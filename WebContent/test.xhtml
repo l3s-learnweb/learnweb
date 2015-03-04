@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" lang="#{userBean.localeCode}">
+
+<ui:composition template="/templates/main.xhtml">
+	<ui:param name="pageTitle" value="test" />
+
+	<ui:define name="center_layout">
+		<div id="text">
+
+<!-- 		
+		https://www.youtube.com/watch?v=4kSVfZxFN0I	
+		 -->	
+		 <br/><br/><br/><br/>
+		 <h1>Add new video</h1>
+			<form class="main_video_form" method="POST" action="http://amara.org/en/videos/create/">
+ <input id="submit_video_field" type="text" name="video_url" size="50" value="https://www.youtube.com/watch?v=_nEEhgtFq9Y" />
+
+ <button class="blue-green-button" value="Begin" type="submit">Add subtitles</button>
+</form>
+<br/><br/>
+<h1>Edit existing video</h1>
+<!--  
+<div class="amara-embed" data-height="480px" data-width="854px" data-url="https://www.youtube.com/watch?v=4kSVfZxFN0I"></div>     
+<script type="text/javascript" src="//amara.org/embedder-iframe">
+</script>        
+-->
+		</div>
+	</ui:define>
+ghgh
+</ui:composition>
+</html>

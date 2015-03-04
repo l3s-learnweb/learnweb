@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:viewParam name="user_id" value="#{userDetailBean.userId}" required="true" />
+
+	<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{userDetailBean.loadUser}" />
+</f:metadata>
+
+<ui:composition template="/lw/templates/new_main.xhtml">
+
+	<ui:param name="loginRequired" value="false" />
+	<ui:param name="pageTitle" value="#{msg.myProfileTitle}" />
+
+	<ui:define name="center_layout">
+
+		<p:panel header="#{msg.myProfileTitle}">
+			<h:panelGrid columns="2" style="float:left; margin-right:20px;">
+				<h:outputText value="#{msg.username}:" />
+				<h:outputText id="username" value="#{userDetailBean.user.username}" />
+
+				<h:outputText value="#{msg.email_address}:" />
+				<h:outputText value="#{userDetailBean.user.email}" />
+
+				<h:outputText value="#{msg.gender}:" />
+				<h:outputText value="--" rendered="#{userDetailBean.user.gender == 0}" />					
+				<h:outputText value="#{msg.gender_male}" rendered="#{userDetailBean.user.gender == 1}" />
+				<h:outputText value="#{msg.gender_female}" rendered="#{userDetailBean.user.gender == 2}" />				
+				
+				<h:outputText value="#{msg.address}:" />
+				<h:outputText value="#{userDetailBean.user.address}" />
+
+				<h:outputText value="#{msg.profession}:" />
+				<h:outputText value="#{userDetailBean.user.profession}" />
+
+				<h:outputText value="#{msg.interest}:" rendered="#{not empty userDetailBean.user.interest}" />
+				<h:outputText value="#{userDetailBean.user.interest}" rendered="#{not empty userDetailBean.user.interest}" />
+
+				<h:outputText value="#{msg.additionalinformation}:" rendered="#{not empty userDetailBean.user.additionalInformation}" />
+				<h:outputText value="#{userDetailBean.user.additionalInformation}" rendered="#{not empty userDetailBean.user.additionalInformation}" />
+			
+				<h:outputText value="#{msg.registered_since}:" />
+				<h:outputText value="#{userDetailBean.user.registrationDate}">
+					<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
+				</h:outputText>
+			</h:panelGrid>
+			
+			<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(userDetailBean.user)}" id="profile_image" />
+			<br class="clear" />
+		</p:panel>
+
+		<p:panel header="#{userDetailBean.user.username}'s groups">
+			<h:form>
+				<p:dataGrid var="group" value="#{userDetailBean.user.groups}">
+					<p:column>
+						<h:outputLink value="group/overview.jsf">
+							<f:param name="group_id" value="#{group.id}" />
+							<h:outputText value="#{group.title}" />
+						</h:outputLink>
+					</p:column>
+				</p:dataGrid>
+			</h:form>
+
+		</p:panel>
+	</ui:define>
+</ui:composition>
+</html>

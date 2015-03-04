@@ -1,0 +1,128 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">	
+	
+	<ui:composition template="/lw/templates/new_main.xhtml"> 
+	
+	
+		<ui:param name="loginRequired" value="true"/>
+		<ui:param name="pageTitle" value="Activity Stream"/>	
+		<ui:param name="helpText" value="#{msg.myhomeActivityHelp}" />		
+
+		
+		<ui:define name="center_layout">
+			<p:commandButton id="add_resource" styleClass="resource_button greenbutton" update=":add_resource_panel" value="#{msg.upload_resource}" widgetVar="add_resource" oncomplete="update_header()">
+				<f:setPropertyActionListener target="#{activityResourceBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
+			</p:commandButton>
+			<script type="text/javascript">
+				var div = document.createElement("div");
+				var group_header = document.createElement("span");
+				$(group_header).addClass("group_header");
+				$(group_header).html("Activity Stream. ");
+				var group_owner = document.createElement("span");
+				$(group_owner).addClass("group_owner");
+				$(group_owner).html("See what your colleagues have been upto.");
+				var cl = $("#add_resource").clone();
+	            $(cl).appendTo(div);
+	            $("#add_resource").remove()
+				$(div).append(group_header);
+	            $(div).append(group_owner);
+				$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
+				$("#center_pane").prepend(div);
+			</script>
+			
+			<p:dialog header="Upload File" widgetVar="file_dialog" modal="true" appendToBody="true" width="600" height="150">
+				<h:form>
+					<p:fileUpload  rendered="true" fileUploadListener="#{addResourceBean.handleFileUpload}"  
+		            mode="advanced"  
+		            auto="true"
+		            sizeLimit="10000000"   
+		            widgetVar="fileUpload"
+		            oncomplete="file_dialog.hide()"
+		            update=":add_resource_form:preview"
+		            /> 
+				</h:form>
+			</p:dialog>
+			<p:dialog header="#{msg.edit}" id="comment_dialog1" modal="true" minWidth="440" appendToBody="true" widgetVar="comment_dialog">
+				<h:form id="comment_dialog_form">	
+					<p:inputTextarea autoResize="1" maxHeight="20" value="#{activityResourceBean.clickedComment.text}" id="edit_comment_textbox"></p:inputTextarea>
+					<p:commandButton actionListener="#{activityResourceBean.onEditComment}" update=":add_resource_panel" 
+										title="#{msg.save}" value="#{msg.save}"								
+										onsuccess="comment_dialog.hide();">
+					</p:commandButton>
+				</h:form>
+			</p:dialog>
+			
+			<h:dataTable var="datagrid" value="#{activityResourceBean.newslist}" id="datagrid">
+				<h:column >
+				<div class="newsfeed_user_image_div">
+				    <h:graphicImage id="userpic" url="#{datagrid.user.image}" width="30" height="30" styleClass="newsfeed_user_image" alt="Profile foto"/>
+				    </div>
+					<div class="newsfeed_text">
+					<h:outputText value="#{datagrid.text}" escape="false"  />
+					<h:panelGroup rendered="#{datagrid.queryNeeded}">
+					<h:outputText value=" with query " escape="false"  />
+					
+					<h:outputLink value="search.jsf" styleClass="newsfeed_query_link">
+					<h:outputText value=" #{datagrid.resource.query}" escape="false"  styleClass="newsfeed_query_link_text"/>
+					
+							<f:param name="query" value="#{datagrid.resource.query}"></f:param>
+					        <f:param name="action" value="search"></f:param>
+					</h:outputLink>
+					
+					<h:outputText value=" from #{datagrid.resource.source} " escape="false"  />
+					</h:panelGroup>
+					</div>
+					
+					<h:outputText value="#{datagrid.datedifference}" escape="false" styleClass="newsfeed_date_difference"/>	
+					
+					<br></br>
+					<br></br>
+					<h:panelGroup rendered="#{datagrid.resourceAction}">
+					<div class="newsfeed_left">
+					
+					
+					<p:commandLink styleClass="newsfeed_query_link" update=":add_resource_panel" oncomplete="update_header()">
+	        			<f:setPropertyActionListener target="#{activityResourceBean.clickedResource}" value="#{datagrid.resource}"></f:setPropertyActionListener>
+							<h:outputText value="#{datagrid.resource.embeddedSize1}" escape="false" />
+					</p:commandLink>
+					
+		
+                   </div>
+					
+					<div class="newsfeed_right">
+					<h:outputText value="#{datagrid.resource.shortDescription} " escape="false"  styleClass="newsfeed_description"/>
+					
+					
+					<br />
+					<h:outputText value="Author: #{datagrid.resource.author} " rendered="#{not empty datagrid.resource.author}" escape="false" styleClass="newsfeed_author"/>
+					
+					</div>
+					</h:panelGroup>
+					
+					<br style="clear:both;" />
+					<h:panelGroup rendered="#{datagrid.resourceAction}">
+					<br /><h:outputText value="tags: " escape="false" styleClass="newsfeed_tag" rendered="#{not empty datagrid.resource.tagsAsString}" />
+					
+					<h:outputText value=" #{datagrid.resource.tagsAsString} " rendered="#{not empty datagrid.resource.tagsAsString}" escape="false" styleClass="newsfeed_tags"/>
+					
+					</h:panelGroup>
+					<hr width="auto" class="newsfeed_separator" ></hr>
+				</h:column>	
+								
+			</h:dataTable>
+		</ui:define>
+		
+			<ui:define name="right_layout">
+			<ui:decorate  template="/lw/templates/right_pane.xhtml">
+				<ui:param name="bean" value="#{activityResourceBean}" />
+			</ui:decorate >
+		</ui:define>
+		
+		
+		
+	</ui:composition>
+</html>

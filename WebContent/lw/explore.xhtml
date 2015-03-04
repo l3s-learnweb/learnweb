@@ -1,0 +1,123 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" 
+	lang="#{userBean.localeCode}">
+
+<f:metadata>
+	<f:viewParam name="mode" value="#{exploreBean.exploreMode}" />
+	<f:viewParam name="page" value="#{exploreBean.page}" />
+	<f:event type="preRenderView" listener="#{exploreBean.preRenderView}" />
+</f:metadata>
+
+<ui:composition template="/lw/templates/new_main.xhtml">
+	<ui:param name="loginRequired" value="true" />
+	<ui:param name="pageTitle" value="#{msg.exploreTitle}" />	
+	
+	<ui:define name="options_panel">
+		<div class="options_panel">
+
+			<h:form id="explore_optform" style="padding-left: 28%;vertical-align: middle;">
+				<h:outputText value="Task based View" styleClass="optform_text"
+					rendered="#{exploreBean.exploreMode == 'task_based'}" />
+				<h:link value="Task based View" outcome="explore"
+					styleClass="optform_link"
+					rendered="#{exploreBean.exploreMode != 'task_based'}" >
+					<f:param name="mode" value="task_based" />
+				</h:link>			
+
+				<h:outputText value="List View"
+					styleClass="optform_text"
+					rendered="#{exploreBean.exploreMode == 'list_view'}" />
+				<h:link value="List View" outcome="explore"
+					styleClass="optform_link"
+					rendered="#{exploreBean.exploreMode != 'list_view'}" >
+					<f:param name="mode" value="list_view" />
+					<f:param name="page" value="1" />
+				</h:link>
+				<h:outputText value="Resultset View"
+					styleClass="optform_text"
+					rendered="#{exploreBean.exploreMode == 'resultset_view'}" />
+			</h:form>
+		</div>		
+	</ui:define>
+	
+	<ui:define name="center_layout">
+
+		<h:panelGroup id="task_based_view" rendered="#{exploreBean.exploreMode == 'task_based'}">
+			<div id="taskbased_history_filter"
+				style="padding-left: 5px; padding-right: 10px;width:100%;">
+				<p:panel id="taskbased_history_filter_panel"
+					header="Task Based Search History Filter" toggleable="true"
+					toggleSpeed="500" widgetVar="panel" style="padding:5px;">
+					<script type="text/javascript">
+						$(function() {
+							$(".Fromdatepicker").datepicker(
+									{
+										defaultDate : "+1w",
+										changeMonth : true,
+										numberOfMonths : 1,
+										onClose : function(selectedDate) {
+											$(".Todatepicker").datepicker(
+													"option", "minDate",
+													selectedDate);
+										}
+									});
+
+							var dateFormat = $(".Fromdatepicker").datepicker(
+									"option", "dateFormat");
+							$(".Fromdatepicker").datepicker("option",
+									"dateFormat", "yy-mm-dd");
+
+							$(".Todatepicker").datepicker(
+									{
+										defaultDate : "+1w",
+										changeMonth : true,
+										numberOfMonths : 1,
+										onClose : function(selectedDate) {
+											$(".Fromdatepicker").datepicker(
+													"option", "maxDate",
+													selectedDate);
+										}
+									});
+
+							dateFormat = $(".Todatepicker").datepicker(
+									"option", "dateFormat");
+							$(".Todatepicker").datepicker("option",
+									"dateFormat", "yy-mm-dd");
+
+						});
+					</script>
+					<h:form>
+					
+					Get Sessions From: <h:inputText styleClass="Fromdatepicker"
+							id="from_date" value="#{exploreBean.fromFilterQueries}" />
+							To: <h:inputText styleClass="Todatepicker" id="to_date"
+							value="#{exploreBean.toFilterQueries}" />
+						    <span>	</span><p:commandButton value="Update Task Based View"
+							update=":task_based_graph" />
+
+					</h:form>
+					<h:form>
+						<p:remoteCommand name="resize" update=":task_based_graph" />
+					</h:form>
+				</p:panel>
+			</div>
+			<p:outputPanel id="task_based_graph">
+				<iframe src="collapsibletree.jsf" id="tree" scrolling="no"
+					frameborder="0" style="height:90%;width:90%;" />
+			</p:outputPanel>
+		</h:panelGroup>
+		<h:panelGroup id="list_view"
+			rendered="#{exploreBean.exploreMode == 'list_view'}">
+			<ui:decorate template="/lw/templates/search_history_list.xhtml">
+				<ui:param name="searchHistorylogs"
+					value="#{exploreBean.searchHistoryLogs}" />
+			</ui:decorate>
+		</h:panelGroup>
+	</ui:define>
+
+</ui:composition>
+</html>

@@ -1,0 +1,80 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">	
+	
+	<ui:composition template="/lw/templates/new_main.xhtml"> 
+
+		<ui:param name="loginRequired" value="true"/>
+		<ui:param name="pageTitle" value="Group Statistics"/>
+
+		
+		<ui:define name="center_layout">
+		
+			<h:form id="anlyse_form">
+				<p:panel header="Select groups">
+					<ui:include src="/lw/templates/group_select_form.xhtml" />	
+					<br/>
+					<p>
+						<p:selectBooleanCheckbox value="#{adminStatisticsBean.showDetails}" /> 
+						show detailed Statistics (slow)
+					</p>
+					<p:commandButton actionListener="#{adminStatisticsBean.onGroupStatistics}" value="Show statistics" process="@form" update=":growl output"/>
+					
+				</p:panel>
+						
+				<br/>
+				
+				<h:panelGroup id="output">
+					<p:panel header="Statistics" >
+						 <p:dataTable var="entry" value="#{adminStatisticsBean.groupStatistics}">  
+					        <p:column headerText="#{msg.group}" sortBy="#{entry.title}">  
+					            <h:outputText value="#{entry.title}" />  
+					        </p:column>  
+					        
+					        <p:column headerText="Resources" >  
+					            <h:outputText value="#{entry.resources}" />  
+					        </p:column> 
+					        
+					        <p:column headerText="Thumb ratings" >  
+					            <h:outputText value="#{entry.thumb_ratings}" />  
+					        </p:column> 
+					        
+					        <p:column headerText="Star ratings" >  
+					            <h:outputText value="#{entry.star_ratings}" />  
+					        </p:column> 
+					        
+					        <p:column headerText="Comments" >  
+					            <h:outputText value="#{entry.comments}" />  
+					        </p:column> 
+					        
+					        <p:column headerText="Tags" >  
+					            <h:outputText value="#{entry.tags}" />  
+					        </p:column> 
+					        
+					        <p:column headerText="Forum topics" >  
+					            <h:outputText value="#{entry.forum_topics}" />  
+					        </p:column> 
+					        
+					        <p:column headerText="Forum posts" >  
+					            <h:outputText value="#{entry.forum_posts}" />  
+					        </p:column> 
+						
+						</p:dataTable>					
+					</p:panel>
+				
+				
+					<p:panel header="Detailed statistics" rendered="#{adminStatisticsBean.showDetails}" style="margin-top:30px;">
+						<p:selectBooleanButton offLabel="toggle Description" onLabel="toggle Description" onchange="$('.description').toggle();" value="off" />
+						<p:selectBooleanButton offLabel="toggle Comments" onLabel="toggle Comments" onchange="$('.admin_comments').toggle();" value="on" />
+						<hr />
+						<h:outputText value="#{adminStatisticsBean.detailedDescription}" escape="false" />					
+					</p:panel>
+				</h:panelGroup> 
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</html>

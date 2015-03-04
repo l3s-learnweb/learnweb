@@ -1,0 +1,133 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition>
+		<h:outputScript library="js" name="jquery.montage.min.js" target="head"/>
+		<div id="fact_sheet_wrapper">
+			<div id="fact_sheet_image_wrapper" style="height: 184px">
+				<h:outputLink value="search.jsf">		
+					<f:param name="action" value="image" />
+					<f:param name="query" value="#{searchBean.query}" />
+				
+					<div id="more_images_box">
+						More Images
+					</div>
+				</h:outputLink>
+				
+				<table>
+					<tr>
+						<td id="fact_sheet_first_image_td">
+							<ui:fragment rendered="#{searchBean.graph.entities[0].thumbnail != ''}">
+								<div id="fact_sheet_first_image">
+									<img onerror="this.style.display='none';" src="#{searchBean.graph.entities[0].thumbnail}"></img>
+								</div>
+							</ui:fragment>
+						</td>
+						<td>
+							<div id="am-container" class="am-container fact_sheet_images">
+								<ui:repeat var="image" value="#{searchBean.images.resources}">
+									<a href=""><img src="#{image.thumbnail2.url}"></img></a>
+								</ui:repeat>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</div>
+			<div id="fact_sheet_contents">
+				<div id="fact_sheet_label">#{searchBean.graph.entities[0].label}</div>
+				<div id="fact_sheet_description">#{searchBean.graph.entities[0].description}</div>
+				<ui:fragment rendered="#{searchBean.graph.entities[0].birthDate != '' and searchBean.graph.entities[0].birthPlace != ''}">
+					<div class="fact_sheet_detail">
+						<span class="fact_sheet_field">Born : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].birthDate}, #{searchBean.graph.entities[0].birthPlace}</span>
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{searchBean.graph.entities[0].birthDate == '' and searchBean.graph.entities[0].birthPlace != ''}">
+					<div class="fact_sheet_detail">
+						<span class="fact_sheet_field">Place of Birth : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].birthPlace}</span>
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{searchBean.graph.entities[0].birthPlace == '' and searchBean.graph.entities[0].birthDate != ''}">
+					<div class="fact_sheet_detail">
+						<span class="fact_sheet_field">Date of Birth : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].birthDate}</span>
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{searchBean.graph.entities[0].deathDate != '' and searchBean.graph.entities[0].deathPlace != ''}">
+					<div class="fact_sheet_detail">
+						<span class="fact_sheet_field">Died : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].deathDate}, #{searchBean.graph.entities[0].deathPlace}</span>
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{searchBean.graph.entities[0].deathDate == '' and searchBean.graph.entities[0].deathPlace != ''}">
+					<div class="fact_sheet_detail">
+						<span class="fact_sheet_field">Place of Death : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].deathPlace}</span>
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{searchBean.graph.entities[0].deathPlace == '' and searchBean.graph.entities[0].deathDate != ''}">
+					<div class="fact_sheet_detail">
+						<span class="fact_sheet_field">Date of Death : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].deathDate}</span>
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{searchBean.graph.entities[0].fullName != ''}">
+					<div class="fact_sheet_detail">
+						<span class="fact_sheet_field">Full Name : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].fullName}</span>
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{searchBean.graph.entities[0].birthName != ''}">
+					<div class="fact_sheet_detail">
+						<span class="fact_sheet_field">Birth Name : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].birthName}</span>
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{searchBean.graph.entities[0].alternativeNames != ''}">
+					<div class="fact_sheet_detail">
+						<span class="fact_sheet_field">Alternative Names : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].alternativeNames}</span>
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{searchBean.graph.entities[0].children != ''}">
+					<div class="fact_sheet_detail">
+						<span class="fact_sheet_field">Children : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].children}</span>
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{searchBean.graph.entities[0].spouse != ''}">
+					<div class="fact_sheet_detail">
+						<span class="fact_sheet_field">Spouse : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].spouse}</span>
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{searchBean.graph.entities.size() gt 1}">
+					<div id="related_search">Related Links</div>
+					<ul id="related_search_list">
+						<ui:repeat var="entity" value="#{searchBean.graph.entities.subList(1,searchBean.graph.entities.size())}">
+							<li><a target="_new" href="#{entity.url}">#{entity.label}</a></li>
+						</ui:repeat>
+					</ul>
+				</ui:fragment>
+			</div>
+		</div>
+		<script type="text/javascript">
+			$(function() {
+				// initialize the plugin
+				var $container 	= $('#am-container'),
+					$imgs		= $container.find('img').hide(),
+					totalImgs	= $imgs.length,
+					cnt			= 0;
+				$imgs.each(function(i) {
+					var $img	= $(this);
+					$('<img/>').load(function() {
+						++cnt;
+						if( cnt === totalImgs ) {
+							$imgs.show();
+							$container.montage({
+								fluid: false,
+								minsize	: false,
+								fixedHeight: 90,
+								margin 	: 1
+							});
+						}
+					}).attr('src',$img.attr('src'));
+				});
+			});
+		</script>
+	</ui:composition>
+</html>

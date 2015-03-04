@@ -1,0 +1,1248 @@
+package de.l3s.learnweb;
+
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
+
+import de.l3s.util.HasId;
+import de.l3s.util.StringHelper;
+
+public class Resource implements HasId, Serializable // AbstractResultItem,
+{
+    public enum OnlineStatus
+    {
+	UNKNOWN,
+	ONLINE,
+	OFFLINE
+    };
+
+    private static final long serialVersionUID = -8486919346993051937L;
+    private final static Logger log = Logger.getLogger(Resource.class);
+
+    public static final int FILE_RESOURCE = 1;
+    public static final int WEB_RESOURCE = 2;
+
+    private int id = -1; // default id, that indicates that this resource is not stored at fedora
+    private String title;
+    private String description = "";
+    private String machineDescription;
+    private String url;
+    private int storageType = WEB_RESOURCE;
+    private int rights = 0;
+    private String author = "";
+    private String source = ""; // The place where the resource was found
+    private String location = ""; // The location where the resource (metadata) is stored; for example Learnweb, Flickr, Youtube ...
+    private String type = "";
+    private String format = "";
+    private String idAtService = "";
+    private int duration;
+    private int ownerUserId;
+    private int views;
+    private String transcript; //To store the English transcripts for TED videos
+    private String archiveUrl; //To store the archive URL from archive.today service
+    private int ratingSum;
+    private int rateNumber;
+    private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
+    private HashMap<Integer, Boolean> isRatedByUser = new HashMap<Integer, Boolean>(); // userId : hasRated
+
+    private int thumbUp;
+    private int thumbDown;
+    private HashMap<Integer, Boolean> isThumbRatedByUser = new HashMap<Integer, Boolean>(); // userId : hasRated
+
+    private LinkedHashMap<Integer, File> files = new LinkedHashMap<Integer, File>(); // resource_file_number : file
+
+    private String embeddedSize1;
+
+    private String embeddedSize3;
+    private String embeddedSize4;
+    private String embeddedSize1Raw;
+
+    private String embeddedSize3Raw;
+    private String embeddedSize4Raw;
+    private String maxImageUrl; // an url to the largest image preview of this resource
+    private String fileName; // stores the file name of uploaded resource
+
+    private String query; // the query which was used to find this resource
+    private int originalResourceId = 0; // if the resource was copied from an older fedora resource this stores the id of the original resource
+
+    private Thumbnail thumbnail0;
+    private Thumbnail thumbnail1;
+    private Thumbnail thumbnail2;
+    private Thumbnail thumbnail2b;
+    private Thumbnail thumbnail2c;
+    private Thumbnail thumbnail3;
+    private Thumbnail thumbnail4;
+    private String embeddedRaw;
+    private String access;
+
+    // caches
+    private transient OwnerList<Tag, User> tags = null;
+    private transient List<Comment> comments;
+    private transient List<Group> groups;
+    private transient User owner;
+
+    protected void clearCaches()
+    {
+	// tags = null; tags are updated every time a tag is added, don't have to be reset
+	// comments = null;
+	groups = null;
+    }
+
+    /**
+     * Do nothing constructor
+     */
+    public Resource()
+    {
+    }
+
+    /**
+     * This constructor is used to create resources when returned from the learnweb resources table in order
+     * to re-visit a previous result set of a query posted in the past.
+     */
+    public Resource(int id, String description, String title, String source, int thumbnail_height, int thumbnail_width, String thumbnail_url, int thumbnail4_height, int thumbnail4_width, String thumbnail4_url, String url, String type)
+    {
+	this.id = id;
+	this.description = description;
+	this.title = title;
+	this.source = source;
+	this.url = url;
+	this.type = type;
+	setThumbnail2(new Thumbnail(thumbnail_url, thumbnail_width, thumbnail_height));
+	setThumbnail4(new Thumbnail(thumbnail4_url, thumbnail4_width, thumbnail4_height));
+    }
+
+    /**
+     * returns the groups this resource is part of
+     * 
+     * @return
+     * @throws SQLException
+     */
+    public List<Group> getGroups() throws SQLException
+    {
+	if(null == groups)
+	    groups = Learnweb.getInstance().getGroupManager().getGroupsByResourceId(id);
+	return groups;
+    }
+
+    @Deprecated
+    public void prepareEmbeddedCodes()
+    {
+	if(null == embeddedSize1 || null == embeddedSize3)
+	{
+
+	    if(source.equalsIgnoreCase("YouTube"))
+	    {
+		Pattern pattern = Pattern.compile("v[/=]([^&]+)");
+		Matcher matcher = pattern.matcher(url);
+
+		if(matcher.find())
+		{
+		    String videoId = matcher.group(1);
+		    if(null == embeddedSize1)
+			this.embeddedSize1 = "<img src=\"http://img.youtube.com/vi/" + videoId + "/default.jpg\" width=\"100\" height=\"75\" />";
+		    if(null == embeddedSize3)
+			this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
+		    this.format = "application/x-shockwave-flash";
+
+		    System.out.println(embeddedSize3);
+		}
+	    }
+	    else if(source.equals("Google") && type.equals("Video"))
+	    {
+		Pattern pattern = Pattern.compile("youtube.com/watch%3Fv%3D([^&]+)");
+		Matcher matcher = pattern.matcher(url);
+
+		if(matcher.find())
+		{
+		    String videoId = matcher.group(1);
+		    this.embeddedSize1 = "<img src=\"http://img.youtube.com/vi/" + videoId + "/default.jpg\" width=\"100\" height=\"75\" />";
+		    this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
+
+		    this.format = "application/x-shockwave-flash";
+		    this.source = "YouTube";
+		    this.url = "https://www.youtube.com/watch?v=" + videoId;
+
+		}
+	    }
+	    else if(source.equalsIgnoreCase("Vimeo"))
+	    {
+		Pattern pattern = Pattern.compile("vimeo\\.com/([^&]+)");
+		Matcher matcher = pattern.matcher(url);
+
+		if(matcher.find())
+		{
+		    String videoId = matcher.group(1);
+		    this.embeddedSize3 = "<object width=\"500\" height=\"375\"><param name=\"allowfullscreen\" value=\"true\" /><param name=\"allowscriptaccess\" value=\"always\" />" + "<param name=\"movie\" value=\"http://vimeo.com/moogaloop.swf?clip_id=" + videoId
+			    + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" /><embed src=\"http://vimeo.com/moogaloop.swf?clip_id=" + videoId
+			    + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"500\" height=\"375\"></embed></object>";
+		    this.format = "application/x-shockwave-flash";
+		}
+
+	    }
+	    else if(source.equals("Ipernity") && embeddedSize1 != null)
+	    {
+
+		if(type.equals("Image"))
+		    embeddedSize3 = embeddedSize1.replace(".100.", ".500.");
+		else
+		    embeddedSize3 = "<a href=\"" + url + "\">" + url + "</a>";
+	    }
+	    else if(source.equals("Flickr") && type.equals("Image") && embeddedSize1 != null)
+	    {
+
+		if(null == embeddedSize3)
+		    embeddedSize3 = embeddedSize1.replace("_t.", ".");
+	    }
+
+	    if(embeddedSize1 == null || embeddedSize1.length() < 3)
+	    {
+		if(type.equalsIgnoreCase("audio"))
+		    embeddedSize1 = "<img src=\"../resources/icon/audio.png\" width=\"100\" height=\"100\" />";
+		else if(format.startsWith("application/vnd.") || format.startsWith("application/ms"))
+		    embeddedSize1 = "<img src=\"https://www.kbs.uni-hannover.de/~kemkes/document.png\" width=\"100\" height=\"100\" />";
+		else if(storageType == WEB_RESOURCE)
+		    embeddedSize1 = "<img src=\"https://www.kbs.uni-hannover.de/~kemkes/website-140.png\" width=\"100\" height=\"100\" />";
+		else if(format.startsWith("text/"))
+		    embeddedSize1 = "<img src=\"https://www.kbs.uni-hannover.de/~kemkes/document.png\" width=\"100\" height=\"100\" />";
+	    }
+
+	}
+	else
+	{
+	    for(File file : files.values())
+	    {
+		embeddedSize1 = replacePlaceholder(embeddedSize1, file);
+		embeddedSize3 = replacePlaceholder(embeddedSize3, file);
+	    }
+	}
+    }
+
+    public void addTag(String tagName, User user) throws Exception
+    {
+	ResourceManager rsm = Learnweb.getInstance().getResourceManager();
+	Tag tag = rsm.getTag(tagName);
+
+	if(tag == null)
+	    tag = rsm.addTag(tagName);
+
+	rsm.tagResource(this, tag, user);
+
+	if(null != tags)
+	{
+	    tags.add(tag, user, new Date());
+	    Collections.sort(tags);
+	}
+
+	Learnweb.getInstance().getSolrClient().indexTag(tag, this);
+    }
+
+    public void deleteTag(Tag tag) throws Exception
+    {
+	Learnweb.getInstance().getResourceManager().deleteTag(tag, this);
+	tags.remove(tag);
+
+	Learnweb.getInstance().getSolrClient().deleteFromIndex(tag, this);
+    }
+
+    public void deleteComment(Comment comment) throws Exception
+    {
+	Learnweb.getInstance().getResourceManager().deleteComment(comment);
+	comments.remove(comment);
+
+	Learnweb.getInstance().getSolrClient().deleteFromIndex(comment);
+    }
+
+    public List<Comment> getComments() throws SQLException
+    {
+	if(id != -1)
+	{
+	    comments = Learnweb.getInstance().getResourceManager().getCommentsByResourceId(id);
+	    Collections.sort(comments);
+	}
+
+	return comments;
+    }
+
+    public Comment addComment(String text, User user) throws Exception
+    {
+	Comment comment = Learnweb.getInstance().getResourceManager().commentResource(text, user, this);
+
+	getComments(); // make sure comments are loaded before adding a new one
+	comments.add(0, comment);
+
+	Learnweb.getInstance().getSolrClient().indexComment(comment);
+
+	return comment;
+    }
+
+    @Override
+    public int getId()
+    {
+	return id;
+    }
+
+    public String getTitle()
+    {
+	return title;
+    }
+
+    public String getDescription()
+    {
+	return description;
+    }
+
+    public String getUrl()
+    {
+	return url;
+    }
+
+    public int getStorageType()
+    {
+	return storageType;
+    }
+
+    public void setStorageType(int type)
+    {
+	if(type != FILE_RESOURCE && type != WEB_RESOURCE)
+	    throw new IllegalArgumentException();
+	this.storageType = type;
+    }
+
+    public int getRights()
+    {
+	return rights;
+    }
+
+    public void setRights(int rights)
+    {
+	this.rights = rights;
+    }
+
+    /**
+     * The location where the resource (metadata) is stored
+     * 
+     * @return for example Learnweb, Flickr, Youtube ...
+     */
+    public String getLocation()
+    {
+	return location;
+    }
+
+    public String getType()
+    {
+	return type;
+    }
+
+    public String getFormat()
+    {
+	return format;
+    }
+
+    public User getOwnerUser() throws SQLException
+    {
+	if(null == owner && -1 != ownerUserId)
+	    owner = Learnweb.getInstance().getUserManager().getUser(ownerUserId);
+	return owner;
+    }
+
+    public int getOwnerUserId()
+    {
+	return ownerUserId;
+    }
+
+    public void setOwnerUserId(int ownerUserId)
+    {
+	this.ownerUserId = ownerUserId;
+	this.owner = null;
+    }
+
+    public double getRating()
+    {
+	return ratingSum == 0 ? 0.0 : ratingSum / rateNumber;
+    }
+
+    public void setRatingSum(int rating)
+    {
+	this.ratingSum = rating;
+    }
+
+    public void setRateNumber(int rateNumber)
+    {
+	this.rateNumber = rateNumber;
+    }
+
+    public int getRateNumber()
+    {
+	return rateNumber;
+    }
+
+    public int getRatingSum()
+    {
+	return ratingSum;
+    }
+
+    /**
+     * 
+     * @return Returns a comma separated list of tags
+     * @throws SQLException
+     */
+    public String getTagsAsString() throws SQLException
+    {
+	return getTagsAsString(", ");
+    }
+
+    public String getTagsAsString(String delim) throws SQLException
+    {
+	tags = getTags();
+
+	StringBuilder out = new StringBuilder();
+	for(Tag tag : tags)
+	{
+	    if(out.length() != 0)
+		out.append(delim);
+	    out.append(tag.getName());
+	}
+	return out.toString();
+    }
+
+    public OwnerList<Tag, User> getTags() throws SQLException
+    {
+	if(null == tags || id != -1)
+	    tags = Learnweb.getInstance().getResourceManager().getTagsByResource(id);
+	return tags;
+    }
+
+    public void setTags(OwnerList<Tag, User> tags)
+    {
+	this.tags = tags;
+    }
+
+    public void setComments(List<Comment> comments)
+    {
+	this.comments = comments;
+    }
+
+    public void setId(int id)
+    {
+	this.id = id;
+    }
+
+    public void setOwner(User user)
+    {
+	this.owner = user;
+	this.ownerUserId = owner.getId();
+    }
+
+    /**
+     * Creates a copy of a resource.<br/>
+     * Ratings and comments are not copied
+     */
+    @Override
+    public Resource clone()
+    {
+	Resource r = new Resource();
+	r.setId(-1);
+	r.setTitle(title);
+	r.setDescription(description);
+	r.setUrl(url);
+	r.setStorageType(storageType);
+	r.setRights(rights);
+	r.setLocation(location);
+	r.setSource(source);
+	r.setAuthor(author);
+	r.setType(type);
+	r.setFormat(format);
+	r.setOwnerUserId(ownerUserId);
+	r.setEmbeddedSize1Raw(embeddedSize1);
+	r.setEmbeddedSize3Raw(embeddedSize3);
+	r.setEmbeddedSize4Raw(embeddedSize4);
+	r.setMaxImageUrl(maxImageUrl);
+	r.setFileName(fileName);
+	r.setQuery(query);
+	r.setOriginalResourceId(id); // sets the originalResourceId to the id of the source resource
+	r.setThumbnail0(thumbnail0);
+	r.setThumbnail1(thumbnail1);
+	r.setThumbnail2(thumbnail2);
+	r.setThumbnail3(thumbnail3);
+	r.setThumbnail4(thumbnail4);
+	r.setEmbeddedRaw(embeddedRaw);
+	r.setDuration(duration);
+	r.setMachineDescription(machineDescription);
+	r.setFileName(fileName);
+	r.setTranscript(transcript);
+	r.setArchiveUrl(archiveUrl);
+	r.setOnlineStatus(onlineStatus);
+	r.setIdAtService(idAtService);
+
+	return r;
+    }
+
+    /**
+     * rate this resource
+     * 
+     * @param value
+     *            the rating 1-5
+     * @param user
+     *            the user who rates
+     * @throws KRSMException
+     * @throws SQLException
+     */
+    public void rate(int value, User user) throws Exception
+    {
+	Learnweb.getInstance().getResourceManager().rateResource(id, user.getId(), value);
+
+	rateNumber++;
+	ratingSum += value;
+
+	isRatedByUser.put(user.getId(), true);
+    }
+
+    public boolean isRatedByUser(int userId) throws Exception
+    {
+	Boolean value = isRatedByUser.get(userId);
+	if(null != value) // the answer is cached
+	    return value;
+
+	// the answer isn't cached we have to ask fedora
+
+	value = Learnweb.getInstance().getResourceManager().isResourceRatedByUser(id, userId);
+	isRatedByUser.put(userId, value); // cache answer
+
+	return value;
+    }
+
+    /**
+     * Stores all made changes at fedora
+     * 
+     * @throws KRSMException
+     * @throws SQLException
+     */
+    public void save() throws SQLException
+    {
+	Learnweb.getInstance().getResourceManager().saveResource(this);
+    }
+
+    public void setTitle(String title)
+    {
+	this.title = StringUtils.isNotEmpty(title) ? Jsoup.clean(title, Whitelist.none()) : "no title";
+    }
+
+    public void setDescription(String description)
+    {
+	this.description = description == null ? "" : Jsoup.clean(description, Whitelist.simpleText());
+    }
+
+    public void setUrl(String url)
+    {
+	this.url = url;
+    }
+
+    /**
+     * The location where the resource (metadata) is stored
+     * 
+     * @param location
+     *            for example Learnweb, Flickr, Youtube ...
+     */
+    public void setLocation(String location)
+    {
+	this.location = location;
+    }
+
+    public void setType(String type)
+    {
+	/*
+	if(null == type || type.length() == 0)
+	    log.info("Resource: " + id + "; type set to null", new Exception());
+	*/
+	if(type.equalsIgnoreCase("videos") || type.equalsIgnoreCase("video"))
+	    this.type = "Video";
+	else if(type.equalsIgnoreCase("photos") || type.equalsIgnoreCase("image"))
+	    this.type = "Image";
+	else if(null == type || type.length() == 0)
+	    this.type = "Unknown";
+	else
+	    this.type = type;
+    }
+
+    /**
+     * set the mime type
+     * 
+     * @param format
+     */
+    public void setFormat(String format)
+    {
+	this.format = format;
+    }
+
+    public int getThumbUp()
+    {
+	return thumbUp;
+    }
+
+    public int getThumbDown()
+    {
+	return thumbDown;
+    }
+
+    public void setThumbUp(int thumbUp)
+    {
+	this.thumbUp = thumbUp;
+    }
+
+    public void setThumbDown(int thumbDown)
+    {
+	this.thumbDown = thumbDown;
+    }
+
+    public void thumbRate(User user, int direction) throws IllegalAccessError, SQLException
+    {
+	if(direction != 1 && direction != -1)
+	    throw new IllegalArgumentException("Illegal value [" + direction + "] for direction. Valid values are 1 and -1");
+
+	if(isThumbRatedByUser(user.getId()))
+	    throw new IllegalAccessError("You have already rated this resource");
+
+	if(direction == 1)
+	    thumbUp++;
+	else
+	    thumbDown++;
+
+	Learnweb.getInstance().getResourceManager().thumbRateResource(id, user.getId(), direction);
+
+	isThumbRatedByUser.put(user.getId(), true);
+    }
+
+    public boolean isThumbRatedByUser(int userId) throws SQLException
+    {
+	Boolean value = isThumbRatedByUser.get(userId);
+	if(null != value) // the answer is cached
+	    return value;
+
+	// the answer isn't cached we have to ask fedora
+
+	value = Learnweb.getInstance().getResourceManager().isResourceThumbRatedByUser(id, userId);
+	isThumbRatedByUser.put(userId, value); // cache answer
+
+	return value;
+    }
+
+    // the following functions are JLearnweb specific and only for convenience included in this class
+
+    public String getLearnwebUrl()
+    {
+	if(getId() != -1)
+	    return "resource.jsf?resource_id=" + getId();
+
+	return getUrl();
+    }
+
+    public String getServiceIcon()
+    {
+	if(getId() != -1) // is stored at fedora
+	    return "/resources/icon/services/fedora.gif";
+
+	return "/resources/icon/services/" + getLocation().toLowerCase() + ".gif";
+    }
+
+    public String getOriginalServiceIcon()
+    {
+	if(getLocation().equalsIgnoreCase("desktop"))
+	    return "/resources/icon/upload.gif";
+	return "/resources/icon/services/" + getLocation().toLowerCase() + ".gif";
+    }
+
+    public static Comparator<Resource> createIdComparator()
+    {
+	return new Comparator<Resource>()
+	{
+	    @Override
+	    public int compare(Resource o1, Resource o2)
+	    {
+		return new Integer(o1.getId()).compareTo(o2.getId());
+	    }
+	};
+    }
+
+    public static Comparator<Resource> createTitleComparator()
+    {
+	return new Comparator<Resource>()
+	{
+	    @Override
+	    public int compare(Resource o1, Resource o2)
+	    {
+		if(null == o1 || null == o2)
+		    return 0;
+		return o1.getTitle().compareTo(o2.getTitle());
+	    }
+	};
+    }
+
+    public static Comparator<Resource> createSourceComparator()
+    {
+	return new Comparator<Resource>()
+	{
+	    @Override
+	    public int compare(Resource o1, Resource o2)
+	    {
+		return o1.getLocation().compareTo(o2.getLocation());
+	    }
+	};
+    }
+
+    public static Comparator<Resource> createTypeComparator()
+    {
+	return new Comparator<Resource>()
+	{
+	    @Override
+	    public int compare(Resource o1, Resource o2)
+	    {
+		return o1.getType().compareTo(o2.getType());
+	    }
+	};
+    }
+
+    /**
+     * html code, only image or text<br/>
+     * max width and max height 100px
+     * 
+     * @return
+     */
+    @Deprecated
+    public String getEmbeddedSize1()
+    {
+
+	if(getThumbnail1() != null)
+	    return getThumbnail1().toHTML();
+	if(getThumbnail2() != null)
+	    return getThumbnail2().resize(140, 140).toHTML();
+	if(getThumbnail3() != null)
+	    return getThumbnail3().resize(140, 140).toHTML();
+
+	return embeddedSize1;
+    }
+
+    /**
+     * html code, only image or text<br/>
+     * max width and max height 100px
+     */
+    @Deprecated
+    public void setEmbeddedSize1Raw(String embeddedSize1)
+    {
+	this.embeddedSize1 = embeddedSize1;
+	this.embeddedSize1Raw = embeddedSize1;
+    }
+
+    /**
+     * html code, may contain flash<br/>
+     * max width 500px and max height 600px
+     * 
+     * @param embedded
+     */
+    @Deprecated
+    public void setEmbeddedSize3Raw(String embedded)
+    {
+
+	this.embeddedSize3 = embedded;
+	this.embeddedSize3Raw = embedded;
+    }
+
+    /**
+     * html code, may contain flash<br/>
+     * max width 500px and max height 600px
+     * 
+     * @return
+     */
+    @Deprecated
+    public String getEmbeddedSize3()
+    {
+	if(getThumbnail3() != null)
+	    return getThumbnail3().toHTML();
+
+	return embeddedSize3;
+    }
+
+    /**
+     * html code, may contain flash<br/>
+     * max width and max height 100%
+     */
+    @Deprecated
+    public String getEmbeddedSize4()
+    {
+	return embeddedSize4;
+    }
+
+    /**
+     * html code, may contain flash<br/>
+     * max width and max height 100%
+     */
+    @Deprecated
+    public void setEmbeddedSize4Raw(String embeddedSize4)
+    {
+	this.embeddedSize4 = embeddedSize4;
+	this.embeddedSize4Raw = embeddedSize4;
+    }
+
+    /**
+     * Contains placeholders for the files
+     * 
+     * @return
+     */
+    @Deprecated
+    public String getEmbeddedSize1Raw()
+    {
+	return embeddedSize1Raw;
+    }
+
+    /**
+     * Contains placeholders for the files
+     * 
+     * @return
+     */
+    @Deprecated
+    public String getEmbeddedSize3Raw()
+    {
+	return embeddedSize3Raw;
+    }
+
+    /**
+     * Contains placeholders for the files
+     * 
+     * @return
+     */
+    @Deprecated
+    public String getEmbeddedSize4Raw()
+    {
+	return embeddedSize4Raw;
+    }
+
+    /**
+     * Url to the best (high resolution) available preview image.<br/>
+     * Only available for interweb search results
+     * 
+     * @return
+     */
+    public String getMaxImageUrl()
+    {
+	return maxImageUrl;
+    }
+
+    /**
+     * Url to the best (high resolution) available preview image.<br/>
+     * Only available for interweb search results
+     * 
+     * @param imageUrl
+     */
+    public void setMaxImageUrl(String imageUrl)
+    {
+	this.maxImageUrl = imageUrl;
+    }
+
+    public String getShortTitle()
+    {
+	return StringHelper.shortnString(title, 20);
+    }
+
+    public String getShortDescription()
+    {
+	return Jsoup.clean(StringHelper.shortnString(description, 200), Whitelist.simpleText());
+    }
+
+    /*
+     * public String getShorterDescription() { return Jsoup.clean(StringHelper.shortnString(description, 80), Whitelist.none()); }
+     */
+
+    /**
+     * @return the file name of uploaded resource
+     */
+    public String getFileName()
+    {
+	return fileName;
+    }
+
+    /**
+     * @param fileName
+     *            the file name of uploaded resource
+     */
+    public void setFileName(String fileName)
+    {
+	this.fileName = fileName;
+    }
+
+    public void setFiles(LinkedHashMap<Integer, File> files)
+    {
+	this.files = files;
+    }
+
+    /**
+     * 
+     * @return the query which was used to find this resource
+     */
+    public String getQuery()
+    {
+	if(query == null)
+	    return "none";
+	return query;
+    }
+
+    /**
+     * 
+     * @param query
+     *            the query which was used to find this resource
+     */
+    public void setQuery(String query)
+    {
+	this.query = query;
+    }
+
+    /**
+     * @return if the resource was copied from an older fedora resource this returns the id of the original resource <b>0</b> otherwise
+     */
+    public int getOriginalResourceId()
+    {
+	return originalResourceId;
+    }
+
+    /**
+     * 
+     * @param originalResourceId
+     *            if the resource was copied from an older fedora resource this stores the id of the original resource
+     */
+    public void setOriginalResourceId(int originalResourceId)
+    {
+	this.originalResourceId = originalResourceId;
+    }
+
+    public String getAuthor()
+    {
+	return author;
+    }
+
+    public void setAuthor(String author)
+    {
+	this.author = author;
+    }
+
+    /**
+     * The place where the resource was found. Example: Flickr or Youtube or Desktop ...
+     * 
+     * @return
+     */
+    public String getSource()
+    {
+	return source;
+    }
+
+    public void setSource(String source)
+    {
+	if(null == source || source.length() == 0)
+	    log.info("Resource: " + id + "; source set to null");
+
+	this.source = source;
+    }
+
+    public LinkedHashMap<Integer, File> getFiles()
+    {
+	return files;
+    }
+
+    /**
+     * This method does not persist the changes.<br/>
+     * see: FileManager.addFileToResource(file, resource);
+     * 
+     * @param file
+     * @throws SQLException
+     */
+    public void addFile(File file) throws SQLException
+    {
+	files.put(file.getResourceFileNumber(), file);
+
+	if(id > 0) // the resource is already stored 
+	{
+	    FileManager fm = Learnweb.getInstance().getFileManager();
+	    fm.addFileToResource(file, this);
+	}
+
+    }
+
+    public File getFile(int fileNumber)
+    {
+	return files.get(fileNumber);
+    }
+
+    @Deprecated
+    public static String createPlaceholder(int fileNumber)
+    {
+	return "{learnweb_file_" + fileNumber + "}";
+    }
+
+    @Deprecated
+    private static String replacePlaceholder(String embeddedCode, File file)
+    {
+	return embeddedCode.replace("{learnweb_file_" + file.getResourceFileNumber() + "}", file.getUrl());
+    }
+
+    /**
+     * @return Text that has been automatically extracted from the source file/url
+     */
+    public String getMachineDescription()
+    {
+	return machineDescription;
+    }
+
+    /**
+     * @param machineDescription
+     *            Text that has been automatically extracted from the source file/url
+     */
+    public void setMachineDescription(String machineDescription)
+    {
+	this.machineDescription = machineDescription;
+    }
+
+    /**
+     * This is only a workarround should not be used too long
+     * 
+     * @return
+     */
+    @Deprecated
+    public boolean isMultimedia()
+    {
+	if(getType().equalsIgnoreCase("pdf") || getType().equals("Document"))
+	    return false;
+
+	if(getStorageType() == FILE_RESOURCE)
+	    return true;
+
+	if(getType().equals("Image") || getType().equals("Video"))
+	    return true;
+
+	if(getUrl().contains("slideshare") || getUrl().contains("ipernity") || getUrl().contains("youtube.com") || getUrl().contains("flickr.com"))
+	    return true;
+
+	return false;
+    }
+
+    public Thumbnail getThumbnail0()
+    {
+	return thumbnail0;
+    }
+
+    public Thumbnail getThumbnail1()
+    {
+	return thumbnail1;
+    }
+
+    /**
+     * maximum width/height : 300 / 220
+     * 
+     * @return
+     */
+    public Thumbnail getThumbnail2()
+    {
+	return thumbnail2;
+    }
+
+    /**
+     * returns thumbnail2 but down scaled to a maximum size of 240 * 128
+     * 
+     * @return
+     */
+    public Thumbnail getThumbnail2b()
+    {
+	return thumbnail2b;
+    }
+
+    /**
+     * returns thumbnail2 but down scaled to a maximum size of 171 * 128
+     * 
+     * @return
+     */
+    public Thumbnail getThumbnail2c()
+    {
+	return thumbnail2c;
+    }
+
+    /**
+     * maximum width/height : 500 / 600
+     * 
+     * @return
+     */
+    public Thumbnail getThumbnail3()
+    {
+	if(null == thumbnail3)
+	    return getThumbnail2();
+
+	return thumbnail3;
+    }
+
+    /**
+     * maximum width/height : 1280 / 1024
+     * 
+     * @return
+     */
+    public Thumbnail getThumbnail4()
+    {
+	if(null == thumbnail4)
+	    return getThumbnail3();
+
+	return thumbnail4;
+    }
+
+    public void setThumbnail0(Thumbnail thumbnail0)
+    {
+	this.thumbnail0 = thumbnail0;
+    }
+
+    public void setThumbnail1(Thumbnail thumbnail1)
+    {
+	this.thumbnail1 = thumbnail1;
+    }
+
+    public void setThumbnail2(Thumbnail thumbnail2)
+    {
+	this.thumbnail2 = thumbnail2;
+	if(thumbnail2 != null)
+	{
+	    this.thumbnail2b = thumbnail2.resize(240, 128);
+	    this.thumbnail2c = thumbnail2.resize(171, 128);
+	}
+    }
+
+    public void setThumbnail3(Thumbnail thumbnail3)
+    {
+	this.thumbnail3 = thumbnail3;
+    }
+
+    public void setThumbnail4(Thumbnail thumbnail4)
+    {
+	this.thumbnail4 = thumbnail4;
+    }
+
+    public String getEmbedded()
+    {
+	Thumbnail large = getThumbnail4();
+
+	if(getType().equalsIgnoreCase("image"))
+	    return "<img src=\"" + getThumbnail2().getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\" original-src=\"" + large.getUrl() + "\"/>";
+	else if(getType().equalsIgnoreCase("text"))
+	    return "<iframe src=\"" + getUrl() + "\" />";
+
+	if(getEmbeddedRaw() != null)
+	    return getEmbeddedRaw();
+
+	if(getEmbeddedSize4() != null)
+	    return getEmbeddedSize4();
+
+	return getEmbeddedSize3();
+    }
+
+    public int getDuration()
+    {
+	return duration;
+    }
+
+    public String getDurationInMinutes()
+    {
+	return StringHelper.getDurationInMinutes(duration);
+    }
+
+    public void setDuration(int duration)
+    {
+	this.duration = duration;
+    }
+
+    /**
+     * Embedded code that can't be created on the fly. For example videos and slideshows
+     * Normally you should not call this function.
+     * Use getEmbedded() instead.
+     * 
+     * @return
+     */
+    public String getEmbeddedRaw()
+    {
+	return embeddedRaw;
+    }
+
+    public void setEmbeddedRaw(String embeddedRaw)
+    {
+	this.embeddedRaw = embeddedRaw;
+    }
+
+    public String getAccess()
+    {
+	return access;
+    }
+
+    public void setAccess(String access)
+    {
+	this.access = access;
+    }
+
+    public int getViews()
+    {
+	return views;
+    }
+
+    public void setViews(int views)
+    {
+	this.views = views;
+    }
+
+    @Override
+    public String toString()
+    {
+	return "Resource [id=" + id + ", title=" + title + ", url=" + url + ", storageType=" + storageType + ", source=" + source + ", type=" + type + ", format=" + format + "]";
+    }
+
+    public String getTranscript()
+    {
+	return transcript;
+    }
+
+    public void setTranscript(String transcript)
+    {
+	this.transcript = transcript;
+    }
+
+    public OnlineStatus getOnlineStatus()
+    {
+	return onlineStatus;
+    }
+
+    public void setOnlineStatus(OnlineStatus onlineStatus)
+    {
+	this.onlineStatus = onlineStatus;
+    }
+
+    public String getIdAtService()
+    {
+	return idAtService;
+    }
+
+    public void setIdAtService(String idAtService)
+    {
+	this.idAtService = idAtService;
+    }
+
+    public String getArchiveUrl()
+    {
+	return archiveUrl;
+    }
+
+    public void setArchiveUrl(String archiveUrl)
+    {
+	this.archiveUrl = archiveUrl;
+    }
+
+}

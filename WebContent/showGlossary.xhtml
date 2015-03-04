@@ -1,0 +1,130 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" 
+	lang="#{userBean.localeCode}">
+
+	
+	<ui:composition template="/templates/main.xhtml">
+		<ui:param name="pageTitle" value="showGlossary" />
+
+		<ui:define name="center_layout">
+		
+		<style type="text/css">
+			.glossary{
+				text-align:center;
+				margin-left:1em;
+				margin-right:1em;
+				border-spacing:0px;
+			}
+			.glossary th{
+				font-size:2em;
+				border:1px solid grey;
+			}
+			.glossary td {
+				border: 1px solid grey;
+			}
+			.button, .button1{
+				background-color:#616161;
+				color:#489A83;
+				font-size:1.5em;
+				font-weight:bold;
+				border:1px solid #489A83;
+				border-radius:5px;
+				padding:2px;
+			}
+			.button:hover, .button1:hover{
+				color:#FFFFFF;
+				border:1px solid #FFFFFF;
+			}
+			.button1{
+				margin-left:1em;
+			}
+			.data{
+				font-size:1.5em;
+			}
+			.inputfield, .inputarea{
+				font-family:Arial;
+				font-size:1.5em;
+				width:15em;
+			}
+			.datatype{
+				font-size:1.5em;
+				margin-left:1em;
+			}
+		</style>
+			
+			<br/>
+			<br/>
+			<br/>
+			
+			<h:form>
+			
+				<h:dataTable value="#{glossaryBean.entries}" var="entry" column="4" styleClass="glossary">
+				
+					<h:column>
+						<f:facet name="header">
+			     			 <h:outputText value="#{msg.item}"></h:outputText>
+			    		</f:facet>
+							<h:outputText value="#{entry.item}" styleClass="data"></h:outputText>
+					</h:column>
+					
+					
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="#{msg.description}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{entry.description}" styleClass="data"></h:outputText>
+					</h:column>
+					
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="#{msg.edit}"></h:outputText>
+						</f:facet>
+						<h:commandButton id="edit" action="#{glossaryBean.edit(entry)}" value="#{msg.edit}" styleClass="button">
+						</h:commandButton>
+					</h:column>
+					
+					<h:column>
+						<f:facet name="header">
+							<h:outputText value="#{msg.delete}"></h:outputText>
+						</f:facet>
+						<h:commandButton id="delete" action="#{glossaryBean.deleteEntry(entry)}" value="#{msg.delete}" styleClass="button">
+						</h:commandButton>
+					</h:column>
+					
+				</h:dataTable>
+				</h:form>
+				<br/>
+				<br/>
+				<br/>
+				<br/>
+				
+				<hr/>
+				
+				<br/>
+				<br/>
+		<h:form>
+		<h:panelGrid id="grid" columns="2" styleClass="grid">
+			
+				<h:outputLabel value="#{msg.item}" for="item" styleClass="datatype"></h:outputLabel>
+				<h:inputText id="item" value="#{glossaryBean.selectedEntry.item}" styleClass="inputfield"></h:inputText>
+				
+				<h:outputLabel value="#{msg.description}" for="description" styleClass="datatype"></h:outputLabel>
+				<h:inputTextarea id="description" value="#{glossaryBean.selectedEntry.description}" styleClass="inputarea"></h:inputTextarea>
+										
+		</h:panelGrid>
+			
+			<br/>
+			<br/>
+			
+			<h:commandButton id="new_entry" action="#{glossaryBean.addNewEntry}" value="#{msg.new_entry}" styleClass="button1">
+			</h:commandButton>
+				
+			</h:form>
+		</ui:define>
+		
+	</ui:composition>
+</html>

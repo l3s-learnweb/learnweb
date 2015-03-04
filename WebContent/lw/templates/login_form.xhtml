@@ -1,0 +1,28 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition> 
+
+		<h:form rendered="#{!userBean.loggedIn}" >
+			<p:focus for="username"/>
+			<h:panelGrid columns="3">
+				<h:outputLabel for="username" value="#{msg.username}:"></h:outputLabel>
+				<p:inputText id="username" value="#{loginBean.username}" />
+				<p:message showSummary="true" showDetail="false" styleClass="error" for="username" />
+				
+				<h:outputLabel for="password" value="#{msg.password}:"></h:outputLabel>
+				<p:password id="password" value="#{loginBean.password}" feedback="false"/>
+				<p:message showSummary="true" showDetail="false" styleClass="error" for="password" />
+				
+				<h:outputText value="" />
+				<p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" />	
+				<h:outputLink  value="user/password.jsf"><h:outputText value="#{msg.forgotten_password}"/></h:outputLink>
+			</h:panelGrid>
+		</h:form>
+
+	</ui:composition>
+</html>

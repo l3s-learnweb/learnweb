@@ -1,0 +1,54 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	lang="#{userBean.localeCode}">
+
+<f:metadata>
+</f:metadata>
+
+<ui:composition template="/lw/templates/new_main.xhtml">
+	<ui:param name="pageTitle" value="Transcript Logs" />
+
+	<ui:define name="center_layout">
+		<h:form  style="padding-right:5px;">
+			<p:dataTable var="log" value="#{tedTranscriptBean.transcriptLogs}" rows="30"
+				paginator="true"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="20,25,30">
+				<p:column headerText="Student Name">
+					<h:outputText value="#{log.user.username}" />
+				</p:column>
+
+				<p:column headerText="TED Talk">
+					<h:outputText value="#{log.resource.title}" />
+				</p:column>
+
+				<p:column headerText="Added By">
+					<h:outputText value="#{log.resource.ownerUser.username}" />
+				</p:column>
+				
+				<p:column headerText="Word/Words">
+					<h:outputText value="#{log.wordsSelected}" />
+				</p:column>
+
+				<p:column headerText="User Annotation">
+					<h:outputText value="#{log.userAnnotation}" />
+				</p:column>
+
+				<p:column headerText="Action">
+					<h:outputText value="#{log.action}" />
+				</p:column>
+				
+				<p:column headerText="TimeStamp">
+					<h:outputText value="#{log.timestamp}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+
+</ui:composition>
+</html>

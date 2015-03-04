@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" 
+	lang="#{userBean.localeCode}">
+
+
+	
+<ui:composition template="/templates/main.xhtml">
+	<ui:param name="pageTitle" value="MyGourmet - Edit Customer" />
+
+	<ui:define name="center_layout">
+	<br/>
+	<br/>
+	  <h1>
+	  	<h:outputText value="MyGourmet"/>
+	  </h1>
+	 <br/>
+	  <h2>
+	  	<h:outputText value="Edit Customer"/>
+	  </h2>
+	 
+	  <h:form id="form">
+	  
+	  <h:panelGrid id="grid" columns="2">
+	    
+	      <h:outputLabel value="First Name:" for="firstName"/>
+	      <h:inputText id="firstName" value="#{customer.selectedPerson.name}"/>
+	  
+	      <h:outputLabel value="E-Mail:" for="email"/>
+	      <h:inputText id="email" value="#{customer.selectedPerson.email}"/>
+	    	
+	   </h:panelGrid>
+	   
+	    <h:commandButton id="add_new_user" action="#{customer.addNewUser}" value="Create new user" rendered="#{not customer.editSelectedPerson}">
+	    </h:commandButton>
+	    
+	    <h:commandButton id="save" action="#{customer.save}" value="Save" rendered="#{customer.editSelectedPerson}">
+	    </h:commandButton>
+	    
+	    
+	    <h:commandButton id="quit" action="#{customer.quit}" value="Quit">
+		</h:commandButton>
+	    
+	  </h:form>
+	
+	</ui:define>
+</ui:composition>
+</html>

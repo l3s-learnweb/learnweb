@@ -1,0 +1,198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">	
+	
+	<ui:composition template="/lw/templates/new_main.xhtml"> 
+
+		<ui:param name="loginRequired" value="true"/>
+		<ui:param name="pageTitle" value="Group Log Analysis" />
+
+		
+		<ui:define name="center_layout">
+ 
+
+       <h:form id="us_form">
+		
+    <p:growl id="growl" showDetail="true" />
+
+		<table cellpadding="1" cellspacing="12">
+			<tr>
+				<td><h3>Begin</h3></td>
+				<td><h3>End</h3></td>
+			</tr>
+			<tr>
+				<td><p:calendar value="#{groupLogBean.beginDate}" pattern="dd.MM.yyyy" /></td>
+				<td><p:calendar value="#{groupLogBean.endDate}" pattern="dd.MM.yyyy" /></td>
+			</tr>
+		</table>
+		
+		<h:outputText style="font-weight:bold" value="Select users" />
+		<ui:include src="/lw/templates/user_select_form.xhtml" />	
+  
+        <br/>
+        
+		<p:commandButton  ajax="true" value="Analysis" action="#{groupLogBean.analysis}"  
+			update="analysisChartPanel,growl">
+   		</p:commandButton>
+   		<p:commandButton ajax="true" value="Filter" onclick="groupFilterDialog.show()" type="button" rendered="false" oncomplete="$('html, body').animate({scrollBottom: '0px'}, 500);"></p:commandButton>
+
+              
+<p:panel visible="false" header="Analysis" id="analysisChartPanel" binding="#{groupLogBean.analysisChartPanel}" >
+        
+<p:tabView >
+<!-- 
+<p:tab title="Pie">
+
+ <object>	
+		<APPLET ARCHIVE="jlwChartApplet.jar" 
+	       CODE="de.l3s.jlw.applet.PieChartAppletOfUsers" width="520" height="400" ALT="You should see an applet, not this text."> 
+          <PARAM NAME="sessionId" VALUE="#{groupLogBean.sessionId}" /> 
+		  <PARAM NAME="usersId" VALUE="#{groupLogBean.selectedUsers}" /> 
+		  <PARAM NAME="beginDate" VALUE="#{groupLogBean.beginDateAppletText}" /> 
+		  <PARAM NAME="endDate" VALUE="#{groupLogBean.endDateAppletText}" />
+		  <PARAM NAME="filter" VALUE="#{groupLogBean.filter}" />
+		</APPLET> 
+		</object>	
+		
+</p:tab>
+
+<p:tab title="Gantt">
+
+		<object>	                  
+          <APPLET ARCHIVE="jlwChartApplet.jar" 
+	       CODE="de.l3s.jlw.applet.GanttChartAppletOfUsers" width="520" height="400" ALT="You should see an applet, not this text."> 
+          
+          <PARAM NAME="sessionId" VALUE="#{groupLogBean.sessionId}" /> 
+		  <PARAM NAME="usersId" VALUE="#{groupLogBean.selectedUsers}" /> 
+		  <PARAM NAME="beginDate" VALUE="#{groupLogBean.beginDateAppletText}" /> 
+		  <PARAM NAME="endDate" VALUE="#{groupLogBean.endDateAppletText}" />
+		  <PARAM NAME="filter" VALUE="#{groupLogBean.filter}" />
+		 </APPLET>
+		  </object>
+		  
+		  <h:outputLink onclick="window.open('log/GanttChart.jsp?sessionId=#{groupLogBean.sessionId}&amp;usersId=#{groupLogBean.selectedUsers}&amp;beginDate=#{groupLogBean.beginDateAppletText}&amp;endDate=#{groupLogBean.endDateAppletText}&amp;filter=#{groupLogBean.filter}');return false;"  >
+				<h:outputText value="Fullscreen"/>		
+			</h:outputLink>	
+		  </p:tab>      
+		 -->  
+<p:tab title="Details">
+
+<p:dataTable ajax="true" id="groupDetails" var="user" value="#{groupLogBean.groupDetailsList}" >
+  	<p:column>  
+            <f:facet name="header">  
+                <h:outputText value="Name" />  
+            </f:facet>  
+            <h:outputText value="#{user.name}" />  
+        </p:column>  
+  
+        <p:column>  
+            <f:facet name="header">  
+                <h:outputText value="Upload" />  
+            </f:facet>  
+            <h:outputText value="#{user.uploadingCount}" />  
+        </p:column>  
+  
+  		<p:column>  
+            <f:facet name="header">  
+                <h:outputText value="Bookmark" />  
+            </f:facet>  
+            <h:outputText value="#{user.bookmarkingCount}" />  
+        </p:column>  
+        
+        <p:column>  
+            <f:facet name="header">  
+                <h:outputText value="Comment" />  
+            </f:facet>  
+            <h:outputText value="#{user.commentingCount}" />  
+        </p:column>
+          
+        <p:column>  
+            <f:facet name="header">  
+                <h:outputText value="Delete Comment" />  
+            </f:facet>  
+            <h:outputText value="#{user.deletingCommentCount}" />  
+        </p:column>
+        
+        <p:column>  
+            <f:facet name="header">  
+                <h:outputText value="Edit" />  
+            </f:facet>  
+            <h:outputText value="#{user.editingCount}" />  
+        </p:column>
+        
+        <p:column>  
+            <f:facet name="header">  
+                <h:outputText value="Rate" />  
+            </f:facet>  
+            <h:outputText value="#{user.rateingCount}" />  
+        </p:column>
+  
+       <p:column>  
+            <f:facet name="header">  
+                <h:outputText value="Search" />  
+            </f:facet>  
+            <h:outputText value="#{user.searchingCount}" />  
+        </p:column>
+        
+        <p:column>  
+            <f:facet name="header">  
+                <h:outputText value="Tag" />  
+            </f:facet>  
+            <h:outputText value="#{user.taggingCount}" />  
+        </p:column>
+   <!-- 
+   		<p:column>  
+            <f:facet name="header">  
+                <h:outputText value="" />  
+            </f:facet>  
+             
+             <h:outputLink onclick="window.open('log/analysis_user_detail.jsf?user=#{user.name}&amp;beginDate=#{groupLogBean.beginDateAppletText}&amp;endDate=#{groupLogBean.endDateAppletText}&amp;filter=#{groupLogBean.filter}');return false;"  >
+				<h:outputText value="Detail"/>		
+	</h:outputLink>	 
+        </p:column>
+         -->
+    </p:dataTable>  
+   
+            
+            <h:commandButton value="Excel Export" actionListener="#{groupLogBean.getExcelExport2}">  
+    	 	<p:dataExporter type="xls" target="groupDetails" fileName="GroupLogAnalysis" /> 
+			</h:commandButton>     
+		
+</p:tab>
+
+<p:tab title="Viewed Links">
+<h:form>
+				<p:dataTable var="logEntry" value="#{groupLogBean.viewedLinks}" emptyMessage="No logs found" dynamic="false" rows="100000" paginator="false" paginatorPosition="bottom">
+
+					<f:facet name="header">Viewed Links</f:facet>
+					
+					<p:column  headerText="User" >
+						<h:outputText value="#{logEntry.username}" />
+					</p:column>
+
+					<p:column headerText="URL" >
+						<h:outputText value="#{logEntry.params}" />
+					</p:column>
+
+					<p:column  headerText="Time" >
+						<h:outputText value="#{logEntry.date}" />
+					</p:column>
+					
+
+				</p:dataTable>
+			</h:form>
+
+</p:tab>	  
+		  
+</p:tabView>
+
+</p:panel>
+	
+</h:form>
+		</ui:define>
+		
+	</ui:composition> 
+</html>

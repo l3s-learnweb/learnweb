@@ -1,0 +1,500 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+	
+	<f:metadata>
+			<f:viewParam name="group_id" value="#{editPresentationBean.groupId}" />
+			<f:viewParam name="format" value="#{editPresentationBean.format}"></f:viewParam>
+			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{editPresentationBean.preRenderView}" />
+	</f:metadata>
+
+    <f:view contentType="text/html">
+        <h:head>
+        	
+            <title>Edit Presentation</title>
+			
+            <link type="text/css" rel="stylesheet" href="../../resources/css/default.css" />
+            <link type="text/css" rel="stylesheet" href="../../resources/css/syntaxhighlighter.css" />
+            
+            <link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />
+	    	<link href="../../resources/css/impress_edit_presentation.css" rel="stylesheet" />
+
+            <style type="text/css">
+                .ui-layout-north {
+                    z-index:20 !important;
+                    overflow:visible !important;;
+                    height: 40px !important;
+                }
+
+                .ui-layout-north .ui-layout-unit-content {
+                    overflow:visible !important;
+                }
+            </style>
+        </h:head>
+
+
+        <h:body id="body" style="padding: 5px 4px;">
+			
+			
+			
+			
+            <p:layout fullPage="true" >
+				
+                <p:layoutUnit id="top" position="north" size="50" style="border: 0px; padding: 0px; margin: 0px">
+					<h:form id="toolbar" onsubmit="return test()">
+						
+	                    <p:toolbar>  
+						    <p:toolbarGroup align="left" style="margin-top: 8px; margin-left: 5px">  
+						    	<span style="font-size: 16px">Edit Presentation : </span><span style="font-size: 16px" id="presentationTitle">New Presentation</span>
+						    </p:toolbarGroup>  
+						  
+						    <p:toolbarGroup align="right">
+						        <p:commandButton type="button" value="Save" onclick='saveDialog()' icon="ui-icon-disk" />
+						      	<p:commandButton type="submit" value="Present" icon="ui-icon-newwin" onclick="display_presentation(this)" ajax="false" action="#{editPresentationBean.present}"/>
+						        <p:commandLink onstart="return false" onclick="help_dialog.show()" style="background: none !important; margin-left: 5px; margin-right: 2px; position: relative; top: -1px">
+						        	<p:graphicImage style="vertical-align: middle" value="/resources/icon/help.png" width="20" height="20"></p:graphicImage>
+						        </p:commandLink>
+						        <p:remoteCommand name="save" actionListener="#{editPresentationBean.addPresentation}" />
+						        <p:remoteCommand name="present" actionListener="#{editPresentationBean.present}" />
+						        <p:dialog style="text-align: center" id="saveDlg" header="Save Presentation" widgetVar="saveDlg" modal="true" appendToBody="true" closable="false" width="400">  
+										File Name : <p:inputText value="" id="presentationName" size="50" required="true" widgetVar="presentationName"></p:inputText><br/><br/>
+										<p:commandButton id="saveButton" style="margin-right: 10px" update=":grwl:growl" type="submit" value="Save" oncomplete="doneSaving()" onclick="save_presentation()" actionListener="#{editPresentationBean.growl}"></p:commandButton>
+										<p:commandButton style="margin-left: 10px" type="button" value="Cancel" onclick="saveDlg.hide()"></p:commandButton>
+										<p:blockUI block="saveDlg" trigger="saveButton" />
+							  	</p:dialog>
+							  	<p:dialog style="text-align: center; z-index: 10000" id="presentDialog" header="Presentation" widgetVar="presentDialog" modal="false" appendToBody="false" closable="false">  
+										Want to save your changes to <span id="presName" style="font-weight: bold"></span>?<br/><br/>
+										<p:commandButton id="but1" style="margin-right: 5px" type="button" value="Save" onclick="save_pres()" ></p:commandButton>
+										<p:commandButton style="margin-left: 5px; margin-right: 5px" type="submit" ajax="false" value="Don't Save" onclick="dontSave(this)" action="#{editPresentationBean.present}"></p:commandButton>
+										<p:commandButton style="margin-left: 5px" type="button" value="Cancel" onclick="presentDialog.hide()"></p:commandButton>
+							  	</p:dialog>
+						  	</p:toolbarGroup>
+						  </p:toolbar> 
+					 </h:form> 
+					 <p:dialog modal="true" resizable="false" width="590" header="Help" visible="true" appendToBody="true" widgetVar="help_dialog">
+					 	<div style="font-weight: bold; line-height: 1.5em; font-size: 14px">Welcome to LearnWeb Presentation Editor!</div>
+					 	<div style="margin-bottom: 5px; line-height: 1.5em; font-size: 14px">
+					 		The LearnWeb Presentation Editor can help you to create your own presentations using the resources in a group.
+					 	</div>
+					 	<style>
+					 		#help_text
+					 		{
+					 			font-size: 14px !important;
+					 			line-height: 1.5em;
+					 		}
+					 	</style>					 	
+					 	<div id="help_text">
+					 		<ul style="list-style: disc; margin-left: 15px">
+					 			<li>
+					 				The left pane displays all the resources present in the group.
+					 				<ul style="list-style: square; margin-left: 16px">
+					 					<li>
+					 						A resource can be removed from the presentation by un-checking the checkbox associated with it.
+					 					</li>
+					 					<li>
+					 						Slides can be re-ordered simply by dragging the resources to appropriate positions.
+					 					</li>
+					 					<li>
+					 						Clicking on a resource displays the slide associated with it in the work area.
+					 					</li>
+					 				</ul>
+					 			</li>
+					 			<li>
+					 				The work area displays the currently active slide.
+					 				<ul style="list-style: square; margin-left: 16px">
+					 					<li>
+					 						Title of the slide can be edited by clicking on the title.
+					 					</li>
+					 					<li>
+					 						Description of the slide can be edited by clicking on the description.
+					 					</li>
+					 					<ui:fragment rendered="#{editPresentationBean.format eq 2}">
+						 					<li>
+						 						In case of 'Text' resources, the Webpage will only be visible while presenting.
+						 					</li>
+					 					</ui:fragment>
+					 				</ul>
+					 			</li>
+					 			<li>
+					 				The top bar has options to Save and Present the presentation.
+					 				<ul style="list-style: square; margin-left: 16px">
+					 					<li>
+					 						The presentation will be saved in the group and will be accessible by all the group members.
+					 					</li>
+					 					<li>
+					 						The Present button can be used to Preview the Presentation without saving.
+					 					</li>
+					 				</ul>
+					 			</li>
+					 		</ul>
+					 	</div>
+					 </p:dialog>
+                </p:layoutUnit>
+                
+                <script type="text/javascript">
+                	var prev_code="";
+                	var flag=0;
+                	var dont_save=0
+                	function generate_content()
+                	{
+                		var id;
+                		var code="";
+                		var offset=-1000;
+                		flag=0;
+                		for(resource in $("div","#form1\\:resource_list"))
+                		{
+                			if(isNaN(resource))
+                				break;
+                			if($($("input","#form1\\:resource_list")[resource]).attr("checked"))
+                			{
+                				
+                				id = $($("div","#form1\\:resource_list")[resource]).attr("id");
+                				
+                				if(#{editPresentationBean.format == 2})
+                				{
+                					if($("#resource_slide_"+id+"_iframe").length > 0)
+                					{
+                						$("#resource_slide_"+id+"_iframe").attr("data-x",offset);
+                        				code=code+$("#resource_slide_"+id+"_iframe")[0].outerHTML;
+                        				offset=offset+1000;
+                					}
+                				}
+                				
+                				$("#resource_slide_"+id).attr("data-x",offset);
+                				code=code+$("#resource_slide_"+id)[0].outerHTML;
+                				offset=offset+1000;
+                			}
+                		}
+                		code = code.replace(/class=\"editable\"/g,"");
+                		code = code.replace(/onclick=\".*\"/g,"");
+                		code = code.replace(/display: none;/g,"");
+                		return code;
+                	}
+                	
+                	function save_presentation()
+                	{
+                		var code = generate_content();
+                		prev_code=code;
+                		var name = presentationName.jq.val();
+                		save([{name:"code",value:code}, {name:"presentationName",value:name}]);
+                	}
+                	
+                	function display_presentation(me)
+                	{
+                		var code = generate_content();
+                		if(prev_code != code)
+                		{
+                			if(dont_save == 0)
+                			{
+                				flag=1;
+                    			$("#presName").html($("#presentationTitle").html());
+                    			presentDialog.show();
+                    			return;
+                			}
+                		}
+                		flag=0;
+                		present([{name:"code_temp",value:code}]);
+                		me.form.target='presentation';
+                		dont_save=0;
+                	}
+                	
+                	function saveDialog()
+                	{
+                		saveDlg.show();
+                		$("#toolbar\\:presentationName").val($("#presentationTitle").html());
+                	}
+                	
+                	function doneSaving()
+                	{
+                		$("#presentationTitle").html($("#toolbar\\:presentationName").val());
+                		saveDlg.hide();
+                	}
+                	
+                	function test()
+                	{
+                		if(flag == 1)
+                			return false;
+                		return true;
+                	}
+                	
+                	function dontSave(me)
+                	{
+                		dont_save=1;
+                		display_presentation(me);
+                		presentDialog.hide();
+                	}
+                	
+                	function save_pres()
+                	{
+                		presentDialog.hide();
+                		saveDialog();
+                	}
+                </script>
+
+                <p:layoutUnit id="left" position="west" size="260" resizable="false" closable="false" collapsible="false"
+                              style="margin: 0px;" header="Resources">
+                    <style>
+                		.slide_thumbnail
+                		{
+                			width: 192px;
+                			height: 144px;
+                			margin: 5px 10px;
+                		}
+                		
+                		#left .ui-widget-content
+                		{
+                			overflow-x: hidden;
+                		}
+                		
+                		.ui-dashboard-column
+                		{
+                			
+                		}
+                		
+                		.ui-layout-center .ui-widget-content
+						{
+							background: rgb(215, 215, 215);
+						    background: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 500, from(rgb(240, 240, 240)), to(rgb(190, 190, 190)));
+						    background: -webkit-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+						    background:    -moz-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+						    background:     -ms-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+						    background:      -o-radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+						    background:         radial-gradient(rgb(240, 240, 240), rgb(190, 190, 190));
+						}
+                	</style>
+					<h:form id="form1">
+						<style>
+							.ui-orderlist-list
+							{
+								width: 235px !important;
+								height: 100% !important;
+								overflow: visible;
+							}
+							
+							.ui-orderlist-list td
+							{
+								vertical-align: middle;
+								padding: 5px 0px;
+							}
+							
+							.ui-orderlist-item
+							{
+								border-bottom: 1px solid #ddd !important;
+								background-color: #efefef;
+							}
+							
+							.editable:HOVER
+							{
+								cursor: url(../resources/pencil.cur), auto;
+							}
+						</style>
+						   						
+					    <p:orderList value="#{editPresentationBean.resourcesAll}" var="result" iconOnly="true" effect="clip"  
+					                    itemValue="#{result}" controlsLocation="none" id="resource_list" widgetVar="resource_list">  
+					        
+					        <p:column style="width:5%">  
+					            <h:selectBooleanCheckbox value="true"></h:selectBooleanCheckbox>
+					            <div id="#{result.id}" style="display:none"></div>
+					        </p:column>
+					        
+					        <p:column style="width:28%; text-align: center" rendered="#{result.id != 1}" >  
+					            <h:outputText escape="false" value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"50\" height=\"50\" />")}' ></h:outputText>  
+					        </p:column>  
+					  
+					  		<p:column style="width:28%; text-align: center" rendered="#{result.id == 1}" >  
+					            <h:outputText escape="false" style="padding: 19px 0px; display: inline-block;" value='[Title]' ></h:outputText>  
+					        </p:column> 
+					  
+					        <p:column>
+					            <h:outputText class="slide_title" escape="false" value="#{result.title}" ></h:outputText> 
+					        </p:column>  
+					    </p:orderList> 
+					    <script type="text/javascript">
+					    
+					    	$(".ui-orderlist-list li").click(function(){
+					    		$(".slide").hide();
+					    		$("#resource_slide_"+$("div",this).attr("id")).show();
+					    	});
+					    
+					    
+					    </script> 
+					</h:form>
+				</p:layoutUnit>
+
+                <p:layoutUnit id="center" position="center" style="padding: 0px; margin: 0px">
+                    <h:form>
+						<div id="impress">
+							<div class="step slide" id="resource_slide_1" data-x="0" data-y="0">
+								<q class="editable" id="presentation_title" style="text-align: center" onclick="title_dialog.show()">#{editPresentationBean.group.title}</q>
+								
+								<!-- <div style="position: absolute; bottom: 20px; left: 0px; text-align: center; width: 100%">
+									<span style="font-size: 50px; position: relative; top: -0.15em">.</span>
+									<ui:repeat var="member" value="#{editPresentationBean.group.members}">
+										<span> #{member.username} </span><span style="font-size: 50px; position: relative; top: -0.15em">.</span>
+									</ui:repeat>
+								</div> -->
+								
+							</div>
+							<ui:fragment rendered="#{editPresentationBean.format eq 1}">
+								<ui:repeat var="result" value="#{editPresentationBean.resourcesAll}">
+									<div class="step slide" data-x="0" data-y="0" id="resource_slide_#{result.id}" style="display:none">
+										<div class="editable" style="font-weight: bold" onclick="title_dialog_#{result.id}.show()" id="resource_title_#{result.id}">#{result.title}</div>
+										<table style="margin-top: 30px">
+											<tr>
+												<td style="width: 50%; max-width: 50% !important; padding-right: 5%">
+													<ui:fragment rendered="#{result.type eq 'text' or result.type eq 'Text'}">
+														<iframe src="#{result.url}" style="width: 100%; height: 500px"></iframe>
+													</ui:fragment>
+													<h:outputText rendered="#{result.type != 'video' and result.type != 'Video' and result.type != 'text' and result.type != 'Text'}" value='#{result.embeddedSize3.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false" ></h:outputText>
+													<h:outputText rendered="#{!request.getHeader('User-Agent').toLowerCase().contains('firefox') and (result.type eq 'video' or result.type eq 'Video')}" value='#{result.embeddedSize3.replaceAll("height=\".*\"","").replaceAll("width=\".*\"","width=\"100%\" height=\"400px\"")}' escape="false" ></h:outputText>
+													<h:outputText title="Firefox does not support embedded videos for Presentations. Consider using Chrome if you want to play the video during the Presentation." rendered="#{request.getHeader('User-Agent').toLowerCase().contains('firefox') and (result.type eq 'video' or result.type eq 'Video')}" value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false" ></h:outputText>
+													<ui:fragment rendered="#{request.getHeader('User-Agent').toLowerCase().contains('firefox') and (result.type eq 'video' or result.type eq 'Video')}">
+														<div style="display: block; text-align: center">
+															<h:outputLink title="Firefox does not support embedded videos for Presentations. Consider using Chrome if you want to play the video during the Presentation." target="_new" style="font-size: 20px; color: #3399FF; text-shadow: 0 0 0" value="#{result.url}">Link to Video</h:outputLink>
+														</div>
+													</ui:fragment>
+													<ui:fragment rendered="#{result.type eq 'pdf'}">
+														<div style="display: block; text-align: center">
+															<h:outputLink target="_new" style="font-size: 20px; color: #3399FF; text-shadow: 0 0 0" value="#{result.url}">Link to PDF</h:outputLink>
+														</div>
+													</ui:fragment>
+												</td>
+												<td style="width: 45%; max-width: 45% !important; min-width: 45% !important; font-size: 18px; line-height: 1.5em; vertical-align: top">
+													<div class="editable" onclick="resource_dialog_#{result.id}.show()" id="resource_description_#{result.id}">
+														<h:outputText value="#{result.description}" escape="false" ></h:outputText> 
+													</div>
+												</td>
+											</tr>
+										</table>
+									</div>
+								</ui:repeat>
+							</ui:fragment>
+							<ui:fragment rendered="#{editPresentationBean.format eq 2}">
+								<ui:repeat var="result" value="#{editPresentationBean.resourcesAll}">
+									<ui:fragment rendered="#{result.type != 'text' and result.type != 'Text'}">	
+										<div class="step slide" data-x="0" data-y="0" id="resource_slide_#{result.id}" style="display:none">
+											<div class="editable" style="font-weight: bold" onclick="title_dialog_#{result.id}.show()" id="resource_title_#{result.id}">#{result.title}</div>
+											<table style="margin-top: 30px">
+												<tr>
+													<td style="width: 50%; max-width: 50% !important; padding-right: 5%">
+														<h:outputText rendered="#{result.type != 'video' and result.type != 'Video' and result.type != 'text' and result.type != 'Text'}" value='#{result.embeddedSize3.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false" ></h:outputText>
+														<h:outputText rendered="#{!request.getHeader('User-Agent').toLowerCase().contains('firefox') and (result.type eq 'video' or result.type eq 'Video')}" value='#{result.embeddedSize3.replaceAll("height=\".*\"","").replaceAll("width=\".*\"","width=\"100%\" height=\"400px\"")}' escape="false" ></h:outputText>
+														<h:outputText title="Firefox does not support embedded videos for Presentations. Consider using Chrome if you want to play the video during the Presentation." rendered="#{request.getHeader('User-Agent').toLowerCase().contains('firefox') and (result.type eq 'video' or result.type eq 'Video')}" value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false" ></h:outputText>
+														<ui:fragment rendered="#{request.getHeader('User-Agent').toLowerCase().contains('firefox') and (result.type eq 'video' or result.type eq 'Video')}">
+															<div style="display: block; text-align: center">
+																<h:outputLink title="Firefox does not support embedded videos for Presentations. Consider using Chrome if you want to play the video during the Presentation." target="_new" style="font-size: 20px; color: #3399FF; text-shadow: 0 0 0" value="#{result.url}">Link to Video</h:outputLink>
+															</div>
+														</ui:fragment>
+														<ui:fragment rendered="#{result.type eq 'pdf'}">
+															<div style="display: block; text-align: center">
+																<h:outputLink target="_new" style="font-size: 20px; color: #3399FF; text-shadow: 0 0 0" value="#{result.url}">Link to PDF</h:outputLink>
+															</div>
+														</ui:fragment>
+													</td>
+													<td style="width: 45%; max-width: 45% !important; min-width: 45% !important; font-size: 18px; line-height: 1.5em; vertical-align: top">
+														<div class="editable" onclick="resource_dialog_#{result.id}.show()" id="resource_description_#{result.id}">
+															<h:outputText value="#{result.description}" escape="false" ></h:outputText> 
+														</div>
+													</td>
+												</tr>
+											</table>
+										</div>
+									</ui:fragment>
+									<ui:fragment rendered="#{result.type eq 'text' or result.type eq 'Text'}">	
+										<div class="step slide" data-x="0" data-y="0" id="resource_slide_#{result.id}_iframe" style="display:none">
+											<div class="editable" style="font-weight: bold" id="resource_title_#{result.id}_iframe">#{result.title}</div>
+											<div style="margin-top: 30px">
+												<iframe src="#{result.url}" style="width: 100%; height: 550px"></iframe>
+											</div>
+										</div>
+										<div class="step slide" data-x="0" data-y="0" id="resource_slide_#{result.id}" style="display:none">
+											<div class="editable" style="font-weight: bold" onclick="title_dialog_#{result.id}.show()" id="resource_title_#{result.id}">#{result.title}</div>
+											<div style="margin-top: 30px">
+												<div class="editable" onclick="resource_dialog_#{result.id}.show()" id="resource_description_#{result.id}">
+													<h:outputText value="#{result.description}" escape="false" ></h:outputText> 
+												</div>
+											</div>
+										</div>
+									</ui:fragment>
+								</ui:repeat>
+							</ui:fragment>
+						</div>
+						
+
+                    </h:form>
+
+
+                </p:layoutUnit>
+
+            </p:layout>
+            
+            <p:dialog id="basicdialog" header="Edit Presentation Title" closable="false" modal="true" widgetVar="title_dialog">  
+			    <h:form>
+			    	<p:editor controls="bold italic underline subscript superscript font size color highlight alignleft center alignright justify undo redo link unlink cut copy paste" value="#{editPresentationBean.group.title}" id="title_editor" widgetVar="title_editor"></p:editor>
+			    	<p:commandButton value="OK" onclick="update_title(presentation_title,title_editor,title_dialog,1)"></p:commandButton>
+			    	<p:commandButton value="Cancel" onclick="cancel_title(presentation_title,title_editor,title_dialog)"></p:commandButton>
+				</h:form>
+			</p:dialog>
+			
+			<ui:repeat var="result" value="#{editPresentationBean.resourcesAll}">
+				<p:dialog id="resource_dialog_#{result.id}" closable="false" header="Edit Description" modal="true" widgetVar="resource_dialog_#{result.id}">  
+				    <h:form>
+				    	<p:editor controls="bold italic underline subscript superscript font size color highlight alignleft center alignright justify undo redo link unlink cut copy paste" value="#{result.description}" id="resource_editor_#{result.id}" widgetVar="resource_editor_#{result.id}"></p:editor>
+				    	<p:commandButton value="OK" onclick="update(resource_description_#{result.id},resource_editor_#{result.id},resource_dialog_#{result.id})"></p:commandButton>
+				    	<p:commandButton value="Cancel" onclick="cancel(resource_description_#{result.id},resource_editor_#{result.id},resource_dialog_#{result.id})"></p:commandButton>
+				    </h:form>
+				</p:dialog>
+			</ui:repeat>
+			
+			<ui:repeat var="result" value="#{editPresentationBean.resourcesAll}">
+				<p:dialog id="title_dialog_#{result.id}" closable="false" header="Edit Title" modal="true" widgetVar="title_dialog_#{result.id}">  
+				    <h:form>
+				    	<p:editor controls="bold italic underline subscript superscript font size color highlight alignleft center alignright justify undo redo link unlink cut copy paste" value="#{result.title}" id="title_editor_#{result.id}" widgetVar="title_editor_#{result.id}"></p:editor>
+				    	<p:commandButton value="OK" onclick="update_title(resource_title_#{result.id},title_editor_#{result.id},title_dialog_#{result.id},#{result.id})"></p:commandButton>
+				    	<p:commandButton value="Cancel" onclick="cancel_title(resource_title_#{result.id},title_editor_#{result.id},title_dialog_#{result.id})"></p:commandButton>
+				    </h:form>
+				</p:dialog>
+			</ui:repeat>
+			<script type="text/javascript">
+				function update(desc,editor,dialog)
+				{
+					$(desc).html($(editor)[0].jqInput[0].value);
+					dialog.hide();
+				}
+				function cancel(desc,editor,dialog)
+				{
+					editor.editor.doc.activeElement.innerHTML=$(desc).html();
+					editor.jqInput[0].defaultValue=$(desc).html();
+					editor.jqInput[0].innerHTML=$(desc).html();
+					editor.jqInput[0].textContent=$(desc).html();
+					editor.jqInput[0].value=$(desc).html();
+					dialog.hide();
+				}
+				function update_title(desc,editor,dialog,id)
+				{
+					$(desc).html($(editor)[0].jqInput[0].value);
+					$(".slide_title",$("#"+id).parent().parent()).html($(editor)[0].jqInput[0].value);
+					dialog.hide();
+				}
+				function cancel_title(desc,editor,dialog)
+				{
+					editor.editor.doc.activeElement.innerHTML=$(desc).html();
+					editor.jqInput[0].defaultValue=$(desc).html();
+					editor.jqInput[0].innerHTML=$(desc).html();
+					editor.jqInput[0].textContent=$(desc).html();
+					editor.jqInput[0].value=$(desc).html();
+					dialog.hide();
+				}
+			</script>			
+            <script src="../../resources/js/impress_edit_presentation.js"></script>
+			<script>impress().init();</script>
+			<h:form id="grwl">
+				<p:growl id="growl" showDetail="true" sticky="false" />
+			</h:form>
+        </h:body>
+
+    </f:view>
+</html>

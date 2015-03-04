@@ -1,0 +1,256 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:viewParam name="resultsetid" value="#{resultSetBean.resultSetIdMd5}" />
+	<f:event listener="#{exploreBean.setExploreMode('resultset_view')}" type="preRenderView" />
+	<f:event type="preRenderView" listener="#{resultSetBean.preRenderView}" />
+</f:metadata>
+
+<ui:composition template="/lw/templates/new_main.xhtml">
+
+	<ui:param name="loginRequired" value="true" />
+	<ui:param name="pageTitle" value="#{msg.resultSetViewTitle}" />	
+	
+	<ui:define name="options_panel">
+		<div class="options_panel">
+			<h:form id="resultset_optform" style="padding-left: 28%;vertical-align: middle;">
+				<h:outputText value="Task based View" styleClass="optform_text"
+					rendered="#{exploreBean.exploreMode == 'task_based'}" />
+				<h:link value="Task based View" outcome="/lw/explore"
+					styleClass="optform_link"
+					rendered="#{exploreBean.exploreMode != 'task_based'}" >
+					<f:param name="mode" value="task_based" />
+				</h:link>			
+
+				<h:outputText value="List View"
+					styleClass="optform_text"
+					rendered="#{exploreBean.exploreMode == 'list_view'}" />
+				<h:link value="List View" outcome="/lw/explore"
+					styleClass="optform_link"
+					rendered="#{exploreBean.exploreMode != 'list_view'}" >
+					<f:param name="mode" value="list_view" />
+					<f:param name="page" value="1"/>
+				</h:link>
+				<h:outputText value="Resultset View"
+					styleClass="optform_text"
+					rendered="#{exploreBean.exploreMode == 'resultset_view'}" />
+				<span style="float:right;padding-right:5px;"><h:panelGroup styleClass="explore_history"><p:commandButton id="rs_explore_history_tools" value="Explore History Tools" type="button" icon="ui-icon-triangle-1-s"/></h:panelGroup></span>
+				<p:menu overlay="true" trigger="rs_explore_history_tools" my="left top"
+					at="left bottom">
+					<p:submenu label="Explore History">
+						<p:menuitem value="Show" icon=" ui-icon-arrowstop-1-w" onclick="open_searchbar();" />
+						<p:menuitem value="Hide" icon="ui-icon-arrowstop-1-e" onclick="close_searchbar();"/>
+					</p:submenu>
+				</p:menu>																
+			</h:form>
+		</div>		
+	</ui:define>
+	
+	<ui:define name="center_layout">
+	
+		<h:outputStylesheet library="css" name="resources.css"  />
+		<h:outputScript library="js" name="viewresultset.js" />		
+		<script type="text/javascript">
+			var view = '#{resultSetBean.resultSetView}';
+		</script>			
+		
+		<ui:decorate  template="/lw/templates/resource_lightbox.xhtml"></ui:decorate>		
+		<h:panelGroup layout="block" id="explore_resultset" >
+		<div class="#{resultSetBean.resultSetView}_view">			
+			
+			<div class="resources">
+			<h:panelGroup layout="block" rendered="${resultSetBean.resources.size() > 0 }">
+				<ui:decorate template="/lw/templates/resources.xhtml" >
+					<ui:param name="resources" value="#{resultSetBean.resources}" />
+					<ui:param name="view" value="#{resultSetBean.resultSetView}" />					
+				</ui:decorate>
+			</h:panelGroup>
+			<h:panelGroup layout="block" rendered="${resultSetBean.resources.size() == 0}">
+				<p:messages id="no_resources" showDetail="true" autoUpdate="true"/>
+			</h:panelGroup>
+			</div>	
+			<div class="clear"></div> 
+		</div>
+		</h:panelGroup>
+		<div id="explore_right_bar" class="right_bar">
+			<p:outputPanel autoUpdate="true"  >
+				<p:tabView id="exploretabView" widgetVar="exploretabViewer" >
+					<p:tab title="ResultSet Timeline">
+						<p:panel id="resultview_filter_panel" header="ResultSet Filter" toggleable="true"
+							toggleSpeed="500" widgetVar="resultview_panel" style="padding:5px;">
+							<h:form>
+								<p:selectOneRadio layout="pageDirection" value="#{resultSetBean.resultsetfilter}" required="true"  >
+									<f:selectItem itemValue="resource_click" itemLabel="Resources Clicked" />
+									<f:selectItem itemValue="resources_not_clicked" itemLabel="Resources not clicked"/>
+									<f:selectItem itemValue="resource_saved" itemLabel="Resources Saved"/>
+									<f:selectItem itemValue="all_resources" itemLabel="All Resources" />
+									<p:ajax listener="#{resultSetBean.setResultsetfilter()}" oncomplete="updateresultset(); "/>
+								</p:selectOneRadio>
+							</h:form>
+						</p:panel>
+						<br/>
+					The current resultset being viewed is for <b><i>#{resultSetBean.query}</i></b> posted on <b><i>#{resultSetBean.queryDate}</i></b>
+						<h:form rendered="#{userBean.loggedIn}">
+							<p:commandLink update=":resultset_form"
+								oncomplete="resultset_dialog.show();"
+								title="share resultset"
+								style="display:block; margin-top:4px;color:blue;">Share Resultset
+							</p:commandLink>
+						</h:form>
+						<table id="timeline" 
+							style="width:100%; padding: 0px 10px 0px 10px;">
+							<ui:repeat value="#{resultSetBean.timeline}" var="timelineDate">
+								<h:panelGroup rendered="#{resultSetBean.resultsetfilter != 'resources_not_clicked'}">
+									<tr>
+										<td><h3>#{timelineDate.date}</h3></td>
+									</tr>
+								</h:panelGroup>
+								<tr>
+									<td>
+										<table style="width: 100%">
+											<ui:repeat value="#{timelineDate.timestamps}"
+												var="timestamp">
+												<h:panelGroup
+													rendered="#{resultSetBean.resultsetfilter == 'resource_click' or resultSetBean.resultsetfilter == 'all_resources'
+								 							or resultSetBean.resultsetfilter == ''}">
+													<h:panelGroup
+														rendered="#{resultSetBean.isResourceClicked(timestamp)}">
+														<tr>
+															<td style="width:1%;"><i class="fa fa-hand-o-up"></i></td>
+															<td style="margin-top: 10px; width: 83%;"><a
+																href="#{resultSetBean.getResourceClicked(timestamp).url}"
+																style="text-align: left; color: blue" target="_blank">#{resultSetBean.getResourceClicked(timestamp).filename}</a>
+																<span style="color: green;"> -#{resultSetBean.getResourceClicked(timestamp).source}</span>
+															</td>
+															<td style="width: 16%;"><span style="float: right;">#{resultSetBean.getResourceClicked(timestamp).actionTime}</span></td>
+														</tr>
+														<h:panelGroup rendered="#{resultSetBean.resultSetView == 'float' or resultSetBean.resultSetView == 'grid'}">
+															<tr>
+																<td style="width: 1%"></td>
+																<td style="margin-top: 10px; width: 84%"><span
+																	style="padding-left: 10px;">Viewed for
+																		#{resultSetBean.getResourceClicked(timestamp).viewTime} seconds.</span></td>
+																<td style="width: 15%"></td>
+															</tr>
+														</h:panelGroup>													
+													</h:panelGroup>
+												</h:panelGroup>
+												<h:panelGroup
+													rendered="#{resultSetBean.resultsetfilter == 'resource_saved' or resultSetBean.resultsetfilter == 'all_resources'
+								 							or resultSetBean.resultsetfilter == ''}">
+													<h:panelGroup
+														rendered="#{resultSetBean.isResourceSaved(timestamp)}">
+														<tr>
+															<td style="width:1%;"><i class="fa fa-star-o"></i></td>
+															<td style="margin-top: 10px; width: 83%;"><a
+																href="#{resultSetBean.getResourceSaved(timestamp).url}"
+																style="text-align: left; color: blue" target="_blank">#{resultSetBean.getResourceSaved(timestamp).filename}</a>
+																<span style="color: green;"> -#{resultSetBean.getResourceSaved(timestamp).source}</span>
+															</td>
+															<td style="width: 16%;"><span style="float: right;">#{resultSetBean.getResourceSaved(timestamp).actionTime}</span></td>
+														</tr>
+														<h:panelGroup rendered="#{resultSetBean.resultSetView == 'float' or resultSetBean.resultSetView == 'grid'}">
+															<tr>
+																<td style="width: 1%"></td>
+																<td style="margin-top: 10px; width: 84%"><span
+																	style="padding-left: 10px;">Viewed for
+																		#{resultSetBean.getResourceSaved(timestamp).viewTime} seconds.</span></td>
+																<td style="width: 15%"></td>
+															</tr>
+														</h:panelGroup>														
+													</h:panelGroup>
+												</h:panelGroup>
+												<h:panelGroup
+													rendered="#{resultSetBean.resultsetfilter == 'all_resources' or resultSetBean.resultsetfilter == ''}">
+													<h:panelGroup
+														rendered="#{resultSetBean.isSearchComment(timestamp)}">
+														<tr>
+															<td style="width:1%;"><i class="fa fa-comment-o"></i></td>
+															<td style="margin-top: 10px; width: 83%;">
+															<b>#{resultSetBean.getSearchComment(timestamp).username}</b> : #{resultSetBean.getSearchComment(timestamp).commentText}
+															</td>
+															<td style="width: 16%;"><span style="float: right;">#{resultSetBean.getSearchComment(timestamp).time}</span></td>
+														</tr>
+													</h:panelGroup>
+												</h:panelGroup>												
+											</ui:repeat>
+										</table>
+									</td>
+								</tr>
+							</ui:repeat>
+						</table>
+					</p:tab>
+					<p:tab id="right_bartab2" title="Current Resultset" rendered="true">
+						<ui:decorate template="/lw/templates/current_search.xhtml">
+							<ui:param name="currentSearchBean" value="#{resultSetBean}"/>
+							<ui:param name="searchType" value="#{resultSetBean.resultSetView}"/>
+						</ui:decorate>
+					</p:tab>
+				</p:tabView>
+			</p:outputPanel>
+
+		</div>
+		<div id="explorenew_results" style="display:none;">	
+			<h:panelGroup id="nextPage" layout="block">				
+				<ui:decorate  template="/lw/templates/resources_#{resultSetBean.resultSetView}.xhtml">
+					<ui:param name="resources" value="#{resultSetBean.resources}" />
+				</ui:decorate>		
+			</h:panelGroup>
+		</div>
+		<h:form style="display:none;">	
+		  	<p:remoteCommand update=":explore_resultset" name="updateresultset" oncomplete="prepareResources($('#explore_resultset .resource'));" />
+		  	<p:remoteCommand update=":exploretabView:right_bartab2" name="updatecurrentsearch" />
+			<p:remoteCommand actionListener="${resultSetBean.logResourceOpened()}" name="logResourceOpened" async="true" oncomplete="updatecurrentsearch();" />
+			<p:remoteCommand actionListener="${resultSetBean.logEndTime()}" name="logEndTime" async="false" />
+			<p:remoteCommand actionListener="${resultSetBean.setSelectedResource()}" name="setSelectedResource" update=":resource_form" />		  	
+		</h:form>
+		<p:dialog header="#{msg.options}" widgetVar="resource_dialog" modal="false" minWidth="600" resizable="false">			
+			<h:form id="resource_form">
+				<h:panelGrid columns="2" rendered="#{userBean.loggedIn}" style="width:100%;">
+					<h:outputText value="#{msg.add_to}:"/>
+					<h:selectOneMenu value="#{resultSetBean.selectedResourceTargetGroupId}">
+						<f:selectItem itemLabel="#{msg.myResourcesTitle}" itemValue="0" />
+						<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />	
+						<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
+					</h:selectOneMenu>
+					
+					<h:outputLabel value="#{msg.title}:" for="title"/>
+					<p:inputText value="#{resultSetBean.selectedResource.title}" id="title" style="width:100%;"/>					
+					
+					<h:outputLabel value="#{msg.description}:" for="description"/>
+					<p:inputTextarea  value="#{resultSetBean.selectedResource.description}" id="description" autoResize="true"  style="width:100%;"/>
+					
+					<h:outputText value="Url:" for="url"/>
+					<h:outputText value="#{resultSetBean.selectedResource.url}" style="width:400px; padding:4px;" />
+					
+					<h:outputText value="#{msg.type}:"/>
+					<h:outputText value="#{resultSetBean.selectedResource.type}" style="width:400px; padding:4px;" />
+					
+					<h:outputText value="#{msg.source}:"/>
+					<h:outputText value="#{resultSetBean.selectedResource.source}" style="width:400px; padding:4px;" />
+					  
+					<h:outputText value="" />
+					<p:commandButton value="#{msg.save}" action="#{resultSetBean.addSelectedResource}" process="@form" update=":growl" oncomplete="resource_dialog.hide();updatecurrentsearch();"/>
+				</h:panelGrid>	
+			</h:form> 			
+		</p:dialog>
+		<p:dialog header="Share Resultset" widgetVar="resultset_dialog" modal="false" minWidth="600" resizable="false">			
+			<h:form id="resultset_form">
+				<h:panelGrid columns="2" rendered="#{userBean.loggedIn}" style="width:100%;">
+										
+					<h:outputLabel value="User Name:" for="username"/>
+					<p:inputText id="username" value="#{resultSetBean.userNameToShareWith}" style="width:100%;"/>					
+					
+					<h:outputText value="" />
+					<p:commandButton value="Share" action="#{resultSetBean.shareResultset}" process="@form" update=":growl" oncomplete="resultset_dialog.hide();"/>
+				</h:panelGrid>	
+			</h:form> 			
+		</p:dialog>
+	</ui:define>
+</ui:composition>
+</html>

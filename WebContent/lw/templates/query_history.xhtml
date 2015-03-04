@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+	<h:form>
+		<div id="query_history">
+			<h:panelGrid rendered="#{searchHistoryBean.displaySelectedQuery}"
+				cellpadding="2"
+				style="outline:2px solid;outline-color: rgb(89, 255, 24)">
+				<p align="justify">
+					We are now comparing <b><i>#{searchBean.query}</i></b> in
+					#{searchBean.searchMode} with resultset at <i><b>#{searchHistoryBean.resultsetTime}</b></i>.
+					The resultset has #{searchBean.getHistoryResources().size()}
+					resources so we are comparing with the first
+					#{searchBean.getHistoryResources().size()} resources of the current
+					search. Resources from this resultset are highlighted in <span
+						style="color: rgb(89, 255, 24)">green.</span>
+				</p>
+
+				<h:commandButton id="view_resultset" value="View Resultset"
+					action="#{resultSetBean.resultSetRedirect()}"
+					actionListener="#{searchBean.updateSearchResources()}" >
+					<f:setPropertyActionListener target="#{resultSetBean.resultSetId}"
+						value="#{searchBean.resultsetViewId}" />
+					<f:setPropertyActionListener
+						target="#{resultSetBean.resultSetView}"
+						value="#{searchBean.searchMode}" />
+					<f:setPropertyActionListener target="#{exploreBean.exploreMode}"
+						value="resultset_view" />
+					<f:setPropertyActionListener target="#{resultSetBean.query}"
+						value="#{searchBean.query}" />
+					<f:setPropertyActionListener target="#{resultSetBean.queryDate}"
+						value="#{searchHistoryBean.selectedQueryTimestamp}" />
+					<f:setPropertyActionListener target="#{searchHistoryBean.selectedQueryTimestamp}" value=" " />
+				</h:commandButton>
+			</h:panelGrid>
+
+			<table id="similarqueries_table"
+				style="width: 100%; padding: 0px 10px 0px 10px;">
+				<ui:repeat value="#{queryHistorybydate}" var="queryhistorybydate">
+					<tr style="width: 100%;">
+						<td colspan="2" class="queryhistory_parent"
+							style="cursor: pointer;"><h3>#{queryhistorybydate.date}</h3></td>
+					</tr>
+					<tr style="cursor: auto; width: 100%;">
+						<td>
+							<table style="width: 100%">
+								<ui:repeat value="#{queryhistorybydate.queryHistory}"
+									var="queryhistory">
+									<h:panelGroup
+										rendered="#{queryhistory.queryselected}">
+										<tr class="queryhistory_child">
+											<td style="width: 2%;padding-top:2px;"><div style="height:4px;width:4px;"></div></td>
+											<td id="compare_with"
+												style="margin-bottom: 10px; width: 83%;	background-color: rgb(89, 255, 24);">
+												Compare this <h:commandLink value="#{queryhistory.query}"
+													action="#{searchBean.compareHistoryResources()}" style="color:blue;" >
+													<f:setPropertyActionListener target="#{searchHistoryBean.selectedQueryTimestamp}" value="#{queryhistory.queryTimestamp}"/>
+													<f:setPropertyActionListener target="#{searchBean.resultsetId}" value="#{queryhistory.resultsetid}"/>	
+												</h:commandLink> in #{queryhistory.searchType} with now
+											</td>
+											<td style="width: 15%;background-color: rgb(89, 255, 24); "><span style="float: right">#{queryhistory.queryTime}</span></td>
+										</tr>
+									</h:panelGroup>
+									<h:panelGroup
+										rendered="#{!queryhistory.queryselected}">
+										<tr class="queryhistory_child">
+											<td style="width: 2%;padding-top:2px;"><div style="height:4px;width:4px;"></div></td>
+											<td id="compare_with"
+												style="margin-bottom: 10px; width: 83%;">
+												Compare this <h:commandLink value="#{queryhistory.query}"
+													action="#{searchBean.compareHistoryResources()}" style="color:blue;">
+													<f:setPropertyActionListener target="#{searchHistoryBean.selectedQueryTimestamp}" value="#{queryhistory.queryTimestamp}"/>
+													<f:setPropertyActionListener target="#{searchBean.resultsetId}" value="#{queryhistory.resultsetid}"/>
+													<f:setPropertyActionListener target="#{searchHistoryBean.selectedTab}" value="#{searchBean.searchMode == 'web' ? 2:1}"/>	
+												</h:commandLink> in #{queryhistory.searchType} with now
+											</td>
+											<td style="width: 15%"><span style="float: right">#{queryhistory.queryTime}</span></td>
+										</tr>
+									</h:panelGroup>
+								</ui:repeat>
+							</table>
+						</td>
+					</tr>
+				</ui:repeat>
+			</table>
+		</div>
+	</h:form>
+</ui:composition>
+</html>

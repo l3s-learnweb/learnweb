@@ -1,0 +1,39 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/lw/templates/main.xhtml">
+
+	<ui:param name="loginRequired" value="true" />
+	<ui:param name="pageTitle" value="#{msg.myRatedResourcesTitle}" />
+
+	<ui:define name="body">
+
+		<h:form>
+			<p:dataTable var="res" value="#{userBean.user.ratedResources}" columnClasses="" headerClass="">
+				<f:facet name="header">#{msg.myRatedResourcesTitle}</f:facet>
+				<p:column>
+					<f:facet name="header">#{msg.title}</f:facet>
+					<h:outputLink value="resource.jsf">
+						<f:param name="resource_id" value="#{res.id}" />
+						#{res.title}
+					</h:outputLink>
+
+				</p:column>
+				<p:column>
+					<f:facet name="header">#{msg.description}</f:facet>
+					<h:outputText value="#{res.description}" escape="false" />								
+				</p:column>
+				<p:column>
+					<f:facet name="header">#{msg.type}</f:facet>
+						#{res.type}
+									
+				</p:column>
+
+			</p:dataTable>
+		</h:form>
+
+
+	</ui:define>
+</ui:composition>
+</html>

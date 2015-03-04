@@ -1,0 +1,204 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/lw/templates/new_main.xhtml">
+
+	<ui:param name="loginRequired" value="true" />
+	<ui:param name="pageTitle" value="#{msg.groupsTitle}" />
+	<ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
+	<ui:param name="helpTextStyle" value="groups_help"/>
+	
+	<ui:define name="right_layout">
+	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;" header="#{msg.createGroup}" id="right_pane">
+		<h:panelGroup style= "left: 5%; position:relative; top:10px;">
+			<h:form id="addgroupform" style="width: 90%;">
+				<p:fieldset legend="#{msg.mandatory_field}">
+				
+					<h:panelGrid columns="3" columnClasses="medium-width">
+					
+						<h:outputText value="#{msg.title}*:" />
+						<p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" />
+						<p:message for="new_title" showSummary="true" showDetail="false" id="message_new_title"/>
+						
+						<h:outputText value="#{msg.course}*:" />
+						<h:selectOneMenu value="#{groupsBean.newGroup.courseId}" id="course_id">	
+							<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
+						</h:selectOneMenu>
+						<h:outputText value="" />
+	
+					</h:panelGrid>
+				</p:fieldset>
+				<br/>
+				<p:fieldset legend="#{msg.optional_data}">
+					<h:panelGrid columns="3" columnClasses="medium-width">
+					
+						<h:outputText value="#{msg.description}:" />					
+						<p:inputTextarea id="new_description" value="#{groupsBean.newGroup.description}" />
+						<p:message for="new_description" showSummary="true" showDetail="false"/>	
+
+						<h:outputText value="#{msg.language}:" />
+						<p:inputText id="new_language" value="#{groupsBean.newGroup.language}" />
+						<p:message for="new_language" showSummary="true" showDetail="false"/>
+							
+					</h:panelGrid>
+				</p:fieldset>
+				<br/>
+				<p:fieldset legend="Group protection" rendered="false">
+					<h:panelGrid columns="3" columnClasses="medium-width">	
+					
+						<h:outputText value="" />
+						<h:selectBooleanCheckbox value="#{groupsBean.newGroup.restrictionOnlyLeaderCanAddResources}" />
+						<h:outputText value="Only the group leader can add resources" />
+				
+					</h:panelGrid>
+				</p:fieldset>
+				<br/>
+				<p:commandButton ajax="false" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" styleClass="greenbutton" process="@all" update="@form :my_groups :growl :group_menu:groupmenu">
+					
+				</p:commandButton> 				
+			</h:form>
+		</h:panelGroup>
+</p:layoutUnit>
+</ui:define>
+	<ui:define name="center_layout">
+	
+		<h:form id="my_groups">
+					
+			<p:dataTable var="group" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
+
+				<f:facet name="header">#{msg.myGroups}</f:facet>
+				
+				<p:column headerText="#{msg.title}" sortBy="#{group.title}">
+					<h:outputLink value="group/overview.jsf">
+						<f:param name="group_id" value="#{group.id}" />
+						<h:outputText value="#{group.title}" />
+					</h:outputLink>
+					
+					<h:outputText value=" (#{msg.new_word})" styleClass="bold_red" rendered="${userBean.newGroups.contains(group)}"/>
+				</p:column>
+
+				<p:column headerText="#{msg.description}" sortBy="#{group.description}">
+					<h:outputText value="#{group.description}" />
+				</p:column>
+				
+				<p:column headerText="#{msg.course}" sortBy="#{group.course.title}">
+					<h:outputText value="#{group.course.title}" />						
+				</p:column>		
+
+				<p:column headerText="#{msg.leader}" sortBy="#{group.leader.username}">
+					<h:outputText value="#{group.leader.username}" />
+				</p:column>
+				
+				<p:column headerText="#{msg.options}" styleClass="nowrap">					
+					<p:commandLink action="#{groupsBean.leaveGroup}" process="@this" update=":other_groups :growl :group_menu:groupmenu :my_groups"
+						style="text-decoration:none;" title="#{msg.leave}">
+						&nbsp;
+						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
+						<h:graphicImage value="/resources/icon/silk/group_delete.png" width="16" height="16" alt="#{msg.leave}" />
+					</p:commandLink>
+					
+					
+					<p:commandLink process="@this" update=":group_moderator_form" 
+							style="text-decoration:none;" title="#{msg.edit}" 
+							rendered="#{userBean.admin || userBean.moderator}"
+							oncomplete="group_moderator_dialog.show()">
+						&nbsp;
+						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
+						<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" /> 								
+					</p:commandLink>
+						
+				</p:column>
+			</p:dataTable>
+		</h:form>
+		<br/>
+		<br/>
+		
+			<h:form id="other_groups">
+				<p:dataTable var="group" value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}"  paginator="false" >
+
+					<f:facet name="header">#{msg.otherGroups}</f:facet>
+					
+					<p:column headerText="#{msg.title}" >
+						<h:outputLink value="group/overview.jsf">
+							<f:param name="group_id" value="#{group.id}" />
+							<h:outputText value="#{group.title}" />
+						</h:outputLink>
+						
+						<h:outputText value=" (#{msg.new_word})" styleClass="bold_red" rendered="${userBean.newGroups.contains(group)}"/>
+					</p:column>
+
+					<p:column  headerText="#{msg.description}" >
+						<h:outputText value="#{group.description}" />
+					</p:column>
+					
+					<p:column headerText="#{msg.course}">
+						<h:outputText value="#{group.course.title}" />						
+					</p:column>					
+					
+					<p:column headerText="#{msg.language}" >
+						<h:outputText value="#{group.language}" />			
+					</p:column>
+					
+					<p:column headerText="#{msg.options}" styleClass="nowrap">	
+							
+						<p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :group_menu:groupmenu :my_groups" style="text-decoration:none;" title="#{msg.join}">
+							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
+							<h:graphicImage value="/resources/icon/silk/group_add.png" width="16" height="16" alt="#{msg.join}" />
+						</p:commandLink>
+						
+						<p:commandLink actionListener="#{groupsBean.deleteGroup}" update=":other_groups :growl :group_menu:groupmenu :my_groups" 
+								style="text-decoration:none;" title="#{msg.delete}" 
+								onstart="return confirm('Do you really want to delete group \'#{group.title}\'?');"
+								rendered="#{userBean.admin || userBean.moderator}">
+							&nbsp;
+							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
+							<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/> 
+								
+						</p:commandLink>
+						
+						<p:commandLink process="@this" update=":group_moderator_form" 
+								style="text-decoration:none;" title="#{msg.edit}" 
+								rendered="#{userBean.admin || userBean.moderator}"
+								onsuccess="group_moderator_dialog.show()" onerror="alert('error');">
+							&nbsp;
+							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
+							<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" /> 
+								
+						</p:commandLink>					 	
+					
+						 
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
+
+
+		<p:dialog header="Edit Group" widgetVar="group_moderator_dialog" modal="true" minWidth="440" appendToBody="true">
+			<h:form id="group_moderator_form">
+				
+				<h:panelGrid columns="2">
+					<h:outputLabel value="#{msg.leader}:" for="edit_group_leader"/>		
+					
+					<h:selectOneMenu value="#{groupsBean.selectedGroupLeaderId}" immediate="true" id="edit_group_leader">
+						<f:selectItems value="#{groupsBean.membersOfSelectedGroup}" />
+					</h:selectOneMenu>
+
+					<h:outputLabel value="#{msg.title}:" for="edit_group_title"/>
+					<p:inputText value="#{groupsBean.selectedGroupTitle}" id="edit_group_title" style="width:300px;"/>
+					
+					<h:outputLabel value="#{msg.description}:" for="edit_group_description"/>
+					<p:inputTextarea value="#{groupsBean.selectedGroupDescription}" id="edit_group_description" autoResize="true"  style="width:300px;"/>
+					
+					<h:outputText value="" />
+					<p:commandButton disabled="false" value="#{msg.save}" ajax="false" action="#{groupsBean.onGroupEdit}" update=":other_groups :growl :group_menu:groupmenu :my_groups" oncomplete="group_moderator_dialog.hide()">
+						<f:setPropertyActionListener target="#{groupsBean.editGroup}" value="#{groupsBean.selectedGroup}" />
+					</p:commandButton>
+				</h:panelGrid>
+			
+			</h:form>
+		
+		</p:dialog>
+	</ui:define>
+</ui:composition>
+</html>

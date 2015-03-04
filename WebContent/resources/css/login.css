@@ -1,0 +1,104 @@
+html { height: 100%; }
+body
+{
+	min-height:100%;
+	margin: 0px auto !important;
+	overflow: hidden !important;
+	
+	background-color: black;
+	background:url(../image/uni.jpg) center no-repeat;
+	background-size:cover;
+}
+
+.info
+{
+	min-height:350px;
+	color:white;
+	left:0px;
+	position: absolute;
+	 top: 15%; 
+	height: 44%;
+	width: 100%;
+	background-color: rgba(0, 0, 0, 0.64);
+	}
+
+.footer
+{
+	color:#489a83;
+	left:0px;
+	position: absolute;
+	 bottom: 0; 
+	 text-align: center;
+	height: 30px;
+	width: 100%;
+	z-index:-500;
+	background-color: rgb(0, 0, 0);
+	}
+
+
+.ui-dialog-titlebar {
+
+
+color: #489a83 ;
+text-shadow: none;
+}
+.ui-widget-header
+{
+	background: none !important;
+}
+.logindiv
+{
+	background-color: white;
+	border-radius: 12px;
+border: 1px solid;
+color: #489a83;
+height: 80%;
+	color: #489a83;position: absolute;
+	-moz-box-shadow:    inset 0 0 10px #489a83;
+   	-webkit-box-shadow: inset 0 0 10px #489a83;
+   	box-shadow:         inset 0 0 10px #489a83;
+top: 5%; right: 10%;  min-height: 100px; min-width: 200px;
+}
+.inputbox
+{
+	padding: 4px;
+	color: rgb(100, 177, 118) !important;
+	background-color: white !important;
+}
+input:-webkit-autofill {
+background-color:none;
+background-image: none;
+color: rgb(0, 0, 0);
+}
+
+.greenbutton
+{
+	border: none;
+background-color: #489a83;
+padding: 4px 13px;
+color: white;
+cursor: pointer;
+}
+#login a
+{
+	font-weight: bold;
+padding: 20px;
+color: rgb(59, 170, 245);
+
+}
+.ui-autocomplete-input
+{
+	border: 1px solid #aeaeae; 
+	border-radius: 0px !important; 
+	box-shadow: 0 0 0px 0px #fff !important;
+	
+}
+.submitsearch
+{
+	padding: 0 !important;
+font-size: 0.95em !important;
+position: relative;
+top: -1px;
+left: -5px;
+border-radius: 0;
+}

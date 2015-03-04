@@ -1,0 +1,211 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:viewParam name="resource_id" value="#{resourceBean.id}" required="true" />
+	<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{resourceBean.preRenderView}" />
+</f:metadata>
+
+<ui:composition template="/lw/templates/new_main.xhtml">
+
+	<ui:param name="pageTitle" value="#{resourceBean.resource.title}" />
+
+	<ui:define name="center_layout">
+
+		<p:panel>
+			<f:facet name="header">
+				<h:outputText value="#{resourceBean.resource.title}" escape="false" />
+			</f:facet>
+			<table cellpadding="10" cellspacing="5" border="0">
+				<tr>
+					<td width="450" valign="top">
+						<div id='preview'>
+							<h:outputText value="#{resourceBean.resource.embeddedSize3}" escape="false" />
+						</div>
+
+						<table>
+							<tr>
+								<td><label for="url-field" style="color: #388222;">URL:</label></td>
+								<td><input name="link" id="url-field" type="text" value="#{resourceBean.resource.url}" onclick="this.select();" readonly="readonly"
+									style="width: 370px;" /></td>
+
+							</tr>
+
+							<h:panelGroup rendered="#{not empty resourceBean.resource.author}">
+								<tr>
+									<td><h:outputText value="#{msg.author}: " style="color:#388222;" /></td>
+									<td><h:outputLink value="search.jsf">
+											<f:param name="query" value="author: #{resourceBean.resource.author}" />
+											<f:param name="action" value="search" />
+											<h:outputText value="#{resourceBean.resource.author}" />
+										</h:outputLink></td>
+								</tr>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{not empty resourceBean.resource.type}">
+								<tr>
+									<td><h:outputText value="#{msg.type}: " style="color:#388222;" /></td>
+									<td><h:outputText value="" /></td>
+								</tr>
+							</h:panelGroup>
+
+							<h:panelGroup rendered="#{not empty resourceBean.resource.groups}">
+								<tr>
+									<td><h:outputText value="#{msg.group}: " style="color:#388222;" /></td>
+									<td><ui:repeat var="group" value="#{resourceBean.resource.groups}">
+											<h:outputLink value="group/overview.jsf">
+												<f:param name="group_id" value="#{group.id}" />
+												<h:outputText value="#{group.title}" />
+											
+											(<h:outputText value="#{group.resources.getElementTimestamp(resourceBean.resource)}">
+													<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
+												</h:outputText>)<br />
+											</h:outputLink>
+										</ui:repeat></td>
+								</tr>
+							</h:panelGroup>
+
+							<h:panelGroup>
+								<tr>
+									<td><h:outputText value="#{msg.resource_found_at}: " style="color:#388222;" /></td>
+									<td><h:outputLink value="resource.jsf?resource_id=#{resourceBean.resource.originalResourceId}"
+											rendered="#{resourceBean.resource.originalResourceId > 0}">
+											<h:outputText value="#{resourceBean.resource.source}" />
+										</h:outputLink> <h:outputLink value="#{resourceBean.resource.url}" rendered="#{resourceBean.resource.originalResourceId == 0}" target="_blank">
+											<h:outputText value="#{resourceBean.resource.source}" />
+										</h:outputLink></td>
+								</tr>
+							</h:panelGroup>
+						</table> 
+						
+						<h:panelGroup rendered="#{not empty resourceBean.resource.description}">
+							<h3>#{msg.description}:</h3>
+							<h:outputText value="#{resourceBean.resource.description}" escape="false" />
+						</h:panelGroup> 
+						
+						<h:form id="comments" prependId="false">
+							<h3>#{msg.comments}: #{resourceBean.resource.comments.size()}</h3>
+
+							<p:dataGrid var="comment" value="#{resourceBean.resource.comments}" columns="1" paginatorAlwaysVisible="false" rows="5" paginator="true" effect="true"
+								paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+
+								<p:column>
+									<p:dialog header="#{msg.edit}" modal="true" minWidth="440" widgetVar="comment_edit_#{comment.id}">
+
+										<p:inputTextarea autoResize="1" maxHeight="20" value="#{comment.text}" style="width:400px;"></p:inputTextarea>
+										<p:commandButton actionListener="#{resourceBean.onEditComment(comment)}" update="@form :message" title="#{msg.save}" value="#{msg.save}"
+											onsuccess="comment_edit_#{comment.id}.hide();">
+											<f:param name="resource_id" value="#{resourceBean.resource.id}" />
+										</p:commandButton>
+
+									</p:dialog>
+									<p:panel>
+										<f:facet name="header">
+											<h:outputText value="#{comment.date}" styleClass="float-right">
+												<f:convertDateTime dateStyle="default" type="both" timeZone="#{userBean.timeZone}" />
+											</h:outputText>
+
+											<h:panelGroup rendered="${resourceBean.canEditComment(comment)}">
+
+												<p:commandLink actionListener="#{resourceBean.onDeleteComment(comment)}" update="@form message" title="#{msg.delete}"
+													onstart="return confirm('Do you really want to delete this Comment?');">
+													<f:param name="resource_id" value="#{resourceBean.resource.id}" />
+													<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" style="vertical-align: middle;" />
+												</p:commandLink>
+
+												<p:commandLink title="#{msg.edit}" onstart="comment_edit_#{comment.id}.show(); return false;">
+													<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.delete}" style="vertical-align: middle;" />
+												</p:commandLink>
+											</h:panelGroup>
+					#{comment.user.username}
+					
+				
+				</f:facet>
+				#{comment.text}
+			</p:panel>
+								</p:column>
+
+							</p:dataGrid>
+						</h:form>
+
+					</td>
+					<td width="400" valign="top" style="background-color: #D8E0EB; font-size: 11px;">
+						<div style="padding: 10px 10px 10px 10px;">
+
+							<p>
+								<a href="#{resourceBean.resource.url}" class="link2" target="_blank"> <h:graphicImage value="/resources/icon/download.gif" width="13" height="16" />
+									#{msg.download_view}
+								</a>
+							</p>
+
+
+
+							<h:form id="rate_form" rendered="">
+								<h3>#{msg.relevance}</h3>
+								<h:panelGroup>
+									<p:rating update="rate_form :growl" rateListener="#{resourceBean.handleRate}" disabled="#{resourceBean.ratedByUser}">
+										<f:param name="resource_id" value="#{resourceBean.resource.id}" />
+									</p:rating>
+								</h:panelGroup>
+						#{resourceBean.resource.rating} (#{resourceBean.resource.rateNumber} #{msg.votes})
+						<br />
+							</h:form>
+
+
+							<h:form id="thumbrating" rendered="">
+								<h3>#{msg.reliability}</h3>
+								<h:outputText value="+#{resourceBean.resource.thumbUp}" />
+								<p:commandLink actionListener="#{resourceBean.onThumbUp}" update="thumbrating :growl">
+									<f:param name="resource_id" value="#{resourceBean.resource.id}" />
+									<h:graphicImage value="/resources/icon/thumb_up.png" width="16" height="16" />
+								</p:commandLink>
+
+								<p:commandLink actionListener="#{resourceBean.onThumbDown}" update="thumbrating :growl">
+									<f:param name="resource_id" value="#{resourceBean.resource.id}" />
+									<h:graphicImage value="/resources/icon/thumb_dw.png" width="16" height="16" />
+								</p:commandLink>
+								<h:outputText value="-#{resourceBean.resource.thumbDown}" />
+							</h:form>
+
+
+							<br />
+							<h3>#{msg.tags}</h3>
+							<h:form id="tag_form">
+								<ul>
+									<ui:repeat var="tag" value="#{resourceBean.resource.tags}">
+										<li>#{tag.name} <p:commandLink actionListener="#{resourceBean.onDeleteTag(tag)}" update="tag_form message" title="#{msg.delete}"
+												onstart="return confirm('Do you really want to delete this tag?');" rendered="#{resourceBean.canDeleteTag(tag)}">
+												<f:param name="resource_id" value="#{resourceBean.resource.id}" />
+												<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" style="vertical-align: middle;" />
+											</p:commandLink>
+										</li>
+									</ui:repeat>
+								</ul>
+								<p:inputText value="#{resourceBean.tagName}" style="width:100%;" />
+								<div class="align-right">
+									<p:commandButton actionListener="#{resourceBean.addTag}" value="#{msg.addTag}" update=":growl,tag_form" process="@form">
+										<f:param name="resource_id" value="#{resourceBean.resource.id}" />
+									</p:commandButton>
+								</div>
+							</h:form>
+							<br />
+							<h:form id="comment_form">
+								<p:inputTextarea style="width:100%" value="#{resourceBean.commentText}" />
+								<div class="align-right">
+									<p:commandButton actionListener="#{resourceBean.addComment}" value="#{msg.addComment}" update=":growl comment_form :comments" process="@form">
+										<f:param name="resource_id" value="#{resourceBean.resource.id}" />
+
+									</p:commandButton>
+								</div>
+							</h:form>
+
+
+						</div>
+					</td>
+				</tr>
+			</table>
+		</p:panel>
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">	
+	
+	<ui:composition template="/lw/templates/new_main.xhtml"> 
+
+		<ui:param name="loginRequired" value="true"/>
+		<ui:param name="pageTitle" value="Courses"/>
+
+		
+		<ui:define name="center_layout">
+			<p:panel header="Courses">
+				<h:form id="courseform">
+					<p:dataTable var="course" value="#{adminCoursesBean.courses}">					
+						<p:column headerText="#{msg.title}" sortBy="#{course.title}">
+							<h:outputText value="#{course.title}" />						
+						</p:column>	
+						
+						<p:column headerText="#{msg.organization}" sortBy="#{course.organisation.title}">
+							<h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}" />						
+						</p:column>	
+					
+						<p:column headerText="#{msg.members}" sortBy="#{course.memberCount}">
+							<h:outputText value="#{course.memberCount}" />									
+						</p:column>
+						
+						<p:column headerText="#{msg.options}">
+							<f:facet name="header">#{msg.options}</f:facet>
+							<h:outputLink value="admin/course.jsf?course_id=#{course.id}" style="text-decoration:none;" title="#{msg.edit}">
+								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
+							</h:outputLink>	
+							
+							<p:commandLink actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this" 
+								update=":courseform :growl" rendered="#{course.memberCount == 0}"
+								onstart="return confirm('Do you really want to delete course \'#{course.title}\'?');"								
+								style="text-decoration:none;" title="#{msg.delete}">
+								&nbsp;								
+								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
+							</p:commandLink>						
+						</p:column>
+					</p:dataTable>	
+				</h:form>
+			</p:panel>
+			<p:panel header="Add New Course">
+			<h:form id="addcourse">
+				Course title: <h:inputText value="#{adminCoursesBean.newCourseTitle}" id="c_title"/>
+				<p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
+				<h:commandButton action="${adminCoursesBean.onCreateCourse}" value="add" process="@form"></h:commandButton>
+			</h:form>
+			</p:panel>
+			
+			<p:panel header="Add New Organization" rendered="#{userBean.admin}">
+			<h:form id="addorganisation">
+				Organization title: <h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>
+				<p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation"/>
+				<h:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="add" process="@form"></h:commandButton>
+			</h:form>
+			</p:panel>
+		</ui:define>
+	</ui:composition>
+</html>

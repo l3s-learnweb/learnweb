@@ -1,0 +1,137 @@
+/* Some browser specific fixes */
+
+@media screen and (-webkit-min-device-pixel-ratio:0) { 
+    /* Safari and Chrome */
+    .userbar ul li ul{
+    	margin:0 0 0 -6em;
+    }
+
+    /* Safari only override */
+    ::i-block-chrome,#firstbar {
+		background:url(LearnwebLogo.png) no-repeat scroll left; 
+		background-color:#489A83;
+		background-size: 22em;
+    }
+}
+
+ @media screen and (-ms-high-contrast:none){
+     	/* IE11 */
+     	.language ul li ul{ 
+     		margin-top:4em;
+     		margin-right:-8.5em;
+     		width:12.5em;
+     	} 
+ }
+ 
+/* options for different screen sizes */
+
+@media screen and (max-width: 91em){
+	#moreprofile{
+		display:block;
+	}
+	#profile{
+		display:none;
+	}
+}
+
+@media screen and (max-width: 84em){
+	#moremygroups{
+		display:block;
+	}
+	#mygroups{
+		display:none;
+	}
+}
+
+@media screen and (max-width: 75em){
+	#moremyresources{
+		display:block;
+	}
+	#myresources{
+		display:none;
+	}
+}
+
+@media screen and (max-width: 65em){
+	#searchfield{
+		width:15em;
+	}
+}
+
+@media screen and (max-width: 60em){
+	#searchfield{
+		width:10em;
+	}
+}
+
+@media screen and (max-width: 54em){
+	.resourcestype:last-child{
+		display:none;
+	}
+	.language{
+		display:none;
+	}
+	#informationonscreen{
+		margin-right:1em;
+	}
+}
+
+@media screen and (max-width: 47em){
+	#informationonscreen{
+		display:none;
+	}
+}
+
+@media screen and (max-width: 44em){
+	#logoutbutton, #loginbutton{
+		display:none;
+	}
+	#login{
+		display:block;
+	}
+}
+
+@media screen and (max-width: 39em){
+	#firstbar{
+		background:#489a83;
+	}
+	#searchfield{
+		margin-left:1em;
+		width:15em;
+	}
+	#backtogroup{
+		width:8em;
+	}
+	.resourcestype{
+		padding-right:0.8em;
+	}
+}
+
+@media screen and (max-width: 31em){
+	#searchfield{
+		width:10em;
+	}
+	#backtogroup{
+		display:none;
+	}
+	.resourcestype{
+		float:left;
+		margin-left:1em;
+	}
+}
+
+@media screen and (max-width: 26em){
+	#searchfield{
+		width:8em;
+	}
+}
+
+@media screen and (max-width: 23em){
+	.userbar ul li a {
+    	padding-left:1em;
+    	padding-right:1em;
+	}
+	#searchfield{
+		width:5em;
+	}
+}

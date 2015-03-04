@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xml xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui">
+<services>	
+<ui:repeat var="service" value="#{statusBean.services}">
+	<service>
+		<name><h:outputText value="#{service.name}" escape="false"/></name>
+		<status><h:outputText value="#{service.status}" escape="false"/></status>
+		<url><h:outputText value="#{service.url}" escape="false"/></url>
+		<comment><h:outputText value="#{service.comment}" escape="false"/></comment>
+	</service>
+</ui:repeat>
+</services>	
+</xml>
+

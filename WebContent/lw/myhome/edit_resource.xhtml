@@ -1,0 +1,76 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:viewParam name="resource_id" value="#{resourceBean.id}" required="true" />
+	<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{resourceBean.preRenderView}" />
+</f:metadata>
+
+<ui:composition template="/lw/templates/main.xhtml">
+
+	<ui:param name="loginRequired" value="#{true}" />
+	<ui:param name="pageTitle" value="#{resourceBean.resource.title}" />
+
+
+
+	<ui:define name="body">
+		<h:form id="resource_form">
+			<p:panel header="#{resourceBean.resource.title}">
+
+				<table cellpadding="10" cellspacing="5" border="0">
+					<tr>
+						<td width="55%" valign="top">
+							<div class="align-center">
+								<h:outputText value="#{resourceBean.resource.embeddedSize3}" escape="false" />
+							</div> <h:outputText value="#{msg.type}: #{resourceBean.resource.type}"
+								rendered="#{not empty resourceBean.resource.type}" />
+
+
+							<h3>#{msg.description}:</h3> <p:inputTextarea value="#{resourceBean.resource.description}"
+								autoResize="true" style="width:430px; min-height:100px;" />
+						</td>
+						<td valign="top" style="background-color: #D8E0EB; font-size: 11px;">
+							<div style="padding: 10px;">
+
+								<p>
+									<h:outputLabel value="#{msg.title}:" />
+									<br />
+									<p:inputText value="#{resourceBean.resource.title}" style="width:100%;" required="true"
+										requiredMessage="#{msg.mandatory_field}" id="title_input" />
+									<p:message for="title_input" />
+								</p>
+								<p>
+									<h:outputLabel value="Url:" />
+									<br />
+									<p:inputText value="#{resourceBean.resource.url}" disabled="true" style="width:100%;" />
+								</p>
+								<p>
+									<h:outputLabel value="#{msg.type}:" />
+									<br />
+									<p:inputText value="#{resourceBean.resource.type}" disabled="true" style="width:100%;" />
+								</p>
+								<p>
+									<h:outputLabel value="#{msg.author}:" />
+									<br />
+									<p:inputText value="#{resourceBean.resource.author}" style="width:100%;" />
+								</p>
+								<p>
+									<p:commandButton value="#{msg.save}" actionListener="#{resourceBean.saveResource}"
+										ajax="false">
+										<f:param name="resource_id" value="#{resourceBean.resource.id}" />
+									</p:commandButton>
+								</p>
+							</div>
+
+
+						</td>
+					</tr>
+				</table>
+			</p:panel>
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+</html>

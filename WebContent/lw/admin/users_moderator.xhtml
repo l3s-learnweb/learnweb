@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">	
+	
+	<ui:composition template="/lw/templates/new_main.xhtml"> 
+
+		<ui:param name="loginRequired" value="true"/>
+		<ui:param name="pageTitle" value="Users"/>
+
+		
+		
+		<ui:define name="center_layout">
+				<h:form>
+					<p:dataTable var="user" value="#{adminUserBean.users}">
+						<p:column headerText="#{msg.username}">
+	
+							<h:outputLink value="user/detail.jsf">
+								<f:param name="user_id" value="#{user.id}" />
+								<h:outputText value="#{user.username}" />
+							</h:outputLink>
+					
+											
+						
+						</p:column>	
+					
+						<p:column headerText="#{msg.email_address}">
+							<h:outputText value="#{user.email}" />
+									
+						</p:column>
+						
+						
+						<p:column headerText="#{msg.registered_since}">
+							<h:outputText value="#{user.registrationDate}">
+								<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
+							</h:outputText>
+									
+						</p:column>
+	
+					</p:dataTable>	
+				</h:form>
+
+		</ui:define>
+	</ui:composition>
+</html>

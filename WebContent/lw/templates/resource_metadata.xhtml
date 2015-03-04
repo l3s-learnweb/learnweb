@@ -1,0 +1,84 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition> 
+	<div class="metadata">
+		<div class="title" >
+			<h:outputText value="${res.title}" escape="false" />
+		</div>
+		
+		<div class="embedded"><!--${res.embedded}--></div>	
+			 
+		<div class="description">
+		
+			<h:panelGroup rendered="#{not empty res.description}">
+				<b><h:outputText value="#{msg.description}:" /></b><br/>
+				<h:outputText value="${res.description}" escape="false" />
+				<br/><br/>				
+			</h:panelGroup> 			
+			
+			<b><h:outputText value="#{msg.location}: " /></b>
+			<h:outputLink value="${res.url}">
+				 <h:outputText value="${res.location}" />
+			</h:outputLink>
+			<br />
+			
+			<b><h:outputText value="#{msg.resource_found_at}: " /></b> 
+		
+				<h:outputText value="#{res.source}" />
+		
+			<br />
+			
+			<h:panelGroup rendered="#{not empty res.groups}">
+				<b><h:outputText value="#{msg.group}: " /></b>	
+				
+				<ui:repeat var="group" value="#{res.groups}">
+					<h:outputLink value="group/overview.jsf">
+						<f:param name="group_id" value="#{group.id}" />
+						<h:outputText value="#{group.title}" />
+					</h:outputLink>
+					<br/>
+				</ui:repeat>						
+				<br/>
+			</h:panelGroup>
+			
+			<br /> 
+		</div>
+		
+		
+		<div class="snippet">
+		
+			<h:panelGroup rendered="#{(not empty res.snippet) and false}">
+			<br/>
+			    <b><h:outputText value="#{msg.snippet}:" /></b><br/>
+				<h:outputText value="${res.snippet}"  />
+				<br/><br/>				
+			</h:panelGroup> 
+			
+			<br /> 
+		</div>
+		
+		
+		<div class="options">	
+			<b><h:outputText value="#{msg.options}: " /></b><br/>
+		
+		 	<h:outputLink value="user/login.jsf" rendered="#{!userBean.loggedIn}">
+				<h:outputText value="#{msg.loginLabel}" />
+			</h:outputLink> 
+			
+			<h:outputLink value="#" 
+				onclick="setSelectedResource([{name:'resource_id', value:${res.tempId}}]); resource_dialog.show(); return false;"
+				rendered="#{userBean.loggedIn}" 
+				title="#{msg.addToMyResources}">
+				
+				<h:graphicImage value="/resources/icon/silk/add.png" width="16" height="16" alt="#{msg.addToMyResources}" style="vertical-align: middle; margin-right:4px;" />#{msg.addToMyResources}
+
+			</h:outputLink> 
+		</div>						
+	</div>
+</ui:composition>
+</html>

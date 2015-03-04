@@ -1,0 +1,78 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" 
+	lang="#{userBean.localeCode}">
+	
+<ui:composition template="/templates/main.xhtml">
+	<ui:param name="pageTitle" value="editGlossary" />
+
+	<ui:define name="center_layout">
+	
+	<style type="text/css">
+			h1{
+				font-size:2em;
+				margin-left:1em;
+			}
+			.button{
+				background-color:#616161;
+				color:#489A83;
+				font-size:1.5em;
+				font-weight:bold;
+				border:1px solid #489A83;
+				border-radius:5px;
+				padding:2px;
+				margin-right:1em;
+				margin-left:1em;
+			}
+			.button:hover{
+				color:#FFFFFF;
+				border:1px solid #FFFFFF;
+			}
+			.inputfield{
+				font-family:Arial;
+				font-size:1.5em;
+				width:15em;
+			}
+			.inputarea{
+				font-family:Arial;
+				font-size:1.5em;
+				width:15em;
+			}
+			.datatype{
+				font-size:1.5em;
+				margin-left:1em;
+			}
+		</style>
+		
+	<br/>
+	<br/>
+		<h1> Glossary </h1>
+	<br/>
+	<br/>
+		<h:form id="form">
+		
+			<h:panelGrid id="grid" columns="2">
+			
+				<h:outputLabel value="#{msg.item}" for="item" styleClass="datatype"></h:outputLabel>
+				<h:inputText id="item" value="#{glossaryBean.selectedEntry.item}" styleClass="inputfield"></h:inputText>
+				
+				<h:outputLabel value="#{msg.description}" for="description" styleClass="datatype"></h:outputLabel>
+				<h:inputTextarea id="description" value="#{glossaryBean.selectedEntry.description}" styleClass="inputarea"></h:inputTextarea>
+										
+			</h:panelGrid>
+			
+			<br/>
+			<br/>
+			
+			<h:commandButton id="save" action="#{glossaryBean.save}" value="#{msg.save}" styleClass="button"></h:commandButton>
+			
+			<h:commandButton id="cancel" action="#{glossaryBean.quit}" value="#{msg.cancel}" styleClass="button"></h:commandButton>
+		
+		</h:form>
+	
+	</ui:define>
+</ui:composition>
+</html>

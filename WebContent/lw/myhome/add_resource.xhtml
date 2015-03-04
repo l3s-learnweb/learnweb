@@ -1,0 +1,156 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:viewParam name="url" value="#{addResourceBean.paramUrl}" />
+	<f:viewParam name="title" value="#{addResourceBean.paramTitle}" />
+	<f:viewParam name="description" value="#{addResourceBean.paramDescription}" />
+	<f:viewParam name="source" value="#{addResourceBean.paramSource}" />
+	<f:viewParam name="type" value="#{addResourceBean.paramType}" />
+	<f:viewParam name="thumbnail" value="#{addResourceBean.paramThumbnail}" />
+	<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{addResourceBean.preRenderView}" />
+</f:metadata>
+
+<ui:composition template="/lw/templates/main.xhtml">
+
+	<ui:param name="pageTitle" value="#{msg.addResource}" />
+	<ui:param name="loginRequired" value="#{true}" />
+
+	<ui:define name="body">
+
+		<h:form id="resource_form" enctype="multipart/form-data">
+			<p:panel header="#{msg.addResource}">
+
+				<table cellpadding="10" cellspacing="5" border="0">
+					<tr>
+						<td width="55%" valign="top"><h:panelGroup id="embedded"
+								layout="block" styleClass="align-center">
+								<h:outputText value="#{addResourceBean.embeddedSize3}"
+									escape="false" />
+							</h:panelGroup> <h:outputText
+								value="#{msg.type}: #{addResourceBean.resource.type}"
+								rendered="#{not empty addResourceBean.resource.type}" />
+
+
+							<h3>#{msg.description}:</h3> <p:inputTextarea id="description"
+								value="#{addResourceBean.resource.description}"
+								autoResize="true" style="width:430px; min-height:100px;" /></td>
+						<td valign="top"
+							style="background-color: #D8E0EB; font-size: 11px;">
+							<div style="padding: 10px;">
+								<p>
+									<h:outputLabel value="#{msg.resource_type}:" />
+									<br />
+									<p:selectOneMenu value="#{addResourceBean.resource.storageType}" >
+										<f:selectItem itemLabel="URL" itemValue="2" />
+										<f:selectItem itemLabel="#{msg.file}" itemValue="1" />
+											<f:ajax render=":resource_form:resource_input" immediate="true" listener="#{addResourceBean.doNothing}"  />
+									
+									</p:selectOneMenu>
+								</p>
+								<p>
+									<h:panelGroup id="resource_input">
+										<h:outputLabel value="URL:" rendered="#{addResourceBean.resource.storageType == 2}" />
+										<h:outputLabel value="#{msg.file}:" rendered="#{addResourceBean.resource.storageType == 1}" />
+										<br />
+										  <p:fileUpload fileUploadListener="#{addResourceBean.handleFileUpload}"  
+									            mode="advanced"  
+									            auto="true"  
+									            update="embedded :growl description"  
+									            
+									            sizeLimit="10000000"   
+									            />  
+            
+										
+		
+								
+										<p:inputText value="#{addResourceBean.resource.url}"
+											style="width:100%;" required="true"
+											requiredmessage="#{msg.mandatory_field}" id="url_input"
+											rendered="#{addResourceBean.resource.storageType == 2}">
+											<f:ajax render="url_message embedded" event="change"
+												listener="#{addResourceBean.handleUrlChange}" />
+										</p:inputText>
+										<p:message for="url_input" id="url_message" />
+									</h:panelGroup>
+								</p>
+								<p>
+									<h:outputLabel value="#{msg.add_to}:" />
+									<br />
+									<h:selectOneMenu
+										value="#{addResourceBean.resourceTargetGroupId}">
+										<f:selectItem itemLabel="#{msg.myResourcesTitle}"
+											itemValue="0" />
+										<f:selectItem itemLabel="------------" itemValue="-1"
+											itemDisabled="true" />
+										<f:selectItems var="group"
+											value="#{userBean.user.writeAbleGroups}"
+											itemLabel="#{group.title}" itemValue="#{group.id}" />
+									</h:selectOneMenu>
+								</p>
+								<p>
+									<h:outputLabel value="#{msg.title}:" />
+									<br />
+									<p:inputText value="#{addResourceBean.resource.title}"
+										style="width:100%;" required="true"
+										requiredmessage="#{msg.mandatory_field}" id="title_input" />
+									<p:message for="title_input" />
+								</p>
+								<!-- 
+	     						<p>	
+									<h:outputLabel value="#{msg.type}:"/><br/>
+									<p:inputText id="type" value="#{addResourceBean.resource.type}" style="width:100%;"/>		
+								</p>
+								 -->
+								<p>
+									<h:outputLabel value="#{msg.author}:" />
+									<br />
+									<p:inputText value="#{addResourceBean.resource.author}"
+										style="width:100%;" />
+								</p>
+								<h:panelGroup id="upload_services">
+									<h:panelGroup
+										rendered="#{not empty addResourceBean.uploadServices}">
+										<p>
+											<h:outputText value="#{msg.upload_to}" />
+											:<br />
+											<h:selectManyCheckbox
+												value="#{addResourceBean.selectedUploadServices}"
+												layout="pageDirection">
+												<f:selectItems value="#{addResourceBean.uploadServices}"
+													var="service" itemLabel="#{service.title}"
+													itemValue="#{service.id}" />
+											</h:selectManyCheckbox>
+										</p>
+									</h:panelGroup>
+								</h:panelGroup>
+								<p>
+									<h:outputText value="" />
+									<br />
+									<p:commandButton value="#{msg.addResource}"
+										action="#{addResourceBean.addResource}" process="@form"
+										ajax="false" update=":growl" />
+								</p>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</p:panel>
+		</h:form>
+		<p:dialog widgetVar="successDialog">
+			<h:outputText value="#{msg.resource_saved}" />
+			<h:outputLink value="resource.jsf" title="View resource">
+				<f:param name="resource_id" value="#{addResourceBean.resource.id}" />
+			</h:outputLink>
+			<h:outputLink value="myhome/add_resource.jsf"
+				title="Upload another resource">
+
+			</h:outputLink>
+		</p:dialog>
+	</ui:define>
+</ui:composition>
+</html>

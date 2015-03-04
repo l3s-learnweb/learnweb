@@ -1,0 +1,117 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+
+<ui:composition template="/lw/templates/new_main.xhtml">
+
+	<ui:param name="loginRequired" value="true" />
+	<ui:param name="pageTitle" value="#{msg.myCommentsTitle}" />
+
+
+	<ui:define name="center_layout" >
+
+
+    
+		<h:form>
+		
+    
+	<style type="text/css">
+	
+.odd-row {  
+    background: red; background-color: #A80000
+} 	
+.new-message {  
+    background: red ; background-color: #99CCFF
+} 
+.message {  
+    border : 0px
+} 
+
+.ui-datatable .ui-datatable-data .notRead td{
+background-color:#6CDFEA;
+border-right: solid 0px #4e6769;
+}
+
+.ui-datatable .ui-datatable-data .read td{
+background-color:#ffffff;
+border-right: solid 0px #4e6769;
+}
+
+</style>
+			<p:dataTable rowStyleClass="#{message.read ? 'read' : 'notRead'}"
+			 var="message" value="#{notificationReaderBean.receivedMessages}">
+
+				<f:facet name="header">  
+             Expand rows to see the notification  
+        
+    </f:facet>
+
+				<p:column  style="width:16px">
+					<p:rowToggler toggleListener="#{notificationReaderBean.messageSelected}">
+					
+					</p:rowToggler>
+					
+				</p:column>
+
+				<p:column style="width:160px">
+					<f:facet name="header">  
+                    From  
+            </f:facet>
+					<h:outputText value="#{message.fromUser.username}" />
+				</p:column>
+
+			<p:column style="width:160px;">
+					<f:facet name="header">  
+                    Date  
+            </f:facet>
+					<h:outputText value="#{message.formatedTime}" />
+				</p:column>
+				
+				<p:column>
+					<f:facet name="header">  
+                    Subject  
+            </f:facet>
+					<h:outputText value="#{message.title}" />
+				</p:column>
+
+				<p:rowExpansion style="border:0px"  >
+					
+					<h:panelGrid columns="1" columnClasses="message" rowClasses="message" >
+						
+						<h:column> 
+						<h:outputText value="From: #{message.fromUser.username}" style="width:1000px;border:0px" />
+						 </h:column>
+						
+						 <h:column > 
+						<h:outputText value="Date: #{message.time}" style="width:1000px;border:0px" />
+						 </h:column>
+						 
+						 <h:column> 
+						 
+						 	<script>#{message.read}</script> 
+							
+							
+						 </h:column>
+						 <h:column> 
+						 </h:column>
+						<h:column > 
+						<h:outputText escape="false" value="#{message.text}"  style="width:1000px;border:0px"/>
+						 </h:column>
+
+					</h:panelGrid>
+
+				</p:rowExpansion>
+			</p:dataTable>
+
+ 
+
+
+		</h:form>
+
+	</ui:define>
+</ui:composition>
+</html>

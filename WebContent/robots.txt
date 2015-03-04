@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /javax.faces.resource
+Disallow: /lw/user
+

@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">	
+	
+	<ui:composition template="/lw/templates/new_main.xhtml"> 
+
+		<ui:param name="loginRequired" value="true"/>
+		<ui:param name="pageTitle" value="Text analysis"/>
+
+		
+		<ui:define name="center_layout">
+		
+			<h:form id="anlyse_form">
+				<p:panel header="Select users">
+					<ui:include src="/lw/templates/user_select_form.xhtml" />	
+					<br/>
+					<p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="Gather comments of selected users" process="@form" update=":growl output"/>
+					
+				</p:panel>
+						
+				<br/>
+				
+				<h:panelGroup id="output">
+					<p:panel header="Comments" value="#{adminTextAnalysisBean.commentCount lt 0}">
+						Selected comments: <h:outputText value="#{adminTextAnalysisBean.commentCount}" />
+						<hr/>
+						<a href="admin/wanderer.jsf" target="_blank" style="padding:5px 10px" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Analyse comments with WordWanderer</a>
+						<hr/>
+						
+						<h:outputText value="#{adminTextAnalysisBean.textBR}" escape="false"/>
+					</p:panel>
+				</h:panelGroup> 
+			</h:form>
+
+		</ui:define>
+	</ui:composition>
+</html>

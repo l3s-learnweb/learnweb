@@ -1,0 +1,51 @@
+#ted_content{
+	width:100%;
+	height:100%;
+}
+.tedTranscript{
+	
+	overflow:auto;	
+}
+
+.savebutton
+{
+	border: none !important;
+	background: none !important;
+	background-color: #489a83 !important;
+	text-shadow: none !important;
+	color: white !important;
+	font-weight: normal !important;
+	cursor: pointer;
+}
+
+.right_bar
+{	
+	float: right;
+	height: 91%;
+	width: 45%;
+	padding:5px;
+	display: inline-block;
+	position: fixed;
+	right: 8px; 
+	border-left-style: groove;
+	overflow:auto;		
+}
+
+.embedded{
+	padding-left:3px;
+	position: absolute;
+	width:53%;
+	height:99%;
+}
+
+ .highlight {
+    background-color: yellow;
+ }
+
+ .note {
+    background-color: yellow;
+ }
+ 
+ .tooltip{
+ 	
+ }

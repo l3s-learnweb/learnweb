@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition>
+
+	<h:dataTable var="logEntry" value="#{news}" style=" width: 100%;" id="logEntry">
+					
+				
+					<h:column >
+					<div style=" float: left;">
+					    <h:graphicImage id="userpic" url="#{logEntry.user.image}" width="30" height="30" style=" padding-right: 10px;"/>
+					    </div>
+						<div style="width: auto;">
+						<h:outputText value="#{logEntry.text}" escape="false"  />
+						<h:panelGroup rendered="#{logEntry.queryNeeded}">
+						<h:outputText value=" with query " escape="false"  />
+						
+						<h:outputLink value="search.jsf" style="text-decoration:none">
+						<h:outputText value=" #{logEntry.resource.query}" escape="false"  style="color:#3399FF;font-weight:bold;"/>
+						
+								<f:param name="query" value="#{logEntry.resource.query}"></f:param>
+						        <f:param name="action" value="search"></f:param>
+						</h:outputLink>
+						
+						<h:outputText value=" from #{logEntry.resource.source} " escape="false"  />
+						</h:panelGroup>
+						</div>
+						
+						<h:outputText value="#{logEntry.datedifference} [#{logEntry.date.toLocaleString()}]" escape="false" style="font-size:8pt; max-height:50px; color: grey;"/>	
+						
+						
+						
+						
+						
+						
+						<br></br>
+						<br></br>
+						
+						
+						<hr width="auto" style="border:1px solid #eee !important;" ></hr>
+					</h:column>	
+									
+				</h:dataTable>
+				
+</ui:composition>
+</html>

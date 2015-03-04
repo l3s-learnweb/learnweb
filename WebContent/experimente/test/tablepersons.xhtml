@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" 
+	lang="#{userBean.localeCode}">
+	
+	<ui:composition template="/templates/main.xhtml">
+		<ui:param name="pageTitle" value="persontable" />
+
+		<ui:define name="center_layout">
+		<h:form>
+			<h:dataTable value="#{customer.persons}" var="person">
+			  <h:column>
+			   <f:facet name="header">
+			      <h:outputText value="Name"/>
+			    </f:facet>
+			    <h:outputText value="#{person.name}"/>
+			  </h:column>
+			  
+			  <h:column>
+			   <f:facet name="header">
+			      <h:outputText value="E-Mail"/>
+			    </f:facet>
+			    <h:outputText value="#{person.email}"/>
+			  </h:column>
+			  
+			 <h:column>
+			  	<f:facet name="header">
+			  		<h:outputText value="edit"/>
+			  	</f:facet>
+			  		<h:commandButton id="edit" action="${customer.edit(person)}" value="Edit">
+			  		</h:commandButton>
+			  </h:column>
+			  <h:column>
+			  	<f:facet name="header">
+			  		<h:outputText value="delete"/>
+			  	</f:facet>
+			  		<h:commandButton id="delete" action="#{customer.deletePerson(person)}" value="Delete">
+			  		</h:commandButton>
+			  </h:column>
+			</h:dataTable>
+			
+			<h:commandButton id="add" action="#{customer.add}" value="add">
+			</h:commandButton>
+			</h:form>
+		
+
+		</ui:define>
+		
+	</ui:composition>
+</html>

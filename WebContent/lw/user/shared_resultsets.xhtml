@@ -1,0 +1,33 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">	
+	
+	<ui:composition> 
+				<h:dataTable var="datagrid" value="${resultSetBean.viewResultsets()}" id="datagrid" style="width:100%;">
+					<h:column >
+						<div class="newsfeed_text">
+						<h:outputText value="#{datagrid.user.username}" escape="false"  />
+						has shared this
+						<h:commandLink action="#{resultSetBean.resultSetRedirect()}" styleClass="newsfeed_query_link">
+							<h:outputText value="resultset" escape="false" styleClass="newsfeed_query_link_text"/>
+								<f:setPropertyActionListener target="#{resultSetBean.resultSetId}" value="#{datagrid.resultsetId}" />
+								<f:setPropertyActionListener target="#{exploreBean.exploreMode}" value="resultset_view" />
+						        <f:setPropertyActionListener target="#{resultSetBean.query}" value="#{datagrid.query}" />
+						     	<f:setPropertyActionListener target="#{resultSetBean.queryDate}" value="#{datagrid.queryTimestamp}" />
+						        <f:param name="resultsetid" value="#{datagrid.md5value}"/>
+						</h:commandLink>
+						<h:outputText value=" for the query " escape="false"  />
+						<h:outputText value=" #{datagrid.query}" escape="false"  style="text-decoration:bold;"/>
+						</div>
+						
+						<h:outputText value="#{datagrid.queryTimestamp}" escape="false" styleClass="newsfeed_date_difference"/>	
+						<br></br>
+						<br></br>
+						<hr width="100%" class="newsfeed_separator" ></hr>
+					</h:column>	
+				</h:dataTable>
+	</ui:composition>
+</html>

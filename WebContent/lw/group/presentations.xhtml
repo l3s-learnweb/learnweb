@@ -1,0 +1,178 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
+	<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}" /> 
+</f:metadata>
+
+<ui:composition template="/lw/templates/new_main.xhtml">
+
+	<ui:param name="loginRequired" value="true" />
+	<ui:param name="pageTitle" value="Groups" />
+
+	
+	    		
+		<ui:define name="center_layout">
+			<h:form target="new_presentation" id="new_presentation_form">
+				<p:commandButton id="add_resource" styleClass="resource_button greenbutton" onclick="format_dialog.show()" value="New Presentation"></p:commandButton>
+			</h:form>
+			<script type="text/javascript">
+				var div = document.createElement("div");
+				var group_header = document.createElement("span");
+				$(group_header).addClass("group_header");
+				$(group_header).html("#{msg.presentations}");
+				var group_owner = document.createElement("span");
+				$(group_owner).addClass("group_owner");
+				$(group_owner).html(" #{msg.of} #{groupDetailBean.group.title}");
+				var cl = $("#new_presentation_form").clone();
+	            $(cl).appendTo(div);
+	            $("#new_presentation_form").remove()
+				$(div).append(group_header);
+				$(div).append(group_owner);
+				$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
+				$("#center_pane").prepend(div);
+				
+				$(document).ready(nCol);
+				window.onresize = nCol;
+				
+				function nCol(){
+					var w = $(window).width();
+					var c = 4;
+					if(w == 1366)
+						c = 4;
+					if(w &lt; 1366)
+						c = 3;
+					updateColumns([{name:'cols',value: c}]);
+				}
+			</script>
+			<h:form>
+				<p:confirmDialog id="confirmDialog" message="Are you sure about deleting the Presentation?" header="Delete Presentation" severity="alert" widgetVar="confirmation" appendToBody="true" >
+			        <p:commandButton id="confirm" value="Yes" update=":datagrid :right_form" oncomplete="update_header(); confirmation.hide();"  
+			                   actionListener="#{groupDetailBean.removePresentationFromGroup}" process=":right_form"/>  
+			        <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+			    </p:confirmDialog>
+			</h:form>
+			<p:dialog resizable="false" header="Layout Selection" widgetVar="format_dialog" modal="true" appendToBody="true">
+				<h:form>
+					Select the layout for displaying Text Resources<br/><br/>
+			    	<a onclick="format_dialog.hide()" class="format_button_link" target="new_presentation" href="#{groupDetailBean.edit('1')}">
+						<img class="format_button" src="../resources/icon/format1.jpg"></img><br/>
+						Single Slide Layout
+					</a>
+			    	<a onclick="format_dialog.hide()" class="format_button_link" target="new_presentation" href="#{groupDetailBean.edit('2')}">
+						<img class="format_button" src="../resources/icon/format2.jpg"></img><br/>
+						Two Slide Layout
+					</a>
+		    	</h:form>
+		    </p:dialog>
+		    <p:dialog resizable="false" header="Layout Selection" widgetVar="format_dialog2" modal="true" appendToBody="true">
+				<h:form id="edit_presentation_layout">
+					Select the layout for displaying Text Resources<br/><br/>
+			    	<a onclick="format_dialog2.hide()" class="format_button_link" target="edit_presentation" href="#{groupDetailBean.editPresentation('1')}">
+						<img class="format_button" src="../resources/icon/format1.jpg"></img><br/>
+						Single Slide Layout
+					</a>
+			    	<a onclick="format_dialog2.hide()" class="format_button_link" target="edit_presentation" href="#{groupDetailBean.editPresentation('2')}">
+						<img class="format_button" src="../resources/icon/format2.jpg"></img><br/>
+						Two Slide Layout
+					</a>
+		    	</h:form>
+		    </p:dialog>
+			<script type="text/javascript">
+				function select(panel)
+				{
+					$(".members_panel").css("border","1px solid #ccc");
+					$(panel).css("border","1px solid #666");
+				}
+			</script>
+			<h:form>
+			 	<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{groupDetailBean.updateColumns}"></p:remoteCommand>
+	        </h:form>
+			<h:panelGroup id="resource_disp">
+				<p:dataGrid emptyMessage="No Presentations found. Please refresh if you just saved a presentation." id="datagrid" var="result" value="#{groupDetailBean.presentations}" columns="#{groupDetailBean.numberOfColumns}" paginator="false" widgetVar="datagrid">  
+			        <p:commandLink rendered="#{groupDetailBean.numberOfColumns != 10 and groupDetailBean.numberOfColumns != 3}" styleClass="resource_command_link" update=":right_form :edit_presentation_layout" oncomplete="update_header()">
+			        	<f:setPropertyActionListener target="#{groupDetailBean.clickedPresentation}" value="#{result}"></f:setPropertyActionListener>
+				        <p:panel styleClass="members_panel">  
+				            <h:panelGrid columns="1" styleClass="members_panelgrid"> 
+				            	<img src="../resources/icon/presentation.png" width="120" height="120" />
+				            	<div class="member_username">#{result.presentationName}</div>
+				            	<span class="groupid">#{result.presentationId}</span>
+				            </h:panelGrid>
+				        </p:panel>
+				    </p:commandLink>
+				    <p:commandLink rendered="#{groupDetailBean.numberOfColumns == 3}" styleClass="resource_command_link" update=":right_form :edit_presentation_layout" oncomplete="update_header()">
+			        	<f:setPropertyActionListener target="#{groupDetailBean.clickedPresentation}" value="#{result}"></f:setPropertyActionListener>
+				        <p:panel styleClass="members_panel_small">  
+				            <h:panelGrid columns="1" styleClass="members_panelgrid"> 
+				            	<img src="../resources/icon/presentation.png" width="100" height="100" />
+				            	<div class="member_username_small">#{result.presentationName}</div>
+				            	<span class="groupid">#{result.presentationId}</span>
+				            </h:panelGrid>
+				        </p:panel>
+				    </p:commandLink>
+			    </p:dataGrid>
+		    </h:panelGroup>
+		    <script type="text/javascript">
+		    	$(".ui-panel").click(function(){
+		    		select(this);
+		    	});
+		    	
+				function resize_preview()
+				{
+					if($("#presentation_preview"))
+					{
+						var width = $("#presentation_preview").width();
+						var height = 3*width/4;
+						$("#presentation_preview").height(height);
+					}
+				}
+		    </script>
+		</ui:define>
+		<ui:define name="right_layout">
+			<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" header="#{groupDetailBean.clickedPresentation.presentationName}" id="right_pane">
+				<div id="right_pane_wrapper">
+					<h:form id="right_form" target="presentation">
+						<script type="text/javascript">
+							function update_header()
+							{
+								$(".ui-layout-unit-header","#right_pane").html("#{groupDetailBean.clickedPresentation.presentationName}");
+								resize_preview();
+							}
+						</script>
+						<ui:fragment rendered="#{groupDetailBean.clickedPresentation.presentationId != -1}">
+							
+							<div id="presentation_preview">
+							    <span class="aligner"></span>
+							    <span class="align">#{groupDetailBean.clickedPresentation.presentationTitle}</span>
+							</div>
+							<p:commandButton styleClass="presentation_commandbutton" action="#{groupDetailBean.present}" ajax="false" value="Present"></p:commandButton>
+							<p:commandButton styleClass="presentation_commandbutton" onclick="format_dialog2.show(); return false" ajax="false" value="Edit"></p:commandButton>
+							<p:commandButton styleClass="presentation_commandbutton" onclick="confirmation.show(); return false" ajax="false" value="Delete"></p:commandButton>
+							<div class="presentation_clear"></div>
+							<div class="presentation_detail_div">
+								<div class="data"><span class="resource_field">Author :</span> #{groupDetailBean.clickedPresentation.getOwner().username}</div>
+								<div class="data"><span class="resource_field">Date :</span> #{groupDetailBean.clickedPresentation.date}</div>
+							</div>
+						</ui:fragment>
+						<ui:fragment rendered="#{groupDetailBean.clickedPresentation.presentationId eq -1}">
+							<div class="click_message">
+								Click on a presentation to view details.
+							</div>
+						</ui:fragment>
+					</h:form>
+				</div>
+			</p:layoutUnit>
+			<script type="text/javascript">
+				$(document).ready(function(){
+					setTimeout("resize_preview()",50);
+				});
+			</script>
+		</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:viewParam name="course_id" value="#{adminCourseBean.courseId}" />
+</f:metadata>
+
+<ui:composition template="/lw/templates/new_main.xhtml">
+	
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{adminCourseBean.course.title} course" />
+	
+	
+	
+	<ui:define name="center_layout">
+
+		<p:panel header="#{adminCourseBean.course.title} - course">
+			<h:form id="course_form" >
+				<h:panelGrid columns="3" columnClasses="medium-width">
+					
+					<h:outputText value="#{msg.title}:" />
+					<p:inputText id="c_title" value="#{adminCourseBean.course.title}">
+						<p:ajax update="message_c_title" />
+					</p:inputText>
+					<p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
+					
+					<h:outputText value="Wizard Parameter:" />
+					<p:inputText id="c_param" value="#{adminCourseBean.course.wizardParam}">
+						<p:ajax update="message_c_param" />
+					</p:inputText>
+					<p:message for="c_param" showSummary="true" showDetail="false" id="message_c_param"/>
+					
+					<h:outputText value="#{msg.organization}:" rendered="#{userBean.admin}" />
+					<h:selectOneMenu id="c_organisation" value="#{adminCourseBean.course.organisationId}" rendered="#{userBean.admin}">
+						<f:selectItem itemLabel="No organisation" itemValue="0" />
+						<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />	
+						<f:selectItems var="org" value="#{adminCourseBean.organisations}" itemLabel="#{org.title}" itemValue="#{org.id}"/>
+					</h:selectOneMenu>
+					<p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation" rendered="#{userBean.admin}"/>
+					
+					<h:outputText value="Banner color:" />
+					<p:colorPicker id="popupCP" value="#{adminCourseBean.course.bannerColor}" widgetVar="picker"/>
+					<p:message for="popupCP" showSummary="true" showDetail="false" />
+					
+					<h:outputText value="Banner image:" />
+					  <p:fileUpload fileUploadListener="#{adminCourseBean.handleFileUpload}"  
+					    id="imageupload"
+			            mode="advanced"  
+			            update="message_c_bannerimage"  
+			            auto="true"  
+			            sizeLimit="1000000"   
+			            allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/> 
+					<p:message for="imageupload" showSummary="true" showDetail="false" id="message_c_bannerimage"/>
+
+				</h:panelGrid>
+				<br/>
+				<p:editor value="#{adminCourseBean.course.welcomeMessage}" width="600" />
+			 
+			 	<br/>
+				<p:accordionPanel autoHeight="false">
+					<c:forEach items="#{adminCourseBean.optionGroups}" var="group">					
+
+						<p:tab title="#{group.title}">
+							<h:dataTable value="#{group.options}" var="option">
+								<h:column>
+									<h:selectBooleanCheckbox value="#{option.value}" id="checkbox"/>
+								</h:column>
+								<h:column>
+									<h:outputLabel value="#{option.name}" for="checkbox" />
+								</h:column>
+							</h:dataTable>
+						</p:tab>
+
+					</c:forEach>
+				</p:accordionPanel>
+				
+				<p>Users won't actually see changes until they login next time.</p>		
+				
+				<p:commandButton actionListener="#{adminCourseBean.save}" value="#{msg.save}" update=":growl">
+					<f:param name="course_id" value="#{adminCourseBean.courseId}" />
+				</p:commandButton>
+				
+				<br/><br/>
+				
+				<p:commandButton actionListener="#{adminCourseBean.onEnableForum}" value="Enable Forum" update=":growl :message" rendered="#{adminCourseBean.course.forumCategoryId == 0}">
+					<f:param name="course_id" value="#{adminCourseBean.courseId}" />
+				</p:commandButton>
+			</h:form>
+		</p:panel>
+	</ui:define>
+</ui:composition>
+</html>

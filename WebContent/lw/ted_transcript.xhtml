@@ -1,0 +1,94 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" 
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	lang="#{userBean.localeCode}">
+
+<f:metadata>
+	<f:viewParam name="resource_id" value ="#{tedTranscriptBean.resourceId}" />
+	<f:event type="preRenderView" listener="#{tedTranscriptBean.preRenderView}" />
+</f:metadata>
+	
+<ui:composition template="/lw/templates/new_main.xhtml">
+	<ui:param name="pageTitle" value="#{msg.tedTranscriptTitle}" />	
+	<ui:param name="helpText" value="#{msg.tedTranscriptHelp}"/>
+	<ui:param name="helpTextStyle" value="tedtranscript_help" />
+	
+	<ui:define name="center_layout">
+		<h:outputStylesheet library="css" name="ted_transcript.css"  />
+		<h:outputStylesheet library="css" name="tipped.css"  />
+		<h:outputScript library="js" name="ted_transcript.js" target="head"/>
+		<h:outputScript library="js" name="tipped.js" target="head"/>
+		<h:outputScript library="js" name="imagesloaded.pkgd.min.js" target="head"/>
+		<h:outputScript library="js" name="log4javascript_stub.js" target="head"/>
+	    <h:outputScript library="js" name="rangy-core.js" target="head"/>
+	    <h:outputScript library="js" name="rangy-dom.js" target="head"/>
+	    <h:outputScript library="js" name="rangy-domrange.js" target="head"/>
+	    <h:outputScript library="js" name="rangy-wrappedrange.js" target="head"/>
+	    <h:outputScript library="js" name="rangy-wrappedselection.js" target="head"/>
+	    <h:outputScript library="js" name="rangy-cssclassapplier.js" target="head"/>
+	    <h:outputScript library="js" name="rangy-highlighter.js" target="head"/>
+	    
+  		<script type="text/javascript">
+  			var noteid = #{tedTranscriptBean.noteId};
+  		</script>		
+		<div id="ted_content">
+		<div class="embedded" id="ted_embedded">		
+			<!-- ${tedTranscriptBean.tedResource.embedded} -->	
+		</div>		
+		
+		<h:panelGroup layout="block" id="search_right_bar" class="right_bar">
+			<p:outputPanel autoUpdate="true">
+				<h:form>
+					<p:outputLabel for="select_lang" value="#{msg.select_transcript_lang}" />
+			        <h:selectOneMenu id="select_lang" value="#{tedTranscriptBean.transcriptLanguage}" >
+			           <f:selectItem itemValue="----------------------------"/>
+			           <f:selectItems value="#{tedTranscriptBean.getLanguageList()}"/>
+			        </h:selectOneMenu>
+					<p:commandButton value="Okay" ajax="true" update=":transcript_form:hidden_transcript" action="#{tedTranscriptBean.setTranscript}" oncomplete="displayTranscript();"/>
+
+					<p:commandButton styleClass="savebutton" value="#{msg.save}" onclick="saveEditing();" style="float:right;"></p:commandButton>
+				</h:form>
+				<b>Note:</b>#{msg.transcript_note}
+				<p:separator/>
+			</p:outputPanel>
+			<h:form id="transcript_form">
+				<h:inputHidden id="hidden_transcript" value="#{tedTranscriptBean.tedResource.transcript}" />
+			</h:form>
+			<div onmouseup="noteSelectedText()" id="ted_transcript" class="tedTranscript">
+					
+			</div>
+
+		</h:panelGroup>
+			<!-- <div class="footer" style="height:130px;text-align:justify;padding-left:4px;">
+				
+				<h:outputText value="Video transcript is a relevant resource for learning. Language teachers appreciate the opportunity of using transcripts in multiple languages to prepare learning activities for their students. To address a specific request from our LearnWeb-OER users, we provide the following activities related to TED videos:" style="display:inline-block; padding-top:4px;width:98%;float:left;"></h:outputText>
+				<h:outputText value="1.Students watch a TED video listening to the talk." style="display:inline-block; padding-top:4px;width:98%;float:left;"></h:outputText>
+				<h:outputText value="2.Students watch the same TED video looking at the transcript in English." style="display:inline-block; padding-top:4px;width:98%;float:left;"></h:outputText>
+				<h:outputText value="3.Students are requested to select specific Parts of Speech in the transcript: they can highlight specific words in the text." style="display:inline-block; padding-top:4px;width:98%;float:left;"></h:outputText>
+				<h:outputText value="When students highlight a word in the transcript, they can write a comment to motivate their selection, and LearnWeb-OER provides a list of synonyms for that word. Synonyms are taken from WordNet." style="display:inline-block;padding-top:2px; width:98%;float:left;"></h:outputText>
+				<h:outputText value="The teacher track students´ activities when the work (video and annotated transcript) is saved in a LearnWeb-OER group." style="display:inline-block;padding-top:2px; width:98%;float:left;"></h:outputText>
+				<a href="#" onclick="footer_close();return false;" id="footer_close" title="close"></a>
+			</div> --> 
+		</div>
+
+		<h:form style="display:none;">
+			<p:remoteCommand actionListener="${tedTranscriptBean.processActionSetSynonyms()}" name="setSynonymsForWord" oncomplete="setSynonyms(xhr,status,args);" async="false"/>
+			<p:remoteCommand actionListener="${tedTranscriptBean.processActionSaveResource()}" name="saveTedResource" update=":growl" />
+			<p:remoteCommand actionListener="${tedTranscriptBean.processActionSaveLog()}" name="saveTranscriptLog" />
+		</h:form>	
+
+		<p:dialog widgetVar="userinput_dialog" modal="true" header="#{msg.userAnnotation}" minWidth="600" resizable="false" closable="false" appendToBody="true">
+			<h:outputLabel value="#{msg.justify_selection}" for="text"/>
+			<p:inputText id="text" style="width:97%;"/>
+			<p:commandButton value="Ok" onclick="getUserText('ok');"></p:commandButton>
+			<p:commandButton value="#{msg.cancel}" onclick="getUserText('cancel');"></p:commandButton>
+		</p:dialog>
+
+	</ui:define>
+	
+</ui:composition>
+</html>

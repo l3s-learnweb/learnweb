@@ -1,0 +1,154 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
+	<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}" /> 
+</f:metadata>
+
+
+<ui:composition template="/lw/templates/new_main.xhtml">
+
+			
+
+<ui:param name="loginRequired" value="true" />
+	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" />
+
+	<ui:define name="center_layout">
+		
+		<p:dialog appendToBody="true" header="#{msg.edit}" widgetVar="link_dialog" modal="true" minWidth="540" styleClass="zindex10000">
+			<h:form id="link_edit_form">
+				<h:panelGrid columns="2">					
+					<h:outputLabel value="#{msg.title}:"/>
+					<p:inputText value="#{groupDetailBean.selectedLink.title}" styleClass="links_input" rendered="#{groupDetailBean.selectedLink != null}"/>
+					
+					<h:outputText value="" />
+					<p:commandButton value="#{msg.save}" ajax="true" actionListener="#{groupDetailBean.onEditLink}" process="@form" oncomplete="link_dialog.hide();" update=":message :grouplinks">
+						<f:setPropertyActionListener target="#{groupDetailBean.editLink}" value="#{groupDetailBean.selectedLink}" />
+						<f:param name="group_id" value="#{groupDetailBean.group.id}"/>						
+					</p:commandButton>
+				</h:panelGrid>
+			</h:form>						
+		</p:dialog>	
+		
+		
+		<h:panelGroup id="grouplinks" layout="block" style="padding-right:5px;">		
+
+		
+			<h:panelGroup rendered="${not empty groupDetailBean.links}">	
+				<h:form styleClass="links_form">		
+					<h4 class="clear"><h:outputText value="#{msg.links}" />:</h4>
+					<p:dataList var="link" value="${groupDetailBean.links}" styleClass="links_datalist">		
+						<p:column>
+							<h:outputLink value="#{link.url}" target="_blank" styleClass="links_output">#{link.title}</h:outputLink>	
+						
+							<p:commandLink update=":link_edit_form" oncomplete="link_dialog.show();" title="#{msg.edit}" 
+								process="@this" styleClass="links_commandlink"
+								rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isMember(userBean.user))}">
+								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" styleClass="links_graphic" />
+								<f:setPropertyActionListener value="#{link}" target="#{groupDetailBean.selectedLink}" />
+								<f:param name="group_id" value="#{groupDetailBean.groupId}" /> 
+							</p:commandLink> 
+							
+							<p:commandLink actionListener="#{groupDetailBean.onDeleteLinkFromGroup(link.id)}" update=":message :grouplinks" 
+									title="#{msg.delete}" 									
+									onstart="return confirm('Do you really want to delete \'#{link.title}\'?');"
+									rendered="${(userBean.admin || userBean.moderator || groupDetailBean.group.isLeader(userBean.user))}">
+								<f:param name="group_id" value="#{groupDetailBean.group.id}"/>
+								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" styleClass="links_graphic"/> 
+							</p:commandLink>
+						</p:column>
+					</p:dataList>
+				</h:form>
+			</h:panelGroup>
+				
+			<h:panelGroup rendered="${not empty groupDetailBean.documentLinks}">	
+				<h:form styleClass="links_form">				
+					<h4 class="clear"><h:outputText value="#{msg.documents}" />:</h4>
+					<p:dataList var="link" value="${groupDetailBean.documentLinks}" styleClass="links_datalist">		
+						<p:column>
+							<h:outputLink value="#{link.url}" target="_blank" styleClass="links_output">#{link.id}  #{link.title}</h:outputLink>	
+							
+							<p:commandLink update=":link_edit_form" oncomplete="link_dialog.show();" title="#{msg.edit}" 
+								process="@this" styleClass="links_commandlink"
+								rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isMember(userBean.user))}">
+								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" styleClass="links_graphic" />
+								<f:setPropertyActionListener value="#{link}" target="#{groupDetailBean.selectedLink}" />
+								<f:param name="group_id" value="#{groupDetailBean.groupId}" /> 
+							</p:commandLink>
+									
+							<p:commandLink actionListener="#{groupDetailBean.onDeleteLinkFromGroup(link.id)}" update=":message :grouplinks" 
+									title="#{msg.delete}" 									
+									onstart="return confirm('Do you really want to delete \'#{link.title}\'?');"
+									rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isLeader(userBean.user))}">
+								<f:param name="group_id" value="#{groupDetailBean.group.id}"/>
+								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" styleClass="links_graphic"/> 
+							</p:commandLink>
+						</p:column>
+					</p:dataList>
+				</h:form>			
+			</h:panelGroup>
+		</h:panelGroup>
+
+		<p:panel toggleable="true" header="#{msg.options}" rendered="${groupDetailBean.group.isMember(userBean.user)}" styleClass="clear links_panel" style="margin-top:20px; margin-right:5px;">
+			<h:form id="link_form">
+				
+				
+				
+				<h:panelGrid columns="3">	
+					<h:outputText value="" rendered="${groupDetailBean.group.forumId == 0}" />
+					<p:commandButton rendered="${groupDetailBean.group.forumId == 0}" immediate="true" value="#{msg.createForum}" actionListener="#{groupDetailBean.onCreateForum}" update=":message :grouplinks @form" style="margin-bottom:10px;">
+						<f:param name="group_id" value="#{groupDetailBean.group.id}"/>
+					</p:commandButton>
+					<h:outputText value="" rendered="${groupDetailBean.group.forumId == 0}" />					
+							
+					<h:outputLabel value="#{msg.type}:" />
+					<h:selectOneMenu value="#{groupDetailBean.newLinkType}">
+						<f:selectItem itemValue="document" itemLabel="Google Document (Word)" />
+						<f:selectItem itemValue="spreadsheet" itemLabel="Google Spreadsheet (Excel)" />
+						<f:selectItem itemValue="presentation" itemLabel="Google Presentation (PowerPoint)" />
+						<f:selectItem itemValue="url" itemLabel="#{msg.website}"  />	 
+						<p:ajax process="@this" update="urlpanel1 urlpanel2 urlpanel3" />
+						<f:param name="group_id" value="#{groupDetailBean.group.id}"/>
+					</h:selectOneMenu>
+					<h:outputText value="" />					
+					
+					<h:panelGroup id="urlpanel1"><h:outputLabel rendered="#{groupDetailBean.newLinkType == 'url'}" for="link_url" value="URL:" /></h:panelGroup>
+					<h:panelGroup id="urlpanel2"><p:inputText rendered="#{groupDetailBean.newLinkType == 'url'}" styleClass="links_inputtext" id="link_url" value="#{groupDetailBean.newLinkUrl}" /></h:panelGroup>
+					<h:panelGroup id="urlpanel3"><p:message rendered="#{groupDetailBean.newLinkType == 'url'}" showSummary="true" showDetail="false" styleClass="error" for="link_url" /></h:panelGroup>
+					
+						
+					<h:outputLabel for="link_title" value="#{msg.title}:" />
+					<p:inputText id="link_title" value="#{groupDetailBean.newLinkTitle}" styleClass="links_inputtext2" />
+					<p:message showSummary="true" showDetail="false" styleClass="error" for="link_title" />
+	
+					<h:outputText value="" />
+					<p:commandButton action="#{groupDetailBean.onAddLink}" ajax="true" value="#{msg.addLink}" process="@form" update=":grouplinks link_form :growl">					
+						<f:param name="group_id" value="#{groupDetailBean.group.id}"/>
+					</p:commandButton>
+				</h:panelGrid>
+				</h:form>
+		</p:panel>
+			<script type="text/javascript">
+				var div = document.createElement("div");
+				var group_header = document.createElement("span");
+				$(group_header).addClass("group_header");
+				$(group_header).html("#{msg.links} - #{groupDetailBean.group.title}");
+				
+				
+				$(div).append(group_header);
+				
+				
+				$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
+				$("#center_pane").prepend(div);
+			</script>
+	
+	
+	</ui:define>
+</ui:composition>
+</html>

@@ -1,0 +1,41 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">	
+	
+	<ui:composition template="/lw/templates/new_main.xhtml"> 
+
+		<ui:param name="loginRequired" value="true"/>
+		<ui:param name="pageTitle" value="Organisation"/>
+
+	
+		<ui:define name="center_layout">
+			
+			<script type="text/javascript">
+			function enableEdit()
+			{			
+				//$('#welcometext').hide();
+				$('#editwelcomeform').css('display', 'block');				
+			}			
+			</script>	
+			<style type="text/css">
+			p { margin: 12px 0 6px 0; }
+			</style>
+						
+			<p:panel header="#{adminOrganisationBean.organisation.title}" style="min-width:628px;">
+				
+				<h:form id="editwelcomeform">
+					<p><h:outputText value="#{msg.title}:" /></p>
+					<p:inputText value="#{adminOrganisationBean.organisation.title}" style="width:400px" />
+					<p><h:outputText value="Welcome message:" /></p>
+					<p:editor value="#{adminOrganisationBean.organisation.welcomeMessage}" width="600" />
+					<p><p:commandButton action="#{adminOrganisationBean.onSave}" value="#{msg.save}" ajax="false"/></p>
+				</h:form>		
+			</p:panel>			
+
+	
+		</ui:define>
+	</ui:composition>
+</html>

@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition> 
+
+	<ui:repeat var="res" value="#{resources}">
+		
+		<h:panelGroup layout="block" styleClass="page_counter" rendered="#{res.tempId gt 1 and res.tempId % 8 eq 1}">
+			<h:outputText value="#{msg.page}  #{utilBean.toInt(res.tempId / 8)}" />
+		</h:panelGroup>	
+			
+		<div class="resource" id="resource_${res.tempId}">		
+			<h:panelGroup layout="block" styleClass="#{res.newResource ? 'list_newResource':'oldResource'}">
+				<h:outputLink class="resourceWebLink" target="_blank"  value="#{res.url}" escape="false" style="color:rgb(88, 147, 236);text-decoration: none; font-size: 12pt; font-weight: bold;"><h:outputText value="#{res.title}" escape="false"/></h:outputLink>
+				
+				<table style="border-spacing:0px;padding-right: 0px;    padding-left: 0px;">
+				<tr>
+				<td style="padding-right: 0px;    padding-left: 0px;">
+				<!-- image of user -->
+				</td>
+				<td>
+				<div style="display:inline; vertical-align:top;">
+				<h:outputLink  value="#{res.learnwebUrl}" title="" style="text-decoration:none; color:green;">#{res.learnwebUrl}</h:outputLink><br/>
+				
+				<h:outputText value="#{res.snippet}" style="display:block;width:94%;" escape="false"></h:outputText>
+				</div>
+				<h:form rendered="#{userBean.loggedIn}">
+					<h:panelGroup rendered="#{utilBean.searchPage}">				
+							<p:commandLink update=":resource_form"
+								oncomplete="resource_dialog.show();"
+								title="#{msg.addToMyResources}"
+								style="display:block; margin-top:4px;">
+								<h:graphicImage value="/resources/icon/silk/add.png" width="16"
+									height="16" alt="#{msg.addToMyResources}" /> #{msg.addToMyResources}
+							<f:setPropertyActionListener value="#{res.resource}"
+									target="#{searchBean.selectedResource}" />
+							</p:commandLink>
+					</h:panelGroup>
+					<h:panelGroup rendered="#{utilBean.viewResultSetPage}">
+							<p:commandLink update=":resource_form"
+								oncomplete="resource_dialog.show();"
+								title="#{msg.addToMyResources}"
+								style="display:block; margin-top:4px;">
+								<h:graphicImage value="/resources/icon/silk/add.png" width="16"
+									height="16" alt="#{msg.addToMyResources}" /> #{msg.addToMyResources}
+							<f:setPropertyActionListener value="#{res.resource}"
+									target="#{resultSetBean.selectedResource}" />
+							</p:commandLink>
+					</h:panelGroup>					
+				</h:form>
+				</td>
+				</tr>
+				</table>
+			</h:panelGroup>
+		</div>		
+	</ui:repeat>
+</ui:composition>
+</html>

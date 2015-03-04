@@ -1,0 +1,64 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<f:metadata>
+	<f:viewParam name="action" value="#{servicesBean.action}" />
+	<f:viewParam name="oauth_token" value="#{servicesBean.iwToken}" />
+	<f:viewParam name="oauth_token_secret" value="#{servicesBean.iwSecret}" />
+	<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{servicesBean.preRenderView}" />
+</f:metadata>
+
+<ui:composition template="/lw/templates/new_main.xhtml"> 
+
+		<ui:param name="loginRequired" value="true"/>
+		<ui:param name="pageTitle" value="#{msg.web2_0services}"/>
+
+		
+		
+		<ui:define name="center_layout">			
+			<p:panel header="Interweb" rendered="#{!userBean.loggedInInterweb}">
+				Please <h:outputLink value="#{servicesBean.authorizeUrl}">authorize</h:outputLink> yourself by Interweb - the environment for integration of the Web2.0 tools
+			</p:panel>
+			
+			<p:panel header="#{msg.web2_0services}"  rendered="#{userBean.loggedInInterweb}">
+			<h:form>
+				<h:dataTable var="service" value="#{servicesBean.services}" columnClasses="servicesTableLeftColumn," headerClass="align-left">
+					<h:column>
+						<f:facet name="header"><h2 style="display:inline;">Interweb</h2></f:facet>
+					
+						<h:graphicImage value="/resources/icon/services/${service.id.toLowerCase()}.gif" width="16" height="16" alt="#{service.title}" title="#{service.title}"/> #{service.title}
+					</h:column>	
+					<h:column>
+						<f:facet name="header">
+							<div style="font-weight:normal;">
+								<h:outputText value="#{msg.authorized_as} #{servicesBean.interwebUsername} " style="color:green"/> 
+								<h:commandLink actionListener="${servicesBean.signOutFromInterweb}" value="#{msg.logoutLabel}" rendered="#{true or servicesBean.userAllowedToLogoutFromInterweb}"/>
+							</div>						
+						</f:facet>
+						<h:panelGroup rendered="#{service.authorized}">
+							<h:outputText value="#{msg.authorized_as} #{service.userIdAtService} " style="color:green"/> 
+							<h:commandLink actionListener="${servicesBean.signOutFromService(service.id)}" value="#{msg.logoutLabel}"/>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{!service.authorized}">							
+							<h:panelGrid columns="2">
+								<h:panelGrid columns="2" style="font-size: 0.8em;" rendered="${servicesBean.isLoginBasedService(service)}">
+									<h:outputLabel value="Key:" style="margin-right:5px" />
+									<h:inputText id="key" value="#{service.key}" />
+									<h:outputLabel value="Secret:" style="margin-right:5px" />
+									<h:inputSecret id="secret" value="#{service.secret}" />
+								</h:panelGrid>
+								<h:commandButton value="Authorize" actionListener="${servicesBean.signInOnService(service)}" />
+							</h:panelGrid>						
+						</h:panelGroup>
+					</h:column>
+
+				</h:dataTable>
+				</h:form>			
+			</p:panel>
+		</ui:define>
+	</ui:composition>
+</html>
