@@ -22,7 +22,7 @@
 			<h:form id="explore_optform" style="padding-left: 28%;vertical-align: middle;">
 				<h:outputText value="Task based View" styleClass="optform_text"
 					rendered="#{exploreBean.exploreMode == 'task_based'}" />
-				<h:link value="Task based View" outcome="explore"
+				<h:link value="#{msg.Task_based_View}" outcome="explore"
 					styleClass="optform_link"
 					rendered="#{exploreBean.exploreMode != 'task_based'}" >
 					<f:param name="mode" value="task_based" />
