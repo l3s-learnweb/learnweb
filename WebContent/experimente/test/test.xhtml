@@ -1,0 +1,32 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" 
+	lang="#{userBean.localeCode}">
+
+	
+<ui:composition template="/templates/main.xhtml">
+	<ui:param name="pageTitle" value="Test-Ajax"/>
+
+	<ui:define name="center_layout">
+	<h:form id="form">
+			<f:ajax render=":outer">
+			<h:panelGrid columns="2">
+				<h:outputLabel value="First Name:" for="first"></h:outputLabel>
+				<h:inputText id="first" value="#{test.first}"></h:inputText>
+				<h:outputLabel value="Last Name:" for="last"></h:outputLabel>
+				<h:inputText id="last" value="#{test.last}"></h:inputText>
+				<h:commandButton value="Show">
+					<f:ajax execute="first last" render="inner"></f:ajax>
+				</h:commandButton>
+			</h:panelGrid>
+			</f:ajax>
+			<h:outputText id="inner" value="#{test.name}"></h:outputText>
+		</h:form>
+			<h:outputText id="outer" value="#{test.name}"></h:outputText>
+	</ui:define>
+	
+</ui:composition>
+</html>
