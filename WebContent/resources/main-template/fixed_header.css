@@ -38,30 +38,30 @@ section {
 	z-index:5;
 }
 #searchfield{
-	float: left;
-	margin-left: 23rem;
-	font-size: 1.8rem;
-	width: 26rem;
-	position: relative;
-	top: 50%;
-	height: 3.4rem;
-	margin-top: -1.7rem;
-	padding: 0px 1rem;
-	border: medium none;
+	float:left;
+	margin-left:23rem;
+	font-size:1.8rem;
+	width:26rem;
+	position:relative;
+	top:50%;
+	height:3.4rem;
+	margin-top:-1.7rem;
+	padding:0px 1rem;
+	border:medium none;
 }
 #searchbutton{
-	cursor: pointer;
-	background: url("search.png") no-repeat scroll center center #9C9C9C;
-	float: left;
-	border-top-right-radius: 5px;
-	border-bottom-right-radius: 5px;
-	width: 4.0rem;
-	font-size: 2.8rem;
-	position: relative;
-	top: 50%;
-	height: 3.4rem;
-	margin-top: -1.7rem;
-	border: medium none;
+	cursor:pointer;
+	background:url("search.png") no-repeat scroll center center #9C9C9C;
+	float:left;
+	border-top-right-radius:5px;
+	border-bottom-right-radius:5px;
+	width:4.0rem;
+	font-size:2.8rem;
+	position:relative;
+	top:50%;
+	height:3.4rem;
+	margin-top:-1.7rem;
+	border:medium none;
 }
 #searchbutton:hover{
 	background-color:#a4a4a4;
@@ -86,7 +86,6 @@ section {
 	background-color:#489a83;
     color:#FFFFFF;
 	text-align:left;
-	z-index:10;
 }
 .language ul{
 	float:right;
@@ -99,11 +98,10 @@ section {
 	margin-left:-6rem;
     margin-right:-6.2rem;
     margin-top:3.3rem;
-    z-index:10;
+    padding-top:1.2rem;
 }
 .language:hover ul{
 	display:block;
-	z-index:10;
 }
 .language ul:after{
 	clear:both;
@@ -117,18 +115,15 @@ section {
     list-style:outside none none;
     margin-top:4px;
     width:12rem;
-    z-index:10;
 }
 .language ul li a{
 	display:block;
 	text-decoration:none;
 	padding:1rem;
 	border-radius:10px;
-	z-index:10;
 }
 .language ul li a:hover{
 	background-color:#74beaa;
-	z-index:10;
 }
 .active{
 	display:block;
@@ -140,7 +135,6 @@ section {
 	top:50%;
 	margin-top:1.2rem;
 	margin-right:2.5rem;
-	z-index:10;
 }
 .non-active{
 	display:none;
@@ -154,8 +148,7 @@ section {
 	border-radius:5px;
 	padding:2px;
 	float:right;
-	margin-right:1rem;
-    margin:1rem 0;
+    margin:1rem;
 }
 #loginbutton{
 	display:block;
@@ -258,6 +251,9 @@ section {
 #moreprofile{
 	display:none;
 }
+#moreactivitystream{
+	display:block;
+}
 #logout, #login{
 	display:none;
 }
@@ -279,6 +275,7 @@ section {
 	padding:0 1rem;
 	text-overflow:ellipsis; 
 	font-weight:normal;
+	margin-right:7rem;
 }
 #backtogroup:hover{
 	color:#000000;
@@ -297,14 +294,3 @@ section {
 #text{
 	text-align:left;
 }
-
-
-
-
-
-
-
-
-
-
-

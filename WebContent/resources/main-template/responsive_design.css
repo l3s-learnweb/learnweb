@@ -25,7 +25,7 @@
  
 /* options for different screen sizes */
 
-@media screen and (max-width: 93em){
+@media screen and (max-width: 76em){
 	#moreprofile{
 		display:block;
 	}
@@ -34,7 +34,7 @@
 	}
 }
 
-@media screen and (max-width: 84em){
+@media screen and (max-width: 70em){
 	#moremygroups{
 		display:block;
 	}
@@ -43,18 +43,12 @@
 	}
 }
 
-@media screen and (max-width: 75em){
+@media screen and (max-width: 65em){
 	#moremyresources{
 		display:block;
 	}
 	#myresources{
 		display:none;
-	}
-}
-
-@media screen and (max-width: 65em){
-	#searchfield{
-		width:15em;
 	}
 }
 
@@ -64,7 +58,7 @@
 	}
 }
 
-@media screen and (max-width: 54em){
+@media screen and (max-width: 55em){
 	.resourcestype:last-child{
 		display:none;
 	}
