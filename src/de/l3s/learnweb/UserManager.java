@@ -164,6 +164,9 @@ public class UserManager
 		user = createUser(rs);
 		user = cache.put(user);
 	    }
+
+	    user.getLastLoginDate(); // must be called before the user is logged in to cache the last login date
+
 	    return user;
 	}
 	finally

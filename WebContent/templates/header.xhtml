@@ -86,13 +86,16 @@
 					</ul>
 		</div>
 		<img alt="" src="resources/main-template/question.png" id="informationonscreen" />
-		<span>
+		<span>			
 			<h:outputLink id="loginbutton" value="lw/user/login.jsf" rendered="#{not userBean.loggedIn}">
 				#{msg.loginLabel}
 			</h:outputLink>
-			<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true">
-				<img alt="#{msg.logoutLabel}" src="resources/main-template/logout.png" height="25" width="25" id="logoutbutton" />							
-			</h:commandLink>
+			
+			<h:form>
+				<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true">
+					<img alt="#{msg.logoutLabel}" src="resources/main-template/logout.png" height="25" width="25" id="logoutbutton" />							
+				</h:commandLink>
+			</h:form>
 		</span>
 	</div>
 
@@ -108,15 +111,7 @@
 
 	</div>
 	
-	
-	<h:panelGroup rendered="#{options_panel}">
-	ist gesetzt
-	
 	<ui:insert name="options_panel"></ui:insert>
-	</h:panelGroup>
-						
-	
-
 
 </ui:composition>
 

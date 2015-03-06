@@ -6,18 +6,12 @@
 	xmlns:f="http://java.sun.com/jsf/core" 
 	xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="pageTitle" value="#{msg.loginTitle}" />
+	<ui:composition> 
 
-	<ui:define name="left_layout">
-		<p:panel header="#{msg.loginTitle}">
-			<ui:include src="/lw/templates/login_form.xhtml" />
-		</p:panel>
-	</ui:define>
-	
-	
-	<ui:define name="center_layout">
-		<p:panel header="#{msg.loginTitle}">
-			<ui:include src="/lw/templates/login_form.xhtml" />
-		</p:panel>
-	</ui:define>
+		<div class="float-left">
+			<a href="#">test</a>
+		</div>
+		
+
+	</ui:composition>
 </ui:composition>
