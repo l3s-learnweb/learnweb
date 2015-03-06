@@ -102,17 +102,17 @@ section {
 .language ul li{
 	float:left;
     list-style:outside none none;
+    margin-top:4px;
 }
 .language ul li a{
 	display:block;
 }
 .language ul li:hover > ul{
-	visibility:visible;
+	display:block;
 }
 .language ul li ul{
    	background-color:#489a83;
-    display:inline;
-    visibility:hidden;
+    display:none;
     width:12rem;
     border-bottom-right-radius:10px;
 	border-bottom-left-radius:10px;
