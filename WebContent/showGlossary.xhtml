@@ -20,7 +20,7 @@
 				border-spacing:0px;
 			}
 			.glossary th{
-				font-size:2em;
+				font-size:1.5rem;
 				border:1px solid grey;
 			}
 			.glossary td {
@@ -29,30 +29,34 @@
 			.button, .button1{
 				background-color:#616161;
 				color:#489A83;
-				font-size:1.5em;
+				font-size:1.5rem;
 				font-weight:bold;
 				border:1px solid #489A83;
 				border-radius:5px;
 				padding:2px;
+				margin-right:2rem;
 			}
 			.button:hover, .button1:hover{
 				color:#FFFFFF;
 				border:1px solid #FFFFFF;
 			}
 			.button1{
-				margin-left:1em;
+				margin-left:1rem;
 			}
 			.data{
-				font-size:1.5em;
+				font-size:1.5rem;
 			}
 			.inputfield, .inputarea{
 				font-family:Arial;
-				font-size:1.5em;
+				font-size:1.5rem;
 				width:15em;
 			}
 			.datatype{
-				font-size:1.5em;
-				margin-left:1em;
+				font-size:1.5rem;
+				margin-left:1rem;
+			}
+			.filter{
+				font-size:1.5rem;
 			}
 		</style>
 			
@@ -62,40 +66,67 @@
 			
 			<h:form>
 			
-				<h:dataTable value="#{glossaryBean.entries}" var="entry" column="4" styleClass="glossary">
+				<p:dataTable value="#{glossaryBean.entries}" var="entry" column="4" styleClass="glossary">
 				
-					<h:column>
+					<p:column>
 						<f:facet name="header">
 			     			 <h:outputText value="#{msg.item}"></h:outputText>
 			    		</f:facet>
 							<h:outputText value="#{entry.item}" styleClass="data"></h:outputText>
-					</h:column>
+					</p:column>
 					
-					
-					<h:column>
+					<p:column>
 						<f:facet name="header">
 							<h:outputText value="#{msg.description}"></h:outputText>
 						</f:facet>
 						<h:outputText value="#{entry.description}" styleClass="data"></h:outputText>
-					</h:column>
+					</p:column>
 					
-					<h:column>
+					<p:column filterBy="#{entry.topic}" filterMatchMode="contains" styleClass="filter">
 						<f:facet name="header">
-							<h:outputText value="#{msg.edit}"></h:outputText>
+							<h:outputText value="#{msg.topic}" ></h:outputText>
 						</f:facet>
-						<h:commandButton id="edit" action="#{glossaryBean.edit(entry)}" value="#{msg.edit}" styleClass="button">
-						</h:commandButton>
-					</h:column>
+						<h:outputText value="#{entry.topic}" styleClass="data"></h:outputText>
+					</p:column>
 					
-					<h:column>
+					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{msg.delete}"></h:outputText>
+							<h:outputText value="#{msg.language_it}"></h:outputText>
 						</f:facet>
+						<h:outputText value="#{entry.italian}" styleClass="data"></h:outputText>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{msg.language_de}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{entry.german}" styleClass="data"></h:outputText>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{msg.language_es}"></h:outputText>
+						</f:facet>
+						<h:outputText value="#{entry.spanish}" styleClass="data"></h:outputText>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{msg.options}"></h:outputText>
+						</f:facet>
+						<h:commandButton id="edit" action="#{glossaryBean.edit(entry)}" value="#{msg.edit}" styleClass="button"></h:commandButton>
 						<h:commandButton id="delete" action="#{glossaryBean.deleteEntry(entry)}" value="#{msg.delete}" styleClass="button">
 						</h:commandButton>
-					</h:column>
+					</p:column>
 					
-				</h:dataTable>
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{msg.reference_material}"></h:outputText>
+						</f:facet>
+						<a href="#{entry.reference}">#{entry.reference}</a>
+					</p:column>
+					
+				</p:dataTable>
 				</h:form>
 				<br/>
 				<br/>
@@ -114,6 +145,21 @@
 				
 				<h:outputLabel value="#{msg.description}" for="description" styleClass="datatype"></h:outputLabel>
 				<h:inputTextarea id="description" value="#{glossaryBean.selectedEntry.description}" styleClass="inputarea"></h:inputTextarea>
+				
+				<h:outputLabel value="#{msg.topic}" for="topic" styleClass="datatype"></h:outputLabel>
+				<h:inputText id="topic" value="#{glossaryBean.selectedEntry.topic}" styleClass="inputfield"></h:inputText>
+				
+				<h:outputLabel value="#{msg.language_it}" for="italian" styleClass="datatype"></h:outputLabel>
+				<h:inputText id="italian" value="#{glossaryBean.selectedEntry.italian}" styleClass="inputfield"></h:inputText>
+				
+				<h:outputLabel value="#{msg.language_de}" for="german" styleClass="datatype"></h:outputLabel>
+				<h:inputText id="german" value="#{glossaryBean.selectedEntry.german}" styleClass="inputfield"></h:inputText>
+				
+				<h:outputLabel value="#{msg.language_es}" for="spanish" styleClass="datatype"></h:outputLabel>
+				<h:inputText id="spanish" value="#{glossaryBean.selectedEntry.spanish}" styleClass="inputfield"></h:inputText>
+				
+				<h:outputLabel value="#{msg.reference_material}" for="reference_material" styleClass="datatype"></h:outputLabel>
+				<h:inputText id="reference_material" value="#{glossaryBean.selectedEntry.reference}" styleClass="inputfield"></h:inputText>
 										
 		</h:panelGrid>
 			

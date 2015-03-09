@@ -97,14 +97,14 @@
 					<ul>
 						<li>
 							<a href="#" id="english">
-								<img alt="" src="resources/main-template/english.png" height="20" width="30" style="vertical-align: middle" />
-									<h:outputText value="#{msg.language_en}"/>
+								<img alt="" src="resources/main-template/english.png" id="flag" style="vertical-align: middle" />
+									<h:outputText value=" #{msg.language_en}"/>
 							</a>
 						</li>
 						<li>
 							<a href="#" id="german">
-								<img alt="" src="resources/main-template/german.png" height="20" width="30" style="vertical-align: middle" />
-									<h:outputText value="#{msg.language_de}"/>
+								<img alt="" src="resources/main-template/german.png" id="flag" style="vertical-align: middle" />
+									<h:outputText value=" #{msg.language_de}"/>
 							</a>
 						</li>
 					</ul>
@@ -129,20 +129,20 @@
 		<a href="#" id="backtogroup">
 			<h:outputText value="#{msg.back_to}"/>
 		</a>
-
-			<a href="#" class="resourcestype">
+		<span class="resourcestype">
+			<a href="#" id="web" class="activeResource">
 				<h:outputText value="#{msg.web}"/>
 			</a>
-			<a href="#" class="resourcestype">
+			<a href="#" id="images" class="non-activeResource">
 				<h:outputText value="#{msg.Images}"/>
 			</a>
-			<a href="#" class="resourcestype">
+			<a href="#" id="videos" class="non-activeResource">
 				<h:outputText value="#{msg.Videos}"/>
 			</a>
-			<a href="#" class="resourcestype">
-				<h:outputText value="#{msg.more_options}"/>
+			<a href="#" id="more_option" class="non-activeResource">
+				<h:outputText value="#{msg.more_options}" />
 			</a>
-
+		</span>
 	</div>
 	
 	<ui:insert name="options_panel"></ui:insert>

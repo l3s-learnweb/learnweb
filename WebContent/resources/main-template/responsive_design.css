@@ -25,7 +25,7 @@
  
 /* options for different screen sizes */
 
-@media screen and (max-width: 76em){
+@media screen and (max-width: 80em){
 	#moreprofile{
 		display:block;
 	}
@@ -34,7 +34,7 @@
 	}
 }
 
-@media screen and (max-width: 70em){
+@media screen and (max-width: 75em){
 	#moremygroups{
 		display:block;
 	}
@@ -59,7 +59,7 @@
 }
 
 @media screen and (max-width: 55em){
-	.resourcestype:last-child{
+	.resourcestype a:last-child{
 		display:none;
 	}
 	.language{

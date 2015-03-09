@@ -125,6 +125,10 @@ section {
 .language ul li a:hover{
 	background-color:#74beaa;
 }
+#flag{
+	height:2rem;
+	width:3rem;
+}
 .active{
 	display:block;
 	float:right;
@@ -271,22 +275,33 @@ section {
 #backtogroup {
 	float:left;
 	text-decoration:none;
-	width:14rem;
+	width:19rem;
 	padding:0 1rem;
 	text-overflow:ellipsis; 
+	overflow:hidden;
+	white-space:nowrap;
 	font-weight:normal;
-	margin-right:7rem;
+	margin-right:1rem;
 }
 #backtogroup:hover{
 	color:#000000;
 }
-.resourcestype{
+.resourcestype a{
 	text-decoration:none;
+	padding-right:1.5rem;
+	padding-left:1.5rem;
 	color:#489a83;
-	margin-right:1rem;
 }
-.resourcestype:hover{
-	color:#FFFFFF;
+.resourcestype a:hover{
+	color:#000000;
+	
+}
+.activeResource{
+	background-image: radial-gradient(circle farthest-corner at center, #FFFFFF 0%, #616161 100%);
+
+}
+.non-activeResource{
+	
 }
 
 /* section */
