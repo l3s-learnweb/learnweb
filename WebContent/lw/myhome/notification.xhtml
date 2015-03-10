@@ -59,21 +59,21 @@ border-right: solid 0px #4e6769;
 
 				<p:column style="width:160px">
 					<f:facet name="header">  
-                    From  
+                    <h:outputText value="#{msg.from}"></h:outputText>  
             </f:facet>
 					<h:outputText value="#{message.fromUser.username}" />
 				</p:column>
 
 			<p:column style="width:160px;">
 					<f:facet name="header">  
-                    Date  
+                    <h:outputText value="#{msg.date}"></h:outputText> 
             </f:facet>
 					<h:outputText value="#{message.formatedTime}" />
 				</p:column>
 				
 				<p:column>
 					<f:facet name="header">  
-                    Subject  
+                    <h:outputText value="#{msg.subject}"></h:outputText> 
             </f:facet>
 					<h:outputText value="#{message.title}" />
 				</p:column>

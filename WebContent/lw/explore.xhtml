@@ -20,7 +20,7 @@
 		<div class="options_panel">
 
 			<h:form id="explore_optform" style="padding-left: 28%;vertical-align: middle;">
-				<h:outputText value="Task based View" styleClass="optform_text"
+				<h:outputText value="#{msg.Task_based_View}" styleClass="optform_text"
 					rendered="#{exploreBean.exploreMode == 'task_based'}" />
 				<h:link value="#{msg.Task_based_View}" outcome="explore"
 					styleClass="optform_link"
@@ -28,16 +28,16 @@
 					<f:param name="mode" value="task_based" />
 				</h:link>			
 
-				<h:outputText value="List View"
+				<h:outputText value="#{msg.list_view}"
 					styleClass="optform_text"
 					rendered="#{exploreBean.exploreMode == 'list_view'}" />
-				<h:link value="List View" outcome="explore"
+				<h:link value="#{msg.list_view}" outcome="explore"
 					styleClass="optform_link"
 					rendered="#{exploreBean.exploreMode != 'list_view'}" >
 					<f:param name="mode" value="list_view" />
 					<f:param name="page" value="1" />
 				</h:link>
-				<h:outputText value="Resultset View"
+				<h:outputText value="#{msg.resultSetViewTitle}"
 					styleClass="optform_text"
 					rendered="#{exploreBean.exploreMode == 'resultset_view'}" />
 			</h:form>
@@ -50,7 +50,7 @@
 			<div id="taskbased_history_filter"
 				style="padding-left: 5px; padding-right: 10px;width:100%;">
 				<p:panel id="taskbased_history_filter_panel"
-					header="Task Based Search History Filter" toggleable="true"
+					header="#{msg.Search_History_Filter}" toggleable="true"
 					toggleSpeed="500" widgetVar="panel" style="padding:5px;">
 					<script type="text/javascript">
 						$(function() {
@@ -92,11 +92,11 @@
 					</script>
 					<h:form>
 					
-					Get Sessions From: <h:inputText styleClass="Fromdatepicker"
+					#{msg.sessions_from}: <h:inputText styleClass="Fromdatepicker"
 							id="from_date" value="#{exploreBean.fromFilterQueries}" />
-							To: <h:inputText styleClass="Todatepicker" id="to_date"
+							#{msg.to}: <h:inputText styleClass="Todatepicker" id="to_date"
 							value="#{exploreBean.toFilterQueries}" />
-						    <span>	</span><p:commandButton value="Update Task Based View"
+						    <span>	</span><p:commandButton value="#{msg.update} #{msg.Task_based_View}"
 							update=":task_based_graph" />
 
 					</h:form>
