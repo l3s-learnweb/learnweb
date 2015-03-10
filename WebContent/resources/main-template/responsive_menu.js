@@ -40,25 +40,25 @@ $(document).ready(function(){
 
 $(document).ready(function(){
 	$("#web").click(function(){
-		$("#web").removeClass("activeResource").toggleClass("non-activeResource");
+		$("#web").removeClass("non-activeResource").toggleClass("activeResource");
 		$("#more_option").toggleClass("non-activeResource");
 		$("#images").toggleClass("non-activeResource");
 		$("#videos").toggleClass("non-activeResource");
 	});
 	$("#images").click(function(){
-		$("#images").removeClass("non-activeResource").toggleClass("activeResource");
+		$("#images").toggleClass("activeResource");
 		$("#web").toggleClass("non-activeResource");
 		$("#more_option").toggleClass("non-activeResource");
 		$("#videos").toggleClass("non-activeResource");
 	});
 	$("#videos").click(function(){
-		$("#videos").removeClass("non-activeResource").toggleClass("activeResource");
+		$("#videos").toggleClass("activeResource");
 		$("#web").toggleClass("non-activeResource");
 		$("#images").toggleClass("non-activeResource");
 		$("#more_option").toggleClass("non-activeResource");
 	});
 	$("#more_option").click(function(){
-		$("#more_option").removeClass("non-activeResource").toggleClass("activeResource");
+		$("#more_option").toggleClass("activeResource");
 		$("#web").toggleClass("non-activeResource");
 		$("#images").toggleClass("non-activeResource");
 		$("#videos").toggleClass("non-activeResource");
