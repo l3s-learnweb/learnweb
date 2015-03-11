@@ -38,30 +38,65 @@ $(document).ready(function(){
 	})
 })
 
+// resourcetyp
 $(document).ready(function(){
-	$("#web").click(function(){
-		$("#web").removeClass("non-activeResource").toggleClass("activeResource");
-		$("#more_option").toggleClass("non-activeResource");
-		$("#images").toggleClass("non-activeResource");
-		$("#videos").toggleClass("non-activeResource");
-	});
 	$("#images").click(function(){
-		$("#images").toggleClass("activeResource");
-		$("#web").toggleClass("non-activeResource");
-		$("#more_option").toggleClass("non-activeResource");
-		$("#videos").toggleClass("non-activeResource");
+		if($("#images").hasClass("non-activeResource")==true){
+			$("#images").removeClass("non-activeResource").toggleClass("activeResource");
+		}
+		if($("#web").hasClass("activeResource")==true){
+			$("#web").removeClass("activeResource").toggleClass("non-activeResource");
+		}
+		if($("#more_option").hasClass("activeResource")==true){
+			$("#more_option").removeClass("activeResource").toggleClass("non-activeResource");
+		}
+		if($("#videos").hasClass("activeResource")==true){
+			$("#videos").removeClass("activeResource").toggleClass("non-activeResource")
+		}
 	});
+	
+	$("#web").click(function(){
+		if($("#web").hasClass("non-activeResource")==true){
+			$("#web").removeClass("non-activeResource").toggleClass("activeResource");
+		}
+		if($("#images").hasClass("activeResource")==true){
+			$("#images").removeClass("activeResource").toggleClass("non-activeResource");
+		}
+		if($("#more_option").hasClass("activeResource")==true){
+			$("#more_option").removeClass("activeResource").toggleClass("non-activeResource");
+		}
+		if($("#videos").hasClass("activeResource")==true){
+			$("#videos").removeClass("activeResource").toggleClass("non-activeResource")
+		}
+	});
+	
 	$("#videos").click(function(){
-		$("#videos").toggleClass("activeResource");
-		$("#web").toggleClass("non-activeResource");
-		$("#images").toggleClass("non-activeResource");
-		$("#more_option").toggleClass("non-activeResource");
+		if($("#videos").hasClass("non-activeResource")==true){
+			$("#videos").removeClass("non-activeResource").toggleClass("activeResource");
+		}
+		if($("#images").hasClass("activeResource")==true){
+			$("#images").removeClass("activeResource").toggleClass("non-activeResource");
+		}
+		if($("#more_option").hasClass("activeResource")==true){
+			$("#more_option").removeClass("activeResource").toggleClass("non-activeResource");
+		}
+		if($("#web").hasClass("activeResource")==true){
+			$("#web").removeClass("activeResource").toggleClass("non-activeResource")
+		}
 	});
 	$("#more_option").click(function(){
-		$("#more_option").toggleClass("activeResource");
-		$("#web").toggleClass("non-activeResource");
-		$("#images").toggleClass("non-activeResource");
-		$("#videos").toggleClass("non-activeResource");
+		if($("#more_option").hasClass("non-activeResource")==true){
+			$("#more_option").removeClass("non-activeResource").toggleClass("activeResource");
+		}
+		if($("#images").hasClass("activeResource")==true){
+			$("#images").removeClass("activeResource").toggleClass("non-activeResource");
+		}
+		if($("#videos").hasClass("activeResource")==true){
+			$("#videos").removeClass("activeResource").toggleClass("non-activeResource");
+		}
+		if($("#web").hasClass("activeResource")==true){
+			$("#web").removeClass("activeResource").toggleClass("non-activeResource")
+		}
 	});
 })
 
