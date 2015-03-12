@@ -66,9 +66,9 @@
 			
 			<h:form>
 			
-				<p:dataTable value="#{glossaryBean.entries}" var="entry" column="4" styleClass="glossary">
+				<p:dataTable value="#{glossaryBean.entries}" var="entry" column="4" styleClass="glossary" >
 				
-					<p:column>
+					<p:column sortBy="#{entry.item}">
 						<f:facet name="header">
 			     			 <h:outputText value="#{msg.item}"></h:outputText>
 			    		</f:facet>
