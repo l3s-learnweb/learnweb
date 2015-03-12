@@ -58,7 +58,7 @@ public class Learnweb
     private final SearchLogClient searchlogClient; //For Search History Tools
     private final SolrClient solrClient;
     private final SparqlClient sparqlClient; //For TED sparql endpoint
-
+    private final LoroManager loroManager;
     private final ResourcePreviewMaker resourcePreviewMaker;
     private JobScheduler jobScheduler;
 
@@ -120,6 +120,8 @@ public class Learnweb
 		propteriesFileName = "lw_windows_lisiyu";
 	    else if((new File("/home/linda").exists()))
 		propteriesFileName = "lw_ubuntu_lisiyu";
+	    else if((new File("C:\\Users\\kalyani").exists()))
+		propteriesFileName = "lw_local_rishita";
 
 	    properties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propteriesFileName + ".properties"));
 	}
@@ -156,6 +158,7 @@ public class Learnweb
 	sparqlClient = new SparqlClient(this);
 	tedManager = new TedManager(this);
 	archiveUrlManager = new ArchiveUrlManager(this);
+	loroManager = new LoroManager(this);
 	jobScheduler = new JobScheduler(this);
 	jobScheduler.startAllJobs();
 	PreparedStatement pstmt = dbConnection.prepareStatement("select * from lw_admin_message");
@@ -619,6 +622,11 @@ public class Learnweb
     public TedManager getTedManager()
     {
 	return tedManager;
+    }
+
+    public LoroManager getLoroManager()
+    {
+	return loroManager;
     }
 
     public ArchiveUrlManager getArchiveUrlManager()
