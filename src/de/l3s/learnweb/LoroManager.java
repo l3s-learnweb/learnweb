@@ -102,17 +102,17 @@ public class LoroManager
 	ResultSet rs = getLoroResource.getResultSet();
 	ResultSetMetaData rsmd = rs.getMetaData();
 	int columnsNumber = rsmd.getColumnCount();
-	while(rs.next())
+	/*while(rs.next())
 	{
 	    for(int i = 1; i <= columnsNumber; i++)
 	    {
 		if(i > 1)
 		    System.out.print(",  ");
-
-		System.out.print("\n" + rsmd.getColumnName(i));
+		String columnValue = rs.getString(i);
+		System.out.print("\n" + columnValue + rsmd.getColumnName(i));
 	    }
 	    System.out.println("");
-	}
+	}*/
 	while(rs.next())
 	{
 	    int learnwebResourceId = rs.getInt("resource_id");
@@ -148,39 +148,37 @@ public class LoroManager
     //Yet to be defined properly
     private Resource createResource(ResultSet rs, int learnwebResourceId) throws SQLException
     {
-	if(!rs.getString("doc_format").contains("image") && !rs.getString("doc_format").contains("video"))
-	{
-	    Resource resource = new Resource();
 
-	    if(learnwebResourceId != 0) // the video is already stored and will be updated
-		resource = learnweb.getResourceManager().getResource(learnwebResourceId);
+	Resource resource = new Resource();
+	System.out.print("\n1");
 
-	    resource.setTitle(rs.getString("title"));
-	    String description = rs.getString("description");
-	    if(rs.getString("language_level") != null)
-		description = description.concat("\nLanguage Level: " + rs.getString("language_level"));
-	    if(rs.getString("languages") != null)
-		description.concat("\nLanguage: " + rs.getString("languages"));
-	    if(rs.getString("course_code") != null)
-		description.concat("\nCourse Code: " + rs.getString("course_code"));
+	if(learnwebResourceId != 0) // the video is already stored and will be updated
+	    resource = learnweb.getResourceManager().getResource(learnwebResourceId);
+	System.out.print("\n2");
+	resource.setTitle(rs.getString("title"));
+	String description = rs.getString("description");
+	if(rs.getString("language_level") != null)
+	    description = description.concat("\nLanguage Level: " + rs.getString("language_level"));
+	if(rs.getString("languages") != null)
+	    description.concat("\nLanguage: " + rs.getString("languages"));
+	if(rs.getString("course_code") != null)
+	    description.concat("\nCourse Code: " + rs.getString("course_code"));
 
-	    description.concat("\nThis file is a part of resource available on: http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
-	    resource.setDescription(rs.getString("description"));
-	    resource.setUrl("http://loro.open.ac.uk" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
-	    resource.setSource("LORO");
-	    resource.setLocation("LORO");
-	    resource.setType("text");
-	    //resource.setDuration(rs.getInt("duration"));
-	    resource.setMaxImageUrl(rs.getString("preview_img_url"));
-	    resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
+	description.concat("\nThis file is a part of resource available on: http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
+	resource.setDescription(rs.getString("description"));
+	resource.setUrl("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
+	resource.setSource("LORO");
+	resource.setLocation("LORO");
+	resource.setType("text");
+	//resource.setDuration(rs.getInt("duration"));
+	resource.setMaxImageUrl(rs.getString("preview_img_url"));
+	resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
 
-	    //	resource.setEmbeddedRaw("<iframe src=\"http://embed.ted.com/talks/" + rs.getString("slug") + ".html\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>");
-	    //	resource.setTranscript("");
+	//	resource.setEmbeddedRaw("<iframe src=\"http://embed.ted.com/talks/" + rs.getString("slug") + ".html\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>");
+	//	resource.setTranscript("");
 
-	    return resource;
-	}
-	else
-	    return null;
+	return resource;
+
     }
 
     public static void main(String[] args) throws Exception
