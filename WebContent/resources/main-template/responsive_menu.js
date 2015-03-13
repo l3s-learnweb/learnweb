@@ -47,9 +47,6 @@ $(document).ready(function(){
 		if($("#web").hasClass("activeResource")==true){
 			$("#web").removeClass("activeResource").toggleClass("non-activeResource");
 		}
-		if($("#more_option").hasClass("activeResource")==true){
-			$("#more_option").removeClass("activeResource").toggleClass("non-activeResource");
-		}
 		if($("#videos").hasClass("activeResource")==true){
 			$("#videos").removeClass("activeResource").toggleClass("non-activeResource")
 		}
@@ -62,9 +59,6 @@ $(document).ready(function(){
 		if($("#images").hasClass("activeResource")==true){
 			$("#images").removeClass("activeResource").toggleClass("non-activeResource");
 		}
-		if($("#more_option").hasClass("activeResource")==true){
-			$("#more_option").removeClass("activeResource").toggleClass("non-activeResource");
-		}
 		if($("#videos").hasClass("activeResource")==true){
 			$("#videos").removeClass("activeResource").toggleClass("non-activeResource")
 		}
@@ -76,23 +70,6 @@ $(document).ready(function(){
 		}
 		if($("#images").hasClass("activeResource")==true){
 			$("#images").removeClass("activeResource").toggleClass("non-activeResource");
-		}
-		if($("#more_option").hasClass("activeResource")==true){
-			$("#more_option").removeClass("activeResource").toggleClass("non-activeResource");
-		}
-		if($("#web").hasClass("activeResource")==true){
-			$("#web").removeClass("activeResource").toggleClass("non-activeResource")
-		}
-	});
-	$("#more_option").click(function(){
-		if($("#more_option").hasClass("non-activeResource")==true){
-			$("#more_option").removeClass("non-activeResource").toggleClass("activeResource");
-		}
-		if($("#images").hasClass("activeResource")==true){
-			$("#images").removeClass("activeResource").toggleClass("non-activeResource");
-		}
-		if($("#videos").hasClass("activeResource")==true){
-			$("#videos").removeClass("activeResource").toggleClass("non-activeResource");
 		}
 		if($("#web").hasClass("activeResource")==true){
 			$("#web").removeClass("activeResource").toggleClass("non-activeResource")
