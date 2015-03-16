@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" lang="#{userBean.localeCode}">
+
+<ui:composition template="/templates/main.xhtml">
+	<ui:param name="pageTitle" value="test" />
+
+	<ui:define name="center_layout">
+	<h:outputStylesheet library="css" name="video-js.css"  />
+		<h:outputScript library="js" name="video.js" />		
+		
+		<div id="text">
+
+
+		 <br/><br/><br/><br/>
+		 <h1>Add new video</h1>
+			<video id="example_video_1" class="video-js vjs-default-skin"
+  controls preload="auto" width="640" height="264"
+  poster="http://video-js.zencoder.com/oceans-clip.png"
+  data-setup='{"example_option":true}'>
+ <source src="https://www.youtube.com/watch?v=_nEEhgtFq9Y" type='video/mp4' />
+ <source src="https://www.youtube.com/watch?v=_nEEhgtFq9Y" type='video/webm' />
+ <source src="https://www.youtube.com/watch?v=_nEEhgtFq9Y" type='video/ogg' />
+ <!-- <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p> -->
+</video>
+		</div>
+	</ui:define>
+ghgh
+</ui:composition>
+</html>
