@@ -6,21 +6,22 @@
 
 	<ui:define name="center_layout">
 	<h:outputStylesheet library="css" name="video-js.css"  />
-		<h:outputScript library="js" name="video.js" />		
+		<h:outputScript library="js" name="video.js" />	
+		<script>
+    videojs.options.flash.swf = "C:\Users\kalyani\Documents\video.js-stable\dist\video-js\video-js.swf";
+  </script>
+			
 		
 		<div id="text">
 
 
 		 <br/><br/><br/><br/>
 		 <h1>Add new video</h1>
-			<video id="example_video_1" class="video-js vjs-default-skin"
-  controls preload="auto" width="640" height="264"
-  poster="http://video-js.zencoder.com/oceans-clip.png"
-  data-setup='{"example_option":true}'>
+			<video id="example_video_1" class="video-js vjs-default-skin" controls preload="auto" width="640" height="264">
  <source src="https://www.youtube.com/watch?v=_nEEhgtFq9Y" type='video/mp4' />
  <source src="https://www.youtube.com/watch?v=_nEEhgtFq9Y" type='video/webm' />
  <source src="https://www.youtube.com/watch?v=_nEEhgtFq9Y" type='video/ogg' />
- <!-- <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p> -->
+ <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
 </video>
 		</div>
 	</ui:define>
