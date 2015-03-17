@@ -7,9 +7,7 @@
 	<ui:define name="center_layout">
 	<h:outputStylesheet library="resources" name="css/video-js.css"  />
 		<h:outputScript library="resources" name="js/video.js" />	
-		<script>
-    videojs.options.flash.swf = "C:\Users\kalyani\Documents\video.js-stable\dist\video-js\video-js.swf";
-  </script>
+	 
 			
 		
 		<div id="text">
@@ -26,12 +24,15 @@
 <h:body>
     Hello from Facelets
     <br />
-    <section id="reproductor">
+	<script>
+    videojs.options.flash.swf = "/resources/js/video-js.swf";
+  </script>
+    
         <video controls="controls">
-        <source src='http://video-js.zencoder.com/oceans-clip.mp4' type='video/mp4'/>
+        <source src='http://loro.open.ac.uk/2112/1/orator_%2D_explanations.MP4' type='video/mp4'/>
         </video>
-    </section>
-    <h:link outcome="welcomePrimefaces" value="Primefaces welcome page" />
+    
+
 </h:body>
 		</div>
 	</ui:define>

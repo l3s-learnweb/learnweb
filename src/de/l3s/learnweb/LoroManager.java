@@ -33,10 +33,6 @@ public class LoroManager
 	    java.util.Properties connProperties = new java.util.Properties();
 	    connProperties.setProperty("user", DB_USER);
 	    connProperties.setProperty("password", DB_PASSWORD);
-	    // connProperties.setProperty("autoReconnect", "true");
-	    connProperties.setProperty("maxTotal", "20");
-	    // connProperties.setProperty("maxReconnects", "-1");
-	    connProperties.setProperty("maxIdleTime", "129600");
 	    DBConnection = DriverManager.getConnection(DB_CONNECTION, connProperties);
 
 	    System.out.println("Connected to the database....");
@@ -44,14 +40,10 @@ public class LoroManager
 	}
 	catch(SQLException e)
 	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
 	    log.error("SQL Exception in getConnection ", e);
 	}
 	catch(ClassNotFoundException e)
 	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
 	    log.error("getConnection ", e);
 	}
     }
@@ -93,11 +85,11 @@ public class LoroManager
 	ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
 	SolrClient solr = learnweb.getSolrClient();
 	Group loroGroup = learnweb.getGroupManager().getGroupById(883);
-	User admin = learnweb.getUserManager().getUser(7727);
+	User admin = learnweb.getUserManager().getUser(9139);
 	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource SET resource_id = ? WHERE loro_resource_id = ?");
 
 	PreparedStatement getLoroResource = DBConnection
-		.prepareStatement("SELECT t1.loro_resource_id , t1.resource_id , t1.description , t1.tags , t1.title , t1.creator_name , t1.course_code , t1.language_level , t1.languages , t1.preview_img_url,  t2.filename , t2.doc_format , t2.doc_url FROM LORO_resource t1 JOIN LORO_resource_docs t2 ON t1.loro_resource_id = t2.loro_resource_id");
+		.prepareStatement("SELECT t1.loro_resource_id , t1.resource_id , t1.description , t1.tags , t1.title , t1.creator_name , t1.course_code , t1.language_level , t1.languages , t1.preview_img_url,  t2.filename , t2.doc_format , t2.doc_url FROM LORO_resource t1 JOIN LORO_resource_docs t2 ON t1.loro_resource_id = t2.loro_resource_id WHERE t2.doc_format LIKE '%video%' ORDER BY t1.loro_resource_id LIMIT 1");
 	getLoroResource.executeQuery();
 	ResultSet rs = getLoroResource.getResultSet();
 	ResultSetMetaData rsmd = rs.getMetaData();
@@ -134,7 +126,7 @@ public class LoroManager
 		admin.addResource(loroResource);
 		loroGroup.addResource(loroResource, admin);
 
-		solr.indexResource(loroResource);
+		//solr.indexResource(loroResource);
 
 	    }
 	    else
@@ -150,11 +142,10 @@ public class LoroManager
     {
 
 	Resource resource = new Resource();
-	System.out.print("\n1");
 
 	if(learnwebResourceId != 0) // the video is already stored and will be updated
 	    resource = learnweb.getResourceManager().getResource(learnwebResourceId);
-	System.out.print("\n2");
+
 	resource.setTitle(rs.getString("title"));
 	String description = "";
 	if(rs.getString("description") != null)
@@ -167,26 +158,24 @@ public class LoroManager
 	    description += "\nCourse Code: " + rs.getString("course_code");
 
 	description += "\nThis file is a part of resource available on: http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
-	resource.setDescription(rs.getString("description"));
+	resource.setDescription(description);
 	resource.setUrl("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
 	resource.setSource("LORO");
 	resource.setLocation("LORO");
 	resource.setMaxImageUrl(rs.getString("preview_img_url"));
 	if(rs.getString("doc_format").contains("image"))
 	    resource.setType("image");
-	else if(rs.getString("doc_format").contains("video"))
+	else if(rs.getString("doc_format").contains("video") && !rs.getString("doc_format").contains("quicktime"))
 	{
 	    resource.setType("Video");
-
+	    resource.setEmbeddedRaw("<h:outputStylesheet library=\"resources\" name=\"css/video-js.css\" /><h:outputScript library=\"resources\" name=\"js/video.js\" /><script>videojs.options.flash.swf = \"/resources/js/video-js.swf\";</script><video controls=\"controls\"><source src='"
+		    + rs.getString("doc_url") + "' ' type='video/mp4'/></video>");
 	}
 	else
 	    resource.setType("text");
 	//resource.setDuration(rs.getInt("duration"));
 
 	resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
-
-	//	resource.setEmbeddedRaw("<iframe src=\"http://embed.ted.com/talks/" + rs.getString("slug") + ".html\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>");
-	//	resource.setTranscript("");
 
 	return resource;
 
