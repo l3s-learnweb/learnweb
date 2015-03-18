@@ -19,24 +19,24 @@
 	<ui:define name="options_panel">
 		<div class="options_panel">
 			<h:form id="resultset_optform" style="padding-left: 28%;vertical-align: middle;">
-				<h:outputText value="Task based View" styleClass="optform_text"
+				<h:outputText value="#{msg.Task_based_View}" styleClass="optform_text"
 					rendered="#{exploreBean.exploreMode == 'task_based'}" />
-				<h:link value="Task based View" outcome="/lw/explore"
+				<h:link value="#{msg.Task_based_View}" outcome="/lw/explore"
 					styleClass="optform_link"
 					rendered="#{exploreBean.exploreMode != 'task_based'}" >
 					<f:param name="mode" value="task_based" />
 				</h:link>			
 
-				<h:outputText value="List View"
+				<h:outputText value="#{msg.list_view}"
 					styleClass="optform_text"
 					rendered="#{exploreBean.exploreMode == 'list_view'}" />
-				<h:link value="List View" outcome="/lw/explore"
+				<h:link value="#{msg.list_view}" outcome="/lw/explore"
 					styleClass="optform_link"
 					rendered="#{exploreBean.exploreMode != 'list_view'}" >
 					<f:param name="mode" value="list_view" />
 					<f:param name="page" value="1"/>
 				</h:link>
-				<h:outputText value="Resultset View"
+				<h:outputText value="#{msg.resultSetViewTitle}"
 					styleClass="optform_text"
 					rendered="#{exploreBean.exploreMode == 'resultset_view'}" />
 				<span style="float:right;padding-right:5px;"><h:panelGroup styleClass="explore_history"><p:commandButton id="rs_explore_history_tools" value="Explore History Tools" type="button" icon="ui-icon-triangle-1-s"/></h:panelGroup></span>
@@ -80,26 +80,27 @@
 		<div id="explore_right_bar" class="right_bar">
 			<p:outputPanel autoUpdate="true"  >
 				<p:tabView id="exploretabView" widgetVar="exploretabViewer" >
-					<p:tab title="ResultSet Timeline">
-						<p:panel id="resultview_filter_panel" header="ResultSet Filter" toggleable="true"
+					<p:tab title="#{msg.ResultSet_Timeline}">
+						<p:panel id="resultview_filter_panel" header="#{msg.ResultSet_Filter}" toggleable="true"
 							toggleSpeed="500" widgetVar="resultview_panel" style="padding:5px;">
 							<h:form>
 								<p:selectOneRadio layout="pageDirection" value="#{resultSetBean.resultsetfilter}" required="true"  >
-									<f:selectItem itemValue="resource_click" itemLabel="Resources Clicked" />
-									<f:selectItem itemValue="resources_not_clicked" itemLabel="Resources not clicked"/>
-									<f:selectItem itemValue="resource_saved" itemLabel="Resources Saved"/>
-									<f:selectItem itemValue="all_resources" itemLabel="All Resources" />
+									<f:selectItem itemValue="resource_click" itemLabel="#{msg.resources_clicked}" />
+									<f:selectItem itemValue="resources_not_clicked" itemLabel="#{msg.resources_not_clicked}/>
+									<f:selectItem itemValue="resource_saved" itemLabel="#{msg.resources_saved}"/>
+									<f:selectItem itemValue="all_resources" itemLabel="#{msg.resources_all}" />
 									<p:ajax listener="#{resultSetBean.setResultsetfilter()}" oncomplete="updateresultset(); "/>
 								</p:selectOneRadio>
 							</h:form>
 						</p:panel>
 						<br/>
-					The current resultset being viewed is for <b><i>#{resultSetBean.query}</i></b> posted on <b><i>#{resultSetBean.queryDate}</i></b>
+					<h:outputText value="#{msg.current_resultset}"/> <b><i>#{resultSetBean.query}</i></b> <h:outputText value="#{msg.posted_on}"/> <b><i>#{resultSetBean.queryDate}</i></b>
 						<h:form rendered="#{userBean.loggedIn}">
 							<p:commandLink update=":resultset_form"
 								oncomplete="resultset_dialog.show();"
 								title="share resultset"
-								style="display:block; margin-top:4px;color:blue;">Share Resultset
+								style="display:block; margin-top:4px;color:blue;">
+								<h:outputText value="#{msg.share_resultset}"/>
 							</p:commandLink>
 						</h:form>
 						<table id="timeline" 
@@ -133,8 +134,8 @@
 															<tr>
 																<td style="width: 1%"></td>
 																<td style="margin-top: 10px; width: 84%"><span
-																	style="padding-left: 10px;">Viewed for
-																		#{resultSetBean.getResourceClicked(timestamp).viewTime} seconds.</span></td>
+																	style="padding-left: 10px;"><h:outputText value="#{msg.viewed_for}"/>
+																		#{resultSetBean.getResourceClicked(timestamp).viewTime} <h:outputText value="#{msg.seconds}"/>.</span></td>
 																<td style="width: 15%"></td>
 															</tr>
 														</h:panelGroup>													
@@ -158,8 +159,8 @@
 															<tr>
 																<td style="width: 1%"></td>
 																<td style="margin-top: 10px; width: 84%"><span
-																	style="padding-left: 10px;">Viewed for
-																		#{resultSetBean.getResourceSaved(timestamp).viewTime} seconds.</span></td>
+																	style="padding-left: 10px;"><h:outputText value="#{msg.viewed_for}"/>
+																		#{resultSetBean.getResourceSaved(timestamp).viewTime} <h:outputText value="#{msg.seconds}"/>.</span></td>
 																<td style="width: 15%"></td>
 															</tr>
 														</h:panelGroup>														
@@ -239,15 +240,15 @@
 				</h:panelGrid>	
 			</h:form> 			
 		</p:dialog>
-		<p:dialog header="Share Resultset" widgetVar="resultset_dialog" modal="false" minWidth="600" resizable="false">			
+		<p:dialog header="#{msg.share_resultset}" widgetVar="resultset_dialog" modal="false" minWidth="600" resizable="false">			
 			<h:form id="resultset_form">
 				<h:panelGrid columns="2" rendered="#{userBean.loggedIn}" style="width:100%;">
 										
-					<h:outputLabel value="User Name:" for="username"/>
+					<h:outputLabel value="#{msg.username}:" for="username"/>
 					<p:inputText id="username" value="#{resultSetBean.userNameToShareWith}" style="width:100%;"/>					
 					
 					<h:outputText value="" />
-					<p:commandButton value="Share" action="#{resultSetBean.shareResultset}" process="@form" update=":growl" oncomplete="resultset_dialog.hide();"/>
+					<p:commandButton value="#{msg.share}" action="#{resultSetBean.shareResultset}" process="@form" update=":growl" oncomplete="resultset_dialog.hide();"/>
 				</h:panelGrid>	
 			</h:form> 			
 		</p:dialog>

@@ -66,9 +66,9 @@
 			
 			<h:form>
 			
-				<p:dataTable value="#{glossaryBean.entries}" var="entry" column="4" styleClass="glossary" >
+				<p:dataTable value="#{glossaryBean.entries}" var="entry" column="4" styleClass="glossary">
 				
-					<p:column sortBy="#{entry.item}">
+					<p:column sortBy="#{entry.item}" filterBy="#{entry.item}" filterMatchMode="contains" styleClass="filter">
 						<f:facet name="header">
 			     			 <h:outputText value="#{msg.item}"></h:outputText>
 			    		</f:facet>
@@ -124,6 +124,20 @@
 							<h:outputText value="#{msg.reference_material}"></h:outputText>
 						</f:facet>
 						<a href="#{entry.reference}">#{entry.reference}</a>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="#{msg.added_by}"></h:outputText>
+						</f:facet>
+							<h:outputText value="#{entry.addby}" styleClass="data"></h:outputText>
+					</p:column>
+					
+					<p:column>
+						<f:facet name="header">
+							<h:outputText value="last modified"></h:outputText>
+						</f:facet>
+							<h:outputText value="#{entry.lastmodified}"></h:outputText>
 					</p:column>
 					
 				</p:dataTable>

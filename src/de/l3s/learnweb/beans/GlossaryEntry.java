@@ -1,5 +1,8 @@
 package de.l3s.learnweb.beans;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class GlossaryEntry
 {
     private String item;
@@ -9,15 +12,41 @@ public class GlossaryEntry
     private String german;
     private String spanish;
     private String reference;
+    private String addby;
+    private Date lastmodified;
+
+    public String getAddby()
+    {
+	return addby;
+    }
+
+    public void setAddby(String addby)
+    {
+	this.addby = addby;
+    }
+
+    public Date getLastmodified()
+    {
+	Date zeitstempel = new Date();
+	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+	lastmodified = zeitstempel;
+	System.out.println("Datum: " + simpleDateFormat.format(zeitstempel));
+	return lastmodified;
+    }
+
+    public void setLastmodified(Date lastmodified)
+    {
+	this.lastmodified = lastmodified;
+    }
 
     public String getReference()
     {
-        return reference;
+	return reference;
     }
 
     public void setReference(String reference)
     {
-        this.reference = reference;
+	this.reference = reference;
     }
 
     public String getTopic()
