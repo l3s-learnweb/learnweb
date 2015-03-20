@@ -93,7 +93,7 @@
 						</script>
 						<ui:fragment rendered="#{groupDetailBean.clickedUser.id eq -1}">
 							<div class="click_message">
-								Click on a user to view details.
+								<h:outputText value="#{msg.user_details}"></h:outputText>
 							</div>
 						</ui:fragment>
 						<ui:fragment rendered="#{groupDetailBean.clickedUser.id != -1}">

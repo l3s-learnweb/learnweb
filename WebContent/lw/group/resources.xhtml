@@ -35,10 +35,10 @@
 					var div = document.createElement("div");
 					var group_header = document.createElement("span");
 					$(group_header).addClass("group_header");
-					$(group_header).html("Resources");
+					$(group_header).html("#{msg.resources}");
 					var group_owner = document.createElement("span");
 					$(group_owner).addClass("group_owner");
-					$(group_owner).html(" of #{groupDetailBean.group.title}");
+					$(group_owner).html(" #{msg.of} #{groupDetailBean.group.title}");
 					var cl = $("#add_resource").clone();
 		            $(cl).appendTo(div);
 		            $("#add_resource").remove()
@@ -70,16 +70,19 @@
 				<p:dialog id="confirmDialog" header="Delete Resource"  widgetVar="confirmation" appendToBody="true" >
 			        
 			        <h:form prependId="false" id="confirm_dialog_form">
-				        <p>The resource <b><h:outputText value="#{groupDetailBean.clickedResource.title}" /></b> is part of:</p>
+				        <p> <h:outputText value="#{msg.theResource}"/>
+				        <b><h:outputText value="#{groupDetailBean.clickedResource.title}" /></b> 
+				        <h:outputText value="#{msg.part_of}:"/></p>
 				        <ul>
 					        <ui:repeat var="group" value="#{groupDetailBean.clickedResource.groups}">				       
-					        	<li>the group
+					        	<li><h:outputText value="#{msg.the_group}"></h:outputText>
 						        	<h:outputLink value="group/overview.jsf?group_id=#{group.id}">
 						        		<h:outputText value="#{group.title}" />
 						        	</h:outputLink>
 					        	</li>
 					        </ui:repeat>
-					        <li>the private resources of user <h:outputText value="#{groupDetailBean.clickedResource.ownerUser.username}"/></li>
+					        <li> <h:outputText value="#{msg.private_resource}"/>
+					         <h:outputText value="#{groupDetailBean.clickedResource.ownerUser.username}"/></li>
 				        </ul>
 				        <p:commandButton value="Delete from group '#{groupDetailBean.group.title}'" update=":datagrid :growl :add_resource_panel" oncomplete="confirmation.hide(); update_header(); ;"  
 				                   actionListener="#{groupDetailBean.removeResourceFromGroup}" process=":datagrid" style="display:block; margin: 10px 0;"/>  
@@ -113,7 +116,7 @@
 				<p:dialog header="#{msg.options}" closable="false" widgetVar="resource_dialog" appendToBody="true" modal="true" minWidth="540">
 					<h:form id="resource_form">
 						<h:panelGrid columns="2">
-							<h:outputLabel value="Add to:" />
+							<h:outputLabel value="#{msg.add_to}:" />
 							<h:selectOneMenu value="#{groupDetailBean.selectedResourceTargetGroupId}">
 								<f:selectItem itemLabel="My resources" itemValue="0" />
 								<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />
@@ -122,7 +125,6 @@
 		
 							<h:outputLabel value="#{msg.title}:" />
 							<p:inputText value="#{groupDetailBean.clickedResource.title}" styleClass="resource_dialog_field" />
-		
 		
 							<h:outputLabel value="#{msg.description}:" />
 							<p:inputTextarea value="#{groupDetailBean.clickedResource.description}" autoResize="true" styleClass="resource_dialog_field"/>
@@ -138,7 +140,7 @@
 							
 								<h:outputText value=""></h:outputText>
 								<p:column styleClass="resource_pcolumn">
-									<div class="resource_pcolumn_div"><p:commandButton value="Cancel" onclick="resource_dialog.hide()" />
+									<div class="resource_pcolumn_div"><p:commandButton value="#{msg.cancel}" onclick="resource_dialog.hide()" />
 									<p:commandButton value="#{msg.save}" action="#{groupDetailBean.addSelectedResource}" update=":datagrid :growl" process="@form :datagrid" oncomplete="resource_dialog.hide()" /></div>
 								</p:column>
 						</h:panelGrid>

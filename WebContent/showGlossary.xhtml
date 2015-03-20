@@ -66,7 +66,7 @@
 			
 			<h:form>
 			
-				<p:dataTable value="#{glossaryBean.entries}" var="entry" column="4" styleClass="glossary">
+				<p:dataTable value="#{glossaryBean.entries}" var="entry" column="4" styleClass="glossary"  emptyMessage="#{msg.no_results_found}"> 
 				
 					<p:column sortBy="#{entry.item}" filterBy="#{entry.item}" filterMatchMode="contains" styleClass="filter">
 						<f:facet name="header">
@@ -135,7 +135,7 @@
 					
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="last modified"></h:outputText>
+							<h:outputText value="#{msg.last_modified}"></h:outputText>
 						</f:facet>
 							<h:outputText value="#{entry.lastmodified}"></h:outputText>
 					</p:column>

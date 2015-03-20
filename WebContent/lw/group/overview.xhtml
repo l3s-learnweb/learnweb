@@ -32,7 +32,7 @@
 						<div class="newsfeed_text">
 						<h:outputText value="#{datagrid.text}" escape="false"  />
 						<h:panelGroup rendered="#{datagrid.queryNeeded}">
-						<h:outputText value=" with query " escape="false"  />
+						<h:outputText value=" #{msg.with_query} " escape="false"  />
 						
 						<h:outputLink styleClass="newsfeed_query_link" value="search.jsf">
 						<h:outputText value=" #{datagrid.resource.query}" escape="false" styleClass="newsfeed_query_link_text"/>
@@ -41,7 +41,7 @@
 						        <f:param name="action" value="search"></f:param>
 						</h:outputLink>
 						
-						<h:outputText value=" from #{datagrid.resource.source} " escape="false"  />
+						<h:outputText value=" #{msg.from} #{datagrid.resource.source} " escape="false"  />
 						</h:panelGroup>
 						</div>
 						
@@ -66,7 +66,7 @@
 								
 								
 								<br />
-								<h:outputText value="Author: #{datagrid.resource.author} " rendered="#{not empty datagrid.resource.author}" escape="false" styleClass="newsfeed_author"/>
+								<h:outputText value="#{msg.author}: #{datagrid.resource.author} " rendered="#{not empty datagrid.resource.author}" escape="false" styleClass="newsfeed_author"/>
 							
 							</div>
 						</h:panelGroup>
@@ -83,7 +83,7 @@
 					</h:dataTable>
 					<br></br>
 					<h:panelGroup id="history" class="newsfeed_history">
-						<p:commandButton value="Show full history"  styleClass="blackbutton" rendered="${not groupDetailBean.isAllLogs()}" update="datagrid history" actionListener="#{groupDetailBean.fetchAllLogs()}"></p:commandButton>
+						<p:commandButton value="#{msg.full_history}"  styleClass="blackbutton" rendered="${not groupDetailBean.isAllLogs()}" update="datagrid history" actionListener="#{groupDetailBean.fetchAllLogs()}"></p:commandButton>
 					</h:panelGroup>
 					<br></br>
 			<p:commandButton id="add_resource" styleClass="resource_button greenbutton" value="#{msg.upload_resource}" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
@@ -97,7 +97,7 @@
 				$(group_header).html("#{groupDetailBean.group.title}");
 				var group_owner = document.createElement("span");
 				$(group_owner).addClass("group_owner");
-				$(group_owner).html(" created by #{groupDetailBean.group.leader.username}");
+				$(group_owner).html(" #{msg.created_by} #{groupDetailBean.group.leader.username}");
 				$(div).append(group_header);
 				$(div).append(group_owner);
 				var cl = $("#add_resource").clone();
