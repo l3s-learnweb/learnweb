@@ -11,7 +11,6 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
-import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.SolrClient;
 
 public class LoroManager
@@ -86,54 +85,109 @@ public class LoroManager
 	SolrClient solr = learnweb.getSolrClient();
 	Group loroGroup = learnweb.getGroupManager().getGroupById(883);
 	User admin = learnweb.getUserManager().getUser(9139);
-	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource SET resource_id = ? WHERE loro_resource_id = ?");
-
-	PreparedStatement getLoroResource = DBConnection
-		.prepareStatement("SELECT t1.loro_resource_id , t1.resource_id , t1.description , t1.tags , t1.title , t1.creator_name , t1.course_code , t1.language_level , t1.languages , t1.preview_img_url,  t2.filename , t2.doc_format , t2.doc_url FROM LORO_resource t1 JOIN LORO_resource_docs t2 ON t1.loro_resource_id = t2.loro_resource_id WHERE t2.doc_format LIKE '%video%' ORDER BY t1.loro_resource_id LIMIT 1");
-	getLoroResource.executeQuery();
-	ResultSet rs = getLoroResource.getResultSet();
-	ResultSetMetaData rsmd = rs.getMetaData();
-	int columnsNumber = rsmd.getColumnCount();
-	/*while(rs.next())
+	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource_docs SET resource_id = ? WHERE loro_resource_id = ? AND doc_url= ?");
+	PreparedStatement getCount = DBConnection.prepareStatement("SELECT COUNT( * ) AS rowcount FROM  `LORO_resource_docs` GROUP BY  `loro_resource_id` LIMIT 3");
+	getCount.executeQuery();
+	ResultSet rs1 = getCount.getResultSet();
+	int startingPoint = 0;
+	while(rs1.next())
 	{
-	    for(int i = 1; i <= columnsNumber; i++)
+	    int endpoint = rs1.getInt("rowcount");
+	    PreparedStatement getLoroResource = DBConnection
+		    .prepareStatement("SELECT t1.loro_resource_id , t2.resource_id , t1.description , t1.tags , t1.title , t1.creator_name , t1.course_code , t1.language_level , t1.languages , t1.flag , t1.preview_img_url,  t2.filename , t2.doc_format , t2.doc_url FROM LORO_resource t1 JOIN LORO_resource_docs t2 ON t1.loro_resource_id = t2.loro_resource_id ORDER BY loro_resource_id LIMIT "
+			    + startingPoint + " , " + endpoint);
+	    getLoroResource.executeQuery();
+	    ResultSet rs = getLoroResource.getResultSet();
+	    ResultSetMetaData rsmd = rs.getMetaData();
+	    int columnsNumber = rsmd.getColumnCount();
+	    /*while(rs.next())
 	    {
-		if(i > 1)
-		    System.out.print(",  ");
-		String columnValue = rs.getString(i);
-		System.out.print("\n" + columnValue + rsmd.getColumnName(i));
-	    }
-	    System.out.println("");
-	}*/
-	while(rs.next())
-	{
-	    int learnwebResourceId = rs.getInt("resource_id");
+	        for(int i = 1; i <= columnsNumber; i++)
+	        {
+	    	if(i > 1)
+	    	    System.out.print(",  ");
+	    	String columnValue = rs.getString(i);
+	    	System.out.print("\n" + columnValue + rsmd.getColumnName(i));
+	        }
+	        System.out.println("");
+	    }*/
 
-	    Resource loroResource = createResource(rs, learnwebResourceId);
-	    int loroId = Integer.parseInt(loroResource.getIdAtService());
-
-	    loroResource.setOwner(admin);
-
-	    if(learnwebResourceId == 0) // not yet stored in Learnweb
-
+	    int resourceId = 0;
+	    /* int resourceId = 0;
+	     if(( !rs.getString("doc_format").contains("video") && !rs.getString("doc_format").contains("image")) || rs.getString("doc_format").contains("quicktime"))
+	    resourceId=loroResource.getId();
+	    */
+	    while(rs.next())
 	    {
-		rpm.processImage(loroResource, FileInspector.openStream(loroResource.getMaxImageUrl()));
-		loroResource.save();
-		update.setInt(1, loroResource.getId());
-		update.setInt(2, loroId);
-		update.executeUpdate();
+		int learnwebResourceId = rs.getInt("resource_id");
+		String docFormat = rs.getString("doc_format");
+		if((!docFormat.contains("video") && !docFormat.contains("image")) || docFormat.contains("quicktime"))
+		{
+		    if(resourceId != 0)
+		    {
+			learnwebResourceId = resourceId;
+		    }
+		}
+		Resource loroResource = createResource(rs, learnwebResourceId);
+		int loroId = Integer.parseInt(loroResource.getIdAtService());
 
-		admin.addResource(loroResource);
-		loroGroup.addResource(loroResource, admin);
+		loroResource.setOwner(admin);
 
-		//solr.indexResource(loroResource);
+		if(learnwebResourceId == 0) // not yet stored in Learnweb
 
+		{
+		    //rpm.processImage(loroResource, FileInspector.openStream(loroResource.getMaxImageUrl()));
+		    loroResource.save();
+		    if((!docFormat.contains("video") && !docFormat.contains("image")) || docFormat.contains("quicktime"))
+		    {
+			if(resourceId == 0)
+			{
+			    resourceId = loroResource.getId();
+			    update.setInt(1, resourceId);
+			}
+		    }
+		    else
+			update.setInt(1, loroResource.getId());
+		    update.setInt(2, loroId);
+		    update.setString(3, rs.getString("doc_url"));
+		    update.executeUpdate();
+
+		    admin.addResource(loroResource);
+		    loroGroup.addResource(loroResource, admin);
+
+		    //solr.indexResource(loroResource);
+
+		}
+		else
+		    loroResource.save();
+
+		log.debug("Processed; lw: " + learnwebResourceId + " loro: " + loroId + " title:" + loroResource.getTitle());
 	    }
-	    else
-		loroResource.save();
-
-	    log.debug("Processed; lw: " + learnwebResourceId + " loro: " + loroId + " title:" + loroResource.getTitle());
+	    startingPoint += endpoint;
 	}
+    }
+
+    private void metaData(ResultSet rs, Resource resource) throws SQLException
+    {
+
+	String description = resource.getDescription();
+	if(description == null)
+	    description = "";
+	if(rs.getString("description") != null && !description.contains(rs.getString("description")))
+	    description = rs.getString("description");
+	if(rs.getString("language_level") != null && !description.contains(rs.getString("language_level")))
+	    description += "\nLanguage Level: " + rs.getString("language_level");
+	if(rs.getString("languages") != null && !description.contains(rs.getString("languages")))
+	    description += "\nLanguage: " + rs.getString("languages");
+	/*if(rs.getString("course_code") != null)
+	description += "\nCourse Code: " + rs.getString("course_code");*/
+	if(!description.contains("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/"))
+	    description += "\nThis file is a part of resource available on: http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
+	resource.setDescription(description);
+	resource.setUrl("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
+	resource.setSource("LORO");
+	resource.setLocation("LORO");
+	resource.setMaxImageUrl(rs.getString("preview_img_url"));
 
     }
 
@@ -143,42 +197,65 @@ public class LoroManager
 
 	Resource resource = new Resource();
 
-	if(learnwebResourceId != 0) // the video is already stored and will be updated
+	if(learnwebResourceId != 0 && rs.getBoolean("flag")) // the video is already stored and updated during LORO crawl
+	{
 	    resource = learnweb.getResourceManager().getResource(learnwebResourceId);
-
-	resource.setTitle(rs.getString("title"));
-	String description = "";
-	if(rs.getString("description") != null)
-	    description = rs.getString("description");
-	if(rs.getString("language_level") != null)
-	    description += "\nLanguage Level: " + rs.getString("language_level");
-	if(rs.getString("languages") != null)
-	    description += "\nLanguage: " + rs.getString("languages");
-	if(rs.getString("course_code") != null)
-	    description += "\nCourse Code: " + rs.getString("course_code");
-
-	description += "\nThis file is a part of resource available on: http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
-	resource.setDescription(description);
-	resource.setUrl("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
-	resource.setSource("LORO");
-	resource.setLocation("LORO");
-	resource.setMaxImageUrl(rs.getString("preview_img_url"));
+	    checkConnection(DBConnection);
+	    PreparedStatement setFlag = DBConnection.prepareStatement("UPDATE LORO_resource SET flag=0 WHERE loro_resource_id=" + rs.getInt("loro_resource_id"));
+	    setFlag.executeUpdate();
+	}
+	metaData(rs, resource);
 	if(rs.getString("doc_format").contains("image"))
+	{
 	    resource.setType("image");
+	    resource.setTitle(rs.getString("title") + " " + rs.getString("filename"));
+	    resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
+
+	    return resource;
+	}
 	else if(rs.getString("doc_format").contains("video") && !rs.getString("doc_format").contains("quicktime"))
 	{
 	    resource.setType("Video");
 	    resource.setEmbeddedRaw("<h:outputStylesheet library=\"resources\" name=\"css/video-js.css\" /><h:outputScript library=\"resources\" name=\"js/video.js\" /><script>videojs.options.flash.swf = \"/resources/js/video-js.swf\";</script><video controls=\"controls\"><source src='"
 		    + rs.getString("doc_url") + "' ' type='video/mp4'/></video>");
+	    resource.setTitle(rs.getString("title") + " " + rs.getString("filename"));
+	    resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
+
+	    return resource;
 	}
-	else
+	//For text resources, we need same resource id for all docs
+	if(!rs.getBoolean("flag") && learnwebResourceId != 0)
+	{
+	    if((!rs.getString("doc_format").contains("%video%") && !rs.getString("doc_format").contains("%image%")) || rs.getString("doc_format").contains("quicktime"))
+	    {
+		//  metaData(rs, resource);
+		resource.setTitle(rs.getString("title"));
+		String description = resource.getDescription();
+		if(!description.contains(rs.getString("filename")))
+		    description += ", " + rs.getString("filename");
+
+		resource.setDescription(description);
+		//resource.setDuration(rs.getInt("duration"));
+
+		resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
+
+		return resource;
+	    }
+	}
+
+	if((!rs.getString("doc_format").contains("%video%") && !rs.getString("doc_format").contains("%image%")) || rs.getString("doc_format").contains("quicktime"))
+	{
+	    resource.setTitle(rs.getString("title"));
 	    resource.setType("text");
-	//resource.setDuration(rs.getInt("duration"));
-
+	    String description = resource.getDescription();
+	    if(description.contains("Filenames"))
+		description += ", " + rs.getString("filename");
+	    else
+		description += "\nFilenames: " + rs.getString("filename");
+	    resource.setDescription(description);
+	}
 	resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
-
 	return resource;
-
     }
 
     public static void main(String[] args) throws Exception
