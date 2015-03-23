@@ -24,9 +24,9 @@ public class GlossaryEntry
 	{
 	    String urlValue = (String) value;
 
-	    if(!urlValue.startsWith("http://") || !urlValue.startsWith("www."))
+	    if(!(urlValue.startsWith("http://")) || !(urlValue.startsWith("www.")))
 	    {
-		throw new ValidatorException(new FacesMessage("The reference isn't a URL. Please change your input.", null));
+		throw new ValidatorException(new FacesMessage("#{msg.linkvalidator_message}", null));
 	    }
 	}
     }

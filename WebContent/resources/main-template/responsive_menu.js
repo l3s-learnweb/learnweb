@@ -28,14 +28,64 @@ $(".userbar ul li ul").mousedown(function(){
 
 $(document).ready(function(){
 	$("#german").click(function(){
-		$("#germanbutton").removeClass("non-active").toggleClass("active");
-		$("#englishbutton").removeClass("active").toggleClass("non-active");
-	})
+		if($("#germanbutton").hasClass("non-active")==true){
+			$("#germanbutton").removeClass("non-active").toggleClass("active");
+		}
+		if($("#englishbutton").hasClass("active")==true){
+			$("#englishbutton").removeClass("active").toggleClass("non-active");
+		}
+		if($("#italianbutton").hasClass("active")==true){
+			$("#italianbutton").removeClass("active").toggleClass("non-active");
+		}
+		if($("#portuguesebutton").hasClass("active")==true){
+			$("#portuguesebutton").removeClass("active").toggleClass("non-active");
+		}
+	});
 	
 	$("#english").click(function(){
-		$("#englishbutton").removeClass("non-active").toggleClass("active");
-		$("#germanbutton").removeClass("active").toggleClass("non-active");
-	})
+		if($("#englishbutton").hasClass("non-active")==true){
+			$("#englishbutton").removeClass("non-active").toggleClass("active");
+		}
+		if($("#germanbutton").hasClass("active")==true){
+			$("#germanbutton").removeClass("active").toggleClass("non-active");
+		}
+		if($("#italianbutton").hasClass("active")==true){
+			$("#italianbutton").removeClass("active").toggleClass("non-active");
+		}
+		if($("#portuguesebutton").hasClass("active")==true){
+			$("#portuguesebutton").removeClass("active").toggleClass("non-active");
+		}
+	});
+	
+	$("#italian").click(function(){
+		if($("#italianbutton").hasClass("non-active")==true){
+			$("#italianbutton").removeClass("non-active").toggleClass("active");
+		}
+		if($("#germanbutton").hasClass("active")==true){
+			$("#germanbutton").removeClass("active").toggleClass("non-active");
+		}
+		if($("#englishbutton").hasClass("active")==true){
+			$("#englishbutton").removeClass("active").toggleClass("non-active");
+		}
+		if($("#portuguesebutton").hasClass("active")==true){
+			$("#portuguesebutton").removeClass("active").toggleClass("non-active");
+		}
+	});
+	
+	$("#portuguese").click(function(){
+		if($("#portuguesebutton").hasClass("non-active")==true){
+			$("#portuguesebutton").removeClass("non-active").toggleClass("active");
+		}
+		if($("#germanbutton").hasClass("active")==true){
+			$("#germanbutton").removeClass("active").toggleClass("non-active");
+		}
+		if($("#englishbutton").hasClass("active")==true){
+			$("#englishbutton").removeClass("active").toggleClass("non-active");
+		}
+		if($("#italianbutton").hasClass("active")==true){
+			$("#italianbutton").removeClass("active").toggleClass("non-active");
+		}
+	});
 })
 
 // resourcetyp
