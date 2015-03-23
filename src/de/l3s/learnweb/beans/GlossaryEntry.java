@@ -1,7 +1,11 @@
 package de.l3s.learnweb.beans;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 
 public class GlossaryEntry
 {
@@ -13,7 +17,25 @@ public class GlossaryEntry
     private String spanish;
     private String reference;
     private String addby;
-    private Date lastmodified;
+
+    public void linkvalidator(FacesContext ctx, UIComponent component, Object value) throws ValidatorException
+    {
+	if(value instanceof String)
+	{
+	    String urlValue = (String) value;
+
+	    if(!urlValue.startsWith("http://") || !urlValue.startsWith("www."))
+	    {
+		throw new ValidatorException(new FacesMessage("The reference isn't a URL. Please change your input.", null));
+	    }
+	}
+    }
+
+    public Date getLastmodified()
+    {
+	Date lastmodified = new Date();
+	return lastmodified;
+    }
 
     public String getAddby()
     {
@@ -23,20 +45,6 @@ public class GlossaryEntry
     public void setAddby(String addby)
     {
 	this.addby = addby;
-    }
-
-    public Date getLastmodified()
-    {
-	Date zeitstempel = new Date();
-	SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-	lastmodified = zeitstempel;
-	System.out.println("Datum: " + simpleDateFormat.format(zeitstempel));
-	return lastmodified;
-    }
-
-    public void setLastmodified(Date lastmodified)
-    {
-	this.lastmodified = lastmodified;
     }
 
     public String getReference()

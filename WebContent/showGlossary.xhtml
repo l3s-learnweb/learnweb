@@ -173,7 +173,8 @@
 				<h:inputText id="spanish" value="#{glossaryBean.selectedEntry.spanish}" styleClass="inputfield"></h:inputText>
 				
 				<h:outputLabel value="#{msg.reference_material}" for="reference_material" styleClass="datatype"></h:outputLabel>
-				<h:inputText id="reference_material" value="#{glossaryBean.selectedEntry.reference}" styleClass="inputfield"></h:inputText>
+				<h:inputText id="reference_material" value="#{glossaryBean.selectedEntry.reference}" styleClass="inputfield" 
+				validator="#{glossaryBean.selectedEntry.linkvalidator}"></h:inputText>
 										
 		</h:panelGrid>
 			
