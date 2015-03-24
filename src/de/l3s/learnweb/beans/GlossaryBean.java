@@ -1,14 +1,21 @@
 package de.l3s.learnweb.beans;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
+
+import de.l3s.learnwebBeans.ApplicationBean;
 
 @ManagedBean
 @SessionScoped
-public class GlossaryBean
+public class GlossaryBean extends ApplicationBean
 {
 
     private GlossaryEntry selectedEntry = new GlossaryEntry();
@@ -34,6 +41,8 @@ public class GlossaryBean
 
     public String addNewEntry()
     {
+	selectedEntry.setUser(getUser());
+	selectedEntry.setLastModified(new Date());
 	entries.add(selectedEntry);
 
 	selectedEntry = new GlossaryEntry();
@@ -70,4 +79,18 @@ public class GlossaryBean
 	this.selectedEntry = selectedEntry;
     }
 
+    public void linkvalidator(FacesContext ctx, UIComponent component, Object value) throws ValidatorException
+    {
+	if(value instanceof String)
+	{
+	    String urlValue = (String) value;
+
+	    if(!(urlValue.startsWith("http://")) || !(urlValue.startsWith("www.")))
+	    {
+		throw new ValidatorException(new FacesMessage("#{msg.linkvalidator_message}", null));
+	    }
+	}
+
+	//super.
+    }
 }

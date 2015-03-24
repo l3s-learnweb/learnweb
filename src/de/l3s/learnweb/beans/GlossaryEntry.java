@@ -7,6 +7,10 @@ import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 
+import org.hibernate.validator.constraints.URL;
+
+import de.l3s.learnweb.User;
+
 public class GlossaryEntry
 {
     private String item;
@@ -15,6 +19,10 @@ public class GlossaryEntry
     private String italian;
     private String german;
     private String spanish;
+    private User user;
+    private Date lastModified;
+
+    @URL
     private String reference;
     private String addby;
 
@@ -31,10 +39,14 @@ public class GlossaryEntry
 	}
     }
 
-    public Date getLastmodified()
+    public Date getLastModified()
     {
-	Date lastmodified = new Date();
-	return lastmodified;
+	return lastModified;
+    }
+
+    public void setLastModified(Date lastModified)
+    {
+	this.lastModified = lastModified;
     }
 
     public String getAddby()
@@ -115,6 +127,16 @@ public class GlossaryEntry
     public void setDescription(String description)
     {
 	this.description = description;
+    }
+
+    public User getUser()
+    {
+	return user;
+    }
+
+    public void setUser(User user)
+    {
+	this.user = user;
     }
 
 }

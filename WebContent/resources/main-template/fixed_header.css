@@ -92,10 +92,10 @@ section {
 	padding:0;
    	background-color:#489a83;
     display:none;
-    width:14rem;
+    width:16rem;
     border-bottom-right-radius:10px;
 	border-bottom-left-radius:10px;
-	margin-left:-8rem;
+	margin-left:-10rem;
     margin-right:-6.2rem;
     margin-top:3.3rem;
     padding-top:1.2rem;
@@ -114,7 +114,7 @@ section {
 	float:left;
     list-style:outside none none;
     margin-top:4px;
-    width:14rem;
+    width:16rem;
 }
 .language ul li a{
 	display:block;
