@@ -86,16 +86,16 @@ public class LoroManager
 	Group loroGroup = learnweb.getGroupManager().getGroupById(883);
 	User admin = learnweb.getUserManager().getUser(9139);
 	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource_docs SET resource_id = ? WHERE loro_resource_id = ? AND doc_url= ?");
-	PreparedStatement getCount = DBConnection.prepareStatement("SELECT COUNT( * ) AS rowcount FROM  `LORO_resource_docs` GROUP BY  `loro_resource_id` LIMIT 3");
+	PreparedStatement getCount = DBConnection.prepareStatement("SELECT COUNT( * ) AS rowcount FROM  `LORO_resource_docs` WHERE  `loro_resource_id` LIMIT 3");
 	getCount.executeQuery();
 	ResultSet rs1 = getCount.getResultSet();
 	int startingPoint = 0;
 	while(rs1.next())
 	{
-	    int endpoint = rs1.getInt("rowcount");
+	    int noOfRows = rs1.getInt("rowcount");
 	    PreparedStatement getLoroResource = DBConnection
 		    .prepareStatement("SELECT t1.loro_resource_id , t2.resource_id , t1.description , t1.tags , t1.title , t1.creator_name , t1.course_code , t1.language_level , t1.languages , t1.flag , t1.preview_img_url,  t2.filename , t2.doc_format , t2.doc_url FROM LORO_resource t1 JOIN LORO_resource_docs t2 ON t1.loro_resource_id = t2.loro_resource_id ORDER BY loro_resource_id LIMIT "
-			    + startingPoint + " , " + endpoint);
+			    + startingPoint + " , " + noOfRows);
 	    getLoroResource.executeQuery();
 	    ResultSet rs = getLoroResource.getResultSet();
 	    ResultSetMetaData rsmd = rs.getMetaData();
@@ -116,9 +116,10 @@ public class LoroManager
 	    /* int resourceId = 0;
 	     if(( !rs.getString("doc_format").contains("video") && !rs.getString("doc_format").contains("image")) || rs.getString("doc_format").contains("quicktime"))
 	    resourceId=loroResource.getId();
-	    */
+	    */boolean textTest = true;
 	    while(rs.next())
 	    {
+
 		int learnwebResourceId = rs.getInt("resource_id");
 		String docFormat = rs.getString("doc_format");
 		if((!docFormat.contains("video") && !docFormat.contains("image")) || docFormat.contains("quicktime"))
@@ -126,6 +127,7 @@ public class LoroManager
 		    if(resourceId != 0)
 		    {
 			learnwebResourceId = resourceId;
+			textTest = false;
 		    }
 		}
 		Resource loroResource = createResource(rs, learnwebResourceId);
@@ -133,7 +135,7 @@ public class LoroManager
 
 		loroResource.setOwner(admin);
 
-		if(learnwebResourceId == 0) // not yet stored in Learnweb
+		if(learnwebResourceId == 0 || textTest == false) // not yet stored in Learnweb
 
 		{
 		    //rpm.processImage(loroResource, FileInspector.openStream(loroResource.getMaxImageUrl()));
@@ -141,10 +143,9 @@ public class LoroManager
 		    if((!docFormat.contains("video") && !docFormat.contains("image")) || docFormat.contains("quicktime"))
 		    {
 			if(resourceId == 0)
-			{
 			    resourceId = loroResource.getId();
-			    update.setInt(1, resourceId);
-			}
+			update.setInt(1, resourceId);
+
 		    }
 		    else
 			update.setInt(1, loroResource.getId());
@@ -155,15 +156,15 @@ public class LoroManager
 		    admin.addResource(loroResource);
 		    loroGroup.addResource(loroResource, admin);
 
-		    //solr.indexResource(loroResource);
-
+		    //solr.indexResource(loroResource)
+		    textTest = true;
 		}
 		else
 		    loroResource.save();
 
 		log.debug("Processed; lw: " + learnwebResourceId + " loro: " + loroId + " title:" + loroResource.getTitle());
 	    }
-	    startingPoint += endpoint;
+	    startingPoint += noOfRows;
 	}
     }
 
@@ -216,7 +217,7 @@ public class LoroManager
 	else if(rs.getString("doc_format").contains("video") && !rs.getString("doc_format").contains("quicktime"))
 	{
 	    resource.setType("Video");
-	    resource.setEmbeddedRaw("<h:outputStylesheet library=\"resources\" name=\"css/video-js.css\" /><h:outputScript library=\"resources\" name=\"js/video.js\" /><script>videojs.options.flash.swf = \"/resources/js/video-js.swf\";</script><video controls=\"controls\"><source src='"
+	    resource.setEmbeddedRaw("<h:outputStylesheet library=\"resources\" name=\"css/video-js.css\" /><h:outputScript library=\"resources\" name=\"js/video.js\" /><script>videojs.options.flash.swf = \"/resources/js/video-js.swf\";</script><video controls=\"controls\"  style = \"width: 100%; height: 100%; \" ><source src='"
 		    + rs.getString("doc_url") + "' ' type='video/mp4'/></video>");
 	    resource.setTitle(rs.getString("title") + " " + rs.getString("filename"));
 	    resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
@@ -226,7 +227,7 @@ public class LoroManager
 	//For text resources, we need same resource id for all docs
 	if(!rs.getBoolean("flag") && learnwebResourceId != 0)
 	{
-	    if((!rs.getString("doc_format").contains("%video%") && !rs.getString("doc_format").contains("%image%")) || rs.getString("doc_format").contains("quicktime"))
+	    if((!rs.getString("doc_format").contains("video") && !rs.getString("doc_format").contains("image")) || rs.getString("doc_format").contains("quicktime"))
 	    {
 		//  metaData(rs, resource);
 		resource.setTitle(rs.getString("title"));
@@ -243,7 +244,7 @@ public class LoroManager
 	    }
 	}
 
-	if((!rs.getString("doc_format").contains("%video%") && !rs.getString("doc_format").contains("%image%")) || rs.getString("doc_format").contains("quicktime"))
+	if((!rs.getString("doc_format").contains("video") && !rs.getString("doc_format").contains("image")) || rs.getString("doc_format").contains("quicktime"))
 	{
 	    resource.setTitle(rs.getString("title"));
 	    resource.setType("text");
