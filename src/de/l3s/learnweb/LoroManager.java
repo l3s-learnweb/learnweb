@@ -182,6 +182,8 @@ public class LoroManager
 	    description += "\nLanguage: " + rs.getString("languages");
 	/*if(rs.getString("course_code") != null)
 	description += "\nCourse Code: " + rs.getString("course_code");*/
+	if(rs.getString("tags") != null)
+	    description += "\nKeyWords: " + rs.getString("tags");
 	if(!description.contains("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/"))
 	    description += "\nThis file is a part of resource available on: http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
 	resource.setDescription(description);
