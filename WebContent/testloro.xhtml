@@ -5,37 +5,41 @@
 	<ui:param name="pageTitle" value="test" />
 
 	<ui:define name="center_layout">
-	<h:outputStylesheet library="resources" name="css/video-js.css"  />
-		<h:outputScript library="resources" name="js/video.js" />	
-	 
-			
-		
+		<h:outputStylesheet library="css" name="video-js.css" />
+		<h:outputScript library="js" name="video.js" />
+
 		<div id="text">
+			<br />
+			<script>
+				videojs.options.flash.swf = "/resources/js/video-js.swf";
+			</script>
 
-
-		 <br/><br/><br/><br/>
-		 <h1>Add new video</h1>
-	<!-- 		<video id="example_video_1" class="video-js vjs-default-skin" controls preload="auto" width="640" height="264">
- <source src="https://www.youtube.com/watch?v=_nEEhgtFq9Y" type='video/mp4' />
- <source src="https://www.youtube.com/watch?v=_nEEhgtFq9Y" type='video/webm' />
- <source src="https://www.youtube.com/watch?v=_nEEhgtFq9Y" type='video/ogg' />
+			<h2>mpeg</h2>
+			<video controls="controls">
+				<source src="http://loro.open.ac.uk/960/1/Gegants.mp4" type="video/mp4" />
+				<p>Video is not visible, most likely your browser does not support HTML5 video</p>
+			</video>
+			
+			<video id="example_video_1" class="video-js vjs-default-skin"
+   preload="auto" width="640" height="264"
+  data-setup='{"example_option":true}'>
+<source src="http://loro.open.ac.uk/2110/1/Breathing_and_body_awareness.MP4" type="video/mp4" />
  <p class="vjs-no-js">To view this video please enable JavaScript, and consider upgrading to a web browser that <a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a></p>
-</video> -->
-<h:body>
-    Hello from Facelets
-    <br />
-	<script>
-    videojs.options.flash.swf = "/resources/js/video-js.swf";
-  </script>
-    
-        <video controls="controls">
-        <source src='http://loro.open.ac.uk/2112/1/orator_%2D_explanations.MP4' type='video/mp4'/>
-        </video>
-    
+</video>
+			
+			<h2>mpeg</h2>
+			<video controls="controls">
+				<source src="http://loro.open.ac.uk/2110/1/Breathing_and_body_awareness.MP4" type="video/mp4" />
+				<p>Video is not visible, most likely your browser does not support HTML5 video</p>
+			</video>
 
-</h:body>
+
+			<h2>mp4</h2>
+			<video controls="controls">
+				<source src="http://loro.open.ac.uk/4329/2/Umlaut_U_in_German%2C_long_version%2C_theory_and_practice.mp4" type="video/mp4" />
+				<p>Video is not visible, most likely your browser does not support HTML5 video</p>
+			</video>
 		</div>
 	</ui:define>
-ghgh
 </ui:composition>
 </html>
