@@ -122,6 +122,8 @@ public class Learnweb
 		propteriesFileName = "lw_ubuntu_lisiyu";
 	    else if((new File("C:\\Users\\kalyani").exists()))
 		propteriesFileName = "lw_local_rishita";
+		else if((new File("C:\\Users\\morais").exists()))
+		propteriesFileName = "lw_local_alana";
 
 	    properties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propteriesFileName + ".properties"));
 	}
