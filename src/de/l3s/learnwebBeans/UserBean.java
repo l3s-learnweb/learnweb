@@ -156,7 +156,7 @@ public class UserBean implements Serializable
 	    locale = Locale.GERMANY;
 	    break;
 	case "en":
-	    locale = Locale.ENGLISH;
+	    locale = new Locale("en", "gb");
 	    break;
 	case "it":
 	    locale = Locale.ITALY;

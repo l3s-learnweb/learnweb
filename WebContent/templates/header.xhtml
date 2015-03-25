@@ -90,13 +90,11 @@
 		</div>	
 		
 		<div id="language_selector">
-		<!--  
-			 <span class="language_#{userBean.localeCode}">XXX</span> 
-		-->
+
 			<a href="#">
-				<img alt="" src="#{request.contextPath}/resources/main-template/flag_#{userBean.localeAsString}.png" id="englishbutton" class="active" />
-		
+				<img alt="" src="#{request.contextPath}/resources/main-template/flag_#{userBean.localeAsString}.png" id="englishbutton" class="active" />		
 			</a>
+			
 			<h:form>
 				<ul>
 					<li><h:commandLink actionListener="#{userBean.setLocaleCode('de')}" styleClass="language_de">Deutsch</h:commandLink></li>

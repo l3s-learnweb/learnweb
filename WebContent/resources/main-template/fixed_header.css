@@ -138,10 +138,10 @@ section {
 	background-color:#74beaa;
 }
 
-.language_de { background-image:url(flag_de_de.png); }
-.language_en { background-image:url(flag_en_en.png); }
-.language_pt { background-image:url(flag_pt_br.png); }
-.language_it { background-image:url(flag_it_it.png); }
+.language_de { background-image:url(flag_de_DE.png); }
+.language_en { background-image:url(flag_en_GB.png); }
+.language_pt { background-image:url(flag_pt_BR.png); }
+.language_it { background-image:url(flag_it_IT.png); }
 
 #flag{
 	height:2rem;
