@@ -94,7 +94,7 @@
 			 <span class="language_#{userBean.localeCode}">XXX</span> 
 		-->
 			<a href="#">
-				<img alt="" src="resources/main-template/english.png" id="englishbutton" class="active" />
+				<img alt="" src="#{request.contextPath}/resources/main-template/flag_#{userBean.localeAsString}.png" id="englishbutton" class="active" />
 		
 			</a>
 			<h:form>
@@ -107,9 +107,9 @@
 			</h:form>
 		</div>
 		
-		<img alt="" src="resources/main-template/question.png" id="informationonscreen" />
+		<img alt="" src="#{request.contextPath}/resources/main-template/question.png" id="informationonscreen" />
 		<span>			
-			<h:outputLink id="loginbutton" value="lw/user/login.jsf" rendered="#{not userBean.loggedIn}">
+			<h:outputLink id="loginbutton" value="#{request.contextPath}/lw/user/login.jsf" rendered="#{not userBean.loggedIn}">
 				#{msg.loginLabel}
 			</h:outputLink>
 			

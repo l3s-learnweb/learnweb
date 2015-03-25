@@ -138,11 +138,6 @@ public class UserBean implements Serializable
 	return locale.toString();
     }
 
-    public String getLocaleLanguage()
-    {
-	return locale.getDisplayLanguage(locale);
-    }
-
     /**
      * example "de"
      * 
