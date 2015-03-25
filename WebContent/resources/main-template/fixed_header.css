@@ -123,6 +123,16 @@ section {
 	text-decoration:none;
 	padding:1rem;
 	border-radius:10px;
+	background-repeat: no-repeat;
+	padding-left:4rem;
+	
+	/*
+	image size auf 
+	height:2rem;
+	width:3rem;
+	setzen
+	*/
+	
 }
 #language_selector a:hover{
 	background-color:#74beaa;

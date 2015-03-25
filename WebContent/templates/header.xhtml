@@ -90,8 +90,13 @@
 		</div>	
 		
 		<div id="language_selector">
+		<!--  
 			 <span class="language_#{userBean.localeCode}">XXX</span> 
-			<!--<a href="#"><img width="30" height="20" src="https://dict.leo.org/css/sprite-d31dfc96.png" /></a> -->
+		-->
+			<a href="#">
+				<img alt="" src="resources/main-template/english.png" id="englishbutton" class="active" />
+		
+			</a>
 			<h:form>
 				<ul>
 					<li><h:commandLink actionListener="#{userBean.setLocaleCode('de')}" styleClass="language_de">Deutsch</h:commandLink></li>
