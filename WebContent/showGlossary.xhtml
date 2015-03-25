@@ -142,7 +142,7 @@
 							<h:outputText value="#{msg.last_modified}"></h:outputText>
 						</f:facet>
 							<h:outputText value="#{entry.lastModified}">
-								<f:convertDateTime pattern="dd.MM.yyyy" />
+								<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
 							</h:outputText>
 							
 					</p:column>
@@ -171,7 +171,7 @@
 		<h:panelGrid id="grid" columns="3" styleClass="grid">
 			
 				<h:outputLabel value="#{msg.item}" for="item" styleClass="datatype"></h:outputLabel>
-				<h:inputText id="item" value="#{glossaryBean.selectedEntry.item}" styleClass="inputfield" validatorMessage="The item may not be empty. Please enter a item. "></h:inputText>
+				<h:inputText id="item" value="#{glossaryBean.selectedEntry.item}" styleClass="inputfield" validatorMessage="The item may not be empty. Please enter an item. "></h:inputText>
 				<p:message for="item" />
 				
 				<h:outputLabel value="#{msg.description}" for="description" styleClass="datatype"></h:outputLabel>
