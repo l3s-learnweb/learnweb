@@ -2,12 +2,14 @@ package de.l3s.learnweb.beans;
 
 import java.util.Date;
 
+import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
 import de.l3s.learnweb.User;
 
 public class GlossaryEntry
 {
+    @NotEmpty
     private String item;
     private String description;
     private String topic;

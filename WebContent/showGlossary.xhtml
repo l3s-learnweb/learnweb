@@ -141,8 +141,10 @@
 						<f:facet name="header">
 							<h:outputText value="#{msg.last_modified}"></h:outputText>
 						</f:facet>
-							<h:outputText value="#{entry.lastModified}"></h:outputText>
-							<h:outputFormat> </h:outputFormat>
+							<h:outputText value="#{entry.lastModified}">
+								<f:convertDateTime pattern="dd.MM.yyyy" />
+							</h:outputText>
+							
 					</p:column>
 					
 					<p:column>
@@ -169,7 +171,7 @@
 		<h:panelGrid id="grid" columns="3" styleClass="grid">
 			
 				<h:outputLabel value="#{msg.item}" for="item" styleClass="datatype"></h:outputLabel>
-				<h:inputText id="item" value="#{glossaryBean.selectedEntry.item}" styleClass="inputfield"></h:inputText>
+				<h:inputText id="item" value="#{glossaryBean.selectedEntry.item}" styleClass="inputfield" validatorMessage="The item may not be empty. Please enter a item. "></h:inputText>
 				<p:message for="item" />
 				
 				<h:outputLabel value="#{msg.description}" for="description" styleClass="datatype"></h:outputLabel>
@@ -193,8 +195,8 @@
 				<p:message for="spanish" />
 				
 				<h:outputLabel value="#{msg.reference_material}" for="reference_material" styleClass="datatype"></h:outputLabel>
-				<h:inputText id="reference_material" value="#{glossaryBean.selectedEntry.reference}" styleClass="inputfield"></h:inputText>
-				<p:message for="reference_material"/>
+				<h:inputText id="reference_material" value="#{glossaryBean.selectedEntry.reference}" styleClass="inputfield" validatorMessage="#{msg.linkvalidator_message}"></h:inputText>
+				<p:message for="reference_material" />
 							
 		</h:panelGrid>
 			
