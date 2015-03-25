@@ -42,7 +42,9 @@ public class GlossaryBean extends ApplicationBean
     public String addNewEntry()
     {
 	selectedEntry.setUser(getUser());
+
 	selectedEntry.setLastModified(new Date());
+
 	entries.add(selectedEntry);
 
 	selectedEntry = new GlossaryEntry();
@@ -52,6 +54,8 @@ public class GlossaryBean extends ApplicationBean
 
     public String save()
     {
+	selectedEntry.setLastModified(new Date());
+
 	selectedEntry = new GlossaryEntry();
 
 	return "showGlossary.xhtml";

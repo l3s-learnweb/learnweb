@@ -68,6 +68,9 @@
 			.filter{
 				font-size:1.5rem;
 			}
+			#message{
+				display:none;
+			}
 		</style>
 			
 			<br/>
@@ -167,31 +170,31 @@
 			
 				<h:outputLabel value="#{msg.item}" for="item" styleClass="datatype"></h:outputLabel>
 				<h:inputText id="item" value="#{glossaryBean.selectedEntry.item}" styleClass="inputfield"></h:inputText>
-				<h:message for="item" />
+				<p:message for="item" />
 				
 				<h:outputLabel value="#{msg.description}" for="description" styleClass="datatype"></h:outputLabel>
 				<h:inputTextarea id="description" value="#{glossaryBean.selectedEntry.description}" styleClass="inputarea"></h:inputTextarea>
-				<h:message for="description" />
+				<p:message for="description" />
 				
 				<h:outputLabel value="#{msg.topic}" for="topic" styleClass="datatype"></h:outputLabel>
 				<h:inputText id="topic" value="#{glossaryBean.selectedEntry.topic}" styleClass="inputfield"></h:inputText>
-				<h:message for="topic" />
+				<p:message for="topic" />
 				
 				<h:outputLabel value="#{msg.language_it}" for="italian" styleClass="datatype"></h:outputLabel>
 				<h:inputText id="italian" value="#{glossaryBean.selectedEntry.italian}" styleClass="inputfield"></h:inputText>
-				<h:message for="italian" />
+				<p:message for="italian" />
 				
 				<h:outputLabel value="#{msg.language_de}" for="german" styleClass="datatype"></h:outputLabel>
 				<h:inputText id="german" value="#{glossaryBean.selectedEntry.german}" styleClass="inputfield"></h:inputText>
-				<h:message for="german" />
+				<p:message for="german" />
 				
 				<h:outputLabel value="#{msg.language_es}" for="spanish" styleClass="datatype"></h:outputLabel>
 				<h:inputText id="spanish" value="#{glossaryBean.selectedEntry.spanish}" styleClass="inputfield"></h:inputText>
-				<h:message for="spanish" />
+				<p:message for="spanish" />
 				
 				<h:outputLabel value="#{msg.reference_material}" for="reference_material" styleClass="datatype"></h:outputLabel>
 				<h:inputText id="reference_material" value="#{glossaryBean.selectedEntry.reference}" styleClass="inputfield"></h:inputText>
-				<h:message for="reference_material" />
+				<p:message for="reference_material"/>
 							
 		</h:panelGrid>
 			

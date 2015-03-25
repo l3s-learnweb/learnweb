@@ -2,11 +2,6 @@ package de.l3s.learnweb.beans;
 
 import java.util.Date;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.component.UIComponent;
-import javax.faces.context.FacesContext;
-import javax.faces.validator.ValidatorException;
-
 import org.hibernate.validator.constraints.URL;
 
 import de.l3s.learnweb.User;
@@ -25,19 +20,6 @@ public class GlossaryEntry
     @URL
     private String reference;
     private String addby;
-
-    public void linkvalidator(FacesContext ctx, UIComponent component, Object value) throws ValidatorException
-    {
-	if(value instanceof String)
-	{
-	    String urlValue = (String) value;
-
-	    if(!(urlValue.startsWith("http://")) || !(urlValue.startsWith("www.")))
-	    {
-		throw new ValidatorException(new FacesMessage("#{msg.linkvalidator_message}", null));
-	    }
-	}
-    }
 
     public Date getLastModified()
     {
