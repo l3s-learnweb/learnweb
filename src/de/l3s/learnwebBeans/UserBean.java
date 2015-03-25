@@ -3,20 +3,17 @@ package de.l3s.learnwebBeans;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.TimeZone;
 
 import javax.annotation.PreDestroy;
-import javax.faces.application.ConfigurableNavigationHandler;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ComponentSystemEvent;
-import javax.faces.event.ValueChangeEvent;
 import javax.servlet.http.HttpSession;
+
+import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Group;
@@ -27,31 +24,34 @@ import de.l3s.learnweb.User;
 @SessionScoped
 public class UserBean implements Serializable
 {
+    private final static long serialVersionUID = -8577036953815676943L;
+    private final static Logger log = Logger.getLogger(UserBean.class);
 
-    private static final long serialVersionUID = -8577036953815676943L;
     private User user = null;
     private Locale locale;
     private HashMap<String, Object> preferences; // user preferences like search mode
-    private int screenWidth;
-    private int screenHeight;
+
     private Course activeCourse;
     private List<Group> newGroups = null;
 
     public UserBean()
     {
 	locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+	System.out.println("local " + locale);
 	preferences = new HashMap<String, Object>();
     }
 
+    /*
     public void preRenderView(ComponentSystemEvent event)
     {
-	FacesContext fc = FacesContext.getCurrentInstance();
-	if(isLoggedIn())
-	{
-	    ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication().getNavigationHandler();
-	    nav.performNavigation("/lw/myhome/activity");
-	}
+    FacesContext fc = FacesContext.getCurrentInstance();
+    if(isLoggedIn())
+    {
+        ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication().getNavigationHandler();
+        nav.performNavigation("/lw/myhome/activity");
     }
+    }
+    */
 
     public boolean isLoggedIn()
     {
@@ -124,70 +124,6 @@ public class UserBean implements Serializable
 	preferences.put(key, value);
     }
 
-    public int getScreenWidth()
-    {
-	return screenWidth;
-    }
-
-    public void setScreenWidth(int screenWidth)
-    {
-	this.screenWidth = screenWidth;
-    }
-
-    public int getScreenHeight()
-    {
-	return screenHeight;
-    }
-
-    public void setScreenHeight(int screenHeight)
-    {
-	this.screenHeight = screenHeight;
-    }
-
-    private static Map<String, Object> countries;
-    static
-    {
-	countries = new LinkedHashMap<String, Object>();
-	countries.put("Deutsch", Locale.GERMANY);
-	countries.put("English", Locale.US); //label, value
-
-    }
-
-    public Map<String, Object> getCountriesInMap()
-    {
-	return countries;
-    }
-
-    // value change event listener
-    public void countryLocaleCodeChanged(ValueChangeEvent e)
-    {
-
-	String newLocaleValue = e.getNewValue().toString();
-	//System.out.println("newLocaleValue "+newLocaleValue);
-	// loop country map to compare the locale code
-	for(Map.Entry<String, Object> entry : countries.entrySet())
-	{
-	    //System.out.println("value "+entry.getValue().toString());
-	    if(entry.getValue().toString().equals(newLocaleValue))
-	    {
-
-		FacesContext.getCurrentInstance().getViewRoot().setLocale((Locale) entry.getValue());
-		setLocale((Locale) entry.getValue());
-	    }
-	}
-
-	/*
-	String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();		
-	return viewId +"?faces-redirect=true&includeViewParams=true";*/
-    }
-
-    public void setLocale(Locale locale)
-    {
-	this.locale = locale;
-	if(isLoggedIn())
-	    user.setLocale(locale);
-    }
-
     public Locale getLocale()
     {
 	return locale;
@@ -202,8 +138,9 @@ public class UserBean implements Serializable
 	return locale.toString();
     }
 
-    public void setLocaleAsString(String foo)
+    public String getLocaleLanguage()
     {
+	return locale.getDisplayLanguage(locale);
     }
 
     /**
@@ -216,10 +153,28 @@ public class UserBean implements Serializable
 	return locale.getLanguage();
     }
 
-    public void setLocaleCode(String lo)
+    public void setLocaleCode(String localeCode)
     {
-	System.out.println("set locale" + lo);
+	switch(localeCode)
+	{
+	case "de":
+	    locale = Locale.GERMANY;
+	    break;
+	case "en":
+	    locale = Locale.ENGLISH;
+	    break;
+	case "it":
+	    locale = Locale.ITALY;
+	    break;
+	case "pt":
+	    locale = new Locale("pt", "br");
+	    break;
+	default:
+	    locale = Locale.ENGLISH;
+	    log.error("Unsupported language: " + localeCode);
+	}
 
+	FacesContext.getCurrentInstance().getViewRoot().setLocale(locale);
     }
 
     public boolean isAdmin()
@@ -390,8 +345,9 @@ public class UserBean implements Serializable
     @Override
     public String toString()
     {
-	int userId = user == null ? 0 : user.getId();
+	if(user == null)
+	    return "not logged in";
 
-	return "userId: " + userId;
+	return "userId: " + user.getId() + " name: " + user.getUsername();
     }
 }

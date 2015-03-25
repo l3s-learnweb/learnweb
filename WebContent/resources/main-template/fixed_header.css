@@ -19,7 +19,7 @@ header{
 	height:7rem;
 }
 header a {
-	color:#FFFFFF;	
+	color:#FFFFFF !important;	
 	font-size:1.5rem;
 	font-weight:bolder;	
 }
@@ -40,28 +40,28 @@ section {
 #searchfield{
 	float:left;
 	margin-left:23rem;
-	font-size:1.8rem;
+	font-size:1.8rem !important;
 	width:26rem;
 	position:relative;
 	top:50%;
 	height:3.4rem;
 	margin-top:-1.7rem;
 	padding:0px 1rem;
-	border:medium none;
+	border:medium none !important;
 }
 #searchbutton{
 	cursor:pointer;
 	background:url("search.png") no-repeat scroll center center #9C9C9C;
 	float:left;
-	border-top-right-radius:5px;
-	border-bottom-right-radius:5px;
+	border-top-right-radius:5px !important;
+	border-bottom-right-radius:5px !important;
 	width:4.0rem;
-	font-size:2.8rem;
+	font-size:2.8rem !important;
 	position:relative;
 	top:50%;
 	height:3.4rem;
 	margin-top:-1.7rem;
-	border:medium none;
+	border:medium none !important;
 }
 #searchbutton:hover{
 	background-color:#a4a4a4;
@@ -82,12 +82,14 @@ section {
 #informationonscreen:hover{
 	background-color:#74beaa;
 }
-.language{
+
+
+#language_selector{
 	background-color:#489a83;
-    color:#FFFFFF;
+    color:#FFFFFF !important;
 	text-align:left;
 }
-.language ul{
+#language_selector ul{
 	float:right;
 	padding:0;
    	background-color:#489a83;
@@ -100,31 +102,37 @@ section {
     margin-top:3.3rem;
     padding-top:1.2rem;
 }
-.language:hover ul{
+#language_selector:hover ul{
 	display:block;
 }
-.language ul:after{
+#language_selector ul:after{
 	clear:both;
 	display:block;
 	font-size:0;
 	height:0;
 	visibility:hidden;
 }
-.language ul li{
+#language_selector li{
 	float:left;
     list-style:outside none none;
     margin-top:4px;
     width:16rem;
 }
-.language ul li a{
+#language_selector ul a{
 	display:block;
 	text-decoration:none;
 	padding:1rem;
 	border-radius:10px;
 }
-.language ul li a:hover{
+#language_selector a:hover{
 	background-color:#74beaa;
 }
+
+.language_de { background-image:url(flag_de_de.png); }
+.language_en { background-image:url(flag_en_en.png); }
+.language_pt { background-image:url(flag_pt_br.png); }
+.language_it { background-image:url(flag_it_it.png); }
+
 #flag{
 	height:2rem;
 	width:3rem;
@@ -236,7 +244,7 @@ section {
 	border-right:0px;
 }
 .menupoint{
-    color:#FFFFFF;
+    color:#FFFFFF !important;
     background-color:#616161;
     font-size:1.5rem;
     font-weight:bolder;
@@ -286,7 +294,7 @@ section {
 	margin-right:1rem;
 }
 #backtogroup:hover{
-	color:#000000;
+	color:#000000 !important;
 }
 .resourcestype a{
 	text-decoration:none;
@@ -294,15 +302,15 @@ section {
 	margin-left:1.5rem;
 }
 .resourcestype a:hover{
-	color:#FFFFFF;
+	color:#FFFFFF !important;
 }
 .activeResource{
-	color:#FFFFFF;
+	color:#FFFFFF !important;
 	border-bottom:2px solid #489a83;
 	
 }
 .non-activeResource{
-	color:#489a83;
+	color:#489a83 !important;
 	border-bottom:none;
 }
 

@@ -8,8 +8,10 @@
 	<application>
 		<locale-config>
 			<default-locale>en</default-locale>
-			<supported-locale>de_DE</supported-locale>
-			<supported-locale>en_US</supported-locale>
+			<supported-locale>de</supported-locale>
+			<supported-locale>en</supported-locale>
+			<supported-locale>it</supported-locale>
+			<supported-locale>pt</supported-locale>
 		</locale-config>
 		
 		<resource-bundle>

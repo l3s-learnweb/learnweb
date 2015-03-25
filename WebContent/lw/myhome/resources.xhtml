@@ -13,19 +13,17 @@
 	<ui:param name="helpText" value="#{msg.myhomeResourcesHelp}"/>
 	  
 		<ui:define name="center_layout">
-			<h:form id="mode_selection" rendered="false">
-				<p:selectOneButton value="#{myResourcesBean.mode}" >  
-	            	<f:selectItem itemLabel="Everything" itemValue="everything" itemDescription="show all resources" />  
-	            	<f:selectItem itemLabel="Multimedia" itemValue="multimedia"  itemDescription="show only images, videos and slideshows"/>  
-	            	<f:selectItem itemLabel="Web" itemValue="text" itemDescription="show only websites" /> 
-	            	 <p:ajax event="change" update=":resource_disp"></p:ajax> 
-        		</p:selectOneButton> 
-			</h:form>
+			<div class="ui-layout-unit-header ui-widget-header ui-corner-all">
+			My Resources
+			</div>
 			<br></br>
-			<p:commandButton id="add_resource" styleClass="resource_button greenbutton" value="Upload Resource" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
-				<f:setPropertyActionListener target="#{myResourcesBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
-			</p:commandButton>
+			<h:form style="display:inline;">
+				<p:commandButton id="add_resource" styleClass="resource_button greenbutton" value="Upload Resource" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
+					<f:setPropertyActionListener target="#{myResourcesBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
+				</p:commandButton>
+			</h:form>
 			<script type="text/javascript">
+			/*
 				var div = document.createElement("div");
 				var group_header = document.createElement("span");
 				$(group_header).addClass("group_header");
@@ -36,6 +34,7 @@
 				$(div).append(group_header);
 				$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
 				$("#center_pane").prepend(div);
+				*/
 			</script>
 			<h:form prependId="false">
 				<p:confirmDialog id="confirmDialog" message="Are you sure about deleting the resource?" header="Delete Resource" severity="alert" widgetVar="confirmation" appendToBody="true" >
@@ -109,6 +108,7 @@
 			</script>
            <h:panelGroup id="resource_disp"> 
 			<p:dataGrid id="datagrid" var="result" value="#{myResourcesBean.resources}" columns="3" paginator="false" widgetVar="datagrid">  
+		       <h:form>
 		        <p:commandLink styleClass="resource_command_link" update=":add_resource_panel :resource_form" oncomplete="update_header()">
 		        	<f:setPropertyActionListener target="#{myResourcesBean.clickedResource}" value="#{result}"></f:setPropertyActionListener>
 			        <p:panel styleClass="resource_panel">  
@@ -118,23 +118,25 @@
 			            		<span class="groupid">#{result.id}</span>
 			            		<h:outputText styleClass="resource_thumbnail" value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"140\" height=\"140\" />")}' escape="false"></h:outputText>
 			            		<div class="buttons">
-			            			<p:commandLink onclick="resource_dialog.show()" title="#{msg.addToMyResources}"
-										styleClass="buttons_link myresources_commandlink" update="datagrid">
-										<h:graphicImage alt="Add" value="/resources/icon/Add.png" width="16" height="16" />
-											<f:setPropertyActionListener value="#{result}" target="#{myResourcesBean.clickedResource}" />
-									</p:commandLink>
-			            			
-			            			<p:commandLink onclick="confirmation.show()" title="#{msg.removeFromGroup}" rendered="true" styleClass="buttons_link">
-										<h:graphicImage alt="Remove" value="../resources/icon/Remove.png" width="16" height="16" />
-											<f:setPropertyActionListener value="#{result}" target="#{myResourcesBean.clickedResource}" />
-									</p:commandLink>
+				            		
+				            			<p:commandLink onclick="resource_dialog.show()" title="#{msg.addToMyResources}"
+											styleClass="buttons_link myresources_commandlink" update=":datagrid">
+											<h:graphicImage alt="Add" value="/resources/icon/Add.png" width="16" height="16" />
+												<f:setPropertyActionListener value="#{result}" target="#{myResourcesBean.clickedResource}" />
+										</p:commandLink>
+				            			
+				            			<p:commandLink onclick="confirmation.show()" title="#{msg.removeFromGroup}" rendered="true" styleClass="buttons_link">
+											<h:graphicImage alt="Remove" value="../resources/icon/Remove.png" width="16" height="16" />
+												<f:setPropertyActionListener value="#{result}" target="#{myResourcesBean.clickedResource}" />
+										</p:commandLink>
+										
+										<p:commandLink title="#{msg.edit}" update=":add_resource_panel" styleClass="buttons_link">
+											<h:graphicImage alt="Edit" value="../resources/icon/Edit.png" width="16" height="16" />
+												<f:setPropertyActionListener value="#{result}" target="#{myResourcesBean.clickedResource}" />
+												<f:setPropertyActionListener target="#{myResourcesBean.editResourceClicked}" value="true"></f:setPropertyActionListener>
+											<f:param name="group_id" value="#{groupDetailBean.groupId}" />
+										</p:commandLink>
 									
-									<p:commandLink title="#{msg.edit}" update=":add_resource_panel" styleClass="buttons_link">
-										<h:graphicImage alt="Edit" value="../resources/icon/Edit.png" width="16" height="16" />
-											<f:setPropertyActionListener value="#{result}" target="#{myResourcesBean.clickedResource}" />
-											<f:setPropertyActionListener target="#{myResourcesBean.editResourceClicked}" value="true"></f:setPropertyActionListener>
-										<f:param name="group_id" value="#{groupDetailBean.groupId}" />
-									</p:commandLink>
 			            		</div>
 			            	</p:row>
 			            	<ui:fragment rendered="#{result.type.length() le 12}">
@@ -151,6 +153,7 @@
 			            
 			        </p:panel>
 			    </p:commandLink>
+			    </h:form>
 		    </p:dataGrid>
 		  </h:panelGroup> 
 		    <script type="text/javascript">

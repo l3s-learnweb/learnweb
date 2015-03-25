@@ -9,13 +9,13 @@ $(document).ready(function(){
 	});
 	
 	
-	$(document).mousedown(function(){
+	$(document).mouseup(function(){
 		
 		$(".userbar ul li ul").css("visibility","hidden");
 	
 	});
 	
-$(".userbar ul li ul").mousedown(function(){
+$(".userbar ul li ul").mouseup(function(){
 		
 		$(".userbar ul li ul").css("visibility","visible");
 	
@@ -25,7 +25,7 @@ $(".userbar ul li ul").mousedown(function(){
 
 
 // flags
-
+/*
 $(document).ready(function(){
 	$("#german").click(function(){
 		if($("#germanbutton").hasClass("non-active")==true){
@@ -128,7 +128,7 @@ $(document).ready(function(){
 })
 
 // logs
-/*
+
 $(document).ready(function(){
 	
 	$("#loginbutton").click(function(){

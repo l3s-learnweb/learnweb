@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Locale;
 import java.util.TimeZone;
 
 import de.l3s.interwebj.AuthCredentials;
@@ -27,7 +26,6 @@ public class User implements Comparable<User>, Serializable, HasId
 
     private int id = -1;
     private InterWeb interweb;
-    private Locale locale = null;
     private int imageFileId; // profile image
     private int organisationId;
     private String username;
@@ -284,16 +282,6 @@ public class User implements Comparable<User>, Serializable, HasId
     public void setUsername(String username)
     {
 	this.username = username;
-    }
-
-    public Locale getLocale()
-    {
-	return locale;
-    }
-
-    public void setLocale(Locale locale)
-    {
-	this.locale = locale;
     }
 
     public void setOrganisationId(int organisationId)

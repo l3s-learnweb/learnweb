@@ -5,7 +5,7 @@ Include only methods which are required on every page.
 
 /**
  * Method required for the search field
- */
+ * /
 function removeViewstate()
 {
 	$('#search_form input[type=hidden]').remove();
@@ -21,7 +21,7 @@ $(document).ready(function() {
 	storeWindowSize();
 	//Shadowbox.init();
 });
-
+*/
 function footer_toggle(){
 	$('.footer').slideToggle();
 }
@@ -31,7 +31,7 @@ function footer_close(){
 }
 /*
  * Copied from new_index.xhtml
- */
+ * /
 
 $(document).ready(function(){
     $('#header_form').live('click', function(event) {        
@@ -44,3 +44,4 @@ $(document).ready(function(){
          $('#headerbar').toggle('show');
     });
 });	
+*/
