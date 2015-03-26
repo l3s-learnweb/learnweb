@@ -21,7 +21,7 @@ header div a{
 
 /* top bar */
 
-#firstbar{
+#main_menu_bar{
 	background-color:#489a83;
 	width:100%;
 	height:50px;
@@ -274,7 +274,7 @@ header div a{
 
 /* bottom bar */
 
-#secondbar{
+#sub_menu_bar{
 	background-color:#616161;
 	width:100%;
 	height:20px;

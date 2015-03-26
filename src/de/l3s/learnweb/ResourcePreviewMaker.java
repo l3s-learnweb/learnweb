@@ -39,14 +39,17 @@ public class ResourcePreviewMaker
     private final Learnweb learnweb;
     private final FileManager fileManager;
     private final FileInspector fileInspector;
-    private final String thumbnailService;
+    private final String websiteThumbnailService;
+    private final String videoThumbnailService;
 
     public ResourcePreviewMaker(Learnweb learnweb)
     {
 	this.learnweb = learnweb;
 	this.fileManager = this.learnweb.getFileManager();
 	this.fileInspector = new FileInspector();
-	this.thumbnailService = learnweb.getProperties().getProperty("THUMBNAIL_SERVICE");
+
+	this.websiteThumbnailService = learnweb.getProperties().getProperty("WEBSITE_THUMBNAIL_SERVICE");
+	this.videoThumbnailService = learnweb.getProperties().getProperty("VIDEO_THUMBNAIL_SERVICE");
     }
 
     /**
@@ -133,7 +136,7 @@ public class ResourcePreviewMaker
 	resource.setType("text");
 	resource.setFormat("text/html");
 
-	URL thumbnailUrl = new URL(thumbnailService + StringHelper.urlEncode(resource.getUrl()));
+	URL thumbnailUrl = new URL(websiteThumbnailService + StringHelper.urlEncode(resource.getUrl()));
 
 	// process image
 	Image img = new Image(thumbnailUrl.openStream());
@@ -145,6 +148,16 @@ public class ResourcePreviewMaker
 	fileManager.save(file, img.getInputStream());
 
 	createThumbnails(resource, img, true);
+    }
+
+    public void processVideo(Resource resource) throws IOException, SQLException
+    {
+	URL thumbnailUrl = new URL(videoThumbnailService + StringHelper.urlEncode(resource.getUrl()));
+
+	// process image
+	Image img = new Image(thumbnailUrl.openStream());
+
+	createThumbnails(resource, img, false);
     }
 
     public static void main(String[] ar)

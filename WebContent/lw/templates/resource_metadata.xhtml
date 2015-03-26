@@ -66,7 +66,7 @@
 		<div class="options">	
 			<b><h:outputText value="#{msg.options}: " /></b><br/>
 		
-		 	<h:outputLink value="user/login.jsf" rendered="#{!userBean.loggedIn}">
+		 	<h:outputLink value="#{request.contextPath}/lw/user/login.jsf" rendered="#{!userBean.loggedIn}">
 				<h:outputText value="#{msg.loginLabel}" />
 			</h:outputLink> 
 			

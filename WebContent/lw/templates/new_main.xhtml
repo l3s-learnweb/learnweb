@@ -11,21 +11,21 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title><h:outputText value="#{pageTitle}" escape="false" /> - Learnweb</title>
 		<link rel="shortcut icon" href="#{learnwebBean.baseUrl}../resources/icon/favicon.ico" />
-		
+		  
 		<link type="text/css" rel="stylesheet" href="#{learnwebBean.baseUrl}../resources/css/default.css" />
 		
         <link rel="stylesheet" type="text/css" href="#{learnwebBean.baseUrl}../resources/css/new_main2.css" />
-      
+     <!--
         <link rel="stylesheet" type="text/css" href="#{learnwebBean.baseUrl}../resources/css/nanoscroller.css" />
-       <!--   -->
+         -->
 		<h:outputScript library="primefaces" name="jquery/jquery.js" />
 		
-		<h:outputScript library="js" name="default.js"/>
+		<h:outputScript library="main-template" name="default.js"/>
+		<!--  
 		<h:outputScript library="js" name="jquery.mousewheel.min.js"/>
 		<h:outputScript library="js" name="jquery.nanoscroller.min.js"/>
-		<h:outputScript library="main-template" name="responsive_menu.js" />
-		
-		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/fixed_header.css" />
+		-->
+		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/main.css" />
 		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />
 		
 
@@ -44,16 +44,13 @@
 
 	<h:body>
 		<p:growl id="growl" />
-		<header>
 
-			<ui:decorate template="/templates/header.xhtml"></ui:decorate>
-
-		</header>
+		<ui:decorate template="/templates/header.xhtml"></ui:decorate>
 					
 		<p:layout fullPage="true" widgetVar="mainLayout">
 		
 			<p:layoutUnit position="north" resizable="false" closable="false"
-				collapsible="false" styleClass="northunit" style="height:8rem; display:block;">
+				collapsible="false" styleClass="northunit" style="height:7rem; display:block;">
 				<script type="text/javascript">
 			
 					function scroller()
@@ -101,23 +98,22 @@
 			
 			</ui:insert>
 			
-			<p:layoutUnit id="center_pane" position="center" >
-			
+			<p:layoutUnit id="center_pane" position="center" >			
 		
-				<div class="content">
-				<p:messages id="message"></p:messages>
-				
-				<h:panelGroup layout="block" id="middle" rendered="#{loginRequired and !userBean.loggedIn}">
-					<p:panel header="#{msg.loginRequiredTitle}">
-						<p><h:outputText value="#{msg.loginRequiredText}" /></p>
-						<ui:include src="/lw/templates/login_form.xhtml" />
-					</p:panel>
-				</h:panelGroup>
-				
-				<h:panelGroup rendered="#{!loginRequired || userBean.loggedIn}">
-					<ui:insert name="center_layout"></ui:insert>
-				</h:panelGroup>
-				</div>
+				<section id="content" class="#{smallPage? 'small_page':''}" style="margin-top:0">
+					<p:messages id="message" />
+			
+					<h:panelGroup layout="block" id="middle" rendered="#{loginRequired and !userBean.loggedIn}" styleClass="small_page">
+						<p:panel header="#{msg.loginRequiredTitle}">
+							<p><h:outputText value="#{msg.loginRequiredText}" /></p>
+							<ui:include src="/lw/templates/login_form.xhtml" />
+						</p:panel>
+					</h:panelGroup>
+					
+					<h:panelGroup rendered="#{!loginRequired || userBean.loggedIn}">
+						<ui:insert name="center_layout"></ui:insert>
+					</h:panelGroup>
+				</section>
 
 			</p:layoutUnit>
 
@@ -128,9 +124,9 @@
 			</h:form> 			
 		</p:dialog>	
 		
-		<ui:insert name="bottom_panel"></ui:insert>
+		
 		<h:panelGroup layout="block" styleClass="#{helpTextStyle} footer"
-			rendered="#{not empty helpText}">
+			rendered="#{not empty helpText and false}">
 			<h:outputText value="#{helpText}" escape="false"
 				style="display:inline-block; padding-top:4px;padding-left:3px;width:98%;float:left;"></h:outputText>
 			<a href="#" onclick="footer_close();return false;" id="footer_close"

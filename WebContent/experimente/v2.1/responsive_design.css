@@ -104,7 +104,7 @@
 	#sourcetype{
 		margin-left:3em;
 	}
-	#secondbar{
+	#sub_menu_bar{
 		top:0px;
 	}
 	#text{
@@ -172,7 +172,7 @@
 	#log{
 		display:block;
 	}
-	#secondbar{
+	#sub_menu_bar{
 		position:relative;
 		top:0px;
 		z-index:1;
@@ -230,7 +230,7 @@
 	#backtogroup{
 		margin-right:0;
 	}
-	#secondbar{
+	#sub_menu_bar{
 		height:15px;
 	}
 	.menubutton{

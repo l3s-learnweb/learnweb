@@ -6,9 +6,7 @@
 	xmlns:p="http://primefaces.org/ui">
 	
 <f:view locale="#{userBean.localeCode}" contentType="text/html">
-	<f:metadata>
-		<f:event listener="#{userBean.preRenderView}" type="preRenderView"></f:event>
-	</f:metadata>
+
 	<h:head>	
 		<title><h:outputText value="#{msg.homepageTitle}" escape="false" /></title>
 		<base href="#{learnwebBean.baseUrl}" />

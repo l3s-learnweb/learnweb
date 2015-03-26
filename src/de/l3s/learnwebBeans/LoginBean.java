@@ -80,9 +80,6 @@ public class LoginBean extends ApplicationBean implements Serializable
 	};
 	new Thread(preFetch).start();
 
-	return "/admin/example?faces-redirect=true";
-
-	/*
 	// if the user logs in from the start or the login page, redirect him to the welcome page
 	String viewId = getFacesContext().getViewRoot().getViewId();
 	if(viewId.endsWith("/user/login.xhtml") || viewId.endsWith("/index.xhtml"))
@@ -92,7 +89,7 @@ public class LoginBean extends ApplicationBean implements Serializable
 
 	// otherwise reload his last page
 	return viewId + "?faces-redirect=true&includeViewParams=true";
-	*/
+
     }
 
     public String logout()

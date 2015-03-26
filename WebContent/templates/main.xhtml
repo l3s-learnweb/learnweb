@@ -12,41 +12,37 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title>#{pageTitle} - Learnweb</title>
 		<link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico" />
-		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/fixed_header.css" />
+		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/main.css" />
 		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />
 
 		<h:outputScript library="primefaces" name="jquery/jquery.js" />
-		<!--  -->
-		<h:outputScript library="main-template" name="responsive_menu.js" />
+		<h:outputScript library="main-template" name="default.js" />
 
 		<base href="#{request.contextPath}/" />
 	</h:head>
 
 	<h:body>
 
-		<header style="border:1px solid red;">
+		<ui:decorate template="/templates/header.xhtml" /> 		
 
-			<ui:decorate template="/templates/header.xhtml"></ui:decorate> 
+		<section id="content" class="#{smallPage? 'small_page':''}">
+			<p:messages id="message" />
+	
+			<p:growl id="growl" showDetail="true" sticky="true" /> 
+			<!--  TODO remove growl -->
+	
+			<h:panelGroup layout="block" id="middle" rendered="#{loginRequired and !userBean.loggedIn}" styleClass="small_page">
+				<p:panel header="#{msg.loginRequiredTitle}">
+					<p>
+						<h:outputText value="#{msg.loginRequiredText}" />
+					</p>
+					<ui:include src="/lw/templates/login_form.xhtml" />
+				</p:panel>
+			</h:panelGroup>
 
-		</header>
-
-		<section>
-			<div class="content">
-				<p:messages id="message"></p:messages>
-
-				<h:panelGroup layout="block" id="middle" rendered="#{loginRequired and !userBean.loggedIn}">
-					<p:panel header="#{msg.loginRequiredTitle}">
-						<p>
-							<h:outputText value="#{msg.loginRequiredText}" />
-						</p>
-						<ui:include src="/lw/templates/login_form.xhtml" />
-					</p:panel>
-				</h:panelGroup>
-
-				<h:panelGroup rendered="#{!loginRequired || userBean.loggedIn}">
-					<ui:insert name="center_layout"></ui:insert>
-				</h:panelGroup>
-			</div>
+			<h:panelGroup rendered="#{!loginRequired || userBean.loggedIn}">
+				<ui:insert name="center_layout"></ui:insert>
+			</h:panelGroup>
 		</section>
 
 	</h:body>

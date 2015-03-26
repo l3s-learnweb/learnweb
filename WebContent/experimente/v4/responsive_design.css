@@ -85,7 +85,7 @@
 	#backtogroup{
 		margin-right:0.5em;
 	}
-	#secondbar{
+	#sub_menu_bar{
 		top:0px;
 	}
 	#text{
@@ -152,7 +152,7 @@
 	#logout{
 		display:block;
 	}
-	#secondbar{
+	#sub_menu_bar{
 		position:relative;
 		top:0px;
 		z-index:1;
@@ -201,7 +201,7 @@
 	#backtogroup{
 		margin-right:0;
 	}
-	#secondbar{
+	#sub_menu_bar{
 		height:15px;
 	}
 	.menubutton{

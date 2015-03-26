@@ -7,7 +7,7 @@
     }
 
     /* Safari only override */
-    ::i-block-chrome,#firstbar {
+    ::i-block-chrome,#main_menu_bar {
 		background:url(LearnwebLogo.png) no-repeat scroll left; 
 		background-color:#489A83;
 		background-size: 22em;
@@ -16,7 +16,7 @@
 
  @media screen and (-ms-high-contrast:none){
      	/* IE11 */
-     	.language ul li ul{ 
+     	#language_selector ul li ul{ 
      		margin-top:4em;
      		margin-right:-8.5em;
      		width:12.5em;
@@ -86,7 +86,7 @@
 }
 
 @media screen and (max-width: 39em){
-	#firstbar{
+	#main_menu_bar{
 		background:#489a83;
 	}
 	#searchfield{

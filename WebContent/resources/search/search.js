@@ -216,21 +216,16 @@ function displayNextPage(xhr, status, args)
 
 function testIfResultsFillPage()
 {	
-	console.log($(window).scrollTop() , $('section').first().scrollTop() ,  $('#results').height() , $('header').first().height(), $( window ).height());
 	
-	var contentAreaHeight = $( window ).height() - $('header').first().height();
+	var contentAreaHeight = $( window ).height() - $('#header').height();
+
+	console.log($(window).scrollTop() , $(document).first().scrollTop() ,  $('#results').height() , $('#header').height(), $( window ).height(), contentAreaHeight);
+
 	
 	// if results don't fill the page -> load more results
+
 	
-	// geändert von trevor, warum?
-	/*
-	if($('.content').scrollTop()*0.90 > ($('#results').height() - $('#center_pane').height())*0.80)
-    {		
-		loadNextPage();
-    }	
-	*/
-	
-	if($('.content').scrollTop() > $('#results').height() - contentAreaHeight*1.5)
+	if($(document).scrollTop() > $('#results').height() - contentAreaHeight*1.5)
     {		
 		loadNextPage();
     }
@@ -506,8 +501,8 @@ $(document).ready(function()
 	});
 	
 	//$('#center_pane > div').scroll(testIfResultsFillPage);	
-	
-	$(".content").bind("scroll", function(e){
+		
+	$(document).bind("scroll", function(e){
 		testIfResultsFillPage();
 	});
 	

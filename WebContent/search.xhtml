@@ -1,9 +1,8 @@
-<ui:composition template="/templates/main.xhtml"
+<ui:composition template="/templates/main.xhtml" 
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:h="http://java.sun.com/jsf/html" 
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui" 
-	lang="#{userBean.localeCode}">
+	xmlns:p="http://primefaces.org/ui">
 
 	<ui:define name="metadata">
 		<f:metadata>
@@ -17,95 +16,70 @@
 
 	<ui:param name="pageTitle" value="#{msg.searchTitle}" />	
 	<ui:param name="helpText" value="#{msg.searchHelp}"/>
+
 	 
-	<ui:define name="options_panel">
-	
-		<div class="options_panel">  
-			<h:panelGroup id="returnlink" rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
-				<h:outputLink value="group/overview.jsf" styleClass="returnlink_link" style="color:white;">
-        		  Go back to <i>#{userBean.user.activeGroup.title}</i>
-					<f:param name="group_id" value="#{userBean.user.activeGroup.id}"></f:param>
-				</h:outputLink>
-			</h:panelGroup>
+	<ui:define name="sub_menu_bar">		
+		<div id="sub_menu_bar">  
+			
+			<h:outputLink value="lw/group/overview.jsf" id="backtogroup" rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
+       		  #{msg.back_to} <i>#{userBean.user.activeGroup.title}</i>
+				<f:param name="group_id" value="#{userBean.user.activeGroup.id}" />
+			</h:outputLink>
+		
 					
-			<h:form id="optform">
-				<h:outputText value="Web" styleClass="optform_text"
+			<h:form styleClass="links">
+				<h:outputText value="Web" styleClass="activeResource"
 					rendered="#{searchBean.searchMode == 'web'}" />
-				<h:link value="Web" outcome="search"
-					styleClass="optform_link"
+				<h:link value="Web" outcome="search"					
 					rendered="#{searchBean.searchMode != 'web'}" >
 					<f:param name="action" value="web" />
 					<f:param name="query" value="#{searchBean.query}" />								
 				</h:link>			
 
 				<h:outputText value="#{msg.Images}"
-					styleClass="optform_text"
+					styleClass="activeResource"
 					rendered="#{searchBean.searchMode == 'image'}" />
-				<h:link value="#{msg.Images}" outcome="search"
-					styleClass="optform_link"
+				<h:link value="#{msg.Images}" outcome="search"					
 					rendered="#{searchBean.searchMode != 'image'}" >
 					<f:param name="action" value="image" />
 					<f:param name="query" value="#{searchBean.query}" />
 				</h:link>
 
 				<h:outputText value="#{msg.Videos}"
-					styleClass="optform_text"
+					styleClass="activeResource"
 					rendered="#{searchBean.searchMode == 'video'}" />
-				<h:link value="#{msg.Videos}" outcome="search"
-					styleClass="optform_link"
+				<h:link value="#{msg.Videos}" outcome="search"					
 					rendered="#{searchBean.searchMode != 'video'}" >
 					<f:param name="action" value="video" />
 					<f:param name="query" value="#{searchBean.query}" />
 				</h:link>
-
-				
-
-<!-- 
-        <link rel="stylesheet" type="text/css" href="#{learnwebBean.baseUrl}../resources/css/jquery.dropdown.css" />
-
-		<h:outputScript library="js" name="jquery.dropdown.min.js" target="head"/>
-			
-		<a href="#" data-dropdown="#dropdown-1">dropdown</a>
-			 -->
-			
-
-	
-				<h:panelGroup rendered="#{userBean.searchHistoryEnabled}">
-					<span style="float:right;padding-right:5px;"><h:panelGroup styleClass="search_history"><p:commandButton  id="search_history_tools" value="Search History Tools" type="button" icon="ui-icon-triangle-1-s"/></h:panelGroup></span>
-					<p:menu overlay="true" trigger="search_history_tools" my="left top"
-						at="left bottom">
-						<p:submenu label="Search History">
-							<p:menuitem value="Show" icon=" ui-icon-arrowstop-1-w" onclick="open_searchbar();" />
-							<p:menuitem value="Hide" icon="ui-icon-arrowstop-1-e" onclick="close_searchbar();"/>
-						</p:submenu>
-						<p:submenu label="Explore History">
-							<p:menuitem value="List View" icon="ui-icon-search" outcome="explore">
-								<f:param name="mode" value="list_view" />
-								<f:param name="page" value="1" />
-							</p:menuitem>
-						</p:submenu>
-					</p:menu>
-				</h:panelGroup>
 			</h:form>
+
+			
+
+		
+			<h:panelGroup rendered="#{userBean.searchHistoryEnabled and false}">
+				<h:form styleClass="resourcestype">
+				<span style="float:right;padding-right:5px;"><h:panelGroup styleClass="search_history"><p:commandButton  id="search_history_tools" value="Search History Tools" type="button" icon="ui-icon-triangle-1-s"/></h:panelGroup></span>
+				<p:menu overlay="true" trigger="search_history_tools" my="left top"
+					at="left bottom">
+					<p:submenu label="Search History">
+						<p:menuitem value="Show" icon=" ui-icon-arrowstop-1-w" onclick="open_searchbar();" />
+						<p:menuitem value="Hide" icon="ui-icon-arrowstop-1-e" onclick="close_searchbar();"/>
+					</p:submenu>
+					<p:submenu label="Explore History">
+						<p:menuitem value="List View" icon="ui-icon-search" outcome="explore">
+							<f:param name="mode" value="list_view" />
+							<f:param name="page" value="1" />
+						</p:menuitem>
+					</p:submenu>
+				</p:menu>
+				</h:form>
+			</h:panelGroup>
+			
 		</div>	
 	</ui:define>
-		
-		
-	<ui:define name="bottom_panel">
-		<div id="dropdown-1" class="dropdown dropdown-tip">
-		    <ul class="dropdown-menu">
-		        <li><a href="#1">Item 1</a></li>
-		        <li><a href="#2">Item 2</a></li>
-		        <li><a href="#3">Item 3</a></li>
-		        <li class="dropdown-divider"></li>
-		        <li><a href="#4">Item 4</a></li>
-		        <li><a href="#5">Item 5</a></li>
-		        <li><a href="#5">Item 6</a></li>
-		    </ul>
-		</div>
-	</ui:define>
-
-		
+				
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="search" name="search.css"  />		
 		<h:outputScript library="search" name="search.js" target="head"/>
@@ -116,7 +90,7 @@
 			var searchHistoryEnabled = #{userBean.searchHistoryEnabled};
 		</script>			
 		 
-		<ui:decorate template="/lw/templates/resource_lightbox.xhtml"></ui:decorate> 	
+		<ui:decorate template="/lw/templates/resource_lightbox.xhtml" /> 	
 
 		<div id="results" class="#{searchBean.view}_view">			
 			<div class="resources">
@@ -208,7 +182,7 @@
 					<h:outputText value="#{searchBean.selectedResource.source}" style="width:400px; padding:4px;" />
 					  
 					<h:outputText value="" />
-					<p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" process="@form" update=":returnlink :growl" oncomplete="resource_dialog.hide()"/>
+					<p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" process="@form" update=":backtogroup :growl" oncomplete="resource_dialog.hide()"/>
 				</h:panelGrid>			
 			</h:form> 			
 		</p:dialog>

@@ -47,7 +47,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     private Search search;
     private String query = "";
     private int page;
-    private String action;
+    private String action = "web";
     private InterWeb interweb;
     private Resource selectedResource;
     private int selectedResourceTargetGroupId;

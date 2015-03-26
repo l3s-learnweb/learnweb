@@ -1,14 +1,10 @@
-/*
-body {
-	margin: 0px;
-	padding: 0;
-	color: #616161;
+.ui-layout-resizer { display:none !important; }
+
+.ui-widget-content {
+	border-top:none !important;
+	border-bottom:none !important;
 }
 
-h1, h2, h3 {
-	margin-top: 0;
-}
-*/
 h1 {
 	font-size: 1.6em;
 	font-weight: normal;
@@ -93,18 +89,6 @@ img.right {
     position:absolute;
     top:5px;
     right:50px;
-}
-
-/* Page */
-#page {
-	padding: 10px 0px;
-	background: #FFFFFF;
-}
-
-/* Content */
-#content {
-	width: 70%;
-    float:left;
 }
 
 .post {

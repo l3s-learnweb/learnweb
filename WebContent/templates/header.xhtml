@@ -1,21 +1,16 @@
-<!DOCTYPE html>
-<html xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" lang="#{userBean.localeCode}">
-
+<html xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:p="http://primefaces.org/ui">
+	
 <ui:composition>
+<header id="header">
 
-
-	<div id="firstbar">
+	<div id="main_menu_bar">
 		
-		<script type="text/javascript">
-			function removeViewstate(searchForm)
-			{
-				$(searchForm).find("[name='javax.faces.ViewState']").remove();
-			}
-		
-		</script>
 		<form action="#{request.contextPath}/search.jsf" method="get" style="height:100%; float:left; vertical-align: middle" onsubmit="removeViewstate(this);">
 			<input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" id="searchfield" />
-			<input type="hidden" name="action" value="image" />
+			<input type="hidden" name="action" value="#{searchBean.action}" />
 			<input type="submit" value=" " id="searchbutton" title="#{msg.searchLabel}" />
 		</form>
 		
@@ -166,37 +161,21 @@
 			</h:outputLink>
 			
 			<h:form>
-				<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true">
+				<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true" title="#{msg.logoutLabel}">
 					<img alt="#{msg.logoutLabel}" src="#{request.contextPath}/resources/main-template/logout.png" height="25" width="25" id="logoutbutton" />							
 				</h:commandLink>
 			</h:form>
 		</span>
 	</div>
-
-	<div id="secondbar">
-		<a href="#" id="backtogroup">
-			<h:outputText value="#{msg.back_to}"/>
-		</a>
-		<span class="resourcestype">
-			<a href="#" id="web" class="non-activeResource">
-				<h:outputText value="#{msg.web}"/>
-			</a>
-			<a href="#" id="images" class="activeResource">
-				<h:outputText value="#{msg.Images}"/>
-			</a>
-			<a href="#" id="videos" class="non-activeResource">
-				<h:outputText value="#{msg.Videos}"/>
-			</a>
-			<!--  
-			<a href="#" id="more_option">
-				<h:outputText value="#{msg.more_options}"/>
-			</a>
-			-->
-		</span>
-	</div>
 	
-	<ui:insert name="options_panel"></ui:insert>
+	<ui:insert name="sub_menu_bar">
+		<style type="text/css">
+			#content { margin-top:6rem; }
+			.ui-layout-north { height:6rem !important; } /* remove when the old template has been removed */
+		</style>
+	</ui:insert>
 
+</header>
 </ui:composition>
 
 </html>
