@@ -42,7 +42,7 @@
 					</a>
 				</li>
 				<li>
-					<img alt="" src="resources/main-template/dropdownmenu.png" height="28" width="28" style="vertical-align: middle" class="menu"/>
+					<img alt="" src="#{request.contextPath}/resources/main-template/dropdownmenu.png" height="28" width="28" style="vertical-align: middle" class="menu"/>
 					
 					<ul>
 						<li class="menupoint">
@@ -91,7 +91,7 @@
 		
 		<div id="language_selector">
 
-				<img alt="" src="#{request.contextPath}/resources/main-template/flag_#{userBean.localeAsString}.png" />
+				<img alt="" src="#{request.contextPath}/resources/main-template/flag_#{userBean.localeCode}.png" />
 			
 			<h:form>
 				<ul>
@@ -111,7 +111,7 @@
 			
 			<h:form>
 				<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true">
-					<img alt="#{msg.logoutLabel}" src="resources/main-template/logout.png" height="25" width="25" id="logoutbutton" />							
+					<img alt="#{msg.logoutLabel}" src="#{request.contextPath}/resources/main-template/logout.png" height="25" width="25" id="logoutbutton" />							
 				</h:commandLink>
 			</h:form>
 		</span>

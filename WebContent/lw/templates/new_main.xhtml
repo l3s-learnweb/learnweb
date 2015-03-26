@@ -44,7 +44,12 @@
 
 	<h:body>
 		<p:growl id="growl" />
-		
+		<header>
+
+			<ui:decorate template="/templates/header.xhtml"></ui:decorate>
+
+		</header>
+					
 		<p:layout fullPage="true" widgetVar="mainLayout">
 		
 			<p:layoutUnit position="north" resizable="false" closable="false"
@@ -85,11 +90,7 @@
 				</script>
 
 				<h:panelGroup layout="block" style="height:8rem;">
-					<header>
-
-						<ui:decorate template="/templates/header.xhtml"></ui:decorate>
-
-					</header>
+					
 				</h:panelGroup>
 
 				<ui:insert name="options_panel"></ui:insert>
