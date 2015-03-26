@@ -82,8 +82,6 @@ section {
 #informationonscreen:hover{
 	background-color:#74beaa;
 }
-
-
 #language_selector{
 	background-color:#489a83;
     color:#FFFFFF !important;
@@ -94,10 +92,10 @@ section {
 	padding:0;
    	background-color:#489a83;
     display:none;
-    width:16rem;
+    width:12rem;
     border-bottom-right-radius:10px;
 	border-bottom-left-radius:10px;
-	margin-left:-10rem;
+	margin-left:-6rem;
     margin-right:-6.2rem;
     margin-top:3.3rem;
     padding-top:1.2rem;
@@ -116,7 +114,7 @@ section {
 	float:left;
     list-style:outside none none;
     margin-top:4px;
-    width:16rem;
+    width:12rem;
 }
 #language_selector ul a{
 	display:block;
@@ -125,29 +123,10 @@ section {
 	border-radius:10px;
 	background-repeat: no-repeat;
 	padding-left:4rem;
-	
-	/*
-	image size auf 
+}
+#language_selector img{
 	height:2rem;
 	width:3rem;
-	setzen
-	*/
-	
-}
-#language_selector a:hover{
-	background-color:#74beaa;
-}
-
-.language_de { background-image:url(flag_de_DE.png); }
-.language_en { background-image:url(flag_en_GB.png); }
-.language_pt { background-image:url(flag_pt_BR.png); }
-.language_it { background-image:url(flag_it_IT.png); }
-
-#flag{
-	height:2rem;
-	width:3rem;
-}
-.active{
 	display:block;
 	float:right;
 	border:1px solid #FFFFFF;
@@ -158,9 +137,29 @@ section {
 	margin-top:1.2rem;
 	margin-right:2.5rem;
 }
-.non-active{
-	display:none;
+#language_selector a:hover{
+	background-color:#74beaa;
 }
+.language_de { 
+	background-image:url(flag_de_DE.png); 
+	background-size:3rem 2rem; 
+	background-position:3% 50%;
+	}
+.language_en { 
+	background-image:url(flag_en_GB.png); 
+	background-size:3rem 2rem; 
+	background-position: 3% 50%;
+	}
+.language_pt { 
+	background-image:url(flag_pt_BR.png); 
+	background-size:3rem 2rem; 
+	background-position: 3% 50%;
+	}
+.language_it { 
+	background-image:url(flag_it_IT.png); 
+	background-size:3rem 2rem; 
+	background-position: 3% 50%;
+	}
 #logoutbutton:hover, #loginbutton:hover{
 	background-color:#74beaa;
 }
@@ -183,10 +182,6 @@ section {
 	float:right;
 	margin-right:1rem;
 	text-decoration:none;
-}
-#englishbutton, #germanbutton, #italianbutton, #portuguesebutton{
-	width:3rem;
-	height:2rem;	
 }
 .menu{
 	cursor:pointer;
