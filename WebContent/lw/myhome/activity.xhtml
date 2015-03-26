@@ -9,7 +9,7 @@
 	
 	
 		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="Activity Stream"/>	
+		<ui:param name="pageTitle" value="#{msg.activity_stream}"/>	
 		<ui:param name="helpText" value="#{msg.myhomeActivityHelp}" />		
 
 		
@@ -21,10 +21,10 @@
 				var div = document.createElement("div");
 				var group_header = document.createElement("span");
 				$(group_header).addClass("group_header");
-				$(group_header).html("Activity Stream. ");
+				$(group_header).html("#{msg.activity_stream}. ");
 				var group_owner = document.createElement("span");
 				$(group_owner).addClass("group_owner");
-				$(group_owner).html("See what your colleagues have been upto.");
+				$(group_owner).html("#{msg.activity_message}");
 				var cl = $("#add_resource").clone();
 	            $(cl).appendTo(div);
 	            $("#add_resource").remove()
@@ -64,7 +64,7 @@
 					<div class="newsfeed_text">
 					<h:outputText value="#{datagrid.text}" escape="false"  />
 					<h:panelGroup rendered="#{datagrid.queryNeeded}">
-					<h:outputText value=" with query " escape="false"  />
+					<h:outputText value=" #{msg.with_query} " escape="false"  />
 					
 					<h:outputLink value="search.jsf" styleClass="newsfeed_query_link">
 					<h:outputText value=" #{datagrid.resource.query}" escape="false"  styleClass="newsfeed_query_link_text"/>
@@ -73,7 +73,7 @@
 					        <f:param name="action" value="search"></f:param>
 					</h:outputLink>
 					
-					<h:outputText value=" from #{datagrid.resource.source} " escape="false"  />
+					<h:outputText value=" #{msg.from} #{datagrid.resource.source} " escape="false"  />
 					</h:panelGroup>
 					</div>
 					

@@ -7,7 +7,7 @@
 	xmlns:p="http://primefaces.org/ui"> 
 
 		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="Organisation"/>
+		<ui:param name="pageTitle" value="#{msg.organization}"/>
 
 	
 		<ui:define name="center_layout">
@@ -28,7 +28,7 @@
 				<h:form id="editwelcomeform">
 					<p><h:outputText value="#{msg.title}:" /></p>
 					<p:inputText value="#{adminOrganisationBean.organisation.title}" style="width:400px" />
-					<p><h:outputText value="Welcome message:" /></p>
+					<p><h:outputText value="#{msg.welcome_message}:" /></p>
 					<p:editor value="#{adminOrganisationBean.organisation.welcomeMessage}" width="600" />
 					<p><p:commandButton action="#{adminOrganisationBean.onSave}" value="#{msg.save}" ajax="false"/></p>
 				</h:form>		

@@ -14,11 +14,11 @@
 	  
 		<ui:define name="center_layout">
 			<div class="ui-layout-unit-header ui-widget-header ui-corner-all">
-			My Resources
+			#{msg.myResourcesTitle}
 			</div>
 			<br></br>
 			<h:form style="display:inline;">
-				<p:commandButton id="add_resource" styleClass="resource_button greenbutton" value="Upload Resource" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
+				<p:commandButton id="add_resource" styleClass="resource_button greenbutton" value="#{msg.upload_resource}" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
 					<f:setPropertyActionListener target="#{myResourcesBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
 				</p:commandButton>
 			</h:form>

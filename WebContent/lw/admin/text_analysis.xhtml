@@ -8,26 +8,26 @@
 
 
 		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="Text analysis"/>
+		<ui:param name="pageTitle" value="#{msg.text_analysis}"/>
 
 		
 		<ui:define name="center_layout">
 		
 			<h:form id="anlyse_form">
-				<p:panel header="Select users">
+				<p:panel header="#{msg.select_users}">
 					<ui:include src="/lw/templates/user_select_form.xhtml" />	
 					<br/>
-					<p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="Gather comments of selected users" process="@form" update=":growl output"/>
+					<p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}" process="@form" update=":growl output"/>
 					
 				</p:panel>
 						
 				<br/>
 				
 				<h:panelGroup id="output">
-					<p:panel header="Comments" value="#{adminTextAnalysisBean.commentCount lt 0}">
-						Selected comments: <h:outputText value="#{adminTextAnalysisBean.commentCount}" />
+					<p:panel header="#{msg.comments}" value="#{adminTextAnalysisBean.commentCount lt 0}">
+						#{msg.selected_comments}: <h:outputText value="#{adminTextAnalysisBean.commentCount}" />
 						<hr/>
-						<a href="admin/wanderer.jsf" target="_blank" style="padding:5px 10px" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">Analyse comments with WordWanderer</a>
+						<a href="admin/wanderer.jsf" target="_blank" style="padding:5px 10px" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">#{msg.comments_analyse}</a>
 						<hr/>
 						
 						<h:outputText value="#{adminTextAnalysisBean.textBR}" escape="false"/>

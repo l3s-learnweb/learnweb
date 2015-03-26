@@ -8,19 +8,19 @@
 
 
 	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="Notification" />
+	<ui:param name="pageTitle" value="#{msg.notification}" />
 
 	
 	<ui:define name="center_layout">
 		<h:outputText value="Missing authentication" rendered="#{not (userBean.admin || userBean.moderator)}" />
 
-		<p:panel header="Notification" rendered="#{userBean.admin || userBean.moderator}">
+		<p:panel header="#{msg.notification}" rendered="#{userBean.admin || userBean.moderator}">
 
 			<h:form id="us_form">
 				<h:panelGrid id="grid" columns="1">
 	
 					<h:panelGroup>
-						<h:outputText style="font-weight:bold" value="Title" />
+						<h:outputText style="font-weight:bold" value="#{msg.title}" />
 						<p:message showSummary="true" showDetail="false" styleClass="error" for="msg_title" />					
 					</h:panelGroup>					
 					<p:inputText value="#{adminNotificationBean.title}" style="width:100%" id="msg_title" />
@@ -28,21 +28,21 @@
 					<p:spacer width="100" height="20" />
 					
 					<h:panelGroup>
-						<h:outputText style="font-weight:bold" value="Description" />
+						<h:outputText style="font-weight:bold" value="#{msg.description}" />
 						<p:message showSummary="true" showDetail="false" styleClass="error" for="msg_description" />					
 					</h:panelGroup>	
 					<p:editor value="#{adminNotificationBean.text}" widgetVar="editor" width="600" id="msg_description" />
 					
 					<p:spacer width="100" height="20" />
 
-					<h:outputText style="font-weight:bold" value="Select users" />
+					<h:outputText style="font-weight:bold" value="#{msg.select_users}" />
 				</h:panelGrid>
 					
 				<ui:include src="/lw/templates/user_select_form.xhtml" />	
 									
 				<h:panelGrid columns="2" style="margin-top:10px">
-					<p:commandButton value="Send" action="#{adminNotificationBean.send}" ajax="false"/>
-					<p:commandButton type="button" value="Clear" onclick="editor.clear()" image="ui-icon ui-icon-close" />
+					<p:commandButton value="#{msg.send}" action="#{adminNotificationBean.send}" ajax="false"/>
+					<p:commandButton type="button" value="#{msg.clear}" onclick="editor.clear()" image="ui-icon ui-icon-close" />
 				</h:panelGrid>
 			</h:form>
 		</p:panel>

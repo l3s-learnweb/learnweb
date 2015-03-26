@@ -14,13 +14,13 @@
 	</ui:define>
 	
 	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{adminCourseBean.course.title} course" />
+	<ui:param name="pageTitle" value="#{adminCourseBean.course.title} #{msg.course}" />
 	
 	
 	
 	<ui:define name="center_layout">
 
-		<p:panel header="#{adminCourseBean.course.title} - course">
+		<p:panel header="#{adminCourseBean.course.title} - #{msg.course}">
 			<h:form id="course_form" >
 				<h:panelGrid columns="3" columnClasses="medium-width">
 					

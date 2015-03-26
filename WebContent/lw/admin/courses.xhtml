@@ -8,7 +8,7 @@
 
 
 		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="Courses"/>
+		<ui:param name="pageTitle" value="#{msg.courses}"/>
 
 		
 		<ui:define name="center_layout">
@@ -46,7 +46,7 @@
 			</p:panel>
 			<p:panel header="Add New Course">
 			<h:form id="addcourse">
-				Course title: <h:inputText value="#{adminCoursesBean.newCourseTitle}" id="c_title"/>
+				#{msg.course_title}: <h:inputText value="#{adminCoursesBean.newCourseTitle}" id="c_title"/>
 				<p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
 				<h:commandButton action="${adminCoursesBean.onCreateCourse}" value="add" process="@form"></h:commandButton>
 			</h:form>
@@ -54,7 +54,7 @@
 			
 			<p:panel header="Add New Organization" rendered="#{userBean.admin}">
 			<h:form id="addorganisation">
-				Organization title: <h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>
+				#{msg.organization_title}: <h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>
 				<p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation"/>
 				<h:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="add" process="@form"></h:commandButton>
 			</h:form>

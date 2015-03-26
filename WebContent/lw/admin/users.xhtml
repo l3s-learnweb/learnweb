@@ -8,7 +8,7 @@
 
 
 		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="Users"/>
+		<ui:param name="pageTitle" value="#{msg.users}"/>
 
 	
 		
@@ -35,7 +35,7 @@
 						
 						<p:column>
 							<f:facet name="header">#{msg.options}</f:facet>
-							<h:commandLink action="${adminUserBean.login(user)}">Login</h:commandLink>
+							<h:commandLink action="${adminUserBean.login(user)}">#{msg.loginLabel}</h:commandLink>
 										
 						</p:column>
 					</p:dataTable>	

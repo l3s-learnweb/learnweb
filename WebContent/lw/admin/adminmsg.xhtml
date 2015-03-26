@@ -8,17 +8,17 @@
 
 
 		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="Admin Messages"/>
+		<ui:param name="pageTitle" value="#{msg.admin_messages_Title}"/>
 
 		
 		
 		<ui:define name="center_layout">
-			<p:panel header="Admin Message">
+			<p:panel header="#{msg.admin_message}">
 			<h:form id="msgform" >
-			<h:outputText value="Message:"/><br />
+			<h:outputText value="#{msg.message}:"/><br />
 			<h:inputTextarea style="width:260px; height:60px;" value="#{adminMessageBean.message}"></h:inputTextarea>
-			<br /><h:commandButton value="Update" actionListener="#{adminMessageBean.update()}"></h:commandButton><br />
-			<h:commandButton value="Clear Admin Message" actionListener="#{adminMessageBean.clear()}" process="@form" update="msgform"></h:commandButton>
+			<br /><h:commandButton value="#{msg.update}" actionListener="#{adminMessageBean.update()}"></h:commandButton><br />
+			<h:commandButton value="#{msg.admin_message_clear}" actionListener="#{adminMessageBean.clear()}" process="@form" update="msgform"></h:commandButton>
 			</h:form>
 		</p:panel>
 	

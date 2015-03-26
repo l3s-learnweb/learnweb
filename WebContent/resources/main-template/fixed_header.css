@@ -123,7 +123,7 @@ section {
 	border-radius:10px;
 	background-repeat: no-repeat;
 	padding-left:5rem;
-		background-size:3rem 2rem; 
+	background-size:3rem 2rem; 
 	background-position:1rem 50%;
 }
 #language_selector img{
@@ -151,7 +151,7 @@ section {
 
 	}
 .language_pt { 
-	background-image:url(flag_bra.png); 
+	background-image:url(flag_pt.png); 
 
 	}
 .language_it { 
@@ -193,6 +193,11 @@ section {
 	float:left;
 	margin:0 0 0 2rem;
     padding:0px;
+    background-color:#489a83;
+}
+.userbar a{
+	text-decoration:none;
+    display:block;
 }
 .userbar ul li {
 	border-left:1px solid #FFFFFF;
@@ -204,12 +209,10 @@ section {
 	border-right:1px solid #FFFFFF;
 } 
 .userbar ul li a {
-    text-decoration:none;
-    display:block;
     padding-right:2rem;
     padding-left:2rem;
 }
-.userbar ul li a:hover{
+.userbar a:hover{
 	background-color:#74beaa;
 }
 .userbar ul li ul{
@@ -219,7 +222,6 @@ section {
     text-align:left;
     display:inline;
     visibility:hidden;
-    background-color:#489a83;
     width:19rem;
     border-bottom-right-radius:10px;
 	border-bottom-left-radius:10px;
@@ -237,7 +239,6 @@ section {
 	padding-left:0.5rem;
 }
 .userbar ul li ul li a:hover{
-	background-color:#74beaa;
 	border-radius:5px;
 }
 .userbar ul li ul li:first-child{
@@ -245,6 +246,9 @@ section {
 }
 .userbar ul li ul li:last-child{
 	border-right:0px;
+}
+.userbar ul li ul li a{
+	padding:1rem;
 }
 .menupoint{
     color:#FFFFFF !important;
@@ -255,9 +259,6 @@ section {
     border-radius:5px;
    	margin:0 1rem;
    	padding-left:1rem;
-}
-.link{
-	padding:1rem;
 }
 #moremyresources{
 	display:none;

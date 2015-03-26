@@ -49,17 +49,17 @@
 							<h:outputText value="#{msg.my_stuff}"/>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/myhome/resources.jsf" class="link" id="moremyresources">
+							<a href="#{request.contextPath}/lw/myhome/resources.jsf" id="moremyresources">
 								<h:outputText value="#{msg.myResourcesTitle}"/>
 							</a>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/myhome/groups.jsf" class="link" id="moremygroups">
+							<a href="#{request.contextPath}/lw/myhome/groups.jsf" id="moremygroups">
 								<h:outputText value="#{msg.myGroups}"/>
 							</a>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/myhome/activity.jsf" class="link" id="moreactivitystream">
+							<a href="#{request.contextPath}/lw/myhome/activity.jsf" id="moreactivitystream">
 								<h:outputText value="#{msg.activity_stream}"/>
 							</a>
 						</li>
@@ -67,77 +67,77 @@
 							<h:outputText value="#{msg.settings}"/>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/user/detail.jsf" class="link" id="moreprofile">
+							<a href="#{request.contextPath}/lw/user/detail.jsf" id="moreprofile">
 								<h:outputText value="#{msg.myProfileTitle}"/>
 							</a>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/myhome/services.jsf" class="link">
+							<a href="#{request.contextPath}/lw/myhome/services.jsf">
 								<h:outputText value="#{msg.web2_0services}"/>
 							</a>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/user/login.jsf" class="link" id="login">#{msg.loginLabel}</a>
+							<a href="#{request.contextPath}/lw/user/login.jsf" id="login">#{msg.loginLabel}</a>
 						</li>
 						<li>
-							<a href="#" class="link" id="logout">
+							<a href="#" id="logout">
 								<h:outputText value="#{msg.logoutLabel}"/>
 							</a>
 						</li>
 						<li class="menupoint">
-							<h:outputText value="Admin"/>
+							<h:outputText value="#{msg.admin}"/>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/admin/courses.jsf" class="link">
+							<a href="#{request.contextPath}/lw/admin/courses.jsf">
 								<h:outputText value="#{msg.courses}"/>
 							</a>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/admin/users.jsf" class="link">
-								<h:outputText value="Users"/>
+							<a href="#{request.contextPath}/lw/admin/users.jsf">
+								<h:outputText value="#{msg.users}"/>
 							</a>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/admin/adminmsg.jsf" class="link">
-								<h:outputText value="Admin Messages"/>
+							<a href="#{request.contextPath}/lw/admin/adminmsg.jsf">
+								<h:outputText value="#{msg.admin_messages_Title}"/>
 							</a>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/admin/adminchangelog.jsf" class="link">
-								<h:outputText value="Change Log"/>
+							<a href="#{request.contextPath}/lw/admin/adminchangelog.jsf">
+								<h:outputText value="#{msg.change_log}"/>
 							</a>
 						</li>
 						<li class="menupoint">
-							<h:outputText value="Moderator"/>
+							<h:outputText value="#{msg.moderator}"/>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/admin/notification.jsf" class="link">
-								<h:outputText value="Notification"/>
+							<a href="#{request.contextPath}/lw/admin/notification.jsf">
+								<h:outputText value="#{msg.notification}"/>
 							</a>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/admin/users_moderator.jsf" class="link">
-								<h:outputText value="Users"/>
+							<a href="#{request.contextPath}/lw/admin/users_moderator.jsf">
+								<h:outputText value="#{msg.users}"/>
 							</a>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/admin/courses.jsf" class="link">
+							<a href="#{request.contextPath}/lw/admin/courses.jsf">
 								<h:outputText value="#{msg.courses}"/>
 							</a>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/admin/organisation.jsf" class="link">
-								<h:outputText value="Organisation"/>
+							<a href="#{request.contextPath}/lw/admin/organisation.jsf">
+								<h:outputText value="#{msg.organization}"/>
 							</a>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/admin/text_analysis.jsf" class="link">
-								<h:outputText value="Text analysis"/>
+							<a href="#{request.contextPath}/lw/admin/text_analysis.jsf">
+								<h:outputText value="#{msg.text_analysis}"/>
 							</a>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/admin/statistics.jsf" class="link">
-								<h:outputText value="Statistics"/>
+							<a href="#{request.contextPath}/lw/admin/statistics.jsf">
+								<h:outputText value="#{msg.statistics}"/>
 							</a>
 						</li>
 					</ul>
@@ -178,18 +178,20 @@
 			<h:outputText value="#{msg.back_to}"/>
 		</a>
 		<span class="resourcestype">
-			<a href="#" id="web" class="activeResource">
+			<a href="#" id="web" class="non-activeResource">
 				<h:outputText value="#{msg.web}"/>
 			</a>
-			<a href="#" id="images" class="non-activeResource">
+			<a href="#" id="images" class="activeResource">
 				<h:outputText value="#{msg.Images}"/>
 			</a>
 			<a href="#" id="videos" class="non-activeResource">
 				<h:outputText value="#{msg.Videos}"/>
 			</a>
-			<a href="#" id="more_option" class="non-activeResource">
+			<!--  
+			<a href="#" id="more_option">
 				<h:outputText value="#{msg.more_options}"/>
 			</a>
+			-->
 		</span>
 	</div>
 	
