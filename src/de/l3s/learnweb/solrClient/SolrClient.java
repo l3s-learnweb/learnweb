@@ -127,9 +127,9 @@ public class SolrClient
 	}
     }
 
-    public void deleteFromIndex(Resource resource) throws SolrServerException, IOException
+    public void deleteFromIndex(int resourceId) throws SolrServerException, IOException
     {
-	server.deleteById("r_" + resource.getId());
+	server.deleteById("r_" + resourceId);
 	server.commit();
     }
 

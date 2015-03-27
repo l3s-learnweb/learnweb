@@ -193,6 +193,16 @@ public class ResourceManager
 
     public void deleteResource(int resourceId) throws SQLException
     {
+	// delete resource from SOLR index
+	try
+	{
+	    learnweb.getSolrClient().deleteFromIndex(resourceId);
+	}
+	catch(Exception e)
+	{
+	    log.error("Couldn't delete resource " + resourceId + " from SOLR", e);
+	}
+
 	// delete the resource from all groups
 	PreparedStatement delete = Learnweb.getConnectionStatic().prepareStatement("DELETE FROM `lw_group_resource` WHERE `resource_id` = ?");
 	delete.setInt(1, resourceId);
@@ -223,15 +233,12 @@ public class ResourceManager
      */
     protected void deleteResourcePermanent(int resourceId) throws SQLException
     {
+	deleteResource(resourceId);
+
 	Connection connection = Learnweb.getConnectionStatic();
-	// delete the resource from all groups
-	PreparedStatement delete = connection.prepareStatement("DELETE FROM `lw_group_resource` WHERE `resource_id` = ?");
-	delete.setInt(1, resourceId);
-	delete.executeUpdate();
-	delete.close();
 
 	// delete the resource
-	delete = connection.prepareStatement("DELETE FROM `lw_resource` WHERE `resource_id` = ?");
+	PreparedStatement delete = connection.prepareStatement("DELETE FROM `lw_resource` WHERE `resource_id` = ?");
 	delete.setInt(1, resourceId);
 	delete.executeUpdate();
 	delete.close();

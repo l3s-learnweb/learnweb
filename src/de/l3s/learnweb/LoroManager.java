@@ -80,10 +80,22 @@ public class LoroManager
     //For saving Loro resources to LW table
     public void saveLoroResource() throws SQLException, IOException, SolrServerException
     {
-	getConnection();
+
 	ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
 	SolrClient solr = learnweb.getSolrClient();
 	Group loroGroup = learnweb.getGroupManager().getGroupById(883);
+	ResourceManager resourceManager = learnweb.getResourceManager();
+
+	for(Resource resource : loroGroup.getResources())
+	{
+	    System.out.println(resource.getTitle());
+	    resourceManager.deleteResourcePermanent(resource.getId());
+	}
+
+	System.exit(1);
+
+	getConnection();
+
 	User admin = learnweb.getUserManager().getUser(9139);
 	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource_docs SET resource_id = ? WHERE loro_resource_id = ? AND doc_url= ?");
 	PreparedStatement getCount = DBConnection.prepareStatement("SELECT COUNT( * ) AS rowcount FROM  `LORO_resource_docs` WHERE  `loro_resource_id` LIMIT 3");
