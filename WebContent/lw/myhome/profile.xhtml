@@ -134,17 +134,7 @@
 	
 	
 	<ui:define name="center_layout">
-		
-		
-		<!-- <p:panel header="Logs" rendered="#{userBean.isModerator() or userBean.isAdmin()}">
-			<h:dataTable var="logEntry" value="#{profileBean.logMessages}">
-				<h:column>
-					<h:outputText value="#{logEntry.description}" escape="false" />
-				</h:column>					
-			</h:dataTable>
-		</p:panel> -->
-		
-			
+				
 		<ui:decorate  template="/lw/templates/activity_stream.xhtml">
 			<ui:param name="news" value="#{newsFeedBean.newslist}" />
 		</ui:decorate >

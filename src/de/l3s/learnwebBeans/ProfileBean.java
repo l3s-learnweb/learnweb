@@ -90,15 +90,6 @@ public class ProfileBean extends ApplicationBean implements Serializable
 	address = user.getAddress();
 	profession = user.getProfession();
 
-	try
-	{
-	    logMessages = user.getLogs();
-	}
-	catch(SQLException e)
-	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
     }
 
     public String getUrlBase()

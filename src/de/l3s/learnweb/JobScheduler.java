@@ -24,7 +24,7 @@ public class JobScheduler
 
 	AddArchiveUrlToResource archiveTask = new AddArchiveUrlToResource();
 	//Schedule the archiveTask every minute
-	scheduler.schedule("* * * * *", archiveTask);
+	//scheduler.schedule("* * * * *", archiveTask);
     }
 
     public void startAllJobs()

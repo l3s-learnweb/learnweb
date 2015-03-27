@@ -506,11 +506,6 @@ public class User implements Comparable<User>, Serializable, HasId
 	return imageUrl;
     }
 
-    public List<LogEntry> getLogs() throws SQLException
-    {
-	return Learnweb.getInstance().getLogsByUser(id, null);
-    }
-
     public void setId(int id)
     {
 	this.id = id;

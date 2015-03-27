@@ -1,11 +1,8 @@
-body {
-	margin: 0px;
-	padding: 0;
-	color: #616161;
-}
+.ui-layout-resizer { display:none !important; }
 
-h1, h2, h3 {
-	margin-top: 0;
+.ui-widget-content {
+	border-top:none !important;
+	border-bottom:none !important;
 }
 
 h1 {
@@ -20,9 +17,6 @@ h2 {
 h3 {
 	font-size: 1em;
 	margin-top:20px;
-}
-
-ul {
 }
 
 a {
@@ -47,7 +41,7 @@ img.right {
 	margin: 0 0 0 20px;
 }
 
-/* Header */
+/* Header 
 #header {
     padding: 4px 0px;
     height: 75px;
@@ -95,18 +89,6 @@ img.right {
     position:absolute;
     top:5px;
     right:50px;
-}
-
-/* Page */
-#page {
-	padding: 10px 0px;
-	background: #FFFFFF;
-}
-
-/* Content */
-#content {
-	width: 70%;
-    float:left;
 }
 
 .post {

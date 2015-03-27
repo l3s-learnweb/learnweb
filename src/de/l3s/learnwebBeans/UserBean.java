@@ -37,21 +37,9 @@ public class UserBean implements Serializable
     public UserBean()
     {
 	locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
-	System.out.println("local " + locale);
+
 	preferences = new HashMap<String, Object>();
     }
-
-    /*
-    public void preRenderView(ComponentSystemEvent event)
-    {
-    FacesContext fc = FacesContext.getCurrentInstance();
-    if(isLoggedIn())
-    {
-        ConfigurableNavigationHandler nav = (ConfigurableNavigationHandler) fc.getApplication().getNavigationHandler();
-        nav.performNavigation("/lw/myhome/activity");
-    }
-    }
-    */
 
     public boolean isLoggedIn()
     {

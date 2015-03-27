@@ -122,7 +122,7 @@ public class Learnweb
 		propteriesFileName = "lw_ubuntu_lisiyu";
 	    else if((new File("C:\\Users\\kalyani").exists()))
 		propteriesFileName = "lw_local_rishita";
-		else if((new File("C:\\Users\\morais").exists()))
+	    else if((new File("C:\\Users\\morais").exists()))
 		propteriesFileName = "lw_local_alana";
 
 	    properties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propteriesFileName + ".properties"));
@@ -412,11 +412,12 @@ public class Learnweb
      * 
      * @param userId
      * @param actions if actions is null the default filter is used
+     * @param limit
      * @param limit if limit is -1 all log entrys are returned
      * @return
      * @throws SQLException
      */
-    public List<LogEntry> getLogsByUser(int userId, Action[] actions) throws SQLException
+    public List<LogEntry> getLogsByUser(int userId, Action[] actions, int limit) throws SQLException
     {
 	LinkedList<LogEntry> log = new LinkedList<LogEntry>();
 
@@ -431,7 +432,7 @@ public class Learnweb
 	    sb.append(",");
 	    sb.append(action.ordinal());
 	}
-	PreparedStatement select = dbConnection.prepareStatement(LOG_SELECT + " WHERE user_id = ? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC");
+	PreparedStatement select = dbConnection.prepareStatement(LOG_SELECT + " WHERE user_id = ? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC LIMIT " + limit);
 	select.setInt(1, userId);
 
 	ResultSet rs = select.executeQuery();

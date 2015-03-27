@@ -12,6 +12,12 @@ import javax.faces.bean.RequestScoped;
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.beans.UtilBean;
+/*
+import org.primefaces.component.menuitem.MenuItem;
+import org.primefaces.component.submenu.Submenu;
+import org.primefaces.model.DefaultMenuModel;
+import org.primefaces.model.MenuModel;
+*/
 
 @ManagedBean
 @RequestScoped
@@ -46,37 +52,7 @@ public class MenuBean extends ApplicationBean implements Serializable
 	}
 	//computeMenu();
 
-	//        MenuItem item = new MenuItem();  
-	//        item.setValue("Dynamic Menuitem 1.1");  
-	//        item.setUrl("#");  
-	//        submenu.getChildren().add(item);  
-	//          
-	//        
-	//          
-	//        //Second submenu  
-	//        submenu = new Submenu();  
-	//        submenu.setLabel("Dynamic Submenu 2");  
-	//          
-	//        item = new MenuItem();  
-	//        item.setValue("Dynamic Menuitem 2.1");  
-	//        item.setUrl("#");  
-	//        submenu.getChildren().add(item);  
-	//          
-	//        item = new MenuItem();  
-	//        item.setValue("Dynamic Menuitem 2.2");  
-	//        item.setUrl("#");  
-	//        submenu.getChildren().add(item);  
-	//          
-	//        model.addSubmenu(submenu);  
     }
-
-    /*
-    public MenuModel getModel()
-    {
-    computeMenu();
-
-    return model;
-    }*/
 
     public ArrayList<Group> getParents()
     {
@@ -121,6 +97,14 @@ public class MenuBean extends ApplicationBean implements Serializable
     }
 
     /*
+        private DefaultMenuModel model;
+        
+        public MenuModel getModel()
+        {
+    	computeMenu();
+
+    	return model;
+        }
         public void computeMenu()
         {
     	//TO DO need to deal with the case where user is only member of a subgroup

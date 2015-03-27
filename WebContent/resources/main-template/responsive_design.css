@@ -56,16 +56,13 @@
 	#searchfield{
 		width:10em;
 	}
-	#searchbutton{
-		margin-left:15.3em
-	}
 }
 
 @media screen and (max-width: 55em){
-	.resourcestype a:last-child{
+	#sub_menu_bar .links a:last-child{
 		display:none;
 	}
-	#language_selector{
+	.language{
 		display:none;
 	}
 	#informationonscreen{
@@ -89,20 +86,19 @@
 }
 
 @media screen and (max-width: 39em){
-	#logo{
+	/* TOD ist das nötig?
+	#main_menu_bar{
 		background:#489a83;
 	}
+	*/
 	#searchfield{
 		margin-left:1em;
 		width:15em;
 	}
-	#searchbutton{
-		margin-left:11em;
-	}
 	#backtogroup{
 		width:8em;
 	}
-	.resourcestype{
+	#sub_menu_bar .links{
 		padding-right:0.8em;
 	}
 }
@@ -111,13 +107,10 @@
 	#searchfield{
 		width:10em;
 	}
-	#searchbutton{
-		margin-left:7.7em;
-	}
 	#backtogroup{
 		display:none;
 	}
-	.resourcestype{
+	#sub_menu_bar .links{
 		float:left;
 		margin-left:1em;
 	}
@@ -126,9 +119,6 @@
 @media screen and (max-width: 26em){
 	#searchfield{
 		width:8em;
-	}
-	#searchbutton{
-		margin-left:6.5em;
 	}
 }
 
@@ -139,8 +129,5 @@
 	}
 	#searchfield{
 		width:5em;
-	}
-	#searchbutton{
-		margin-left:4.5em;
 	}
 }

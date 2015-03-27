@@ -1,56 +1,34 @@
-<!DOCTYPE html>
-<html xmlns:ui="http://java.sun.com/jsf/facelets" 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:h="http://java.sun.com/jsf/html" 
-	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui" 
 	lang="#{userBean.localeCode}">
 
 <f:view locale="#{userBean.localeCode}" contentType="text/html">
 
-	<h:head>	
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<h:head>	testttp-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title><h:outputText value="#{pageTitle}" escape="false" /> - Learnweb</title>
 		<link rel="shortcut icon" href="#{learnwebBean.baseUrl}../resources/icon/favicon.ico" />
-		  
+		 
 		<link type="text/css" rel="stylesheet" href="#{learnwebBean.baseUrl}../resources/css/default.css" />
-		
         <link rel="stylesheet" type="text/css" href="#{learnwebBean.baseUrl}../resources/css/new_main2.css" />
-     <!--
         <link rel="stylesheet" type="text/css" href="#{learnwebBean.baseUrl}../resources/css/nanoscroller.css" />
-         -->
 		<h:outputScript library="primefaces" name="jquery/jquery.js" />
-		
-		<h:outputScript library="main-template" name="default.js"/>
-		<!--  
+		<h:outputScript library="js" name="default.js"/>
 		<h:outputScript library="js" name="jquery.mousewheel.min.js"/>
 		<h:outputScript library="js" name="jquery.nanoscroller.min.js"/>
-		-->
-		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/main.css" />
-		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />
-		
 
 		<base href="#{learnwebBean.baseUrl}" />
-		
-		<style type="text/css">
-		.ui-layout-pane {
-			border:none;
-			padding:0;
-		}
-		.ui-widget-content a {
-		    color: none;
-		}
-		</style>
 	</h:head>
 
 	<h:body>
 		<p:growl id="growl" />
-
-		<ui:decorate template="/templates/header.xhtml"></ui:decorate>
-					
-		<p:layout fullPage="true" widgetVar="mainLayout">
 		
+		<p:layout fullPage="true" widgetVar="mainLayout">
 			<p:layoutUnit position="north" resizable="false" closable="false"
-				collapsible="false" styleClass="northunit" style="height:7rem; display:block;">
+				collapsible="false" styleClass="northunit">
 				<script type="text/javascript">
 			
 					function scroller()
@@ -66,8 +44,8 @@
 							$(".ui-layout-unit-content","#left_pane").addClass("nano");
 						}
 						
-						//scroller();
-						//setInterval("scroller()",500);
+						scroller();
+						setInterval("scroller()",500);
 					});
 					
 					// for the search input field:
@@ -85,35 +63,193 @@
 							sbutton.jq.click();
 					}
 				</script>
+				
+				
+				<div id="headerbar" style="background-color: #{menuBean.bannerColor};">
 
-				<h:panelGroup layout="block" style="height:8rem;">
-					
-				</h:panelGroup>
+					<table border="0">
+						<tr>
+							<td class="col1">
+								<h:outputLink value="#{menuBean.bannerLink}" styleClass="main_link1">
+									<img id="learnweb_logo" src="#{menuBean.bannerImage}" width="200" height="46" />
+								</h:outputLink>
+								
+								<h:form id="header_form" prependId="false">
+									<h:outputText
+										rendered="${userBean.loggedIn and userBean.user.courses.size() gt 1}"
+										id="courses" value="#{menuBean.selectCourse.title}" >
+									</h:outputText>
+								</h:form></td>
+							<td class="col2">
+								<h:form id="search_form">
+								
+									<p:autoComplete id="searchbar" size="70" cache="true" cacheTimeout="30000"   
+                    					value="#{searchBean.query}" completeMethod="#{autoCompleteBean.complete}"
+                    					var="s" itemLabel="#{s}" itemValue="#{s.query}" oncomplete="deselect()" onkeyup="return search_query(event)">
+                    					<p:column styleClass="search_col1">
+                    						<p:graphicImage rendered="#{s.source eq 'google'}" width="22" height="22" value="/resources/icon/google-logo.png"></p:graphicImage>
+                    						<p:graphicImage rendered="#{s.source eq 'learnweb'}" width="22" height="22" value="/resources/icon/lw-logo.png"></p:graphicImage>
+                    					</p:column>
+                    					<p:column styleClass="search_col2">
+                    						<p:outputLabel escape="false" value="#{s.query}"></p:outputLabel>
+                    					</p:column>
+                    					<p:column styleClass="search_col3">
+                    						<h:outputText title="#{s.results} resource(s) stored with this query in LearnWeb" styleClass="search_tooltip" rendered="#{s.source eq 'learnweb'}" value="#{s.results} resource(s)"></h:outputText>
+                    					</p:column>
+                    				</p:autoComplete>                    	
 
+									<p:commandButton value="#{msg.searchLabel}"
+										styleClass="blackbutton search_button" action="#{searchBean.onSearch()}"
+										ajax="false" widgetVar="sbutton"  />
+
+								</h:form>
+								
+								<h:form id="languageform">
+									
+								</h:form>
+								
+								<p:graphicImage value="/resources/icon/ajax-loader.gif"
+									id="ajaxstatus"/>
+								<p:ajaxStatus
+									onstart="document.getElementById('ajaxstatus').style.display='block';"
+									onsuccess="document.getElementById('ajaxstatus').style.display='none';" />
+								<p:graphicImage value="/resources/icon/question1.png"
+									styleClass="help_icon" onclick="footer_toggle();" rendered="#{not empty helpText}"/>	
+							</td>
+							<td class="col3">
+								<h:outputLink styleClass="col3_div_link" value="user/login.jsf" rendered="#{not userBean.loggedIn}">
+									<h:outputText styleClass="col3_div_text" value="#{msg.loginLabel}"/>
+								</h:outputLink>
+										
+								<h:form rendered="#{userBean.loggedIn}">
+									<div class="col3_div">
+										<h:outputLink styleClass="col3_div_link" value="myhome/profile.jsf">
+											<h:outputText styleClass="col3_div_text" value="#{userBean.user.username}"/>
+										</h:outputLink>
+										<h:commandLink action="#{loginBean.logout}"
+											value="#{msg.logoutLabel}" rendered="#{userBean.loggedIn}"
+											immediate="true" styleClass="col3_div_link"></h:commandLink>
+
+									</div>
+
+									<p:commandButton
+										title="#{notificationReaderBean.howManyNewMessages} new messages"
+										action="/lw/myhome/notification.jsf?faces-redirect=true"
+										value="#{notificationReaderBean.howManyNewMessages}"
+										styleClass="blackbutton notification_button"></p:commandButton>
+
+									<h:commandButton id="settingsButton" value=" "
+										styleClass="blackbutton img-button-settings"
+										ajax="false"
+										onclick="return false;" />
+
+									<p:menu overlay="true" trigger="settingsButton" my="left top"
+										at="left bottom" model="">
+
+										<p:submenu label="Admin" rendered="#{userBean.admin}">
+											<p:menuitem value="#{msg.courses}"
+												url="/lw/admin/courses.jsf" />
+											<p:menuitem value="Users" url="/lw/admin/users.jsf" />
+											<p:menuitem value="Admin Messages"
+												url="/lw/admin/adminmsg.jsf" />
+											<p:menuitem value="Change Log"
+												url="/lw/admin/adminchangelog.jsf" />
+										</p:submenu>
+										<p:submenu label="Moderator" rendered="#{userBean.admin || userBean.moderator}">
+											<p:menuitem value="Notification" url="/lw/admin/notification.jsf" />
+											<p:menuitem value="Users" url="/lw/admin/users_moderator.jsf" />
+											<p:menuitem value="#{msg.courses}" url="/lw/admin/courses.jsf" />
+											<p:menuitem value="Organisation" url="/lw/admin/organisation.jsf" />
+											<p:menuitem value="Text analysis" url="/lw/admin/text_analysis.jsf" />
+											<p:menuitem value="Statistics" url="/lw/admin/statistics.jsf" />
+										</p:submenu>
+										<p:submenu label="#{msg.my_stuff}">
+											<p:menuitem value="#{msg.resources}" icon="ui-icon-disk"
+												url="/lw/myhome/resources.jsf" />
+											<p:menuitem value="#{msg.myGroups}" icon="ui-icon-home"
+												url="/lw/myhome/groups.jsf" />
+											<p:menuitem value="Activity Stream" icon="ui-icon-home"
+												url="/lw/myhome/activity.jsf" />
+											<p:menuitem value="Explore History" icon="ui-icon-search" 
+												url="/lw/explore.jsf?page=1&amp;mode=list_view" rendered="#{userBean.searchHistoryEnabled}" />
+										</p:submenu>
+										<p:submenu label="#{msg.settings}">
+											<p:menuitem value="#{msg.myProfileTitle}"
+												url="myhome/profile.jsf" />
+											<p:menuitem value="#{msg.web2_0services}"
+												url="myhome/services.jsf" />
+										</p:submenu>
+										<p:submenu label="#{msg.options}">
+
+											<p:menuitem action="#{loginBean.logout}"
+												value="#{msg.logoutLabel}" rendered="#{userBean.loggedIn}"
+												immediate="true" icon="ui-icon-home" />
+										</p:submenu>
+									</p:menu>
+								</h:form></td>
+						</tr>
+					</table>
+
+				</div>
+				
 				<ui:insert name="options_panel"></ui:insert>
 				
 			</p:layoutUnit>
 
+			<p:layoutUnit id="left_pane"
+				rendered="#{userBean.loggedIn and !utilBean.searchPage and !utilBean.explorePage and !utilBean.viewResultSetPage and !utilBean.tedTranscriptPage}"
+				position="west" size="200" resizable="false" closable="false"
+				collapsible="false">
+				
+				<div class="content">
+					<div id="groupoverview_link">
+						<h:outputLink value="myhome/groups.jsf">
+							<h:outputText value="#{msg.groupOverview}"/>
+							<h:outputText value="(#{userBean.newGroupsCount})" rendered="#{userBean.newGroupsCount gt 0}" id="new_group_count" styleClass="bold_red" style="padding-left:3px;"/>
+						
+						</h:outputLink>
+						
+						<p:tooltip for="new_group_count"  showEffect="fade" hideEffect="fade">
+							<h:outputFormat value="#{msg.new_groups_message}">
+							    <f:param value="#{userBean.newGroupsCount}" />
+							</h:outputFormat>
+						</p:tooltip> 
+					</div>
+				
+					<h:form id="group_menu">
+						p:panelMenu id="groupmenu"
+							model="{menuBean.model}">/p:panelMenu>
+					</h:form>
+					<h:form rendered = "#{userBean.searchHistoryEnabled}">
+    					<h:outputLink onclick="shared_resultsets_dialog.show();return false;" >
+							<h:outputText value="View Shared Resultsets" style="padding-left:15px;"/>
+						</h:outputLink>
+    				</h:form>
+    				<h:outputLink rendered="#{userBean.admin || userBean.moderator}" value="transcript_log.jsf">
+    					<h:outputText value="View Transcript Log" style="padding-left:27px;"/>
+    				</h:outputLink>
+				</div>
+			</p:layoutUnit>
+
 			<ui:insert name="right_layout">
-			
+				
 			</ui:insert>
 			
-			<p:layoutUnit id="center_pane" position="center" >			
-		
-				<section id="content" class="#{smallPage? 'small_page':''}" style="margin-top:0">
-					<p:messages id="message" />
-			
-					<h:panelGroup layout="block" id="middle" rendered="#{loginRequired and !userBean.loggedIn}" styleClass="small_page">
-						<p:panel header="#{msg.loginRequiredTitle}">
-							<p><h:outputText value="#{msg.loginRequiredText}" /></p>
-							<ui:include src="/lw/templates/login_form.xhtml" />
-						</p:panel>
-					</h:panelGroup>
-					
-					<h:panelGroup rendered="#{!loginRequired || userBean.loggedIn}">
-						<ui:insert name="center_layout"></ui:insert>
-					</h:panelGroup>
-				</section>
+			<p:layoutUnit id="center_pane" position="center" >
+				<div class="content">
+				<p:messages id="message"></p:messages>
+				
+				<h:panelGroup layout="block" id="middle" rendered="#{loginRequired and !userBean.loggedIn}">
+					<p:panel header="#{msg.loginRequiredTitle}">
+						<p><h:outputText value="#{msg.loginRequiredText}" /></p>
+						<ui:include src="/lw/templates/login_form.xhtml" />
+					</p:panel>
+				</h:panelGroup>
+				
+				<h:panelGroup rendered="#{!loginRequired || userBean.loggedIn}">
+					<ui:insert name="center_layout"></ui:insert>
+				</h:panelGroup>
+				</div>
 
 			</p:layoutUnit>
 
@@ -124,9 +260,9 @@
 			</h:form> 			
 		</p:dialog>	
 		
-		
+		<ui:insert name="bottom_panel"></ui:insert>
 		<h:panelGroup layout="block" styleClass="#{helpTextStyle} footer"
-			rendered="#{not empty helpText and false}">
+			rendered="#{not empty helpText}">
 			<h:outputText value="#{helpText}" escape="false"
 				style="display:inline-block; padding-top:4px;padding-left:3px;width:98%;float:left;"></h:outputText>
 			<a href="#" onclick="footer_close();return false;" id="footer_close"
