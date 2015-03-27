@@ -9,6 +9,7 @@
 	<div id="main_menu_bar">
 		
 		<form action="#{request.contextPath}/search.jsf" method="get" style="height:100%; float:left; vertical-align: middle" onsubmit="removeViewstate(this);">
+			<a href="http://localhost:8080/Learnweb-Tomcat/lw/myhome/groups.jsf" id="logo">Logo</a>
 			<input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" id="searchfield" />
 			<input type="hidden" name="action" value="#{searchBean.action}" />
 			<input type="submit" value=" " id="searchbutton" title="#{msg.searchLabel}" />

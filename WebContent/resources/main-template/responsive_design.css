@@ -56,13 +56,16 @@
 	#searchfield{
 		width:10em;
 	}
+	#searchbutton{
+		margin-left:15.3em
+	}
 }
 
 @media screen and (max-width: 55em){
 	.resourcestype a:last-child{
 		display:none;
 	}
-	.language{
+	#language_selector{
 		display:none;
 	}
 	#informationonscreen{
@@ -86,12 +89,15 @@
 }
 
 @media screen and (max-width: 39em){
-	#main_menu_bar{
+	#logo{
 		background:#489a83;
 	}
 	#searchfield{
 		margin-left:1em;
 		width:15em;
+	}
+	#searchbutton{
+		margin-left:11em;
 	}
 	#backtogroup{
 		width:8em;
@@ -104,6 +110,9 @@
 @media screen and (max-width: 31em){
 	#searchfield{
 		width:10em;
+	}
+	#searchbutton{
+		margin-left:7.7em;
 	}
 	#backtogroup{
 		display:none;
@@ -118,6 +127,9 @@
 	#searchfield{
 		width:8em;
 	}
+	#searchbutton{
+		margin-left:6.5em;
+	}
 }
 
 @media screen and (max-width: 23em){
@@ -127,5 +139,8 @@
 	}
 	#searchfield{
 		width:5em;
+	}
+	#searchbutton{
+		margin-left:4.5em;
 	}
 }
