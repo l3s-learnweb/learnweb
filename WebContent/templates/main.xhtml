@@ -44,6 +44,12 @@
 				<ui:insert name="center_layout"></ui:insert>
 			</h:panelGroup>
 		</section>
+		
+		
+		<h:panelGroup layout="block" id="footer" rendered="#{not empty helpText}">
+			<h:outputText value="#{helpText}" escape="false" style="padding: 0.7rem 4rem; display:block;" />
+			<a href="#" onclick="return footerClose();" id="footer_close" title="#{msg.close}"></a>
+		</h:panelGroup>
 
 	</h:body>
 </f:view>

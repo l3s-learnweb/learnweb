@@ -8,7 +8,7 @@
 
 	<div id="main_menu_bar">
 		
-		<form action="#{request.contextPath}/search.jsf" method="get" style="height:100%; float:left; vertical-align: middle" onsubmit="removeViewstate(this);">
+		<form action="#{request.contextPath}/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
 			<a href="http://localhost:8080/Learnweb-Tomcat/lw/myhome/groups.jsf" id="learnweb_logo">Logo</a>
 			<input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" id="searchfield" />
 			<input type="hidden" name="action" value="#{searchBean.action}" />
@@ -38,7 +38,7 @@
 					</a>
 				</li>
 				<li>
-					<img alt="" src="#{request.contextPath}/resources/main-template/dropdownmenu.png" height="28" width="28" style="vertical-align: middle" class="menu"/>
+					<img alt="" src="#{request.contextPath}/resources/main-template/dropdownmenu.png" height="28" width="28" style="vertical-align: middle" class="menu" tabindex="0"/>
 					
 					<ul>
 						<li class="menupoint">
@@ -76,7 +76,7 @@
 							<a href="#{request.contextPath}/lw/user/login.jsf" id="login">#{msg.loginLabel}</a>
 						</li>
 						<li>
-							<a href="#" id="logout">
+							<a href="#" id="logout" >
 								<h:outputText value="#{msg.logoutLabel}"/>
 							</a>
 						</li>
@@ -141,9 +141,8 @@
 			</ul>
 		</div>	
 		
-		<div id="language_selector">
-
-				<img alt="" src="#{request.contextPath}/resources/main-template/flag_#{userBean.localeCode}.png" />
+		<div id="language_selector" class="hover-white" tabindex="0">
+			<img alt="" src="#{request.contextPath}/resources/main-template/flag_#{userBean.localeCode}.png" />
 			
 			<h:form>
 				<ul>
@@ -155,18 +154,19 @@
 			</h:form>
 		</div>
 		
-		<img alt="" src="#{request.contextPath}/resources/main-template/question.png" id="informationonscreen" />
-		<span>			
-			<h:outputLink id="loginbutton" value="#{request.contextPath}/lw/user/login.jsf" rendered="#{not userBean.loggedIn}">
+		<p:graphicImage value="/resources/main-template/question.png" alt="#{msg.help}" onclick="footerToggle();" rendered="#{not empty helpText}" id="informationonscreen" />	
+		
+				
+			<h:outputLink id="loginbutton" value="#{request.contextPath}/lw/user/login.jsf" rendered="#{not userBean.loggedIn}" class="hover-white">
 				#{msg.loginLabel}
 			</h:outputLink>
 			
 			<h:form>
 				<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true" title="#{msg.logoutLabel}">
-					<img alt="#{msg.logoutLabel}" src="#{request.contextPath}/resources/main-template/logout.png" height="25" width="25" id="logoutbutton" />							
+					<img alt="#{msg.logoutLabel}" src="#{request.contextPath}/resources/main-template/logout.png" id="logoutbutton" class="hover-white" />							
 				</h:commandLink>
 			</h:form>
-		</span>
+		
 	</div>
 	
 	<ui:insert name="sub_menu_bar">

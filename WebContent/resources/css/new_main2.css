@@ -43,19 +43,7 @@ body {
 	top: 6px;
 }
 
-.footer
-{
-	color:#ffffff;
-	left:0px;
-	position: fixed;
-	bottom: 0px; 
-	text-align: center;
-	height: 50px;
-	width: 100%;
-	z-index:1500;
-	opacity:0.9;
-	background-color: rgb(0, 0, 0);
-}
+
 
 .groups_help{
 	height:35px;	
@@ -74,6 +62,18 @@ body {
 	width:12.5px;
 	height:12.5px;
 	background:url(../icon/delete-white.png) center no-repeat;
+}
+#footer
+{
+	color:#ffffff;
+	left:0px;
+	position: fixed;
+	bottom: 0px; 
+	text-align: center;
+	z-index:1500;
+	opacity:0.9;
+	width:100%;
+	background-color: rgb(0, 0, 0);
 }
 
 #groupoverview_link {

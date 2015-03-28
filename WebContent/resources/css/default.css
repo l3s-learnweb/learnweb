@@ -206,31 +206,6 @@ img.right {
     padding: 1px;
 }
 
-/* Footer */
-#footer {
-	height: 70px;
-	margin: 0 auto;
-	padding: 0 20px;
-    font-size: 14px;
-}
-
-#footer p {
-	margin: 0;
-	padding: 25px 0 0 0;
-	text-align: center;
-}
-
-#footer a {
-}
-
-#footer .link {
-	float: right;
-}
-
-#footer .copyright {
-	float: left;
-}
-
 .homeText {
 	line-height: 175%;
 }

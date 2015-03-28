@@ -8,7 +8,7 @@
 
 <f:view locale="#{userBean.localeCode}" contentType="text/html">
 
-	<h:head>	testttp-equiv="Content-Type" content="text/html; charset=UTF-8" />
+	<h:head>	
 		<title><h:outputText value="#{pageTitle}" escape="false" /> - Learnweb</title>
 		<link rel="shortcut icon" href="#{learnwebBean.baseUrl}../resources/icon/favicon.ico" />
 		 
@@ -114,7 +114,7 @@
 									onstart="document.getElementById('ajaxstatus').style.display='block';"
 									onsuccess="document.getElementById('ajaxstatus').style.display='none';" />
 								<p:graphicImage value="/resources/icon/question1.png"
-									styleClass="help_icon" onclick="footer_toggle();" rendered="#{not empty helpText}"/>	
+									styleClass="help_icon" onclick="footerToggle();" rendered="#{not empty helpText}"/>	
 							</td>
 							<td class="col3">
 								<h:outputLink styleClass="col3_div_link" value="user/login.jsf" rendered="#{not userBean.loggedIn}">
@@ -216,11 +216,389 @@
 						</p:tooltip> 
 					</div>
 				
-					<h:form id="group_menu">
-						p:panelMenu id="groupmenu"
-							model="{menuBean.model}">/p:panelMenu>
-					</h:form>
-					<h:form rendered = "#{userBean.searchHistoryEnabled}">
+					<h:panelGroup layout="block" styleClass="ui-panelmenu ui-widget" id="group_menu">
+					
+						<ui:repeat value="#{menuBean.model.elements}" var="group">
+							<div class="ui-panelmenu-panel">
+							<h3 class="ui-panelmenu-header ui-state-default ui-corner-all" role="tab">
+								<span class="ui-icon ui-icon-triangle-1-e"></span>
+								<a href="#">#{group.label}</a>
+							</h3>
+							
+								<div class="ui-panelmenu-content ui-widget-content ui-helper-hidden" role="tabpanel">
+									<ul class="ui-menu-list ui-helper-reset">					
+									<ui:repeat value="#{group.elements}" var="link">								
+										<li class="ui-menuitem ui-widget ui-corner-all" role="menuitem">
+											<a class="ui-menuitem-link ui-corner-all" href="#{link.url}">
+												<span class="ui-menuitem-text">#{link.value}</span>
+											</a>
+										</li>
+									</ui:repeat>
+									</ul>	
+								</div>
+							
+							</div>
+						</ui:repeat>
+					
+					</h:panelGroup>
+<br/>
+<br/>
+						<div id="group_menu:groupmenu" class="ui-panelmenu ui-widget" role="menu">
+							<div class="ui-panelmenu-panel">
+								<h3 class="ui-panelmenu-header ui-state-default ui-corner-all"
+									role="tab">
+									<span class="ui-icon ui-icon-triangle-1-e"></span><a href="#"
+										tabindex="-1">Aaron Swartz</a>
+								</h3>
+								<div id="group_menu:j_id0"
+									class="ui-panelmenu-content ui-widget-content ui-helper-hidden"
+									role="tabpanel">
+									<ul class="ui-menu-list ui-helper-reset">
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id1"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/overview.jsf?group_id=635"><span
+												class="ui-menuitem-text">Übersicht</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id2"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/members.jsf?group_id=635"><span
+												class="ui-menuitem-text">Mitglieder</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id3"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/presentations.jsf?group_id=635"><span
+												class="ui-menuitem-text">Präsentationen</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id4"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/links.jsf?group_id=635"><span
+												class="ui-menuitem-text">Links</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id5"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/resources.jsf?group_id=635"><span
+												class="ui-menuitem-text">Ressourcen</span></a></li>
+										<li class="ui-widget ui-menuitem ui-corner-all ui-menu-parent"
+											role="menuitem"><a id="group_menu:j_id6"
+											class="ui-menuitem-link ui-corner-all"><span
+												class="ui-panelmenu-icon ui-icon ui-icon-triangle-1-e"></span><span
+												class="ui-menuitem-text">Untergruppen</span></a>
+										<ul class="ui-menu-list ui-helper-reset">
+												<li class="ui-menuitem ui-widget ui-corner-all"
+													role="menuitem"><a id="group_menu:j_id7"
+													class="ui-menuitem-link ui-corner-all"
+													href="./group/subgroups.jsf?group_id=635"><span
+														class="ui-menuitem-text">Übersicht</span></a></li>
+											</ul></li>
+									</ul>
+								</div>
+							</div>
+							<div class="ui-panelmenu-panel"
+								style="text-decoration: underline; font-style: italic;">
+								<h3 class="ui-panelmenu-header ui-state-default ui-corner-all"
+									role="tab">
+									<span class="ui-icon ui-icon-triangle-1-e"></span><a href="#"
+										tabindex="-1">Abuse</a>
+								</h3>
+								<div id="group_menu:j_id8"
+									class="ui-panelmenu-content ui-widget-content ui-helper-hidden"
+									role="tabpanel">
+									<ul class="ui-menu-list ui-helper-reset">
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id9"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/overview.jsf?group_id=197"><span
+												class="ui-menuitem-text">Übersicht</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id10"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/members.jsf?group_id=197"><span
+												class="ui-menuitem-text">Mitglieder</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id11"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/presentations.jsf?group_id=197"><span
+												class="ui-menuitem-text">Präsentationen</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id12"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/links.jsf?group_id=197"><span
+												class="ui-menuitem-text">Links</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id13"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/resources.jsf?group_id=197"><span
+												class="ui-menuitem-text">Ressourcen</span></a></li>
+										<li class="ui-widget ui-menuitem ui-corner-all ui-menu-parent"
+											role="menuitem"><a id="group_menu:j_id14"
+											class="ui-menuitem-link ui-corner-all"><span
+												class="ui-panelmenu-icon ui-icon ui-icon-triangle-1-e"></span><span
+												class="ui-menuitem-text">Untergruppen</span></a>
+										<ul class="ui-menu-list ui-helper-reset">
+												<li class="ui-menuitem ui-widget ui-corner-all"
+													role="menuitem"><a id="group_menu:j_id15"
+													class="ui-menuitem-link ui-corner-all"
+													href="./group/subgroups.jsf?group_id=197"><span
+														class="ui-menuitem-text">Übersicht</span></a></li>
+											</ul></li>
+									</ul>
+								</div>
+							</div>
+							<div class="ui-panelmenu-panel">
+								<h3 class="ui-panelmenu-header ui-state-default ui-corner-all"
+									role="tab">
+									<span class="ui-icon ui-icon-triangle-1-e"></span><a href="#"
+										tabindex="-1">Adventure</a>
+								</h3>
+								<div id="group_menu:j_id16"
+									class="ui-panelmenu-content ui-widget-content ui-helper-hidden"
+									role="tabpanel">
+									<ul class="ui-menu-list ui-helper-reset">
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id17"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/overview.jsf?group_id=281"><span
+												class="ui-menuitem-text">Übersicht</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id18"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/members.jsf?group_id=281"><span
+												class="ui-menuitem-text">Mitglieder</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id19"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/presentations.jsf?group_id=281"><span
+												class="ui-menuitem-text">Präsentationen</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id20"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/links.jsf?group_id=281"><span
+												class="ui-menuitem-text">Links</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id21"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/resources.jsf?group_id=281"><span
+												class="ui-menuitem-text">Ressourcen</span></a></li>
+										<li class="ui-widget ui-menuitem ui-corner-all ui-menu-parent"
+											role="menuitem"><a id="group_menu:j_id22"
+											class="ui-menuitem-link ui-corner-all"><span
+												class="ui-panelmenu-icon ui-icon ui-icon-triangle-1-e"></span><span
+												class="ui-menuitem-text">Untergruppen</span></a>
+										<ul class="ui-menu-list ui-helper-reset">
+												<li class="ui-menuitem ui-widget ui-corner-all"
+													role="menuitem"><a id="group_menu:j_id23"
+													class="ui-menuitem-link ui-corner-all"
+													href="./group/subgroups.jsf?group_id=281"><span
+														class="ui-menuitem-text">Übersicht</span></a></li>
+											</ul></li>
+									</ul>
+								</div>
+							</div>
+							<div class="ui-panelmenu-panel">
+								<h3 class="ui-panelmenu-header ui-state-default ui-corner-all"
+									role="tab">
+									<span class="ui-icon ui-icon-triangle-1-e"></span><a href="#"
+										tabindex="-1">Alpha</a>
+								</h3>
+								<div id="group_menu:j_id24"
+									class="ui-panelmenu-content ui-widget-content ui-helper-hidden"
+									role="tabpanel">
+									<ul class="ui-menu-list ui-helper-reset">
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id25"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/overview.jsf?group_id=156"><span
+												class="ui-menuitem-text">Übersicht</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id26"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/members.jsf?group_id=156"><span
+												class="ui-menuitem-text">Mitglieder</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id27"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/presentations.jsf?group_id=156"><span
+												class="ui-menuitem-text">Präsentationen</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id28"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/links.jsf?group_id=156"><span
+												class="ui-menuitem-text">Links</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id29"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/resources.jsf?group_id=156"><span
+												class="ui-menuitem-text">Ressourcen</span></a></li>
+										<li class="ui-widget ui-menuitem ui-corner-all ui-menu-parent"
+											role="menuitem"><a id="group_menu:j_id30"
+											class="ui-menuitem-link ui-corner-all"><span
+												class="ui-panelmenu-icon ui-icon ui-icon-triangle-1-e"></span><span
+												class="ui-menuitem-text">Untergruppen</span></a>
+										<ul class="ui-menu-list ui-helper-reset">
+												<li class="ui-menuitem ui-widget ui-corner-all"
+													role="menuitem"><a id="group_menu:j_id31"
+													class="ui-menuitem-link ui-corner-all"
+													href="./group/subgroups.jsf?group_id=156"><span
+														class="ui-menuitem-text">Übersicht</span></a></li>
+											</ul></li>
+									</ul>
+								</div>
+							</div>
+							<div class="ui-panelmenu-panel">
+								<h3 class="ui-panelmenu-header ui-state-default ui-corner-all"
+									role="tab">
+									<span class="ui-icon ui-icon-triangle-1-e"></span><a href="#"
+										tabindex="-1">Barcelona</a>
+								</h3>
+								<div id="group_menu:j_id32"
+									class="ui-panelmenu-content ui-widget-content ui-helper-hidden"
+									role="tabpanel">
+									<ul class="ui-menu-list ui-helper-reset">
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id33"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/overview.jsf?group_id=229"><span
+												class="ui-menuitem-text">Übersicht</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id34"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/members.jsf?group_id=229"><span
+												class="ui-menuitem-text">Mitglieder</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id35"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/presentations.jsf?group_id=229"><span
+												class="ui-menuitem-text">Präsentationen</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id36"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/links.jsf?group_id=229"><span
+												class="ui-menuitem-text">Links</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id37"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/resources.jsf?group_id=229"><span
+												class="ui-menuitem-text">Ressourcen</span></a></li>
+										<li class="ui-widget ui-menuitem ui-corner-all ui-menu-parent"
+											role="menuitem"><a id="group_menu:j_id38"
+											class="ui-menuitem-link ui-corner-all"><span
+												class="ui-panelmenu-icon ui-icon ui-icon-triangle-1-e"></span><span
+												class="ui-menuitem-text">Untergruppen</span></a>
+										<ul class="ui-menu-list ui-helper-reset">
+												<li class="ui-menuitem ui-widget ui-corner-all"
+													role="menuitem"><a id="group_menu:j_id39"
+													class="ui-menuitem-link ui-corner-all"
+													href="./group/subgroups.jsf?group_id=229"><span
+														class="ui-menuitem-text">Übersicht</span></a></li>
+											</ul></li>
+									</ul>
+								</div>
+							</div>
+							<div class="ui-panelmenu-panel">
+								<h3 class="ui-panelmenu-header ui-state-default ui-corner-all"
+									role="tab">
+									<span class="ui-icon ui-icon-triangle-1-e"></span><a href="#"
+										tabindex="-1">London</a>
+								</h3>
+								<div id="group_menu:j_id40"
+									class="ui-panelmenu-content ui-widget-content ui-helper-hidden"
+									role="tabpanel">
+									<ul class="ui-menu-list ui-helper-reset">
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id41"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/overview.jsf?group_id=151"><span
+												class="ui-menuitem-text">Übersicht</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id42"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/members.jsf?group_id=151"><span
+												class="ui-menuitem-text">Mitglieder</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id43"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/presentations.jsf?group_id=151"><span
+												class="ui-menuitem-text">Präsentationen</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id44"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/links.jsf?group_id=151"><span
+												class="ui-menuitem-text">Links</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id45"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/resources.jsf?group_id=151"><span
+												class="ui-menuitem-text">Ressourcen</span></a></li>
+										<li class="ui-widget ui-menuitem ui-corner-all ui-menu-parent"
+											role="menuitem"><a id="group_menu:j_id46"
+											class="ui-menuitem-link ui-corner-all"><span
+												class="ui-panelmenu-icon ui-icon ui-icon-triangle-1-e"></span><span
+												class="ui-menuitem-text">Untergruppen</span></a>
+										<ul class="ui-menu-list ui-helper-reset">
+												<li class="ui-menuitem ui-widget ui-corner-all"
+													role="menuitem"><a id="group_menu:j_id47"
+													class="ui-menuitem-link ui-corner-all"
+													href="./group/subgroups.jsf?group_id=151"><span
+														class="ui-menuitem-text">Übersicht</span></a></li>
+											</ul></li>
+									</ul>
+								</div>
+							</div>
+							<div class="ui-panelmenu-panel">
+								<h3 class="ui-panelmenu-header ui-state-default ui-corner-all"
+									role="tab">
+									<span class="ui-icon ui-icon-triangle-1-e"></span><a href="#"
+										tabindex="-1">New group of sergej</a>
+								</h3>
+								<div id="group_menu:j_id48"
+									class="ui-panelmenu-content ui-widget-content ui-helper-hidden"
+									role="tabpanel">
+									<ul class="ui-menu-list ui-helper-reset">
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id49"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/overview.jsf?group_id=113"><span
+												class="ui-menuitem-text">Übersicht</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id50"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/members.jsf?group_id=113"><span
+												class="ui-menuitem-text">Mitglieder</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id51"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/presentations.jsf?group_id=113"><span
+												class="ui-menuitem-text">Präsentationen</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id52"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/links.jsf?group_id=113"><span
+												class="ui-menuitem-text">Links</span></a></li>
+										<li class="ui-menuitem ui-widget ui-corner-all"
+											role="menuitem"><a id="group_menu:j_id53"
+											class="ui-menuitem-link ui-corner-all"
+											href="./group/resources.jsf?group_id=113"><span
+												class="ui-menuitem-text">Ressourcen</span></a></li>
+										<li class="ui-widget ui-menuitem ui-corner-all ui-menu-parent"
+											role="menuitem"><a id="group_menu:j_id54"
+											class="ui-menuitem-link ui-corner-all"><span
+												class="ui-panelmenu-icon ui-icon ui-icon-triangle-1-e"></span><span
+												class="ui-menuitem-text">Untergruppen</span></a>
+										<ul class="ui-menu-list ui-helper-reset">
+												<li class="ui-menuitem ui-widget ui-corner-all"
+													role="menuitem"><a id="group_menu:j_id55"
+													class="ui-menuitem-link ui-corner-all"
+													href="./group/subgroups.jsf?group_id=113"><span
+														class="ui-menuitem-text">Übersicht</span></a></li>
+											</ul></li>
+									</ul>
+								</div>
+							</div>
+						</div>
+
+					
+					<h:form rendered = "#{userBean.searchHistoryEnabled and false}">
     					<h:outputLink onclick="shared_resultsets_dialog.show();return false;" >
 							<h:outputText value="View Shared Resultsets" style="padding-left:15px;"/>
 						</h:outputLink>
@@ -261,12 +639,9 @@
 		</p:dialog>	
 		
 		<ui:insert name="bottom_panel"></ui:insert>
-		<h:panelGroup layout="block" styleClass="#{helpTextStyle} footer"
-			rendered="#{not empty helpText}">
-			<h:outputText value="#{helpText}" escape="false"
-				style="display:inline-block; padding-top:4px;padding-left:3px;width:98%;float:left;"></h:outputText>
-			<a href="#" onclick="footer_close();return false;" id="footer_close"
-				title="close"></a>
+		<h:panelGroup layout="block" id="footer" rendered="#{not empty helpText}">
+			<h:outputText value="#{helpText}" escape="false" style="padding: 0.7rem 4rem; display:block;" />
+			<a href="#" onclick="return footerClose();" id="footer_close" title="#{msg.close}"></a>
 		</h:panelGroup>
 	</h:body>
 </f:view>

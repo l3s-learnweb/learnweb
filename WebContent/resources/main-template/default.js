@@ -12,12 +12,16 @@ function removeViewstate(searchForm)
 }
 
 
-function footer_toggle(){
-	$('.footer').slideToggle();
+function footerToggle()
+{
+	$('#footer').slideToggle();
+	return false;
 }
 
-function footer_close(){
-	$('.footer').hide();
+function footerClose()
+{
+	$('#footer').hide();
+	return false;
 }
 
 

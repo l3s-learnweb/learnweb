@@ -54,7 +54,7 @@
 					</h:panelGrid>
 				</p:fieldset>
 				<br/>
-				<p:commandButton ajax="false" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" styleClass="greenbutton" process="@all" update="@form :my_groups :growl :group_menu:groupmenu">
+				<p:commandButton ajax="false" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" styleClass="greenbutton" process="@all" update="@form :my_groups :growl :group_menu">
 					
 				</p:commandButton> 				
 			</h:form>
@@ -91,7 +91,7 @@
 				</p:column>
 				
 				<p:column headerText="#{msg.options}" styleClass="nowrap">					
-					<p:commandLink action="#{groupsBean.leaveGroup}" process="@this" update=":other_groups :growl :group_menu:groupmenu :my_groups"
+					<p:commandLink action="#{groupsBean.leaveGroup}" process="@this" update=":other_groups :growl :group_menu :my_groups"
 						style="text-decoration:none;" title="#{msg.leave}">
 						&nbsp;
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
@@ -142,12 +142,12 @@
 					
 					<p:column headerText="#{msg.options}" styleClass="nowrap">	
 							
-						<p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :group_menu:groupmenu :my_groups" style="text-decoration:none;" title="#{msg.join}">
+						<p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :group_menu :my_groups" style="text-decoration:none;" title="#{msg.join}">
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 							<h:graphicImage value="/resources/icon/silk/group_add.png" width="16" height="16" alt="#{msg.join}" />
 						</p:commandLink>
 						
-						<p:commandLink actionListener="#{groupsBean.deleteGroup}" update=":other_groups :growl :group_menu:groupmenu :my_groups" 
+						<p:commandLink actionListener="#{groupsBean.deleteGroup}" update=":other_groups :growl :group_menu :my_groups" 
 								style="text-decoration:none;" title="#{msg.delete}" 
 								onstart="return confirm('Do you really want to delete group \'#{group.title}\'?');"
 								rendered="#{userBean.admin || userBean.moderator}">
@@ -191,7 +191,7 @@
 					<p:inputTextarea value="#{groupsBean.selectedGroupDescription}" id="edit_group_description" autoResize="true"  style="width:300px;"/>
 					
 					<h:outputText value="" />
-					<p:commandButton disabled="false" value="#{msg.save}" ajax="false" action="#{groupsBean.onGroupEdit}" update=":other_groups :growl :group_menu:groupmenu :my_groups" oncomplete="group_moderator_dialog.hide()">
+					<p:commandButton disabled="false" value="#{msg.save}" ajax="false" action="#{groupsBean.onGroupEdit}" update=":other_groups :growl :group_menu :my_groups" oncomplete="group_moderator_dialog.hide()">
 						<f:setPropertyActionListener target="#{groupsBean.editGroup}" value="#{groupsBean.selectedGroup}" />
 					</p:commandButton>
 				</h:panelGrid>
