@@ -11,7 +11,7 @@
 		<form action="#{request.contextPath}/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
 			<a href="http://localhost:8080/Learnweb-Tomcat/lw/myhome/groups.jsf" id="learnweb_logo">Logo</a>
 			<input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" id="searchfield" />
-			<input type="hidden" name="action" value="#{searchBean.action}" />
+			<input type="hidden" name="action" value="#{searchBean.searchMode}" />
 			<input type="submit" value=" " id="searchbutton" title="#{msg.searchLabel}" />
 		</form>
 		

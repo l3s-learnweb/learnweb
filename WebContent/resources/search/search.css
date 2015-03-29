@@ -167,7 +167,7 @@ div.grid_view .duration {
 	font-size:10px;
 }
 
-div.grid_view .title {
+div.grid_view .border > .title {
 	margin:0;
     padding:5px 0 0 0; 
     font-size:12px;
@@ -210,13 +210,16 @@ img.smallImage { cursor:pointer; margin:4px; }
 }
 .preview .title { 
 	font-size:12px;
-	font-weight: bold;
+	font-weight: 600;
+	padding:5px 0 0 0; 
 	background-color:transparent;
     color: black;
-    padding: 0;
     white-space: nowrap;
     overflow:hidden;
 	text-overflow:ellipsis;
+}
+.preview .description {
+	color: #4F4F4F;
 }
 
 .preview>.location img {

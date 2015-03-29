@@ -47,7 +47,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     private Search search;
     private String query = "";
     private int page;
-    private String action = "web";
+    private String action;
     private InterWeb interweb;
     private Resource selectedResource;
     private int selectedResourceTargetGroupId;
@@ -77,6 +77,8 @@ public class SearchBean extends ApplicationBean implements Serializable
 	searchMode = MODE.image; // default search mode
 	logEnabled = false;
 	historyResources = new HashSet<String>();
+
+	action = getPreference("SEARCH_ACTION", "web");
     }
 
     public void preRenderView() throws SQLException
@@ -85,7 +87,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	{
 	    return;
 	}
-	System.out.println("action" + action + " q: " + query);
+
 	if(action != null)
 	{
 	    String actionTemp = action;
@@ -126,6 +128,8 @@ public class SearchBean extends ApplicationBean implements Serializable
 	{
 	    if(null != search)
 		search.stop();
+
+	    setPreference("search_action", searchMode.name());
 
 	    historyResourcesRetrieved = false;
 
@@ -508,7 +512,8 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public void setAction(String action)
     {
-	this.action = action;
+	if(action != null && action.length() != 0)
+	    this.action = action;
     }
 
     public Resource getSelectedResource()

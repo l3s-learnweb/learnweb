@@ -3,12 +3,14 @@ package de.l3s.learnweb;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
+
+import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.AuthCredentials;
 import de.l3s.interwebj.InterWeb;
@@ -52,6 +54,8 @@ public class User implements Comparable<User>, Serializable, HasId
     private String iwKey;
     private String iwSecret;
 
+    private HashMap<String, String> preferences;
+
     // caches
     private List<Course> courses;
     private List<Resource> resources;
@@ -61,35 +65,6 @@ public class User implements Comparable<User>, Serializable, HasId
 
     private TimeZone timeZone = TimeZone.getTimeZone("Europe/Berlin");
     private Date lastLoginDate = null;
-
-    @Deprecated
-    public User(ResultSet rs) throws SQLException
-    {
-	super();
-	this.id = rs.getInt("user_id");
-	this.username = rs.getString("username");
-	this.email = rs.getString("email");
-	this.password = rs.getString("password");
-	this.organisationId = rs.getInt("organisation_id");
-	this.activeGroupId = rs.getInt("active_group_id");
-	this.imageFileId = rs.getInt("image_file_id");
-
-	this.gender = rs.getInt("gender");
-	this.dateofbirth = rs.getDate("dateofbirth");
-	this.address = rs.getString("address");
-	this.profession = rs.getString("profession");
-	this.additionalInformation = rs.getString("additionalinformation");
-	this.interest = rs.getString("interest");
-	this.phone = rs.getString("phone");
-	this.registrationDate = rs.getDate("registration_date");
-
-	this.admin = rs.getInt("is_admin") == 1;
-	this.moderator = rs.getInt("is_moderator") == 1;
-
-	this.iwKey = rs.getString("iw_token");
-	this.iwSecret = rs.getString("iw_secret");
-	this.timeZone = TimeZone.getTimeZone("Europe/Berlin");
-    }
 
     public User()
     {
@@ -108,6 +83,17 @@ public class User implements Comparable<User>, Serializable, HasId
 	if(destroyed)
 	    return;
 	destroyed = true;
+
+	System.out.println("on destroy: " + preferences);
+
+	try
+	{
+	    Learnweb.getInstance().getUserManager().save(this);
+	}
+	catch(SQLException e)
+	{
+	    Logger.getLogger(User.class).error("Couldn't save user onDestroy", e);
+	}
     }
 
     public boolean isLoggedInInterweb()
@@ -593,6 +579,16 @@ public class User implements Comparable<User>, Serializable, HasId
     public String getPassword()
     {
 	return password;
+    }
+
+    public HashMap<String, String> getPreferences()
+    {
+	return preferences;
+    }
+
+    public void setPreferences(HashMap<String, String> preferences)
+    {
+	this.preferences = preferences;
     }
 
     /**

@@ -31,7 +31,7 @@
 				<h:form rendered="#{userBean.loggedIn}">
 					<h:panelGroup rendered="#{utilBean.searchPage}">				
 							<p:commandLink update=":resource_form"
-								oncomplete="resource_dialog.show();"
+								oncomplete="PF('resource_dialog').show();"
 								title="#{msg.addToMyResources}"
 								style="display:block; margin-top:4px;">
 								<h:graphicImage value="/resources/icon/silk/add.png" width="16"
@@ -42,7 +42,7 @@
 					</h:panelGroup>
 					<h:panelGroup rendered="#{utilBean.viewResultSetPage}">
 							<p:commandLink update=":resource_form"
-								oncomplete="resource_dialog.show();"
+								oncomplete="PF('resource_dialog').show();"
 								title="#{msg.addToMyResources}"
 								style="display:block; margin-top:4px;">
 								<h:graphicImage value="/resources/icon/silk/add.png" width="16"

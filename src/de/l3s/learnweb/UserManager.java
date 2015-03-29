@@ -1,14 +1,21 @@
 package de.l3s.learnweb;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.TimeZone;
+
+import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.AuthCredentials;
 import de.l3s.util.Cache;
@@ -24,9 +31,10 @@ import de.l3s.util.ICache;
  */
 public class UserManager
 {
+    private final static Logger log = Logger.getLogger(UserManager.class);
 
     // if you change this, you have to change the constructor of User too
-    private final static String COLUMNS = "user_id, username, email, organisation_id, iw_token, iw_secret, active_group_id, image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, is_moderator, image_resource_id, registration_date, password";
+    private final static String COLUMNS = "user_id, username, email, organisation_id, iw_token, iw_secret, active_group_id, image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, is_moderator, image_resource_id, registration_date, password, preferences";
 
     private Learnweb learnweb;
     private ICache<User> cache;
@@ -362,7 +370,7 @@ public class UserManager
 
     public User save(User user) throws SQLException
     {
-	PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+	PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
 	if(user.getId() < 0) // the User is not yet stored at the database 
 	    replace.setNull(1, java.sql.Types.INTEGER);
@@ -387,6 +395,9 @@ public class UserManager
 	replace.setInt(18, 0); //user.getImageResourceId());
 	replace.setDate(19, user.getRegistrationDate() == null ? null : new java.sql.Date(user.getRegistrationDate().getTime()));
 	replace.setString(20, user.getPassword());
+
+	serializeObjectAndSet(replace, 21, user.getPreferences());
+
 	replace.executeUpdate();
 
 	if(user.getId() < 0) // get the assigned id
@@ -403,6 +414,28 @@ public class UserManager
 	return user;
     }
 
+    private static void serializeObjectAndSet(PreparedStatement stmt, int parameterIndex, Object obj) throws SQLException
+    {
+	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+	try
+	{
+	    ObjectOutputStream oos = new ObjectOutputStream(baos);
+	    oos.writeObject(obj);
+
+	    byte[] employeeAsBytes = baos.toByteArray();
+
+	    stmt.setBinaryStream(parameterIndex, new ByteArrayInputStream(employeeAsBytes), employeeAsBytes.length);
+	}
+	catch(Exception e)
+	{
+	    log.error("Couldn't serialize preferences: " + obj.toString(), e);
+	}
+
+	stmt.setNull(parameterIndex, java.sql.Types.BLOB);
+    }
+
+    @SuppressWarnings("unchecked")
     private User createUser(ResultSet rs) throws SQLException
     {
 	User user = new User();
@@ -429,6 +462,33 @@ public class UserManager
 	user.setInterwebKey(rs.getString("iw_token"));
 	user.setInterwebSecret(rs.getString("iw_secret"));
 	user.setTimeZone(TimeZone.getTimeZone("Europe/Berlin"));
+
+	// deserialize preferences
+	HashMap<String, String> preferences = null;
+
+	byte[] preferenceBytes = rs.getBytes("preferences");
+
+	if(preferenceBytes != null && preferenceBytes.length > 0)
+	{
+	    ByteArrayInputStream preferenceBAIS = new ByteArrayInputStream(preferenceBytes);
+
+	    try
+	    {
+		ObjectInputStream preferencesOIS = new ObjectInputStream(preferenceBAIS);
+
+		// re-create the object
+		preferences = (HashMap<String, String>) preferencesOIS.readObject();
+	    }
+	    catch(Exception e)
+	    {
+		log.error("Couldn't load preferences for user " + user.getId(), e);
+	    }
+	}
+
+	if(preferences == null)
+	    preferences = new HashMap<String, String>();
+
+	user.setPreferences(preferences);
 
 	return user;
     }

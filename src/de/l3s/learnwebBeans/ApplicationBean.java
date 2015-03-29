@@ -211,7 +211,7 @@ public class ApplicationBean
      * @param key
      * @return
      */
-    public Object getPreference(String key)
+    public String getPreference(String key)
     {
 	return UtilBean.getUserBean().getPreference(key);
     }
@@ -223,9 +223,9 @@ public class ApplicationBean
      * @param defaultValue
      * @return
      */
-    public Object getPreference(String key, Object defaultValue)
+    public String getPreference(String key, String defaultValue)
     {
-	Object obj = getPreference(key);
+	String obj = getPreference(key);
 	return obj == null ? defaultValue : obj;
     }
 
@@ -235,7 +235,7 @@ public class ApplicationBean
      * @param key
      * @param value
      */
-    public void setPreference(String key, Object value)
+    public void setPreference(String key, String value)
     {
 	UtilBean.getUserBean().setPreference(key, value);
     }

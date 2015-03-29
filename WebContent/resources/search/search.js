@@ -51,10 +51,12 @@ function prepareResources(resources)
 		    		var offset = image.offset();		    		
 		    		var width = preview.width() + 2*padding;
 		    		var heightDiff = padding + (previewImage.attr('height') - image.height())/2;						
-					var widthDiff = padding + (previewImage.attr('width') - image.width())/2;
+					var widthDiff = padding + (previewImage.attr('width') - image.width())/2;					
+					var headerHeight = $('#header').height() + 5;
+					var scrollTop = $(window).scrollTop();
 					
 					offset.left -= widthDiff;
-					offset.top -= heightDiff;
+					offset.top -= heightDiff + scrollTop;
 					
 					var containerWidth = $('#results').outerWidth(true); 
 					var containerHeight = $(window).height();				
@@ -63,14 +65,17 @@ function prepareResources(resources)
 					if(offset.left < mindist)
 						offset.left = mindist;					
 					else if(offset.left + width + mindist > containerWidth)
-						offset.left = containerWidth - width - mindist;
+						offset.left = containerWidth - width - mindist;					
 					
-					if(offset.top < 79)
-						offset.top = 79;	
+					console.log(offset.top, previewHeight, containerHeight, headerHeight, scrollTop);
 					
+					if(offset.top < headerHeight)
+						offset.top = headerHeight;						
 					else if(offset.top + previewHeight > containerHeight)
 						offset.top = containerHeight - previewHeight;
 
+					offset.top += scrollTop;
+					
 					openPreview.hide();
 					openPreview = preview;
 				
@@ -215,16 +220,12 @@ function displayNextPage(xhr, status, args)
 }
 
 function testIfResultsFillPage()
-{	
-	
+{		
 	var contentAreaHeight = $( window ).height() - $('#header').height();
 
-	console.log($(window).scrollTop() , $(document).first().scrollTop() ,  $('#results').height() , $('#header').height(), $( window ).height(), contentAreaHeight);
-
+	//console.log($(window).scrollTop() , $(document).first().scrollTop() ,  $('#results').height() , $('#header').height(), $( window ).height(), contentAreaHeight);
 	
-	// if results don't fill the page -> load more results
-
-	
+	// if results don't fill the page -> load more results	
 	if($(document).scrollTop() > $('#results').height() - contentAreaHeight*1.5)
     {		
 		loadNextPage();
@@ -460,34 +461,34 @@ $(document).ready(function()
 	if(view == 'grid')
 		resizeGridResources();
 	else if(view == 'list')
-		{
-			if(localStorage.getItem(userId) === null || localStorage.getItem(userId) !== "true")			
-			{	$('#search_right_bar').css('width','0%');
-				$('#search_right_bar').css('display','none');
-			}
-			else
-			{
-				$('#search_right_bar').removeClass('right_bar').addClass('web_right_bar');
-				//$('#search_loading_more_results,#search_nothing_found,#search_no_more_results').css('width','61%'); für search history aktivieren
-			}
-			ajaxLoadFactsheet();
+	{
+		if(localStorage.getItem(userId) === null || localStorage.getItem(userId) !== "true")			
+		{	$('#search_right_bar').css('width','0%');
+			$('#search_right_bar').css('display','none');
 		}
+		else
+		{
+			$('#search_right_bar').removeClass('right_bar').addClass('web_right_bar');
+			//$('#search_loading_more_results,#search_nothing_found,#search_no_more_results').css('width','61%'); für search history aktivieren
+		}
+		ajaxLoadFactsheet();
+	}
 	
 	if(view=='grid'||view=='float')
-		{	
-			if(localStorage.getItem(userId) === null || localStorage.getItem(userId) !== "true" || !searchHistoryEnabled)
-			{
-				//$('.grid_view').css('width','100%'); für search history aktivieren
-				//$('.float_view').css('width','100%'); für search history aktivieren
-				$('#search_right_bar').css('width','0%');
-			    $('#search_right_bar').css('display','none');
-			}
-			else
-			{
-				//$('#search_loading_more_results,#search_nothing_found,#search_no_more_results').css('width','75%');	 für search history aktivieren
-			}
+	{	
+		if(localStorage.getItem(userId) === null || localStorage.getItem(userId) !== "true" || !searchHistoryEnabled)
+		{
+			//$('.grid_view').css('width','100%'); für search history aktivieren
+			//$('.float_view').css('width','100%'); für search history aktivieren
+			$('#search_right_bar').css('width','0%');
+		    $('#search_right_bar').css('display','none');
 		}
-		
+		else
+		{
+			//$('#search_loading_more_results,#search_nothing_found,#search_no_more_results').css('width','75%');	 für search history aktivieren
+		}
+	}
+	
 	ajaxLoadSearchHistory();
 	
 	// register cursor left/right and esc key

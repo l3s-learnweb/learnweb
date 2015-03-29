@@ -14,15 +14,16 @@
 			</h:panelGroup>
 			<div class="preview" style="max-width:${res.thumbnail2.width>160? res.thumbnail2.width:180 }px;">
 				<img src="${res.thumbnail2.url}" height="${res.thumbnail2.height}" width="${res.thumbnail2.width}" class="mediumImage" />
-				<div class="title">
-					
-						<h:outputLink value="${res.url}">
-							<img src="#{learnwebBean.contextUrl}/resources/icon/services/#{res.location.toLowerCase()}.gif" alt="${res.location}" />
-						</h:outputLink><h:outputText value="${res.title}" escape="false" />					
-				</div>
+				
+				<div class="title"><h:outputText value="${res.title}" escape="false" /></div>
 				<div class="description">
 					<h:outputText value="${res.shortSnippet}" escape="false" />
-				</div>				
+				</div>
+				<div class="location">
+					<h:outputLink value="${res.url}">
+						<img src="#{learnwebBean.contextUrl}/resources/icon/services/#{res.location.toLowerCase()}.gif" alt="${res.location}" /> <h:outputText value="${res.location}" />
+					</h:outputLink>
+				</div>			
 			</div>
 			
 			<ui:decorate  template="/lw/templates/resource_metadata.xhtml">

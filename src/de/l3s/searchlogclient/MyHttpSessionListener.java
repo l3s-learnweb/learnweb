@@ -4,12 +4,15 @@ import javax.servlet.http.HttpSession;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 
+import org.apache.log4j.Logger;
+
 import com.sun.jersey.api.client.ClientHandlerException;
 
 import de.l3s.learnweb.Learnweb;
 
 public class MyHttpSessionListener implements HttpSessionListener
 {
+    private final static Logger log = Logger.getLogger(MyHttpSessionListener.class);
 
     @Override
     public void sessionCreated(HttpSessionEvent se)
@@ -27,15 +30,15 @@ public class MyHttpSessionListener implements HttpSessionListener
 	    searchLogClient.passUpdateResultset();
 	    searchLogClient.pushTagList();
 	}
-	catch (ClientHandlerException e)
+	catch(ClientHandlerException e)
 	{
 	    System.out.println("Search Tracker service is down");
 	}
-	catch (RuntimeException e)
+	catch(RuntimeException e)
 	{
 	    System.out.println(e.getMessage());
 	}
 	HttpSession session = se.getSession();
-	System.out.println(" (session) Destroyed:ID=" + session.getId());
+	log.debug("Ssession Destroyed:ID=" + session.getId());
     }
 }

@@ -29,7 +29,7 @@ public class UserBean implements Serializable
 
     private User user = null;
     private Locale locale;
-    private HashMap<String, Object> preferences; // user preferences like search mode
+    private HashMap<String, String> preferences; // user preferences like search mode
 
     private Course activeCourse;
     private List<Group> newGroups = null;
@@ -38,7 +38,7 @@ public class UserBean implements Serializable
     {
 	locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
-	preferences = new HashMap<String, Object>();
+	preferences = new HashMap<String, String>();
     }
 
     public boolean isLoggedIn()
@@ -71,7 +71,6 @@ public class UserBean implements Serializable
      */
     public void setUser(User user)
     {
-	this.user = user;
 
 	// store the user also in the session so that it is accessible in the download servlet
 	HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
@@ -87,27 +86,35 @@ public class UserBean implements Serializable
 	    {
 		e.printStackTrace();
 	    }
+
+	    preferences = user.getPreferences();
 	}
 	else
 	// user logged out -> clear caches
 	{
 	    newGroups = null;
+	    onDestroy();
 	}
+
+	this.user = user;
     }
 
     @PreDestroy
     public void onDestroy()
     {
 	if(null != user)
+	{
+	    user.setPreferences(preferences);
 	    user.onDestroy();
+	}
     }
 
-    public Object getPreference(String key)
+    public String getPreference(String key)
     {
 	return preferences.get(key);
     }
 
-    public void setPreference(String key, Object value)
+    public void setPreference(String key, String value)
     {
 	preferences.put(key, value);
     }
