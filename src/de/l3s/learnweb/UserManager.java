@@ -426,6 +426,8 @@ public class UserManager
 	    byte[] employeeAsBytes = baos.toByteArray();
 
 	    stmt.setBinaryStream(parameterIndex, new ByteArrayInputStream(employeeAsBytes), employeeAsBytes.length);
+
+	    return;
 	}
 	catch(Exception e)
 	{

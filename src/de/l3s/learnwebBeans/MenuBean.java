@@ -18,13 +18,6 @@ import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.beans.UtilBean;
 
-/*
-import org.primefaces.component.menuitem.MenuItem;
-import org.primefaces.component.submenu.Submenu;
-import org.primefaces.model.DefaultMenuModel;
-import org.primefaces.model.MenuModel;
-*/
-
 @ManagedBean
 @RequestScoped
 public class MenuBean extends ApplicationBean implements Serializable
@@ -119,7 +112,7 @@ public class MenuBean extends ApplicationBean implements Serializable
 		    submenu.setLabel(group.getTitle());
 
 		    if(groupId != null && groupId.equals(group.getId()))
-			submenu.setStyle("text-decoration: underline;font-style: italic;");
+			submenu.setStyleClass("active");
 
 		    DefaultMenuItem item = new DefaultMenuItem();
 		    item.setValue(getLocaleMessage("overview"));
@@ -264,6 +257,7 @@ public class MenuBean extends ApplicationBean implements Serializable
 		System.out.println(link.getValue() + " - " + link.getUrl());
 	    }
 	}
+
     }
 
     public String onCourseChange()

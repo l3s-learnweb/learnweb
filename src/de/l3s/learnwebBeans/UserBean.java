@@ -119,6 +119,14 @@ public class UserBean implements Serializable
 	preferences.put(key, value);
     }
 
+    public void setPreferenceRemote()
+    {
+	String key = getParameter("key");
+	String value = getParameter("value");
+
+	setPreference(key, value);
+    }
+
     public Locale getLocale()
     {
 	return locale;
@@ -340,4 +348,10 @@ public class UserBean implements Serializable
 
 	return "userId: " + user.getId() + " name: " + user.getUsername();
     }
+
+    private String getParameter(String param)
+    {
+	return FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(param);
+    }
+
 }

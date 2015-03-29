@@ -46,10 +46,14 @@
 		</section>
 		
 		
-		<h:panelGroup layout="block" id="footer" rendered="#{not empty helpText}">
+		<h:panelGroup layout="block" id="footer" rendered="#{not empty helpText}" styleClass="#{userBean.getPreference('helptext_hide')? 'display-none':''}">
 			<h:outputText value="#{helpText}" escape="false" style="padding: 0.7rem 4rem; display:block;" />
 			<a href="#" onclick="return footerClose();" id="footer_close" title="#{msg.close}"></a>
 		</h:panelGroup>
+		
+		<h:form styleClass="display-none">	
+			<p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" />
+		</h:form>
 
 	</h:body>
 </f:view>

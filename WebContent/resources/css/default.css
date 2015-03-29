@@ -12,7 +12,9 @@ h1 {
 	font-size: 1.6em;
 	font-weight: normal;
 }
-
+.display-none {
+	display:none;
+}
 h2 {
 	font-size: 1.6em;
 }

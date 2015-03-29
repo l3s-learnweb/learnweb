@@ -84,8 +84,6 @@ public class User implements Comparable<User>, Serializable, HasId
 	    return;
 	destroyed = true;
 
-	System.out.println("on destroy: " + preferences);
-
 	try
 	{
 	    Learnweb.getInstance().getUserManager().save(this);

@@ -131,7 +131,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
     @Override
     public boolean equals(Object obj)
     {
-	System.out.println("equals " + title);
 	if(obj.getClass() == this.getClass())
 	{
 	    Group g2 = (Group) obj;
