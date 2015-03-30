@@ -20,7 +20,7 @@
 	    		
 		<ui:define name="center_layout">
 			<h:form target="new_presentation" id="new_presentation_form">
-				<p:commandButton id="add_resource" styleClass="resource_button greenbutton" onclick="format_dialog.show()" value="New Presentation"></p:commandButton>
+				<p:commandButton id="add_resource" styleClass="resource_button greenbutton" onclick="PF('format_dialog').show()" value="New Presentation"></p:commandButton>
 			</h:form>
 			<script type="text/javascript">
 				var div = document.createElement("div");
@@ -52,33 +52,33 @@
 				}
 			</script>
 			<h:form>
-				<p:confirmDialog id="confirmDialog" message="Are you sure about deleting the Presentation?" header="Delete Presentation" severity="alert" widgetVar="confirmation" appendToBody="true" >
-			        <p:commandButton id="confirm" value="Yes" update=":datagrid :right_form" oncomplete="update_header(); confirmation.hide();"  
+				<p:confirmDialog id="confirmDialog" message="Are you sure about deleting the Presentation?" header="Delete Presentation" severity="alert" widgetVar="confirmation" appendTo="@(body)" >
+			        <p:commandButton id="confirm" value="Yes" update=":datagrid :right_form" oncomplete="update_header(); PF('confirmation').hide();"  
 			                   actionListener="#{groupDetailBean.removePresentationFromGroup}" process=":right_form"/>  
-			        <p:commandButton id="decline" value="No" onclick="confirmation.hide()" type="button" />
+			        <p:commandButton id="decline" value="No" onclick="PF('confirmation').hide()" type="button" />
 			    </p:confirmDialog>
 			</h:form>
-			<p:dialog resizable="false" header="Layout Selection" widgetVar="format_dialog" modal="true" appendToBody="true">
+			<p:dialog resizable="false" header="Layout Selection" widgetVar="format_dialog" modal="true" appendTo="@(body)">
 				<h:form>
 					Select the layout for displaying Text Resources<br/><br/>
-			    	<a onclick="format_dialog.hide()" class="format_button_link" target="new_presentation" href="#{groupDetailBean.edit('1')}">
+			    	<a onclick="PF('format_dialog').hide()" class="format_button_link" target="new_presentation" href="#{groupDetailBean.edit('1')}">
 						<img class="format_button" src="../resources/icon/format1.jpg"></img><br/>
 						Single Slide Layout
 					</a>
-			    	<a onclick="format_dialog.hide()" class="format_button_link" target="new_presentation" href="#{groupDetailBean.edit('2')}">
+			    	<a onclick="PF('format_dialog').hide()" class="format_button_link" target="new_presentation" href="#{groupDetailBean.edit('2')}">
 						<img class="format_button" src="../resources/icon/format2.jpg"></img><br/>
 						Two Slide Layout
 					</a>
 		    	</h:form>
 		    </p:dialog>
-		    <p:dialog resizable="false" header="Layout Selection" widgetVar="format_dialog2" modal="true" appendToBody="true">
+		    <p:dialog resizable="false" header="Layout Selection" widgetVar="format_dialog2" modal="true" appendTo="@(body)">
 				<h:form id="edit_presentation_layout">
 					Select the layout for displaying Text Resources<br/><br/>
-			    	<a onclick="format_dialog2.hide()" class="format_button_link" target="edit_presentation" href="#{groupDetailBean.editPresentation('1')}">
+			    	<a onclick="PF('format_dialog2').hide()" class="format_button_link" target="edit_presentation" href="#{groupDetailBean.editPresentation('1')}">
 						<img class="format_button" src="../resources/icon/format1.jpg"></img><br/>
 						Single Slide Layout
 					</a>
-			    	<a onclick="format_dialog2.hide()" class="format_button_link" target="edit_presentation" href="#{groupDetailBean.editPresentation('2')}">
+			    	<a onclick="PF('format_dialog2').hide()" class="format_button_link" target="edit_presentation" href="#{groupDetailBean.editPresentation('2')}">
 						<img class="format_button" src="../resources/icon/format2.jpg"></img><br/>
 						Two Slide Layout
 					</a>
@@ -152,8 +152,8 @@
 							    <span class="align">#{groupDetailBean.clickedPresentation.presentationTitle}</span>
 							</div>
 							<p:commandButton styleClass="presentation_commandbutton" action="#{groupDetailBean.present}" ajax="false" value="Present"></p:commandButton>
-							<p:commandButton styleClass="presentation_commandbutton" onclick="format_dialog2.show(); return false" ajax="false" value="Edit"></p:commandButton>
-							<p:commandButton styleClass="presentation_commandbutton" onclick="confirmation.show(); return false" ajax="false" value="Delete"></p:commandButton>
+							<p:commandButton styleClass="presentation_commandbutton" onclick="PF('format_dialog2').show(); return false" ajax="false" value="Edit"></p:commandButton>
+							<p:commandButton styleClass="presentation_commandbutton" onclick="PF('confirmation').show(); return false" ajax="false" value="Delete"></p:commandButton>
 							<div class="presentation_clear"></div>
 							<div class="presentation_detail_div">
 								<div class="data"><span class="resource_field">Author :</span> #{groupDetailBean.clickedPresentation.getOwner().username}</div>

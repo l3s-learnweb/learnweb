@@ -54,27 +54,27 @@
 						    <p:toolbarGroup align="right">
 						        <p:commandButton type="button" value="Save" onclick='saveDialog()' icon="ui-icon-disk" />
 						      	<p:commandButton type="submit" value="Present" icon="ui-icon-newwin" onclick="display_presentation(this)" ajax="false" action="#{reEditPresentationBean.present}"/>
-						        <p:commandLink onstart="return false" onclick="help_dialog.show()" style="background: none !important; margin-left: 5px; margin-right: 2px; position: relative; top: -1px">
+						        <p:commandLink onstart="return false" onclick="PF('help_dialog').show()" style="background: none !important; margin-left: 5px; margin-right: 2px; position: relative; top: -1px">
 						        	<p:graphicImage style="vertical-align: middle" value="/resources/icon/help.png" width="20" height="20"></p:graphicImage>
 						        </p:commandLink>
 						        <p:remoteCommand name="save" actionListener="#{reEditPresentationBean.addPresentation}" />
 						        <p:remoteCommand name="present" actionListener="#{reEditPresentationBean.present}" />
-						        <p:dialog style="text-align: center" id="saveDlg" header="Save Presentation" widgetVar="saveDlg" modal="true" appendToBody="true" closable="false" width="400">  
+						        <p:dialog style="text-align: center" id="saveDlg" header="Save Presentation" widgetVar="saveDlg" modal="true" appendTo="@(body)" closable="false" width="400">  
 										File Name : <p:inputText value="" id="presentationName" size="50" required="true" widgetVar="presentationName"></p:inputText><br/><br/>
 										<p:commandButton id="saveButton" style="margin-right: 10px" update=":grwl:growl" type="submit" value="Save" oncomplete="doneSaving()" onclick="save_presentation()" actionListener="#{reEditPresentationBean.growl}"></p:commandButton>
-										<p:commandButton style="margin-left: 10px" type="button" value="Cancel" onclick="saveDlg.hide()"></p:commandButton>
+										<p:commandButton style="margin-left: 10px" type="button" value="Cancel" onclick="PF('saveDlg').hide()"></p:commandButton>
 										<p:blockUI block="saveDlg" trigger="saveButton" />
 							  	</p:dialog>
-							  	<p:dialog style="text-align: center; z-index: 10000" id="presentDialog" header="Presentation" widgetVar="presentDialog" modal="false" appendToBody="false" closable="false">  
+							  	<p:dialog style="text-align: center; z-index: 10000" id="presentDialog" header="Presentation" widgetVar="presentDialog" modal="false" appendTo="@(body)" closable="false">  
 										Want to save your changes to <span id="presName" style="font-weight: bold"></span>?<br/><br/>
 										<p:commandButton id="but1" style="margin-right: 5px" type="button" value="Save" onclick="save_pres()" ></p:commandButton>
 										<p:commandButton style="margin-left: 5px; margin-right: 5px" type="submit" ajax="false" value="Don't Save" onclick="dontSave(this)" action="#{reEditPresentationBean.present}"></p:commandButton>
-										<p:commandButton style="margin-left: 5px" type="button" value="Cancel" onclick="presentDialog.hide()"></p:commandButton>
+										<p:commandButton style="margin-left: 5px" type="button" value="Cancel" onclick="PF('presentDialog').hide()"></p:commandButton>
 							  	</p:dialog>
 						  	</p:toolbarGroup>
 						  </p:toolbar> 
 					 </h:form> 
-					 <p:dialog modal="true" resizable="false" width="590" header="Help" visible="true" appendToBody="true" widgetVar="help_dialog">
+					 <p:dialog modal="true" resizable="false" width="590" header="Help" visible="true" appendTo="@(body)" widgetVar="help_dialog">
 					 	<div style="font-weight: bold; line-height: 1.5em; font-size: 14px">Welcome to LearnWeb Presentation Editor!</div>
 					 	<div style="margin-bottom: 5px; line-height: 1.5em; font-size: 14px">
 					 		The LearnWeb Presentation Editor can help you to create your own presentations using the resources in a group.
@@ -178,7 +178,7 @@
                 	{
                 		var code = generate_content();
                 		prev_code=code;
-                		var name = presentationName.jq.val();
+                		var name = $('#presentationName').val();
                 		save([{name:"code",value:code}, {name:"presentationName",value:name}]);
                 	}
                 	
@@ -191,7 +191,7 @@
                 			{
                 				flag=1;
                     			$("#presName").html($("#presentationTitle").html());
-                    			presentDialog.show();
+                    			PF('presentDialog').show();
                     			return;
                 			}
                 		}
@@ -203,14 +203,14 @@
                 	
                 	function saveDialog()
                 	{
-                		saveDlg.show();
+                		PF('saveDlg').show();
                 		$("#toolbar\\:presentationName").val($("#presentationTitle").html());
                 	}
                 	
                 	function doneSaving()
                 	{
                 		$("#presentationTitle").html($("#toolbar\\:presentationName").val());
-                		saveDlg.hide();
+                		PF('saveDlg').hide();
                 	}
                 	
                 	function test()
@@ -224,12 +224,12 @@
                 	{
                 		dont_save=1;
                 		display_presentation(me);
-                		presentDialog.hide();
+                		PF('presentDialog').hide();
                 	}
                 	
                 	function save_pres()
                 	{
-                		presentDialog.hide();
+                		PF('presentDialog').hide();
                 		saveDialog();
                 	}
                 </script>
@@ -328,7 +328,7 @@
                     <h:form>
 						<div id="impress">
 							<div class="step slide" id="resource_slide_1" data-x="0" data-y="0">
-								<q class="editable" id="presentation_title" style="text-align: center" onclick="title_dialog.show()">#{reEditPresentationBean.resourcesAll[0].getTitle()}</q>
+								<q class="editable" id="presentation_title" style="text-align: center" onclick="PF('title_dialog').show()">#{reEditPresentationBean.resourcesAll[0].getTitle()}</q>
 								
 								<!-- <div style="position: absolute; bottom: 20px; left: 0px; text-align: center; width: 100%">
 									<span style="font-size: 50px; position: relative; top: -0.15em">.</span>
@@ -341,7 +341,7 @@
 							<ui:fragment rendered="#{reEditPresentationBean.format eq 1}">
 								<ui:repeat var="result" value="#{reEditPresentationBean.resourcesAll}">
 									<div class="step slide" data-x="0" data-y="0" id="resource_slide_#{result.id}" style="display:none">
-										<div class="editable" style="font-weight: bold" onclick="title_dialog_#{result.id}.show()" id="resource_title_#{result.id}">#{result.title}</div>
+										<div class="editable" style="font-weight: bold" onclick="PF('title_dialog_#{result.id}').show()" id="resource_title_#{result.id}">#{result.title}</div>
 										<table style="margin-top: 30px">
 											<tr>
 												<td style="width: 50%; max-width: 50% !important; padding-right: 5%">
@@ -363,7 +363,7 @@
 													</ui:fragment>
 												</td>
 												<td style="width: 45%; max-width: 45% !important; min-width: 45% !important; font-size: 18px; line-height: 1.5em; vertical-align: top">
-													<div class="editable" onclick="resource_dialog_#{result.id}.show()" id="resource_description_#{result.id}">
+													<div class="editable" onclick="PF('resource_dialog_#{result.id}').show()" id="resource_description_#{result.id}">
 														<h:outputText value="#{result.description}" escape="false" ></h:outputText> 
 													</div>
 												</td>
@@ -376,7 +376,7 @@
 								<ui:repeat var="result" value="#{reEditPresentationBean.resourcesAll}">
 									<ui:fragment rendered="#{result.type != 'text' and result.type != 'Text'}">	
 										<div class="step slide" data-x="0" data-y="0" id="resource_slide_#{result.id}" style="display:none">
-											<div class="editable" style="font-weight: bold" onclick="title_dialog_#{result.id}.show()" id="resource_title_#{result.id}">#{result.title}</div>
+											<div class="editable" style="font-weight: bold" onclick="PF('title_dialog_#{result.id}').show()" id="resource_title_#{result.id}">#{result.title}</div>
 											<table style="margin-top: 30px">
 												<tr>
 													<td style="width: 50%; max-width: 50% !important; padding-right: 5%">
@@ -395,7 +395,7 @@
 														</ui:fragment>
 													</td>
 													<td style="width: 45%; max-width: 45% !important; min-width: 45% !important; font-size: 18px; line-height: 1.5em; vertical-align: top">
-														<div class="editable" onclick="resource_dialog_#{result.id}.show()" id="resource_description_#{result.id}">
+														<div class="editable" onclick="PF('resource_dialog_#{result.id}').show()" id="resource_description_#{result.id}">
 															<h:outputText value="#{result.description}" escape="false" ></h:outputText> 
 														</div>
 													</td>
@@ -411,9 +411,9 @@
 											</div>
 										</div>
 										<div class="step slide" data-x="0" data-y="0" id="resource_slide_#{result.id}" style="display:none">
-											<div class="editable" style="font-weight: bold" onclick="title_dialog_#{result.id}.show()" id="resource_title_#{result.id}">#{result.title}</div>
+											<div class="editable" style="font-weight: bold" onclick="PF('title_dialog_#{result.id}').show()" id="resource_title_#{result.id}">#{result.title}</div>
 											<div style="margin-top: 30px">
-												<div class="editable" onclick="resource_dialog_#{result.id}.show()" id="resource_description_#{result.id}">
+												<div class="editable" onclick="PF('resource_dialog_#{result.id}').show()" id="resource_description_#{result.id}">
 													<h:outputText value="#{result.description}" escape="false" ></h:outputText> 
 												</div>
 											</div>

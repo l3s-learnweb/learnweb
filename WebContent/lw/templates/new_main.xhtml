@@ -11,7 +11,7 @@
 	<h:head>	
 		<title><h:outputText value="#{pageTitle}" escape="false" /> - Learnweb</title>
 		<link rel="shortcut icon" href="#{learnwebBean.baseUrl}../resources/icon/favicon.ico" />
-		 
+
 		<link type="text/css" rel="stylesheet" href="#{learnwebBean.baseUrl}../resources/css/default.css" />
         <link rel="stylesheet" type="text/css" href="#{learnwebBean.baseUrl}../resources/css/new_main2.css" />
         <link rel="stylesheet" type="text/css" href="#{learnwebBean.baseUrl}../resources/css/nanoscroller.css" />
@@ -245,7 +245,7 @@
 
 					
 					<h:form rendered = "#{userBean.searchHistoryEnabled and false}">
-    					<h:outputLink onclick="shared_resultsets_dialog.show();return false;" >
+    					<h:outputLink onclick="PF('shared_resultsets_dialog').show();return false;" >
 							<h:outputText value="View Shared Resultsets" style="padding-left:15px;"/>
 						</h:outputLink>
     				</h:form>

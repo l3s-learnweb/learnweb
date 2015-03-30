@@ -182,7 +182,7 @@
 					<h:outputText value="#{searchBean.selectedResource.source}" style="width:400px; padding:4px;" />
 					  
 					<h:outputText value="" />
-					<p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" process="@form" update=":backtogroup :growl" oncomplete="resource_dialog.hide()"/>
+					<p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" process="@form" update=":backtogroup :growl" oncomplete="PF('resource_dialog').hide()"/>
 				</h:panelGrid>			
 			</h:form> 			
 		</p:dialog>

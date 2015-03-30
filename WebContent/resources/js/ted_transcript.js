@@ -111,7 +111,7 @@ function setSynonyms(xhr,status,args){
           }
     }));
 	highlighter.highlightSelection("note");
-	userinput_dialog.show();
+	PF('userinput_dialog').show();
 }
 
 function noteSelectedText() {
@@ -128,7 +128,7 @@ function getUserText(buttonClicked){
 	if(buttonClicked == 'ok')
 		usertext = $("#text").val();
 
-	userinput_dialog.hide();	
+	PF('userinput_dialog').hide();	
 	$("#text").val('');
 	if(synonyms != "multiple")
 		$('#'+noteid).attr({'data-title':usertext, 'data-content':synonyms});

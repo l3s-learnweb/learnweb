@@ -97,7 +97,7 @@
 					<h:outputText value="#{msg.current_resultset}"/> <b><i>#{resultSetBean.query}</i></b> <h:outputText value="#{msg.posted_on}"/> <b><i>#{resultSetBean.queryDate}</i></b>
 						<h:form rendered="#{userBean.loggedIn}">
 							<p:commandLink update=":resultset_form"
-								oncomplete="resultset_dialog.show();"
+								oncomplete="PF('resultset_dialog').show();"
 								title="share resultset"
 								style="display:block; margin-top:4px;color:blue;">
 								<h:outputText value="#{msg.share_resultset}"/>
@@ -236,7 +236,7 @@
 					<h:outputText value="#{resultSetBean.selectedResource.source}" style="width:400px; padding:4px;" />
 					  
 					<h:outputText value="" />
-					<p:commandButton value="#{msg.save}" action="#{resultSetBean.addSelectedResource}" process="@form" update=":growl" oncomplete="resource_dialog.hide();updatecurrentsearch();"/>
+					<p:commandButton value="#{msg.save}" action="#{resultSetBean.addSelectedResource}" process="@form" update=":growl" oncomplete="PF('resource_dialog').hide();updatecurrentsearch();"/>
 				</h:panelGrid>	
 			</h:form> 			
 		</p:dialog>
@@ -248,7 +248,7 @@
 					<p:inputText id="username" value="#{resultSetBean.userNameToShareWith}" style="width:100%;"/>					
 					
 					<h:outputText value="" />
-					<p:commandButton value="#{msg.share}" action="#{resultSetBean.shareResultset}" process="@form" update=":growl" oncomplete="resultset_dialog.hide();"/>
+					<p:commandButton value="#{msg.share}" action="#{resultSetBean.shareResultset}" process="@form" update=":growl" oncomplete="PF('resultset_dialog').hide();"/>
 				</h:panelGrid>	
 			</h:form> 			
 		</p:dialog>

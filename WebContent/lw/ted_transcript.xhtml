@@ -80,7 +80,7 @@
 			<p:remoteCommand actionListener="${tedTranscriptBean.processActionSaveLog()}" name="saveTranscriptLog" />
 		</h:form>	
 
-		<p:dialog widgetVar="userinput_dialog" modal="true" header="#{msg.userAnnotation}" minWidth="600" resizable="false" closable="false" appendToBody="true">
+		<p:dialog widgetVar="userinput_dialog" modal="true" header="#{msg.userAnnotation}" minWidth="600" resizable="false" closable="false" appendTo="@(body)">
 			<h:outputLabel value="#{msg.justify_selection}" for="text"/>
 			<p:inputText id="text" style="width:97%;"/>
 			<p:commandButton value="Ok" onclick="getUserText('ok');"></p:commandButton>

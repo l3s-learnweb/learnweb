@@ -67,7 +67,7 @@
 					}
 				</script>
 				
-				<p:dialog id="confirmDialog" header="Delete Resource"  widgetVar="confirmation" appendToBody="true" >
+				<p:dialog id="confirmDialog" header="Delete Resource"  widgetVar="confirmation" appendTo="@(body)" >
 			        
 			        <h:form prependId="false" id="confirm_dialog_form">
 				        <p> <h:outputText value="#{msg.theResource}"/>
@@ -92,7 +92,7 @@
 			        </h:form>
 			    </p:dialog>
 				
-				<p:dialog header="Upload File" widgetVar="file_dialog" modal="true" appendToBody="true" width="600" height="150">
+				<p:dialog header="Upload File" widgetVar="file_dialog" modal="true" appendTo="@(body)" width="600" height="150">
 					<h:form>
 						<p:fileUpload  rendered="true" fileUploadListener="#{addResourceBean.handleFileUpload}"  
 			            mode="advanced"  
@@ -104,7 +104,7 @@
 			            /> 
 					</h:form>
 				</p:dialog>
-				<p:dialog header="#{msg.edit}" id="comment_dialog1" modal="true" minWidth="440" appendToBody="true" widgetVar="comment_dialog">
+				<p:dialog header="#{msg.edit}" id="comment_dialog1" modal="true" minWidth="440" appendTo="@(body)" widgetVar="comment_dialog">
 					<h:form id="comment_dialog_form">	
 						<p:inputTextarea autoResize="1" maxHeight="20" value="#{groupDetailBean.clickedComment.text}" id="edit_comment_textbox"></p:inputTextarea>
 						<p:commandButton actionListener="#{groupDetailBean.onEditComment}" update=":add_resource_panel" 
@@ -113,7 +113,7 @@
 						</p:commandButton>
 					</h:form>
 				</p:dialog>
-				<p:dialog header="#{msg.options}" closable="false" widgetVar="resource_dialog" appendToBody="true" modal="true" minWidth="540">
+				<p:dialog header="#{msg.options}" closable="false" widgetVar="resource_dialog" appendTo="@(body)" modal="true" minWidth="540">
 					<h:form id="resource_form">
 						<h:panelGrid columns="2">
 							<h:outputLabel value="#{msg.add_to}:" />
@@ -182,21 +182,21 @@
 				            		<h:outputText styleClass="resource_thumbnail" value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"140\" height=\"140\" />")}' escape="false"></h:outputText>
 
 				            		<div class="buttons">
-				            			<p:commandLink onclick="resource_dialog.show()" title="#{msg.addToMyResources}"
+				            			<p:commandLink onclick="PF('resource_dialog').show()" title="#{msg.addToMyResources}"
 											update="datagrid" styleClass="buttons_link resource_commandlink">
 											<h:graphicImage alt="Add" value="/resources/icon/Add.png"/>
 											<f:setPropertyActionListener value="#{result}" target="#{groupDetailBean.clickedResource}" />
 											<f:param name="group_id" value="#{groupDetailBean.groupId}" />
 										</p:commandLink>
 										
-										<p:commandLink oncomplete="resource_link_dialog.show();" title="#{msg.link_to}" 
+										<p:commandLink oncomplete="PF('resource_link_dialog').show();" title="#{msg.link_to}" 
 											rendered="#{userBean.isModerator() or true}" update="datagrid" styleClass="buttons_link resource_commandlink">
 											<h:graphicImage alt="Add" value="/resources/icon/Add_blue.png" title="#{msg.link_to}" /> 
 											<f:setPropertyActionListener value="#{result}" target="#{groupDetailBean.clickedResource}" />
 											<f:param name="group_id" value="#{groupDetailBean.groupId}" /> 
 										</p:commandLink>
 				            			
-				            			<p:commandLink  oncomplete="confirmation.show();" title="#{msg.removeFromGroup}" rendered="#{groupDetailBean.canDeleteResource(result)}" styleClass="buttons_link" update=":confirm_dialog_form">
+				            			<p:commandLink  oncomplete="PF('confirmation').show();" title="#{msg.removeFromGroup}" rendered="#{groupDetailBean.canDeleteResource(result)}" styleClass="buttons_link" update=":confirm_dialog_form">
 											<h:graphicImage alt="Remove" value="../resources/icon/Remove.png"/>
 											
 											<f:setPropertyActionListener value="#{result}" target="#{groupDetailBean.clickedResource}" />
@@ -210,7 +210,7 @@
 											<f:param name="group_id" value="#{groupDetailBean.groupId}" />
 										</p:commandLink>
 										
-										<p:commandLink update="resource_form" oncomplete="resource_move_dialog.show();" title="#{msg.move_to}" 
+										<p:commandLink update="resource_form" oncomplete="PF('resource_move_dialog').show();" title="#{msg.move_to}" 
 											rendered="#{userBean.isModerator() and false}" >
 											<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" title="#{msg.move_to}" style="padding: 3px;"/> 
 											<f:setPropertyActionListener value="#{result}" target="#{searchBean.selectedResource}" />

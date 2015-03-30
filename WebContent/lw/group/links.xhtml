@@ -21,14 +21,14 @@
 
 	<ui:define name="center_layout">
 		
-		<p:dialog appendToBody="true" header="#{msg.edit}" widgetVar="link_dialog" modal="true" minWidth="540" styleClass="zindex10000">
+		<p:dialog appendTo="@(body)" header="#{msg.edit}" widgetVar="link_dialog" modal="true" minWidth="540" styleClass="zindex10000">
 			<h:form id="link_edit_form">
 				<h:panelGrid columns="2">					
 					<h:outputLabel value="#{msg.title}:"/>
 					<p:inputText value="#{groupDetailBean.selectedLink.title}" styleClass="links_input" rendered="#{groupDetailBean.selectedLink != null}"/>
 					
 					<h:outputText value="" />
-					<p:commandButton value="#{msg.save}" ajax="true" actionListener="#{groupDetailBean.onEditLink}" process="@form" oncomplete="link_dialog.hide();" update=":message :grouplinks">
+					<p:commandButton value="#{msg.save}" ajax="true" actionListener="#{groupDetailBean.onEditLink}" process="@form" oncomplete="PF('link_dialog').hide();" update=":message :grouplinks">
 						<f:setPropertyActionListener target="#{groupDetailBean.editLink}" value="#{groupDetailBean.selectedLink}" />
 						<f:param name="group_id" value="#{groupDetailBean.group.id}"/>						
 					</p:commandButton>
@@ -47,7 +47,7 @@
 						<p:column>
 							<h:outputLink value="#{link.url}" target="_blank" styleClass="links_output">#{link.title}</h:outputLink>	
 						
-							<p:commandLink update=":link_edit_form" oncomplete="link_dialog.show();" title="#{msg.edit}" 
+							<p:commandLink update=":link_edit_form" oncomplete="PF('link_dialog').show();" title="#{msg.edit}" 
 								process="@this" styleClass="links_commandlink"
 								rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isMember(userBean.user))}">
 								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" styleClass="links_graphic" />
@@ -74,7 +74,7 @@
 						<p:column>
 							<h:outputLink value="#{link.url}" target="_blank" styleClass="links_output">#{link.id}  #{link.title}</h:outputLink>	
 							
-							<p:commandLink update=":link_edit_form" oncomplete="link_dialog.show();" title="#{msg.edit}" 
+							<p:commandLink update=":link_edit_form" oncomplete="PF('link_dialog').show();" title="#{msg.edit}" 
 								process="@this" styleClass="links_commandlink"
 								rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isMember(userBean.user))}">
 								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" styleClass="links_graphic" />

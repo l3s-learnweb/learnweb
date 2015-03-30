@@ -95,7 +95,7 @@
 
 										<p:inputTextarea autoResize="1" maxHeight="20" value="#{comment.text}" style="width:400px;"></p:inputTextarea>
 										<p:commandButton actionListener="#{resourceBean.onEditComment(comment)}" update="@form :message" title="#{msg.save}" value="#{msg.save}"
-											onsuccess="comment_edit_#{comment.id}.hide();">
+											onsuccess="PF('comment_edit_#{comment.id}').hide();">
 											<f:param name="resource_id" value="#{resourceBean.resource.id}" />
 										</p:commandButton>
 
