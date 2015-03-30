@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
@@ -98,7 +97,7 @@ public class LoroManager
 
 	User admin = learnweb.getUserManager().getUser(9139);
 	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource_docs SET resource_id = ? WHERE loro_resource_id = ? AND doc_url= ?");
-	PreparedStatement getCount = DBConnection.prepareStatement("SELECT COUNT( * ) AS rowcount FROM  `LORO_resource_docs` WHERE  `loro_resource_id` LIMIT 3");
+	PreparedStatement getCount = DBConnection.prepareStatement("SELECT COUNT( * ) AS rowcount FROM  `LORO_resource_docs` Group by  `loro_resource_id` LIMIT 3");
 	getCount.executeQuery();
 	ResultSet rs1 = getCount.getResultSet();
 	int startingPoint = 0;
@@ -110,25 +109,9 @@ public class LoroManager
 			    + startingPoint + " , " + noOfRows);
 	    getLoroResource.executeQuery();
 	    ResultSet rs = getLoroResource.getResultSet();
-	    ResultSetMetaData rsmd = rs.getMetaData();
-	    int columnsNumber = rsmd.getColumnCount();
-	    /*while(rs.next())
-	    {
-	        for(int i = 1; i <= columnsNumber; i++)
-	        {
-	    	if(i > 1)
-	    	    System.out.print(",  ");
-	    	String columnValue = rs.getString(i);
-	    	System.out.print("\n" + columnValue + rsmd.getColumnName(i));
-	        }
-	        System.out.println("");
-	    }*/
 
 	    int resourceId = 0;
-	    /* int resourceId = 0;
-	     if(( !rs.getString("doc_format").contains("video") && !rs.getString("doc_format").contains("image")) || rs.getString("doc_format").contains("quicktime"))
-	    resourceId=loroResource.getId();
-	    */boolean textTest = true;
+	    boolean textTest = true;
 	    while(rs.next())
 	    {
 
