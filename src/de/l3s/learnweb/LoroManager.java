@@ -97,16 +97,19 @@ public class LoroManager
 
 	User admin = learnweb.getUserManager().getUser(9139);
 	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource_docs SET resource_id = ? WHERE loro_resource_id = ? AND doc_url= ?");
-	PreparedStatement getCount = DBConnection.prepareStatement("SELECT COUNT( * ) AS rowcount FROM  `LORO_resource_docs` Group by  `loro_resource_id` LIMIT 3");
+	PreparedStatement getCount = DBConnection.prepareStatement("SELECT loro_resource_id, COUNT( * ) AS rowcount FROM  `LORO_resource_docs` Group by  `loro_resource_id` LIMIT 3");
 	getCount.executeQuery();
 	ResultSet rs1 = getCount.getResultSet();
 	int startingPoint = 0;
 	while(rs1.next())
 	{
 	    int noOfRows = rs1.getInt("rowcount");
+	    //int loroId = rs1.getInt("loro_resource_id");
+
 	    PreparedStatement getLoroResource = DBConnection
 		    .prepareStatement("SELECT t1.loro_resource_id , t2.resource_id , t1.description , t1.tags , t1.title , t1.creator_name , t1.course_code , t1.language_level , t1.languages , t1.flag , t1.preview_img_url,  t2.filename , t2.doc_format , t2.doc_url FROM LORO_resource t1 JOIN LORO_resource_docs t2 ON t1.loro_resource_id = t2.loro_resource_id ORDER BY loro_resource_id LIMIT "
 			    + startingPoint + " , " + noOfRows);
+
 	    getLoroResource.executeQuery();
 	    ResultSet rs = getLoroResource.getResultSet();
 
@@ -215,9 +218,13 @@ public class LoroManager
 	{
 	    resource.setType("Video");
 	    resource.setEmbeddedRaw("<h:outputStylesheet library=\"resources\" name=\"css/video-js.css\" /><h:outputScript library=\"resources\" name=\"js/video.js\" /><script>videojs.options.flash.swf = \"/resources/js/video-js.swf\";</script><video controls=\"controls\"  style = \"width: 100%; height: 100%; \" ><source src='"
-		    + rs.getString("doc_url") + "' ' type='video/mp4'/></video>");
+		    + rs.getString("doc_url") + "  type='video/mp4'/></video>");
 	    resource.setTitle(rs.getString("title") + " " + rs.getString("filename"));
 	    resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
+
+	    resource.setUrl("link to loro page");
+
+	    resource.setFileName(rs.getString("doc_url"));
 
 	    return resource;
 	}
