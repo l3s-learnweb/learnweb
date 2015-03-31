@@ -2,12 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<ui:composition template="/lw/templates/new_main.xhtml">
+<ui:composition template="/lw/templates/new_main_b.xhtml">
 
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.groupsTitle}" />
 	<ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
-	<ui:param name="helpTextStyle" value="groups_help"/>
 	
 	<ui:define name="right_layout">
 	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;" header="#{msg.createGroup}" id="right_pane">

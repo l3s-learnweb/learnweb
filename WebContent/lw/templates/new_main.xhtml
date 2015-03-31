@@ -198,60 +198,13 @@
 			</p:layoutUnit>
 
 			<p:layoutUnit id="left_pane"
-				rendered="#{userBean.loggedIn and !utilBean.searchPage and !utilBean.explorePage and !utilBean.viewResultSetPage and !utilBean.tedTranscriptPage}"
+				rendered="#{userBean.loggedIn and !utilBean.explorePage and !utilBean.viewResultSetPage and !utilBean.tedTranscriptPage}"
 				position="west" size="200" resizable="false" closable="false"
 				collapsible="false">
 				
 				<div class="content">
-					<div id="groupoverview_link">
-						<h:outputLink value="myhome/groups.jsf">
-							<h:outputText value="#{msg.groupOverview}"/>
-							<h:outputText value="(#{userBean.newGroupsCount})" rendered="#{userBean.newGroupsCount gt 0}" id="new_group_count" styleClass="bold_red" style="padding-left:3px;"/>
-						
-						</h:outputLink>
-						
-						<p:tooltip for="new_group_count"  showEffect="fade" hideEffect="fade">
-							<h:outputFormat value="#{msg.new_groups_message}">
-							    <f:param value="#{userBean.newGroupsCount}" />
-							</h:outputFormat>
-						</p:tooltip> 
-					</div>
+					<ui:decorate  template="/templates/group_menu.xhtml" />
 				
-					<h:panelGroup layout="block" styleClass="ui-panelmenu ui-widget" id="group_menu">
-					
-						<ui:repeat value="#{menuBean.model.elements}" var="group">
-							<div class="ui-panelmenu-panel #{group.styleClass}">
-							<h3 class="ui-panelmenu-header ui-state-default ui-corner-all">
-								<span class="ui-icon ui-icon-triangle-1-e"></span>
-								<a href="#">#{group.label}</a>
-							</h3>
-							
-								<div class="ui-panelmenu-content ui-widget-content ui-helper-hidden">
-									<ul class="ui-menu-list ui-helper-reset">					
-									<ui:repeat value="#{group.elements}" var="link">								
-										<li class="ui-menuitem ui-widget ui-corner-all">
-											<a class="ui-menuitem-link ui-corner-all" href="#{link.url}">
-												<span class="ui-menuitem-text">#{link.value}</span>
-											</a>
-										</li>
-									</ui:repeat>
-									</ul>	
-								</div>
-							
-							</div>
-						</ui:repeat>
-					
-					</h:panelGroup>
-
-					
-					<h:form rendered = "#{userBean.searchHistoryEnabled and false}">
-    					<h:outputLink onclick="PF('shared_resultsets_dialog').show();return false;" >
-							<h:outputText value="View Shared Resultsets" style="padding-left:15px;"/>
-						</h:outputLink>
-    				</h:form>
-    				<h:outputLink rendered="#{userBean.admin || userBean.moderator}" value="transcript_log.jsf">
-    					<h:outputText value="View Transcript Log" style="padding-left:27px;"/>
-    				</h:outputLink>
 				</div>
 			</p:layoutUnit>
 

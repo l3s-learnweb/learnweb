@@ -16,16 +16,13 @@
 
 	<ui:param name="pageTitle" value="#{msg.searchTitle}" />	
 	<ui:param name="helpText" value="#{msg.searchHelp}"/>
-
 	 
 	<ui:define name="sub_menu_bar">		
-		<div id="sub_menu_bar">  
-			
+		<div id="sub_menu_bar">  			
 			<h:outputLink value="lw/group/overview.jsf" id="backtogroup" rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
        		  #{msg.back_to} <i>#{userBean.user.activeGroup.title}</i>
 				<f:param name="group_id" value="#{userBean.user.activeGroup.id}" />
-			</h:outputLink>
-		
+			</h:outputLink>		
 					
 			<h:form styleClass="links">
 				<h:outputText value="Web" styleClass="activeResource"
@@ -53,9 +50,7 @@
 					<f:param name="action" value="video" />
 					<f:param name="query" value="#{searchBean.query}" />
 				</h:link>
-			</h:form>
-
-			
+			</h:form>		
 
 		
 			<h:panelGroup rendered="#{userBean.searchHistoryEnabled and false}">

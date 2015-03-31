@@ -60,7 +60,7 @@ $(document).ready(function(){
 		
 		group.find('h3').click(function()
 		{
-			links.toggle();
+			links.slideToggle();
 			return false;
 		});
 		

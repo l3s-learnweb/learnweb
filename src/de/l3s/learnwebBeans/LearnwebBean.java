@@ -143,11 +143,13 @@ public class LearnwebBean implements Serializable
      */
     public String getProfileImage(User user) throws SQLException
     {
-	String url = user.getImage();
+	if(user != null)
+	{
+	    String url = user.getImage();
 
-	if(null != url)
-	    return url;
-
+	    if(null != url)
+		return url;
+	}
 	return getContextUrl() + "/resources/image/no_profile.jpg";
     }
 

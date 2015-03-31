@@ -33,7 +33,7 @@
 					</a>
 				</li>
 				<li>
-					<a href="#{request.contextPath}/lw/user/detail.jsf" id="profile">
+					<a href="#{request.contextPath}/lw/myhome/profile.jsf" id="profile">
 						<h:outputText value="#{msg.myProfileTitle}"/>
 					</a>
 				</li>
@@ -63,7 +63,7 @@
 							<h:outputText value="#{msg.settings}"/>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/user/detail.jsf" id="moreprofile">
+							<a href="#{request.contextPath}/lw/myhome/profile.jsf" id="moreprofile">
 								<h:outputText value="#{msg.myProfileTitle}"/>
 							</a>
 						</li>
@@ -76,66 +76,75 @@
 							<a href="#{request.contextPath}/lw/user/login.jsf" id="login">#{msg.loginLabel}</a>
 						</li>
 						<li>
-							<a href="#" id="logout" >
-								<h:outputText value="#{msg.logoutLabel}"/>
-							</a>
+							<h:form id="logout">
+								<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true" title="#{msg.logoutLabel}" value="#{msg.logoutLabel}" />
+							</h:form>
 						</li>
-						<li class="menupoint">
-							<h:outputText value="#{msg.admin}"/>
-						</li>
-						<li>
-							<a href="#{request.contextPath}/lw/admin/courses.jsf">
-								<h:outputText value="#{msg.courses}"/>
-							</a>
-						</li>
-						<li>
-							<a href="#{request.contextPath}/lw/admin/users.jsf">
-								<h:outputText value="#{msg.users}"/>
-							</a>
-						</li>
-						<li>
-							<a href="#{request.contextPath}/lw/admin/adminmsg.jsf">
-								<h:outputText value="#{msg.admin_messages_Title}"/>
-							</a>
-						</li>
-						<li>
-							<a href="#{request.contextPath}/lw/admin/adminchangelog.jsf">
-								<h:outputText value="#{msg.change_log}"/>
-							</a>
-						</li>
-						<li class="menupoint">
-							<h:outputText value="#{msg.moderator}"/>
-						</li>
-						<li>
-							<a href="#{request.contextPath}/lw/admin/notification.jsf">
-								<h:outputText value="#{msg.notification}"/>
-							</a>
-						</li>
-						<li>
-							<a href="#{request.contextPath}/lw/admin/users_moderator.jsf">
-								<h:outputText value="#{msg.users}"/>
-							</a>
-						</li>
-						<li>
-							<a href="#{request.contextPath}/lw/admin/courses.jsf">
-								<h:outputText value="#{msg.courses}"/>
-							</a>
-						</li>
-						<li>
-							<a href="#{request.contextPath}/lw/admin/organisation.jsf">
-								<h:outputText value="#{msg.organization}"/>
-							</a>
-						</li>
-						<li>
-							<a href="#{request.contextPath}/lw/admin/text_analysis.jsf">
-								<h:outputText value="#{msg.text_analysis}"/>
-							</a>
-						</li>
-						<li>
-							<a href="#{request.contextPath}/lw/admin/statistics.jsf">
-								<h:outputText value="#{msg.statistics}"/>
-							</a>
-						</li>
+						<ui:fragment rendered="#{userBean.admin || userBean.moderator}">
+							<li class="menupoint">
+								<h:outputText value="#{msg.admin}"/>
+							</li>
+							<li>
+								<a href="#{request.contextPath}/lw/admin/courses.jsf">
+									<h:outputText value="#{msg.courses}"/>
+								</a>
+							</li>
+							<li>
+								<a href="#{request.contextPath}/lw/admin/users.jsf">
+									<h:outputText value="#{msg.users}"/>
+								</a>
+							</li>
+							<li>
+								<a href="#{request.contextPath}/lw/admin/adminmsg.jsf">
+									<h:outputText value="#{msg.admin_messages_Title}"/>
+								</a>
+							</li>
+							<li>
+								<a href="#{request.contextPath}/lw/admin/adminchangelog.jsf">
+									<h:outputText value="#{msg.change_log}"/>
+								</a>
+							</li>
+						</ui:fragment>
+						<ui:fragment rendered="#{userBean.admin || userBean.moderator}">
+							<li class="menupoint">
+								<h:outputText value="#{msg.moderator}"/>
+							</li>
+							<li>
+								<a href="#{request.contextPath}/lw/admin/notification.jsf">
+									<h:outputText value="#{msg.notification}"/>
+								</a>
+							</li>
+							<li>
+								<a href="#{request.contextPath}/lw/admin/users_moderator.jsf">
+									<h:outputText value="#{msg.users}"/>
+								</a>
+							</li>
+							<li>
+								<a href="#{request.contextPath}/lw/admin/courses.jsf">
+									<h:outputText value="#{msg.courses}"/>
+								</a>
+							</li>
+							<li>
+								<a href="#{request.contextPath}/lw/admin/organisation.jsf">
+									<h:outputText value="#{msg.organization}"/>
+								</a>
+							</li>
+							<li>
+								<a href="#{request.contextPath}/lw/admin/text_analysis.jsf">
+									<h:outputText value="#{msg.text_analysis}"/>
+								</a>
+							</li>
+							<li>
+								<a href="#{request.contextPath}/lw/admin/statistics.jsf">
+									<h:outputText value="#{msg.statistics}"/>
+								</a>
+							</li>
+							<li>
+								<a href="#{request.contextPath}/lw/transcript_log.jsf">
+									<h:outputText value="Transcript Log"/>
+								</a>
+							</li>
+						</ui:fragment>    				
 					</ul>
 				</li>
 			</ul>

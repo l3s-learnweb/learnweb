@@ -23,6 +23,8 @@
 				<h:outputLink  value="#{request.contextPath}/lw/user/password.jsf"><h:outputText value="#{msg.forgotten_password}"/></h:outputLink>
 			</h:panelGrid>
 		</h:form>
+		
+		<h:outputText rendered="#{userBean.loggedIn}" value="#{msg.you_are_already_logged_in}"/>
 
 	</ui:composition>
 </html>

@@ -111,11 +111,13 @@ public class UserBean implements Serializable
 
     public String getPreference(String key)
     {
+	System.out.println("get " + key + " a: " + preferences.get(key));
 	return preferences.get(key);
     }
 
     public void setPreference(String key, String value)
     {
+	System.out.println("set " + key + " a: " + value);
 	preferences.put(key, value);
     }
 

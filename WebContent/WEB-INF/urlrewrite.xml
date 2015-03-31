@@ -13,6 +13,10 @@
 		<from>/new/(.*)</from>
 		<to type="redirect">/$1</to>
 	</rule>
+	<rule>
+		<from>/lw/search.jsf</from>
+		<to type="redirect">/search.jsf</to>
+	</rule>
        
         
     <!-- 
