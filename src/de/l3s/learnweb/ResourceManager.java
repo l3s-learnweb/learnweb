@@ -5,6 +5,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -603,6 +604,22 @@ public class ResourceManager
 	}
 
 	replace.close();
+    }
+
+    public List<ArchiveUrl> getArchiveUrlsByResourceId(int id) throws SQLException
+    {
+
+	List<ArchiveUrl> archiveUrls = new ArrayList<ArchiveUrl>();
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT archive_url, DATE_FORMAT(timestamp,'%d %b, %Y %k:%i:%s') AS timestamp FROM `lw_resource_archiveurl` WHERE `resource_id` = ? ORDER BY timestamp");
+	select.setInt(1, id);
+	ResultSet rs = select.executeQuery();
+	while(rs.next())
+	{
+	    archiveUrls.add(new ArchiveUrl(rs.getString("archive_url"), rs.getString("timestamp")));
+	}
+	select.close();
+
+	return archiveUrls;
     }
 
     public List<Resource> search(String terms, String type, int resultsPerPage, int page) throws Exception

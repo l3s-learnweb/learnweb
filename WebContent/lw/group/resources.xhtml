@@ -113,6 +113,19 @@
 						</p:commandButton>
 					</h:form>
 				</p:dialog>
+				<p:dialog id="archive_dialog1" header="View Archived Versions" modal="true" appendTo="@(body)" widgetVar="archive_dialog" width="250" height="200">
+					<h:form id="archive_dialog_form">
+						<ul>
+							<ui:repeat var="entry"
+								value="#{groupDetailBean.clickedResource.archiveUrls}" >
+								<li><h:outputLink value="#{entry.archiveUrl}" target="_blank">
+										<h:outputText value="#{entry.timestamp}"/>
+									</h:outputLink>
+								</li>
+							</ui:repeat>
+						</ul>
+					</h:form>
+				</p:dialog>				
 				<p:dialog header="#{msg.options}" closable="false" widgetVar="resource_dialog" appendTo="@(body)" modal="true" minWidth="540">
 					<h:form id="resource_form">
 						<h:panelGrid columns="2">
@@ -165,6 +178,7 @@
 		
 			 <h:form>
 			 	<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{groupDetailBean.updateColumns}"></p:remoteCommand>
+			 	<p:remoteCommand update=":archive_dialog_form" name="update_archive_dialog" oncomplete="PF('archive_dialog').show()"></p:remoteCommand>
 	         </h:form>
 	         <h:panelGroup id="resource_disp">
 	

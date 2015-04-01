@@ -189,8 +189,13 @@
 								<span class="resource_field">#{msg.source} : </span><h:outputText value="#{bean.clickedResource.source}"></h:outputText>
 							</div>
 							<h:panelGroup layout="block" style="padding-top: 10px;" rendered="#{not empty bean.clickedResource.archiveUrl}">
-								<span class="resource_field">#{msg.archive_url} : </span><h:outputLink value="#{bean.clickedResource.archiveUrl}" style="text-decoration:underline;" target="_blank">#{msg.archive_url}</h:outputLink>
-							
+								<span class="resource_field">#{msg.archive_url} : </span>
+								<h:selectOneMenu onchange="archive_url_select();" id="select_archive_url" value="0"  >
+									<f:selectItem itemLabel="Choose an archived version" noSelectionOption="true"/> 
+									<f:selectItems value="#{bean.clickedResource.limitedArchiveUrls}" var="entry" itemLabel="#{entry.timestamp}" itemValue="#{entry.archiveUrl}"/>
+									<f:selectItem itemValue="more versions" itemLabel="More versions" itemDisabled="#{bean.clickedResource.archiveUrls.size() le 5}" />
+								</h:selectOneMenu>
+								<p:commandButton action="#{bean.archiveCurrentVersion}" value="Archive Current Version"/>
 							</h:panelGroup>
 							<h:panelGroup layout="block" style="padding-top: 10px;" rendered="#{bean.clickedResource.source == 'TED'}">
 								<span class="resource_field">#{msg.transcript} : </span><h:outputLink value="ted_transcript.jsf" style="text-decoration:underline;"><f:param name="resource_id" value="#{bean.clickedResource.id}"/>#{msg.link_to_transcript}</h:outputLink>

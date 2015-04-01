@@ -51,7 +51,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private int ownerUserId;
     private int views;
     private String transcript; //To store the English transcripts for TED videos
-    private String archiveUrl; //To store the archive URL from archive.today service
+    private String archiveUrl;
     private int ratingSum;
     private int rateNumber;
     private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
@@ -86,6 +86,8 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private Thumbnail thumbnail4;
     private String embeddedRaw;
     private String access;
+
+    private List<ArchiveUrl> archiveUrls = null;//To store the archive URL from archive.today service
 
     // caches
     private transient OwnerList<Tag, User> tags = null;
@@ -1245,4 +1247,26 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	this.archiveUrl = archiveUrl;
     }
 
+    public List<ArchiveUrl> getLimitedArchiveUrls() throws SQLException
+    {
+	if(id != -1 && archiveUrls == null)
+	{
+	    archiveUrls = Learnweb.getInstance().getResourceManager().getArchiveUrlsByResourceId(id);
+	}
+
+	if(archiveUrls.size() > 5)
+	    return archiveUrls.subList(0, 5);
+	else
+	    return archiveUrls;
+    }
+
+    public List<ArchiveUrl> getArchiveUrls() throws SQLException
+    {
+	if(id != -1 && archiveUrls == null)
+	{
+	    archiveUrls = Learnweb.getInstance().getResourceManager().getArchiveUrlsByResourceId(id);
+	}
+
+	return archiveUrls;
+    }
 }

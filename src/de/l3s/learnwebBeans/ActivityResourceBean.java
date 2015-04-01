@@ -393,4 +393,9 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
     {
 	this.editResourceClicked = editResourceClicked;
     }
+
+    public void archiveCurrentVersion()
+    {
+	getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
+    }
 }

@@ -1288,4 +1288,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
 
     }
+
+    public void archiveCurrentVersion()
+    {
+	getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
+    }
 }
