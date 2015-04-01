@@ -151,8 +151,8 @@
 						<f:facet name="header">
 							<h:outputText value="#{msg.options}"></h:outputText>
 						</f:facet>
-						<h:commandButton id="edit" action="#{glossaryBean.edit(entry)}" value="#{msg.edit}" styleClass="button"></h:commandButton>
-						<h:commandButton id="delete" action="#{glossaryBean.deleteEntry(entry)}" value="#{msg.delete}" styleClass="button">
+						<h:commandButton id="edit" action="${glossaryBean.edit(entry)}" value="#{msg.edit}" styleClass="button"></h:commandButton>
+						<h:commandButton id="delete" action="${glossaryBean.deleteEntry(entry)}" value="#{msg.delete}" styleClass="button">
 						</h:commandButton>
 					</p:column>
 					

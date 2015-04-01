@@ -1,19 +1,17 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" 
+<ui:composition template="/lw/templates/new_main_t.xhtml" 
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core" 
-	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<f:metadata>
-	<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
-	<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}" /> 
-</f:metadata>
-
-
-<ui:composition template="/lw/templates/new_main_t.xhtml">
-<ui:param name="loginRequired" value="true" />
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
+			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}" /> 
+		</f:metadata>
+	</ui:define>
+	
+	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" />
 
 	<ui:define name="center_layout">	
@@ -21,9 +19,9 @@
 		<h:dataTable var="datagrid" value="#{groupDetailBean.newslist}" id="datagrid" >
 					
 				
-					<h:column >
+				<h:column >
 					<div class="newsfeed_user_image_div">
-					    <h:graphicImage id="userpic" url="#{datagrid.user.image}" width="30" height="30" styleClass="newsfeed_user_image"/>
+					    <h:graphicImage id="userpic"  url="#{datagrid.user.image}" alt="profile image" width="30" height="30" styleClass="newsfeed_user_image"/>
 					    </div>
 						<div class="newsfeed_text">
 						<h:outputText value="#{datagrid.text}" escape="false"  />
@@ -85,56 +83,55 @@
 					</h:form>
 					<br></br>
 					
-			<h:form id="add_resource">
+		<h:form id="add_resource">
 			<p:commandButton styleClass="resource_button greenbutton" value="#{msg.upload_resource}" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
 				<f:setPropertyActionListener target="#{addResourceBean.resourceTargetGroupId}" value="#{groupDetailBean.groupId}"></f:setPropertyActionListener>
 				<f:setPropertyActionListener target="#{groupDetailBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
 			</p:commandButton>
+		</h:form>
+		<script type="text/javascript">
+			var div = document.createElement("div");
+			var group_header = document.createElement("span");
+			$(group_header).addClass("group_header");
+			$(group_header).html("#{groupDetailBean.group.title}");
+			var group_owner = document.createElement("span");
+			$(group_owner).addClass("group_owner");
+			$(group_owner).html(" #{msg.created_by} #{groupDetailBean.group.leader.username}");
+			$(div).append(group_header);
+			$(div).append(group_owner);
+			//var cl = $("#add_resource").clone();
+            $("#add_resource").appendTo(div);
+            //$("#add_resource").remove();
+			$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
+			$("#center_pane").prepend(div);
+		</script>
+		<p:dialog header="Upload File" widgetVar="file_dialog" modal="true" appendTo="@(body)" width="600" height="150">
+			<h:form>
+				<p:fileUpload  rendered="true" fileUploadListener="#{addResourceBean.handleFileUpload}"  
+	            mode="advanced"  
+	            auto="true"
+	            sizeLimit="10000000"   
+	            widgetVar="fileUpload"
+	            oncomplete="PF('file_dialog').hide()"
+	            update=":add_resource_form:preview"
+	            /> 
 			</h:form>
-			<script type="text/javascript">
-				var div = document.createElement("div");
-				var group_header = document.createElement("span");
-				$(group_header).addClass("group_header");
-				$(group_header).html("#{groupDetailBean.group.title}");
-				var group_owner = document.createElement("span");
-				$(group_owner).addClass("group_owner");
-				$(group_owner).html(" #{msg.created_by} #{groupDetailBean.group.leader.username}");
-				$(div).append(group_header);
-				$(div).append(group_owner);
-				//var cl = $("#add_resource").clone();
-	            $("#add_resource").appendTo(div);
-	            //$("#add_resource").remove();
-				$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
-				$("#center_pane").prepend(div);
-			</script>
-			<p:dialog header="Upload File" widgetVar="file_dialog" modal="true" appendTo="@(body)" width="600" height="150">
-				<h:form>
-					<p:fileUpload  rendered="true" fileUploadListener="#{addResourceBean.handleFileUpload}"  
-		            mode="advanced"  
-		            auto="true"
-		            sizeLimit="10000000"   
-		            widgetVar="fileUpload"
-		            oncomplete="PF('file_dialog').hide()"
-		            update=":add_resource_form:preview"
-		            /> 
-				</h:form>
-			</p:dialog>
-			<p:dialog header="#{msg.edit}" id="comment_dialog1" modal="true" minWidth="440" appendTo="@(body)" widgetVar="comment_dialog">
-				<h:form id="comment_dialog_form">	
-					<p:inputTextarea autoResize="1" maxHeight="20" value="#{groupDetailBean.clickedComment.text}" id="edit_comment_textbox"></p:inputTextarea>
-					<p:commandButton actionListener="#{groupDetailBean.onEditComment}" update=":add_resource_panel" 
-										title="#{msg.save}" value="#{msg.save}"								
-										onsuccess="PF('comment_dialog').hide();">
-					</p:commandButton>
-				</h:form>
-			</p:dialog>
-		
-		</ui:define>
-		
-		<ui:define name="right_layout">
-			<ui:decorate  template="/lw/templates/right_pane.xhtml">
-				<ui:param name="bean" value="#{groupDetailBean}" />
-			</ui:decorate >
-		</ui:define>
+		</p:dialog>
+		<p:dialog header="#{msg.edit}" id="comment_dialog1" modal="true" minWidth="440" appendTo="@(body)" widgetVar="comment_dialog">
+			<h:form id="comment_dialog_form">	
+				<p:inputTextarea autoResize="1" maxHeight="20" value="#{groupDetailBean.clickedComment.text}" id="edit_comment_textbox"></p:inputTextarea>
+				<p:commandButton actionListener="#{groupDetailBean.onEditComment}" update=":add_resource_panel" 
+									title="#{msg.save}" value="#{msg.save}"								
+									onsuccess="PF('comment_dialog').hide();">
+				</p:commandButton>
+			</h:form>
+		</p:dialog>
+	
+	</ui:define>
+	
+	<ui:define name="right_layout">
+		<ui:decorate  template="/lw/templates/right_pane.xhtml">
+			<ui:param name="bean" value="#{groupDetailBean}" />
+		</ui:decorate >
+	</ui:define>
 </ui:composition>
-</html>

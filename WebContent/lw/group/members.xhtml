@@ -1,17 +1,15 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" 
+<ui:composition template="/lw/templates/new_main_t.xhtml" 
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core" 
-	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<f:metadata>
-	<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
-	<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}" /> 
-</f:metadata>
-
-<ui:composition template="/lw/templates/new_main_t.xhtml">
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
+			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}" /> 
+		</f:metadata>
+	</ui:define>
 
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="Group members" />	
@@ -55,7 +53,7 @@
 	        </h:form>
 	        <h:panelGrid id="resource_disp">
 	        <h:form>
-			<p:dataGrid id="datagrid" var="result" value="#{groupDetailBean.getGroup().getMembers()}" columns="#{groupDetailBean.numberOfColumns}" paginator="false" rows="100" widgetVar="datagrid">  
+			<p:dataGrid id="datagrid" var="result" value="#{groupDetailBean.getMembers()}" columns="#{groupDetailBean.numberOfColumns}" paginator="false" rows="100" widgetVar="datagrid">  
 		      
 		        <p:commandLink rendered="#{groupDetailBean.numberOfColumns != 3}" styleClass="resource_command_link" update=":right_form" oncomplete="update_header()">
 		        	<f:setPropertyActionListener target="#{groupDetailBean.clickedUser}" value="#{result}"></f:setPropertyActionListener>
@@ -157,4 +155,3 @@
 			</p:layoutUnit>
 		</ui:define>
 </ui:composition>
-</html>

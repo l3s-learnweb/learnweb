@@ -1,23 +1,19 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" 
+<ui:composition template="/lw/templates/new_main_t.xhtml" 
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core" 
-	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<f:metadata>
-	<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
-	<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}" /> 
-</f:metadata>
-
-<ui:composition template="/lw/templates/new_main.xhtml">
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
+			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}" /> 
+		</f:metadata>
+	</ui:define>	
 
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="Groups" />
-
-	
-	    		
+		    		
 		<ui:define name="center_layout">
 			<h:form target="new_presentation" id="new_presentation_form">
 				<p:commandButton id="add_resource" styleClass="resource_button greenbutton" onclick="PF('format_dialog').show()" value="New Presentation"></p:commandButton>
@@ -175,4 +171,3 @@
 			</script>
 		</ui:define>
 </ui:composition>
-</html>

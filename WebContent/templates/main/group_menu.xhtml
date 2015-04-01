@@ -23,15 +23,15 @@
 			<div class="ui-panelmenu-panel #{group.styleClass}">
 				<h3 class="ui-panelmenu-header ui-state-default ui-corner-all">
 					<span class="ui-icon ui-icon-triangle-1-e"></span>
-					<a href="#">#{group.label}</a>
+					<a href="./group/resources.jsf?group_id=#{group.id}">#{group.label}</a>
 				</h3>
 			
 				<div class="ui-panelmenu-content ui-widget-content ui-helper-hidden">
 					<ul class="ui-menu-list ui-helper-reset">					
 					<ui:repeat value="#{group.elements}" var="link">								
 						<li class="ui-menuitem ui-widget ui-corner-all">
-							<a class="ui-menuitem-link ui-corner-all" href="#{link.url}">
-								<span class="ui-menuitem-text">#{link.value}</span>
+							<a class="#{link.styleClass} ui-menuitem-link" href="#{link.url}">
+								#{link.value}
 							</a>
 						</li>
 					</ui:repeat>

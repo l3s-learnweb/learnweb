@@ -28,7 +28,7 @@ body {
 }
 
 #content {
-	margin-top:4.6rem;	
+	padding-top:4.6rem;	
 	height:100%;
 	width:100%;
 }
@@ -406,6 +406,7 @@ in allen browsern testen danach löschen
 /* group menu */
 #group_menu .active > div { display: block; }
 #group_menu .active h3 { text-decoration:underline; }
+#group_menu a.active { font-weight:bold; }
 
 /* general settings */
 .clear { 

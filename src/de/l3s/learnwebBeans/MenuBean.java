@@ -81,7 +81,8 @@ public class MenuBean extends ApplicationBean implements Serializable
 
     public MenuModel getModel()
     {
-	computeMenu();
+	if(null == model)
+	    computeMenu();
 
 	return model;
     }
@@ -96,6 +97,8 @@ public class MenuBean extends ApplicationBean implements Serializable
 
 	int courseCount = courses.size();
 
+	String viewId = getFacesContext().getViewRoot().getViewId();
+
 	Integer groupId = getParameterInt("group_id");
 	DefaultSubMenu submenu;
 
@@ -106,36 +109,51 @@ public class MenuBean extends ApplicationBean implements Serializable
 		if(group.getParentGroup() == null && courseCount < 3 || group.getCourse().getId() == selectCourse.getId())
 		{
 		    //addedToMenu.add(group);
+		    boolean isActiveGroup = false;
 
 		    submenu = new DefaultSubMenu();
 		    submenu.setLabel(group.getTitle());
+		    submenu.setId(Integer.toString(group.getId()));
 
 		    if(groupId != null && groupId.equals(group.getId()))
+		    {
 			submenu.setStyleClass("active");
+			isActiveGroup = true;
+		    }
 
 		    DefaultMenuItem item = new DefaultMenuItem();
+		    item.setValue(getLocaleMessage("resources"));
+		    item.setUrl("./group/resources.jsf?group_id=" + group.getId());
+		    if(isActiveGroup && viewId.endsWith("resources.xhtml"))
+			item.setStyleClass("active");
+		    submenu.addElement(item);
+
+		    item = new DefaultMenuItem();
 		    item.setValue(getLocaleMessage("overview"));
 		    item.setUrl("./group/overview.jsf?group_id=" + group.getId());
+		    if(isActiveGroup && viewId.endsWith("overview.xhtml"))
+			item.setStyleClass("active");
 		    submenu.addElement(item);
 
 		    item = new DefaultMenuItem();
 		    item.setValue(getLocaleMessage("members"));
 		    item.setUrl("./group/members.jsf?group_id=" + group.getId());
+		    if(isActiveGroup && viewId.endsWith("members.xhtml"))
+			item.setStyleClass("active");
 		    submenu.addElement(item);
 
 		    item = new DefaultMenuItem();
 		    item.setValue(getLocaleMessage("presentations"));
 		    item.setUrl("./group/presentations.jsf?group_id=" + group.getId());
+		    if(isActiveGroup && viewId.endsWith("presentations.xhtml"))
+			item.setStyleClass("active");
 		    submenu.addElement(item);
 
 		    item = new DefaultMenuItem();
 		    item.setValue(getLocaleMessage("links"));
 		    item.setUrl("./group/links.jsf?group_id=" + group.getId());
-		    submenu.addElement(item);
-
-		    item = new DefaultMenuItem();
-		    item.setValue(getLocaleMessage("resources"));
-		    item.setUrl("./group/resources.jsf?group_id=" + group.getId());
+		    if(isActiveGroup && viewId.endsWith("links.xhtml"))
+			item.setStyleClass("active");
 		    submenu.addElement(item);
 
 		    /*

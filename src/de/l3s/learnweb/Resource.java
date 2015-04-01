@@ -157,8 +157,6 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 		    if(null == embeddedSize3)
 			this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
 		    this.format = "application/x-shockwave-flash";
-
-		    System.out.println(embeddedSize3);
 		}
 	    }
 	    else if(source.equals("Google") && type.equals("Video"))

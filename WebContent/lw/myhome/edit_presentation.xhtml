@@ -148,7 +148,9 @@
                 		{
                 			if(isNaN(resource))
                 				break;
-                			if($($("input","#form1\\:resource_list")[resource]).attr("checked"))
+                			console.log(resource, $($("input","#form1\\:resource_list")[resource]).prop("checked"));
+                			
+                			if($($("input","#form1\\:resource_list")[resource]).prop("checked"))
                 			{
                 				
                 				id = $($("div","#form1\\:resource_list")[resource]).attr("id");
@@ -434,59 +436,69 @@
             <p:dialog id="basicdialog" header="Edit Presentation Title" closable="false" modal="true" widgetVar="title_dialog">  
 			    <h:form>
 			    	<p:editor controls="bold italic underline subscript superscript font size color highlight alignleft center alignright justify undo redo link unlink cut copy paste" value="#{editPresentationBean.group.title}" id="title_editor" widgetVar="title_editor"></p:editor>
-			    	<p:commandButton value="OK" onclick="update_title(presentation_title,title_editor,title_dialog,1)"></p:commandButton>
-			    	<p:commandButton value="Cancel" onclick="cancel_title(presentation_title,title_editor,title_dialog)"></p:commandButton>
+			    	<p:commandButton value="OK" onclick="update_title('#presentation_title','title_editor','title_dialog',1)"></p:commandButton>
+			    	<p:commandButton rendered="false" value="Cancel" onclick="456cancel_title('#presentation_title','title_editor','title_dialog')"></p:commandButton>
 				</h:form>
 			</p:dialog>
 			
 			<ui:repeat var="result" value="#{editPresentationBean.resourcesAll}">
 				<p:dialog id="resource_dialog_#{result.id}" closable="false" header="Edit Description" modal="true" widgetVar="resource_dialog_#{result.id}">  
-				    <h:form>
-				    	<p:editor controls="bold italic underline subscript superscript font size color highlight alignleft center alignright justify undo redo link unlink cut copy paste" value="#{result.description}" id="resource_editor_#{result.id}" widgetVar="resource_editor_#{result.id}"></p:editor>
-				    	<p:commandButton value="OK" onclick="update(resource_description_#{result.id},resource_editor_#{result.id},resource_dialog_#{result.id})"></p:commandButton>
-				    	<p:commandButton value="Cancel" onclick="cancel(resource_description_#{result.id},resource_editor_#{result.id},resource_dialog_#{result.id})"></p:commandButton>
+				    <h:form id="#{result.id}_resource_dialog_form" prependId="true">
+				    	<p:editor id="resource_editor_#{result.id}" controls="bold italic underline subscript superscript font size color highlight alignleft center alignright justify undo redo link unlink cut copy paste" value="#{result.description}" widgetVar="resource_editor_#{result.id}"></p:editor>
+				    	<p:commandButton value="OK" onclick="return update('#resource_description_#{result.id}','resource_editor_#{result.id}','resource_dialog_#{result.id}')"></p:commandButton>
+				    	<p:commandButton rendered="false"  value="Cancel" onclick="return cancel('#resource_description_#{result.id}','resource_editor_#{result.id}','resource_dialog_#{result.id}')"></p:commandButton>
 				    </h:form>
 				</p:dialog>
 			</ui:repeat>
 			
 			<ui:repeat var="result" value="#{editPresentationBean.resourcesAll}">
 				<p:dialog id="title_dialog_#{result.id}" closable="false" header="Edit Title" modal="true" widgetVar="title_dialog_#{result.id}">  
-				    <h:form>
+				    <h:form id="title_dialog_#{result.id}_form" prependId="false">
 				    	<p:editor controls="bold italic underline subscript superscript font size color highlight alignleft center alignright justify undo redo link unlink cut copy paste" value="#{result.title}" id="title_editor_#{result.id}" widgetVar="title_editor_#{result.id}"></p:editor>
-				    	<p:commandButton value="OK" onclick="update_title(resource_title_#{result.id},title_editor_#{result.id},title_dialog_#{result.id},#{result.id})"></p:commandButton>
-				    	<p:commandButton value="Cancel" onclick="cancel_title(resource_title_#{result.id},title_editor_#{result.id},title_dialog_#{result.id})"></p:commandButton>
+				    	<p:commandButton value="OK" onclick="return update_title('#resource_title_#{result.id}','title_editor_#{result.id}','title_dialog_#{result.id}',#{result.id})"></p:commandButton>
+				    	<p:commandButton rendered="false" value="Cancel" onclick="return cancel_title('#resource_title_#{result.id}','title_editor_#{result.id}','title_dialog_#{result.id}')"></p:commandButton>
+				    
 				    </h:form>
 				</p:dialog>
 			</ui:repeat>
 			<script type="text/javascript">
 				function update(desc,editor,dialog)
-				{
-					$(desc).html($(editor)[0].jqInput[0].value);
-					dialog.hide();
+				{		
+					$(desc).html(PF(editor).jqInput[0].value);
+					
+					PF(dialog).hide();
+					return false;
 				}
 				function cancel(desc,editor,dialog)
 				{
-					editor.editor.doc.activeElement.innerHTML=$(desc).html();
-					editor.jqInput[0].defaultValue=$(desc).html();
-					editor.jqInput[0].innerHTML=$(desc).html();
-					editor.jqInput[0].textContent=$(desc).html();
-					editor.jqInput[0].value=$(desc).html();
-					dialog.hide();
+					
+					var ed = PF(editor);
+					console.log(ed.jqInput[0]);
+				//	ed.editor.doc.activeElement.innerHTML=$(desc).html();
+					ed.jqInput[0].defaultValue=$(desc).html();
+					ed.jqInput[0].innerHTML=$(desc).html();
+					ed.jqInput[0].textContent=$(desc).html();
+					ed.jqInput[0].value=$(desc).html();
+					PF(dialog).hide();
+					return false;
 				}
 				function update_title(desc,editor,dialog,id)
 				{
-					$(desc).html($(editor)[0].jqInput[0].value);
-					$(".slide_title",$("#"+id).parent().parent()).html($(editor)[0].jqInput[0].value);
-					dialog.hide();
+					$(desc).html(PF(editor).jqInput[0].value);
+					$(".slide_title",$("#"+id).parent().parent()).html(PF(editor).jqInput[0].value);
+					PF(dialog).hide();
+					return false;
 				}
 				function cancel_title(desc,editor,dialog)
 				{
-					editor.editor.doc.activeElement.innerHTML=$(desc).html();
-					editor.jqInput[0].defaultValue=$(desc).html();
-					editor.jqInput[0].innerHTML=$(desc).html();
-					editor.jqInput[0].textContent=$(desc).html();
-					editor.jqInput[0].value=$(desc).html();
-					dialog.hide();
+					var ed = PF(editor);
+				//	editor.editor.doc.activeElement.innerHTML=$(desc).html();
+					ed.jqInput[0].defaultValue=$(desc).html();
+					ed.jqInput[0].innerHTML=$(desc).html();
+					ed.jqInput[0].textContent=$(desc).html();
+					ed.jqInput[0].value=$(desc).html();
+					PF(dialog).hide();
+					return false;
 				}
 			</script>			
             <script src="../../resources/js/impress_edit_presentation.js"></script>

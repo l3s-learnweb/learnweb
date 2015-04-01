@@ -21,6 +21,7 @@ import javax.faces.event.ComponentSystemEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.validator.ValidatorException;
 
+import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.google.gdata.client.docs.DocsService;
@@ -59,6 +60,7 @@ import de.l3s.util.MD5;
 public class GroupDetailBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -9105093690086624246L;
+    private final static Logger log = Logger.getLogger(GroupDetailBean.class);
 
     private int groupId;
     private Group group;
@@ -145,12 +147,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void resize()
     {
-	System.out.println("Ankit");
+	log.info("Ankit");
     }
 
-    public GroupDetailBean()
+    public GroupDetailBean() throws SQLException
     {
-	load();
+	loadGroup();
 	/*if(resourcesAll != null && !resourcesAll.isEmpty())
 		clickedResource = resourcesAll.getFirst();
 	else
@@ -166,9 +168,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void preRenderView(ComponentSystemEvent e)
     {
-	System.out.println("pre render");
-	//load();	
-
 	User user = getUser();
 	if(null != user && null != group)
 	{
@@ -219,8 +218,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 		}
 		if(r != null && deletedResources.contains(r.getId()))
 		    resourceaction = false;
-
-		System.out.println(l.getAction().toString());
 
 		int commentcount = 0;
 		int tagcount = 0;
@@ -312,7 +309,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	if(null == newslist || reloadLogs)
 	{
-	    load();
 	    loadLogs(25);
 
 	    if(newslist.size() < 25)
@@ -348,23 +344,14 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return mode;
     }
 
-    private void loadPresentations() throws SQLException
-    {
-	presentations = getLearnweb().getPresentationManager().getPresentationsByGroupId(groupId);
-    }
-
     public void loadResources() throws SQLException
     {
 	resourcesAll = new OwnerList<Resource, User>(group.getResources());
 	Collections.sort(resourcesAll, Resource.createTitleComparator());
     }
 
-    public void load()
+    private void loadGroup() throws SQLException
     {
-	if(loaded)
-	    return;
-	loaded = true;
-
 	if(0 == groupId)
 	{
 	    String temp = getFacesContext().getExternalContext().getRequestParameterMap().get("group_id");
@@ -374,9 +361,19 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    if(0 == groupId)
 		return;
 	}
+
+	group = getLearnweb().getGroupManager().getGroupById(groupId);
+    }
+
+    private void load()
+    {
+	if(loaded)
+	    return;
+	loaded = true;
+
 	try
 	{
-	    group = getLearnweb().getGroupManager().getGroupById(groupId);
+	    loadGroup();
 
 	    if(null == group)
 	    {
@@ -384,9 +381,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 		return;
 	    }
 
-	    members = group.getMembers();
 	    loadResources();
-	    loadPresentations();
 
 	    isNewestResourceHidden = group.getCourse().getOption(Course.Option.Groups_Hide_newest_resource);
 
@@ -410,8 +405,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
 	catch(SQLException e)
 	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    addFatalMessage(e);
 	}
 	convert();
 
@@ -426,9 +420,19 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    links.add(0, new Link(Link.LinkType.LINK, getLocaleMessage("forum"), forumUrl));
     }
 
-    public List<User> getMembers()
+    public List<User> getMembers() throws SQLException
     {
-	load();
+	if(null == members)
+	{
+	    loadGroup();
+
+	    if(null == group)
+	    {
+		addMessage(FacesMessage.SEVERITY_ERROR, "Missing or wrong parameter: group_id");
+		return null;
+	    }
+	    members = group.getMembers();
+	}
 	return members;
     }
 
@@ -438,9 +442,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return resourcesAll;
     }
 
-    public Group getGroup()
+    public Group getGroup() throws SQLException
     {
-	load();
+	loadGroup();
 	return group;
     }
 
@@ -458,7 +462,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	if(null == logMessages)
 	{
-	    load();
 	    logMessages = getLearnweb().getLogsByGroup(groupId, null);
 	    convert();
 	}
@@ -511,8 +514,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	this.newLinkType = newLinkType;
     }
 
-    public List<Link> getDocumentLinks()
+    public List<Link> getDocumentLinks() throws SQLException
     {
+	if(null == documentLinks)
+	    updateLinksList();
+
 	return documentLinks;
     }
 
@@ -573,7 +579,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    PreparedStatement ps = dbCon.prepareStatement("UPDATE `lw_presentation` SET deleted=1 WHERE `presentation_id`=?");
 	    ps.setInt(1, clickedPresentation.getPresentationId());
 	    ps.execute();
-	    loadPresentations();
+
+	    presentations = getLearnweb().getPresentationManager().getPresentationsByGroupId(groupId);
 	    clickedPresentation = new Presentation();
 	}
 	catch(SQLException e)
@@ -858,7 +865,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public boolean hasViewPermission(User user) throws SQLException
     {
-	load();
 	if(null == group)
 	    return false;
 
@@ -874,7 +880,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void onSortingChanged(ValueChangeEvent e)
     {
 	String sort = e.getNewValue().toString();
-	System.out.println("sort " + sort);
 
 	Comparator<Resource> comparator;
 
@@ -978,9 +983,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void onCreateGroup()
     {
-
-	System.out.println("on create group" + newGroup.getTitle());
-
 	if(null == getUser())
 	    return;
 
@@ -1008,8 +1010,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	newGroup = new Group();
     }
 
-    public List<Link> getLinks()
+    public List<Link> getLinks() throws SQLException
     {
+	if(null == links)
+	    updateLinksList();
+
 	return links;
     }
 
@@ -1039,7 +1044,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public boolean canDeleteTag(Object tagO) throws SQLException
     {
-	System.out.println("canDeleteTag");
 	if(!(tagO instanceof Tag))
 	    return false;
 
@@ -1060,7 +1064,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	if(!(resource2 instanceof Resource))
 	{
-	    System.out.println("problem" + resource2);
 	    return false;
 	}
 	Resource resource = (Resource) resource2;
@@ -1108,8 +1111,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	this.gridColumns = gridColumns;
     }
 
-    public List<Presentation> getPresentations()
+    public List<Presentation> getPresentations() throws SQLException
     {
+	presentations = getLearnweb().getPresentationManager().getPresentationsByGroupId(groupId);
 	return presentations;
     }
 
@@ -1287,8 +1291,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    log(Action.adding_resource, newResource.getId(), selectedResourceTargetGroupId + "");
 
 	    addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
-	    addMessage(FacesMessage.SEVERITY_INFO, "bla");
-	    System.out.println("verlinkt");
 	}
 
     }

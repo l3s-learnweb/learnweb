@@ -1,31 +1,26 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" 
+<ui:composition template="/lw/templates/new_main_t.xhtml" 
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core" 
-	xmlns:c="http://java.sun.com/jsp/jstl/core" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<f:metadata>
-	<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
-	<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}" /> 
-</f:metadata>
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
+			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}" /> 
+		</f:metadata>
+	</ui:define>			
 
-
-<ui:composition template="/lw/templates/new_main_t.xhtml">
-
-			
-
-<ui:param name="loginRequired" value="true" />
+	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" />
 
 	<ui:define name="center_layout">
 		
 		<p:dialog appendTo="@(body)" header="#{msg.edit}" widgetVar="link_dialog" modal="true" minWidth="540" styleClass="zindex10000">
 			<h:form id="link_edit_form">
-				<h:panelGrid columns="2">					
-					<h:outputLabel value="#{msg.title}:"/>
-					<p:inputText value="#{groupDetailBean.selectedLink.title}" styleClass="links_input" rendered="#{groupDetailBean.selectedLink != null}"/>
+				<h:panelGrid columns="2" rendered="#{groupDetailBean.selectedLink != null}">					
+					<h:outputLabel value="#{msg.title}:" for="link_title_edit"/>
+					<p:inputText value="#{groupDetailBean.selectedLink.title}" id="link_title_edit" styleClass="links_input" />
 					
 					<h:outputText value="" />
 					<p:commandButton value="#{msg.save}" ajax="true" actionListener="#{groupDetailBean.onEditLink}" process="@form" oncomplete="PF('link_dialog').hide();" update=":message :grouplinks">
@@ -50,7 +45,7 @@
 							<p:commandLink update=":link_edit_form" oncomplete="PF('link_dialog').show();" title="#{msg.edit}" 
 								process="@this" styleClass="links_commandlink"
 								rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isMember(userBean.user))}">
-								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" styleClass="links_graphic" />
+								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" styleClass="links_graphic" />
 								<f:setPropertyActionListener value="#{link}" target="#{groupDetailBean.selectedLink}" />
 								<f:param name="group_id" value="#{groupDetailBean.groupId}" /> 
 							</p:commandLink> 
@@ -107,8 +102,8 @@
 					</p:commandButton>
 					<h:outputText value="" rendered="${groupDetailBean.group.forumId == 0}" />					
 							
-					<h:outputLabel value="#{msg.type}:" />
-					<h:selectOneMenu value="#{groupDetailBean.newLinkType}">
+					<h:outputLabel value="#{msg.type}:" for="link_type" />
+					<h:selectOneMenu value="#{groupDetailBean.newLinkType}" id="link_type">
 						<f:selectItem itemValue="document" itemLabel="Google Document (Word)" />
 						<f:selectItem itemValue="spreadsheet" itemLabel="Google Spreadsheet (Excel)" />
 						<f:selectItem itemValue="presentation" itemLabel="Google Presentation (PowerPoint)" />
@@ -131,6 +126,7 @@
 					<p:commandButton action="#{groupDetailBean.onAddLink}" ajax="true" value="#{msg.addLink}" process="@form" update=":grouplinks link_form :growl">					
 						<f:param name="group_id" value="#{groupDetailBean.group.id}"/>
 					</p:commandButton>
+					<h:outputText value="" />
 				</h:panelGrid>
 				</h:form>
 		</p:panel>
@@ -151,4 +147,3 @@
 	
 	</ui:define>
 </ui:composition>
-</html>

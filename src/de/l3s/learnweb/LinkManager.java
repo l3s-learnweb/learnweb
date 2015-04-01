@@ -37,7 +37,6 @@ public class LinkManager
 	while(rs.next())
 	{
 	    links.add(new Link(rs));
-	    System.out.println(new Link(rs));
 	}
 	select.close();
 	return links;
