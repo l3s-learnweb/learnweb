@@ -14,13 +14,14 @@ function removeViewstate(searchForm)
 
 function footerToggle()
 {
-	var footer = $('#footer');	
-	footer.slideToggle();
+	var footer = $('#footer');
 	
-	if(footer.is(":visible"))
+	if(footer.css('display') == 'none')
 		setPreference('helptext_hide', 'false');
 	else
 		setPreference('helptext_hide', 'true');
+	
+	footer.slideToggle();
 
 	return false;
 }

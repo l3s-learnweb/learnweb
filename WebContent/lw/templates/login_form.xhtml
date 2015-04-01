@@ -7,7 +7,7 @@
 
 	<ui:composition> 
 
-		<h:form rendered="#{!userBean.loggedIn}" >
+		<h:form rendered="#{!userBean.loggedIn}">
 			<p:focus for="username"/>
 			<h:panelGrid columns="3">
 				<h:outputLabel for="username" value="#{msg.username}:"></h:outputLabel>
@@ -20,7 +20,7 @@
 				
 				<h:outputText value="" />
 				<p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" />	
-				<h:outputLink  value="#{request.contextPath}/lw/user/password.jsf"><h:outputText value="#{msg.forgotten_password}"/></h:outputLink>
+				<h:outputLink  value="#{request.contextPath}/lw/user/password.jsf"><h:outputText value="#{msg.forgotten_password}" /></h:outputLink>
 			</h:panelGrid>
 		</h:form>
 		

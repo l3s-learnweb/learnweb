@@ -86,6 +86,21 @@
 	background: rgba(204, 204, 204, 0.03);
 }
 
+.list_view a {  text-decoration: none; }
+.list_view a:hover { text-decoration: underline;}
+
+.list_view .add_resource_link a:link, 
+.list_view .add_resource_link a:visited,
+.list_view .add_resource_link a { text-decoration: underline; color: black; }
+.list_view .add_resource_link a:hover { text-decoration: none; }
+.list_view .add_resource_link img { vertical-align: top; margin-right:3px; }
+
+.list_view a.resourceWebLink:link, 
+.list_view a.resourceWebLink { color:rgb(88, 147, 236); font-size: 1.6rem; font-weight: bold; }
+.list_view a.resourceWebLink:visited { color:rgb(60, 110, 200); }
+
+
+
 .page_counter {
 	font-weight:bold;
 	margin:5px 0 -10px 15px;
@@ -359,6 +374,10 @@ img.smallImage { cursor:pointer; margin:4px; }
 #lightbox_container a:link, #lightbox_container a:visited,
 #lightbox_container a { color:white; text-decoration:underline; }
 #lightbox_container a:hover { text-decoration:none;}
+
+
+
+
 
 .source_bing { box-shadow: 0 4px 16px rgba(255, 0, 0, 0.8); }
 .source_ipernity { box-shadow: 0 4px 16px rgba(0, 200, 0, 0.8); }

@@ -1080,13 +1080,12 @@ textarea
 	font-weight: 100;
 	color: #489a83;
 }
+form#add_resource { float:right; }
 .resource_button
 {
 	float: right;
-	
-	font-size: 16px;
 	position: relative;
-	top: -7px;
+	top: -4px;
 	right: -5px;
 }
 

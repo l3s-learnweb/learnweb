@@ -12,16 +12,12 @@
 </f:metadata>
 
 
-<ui:composition template="/lw/templates/new_main.xhtml">
+<ui:composition template="/lw/templates/new_main_t.xhtml">
 <ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" />
 
-	<ui:define name="center_layout">
-	
-	
+	<ui:define name="center_layout">	
 		
-	
-	
 		<h:dataTable var="datagrid" value="#{groupDetailBean.newslist}" id="datagrid" >
 					
 				
@@ -52,12 +48,12 @@
 						<h:panelGroup rendered="#{datagrid.resourceAction}">
 							<div class="newsfeed_left">
 						
-						
+						<h:form>
 								<p:commandLink styleClass="newsfeed_query_link" update=":add_resource_panel" oncomplete="update_header()">
 				        			<f:setPropertyActionListener target="#{groupDetailBean.clickedResource}" value="#{datagrid.resource}"></f:setPropertyActionListener>
 										<h:outputText value="#{datagrid.resource.embeddedSize1}" escape="false" />
 								</p:commandLink>
-								
+								</h:form>
 				
 		                   </div>
 							
@@ -82,14 +78,19 @@
 						</h:column>				
 					</h:dataTable>
 					<br></br>
+					<h:form>
 					<h:panelGroup id="history" class="newsfeed_history">
-						<p:commandButton value="#{msg.full_history}"  styleClass="blackbutton" rendered="${not groupDetailBean.isAllLogs()}" update="datagrid history" actionListener="#{groupDetailBean.fetchAllLogs()}"></p:commandButton>
+						<p:commandButton value="#{msg.full_history}"  styleClass="blackbutton" rendered="${not groupDetailBean.isAllLogs()}" update=":datagrid history" actionListener="#{groupDetailBean.fetchAllLogs()}"></p:commandButton>
 					</h:panelGroup>
+					</h:form>
 					<br></br>
-			<p:commandButton id="add_resource" styleClass="resource_button greenbutton" value="#{msg.upload_resource}" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
+					
+			<h:form id="add_resource">
+			<p:commandButton styleClass="resource_button greenbutton" value="#{msg.upload_resource}" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
 				<f:setPropertyActionListener target="#{addResourceBean.resourceTargetGroupId}" value="#{groupDetailBean.groupId}"></f:setPropertyActionListener>
 				<f:setPropertyActionListener target="#{groupDetailBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
 			</p:commandButton>
+			</h:form>
 			<script type="text/javascript">
 				var div = document.createElement("div");
 				var group_header = document.createElement("span");
@@ -100,9 +101,9 @@
 				$(group_owner).html(" #{msg.created_by} #{groupDetailBean.group.leader.username}");
 				$(div).append(group_header);
 				$(div).append(group_owner);
-				var cl = $("#add_resource").clone();
-	            $(cl).appendTo(div);
-	            $("#add_resource").remove();
+				//var cl = $("#add_resource").clone();
+	            $("#add_resource").appendTo(div);
+	            //$("#add_resource").remove();
 				$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
 				$("#center_pane").prepend(div);
 			</script>
@@ -127,6 +128,7 @@
 					</p:commandButton>
 				</h:form>
 			</p:dialog>
+		
 		</ui:define>
 		
 		<ui:define name="right_layout">

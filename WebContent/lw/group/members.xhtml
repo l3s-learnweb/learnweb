@@ -11,7 +11,7 @@
 	<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}" /> 
 </f:metadata>
 
-<ui:composition template="/lw/templates/new_main.xhtml">
+<ui:composition template="/lw/templates/new_main_t.xhtml">
 
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="Group members" />	
@@ -54,7 +54,9 @@
 			 	<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{groupDetailBean.updateColumns}"></p:remoteCommand>
 	        </h:form>
 	        <h:panelGrid id="resource_disp">
-			<p:dataGrid id="datagrid" var="result" value="#{groupDetailBean.getGroup().getMembers()}" columns="#{groupDetailBean.numberOfColumns}" paginator="false" widgetVar="datagrid">  
+	        <h:form>
+			<p:dataGrid id="datagrid" var="result" value="#{groupDetailBean.getGroup().getMembers()}" columns="#{groupDetailBean.numberOfColumns}" paginator="false" rows="100" widgetVar="datagrid">  
+		      
 		        <p:commandLink rendered="#{groupDetailBean.numberOfColumns != 3}" styleClass="resource_command_link" update=":right_form" oncomplete="update_header()">
 		        	<f:setPropertyActionListener target="#{groupDetailBean.clickedUser}" value="#{result}"></f:setPropertyActionListener>
 			        <p:panel styleClass="members_panel">  
@@ -73,7 +75,9 @@
 			            </h:panelGrid>
 			        </p:panel>
 		        </p:commandLink>
+		        
 		    </p:dataGrid>
+		    </h:form>
 		    </h:panelGrid>
 		    <script type="text/javascript">
 		    	$(".ui-panel").click(function(){
@@ -131,7 +135,9 @@
 								<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(groupDetailBean.clickedUser)}" id="profile_image" />
 								<br class="clear" />
 							</p:panel>
-					
+							
+							<br/>
+							
 							<p:panel header="#{groupDetailBean.clickedUser.username}'s groups">
 								<h:form>
 									<p:dataGrid var="group" value="#{groupDetailBean.clickedUser.groups}">

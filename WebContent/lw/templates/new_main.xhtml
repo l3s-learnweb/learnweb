@@ -203,7 +203,7 @@
 				collapsible="false">
 				
 				<div class="content">
-					<ui:decorate  template="/templates/group_menu.xhtml" />
+					<ui:decorate  template="/templates/main/group_menu.xhtml" />
 				
 				</div>
 			</p:layoutUnit>
@@ -245,7 +245,7 @@
 		</h:panelGroup>
 		
 		<h:form styleClass="display-none">	
-			<p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" />
+			<p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" immediate="true" process="@this" />
 		</h:form>
 		
 	</h:body>

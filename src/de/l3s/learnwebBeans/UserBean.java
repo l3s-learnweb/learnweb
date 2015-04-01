@@ -111,13 +111,13 @@ public class UserBean implements Serializable
 
     public String getPreference(String key)
     {
-	System.out.println("get " + key + " a: " + preferences.get(key));
+	//System.out.println("get " + key + " a: " + preferences.get(key));
 	return preferences.get(key);
     }
 
     public void setPreference(String key, String value)
     {
-	System.out.println("set " + key + " a: " + value);
+	//System.out.println("set " + key + " a: " + value);
 	preferences.put(key, value);
     }
 
@@ -153,7 +153,7 @@ public class UserBean implements Serializable
 	return locale.getLanguage();
     }
 
-    public void setLocaleCode(String localeCode)
+    public String setLocaleCode(String localeCode)
     {
 	switch(localeCode)
 	{
@@ -174,7 +174,11 @@ public class UserBean implements Serializable
 	    log.error("Unsupported language: " + localeCode);
 	}
 
-	FacesContext.getCurrentInstance().getViewRoot().setLocale(locale);
+	FacesContext facesContext = FacesContext.getCurrentInstance();
+	facesContext.getViewRoot().setLocale(locale);
+
+	String viewId = facesContext.getViewRoot().getViewId();
+	return viewId + "?faces-redirect=true&includeViewParams=true";
     }
 
     public boolean isAdmin()

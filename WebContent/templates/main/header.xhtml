@@ -155,10 +155,10 @@
 			
 			<h:form>
 				<ul>
-					<li><h:commandLink actionListener="#{userBean.setLocaleCode('de')}" styleClass="language_de">Deutsch</h:commandLink></li>
-					<li><h:commandLink actionListener="#{userBean.setLocaleCode('en')}" styleClass="language_en">English</h:commandLink></li>
-					<li><h:commandLink actionListener="#{userBean.setLocaleCode('it')}" styleClass="language_it">Italiano</h:commandLink></li>
-					<li><h:commandLink actionListener="#{userBean.setLocaleCode('pt')}" styleClass="language_pt">Português</h:commandLink></li>
+					<li><h:commandLink action="#{userBean.setLocaleCode('de')}" styleClass="language_de" >Deutsch</h:commandLink></li>
+					<li><h:commandLink action="#{userBean.setLocaleCode('en')}" styleClass="language_en">English</h:commandLink></li>
+					<li><h:commandLink action="#{userBean.setLocaleCode('it')}" styleClass="language_it">Italiano</h:commandLink></li>
+					<li><h:commandLink action="#{userBean.setLocaleCode('pt')}" styleClass="language_pt">Português</h:commandLink></li>
 				</ul> 
 			</h:form>
 		</div>
@@ -179,10 +179,7 @@
 	</div>
 	
 	<ui:insert name="sub_menu_bar">
-		<style type="text/css">
-			#content { margin-top:6rem; }
-			.ui-layout-north { height:6rem !important; } /* remove when the old template has been removed */
-		</style>
+		
 	</ui:insert>
 
 </header>

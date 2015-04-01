@@ -1,4 +1,4 @@
-<ui:composition template="/templates/main.xhtml" 
+<ui:composition template="/templates/main/main.xhtml" 
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:h="http://java.sun.com/jsf/html" 
 	xmlns:f="http://java.sun.com/jsf/core"
@@ -17,7 +17,10 @@
 	<ui:param name="pageTitle" value="#{msg.searchTitle}" />	
 	<ui:param name="helpText" value="#{msg.searchHelp}"/>
 	 
-	<ui:define name="sub_menu_bar">		
+	<ui:define name="sub_menu_bar">
+		<style type="text/css">
+			#content { margin-top:6.7rem; }
+		</style>		
 		<div id="sub_menu_bar">  			
 			<h:outputLink value="lw/group/overview.jsf" id="backtogroup" rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
        		  #{msg.back_to} <i>#{userBean.user.activeGroup.title}</i>

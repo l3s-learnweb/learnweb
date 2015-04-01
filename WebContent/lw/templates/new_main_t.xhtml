@@ -1,56 +1,44 @@
-<!DOCTYPE html>
-<html xmlns:ui="http://java.sun.com/jsf/facelets" 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:h="http://java.sun.com/jsf/html" 
-	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui" 
 	lang="#{userBean.localeCode}">
 
 <f:view locale="#{userBean.localeCode}" contentType="text/html">
 
 	<h:head>	
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title><h:outputText value="#{pageTitle}" escape="false" /> - Learnweb</title>
 		<link rel="shortcut icon" href="#{learnwebBean.baseUrl}../resources/icon/favicon.ico" />
-		  
+
 		<link type="text/css" rel="stylesheet" href="#{learnwebBean.baseUrl}../resources/css/default.css" />
-		
         <link rel="stylesheet" type="text/css" href="#{learnwebBean.baseUrl}../resources/css/new_main2.css" />
-     
         <link rel="stylesheet" type="text/css" href="#{learnwebBean.baseUrl}../resources/css/nanoscroller.css" />
-        
 		<h:outputScript library="primefaces" name="jquery/jquery.js" />
-		
-		
-		 
+		<h:outputScript library="main-template" name="default.js"/>
 		<h:outputScript library="js" name="jquery.mousewheel.min.js"/>
 		<h:outputScript library="js" name="jquery.nanoscroller.min.js"/>
-		<!-- 
+		<link type="text/css" rel="stylesheet" href="#{learnwebBean.baseUrl}../resources/main-template/main.css" />
+		
 		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/main.css" />
 		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />
 		<h:outputScript library="main-template" name="default.js"/>
- -->
+
 		<base href="#{learnwebBean.baseUrl}" />
-		
-		<style type="text/css">
-		.ui-layout-pane {
-			border:none;
-			padding:0;
-		}
-		.ui-widget-content a {
-		    color: none;
-		}
-		</style>
 	</h:head>
 
 	<h:body>
 		<p:growl id="growl" />
-
-		<ui:decorate template="/templates/header.xhtml"></ui:decorate>
-					
-		<p:layout fullPage="true" widgetVar="mainLayout">
 		
+		<ui:decorate template="/templates/main/header.xhtml" />
+		
+		<style type="text/css">
+			.ui-layout-north { height:46px !important; }
+		</style>
+		<p:layout fullPage="true" widgetVar="mainLayout">
 			<p:layoutUnit position="north" resizable="false" closable="false"
-				collapsible="false" styleClass="northunit" style="height:46px; display:block;">
+				collapsible="false" styleClass="northunit" style="display:block; height:46px;">
 				<script type="text/javascript">
 			
 					function scroller()
@@ -68,64 +56,44 @@
 						
 						scroller();
 						setInterval("scroller()",500);
-					});
-					
-					// for the search input field:
-					function deselect()
-					{
-						$(".ui-autocomplete-row").removeClass("ui-state-highlight");
-						$(".ui-autocomplete-row").click(function(){
-							sbutton.jq.click();
-						});
-					}
-					function search_query(e)
-					{
-						var key = window.event ? window.event.keyCode : e.which;
-						if(key == 13)
-							sbutton.jq.click();
-					}
-				</script>
-
-<!--  
-				<h:panelGroup layout="block" style="height:8rem;">
-					
-				</h:panelGroup>
-
+					});			
+				
+				</script>				
+			
 				<ui:insert name="options_panel"></ui:insert>
-				-->
+				
 			</p:layoutUnit>
 
-			<ui:insert name="right_layout">
-			
-			</ui:insert>
-			
 			<p:layoutUnit id="left_pane"
 				rendered="#{userBean.loggedIn and !utilBean.explorePage and !utilBean.viewResultSetPage and !utilBean.tedTranscriptPage}"
-				position="west" size="200" resizable="false" closable="false"
+				position="west" size="223" resizable="false" closable="false"
 				collapsible="false">
 				
 				<div class="content">
-					<ui:decorate  template="/templates/group_menu.xhtml" />
+					<ui:decorate  template="/templates/main/group_menu.xhtml" />
 				
 				</div>
 			</p:layoutUnit>
+
+			<ui:insert name="right_layout">
+				
+			</ui:insert>
 			
-			<p:layoutUnit id="center_pane" position="center" >			
-		
-				<section id="content" class="#{smallPage? 'small_page':''}" style="margin-top:0">
-					<p:messages id="message" />
-			
-					<h:panelGroup layout="block" id="middle" rendered="#{loginRequired and !userBean.loggedIn}" styleClass="small_page">
-						<p:panel header="#{msg.loginRequiredTitle}">
-							<p><h:outputText value="#{msg.loginRequiredText}" /></p>
-							<ui:include src="/lw/templates/login_form.xhtml" />
-						</p:panel>
-					</h:panelGroup>
-					
-					<h:panelGroup rendered="#{!loginRequired || userBean.loggedIn}">
-						<ui:insert name="center_layout"></ui:insert>
-					</h:panelGroup>
-				</section>
+			<p:layoutUnit id="center_pane" position="center" >
+				<div class="content">
+				<p:messages id="message"></p:messages>
+				
+				<h:panelGroup layout="block" id="middle" rendered="#{loginRequired and !userBean.loggedIn}">
+					<p:panel header="#{msg.loginRequiredTitle}">
+						<p><h:outputText value="#{msg.loginRequiredText}" /></p>
+						<ui:include src="/lw/templates/login_form.xhtml" />
+					</p:panel>
+				</h:panelGroup>
+				
+				<h:panelGroup rendered="#{!loginRequired || userBean.loggedIn}">
+					<ui:insert name="center_layout"></ui:insert>
+				</h:panelGroup>
+				</div>
 
 			</p:layoutUnit>
 
@@ -136,15 +104,17 @@
 			</h:form> 			
 		</p:dialog>	
 		
-		
+		<ui:insert name="bottom_panel"></ui:insert>
+	
 		<h:panelGroup layout="block" id="footer" rendered="#{not empty helpText}" styleClass="#{userBean.getPreference('helptext_hide')? 'display-none':''}">
 			<h:outputText value="#{helpText}" escape="false" style="padding: 0.7rem 4rem; display:block;" />
 			<a href="#" onclick="return footerClose();" id="footer_close" title="#{msg.close}"></a>
 		</h:panelGroup>
 		
 		<h:form styleClass="display-none">	
-			<p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" />
+			<p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" immediate="true" process="@this" />
 		</h:form>
+		
 	</h:body>
 </f:view>
 

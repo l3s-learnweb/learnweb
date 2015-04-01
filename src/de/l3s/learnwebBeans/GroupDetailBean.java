@@ -166,6 +166,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void preRenderView(ComponentSystemEvent e)
     {
+	System.out.println("pre render");
 	//load();	
 
 	User user = getUser();
@@ -312,7 +313,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	if(null == newslist || reloadLogs)
 	{
 	    load();
-	    loadLogs(50);
+	    loadLogs(25);
+
+	    if(newslist.size() < 25)
+		allLogs = true;
 	}
 
 	return newslist;

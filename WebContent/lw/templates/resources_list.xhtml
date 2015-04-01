@@ -15,27 +15,24 @@
 			
 		<div class="resource" id="resource_${res.tempId}">		
 			<h:panelGroup layout="block" styleClass="#{res.newResource ? 'list_newResource':'oldResource'}">
-				<h:outputLink class="resourceWebLink" target="_blank"  value="#{res.url}" escape="false" style="color:rgb(88, 147, 236);text-decoration: none; font-size: 12pt; font-weight: bold;"><h:outputText value="#{res.title}" escape="false"/></h:outputLink>
+				<h:outputLink class="resourceWebLink" target="_blank" value="#{res.url}"><h:outputText value="#{res.title}" escape="false"/></h:outputLink>
 				
 				<table style="border-spacing:0px;padding-right: 0px;    padding-left: 0px;">
 				<tr>
-				<td style="padding-right: 0px;    padding-left: 0px;">
-				<!-- image of user -->
-				</td>
-				<td>
+					<td>
 				<div style="display:inline; vertical-align:top;">
-				<h:outputLink  value="#{res.learnwebUrl}" title="" style="text-decoration:none; color:green;">#{res.learnwebUrl}</h:outputLink><br/>
+				<h:outputLink  value="#{res.learnwebUrl}" title="" style="color:green;">#{res.learnwebUrl}</h:outputLink><br/>
 				
 				<h:outputText value="#{res.snippet}" style="display:block;width:94%;" escape="false"></h:outputText>
 				</div>
-				<h:form rendered="#{userBean.loggedIn}">
+				<h:form rendered="#{userBean.loggedIn}" class="add_resource_link">
 					<h:panelGroup rendered="#{utilBean.searchPage}">				
 							<p:commandLink update=":resource_form"
 								oncomplete="PF('resource_dialog').show();"
 								title="#{msg.addToMyResources}"
 								style="display:block; margin-top:4px;">
 								<h:graphicImage value="/resources/icon/silk/add.png" width="16"
-									height="16" alt="#{msg.addToMyResources}" /> #{msg.addToMyResources}
+									height="16" alt="#{msg.addToMyResources}" />#{msg.addToMyResources}
 							<f:setPropertyActionListener value="#{res.resource}"
 									target="#{searchBean.selectedResource}" />
 							</p:commandLink>
@@ -46,7 +43,7 @@
 								title="#{msg.addToMyResources}"
 								style="display:block; margin-top:4px;">
 								<h:graphicImage value="/resources/icon/silk/add.png" width="16"
-									height="16" alt="#{msg.addToMyResources}" /> #{msg.addToMyResources}
+									height="16" alt="#{msg.addToMyResources}" />#{msg.addToMyResources}
 							<f:setPropertyActionListener value="#{res.resource}"
 									target="#{resultSetBean.selectedResource}" />
 							</p:commandLink>

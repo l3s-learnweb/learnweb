@@ -11,7 +11,6 @@ import javax.faces.bean.RequestScoped;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
-import org.primefaces.model.menu.MenuElement;
 import org.primefaces.model.menu.MenuModel;
 
 import de.l3s.learnweb.Course;
@@ -244,6 +243,7 @@ public class MenuBean extends ApplicationBean implements Serializable
 	    e.printStackTrace();
 	}
 
+	/*
 	for(MenuElement element : model.getElements())
 	{
 	    DefaultSubMenu groupMenu = (DefaultSubMenu) element;
@@ -257,6 +257,7 @@ public class MenuBean extends ApplicationBean implements Serializable
 		System.out.println(link.getValue() + " - " + link.getUrl());
 	    }
 	}
+	*/
 
     }
 
