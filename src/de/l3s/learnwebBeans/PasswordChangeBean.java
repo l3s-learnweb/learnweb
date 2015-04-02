@@ -11,6 +11,8 @@ import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.UserManager;
 
@@ -21,13 +23,14 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = 2237249691332567548L;
 
     private String parameter;
+    @NotEmpty
     private String password;
+    @NotEmpty
     private String confirmPassword;
     private User user = null;
 
     public PasswordChangeBean() throws SQLException
     {
-	System.out.println("construct PasswordChangeBean");
 	if(parameter == null || parameter.equals(""))
 	    parameter = getFacesContext().getExternalContext().getRequestParameterMap().get("u");
 
@@ -52,7 +55,6 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
 	    addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
 	    return;
 	}
-	System.out.println("edit user:" + user.getUsername() + " id " + user.getId());
     }
 
     public void onChangePassword()

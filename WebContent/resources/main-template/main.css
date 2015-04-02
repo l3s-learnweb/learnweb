@@ -33,13 +33,6 @@ body {
 	width:100%;
 }
 
-.small_page {
-	max-width:80rem;
-	padding:1rem;
-	margin-left:auto;
-	margin-right:auto;
-}
-
 #learnweb_logo {
 	position:absolute;
 	width:16rem;
@@ -407,6 +400,19 @@ in allen browsern testen danach löschen
 #group_menu .active > div { display: block; }
 #group_menu .active h3 { text-decoration:underline; }
 #group_menu a.active { font-weight:bold; }
+
+
+.small_page {
+	max-width:80rem;
+	padding:1rem;
+	margin-top:1rem;
+	margin-left:auto;
+	margin-right:auto;
+}
+.small_page input[type=text],
+.small_page input[type=password] {
+	width:200px;
+}
 
 /* general settings */
 .clear { 

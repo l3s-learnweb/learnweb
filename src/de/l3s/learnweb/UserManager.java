@@ -62,13 +62,7 @@ public class UserManager
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
 	{
-	    User user = cache.get(rs.getInt("user_id"));
-	    if(null == user)
-	    {
-		user = createUser(rs);
-		user = cache.put(user); // this line makes sure that only on instance of each user exists				
-	    }
-	    users.add(user);
+	    users.add(createUser(rs));
 	}
 	select.close();
 
@@ -89,13 +83,7 @@ public class UserManager
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
 	{
-	    User user = cache.get(rs.getInt("user_id"));
-	    if(null == user)
-	    {
-		user = createUser(rs);
-		user = cache.put(user); // this line makes sure that only on instance of each user exists				
-	    }
-	    users.add(user);
+	    users.add(createUser(rs));
 	}
 	select.close();
 
@@ -110,13 +98,7 @@ public class UserManager
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
 	{
-	    User user = cache.get(rs.getInt("user_id"));
-	    if(null == user)
-	    {
-		user = createUser(rs);
-		user = cache.put(user); // this line makes sure that only on instance of each user exists				
-	    }
-	    users.add(user);
+	    users.add(createUser(rs));
 	}
 	select.close();
 
@@ -131,13 +113,7 @@ public class UserManager
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
 	{
-	    User user = cache.get(rs.getInt("user_id"));
-	    if(null == user)
-	    {
-		user = createUser(rs);
-		user = cache.put(user); // this line makes sure that only on instance of each user exists				
-	    }
-	    users.add(user);
+	    users.add(createUser(rs));
 	}
 	select.close();
 
@@ -166,12 +142,7 @@ public class UserManager
 	    if(!rs.next())
 		return null;
 
-	    User user = cache.get(rs.getInt("user_id"));
-	    if(null == user)
-	    {
-		user = createUser(rs);
-		user = cache.put(user);
-	    }
+	    User user = createUser(rs);
 
 	    user.getLastLoginDate(); // must be called before the user is logged in to cache the last login date
 
@@ -183,30 +154,21 @@ public class UserManager
 	}
     }
 
-    public User getUser(String email) throws SQLException
+    public List<User> getUser(String email) throws SQLException
     {
+	List<User> users = new LinkedList<User>();
 	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_user WHERE email = ?");
+	select.setString(1, email);
+	ResultSet rs = select.executeQuery();
 
-	try
+	while(rs.next())
 	{
-	    select.setString(1, email);
-	    ResultSet rs = select.executeQuery();
-
-	    if(!rs.next())
-		return null;
-
-	    User user = cache.get(rs.getInt("user_id"));
-	    if(null == user)
-	    {
-		user = createUser(rs);
-		user = cache.put(user);
-	    }
-	    return user;
+	    users.add(createUser(rs));
 	}
-	finally
-	{
-	    select.close();
-	}
+
+	select.close();
+
+	return users;
     }
 
     /**
@@ -440,7 +402,14 @@ public class UserManager
     @SuppressWarnings("unchecked")
     private User createUser(ResultSet rs) throws SQLException
     {
-	User user = new User();
+	int userId = rs.getInt("user_id");
+	User user = cache.get(userId);
+	if(null != user)
+	{
+	    return user;
+	}
+
+	user = new User();
 	user.setId(rs.getInt("user_id"));
 	user.setUsername(rs.getString("username"));
 	user.setEmail(rs.getString("email"));
@@ -491,6 +460,8 @@ public class UserManager
 	    preferences = new HashMap<String, String>();
 
 	user.setPreferences(preferences);
+
+	user = cache.put(user);
 
 	return user;
     }

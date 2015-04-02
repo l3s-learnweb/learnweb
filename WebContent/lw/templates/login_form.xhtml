@@ -11,20 +11,26 @@
 			<p:focus for="username"/>
 			<h:panelGrid columns="3">
 				<h:outputLabel for="username" value="#{msg.username}:"></h:outputLabel>
-				<p:inputText id="username" value="#{loginBean.username}" />
-				<p:message showSummary="true" showDetail="false" styleClass="error" for="username" />
+				<p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" />
+				<p:message  styleClass="error" for="username" />
 				
 				<h:outputLabel for="password" value="#{msg.password}:"></h:outputLabel>
-				<p:password id="password" value="#{loginBean.password}" feedback="false"/>
-				<p:message showSummary="true" showDetail="false" styleClass="error" for="password" />
+				<p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" />
+				<p:message  styleClass="error" for="password" />
 				
 				<h:outputText value="" />
 				<p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" />	
-				<h:outputLink  value="#{request.contextPath}/lw/user/password.jsf"><h:outputText value="#{msg.forgotten_password}" /></h:outputLink>
+				<h:outputText value="" />
 			</h:panelGrid>
-		</h:form>
+		</h:form>		
 		
 		<h:outputText rendered="#{userBean.loggedIn}" value="#{msg.you_are_already_logged_in}"/>
+		
+		<br/>
+		<h:outputLink  value="#{request.contextPath}/lw/user/password.jsf"><h:outputText value="#{msg.forgotten_password}" /></h:outputLink>
+		<br/>
+		<h:outputLink  value="#{request.contextPath}/lw/user/register.jsf"><h:outputText value="#{msg.registerLabel}" /></h:outputLink>
+		
 
 	</ui:composition>
 </html>

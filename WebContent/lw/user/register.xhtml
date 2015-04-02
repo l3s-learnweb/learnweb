@@ -16,46 +16,43 @@
 
 	<ui:param name="pageTitle" value="#{msg.registerLabel}" />
 	<ui:param name="smallPage" value="true" />
+	<ui:param name="disableGrowl" value="true" />
 	
 	<ui:define name="center_layout">
-		
-			<h:form id="registerform" style="width: 300px; margin-left:auto; margin-right:auto;">
-	<!-- 			<input type="hidden" name="wizard" value="#{registrationBean.wizard}" />
-	 -->
-	
+		<p:panel header="#{msg.registerLabel}">
+			<h:form id="registerform">
+
 				<h:panelGrid columns="3">					
 					<h:outputLabel for="username" value="#{msg.username}: *" />
-					<p:inputText id="username" value="#{registrationBean.username}" validator="#{registrationBean.validateUsername}">
-					
-					</p:inputText>
+					<p:inputText id="username" value="#{registrationBean.username}" validator="#{registrationBean.validateUsername}" label="#{msg.username}" />
 					<p:message showSummary="true" showDetail="false" styleClass="error" for="username" id="usernameMessage" />
 
 					<h:outputLabel for="password" value="#{msg.password}: *" />
-					<p:password id="password" value="#{registrationBean.password}" autocomplete="false" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
+					<p:password id="password" value="#{registrationBean.password}" autocomplete="false" label="#{msg.password}" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
 						goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}">
 					
 					</p:password>
 					<p:message id="passwordMessage" showSummary="true" showDetail="false" styleClass="error" for="password" />
 
 					<h:outputLabel for="confirm_password" value="#{msg.confirm_password}: *" />
-					<p:password id="confirm_password" value="#{registrationBean.confirmPassword}" validator="#{registrationBean.validatePassword}" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
+					<p:password id="confirm_password" value="#{registrationBean.confirmPassword}" label="#{msg.confirm_password}" validator="#{registrationBean.validatePassword}" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
 						goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}">
 					
 					</p:password>
 					<p:message id="confirmPasswordMessage" showSummary="true" showDetail="false" styleClass="error" for="confirm_password" />
 
 					<h:outputLabel for="email" value="#{msg.email_address}:" />
-					<p:inputText id="email" value="#{registrationBean.email}">
+					<p:inputText id="email" value="#{registrationBean.email}" label="#{msg.email_address}">
 					
 					</p:inputText>
 					<p:message id="emailMessage" showSummary="true" showDetail="false" styleClass="error" for="email" />
 
-					<h:outputText value="" />
-			
+					<h:outputText value="" />			
 					<p:commandButton action="#{registrationBean.register}" value="#{msg.registerLabel}" ajax="false"/>
+					<h:outputText value="" />
 				</h:panelGrid>
 				<h:outputText value="* #{msg.mandatory_field}" />
 			</h:form>
-		
+		</p:panel>
 	</ui:define>
 </ui:composition>

@@ -22,14 +22,15 @@
 	</h:head>
 
 	<h:body>
+		<p:growl id="growl" showDetail="true" sticky="true" rendered="#{not disableGrowl}"/> 
+		<!--  TODO remove growl -->
 
 		<ui:decorate template="/templates/main/header.xhtml" /> 		
 
 		<section id="content" class="#{smallPage? 'small_page':''}">
-			<p:messages id="message" />
+			<p:messages id="message" showDetail="false" showSummary="true" />
 	
-			<p:growl id="growl" showDetail="true" sticky="true" /> 
-			<!--  TODO remove growl -->
+			
 	
 			<h:panelGroup layout="block" id="middle" rendered="#{loginRequired and !userBean.loggedIn}" styleClass="small_page">
 				<p:panel header="#{msg.loginRequiredTitle}">
