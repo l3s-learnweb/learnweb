@@ -10,6 +10,7 @@
 
 
 	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" header="#{bean.clickedResource.title}" id="right_pane">
+				<h:outputScript library="right-pane-template" name="right-pane.js" />
 				<h:form id="remote_form">
 					<p:remoteCommand  actionListener="#{bean.loadResources}" update=":datagrid :add_resource_panel" name="update_datagrid" oncomplete="update_header()"></p:remoteCommand>
 				</h:form>
@@ -188,15 +189,24 @@
 							<div style="padding-top: 10px">
 								<span class="resource_field">#{msg.source} : </span><h:outputText value="#{bean.clickedResource.source}"></h:outputText>
 							</div>
-							<h:panelGroup layout="block" style="padding-top: 10px;" rendered="#{not empty bean.clickedResource.archiveUrl}">
-								<span class="resource_field">#{msg.archive_url} : </span>
-								<h:selectOneMenu onchange="archive_url_select();" id="select_archive_url" value="0"  >
-									<f:selectItem itemLabel="Choose an archived version" noSelectionOption="true"/> 
-									<f:selectItems value="#{bean.clickedResource.limitedArchiveUrls}" var="entry" itemLabel="#{entry.timestamp}" itemValue="#{entry.archiveUrl}"/>
-									<f:selectItem itemValue="more versions" itemLabel="More versions" itemDisabled="#{bean.clickedResource.archiveUrls.size() le 5}" />
-								</h:selectOneMenu>
-								<p:commandButton action="#{bean.archiveCurrentVersion}" value="Archive Current Version"/>
+							<h:panelGroup layout="block" style="padding-top: 10px;" rendered="#{not empty bean.clickedResource.archiveUrls}">
+								<span class="resource_field" style="position:relative;bottom:6px;">#{msg.archive_versions} : </span>
+								<p:selectOneMenu onchange="archive_url_select();" id="select_archive_url" value="0" height="90"
+									widgetVar="archive_versions_menu" var="t">
+									<f:selectItem itemLabel="Choose an archived version" itemValue="" noSelectionOption="true" />
+									<f:selectItems value="#{bean.clickedResource.archiveUrls}" var="entry" itemLabel="#{entry.timestamp}"
+										itemValue="#{entry.archiveUrl}" />
+									<p:column>
+										<h:outputText value="#{t.timestamp}">
+											<f:convertDateTime pattern="d-M-yyyy" type="date"/>
+										</h:outputText>
+									</p:column>
+								</p:selectOneMenu>
 							</h:panelGroup>
+							<div style="padding-top:10px">
+								<span class="resource_field">#{msg.archive} : </span>
+								<p:commandButton action="#{bean.archiveCurrentVersion}" styleClass="greenbutton" value="#{msg.live_version}"/>								
+							</div>
 							<h:panelGroup layout="block" style="padding-top: 10px;" rendered="#{bean.clickedResource.source == 'TED'}">
 								<span class="resource_field">#{msg.transcript} : </span><h:outputLink value="ted_transcript.jsf" style="text-decoration:underline;"><f:param name="resource_id" value="#{bean.clickedResource.id}"/>#{msg.link_to_transcript}</h:outputLink>
 							</h:panelGroup>

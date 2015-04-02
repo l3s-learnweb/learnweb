@@ -38,16 +38,6 @@ function setPreference(prefKey, prefValue)
 	setPreferenceRemote([{name:'key', value:prefKey}, {name:'value', value:prefValue}]);
 }
 
-function archive_url_select(){
-	
-	var selectedValue = document.getElementById("right_form:select_archive_url").value;
-	if(selectedValue != "more versions" && selectedValue != "")
-		window.open(selectedValue,'_blank');
-	else if(selectedValue == "more versions")
-		update_archive_dialog();
-	
-}
-
 $(document).ready(function(){
 	
 	$(".menu").click(function(){		

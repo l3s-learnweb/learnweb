@@ -1,15 +1,16 @@
 package de.l3s.learnweb;
 
 import java.io.Serializable;
+import java.util.Date;
 
 public class ArchiveUrl implements Serializable
 {
 
     private static final long serialVersionUID = 63994605834754451L;
     private String archiveUrl;
-    private String timestamp;
+    private Date timestamp;
 
-    public ArchiveUrl(String archiveUrl, String timestamp)
+    public ArchiveUrl(String archiveUrl, Date timestamp)
     {
 	this.archiveUrl = archiveUrl;
 	this.timestamp = timestamp;
@@ -25,12 +26,12 @@ public class ArchiveUrl implements Serializable
 	this.archiveUrl = archiveUrl;
     }
 
-    public String getTimestamp()
+    public Date getTimestamp()
     {
 	return timestamp;
     }
 
-    public void setTimestamp(String timestamp)
+    public void setTimestamp(Date timestamp)
     {
 	this.timestamp = timestamp;
     }

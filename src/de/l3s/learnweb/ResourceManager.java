@@ -610,12 +610,12 @@ public class ResourceManager
     {
 
 	List<ArchiveUrl> archiveUrls = new ArrayList<ArchiveUrl>();
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT archive_url, DATE_FORMAT(timestamp,'%d %b, %Y %k:%i:%s') AS timestamp FROM `lw_resource_archiveurl` WHERE `resource_id` = ? ORDER BY timestamp");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT archive_url, timestamp FROM `lw_resource_archiveurl` WHERE `resource_id` = ? ORDER BY timestamp");
 	select.setInt(1, id);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
 	{
-	    archiveUrls.add(new ArchiveUrl(rs.getString("archive_url"), rs.getString("timestamp")));
+	    archiveUrls.add(new ArchiveUrl(rs.getString("archive_url"), rs.getTimestamp("timestamp")));
 	}
 	select.close();
 
