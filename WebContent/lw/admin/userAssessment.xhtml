@@ -1,0 +1,101 @@
+<ui:composition 
+	template="/templates/main.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:p="http://primefaces.org/ui">
+
+		<ui:param name="loginRequired" value="true"/>
+		<ui:param name="pageTitle" value="#{msg.users}"/>
+		
+		<ui:define name="center_layout">
+			
+			<h2 style="margin-left:10px;"> User Assessment </h2>
+			
+			<h:form>
+    		<p:messages autoUpdate="true" />
+    		
+			    <p:tabView cache="true">
+			        <p:tab title="Interactive Groups">
+						<h:panelGrid columns="2"  cellpadding="10" cellspacing="1">
+			            	<f:facet name="header"> 
+			                	<p:outputLabel for="selectCourse1" value="Select a Class" /> 
+			                </f:facet>
+			            	
+			                <p:outputLabel for="selectCourse1" value="Class:" /> 
+			                <p:selectOneMenu id="selectCourse1" value="#{userAssessmentBean.selectCourse1}" style="width:250px">
+							   	<f:selectItem itemLabel="---" itemValue="" />
+	            				<f:selectItems value="#{userAssessmentBean.courses}" />
+						    </p:selectOneMenu>
+						    
+						    <p:outputLabel for="graph1" value="Chart Type:" />
+					        <p:selectOneRadio id="graph1" value="#{userAssessmentBean.selectChart1}">
+					            <f:selectItem itemLabel="Bar Chart" itemValue="bar" />
+					            <f:selectItem itemLabel="Pie Chart" itemValue="pie" />
+					            <f:selectItem itemLabel="Line Chart" itemValue="line" />
+					        </p:selectOneRadio>
+					        
+					        <!-- Verificar as saidas -->
+			           		<p:commandButton value="Submit" update="display" icon="ui-icon-check" />
+        					<h:outputText id="display" value="#{userAssessmentBean.selectCourse1}" />
+        					
+			           </h:panelGrid>
+					</p:tab>		        
+			        
+			        
+			        <p:tab title="Classes Comparation">
+			            <h:panelGrid columns="2" cellpadding="10" cellspacing="1">
+			                <p:graphicImage name="demo/images/godfather/godfather2.jpg" />
+			                <h:outputText value="Classes comparation Menu" />
+			                
+			                <p:commandButton value="Generate Chart" update="display" oncomplete="PF('dlg2').show()" />
+					        <p:dialog modal="true" resizable="false" widgetVar="dlg2" header="Comparative Between Classes" showEffect="clip" >
+						           <p:chart type="line" model="#{userAssessmentBean.lineModel2}" style="height:300px; min-width: 600px;"/>
+						    </p:dialog>
+			            </h:panelGrid>
+			        </p:tab>
+			        
+			        
+			        <p:tab title="User Analysis">
+			            <h:panelGrid columns="2" cellpadding="10" cellspacing="1">
+			            	<f:facet name="header"> 
+			                	<p:outputLabel value="Select an User" /> 
+			                </f:facet>
+			                
+			                <p:outputLabel for="selectCourse3" value="Select a Class:" />
+						    <p:selectOneMenu id="selectCourse3" value="#{userAssessmentBean.selectCourse3}" style="width:250px">
+						    	<f:selectItem itemLabel="---" itemValue="" />
+            					<f:selectItems value="#{userAssessmentBean.courses}" />
+            					<p:ajax update="selectUser" listener="#{userAssessmentBean.changeCourse}" /> 
+						    </p:selectOneMenu>
+						    
+							<p:outputLabel for="selectUser" value="Select a Student:" />
+                			<p:selectOneMenu id="selectUser" value="#{userAssessmentBean.selectUser}" style="width:250px">  
+                    			<f:selectItem itemLabel="---" itemValue="" />  
+                    			<f:selectItems value="#{userAssessmentBean.users}" var="u" itemLabel="#{u.username}" itemValue="#{u.id}" />  
+                			</p:selectOneMenu>						    
+						   
+						    <p:outputLabel for="graph3" value="Chart Type:" />
+					        <p:selectOneRadio id="graph3" value="#{userAssessmentBean.selectChart3}">
+					            <f:selectItem itemLabel="Bar Chart" itemValue="bar" />
+					            <f:selectItem itemLabel="Pie Chart" itemValue="pie" />
+					            <f:selectItem itemLabel="Line Chart" itemValue="line" />
+					        </p:selectOneRadio>
+					    					    			               
+					        <p:commandButton value="Generate Chart" update="display" icon="ui-icon-check" oncomplete="PF('dlg').show()" />
+					        <p:dialog modal="true" resizable="false" widgetVar="dlg" header="User Details" showEffect="clip" >
+						           <p:chart type="bar" model="#{userAssessmentBean.barModel}" style="min-width: 600px; height: 500px; margin: 0 auto"/>
+						    </p:dialog>
+			                
+			                
+			            </h:panelGrid>
+			        </p:tab>
+			        
+			    </p:tabView>
+			</h:form>   
+			
+			
+			
+		</ui:define>
+</ui:composition>
