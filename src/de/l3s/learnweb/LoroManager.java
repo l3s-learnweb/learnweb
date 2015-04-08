@@ -20,7 +20,7 @@ public class LoroManager
     public static final String DB_PASSWORD = "***REMOVED***";
     private long lastCheck = 0L;
 
-    Connection DBConnection = null;
+    static Connection DBConnection = null;
     private final static Logger log = Logger.getLogger(LoroManager.class);
     private final Learnweb learnweb;
 
@@ -77,6 +77,38 @@ public class LoroManager
 	this.learnweb = learnweb;
     }
 
+    private void metaData(ResultSet rs, Resource resource) throws SQLException
+    {
+
+	String description = resource.getDescription();
+	if(description == null)
+	    description = "";
+	if(rs.getString("description") != null && !description.contains(rs.getString("description")))
+	    description = rs.getString("description");
+	if(rs.getString("language_level") != null && !description.contains(rs.getString("language_level")))
+	    description += "\nLanguage Level: " + rs.getString("language_level");
+	if(rs.getString("languages") != null && !description.contains(rs.getString("languages")))
+	    description += "\nLanguage: " + rs.getString("languages");
+	/*if(rs.getString("course_code") != null)
+	description += "\nCourse Code: " + rs.getString("course_code");*/
+	if(rs.getString("tags") != null)
+	    description += "\nKeyWords: " + rs.getString("tags");
+	if(!description.contains("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/"))
+	    description += "\nThis file is a part of resource available on: http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
+	resource.setDescription(description);
+	if(!rs.getString("doc_format").contains("video"))
+	    resource.setUrl("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
+	else
+	    resource.setUrl(rs.getString("doc_url"));
+	resource.setSource("LORO");
+	resource.setLocation("LORO");
+	if(rs.getString("doc_format").contains("image"))
+	    resource.setMaxImageUrl(rs.getString("doc_url"));
+	else if(!rs.getString("doc_format").contains("video"))
+	    resource.setMaxImageUrl(rs.getString("preview_img_url"));
+
+    }
+
     //For saving Loro resources to LW table
     public void saveLoroResource() throws SQLException, IOException, SolrServerException
     {
@@ -96,7 +128,7 @@ public class LoroManager
 
 	User admin = learnweb.getUserManager().getUser(9139);
 	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource_docs SET resource_id = ? WHERE loro_resource_id = ? AND doc_url= ?");
-	PreparedStatement getCount = DBConnection.prepareStatement("SELECT loro_resource_id, COUNT( * ) AS rowcount FROM  `LORO_resource_docs` Group by  `loro_resource_id` LIMIT 1");
+	PreparedStatement getCount = DBConnection.prepareStatement("SELECT loro_resource_id, COUNT( * ) AS rowcount FROM  `LORO_resource_docs` group by `loro_resource_id` LIMIT 3");
 	getCount.executeQuery();
 	ResultSet rs1 = getCount.getResultSet();
 	int startingPoint = 0;
@@ -106,8 +138,8 @@ public class LoroManager
 	    //int loroId = rs1.getInt("loro_resource_id");
 
 	    PreparedStatement getLoroResource = DBConnection
-		    .prepareStatement("SELECT t1.loro_resource_id , t2.resource_id , t1.description , t1.tags , t1.title , t1.creator_name , t1.course_code , t1.language_level , t1.languages , t1.flag , t1.preview_img_url,  t2.filename , t2.doc_format , t2.doc_url FROM LORO_resource t1 JOIN LORO_resource_docs t2 ON t1.loro_resource_id = t2.loro_resource_id ORDER BY loro_resource_id LIMIT "
-			    + startingPoint + " , " + noOfRows);
+		    .prepareStatement("SELECT t1.loro_resource_id , t2.resource_id , t1.description , t1.tags , t1.title , t1.creator_name , t1.course_code , t1.language_level , t1.languages , t1.flag , t1.preview_img_url,  t2.filename , t2.doc_format , t2.doc_url FROM LORO_resource t1 JOIN LORO_resource_docs t2 ON t1.loro_resource_id = t2.loro_resource_id WHERE t1.`loro_resource_id` = "
+			    + rs1.getInt("loro_resource_id"));
 
 	    getLoroResource.executeQuery();
 	    ResultSet rs = getLoroResource.getResultSet();
@@ -135,7 +167,10 @@ public class LoroManager
 		if(learnwebResourceId == 0 || textTest == false) // not yet stored in Learnweb
 
 		{
-		    rpm.processImage(loroResource, FileInspector.openStream(loroResource.getMaxImageUrl()));
+		    if(rs.getString("doc_format").contains("video"))
+			rpm.processVideo(loroResource);
+		    else
+			rpm.processImage(loroResource, FileInspector.openStream(loroResource.getMaxImageUrl()));
 		    loroResource.save();
 		    if(!docFormat.contains("video") && !docFormat.contains("image"))
 		    {
@@ -165,35 +200,6 @@ public class LoroManager
 	}
     }
 
-    private void metaData(ResultSet rs, Resource resource) throws SQLException
-    {
-
-	String description = resource.getDescription();
-	if(description == null)
-	    description = "";
-	if(rs.getString("description") != null && !description.contains(rs.getString("description")))
-	    description = rs.getString("description");
-	if(rs.getString("language_level") != null && !description.contains(rs.getString("language_level")))
-	    description += "\nLanguage Level: " + rs.getString("language_level");
-	if(rs.getString("languages") != null && !description.contains(rs.getString("languages")))
-	    description += "\nLanguage: " + rs.getString("languages");
-	/*if(rs.getString("course_code") != null)
-	description += "\nCourse Code: " + rs.getString("course_code");*/
-	if(rs.getString("tags") != null)
-	    description += "\nKeyWords: " + rs.getString("tags");
-	if(!description.contains("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/"))
-	    description += "\nThis file is a part of resource available on: http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
-	resource.setDescription(description);
-	resource.setUrl("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
-	resource.setSource("LORO");
-	resource.setLocation("LORO");
-	if(rs.getString("doc_format").contains("image"))
-	    resource.setMaxImageUrl(rs.getString("doc_url"));
-	else
-	    resource.setMaxImageUrl(rs.getString("preview_img_url"));
-
-    }
-
     //Yet to be defined properly
     private Resource createResource(ResultSet rs, int learnwebResourceId) throws SQLException
     {
@@ -219,14 +225,14 @@ public class LoroManager
 	else if(rs.getString("doc_format").contains("video"))
 	{
 	    resource.setType("Video");
-	    resource.setEmbeddedRaw("<link href=\"http://vjs.zencdn.net/4.12/video-js.css\" rel=\"stylesheet\"/><script src=\"http://vjs.zencdn.net/4.12/video.js\"></script><script>videojs.options.flash.swf = \"/resources/js/video-js.swf\";</script><video controls=\"controls\"  style = \"width: 100%; height: 100%; \" ><source src='"
-		    + rs.getString("doc_url") + "  type='video/mp4'/></video>");
+	    resource.setEmbeddedRaw("<link href=\"http://vjs.zencdn.net/4.12/video-js.css\" rel=\"stylesheet\"/><script src=\"http://vjs.zencdn.net/4.12/video.js\"></script><script>videojs.options.flash.swf = \"/resources/js/video-js.swf\"</script><video id=\"MY_VIDEO_1\" class=\"video-js vjs-default-skin vjs-big-play-centered\" controls=\"preload=none\" width=\"100%\" height=\"100%\" data-setup=\"{}\"><source src=\""
+		    + rs.getString("doc_url") + "\"> </video>");
 	    resource.setTitle(rs.getString("title") + " " + rs.getString("filename"));
 	    resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
 
-	    resource.setUrl("link to loro page");
+	    resource.setFileName("http://loro.open.ac.uk/" + rs.getInt("loro_resource_id"));
 
-	    resource.setFileName(rs.getString("doc_url"));
+	    resource.setUrl(rs.getString("doc_url"));
 
 	    return resource;
 	}
@@ -236,6 +242,7 @@ public class LoroManager
 	    if(!rs.getString("doc_format").contains("video") && !rs.getString("doc_format").contains("image"))
 	    {
 		//  metaData(rs, resource);
+		resource.setType("text");
 		resource.setTitle(rs.getString("title"));
 		String description = resource.getDescription();
 		if(!description.contains(rs.getString("filename")))
@@ -270,6 +277,7 @@ public class LoroManager
 
 	LoroManager lm = Learnweb.getInstance().getLoroManager();
 	lm.saveLoroResource();
+	DBConnection.close();
     }
 
 }
