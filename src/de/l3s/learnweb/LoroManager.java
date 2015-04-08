@@ -102,10 +102,30 @@ public class LoroManager
 	    resource.setUrl(rs.getString("doc_url"));
 	resource.setSource("LORO");
 	resource.setLocation("LORO");
+
+	//set maxImageUrl for different types
+	//Images
 	if(rs.getString("doc_format").contains("image"))
-	    resource.setMaxImageUrl(rs.getString("doc_url"));
+	{
+	    if(rs.getString("preview_img_url").contains("RestrictedAccess"))
+	    {
+		resource.setMaxImageUrl(learnweb.getContextUrl() + "/resources/image//LearnwebP5/WebContent/resources/image/RestrictedAccess.jpg"); //Using restrictedAccess Image stored in resources folder
+
+	    }
+	    else if(!rs.getString("preview_img_url").contains("No-Preview"))
+		resource.setMaxImageUrl(rs.getString("doc_url")); //Setting doc_url as preview image if it is accessible
+	}
+	//Video  
 	else if(!rs.getString("doc_format").contains("video"))
-	    resource.setMaxImageUrl(rs.getString("preview_img_url"));
+	{
+	    if(rs.getString("preview_img_url").contains("RestrictedAccess")) //For restricted videos, we need to set video thumbnail as restrictedAccess image
+		resource.setMaxImageUrl(learnweb.getContextUrl() + "/resources/image//LearnwebP5/WebContent/resources/image/RestrictedAccess.jpg");
+	}
+	//Other
+	else if(!rs.getString("preview_img_url").contains("No-Preview"))
+	    resource.setMaxImageUrl(rs.getString("preview_img_url")); //Set preview_img available for normal types
+	else if(rs.getString("preview_img_url").contains("RestrictedAccess"))
+	    resource.setMaxImageUrl(learnweb.getContextUrl() + "/resources/image//LearnwebP5/WebContent/resources/image/RestrictedAccess.jpg");
 
     }
 
@@ -128,7 +148,7 @@ public class LoroManager
 
 	User admin = learnweb.getUserManager().getUser(9139);
 	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource_docs SET resource_id = ? WHERE loro_resource_id = ? AND doc_url= ?");
-	PreparedStatement getCount = DBConnection.prepareStatement("SELECT loro_resource_id, COUNT( * ) AS rowcount FROM  `LORO_resource_docs` group by `loro_resource_id` LIMIT 3");
+	PreparedStatement getCount = DBConnection.prepareStatement("SELECT loro_resource_id, COUNT( * ) AS rowcount FROM  `LORO_resource_docs` where loro_resource_id = 314 group by `loro_resource_id` LIMIT 1");
 	getCount.executeQuery();
 	ResultSet rs1 = getCount.getResultSet();
 	int startingPoint = 0;
@@ -167,9 +187,14 @@ public class LoroManager
 		if(learnwebResourceId == 0 || textTest == false) // not yet stored in Learnweb
 
 		{
+
+		    //processVideo can not be used to fetch preview image URL of a video if the video has restricted access
 		    if(rs.getString("doc_format").contains("video"))
-			rpm.processVideo(loroResource);
-		    else
+			if(rs.getString("preview_img_url").contains("RestrictedAccess"))
+			    rpm.processImage(loroResource, FileInspector.openStream(loroResource.getMaxImageUrl()));
+			else
+			    rpm.processVideo(loroResource);
+		    else if(!rs.getString("preview_img_url").contains("No-Preview"))
 			rpm.processImage(loroResource, FileInspector.openStream(loroResource.getMaxImageUrl()));
 		    loroResource.save();
 		    if(!docFormat.contains("video") && !docFormat.contains("image"))
