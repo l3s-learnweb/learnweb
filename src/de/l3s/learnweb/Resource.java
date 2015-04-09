@@ -88,7 +88,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private String access;
 
     private List<ArchiveUrl> archiveUrls = null;//To store the archive URL from archive.today service
-
+    private boolean restricted = false;
     // caches
     private transient OwnerList<Tag, User> tags = null;
     private transient List<Comment> comments;
@@ -1266,5 +1266,15 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	}
 
 	return archiveUrls;
+    }
+
+    public boolean isRestricted()
+    {
+	return restricted;
+    }
+
+    public void setRestricted(boolean restricted)
+    {
+	this.restricted = restricted;
     }
 }

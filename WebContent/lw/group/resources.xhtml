@@ -84,7 +84,7 @@
 					        <li> <h:outputText value="#{msg.private_resource}"/>
 					         <h:outputText value="#{groupDetailBean.clickedResource.ownerUser.username}"/></li>
 				        </ul>
-				        <p:commandButton value="Delete from group '#{groupDetailBean.group.title}'" update=":datagrid :growl :add_resource_panel" oncomplete="confirmation.hide(); update_header(); ;"  
+				        <p:commandButton value="Delete from group '#{groupDetailBean.group.title}'" update=":datagrid :growl :add_resource_panel" oncomplete="PF('confirmation').hide(); update_header(); ;"  
 				                   actionListener="#{groupDetailBean.removeResourceFromGroup}" process=":datagrid" style="display:block; margin: 10px 0;"/>  
 			              
 		   
@@ -99,7 +99,7 @@
 			            auto="true"
 			            sizeLimit="10000000"   
 			            widgetVar="fileUpload"
-			            oncomplete="file_dialog.hide()"
+			            oncomplete="PF('file_dialog').hide()"
 			            update=":add_resource_form:preview"
 			            /> 
 					</h:form>
@@ -109,7 +109,7 @@
 						<p:inputTextarea autoResize="1" maxHeight="20" value="#{groupDetailBean.clickedComment.text}" id="edit_comment_textbox"></p:inputTextarea>
 						<p:commandButton actionListener="#{groupDetailBean.onEditComment}" update=":add_resource_panel" 
 											title="#{msg.save}" value="#{msg.save}"								
-											onsuccess="comment_dialog.hide();">
+											onsuccess="PF('comment_dialog').hide();">
 						</p:commandButton>
 					</h:form>
 				</p:dialog>
