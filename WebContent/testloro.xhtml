@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" lang="#{userBean.localeCode}">
 
-<ui:composition template="/templates/main/main.xhtml">
+<ui:composition template="/templates/main.xhtml">
 	<ui:param name="pageTitle" value="test" />
 
 	<ui:define name="center_layout">
@@ -13,12 +13,12 @@
 		<div id="text">
 			<br />
 			<script>
-				videojs.options.flash.swf = "/resources/js/video-js.swf";
+				videojs.options.flash.swf = "/resources/js/video-js.swf"
 			</script>
 
 			<h2>mpeg</h2>
 			<video id="MY_VIDEO_1" class="video-js vjs-default-skin vjs-big-play-centered" controls="preload=none" width="640" height="264" data-setup="{}">
-				<!-- <source src="http://loro.open.ac.uk/960/1/Gegants.mp4" type="video/mp4" /> -->
+				<source src="http://loro.open.ac.uk/960/1/Gegants.mp4" type="video/mp4" /> 
 				<!-- <source src="http://loro.open.ac.uk/4394/2/ThesandzsoundsinFrench.mp4" type="video/mp4" /> -->
 				<!-- <source src="http://loro.open.ac.uk/4319/1/ThesoundAIandEinFrench.mp4" type="video/mp4" /> -->
 				<!-- <source src="http://loro.open.ac.uk/960/1/Gegants.mp4" type="video/mp4" /> -->
@@ -28,7 +28,7 @@
 				<source src="http://loro.open.ac.uk/4321/1/TheliaisoninFrenchpart2.mp4" type="video/mp4" />
 				<source src="http://loro.open.ac.uk/960/1/Gegants.mp4" type="video/mp4" />
 				<source src="http://loro.open.ac.uk/2130/1/Teaser_Trailer_1.mp4" type="video/mp4" /> -->
-				<source src="http://loro.open.ac.uk/2130/2/Teaser_Trailer_2.mov" type="video/mp4" />
+				<!-- <source src="http://loro.open.ac.uk/2130/2/Teaser_Trailer_2.mov" type="video/mp4" /> -->
 		<!-- 	<source src="http://loro.open.ac.uk/2113/1/ah!.MP4" type="video/mp4" />
 				<source src="http://loro.open.ac.uk/2109/1/mirror.MP4" type="video/mp4" />
 				<source src="http://loro.open.ac.uk/1980/1/no_words_needed.MP4" type="video/mp4" />
