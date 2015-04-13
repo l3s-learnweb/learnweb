@@ -76,6 +76,12 @@
 	}
 }
 
+@media screen and (max-width:46em){
+	#language_selector{
+		display:none;
+	}
+}
+
 @media screen and (max-width: 44em){
 	#logoutbutton, #loginbutton{
 		display:none;
@@ -86,11 +92,10 @@
 }
 
 @media screen and (max-width: 39em){
-	/* TOD ist das nötig?
+	/* TOD ist das nötig? (nötig um das logo verschwinden zu lassen)*/
 	#main_menu_bar{
 		background:#489a83;
 	}
-	*/
 	#searchfield{
 		margin-left:1em;
 		width:15em;

@@ -117,6 +117,7 @@ body {
 	right: -2.5rem;
 	display: none;
 	top: 0;	
+	margin-right: 0.5rem;
 }
 #language_selector li:last-child {
 	border-bottom-right-radius: 10px;
