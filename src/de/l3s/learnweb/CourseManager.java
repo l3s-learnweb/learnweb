@@ -32,7 +32,7 @@ public class CourseManager
     {
 	StringBuilder qry = new StringBuilder(
 		"course_id, title, forum_id, forum_category_id, organisation_id, default_group_id, wizard_param, wizard_enabled, next_x_users_become_moderator, default_interweb_username, default_interweb_password, welcome_message, banner_color, banner_image_file_id, options_field1");
-	for (int i = 2; i <= FIELDS; i++)
+	for(int i = 2; i <= FIELDS; i++)
 	    qry.append(", options_field").append(i);
 	COLUMNS = qry.toString();
     }
@@ -43,7 +43,7 @@ public class CourseManager
     {
 	super();
 	this.learnweb = learnweb;
-	this.cache = Collections.synchronizedMap(new LinkedHashMap<Integer, Course>(10));
+	this.cache = Collections.synchronizedMap(new LinkedHashMap<Integer, Course>(50));
 	this.resetCache();
     }
 
@@ -54,7 +54,7 @@ public class CourseManager
 	// load all organisations into cache
 	Statement select = learnweb.getConnection().createStatement();
 	ResultSet rs = select.executeQuery("SELECT " + COLUMNS + ", COUNT(user_id) AS member_count FROM lw_course LEFT JOIN lw_user_course USING(course_id) GROUP BY course_id ORDER BY title");
-	while (rs.next())
+	while(rs.next())
 	    cache.put(rs.getInt("course_id"), new Course(rs));
 	select.close();
     }
@@ -78,9 +78,9 @@ public class CourseManager
      */
     public Course getCourseByWizard(String wizardParam)
     {
-	for (Course course : cache.values()) // it's ok to iterate over the courses because we have only a few
+	for(Course course : cache.values()) // it's ok to iterate over the courses because we have only a few
 	{
-	    if (null != course.getWizardParam() && course.getWizardParam().equalsIgnoreCase(wizardParam))
+	    if(null != course.getWizardParam() && course.getWizardParam().equalsIgnoreCase(wizardParam))
 		return course;
 	}
 	return null;
@@ -105,9 +105,9 @@ public class CourseManager
     {
 	List<Course> courses = new LinkedList<Course>();
 
-	for (Course course : cache.values()) // it's ok to iterate over the courses because we have only a few
+	for(Course course : cache.values()) // it's ok to iterate over the courses because we have only a few
 	{
-	    if (course.getOrganisationId() == organisationId)
+	    if(course.getOrganisationId() == organisationId)
 		courses.add(course);
 	}
 
@@ -127,7 +127,7 @@ public class CourseManager
 	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT course_id FROM lw_user_course WHERE user_id = ?");
 	select.setInt(1, userId);
 	ResultSet rs = select.executeQuery();
-	while (rs.next())
+	while(rs.next())
 	    courses.add(getCourseById(rs.getInt(1)));
 	select.close();
 
@@ -144,7 +144,7 @@ public class CourseManager
      */
     public synchronized Course save(Course course) throws SQLException
     {
-	if (course.getId() < 0) // the course is not yet stored at the database 
+	if(course.getId() < 0) // the course is not yet stored at the database 
 	{ // we have to get a new id from the groupmanager
 	    Group group = new Group();
 	    group.setTitle(course.getTitle());
@@ -157,7 +157,7 @@ public class CourseManager
 
 	    cache.put(course.getId(), course);
 
-	    if (course.getForumCategoryId() < 1 && course.getForumId() < 1)
+	    if(course.getForumCategoryId() < 1 && course.getForumId() < 1)
 	    {
 		// try to set up the forum:
 		ForumManager fm = learnweb.getForumManger();
@@ -169,7 +169,7 @@ public class CourseManager
 		    course.setForumCategoryId(categoryId);
 		    course.setForumId(forumId);
 		}
-		catch (Exception e)
+		catch(Exception e)
 		{
 		    e.printStackTrace();
 
@@ -181,7 +181,7 @@ public class CourseManager
 
 	PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_course` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
-	if (course.getId() < 0) // the course is not yet stored at the database 			
+	if(course.getId() < 0) // the course is not yet stored at the database 			
 	    replace.setNull(1, java.sql.Types.INTEGER);
 	else
 	    replace.setInt(1, course.getId());
@@ -201,10 +201,10 @@ public class CourseManager
 	replace.setLong(15, course.getOptions()[0]);
 	replace.executeUpdate();
 
-	if (course.getId() < 0) // it's a new course -> get the assigned id
+	if(course.getId() < 0) // it's a new course -> get the assigned id
 	{
 	    ResultSet rs = replace.getGeneratedKeys();
-	    if (!rs.next())
+	    if(!rs.next())
 		throw new SQLException("database error: no id generated");
 	    course.setId(rs.getInt(1));
 
@@ -222,7 +222,7 @@ public class CourseManager
 
     public void delete(Course course) throws SQLException
     {
-	if (course.getMemberCount() > 0)
+	if(course.getMemberCount() > 0)
 	    throw new IllegalArgumentException("course can't be deleted, remove all members first");
 
 	PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_course` WHERE course_id = ?");
@@ -260,10 +260,10 @@ public class CourseManager
 	CourseManager cm = lw.getCourseManager();
 
 	System.out.println("All courses:");
-	for (Course o : cm.getCoursesAll())
+	for(Course o : cm.getCoursesAll())
 	{
 	    System.out.println(o);
-	    if (o.getOrganisation() == null)
+	    if(o.getOrganisation() == null)
 		System.out.println("problem" + o.getOrganisationId());
 	}
     }

@@ -95,11 +95,9 @@ public class LoroManager
 	    description += "\nKeyWords: " + rs.getString("tags");
 	if(!description.contains("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/"))
 	    description += "\nThis file is a part of resource available on: http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
-	resource.setDescription(description);
-	if(!rs.getString("doc_format").contains("video"))
-	    resource.setUrl("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
-	else
-	    resource.setUrl(rs.getString("doc_url"));
+
+	resource.setUrl("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
+
 	resource.setSource("LORO");
 	resource.setLocation("LORO");
 
@@ -277,9 +275,7 @@ public class LoroManager
 	    resource.setTitle(rs.getString("title") + " " + rs.getString("filename"));
 	    resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
 
-	    resource.setFileName("http://loro.open.ac.uk/" + rs.getInt("loro_resource_id"));
-
-	    resource.setUrl(rs.getString("doc_url"));
+	    resource.setFileName(rs.getString("doc_url"));
 
 	    return resource;
 	}

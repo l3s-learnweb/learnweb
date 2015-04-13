@@ -189,7 +189,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    log(Action.searching, 0, query);
 	}
 
-	return "/search.xhtml?faces-redirect=true";
+	return "/lw/search.xhtml?faces-redirect=true";
     }
 
     public String onSearchVideo()

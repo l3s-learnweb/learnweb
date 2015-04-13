@@ -269,6 +269,7 @@ public class UserManager
 	user.setInterwebToken(iwToken);
 	user.setOrganisationId(course.getOrganisationId());
 	user.setPassword(password, false);
+	user.setPreferences(new HashMap<String, String>());
 	user = save(user);
 
 	course.addUser(user);

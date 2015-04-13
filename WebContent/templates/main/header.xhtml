@@ -5,9 +5,8 @@
 	
 <ui:composition>
 <header id="header">
+	<div id="main_menu_bar" style="background-image:url(#{menuBean.bannerImage});">
 
-	<div id="main_menu_bar">
-		
 		<form action="#{request.contextPath}/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
 			<a href="http://localhost:8080/Learnweb-Tomcat/lw/myhome/groups.jsf" id="learnweb_logo">Logo</a>
 			<input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" id="searchfield" />

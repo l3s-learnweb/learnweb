@@ -597,16 +597,6 @@ public class Learnweb
 	return querydbConnection;
     }
 
-    public long getLastQueryCheck()
-    {
-	return lastQueryCheck;
-    }
-
-    public void setLastQueryCheck(long lastQueryCheck)
-    {
-	this.lastQueryCheck = lastQueryCheck;
-    }
-
     public SearchLogClient getSearchlogClient()
     {
 	return searchlogClient;
@@ -635,5 +625,19 @@ public class Learnweb
     public ArchiveUrlManager getArchiveUrlManager()
     {
 	return archiveUrlManager;
+    }
+
+    /**
+     * You should never call this
+     * 
+     * @throws SQLException
+     */
+    public void resetCaches() throws SQLException
+    {
+	organisationManager.resetCache();
+	userManager.resetCache();
+	resourceManager.resetCache();
+	groupManager.resetCache();
+	courseManager.resetCache();
     }
 }

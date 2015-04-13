@@ -29,7 +29,7 @@ public class OrganisationManager
     {
 	super();
 	this.learnweb = learnweb;
-	this.cache = Collections.synchronizedMap(new LinkedHashMap<Integer, Organisation>(10));
+	this.cache = Collections.synchronizedMap(new LinkedHashMap<Integer, Organisation>(30));
 	this.resetCache();
     }
 

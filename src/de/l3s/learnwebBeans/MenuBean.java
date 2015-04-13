@@ -296,7 +296,7 @@ public class MenuBean extends ApplicationBean implements Serializable
 
     public String getBannerImage() throws SQLException
     {
-	String bannerImageUrl = "../resources/icon/Learnweb.png";
+	String bannerImageUrl = "../resources/main-template/img/LearnwebLogo.png";
 
 	if(selectCourse != null && selectCourse.getBannerImage() != null)
 	    bannerImageUrl = selectCourse.getBannerImage();

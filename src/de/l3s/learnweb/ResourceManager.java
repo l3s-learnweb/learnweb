@@ -835,6 +835,15 @@ public class ResourceManager
 	return resources;
     }
 
+    public void resetCache() throws SQLException
+    {
+	cache.clear();
+    }
+
+    /*
+     *  All methods beyond should be deleted soon
+     */
+
     public static void main(String[] args) throws Exception
     {
 	createThumbnailsForTEDVideos();
@@ -954,4 +963,5 @@ public class ResourceManager
 		System.out.println(resource.getType());
 	}
     }
+
 }
