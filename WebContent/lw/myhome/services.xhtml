@@ -46,9 +46,9 @@
 						<h:panelGroup rendered="#{!service.authorized}">							
 							<h:panelGrid columns="2">
 								<h:panelGrid columns="2" style="font-size: 0.8em;" rendered="${servicesBean.isLoginBasedService(service)}">
-									<h:outputLabel value="#{msg.key}:" style="margin-right:5px" />
+									<h:outputLabel value="#{msg.username}:" style="margin-right:5px" />
 									<h:inputText id="key" value="#{service.key}" />
-									<h:outputLabel value="#{msg.secret}:" style="margin-right:5px" />
+									<h:outputLabel value="#{msg.password}:" style="margin-right:5px" />
 									<h:inputSecret id="secret" value="#{service.secret}" />
 								</h:panelGrid>
 								<h:commandButton value="#{msg.authorize}" actionListener="${servicesBean.signInOnService(service)}" />

@@ -14,13 +14,19 @@
 			<h:form id="addgroupform" style="width: 90%;">
 				<p:fieldset legend="#{msg.mandatory_field}">
 				
-					<h:panelGrid columns="3" columnClasses="medium-width">
+					<h:panelGrid columns="3" columnClasses="medium-width">						
 					
-						<h:outputText value="#{msg.title}*:" />
+						<h:outputText value="#{msg.title}:" />
 						<p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" />
 						<p:message for="new_title" showSummary="true" showDetail="false" id="message_new_title"/>
 						
-						<h:outputText value="#{msg.course}*:" />
+						<h:outputText value="#{msg.category}:" />
+						<h:selectOneMenu value="#{groupsBean.newGroup.courseId}" >	
+							<f:selectItem itemValue="Some Topic 2015 [ST2015]" />
+						</h:selectOneMenu>
+						<h:outputText value="" />
+						
+						<h:outputText value="#{msg.course}:" />
 						<h:selectOneMenu value="#{groupsBean.newGroup.courseId}" id="course_id">	
 							<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
 						</h:selectOneMenu>
