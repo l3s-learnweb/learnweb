@@ -44,6 +44,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     private boolean restrictionOnlyLeaderCanAddResources;
 
     // caches
+
     private transient List<Link> documentLinks;
     private transient OwnerList<Resource, User> resources;
     private transient List<User> members;
@@ -54,11 +55,13 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     public void clearCaches()
     {
+
 	documentLinks = null;
 	resources = null;
 	members = null;
 	links = null;
 	subgroups = null;
+
     }
 
     public Group()
@@ -91,10 +94,11 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     public List<User> getMembers() throws SQLException
     {
-	if(null == members)
-	{
-	    members = Learnweb.getInstance().getUserManager().getUsersByGroupId(id);
-	}
+	//  disabled because the members variableis not updated correctly when a user is added/deleted
+	//if(null == members)
+	//{
+	members = Learnweb.getInstance().getUserManager().getUsersByGroupId(id);
+	//}
 	return members;
     }
 
@@ -105,7 +109,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
      */
     public boolean isMember(User user) throws SQLException
     {
-	getMembers(); // make sure members are loaded
+	List<User> members = getMembers(); // make sure members are loaded
 
 	return members.contains(user);
     }
@@ -140,14 +144,19 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	return false;
     }
 
+    private long resourcesCacheTime = 0L;
+
     public OwnerList<Resource, User> getResources() throws SQLException
     {
+	System.out.println("getResources");
 	// caching disabled until a good strategie exist how to deal with deleting resources on the my resource page
-	//if(null == resources) 
-	//{
-	ResourceManager rm = Learnweb.getInstance().getResourceManager();
-	resources = rm.getResourcesByGroupId(id);
-	//}
+	if(null == resources || resourcesCacheTime + 3000L < System.currentTimeMillis())
+	{
+	    System.out.println("getResources echt");
+	    ResourceManager rm = Learnweb.getInstance().getResourceManager();
+	    resources = rm.getResourcesByGroupId(id);
+	    resourcesCacheTime = System.currentTimeMillis();
+	}
 	return resources;
     }
 
@@ -295,11 +304,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
     public void setForumId(int forumId) throws SQLException
     {
 	this.forumId = forumId;
-    }
-
-    public void clearLinksCache()
-    {
-	documentLinks = null;
     }
 
     public List<Link> getDocumentLinks() throws SQLException

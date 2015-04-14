@@ -57,6 +57,7 @@ public class User implements Comparable<User>, Serializable, HasId
     private HashMap<String, String> preferences;
 
     // caches
+
     private List<Course> courses;
     private List<Resource> resources;
     private List<Group> groups;
@@ -202,8 +203,8 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public List<Resource> getResources() throws SQLException
     {
-	if(null == resources)
-	    resources = Learnweb.getInstance().getResourceManager().getResourcesByUserId(this.getId());
+	//if(null == resources)
+	resources = Learnweb.getInstance().getResourceManager().getResourcesByUserId(this.getId());
 
 	return resources;
     }
@@ -295,6 +296,8 @@ public class User implements Comparable<User>, Serializable, HasId
 	return ((User) obj).getId() == this.getId();
     }
 
+    private long groupsCacheTime = 0L;
+
     /**
      * returns the groups the user is member off
      * 
@@ -303,9 +306,11 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public List<Group> getGroups() throws SQLException
     {
-	if(null == groups)
+	if(null == groups || groupsCacheTime + 3000L < System.currentTimeMillis())
+	{
 	    groups = Learnweb.getInstance().getGroupManager().getGroupsByUserId(id);
-
+	    groupsCacheTime = System.currentTimeMillis();
+	}
 	return groups;
     }
 
@@ -317,16 +322,16 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public List<Group> getWriteAbleGroups() throws SQLException
     {
-	if(null == writeAbleGroups)
+	//if(null == writeAbleGroups)
+	//{
+	writeAbleGroups = new LinkedList<Group>();
+	List<Group> groups = getGroups();
+	for(Group group : groups)
 	{
-	    writeAbleGroups = new LinkedList<Group>();
-	    getGroups();
-	    for(Group group : groups)
-	    {
-		if(!group.isRestrictionOnlyLeaderCanAddResources() || group.isLeader(this))
-		    writeAbleGroups.add(group);
-	    }
+	    if(!group.isRestrictionOnlyLeaderCanAddResources() || group.isLeader(this))
+		writeAbleGroups.add(group);
 	}
+	//}
 	return writeAbleGroups;
     }
 

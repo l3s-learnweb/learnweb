@@ -133,8 +133,8 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
      */
     public List<Group> getGroups() throws SQLException
     {
-	if(null == groups)
-	    groups = Learnweb.getInstance().getGroupManager().getGroupsByResourceId(id);
+	//if(null == groups)
+	groups = Learnweb.getInstance().getGroupManager().getGroupsByResourceId(id);
 	return groups;
     }
 

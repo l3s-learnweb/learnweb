@@ -707,17 +707,18 @@ public class ResourceManager
 
 	OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT resource_id, user_id, timestamp FROM `lw_group_resource` WHERE `group_id` = ? ORDER BY resource_id ASC");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? ORDER BY resource_id ASC");
 	select.setInt(1, groupId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
 	{
-	    int userId = rs.getInt(2);
-	    Resource r = getResource(rs.getInt(1));
+	    int userId = rs.getInt(1);
+	    //Resource r = getResource(rs.getInt(1));
+	    Resource r = createResource(rs);
 	    User user = userId == 0 ? null : um.getUser(userId);
 
 	    if(null != r)
-		resources.add(r, user, rs.getDate(3));
+		resources.add(r, user, rs.getDate(2));
 	}
 	select.close();
 
@@ -767,6 +768,7 @@ public class ResourceManager
 	    resource.setDuration(rs.getInt("duration"));
 	    resource.setArchiveUrl(rs.getString("archive_url"));
 	    resource.setRestricted(rs.getInt("restricted") == 1);
+
 	    if(resource.getSource().equals("TED")) // This must be set manually because we store all TED videos in Learnweb/Solr
 		resource.setLocation("TED");
 	    else

@@ -328,7 +328,6 @@ public class ResourceBean extends ApplicationBean implements Serializable
 
     public boolean canDeleteTag(Object tagO) throws SQLException
     {
-	System.out.println("canDeleteTag");
 	if(!(tagO instanceof Tag))
 	    return false;
 
