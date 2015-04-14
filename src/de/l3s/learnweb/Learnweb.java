@@ -118,7 +118,7 @@ public class Learnweb
 		propteriesFileName = "lw_windows_lisiyu";
 	    else if((new File("/home/linda").exists()))
 		propteriesFileName = "lw_ubuntu_lisiyu";
-	    else if((new File("C:\\Users\\kalyani").exists()))
+	    else if((new File("/home/kalyani").exists()))
 		propteriesFileName = "lw_local_rishita";
 	    else if((new File("C:\\Users\\morais").exists()))
 		propteriesFileName = "lw_local_alana";
