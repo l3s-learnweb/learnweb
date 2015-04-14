@@ -22,7 +22,6 @@ import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.solrClient.SolrClient;
 import de.l3s.searchlogclient.SearchLogClient;
-import de.l3s.sparqlclient.SparqlClient;
 import de.l3s.util.PropertiesBundle;
 
 @ManagedBean
@@ -57,7 +56,6 @@ public class Learnweb
     private final ArchiveUrlManager archiveUrlManager; //For creating archive pages of resources saved to LearnWeb
     private final SearchLogClient searchlogClient; //For Search History Tools
     private final SolrClient solrClient;
-    private final SparqlClient sparqlClient; //For TED sparql endpoint
     private final LoroManager loroManager;
     private final ResourcePreviewMaker resourcePreviewMaker;
     private JobScheduler jobScheduler;
@@ -112,7 +110,7 @@ public class Learnweb
 		propteriesFileName = "lw_local_michaela";
 	    else if((new File("C:\\Users\\singh")).exists())
 		propteriesFileName = "lw_local_jaspreet";
-	    else if((new File("C:\\Users\\z.fernando").exists()))
+	    else if((new File("/home/fernando").exists()))
 		propteriesFileName = "lw_local_trevor";
 	    else if((new File("C:\\Users\\TF").exists()))
 		propteriesFileName = "lw_local_trevor";
@@ -157,7 +155,6 @@ public class Learnweb
 	solrClient = SolrClient.getInstance(this);
 	resourcePreviewMaker = new ResourcePreviewMaker(this);
 	searchlogClient = new SearchLogClient(this);
-	sparqlClient = new SparqlClient(this);
 	tedManager = new TedManager(this);
 	archiveUrlManager = new ArchiveUrlManager(this);
 	loroManager = new LoroManager(this);
@@ -605,11 +602,6 @@ public class Learnweb
     public SolrClient getSolrClient()
     {
 	return solrClient;
-    }
-
-    public SparqlClient getSparqlClient()
-    {
-	return sparqlClient;
     }
 
     public TedManager getTedManager()

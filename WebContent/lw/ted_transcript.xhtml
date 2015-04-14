@@ -1,18 +1,17 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" 
+<ui:composition template="/templates/main/main.xhtml" 
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:h="http://java.sun.com/jsf/html" 
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui" 
-	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui"
 	lang="#{userBean.localeCode}">
 
-<f:metadata>
-	<f:viewParam name="resource_id" value ="#{tedTranscriptBean.resourceId}" />
-	<f:event type="preRenderView" listener="#{tedTranscriptBean.preRenderView}" />
-</f:metadata>
-	
-<ui:composition template="/lw/templates/new_main.xhtml">
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="resource_id" value ="#{tedTranscriptBean.resourceId}" />
+			<f:event type="preRenderView" listener="#{tedTranscriptBean.preRenderView}" />
+		</f:metadata>
+	</ui:define>
+
 	<ui:param name="pageTitle" value="#{msg.tedTranscriptTitle}" />	
 	<ui:param name="helpText" value="#{msg.tedTranscriptHelp}"/>
 	<ui:param name="helpTextStyle" value="tedtranscript_help" />
@@ -90,4 +89,3 @@
 	</ui:define>
 	
 </ui:composition>
-</html>

@@ -1,10 +1,7 @@
 package de.l3s.learnweb;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.Date;
-
-import de.l3s.learnweb.beans.UtilBean;
 
 public class ArchiveUrl implements Serializable
 {
@@ -29,9 +26,9 @@ public class ArchiveUrl implements Serializable
 	this.archiveUrl = archiveUrl;
     }
 
-    public String getTimestamp()
+    public Date getTimestamp()
     {
-	return new SimpleDateFormat("MMM d, yyyy HH:mm:ss", UtilBean.getUserBean().getLocale()).format(timestamp);
+	return timestamp;
     }
 
     public void setTimestamp(Date timestamp)

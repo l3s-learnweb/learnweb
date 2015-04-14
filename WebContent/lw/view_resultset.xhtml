@@ -1,18 +1,17 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
+<ui:composition template="/templates/main/main.xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
-
-<f:metadata>
-	<f:viewParam name="resultsetid" value="#{resultSetBean.resultSetIdMd5}" />
-	<f:event listener="#{exploreBean.setExploreMode('resultset_view')}" type="preRenderView" />
-	<f:event type="preRenderView" listener="#{resultSetBean.preRenderView}" />
-</f:metadata>
-
-<ui:composition template="/lw/templates/new_main.xhtml">
-
+	
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="resultsetid" value="#{resultSetBean.resultSetIdMd5}" />
+			<f:event listener="#{exploreBean.setExploreMode('resultset_view')}" type="preRenderView" />
+			<f:event type="preRenderView" listener="#{resultSetBean.preRenderView}" />
+		</f:metadata>
+	</ui:define>
+	
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.resultSetViewTitle}" />	
 	
@@ -254,4 +253,3 @@
 		</p:dialog>
 	</ui:define>
 </ui:composition>
-</html>

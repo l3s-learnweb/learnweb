@@ -2,6 +2,8 @@ package de.l3s.learnwebBeans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -267,4 +269,9 @@ public class UserBean implements Serializable
 	return FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(param);
     }
 
+    //Function to format Date variables in the UI
+    public String formatDate(String pattern, Date date)
+    {
+	return new SimpleDateFormat(pattern, locale).format(date);
+    }
 }

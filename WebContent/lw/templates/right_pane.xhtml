@@ -193,7 +193,7 @@
 								<span class="resource_field" style="position:relative;bottom:6px;">#{msg.archive_versions} : </span>
 								<p:selectOneMenu onchange="archive_url_select();" id="select_archive_url" widgetVar="archive_versions_menu">
 									<f:selectItem itemLabel="Choose an archived version" itemValue="" noSelectionOption="true" />
-									<f:selectItems value="#{bean.clickedResource.archiveUrls}" var="entry" itemLabel="#{entry.timestamp}"
+									<f:selectItems value="#{bean.clickedResource.archiveUrls}" var="entry" itemLabel="#{userBean.formatDate('MMM d, yyyy HH:mm:ss',entry.timestamp)}"
 										itemValue="#{entry.archiveUrl}" /> 
 								</p:selectOneMenu>
 							</h:panelGroup>
