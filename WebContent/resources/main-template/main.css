@@ -71,7 +71,7 @@ body {
 }
 #searchbutton {
 	cursor:pointer;
-	background:url("search.png") no-repeat scroll center center #9C9C9C;
+	background:url(#{request.contextPath}/resources/main-template/img/search.png) no-repeat scroll center center #9C9C9C;
 	float:left;
 	border-top-right-radius:5px !important;
 	border-bottom-right-radius:5px !important;
