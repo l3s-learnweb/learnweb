@@ -71,7 +71,7 @@ body {
 }
 #searchbutton {
 	cursor:pointer;
-	background:url(#{request.contextPath}/resources/main-template/img/search.png) no-repeat scroll center center #9C9C9C;
+	background:url(search.png) no-repeat scroll center center #9C9C9C;
 	float:left;
 	border-top-right-radius:5px !important;
 	border-bottom-right-radius:5px !important;
@@ -195,10 +195,10 @@ in allen browsern testen danach löschen
 #language_selector a:hover {
 	background-color:#74beaa;
 }
-.language_de { background-image:url(flag_de.png); }
-.language_en { background-image:url(flag_en.png); }
-.language_pt { background-image:url(flag_pt.png); }
-.language_it { background-image:url(flag_it.png); }
+.language_de { background-image:url(../resources/main-template/img/flag_de.png); }
+.language_en { background-image:url(../resources/main-template/img/flag_en.png); }
+.language_pt { background-image:url(../resources/main-template/img/flag_pt.png); }
+.language_it { background-image:url(../resources/main-template/img/flag_it.png); }
 
 .hover-white:focus,
 .hover-white:hover	{
