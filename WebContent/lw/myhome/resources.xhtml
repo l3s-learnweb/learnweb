@@ -9,32 +9,29 @@
 <ui:composition template="/lw/templates/new_main_t.xhtml">
 
 	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="My Resources" />
+	<ui:param name="pageTitle" value="#{msg.myResourcesTitle}" />
 	<ui:param name="helpText" value="#{msg.myhomeResourcesHelp}"/>
 	  
 		<ui:define name="center_layout">
-			<div class="ui-layout-unit-header ui-widget-header ui-corner-all">
-			#{msg.myResourcesTitle}
-			</div>
 			<br></br>
-			<h:form style="display:inline;">
-				<p:commandButton id="add_resource" styleClass="resource_button greenbutton" value="#{msg.upload_resource}" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
+			<h:form  id="add_resource">
+				<p:commandButton styleClass="resource_button greenbutton" value="#{msg.upload_resource}" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
 					<f:setPropertyActionListener target="#{myResourcesBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
 				</p:commandButton>
 			</h:form>
 			<script type="text/javascript">
-			/*
+			
 				var div = document.createElement("div");
 				var group_header = document.createElement("span");
 				$(group_header).addClass("group_header");
-				$(group_header).html("My Resources");
+				$(group_header).html("#{msg.myResourcesTitle}");
 				var cl = $("#add_resource").clone();
 	            $(cl).appendTo(div);
 	            $("#add_resource").remove()
 				$(div).append(group_header);
 				$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
 				$("#center_pane").prepend(div);
-				*/
+				
 			</script>
 			<h:form prependId="false">
 				<p:confirmDialog id="confirmDialog" message="Are you sure about deleting the resource?" header="Delete Resource" severity="alert" widgetVar="confirmation" appendTo="@(body)" >
@@ -113,7 +110,8 @@
 		        	<f:setPropertyActionListener target="#{myResourcesBean.clickedResource}" value="#{result}"></f:setPropertyActionListener>
 			        <p:panel styleClass="resource_panel">  
 			            <h:panelGrid columns="1" styleClass="resource_panelgrid"> 
-			            	<div class="resource_short_title">#{result.shortTitle}</div>
+			            	<h:outputText value="#{result.title}" escape="false" styleClass="resource_short_title" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; max-width:185px; width:185px; display:block;" /> 
+				        
 			            	<p:row>
 			            		<span class="groupid">#{result.id}</span>
 			            		<h:outputText styleClass="resource_thumbnail" value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"140\" height=\"140\" />")}' escape="false"></h:outputText>

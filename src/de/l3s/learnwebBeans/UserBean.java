@@ -273,6 +273,5 @@ public class UserBean implements Serializable
     public String formatDate(Date date)
     {
 	return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, getLocale()).format(date);
-	//return new SimpleDateFormat(pattern, locale).format(date);
     }
 }

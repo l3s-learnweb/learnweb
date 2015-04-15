@@ -6,20 +6,19 @@
 	xmlns:f="http://java.sun.com/jsf/core" 
 	xmlns:p="http://primefaces.org/ui">
 	
-	<ui:param name="pageTitle" value="#{msg.homepage5}" />
+	<ui:param name="pageTitle" value="Error" />
 	<ui:param name="smallPage" value="true" />
 	<ui:param name="disableGrowl" value="true" />
 	
 	<ui:define name="center_layout">
-		<p:panel header="#{msg.homepage5}">
-			<p style="padding: 10px;">
-				<h:outputText value="" />
-				Your session has expired. Please login again.
+		<p:panel header="Error">
+			<p class="error">
+				Your session has expired. Please try again.
 			</p>
 
-			<p style="text-align: center;">
+			<ui:fragment rendered="#{not userBean.loggedIn}">
 				<ui:include src="/lw/templates/login_form.xhtml" />
-			</p>
+			</ui:fragment>
 
 		</p:panel>
 	</ui:define>

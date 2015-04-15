@@ -422,3 +422,8 @@ in allen browsern testen danach löschen
 	display:none;
 }	
 	
+.error {
+	color:red;
+	font-weight:bold;
+	padding:2rem;
+}
