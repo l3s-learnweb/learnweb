@@ -139,11 +139,32 @@
 					
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{msg.last_modified}"></h:outputText>
+							<h:outputText value="#{entry.lastModified}"></h:outputText>
 						</f:facet>
 							<h:outputText value="#{entry.lastModified}">
-								<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="Europe/Berlin"/>
+								<f:convertDateTime pattern="dd.MM.yyyy HH:mm" timeZone="#{userBean.timeZone}"/>
 							</h:outputText>
+							<br/>
+      <h:outputText value="#{entry.lastModified}">
+            <f:convertDateTime type="both" timeStyle="short" dateStyle="short" timeZone="#{userBean.timeZone}" />
+        </h:outputText>
+ 
+        <br />
+        <h:outputText value="#{entry.lastModified}">
+            <f:convertDateTime type="both" timeStyle="short" dateStyle="medium"  timeZone="#{userBean.timeZone}"/>
+        </h:outputText>
+      
+        <br />
+        <h:outputText value="#{entry.lastModified}">
+            <f:convertDateTime type="both" timeStyle="short" dateStyle="long"  timeZone="#{userBean.timeZone}"/>
+        </h:outputText>
+  
+        <br />
+        <h:outputText value="#{entry.lastModified}">
+            <f:convertDateTime type="both" timeStyle="full" dateStyle="full" timeZone="#{userBean.timeZone}" />
+        </h:outputText>
+    
+
 							
 					</p:column>
 					
