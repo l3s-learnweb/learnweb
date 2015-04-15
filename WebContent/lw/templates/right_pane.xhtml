@@ -191,11 +191,12 @@
 							</div>
 							<h:panelGroup layout="block" style="padding-top: 10px;" rendered="#{not empty bean.clickedResource.archiveUrls}">
 								<span class="resource_field" style="position:relative;bottom:6px;">#{msg.archive_versions} : </span>
-								<p:selectOneMenu onchange="archive_url_select();" id="select_archive_url" widgetVar="archive_versions_menu">
+								<p:selectOneMenu onchange="archive_url_select();" id="select_archive_url">
 									<f:selectItem itemLabel="Choose an archived version" itemValue="" noSelectionOption="true" />
-									<f:selectItems value="#{bean.clickedResource.archiveUrls}" var="entry" itemLabel="${userBean.formatDate('MMM d, yyyy HH:mm:ss',entry.timestamp)}"
-										itemValue="#{entry.archiveUrl}" /> 
+							
+									<f:selectItems value="#{bean.clickedResource.archiveUrls}" var="entry" itemValue="#{entry.archiveUrl}" itemLabel="${userBean.formatDate(entry.timestamp)}" /> 
 								</p:selectOneMenu>
+								
 							</h:panelGroup>
 							<div style="padding-top:10px">
 								<span class="resource_field">#{msg.archive} : </span>

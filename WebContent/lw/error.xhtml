@@ -1,22 +1,28 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" 
+<ui:composition 
+	template="/templates/main/main.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
-	xmlns:h="http://java.sun.com/jsf/html" 
-	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" 
 	xmlns:p="http://primefaces.org/ui">
+	
+	<ui:param name="pageTitle" value="#{msg.homepage5}" />
+	<ui:param name="smallPage" value="true" />
+	<ui:param name="disableGrowl" value="true" />
+	
+	<ui:define name="center_layout">
+		<p:panel header="#{msg.homepage5}">
+			<p style="padding: 10px;">
+				#{learnwebBean.addGlobalErrorMessage()}				
+			</p>
+			
+			<h:outputText value="Message:#{pfExceptionHandler.message}" />
+			<h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
 
-	<h:head>	
-		<title>Error - Learnweb</title>
-		<link rel="shortcut icon" href="#{learnwebBean.baseUrl}../resources/icon/favicon.ico" />
-		<link rel="stylesheet" type="text/css" href="#{learnwebBean.baseUrl}../resources/css/lw6.css" />
-		<base href="#{learnwebBean.baseUrl}" />
-	</h:head>
-	<h:body> 
-		<div style="margin:20px auto; max-width:800px;">	    			
-			#{learnwebBean.addGlobalErrorMessage()}
-			<p:messages id="message" />
-			<p:growl id="growl" globalOnly="true" />
-		</div>		
-	</h:body>
-</html>
+		</p:panel>
+	</ui:define>
+
+</ui:composition>
+    			
+
 

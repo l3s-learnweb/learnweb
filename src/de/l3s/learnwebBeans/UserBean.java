@@ -2,7 +2,7 @@ package de.l3s.learnwebBeans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
+import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -270,8 +270,9 @@ public class UserBean implements Serializable
     }
 
     //Function to format Date variables in the UI
-    public String formatDate(String pattern, Date date)
+    public String formatDate(Date date)
     {
-	return new SimpleDateFormat(pattern, locale).format(date);
+	return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, getLocale()).format(date);
+	//return new SimpleDateFormat(pattern, locale).format(date);
     }
 }
