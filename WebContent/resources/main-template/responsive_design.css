@@ -8,7 +8,7 @@
 
     /* Safari only override */
     ::i-block-chrome,#main_menu_bar {
-		background:url(LearnwebLogo.png) no-repeat scroll left; 
+		background-image:none; 
 		background-color:#489A83;
 		background-size: 22em;
     }
@@ -25,7 +25,22 @@
  
 /* options for different screen sizes */
 
+@media screen and (max-width: 82em){
+	#searchfield{
+		margin-left:27rem;
+	}
+	#sub_menu_bar .links { 
+		margin-left:26rem;
+	}
+}
+
 @media screen and (max-width: 80em){
+	#searchfield{
+		margin-left:25rem;
+	}
+	#sub_menu_bar .links { 
+		margin-left:24rem;
+	}
 	#moreprofile{
 		display:block;
 	}
@@ -34,7 +49,13 @@
 	}
 }
 
-@media screen and (max-width: 75em){
+@media screen and (max-width: 74em){
+	#searchfield{
+		margin-left:23rem;
+	}
+	#sub_menu_bar .links { 
+		margin-left:22rem;
+	}
 	#moremygroups{
 		display:block;
 	}
@@ -44,6 +65,12 @@
 }
 
 @media screen and (max-width: 65em){
+	#searchfield{
+		margin-left:20rem;
+	}
+	#sub_menu_bar .links { 
+		margin-left:19rem;
+	}
 	#moremyresources{
 		display:block;
 	}
@@ -52,59 +79,50 @@
 	}
 }
 
-@media screen and (max-width: 60em){
-	#searchfield{
-		width:10em;
-	}
-}
-
-@media screen and (max-width: 55em){
+@media screen and (max-width: 50em){
 	#sub_menu_bar .links a:last-child{
 		display:none;
 	}
-	.language{
-		display:none;
+	#searchfield{
+		width:18rem;
 	}
 	#informationonscreen{
 		margin-right:1em;
 	}
 }
 
-@media screen and (max-width: 47em){
+@media screen and (max-width: 46em){
 	#informationonscreen{
 		display:none;
 	}
 }
 
-@media screen and (max-width:46em){
+@media screen and (max-width:45em){
 	#language_selector{
 		display:none;
-	}
-}
-
-@media screen and (max-width: 44em){
-	#logoutbutton, #loginbutton{
-		display:none;
-	}
-	#login{
-		display:block;
 	}
 }
 
 @media screen and (max-width: 39em){
 	/* TOD ist das nötig? (nötig um das logo verschwinden zu lassen)*/
 	#main_menu_bar{
-		background:#489a83;
+		background-image:none; 
 	}
 	#searchfield{
 		margin-left:1em;
-		width:15em;
+		width:30rem;
 	}
 	#backtogroup{
 		width:8em;
 	}
 	#sub_menu_bar .links{
 		padding-right:0.8em;
+	}
+	#logoutbutton, #loginbutton{
+		display:none;
+	}
+	#login{
+		display:block;
 	}
 }
 
