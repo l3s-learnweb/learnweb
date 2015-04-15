@@ -1,16 +1,22 @@
 <html xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core" xmlns:p="http://primefaces.org/ui">
 
 <ui:composition>
-	<header id="header">
-		<div id="main_menu_bar" style="background-image: url(#{menuBean.bannerImage});">
 
+<header id="header">
+	<div id="main_menu_bar" style="background-image:url(#{menuBean.bannerImage});">
+			
+		<p:ajaxStatus>
+				<f:facet name="default">
+					<img src="#{request.contextPath}/resources/icon/ajax-loader1.gif" alt="Loading" style="vertical-align:middle; margin-top:0.5rem; margin-left:2rem; float:left;"/>
+				</f:facet>
+		</p:ajaxStatus>
+		 
 			<form action="#{request.contextPath}/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
 				<a href="http://localhost:8080/Learnweb-Tomcat/lw/myhome/groups.jsf" id="learnweb_logo">Logo</a>
 				<input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" id="searchfield" />
 				<input type="hidden" name="action" value="#{searchBean.searchMode}" />
 				<input type="submit" value=" " id="searchbutton" title="#{msg.searchLabel}" />
 			</form>
-
 			<div class="userbar">
 				<ul>
 					<li>
@@ -34,7 +40,7 @@
 						</a>
 					</li>
 					<li>
-						<img alt="" src="#{request.contextPath}/resources/main-template/dropdownmenu.png" height="28" width="28" style="vertical-align: middle" class="menu" tabindex="0" />
+						<img alt="" src="#{request.contextPath}/resources/main-template/img/dropdownmenu.png" height="28" width="28" style="vertical-align: middle" class="menu" tabindex="0" />
 
 						<ul>
 							<li class="menupoint">
@@ -145,15 +151,35 @@
 					</li>
 				</ul>
 			</div>
-							
+		<!--  
+		<p:ajaxStatus>
+				<f:facet name="default">
+					<img src="#{request.contextPath}/resources/icon/ajax-loader1.gif" alt="Loading" style="vertical-align:middle; margin-top:0.5rem; margin-left:2rem; float:left;"/>
+				</f:facet>
+		</p:ajaxStatus>
+		 -->
+	 <!-- 
 			<p:ajaxStatus>
-				<f:facet name="start">
-					<img src="#{request.contextPath}/resources/icon/ajax-loader.gif" alt="Loading"/>
+				<f:facet name="default">
+					<img src="#{request.contextPath}/resources/icon/ajax-loader.gif" alt="Loading" style="vertical-align:middle; margin-top:0.8rem; margin-left:2rem; float:left;"/>
 				</f:facet>
 			</p:ajaxStatus>
-
+		
+		 	
+			<p:ajaxStatus>
+				<f:facet name="default">
+					<img src="#{request.contextPath}/resources/icon/ajax-loader2.gif" alt="Loading" style="vertical-align:middle; margin-top:1.5rem; margin-left:2rem; float:left;"/>
+				</f:facet>
+			</p:ajaxStatus>
+			
+			<p:ajaxStatus>
+				<f:facet name="default">
+					<img src="#{request.contextPath}/resources/icon/ajax-loader3.gif" alt="Loading" style="vertical-align:middle; margin-top:1.5rem; margin-left:2rem; float:left;"/>
+				</f:facet>
+			</p:ajaxStatus>
+	-->
 			<div id="language_selector" class="hover-white" tabindex="0">
-				<img alt="#{userBean.localeCode}" src="#{request.contextPath}/resources/main-template/flag_#{userBean.localeCode}.png" />
+				<img alt="#{userBean.localeCode}" src="#{request.contextPath}/resources/main-template/img/flag_#{userBean.localeCode}.png" />
 
 				<h:form>
 					<ul>
@@ -173,7 +199,7 @@
 				</h:form>
 			</div>
 
-			<p:graphicImage value="/resources/main-template/question.png" alt="#{msg.help}" onclick="footerToggle();" rendered="#{not empty helpText}" id="informationonscreen" />
+			<p:graphicImage value="/resources/main-template/img/question.png" alt="#{msg.help}" onclick="footerToggle();" rendered="#{not empty helpText}" id="informationonscreen" />
 
 
 			<h:outputLink id="loginbutton" value="#{request.contextPath}/lw/user/login.jsf" rendered="#{not userBean.loggedIn}" class="hover-white">
@@ -182,7 +208,7 @@
 
 			<h:form>
 				<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true" title="#{msg.logoutLabel}">
-					<img alt="#{msg.logoutLabel}" src="#{request.contextPath}/resources/main-template/logout.png" id="logoutbutton" class="hover-white" />
+					<img alt="#{msg.logoutLabel}" src="#{request.contextPath}/resources/main-template/img/logout.png" id="logoutbutton" class="hover-white" />
 				</h:commandLink>
 			</h:form>
 
@@ -194,6 +220,8 @@
 
 	</header>
 
+			
+	
 	<h:form>
 		<p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException" update="expiredExceptionDialog" onexception="PF('exceptionDialog').show();" />
 

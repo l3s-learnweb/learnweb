@@ -8,7 +8,7 @@
 
     /* Safari only override */
     ::i-block-chrome,#main_menu_bar {
-		background-image:none; 
+		/*background-image:none;  (nötig??)*/ 
 		background-color:#489A83;
 		background-size: 22em;
     }
@@ -25,7 +25,7 @@
  
 /* options for different screen sizes */
 
-@media screen and (max-width: 82em){
+@media screen and (max-width: 85em){
 	#searchfield{
 		margin-left:27rem;
 	}
@@ -34,7 +34,7 @@
 	}
 }
 
-@media screen and (max-width: 80em){
+@media screen and (max-width: 83em){
 	#searchfield{
 		margin-left:25rem;
 	}
@@ -49,7 +49,7 @@
 	}
 }
 
-@media screen and (max-width: 74em){
+@media screen and (max-width: 78em){
 	#searchfield{
 		margin-left:23rem;
 	}
@@ -64,7 +64,7 @@
 	}
 }
 
-@media screen and (max-width: 65em){
+@media screen and (max-width: 66em){
 	#searchfield{
 		margin-left:20rem;
 	}
@@ -79,7 +79,7 @@
 	}
 }
 
-@media screen and (max-width: 50em){
+@media screen and (max-width: 53em){
 	#sub_menu_bar .links a:last-child{
 		display:none;
 	}
@@ -91,19 +91,19 @@
 	}
 }
 
-@media screen and (max-width: 46em){
+@media screen and (max-width: 48em){
 	#informationonscreen{
 		display:none;
 	}
 }
 
-@media screen and (max-width:45em){
+@media screen and (max-width:47em){
 	#language_selector{
 		display:none;
 	}
 }
 
-@media screen and (max-width: 39em){
+@media screen and (max-width: 43em){
 	#main_menu_bar{
 		background-image:none; 
 	}
@@ -125,7 +125,7 @@
 	}
 }
 
-@media screen and (max-width: 31em){
+@media screen and (max-width: 35em){
 	#searchfield{
 		width:10em;
 	}
