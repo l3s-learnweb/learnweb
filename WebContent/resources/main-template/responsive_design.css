@@ -91,6 +91,7 @@
 	}
 }
 
+/*#left_pane { width:100px; } (Optimierungsmöglichkeit)*/
 @media screen and (max-width: 43em){
 	#main_menu_bar{
 		background-image:none; 

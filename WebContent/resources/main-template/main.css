@@ -57,8 +57,8 @@ body {
 	vertical-align:middle;
 	position:absolute;
 	left:15rem;
-	line-height:4.6rem; /*wird leider ignoriert*/ 
-	top:0.6rem; /*alternativ auch 15% (beides funktioniert nur bei Browserschriftgöße 16)*/
+	top:50%;
+	margin-top:-16px;
 }
 #searchfield {
 	float:left;

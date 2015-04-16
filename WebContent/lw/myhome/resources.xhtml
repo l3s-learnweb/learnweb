@@ -77,9 +77,9 @@
 			<p:dialog header="#{msg.options}" closable="false" widgetVar="resource_dialog" appendTo="@(body)" modal="true" minWidth="540">
 				<h:form id="resource_form">
 					<h:panelGrid columns="2">
-						<h:outputLabel value="Add to:" />
+						<h:outputLabel value="#{msg.add_to}:" />
 						<h:selectOneMenu value="#{myResourcesBean.selectedResourceTargetGroupId}">
-							<f:selectItem itemLabel="My resources" itemValue="0" />
+							<f:selectItem itemLabel="#{msg.myResourcesTitle}" itemValue="0" />
 							<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />
 							<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" itemValue="#{group.id}" />
 						</h:selectOneMenu>
@@ -102,7 +102,7 @@
 						
 							<h:outputText value=""></h:outputText>
 							<p:column styleClass="myresources_pcolumn">
-								<div class="myresources_pcolumn_div"><p:commandButton value="Cancel" onclick="PF('resource_dialog').hide()" />
+								<div class="myresources_pcolumn_div"><p:commandButton value="#{msg.cancel}" onclick="PF('resource_dialog').hide()" />
 								<p:commandButton value="#{msg.save}" action="#{myResourcesBean.addSelectedResource}" update=":datagrid :growl" process="@form :datagrid" oncomplete="PF('resource_dialog').hide()" /></div>
 							</p:column>
 					</h:panelGrid>
