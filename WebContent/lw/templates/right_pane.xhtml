@@ -170,7 +170,7 @@
 									<a class="hyperlink" href="#{bean.clickedResource.url}" target="_blank"><h:outputText styleClass="hyperlink" rendered="#{bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf'}" value="#{bean.clickedResource.url}"></h:outputText></a>
 								</div>
 							</ui:fragment>
-							<ui:fragment rendered="#{not empty bean.clickedResource.fileName}">
+							<ui:fragment rendered="#{not empty bean.clickedResource.fileName and not bean.clickedResource.source.equals('LORO')}">
 								<div style="padding-top: 10px">
 									<span class="resource_field">#{msg.file} : </span><a style="color: #22e" href="#{bean.clickedResource.getUrl()}">#{bean.clickedResource.fileName}</a>
 								</div>
@@ -189,6 +189,21 @@
 							<div style="padding-top: 10px">
 								<span class="resource_field">#{msg.source} : </span><h:outputText value="#{bean.clickedResource.source}"></h:outputText>
 							</div>
+							
+							<h:panelGroup rendered="#{not empty bean.clickedResource.groups}" style="padding-top: 10px" layout="block">
+								<b><h:outputText value="#{msg.group}: " /></b>	
+								
+								<ui:repeat var="group" value="#{bean.clickedResource.groups}">
+									<h:outputLink value="group/overview.jsf">
+										<f:param name="group_id" value="#{group.id}" />
+										<h:outputText value="#{group.title}" />
+									</h:outputLink>
+									<br/>
+								</ui:repeat>						
+								<br/>
+							</h:panelGroup>
+							
+							
 							<h:panelGroup layout="block" style="padding-top: 10px;" rendered="#{not empty bean.clickedResource.archiveUrls}">
 								<span class="resource_field" style="position:relative;bottom:6px;">#{msg.archive_versions} : </span>
 								<p:selectOneMenu onchange="archive_url_select();" id="select_archive_url" widgetVar="archive_versions_menu">
@@ -255,7 +270,7 @@
 							</div>
 						</h:form>
 						<h:form rendered="#{bean.editResourceClicked and !bean.newResourceClicked}" id="edit_form">
-							<div style="text-align: center;">123
+							<div style="text-align: center;">
 								<div class="preview_box" style="max-height:500px;">
 						
 									<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>

@@ -58,14 +58,13 @@
 						
 						if(w &lt; 1360)
 							c = 2;
-						
-						console.log(columns, c);
+						if(w &gt; 1610)
+							c = 4;
 						
 						if(columns != c) {
 							columns = c;
 							updateColumns([{name:'cols',value: columns}]);
-						}
-						
+						}						
 					}
 				</script>
 				

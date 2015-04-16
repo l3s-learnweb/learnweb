@@ -10,6 +10,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
+import org.apache.log4j.Logger;
+
 import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
@@ -22,10 +24,9 @@ import de.l3s.learnweb.User;
 @ViewScoped
 public class MyResourcesBean extends ApplicationBean implements Serializable
 {
-    /**
-	 * 
-	 */
-    private static final long serialVersionUID = 5680533799976460331L;
+    private final static long serialVersionUID = 5680533799976460331L;
+    private final static Logger log = Logger.getLogger(MyResourcesBean.class);
+
     private List<Resource> resources;
     private List<Resource> resourcesAll;
     private String newComment;
@@ -38,51 +39,11 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     private Comment clickedComment;
     private Boolean reloadLogs = false;
 
-    public Comment getClickedComment()
-    {
-	return clickedComment;
-    }
-
-    public void setClickedComment(Comment clickedComment)
-    {
-	this.clickedComment = clickedComment;
-    }
-
-    public String getTagName()
-    {
-	return tagName;
-    }
-
-    public void setTagName(String tagName)
-    {
-	this.tagName = tagName;
-    }
-
-    public String getNewComment()
-    {
-	return newComment;
-    }
-
-    public void setNewComment(String newComment)
-    {
-	this.newComment = newComment;
-    }
-
-    public List<Resource> getResourcesAll()
-    {
-	return resourcesAll;
-    }
-
-    public void setResourcesAll(List<Resource> resourcesAll)
-    {
-	this.resourcesAll = resourcesAll;
-    }
-
     private List<Resource> resourcesText = new LinkedList<Resource>();
     private List<Resource> resourcesMultimedia = new LinkedList<Resource>();
     private Resource clickedResource;
     private String mode = "everything";
-    private int numberOfColumns;
+    private int numberOfColumns = 3;
 
     public MyResourcesBean() throws SQLException
     {
@@ -97,6 +58,12 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     public void updateColumns()
     {
 	numberOfColumns = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("cols"));
+
+	if(numberOfColumns < 1)
+	{
+	    log.warn("Tried to set invalid numberOfColumns: " + numberOfColumns);
+	    numberOfColumns = 3;
+	}
     }
 
     public int getNumberOfColumns()
@@ -183,9 +150,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
     public void loadResources() throws SQLException
     {
-	long start = System.currentTimeMillis();
 	resourcesAll = getUser().getResources();
-	System.out.println("laden " + (System.currentTimeMillis() - start));
 	resourcesMultimedia.clear();
 	resourcesText.clear();
 
@@ -247,7 +212,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     public void deleteResource() throws SQLException
     {
 	getUser().deleteResource(clickedResource);
-	getUser().clearCaches();
 	addGrowl(FacesMessage.SEVERITY_INFO, "resource_deleted");
 	log(Action.deleting_resource, clickedResource.getId(), clickedResource.getTitle());
 	clickedResource = new Resource();
@@ -366,6 +330,46 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     public void setReloadLogs(Boolean reloadLogs)
     {
 	this.reloadLogs = reloadLogs;
+    }
+
+    public Comment getClickedComment()
+    {
+	return clickedComment;
+    }
+
+    public void setClickedComment(Comment clickedComment)
+    {
+	this.clickedComment = clickedComment;
+    }
+
+    public String getTagName()
+    {
+	return tagName;
+    }
+
+    public void setTagName(String tagName)
+    {
+	this.tagName = tagName;
+    }
+
+    public String getNewComment()
+    {
+	return newComment;
+    }
+
+    public void setNewComment(String newComment)
+    {
+	this.newComment = newComment;
+    }
+
+    public List<Resource> getResourcesAll()
+    {
+	return resourcesAll;
+    }
+
+    public void setResourcesAll(List<Resource> resourcesAll)
+    {
+	this.resourcesAll = resourcesAll;
     }
 
 }
