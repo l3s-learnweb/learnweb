@@ -162,6 +162,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     public boolean addResource(Resource resource, User user) throws SQLException
     {
+	resources = null;
 	return Learnweb.getInstance().getResourceManager().addResourceToGroup(resource, this, user);
     }
 

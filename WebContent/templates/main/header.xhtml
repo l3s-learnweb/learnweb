@@ -2,14 +2,12 @@
 
 <ui:composition>
 
-<header id="header">
-	<div id="main_menu_bar" style="background-image:url(#{menuBean.bannerImage});">
-			
+	<header id="header">
+		<div id="main_menu_bar" style="background-image:url(#{menuBean.bannerImage});">			
 		
-					<img src="#{request.contextPath}/resources/icon/ajax-loader1.gif" alt="Loading" id="loadingsymbol" style="vertical-align:middle; "/>
-			
+			<img src="#{request.contextPath}/resources/icon/ajax-loader1.gif" alt="Loading" id="loadingsymbol" style="vertical-align:middle; "/>			
 		 
-			<form action="#{request.contextPath}/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
+			<form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
 				<a href="http://localhost:8080/Learnweb-Tomcat/lw/myhome/groups.jsf" id="learnweb_logo">Logo</a>
 				<input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" id="searchfield" />
 				<input type="hidden" name="action" value="#{searchBean.searchMode}" />
@@ -149,33 +147,7 @@
 					</li>
 				</ul>
 			</div>
-		<!--  
-		<p:ajaxStatus>
-				<f:facet name="default">
-					<img src="#{request.contextPath}/resources/icon/ajax-loader1.gif" alt="Loading" style="vertical-align:middle; margin-top:0.5rem; margin-left:2rem; float:left;"/>
-				</f:facet>
-		</p:ajaxStatus>
-		
-	 
-			<p:ajaxStatus>
-				<f:facet name="default">
-					<img src="#{request.contextPath}/resources/icon/ajax-loader.gif" alt="Loading" style="vertical-align:middle; margin-top:0.8rem; margin-left:2rem; float:left;"/>
-				</f:facet>
-			</p:ajaxStatus>
-		
-		 	
-			<p:ajaxStatus>
-				<f:facet name="default">
-					<img src="#{request.contextPath}/resources/icon/ajax-loader2.gif" alt="Loading" style="vertical-align:middle; margin-top:1.5rem; margin-left:2rem; float:left;"/>
-				</f:facet>
-			</p:ajaxStatus>
-			
-			<p:ajaxStatus>
-				<f:facet name="default">
-					<img src="#{request.contextPath}/resources/icon/ajax-loader3.gif" alt="Loading" style="vertical-align:middle; margin-top:1.5rem; margin-left:2rem; float:left;"/>
-				</f:facet>
-			</p:ajaxStatus>
-	 -->
+	
 			<div id="language_selector" class="hover-white" tabindex="0">
 				<img alt="#{userBean.localeCode}" src="#{request.contextPath}/resources/main-template/img/flag_#{userBean.localeCode}.png" />
 

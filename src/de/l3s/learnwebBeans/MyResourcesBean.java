@@ -6,7 +6,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.application.FacesMessage.Severity;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
@@ -83,6 +82,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     private List<Resource> resourcesMultimedia = new LinkedList<Resource>();
     private Resource clickedResource;
     private String mode = "everything";
+    private int numberOfColumns;
 
     public MyResourcesBean() throws SQLException
     {
@@ -94,14 +94,23 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	clickedResource = temp;
     }
 
+    public void updateColumns()
+    {
+	numberOfColumns = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("cols"));
+    }
+
+    public int getNumberOfColumns()
+    {
+	return numberOfColumns;
+    }
+
     public boolean canDeleteTag(Object tagO) throws SQLException
     {
-	System.out.println("canDeleteTag");
 	if(!(tagO instanceof Tag))
 	    return false;
 
 	User user = getUser();
-	if(null == user)// || true)
+	if(null == user)
 	    return false;
 	if(user.isAdmin() || user.isModerator())
 	    return true;
@@ -117,25 +126,18 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     {
 	try
 	{
-
-	    String msgKey = "resource added";
-
-	    Severity sev = FacesMessage.SEVERITY_INFO;
-	    FacesContext context = FacesContext.getCurrentInstance();
-
-	    context.addMessage(null, new FacesMessage("Successful", "Hello "));
-	    context.addMessage(null, new FacesMessage("Second Message", "Additional Info Here..."));
-
-	    Resource res = getUser().addResource(clickedResource.clone());
-	    getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(res, getUser());
+	    //Resource res = getUser().addResource(clickedResource.clone());
+	    getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(clickedResource, getUser());
 	    //getLearnweb().getResourceManager().addResourceToGroup(res, getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId), getUser());
-	    loadResources();
+
+	    log(Action.adding_resource, clickedResource.getId(), selectedResourceTargetGroupId + "");
+
+	    addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", clickedResource.getTitle());
 
 	}
 	catch(SQLException e)
 	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    addFatalMessage(e);
 	}
     }
 
@@ -187,62 +189,38 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	resourcesMultimedia.clear();
 	resourcesText.clear();
 
+	/*
 	for(Resource resource : resourcesAll)
 	{
 	    if(resource.isMultimedia())
 		resourcesMultimedia.add(resource);
 	    else
 		resourcesText.add(resource);
-	}
+	}*/
 	setMode(mode);
     }
 
-    public void editClickedResource()
+    public void editClickedResource() throws SQLException
     {
-	try
-	{
-	    clickedResource.save();
-	}
-	catch(SQLException e)
-	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
+
+	clickedResource.save();
+
     }
 
-    public void onSelect()
+    public void onSelect() throws NumberFormatException, SQLException
     {
 	ResourceManager rm = Learnweb.getInstance().getResourceManager();
 	Resource temp;
-	try
-	{
-	    temp = rm.getResource(Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id")));
-	    setClickedResource(temp);
-	}
-	catch(NumberFormatException e)
-	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
 
-	}
-	catch(SQLException e)
-	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
+	temp = rm.getResource(Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id")));
+	setClickedResource(temp);
+
     }
 
     public void addComment() throws Exception
     {
 	clickedResource.addComment(newComment, getUser());
-	/*
-	try {
-		getLearnweb().getResourceManager().commentResource(newComment, getUser(), clickedResource);
-		newComment = "";
-	} catch (Exception e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}	*/
+
     }
 
     public List<Resource> getResources()

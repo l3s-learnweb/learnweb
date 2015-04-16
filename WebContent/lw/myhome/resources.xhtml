@@ -14,6 +14,10 @@
 	  
 		<ui:define name="center_layout">
 			<br></br>
+			
+			<h:form>
+			 	<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{myResourcesBean.updateColumns}"></p:remoteCommand>
+	         </h:form>
 			<h:form  id="add_resource">
 				<p:commandButton styleClass="resource_button greenbutton" value="#{msg.upload_resource}" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
 					<f:setPropertyActionListener target="#{myResourcesBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
@@ -32,7 +36,25 @@
 				$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
 				$("#center_pane").prepend(div);
 				
+				var columns = 3;
+				function nCol(){
+					var w = $(window).width();
+					var c = 3;
+					
+					if(w &lt; 1360)
+						c = 2;
+					
+					console.log(columns, c);
+					
+					if(columns != c) {
+						columns = c;
+						updateColumns([{name:'cols',value: columns}]);
+					}
+					
+				}
+				
 			</script>
+			
 			<h:form prependId="false">
 				<p:confirmDialog id="confirmDialog" message="Are you sure about deleting the resource?" header="Delete Resource" severity="alert" widgetVar="confirmation" appendTo="@(body)" >
 			        <p:commandButton id="confirm" value="Yes" update=":datagrid :growl :add_resource_panel" oncomplete="PF('confirmation').hide(); update_header()"  
@@ -95,14 +117,7 @@
 					</p:commandButton>
 				</h:form>
 			</p:dialog>
-			<script type="text/javascript">
-				function select(panel)
-				{
-					$(".resource_panel").css("border","1px solid #ccc");
-					$(panel).css("border","1px solid #666");
-				}
-				
-			</script>
+	
            <h:panelGroup id="resource_disp"> 
 			<p:dataGrid id="datagrid" var="result" value="#{myResourcesBean.resources}" columns="3" paginator="false" widgetVar="datagrid">  
 		       <h:form>
@@ -154,11 +169,7 @@
 			    </h:form>
 		    </p:dataGrid>
 		  </h:panelGroup> 
-		    <script type="text/javascript">
-			    $(".ui-panel").live("click",function(){
-		    		select(this);
-		    	});
-		    </script>
+	
 		</ui:define>
 		<ui:define name="right_layout">
 			<ui:decorate  template="/lw/templates/right_pane.xhtml">

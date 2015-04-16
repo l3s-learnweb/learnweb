@@ -47,23 +47,25 @@
 					$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
 					$("#center_pane").prepend(div);
 		
-					function select(panel)
-					{
-						$(".resource_panel").css("border","1px solid #ccc");
-						$(panel).css("border","1px solid #666");
-					}
-					
+										
 					$(document).ready(nCol);
 					window.onresize = nCol;
 					
+					var columns = 3;
 					function nCol(){
 						var w = $(window).width();
 						var c = 3;
-						if(w == 1366)
-							c = 3;
-						if(w &lt; 1366)
+						
+						if(w &lt; 1360)
 							c = 2;
-						updateColumns([{name:'cols',value: c}]);
+						
+						console.log(columns, c);
+						
+						if(columns != c) {
+							columns = c;
+							updateColumns([{name:'cols',value: columns}]);
+						}
+						
 					}
 				</script>
 				
@@ -71,18 +73,18 @@
 			        
 			        <h:form prependId="false" id="confirm_dialog_form">
 				        <p> <h:outputText value="#{msg.theResource}"/>
-				        <b><h:outputText value="#{groupDetailBean.clickedResource.title}" /></b> 
+				        <b> <h:outputText value="#{groupDetailBean.clickedResource.title}" /> </b> 
 				        <h:outputText value="#{msg.part_of}:"/></p>
 				        <ul>
 					        <ui:repeat var="group" value="#{groupDetailBean.clickedResource.groups}">				       
-					        	<li><h:outputText value="#{msg.the_group}"></h:outputText>
+					        	<li><h:outputText value="#{msg.the_group}" />
 						        	<h:outputLink value="group/overview.jsf?group_id=#{group.id}">
 						        		<h:outputText value="#{group.title}" />
 						        	</h:outputLink>
 					        	</li>
 					        </ui:repeat>
 					        <li> <h:outputText value="#{msg.private_resource}"/>
-					         <h:outputText value="#{groupDetailBean.clickedResource.ownerUser.username}"/></li>
+					         <h:outputText value=" #{groupDetailBean.clickedResource.ownerUser.username}"/></li>
 				        </ul>
 				        <p:commandButton value="Delete from group '#{groupDetailBean.group.title}'" update=":datagrid :growl :add_resource_panel" oncomplete="PF('confirmation').hide(); update_header(); ;"  
 				                   actionListener="#{groupDetailBean.removeResourceFromGroup}" process=":datagrid" style="display:block; margin: 10px 0;"/>  
@@ -236,11 +238,6 @@
 			   
 			 </h:panelGroup>      
 			    
-			    <script type="text/javascript">
-			    	$(".ui-panel").click(function(){
-			    		select(this);
-			    	});
-			    </script>
 		</ui:define>
 		<ui:define name="right_layout">
 			<ui:decorate  template="/lw/templates/right_pane.xhtml">
