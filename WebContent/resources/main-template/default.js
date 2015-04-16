@@ -54,7 +54,7 @@ $(document).ready(function(){
 	
 	});
 	
-	$("#group_menu > .ui-panelmenu-panel").each(function( index ) 
+	$("#group_menu > .panelmenu").each(function( index ) 
 	{
 		var group = $(this);
 		var links = group.children('div');
@@ -62,6 +62,7 @@ $(document).ready(function(){
 		group.find('h3').click(function()
 		{
 			links.slideToggle();
+			group.toggleClass('active');
 			return false;
 		});
 		

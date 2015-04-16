@@ -4,6 +4,7 @@
 	xmlns:p="http://primefaces.org/ui">
 	
 <ui:composition>
+
 	<div id="groupoverview_link">
 		<h:outputLink value="myhome/groups.jsf">
 			<h:outputText value="#{msg.groupOverview}"/>
@@ -17,19 +18,19 @@
 		</p:tooltip> 
 	</div>
 
-	<h:panelGroup layout="block" styleClass="ui-panelmenu ui-widget" id="group_menu">
+	<h:panelGroup layout="block" id="group_menu">
 	
 		<ui:repeat value="#{menuBean.model.elements}" var="group">
-			<div class="ui-panelmenu-panel #{group.styleClass}">
-				<h3 class="ui-panelmenu-header ui-state-default ui-corner-all">
-					<span class="ui-icon ui-icon-triangle-1-e"></span>
+			<div class="panelmenu #{group.styleClass}">
+				<h3>
+					<span class="iconarrow"></span>
 					<a href="./group/resources.jsf?group_id=#{group.id}">#{group.label}</a>
 				</h3>
 			
 				<div class="ui-panelmenu-content ui-widget-content ui-helper-hidden">
 					<ul class="ui-menu-list ui-helper-reset">					
 					<ui:repeat value="#{group.elements}" var="link">								
-						<li class="ui-menuitem ui-widget ui-corner-all">
+						<li class="groupmenu_items">
 							<a class="#{link.styleClass} ui-menuitem-link" href="#{link.url}">
 								#{link.value}
 							</a>
@@ -42,7 +43,6 @@
 		</ui:repeat>
 	
 	</h:panelGroup>
-
 
 	<h:form rendered="#{userBean.searchHistoryEnabled}">
 		<h:outputLink
