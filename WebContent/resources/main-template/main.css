@@ -54,13 +54,15 @@ body {
 }
 
 #loadingsymbol{
-	margin-left:15rem;
-	float:left;
-	margin-top:0.6rem;
+	vertical-align:middle;
+	position:absolute;
+	left:15rem;
+	line-height:4.6rem; /*wird leider ignoriert*/ 
+	top:0.6rem; /*alternativ auch 15% (beides funktioniert nur bei Browserschriftgöße 16)*/
 }
 #searchfield {
 	float:left;
-	margin-left:8rem;
+	margin-left:23rem;
 	font-size:1.8rem !important;
 	width:26rem;
 	position:relative;
@@ -234,6 +236,7 @@ in allen browsern testen danach löschen
 	cursor:pointer;
 	padding-right:2rem;
 	padding-left:2rem;
+	vertical-align: middle
 }
 
 /* menu top bar */

@@ -69,12 +69,12 @@
 					}
 				</script>
 				
-				<p:dialog id="confirmDialog" header="Delete Resource"  widgetVar="confirmation" appendTo="@(body)" >
+				<p:dialog id="confirmDialog" header="#{msg.delete_resource_title}"  widgetVar="confirmation" appendTo="@(body)" >
 			        
 			        <h:form prependId="false" id="confirm_dialog_form">
 				        <p> <h:outputText value="#{msg.theResource}"/>
 				        <b> <h:outputText value="#{groupDetailBean.clickedResource.title}" /> </b> 
-				        <h:outputText value="#{msg.part_of}:"/></p>
+				        <h:outputText value=" #{msg.part_of}:"/></p>
 				        <ul>
 					        <ui:repeat var="group" value="#{groupDetailBean.clickedResource.groups}">				       
 					        	<li><h:outputText value="#{msg.the_group}" />
@@ -86,7 +86,7 @@
 					        <li> <h:outputText value="#{msg.private_resource}"/>
 					         <h:outputText value=" #{groupDetailBean.clickedResource.ownerUser.username}"/></li>
 				        </ul>
-				        <p:commandButton value="Delete from group '#{groupDetailBean.group.title}'" update=":datagrid :growl :add_resource_panel" oncomplete="PF('confirmation').hide(); update_header(); ;"  
+				        <p:commandButton value="#{msg.delete_from_group} '#{groupDetailBean.group.title}'" update=":datagrid :growl :add_resource_panel" oncomplete="PF('confirmation').hide(); update_header(); ;"  
 				                   actionListener="#{groupDetailBean.removeResourceFromGroup}" process=":datagrid" style="display:block; margin: 10px 0;"/>  
 			              
 		   
