@@ -8,6 +8,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -56,7 +57,7 @@ public class ArchiveUrlManager
 	while(!resources.isEmpty())
 	{
 	    Resource resource = resources.poll();
-	    SimpleDateFormat responseDate = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
+	    DateFormat responseDate = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z");
 
 	    if(resource == null)
 		continue;

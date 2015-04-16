@@ -1298,5 +1298,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void archiveCurrentVersion()
     {
 	getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
+	addGrowl(FacesMessage.SEVERITY_INFO, "The resource is added to the queue and will be archived shortly.");
     }
 }

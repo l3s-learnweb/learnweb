@@ -203,6 +203,15 @@
 								<br/>
 							</h:panelGroup>
 							
+							<h:panelGroup layout="block" style="padding-top: 10px;" rendered="#{bean.clickedResource.source == 'TED'}">
+								<span class="resource_field">#{msg.transcript} : </span><h:outputLink value="ted_transcript.jsf" style="text-decoration:underline;"><f:param name="resource_id" value="#{bean.clickedResource.id}"/>#{msg.link_to_transcript}</h:outputLink>
+							</h:panelGroup>
+							<div class="resource_field" style="padding-top: 10px">#{msg.description}</div>
+							<h:outputText id="resource_description" value="#{bean.clickedResource.description}" escape="false"></h:outputText>
+							<div style="padding-top:10px">
+								<span class="resource_field">#{msg.current_version} : </span>
+								<p:commandButton action="#{bean.archiveCurrentVersion}" styleClass="greenbutton" value="#{msg.archive_now}" update=":growl"/>								
+							</div>
 							
 							<h:panelGroup layout="block" style="padding-top: 10px;" rendered="#{not empty bean.clickedResource.archiveUrls}">
 								<span class="resource_field" style="position:relative;bottom:6px;">#{msg.archive_versions} : </span>
@@ -213,15 +222,6 @@
 								</p:selectOneMenu>
 								
 							</h:panelGroup>
-							<div style="padding-top:10px">
-								<span class="resource_field">#{msg.archive} : </span>
-								<p:commandButton action="#{bean.archiveCurrentVersion}" styleClass="greenbutton" value="#{msg.live_version}"/>								
-							</div>
-							<h:panelGroup layout="block" style="padding-top: 10px;" rendered="#{bean.clickedResource.source == 'TED'}">
-								<span class="resource_field">#{msg.transcript} : </span><h:outputLink value="ted_transcript.jsf" style="text-decoration:underline;"><f:param name="resource_id" value="#{bean.clickedResource.id}"/>#{msg.link_to_transcript}</h:outputLink>
-							</h:panelGroup>
-							<div class="resource_field" style="padding-top: 10px">#{msg.description}</div>
-							<h:outputText id="resource_description" value="#{bean.clickedResource.description}" escape="false"></h:outputText>
 							<div class="resource_field" style="padding-top: 10px; padding-bottom: 10px">#{msg.tags}</div>
 						         <ul style="margin: 0px; padding: 0px">
 						         <ui:repeat var="tag" value="#{bean.clickedResource.tags}">

@@ -97,7 +97,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
 	String transcript = tedResource.getTranscript();
 	noteId = 0;
-	if(transcript != null)
+	if(transcript != null && transcript != "")
 	{
 	    Document doc = Jsoup.parse(transcript);
 	    Elements elements = doc.select("span");
@@ -107,6 +107,11 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	    }
 
 	    tedResource.setTranscript(doc.getElementsByTag("body").html());
+	}
+	else
+	{
+	    transcriptLanguage = "en";
+	    setTranscript();
 	}
 
     }

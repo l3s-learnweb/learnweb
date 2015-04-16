@@ -32,10 +32,12 @@
 }
 
 .embedded{
-	padding-left:3px;
-	position: absolute;
-	width:53%;
-	height:99%;
+	padding-top: 5px;
+	padding-left: 5px;
+  	position: absolute;
+  	width: 53%;
+  	height: 92%;
+  	max-height: 92%;
 }
 
  .highlight {
