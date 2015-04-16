@@ -5,11 +5,9 @@
 <header id="header">
 	<div id="main_menu_bar" style="background-image:url(#{menuBean.bannerImage});">
 			
-		<p:ajaxStatus>
-				<f:facet name="default">
-					<img src="#{request.contextPath}/resources/icon/ajax-loader1.gif" alt="Loading" style="vertical-align:middle; margin-top:0.5rem; margin-left:2rem; float:left;"/>
-				</f:facet>
-		</p:ajaxStatus>
+		
+					<img src="#{request.contextPath}/resources/icon/ajax-loader1.gif" alt="Loading" id="loadingsymbol" style="vertical-align:middle; "/>
+			
 		 
 			<form action="#{request.contextPath}/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
 				<a href="http://localhost:8080/Learnweb-Tomcat/lw/myhome/groups.jsf" id="learnweb_logo">Logo</a>
@@ -157,7 +155,7 @@
 					<img src="#{request.contextPath}/resources/icon/ajax-loader1.gif" alt="Loading" style="vertical-align:middle; margin-top:0.5rem; margin-left:2rem; float:left;"/>
 				</f:facet>
 		</p:ajaxStatus>
-		 -->
+		
 	 
 			<p:ajaxStatus>
 				<f:facet name="default">
@@ -177,7 +175,7 @@
 					<img src="#{request.contextPath}/resources/icon/ajax-loader3.gif" alt="Loading" style="vertical-align:middle; margin-top:1.5rem; margin-left:2rem; float:left;"/>
 				</f:facet>
 			</p:ajaxStatus>
-	
+	 -->
 			<div id="language_selector" class="hover-white" tabindex="0">
 				<img alt="#{userBean.localeCode}" src="#{request.contextPath}/resources/main-template/img/flag_#{userBean.localeCode}.png" />
 

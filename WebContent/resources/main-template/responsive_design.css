@@ -25,21 +25,12 @@
  
 /* options for different screen sizes */
 
-@media screen and (max-width: 85em){
-	#searchfield{
-		margin-left:27rem;
-	}
-	#sub_menu_bar .links { 
-		margin-left:26rem;
-	}
-}
-
 @media screen and (max-width: 83em){
-	#searchfield{
-		margin-left:25rem;
-	}
 	#sub_menu_bar .links { 
 		margin-left:24rem;
+	}
+	#searchfield{
+		margin-left:6rem;
 	}
 	#moreprofile{
 		display:block;
@@ -50,11 +41,11 @@
 }
 
 @media screen and (max-width: 78em){
-	#searchfield{
-		margin-left:23rem;
-	}
 	#sub_menu_bar .links { 
 		margin-left:22rem;
+	}
+	#searchfield{
+		margin-left:4rem;
 	}
 	#moremygroups{
 		display:block;
@@ -65,9 +56,6 @@
 }
 
 @media screen and (max-width: 66em){
-	#searchfield{
-		margin-left:20rem;
-	}
 	#sub_menu_bar .links { 
 		margin-left:19rem;
 	}
@@ -108,8 +96,11 @@
 		background-image:none; 
 	}
 	#searchfield{
-		margin-left:1em;
-		width:30rem;
+		margin-left:0;
+		width:25rem;
+	}
+	#loadingsymbol{
+		margin-left:1rem;
 	}
 	#backtogroup{
 		width:8em;
@@ -138,13 +129,7 @@
 	}
 }
 
-@media screen and (max-width: 26em){
-	#searchfield{
-		width:8em;
-	}
-}
-
-@media screen and (max-width: 23em){
+@media screen and (max-width: 29em){
 	.userbar ul li a {
     	padding-left:1em;
     	padding-right:1em;

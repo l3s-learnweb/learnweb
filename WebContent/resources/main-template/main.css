@@ -53,9 +53,14 @@ body {
 	float:left;
 }
 
+#loadingsymbol{
+	margin-left:15rem;
+	float:left;
+	margin-top:0.6rem;
+}
 #searchfield {
 	float:left;
-	margin-left:30rem;
+	margin-left:8rem;
 	font-size:1.8rem !important;
 	width:26rem;
 	position:relative;
