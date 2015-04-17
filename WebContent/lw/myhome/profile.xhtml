@@ -12,7 +12,7 @@
 	
 	
 	<ui:define name="right_layout">
-		<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;"  id="right_pane">
+		<p:layoutUnit position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;"  id="right_pane">
 			<div style="width:90%; position:relative; margin-left:auto; margin-right:auto;">
 				
 				<br />
@@ -76,7 +76,7 @@
 											
 						
 							<h:outputText value="" />
-							<p:commandButton actionListener="#{profileBean.saveProfile}" value="#{msg.save}" ajax="true" process="@form" update=":growl @form"/>		
+							<p:commandButton actionListener="#{profileBean.saveProfile}" value="#{msg.save}" ajax="true" process="@form" update=":growl @form :profile_news"/>		
 							<h:outputText value="" />
 							
 						</h:panelGrid>			
@@ -135,11 +135,11 @@
 	
 	
 	<ui:define name="center_layout">
-				
-		<ui:decorate  template="/lw/templates/activity_stream.xhtml">
-			<ui:param name="news" value="#{newsFeedBean.newslist}" />
-		</ui:decorate >
-		
+		<h:panelGroup id="profile_news">		
+			<ui:decorate  template="/lw/templates/activity_stream.xhtml">
+				<ui:param name="news" value="#{newsFeedBean.newslist}" />
+			</ui:decorate >
+		</h:panelGroup>
 	</ui:define>
 </ui:composition>
 </html>

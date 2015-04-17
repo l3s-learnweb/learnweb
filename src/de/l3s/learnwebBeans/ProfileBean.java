@@ -106,6 +106,9 @@ public class ProfileBean extends ApplicationBean implements Serializable
 	}
 	catch(IllegalArgumentException e) // image is smaller than 100px
 	{
+
+	    e.printStackTrace();
+
 	    if(e.getMessage().startsWith("Width 100 exceeds"))
 		addMessage(FacesMessage.SEVERITY_ERROR, "Your image is to small.");
 	    else
