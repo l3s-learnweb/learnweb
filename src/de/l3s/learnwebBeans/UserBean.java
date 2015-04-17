@@ -21,6 +21,7 @@ import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.beans.UtilBean;
 
 @ManagedBean
 @SessionScoped
@@ -29,7 +30,10 @@ public class UserBean implements Serializable
     private final static long serialVersionUID = -8577036953815676943L;
     private final static Logger log = Logger.getLogger(UserBean.class);
 
-    private User user = null;
+    private int userId = 0;
+    private User userCache = null; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
+    private long userCacheTime = 0L; // the user instance is cached for 100ms
+
     private Locale locale;
     private HashMap<String, String> preferences; // user preferences like search mode
 
@@ -45,7 +49,8 @@ public class UserBean implements Serializable
 
     public boolean isLoggedIn()
     {
-	return user != null;
+	//return user != null;
+	return userId != 0;
     }
 
     public boolean isLoggedInInterweb()
@@ -53,7 +58,7 @@ public class UserBean implements Serializable
 	if(!isLoggedIn())
 	    return false;
 
-	return user.isLoggedInInterweb();
+	return getUser().isLoggedInInterweb();
     }
 
     /**
@@ -63,7 +68,24 @@ public class UserBean implements Serializable
      */
     public User getUser()
     {
-	return user;
+	if(userId == 0)
+	    return null;
+
+	if(userCache == null || userCacheTime + 100L < System.currentTimeMillis())
+	{
+	    try
+	    {
+		userCache = UtilBean.getLearnwebBean().getLearnweb().getUserManager().getUser(userId);
+		userCacheTime = System.currentTimeMillis();
+	    }
+	    catch(SQLException e)
+	    {
+		e.printStackTrace();
+		return null;
+	    }
+	}
+	return userCache;
+	//return user;
     }
 
     /**
@@ -98,12 +120,14 @@ public class UserBean implements Serializable
 	    onDestroy();
 	}
 
-	this.user = user;
+	//this.user = user;
+	userId = user.getId();
     }
 
     @PreDestroy
     public void onDestroy()
     {
+	User user = getUser();
 	if(null != user)
 	{
 	    user.setPreferences(preferences);
@@ -185,6 +209,7 @@ public class UserBean implements Serializable
 
     public boolean isAdmin()
     {
+	User user = getUser();
 	if(null == user)
 	    return false;
 
@@ -193,6 +218,7 @@ public class UserBean implements Serializable
 
     public boolean isModerator()
     {
+	User user = getUser();
 	if(null == user)
 	    return false;
 
@@ -201,6 +227,7 @@ public class UserBean implements Serializable
 
     public TimeZone getTimeZone()
     {
+	User user = getUser();
 	if(user == null)
 	    return TimeZone.getTimeZone("Europe/Berlin");
 
@@ -227,7 +254,7 @@ public class UserBean implements Serializable
     {
 	if(null == newGroups)
 	{
-	    newGroups = Learnweb.getInstance().getGroupManager().getGroupsByCourseId(activeCourse.getId(), user.getLastLoginDate());
+	    newGroups = Learnweb.getInstance().getGroupManager().getGroupsByCourseId(activeCourse.getId(), getUser().getLastLoginDate());
 	}
 
 	return newGroups;
@@ -258,6 +285,7 @@ public class UserBean implements Serializable
     @Override
     public String toString()
     {
+	User user = getUser();
 	if(user == null)
 	    return "not logged in";
 
