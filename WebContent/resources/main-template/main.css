@@ -406,14 +406,17 @@ in allen browsern testen danach löschen
 /* group menu */
 #group_menu h3{ margin-top:10px; }
 #group_menu h3 a:hover{ background-color:#eeeeee;  }
-#group_menu .active > div { display: block; }
+#group_menu .active > div { display:block; }
 #group_menu .active h3 { text-decoration:underline;}
 #group_menu a.active { font-weight:bold; }
+#group_menu .active h3 .iconarrow { background-position:-64px -16px; }
+
 #group_menu a{
 	display:block;
-	padding:0.5em 0.5em 0.5em 2.2em;
+	padding:0.5em;
+	margin-left:2.2em;
 }
-.groupmenu_items:hover{
+.groupmenu_items a:hover{
 	background-color:#eeeeee;
 	border-radius:5px;
 }
@@ -436,18 +439,7 @@ in allen browsern testen danach löschen
 	overflow:hidden;
 	text-indent:-99999px;
 }
-/*.active{
-	background-image:url("/Learnweb-Tomcat/javax.faces.resource/images/ui-icons_38667f_256x240.png.jsf?ln=primefaces-aristo");
-	background-position:-64px -16px;
-	overflow:hidden;
-	height:16px;
-	width:16px;
-	text-indent:-99999px;
-	position:absoute;
-	margin-top:6px;
-	left:0.5em;
-	right:auto;
-}*/
+
 .small_page {
 	max-width:80rem;
 	padding:1rem;
