@@ -14,7 +14,7 @@
     <f:view contentType="text/html">
         <h:head>
         	
-            <title>Edit Presentation</title>
+            <title>#{msg.edit_presentation}</title>
 			
             <link type="text/css" rel="stylesheet" href="../../resources/css/default.css" />
             <link type="text/css" rel="stylesheet" href="../../resources/css/syntaxhighlighter.css" />
@@ -48,12 +48,12 @@
 						
 	                    <p:toolbar>  
 						    <p:toolbarGroup align="left" style="margin-top: 8px; margin-left: 5px">  
-						    	<span style="font-size: 16px">Edit Presentation : </span><span style="font-size: 16px" id="presentationTitle">New Presentation</span>
+						    	<span style="font-size: 16px">#{msg.edit_presentation} : </span><span style="font-size: 16px" id="presentationTitle">#{msg.presentation_new}</span>
 						    </p:toolbarGroup>  
 						  
 						    <p:toolbarGroup align="right">
-						        <p:commandButton type="button" value="Save" onclick='saveDialog()' icon="ui-icon-disk" />
-						      	<p:commandButton type="submit" value="Present" icon="ui-icon-newwin" onclick="display_presentation(this)" ajax="false" action="#{editPresentationBean.present}"/>
+						        <p:commandButton type="button" value="#{msg.save}" onclick='saveDialog()' icon="ui-icon-disk" />
+						      	<p:commandButton type="submit" value="#{msg.present}" icon="ui-icon-newwin" onclick="display_presentation(this)" ajax="false" action="#{editPresentationBean.present}"/>
 						        <p:commandLink onstart="return false" onclick="PF('help_dialog').show()" style="background: none !important; margin-left: 5px; margin-right: 2px; position: relative; top: -1px">
 						        	<p:graphicImage style="vertical-align: middle" value="/resources/icon/help.png" width="20" height="20"></p:graphicImage>
 						        </p:commandLink>
@@ -65,11 +65,11 @@
 										<p:commandButton style="margin-left: 10px" type="button" value="Cancel" onclick="PF('saveDlg').hide()"></p:commandButton>
 										<p:blockUI block="saveDlg" trigger="saveButton" />
 							  	</p:dialog>
-							  	<p:dialog style="text-align: center; z-index: 10000" id="presentDialog" header="Presentation" widgetVar="presentDialog" modal="false" appendTo="@(body)" closable="false">  
+							  	<p:dialog style="text-align: center; z-index: 10000" id="presentDialog" header="#{msg.presentations}" widgetVar="presentDialog" modal="false" appendTo="@(body)" closable="false">  
 										Want to save your changes to <span id="presName" style="font-weight: bold"></span>?<br/><br/>
-										<p:commandButton id="but1" style="margin-right: 5px" type="button" value="Save" onclick="save_pres()" ></p:commandButton>
+										<p:commandButton id="but1" style="margin-right: 5px" type="button" value="#{msg.save}" onclick="save_pres()" ></p:commandButton>
 										<p:commandButton style="margin-left: 5px; margin-right: 5px" type="submit" ajax="false" value="Don't Save" onclick="dontSave(this)" action="#{editPresentationBean.present}"></p:commandButton>
-										<p:commandButton style="margin-left: 5px" type="button" value="Cancel" onclick="PF('presentDialog').hide()"></p:commandButton>
+										<p:commandButton style="margin-left: 5px" type="button" value="#{msg.cancel}" onclick="PF('presentDialog').hide()"></p:commandButton>
 							  	</p:dialog>
 						  	</p:toolbarGroup>
 						  </p:toolbar> 
@@ -237,7 +237,7 @@
                 </script>
 
                 <p:layoutUnit id="left" position="west" size="260" resizable="false" closable="false" collapsible="false"
-                              style="margin: 0px;" header="Resources">
+                              style="margin: 0px;" header="#{msg.resources}">
                     <style>
                 		.slide_thumbnail
                 		{
@@ -307,7 +307,7 @@
 					        </p:column>  
 					  
 					  		<p:column style="width:28%; text-align: center" rendered="#{result.id == 1}" >  
-					            <h:outputText escape="false" style="padding: 19px 0px; display: inline-block;" value='[Title]' ></h:outputText>  
+					            <h:outputText escape="false" style="padding: 19px 0px; display: inline-block;" value='[#{msg.title}]' ></h:outputText>  
 					        </p:column> 
 					  
 					        <p:column>

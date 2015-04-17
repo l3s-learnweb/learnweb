@@ -48,35 +48,35 @@
 				}
 			</script>
 			<h:form>
-				<p:confirmDialog id="confirmDialog" message="#{msg.delete_message_presentation}" header="Delete Presentation" severity="alert" widgetVar="confirmation" appendTo="@(body)" >
-			        <p:commandButton id="confirm" value="Yes" update=":datagrid :right_form" oncomplete="update_header(); PF('confirmation').hide();"  
+				<p:confirmDialog id="confirmDialog" message="#{msg.delete_message_presentation}" header="delete_presentation" severity="alert" widgetVar="confirmation" appendTo="@(body)" >
+			        <p:commandButton id="confirm" value="#{msg.yes}" update=":datagrid :right_form" oncomplete="update_header(); PF('confirmation').hide();"  
 			                   actionListener="#{groupDetailBean.removePresentationFromGroup}" process=":right_form"/>  
-			        <p:commandButton id="decline" value="No" onclick="PF('confirmation').hide()" type="button" />
+			        <p:commandButton id="decline" value="#{msg.no}" onclick="PF('confirmation').hide()" type="button" />
 			    </p:confirmDialog>
 			</h:form>
-			<p:dialog resizable="false" header="Layout Selection" widgetVar="format_dialog" modal="true" appendTo="@(body)">
+			<p:dialog resizable="false" header="#{msg.layout_selection}" widgetVar="format_dialog" modal="true" appendTo="@(body)">
 				<h:form>
-					Select the layout for displaying Text Resources<br/><br/>
+					#{msg.select_layout}<br/><br/>
 			    	<a onclick="PF('format_dialog').hide()" class="format_button_link" target="new_presentation" href="#{groupDetailBean.edit('1')}">
 						<img class="format_button" src="../resources/icon/format1.jpg"></img><br/>
-						Single Slide Layout
+						#{msg.layout_single_silde}
 					</a>
 			    	<a onclick="PF('format_dialog').hide()" class="format_button_link" target="new_presentation" href="#{groupDetailBean.edit('2')}">
 						<img class="format_button" src="../resources/icon/format2.jpg"></img><br/>
-						Two Slide Layout
+						#{msg.layout_two_silde}
 					</a>
 		    	</h:form>
 		    </p:dialog>
-		    <p:dialog resizable="false" header="Layout Selection" widgetVar="format_dialog2" modal="true" appendTo="@(body)">
+		    <p:dialog resizable="false" header="#{msg.layout_selection}" widgetVar="format_dialog2" modal="true" appendTo="@(body)">
 				<h:form id="edit_presentation_layout">
-					Select the layout for displaying Text Resources<br/><br/>
+					#{msg.select_layout}<br/><br/>
 			    	<a onclick="PF('format_dialog2').hide()" class="format_button_link" target="edit_presentation" href="#{groupDetailBean.editPresentation('1')}">
 						<img class="format_button" src="../resources/icon/format1.jpg"></img><br/>
-						Single Slide Layout
+						#{msg.layout_single_silde}
 					</a>
 			    	<a onclick="PF('format_dialog2').hide()" class="format_button_link" target="edit_presentation" href="#{groupDetailBean.editPresentation('2')}">
 						<img class="format_button" src="../resources/icon/format2.jpg"></img><br/>
-						Two Slide Layout
+						#{msg.layout_two_silde}
 					</a>
 		    	</h:form>
 		    </p:dialog>
@@ -91,7 +91,7 @@
 			 	<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{groupDetailBean.updateColumns}"></p:remoteCommand>
 	        </h:form>
 			<h:panelGroup id="resource_disp">
-				<p:dataGrid emptyMessage="No Presentations found. Please refresh if you just saved a presentation." id="datagrid" var="result" value="#{groupDetailBean.presentations}" columns="#{groupDetailBean.numberOfColumns}" paginator="false" widgetVar="datagrid">  
+				<p:dataGrid emptyMessage="#{msg.no_presentation}" id="datagrid" var="result" value="#{groupDetailBean.presentations}" columns="#{groupDetailBean.numberOfColumns}" paginator="false" widgetVar="datagrid">  
 				    <h:form>
 				        <p:commandLink rendered="#{groupDetailBean.numberOfColumns != 10 and groupDetailBean.numberOfColumns != 3}" styleClass="resource_command_link" update=":right_form :edit_presentation_layout" oncomplete="update_header()">
 				        	<f:setPropertyActionListener target="#{groupDetailBean.clickedPresentation}" value="#{result}"></f:setPropertyActionListener>
@@ -149,18 +149,18 @@
 							    <span class="aligner"></span>
 							    <span class="align">#{groupDetailBean.clickedPresentation.presentationTitle}</span>
 							</div>
-							<p:commandButton styleClass="presentation_commandbutton" action="#{groupDetailBean.present}" ajax="false" value="Present"></p:commandButton>
-							<p:commandButton styleClass="presentation_commandbutton" onclick="PF('format_dialog2').show(); return false" ajax="false" value="Edit"></p:commandButton>
-							<p:commandButton styleClass="presentation_commandbutton" onclick="PF('confirmation').show(); return false" ajax="false" value="Delete"></p:commandButton>
+							<p:commandButton styleClass="presentation_commandbutton" action="#{groupDetailBean.present}" ajax="false" value="#{msg.present}"></p:commandButton>
+							<p:commandButton styleClass="presentation_commandbutton" onclick="PF('format_dialog2').show(); return false" ajax="false" value="#{msg.edit}"></p:commandButton>
+							<p:commandButton styleClass="presentation_commandbutton" onclick="PF('confirmation').show(); return false" ajax="false" value="#{msg.delete}"></p:commandButton>
 							<div class="presentation_clear"></div>
 							<div class="presentation_detail_div">
-								<div class="data"><span class="resource_field">Author :</span> #{groupDetailBean.clickedPresentation.getOwner().username}</div>
-								<div class="data"><span class="resource_field">Date :</span> #{groupDetailBean.clickedPresentation.date}</div>
+								<div class="data"><span class="resource_field">#{msg.author} :</span> #{groupDetailBean.clickedPresentation.getOwner().username}</div>
+								<div class="data"><span class="resource_field">#{msg.date} :</span> #{groupDetailBean.clickedPresentation.date}</div>
 							</div>
 						</ui:fragment>
 						<ui:fragment rendered="#{groupDetailBean.clickedPresentation.presentationId eq -1}">
 							<div class="click_message">
-								Click on a presentation to view details.
+								#{msg.presentation_details}
 							</div>
 						</ui:fragment>
 					</h:form>
