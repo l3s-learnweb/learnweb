@@ -156,7 +156,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	    log.fatal(e);
 	}
 	getUser().clearCaches();
-	addGrowl(FacesMessage.SEVERITY_INFO, "Saved the changes to the resource");
+	addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
     public void processActionSaveLog()

@@ -671,7 +671,7 @@ public class ResultSetBean extends ApplicationBean
 	    }
 	    catch(ClientHandlerException e)
 	    {
-		addGrowl(FacesMessage.SEVERITY_INFO, "Search Tracker service is down");
+		addGrowl(FacesMessage.SEVERITY_INFO, "searchTrackerDown");
 	    }
 	    catch(RuntimeException e)
 	    {
@@ -688,7 +688,7 @@ public class ResultSetBean extends ApplicationBean
 	}
 	catch(ClientHandlerException e)
 	{
-	    addGrowl(FacesMessage.SEVERITY_INFO, "Search Tracker service is down");
+	    addGrowl(FacesMessage.SEVERITY_INFO, "searchTrackerDown");
 	}
 	catch(RuntimeException e)
 	{
@@ -834,7 +834,7 @@ public class ResultSetBean extends ApplicationBean
 	}
 	catch(ClientHandlerException e)
 	{
-	    addGrowl(FacesMessage.SEVERITY_INFO, "Search Tracker service is down");
+	    addGrowl(FacesMessage.SEVERITY_INFO, "searchTrackerDown");
 	    return null;
 	}
 	catch(RuntimeException e)

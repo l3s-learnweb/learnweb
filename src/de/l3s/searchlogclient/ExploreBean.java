@@ -120,7 +120,7 @@ public class ExploreBean extends ApplicationBean implements Serializable
 	}
 	catch(ClientHandlerException e)
 	{
-	    addGrowl(FacesMessage.SEVERITY_INFO, "Search Tracker service is down");
+	    addGrowl(FacesMessage.SEVERITY_INFO, "searchTrackerDown");
 	}
 	catch(RuntimeException e)
 	{
@@ -150,7 +150,7 @@ public class ExploreBean extends ApplicationBean implements Serializable
 	}
 	catch(ClientHandlerException e)
 	{
-	    addGrowl(FacesMessage.SEVERITY_INFO, "Search Tracker service is down");
+	    addGrowl(FacesMessage.SEVERITY_INFO, "searchTrackerDown");
 	}
 	catch(RuntimeException e)
 	{
