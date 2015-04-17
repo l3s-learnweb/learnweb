@@ -5,7 +5,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">	
 	
-	<ui:composition template="/lw/templates/new_main.xhtml"> 
+	<ui:composition template="/lw/templates/new_main_t.xhtml"> 
 	
 	
 		<ui:param name="loginRequired" value="true"/>
@@ -14,9 +14,11 @@
 
 		
 		<ui:define name="center_layout">
-			<p:commandButton id="add_resource" styleClass="resource_button greenbutton" update=":add_resource_panel" value="#{msg.upload_resource}" widgetVar="add_resource" oncomplete="update_header()">
-				<f:setPropertyActionListener target="#{activityResourceBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
-			</p:commandButton>
+			<h:form id="add_resource">
+				<p:commandButton styleClass="resource_button greenbutton" update=":add_resource_panel" value="#{msg.upload_resource}" widgetVar="add_resource" oncomplete="update_header()">
+					<f:setPropertyActionListener target="#{activityResourceBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
+				</p:commandButton>
+			</h:form>
 			<script type="text/javascript">
 				var div = document.createElement("div");
 				var group_header = document.createElement("span");
@@ -67,10 +69,10 @@
 					<h:outputText value=" #{msg.with_query} " escape="false"  />
 					
 					<h:outputLink value="search.jsf" styleClass="newsfeed_query_link">
-					<h:outputText value=" #{datagrid.resource.query}" escape="false"  styleClass="newsfeed_query_link_text"/>
-					
-							<f:param name="query" value="#{datagrid.resource.query}"></f:param>
-					        <f:param name="action" value="search"></f:param>
+						<h:outputText value=" #{datagrid.resource.query}" escape="false"  styleClass="newsfeed_query_link_text"/>
+				
+						<f:param name="query" value="#{datagrid.resource.query}"></f:param>
+				        <f:param name="action" value="search"></f:param>
 					</h:outputLink>
 					
 					<h:outputText value=" #{msg.from} #{datagrid.resource.source} " escape="false"  />
@@ -84,13 +86,12 @@
 					<h:panelGroup rendered="#{datagrid.resourceAction}">
 					<div class="newsfeed_left">
 					
-					
-					<p:commandLink styleClass="newsfeed_query_link" update=":add_resource_panel" oncomplete="update_header()">
-	        			<f:setPropertyActionListener target="#{activityResourceBean.clickedResource}" value="#{datagrid.resource}"></f:setPropertyActionListener>
-							<h:outputText value="#{datagrid.resource.embeddedSize1}" escape="false" />
-					</p:commandLink>
-					
-		
+					<h:form>
+						<p:commandLink styleClass="newsfeed_query_link" update=":add_resource_panel" oncomplete="update_header()" process="@form">
+		        			<f:setPropertyActionListener target="#{activityResourceBean.clickedResource}" value="#{datagrid.resource}"></f:setPropertyActionListener>
+								<h:outputText value="#{datagrid.resource.embeddedSize1}" escape="false" />
+						</p:commandLink>
+					</h:form>		
                    </div>
 					
 					<div class="newsfeed_right">
@@ -116,13 +117,10 @@
 			</h:dataTable>
 		</ui:define>
 		
-			<ui:define name="right_layout">
+		<ui:define name="right_layout">
 			<ui:decorate  template="/lw/templates/right_pane.xhtml">
 				<ui:param name="bean" value="#{activityResourceBean}" />
 			</ui:decorate >
-		</ui:define>
-		
-		
-		
+		</ui:define>	
 	</ui:composition>
 </html>

@@ -182,6 +182,7 @@ public class UserManager
 
     public User getUser(int userId) throws SQLException
     {
+
 	if(userId < 1)
 	{
 	    if(userId != 0)
@@ -192,7 +193,10 @@ public class UserManager
 	User user = cache.get(userId);
 
 	if(null != user)
+	{
+	    log.debug("Get user " + user.getUsername() + " from cache");
 	    return user;
+	}
 
 	PreparedStatement pstmtGetUser = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_user` WHERE user_id = ?");
 	pstmtGetUser.setInt(1, userId);
@@ -207,6 +211,9 @@ public class UserManager
 	pstmtGetUser.close();
 
 	user = cache.put(user);
+
+	log.debug("Get user " + user.getUsername() + " from db");
+
 	return user;
     }
 

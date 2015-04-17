@@ -112,16 +112,19 @@ public class UserBean implements Serializable
 	    }
 
 	    preferences = user.getPreferences();
+	    userId = user.getId();
 	}
 	else
 	// user logged out -> clear caches
 	{
 	    newGroups = null;
+	    userId = 0;
+	    userCache = null;
 	    onDestroy();
 	}
 
 	//this.user = user;
-	userId = user.getId();
+
     }
 
     @PreDestroy

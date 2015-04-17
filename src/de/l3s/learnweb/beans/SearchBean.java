@@ -694,6 +694,9 @@ public class SearchBean extends ApplicationBean implements Serializable
     {
 	try
 	{
+	    if(query == null || query.length() < 2)
+		return;
+
 	    graph = new FactSheet(query);
 	    if(graph.getEntities().size() == 0)
 	    {

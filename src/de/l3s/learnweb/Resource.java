@@ -1244,6 +1244,12 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	return archiveUrls;
     }
 
+    public void addArchiveUrl(ArchiveUrl archiveUrl)
+    {
+	// TODO really add archive url; until then clean cache:	
+	archiveUrls = null;
+    }
+
     public boolean isRestricted()
     {
 	return restricted;
@@ -1253,4 +1259,5 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     {
 	this.restricted = restricted;
     }
+
 }

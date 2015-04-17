@@ -18,8 +18,7 @@
 			margin: 0px auto !important;
 			overflow: hidden !important;
 	
-			background-color: black;
-			background:url(./resources/image/uni.jpg) center no-repeat;
+			/*background:url(../resources/image/uni.jpg) center no-repeat;*/
 			background-size:cover;
 		}
 		.info{
@@ -112,22 +111,15 @@
 		<div style="display:block;">
 		<h:form rendered="#{!userBean.loggedIn}" id="loginform" style="width: 260px;position: relative; height: inherit;top: 5%;padding-left: 10px;padding-right: 10px;display: inline-block;border-right: 1px solid #489a83;">
 			<p:focus for="username"/>
-			<h:panelGrid columns="4">
-				
-			<!--  
-				<h:graphicImage for="username" url="../resources/icon/user.png" title="#{msg.username}" height="30" width="30"></h:graphicImage>
-			-->
+			<h:panelGrid columns="3">
+		
 				<h:outputText value="#{msg.username}"></h:outputText>
 				<p:inputText id="username" styleClass="inputbox" value="#{loginBean.username}" ></p:inputText>
 				<p:message showSummary="true" showDetail="false" styleClass="error" for="username" />
 				
-				
-			<!-- 
-				<h:graphicImage for="password" url="../resources/icon/pwd.png" height="20" width="20" title="#{msg.password}" style="padding-left:4px;"></h:graphicImage>
-			-->
+	
 				<h:outputText value="#{msg.password}"></h:outputText>
 				<p:inputText type="password" styleClass="inputbox" id="password" value="#{loginBean.password}" feedback="false"></p:inputText>
-				
 				<p:message showSummary="true" showDetail="false" styleClass="error" for="password" />
 				
 				<h:outputText value="" />
@@ -137,15 +129,21 @@
 			<br></br>
 			<h:outputLink id="forgot" style="color:white;  font-family: sans-serif;" value="user/password.jsf"><h:outputText value="#{msg.forgotten_password}"/></h:outputLink>
 		</h:form>
-		<h:form style="width: 200px;    margin-left:30px;    display: inline-block;     vertical-align: top;    ">
-		<div>
-		<h:outputText  value="Sign up for " style="display:inline-block;"></h:outputText>
-		<h:outputLink   styleClass="greenbutton" style="display:inline-block; text-decoration:none; margin-left:5px;" value="user/register.jsf"><h:outputText value="YELL"></h:outputText>
-		<f:param name="wizard" value="yell"></f:param>
-		</h:outputLink>
-		</div>
-		<br/>
-		<h:commandButton id="register"  onclick="PF('dlg').show(); return false;" styleClass="greenbutton" value="I'm a new user!" style=" display:block; margin-left:10px;"></h:commandButton>
+		<h:form rendered="#{!userBean.loggedIn}" style="width: 200px;    margin-left:30px;    display: inline-block;     vertical-align: top;  text-align:left;  ">
+			<div>
+			<h:outputText  value="Sign up for " style="display:inline-block;"></h:outputText>
+			<h:outputLink   styleClass="greenbutton" style="display:inline-block; text-decoration:none; margin-left:5px;" value="user/register.jsf"><h:outputText value="YELL"></h:outputText>
+			<f:param name="wizard" value="yell"></f:param>
+			</h:outputLink>
+		
+			</div>
+		_______________
+			<br/><br/>
+			Or for the public environment
+			<br/><br/>
+			<h:outputLink   styleClass="greenbutton" style="display:inline-block; text-decoration:none; margin-left:5px;" value="user/register.jsf"><h:outputText value="#{msg.registerLabel}"></h:outputText>
+			</h:outputLink>
+		</h:form>
 		<br/>
 		<br/>
 		<p:lightBox>
@@ -157,7 +155,7 @@
 	        </f:facet>
 	    </p:lightBox>
 	    
-		</h:form>
+		
 		
 		</div>
 			

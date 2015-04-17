@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
@@ -46,13 +45,10 @@ public class MenuBean extends ApplicationBean implements Serializable
 	    courses = getUser().getCourses();
 	    selectCourse = UtilBean.getUserBean().getActiveCourse();
 	}
-	catch(SQLException e1)
+	catch(SQLException e)
 	{
-	    addGrowl(FacesMessage.SEVERITY_FATAL, "Fatal error. Log out please.");
-	    e1.printStackTrace();
+	    addFatalMessage(e);
 	}
-	//computeMenu();
-
     }
 
     public List<Course> getCourses()
@@ -74,7 +70,6 @@ public class MenuBean extends ApplicationBean implements Serializable
     {
 	this.selectCourse = selectCourse;
 	UtilBean.getUserBean().setActiveCourse(selectCourse);
-	//computeMenu();
     }
 
     private MenuModel model;

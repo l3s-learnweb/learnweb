@@ -76,7 +76,7 @@ public class ArchiveUrlManager
 		wr.flush();
 		wr.close();
 
-		log.info("Sending archive request for URL : " + resource.getUrl());
+		log.debug("Sending archive request for URL : " + resource.getUrl());
 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		String inputLine;
 		StringBuffer response = new StringBuffer();
@@ -95,16 +95,12 @@ public class ArchiveUrlManager
 		if(filenameParts.find())
 		    archiveURL = resp.substring(filenameParts.start(), filenameParts.end());
 
-		log.info("Archived URL: " + archiveURL);
+		log.debug("Archived URL: " + archiveURL);
 		String responseDateGMTString = con.getHeaderField("Date");
 		Date archiveUrlDate = null;
 
 		if(responseDateGMTString != null)
 		    archiveUrlDate = responseDate.parse(responseDateGMTString);
-		log.info("Archive URL Date:" + archiveUrlDate.toString());
-
-		//resource.setArchiveUrl(archiveURL);
-		//resource.save();
 
 		PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)");
 		prepStmt.setInt(1, resource.getId());
@@ -112,6 +108,8 @@ public class ArchiveUrlManager
 		prepStmt.setTimestamp(3, new java.sql.Timestamp(archiveUrlDate.getTime()));
 		prepStmt.executeUpdate();
 		prepStmt.close();
+
+		resource.addArchiveUrl(null); // TODO 
 	    }
 	    catch(IOException e)
 	    {
