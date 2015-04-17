@@ -230,7 +230,7 @@
 							         		<f:param name="action" value="image"></f:param>
 							         		<f:param name="query" value="#{tag.name}"></f:param>
 						         		</h:outputLink>
-						         		<p:commandButton styleClass="tag_x" action="#{bean.onDeleteTag}" value="x" update=":add_resource_panel :middle" process="@form">
+						         		<p:commandButton styleClass="tag_x" action="#{bean.onDeleteTag}" value="x" update=":add_resource_panel" process="@form">
 						         			<f:setPropertyActionListener target="#{bean.selectedTag}" value="#{tag}"></f:setPropertyActionListener>
 						         		</p:commandButton>
 						         	</li>
@@ -238,7 +238,7 @@
 						         </ul>
 						         <p:inputText styleClass="tag_field" value="#{bean.tagName}"/>
 						         <div class="align-right" style="margin-top:4px">
-						         <p:commandButton actionListener="#{bean.addTag}" styleClass="greenbutton" value="#{msg.addTag}" update=":datagrid :add_resource_panel :middle" process="@form">
+						         <p:commandButton actionListener="#{bean.addTag}" styleClass="greenbutton" value="#{msg.addTag}" update=":datagrid :add_resource_panel" process="@form">
 						         	<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
 						         </p:commandButton>
 						         </div>

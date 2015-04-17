@@ -82,9 +82,9 @@
 				<div class="content">
 				<p:messages id="message"></p:messages>
 				
-				<h:panelGroup layout="block" id="middle" rendered="#{loginRequired and !userBean.loggedIn}">
+				<h:panelGroup layout="block" styleClass="small_page" rendered="#{loginRequired and !userBean.loggedIn}">
 					<p:panel header="#{msg.loginRequiredTitle}">
-						<p><h:outputText value="#{msg.loginRequiredText}" /></p>
+						<h4>#{msg.loginRequiredText}</h4>
 						<ui:include src="/lw/templates/login_form.xhtml" />
 					</p:panel>
 				</h:panelGroup>

@@ -30,13 +30,9 @@
 		<section id="content" class="#{smallPage? 'small_page':''}">
 			<p:messages id="message" showDetail="false" showSummary="true" />
 	
-			
-	
-			<h:panelGroup layout="block" id="middle" rendered="#{loginRequired and !userBean.loggedIn}" styleClass="small_page">
+			<h:panelGroup layout="block" styleClass="small_page" rendered="#{loginRequired and !userBean.loggedIn}">
 				<p:panel header="#{msg.loginRequiredTitle}">
-					<p>
-						<h:outputText value="#{msg.loginRequiredText}" />
-					</p>
+					<h4>#{msg.loginRequiredText}</h4>
 					<ui:include src="/lw/templates/login_form.xhtml" />
 				</p:panel>
 			</h:panelGroup>

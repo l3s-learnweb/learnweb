@@ -21,9 +21,13 @@
 		<param-value>server</param-value>
 	</context-param>
   
+  	<error-page>
+		<exception-type>java.lang.RuntimeException</exception-type>
+		<location>/lw/error_runtime.jsf</location>
+	</error-page>
 	<error-page>
 		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
-		<location>/lw/expired.jsf</location>
+		<location>/lw//lw/error_expired.jsf.jsf</location>
 	</error-page>	
 	<error-page>
         <exception-type>java.lang.Throwable</exception-type>
@@ -49,7 +53,7 @@
 		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
 		<init-param>
 			<param-name>logLevel</param-name>
-			<param-value>WARN</param-value>
+			<param-value>ERROR</param-value>
 		</init-param>
 	</filter>
 	<filter-mapping>
@@ -81,7 +85,7 @@
 		<param-name>com.sun.faces.numberOfLogicalViews</param-name>
 		<param-value>300</param-value>
 	</context-param>
-
+<!-- 
 	<context-param>
 		<param-name>org.apache.myfaces.ERROR_HANDLING</param-name>
 		<param-value>true</param-value>
@@ -90,7 +94,7 @@
 		<param-name>org.apache.myfaces.ERROR_TEMPLATE_RESOURCE</param-name>
 		<param-value>META-INF/rsc/custom-dev-error.xml</param-value>
 	</context-param>
-
+ -->
 	<context-param>
 		<param-name>javax.servlet.jsp.jstl.fmt.localizationContext</param-name>
 		<param-value>resources.application</param-value>

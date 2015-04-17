@@ -43,7 +43,10 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     private boolean restrictionOnlyLeaderCanAddResources;
 
+    private int categoryId;
     // caches
+    private String categoryTitle;
+    private String categoryAbbreviation;
 
     private transient List<Link> documentLinks;
     private transient OwnerList<Resource, User> resources;
@@ -442,6 +445,36 @@ public class Group implements Comparable<Group>, HasId, Serializable
     public List<LogEntry> getLogs() throws SQLException
     {
 	return getLogs(null, 5);
+    }
+
+    public int getCategoryId()
+    {
+	return categoryId;
+    }
+
+    public void setCategoryId(int categoryId)
+    {
+	this.categoryId = categoryId;
+    }
+
+    public String getCategoryTitle()
+    {
+	return categoryTitle;
+    }
+
+    public void setCategoryTitle(String categoryTitle)
+    {
+	this.categoryTitle = categoryTitle;
+    }
+
+    public String getCategoryAbbreviation()
+    {
+	return categoryAbbreviation;
+    }
+
+    public void setCategoryAbbreviation(String categoryAbbreviation)
+    {
+	this.categoryAbbreviation = categoryAbbreviation;
     }
 
 }

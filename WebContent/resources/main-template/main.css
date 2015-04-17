@@ -54,11 +54,11 @@ body {
 }
 
 #loadingsymbol{
-	vertical-align:middle;
 	position:absolute;
 	left:15rem;
 	top:50%;
 	margin-top:-16px;
+	visibility: hidden;
 }
 #searchfield {
 	float:left;
