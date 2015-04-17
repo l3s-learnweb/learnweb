@@ -31,8 +31,8 @@
 				<div class="ui-panelmenu-content ui-widget-content ui-helper-hidden">
 					<ul class="ui-menu-list ui-helper-reset">					
 					<ui:repeat value="#{group.elements}" var="link">								
-						<li class="groupmenu_items">
-							<a class="#{link.styleClass} ui-menuitem-link" href="#{link.url}">
+						<li>
+							<a class="#{link.styleClass}" href="#{link.url}">
 								#{link.value}
 							</a>
 						</li>

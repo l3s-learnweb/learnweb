@@ -405,24 +405,27 @@ in allen browsern testen danach löschen
 
 /* group menu */
 #group_menu h3{ margin-top:10px; }
-#group_menu h3 a:hover{ background-color:#eeeeee;  }
+#group_menu h3:hover{ background-color:#eeeeee;  }
 #group_menu .active > div { display:block; }
 #group_menu .active h3 { text-decoration:underline;}
 #group_menu a.active { font-weight:bold; }
 #group_menu .active h3 .iconarrow { background-position:-64px -16px; }
-
 #group_menu a{
 	display:block;
 	padding:0.5em;
 	margin-left:2.2em;
 }
-.groupmenu_items a:hover{
+#group_menu li{
+	padding-left:0.3em;
+	margin-right:1rem;
+}
+#group_menu li a:hover{
 	background-color:#eeeeee;
 	border-radius:5px;
 }
-.groupmenu_items{
-	font-style:italic;
-	padding-left:0.3em;
+#group_menu li a{
+	margin-left:1em;
+	margin-right:2em;
 }
 .iconarrow{
 	position:absolute;

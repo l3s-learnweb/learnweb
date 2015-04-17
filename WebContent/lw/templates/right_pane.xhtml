@@ -191,7 +191,11 @@
 							</div>
 							
 							<h:panelGroup rendered="#{not empty bean.clickedResource.groups}" style="padding-top: 10px" layout="block">
-								<b><h:outputText value="#{msg.group}: " /></b>	
+								<b><h:outputFormat value="#{msg.group_s}: ">
+										<f:param value="#{bean.clickedResource.groups.size()}" />
+									</h:outputFormat></b>	
+								
+								
 								
 								<ui:repeat var="group" value="#{bean.clickedResource.groups}">
 									<h:outputLink value="group/overview.jsf">

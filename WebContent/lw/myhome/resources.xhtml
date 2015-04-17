@@ -60,11 +60,11 @@
 			</script>
 			
 			
-			<p:confirmDialog id="confirmDialog" message="Are you sure about deleting the resource?" header="Delete Resource" severity="alert" widgetVar="confirmation" appendTo="@(body)" >
+			<p:confirmDialog id="confirmDialog" message="#{msg.delete_message_resource}" header="#{msg.delete_resource_title}" severity="alert" widgetVar="confirmation" appendTo="@(body)" >
 		        <h:form>
-			        <p:commandButton id="confirm" value="Yes" update=":datagrid :growl :add_resource_panel" oncomplete="PF('confirmation').hide(); update_header()"  
+			        <p:commandButton id="confirm" value="#{msg.yes}" update=":datagrid :growl :add_resource_panel" oncomplete="PF('confirmation').hide(); update_header()"  
 			                   actionListener="#{myResourcesBean.deleteResource}" process="@form"/>  
-			        <p:commandButton id="decline" value="No" onclick="PF('confirmation').hide()" type="button" />
+			        <p:commandButton id="decline" value="#{msg.no}" onclick="PF('confirmation').hide()" type="button" />
 			        </h:form>
 		    </p:confirmDialog>
 			

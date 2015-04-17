@@ -12,11 +12,11 @@
 	</ui:define>	
 
 	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="Groups" />
+	<ui:param name="pageTitle" value="#{msg.groupsTitle}" />
 		    		
 		<ui:define name="center_layout">
 			<h:form target="new_presentation" id="new_presentation_form">
-				<p:commandButton id="add_resource" styleClass="resource_button greenbutton" onclick="PF('format_dialog').show()" value="New Presentation"></p:commandButton>
+				<p:commandButton id="add_resource" styleClass="resource_button greenbutton" onclick="PF('format_dialog').show()" value="#{msg.presentation_new}"></p:commandButton>
 			</h:form>
 			<script type="text/javascript">
 				var div = document.createElement("div");
