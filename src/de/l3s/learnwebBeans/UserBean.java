@@ -184,21 +184,16 @@ public class UserBean implements Serializable
 
     public String setLocaleCode(String localeCode)
     {
-	switch(localeCode)
-	{
-	case "de":
+	if(localeCode.equals("de"))
 	    locale = Locale.GERMANY;
-	    break;
-	case "en":
+	else if(localeCode.equals("en"))
 	    locale = new Locale("en", "gb");
-	    break;
-	case "it":
+	else if(localeCode.equals("it"))
 	    locale = Locale.ITALY;
-	    break;
-	case "pt":
+	else if(localeCode.equals("pt"))
 	    locale = new Locale("pt", "br");
-	    break;
-	default:
+	else
+	{
 	    locale = Locale.ENGLISH;
 	    log.error("Unsupported language: " + localeCode);
 	}
