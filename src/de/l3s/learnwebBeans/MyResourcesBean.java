@@ -89,23 +89,48 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	return false;
     }
 
+    /*
     public void addSelectedResource()
     {
-	try
+    try
+    {
+        //Resource res = getUser().addResource(clickedResource.clone());
+        getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(clickedResource, getUser());
+        //getLearnweb().getResourceManager().addResourceToGroup(res, getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId), getUser());
+
+        log(Action.adding_resource, clickedResource.getId(), selectedResourceTargetGroupId + "");
+
+        addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", clickedResource.getTitle());
+
+    }
+    catch(SQLException e)
+    {
+        addFatalMessage(e);
+    }
+    } */
+
+    public void addSelectedResourceLink() throws SQLException
+    {
+	User user = getUser();
+	if(null == user)
 	{
-	    //Resource res = getUser().addResource(clickedResource.clone());
-	    getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(clickedResource, getUser());
-	    //getLearnweb().getResourceManager().addResourceToGroup(res, getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId), getUser());
-
-	    log(Action.adding_resource, clickedResource.getId(), selectedResourceTargetGroupId + "");
-
-	    addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", clickedResource.getTitle());
-
+	    addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
+	    return;
 	}
-	catch(SQLException e)
+
+	Resource newResource = clickedResource;
+
+	// add resource to a group if selected
+	if(selectedResourceTargetGroupId != 0)
 	{
-	    addFatalMessage(e);
+	    getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(newResource, getUser());
+	    user.setActiveGroup(selectedResourceTargetGroupId);
+
+	    log(Action.adding_resource, newResource.getId(), selectedResourceTargetGroupId + "");
+
+	    addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
 	}
+
     }
 
     public void onDeleteTag()

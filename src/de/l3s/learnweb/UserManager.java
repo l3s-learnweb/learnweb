@@ -194,7 +194,7 @@ public class UserManager
 
 	if(null != user)
 	{
-	    log.debug("Get user " + user.getUsername() + " from cache");
+	    //	    log.debug("Get user " + user.getUsername() + " from cache");
 	    return user;
 	}
 

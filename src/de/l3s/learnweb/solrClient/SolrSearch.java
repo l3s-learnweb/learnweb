@@ -20,7 +20,6 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.ResourceManager;
-import de.l3s.learnweb.Thumbnail;
 import de.l3s.learnweb.User;
 
 public class SolrSearch implements Serializable
@@ -267,22 +266,25 @@ public class SolrSearch implements Serializable
 		}
 	    }
 	    else
-	    { // cached resources	  
-		resource = new Resource();
-		resource.setUrl(solrResource.getId());
-		resource.setTitle(solrResource.getTitle());
-		resource.setSource(solrResource.getSource());
-		resource.setDescription(solrResource.getDescription());
-		resource.setLocation(solrResource.getLocation());
-		resource.setType(solrResource.getType());
-		resource.setFormat(solrResource.getFormat());
-		//resource.setLanguage(solrResource.getLanguage());
-		resource.setAuthor(solrResource.getAuthor());
-		resource.setMachineDescription(solrResource.getMachineDescription());
-		resource.setEmbeddedRaw(solrResource.getEmbeddedCode());
-		resource.setThumbnail2(new Thumbnail(solrResource.getThumbnailUrl2(), solrResource.getThumnailWidth2(), solrResource.getThumbnailHeight2()));
-		resource.setThumbnail3(new Thumbnail(solrResource.getThumbnailUrl3(), solrResource.getThumnailWidth3(), solrResource.getThumbnailHeight3()));
-		resource.setThumbnail4(new Thumbnail(solrResource.getThumbnailUrl4(), solrResource.getThumnailWidth4(), solrResource.getThumbnailHeight4()));
+	    { // cached resources
+		log.fatal("Cached resources are dissabled. This should never happen. Solr is in a corrupted state.");
+		/*		
+				resource = new Resource();
+				resource.setUrl(solrResource.getId());
+				resource.setTitle(solrResource.getTitle());
+				resource.setSource(solrResource.getSource());
+				resource.setDescription(solrResource.getDescription());
+				resource.setLocation(solrResource.getLocation());
+				resource.setType(solrResource.getType());
+				resource.setFormat(solrResource.getFormat());
+				//resource.setLanguage(solrResource.getLanguage());
+				resource.setAuthor(solrResource.getAuthor());
+				resource.setMachineDescription(solrResource.getMachineDescription());
+				resource.setEmbeddedRaw(solrResource.getEmbeddedCode());
+				resource.setThumbnail2(new Thumbnail(solrResource.getThumbnailUrl2(), solrResource.getThumnailWidth2(), solrResource.getThumbnailHeight2()));
+				resource.setThumbnail3(new Thumbnail(solrResource.getThumbnailUrl3(), solrResource.getThumnailWidth3(), solrResource.getThumbnailHeight3()));
+				resource.setThumbnail4(new Thumbnail(solrResource.getThumbnailUrl4(), solrResource.getThumnailWidth4(), solrResource.getThumbnailHeight4()));
+		*/
 	    }
 
 	    if(resource.getType() == null || resource.getTitle() == null || resource.getUrl() == null)

@@ -23,7 +23,6 @@ public class ResourceDecorator implements Serializable
     private Resource resource;
     private int tempId;
     private String snippet;
-    private String shortTitle;
     private boolean newResource; //Used to highlight new resources when we compare the current result set with a result set from a similar query posted earlier
     private int rankAtService; // the rank which the resource had at its original service (youtube, flickr...)
     private String title;
@@ -88,21 +87,6 @@ public class ResourceDecorator implements Serializable
     public void setTitle(String title)
     {
 	this.title = title;
-    }
-
-    /**
-     * 
-     * @param length
-     *            The maximum string length
-     * @return
-     */
-    public String getShortTitle()
-    {
-	if(null == shortTitle)
-	{
-	    shortTitle = StringHelper.shortnString(resource.getTitle(), 60);
-	}
-	return shortTitle;
     }
 
     public Thumbnail getThumbnail0()

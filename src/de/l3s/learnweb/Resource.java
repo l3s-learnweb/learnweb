@@ -67,7 +67,6 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private String embeddedSize3;
     private String embeddedSize4;
     private String embeddedSize1Raw;
-
     private String embeddedSize3Raw;
     private String embeddedSize4Raw;
     private String maxImageUrl; // an url to the largest image preview of this resource
@@ -140,7 +139,19 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     @Deprecated
     public void prepareEmbeddedCodes()
     {
-	if(null == embeddedSize1 || null == embeddedSize3)
+	if(isRestricted())
+	{
+	    embeddedSize1 = "<img src=\"../resources/resources/img/RestrictedAccess.jpg\" width=\"300\" height=\"214\" />";
+
+	    // TODO find a better solution; don't set a fixed error image
+	    Thumbnail restrictedImage = new Thumbnail("../resources/resources/img/RestrictedAccess.jpg", 300, 214);
+	    setThumbnail0(restrictedImage);
+	    setThumbnail1(restrictedImage);
+	    setThumbnail2(restrictedImage);
+	    setThumbnail3(restrictedImage);
+	    setThumbnail4(restrictedImage);
+	}
+	else if(null == embeddedSize1 || null == embeddedSize3)
 	{
 
 	    if(source.equalsIgnoreCase("YouTube"))
@@ -208,13 +219,13 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	    if(embeddedSize1 == null || embeddedSize1.length() < 3)
 	    {
 		if(type.equalsIgnoreCase("audio"))
-		    embeddedSize1 = "<img src=\"../resources/icon/audio.png\" width=\"100\" height=\"100\" />";
+		    embeddedSize1 = "<img src=\"../resources/resources/img/audio.png\" width=\"100\" height=\"100\" />";
 		else if(format.startsWith("application/vnd.") || format.startsWith("application/ms"))
-		    embeddedSize1 = "<img src=\"https://www.kbs.uni-hannover.de/~kemkes/document.png\" width=\"100\" height=\"100\" />";
+		    embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
 		else if(storageType == WEB_RESOURCE)
-		    embeddedSize1 = "<img src=\"https://www.kbs.uni-hannover.de/~kemkes/website-140.png\" width=\"100\" height=\"100\" />";
+		    embeddedSize1 = "<img src=\"../resources/resources/img/website-140.png\" width=\"100\" height=\"100\" />";
 		else if(format.startsWith("text/"))
-		    embeddedSize1 = "<img src=\"https://www.kbs.uni-hannover.de/~kemkes/document.png\" width=\"100\" height=\"100\" />";
+		    embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
 	    }
 
 	}
@@ -848,19 +859,10 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	this.maxImageUrl = imageUrl;
     }
 
-    public String getShortTitle()
-    {
-	return StringHelper.shortnString(title, 20);
-    }
-
     public String getShortDescription()
     {
 	return Jsoup.clean(StringHelper.shortnString(description, 200), Whitelist.simpleText());
     }
-
-    /*
-     * public String getShorterDescription() { return Jsoup.clean(StringHelper.shortnString(description, 80), Whitelist.none()); }
-     */
 
     /**
      * @return the file name of uploaded resource
@@ -1009,29 +1011,6 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	this.machineDescription = machineDescription;
     }
 
-    /**
-     * This is only a workarround should not be used too long
-     * 
-     * @return
-     */
-    @Deprecated
-    public boolean isMultimedia()
-    {
-	if(getType().equalsIgnoreCase("pdf") || getType().equals("Document"))
-	    return false;
-
-	if(getStorageType() == FILE_RESOURCE)
-	    return true;
-
-	if(getType().equals("Image") || getType().equals("Video"))
-	    return true;
-
-	if(getUrl().contains("slideshare") || getUrl().contains("ipernity") || getUrl().contains("youtube.com") || getUrl().contains("flickr.com"))
-	    return true;
-
-	return false;
-    }
-
     public Thumbnail getThumbnail0()
     {
 	return thumbnail0;
@@ -1098,17 +1077,17 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	return thumbnail4;
     }
 
-    public void setThumbnail0(Thumbnail thumbnail0)
+    protected void setThumbnail0(Thumbnail thumbnail0)
     {
 	this.thumbnail0 = thumbnail0;
     }
 
-    public void setThumbnail1(Thumbnail thumbnail1)
+    protected void setThumbnail1(Thumbnail thumbnail1)
     {
 	this.thumbnail1 = thumbnail1;
     }
 
-    public void setThumbnail2(Thumbnail thumbnail2)
+    protected void setThumbnail2(Thumbnail thumbnail2)
     {
 	this.thumbnail2 = thumbnail2;
 	if(thumbnail2 != null)
@@ -1118,12 +1097,12 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	}
     }
 
-    public void setThumbnail3(Thumbnail thumbnail3)
+    protected void setThumbnail3(Thumbnail thumbnail3)
     {
 	this.thumbnail3 = thumbnail3;
     }
 
-    public void setThumbnail4(Thumbnail thumbnail4)
+    protected void setThumbnail4(Thumbnail thumbnail4)
     {
 	this.thumbnail4 = thumbnail4;
     }

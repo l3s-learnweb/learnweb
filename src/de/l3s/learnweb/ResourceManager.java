@@ -14,6 +14,8 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
+import de.l3s.interwebj.jaxb.SearchResultEntity;
+import de.l3s.interwebj.jaxb.ThumbnailEntity;
 import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
@@ -25,7 +27,8 @@ import de.l3s.util.StringHelper;
 public class ResourceManager
 {
     private final static String COMMENT_COLUMNS = "`comment_id`, `resource_id`, `user_id`, `text`, `date`";
-    private final static String RESOURCE_COLUMNS = "r.resource_id, r.title, r.description, r.url, r.storage_type, r.rights, r.source, r.type, r.format, r.owner_user_id, r.rating, r.rate_number, r.embedded_size1, r.embedded_size2, r.embedded_size3, r.embedded_size4, r.filename, r.max_image_url, r.query, r.original_resource_id, r.author, r.access, r.thumbnail0_url, r.thumbnail0_file_id, r.thumbnail0_width, r.thumbnail0_height, r.thumbnail1_url, r.thumbnail1_file_id, r.thumbnail1_width, r.thumbnail1_height, r.thumbnail2_url, r.thumbnail2_file_id, r.thumbnail2_width, r.thumbnail2_height, r.thumbnail3_url, r.thumbnail3_file_id, r.thumbnail3_width, r.thumbnail3_height, r.thumbnail4_url, r.thumbnail4_file_id, r.thumbnail4_width, r.thumbnail4_height, r.embeddedRaw, r.transcript, r.online_status, r.id_at_service, r.duration, r.restricted";
+    private final static String RESOURCE_COLUMNS = "r.deleted, r.resource_id, r.title, r.description, r.url, r.storage_type, r.rights, r.source, r.type, r.format, r.owner_user_id, r.rating, r.rate_number, r.embedded_size1, r.embedded_size2, r.embedded_size3, r.embedded_size4, r.filename, r.max_image_url, r.query, r.original_resource_id, r.author, r.access, r.thumbnail0_url, r.thumbnail0_file_id, r.thumbnail0_width, r.thumbnail0_height, r.thumbnail1_url, r.thumbnail1_file_id, r.thumbnail1_width, r.thumbnail1_height, r.thumbnail2_url, r.thumbnail2_file_id, r.thumbnail2_width, r.thumbnail2_height, r.thumbnail3_url, r.thumbnail3_file_id, r.thumbnail3_width, r.thumbnail3_height, r.thumbnail4_url, r.thumbnail4_file_id, r.thumbnail4_width, r.thumbnail4_height, r.embeddedRaw, r.transcript, r.online_status, r.id_at_service, r.duration, r.restricted";
+
     private final static Logger log = Logger.getLogger(ResourceManager.class);
 
     private final Learnweb learnweb;
@@ -178,9 +181,7 @@ public class ResourceManager
 	resource = createResource(rs);
 	select.close();
 
-	resource.prepareEmbeddedCodes();
-
-	return cache.put(resource);
+	return resource;
     }
 
     /**
@@ -712,7 +713,6 @@ public class ResourceManager
 	while(rs.next())
 	{
 	    int userId = rs.getInt(1);
-	    //Resource r = getResource(rs.getInt(1));
 	    Resource r = createResource(rs);
 	    User user = userId == 0 ? null : um.getUser(userId);
 
@@ -773,13 +773,19 @@ public class ResourceManager
 	    else
 		resource.setLocation("Learnweb");
 
-	    List<File> files = learnweb.getFileManager().getFilesByResource(resource.getId());
-	    for(File file : files)
+	    if(rs.getInt("deleted") == 0)
 	    {
-		resource.addFile(file);
-		if(file.getResourceFileNumber() == File.ORIGINAL_FILE)
-		    resource.setUrl(file.getUrl());
+
+		List<File> files = learnweb.getFileManager().getFilesByResource(resource.getId());
+		for(File file : files)
+		{
+		    resource.addFile(file);
+		    if(file.getResourceFileNumber() == File.ORIGINAL_FILE)
+			resource.setUrl(file.getUrl());
+		}
 	    }
+	    else
+		log.debug(resource.getTitle() + " is deleted");
 
 	    resource.prepareEmbeddedCodes();
 	    resource = cache.put(resource);
@@ -845,10 +851,83 @@ public class ResourceManager
      *  All methods beyond should be deleted soon
      */
 
+    public static Resource getResourceFromInterwebResult(SearchResultEntity searchResult)
+    {
+	Resource currentResult = new Resource();
+
+	currentResult.setType(searchResult.getType());
+	currentResult.setTitle(searchResult.getTitle());
+
+	if(!currentResult.getTitle().equals(searchResult.getDescription()))
+	    currentResult.setDescription(searchResult.getDescription());
+	currentResult.setLocation(searchResult.getService());
+	currentResult.setSource(searchResult.getService());
+
+	currentResult.setViews(searchResult.getNumberOfViews());
+	currentResult.setUrl(StringHelper.urlDecode(searchResult.getUrl()));
+	currentResult.setEmbeddedSize1Raw(searchResult.getEmbeddedSize1());
+	currentResult.setEmbeddedSize3Raw(searchResult.getEmbeddedSize3());
+	currentResult.setEmbeddedSize4Raw(searchResult.getEmbeddedSize4());
+	//currentResult.setMaxImageUrl(searchResult.getImageUrl());
+	currentResult.setDuration(searchResult.getDuration());
+
+	if(!currentResult.getType().equalsIgnoreCase("image"))
+	{
+	    currentResult.setEmbeddedRaw(searchResult.getEmbeddedSize4());
+	    if(null == currentResult.getEmbeddedRaw())
+		currentResult.setEmbeddedRaw(searchResult.getEmbeddedSize3());
+	}
+
+	List<ThumbnailEntity> thumbnails = searchResult.getThumbnailEntities();
+
+	for(ThumbnailEntity thumbnailElement : thumbnails)
+	{
+	    String url = thumbnailElement.getUrl();
+
+	    int height = thumbnailElement.getHeight();
+	    int width = thumbnailElement.getWidth();
+
+	    // ipernity api doesn't return largest available thumbnail, so we have to guess it
+	    if(searchResult.getService().equals("Ipernity") && url.contains(".560."))
+	    {
+		if(width == 560 || height == 560)
+		{
+		    double ratio = 640.0 / 560.;
+		    width *= ratio;
+		    height *= ratio;
+
+		    url = url.replace(".560.", ".640.");
+		}
+	    }
+
+	    Thumbnail thumbnail = new Thumbnail(url, width, height);
+
+	    if(thumbnail.getHeight() <= 100 && thumbnail.getWidth() <= 100)
+		currentResult.setThumbnail0(thumbnail);
+	    else if(thumbnail.getHeight() < 170 && thumbnail.getWidth() < 170)
+	    {
+		thumbnail = thumbnail.resize(120, 100);
+		currentResult.setThumbnail1(thumbnail);
+	    }
+	    else if(thumbnail.getHeight() < 500 && thumbnail.getWidth() < 500)
+	    {
+		currentResult.setThumbnail2(thumbnail.resize(300, 220));
+	    }
+	    else
+	    //if(thumbnail.getHeight() < 600 && thumbnail.getWidth() < 600)
+	    {
+		currentResult.setThumbnail4(thumbnail);
+	    }
+	}
+	return currentResult;
+    }
+
     public static void main(String[] args) throws Exception
     {
-	createThumbnailsForTEDVideos();
-	//createThumbnailsForWebResources();
+	//createThumbnailsForTEDVideos();
+	createThumbnailsForWebResources();
+
+	System.out.println("done");
     }
 
     public static void createThumbnailsForWebResources() throws Exception
@@ -862,7 +941,7 @@ public class ResourceManager
 		.getResources(
 			"SELECT "
 				+ RESOURCE_COLUMNS
-				+ " FROM `lw_resource` r where  `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and r.`resource_id` > 20000 and type !='pdf' and source != 'SlideShare' and thumbnail2_file_id=0 and online_status = 'unknown' ORDER BY `resource_id` DESC limit 1000",
+				+ " FROM `lw_resource` r where  `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and r.`resource_id` > 20000 and type !='pdf' and source != 'SlideShare' and thumbnail2_file_id=0 and online_status = 'unknown' ORDER BY `resource_id` DESC limit 2000",
 			null);
 
 	ResourcePreviewMaker rpm = lw.getResourcePreviewMaker();
@@ -883,6 +962,12 @@ public class ResourceManager
 	    if(url.contains("ted.com") || url.contains("youtube") || url.contains("vimeo") || url.contains("slideshare") || url.contains("flickr") || resource.getId() == 71989 || resource.getId() == 71536 || resource.getId() == 71100)
 	    {
 		System.err.println("skipeed: " + url);
+		continue;
+	    }
+
+	    if(url.contains("loro") && resource.getMaxImageUrl() != null)
+	    {
+		System.out.println("skipped");
 		continue;
 	    }
 

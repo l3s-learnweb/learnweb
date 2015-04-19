@@ -151,11 +151,10 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     public OwnerList<Resource, User> getResources() throws SQLException
     {
-	System.out.println("getResources");
-	// caching disabled until a good strategie exist how to deal with deleting resources on the my resource page
-	if(null == resources || resourcesCacheTime + 3000L < System.currentTimeMillis())
+	// caching is restricted to 1 sec until a good strategy exist how to deal with deleting resources in other beans
+
+	if(null == resources || resourcesCacheTime + 1000L < System.currentTimeMillis())
 	{
-	    System.out.println("getResources echt");
 	    ResourceManager rm = Learnweb.getInstance().getResourceManager();
 	    resources = rm.getResourcesByGroupId(id);
 	    resourcesCacheTime = System.currentTimeMillis();

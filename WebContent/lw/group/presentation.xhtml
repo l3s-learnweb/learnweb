@@ -34,12 +34,12 @@
 			}
 		</style>
 		<p:notificationBar effect="slide" position="top" styleClass="top" widgetVar="notification">
-			<h:outputText value="#{msg.full_screen_mode}"/>
+			<h:outputText value="#{msg.full_screen_mode}" escape="false" />
 		</p:notificationBar>
 		<script type="text/javascript">
 		$(document).ready(function(){
-			setTimeout('notification.show()',500);
-			setTimeout('notification.hide()',8000);
+			setTimeout('PF("notification").show()',500);
+			setTimeout('PF("notification").hide()',8000);
 		});
 		</script>
 		<style>
@@ -74,9 +74,11 @@
 		    <h:outputText value="#{msg.navigate}"/>
 		</div>
 		<script>
+		/* <!-- */
 		if ("ontouchstart" in document.documentElement) { 
 		    document.querySelector(".hint").innerHTML = "<p>Tap on the left or right to navigate</p>";
 		}
+		/* --> */
 		</script>
 		
 		<script src="http://bartaz.github.com/impress.js/js/impress.js"></script>

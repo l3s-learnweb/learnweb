@@ -416,11 +416,11 @@ public class SearchLogClient
 	    Resource resourceSend;
 	    //creating a new resource type for the web service
 	    if(mode != MODE.web)
-		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getShortTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resource.getThumbnail2()
+		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resource.getThumbnail2()
 			.getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(), resource.getResource().getThumbnail4().getUrl(), resultsetId,
 			resource.getTempId());
 	    else
-		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getShortTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
+		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
 			resource.getTempId());
 
 	    //posting the resource to the web service
@@ -451,11 +451,11 @@ public class SearchLogClient
 	    Resource resourceSend;
 	    //creating a new resource type for the web service
 	    if(mode != MODE.web)
-		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getShortTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resource.getThumbnail2()
+		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resource.getThumbnail2()
 			.getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(), resource.getResource().getThumbnail4().getUrl(), resultsetId,
 			resource.getTempId());
 	    else
-		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getShortTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
+		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
 			resource.getTempId());
 	    resourcelist.add(resourceSend);
 	}
@@ -498,11 +498,11 @@ public class SearchLogClient
 		//creating a new resource type for the web service
 		Resource resourceSend;
 		if(mode != MODE.web)
-		    resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getShortTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resource.getThumbnail2()
+		    resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resource.getThumbnail2()
 			    .getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(), resource.getResource().getThumbnail4().getUrl(), resultsetId,
 			    resource.getTempId());
 		else
-		    resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getShortTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
+		    resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
 			    resource.getTempId());
 
 		resources.add(resourceSend);

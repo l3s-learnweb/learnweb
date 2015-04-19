@@ -16,14 +16,6 @@
 
 	  
 		<ui:define name="center_layout">
-				<h:form id="mode_selection" rendered="false">
-					<p:selectOneButton value="#{groupDetailBean.mode}">  
-		            <f:selectItem itemLabel="Everything" itemValue="everything" />  
-		            <f:selectItem itemLabel="Multimedia" itemValue="multimedia" />  
-		            <f:selectItem itemLabel="Web" itemValue="text" /> 
-		             <p:ajax event="change" update=":resource_disp"></p:ajax> 
-	        		</p:selectOneButton> 
-				</h:form>
 				<br></br>
 				<h:form id="add_resource">
 					<p:commandButton styleClass="resource_button greenbutton" value="#{msg.upload_resource}" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
@@ -117,52 +109,52 @@
 				<p:dialog header="#{msg.options}" closable="false" widgetVar="resource_dialog" appendTo="@(body)" modal="true" minWidth="540">
 					<h:form id="resource_form">
 						<h:panelGrid columns="2">
-							<h:outputLabel value="#{msg.add_to}:" />
+							<h:outputText value="#{msg.add_to}:" />
 							<h:selectOneMenu value="#{groupDetailBean.selectedResourceTargetGroupId}">
 								<f:selectItem itemLabel="#{msg.myResourcesTitle}" itemValue="0" />
 								<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />
 								<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" itemValue="#{group.id}" />
 							</h:selectOneMenu>
 		
-							<h:outputLabel value="#{msg.title}:" />
+							<h:outputText value="#{msg.title}:" />
 							<p:inputText value="#{groupDetailBean.clickedResource.title}" styleClass="resource_dialog_field" />
 		
-							<h:outputLabel value="#{msg.description}:" />
+							<h:outputText value="#{msg.description}:" />
 							<p:inputTextarea value="#{groupDetailBean.clickedResource.description}" autoResize="true" styleClass="resource_dialog_field"/>
 		
-							<h:outputLabel value="Url:" />
+							<h:outputText value="Url:" />
 							<p:inputText value="#{groupDetailBean.clickedResource.url}" disabled="true" styleClass="resource_dialog_field" />
 		
-							<h:outputLabel value="#{msg.type}:" />
+							<h:outputText value="#{msg.type}:" />
 							<p:inputText value="#{groupDetailBean.clickedResource.type}" disabled="true" styleClass="resource_dialog_field" />
 		
-							<h:outputLabel value="#{msg.author}:" />
+							<h:outputText value="#{msg.author}:" />
 							<p:inputText value="#{groupDetailBean.clickedResource.author}" styleClass="resource_dialog_field" />
 							
-								<h:outputText value=""></h:outputText>
-								<p:column styleClass="resource_pcolumn">
-									<div class="resource_pcolumn_div"><p:commandButton value="#{msg.cancel}" onclick="resource_dialog.hide()" />
-									<p:commandButton value="#{msg.save}" action="#{groupDetailBean.addSelectedResource}" update=":datagrid :growl" process="@form :datagrid" oncomplete="resource_dialog.hide()" /></div>
-								</p:column>
+							<h:outputText value=""></h:outputText>
+							<h:panelGroup layout="block" styleClass="resource_pcolumn_div">
+								<p:commandButton value="#{msg.cancel}" onclick="PF('resource_dialog').hide(); return false;" />
+								
+								<p:commandButton value="#{msg.save}" action="#{groupDetailBean.addSelectedResource}" update=":datagrid :growl" process="@form :datagrid" oncomplete="PF('resource_dialog').hide()" />
+							</h:panelGroup>
+							
 						</h:panelGrid>
 					</h:form>
 				</p:dialog>
 				
-				<p:dialog header="#{msg.link_to}" widgetVar="resource_link_dialog" modal="false" minWidth="540" styleClass="zindex10000">
-			
+				<p:dialog header="#{msg.link_to}" widgetVar="resource_link_dialog" modal="false" minWidth="540" styleClass="zindex10000">			
 					<h:form id="resource_link_form">
 						<h:panelGrid columns="2">
-							<h:outputLabel value="#{msg.link_to}"/>
+							<h:outputText value="#{msg.link_to}:"/>
 							<h:selectOneMenu value="#{groupDetailBean.selectedResourceTargetGroupId}">
 								<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
 							</h:selectOneMenu>					
 							
 							<h:outputText value="" />
-							<p:commandButton value="#{msg.save}" action="#{groupDetailBean.addSelectedResourceLink}" process="@form" update=":growl" oncomplete="resource_link_dialog.hide()"/>
-						</h:panelGrid>
-					
+							<p:commandButton value="#{msg.save}" action="#{groupDetailBean.addSelectedResourceLink}" process="@form" update=":growl" oncomplete="PF('resource_link_dialog').hide()"/>
+						</h:panelGrid>					
 					</h:form>			
-				</p:dialog>					
+				</p:dialog>			
 		
 			 <h:form>
 			 	<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{groupDetailBean.updateColumns}"></p:remoteCommand>
@@ -171,7 +163,7 @@
 	
 				<p:dataGrid id="datagrid" var="result" value="#{groupDetailBean.resources}" columns="#{groupDetailBean.numberOfColumns}" paginator="false" widgetVar="datagrid" emptyMessage="#{msg.no_resources_found}">  
 			  		<h:form>
-			        <p:commandLink styleClass="resource_command_link" update=":resource_form :add_resource_panel" oncomplete="update_header()">
+			        <p:commandLink styleClass="resource_command_link" update=":add_resource_panel" oncomplete="update_header()">
 			        	<f:setPropertyActionListener target="#{groupDetailBean.clickedResource}" value="#{result}"></f:setPropertyActionListener>
 				        <p:panel styleClass="resource_panel"> 
 				        	<h:outputText value="#{result.title}" escape="false" styleClass="resource_short_title" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; max-width:185px; width:185px; display:block;" /> 
@@ -183,15 +175,15 @@
 				            		<h:outputText styleClass="resource_thumbnail" value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"140\" height=\"140\" />")}' escape="false"></h:outputText>
 
 				            		<div class="buttons">
-				            			<p:commandLink onclick="PF('resource_dialog').show()" title="#{msg.addToMyResources}"
-											update=":datagrid" styleClass="buttons_link resource_commandlink">
+				            			<p:commandLink oncomplete="PF('resource_dialog').show()" title="#{msg.addToMyResources}"
+											update=":resource_form" styleClass="buttons_link resource_commandlink" process="@this">
 											<h:graphicImage alt="Add" value="/resources/icon/Add.png"/>
 											<f:setPropertyActionListener value="#{result}" target="#{groupDetailBean.clickedResource}" />
 											<f:param name="group_id" value="#{groupDetailBean.groupId}" />
 										</p:commandLink>
 										
 										<p:commandLink oncomplete="PF('resource_link_dialog').show();" title="#{msg.link_to}" 
-											rendered="#{userBean.isModerator() or true}" update=":datagrid" styleClass="buttons_link resource_commandlink">
+											rendered="#{userBean.isModerator() or true}" styleClass="buttons_link resource_commandlink">
 											<h:graphicImage alt="Add" value="/resources/icon/Add_blue.png" title="#{msg.link_to}" /> 
 											<f:setPropertyActionListener value="#{result}" target="#{groupDetailBean.clickedResource}" />
 											<f:param name="group_id" value="#{groupDetailBean.groupId}" /> 
@@ -211,20 +203,18 @@
 											<f:param name="group_id" value="#{groupDetailBean.groupId}" />
 										</p:commandLink>
 										
-										<p:commandLink update="resource_form" oncomplete="PF('resource_move_dialog').show();" title="#{msg.move_to}" 
+										<p:commandLink update=":resource_form" oncomplete="PF('resource_move_dialog').show();" title="#{msg.move_to}" 
 											rendered="#{userBean.isModerator() and false}" >
 											<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" title="#{msg.move_to}" style="padding: 3px;"/> 
 											<f:setPropertyActionListener value="#{result}" target="#{searchBean.selectedResource}" />
 											<f:param name="group_id" value="#{groupDetailBean2.groupId}" /> 
 										</p:commandLink>
 				            		</div>
-					            	
-					            	<!-- <h:outputText value="#{result.shortDescription}" escape="false"></h:outputText> -->
 				            	</p:row>
 				            	
-					            	<div class="resource_summary" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; max-width:185px; width:185px;">
+				            	<div class="resource_summary" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; max-width:185px; width:185px;">
 									<span>${learnwebBean.getLocaleMessage(result.type)}</span> #{msg.added_by} <span>#{result.getOwnerUser().username}</span>
-							            </div>
+						        </div>
 				            
 					          
 				            </h:panelGrid>  

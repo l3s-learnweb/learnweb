@@ -87,43 +87,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public Comment clickedComment;
     private int numberOfColumns;
 
-    public Comment getClickedComment()
-    {
-	return clickedComment;
-    }
-
-    public void setClickedComment(Comment clickedComment)
-    {
-	this.clickedComment = clickedComment;
-    }
-
     private boolean allLogs = false;
     private boolean reloadLogs = false;
-
-    public Presentation getClickedPresentation()
-    {
-	return clickedPresentation;
-    }
-
-    public void setClickedPresentation(Presentation clickedPresentation)
-    {
-	this.clickedPresentation = clickedPresentation;
-    }
-
-    public Resource getClickedResource()
-    {
-	return clickedResource;
-    }
-
-    public void setClickedResource(Resource clickedResource)
-    {
-	if(!editResourceClicked || this.clickedResource != clickedResource)
-	{
-	    editResourceClicked = false;
-	    this.clickedResource = clickedResource;
-	}
-	newResourceClicked = false;
-    }
 
     @NotBlank
     private String newLinkUrl;
@@ -145,18 +110,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     private Group newGroup = new Group();
 
-    public void resize()
-    {
-	log.info("Ankit");
-    }
-
     public GroupDetailBean() throws SQLException
     {
 	loadGroup();
-	/*if(resourcesAll != null && !resourcesAll.isEmpty())
-		clickedResource = resourcesAll.getFirst();
-	else
-		clickedResource=null;*/
+
 	Resource temp = new Resource();
 	clickedResource = temp;
 	clickedUser = new User(); // TODO initilaize with null
@@ -164,6 +121,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	clickedPresentation = new Presentation();// TODO initilaize with null
 
 	numberOfColumns = 3;
+
+	log.debug("init GroupDetailBean()");
     }
 
     public void preRenderView(ComponentSystemEvent e)
@@ -346,7 +305,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void loadResources() throws SQLException
     {
-	resourcesAll = new OwnerList<Resource, User>(group.getResources());
+	resourcesAll = new OwnerList<Resource, User>(group.getResources()); // copy resources
 	Collections.sort(resourcesAll, Resource.createTitleComparator());
     }
 
@@ -1299,5 +1258,40 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
 	addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
+    }
+
+    public Comment getClickedComment()
+    {
+	return clickedComment;
+    }
+
+    public void setClickedComment(Comment clickedComment)
+    {
+	this.clickedComment = clickedComment;
+    }
+
+    public Presentation getClickedPresentation()
+    {
+	return clickedPresentation;
+    }
+
+    public void setClickedPresentation(Presentation clickedPresentation)
+    {
+	this.clickedPresentation = clickedPresentation;
+    }
+
+    public Resource getClickedResource()
+    {
+	return clickedResource;
+    }
+
+    public void setClickedResource(Resource clickedResource)
+    {
+	if(!editResourceClicked || this.clickedResource != clickedResource)
+	{
+	    editResourceClicked = false;
+	    this.clickedResource = clickedResource;
+	}
+	newResourceClicked = false;
     }
 }
