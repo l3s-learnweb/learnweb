@@ -47,14 +47,16 @@
 					updateColumns([{name:'cols',value: c}]);
 				}
 			</script>
+
+		<p:confirmDialog id="confirmDialog" message="#{msg.delete_message_presentation}" header="delete_presentation" severity="alert" widgetVar="confirmation" appendTo="@(body)">
 			<h:form>
-				<p:confirmDialog id="confirmDialog" message="#{msg.delete_message_presentation}" header="delete_presentation" severity="alert" widgetVar="confirmation" appendTo="@(body)" >
-			        <p:commandButton id="confirm" value="#{msg.yes}" update=":datagrid :right_form" oncomplete="update_header(); PF('confirmation').hide();"  
-			                   actionListener="#{groupDetailBean.removePresentationFromGroup}" process=":right_form"/>  
-			        <p:commandButton id="decline" value="#{msg.no}" onclick="PF('confirmation').hide()" type="button" />
-			    </p:confirmDialog>
+				<p:commandButton id="confirm" value="#{msg.yes}" update=":datagrid :right_form" oncomplete="update_header(); PF('confirmation').hide();"
+					actionListener="#{groupDetailBean.removePresentationFromGroup}" process=":right_form" />
+				<p:commandButton id="decline" value="#{msg.no}" onclick="PF('confirmation').hide()" type="button" />
 			</h:form>
-			<p:dialog resizable="false" header="#{msg.layout_selection}" widgetVar="format_dialog" modal="true" appendTo="@(body)">
+		</p:confirmDialog>
+
+		<p:dialog resizable="false" header="#{msg.layout_selection}" widgetVar="format_dialog" modal="true" appendTo="@(body)">
 				<h:form>
 					#{msg.select_layout}<br/><br/>
 			    	<a onclick="PF('format_dialog').hide()" class="format_button_link" target="new_presentation" href="#{groupDetailBean.edit('1')}">
@@ -147,10 +149,10 @@
 							
 							<div id="presentation_preview">
 							    <span class="aligner"></span>
-							    <span class="align">#{groupDetailBean.clickedPresentation.presentationTitle}</span>
+							    <h:outputText value="#{groupDetailBean.clickedPresentation.presentationTitle}" escape="false" styleClass="align" />
 							</div>
 							<p:commandButton styleClass="presentation_commandbutton" action="#{groupDetailBean.present}" ajax="false" value="#{msg.present}"></p:commandButton>
-							<p:commandButton styleClass="presentation_commandbutton" onclick="PF('format_dialog2').show(); return false" ajax="false" value="#{msg.edit}"></p:commandButton>
+							<p:commandButton rendered="false" styleClass="presentation_commandbutton" onclick="PF('format_dialog2').show(); return false" ajax="false" value="#{msg.edit}"></p:commandButton>
 							<p:commandButton styleClass="presentation_commandbutton" onclick="PF('confirmation').show(); return false" ajax="false" value="#{msg.delete}"></p:commandButton>
 							<div class="presentation_clear"></div>
 							<div class="presentation_detail_div">

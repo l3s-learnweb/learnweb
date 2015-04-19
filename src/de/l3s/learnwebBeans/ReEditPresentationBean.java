@@ -136,9 +136,7 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
 		    System.out.println(newId);
 		}
 	    }
-	    FacesContext context = FacesContext.getCurrentInstance();
-	    context.addMessage(null, new FacesMessage("Presentation Saved", "p1"));
-	    System.out.println("test");
+	    addGrowl(FacesMessage.SEVERITY_INFO, "presentation_saved");
 	}
 	catch(SQLException e)
 	{
@@ -150,8 +148,7 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
 
     public void growl()
     {
-	FacesContext context = FacesContext.getCurrentInstance();
-	context.addMessage(null, new FacesMessage("Presentation Saved", getPresentationName()));
+	addGrowl(FacesMessage.SEVERITY_INFO, "presentation_saved");
     }
 
     public void load()

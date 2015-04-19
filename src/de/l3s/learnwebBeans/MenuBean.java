@@ -78,8 +78,6 @@ public class MenuBean extends ApplicationBean implements Serializable
 
     public MenuModel getModel()
     {
-	System.out.println("compute model");
-	//if(null == model)
 	computeMenu();
 
 	return model;

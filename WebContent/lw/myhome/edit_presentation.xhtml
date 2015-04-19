@@ -330,7 +330,7 @@
                     <h:form>
 						<div id="impress">
 							<div class="step slide" id="resource_slide_1" data-x="0" data-y="0">
-								<q class="editable" id="presentation_title" style="text-align: center" onclick="PF('title_dialog').show()">#{editPresentationBean.group.title}</q>
+								<q class="editable" id="presentation_title" style="text-align: center" onclick="PF('title_dialog').show()"><h:outputText escape="false" value="#{editPresentationBean.group.title}" /></q>
 								
 								<!-- <div style="position: absolute; bottom: 20px; left: 0px; text-align: center; width: 100%">
 									<span style="font-size: 50px; position: relative; top: -0.15em">.</span>
@@ -343,7 +343,7 @@
 							<ui:fragment rendered="#{editPresentationBean.format eq 1}">
 								<ui:repeat var="result" value="#{editPresentationBean.resourcesAll}">
 									<div class="step slide" data-x="0" data-y="0" id="resource_slide_#{result.id}" style="display:none">
-										<div class="editable" style="font-weight: bold" onclick="PF('title_dialog_#{result.id}').show()" id="resource_title_#{result.id}">#{result.title}</div>
+										<div class="editable" style="font-weight: bold" onclick="PF('title_dialog_#{result.id}').show()" id="resource_title_#{result.id}"><h:outputText escape="false" value="#{result.title}" /></div>
 										<table style="margin-top: 30px">
 											<tr>
 												<td style="width: 50%; max-width: 50% !important; padding-right: 5%">
@@ -378,7 +378,7 @@
 								<ui:repeat var="result" value="#{editPresentationBean.resourcesAll}">
 									<ui:fragment rendered="#{result.type != 'text' and result.type != 'Text'}">	
 										<div class="step slide" data-x="0" data-y="0" id="resource_slide_#{result.id}" style="display:none">
-											<div class="editable" style="font-weight: bold" onclick="PF('title_dialog_#{result.id}').show()" id="resource_title_#{result.id}">#{result.title}</div>
+											<div class="editable" style="font-weight: bold" onclick="PF('title_dialog_#{result.id}').show()" id="resource_title_#{result.id}"><h:outputText escape="false" value="#{result.title}" /></div>
 											<table style="margin-top: 30px">
 												<tr>
 													<td style="width: 50%; max-width: 50% !important; padding-right: 5%">

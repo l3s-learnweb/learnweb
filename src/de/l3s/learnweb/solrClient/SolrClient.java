@@ -158,7 +158,8 @@ public class SolrClient
 	 * +2YEARS : Exactly two years in the future from now
 	 */
 
-	server.deleteByQuery("timestamp : [ * TO NOW-1DAY/DAY] AND -id:r_*");
+	//server.deleteByQuery("timestamp : [ * TO NOW-1DAY/DAY] AND -id:r_*");
+	server.deleteByQuery("-id:r_*");
 	server.commit();
     }
 

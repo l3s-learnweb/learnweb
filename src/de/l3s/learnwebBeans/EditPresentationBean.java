@@ -143,8 +143,7 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
 
     public void growl()
     {
-	FacesContext context = FacesContext.getCurrentInstance();
-	context.addMessage(null, new FacesMessage("Presentation Saved", getPresentationName()));
+	addGrowl(FacesMessage.SEVERITY_INFO, "presentation_saved");
     }
 
     public void load()
