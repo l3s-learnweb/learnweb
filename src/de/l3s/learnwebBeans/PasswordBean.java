@@ -123,7 +123,7 @@ public class PasswordBean extends ApplicationBean implements Serializable
 
 	String link = UtilBean.getLearnwebBean().getContextUrl() + "/lw/user/change_password.jsf?u=" + user.getId() + "_" + createHash(user);
 
-	message.setText("Hi " + user.getUsername() + ",\n\nyou can change the password of your learnweb account '" + user.getUsername() + "' by clicking on this link:\n" + link + "\n\nOr just ignore these email, if you haven't requested it.\n\nBest regards\nLearnweb Team");
+	message.setText("Hi " + user.getUsername() + ",\n\nyou can change the password of your learnweb account '" + user.getUsername() + "' by clicking on this link:\n" + link + "\n\nOr just ignore this email, if you haven't requested it.\n\nBest regards\nLearnweb Team");
 	message.saveChanges();
 	Transport.send(message);
     }

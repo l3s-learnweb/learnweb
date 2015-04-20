@@ -50,11 +50,19 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
 	String hash = splits[1];
 
 	user = getLearnweb().getUserManager().getUser(userId);
+	System.out.println(hash + " - " + PasswordBean.createHash(user));
+
 	if(null == user || !hash.equals(PasswordBean.createHash(user)))
 	{
 	    addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
+	    user = null;
 	    return;
 	}
+    }
+
+    public void checkParameter() throws SQLException
+    {
+
     }
 
     public void onChangePassword()
@@ -144,6 +152,12 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
     	}
     	*/
 
+    @Override
+    public User getUser()
+    {
+	return user;
+    }
+
     public void validatePassword(FacesContext context, UIComponent component, Object value) throws ValidatorException
     {
 	// Find the actual JSF component for the first password field.
@@ -156,5 +170,10 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
 	{
 	    throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "passwords_do_not_match"));
 	}
+    }
+
+    public void setDummy(String dummy)
+    {
+
     }
 }

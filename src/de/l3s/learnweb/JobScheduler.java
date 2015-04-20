@@ -39,22 +39,6 @@ public class JobScheduler
 	    scheduler.stop();
     }
 
-    public static void main(String[] args)
-    {
-	Learnweb learnweb = Learnweb.getInstance();
-	JobScheduler job = new JobScheduler(learnweb);
-	job.startAllJobs();
-	try
-	{
-	    Thread.sleep(2L * 60L * 1000L);
-	}
-	catch(InterruptedException e)
-	{
-	    ;
-	}
-	job.stopAllJobs();
-    }
-
     private class UpdateTedVideos extends Task
     {
 
@@ -83,7 +67,7 @@ public class JobScheduler
 	}
 
 	@Override
-	public void execute(TaskExecutionContext context) throws RuntimeException
+	public void execute(TaskExecutionContext context)
 	{
 
 	    try
@@ -125,7 +109,7 @@ public class JobScheduler
 	}
 
 	@Override
-	public void execute(TaskExecutionContext context2) throws RuntimeException
+	public void execute(TaskExecutionContext context2)
 	{
 	    try
 	    {
@@ -139,4 +123,19 @@ public class JobScheduler
 
     }
 
+    public static void main(String[] args)
+    {
+	Learnweb learnweb = Learnweb.getInstance();
+	JobScheduler job = new JobScheduler(learnweb);
+	job.startAllJobs();
+	try
+	{
+	    Thread.sleep(2L * 60L * 1000L);
+	}
+	catch(InterruptedException e)
+	{
+	    ;
+	}
+	job.stopAllJobs();
+    }
 }

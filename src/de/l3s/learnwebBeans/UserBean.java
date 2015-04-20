@@ -104,7 +104,10 @@ public class UserBean implements Serializable
 	{
 	    try
 	    {
-		activeCourse = user.getCourses().get(0);
+		if(user.getId() == 2969) // paviamod set to dentists2015
+		    activeCourse = Learnweb.getInstance().getCourseManager().getCourseById(884);
+		else
+		    activeCourse = user.getCourses().get(0);
 	    }
 	    catch(SQLException e)
 	    {

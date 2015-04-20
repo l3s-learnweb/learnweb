@@ -298,6 +298,8 @@ public class Learnweb
      */
     public void onDestroy()
     {
+	log.info("Shutdown Learnweb start");
+
 	try
 	{
 	    if(logBatchSize > 0)
@@ -314,12 +316,15 @@ public class Learnweb
 	try
 	{
 	    dbConnection.close();
+	    querydbConnection.close();
 	}
 	catch(SQLException e)
 	{
 	} // ignore	
 
 	jobScheduler.stopAllJobs();
+
+	log.info("Shutdown Learnweb completed");
     }
 
     /**

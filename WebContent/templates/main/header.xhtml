@@ -3,7 +3,7 @@
 <ui:composition>
 
 	<header id="header">
-		<div id="main_menu_bar" style="background-image:url(#{menuBean.bannerImage});">			
+		<div id="main_menu_bar" style="background-color: #{menuBean.bannerColor}; background-image:url(#{menuBean.bannerImage});">			
 		
 			<img src="#{request.contextPath}/resources/main-template/img/ajax-loader.gif" alt="Loading" id="loadingsymbol"/>
 			<p:ajaxStatus
@@ -11,7 +11,7 @@
 				onsuccess="document.getElementById('loadingsymbol').style.visibility='hidden';" />			
 		 
 			<form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
-				<a href="http://localhost:8080/Learnweb-Tomcat/lw/myhome/groups.jsf" id="learnweb_logo">Logo</a>
+				<a href="#{menuBean.bannerLink}" id="learnweb_logo">Logo</a>
 				<input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" id="searchfield" />
 				<input type="hidden" name="action" value="#{searchBean.searchMode}" />
 				<input type="submit" value=" " id="searchbutton" title="#{msg.searchLabel}" />

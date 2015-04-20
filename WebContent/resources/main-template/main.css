@@ -432,7 +432,7 @@ in allen browsern testen danach löschen
 	margin-top:5px;
 	left:0.5em;
 	right:auto;
-	background-image:url("/Learnweb-Tomcat/javax.faces.resource/images/ui-icons_38667f_256x240.png.jsf?ln=primefaces-aristo");
+	background-image:url("img/ui-icons.png");
 	background-position:-32px -16px;
 	background-repeat:no-repeat;
 	cursor:pointer;
