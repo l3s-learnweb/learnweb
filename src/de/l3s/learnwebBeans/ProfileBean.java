@@ -80,6 +80,10 @@ public class ProfileBean extends ApplicationBean implements Serializable
     public ProfileBean()
     {
 	User user = getUser();
+
+	if(user == null)
+	    return;
+
 	username = user.getUsername();
 	email = user.getEmail();
 	phone = user.getPhone();

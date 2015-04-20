@@ -127,15 +127,17 @@ public class LoroManager
 	Group loroGroup = learnweb.getGroupManager().getGroupById(883);
 	ResourceManager resourceManager = learnweb.getResourceManager();
 
-	for(Resource resource : loroGroup.getResources())
+	/*
+	User rishita = learnweb.getUserManager().getUser(9139); 
+	for(Resource resource : rishita.getResources())
 	{
 	    System.out.println(resource.getTitle());
 	    resourceManager.deleteResourcePermanent(resource.getId());
 	}
-
+	*/
 	getConnection();
 
-	User admin = learnweb.getUserManager().getUser(9139);
+	User admin = learnweb.getUserManager().getUser(7727);
 	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource_docs SET resource_id = ? WHERE loro_resource_id = ? AND doc_url= ?");
 	PreparedStatement getCount = DBConnection.prepareStatement("SELECT loro_resource_id, COUNT( * ) AS rowcount FROM  `LORO_resource_docs` group by `loro_resource_id`");
 	getCount.executeQuery();

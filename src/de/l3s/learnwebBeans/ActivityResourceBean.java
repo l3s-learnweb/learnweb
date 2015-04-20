@@ -22,12 +22,9 @@ import de.l3s.learnweb.User;
 @ViewScoped
 public class ActivityResourceBean extends ApplicationBean implements Serializable
 {
-
-    /**
-	 * 
-	 */
-    Action[] filter = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
+    private static Action[] filter = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
 	    Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.group_removing_resource };
+
     private static final long serialVersionUID = -7630987853810267209L;
     private ArrayList<NewsEntry> newslist;
     private Resource clickedResource;
@@ -85,26 +82,22 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
 	clickedResource = new Resource();
     }
 
-    public void addComment()
+    public void addComment() throws Exception
     {
-	try
-	{
-	    //getLearnweb().getResourceManager().commentResource(newComment, getUser(), clickedResource);
-	    Comment comment = clickedResource.addComment(newComment, getUser());
-	    log(Action.commenting_resource, clickedResource.getId(), comment.getId() + "");
-	    addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
-	    newComment = "";
-	}
-	catch(Exception e)
-	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
+	//getLearnweb().getResourceManager().commentResource(newComment, getUser(), clickedResource);
+	Comment comment = clickedResource.addComment(newComment, getUser());
+	log(Action.commenting_resource, clickedResource.getId(), comment.getId() + "");
+	addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
+	newComment = "";
+    }
+
+    public void loadResources()
+    {
+	// do nothing. this method is needed for the right pane template
     }
 
     public boolean canDeleteTag(Object tagO) throws SQLException
     {
-	System.out.println("canDeleteTag");
 	if(!(tagO instanceof Tag))
 	    return false;
 

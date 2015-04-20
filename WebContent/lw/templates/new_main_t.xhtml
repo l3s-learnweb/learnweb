@@ -28,7 +28,7 @@
 	</h:head>
 
 	<h:body>
-		<p:growl id="growl" />
+		<p:growl id="growl" rendered="#{userBean.loggedIn}" />
 		
 		<ui:decorate template="/templates/main/header.xhtml" />
 		
@@ -79,8 +79,8 @@
 			</ui:insert>
 			
 			<p:layoutUnit id="center_pane" position="center" >
-				<div class="content">
-				<p:messages id="message"></p:messages>
+				<div class="content" >
+				<p:messages id="message" styleClass="#{userBean.loggedIn? '':'small_page'}"></p:messages>
 				
 				<h:panelGroup layout="block" styleClass="small_page" rendered="#{loginRequired and !userBean.loggedIn}">
 					<p:panel header="#{msg.loginRequiredTitle}">

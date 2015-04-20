@@ -300,4 +300,19 @@ public class FileManager
 	this.baseUrl = contextUrl + urlPattern;
     }
 
+    public static void main(String[] args)
+    {
+	deleteBrokenResources();
+    }
+
+    private static void deleteBrokenResources()
+    {
+	Learnweb learnweb = Learnweb.getInstance();
+
+	for(final java.io.File file : learnweb.getFileManager().folder.listFiles())
+	{
+	    System.out.println(file.getName());
+	}
+    }
+
 }

@@ -263,6 +263,12 @@ public class ResourceManager
 	delete.executeUpdate();
 	delete.close();
 
+	// delete archived versions
+	delete = connection.prepareStatement("DELETE FROM `lw_resource_archiveurl` WHERE `resource_id` = ?");
+	delete.setInt(1, resourceId);
+	delete.executeUpdate();
+	delete.close();
+
 	// delete files?
 
 	// remove resource from cache
