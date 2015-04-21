@@ -89,12 +89,12 @@ public class LoroManager
 	    description += "\nLanguage Level: " + rs.getString("language_level");
 	if(rs.getString("languages") != null && !description.contains(rs.getString("languages")))
 	    description += "\nLanguage: " + rs.getString("languages");
-	/*if(rs.getString("course_code") != null)
-	description += "\nCourse Code: " + rs.getString("course_code");*/
+	if(rs.getString("course_code") != null)
+	    description += "\nCourse Code: " + rs.getString("course_code");
 	if(rs.getString("tags") != null)
 	    description += "\nKeyWords: " + rs.getString("tags");
 	if(!description.contains("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/"))
-	    description += "\nThis file is a part of resource available on: http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
+	    description += "\nThis file is a part of resource collection available on: http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
 
 	resource.setUrl("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
 
@@ -127,19 +127,21 @@ public class LoroManager
 	Group loroGroup = learnweb.getGroupManager().getGroupById(883);
 	ResourceManager resourceManager = learnweb.getResourceManager();
 
-	/*
-	User rishita = learnweb.getUserManager().getUser(9139); 
-	for(Resource resource : rishita.getResources())
+	//User rishita = learnweb.getUserManager().getUser(7727);
+
+	/*for(Resource resource : loroGroup.getResources())
 	{
 	    System.out.println(resource.getTitle());
 	    resourceManager.deleteResourcePermanent(resource.getId());
 	}
+
+	System.exit(0);
 	*/
 	getConnection();
 
 	User admin = learnweb.getUserManager().getUser(7727);
 	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource_docs SET resource_id = ? WHERE loro_resource_id = ? AND doc_url= ?");
-	PreparedStatement getCount = DBConnection.prepareStatement("SELECT loro_resource_id, COUNT( * ) AS rowcount FROM  `LORO_resource_docs` group by `loro_resource_id`");
+	PreparedStatement getCount = DBConnection.prepareStatement("SELECT loro_resource_id, COUNT( * ) AS rowcount FROM  `LORO_resource_docs` group by `loro_resource_id` limit 100");
 	getCount.executeQuery();
 	ResultSet rs1 = getCount.getResultSet();
 
@@ -172,7 +174,7 @@ public class LoroManager
 		}
 
 		Resource loroResource;
-		if(docFormat.contains("video") || docFormat.contains("image") || textTest == true)
+		if(docFormat.contains("video") || docFormat.contains("image") || textTest == true) //Creating resource
 		    loroResource = createResource(rs, learnwebResourceId);
 		else
 		{
@@ -180,7 +182,7 @@ public class LoroManager
 		    update.setInt(2, rs.getInt("loro_resource_id"));
 		    update.setString(3, rs.getString("doc_url"));
 		    update.executeUpdate();
-		    continue innerloop;
+		    continue innerloop; //Updates the resource_id in LORO table and continues the innerloop
 		}
 
 		int loroId = Integer.parseInt(loroResource.getIdAtService());
@@ -190,35 +192,6 @@ public class LoroManager
 		if(learnwebResourceId == 0) // not yet stored in Learnweb
 
 		{
-
-		    //processVideo can not be used to fetch preview image URL of a video if the video has restricted access
-		    if(rs.getString("doc_format").contains("video"))
-		    {
-			if(!rs.getString("preview_img_url").contains("RestrictedAccess"))
-			    try
-			    {
-				rpm.processVideo(loroResource);
-
-			    }
-			    catch(IOException e)
-			    {
-				e.printStackTrace();
-			    }
-		    } //Preview images for video can be generated even when there is no preview image available
-		    else if((!rs.getString("preview_img_url").contains("No-Preview") && !rs.getString("preview_img_url").contains("RestrictedAccess")) || (rs.getString("doc_format").contains("image") && !rs.getString("preview_img_url").contains("RestrictedAccess")))
-		    {
-
-			try
-			{
-			    rpm.processImage(loroResource, FileInspector.openStream(loroResource.getMaxImageUrl())); // For all other resources of type != video
-			}
-			catch(Exception e)
-			{
-			    e.printStackTrace();
-
-			}
-		    }
-		    loroResource.save();
 		    if(!docFormat.contains("video") && !docFormat.contains("image"))
 		    {
 			if(resourceId == 0)
@@ -232,8 +205,53 @@ public class LoroManager
 		    update.setString(3, rs.getString("doc_url"));
 		    update.executeUpdate();
 
-		    admin.addResource(loroResource);
+		    loroResource = admin.addResource(loroResource);
 		    loroGroup.addResource(loroResource, admin);
+
+		    //processVideo can not be used to fetch preview image URL of a video if the video has restricted access
+		    if(rs.getString("doc_format").contains("video"))
+		    {
+			if(!rs.getString("preview_img_url").contains("RestrictedAccess"))
+			    try
+			    {
+				rpm.processVideo(loroResource);
+
+				//rpm.processWebsite(resource);
+			    }
+			    catch(IOException e)
+			    {
+				e.printStackTrace();
+			    }
+		    } //Preview images for video can be generated even when there is no preview image available
+		      // else if((!rs.getString("preview_img_url").contains("No-Preview") && !rs.getString("preview_img_url").contains("RestrictedAccess")) || (rs.getString("doc_format").contains("image") && !rs.getString("preview_img_url").contains("RestrictedAccess")))
+		    else if(!rs.getString("preview_img_url").contains("RestrictedAccess"))
+		    {
+			if(!rs.getString("preview_img_url").contains("No-Preview") || rs.getString("doc_format").contains("image"))
+			{
+			    try
+			    {
+				rpm.processImage(loroResource, FileInspector.openStream(loroResource.getMaxImageUrl())); // For all other resources of type != video
+			    }
+			    catch(Exception e)
+			    {
+				e.printStackTrace();
+
+			    }
+			}
+			else
+			{
+
+			    try
+			    {
+				rpm.processWebsite(loroResource); //For websites where preview image is not available
+			    }
+			    catch(Exception e)
+			    {
+				e.printStackTrace();
+			    }
+			}
+		    }
+		    loroResource.save();
 
 		    //solr.indexResource(loroResource)
 		    // textTest = true;
@@ -247,7 +265,6 @@ public class LoroManager
 	}
     }
 
-    //Yet to be defined properly
     private Resource createResource(ResultSet rs, int learnwebResourceId) throws SQLException
     {
 
@@ -264,7 +281,7 @@ public class LoroManager
 	if(rs.getString("doc_format").contains("image"))
 	{
 	    resource.setType("image");
-	    resource.setTitle(rs.getString("title") + " " + rs.getString("filename"));
+	    resource.setTitle(rs.getString("title") + " - " + rs.getString("filename"));
 	    resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
 
 	    return resource;
@@ -272,9 +289,9 @@ public class LoroManager
 	else if(rs.getString("doc_format").contains("video"))
 	{
 	    resource.setType("Video");
-	    resource.setEmbeddedRaw("<link href=\"http://vjs.zencdn.net/4.12/video-js.css\" rel=\"stylesheet\"/><script src=\"http://vjs.zencdn.net/4.12/video.js\"></script><script>videojs.options.flash.swf = \"/resources/js/video-js.swf\"</script><video id=\"MY_VIDEO_1\" class=\"video-js vjs-default-skin vjs-big-play-centered\" controls=\"preload=none\" width=\"100%\" height=\"100%\" data-setup=\"{}\"><source src=\""
+	    resource.setEmbeddedRaw("<link href=\"http://vjs.zencdn.net/4.12/video-js.css\" rel=\"stylesheet\"/><script src=\"http://vjs.zencdn.net/4.12/video.js\"></script><video id=\"MY_VIDEO_1\" class=\"video-js vjs-default-skin vjs-big-play-centered\" controls=\"preload=none\" width=\"100%\" height=\"100%\" data-setup=\"{}\"><source src=\""
 		    + rs.getString("doc_url") + "\"> </video>");
-	    resource.setTitle(rs.getString("title") + " " + rs.getString("filename"));
+	    resource.setTitle(rs.getString("title") + " - " + rs.getString("filename"));
 	    resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
 
 	    resource.setFileName(rs.getString("doc_url"));
@@ -285,15 +302,9 @@ public class LoroManager
 
 	else
 	{
-	    //  metaData(rs, resource);
+
 	    resource.setType("text");
 	    resource.setTitle(rs.getString("title"));
-	    String description = resource.getDescription();
-	    if(!description.contains(rs.getString("filename")))
-		description += ", " + rs.getString("filename");
-
-	    resource.setDescription(description);
-	    //resource.setDuration(rs.getInt("duration"));
 
 	    resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
 
