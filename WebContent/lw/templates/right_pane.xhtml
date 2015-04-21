@@ -212,7 +212,7 @@
 							<div class="resource_field" style="padding-top: 10px">#{msg.description}</div>
 							<h:outputText id="resource_description" value="#{bean.clickedResource.description}" escape="false"></h:outputText>
 
-							<h:form id="archive_current_form">
+							<h:form id="archive_current_form" rendered="#{bean.clickedResource.storageType != 1}">
 								<div style="padding-top:10px">
 									<span class="resource_field">#{msg.current_version} : </span>
 									<p:commandButton action="#{bean.archiveCurrentVersion}" styleClass="greenbutton" value="#{msg.archive_now}" update=":growl"/>								

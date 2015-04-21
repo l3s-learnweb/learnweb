@@ -47,8 +47,8 @@ public class ArchiveUrlManager
 
     public void addResourceToArchive(Resource resource)
     {
-	//if(resource.getArchiveUrl() == null || resource.getArchiveUrl().length() == 0)
-	resources.add(resource);
+	if(!(resource.getStorageType() == Resource.FILE_RESOURCE))
+	    resources.add(resource);
     }
 
     public void addArchiveUrlToResource()

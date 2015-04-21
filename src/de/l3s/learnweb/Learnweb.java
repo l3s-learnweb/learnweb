@@ -110,12 +110,10 @@ public class Learnweb
 		propteriesFileName = "lw_local_michaela";
 	    else if((new File("C:\\Users\\singh")).exists())
 		propteriesFileName = "lw_local_jaspreet";
-	    /*
-	    else if((new File("/home/fernando").exists())) This folder exists on the Learnweb server too!
-	    propteriesFileName = "lw_local_trevor";
-	    */
-	    else if((new File("C:\\Users\\TF").exists()))
+	    else if((new File("/home/fernando/trevor.txt").exists()))
 		propteriesFileName = "lw_local_trevor";
+	    else if((new File("C:\\Users\\TF").exists()))
+		propteriesFileName = "lw_local_trevor_win";
 	    else if((new File("C:\\Users\\Linda").exists()))
 		propteriesFileName = "lw_windows_lisiyu";
 	    else if((new File("/home/linda").exists()))
