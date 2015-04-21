@@ -135,8 +135,8 @@ public class LoroManager
 	    resourceManager.deleteResourcePermanent(resource.getId());
 	}
 
-	System.exit(0);
-	*/
+	System.exit(0);*/
+
 	getConnection();
 
 	User admin = learnweb.getUserManager().getUser(7727);
@@ -192,6 +192,9 @@ public class LoroManager
 		if(learnwebResourceId == 0) // not yet stored in Learnweb
 
 		{
+
+		    loroResource = admin.addResource(loroResource);
+		    loroGroup.addResource(loroResource, admin);
 		    if(!docFormat.contains("video") && !docFormat.contains("image"))
 		    {
 			if(resourceId == 0)
@@ -204,9 +207,6 @@ public class LoroManager
 		    update.setInt(2, loroId);
 		    update.setString(3, rs.getString("doc_url"));
 		    update.executeUpdate();
-
-		    loroResource = admin.addResource(loroResource);
-		    loroGroup.addResource(loroResource, admin);
 
 		    //processVideo can not be used to fetch preview image URL of a video if the video has restricted access
 		    if(rs.getString("doc_format").contains("video"))
@@ -270,12 +270,15 @@ public class LoroManager
 
 	Resource resource = new Resource();
 
-	if(learnwebResourceId != 0 && rs.getBoolean("flag")) // the video is already stored and updated during LORO crawl
+	if(learnwebResourceId != 0) // the video is already stored and updated during LORO crawl
 	{
 	    resource = learnweb.getResourceManager().getResource(learnwebResourceId);
-	    checkConnection(DBConnection);
-	    PreparedStatement setFlag = DBConnection.prepareStatement("UPDATE LORO_resource SET flag=0 WHERE loro_resource_id=" + rs.getInt("loro_resource_id"));
-	    setFlag.executeUpdate();
+	    if(rs.getBoolean("flag"))
+	    {
+		checkConnection(DBConnection);
+		PreparedStatement setFlag = DBConnection.prepareStatement("UPDATE LORO_resource SET flag=0 WHERE loro_resource_id=" + rs.getInt("loro_resource_id"));
+		setFlag.executeUpdate();
+	    }
 	}
 	metaData(rs, resource);
 	if(rs.getString("doc_format").contains("image"))
