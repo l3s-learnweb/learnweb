@@ -1,15 +1,16 @@
-<!DOCTYPE html PUBLIC "-//W3C//Dtd XHTML 1.0 Transitional//EN" "http://www.w3.org/tr/xhtml1/Dtd/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
+<ui:composition template="/templates/main/main.xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-	<ui:composition template="/lw/templates/new_main.xhtml"> 
+	<ui:param name="pageTitle" value="#{msg.statistics}"/>
+	<ui:param name="smallPage" value="true"/>
+	
+	<ui:define name="center_layout">
 
-		<ui:param name="pageTitle" value="Statistics"/>
-		<ui:define name="center_layout">
-
+		<h1><h:outputText value="#{msg.statistics}" escape="false" /></h1>
+	
 		<div class="ui-datatable ui-widget">
 			<table role="grid" >
 				<thead>
@@ -82,11 +83,6 @@
 					</tr>
 				</tbody>
 			</table>
-
-		</div>
-		
-
-	</ui:define>
-		
-	</ui:composition>
-</html>
+		</div>		
+	</ui:define>		
+</ui:composition>

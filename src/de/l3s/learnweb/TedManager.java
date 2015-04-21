@@ -192,7 +192,9 @@ public class TedManager
 
 	    {
 		rpm.processImage(tedVideo, FileInspector.openStream(tedVideo.getMaxImageUrl()));
-		tedVideo.save();
+
+		//tedVideo.save(); TODO test if this caused problems
+
 		update.setInt(1, tedVideo.getId());
 		update.setInt(2, tedId);
 		update.executeUpdate();

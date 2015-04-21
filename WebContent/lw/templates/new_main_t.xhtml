@@ -79,8 +79,8 @@
 			</ui:insert>
 			
 			<p:layoutUnit id="center_pane" position="center" >
-				<div class="content" >
-				<p:messages id="message" styleClass="#{userBean.loggedIn? '':'small_page'}"></p:messages>
+				<div class="content" style="padding-right: 7px;">
+				<p:messages id="message" styleClass="#{userBean.loggedIn? '':'small_page'}" escape="false" />
 				
 				<h:panelGroup layout="block" styleClass="small_page" rendered="#{loginRequired and !userBean.loggedIn}">
 					<p:panel header="#{msg.loginRequiredTitle}">

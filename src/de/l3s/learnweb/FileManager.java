@@ -300,19 +300,35 @@ public class FileManager
 	this.baseUrl = contextUrl + urlPattern;
     }
 
-    public static void main(String[] args)
-    {
-	deleteBrokenResources();
-    }
-
-    private static void deleteBrokenResources()
+    public static void main(String[] args) throws SQLException
     {
 	Learnweb learnweb = Learnweb.getInstance();
 
-	for(final java.io.File file : learnweb.getFileManager().folder.listFiles())
-	{
-	    System.out.println(file.getName());
-	}
+	findAbandonedFiles();
+
+	System.out.println("fertig");
+	learnweb.onDestroy();
     }
 
+    private static void findAbandonedFiles() throws SQLException
+    {
+	FileManager fm = Learnweb.getInstance().getFileManager();
+
+	for(final java.io.File file : fm.folder.listFiles())
+	{
+	    //System.out.println(file.getName());
+
+	    String[] splits = file.getName().split("\\.");
+
+	    if(splits[1] == "dat")
+	    {
+		int id = Integer.parseInt(splits[0]);
+		if(fm.getFileById(id) == null)
+		{
+		    System.err.println("abandoned");
+		}
+
+	    }
+	}
+    }
 }

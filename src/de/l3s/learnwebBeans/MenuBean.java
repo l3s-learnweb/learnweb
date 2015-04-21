@@ -294,12 +294,10 @@ public class MenuBean extends ApplicationBean implements Serializable
 
     public String getBannerImage() throws SQLException
     {
-	String bannerImageUrl = "../resources/main-template/img/LearnwebLogo.png";
-
 	if(selectCourse != null && selectCourse.getBannerImage() != null)
-	    bannerImageUrl = selectCourse.getBannerImage();
+	    return "background-image: url(" + selectCourse.getBannerImage() + ");";
 
-	return bannerImageUrl;
+	return "";
     }
 
     public String getBannerColor()
@@ -314,13 +312,12 @@ public class MenuBean extends ApplicationBean implements Serializable
 
     public String getBannerLink()
     {
+	if(getUser() == null)
+	    return "";
+
 	try
 	{
 	    return getUser().getOrganisation().getWelcomePage();
-	}
-	catch(NullPointerException e)
-	{
-	    // not logged in > ignore
 	}
 	catch(SQLException e)
 	{

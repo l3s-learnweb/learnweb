@@ -69,14 +69,20 @@
 </p:layoutUnit>
 </ui:define>
 	<ui:define name="center_layout">
-	
+	<style type="text/css">
+		.optionIcon {
+			text-decoration:none;
+			display:inline-block;
+			margin: 0 3px;	
+		}
+	</style>
 		<h:form id="my_groups">
 					
 			<p:dataTable var="group" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
 
 				<f:facet name="header">#{msg.myGroups}</f:facet>
 				
-				<p:column headerText="#{msg.title}" sortBy="#{group.title}">
+				<p:column headerText="#{msg.title}" sortBy="#{group.title}" width="17%">
 					<h:outputLink value="group/overview.jsf">
 						<f:param name="group_id" value="#{group.id}" />
 						<h:outputText value="#{group.title}" />
@@ -89,32 +95,35 @@
 					<h:outputText value="#{group.description}" />
 				</p:column>
 
-				<p:column headerText="#{msg.leader}" sortBy="#{group.leader.username}" width="80">
+				<p:column headerText="#{msg.leader}" sortBy="#{group.leader.username}" width="9%">
 					<h:outputText value="#{group.leader.username}" />
 				</p:column>
 				
-				<p:column headerText="#{msg.course}" sortBy="#{group.course.title}" width="80">
+				<p:column headerText="#{msg.course}" sortBy="#{group.course.title}" width="8%">
 					<h:outputText value="#{group.course.title}" />						
 				</p:column>		
 				
-				<p:column headerText="#{msg.options}" styleClass="nowrap" width="50">					
-					<p:commandLink action="#{groupsBean.leaveGroup}" process="@this" update=":other_groups :growl :group_menu :my_groups"
-						style="text-decoration:none;" title="#{msg.leave}">
-						&nbsp;
+				<p:column headerText="#{msg.options}" styleClass="nowrap" width="60">					
+					<p:commandLink action="#{groupsBean.leaveGroup}" styleClass="optionIcon" process="@this" update=":other_groups :growl :group_menu :my_groups"  title="#{msg.leave}">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 						<h:graphicImage value="/resources/icon/silk/group_delete.png" width="16" height="16" alt="#{msg.leave}" />
-					</p:commandLink>
-					
+					</p:commandLink>					
 					
 					<p:commandLink process="@this" update=":group_moderator_form" 
-							style="text-decoration:none;" title="#{msg.edit}" 
-							rendered="#{userBean.admin || userBean.moderator}"
+							styleClass="optionIcon" title="#{msg.edit}" 
+							rendered="#{groupsBean.canDeleteGroup(group)}"
 							oncomplete="PF('group_moderator_dialog').show()">
-						&nbsp;
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 						<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" /> 								
 					</p:commandLink>
-						
+					
+					<p:commandLink action="#{groupsBean.deleteGroup}" update=":growl :group_menu :my_groups" 
+								styleClass="optionIcon" title="#{msg.delete}" process="@this"
+								onstart="return confirm('Do you really want to delete group \'#{group.title}\'?');"
+								rendered="#{groupsBean.canDeleteGroup(group)}">
+						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
+						<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/> 							
+					</p:commandLink>						
 				</p:column>
 			</p:dataTable>
 			<br/><br/>
@@ -127,7 +136,7 @@
 
 					<f:facet name="header">#{msg.otherGroups}</f:facet>
 					
-					<p:column headerText="#{msg.title}">
+					<p:column headerText="#{msg.title}" sortBy="#{group.title}" width="17%">
 						<h:outputLink value="group/overview.jsf">
 							<f:param name="group_id" value="#{group.id}" />
 							<h:outputText value="#{group.title}" />
@@ -140,47 +149,44 @@
 						<h:outputText value="#{group.description}" />
 					</p:column>					
 					
-					<p:column headerText="#{msg.language}" width="70">
+					<p:column headerText="#{msg.language}" width="7%">
 						<h:outputText value="#{group.language}" />			
 					</p:column>
 					
-					<p:column headerText="#{msg.course}" width="80">
+					<p:column headerText="#{msg.course}" width="8%">
 						<h:outputText value="#{group.course.title}" />						
 					</p:column>
 					
-					<p:column headerText="#{msg.options}" styleClass="nowrap" width="50">	
+					<p:column headerText="#{msg.options}" styleClass="nowrap" width="60">	
 							
-						<p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :group_menu :my_groups" style="text-decoration:none;" title="#{msg.join}">
+						<p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :group_menu :my_groups"  process="@this" styleClass="optionIcon" title="#{msg.join}">
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 							<h:graphicImage value="/resources/icon/silk/group_add.png" width="16" height="16" alt="#{msg.join}" />
 						</p:commandLink>
 						
-						<p:commandLink actionListener="#{groupsBean.deleteGroup}" update=":other_groups :growl :group_menu :my_groups" 
-								style="text-decoration:none;" title="#{msg.delete}" 
-								onstart="return confirm('Do you really want to delete group \'#{group.title}\'?');"
-								rendered="#{userBean.admin || userBean.moderator}">
-							&nbsp;
-							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
-							<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/> 
-								
-						</p:commandLink>
 						
 						<p:commandLink process="@this" update=":group_moderator_form" 
-								style="text-decoration:none;" title="#{msg.edit}" 
+								styleClass="optionIcon" title="#{msg.edit}" 
 								rendered="#{userBean.admin || userBean.moderator}"
 								onsuccess="PF('group_moderator_dialog').show()" onerror="alert('error');">
-							&nbsp;
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
-							<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" /> 
-								
-						</p:commandLink>					 	
+							<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" /> 								
+						</p:commandLink>	
+						
+						
+						<p:commandLink action="#{groupsBean.deleteGroup}" update=":other_groups :growl" 
+								styleClass="optionIcon" title="#{msg.delete}" process="@this"
+								onstart="return confirm('Do you really want to delete group \'#{group.title}\'?');"
+								rendered="#{userBean.admin || userBean.moderator}">
+							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
+							<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/> 								
+						</p:commandLink>				 	
 					
 						 
 					</p:column>
 
 				</p:dataTable>
 			</h:form>
-
 
 		<p:dialog header="Edit Group" widgetVar="group_moderator_dialog" modal="true" minWidth="440" appendTo="@(body)">
 			<h:form id="group_moderator_form">
