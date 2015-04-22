@@ -119,8 +119,8 @@
 					
 						
 					<h:outputLabel for="link_title" value="#{msg.title}:" />
-					<p:inputText id="link_title" value="#{groupDetailBean.newLinkTitle}" styleClass="links_inputtext2" />
-					<p:message showSummary="true" showDetail="false" styleClass="error" for="link_title" />
+					<p:inputText id="link_title" value="#{groupDetailBean.newLinkTitle}" styleClass="links_inputtext2"/>
+					<p:message showSummary="true" showDetail="false" styleClass="error" for="link_title"/>
 	
 					<h:outputText value="" />
 					<p:commandButton action="#{groupDetailBean.onAddLink}" ajax="true" value="#{msg.addLink}" process="@form" update=":grouplinks link_form :growl">					

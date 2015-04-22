@@ -224,7 +224,7 @@
 							<h:panelGroup layout="block" style="padding-top: 10px;" rendered="#{not empty bean.clickedResource.archiveUrls}">
 								<span class="resource_field" style="position:relative;bottom:6px;">#{msg.archive_versions} : </span>
 								<p:selectOneMenu onchange="archive_url_select();" id="select_archive_url" widgetVar="archive_versions_menu">
-									<f:selectItem itemLabel="Choose an archived version" itemValue="0" noSelectionOption="true" />
+									<f:selectItem itemLabel="#{msg.choose_archived_version}" itemValue="0" noSelectionOption="true" />
 							
 									<f:selectItems value="#{bean.clickedResource.archiveUrls}" var="entry" itemValue="#{entry.archiveUrl}" itemLabel="${userBean.formatDate(entry.timestamp)}" /> 
 								</p:selectOneMenu>
@@ -267,7 +267,7 @@
 											<p:commandLink rendered="#{bean.canEditComment(comment)}" style="margin-right: 5px; font-size: 10px !important; color: green" value="#{msg.edit}" onstart="PF('comment_dialog').show();" ajax="true" update=":comment_dialog_form">
 												<f:setPropertyActionListener target="#{bean.clickedComment}" value="#{comment}"></f:setPropertyActionListener>
 											</p:commandLink>
-											<p:commandLink rendered="#{bean.canEditComment(comment)}" action="#{bean.onDeleteComment}" style="margin-right: 5px; font-size: 10px !important; color: red" value="#{msg.delete}" onstart="return confirm('Do you really want to delete this Comment?');" ajax="true" update=":add_resource_panel">
+											<p:commandLink rendered="#{bean.canEditComment(comment)}" action="#{bean.onDeleteComment}" style="margin-right: 5px; font-size: 10px !important; color: red" value="#{msg.delete}" onstart="return confirm('#{msg.delete_message_comments}');" ajax="true" update=":add_resource_panel">
 												<f:setPropertyActionListener target="#{bean.clickedComment}" value="#{comment}"></f:setPropertyActionListener>
 											</p:commandLink>
 										</div>

@@ -27,7 +27,7 @@
 		
 		
 							<h:outputText value="#{msg.email_address}:" />
-							<p:inputText id="useremail" value="#{profileBean.email}" >
+							<p:inputText id="useremail" value="#{profileBean.email}" validatorMessage="#{msg.email_message}">
 								<f:ajax render="useremailMessage"/>							
 							</p:inputText>
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="useremail" id="useremailMessage" />					
