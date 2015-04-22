@@ -38,7 +38,7 @@ function setPreference(prefKey, prefValue)
 	setPreferenceRemote([{name:'key', value:prefKey}, {name:'value', value:prefValue}]);
 }
 
-$(document).ready(function(){
+/*$(document).ready(function(){
 	
 	$(".menu").click(function(){		
 		$(".userbar ul li ul").css("visibility","visible");		
@@ -52,7 +52,7 @@ $(document).ready(function(){
 	$(".userbar ul li ul").mouseup(function(){		
 		$(".userbar ul li ul").css("visibility","visible");
 	
-	});
+	});*/
 	
 	$("#group_menu > .panelmenu").each(function( index ) 
 	{

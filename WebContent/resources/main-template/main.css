@@ -223,6 +223,7 @@ in allen browsern testen danach löschen
     margin:1rem;
     width:2rem;
     height:2rem;
+    position:relative;
 }
 #loginbutton{
 	display:block;
@@ -233,6 +234,7 @@ in allen browsern testen danach löschen
 	float:right;
 	margin-right:1rem;
 	text-decoration:none;
+	position:relative;
 }
 .menu{
 	cursor:pointer;
@@ -247,7 +249,17 @@ in allen browsern testen danach löschen
 	float:left;
 	margin:0 0 0 2rem;
     padding:0px;
-    background-color:#489a83;
+   	background-color:#489a83;
+}
+.userbar ul:after {
+    clear:both;
+    display:block;
+    font-size:0;
+    height:0;
+    visibility:hidden;
+}
+.userbar ul li:hover > ul {
+    visibility:visible;
 }
 .userbar a{
 	text-decoration:none;
@@ -271,6 +283,7 @@ in allen browsern testen danach löschen
 	background-color:#74beaa;
 }
 .userbar ul li ul{
+	display:inline;
 	position:absolute;
 	top:4.6rem;
 	margin:0 0 0 -13rem;
