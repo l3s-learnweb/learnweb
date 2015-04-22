@@ -4,6 +4,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,10 +14,6 @@ import java.sql.SQLException;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
-
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
 
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.SolrClient;
@@ -135,15 +133,17 @@ public class LoroManager
 	try
 	{
 
-	    Client client = Client.create();
 	    int exponent = 2;
-	    WebResource webResource = client.resource(doc_url);
+	    HttpURLConnection.setFollowRedirects(false);
+	    // note : you may also need
+	    //        HttpURLConnection.setInstanceFollowRedirects(false)
+	    HttpURLConnection con = (HttpURLConnection) new URL(doc_url).openConnection();
+	    con.setRequestMethod("HEAD");
+
 	    for(int i = 1; i < 100;)
 	    {
 
-		ClientResponse response = webResource.accept("application/json").get(ClientResponse.class);
-
-		if(response.getStatus() != 404)
+		if(con.getResponseCode() != 404)
 		{
 		    try
 		    {
@@ -210,7 +210,7 @@ public class LoroManager
 	User admin = learnweb.getUserManager().getUser(7727);
 	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource_docs SET resource_id = ? WHERE loro_resource_id = ? AND doc_url= ?");
 	//Philipp, you can check here for id = 2109 and id= 5
-	PreparedStatement getCount = DBConnection.prepareStatement("SELECT loro_resource_id, COUNT( * ) AS rowcount FROM  `LORO_resource_docs` where `loro_resource_id`=2109");
+	PreparedStatement getCount = DBConnection.prepareStatement("SELECT loro_resource_id, COUNT( * ) AS rowcount FROM  `LORO_resource_docs` where `loro_resource_id`=5");
 	getCount.executeQuery();
 	ResultSet rs1 = getCount.getResultSet();
 
