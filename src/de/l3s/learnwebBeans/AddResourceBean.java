@@ -198,6 +198,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	    }
 	    if(resource.getStorageType() == Resource.WEB_RESOURCE && (resource.getType() == null || resource.getType().isEmpty()))
 	    {
+		if(!resource.getUrl().startsWith("http"))
+		    resource.setUrl("http://" + resource.getUrl());
+
 		resource.setType("text");
 	    }
 

@@ -24,7 +24,7 @@ public class GroupManager
 {
 
     // if you change this, you have to change the constructor of Group too
-    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.course, g.location, g.language, g.forum_id, g.restriction_only_leader_can_add_resources, g.parent_group_id, g.subgroup_label";
+    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.course, g.location, g.language, g.forum_id, g.restriction_only_leader_can_add_resources, g.parent_group_id, g.subgroup_label, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation";
 
     private Learnweb learnweb;
     private ICache<Group> cache;
@@ -71,7 +71,7 @@ public class GroupManager
      */
     public List<Group> getGroupsByUserId(int userId) throws SQLException
     {
-	String query = "SELECT " + COLUMNS + " FROM `lw_group` g JOIN lw_group_user u USING(group_id) WHERE u.user_id = ? AND g.deleted = 0 ORDER BY title";
+	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_group_user u USING(group_id) WHERE u.user_id = ? AND g.deleted = 0 ORDER BY title";
 	return getGroups(query, userId);
     }
 
@@ -82,7 +82,7 @@ public class GroupManager
      */
     public List<Group> getGroupsByCourseId(int courseId) throws SQLException
     {
-	String query = "SELECT " + COLUMNS + " FROM `lw_group` g WHERE g.course_id = ? AND g.deleted = 0 ORDER BY title";
+	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.course_id = ? AND g.deleted = 0 ORDER BY title";
 	return getGroups(query, courseId);
     }
 
@@ -91,7 +91,7 @@ public class GroupManager
      */
     public List<Group> getGroupsByCourseId(int courseId, Date newerThan) throws SQLException
     {
-	String query = "SELECT " + COLUMNS + " FROM `lw_group` g WHERE g.course_id = ? AND g.deleted = 0 AND `creation_time` > FROM_UNIXTIME(?) ORDER BY title";
+	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.course_id = ? AND g.deleted = 0 AND `creation_time` > FROM_UNIXTIME(?) ORDER BY title";
 	return getGroups(query, courseId, (int) (newerThan.getTime() / 1000));
     }
 
@@ -100,7 +100,7 @@ public class GroupManager
 	if(resourceId <= 0)
 	    return new LinkedList<Group>();
 
-	String query = "SELECT " + COLUMNS + " FROM `lw_group` g JOIN lw_group_resource USING(group_id) WHERE resource_id = ? AND g.deleted = 0 ORDER BY g.title";
+	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_group_resource USING(group_id) WHERE resource_id = ? AND g.deleted = 0 ORDER BY g.title";
 	return getGroups(query, resourceId);
     }
 
@@ -111,13 +111,13 @@ public class GroupManager
      */
     public List<Group> getGroupsByUserIdFilteredByCourseId(int userId, int courseId) throws SQLException
     {
-	String query = "SELECT " + COLUMNS + " FROM `lw_group` g JOIN lw_group_user USING(group_id) WHERE user_id = ? AND g.course_id = ? AND g.deleted = 0 ORDER BY title";
+	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_group_user USING(group_id) WHERE user_id = ? AND g.course_id = ? AND g.deleted = 0 ORDER BY title";
 	return getGroups(query, userId, courseId);
     }
 
     public Group getGroupByTitleFilteredByOrganisation(String title, int organisationId) throws SQLException
     {
-	PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_group` g JOIN lw_course gc USING(course_id) WHERE g.title LIKE ? AND organisation_id = ? AND g.deleted = 0");
+	PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_course gc USING(course_id) WHERE g.title LIKE ? AND organisation_id = ? AND g.deleted = 0");
 	pstmtGetGroup.setString(1, title);
 	pstmtGetGroup.setInt(2, organisationId);
 	ResultSet rs = pstmtGetGroup.executeQuery();
@@ -163,7 +163,7 @@ public class GroupManager
 	    sb.append("," + group.getId());
 	String groupsIn = sb.substring(1);
 
-	String query = "SELECT " + COLUMNS + " FROM `lw_group` g WHERE g.group_id NOT IN(" + groupsIn + ") AND g.course_id IN(" + coursesIn + ") AND g.deleted = 0 ORDER BY title";
+	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.group_id NOT IN(" + groupsIn + ") AND g.course_id IN(" + coursesIn + ") AND g.deleted = 0 ORDER BY title";
 	return getGroups(query);
     }
 
@@ -181,7 +181,7 @@ public class GroupManager
 	if(null != group)
 	    return group;
 
-	PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_group` g WHERE group_id = ?");
+	PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE group_id = ?");
 	pstmtGetGroup.setInt(1, id);
 	ResultSet rs = pstmtGetGroup.executeQuery();
 
@@ -206,10 +206,18 @@ public class GroupManager
     public synchronized Group save(Group group) throws SQLException
     {
 	PreparedStatement replace = learnweb.getConnection().prepareStatement(
-		"REPLACE INTO `lw_group` (group_id, `title` ,`description` ,`leader_id` , university, course, location, language, course_id, parent_group_id, subgroup_label, forum_id) VALUES (?,?, ?, ?, ?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+		"REPLACE INTO `lw_group` (group_id, `title` ,`description` ,`leader_id` , university, course, location, language, course_id, parent_group_id, subgroup_label, forum_id, group_category_id) VALUES (?, ?,?, ?, ?, ?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
 	if(group.getId() < 0) // the Group is not yet stored at the database 
+	{
 	    replace.setNull(1, java.sql.Types.INTEGER);
+
+	    if(group.getCategoryId() != 0)
+	    {
+		group.setCategoryAbbreviation("TDLab"); // TODO get values from db
+		group.setCategoryTitle("TDLab");
+	    }
+	}
 	else
 	    replace.setInt(1, group.getId());
 	replace.setString(2, group.getTitle());
@@ -223,6 +231,7 @@ public class GroupManager
 	replace.setInt(10, group.getParentGroupId());
 	replace.setString(11, group.getSubgroupsLabel());
 	replace.setInt(12, group.getForumId());
+	replace.setInt(13, group.getCategoryId());
 	replace.executeUpdate();
 
 	if(group.getId() < 0) // get the assigned id
@@ -256,7 +265,7 @@ public class GroupManager
      */
     public List<Group> getSubgroups(Group group) throws SQLException
     {
-	String query = "SELECT " + COLUMNS + " FROM `lw_group` g WHERE g.parent_group_id = ? AND g.deleted = 0 ORDER BY title";
+	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.parent_group_id = ? AND g.deleted = 0 ORDER BY title";
 	return getGroups(query, group.getId());
     }
 

@@ -20,22 +20,24 @@
 						<p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" />
 						<p:message for="new_title" showSummary="true" showDetail="false" id="message_new_title"/>
 						
-				
-						 
+											 
 						<h:outputText value="#{msg.course}:" />
 						<h:selectOneMenu value="#{groupsBean.newGroup.courseId}" id="course_id">	
 							<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
 						</h:selectOneMenu>
 						<h:outputText value="" />
-	
+				
+						
+							<h:outputText value="#{msg.category}:" rendered="#{menuBean.selectCourse.id == 505}" />
+							<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{menuBean.selectCourse.id == 505}" >	
+								<f:selectItem itemValue="1" itemLabel="TDLab" />
+							</h:selectOneMenu>
+							<h:outputText value="" rendered="#{menuBean.selectCourse.id == 505}" />
+						
 					</h:panelGrid>
-							<!-- 
-						<h:outputText value="#{msg.category}:" />
-						<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" >	
-							<f:selectItem itemValue="0" itemLabel="Some Topic 2015 [ST2015]" />
-						</h:selectOneMenu>
-						<h:outputText value="" />
-						 -->
+							 
+						
+						 
 				</p:fieldset>
 				<br/>
 				<p:fieldset legend="#{msg.optional_data}">
@@ -85,7 +87,7 @@
 				<p:column headerText="#{msg.title}" sortBy="#{group.title}" width="17%">
 					<h:outputLink value="group/overview.jsf">
 						<f:param name="group_id" value="#{group.id}" />
-						<h:outputText value="#{group.title}" />
+						<h:outputText value="#{group.longTitle}" />
 					</h:outputLink>
 					
 					<h:outputText value=" (#{msg.new_word})" styleClass="bold_red" rendered="${userBean.newGroups.contains(group)}"/>
@@ -139,7 +141,7 @@
 					<p:column headerText="#{msg.title}" sortBy="#{group.title}" width="17%">
 						<h:outputLink value="group/overview.jsf">
 							<f:param name="group_id" value="#{group.id}" />
-							<h:outputText value="#{group.title}" />
+							<h:outputText value="#{group.longTitle}" />
 						</h:outputLink>
 						
 						<h:outputText value=" (#{msg.new_word})" styleClass="bold_red" rendered="${userBean.newGroups.contains(group)}"/>

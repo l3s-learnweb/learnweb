@@ -16,30 +16,54 @@
 
 	  
 		<ui:define name="center_layout">
-				<br></br>
-				<h:form id="add_resource">
+			<div class="ui-layout-unit-header ui-widget-header ui-corner-all" id="group_header">
+				<span class="group_header">#{msg.resources}</span> #{msg.of} #{groupDetailBean.group.title}
+				<h:form id="add_resource" rendered="#{groupDetailBean.member}">
 					<p:commandButton styleClass="resource_button greenbutton" value="#{msg.upload_resource}" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
 						<f:setPropertyActionListener target="#{addResourceBean.resourceTargetGroupId}" value="#{groupDetailBean.groupId}"></f:setPropertyActionListener>
 						<f:setPropertyActionListener target="#{groupDetailBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
 					</p:commandButton>
 				</h:form>
-				<script type="text/javascript">
-					var div = document.createElement("div");
-					var group_header = document.createElement("span");
-					$(group_header).addClass("group_header");
-					$(group_header).html("#{msg.resources}");
-					var group_owner = document.createElement("span");
-					$(group_owner).addClass("group_owner");
-					$(group_owner).html(" #{msg.of} #{groupDetailBean.group.title}");
-					var cl = $("#add_resource").clone();
-		            $(cl).appendTo(div);
-		            $("#add_resource").remove()
-					$(div).append(group_header);
-					$(div).append(group_owner);
-					$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
-					$("#center_pane").prepend(div);
+				
+				<ul>								
+					<li>
+						<a class="" href="./group/overview.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.overview}" />
+						</a>
+					</li>								
+					<li>
+						<a class="active" href="./group/resources.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.resources}" />
+						</a>
+					</li>								
+					<li>
+						<a class="" href="./group/members.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.members}" />
+						</a>
+					</li>								
+					<li>
+						<a class="" href="./group/presentations.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.presentations}" />
+						</a>
+					</li>								
+					<li>
+						<a class="" href="./group/links.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.links}" />
+						</a>
+					</li>
+				</ul>
+			</div>
+			
+			
+				<br></br>
 		
-										
+				<script type="text/javascript">	
+				
+				$(function () {
+					$("#center_pane").prepend($("#group_header"));
+					nCol();
+				});
+				
 					$(document).ready(nCol);
 					window.onresize = nCol;
 					

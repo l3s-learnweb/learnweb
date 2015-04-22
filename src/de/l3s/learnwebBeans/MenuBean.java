@@ -110,7 +110,7 @@ public class MenuBean extends ApplicationBean implements Serializable
 		boolean isActiveGroup = false;
 
 		submenu = new DefaultSubMenu();
-		submenu.setLabel(group.getTitle());
+		submenu.setLabel(group.getLongTitle());
 		submenu.setId(Integer.toString(group.getId()));
 
 		if(groupId != null && groupId.equals(group.getId()))

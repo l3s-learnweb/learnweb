@@ -174,7 +174,7 @@
 							</ui:fragment>
 							<ui:fragment rendered="#{not empty bean.clickedResource.fileName and not bean.clickedResource.source.equals('LORO')}">
 								<div style="padding-top: 10px">
-									<span class="resource_field">#{msg.file} : </span><a style="color: #22e" href="#{bean.clickedResource.getUrl()}">#{bean.clickedResource.fileName}</a>
+									<span class="resource_field">#{msg.file} : </span><a href="#{bean.clickedResource.getUrl()}">#{bean.clickedResource.fileName}</a>
 								</div>
 							</ui:fragment>
 							
@@ -189,15 +189,14 @@
 							</ui:fragment>
 							
 							<div style="padding-top: 10px">
-								<span class="resource_field">#{msg.source} : </span><h:outputText value="#{bean.clickedResource.source}"></h:outputText>
+								<span class="resource_field">#{msg.source} : </span>								
+								<a href="#{bean.clickedResource.getUrl()}"><h:outputText value="#{bean.clickedResource.source}" /></a>
 							</div>
 							
 							<h:panelGroup rendered="#{not empty bean.clickedResource.groups}" style="padding-top: 10px" layout="block">
 								<b><h:outputFormat value="#{msg.group_s}: ">
 										<f:param value="#{bean.clickedResource.groups.size()}" />
-									</h:outputFormat></b>	
-								
-								
+									</h:outputFormat></b>									
 								
 								<ui:repeat var="group" value="#{bean.clickedResource.groups}">
 									<h:outputLink value="group/overview.jsf">

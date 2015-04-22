@@ -87,6 +87,9 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	this.restrictionOnlyLeaderCanAddResources = rs.getInt("restriction_only_leader_can_add_resources") == 1;
 	this.parentGroupId = rs.getInt("parent_group_id");
 	this.subgroupsLabel = rs.getString("subgroup_label");
+	this.categoryId = rs.getInt("group_category_id");
+	this.categoryTitle = rs.getString("category_title");
+	this.categoryAbbreviation = rs.getString("category_abbreviation");
     }
 
     @Override
@@ -177,6 +180,19 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     public String getTitle()
     {
+	return title;
+    }
+
+    /**
+     * Title + category abbreviation (if group is categorized)
+     * 
+     * @return
+     */
+    public String getLongTitle()
+    {
+	if(categoryAbbreviation != null && categoryAbbreviation != "")
+	    return "[" + categoryAbbreviation + "] " + title;
+
 	return title;
     }
 

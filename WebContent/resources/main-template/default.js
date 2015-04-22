@@ -38,8 +38,8 @@ function setPreference(prefKey, prefValue)
 	setPreferenceRemote([{name:'key', value:prefKey}, {name:'value', value:prefValue}]);
 }
 
-/*$(document).ready(function(){
-	
+$(document).ready(function(){
+	/*
 	$(".menu").click(function(){		
 		$(".userbar ul li ul").css("visibility","visible");		
 	});

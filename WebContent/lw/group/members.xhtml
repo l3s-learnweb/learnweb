@@ -15,39 +15,46 @@
 	<ui:param name="pageTitle" value="Group members" />	
 	    		
 		<ui:define name="center_layout">
-			<script type="text/javascript">
-				var div = document.createElement("div");
-				var group_header = document.createElement("span");
-				$(group_header).addClass("group_header");
-				$(group_header).html("#{msg.members}");
-				var group_owner = document.createElement("span");
-				$(group_owner).addClass("group_owner");
-				$(group_owner).html(" #{msg.of} #{groupDetailBean.group.title}");
-				$(div).append(group_header);
-				$(div).append(group_owner);
-				$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
-				$("#center_pane").prepend(div);
+			<div class="ui-layout-unit-header ui-widget-header ui-corner-all" id="group_header">
+				<span class="group_header">#{msg.members}</span> #{msg.of} #{groupDetailBean.group.title}
 				
-				$(document).ready(nCol);
-				window.onresize = nCol;
-				
-				function nCol(){
-					var w = $(window).width();
-					var c = 4;
-					if(w == 1366)
-						c = 4;
-					if(w &lt; 1366)
-						c = 3;
-					updateColumns([{name:'cols',value: c}]);
-				}
-			</script>
+				<ul>								
+					<li>
+						<a class="" href="./group/overview.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.overview}" />
+						</a>
+					</li>								
+					<li>
+						<a class="" href="./group/resources.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.resources}" />
+						</a>
+					</li>								
+					<li>
+						<a class="active" href="./group/members.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.members}" />
+						</a>
+					</li>								
+					<li>
+						<a class="" href="./group/presentations.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.presentations}" />
+						</a>
+					</li>								
+					<li>
+						<a class="" href="./group/links.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.links}" />
+						</a>
+					</li>
+				</ul>
+			</div>
+			
 			<script type="text/javascript">
-				function select(panel)
-				{
-					$(".members_panel").css("border","1px solid #ccc");
-					$(panel).css("border","1px solid #666");
-				}
+			/* <!-- */
+			$(function () {
+				$("#center_pane").prepend($("#group_header"));
+			});
+			/* --> */
 			</script>
+		
 			<h:form>
 			 	<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{groupDetailBean.updateColumns}"></p:remoteCommand>
 	        </h:form>
@@ -77,11 +84,6 @@
 		    </p:dataGrid>
 		    </h:form>
 		    </h:panelGrid>
-		    <script type="text/javascript">
-		    	$(".ui-panel").click(function(){
-		    		select(this);
-		    	});
-		    </script>
 		</ui:define>
 		<ui:define name="right_layout">
 			<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" header="" id="right_pane">
@@ -130,7 +132,7 @@
 									</h:outputText>
 								</h:panelGrid>
 								
-								<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(groupDetailBean.clickedUser)}" id="profile_image" />
+								<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(groupDetailBean.clickedUser)}" id="profile_image" alt="profile picture" />
 								<br class="clear" />
 							</p:panel>
 							
@@ -149,6 +151,9 @@
 								</h:form>
 					
 							</p:panel>
+							
+							<br class="clear" />
+							<br/>
 						</ui:fragment>
 					</h:form>
 				</div>

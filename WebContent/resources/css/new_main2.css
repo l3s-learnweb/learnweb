@@ -1074,20 +1074,7 @@ textarea
 	margin-bottom: 5px;
 	padding: 10px;
 }
-.group_header
-{
-	font-size: 20px;
-	font-weight: 100;
-	color: #489a83;
-}
-form#add_resource { float:right; }
-.resource_button
-{
-	float: right;
-	position: relative;
-	top: -4px;
-	right: -5px;
-}
+
 
 #ajaxstatus {
 	position:absolute;

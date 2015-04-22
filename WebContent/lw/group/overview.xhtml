@@ -14,7 +14,53 @@
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" escape="false" />
 
-	<ui:define name="center_layout">	
+	<ui:define name="center_layout">
+	
+		<div class="ui-layout-unit-header ui-widget-header ui-corner-all" id="group_header">
+			<span class="group_header">#{groupDetailBean.group.title}</span> #{msg.created_by} #{groupDetailBean.group.leader.username}
+			<h:form id="add_resource" rendered="#{groupDetailBean.member}">
+				<p:commandButton styleClass="resource_button greenbutton" value="#{msg.upload_resource}" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
+					<f:setPropertyActionListener target="#{addResourceBean.resourceTargetGroupId}" value="#{groupDetailBean.groupId}"></f:setPropertyActionListener>
+					<f:setPropertyActionListener target="#{groupDetailBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
+				</p:commandButton>
+			</h:form>
+			
+			<ul>								
+				<li>
+					<a class="active" href="./group/overview.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.overview}" />
+					</a>
+				</li>								
+				<li>
+					<a class="" href="./group/resources.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.resources}" />
+					</a>
+				</li>								
+				<li>
+					<a class="" href="./group/members.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.members}" />
+					</a>
+				</li>								
+				<li>
+					<a class="" href="./group/presentations.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.presentations}" />
+					</a>
+				</li>								
+				<li>
+					<a class="" href="./group/links.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.links}" />
+					</a>
+				</li>
+			</ul>
+		</div>
+			
+		<script type="text/javascript">
+		/* <!-- */
+		$(function () {
+			$("#center_pane").prepend($("#group_header"));
+		});
+		/* --> */
+		</script>	
 		
 		<h:dataTable var="datagrid" value="#{groupDetailBean.newslist}" id="datagrid" >
 					
@@ -83,28 +129,7 @@
 					</h:form>
 					<br></br>
 					
-		<h:form id="add_resource">
-			<p:commandButton styleClass="resource_button greenbutton" value="#{msg.upload_resource}" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
-				<f:setPropertyActionListener target="#{addResourceBean.resourceTargetGroupId}" value="#{groupDetailBean.groupId}"></f:setPropertyActionListener>
-				<f:setPropertyActionListener target="#{groupDetailBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
-			</p:commandButton>
-		</h:form>
-		<script type="text/javascript">
-			var div = document.createElement("div");
-			var group_header = document.createElement("span");
-			$(group_header).addClass("group_header");
-			$(group_header).html("#{groupDetailBean.group.title}");
-			var group_owner = document.createElement("span");
-			$(group_owner).addClass("group_owner");
-			$(group_owner).html(" #{msg.created_by} #{groupDetailBean.group.leader.username}");
-			$(div).append(group_header);
-			$(div).append(group_owner);
-			//var cl = $("#add_resource").clone();
-            $("#add_resource").appendTo(div);
-            //$("#add_resource").remove();
-			$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
-			$("#center_pane").prepend(div);
-		</script>
+
 		<p:dialog header="Upload File" widgetVar="file_dialog" modal="true" appendTo="@(body)" width="600" height="150">
 			<h:form>
 				<p:fileUpload  rendered="true" fileUploadListener="#{addResourceBean.handleFileUpload}"  

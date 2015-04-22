@@ -16,25 +16,52 @@
 		    		
 		<ui:define name="center_layout">
 			<h:form target="new_presentation" id="new_presentation_form">
-				<p:commandButton id="add_resource" styleClass="resource_button greenbutton" onclick="PF('format_dialog').show()" value="#{msg.presentation_new}"></p:commandButton>
-			</h:form>
-			<script type="text/javascript">
-				var div = document.createElement("div");
-				var group_header = document.createElement("span");
-				$(group_header).addClass("group_header");
-				$(group_header).html("#{msg.presentations}");
-				var group_owner = document.createElement("span");
-				$(group_owner).addClass("group_owner");
-				$(group_owner).html(" #{msg.of} #{groupDetailBean.group.title}");
-				var cl = $("#new_presentation_form").clone();
-	            $(cl).appendTo(div);
-	            $("#new_presentation_form").remove()
-				$(div).append(group_header);
-				$(div).append(group_owner);
-				$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
-				$("#center_pane").prepend(div);
+							</h:form>
+			<div class="ui-layout-unit-header ui-widget-header ui-corner-all" id="group_header">
+				<span class="group_header">#{msg.resources}</span> #{msg.of} #{groupDetailBean.group.title}
+				<h:form id="add_resource" rendered="#{groupDetailBean.member}">
+					<p:commandButton id="add_resource" styleClass="resource_button greenbutton" onclick="PF('format_dialog').show()" value="#{msg.presentation_new}"></p:commandButton>
+
+				</h:form>
 				
-				$(document).ready(nCol);
+				<ul>								
+					<li>
+						<a class="" href="./group/overview.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.overview}" />
+						</a>
+					</li>								
+					<li>
+						<a class="" href="./group/resources.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.resources}" />
+						</a>
+					</li>								
+					<li>
+						<a class="" href="./group/members.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.members}" />
+						</a>
+					</li>								
+					<li>
+						<a class="active" href="./group/presentations.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.presentations}" />
+						</a>
+					</li>								
+					<li>
+						<a class="" href="./group/links.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.links}" />
+						</a>
+					</li>
+				</ul>
+			</div>
+			
+		
+				<script type="text/javascript">	
+				
+				$(function () {
+					$("#center_pane").prepend($("#group_header"));
+					nCol();
+				});
+			
+				
 				window.onresize = nCol;
 				
 				function nCol(){
@@ -82,13 +109,7 @@
 					</a>
 		    	</h:form>
 		    </p:dialog>
-			<script type="text/javascript">
-				function select(panel)
-				{
-					$(".members_panel").css("border","1px solid #ccc");
-					$(panel).css("border","1px solid #666");
-				}
-			</script>
+		    
 			<h:form>
 			 	<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{groupDetailBean.updateColumns}"></p:remoteCommand>
 	        </h:form>
@@ -119,9 +140,6 @@
 			    </p:dataGrid>
 		    </h:panelGroup>
 		    <script type="text/javascript">
-		    	$(".ui-panel").click(function(){
-		    		select(this);
-		    	});
 		    	
 				function resize_preview()
 				{

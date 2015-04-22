@@ -610,6 +610,16 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	log(Action.group_deleting_link, group.getId(), "Forum");
     }
 
+    public boolean isMember() throws SQLException
+    {
+	User user = getUser();
+
+	if(null == user)
+	    return false;
+
+	return group.isMember(user);
+    }
+
     public void onAddLink()
     {
 	try

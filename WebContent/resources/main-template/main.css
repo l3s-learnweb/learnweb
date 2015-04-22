@@ -458,6 +458,55 @@ in allen browsern testen danach löschen
 	text-indent:-99999px;
 }
 
+/* group header ; maybe move to a separate file */
+#group_header {
+	padding-bottom:0 !important;
+}
+
+#group_header li {
+	float:left;
+	display:block;
+	border-right: 1px solid rgb(230, 230, 230);
+}
+#group_header a {	
+	padding:5px 15px; 
+	display:block;
+}
+#group_header a.active,
+#group_header a:hover {	
+	background-color: #EEE;
+}
+
+#group_header ul {
+	list-style: outside none none;
+	margin: 10px -10px 0px;
+	padding: 0px;
+	border-top: 1px solid #DDD !important;
+	background-color: rgb(230, 230, 230);
+	clear: both;
+}
+#group_header ul:after {
+    content:'';
+    display:block;
+    clear: both;
+}
+
+.group_header
+{
+	font-size: 20px;
+	font-weight: 100;
+	color: #489a83;
+}
+form#add_resource { float:right; }
+.resource_button
+{
+	float: right;
+	position: relative;
+	top: -4px;
+	right: -5px;
+}
+
+/* general settings */
 .small_page {
 	max-width:80rem;
 	padding:1rem;
@@ -470,7 +519,7 @@ in allen browsern testen danach löschen
 	width:200px;
 }
 
-/* general settings */
+
 .clear { 
 	clear:both; 
 }
