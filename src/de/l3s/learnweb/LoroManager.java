@@ -95,8 +95,11 @@ public class LoroManager
 	    description += "\nKeyWords: " + rs.getString("tags");
 	if(!description.contains("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/"))
 	    description += "\nThis file is a part of resource collection available on: http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
-
-	resource.setUrl("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
+	resource.setDescription(description);
+	if(rs.getString("doc_format").contains("image") || rs.getString("doc_format").contains("video"))
+	    resource.setUrl(rs.getString("doc_url"));
+	else
+	    resource.setUrl("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
 
 	resource.setSource("LORO");
 	resource.setLocation("LORO");
@@ -135,8 +138,8 @@ public class LoroManager
 	    resourceManager.deleteResourcePermanent(resource.getId());
 	}
 
-	System.exit(0);*/
-
+	System.exit(0);
+	*/
 	getConnection();
 
 	User admin = learnweb.getUserManager().getUser(7727);
@@ -297,7 +300,7 @@ public class LoroManager
 	    resource.setTitle(rs.getString("title") + " - " + rs.getString("filename"));
 	    resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
 
-	    resource.setFileName(rs.getString("doc_url"));
+	    //resource.setFileName(rs.getString("doc_url"));
 
 	    return resource;
 	}
