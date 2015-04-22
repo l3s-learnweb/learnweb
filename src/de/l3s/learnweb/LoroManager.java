@@ -1,6 +1,9 @@
 package de.l3s.learnweb;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,6 +13,10 @@ import java.sql.SQLException;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
+
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.SolrClient;
 
@@ -18,6 +25,7 @@ public class LoroManager
     public static final String DB_CONNECTION = "jdbc:mysql://prometheus.kbs.uni-hannover.de:3306/learnweb_crawler?characterEncoding=utf8";
     public static final String DB_USER = "learnweb_crawler";
     public static final String DB_PASSWORD = "***REMOVED***";
+    public static PrintWriter writer = null;
     private long lastCheck = 0L;
 
     static Connection DBConnection = null;
@@ -121,6 +129,48 @@ public class LoroManager
 
     }
 
+    private boolean checkForError(Resource loroResource, String doc_url)
+    {
+	boolean delete = false;
+	try
+	{
+
+	    Client client = Client.create();
+	    int exponent = 2;
+	    WebResource webResource = client.resource(doc_url);
+	    for(int i = 1; i < 100;)
+	    {
+
+		ClientResponse response = webResource.accept("application/json").get(ClientResponse.class);
+
+		if(response.getStatus() != 404)
+		{
+		    try
+		    {
+			Thread.sleep(10000 * i);
+		    }
+		    catch(InterruptedException e)
+		    {
+			log.error("Failed due to some interrupt exception on the thread that fetches from the ted api in case of gateway error 504", e);
+		    }
+		    i = (int) Math.pow(2, exponent++);
+		}
+		else
+		{
+		    delete = true;
+		    break;
+		}
+	    }
+	}
+	catch(Exception e)
+	{
+
+	    e.printStackTrace();
+
+	}
+	return delete;
+    }
+
     //For saving Loro resources to LW table
     public void saveLoroResource() throws SQLException, IOException, SolrServerException
     {
@@ -130,21 +180,36 @@ public class LoroManager
 	Group loroGroup = learnweb.getGroupManager().getGroupById(883);
 	ResourceManager resourceManager = learnweb.getResourceManager();
 
-	//User rishita = learnweb.getUserManager().getUser(7727);
-
-	/*for(Resource resource : loroGroup.getResources())
+	try
 	{
-	    System.out.println(resource.getTitle());
-	    resourceManager.deleteResourcePermanent(resource.getId());
+	    writer = new PrintWriter("LoroErrorUrl.txt", "UTF-8");
+	}
+	catch(FileNotFoundException e)
+	{
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	catch(UnsupportedEncodingException e)
+	{
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
 	}
 
-	System.exit(0);
+	//User rishita = learnweb.getUserManager().getUser(7727);
+
+	/*	for(Resource resource : loroGroup.getResources())
+		{
+		    System.out.println(resource.getTitle());
+		    resourceManager.deleteResourcePermanent(resource.getId());
+		}
+
+		System.exit(0);
 	*/
 	getConnection();
 
 	User admin = learnweb.getUserManager().getUser(7727);
 	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource_docs SET resource_id = ? WHERE loro_resource_id = ? AND doc_url= ?");
-	PreparedStatement getCount = DBConnection.prepareStatement("SELECT loro_resource_id, COUNT( * ) AS rowcount FROM  `LORO_resource_docs` group by `loro_resource_id` limit 100");
+	PreparedStatement getCount = DBConnection.prepareStatement("SELECT loro_resource_id, COUNT( * ) AS rowcount FROM  `LORO_resource_docs` where `loro_resource_id`=2109");
 	getCount.executeQuery();
 	ResultSet rs1 = getCount.getResultSet();
 
@@ -219,11 +284,13 @@ public class LoroManager
 			    {
 				rpm.processVideo(loroResource);
 
-				//rpm.processWebsite(resource);
 			    }
-			    catch(IOException e)
+			    catch(Exception e)
 			    {
-				e.printStackTrace();
+
+				writer.println(rs.getString("doc_url"));
+				System.out.println(rs.getString("doc_url"));
+
 			    }
 		    } //Preview images for video can be generated even when there is no preview image available
 		      // else if((!rs.getString("preview_img_url").contains("No-Preview") && !rs.getString("preview_img_url").contains("RestrictedAccess")) || (rs.getString("doc_format").contains("image") && !rs.getString("preview_img_url").contains("RestrictedAccess")))
@@ -237,7 +304,10 @@ public class LoroManager
 			    }
 			    catch(Exception e)
 			    {
-				e.printStackTrace();
+				if(checkForError(loroResource, rs.getString("doc_url")))
+				    resourceManager.deleteResourcePermanent(loroResource.getId());
+				else
+				    writer.println(rs.getString("doc_url"));
 
 			    }
 			}
@@ -250,7 +320,11 @@ public class LoroManager
 			    }
 			    catch(Exception e)
 			    {
-				e.printStackTrace();
+				String loroUrl = "http://loro.open.ac.uk/" + rs.getInt("loro_resource_id") + "/";
+				if(checkForError(loroResource, loroUrl))
+				    resourceManager.deleteResourcePermanent(loroResource.getId());
+				else
+				    writer.println(loroUrl);
 			    }
 			}
 		    }
@@ -326,6 +400,7 @@ public class LoroManager
 
 	LoroManager lm = Learnweb.getInstance().getLoroManager();
 	lm.saveLoroResource();
+	writer.close();
 	DBConnection.close();
     }
 
