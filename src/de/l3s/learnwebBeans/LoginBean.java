@@ -101,6 +101,6 @@ public class LoginBean extends ApplicationBean implements Serializable
 
 	//addMessage(FacesMessage.SEVERITY_INFO, "logout_success");
 	FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-	return "/index.xhtml?faces-redirect=true";
+	return "/lw/index.xhtml?faces-redirect=true";
     }
 }
