@@ -17,11 +17,11 @@
             <title>#{msg.edit_presentation}</title>
 			
             <link type="text/css" rel="stylesheet" href="../../resources/css/default.css" />
-            <link type="text/css" rel="stylesheet" href="../../resources/css/syntaxhighlighter.css" />
+            <!-- <link type="text/css" rel="stylesheet" href="../../resources/css/syntaxhighlighter.css" /> -->
             
             <link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />
-	    	<link href="../../resources/css/impress_edit_presentation.css" rel="stylesheet" />
-
+	    	<link href="../../resources/css/impress_edit_presentation.css" type="text/css" rel="stylesheet"/>
+			<h:outputScript library="myhome-edit-presentation" name="edit_presentation.js"/>
             <style type="text/css">
                 .ui-layout-north {
                     z-index:20 !important;
@@ -464,13 +464,7 @@
 				</p:dialog>
 			</ui:repeat>
 			<script type="text/javascript">
-				function update(desc,editor,dialog)
-				{		
-					$(desc).html(PF(editor).jqInput[0].value);
-					
-					PF(dialog).hide();
-					return false;
-				}
+
 				function cancel(desc,editor,dialog)
 				{
 					
@@ -484,13 +478,7 @@
 					PF(dialog).hide();
 					return false;
 				}
-				function update_title(desc,editor,dialog,id)
-				{
-					$(desc).html(PF(editor).jqInput[0].value);
-					$(".slide_title",$("#"+id).parent().parent()).html(PF(editor).jqInput[0].value);
-					PF(dialog).hide();
-					return false;
-				}
+
 				function cancel_title(desc,editor,dialog)
 				{
 					var ed = PF(editor);
