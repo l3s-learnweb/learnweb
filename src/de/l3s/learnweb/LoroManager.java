@@ -186,12 +186,12 @@ public class LoroManager
 	}
 	catch(FileNotFoundException e)
 	{
-	    // TODO Auto-generated catch block
+
 	    e.printStackTrace();
 	}
 	catch(UnsupportedEncodingException e)
 	{
-	    // TODO Auto-generated catch block
+
 	    e.printStackTrace();
 	}
 
@@ -209,6 +209,7 @@ public class LoroManager
 
 	User admin = learnweb.getUserManager().getUser(7727);
 	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource_docs SET resource_id = ? WHERE loro_resource_id = ? AND doc_url= ?");
+	//Philipp, you can check here for id = 2109 and id= 5
 	PreparedStatement getCount = DBConnection.prepareStatement("SELECT loro_resource_id, COUNT( * ) AS rowcount FROM  `LORO_resource_docs` where `loro_resource_id`=2109");
 	getCount.executeQuery();
 	ResultSet rs1 = getCount.getResultSet();
