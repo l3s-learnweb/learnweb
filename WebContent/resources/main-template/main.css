@@ -488,3 +488,11 @@ in allen browsern testen danach löschen
 }
 
 h1 { margin-bottom: 1rem; }
+
+/* change primefaces ui */
+.ui-button,
+.ui-inputfield {
+	border-radius: 0px !important;
+	border: 1px solid #a8a8a8 !important;
+	box-shadow: 0 0 0px 0px #fff !important;
+}

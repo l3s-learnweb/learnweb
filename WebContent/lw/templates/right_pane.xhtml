@@ -63,12 +63,15 @@
 										URL
 									</td>
 									<td>
+									<!-- 
+									p:ajax update="add_resource_form" event="change"
+													listener="addResourceBean.handleUrlChange}" /
+									 -->
 										<p:inputText value="#{addResourceBean.resource.url}"
 												styleClass="add_field" required="true"
 												requiredmessage="#{msg.mandatory_field}" id="url_input"
 												rendered="#{addResourceBean.resource.storageType == 2}">
-												<p:ajax update="add_resource_form" event="change"
-													listener="#{addResourceBean.handleUrlChange}" />
+												
 											</p:inputText>
 									</td>
 								</p:row>

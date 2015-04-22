@@ -2,6 +2,7 @@ package de.l3s.learnwebBeans;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,6 +13,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.validator.ValidatorException;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.log4j.Logger;
@@ -63,10 +65,40 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	resource.setStorageType(Resource.FILE_RESOURCE);
     }
 
+    /*
+    public void validateUrl(FacesContext context, UIComponent component, Object value) throws ValidatorException
+    {
+    
+    String urlString = ((String) value).trim();
+
+    log.debug("validate Url: " + urlString);
+
+    if(!urlString.startsWith("http"))
+        urlString = "http://" + urlString;
+
+    
+        throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_url"));
+    
+    }
+    */
     public void handleUrlChange(AjaxBehaviorEvent event) throws IOException
     {
 	System.out.println("handleUrlChange");
 	System.out.println(resource.getUrl());
+
+	if(!resource.getUrl().startsWith("http"))
+	    resource.setUrl("http://" + resource.getUrl());
+
+	try
+	{
+	    new URL(resource.getUrl());
+
+	}
+	catch(MalformedURLException e)
+	{
+	    throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_url"));
+	}
+
 	URL url = new URL(resource.getUrl());
 	URLExtractor ue = new URLExtractor();
 	URLInfo urlinfo = ue.extract(url);
