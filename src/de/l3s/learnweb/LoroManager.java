@@ -78,7 +78,7 @@ public class LoroManager
 	lastCheck = System.currentTimeMillis();
     }
 
-    public LoroManager(Learnweb learnweb)
+    protected LoroManager(Learnweb learnweb)
     {
 	this.learnweb = learnweb;
     }

@@ -515,8 +515,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
 	catch(Exception e)
 	{
-	    e.printStackTrace();
-	    addGrowl(FacesMessage.SEVERITY_INFO, "sorry an error occurred");
+	    addFatalMessage(e);
 	}
     }
 

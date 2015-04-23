@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
@@ -80,7 +79,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 
 	try
 	{
-	    UserManager usm = new UserManager(getLearnweb());
+	    UserManager usm = getLearnweb().getUserManager();
 	    this.setUsers(usm.getUsersByCourseId(idCourse));
 	    //Falta remover os admins e moderadores
 	}
@@ -206,8 +205,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	}
 	catch(SQLException e1)
 	{
-	    addGrowl(FacesMessage.SEVERITY_FATAL, "Fatal error. Log out please.");
-	    e1.printStackTrace();
+	    addFatalMessage(e1);
 	}
     }
 

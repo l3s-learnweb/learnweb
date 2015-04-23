@@ -29,7 +29,7 @@ public class GroupManager
     private Learnweb learnweb;
     private ICache<Group> cache;
 
-    public GroupManager(Learnweb learnweb) throws SQLException
+    protected GroupManager(Learnweb learnweb) throws SQLException
     {
 	super();
 	Properties properties = learnweb.getProperties();
@@ -214,8 +214,9 @@ public class GroupManager
 
 	    if(group.getCategoryId() != 0)
 	    {
-		group.setCategoryAbbreviation("TDLab"); // TODO get values from db
-		group.setCategoryTitle("TDLab");
+		GroupCategory category = getGroupCategoryById(group.getCategoryId());
+		group.setCategoryAbbreviation(category.getAbbreviation());
+		group.setCategoryTitle(category.getTitle());
 	    }
 	}
 	else
@@ -387,4 +388,62 @@ public class GroupManager
     	for(Group o : om.getGroupsAll())
     		System.out.println(o);
     }*/
+
+    public List<GroupCategory> getGroupCategoriesByCourse(int courseId) throws SQLException
+    {
+	LinkedList<GroupCategory> categories = new LinkedList<GroupCategory>();
+
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT group_category_id, category_title, category_abbreviation FROM `lw_group_category` WHERE category_course_id = ? ORDER BY category_title");
+	select.setInt(1, courseId);
+	ResultSet rs = select.executeQuery();
+	while(rs.next())
+	{
+	    categories.add(new GroupCategory(rs.getInt(1), courseId, rs.getString(2), rs.getString(3)));
+	}
+
+	select.close();
+	return categories;
+    }
+
+    public GroupCategory getGroupCategoryById(int categoryId) throws SQLException
+    {
+	GroupCategory cat = null;
+
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT group_category_id, category_course_id, category_title, category_abbreviation FROM `lw_group_category` WHERE group_category_id = ?");
+	select.setInt(1, categoryId);
+	ResultSet rs = select.executeQuery();
+	if(rs.next())
+	    cat = new GroupCategory(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4));
+
+	select.close();
+	return cat;
+    }
+
+    protected GroupCategory save(GroupCategory category) throws SQLException
+    {
+	PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group_category` (group_category_id, course_id, category_title, category_abbreviation) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+
+	if(category.getId() < 0) // the Group is not yet stored at the database 
+	    replace.setNull(1, java.sql.Types.INTEGER);
+	else
+	    replace.setInt(1, category.getId());
+	replace.setInt(1, category.getCourseId());
+	replace.setString(2, category.getTitle());
+	replace.setString(3, category.getAbbreviation());
+	replace.executeUpdate();
+
+	if(category.getId() < 0) // get the assigned id
+	{
+	    ResultSet rs = replace.getGeneratedKeys();
+	    if(!rs.next())
+		throw new SQLException("database error: no id generated");
+	    category.setId(rs.getInt(1));
+
+	    resetCache();
+	}
+
+	replace.close();
+
+	return category;
+    }
 }

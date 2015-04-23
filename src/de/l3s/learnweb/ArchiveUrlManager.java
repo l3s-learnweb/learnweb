@@ -31,7 +31,7 @@ public class ArchiveUrlManager
     private URL serviceUrlObj;
     private Queue<Resource> resources = new ConcurrentLinkedQueue<Resource>();
 
-    public ArchiveUrlManager(Learnweb learnweb)
+    protected ArchiveUrlManager(Learnweb learnweb)
     {
 	this.learnweb = learnweb;
 	archiveTodayURL = learnweb.getProperties().getProperty("ARCHIVE_TODAY_URL");

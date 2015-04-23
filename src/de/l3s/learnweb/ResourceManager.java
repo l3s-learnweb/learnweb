@@ -35,7 +35,7 @@ public class ResourceManager
 
     private ICache<Resource> cache;
 
-    public ResourceManager(Learnweb learnweb)
+    protected ResourceManager(Learnweb learnweb)
     {
 	Properties properties = learnweb.getProperties();
 	int cacheSize = Integer.parseInt(properties.getProperty("RESOURCE_CACHE"));

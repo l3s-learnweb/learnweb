@@ -16,7 +16,7 @@ public class PresentationManager
 
     private final Learnweb learnweb;
 
-    public PresentationManager(Learnweb learnweb) throws SQLException
+    protected PresentationManager(Learnweb learnweb) throws SQLException
     {
 	this.learnweb = learnweb;
     }

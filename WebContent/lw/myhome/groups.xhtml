@@ -25,25 +25,15 @@
 						<h:selectOneMenu value="#{groupsBean.newGroup.courseId}" id="course_id">	
 							<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
 						</h:selectOneMenu>
-						<h:outputText value="" />
-				
+						<h:outputText value="" />				
 						
-							<h:outputText value="#{msg.category}:" rendered="#{menuBean.selectCourse.id == 505}" />
-							<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{menuBean.selectCourse.id == 505}" >	
-								<f:selectItem itemValue="1" itemLabel="TDLab" />
-							</h:selectOneMenu>
-							<h:outputText value="" rendered="#{menuBean.selectCourse.id == 505}" />
-						
-						<h:outputText value="#{msg.category}:" rendered="#{menuBean.selectCourse.id == 891}" />
-							<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{menuBean.selectCourse.id == 891}" >	
-								<f:selectItem itemValue="2" itemLabel="Culture and Sensitivity [CaS]" />
-							</h:selectOneMenu>
-							<h:outputText value="" rendered="#{menuBean.selectCourse.id == 891}" />
+						<h:outputText value="#{msg.category}:" rendered="#{not empty menuBean.selectCourse.groupCategories}" />
+						<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{not empty menuBean.selectCourse.groupCategories}" >	
+							<f:selectItems value="#{menuBean.selectCourse.groupCategories}" var="cat" itemValue="#{cat.id}" itemLabel="#{cat.title} [#{cat.abbreviation}]" />
+						</h:selectOneMenu>
+						<h:outputText value="" rendered="#{not empty menuBean.selectCourse.groupCategories}" />						
 							
-					</h:panelGrid>
-							 
-						
-						 
+					</h:panelGrid>				 
 				</p:fieldset>
 				<br/>
 				<p:fieldset legend="#{msg.optional_data}">

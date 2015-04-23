@@ -39,7 +39,7 @@ public class CourseManager
     private Learnweb learnweb;
     private Map<Integer, Course> cache;
 
-    public CourseManager(Learnweb learnweb) throws SQLException
+    protected CourseManager(Learnweb learnweb) throws SQLException
     {
 	super();
 	this.learnweb = learnweb;

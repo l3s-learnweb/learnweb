@@ -42,7 +42,7 @@ public class ResourcePreviewMaker
     private final String websiteThumbnailService;
     private final String videoThumbnailService;
 
-    public ResourcePreviewMaker(Learnweb learnweb)
+    protected ResourcePreviewMaker(Learnweb learnweb)
     {
 	this.learnweb = learnweb;
 	this.fileManager = this.learnweb.getFileManager();

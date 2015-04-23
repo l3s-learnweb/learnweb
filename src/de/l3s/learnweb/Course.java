@@ -10,303 +10,352 @@ import javax.validation.constraints.Size;
 
 public class Course implements Serializable, Comparable<Course>
 {
-	private static final long serialVersionUID = -1101352995500154406L;
+    private static final long serialVersionUID = -1101352995500154406L;
 
-	// add new options add the end , don't delete options !!!!!
-	// if you add 64 options you have to add one options_field{x} column in lw_course 
-	public static enum Option implements Comparable<Option>{
-		Groups_Forum_enabled,
-		Groups_Detailed_logs_enabled,
-		Course_Forum_enabled,
-		Services_Allow_user_to_logout_from_interweb,
-		Groups_Hide_newest_resource,
-		Search_History_log_enabled
-	}
-	
-	private int id;	
-	@Size(min=1, max=50)
-	private String title;	
-	private int forumId;
-	private int forumCategoryId;
-	private int organisationId;
-	private int defaultGroupId; // all users who join this course, automatically join this group
-	@Size(min=1, max=100)
-	private String wizardParam;
-	private boolean wizardEnabled;
-	private int nextXUsersBecomeModerator;
-	@Size(max=255)
-	private String defaultInterwebUsername;
-	@Size(max=255)
-	private String defaultInterwebPassword;
-	private String welcomeMessage;
-	private String bannerImage;
-	private int bannerImageFileId;
-	private String bannerColor;
-	
-	private long[] options = new long[CourseManager.FIELDS];
-	
-	// derived values:
-	private int memberCount;	
-		
-	/**
-	 * Constructs a temporary object. Can be persisted by CourseManager.save()
-	 */
-	public Course()
+    // add new options add the end , don't delete options !!!!!
+    // if you add 64 options you have to add one options_field{x} column in lw_course 
+    public static enum Option implements Comparable<Option>
+    {
+	Groups_Forum_enabled,
+	Groups_Detailed_logs_enabled,
+	Course_Forum_enabled,
+	Services_Allow_user_to_logout_from_interweb,
+	Groups_Hide_newest_resource,
+	Search_History_log_enabled
+    }
+
+    private int id;
+    @Size(min = 1, max = 50)
+    private String title;
+    private int forumId;
+    private int forumCategoryId;
+    private int organisationId;
+    private int defaultGroupId; // all users who join this course, automatically join this group
+    @Size(min = 1, max = 100)
+    private String wizardParam;
+    private boolean wizardEnabled;
+    private int nextXUsersBecomeModerator;
+    @Size(max = 255)
+    private String defaultInterwebUsername;
+    @Size(max = 255)
+    private String defaultInterwebPassword;
+    private String welcomeMessage;
+    private String bannerImage;
+    private int bannerImageFileId;
+    private String bannerColor;
+
+    private long[] options = new long[CourseManager.FIELDS];
+
+    // derived values:
+    private int memberCount;
+    private List<GroupCategory> groupCategories;
+
+    /**
+     * Constructs a temporary object. Can be persisted by CourseManager.save()
+     */
+    public Course()
+    {
+	this.id = -1;
+	this.options[0] = 5L; // forum enabled
+	this.wizardEnabled = true;
+    }
+
+    protected Course(ResultSet rs) throws SQLException
+    {
+	this.id = rs.getInt("course_id");
+	this.title = rs.getString("title");
+	this.forumId = rs.getInt("forum_id");
+	this.forumCategoryId = rs.getInt("forum_category_id");
+	this.organisationId = rs.getInt("organisation_id");
+	this.defaultGroupId = rs.getInt("default_group_id");
+	this.wizardParam = rs.getString("wizard_param");
+	this.wizardEnabled = rs.getInt("wizard_enabled") == 1;
+	this.nextXUsersBecomeModerator = rs.getInt("next_x_users_become_moderator");
+	this.memberCount = rs.getInt("member_count");
+	this.defaultInterwebUsername = rs.getString("default_interweb_username");
+	this.defaultInterwebPassword = rs.getString("default_interweb_password");
+	this.welcomeMessage = rs.getString("welcome_message");
+	this.bannerColor = rs.getString("banner_color");
+	this.bannerImageFileId = rs.getInt("banner_image_file_id");
+
+	for(int i = 0; i < CourseManager.FIELDS;)
+	    options[i] = rs.getInt("options_field" + (++i));
+    }
+
+    public boolean getOption(Option option)
+    {
+	int bit = option.ordinal();
+	int field = bit >> 6;
+	long bitMask = 1L << (bit % 64);
+
+	return (options[field] & bitMask) == bitMask;
+    }
+
+    public void setOption(Option option, boolean value)
+    {
+	int bit = option.ordinal();
+	int field = bit >> 6;
+	long bitMask = 1L << (bit % 64);
+
+	if(value) // is true set Bit to 1
 	{
-		this.id = -1;
-		this.options[0] = 5L; // forum enabled
-		this.wizardEnabled = true;
+	    options[field] |= bitMask;
 	}
-	
-	protected Course(ResultSet rs) throws SQLException
+	else
 	{
-		this.id = rs.getInt("course_id");
-		this.title = rs.getString("title");
-		this.forumId = rs.getInt("forum_id");
-		this.forumCategoryId = rs.getInt("forum_category_id");
-		this.organisationId = rs.getInt("organisation_id");
-		this.defaultGroupId = rs.getInt("default_group_id");
-		this.wizardParam = rs.getString("wizard_param");
-		this.wizardEnabled = rs.getInt("wizard_enabled") == 1;
-		this.nextXUsersBecomeModerator = rs.getInt("next_x_users_become_moderator");
-		this.memberCount = rs.getInt("member_count");
-		this.defaultInterwebUsername = rs.getString("default_interweb_username");
-		this.defaultInterwebPassword = rs.getString("default_interweb_password");
-		this.welcomeMessage = rs.getString("welcome_message"); 
-		this.bannerColor = rs.getString("banner_color");
-		this.bannerImageFileId = rs.getInt("banner_image_file_id");
-		
-		for(int i=0; i<CourseManager.FIELDS;)
-			options[i] = rs.getInt("options_field"+ (++i));
+	    options[field] &= ~bitMask;
 	}
-	
-	public boolean getOption(Option option)
+    }
+
+    public List<Group> getGroups() throws SQLException
+    {
+	return Learnweb.getInstance().getGroupManager().getGroupsByCourseId(id);
+    }
+
+    public List<Group> getGroupsFilteredByUser(User user) throws SQLException
+    {
+	return Learnweb.getInstance().getGroupManager().getGroupsByUserIdFilteredByCourseId(user.getId(), id);
+    }
+
+    public String getForumUrl(User user) throws SQLException
+    {
+	return Learnweb.getInstance().getForumManger().getForumUrl(user, forumId);
+    }
+
+    /**
+     * A negative id indicates, that this object is not stored at the database
+     * 
+     * @return
+     */
+    public int getId()
+    {
+	return id;
+    }
+
+    /**
+     * This method should only be called by CourseManager
+     * 
+     * @param id
+     */
+    public void setId(int id)
+    {
+	this.id = id;
+    }
+
+    public String getTitle()
+    {
+	return title;
+    }
+
+    public void setTitle(String title)
+    {
+	this.title = title;
+    }
+
+    public long[] getOptions()
+    {
+	return options;
+    }
+
+    public int getForumId()
+    {
+	return forumId;
+    }
+
+    public void setForumId(int forumId)
+    {
+	this.forumId = forumId;
+    }
+
+    public int getForumCategoryId()
+    {
+	return forumCategoryId;
+    }
+
+    public void setForumCategoryId(int forumCategoryId)
+    {
+	this.forumCategoryId = forumCategoryId;
+    }
+
+    public int getOrganisationId()
+    {
+	return organisationId;
+    }
+
+    public Organisation getOrganisation() throws SQLException
+    {
+	if(organisationId < 0)
+	    return null;
+
+	return Learnweb.getInstance().getOrganisationManager().getOrganisationById(organisationId);
+    }
+
+    public void setOrganisationId(int organisationId)
+    {
+	this.organisationId = organisationId;
+    }
+
+    public int getDefaultGroupId()
+    {
+	return defaultGroupId;
+    }
+
+    public void setDefaultGroupId(int defaultGroupId)
+    {
+	this.defaultGroupId = defaultGroupId;
+    }
+
+    public String getWizardParam()
+    {
+	return wizardParam;
+    }
+
+    public void setWizardParam(String wizardParam)
+    {
+	this.wizardParam = wizardParam;
+    }
+
+    public boolean isWizardEnabled()
+    {
+	return wizardEnabled;
+    }
+
+    public void setWizardEnabled(boolean wizardEnabled)
+    {
+	this.wizardEnabled = wizardEnabled;
+    }
+
+    public int getNextXUsersBecomeModerator()
+    {
+	return nextXUsersBecomeModerator;
+    }
+
+    public void setNextXUsersBecomeModerator(int nextXUsersBecomeModerator)
+    {
+	this.nextXUsersBecomeModerator = nextXUsersBecomeModerator;
+    }
+
+    public int getMemberCount()
+    {
+	return memberCount;
+    }
+
+    public List<User> getMembers() throws SQLException
+    {
+	return Learnweb.getInstance().getUserManager().getUsersByCourseId(id);
+    }
+
+    public void addUser(User user) throws SQLException
+    {
+	memberCount++;
+	Learnweb.getInstance().getCourseManager().addUser(this, user);
+	user.clearCaches();
+    }
+
+    public String getDefaultInterwebUsername()
+    {
+	return defaultInterwebUsername;
+    }
+
+    public void setDefaultInterwebUsername(String defaultInterwebUsername)
+    {
+	this.defaultInterwebUsername = defaultInterwebUsername;
+    }
+
+    public String getDefaultInterwebPassword()
+    {
+	return defaultInterwebPassword;
+    }
+
+    public void setDefaultInterwebPassword(String defaultInterwebPassword)
+    {
+	this.defaultInterwebPassword = defaultInterwebPassword;
+    }
+
+    public String getWelcomeMessage()
+    {
+	return welcomeMessage;
+    }
+
+    public void setWelcomeMessage(String welcomeMessage)
+    {
+	this.welcomeMessage = welcomeMessage;
+    }
+
+    public String getBannerImage() throws SQLException
+    {
+	if(null == bannerImage)
 	{
-		int bit = option.ordinal();
-		int field = bit >> 6; 
-		long bitMask = 1L << (bit % 64);		
-			
-		return (options[field] & bitMask) == bitMask;
+	    if(bannerImageFileId < 1)
+		return null;
+
+	    File file = Learnweb.getInstance().getFileManager().getFileById(bannerImageFileId);
+	    bannerImage = file.getUrl();
 	}
-	
-	public void setOption(Option option, boolean value)
+	return bannerImage;
+    }
+
+    public int getBannerImageFileId()
+    {
+	return bannerImageFileId;
+    }
+
+    public void setBannerImageFileId(int bannerImageFileId)
+    {
+	this.bannerImageFileId = bannerImageFileId;
+    }
+
+    public String getBannerColor()
+    {
+	return bannerColor;
+    }
+
+    public void setBannerColor(String bannerColor)
+    {
+	this.bannerColor = bannerColor;
+    }
+
+    @Override
+    public String toString()
+    {
+	return "Course [id=" + id + ", title=" + title + ", options=" + Arrays.toString(options) + ", forumId=" + forumId + ", forumCategoryId=" + forumCategoryId + ", organisationId=" + organisationId + ", defaultGroupId=" + defaultGroupId + ", wizardParam=" + wizardParam
+		+ ", wizardEnabled=" + wizardEnabled + ", nextXUsersBecomeModerator=" + nextXUsersBecomeModerator + ", defaultInterwebUsername=" + defaultInterwebUsername + ", defaultInterwebPassword=" + defaultInterwebPassword + ", memberCount=" + memberCount + "]";
+    }
+
+    @Override
+    public int compareTo(Course o) // sort primarily by organisationTitle, secondarily by course title
+    {
+	if(o.getOrganisationId() == getOrganisationId())
+	    return getTitle().compareTo(o.getTitle());
+
+	try
 	{
-		int bit = option.ordinal();
-		int field = bit >> 6;
-		long bitMask = 1L << (bit % 64);			
-		
-		if(value) // is true set Bit to 1
-		{
-			options[field] |= bitMask;			
-		}
-		else
-		{
-			options[field] &= ~bitMask;
-		}
+	    String title1 = (getOrganisationId() < 1) ? "" : getOrganisation().getTitle();
+	    String title2 = (o.getOrganisationId() < 1) ? "" : o.getOrganisation().getTitle();
+	    return title1.compareTo(title2);
 	}
-	
-	public List<Group> getGroups() throws SQLException
+	catch(SQLException e)
 	{
-		return Learnweb.getInstance().getGroupManager().getGroupsByCourseId(id);
-	}
-	
-	public List<Group> getGroupsFilteredByUser(User user) throws SQLException
-	{
-		return Learnweb.getInstance().getGroupManager().getGroupsByUserIdFilteredByCourseId(user.getId(), id);
-	}
+	    e.printStackTrace();
 
-	
-	public String getForumUrl(User user) throws SQLException
-	{
-		return Learnweb.getInstance().getForumManger().getForumUrl(user, forumId);
+	    return 0;
 	}
+    }
 
-	/**
-	 * A negative id indicates, that this object is not stored at the database
-	 * @return
-	 */
-	public int getId() {
-		return id;
-	}
+    public List<GroupCategory> getGroupCategories() throws SQLException
+    {
+	if(null == groupCategories)
+	    groupCategories = Learnweb.getInstance().getGroupManager().getGroupCategoriesByCourse(id);
 
-	/**
-	 * This method should only be called by CourseManager
-	 * @param id
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
+	return groupCategories;
+    }
 
-	public String getTitle() {
-		return title;
-	}
+    public void addGroupCategory(GroupCategory category) throws SQLException
+    {
+	category.setCourseId(id);
+	Learnweb.getInstance().getGroupManager().save(category);
 
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public long[] getOptions() {
-		return options;
-	}
-
-	public int getForumId() {
-		return forumId;
-	}
-
-	public void setForumId(int forumId) {
-		this.forumId = forumId;
-	}
-
-	public int getForumCategoryId() {
-		return forumCategoryId;
-	}
-
-	public void setForumCategoryId(int forumCategoryId) {
-		this.forumCategoryId = forumCategoryId;
-	}
-
-	public int getOrganisationId() {
-		return organisationId;
-	}
-	
-	public Organisation getOrganisation() throws SQLException
-	{
-		if(organisationId < 0)
-			return null;
-		
-		return Learnweb.getInstance().getOrganisationManager().getOrganisationById(organisationId);
-	}
-
-	public void setOrganisationId(int organisationId) {
-		this.organisationId = organisationId;
-	}
-
-	public int getDefaultGroupId() {
-		return defaultGroupId;
-	}
-
-	public void setDefaultGroupId(int defaultGroupId) {
-		this.defaultGroupId = defaultGroupId;
-	}
-
-	public String getWizardParam() {
-		return wizardParam;
-	}
-
-	public void setWizardParam(String wizardParam) {
-		this.wizardParam = wizardParam;
-	}
-
-	public boolean isWizardEnabled() {
-		return wizardEnabled;
-	}
-
-	public void setWizardEnabled(boolean wizardEnabled) {
-		this.wizardEnabled = wizardEnabled;
-	}
-
-	public int getNextXUsersBecomeModerator() {
-		return nextXUsersBecomeModerator;
-	}
-
-	public void setNextXUsersBecomeModerator(int nextXUsersBecomeModerator) {
-		this.nextXUsersBecomeModerator = nextXUsersBecomeModerator;
-	}
-
-	public int getMemberCount() {
-		return memberCount;
-	}
-	
-	public List<User> getMembers() throws SQLException
-	{
-		return Learnweb.getInstance().getUserManager().getUsersByCourseId(id);
-	}
-	
-	public void addUser(User user) throws SQLException
-	{
-		memberCount++;
-		Learnweb.getInstance().getCourseManager().addUser(this, user);
-		user.clearCaches();
-	}	
-
-
-	public String getDefaultInterwebUsername() {
-		return defaultInterwebUsername;
-	}
-
-	public void setDefaultInterwebUsername(String defaultInterwebUsername) {
-		this.defaultInterwebUsername = defaultInterwebUsername;
-	}
-
-	public String getDefaultInterwebPassword() {
-		return defaultInterwebPassword;
-	}
-
-	public void setDefaultInterwebPassword(String defaultInterwebPassword) {
-		this.defaultInterwebPassword = defaultInterwebPassword;
-	}
-	
-	public String getWelcomeMessage() {
-		return welcomeMessage;
-	}
-
-	public void setWelcomeMessage(String welcomeMessage) {
-		this.welcomeMessage = welcomeMessage;
-	}	
-
-	public String getBannerImage() throws SQLException 
-	{
-		if(null == bannerImage)
-		{
-			if(bannerImageFileId < 1)
-				return null;
-			
-			File file = Learnweb.getInstance().getFileManager().getFileById(bannerImageFileId);
-			bannerImage = file.getUrl();
-		}
-		return bannerImage;
-	}
-
-	public int getBannerImageFileId() {
-		return bannerImageFileId;
-	}
-
-	public void setBannerImageFileId(int bannerImageFileId) {
-		this.bannerImageFileId = bannerImageFileId;
-	}
-
-	public String getBannerColor() {
-		return bannerColor;
-	}
-
-	public void setBannerColor(String bannerColor) {
-		this.bannerColor = bannerColor;
-	}
-
-	@Override
-	public String toString() {
-		return "Course [id=" + id + ", title=" + title + ", options=" + Arrays.toString(options) + ", forumId=" + forumId
-				+ ", forumCategoryId=" + forumCategoryId + ", organisationId=" + organisationId + ", defaultGroupId=" + defaultGroupId
-				+ ", wizardParam=" + wizardParam + ", wizardEnabled=" + wizardEnabled + ", nextXUsersBecomeModerator="
-				+ nextXUsersBecomeModerator + ", defaultInterwebUsername=" + defaultInterwebUsername + ", defaultInterwebPassword="
-				+ defaultInterwebPassword + ", memberCount=" + memberCount + "]";
-	}
-
-	@Override
-	public int compareTo(Course o) // sort primarily by organisationTitle, secondarily by course title
-	{
-		if(o.getOrganisationId() == getOrganisationId())
-			return getTitle().compareTo(o.getTitle());
-		
-		try {
-			String title1 = (getOrganisationId() < 1)? "":getOrganisation().getTitle();
-			String title2 = (o.getOrganisationId() < 1)? "":o.getOrganisation().getTitle();
-			return title1.compareTo(title2);
-		}
-		catch (SQLException e) {
-			e.printStackTrace();
-			
-			return 0;
-		}		
-	}		
+	if(groupCategories != null)
+	    groupCategories = null; // clear cache
+    }
 }

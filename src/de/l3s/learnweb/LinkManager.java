@@ -21,7 +21,7 @@ public class LinkManager
 
     private Learnweb learnweb;
 
-    public LinkManager(Learnweb learnweb) throws SQLException
+    protected LinkManager(Learnweb learnweb) throws SQLException
     {
 	super();
 	this.learnweb = learnweb;

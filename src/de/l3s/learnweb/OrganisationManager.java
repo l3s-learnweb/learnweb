@@ -25,7 +25,7 @@ public class OrganisationManager
     private Learnweb learnweb;
     private Map<Integer, Organisation> cache;
 
-    public OrganisationManager(Learnweb learnweb) throws SQLException
+    protected OrganisationManager(Learnweb learnweb) throws SQLException
     {
 	super();
 	this.learnweb = learnweb;

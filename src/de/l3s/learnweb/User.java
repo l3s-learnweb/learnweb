@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -106,6 +107,11 @@ public class User implements Comparable<User>, Serializable, HasId
 	    return courses;
 
 	courses = Learnweb.getInstance().getCourseManager().getCoursesByUserId(id);
+
+	if(courses.size() > 1)
+	{
+	    Collections.sort(courses);
+	}
 
 	return courses;
     }

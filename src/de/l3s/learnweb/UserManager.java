@@ -39,7 +39,7 @@ public class UserManager
     private Learnweb learnweb;
     private ICache<User> cache;
 
-    public UserManager(Learnweb learnweb) throws SQLException
+    protected UserManager(Learnweb learnweb) throws SQLException
     {
 	super();
 	Properties properties = learnweb.getProperties();

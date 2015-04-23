@@ -95,7 +95,7 @@ public class GroupsBean extends ApplicationBean implements Serializable
 	if(null != parentGroup)
 	    parentGroup.clearCaches();
 
-	addGrowl(FacesMessage.SEVERITY_INFO, "group deleted", selectedGroup.getTitle());
+	addGrowl(FacesMessage.SEVERITY_INFO, "group_deleted", selectedGroup.getTitle());
     }
 
     public boolean canDeleteGroup(Group group) throws SQLException

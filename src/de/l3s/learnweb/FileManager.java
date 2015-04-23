@@ -42,7 +42,7 @@ public class FileManager
     private final String urlPattern;
     private String baseUrl;
 
-    public FileManager(Learnweb learnweb) throws SQLException
+    protected FileManager(Learnweb learnweb) throws SQLException
     {
 	Properties properties = learnweb.getProperties();
 	int cacheSize = Integer.parseInt(properties.getProperty("FILE_MANAGER_CACHE_SIZE"));

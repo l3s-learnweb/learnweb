@@ -12,7 +12,7 @@ public class JobScheduler
     private Scheduler scheduler;
     private Learnweb learnweb;
 
-    public JobScheduler(Learnweb learnweb)
+    protected JobScheduler(Learnweb learnweb)
     {
 	this.learnweb = learnweb;
 	this.scheduler = new Scheduler();

@@ -27,7 +27,7 @@ public class TedManager
 
     private final Learnweb learnweb;
 
-    public TedManager(Learnweb learnweb)
+    protected TedManager(Learnweb learnweb)
     {
 	this.learnweb = learnweb;
     }
