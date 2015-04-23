@@ -34,6 +34,12 @@
 							</h:selectOneMenu>
 							<h:outputText value="" rendered="#{menuBean.selectCourse.id == 505}" />
 						
+						<h:outputText value="#{msg.category}:" rendered="#{menuBean.selectCourse.id == 891}" />
+							<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{menuBean.selectCourse.id == 891}" >	
+								<f:selectItem itemValue="2" itemLabel="Culture and Sensitivity [CaS]" />
+							</h:selectOneMenu>
+							<h:outputText value="" rendered="#{menuBean.selectCourse.id == 891}" />
+							
 					</h:panelGrid>
 							 
 						

@@ -24,13 +24,16 @@ import org.primefaces.model.UploadedFile;
 
 import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
 import de.l3s.interwebj.IllegalResponseException;
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.ResourcePreviewMaker;
 import de.l3s.learnweb.URLExtractor;
 import de.l3s.learnweb.URLInfo;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 import de.l3s.util.StringHelper;
 
@@ -202,6 +205,8 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 		    resource.setUrl("http://" + resource.getUrl());
 
 		resource.setType("text");
+
+		new CreateWebsiteThumbnailThread(resource).start();
 	    }
 
 	    if(null != selectedUploadServices && selectedUploadServices.size() > 0) // the resource has to be uploaded to interweb
@@ -429,6 +434,77 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 		addMessage(FacesMessage.SEVERITY_FATAL, "fatal error");
 	    }
 	}
+    }
+
+    public static class CreateWebsiteThumbnailThread extends Thread
+    {
+
+	private Resource resource;
+
+	public CreateWebsiteThumbnailThread(Resource resource)
+	{
+	    this.resource = resource;
+	}
+
+	@Override
+	public void run()
+	{
+
+	    try
+	    {
+		log.debug("Create thumbnail for resource " + resource.getId() + "; Done");
+
+		FileInfo info = new FileInspector().inspect(FileInspector.openStream(resource.getUrl()), "unknown");
+		ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
+		if(info.getMimeType().equals("text/html") || info.getMimeType().equals("text/plain") || info.getMimeType().equals("application/xhtml+xml") || info.getMimeType().equals("application/octet-stream") || info.getMimeType().equals("blog-post"))
+		{
+		    resource.setMachineDescription(info.getTextContent());
+
+		    rpm.processWebsite(resource);
+		    resource.setOnlineStatus(OnlineStatus.ONLINE);
+		    if(resource.getSource() == null)
+			resource.setSource("Internet");
+
+		    resource.save();
+
+		}
+		else if(info.getMimeType().equals("application/pdf"))
+		{
+		    System.out.println("process " + info.getMimeType());
+		    resource.setMachineDescription(info.getTextContent());
+
+		    rpm.processFile(resource, FileInspector.openStream(resource.getUrl()), info);
+		    resource.save();
+		}
+		else if(info.getMimeType().startsWith("image/"))
+		{
+		    rpm.processImage(resource, FileInspector.openStream(resource.getUrl()));
+		    resource.setFormat(info.getMimeType());
+		    resource.setType("Image");
+		    resource.save();
+		}
+		else
+		    log.error("Can't create thumbnail for mimetype: " + info.getMimeType());
+
+		log.debug("Create thumbnail for resource " + resource.getId() + "; Done");
+	    }
+	    catch(Exception e)
+	    {
+
+		log.error(e);
+
+		resource.setOnlineStatus(OnlineStatus.OFFLINE); // offline
+		try
+		{
+		    resource.save();
+		}
+		catch(SQLException e1)
+		{
+		    log.fatal("can't save resource: " + resource.getId(), e1);
+		}
+	    }
+	}
+
     }
 
 }

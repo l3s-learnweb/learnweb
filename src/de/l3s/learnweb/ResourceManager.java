@@ -943,6 +943,8 @@ public class ResourceManager
 	createThumbnailsForWebResources();
 
 	System.out.println("done");
+
+	Learnweb.getInstance().onDestroy();
     }
 
     public static void createThumbnailsForWebResources() throws Exception
@@ -956,7 +958,7 @@ public class ResourceManager
 		.getResources(
 			"SELECT "
 				+ RESOURCE_COLUMNS
-				+ " FROM `lw_resource` r where  `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and r.`resource_id` > 20000 and type !='pdf' and source != 'SlideShare' and thumbnail2_file_id=0 and online_status = 'unknown' ORDER BY `resource_id` DESC limit 20",
+				+ " FROM `lw_resource` r where  `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and r.`resource_id` > 20000 and type !='pdf' and source != 'SlideShare' and thumbnail2_file_id=0 and online_status = 'unknown' ORDER BY `resource_id` DESC limit 100",
 			null);
 
 	ResourcePreviewMaker rpm = lw.getResourcePreviewMaker();

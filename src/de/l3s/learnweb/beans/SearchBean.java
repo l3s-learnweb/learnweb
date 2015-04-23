@@ -33,6 +33,7 @@ import de.l3s.learnweb.Search.MEDIA;
 import de.l3s.learnweb.Search.MODE;
 import de.l3s.learnweb.Search.SERVICE;
 import de.l3s.learnweb.User;
+import de.l3s.learnwebBeans.AddResourceBean;
 import de.l3s.learnwebBeans.ApplicationBean;
 import de.l3s.searchlogclient.Actions.ACTION;
 import de.l3s.searchlogclient.SearchLogClient;
@@ -348,9 +349,14 @@ public class SearchBean extends ApplicationBean implements Serializable
 	try
 	{
 	    Resource newResource;
+	    boolean createNewResource = false;
 
 	    if(selectedResource.getId() == -1) // resource is not yet stored at fedora
+	    {
 		newResource = selectedResource;
+		createNewResource = true;
+
+	    }
 	    else
 		// create a copy 
 		newResource = selectedResource.clone();
@@ -367,6 +373,9 @@ public class SearchBean extends ApplicationBean implements Serializable
 		getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(newResource, getUser());
 		user.setActiveGroup(selectedResourceTargetGroupId);
 	    }
+
+	    if(createNewResource && newResource.getType().equalsIgnoreCase("text"))
+		new AddResourceBean.CreateWebsiteThumbnailThread(newResource).start();
 
 	    //Logs when a resource has been saved by the user to LearnWeb
 	    if(logEnabled)
