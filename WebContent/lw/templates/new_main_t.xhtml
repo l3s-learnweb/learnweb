@@ -64,7 +64,7 @@
 			</p:layoutUnit>
 
 			<p:layoutUnit id="left_pane"
-				rendered="#{userBean.loggedIn and !utilBean.explorePage and !utilBean.viewResultSetPage and !utilBean.tedTranscriptPage}"
+				rendered="#{userBean.loggedIn and !utilBean.viewResultSetPage}"
 				position="west" size="223" resizable="false" closable="false"
 				collapsible="false">
 				
@@ -74,9 +74,7 @@
 				</div>
 			</p:layoutUnit>
 
-			<ui:insert name="right_layout">
-				
-			</ui:insert>
+			<ui:insert name="right_layout" />
 			
 			<p:layoutUnit id="center_pane" position="center" >
 				<div class="content" style="padding-right: 7px;">
@@ -105,7 +103,7 @@
 		
 		<ui:insert name="bottom_panel"></ui:insert>
 	
-		<h:panelGroup layout="block" id="footer" rendered="#{not empty helpText}" styleClass="#{userBean.getPreference('helptext_hide')? 'display-none':''}">
+		<h:panelGroup layout="block" id="footer" rendered="#{not empty helpText and (!loginRequired || userBean.loggedIn)}" styleClass="#{userBean.getPreference('helptext_hide')? 'display-none':''}">
 			<h:outputText value="#{helpText}" escape="false" style="padding: 0.7rem 4rem; display:block;" />
 			<a href="#" onclick="return footerClose();" id="footer_close" title="#{msg.close}"></a>
 		</h:panelGroup>

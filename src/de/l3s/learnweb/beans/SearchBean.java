@@ -374,8 +374,8 @@ public class SearchBean extends ApplicationBean implements Serializable
 		user.setActiveGroup(selectedResourceTargetGroupId);
 	    }
 
-	    if(createNewResource && newResource.getType().equalsIgnoreCase("text"))
-		new AddResourceBean.CreateWebsiteThumbnailThread(newResource).start();
+	    if(createNewResource)
+		new AddResourceBean.CreateThumbnailThread(newResource).start();
 
 	    //Logs when a resource has been saved by the user to LearnWeb
 	    if(logEnabled)

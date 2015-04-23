@@ -210,7 +210,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     public void addComment() throws Exception
     {
 	clickedResource.addComment(newComment, getUser());
-
+	newComment = "";
     }
 
     public List<Resource> getResources()

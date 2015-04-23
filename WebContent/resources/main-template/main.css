@@ -8,7 +8,7 @@ html{
 }
 body {
 	min-width:320px;
-	font-family:"Lato", sans-serif;
+	font-family:Arial, Verdana;
 	height:100%;
 	width:100%;
 	font-size:1.2rem;
@@ -47,6 +47,7 @@ body {
 	position: relative;	
 	background:#489a83 url("img/LearnwebLogo.png") left no-repeat;
 	background-size: contain;
+	font-family:"Lato", sans-serif;
 	width:100%;
 	height:4.6rem;	
 }
@@ -292,6 +293,7 @@ in allen browsern testen danach löschen
     visibility:hidden;
     border-bottom-right-radius:10px;
 	border-bottom-left-radius:10px;
+	min-width: 20rem;
 }
 .userbar ul li ul li{
 	border-left:0px;
@@ -344,6 +346,10 @@ in allen browsern testen danach löschen
 }
 #activitystream{
 	display:none;
+}
+
+#growl_container {
+	top:80px;
 }
 
 /* bottom bar */

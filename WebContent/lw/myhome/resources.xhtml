@@ -129,11 +129,10 @@
 				            			<p:commandLink oncomplete="PF('resource_link_dialog').show();" title="#{msg.link_to}" 
 											rendered="#{userBean.isModerator() or true}" styleClass="buttons_link resource_commandlink">
 											<h:graphicImage alt="Add" value="/resources/icon/Add_blue.png" title="#{msg.link_to}" /> 
-											<f:setPropertyActionListener value="#{result}" target="#{groupDetailBean.clickedResource}" />
-											<f:param name="group_id" value="#{groupDetailBean.groupId}" /> 
+											<f:setPropertyActionListener value="#{result}" target="#{myResourcesBean.clickedResource}" />
 										</p:commandLink>
 										 
-				            			<p:commandLink onclick="PF('confirmation').show()" title="#{msg.removeFromGroup}" rendered="true" styleClass="buttons_link">
+				            			<p:commandLink onclick="PF('confirmation').show()" title="#{msg.delete_resource_title}" rendered="true" styleClass="buttons_link">
 											<h:graphicImage alt="Remove" value="../resources/icon/Remove.png" width="16" height="16" />
 												<f:setPropertyActionListener value="#{result}" target="#{myResourcesBean.clickedResource}" />
 										</p:commandLink>
@@ -142,7 +141,7 @@
 											<h:graphicImage alt="Edit" value="../resources/icon/Edit.png" width="16" height="16" />
 												<f:setPropertyActionListener value="#{result}" target="#{myResourcesBean.clickedResource}" />
 												<f:setPropertyActionListener target="#{myResourcesBean.editResourceClicked}" value="true"></f:setPropertyActionListener>
-											<f:param name="group_id" value="#{groupDetailBean.groupId}" />
+	
 										</p:commandLink>
 									
 			            		</div>

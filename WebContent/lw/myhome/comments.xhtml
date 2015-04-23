@@ -5,12 +5,12 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<ui:composition template="/lw/templates/main.xhtml">
+<ui:composition template="/lw/templates/new_main_t.xhtml">
 
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.myCommentsTitle}" />
 
-	<ui:define name="body">
+	<ui:define name="center_layout">
 
 			<h:form>
 				<p:dataTable var="comment" value="#{userBean.user.comments}">

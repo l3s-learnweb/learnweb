@@ -129,9 +129,8 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
 		    System.out.println(newId);
 		}
 	    }
-	    FacesContext context = FacesContext.getCurrentInstance();
-	    context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Presentation Saved", ""));
-	    System.out.println("test");
+	    addGrowl(FacesMessage.SEVERITY_INFO, "presentation_saved");
+
 	}
 	catch(SQLException e)
 	{

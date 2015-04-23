@@ -206,7 +206,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
 		resource.setType("text");
 
-		new CreateWebsiteThumbnailThread(resource).start();
+		new CreateThumbnailThread(resource).start();
 	    }
 
 	    if(null != selectedUploadServices && selectedUploadServices.size() > 0) // the resource has to be uploaded to interweb
@@ -436,12 +436,12 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	}
     }
 
-    public static class CreateWebsiteThumbnailThread extends Thread
+    public static class CreateThumbnailThread extends Thread
     {
 
 	private Resource resource;
 
-	public CreateWebsiteThumbnailThread(Resource resource)
+	public CreateThumbnailThread(Resource resource)
 	{
 	    this.resource = resource;
 	}
@@ -452,40 +452,57 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
 	    try
 	    {
-		log.debug("Create thumbnail for resource " + resource.getId() + "; Done");
-
-		FileInfo info = new FileInspector().inspect(FileInspector.openStream(resource.getUrl()), "unknown");
+		log.debug("Create thumbnail for resource " + resource.getId());
 		ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
-		if(info.getMimeType().equals("text/html") || info.getMimeType().equals("text/plain") || info.getMimeType().equals("application/xhtml+xml") || info.getMimeType().equals("application/octet-stream") || info.getMimeType().equals("blog-post"))
+
+		if(resource.getType().equalsIgnoreCase("text"))
 		{
-		    resource.setMachineDescription(info.getTextContent());
+		    FileInfo info = new FileInspector().inspect(FileInspector.openStream(resource.getUrl()), "unknown");
 
-		    rpm.processWebsite(resource);
-		    resource.setOnlineStatus(OnlineStatus.ONLINE);
-		    if(resource.getSource() == null)
-			resource.setSource("Internet");
+		    if(info.getMimeType().equals("text/html") || info.getMimeType().equals("text/plain") || info.getMimeType().equals("application/xhtml+xml") || info.getMimeType().equals("application/octet-stream") || info.getMimeType().equals("blog-post"))
+		    {
+			resource.setMachineDescription(info.getTextContent());
 
-		    resource.save();
+			rpm.processWebsite(resource);
+			resource.setOnlineStatus(OnlineStatus.ONLINE);
+			if(resource.getSource() == null)
+			    resource.setSource("Internet");
 
+			resource.save();
+
+		    }
+		    else if(info.getMimeType().equals("application/pdf"))
+		    {
+			System.out.println("process " + info.getMimeType());
+			resource.setMachineDescription(info.getTextContent());
+
+			rpm.processFile(resource, FileInspector.openStream(resource.getUrl()), info);
+			resource.save();
+		    }
+		    else if(info.getMimeType().startsWith("image/"))
+		    {
+			rpm.processImage(resource, FileInspector.openStream(resource.getUrl()));
+			resource.setFormat(info.getMimeType());
+			resource.setType("Image");
+			resource.save();
+		    }
+		    else
+		    {
+			log.error("Can't create thumbnail for mimetype: " + info.getMimeType());
+			return;
+		    }
 		}
-		else if(info.getMimeType().equals("application/pdf"))
+		else if(resource.getStorageType() == Resource.WEB_RESOURCE && resource.getMaxImageUrl() != null && resource.getMaxImageUrl().length() > 4)
 		{
-		    System.out.println("process " + info.getMimeType());
-		    resource.setMachineDescription(info.getTextContent());
-
-		    rpm.processFile(resource, FileInspector.openStream(resource.getUrl()), info);
-		    resource.save();
-		}
-		else if(info.getMimeType().startsWith("image/"))
-		{
-		    rpm.processImage(resource, FileInspector.openStream(resource.getUrl()));
-		    resource.setFormat(info.getMimeType());
-		    resource.setType("Image");
+		    log.debug("Create Thumbnails from: " + resource.getMaxImageUrl());
+		    rpm.processImage(resource, FileInspector.openStream(resource.getMaxImageUrl()));
 		    resource.save();
 		}
 		else
-		    log.error("Can't create thumbnail for mimetype: " + info.getMimeType());
-
+		{
+		    log.error("Can't create thumbnail. Don't know how to handle resource " + resource.getId());
+		    return;
+		}
 		log.debug("Create thumbnail for resource " + resource.getId() + "; Done");
 	    }
 	    catch(Exception e)

@@ -893,6 +893,9 @@ public class ResourceManager
 		currentResult.setEmbeddedRaw(searchResult.getEmbeddedSize3());
 	}
 
+	ThumbnailEntity biggestThumbnail = null;
+	int biggestThumbnailHeight = 0;
+
 	List<ThumbnailEntity> thumbnails = searchResult.getThumbnailEntities();
 
 	for(ThumbnailEntity thumbnailElement : thumbnails)
@@ -902,6 +905,11 @@ public class ResourceManager
 	    int height = thumbnailElement.getHeight();
 	    int width = thumbnailElement.getWidth();
 
+	    if(height > biggestThumbnailHeight)
+	    {
+		biggestThumbnailHeight = height;
+		biggestThumbnail = thumbnailElement;
+	    }
 	    // ipernity api doesn't return largest available thumbnail, so we have to guess it
 	    if(searchResult.getService().equals("Ipernity") && url.contains(".560."))
 	    {
@@ -934,6 +942,10 @@ public class ResourceManager
 		currentResult.setThumbnail4(thumbnail);
 	    }
 	}
+
+	if(biggestThumbnail != null)
+	    currentResult.setMaxImageUrl(biggestThumbnail.getUrl());
+
 	return currentResult;
     }
 

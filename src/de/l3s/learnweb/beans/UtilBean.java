@@ -36,30 +36,10 @@ public class UtilBean implements Serializable
     }
 
     @Deprecated
-    public boolean isExplorePage()
-    {
-	String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-	if(viewId.contains("explore.xhtml"))
-	    return true;
-	else
-	    return false;
-    }
-
-    @Deprecated
     public boolean isViewResultSetPage()
     {
 	String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
 	if(viewId.contains("view_resultset.xhtml"))
-	    return true;
-	else
-	    return false;
-    }
-
-    @Deprecated
-    public boolean isTedTranscriptPage()
-    {
-	String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-	if(viewId.contains("ted_transcript.xhtml"))
 	    return true;
 	else
 	    return false;

@@ -2,26 +2,30 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<ui:composition template="/lw/templates/main.xhtml">
+<ui:composition template="/lw/templates/new_main_t.xhtml">
 
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.tagsTitle}" />
 
-	<ui:define name="body">
+	<ui:define name="center_layout">
 		<p:panel header="#{msg.tagsTitle}">
-			<ul style="padding-right: 40px">
+			
 				<ui:repeat var="tag" value="#{userBean.user.tags}">
-					<li>
-						<h4><h:outputText value="#{tag.name}" /></h4>
-						<p:dataList var="res" value="#{tag.resources}">
-							<h:outputLink value="resource.jsf">
-								<f:param name="resource_id" value="#{res.id}" />
-								<h:outputText value="#{res.title}" escape="false" /> 
-							</h:outputLink>
-						</p:dataList>
-					</li>
+					
+						<h3 style="font-size: 1.3rem"><h:outputText value="#{tag.name}" /></h3>
+						<ul>
+							<ui:repeat var="res" value="#{tag.resources}">
+							<li>
+								<h:outputLink value="resource.jsf">
+									<f:param name="resource_id" value="#{res.id}" />
+									<h:outputText value="#{res.title}" escape="false" /> 
+								</h:outputLink>
+							</li>
+							</ui:repeat>
+						</ul>
+					
 				</ui:repeat>
-			</ul>
+			
 		</p:panel>
 
 

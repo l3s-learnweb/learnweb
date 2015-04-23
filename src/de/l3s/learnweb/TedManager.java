@@ -234,7 +234,7 @@ public class TedManager
     {
 	Resource resource = new Resource();
 
-	if(learnwebResourceId != 0) // the video is alreay stored and will be updated
+	if(learnwebResourceId != 0) // the video is already stored and will be updated
 	    resource = learnweb.getResourceManager().getResource(learnwebResourceId);
 
 	resource.setTitle(rs.getString("title"));

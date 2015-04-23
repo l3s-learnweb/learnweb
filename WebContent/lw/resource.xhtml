@@ -91,7 +91,7 @@
 								paginatorPosition="bottom" paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
 								<p:column>
-									<p:dialog header="#{msg.edit}" modal="true" minWidth="440" widgetVar="comment_edit_#{comment.id}">
+									<p:dialog header="#{msg.edit}" minWidth="440" widgetVar="comment_edit_#{comment.id}" modal="false">
 
 										<p:inputTextarea autoResize="1" maxHeight="20" value="#{comment.text}" style="width:400px;"></p:inputTextarea>
 										<p:commandButton actionListener="#{resourceBean.onEditComment(comment)}" update="@form :message" title="#{msg.save}" value="#{msg.save}"
