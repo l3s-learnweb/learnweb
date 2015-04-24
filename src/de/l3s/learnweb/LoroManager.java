@@ -223,7 +223,7 @@ public class LoroManager
 
 	    getLoroResource.executeQuery();
 	    ResultSet rs = getLoroResource.getResultSet();
-
+	    String rs1Result = rs1.toString();
 	    int resourceId = 0;
 	    //Variable to keep track for resourceId of a particular file belonging to type "text" and under same loro_resource_id group
 	    boolean textTest = true;
@@ -296,21 +296,55 @@ public class LoroManager
 			    }
 		    } //Preview images for video can be generated even when there is no preview image available
 		      // else if((!rs.getString("preview_img_url").contains("No-Preview") && !rs.getString("preview_img_url").contains("RestrictedAccess")) || (rs.getString("doc_format").contains("image") && !rs.getString("preview_img_url").contains("RestrictedAccess")))
+
 		    else if(!rs.getString("preview_img_url").contains("RestrictedAccess"))
 		    {
+			checkConnection(DBConnection);
 			if(!rs.getString("preview_img_url").contains("No-Preview") || rs.getString("doc_format").contains("image"))
 			{
-			    try
+			    if((!rs.getString("preview_img_url").endsWith(".jpg") || !rs.getString("preview_img_url").endsWith(".png")) && !rs.getString("doc_format").contains("image"))
 			    {
-				rpm.processImage(loroResource, FileInspector.openStream(loroResource.getMaxImageUrl())); // For all other resources of type != video
+				try
+				{
+				    rpm.processWebsite(loroResource); //For websites where preview image is not available
+				}
+				catch(Exception e)
+				{
+				    String loroUrl = "http://loro.open.ac.uk/" + rs.getInt("loro_resource_id") + "/";
+				    if(checkForError(loroResource, loroUrl))
+				    {
+					resourceManager.deleteResourcePermanent(loroResource.getId());
+					PreparedStatement delete = DBConnection.prepareStatement("DELETE FROM `loro_resource_docs` WHERE `resource_id` = ? and title = ?");
+					delete.setInt(1, loroResource.getId());
+					delete.setString(2, rs.getString("title"));
+					delete.executeUpdate();
+					delete.close();
+				    }
+				    else
+					writer.println(loroUrl);
+				}
 			    }
-			    catch(Exception e)
+			    else
 			    {
-				if(checkForError(loroResource, rs.getString("doc_url")))
-				    resourceManager.deleteResourcePermanent(loroResource.getId());
-				else
-				    writer.println(rs.getString("doc_url"));
+				try
+				{
+				    rpm.processImage(loroResource, FileInspector.openStream(loroResource.getMaxImageUrl())); // For all other resources of type != video
+				}
+				catch(Exception e)
+				{
+				    if(checkForError(loroResource, rs.getString("doc_url")))
+				    {
+					resourceManager.deleteResourcePermanent(loroResource.getId());
+					PreparedStatement delete = DBConnection.prepareStatement("DELETE FROM `loro_resource_docs` WHERE `resource_id` = ? and title = ?");
+					delete.setInt(1, loroResource.getId());
+					delete.setString(2, rs.getString("title"));
+					delete.executeUpdate();
+					delete.close();
+				    }
+				    else
+					writer.println(rs.getString("doc_url"));
 
+				}
 			    }
 			}
 			else
@@ -324,7 +358,14 @@ public class LoroManager
 			    {
 				String loroUrl = "http://loro.open.ac.uk/" + rs.getInt("loro_resource_id") + "/";
 				if(checkForError(loroResource, loroUrl))
+				{
 				    resourceManager.deleteResourcePermanent(loroResource.getId());
+				    PreparedStatement delete = DBConnection.prepareStatement("DELETE FROM `loro_resource_docs` WHERE `resource_id` = ? and title = ?");
+				    delete.setInt(1, loroResource.getId());
+				    delete.setString(2, rs.getString("title"));
+				    delete.executeUpdate();
+				    delete.close();
+				}
 				else
 				    writer.println(loroUrl);
 			    }
@@ -404,6 +445,7 @@ public class LoroManager
 	lm.saveLoroResource();
 	writer.close();
 	DBConnection.close();
+	System.exit(0);
     }
 
 }
