@@ -71,7 +71,7 @@ public class StringHelper
     /**
      * Translates a string into application/x-www-form-urlencoded format using a specific encoding scheme. <br/>
      * This method uses UTF-8. <br/>
-     * It's just a confinience method to get rid of the UnsupportedEncodingException.
+     * It's just a convenience method to get rid of the UnsupportedEncodingException.
      * 
      * @param str
      * @return

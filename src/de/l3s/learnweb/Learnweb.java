@@ -101,23 +101,17 @@ public class Learnweb
 
 	    String propteriesFileName = "learnweb";
 
-	    // if you need to override values in learnweb.properties file for local testing, do it in a separate properties file an add it here:
+	    // if you need to override values in learnweb.properties file for local testing, do it in a separate properties file and add it here:
 	    if((new File("C:\\programmieren\\philipp.txt")).exists())
 		propteriesFileName = "lw_local_philipp";
 	    else if((new File("C:\\programmieren\\philipp_uni.txt")).exists())
 		propteriesFileName = "lw_local_philipp_uni";
 	    else if((new File("C:\\Users\\Michaela")).exists())
 		propteriesFileName = "lw_local_michaela";
-	    else if((new File("C:\\Users\\singh")).exists())
-		propteriesFileName = "lw_local_jaspreet";
 	    else if((new File("/home/fernando/trevor.txt").exists()))
 		propteriesFileName = "lw_local_trevor";
 	    else if((new File("C:\\Users\\TF").exists()))
 		propteriesFileName = "lw_local_trevor_win";
-	    else if((new File("C:\\Users\\Linda").exists()))
-		propteriesFileName = "lw_windows_lisiyu";
-	    else if((new File("/home/linda").exists()))
-		propteriesFileName = "lw_ubuntu_lisiyu";
 	    else if((new File("/home/kalyani").exists()))
 		propteriesFileName = "lw_local_rishita";
 	    else if((new File("C:\\Users\\morais").exists()))
@@ -132,6 +126,8 @@ public class Learnweb
 
 	Class.forName("com.mysql.jdbc.Driver");
 	connect();
+
+	/*
 	try
 	{
 	    querySuggestionDBConnect();//different db connection needed to get suggestions from google DB
@@ -140,6 +136,7 @@ public class Learnweb
 	{
 	    System.err.println("Failed to connect to querySuggestionDB");
 	} // this connection is not mandatory and shouldn't prevent learnweb from starting
+	*/
 
 	interweb = new InterWeb(properties.getProperty("INTERWEBJ_API_URL"), properties.getProperty("INTERWEBJ_API_KEY"), properties.getProperty("INTERWEBJ_API_SECRET"));
 
@@ -159,12 +156,22 @@ public class Learnweb
 	archiveUrlManager = new ArchiveUrlManager(this);
 	loroManager = new LoroManager(this);
 	jobScheduler = new JobScheduler(this);
-	jobScheduler.startAllJobs();
+
+	/*
 	PreparedStatement pstmt = dbConnection.prepareStatement("select * from lw_admin_message");
 	ResultSet rs = pstmt.executeQuery();
 	if(rs.next())
 	    adminMessage = rs.getString(1);
 	pstmt.close();
+	*/
+    }
+
+    /**
+     * initialize stuff which are only required in server mode
+     */
+    public void initLearnwebServer()
+    {
+	jobScheduler.startAllJobs();
     }
 
     public FileManager getFileManager()

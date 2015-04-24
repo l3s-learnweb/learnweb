@@ -31,13 +31,16 @@ public class UserBean implements Serializable
     private final static Logger log = Logger.getLogger(UserBean.class);
 
     private int userId = 0;
-    private User userCache = null; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
-    private long userCacheTime = 0L; // the user instance is cached for 100ms
+    private transient User userCache = null; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
+    private long userCacheTime = 0L; // stores when the userCache was refreshed the last time
 
     private Locale locale;
     private HashMap<String, String> preferences; // user preferences like search mode
 
-    private Course activeCourse;
+    private int activeCourseId = 0;
+    private transient Course activeCourseCache = null;
+    private long activeCourseCacheTime = 0L;
+
     private List<Group> newGroups = null;
 
     public UserBean()
@@ -71,8 +74,9 @@ public class UserBean implements Serializable
 	if(userId == 0)
 	    return null;
 
-	if(userCache == null || userCacheTime + 100L < System.currentTimeMillis())
+	if(userCache == null || userCacheTime + 60000L < System.currentTimeMillis())
 	{
+	    log.debug("Load user: " + userId);
 	    try
 	    {
 		userCache = UtilBean.getLearnwebBean().getLearnweb().getUserManager().getUser(userId);
@@ -80,12 +84,10 @@ public class UserBean implements Serializable
 	    }
 	    catch(SQLException e)
 	    {
-		e.printStackTrace();
-		return null;
+		log.fatal("Can't retrieve user", e);
 	    }
 	}
 	return userCache;
-	//return user;
     }
 
     /**
@@ -95,7 +97,6 @@ public class UserBean implements Serializable
      */
     public void setUser(User user)
     {
-
 	// store the user also in the session so that it is accessible in the download servlet
 	HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 	session.setAttribute("learnweb_user", user);
@@ -105,9 +106,13 @@ public class UserBean implements Serializable
 	    try
 	    {
 		if(user.getId() == 2969) // paviamod set to dentists2015
-		    activeCourse = Learnweb.getInstance().getCourseManager().getCourseById(884);
+		    activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(884);
 		else
-		    activeCourse = user.getCourses().get(0);
+		{
+		    getPreference("active_course");
+		    activeCourseCache = user.getCourses().get(0);
+
+		}
 	    }
 	    catch(SQLException e)
 	    {
@@ -123,6 +128,8 @@ public class UserBean implements Serializable
 	    newGroups = null;
 	    userId = 0;
 	    userCache = null;
+	    activeCourseId = 0;
+	    activeCourseCache = null;
 	    onDestroy();
 	}
 
@@ -143,13 +150,11 @@ public class UserBean implements Serializable
 
     public String getPreference(String key)
     {
-	//System.out.println("get " + key + " a: " + preferences.get(key));
 	return preferences.get(key);
     }
 
     public void setPreference(String key, String value)
     {
-	//System.out.println("set " + key + " a: " + value);
 	preferences.put(key, value);
     }
 
@@ -237,12 +242,22 @@ public class UserBean implements Serializable
 
     public Course getActiveCourse()
     {
-	return activeCourse;
+	if(activeCourseCacheTime + 60000 < System.currentTimeMillis() || activeCourseCache == null)
+	{
+	    log.debug("Load course for user: " + userCache.getUsername());
+	    this.activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(activeCourseId);
+	    this.activeCourseCacheTime = System.currentTimeMillis();
+	}
+	return activeCourseCache;
     }
 
     public void setActiveCourse(Course activeCourse)
     {
-	this.activeCourse = activeCourse;
+	this.activeCourseCache = activeCourse;
+	this.activeCourseId = activeCourse.getId();
+	this.activeCourseCacheTime = System.currentTimeMillis();
+
+	setPreference("active_course", Integer.toString(activeCourseId));
     }
 
     /**
@@ -255,7 +270,7 @@ public class UserBean implements Serializable
     {
 	if(null == newGroups)
 	{
-	    newGroups = Learnweb.getInstance().getGroupManager().getGroupsByCourseId(activeCourse.getId(), getUser().getLastLoginDate());
+	    newGroups = Learnweb.getInstance().getGroupManager().getGroupsByCourseId(activeCourseId, getUser().getLastLoginDate());
 	}
 
 	return newGroups;
@@ -277,10 +292,10 @@ public class UserBean implements Serializable
 
     public boolean isSearchHistoryEnabled()
     {
-	if(activeCourse == null)
+	if(!isLoggedIn())
 	    return false;
 
-	return activeCourse.getOption(Course.Option.Search_History_log_enabled);
+	return getActiveCourse().getOption(Course.Option.Search_History_log_enabled);
     }
 
     @Override

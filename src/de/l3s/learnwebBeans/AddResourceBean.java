@@ -2,8 +2,6 @@ package de.l3s.learnwebBeans;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -13,7 +11,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.AjaxBehaviorEvent;
-import javax.faces.validator.ValidatorException;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.log4j.Logger;
@@ -29,8 +26,6 @@ import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.ResourcePreviewMaker;
-import de.l3s.learnweb.URLExtractor;
-import de.l3s.learnweb.URLInfo;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.solrClient.FileInspector;
@@ -83,48 +78,48 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_url"));
     
     }
-    */
+    
     public void handleUrlChange(AjaxBehaviorEvent event) throws IOException
     {
-	System.out.println("handleUrlChange");
-	System.out.println(resource.getUrl());
+    System.out.println("handleUrlChange");
+    System.out.println(resource.getUrl());
 
-	if(!resource.getUrl().startsWith("http"))
-	    resource.setUrl("http://" + resource.getUrl());
+    if(!resource.getUrl().startsWith("http"))
+        resource.setUrl("http://" + resource.getUrl());
 
-	try
-	{
-	    new URL(resource.getUrl());
+    try
+    {
+        new URL(resource.getUrl());
 
-	}
-	catch(MalformedURLException e)
-	{
-	    throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_url"));
-	}
-
-	URL url = new URL(resource.getUrl());
-	URLExtractor ue = new URLExtractor();
-	URLInfo urlinfo = ue.extract(url);
-	resource.setTitle(urlinfo.getTitle());
-	resource.setDescription(urlinfo.getDescription());
-	ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
-	URL img = new URL(urlinfo.getImage());
-	try
-	{
-	    rpm.processImage(resource, img.openStream());
-	}
-	catch(SQLException e)
-	{
-	    resource.setEmbeddedSize1Raw("<img src=\"" + urlinfo.getImage() + "\" width=\"100\" height=\"100\" />");
-	    e.printStackTrace();
-	}
-
-	System.out.println(resource.getTitle());
-	System.out.println(resource.getEmbeddedSize1());
-	System.out.println(resource.getDescription());
-	resource.prepareEmbeddedCodes();
+    }
+    catch(MalformedURLException e)
+    {
+        throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_url"));
     }
 
+    URL url = new URL(resource.getUrl());
+    URLExtractor ue = new URLExtractor();
+    URLInfo urlinfo = ue.extract(url);
+    resource.setTitle(urlinfo.getTitle());
+    resource.setDescription(urlinfo.getDescription());
+    ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
+    URL img = new URL(urlinfo.getImage());
+    try
+    {
+        rpm.processImage(resource, img.openStream());
+    }
+    catch(SQLException e)
+    {
+        resource.setEmbeddedSize1Raw("<img src=\"" + urlinfo.getImage() + "\" width=\"100\" height=\"100\" />");
+        e.printStackTrace();
+    }
+
+    System.out.println(resource.getTitle());
+    System.out.println(resource.getEmbeddedSize1());
+    System.out.println(resource.getDescription());
+    resource.prepareEmbeddedCodes();
+    }
+    */
     public void clearForm()
     {
 	resource = new Resource();

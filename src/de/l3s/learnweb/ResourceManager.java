@@ -954,9 +954,15 @@ public class ResourceManager
 	//createThumbnailsForTEDVideos();
 	createThumbnailsForWebResources();
 
+	//Learnweb.getInstance().getResourcePreviewMaker().processImage(new Resource(), FileInspector.openStream("http://www.educaplay.com/es/recursoseducativos/1460084/mi_barrio.htm")); // For all other resources of type != video
+	/*
+		Resource video = new Resource();
+		video.setUrl("http://loro.open.ac.uk/2130/1/Teaser_Trailer_1.mp4");
+		Learnweb.getInstance().getResourcePreviewMaker().processVideo(video);
+	*/
 	System.out.println("done");
 
-	Learnweb.getInstance().onDestroy();
+	//Learnweb.getInstance().onDestroy();
     }
 
     public static void createThumbnailsForWebResources() throws Exception
@@ -970,7 +976,7 @@ public class ResourceManager
 		.getResources(
 			"SELECT "
 				+ RESOURCE_COLUMNS
-				+ " FROM `lw_resource` r where  `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and r.`resource_id` > 20000 and type !='pdf' and source != 'SlideShare' and thumbnail2_file_id=0 and online_status = 'unknown' ORDER BY `resource_id` DESC limit 100",
+				+ " FROM `lw_resource` r where  `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`resource_id` > 20000 and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown' ORDER BY `resource_id` DESC limit 20",
 			null);
 
 	ResourcePreviewMaker rpm = lw.getResourcePreviewMaker();

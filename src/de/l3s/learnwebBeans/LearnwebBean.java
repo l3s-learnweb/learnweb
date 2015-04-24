@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 
+import javax.annotation.PostConstruct;
 import javax.annotation.PreDestroy;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
@@ -43,6 +44,13 @@ public class LearnwebBean implements Serializable
 
 	learnweb = Learnweb.getInstance();
 	learnweb.setContextUrl(contextUrl);
+    }
+
+    @PostConstruct
+    public void init()
+    {
+	// initialize stuff which is not required by console tasks
+	learnweb.initLearnwebServer();
     }
 
     /**
@@ -144,8 +152,8 @@ public class LearnwebBean implements Serializable
      * @param args
      * @return
      */
-    public String getLocaleMessage(String msgKey)
+    public String getLocaleMessage(String msgKey, Object... args)
     {
-	return UtilBean.getLocaleMessage(msgKey);
+	return UtilBean.getLocaleMessage(msgKey, args);
     }
 }

@@ -631,4 +631,10 @@ public class User implements Comparable<User>, Serializable, HasId
 	}
 	return lastLoginDate;
     }
+
+    @Override
+    public String toString()
+    {
+	return "userId: " + getId() + " name: " + getUsername();
+    }
 }

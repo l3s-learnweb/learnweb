@@ -24,6 +24,7 @@ import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.User;
+import de.l3s.learnwebBeans.AddResourceBean;
 import de.l3s.learnwebBeans.ApplicationBean;
 import de.l3s.searchlogclient.Actions.ACTION;
 import de.l3s.searchlogclient.jaxb.CommentonSearch;
@@ -310,9 +311,14 @@ public class ResultSetBean extends ApplicationBean
 	try
 	{
 	    Resource newResource;
+	    boolean createNewResource = false;
 
 	    if(selectedResource.getId() == -1) // resource is not yet stored at fedora
+	    {
 		newResource = selectedResource;
+		createNewResource = true;
+
+	    }
 	    else
 		// create a copy 
 		newResource = selectedResource.clone();
@@ -326,6 +332,9 @@ public class ResultSetBean extends ApplicationBean
 		getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(newResource, getUser());
 		user.setActiveGroup(selectedResourceTargetGroupId);
 	    }
+
+	    if(createNewResource)
+		new AddResourceBean.CreateThumbnailThread(newResource).start();
 
 	    int tempresourceId = searchLogClient.getResourceIdByUrl(newResource.getUrl());
 	    searchLogClient.saveResourceLog(user.getId(), date, ACTION.resource_saved, newResource.getUrl(), tempresourceId, newResource.getTitle(), newResource.getSource());

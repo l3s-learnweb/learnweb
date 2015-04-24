@@ -20,11 +20,8 @@ import de.l3s.learnweb.beans.UtilBean;
 @RequestScoped
 public class MenuBean extends ApplicationBean implements Serializable
 {
-    /**
-	 * 
-	 */
     private static final long serialVersionUID = -7904027575208377375L;
-    //private MenuModel model;
+
     private Course selectCourse;
 
     private List<Course> courses;
@@ -54,11 +51,6 @@ public class MenuBean extends ApplicationBean implements Serializable
     public List<Course> getCourses()
     {
 	return courses;
-    }
-
-    public void setCourses(List<Course> courses)
-    {
-	this.courses = courses;
     }
 
     public Course getSelectCourse()
@@ -91,8 +83,6 @@ public class MenuBean extends ApplicationBean implements Serializable
 	//children = new ArrayList<Group>();
 	//addedToMenu = new ArrayList<Group>();
 
-	int courseCount = courses.size();
-
 	String viewId = getFacesContext().getViewRoot().getViewId();
 
 	Integer groupId = getParameterInt("group_id");
@@ -120,16 +110,16 @@ public class MenuBean extends ApplicationBean implements Serializable
 		}
 
 		DefaultMenuItem item = new DefaultMenuItem();
-		item.setValue(getLocaleMessage("resources"));
-		item.setUrl("./group/resources.jsf?group_id=" + group.getId());
-		if(isActiveGroup && viewId.endsWith("resources.xhtml"))
+		item.setValue(getLocaleMessage("overview"));
+		item.setUrl("./group/overview.jsf?group_id=" + group.getId());
+		if(isActiveGroup && viewId.endsWith("overview.xhtml"))
 		    item.setStyleClass("active");
 		submenu.addElement(item);
 
 		item = new DefaultMenuItem();
-		item.setValue(getLocaleMessage("overview"));
-		item.setUrl("./group/overview.jsf?group_id=" + group.getId());
-		if(isActiveGroup && viewId.endsWith("overview.xhtml"))
+		item.setValue(getLocaleMessage("resources"));
+		item.setUrl("./group/resources.jsf?group_id=" + group.getId());
+		if(isActiveGroup && viewId.endsWith("resources.xhtml"))
 		    item.setStyleClass("active");
 		submenu.addElement(item);
 
