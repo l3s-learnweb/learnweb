@@ -15,6 +15,8 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
+import org.apache.log4j.Logger;
+
 import com.mysql.jdbc.Statement;
 
 import de.l3s.learnweb.Group;
@@ -32,6 +34,7 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
 	 * 
 	 */
     private static final long serialVersionUID = 5990525657898323276L;
+    private final static Logger log = Logger.getLogger(ReEditPresentationBean.class);
     private int groupId;
     private Group group;
     private List<User> members;
@@ -96,24 +99,15 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
 	    }
 	    else
 	    {
-		int id = -1;
-		select = getLearnweb().getConnection().prepareStatement("SELECT `presentation_id` FROM `lw_presentation` WHERE `user_id`=? AND `group_id`=? AND `presentation_name`=?");
-		select.setInt(1, getUser().getId());
-		select.setInt(2, getGroupId());
-		select.setString(3, getPresentationName());
-		ResultSet rs = select.executeQuery();
-		while(rs.next())
+		if(prevId > 0)
 		{
-		    id = rs.getInt(1);
-		}
-		if(id != -1)
-		{
-		    update = getLearnweb().getConnection().prepareStatement("UPDATE `lw_presentation` SET `code`=? WHERE `presentation_id`=? AND `group_id`=?");
+		    update = getLearnweb().getConnection().prepareStatement("UPDATE `lw_presentation` SET `code`=?,`presentation_name`=? WHERE `presentation_id`=? AND `group_id`=?");
 		    update.setString(1, getCode());
-		    update.setInt(2, id);
-		    update.setInt(3, getGroupId());
+		    update.setString(2, getPresentationName());
+		    update.setInt(3, presentationId);
+		    update.setInt(4, getGroupId());
 		    update.execute();
-		    prevId = id;
+		    prevId = presentationId;
 		    prevTitle = getPresentationName();
 		}
 		else
@@ -262,7 +256,7 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
     public String present()
     {
 	setCode(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("code_temp"));
-	return "presentation?faces-redirect=true";
+	return "presentation_reedit?faces-redirect=true";
     }
 
     public List<User> getMembers()

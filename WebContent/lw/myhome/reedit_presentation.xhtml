@@ -17,11 +17,11 @@
             <title>Edit Presentation</title>
 			
             <link type="text/css" rel="stylesheet" href="../../resources/css/default.css" />
-            <link type="text/css" rel="stylesheet" href="../../resources/css/syntaxhighlighter.css" />
+            <!-- <link type="text/css" rel="stylesheet" href="../../resources/css/syntaxhighlighter.css" /> -->
             
             <link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />
 	    	<link href="../../resources/css/impress_edit_presentation.css" rel="stylesheet" />
-
+			<h:outputScript library="myhome-edit-presentation" name="edit_presentation.js"/>
             <style type="text/css">
                 .ui-layout-north {
                     z-index:20 !important;
@@ -58,22 +58,25 @@
 						        	<p:graphicImage style="vertical-align: middle" value="/resources/icon/help.png" width="20" height="20"></p:graphicImage>
 						        </p:commandLink>
 						        <p:remoteCommand name="save" actionListener="#{reEditPresentationBean.addPresentation}" />
-						        <p:remoteCommand name="present" actionListener="#{reEditPresentationBean.present}" />
+						        <p:remoteCommand name="present" actionListener="#{reEditPresentationBean.present}"/>
+						        
 						        <p:dialog style="text-align: center" id="saveDlg" header="Save Presentation" widgetVar="saveDlg" modal="true" appendTo="@(body)" closable="false" width="400">  
 										File Name : <p:inputText value="" id="presentationName" size="50" required="true" widgetVar="presentationName"></p:inputText><br/><br/>
 										<p:commandButton id="saveButton" style="margin-right: 10px" update=":grwl:growl" type="submit" value="Save" oncomplete="doneSaving()" onclick="save_presentation()" actionListener="#{reEditPresentationBean.growl}"></p:commandButton>
 										<p:commandButton style="margin-left: 10px" type="button" value="Cancel" onclick="PF('saveDlg').hide()"></p:commandButton>
 										<p:blockUI block="saveDlg" trigger="saveButton" />
 							  	</p:dialog>
-							  	<p:dialog style="text-align: center; z-index: 10000" id="presentDialog" header="Presentation" widgetVar="presentDialog" modal="false" appendTo="@(body)" closable="false">  
-										Want to save your changes to <span id="presName" style="font-weight: bold"></span>?<br/><br/>
-										<p:commandButton id="but1" style="margin-right: 5px" type="button" value="Save" onclick="save_pres()" ></p:commandButton>
-										<p:commandButton style="margin-left: 5px; margin-right: 5px" type="submit" ajax="false" value="Don't Save" onclick="dontSave(this)" action="#{reEditPresentationBean.present}"></p:commandButton>
-										<p:commandButton style="margin-left: 5px" type="button" value="Cancel" onclick="PF('presentDialog').hide()"></p:commandButton>
-							  	</p:dialog>
 						  	</p:toolbarGroup>
 						  </p:toolbar> 
 					 </h:form> 
+					 <p:dialog style="text-align: center; z-index: 10000" id="presentDialog" header="#{msg.presentations}" widgetVar="presentDialog" modal="false" appendTo="@(body)" closable="false">  
+							<h:form id="present_dialog_form">
+								Want to save your changes to <span id="presName" style="font-weight: bold"></span>?<br/><br/>
+								<p:commandButton id="but1" style="margin-right: 5px" type="button" value="#{msg.save}" onclick="save_pres()" ></p:commandButton>
+								<p:commandButton style="margin-left: 5px; margin-right: 5px" type="submit" ajax="false" value="Don't Save" onclick="dontSave(this)" action="#{reEditPresentationBean.present}"></p:commandButton>
+								<p:commandButton style="margin-left: 5px" type="button" value="#{msg.cancel}" onclick="PF('presentDialog').hide()"></p:commandButton>
+							</h:form>
+					 </p:dialog>						 
 					 <p:dialog modal="true" resizable="false" width="590" header="Help" visible="true" appendTo="@(body)" widgetVar="help_dialog">
 					 	<div style="font-weight: bold; line-height: 1.5em; font-size: 14px">Welcome to LearnWeb Presentation Editor!</div>
 					 	<div style="margin-bottom: 5px; line-height: 1.5em; font-size: 14px">
@@ -178,12 +181,12 @@
                 	{
                 		var code = generate_content();
                 		prev_code=code;
-                		var name = $('#presentationName').val();
+                		var name = $('#toolbar\\:presentationName').val();
                 		save([{name:"code",value:code}, {name:"presentationName",value:name}]);
                 	}
                 	
                 	function display_presentation(me)
-                	{
+                	{	
                 		var code = generate_content();
                 		if(prev_code != code)
                 		{
@@ -197,10 +200,10 @@
                 		}
                 		flag=0;
                 		present([{name:"code_temp",value:code}]);
-                		me.form.target='presentation';
+                		me.form.target='presentation_reedit';
                 		dont_save=0;
                 	}
-                	
+
                 	function saveDialog()
                 	{
                 		PF('saveDlg').show();
@@ -456,13 +459,7 @@
 				</p:dialog>
 			</ui:repeat>
 			<script type="text/javascript">
-			function update(desc,editor,dialog)
-			{		
-				$(desc).html(PF(editor).jqInput[0].value);
-				
-				PF(dialog).hide();
-				return false;
-			}
+
 			function cancel(desc,editor,dialog)
 			{
 				
@@ -473,13 +470,6 @@
 				ed.jqInput[0].innerHTML=$(desc).html();
 				ed.jqInput[0].textContent=$(desc).html();
 				ed.jqInput[0].value=$(desc).html();
-				PF(dialog).hide();
-				return false;
-			}
-			function update_title(desc,editor,dialog,id)
-			{
-				$(desc).html(PF(editor).jqInput[0].value);
-				$(".slide_title",$("#"+id).parent().parent()).html(PF(editor).jqInput[0].value);
 				PF(dialog).hide();
 				return false;
 			}

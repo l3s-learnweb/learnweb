@@ -194,7 +194,7 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
     public String present()
     {
 	setCode(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("code_temp"));
-	return "presentation?faces-redirect=true";
+	return "presentation_edit?faces-redirect=true";
     }
 
     public List<User> getMembers()

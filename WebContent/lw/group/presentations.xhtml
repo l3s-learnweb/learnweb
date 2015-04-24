@@ -170,7 +170,7 @@
 							    <h:outputText value="#{groupDetailBean.clickedPresentation.presentationTitle}" escape="false" styleClass="align" />
 							</div>
 							<p:commandButton styleClass="presentation_commandbutton" action="#{groupDetailBean.present}" ajax="false" value="#{msg.present}"></p:commandButton>
-							<p:commandButton rendered="false" styleClass="presentation_commandbutton" onclick="PF('format_dialog2').show(); return false" ajax="false" value="#{msg.edit}"></p:commandButton>
+							<p:commandButton styleClass="presentation_commandbutton" onclick="PF('format_dialog2').show(); return false" ajax="false" value="#{msg.edit}"></p:commandButton>
 							<p:commandButton styleClass="presentation_commandbutton" rendered="#{userBean.admin || userBean.moderator || groupDetailBean.clickedPresentation.ownerId == userBean.user.id || groupDetailBean.group.leaderUserId == userBean.user.id}" onclick="PF('confirmation').show(); return false" ajax="false" value="#{msg.delete}"></p:commandButton>
 							<div class="presentation_clear"></div>
 							<div class="presentation_detail_div">
