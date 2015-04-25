@@ -13,6 +13,11 @@
 		<from>/new/(.*)</from>
 		<to type="redirect">/$1</to>
 	</rule>
+	
+	<rule>
+		<from>/p5/(.*)</from>
+		<to type="redirect">/$1</to>
+	</rule>
 
         
     <!-- 
