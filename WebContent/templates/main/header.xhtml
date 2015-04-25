@@ -98,7 +98,7 @@
 									<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true" title="#{msg.logoutLabel}" value="#{msg.logoutLabel}" />
 								</h:form>
 							</li>
-							<ui:fragment rendered="#{userBean.admin || userBean.moderator}">
+							<ui:fragment rendered="#{userBean.admin}">
 								<li class="menupoint">
 									<h:outputText value="#{msg.admin}" />
 								</li>

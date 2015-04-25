@@ -113,6 +113,8 @@ public class UserBean implements Serializable
 		    activeCourseCache = user.getCourses().get(0);
 
 		}
+
+		activeCourseId = activeCourseCache.getId();
 	    }
 	    catch(SQLException e)
 	    {
@@ -244,9 +246,10 @@ public class UserBean implements Serializable
     {
 	if(activeCourseCacheTime + 60000 < System.currentTimeMillis() || activeCourseCache == null)
 	{
-	    log.debug("Load course for user: " + userCache.getUsername());
 	    this.activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(activeCourseId);
 	    this.activeCourseCacheTime = System.currentTimeMillis();
+
+	    log.debug("Load course for user: " + userCache.getUsername() + " - " + activeCourseId + " - " + activeCourseCache);
 	}
 	return activeCourseCache;
     }
