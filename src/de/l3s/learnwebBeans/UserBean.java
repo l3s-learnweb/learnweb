@@ -21,7 +21,6 @@ import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
-import de.l3s.learnweb.beans.UtilBean;
 
 @ManagedBean
 @SessionScoped
@@ -79,7 +78,7 @@ public class UserBean implements Serializable
 	    log.debug("Load user: " + userId);
 	    try
 	    {
-		userCache = UtilBean.getLearnwebBean().getLearnweb().getUserManager().getUser(userId);
+		userCache = Learnweb.getInstance().getUserManager().getUser(userId);
 		userCacheTime = System.currentTimeMillis();
 	    }
 	    catch(SQLException e)

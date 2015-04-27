@@ -616,6 +616,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	if(null == user)
 	    return false;
 
+	if(null == group)
+	    return false;
+
 	return group.isMember(user);
     }
 

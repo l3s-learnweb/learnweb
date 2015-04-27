@@ -817,6 +817,11 @@ public class ResourceManager
 	if(fileId != 0)
 	{
 	    File file = learnweb.getFileManager().getFileById(fileId);
+	    if(null == file)
+	    {
+		log.error("resource " + rs.getInt("resource_id") + ": thumbnail file " + fileId + " size=" + thumbnailSize + " does not exist");
+		return null;
+	    }
 	    url = file.getUrl();
 	}
 	else if(url == null)
