@@ -265,7 +265,7 @@ in allen browsern testen danach löschen
 .userbar a{
 	text-decoration:none;
     display:block;
-}
+ }
 .userbar ul li {
 	border-left:1px solid #FFFFFF;
 	line-height:4.6rem;
@@ -305,10 +305,11 @@ in allen browsern testen danach löschen
 	border-right:0px;
 	border-left:0px;
 	margin:0 0.5rem;
-	padding-left:0.5rem;
 }
 .userbar ul li ul li a:hover{
 	border-radius:5px;
+	margin:0 1rem;
+	padding-left:0.5rem;
 }
 .userbar ul li ul li:first-child{
 	margin-top:1rem;
@@ -327,27 +328,19 @@ in allen browsern testen danach löschen
     border:1px solid #000000;
     border-radius:5px;
    	margin:0 1rem;
-   	padding-left:1rem;
+   	padding:0.5rem;
 }
-#moremyresources{
-	display:none;
+#moremyresources, #moremygroups, #moreprofile, #logout, #login, #activitystream{
+	display:none;}
 }
-#moremygroups{
-	display:none;
+
+}}
 }
-#moreprofile{
-	display:none;
+
 }
 #moreactivitystream{
 	display:block;
 }
-#logout, #login{
-	display:none;
-}
-#activitystream{
-	display:none;
-}
-
 #growl_container {
 	top:80px;
 }
