@@ -13,6 +13,16 @@
 	<ui:define name="center_layout">
 	<style type="text/css">
 		html { height:100%; }
+		h1{
+			font-weight: bold; 
+			font-family: sans-serif;
+			font-size:1.7rem;
+			display:inline-block;
+		}
+		h2{
+			font-size:medium;
+			font-weight:bold;
+		}
 		#content{
 			min-height:100%;
 			margin: 0px auto !important;
@@ -21,13 +31,22 @@
 			background:url(../resources/image/uni.jpg) center no-repeat;
 			background-size:cover;
 		}
+		#text_content{
+			position:relative;
+			max-width:750px; 
+			height:20%; 
+			top:20px; 
+			margin-left:auto; 
+			margin-right:auto;
+			text-align: justify;
+		}
 		.info{
 			min-height:350px;
 			color:white;
 			left:0px;
 			position: absolute;
-			 top: 15%; 
-			height: 44%;
+			top: 15%; 
+			height: 85%;
 			width: 100%;
 			background-color: rgba(0, 0, 0, 0.64);
 			}
@@ -52,14 +71,16 @@
 		.logindiv{
 			background-color: white;
 			border-radius: 12px;
-			border: 1px solid;
 			color: #489a83;
 			height: 80%;
-			color: #489a83;position: absolute;
+			position: absolute;
 			-moz-box-shadow:    inset 0 0 10px #489a83;
 		   	-webkit-box-shadow: inset 0 0 10px #489a83;
 		   	box-shadow:         inset 0 0 10px #489a83;
-			top: 5%; right: 10%;  min-height: 100px; min-width: 200px;
+			top: 5%; 
+			right: 10%;  
+			min-height: 100px; 
+			min-width: 200px;
 		}
 		.inputbox{
 			padding: 4px;
@@ -77,6 +98,13 @@
 			padding: 4px 13px;
 			color: white;
 			cursor: pointer;
+			border-radius:5px;
+			display:inline-block;
+			text-decoration:none; 
+			margin-left:5px;
+		}
+		.greenbutton:hover{
+			background-color:#74beaa;
 		}
 		#login a{
 			font-weight: bold;
@@ -96,20 +124,73 @@
 			left: -5px;
 			border-radius: 0;
 		}
+		.video_guide{
+			background-image:url("http://batteryacid.org/biofilm/images/video-guide.gif");
+			width:190.5px;
+			height:117px;
+			margin-top:-19%;
+			position:relative;
+			left:65%;
+		}
+		.video_link{
+			display:none;
+		}
+		.public_courses{
+		 	display: block;
+    		font-family: sans-serif;
+    		font-size: 1.2rem;
+		}
+		.changelog_date{
+			text-decoration:underline;
+			font-size:1.3rem;
+		}
+		.changelog_description{
+			padding:0 15px;
+		}
+		#loginform{
+			width: 350px;
+			position: relative;
+			height: inherit;
+			top: 5%;
+			padding:0 15px;
+			display: inline-block; 
+			border-right:2px solid #489a83;
+		}
+		#register_form{
+			padding-left:10px; 
+			width: 350px; 
+			padding:0 15px; 
+			border-right:2px solid #489a83;
+		}
+		#dividing_line{
+			width:100%; 
+			color:#489a83; 
+			height:2px; 
+			background-color: #489a83; 
+			border:none; 
+			margin-top:4%;
+		}
+		.forgot{
+			color:white; 
+			font-family: sans-serif;
+		}
+		
 	</style>
 	
 		<div class="info">
-		<div style="position:relative;max-width:550px; height:20%; top:20px; margin-left:auto; margin-right:auto;text-align: justify;">
+		<div id="text_content">
 		
-		<h:outputText value="#{msg.homepageTitle}" style="font-weight: bold; font-family: sans-serif;font-size:1.7rem;display:inline-block; "></h:outputText>
+		<h1>#{msg.homepageTitle}</h1>
+	
+		<br/>
+		<br/>
 		
-		<br></br>	
-		
-		<br></br>
 		<h:outputText value="#{msg.homepage}" style="font-family: sans-serif;font-size:medium; display:block; "></h:outputText>
 		<br />
+		<br/>
+		
 		<div style="display:block;">
-		<h:form rendered="#{!userBean.loggedIn}" id="loginform" style="width: 260px;position: relative; height: inherit;top: 5%;padding-left: 10px;padding-right: 10px;display: inline-block;border-right: 1px solid #489a83;">
+		<h:form rendered="#{!userBean.loggedIn}" id="loginform">
 			<p:focus for="username"/>
 			<h:panelGrid columns="3">
 		
@@ -117,7 +198,6 @@
 				<p:inputText id="username" styleClass="inputbox" value="#{loginBean.username}" ></p:inputText>
 				<p:message showSummary="true" showDetail="false" styleClass="error" for="username" />
 				
-	
 				<h:outputText value="#{msg.password}"></h:outputText>
 				<p:inputText type="password" styleClass="inputbox" id="password" value="#{loginBean.password}" feedback="false"></p:inputText>
 				<p:message showSummary="true" showDetail="false" styleClass="error" for="password" />
@@ -126,40 +206,67 @@
 				<h:commandButton styleClass="greenbutton" action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" />	
 				
 			</h:panelGrid>
-			<br></br>
-			<h:outputLink id="forgot" style="color:white;  font-family: sans-serif;" value="user/password.jsf"><h:outputText value="#{msg.forgotten_password}"/></h:outputLink>
-		</h:form>
-		<h:form rendered="#{!userBean.loggedIn}" style="width: 200px;    margin-left:30px;    display: inline-block;     vertical-align: top;  text-align:left;  ">
-			<div>
-			<h:outputText  value="Sign up for " style="display:inline-block;"></h:outputText>
-			<h:outputLink   styleClass="greenbutton" style="display:inline-block; text-decoration:none; margin-left:5px;" value="user/register.jsf"><h:outputText value="YELL"></h:outputText>
-			<f:param name="wizard" value="yell"></f:param>
-			</h:outputLink>
-		
-			</div>
-		_______________
-			<br/><br/>
-			Or for the public environment
-			<br/><br/>
-			<h:outputLink   styleClass="greenbutton" style="display:inline-block; text-decoration:none; margin-left:5px;" value="user/register.jsf"><h:outputText value="#{msg.registerLabel}"></h:outputText>
-			</h:outputLink>
+			<br/>
+			<h:outputLink id="forgot" class="forgot" value="user/password.jsf"><h:outputText value="#{msg.forgotten_password}"/></h:outputLink>
 		</h:form>
 		<br/>
+		<h:form rendered="#{!userBean.loggedIn}" id="register_form">
+			<br/>
+			For the public environment 
+			<h:outputLink styleClass="greenbutton" value="user/register.jsf"><h:outputText value="#{msg.registerLabel}"></h:outputText>
+			</h:outputLink>
+		</h:form>
+			
+			<p:lightBox>
+			<div class="video_guide">
+	        	<h:outputLink value="#" style="color:white;  font-family: sans-serif;">
+	            	<h:outputText value="Video guide" styleClass="video_link"/>
+	        	</h:outputLink>
+	        	<f:facet name="inline">
+	            	<p:media id="youTubeMedia" value="https://www.youtube.com/v/hWA-YdiHIWw" width="1000" height="563" player="flash" />
+	        	</f:facet>
+	        </div>
+	    	</p:lightBox>
+			
+			<hr id="dividing_line"/>
+			<br/>
+			
+		<h2>public courses</h2>	
 		<br/>
-		<p:lightBox>
-	        <h:outputLink value="#" style="color:white;  font-family: sans-serif;">
-	            <h:outputText value="Video guide"/>
-	        </h:outputLink>
-	        <f:facet name="inline">
-	            <p:media id="youTubeMedia" value="https://www.youtube.com/v/hWA-YdiHIWw" width="1000" height="563" player="flash" />
-	        </f:facet>
-	    </p:lightBox>
-	    
+		<br/>
+		<h:panelGrid columns="3" border="1" cellspacing="0" cellpadding="10" styleClass="public_courses">
+			<h:outputText value="Default"></h:outputText>
+			<h:outputText value="Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum."></h:outputText>
+			<h:outputText value=""></h:outputText>
+			
+			<h:outputText value="YELL"></h:outputText>
+			<h:outputText value="
+	Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.">
+	</h:outputText>
+		<h:form rendered="#{!userBean.loggedIn}">
+			<span>
+				<h:outputText  value="Sign up for " style="display:inline-block;"></h:outputText>
+				<h:outputLink   styleClass="greenbutton" value="user/register.jsf"><h:outputText value="YELL"></h:outputText>
+				<f:param name="wizard" value="yell"></f:param>
+				</h:outputLink>
+			</span>
+		</h:form>
 		
+		</h:panelGrid>
+	
+		<hr id="dividing_line"/>
+		<br/>
+		
+		<h2>Changelog</h2>
+		<br/>
+		<h:panelGrid>
+		<h:outputText value="27.April 2015" styleClass="changelog_date"/>
+		<h:outputText value="new Homepage, new header, more languages" styleClass="changelog_description"></h:outputText>
+		
+		</h:panelGrid>
 		
 		</div>
 			
-		
 		
 		</div>
 		</div>
