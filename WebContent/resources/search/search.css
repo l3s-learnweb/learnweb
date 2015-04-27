@@ -96,7 +96,7 @@
 .list_view .add_resource_link img { vertical-align: top; margin-right:3px; }
 
 .list_view a.resourceWebLink:link, 
-.list_view a.resourceWebLink { color:rgb(88, 147, 236); font-size: 1.6rem; font-weight: bold; }
+.list_view a.resourceWebLink { color:rgb(88, 147, 236); font-size: 1.6rem; font-family: "Segoe UI",Arial,Helvetica,sans-serif; }
 .list_view a.resourceWebLink:visited { color:rgb(60, 110, 200); }
 
 

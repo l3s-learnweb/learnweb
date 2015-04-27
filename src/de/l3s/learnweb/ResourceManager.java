@@ -1007,7 +1007,7 @@ public class ResourceManager
 
 	    if(url.contains("loro") && resource.getMaxImageUrl() != null)
 	    {
-		System.out.println("skipped");
+		System.out.println("skipped LORO");
 		continue;
 	    }
 
@@ -1018,7 +1018,8 @@ public class ResourceManager
 	    {
 		FileInfo info = new FileInspector().inspect(FileInspector.openStream(url), "unknown");
 
-		if(info.getMimeType().equals("text/html") || info.getMimeType().equals("text/plain") || info.getMimeType().equals("application/xhtml+xml") || info.getMimeType().equals("application/octet-stream") || info.getMimeType().equals("blog-post"))
+		if(info.getMimeType().equals("text/html") || info.getMimeType().equals("text/plain") || info.getMimeType().equals("application/xhtml+xml") || info.getMimeType().equals("application/octet-stream") || info.getMimeType().equals("blog-post")
+			|| info.getMimeType().equals("application/x-gzip"))
 		{
 		    resource.setMachineDescription(info.getTextContent());
 		    resource.setUrl(url);

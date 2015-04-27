@@ -450,11 +450,12 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 		log.debug("Create thumbnail for resource " + resource.getId());
 		ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
 
-		if(resource.getType().equalsIgnoreCase("text"))
+		if(resource.getType().equalsIgnoreCase("text") || resource.getType().equalsIgnoreCase("unknown"))
 		{
 		    FileInfo info = new FileInspector().inspect(FileInspector.openStream(resource.getUrl()), "unknown");
 
-		    if(info.getMimeType().equals("text/html") || info.getMimeType().equals("text/plain") || info.getMimeType().equals("application/xhtml+xml") || info.getMimeType().equals("application/octet-stream") || info.getMimeType().equals("blog-post"))
+		    if(info.getMimeType().equals("text/html") || info.getMimeType().equals("text/plain") || info.getMimeType().equals("application/xhtml+xml") || info.getMimeType().equals("application/octet-stream") || info.getMimeType().equals("blog-post")
+			    || info.getMimeType().equals("application/x-gzip"))
 		    {
 			resource.setMachineDescription(info.getTextContent());
 

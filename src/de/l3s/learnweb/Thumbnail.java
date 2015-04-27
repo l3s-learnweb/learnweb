@@ -99,7 +99,7 @@ public class Thumbnail implements Comparable<Thumbnail>, Serializable
      * 
      * @return
      */
-    protected int getFileId()
+    public int getFileId()
     {
 	return fileId;
     }

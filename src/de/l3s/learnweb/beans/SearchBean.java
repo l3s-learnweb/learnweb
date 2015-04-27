@@ -349,14 +349,9 @@ public class SearchBean extends ApplicationBean implements Serializable
 	try
 	{
 	    Resource newResource;
-	    boolean createNewResource = false;
 
-	    if(selectedResource.getId() == -1) // resource is not yet stored at fedora
-	    {
+	    if(selectedResource.getId() == -1) // resource is not yet stored at the database
 		newResource = selectedResource;
-		createNewResource = true;
-
-	    }
 	    else
 		// create a copy 
 		newResource = selectedResource.clone();
@@ -374,7 +369,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 		user.setActiveGroup(selectedResourceTargetGroupId);
 	    }
 
-	    if(createNewResource)
+	    if(newResource.getThumbnail2() == null || newResource.getThumbnail2().getFileId() == 0)
 		new AddResourceBean.CreateThumbnailThread(newResource).start();
 
 	    //Logs when a resource has been saved by the user to LearnWeb
