@@ -51,7 +51,7 @@ public class CourseManager
     {
 	cache.clear();
 
-	// load all organisations into cache
+	// load all courses into cache
 	Statement select = learnweb.getConnection().createStatement();
 	ResultSet rs = select.executeQuery("SELECT " + COLUMNS + ", COUNT(user_id) AS member_count FROM lw_course LEFT JOIN lw_user_course USING(course_id) GROUP BY course_id ORDER BY title");
 	while(rs.next())

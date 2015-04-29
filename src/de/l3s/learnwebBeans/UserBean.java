@@ -104,11 +104,13 @@ public class UserBean implements Serializable
 	{
 	    try
 	    {
-		if(user.getId() == 2969) // paviamod set to dentists2015
+		if(user.getId() == 2969) // paviamod set to dentists2015 // TODO this is only a quick fix
 		    activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(884);
+		else if(user.getId() == 5143) // yell set to yell // TODO this is only a quick fix
+		    activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(505);
 		else
 		{
-		    getPreference("active_course");
+		    //getPreference("active_course");
 		    activeCourseCache = user.getCourses().get(0);
 
 		}
@@ -243,7 +245,7 @@ public class UserBean implements Serializable
 
     public Course getActiveCourse()
     {
-	if(activeCourseCacheTime + 60000 < System.currentTimeMillis() || activeCourseCache == null)
+	if(activeCourseCacheTime + 6000000 < System.currentTimeMillis() || activeCourseCache == null)
 	{
 	    this.activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(activeCourseId);
 	    this.activeCourseCacheTime = System.currentTimeMillis();
