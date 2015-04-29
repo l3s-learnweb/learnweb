@@ -11,9 +11,36 @@
 	<ui:param name="pageTitle" value="#{msg.homepageTitle}" />	
 	<ui:param name="disableGrowl" value="true" />
 						
-<ui:define name="center_layout">
-	<style type="text/css">	
-		html { height:100%; }
+	<ui:define name="center_layout">
+	<style type="text/css">
+		.window { 
+		  width: 45%;
+		  border-radius: 5px;
+		  background-color: #489a83;
+		  margin: 1rem;
+		  text-align: center;
+		}
+		.window label { 
+		  display: block;
+		  background-color: #489a83;
+		  font-size: larger;
+		  border-radius: 5px;
+		  transition: .4s all linear; 
+		}
+		.window label:hover { 
+		  cursor: pointer; 
+		  background: #74beaa; 
+		}
+		.toggle ~ div { 
+		  height: 0px; 
+		  overflow: hidden;
+		  transition: .6s all cubic-bezier(0.730, -0.485, 0.145, 1.620)
+		}
+		.toggle:checked ~ div { height: 230px; }
+		.toggle:checked + label { background: #74beaa; }
+		.toggle { display: none; }
+			
+		html { height:100% }
 		h1{
 			font-weight: bold; 
 			font-family: sans-serif;
@@ -32,14 +59,25 @@
 			background:url(../resources/image/uni.jpg) center no-repeat;
 			background-size:cover;
 		}
+		#text_content{
+			position:relative;
+			max-width:750px; 
+			height:20%; 
+			top:20px; 
+			margin-left:auto; 
+			margin-right:auto;
+			text-align: justify;
+		}
 		.info{
 			min-height:350px;
-			color:white; 
-			width:760px;
+			color:white;
+			left:0px;
+			position: absolute;
+			top: 15%; 
+			width: 100%;
 			background-color: rgba(0, 0, 0, 0.7);
-			margin:5% auto;
 			}
-		/*.footer{
+		.footer{
 			color:#489a83;
 			left:0px;
 			position: fixed;
@@ -49,7 +87,7 @@
 			width: 100%;
 			z-index:-500;
 			background-color: rgb(0, 0, 0);
-			}*/
+			}
 		.ui-dialog-titlebar {
 			color: #489a83 ;
 			text-shadow: none;
@@ -86,6 +124,7 @@
 			padding: 4px 13px;
 			color: white;
 			cursor: pointer;
+			border-radius:5px;
 			display:inline-block;
 			text-decoration:none; 
 			margin-left:5px;
@@ -116,6 +155,7 @@
 			width:254px;
 			height:156px;
 			float:right;
+			margin-top:-23%;
 			margin-right:5%;
 			cursor: pointer;
 		}
@@ -123,7 +163,7 @@
 			display:none;
 		}
 		.public_courses{
-		 	display: inline-block;
+		 	display: block;
     		font-family: sans-serif;
     		font-size: 1.2rem;
 		}
@@ -137,10 +177,16 @@
 		#loginform{
 			width: 350px;
 			float:left;
-			height: 156px;
+			height: inherit;
 			padding:0 15px;
 			display: inline-block; 
 			border-right:2px solid #489a83;
+		}
+		#register_form{
+			width: 350px; 
+			padding:0 15px; 
+			border-right:2px solid #489a83;
+			display: inline-block;
 		}
 		#dividing_line{
 			width:100%; 
@@ -148,9 +194,7 @@
 			height:2px; 
 			background-color: #489a83; 
 			border:none; 
-			margin-top:1%;
-			margin-bottom:1%;
-			float:left;
+			margin-top:2%;
 		}
 		.forgot{
 			color:white; 
@@ -160,13 +204,14 @@
 	</style>
 	
 		<div class="info">
+		<div id="text_content">
 		
 		<h1>#{msg.homepageTitle}</h1>
 	
 		<br/>
 		<br/>
 		
-		<h:outputText value="#{msg.homepage}" style="font-family: sans-serif;font-size:medium; display:block; "/>
+		<h:outputText value="#{msg.homepage}" style="font-family: sans-serif;font-size:medium; display:block; "></h:outputText>
 		<br />
 		<br/>
 		
@@ -176,11 +221,11 @@
 			<h:panelGrid columns="3">
 				<h:outputLabel for="username" value="#{msg.username}:"></h:outputLabel>
 				<p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" styleClass="inputbox" />
-				<p:message styleClass="error" for="username" />
+				<p:message  styleClass="error" for="username" />
 				
 				<h:outputLabel for="password" value="#{msg.password}:"></h:outputLabel>
 				<p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" styleClass="inputbox" />
-				<p:message styleClass="error" for="password" />
+				<p:message  styleClass="error" for="password" />
 				
 				<h:outputText value="" />
 				<h:commandButton styleClass="greenbutton" action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" />	
@@ -188,6 +233,18 @@
 			</h:panelGrid>
 			<br/>
 			<h:outputLink id="forgot" class="forgot" value="user/password.jsf"><h:outputText value="#{msg.forgotten_password}"/></h:outputLink>
+		</h:form>
+	
+		<h:form rendered="#{!userBean.loggedIn}" id="register_form">
+			<br/>
+					<h:outputText value="Sign up for " style="display:inline-block;"></h:outputText>
+					<h:outputLink styleClass="greenbutton" value="user/register.jsf"><h:outputText value="YELL"></h:outputText>
+					<f:param name="wizard" value="yell"></f:param>
+					</h:outputLink>
+			<br/>
+			For the public environment 
+			<h:outputLink styleClass="greenbutton" value="user/register.jsf"><h:outputText value="#{msg.registerLabel}"></h:outputText>
+			</h:outputLink>	
 		</h:form>
 			
 			<p:lightBox>
@@ -201,42 +258,14 @@
 	        </div>
 	    	</p:lightBox>
 			
-			<br/>
 			<hr id="dividing_line"/>
 			<br/>
-		
-		<!--  <ui:fragment rendered="#{!userBean.loggedIn}">
-		
-		</ui:fragment>-->
-		
-		<h2>Public courses</h2>
-			<br/>
-			<h:panelGrid colu="Sign up for " style="display:inline-block;font-weight:bold; font-size:1.5rem"/>
-				<h:outputText value=""/>
-				
-				<h:form rendered="#{!userBean.loggedIn}">
-					<h:outputLink styleClass="greenbutton" value="user/register.jsf" >
-						<h:outputText value="YELL"></h:outputText>
-					<f:param name="wizard" value="yell"></f:param>
-					</h:outputLink>
-				</h:form>
-				<h:outputText value="
-		Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.">
-				</h:outputText>
 			
-				<h:form rendered="#{!userBean.loggedIn}">
-					<h:outputLink styleClass="greenbutton" value="user/register.jsf"><h:outputText value="#{msg.registerLabel}"></h:outputText>
-					</h:outputLink>	
-				</h:form>
-				<h:outputText value="Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum."></h:outputText>
-			</h:panelGrid>
-		
-		<br/>
-		<hr id="dividing_line"/>
-		<br/>
-			
+			<div>
+	<div class="window" style="position:absolute; right:0px;">
+		<input type="checkbox" id="changelog" class="toggle"/>
+			<label for="changelog">Changelog</label>
 		<div>
-			<h2>Changelog</h2>
 			<br/>
 			<h:panelGrid>
 			<h:outputText value="27.April 2015" styleClass="changelog_date"/>
@@ -244,12 +273,36 @@
 			
 			</h:panelGrid>
 		</div>
+	</div>
+	</div>
+	<div>
+		<div class="window">
+			<input type="checkbox" id="public_courses" class="toggle"/>
+			<label for="public_courses">public courses</label>	
+		<div>
+			<br/>
+			<h:panelGrid columns="2" border="1" cellspacing="0" cellpadding="10" styleClass="public_courses">
+				<h:outputText value="Default"></h:outputText>
+				<h:outputText value="Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum."></h:outputText>
+				
+				<h:outputText value="YELL"></h:outputText>
+				<h:outputText value="
+		Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.">
+				</h:outputText>
+			</h:panelGrid>
+		</div>
+		</div>
+	</div>
+		<br/>
+	
+		
+		</div>
 			
 		
 		</div>
 		</div>
 		
-		<!--  <div  class="footer">
+		<div  class="footer">
 		<h:outputText value="LearnWeb V4 developed and maintained by L3S Research Centre, Hannover, Germany. For details please contact:  " style="display:inline-block; padding-top:4px;"></h:outputText>
 		<h:outputText value="learnweb-support@l3s.de" style="display:inline-block; margin-left:3px; padding-top:4px; color:#EFEFEF;"></h:outputText>
 		
@@ -257,10 +310,53 @@
 		
 		
 		<br style="clear:both;"/>
-		-->
 		
+		
+		<p:dialog header="#{msg.homepageTitle}" widgetVar="dlg" resizable="true" modal="true">  
+    	 
+    	 
+    	 	
+			<h:form id="registerform" >
+	
+			<input type="hidden" name="wizard" value="#{registrationBean.wizard}" />
+				<h:panelGrid columns="3">					
+					<h:outputLabel for="username" value="#{msg.username}: *" />
+					<p:inputText id="username" value="#{registrationBean.username}" validator="#{registrationBean.validateUsername}">
+					
+					</p:inputText>
+					<p:message showSummary="true" showDetail="false" styleClass="error" for="username" id="usernameMessage" />
 
+					<h:outputLabel for="password" value="#{msg.password}: *" />
+					<p:password id="password" value="#{registrationBean.password}" autocomplete="false" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
+						goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}">
+					
+					</p:password>
+					<p:message id="passwordMessage" showSummary="true" showDetail="false" styleClass="error" for="password" />
+
+					<h:outputLabel for="confirm_password" value="#{msg.confirm_password}: *" />
+					<p:password id="confirm_password" value="#{registrationBean.confirmPassword}" validator="#{registrationBean.validatePassword}" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
+						goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}">
+					
+					</p:password>
+					<p:message id="confirmPasswordMessage" showSummary="true" showDetail="false" styleClass="error" for="confirm_password" />
+
+					<h:outputLabel for="email" value="#{msg.email_address}:" />
+					<p:inputText id="email" value="#{registrationBean.email}">
+					
+					</p:inputText>
+					<p:message id="emailMessage" showSummary="true" showDetail="false" styleClass="error" for="email" />
+
+					<h:outputText value="" />
+					<h:commandButton action="#{registrationBean.register}" value="#{msg.registerLabel}" ajax="false" styleClass="greenbutton">
+						
+					</h:commandButton>
+				</h:panelGrid>
+				<h:outputText value="* #{msg.mandatory_field}" />
+			</h:form>
+			
+		</p:dialog>  
 		
 	</ui:define>
 	
 </ui:composition>
+	
