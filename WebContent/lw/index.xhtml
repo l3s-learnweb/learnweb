@@ -15,8 +15,7 @@
 	<style type="text/css">	
 		html { height:100%; }
 		h1{
-			font-weight: bold; 
-			font-family: sans-serif;
+			font-weight:bold; 
 			font-size:1.7rem;
 			display:inline-block;
 		}
@@ -26,41 +25,31 @@
 		}
 		#content{
 			min-height:100%;
-			margin: 0px auto !important;
-			overflow: hidden !important;
-	
+			margin:0px auto !important;
+			overflow:hidden !important;
 			background:url(../resources/image/uni.jpg) center no-repeat;
 			background-size:cover;
+			font-family:sans-serif;
 		}
 		.info{
 			min-height:350px;
-			color:white; 
-			width:760px;
+			color:white;
+			width:750px;
 			background-color: rgba(0, 0, 0, 0.7);
 			margin:5% auto;
-			}
-		/*.footer{
-			color:#489a83;
-			left:0px;
-			position: fixed;
-			bottom: 0; 
-			text-align: center;
-			height: 30px;
-			width: 100%;
-			z-index:-500;
-			background-color: rgb(0, 0, 0);
-			}*/
+			padding:15px;
+		}
 		.ui-dialog-titlebar {
-			color: #489a83 ;
-			text-shadow: none;
+			color:#489a83 ;
+			text-shadow:none;
 		}
 		.ui-widget-header{
-			background: none !important;
+			background:none !important;
 		}
-		.logindiv{
-			background-color: white;
-			border-radius: 12px;
-			color: #489a83;
+		/*.logindiv{
+			background-color:white;
+			border-radius:12px;
+			color:#489a83;
 			height: 80%;
 			-moz-box-shadow:    inset 0 0 10px #489a83;
 		   	-webkit-box-shadow: inset 0 0 10px #489a83;
@@ -69,23 +58,23 @@
 			right: 10%;  
 			min-height: 100px; 
 			min-width: 200px;
-		}
+		}*/
 		.inputbox{
-			padding: 4px;
-			color: rgb(100, 177, 118) !important;
-			background-color: white !important;
+			padding:4px;
+			color:rgb(100, 177, 118) !important;
+			background-color:white !important;
 		}
 		input:-webkit-autofill {
 			background-color:none;
-			background-image: none;
-			color: rgb(0, 0, 0);
+			background-image:none;
+			color:rgb(0, 0, 0);
 		}
 		.greenbutton{
-			border: none;
-			background-color: #489a83;
-			padding: 4px 13px;
-			color: white;
-			cursor: pointer;
+			border:none;
+			background-color:#489a83;
+			padding:4px 13px;
+			color:white;
+			cursor:pointer;
 			display:inline-block;
 			text-decoration:none; 
 			margin-left:5px;
@@ -94,38 +83,37 @@
 			background-color:#74beaa;
 		}
 		#login a{
-			font-weight: bold;
-			padding: 20px;
-			color: rgb(59, 170, 245);
+			font-weight:bold;
+			padding:20px;
+			color:rgb(59, 170, 245);
 		}
 		.ui-autocomplete-input{
-			border: 1px solid #aeaeae; 
-			border-radius: 0px !important; 
-			box-shadow: 0 0 0px 0px #fff !important;	
+			border:1px solid #aeaeae; 
+			border-radius:0px !important; 
+			box-shadow:0 0 0px 0px #fff !important;	
 		}
-		.submitsearch{
-			padding: 0 !important;
-			font-size: 0.95em !important;
-			position: relative;
-			top: -1px;
-			left: -5px;
-			border-radius: 0;
-		}
+		/*.submitsearch{
+			padding:0 !important;
+			font-size:0.95em !important;
+			position:relative;
+			top:-1px;
+			left:-5px;
+			border-radius:0;
+		}*/
 		.video_guide{
 			background-image:url("http://batteryacid.org/biofilm/images/video-guide.gif");
 			width:254px;
 			height:156px;
 			float:right;
 			margin-right:5%;
-			cursor: pointer;
+			cursor:pointer;
 		}
 		.video_link{
 			display:none;
 		}
 		.public_courses{
-		 	display: inline-block;
-    		font-family: sans-serif;
-    		font-size: 1.2rem;
+		 	display:inline-block;
+    		font-size:1.2rem;
 		}
 		.changelog_date{
 			text-decoration:underline;
@@ -135,11 +123,11 @@
 			padding:0 15px;
 		}
 		#loginform{
-			width: 350px;
+			width:350px;
 			float:left;
-			height: 156px;
+			height:156px;
 			padding:0 15px;
-			display: inline-block; 
+			display:inline-block; 
 			border-right:2px solid #489a83;
 		}
 		#dividing_line{
@@ -154,9 +142,11 @@
 		}
 		.forgot{
 			color:white; 
-			font-family: sans-serif;
 		}
-		
+		.homepage_infotext{
+			font-size:medium; 
+			display:block;
+		}
 	</style>
 	
 		<div class="info">
@@ -166,7 +156,7 @@
 		<br/>
 		<br/>
 		
-		<h:outputText value="#{msg.homepage}" style="font-family: sans-serif;font-size:medium; display:block; "/>
+		<h:outputText value="#{msg.homepage}" styleClass="homepage_infotext"></h:outputText>
 		<br />
 		<br/>
 		
@@ -204,32 +194,33 @@
 			<br/>
 			<hr id="dividing_line"/>
 			<br/>
-		
-		<!--  <ui:fragment rendered="#{!userBean.loggedIn}">
-		
-		</ui:fragment>-->
-		
+
+	<div style="margin-top:150px;">
 		<h2>Public courses</h2>
 			<br/>
-			<h:panelGrid colu="Sign up for " style="display:inline-block;font-weight:bold; font-size:1.5rem"/>
+		
+		<ui:fragment rendered="#{!userBean.loggedIn}">
+			<h:panelGrid columns="2" cellpadding="5" styleClass="public_courses">
+			
+				<h:outputText value="Sign up for" style="display:inline-block;font-weight:bold; font-size:1.5rem"/>
 				<h:outputText value=""/>
+			
+				<h:outputLink styleClass="greenbutton" value="user/register.jsf">
+					<h:outputText value="#{msg.registerLabel}"/>
+				</h:outputLink>	
+				<h:outputText value="Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum."/>
 				
-				<h:form rendered="#{!userBean.loggedIn}">
-					<h:outputLink styleClass="greenbutton" value="user/register.jsf" >
-						<h:outputText value="YELL"></h:outputText>
-					<f:param name="wizard" value="yell"></f:param>
-					</h:outputLink>
-				</h:form>
-				<h:outputText value="
-		Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.">
+				<h:outputLink styleClass="greenbutton" value="user/register.jsf">
+						<h:outputText value="YELL"/>
+						<f:param name="wizard" value="yell"/>
+				</h:outputLink>
+				<h:outputText value="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+		sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."/>
 				</h:outputText>
 			
-				<h:form rendered="#{!userBean.loggedIn}">
-					<h:outputLink styleClass="greenbutton" value="user/register.jsf"><h:outputText value="#{msg.registerLabel}"></h:outputText>
-					</h:outputLink>	
-				</h:form>
-				<h:outputText value="Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum."></h:outputText>
-			</h:panelGrid>
+			</h:panelGrid>	
+		</ui:fragment>
+	</div>
 		
 		<br/>
 		<hr id="dividing_line"/>
@@ -239,27 +230,14 @@
 			<h2>Changelog</h2>
 			<br/>
 			<h:panelGrid>
-			<h:outputText value="27.April 2015" styleClass="changelog_date"/>
-			<h:outputText value="new Homepage, new header, more languages" styleClass="changelog_description"></h:outputText>
-			
+				<h:outputText value="27.April 2015" styleClass="changelog_date"/>
+				<h:outputText value="new Homepage, new header, more languages" styleClass="changelog_description"></h:outputText>
 			</h:panelGrid>
 		</div>
 			
 		
 		</div>
 		</div>
-		
-		<!--  <div  class="footer">
-		<h:outputText value="LearnWeb V4 developed and maintained by L3S Research Centre, Hannover, Germany. For details please contact:  " style="display:inline-block; padding-top:4px;"></h:outputText>
-		<h:outputText value="learnweb-support@l3s.de" style="display:inline-block; margin-left:3px; padding-top:4px; color:#EFEFEF;"></h:outputText>
-		
-		</div>
-		
-		
-		<br style="clear:both;"/>
-		-->
-		
-
 		
 	</ui:define>
 	
