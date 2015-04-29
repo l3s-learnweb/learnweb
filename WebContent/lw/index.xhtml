@@ -7,8 +7,9 @@
 <!--  
 <   link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/login.css" />
 -->
-
+						
 	<ui:param name="pageTitle" value="#{msg.homepageTitle}" />	
+	<ui:param name="disableGrowl" value="true" />
 						
 	<ui:define name="center_layout">
 	<style type="text/css">
@@ -39,7 +40,7 @@
 		.toggle:checked + label { background: #74beaa; }
 		.toggle { display: none; }
 			
-		html { height:100%; }
+		html { height:94.2%; }
 		h1{
 			font-weight: bold; 
 			font-family: sans-serif;
@@ -73,14 +74,13 @@
 			left:0px;
 			position: absolute;
 			top: 15%; 
-			height: 55%;
 			width: 100%;
 			background-color: rgba(0, 0, 0, 0.7);
 			}
 		.footer{
 			color:#489a83;
 			left:0px;
-			position: absolute;
+			position: fixed;
 			bottom: 0; 
 			text-align: center;
 			height: 30px;
@@ -100,7 +100,6 @@
 			border-radius: 12px;
 			color: #489a83;
 			height: 80%;
-			position: absolute;
 			-moz-box-shadow:    inset 0 0 10px #489a83;
 		   	-webkit-box-shadow: inset 0 0 10px #489a83;
 		   	box-shadow:         inset 0 0 10px #489a83;
@@ -153,11 +152,11 @@
 		}
 		.video_guide{
 			background-image:url("http://batteryacid.org/biofilm/images/video-guide.gif");
-			width:190.5px;
-			height:117px;
-			margin-top:-19%;
-			position:relative;
-			left:65%;
+			width:254px;
+			height:156px;
+			float:right;
+			margin-top:-23%;
+			margin-right:5%;
 			cursor: pointer;
 		}
 		.video_link{
@@ -177,18 +176,17 @@
 		}
 		#loginform{
 			width: 350px;
-			position: relative;
+			float:left;
 			height: inherit;
-			top: 5%;
 			padding:0 15px;
 			display: inline-block; 
 			border-right:2px solid #489a83;
 		}
 		#register_form{
-			padding-left:10px; 
 			width: 350px; 
 			padding:0 15px; 
 			border-right:2px solid #489a83;
+			display: inline-block;
 		}
 		#dividing_line{
 			width:100%; 
@@ -196,7 +194,7 @@
 			height:2px; 
 			background-color: #489a83; 
 			border:none; 
-			margin-top:4%;
+			margin-top:2%;
 		}
 		.forgot{
 			color:white; 
@@ -221,14 +219,13 @@
 		<h:form rendered="#{!userBean.loggedIn}" id="loginform">
 			<p:focus for="username"/>
 			<h:panelGrid columns="3">
-		
-				<h:outputText value="#{msg.username}"></h:outputText>
-				<p:inputText id="username" styleClass="inputbox" value="#{loginBean.username}" ></p:inputText>
-				<p:message showSummary="true" showDetail="false" styleClass="error" for="username" />
+				<h:outputLabel for="username" value="#{msg.username}:"></h:outputLabel>
+				<p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" styleClass="inputbox" />
+				<p:message  styleClass="error" for="username" />
 				
-				<h:outputText value="#{msg.password}"></h:outputText>
-				<p:inputText type="password" styleClass="inputbox" id="password" value="#{loginBean.password}" feedback="false"></p:inputText>
-				<p:message showSummary="true" showDetail="false" styleClass="error" for="password" />
+				<h:outputLabel for="password" value="#{msg.password}:"></h:outputLabel>
+				<p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" styleClass="inputbox" />
+				<p:message  styleClass="error" for="password" />
 				
 				<h:outputText value="" />
 				<h:commandButton styleClass="greenbutton" action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" />	
@@ -237,15 +234,13 @@
 			<br/>
 			<h:outputLink id="forgot" class="forgot" value="user/password.jsf"><h:outputText value="#{msg.forgotten_password}"/></h:outputLink>
 		</h:form>
-		<br/>
+	
 		<h:form rendered="#{!userBean.loggedIn}" id="register_form">
 			<br/>
-			<div>
-					<h:outputText  value="Sign up for " style="display:inline-block;"></h:outputText>
-					<h:outputLink   styleClass="greenbutton" value="user/register.jsf"><h:outputText value="YELL"></h:outputText>
+					<h:outputText value="Sign up for " style="display:inline-block;"></h:outputText>
+					<h:outputLink styleClass="greenbutton" value="user/register.jsf"><h:outputText value="YELL"></h:outputText>
 					<f:param name="wizard" value="yell"></f:param>
 					</h:outputLink>
-			</div>
 			<br/>
 			For the public environment 
 			<h:outputLink styleClass="greenbutton" value="user/register.jsf"><h:outputText value="#{msg.registerLabel}"></h:outputText>
@@ -364,3 +359,4 @@
 	</ui:define>
 	
 </ui:composition>
+	
