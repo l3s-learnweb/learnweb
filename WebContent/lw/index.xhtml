@@ -198,27 +198,25 @@
 <ui:fragment rendered="#{!userBean.loggedIn}">
 	<div style="margin-top:150px;">
 		<h2>Public courses</h2>
-			<br></br>
-			<h:panelGrid columns="2" cellpadding="5" styleClass="public_courses">
-			
-				<h:outputText value="Sign up for" style="display:inline-block;font-weight:bold; font-size:1.5rem"></h:outputText>
-				<h:outputText value=""></h:outputText>
-			
-				<h:outputLink styleClass="greenbutton" value="user/register.jsf">
-					<h:outputText value="#{msg.registerLabel}"></h:outputText>
-				</h:outputLink>	
-				<h:outputText value="Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.">
-				</h:outputText>
-				
-				<h:outputLink styleClass="greenbutton" value="user/register.jsf">
-						<h:outputText value="YELL"></h:outputText>
-						<f:param name="wizard" value="yell"></f:param>
-				</h:outputLink>
-				<h:outputText value="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
-		sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet."/>
-				</h:outputText>
-			
-			</h:panelGrid>
+		<br></br>
+
+		<h:panelGrid columns="2" styleClass="public_courses">
+		
+			<h:outputText value="Sign up for" style="display:inline-block;font-weight:bold; font-size:1.5rem"></h:outputText>
+			<h:outputText value=""></h:outputText>
+		
+			<h:outputLink styleClass="greenbutton" value="user/register.jsf">
+				<h:outputText value="#{msg.registerLabel}"></h:outputText>
+			</h:outputLink>	
+			<h:outputText value="Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum." />
+
+			<h:outputLink styleClass="greenbutton" value="user/register.jsf">
+					<h:outputText value="YELL"></h:outputText>
+					<f:param name="wizard" value="yell"></f:param>
+			</h:outputLink>
+			<h:outputText value="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore mag"/>
+		
+		</h:panelGrid>
 	</div>
 </ui:fragment>
 		
