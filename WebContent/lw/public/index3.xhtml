@@ -1,0 +1,247 @@
+<ui:composition template="/templates/main/main.xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+<!--  
+<   link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/login.css" />
+-->
+						
+	<ui:param name="pageTitle" value="#{msg.homepageTitle}" />	
+	<ui:param name="disableGrowl" value="true" />
+						
+	<ui:define name="center_layout">
+	<style type="text/css">	
+		html { height:100%; }
+		h1{
+			font-weight:bold; 
+			font-size:1.7rem;
+			display:inline-block;
+		}
+		h2{
+			font-size:medium;
+			font-weight:bold;
+		}
+		#content{
+			margin:0px auto !important;
+			overflow:hidden !important;
+			background:url(../resources/image/uni.jpg) center no-repeat;
+			background-size:cover;
+			font-family:sans-serif;
+			height:auto;
+			min-height:100%;
+		}
+		.info{
+			min-height:350px;
+			color:white;
+			width:750px;
+			background-color: rgba(0, 0, 0, 0.7);
+			margin:5% auto;
+			padding:15px;
+		}
+		.ui-dialog-titlebar {
+			color:#489a83 ;
+			text-shadow:none;
+		}
+		.ui-widget-header{
+			background:none !important;
+		}
+		.logindiv{
+			background-color:white;
+			border-radius:12px;
+			color:#489a83;
+			height: 80%;
+			-moz-box-shadow:    inset 0 0 10px #489a83;
+		   	-webkit-box-shadow: inset 0 0 10px #489a83;
+		   	box-shadow:         inset 0 0 10px #489a83;
+			top: 5%; 
+			right: 10%;  
+			min-height: 100px; 
+			min-width: 200px;
+		}
+		.inputbox{
+			padding:4px;
+			color:rgb(100, 177, 118) !important;
+			background-color:white !important;
+		}
+		input:-webkit-autofill {
+			background-color:none;
+			background-image:none;
+			color:rgb(0, 0, 0);
+		}
+		.greenbutton{
+			border:none;
+			background-color:#489a83;
+			padding:4px 13px;
+			color:white;
+			cursor:pointer;
+			display:inline-block;
+			text-decoration:none;
+		}
+		.greenbutton:hover{
+			background-color:#74beaa;
+		}
+		#login a{
+			font-weight:bold;
+			padding:20px;
+			color:rgb(59, 170, 245);
+		}
+		.ui-autocomplete-input{
+			border:1px solid #aeaeae; 
+			border-radius:0px !important; 
+			box-shadow:0 0 0px 0px #fff !important;	
+		}
+		.submitsearch{
+			padding:0 !important;
+			font-size:0.95em !important;
+			position:relative;
+			top:-1px;
+			left:-5px;
+			border-radius:0;
+		}
+		.video_guide{
+			background-image:url("http://batteryacid.org/biofilm/images/video-guide.gif");
+			width:254px;
+			height:156px;
+			float:left;
+			cursor:pointer;
+			margin-top:2%;
+		}
+		.video_link{
+			display:none;
+		}
+		.public_courses{
+			float: right;
+    		font-size: 1.2rem;
+   		 	margin-top:-38%;
+   		 	width: 458px;
+		}
+		.changelog_date{
+			text-decoration:underline;
+			font-size:1.3rem;
+		}
+		.changelog_description{
+			padding:0 15px;
+		}
+		#loginform{
+			height:156px;
+			padding:0 15px;
+			display:inline-block; 
+			border-right:2px solid #489a83;
+			padding-top:2%;
+			width:250px;
+		}
+		#dividing_line{
+			width:100%; 
+			color:#489a83; 
+			height:2px; 
+			background-color: #489a83; 
+			border:none; 
+			margin-top:1%;
+			margin-bottom:1%;
+			float:left;
+		}
+		.forgot{
+			color:white; 
+		}
+		.homepage_infotext{
+			font-size:medium; 
+			display:block;
+		}
+	</style>
+	
+		<div class="info">
+		
+		<h1>#{msg.homepageTitle}</h1>
+	
+		<br/>
+		<br/>
+		
+		<h:outputText value="#{msg.homepage}" styleClass="homepage_infotext"></h:outputText>
+		<br />
+		<br/>
+		
+		<div style="display:block;">
+		<h:form rendered="#{!userBean.loggedIn}" id="loginform">
+			<p:focus for="username"></p:focus>
+			<h:panelGrid columns="3">
+				<h:outputLabel for="username" value="#{msg.username}:"></h:outputLabel>
+				<p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" styleClass="inputbox"></p:inputText>
+				<p:message styleClass="error" for="username"></p:message>
+				
+				<h:outputLabel for="password" value="#{msg.password}:"></h:outputLabel>
+				<p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" styleClass="inputbox"></p:password>
+				<p:message styleClass="error" for="password"></p:message>
+				
+				<h:outputText value="" />
+				<h:commandButton styleClass="greenbutton" action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false"></h:commandButton>	
+				
+			</h:panelGrid>
+			<br></br>
+			<h:outputLink id="forgot" class="forgot" value="user/password.jsf"><h:outputText value="#{msg.forgotten_password}"/></h:outputLink>
+		</h:form>
+			
+		<p:lightBox>
+			<div class="video_guide">
+	        	<h:outputLink value="#" style="color:white;  font-family: sans-serif;">
+	            	<h:outputText value="Video guide" styleClass="video_link"/>
+	        	</h:outputLink>
+	        	<f:facet name="inline">
+	            	<p:media id="youTubeMedia" value="https://www.youtube.com/v/hWA-YdiHIWw" width="1000" height="563" player="flash" />
+	        	</f:facet>
+	        </div>
+	    </p:lightBox>
+
+<ui:fragment rendered="#{!userBean.loggedIn}">			
+			<!--  <br></br>
+			<hr id="dividing_line"></hr>
+			<br></br>-->
+
+
+	<div style="padding-left:40%;height: 180px">
+		<h2 style="margin-top:-38%; float:right; margin-right:74%;">Public courses</h2>
+			<br></br>
+			<h:panelGrid columns="2" cellpadding="5" styleClass="public_courses">
+			
+				<h:outputText value="Sign up for" style="display:inline-block;font-weight:bold; font-size:1.5rem"></h:outputText>
+				<h:outputText value=""></h:outputText>
+			
+				<h:outputLink styleClass="greenbutton" value="user/register.jsf">
+					<h:outputText value="#{msg.registerLabel}"></h:outputText>
+				</h:outputLink>	
+				<h:outputText value="Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.">
+				</h:outputText>
+				
+				<h:outputLink styleClass="greenbutton" value="user/register.jsf">
+						<h:outputText value="YELL"></h:outputText>
+						<f:param name="wizard" value="yell"></f:param>
+				</h:outputLink>
+				<h:outputText value="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
+		sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.">
+				</h:outputText>
+			
+			</h:panelGrid>
+	</div>
+
+		
+		<!--  <br></br>
+		<hr id="dividing_line"></hr>
+		<br></br>-->
+ </ui:fragment>	
+		<div style="float:right; margin-top:-24%; height:160px; width:458px; padding-left: 10px; border-left: 2px solid #489a83">
+			<h2>Changelog</h2>
+			<br></br>
+			<h:panelGrid>
+				<h:outputText value="27.April 2015" styleClass="changelog_date"/>
+				<h:outputText value="new Homepage, new header, more languages" styleClass="changelog_description"></h:outputText>
+			</h:panelGrid>
+		</div>
+			
+		
+		</div>
+		</div>
+		
+	</ui:define>
+	
+</ui:composition>

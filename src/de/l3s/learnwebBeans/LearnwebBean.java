@@ -156,4 +156,9 @@ public class LearnwebBean implements Serializable
     {
 	return UtilBean.getLocaleMessage(msgKey, args);
     }
+
+    public String getLocaleMessage(String msgKey)
+    {
+	return UtilBean.getLocaleMessage(msgKey);
+    }
 }
