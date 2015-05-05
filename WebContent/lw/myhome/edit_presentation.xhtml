@@ -62,7 +62,7 @@
 						        
 						        <p:dialog style="text-align: center" id="saveDlg" header="Save Presentation" widgetVar="saveDlg" modal="true" appendTo="@(body)" closable="false" width="400">  
 										File Name : <p:inputText value="" id="presentationName" size="50" required="true" widgetVar="presentationName"></p:inputText><br/><br/>
-										<p:commandButton id="saveButton" style="margin-right: 10px" update=":grwl:growl" type="submit" value="Save" oncomplete="doneSaving()" onclick="save_presentation()" actionListener="#{editPresentationBean.growl}"></p:commandButton>
+										<p:commandButton id="saveButton" style="margin-right: 10px" update=":grwl:growl" type="submit" value="#{msg.save}" oncomplete="doneSaving()" onclick="save_presentation()" actionListener="#{editPresentationBean.growl}"></p:commandButton>
 										<p:commandButton style="margin-left: 10px" type="button" value="Cancel" onclick="PF('saveDlg').hide()"></p:commandButton>
 										<p:blockUI block="saveDlg" trigger="saveButton" />
 								</p:dialog>
@@ -156,7 +156,7 @@
                 			if($($("input","#form1\\:resource_list")[resource]).prop("checked"))
                 			{
                 				
-                				id = $($("div","#form1\\:resource_list")[resource]).attr("id");
+                				id = $($("div","#form1\\:resource_list")[resource]).prop("id");
                 				
                 				if(#{editPresentationBean.format == 2})
                 				{
@@ -184,7 +184,7 @@
                 	{
                 		var code = generate_content();
                 		prev_code=code;
-                		var name = $('#presentationName').val();
+                		var name = $('#toolbar\\:presentationName').val();
                 		save([{name:"code",value:code}, {name:"presentationName",value:name}]);
                 	}
                 	

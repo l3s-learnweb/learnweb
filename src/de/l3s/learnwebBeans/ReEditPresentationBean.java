@@ -34,7 +34,7 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
 	 * 
 	 */
     private static final long serialVersionUID = 5990525657898323276L;
-    private final static Logger log = Logger.getLogger(ReEditPresentationBean.class);
+    private static final Logger log = Logger.getLogger(ReEditPresentationBean.class);
     private int groupId;
     private Group group;
     private List<User> members;
@@ -85,7 +85,7 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
 	setPresentationName(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("presentationName"));
 	PreparedStatement insert;
 	PreparedStatement update;
-	PreparedStatement select;
+
 	try
 	{
 	    if(getPresentationName().equals(prevTitle))
@@ -134,8 +134,7 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
 	}
 	catch(SQLException e)
 	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    log.error("Error while updating existing presentation", e);
 	}
 
     }

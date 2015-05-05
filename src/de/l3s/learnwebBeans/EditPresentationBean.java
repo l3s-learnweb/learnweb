@@ -14,6 +14,8 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
+import org.apache.log4j.Logger;
+
 import com.mysql.jdbc.Statement;
 
 import de.l3s.learnweb.Group;
@@ -30,6 +32,7 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
 	 * 
 	 */
     private static final long serialVersionUID = 5990525657898323276L;
+    private static final Logger log = Logger.getLogger(EditPresentationBean.class);
     private int groupId;
     private Group group;
     private List<User> members;
@@ -134,8 +137,7 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
 	}
 	catch(SQLException e)
 	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    log.error("Error while updating existing presentation or creating a new one", e);
 	}
 
     }

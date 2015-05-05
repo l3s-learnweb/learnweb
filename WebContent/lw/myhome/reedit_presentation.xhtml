@@ -62,7 +62,7 @@
 						        
 						        <p:dialog style="text-align: center" id="saveDlg" header="Save Presentation" widgetVar="saveDlg" modal="true" appendTo="@(body)" closable="false" width="400">  
 										File Name : <p:inputText value="" id="presentationName" size="50" required="true" widgetVar="presentationName"></p:inputText><br/><br/>
-										<p:commandButton id="saveButton" style="margin-right: 10px" update=":grwl:growl" type="submit" value="Save" oncomplete="doneSaving()" onclick="save_presentation()" actionListener="#{reEditPresentationBean.growl}"></p:commandButton>
+										<p:commandButton id="saveButton" style="margin-right: 10px" update=":grwl:growl" type="submit" value="#{msg.save}" oncomplete="doneSaving()" onclick="save_presentation()" actionListener="#{reEditPresentationBean.growl}"></p:commandButton>
 										<p:commandButton style="margin-left: 10px" type="button" value="Cancel" onclick="PF('saveDlg').hide()"></p:commandButton>
 										<p:blockUI block="saveDlg" trigger="saveButton" />
 							  	</p:dialog>
@@ -72,7 +72,7 @@
 					 <p:dialog style="text-align: center; z-index: 10000" id="presentDialog" header="#{msg.presentations}" widgetVar="presentDialog" modal="false" appendTo="@(body)" closable="false">  
 							<h:form id="present_dialog_form">
 								Want to save your changes to <span id="presName" style="font-weight: bold"></span>?<br/><br/>
-								<p:commandButton id="but1" style="margin-right: 5px" type="button" value="#{msg.save}" onclick="save_pres()" ></p:commandButton>
+								<p:commandButton id="but1" style="margin-right: 5px" type="submit" value="#{msg.save}" onclick="save_pres()" update=":grwl:growl" actionListener="#{reEditPresentationBean.growl}"></p:commandButton>
 								<p:commandButton style="margin-left: 5px; margin-right: 5px" type="submit" ajax="false" value="Don't Save" onclick="dontSave(this)" action="#{reEditPresentationBean.present}"></p:commandButton>
 								<p:commandButton style="margin-left: 5px" type="button" value="#{msg.cancel}" onclick="PF('presentDialog').hide()"></p:commandButton>
 							</h:form>
@@ -151,7 +151,7 @@
                 		{
                 			if(isNaN(resource))
                 				break;
-                			if($($("input","#form1\\:resource_list")[resource]).attr("checked"))
+                			if($($("input","#form1\\:resource_list")[resource]).prop("checked"))
                 			{
                 				
                 				id = $($("div","#form1\\:resource_list")[resource]).prop("id");
@@ -233,7 +233,8 @@
                 	function save_pres()
                 	{
                 		PF('presentDialog').hide();
-                		saveDialog();
+                		$("#toolbar\\:presentationName").val($("#presentationTitle").html());
+                		save_presentation();
                 	}
                 </script>
 
