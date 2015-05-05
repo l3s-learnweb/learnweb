@@ -97,11 +97,11 @@
 					<h:outputText value="#{group.leader.username}" />
 				</p:column>
 				
-				<p:column headerText="#{msg.course}" sortBy="#{group.course.title}" width="8%">
+				<p:column headerText="#{msg.course}" sortBy="#{group.course.title}" width="8%" style="">
 					<h:outputText value="#{group.course.title}" />						
 				</p:column>		
 				
-				<p:column headerText="#{msg.options}" styleClass="nowrap" width="60">					
+				<p:column headerText="#{msg.options}" styleClass="nowrap align-center" width="70">					
 					<p:commandLink action="#{groupsBean.leaveGroup}" styleClass="optionIcon" process="@this" update=":other_groups :growl :group_menu :my_groups"  title="#{msg.leave}">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 						<h:graphicImage value="/resources/icon/silk/group_delete.png" width="16" height="16" alt="#{msg.leave}" />
@@ -155,7 +155,7 @@
 						<h:outputText value="#{group.course.title}" />						
 					</p:column>
 					
-					<p:column headerText="#{msg.options}" styleClass="nowrap" width="60">	
+					<p:column headerText="#{msg.options}" styleClass="nowrap align-center" width="70">	
 							
 						<p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :group_menu :my_groups"  process="@this" styleClass="optionIcon" title="#{msg.join}">
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />

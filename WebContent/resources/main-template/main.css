@@ -45,7 +45,7 @@ body {
 
 #main_menu_bar {
 	position: relative;	
-	background:#489a83 url("img/LearnwebLogo.png") left no-repeat;
+	background:#489a83 url("img/logo.png") left no-repeat;
 	background-size: contain;
 	font-family:"Lato", sans-serif;
 	width:100%;
@@ -75,6 +75,7 @@ body {
 	padding:0px 1rem;
 	border:none !important;
 	background-color:#f7f7f7;
+	-webkit-appearance: none;
 }
 #searchfield:focus {
 	background-color:white;
@@ -304,7 +305,8 @@ in allen browsern testen danach löschen
 .userbar ul li ul li a{
 	border-right:0px;
 	border-left:0px;
-	margin:0 0.5rem;
+	margin-left:0.5rem;
+	margin-right:1rem;
 }
 .userbar ul li ul li a:hover{
 	border-radius:5px;
@@ -331,13 +333,9 @@ in allen browsern testen danach löschen
    	padding:0.5rem;
 }
 #moremyresources, #moremygroups, #moreprofile, #logout, #login, #activitystream{
-	display:none;}
+	display:none;
 }
 
-}}
-}
-
-}
 #moreactivitystream{
 	display:block;
 }

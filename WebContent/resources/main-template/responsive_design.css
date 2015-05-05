@@ -3,14 +3,7 @@
 @media screen and (-webkit-min-device-pixel-ratio:0) { 
     /* Safari and Chrome */
     .userbar ul li ul{
-    	margin:0 0 0 -6em;
-    }
-
-    /* Safari only override */
-    ::i-block-chrome,#main_menu_bar {
-		/*background-image:none;  (nötig??)*/ 
-		background-color:#489A83;
-		background-size: 22em;
+    	margin-left:-6em;
     }
 }
 

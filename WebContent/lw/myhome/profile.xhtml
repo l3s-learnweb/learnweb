@@ -10,7 +10,6 @@
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>	
 	
-	
 	<ui:define name="right_layout">
 		<p:layoutUnit position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;"  id="right_pane" rendered="#{userBean.loggedIn}">
 			<div style="width:90%; position:relative; margin-left:auto; margin-right:auto;">
@@ -86,12 +85,12 @@
 		    					
 		    					
 						<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(userBean.user)}" id="profile_image" alt="Profile image" />
-						<br class="clear" />
+						
 					</h:form>
 			
 					
-				<br />
-		
+				<br style="clear:both"/>
+				<br/>
 		
 				<p:panel header="#{msg.change_password}" >
 		

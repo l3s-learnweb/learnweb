@@ -24,16 +24,16 @@
 			font-weight:bold;
 		}
 		#content{
+			min-height:100%;
 			margin:0px auto !important;
 			overflow:hidden !important;
 			background:url(../resources/image/uni.jpg) center no-repeat;
 			background-size:cover;
 			font-family:sans-serif;
 			height:auto;
-			min-height:100%;
 		}
 		.info{
-			min-height:350px;
+			min-height:550px;
 			color:white;
 			width:750px;
 			background-color: rgba(0, 0, 0, 0.7);
@@ -64,6 +64,7 @@
 			padding:4px;
 			color:rgb(100, 177, 118) !important;
 			background-color:white !important;
+			margin:5px 0;
 		}
 		input:-webkit-autofill {
 			background-color:none;
@@ -101,21 +102,24 @@
 			border-radius:0;
 		}
 		.video_guide{
-			background-image:url("http://batteryacid.org/biofilm/images/video-guide.gif");
-			width:254px;
-			height:156px;
-			float:left;
+			background-image:url("../resources/icon/videoguide.jpg");
+			width:280px;
+			height:153px;
 			cursor:pointer;
-			margin-top:2%;
+		}
+		.video_guide:hover{
+			background-position:280px 153px;
 		}
 		.video_link{
 			display:none;
 		}
 		.public_courses{
-			float: right;
-    		font-size: 1.2rem;
-   		 	margin-top:-43%;
-   		 	width: 458px;
+		 	display:inline-block;
+    		font-size:1.2rem;
+    		width:395px;
+    		float:right;
+    		border-left:2px solid #489a83;
+    		padding:10px;
 		}
 		.changelog_date{
 			text-decoration:underline;
@@ -125,12 +129,11 @@
 			padding:0 15px;
 		}
 		#loginform{
-			height:180px;
+			width:300px;
+			float:left;
+			height:156px;
 			padding:0 15px;
-			display:inline-block; 
-			border-right:2px solid #489a83;
-			padding-top:2%;
-			width:250px;
+			display:inline-block;
 		}
 		#dividing_line{
 			width:100%; 
@@ -162,55 +165,45 @@
 		<br />
 		<br/>
 		
-		<div style="display:block;">
-		<h:form rendered="#{!userBean.loggedIn}" id="loginform">
+<div style="display:block;">
+
+<ui:fragment rendered="#{!userBean.loggedIn}">
+	<div id="loginform">
+		<h2>#{msg.loginLabel}</h2>
+		<br/>
+		<h:form>
 			<p:focus for="username"></p:focus>
 			<h:panelGrid columns="3">
 				<h:outputLabel for="username" value="#{msg.username}:"></h:outputLabel>
 				<p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" styleClass="inputbox"></p:inputText>
-				<p:message styleClass="error" for="username"></p:message>
+				<p:message styleClass="error" for="username" display="icon"></p:message>
 				
 				<h:outputLabel for="password" value="#{msg.password}:"></h:outputLabel>
 				<p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" styleClass="inputbox"></p:password>
-				<p:message styleClass="error" for="password"></p:message>
+				<p:message styleClass="error" for="password" display="icon"></p:message>
 				
 				<h:outputText value="" />
-				<h:commandButton styleClass="greenbutton" action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false"></h:commandButton>	
+				<h:commandButton styleClass="greenbutton" action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" style="margin-top:5px;"></h:commandButton>	
+				<h:outputText value="" />
 				
 			</h:panelGrid>
 			<br></br>
 			<h:outputLink id="forgot" class="forgot" value="user/password.jsf"><h:outputText value="#{msg.forgotten_password}"/></h:outputLink>
 		</h:form>
-			
-		<p:lightBox>
-			<div class="video_guide">
-	        	<h:outputLink value="#" style="color:white;  font-family: sans-serif;">
-	            	<h:outputText value="Video guide" styleClass="video_link"/>
-	        	</h:outputLink>
-	        	<f:facet name="inline">
-	            	<p:media id="youTubeMedia" value="https://www.youtube.com/v/hWA-YdiHIWw" width="1000" height="563" player="flash" />
-	        	</f:facet>
-	        </div>
-	    </p:lightBox>
+	</div>	
 
-<ui:fragment rendered="#{!userBean.loggedIn}">			
-			<!--  <br></br>
-			<hr id="dividing_line"></hr>
-			<br></br>-->
-
-
-	<div style="padding-left:40%;height: 180px">
-		<h2 style="margin-top:-44%; float:right; margin-right:74%;">Public courses</h2>
+<div class="public_courses">
+	<h2>#{msg.public_courses}</h2>
 			<br></br>
-			<h:panelGrid columns="2" cellpadding="5" styleClass="public_courses">
+			<h:panelGrid columns="2" cellpadding="5">
 			
-				<h:outputText value="Sign up for" style="display:inline-block;font-weight:bold; font-size:1.5rem"></h:outputText>
+				<h:outputText value="#{msg.sign_up_for}" style="display:inline-block;font-weight:bold; font-size:1.5rem; width:115px;"></h:outputText>
 				<h:outputText value=""></h:outputText>
 			
 				<h:outputLink styleClass="greenbutton" value="user/register.jsf">
-					<h:outputText value="#{msg.registerLabel}"></h:outputText>
+					<h:outputText value="public version"></h:outputText>
 				</h:outputLink>	
-				<h:outputText value="Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. At vero eos et accusam et justo duo dolores et ea rebum.">
+				<h:outputText value="This public version of LearnWeb is for all students and teacher, who want to join LearnWeb. Everyone can join and create groups.">
 				</h:outputText>
 				
 				<h:outputLink styleClass="greenbutton" value="user/register.jsf">
@@ -223,14 +216,30 @@
 			
 			</h:panelGrid>
 	</div>
+	
+</ui:fragment>	
 
+	<br style="clear:both"></br>			
+
+<div style="float:left; padding:0 15px 15px; margin-top:-10%; width:300px;">	
+	<h2>#{msg.video_guide}</h2>
+	<br/>
+		<p:lightBox>
+			<div class="video_guide">
+	        	<h:outputLink value="#" style="color:white;  font-family: sans-serif;">
+	            	<h:outputText value="Video guide" styleClass="video_link"/>
+	        	</h:outputLink>
+	        	<f:facet name="inline">
+	        	
+	            	<iframe width="1000" height="563" src="https://www.youtube.com/embed/hWA-YdiHIWw" frameborder="0" allowfullscreen="0"></iframe>
+	            	
+	        	</f:facet>
+	        </div>
+	    </p:lightBox>
+	 </div>
 		
-		<!--  <br></br>
-		<hr id="dividing_line"></hr>
-		<br></br>-->
- </ui:fragment>	
-		<div style="float:right; margin-top:-24%; height:160px; width:458px; padding-left: 10px; border-left: 2px solid #489a83; padding-top:10px;">
-			<h2>Changelog</h2>
+		<div style="float:left; border-left:2px solid #489a83; padding:10px; height:120px; width:395px">
+			<h2>#{msg.changelog_title}</h2>
 			<br></br>
 			<h:panelGrid>
 				<h:outputText value="27.April 2015" styleClass="changelog_date"/>
@@ -245,3 +254,4 @@
 	</ui:define>
 	
 </ui:composition>
+	
