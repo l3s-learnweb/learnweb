@@ -244,10 +244,11 @@
 							         	</li>
 							         </ui:repeat>
 							    </ul>
-							    
+							</h:form> 
+							<h:form id="tag_input_form">  
 							    <p:inputText styleClass="tag_field" value="#{bean.tagName}"/>
 							    <div class="align-right" style="margin-top:4px">
-							    	<p:commandButton actionListener="#{bean.addTag}" styleClass="greenbutton" value="#{msg.addTag}" update=":datagrid :add_resource_panel" process="@form">
+							    	<p:commandButton actionListener="#{bean.addTag}" styleClass="greenbutton" value="#{msg.addTag}" update=":datagrid :tag_form" process="@form">
 							    	  	<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
 							        </p:commandButton>
 							    </div>
