@@ -8,23 +8,23 @@
 
 
 		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="Admin Change Log"/>
+		<ui:param name="pageTitle" value="#{msg.admin_changelog}"/>
 
 		
 		<ui:define name="center_layout">
 		
-				<p:panel header="Info">
+				<p:panel header="#{msg.info}">
 			#{infoBean.info}
 		</p:panel>	
 		
-			<p:panel header="Admin Change Log">
+			<p:panel header="#{msg.admin_changelog}">
 			<h:form id="msgform" >
-			<h:outputText value="Enter update:"/><br />
+			<h:outputText value="#{msg.enter_update}:"/><br />
 			<h:inputTextarea style="width:260px; height:60px;" value="#{adminChangeLogBean.message}"></h:inputTextarea>
-			<br /><h:commandButton value="Update" actionListener="#{adminChangeLogBean.update()}"></h:commandButton><br />
+			<br /><h:commandButton value="#{msg.update}" actionListener="#{adminChangeLogBean.update()}"></h:commandButton><br />
 			</h:form>
 		</p:panel>
-		<p:panel header="Change Log">
+		<p:panel header="#{msg.changelog_title}">
 		<h:dataTable var="logEntry" value="#{adminChangeLogBean.changelogmessages}">
 					<h:column>
 						<h:outputText value="#{logEntry}" escape="false" />

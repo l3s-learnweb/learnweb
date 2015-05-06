@@ -516,7 +516,9 @@ form#add_resource { float:right; }
 	width:200px;
 }
 
-
+.greenbutton:hover{
+	background:none repeat scroll 0 0 #74beaa !important;
+}
 .clear { 
 	clear:both; 
 }

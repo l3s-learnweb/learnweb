@@ -12,7 +12,7 @@
 
 		
 		<ui:define name="center_layout">
-			<p:panel header="Courses">
+			<p:panel header="#{msg.courses}">
 				<h:form id="courseform">
 					<p:dataTable var="course" value="#{adminCoursesBean.courses}">					
 						<p:column headerText="#{msg.title}" sortBy="#{course.title}">

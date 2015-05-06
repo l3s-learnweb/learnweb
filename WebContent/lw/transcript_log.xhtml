@@ -5,7 +5,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	lang="#{userBean.localeCode}">
 	
-	<ui:param name="pageTitle" value="Transcript Logs" />
+	<ui:param name="pageTitle" value="#{msg.transcript_logs}" />
 
 	<ui:define name="center_layout">
 		<h:form  style="padding-right:5px;">
@@ -13,7 +13,7 @@
 				paginator="true"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				rowsPerPageTemplate="20,25,30">
-				<p:column headerText="Student Name">
+				<p:column headerText="#{msg.student}">
 					<h:outputText value="#{log.user.username}" />
 				</p:column>
 
@@ -21,23 +21,23 @@
 					<h:outputText value="#{log.resource.title}" />
 				</p:column>
 
-				<p:column headerText="Added By">
+				<p:column headerText="#{msg.added_by}">
 					<h:outputText value="#{log.resource.ownerUser.username}" />
 				</p:column>
 				
-				<p:column headerText="Word/Words">
+				<p:column headerText="#{msg.word}">
 					<h:outputText value="#{log.wordsSelected}" />
 				</p:column>
 
-				<p:column headerText="User Annotation">
+				<p:column headerText="#{msg.userAnnotation}">
 					<h:outputText value="#{log.userAnnotation}" />
 				</p:column>
 
-				<p:column headerText="Action">
+				<p:column headerText="#{msg.action}">
 					<h:outputText value="#{log.action}" />
 				</p:column>
 				
-				<p:column headerText="TimeStamp">
+				<p:column headerText="#{msg.time_stamp}">
 					<h:outputText value="#{log.timestamp}" />
 				</p:column>
 			</p:dataTable>
