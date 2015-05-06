@@ -80,6 +80,7 @@ public class LearnwebBean implements Serializable
     {
 	if(null == learnweb)
 	{
+	    System.err.println("LearnwebBean: learnweb is null -> redirect");
 	    UtilBean.redirect("/lw/error.jsf");
 	}
 	return learnweb;
