@@ -6,22 +6,10 @@
     	margin-left:-6em;
     }
 }
-
- @media screen and (-ms-high-contrast:none){
-     	/* IE11 */
-     	#language_selector ul li ul{ 
-     		margin-top:4em;
-     		margin-right:-8.5em;
-     		width:12.5em;
-     	} 
- }
  
 /* options for different screen sizes */
 
-@media screen and (max-width: 77em){
-	#sub_menu_bar .links { 
-		margin-left:24rem;
-	}
+@media screen and (max-width: 82em){
 	#moreprofile{
 		display:block;
 	}
@@ -30,9 +18,9 @@
 	}
 }
 
-@media screen and (max-width: 70em){
+@media screen and (max-width: 77em){
 	#sub_menu_bar .links { 
-		margin-left:22rem;
+		margin-left:20rem;
 	}
 	#searchfield{
 		margin-left:21.5rem;
@@ -45,7 +33,7 @@
 	}
 }
 
-@media screen and (max-width: 62em){
+@media screen and (max-width: 68em){
 	#sub_menu_bar .links { 
 		margin-left:19rem;
 	}
@@ -60,7 +48,7 @@
 	}
 }
 
-@media screen and (max-width: 50em){
+@media screen and (max-width: 60em){
 	#sub_menu_bar .links a:last-child{
 		display:none;
 	}
@@ -97,10 +85,11 @@
 		left:0rem;
 	}
 	#backtogroup{
-		width:8em;
+		display:none;
 	}
 	#sub_menu_bar .links{
 		padding-right:0.8em;
+		margin-left:2.5rem;
 	}
 	#logoutbutton, #loginbutton{
 		display:none;
@@ -114,12 +103,8 @@
 	#searchfield{
 		width:10em;
 	}
-	#backtogroup{
-		display:none;
-	}
 	#sub_menu_bar .links{
 		float:left;
-		margin-left:1em;
 	}
 }
 

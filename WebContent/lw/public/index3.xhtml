@@ -113,14 +113,6 @@
 		.video_link{
 			display:none;
 		}
-		.public_courses{
-		 	display:inline-block;
-    		font-size:1.2rem;
-    		width:395px;
-    		float:right;
-    		border-left:2px solid #489a83;
-    		padding:10px;
-		}
 		.changelog_date{
 			text-decoration:underline;
 			font-size:1.3rem;
@@ -128,29 +120,25 @@
 		.changelog_description{
 			padding:0 15px;
 		}
-		#loginform{
-			width:300px;
-			float:left;
-			height:156px;
-			padding:0 15px;
-			display:inline-block;
-		}
-		#dividing_line{
-			width:100%; 
-			color:#489a83; 
-			height:2px; 
-			background-color: #489a83; 
-			border:none; 
-			margin-top:1%;
-			margin-bottom:1%;
-			float:left;
-		}
 		.forgot{
 			color:white; 
 		}
 		.homepage_infotext{
 			font-size:medium; 
 			display:block;
+		}
+		#div_left{
+			display:block; 
+			float:left; 
+			width:300px; 
+			padding:0 15px;
+		}
+		#div_right{
+			float:right; 
+			width:395px; 
+			padding:0 10px; 
+			border-left:2px solid #489a83; 
+			min-height:380px; 
 		}
 	</style>
 	
@@ -165,10 +153,10 @@
 		<br />
 		<br/>
 		
-<div style="display:block;">
+<div id="div_left">
 
 <ui:fragment rendered="#{!userBean.loggedIn}">
-	<div id="loginform">
+	
 		<h2>#{msg.loginLabel}</h2>
 		<br/>
 		<h:form>
@@ -190,9 +178,30 @@
 			<br></br>
 			<h:outputLink id="forgot" class="forgot" value="user/password.jsf"><h:outputText value="#{msg.forgotten_password}"/></h:outputLink>
 		</h:form>
-	</div>	
+	</ui:fragment>	
+	
+<br/>
 
-<div class="public_courses">
+	<h2>#{msg.video_guide}</h2>
+	<br/>
+		<p:lightBox>
+			<div class="video_guide">
+	        	<h:outputLink value="#" style="color:white;  font-family: sans-serif;">
+	            	<h:outputText value="Video guide" styleClass="video_link"/>
+	        	</h:outputLink>
+	        	<f:facet name="inline">
+	        	
+	            	<iframe width="1000" height="563" src="https://www.youtube.com/embed/hWA-YdiHIWw" frameborder="0" allowfullscreen="0"></iframe>
+	            	
+	        	</f:facet>
+	        </div>
+	    </p:lightBox>
+	    
+	 </div>
+
+<div id="div_right">
+
+   <ui:fragment rendered="#{!userBean.loggedIn}">
 	<h2>#{msg.public_courses}</h2>
 			<br></br>
 			<h:panelGrid columns="2" cellpadding="5">
@@ -215,41 +224,22 @@
 				</h:outputText>
 			
 			</h:panelGrid>
-	</div>
 	
-</ui:fragment>	
-
-	<br style="clear:both"></br>			
-
-<div style="float:left; padding:0 15px 15px; margin-top:-10%; width:300px;">	
-	<h2>#{msg.video_guide}</h2>
+	</ui:fragment>
+	
 	<br/>
-		<p:lightBox>
-			<div class="video_guide">
-	        	<h:outputLink value="#" style="color:white;  font-family: sans-serif;">
-	            	<h:outputText value="Video guide" styleClass="video_link"/>
-	        	</h:outputLink>
-	        	<f:facet name="inline">
-	        	
-	            	<iframe width="1000" height="563" src="https://www.youtube.com/embed/hWA-YdiHIWw" frameborder="0" allowfullscreen="0"></iframe>
-	            	
-	        	</f:facet>
-	        </div>
-	    </p:lightBox>
-	 </div>
-		
-		<div style="float:left; border-left:2px solid #489a83; padding:10px; height:120px; width:395px">
+	
 			<h2>#{msg.changelog_title}</h2>
 			<br></br>
 			<h:panelGrid>
 				<h:outputText value="27.April 2015" styleClass="changelog_date"/>
 				<h:outputText value="new Homepage, new header, more languages" styleClass="changelog_description"></h:outputText>
 			</h:panelGrid>
-		</div>
+</div>
 			
 		
-		</div>
-		</div>
+		
+	</div>
 		
 	</ui:define>
 	

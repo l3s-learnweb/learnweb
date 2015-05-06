@@ -372,7 +372,7 @@ in allen browsern testen danach löschen
 @-moz-document url-prefix() {
     #sub_menu_bar { line-height:2.0rem; }
 }
-#sub_menu_bar .links { margin-left:29rem; }
+#sub_menu_bar .links { margin-left:22rem; }
 
 #sub_menu_bar .activeResource,
 #sub_menu_bar .links a {
