@@ -1,0 +1,109 @@
+<ui:composition template="/templates/main/main.xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+	
+	<ui:param name="pageTitle" value="ArchiveTimeline" />
+	
+	<ui:define name="center_layout">
+		<p:chart type="line" model="#{archiveTimeLineBean.dateModel}" style="height:400px;" responsive="true" widgetVar="chart">
+			<p:ajax event="itemSelect" listener="#{archiveTimeLineBean.itemSelect}" update=":growl" />
+		</p:chart>
+		
+		<p:commandButton type="button" value="Reset" icon="ui-icon-cancel" style="margin-left:5px;" onclick="PF('chart').resetZoom()"/>
+		<script src="http://code.highcharts.com/highcharts.js"></script>
+		<script src="http://code.highcharts.com/modules/exporting.js"></script>
+		<script src="http://ericwenn.se/kalendar/free/"></script>
+		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
+		<h:outputScript library="archive-timeline" name="responsive-calendar.min.js"></h:outputScript>
+		<h:outputStylesheet library="archive-timeline" name="responsive-calendar.css"/>
+		<h:outputScript library="archive-timeline" name="archive_timeline.js"></h:outputScript>
+		<script>
+		function getArchiveVersions(timestamp){
+			alert(timestamp/100);
+			data= #{archiveTimeLineBean.getJsonData()};
+		}
+		$(document).ready(function(){
+			
+			json(#{archiveTimeLineBean.getJsonData()});
+			$('.responsive-calendar').responsiveCalendar({
+				time: '2013-05',
+			    events: {
+			      "2013-05-30": {"number": 5, "badgeClass": "badge-warning", "url": "http://w3widgets.com/responsive-calendar"},
+			      "2013-05-26": {"number": 1, "badgeClass": "badge-warning", "url": "http://w3widgets.com"}, 
+			      "2013-05-03": {"number": 1, "badgeClass": "badge-error"}, 
+			      "2013-06-12": {}}
+			});
+			var options = { 
+				 	events: [{
+				 		  title: "Olympics",
+				 		  location: "Sochi",
+				 		  start: {
+				 		    date: "20150507", time: "17.00"
+				 		  },
+				 		  end: {
+				 		    date: "20150507", time: "17.00"
+				 		  },
+				 		  url: "http://www.sochi2014.com",
+				 		   
+				 		},{
+					 		  title: "Olympics",
+					 		  location: "Sochi",
+					 		  start: {
+					 		    date: "20150507", time: "18.00"
+					 		  },
+					 		  end: {
+					 		    date: "20150507", time: "18.00"
+					 		  },
+					 		  url: "http://www.sochi2014.com",
+					 		   
+					 		}],
+				 		color:"blue",
+				 	firstDayOfWeek: "Monday",
+				 	showDays: true
+				};
+			$('#kalendar').kalendar(options);
+		});
+		</script>	
+		<br/>
+		<h:panelGroup layout="block" id="container" style="min-width: 200px; height: 400px;width:500px;float:left; "></h:panelGroup>
+		<div id="calendar" style="width: 500px; height: 400px; overflow:hidden;">
+			<!-- Responsive calendar - START -->
+			<div class="responsive-calendar">
+				<div class="controls">
+					<a class="pull-left" data-go="prev"><h:panelGroup layout="block" class="btn btn-primary">
+							<i class="icon-chevron-left"></i>
+						</h:panelGroup></a>
+					<h4>
+						<p:outputPanel layout="inline" data-head-year=""></p:outputPanel>
+						<p:outputPanel layout="inline" data-head-month=""></p:outputPanel>
+					</h4>
+					<a class="pull-right" data-go="next"><h:panelGroup layout="block" class="btn btn-primary">
+							<i class="icon-chevron-right"></i>
+						</h:panelGroup>
+					</a>
+				</div>
+				<hr />
+				<h:panelGroup layout="block" class="day-headers">
+					<h:panelGroup layout="block" class="day header">Mon</h:panelGroup>
+					<h:panelGroup layout="block" class="day header">Tue</h:panelGroup>
+					<h:panelGroup layout="block" class="day header">Wed</h:panelGroup>
+					<h:panelGroup layout="block" class="day header">Thu</h:panelGroup>
+					<h:panelGroup layout="block" class="day header">Fri</h:panelGroup>
+					<h:panelGroup layout="block" class="day header">Sat</h:panelGroup>
+					<h:panelGroup layout="block" class="day header">Sun</h:panelGroup>
+				</h:panelGroup>
+				<div class="days" data-group="days">
+					<!-- the place where days will be generated -->
+				</div>
+			</div>
+			<!-- Responsive calendar - END -->
+		</div>
+		<div id="kalendar" style="width: 500px; height: 400px; overflow:hidden;">
+			
+		</div>
+	</ui:define>
+	
+</ui:composition>	
