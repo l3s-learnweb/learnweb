@@ -4,8 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<!--  
-<   link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/login.css" />
+<!--   
+<  link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/login.css" />
 -->
 						
 	<ui:param name="pageTitle" value="#{msg.homepageTitle}" />	
@@ -33,7 +33,7 @@
 			height:auto;
 		}
 		.info{
-			min-height:565px;
+			min-height:595px;
 			color:white;
 			width:850px;
 			background-color: rgba(0, 0, 0, 0.7);
@@ -135,8 +135,8 @@
 		}
 		#div_right{
 			float:right; 
-			width:495px; 
-			padding:0 10px; 
+			width:513px; 
+			padding-left:10px; 
 			border-left:2px solid #489a83; 
 			min-height:380px; 
 		}
@@ -144,7 +144,7 @@
 			display:inline-block;
 			font-weight:bold; 
 			font-size:1.5rem; 
-			width:120px;
+			width:130px;
 		}
 	</style>
 	
@@ -217,31 +217,25 @@
 				<h:outputText value=""></h:outputText>
 			
 				<h:outputLink styleClass="greenbutton" value="user/register.jsf">
-					<h:outputText value="Standard Version"></h:outputText>
+					<h:outputText value="#{msg.standard_version}"></h:outputText>
 				</h:outputLink>	
-				<h:outputText value="Anybody can create a public account in order to use the LearnWeb platform to search educational resources on the Web and share them with others.">
+				<h:outputText value="#{msg.standard_version_description}">
 				</h:outputText>
 				
-				<h:outputText value="Specific courses" styleClass="subheading"></h:outputText>
+				<h:outputText value="#{msg.specific_courses}" styleClass="subheading"></h:outputText>
 				<h:outputText value=""></h:outputText>
 				
 				<h:outputLink styleClass="greenbutton" value="user/register.jsf">
 						<h:outputText value="YELL"></h:outputText>
 						<f:param name="wizard" value="yell"></f:param>
 				</h:outputLink>
-				<h:outputText value="YELL/TELL is a lifelong teacher education project that brings together trainees, teachers, trainers and experts from different schools and backgrounds (nursery, primary,
-lower-secondary and higher secondary teachers, teacher trainers, university lecturers and computer developers). The overall aim is to promote collaborative peer-learning and peer-teaching professional improvement for teachers of English as a foreign language across school levels. The project is grounded within the socio-constructivist view of
-learning and teaching: participants learn to share ideas, resources, practices and construct meaning in collaboration with teachers from different backgrounds.">
-				</h:outputText>
+				<h:outputText value="#{msg.yell_description}"></h:outputText>
 			
 			</h:panelGrid>
 	
 	</ui:fragment>
 	
 	<br/>
-	<br/>
-	<br/>
-	
 			<h2>#{msg.changelog_title}</h2>
 			<br></br>
 			<h:panelGrid>
