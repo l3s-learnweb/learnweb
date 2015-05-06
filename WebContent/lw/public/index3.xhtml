@@ -33,9 +33,9 @@
 			height:auto;
 		}
 		.info{
-			min-height:550px;
+			min-height:565px;
 			color:white;
-			width:750px;
+			width:850px;
 			background-color: rgba(0, 0, 0, 0.7);
 			margin:5% auto;
 			padding:15px;
@@ -74,7 +74,7 @@
 		.greenbutton{
 			border:none;
 			background-color:#489a83;
-			padding:4px 13px;
+			padding:4px 10px;
 			color:white;
 			cursor:pointer;
 			display:inline-block;
@@ -131,14 +131,20 @@
 			display:block; 
 			float:left; 
 			width:300px; 
-			padding:0 15px;
+			padding-left:15px;
 		}
 		#div_right{
 			float:right; 
-			width:395px; 
+			width:495px; 
 			padding:0 10px; 
 			border-left:2px solid #489a83; 
 			min-height:380px; 
+		}
+		.subheading{
+			display:inline-block;
+			font-weight:bold; 
+			font-size:1.5rem; 
+			width:120px;
 		}
 	</style>
 	
@@ -202,31 +208,38 @@
 <div id="div_right">
 
    <ui:fragment rendered="#{!userBean.loggedIn}">
-	<h2>#{msg.public_courses}</h2>
+			
+		<h2>#{msg.public_courses}</h2>
 			<br></br>
 			<h:panelGrid columns="2" cellpadding="5">
 			
-				<h:outputText value="#{msg.sign_up_for}" style="display:inline-block;font-weight:bold; font-size:1.5rem; width:115px;"></h:outputText>
+				<h:outputText value="#{msg.sign_up_for}" styleClass="subheading"></h:outputText>
 				<h:outputText value=""></h:outputText>
 			
 				<h:outputLink styleClass="greenbutton" value="user/register.jsf">
-					<h:outputText value="public version"></h:outputText>
+					<h:outputText value="Standard Version"></h:outputText>
 				</h:outputLink>	
-				<h:outputText value="This public version of LearnWeb is for all students and teacher, who want to join LearnWeb. Everyone can join and create groups.">
+				<h:outputText value="Anybody can create a public account in order to use the LearnWeb platform to search educational resources on the Web and share them with others.">
 				</h:outputText>
+				
+				<h:outputText value="Specific courses" styleClass="subheading"></h:outputText>
+				<h:outputText value=""></h:outputText>
 				
 				<h:outputLink styleClass="greenbutton" value="user/register.jsf">
 						<h:outputText value="YELL"></h:outputText>
 						<f:param name="wizard" value="yell"></f:param>
 				</h:outputLink>
-				<h:outputText value="Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, 
-		sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.">
+				<h:outputText value="YELL/TELL is a lifelong teacher education project that brings together trainees, teachers, trainers and experts from different schools and backgrounds (nursery, primary,
+lower-secondary and higher secondary teachers, teacher trainers, university lecturers and computer developers). The overall aim is to promote collaborative peer-learning and peer-teaching professional improvement for teachers of English as a foreign language across school levels. The project is grounded within the socio-constructivist view of
+learning and teaching: participants learn to share ideas, resources, practices and construct meaning in collaboration with teachers from different backgrounds.">
 				</h:outputText>
 			
 			</h:panelGrid>
 	
 	</ui:fragment>
 	
+	<br/>
+	<br/>
 	<br/>
 	
 			<h2>#{msg.changelog_title}</h2>
