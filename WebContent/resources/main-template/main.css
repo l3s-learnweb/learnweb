@@ -143,38 +143,6 @@ body {
     position: relative;
     padding: 2px;    
 }
-/*
-überarbeitet, aber alte einstellungen zur sicherheit behalten:
-in allen browsern testen danach löschen
-
-#language_selector ul{
-	float:right;
-	padding:0;
-   	background-color:#489a83;
-    display:none;
-    border-bottom-right-radius:10px;
-	border-bottom-left-radius:10px;
-
-	margin-left:-7rem;
-    margin-right:-6.2rem;
-
-    margin-top:3.3rem;
-    padding-top:1.2rem;
-}
-#language_selector img{
-	height:2rem;
-	width:3rem;
-	display:block;
-	float:right;
-	border:1px solid #FFFFFF;
-	border-radius:5px;
-	padding:2px;
-	position:relative;
-	margin-top:1rem;
-	margin-right:2.5rem;
-}
-*/
-
 #language_selector:focus ul,
 #language_selector:hover ul{
 	display:block;
