@@ -1268,8 +1268,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void archiveCurrentVersion()
     {
-	getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
-	addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
+	String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
+	addGrowl(FacesMessage.SEVERITY_INFO, response);
     }
 
     public Comment getClickedComment()

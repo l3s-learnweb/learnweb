@@ -12,8 +12,11 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -30,6 +33,7 @@ public class ArchiveUrlManager
     private static String archiveTodayURL;
     private URL serviceUrlObj;
     private Queue<Resource> resources = new ConcurrentLinkedQueue<Resource>();
+    private Map<Integer, Date> trackResources = new ConcurrentHashMap<Integer, Date>();
 
     protected ArchiveUrlManager(Learnweb learnweb)
     {
@@ -45,10 +49,31 @@ public class ArchiveUrlManager
 	}
     }
 
-    public void addResourceToArchive(Resource resource)
+    public String addResourceToArchive(Resource resource)
     {
+	String response = "";
 	if(!(resource.getStorageType() == Resource.FILE_RESOURCE))
-	    resources.add(resource);
+	{
+	    if(trackResources.containsKey(resource.getId()))
+	    {
+		long timeDifference = (new Date().getTime() - trackResources.get(resource.getId()).getTime()) / 1000;
+		if(timeDifference > 300)
+		{
+		    resources.add(resource);
+		    trackResources.put(resource.getId(), new Date());
+		    response = "addedToArchiveQueue";
+		}
+		else
+		    response = "archiveWaitMessage";
+	    }
+	    else
+	    {
+		resources.add(resource);
+		trackResources.put(resource.getId(), new Date());
+		response = "addedToArchiveQueue";
+	    }
+	}
+	return response;
     }
 
     public void addArchiveUrlToResource()
@@ -122,6 +147,17 @@ public class ArchiveUrlManager
 	    catch(ParseException e)
 	    {
 		log.error("Error while trying to parse the response date for archive URL service", e);
+	    }
+	}
+
+	Iterator<Map.Entry<Integer, Date>> trackResourceIterator = trackResources.entrySet().iterator();
+	while(trackResourceIterator.hasNext())
+	{
+	    Map.Entry<Integer, Date> entry = trackResourceIterator.next();
+	    long timeDifference = (new Date().getTime() - entry.getValue().getTime()) / 1000;
+	    if(timeDifference > 300)
+	    {
+		trackResourceIterator.remove();
 	    }
 	}
     }
