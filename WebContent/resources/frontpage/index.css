@@ -51,6 +51,7 @@ html { height:100%; }
 			color:rgb(100, 177, 118) !important;
 			background-color:white !important;
 			margin:5px 0;
+			border: 1px solid #eee !important;
 		}
 		input:-webkit-autofill {
 			background-color:none;
