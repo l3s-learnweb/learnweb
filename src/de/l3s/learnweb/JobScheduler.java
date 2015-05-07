@@ -29,8 +29,10 @@ public class JobScheduler
 
     public void startAllJobs()
     {
+	/*
 	if(!scheduler.isStarted())
 	    scheduler.start();
+	    */
     }
 
     public void stopAllJobs()
