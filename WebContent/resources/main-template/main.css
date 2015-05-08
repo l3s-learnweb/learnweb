@@ -525,3 +525,14 @@ h1 { margin-bottom: 1rem; }
 	border: 1px solid #a8a8a8 !important;
 	box-shadow: 0 0 0px 0px #fff !important;
 }
+
+
+#left_pane-resizer{
+	left:223px;
+}
+#left_pane{
+	width:222px;
+}
+#center_pane{
+	left:229px;
+}

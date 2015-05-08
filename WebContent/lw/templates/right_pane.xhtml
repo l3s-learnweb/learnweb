@@ -188,8 +188,6 @@
 							<td>
 								<span class="resource_field">#{msg.author} :  </span>
 							</td>
-						</ui:fragment>
-						<ui:fragment rendered="#{not empty bean.clickedResource.author}">
 							<td> 
 								<h:outputText value="#{bean.clickedResource.author}"></h:outputText>
 							</td>
@@ -204,38 +202,33 @@
 						</td>
 					</tr>
 					<tr style="padding:10px;">
-						<td>
-							<h:panelGroup rendered="#{not empty bean.clickedResource.groups}">
-								<b><h:outputFormat value="#{msg.group_s}:  ">
-										<f:param value="#{bean.clickedResource.groups.size()}" />
-									</h:outputFormat></b>									
-							</h:panelGroup>
-						</td>
-						<td>
-							<h:panelGroup rendered="#{not empty bean.clickedResource.groups}">	
-								<ui:repeat var="group" value="#{bean.clickedResource.groups}">
-									<h:outputLink value="group/overview.jsf">
-										<f:param name="group_id" value="#{group.id}" />
-										<h:outputText value="#{group.title}" />
-									</h:outputLink>
-								</ui:repeat>
-							</h:panelGroup>
-						</td>
+						<h:panelGroup rendered="#{not empty bean.clickedResource.groups}">
+							<td>
+									<b><h:outputFormat value="#{msg.group_s}:  ">
+											<f:param value="#{bean.clickedResource.groups.size()}" />
+										</h:outputFormat></b>									
+							</td>
+							<td>
+									<ui:repeat var="group" value="#{bean.clickedResource.groups}">
+										<h:outputLink value="group/overview.jsf">
+											<f:param name="group_id" value="#{group.id}" />
+											<h:outputText value="#{group.title}" />
+										</h:outputLink>
+									</ui:repeat>
+							</td>
+						</h:panelGroup>
 					</tr>
 					<tr style="padding:10px;">
-						<td>
-							<h:panelGroup rendered="#{bean.clickedResource.source == 'TED'}">
-								<span class="resource_field">#{msg.transcript} :  </span>
-							</h:panelGroup>
-						</td>
-						<td>
-							<h:panelGroup rendered="#{bean.clickedResource.source == 'TED'}">
-								<h:outputLink value="ted_transcript.jsf" style="text-decoration:underline;"><f:param name="resource_id" value="#{bean.clickedResource.id}"/>#{msg.link_to_transcript}</h:outputLink>
-							</h:panelGroup>
-						</td>
+						<h:panelGroup rendered="#{bean.clickedResource.source == 'TED'}">
+							<td>
+									<span class="resource_field">#{msg.transcript} :  </span>
+							</td>
+							<td>
+									<h:outputLink value="ted_transcript.jsf" style="text-decoration:underline;"><f:param name="resource_id" value="#{bean.clickedResource.id}"/>#{msg.link_to_transcript}</h:outputLink>
+							</td>
+						</h:panelGroup>
 					</tr>
 				</table>		
-					
 							<!--  <ui:fragment rendered="#{not empty bean.clickedResource.author}">
 								<div style="padding-top: 10px">
 									<span class="resource_field">#{msg.author} : </span><h:outputText value="#{bean.clickedResource.author}"></h:outputText>
@@ -286,6 +279,7 @@
 									<f:selectItems value="#{bean.clickedResource.archiveUrls}" var="entry" itemValue="#{entry.archiveUrl}" itemLabel="${userBean.formatDate(entry.timestamp)}" /> 
 								</p:selectOneMenu>
 							</h:panelGroup>
+							
 							<h:form id="tag_form">
 								<div class="resource_field" style="padding-top: 10px; padding-bottom: 10px">#{msg.tags}</div>
 	
