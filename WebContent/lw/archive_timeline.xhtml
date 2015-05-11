@@ -15,56 +15,106 @@
 		<p:commandButton type="button" value="Reset" icon="ui-icon-cancel" style="margin-left:5px;" onclick="PF('chart').resetZoom()"/>
 		<script src="http://code.highcharts.com/highcharts.js"></script>
 		<script src="http://code.highcharts.com/modules/exporting.js"></script>
-		<script src="http://ericwenn.se/kalendar/free/"></script>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" />
 		<link rel="stylesheet" href="http://netdna.bootstrapcdn.com/bootstrap/3.0.3/css/bootstrap.min.css" />
-		<h:outputScript library="archive-timeline" name="responsive-calendar.min.js"></h:outputScript>
+		<h:outputScript library="archive-timeline" name="responsive-calendar.min.js" />
 		<h:outputStylesheet library="archive-timeline" name="responsive-calendar.css"/>
-		<h:outputScript library="archive-timeline" name="archive_timeline.js"></h:outputScript>
+		<h:outputScript library="archive-timeline" name="archive_timeline.js" />
+		<h:outputStylesheet library="css" name="tipped.css"/>
+		<h:outputScript library="js" name="tipped.js" />
+		
 		<script>
-		function getArchiveVersions(timestamp){
-			alert(timestamp/100);
-			data= #{archiveTimeLineBean.getJsonData()};
-		}
 		$(document).ready(function(){
 			
 			json(#{archiveTimeLineBean.getJsonData()});
 			$('.responsive-calendar').responsiveCalendar({
-				time: '2013-05',
-			    events: {
-			      "2013-05-30": {"number": 5, "badgeClass": "badge-warning", "url": "http://w3widgets.com/responsive-calendar"},
-			      "2013-05-26": {"number": 1, "badgeClass": "badge-warning", "url": "http://w3widgets.com"}, 
-			      "2013-05-03": {"number": 1, "badgeClass": "badge-error"}, 
-			      "2013-06-12": {}}
+				time: '2010-11',
+		          events: {
+				        "2010-11-30": {
+				            "dayEvents": [
+							                {
+							                    "time": "2010-11-30 02:23:10.0",
+							                    "url": "https://wayback.archive-it.org/2212/20101130022310/https://www.moma.org/"
+							                }
+							            ],
+				            "badgeClass": "badge-warning",
+				            "number": 1
+				        },
+				        "2010-11-23": {
+				            "dayEvents": [
+				                {
+				                    "time": "2010-11-23 22:02:10.0",
+				                    "url": "https://wayback.archive-it.org/2212/20101123220210/http://www.moma.org//"
+				                }
+				            ],
+				            "badgeClass": "badge-warning",
+				            "number": 1
+				        },
+				        "2010-11-22": {
+				            "dayEvents": [
+				                {
+				                    "time": "2010-11-22 19:43:05.0",
+				                    "url": "https://wayback.archive-it.org/2212/20101122194305/http://www.moma.org/"
+				                }
+				            ],
+				            "badgeClass": "badge-warning",
+				            "number": 1
+				        },
+				        "2010-11-17": {
+				            "dayEvents": [
+				                {
+				                    "time": "2010-11-17 13:08:33.0",
+				                    "url": "https://wayback.archive-it.org/2212/20101117130833/http://www.moma.org//"
+				                }
+				            ],
+				            "badgeClass": "badge-warning",
+				            "number": 1
+				        },
+				        "2010-11-15": {
+				            "dayEvents": [
+				                {
+				                    "time": "2010-11-15 17:24:50.0",
+				                    "url": "https://wayback.archive-it.org/2212/20101115172450/http://www.moma.org/"
+				                },
+				                {
+				                    "time": "2010-11-15 19:43:31.0",
+				                    "url": "https://wayback.archive-it.org/2212/20101115194331/http://www.moma.org/"
+				                }
+				            ],
+				            "badgeClass": "badge-warning",
+				            "number": 2
+				        },
+				        "2010-11-29": {
+				            "dayEvents": [
+				                {
+				                    "time": "2010-11-29 20:25:07.0",
+				                    "url": "https://wayback.archive-it.org/2212/20101129202507/http://www.moma.org/"
+				                },
+				                {
+				                    "time": "2011-04-29 01:20:31.0",
+				                    "url": "https://wayback.archive-it.org/2212/20110429012031/http://www.moma.org/"
+				                },
+				                {
+				                    "time": "2011-04-29 06:10:33.0",
+				                    "url": "https://wayback.archive-it.org/2212/20110429061033/https://www.moma.org/"
+				                }
+				            ],
+				            "badgeClass": "badge-warning",
+				            "number": 1
+				        }
+				    },
+			    onActiveDayHover: function(events) {
+				    var thisDayEvent, key;
+
+				    key = $(this).data('year')+'-'+addLeadingZero( $(this).data('month') )+'-'+addLeadingZero( $(this).data('day') );
+				    thisDayEvent = events[key];
+				   
+			    	Tipped.create($(this),archiveVersionsList(thisDayEvent));
+			    	//alert(thisDayEvent.dayEvents[i]);	
+			    
+				} 
 			});
-			var options = { 
-				 	events: [{
-				 		  title: "Olympics",
-				 		  location: "Sochi",
-				 		  start: {
-				 		    date: "20150507", time: "17.00"
-				 		  },
-				 		  end: {
-				 		    date: "20150507", time: "17.00"
-				 		  },
-				 		  url: "http://www.sochi2014.com",
-				 		   
-				 		},{
-					 		  title: "Olympics",
-					 		  location: "Sochi",
-					 		  start: {
-					 		    date: "20150507", time: "18.00"
-					 		  },
-					 		  end: {
-					 		    date: "20150507", time: "18.00"
-					 		  },
-					 		  url: "http://www.sochi2014.com",
-					 		   
-					 		}],
-				 		color:"blue",
-				 	firstDayOfWeek: "Monday",
-				 	showDays: true
-				};
-			$('#kalendar').kalendar(options);
+
 		});
 		</script>	
 		<br/>
@@ -74,13 +124,13 @@
 			<div class="responsive-calendar">
 				<div class="controls">
 					<a class="pull-left" data-go="prev"><h:panelGroup layout="block" class="btn btn-primary">
-							<i class="icon-chevron-left"></i>
+							<i class="icon-chevron-left"></i> Prev
 						</h:panelGroup></a>
 					<h4>
-						<span data-head-year="data-head-year"></span> <span data-head-month="data-head-month"></span>
+						<span id="year" data-head-year="data-head-year"></span> <span id="month" data-head-month="data-head-month"></span>
 					</h4>
 					<a class="pull-right" data-go="next"><h:panelGroup layout="block" class="btn btn-primary">
-							<i class="icon-chevron-right"></i>
+							Next <i class="icon-chevron-right"></i>
 						</h:panelGroup>
 					</a>
 				</div>
@@ -99,9 +149,6 @@
 				</div>
 			</div>
 			<!-- Responsive calendar - END -->
-		</div>
-		<div id="kalendar" style="width: 500px; height: 400px; overflow:hidden;">
-			
 		</div>
 	</ui:define>
 	

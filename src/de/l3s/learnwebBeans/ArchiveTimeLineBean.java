@@ -138,6 +138,7 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
     public String getArchiveVersions(long unixTimestamp) throws SQLException
     {
 	JSONObject archiveDates = new JSONObject();
+
 	PreparedStatement select = Learnweb
 		.getInstance()
 		.getConnection()
@@ -147,9 +148,22 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
 	{
+	    JSONObject archiveDay = new JSONObject();
+	    archiveDay.put("number", rs.getInt("no_of_versions"));
+	    archiveDay.put("badgeClass", "badge-warning");
 	    select = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM lw_resource_archiveurl WHERE `resource_id`=75336 AND DAY(timestamp) = DAY('" + rs.getString("day") + "')");
-
+	    ResultSet rsArchiveVersion = select.executeQuery();
+	    JSONArray archiveVersions = new JSONArray();
+	    while(rs.next())
+	    {
+		JSONObject archiveVersion = new JSONObject();
+		archiveVersion.put("url", rs.getString("archive_url"));
+		archiveVersion.put("time", rs.getTimestamp("timestamp"));
+		archiveVersions.add(archiveVersion);
+	    }
+	    archiveDates.put(rs.getString("day"), archiveDay);
 	}
+	System.out.println(archiveDates.toJSONString());
 	return "";
 
     }
@@ -157,19 +171,30 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
     public static void main(String[] args) throws SQLException
     {
 
-	JSONArray outerArray = new JSONArray();
+	JSONObject archiveDates = new JSONObject();
 
-	PreparedStatement select = Learnweb.getInstance().getConnection().prepareStatement("SELECT timestamp,count(*) as count FROM `lw_resource_archiveurl` WHERE `resource_id` = 75336 group by month(timestamp)");
+	PreparedStatement select = Learnweb.getInstance().getConnection()
+		.prepareStatement("SELECT DATE_FORMAT(t1.timestamp,'%Y-%m-%d') as day, COUNT(*) as no_of_versions FROM (SELECT * FROM lw_resource_archiveurl WHERE `resource_id`=75336 AND MONTH(timestamp) = MONTH(FROM_UNIXTIME(1289838290))) t1 GROUP BY DAY(t1.timestamp)");
+
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
 	{
-	    JSONArray innerArray = new JSONArray();
-	    //series1.set(rs.getString("date"), rs.getInt("count"));
-	    innerArray.add(rs.getTimestamp("timestamp").getTime());
-	    innerArray.add(rs.getInt("count"));
-	    outerArray.add(innerArray);
+	    JSONObject archiveDay = new JSONObject();
+	    archiveDay.put("number", rs.getInt("no_of_versions"));
+	    archiveDay.put("badgeClass", "badge-warning");
+	    PreparedStatement select2 = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM lw_resource_archiveurl WHERE `resource_id`=75336 AND DAY(timestamp) = DAY('" + rs.getString("day") + "')");
+	    ResultSet rsArchiveVersion = select2.executeQuery();
+	    JSONArray archiveVersions = new JSONArray();
+	    while(rsArchiveVersion.next())
+	    {
+		JSONObject archiveVersion = new JSONObject();
+		archiveVersion.put("url", rsArchiveVersion.getString("archive_url"));
+		archiveVersion.put("time", rsArchiveVersion.getTimestamp("timestamp").toString());
+		archiveVersions.add(archiveVersion);
+	    }
+	    archiveDay.put("dayEvents", archiveVersions);
+	    archiveDates.put(rs.getString("day"), archiveDay);
 	}
-	//outerArray.add(innerArray);
-	System.out.println(outerArray.toJSONString());
+	System.out.println(archiveDates.toJSONString());
     }
 }

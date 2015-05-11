@@ -1,3 +1,23 @@
+
+function archiveVersionsList(thisDayEvent){
+	var no_of_versions = thisDayEvent.dayEvents.length;
+	var list = "<ul>";
+	for(var i=0;i<no_of_versions;i++){
+		list += "<li><a href='" + thisDayEvent.dayEvents[i].url + "'>"+thisDayEvent.dayEvents[i].time+"</a></li>";
+	}
+	list +="</ul>";
+	return list;
+	
+}
+
+function addLeadingZero(num) {
+	if (num < 10) {
+		return "0" + num;
+	} else {
+		return "" + num;
+	}
+}
+
 function json(data_var){
 	$('#container').highcharts({
 		chart: {
@@ -36,12 +56,12 @@ function json(data_var){
 				point: {
 					events: {
 						click: function () {
-							
+				
 							var date = new Date(this.x);
 							var year = date.getFullYear();
 							var month = date.getMonth() + 1;
-							$('#calendar').responsiveCalendar(year+'-'+ month);
-							getArchiveVersions(this.x);
+							$('.responsive-calendar').responsiveCalendar(year+'-'+ month);
+							
 						}
 					}
 				}
