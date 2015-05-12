@@ -3,10 +3,6 @@
 	xmlns:h="http://java.sun.com/jsf/html" 
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
-
-<!--   
-<  link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/login.css" />
--->
 						
 	<ui:param name="pageTitle" value="#{msg.homepageTitle}" />	
 	<ui:param name="disableGrowl" value="true" />
@@ -104,20 +100,20 @@
 	<br/>
 			<h2>#{msg.changelog_title}</h2>
 			<br></br>
-				<h:outputText value="27.April 2015" styleClass="changelog_date"/> <br/>
+				<h:outputText value="27. April 2015" styleClass="changelog_date"/> <br/>
 				<h:panelGrid columns="2" styleClass="changelog_description">
-					<h:outputText value="homepage: " style="font-weight:bold; width:130px; display:inline-block"></h:outputText>
-					<h:outputText value=" We integrate a changelog, informations about public courses and change the design."></h:outputText>
+					<h:outputText value="New design:" style="font-weight:bold; width:130px; display:inline-block"></h:outputText>
+					<h:outputText value="Today we present you the refreshed Learnweb design."></h:outputText>
 					
-					<h:outputText value="header: " style="font-weight:bold; width:130px; display:inline-block"></h:outputText>
-					<h:outputText value=" We created a new header with all important functionalities."></h:outputText>
+					<h:outputText value="Header:"  style="font-weight:bold; width:130px; display:inline-block"></h:outputText>
+					<h:outputText value="From now on the header contains links to all important functionalities."></h:outputText>
 					
-					<h:outputText value="languages: " style="font-weight:bold; width:130px; display:inline-block"></h:outputText>
-					<h:outputText value=" You can choose between English, German, Italian and Portuguese."></h:outputText>
+					<h:outputText value="Languages:" style="font-weight:bold; width:130px; display:inline-block"></h:outputText>
+					<h:outputText value="Learnweb is now availabile in English, German, Italian and Portuguese. Select your flag in the top right corner."></h:outputText>
 				</h:panelGrid>
-</div>
-			
-		
+	</div>
+	
+	<br style="clear:both"/>	
 		
 	</div>
 		
