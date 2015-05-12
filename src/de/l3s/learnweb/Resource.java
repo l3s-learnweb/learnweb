@@ -878,11 +878,9 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
      */
     public void setFileName(String fileName)
     {
-	if(fileName != null)
-	{
-	    if(fileName.length() > 200)
-		throw new IllegalArgumentException("file name is too long: " + fileName.length() + "; " + fileName);
-	}
+	if(fileName != null && fileName.length() > 200)
+	    throw new IllegalArgumentException("file name is too long: " + fileName.length() + "; " + fileName);
+
 	this.fileName = fileName;
     }
 
@@ -1241,11 +1239,9 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
     public void setFileUrl(String fileUrl)
     {
-	if(fileUrl != null)
-	{
-	    if(fileUrl.length() > 500)
-		throw new IllegalArgumentException("url is too long: " + fileUrl.length() + "; " + fileUrl);
-	}
+	if(fileUrl != null && fileUrl.length() > 500)
+	    throw new IllegalArgumentException("url is too long: " + fileUrl.length() + "; " + fileUrl);
+
 	this.fileUrl = fileUrl;
     }
 
