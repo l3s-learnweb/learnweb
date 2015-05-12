@@ -2,6 +2,7 @@ package de.l3s.learnwebBeans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -399,7 +400,25 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
     public void archiveCurrentVersion()
     {
-	String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
-	addGrowl(FacesMessage.SEVERITY_INFO, response);
+	try
+	{
+	    int versions = clickedResource.getArchiveUrls().size();
+	    long timeDifference = (new Date().getTime() - clickedResource.getArchiveUrls().get(versions - 1).getTimestamp().getTime()) / 1000;
+	    if(timeDifference > 300)
+	    {
+		getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
+		addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
+	    }
+	    else
+		addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
+	}
+	catch(SQLException e)
+	{
+	    log.error("Error while fetching the archive urls from a resource", e);
+	    addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
+	}
+
+	//String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
+	//addGrowl(FacesMessage.SEVERITY_INFO, response);
     }
 }

@@ -12,7 +12,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Queue;
@@ -54,39 +53,56 @@ public class ArchiveUrlManager
 	String response = "";
 	if(!(resource.getStorageType() == Resource.FILE_RESOURCE))
 	{
-	    if(trackResources.containsKey(resource.getId()))
+	    //if(trackResources.containsKey(resource.getId()))
+	    //{
+	    //long timeDifference = (new Date().getTime() - trackResources.get(resource.getId()).getTime()) / 1000;
+	    //if(timeDifference > 300)
+	    //{
+	    resources.add(resource);
+	    //  trackResources.put(resource.getId(), new Date());
+	    //  response = "addedToArchiveQueue";
+	    //}
+	    //else
+	    //  response = "archiveWaitMessage";
+	    //}
+	    /*else
 	    {
-		long timeDifference = (new Date().getTime() - trackResources.get(resource.getId()).getTime()) / 1000;
-		if(timeDifference > 300)
-		{
-		    resources.add(resource);
-		    trackResources.put(resource.getId(), new Date());
-		    response = "addedToArchiveQueue";
-		}
-		else
-		    response = "archiveWaitMessage";
-	    }
-	    else
-	    {
-		resources.add(resource);
-		trackResources.put(resource.getId(), new Date());
-		response = "addedToArchiveQueue";
-	    }
+	        resources.add(resource);
+	    trackResources.put(resource.getId(), new Date());
+	    response = "addedToArchiveQueue";
+	    }*/
 	}
 	return response;
     }
 
-    public void addArchiveUrlToResource()
+    public void addArchiveUrlToResource() throws SQLException
     {
 	String urlParameters;
 
 	while(!resources.isEmpty())
 	{
 	    Resource resource = resources.poll();
+
 	    DateFormat responseDate = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
 
 	    if(resource == null)
 		continue;
+
+	    resource = learnweb.getResourceManager().getResource(resource.getId());
+	    try
+	    {
+		if(resource.getArchiveUrls() != null)
+		{
+		    int versions = resource.getArchiveUrls().size();
+		    long timeDifference = (new Date().getTime() - resource.getArchiveUrls().get(versions - 1).getTimestamp().getTime()) / 1000;
+		    if(timeDifference < 300)
+			continue;
+		}
+	    }
+	    catch(SQLException e1)
+	    {
+		log.error("Error while retrieving archive urls for resource", e1);
+	    }
 
 	    try
 	    {
@@ -134,7 +150,8 @@ public class ArchiveUrlManager
 		prepStmt.executeUpdate();
 		prepStmt.close();
 
-		resource.addArchiveUrl(null); // TODO 
+		learnweb.getResourceManager().getResource(resource.getId()).addArchiveUrl(null);
+		//resource.addArchiveUrl(null); // TODO 
 	    }
 	    catch(IOException e)
 	    {
@@ -150,7 +167,7 @@ public class ArchiveUrlManager
 	    }
 	}
 
-	Iterator<Map.Entry<Integer, Date>> trackResourceIterator = trackResources.entrySet().iterator();
+	/*Iterator<Map.Entry<Integer, Date>> trackResourceIterator = trackResources.entrySet().iterator();
 	while(trackResourceIterator.hasNext())
 	{
 	    Map.Entry<Integer, Date> entry = trackResourceIterator.next();
@@ -159,7 +176,7 @@ public class ArchiveUrlManager
 	    {
 		trackResourceIterator.remove();
 	    }
-	}
+	}*/
     }
 
 }

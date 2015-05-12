@@ -320,6 +320,10 @@ public class UserBean implements Serializable
     //Function to format Date variables in the UI
     public String formatDate(Date date)
     {
-	return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, getLocale()).format(date);
+	long timeDifference = (new Date().getTime() - date.getTime()) / 1000;
+	if(timeDifference > 300)
+	    return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, getLocale()).format(date);
+	else
+	    return "a few minutes ago";
     }
 }
