@@ -55,7 +55,7 @@
 		<p:lightBox>
 			<div class="video_guide">
 	        	<h:outputLink value="#" style="color:white;  font-family: sans-serif;">
-	            	<h:outputText value="Video guide" styleClass="video_link"/>
+	            	<!--  <h:outputText value="Video guide" styleClass="video_link"/>-->
 	        	</h:outputLink>
 	        	<f:facet name="inline">
 	        	
@@ -73,50 +73,65 @@
 			
 		<h2>#{msg.public_courses}</h2>
 			<br></br>
-			<h:panelGrid columns="2" cellpadding="5">
-			
 				<h:outputText value="#{msg.sign_up_for}" styleClass="subheading"></h:outputText>
-				<h:outputText value=""></h:outputText>
+			<br/>
+			<br/>
+
+			<h:panelGrid columns="2">
 			
-				<h:outputLink styleClass="greenbutton" value="user/register.jsf">
+				<h:outputLink styleClass="greenbutton" value="user/register.jsf" style="margin-right:4rem; width:76%">
 					<h:outputText value="#{msg.standard_version}"></h:outputText>
 				</h:outputLink>	
 				<h:outputText value="#{msg.standard_version_description}">
 				</h:outputText>
 				
+			</h:panelGrid>
+			<br/>
+			<br/>	
 				<h:outputText value="#{msg.specific_courses}" styleClass="subheading"></h:outputText>
-				<h:outputText value=""></h:outputText>
+			<br/>
+			<br/>
+		
+			<h:panelGrid columns="2">
 				
-				<h:outputLink styleClass="greenbutton" value="user/register.jsf">
+				<h:outputLink styleClass="greenbutton" value="user/register.jsf" style="margin-right:5%">
 						<h:outputText value="YELL"></h:outputText>
 						<f:param name="wizard" value="yell"></f:param>
 				</h:outputLink>
 				<h:outputText value="#{msg.yell_description}"></h:outputText>
-			
+				
 			</h:panelGrid>
+			
 	
 	</ui:fragment>
 	
 	<br/>
 			<h2>#{msg.changelog_title}</h2>
 			<br></br>
-				<h:outputText value="27. April 2015" styleClass="changelog_date"/> <br/>
-				<h:panelGrid columns="2" styleClass="changelog_description">
-					<h:outputText value="New design:" style="font-weight:bold; width:130px; display:inline-block"></h:outputText>
-					<h:outputText value="Today we present you the refreshed Learnweb design."></h:outputText>
+				<h:outputText value="27. April 2015" styleClass="changelog_date"/> 
+				<br/>
+	
+				<h:panelGrid columns="2">
+					<h:outputText value="New design:" class="changes"></h:outputText>
+					<h:outputText value="Today we present you the refreshed Learnweb design." style="width:75%"></h:outputText>
 					
-					<h:outputText value="Header:"  style="font-weight:bold; width:130px; display:inline-block"></h:outputText>
+					<h:outputText value="Header:" class="changes"></h:outputText>
 					<h:outputText value="From now on the header contains links to all important functionalities."></h:outputText>
 					
-					<h:outputText value="Languages:" style="font-weight:bold; width:130px; display:inline-block"></h:outputText>
-					<h:outputText value="Learnweb is now availabile in English, German, Italian and Portuguese. Select your flag in the top right corner."></h:outputText>
+					<h:outputText value="Languages:" class="changes"></h:outputText>
+					<h:outputText value="LearnWeb is now availabile in English, German, Italian and Portuguese. Select your flag in the top right corner."></h:outputText>
 				</h:panelGrid>
 	</div>
 	
 	<br style="clear:both"/>	
 		
 	</div>
+	
+		<div id="index_footer">
+		<h:outputText value="LearnWeb V4 developed and maintained by L3S Research Centre, Hannover, Germany. For details please contact:  "></h:outputText>
+		<h:outputText value="learnweb-support@l3s.de" style="margin-left:3px; color:#000000;"></h:outputText>
 		
+		</div>
 	</ui:define>
 	
 </ui:composition>

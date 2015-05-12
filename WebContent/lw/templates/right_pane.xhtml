@@ -229,36 +229,6 @@
 						</h:panelGroup>
 					</tr>
 				</table>		
-							<!--  <ui:fragment rendered="#{not empty bean.clickedResource.author}">
-								<div style="padding-top: 10px">
-									<span class="resource_field">#{msg.author} : </span><h:outputText value="#{bean.clickedResource.author}"></h:outputText>
-								</div>
-							</ui:fragment>
-							
-							<div style="padding-top: 10px">
-								<span class="resource_field">#{msg.source} : </span>								
-								<a href="#{bean.clickedResource.getUrl()}"><h:outputText value="#{bean.clickedResource.source}" /></a>
-							</div>
-							
-							<h:panelGroup rendered="#{not empty bean.clickedResource.groups}" style="padding-top: 10px" layout="block">
-								<b><h:outputFormat value="#{msg.group_s}: ">
-										<f:param value="#{bean.clickedResource.groups.size()}" />
-									</h:outputFormat></b>									
-								
-								<ui:repeat var="group" value="#{bean.clickedResource.groups}">
-									<h:outputLink value="group/overview.jsf">
-										<f:param name="group_id" value="#{group.id}" />
-										<h:outputText value="#{group.title}" />
-									</h:outputLink>
-									<br/>
-								</ui:repeat>						
-								<br/>
-							</h:panelGroup>
-							
-							<h:panelGroup layout="block" style="padding-top: 10px;" rendered="#{bean.clickedResource.source == 'TED'}">
-								<span class="resource_field">#{msg.transcript} : </span><h:outputLink value="ted_transcript.jsf" style="text-decoration:underline;"><f:param name="resource_id" value="#{bean.clickedResource.id}"/>#{msg.link_to_transcript}</h:outputLink>
-							</h:panelGroup>
-						-->	
 							
 							<h:panelGroup rendered="#{not empty bean.clickedResource.description}">
 								<div class="resource_field" style="padding-top: 10px">#{msg.description}</div>
@@ -279,7 +249,8 @@
 									<f:selectItems value="#{bean.clickedResource.archiveUrls}" var="entry" itemValue="#{entry.archiveUrl}" itemLabel="${userBean.formatDate(entry.timestamp)}" /> 
 								</p:selectOneMenu>
 							</h:panelGroup>
-							
+						
+						<div style="width:100%">	
 							<h:form id="tag_form">
 								<div class="resource_field" style="padding-top: 10px; padding-bottom: 10px">#{msg.tags}</div>
 	
@@ -290,7 +261,7 @@
 								         		<f:param name="action" value="image"></f:param>
 								         		<f:param name="query" value="#{tag.name}"></f:param>
 							         		</h:outputLink>
-							         		<p:commandButton styleClass="tag_x" action="#{bean.onDeleteTag}" value="x" update=":add_resource_panel" process="@form">
+							         		<p:commandButton styleClass="tag_x" action="#{bean.onDeleteTag}" value="x" update=":add_resource_panel" process="@form" style="float:right">
 							         			<f:setPropertyActionListener target="#{bean.selectedTag}" value="#{tag}"></f:setPropertyActionListener>
 							         		</p:commandButton>
 							         	</li>
@@ -328,14 +299,15 @@
 									</div>
 								</ui:repeat>
 								<div class="comments" style="padding:10px 0px;">
-									<p:inputTextarea style="width: 97.6%;" rows="2" value="#{bean.newComment}"></p:inputTextarea><br/>
+									<p:inputTextarea style="width: 98.4%;" rows="2" value="#{bean.newComment}"></p:inputTextarea><br/>
 									<div style="text-align: right; margin-top: 5px">
-										<p:commandButton styleClass="greenbutton" value="#{msg.comment}" actionListener="#{bean.addComment()}" update=":datagrid :comment_form">
+										<p:commandButton styleClass="greenbutton" value="#{msg.comment}" actionListener="#{bean.addComment()}" update=":datagrid :comment_form" style="float:right">
 										<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
 										</p:commandButton>
 									</div>
 								</div>
-							</h:form>							
+							</h:form>	
+						</div>							
 							<br/><br/>
 						</h:panelGroup>
 						<h:form rendered="#{bean.editResourceClicked and !bean.newResourceClicked}" id="edit_form">
