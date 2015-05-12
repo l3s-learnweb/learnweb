@@ -104,10 +104,17 @@
 	<br/>
 			<h2>#{msg.changelog_title}</h2>
 			<br></br>
-			<h:panelGrid>
-				<h:outputText value="27.April 2015" styleClass="changelog_date"/>
-				<h:outputText value="new Homepage, new header, more languages" styleClass="changelog_description"></h:outputText>
-			</h:panelGrid>
+				<h:outputText value="27.April 2015" styleClass="changelog_date"/> <br/>
+				<h:panelGrid columns="2" styleClass="changelog_description">
+					<h:outputText value="homepage: " style="font-weight:bold; width:130px; display:inline-block"></h:outputText>
+					<h:outputText value=" We integrate a changelog, informations about public courses and change the design."></h:outputText>
+					
+					<h:outputText value="header: " style="font-weight:bold; width:130px; display:inline-block"></h:outputText>
+					<h:outputText value=" We created a new header with all important functionalities."></h:outputText>
+					
+					<h:outputText value="languages: " style="font-weight:bold; width:130px; display:inline-block"></h:outputText>
+					<h:outputText value=" You can choose between English, German, Italian and Portuguese."></h:outputText>
+				</h:panelGrid>
 </div>
 			
 		
