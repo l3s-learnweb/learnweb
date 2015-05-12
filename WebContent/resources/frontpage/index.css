@@ -34,7 +34,7 @@ h1,h2{font-weight:bold;font-size:1.7rem;}
 	padding:4px;
 	margin:5px 0;
 	/*color:rgb(100, 177, 118) !important;*/
-	background-color:white !important;
+	/*background-color:white !important;*/
 	/*border: 1px solid #eee !important;*/
 }
 .greenbutton{
@@ -68,6 +68,12 @@ h1,h2{font-weight:bold;font-size:1.7rem;}
 	padding-left:10px; 
 	border-left:2px solid #489a83; 
 	/*min-height:380px;*/ 
+}
+.first_column{
+	width:25%;
+}
+.description{
+	width:75%;
 }
 .changelog_date{
 	text-decoration:underline;	

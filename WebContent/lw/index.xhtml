@@ -43,7 +43,7 @@
 				<h:outputText value="" />
 				
 			</h:panelGrid>
-			<br></br>
+			<br/>
 			<h:outputLink id="forgot" class="forgot" value="user/password.jsf"><h:outputText value="#{msg.forgotten_password}"/></h:outputLink>
 		</h:form>
 	</ui:fragment>	
@@ -54,7 +54,7 @@
 	<br/>
 		<p:lightBox>
 			<div class="video_guide">
-	        	<h:outputLink value="#" style="color:white;  font-family: sans-serif;">
+	        	<h:outputLink value="#">
 	            	<!--  <h:outputText value="Video guide" styleClass="video_link"/>-->
 	        	</h:outputLink>
 	        	<f:facet name="inline">
@@ -77,13 +77,14 @@
 			<br/>
 			<br/>
 
-			<h:panelGrid columns="2">
-			
-				<h:outputLink styleClass="greenbutton" value="user/register.jsf" style="margin-right:4rem; width:76%">
-					<h:outputText value="#{msg.standard_version}"></h:outputText>
-				</h:outputLink>	
-				<h:outputText value="#{msg.standard_version_description}">
-				</h:outputText>
+			<h:panelGrid columns="2" columnClasses="first_column,description">
+				
+					<h:outputLink styleClass="greenbutton" value="user/register.jsf">
+						<h:outputText value="#{msg.standard_version}"></h:outputText>
+					</h:outputLink>	
+					
+					<h:outputText value="#{msg.standard_version_description}">
+					</h:outputText>
 				
 			</h:panelGrid>
 			<br/>
@@ -92,9 +93,9 @@
 			<br/>
 			<br/>
 		
-			<h:panelGrid columns="2">
+			<h:panelGrid columns="2" columnClasses="first_column,description">
 				
-				<h:outputLink styleClass="greenbutton" value="user/register.jsf" style="margin-right:5%">
+				<h:outputLink styleClass="greenbutton" value="user/register.jsf">
 						<h:outputText value="YELL"></h:outputText>
 						<f:param name="wizard" value="yell"></f:param>
 				</h:outputLink>
@@ -111,7 +112,7 @@
 				<h:outputText value="27. April 2015" styleClass="changelog_date"/> 
 				<br/>
 	
-				<h:panelGrid columns="2">
+				<h:panelGrid columns="2" columnClasses="first_column,description">
 					<h:outputText value="New design:" class="changes"></h:outputText>
 					<h:outputText value="Today we present you the refreshed Learnweb design." style="width:75%"></h:outputText>
 					
