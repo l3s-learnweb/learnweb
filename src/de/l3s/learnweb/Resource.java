@@ -71,6 +71,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private String embeddedSize4Raw;
     private String maxImageUrl; // an url to the largest image preview of this resource
     private String fileName; // stores the file name of uploaded resource
+    private String fileUrl;
 
     private String query; // the query which was used to find this resource
     private int originalResourceId = 0; // if the resource was copied from an older fedora resource this stores the id of the original resource
@@ -83,7 +84,6 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private Thumbnail thumbnail3;
     private Thumbnail thumbnail4;
     private String embeddedRaw;
-    private String access;
 
     private List<ArchiveUrl> archiveUrls = null;//To store the archive URL from archive.today service
     private boolean restricted = false;
@@ -878,6 +878,9 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
      */
     public void setFileName(String fileName)
     {
+	if(fileName.length() > 200)
+	    throw new IllegalArgumentException("file name is too long: " + fileName.length() + "; " + fileName);
+
 	this.fileName = fileName;
     }
 
@@ -1157,16 +1160,6 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	this.embeddedRaw = embeddedRaw;
     }
 
-    public String getAccess()
-    {
-	return access;
-    }
-
-    public void setAccess(String access)
-    {
-	this.access = access;
-    }
-
     public int getViews()
     {
 	return views;
@@ -1237,6 +1230,19 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     public void setRestricted(boolean restricted)
     {
 	this.restricted = restricted;
+    }
+
+    public String getFileUrl()
+    {
+	return fileUrl;
+    }
+
+    public void setFileUrl(String fileUrl)
+    {
+	if(fileUrl.length() > 500)
+	    throw new IllegalArgumentException("url is too long: " + fileUrl.length() + "; " + fileUrl);
+
+	this.fileUrl = fileUrl;
     }
 
 }
