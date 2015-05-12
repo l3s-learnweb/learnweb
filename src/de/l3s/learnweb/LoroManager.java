@@ -92,15 +92,15 @@ public class LoroManager
 	if(rs.getString("description") != null && !description.contains(rs.getString("description")))
 	    description = rs.getString("description");
 	if(rs.getString("language_level") != null && !description.contains(rs.getString("language_level")))
-	    description += "\nLanguage Level: " + rs.getString("language_level");
+	    description += "<br/>Language Level: " + rs.getString("language_level");
 	if(rs.getString("languages") != null && !description.contains(rs.getString("languages")))
-	    description += "\nLanguage: " + rs.getString("languages");
-	if(rs.getString("course_code") != null)
-	    description += "\nCourse Code: " + rs.getString("course_code");
+	    description += "<br/>Language: " + rs.getString("languages");
+	/*if(rs.getString("course_code") != null)
+	    description += "\nCourse Code: " + rs.getString("course_code");*/
 	if(rs.getString("tags") != null)
-	    description += "\nKeyWords: " + rs.getString("tags");
+	    description += "<br/>KeyWords: " + rs.getString("tags");
 	if(!description.contains("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/"))
-	    description += "\nThis file is a part of resource collection available on: http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
+	    description += "<br/>This file is a part of resource collection available on LORO - http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
 	resource.setDescription(description);
 	if(rs.getString("doc_format").contains("image") || rs.getString("doc_format").contains("video"))
 	    resource.setUrl(rs.getString("doc_url"));
@@ -195,16 +195,17 @@ public class LoroManager
 	    e.printStackTrace();
 	}
 
-	//User rishita = learnweb.getUserManager().getUser(7727);
+	/*User rishita = learnweb.getUserManager().getUser(7727);
 
-	/*	for(Resource resource : loroGroup.getResources())
-		{
-		    System.out.println(resource.getTitle());
-		    resourceManager.deleteResourcePermanent(resource.getId());
-		}
+	for(Resource resource : loroGroup.getResources())
+	{
+	    System.out.println(resource.getTitle());
 
-		System.exit(0);
-	*/
+	    solr.indexResource(resource);
+	}
+
+	System.exit(0);*/
+
 	getConnection();
 
 	User admin = learnweb.getUserManager().getUser(7727);
@@ -291,7 +292,7 @@ public class LoroManager
 			    {
 
 				writer.println(rs.getString("doc_url"));
-				System.out.println(rs.getString("doc_url"));
+				resourceManager.deleteResource(loroResource.getId());
 
 			    }
 		    } //Preview images for video can be generated even when there is no preview image available
@@ -321,7 +322,10 @@ public class LoroManager
 					delete.close();
 				    }
 				    else
+				    {
 					writer.println(loroUrl);
+					resourceManager.deleteResource(loroResource.getId());
+				    }
 				}
 			    }
 			    else
@@ -342,7 +346,10 @@ public class LoroManager
 					delete.close();
 				    }
 				    else
+				    {
 					writer.println(rs.getString("doc_url"));
+					resourceManager.deleteResource(loroResource.getId());
+				    }
 
 				}
 			    }
@@ -367,13 +374,16 @@ public class LoroManager
 				    delete.close();
 				}
 				else
+				{
 				    writer.println(loroUrl);
+				    resourceManager.deleteResource(loroResource.getId());
+				}
 			    }
 			}
 		    }
 		    loroResource.save();
 
-		    //solr.indexResource(loroResource)
+		    solr.indexResource(loroResource);
 		    // textTest = true;
 		}
 		else
@@ -383,6 +393,22 @@ public class LoroManager
 	    }
 
 	}
+
+    }
+
+    private String UrlDecoder(String filename)
+    {
+	String decodedFilename = null;
+	try
+	{
+	    decodedFilename = java.net.URLDecoder.decode(filename, "UTF-8");
+	}
+	catch(UnsupportedEncodingException e)
+	{
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	return decodedFilename;
     }
 
     private Resource createResource(ResultSet rs, int learnwebResourceId) throws SQLException
@@ -404,9 +430,17 @@ public class LoroManager
 	if(rs.getString("doc_format").contains("image"))
 	{
 	    resource.setType("image");
-	    resource.setTitle(rs.getString("title") + " - " + rs.getString("filename"));
+	    String titleFilename = UrlDecoder(rs.getString("filename"));
+	    resource.setTitle(rs.getString("title") + " - " + titleFilename);
 	    resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
-
+	    try
+	    {
+		resource.setFileUrl(rs.getString("doc_url"));
+	    }
+	    catch(Exception e)
+	    {
+		writer.println("There was a problem in setting FileUrl " + rs.getString("doc_url") + "Resource ID " + rs.getInt("loro_resource_id"));
+	    }
 	    return resource;
 	}
 	else if(rs.getString("doc_format").contains("video"))
@@ -414,9 +448,17 @@ public class LoroManager
 	    resource.setType("Video");
 	    resource.setEmbeddedRaw("<link href=\"http://vjs.zencdn.net/4.12/video-js.css\" rel=\"stylesheet\"/><script src=\"http://vjs.zencdn.net/4.12/video.js\"></script><video id=\"MY_VIDEO_1\" class=\"video-js vjs-default-skin vjs-big-play-centered\" controls=\"preload=none\" width=\"100%\" height=\"100%\" data-setup=\"{}\"><source src=\""
 		    + rs.getString("doc_url") + "\"> </video>");
-	    resource.setTitle(rs.getString("title") + " - " + rs.getString("filename"));
+	    String titleFilename = UrlDecoder(rs.getString("filename"));
+	    resource.setTitle(rs.getString("title") + " - " + titleFilename);
 	    resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
-
+	    try
+	    {
+		resource.setFileUrl(rs.getString("doc_url"));
+	    }
+	    catch(Exception e)
+	    {
+		writer.println("There was a problem in setting FileUrl " + rs.getString("doc_url") + "Resource ID " + rs.getInt("loro_resource_id"));
+	    }
 	    //resource.setFileName(rs.getString("doc_url"));
 
 	    return resource;
@@ -444,6 +486,7 @@ public class LoroManager
 	LoroManager lm = Learnweb.getInstance().getLoroManager();
 	lm.saveLoroResource();
 	writer.close();
+
 	DBConnection.close();
 	System.exit(0);
     }
