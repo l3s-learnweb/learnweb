@@ -92,15 +92,15 @@ public class LoroManager
 	if(rs.getString("description") != null && !description.contains(rs.getString("description")))
 	    description = rs.getString("description");
 	if(rs.getString("language_level") != null && !description.contains(rs.getString("language_level")))
-	    description += "<br/>Language Level: " + rs.getString("language_level");
+	    description += "\nLanguage Level: " + rs.getString("language_level");
 	if(rs.getString("languages") != null && !description.contains(rs.getString("languages")))
-	    description += "<br/>Language: " + rs.getString("languages");
+	    description += "\nLanguage: " + rs.getString("languages");
 	/*if(rs.getString("course_code") != null)
 	    description += "\nCourse Code: " + rs.getString("course_code");*/
-	if(rs.getString("tags") != null)
-	    description += "<br/>KeyWords: " + rs.getString("tags");
+	if(rs.getString("tags") != null && !description.contains("KeyWords:"))
+	    description += "\nKeyWords: " + rs.getString("tags");
 	if(!description.contains("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/"))
-	    description += "<br/>This file is a part of resource collection available on LORO - http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
+	    description += "\nThis file is a part of resource collection available on LORO - http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
 	resource.setDescription(description);
 	if(rs.getString("doc_format").contains("image") || rs.getString("doc_format").contains("video"))
 	    resource.setUrl(rs.getString("doc_url"));
@@ -201,11 +201,11 @@ public class LoroManager
 	{
 	    System.out.println(resource.getTitle());
 
-	    solr.indexResource(resource);
+	    
 	}
 
-	System.exit(0);*/
-
+	System.exit(0);
+	*/
 	getConnection();
 
 	User admin = learnweb.getUserManager().getUser(7727);
@@ -424,6 +424,7 @@ public class LoroManager
 		checkConnection(DBConnection);
 		PreparedStatement setFlag = DBConnection.prepareStatement("UPDATE LORO_resource SET flag=0 WHERE loro_resource_id=" + rs.getInt("loro_resource_id"));
 		setFlag.executeUpdate();
+		resource.setDescription(null);
 	    }
 	}
 	metaData(rs, resource);
