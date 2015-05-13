@@ -6,12 +6,11 @@
 						
 	<ui:param name="pageTitle" value="#{msg.homepageTitle}" />	
 	<ui:param name="disableGrowl" value="true" />
-	<ui:param name="smallPage" value="true" />							
 
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="frontpage" name="index.css" />
 
-		<div class="info">waaaaa
+		<div class="info">
 			<h1>#{msg.homepageTitle}</h1>
 
 			<h:outputText value="#{msg.homepage}" styleClass="homepage_infotext" />
@@ -38,7 +37,7 @@
 
 						</h:panelGrid>
 						<br />
-						<h:outputLink id="forgot" class="forgot" value="user/password.jsf">
+						<h:outputLink class="forgotten_password" value="user/password.jsf">
 							<h:outputText value="#{msg.forgotten_password}" />
 						</h:outputLink>
 					</h:form>
@@ -105,7 +104,7 @@
 		</div>
 
 		<div id="index_footer">
-			<h:outputText value="LearnWeb V4 developed and maintained by L3S Research Centre, Hannover, Germany. For details please contact:  "></h:outputText>
+			<h:outputText value="LearnWeb is developed and maintained by L3S Research Centre, Hanover, Germany. Contact: "></h:outputText>
 			<h:outputText value="learnweb-support@l3s.de" style="margin-left:3px; color:#000000;"></h:outputText>
 
 		</div>

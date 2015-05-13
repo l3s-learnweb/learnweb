@@ -517,6 +517,7 @@ form#add_resource { float:right; }
 }
 
 h1 { margin-bottom: 1rem; }
+h2 { margin-bottom: 0.8rem; }
 
 /* change primefaces ui */
 .ui-button,
