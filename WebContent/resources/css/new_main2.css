@@ -1123,16 +1123,6 @@ textarea
 	cursor: -moz-zoom-in;
 }
 
-a.rss_link { 
-	display:block;
-	height:32px;
-	width:32px;
-	background-image:url(../icon/rss_off.png);
-}
-a.rss_link:hover {
-	background-image:url(../icon/rss_on.png);
-}
-
 .klapper_zu { 
 	float:left;
 	width:11px;	 

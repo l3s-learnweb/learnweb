@@ -1,14 +1,22 @@
-@CHARSET "ISO-8859-1";
+
 /*html { 
 	height:100%; 
 }*/
+body {
+	background:url("uni.jpg") no-repeat center center fixed;
+	background-size:cover;
+	position:static;
+}
 #content{
+	/*
 	margin:0px auto !important;
 	overflow:hidden !important;
-	background:url(../resources/image/uni.jpg) center no-repeat;
+	*/
+	background:url(../resources/frontpage/uni.jpg) center no-repeat;
+	/*
 	background-size:cover;
 	font-family:sans-serif;
-	/*display:inline-block;*/
+	display:inline-block;*/
 	/*height:auto;*/
 	/*min-height:100%;*/
 }
@@ -19,10 +27,12 @@
 	margin:5% auto;
 	padding:15px;
 }
-h1,h2{font-weight:bold;font-size:1.7rem;}
+
+.ui-inputfield { width: 100%; }
+
 .homepage_infotext{
 	font-size:medium; 
-	/*display:block;*/
+
 }
 #div_left{
 	float:left; 
@@ -47,14 +57,16 @@ h1,h2{font-weight:bold;font-size:1.7rem;}
 	display:inline-block;
 }
 .forgot{color:white;}
+
+/*
 .subheading{
-	/*display:inline-block;*/
+	
 	font-weight:bold; 
 	font-size:1.5rem;
 	width:100%;
-}
+}*/
 .video_guide{
-	background-image:url("../resources/icon/videoguide.jpg");
+	background-image:url(../resources/frontpage/videoguide.jpg);
 	width:280px;
 	height:153px;
 	cursor:pointer;

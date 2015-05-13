@@ -331,7 +331,7 @@ img.smallImage { cursor:pointer; margin:4px; }
 	top:10px;
 	width:24px;
 	height:24px;
-	background:url(../resources/icon/flat/cancel-inv.png) center no-repeat;
+	background:url(../resources/search/icon/cancel-inv.png) center no-repeat;
 }
 
 #lightbox_navigate_left {
@@ -340,7 +340,7 @@ img.smallImage { cursor:pointer; margin:4px; }
 	top:0;
 	width:30px;
 	height:100%;
-	background:url(../resources/icon/flat/media-backward-inv.png) center no-repeat;
+	background:url(../resources/search/icon/media-backward-inv.png) center no-repeat;
 	cursor:pointer;
 	opacity: 0.5;
 	z-index:910;
@@ -359,7 +359,7 @@ img.smallImage { cursor:pointer; margin:4px; }
 	top:0;
 	width:30px;
 	height:100%;
-	background:url(../resources/icon/flat/media-play-inv.png) center no-repeat;
+	background:url(../resources/search/icon/media-play-inv.png) center no-repeat;
 	cursor:pointer;
 	opacity: 0.5;
 	z-index:910;
