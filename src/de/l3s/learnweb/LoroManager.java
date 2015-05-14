@@ -17,6 +17,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.SolrClient;
+import de.l3s.util.StringHelper;
 
 public class LoroManager
 {
@@ -101,12 +102,9 @@ public class LoroManager
 	    description += "\nKeyWords: " + rs.getString("tags");
 	if(!description.contains("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/"))
 	    description += "\nThis file is a part of resource collection available on LORO - http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
-	resource.setDescription(description);
-	if(rs.getString("doc_format").contains("image") || rs.getString("doc_format").contains("video"))
-	    resource.setUrl(rs.getString("doc_url"));
-	else
-	    resource.setUrl("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
 
+	resource.setDescription(description);
+	resource.setUrl("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
 	resource.setSource("LORO");
 	resource.setLocation("LORO");
 
@@ -127,48 +125,34 @@ public class LoroManager
 
     }
 
-    private boolean checkForError(Resource loroResource, String doc_url)
+    private boolean isLoroResourceDeleted(Resource loroResource, String doc_url)
     {
-	boolean delete = false;
 	try
 	{
-
-	    int exponent = 2;
 	    HttpURLConnection.setFollowRedirects(false);
-	    // note : you may also need
-	    //        HttpURLConnection.setInstanceFollowRedirects(false)
 	    HttpURLConnection con = (HttpURLConnection) new URL(doc_url).openConnection();
 	    con.setRequestMethod("HEAD");
 
-	    for(int i = 1; i < 100;)
+	    for(int i = 1; i < 6;)
 	    {
+		if(con.getResponseCode() == 404)
+		    return true;
 
-		if(con.getResponseCode() != 404)
+		try
 		{
-		    try
-		    {
-			Thread.sleep(10000 * i);
-		    }
-		    catch(InterruptedException e)
-		    {
-			log.error("Failed due to some interrupt exception on the thread that fetches from the ted api in case of gateway error 504", e);
-		    }
-		    i = (int) Math.pow(2, exponent++);
+		    Thread.sleep(10000 * (int) Math.pow(2, i));
 		}
-		else
+		catch(InterruptedException e)
 		{
-		    delete = true;
-		    break;
+		    log.error("Failed due to some interrupt exception on the thread that fetches from the ted api in case of gateway error 504", e); // TODO change messages
 		}
 	    }
 	}
 	catch(Exception e)
 	{
-
-	    e.printStackTrace();
-
+	    e.printStackTrace(); // TODO log.error + appropriate message
 	}
-	return delete;
+	return false;
     }
 
     //For saving Loro resources to LW table
@@ -186,12 +170,10 @@ public class LoroManager
 	}
 	catch(FileNotFoundException e)
 	{
-
 	    e.printStackTrace();
 	}
 	catch(UnsupportedEncodingException e)
 	{
-
 	    e.printStackTrace();
 	}
 
@@ -209,8 +191,10 @@ public class LoroManager
 	getConnection();
 
 	User admin = learnweb.getUserManager().getUser(7727);
+
+	PreparedStatement getLoroResource = DBConnection
+		.prepareStatement("SELECT t1.loro_resource_id , t2.resource_id , t1.description , t1.tags , t1.title , t1.creator_name , t1.course_code , t1.language_level , t1.languages , t1.flag , t1.preview_img_url,  t2.filename , t2.doc_format , t2.doc_url FROM LORO_resource t1 JOIN LORO_resource_docs t2 ON t1.loro_resource_id = t2.loro_resource_id WHERE t1.`loro_resource_id` = ?");
 	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource_docs SET resource_id = ? WHERE loro_resource_id = ? AND doc_url= ?");
-	//Philipp, you can check here for id = 2109 and id= 5
 	PreparedStatement getCount = DBConnection.prepareStatement("SELECT loro_resource_id, COUNT( * ) AS rowcount FROM  `LORO_resource_docs` group by `loro_resource_id`");
 	getCount.executeQuery();
 	ResultSet rs1 = getCount.getResultSet();
@@ -218,13 +202,10 @@ public class LoroManager
 	while(rs1.next())
 	{
 
-	    PreparedStatement getLoroResource = DBConnection
-		    .prepareStatement("SELECT t1.loro_resource_id , t2.resource_id , t1.description , t1.tags , t1.title , t1.creator_name , t1.course_code , t1.language_level , t1.languages , t1.flag , t1.preview_img_url,  t2.filename , t2.doc_format , t2.doc_url FROM LORO_resource t1 JOIN LORO_resource_docs t2 ON t1.loro_resource_id = t2.loro_resource_id WHERE t1.`loro_resource_id` = "
-			    + rs1.getInt("loro_resource_id"));
-
+	    getLoroResource.setInt(1, rs1.getInt("loro_resource_id"));
 	    getLoroResource.executeQuery();
 	    ResultSet rs = getLoroResource.getResultSet();
-	    String rs1Result = rs1.toString();
+	    String rs1Result = rs1.toString(); // TODO remove?
 	    int resourceId = 0;
 	    //Variable to keep track for resourceId of a particular file belonging to type "text" and under same loro_resource_id group
 	    boolean textTest = true;
@@ -233,7 +214,7 @@ public class LoroManager
 	    {
 
 		int learnwebResourceId = rs.getInt("resource_id");
-		int lororesourceid = rs.getInt("loro_resource_id");
+		int lororesourceid = rs.getInt("loro_resource_id"); // TODO remove?
 		String docFormat = rs.getString("doc_format");
 		if(!docFormat.contains("video") && !docFormat.contains("image"))
 		{
@@ -261,9 +242,7 @@ public class LoroManager
 		loroResource.setOwner(admin);
 
 		if(learnwebResourceId == 0) // not yet stored in Learnweb
-
 		{
-
 		    loroResource = admin.addResource(loroResource);
 		    loroGroup.addResource(loroResource, admin);
 		    if(!docFormat.contains("video") && !docFormat.contains("image"))
@@ -271,7 +250,6 @@ public class LoroManager
 			if(resourceId == 0)
 			    resourceId = loroResource.getId();
 			update.setInt(1, resourceId);
-
 		    }
 		    else
 			update.setInt(1, loroResource.getId());
@@ -283,18 +261,17 @@ public class LoroManager
 		    if(rs.getString("doc_format").contains("video"))
 		    {
 			if(!rs.getString("preview_img_url").contains("RestrictedAccess"))
+			{
 			    try
 			    {
 				rpm.processVideo(loroResource);
-
 			    }
 			    catch(Exception e)
 			    {
-
 				writer.println(rs.getString("doc_url"));
 				resourceManager.deleteResource(loroResource.getId());
-
 			    }
+			}
 		    } //Preview images for video can be generated even when there is no preview image available
 		      // else if((!rs.getString("preview_img_url").contains("No-Preview") && !rs.getString("preview_img_url").contains("RestrictedAccess")) || (rs.getString("doc_format").contains("image") && !rs.getString("preview_img_url").contains("RestrictedAccess")))
 
@@ -312,7 +289,7 @@ public class LoroManager
 				catch(Exception e)
 				{
 				    String loroUrl = "http://loro.open.ac.uk/" + rs.getInt("loro_resource_id") + "/";
-				    if(checkForError(loroResource, loroUrl))
+				    if(isLoroResourceDeleted(loroResource, loroUrl))
 				    {
 					resourceManager.deleteResourcePermanent(loroResource.getId());
 					PreparedStatement delete = DBConnection.prepareStatement("DELETE FROM `loro_resource_docs` WHERE `resource_id` = ? and title = ?");
@@ -336,7 +313,7 @@ public class LoroManager
 				}
 				catch(Exception e)
 				{
-				    if(checkForError(loroResource, rs.getString("doc_url")))
+				    if(isLoroResourceDeleted(loroResource, rs.getString("doc_url")))
 				    {
 					resourceManager.deleteResourcePermanent(loroResource.getId());
 					PreparedStatement delete = DBConnection.prepareStatement("DELETE FROM `loro_resource_docs` WHERE `resource_id` = ? and title = ?");
@@ -350,7 +327,6 @@ public class LoroManager
 					writer.println(rs.getString("doc_url"));
 					resourceManager.deleteResource(loroResource.getId());
 				    }
-
 				}
 			    }
 			}
@@ -364,7 +340,7 @@ public class LoroManager
 			    catch(Exception e)
 			    {
 				String loroUrl = "http://loro.open.ac.uk/" + rs.getInt("loro_resource_id") + "/";
-				if(checkForError(loroResource, loroUrl))
+				if(isLoroResourceDeleted(loroResource, loroUrl))
 				{
 				    resourceManager.deleteResourcePermanent(loroResource.getId());
 				    PreparedStatement delete = DBConnection.prepareStatement("DELETE FROM `loro_resource_docs` WHERE `resource_id` = ? and title = ?");
@@ -396,21 +372,6 @@ public class LoroManager
 
     }
 
-    private String UrlDecoder(String filename)
-    {
-	String decodedFilename = null;
-	try
-	{
-	    decodedFilename = java.net.URLDecoder.decode(filename, "UTF-8");
-	}
-	catch(UnsupportedEncodingException e)
-	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-	return decodedFilename;
-    }
-
     private Resource createResource(ResultSet rs, int learnwebResourceId) throws SQLException
     {
 
@@ -431,7 +392,8 @@ public class LoroManager
 	if(rs.getString("doc_format").contains("image"))
 	{
 	    resource.setType("image");
-	    String titleFilename = UrlDecoder(rs.getString("filename"));
+	    String titleFilename = StringHelper.urlDecode(rs.getString("filename"));
+	    resource.setFileName(titleFilename);
 	    resource.setTitle(rs.getString("title") + " - " + titleFilename);
 	    resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
 	    try
@@ -449,7 +411,8 @@ public class LoroManager
 	    resource.setType("Video");
 	    resource.setEmbeddedRaw("<link href=\"http://vjs.zencdn.net/4.12/video-js.css\" rel=\"stylesheet\"/><script src=\"http://vjs.zencdn.net/4.12/video.js\"></script><video id=\"MY_VIDEO_1\" class=\"video-js vjs-default-skin vjs-big-play-centered\" controls=\"preload=none\" width=\"100%\" height=\"100%\" data-setup=\"{}\"><source src=\""
 		    + rs.getString("doc_url") + "\"> </video>");
-	    String titleFilename = UrlDecoder(rs.getString("filename"));
+	    String titleFilename = StringHelper.urlDecode(rs.getString("filename"));
+	    resource.setFileName(titleFilename);
 	    resource.setTitle(rs.getString("title") + " - " + titleFilename);
 	    resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
 	    try
@@ -460,7 +423,6 @@ public class LoroManager
 	    {
 		writer.println("There was a problem in setting FileUrl " + rs.getString("doc_url") + "Resource ID " + rs.getInt("loro_resource_id"));
 	    }
-	    //resource.setFileName(rs.getString("doc_url"));
 
 	    return resource;
 	}
@@ -471,14 +433,10 @@ public class LoroManager
 
 	    resource.setType("text");
 	    resource.setTitle(rs.getString("title"));
-
 	    resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
 
 	    return resource;
 	}
-
-	//resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
-	//return resource;
     }
 
     public static void main(String[] args) throws Exception
