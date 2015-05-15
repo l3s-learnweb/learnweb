@@ -119,7 +119,7 @@ public class Course implements Serializable, Comparable<Course>
 
     public String getForumUrl(User user) throws SQLException
     {
-	return Learnweb.getInstance().getForumManger().getForumUrl(user, forumId);
+	return Learnweb.getInstance().getJForumManager().getForumUrl(user, forumId);
     }
 
     /**

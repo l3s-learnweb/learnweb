@@ -43,7 +43,8 @@ public class Learnweb
 
     // Manager (Data Access Objects):
 
-    private final ForumManager forumManger;
+    private final JForumManager jforumManager;
+    private final ForumManager forumManager;
     private final ResourceManager resourceManager;
     private final PresentationManager presentationManager;
     private final OrganisationManager organisationManager;
@@ -142,7 +143,8 @@ public class Learnweb
 
 	resourceManager = new ResourceManager(this);
 	presentationManager = new PresentationManager(this);
-	forumManger = new ForumManager(this);
+	jforumManager = new JForumManager(this);
+	forumManager = new ForumManager(this);
 	organisationManager = new OrganisationManager(this);
 	courseManager = new CourseManager(this);
 	groupManager = new GroupManager(this);
@@ -184,9 +186,9 @@ public class Learnweb
 	return resourceManager;
     }
 
-    public ForumManager getForumManger()
+    public JForumManager getJForumManager()
     {
-	return forumManger;
+	return jforumManager;
     }
 
     public OrganisationManager getOrganisationManager()
@@ -629,6 +631,11 @@ public class Learnweb
     public ArchiveUrlManager getArchiveUrlManager()
     {
 	return archiveUrlManager;
+    }
+
+    public ForumManager getForumManager()
+    {
+	return forumManager;
     }
 
     /**

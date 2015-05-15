@@ -18,7 +18,7 @@ import org.primefaces.model.UploadedFile;
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Course.Option;
 import de.l3s.learnweb.File;
-import de.l3s.learnweb.ForumManager;
+import de.l3s.learnweb.JForumManager;
 import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.ResourcePreviewMaker;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
@@ -121,7 +121,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
 
     public void onEnableForum()
     {
-	ForumManager fm = getLearnweb().getForumManger();
+	JForumManager fm = getLearnweb().getJForumManager();
 
 	try
 	{

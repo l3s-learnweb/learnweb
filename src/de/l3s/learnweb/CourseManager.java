@@ -160,7 +160,7 @@ public class CourseManager
 	    if(course.getForumCategoryId() < 1 && course.getForumId() < 1)
 	    {
 		// try to set up the forum:
-		ForumManager fm = learnweb.getForumManger();
+		JForumManager fm = learnweb.getJForumManager();
 		try
 		{
 		    int categoryId = fm.createCategory(course.getTitle());

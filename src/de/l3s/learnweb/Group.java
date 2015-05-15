@@ -364,7 +364,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     public String getForumUrl(User user) throws SQLException
     {
-	return Learnweb.getInstance().getForumManger().getForumUrl(user, forumId);
+	return Learnweb.getInstance().getJForumManager().getForumUrl(user, forumId);
     }
 
     public int getParentGroupId()

@@ -37,7 +37,7 @@ import com.google.gdata.util.ServiceException;
 
 import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.Course;
-import de.l3s.learnweb.ForumManager;
+import de.l3s.learnweb.JForumManager;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Link;
@@ -577,7 +577,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    return;
 	}
 
-	ForumManager fm = getLearnweb().getForumManger();
+	JForumManager fm = getLearnweb().getJForumManager();
 
 	try
 	{

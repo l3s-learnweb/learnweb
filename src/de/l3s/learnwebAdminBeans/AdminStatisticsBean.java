@@ -18,8 +18,8 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import de.l3s.learnweb.Comment;
-import de.l3s.learnweb.ForumManager;
-import de.l3s.learnweb.ForumManager.ForumStatistic;
+import de.l3s.learnweb.JForumManager;
+import de.l3s.learnweb.JForumManager.ForumStatistic;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.GroupManager;
 import de.l3s.learnweb.Learnweb;
@@ -103,7 +103,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 
 	    ResultSet rs = Learnweb.getInstance().getConnection().createStatement().executeQuery(query);
 
-	    ForumManager forumManager = Learnweb.getInstance().getForumManger();
+	    JForumManager forumManager = Learnweb.getInstance().getJForumManager();
 
 	    while(rs.next())
 	    {
