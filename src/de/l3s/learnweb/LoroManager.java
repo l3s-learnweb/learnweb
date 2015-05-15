@@ -144,13 +144,14 @@ public class LoroManager
 		}
 		catch(InterruptedException e)
 		{
-		    log.error("Failed due to some interrupt exception on the thread that fetches from the ted api in case of gateway error 504", e); // TODO change messages
+		    log.error("Failed due to some interrupt exception on the thread that fetches from the LORO", e);
 		}
 	    }
 	}
 	catch(Exception e)
 	{
-	    e.printStackTrace(); // TODO log.error + appropriate message
+	    log.error("Failed because there was a problem in establishing connection.");
+	    e.printStackTrace();
 	}
 	return false;
     }
@@ -205,7 +206,7 @@ public class LoroManager
 	    getLoroResource.setInt(1, rs1.getInt("loro_resource_id"));
 	    getLoroResource.executeQuery();
 	    ResultSet rs = getLoroResource.getResultSet();
-	    String rs1Result = rs1.toString(); // TODO remove?
+
 	    int resourceId = 0;
 	    //Variable to keep track for resourceId of a particular file belonging to type "text" and under same loro_resource_id group
 	    boolean textTest = true;
@@ -214,7 +215,7 @@ public class LoroManager
 	    {
 
 		int learnwebResourceId = rs.getInt("resource_id");
-		int lororesourceid = rs.getInt("loro_resource_id"); // TODO remove?
+
 		String docFormat = rs.getString("doc_format");
 		if(!docFormat.contains("video") && !docFormat.contains("image"))
 		{
