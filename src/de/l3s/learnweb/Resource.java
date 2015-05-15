@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -85,7 +86,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private Thumbnail thumbnail4;
     private String embeddedRaw;
 
-    private List<ArchiveUrl> archiveUrls = null;//To store the archive URL from archive.today service
+    private LinkedList<ArchiveUrl> archiveUrls = null;//To store the archive URL from archive.today service
     private boolean restricted = false;
     // caches
     private transient OwnerList<Tag, User> tags = null;
@@ -1206,7 +1207,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	this.idAtService = idAtService;
     }
 
-    public List<ArchiveUrl> getArchiveUrls() throws SQLException
+    public LinkedList<ArchiveUrl> getArchiveUrls() throws SQLException
     {
 	if(id != -1 && archiveUrls == null)
 	{

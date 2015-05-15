@@ -175,6 +175,7 @@ public class Learnweb
      */
     public void initLearnwebServer()
     {
+	log.info("initLearnwebServer");
 	jobScheduler.startAllJobs();
     }
 
@@ -332,6 +333,7 @@ public class Learnweb
 	} // ignore	
 
 	jobScheduler.stopAllJobs();
+	archiveUrlManager.onDestroy();
 
 	log.info("Shutdown Learnweb completed");
     }

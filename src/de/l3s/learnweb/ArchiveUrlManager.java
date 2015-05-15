@@ -15,8 +15,12 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Queue;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -33,6 +37,7 @@ public class ArchiveUrlManager
     private URL serviceUrlObj;
     private Queue<Resource> resources = new ConcurrentLinkedQueue<Resource>();
     private Map<Integer, Date> trackResources = new ConcurrentHashMap<Integer, Date>();
+    private ThreadPoolExecutor executerService;
 
     protected ArchiveUrlManager(Learnweb learnweb)
     {
@@ -46,10 +51,28 @@ public class ArchiveUrlManager
 	{
 	    log.error("The archive today service URL is malformed:", e);
 	}
+
+	int maxThreads = 1;
+	executerService = new ThreadPoolExecutor(maxThreads, maxThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(maxThreads * 1000, true), new ThreadPoolExecutor.CallerRunsPolicy());
+
+    }
+
+    class Worker implements Callable<Object>
+    {
+
+	@Override
+	public Object call() throws Exception
+	{
+	    // TODO Auto-generated method stub
+	    return null;
+	}
+
     }
 
     public String addResourceToArchive(Resource resource)
     {
+	// executerService.submit(new Worker(query, matchPattern, round));
+
 	String response = "";
 	if(!(resource.getStorageType() == Resource.FILE_RESOURCE))
 	{
@@ -88,15 +111,23 @@ public class ArchiveUrlManager
 	    if(resource == null)
 		continue;
 
+	    //    resource.setTitle("testsswssss");
+
 	    resource = learnweb.getResourceManager().getResource(resource.getId());
+
+	    System.out.println(resource.getTitle());
+
 	    try
 	    {
 		if(resource.getArchiveUrls() != null)
 		{
 		    int versions = resource.getArchiveUrls().size();
-		    long timeDifference = (new Date().getTime() - resource.getArchiveUrls().get(versions - 1).getTimestamp().getTime()) / 1000;
-		    if(timeDifference < 300)
-			continue;
+		    if(versions > 0)
+		    {
+			long timeDifference = (new Date().getTime() - resource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
+			if(timeDifference < 300)
+			    continue;
+		    }
 		}
 	    }
 	    catch(SQLException e1)
@@ -177,6 +208,21 @@ public class ArchiveUrlManager
 		trackResourceIterator.remove();
 	    }
 	}*/
+    }
+
+    public void onDestroy()
+    {
+	executerService.shutdown();
+	try
+	{
+	    executerService.awaitTermination(1, TimeUnit.MINUTES);
+	}
+	catch(InterruptedException e)
+	{
+	    // TODO Auto-generated catch block
+	    e.printStackTrace(); // TODO
+	}
+
     }
 
 }

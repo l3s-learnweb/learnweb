@@ -402,15 +402,22 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     {
 	try
 	{
-	    int versions = clickedResource.getArchiveUrls().size();
-	    long timeDifference = (new Date().getTime() - clickedResource.getArchiveUrls().get(versions - 1).getTimestamp().getTime()) / 1000;
-	    if(timeDifference > 300)
+	    if(clickedResource.getArchiveUrls().size() > 0)
+	    {
+		long timeDifference = (new Date().getTime() - clickedResource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
+		if(timeDifference > 300)
+		{
+		    getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
+		    addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
+		}
+		else
+		    addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
+	    }
+	    else
 	    {
 		getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
 		addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
 	    }
-	    else
-		addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
 	}
 	catch(SQLException e)
 	{
