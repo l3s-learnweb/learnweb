@@ -1,5 +1,7 @@
 package de.l3s.learnweb;
 
+import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Collections;
@@ -64,7 +66,6 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private LinkedHashMap<Integer, File> files = new LinkedHashMap<Integer, File>(); // resource_file_number : file
 
     private String embeddedSize1;
-
     private String embeddedSize3;
     private String embeddedSize4;
     private String embeddedSize1Raw;
@@ -76,6 +77,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
     private String query; // the query which was used to find this resource
     private int originalResourceId = 0; // if the resource was copied from an older fedora resource this stores the id of the original resource
+    private boolean restricted = false;
 
     private Thumbnail thumbnail0;
     private Thumbnail thumbnail1;
@@ -86,13 +88,12 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private Thumbnail thumbnail4;
     private String embeddedRaw;
 
-    private LinkedList<ArchiveUrl> archiveUrls = null;//To store the archive URL from archive.today service
-    private boolean restricted = false;
     // caches
     private transient OwnerList<Tag, User> tags = null;
     private transient List<Comment> comments;
     private transient List<Group> groups;
     private transient User owner;
+    private transient LinkedList<ArchiveUrl> archiveUrls = null;//To store the archive URL from archive.today service
 
     protected void clearCaches()
     {
@@ -1244,6 +1245,14 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	    throw new IllegalArgumentException("url is too long: " + fileUrl.length() + "; " + fileUrl);
 
 	this.fileUrl = fileUrl;
+    }
+
+    private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException
+    {
+	inputStream.defaultReadObject();
+
+	// restore transient objects
+	log.debug("deserialize: " + id);
     }
 
 }

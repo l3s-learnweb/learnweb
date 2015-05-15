@@ -254,6 +254,8 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    ++resourceCount;
 	}
 
+	// TODO does this really make sense?
+	//  shouldn't you check if a resource with the same url was part of the old resultset to check if a resource is new?
 	while(resourceCount < historyResourcesSize)
 	{
 	    ++page;
