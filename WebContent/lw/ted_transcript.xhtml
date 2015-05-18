@@ -42,7 +42,7 @@
 		<h:panelGroup layout="block" id="search_right_bar" class="right_bar">
 			<p:outputPanel autoUpdate="true">
 				<h:form>
-					<p:outputLabel for="select_lang" value="#{msg.select_transcript_lang}" />
+					<p:outputLabel for="select_lang" value="#{msg.select_transcript_lang}:" />
 			        <h:selectOneMenu id="select_lang" value="#{tedTranscriptBean.transcriptLanguage}" >
 			           <f:selectItem itemValue="----------------------------"/>
 			           <f:selectItems value="#{tedTranscriptBean.getLanguageList()}"/>
@@ -71,7 +71,7 @@
 		</h:form>	
 
 		<p:dialog widgetVar="userinput_dialog" modal="true" header="#{msg.userAnnotation}" minWidth="600" resizable="false" closable="false" appendTo="@(body)">
-			<h:outputLabel value="#{msg.justify_selection}" for="text"/>
+			<h:outputLabel value="#{msg.justify_selection}:" for="text"/>
 			<p:inputText id="text" style="width:97%;"/>
 			<p:commandButton value="Ok" onclick="getUserText('ok');"></p:commandButton>
 			<p:commandButton value="#{msg.cancel}" onclick="getUserText('cancel');"></p:commandButton>

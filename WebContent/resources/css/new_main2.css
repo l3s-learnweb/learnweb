@@ -559,7 +559,8 @@ span.ui-autocomplete
 	border: 1px solid #aeaeae !important;
 	border-radius: 0px !important;
 	box-shadow: 0 0 0px 0px #fff !important;
-	width: 98.4%
+	width: 100%;
+	box-sizing:border-box;
 }
 
 .tag_x
