@@ -13,6 +13,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.apache.log4j.Logger;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
@@ -27,17 +28,18 @@ import de.l3s.learnweb.UserManager;
 import de.l3s.learnwebBeans.ApplicationBean;
 import de.l3s.util.Sql;
 
+/**
+ * User Assessment Bean
+ * 
+ * @author Alana Morais
+ */
 @ManagedBean
 @SessionScoped
 public class UserAssessmentBean extends ApplicationBean implements Serializable
 {
-    /**
-     * User Assessment Bean
-     * 
-     * @author Alana Morais
-     */
+    private final static long serialVersionUID = 3991177737812918816L;
+    private final static Logger log = Logger.getLogger(UserAssessmentBean.class);
 
-    private static final long serialVersionUID = 1L;
     private List<User> group1 = new ArrayList<User>();
     private List<User> group2 = new ArrayList<User>();
     private List<User> group3 = new ArrayList<User>();
@@ -47,7 +49,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     private Map<String, String> infoDetailUser = new HashMap<String, String>();
 
     private String selectCourse1;
-    private String selectCourse20;
+    private String selectCourse20; // TODO please use better names
     private String selectCourse21;
     private String selectCourse3;
     private String selectedUser;
@@ -60,7 +62,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     private BarChartModel barModel = new BarChartModel();
     private BarChartModel barModel2 = new BarChartModel();
     private PieChartModel pieModel = new PieChartModel();
-    private PieChartModel pieModel20 = new PieChartModel();
+    private PieChartModel pieModel20 = new PieChartModel(); // TODO please use better names
     private PieChartModel pieModel21 = new PieChartModel();
     private LineChartModel lineModel = new LineChartModel();
     private LineChartModel lineModel2 = new LineChartModel();
@@ -123,6 +125,28 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    Long downloading = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=32");
 	    Long editResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=19");
 
+	    /**
+	     * I guess one query will be faster than 6.
+	     * 
+	     * WHERE A2.course_id=" + classe + " AND A1.action=19
+	     * 
+	     * Adding a parameter to the query is a security vulnerability.
+	     * PrepearedStatements are more secure.
+	     * 
+	     * PreparedStatement select = getLearnweb().getConnection().prepareStatement(
+	     * "SELECT action, count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 USING(user_id) WHERE A2.course_id=? GROUP BY A1.action");
+	     * select.setString(1, classe);
+	     * ResultSet rs = select.executeQuery();
+	     * while(rs.next())
+	     * {
+	     * int action = rs.getInt(1);
+	     * int count = rs.getInt(2);
+	     * 
+	     * if(action == 19)
+	     * listGeneralActivities.put("Edit Resource", (long) count);
+	     * }
+	     * rs.close();
+	     */
 	    listGeneralActivities.put("Ratting Resources", ratting);
 	    listGeneralActivities.put("Tagging Resources", tagging);
 	    listGeneralActivities.put("Comments", commenting);
@@ -133,7 +157,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	}
 	catch(SQLException e)
 	{
-	    e.printStackTrace();
+	    log.error("Couldn't genereta statistics", e); // TODO use log.info/debug/error instead of system.println
 	    return null;
 	}
     }

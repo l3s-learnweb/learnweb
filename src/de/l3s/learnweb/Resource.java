@@ -494,9 +494,10 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	r.setMachineDescription(machineDescription);
 	r.setFileName(fileName);
 	r.setTranscript(transcript);
-	//r.setArchiveUrl(archiveUrl);
 	r.setOnlineStatus(onlineStatus);
 	r.setIdAtService(idAtService);
+	r.setFileUrl(fileUrl);
+	r.setRestricted(restricted);
 
 	return r;
     }
@@ -1252,7 +1253,6 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	inputStream.defaultReadObject();
 
 	// restore transient objects
-	log.debug("deserialize: " + id);
+	//log.debug("deserialize: " + id);
     }
-
 }
