@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormatSymbols;
+import java.util.Arrays;
+import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -20,6 +23,7 @@ import org.primefaces.model.chart.PieChartModel;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.beans.UtilBean;
 
 @ManagedBean
 public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
@@ -166,6 +170,27 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 	System.out.println(archiveDates.toJSONString());
 	return "";
 
+    }
+
+    //Function to get short week day names for the calendar
+    public List<String> getShortWeekDays()
+    {
+	DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
+	List<String> dayNames = Arrays.asList(symbols.getShortWeekdays());
+	return dayNames.subList(1, 8);
+    }
+
+    //Function to localized month names for the calendar 
+    public String getMonthNames()
+    {
+	DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
+	JSONArray monthNames = new JSONArray();
+	for(String month : symbols.getMonths())
+	{
+	    monthNames.add(month);
+	}
+	monthNames.remove(""); //To remove empty string from the array
+	return monthNames.toJSONString();
     }
 
     public static void main(String[] args) throws SQLException

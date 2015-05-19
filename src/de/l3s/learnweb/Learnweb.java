@@ -56,6 +56,7 @@ public class Learnweb
     private final TedManager tedManager; //For logging transcript actions by users
     private final ArchiveUrlManager archiveUrlManager; //For creating archive pages of resources saved to LearnWeb
     private final SearchLogClient searchlogClient; //For Search History Tools
+    private final MementoClient mementoClient;
     private final SolrClient solrClient;
     private final LoroManager loroManager;
     private final ResourcePreviewMaker resourcePreviewMaker;
@@ -158,9 +159,10 @@ public class Learnweb
 	searchlogClient = new SearchLogClient(this);
 	tedManager = new TedManager(this);
 	archiveUrlManager = new ArchiveUrlManager(this);
+	mementoClient = new MementoClient(this);
 	loroManager = new LoroManager(this);
 	jobScheduler = new JobScheduler(this);
-
+	jobScheduler.startAllJobs();
 	/*
 	PreparedStatement pstmt = dbConnection.prepareStatement("select * from lw_admin_message");
 	ResultSet rs = pstmt.executeQuery();
@@ -654,5 +656,10 @@ public class Learnweb
 	resourceManager.resetCache();
 	groupManager.resetCache();
 	courseManager.resetCache();
+    }
+
+    public MementoClient getMementoClient()
+    {
+	return mementoClient;
     }
 }
