@@ -1,0 +1,117 @@
+<ui:composition 
+	template="/templates/main/main.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:p="http://primefaces.org/ui">
+
+
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="Group Log Analysis" />
+
+	<ui:define name="center_layout">
+			
+		<p:tabView cache="true">
+			<p:tab title="Interactive Groups">
+				<h:form id="form1">
+					<h:panelGrid columns="2" cellspacing="1" id="pg1">
+						<f:facet name="header"> 
+							<p:outputLabel for="selectCourse1" value="Select a Class" /> 
+						</f:facet>
+				            	
+						<p:outputLabel for="selectCourse1" value="Class:" /> 
+						<p:selectOneMenu id="selectCourse1" value="#{userAssessmentBean.selectCourse1}" style="width:250px">
+							<f:selectItem itemLabel="-" itemValue="" />
+							<f:selectItems value="#{userAssessmentBean.courses}" var="c1" itemLabel="#{c1.title}" itemValue="#{c1.id}"/>
+						</p:selectOneMenu>
+							    
+						<p:outputLabel for="graph1" value="Chart Type:" />
+						<p:selectOneMenu id="graph1" value="#{userAssessmentBean.selectChart1}">
+							<f:selectItem itemLabel="-" itemValue="" />
+							<f:selectItem itemLabel="Bar Chart" itemValue="bar" />
+							<f:selectItem itemLabel="Pie Chart" itemValue="pie" />
+							<f:selectItem itemLabel="Line Chart" itemValue="line" />
+						</p:selectOneMenu>
+					</h:panelGrid>
+				</h:form>
+			</p:tab>		        
+			
+			<p:tab title="Classes Comparation">
+				<h:form id="form2">
+					<h:panelGrid columns="2" cellspacing="1" id="pg2">
+				    	<f:facet name="header">
+				        	<h:outputText value="Classes comparation Menu" /> 
+				    	</f:facet>
+				    	
+				    	<p:outputLabel for="selectCourse20" value="Class 1:" /> 
+				        <p:selectOneMenu id="selectCourse20" value="#{userAssessmentBean.selectCourse20}" style="width:250px">
+							<f:selectItem itemLabel="-" itemValue="" />
+		            		<f:selectItems value="#{userAssessmentBean.courses}" var="c20" itemLabel="#{c20.title}" itemValue="#{c20.id}"/>
+						</p:selectOneMenu>
+							    
+						<p:outputLabel for="selectCourse21" value="Class 2:" /> 
+				        <p:selectOneMenu id="selectCourse21" value="#{userAssessmentBean.selectCourse21}" style="width:250px">
+							<f:selectItem itemLabel="-" itemValue="" />
+		            		<f:selectItems value="#{userAssessmentBean.courses}" var="c21" itemLabel="#{c21.title}" itemValue="#{c21.id}"/>
+						</p:selectOneMenu>
+				                
+				        <p:outputLabel for="graph2" value="Chart Type:" />
+						<p:selectOneMenu id="graph2" value="#{userAssessmentBean.selectChart2}">
+							<f:selectItem itemLabel="-" itemValue="" />
+						    <f:selectItem itemLabel="Bar Chart" itemValue="bar" />
+						    <f:selectItem itemLabel="Pie Chart" itemValue="pie" />
+						    <f:selectItem itemLabel="Line Chart" itemValue="line" />
+						</p:selectOneMenu>
+						        
+				        <p:commandButton value="Compare" oncomplete="PF('dlg2').show()" update="dia" actionListener="#{userAssessmentBean.generateComparativeGraph}"/>
+				                
+						<p:dialog id="dia" modal="true" resizable="true" widgetVar="dlg2" header="Comparative Between Classes" showEffect="clip">
+							<p:chart type="bar" model="#{userAssessmentBean.barModel2}" rendered="#{userAssessmentBean.showb2}" style="height:300px;width:800px"/>
+							<p:chart type="line" model="#{userAssessmentBean.lineModel2}" rendered="#{userAssessmentBean.showl2}" style="height:300px;width:800px"/>
+							<p:chart type="pie" model="#{userAssessmentBean.pieModel20}" rendered="#{userAssessmentBean.showp2}" style="height:300px;width:800px"/>
+							<p:chart type="pie" model="#{userAssessmentBean.pieModel21}" rendered="#{userAssessmentBean.showp2}" style="height:300px;width:800px"/>
+						</p:dialog>
+				    </h:panelGrid>
+			    </h:form>
+			</p:tab>
+			
+			<p:tab title="User Analysis">
+				<h:form id="form3">
+					<h:panelGrid columns="2" cellspacing="1" id="pg3">
+				    	<f:facet name="header" > 
+				        	<p:outputLabel value="User Details" /> 
+						</f:facet>
+				    	<p:outputLabel for="selectCourse3" value="Select a Class:" />
+				    	<p:selectOneMenu id="selectCourse3" value="#{userAssessmentBean.selectCourse3}" style="width:250px">
+							    	<p:ajax update="selectUser3" listener="#{userAssessmentBean.changeCourse}" /> 
+							    	<f:selectItem itemLabel="-" itemValue="" />
+							    	<f:selectItems value="#{userAssessmentBean.courses}" var="c3" itemLabel="#{c3.title}" itemValue="#{c3.id}"/>
+				    	</p:selectOneMenu>
+							    
+				    	<p:outputLabel for="selectUser3" value="Select a Student:" />
+				    	<p:selectOneMenu id="selectUser3" value="#{userAssessmentBean.selectedUser}" style="width:250px">  
+	                    			<f:selectItem itemLabel="-" itemValue="" />  
+	                    			<f:selectItems value="#{userAssessmentBean.users}" var="u3" itemLabel="#{u3.username}" itemValue="#{u3.id}" />
+				    	</p:selectOneMenu>
+	                			
+				    	<p:outputLabel for="graph3" value="Chart Type:" />
+				    	<p:selectOneMenu id="graph3" value="#{userAssessmentBean.selectChart3}">
+						        	<f:selectItem itemLabel="-" itemValue="" />
+						            <f:selectItem itemLabel="Bar Chart" itemValue="bar" />
+						            <f:selectItem itemLabel="Pie Chart" itemValue="pie" />
+						            <f:selectItem itemLabel="Line Chart" itemValue="line" />
+				    	</p:selectOneMenu>
+						        
+				    	<p:commandButton id="button33" value="Generate Chart" oncomplete="PF('dlg3').show()" update="g3" actionListener="#{userAssessmentBean.generateUserChart}"/>
+				    	<p:dialog id="g3" modal="true" resizable="true" widgetVar="dlg3" header="User Details" showEffect="clip">
+						        	   <p:chart type="bar" model="#{userAssessmentBean.barModel}"  rendered="#{userAssessmentBean.showb3}" style="height:300px;width:800px"/>
+						        	   <p:chart type="line" model="#{userAssessmentBean.lineModel}"  rendered="#{userAssessmentBean.showl3}" style="height:300px;width:800px"/>
+						        	   <p:chart type="pie" model="#{userAssessmentBean.pieModel}"  rendered="#{userAssessmentBean.showp3}" style="width:400px;height:300px"/>
+				    	</p:dialog>
+					</h:panelGrid>
+				</h:form>
+			</p:tab>
+		</p:tabView>
+	</ui:define>
+</ui:composition>
