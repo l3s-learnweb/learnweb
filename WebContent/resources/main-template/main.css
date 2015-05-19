@@ -25,7 +25,7 @@ body {
 #header a {
 	color:#FFFFFF !important;	
 	font-size:1.5rem;
-	font-weight:bolder;	
+	font-weight:bolder;
 }
 
 #content {
@@ -246,6 +246,7 @@ body {
 .userbar ul li a {
     padding-right:2rem;
     padding-left:2rem;
+    background-color:#489a83; /*important when we integrate the tooltips*/
 }
 .userbar a:focus,
 .userbar a:hover{

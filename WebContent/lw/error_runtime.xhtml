@@ -16,23 +16,71 @@
 		<h:outputScript library="primefaces" name="jquery/jquery.js" />
 		<h:outputScript library="main-template" name="default.js" />
 		
-		<link rel="stylesheet" type="text/css" href="css/tooltipster.css" />
-		<script type="text/javascript" src="js/jquery.tooltipster.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/tooltipster.css" />
+		<script type="text/javascript" src="#{request.contextPath}/resources/js/jquery.tooltipster.min.js"></script>
 		
 		<script>
+
 		$(document).ready(function() {
 
 			   // first on page load, initiate the Tooltipster plugin
-			   $('.tooltip').tooltipster();
+			   $('.tooltip').tooltipster({
+				   animation: 'fall',		//from the top
+				   delay: 200,
+				   theme: 'tooltipster-default',
+				   touchDevices: false,
+				   trigger: 'hover'
+				});
 
 			   // then immediately show the tooltip
-			   $('.tooltip').tooltipster('show');
+			  $('.tooltip').tooltipster('show');
 
 			   // as soon as a key is pressed on the keyboard, hide the tooltip.
-			   $(window).keypress(function() {
+			  $(window).keypress(function() {
 			      $('.tooltip').tooltipster('hide');
 			   });
-			});
+		});
+		
+		$(document).ready(function() {
+
+			   // first on page load, initiate the Tooltipster plugin
+			   $('.tooltip1').tooltipster({
+				   animation: 'slide',			// from the left side
+				   delay: 200,
+				   theme: 'tooltipster-default',
+				   touchDevices: false,
+				   trigger: 'hover',
+				});
+
+			   // then immediately show the tooltip
+			  $('.tooltip1').tooltipster('show');
+
+			   // as soon as a key is pressed on the keyboard, hide the tooltip.
+			  $(window).keypress(function() {
+			      $('.tooltip1').tooltipster('hide');
+			   });
+		});
+		
+		$(document).ready(function() {
+
+			   // first on page load, initiate the Tooltipster plugin
+			   $('.tooltip2').tooltipster({
+				   animation: 'grow',				//small to big and big to small
+				   delay: 200,
+				   theme: 'tooltipster-default',
+				   touchDevices: false,
+				   trigger: 'hover'
+				});
+
+			   // then immediately show the tooltip
+			  $('.tooltip2').tooltipster('show');
+
+			   // as soon as a key is pressed on the keyboard, hide the tooltip.
+			  $(window).keypress(function() {
+			      $('.tooltip2').tooltipster('hide');
+			   });
+		});
+		
     	</script>
 
 		<base href="#{request.contextPath}/lw/" />
@@ -40,15 +88,10 @@
 
 	<h:body>
 <script>
-
-
 /*setTimeout(function()
 		{ 
 			alert("Hello"); 
 			
-			$('.tooltip').tooltipster({
-			    theme: 'tooltipster-noir'
-			});
 		
 		}, 2000);*/
 </script>
@@ -64,12 +107,12 @@
 				<div class="userbar">
 					<ul>
 						<li>
-							<a href="#{request.contextPath}/lw/myhome/resources.jsf" id="myresources" class="tooltipster-base" title="Hier klicken um deine gespeicherten Ressourcen zu sehen.">
+							<a href="#{request.contextPath}/lw/myhome/resources.jsf" id="myresources" class="tooltip" title="Hier klicken um deine gespeicherten Ressourcen zu sehen.">
 								<h:outputText value="#{msg.myResourcesTitle}" />
 							</a>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/myhome/groups.jsf" id="mygroups" class="tooltipster-arrow" title="Hier klicken um deine Gruppen anzuzeigen.">
+							<a href="#{request.contextPath}/lw/myhome/groups.jsf" id="mygroups" class="tooltip1" title="Hier klicken um deine Gruppen anzuzeigen.">
 								<h:outputText value="#{msg.groupOverview}" />
 							</a>
 						</li>
@@ -79,7 +122,7 @@
 							</a>
 						</li>
 						<li>
-							<a href="#{request.contextPath}/lw/myhome/profile.jsf" id="profile" class="tooltipster-fade" title="Hier klicken um dein Profil zu sehen.">
+							<a href="#{request.contextPath}/lw/myhome/profile.jsf" id="profile" class="tooltip2" title="Hier klicken um dein Profil zu sehen.">
 								<h:outputText value="#{msg.myProfileTitle}" />
 							</a>
 						</li>

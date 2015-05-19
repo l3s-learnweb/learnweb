@@ -3,6 +3,33 @@
 <ui:composition>
 
 	<header id="header">
+	
+		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/tooltipster.css"></link>
+		<script type="text/javascript" src="#{request.contextPath}/resources/js/jquery.tooltipster.min.js"></script>
+		
+		<script>
+
+		$(document).ready(function() {
+
+			   // first on page load, initiate the Tooltipster plugin
+			   $('.tooltip').tooltipster({
+				   animation: 'fall',
+				   delay: 200,
+				   theme: 'tooltipster-default',
+				   touchDevices: false,
+				   trigger: 'hover'
+				});
+
+			   // then immediately show the tooltip
+			  $('.tooltip').tooltipster('show');
+
+			   // as soon as a key is pressed on the keyboard, hide the tooltip.
+			  $(window).keypress(function() {
+			      $('.tooltip').tooltipster('hide');
+			   });
+		});
+    	</script>
+	
 		<div id="main_menu_bar" style="background-color: #{menuBean.bannerColor}; #{menuBean.bannerImage}">			
 		
 			<img src="#{request.contextPath}/resources/main-template/img/ajax-loader.gif" alt="Loading" id="loadingsymbol"/>
