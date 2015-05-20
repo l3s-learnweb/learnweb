@@ -18,6 +18,7 @@ body {
 
 h2 { margin-top: 0.4rem; }
 h3 { margin: 0.4rem 0; }
+h4 { text-decoration:underline;	font-size:1.3rem;}
 
 .homepage_infotext{
 	font-size:medium; 
@@ -85,10 +86,6 @@ h3 { margin: 0.4rem 0; }
 .description{
 	width:74%;
 	text-align:justify;
-}
-.changelog_date{
-	text-decoration:underline;	
-	font-size:1.3rem;	
 }
 .changes{
 	font-weight:bold;

@@ -3,6 +3,7 @@ package de.l3s.learnweb.beans;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.util.Date;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
@@ -109,5 +110,10 @@ public class UtilBean implements Serializable
     public static int time()
     {
 	return (int) (System.currentTimeMillis() / 1000);
+    }
+
+    public Date StringToDate(String dateStr)
+    {
+	return new Date();
     }
 }
