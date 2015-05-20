@@ -25,16 +25,6 @@
 	#searchfield{
 		margin-left:21.5rem;
 	}
-	/* optimization */
-	/*#left_pane-resizer{
-		left:205px;
-	}
-	#left_pane{
-		width:205px;
-	}
-	#center_pane{
-		left:215px;
-	}*/
 	#moremygroups{
 		display:block;
 	}
@@ -50,16 +40,6 @@
 	#searchfield{
 		margin-left:20rem;
 	}
-	/* optimization */
-	/*#left_pane-resizer{
-		left:190px;
-	}
-	#left_pane{
-		width:190px;
-	}
-	#center_pane{
-		left:200px;
-	}*/
 	#moremyresources{
 		display:block;
 	}
@@ -92,7 +72,6 @@
 	}
 }
 
-/*#left_pane { width:100px; } (Optimierungsmöglichkeit)*/
 @media screen and (max-width: 43em){
 	#main_menu_bar{
 		background-image:none; 
