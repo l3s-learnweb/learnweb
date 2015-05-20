@@ -4,6 +4,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
+	<ui:param name="helpText" value="#{msg.groupMembersHelp}"/>
+
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
@@ -12,7 +14,7 @@
 	</ui:define>
 
 	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="Group members" />	
+	<ui:param name="pageTitle" value="#{msg.groupMember}" />	
 	    		
 		<ui:define name="center_layout">
 			<div class="ui-layout-unit-header ui-widget-header ui-corner-all" id="group_header">
