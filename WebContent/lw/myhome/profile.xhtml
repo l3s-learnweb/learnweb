@@ -8,7 +8,8 @@
 <ui:composition template="/lw/templates/new_main_t.xhtml"> 
 
 	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>	
+	<ui:param name="pageTitle" value="#{msg.myProfileTitle}"/>
+	<ui:param name="helpText" value="#{msg.myhomeProfileHelp}"/>	
 	
 	<ui:define name="right_layout">
 		<p:layoutUnit position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;"  id="right_pane" rendered="#{userBean.loggedIn}">
