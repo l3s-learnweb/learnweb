@@ -3,6 +3,8 @@ package de.l3s.learnweb.beans;
 import java.io.IOException;
 import java.io.Serializable;
 import java.text.MessageFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -112,8 +114,9 @@ public class UtilBean implements Serializable
 	return (int) (System.currentTimeMillis() / 1000);
     }
 
-    public Date StringToDate(String dateStr)
+    public Date StringToDate(String dateStr) throws ParseException
     {
-	return new Date();
+	SimpleDateFormat format = new SimpleDateFormat("dd.mm.yyyy");
+	return format.parse(dateStr);
     }
 }

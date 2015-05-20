@@ -18,7 +18,7 @@ body {
 
 h2 { margin-top: 0.4rem; }
 h3 { margin: 0.4rem 0; }
-h4 { text-decoration:underline;	font-size:1.3rem;}
+h4 { text-decoration:underline;	font-size:1.3rem; margin: 0.8rem 0 0.4rem; }
 
 .homepage_infotext{
 	font-size:medium; 
@@ -90,7 +90,7 @@ h4 { text-decoration:underline;	font-size:1.3rem;}
 .changes{
 	font-weight:bold;
 }
-#index_footer{
+#index_footer {
 	color:#ffffff;
 	position: fixed;
 	bottom: 0px; 
@@ -100,6 +100,8 @@ h4 { text-decoration:underline;	font-size:1.3rem;}
 	background-color:#489a83;
 	padding:5px;
 }
+#index_footer a { text-decoration: none; }
+#index_footer a:hover { text-decoration: underline; }
 
 @media screen and (max-width:40rem){
 	#div_left{

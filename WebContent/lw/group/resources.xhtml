@@ -18,6 +18,10 @@
 
 	  
 		<ui:define name="center_layout">
+			<h:form>
+				<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{groupDetailBean.updateColumns}"></p:remoteCommand>
+			</h:form>
+	
 			<div class="ui-layout-unit-header ui-widget-header ui-corner-all" id="group_header">
 				<span class="group_header">#{msg.resources}</span> #{msg.of} #{groupDetailBean.group.title}
 				<h:form id="add_resource" rendered="#{groupDetailBean.member}">
@@ -76,9 +80,10 @@
 				}						
 			}
 			
-			$(nCol());			
-			window.onresize = nCol;
-	
+			$(nCol());	
+			$(window).resize(function() {
+				nCol();	
+			});	
 			</script>
 				
 				<p:dialog id="confirmDialog" header="#{msg.delete_resource_title}"  widgetVar="confirmation" appendTo="@(body)" >
@@ -177,9 +182,7 @@
 					</h:form>			
 				</p:dialog>			
 		
-			 <h:form>
-			 	<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{groupDetailBean.updateColumns}"></p:remoteCommand>
-	         </h:form>
+
 	         <h:panelGroup id="resource_disp">
 	
 				<p:dataGrid id="datagrid" var="result" value="#{groupDetailBean.resources}" columns="#{groupDetailBean.numberOfColumns}" paginator="false" widgetVar="datagrid" emptyMessage="#{msg.no_resources_found}">  

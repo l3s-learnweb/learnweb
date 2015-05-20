@@ -8,145 +8,148 @@
 	<ui:composition> 
 
 	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" header="#{bean.clickedResource.id eq -1? msg.click_to_view_details : bean.clickedResource.title}" id="right_pane">
-				<h:outputScript library="right-pane-template" name="right-pane.js" />
-				<h:form id="remote_form">
-					<p:remoteCommand  actionListener="#{bean.loadResources}" update=":datagrid :add_resource_panel" name="update_datagrid" oncomplete="update_header()"></p:remoteCommand>
-				</h:form>
-				<div id="right_pane_wrapper">
-					<p:panel id="add_resource_panel">
-						<script type="text/javascript">
-							function update_header()
-							{
-								if(#{bean.newResourceClicked})
-								{
-									$(".ui-layout-unit-header","#right_pane").html("#{msg.upload_resource}");
-								}
-								else if(#{bean.editResourceClicked})
-								{
-									$(".ui-layout-unit-header","#right_pane").html("#{msg.edit_resource} - #{bean.clickedResource.title}");
-								}
-								else
-								{
-									$(".ui-layout-unit-header","#right_pane").html("#{bean.clickedResource.title}");
-								}
-							}
-						</script>
-						<h:form rendered="#{bean.newResourceClicked and !bean.editResourceClicked}" id="add_resource_form">
-							<table id="add_resource_table">
-								<tr>
-									<td>
-										#{msg.resource_type}:
-									</td>
-									<td>
-										<h:selectOneMenu id="type" value="#{addResourceBean.resource.storageType}" valueChangeListener="#{addResourceBean.clearForm}">
-											<f:selectItem itemLabel="URL" itemValue="2" />
-											<f:selectItem itemLabel="#{msg.file}" itemValue="1" />
-												<p:ajax update="@form" immediate="true" listener="#{addResourceBean.doNothing}"  />
-										</h:selectOneMenu>
-									</td>
-									<td rowspan="3" style="padding: 0px !important; text-align: right">
-										<h:outputText id="preview" escape="false" value="#{addResourceBean.resource.embeddedSize1}"/>
-									</td>
-								</tr>
-								<p:row id="resource_input" rendered="#{addResourceBean.resource.storageType == 1}">
-									<td>
-										#{msg.file}:
-									</td>
-									<td>
-										<p:commandButton styleClass="greenbutton" value="#{msg.choose_file}" onclick="PF('file_dialog').show()"></p:commandButton>
-									</td>
-								</p:row>
-								<p:row id="resource_input2" rendered="#{addResourceBean.resource.storageType == 2}">
-									<td>
-										URL:
-									</td>
-									<td>									
-										<p:inputText value="#{addResourceBean.resource.url}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="url_input" rendered="#{addResourceBean.resource.storageType == 2}"/>
-									</td>
-								</p:row>
-								<tr>
-									<td>
-										#{msg.add_to}:
-									</td>
-									<td>
-										<h:selectOneMenu value="#{addResourceBean.resourceTargetGroupId}">
-											<f:selectItem itemLabel="#{msg.myResourcesTitle}" itemValue="0" />
-											<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />
-											<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" itemValue="#{group.id}" />
-										</h:selectOneMenu>
-									</td>
-								</tr>
-								<tr>
-									<td>
-										#{msg.title}:
-									</td>
-									<td colspan="2">
-										<p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="title_input" />
-									</td>
-								</tr>
-								<tr>
-									<td>
-										#{msg.author}:
-									</td>
-									<td colspan="2">
-										<p:inputText value="#{addResourceBean.resource.author}" styleClass="add_field" />
-									</td>
-								</tr>
-								<tr>
-									<td>
-										#{msg.description}:
-									</td>
-								</tr>
-								<tr>
-									<td colspan="3">
-										<p:inputTextarea id="description" value="#{addResourceBean.resource.description}" autoResize="true" styleClass="add_field" style="min-height:100px;"></p:inputTextarea>
-									</td>
-								</tr>
-							</table>
-								
-								<p:commandButton value="#{msg.addResource}" styleClass="greenbutton" update=":growl :add_resource_panel" action="#{addResourceBean.addResource}" ajax="true" oncomplete="update_all()" style="float:right;box-sizing:border-box;margin-right:3.5%;">
+		<h:outputScript library="right-pane-template" name="right-pane.js" />
+		<h:form id="remote_form">
+			<p:remoteCommand name="update_datagrid"  actionListener="#{bean.loadResources}" update=":datagrid :add_resource_panel" oncomplete="update_header()"></p:remoteCommand>
+		</h:form>
+
+		<div id="right_pane_wrapper">
+			<p:panel id="add_resource_panel">
+				<script type="text/javascript">
+					function update_header()
+					{
+						if(#{bean.newResourceClicked})
+						{
+							$(".ui-layout-unit-header","#right_pane").html("#{msg.upload_resource}");
+						}
+						else if(#{bean.editResourceClicked})
+						{
+							$(".ui-layout-unit-header","#right_pane").html("#{msg.edit_resource} - #{bean.clickedResource.title}");
+						}
+						else
+						{
+							$(".ui-layout-unit-header","#right_pane").html("#{bean.clickedResource.title}");
+						}
+						console.log('scoller', $('#right_pane .content').scrollTop());
+						
+						$('#right_pane .content').scrollTop(0);
+						
+						scroller();
+					}
+				</script>
+				<h:form rendered="#{bean.newResourceClicked and !bean.editResourceClicked}" id="add_resource_form">
+					<table id="add_resource_table">
+						<tr>
+							<td>
+								#{msg.resource_type}:
+							</td>
+							<td>
+								<h:selectOneMenu id="type" value="#{addResourceBean.resource.storageType}" valueChangeListener="#{addResourceBean.clearForm}">
+									<f:selectItem itemLabel="URL" itemValue="2" />
+									<f:selectItem itemLabel="#{msg.file}" itemValue="1" />
+										<p:ajax update="@form" immediate="true" listener="#{addResourceBean.doNothing}"  />
+								</h:selectOneMenu>
+							</td>
+							<td rowspan="3" style="padding: 0px !important; text-align: right">
+								<h:outputText id="preview" escape="false" value="#{addResourceBean.resource.embeddedSize1}"/>
+							</td>
+						</tr>
+						<p:row id="resource_input" rendered="#{addResourceBean.resource.storageType == 1}">
+							<td>
+								#{msg.file}:
+							</td>
+							<td>
+								<p:commandButton styleClass="greenbutton" value="#{msg.choose_file}" onclick="PF('file_dialog').show()"></p:commandButton>
+							</td>
+						</p:row>
+						<p:row id="resource_input2" rendered="#{addResourceBean.resource.storageType == 2}">
+							<td>
+								URL:
+							</td>
+							<td>									
+								<p:inputText value="#{addResourceBean.resource.url}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="url_input" rendered="#{addResourceBean.resource.storageType == 2}"/>
+							</td>
+						</p:row>
+						<tr>
+							<td>
+								#{msg.add_to}:
+							</td>
+							<td>
+								<h:selectOneMenu value="#{addResourceBean.resourceTargetGroupId}">
+									<f:selectItem itemLabel="#{msg.myResourcesTitle}" itemValue="0" />
+									<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />
+									<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" itemValue="#{group.id}" />
+								</h:selectOneMenu>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								#{msg.title}:
+							</td>
+							<td colspan="2">
+								<p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="title_input" />
+							</td>
+						</tr>
+						<tr>
+							<td>
+								#{msg.author}:
+							</td>
+							<td colspan="2">
+								<p:inputText value="#{addResourceBean.resource.author}" styleClass="add_field" />
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								#{msg.description}:
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								<p:inputTextarea id="description" value="#{addResourceBean.resource.description}" autoResize="true" styleClass="add_field" style="min-height:100px;"></p:inputTextarea>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								<p:commandButton value="#{msg.addResource}" styleClass="greenbutton" update=":growl :add_resource_panel" action="#{addResourceBean.addResource}" ajax="true" oncomplete="update_datagrid();" style="float:right;">
 									<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
 									<f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"></f:setPropertyActionListener>
 								</p:commandButton>
 								
-								<p:commandButton value="#{msg.cancel}" styleClass="greenbutton" partialSubmit="true" process="@this" actionListener="#{addResourceBean.cancelUpload}" ajax="true" update=":add_resource_panel" oncomplete="update_header()" style="margin-right:0.5em;float:right;box-sizing:border-box;">
+								<p:commandButton value="#{msg.cancel}" styleClass="greenbutton" partialSubmit="true" process="@this" actionListener="#{addResourceBean.cancelUpload}" ajax="true" update=":add_resource_panel" oncomplete="update_header()" style="margin-right:0.5em;float:right;">
 									<f:setPropertyActionListener target="#{bean.newResourceClicked}" value="false"></f:setPropertyActionListener>
 								</p:commandButton>
-							
-						</h:form>
-						<script type="text/javascript">
-									function update_all()
-									{
-										update_datagrid();
-									}
-								</script>
-						<h:panelGroup rendered="#{!bean.newResourceClicked and !bean.editResourceClicked and bean.clickedResource.id != -1}" layout="block">						
-							<ui:fragment rendered="#{bean.clickedResource.type.toLowerCase() eq 'text' or bean.clickedResource.type eq 'pdf' or bean.clickedResource.type.toLowerCase() eq 'video' or bean.clickedResource.type.toLowerCase() eq 'image'}">
-								<div class="center_align">
-								
-									<ui:fragment rendered="#{bean.clickedResource.type == 'Video'}">
-										<div class="preview_box" style="max-height:500px; height:400px;">
-											<h:outputText value='#{bean.clickedResource.embedded}' escape="false" />
-										</div>
-									</ui:fragment>								
-									<ui:fragment rendered="#{bean.clickedResource.type != 'text' and bean.clickedResource.type != 'pdf' and bean.clickedResource.type != 'Video'}">
-										<div class="preview_box">
-											<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
-										</div>
-									</ui:fragment>
-									<ui:fragment rendered="#{(bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf' ) and bean.clickedResource.type != 'Video'}">
-										<div class="preview_box" style="display: inline-block">
-											<a target="_blank" class="newsfeed_query_link" style="padding: 0px" href="#{bean.clickedResource.url}">
-												<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
-											</a>
-										</div>
-									</ui:fragment>
-									
+							</td>
+						</tr>
+					</table>									
+				</h:form>
+				
+				<h:panelGroup rendered="#{!bean.newResourceClicked and !bean.editResourceClicked and bean.clickedResource.id != -1}" layout="block">						
+					<ui:fragment rendered="#{bean.clickedResource.type.toLowerCase() eq 'text' or bean.clickedResource.type eq 'pdf' or bean.clickedResource.type.toLowerCase() eq 'video' or bean.clickedResource.type.toLowerCase() eq 'image'}">
+						<div class="center_align">
+						
+							<ui:fragment rendered="#{bean.clickedResource.type == 'Video'}">
+								<div class="preview_box" style="max-height:500px; height:400px;">
+									<h:outputText value='#{bean.clickedResource.embedded}' escape="false" />
 								</div>
-								<div class="center_align" style="padding-top: 10px">
-									<a class="hyperlink" href="#{bean.clickedResource.url}" target="_blank"><h:outputText styleClass="hyperlink" rendered="#{bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf'}" value="#{bean.clickedResource.url}"></h:outputText></a>
+							</ui:fragment>								
+							<ui:fragment rendered="#{bean.clickedResource.type != 'text' and bean.clickedResource.type != 'pdf' and bean.clickedResource.type != 'Video'}">
+								<div class="preview_box">
+									<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
 								</div>
 							</ui:fragment>
+							<ui:fragment rendered="#{(bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf' ) and bean.clickedResource.type != 'Video'}">
+								<div class="preview_box" style="display: inline-block">
+									<a target="_blank" class="newsfeed_query_link" style="padding: 0px" href="#{bean.clickedResource.url}">
+										<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
+									</a>
+								</div>
+							</ui:fragment>
+							
+						</div>
+						<div class="center_align" style="padding-top: 10px">
+							<a class="hyperlink" href="#{bean.clickedResource.url}" target="_blank"><h:outputText styleClass="hyperlink" rendered="#{bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf'}" value="#{bean.clickedResource.url}"></h:outputText></a>
+						</div>
+					</ui:fragment>
 					<table>
 						<ui:fragment rendered="#{not empty bean.clickedResource.fileName and not bean.clickedResource.source.equals('LORO')}">
 							<tr style="padding: 10px 0;">
@@ -352,13 +355,11 @@
 								</tr>
 							</table>
 						</h:form>
-						<!--  
-						<ui:fragment rendered="#{!bean.newResourceClicked and !bean.editResourceClicked and bean.clickedResource.id eq -1}">
-							<div class="click_message">
-								bean.clickedResource.id eq -1 #{msg.click_to_view_details}
-							</div>
-						</ui:fragment>
-						-->
+		<script type="text/javascript">
+		$("#right_pane_wrapper img").bind('load', function() {
+			scroller();
+		});
+		</script>
 					</p:panel>
 				</div>
 			</p:layoutUnit>
