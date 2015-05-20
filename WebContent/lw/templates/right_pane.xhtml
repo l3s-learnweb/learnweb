@@ -47,7 +47,7 @@
 										</h:selectOneMenu>
 									</td>
 									<td rowspan="3" style="padding: 0px !important; text-align: right">
-										<h:outputText id="preview" escape="false" value="#{addResourceBean.resource.embeddedSize1}"></h:outputText>
+										<h:outputText id="preview" escape="false" value="#{addResourceBean.resource.embeddedSize1}"/>
 									</td>
 								</tr>
 								<p:row id="resource_input" rendered="#{addResourceBean.resource.storageType == 1}">
@@ -63,11 +63,7 @@
 										URL:
 									</td>
 									<td>									
-										<p:inputText value="#{addResourceBean.resource.url}"
-												styleClass="add_field" required="true"
-												requiredmessage="#{msg.mandatory_field}" id="url_input"
-												rendered="#{addResourceBean.resource.storageType == 2}">												
-											</p:inputText>
+										<p:inputText value="#{addResourceBean.resource.url}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="url_input" rendered="#{addResourceBean.resource.storageType == 2}"/>
 									</td>
 								</p:row>
 								<tr>
@@ -75,15 +71,10 @@
 										#{msg.add_to}:
 									</td>
 									<td>
-										<h:selectOneMenu
-											value="#{addResourceBean.resourceTargetGroupId}">
-											<f:selectItem itemLabel="#{msg.myResourcesTitle}"
-												itemValue="0" />
-											<f:selectItem itemLabel="------------" itemValue="-1"
-												itemDisabled="true" />
-											<f:selectItems var="group"
-												value="#{userBean.user.writeAbleGroups}"
-												itemLabel="#{group.title}" itemValue="#{group.id}" />
+										<h:selectOneMenu value="#{addResourceBean.resourceTargetGroupId}">
+											<f:selectItem itemLabel="#{msg.myResourcesTitle}" itemValue="0" />
+											<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />
+											<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" itemValue="#{group.id}" />
 										</h:selectOneMenu>
 									</td>
 								</tr>
@@ -92,9 +83,7 @@
 										#{msg.title}:
 									</td>
 									<td colspan="2">
-										<p:inputText value="#{addResourceBean.resource.title}"
-											styleClass="add_field" required="true"
-											requiredmessage="#{msg.mandatory_field}" id="title_input" />
+										<p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="title_input" />
 									</td>
 								</tr>
 								<tr>
@@ -102,8 +91,7 @@
 										#{msg.author}:
 									</td>
 									<td colspan="2">
-										<p:inputText value="#{addResourceBean.resource.author}"
-											styleClass="add_field" />
+										<p:inputText value="#{addResourceBean.resource.author}" styleClass="add_field" />
 									</td>
 								</tr>
 								<tr>
@@ -113,21 +101,17 @@
 								</tr>
 								<tr>
 									<td colspan="3">
-										<p:inputTextarea id="description"
-									value="#{addResourceBean.resource.description}"
-									autoResize="true" styleClass="add_field" style="min-height:100px;"></p:inputTextarea>
+										<p:inputTextarea id="description" value="#{addResourceBean.resource.description}" autoResize="true" styleClass="add_field" style="min-height:100px;"></p:inputTextarea>
 									</td>
 								</tr>
 							</table>
 								
-								<p:commandButton value="#{msg.addResource}" styleClass="greenbutton" update=":growl :add_resource_panel"
-											action="#{addResourceBean.addResource}" ajax="true" oncomplete="update_all()" style="float:right;box-sizing:border-box;margin-right:3.5%;">
+								<p:commandButton value="#{msg.addResource}" styleClass="greenbutton" update=":growl :add_resource_panel" action="#{addResourceBean.addResource}" ajax="true" oncomplete="update_all()" style="float:right;box-sizing:border-box;margin-right:3.5%;">
 									<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
 									<f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"></f:setPropertyActionListener>
 								</p:commandButton>
 								
-								<p:commandButton value="#{msg.cancel}" styleClass="greenbutton" partialSubmit="true" process="@this"
-											actionListener="#{addResourceBean.cancelUpload}" ajax="true" update=":add_resource_panel" oncomplete="update_header()" style="margin-right:0.5em;float:right;box-sizing:border-box;">
+								<p:commandButton value="#{msg.cancel}" styleClass="greenbutton" partialSubmit="true" process="@this" actionListener="#{addResourceBean.cancelUpload}" ajax="true" update=":add_resource_panel" oncomplete="update_header()" style="margin-right:0.5em;float:right;box-sizing:border-box;">
 									<f:setPropertyActionListener target="#{bean.newResourceClicked}" value="false"></f:setPropertyActionListener>
 								</p:commandButton>
 							
@@ -168,55 +152,72 @@
 					<table>
 						<ui:fragment rendered="#{not empty bean.clickedResource.fileName and not bean.clickedResource.source.equals('LORO')}">
 							<tr style="padding: 10px;">
-
-								<td><span class="resource_field">#{msg.file}:</span></td>
-								<td><a href="#{bean.clickedResource.getUrl()}">#{bean.clickedResource.fileName}</a></td>
-
+								<td>
+									<span class="resource_field">#{msg.file}:</span>
+								</td>
+								<td>
+									<a href="#{bean.clickedResource.getUrl()}">#{bean.clickedResource.fileName}</a>
+								</td>
 							</tr>
 						</ui:fragment>
 
-						<ui:fragment
-							rendered="#{empty bean.clickedResource.fileName and bean.clickedResource.type.toLowerCase() != 'text' and bean.clickedResource.type != 'pdf' and bean.clickedResource.type.toLowerCase() != 'video' and bean.clickedResource.type.toLowerCase() != 'image'}">
+						<ui:fragment rendered="#{empty bean.clickedResource.fileName and bean.clickedResource.type.toLowerCase() != 'text' and bean.clickedResource.type != 'pdf' and bean.clickedResource.type.toLowerCase() != 'video' and bean.clickedResource.type.toLowerCase() != 'image'}">
 							<tr style="padding: 10px;">
-
-								<td><span class="resource_field">#{msg.resource}:</span></td>
-								<td><a style="color: #22e" href="#{bean.clickedResource.getUrl()}">#{bean.clickedResource.url}</a></td>
-
+								<td>
+									<span class="resource_field">#{msg.resource}:</span>
+								</td>
+								<td>
+									<a style="color: #22e" href="#{bean.clickedResource.getUrl()}">#{bean.clickedResource.url}</a>
+								</td>
 							</tr>
 						</ui:fragment>
 
 						<ui:fragment rendered="#{not empty bean.clickedResource.author}">
 							<tr style="padding: 10px;">
-
-								<td><span class="resource_field">#{msg.author}:</span></td>
-								<td><h:outputText value="#{bean.clickedResource.author}"></h:outputText></td>
-
+								<td>
+									<span class="resource_field">#{msg.author}:</span>
+								</td>
+								<td>
+									<h:outputText value="#{bean.clickedResource.author}"/>
+								</td>
 							</tr>
 						</ui:fragment>
 						<tr style="padding: 10px;">
-							<td><span class="resource_field">#{msg.source}:</span></td>
-							<td><a href="#{bean.clickedResource.getUrl()}"><h:outputText value="#{bean.clickedResource.source}" /></a></td>
+							<td>
+								<span class="resource_field">#{msg.source}:</span>
+							</td>
+							<td>
+								<a href="#{bean.clickedResource.getUrl()}">
+									<h:outputText value="#{bean.clickedResource.source}" />
+								</a>
+							</td>
 						</tr>
 						<ui:fragment rendered="#{not empty bean.clickedResource.groups}">
 							<tr style="padding: 10px;">
-								<td><span class="resource_field"><h:outputFormat value="#{msg.group_s}:">
+								<td>
+									<span class="resource_field"><h:outputFormat value="#{msg.group_s}:">
 											<f:param value="#{bean.clickedResource.groups.size()}" />
-										</h:outputFormat></span></td>
-								<td><ui:repeat var="group" value="#{bean.clickedResource.groups}">
+										</h:outputFormat></span>
+								</td>
+								<td>
+									<ui:repeat var="group" value="#{bean.clickedResource.groups}">
 										<h:outputLink value="group/overview.jsf" style="display:inline-block; margin-right:1rem;">
 											<f:param name="group_id" value="#{group.id}" />
 											<h:outputText value="#{group.title}" />
 										</h:outputLink>
-									</ui:repeat></td>
+									</ui:repeat>
+								</td>
 							</tr>
 						</ui:fragment>
 						<ui:fragment rendered="#{bean.clickedResource.source == 'TED'}">
 							<tr style="padding: 10px;">
-
-								<td><span class="resource_field">#{msg.transcript}:</span></td>
-								<td><h:outputLink value="ted_transcript.jsf" style="text-decoration:underline;">
-										<f:param name="resource_id" value="#{bean.clickedResource.id}" />#{msg.link_to_transcript}</h:outputLink></td>
-
+								<td>
+									<span class="resource_field">#{msg.transcript}:</span>
+								</td>
+								<td>
+									<h:outputLink value="ted_transcript.jsf" style="text-decoration:underline;">
+										<f:param name="resource_id" value="#{bean.clickedResource.id}" />#{msg.link_to_transcript}</h:outputLink>
+								</td>
 							</tr>
 						</ui:fragment>
 					</table>
@@ -227,16 +228,13 @@
 							</h:panelGroup>
 							
 							<h:form id="archive_current_form" rendered="#{bean.clickedResource.storageType != 1}">
-					
 									<span class="resource_field">#{msg.current_version}: </span>
-									<p:commandButton action="#{bean.archiveCurrentVersion}" styleClass="greenbutton" value="#{msg.archive_now}" update=":growl :select_archive_url" style="margin-top:10px"/>								
-								
+									<p:commandButton action="#{bean.archiveCurrentVersion}" styleClass="greenbutton" value="#{msg.archive_now}" update=":growl :select_archive_url" style="margin-top:10px"/>
 							</h:form>
 							<h:panelGroup layout="block" style="padding-top: 10px;" rendered="#{not empty bean.clickedResource.archiveUrls}">
 								<span class="resource_field" style="position:relative;bottom:6px;">#{msg.archive_versions}: </span>
 								<p:selectOneMenu onchange="archive_url_select();" id="select_archive_url" widgetVar="archive_versions_menu">
 									<f:selectItem itemLabel="#{msg.choose_archived_version}" itemValue="0" noSelectionOption="true" />
-							
 									<f:selectItems value="#{bean.clickedResource.archiveUrls}" var="entry" itemValue="#{entry.archiveUrl}" itemLabel="${userBean.formatDate(entry.timestamp)}" /> 
 								</p:selectOneMenu>
 							</h:panelGroup>
@@ -273,7 +271,9 @@
 										<div class="comment">
 											<h:graphicImage class="userpic" url="#{comment.getUser().image}" width="30" height="30"/>
 											<div class="username_div">
-												<span class="username"><a href="user/detail.jsf?user_id=#{comment.getUser().getId()}" class="username_link">#{comment.getUser().username}</a> </span>
+												<span class="username">
+													<a href="user/detail.jsf?user_id=#{comment.getUser().getId()}" class="username_link">#{comment.getUser().username}</a>
+												</span>
 													<span style="vertical-align: top; padding-left:5px;">#{comment.text}</span>
 											</div>
 											<div style="clear: both"></div>
