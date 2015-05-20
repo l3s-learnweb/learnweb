@@ -310,7 +310,10 @@ public class Learnweb
      */
     public void onDestroy()
     {
-	log.info("Shutdown Learnweb start");
+	log.info("Shutting down Learnweb");
+
+	jobScheduler.stopAllJobs();
+	archiveUrlManager.onDestroy();
 
 	try
 	{
@@ -328,14 +331,11 @@ public class Learnweb
 	try
 	{
 	    dbConnection.close();
-	    querydbConnection.close();
+	    //querydbConnection.close();
 	}
 	catch(SQLException e)
 	{
 	} // ignore	
-
-	jobScheduler.stopAllJobs();
-	archiveUrlManager.onDestroy();
 
 	log.info("Shutdown Learnweb completed");
     }

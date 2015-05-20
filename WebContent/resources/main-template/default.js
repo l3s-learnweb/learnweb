@@ -11,7 +11,6 @@ function removeViewstate(searchForm)
 	$(searchForm).find("[name='javax.faces.ViewState']").remove();
 }
 
-
 function footerToggle()
 {
 	var footer = $('#footer');
@@ -38,36 +37,18 @@ function setPreference(prefKey, prefValue)
 	setPreferenceRemote([{name:'key', value:prefKey}, {name:'value', value:prefValue}]);
 }
 
-$(document).ready(function(){
-	/*
-	$(".menu").click(function(){		
-		$(".userbar ul li ul").css("visibility","visible");		
-	});
-	
-	
-	$(document).mouseup(function(){		
-		$(".userbar ul li ul").css("visibility","hidden");	
-	});
-	
-	$(".userbar ul li ul").mouseup(function(){		
-		$(".userbar ul li ul").css("visibility","visible");
-	
-	});*/
-	
+$(document).ready(function()
+{	
 	$("#group_menu > .panelmenu").each(function( index ) 
 	{
 		var group = $(this);
 		var links = group.children('div');
 		
-		group.find('h3').click(function()
+		group.find('h3 .iconarrow').click(function()
 		{
 			links.slideToggle();
 			group.toggleClass('active');
-			return false;
-		});
-		
-		
+			return true;
+		});		
 	});
-	
-
 })  

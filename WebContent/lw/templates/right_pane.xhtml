@@ -144,11 +144,9 @@
 								
 									<ui:fragment rendered="#{bean.clickedResource.type == 'Video'}">
 										<div class="preview_box" style="max-height:500px; height:400px;">
-											<h:outputText value='#{bean.clickedResource.embedded}' escape="false"></h:outputText>
+											<h:outputText value='#{bean.clickedResource.embedded}' escape="false" />
 										</div>
-									</ui:fragment>
-								
-								
+									</ui:fragment>								
 									<ui:fragment rendered="#{bean.clickedResource.type != 'text' and bean.clickedResource.type != 'pdf' and bean.clickedResource.type != 'Video'}">
 										<div class="preview_box">
 											<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
@@ -224,7 +222,7 @@
 					</table>
 
 					<h:panelGroup rendered="#{not empty bean.clickedResource.description}">
-								<div class="resource_field" style="padding-top: 10px">#{msg.description}</div>
+							<div class="resource_field" style="padding-top: 10px">#{msg.description}</div>
 								<h:outputText id="resource_description" value="#{bean.clickedResource.description}" escape="false"></h:outputText>
 							</h:panelGroup>
 							
@@ -263,57 +261,63 @@
 							</h:form> 
 							<h:form id="tag_input_form">  
 							    <p:inputText styleClass="tag_field" value="#{bean.tagName}"/>
-							    	<p:commandButton actionListener="#{bean.addTag}" styleClass="greenbutton" value="#{msg.addTag}" update=":datagrid :tag_form" process="@form" style="margin-right:0;margin-top:4px;float:right">
-							    	  	<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
-							        </p:commandButton>
+						    	<p:commandButton actionListener="#{bean.addTag}" styleClass="greenbutton clearfix" value="#{msg.addTag}" update=":datagrid :tag_form" process="@form" style="margin-right:0;margin-top:4px;float:right">
+						    	  	<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
+						        </p:commandButton>
 						    </h:form>
-						    <br class="clear"></br>
-						    <h:form id="comment_form"> 
-								<div class="resource_field" style="padding-top: 10px">#{msg.comments}</div>
-
-								<ui:repeat var="comment" value="#{bean.clickedResource.comments}">
-									<br/>
-									<div class="comments" style="background-color: #eee; border:1px solid #ddd">
-										<h:graphicImage class="userpic" url="#{comment.getUser().image}" width="30" height="30"/>
-										<div class="username_div">
-											<span class="username"><a href="user/detail.jsf?user_id=#{comment.getUser().getId()}" class="username_link">#{comment.getUser().username}</a> </span>
-												<span style="vertical-align: top; padding-left:5px;">#{comment.text}</span>
+						    <h:form id="comment_form" styleClass="clear"> 
+								<div class="resource_field" style="padding-top: 10px">#{msg.comments}</div>								
+								<div class="comments">
+									<ui:repeat var="comment" value="#{bean.clickedResource.comments}">
+										<div class="comment">
+											<h:graphicImage class="userpic" url="#{comment.getUser().image}" width="30" height="30"/>
+											<div class="username_div">
+												<span class="username"><a href="user/detail.jsf?user_id=#{comment.getUser().getId()}" class="username_link">#{comment.getUser().username}</a> </span>
+													<span style="vertical-align: top; padding-left:5px;">#{comment.text}</span>
+											</div>
+											<div style="clear: both"></div>
+											<div style="padding-left: 40px;">
+												<p:commandLink rendered="#{bean.canEditComment(comment)}" style="margin-right: 5px; font-size: 10px !important; color: green" value="#{msg.edit}" onstart="PF('comment_dialog').show();" ajax="true" update=":comment_dialog_form">
+													<f:setPropertyActionListener target="#{bean.clickedComment}" value="#{comment}"></f:setPropertyActionListener>
+												</p:commandLink>
+												<p:commandLink rendered="#{bean.canEditComment(comment)}" action="#{bean.onDeleteComment}" style="margin-right: 5px; font-size: 10px !important; color: red" value="#{msg.delete}" onstart="return confirm('#{msg.delete_message_comments}');" ajax="true" update=":add_resource_panel">
+													<f:setPropertyActionListener target="#{bean.clickedComment}" value="#{comment}"></f:setPropertyActionListener>
+												</p:commandLink>
+											</div>
 										</div>
-										<div style="clear: both"></div>
-										<div style="padding-left: 40px;">
-											<p:commandLink rendered="#{bean.canEditComment(comment)}" style="margin-right: 5px; font-size: 10px !important; color: green" value="#{msg.edit}" onstart="PF('comment_dialog').show();" ajax="true" update=":comment_dialog_form">
-												<f:setPropertyActionListener target="#{bean.clickedComment}" value="#{comment}"></f:setPropertyActionListener>
-											</p:commandLink>
-											<p:commandLink rendered="#{bean.canEditComment(comment)}" action="#{bean.onDeleteComment}" style="margin-right: 5px; font-size: 10px !important; color: red" value="#{msg.delete}" onstart="return confirm('#{msg.delete_message_comments}');" ajax="true" update=":add_resource_panel">
-												<f:setPropertyActionListener target="#{bean.clickedComment}" value="#{comment}"></f:setPropertyActionListener>
-											</p:commandLink>
-										</div>
-									</div>
-								</ui:repeat>
-								<div class="comments" style="padding:10px 0px;">
-									<p:inputTextarea style="width: 100%;box-sizing:border-box;" rows="2" value="#{bean.newComment}"></p:inputTextarea><br/>
-										<p:commandButton styleClass="greenbutton" value="#{msg.comment}" actionListener="#{bean.addComment()}" update=":datagrid :comment_form" style="float:right;margin-right:0;margin-top: 5px">
-										<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
-										</p:commandButton>
+									</ui:repeat>
 								</div>
-							</h:form>	
-										
-							<br class="clear"></br>
-							
+								<p:inputTextarea style="width:100%; box-sizing:border-box;" rows="2" value="#{bean.newComment}" /><br/>
+								<p:commandButton styleClass="greenbutton" value="#{msg.comment}" actionListener="#{bean.addComment()}" update=":datagrid :comment_form" style="float:right;margin-right:0;margin-top: 4px">
+									<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
+								</p:commandButton>
+								<br class="clear" />								
+							</h:form>				
 						</h:panelGroup>
 						<h:form rendered="#{bean.editResourceClicked and !bean.newResourceClicked}" id="edit_form">
 							<div style="text-align: center;">
-								<div class="preview_box" style="max-height:500px;">
-						
-									<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
-							
-						
-								</div>
+								<ui:fragment rendered="#{bean.clickedResource.type == 'Video'}">
+									<div class="preview_box" style="max-height:500px; height:400px;">
+										<h:outputText value='#{bean.clickedResource.embedded}' escape="false" />
+									</div>
+								</ui:fragment>								
+								<ui:fragment rendered="#{bean.clickedResource.type != 'text' and bean.clickedResource.type != 'pdf' and bean.clickedResource.type != 'Video'}">
+									<div class="preview_box">
+										<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
+									</div>
+								</ui:fragment>
+								<ui:fragment rendered="#{(bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf' ) and bean.clickedResource.type != 'Video'}">
+									<div class="preview_box" style="display: inline-block">
+										<a target="_blank" class="newsfeed_query_link" style="padding: 0px" href="#{bean.clickedResource.url}">
+											<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
+										</a>
+									</div>
+								</ui:fragment>
 							</div>
 							<table id="edit_table" style="width: 100%; margin-top: 10px">
 								<tr>
 									<td>
-										#{msg.title}
+										#{msg.title}:
 									</td>
 									<td>
 										<p:inputText style="width: 96%" value="#{bean.clickedResource.title}"></p:inputText>
@@ -321,7 +325,7 @@
 								</tr>
 								<tr>
 									<td>
-										#{msg.author}
+										#{msg.author}:
 									</td>
 									<td>
 										<p:inputText style="width: 96%" value="#{bean.clickedResource.author}"></p:inputText>
@@ -329,7 +333,7 @@
 								</tr>
 								<tr>
 									<td>
-										#{msg.description}
+										#{msg.description}:
 									</td>
 								</tr>
 								<tr>

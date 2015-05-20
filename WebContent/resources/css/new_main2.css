@@ -961,12 +961,6 @@ input
 	box-shadow: 0 0 0px 0px #fff !important;
 }
 
-.comments
-{
-	border-bottom: 1px solid #eee;
-	padding: 10px;
-}
-
 #right_pane .ui-layout-unit-header
 {
 	background: #fff !important;
@@ -1570,3 +1564,17 @@ width:100%; min-height:110px; overflow-y: hidden; overflow-x:hidden;
 	 width: 16px;
 	 background-repeat: no-repeat;
  }
+ 
+ 
+ /* right resource panel */
+ 
+.comment {
+	border-bottom: 1px solid #eee;
+	padding: 10px;
+	background-color: #F9F9F9;
+}
+
+.comments {
+	margin:10px 0;
+	border-top: 1px solid #eee;
+}

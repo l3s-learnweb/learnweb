@@ -33,7 +33,13 @@
 				});
 
 			   // then immediately show the tooltip
-			  $('.tooltip').tooltipster('show');
+			   setTimeout(function()
+				{ 
+						   $('.tooltip').tooltipster('show');
+					
+				
+				}, 500);
+			  
 
 			   // as soon as a key is pressed on the keyboard, hide the tooltip.
 			  $(window).keypress(function() {
@@ -84,6 +90,7 @@
     	</script>
 
 		<base href="#{request.contextPath}/lw/" />
+	
 	</h:head>
 
 	<h:body>
