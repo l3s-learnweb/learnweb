@@ -267,7 +267,8 @@
 						    </h:form>
 						    <h:form id="comment_form" styleClass="clear"> 
 								<div class="resource_field" style="padding-top: 10px">#{msg.comments}</div>								
-								<div class="comments">
+							
+								<h:panelGroup layout="block" rendered="#{not empty bean.clickedResource.comments}" styleClass="comments">
 									<ui:repeat var="comment" value="#{bean.clickedResource.comments}">
 										<div class="comment">
 											<h:graphicImage class="userpic" url="#{comment.getUser().image}" width="30" height="30"/>
@@ -286,7 +287,7 @@
 											</div>
 										</div>
 									</ui:repeat>
-								</div>
+								</h:panelGroup>
 								<p:inputTextarea style="width:100%; box-sizing:border-box;" rows="2" value="#{bean.newComment}" /><br/>
 								<p:commandButton styleClass="greenbutton" value="#{msg.comment}" actionListener="#{bean.addComment()}" update=":datagrid :comment_form" style="float:right;margin-right:0;margin-top: 4px">
 									<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
