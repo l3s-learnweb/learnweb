@@ -23,8 +23,7 @@
 					<f:setPropertyActionListener target="#{myResourcesBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
 				</p:commandButton>
 			</h:form>
-			<script type="text/javascript">
-			
+			<script type="text/javascript">			
 				var div = document.createElement("div");
 				var group_header = document.createElement("span");
 				$(group_header).addClass("group_header");
@@ -34,9 +33,7 @@
 	            $("#add_resource").remove()
 				$(div).append(group_header);
 				$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
-				$("#center_pane").prepend(div);
-				
-				
+				$("#center_pane").prepend(div);				
 				
 				var columns = 3;
 				function nCol(){
@@ -45,7 +42,7 @@
 					
 					if(w &lt; 1360)
 						c = 2;
-					if(w &gt; 1610)
+					if(w &gt; 1800)
 						c = 4;
 					
 					if(columns != c) {
@@ -55,8 +52,7 @@
 				}
 				
 				$(document).ready(nCol);
-				window.onresize = nCol;
-				
+				window.onresize = nCol;				
 			</script> 
 			
 			

@@ -54,37 +54,32 @@
 						</a>
 					</li>
 				</ul>
-			</div>
-			
-			
-				<br></br>
-		
-				<script type="text/javascript">	
+			</div>			
+			<br />
+	
+			<script type="text/javascript">				
+			$("#center_pane").prepend($("#group_header"));
+	
+			var columns = 3;
+			function nCol(){
+				var w = $(window).width();
+				var c = 3;
 				
-				$(function () {
-					$("#center_pane").prepend($("#group_header"));
-					nCol();
-				});
+				if(w &lt; 1400)
+					c = 2;
+				if(w &gt; 1800)
+					c = 4;
 				
-					$(document).ready(nCol);
-					window.onresize = nCol;
-					
-					var columns = 3;
-					function nCol(){
-						var w = $(window).width();
-						var c = 3;
-						
-						if(w &lt; 1360)
-							c = 2;
-						if(w &gt; 1770)
-							c = 4;
-						
-						if(columns != c) {
-							columns = c;
-							updateColumns([{name:'cols',value: columns}]);
-						}						
-					}
-				</script>
+				if(columns != c) {
+					columns = c;
+					updateColumns([{name:'cols',value: columns}]);
+				}						
+			}
+			
+			$(nCol());			
+			window.onresize = nCol;
+	
+			</script>
 				
 				<p:dialog id="confirmDialog" header="#{msg.delete_resource_title}"  widgetVar="confirmation" appendTo="@(body)" >
 			        

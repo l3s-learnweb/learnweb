@@ -954,8 +954,16 @@ public class ResourceManager
 
     public static void main(String[] args) throws Exception
     {
+	Learnweb lw = Learnweb.getInstance();
+	ResourceManager rm = new ResourceManager(lw);
+	ResourcePreviewMaker rpm = lw.getResourcePreviewMaker();
+
+	Resource r = rm.getResource(110873);
+
+	rpm.processWebsite(r);
+
 	//createThumbnailsForTEDVideos();
-	createThumbnailsForWebResources();
+	//createThumbnailsForWebResources();
 
 	//Learnweb.getInstance().getResourcePreviewMaker().processImage(new Resource(), FileInspector.openStream("http://www.educaplay.com/es/recursoseducativos/1460084/mi_barrio.htm")); // For all other resources of type != video
 	/*

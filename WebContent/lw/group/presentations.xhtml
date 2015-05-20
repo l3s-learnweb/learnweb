@@ -56,26 +56,32 @@
 			</div>
 			
 		
-				<script type="text/javascript">	
-				
-				$(function () {
-					$("#center_pane").prepend($("#group_header"));
-					nCol();
-				});
+		<script type="text/javascript">
+		/* <![CDATA[ */
+		
+			$("#center_pane").prepend($("#group_header"));
 			
+			var columns = 3;
+			function nCol(){
+				var w = $(window).width();
+				var c = 3;
 				
-				window.onresize = nCol;
+				if(w < 1400)
+					c = 2;
+				else if(w > 1800)
+					c = 4;
 				
-				function nCol(){
-					var w = $(window).width();
-					var c = 4;
-					if(w == 1366)
-						c = 4;
-					if(w &lt; 1366)
-						c = 3;
-					updateColumns([{name:'cols',value: c}]);
-				}
-			</script>
+				if(columns != c) {
+					columns = c;
+					updateColumns([{name:'cols',value: columns}]);
+				}						
+			}
+			
+			window.onresize = nCol;
+			$(nCol);
+			
+		/* ]]> */
+		</script>
 
 		<p:confirmDialog id="confirmDialog" message="#{msg.delete_message_presentation}" header="delete_presentation" severity="alert" widgetVar="confirmation" appendTo="@(body)">
 			<h:form>
@@ -155,7 +161,7 @@
 		    </script>
 		</ui:define>
 		<ui:define name="right_layout">
-			<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" header="#{groupDetailBean.clickedPresentation.presentationName}" id="right_pane">
+			<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" header="#{groupDetailBean.clickedPresentation.presentationId eq -1? msg.presentation_details:groupDetailBean.clickedPresentation.presentationName}" id="right_pane">
 				<div id="right_pane_wrapper">
 					<h:form id="right_form" target="presentation">
 						<script type="text/javascript">
@@ -163,6 +169,7 @@
 							{
 								$(".ui-layout-unit-header","#right_pane").html("#{groupDetailBean.clickedPresentation.presentationName}");
 								resize_preview();
+								scroller();
 							}
 						</script>
 						<ui:fragment rendered="#{groupDetailBean.clickedPresentation.presentationId != -1}">
@@ -176,15 +183,18 @@
 							<p:commandButton styleClass="presentation_commandbutton" rendered="#{userBean.admin || userBean.moderator || groupDetailBean.clickedPresentation.ownerId == userBean.user.id || groupDetailBean.group.leaderUserId == userBean.user.id}" onclick="PF('confirmation').show(); return false" ajax="false" value="#{msg.delete}"></p:commandButton>
 							<div class="presentation_clear"></div>
 							<div class="presentation_detail_div">
-								<div class="data"><span class="resource_field">#{msg.author} :</span> #{groupDetailBean.clickedPresentation.getOwner().username}</div>
-								<div class="data"><span class="resource_field">#{msg.date} :</span> #{groupDetailBean.clickedPresentation.date}</div>
+								<div class="data"><span class="resource_field">#{msg.author}:</span> #{groupDetailBean.clickedPresentation.getOwner().username}</div>
+								<div class="data"><span class="resource_field">#{msg.date}:</span> #{groupDetailBean.clickedPresentation.date}</div>
 							</div>
+							<br/>
 						</ui:fragment>
+						<!--  
 						<ui:fragment rendered="#{groupDetailBean.clickedPresentation.presentationId eq -1}">
 							<div class="click_message">
 								#{msg.presentation_details}
 							</div>
 						</ui:fragment>
+						-->
 					</h:form>
 				</div>
 			</p:layoutUnit>

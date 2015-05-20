@@ -162,7 +162,6 @@ public class Learnweb
 	mementoClient = new MementoClient(this);
 	loroManager = new LoroManager(this);
 	jobScheduler = new JobScheduler(this);
-	jobScheduler.startAllJobs();
 	/*
 	PreparedStatement pstmt = dbConnection.prepareStatement("select * from lw_admin_message");
 	ResultSet rs = pstmt.executeQuery();
@@ -177,7 +176,7 @@ public class Learnweb
      */
     public void initLearnwebServer()
     {
-	log.info("initLearnwebServer");
+	log.debug("Init LearnwebServer");
 	jobScheduler.startAllJobs();
     }
 

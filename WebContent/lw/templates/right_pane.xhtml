@@ -7,9 +7,7 @@
 
 	<ui:composition> 
 
-
-
-	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" header="#{bean.clickedResource.title}" id="right_pane">
+	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" header="#{bean.clickedResource.id eq -1? msg.click_to_view_details : bean.clickedResource.title}" id="right_pane">
 				<h:outputScript library="right-pane-template" name="right-pane.js" />
 				<h:form id="remote_form">
 					<p:remoteCommand  actionListener="#{bean.loadResources}" update=":datagrid :add_resource_panel" name="update_datagrid" oncomplete="update_header()"></p:remoteCommand>
@@ -151,7 +149,7 @@
 							</ui:fragment>
 					<table>
 						<ui:fragment rendered="#{not empty bean.clickedResource.fileName and not bean.clickedResource.source.equals('LORO')}">
-							<tr style="padding: 10px;">
+							<tr style="padding: 10px 0;">
 								<td>
 									<span class="resource_field">#{msg.file}:</span>
 								</td>
@@ -162,7 +160,7 @@
 						</ui:fragment>
 
 						<ui:fragment rendered="#{empty bean.clickedResource.fileName and bean.clickedResource.type.toLowerCase() != 'text' and bean.clickedResource.type != 'pdf' and bean.clickedResource.type.toLowerCase() != 'video' and bean.clickedResource.type.toLowerCase() != 'image'}">
-							<tr style="padding: 10px;">
+							<tr style="padding: 10px 0;">
 								<td>
 									<span class="resource_field">#{msg.resource}:</span>
 								</td>
@@ -173,7 +171,7 @@
 						</ui:fragment>
 
 						<ui:fragment rendered="#{not empty bean.clickedResource.author}">
-							<tr style="padding: 10px;">
+							<tr style="padding: 10px 0;">
 								<td>
 									<span class="resource_field">#{msg.author}:</span>
 								</td>
@@ -182,7 +180,7 @@
 								</td>
 							</tr>
 						</ui:fragment>
-						<tr style="padding: 10px;">
+						<tr style="padding: 10px 0;">
 							<td>
 								<span class="resource_field">#{msg.source}:</span>
 							</td>
@@ -193,7 +191,7 @@
 							</td>
 						</tr>
 						<ui:fragment rendered="#{not empty bean.clickedResource.groups}">
-							<tr style="padding: 10px;">
+							<tr style="padding: 10px 0;">
 								<td>
 									<span class="resource_field"><h:outputFormat value="#{msg.group_s}:">
 											<f:param value="#{bean.clickedResource.groups.size()}" />
@@ -210,7 +208,7 @@
 							</tr>
 						</ui:fragment>
 						<ui:fragment rendered="#{bean.clickedResource.source == 'TED'}">
-							<tr style="padding: 10px;">
+							<tr style="padding: 10px 0;">
 								<td>
 									<span class="resource_field">#{msg.transcript}:</span>
 								</td>
@@ -354,11 +352,13 @@
 								</tr>
 							</table>
 						</h:form>
+						<!--  
 						<ui:fragment rendered="#{!bean.newResourceClicked and !bean.editResourceClicked and bean.clickedResource.id eq -1}">
 							<div class="click_message">
-								#{msg.click_to_view_details}
+								bean.clickedResource.id eq -1 #{msg.click_to_view_details}
 							</div>
 						</ui:fragment>
+						-->
 					</p:panel>
 				</div>
 			</p:layoutUnit>

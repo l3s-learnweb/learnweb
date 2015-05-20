@@ -51,9 +51,7 @@
 			
 			<script type="text/javascript">
 			/* <!-- */
-			$(function () {
 				$("#center_pane").prepend($("#group_header"));
-			});
 			/* --> */
 			</script>
 		
@@ -88,20 +86,24 @@
 		    </h:panelGrid>
 		</ui:define>
 		<ui:define name="right_layout">
-			<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" header="" id="right_pane">
+			<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" header="#{groupDetailBean.clickedUser.id eq -1? msg.user_details : groupDetailBean.clickedUser.username}" id="right_pane">
 				<div id="right_pane_wrapper">
 					<h:form id="right_form" target="presentation">
 						<script type="text/javascript">
 							function update_header()
 							{
 								$(".ui-layout-unit-header","#right_pane").html("#{groupDetailBean.clickedUser.username}");
+								scroller();
 							}
 						</script>
+						<!-- 
 						<ui:fragment rendered="#{groupDetailBean.clickedUser.id eq -1}">
 							<div class="click_message">
 								<h:outputText value="#{msg.user_details}"></h:outputText>
 							</div>
 						</ui:fragment>
+						
+						 -->
 						<ui:fragment rendered="#{groupDetailBean.clickedUser.id != -1}">
 							<p:panel header="#{msg.myProfileTitle}">
 								<h:panelGrid columns="2" styleClass="members_panelgrid">

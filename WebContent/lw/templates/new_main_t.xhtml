@@ -40,7 +40,7 @@
 				collapsible="false" styleClass="northunit" style="display:block; height:46px;">
 				<script type="text/javascript">
 			
-				/*
+				
 					function scroller()
 					{
 						$(".nano").nanoScroller();
@@ -54,10 +54,16 @@
 							$(".ui-layout-unit-content","#left_pane").addClass("nano");
 						}
 						
+					
+						/*
 						scroller();
 						setInterval("scroller()",500);
+						*/
+						
+						window.resize=scroller;
+						$(scroller);
 					});			
-				*/
+				
 				</script>				
 			
 				<ui:insert name="options_panel"></ui:insert>
