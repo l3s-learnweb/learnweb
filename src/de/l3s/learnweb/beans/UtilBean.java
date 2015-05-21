@@ -116,7 +116,7 @@ public class UtilBean implements Serializable
 
     public Date StringToDate(String dateStr) throws ParseException
     {
-	SimpleDateFormat format = new SimpleDateFormat("dd.mm.yyyy");
+	SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
 	return format.parse(dateStr);
     }
 }

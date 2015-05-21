@@ -90,9 +90,9 @@
 				<br/>
 				<h2>#{msg.changelog_title}</h2>
 				 				
-				<h4>${utilBean.StringToDate('20.5.2015')}
-					<h:outputText value="${utilBean.StringToDate('20.05.2015')}">
-           				<f:convertDateTime type="date" dateStyle="long"  timeZone="#{userBean.timeZone}"/>
+				<h4>
+					<h:outputText value="${utilBean.StringToDate('20.5.2015')}">
+           				<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
        				</h:outputText>	
        			</h4>
 				<h:panelGrid columns="2" columnClasses="first_column,description">								
@@ -102,7 +102,7 @@
 				
 				<h4>
 					<h:outputText value="${utilBean.StringToDate('12.05.2015')}">
-           				<f:convertDateTime type="date" dateStyle="long"  timeZone="#{userBean.timeZone}"/>
+           				<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
        				</h:outputText>	
        			</h4>
 				<p><h:outputText value="#{msg.changelog_new_design_description}:"/></p>				
@@ -122,7 +122,7 @@
 		</div>
 
 		<div id="index_footer">
-			<h:outputText value="#{msg.index_footer_text} "></h:outputText>
+			<h:outputText value="#{msg.index_footer_text} "/>
 			<a href="mailto:learnweb-support@l3s.de" >
 				<h:outputText value="learnweb-support@l3s.de" style="margin-left:3px; color:#000000;"></h:outputText>
 			</a>

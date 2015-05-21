@@ -29,10 +29,6 @@ import de.l3s.learnweb.User;
 @ViewScoped
 public class ReEditPresentationBean extends ApplicationBean implements Serializable
 {
-
-    /**
-	 * 
-	 */
     private static final long serialVersionUID = 5990525657898323276L;
     private static final Logger log = Logger.getLogger(ReEditPresentationBean.class);
     private int groupId;
@@ -127,7 +123,6 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
 		    }
 		    prevId = newId;
 		    prevTitle = getPresentationName();
-		    System.out.println(newId);
 		}
 	    }
 	    addGrowl(FacesMessage.SEVERITY_INFO, "presentation_saved");
@@ -246,7 +241,7 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
 	    temp.setPresentationId(rs.getInt(3));
 	    temp.setPresentationName(rs.getString(4));
 	    temp.setCode(rs.getString(5));
-	    temp.setDate(rs.getString(6));
+	    temp.setDate(rs.getDate(6));
 	    temp.parseCode();
 	}
 	return temp;

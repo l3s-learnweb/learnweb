@@ -183,14 +183,13 @@
 							<p:commandButton styleClass="presentation_commandbutton" rendered="#{userBean.admin || userBean.moderator || groupDetailBean.clickedPresentation.ownerId == userBean.user.id || groupDetailBean.group.leaderUserId == userBean.user.id}" onclick="PF('confirmation').show(); return false" ajax="false" value="#{msg.delete}"></p:commandButton>
 							<div class="presentation_clear"></div>
 							<div class="presentation_detail_div">
+								<div class="data"><span class="resource_field">#{msg.author}: </span>#{groupDetailBean.clickedPresentation.getOwner().username}</div>
 								<div class="data">
-									<span class="resource_field">#{msg.author}:</span> 
-										#{groupDetailBean.clickedPresentation.getOwner().username}
+									<span class="resource_field">#{msg.date}: </span>
+									<h:outputText value="#{groupDetailBean.clickedPresentation.date}">	
+										<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}" />
+									</h:outputText>
 								</div>
-								<div class="data">
-									<span class="resource_field">#{msg.date}:</span> 
-										#{groupDetailBean.clickedPresentation.date}
-									</div>
 							</div>
 							<br/><br/>
 						</ui:fragment>						
