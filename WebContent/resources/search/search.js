@@ -6,19 +6,23 @@ var lightboxActiveResource = null;
 var gridItemWidth = 190;
 var tabActiveindex = 0;
 
-// query extension: uncomment function 
+// jquery extension: uncomment function 
 (function($) {
 	$.fn.uncomment = function() {
 		$(this).contents().each(function() {
 			if ( this.nodeType == 8 ) {
+				$(this).replaceWith(this.nodeValue);
+				/*
 				// Need to "evaluate" the HTML content,
 				// otherwise simple text won't replace
 				var e = $('<span>' + this.nodeValue + '</span>');
 				$(this).replaceWith(e.contents());
+				*/
 			}
+			/*
 			else if ( this.hasChildNodes() ) {
 				$(this).uncomment(recurse);
-			} 
+			} */
 		});
 	};
 })(jQuery);

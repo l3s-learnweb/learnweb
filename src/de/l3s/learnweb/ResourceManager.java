@@ -720,18 +720,17 @@ public class ResourceManager
 
 	OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement(
-		"SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? and type like 'video' ORDER BY resource_id ASC LIMIT 250"); // TODO remove limit and implement paginator on group page
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT 250"); // TODO remove limit and implement paginator on group page
 	select.setInt(1, groupId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
 	{
 	    int userId = rs.getInt(1);
-	    Resource r = createResource(rs);
+	    Resource resource = createResource(rs);
 	    User user = userId == 0 ? null : um.getUser(userId);
 
-	    if(null != r)
-		resources.add(r, user, rs.getDate(2));
+	    if(null != resource)
+		resources.add(resource, user, rs.getDate(2));
 	}
 	select.close();
 

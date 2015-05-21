@@ -339,8 +339,7 @@ public class Search implements Serializable
 
 	if(page > 50)
 	{
-	    log.fatal("requested more than 50 pages");
-	    new Exception().printStackTrace();
+	    log.fatal("requested more than 50 pages", new Exception());
 	    return null;
 	}
 

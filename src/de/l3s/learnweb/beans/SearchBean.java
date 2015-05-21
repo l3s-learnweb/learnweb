@@ -300,6 +300,8 @@ public class SearchBean extends ApplicationBean implements Serializable
 	if(!isSearched())
 	    return null;
 
+	log.debug("getNextPage");
+
 	batchrsTimeout = new Date().getTime() - batchrsStartTime;
 	LinkedList<ResourceDecorator> newResources = search.getResourcesByPage(page);
 

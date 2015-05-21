@@ -146,14 +146,20 @@
 			</h:panelGroup>
 		</div>
 	
+		<!-- TODO: all remote commands cause an update of :nextPage  -->
 		<h:form style="display:none;">	
-			<p:remoteCommand actionListener="${searchBean.loadNextPage()}" update=":nextPage" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" />
-			<p:remoteCommand actionListener="${searchBean.generateKnowledgeGraph()}" update=":factsheet" name="ajaxLoadFactsheet" async="true" />
-			<p:remoteCommand actionListener="${searchBean.setSelectedResource()}" name="setSelectedResource" update=":resource_form" />
-		  	<p:remoteCommand actionListener="${searchHistoryBean.updateSearchHistory()}"  update=":tabView:tab3" name="ajaxLoadSearchHistory" />
-			<p:remoteCommand update=":tabView:tab2" name="updatecurrentsearch" />		  				
-			<p:remoteCommand actionListener="${searchBean.logResourceOpened()}" name="logResourceOpened" async="true" />
-			<p:remoteCommand actionListener="${searchBean.logEndTime()}" name="logEndTime" async="false" oncomplete="updatecurrentsearch();"/>
+			<p:remoteCommand actionListener="${searchBean.loadNextPage()}" update=":nextPage" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this" partialSubmit="true" imme />
+			<p:remoteCommand actionListener="${searchBean.generateKnowledgeGraph()}" update=":factsheet" name="ajaxLoadFactsheet" async="true" process="@this" partialSubmit="true"/>
+		</h:form>
+		<h:form style="display:none;">	
+			<p:remoteCommand actionListener="${searchBean.setSelectedResource()}" name="setSelectedResource" update=":resource_form" process="@this" partialSubmit="true" />
+		  	<p:remoteCommand actionListener="${searchHistoryBean.updateSearchHistory()}" update=":tabView:tab3" name="ajaxLoadSearchHistory" process="@this" partialSubmit="true" />
+					  				
+			<p:remoteCommand actionListener="${searchBean.logResourceOpened()}" name="logResourceOpened" async="true" process="@this" partialSubmit="true" />
+			
+			<!--  why no update :tabView:tab2 in logEndTime remotecommand -->
+			<p:remoteCommand update=":tabView:tab2" name="updatecurrentsearch" process="@this" partialSubmit="true" />
+			<p:remoteCommand actionListener="${searchBean.logEndTime()}" name="logEndTime" async="false" oncomplete="updatecurrentsearch();" process="@this" partialSubmit="true"/>
 		</h:form>
  
 		<p:dialog header="#{msg.options}" widgetVar="resource_dialog" modal="false" minWidth="600" resizable="false" style="z-index:1500;">			
