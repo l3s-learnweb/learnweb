@@ -33,9 +33,7 @@
 		<div id="main_menu_bar" style="background-color: #{menuBean.bannerColor}; #{menuBean.bannerImage}">			
 		
 			<img src="#{request.contextPath}/resources/main-template/img/ajax-loader.gif" alt="Loading" id="loadingsymbol"/>
-			<p:ajaxStatus
-				onstart="document.getElementById('loadingsymbol').style.visibility='visible';"
-				onsuccess="document.getElementById('loadingsymbol').style.visibility='hidden';" />			
+			<p:ajaxStatus onstart="document.getElementById('loadingsymbol').style.visibility='visible';" onsuccess="document.getElementById('loadingsymbol').style.visibility='hidden';" />			
 		 
 			<form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
 				<a href="#{menuBean.bannerLink}" id="learnweb_logo">Logo</a>

@@ -144,63 +144,63 @@
 									</a>
 								</div>
 							</ui:fragment>
-							
 						</div>
 						<div class="center_align" style="padding-top: 10px">
 							<a class="hyperlink" href="#{bean.clickedResource.url}" target="_blank"><h:outputText styleClass="hyperlink" rendered="#{bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf'}" value="#{bean.clickedResource.url}"></h:outputText></a>
 						</div>
 					</ui:fragment>
-					<table>
+					
+					<table cellpadding="0" cellspacing="0" style="width:40%">
 						<ui:fragment rendered="#{not empty bean.clickedResource.fileName and not bean.clickedResource.source.equals('LORO')}">
-							<tr style="padding: 10px 0;">
-								<td>
+							<tr>
+								<td style="padding-top:5px">
 									<span class="resource_field">#{msg.file}:</span>
 								</td>
-								<td>
+								<td style="padding-top:5px">
 									<a href="#{bean.clickedResource.getUrl()}">#{bean.clickedResource.fileName}</a>
 								</td>
 							</tr>
 						</ui:fragment>
 
 						<ui:fragment rendered="#{empty bean.clickedResource.fileName and bean.clickedResource.type.toLowerCase() != 'text' and bean.clickedResource.type != 'pdf' and bean.clickedResource.type.toLowerCase() != 'video' and bean.clickedResource.type.toLowerCase() != 'image'}">
-							<tr style="padding: 10px 0;">
-								<td>
+							<tr>
+								<td style="padding-top:5px">
 									<span class="resource_field">#{msg.resource}:</span>
 								</td>
-								<td>
+								<td style="padding-top:5px">
 									<a style="color: #22e" href="#{bean.clickedResource.getUrl()}">#{bean.clickedResource.url}</a>
 								</td>
 							</tr>
 						</ui:fragment>
 
 						<ui:fragment rendered="#{not empty bean.clickedResource.author}">
-							<tr style="padding: 10px 0;">
-								<td>
+							<tr>
+								<td style="padding-top:5px">
 									<span class="resource_field">#{msg.author}:</span>
 								</td>
-								<td>
+								<td style="padding-top:5px">
 									<h:outputText value="#{bean.clickedResource.author}"/>
 								</td>
 							</tr>
 						</ui:fragment>
-						<tr style="padding: 10px 0;">
-							<td>
+						<tr>
+							<td style="padding-top:5px">
 								<span class="resource_field">#{msg.source}:</span>
 							</td>
-							<td>
+							<td style="padding-top:5px">
 								<a href="#{bean.clickedResource.getUrl()}">
 									<h:outputText value="#{bean.clickedResource.source}" />
 								</a>
 							</td>
 						</tr>
 						<ui:fragment rendered="#{not empty bean.clickedResource.groups}">
-							<tr style="padding: 10px 0;">
-								<td>
+							<tr>
+								<td style="padding-top:5px">
 									<span class="resource_field"><h:outputFormat value="#{msg.group_s}:">
 											<f:param value="#{bean.clickedResource.groups.size()}" />
 										</h:outputFormat></span>
 								</td>
-								<td>
+								<td style="padding-top:5px">
 									<ui:repeat var="group" value="#{bean.clickedResource.groups}">
 										<h:outputLink value="group/overview.jsf" style="display:inline-block; margin-right:1rem;">
 											<f:param name="group_id" value="#{group.id}" />
@@ -211,11 +211,11 @@
 							</tr>
 						</ui:fragment>
 						<ui:fragment rendered="#{bean.clickedResource.source == 'TED'}">
-							<tr style="padding: 10px 0;">
-								<td>
+							<tr>
+								<td style="padding-top:5px">
 									<span class="resource_field">#{msg.transcript}:</span>
 								</td>
-								<td>
+								<td style="padding-top:5px">
 									<h:outputLink value="ted_transcript.jsf" style="text-decoration:underline;">
 										<f:param name="resource_id" value="#{bean.clickedResource.id}" />#{msg.link_to_transcript}</h:outputLink>
 								</td>

@@ -112,7 +112,7 @@
 		
 		<ui:insert name="bottom_panel"></ui:insert>
 	
-		<h:panelGroup layout="block" id="footer" rendered="#{not empty helpText and (!loginRequired || userBean.loggedIn)}" styleClass="#{userBean.getPreference('helptext_hide')? 'display-none':''}">
+		<h:panelGroup layout="block" id="footer" rendered="#{not empty helpText and (!loginRequired || userBean.loggedIn)}" styleClass="#{userBean.getPreference('helptext_hide')? 'display-none':''}" style="background:url(../resources/main-template/img/question.png) center no no-repeat">
 			<h:outputText value="#{helpText}" escape="false" style="padding: 0.7rem 4rem; display:block;" />
 			<a href="#" onclick="return footerClose();" id="footer_close" title="#{msg.close}"></a>
 		</h:panelGroup>

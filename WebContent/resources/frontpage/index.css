@@ -44,7 +44,6 @@ h4 { text-decoration:underline;	font-size:1.3rem; margin: 0.8rem 0 0.4rem; }
 
 .ui-inputfield.inputbox{
 	box-sizing:border-box;
-	/*width: 16rem*/;
 	width: 100%;
 	font-size:1.4rem;
 	padding:4px 7px;
