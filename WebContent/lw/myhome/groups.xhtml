@@ -27,11 +27,11 @@
 						</h:selectOneMenu>
 						<h:outputText value="" />				
 						
-						<h:outputText value="#{msg.category}:" rendered="#{not empty menuBean.selectCourse.groupCategories}" />
-						<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{not empty menuBean.selectCourse.groupCategories}" >	
-							<f:selectItems value="#{menuBean.selectCourse.groupCategories}" var="cat" itemValue="#{cat.id}" itemLabel="#{cat.title} [#{cat.abbreviation}]" />
+						<h:outputText value="#{msg.category}:" rendered="#{not empty userBean.activeCourse.groupCategories}" />
+						<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{not empty userBean.activeCourse.groupCategories}" >	
+							<f:selectItems value="#{userBean.activeCourse.groupCategories}" var="cat" itemValue="#{cat.id}" itemLabel="#{cat.title} [#{cat.abbreviation}]" />
 						</h:selectOneMenu>
-						<h:outputText value="" rendered="#{not empty menuBean.selectCourse.groupCategories}" />						
+						<h:outputText value="" rendered="#{not empty userBean.activeCourse.groupCategories}" />						
 							
 					</h:panelGrid>				 
 				</p:fieldset>

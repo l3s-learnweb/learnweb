@@ -59,7 +59,7 @@ public class ApplicationBean
 	return FacesContext.getCurrentInstance().isPostback();
     }
 
-    protected FacesContext getFacesContext()
+    protected static FacesContext getFacesContext()
     {
 	return FacesContext.getCurrentInstance();
     }
@@ -70,7 +70,7 @@ public class ApplicationBean
      * @param param
      * @return
      */
-    protected String getParameter(String param)
+    protected static String getParameter(String param)
     {
 	String value = getFacesContext().getExternalContext().getRequestParameterMap().get(param);
 
@@ -99,24 +99,21 @@ public class ApplicationBean
      * @param param
      * @return
      */
-    protected Integer getParameterInt(String param)
+    protected static Integer getParameterInt(String param)
     {
 	String value = getFacesContext().getExternalContext().getRequestParameterMap().get(param);
 
 	if(null == value)
 	    return null;
 
-	Integer intValue;
 	try
 	{
-	    intValue = Integer.parseInt(value);
+	    return Integer.parseInt(value);
 	}
 	catch(NumberFormatException e)
 	{
-	    intValue = null;
+	    return null;
 	}
-
-	return intValue;
     }
 
     /**
@@ -195,7 +192,7 @@ public class ApplicationBean
      * 
      * @return
      */
-    protected String getTemplateDir()
+    protected static String getTemplateDir()
     {
 	String path = getFacesContext().getExternalContext().getRequestServletPath();
 	int index = path.indexOf("/", 1);

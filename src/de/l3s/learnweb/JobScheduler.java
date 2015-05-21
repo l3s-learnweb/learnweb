@@ -111,7 +111,7 @@ public class JobScheduler
 	@Override
 	public void execute(TaskExecutionContext context2)
 	{
-	    log.debug("archive something");
+	    //log.debug("archive something");
 	    try
 	    {
 		learnweb.getArchiveUrlManager().addArchiveUrlToResource();

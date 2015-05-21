@@ -9,6 +9,9 @@
 
 	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" header="#{bean.clickedResource.id eq -1? msg.click_to_view_details : bean.clickedResource.title}" id="right_pane">
 		<h:outputScript library="resource-pane-template" name="resource-pane.js" />
+		<link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet"/>
+		<script src="http://vjs.zencdn.net/4.12/video.js"></script>
+		
 		<h:form id="remote_form">
 			<p:remoteCommand name="update_datagrid"  actionListener="#{bean.loadResources}" update=":datagrid :add_resource_panel" oncomplete="update_header()"></p:remoteCommand>
 		</h:form>

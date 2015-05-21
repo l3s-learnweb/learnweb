@@ -104,12 +104,14 @@
 			</p:layoutUnit>
 
 		</p:layout>
+		<!-- 
 		<p:dialog header="Shared Resultsets" widgetVar="shared_resultsets_dialog" modal="false" minWidth="600" resizable="false" rendered="#{userBean.searchHistoryEnabled}">			
 			<h:form id="shared_resultsets_form">
 				<ui:decorate template="/lw/user/shared_resultsets.xhtml"></ui:decorate>
 			</h:form> 			
 		</p:dialog>	
-		
+		 -->
+		 
 		<ui:insert name="bottom_panel"></ui:insert>
 	
 		<h:panelGroup layout="block" id="footer" rendered="#{not empty helpText and (!loginRequired || userBean.loggedIn)}" styleClass="#{userBean.getPreference('helptext_hide')? 'display-none':''}">

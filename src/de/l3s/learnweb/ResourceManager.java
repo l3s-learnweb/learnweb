@@ -451,7 +451,7 @@ public class ResourceManager
 
 	List<Comment> comments = new LinkedList<Comment>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COMMENT_SELECT + " FROM `lw_comment` WHERE `resource_id` = ?");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COMMENT_SELECT + " FROM `lw_comment` WHERE `resource_id` = ? ORDER BY date DESC");
 	select.setInt(1, id);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -720,7 +720,8 @@ public class ResourceManager
 
 	OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? ORDER BY resource_id ASC");
+	PreparedStatement select = learnweb.getConnection().prepareStatement(
+		"SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? and type like 'video' ORDER BY resource_id ASC LIMIT 250"); // TODO remove limit and implement paginator on group page
 	select.setInt(1, groupId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())

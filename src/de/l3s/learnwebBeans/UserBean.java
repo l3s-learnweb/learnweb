@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
@@ -16,11 +17,15 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.primefaces.model.menu.DefaultMenuItem;
+import org.primefaces.model.menu.DefaultMenuModel;
+import org.primefaces.model.menu.DefaultSubMenu;
 
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.beans.UtilBean;
 
 @ManagedBean
 @SessionScoped
@@ -31,14 +36,14 @@ public class UserBean implements Serializable
 
     private int userId = 0;
     private transient User userCache = null; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
-    private long userCacheTime = 0L; // stores when the userCache was refreshed the last time
+    private transient long userCacheTime = 0L; // stores when the userCache was refreshed the last time
 
     private Locale locale;
     private HashMap<String, String> preferences; // user preferences like search mode
 
     private int activeCourseId = 0;
     private transient Course activeCourseCache = null;
-    private long activeCourseCacheTime = 0L;
+    private transient long activeCourseCacheTime = 0L;
 
     private List<Group> newGroups = null;
 
@@ -51,7 +56,6 @@ public class UserBean implements Serializable
 
     public boolean isLoggedIn()
     {
-	//return user != null;
 	return userId != 0;
     }
 
@@ -83,7 +87,7 @@ public class UserBean implements Serializable
 	    }
 	    catch(SQLException e)
 	    {
-		log.fatal("Can't retrieve user", e);
+		log.fatal("Can't retrieve user " + userId, e);
 	    }
 	}
 	return userCache;
@@ -102,32 +106,39 @@ public class UserBean implements Serializable
 
 	if(user != null)
 	{
+	    preferences = user.getPreferences();
+	    userId = user.getId();
+
 	    try
 	    {
 		if(user.getId() == 2969) // paviamod set to dentists2015 // TODO this is only a quick fix
-		    activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(884);
+		    activeCourseId = 884; // activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(884);
 		else if(user.getId() == 5143) // yell set to yell // TODO this is only a quick fix
-		    activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(505);
+		    activeCourseId = 505; //activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(505);
 		else
 		{
-		    //getPreference("active_course");
-		    activeCourseCache = user.getCourses().get(0);
-
+		    String lastActiveCourse = getPreference("active_course");
+		    if(lastActiveCourse != null)
+		    {
+			activeCourseId = Integer.parseInt(lastActiveCourse);
+			log.debug("course from pref");
+		    }
+		    else
+		    {
+			activeCourseId = user.getCourses().get(0).getId();
+			log.debug("course default");
+		    }
 		}
-
-		activeCourseId = activeCourseCache.getId();
 	    }
 	    catch(SQLException e)
 	    {
-		e.printStackTrace();
+		log.error("Couldn't login user " + user.getId(), e);
 	    }
 
-	    preferences = user.getPreferences();
-	    userId = user.getId();
 	}
 	else
-	// user logged out -> clear caches
 	{
+	    // user logged out -> clear caches
 	    newGroups = null;
 	    userId = 0;
 	    userCache = null;
@@ -163,8 +174,8 @@ public class UserBean implements Serializable
 
     public void setPreferenceRemote()
     {
-	String key = getParameter("key");
-	String value = getParameter("value");
+	String key = ApplicationBean.getParameter("key");
+	String value = ApplicationBean.getParameter("value");
 
 	setPreference(key, value);
     }
@@ -247,21 +258,94 @@ public class UserBean implements Serializable
     {
 	if(activeCourseCacheTime + 6000000 < System.currentTimeMillis() || activeCourseCache == null)
 	{
+	    if(activeCourseId == 0)
+	    {
+		log.fatal("activeCourseId is 0. This should never happen");
+		activeCourseId = 485; // set to default course
+	    }
 	    this.activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(activeCourseId);
 	    this.activeCourseCacheTime = System.currentTimeMillis();
-
-	    log.debug("Load course for user: " + userCache.getUsername() + " - " + activeCourseId + " - " + activeCourseCache);
 	}
 	return activeCourseCache;
     }
 
-    public void setActiveCourse(Course activeCourse)
+    public void setActiveCourseId(int activeCourseId)
     {
-	this.activeCourseCache = activeCourse;
-	this.activeCourseId = activeCourse.getId();
-	this.activeCourseCacheTime = System.currentTimeMillis();
+	this.activeCourseCache = null;
+	this.activeCourseId = activeCourseId;
 
 	setPreference("active_course", Integer.toString(activeCourseId));
+    }
+
+    public int getActiveCourseId()
+    {
+	return activeCourseId;
+    }
+
+    @Override
+    public String toString()
+    {
+	User user = getUser();
+	if(user == null)
+	    return "not logged in";
+
+	return "userId: " + user.getId() + " name: " + user.getUsername();
+    }
+
+    // -------------------- Front ent ---------------------------
+
+    /**
+     * Function to format Date variables in the UI depending on the users locale
+     * 
+     * @param date
+     * @return
+     */
+    public String formatDate(Date date)
+    {
+	long timeDifference = (new Date().getTime() - date.getTime());
+	if(timeDifference > 300000)
+	    return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, getLocale()).format(date);
+	else
+	    return UtilBean.getLocaleMessage("a_few_minutes_ago");
+    }
+
+    /**
+     * Returns the css code for the banner image of the active course or an empty string if no image is defined
+     * 
+     * @return
+     * @throws SQLException
+     */
+    public String getBannerImage() throws SQLException
+    {
+	Course selectCourse = getActiveCourse();
+	if(selectCourse != null && selectCourse.getBannerImage() != null)
+	    return "background-image: url(" + selectCourse.getBannerImage() + ");";
+
+	return "";
+    }
+
+    /**
+     * Returns the css banner color of the active course or an empty string if no color is defined
+     * 
+     * @return
+     */
+    public String getBannerColor()
+    {
+	String bannerColor = "#489a83";
+	Course selectCourse = getActiveCourse();
+
+	if(selectCourse != null && selectCourse.getBannerColor() != null && selectCourse.getBannerColor().length() > 3)
+	    bannerColor = "#" + selectCourse.getBannerColor();
+
+	return bannerColor;
+    }
+
+    public String getBannerLink() throws SQLException
+    {
+	if(getUser() == null)
+	    return "";
+
+	return getUser().getOrganisation().getWelcomePage();
     }
 
     /**
@@ -288,7 +372,7 @@ public class UserBean implements Serializable
 	}
 	catch(SQLException e)
 	{
-	    e.printStackTrace();
+	    log.error(e);
 	}
 
 	return 0;
@@ -302,28 +386,96 @@ public class UserBean implements Serializable
 	return getActiveCourse().getOption(Course.Option.Search_History_log_enabled);
     }
 
-    @Override
-    public String toString()
+    /**
+     * Model for the group menu
+     * 
+     * @return
+     */
+    public LinkedList<DefaultSubMenu> getGroupMenu()
     {
-	User user = getUser();
-	if(user == null)
-	    return "not logged in";
+	DefaultMenuModel model = new DefaultMenuModel();
 
-	return "userId: " + user.getId() + " name: " + user.getUsername();
+	String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
+
+	Integer groupId = ApplicationBean.getParameterInt("group_id");
+
+	LinkedList<DefaultSubMenu> menu = new LinkedList<DefaultSubMenu>();
+	try
+	{
+	    for(Group group : getActiveCourse().getGroupsFilteredByUser(getUser()))
+	    {
+		boolean isActiveGroup = false;
+
+		DefaultSubMenu submenu = new DefaultSubMenu();
+		submenu.setLabel(group.getLongTitle());
+		submenu.setId(Integer.toString(group.getId()));
+
+		if(groupId != null && groupId.equals(group.getId()))
+		{
+		    submenu.setStyleClass("active");
+		    isActiveGroup = true;
+		}
+
+		DefaultMenuItem item = new DefaultMenuItem();
+		item.setValue(UtilBean.getLocaleMessage("overview"));
+		item.setUrl("./group/overview.jsf?group_id=" + group.getId());
+		if(isActiveGroup && viewId.endsWith("overview.xhtml"))
+		    item.setStyleClass("active");
+		submenu.addElement(item);
+
+		item = new DefaultMenuItem();
+		item.setValue(UtilBean.getLocaleMessage("resources"));
+		item.setUrl("./group/resources.jsf?group_id=" + group.getId());
+		if(isActiveGroup && viewId.endsWith("resources.xhtml"))
+		    item.setStyleClass("active");
+		submenu.addElement(item);
+
+		item = new DefaultMenuItem();
+		item.setValue(UtilBean.getLocaleMessage("members"));
+		item.setUrl("./group/members.jsf?group_id=" + group.getId());
+		if(isActiveGroup && viewId.endsWith("members.xhtml"))
+		    item.setStyleClass("active");
+		submenu.addElement(item);
+
+		item = new DefaultMenuItem();
+		item.setValue(UtilBean.getLocaleMessage("presentations"));
+		item.setUrl("./group/presentations.jsf?group_id=" + group.getId());
+		if(isActiveGroup && viewId.endsWith("presentations.xhtml"))
+		    item.setStyleClass("active");
+		submenu.addElement(item);
+
+		item = new DefaultMenuItem();
+		item.setValue(UtilBean.getLocaleMessage("links"));
+		item.setUrl("./group/links.jsf?group_id=" + group.getId());
+		if(isActiveGroup && viewId.endsWith("links.xhtml"))
+		    item.setStyleClass("active");
+		submenu.addElement(item);
+
+		model.addElement(submenu);
+
+		menu.add(submenu);
+	    }
+
+	}
+	catch(SQLException e)
+	{
+	    log.error("Can't create menu model", e);
+	}
+
+	return menu;
+	//return model;
     }
 
-    private String getParameter(String param)
+    public String onCourseChange()
     {
-	return FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get(param);
-    }
-
-    //Function to format Date variables in the UI
-    public String formatDate(Date date)
-    {
-	long timeDifference = (new Date().getTime() - date.getTime()) / 1000;
-	if(timeDifference > 300)
-	    return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, getLocale()).format(date);
-	else
-	    return "a few minutes ago";
+	try
+	{
+	    return ApplicationBean.getTemplateDir() + "/" + getUser().getOrganisation().getWelcomePage() + "?faces-redirect=true";
+	}
+	catch(SQLException e)
+	{
+	    log.error(e);
+	}
+	return null;
     }
 }
