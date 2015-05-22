@@ -466,16 +466,38 @@ public class UserBean implements Serializable
 	//return model;
     }
 
-    public String onCourseChange()
+    public String onCourseChange(int courseId) throws SQLException
     {
-	try
+	setActiveCourseId(courseId);
+
+	return ApplicationBean.getTemplateDir() + "/" + getUser().getOrganisation().getWelcomePage() + "?faces-redirect=true";
+    }
+
+    public DefaultMenuModel getCourseMenuModel() throws SQLException
+    {
+	DefaultMenuModel model = new DefaultMenuModel();
+
+	//First submenu
+	DefaultSubMenu firstSubmenu = new DefaultSubMenu("Active course: " + getActiveCourse().getTitle());
+
+	for(Course course : getUser().getCourses())
 	{
-	    return ApplicationBean.getTemplateDir() + "/" + getUser().getOrganisation().getWelcomePage() + "?faces-redirect=true";
+	    DefaultMenuItem item = new DefaultMenuItem(course.getTitle());
+	    //item.setIcon("ui-icon-disk");
+	    item.setCommand("#{userBean.onCourseChange(" + course.getId() + ")}");
+	    item.setAjax(false);
+
+	    firstSubmenu.addElement(item);
+	    System.out.println(course.getTitle());
 	}
-	catch(SQLException e)
-	{
-	    log.error(e);
-	}
-	return null;
+
+	model.addElement(firstSubmenu);
+
+	/*
+		secondSubmenu.addElement(item);
+
+		model.addElement(secondSubmenu);
+	*/
+	return model;
     }
 }

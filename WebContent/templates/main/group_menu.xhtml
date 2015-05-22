@@ -4,16 +4,21 @@
 	xmlns:p="http://primefaces.org/ui">
 	
 <ui:composition>
-	<h:panelGroup>
-		<h3>Active course:</h3>
+<!--
+	<h:form id="course_selector">
+		
+		<p:panelMenu style="width:auto" model="#{userBean.courseMenuModel}"></p:panelMenu>
 
+	
+
+	</h:form>
+	 
 		<p:selectOneMenu id="console" value="#{userBean.activeCourseId}" style="width:125px">
 			<f:selectItem itemLabel="Select One" itemValue="-1" itemDisabled="true" itemDescription="ladida" />
 			<f:selectItems value="#{userBean.user.courses}" var="course" itemLabel="#{course.title}" itemValue="#{course.id}" />
-		</p:selectOneMenu>
 
-	</h:panelGroup>
-	
+		</p:selectOneMenu>
+	 -->
 	<div id="groupoverview_link">
 		<h:outputLink value="myhome/groups.jsf">
 			<h:outputText value="#{msg.groupOverview}"/>

@@ -382,9 +382,8 @@ iframe { border: none }
 	background-color: rgb(0, 0, 0);
 }
 #footer_question_mark{
-	font-size:5.5rem;
+	font-size:56px;
 	text-algin:center;
-	height:68px;
 	width:68px;
 	border:2px solid #616161;
 	border-radius:34px;
