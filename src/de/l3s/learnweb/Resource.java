@@ -1125,8 +1125,9 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	{
 	    if(getSource().equalsIgnoreCase("loro"))
 	    {
+		return "<iframe src=\"video.jsf?resource_id=" + id + "\" width=\"100%\" height=\"100%\" />";
 		//log.debug("" + getFileUrl());
-		return "<video class=\"video-js vjs-default-skin vjs-big-play-centered\" controls=\"preload=none\" width=\"100%\" height=\"100%\" data-setup=\"{}\"><source src=\"" + getFileUrl() + "\" /></video>";
+		//return "<video class=\"video-js vjs-default-skin vjs-big-play-centered\" controls=\"preload=none\" width=\"100%\" height=\"100%\" data-setup=\"{}\"><source src=\"" + getFileUrl() + "\" /></video>";
 		//+ "<link href=\"http://vjs.zencdn.net/4.12/video-js.css\" rel=\"stylesheet\"/><script src=\"http://vjs.zencdn.net/4.12/video.js\"></script>";
 
 	    }

@@ -12,8 +12,6 @@ import org.primefaces.event.RateEvent;
 
 import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.Organisation;
-import de.l3s.learnweb.Organisation.Option;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Tag;
 import de.l3s.learnweb.User;
@@ -32,13 +30,6 @@ public class ResourceBean extends ApplicationBean implements Serializable
     private boolean isStarRatingHidden = false;
     private boolean isThumbRatingHidden = false;
 
-    /*
-    @PostConstruct
-    public void postConstruct()
-    {
-    	loadResource();
-    }*/
-
     public void loadResource()
     {
 	if(null != resource) // resource already loaded
@@ -46,12 +37,10 @@ public class ResourceBean extends ApplicationBean implements Serializable
 
 	if(id == 0) // no or invalid resource_id
 	{
-	    try
-	    {
-		id = Integer.parseInt(getFacesContext().getExternalContext().getRequestParameterMap().get("resource_id"));
 
-	    }
-	    catch(Exception e)
+	    id = getParameterInt("resource_id");
+
+	    if(id == 0)
 	    {
 		addMessage(FacesMessage.SEVERITY_FATAL, "invalid or no resource_id parameter");
 		return;
@@ -60,28 +49,32 @@ public class ResourceBean extends ApplicationBean implements Serializable
 
 	try
 	{
-	    resource = this.getLearnweb().getResourceManager().getResource(getId());
+	    resource = getLearnweb().getResourceManager().getResource(getId());
 
 	    if(null == resource)
 	    {
 		addMessage(FacesMessage.SEVERITY_FATAL, "Invalid or no resource_id parameter. Maybe the resource was deleted");
 		return;
 	    }
+	    /*
+	    	    User user = getUser();
+	    	    Organisation org;
+	    	    if(null == user) //  not logged in, get organisation "Public"
+	    		org = getLearnweb().getOrganisationManager().getOrganisationByTitle("Public");
+	    	    else
+	    		org = user.getOrganisation();
 
-	    User user = getUser();
-	    Organisation org;
-	    if(null == user) //  not logged in, get organisation "Public"
-		org = getLearnweb().getOrganisationManager().getOrganisationByTitle("Public");
-	    else
-		org = user.getOrganisation();
+	    	    isStarRatingHidden = org.getOption(Option.Resource_Hide_Star_rating);
+	    	    isThumbRatingHidden = org.getOption(Option.Resource_Hide_Thumb_rating);
+	    	    */
 
-	    isStarRatingHidden = org.getOption(Option.Resource_Hide_Star_rating);
-	    isThumbRatingHidden = org.getOption(Option.Resource_Hide_Thumb_rating);
+	    isStarRatingHidden = false;
+	    isThumbRatingHidden = true;
+
 	}
 	catch(Exception e)
 	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
 	}
     }
 

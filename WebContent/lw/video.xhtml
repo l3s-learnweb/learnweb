@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:p="http://primefaces.org/ui">
+
+	<f:metadata>
+		<f:viewParam name="resource_id" value="#{resourceBean.id}" required="true" />
+		<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{resourceBean.preRenderView}" />
+	</f:metadata>
+	
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>Video - Learnweb</title>
+		<link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet"/>
+		<script src="http://vjs.zencdn.net/4.12/video.js"></script>
+	
+		<base href="#{request.contextPath}/lw/" />	
+		
+		<style type="text/css">
+		html, body { height:100%; margin:0; padding:0; }
+		</style>
+	</h:head>
+	
+	<h:body>	
+		<video class="video-js vjs-default-skin vjs-big-play-centered" controls="controls" data-setup="{}" poster="#{resourceBean.resource.thumbnail3.url}" height="100%" width="100%">
+			<source src="#{resourceBean.resource.fileUrl}" type="video/mp4" /> 
+		</video>
+	</h:body> 
+</html>

@@ -783,6 +783,8 @@ public class ResourceManager
 
 	    if(resource.getSource().equals("TED")) // This must be set manually because we store all TED videos in Learnweb/Solr
 		resource.setLocation("TED");
+	    if(resource.getSource().equals("LORO")) // This must be set manually because we store all LORO resources in Learnweb/Solr
+		resource.setLocation("LORO");
 	    else
 		resource.setLocation("Learnweb");
 
