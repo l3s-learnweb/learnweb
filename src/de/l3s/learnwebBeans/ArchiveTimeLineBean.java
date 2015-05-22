@@ -124,7 +124,7 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
     {
 	JSONArray outerArray = new JSONArray();
 
-	PreparedStatement select = Learnweb.getInstance().getConnection().prepareStatement("SELECT timestamp,count(*) as count FROM `lw_resource_archiveurl` WHERE `resource_id` = 75336 group by month(timestamp) ORDER BY timestamp ASC");
+	PreparedStatement select = Learnweb.getInstance().getConnection().prepareStatement("SELECT timestamp,count(*) as count FROM `lw_resource_archiveurl` WHERE `resource_id` = 110852 group by year(timestamp),month(timestamp) ORDER BY timestamp ASC");
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
 	{
@@ -147,7 +147,7 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 		.getInstance()
 		.getConnection()
 		.prepareStatement(
-			"SELECT DATE_FORMAT(t1.timestamp,'%Y-%m-%d') as day, COUNT(*) as no_of_versions FROM (SELECT * FROM lw_resource_archiveurl WHERE `resource_id`=75336 AND MONTH(timestamp) = MONTH(FROM_UNIXTIME(" + unixTimestamp + "))) t1 GROUP BY DAY(t1.timestamp)");
+			"SELECT DATE_FORMAT(t1.timestamp,'%Y-%m-%d') as day, COUNT(*) as no_of_versions FROM (SELECT * FROM lw_resource_archiveurl WHERE `resource_id`=110852 AND MONTH(timestamp) = MONTH(FROM_UNIXTIME(" + unixTimestamp + "))) t1 GROUP BY DAY(t1.timestamp)");
 
 	ResultSet rs = select.executeQuery();
 	while(rs.next())

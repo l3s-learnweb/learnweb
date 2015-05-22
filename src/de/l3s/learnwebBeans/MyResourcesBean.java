@@ -424,8 +424,5 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	    log.error("Error while fetching the archive urls from a resource", e);
 	    addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
 	}
-
-	//String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
-	//addGrowl(FacesMessage.SEVERITY_INFO, response);
     }
 }

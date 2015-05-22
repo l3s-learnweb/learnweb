@@ -21,13 +21,13 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Queue;
 import java.util.TimeZone;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -50,7 +50,7 @@ public class ArchiveUrlManager
     private URL serviceUrlObj;
     private static int collectionId;
     private Queue<Resource> resources = new ConcurrentLinkedQueue<Resource>();
-    private Map<Integer, Date> trackResources = new ConcurrentHashMap<Integer, Date>();
+    //private Map<Integer, Date> trackResources = new ConcurrentHashMap<Integer, Date>();
     private ThreadPoolExecutor executerService;
 
     protected ArchiveUrlManager(Learnweb learnweb)
@@ -72,45 +72,145 @@ public class ArchiveUrlManager
 
     }
 
-    class Worker implements Callable<Object>
+    class ArchiveIsWorker implements Callable<String>
     {
+	Resource resource;
+
+	public ArchiveIsWorker(Resource resource)
+	{
+	    this.resource = resource;
+	}
 
 	@Override
-	public Object call() throws Exception
+	public String call() throws Exception
 	{
-	    // TODO Auto-generated method stub
-	    return null;
+	    DateFormat responseDate = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
+
+	    if(resource == null)
+		return "resource was NULL";
+
+	    //resource = learnweb.getResourceManager().getResource(resource.getId());
+
+	    try
+	    {
+		if(resource.getArchiveUrls() != null)
+		{
+		    int versions = resource.getArchiveUrls().size();
+		    if(versions > 0)
+		    {
+			long timeDifference = (new Date().getTime() - resource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
+			if(timeDifference < 300)
+			    return "resource was last archived less than 5 minutes ago";
+		    }
+		}
+	    }
+	    catch(SQLException e1)
+	    {
+		log.error("Error while retrieving archive urls for resource", e1);
+	    }
+
+	    try
+	    {
+		HttpsURLConnection con = (HttpsURLConnection) serviceUrlObj.openConnection();
+		con.setRequestMethod("POST");
+		con.setDoOutput(true);
+
+		String urlParameters = "url=" + resource.getUrl();
+
+		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
+		wr.writeBytes(urlParameters);
+		wr.flush();
+		wr.close();
+
+		log.debug("Sending archive request for URL : " + resource.getUrl());
+		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+
+		while((inputLine = in.readLine()) != null)
+		{
+		    response.append(inputLine);
+		}
+		in.close();
+
+		String resp = response.toString();
+
+		Pattern p = Pattern.compile("https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
+		Matcher filenameParts = p.matcher(resp);
+		String archiveURL = null;
+		if(filenameParts.find())
+		    archiveURL = resp.substring(filenameParts.start(), filenameParts.end());
+
+		log.debug("Archived URL: " + archiveURL);
+		String responseDateGMTString = con.getHeaderField("Date");
+		Date archiveUrlDate = null;
+
+		if(responseDateGMTString != null)
+		    archiveUrlDate = responseDate.parse(responseDateGMTString);
+		System.out.println("Archived URL:" + archiveURL + "Response Date:" + responseDateGMTString);
+		PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)");
+		prepStmt.setInt(1, resource.getId());
+		prepStmt.setString(2, archiveURL);
+		prepStmt.setTimestamp(3, new java.sql.Timestamp(archiveUrlDate.getTime()));
+		prepStmt.executeUpdate();
+		prepStmt.close();
+
+		resource.addArchiveUrl(null); // TODO 
+	    }
+	    catch(IOException e)
+	    {
+		log.error("HTTPs URL connection to the archive service causing error:", e);
+	    }
+	    catch(SQLException e)
+	    {
+		log.error("Error while trying to save the resource with the archived URL", e);
+	    }
+	    catch(ParseException e)
+	    {
+		log.error("Error while trying to parse the response date for archive URL service", e);
+	    }
+
+	    return "Archived url successfully added to resource";
 	}
 
     }
 
-    public String addResourceToArchive(Resource resource)
+    public void addResourceToArchive(Resource resource)
     {
-	// executerService.submit(new Worker(query, matchPattern, round));
-
-	String response = "";
 	if(!(resource.getStorageType() == Resource.FILE_RESOURCE))
 	{
-	    //if(trackResources.containsKey(resource.getId()))
-	    //{
-	    //long timeDifference = (new Date().getTime() - trackResources.get(resource.getId()).getTime()) / 1000;
-	    //if(timeDifference > 300)
-	    //{
+	    Future<String> executorResponse = executerService.submit(new ArchiveIsWorker(resource));
+	    try
+	    {
+		log.info(executorResponse.get());
+	    }
+	    catch(InterruptedException e)
+	    {
+		log.error("Execution of the thread was interrupted", e);
+	    }
+	    catch(ExecutionException e)
+	    {
+		log.error("Error while retrieving response from a task that was interrupted by an exception", e);
+	    }
+	    /*if(trackResources.containsKey(resource.getId()))
+	    {
+	    long timeDifference = (new Date().getTime() - trackResources.get(resource.getId()).getTime()) / 1000;
+	    if(timeDifference > 300)
+	    {
 	    resources.add(resource);
-	    //  trackResources.put(resource.getId(), new Date());
-	    //  response = "addedToArchiveQueue";
-	    //}
-	    //else
-	    //  response = "archiveWaitMessage";
-	    //}
-	    /*else
+	      trackResources.put(resource.getId(), new Date());
+	      response = "addedToArchiveQueue";
+	    }
+	    else
+	      response = "archiveWaitMessage";
+	    }
+	    else
 	    {
 	        resources.add(resource);
 	    trackResources.put(resource.getId(), new Date());
 	    response = "addedToArchiveQueue";
 	    }*/
 	}
-	return response;
     }
 
     public void addArchiveUrlToResource() throws SQLException
@@ -197,7 +297,7 @@ public class ArchiveUrlManager
 		prepStmt.close();
 
 		learnweb.getResourceManager().getResource(resource.getId()).addArchiveUrl(null);
-		//resource.addArchiveUrl(null); // TODO 
+		//resource.addArchiveUrl(null); 
 	    }
 	    catch(IOException e)
 	    {
@@ -381,57 +481,12 @@ public class ArchiveUrlManager
 
     public static void main(String[] args) throws SQLException, ParseException
     {
+	/*
 	ArchiveUrlManager archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
 	archiveUrlManager.saveArchiveItResources();
 
-	//ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
-	//List<Integer> resourceIds = new LinkedList<Integer>(Arrays.asList(110766, 110823, 110846, 110857, 110858, 110873));
-	/*for(int id = 110893; id < 110914; id++)
-	{
-	    Resource res = Learnweb.getInstance().getResourceManager().getResource(id);
-	    MementoClient mClient = Learnweb.getInstance().getMementoClient();
-	    List<ArchiveUrl> archiveVersions = mClient.getArchiveItVersions(collectionId, res.getUrl());
-	    archiveUrlManager.saveArchiveItVersions(res.getId(), archiveVersions);
-	}*/
-	/*try
-	{
-	Resource res = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-	URL obj = new URL(res.getUrl());
-	HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
-	conn.setReadTimeout(5000);
-	conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
-	conn.addRequestProperty("User-Agent", "Mozilla");
-	conn.addRequestProperty("Referer", "google.com");
-
-	boolean redirect = false;
-
-	// normally, 3xx is redirect
-	int status = conn.getResponseCode();
-	if(status != HttpURLConnection.HTTP_OK)
-	{
-	    if(status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM || status == HttpURLConnection.HTTP_SEE_OTHER)
-		redirect = true;
-	}
-
-	System.out.println("Response Code ... " + status);
-
-	if(redirect)
-	{
-
-	    // get redirect url from "location" header field
-	    String newUrl = conn.getHeaderField("Location");
-	    res.setUrl(newUrl);
-	    rpm.processWebsite(res);
-	    res.save();
-	    System.out.println("Redirect to URL : " + newUrl);
-
-	}
-	}
-	catch(Exception e)
-	{
-	e.printStackTrace();
-	}*/
-
+	ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
+	List<Integer> resourceIds = new LinkedList<Integer>(Arrays.asList(110766, 110823, 110846, 110857, 110858, 110873));*/
     }
 
     public void onDestroy()
@@ -439,12 +494,17 @@ public class ArchiveUrlManager
 	executerService.shutdown();
 	try
 	{
-	    executerService.awaitTermination(1, TimeUnit.MINUTES);
+	    //Wait for a while for currently executing tasks to terminate
+	    if(!executerService.awaitTermination(1, TimeUnit.MINUTES))
+		executerService.shutdownNow(); //cancelling currently executing tasks
 	}
 	catch(InterruptedException e)
 	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace(); // TODO
+	    // (Re-)Cancel if current thread also interrupted
+	    executerService.shutdownNow();
+	    // Preserve interrupt status
+	    Thread.currentThread().interrupt();
+
 	}
 
     }

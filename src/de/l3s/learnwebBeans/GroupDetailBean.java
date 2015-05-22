@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -37,8 +38,8 @@ import com.google.gdata.util.ServiceException;
 
 import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.Course;
-import de.l3s.learnweb.JForumManager;
 import de.l3s.learnweb.Group;
+import de.l3s.learnweb.JForumManager;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Link;
 import de.l3s.learnweb.Link.LinkType;
@@ -1268,8 +1269,30 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void archiveCurrentVersion()
     {
-	String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
-	addGrowl(FacesMessage.SEVERITY_INFO, response);
+	try
+	{
+	    if(clickedResource.getArchiveUrls().size() > 0)
+	    {
+		long timeDifference = (new Date().getTime() - clickedResource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
+		if(timeDifference > 300)
+		{
+		    getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
+		    addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
+		}
+		else
+		    addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
+	    }
+	    else
+	    {
+		getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
+		addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
+	    }
+	}
+	catch(SQLException e)
+	{
+	    log.error("Error while fetching the archive urls from a resource", e);
+	    addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
+	}
     }
 
     public Comment getClickedComment()

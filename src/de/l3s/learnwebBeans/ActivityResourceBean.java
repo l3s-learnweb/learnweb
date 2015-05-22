@@ -3,6 +3,7 @@ package de.l3s.learnwebBeans;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
@@ -389,7 +390,29 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
 
     public void archiveCurrentVersion()
     {
-	String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
-	addGrowl(FacesMessage.SEVERITY_INFO, response);
+	try
+	{
+	    if(clickedResource.getArchiveUrls().size() > 0)
+	    {
+		long timeDifference = (new Date().getTime() - clickedResource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
+		if(timeDifference > 300)
+		{
+		    getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
+		    addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
+		}
+		else
+		    addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
+	    }
+	    else
+	    {
+		getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
+		addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
+	    }
+	}
+	catch(SQLException e)
+	{
+	    System.out.println("Error while fetching the archive urls from a resource" + e);
+	    addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
+	}
     }
 }

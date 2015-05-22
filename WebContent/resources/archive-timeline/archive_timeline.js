@@ -3,7 +3,8 @@ function archiveVersionsList(thisDayEvent){
 	var no_of_versions = thisDayEvent.dayEvents.length;
 	var list = "<ul>";
 	for(var i=0;i<no_of_versions;i++){
-		list += "<li><a href='" + thisDayEvent.dayEvents[i].url + "'>"+thisDayEvent.dayEvents[i].time+"</a></li>";
+		var time = new Date(thisDayEvent.dayEvents[i].time);
+		list += "<li><a href='" + thisDayEvent.dayEvents[i].url + "'>"+time.toUTCString()+"</a></li>";
 	}
 	list +="</ul>";
 	return list;
