@@ -16,9 +16,35 @@
 
 	<ui:define name="center_layout">
 	
-		test
-		
-		<h:outputText>asdsdsadf</h:outputText>
+		<h:form id="forum_post" enctype="multipart/form-data">
+			<p:panel header="Forum Post">
+
+				<table cellpadding="10" cellspacing="5" border="0">
+					<tr> 
+						<td>
+						Enter your name: <h:inputText value="#{forumTopicsBean.name}" id="name"></h:inputText>
+						</td>
+					</tr>
+					<tr> 
+						<td>
+						Enter your email: <h:inputText value="#{forumTopicsBean.email}" id="email"></h:inputText>
+						</td>
+					
+					</tr>
+					<tr>
+					<td>
+						Enter your query: <h:inputTextarea value="#{forumTopicsBean.query}" id="query">  </h:inputTextarea>
+						</td>
+					</tr>
+					<tr>
+					<td>
+					<p:commandButton type="submit" value="submit" ajax="true" update="name email query messagedb :growl" action="#{forumTopicsBean.saveForumPost}"/>
+					</td>
+					</tr>
+					<tr><td><h:outputText id="messagedb" value="#{forumTopicsBean.message}"/></td></tr>
+				</table>
+			</p:panel>
+		</h:form>
 	</ui:define>
 
 </ui:composition>
