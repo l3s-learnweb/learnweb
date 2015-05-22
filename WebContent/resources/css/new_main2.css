@@ -54,7 +54,7 @@ body {
 	text-align:justify;
 	padding-left:4px;
 }
-
+/*
 #footer_close {
 	position:absolute;
 	right:5px;
@@ -90,7 +90,7 @@ body {
 	color:white;
 	background-color:black;
 }
-
+*/
 #groupoverview_link {
 	padding:0.5em 0.5em 0.5em 2.2em;
 	font-size:1em;
@@ -626,6 +626,7 @@ span.ui-autocomplete
 	border: 1px solid #ccc !important;
 	box-shadow: 0 0 3px 3px #dfdfdf;
 }
+.preview_box iframe { min-height:400px; }
 
 .add_field
 {
