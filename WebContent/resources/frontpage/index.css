@@ -99,7 +99,7 @@ h4 { text-decoration:underline;	font-size:1.3rem; margin: 0.8rem 0 0.4rem; }
 	background-color:#489a83;
 	padding:5px;
 }
-#index_footer a { text-decoration: none; }
+#index_footer a { text-decoration: none; margin-left:3px; color:#000000; }
 #index_footer a:hover { text-decoration: underline; }
 
 @media screen and (max-width:40rem){

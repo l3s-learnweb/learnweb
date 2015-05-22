@@ -44,7 +44,8 @@
 		
 		
 		<h:panelGroup layout="block" id="footer" rendered="#{not empty helpText}" styleClass="#{userBean.getPreference('helptext_hide')? 'display-none':''}">
-			<h:outputText value="#{helpText}" escape="false" style="padding: 0.7rem 4rem; display:block;" />
+			<h:outputText value="?" id="footer_question_mark"/>
+			<h:outputText value="#{helpText}" escape="false" style="padding: 0.7rem 10rem; display:block; font-size:1.5rem;" />
 			<a href="#" onclick="return footerClose();" id="footer_close" title="#{msg.close}"></a>
 		</h:panelGroup>
 		
