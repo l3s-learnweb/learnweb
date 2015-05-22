@@ -18,9 +18,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.Date;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -52,7 +50,6 @@ public class ArchiveUrlManager
     private URL serviceUrlObj;
     private static int collectionId;
     private Queue<Resource> resources = new ConcurrentLinkedQueue<Resource>();
-    private List<Integer> errorResponseCodes = new LinkedList<Integer>(Arrays.asList(403, 404, 503));
     private Map<Integer, Date> trackResources = new ConcurrentHashMap<Integer, Date>();
     private ThreadPoolExecutor executerService;
 
@@ -228,20 +225,6 @@ public class ArchiveUrlManager
 	}*/
     }
 
-    public boolean handleResponse(HttpURLConnection con) throws IOException
-    {
-	if(errorResponseCodes.contains(con.getResponseCode()))
-	{
-	    log.info("Failed : HTTP error code : " + con.getResponseCode() + " URL:" + con.getURL());
-	    return false;
-	}
-	else
-	{
-	    log.info("Url Still Alive " + con.getResponseCode() + " URL:" + con.getURL());
-	    return true;
-	}
-    }
-
     //For saving crawled Archive-It Urls to lw_resource_table as resource
     public void saveArchiveItResources() throws SQLException
     {
@@ -254,9 +237,6 @@ public class ArchiveUrlManager
 	{
 	    File collectionFile = new File("/home/fernando/1475.txt");
 	    BufferedReader br = new BufferedReader(new FileReader(collectionFile));
-	    //Client archiveItClient = Client.create();
-	    //WebResource web;
-
 	    String line;
 
 	    while((line = br.readLine()) != null)
@@ -264,7 +244,7 @@ public class ArchiveUrlManager
 		String[] pageDetails = line.split("\t");
 		String urlString = pageDetails[0];
 		String title = null, description = null;
-		boolean toProcessUrl = false;
+		boolean toProcessUrl = false, redirect = false;
 		if(pageDetails.length == 3)
 		{
 		    title = pageDetails[1];
@@ -280,20 +260,30 @@ public class ArchiveUrlManager
 		    con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
 		    con.setConnectTimeout(1000);
 		    con.connect();
+		    HttpURLConnection httpCon = (HttpURLConnection) con;
+		    int status = httpCon.getResponseCode();
 
-		    if(con instanceof HttpsURLConnection)
+		    if(status != HttpURLConnection.HTTP_OK)
 		    {
-			HttpsURLConnection httpsCon = (HttpsURLConnection) con;
-			toProcessUrl = handleResponse(httpsCon);
+			// Handling, 3xx which is redirect
+			if(status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM || status == HttpURLConnection.HTTP_SEE_OTHER)
+			{
+			    redirect = true;
+			    toProcessUrl = true;
+			}
+			else
+			    log.info("Failed : HTTP error code : " + httpCon.getResponseCode() + " URL:" + con.getURL());
 		    }
-		    else if(con instanceof HttpURLConnection)
-		    {
-			HttpURLConnection httpCon = (HttpURLConnection) con;
-			toProcessUrl = handleResponse(httpCon);
-		    }
+		    else
+			toProcessUrl = true;
 
+		    if(redirect)
+		    {
+			urlString = con.getHeaderField("Location");
+		    }
 		    if(toProcessUrl)
 		    {
+			log.info("Url Still Alive " + httpCon.getResponseCode() + " URL:" + urlString);
 			if(title == null)
 			{
 			    BufferedReader brPage = new BufferedReader(new InputStreamReader(con.getInputStream()));
@@ -305,6 +295,7 @@ public class ArchiveUrlManager
 			    Document pageDoc = Jsoup.parse(pageHtml);
 			    title = pageDoc.title();
 			}
+
 			Resource archiveResource = createResource(urlString, title, description);
 			archiveResource.setOwner(archiveDemo);
 			try
@@ -340,6 +331,7 @@ public class ArchiveUrlManager
 		    log.error("Error while trying to connect to the url", e);
 		}
 	    }
+	    br.close();
 	}
 	catch(IOException e)
 	{
@@ -390,55 +382,55 @@ public class ArchiveUrlManager
     public static void main(String[] args) throws SQLException, ParseException
     {
 	ArchiveUrlManager archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
-	/*archiveUrlManager.saveArchiveItResources();*/
+	archiveUrlManager.saveArchiveItResources();
 
 	//ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
 	//List<Integer> resourceIds = new LinkedList<Integer>(Arrays.asList(110766, 110823, 110846, 110857, 110858, 110873));
-	for(int id = 110855; id < 110861; id++)
+	/*for(int id = 110893; id < 110914; id++)
 	{
 	    Resource res = Learnweb.getInstance().getResourceManager().getResource(id);
 	    MementoClient mClient = Learnweb.getInstance().getMementoClient();
 	    List<ArchiveUrl> archiveVersions = mClient.getArchiveItVersions(collectionId, res.getUrl());
 	    archiveUrlManager.saveArchiveItVersions(res.getId(), archiveVersions);
-	    /*try
-	    {
-	    Resource res = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-	    URL obj = new URL(res.getUrl());
-	    HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
-	    conn.setReadTimeout(5000);
-	    conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
-	    conn.addRequestProperty("User-Agent", "Mozilla");
-	    conn.addRequestProperty("Referer", "google.com");
+	}*/
+	/*try
+	{
+	Resource res = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+	URL obj = new URL(res.getUrl());
+	HttpURLConnection conn = (HttpURLConnection) obj.openConnection();
+	conn.setReadTimeout(5000);
+	conn.addRequestProperty("Accept-Language", "en-US,en;q=0.8");
+	conn.addRequestProperty("User-Agent", "Mozilla");
+	conn.addRequestProperty("Referer", "google.com");
 
-	    boolean redirect = false;
+	boolean redirect = false;
 
-	    // normally, 3xx is redirect
-	    int status = conn.getResponseCode();
-	    if(status != HttpURLConnection.HTTP_OK)
-	    {
-	        if(status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM || status == HttpURLConnection.HTTP_SEE_OTHER)
-	    	redirect = true;
-	    }
-
-	    System.out.println("Response Code ... " + status);
-
-	    if(redirect)
-	    {
-
-	        // get redirect url from "location" header field
-	        String newUrl = conn.getHeaderField("Location");
-	        res.setUrl(newUrl);
-	        rpm.processWebsite(res);
-	        res.save();
-	        System.out.println("Redirect to URL : " + newUrl);
-
-	    }
-	    }
-	    catch(Exception e)
-	    {
-	    e.printStackTrace();
-	    }*/
+	// normally, 3xx is redirect
+	int status = conn.getResponseCode();
+	if(status != HttpURLConnection.HTTP_OK)
+	{
+	    if(status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM || status == HttpURLConnection.HTTP_SEE_OTHER)
+		redirect = true;
 	}
+
+	System.out.println("Response Code ... " + status);
+
+	if(redirect)
+	{
+
+	    // get redirect url from "location" header field
+	    String newUrl = conn.getHeaderField("Location");
+	    res.setUrl(newUrl);
+	    rpm.processWebsite(res);
+	    res.save();
+	    System.out.println("Redirect to URL : " + newUrl);
+
+	}
+	}
+	catch(Exception e)
+	{
+	e.printStackTrace();
+	}*/
 
     }
 

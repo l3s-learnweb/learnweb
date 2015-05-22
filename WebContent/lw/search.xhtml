@@ -156,10 +156,7 @@
 		  	<p:remoteCommand actionListener="${searchHistoryBean.updateSearchHistory()}" update=":tabView:tab3" name="ajaxLoadSearchHistory" process="@this" partialSubmit="true" />
 					  				
 			<p:remoteCommand actionListener="${searchBean.logResourceOpened()}" name="logResourceOpened" async="true" process="@this" partialSubmit="true" />
-			
-			<!--  why no update :tabView:tab2 in logEndTime remotecommand -->
-			<p:remoteCommand update=":tabView:tab2" name="updatecurrentsearch" process="@this" partialSubmit="true" />
-			<p:remoteCommand actionListener="${searchBean.logEndTime()}" name="logEndTime" async="false" oncomplete="updatecurrentsearch();" process="@this" partialSubmit="true"/>
+			<p:remoteCommand actionListener="${searchBean.logEndTime()}" update=":tabView:tab2" name="logEndTime" async="true" process="@this" partialSubmit="true"/>
 		</h:form>
  
 		<p:dialog header="#{msg.options}" widgetVar="resource_dialog" modal="false" minWidth="600" resizable="false" style="z-index:1500;">			
