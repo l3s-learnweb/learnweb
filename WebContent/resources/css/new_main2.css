@@ -33,16 +33,6 @@ body {
 	padding: 0;
 }
 
-.help_icon
-{
-	height: 30px;
-	width: 30px;
-	cursor: pointer;
-	position: absolute;
-	right: 185px;
-	top: 6px;
-}
-
 
 
 .groups_help{
@@ -126,36 +116,6 @@ body {
 	color: rgb(88, 147, 255);
 }
 
-.fact_sheet_value a
-{
-	color : rgb(88, 147, 236);
-}
-
-.fact_sheet_field
-{
-	font-weight: bold;
-}
-
-.fact_sheet_detail
-{
-	padding-bottom: 5px;
-}
-
-#fact_sheet_description
-{
-	padding-bottom: 10px;
-}
-
-#fact_sheet_label
-{
-	font-size: 26px;
-	padding-bottom: 5px;
-}
-
-#fact_sheet_contents
-{
-	padding: 20px 10px 15px 10px;
-}
 
 .resource_pcolumn
 {
@@ -463,42 +423,6 @@ span.ui-autocomplete
 	background: rgba(0, 0, 0, 1);
 }
 
-#fact_sheet_image_wrapper
-{
-	height: 184px;
-	overflow: hidden;
-	display: block;
-	position: relative;
-}
-
-#fact_sheet_first_image img
-{
-	max-width: 180px;
-	margin: 1px !important;
-}
-
-#fact_sheet_first_image
-{
-	height: 182px;
-	overflow: hidden;
-	display: table-cell;
-	vertical-align: middle;
-}
-
-#fact_sheet_first_image_td
-{
-	vertical-align: top;
-}
-
-#fact_sheet_wrapper table
-{
-	border-spacing: 0px;
-}
-
-#fact_sheet_wrapper table td
-{
-	padding: 0px;
-}
 
 .am-wrapper{
     float:left;
@@ -509,19 +433,6 @@ span.ui-autocomplete
 .am-wrapper img{
     position:absolute;
     outline:none;
-}
-
-#fact_sheet_wrapper
-{
-	float: right;
-	margin: 15px;
-	width: 35%;
-	min-width: 356.296875px;
-	border: 1px solid #ddd;
-	z-index: 10000;
-	box-shadow: 0 0 4px #ccc;
-	padding: 0px;
-	color: black;
 }
 
 #learnweb_logo
@@ -1087,12 +998,6 @@ textarea
 }
 
 
-#ajaxstatus {
-	position:absolute;
-	top:0;
-	left:0;	
-}
-
 .ui-panelmenu-header
 {
 	border-radius: 0px;
@@ -1161,14 +1066,6 @@ textarea
 }
 
 
-.active-button {
-	background:
-		url("/jlw/javax.faces.resource/themes/sam/images/sprite.png.jsf?ln=primefaces&amp;v=2.2-SNAPSHOT")
-		repeat-x scroll left -1400px #2647A0;
-	border: 1px solid #AAAAAA;
-	color: #FFFFFF;
-	font-weight: normal;
-}
 
 #main {
 	min-width: 955px;
@@ -1180,20 +1077,7 @@ textarea
 	vertical-align: top;
 }
 
-#submenu_left {
-	max-width: 150px;
-	vertical-align: top;
-}
 
-#submenu_right {
-	vertical-align: top;
-	width: 160px;
-	/*font-size: 10px; */
-}
-
-#filter_form td {
-	white-space: nowrap;
-}
 
 .gridview td {
 	border: 1px solid grey;
@@ -1227,70 +1111,13 @@ textarea
 	color: red;
 }
 
-#languageform {
-	position: absolute;
-	right: 220px;
-	top: 12px;
-}
 
-#languageform a {
-	margin: 8px;
-	color: white;
-	font-size: 12px;
-	font-family: verdana;
-	text-decoration: none;
-	font-style: normal;
-}
 .colstyle {
 	width: 200px;
 	background-color: #9BBCDA;
 }
-
-#menu {
-	position: relative;
-	background-color: #9BBCDA;
-	color: #5C5C5C;
-	text-align: center;
-	font-family: Verdana, Arial, Helvetica, sans-serif;
-	font-size: 12px;
-	font-weight: bold;
-	margin: 0;
-	padding-top: 10px;
-	padding-left: 20px;
-	padding-bottom: 10px;
-}
-
-#menu a {
-	margin: 0 4px;
-	color: #369;
-	text-decoration: none;
-}
-
-#menu a:hover {
-	color: #06c;
-	text-decoration: none;
-}
-
 p:dataList {
 	background-color: blue;
-}
-
-#listviewleft {
-	width: 370px;
-	text-align: left;
-	font-size: 10px;
-	position: relative;
-	float: left;
-}
-
-#listviewright {
-	width: 370px;
-	text-align: left;
-	font-size: 10px;
-	position: relative;
-	float: right;
-	float: top;
-	border: none;
 }
 
 #gtitle {
@@ -1343,7 +1170,7 @@ a.link:hover {
 	text-align: right;
 	background-color: #e3edf5;
 }
-
+/*
 div.header {
 	background-color: #5C5C5C;
 	background-image: url('../image/header.jpg');
@@ -1354,27 +1181,8 @@ div.header {
 	position:relative;
 	
 }
-/*
-#search_form {
-	display:block;
-	min-width:704px;
-	position:relative;
-}
 */
-.pavia {
-	background-image: url('../image/header_pavia.jpg') !important;
-}
 
-.messina {
-	background-image: url('../image/header_messina.jpg') !important;
-}
-
-.act {
-	background-image: url('../image/header_act.jpg') !important;
-}
-.yell {
-	background-image: url('../image/header_yell.jpg') !important;
-}
 
 div.title {
 	background-color: #9bbcda;
@@ -1387,11 +1195,6 @@ div.title {
 	padding-left: 20px;
 	padding-bottom: 10px;
 }
-
-
-/* learnweb classes  */
-/* resource preview */
-
 
 .loading {
 	width: 100%;
