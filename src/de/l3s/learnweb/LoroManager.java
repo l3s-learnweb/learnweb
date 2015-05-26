@@ -185,8 +185,10 @@ public class LoroManager
 	    if(resource.getType().contains("Video") || resource.getType().contains("Image"))
 	    {
 		resource.setUrl("http://loro.open.ac.uk/" + resource.getIdAtService() + "/");
+		resource.save();
 		System.out.println(resource.getUrl());
 	    }
+
 	    System.out.println(resource.getTitle());
 
 	}
