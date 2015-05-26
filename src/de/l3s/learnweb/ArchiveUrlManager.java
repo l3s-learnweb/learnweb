@@ -23,12 +23,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Queue;
 import java.util.TimeZone;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
-import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -51,7 +51,7 @@ public class ArchiveUrlManager
     private static int collectionId;
     private Queue<Resource> resources = new ConcurrentLinkedQueue<Resource>();
     //private Map<Integer, Date> trackResources = new ConcurrentHashMap<Integer, Date>();
-    private ThreadPoolExecutor executerService;
+    private ExecutorService executerService;
 
     protected ArchiveUrlManager(Learnweb learnweb)
     {
@@ -67,8 +67,7 @@ public class ArchiveUrlManager
 	    log.error("The archive today service URL is malformed:", e);
 	}
 
-	int maxThreads = 1;
-	executerService = new ThreadPoolExecutor(maxThreads, maxThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(maxThreads * 1000, true), new ThreadPoolExecutor.CallerRunsPolicy());
+	executerService = Executors.newCachedThreadPool();//new ThreadPoolExecutor(maxThreads, maxThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(maxThreads * 1000, true), new ThreadPoolExecutor.CallerRunsPolicy());
 
     }
 
@@ -113,6 +112,7 @@ public class ArchiveUrlManager
 	    {
 		HttpsURLConnection con = (HttpsURLConnection) serviceUrlObj.openConnection();
 		con.setRequestMethod("POST");
+		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
 		con.setDoOutput(true);
 
 		String urlParameters = "url=" + resource.getUrl();
@@ -155,7 +155,7 @@ public class ArchiveUrlManager
 		prepStmt.executeUpdate();
 		prepStmt.close();
 
-		resource.addArchiveUrl(null); // TODO 
+		//resource.addArchiveUrl(null); // TODO 
 	    }
 	    catch(IOException e)
 	    {
@@ -192,24 +192,7 @@ public class ArchiveUrlManager
 	    {
 		log.error("Error while retrieving response from a task that was interrupted by an exception", e);
 	    }
-	    /*if(trackResources.containsKey(resource.getId()))
-	    {
-	    long timeDifference = (new Date().getTime() - trackResources.get(resource.getId()).getTime()) / 1000;
-	    if(timeDifference > 300)
-	    {
-	    resources.add(resource);
-	      trackResources.put(resource.getId(), new Date());
-	      response = "addedToArchiveQueue";
-	    }
-	    else
-	      response = "archiveWaitMessage";
-	    }
-	    else
-	    {
-	        resources.add(resource);
-	    trackResources.put(resource.getId(), new Date());
-	    response = "addedToArchiveQueue";
-	    }*/
+	    //resources.add(resource);
 	}
     }
 
@@ -226,11 +209,7 @@ public class ArchiveUrlManager
 	    if(resource == null)
 		continue;
 
-	    //    resource.setTitle("testsswssss");
-
 	    resource = learnweb.getResourceManager().getResource(resource.getId());
-
-	    System.out.println(resource.getTitle());
 
 	    try
 	    {
@@ -296,7 +275,6 @@ public class ArchiveUrlManager
 		prepStmt.executeUpdate();
 		prepStmt.close();
 
-		learnweb.getResourceManager().getResource(resource.getId()).addArchiveUrl(null);
 		//resource.addArchiveUrl(null); 
 	    }
 	    catch(IOException e)
@@ -479,14 +457,54 @@ public class ArchiveUrlManager
 	}
     }
 
+    /*public static String getMementoDatetime(String archiveURL)
+    {
+    Client client = Client.create();
+    WebResource webResource = client.resource(archiveURL);
+    ClientResponse response;
+    for(int i = 1; i < 6;)
+    {
+        response = webResource.head();
+        if(response.getHeaders().containsKey("Memento-Datetime"))
+    	return response.getHeaders().getFirst("Memento-Datetime");
+        else
+    	System.out.println("Memento Datetime not found");
+        try
+        {
+    	Thread.sleep(1000 * (int) Math.pow(2, i));
+        }
+        catch(InterruptedException e)
+        {
+    	log.error("Failed due to some interrupt exception on the thread that fetches from archive.is", e);
+        }
+    }
+    return null;
+    }*/
+
     public static void main(String[] args) throws SQLException, ParseException
     {
 	/*
 	ArchiveUrlManager archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
-	archiveUrlManager.saveArchiveItResources();
+	archiveUrlManager.saveArchiveItResources();*/
 
-	ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
-	List<Integer> resourceIds = new LinkedList<Integer>(Arrays.asList(110766, 110823, 110846, 110857, 110858, 110873));*/
+	/*Client client = Client.create();
+	WebResource webResource = client.resource("https://archive.is/submit/");
+	MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
+	formData.add("url", "http://docs.oracle.com/javase/7/docs/api/java/net/HttpURLConnection.html#setFollowRedirects(boolean)");
+	ClientResponse response = webResource.accept(MediaType.APPLICATION_FORM_URLENCODED).header(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0").post(ClientResponse.class, formData);
+	String refreshHeader = null;
+
+	if(response.getHeaders().containsKey("Refresh"))
+	    refreshHeader = response.getHeaders().get("Refresh").get(0);
+	Pattern p = Pattern.compile("https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
+	Matcher filenameParts = p.matcher(refreshHeader);
+	String archiveURL = null;
+	if(filenameParts.find())
+	    archiveURL = refreshHeader.substring(filenameParts.start(), filenameParts.end());
+	System.out.println(archiveURL);
+	String mementoDatetime = getMementoDatetime(archiveURL);
+	if(mementoDatetime != null)
+	    System.out.println(mementoDatetime);*/
     }
 
     public void onDestroy()

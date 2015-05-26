@@ -1229,11 +1229,11 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	return archiveUrls;
     }
 
-    public void addArchiveUrl(ArchiveUrl archiveUrl)
+    /*public void addArchiveUrl(ArchiveUrl archiveUrl)
     {
-	// TODO really add archive url; until then clean cache:	
-	archiveUrls = null;
-    }
+    // TODO really add archive url; until then clean cache:	
+    archiveUrls = null;
+    }*/
 
     public boolean isRestricted()
     {

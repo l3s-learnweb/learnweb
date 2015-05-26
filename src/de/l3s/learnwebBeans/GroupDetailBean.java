@@ -1269,24 +1269,22 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void archiveCurrentVersion()
     {
+	boolean addToQueue = true;
 	try
 	{
 	    if(clickedResource.getArchiveUrls().size() > 0)
 	    {
 		long timeDifference = (new Date().getTime() - clickedResource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
-		if(timeDifference > 300)
-		{
-		    getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
-		    addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
-		}
-		else
-		    addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
+		addToQueue = timeDifference > 300;
 	    }
-	    else
+
+	    if(addToQueue)
 	    {
 		getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
 		addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
 	    }
+	    else
+		addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
 	}
 	catch(SQLException e)
 	{
