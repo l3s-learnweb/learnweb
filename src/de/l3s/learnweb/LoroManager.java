@@ -178,7 +178,7 @@ public class LoroManager
 	    e.printStackTrace();
 	}
 
-	User rishita = learnweb.getUserManager().getUser(7727);
+	/*User rishita = learnweb.getUserManager().getUser(7727);
 
 	for(Resource resource : loroGroup.getResources())
 	{
@@ -193,7 +193,7 @@ public class LoroManager
 
 	}
 
-	System.exit(0);
+	System.exit(0);*/
 
 	getConnection();
 
