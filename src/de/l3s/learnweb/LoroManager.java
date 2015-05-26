@@ -178,17 +178,21 @@ public class LoroManager
 	    e.printStackTrace();
 	}
 
-	/*User rishita = learnweb.getUserManager().getUser(7727);
+	User rishita = learnweb.getUserManager().getUser(7727);
 
 	for(Resource resource : loroGroup.getResources())
 	{
+	    if(resource.getType().contains("Video") || resource.getType().contains("Image"))
+	    {
+		resource.setUrl("http://loro.open.ac.uk/" + resource.getIdAtService() + "/");
+		System.out.println(resource.getUrl());
+	    }
 	    System.out.println(resource.getTitle());
 
-	    
 	}
 
 	System.exit(0);
-	*/
+
 	getConnection();
 
 	User admin = learnweb.getUserManager().getUser(7727);
