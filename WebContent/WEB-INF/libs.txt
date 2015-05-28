@@ -16,7 +16,8 @@ gdata-client-1.0.jar				------"------
 gdata-core-1.0.jar					------"------
 gdata-docs-3.0.jar					------"------
 gdata-media-1.0.jar					------"------
-guava-r09.jar						------"------
+geronimo-atinject_1.0_spec-1.0		required by my-faces-bundle
+guava-r09.jar						Creating google docs 
 hibernate-validator-4.3.0.Final.jar Bean Validator
 java-image-scaling-0.8.5.jar		Thumbnails
 javax.servlet.jsp.jstl-1.2.1.jar	JSF Base
