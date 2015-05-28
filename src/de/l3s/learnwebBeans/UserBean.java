@@ -100,6 +100,13 @@ public class UserBean implements Serializable
      */
     public void setUser(User user)
     {
+	//clear caches
+	newGroups = null;
+	userId = 0;
+	userCache = null;
+	activeCourseId = 0;
+	activeCourseCache = null;
+
 	// store the user also in the session so that it is accessible in the download servlet
 	HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
 	session.setAttribute("learnweb_user", user);
@@ -121,12 +128,12 @@ public class UserBean implements Serializable
 		    if(lastActiveCourse != null)
 		    {
 			activeCourseId = Integer.parseInt(lastActiveCourse);
-			log.debug("course from pref");
+			log.debug("load course from preferences");
 		    }
 		    else
 		    {
 			activeCourseId = user.getCourses().get(0).getId();
-			log.debug("course default");
+			log.debug("use public course");
 		    }
 		}
 	    }
@@ -138,17 +145,9 @@ public class UserBean implements Serializable
 	}
 	else
 	{
-	    // user logged out -> clear caches
-	    newGroups = null;
-	    userId = 0;
-	    userCache = null;
-	    activeCourseId = 0;
-	    activeCourseCache = null;
+	    // user logged out
 	    onDestroy();
 	}
-
-	//this.user = user;
-
     }
 
     @PreDestroy
@@ -393,8 +392,6 @@ public class UserBean implements Serializable
      */
     public LinkedList<DefaultSubMenu> getGroupMenu()
     {
-	DefaultMenuModel model = new DefaultMenuModel();
-
 	String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
 
 	Integer groupId = ApplicationBean.getParameterInt("group_id");
@@ -402,6 +399,14 @@ public class UserBean implements Serializable
 	LinkedList<DefaultSubMenu> menu = new LinkedList<DefaultSubMenu>();
 	try
 	{
+	    /*
+	    log.debug("course: " + getActiveCourse().toString());
+
+	    for(Group group : getUser().getGroups())
+	    {
+	    log.debug("group1 " + group);
+	    }
+	    */
 	    for(Group group : getActiveCourse().getGroupsFilteredByUser(getUser()))
 	    {
 		boolean isActiveGroup = false;
@@ -451,8 +456,6 @@ public class UserBean implements Serializable
 		    item.setStyleClass("active");
 		submenu.addElement(item);
 
-		model.addElement(submenu);
-
 		menu.add(submenu);
 	    }
 
@@ -463,7 +466,6 @@ public class UserBean implements Serializable
 	}
 
 	return menu;
-	//return model;
     }
 
     public String onCourseChange(int courseId) throws SQLException
