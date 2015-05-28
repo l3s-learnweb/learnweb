@@ -244,24 +244,20 @@
 
 	</header>
 
-			
-	
 	<h:form>
-		<p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException" update="expiredExceptionDialog" onexception="PF('exceptionDialog').show();" />
+		<p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException" onexception="PF('expiredExceptionDialog').show();" />
 
-		<p:ajaxExceptionHandler type="java.lang.Exception" update="exceptionDialog" onexception="PF('expiredExceptionDialog').show();" />
+		<p:ajaxExceptionHandler type="java.lang.Exception" update="exceptionDialog" onexception="PF('exceptionDialoge').show();" />
 
 		<p:dialog id="exceptionDialog" header="Exception '#{pfExceptionHandler.type}' occured!" widgetVar="exceptionDialog" height="500px">
-        Message: #{pfExceptionHandler.message} <br />
-        StackTrace: <h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
+	        Message: #{pfExceptionHandler.message} <br />
+	        StackTrace: <h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
 			<br />
-
 		</p:dialog>
 
-		<p:dialog id="expiredExceptionDialog" header="ViewExpiredException occured!" widgetVar="expiredExceptionDialog" height="500px">
-        Sorry your Session has timed out. Please reload the page.
-        <p:button onclick="document.location.href = document.location.href;" value="Reload!"
-				rendered="#{pfExceptionHandler.type == 'javax.faces.application.ViewExpiredException'}" />
+		<p:dialog header="ViewExpiredException occured!" widgetVar="expiredExceptionDialog" height="200px">
+	        Sorry your Session has timed out. Please reload the page.
+	        <p:button onclick="document.location.href = document.location.href;" value="Reload" />
 		</p:dialog>
 	</h:form>
 
