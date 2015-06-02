@@ -3,7 +3,6 @@ package de.l3s.learnweb;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.MessageFormat;
 import java.util.Date;
 
 import de.l3s.learnweb.beans.UtilBean;
@@ -11,10 +10,6 @@ import de.l3s.util.StringHelper;
 
 public class LogEntry implements Serializable
 {
-
-    /**
-	 * 
-	 */
     private static final long serialVersionUID = -4239479043091966928L;
 
     public enum Action
@@ -63,9 +58,6 @@ public class LogEntry implements Serializable
     private String params;
     private String username;
     private String description;
-    private String usernameLink;
-    private boolean highlighted = false;
-
     private int resourceId;
 
     public LogEntry(ResultSet rs) throws SQLException
@@ -84,7 +76,7 @@ public class LogEntry implements Serializable
 	int groupId = rs.getInt(7);
 	//user_id, username, action, target_id, params, timestamp, group_id, r.title AS resource_title, g.title AS group_title
 
-	usernameLink = "<a href=\"" + url + "user/detail.jsf?user_id=" + userId + "\" style=\" color:#3399FF;text-decoration: none;\">" + username + "</a>";
+	String usernameLink = "<a href=\"" + url + "user/detail.jsf?user_id=" + userId + "\" style=\" color:#3399FF;text-decoration: none;\">" + username + "</a> ";
 
 	String resourceTitle = rs.getString("resource_title");
 	if(null == resourceTitle)
@@ -100,10 +92,13 @@ public class LogEntry implements Serializable
 	    groupTitle = "<i>" + StringHelper.shortnString(groupTitle, 80) + "</i>";
 	String group = "<a href=\"" + url + "group/overview.jsf?group_id=" + groupId + "\" style=\" color:#3399FF;text-decoration: none;\">" + groupTitle + "</a>";
 
+	//
+
 	switch(action)
 	{
 	case adding_resource:
-	    description = usernameLink + " has added " + resource + " to " + group;
+	    description = usernameLink + UtilBean.getLocaleMessage("log_adding_resource", resource, group);
+	    //description = usernameLink + " has added " + resource + " to " + group;
 	    break;
 	case edit_resource:
 	    description = usernameLink + " has edited " + resource;
@@ -131,7 +126,6 @@ public class LogEntry implements Serializable
 	    description = usernameLink + " searched for \"" + params + "\"";
 	    break;
 	case group_joining:
-	    //if(targetId==groupId)
 	    description = usernameLink + " has joined the group " + group;
 	    break;
 	case group_leaving:
@@ -143,7 +137,6 @@ public class LogEntry implements Serializable
 	case group_deleting:
 	    description = usernameLink + " has deleted the group " + groupTitle;
 	    break;
-
 	case group_changing_title:
 	    description = usernameLink + " has changed the title of group " + group;
 	    break;
@@ -159,63 +152,18 @@ public class LogEntry implements Serializable
 	case group_adding_link:
 	    description = usernameLink + " has added a link to " + group;
 	    break;
+	case group_deleting_link:
+	    description = usernameLink + " has deleted a link from " + group;
+	    break;
 	case group_removing_resource:
-	    description = usernameLink + " has deleted " + resourceTitle;
+	    description = usernameLink + " has deleted " + resourceTitle + " from " + group;
 	    break;
 	case downloading:
 	    description = usernameLink + " has downloaded " + resource;
-
-	    /*			
-	    			Action.group_changing_restriction,			
-	    */
-
+	    break;
 	default:
-	    description = "no message for action " + action.name();
+	    description = "no message for action " + action.name(); // should never happen; muss nicht übersetzt werden
 	}
-    }
-
-    public boolean isHighlighted()
-    {
-	return highlighted;
-    }
-
-    public void setHighlighted(boolean highlighted)
-    {
-	this.highlighted = highlighted;
-    }
-
-    /**
-     * Error entry
-     */
-    public LogEntry(String description)
-    {
-	super();
-	this.userId = -1;
-	this.action = Action.error;
-	this.groupId = -1;
-	this.date = new Date();
-	this.params = "";
-	this.description = description;
-    }
-
-    public LogEntry(int userId, Action action, int groupId, Date date, String params)
-    {
-	super();
-	this.userId = userId;
-	this.action = action;
-	this.groupId = groupId;
-	this.date = date;
-	this.params = params;
-    }
-
-    public LogEntry(int userId, String username, Action action, int groupId, Date date, String params)
-    {
-	this.userId = userId;
-	this.action = action;
-	this.groupId = groupId;
-	this.date = date;
-	this.params = params;
-	this.username = username;
     }
 
     public int getUserId()
@@ -253,18 +201,6 @@ public class LogEntry implements Serializable
 	return description;
     }
 
-    public String getUsernameLink()
-    {
-	return usernameLink;
-    }
-
-    @Override
-    public String toString()
-    {
-	//MessageFormat format = new MessageFormat("{1} added \"{2}\" to group");
-	return MessageFormat.format("{1} added \"{2}\" to group", "userx", "image");
-    }
-
     public void setUserId(int userId)
     {
 	this.userId = userId;
@@ -279,10 +215,4 @@ public class LogEntry implements Serializable
     {
 	this.resourceId = resourceId;
     }
-
-    public static void main(String[] args)
-    {
-	System.out.println(LogEntry.Action.downloading.ordinal());
-    }
-
 }
