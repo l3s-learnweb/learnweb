@@ -1,3 +1,4 @@
+var data_var = "";
 function open_timeline(){
 	$('#calendar').hide("slide", { direction: "right" }, 1000);
 	$('#container').show("slide", { direction: "left" }, 1000);
@@ -23,14 +24,16 @@ function addLeadingZero(num) {
 	}
 }
 
-/*function handleJsonData(xhr, status, args)
+function handleJsonData(xhr, status, args)
 {	
 	data_var = args.timelineData;
-}*/
+}
 
-function json(data_var){
-	var options = {
+function loadTimeline(){
+	jsondata = JSON.parse(data_var);
+	$('#container').highcharts({
 		chart: {
+			renderTo: 'container',
 			zoomType: 'x'
 		},
 		title: {
@@ -84,10 +87,10 @@ function json(data_var){
 		series: [{
 			type: 'column',
 			name: 'Archive Versions',
-			data: data_var,
+			data: jsondata,
 		}]
-	};
-	
-	$('#container').highcharts(options);
-	//chart = Highcharts.Chart(options,function(chart){chart.render();});
+	});
+	$('#timeline').show("slide", { direction: "left" }, 1000);
+	return false;
+
 }

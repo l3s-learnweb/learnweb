@@ -1,31 +1,28 @@
-<ui:composition template="/templates/main/main.xhtml" 
+<ui:composition 
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:h="http://java.sun.com/jsf/html" 
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 	
-	<ui:param name="pageTitle" value="ArchiveTimeline" />
 	
-	<ui:define name="center_layout">
-		<script src="http://code.highcharts.com/highcharts.js"></script>
-
-		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css" />
-		
-		<h:outputScript library="archive-timeline" name="responsive-calendar.min.js" />
+		<h:outputScript library="archive-timeline" name="responsive-calendar.min.js" target="head"/>
 		<h:outputStylesheet library="archive-timeline" name="responsive-calendar.css"/>
-		<h:outputStylesheet library="archive-timeline" name="bootstrap.min.css"/>
-		<h:outputScript library="archive-timeline" name="archive_timeline.js" />
+		<h:outputStylesheet library="archive-timeline" name="bootstrap.min.css" />
+				
+		<h:outputScript library="js" name="tipped.js" target="head" />
+		<h:outputStylesheet library="css" name="tipped.css"/>		
+		
+		<h:outputScript library="archive-timeline" name="archive_timeline_template.js" target="head"/>
 		<h:outputStylesheet library="archive-timeline" name="archive_timeline.css"/>
-		<h:outputStylesheet library="css" name="tipped.css"/>
-		
-		<h:outputScript library="js" name="tipped.js" />
-		
+	
+		<h:form style="display:none">
+			<p:remoteCommand action="#{archiveTimeLineBean.getJsonData()}" name="fetchJsonData" process="@this" partialSubmit="true" autoRun="false" oncomplete="handleJsonData(xhr, status, args);"/>
+		</h:form>		
 		<script>
-		var chart;
-		function openasd(){
-			
-			json(#{archiveTimeLineBean.getResourceJsonData()});
+			var resId = ${res.id};
+			fetchJsonData([{name:'resource_id', value:resId}]);
+
 			$('.responsive-calendar').responsiveCalendar({
 				time: '2010-11',
 				allRows: false,
@@ -115,10 +112,9 @@
 			    
 				} 
 			});
-		return false;
-		};
+			//loadTimeline();
 		</script>	
-		<br/><a href='#' onclick="return openasd();">Click</a>
+		<br/>
 		<div class='box'>
 		<h:panelGroup layout="block" id="container"></h:panelGroup>
 		<div id="calendar">
@@ -150,6 +146,5 @@
 			<h:outputLink style="float:right;color:#489a83" onclick="return open_timeline();"><i class="icon-circle-arrow-left"></i> Back to TimeLine View</h:outputLink>
 		</div>
 		</div>
-	</ui:define>
 	
 </ui:composition>	
