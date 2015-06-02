@@ -22,9 +22,9 @@ public class JobScheduler
 	//description about Scheduling patterns : http://www.sauronsoftware.it/projects/cron4j/manual.php#p02 
 	scheduler.schedule("0 1 * * *", task);
 
-	AddArchiveUrlToResource archiveTask = new AddArchiveUrlToResource();
+	//AddArchiveUrlToResource archiveTask = new AddArchiveUrlToResource();
 	//Schedule the archiveTask every minute
-	scheduler.schedule("* * * * *", archiveTask);
+	//scheduler.schedule("* * * * *", archiveTask);
     }
 
     public void startAllJobs()
@@ -111,7 +111,6 @@ public class JobScheduler
 	@Override
 	public void execute(TaskExecutionContext context2)
 	{
-	    //log.debug("archive something");
 	    try
 	    {
 		learnweb.getArchiveUrlManager().addArchiveUrlToResource();

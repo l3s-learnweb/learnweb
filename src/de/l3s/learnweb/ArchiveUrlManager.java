@@ -141,13 +141,12 @@ public class ArchiveUrlManager
 		if(filenameParts.find())
 		    archiveURL = resp.substring(filenameParts.start(), filenameParts.end());
 
-		log.debug("Archived URL: " + archiveURL);
 		String responseDateGMTString = con.getHeaderField("Date");
 		Date archiveUrlDate = null;
 
 		if(responseDateGMTString != null)
 		    archiveUrlDate = responseDate.parse(responseDateGMTString);
-		System.out.println("Archived URL:" + archiveURL + "Response Date:" + responseDateGMTString);
+		log.debug("Archived URL:" + archiveURL + " Response Date:" + responseDateGMTString);
 		PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)");
 		prepStmt.setInt(1, resource.getId());
 		prepStmt.setString(2, archiveURL);
@@ -155,7 +154,7 @@ public class ArchiveUrlManager
 		prepStmt.executeUpdate();
 		prepStmt.close();
 
-		//resource.addArchiveUrl(null); // TODO 
+		resource.addArchiveUrl(null); // TODO 
 	    }
 	    catch(IOException e)
 	    {
