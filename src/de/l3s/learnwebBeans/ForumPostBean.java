@@ -15,19 +15,19 @@ import de.l3s.learnweb.Learnweb;
 
 @ManagedBean
 @RequestScoped
-public class ForumTopicsBean extends ApplicationBean implements Serializable
+public class ForumPostBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 1L;
 
-    private final static Logger log = Logger.getLogger(ForumTopicsBean.class);
+    private final static Logger log = Logger.getLogger(ForumPostBean.class);
 
     private int groupId;
 
-    private String topic, message;
+    private String topic, message, post;
 
     private Group group;
 
-    public ForumTopicsBean()
+    public ForumPostBean()
     {
 
     }
@@ -63,24 +63,26 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
 
     }
 
-    public String getTopic()
+    public String getPost()
     {
-	return topic;
+	return post;
     }
 
-    public void setTopic(String topic)
+    public void setPost(String post)
     {
-	this.topic = topic;
-	System.out.println(topic);
+	this.post = post;
+	System.out.println(post);
 
     }
 
-    public void saveForumTopic()
+    public void saveForumPost()
     {
 	try
 	{
 	    int group_id = 883;
-	    message = Learnweb.getInstance().getForumManager().saveForumTopic(topic, group_id);
+	    int user_id = 1;
+	    int topic_id = 1;
+	    message = Learnweb.getInstance().getForumManager().saveForumPost(post, topic_id, group_id, user_id);
 	    this.topic = "";
 	    addGrowl(FacesMessage.SEVERITY_INFO, message);
 	}
