@@ -23,11 +23,20 @@ function addLeadingZero(num) {
 		return "" + num;
 	}
 }
+function handleCalendarData(xhr, status, args)
+{	
+	calendar_data = args.calendarData;
+	calendar_data = JSON.parse(calendar_data);
+	loadCalendar(calendar_data);
+}
 
 function handleJsonData(xhr, status, args)
 {	
 	data_var = args.timelineData;
+	loadTimeline();
 }
+
+
 
 function loadTimeline(){
 	jsondata = JSON.parse(data_var);
@@ -70,14 +79,12 @@ function loadTimeline(){
 				point: {
 					events: {
 						click: function () {
-				
 							var date = new Date(this.x);
 							var year = date.getFullYear();
 							var month = date.getMonth() + 1;
 							$('#calendar').show("slide", { direction: "right" }, 1000);
 							$('#container').hide("slide", { direction: "left" }, 1000);
-							//$('.responsive-calendar').responsiveCalendar(year+'-'+ month);
-							
+							$('.responsive-calendar').responsiveCalendar(year+'-'+ month);
 						}
 					}
 				}
@@ -90,7 +97,7 @@ function loadTimeline(){
 			data: jsondata,
 		}]
 	});
-	$('#timeline').show("slide", { direction: "left" }, 1000);
-	return false;
+	
+	
 
 }

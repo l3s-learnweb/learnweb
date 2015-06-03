@@ -23,14 +23,27 @@
 		
 		<script>
 		var chart;
+		function changeValue(){
+		document.getElementById("myForm:res_id").value = 110805;
+		}
 		function openasd(){
 			
-			json(#{archiveTimeLineBean.getResourceJsonData()});
 			$('.responsive-calendar').responsiveCalendar({
 				time: '2010-11',
 				allRows: false,
 				translateMonths: #{archiveTimeLineBean.monthNames},
-		          events: {
+			    onActiveDayHover: function(events) {
+				    var thisDayEvent, key;
+
+				    key = $(this).data('year')+'-'+addLeadingZero( $(this).data('month') )+'-'+addLeadingZero( $(this).data('day') );
+				    thisDayEvent = events[key];
+				   
+			    	Tipped.create($(this),archiveVersionsList(thisDayEvent));
+			    	//alert(thisDayEvent.dayEvents[i]);	
+			    
+				} 
+			});
+			$('.responsive-calendar').responsiveCalendar('edit',{
 				        "2010-11-30": {
 				            "dayEvents": [
 							                {
@@ -103,22 +116,14 @@
 				            "badgeClass": "badge-warning",
 				            "number": 1
 				        }
-				    },
-			    onActiveDayHover: function(events) {
-				    var thisDayEvent, key;
-
-				    key = $(this).data('year')+'-'+addLeadingZero( $(this).data('month') )+'-'+addLeadingZero( $(this).data('day') );
-				    thisDayEvent = events[key];
-				   
-			    	Tipped.create($(this),archiveVersionsList(thisDayEvent));
-			    	//alert(thisDayEvent.dayEvents[i]);	
-			    
-				} 
-			});
-		return false;
-		};
+				    });
+		}
 		</script>	
-		<br/><a href='#' onclick="return openasd();">Click</a>
+		<br/>
+		<h:form id="myForm">
+			<h:inputHidden id="res_id" value="#{archiveTimeLineBean.resourceId}" />
+			<p:commandButton action="#{archiveTimeLineBean.getResourceJsonData()}" value="Click Here" oncomplete="handleJsonData(xhr, status, args);" onstart="changeValue();"></p:commandButton>
+		</h:form>
 		<div class='box'>
 		<h:panelGroup layout="block" id="container"></h:panelGroup>
 		<div id="calendar">
@@ -147,6 +152,7 @@
 				</div>
 			</div>
 			<!-- Responsive calendar - END -->
+			<br/>
 			<h:outputLink style="float:right;color:#489a83" onclick="return open_timeline();"><i class="icon-circle-arrow-left"></i> Back to TimeLine View</h:outputLink>
 		</div>
 		</div>

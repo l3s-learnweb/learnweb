@@ -8,8 +8,10 @@ import java.text.DateFormatSymbols;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 
+import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.primefaces.context.RequestContext;
@@ -22,34 +24,14 @@ import de.l3s.learnweb.beans.UtilBean;
 public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -991280404434096581L;
+    private final static Logger log = Logger.getLogger(ArchiveTimeLineBean.class);
 
-    public String getResourceJsonData() throws SQLException
-    {
+    private int resourceId = 0;
 
-	JSONArray outerArray = new JSONArray();
-
-	PreparedStatement select = Learnweb.getInstance().getConnection().prepareStatement("SELECT timestamp,count(*) as count FROM `lw_resource_archiveurl` WHERE `resource_id` = 110855 group by year(timestamp),month(timestamp) ORDER BY timestamp ASC");
-
-	ResultSet rs = select.executeQuery();
-	while(rs.next())
-	{
-	    JSONArray innerArray = new JSONArray();
-	    //series1.set(rs.getString("date"), rs.getInt("count"));
-	    innerArray.add(rs.getTimestamp("timestamp").getTime());
-	    innerArray.add(rs.getInt("count"));
-	    outerArray.add(innerArray);
-	}
-	//outerArray.add(innerArray);
-	System.out.println(outerArray.toJSONString());
-	//RequestContext.getCurrentInstance().addCallbackParam("timelineData", outerArray.toJSONString());
-	return outerArray.toJSONString();
-
-    }
-
-    public void getJsonData() throws SQLException
+    public void getResourceJsonData() throws SQLException
     {
 	JSONArray outerArray = new JSONArray();
-	int resourceId = getParameterInt("resource_id");
+
 	PreparedStatement select = Learnweb.getInstance().getConnection().prepareStatement("SELECT timestamp,count(*) as count FROM `lw_resource_archiveurl` WHERE `resource_id` = ? group by year(timestamp),month(timestamp) ORDER BY timestamp ASC");
 	select.setInt(1, resourceId);
 	ResultSet rs = select.executeQuery();
@@ -64,39 +46,66 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 	//outerArray.add(innerArray);
 	System.out.println(outerArray.toJSONString());
 	RequestContext.getCurrentInstance().addCallbackParam("timelineData", outerArray.toJSONString());
-	//return outerArray.toJSONString();
+
     }
 
-    public String getArchiveVersions(long unixTimestamp) throws SQLException
+    public void getHighChartsJsonData()
+    {
+	JSONArray outerArray = new JSONArray();
+	int resourceId = getParameterInt("resource_id");
+	try
+	{
+	    PreparedStatement select = Learnweb.getInstance().getConnection().prepareStatement("SELECT timestamp,count(*) as count FROM `lw_resource_archiveurl` WHERE `resource_id` = ? group by year(timestamp),month(timestamp) ORDER BY timestamp ASC");
+	    select.setInt(1, resourceId);
+	    ResultSet rs = select.executeQuery();
+	    while(rs.next())
+	    {
+		JSONArray innerArray = new JSONArray();
+		innerArray.add(rs.getTimestamp("timestamp").getTime());
+		innerArray.add(rs.getInt("count"));
+		outerArray.add(innerArray);
+	    }
+	}
+	catch(SQLException e)
+	{
+	    log.error("Error while fetching the archive urls as json data for a resource", e);
+	    addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
+	}
+	System.out.println(outerArray.toJSONString());
+	RequestContext.getCurrentInstance().addCallbackParam("timelineData", outerArray.toJSONString());
+    }
+
+    public void getCalendarJsonData() throws SQLException
     {
 	JSONObject archiveDates = new JSONObject();
-
-	PreparedStatement select = Learnweb
-		.getInstance()
-		.getConnection()
-		.prepareStatement(
-			"SELECT DATE_FORMAT(t1.timestamp,'%Y-%m-%d') as day, COUNT(*) as no_of_versions FROM (SELECT * FROM lw_resource_archiveurl WHERE `resource_id`=110852 AND MONTH(timestamp) = MONTH(FROM_UNIXTIME(" + unixTimestamp + "))) t1 GROUP BY DAY(t1.timestamp)");
-
+	int resourceId = getParameterInt("resource_id");
+	PreparedStatement select = Learnweb.getInstance().getConnection()
+		.prepareStatement("SELECT DATE_FORMAT(t1.timestamp,'%Y-%m-%d') as day, COUNT(*) as no_of_versions FROM (SELECT * FROM lw_resource_archiveurl WHERE `resource_id`=?) t1 GROUP BY YEAR(t1.timestamp),MONTH(t1.timestamp),DAY(t1.timestamp) ORDER BY t1.timestamp");
+	select.setInt(1, resourceId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
 	{
 	    JSONObject archiveDay = new JSONObject();
 	    archiveDay.put("number", rs.getInt("no_of_versions"));
 	    archiveDay.put("badgeClass", "badge-warning");
-	    select = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM lw_resource_archiveurl WHERE `resource_id`=75336 AND DAY(timestamp) = DAY('" + rs.getString("day") + "')");
+	    select = Learnweb.getInstance().getConnection()
+		    .prepareStatement("SELECT * FROM lw_resource_archiveurl WHERE `resource_id`=? AND YEAR(timestamp)=YEAR('" + rs.getString("day") + "') AND MONTH(timestamp)=MONTH('" + rs.getString("day") + "') AND DAY(timestamp) = DAY('" + rs.getString("day") + "')");
+	    select.setInt(1, resourceId);
 	    ResultSet rsArchiveVersion = select.executeQuery();
 	    JSONArray archiveVersions = new JSONArray();
 	    while(rsArchiveVersion.next())
 	    {
 		JSONObject archiveVersion = new JSONObject();
-		archiveVersion.put("url", rs.getString("archive_url"));
-		archiveVersion.put("time", rs.getTimestamp("timestamp"));
+		archiveVersion.put("url", rsArchiveVersion.getString("archive_url"));
+		archiveVersion.put("time", rsArchiveVersion.getTimestamp("timestamp").toString());
 		archiveVersions.add(archiveVersion);
 	    }
+	    archiveDay.put("dayEvents", archiveVersions);
 	    archiveDates.put(rs.getString("day"), archiveDay);
 	}
 	System.out.println(archiveDates.toJSONString());
-	return "";
+	RequestContext.getCurrentInstance().addCallbackParam("calendarData", archiveDates.toJSONString());
+	//return "";
 
     }
 
@@ -127,7 +136,7 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 	JSONObject archiveDates = new JSONObject();
 
 	PreparedStatement select = Learnweb.getInstance().getConnection()
-		.prepareStatement("SELECT DATE_FORMAT(t1.timestamp,'%Y-%m-%d') as day, COUNT(*) as no_of_versions FROM (SELECT * FROM lw_resource_archiveurl WHERE `resource_id`=75336 AND MONTH(timestamp) = MONTH(FROM_UNIXTIME(1289838290))) t1 GROUP BY DAY(t1.timestamp)");
+		.prepareStatement("SELECT DATE_FORMAT(t1.timestamp,'%Y-%m-%d') as day, COUNT(*) as no_of_versions FROM (SELECT * FROM lw_resource_archiveurl WHERE `resource_id`=110805) t1 GROUP BY YEAR(t1.timestamp),MONTH(t1.timestamp),DAY(t1.timestamp) ORDER BY t1.timestamp");
 
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -135,7 +144,8 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 	    JSONObject archiveDay = new JSONObject();
 	    archiveDay.put("number", rs.getInt("no_of_versions"));
 	    archiveDay.put("badgeClass", "badge-warning");
-	    PreparedStatement select2 = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM lw_resource_archiveurl WHERE `resource_id`=75336 AND DAY(timestamp) = DAY('" + rs.getString("day") + "')");
+	    PreparedStatement select2 = Learnweb.getInstance().getConnection()
+		    .prepareStatement("SELECT * FROM lw_resource_archiveurl WHERE `resource_id`=110805 AND YEAR(timestamp)=YEAR('" + rs.getString("day") + "') AND MONTH(timestamp)=MONTH('" + rs.getString("day") + "') AND DAY(timestamp) = DAY('" + rs.getString("day") + "')");
 	    ResultSet rsArchiveVersion = select2.executeQuery();
 	    JSONArray archiveVersions = new JSONArray();
 	    while(rsArchiveVersion.next())
@@ -150,4 +160,16 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 	}
 	System.out.println(archiveDates.toJSONString());
     }
+
+    public int getResourceId()
+    {
+	return resourceId;
+    }
+
+    public void setResourceId(int resourceId)
+    {
+	this.resourceId = resourceId;
+	System.out.println(resourceId);
+    }
+
 }

@@ -23,12 +23,14 @@ function addLeadingZero(num) {
 	}
 }
 
-/*function handleJsonData(xhr, status, args)
+function handleJsonData(xhr, status, args)
 {	
 	data_var = args.timelineData;
-}*/
+	json(data_var);
+}
 
 function json(data_var){
+	data_var = JSON.parse(data_var);
 	var options = {
 		chart: {
 			zoomType: 'x'
@@ -73,7 +75,7 @@ function json(data_var){
 							var month = date.getMonth() + 1;
 							$('#calendar').show("slide", { direction: "right" }, 1000);
 							$('#container').hide("slide", { direction: "left" }, 1000);
-							//$('.responsive-calendar').responsiveCalendar(year+'-'+ month);
+							$('.responsive-calendar').responsiveCalendar(year+'-'+ month);
 							
 						}
 					}
@@ -89,5 +91,6 @@ function json(data_var){
 	};
 	
 	$('#container').highcharts(options);
+	openasd();
 	//chart = Highcharts.Chart(options,function(chart){chart.render();});
 }
