@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -21,6 +22,7 @@ import de.l3s.learnweb.beans.UtilBean;
 
 @SuppressWarnings("unchecked")
 @ManagedBean
+@ViewScoped
 public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -991280404434096581L;

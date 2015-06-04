@@ -19,7 +19,7 @@
 	  
 		<ui:define name="center_layout">
 			<h:form>
-				<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{groupDetailBean.updateColumns}"></p:remoteCommand>
+				<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{groupDetailBean.updateColumns}" async="true"></p:remoteCommand>
 			</h:form>
 	
 			<div class="ui-layout-unit-header ui-widget-header ui-corner-all" id="group_header">

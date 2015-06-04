@@ -8,20 +8,21 @@
 	
 		<h:outputScript library="archive-timeline" name="responsive-calendar.min.js" target="head"/>
 		<h:outputStylesheet library="archive-timeline" name="responsive-calendar.css"/>
-		<h:outputStylesheet library="archive-timeline" name="bootstrap.min.css" />
+		
+		<!-- <h:outputStylesheet library="archive-timeline" name="bootstrap.min.css" /> -->
 				
 		<h:outputScript library="js" name="tipped.js" target="head" />
 		<h:outputStylesheet library="css" name="tipped.css"/>		
-		
+	
 		<h:outputScript library="archive-timeline" name="archive_timeline_template.js" target="head"/>
 		<h:outputStylesheet library="archive-timeline" name="archive_timeline.css"/>
-	
+	 
 		<h:form style="display:none">
 			<p:remoteCommand action="#{archiveTimeLineBean.getHighChartsJsonData()}" name="fetchHighChartsJsonData" process="@this" partialSubmit="true" autoRun="false" oncomplete="handleJsonData(xhr, status, args);"/>
 			<p:remoteCommand action="#{archiveTimeLineBean.getCalendarJsonData()}" name="fetchCalendarJsonData" process="@this" partialSubmit="true" autoRun="false" oncomplete="handleCalendarData(xhr, status, args);"/>
 		</h:form>		
 		<script>
-			var resId = ${res.id};
+			var resId = ${res_id};
 			fetchHighChartsJsonData([{name:'resource_id', value:resId}]);
 			fetchCalendarJsonData([{name:'resource_id', value:resId}]);
 			
@@ -51,7 +52,7 @@
 					<a class="pull-left" data-go="prev"><h:panelGroup layout="block" class="btn btn-primary" style="background-color:#489a83;border-color: #3b8b74;">
 							<i class="icon-chevron-left"></i> Prev
 						</h:panelGroup></a>
-					<h4>
+					<h4 id="head-year-month">
 						<span id="year" data-head-year="data-head-year"></span> <span id="month" data-head-month="data-head-month"></span>
 					</h4>
 					<a class="pull-right" data-go="next"><h:panelGroup layout="block" class="btn btn-primary" style="background-color:#489a83;border-color: #3b8b74;">

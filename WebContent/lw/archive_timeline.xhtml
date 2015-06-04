@@ -43,6 +43,7 @@
 			    
 				} 
 			});
+			$('#timeline_link').show();
 			$('.responsive-calendar').responsiveCalendar('edit',{
 				        "2010-11-30": {
 				            "dayEvents": [
@@ -153,8 +154,8 @@
 			</div>
 			<!-- Responsive calendar - END -->
 			<br/>
-			<h:outputLink style="float:right;color:#489a83" onclick="return open_timeline();"><i class="icon-circle-arrow-left"></i> Back to TimeLine View</h:outputLink>
 		</div>
+		<h:outputLink id="timeline_link" style="float:right;color:#489a83;display:none;" onclick="return open_timeline();"><i class="icon-circle-arrow-left"></i> Back to TimeLine View</h:outputLink>
 		</div>
 	</ui:define>
 	
