@@ -60,6 +60,7 @@ public class Learnweb
     private final SolrClient solrClient;
     private final LoroManager loroManager;
     private final ResourcePreviewMaker resourcePreviewMaker;
+    private final YovistoManager yovistoManager;
     private JobScheduler jobScheduler;
 
     private static Learnweb learnweb = null;
@@ -162,6 +163,7 @@ public class Learnweb
 	mementoClient = new MementoClient(this);
 	loroManager = new LoroManager(this);
 	jobScheduler = new JobScheduler(this);
+	yovistoManager = new YovistoManager(this);
 	/*
 	PreparedStatement pstmt = dbConnection.prepareStatement("select * from lw_admin_message");
 	ResultSet rs = pstmt.executeQuery();
@@ -659,5 +661,10 @@ public class Learnweb
     public MementoClient getMementoClient()
     {
 	return mementoClient;
+    }
+
+    public YovistoManager getYovistoManager()
+    {
+	return yovistoManager;
     }
 }
