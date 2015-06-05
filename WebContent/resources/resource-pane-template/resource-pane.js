@@ -5,3 +5,8 @@ function archive_url_select(){
 	if(PF('archive_versions_menu').getSelectedValue() != 0)
 		window.open(PF('archive_versions_menu').getSelectedValue(),'_blank');
 }
+
+function open_timeline_view(){
+	$('#timeline').slideToggle("slow");	
+	return false;
+}

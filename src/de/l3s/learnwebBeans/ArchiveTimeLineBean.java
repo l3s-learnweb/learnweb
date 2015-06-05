@@ -51,10 +51,10 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 
     }
 
-    public void getHighChartsJsonData()
+    public String getHighChartsJsonData()
     {
 	JSONArray outerArray = new JSONArray();
-	int resourceId = getParameterInt("resource_id");
+	//int resourceId = getParameterInt("resource_id");
 	try
 	{
 	    PreparedStatement select = Learnweb.getInstance().getConnection().prepareStatement("SELECT timestamp,count(*) as count FROM `lw_resource_archiveurl` WHERE `resource_id` = ? group by year(timestamp),month(timestamp) ORDER BY timestamp ASC");
@@ -75,12 +75,13 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 	}
 	System.out.println(outerArray.toJSONString());
 	RequestContext.getCurrentInstance().addCallbackParam("timelineData", outerArray.toJSONString());
+	return outerArray.toJSONString();
     }
 
-    public void getCalendarJsonData() throws SQLException
+    public String getCalendarJsonData() throws SQLException
     {
 	JSONObject archiveDates = new JSONObject();
-	int resourceId = getParameterInt("resource_id");
+	//int resourceId = getParameterInt("resource_id");
 	PreparedStatement select = Learnweb.getInstance().getConnection()
 		.prepareStatement("SELECT DATE_FORMAT(t1.timestamp,'%Y-%m-%d') as day, COUNT(*) as no_of_versions FROM (SELECT * FROM lw_resource_archiveurl WHERE `resource_id`=?) t1 GROUP BY YEAR(t1.timestamp),MONTH(t1.timestamp),DAY(t1.timestamp) ORDER BY t1.timestamp");
 	select.setInt(1, resourceId);
@@ -107,7 +108,7 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 	}
 	System.out.println(archiveDates.toJSONString());
 	RequestContext.getCurrentInstance().addCallbackParam("calendarData", archiveDates.toJSONString());
-	//return "";
+	return archiveDates.toJSONString();
 
     }
 

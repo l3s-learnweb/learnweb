@@ -23,7 +23,8 @@ function addLeadingZero(num) {
 		return "" + num;
 	}
 }
-function handleCalendarData(xhr, status, args)
+
+/*function handleCalendarData(xhr, status, args)
 {	
 	calendar_data = args.calendarData;
 	calendar_data = JSON.parse(calendar_data);
@@ -34,12 +35,11 @@ function handleJsonData(xhr, status, args)
 {	
 	data_var = args.timelineData;
 	loadTimeline();
-}
+}*/
 
-
-
-function loadTimeline(){
-	jsondata = JSON.parse(data_var);
+function loadTimeline(data_var){
+	//jsondata = JSON.parse(data_var);
+	
 	$('#container').highcharts({
 		chart: {
 			renderTo: 'container',
@@ -56,7 +56,7 @@ function loadTimeline(){
 		xAxis: {
 			type: 'datetime',
 			//tickInterval: 30 * 24 * 3600000,
-			minRange:  24 * 3600000 // fourteen days
+			minRange: 365 * 24 * 3600000 // 1 year 
 		},
 		yAxis: {
 			title: {
@@ -94,10 +94,10 @@ function loadTimeline(){
 		series: [{
 			type: 'column',
 			name: 'Archive Versions',
-			data: jsondata,
+			data: data_var,
 		}]
 	});
 	
-	
+	$('#timeline').hide();
 
 }

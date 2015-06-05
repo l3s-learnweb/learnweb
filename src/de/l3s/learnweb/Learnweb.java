@@ -55,6 +55,7 @@ public class Learnweb
     private final FileManager fileManager;
     private final TedManager tedManager; //For logging transcript actions by users
     private final ArchiveUrlManager archiveUrlManager; //For creating archive pages of resources saved to LearnWeb
+    private final TimelineManager timelineManager; //DAO for resource archive versions
     private final SearchLogClient searchlogClient; //For Search History Tools
     private final MementoClient mementoClient;
     private final SolrClient solrClient;
@@ -160,6 +161,7 @@ public class Learnweb
 	searchlogClient = new SearchLogClient(this);
 	tedManager = new TedManager(this);
 	archiveUrlManager = new ArchiveUrlManager(this);
+	timelineManager = new TimelineManager(this);
 	mementoClient = new MementoClient(this);
 	loroManager = new LoroManager(this);
 	jobScheduler = new JobScheduler(this);
@@ -639,6 +641,16 @@ public class Learnweb
 	return archiveUrlManager;
     }
 
+    public MementoClient getMementoClient()
+    {
+	return mementoClient;
+    }
+
+    public TimelineManager getTimelineManager()
+    {
+	return timelineManager;
+    }
+
     public ForumManager getForumManager()
     {
 	return forumManager;
@@ -656,11 +668,6 @@ public class Learnweb
 	resourceManager.resetCache();
 	groupManager.resetCache();
 	courseManager.resetCache();
-    }
-
-    public MementoClient getMementoClient()
-    {
-	return mementoClient;
     }
 
     public YovistoManager getYovistoManager()

@@ -11,7 +11,7 @@
 		<h:outputScript library="resource-pane-template" name="resource-pane.js" />
 		<link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet"/>
 		<script src="http://vjs.zencdn.net/4.12/video.js"></script>
-		
+		<script src="http://code.highcharts.com/highcharts.js"></script>		
 		<h:form id="remote_form">
 			<p:remoteCommand name="update_datagrid"  actionListener="#{bean.loadResources}" update=":datagrid :add_resource_panel" oncomplete="update_header()"></p:remoteCommand>
 		</h:form>
@@ -241,8 +241,13 @@
 									<f:selectItem itemLabel="#{msg.choose_archived_version}" itemValue="0" noSelectionOption="true" />
 									<f:selectItems value="#{bean.clickedResource.archiveUrls}" var="entry" itemValue="#{entry.archiveUrl}" itemLabel="${userBean.formatDate(entry.timestamp)}" /> 
 								</p:selectOneMenu>
+								<a href="#" onclick="return open_timeline_view();"> Timeline View</a>
 							</h:panelGroup>
-						
+							<h:panelGroup id="timeline" style="align:center;" layout="block">
+								<ui:decorate template="/lw/templates/archive_timeline_template.xhtml">
+								</ui:decorate>
+								<br class="clear" />
+							</h:panelGroup>					
 		
 							<h:form id="tag_form">
 								<div class="resource_field" style="padding-top: 10px; padding-bottom: 10px">#{msg.tags}</div>
@@ -297,7 +302,8 @@
 									<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
 								</p:commandButton>
 								<br class="clear" />								
-							</h:form>				
+							</h:form>
+											
 						</h:panelGroup>
 						<h:form rendered="#{bean.editResourceClicked and !bean.newResourceClicked}" id="edit_form">
 							<div style="text-align: center;">
