@@ -11,7 +11,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -669,34 +668,31 @@ public class SearchBean extends ApplicationBean implements Serializable
 	searchLogClient = getLearnweb().getSearchlogClient();
     }
 
+    /*
     public List<Search.SERVICE> getLocationFilterOptions()
     {
+    LinkedList<SERVICE> services = new LinkedList<Search.SERVICE>();
 
-	/*if(true)
-	    return;*/
-	//Search.SERVICE.Flickr
+    services.add(Search.SERVICE.Learnweb);
 
-	LinkedList<SERVICE> services = new LinkedList<Search.SERVICE>();
-
-	services.add(Search.SERVICE.Learnweb);
-
-	if(MODE.web == searchMode)
-	    services.add(Search.SERVICE.Bing);
-	else if(MODE.image == searchMode)
-	{
-	    services.add(Search.SERVICE.Bing);
-	    services.add(Search.SERVICE.Ipernity);
-	    services.add(Search.SERVICE.Flickr);
-	}
-	else if(MODE.video == searchMode)
-	{
-	    services.add(Search.SERVICE.TED);
-	    services.add(Search.SERVICE.Vimeo);
-	    services.add(Search.SERVICE.YouTube);
-	}
-
-	return services;
+    if(MODE.web == searchMode)
+        services.add(Search.SERVICE.Bing);
+    else if(MODE.image == searchMode)
+    {
+        services.add(Search.SERVICE.Bing);
+        services.add(Search.SERVICE.Ipernity);
+        services.add(Search.SERVICE.Flickr);
     }
+    else if(MODE.video == searchMode)
+    {
+        services.add(Search.SERVICE.TED);
+        services.add(Search.SERVICE.Vimeo);
+        services.add(Search.SERVICE.YouTube);
+    }
+
+    return services;
+    }
+    */
 
     public void generateKnowledgeGraph()
     {

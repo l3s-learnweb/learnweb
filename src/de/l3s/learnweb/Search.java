@@ -32,8 +32,9 @@ public class Search implements Serializable
 	Vimeo,
 	SlideShare,
 	Ipernity,
-	TED,
-	Learnweb
+	TED, // stored in SOLR
+	Loro, // stored in SOLR
+	Learnweb // stored in SOLR
     };
 
     public enum MEDIA
@@ -65,7 +66,7 @@ public class Search implements Serializable
     private HashMap<Integer, LinkedList<ResourceDecorator>> pages = new HashMap<Integer, LinkedList<ResourceDecorator>>();
     private HashMap<Integer, Resource> tempIdIndex = new HashMap<Integer, Resource>(); // makes it possible to retrieve resources by its tempId
     private int temporaryId = 1;
-    private TreeSet<String> urlHashMap = new TreeSet<String>();
+    private TreeSet<String> urlHashMap = new TreeSet<String>(); // used to make sure that resources with the same url appear only once in the search results
     private InterWeb interweb;
     private MODE mode;
     private boolean hasMoreResults = true;
@@ -79,7 +80,7 @@ public class Search implements Serializable
 
     public Search(InterWeb interweb, String query, User user)
     {
-	urlHashMap.add("http://vimeo.com/735450"); // a really stupid video, that appears in many search results
+	urlHashMap.add("http://vimeo.com/735450"); // hides a really stupid video, that appears in many search results
 
 	this.query = query;
 	this.interweb = interweb;
@@ -142,6 +143,14 @@ public class Search implements Serializable
 	return newResources;
     }
 
+    /**
+     * Load resources from SOLR
+     * 
+     * @param page
+     * @return
+     * @throws SQLException
+     * @throws SolrServerException
+     */
     private LinkedList<ResourceDecorator> getLearnwebResults(int page) throws SQLException, SolrServerException
     {
 	long start = System.currentTimeMillis();
