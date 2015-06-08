@@ -6,7 +6,7 @@ function open_timeline(){
 }
 function archiveVersionsList(thisDayEvent){
 	var no_of_versions = thisDayEvent.dayEvents.length;
-	var list = "<ul>";
+	var list = "<ul style='margin:0'>";
 	for(var i=0;i<no_of_versions;i++){
 		var time = new Date(thisDayEvent.dayEvents[i].time);
 		list += "<li><a href='" + thisDayEvent.dayEvents[i].url + "'>"+time.toUTCString()+"</a></li>";

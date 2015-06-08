@@ -3,9 +3,11 @@
 	xmlns:h="http://java.sun.com/jsf/html" 
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
+
+		<h:outputScript library="js" name="jquery.tooltipster.min.js" target="head"/>
+		<h:outputStylesheet library="css" name="tooltipster.css"/>	
 	
-	
-		<h:outputScript library="archive-timeline" name="responsive-calendar.min.js" target="head"/>
+		<h:outputScript library="archive-timeline" name="responsive-calendar.js" target="head"/>
 		<h:outputStylesheet library="archive-timeline" name="responsive-calendar.css"/>
 		
 		<h:outputScript library="js" name="tipped.js" target="head" />
@@ -20,7 +22,6 @@
 
 			function loadCalendar(calendar_data){
 				$('.responsive-calendar').responsiveCalendar({
-					time: '2010-11',
 					allRows: false,
 					translateMonths: #{resourceDetailBean.monthNames},
 					events: calendar_data,
@@ -28,7 +29,15 @@
 					    var thisDayEvent, key;
 					    key = $(this).data('year')+'-'+addLeadingZero( $(this).data('month') )+'-'+addLeadingZero( $(this).data('day') );
 					    thisDayEvent = events[key];
+					    /*Tipped.create($('.active'),function() {
+					        return {
+					            content: archiveVersionsList(thisDayEvent)
+					           };
+					        });*/
 				    	Tipped.create($(this),archiveVersionsList(thisDayEvent));
+					    /*$(this).tooltipster({
+			                content: $(archiveVersionsList(thisDayEvent))
+			            });*/
 					} 
 				});
 
@@ -42,13 +51,13 @@
 			<div class="responsive-calendar">
 				<div class="controls">
 					<a class="pull-left" data-go="prev"><h:panelGroup layout="block" class="btn btn-primary" style="background-color:#489a83;border-color: #3b8b74;">
-							<i class="icon-chevron-left"></i> Prev
+							Prev
 						</h:panelGroup></a>
 					<h4 id="head-year-month">
 						<span id="year" data-head-year="data-head-year"></span> <span id="month" data-head-month="data-head-month"></span>
 					</h4>
 					<a class="pull-right" data-go="next"><h:panelGroup layout="block" class="btn btn-primary" style="background-color:#489a83;border-color: #3b8b74;">
-							Next <i class="icon-chevron-right"></i>
+							Next 
 						</h:panelGroup>
 					</a>
 				</div>
