@@ -111,6 +111,7 @@ h4 { text-decoration:underline;	font-size:1.3rem; margin: 0.8rem 0 0.4rem; }
 		width:100%; 
 		border-left:none;
 		margin-top:5%; 
+		padding-left:0rem;
 	}
 	.video_guide{
 		width:280px;

@@ -250,13 +250,13 @@
 		<p:ajaxExceptionHandler type="java.lang.Exception" update="exceptionDialog" onexception="PF('exceptionDialoge').show();" />
 
 		<p:dialog id="exceptionDialog" header="Exception '#{pfExceptionHandler.type}' occured!" widgetVar="exceptionDialog" height="500px">
-	        Message: #{pfExceptionHandler.message} <br />
+	        #{msg.message}: #{pfExceptionHandler.message} <br />
 	        StackTrace: <h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
 			<br />
 		</p:dialog>
 
 		<p:dialog header="Session expired" widgetVar="expiredExceptionDialog">
-	        Sorry your Session has timed out. Please reload the page.
+	        #{msg.reload_page}
 	        <br/><br/>
 	        <p:button onclick="document.location.href = document.location.href;" value="Reload" />
 		</p:dialog>
