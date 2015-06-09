@@ -241,7 +241,7 @@
 									<f:selectItem itemLabel="#{msg.choose_archived_version}" itemValue="0" noSelectionOption="true" />
 									<f:selectItems value="#{bean.clickedResource.archiveUrls}" var="entry" itemValue="#{entry.archiveUrl}" itemLabel="${userBean.formatDate(entry.timestamp)}" /> 
 								</p:selectOneMenu>
-								<a href="#" onclick="return open_timeline_view();"> Timeline View</a>
+								<a href="#" onclick="return open_timeline_view();" style="font-weight: bold; padding-left:5rem; position:relative; bottom:6px;">#{msg.timeline_view}</a>
 							</h:panelGroup>
 							<h:panelGroup id="timeline" style="align:center;" layout="block">
 								<ui:decorate template="/lw/templates/archive_timeline_template.xhtml">
