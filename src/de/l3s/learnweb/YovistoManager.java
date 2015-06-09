@@ -69,6 +69,17 @@ public class YovistoManager
 
     }
 
+    private void addTagToResource(Resource resource, String tagName, User user) throws Exception
+    {
+	ResourceManager rsm = Learnweb.getInstance().getResourceManager();
+	Tag tag = rsm.getTag(tagName);
+
+	if(tag == null)
+	    tag = rsm.addTag(tagName);
+
+	rsm.tagResource(resource, tag, user);
+    }
+
     public static void main(String[] args) throws Exception
     {
 
