@@ -367,7 +367,7 @@ iframe { border: none }
 	top:8px;
 	width:12.5px;
 	height:12.5px;
-	background:url(../icon/delete-white.png) center no-repeat;
+	background:url(../resources/search/icon/cancel-inv.png) center no-repeat;
 }
 #footer {
 	color:#ffffff;
@@ -393,6 +393,11 @@ iframe { border: none }
 	display:inline-block;
 	color:white;
 	background-color:black;
+}
+#footer_text{
+	padding: 0.7rem 10rem;
+	display:block; 
+	font-size:1.5rem;
 }
 
 /* group menu */
