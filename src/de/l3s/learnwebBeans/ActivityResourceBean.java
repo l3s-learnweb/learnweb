@@ -18,6 +18,7 @@ import de.l3s.learnweb.NewsEntry;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Tag;
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.beans.UtilBean;
 
 @ManagedBean
 @ViewScoped
@@ -244,7 +245,7 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		    }
-		    text = text + " with " + "<b>" + commenttobeadded.getText() + "</b>";
+		    text = text + " " + UtilBean.getLocaleMessage("with") + " " + "<i>" + commenttobeadded.getText() + "</i>";
 		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
 		    continue;
 

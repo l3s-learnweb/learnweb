@@ -36,7 +36,7 @@
 				$("#center_pane").prepend(div);
 			</script>
 			
-			<p:dialog header="Upload File" widgetVar="file_dialog" modal="true" appendTo="@(body)" width="600" height="150">
+			<p:dialog header="#{msg.upload_file}" widgetVar="file_dialog" modal="true" appendTo="@(body)" width="600" height="150">
 				<h:form>
 					<p:fileUpload  rendered="true" fileUploadListener="#{addResourceBean.handleFileUpload}"  
 		            mode="advanced"  

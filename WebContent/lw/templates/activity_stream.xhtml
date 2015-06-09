@@ -17,7 +17,7 @@
 						<div style="width: auto;">
 						<h:outputText value="#{logEntry.text}" escape="false"  />
 						<h:panelGroup rendered="#{logEntry.queryNeeded}">
-						<h:outputText value=" with query " escape="false"  />
+						<h:outputText value=" #{msg.with_query} " escape="false"  />
 						
 						<h:outputLink value="search.jsf" style="text-decoration:none">
 						<h:outputText value=" #{logEntry.resource.query}" escape="false"  style="color:#3399FF;font-weight:bold;"/>
@@ -26,7 +26,7 @@
 						        <f:param name="action" value="search"></f:param>
 						</h:outputLink>
 						
-						<h:outputText value=" from #{logEntry.resource.source} " escape="false"  />
+						<h:outputText value=" #{msg.from} #{logEntry.resource.source} " escape="false"  />
 						</h:panelGroup>
 						</div>
 						

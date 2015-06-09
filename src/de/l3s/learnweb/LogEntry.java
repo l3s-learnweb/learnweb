@@ -82,15 +82,15 @@ public class LogEntry implements Serializable
 	if(null == resourceTitle)
 	    resourceTitle = "a resource";
 	else
-	    resourceTitle = "<i>" + StringHelper.shortnString(resourceTitle, 80) + "</i>";
-	String resource = "<b>" + resourceTitle + "</b>";
+	    resourceTitle = "<b>" + StringHelper.shortnString(resourceTitle, 80) + "</b>";
+	String resource = resourceTitle;
 
 	String groupTitle = rs.getString("group_title");
 	if(null == groupTitle)
 	    groupTitle = "a group";
 	else
-	    groupTitle = "<i>" + StringHelper.shortnString(groupTitle, 80) + "</i>";
-	String group = "<a href=\"" + url + "group/overview.jsf?group_id=" + groupId + "\" style=\" color:#3399FF;text-decoration: none;\">" + groupTitle + "</a>";
+	    groupTitle = StringHelper.shortnString(groupTitle, 80);
+	String group = "<a href=\"" + url + "group/overview.jsf?group_id=" + groupId + "\" style=\" color:#06bf8b;text-decoration: none; font-weight: bold\">" + groupTitle + "</a>";
 
 	//
 
