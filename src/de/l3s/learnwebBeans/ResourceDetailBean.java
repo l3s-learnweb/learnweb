@@ -2,6 +2,7 @@ package de.l3s.learnwebBeans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -69,7 +70,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 		{
 		    JSONObject archiveVersion = new JSONObject();
 		    archiveVersion.put("url", archiveUrl.getArchiveUrl());
-		    archiveVersion.put("time", archiveUrl.getTimestamp().toString());
+		    archiveVersion.put("time", DateFormat.getTimeInstance(DateFormat.MEDIUM, UtilBean.getUserBean().getLocale()).format(archiveUrl.getTimestamp()));
 		    archiveVersions.add(archiveVersion);
 		}
 		archiveDay.put("dayEvents", archiveVersions);
@@ -98,6 +99,18 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
 	JSONArray monthNames = new JSONArray();
 	for(String month : symbols.getMonths())
+	{
+	    monthNames.add(month);
+	}
+	monthNames.remove(""); //To remove empty string from the array
+	return monthNames.toJSONString();
+    }
+
+    public String getShortMonthNames()
+    {
+	DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
+	JSONArray monthNames = new JSONArray();
+	for(String month : symbols.getShortMonths())
 	{
 	    monthNames.add(month);
 	}

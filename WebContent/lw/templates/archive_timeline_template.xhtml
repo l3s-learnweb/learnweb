@@ -17,13 +17,28 @@
 		<h:outputStylesheet library="archive-timeline" name="archive_timeline.css"/>
 	 
 		<script>
+			Highcharts.setOptions({
+				lang: {
+						months: ${resourceDetailBean.monthNames},
+						shortMonths: ${resourceDetailBean.shortMonthNames},
+						resetZoom: '#{msg.resetZoom}',
+						resetZoomTitle: '#{msg.resetZoomTitle}'
+				}
+			});
+			
+			var no_of_versions = '#{msg.no_of_versions}';
+			var timeline_title = '#{msg.archive_timeline_title}';
+			var timeline_series_name = '#{msg.archive_timeline_series_name}';
+			var msgClickZoom = '#{msg.archive_timeline_click_zoom}';
+			var msgTouchZoom = '#{msg.archive_timeline_touch_zoom}';
+			
 			loadTimeline(#{resourceDetailBean.highChartsJsonData});
 			loadCalendar(#{resourceDetailBean.calendarJsonData});
 
 			function loadCalendar(calendar_data){
 				$('.responsive-calendar').responsiveCalendar({
 					allRows: false,
-					translateMonths: #{resourceDetailBean.monthNames},
+					translateMonths: ${resourceDetailBean.monthNames},
 					events: calendar_data,
 				    onActiveDayHover: function(events) {
 					    var thisDayEvent, key;
@@ -63,7 +78,7 @@
 				</div>
 				<hr />
 				<h:panelGroup layout="block" class="day-headers">
-					<ui:repeat var="day" value="#{resourceDetailBean.shortWeekDays}">
+					<ui:repeat var="day" value="${resourceDetailBean.shortWeekDays}">
 						<h:panelGroup layout="block" class="day header">#{day}</h:panelGroup>
 					</ui:repeat>
 				</h:panelGroup>

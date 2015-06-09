@@ -1,15 +1,16 @@
-var data_var = "";
+//Slide transitions between calendar and timeline view
 function open_timeline(){
 	$('#calendar').hide("slide", { direction: "right" }, 1000);
 	$('#container').show("slide", { direction: "left" }, 1000);
 	return false;
 }
+
+//Creation of list of links to the archived versions
 function archiveVersionsList(thisDayEvent){
 	var no_of_versions = thisDayEvent.dayEvents.length;
-	var list = "<ul style='margin:0'>";
+	var list = "<ul style='padding-left:8px;list-style-type: circle;'>";
 	for(var i=0;i<no_of_versions;i++){
-		var time = new Date(thisDayEvent.dayEvents[i].time);
-		list += "<li><a href='" + thisDayEvent.dayEvents[i].url + "'>"+time.toUTCString()+"</a></li>";
+		list += "<li><a href='" + thisDayEvent.dayEvents[i].url + "'>"+thisDayEvent.dayEvents[i].time+"</a></li>";
 	}
 	list +="</ul>";
 	return list;
@@ -46,12 +47,11 @@ function loadTimeline(data_var){
 			zoomType: 'x'
 		},
 		title: {
-			text: 'Archive Url Versions'
+			text: timeline_title
 		},
 		subtitle: {
 			text: document.ontouchstart === undefined ?
-					'Click and drag in the plot area to zoom in' :
-						'Pinch the chart to zoom in'
+					msgClickZoom : msgTouchZoom
 		},
 		xAxis: {
 			type: 'datetime',
@@ -60,7 +60,7 @@ function loadTimeline(data_var){
 		},
 		yAxis: {
 			title: {
-				text: 'Number of versions'
+				text: no_of_versions
 			}
 		},
 		tooltip: {
@@ -93,7 +93,7 @@ function loadTimeline(data_var){
 
 		series: [{
 			type: 'column',
-			name: 'Archive Versions',
+			name: timeline_series_name ,
 			data: data_var,
 		}]
 	});
