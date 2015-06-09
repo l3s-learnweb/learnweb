@@ -10,9 +10,6 @@
 		<h:outputScript library="archive-timeline" name="responsive-calendar.js" target="head"/>
 		<h:outputStylesheet library="archive-timeline" name="responsive-calendar.css"/>
 		
-		<h:outputScript library="js" name="tipped.js" target="head" />
-		<h:outputStylesheet library="css" name="tipped.css"/>		
-	
 		<h:outputScript library="archive-timeline" name="archive_timeline_template.js" target="head"/>
 		<h:outputStylesheet library="archive-timeline" name="archive_timeline.css"/>
 	 
@@ -44,15 +41,13 @@
 					    var thisDayEvent, key;
 					    key = $(this).data('year')+'-'+addLeadingZero( $(this).data('month') )+'-'+addLeadingZero( $(this).data('day') );
 					    thisDayEvent = events[key];
-					    /*Tipped.create($('.active'),function() {
-					        return {
-					            content: archiveVersionsList(thisDayEvent)
-					           };
-					        });*/
-				    	Tipped.create($(this),archiveVersionsList(thisDayEvent));
-					    /*$(this).tooltipster({
+					    $(this).tooltipster({
+					    	interactive: true,
+					    	interactiveTolerance: 150,
+					    	theme:'tooltipster-custom-theme',
 			                content: $(archiveVersionsList(thisDayEvent))
-			            });*/
+			            });
+					    $(this).tooltipster("show");
 					} 
 				});
 
@@ -87,7 +82,7 @@
 				</div>
 			</div>
 			<!-- Responsive calendar - END -->
-			<h:outputLink style="float:right;color:#489a83" onclick="return open_timeline();"><i class="icon-circle-arrow-left"></i>#{msg.back_to_timeline_view}</h:outputLink>
+			<h:outputLink style="float:right;color:#489a83" onclick="return open_timeline();">#{msg.back_to_timeline_view}</h:outputLink>
 		</div>
 		</div>
 	

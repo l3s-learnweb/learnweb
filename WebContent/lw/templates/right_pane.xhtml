@@ -233,7 +233,7 @@
 							
 							<h:form id="archive_current_form" rendered="#{bean.clickedResource.storageType != 1}">
 									<span class="resource_field">#{msg.current_version}: </span>
-									<p:commandButton action="#{bean.archiveCurrentVersion}" styleClass="greenbutton" value="#{msg.archive_now}" update=":growl :select_archive_url" style="margin-top:10px"/>
+									<p:commandButton action="#{bean.archiveCurrentVersion}" styleClass="greenbutton" value="#{msg.archive_now}" update=":growl :select_archive_url :timeline" style="margin-top:10px"/>
 							</h:form>
 							<h:panelGroup layout="block" style="padding-top: 10px;" rendered="#{not empty bean.clickedResource.archiveUrls}">
 								<span class="resource_field" style="position:relative;bottom:6px;">#{msg.archive_versions}: </span>
@@ -243,7 +243,7 @@
 								</p:selectOneMenu>
 								<a href="#" onclick="return open_timeline_view();" style="font-weight: bold; padding-left:5rem; position:relative; bottom:6px;">#{msg.timeline_view}</a>
 							</h:panelGroup>
-							<h:panelGroup id="timeline" style="align:center;" layout="block">
+							<h:panelGroup id="timeline" layout="block">
 								<ui:decorate template="/lw/templates/archive_timeline_template.xhtml">
 								</ui:decorate>
 								<br class="clear" />

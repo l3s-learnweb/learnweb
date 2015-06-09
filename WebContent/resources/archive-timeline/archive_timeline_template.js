@@ -8,9 +8,9 @@ function open_timeline(){
 //Creation of list of links to the archived versions
 function archiveVersionsList(thisDayEvent){
 	var no_of_versions = thisDayEvent.dayEvents.length;
-	var list = "<ul style='padding-left:8px;list-style-type: circle;'>";
+	var list = "<ul style='padding-left:10px;list-style-type: circle;'>";
 	for(var i=0;i<no_of_versions;i++){
-		list += "<li><a href='" + thisDayEvent.dayEvents[i].url + "'>"+thisDayEvent.dayEvents[i].time+"</a></li>";
+		list += "<li><a href='" + thisDayEvent.dayEvents[i].url + "' target='_blank'>"+thisDayEvent.dayEvents[i].time+"</a></li>";
 	}
 	list +="</ul>";
 	return list;

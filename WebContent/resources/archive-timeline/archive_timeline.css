@@ -1,7 +1,7 @@
 .box {
     position: relative;
-    height: 380px;
-    width: 550px;
+    height: 400px;
+    width: 600px;
     float: left;
     overflow: hidden;
 }
@@ -25,6 +25,20 @@
   	font-weight: 500; 
   	line-height: 1.1;
   	color: inherit;
+}
+
+.tooltipster-custom-theme {
+	border: 1px solid #000;
+	background: #ffffff;
+	border-color: #489a83;
+	box-shadow: 1px 1px 5px #888888;
+}
+
+.tooltipster-custom-theme .tooltipster-content {
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+	line-height: 16px;
+	padding: 8px 10px;
 }
 
 hr {

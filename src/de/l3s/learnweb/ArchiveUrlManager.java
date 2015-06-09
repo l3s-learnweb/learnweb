@@ -146,7 +146,7 @@ public class ArchiveUrlManager
 
 		if(responseDateGMTString != null)
 		    archiveUrlDate = responseDate.parse(responseDateGMTString);
-		log.debug("Archived URL:" + archiveURL + " Response Date:" + responseDateGMTString);
+		log.info("Archived URL:" + archiveURL + " Response Date:" + responseDateGMTString);
 		PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)");
 		prepStmt.setInt(1, resource.getId());
 		prepStmt.setString(2, archiveURL);
