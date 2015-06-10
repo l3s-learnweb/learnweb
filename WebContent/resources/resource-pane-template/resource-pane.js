@@ -7,6 +7,6 @@ function archive_url_select(){
 }
 
 function open_timeline_view(){
-	$('#timeline').slideToggle("slow");	
+	$('#timeline').slideToggle("slow",function(){scroller();});
 	return false;
 }

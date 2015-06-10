@@ -1,7 +1,7 @@
 .box {
     position: relative;
-    height: 400px;
-    width: 600px;
+    height: 350px;
+    width: 100%;
     float: left;
     overflow: hidden;
 }

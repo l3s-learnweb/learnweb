@@ -32,6 +32,12 @@
 			loadTimeline(#{resourceDetailBean.highChartsJsonData});
 			loadCalendar(#{resourceDetailBean.calendarJsonData});
 
+			$.fn.tooltipster('setDefaults', {
+				interactive: true,
+		    	interactiveTolerance: 150,
+		    	theme:'tooltipster-custom-theme'
+			});
+			
 			function loadCalendar(calendar_data){
 				$('.responsive-calendar').responsiveCalendar({
 					allRows: false,
@@ -41,16 +47,15 @@
 					    var thisDayEvent, key;
 					    key = $(this).data('year')+'-'+addLeadingZero( $(this).data('month') )+'-'+addLeadingZero( $(this).data('day') );
 					    thisDayEvent = events[key];
-					    $(this).tooltipster({
-					    	interactive: true,
-					    	interactiveTolerance: 150,
-					    	theme:'tooltipster-custom-theme',
-			                content: $(archiveVersionsList(thisDayEvent))
-			            });
+						if(!$(this).hasClass('tooltipstered'))
+					    {
+							$(this).tooltipster({
+					    	content:$(archiveVersionsList(thisDayEvent))
+					    	});
+					    }
 					    $(this).tooltipster("show");
 					} 
 				});
-
 			}
 		</script>	
 		<br/>
