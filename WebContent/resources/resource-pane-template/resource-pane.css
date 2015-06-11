@@ -1,0 +1,46 @@
+/*taken from new_main2.css*/
+
+#add_resource_form td{padding: 8px 0px !important;}
+#add_resource_form td:FIRST-CHILD {
+	font-weight: bold;
+	width: 100px;
+}
+#add_resource_form td:LAST-CHILD {width: 100px;}
+#add_resource_form input, #add_resource_form textarea, #add_resource_form button, .ui-button{
+	border-radius: 0px !important;
+	box-shadow: 0 0 0px 0px #fff !important;
+}
+#add_resource_panel{
+	padding: 0px;
+	border: 0px !important;
+}
+
+#add_resource_table{
+	width: 90%; 
+	margin: auto;
+}
+.add_field{
+	width:100%;
+	box-sizing: border-box;
+}
+.comment {
+	border-bottom: 1px solid #eee;
+	padding: 10px;
+	background-color: #F9F9F9;
+}
+.comments {
+	margin:10px 0;
+	border-top: 1px solid #eee;
+}
+#edit_table{
+	width: 100%;
+	margin-top: 10px;
+}
+#edit_table td{padding-top: 5px;}
+#edit_table td:FIRST-CHILD{font-weight: bold;}
+.preview_box{
+	padding: 5px;
+	border: 1px solid #ccc !important;
+	box-shadow: 0 0 3px 3px #dfdfdf;
+}
+.preview_box iframe {min-height:400px;}

@@ -5,6 +5,7 @@
 }
 html{ 
 	font-size:62.5%; 
+	/*overflow-y: hidden !important; (taken from new_main2.css)*/
 }
 body {
 	min-width:320px;
@@ -12,6 +13,9 @@ body {
 	height:100%;
 	width:100%;
 	font-size:1.2rem;
+	/*min-height: 100%;
+	padding: 0;
+	(taken from new_main2.css)*/
 }
 iframe { border: none }
 
@@ -31,10 +35,13 @@ iframe { border: none }
 	padding-top:4.6rem;	
 	height:100%;
 	width:100%;
+	/*vertical-align: top; (taken from new_main2)*/ 
 }
 
 #learnweb_logo {
 	position:absolute;
+	top:0px;
+	left:0px;
 	width:19rem;
 	height:100%;
 	display:block;
@@ -360,14 +367,14 @@ iframe { border: none }
 }
 
 
-
+/*footer help messages*/
 #footer_close {
 	position:absolute;
 	right:5px;
-	top:8px;
-	width:12.5px;
-	height:12.5px;
-	background:url(../resources/search/icon/cancel-inv.png) center no-repeat;
+	top:3px;
+	width:26px;
+	height:26px;
+	background:url("../search/icon/cancel-inv.png") center no-repeat;
 }
 #footer {
 	color:#ffffff;
@@ -383,7 +390,7 @@ iframe { border: none }
 }
 #footer_question_mark{
 	font-size:56px;
-	text-algin:center;
+	text-align:center;
 	width:68px;
 	border:2px solid #616161;
 	border-radius:34px;
@@ -401,6 +408,11 @@ iframe { border: none }
 }
 
 /* group menu */
+#groupoverview_link {
+	padding:0.5em 0.5em 0.5em 2.2em;
+	font-size:1em;
+	color:#2F556A;
+}
 #group_menu h3{ margin-top:10px; }
 #group_menu h3:hover{ background-color:#eeeeee;  }
 #group_menu .active > div { display:block; }
@@ -441,10 +453,7 @@ iframe { border: none }
 }
 
 /* group header ; maybe move to a separate file */
-#group_header {
-	padding-bottom:0 !important;
-}
-
+#group_header {padding-bottom:0 !important;}
 #group_header li {
 	float:left;
 	display:block;
@@ -455,10 +464,7 @@ iframe { border: none }
 	display:block;
 }
 #group_header a.active,
-#group_header a:hover {	
-	background-color: #EEE;
-}
-
+#group_header a:hover {	background-color: #EEE;}
 #group_header ul {
 	list-style: outside none none;
 	margin: 10px -10px 0px;
@@ -472,16 +478,15 @@ iframe { border: none }
     display:block;
     clear: both;
 }
-
-.group_header
-{
+.group_header{
 	font-size: 20px;
 	font-weight: 100;
 	color: #489a83;
 }
+
+
 form#add_resource { float:right; }
-.resource_button
-{
+.resource_button{
 	float: right;
 	position: relative;
 	top: -4px;
@@ -501,16 +506,23 @@ form#add_resource { float:right; }
 	width:200px;
 }
 
+.greenbutton{
+	border: none !important;
+	background: none !important;
+	background-color: #489a83 !important;
+	text-shadow: none !important;
+	padding: 4px 9px;
+	color: white !important;
+	font-weight: normal !important;
+	cursor: pointer;
+}
+
 .greenbutton:hover{
 	background:none repeat scroll 0 0 #74beaa !important;
 }
-.clear { 
-	clear:both; 
-}
+.clear {clear:both;}
 
-.display-none {
-	display:none;
-}	
+.display-none {display:none;}	
 	
 .error {
 	color:red;
@@ -518,21 +530,14 @@ form#add_resource { float:right; }
 	padding:2rem;
 }
 
-.align-left {
-	text-align: left;
-}
+.align-left {text-align: left;}
+.align-right {text-align: right;}
+.align-center {text-align: center;}
 
-.align-right {
-	text-align: right;
-}
+.float-left {float: left;}
+.float-right {float: right;}
 
-.align-center {
-	text-align: center;
-}
-
-.nowrap {
-	white-space: nowrap; 
-}
+.nowrap {white-space: nowrap;}
 
 h1 { margin-bottom: 1rem; }
 h2 { margin-bottom: 0.8rem; }
@@ -544,6 +549,4 @@ h2 { margin-bottom: 0.8rem; }
 	border: 1px solid #a8a8a8 !important;
 	box-shadow: 0 0 0px 0px #fff !important;
 }
-.ui-widget {
-    font-size:1.2rem;
-}
+.ui-widget {font-size:1.2rem;}
