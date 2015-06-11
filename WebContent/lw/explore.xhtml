@@ -21,24 +21,16 @@
 			<h:form id="explore_optform" style="padding-left: 28%;vertical-align: middle;">
 				<h:outputText value="#{msg.Task_based_View}" styleClass="optform_text"
 					rendered="#{exploreBean.exploreMode == 'task_based'}" />
-				<h:link value="#{msg.Task_based_View}" outcome="explore"
-					styleClass="optform_link"
-					rendered="#{exploreBean.exploreMode != 'task_based'}" >
+				<h:link value="#{msg.Task_based_View}" outcome="explore" styleClass="optform_link" rendered="#{exploreBean.exploreMode != 'task_based'}" >
 					<f:param name="mode" value="task_based" />
 				</h:link>			
 
-				<h:outputText value="#{msg.list_view}"
-					styleClass="optform_text"
-					rendered="#{exploreBean.exploreMode == 'list_view'}" />
-				<h:link value="#{msg.list_view}" outcome="explore"
-					styleClass="optform_link"
-					rendered="#{exploreBean.exploreMode != 'list_view'}" >
+				<h:outputText value="#{msg.list_view}" styleClass="optform_text" rendered="#{exploreBean.exploreMode == 'list_view'}" />
+				<h:link value="#{msg.list_view}" outcome="explore" styleClass="optform_link" rendered="#{exploreBean.exploreMode != 'list_view'}" >
 					<f:param name="mode" value="list_view" />
 					<f:param name="page" value="1" />
 				</h:link>
-				<h:outputText value="#{msg.resultSetViewTitle}"
-					styleClass="optform_text"
-					rendered="#{exploreBean.exploreMode == 'resultset_view'}" />
+				<h:outputText value="#{msg.resultSetViewTitle}" styleClass="optform_text" rendered="#{exploreBean.exploreMode == 'resultset_view'}" />
 			</h:form>
 		</div>		
 	</ui:define>
@@ -46,11 +38,8 @@
 	<ui:define name="center_layout">
 
 		<h:panelGroup id="task_based_view" rendered="#{exploreBean.exploreMode == 'task_based'}">
-			<div id="taskbased_history_filter"
-				style="padding-left: 5px; padding-right: 10px;width:100%;">
-				<p:panel id="taskbased_history_filter_panel"
-					header="#{msg.Search_History_Filter}" toggleable="true"
-					toggleSpeed="500" widgetVar="panel" style="padding:5px;">
+			<div id="taskbased_history_filter" style="padding-left: 5px; padding-right: 10px;width:100%;">
+				<p:panel id="taskbased_history_filter_panel" header="#{msg.Search_History_Filter}" toggleable="true" toggleSpeed="500" widgetVar="panel" style="padding:5px;">
 					<script type="text/javascript">
 						$(function() {
 							$(".Fromdatepicker").datepicker(
@@ -91,12 +80,9 @@
 					</script>
 					<h:form>
 					
-					#{msg.sessions_from}: <h:inputText styleClass="Fromdatepicker"
-							id="from_date" value="#{exploreBean.fromFilterQueries}" />
-							#{msg.to}: <h:inputText styleClass="Todatepicker" id="to_date"
-							value="#{exploreBean.toFilterQueries}" />
-						    <span>	</span><p:commandButton value="#{msg.update} #{msg.Task_based_View}"
-							update=":task_based_graph" />
+					#{msg.sessions_from}: <h:inputText styleClass="Fromdatepicker" id="from_date" value="#{exploreBean.fromFilterQueries}" />
+							#{msg.to}: <h:inputText styleClass="Todatepicker" id="to_date" value="#{exploreBean.toFilterQueries}" />
+						    <span>	</span><p:commandButton value="#{msg.update} #{msg.Task_based_View}" update=":task_based_graph" />
 
 					</h:form>
 					<h:form>
@@ -105,15 +91,12 @@
 				</p:panel>
 			</div>
 			<p:outputPanel id="task_based_graph">
-				<iframe src="collapsibletree.jsf" id="tree" scrolling="no"
-					frameborder="0" style="height:90%;width:90%;" />
+				<iframe src="collapsibletree.jsf" id="tree" scrolling="no" frameborder="0" style="height:90%;width:90%;" />
 			</p:outputPanel>
 		</h:panelGroup>
-		<h:panelGroup id="list_view"
-			rendered="#{exploreBean.exploreMode == 'list_view'}">
+		<h:panelGroup id="list_view" rendered="#{exploreBean.exploreMode == 'list_view'}">
 			<ui:decorate template="/lw/templates/search_history_list.xhtml">
-				<ui:param name="searchHistorylogs"
-					value="#{exploreBean.searchHistoryLogs}" />
+				<ui:param name="searchHistorylogs" value="#{exploreBean.searchHistoryLogs}" />
 			</ui:decorate>
 		</h:panelGroup>
 	</ui:define>
