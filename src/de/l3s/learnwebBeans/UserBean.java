@@ -399,15 +399,7 @@ public class UserBean implements Serializable
 	LinkedList<DefaultSubMenu> menu = new LinkedList<DefaultSubMenu>();
 	try
 	{
-	    /*
-	    log.debug("course: " + getActiveCourse().toString());
-
-	    for(Group group : getUser().getGroups())
-	    {
-	    log.debug("group1 " + group);
-	    }
-	    */
-	    for(Group group : getActiveCourse().getGroupsFilteredByUser(getUser()))
+	    for(Group group : getUser().getGroups())// getActiveCourse().getGroupsFilteredByUser(getUser()))
 	    {
 		boolean isActiveGroup = false;
 

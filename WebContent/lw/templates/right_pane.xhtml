@@ -9,6 +9,7 @@
 
 	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" header="#{bean.clickedResource.id eq -1? msg.click_to_view_details : bean.clickedResource.title}" id="right_pane">
 		<h:outputScript library="resource-pane-template" name="resource-pane.js" target="head" />
+		<h:outputStylesheet library="resource-pane-template" name="resource-pane.css" />
 		<script src="http://code.highcharts.com/highcharts.js"></script>		
 		<h:form id="remote_form">
 			<p:remoteCommand name="update_datagrid"  actionListener="#{bean.loadResources}" update=":datagrid :add_resource_panel" oncomplete="update_header()"></p:remoteCommand>
@@ -133,16 +134,27 @@
 									<h:outputText value='#{bean.clickedResource.embedded}' escape="false" />
 								</div>
 							</ui:fragment>								
-							<ui:fragment rendered="#{bean.clickedResource.type != 'text' and bean.clickedResource.type != 'pdf' and bean.clickedResource.type != 'Video'}">
+							<ui:fragment rendered="#{bean.clickedResource.type != 'text' and bean.clickedResource.type != 'pdf' and bean.clickedResource.type != 'Video' and bean.clickedResource.type != 'Image'}">
 								<div class="preview_box">
 									<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
 								</div>
 							</ui:fragment>
-							<ui:fragment rendered="#{(bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf' ) and bean.clickedResource.type != 'Video'}">
+							<ui:fragment rendered="#{(bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf' or bean.clickedResource.type eq 'Image') and not empty bean.clickedResource.thumbnail3}">
+								
+								
+									<img class="preview_box" src="#{bean.clickedResource.thumbnail3.url}" height="#{bean.clickedResource.thumbnail3.height}" width="#{bean.clickedResource.thumbnail3.width}" style="max-width: 100%; height: auto; margin:0 auto; display:block;"/>								
+								
+							</ui:fragment>
+							<ui:fragment rendered="#{(bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf') and empty bean.clickedResource.thumbnail3}">
 								<div class="preview_box" style="display: inline-block">
 									<a target="_blank" class="newsfeed_query_link" style="padding: 0px" href="#{bean.clickedResource.url}">
 										<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
 									</a>
+								</div>
+							</ui:fragment>
+							<ui:fragment rendered="#{bean.clickedResource.type eq 'Image' and empty bean.clickedResource.thumbnail3}">
+								<div class="preview_box">
+									<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
 								</div>
 							</ui:fragment>
 						</div>
