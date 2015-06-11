@@ -8,6 +8,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
@@ -61,11 +64,22 @@ public class YovistoManager
 	SolrClient solr = learnweb.getSolrClient();
 	Group yovistoGroup = learnweb.getGroupManager().getGroupById(918);
 	User admin = learnweb.getUserManager().getUser(7727);
+	ResourceManager resourceManager = learnweb.getResourceManager();
 	connect();
 	ResultSet result = null;
+	User rishita = learnweb.getUserManager().getUser(7727);
+
+	/*	for(Resource resource : yovistoGroup.getResources())
+		{
+
+		    resourceManager.deleteResourcePermanent(resource.getId());
+
+		}
+
+		System.exit(0);*/
 	try
 	{
-	    PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM yovisto_video WHERE `yovisto_id`=8670");
+	    PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM yovisto_video WHERE `yovisto_id`= 6381");
 	    result = preparedStmnt.executeQuery();
 	}
 	catch(SQLException e)
@@ -106,13 +120,21 @@ public class YovistoManager
 		    log.error("Error in creating preview image for video with id: " + yovistoId, e);
 		    e.printStackTrace();
 		}
-
-		update.setInt(1, yovistoVideo.getId());
-		update.setInt(2, yovistoId);
-		update.executeUpdate();
-
 		admin.addResource(yovistoVideo);
 		yovistoGroup.addResource(yovistoVideo, admin);
+		try
+		{
+		    update.setInt(1, yovistoVideo.getId());
+		    update.setInt(2, yovistoId);
+
+		    update.executeUpdate();
+		}
+		catch(SQLException e)
+		{
+		    log.error(e);
+		    e.printStackTrace();
+
+		}
 
 		//solr.indexResource(yovistoVideo);
 		yovistoVideo.save();
@@ -120,7 +142,33 @@ public class YovistoManager
 	    }
 	    else
 		yovistoVideo.save();
-	    log.debug("Processed; lw: " + learnwebResourceId + " ted: " + yovistoId + " title:" + yovistoVideo.getTitle());
+	    /*try
+	    {*/
+	    Set<String> tag = new HashSet<String>(Arrays.asList(result.getString("user_tag").split(",")));
+
+	    Set<String> tagsAdded = new HashSet<String>(Arrays.asList(yovistoVideo.getTagsAsString().split(",")));
+	    System.out.println(tagsAdded);
+	    tag.removeAll(tagsAdded);
+	    System.out.println(tag);
+
+	    /*	for(String tagName : tag)
+	    	{
+	    	    try
+	    	    {
+	    		addTagToResource(yovistoVideo, tagName, admin);
+	    	    }
+	    	    catch(Exception e)
+	    	    {
+	    		log.error("Error in adding tags " + tagName, e);
+	    		e.printStackTrace();
+	    	    }
+	    	}
+	        }
+	        catch(NullPointerException e)
+	        {
+	    	log.info("No tags available for resource with id" + yovistoId, e);
+	        }*/
+	    log.debug("Processed; lw: " + learnwebResourceId + " yovisto: " + yovistoId + " title:" + yovistoVideo.getTitle());
 
 	}
 
@@ -205,23 +253,7 @@ public class YovistoManager
 	resource.setMaxImageUrl(result.getString("thumbnail_url"));
 	resource.setIdAtService(Integer.toString(result.getInt("yovisto_id")));
 	resource.setFileUrl("http://www.yovisto.com/streams/" + result.getInt("yovisto_id") + ".mp4");
-	resource.setEmbeddedRaw("<object id=\"embPlayer"
-		+ result.getInt("yovisto_id")
-		+ " classid=\"clsid:D27CDB6E-AE6D-11cf-96B8-444553540000\" codebase=\"http://download.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=7,0,19,0\" width=\"100%\" height=\"100%\"> <param name=\"movie\" value=\"http://www.yovisto.com/yoexply.swf?vid="
-		+ result.getInt("yovisto_id")
-		+ "&amp;url=http://www.yovisto.com/streams/"
-		+ result.getInt("yovisto_id")
-		+ ".mp4&amp;prev=\""
-		+ result.getString("thumbnail_url")
-		+ "\"></param><param name=\"quality\" value=\"high\"></param><param name=\"scale\" value=\"exactfit\"></param><param name=\"allowFullScreen\" value=\"true\"></param><param name=\"wmode\" value=\"transparent\"></param><embed id=\"embPlayer"
-		+ result.getInt("yovisto_id")
-		+ "\" src=\"http://www.yovisto.com/yoexply.swf?vid="
-		+ result.getInt("yovisto_id")
-		+ "&amp;url=http://www.yovisto.com/streams/"
-		+ result.getInt("yovisto_id")
-		+ ".mp4&amp;prev=\""
-		+ result.getString("thumbnail_url")
-		+ "\" scale=\"exactfit\" quality=\"high\" name=\"FlashMovie\" swliveconnect=\"true\" allowFullScreen=\"true\" wmode=\"transparent\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" width=\"100%\" height=\"100%\" flashvars=\"var1=0&amp;enablejs=true\"></embed> </object>");
+	resource.setEmbeddedRaw("<iframe id=\"embPlayer6381\" value=\"http://www.yovisto.com/yoexply.swf?vid=2377&amp;url=http://www.yovisto.com/streams/6381.mp4&amp;prev=http://www.yovisto.com/osotis-images/tn_6381_13.jpg\" src=\"http://www.yovisto.com/yoexply.swf?vid=6381&amp;url=http://www.yovisto.com/streams/6381.mp4&amp;prev=http://www.yovisto.com/osotis-images/tn_6381_13.jpg\" scale=\"exactfit\" quality=\"high\" name=\"FlashMovie\" swliveconnect=\"true\" allowFullScreen=\"true\" wmode=\"transparent\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" style=\"height:100%; width:100%;\" flashvars=\"var1=0&amp;enablejs=true\"></iframe>");
 
 	resource.setAuthor(result.getString("organization"));
 
