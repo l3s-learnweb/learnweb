@@ -20,7 +20,7 @@ h3 {
 
 a {
 	text-decoration: none;
-	/* set a color */
+	color: #4F4F4F;
 }
 
 a:hover {
@@ -36,52 +36,6 @@ a img {
     font-size: 12px !important;
 }
 
-
-
-/* die folgenden sind noch nicht überprüft */
-
-img.left {
-	float: left;
-	margin: 0 20px 0 0;
-}
-
-img.right {
-	float: right;
-	margin: 0 0 0 20px;
-}
-
-
-.post {
-	padding-bottom: 15px;
-}
-
-.post h1 {
-	font-weight: normal;
-}
-
-.submenu-title {
-    padding: 4px 10px;
-}
-
-.byline {
-	margin: -60px 20px 20px 20px;
-}
-
-.byline a {
-	color: #DC8700;
-}
-
-.tag {
-	padding: 0 15px;
-}
-
-.entry {
-	padding: 0 20px;
-}
-
-.entry p {
-	line-height: 200%;
-}
 
 .links {
 	padding: 4px 0px;

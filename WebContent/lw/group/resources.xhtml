@@ -158,7 +158,7 @@
 							<p:inputText value="#{groupDetailBean.clickedResource.author}" styleClass="resource_dialog_field" />
 							
 							<h:outputText value=""></h:outputText>
-							<h:panelGroup layout="block" styleClass="resource_pcolumn_div">
+							<h:panelGroup layout="block" styleClass="align-right">
 								<p:commandButton value="#{msg.cancel}" onclick="PF('resource_dialog').hide(); return false;" />
 								
 								<p:commandButton value="#{msg.save}" action="#{groupDetailBean.addSelectedResource}" update=":datagrid :growl" process="@form :datagrid" oncomplete="PF('resource_dialog').hide()" />

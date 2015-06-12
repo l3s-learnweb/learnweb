@@ -1,10 +1,9 @@
 /*away?*/
-.tedtranscript_help{
+/*.tedtranscript_help{
 	height:80px;
 	text-align:justify;
 	padding-left:4px;
 }
-.resource_pcolumn{text-align: right;}
 #searchbar{
 	border: 1px solid #aeaeae;
 	border-radius: 0px !important;
@@ -18,23 +17,9 @@
 	right:72px;
 	top:0;
 }
-.bold{font-weight: bold;}
 #groupmenu{
 	margin-left: 8px;
 	margin-right: 6px;
-}
-a.link {
-	color: white;
-	font-size: 12px;
-	font-family: verdana;
-	font-style: normal;
-}
-a.link:hover {font-weight: bold;}
-.loading {
-	width: 100%;
-	height: 180px;
-	background: url(../../resources/image/colorbox/loading.gif) no-repeat
-		center center;
 }
 .bar{
 	background:radial-gradient(black 15%, transparent 16%) 0 0,radial-gradient(black 15%, transparent 16%) 8px 8px,radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 0 1px,radial-gradient(rgba(255,255,255,.1) 15%, transparent 20%) 8px 9px;
@@ -49,36 +34,17 @@ a.link:hover {font-weight: bold;}
 	border: 1px solid #489a83;
 	z-index: 140;
 }
-#optform{
-	padding-left: 28%;
-	vertical-align: middle;
-}
-.options_panel form#optform a{
-	text-decoration: none;
-	color:#489a83; 
-	font-weight: bold;
-}
-.options_panel form#optform a:HOVER{
-	font-weight:bold;
-	color:white;
-}
-/*#mode_selection doesn't exist*/
-#mode_selection .ui-state-active{
-	background:#489a83 !important;
-	color: #EFEFEF !important;
-	border: none !important;
-	font-weight: initial;
-}
-#mode_selection .ui-state-hover{background: rgba(106, 173, 155, 0.44) !important;}
+*/
+
 /*Just id no class*/
-.view_resultset{
+/*.view_resultset{
 	color:blue;
 	background:none!important;
 	border:0 !important;
 	cursor:pointer;
 	padding: 0;
 }
-
+*/
 
 /*necessary*/
 
@@ -368,7 +334,7 @@ div#presentation_preview {
 	cursor: pointer;
 	border-color: #666;
 }
-.resource_pcolumn_div{text-align: right;}
+
 .resource_summary{
 	color: #666;
 	font-size: 9px;
@@ -512,21 +478,16 @@ div#presentation_preview {
 	position:relative;
 	text-align: justify;
 }
-.options_panel form#explore_optform a{
+.options_panel form#explore_optform{
+	padding-left: 28%;
+	vertical-align: middle;
+}
+.options_panel form#explore_optform a, .options_panel form#resultset_optform a{
 	text-decoration: none;
 	color:#489a83; 
 	font-weight: bold;
 }
-.options_panel form#explore_optform a:HOVER{
-	font-weight:bold;
-	color:white;
-}
-.options_panel form#resultset_optform a{
-	text-decoration: none;
-	color:#489a83; 
-	font-weight: bold;
-}
-.options_panel form#resultset_optform a:HOVER{
+.options_panel form#explore_optform a:HOVER, .options_panel form#resultset_optform a:HOVER{
 	font-weight:bold;
 	color:white;
 }

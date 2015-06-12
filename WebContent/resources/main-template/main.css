@@ -511,12 +511,15 @@ form#add_resource { float:right; }
 	background: none !important;
 	background-color: #489a83 !important;
 	text-shadow: none !important;
-	padding: 4px 9px;
+	padding: 6px 12px;
 	color: white !important;
 	font-weight: normal !important;
 	cursor: pointer;
+	font-size:14px !important;
 }
-
+.greenbutton .ui-button-text  {
+	padding:0;
+}
 .greenbutton:hover{
 	background:none repeat scroll 0 0 #74beaa !important;
 }

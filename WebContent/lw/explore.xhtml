@@ -18,9 +18,8 @@
 	<ui:define name="options_panel">
 		<div class="options_panel">
 
-			<h:form id="explore_optform" style="padding-left: 28%;vertical-align: middle;">
-				<h:outputText value="#{msg.Task_based_View}" styleClass="optform_text"
-					rendered="#{exploreBean.exploreMode == 'task_based'}" />
+			<h:form id="explore_optform">
+				<h:outputText value="#{msg.Task_based_View}" styleClass="optform_text" rendered="#{exploreBean.exploreMode == 'task_based'}" />
 				<h:link value="#{msg.Task_based_View}" outcome="explore" styleClass="optform_link" rendered="#{exploreBean.exploreMode != 'task_based'}" >
 					<f:param name="mode" value="task_based" />
 				</h:link>			

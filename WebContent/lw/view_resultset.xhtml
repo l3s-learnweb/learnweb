@@ -85,7 +85,7 @@
 							<h:form>
 								<p:selectOneRadio layout="pageDirection" value="#{resultSetBean.resultsetfilter}" required="true"  >
 									<f:selectItem itemValue="resource_click" itemLabel="#{msg.resources_clicked}" />
-									<f:selectItem itemValue="resources_not_clicked" itemLabel="#{msg.resources_not_clicked}/>
+									<f:selectItem itemValue="resources_not_clicked" itemLabel="#{msg.resources_not_clicked}"/>
 									<f:selectItem itemValue="resource_saved" itemLabel="#{msg.resources_saved}"/>
 									<f:selectItem itemValue="all_resources" itemLabel="#{msg.resources_all}" />
 									<p:ajax listener="#{resultSetBean.setResultsetfilter()}" oncomplete="updateresultset(); "/>
