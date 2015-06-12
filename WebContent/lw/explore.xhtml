@@ -15,8 +15,11 @@
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.exploreTitle}" />	
 	
-	<ui:define name="options_panel">
-		<div class="options_panel">
+	<ui:define name="sub_menu_bar">
+		<style type="text/css">
+			#content { padding-top:6.7rem; }
+		</style>	
+		<div id="sub_menu_bar">
 
 			<h:form id="explore_optform">
 				<h:outputText value="#{msg.Task_based_View}" styleClass="optform_text" rendered="#{exploreBean.exploreMode == 'task_based'}" />
@@ -33,6 +36,7 @@
 			</h:form>
 		</div>		
 	</ui:define>
+	
 	
 	<ui:define name="center_layout">
 

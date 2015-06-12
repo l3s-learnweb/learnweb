@@ -44,3 +44,6 @@
 	box-shadow: 0 0 3px 3px #dfdfdf;
 }
 .preview_box iframe {min-height:400px;}
+.ui-button{
+    border-radius: 4px !important;
+}

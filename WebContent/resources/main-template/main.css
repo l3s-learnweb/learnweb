@@ -489,8 +489,9 @@ form#add_resource { float:right; }
 .resource_button{
 	float: right;
 	position: relative;
-	top: -4px;
+	top: -3px;
 	right: -5px;
+	border-radius:0px !important;
 }
 
 /* general settings */
@@ -507,7 +508,7 @@ form#add_resource { float:right; }
 }
 
 .greenbutton{
-	border: none !important;
+	border: 1px solid #3b8b74 !important;
 	background: none !important;
 	background-color: #489a83 !important;
 	text-shadow: none !important;
@@ -517,11 +518,15 @@ form#add_resource { float:right; }
 	cursor: pointer;
 	font-size:14px !important;
 }
+
 .greenbutton .ui-button-text  {
 	padding:0;
 }
 .greenbutton:hover{
 	background:none repeat scroll 0 0 #74beaa !important;
+	-webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,1);
+	-moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,1);
+	box-shadow: 0px 0px 20px 0px rgba(0,0,0,1);
 }
 .clear {clear:both;}
 
@@ -547,9 +552,9 @@ h2 { margin-bottom: 0.8rem; }
 
 /* change primefaces ui */
 .ui-button,
-.ui-inputfield {
-	border-radius: 0px !important;
-	border: 1px solid #a8a8a8 !important;
+.ui-inputfield{
+	border-radius: 0px;
+	border: 1px solid #a8a8a8;
 	box-shadow: 0 0 0px 0px #fff !important;
 }
 .ui-widget {font-size:1.2rem;}

@@ -74,9 +74,9 @@
 			</script>
 			<h:form>
 					
-					Get History From:<h:inputText styleClass="Fromdatepicker"
+					#{msg.sessions_from}:<h:inputText styleClass="Fromdatepicker"
 					id="from_date" value="#{exploreBean.fromFilterQueries}" />
-							To:<h:inputText styleClass="Todatepicker" id="to_date"
+							#{msg.to}:<h:inputText styleClass="Todatepicker" id="to_date"
 					value="#{exploreBean.toFilterQueries}" />
 				<p:commandButton value="Update List View"
 					actionListener="#{exploreBean.filterQueries()}" process="@form" update=":search_history_list :growl" oncomplete="displayButton();"/>
@@ -88,18 +88,17 @@
 	<h:panelGroup layout="block" rendered="#{searchHistorylogs.size() > 0}">
 		<p:outputPanel id="search_history_list"  >
 			<h:form>
-			<table id="list_table"
-				style="width: 60%; padding: 0px 10px 0px 10px;font-family:'verdana';font-size:14px;">
+			<table id="list_table" style="width: 60%; padding: 0px 10px 0px 10px;font-family:'verdana';font-size:14px;">
 				<tr>
 					<td colspan="2" style="padding-right:1px;">
 						<p:commandButton value="Delete Queries" update=":search_history_list :growl" action="#{exploreBean.deleteSelectedQueries()}" icon="ui-icon-trash" style="float:left;" oncomplete="displayButton();"/>
 						<span style="float:right;">
-						<p:commandButton value="Previous"
+						<p:commandButton value="#{msg.previous}"
 								action="#{exploreBean.redirect('Previous')}"
 								disabled="#{exploreBean.page == 1}" icon="ui-icon-carat-1-w" ajax="false" >
 							<f:setPropertyActionListener target="#{exploreBean.page}" value="#{exploreBean.page - 1}" />
 						</p:commandButton>
-						<p:commandButton value="Next" action="#{exploreBean.redirect('Next')}" icon="ui-icon-carat-1-e" ajax="false" iconPos="right" >
+						<p:commandButton value="#{msg.next}" action="#{exploreBean.redirect('Next')}" icon="ui-icon-carat-1-e" ajax="false" iconPos="right" >
  							<f:setPropertyActionListener target="#{exploreBean.page}" value="#{exploreBean.page + 1}" />
  						</p:commandButton>
 						</span>

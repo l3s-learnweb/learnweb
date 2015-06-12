@@ -63,7 +63,7 @@
 		
 							<h:outputText value="#{msg.photo}:" />
 		
-							<p:fileUpload id="userphoto" fileUploadListener="${profileBean.handleFileUpload}" mode="advanced" update=":growl profile_image" auto="true"
+							<p:fileUpload id="userphoto" fileUploadListener="${profileBean.handleFileUpload}" mode="advanced" update=":growl profile_image" auto="true" label="#{msg.choose_file}" cancelLabel="abb"
 								sizeLimit="10485760" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
 		
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="userphoto" id="userphotoMessage" />
