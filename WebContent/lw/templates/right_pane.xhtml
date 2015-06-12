@@ -12,7 +12,7 @@
 		<h:outputScript library="resource-pane-template" name="resource-pane.js"/>
 		<h:outputStylesheet library="resource-pane-template" name="resource-pane.css"/>
 
-		<script src="http://code.highcharts.com/highcharts.js"></script>		
+
 		<h:form id="remote_form">
 			<p:remoteCommand name="update_datagrid"  actionListener="#{bean.loadResources}" update=":datagrid :add_resource_panel" oncomplete="update_header()"></p:remoteCommand>
 		</h:form>

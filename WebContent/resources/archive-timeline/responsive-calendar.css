@@ -22,7 +22,7 @@
   color: #000000;
   display: block;
   cursor: pointer;
-  padding: 20% 0 20% 0;
+  padding: 13.5px 0 13.5px 0;
 }
 .responsive-calendar .day a:hover {
   background-color: #eee;
