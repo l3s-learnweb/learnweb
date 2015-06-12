@@ -47,3 +47,30 @@
 .ui-button{
     border-radius: 4px !important;
 }
+
+#archive_list_view{
+    position: relative;
+    max-height: 350px;
+    width: 100%;
+    float: left;
+    overflow: auto;
+    display:none;
+}
+
+#archive_list_view ul{
+	list-style-type: none;
+	padding:0;
+}
+
+#archive_list_view ul > li{
+	float: left;
+	width: 157px;
+	text-align:center;
+	padding: 10px 0px 10px 0px;
+	border-radius: 4px;
+	box-shadow:inset 0px 1px 1px rgba(0, 0, 0, .3);	
+}
+
+#archive_list_view ul :hover{
+	background-color: #b5ebdc;
+}

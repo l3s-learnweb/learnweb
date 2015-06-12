@@ -32,7 +32,7 @@
 			var msgTouchZoom = '#{msg.archive_timeline_touch_zoom}';
 			
 			loadTimeline(#{resourceDetailBean.highChartsJsonData});
-			//loadCalendar(#{resourceDetailBean.calendarJsonData});
+			loadCalendar(#{resourceDetailBean.calendarJsonData});
 
 			$.fn.tooltipster('setDefaults', {
 				interactive: true,
@@ -40,7 +40,6 @@
 		    	theme:'tooltipster-custom-theme'
 			});
 			
-			$('.responsive-calendar').responsiveCalendar();
 			function loadCalendar(calendar_data){
 				$('.responsive-calendar').responsiveCalendar({
 					allRows: false,
@@ -50,13 +49,13 @@
 					    var thisDayEvent, key;
 					    key = $(this).data('year')+'-'+addLeadingZero( $(this).data('month') )+'-'+addLeadingZero( $(this).data('day') );
 					    thisDayEvent = events[key];
-						if(!$(this).hasClass('tooltipstered'))
+						if(!$(this).parent().hasClass('tooltipstered'))
 					    {
-							$(this).tooltipster({
+							$(this).parent().tooltipster({
 					    	content:$(archiveVersionsList(thisDayEvent))
 					    	});
 					    }
-					    $(this).tooltipster("show");
+					    $(this).parent().tooltipster("show");
 					} 
 				});
 			}

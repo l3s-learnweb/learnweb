@@ -98,6 +98,6 @@ function loadTimeline(data_var){
 		}]
 	});
 	
-	$('#timeline').hide();
+	$('#timeline_view').hide();
 
 }
