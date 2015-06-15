@@ -238,11 +238,18 @@
 									<span class="resource_field">#{msg.current_version}: </span>
 									<p:commandButton action="#{bean.archiveCurrentVersion}" styleClass="greenbutton" value="#{msg.archive_now}" update=":growl :archive_view :archive_view_options" style="margin-top:10px"/>
 							</h:form>
+									
 							<h:panelGroup id="archive_view_options" layout="block">
 								<h:panelGroup layout="block" style="padding-top: 15px;" rendered="#{not empty bean.clickedResource.archiveUrls}">
-									<span class="resource_field" style="position:relative;bottom:6px;">#{msg.archive_versions}: </span>
+									<span class="resource_field" style="position:relative;">#{msg.archive_versions}: </span>
+									
+									<p:commandButton styleClass="greenbutton splitbutton_left" value="#{msg.list_view}" onclick="return open_list_view();" ></p:commandButton>
+									<p:commandButton styleClass="greenbutton splitbutton_right" value="#{msg.timeline_view}" onclick="return open_timeline_view();"></p:commandButton>
+							
+									<!--  
 									<a href="#" onclick="return open_list_view();" style="font-weight: bold; padding-left:5rem; position:relative; bottom:6px;">#{msg.list_view}</a>
 									<a href="#" onclick="return open_timeline_view();" style="font-weight: bold; padding-left:5rem; position:relative; bottom:6px;">#{msg.timeline_view}</a>
+									-->
 								</h:panelGroup>
 							</h:panelGroup>
 							<h:panelGroup id="archive_view" layout="block">
