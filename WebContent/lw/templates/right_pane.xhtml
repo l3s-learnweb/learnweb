@@ -131,21 +131,46 @@
 					<ui:fragment rendered="#{bean.clickedResource.type.toLowerCase() eq 'text' or bean.clickedResource.type eq 'pdf' or bean.clickedResource.type.toLowerCase() eq 'video' or bean.clickedResource.type.toLowerCase() eq 'image'}">
 						<div class="center_align">
 						
+						<!-- 
+							<p:lightBox id="lighbox2" widgetVar="resource_lightbox">
+							    <h:outputLink value="#">
+							        <h:outputText value="Video Content" />
+							    </h:outputLink>
+							 
+							    <f:facet name="inline">
+							    	<img class="preview_box" src="#{bean.clickedResource.thumbnail4.url}" height="#{bean.clickedResource.thumbnail4.height}" width="#{bean.clickedResource.thumbnail4.width}" />
+							    </f:facet>
+							</p:lightBox>
+						 -->	
 							<ui:fragment rendered="#{bean.clickedResource.type == 'Video'}">
 								<div class="preview_box" style="min-height:400px; max-height:500px; height:100%;">
 									<h:outputText value='#{bean.clickedResource.embedded}' escape="false" />
 								</div>
 							</ui:fragment>								
-							<ui:fragment rendered="#{bean.clickedResource.type != 'text' and bean.clickedResource.type != 'pdf' and bean.clickedResource.type != 'Video'}">
+							<ui:fragment rendered="#{bean.clickedResource.type != 'text' and bean.clickedResource.type != 'pdf' and bean.clickedResource.type != 'Video' and bean.clickedResource.type != 'Image'}">
 								<div class="preview_box">
 									<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
 								</div>
 							</ui:fragment>
-							<ui:fragment rendered="#{(bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf' ) and bean.clickedResource.type != 'Video'}">
+							<ui:fragment rendered="#{(bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf' or bean.clickedResource.type eq 'Image') and not empty bean.clickedResource.thumbnail3}">
+								
+								
+									<img class="preview_box" src="#{bean.clickedResource.thumbnail3.url}" height="#{bean.clickedResource.thumbnail3.height}" width="#{bean.clickedResource.thumbnail3.width}" 
+										style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor:zoom"
+										onmouseup="PF('resource_lightbox').show();"
+									/>								
+								
+							</ui:fragment>
+							<ui:fragment rendered="#{(bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf') and empty bean.clickedResource.thumbnail3}">
 								<div class="preview_box" style="display: inline-block">
 									<a target="_blank" class="newsfeed_query_link" style="padding: 0px" href="#{bean.clickedResource.url}">
 										<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
 									</a>
+								</div>
+							</ui:fragment>
+							<ui:fragment rendered="#{bean.clickedResource.type eq 'Image' and empty bean.clickedResource.thumbnail3}">
+								<div class="preview_box">
+									<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
 								</div>
 							</ui:fragment>
 						</div>

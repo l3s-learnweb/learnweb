@@ -147,6 +147,9 @@ public class ResourcePreviewMaker
 	file.setMimeType("image/png");
 	fileManager.save(file, img.getInputStream());
 
+	resource.addFile(file);
+	resource.setThumbnail4(new Thumbnail(file.getUrl(), img.getWidth(), img.getHeight(), file.getId()));
+
 	createThumbnails(resource, img, true);
     }
 

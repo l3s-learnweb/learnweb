@@ -21,6 +21,7 @@ import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
+import de.l3s.util.Image;
 import de.l3s.util.StringHelper;
 
 public class ResourceManager
@@ -956,6 +957,8 @@ public class ResourceManager
 
     public static void main(String[] args) throws Exception
     {
+	fixThumbnailsForWebResources();
+	/*
 	Learnweb lw = Learnweb.getInstance();
 	ResourceManager rm = new ResourceManager(lw);
 	ResourcePreviewMaker rpm = lw.getResourcePreviewMaker();
@@ -978,21 +981,62 @@ public class ResourceManager
 	//Learnweb.getInstance().onDestroy();
     }
 
+    public static void fixThumbnailsForWebResources() throws Exception
+    {
+
+	Learnweb lw = Learnweb.getInstance();
+	ResourceManager rm = new ResourceManager(lw);
+	FileManager fm = lw.getFileManager();
+
+	// ResourcePreviewMaker pm = lw.getResourcePrevewMaker();
+
+	List<Resource> resources = rm.getResources("SELECT " + RESOURCE_COLUMNS + " FROM `lw_resource` r  WHERE `deleted` = 0 AND `type` LIKE 'text' AND `thumbnail4_file_id` = thumbnail3_file_id", null);
+
+	for(Resource resource : resources)
+	{
+	    Thumbnail thumbnail = resource.getThumbnail0();
+
+	    if(thumbnail == null)
+	    {
+		//System.out.println("resource: " + resource.getId());
+		continue;
+	    }
+
+	    File file = fm.getFileById(thumbnail.getFileId() - 1);
+
+	    if(file != null && file.getName().equals("website.png"))
+	    {
+		System.out.println(file.getName());
+		//
+		if(resource.getSource() == null)
+		    resource.setSource("Internet");
+
+		new Image(file.getInputStream());
+
+		System.out.println("gut");
+	    }
+	    /*
+	    else
+	    System.out.println("schlecht");
+	    */
+	}
+
+    }
+
     public static void createThumbnailsForWebResources() throws Exception
     {
 
 	Learnweb lw = Learnweb.getInstance();
 	ResourceManager rm = new ResourceManager(lw);
-	// ResourcePreviewMaker pm = lw.getResourcePrevewMaker();
+	ResourcePreviewMaker rpm = lw.getResourcePreviewMaker();
 
 	List<Resource> resources = rm
 		.getResources(
 			"SELECT "
 				+ RESOURCE_COLUMNS
-				+ " FROM `lw_resource` r where  `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`resource_id` > 20000 and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown' ORDER BY `resource_id` DESC limit 20",
+				+ "  FROM `lw_resource` r where  `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`resource_id` > 20000 and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown' ORDER BY `resource_id` DESC limit 20",
 			null);
 
-	ResourcePreviewMaker rpm = lw.getResourcePreviewMaker();
 	for(Resource resource : resources)
 	{
 	    System.out.println(resource);
