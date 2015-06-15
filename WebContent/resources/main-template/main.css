@@ -491,7 +491,6 @@ form#add_resource { float:right; }
 	position: relative;
 	top: -3px;
 	right: -5px;
-	border-radius:0px !important;
 }
 
 /* general settings */
@@ -517,16 +516,15 @@ form#add_resource { float:right; }
 	font-weight: normal !important;
 	cursor: pointer;
 	font-size:14px !important;
+	border-radius:2px;
 }
 
 .greenbutton .ui-button-text  {
 	padding:0;
 }
 .greenbutton:hover{
-	background:none repeat scroll 0 0 #74beaa !important;
-	-webkit-box-shadow: 0px 0px 20px 0px rgba(0,0,0,1);
-	-moz-box-shadow: 0px 0px 20px 0px rgba(0,0,0,1);
-	box-shadow: 0px 0px 20px 0px rgba(0,0,0,1);
+	background:none repeat scroll 0 0 #4ea68d !important;
+	box-shadow:0px 1px 2px rgba(0,0,0,0.1);
 }
 .clear {clear:both;}
 
@@ -553,8 +551,14 @@ h2 { margin-bottom: 0.8rem; }
 /* change primefaces ui */
 .ui-button,
 .ui-inputfield{
-	border-radius: 0px;
+	/*border-radius: 0px;*/
 	border: 1px solid #a8a8a8;
 	box-shadow: 0 0 0px 0px #fff !important;
 }
 .ui-widget {font-size:1.2rem;}
+#right_pane .ui-button{
+	border-radius: 0px;
+}
+#right_pane .greenbutton{
+	border-radius:2px;
+}
