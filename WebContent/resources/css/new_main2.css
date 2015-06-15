@@ -86,12 +86,16 @@ textarea{
 
 
 button{
-	border-radius: 0px !important;
+	/*border-radius: 0px;*/
 	background-color: #dedede !important;
 	border-color: #ccc !important;
 }
 .blackbutton{
-	background: rgb(94, 94, 94) !important; border: 1; border-color:rgba(0, 0, 0, 0.14); cursor:pointer; color:#EFEFEF !important;
+	background: rgb(94, 94, 94) !important; 
+	border: 1; 
+	border-color:rgba(0, 0, 0, 0.14); 
+	cursor:pointer; 
+	color:#EFEFEF !important;
 	text-shadow: none !important;
 	border: none !important;
 	box-shadow: none;
@@ -178,15 +182,6 @@ div.title {
 }
 #related_search_list li{line-height: 1.5em;}
 #related_search_list li a{color: rgb(88, 147, 255);}
-
-.optform_text{
-	margin-right:20px;
-	color:white;
-	padding-bottom: 6px;
-	font-weight:bold;
-	border-bottom: 3px solid #489a83;
-}
-.optform_link{margin-right:20px;}
 
 #left_pane{
 	border: none;
@@ -467,6 +462,7 @@ div#presentation_preview {
 	background: url(../image/test.gif) no-repeat bottom left;
 }
 
+/*.options_panel, #explore_optform, .optform_text, .optform_link überprüfen, ob es noch gebraucht wird.*/
 .options_panel {
 	background-color: rgba(12, 11, 11, 0.69);
 	background-repeat: no-repeat;
@@ -478,19 +474,27 @@ div#presentation_preview {
 	position:relative;
 	text-align: justify;
 }
-.options_panel form#explore_optform{
+#explore_optform{
 	padding-left: 28%;
 	vertical-align: middle;
 }
-.options_panel form#explore_optform a, .options_panel form#resultset_optform a{
+#explore_optform a, #resultset_optform a{
 	text-decoration: none;
 	color:#489a83; 
 	font-weight: bold;
 }
-.options_panel form#explore_optform a:HOVER, .options_panel form#resultset_optform a:HOVER{
+#explore_optform a:HOVER, #resultset_optform a:HOVER{
 	font-weight:bold;
 	color:white;
 }
+.optform_text{
+	margin-right:20px;
+	color:white;
+	padding-bottom: 6px;
+	font-weight:bold;
+	border-bottom: 3px solid #489a83;
+}
+.optform_link{margin-right:20px;}
 
 .northunit{border: none;}
 
