@@ -15,35 +15,33 @@
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.resultSetViewTitle}" />	
 	
-	<ui:define name="options_panel">
-		<div class="options_panel">
-			<h:form id="resultset_optform" style="padding-left: 28%;vertical-align: middle;">
-				<h:outputText value="#{msg.Task_based_View}" styleClass="optform_text"
-					rendered="#{exploreBean.exploreMode == 'task_based'}" />
-				<h:link value="#{msg.Task_based_View}" outcome="/lw/explore"
-					styleClass="optform_link"
-					rendered="#{exploreBean.exploreMode != 'task_based'}" >
+	<ui:define name="sub_menu_bar">
+		<style type="text/css">
+			#content { padding-top:6.7rem; }
+		</style>	
+		<div id="sub_menu_bar">
+			
+			<h:form class="links" style="vertical-align: middle;">
+				<h:outputText value="#{msg.Task_based_View}" styleClass="activeResource" rendered="#{exploreBean.exploreMode == 'task_based'}" />
+				<h:link value="#{msg.Task_based_View}" outcome="/lw/explore" rendered="#{exploreBean.exploreMode != 'task_based'}" >
 					<f:param name="mode" value="task_based" />
 				</h:link>			
 
-				<h:outputText value="#{msg.list_view}"
-					styleClass="optform_text"
-					rendered="#{exploreBean.exploreMode == 'list_view'}" />
-				<h:link value="#{msg.list_view}" outcome="/lw/explore"
-					styleClass="optform_link"
-					rendered="#{exploreBean.exploreMode != 'list_view'}" >
+				<h:outputText value="#{msg.list_view}" styleClass="activeResource" rendered="#{exploreBean.exploreMode == 'list_view'}" />
+				<h:link value="#{msg.list_view}" outcome="/lw/explore" rendered="#{exploreBean.exploreMode != 'list_view'}" >
 					<f:param name="mode" value="list_view" />
 					<f:param name="page" value="1"/>
 				</h:link>
-				<h:outputText value="#{msg.resultSetViewTitle}"
-					styleClass="optform_text"
-					rendered="#{exploreBean.exploreMode == 'resultset_view'}" />
-				<span style="float:right;padding-right:5px;"><h:panelGroup styleClass="explore_history"><p:commandButton id="rs_explore_history_tools" value="Explore History Tools" type="button" icon="ui-icon-triangle-1-s"/></h:panelGroup></span>
-				<p:menu overlay="true" trigger="rs_explore_history_tools" my="left top"
-					at="left bottom">
-					<p:submenu label="Explore History">
-						<p:menuitem value="Show" icon=" ui-icon-arrowstop-1-w" onclick="open_searchbar();" />
-						<p:menuitem value="Hide" icon="ui-icon-arrowstop-1-e" onclick="close_searchbar();"/>
+				<h:outputText value="#{msg.resultSetViewTitle}" styleClass="activeResource" rendered="#{exploreBean.exploreMode == 'resultset_view'}" />
+				<span style="float:right;padding-right:5px;">
+					<h:panelGroup styleClass="explore_history">
+						<p:commandButton id="rs_explore_history_tools" value="#{msg.history_tools_explore}" type="button" icon="ui-icon-triangle-1-s"/>
+					</h:panelGroup>
+				</span>
+				<p:menu overlay="true" trigger="rs_explore_history_tools" my="left top" at="left bottom">
+					<p:submenu label="#{msg.explore_history}">
+						<p:menuitem value="#{msg.show}" icon=" ui-icon-arrowstop-1-w" onclick="open_searchbar();" />
+						<p:menuitem value="#{msg.hide}" icon="ui-icon-arrowstop-1-e" onclick="close_searchbar();"/>
 					</p:submenu>
 				</p:menu>																
 			</h:form>
@@ -80,8 +78,7 @@
 			<p:outputPanel autoUpdate="true"  >
 				<p:tabView id="exploretabView" widgetVar="exploretabViewer" >
 					<p:tab title="#{msg.ResultSet_Timeline}">
-						<p:panel id="resultview_filter_panel" header="#{msg.ResultSet_Filter}" toggleable="true"
-							toggleSpeed="500" widgetVar="resultview_panel" style="padding:5px;">
+						<p:panel id="resultview_filter_panel" header="#{msg.ResultSet_Filter}" toggleable="true" toggleSpeed="500" widgetVar="resultview_panel" style="padding:5px;">
 							<h:form>
 								<p:selectOneRadio layout="pageDirection" value="#{resultSetBean.resultsetfilter}" required="true"  >
 									<f:selectItem itemValue="resource_click" itemLabel="#{msg.resources_clicked}" />
@@ -93,88 +90,112 @@
 							</h:form>
 						</p:panel>
 						<br/>
-					<h:outputText value="#{msg.current_resultset}"/> <b><i>#{resultSetBean.query}</i></b> <h:outputText value="#{msg.posted_on}"/> <b><i>#{resultSetBean.queryDate}</i></b>
+					<h:outputText value="#{msg.current_resultset}"/> 
+						<b><i>#{resultSetBean.query}</i></b> 
+							<h:outputText value=" #{msg.posted_on}"/> 
+								<b><i>#{resultSetBean.queryDate}</i></b>
 						<h:form rendered="#{userBean.loggedIn}">
-							<p:commandLink update=":resultset_form"
-								oncomplete="PF('resultset_dialog').show();"
-								title="share resultset"
-								style="display:block; margin-top:4px;color:blue;">
+							<p:commandLink update=":resultset_form" oncomplete="PF('resultset_dialog').show();" title="share resultset" style="display:block; margin-top:4px;color:blue;">
 								<h:outputText value="#{msg.share_resultset}"/>
 							</p:commandLink>
 						</h:form>
-						<table id="timeline" 
-							style="width:100%; padding: 0px 10px 0px 10px;">
+						<table id="timeline" style="width:100%; padding: 0px 10px 0px 10px;">
 							<ui:repeat value="#{resultSetBean.timeline}" var="timelineDate">
 								<h:panelGroup rendered="#{resultSetBean.resultsetfilter != 'resources_not_clicked'}">
 									<tr>
-										<td><h3>#{timelineDate.date}</h3></td>
+										<td>
+											<h3>#{timelineDate.date}</h3>
+										</td>
 									</tr>
 								</h:panelGroup>
 								<tr>
 									<td>
 										<table style="width: 100%">
-											<ui:repeat value="#{timelineDate.timestamps}"
-												var="timestamp">
-												<h:panelGroup
-													rendered="#{resultSetBean.resultsetfilter == 'resource_click' or resultSetBean.resultsetfilter == 'all_resources'
-								 							or resultSetBean.resultsetfilter == ''}">
-													<h:panelGroup
-														rendered="#{resultSetBean.isResourceClicked(timestamp)}">
+											<ui:repeat value="#{timelineDate.timestamps}" var="timestamp">
+												<h:panelGroup rendered="#{resultSetBean.resultsetfilter == 'resource_click' or resultSetBean.resultsetfilter == 'all_resources' or resultSetBean.resultsetfilter == ''}">
+													<h:panelGroup rendered="#{resultSetBean.isResourceClicked(timestamp)}">
 														<tr>
-															<td style="width:1%;"><i class="fa fa-hand-o-up"></i></td>
-															<td style="margin-top: 10px; width: 83%;"><a
-																href="#{resultSetBean.getResourceClicked(timestamp).url}"
-																style="text-align: left; color: blue" target="_blank">#{resultSetBean.getResourceClicked(timestamp).filename}</a>
-																<span style="color: green;"> -#{resultSetBean.getResourceClicked(timestamp).source}</span>
+															<td style="width:1%;">
+																<i class="fa fa-hand-o-up"></i>
 															</td>
-															<td style="width: 16%;"><span style="float: right;">#{resultSetBean.getResourceClicked(timestamp).actionTime}</span></td>
+															<td style="margin-top: 10px; width: 83%;">
+															<a href="#{resultSetBean.getResourceClicked(timestamp).url}" class="align-left" style="color: blue" target="_blank">
+																#{resultSetBean.getResourceClicked(timestamp).filename}
+															</a>
+																<span style="color: green;"> 
+																	-#{resultSetBean.getResourceClicked(timestamp).source}
+																</span>
+															</td>
+															<td style="width: 16%;">
+																<span class="float-right">
+																	#{resultSetBean.getResourceClicked(timestamp).actionTime}
+																</span>
+															</td>
 														</tr>
 														<h:panelGroup rendered="#{resultSetBean.resultSetView == 'float' or resultSetBean.resultSetView == 'grid'}">
 															<tr>
 																<td style="width: 1%"></td>
-																<td style="margin-top: 10px; width: 84%"><span
-																	style="padding-left: 10px;"><h:outputText value="#{msg.viewed_for}"/>
-																		#{resultSetBean.getResourceClicked(timestamp).viewTime} <h:outputText value="#{msg.seconds}"/>.</span></td>
+																<td style="margin-top: 10px; width: 84%">
+																	<span style="padding-left: 10px;">
+																		<h:outputText value="#{msg.viewed_for}"/>
+																			#{resultSetBean.getResourceClicked(timestamp).viewTime} 
+																		<h:outputText value="#{msg.seconds}"/>.
+																	</span>
+																</td>
 																<td style="width: 15%"></td>
 															</tr>
 														</h:panelGroup>													
 													</h:panelGroup>
 												</h:panelGroup>
-												<h:panelGroup
-													rendered="#{resultSetBean.resultsetfilter == 'resource_saved' or resultSetBean.resultsetfilter == 'all_resources'
-								 							or resultSetBean.resultsetfilter == ''}">
-													<h:panelGroup
-														rendered="#{resultSetBean.isResourceSaved(timestamp)}">
+												<h:panelGroup rendered="#{resultSetBean.resultsetfilter == 'resource_saved' or resultSetBean.resultsetfilter == 'all_resources' or resultSetBean.resultsetfilter == ''}">
+													<h:panelGroup rendered="#{resultSetBean.isResourceSaved(timestamp)}">
 														<tr>
-															<td style="width:1%;"><i class="fa fa-star-o"></i></td>
-															<td style="margin-top: 10px; width: 83%;"><a
-																href="#{resultSetBean.getResourceSaved(timestamp).url}"
-																style="text-align: left; color: blue" target="_blank">#{resultSetBean.getResourceSaved(timestamp).filename}</a>
-																<span style="color: green;"> -#{resultSetBean.getResourceSaved(timestamp).source}</span>
+															<td style="width:1%;">
+																<i class="fa fa-star-o"></i>
 															</td>
-															<td style="width: 16%;"><span style="float: right;">#{resultSetBean.getResourceSaved(timestamp).actionTime}</span></td>
+															<td style="margin-top: 10px; width: 83%;">
+																<a href="#{resultSetBean.getResourceSaved(timestamp).url}" class="align-left" style="color: blue" target="_blank">
+																	#{resultSetBean.getResourceSaved(timestamp).filename}
+																</a>
+																<span style="color: green;"> 
+																	-#{resultSetBean.getResourceSaved(timestamp).source}
+																</span>
+															</td>
+															<td style="width: 16%;">
+																<span class="float-right">
+																	#{resultSetBean.getResourceSaved(timestamp).actionTime}
+																</span>
+															</td>
 														</tr>
 														<h:panelGroup rendered="#{resultSetBean.resultSetView == 'float' or resultSetBean.resultSetView == 'grid'}">
 															<tr>
 																<td style="width: 1%"></td>
-																<td style="margin-top: 10px; width: 84%"><span
-																	style="padding-left: 10px;"><h:outputText value="#{msg.viewed_for}"/>
-																		#{resultSetBean.getResourceSaved(timestamp).viewTime} <h:outputText value="#{msg.seconds}"/>.</span></td>
+																<td style="margin-top: 10px; width: 84%">
+																	<span style="padding-left: 10px;">
+																		<h:outputText value="#{msg.viewed_for}"/>
+																			#{resultSetBean.getResourceSaved(timestamp).viewTime} 
+																		<h:outputText value="#{msg.seconds}"/>.
+																	</span>
+																</td>
 																<td style="width: 15%"></td>
 															</tr>
 														</h:panelGroup>														
 													</h:panelGroup>
 												</h:panelGroup>
-												<h:panelGroup
-													rendered="#{resultSetBean.resultsetfilter == 'all_resources' or resultSetBean.resultsetfilter == ''}">
-													<h:panelGroup
-														rendered="#{resultSetBean.isSearchComment(timestamp)}">
+												<h:panelGroup rendered="#{resultSetBean.resultsetfilter == 'all_resources' or resultSetBean.resultsetfilter == ''}">
+													<h:panelGroup rendered="#{resultSetBean.isSearchComment(timestamp)}">
 														<tr>
-															<td style="width:1%;"><i class="fa fa-comment-o"></i></td>
-															<td style="margin-top: 10px; width: 83%;">
-															<b>#{resultSetBean.getSearchComment(timestamp).username}</b> : #{resultSetBean.getSearchComment(timestamp).commentText}
+															<td style="width:1%;">
+																<i class="fa fa-comment-o"></i>
 															</td>
-															<td style="width: 16%;"><span style="float: right;">#{resultSetBean.getSearchComment(timestamp).time}</span></td>
+															<td style="margin-top: 10px; width: 83%;">
+																<b>#{resultSetBean.getSearchComment(timestamp).username}</b> : #{resultSetBean.getSearchComment(timestamp).commentText}
+															</td>
+															<td style="width: 16%;">
+																<span class="float-right">
+																	#{resultSetBean.getSearchComment(timestamp).time}
+																</span>
+															</td>
 														</tr>
 													</h:panelGroup>
 												</h:panelGroup>												
@@ -185,7 +206,7 @@
 							</ui:repeat>
 						</table>
 					</p:tab>
-					<p:tab id="right_bartab2" title="Current Resultset" rendered="true">
+					<p:tab id="right_bartab2" title="#{msg.current_resultset_title}" rendered="true">
 						<ui:decorate template="/lw/templates/current_search.xhtml">
 							<ui:param name="currentSearchBean" value="#{resultSetBean}"/>
 							<ui:param name="searchType" value="#{resultSetBean.resultSetView}"/>
@@ -197,7 +218,7 @@
 		</div>
 		<div id="explorenew_results" style="display:none;">	
 			<h:panelGroup id="nextPage" layout="block">				
-				<ui:decorate  template="/lw/templates/resources_#{resultSetBean.resultSetView}.xhtml">
+				<ui:decorate template="/lw/templates/resources_#{resultSetBean.resultSetView}.xhtml">
 					<ui:param name="resources" value="#{resultSetBean.resources}" />
 				</ui:decorate>		
 			</h:panelGroup>

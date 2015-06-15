@@ -31,11 +31,8 @@
 				});
 		}
 	</script>
-	<div id="listview_history_filter"
-		style="padding-left: 5px; width: 99%;">
-		<p:panel id="listview_history_filter_panel"
-			header="Search History Filter" toggleable="true"
-			toggleSpeed="500" widgetVar="panel" style="padding:5px;">
+	<div id="listview_history_filter" style="padding-left: 5px; width: 99%;">
+		<p:panel id="listview_history_filter_panel" header="#{msg.search_history_filter}" toggleable="true" toggleSpeed="500" widgetVar="panel" style="padding:5px;">
 			<script type="text/javascript">
 				$(function() {
 					$(".Fromdatepicker").datepicker(
@@ -74,12 +71,11 @@
 			</script>
 			<h:form>
 					
-					#{msg.sessions_from}:<h:inputText styleClass="Fromdatepicker"
-					id="from_date" value="#{exploreBean.fromFilterQueries}" />
-							#{msg.to}:<h:inputText styleClass="Todatepicker" id="to_date"
-					value="#{exploreBean.toFilterQueries}" />
-				<p:commandButton value="Update List View"
-					actionListener="#{exploreBean.filterQueries()}" process="@form" update=":search_history_list :growl" oncomplete="displayButton();"/>
+					#{msg.sessions_from}:
+						<h:inputText styleClass="Fromdatepicker" id="from_date" value="#{exploreBean.fromFilterQueries}" />
+					#{msg.to}:
+					<h:inputText styleClass="Todatepicker" id="to_date" value="#{exploreBean.toFilterQueries}" />
+				<p:commandButton value="#{msg.update} #{msg.Task_based_View}" actionListener="#{exploreBean.filterQueries()}" process="@form" update=":search_history_list :growl" oncomplete="displayButton();"/>
 
 			</h:form>
 		</p:panel>
@@ -91,107 +87,138 @@
 			<table id="list_table" style="width: 60%; padding: 0px 10px 0px 10px;font-family:'verdana';font-size:14px;">
 				<tr>
 					<td colspan="2" style="padding-right:1px;">
-						<p:commandButton value="Delete Queries" update=":search_history_list :growl" action="#{exploreBean.deleteSelectedQueries()}" icon="ui-icon-trash" style="float:left;" oncomplete="displayButton();"/>
-						<span style="float:right;">
-						<p:commandButton value="#{msg.previous}"
-								action="#{exploreBean.redirect('Previous')}"
-								disabled="#{exploreBean.page == 1}" icon="ui-icon-carat-1-w" ajax="false" >
-							<f:setPropertyActionListener target="#{exploreBean.page}" value="#{exploreBean.page - 1}" />
-						</p:commandButton>
-						<p:commandButton value="#{msg.next}" action="#{exploreBean.redirect('Next')}" icon="ui-icon-carat-1-e" ajax="false" iconPos="right" >
- 							<f:setPropertyActionListener target="#{exploreBean.page}" value="#{exploreBean.page + 1}" />
- 						</p:commandButton>
+						<p:commandButton value="#{msg.delete_queries}" update=":search_history_list :growl" action="#{exploreBean.deleteSelectedQueries()}" icon="ui-icon-trash" style="float:left;" oncomplete="displayButton();"/>
+						<span class="float-right">
+							<p:commandButton value="#{msg.previous}" action="#{exploreBean.redirect('Previous')}" disabled="#{exploreBean.page == 1}" icon="ui-icon-carat-1-w" ajax="false" >
+								<f:setPropertyActionListener target="#{exploreBean.page}" value="#{exploreBean.page - 1}" />
+							</p:commandButton>
+							<p:commandButton value="#{msg.next}" action="#{exploreBean.redirect('Next')}" icon="ui-icon-carat-1-e" ajax="false" iconPos="right" >
+	 							<f:setPropertyActionListener target="#{exploreBean.page}" value="#{exploreBean.page + 1}" />
+	 						</p:commandButton>
 						</span>
 					</td>
 				</tr>
 				<ui:repeat value="#{searchHistorylogs}" var="searchhistory">
 					<tr style="width: 60%;border-right: thin;">
-						<td colspan="2" class="history_parent" style="cursor: pointer;" ><h3>#{searchhistory.date}</h3></td>
+						<td colspan="2" class="history_parent" style="cursor: pointer;" >
+							<h3>
+								#{searchhistory.date}
+							</h3>
+						</td>
 					</tr>
 					<tr style="cursor: auto; width: 60%;border-right: thin;">
 						<td >
 							<table style="width: 100%"  >
 							
-								<ui:repeat value="#{searchhistory.queryHistory}"
-									var="queryhistory">
+								<ui:repeat value="#{searchhistory.queryHistory}" var="queryhistory">
 
 										<tr class="history_child">
 
-											<td style="width: 1%" align="right"><p:selectBooleanCheckbox
-													value="#{exploreBean.selectedQuery}">
-													<p:ajax
-														listener="#{exploreBean.pushToDeleteQueue(queryhistory.resultsetid)}" />
+											<td style="width: 1%" align="right">
+												<p:selectBooleanCheckbox value="#{exploreBean.selectedQuery}">
+													<p:ajax listener="#{exploreBean.pushToDeleteQueue(queryhistory.resultsetid)}" />
 												</p:selectBooleanCheckbox>
 											</td>
 											<td id="searched_for" style="margin-bottom: 10px; width: 84%">
-												Searched in <i>#{queryhistory.searchType}</i> for <b>#{queryhistory.query}</b>
+												<h:outputFormat value="#{msg.searched_in_for}">
+													<f:param value="#{queryhistory.searchType}"/>
+													<f:param value="#{queryhistory.query}"/>
+												</h:outputFormat>
+											
 												<span id="view_resultset" style="display: none;">
-													<h:commandButton value="View Resultset"
-														action="#{resultSetBean.resultSetRedirect()}">
-														<f:setPropertyActionListener target="#{resultSetBean.resultSetId}"
-															value="#{queryhistory.resultsetid}" />
-														<f:setPropertyActionListener target="#{resultSetBean.resultSetView}"
-															value="#{queryhistory.searchType}" />
-														<f:setPropertyActionListener target="#{exploreBean.exploreMode}"
-															value="resultset_view" />
-														<f:setPropertyActionListener target="#{resultSetBean.query}"
-															value="#{queryhistory.query}" />
-														<f:setPropertyActionListener target="#{resultSetBean.queryDate}"
-															value="#{queryhistory.queryTimestamp}" />															
+													<h:commandButton value="#{msg.resultset_view}" action="#{resultSetBean.resultSetRedirect()}">
+														<f:setPropertyActionListener target="#{resultSetBean.resultSetId}" value="#{queryhistory.resultsetid}" />
+														<f:setPropertyActionListener target="#{resultSetBean.resultSetView}" value="#{queryhistory.searchType}" />
+														<f:setPropertyActionListener target="#{exploreBean.exploreMode}" value="resultset_view" />
+														<f:setPropertyActionListener target="#{resultSetBean.query}" value="#{queryhistory.query}" />
+														<f:setPropertyActionListener target="#{resultSetBean.queryDate}" value="#{queryhistory.queryTimestamp}" />															
 													</h:commandButton>
 												</span>
 											</td>
-											<td style="width: 15%"><span style="float: right">#{queryhistory.queryTime}</span></td>
+											<td style="width: 15%">
+												<span class="float-right">
+													#{queryhistory.queryTime}
+												</span>
+											</td>
 
 										</tr>
 									<tr>
 										<td style="width: 1%" ></td>
 										<td colspan="2">
-											<table id="timeline" 
-												style="width:100%;">
+											<table id="timeline" style="width:100%;">
 												<ui:repeat value="#{queryhistory.timelines}" var="timelineDate">
 													<tr>
-														<td style="font-size:12px;"><i>#{timelineDate.date}</i></td>
+														<td style="font-size:12px;">
+															<i>#{timelineDate.date}</i>
+														</td>
 													</tr>
 												<tr>
 												<td>
 													<table style="width: 100%">
-														<ui:repeat value="#{timelineDate.timestamps}"
-															var="timestamp">
-																<h:panelGroup
-																	rendered="#{queryhistory.isResourceClicked(timestamp)}">
+														<ui:repeat value="#{timelineDate.timestamps}" var="timestamp">
+																<h:panelGroup rendered="#{queryhistory.isResourceClicked(timestamp)}">
 																	<tr>
-																		<td style="width:1%;"><i class="fa fa-hand-o-up"></i></td>
-																		<td style="margin-bottom: 10px; width: 83%;"><a
-																			href="#{queryhistory.getResourceClicked(timestamp).url}"
-																			style="text-align: left; color: blue" target="_blank">#{queryhistory.getResourceClicked(timestamp).filename}</a>
-																			<span style="color: green;"> - #{queryhistory.getResourceClicked(timestamp).source}</span>
+																		<td style="width:1%;">
+																			<i class="fa fa-hand-o-up"></i>
 																		</td>
-																		<td style="width: 16%;"><span style="float: right;">#{queryhistory.getResourceClicked(timestamp).actionTime}</span></td>
+																		<td style="margin-bottom: 10px; width: 83%;">
+																			<a href="#{queryhistory.getResourceClicked(timestamp).url}" class="align-left" style="color: blue" target="_blank">
+																				#{queryhistory.getResourceClicked(timestamp).filename}
+																			</a>
+																			<span style="color: green;"> 
+																				- #{queryhistory.getResourceClicked(timestamp).source}
+																			</span>
+																		</td>
+																		<td style="width: 16%;">
+																			<span class="float-right">
+																				#{queryhistory.getResourceClicked(timestamp).actionTime}
+																			</span>
+																		</td>
 																	</tr>
 																</h:panelGroup>
 																<h:panelGroup
 																	rendered="#{queryhistory.isResourceSaved(timestamp)}">
 																	<tr>
-																		<td style="width:1%;"><i class="fa fa-star-o"></i></td>
-																		<td style="margin-bottom: 10px; width: 83%;"><a
-																			href="#{queryhistory.getResourceSaved(timestamp).url}"
-																			style="text-align: left; color: blue" target="_blank">#{queryhistory.getResourceSaved(timestamp).filename}</a>
-																			<span style="color: green;"> - #{queryhistory.getResourceSaved(timestamp).source}</span>
+																		<td style="width:1%;">
+																			<i class="fa fa-star-o"></i>
 																		</td>
-																		<td style="width: 16%;"><span style="float: right;">#{queryhistory.getResourceSaved(timestamp).actionTime}</span></td>
+																		<td style="margin-bottom: 10px; width: 83%;">
+																			<a href="#{queryhistory.getResourceSaved(timestamp).url}" class="align-left" style="color: blue" target="_blank">
+																				#{queryhistory.getResourceSaved(timestamp).filename}
+																			</a>
+																			<span style="color: green;"> 
+																				- #{queryhistory.getResourceSaved(timestamp).source}
+																			</span>
+																		</td>
+																		<td style="width: 16%;">
+																			<span class="float-right">
+																				#{queryhistory.getResourceSaved(timestamp).actionTime}
+																			</span>
+																		</td>
 																	</tr>
 																</h:panelGroup>
-																<h:panelGroup
-																	rendered="#{queryhistory.isResourceClickedAndSaved(timestamp)}">
+																<h:panelGroup rendered="#{queryhistory.isResourceClickedAndSaved(timestamp)}">
 																	<tr>
-																		<td style="width:1%;"><i class="fa fa-star-o"></i><h:panelGroup rendered="#{queryhistory.searchType == 'web'}"><i class="fa fa-hand-o-up"></i></h:panelGroup></td>
-																		<td style="margin-bottom: 10px; width: 83%;"><a
-																			href="#{queryhistory.getResourceClickedAndSaved(timestamp).url}"
-																			style="text-align: left; color: blue" target="_blank">#{queryhistory.getResourceClickedAndSaved(timestamp).filename}</a>
-																			<span style="color: green;"> - #{queryhistory.getResourceClickedAndSaved(timestamp).source}</span>
+																		<td style="width:1%;">
+																			<i class="fa fa-star-o"></i>
+																				<h:panelGroup rendered="#{queryhistory.searchType == 'web'}">
+																					<i class="fa fa-hand-o-up"></i>
+																				</h:panelGroup>
+																			</td>
+																		<td style="margin-bottom: 10px; width: 83%;">
+																			<a href="#{queryhistory.getResourceClickedAndSaved(timestamp).url}" class="align-left" style="color: blue" target="_blank">
+																				#{queryhistory.getResourceClickedAndSaved(timestamp).filename}
+																			</a>
+																			<span style="color: green;"> 
+																				- #{queryhistory.getResourceClickedAndSaved(timestamp).source}
+																			</span>
 																		</td>
-																		<td style="width: 16%;"><span style="float: right;">#{queryhistory.getResourceClickedAndSaved(timestamp).actionTime}</span></td>																	</tr>
+																		<td style="width: 16%;">
+																			<span class="float-right">
+																				#{queryhistory.getResourceClickedAndSaved(timestamp).actionTime}
+																			</span>
+																		</td>																	
+																	</tr>
 																</h:panelGroup>
 														</ui:repeat>
 													</table>

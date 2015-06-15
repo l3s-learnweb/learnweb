@@ -28,28 +28,20 @@
 			</h:outputLink>		
 					
 			<h:form styleClass="links">
-				<h:outputText value="Web" styleClass="activeResource"
-					rendered="#{searchBean.searchMode == 'web'}" />
-				<h:link value="Web" outcome="search"					
-					rendered="#{searchBean.searchMode != 'web'}" >
+				<h:outputText value="Web" styleClass="activeResource" rendered="#{searchBean.searchMode == 'web'}" />
+				<h:link value="Web" outcome="search" Srendered="#{searchBean.searchMode != 'web'}" >
 					<f:param name="action" value="web" />
 					<f:param name="query" value="#{searchBean.query}" />								
 				</h:link>			
 
-				<h:outputText value="#{msg.Images}"
-					styleClass="activeResource"
-					rendered="#{searchBean.searchMode == 'image'}" />
-				<h:link value="#{msg.Images}" outcome="search"					
-					rendered="#{searchBean.searchMode != 'image'}" >
+				<h:outputText value="#{msg.Images}" styleClass="activeResource" rendered="#{searchBean.searchMode == 'image'}" />
+				<h:link value="#{msg.Images}" outcome="search" rendered="#{searchBean.searchMode != 'image'}" >
 					<f:param name="action" value="image" />
 					<f:param name="query" value="#{searchBean.query}" />
 				</h:link>
 
-				<h:outputText value="#{msg.Videos}"
-					styleClass="activeResource"
-					rendered="#{searchBean.searchMode == 'video'}" />
-				<h:link value="#{msg.Videos}" outcome="search"					
-					rendered="#{searchBean.searchMode != 'video'}" >
+				<h:outputText value="#{msg.Videos}" styleClass="activeResource" rendered="#{searchBean.searchMode == 'video'}" />
+				<h:link value="#{msg.Videos}" outcome="search" rendered="#{searchBean.searchMode != 'video'}" >
 					<f:param name="action" value="video" />
 					<f:param name="query" value="#{searchBean.query}" />
 				</h:link>
@@ -58,15 +50,18 @@
 		
 			<h:panelGroup rendered="#{userBean.searchHistoryEnabled and false}">
 				<h:form styleClass="resourcestype">
-				<span style="float:right;padding-right:5px;"><h:panelGroup styleClass="search_history"><p:commandButton  id="search_history_tools" value="Search History Tools" type="button" icon="ui-icon-triangle-1-s"/></h:panelGroup></span>
-				<p:menu overlay="true" trigger="search_history_tools" my="left top"
-					at="left bottom">
-					<p:submenu label="Search History">
-						<p:menuitem value="Show" icon=" ui-icon-arrowstop-1-w" onclick="open_searchbar();" />
-						<p:menuitem value="Hide" icon="ui-icon-arrowstop-1-e" onclick="close_searchbar();"/>
+				<span class="float-right" style="padding-right:5px;">
+					<h:panelGroup styleClass="search_history">
+						<p:commandButton id="search_history_tools" value="#{msg.search_history_tools}" type="button" icon="ui-icon-triangle-1-s"/>
+					</h:panelGroup>
+				</span>
+				<p:menu overlay="true" trigger="search_history_tools" my="left top" at="left bottom">
+					<p:submenu label="#{msg.search_history}">
+						<p:menuitem value="#{msg.show}" icon=" ui-icon-arrowstop-1-w" onclick="open_searchbar();" />
+						<p:menuitem value="#{msg.hide}" icon="ui-icon-arrowstop-1-e" onclick="close_searchbar();"/>
 					</p:submenu>
-					<p:submenu label="Explore History">
-						<p:menuitem value="List View" icon="ui-icon-search" outcome="explore">
+					<p:submenu label="#{msg.explore_history}">
+						<p:menuitem value="#{msg.list_view}" icon="ui-icon-search" outcome="explore">
 							<f:param name="mode" value="list_view" />
 							<f:param name="page" value="1" />
 						</p:menuitem>

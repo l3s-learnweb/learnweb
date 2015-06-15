@@ -21,18 +21,18 @@
 		</style>	
 		<div id="sub_menu_bar">
 
-			<h:form id="explore_optform">
-				<h:outputText value="#{msg.Task_based_View}" styleClass="optform_text" rendered="#{exploreBean.exploreMode == 'task_based'}" />
-				<h:link value="#{msg.Task_based_View}" outcome="explore" styleClass="optform_link" rendered="#{exploreBean.exploreMode != 'task_based'}" >
+			<h:form class="links">
+				<h:outputText value="#{msg.Task_based_View}" styleClass="activeResource" rendered="#{exploreBean.exploreMode == 'task_based'}" />
+				<h:link value="#{msg.Task_based_View}" outcome="explore" rendered="#{exploreBean.exploreMode != 'task_based'}" >
 					<f:param name="mode" value="task_based" />
 				</h:link>			
 
-				<h:outputText value="#{msg.list_view}" styleClass="optform_text" rendered="#{exploreBean.exploreMode == 'list_view'}" />
-				<h:link value="#{msg.list_view}" outcome="explore" styleClass="optform_link" rendered="#{exploreBean.exploreMode != 'list_view'}" >
+				<h:outputText value="#{msg.list_view}" styleClass="activeResource" rendered="#{exploreBean.exploreMode == 'list_view'}" />
+				<h:link value="#{msg.list_view}" outcome="explore" rendered="#{exploreBean.exploreMode != 'list_view'}" >
 					<f:param name="mode" value="list_view" />
 					<f:param name="page" value="1" />
 				</h:link>
-				<h:outputText value="#{msg.resultSetViewTitle}" styleClass="optform_text" rendered="#{exploreBean.exploreMode == 'resultset_view'}" />
+				<h:outputText value="#{msg.resultSetViewTitle}" rendered="#{exploreBean.exploreMode == 'resultset_view'}" />
 			</h:form>
 		</div>		
 	</ui:define>
@@ -85,7 +85,9 @@
 					
 					#{msg.sessions_from}: <h:inputText styleClass="Fromdatepicker" id="from_date" value="#{exploreBean.fromFilterQueries}" />
 							#{msg.to}: <h:inputText styleClass="Todatepicker" id="to_date" value="#{exploreBean.toFilterQueries}" />
-						    <span>	</span><p:commandButton value="#{msg.update} #{msg.Task_based_View}" update=":task_based_graph" />
+						    <span>	</span>
+						    <p:commandButton value="#{msg.update} #{msg.Task_based_View}" update=":task_based_graph" />
+						    
 
 					</h:form>
 					<h:form>

@@ -116,10 +116,7 @@
 						<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" /> 								
 					</p:commandLink>
 					
-					<p:commandLink action="#{groupsBean.deleteGroup}" update=":growl :group_menu :my_groups" 
-								styleClass="optionIcon" title="#{msg.delete}" process="@this"
-								onstart="return confirm('${groupDetailBean.getLocaleMessage('group_delete_question', group.title)}');"
-								rendered="#{groupsBean.canDeleteGroup(group)}">
+					<p:commandLink action="#{groupsBean.deleteGroup}" update=":growl :group_menu :my_groups" styleClass="optionIcon" title="#{msg.delete}" process="@this" onstart="return confirm('${groupDetailBean.getLocaleMessage('group_delete_question', group.title)}');" rendered="#{groupsBean.canDeleteGroup(group)}">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 						<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/> 							
 					</p:commandLink>						
@@ -164,19 +161,13 @@
 						</p:commandLink>
 						
 						
-						<p:commandLink process="@this" update=":group_moderator_form" 
-								styleClass="optionIcon" title="#{msg.edit}" 
-								rendered="#{userBean.admin || userBean.moderator}"
-								onsuccess="PF('group_moderator_dialog').show()" onerror="alert('error');">
+						<p:commandLink process="@this" update=":group_moderator_form" styleClass="optionIcon" title="#{msg.edit}" rendered="#{userBean.admin || userBean.moderator}" onsuccess="PF('group_moderator_dialog').show()" onerror="alert('error');">
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 							<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" /> 								
 						</p:commandLink>	
 						
 						
-						<p:commandLink action="#{groupsBean.deleteGroup}" update=":other_groups :growl" 
-								styleClass="optionIcon" title="#{msg.delete}" process="@this"
-								onstart="return confirm('${groupDetailBean.getLocaleMessage('group_delete_question', group.title)}');"
-								rendered="#{userBean.admin || userBean.moderator}">
+						<p:commandLink action="#{groupsBean.deleteGroup}" update=":other_groups :growl" styleClass="optionIcon" title="#{msg.delete}" process="@this" onstart="return confirm('${groupDetailBean.getLocaleMessage('group_delete_question', group.title)}');" rendered="#{userBean.admin || userBean.moderator}">
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 							<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/> 								
 						</p:commandLink>				 	
@@ -187,7 +178,7 @@
 				</p:dataTable>
 			</h:form>
 
-		<p:dialog header="Edit Group" widgetVar="group_moderator_dialog" modal="true" minWidth="440" appendTo="@(body)">
+		<p:dialog header="#{msg.edit_group}" widgetVar="group_moderator_dialog" modal="true" minWidth="440" appendTo="@(body)">
 			<h:form id="group_moderator_form">
 				
 				<h:panelGrid columns="2">

@@ -5,109 +5,133 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<div id="current_search" style="padding: 0px 6px 0px 6px">
-		<h:panelGroup rendered = "#{utilBean.searchPage}">
-			Current search is <b>#{searchBean.query}</b> in <i>#{searchBean.searchMode}</i><br />
+	
+		<h:panelGroup rendered="#{utilBean.searchPage}">
+			<h:outputFormat value="#{msg.current_search}">
+				<f:param value="#{searchBean.query}"/>
+				<f:param value="#{searchBean.searchMode}"/>
+			</h:outputFormat>
+			<br/>
 		<br />
 		<br />
 		</h:panelGroup>
 		<h:panelGroup rendered = "#{utilBean.viewResultSetPage}">
-		 	The current resultset being viewed is for the query <b>#{resultSetBean.query}</b> posted on <b>#{resultSetBean.queryDate}</b><br/><br/>
+			<h:outputText value="#{msg.current_resultset}"/> 
+				<b>#{resultSetBean.query}</b> 
+			<h:outputText value=" #{msg.posted_on}"/> 
+				<b>#{resultSetBean.queryDate}</b>
+		 	<br/>
+		 	<br/>
 		</h:panelGroup>
 		
 		<p:outputPanel autoUpdate="true">
 			<ul style="margin: 0px; padding: 0px">
 			<ui:repeat var="tag" value="#{currentSearchBean.getTags()}">
-				<li class="tag_list"><p:commandButton
-						styleClass="tag_name ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" style="cursor:default !important;" value="#{tag.name}" onclick="return false;"/>
-					<p:commandButton styleClass="tag_x" action="#{currentSearchBean.onDeleteTag()}"
-						value="x" oncomplete="tabselection('currentsearch')">
-					 	<f:setPropertyActionListener target="#{currentSearchBean.selectedTag}"
-							value="#{tag}" /> 
+				<li class="tag_list">
+					<p:commandButton styleClass="tag_name ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" style="cursor:default !important;" value="#{tag.name}" onclick="return false;"/>
+					<p:commandButton styleClass="tag_x" action="#{currentSearchBean.onDeleteTag()}" value="x" oncomplete="tabselection('currentsearch')">
+					 	<f:setPropertyActionListener target="#{currentSearchBean.selectedTag}" value="#{tag}" /> 
 					</p:commandButton></li>
 			</ui:repeat>
 			</ul>
 			<h:form id="tag_form">
 				<p:inputText styleClass="tag_field" value="#{currentSearchBean.tagName}" /> 
 				<div class="align-right">
-					<p:commandButton actionListener="#{currentSearchBean.addTag()}"
-						styleClass="greenbutton" value="#{msg.addTag}" oncomplete="tabselection('currentsearch')">
-					</p:commandButton>
+					<p:commandButton actionListener="#{currentSearchBean.addTag()}" styleClass="greenbutton" value="#{msg.addTag}" oncomplete="tabselection('currentsearch')"></p:commandButton>
 				</div>
 			</h:form>
 			<br/>
-			<ui:repeat var="comment"
-				value="#{currentSearchBean.getSearchComments()}">
+			<ui:repeat var="comment" value="#{currentSearchBean.getSearchComments()}">
 				<div class="comments">
 					<div>
-						<span class="username">#{comment.username}</span><span
-							style="vertical-align: top; padding-left: 10px;">#{comment.commentText}</span>
-						<span style="float: right;">#{comment.timestamp}</span>
+						<span class="username">
+							#{comment.username}
+						</span>
+						<span style="vertical-align: top; padding-left: 10px;">
+							#{comment.commentText}
+						</span>
+						<span class="float-right">
+							#{comment.timestamp}
+						</span>
 					</div>
-					<div style="clear: both"></div>
+					<div class="clear"></div>
 				</div>
 			</ui:repeat>
 			<div class="comments">
-				<b>Comment on search process:</b>
+				<b>#{msg.search_process_comment}:</b>
 				<h:form id="comment_form">
-					<p:inputTextarea style="width: 97.6%;" rows="2"
-						value="#{currentSearchBean.newSearchComment}"></p:inputTextarea>
+					<p:inputTextarea style="width: 97.6%;" rows="2" value="#{currentSearchBean.newSearchComment}"></p:inputTextarea>
 					<br />
-					<div style="text-align: right; margin-top: 5px">
-						<p:commandButton styleClass="greenbutton" value="#{msg.comment}"
-							actionListener="#{currentSearchBean.addSearchComment()}"
-							oncomplete="tabselection('currentsearch')">
-						</p:commandButton>
+					<div class="align-right" style="margin-top: 5px">
+						<p:commandButton styleClass="greenbutton" value="#{msg.comment}" actionListener="#{currentSearchBean.addSearchComment()}" oncomplete="tabselection('currentsearch')"/>
 					</div>
 				</h:form>
 			</div>
 		</p:outputPanel>
-		<table id="clickedresources_table"
-			style="width: 100%; padding: 0px 10px 0px 10px;">
+		<table id="clickedresources_table" style="width: 100%; padding: 0px 10px 0px 10px;">
 			<tr>
-				<td colspan="2" class="history_parent"><h3>Resources
-						Clicked</h3></td>
+				<td colspan="2" class="history_parent">
+					<h3>#{msg.resources_clicked}</h3>
+				</td>
 			</tr>
-			<ui:repeat value="#{currentSearchBean.clickedResourcesList}"
-				var="clickedresource">
+			<ui:repeat value="#{currentSearchBean.clickedResourcesList}" var="clickedresource">
 
 				<tr>
 					<td style="width: 1%"></td>
-					<td style="margin-top: 10px; width: 84%"><a
-						href="#{clickedresource.url}"
-						style="text-align: left; color: blue" target="_blank">#{clickedresource.filename}</a>
-						<span style="color: green;"> -
-							#{clickedresource.source}.com</span></td>
+					<td style="margin-top: 10px; width: 84%">
+						<a href="#{clickedresource.url}" class="align-left" style="color: blue" target="_blank">
+							#{clickedresource.filename}
+						</a>
+							<span style="color: green;"> 
+								- #{clickedresource.source}.com
+							</span>
+						</td>
 
-					<td style="width: 15%"><span style="float: right;">#{clickedresource.timestamp}</span></td>
+					<td style="width: 15%">
+						<span class="float-right">
+							#{clickedresource.timestamp}
+						</span>
+					</td>
 				</tr>
 				<h:panelGroup rendered="#{searchType != 'list'}">
 				<tr>
 					<td style="width: 1%"></td>
-					<td style="margin-top: 10px; width: 84%"><span
-						style="padding-left: 10px;">Viewed for
-							#{clickedresource.viewTime} seconds.</span></td>
+					<td style="margin-top: 10px; width: 84%">
+						<span style="padding-left: 10px;">
+							<h:outputText value="#{msg.viewed_for}"/>
+								#{clickedresource.viewTime}
+							<h:outputText value="#{msg.seconds}"/>.
+						</span>
+					</td>
 					<td style="width: 15%"></td>
 				</tr>
 				</h:panelGroup>
 			</ui:repeat>
 		</table>
-		<table id="savedresources_table"
-			style="width: 100%; padding: 0px 10px 0px 10px;">
+		<table id="savedresources_table" style="width: 100%; padding: 0px 10px 0px 10px;">
 			<tr>
-				<td colspan="2" class="history_parent"><h3>Resources
-						Saved</h3></td>
+				<td colspan="2" class="history_parent">
+					<h3>#{msg.resources_saved}</h3>
+				</td>
 			</tr>
-			<ui:repeat value="#{currentSearchBean.savedResourcesList}"
-				var="savedresource">
+			<ui:repeat value="#{currentSearchBean.savedResourcesList}" var="savedresource">
 
 				<tr>
 					<td style="width: 1%"></td>
-					<td style="margin-top: 10px; width: 84%"><a
-						href="#{savedresource.url}" style="text-align: left; color: blue"
-						target="_blank">#{savedresource.filename}</a> <span
-						style="color: green;"> - #{savedresource.source}</span></td>
+					<td style="margin-top: 10px; width: 84%">
+						<a href="#{savedresource.url}" class="align-left" style="color: blue" target="_blank">
+							#{savedresource.filename}
+						</a> 
+						<span style="color: green;"> 
+							- #{savedresource.source}
+						</span>
+					</td>
 
-					<td style="width: 15%"><span style="float: right;">#{savedresource.timestamp}</span></td>
+					<td style="width: 15%">
+						<span class="float-right">
+							#{savedresource.timestamp}
+						</span>
+					</td>
 				</tr>
 
 			</ui:repeat>

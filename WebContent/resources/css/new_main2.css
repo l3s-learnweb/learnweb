@@ -462,40 +462,6 @@ div#presentation_preview {
 	background: url(../image/test.gif) no-repeat bottom left;
 }
 
-/*.options_panel, #explore_optform, .optform_text, .optform_link überprüfen, ob es noch gebraucht wird.*/
-.options_panel {
-	background-color: rgba(12, 11, 11, 0.69);
-	background-repeat: no-repeat;
-	height: 22px;
-	padding-top: 2px;
-    padding-bottom: 2px;
-	margin-bottom:0px;
-	min-width:704px;
-	position:relative;
-	text-align: justify;
-}
-#explore_optform{
-	padding-left: 28%;
-	vertical-align: middle;
-}
-#explore_optform a, #resultset_optform a{
-	text-decoration: none;
-	color:#489a83; 
-	font-weight: bold;
-}
-#explore_optform a:HOVER, #resultset_optform a:HOVER{
-	font-weight:bold;
-	color:white;
-}
-.optform_text{
-	margin-right:20px;
-	color:white;
-	padding-bottom: 6px;
-	font-weight:bold;
-	border-bottom: 3px solid #489a83;
-}
-.optform_link{margin-right:20px;}
-
 .northunit{border: none;}
 
 /* overwrite primefaces options*/
