@@ -1,7 +1,13 @@
+var chart;
 //Slide transitions between calendar and timeline view
 function open_timeline(){
+	$('#container').width($('#timeline_view').width());
+	chart.setSize($('#timeline_view').width(), $('#container').height());
+	chart.reflow();
+	
 	$('#calendar').hide("slide", { direction: "right" }, 1000);
-	$('#container').show("slide", { direction: "left" }, 1000);
+	//$('#container').show("slide", { direction: "left" }, 1000);
+	$('#container').fadeTo(1000, 1.0 );
 	return false;
 }
 
@@ -25,27 +31,31 @@ function addLeadingZero(num) {
 	}
 }
 
-/*function handleCalendarData(xhr, status, args)
-{	
-	calendar_data = args.calendarData;
-	calendar_data = JSON.parse(calendar_data);
-	loadCalendar(calendar_data);
-}
+var id;
+$(window).resize(function() {
+	clearTimeout(id);
+    id = setTimeout(doneResizing, 500);
+});
 
-function handleJsonData(xhr, status, args)
-{	
-	data_var = args.timelineData;
-	loadTimeline();
-}*/
+function doneResizing(){
+	if($('#container').is(':visible')){
+	$('#container').width($('#timeline_view').width());
+	chart.setSize($('#timeline_view').width(), $('#container').height());
+	chart.reflow();
+	}
+}
 
 function loadTimeline(data_var){
 	//jsondata = JSON.parse(data_var);
 	
-	$('#container').highcharts({
+	chart = new Highcharts.Chart({
 		chart: {
 			renderTo: 'container',
 			zoomType: 'x'
 		},
+        credits: {
+            enabled: false
+        },
 		title: {
 			text: timeline_title
 		},
@@ -83,7 +93,8 @@ function loadTimeline(data_var){
 							var year = date.getFullYear();
 							var month = date.getMonth() + 1;
 							$('#calendar').show("slide", { direction: "right" }, 1000);
-							$('#container').hide("slide", { direction: "left" }, 1000);
+							$('#container').fadeTo( 1000, 0.0 );
+							//$('#container').hide("slide", { direction: "left" }, 1000);
 							$('.responsive-calendar').responsiveCalendar(year+'-'+ month);
 						}
 					}
@@ -97,7 +108,6 @@ function loadTimeline(data_var){
 			data: data_var,
 		}]
 	});
-	
+	$('.highcharts-container').css('overflow','');
 	$('#timeline_view').hide();
-
 }

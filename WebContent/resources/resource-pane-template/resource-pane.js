@@ -7,12 +7,35 @@ function archive_url_select(){
 } */
 
 function open_timeline_view(){
-	$('#timeline_view').slideToggle("slow",function(){scroller();});
+	if($('#archive_list_view').is(':visible'))
+	{
+		$('#archive_list_view').slideToggle("slow");
+		$('#list_button').toggleClass('button-active');
+	}
+
+	$('#timeline_view').slideToggle("slow",function(){
+		scroller();
+		$('#timeline_button').toggleClass("button-active");
+		if($('#timeline_view').is(':visible')){
+			$('#container').width($('#timeline_view').width());
+			chart.setSize($('#timeline_view').width(), $('#container').height());
+			chart.reflow();
+		}
+	});
 	return false;
 }
 
 function open_list_view(){
-	$('#archive_list_view').slideToggle("slow",function(){scroller();});
+	if($('#timeline_view').is(':visible'))
+	{
+		$('#timeline_view').slideToggle("slow");
+		$('#timeline_button').toggleClass('button-active');
+	}
+
+	$('#archive_list_view').slideToggle("slow",function(){
+		scroller();
+		$('#list_button').toggleClass("button-active");
+	});
 	return false;
 }
 
