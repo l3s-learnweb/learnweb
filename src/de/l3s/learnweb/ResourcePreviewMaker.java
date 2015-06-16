@@ -155,7 +155,7 @@ public class ResourcePreviewMaker
 
     public void processVideo(Resource resource) throws IOException, SQLException
     {
-	URL thumbnailUrl = new URL(videoThumbnailService + StringHelper.urlEncode(resource.getUrl()));
+	URL thumbnailUrl = new URL(videoThumbnailService + StringHelper.urlEncode(resource.getFileUrl()));
 
 	// process image
 	Image img = new Image(thumbnailUrl.openStream());
