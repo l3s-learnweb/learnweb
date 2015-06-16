@@ -78,6 +78,7 @@ public class YovistoManager
 	System.exit(0);*/
 	try
 	{
+	    //Philipp, you will be fetching the resource that is creating issue.
 	    PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM yovisto_video WHERE yovisto_id = 10027");
 	    result = preparedStmnt.executeQuery();
 	}
