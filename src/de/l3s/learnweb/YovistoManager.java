@@ -9,12 +9,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.SolrClient;
 
 public class YovistoManager
@@ -24,7 +23,7 @@ public class YovistoManager
     private final static String DB_User = "learnweb_crawler";
     private final static String DB_Password = "***REMOVED***";
     private final static String DB_Connection = "jdbc:mysql://prometheus.kbs.uni-hannover.de:3306/learnweb_crawler?characterEncoding=utf8";
-    private Connection DBConnection;
+    private static Connection DBConnection;
     private static long lastCheck = 0L;
 
     public YovistoManager(Learnweb learnweb)
@@ -67,19 +66,19 @@ public class YovistoManager
 	ResourceManager resourceManager = learnweb.getResourceManager();
 	connect();
 	ResultSet result = null;
-	User rishita = learnweb.getUserManager().getUser(7727);
+	/*User rishita = learnweb.getUserManager().getUser(7727);
 
-	/*	for(Resource resource : yovistoGroup.getResources())
-		{
+	for(Resource resource : yovistoGroup.getResources())
+	{
 
-		    resourceManager.deleteResourcePermanent(resource.getId());
+	    resourceManager.deleteResourcePermanent(resource.getId());
 
-		}
+	}
 
-		System.exit(0);*/
+	System.exit(0);*/
 	try
 	{
-	    PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM yovisto_video WHERE `yovisto_id`= 6381");
+	    PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM yovisto_video");
 	    result = preparedStmnt.executeQuery();
 	}
 	catch(SQLException e)
@@ -89,16 +88,18 @@ public class YovistoManager
 	PreparedStatement update = Learnweb.getInstance().getConnection().prepareStatement("UPDATE yovisto_video SET resource_id = ? WHERE yovisto_id = ?");
 	while(result.next())
 	{
+	    //To avoid duplicates between TED videos included through TED API and through Yovisto. Change this later when there are more TED videos available through API.
 	    if(result.getString("organization").contains("TED Conference - Technology, Entertainment, Design") || result.getString("organization").contains("TEDxSanJoseCA 2012 "))
 	    {
 		int id = result.getInt("yovisto_id");
-		log.info("Video with id: " + id + "not included as it is a TED video");
+		log.info("Video with id: " + id + " not included as it is a TED video");
 		continue;
 	    }
+	    //Check whether Video exists or not by HEAD request
 	    if(VideoDoesNotExist(result.getInt("yovisto_id")))
 	    {
 		int id = result.getInt("yovisto_id");
-		log.info("Video with id: " + id + "not included as it does not exist.");
+		log.info("Video with id: " + id + " not included as it does not exist.");
 		continue;
 	    }
 	    int learnwebResourceId = result.getInt("resource_id");
@@ -108,12 +109,13 @@ public class YovistoManager
 
 	    yovistoVideo.setOwner(admin);
 
-	    if(learnwebResourceId == 0) // not yet stored in Learnweb
+	    if(learnwebResourceId == 0) // not yet stored in LearnWeb
 
 	    {
 		try
 		{
-		    rpm.processImage(yovistoVideo, FileInspector.openStream(yovistoVideo.getMaxImageUrl()));
+		    rpm.processVideo(yovistoVideo);
+
 		}
 		catch(IOException e)
 		{
@@ -136,38 +138,61 @@ public class YovistoManager
 
 		}
 
-		//solr.indexResource(yovistoVideo);
+		/*try
+		{
+		    solr.indexResource(yovistoVideo);
+		}
+		catch(IOException e)
+		{
+		    log.error("Error in indexing the video with yovisto ID: " + yovistoId, e);
+		    e.printStackTrace();
+		}
+		catch(SolrServerException e)
+		{
+		    log.error("Error in indexing the video with yovisto ID: " + yovistoId, e);
+		    e.printStackTrace();
+		}*/
 		yovistoVideo.save();
 
 	    }
 	    else
 		yovistoVideo.save();
-	    /*try
-	    {*/
-	    Set<String> tag = new HashSet<String>(Arrays.asList(result.getString("user_tag").split(",")));
+	    //Add the tags to the resource
+	    try
+	    {
+		Set<String> tag = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER); //Tags from the yovisto_video table
+		tag.addAll(Arrays.asList(result.getString("user_tag").split(",")));
 
-	    Set<String> tagsAdded = new HashSet<String>(Arrays.asList(yovistoVideo.getTagsAsString().split(",")));
-	    System.out.println(tagsAdded);
-	    tag.removeAll(tagsAdded);
-	    System.out.println(tag);
+		OwnerList<Tag, User> tagsFromResource = resourceManager.getTagsByResource(learnwebResourceId); //Tags already added to this resource
+		StringBuilder out = new StringBuilder();
+		for(Tag tags : tagsFromResource)
+		{
+		    if(out.length() != 0)
+			out.append(", ");
+		    out.append(tags.getName());
+		}
+		String output = out.toString();
+		Set<String> tagsFromLw = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+		tagsFromLw.addAll(Arrays.asList(output.split(", ")));
+		tag.removeAll(tagsFromLw); //Remove already added tags to avoid duplicate tags
 
-	    /*	for(String tagName : tag)
-	    	{
-	    	    try
-	    	    {
-	    		addTagToResource(yovistoVideo, tagName, admin);
-	    	    }
-	    	    catch(Exception e)
-	    	    {
-	    		log.error("Error in adding tags " + tagName, e);
-	    		e.printStackTrace();
-	    	    }
-	    	}
-	        }
-	        catch(NullPointerException e)
-	        {
-	    	log.info("No tags available for resource with id" + yovistoId, e);
-	        }*/
+		for(String tagName : tag)
+		{
+		    try
+		    {
+			addTagToResource(yovistoVideo, tagName, admin);
+		    }
+		    catch(Exception e)
+		    {
+			log.error("Error in adding tags " + tagName, e);
+			e.printStackTrace();
+		    }
+		}
+	    }
+	    catch(NullPointerException e)
+	    {
+		log.info("No tags available for resource with id" + yovistoId, e);
+	    }
 	    log.debug("Processed; lw: " + learnwebResourceId + " yovisto: " + yovistoId + " title:" + yovistoVideo.getTitle());
 
 	}
@@ -182,17 +207,9 @@ public class YovistoManager
 	    HttpURLConnection con = (HttpURLConnection) new URL("http://www.yovisto.com/streams/" + yovistoId + ".mp4").openConnection();
 	    con.setRequestMethod("HEAD");
 
+	    //Video does not exist
 	    if(con.getResponseCode() == 404)
 		return true;
-
-	    /*try
-	    {
-	        Thread.sleep(10000 * (int) Math.pow(2, i));
-	    }
-	    catch(InterruptedException e)
-	    {
-	        log.error("Failed due to some interrupt exception on the thread that fetches from the LORO", e);
-	    }*/
 
 	}
 	catch(Exception e)
@@ -224,6 +241,7 @@ public class YovistoManager
 	    description = description + " \nSpeaker: " + result.getString("speaker");
 	if(!result.getString("language").isEmpty())
 	{
+	    //Decode the language through its representation
 	    String lang = "";
 	    if(result.getString("language").contains("de"))
 		lang += "German, ";
@@ -243,17 +261,28 @@ public class YovistoManager
 		lang += "Spanish, ";
 	    else if(lang.isEmpty() && !lang.contains("none"))
 		lang += result.getString("language") + ", ";
+	    if(!lang.isEmpty())
+		description = description + "\nLanguage: " + lang;
 
 	}
 
 	if(!result.getString("alternative_title").isEmpty())
-	    description = "Alternative Title: " + result.getString("alternative_title") + " \n" + description;
+	    description = " \nAlternative Title: " + result.getString("alternative_title") + "\n" + description;
 	resource.setDescription(description);
 	resource.setDuration(result.getInt("durationInSec"));
 	resource.setMaxImageUrl(result.getString("thumbnail_url"));
-	resource.setIdAtService(Integer.toString(result.getInt("yovisto_id")));
+	int yovistoId = result.getInt("yovisto_id");
+	resource.setIdAtService(Integer.toString(yovistoId));
 	resource.setFileUrl("http://www.yovisto.com/streams/" + result.getInt("yovisto_id") + ".mp4");
-	resource.setEmbeddedRaw("<iframe id=\"embPlayer6381\" value=\"http://www.yovisto.com/yoexply.swf?vid=2377&amp;url=http://www.yovisto.com/streams/6381.mp4&amp;prev=http://www.yovisto.com/osotis-images/tn_6381_13.jpg\" src=\"http://www.yovisto.com/yoexply.swf?vid=6381&amp;url=http://www.yovisto.com/streams/6381.mp4&amp;prev=http://www.yovisto.com/osotis-images/tn_6381_13.jpg\" scale=\"exactfit\" quality=\"high\" name=\"FlashMovie\" swliveconnect=\"true\" allowFullScreen=\"true\" wmode=\"transparent\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" style=\"height:100%; width:100%;\" flashvars=\"var1=0&amp;enablejs=true\"></iframe>");
+	resource.setEmbeddedRaw("<iframe id=\"embPlayer"
+		+ yovistoId
+		+ "\"  src=\"http://www.yovisto.com/yoexply.swf?vid="
+		+ yovistoId
+		+ "&amp;url=http://www.yovisto.com/streams/"
+		+ yovistoId
+		+ ".mp4&amp;prev="
+		+ result.getString("thumbnail_url")
+		+ "\" scale=\"exactfit\" quality=\"high\" name=\"FlashMovie\" swliveconnect=\"true\" allowFullScreen=\"true\" wmode=\"transparent\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" style=\"height:100%; width:100%;\" flashvars=\"var1=0&amp;enablejs=true\"></iframe>");
 
 	resource.setAuthor(result.getString("organization"));
 
@@ -301,7 +330,7 @@ public class YovistoManager
 	YovistoManager lm = Learnweb.getInstance().getYovistoManager();
 	lm.saveYovistoResource();
 
-	//DBConnection.close();
+	DBConnection.close();
 	System.exit(0);
     }
 
