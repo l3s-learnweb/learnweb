@@ -120,7 +120,7 @@
 												</p:selectBooleanCheckbox>
 											</td>
 											<td id="searched_for" style="margin-bottom: 10px; width: 84%">
-												<h:outputFormat value="#{msg.searched_in_for}">
+												<h:outputFormat value="#{msg.searched_in_for}" escape="false">
 													<f:param value="#{queryhistory.searchType}"/>
 													<f:param value="#{queryhistory.query}"/>
 												</h:outputFormat>

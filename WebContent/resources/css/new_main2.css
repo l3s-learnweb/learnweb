@@ -99,6 +99,7 @@ button{
 	text-shadow: none !important;
 	border: none !important;
 	box-shadow: none;
+	border-radius:0px;
 }
 .buttons{
 	float: right;
@@ -514,6 +515,9 @@ span.ui-autocomplete{border: 1px solid transparent !important;}
 }
 .ui-datatable {width: 100%;}
 .ui-layout-pane-north .ui-layout-unit-content {overflow: hidden !important;}
+.ui-corner-all{
+	border-radius:0px;
+}
 
 /*overwritw primefaces option for some areas which have a id or a class */
 #center_pane .ui-layout-unit-header{
@@ -526,11 +530,7 @@ span.ui-autocomplete{border: 1px solid transparent !important;}
 	padding: 10px;
 }
 #datagrid .ui-panel-content{padding: 5px;}
-.explore_history .ui-button .ui-button-text{
-	display:block;
-	line-height: 0.6;
-}
-.search_history .ui-button .ui-button-text{
+.explore_history .ui-button .ui-button-text, .search_history .ui-button .ui-button-text{
 	display:block;
 	line-height: 0.6;
 }

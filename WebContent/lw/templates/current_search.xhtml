@@ -7,7 +7,7 @@
 	<div id="current_search" style="padding: 0px 6px 0px 6px">
 	
 		<h:panelGroup rendered="#{utilBean.searchPage}">
-			<h:outputFormat value="#{msg.current_search}">
+			<h:outputFormat value="#{msg.current_search}" escape="false">
 				<f:param value="#{searchBean.query}"/>
 				<f:param value="#{searchBean.searchMode}"/>
 			</h:outputFormat>

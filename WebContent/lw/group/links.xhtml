@@ -82,18 +82,13 @@
 						<p:column>
 							<h:outputLink value="#{link.url}" target="_blank" styleClass="links_output">#{link.title}</h:outputLink>	
 						
-							<p:commandLink update=":link_edit_form" oncomplete="PF('link_dialog').show();" title="#{msg.edit}" 
-								process="@this" styleClass="links_commandlink"
-								rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isMember(userBean.user))}">
+							<p:commandLink update=":link_edit_form" oncomplete="PF('link_dialog').show();" title="#{msg.edit}" process="@this" styleClass="links_commandlink" rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isMember(userBean.user))}">
 								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" styleClass="links_graphic" />
 								<f:setPropertyActionListener value="#{link}" target="#{groupDetailBean.selectedLink}" />
 								<f:param name="group_id" value="#{groupDetailBean.groupId}" /> 
 							</p:commandLink> 
 							
-							<p:commandLink actionListener="#{groupDetailBean.onDeleteLinkFromGroup(link.id)}" update=":message :grouplinks" 
-									title="#{msg.delete}" 									
-									onstart="return confirm('Do you really want to delete \'#{link.title}\'?');"
-									rendered="${(userBean.admin || userBean.moderator || groupDetailBean.group.isLeader(userBean.user))}">
+							<p:commandLink actionListener="#{groupDetailBean.onDeleteLinkFromGroup(link.id)}" update=":message :grouplinks" title="#{msg.delete}" onstart="return confirm('Do you really want to delete \'#{link.title}\'?');" rendered="${(userBean.admin || userBean.moderator || groupDetailBean.group.isLeader(userBean.user))}">
 								<f:param name="group_id" value="#{groupDetailBean.group.id}"/>
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" styleClass="links_graphic"/> 
 							</p:commandLink>
@@ -104,23 +99,22 @@
 				
 			<h:panelGroup rendered="${not empty groupDetailBean.documentLinks}">	
 				<h:form styleClass="links_form">				
-					<h4 class="clear"><h:outputText value="#{msg.documents}" />:</h4>
+					<h4 class="clear">
+						<h:outputText value="#{msg.documents}" />:
+					</h4>
 					<p:dataList var="link" value="${groupDetailBean.documentLinks}" styleClass="links_datalist">		
 						<p:column>
-							<h:outputLink value="#{link.url}" target="_blank" styleClass="links_output">#{link.title}</h:outputLink>	
+							<h:outputLink value="#{link.url}" target="_blank" styleClass="links_output">
+								#{link.title}
+							</h:outputLink>	
 							
-							<p:commandLink update=":link_edit_form" oncomplete="PF('link_dialog').show();" title="#{msg.edit}" 
-								process="@this" styleClass="links_commandlink"
-								rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isMember(userBean.user))}">
+							<p:commandLink update=":link_edit_form" oncomplete="PF('link_dialog').show();" title="#{msg.edit}" process="@this" styleClass="links_commandlink" rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isMember(userBean.user))}">
 								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" styleClass="links_graphic" />
 								<f:setPropertyActionListener value="#{link}" target="#{groupDetailBean.selectedLink}" />
 								<f:param name="group_id" value="#{groupDetailBean.groupId}" /> 
 							</p:commandLink>
 									
-							<p:commandLink actionListener="#{groupDetailBean.onDeleteLinkFromGroup(link.id)}" update=":message :grouplinks" 
-									title="#{msg.delete}" 									
-									onstart="return confirm('Do you really want to delete \'#{link.title}\'?');"
-									rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isLeader(userBean.user))}">
+							<p:commandLink actionListener="#{groupDetailBean.onDeleteLinkFromGroup(link.id)}" update=":message :grouplinks" title="#{msg.delete}" onstart="return confirm('Do you really want to delete \'#{link.title}\'?');" rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isLeader(userBean.user))}">
 								<f:param name="group_id" value="#{groupDetailBean.group.id}"/>
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" styleClass="links_graphic"/> 
 							</p:commandLink>
@@ -150,9 +144,15 @@
 					</h:selectOneMenu>
 					<h:outputText value="" />					
 					
-					<h:panelGroup id="urlpanel1"><h:outputLabel rendered="#{groupDetailBean.newLinkType == 'url'}" for="link_url" value="URL:" /></h:panelGroup>
-					<h:panelGroup id="urlpanel2"><p:inputText rendered="#{groupDetailBean.newLinkType == 'url'}" styleClass="links_inputtext" id="link_url" value="#{groupDetailBean.newLinkUrl}" /></h:panelGroup>
-					<h:panelGroup id="urlpanel3"><p:message rendered="#{groupDetailBean.newLinkType == 'url'}" showSummary="true" showDetail="false" styleClass="error" for="link_url" /></h:panelGroup>
+					<h:panelGroup id="urlpanel1">
+						<h:outputLabel rendered="#{groupDetailBean.newLinkType == 'url'}" for="link_url" value="URL:" />
+					</h:panelGroup>
+					<h:panelGroup id="urlpanel2">
+						<p:inputText rendered="#{groupDetailBean.newLinkType == 'url'}" styleClass="links_inputtext" id="link_url" value="#{groupDetailBean.newLinkUrl}" />
+					</h:panelGroup>
+					<h:panelGroup id="urlpanel3">
+						<p:message rendered="#{groupDetailBean.newLinkType == 'url'}" showSummary="true" showDetail="false" styleClass="error" for="link_url" />
+					</h:panelGroup>
 					
 						
 					<h:outputLabel for="link_title" value="#{msg.title}:" />

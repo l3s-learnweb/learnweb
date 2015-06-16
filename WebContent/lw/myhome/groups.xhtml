@@ -98,7 +98,7 @@
 					<h:outputText value="#{group.leader.username}" />
 				</p:column>
 				
-				<p:column headerText="#{msg.course}" sortBy="#{group.course.title}" width="8%" style="">
+				<p:column headerText="#{msg.course}" sortBy="#{group.course.title}" width="8%" >
 					<h:outputText value="#{group.course.title}" />						
 				</p:column>		
 				
@@ -108,10 +108,7 @@
 						<h:graphicImage value="/resources/icon/silk/group_delete.png" width="16" height="16" alt="#{msg.leave}" />
 					</p:commandLink>					
 					
-					<p:commandLink process="@this" update=":group_moderator_form" 
-							styleClass="optionIcon" title="#{msg.edit}" 
-							rendered="#{groupsBean.canDeleteGroup(group)}"
-							oncomplete="PF('group_moderator_dialog').show()">
+					<p:commandLink process="@this" update=":group_moderator_form" styleClass="optionIcon" title="#{msg.edit}" rendered="#{groupsBean.canDeleteGroup(group)}" oncomplete="PF('group_moderator_dialog').show()">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 						<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" /> 								
 					</p:commandLink>
@@ -195,7 +192,7 @@
 					<p:inputTextarea value="#{groupsBean.selectedGroupDescription}" id="edit_group_description" autoResize="true"  style="width:300px;"/>
 					
 					<h:outputText value="" />
-					<p:commandButton disabled="false" value="#{msg.save}" ajax="false" action="#{groupsBean.onGroupEdit}" update=":other_groups :growl :group_menu :my_groups" oncomplete="PF('group_moderator_dialog').hide()">
+					<p:commandButton disabled="false" value="#{msg.save}" ajax="false" action="#{groupsBean.onGroupEdit}" update=":other_groups :growl :group_menu :my_groups" oncomplete="PF('group_moderator_dialog').hide()" style="border-radius:0px;">
 						<f:setPropertyActionListener target="#{groupsBean.editGroup}" value="#{groupsBean.selectedGroup}" />
 					</p:commandButton>
 				</h:panelGrid>

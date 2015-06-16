@@ -298,11 +298,12 @@
 						        <ul style="margin: 0px; padding: 0px">
 							         <ui:repeat var="tag" value="#{bean.clickedResource.tags}">
 							         	<li class="tag_list">
-							         		<h:outputLink styleClass="tag_name ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="search.jsf"><span class="ui-button-text">#{tag.name}</span>
-								         		<f:param name="action" value="image"></f:param>
-								         		<f:param name="query" value="#{tag.name}"></f:param>
+							         		<h:outputLink styleClass="tag_name ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" value="search.jsf">
+							         			<span class="ui-button-text">#{tag.name}</span>
+									         		<f:param name="action" value="image"></f:param>
+									         		<f:param name="query" value="#{tag.name}"></f:param>
 							         		</h:outputLink>
-							         		<p:commandButton styleClass="tag_x" action="#{bean.onDeleteTag}" value="x" update=":add_resource_panel" process="@form" style="float:right">
+							         		<p:commandButton styleClass="tag_x float-right" action="#{bean.onDeleteTag}" value="x" update=":add_resource_panel" process="@form">
 							         			<f:setPropertyActionListener target="#{bean.selectedTag}" value="#{tag}"></f:setPropertyActionListener>
 							         		</p:commandButton>
 							         	</li>

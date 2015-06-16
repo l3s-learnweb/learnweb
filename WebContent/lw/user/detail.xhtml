@@ -21,7 +21,7 @@
 	<ui:define name="center_layout">
 
 		<p:panel header="#{msg.myProfileTitle}">
-			<h:panelGrid columns="2" style="float:left; margin-right:20px;">
+			<h:panelGrid columns="2" class="float-left" style="margin-right:20px;">
 				<h:outputText value="#{msg.username}:" />
 				<h:outputText id="username" value="#{userDetailBean.user.username}" />
 
@@ -68,5 +68,6 @@
 			</h:form>
 
 		</p:panel>
+		
 	</ui:define>
 </ui:composition>

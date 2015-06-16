@@ -8,7 +8,7 @@ body {
 }
 .info{
 	color:white;
-	max-width:85rem; 
+	max-width:92rem; 
 	background-color: rgba(0, 0, 0, 0.8);
 	margin:5% auto;
 	padding:3rem;
@@ -30,13 +30,13 @@ h4 { text-decoration:underline;	font-size:1.3rem; margin: 0.8rem 0 0.4rem; }
 	float:left; 
 	padding-right:1.5rem;
 	box-sizing:border-box;
-	width:37%; 
+	width:33%; 
 }
 #div_left table { width: 100%; }
 #div_left table td { padding:0; }
 #div_right{
 	float:right; 
-	width:63%; 
+	width:67%; 
 	padding-left:1.5rem; 
 	border-left:2px solid #489a83; 
 	box-sizing:border-box;
@@ -49,7 +49,8 @@ h4 { text-decoration:underline;	font-size:1.3rem; margin: 0.8rem 0 0.4rem; }
 	padding:4px 7px;
 	margin:4px 0;
 	background-color: #F7F7F7 !important;
-	border: none !important;/
+	border: none !important;
+	border-radius:0px;
 }
 .inputbox:focus{
 	background-color: white !important;
