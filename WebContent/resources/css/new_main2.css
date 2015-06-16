@@ -49,14 +49,9 @@
 /*necessary*/
 
 img {border: none;}
-input{
+input, textarea{
 	border-radius: 0px !important;
 	border: 1px solid #a8a8a8 !important;
-	box-shadow: 0 0 0px 0px #fff !important;
-}
-textarea{
-	border-radius: 0px !important;
-	border-color: #ccc !important;
 	box-shadow: 0 0 0px 0px #fff !important;
 }
 
@@ -517,6 +512,14 @@ span.ui-autocomplete{border: 1px solid transparent !important;}
 .ui-layout-pane-north .ui-layout-unit-content {overflow: hidden !important;}
 .ui-corner-all{
 	border-radius:0px;
+}
+.ui-corner-top{
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+}
+.ui-corner-bottom{
+	border-bottom-left-radius: 0px;
+	border-bottom-right-radius: 0px;
 }
 
 /*overwritw primefaces option for some areas which have a id or a class */

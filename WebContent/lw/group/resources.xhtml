@@ -113,7 +113,7 @@
 				
 				<p:dialog header="#{msg.upload_file}" widgetVar="file_dialog" modal="true" appendTo="@(body)" width="600" height="150">
 					<h:form>
-						<p:fileUpload  rendered="true" fileUploadListener="#{addResourceBean.handleFileUpload}" mode="advanced" auto="true" sizeLimit="10000000" widgetVar="fileUpload" oncomplete="PF('file_dialog').hide()" update=":add_resource_form:preview"/> 
+						<p:fileUpload  rendered="true" fileUploadListener="#{addResourceBean.handleFileUpload}" mode="advanced" auto="true" sizeLimit="10000000" widgetVar="fileUpload" oncomplete="PF('file_dialog').hide()" update=":add_resource_form:preview" label="#{msg.choose_file}" cancelLabel="abb"/> 
 					</h:form>
 				</p:dialog>
 				<p:dialog header="#{msg.edit}" id="comment_dialog1" modal="true" minWidth="440" appendTo="@(body)" widgetVar="comment_dialog">
