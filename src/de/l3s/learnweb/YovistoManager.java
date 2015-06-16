@@ -78,7 +78,7 @@ public class YovistoManager
 	System.exit(0);*/
 	try
 	{
-	    PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM yovisto_video");
+	    PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM yovisto_video WHERE yovisto_id = 10027");
 	    result = preparedStmnt.executeQuery();
 	}
 	catch(SQLException e)
