@@ -5,9 +5,11 @@ function open_timeline(){
 	chart.setSize($('#timeline_view').width(), $('#container').height());
 	chart.reflow();
 	
-	$('#calendar').hide("slide", { direction: "right" }, 1000);
+	//$('#calendar').hide("slide", { direction: "right" }, 1000);
 	//$('#container').show("slide", { direction: "left" }, 1000);
-	$('#container').fadeTo(1000, 1.0 );
+	$('#container').fadeTo(1000, 1.0);
+	$('#calendar').fadeTo(1000,0.0).hide();
+
 	return false;
 }
 
@@ -92,7 +94,8 @@ function loadTimeline(data_var){
 							var date = new Date(this.x);
 							var year = date.getFullYear();
 							var month = date.getMonth() + 1;
-							$('#calendar').show("slide", { direction: "right" }, 1000);
+							//$('#calendar').show("slide", { direction: "right" }, 1000);
+							$('#calendar').show().fadeTo(1000,1.0);
 							$('#container').fadeTo( 1000, 0.0 );
 							//$('#container').hide("slide", { direction: "left" }, 1000);
 							$('.responsive-calendar').responsiveCalendar(year+'-'+ month);
