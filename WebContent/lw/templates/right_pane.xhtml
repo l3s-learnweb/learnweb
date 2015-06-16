@@ -39,6 +39,7 @@
 						$('#right_pane .content').scrollTop(0);
 						
 						scroller();
+						lightbox_load();
 					}
 				</script>
 				<h:form rendered="#{bean.newResourceClicked and !bean.editResourceClicked}" id="add_resource_form">
@@ -130,18 +131,29 @@
 				<h:panelGroup rendered="#{!bean.newResourceClicked and !bean.editResourceClicked and bean.clickedResource.id != -1}" layout="block">						
 					<ui:fragment rendered="#{bean.clickedResource.type.toLowerCase() eq 'text' or bean.clickedResource.type eq 'pdf' or bean.clickedResource.type.toLowerCase() eq 'video' or bean.clickedResource.type.toLowerCase() eq 'image'}">
 						<div class="center_align">
-						
-						<!-- 
-							<p:lightBox id="lighbox2" widgetVar="resource_lightbox">
-							    <h:outputLink value="#">
-							        <h:outputText value="Video Content" />
-							    </h:outputLink>
-							 
-							    <f:facet name="inline">
-							    	<img class="preview_box" src="#{bean.clickedResource.thumbnail4.url}" height="#{bean.clickedResource.thumbnail4.height}" width="#{bean.clickedResource.thumbnail4.width}" />
-							    </f:facet>
-							</p:lightBox>
-						 -->	
+
+							<div id="lightbox">
+								<div id="lightbox_background" onclick="lightbox_close();"></div>
+								
+								<div id="lightbox_container">			
+									<div id="lightbox_content">
+										<ui:fragment rendered="#{bean.clickedResource.type eq 'text'}">
+									    	<div style="overflow:auto; height:100%; width:100%; text-align:center;">
+									    		<img src="#{bean.clickedResource.thumbnail4.url}" height="#{bean.clickedResource.thumbnail4.height}" width="#{bean.clickedResource.thumbnail4.width}" />
+									    	</div>	
+								    	</ui:fragment>
+								    	<ui:fragment rendered="#{bean.clickedResource.type eq 'pdf'}">
+									    	<iframe src="#{bean.clickedResource.url}" style="width:100%; height:100%; "></iframe>									    	
+								    	</ui:fragment>
+								    	<ui:fragment rendered="#{bean.clickedResource.type eq 'Image'}">
+									    		<img src="#{bean.clickedResource.thumbnail4.url}" height="#{bean.clickedResource.thumbnail4.height}" width="#{bean.clickedResource.thumbnail4.width}" 
+									    			style="height:auto; width:auto; max-width:100%; max-height:100%; display:block; margin:0 auto;"/>	
+								    	</ui:fragment>							
+									</div>
+								</div>
+							</div>						
+						 
+									
 							<ui:fragment rendered="#{bean.clickedResource.type == 'Video'}">
 								<div class="preview_box" style="min-height:400px; max-height:500px; height:100%;">
 									<h:outputText value='#{bean.clickedResource.embedded}' escape="false" />
@@ -156,9 +168,8 @@
 								
 								
 									<img class="preview_box" src="#{bean.clickedResource.thumbnail3.url}" height="#{bean.clickedResource.thumbnail3.height}" width="#{bean.clickedResource.thumbnail3.width}" 
-										style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor:zoom"
-										onmouseup="PF('resource_lightbox').show();"
-									/>								
+										style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"
+										onmouseup="lightbox_open();" />								
 								
 							</ui:fragment>
 							<ui:fragment rendered="#{(bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf') and empty bean.clickedResource.thumbnail3}">

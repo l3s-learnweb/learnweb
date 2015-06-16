@@ -272,6 +272,8 @@ public class FileManager
 	{
 	    log.error("Can't find file: " + file.getActualFile().getAbsolutePath());
 
+	    file.setExists(false);
+
 	    if(file.getMimeType().startsWith("image/"))
 	    {
 		file.setActualFile(new java.io.File(folder, "404-no-file.png"));

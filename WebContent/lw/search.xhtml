@@ -29,7 +29,7 @@
 					
 			<h:form styleClass="links">
 				<h:outputText value="Web" styleClass="activeResource" rendered="#{searchBean.searchMode == 'web'}" />
-				<h:link value="Web" outcome="search" Srendered="#{searchBean.searchMode != 'web'}" >
+				<h:link value="Web" outcome="search" rendered="#{searchBean.searchMode != 'web'}" >
 					<f:param name="action" value="web" />
 					<f:param name="query" value="#{searchBean.query}" />								
 				</h:link>			

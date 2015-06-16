@@ -25,7 +25,8 @@ public class File implements Serializable, HasId
     private boolean downloadLogActivated = false;
     private Date lastModified;
 
-    public java.io.File actualFile;
+    private java.io.File actualFile;
+    private boolean actualFileExists = true; // when the actual file doesn't exist it is replaced by an error image. For this reason we have to store if the file exists 
 
     public File()
     {
@@ -118,6 +119,16 @@ public class File implements Serializable, HasId
     protected void setActualFile(java.io.File actualFile)
     {
 	this.actualFile = actualFile;
+    }
+
+    public boolean exists()
+    {
+	return actualFileExists;
+    }
+
+    public void setExists(boolean actualFileExists)
+    {
+	this.actualFileExists = actualFileExists;
     }
 
     public OutputStream getOutputStream()

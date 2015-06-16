@@ -1006,14 +1006,24 @@ public class ResourceManager
 
 	    if(file != null && file.getName().equals("website.png"))
 	    {
-		System.out.println(file.getName());
-		//
+		if(!file.exists())
+		{
+		    log.error(resource.getId() + " - " + resource.getOwnerUser().getUsername());
+
+		    continue;
+		}
+
 		if(resource.getSource() == null)
 		    resource.setSource("Internet");
 
-		new Image(file.getInputStream());
+		Image image = new Image(file.getInputStream());
 
-		System.out.println("gut");
+		Thumbnail thumbnail4 = new Thumbnail(null, image.getWidth(), image.getHeight(), file.getId());
+
+		System.out.println(thumbnail4);
+
+		resource.setThumbnail4(thumbnail4);
+		resource.save();
 	    }
 	    /*
 	    else

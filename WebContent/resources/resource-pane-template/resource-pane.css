@@ -82,3 +82,33 @@
 	border-top-left-radius:0px !important;
 	border-bottom-left-radius:0px !important;
 }
+
+#lightbox {
+	display:none;
+    position:fixed; 
+    top: 0px;
+    left:0;
+    height:100%; 
+    width:100%; 
+    background: rgba(100, 100, 100, 0.6);
+    z-index:899;
+}
+
+#lightbox_background { 
+	position:absolute;
+    height:100%; 
+    width:100%; 
+    z-index:900; 
+} 
+#lightbox_container {
+	position:relative; 
+    background: #191919; 
+    margin:81px 32px 5px 32px; 
+    color:white;   
+    z-index:901; 
+}
+#lightbox_content {
+    height:100%;
+    width:100%;		
+}
+
