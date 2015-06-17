@@ -347,7 +347,9 @@ div#presentation_preview {
 	width: 195px;
 	height: 197px;
 	margin-bottom: 4px;
+	margin-right: 35px;
 	position: relative;
+	float:left;
 }
 #resource_description{
 	display: block;
