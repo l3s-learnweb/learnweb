@@ -106,31 +106,23 @@
 						 -->
 						<ui:fragment rendered="#{groupDetailBean.clickedUser.id != -1}">
 							<p:panel header="#{msg.myProfileTitle}">
-							
-							<!-- style="width:75%;text-align:left;" -->
-							
-							 <!-- fade out empty informations 
-							 rendered="#{not empty groupDetailBean.clickedUser.email}"
-							 rendered="#{not empty groupDetailBean.clickedUser.address}"
-							 rendered="#{not empty groupDetailBean.clickedUser.profession}" -->
-							 
-								<h:panelGrid columns="2" styleClass="members_panelgrid">
+								<h:panelGrid columns="2" styleClass="members_panelgrid" style="width:75%;text-align:left;">
 									<h:outputText value="#{msg.username}:" />
 									<h:outputText id="username" value="#{groupDetailBean.clickedUser.username}" />
 					
-									<h:outputText value="#{msg.email_address}:" />
-									<h:outputText value="#{groupDetailBean.clickedUser.email}" />
+									<h:outputText value="#{msg.email_address}:" rendered="#{not empty groupDetailBean.clickedUser.email}" />
+									<h:outputText value="#{groupDetailBean.clickedUser.email}" rendered="#{not empty groupDetailBean.clickedUser.email}" />
 					
 									<h:outputText value="#{msg.gender}:" />
 									<h:outputText value="--" rendered="#{groupDetailBean.clickedUser.gender == 0}" />					
 									<h:outputText value="#{msg.gender_male}" rendered="#{groupDetailBean.clickedUser.gender == 1}" />
 									<h:outputText value="#{msg.gender_female}" rendered="#{groupDetailBean.clickedUser.gender == 2}" />				
 									
-									<h:outputText value="#{msg.address}:" />
-									<h:outputText value="#{groupDetailBean.clickedUser.address}" />
+									<h:outputText value="#{msg.address}:" rendered="#{not empty groupDetailBean.clickedUser.address}" />
+									<h:outputText value="#{groupDetailBean.clickedUser.address}" rendered="#{not empty groupDetailBean.clickedUser.address}"/>
 					
-									<h:outputText value="#{msg.profession}:" /> 
-									<h:outputText value="#{groupDetailBean.clickedUser.profession}"/>
+									<h:outputText value="#{msg.profession}:" rendered="#{not empty groupDetailBean.clickedUser.profession}"/> 
+									<h:outputText value="#{groupDetailBean.clickedUser.profession}" rendered="#{not empty groupDetailBean.clickedUser.profession}"/>
 					
 									<h:outputText value="#{msg.interest}:" rendered="#{not empty groupDetailBean.clickedUser.interest}" />
 									<h:outputText value="#{groupDetailBean.clickedUser.interest}" rendered="#{not empty groupDetailBean.clickedUser.interest}" />

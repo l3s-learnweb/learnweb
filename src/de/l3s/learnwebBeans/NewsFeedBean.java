@@ -140,7 +140,7 @@ public class NewsFeedBean extends ApplicationBean
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		    }
-		    text = text + " with " + "<b>" + commenttobeadded.getText() + "</b>";
+		    text = text + " " + getLocaleMessage("with") + " " + "<b>" + commenttobeadded.getText() + "</b>";
 		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, true, l.getDate()));
 		    continue;
 

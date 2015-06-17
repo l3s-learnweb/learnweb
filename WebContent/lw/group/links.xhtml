@@ -88,7 +88,7 @@
 								<f:param name="group_id" value="#{groupDetailBean.groupId}" /> 
 							</p:commandLink> 
 							
-							<p:commandLink actionListener="#{groupDetailBean.onDeleteLinkFromGroup(link.id)}" update=":message :grouplinks" title="#{msg.delete}" onstart="return confirm('Do you really want to delete \'#{link.title}\'?');" rendered="${(userBean.admin || userBean.moderator || groupDetailBean.group.isLeader(userBean.user))}">
+							<p:commandLink actionListener="#{groupDetailBean.onDeleteLinkFromGroup(link.id)}" update=":message :grouplinks" title="#{msg.delete}" onstart="return confirm('${utilBean.getLocaleMessage('link_delete_question', link.title)}');" rendered="${(userBean.admin || userBean.moderator || groupDetailBean.group.isLeader(userBean.user))}">
 								<f:param name="group_id" value="#{groupDetailBean.group.id}"/>
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" styleClass="links_graphic"/> 
 							</p:commandLink>
@@ -114,7 +114,7 @@
 								<f:param name="group_id" value="#{groupDetailBean.groupId}" /> 
 							</p:commandLink>
 									
-							<p:commandLink actionListener="#{groupDetailBean.onDeleteLinkFromGroup(link.id)}" update=":message :grouplinks" title="#{msg.delete}" onstart="return confirm('Do you really want to delete \'#{link.title}\'?');" rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isLeader(userBean.user))}">
+							<p:commandLink actionListener="#{groupDetailBean.onDeleteLinkFromGroup(link.id)}" update=":message :grouplinks" title="#{msg.delete}" onstart="return confirm('${utilBean.getLocaleMessage('link_delete_question', link.title)}');" rendered="${link.id != -1 and (userBean.admin || userBean.moderator || groupDetailBean.group.isLeader(userBean.user))}">
 								<f:param name="group_id" value="#{groupDetailBean.group.id}"/>
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" styleClass="links_graphic"/> 
 							</p:commandLink>

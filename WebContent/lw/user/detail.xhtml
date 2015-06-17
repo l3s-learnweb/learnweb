@@ -1,10 +1,12 @@
-<ui:composition 
-	template="/templates/main/main.xhtml" 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
 	xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core" 
 	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition template="/lw/templates/new_main_t.xhtml"> 
 
 	<ui:define name="metadata">
 		<f:metadata>
@@ -21,23 +23,23 @@
 	<ui:define name="center_layout">
 
 		<p:panel header="#{msg.myProfileTitle}">
-			<h:panelGrid columns="2" class="float-left" style="margin-right:20px;">
+			<h:panelGrid columns="2" class="float-left" style="width:50%; margin-right:30px;">
 				<h:outputText value="#{msg.username}:" />
 				<h:outputText id="username" value="#{userDetailBean.user.username}" />
 
-				<h:outputText value="#{msg.email_address}:" />
-				<h:outputText value="#{userDetailBean.user.email}" />
+				<h:outputText value="#{msg.email_address}:" rendered="#{not empty groupDetailBean.clickedUser.email}"/>
+				<h:outputText value="#{userDetailBean.user.email}" rendered="#{not empty groupDetailBean.clickedUser.email}"/>
 
 				<h:outputText value="#{msg.gender}:" />
 				<h:outputText value="--" rendered="#{userDetailBean.user.gender == 0}" />					
 				<h:outputText value="#{msg.gender_male}" rendered="#{userDetailBean.user.gender == 1}" />
 				<h:outputText value="#{msg.gender_female}" rendered="#{userDetailBean.user.gender == 2}" />				
 				
-				<h:outputText value="#{msg.address}:" />
-				<h:outputText value="#{userDetailBean.user.address}" />
+				<h:outputText value="#{msg.address}:"/>
+				<h:outputText value="#{userDetailBean.user.address}"/>
 
-				<h:outputText value="#{msg.profession}:" />
-				<h:outputText value="#{userDetailBean.user.profession}" />
+				<h:outputText value="#{msg.profession}:" rendered="#{not empty groupDetailBean.clickedUser.profession}"/>
+				<h:outputText value="#{userDetailBean.user.profession}" rendered="#{not empty groupDetailBean.clickedUser.profession}" />
 
 				<h:outputText value="#{msg.interest}:" rendered="#{not empty userDetailBean.user.interest}" />
 				<h:outputText value="#{userDetailBean.user.interest}" rendered="#{not empty userDetailBean.user.interest}" />
@@ -51,23 +53,36 @@
 				</h:outputText>
 			</h:panelGrid>
 			
-			<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(userDetailBean.user)}" id="profile_image" />
+			<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(userDetailBean.user)}" id="profile_image" alt="profile image"/>
 			<br class="clear" />
 		</p:panel>
 
 		<p:panel header="#{userDetailBean.user.username}'s groups">
 			<h:form>
-				<p:dataGrid var="group" value="#{userDetailBean.user.groups}">
+				<ui:repeat var="group" value="#{userDetailBean.user.groups}">
+					<table>
+						<tr>	
+							<td>		
+								<h:outputLink value="group/overview.jsf">
+									<f:param name="group_id" value="#{group.id}" />
+									<h:outputText value="#{group.title}" />
+								</h:outputLink>
+							</td>
+						</tr>
+					</table>	
+				</ui:repeat>
+				<!--  <p:dataGrid var="group" value="#{userDetailBean.user.groups}">
 					<p:column>
 						<h:outputLink value="group/overview.jsf">
 							<f:param name="group_id" value="#{group.id}" />
 							<h:outputText value="#{group.title}" />
 						</h:outputLink>
 					</p:column>
-				</p:dataGrid>
+				</p:dataGrid>-->
 			</h:form>
 
 		</p:panel>
 		
 	</ui:define>
 </ui:composition>
+</html>

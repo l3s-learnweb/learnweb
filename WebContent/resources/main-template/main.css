@@ -134,6 +134,7 @@ iframe { border: none }
 	display: none;
 	top: 0;	
 	margin-right: 0.5rem;
+	z-index:1;
 }
 #language_selector li:last-child {
 	border-bottom-right-radius: 10px;
@@ -342,7 +343,7 @@ iframe { border: none }
 	width:100%;
 	overflow:hidden;
 }
-@-moz-document url-prefix() {
+@-moz-document url-prefix(){
     #sub_menu_bar { line-height:2.0rem; }
 }
 #sub_menu_bar .links { margin-left:22rem; }
@@ -556,9 +557,8 @@ h2 { margin-bottom: 0.8rem; }
 	box-shadow: 0 0 0px 0px #fff !important;
 }
 .ui-widget {font-size:1.2rem;}
-#right_pane .ui-button{
-	border-radius: 0px;
-}
-#right_pane .greenbutton{
-	border-radius:2px;
-}
+.ui-widget-content a{text-decoration:none;}
+.ui-widget-content a:hover{text-decoration:underline;}
+
+#right_pane .ui-button{border-radius: 0px;}
+#right_pane .greenbutton{border-radius:2px;}

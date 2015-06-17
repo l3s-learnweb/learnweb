@@ -131,8 +131,8 @@ public class MultiGroupFeedBean extends ApplicationBean
 		    {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		    }//getLocaleMessage(msgKey, args)
-		    text = text + " with " + "<b>" + commenttobeadded.getText() + "</b>";
+		    }//
+		    text = text + " " + getLocaleMessage("with") + " " + "<b>" + commenttobeadded.getText() + "</b>";
 		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
 		    continue;
 

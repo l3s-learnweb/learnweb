@@ -27,14 +27,14 @@
 		
 		
 							<h:outputText value="#{msg.email_address}:" />
-							<p:inputText id="useremail" value="#{profileBean.email}" validatorMessage="#{msg.email_message}">
+							<p:inputText id="useremail" value="#{profileBean.email}" validatorMessage="#{msg.email_message}" style="width:200px;">
 								<f:ajax render="useremailMessage"/>							
 							</p:inputText>
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="useremail" id="useremailMessage" />					
 						
 						
 							<h:outputText value="#{msg.gender}:" />
-							<h:selectOneMenu id="usergender" value="#{profileBean.gender}" >
+							<h:selectOneMenu id="usergender" value="#{profileBean.gender}" style="width:210px;">
 								<f:selectItem id="g0" itemLabel="--" itemValue="0" />
 								<f:selectItem id="g1" itemLabel="#{msg.gender_male}" itemValue="1" />
 								<f:selectItem id="g2" itemLabel="#{msg.gender_female}" itemValue="2" />														
@@ -48,12 +48,12 @@
 						
 						
 							<h:outputText value="#{msg.profession}:" />
-							<p:inputText id="userprofession" value="#{profileBean.profession}" />
+							<p:inputText id="userprofession" value="#{profileBean.profession}" style="width:200px;"/>
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="userprofession" id="userprofessionMessage" />					
 						
 						
 							<h:outputText value="#{msg.interest}:" />
-							<p:inputText id="userinterest" value="#{profileBean.interest}" />
+							<p:inputTextarea id="userinterest" value="#{profileBean.interest}" style="width:200px;" />
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="userinterest" id="userinterestMessage" />					
 						
 								
@@ -108,15 +108,11 @@
 							<h:outputText value="&nbsp;" style="font-size:5px; line-height:5px;" />
 							
 							<h:outputLabel for="password" value="#{msg.new_password}:" />
-							<p:password id="password" value="#{profileBean.password}" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
-								goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}">
-							</p:password>
+							<p:password id="password" value="#{profileBean.password}" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}" goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}"></p:password>
 							<p:message id="passwordMessage" showSummary="true" showDetail="false" styleClass="error" for="password" />
 		
 							<h:outputLabel for="confirm_password" value="#{msg.confirm_password}:" />
-							<p:password id="confirm_password" value="#{profileBean.confirmPassword}" validator="#{profileBean.validatePassword}" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
-								goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}">
-							</p:password>
+							<p:password id="confirm_password" value="#{profileBean.confirmPassword}" validator="#{profileBean.validatePassword}" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}" goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}"></p:password>
 							<p:message id="confirmPasswordMessage" showSummary="true" showDetail="false" styleClass="error" for="confirm_password" />
 		
 							<h:outputText value="" />

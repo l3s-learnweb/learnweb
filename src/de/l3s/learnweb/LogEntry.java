@@ -76,7 +76,7 @@ public class LogEntry implements Serializable
 	int groupId = rs.getInt(7);
 	//user_id, username, action, target_id, params, timestamp, group_id, r.title AS resource_title, g.title AS group_title
 
-	String usernameLink = "<a href=\"" + url + "user/detail.jsf?user_id=" + userId + "\" style=\" color:#3399FF;text-decoration: none;\">" + username + "</a> ";
+	String usernameLink = "<a href=\"" + url + "user/detail.jsf?user_id=" + userId + "\" style=\" color:#3399FF;text-decoration:none;\">" + username + "</a> ";
 
 	String resourceTitle = rs.getString("resource_title");
 	if(null == resourceTitle)
@@ -90,7 +90,7 @@ public class LogEntry implements Serializable
 	    groupTitle = "a group";
 	else
 	    groupTitle = StringHelper.shortnString(groupTitle, 80);
-	String group = "<a href=\"" + url + "group/overview.jsf?group_id=" + groupId + "\" style=\" color:#06bf8b;text-decoration: none; font-weight: bold\">" + groupTitle + "</a>";
+	String group = "<a href=\"" + url + "group/overview.jsf?group_id=" + groupId + "\" style=\" color:#53b398;text-decoration:none;font-weight:bold\">" + groupTitle + "</a>";
 
 	//
 
