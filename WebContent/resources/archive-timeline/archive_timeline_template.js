@@ -1,10 +1,8 @@
-var chart;
+var chart; //handle to access the HighCharts methods
+
 //Slide transitions between calendar and timeline view
-function open_timeline(){
-	$('#container').width($('#timeline_view').width());
-	chart.setSize($('#timeline_view').width(), $('#container').height());
-	chart.reflow();
-	
+function returnToTimeline(){
+	resizeChart();
 	//$('#calendar').hide("slide", { direction: "right" }, 1000);
 	//$('#container').show("slide", { direction: "left" }, 1000);
 	$('#container').fadeTo(1000, 1.0);
@@ -13,7 +11,7 @@ function open_timeline(){
 	return false;
 }
 
-//Creation of list of links to the archived versions
+//Creation of list of links to the archived versions in the calendar
 function archiveVersionsList(thisDayEvent){
 	var no_of_versions = thisDayEvent.dayEvents.length;
 	var list = "<ul style='padding-left:10px;list-style-type: circle;'>";
@@ -33,20 +31,25 @@ function addLeadingZero(num) {
 	}
 }
 
+//To handle resizing of the timeline on window resize event
 var id;
 $(window).resize(function() {
 	clearTimeout(id);
-    id = setTimeout(doneResizing, 500);
+    id = setTimeout(function(){
+    	if($('#container').is(':visible')){
+    		resizeChart();
+    	}
+    }, 500);
 });
 
-function doneResizing(){
-	if($('#container').is(':visible')){
+//To resize the highchart to fit the container width on window resize
+function resizeChart(){
 	$('#container').width($('#timeline_view').width());
 	chart.setSize($('#timeline_view').width(), $('#container').height());
 	chart.reflow();
-	}
 }
 
+//Initialize highcharts with data from lw_resource_archiveurl
 function loadTimeline(data_var){
 	//jsondata = JSON.parse(data_var);
 	

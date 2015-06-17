@@ -47,6 +47,7 @@
 .preview_box iframe {min-height:400px;}
 
 #archive_list_view{
+	padding-top: 10px;
     position: relative;
     max-height: 350px;
     width: 100%;
@@ -62,7 +63,7 @@
 
 #archive_list_view ul > li{
 	float: left;
-	width: 157px;
+	width: 149px;
 	text-align:center;
 	padding: 10px 0px 10px 0px;
 	border-radius: 4px;
