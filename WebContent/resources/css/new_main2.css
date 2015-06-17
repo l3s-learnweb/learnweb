@@ -351,6 +351,25 @@ div#presentation_preview {
 	position: relative;
 	float:left;
 }
+
+@media screen and (min-width:60em) and (max-width:89.9999em) {
+	.resource_panel{
+	margin-right: 1px;
+	}
+}
+
+@media screen and (min-width:90em){
+	.resource_panel{
+	margin-right: 10px;
+	}
+}
+
+@media screen and (min-width:120em){
+	.resource_panel{
+	margin-right: 28px;
+	}
+}
+
 #resource_description{
 	display: block;
 	padding: 5px 0px;
