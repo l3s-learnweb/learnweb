@@ -107,7 +107,7 @@ iframe { border: none }
 #informationonscreen{
 	cursor:pointer;
 	float:right;
-	border:1px solid #317360; /* old color: #FFFFFF*/
+	border:1px solid #FFFFFF; /* option color: ##317360*/
 	border-radius:5px;
 	padding:2px;
 	width:2rem;
@@ -144,7 +144,7 @@ iframe { border: none }
     height: 2rem;
     width: 3rem;
     display: block;
-    border: 1px solid #317360; /* old color: #FFFFFF*/
+    border: 1px solid #FFFFFF; /* option color: #317360*/
     border-radius: 5px;
     position: relative;
     padding: 2px;    
@@ -192,7 +192,7 @@ iframe { border: none }
 
 #logoutbutton{
 	display:block;
-	border:1px solid #317360; /* old color: #FFFFFF*/
+	border:1px solid #FFFFFF; /* option color: #317360*/
 	border-radius:5px;
 	padding:2px;
 	float:right;
@@ -203,8 +203,8 @@ iframe { border: none }
 }
 #loginbutton{
 	display:block;
-	border-right:1px solid #317360; /* old color: #FFFFFF*/
-	border-left:1px solid #317360; /* old color: #FFFFFF*/
+	border-right:1px solid #FFFFFF; /* option color: #317360*/
+	border-left:1px solid #FFFFFF; /* option color: #317360*/
 	line-height:4.6rem;
 	padding:0 1rem;
 	float:right;
@@ -242,13 +242,13 @@ iframe { border: none }
     display:block;
  }
 .userbar ul li {
-	border-left:1px solid #317360;
+	border-left:1px solid #FFFFFF; /*option color:#317360*/
 	line-height:4.6rem;
     list-style:none;
     float:left;
 }
 .userbar ul li:last-child{
-	border-right:1px solid #317360;
+	border-right:1px solid #FFFFFF; /*option color:#317360*/
 } 
 .userbar ul li a {
     padding-right:2rem;
