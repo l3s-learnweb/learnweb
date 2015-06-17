@@ -6,7 +6,6 @@ import java.sql.SQLException;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
-import javax.faces.context.FacesContext;
 
 import org.hibernate.validator.constraints.NotBlank;
 
@@ -94,13 +93,13 @@ public class LoginBean extends ApplicationBean implements Serializable
 
     public String logout()
     {
-	setKeepMessages();
+	//setKeepMessages();
 
 	log(Action.logout, 0, null);
 	UtilBean.getUserBean().setUser(null);
 
 	//addMessage(FacesMessage.SEVERITY_INFO, "logout_success");
-	FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
+	//FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
 	return "/lw/index.xhtml?faces-redirect=true";
     }
 }

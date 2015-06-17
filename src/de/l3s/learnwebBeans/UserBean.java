@@ -109,7 +109,8 @@ public class UserBean implements Serializable
 
 	// store the user also in the session so that it is accessible in the download servlet
 	HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-	session.setAttribute("learnweb_user", user);
+	//session.setAttribute("learnweb_user", user);
+	session.setAttribute("learnweb_user_id", new Integer(user == null ? 0 : user.getId()));
 
 	if(user != null)
 	{
@@ -259,8 +260,7 @@ public class UserBean implements Serializable
 	{
 	    if(activeCourseId == 0)
 	    {
-		log.fatal("activeCourseId is 0. This should never happen");
-		activeCourseId = 485; // set to default course
+		activeCourseId = 485; // set to public course
 	    }
 	    this.activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(activeCourseId);
 	    this.activeCourseCacheTime = System.currentTimeMillis();
