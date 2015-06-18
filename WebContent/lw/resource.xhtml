@@ -81,7 +81,7 @@
 						
 						<h:panelGroup rendered="#{not empty resourceBean.resource.description}">
 							<h3>#{msg.description}:</h3>
-							<h:outputText value="#{resourceBean.resource.description}" escape="false" />
+							<h:outputText value="#{resourceBean.resource.descriptionHTML}" escape="false" />
 						</h:panelGroup> 
 						
 						<h:form id="comments" prependId="false">

@@ -17,7 +17,7 @@
 		
 			<h:panelGroup rendered="#{not empty res.description}">
 				<b><h:outputText value="#{msg.description}:" /></b><br/>
-				<h:outputText value="${res.description}" escape="false" />
+				<h:outputText value="${res.descriptionHTML}" escape="false" />
 				<br/><br/>				
 			</h:panelGroup> 			
 			

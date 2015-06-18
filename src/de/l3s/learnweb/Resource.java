@@ -315,6 +315,11 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	return description;
     }
 
+    public String getDescriptionHTML()
+    {
+	return description.replace("\n", "<br/>");
+    }
+
     public String getUrl()
     {
 	return url;
@@ -554,7 +559,11 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
     public void setDescription(String description)
     {
+	System.out.println(description);
+
 	this.description = description == null ? "" : Jsoup.clean(description, Whitelist.simpleText());
+
+	System.out.println(description);
     }
 
     public void setUrl(String url)
@@ -1017,11 +1026,21 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	this.machineDescription = machineDescription;
     }
 
+    /**
+     * maximum width/height : 150 / 120
+     * 
+     * @return
+     */
     public Thumbnail getThumbnail0()
     {
 	return thumbnail0;
     }
 
+    /**
+     * height and width = 150px
+     * 
+     * @return
+     */
     public Thumbnail getThumbnail1()
     {
 	return thumbnail1;

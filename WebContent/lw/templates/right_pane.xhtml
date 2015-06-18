@@ -267,7 +267,7 @@
 
 					<h:panelGroup rendered="#{not empty bean.clickedResource.description}">
 							<div class="resource_field" style="padding-top: 10px">#{msg.description}</div>
-								<h:outputText id="resource_description" value="#{bean.clickedResource.description}" escape="false"></h:outputText>
+								<h:outputText id="resource_description" value="#{bean.clickedResource.descriptionHTML} &lt;br/&gt; test" escape="false" />
 							</h:panelGroup>
 							
 							<h:form id="archive_current_form" rendered="#{bean.clickedResource.storageType != 1}">
