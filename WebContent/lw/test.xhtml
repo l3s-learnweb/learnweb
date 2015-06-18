@@ -8,7 +8,7 @@
 
 	<h:head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-		<title>#{msg.error} - Learnweb</title>
+		<title>test - Learnweb</title>
 		<link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico" />
 		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/main.css" />
 		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />
@@ -94,6 +94,10 @@
 	</h:head>
 
 	<h:body>
+	<style>
+		.active_button_green{background-color:#74beaa !important;color:black !important};
+		.active_button{background-color:#85b2cb !important}	
+	</style>
 <script>
 /*setTimeout(function()
 		{ 
@@ -180,11 +184,29 @@
 		</header>		
 
 		<section id="content" class="small_page">
-
+			
 		
 				<p class="error">test page</p>
-				
-				
+		<div>
+			<p:button value="«" style="margin-right:5px;"/>
+			<p:button value="1" style="margin-right:5px;"/>		
+			<p:button value="Seite 2" style="margin-right:5px;" styleClass="active_button"/>		
+			<p:button value="3" style="margin-right:5px;"/>
+			<p:button value="»"/>	
+		</div>						
+		<br/>
+		<br/>
+		<div>
+		
+			<p:button value="«" style="margin-right:5px;" styleClass="greenbutton"/>
+			<p:button value="1" style="margin-right:5px;" styleClass="greenbutton"/>		
+			<p:button value="Seite 2" style="margin-right:5px;" styleClass="greenbutton active_button_green"/>		
+			<p:button value="3" style="margin-right:5px;" styleClass="greenbutton"/>
+			<p:button value="»" styleClass="greenbutton"/>
+		</div>					
+		<br/>
+		<br/>
+		
 	
 		</section>
 		

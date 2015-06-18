@@ -21,119 +21,99 @@
 	<ui:param name="smallPage" value="true" />
 
 	<ui:define name="center_layout">
+		<h:panelGroup id="profile_news">		
+			<ui:decorate template="/lw/templates/activity_stream.xhtml">
+				<ui:param name="news" value="#{newsFeedBean.newslist}"/>
+			</ui:decorate >
+		</h:panelGroup>
+	</ui:define>
 	
+	
+	<ui:define name="right_layout">
 	<style>
-		#user_informations, #user_groups{display: block;padding: 5px 15px;}
-		#user_informations:hover, #user_groups:hover{text-decoration:underline;background-color:#eee;}
+		#user_informations, #user_groups, #last_activities{
+			display:block;
+			padding: 5px 15px;
+			font-weight:bold;
+		}
+		#user_informations:hover, #user_groups:hover{
+			text-decoration:underline;
+			background-color:#eee;
+		}
 		.active{background-color:#eee;}
+		#group_table{
+			border:1px solid #A8A8A8;
+			padding:0.5em 1em;
+		}
+		#group_header{
+			border:1px solid #ddd;
+			background-color:#eee;
+			margin-bottom:5px;
+			padding:10px;
+			font-weight:bold;
+		}
 	</style>
-	<script>
-	$(document).ready(function(){
-		$("#user_groups").click(function(){
-			if($("#user_groups").hasClass("non-active")){
-				$("#user_informations").removeClass("active").addClass("non-active");
-				$("#user_groups").removeClass("non-active").addClass("active");
-				$("#informations_table").css("display","none");
-				$("#group_table").css("display","block");
-			}
-		})
-		
-		$("#user_informations").click(function(){
-			if($("#user_informations").hasClass("non-active")){
-				$("#user_groups").removeClass("active").addClass("non-active");
-				$("#user_informations").removeClass("non-active").addClass("active");
-				$("#informations_table").css("display","block");
-				$("#group_table").css("display","none");
-			}
-		})
-		
-	})
-	</script>
-		<div class="ui-layout-unit-header ui-widget-header ui-corner-all" id="group_header">
-				<span class="group_header">#{msg.myProfileTitle}</span> #{msg.of} #{userDetailBean.user.username}
-		
-			<ul>								
-					<li>
-							<h:outputText value="Informations" class="active" id="user_informations"/>
-					</li>								
-					<li>
-							<h:outputText value="#{msg.groupsTitle}" class="non-active" id="user_groups"/>
-					</li>
-					<!--  <li>
-						<a class="" href="./user/detail.jsf">
-							<h:outputText value="last activities" />
-						</a>
-					</li>-->
-			</ul>		
-		</div>
-		
-		<!--header="#{msg.myProfileTitle}"-->
-		<!--wird immer ausgeblendet nicht nur wenn nichts angegeben ist.
-		 rendered="#{not empty groupDetailBean.clickedUser.profession}"
-		 rendered="#{not empty groupDetailBean.clickedUser.address}"
-		 rendered="#{not empty groupDetailBean.clickedUser.email}"
-		  -->
-		<p:panel id="informations_table" style="display:block;">
-			<h:panelGrid columns="2" class="float-left" style="width:50%; margin-right:30px;">
-				<h:outputText value="#{msg.username}:" />
-				<h:outputText id="username" value="#{userDetailBean.user.username}" />
-
-				<h:outputText value="#{msg.email_address}:"/>
-				<h:outputText value="#{userDetailBean.user.email}"/>
-
-				<h:outputText value="#{msg.gender}:" />
-				<h:outputText value="--" rendered="#{userDetailBean.user.gender == 0}" />					
-				<h:outputText value="#{msg.gender_male}" rendered="#{userDetailBean.user.gender == 1}" />
-				<h:outputText value="#{msg.gender_female}" rendered="#{userDetailBean.user.gender == 2}" />				
-				
-				<h:outputText value="#{msg.address}:" />
-				<h:outputText value="#{userDetailBean.user.address}"/>
-
-				<h:outputText value="#{msg.profession}:"/>
-				<h:outputText value="#{userDetailBean.user.profession}"/>
-
-				<h:outputText value="#{msg.interest}:" rendered="#{not empty userDetailBean.user.interest}" />
-				<h:outputText value="#{userDetailBean.user.interest}" rendered="#{not empty userDetailBean.user.interest}" />
-
-				<h:outputText value="#{msg.additionalinformation}:" rendered="#{not empty userDetailBean.user.additionalInformation}" />
-				<h:outputText value="#{userDetailBean.user.additionalInformation}" rendered="#{not empty userDetailBean.user.additionalInformation}" />
-			
-				<h:outputText value="#{msg.registered_since}:" />
-				<h:outputText value="#{userDetailBean.user.registrationDate}">
-					<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
-				</h:outputText>
-			</h:panelGrid>
-			
-			<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(userDetailBean.user)}" id="profile_image" alt="profile image"/>
-			<br class="clear" />
-		 </p:panel>
-
-		<!--  header="#{userDetailBean.user.username}'s groups"-->
-		<p:panel id="group_table" style="display:none;">
-			<h:form>
-				<ui:repeat var="group" value="#{userDetailBean.user.groups}">
-					<table>
-						<tr>	
-							<td>		
-								<h:outputLink value="group/overview.jsf">
-									<f:param name="group_id" value="#{group.id}" />
-									<h:outputText value="#{group.title}" />
-								</h:outputLink>
-							</td>
-						</tr>
-					</table>	
-				</ui:repeat>
-				<!--  <p:dataGrid var="group" value="#{userDetailBean.user.groups}">
-					<p:column>
-						<h:outputLink value="group/overview.jsf">
-							<f:param name="group_id" value="#{group.id}" />
-							<h:outputText value="#{group.title}" />
-						</h:outputLink>
-					</p:column>
-				</p:dataGrid>-->
-			</h:form>
-		</p:panel>
+		<p:layoutUnit position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;"  id="right_pane" rendered="#{userBean.loggedIn}">
+			<div style="width:90%; position:relative; margin-left:auto; margin-right:auto;">
 	
+				<div id="group_header">
+					<span class="group_header">#{msg.myProfileTitle}</span> #{msg.of} #{userDetailBean.user.username}
+				</div>
+		
+				<p:panel id="informations_table">
+					<h:panelGrid columns="2" class="float-left" style="width:70%; margin-right:30px;">
+						<h:outputText value="#{msg.username}:" />
+						<h:outputText id="username" value="#{userDetailBean.user.username}" />
+		
+						<h:outputText value="#{msg.email_address}:"/>
+						<h:outputText value="#{userDetailBean.user.email}"/>
+		
+						<h:outputText value="#{msg.gender}:" />
+						<h:outputText value="--" rendered="#{userDetailBean.user.gender == 0}" />					
+						<h:outputText value="#{msg.gender_male}" rendered="#{userDetailBean.user.gender == 1}" />
+						<h:outputText value="#{msg.gender_female}" rendered="#{userDetailBean.user.gender == 2}" />				
+						
+						<h:outputText value="#{msg.address}:" />
+						<h:outputText value="#{userDetailBean.user.address}"/>
+		
+						<h:outputText value="#{msg.profession}:"/>
+						<h:outputText value="#{userDetailBean.user.profession}"/>
+		
+						<h:outputText value="#{msg.interest}:" rendered="#{not empty userDetailBean.user.interest}" />
+						<h:outputText value="#{userDetailBean.user.interest}" rendered="#{not empty userDetailBean.user.interest}" />
+		
+						<h:outputText value="#{msg.additionalinformation}:" rendered="#{not empty userDetailBean.user.additionalInformation}" />
+						<h:outputText value="#{userDetailBean.user.additionalInformation}" rendered="#{not empty userDetailBean.user.additionalInformation}" />
+					
+						<h:outputText value="#{msg.registered_since}:" />
+						<h:outputText value="#{userDetailBean.user.registrationDate}">
+							<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
+						</h:outputText>
+					</h:panelGrid>
+					
+					<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(userDetailBean.user)}" id="profile_image" alt="profile image"/>
+					<br class="clear" />
+				 </p:panel>
+		<br/>
+		<br/>
+
+				<div id="group_header">
+						<span class="group_header">#{msg.groupsTitle}</span> #{msg.of} #{userDetailBean.user.username}
+				</div>
+				<div id="group_table" style="display:block;">
+					<ui:repeat var="group" value="#{userDetailBean.user.groups}">
+						<div class="float-left" style="width:33%">		
+							<h:outputLink value="group/overview.jsf">
+								<f:param name="group_id" value="#{group.id}" />
+								<h:outputText value="#{group.title}" />
+							</h:outputLink>
+						</div>	
+					</ui:repeat>
+					<br class="clear"/>
+				</div>
+				
+			</div>
+		</p:layoutUnit>
 	</ui:define>
 </ui:composition>
 </html>

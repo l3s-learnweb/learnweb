@@ -135,7 +135,11 @@
 							<div id="lightbox">
 								<div id="lightbox_background" onclick="lightbox_close();"></div>
 								
-								<div id="lightbox_container">			
+								<div id="lightbox_container">	
+										<div id="lightbox_header">
+											<h:outputText value="#{bean.clickedResource.title}"></h:outputText>
+											<a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="close"></a>
+										</div>
 									<div id="lightbox_content">
 										<ui:fragment rendered="#{bean.clickedResource.type eq 'text'}">
 									    	<div style="overflow:auto; height:100%; width:100%; text-align:center;">

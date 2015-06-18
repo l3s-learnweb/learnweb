@@ -84,6 +84,10 @@
 	border-bottom-left-radius:0px !important;
 }
 
+#right_pane .button-active{
+	background-color:#4ea68d !important;
+}
+
 #lightbox {
 	display:none;
     position:fixed; 
@@ -111,5 +115,19 @@
 #lightbox_content {
     height:100%;
     width:100%;		
+}
+#lightbox_header{
+	font-size:1.5rem;
+	font-weight:bold;
+	padding:5px 0;
+	text-align:center;
+}
+#lightbox_close {
+	position:absolute;
+	right:10px;
+	top:10px;
+	width:24px;
+	height:24px;
+	background:url(../resources/search/icon/cancel-inv.png) center no-repeat;
 }
 
