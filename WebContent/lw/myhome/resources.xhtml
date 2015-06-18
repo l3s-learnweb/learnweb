@@ -14,10 +14,7 @@
 	  
 		<ui:define name="center_layout">
 			<br></br>
-			
-			<h:form>
-			 	<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{myResourcesBean.updateColumns}"></p:remoteCommand>
-	         </h:form>
+
 			<h:form  id="add_resource">
 				<p:commandButton styleClass="resource_button greenbutton" value="#{msg.upload_resource}" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
 					<f:setPropertyActionListener target="#{myResourcesBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
@@ -35,7 +32,7 @@
 				$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
 				$("#center_pane").prepend(div);				
 				
-				var columns = 3;
+				/*var columns = 3;
 				function nCol(){
 					var w = $(window).width();
 					var c = 3;
@@ -50,7 +47,7 @@
 						updateColumns([{name:'cols',value: columns}]);
 					}					
 				}
-				/*
+				
 				$(document).ready(nCol);
 				window.onresize = nCol;
 				*/
@@ -91,7 +88,7 @@
 				</h:form>
 			</p:dialog>
 	
-           <h:panelGroup id="resource_disp"> 
+            
 			<h:panelGroup layout="block" id="datagrid">  
 		       <ui:repeat var="result" value="#{myResourcesBean.resources}" >
 		       <h:form>
@@ -145,7 +142,7 @@
 			    </h:form>
 			    </ui:repeat>
 		    </h:panelGroup>
-		  </h:panelGroup> 
+		   
 	
 		</ui:define>
 		<ui:define name="right_layout">
