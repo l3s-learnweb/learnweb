@@ -6,6 +6,9 @@ import java.net.URLEncoder;
 import java.util.Collection;
 
 import org.apache.commons.codec.binary.Base64;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.safety.Whitelist;
 
 public class StringHelper
 {
@@ -133,17 +136,24 @@ public class StringHelper
 	    str.append('0');
 	return str.toString();
     }
-    /*
-    
-    public static String br2nl(String html) {
-        if(html==null)
-            return html;
-        Document document = Jsoup.parse(html);
-        document.outputSettings(new Document.OutputSettings().prettyPrint(false));//makes html() preserve linebreaks and spacing
-        document.select("br").append("\\n");
-        document.select("p").prepend("\\n\\n");
-        String s = document.html().replaceAll("\\\\n", "\n");
-        return Jsoup.clean(s, "", Whitelist.none(), new Document.OutputSettings().prettyPrint(false));
+
+    /**
+     * Like Jsoup.clean but it preserves linebreaks and spacing
+     * 
+     * @param html
+     * @param whitelist for example: Whitelist.none()
+     * @return
+     */
+    public static String clean(String html, Whitelist whitelist)
+    {
+	if(html == null)
+	    return html;
+	Document document = Jsoup.parse(html);
+	document.outputSettings(new Document.OutputSettings().prettyPrint(false));//makes html() preserve linebreaks and spacing
+	document.select("br").append("\\n");
+	document.select("p").prepend("\\n\\n");
+	String s = document.html().replaceAll("\\\\n", "\n");
+	return Jsoup.clean(s, "", whitelist, new Document.OutputSettings().prettyPrint(false));
     }
-    */
+
 }

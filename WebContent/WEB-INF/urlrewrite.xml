@@ -9,18 +9,17 @@
 
 -->
 <urlrewrite>
+
+<!-- 
 	<rule>
-		<from>/new/(.*)</from>
-		<to type="redirect">/$1</to>
+		<from>/lw/(.*)</from>
+		<to type="redirect">http://learnweb1.l3s.uni-hannover.de/lw/$1</to>
 	</rule>
 	
-	<rule>
-		<from>/p5/(.*)</from>
-		<to type="redirect">/$1</to>
-	</rule>
+
 
         
-    <!-- 
+    
     <rule>
         <note>
             The rule means that requests to /test/status/ will be redirected to /rewrite-status

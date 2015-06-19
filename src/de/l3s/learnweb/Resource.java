@@ -561,7 +561,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     {
 	System.out.println(description);
 
-	this.description = description == null ? "" : Jsoup.clean(description, Whitelist.simpleText());
+	this.description = description == null ? "" : StringHelper.clean(description, Whitelist.simpleText());
 
 	System.out.println(description);
     }

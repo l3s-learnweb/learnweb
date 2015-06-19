@@ -56,21 +56,18 @@ function lightbox_resize_container()
 	if(height < 200)
 		height = 200;
 	
-	var titleHeight = 0;//$('#lightbox_title').height() + 10;
+//	var titleHeight = $('#lightbox_title').height() + 10;
 	
 	$('#lightbox_container').height(height);
-	$('#lightbox_content').height(height-titleHeight);
+//	$('#lightbox_content').height(height-titleHeight);
 }
 
 function lightbox_load()
 {
 	box = $('#lightbox');
-	console.log('load box');
 }
 function lightbox_open()
 {
-	//var box = $('#lightbox');
-	
 	box.appendTo(document.body);
 	lightbox_resize_container();
 	box.show();

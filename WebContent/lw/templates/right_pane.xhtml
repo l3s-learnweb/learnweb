@@ -136,8 +136,8 @@
 								<div id="lightbox_background" onclick="lightbox_close();"></div>
 								
 								<div id="lightbox_container">	
-										<div id="lightbox_header">
-											<h:outputText value="#{bean.clickedResource.title}"></h:outputText>
+										<div id="lightbox_title">
+											<h:outputText value="#{bean.clickedResource.title}" escape="false" />
 											<a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="close"></a>
 										</div>
 									<div id="lightbox_content">
@@ -151,7 +151,7 @@
 								    	</ui:fragment>
 								    	<ui:fragment rendered="#{bean.clickedResource.type eq 'Image'}">
 									    		<img src="#{bean.clickedResource.thumbnail4.url}" height="#{bean.clickedResource.thumbnail4.height}" width="#{bean.clickedResource.thumbnail4.width}" 
-									    			style="height:auto; width:auto; max-width:100%; max-height:100%; display:block; margin:0 auto;"/>	
+									    			style="height:#{bean.clickedResource.thumbnail4.height gt 250? '100%':'auto'}; width:auto; display:block; margin:0 auto;"/>	
 								    	</ui:fragment>							
 									</div>
 								</div>
