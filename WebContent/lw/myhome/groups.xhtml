@@ -74,7 +74,17 @@
 			display:inline-block;
 			margin: 0 3px;	
 		}
+		#group_header{
+			border:1px solid #ddd;
+			background-color:#eee;
+			margin-bottom:5px;
+			padding:10px !important;
+			font-weight:bold;
+		}
 	</style>
+		<!--  <div id="group_header">
+			<span class="group_header">#{msg.groupsTitle}</span>
+		</div>-->
 		<h:form id="my_groups">
 					
 			<p:dataTable var="group" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">

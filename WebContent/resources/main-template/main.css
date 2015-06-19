@@ -107,7 +107,7 @@ iframe { border: none }
 #informationonscreen{
 	cursor:pointer;
 	float:right;
-	border:1px solid #FFFFFF; /* option color: ##317360*/
+	border:1px solid #FFFFFF; /* option color: #317360*/
 	border-radius:5px;
 	padding:2px;
 	width:2rem;
