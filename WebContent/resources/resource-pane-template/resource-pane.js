@@ -51,7 +51,7 @@ function lightbox_close()
 function lightbox_resize_container()
 {	
 	// resize lightbox container
-	var height = $(window).height() - 137;
+	var height = $(window).height() - 167;
 	
 	if(height < 200)
 		height = 200;
