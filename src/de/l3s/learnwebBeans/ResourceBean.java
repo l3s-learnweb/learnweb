@@ -8,6 +8,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ComponentSystemEvent;
 
+import org.apache.log4j.Logger;
 import org.primefaces.event.RateEvent;
 
 import de.l3s.learnweb.Comment;
@@ -21,6 +22,7 @@ import de.l3s.learnweb.User;
 public class ResourceBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -8834191417574642115L;
+    private final static Logger log = Logger.getLogger(ResourceBean.class);
     private int id;
     private Resource resource;
     private String tagName;
@@ -74,6 +76,7 @@ public class ResourceBean extends ApplicationBean implements Serializable
 	}
 	catch(Exception e)
 	{
+	    log.error("can't load resource: " + id, e);
 	    addFatalMessage(e);
 	}
     }
