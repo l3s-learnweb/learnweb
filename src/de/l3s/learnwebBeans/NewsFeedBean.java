@@ -12,7 +12,9 @@ import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.NewsEntry;
 import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.ResourceManager;
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.UserManager;
 
 @RequestScoped
 @ManagedBean
@@ -29,6 +31,7 @@ public class NewsFeedBean extends ApplicationBean
 
     public NewsFeedBean()
     {
+	/*
 	String temp = getFacesContext().getExternalContext().getRequestParameterMap().get("group_id");
 
 	type = BIG;
@@ -40,27 +43,40 @@ public class NewsFeedBean extends ApplicationBean
 	    entityId = u.getId();
 	    userlog = true;
 	}
+	*/
+	Integer groupId = getParameterInt("group_id");
+	Integer userId = getParameterInt("user_id");
+
+	type = BIG;
+	if(groupId != null)
+	    entityId = groupId;
+	else if(userId != null)
+	{
+	    entityId = userId;
+	    userlog = true;
+	}
+	else
+	{
+	    entityId = getUser().getId();
+	    userlog = true;
+	}
 
     }
 
-    private void convert()
+    private void convert() throws SQLException
     {
-
 	Action[] filter = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
 		Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.group_removing_resource };
 	List<LogEntry> feed = null;
-	try
-	{
-	    if(userlog)
-		feed = getLearnweb().getLogsByUser(entityId, filter, 50);
-	    else
-		feed = getLearnweb().getLogsByGroup(entityId, filter, 50);
-	}
-	catch(SQLException e)
-	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
+
+	if(userlog)
+	    feed = getLearnweb().getLogsByUser(entityId, filter, 50);
+	else
+	    feed = getLearnweb().getLogsByGroup(entityId, filter, 50);
+
+	UserManager userManager = getLearnweb().getUserManager();
+	ResourceManager resourceManager = getLearnweb().getResourceManager();
+
 	if(feed != null)
 	{
 	    newslist = new ArrayList<NewsEntry>();
@@ -69,18 +85,10 @@ public class NewsFeedBean extends ApplicationBean
 		User u = null;
 		Resource r = null;
 
-		try
-		{
-		    u = getLearnweb().getUserManager().getUser(l.getUserId());
-		    r = getLearnweb().getResourceManager().getResource(l.getResourceId());
-		}
-		catch(Exception e)
-		{
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		}
+		u = userManager.getUser(l.getUserId());
+		r = resourceManager.getResource(l.getResourceId());
 
-		System.out.println(l.getAction().toString());
+		//System.out.println(l.getAction().toString());
 
 		int commentcount = 0;
 		int tagcount = 0;
@@ -90,87 +98,59 @@ public class NewsFeedBean extends ApplicationBean
 		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, false, l.getDate()));
 		    continue;
 		}
-		try
-		{
-		    if(r.getComments() != null)
-			commentcount += r.getComments().size();
-		}
-		catch(Exception e)
-		{
-		    // TODO Auto-generated catch block
 
-		}
+		if(r.getComments() != null)
+		    commentcount += r.getComments().size();
 
-		try
-		{
-		    if(r.getTags() != null)
-			tagcount += r.getTags().size();
-		}
-		catch(Exception e)
-		{
-		    // TODO Auto-generated catch block
-
-		}
+		if(r.getTags() != null)
+		    tagcount += r.getTags().size();
 
 		if(l.getAction() == filter[0]) //add_resource
 		{
-
 		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, true, l.getDate()));
-		    continue;
-
 		}
-		if(l.getAction() == filter[1] && commentcount > 0)
+		else if(l.getAction() == filter[1] && commentcount > 0)
 		{
 		    Comment commenttobeadded = new Comment();
 		    commenttobeadded.setText("comment removed!");
-		    try
-		    {
 
-			for(Comment c : getLearnweb().getResourceManager().getCommentsByResourceId(r.getId()))
+		    for(Comment c : getLearnweb().getResourceManager().getCommentsByResourceId(r.getId()))
+		    {
+			if(c.getId() == Integer.parseInt(l.getParams()))
 			{
-			    if(c.getId() == Integer.parseInt(l.getParams()))
-			    {
-				commenttobeadded = c;
-			    }
+			    commenttobeadded = c;
 			}
+		    }
 
-		    }
-		    catch(SQLException e)
-		    {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		    }
 		    text = text + " " + getLocaleMessage("with") + " " + "<b>" + commenttobeadded.getText() + "</b>";
 		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, true, l.getDate()));
-		    continue;
-
 		}
-		if(l.getAction() == filter[15])
+		else if(l.getAction() == filter[15])
 		{
 		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, true, l.getDate()));
-		    continue;
-
 		}
-		if(l.getAction() == filter[14])
+		else if(l.getAction() == filter[14])
 		{
 		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, true, l.getDate()));
-		    continue;
-
 		}
-
-		newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, false, l.getDate()));
-
+		else
+		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, false, l.getDate()));
 	    }
-
 	}
-
     }
 
     public ArrayList<NewsEntry> getNewslist()
     {
 	if(null == newslist)
 	{
-	    convert();
+	    try
+	    {
+		convert();
+	    }
+	    catch(SQLException e)
+	    {
+		addFatalMessage(e);
+	    }
 	}
 	return newslist;
     }
@@ -208,6 +188,15 @@ public class NewsFeedBean extends ApplicationBean
     public void setType(int type)
     {
 	this.type = type;
-	convert();
+
+	try
+	{
+	    convert();
+	}
+	catch(SQLException e)
+	{
+	    addFatalMessage(e);
+	}
+
     }
 }

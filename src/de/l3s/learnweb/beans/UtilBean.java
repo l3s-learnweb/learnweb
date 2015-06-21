@@ -105,7 +105,7 @@ public class UtilBean implements Serializable
 	}
 	catch(MissingResourceException e)
 	{
-	    log.error("Missing translation for key: " + msgKey);
+	    //	    log.error("Missing translation for key: " + msgKey);
 	    msg = msgKey;
 	}
 	return msg;

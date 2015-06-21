@@ -261,14 +261,11 @@
 		</p:dialog>
 
 		<p:dialog header="Session expired" widgetVar="expiredExceptionDialog">
-	        #{msg.reload_page}
+			<div class="error" style="font-size:1.4rem">#{msg.reload_page}</div>	        
 	        <br/><br/>
-	        <p:button onclick="document.location.href = document.location.href;" value="Reload" />
-	        
-	        <a href="#" onclick="document.location.href = document.location.href">reload</a>
+	        <p:button onclick="document.location.href = document.location.href; return false;" value="Reload" />	        
 		</p:dialog>
 	</h:form>
-
 
 </ui:composition>
 

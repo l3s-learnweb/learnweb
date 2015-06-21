@@ -6,6 +6,7 @@
 html{ 
 	font-size:62.5%; 
 	/*overflow-y: hidden !important; (taken from new_main2.css)*/
+	height: 100%;
 }
 body {
 	min-width:320px;
@@ -35,6 +36,7 @@ iframe { border: none }
 	padding-top:4.6rem;	
 	height:100%;
 	width:100%;
+	box-sizing: border-box;
 	/*vertical-align: top; (taken from new_main2)*/ 
 }
 

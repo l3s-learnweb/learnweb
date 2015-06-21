@@ -49,10 +49,11 @@
 			        </h:selectOneMenu>
 					<p:commandButton value="Okay" ajax="true" update=":transcript_form:hidden_transcript" action="#{tedTranscriptBean.setTranscript}" oncomplete="displayTranscript();"/>
 
-					<p:commandButton styleClass="savebutton" value="#{msg.save}" onclick="saveEditing();" style="float:right;"></p:commandButton>
+					<p:commandButton styleClass="greenbutton" value="#{msg.save}" onclick="saveEditing();" style="float:right;" />
 				</h:form>
-				<b>Note:</b>#{msg.transcript_note}
-				<p:separator/>
+				<div class="transcript_note">
+				<b>#{msg.note}:</b> #{msg.transcript_note}
+				</div>
 			</p:outputPanel>
 			<h:form id="transcript_form">
 				<h:inputHidden id="hidden_transcript" value="#{tedTranscriptBean.tedResource.transcript}" />
