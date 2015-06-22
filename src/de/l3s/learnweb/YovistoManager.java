@@ -13,6 +13,7 @@ import java.util.Set;
 import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.learnweb.solrClient.SolrClient;
 
@@ -66,16 +67,30 @@ public class YovistoManager
 	ResourceManager resourceManager = learnweb.getResourceManager();
 	connect();
 	ResultSet result = null;
-	/*User rishita = learnweb.getUserManager().getUser(7727);
+	/*	User rishita = learnweb.getUserManager().getUser(7727);
 
-	for(Resource resource : yovistoGroup.getResources())
-	{
+		for(Resource resource : yovistoGroup.getResources())
+		{
 
-	    resourceManager.deleteResourcePermanent(resource.getId());
+		    try
+		    {
+			solr.indexResource(resource);
+		    }
+		    catch(IOException e)
+		    {
+			log.error(e);
+			e.printStackTrace();
+		    }
+		    catch(SolrServerException e)
+		    {
+			log.error(e);
+			e.printStackTrace();
+		    }
+		    System.out.println(resource.getTitle());
 
-	}
+		}
 
-	System.exit(0);*/
+		System.exit(0);*/
 	try
 	{
 
@@ -133,20 +148,20 @@ public class YovistoManager
 
 		    }
 
-		    /*try
+		    try
 		    {
-		        solr.indexResource(yovistoVideo);
+			solr.indexResource(yovistoVideo);
 		    }
 		    catch(IOException e)
 		    {
-		        log.error("Error in indexing the video with yovisto ID: " + yovistoId, e);
-		        e.printStackTrace();
+			log.error("Error in indexing the video with yovisto ID: " + yovistoId, e);
+
 		    }
 		    catch(SolrServerException e)
 		    {
-		        log.error("Error in indexing the video with yovisto ID: " + yovistoId, e);
-		        e.printStackTrace();
-		    }*/
+			log.error("Error in indexing the video with yovisto ID: " + yovistoId, e);
+
+		    }
 		    yovistoVideo.save();
 		}
 		catch(IOException e)
@@ -276,7 +291,7 @@ public class YovistoManager
 	}
 
 	if(!result.getString("alternative_title").isEmpty())
-	    description = " \nAlternative Title: " + result.getString("alternative_title") + "\n" + description;
+	    description = "Alternative Title: " + result.getString("alternative_title") + "\n" + description;
 	resource.setDescription(description);
 	resource.setDuration(result.getInt("durationInSec"));
 	resource.setMaxImageUrl(result.getString("thumbnail_url"));
