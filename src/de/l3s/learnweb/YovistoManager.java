@@ -78,8 +78,8 @@ public class YovistoManager
 	System.exit(0);*/
 	try
 	{
-	    //Philipp, you will be fetching the resource that is creating issue.
-	    PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM yovisto_video WHERE yovisto_id = 10027");
+
+	    PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM yovisto_video");
 	    result = preparedStmnt.executeQuery();
 	}
 	catch(SQLException e)
@@ -117,43 +117,43 @@ public class YovistoManager
 		{
 		    rpm.processVideo(yovistoVideo);
 
+		    admin.addResource(yovistoVideo);
+		    yovistoGroup.addResource(yovistoVideo, admin);
+		    try
+		    {
+			update.setInt(1, yovistoVideo.getId());
+			update.setInt(2, yovistoId);
+
+			update.executeUpdate();
+		    }
+		    catch(SQLException e)
+		    {
+			log.error(e);
+			e.printStackTrace();
+
+		    }
+
+		    /*try
+		    {
+		        solr.indexResource(yovistoVideo);
+		    }
+		    catch(IOException e)
+		    {
+		        log.error("Error in indexing the video with yovisto ID: " + yovistoId, e);
+		        e.printStackTrace();
+		    }
+		    catch(SolrServerException e)
+		    {
+		        log.error("Error in indexing the video with yovisto ID: " + yovistoId, e);
+		        e.printStackTrace();
+		    }*/
+		    yovistoVideo.save();
 		}
-		catch(IOException e)
+		catch(IOException | IllegalArgumentException e)
 		{
 		    log.error("Error in creating preview image for video with id: " + yovistoId, e);
 		    e.printStackTrace();
 		}
-		admin.addResource(yovistoVideo);
-		yovistoGroup.addResource(yovistoVideo, admin);
-		try
-		{
-		    update.setInt(1, yovistoVideo.getId());
-		    update.setInt(2, yovistoId);
-
-		    update.executeUpdate();
-		}
-		catch(SQLException e)
-		{
-		    log.error(e);
-		    e.printStackTrace();
-
-		}
-
-		/*try
-		{
-		    solr.indexResource(yovistoVideo);
-		}
-		catch(IOException e)
-		{
-		    log.error("Error in indexing the video with yovisto ID: " + yovistoId, e);
-		    e.printStackTrace();
-		}
-		catch(SolrServerException e)
-		{
-		    log.error("Error in indexing the video with yovisto ID: " + yovistoId, e);
-		    e.printStackTrace();
-		}*/
-		yovistoVideo.save();
 
 	    }
 	    else
@@ -164,7 +164,7 @@ public class YovistoManager
 		Set<String> tag = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER); //Tags from the yovisto_video table
 		tag.addAll(Arrays.asList(result.getString("user_tag").split(",")));
 
-		OwnerList<Tag, User> tagsFromResource = resourceManager.getTagsByResource(learnwebResourceId); //Tags already added to this resource
+		OwnerList<Tag, User> tagsFromResource = resourceManager.getTagsByResource(yovistoVideo.getId()); //Tags already added to this resource
 		StringBuilder out = new StringBuilder();
 		for(Tag tags : tagsFromResource)
 		{
@@ -232,7 +232,7 @@ public class YovistoManager
 	resource.setTitle(result.getString("title"));
 	String description = result.getString("description");
 	resource.setUrl("http://www.yovisto.com/video/" + result.getInt("yovisto_id"));
-	resource.setSource("Yovsito");
+	resource.setSource("Yovisto");
 	resource.setLocation("Yovisto");
 	resource.setType("Video");
 	resource.setFormat(result.getString("format"));
@@ -240,6 +240,8 @@ public class YovistoManager
 	    description = description + " \nKeywords: " + result.getString("keywords");
 	if(!result.getString("speaker").isEmpty())
 	    description = description + " \nSpeaker: " + result.getString("speaker");
+	if(!result.getString("category").isEmpty())
+	    description = description + "\nCategory: " + result.getString("category");
 	if(!result.getString("language").isEmpty())
 	{
 	    //Decode the language through its representation
@@ -263,7 +265,10 @@ public class YovistoManager
 	    else if(lang.isEmpty() && !lang.contains("none"))
 		lang += result.getString("language") + ", ";
 	    if(!lang.isEmpty())
+	    {
+		lang = lang.substring(0, lang.lastIndexOf(","));
 		description = description + "\nLanguage: " + lang;
+	    }
 
 	}
 
