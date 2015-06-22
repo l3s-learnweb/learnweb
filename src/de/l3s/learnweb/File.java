@@ -170,4 +170,10 @@ public class File implements Serializable, HasId
 	this.lastModified = lastModified;
     }
 
+    @Override
+    public String toString()
+    {
+	return "File [fileId=" + fileId + ", name=" + name + ", mimeType=" + mimeType + ", resourceId=" + resourceId + ", resourceFileNumber=" + resourceFileNumber + ", url=" + url + ", lastModified=" + lastModified + "]";
+    }
+
 }

@@ -104,7 +104,7 @@ public class FileManager
     {
 	List<File> files = new LinkedList<File>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_file WHERE deleted = 0 order by resource_id");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_file WHERE deleted = 0 order by resource_id desc");
 
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -316,6 +316,25 @@ public class FileManager
     {
 	FileManager fm = Learnweb.getInstance().getFileManager();
 
+	PreparedStatement update = Learnweb.getInstance().getConnection().prepareStatement("update lw_file set missing = 1 where file_id = ?");
+
+	for(File file : fm.getAllFiles())
+	{
+	    if(!file.exists())
+	    {
+		System.out.println(file.toString());
+
+		update.setInt(1, file.getId());
+		update.executeUpdate();
+	    }
+	    else
+		System.out.print(file.getId() + ",");
+
+	}
+
+	update.close();
+
+	/*
 	for(final java.io.File file : fm.folder.listFiles())
 	{
 	    //System.out.println(file.getName());
@@ -332,5 +351,7 @@ public class FileManager
 
 	    }
 	}
+	*/
     }
+
 }
