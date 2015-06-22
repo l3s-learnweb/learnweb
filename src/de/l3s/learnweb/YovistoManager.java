@@ -149,10 +149,13 @@ public class YovistoManager
 		    }*/
 		    yovistoVideo.save();
 		}
-		catch(IOException | IllegalArgumentException e)
+		catch(IOException e)
 		{
 		    log.error("Error in creating preview image for video with id: " + yovistoId, e);
-		    e.printStackTrace();
+		}
+		catch(IllegalArgumentException e)
+		{
+		    log.error("Error in creating preview image for video with id: " + yovistoId, e);
 		}
 
 	    }
