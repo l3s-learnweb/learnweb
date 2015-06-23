@@ -119,6 +119,11 @@ public class ResourceDecorator implements Serializable
 	return resource.getThumbnail3();
     }
 
+    public Thumbnail getThumbnail4()
+    {
+	return resource.getThumbnail4();
+    }
+
     public String getLocation()
     {
 	return resource.getLocation();

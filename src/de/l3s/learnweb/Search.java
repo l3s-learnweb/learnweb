@@ -3,9 +3,13 @@ package de.l3s.learnweb;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeMap;
@@ -24,6 +28,8 @@ public class Search implements Serializable
     private static final long serialVersionUID = -2405235188000105509L;
     final static Logger log = Logger.getLogger(Search.class);
 
+    private static final DateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     public enum SERVICE
     {
 	Bing,
@@ -36,6 +42,22 @@ public class Search implements Serializable
 	Loro, // stored in SOLR
 	Learnweb // stored in SOLR
     };
+
+    public enum DATE
+    {
+	d, // day
+	w, // week (7 days)
+	m, // month
+	y // year
+    }
+
+    public enum SIZE
+    {
+	small,
+	medium,
+	large,
+	extraLarge
+    }
 
     public enum MEDIA
     {
@@ -50,13 +72,15 @@ public class Search implements Serializable
 	image,
 	web,
 	video,
-	multimedia
+	multimedia // todo remove
     };
 
     private String query;
     private List<String> configMedia = new ArrayList<String>(Arrays.asList("image", "presentation", "video")); // the media types to search for
     private List<String> configService = new ArrayList<String>(Arrays.asList("Flickr", "YouTube", "Vimeo", "SlideShare", "Ipernity")); // the services to search in
-    private Integer configResultsPerService = 8;
+    private String configDate;
+    private int[] configSize = new int[2];
+    private Integer configResultsPerService = 20;
     private String configLanguage;
 
     // all resources
@@ -70,7 +94,7 @@ public class Search implements Serializable
     private InterWeb interweb;
     private MODE mode;
     private boolean hasMoreResults = true;
-    private boolean hasMoreLearnwebResults = true;
+    private boolean hasMoreLearnwebResults = false; // false
     private boolean hasMoreInterwebResults = true;
     private SolrSearch solrSearch;
     private int userId;
@@ -87,6 +111,7 @@ public class Search implements Serializable
 	this.userId = (null == user) ? -1 : user.getId();
 	this.solrSearch = new SolrSearch(query, user);
 
+	//source:ted
 	if(query.startsWith("source:"))
 	    hasMoreInterwebResults = false; // disable interweb for advanced search queries
     }
@@ -133,6 +158,19 @@ public class Search implements Serializable
 		hasMoreResults = false;
 
 	    resources.addAll(newResources);
+
+	    if(StringHelper.implode(configMedia, ",").equals("image") && configSize != null)
+	    {
+		for(Iterator<ResourceDecorator> it = resources.iterator(); it.hasNext();)
+		{
+		    int width = it.next().getThumbnail4().getWidth();
+		    if(configSize[0] > width || (configSize[1] != 0 && width > configSize[1]))
+		    {
+			it.remove();
+		    }
+		}
+	    }
+
 	    pages.put(page, newResources);
 	}
 	catch(Exception e)
@@ -216,6 +254,12 @@ public class Search implements Serializable
 	params.put("page", Integer.toString(page));
 	params.put("timeout", "50");
 
+	if(configDate != null)
+	{
+	    log.debug("Add date: " + configDate);
+	    params.put("date_from", configDate);
+	}
+
 	if(configLanguage != null)
 	    params.put("language", configLanguage);
 
@@ -273,15 +317,15 @@ public class Search implements Serializable
 	{
 	case image:
 	    setMedia(MEDIA.image);
-	    setService(SERVICE.Bing, SERVICE.Flickr, SERVICE.Ipernity); // , SERVICE.SlideShare  
+	    setService(SERVICE.Bing, SERVICE.Flickr, SERVICE.Ipernity, SERVICE.Loro, SERVICE.Learnweb); // , SERVICE.SlideShare  
 	    break;
 	case web:
 	    setMedia(MEDIA.text);
-	    setService(SERVICE.Bing);
+	    setService(SERVICE.Bing, SERVICE.Learnweb);
 	    break;
 	case video:
 	    setMedia(MEDIA.video);
-	    setService(SERVICE.YouTube, SERVICE.Vimeo); // , SERVICE.Flickr , SERVICE.SlideShare
+	    setService(SERVICE.YouTube, SERVICE.Vimeo, SERVICE.Loro, SERVICE.TED, SERVICE.Learnweb); // , SERVICE.Flickr , SERVICE.SlideShare
 	    break;
 	case multimedia:
 	    setMedia(MEDIA.video, MEDIA.image, MEDIA.text, MEDIA.presentation);
@@ -301,14 +345,72 @@ public class Search implements Serializable
     {
 	configMedia.clear();
 	for(MEDIA media : args)
+	{
 	    configMedia.add(media.name());
+	}
     }
 
     public void setService(SERVICE... args)
     {
+
 	configService.clear();
 	for(SERVICE service : args)
+	{
 	    configService.add(service.name());
+	}
+    }
+
+    public void setDate(DATE date)
+    {
+	Calendar cal = Calendar.getInstance();
+	if(date.equals(DATE.d))
+	{
+	    cal.add(Calendar.DATE, -1);
+	}
+	else if(date.equals(DATE.w))
+	{
+	    cal.add(Calendar.DATE, -7);
+	}
+	else if(date.equals(DATE.m))
+	{
+	    cal.add(Calendar.MONTH, -1);
+	}
+	else if(date.equals(DATE.y))
+	{
+	    cal.add(Calendar.YEAR, -1);
+	}
+
+	this.configDate = DEFAULT_DATE_FORMAT.format(cal.getTime());
+    }
+
+    public void setSize(SIZE size)
+    {
+	int minWidth = 0;
+	int maxWidth = 0;
+
+	if(size.equals(SIZE.small))
+	{
+	    minWidth = 0;
+	    maxWidth = 150;
+	}
+	else if(size.equals(SIZE.medium))
+	{
+	    minWidth = 150;
+	    maxWidth = 600;
+	}
+	else if(size.equals(SIZE.large))
+	{
+	    minWidth = 600;
+	    maxWidth = 1200;
+	}
+	else if(size.equals(SIZE.extraLarge))
+	{
+	    minWidth = 1200;
+	    maxWidth = 0;
+	}
+
+	this.configSize[0] = minWidth;
+	this.configSize[1] = maxWidth;
     }
 
     public void setResultsPerService(Integer configResultsPerService)

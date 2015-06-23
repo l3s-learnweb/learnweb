@@ -62,6 +62,99 @@
 .oldResource{
 }
 
+
+/* Search filters bar */ 
+
+#filters_menu_bar {
+	background-color: #6E6E6E;
+	line-height: 2.1rem;
+	width: 100%;
+	height: 2.8rem;
+}
+
+#filters_menu_bar > * {
+	margin-left: 22rem;
+}
+
+#filters_menu_bar ul {
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;
+}
+
+#filters_menu_bar ul li {
+	float: left;
+	display: block;
+	position: relative;
+	white-space: nowrap;
+}
+
+#filters_menu_bar ul li.active, #filters_menu_bar ul li:hover {
+	background-color: #7B7B7B;
+}
+
+#filters_menu_bar .filter-name {
+	cursor: pointer;
+	font-size: 1.3rem;
+	display: inline-block;
+	padding: 0.4rem 1.4rem 0.3rem;
+	color: #fff;
+}
+
+#filters_menu_bar .search-filters li:hover .filter-sub-bar {
+	display: block;
+}
+
+#filters_menu_bar .filter-sub-bar {
+	display: none;
+	position: absolute;
+	top: 2.8rem;
+	left: 0;
+	width: auto;
+	z-index: 10;
+	border: solid 1px #ccc;
+	background: #fff;
+}
+
+#filters_menu_bar .filter-sub-bar.hidden {
+	display: none;
+}
+
+#filters_menu_bar .filter-sub-bar a {
+  display: block;
+  white-space: nowrap;
+  text-decoration: none;
+  padding: 0 15px 0 10px;
+  line-height: 32px;
+  color: #000 !important;
+}
+
+#filters_menu_bar .filter-sub-bar a.active, #filters_menu_bar .filter-sub-bar a:hover {
+	background: #eee;
+}
+
+#filters_menu_bar a.clear-filter {
+	text-decoration: none;
+	font-size: 1.3rem;
+	display: inline-block;
+	padding: 0.4rem 1.4rem 0.3rem;
+}
+
+#filters_menu_bar a.clear-filter:hover {
+	text-decoration: underline;
+}
+
+#filters_menu_bar .arrow {
+	width: 0; 
+	height: 0; 
+	border-left: 0.5rem solid transparent;
+	border-right: 0.5rem solid transparent;
+	border-top: 0.4rem solid #fff;
+	display: inline-block;
+	margin-bottom: 2px;
+	margin-left: 5px;
+}
+
 /* ----------------------- List view ------------------------*/
 
 .list_view#results {

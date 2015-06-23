@@ -7,7 +7,8 @@
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="query" value="#{searchBean.query}" />
-			<f:viewParam name="action" value="#{searchBean.action}" />
+			<f:viewParam name="action" value="#{searchBean.queryMode}" />
+			<f:viewParam name="filter" value="#{searchBean.queryFilters}" />
 			<f:viewParam name="resultsetid" value="#{searchBean.resultsetId}" />
 			<f:viewParam name="selectedquerytimestamp" value="#{searchHistoryBean.selectedQueryTimestamp}"/>
 			<f:event type="preRenderView" listener="#{searchBean.preRenderView}" />
@@ -19,7 +20,7 @@
 	 
 	<ui:define name="sub_menu_bar">
 		<style type="text/css">
-			#content { padding-top:6.7rem; }
+			#content { padding-top: 6.7rem; }
 		</style>		
 		<div id="sub_menu_bar">  			
 			<h:outputLink value="group/overview.jsf" id="backtogroup" rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
@@ -32,7 +33,7 @@
 				<h:link value="Web" outcome="search" rendered="#{searchBean.searchMode != 'web'}" >
 					<f:param name="action" value="web" />
 					<f:param name="query" value="#{searchBean.query}" />								
-				</h:link>			
+				</h:link>
 
 				<h:outputText value="#{msg.Images}" styleClass="activeResource" rendered="#{searchBean.searchMode == 'image'}" />
 				<h:link value="#{msg.Images}" outcome="search" rendered="#{searchBean.searchMode != 'image'}" >
@@ -46,8 +47,9 @@
 					<f:param name="query" value="#{searchBean.query}" />
 				</h:link>
 			</h:form>		
-
+	
 			<h:panelGroup rendered="#{userBean.searchHistoryEnabled and false}">		
+
 				<h:form styleClass="resourcestype">
 				<span class="float-right" style="padding-right:5px; margin-top:-2.1rem;">
 					<h:panelGroup styleClass="search_history">
@@ -69,7 +71,209 @@
 				</h:form>
 			</h:panelGroup>
 			
-		</div>	
+		</div>
+		<ui:fragment rendered="#{userBean.moderator}">
+			
+			<style type="text/css">
+				#content { padding-top: 11rem; }
+			</style>	
+			<div id="filters_menu_bar">
+				<h:panelGroup styleClass="search-filters #{searchBean.searchMode}" layout="block">
+					<ul>
+						<ui:fragment rendered="#{searchBean.searchMode == 'web'}">
+							<li class="#{searchBean.filterService != null ? 'active' : null}">
+								<span class="filter-name">Source <span class="arrow"></span></span>
+								<div class="filter-sub-bar">
+									<h:link value="Any service" outcome="search" styleClass="#{searchBean.filterService == null ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'all')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Bing" outcome="search" styleClass="#{searchBean.filterService == 'Bing' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'Bing')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Learnweb" outcome="search" styleClass="#{searchBean.filterService == 'Learnweb' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'Learnweb')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+								</div>
+							</li>
+						</ui:fragment>
+						<ui:fragment rendered="#{searchBean.searchMode == 'image'}">
+							<li class="source #{searchBean.filterService != null ? 'active' : null}">
+								<span class="filter-name">Source <span class="arrow"></span></span>
+								<div class="filter-sub-bar">
+									<h:link value="Any service" outcome="search" styleClass="#{searchBean.filterService == null ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'all')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Bing" outcome="search" styleClass="#{searchBean.filterService == 'Bing' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'Bing')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Flickr" outcome="search" styleClass="#{searchBean.filterService == 'Flickr' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'Flickr')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Ipernity" outcome="search" styleClass="#{searchBean.filterService == 'Ipernity' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'Ipernity')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Loro" outcome="search" styleClass="#{searchBean.filterService == 'Loro' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'Loro')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Learnweb" outcome="search" styleClass="#{searchBean.filterService == 'Learnweb' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'Learnweb')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+								</div>
+							</li>
+							<li class="date #{searchBean.filterDate != null ? 'active' : null}">
+								<span class="filter-name">Date <span class="arrow"></span></span>
+								<div class="filter-sub-bar">
+									<h:link value="Any time" outcome="search" styleClass="#{searchBean.filterDate == null ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('date', 'all')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Past 24 hours" outcome="search" styleClass="#{searchBean.filterDate == 'd' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('date', 'd')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Past week" outcome="search" styleClass="#{searchBean.filterDate == 'w' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('date', 'w')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Past month" outcome="search" styleClass="#{searchBean.filterDate == 'm' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('date', 'm')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Past year" outcome="search" styleClass="#{searchBean.filterDate == 'y' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('date', 'y')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+								</div>
+							</li>
+							<li class="size #{searchBean.filterSize != null ? 'active' : null}">
+								<span class="filter-name">Size <span class="arrow"></span></span>
+								<div class="filter-sub-bar">
+									<h:link value="Any size" outcome="search" styleClass="#{searchBean.filterSize == null ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('size', 'all')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Small" outcome="search" styleClass="#{searchBean.filterSize == 'small' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('size', 'small')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Medium" outcome="search" styleClass="#{searchBean.filterSize == 'medium' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('size', 'medium')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Large" outcome="search" styleClass="#{searchBean.filterSize == 'large' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('size', 'large')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Extra Large" outcome="search" styleClass="#{searchBean.filterSize == 'extraLarge' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('size', 'extraLarge')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+								</div>
+							</li>
+						</ui:fragment>
+						<ui:fragment rendered="#{searchBean.searchMode == 'video'}">
+							<li>
+								<span class="filter-name">Source <span class="arrow"></span></span>
+								<div class="filter-sub-bar">
+									<h:link value="Any service" outcome="search" styleClass="#{searchBean.filterService == null ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'all')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="YouTube" outcome="search" styleClass="#{searchBean.filterService == 'YouTube' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="srv:YouTube" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Vimeo" outcome="search" styleClass="#{searchBean.filterService == 'Vimeo' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="srv:Vimeo" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Loro" outcome="search" styleClass="#{searchBean.filterService == 'Loro' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="srv:Loro" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="TED" outcome="search" styleClass="#{searchBean.filterService == 'TED' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="srv:TED" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Learnweb" outcome="search" styleClass="#{searchBean.filterService == 'Learnweb' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="srv:Learnweb" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+								</div>
+							</li>
+							<li class="date #{searchBean.filterDate != null ? 'active' : null}">
+								<span class="filter-name">Date <span class="arrow"></span></span>
+								<div class="filter-sub-bar">
+									<h:link value="Any time" outcome="search" styleClass="#{searchBean.filterDate == null ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('date', 'all')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Past 24 hours" outcome="search" styleClass="#{searchBean.filterDate == 'd' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('date', 'd')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Past week" outcome="search" styleClass="#{searchBean.filterDate == 'w' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('date', 'w')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Past month" outcome="search" styleClass="#{searchBean.filterDate == 'm' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('date', 'm')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Past year" outcome="search" styleClass="#{searchBean.filterDate == 'y' ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('date', 'y')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+								</div>
+							</li>
+						</ui:fragment>
+					</ul>
+					<h:link value="Clear filters" outcome="search" rendered="#{searchBean.searchFilters != null}" styleClass="clear-filter">
+						<f:param name="action" value="#{searchBean.searchMode}" />
+						<f:param name="query" value="#{searchBean.query}" />
+					</h:link>
+				</h:panelGroup>	
+			</div>
+		</ui:fragment>
 	</ui:define>
 				
 	<ui:define name="center_layout">
@@ -179,7 +383,7 @@
 					  
 					<h:outputText value="" />
 					<p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" process="@form" update=":backtogroup :growl" oncomplete="PF('resource_dialog').hide()"/>
-				</h:panelGrid>			
+				</h:panelGrid>		
 			</h:form> 			
 		</p:dialog>
 		

@@ -7,16 +7,20 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.sun.jersey.api.client.ClientHandlerException;
@@ -28,9 +32,11 @@ import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.Search;
+import de.l3s.learnweb.Search.DATE;
 import de.l3s.learnweb.Search.MEDIA;
 import de.l3s.learnweb.Search.MODE;
 import de.l3s.learnweb.Search.SERVICE;
+import de.l3s.learnweb.Search.SIZE;
 import de.l3s.learnweb.User;
 import de.l3s.learnwebBeans.AddResourceBean;
 import de.l3s.learnwebBeans.ApplicationBean;
@@ -44,22 +50,31 @@ public class SearchBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = 8540469716342051138L;
     private static final Logger log = Logger.getLogger(SearchBean.class);
 
-    private Search search;
+    private static final DateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     private String query = "";
+    private String queryMode;
+    private String queryFilters;
     private int page;
-    private String action;
+
+    private Search search;
+    private MODE searchMode;
+    private String searchFilters;
+    private SERVICE filterService;
+    private DATE filterDate;
+    private SIZE filterSize;
+
     private InterWeb interweb;
     private Resource selectedResource;
     private int selectedResourceTargetGroupId;
 
     private FactSheet graph = new FactSheet();
     private Search images;
-
-    private MODE searchMode;
     private String view = "float"; // float, grid or list
 
     private boolean graphLoaded = false;
 
+    /* For logging */
     private boolean logEnabled; //Only carry out search log functions if user is logged in
     private Date startTime; //To log when viewing time is started for a resource
     private Date endTime; //To log when viewing time is ended for a resource
@@ -78,7 +93,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	logEnabled = false;
 	historyResources = new HashSet<String>();
 
-	action = getPreference("SEARCH_ACTION", "web");
+	queryMode = getPreference("SEARCH_ACTION", "web");
     }
 
     public void preRenderView() throws SQLException
@@ -88,18 +103,17 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    return;
 	}
 
-	if(action != null)
+	if(queryMode != null)
 	{
-	    String actionTemp = action;
-	    action = null;
+	    String modeTemp = queryMode;
+	    queryMode = null;
 
-	    if(actionTemp.equals("web"))
+	    if(modeTemp.equals("web"))
 		onSearchText();
-	    else if(actionTemp.equals("image"))
+	    else if(modeTemp.equals("image"))
 		onSearchImage();
-	    else if(actionTemp.equals("video"))
+	    else if(modeTemp.equals("video"))
 		onSearchVideo();
-
 	}
 
 	// stop caching (back button problem)
@@ -112,19 +126,47 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     // -------------------------------------------------------------------------
 
+    public String onSearchVideo()
+    {
+	searchMode = Search.MODE.video;
+	setView("grid");
+	return onSearch();
+    }
+
+    public String onSearchImage()
+    {
+	searchMode = Search.MODE.image;
+	setView("float");
+	return onSearch();
+    }
+
+    public String onSearchText()
+    {
+	searchMode = Search.MODE.web;
+	setView("list");
+	return onSearch();
+    }
+
+    public String onSearchMultimedia()
+    {
+	searchMode = Search.MODE.multimedia;
+	return onSearch();
+    }
+
     public String onSearch()
     {
-	Date date = new Date(); //For getting the query timestamp 
-	SimpleDateFormat dateToTimestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	String onSearchTimestamp = dateToTimestamp.format(date);
+	Date tempDate = new Date(); //For getting the query timestamp 
+	String onSearchTimestamp = DEFAULT_DATE_FORMAT.format(tempDate);
 	searchLogClient = getLearnweb().getSearchlogClient();
 
 	int userId = getUser() == null ? -1 : getUser().getId();
 	if(userId > 0)
+	{
 	    logEnabled = true;
+	}
 
 	// search if a query is given and (it was not searched before or the query or searchmode has been changed)
-	if(!isEmpty(query) && (null == search || !query.equals(search.getQuery()) || searchMode != search.getMode()))
+	if(!isEmpty(query) && (null == search || !query.equals(search.getQuery()) || searchMode != search.getMode() || !StringUtils.equals(queryFilters, searchFilters)))
 	{
 	    if(null != search)
 		search.stop();
@@ -164,6 +206,61 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    search.setMode(searchMode);
 	    search.setLanguage(UtilBean.getUserBean().getLocaleCode());
 
+	    log.debug("Filters: " + queryFilters);
+	    if(queryFilters != null)
+	    {
+		String[] tempFilters = queryFilters.split(",");
+		searchFilters = queryFilters;
+		queryFilters = null;
+
+		setFilterDate(null);
+		setFilterService(null);
+		setFilterSize(null);
+
+		for(String filter : tempFilters)
+		{
+		    String[] nameValue = filter.split(":");
+		    if(nameValue.length != 2)
+		    {
+			continue;
+		    }
+		    else if(nameValue[0].equals("srv"))
+		    {
+			setFilterService(nameValue[1]);
+		    }
+		    else if(nameValue[0].equals("date"))
+		    {
+			setFilterDate(nameValue[1]);
+		    }
+		    else if(nameValue[0].equals("size"))
+		    {
+			setFilterSize(nameValue[1]);
+		    }
+		}
+
+		if(filterService != null)
+		{
+		    search.setService(filterService);
+		}
+
+		if(filterDate != null)
+		{
+		    search.setDate(filterDate);
+		}
+
+		if(filterSize != null)
+		{
+		    search.setSize(filterSize);
+		}
+	    }
+	    else if(searchFilters != null)
+	    {
+		setFilterDate(null);
+		setFilterService(null);
+		setFilterSize(null);
+		searchFilters = null;
+	    }
+
 	    if(getUser() != null && searchMode.equals(MODE.video) && UtilBean.getUserBean().getActiveCourse().getId() == 855)
 	    {
 		search.setService();
@@ -190,33 +287,6 @@ public class SearchBean extends ApplicationBean implements Serializable
 	}
 
 	return "/lw/search.xhtml?faces-redirect=true";
-    }
-
-    public String onSearchVideo()
-    {
-	searchMode = Search.MODE.video;
-	setView("grid");
-	return onSearch();
-    }
-
-    public String onSearchImage()
-    {
-	searchMode = Search.MODE.image;
-	setView("float");
-	return onSearch();
-    }
-
-    public String onSearchText()
-    {
-	searchMode = Search.MODE.web;
-	setView("list");
-	return onSearch();
-    }
-
-    public String onSearchMultimedia()
-    {
-	searchMode = Search.MODE.multimedia;
-	return onSearch();
     }
 
     //For comparing the resources in the current result set with another result set from a similar query in the past
@@ -254,7 +324,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	}
 
 	// TODO does this really make sense?
-	//  shouldn't you check if a resource with the same url was part of the old resultset to check if a resource is new?
+	// shouldn't you check if a resource with the same url was part of the old resultset to check if a resource is new?
 	while(resourceCount < historyResourcesSize)
 	{
 	    ++page;
@@ -512,15 +582,152 @@ public class SearchBean extends ApplicationBean implements Serializable
 	this.query = query;
     }
 
-    public String getAction()
+    public String getQueryMode()
     {
-	return action;
+	return queryMode;
     }
 
-    public void setAction(String action)
+    public void setQueryMode(String queryMode)
     {
-	if(action != null && action.length() != 0)
-	    this.action = action;
+	if(queryMode != null && queryMode.length() != 0)
+	{
+	    this.queryMode = queryMode;
+	}
+    }
+
+    public String getQueryFilters()
+    {
+	return queryFilters;
+    }
+
+    public void setQueryFilters(String queryFilters)
+    {
+	if(queryFilters != null && queryFilters.length() != 0)
+	{
+	    this.queryFilters = queryFilters;
+	}
+    }
+
+    public String getSearchFilters()
+    {
+	return searchFilters;
+    }
+
+    public void setSearchFilters(String searchFilters)
+    {
+	this.searchFilters = searchFilters;
+    }
+
+    public String getFilterService()
+    {
+	if(filterService == null)
+	{
+	    return null;
+	}
+	return filterService.name();
+    }
+
+    public void setFilterService(String stringService)
+    {
+	if(stringService == null)
+	{
+	    this.filterService = null;
+	}
+
+	for(SERVICE serv : SERVICE.values())
+	{
+	    if(serv.name().equals(stringService))
+	    {
+		this.filterService = serv;
+		break;
+	    }
+	}
+    }
+
+    public String getFilterDate()
+    {
+	if(filterDate == null)
+	{
+	    return null;
+	}
+	return filterDate.name();
+    }
+
+    public void setFilterDate(String stringDate)
+    {
+	if(stringDate == null)
+	{
+	    this.filterDate = null;
+	}
+
+	for(DATE date : DATE.values())
+	{
+	    if(date.name().equals(stringDate))
+	    {
+		this.filterDate = date;
+		break;
+	    }
+	}
+    }
+
+    public String getFilterSize()
+    {
+	if(filterSize == null)
+	{
+	    return null;
+	}
+	return filterSize.name();
+    }
+
+    public void setFilterSize(String stringSize)
+    {
+	if(stringSize == null)
+	{
+	    this.filterSize = null;
+	}
+
+	for(SIZE size : SIZE.values())
+	{
+	    if(size.name().equals(stringSize))
+	    {
+		this.filterSize = size;
+		break;
+	    }
+	}
+    }
+
+    public String generateFiltersLink(String param, String value)
+    {
+	List<String> output = new ArrayList<String>();
+
+	if(param.equals("srv") && !value.equals("all"))
+	{
+	    output.add("srv:" + value);
+	}
+	else if(!param.equals("srv") && filterService != null)
+	{
+	    output.add("srv:" + filterService.name());
+	}
+
+	if(param.equals("date") && !value.equals("all"))
+	{
+	    output.add("date:" + value);
+	}
+	else if(!param.equals("date") && filterDate != null)
+	{
+	    output.add("date:" + filterDate.name());
+	}
+
+	if(param.equals("size") && !value.equals("all"))
+	{
+	    output.add("size:" + value);
+	}
+	else if(!param.equals("size") && filterSize != null)
+	{
+	    output.add("size:" + filterSize.name());
+	}
+
+	return StringUtils.join(output, ',');
     }
 
     public Resource getSelectedResource()
