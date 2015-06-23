@@ -11,6 +11,9 @@
 <urlrewrite>
 
 <!-- 
+  URL rewrite disabled in web.xml
+  
+  
 	<rule>
 		<from>/lw/(.*)</from>
 		<to type="redirect">http://learnweb1.l3s.uni-hannover.de/lw/$1</to>
