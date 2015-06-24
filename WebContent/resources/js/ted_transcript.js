@@ -8,11 +8,11 @@ $(document).ready(function(){
 		}
 	});
 	
-	var hiddeninput = document.getElementById("transcript_form:hidden_transcript");
+	/*var hiddeninput = document.getElementById("transcript_form:hidden_transcript");
 	var ted_transcript = hiddeninput.value;
 	var div = document.getElementById("ted_transcript");
 	div.innerHTML = ted_transcript;
-    
+    */
 	Tipped.create('.note', function() {
         return {
           title: $(this).data('title'),
@@ -38,48 +38,41 @@ $(document).ready(function(){
 		};
 	}
 
-		$('#text').keypress(function(event){
-				 
-				var keycode = (event.keyCode ? event.keyCode : event.which);
-				if(keycode == '13'){
-					getUserText('ok');
-				}
-				
-			});
+	$('#text').keypress(function(event){
+		var keycode = (event.keyCode ? event.keyCode : event.which);
+		if(keycode == '13')
+			getUserText('ok');
+	});
 		
-		$(document).keyup(function(event){
-			var keycode = (event.keyCode ? event.keyCode : event.which);
-			if(keycode == '27')
-			{	
-				getUserText('cancel');	
-			}
-		});
+	$(document).keyup(function(event){
+		var keycode = (event.keyCode ? event.keyCode : event.which);
+		if(keycode == '27')
+			getUserText('cancel');
+
+	});
+
+	//Initializing rangy highlighter
+    rangy.init();
+    highlighter = rangy.createHighlighter();
+    //Adding the css class highlight to the rangy highlighter object
+    highlighter.addClassApplier(rangy.createCssClassApplier("highlight", {
+        ignoreWhiteSpace: true,
+        tagNames: ["span", "a"]
+    }));
 });
 
-//var noteid = 0;	
 var highlighter;
 var usertext = "";
 var synonyms = "";
 var sel_str ="";
 
-window.onload = function() {
-    rangy.init();
-    highlighter = rangy.createHighlighter();
-
-    highlighter.addClassApplier(rangy.createCssClassApplier("highlight", {
-        ignoreWhiteSpace: true,
-        tagNames: ["span", "a"]
-    }));
-
-};
-
-function displayTranscript(){
+/*function displayTranscript(){
 
 	var hiddeninput = document.getElementById("transcript_form:hidden_transcript");
 	var ted_transcript = hiddeninput.value;
 	var div = document.getElementById("ted_transcript");
 	div.innerHTML = ted_transcript;
-}
+}*/
 
 function highlightSelectedText() {
     highlighter.highlightSelection("highlight");
@@ -88,7 +81,7 @@ function highlightSelectedText() {
 function setSynonyms(xhr,status,args){
 	synonyms = "";
 	synonyms = synonyms + args.synonyms;
-	//alert(synonyms);		
+		
 	noteid++;
 	highlighter.addClassApplier(rangy.createCssClassApplier("note", {
         ignoreWhiteSpace: true,
@@ -153,7 +146,6 @@ function getUserText(buttonClicked){
 	{	saveTranscriptLog([{name:'word', value:sel_str},{name:'user_annotation', value:usertext},{ name:'action',value:'selection'}]);
 		escape_key_flag = false;
 	}
-	
 }
 
 function saveEditing(){

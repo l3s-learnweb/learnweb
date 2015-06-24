@@ -2,8 +2,10 @@ package de.l3s.learnwebBeans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
-import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -12,6 +14,7 @@ import java.util.regex.Pattern;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -43,7 +46,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     private int noteId;
     private int tedId;
     private int resourceId;
-    private Map<String, String> languageList;
+    private List<SelectItem> languageList;
     private String locale;
 
     //private transient SparqlClient sparqlClient;
@@ -222,7 +225,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	    RiWordnet wordnet = new RiWordnet(null);
 
 	    //For storing the similarity measures between input and retrieved synset words
-	    HashMap<String, Double> similarityMeasures = new HashMap<String, Double>();
+	    //HashMap<String, Double> similarityMeasures = new HashMap<String, Double>();
 
 	    String[] pos = wordnet.getPos(word);
 	    String[] synonyms = new String[pos.length];
@@ -231,7 +234,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 		synonyms[i] = word + "(" + pos[i] + ")- " + wordnet.getDescription(word, pos[i]) + ": ";
 
 		String[] possynonyms = wordnet.getAllSynsets(word, pos[i]);
-		similarityMeasures.clear();
+		//similarityMeasures.clear();
 		if(possynonyms != null)
 		{
 		    for(int j = 0; j < possynonyms.length; j++)
@@ -291,7 +294,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	this.transcriptLanguage = transcriptLanguage;
     }
 
-    public Map<String, String> getLanguageList()
+    public List<SelectItem> getLanguageList()
     {
 	try
 	{
@@ -303,23 +306,29 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
 	    if(languageList == null)
 	    {
-
+		Map<String, String> langList;
+		languageList = new LinkedList<SelectItem>();
 		if(tedResource.getIdAtService() != null)
 		{
-		    languageList = Learnweb.getInstance().getTedManager().getLangList(Integer.parseInt(tedResource.getIdAtService()));
+		    langList = Learnweb.getInstance().getTedManager().getLangList(Integer.parseInt(tedResource.getIdAtService()));
 		}
 		else
 		{
-		    String url = tedResource.getUrl();
-		    int tedId = Learnweb.getInstance().getTedManager().getTedId(url);
-		    languageList = Learnweb.getInstance().getTedManager().getLangList(tedId);
+		    langList = Learnweb.getInstance().getTedManager().getLangList(tedId);
 		}
 
-		if(languageList.isEmpty())
-		    languageList.put("No Transcripts Available", "NA");
-	    }
+		if(!langList.isEmpty())
+		{
+		    for(Map.Entry<String, String> entry : langList.entrySet())
+		    {
+			languageList.add(new SelectItem(entry.getValue(), entry.getKey()));
+		    }
+		    Collections.sort(languageList, languageComparator());
+		}
+		else
+		    languageList.add(new SelectItem("NA", "No Transcripts Available"));
 
-	    //langList = sparqlClient.getTranscriptLanguages(tedResource.getTitle());
+	    }
 
 	}
 	catch(RuntimeException e)
@@ -354,5 +363,17 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     public void setResourceId(int resourceId)
     {
 	this.resourceId = resourceId;
+    }
+
+    public static Comparator<SelectItem> languageComparator()
+    {
+	return new Comparator<SelectItem>()
+	{
+	    @Override
+	    public int compare(SelectItem o1, SelectItem o2)
+	    {
+		return o1.getLabel().compareTo(o2.getLabel());
+	    }
+	};
     }
 }

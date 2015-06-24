@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -45,15 +46,9 @@ public class YovistoManager
 		    {
 			solr.indexResource(resource);
 		    }
-		    catch(IOException e)
+		    catch(IOException |SolrServerException e)
 		    {
 			log.error(e);
-			e.printStackTrace();
-		    }
-		    catch(SolrServerException e)
-		    {
-			log.error(e);
-			e.printStackTrace();
 		    }
 		    System.out.println(resource.getTitle());
 
@@ -121,23 +116,14 @@ public class YovistoManager
 		    {
 			solr.indexResource(yovistoVideo);
 		    }
-		    catch(IOException e)
-		    {
-			log.error("Error in indexing the video with yovisto ID: " + yovistoId, e);
-
-		    }
-		    catch(SolrServerException e)
+		    catch(IOException | SolrServerException e)
 		    {
 			log.error("Error in indexing the video with yovisto ID: " + yovistoId, e);
 
 		    }
 		    yovistoVideo.save();
 		}
-		catch(IOException e)
-		{
-		    log.error("Error in creating preview image for video with id: " + yovistoId, e);
-		}
-		catch(IllegalArgumentException e)
+		catch(IOException | IllegalArgumentException e)
 		{
 		    log.error("Error in creating preview image for video with id: " + yovistoId, e);
 		}
@@ -173,7 +159,6 @@ public class YovistoManager
 		    catch(Exception e)
 		    {
 			log.error("Error in adding tags " + tagName, e);
-			e.printStackTrace();
 		    }
 		}
 	    }
@@ -203,7 +188,6 @@ public class YovistoManager
 	catch(Exception e)
 	{
 	    log.error("Failed because there was a problem in establishing connection.", e);
-	    e.printStackTrace();
 	    return true;
 	}
 	return false;
@@ -296,8 +280,18 @@ public class YovistoManager
     public static void main(String[] args) throws Exception
     {
 
-	YovistoManager lm = Learnweb.getInstance().getYovistoManager();
-	lm.saveYovistoResource();
+	/*YovistoManager lm = Learnweb.getInstance().getYovistoManager();
+	lm.saveYovistoResource();*/
+	String lang = "";
+	String[] languages = "pt, fr, it, da, fi, es".split(",");
+	for(String language : languages)
+	{
+	    Locale locale = new Locale(language.trim());
+	    lang += locale.getDisplayLanguage() + ", ";
+	}
+	if(!lang.isEmpty())
+	    lang = lang.substring(0, lang.lastIndexOf(","));
+	System.out.println(lang);
 
 	System.exit(0);
     }
