@@ -44,21 +44,23 @@
 			background-color:#eee;
 		}
 		.active{background-color:#eee;}
-		#group_table{
-			display:block;
-			border:1px solid #ccc;
-			padding:0.5em 1em;
-		}
+		#group_table{display:block;}
 
 	</style>
 		<p:layoutUnit position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;"  id="right_pane" rendered="#{userBean.loggedIn}">
 			<div style="width:90%; position:relative; margin-left:auto; margin-right:auto;">
 	
-				<div class="page_header">
-					<span>#{msg.myProfileTitle}</span> #{msg.of} #{userDetailBean.user.username}
-				</div>
+			<!--
+				<div class="ui-layout-unit-header ui-widget-header ui-corner-all">
+					<span>#{msg.myProfileTitle} #{msg.of} #{userDetailBean.user.username}</span>
+				</div>-->
 				
-				<p:panel id="informations_table">
+			<div class="ui-layout-unit-header ui-widget-header ui-corner-all">
+				<span>#{userDetailBean.user.username}</span>
+			</div>	
+				<p:fieldset legend="#{msg.myProfileTitle}">
+				
+				<div id="informations_table">
 					<h:panelGrid columns="2" class="float-left" style="width:70%; margin-right:30px;">
 						<h:outputText value="#{msg.username}:" />
 						<h:outputText id="username" value="#{userDetailBean.user.username}" />
@@ -91,15 +93,18 @@
 					
 					<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(userDetailBean.user)}" id="profile_image" alt="profile image"/>
 					<br class="clear" />
-				 </p:panel>
+				 </div>
+				 </p:fieldset>
 		<br/>
 		<br/>
 
-				<div class="page_header">
-						<span>#{msg.groupsTitle}</span> #{msg.of} #{userDetailBean.user.username} 
-				</div>
+			<!--  <div class="ui-layout-unit-header ui-widget-header ui-corner-all">
+					<span>#{msg.groupsTitle} #{msg.of} #{userDetailBean.user.username}</span>
+				</div>-->
 				
 				<div id="group_table">
+			
+				<p:fieldset legend="#{msg.groupsTitle}">
 					<ui:repeat var="group" value="#{userDetailBean.user.groups}">
 						<div class="float-left" style="width:33%; padding:0.5em 0;">		
 							<h:outputLink value="group/overview.jsf">
@@ -108,6 +113,7 @@
 							</h:outputLink>
 						</div>	
 					</ui:repeat>
+				</p:fieldset>
 					<br class="clear"/>
 				</div>
 				

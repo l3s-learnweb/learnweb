@@ -113,12 +113,13 @@
     z-index:901; 
     box-sizing: border-box;    
 	padding-top:3rem;
+	padding-bottom:3rem;
 }
 #lightbox_content {
     height:100%;
     width:100%;		
 }
-#lightbox_title{
+#lightbox_title, #lightbox_url{
 	font-size:2rem;
 	line-height:3rem;
 	height:3rem;
@@ -126,9 +127,14 @@
 	font-weight:bold;
 	text-align:center;
 	position:absolute;
-	top:0;
-	background-color:black;
 }
+#lightbox_title{top:0;}
+#lightbox_url{bottom:0;}
+#lightbox_url a{
+	color:white;
+	text-decoration:none;
+}
+#lightbox_url a:hover{text-decoration:underline;}
 #lightbox_close {
 	position:absolute;
 	right:1.5rem;
