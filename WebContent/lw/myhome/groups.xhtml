@@ -55,7 +55,7 @@
 					
 						<h:outputText value="" />
 						<h:selectBooleanCheckbox value="#{groupsBean.newGroup.restrictionOnlyLeaderCanAddResources}" />
-						<h:outputText value="Only the group leader can add resources" />
+						<h:outputText value="#{msg.add_resource_group_leader}" />
 				
 					</h:panelGrid>
 				</p:fieldset>
@@ -74,22 +74,13 @@
 			display:inline-block;
 			margin: 0 3px;	
 		}
-		#group_header{
-			border:1px solid #ddd;
-			background-color:#eee;
-			margin-bottom:5px;
-			padding:10px !important;
-			font-weight:bold;
-		}
 	</style>
-		<!--  <div id="group_header">
-			<span class="group_header">#{msg.groupsTitle}</span>
-		</div>-->
+		<div class="page_header">
+			<span>#{msg.myGroups}</span>
+		</div>
 		<h:form id="my_groups">
 					
 			<p:dataTable var="group" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
-
-				<f:facet name="header">#{msg.myGroups}</f:facet>
 				
 				<p:column headerText="#{msg.title}" sortBy="#{group.title}" width="17%">
 					<h:outputLink value="group/overview.jsf">
@@ -134,10 +125,11 @@
 		<br/>
 		<br/>
 		
+			<div class="page_header">
+				<span>#{msg.otherGroups}</span>
+			</div>
 			<h:form id="other_groups">
 				<p:dataTable var="group" value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}"  paginator="false" >
-
-					<f:facet name="header">#{msg.otherGroups}</f:facet>
 					
 					<p:column headerText="#{msg.title}" sortBy="#{group.title}" width="17%">
 						<h:outputLink value="group/overview.jsf">

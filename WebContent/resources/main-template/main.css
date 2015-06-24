@@ -481,10 +481,17 @@ iframe { border: none }
     display:block;
     clear: both;
 }
-.group_header{
+.group_header, .page_header span{
 	font-size: 20px;
 	font-weight: 100;
 	color: #489a83;
+}
+.page_header{
+	border:1px solid #ddd;
+	background-color:#eee;
+	margin-bottom:5px;
+	padding:10px !important;
+	font-weight:bold;
 }
 
 
@@ -551,6 +558,7 @@ form#add_resource { float:right; }
 
 h1 { margin-bottom: 1rem; }
 h2 { margin-bottom: 0.8rem; }
+
 
 /* change primefaces ui */
 .ui-button,

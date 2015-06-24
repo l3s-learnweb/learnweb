@@ -12,17 +12,9 @@
 	<ui:param name="helpText" value="#{msg.myhomeCommentsHelp}"/>	
 
 	<ui:define name="center_layout">
-<style>
-	#group_header{
-			border:1px solid #ddd;
-			background-color:#eee;
-			margin-bottom:5px;
-			padding:10px !important;
-			font-weight:bold;
-		}
-	</style>
-		<div id="group_header">
-			<span class="group_header">#{msg.myCommentsTitle}</span>
+
+		<div class="page_header">
+			<span>#{msg.myCommentsTitle}</span>
 		</div>			
 			<h:form>
 				<p:dataTable var="comment" value="#{userBean.user.comments}">
