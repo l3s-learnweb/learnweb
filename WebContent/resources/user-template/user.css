@@ -1,0 +1,13 @@
+#group_table{
+	display:block;
+	border:1px solid #ccc;
+	padding:0.5em 1em;
+}
+#group_table div{
+	width:33%; 
+	padding:0.5em 0;
+}
+#informations_table table{
+	width:70%; 
+	margin-right:30px;
+}

@@ -9,19 +9,18 @@
 	<ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
 	
 	<ui:define name="right_layout">
-	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" header="#{msg.createGroup}" style="border: none;" id="right_pane"> <!-- header="#{msg.createGroup}" -->
-		<h:panelGroup style= "left: 5%; position:relative; top:10px;">
+	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;" id="right_pane"> <!-- header="#{msg.createGroup}" -->
+		<h:panelGroup style= "left: 5%; position:relative;">
 			<h:form id="addgroupform" style="width: 90%;">
 				
-				<!-- <div class="page_header">
+				<div class="page_header">
 					<span>#{msg.createGroup}</span>
 				</div>
 				
-				<br/>
 				<div style="font-weight:bold; font-size:1.5rem;">#{msg.mandatory_field}</div>
 				<br/>
-				<div style="border:1px solid #ccc; padding:0.5em 1em;">-->
-				<p:fieldset legend="#{msg.mandatory_field}">
+				<div style="border:1px solid #ccc; padding:0.5em 1em;">
+				<!--  <p:fieldset legend="#{msg.mandatory_field}">-->
 					<h:panelGrid columns="3" columnClasses="medium-width">						
 					
 						<h:outputText value="#{msg.title}:" />
@@ -42,14 +41,14 @@
 						<h:outputText value="" rendered="#{not empty userBean.activeCourse.groupCategories}" />						
 							
 					</h:panelGrid>	
-					</p:fieldset>		 
-				<!-- </div> -->
+					<!-- </p:fieldset>	-->	 
+				</div> 
 				<br/>
-				<p:fieldset legend="#{msg.optional_data}"> 
+				<!-- <p:fieldset legend="#{msg.optional_data}"> -->
 				
-				<!-- <div style="font-weight:bold; font-size:1.5rem;">#{msg.optional_data}</div>
+				<div style="font-weight:bold; font-size:1.5rem;">#{msg.optional_data}</div>
 				<br/>
-				<div style="border:1px solid #ccc; padding:0.5em 1em;">-->
+				<div style="border:1px solid #ccc; padding:0.5em 1em;">
 					
 					<h:panelGrid columns="3" columnClasses="medium-width">
 					
@@ -62,8 +61,8 @@
 						<p:message for="new_language" showSummary="true" showDetail="false"/>
 							
 					</h:panelGrid>
-				<!-- </div>-->
-				</p:fieldset>
+				</div>
+				<!-- </p:fieldset>-->
 				<br/>
 				<p:fieldset legend="Group protection" rendered="false">
 					<h:panelGrid columns="3" columnClasses="medium-width">	

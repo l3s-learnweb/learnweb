@@ -14,16 +14,12 @@
 	<ui:define name="right_layout">
 		<p:layoutUnit position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;"  id="right_pane" rendered="#{userBean.loggedIn}">
 			<div style="width:90%; position:relative; margin-left:auto; margin-right:auto;">
-				
-				<br />
-				
-					<div class="ui-layout-unit-header ui-widget-header ui-corner-all">
+				<div class="page_header">
 						<span>#{msg.edit_profile}</span>
-					</div>
-					<br/>
+				</div>
 					<h:form id="profile_form" enctype="multipart/form-data">
 		
-						<h:panelGrid columns="3" style="float:left; margin-right:20px;">
+						<h:panelGrid columns="3" class="float-left" style="margin-right:20px;">
 							<h:outputText value="#{msg.username}:" />
 							<p:inputText id="username" value="#{profileBean.username}"  validator="#{profileBean.validateUsername}">
 								<f:ajax render="usernameMessage"/>							
@@ -84,21 +80,18 @@
 							<h:outputText value="" />
 							
 						</h:panelGrid>		
-		    					
+
 						<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(userBean.user)}" id="profile_image" alt="Profile image" />
-						
+						<br class="clear" />
 					</h:form>
-			
+				
 					
-				<br style="clear:both"/>
 				<br/>
 		
-		
-				<div class="ui-layout-unit-header ui-widget-header ui-corner-all">
-					<span>#{msg.change_password}</span>
+			<div class="page_header">
+						<span>#{msg.change_password}</span>
 				</div>
-				<br/>
-					<h:form id="passwordform"><!--  style="border:1px solid #ccc; padding:0.5em 1em;" -->
+					<h:form id="passwordform" style="border:1px solid #ccc; padding:0.5em 1em;">
 						<h:panelGrid columns="3" >
 						
 							<h:outputLabel for="current_password" value="#{msg.current_password}:" />
@@ -135,7 +128,7 @@
 	<ui:define name="center_layout">
 
 		<div class="page_header">
-			<span>#{msg.last_activities}</span> <!--  #{msg.of} #{userDetailBean.user.username}-->
+			<span>#{msg.last_activities}</span>
 		</div>
 		<h:panelGroup id="profile_news">		
 			<ui:decorate  template="/lw/templates/activity_stream.xhtml">

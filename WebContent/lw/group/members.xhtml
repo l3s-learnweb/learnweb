@@ -92,19 +92,31 @@
 						<script type="text/javascript">
 							function update_header()
 							{
-								$(".ui-layout-unit-header","#right_pane").html("#{groupDetailBean.clickedUser.username}");
+								//$(".ui-layout-unit-header","#right_pane").html("#{groupDetailBean.clickedUser.username}");
+								$(".ui-layout-unit-header","#right_pane").hide();
 								scroller();
 							}
 						</script>
-						<!-- 
-						<ui:fragment rendered="#{groupDetailBean.clickedUser.id eq -1}">
-							<div class="click_message">
-								<h:outputText value="#{msg.user_details}"></h:outputText>
-							</div>
-						</ui:fragment>
+						<style>
+						#right_pane .ui-layout-unit-header{
+							text-align:left;
+							background-color:#eee !important;
+							color: #489a83 !important;
+							font-size: 20px !important;
+							font-weight: 100 !important;
+							border: 1px solid #ddd !important;
+							padding:10px;
+							width:88%;
+							margin:0 auto;
+						}
+						</style>
 						
-						 -->
 						<ui:fragment rendered="#{groupDetailBean.clickedUser.id != -1}">
+						
+							<ui:decorate template="/templates/user/profile.xhtml">
+								<ui:param name="user" value="#{groupDetailBean.clickedUser}" />		
+							</ui:decorate>
+							<!-- 
 							<p:panel header="#{msg.myProfileTitle}">
 								<h:panelGrid columns="2" styleClass="members_panelgrid" style="width:75%;text-align:left;">
 									<h:outputText value="#{msg.username}:" />
@@ -114,7 +126,7 @@
 									<h:outputText value="#{groupDetailBean.clickedUser.email}" rendered="#{not empty groupDetailBean.clickedUser.email}" />
 					
 									<h:outputText value="#{msg.gender}:" />
-									<h:outputText value="--" rendered="#{groupDetailBean.clickedUser.gender == 0}" />					
+7									<h:outputText value="-" rendered="#{groupDetailBean.clickedUser.gender == 0}" />					
 									<h:outputText value="#{msg.gender_male}" rendered="#{groupDetailBean.clickedUser.gender == 1}" />
 									<h:outputText value="#{msg.gender_female}" rendered="#{groupDetailBean.clickedUser.gender == 2}" />				
 									
@@ -158,6 +170,7 @@
 							
 							<br class="clear" />
 							<br/>
+							-->
 						</ui:fragment>
 					</h:form>
 				</div>

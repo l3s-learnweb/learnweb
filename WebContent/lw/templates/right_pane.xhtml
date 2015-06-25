@@ -12,9 +12,8 @@
 		<h:outputScript library="resource-pane-template" name="resource-pane.js"/>
 		<h:outputStylesheet library="resource-pane-template" name="resource-pane.css"/>
 
-
 		<h:form id="remote_form">
-			<p:remoteCommand name="update_datagrid"  actionListener="#{bean.loadResources}" update=":datagrid :add_resource_panel" oncomplete="update_header()"></p:remoteCommand>
+			<p:remoteCommand name="update_datagrid" actionListener="#{bean.loadResources}" update=":datagrid :add_resource_panel" oncomplete="update_header()"></p:remoteCommand>
 		</h:form>
 
 		<div id="right_pane_wrapper">
@@ -42,7 +41,20 @@
 						lightbox_load();
 					}
 				</script>
-				<h:form rendered="#{bean.newResourceClicked and !bean.editResourceClicked}" id="add_resource_form">
+				<style>
+					#right_pane .ui-layout-unit-header{
+						text-align:left;
+						background-color:#eee !important;
+						color: #489a83 !important;
+						font-size: 20px !important;
+						font-weight: 100 !important;
+						border: 1px solid #ddd !important;
+						padding:10px;
+						width:88%;
+						margin:0 auto;
+					}
+				</style>
+				<h:form rendered="#{bean.newResourceClicked and !bean.editResourceClicked}" id="add_resource_form"  style="border:1px solid #ccc !important;">
 					<table id="add_resource_table">
 						<tr>
 							<td>
@@ -153,9 +165,9 @@
 										    	<img src="#{bean.clickedResource.thumbnail4.url}" height="#{bean.clickedResource.thumbnail4.height}" width="#{bean.clickedResource.thumbnail4.width}" style="height:#{bean.clickedResource.thumbnail4.height gt 250? '100%':'auto'}; width:auto; display:block; margin:0 auto;"/>	
 									    </ui:fragment>							
 									</div>
-									<div id="lightbox_url">
+									<!--  <div id="lightbox_url">
 										<a href="#{bean.clickedResource.url}">#{bean.clickedResource.url}</a>
-									</div>
+									</div>-->
 								</div>
 							</div>						
 						 

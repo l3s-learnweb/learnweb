@@ -1,0 +1,76 @@
+<html xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:p="http://primefaces.org/ui">
+	
+	<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/user-template/user.css" />
+<ui:composition>
+	
+	<h:outputStylesheet library="user-template" name="user.css"/>
+	
+	<div class="page_header">
+		<span>
+			#{msg.myProfileTitle}
+		</span> 
+		#{msg.of} #{user.username}
+	</div>
+				
+	<p:panel id="informations_table">
+		<h:panelGrid columns="2" class="float-left">
+			<h:outputText value="#{msg.username}:" />
+			<h:outputText id="username" value="#{user.username}" />
+		
+			<h:outputText value="#{msg.email_address}:"/>
+			<h:outputText value="#{user.email}"/>
+		
+			<h:outputText value="#{msg.gender}:" />
+			<h:outputText value="-" rendered="#{user.gender == 0}" />					
+			<h:outputText value="#{msg.gender_male}" rendered="#{user.gender == 1}" />
+			<h:outputText value="#{msg.gender_female}" rendered="#{user.gender == 2}" />				
+						
+			<h:outputText value="#{msg.address}:" />
+			<h:outputText value="#{user.address}"/>
+		
+			<h:outputText value="#{msg.profession}:"/>
+			<h:outputText value="#{user.profession}"/>
+		
+			<h:outputText value="#{msg.interest}:" rendered="#{not empty user.interest}" />
+			<h:outputText value="#{user.interest}" rendered="#{not empty user.interest}" />
+		
+			<h:outputText value="#{msg.additionalinformation}:" rendered="#{not empty user.additionalInformation}" />
+			<h:outputText value="#{user.additionalInformation}" rendered="#{not empty user.additionalInformation}" />
+					
+			<h:outputText value="#{msg.registered_since}:" />
+			<h:outputText value="#{user.registrationDate}">
+				<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
+			</h:outputText>
+		</h:panelGrid>
+					
+		<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(user)}" id="profile_image" alt="profile image"/>
+		
+		<br class="clear" />
+	 </p:panel>
+	 
+<br/>
+<br/>
+
+	<div class="page_header">
+		<span>
+			#{msg.groupsTitle}
+		</span> 
+		#{msg.of} #{user.username} 
+	</div>
+				
+	<div id="group_table">
+		<ui:repeat var="group" value="#{user.groups}">
+			<div class="float-left">		
+				<h:outputLink value="group/overview.jsf">
+					<f:param name="group_id" value="#{group.id}" />
+					<h:outputText value="#{group.title}" />
+				</h:outputLink>
+			</div>	
+		</ui:repeat>
+		<br class="clear"/>
+	</div>
+</ui:composition>
+</html>
