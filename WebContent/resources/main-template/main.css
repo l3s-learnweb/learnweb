@@ -117,6 +117,7 @@ iframe { border: none }
 	height:2rem;
 	position:relative;
 	margin:1rem 1rem 0 0;
+	z-index:5;
 }
 #informationonscreen:hover{
 	background-color:#4ea68d; /* old color: 74beaa*/
@@ -203,6 +204,7 @@ iframe { border: none }
     width:2rem;
     height:2rem;
     position:relative;
+    z-index:5;
 }
 #loginbutton{
 	display:block;
@@ -514,10 +516,11 @@ iframe { border: none }
 
 form#add_resource { float:right; }
 .resource_button{
-	float: right;
-	position: relative;
-	top: -3px;
-	right: -5px;
+	float:right;
+	position:relative;
+	top:-3px;
+	right:-5px;
+	border-radius:2px !important;
 }
 
 /* general settings */
@@ -595,5 +598,6 @@ h5 {
 .ui-widget-content a{text-decoration:none;}
 .ui-widget-content a:hover{text-decoration:underline;}
 .ui-corner-all{border-radius:0px;}
+
 #right_pane .ui-button{border-radius: 0px;}
 #right_pane .greenbutton{border-radius:2px;}

@@ -20,6 +20,9 @@
 	width:100%; 
 	margin: auto;
 }
+#add_resource_panel_content{
+	padding-top:0px !important;
+}
 .add_field{
 	width:100%;
 	box-sizing: border-box;
