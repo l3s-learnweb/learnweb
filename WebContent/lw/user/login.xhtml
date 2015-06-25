@@ -11,24 +11,6 @@
 	<ui:param name="disableGrowl" value="true" />
 
 	<ui:define name="center_layout">
-	<style>
-		.ui-corner-all{
-			border-radius:0px;
-		}
-		a{
-			color:#4f4f4f;
-		}
-		#login_div{
-			border: 1px solid #ccc; 
-			padding:0.5em 1em; 
-			color:#4f4f4f;
-		}
-	</style>
-		<div class="page_header">
-			<span>#{msg.loginTitle}</span>
-		</div>
-		<div id="login_div">
-			<ui:include src="/lw/templates/login_form.xhtml"/>
-		</div>
+		<ui:include src="/templates/user/login.xhtml"/>		
 	</ui:define>
 </ui:composition>

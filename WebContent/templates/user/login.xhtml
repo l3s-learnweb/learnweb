@@ -1,0 +1,53 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition> 
+		<style>
+			.ui-corner-all{
+				border-radius:0px;
+			}
+			a{
+				color:#4f4f4f;
+			}
+			#login_div{
+				border: 1px solid #ccc; 
+				padding:0.5em 1em; 
+				color:#4f4f4f;
+			}
+		</style>
+		<div class="page_header">
+			<span>#{msg.loginTitle}</span>
+		</div>
+		<div id="login_div">
+		
+			<h:form rendered="#{!userBean.loggedIn}">
+				<p:focus for="username"/>
+				<h:panelGrid columns="3">
+					<h:outputLabel for="username" value="#{msg.username}:"></h:outputLabel>
+					<p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" />
+					<p:message  styleClass="error" for="username" />
+					
+					<h:outputLabel for="password" value="#{msg.password}:"></h:outputLabel>
+					<p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" />
+					<p:message  styleClass="error" for="password" />
+					
+					<h:outputText value="" />
+					<p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" />	
+					<h:outputText value="" />
+				</h:panelGrid>
+			</h:form>		
+			
+			<h:outputText rendered="#{userBean.loggedIn}" value="#{msg.you_are_already_logged_in}" style="font-weight:bold;"/>
+			<br/>
+			<br/>
+			<h:outputLink  value="#{request.contextPath}/lw/user/password.jsf"><h:outputText value="#{msg.forgotten_password}" /></h:outputLink>
+			<br/>
+			<h:outputLink  value="#{request.contextPath}/lw/user/register.jsf"><h:outputText value="#{msg.registerLabel}" /></h:outputLink>
+		
+		</div>
+	</ui:composition>
+</html>

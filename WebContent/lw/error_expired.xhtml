@@ -3,24 +3,20 @@
 	xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core" 
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:f="http://java.sun.com/jsf/core">
 	
 	<ui:param name="pageTitle" value="Error" />
 	<ui:param name="smallPage" value="true" />
 	<ui:param name="disableGrowl" value="true" />
 	
 	<ui:define name="center_layout">
-		<p:panel header="Error">
-			<p class="error">
-				Your session has expired. Please try again.
-			</p>
-
-			<ui:fragment rendered="#{not userBean.loggedIn}">
-				<ui:include src="/lw/templates/login_form.xhtml" />
-			</ui:fragment>
-
-		</p:panel>
+		<p class="error">
+			Your session has expired. Please try again.
+		</p>
+	
+		<ui:fragment rendered="#{not userBean.loggedIn}">
+			<ui:include src="/templates/user/login.xhtml" />
+		</ui:fragment>
 	</ui:define>
 
 </ui:composition>

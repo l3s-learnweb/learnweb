@@ -31,10 +31,7 @@
 			<p:messages id="message" showDetail="false" showSummary="true" escape="false" />
 	
 			<h:panelGroup layout="block" styleClass="small_page" rendered="#{loginRequired and !userBean.loggedIn}">
-				<p:panel header="#{msg.loginRequiredTitle}">
-					<h4>#{msg.loginRequiredText}</h4>
-					<ui:include src="/lw/templates/login_form.xhtml" />
-				</p:panel>
+				<ui:include src="/templates/user/login.xhtml" />
 			</h:panelGroup>
 
 			<h:panelGroup rendered="#{!loginRequired || userBean.loggedIn}">
