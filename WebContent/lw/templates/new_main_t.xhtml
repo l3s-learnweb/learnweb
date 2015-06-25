@@ -54,18 +54,18 @@
 						}
 						
 					
-						/*
-						scroller();
-						setInterval("scroller()",500);
-						*/
 						
 						scroller();
+						setInterval("scroller()",500);  // TODO get rid of this. Should be handled on resize windows, but that doesn't work
+						
+						
+						//scroller();
 					});	
-					
+					/*
 					$(window).resize(function() {
 						scroller();		
 					});	
-				
+				*/
 				</script>				
 			
 				<ui:insert name="sub_menu_bar"></ui:insert>

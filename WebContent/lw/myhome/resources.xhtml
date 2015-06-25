@@ -31,26 +31,6 @@
 				$(div).append(group_header);
 				$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
 				$("#center_pane").prepend(div);				
-				
-				/*var columns = 3;
-				function nCol(){
-					var w = $(window).width();
-					var c = 3;
-					
-					if(w &lt; 1400)
-						c = 2;
-					if(w &gt; 1800)
-						c = 4;
-					
-					if(columns != c) {
-						columns = c;
-						updateColumns([{name:'cols',value: columns}]);
-					}					
-				}
-				
-				$(document).ready(nCol);
-				window.onresize = nCol;
-				*/
 			</script> 
 			
 			
@@ -103,7 +83,6 @@
 			            	<p:row>
 			            		<span class="groupid">#{result.id}</span>
 			            		<h:graphicImage styleClass="resource_thumbnail" width="140" height="140" value="#{result.thumbnail1.url}" rendered="#{not empty result.thumbnail1}" alt="#{result.title}"></h:graphicImage>
-								<h:graphicImage styleClass="resource_thumbnail" width="140" height="140" value="#{result.thumbnail0.url}" rendered="#{empty result.thumbnail1 and not empty result.thumbnail0}" alt="#{result.title}"></h:graphicImage>
 				            	<h:outputText styleClass="resource_thumbnail" value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"140\" height=\"140\" />")}' escape="false" rendered="#{empty result.thumbnail1 and empty result.thumbnail0}"></h:outputText>
 
 			            		<div class="buttons">

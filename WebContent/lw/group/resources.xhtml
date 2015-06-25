@@ -61,28 +61,6 @@
 	
 			<script type="text/javascript">				
 			$("#center_pane").prepend($("#group_header"));
-	
-			/*var columns = 3;
-			function nCol(){
-				var w = $(window).width();
-				var c = 3;
-				
-				if(w &lt; 1400)
-					c = 2;
-				if(w &gt; 1800)
-					c = 4;
-				
-				if(columns != c) {
-					columns = c;
-					updateColumns([{name:'cols',value: columns}]);
-				}						
-			}
-			
-			$(nCol());
-			$(window).resize(function() {
-				nCol();	
-			});*/
-
 			</script>
 				
 				<p:dialog id="confirmDialog" header="#{msg.delete_resource_title}"  widgetVar="confirmation" appendTo="@(body)" >
@@ -104,9 +82,7 @@
 				        </ul>
 				        <p:commandButton value="#{msg.delete_from_group} '#{groupDetailBean.group.title}'" update=":datagrid :growl :add_resource_panel" oncomplete="PF('confirmation').hide(); update_header(); ;"  
 				                   actionListener="#{groupDetailBean.removeResourceFromGroup}" process=":datagrid" style="display:block; margin: 10px 0;"/>  
-			              
-		   
-				        
+			        
 			        </h:form>
 			    </p:dialog>
 				
@@ -187,9 +163,8 @@
 				            	<p:row>
 				            		<span class="groupid">#{result.id}</span>
 
-									<h:graphicImage styleClass="resource_thumbnail" width="140" height="140" value="#{result.thumbnail1.url}" rendered="#{not empty result.thumbnail1}" alt="#{result.title}"></h:graphicImage>
-									<h:graphicImage styleClass="resource_thumbnail" width="140" height="140" value="#{result.thumbnail0.url}" rendered="#{empty result.thumbnail1 and not empty result.thumbnail0}" alt="#{result.title}"></h:graphicImage>
-				            		<h:outputText styleClass="resource_thumbnail" value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"140\" height=\"140\" />")}' escape="false" rendered="#{empty result.thumbnail1 and empty result.thumbnail0}"></h:outputText>
+									<h:graphicImage styleClass="resource_thumbnail" width="140" height="140" value="#{result.thumbnail1.url}" rendered="#{not empty result.thumbnail1}" alt="#{result.title}" />
+						    		<h:outputText styleClass="resource_thumbnail" value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"140\" height=\"140\" />")}' escape="false" rendered="#{empty result.thumbnail1 and empty result.thumbnail0}"></h:outputText>
 
 				            		<div class="buttons">
 				            			<p:commandLink oncomplete="PF('resource_dialog').show()" title="#{msg.addToMyResources}" update=":resource_form" styleClass="buttons_link resource_commandlink" process="@this">
