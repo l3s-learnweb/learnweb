@@ -8,7 +8,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -75,17 +74,17 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private ArrayList<NewsEntry> newslist;
     private User clickedUser;
     private Group clickedGroup;
-    private String tagName;
+    //private String tagName;
     private String wizardURL = null;
-    private String newComment;
+    //private String newComment;
     private Boolean newResourceClicked = false;
     private Boolean editResourceClicked = false;
-    private Tag selectedTag;
+    //private Tag selectedTag;
     private boolean loaded = false;
     private Resource selectedResource;
     public Resource clickedResource;
     public Presentation clickedPresentation;
-    public Comment clickedComment;
+    //public Comment clickedComment;
     private int numberOfColumns;
 
     private boolean allLogs = false;
@@ -111,6 +110,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     private Group newGroup = new Group();
 
+    private int page = 0;
+    private int totalPages;
+
     public GroupDetailBean() throws SQLException
     {
 	loadGroup();
@@ -123,6 +125,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
 	numberOfColumns = 3;
 
+	if(groupId != 0)
+	    totalPages = getLearnweb().getResourceManager().getGroupResourcesPageCount(groupId);
 	log.debug("init GroupDetailBean()");
     }
 
@@ -306,7 +310,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void loadResources() throws SQLException
     {
-	resourcesAll = new OwnerList<Resource, User>(group.getResources()); // copy resources
+	resourcesAll = new OwnerList<Resource, User>(group.getResources(page)); // copy resources
 	Collections.sort(resourcesAll, Resource.createTitleComparator());
     }
 
@@ -327,9 +331,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     private void load()
     {
-	if(loaded)
+	/*if(loaded)
 	    return;
-	loaded = true;
+	loaded = true;*/
 
 	try
 	{
@@ -398,7 +402,15 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public List<Resource> getResources()
     {
-	load();
+	try
+	{
+	    loadResources();
+	}
+	catch(SQLException e)
+	{
+	    e.printStackTrace();
+	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	}
 	return resourcesAll;
     }
 
@@ -724,36 +736,36 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
     }
 
-    public String addTag()
+    /*public String addTag()
     {
-	if(null == getUser())
-	{
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
-	    return null;
-	}
-
-	if(tagName == null || tagName.length() == 0)
-	    return null;
-
-	try
-	{
-	    int index = 0;
-	    while(!getResources().get(index).getTitle().equals(clickedResource.getTitle()))
-		index++;
-	    clickedResource.addTag(tagName, getUser());
-	    getResources().remove(index);
-	    getResources().add(clickedResource);
-	    addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
-	    log(Action.tagging_resource, clickedResource.getId(), tagName);
-	    tagName = ""; // clear tag input field 
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "fatal_error");
-	}
-	return null;
+    if(null == getUser())
+    {
+        addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
+        return null;
     }
+
+    if(tagName == null || tagName.length() == 0)
+        return null;
+
+    try
+    {
+        int index = 0;
+        while(!getResources().get(index).getTitle().equals(clickedResource.getTitle()))
+    	index++;
+        clickedResource.addTag(tagName, getUser());
+        getResources().remove(index);
+        getResources().add(clickedResource);
+        addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
+        log(Action.tagging_resource, clickedResource.getId(), tagName);
+        tagName = ""; // clear tag input field 
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        addGrowl(FacesMessage.SEVERITY_ERROR, "fatal_error");
+    }
+    return null;
+    }*/
 
     public void addSelectedResource()
     {
@@ -931,22 +943,22 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return getLocaleMessage("subgroupsLabel");
     }
 
-    public void addComment()
+    /*public void addComment()
     {
-	try
-	{
-	    //getLearnweb().getResourceManager().commentResource(newComment, getUser(), clickedResource);
-	    Comment comment = clickedResource.addComment(newComment, getUser());
-	    log(Action.commenting_resource, clickedResource.getId(), comment.getId() + "");
-	    addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
-	    newComment = "";
-	}
-	catch(Exception e)
-	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
+    try
+    {
+        //getLearnweb().getResourceManager().commentResource(newComment, getUser(), clickedResource);
+        Comment comment = clickedResource.addComment(newComment, getUser());
+        log(Action.commenting_resource, clickedResource.getId(), comment.getId() + "");
+        addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
+        newComment = "";
     }
+    catch(Exception e)
+    {
+        // TODO Auto-generated catch block
+        e.printStackTrace();
+    }
+    }*/
 
     public Group getNewGroup()
     {
@@ -1000,19 +1012,19 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
     }
 
-    public void onDeleteTag()
+    /*public void onDeleteTag()
     {
-	try
-	{
-	    clickedResource.deleteTag(selectedTag);
-	    addMessage(FacesMessage.SEVERITY_INFO, "tag_deleted");
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	}
+    try
+    {
+        clickedResource.deleteTag(selectedTag);
+        addMessage(FacesMessage.SEVERITY_INFO, "tag_deleted");
     }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+    }
+    }*/
 
     public boolean canDeleteTag(Object tagO) throws SQLException
     {
@@ -1094,15 +1106,15 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	this.presentations = presentations;
     }
 
-    public String getNewComment()
+    /*public String getNewComment()
     {
-	return newComment;
+    return newComment;
     }
 
     public void setNewComment(String newComment)
     {
-	this.newComment = newComment;
-    }
+    this.newComment = newComment;
+    }*/
 
     public Boolean getNewResourceClicked()
     {
@@ -1166,72 +1178,72 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	this.reloadLogs = reloadLogs;
     }
 
-    public String getTagName()
+    /*public String getTagName()
     {
-	return tagName;
+    return tagName;
     }
 
     public void setTagName(String tagName)
     {
-	this.tagName = tagName;
+    this.tagName = tagName;
     }
 
     public Tag getSelectedTag()
     {
-	return selectedTag;
+    return selectedTag;
     }
 
     public void setSelectedTag(Tag selectedTag)
     {
-	this.selectedTag = selectedTag;
+    this.selectedTag = selectedTag;
     }
 
     public void onEditComment()
     {
-	try
-	{
-	    getLearnweb().getResourceManager().saveComment(clickedComment);
-	    addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	}
+    try
+    {
+        getLearnweb().getResourceManager().saveComment(clickedComment);
+        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+    }
     }
 
     public void onDeleteComment()
     {
-	try
-	{
-	    clickedResource.deleteComment(clickedComment);
-	    addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
-	    log(Action.deleting_comment, clickedComment.getResourceId(), clickedComment.getId() + "");
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	}
+    try
+    {
+        clickedResource.deleteComment(clickedComment);
+        addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
+        log(Action.deleting_comment, clickedComment.getResourceId(), clickedComment.getId() + "");
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+    }
     }
 
     public boolean canEditComment(Object commentO) throws Exception
     {
-	if(!(commentO instanceof Comment))
-	    return false;
+    if(!(commentO instanceof Comment))
+        return false;
 
-	User user = getUser();
-	if(null == user)// || true)
-	    return false;
-	if(user.isAdmin() || user.isModerator())
-	    return true;
+    User user = getUser();
+    if(null == user)// || true)
+        return false;
+    if(user.isAdmin() || user.isModerator())
+        return true;
 
-	Comment comment = (Comment) commentO;
-	User owner = comment.getUser();
-	if(user.equals(owner))
-	    return true;
-	return false;
-    }
+    Comment comment = (Comment) commentO;
+    User owner = comment.getUser();
+    if(user.equals(owner))
+        return true;
+    return false;
+    }*/
 
     public int getNumberOfColumns()
     {
@@ -1267,41 +1279,15 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     }
 
-    public void archiveCurrentVersion()
+    /*public Comment getClickedComment()
     {
-	boolean addToQueue = true;
-	try
-	{
-	    if(clickedResource.getArchiveUrls().size() > 0)
-	    {
-		long timeDifference = (new Date().getTime() - clickedResource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
-		addToQueue = timeDifference > 300;
-	    }
-
-	    if(addToQueue)
-	    {
-		getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
-		addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
-	    }
-	    else
-		addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
-	}
-	catch(SQLException e)
-	{
-	    log.error("Error while fetching the archive urls from a resource", e);
-	    addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
-	}
-    }
-
-    public Comment getClickedComment()
-    {
-	return clickedComment;
+    return clickedComment;
     }
 
     public void setClickedComment(Comment clickedComment)
     {
-	this.clickedComment = clickedComment;
-    }
+    this.clickedComment = clickedComment;
+    }*/
 
     public Presentation getClickedPresentation()
     {
@@ -1326,5 +1312,86 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    this.clickedResource = clickedResource;
 	}
 	newResourceClicked = false;
+    }
+
+    public int getPage()
+    {
+	return page;
+    }
+
+    public void setPage(int page)
+    {
+	this.page = page;
+    }
+
+    public int getTotalPages()
+    {
+	return totalPages;
+    }
+
+    public String firstPageButtonValue()
+    {
+	if(page == 0)
+	    return "Seite " + (page + 1);
+	else if(page > 0 && page < totalPages)
+	    return "" + page;
+	else if(page == totalPages)
+	    return "" + (page - 1);
+	return "";
+    }
+
+    public int firstPageButtonClick()
+    {
+	if(page == 0)
+	    return page;
+	else if(page > 0 && page < totalPages)
+	    return page - 1;
+	else if(page == totalPages)
+	    return page - 2;
+	return 0;
+    }
+
+    public String secondPageButtonValue()
+    {
+	if(page == 0)
+	    return "" + (page + 2);
+	else if(page > 0 && page < totalPages)
+	    return "Seite " + (page + 1);
+	else if(page == totalPages)
+	    return "" + page;
+	return "";
+    }
+
+    public int secondPageButtonClick()
+    {
+	if(page == 0)
+	    return page + 1;
+	else if(page > 0 && page < totalPages)
+	    return page;
+	else if(page == totalPages)
+	    return page - 1;
+	return 0;
+    }
+
+    public String thirdPageButtonValue()
+    {
+	if(page == 0)
+	    return "" + (page + 3);
+	else if(page > 0 && page < totalPages)
+	    return "" + (page + 2);
+	else if(page == totalPages)
+	    return "Seite " + (page + 1);
+	return "";
+    }
+
+    public int thirdPageButtonClick()
+    {
+	if(page == 0)
+	    return page + 2;
+	else if(page > 0 && page < totalPages)
+	    return page + 1;
+	else if(page == totalPages)
+	    return page;
+	return 0;
     }
 }

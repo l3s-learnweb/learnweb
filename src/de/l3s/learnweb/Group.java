@@ -165,6 +165,13 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	return resources;
     }
 
+    public OwnerList<Resource, User> getResources(int page) throws SQLException
+    {
+	ResourceManager rm = Learnweb.getInstance().getResourceManager();
+	resources = rm.getResourcesByGroupId(id, page);
+	return resources;
+    }
+
     public boolean addResource(Resource resource, User user) throws SQLException
     {
 	resources = null;

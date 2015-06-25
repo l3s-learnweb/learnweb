@@ -34,6 +34,7 @@ public class ResourceManager
     private final Learnweb learnweb;
 
     private ICache<Resource> cache;
+    private int pageSize;
 
     protected ResourceManager(Learnweb learnweb)
     {
@@ -42,6 +43,7 @@ public class ResourceManager
 
 	this.learnweb = learnweb;
 	this.cache = cacheSize == 0 ? new DummyCache<Resource>() : new Cache<Resource>(cacheSize);
+	this.pageSize = Integer.parseInt(properties.getProperty("RESOURCES_PAGE_SIZE"));
     }
 
     /**
@@ -736,6 +738,43 @@ public class ResourceManager
 	select.close();
 
 	return resources;
+    }
+
+    public OwnerList<Resource, User> getResourcesByGroupId(int groupId, int page) throws SQLException
+    {
+	UserManager um = learnweb.getUserManager();
+
+	OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
+
+	PreparedStatement select = learnweb.getConnection().prepareStatement(
+		"SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
+	select.setInt(1, groupId);
+	select.setInt(2, pageSize);
+	select.setInt(3, page * pageSize);
+	ResultSet rs = select.executeQuery();
+	while(rs.next())
+	{
+	    int userId = rs.getInt(1);
+	    Resource resource = createResource(rs);
+	    User user = userId == 0 ? null : um.getUser(userId);
+
+	    if(null != resource)
+		resources.add(resource, user, rs.getDate(2));
+	}
+	select.close();
+
+	return resources;
+    }
+
+    public int getGroupResourcesPageCount(int groupId) throws SQLException
+    {
+	int count = 0;
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT count(*) as count from lw_resource where resource_id IN (select resource_id from lw_group_resource WHERE group_id=?)");
+	select.setInt(1, groupId);
+	ResultSet rs = select.executeQuery();
+	if(rs.next())
+	    count = rs.getInt("count");
+	return count / pageSize;
     }
 
     private Resource createResource(ResultSet rs) throws SQLException

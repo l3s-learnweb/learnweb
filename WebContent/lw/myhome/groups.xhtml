@@ -128,7 +128,7 @@
 						<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" /> 								
 					</p:commandLink>
 					
-					<p:commandLink action="#{groupsBean.deleteGroup}" update=":growl :group_menu :my_groups" styleClass="optionIcon" title="#{msg.delete}" process="@this" onstart="return confirm('${groupDetailBean.getLocaleMessage('group_delete_question', group.title)}');" rendered="#{groupsBean.canDeleteGroup(group)}">
+					<p:commandLink action="#{groupsBean.deleteGroup}" update=":growl :group_menu :my_groups" styleClass="optionIcon" title="#{msg.delete}" process="@this" onstart="return confirm('${groupsBean.getLocaleMessage('group_delete_question', group.title)}');" rendered="#{groupsBean.canDeleteGroup(group)}">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 						<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/> 							
 					</p:commandLink>						
@@ -180,7 +180,7 @@
 						</p:commandLink>	
 						
 						
-						<p:commandLink action="#{groupsBean.deleteGroup}" update=":other_groups :growl" styleClass="optionIcon" title="#{msg.delete}" process="@this" onstart="return confirm('${groupDetailBean.getLocaleMessage('group_delete_question', group.title)}');" rendered="#{userBean.admin || userBean.moderator}">
+						<p:commandLink action="#{groupsBean.deleteGroup}" update=":other_groups :growl" styleClass="optionIcon" title="#{msg.delete}" process="@this" onstart="return confirm('${groupsBean.getLocaleMessage('group_delete_question', group.title)}');" rendered="#{userBean.admin || userBean.moderator}">
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 							<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/> 								
 						</p:commandLink>				 	

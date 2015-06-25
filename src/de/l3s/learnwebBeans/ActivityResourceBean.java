@@ -3,11 +3,9 @@ package de.l3s.learnwebBeans;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -32,9 +30,9 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
     private Resource clickedResource;
     private Boolean newResourceClicked = false;
     private Boolean editResourceClicked = false;
-    private String newComment;
-    private Comment clickedComment;
-    private String tagName;
+    //private String newComment;
+    //private Comment clickedComment;
+    //private String tagName;
     private boolean reloadLogs = false;
 
     public boolean isReloadLogs()
@@ -47,51 +45,51 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
 	this.reloadLogs = reloadLogs;
     }
 
-    public String getTagName()
+    /*public String getTagName()
     {
-	return tagName;
+    return tagName;
     }
 
     public void setTagName(String tagName)
     {
-	this.tagName = tagName;
+    this.tagName = tagName;
     }
 
     private Tag selectedTag;
 
     public Tag getSelectedTag()
     {
-	return selectedTag;
+    return selectedTag;
     }
 
     public void setSelectedTag(Tag selectedTag)
     {
-	this.selectedTag = selectedTag;
+    this.selectedTag = selectedTag;
     }
 
     public String getNewComment()
     {
-	return newComment;
+    return newComment;
     }
 
     public void setNewComment(String newComment)
     {
-	this.newComment = newComment;
-    }
+    this.newComment = newComment;
+    }*/
 
     public ActivityResourceBean()
     {
 	clickedResource = new Resource();
     }
 
-    public void addComment() throws Exception
+    /*public void addComment() throws Exception
     {
-	//getLearnweb().getResourceManager().commentResource(newComment, getUser(), clickedResource);
-	Comment comment = clickedResource.addComment(newComment, getUser());
-	log(Action.commenting_resource, clickedResource.getId(), comment.getId() + "");
-	addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
-	newComment = "";
-    }
+    //getLearnweb().getResourceManager().commentResource(newComment, getUser(), clickedResource);
+    Comment comment = clickedResource.addComment(newComment, getUser());
+    log(Action.commenting_resource, clickedResource.getId(), comment.getId() + "");
+    addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
+    newComment = "";
+    }*/
 
     public void loadResources()
     {
@@ -116,45 +114,45 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
 	return false;
     }
 
-    public void onDeleteTag()
+    /*public void onDeleteTag()
     {
-	try
-	{
-	    clickedResource.deleteTag(selectedTag);
-	    addMessage(FacesMessage.SEVERITY_INFO, "tag_deleted");
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	}
+    try
+    {
+        clickedResource.deleteTag(selectedTag);
+        addMessage(FacesMessage.SEVERITY_INFO, "tag_deleted");
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+    }
     }
 
     public String addTag()
     {
-	if(null == getUser())
-	{
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
-	    return null;
-	}
-
-	if(tagName == null || tagName.length() == 0)
-	    return null;
-
-	try
-	{
-	    clickedResource.addTag(tagName, getUser());
-	    addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
-	    log(Action.tagging_resource, clickedResource.getId(), tagName);
-	    tagName = ""; // clear tag input field 
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "fatal_error");
-	}
-	return null;
+    if(null == getUser())
+    {
+        addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
+        return null;
     }
+
+    if(tagName == null || tagName.length() == 0)
+        return null;
+
+    try
+    {
+        clickedResource.addTag(tagName, getUser());
+        addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
+        log(Action.tagging_resource, clickedResource.getId(), tagName);
+        tagName = ""; // clear tag input field 
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        addGrowl(FacesMessage.SEVERITY_ERROR, "fatal_error");
+    }
+    return null;
+    }*/
 
     private void generateNewsList()
     {
@@ -322,62 +320,62 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
 	return logs;
     }
 
-    public Comment getClickedComment()
+    /*public Comment getClickedComment()
     {
-	return clickedComment;
+    return clickedComment;
     }
 
     public void setClickedComment(Comment clickedComment)
     {
-	this.clickedComment = clickedComment;
+    this.clickedComment = clickedComment;
     }
 
     public void onEditComment()
     {
-	try
-	{
-	    getLearnweb().getResourceManager().saveComment(clickedComment);
-	    addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	}
+    try
+    {
+        getLearnweb().getResourceManager().saveComment(clickedComment);
+        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+    }
     }
 
     public void onDeleteComment()
     {
-	try
-	{
-	    clickedResource.deleteComment(clickedComment);
-	    addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
-	    log(Action.deleting_comment, clickedComment.getResourceId(), clickedComment.getId() + "");
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	}
+    try
+    {
+        clickedResource.deleteComment(clickedComment);
+        addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
+        log(Action.deleting_comment, clickedComment.getResourceId(), clickedComment.getId() + "");
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+    }
     }
 
     public boolean canEditComment(Object commentO) throws Exception
     {
-	if(!(commentO instanceof Comment))
-	    return false;
+    if(!(commentO instanceof Comment))
+        return false;
 
-	User user = getUser();
-	if(null == user)// || true)
-	    return false;
-	if(user.isAdmin() || user.isModerator())
-	    return true;
+    User user = getUser();
+    if(null == user)// || true)
+        return false;
+    if(user.isAdmin() || user.isModerator())
+        return true;
 
-	Comment comment = (Comment) commentO;
-	User owner = comment.getUser();
-	if(user.equals(owner))
-	    return true;
-	return false;
-    }
+    Comment comment = (Comment) commentO;
+    User owner = comment.getUser();
+    if(user.equals(owner))
+        return true;
+    return false;
+    }*/
 
     public Boolean getEditResourceClicked()
     {
@@ -389,29 +387,4 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
 	this.editResourceClicked = editResourceClicked;
     }
 
-    public void archiveCurrentVersion()
-    {
-	boolean addToQueue = true;
-	try
-	{
-	    if(clickedResource.getArchiveUrls().size() > 0)
-	    {
-		long timeDifference = (new Date().getTime() - clickedResource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
-		addToQueue = timeDifference > 300;
-	    }
-
-	    if(addToQueue)
-	    {
-		getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
-		addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
-	    }
-	    else
-		addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
-	}
-	catch(SQLException e)
-	{
-	    System.out.println("Error while fetching the archive urls from a resource" + e);
-	    addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
-	}
-    }
 }

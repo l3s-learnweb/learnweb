@@ -2,7 +2,6 @@ package de.l3s.learnwebBeans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,7 +12,6 @@ import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
@@ -30,14 +28,14 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
     private List<Resource> resources;
     private List<Resource> resourcesAll;
-    private String newComment;
+    //private String newComment;
 
     private int selectedResourceTargetGroupId;
     private Boolean newResourceClicked = false;
     private Boolean editResourceClicked = false;
-    private Tag selectedTag;
-    private String tagName;
-    private Comment clickedComment;
+    //private Tag selectedTag;
+    //private String tagName;
+    //private Comment clickedComment;
     private Boolean reloadLogs = false;
 
     private List<Resource> resourcesText = new LinkedList<Resource>();
@@ -134,45 +132,45 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
     }
 
-    public void onDeleteTag()
+    /*public void onDeleteTag()
     {
-	try
-	{
-	    clickedResource.deleteTag(selectedTag);
-	    addMessage(FacesMessage.SEVERITY_INFO, "tag_deleted");
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	}
+    try
+    {
+        clickedResource.deleteTag(selectedTag);
+        addMessage(FacesMessage.SEVERITY_INFO, "tag_deleted");
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+    }
     }
 
     public String addTag()
     {
-	if(null == getUser())
-	{
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
-	    return null;
-	}
-
-	if(tagName == null || tagName.length() == 0)
-	    return null;
-
-	try
-	{
-	    clickedResource.addTag(tagName, getUser());
-	    addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
-	    log(Action.tagging_resource, clickedResource.getId(), tagName);
-	    tagName = ""; // clear tag input field 
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "fatal_error");
-	}
-	return null;
+    if(null == getUser())
+    {
+        addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
+        return null;
     }
+
+    if(tagName == null || tagName.length() == 0)
+        return null;
+
+    try
+    {
+        clickedResource.addTag(tagName, getUser());
+        addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
+        log(Action.tagging_resource, clickedResource.getId(), tagName);
+        tagName = ""; // clear tag input field 
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        addGrowl(FacesMessage.SEVERITY_ERROR, "fatal_error");
+    }
+    return null;
+    }*/
 
     public void loadResources() throws SQLException
     {
@@ -208,11 +206,11 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
     }
 
-    public void addComment() throws Exception
+    /*public void addComment() throws Exception
     {
-	clickedResource.addComment(newComment, getUser());
-	newComment = "";
-    }
+    clickedResource.addComment(newComment, getUser());
+    newComment = "";
+    }*/
 
     public List<Resource> getResources()
     {
@@ -291,62 +289,62 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	this.editResourceClicked = editResourceClicked;
     }
 
-    public Tag getSelectedTag()
+    /*public Tag getSelectedTag()
     {
-	return selectedTag;
+    return selectedTag;
     }
 
     public void setSelectedTag(Tag selectedTag)
     {
-	this.selectedTag = selectedTag;
+    this.selectedTag = selectedTag;
     }
 
     public void onEditComment()
     {
-	try
-	{
-	    getLearnweb().getResourceManager().saveComment(clickedComment);
-	    addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	}
+    try
+    {
+        getLearnweb().getResourceManager().saveComment(clickedComment);
+        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+    }
     }
 
     public void onDeleteComment()
     {
-	try
-	{
-	    clickedResource.deleteComment(clickedComment);
-	    addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
-	    log(Action.deleting_comment, clickedComment.getResourceId(), clickedComment.getId() + "");
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	}
+    try
+    {
+        clickedResource.deleteComment(clickedComment);
+        addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
+        log(Action.deleting_comment, clickedComment.getResourceId(), clickedComment.getId() + "");
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+    }
     }
 
     public boolean canEditComment(Object commentO) throws Exception
     {
-	if(!(commentO instanceof Comment))
-	    return false;
+    if(!(commentO instanceof Comment))
+        return false;
 
-	User user = getUser();
-	if(null == user)// || true)
-	    return false;
-	if(user.isAdmin() || user.isModerator())
-	    return true;
+    User user = getUser();
+    if(null == user)// || true)
+        return false;
+    if(user.isAdmin() || user.isModerator())
+        return true;
 
-	Comment comment = (Comment) commentO;
-	User owner = comment.getUser();
-	if(user.equals(owner))
-	    return true;
-	return false;
-    }
+    Comment comment = (Comment) commentO;
+    User owner = comment.getUser();
+    if(user.equals(owner))
+        return true;
+    return false;
+    }*/
 
     public Boolean getReloadLogs()
     {
@@ -358,35 +356,35 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	this.reloadLogs = reloadLogs;
     }
 
-    public Comment getClickedComment()
+    /*public Comment getClickedComment()
     {
-	return clickedComment;
+    return clickedComment;
     }
 
     public void setClickedComment(Comment clickedComment)
     {
-	this.clickedComment = clickedComment;
+    this.clickedComment = clickedComment;
     }
 
     public String getTagName()
     {
-	return tagName;
+    return tagName;
     }
 
     public void setTagName(String tagName)
     {
-	this.tagName = tagName;
+    this.tagName = tagName;
     }
 
     public String getNewComment()
     {
-	return newComment;
+    return newComment;
     }
 
     public void setNewComment(String newComment)
     {
-	this.newComment = newComment;
-    }
+    this.newComment = newComment;
+    }*/
 
     public List<Resource> getResourcesAll()
     {
@@ -396,31 +394,5 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     public void setResourcesAll(List<Resource> resourcesAll)
     {
 	this.resourcesAll = resourcesAll;
-    }
-
-    public void archiveCurrentVersion()
-    {
-	boolean addToQueue = true;
-	try
-	{
-	    if(clickedResource.getArchiveUrls().size() > 0)
-	    {
-		long timeDifference = (new Date().getTime() - clickedResource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
-		addToQueue = timeDifference > 300;
-	    }
-
-	    if(addToQueue)
-	    {
-		getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
-		addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
-	    }
-	    else
-		addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
-	}
-	catch(SQLException e)
-	{
-	    log.error("Error while fetching the archive urls from a resource", e);
-	    addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
-	}
     }
 }
