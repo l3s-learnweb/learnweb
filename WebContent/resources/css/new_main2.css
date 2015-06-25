@@ -81,7 +81,6 @@ input, textarea{
 
 
 button{
-	/*border-radius: 0px;*/
 	background-color: #dedede !important;
 	border-color: #ccc !important;
 }
@@ -458,11 +457,6 @@ div#presentation_preview {
 	line-height: 30px;
 }
 
-.error {
-	font-weight: bold;
-	color: red;
-}
-
 #tabv {
 	position: relative;
 	border: 1px solid grey;
@@ -531,9 +525,6 @@ span.ui-autocomplete{border: 1px solid transparent !important;}
 }
 .ui-datatable {width: 100%;}
 .ui-layout-pane-north .ui-layout-unit-content {overflow: hidden !important;}
-.ui-corner-all{
-	border-radius:0px;
-}
 .ui-corner-top{
 	border-top-left-radius: 0px;
 	border-top-right-radius: 0px;
@@ -559,18 +550,4 @@ span.ui-autocomplete{border: 1px solid transparent !important;}
 	line-height: 0.6;
 }
 
-/*right_pane*/
-#right_pane{border: none;}
-#right_pane_wrapper{
-	width: 95%;
-	margin: auto;
-	padding-top: 5px;
-}
-#right_pane .ui-layout-unit-header{
-	background: #fff !important;
-	border: 0px;
-	text-align: center;
-	font-size: 16px;
-	color: #000;
-	margin-bottom:0px;
-}
+

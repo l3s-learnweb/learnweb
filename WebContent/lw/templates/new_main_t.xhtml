@@ -72,10 +72,7 @@
 				
 			</p:layoutUnit>
 
-			<p:layoutUnit id="left_pane"
-				rendered="#{userBean.loggedIn and !utilBean.viewResultSetPage}"
-				position="west" size="223" resizable="false" closable="false"
-				collapsible="false">
+			<p:layoutUnit id="left_pane" rendered="#{userBean.loggedIn and !utilBean.viewResultSetPage}" position="west" size="223" resizable="false" closable="false" collapsible="false">
 				
 				<div class="content">
 					<ui:decorate  template="/templates/main/group_menu.xhtml" />

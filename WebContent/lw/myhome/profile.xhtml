@@ -17,11 +17,11 @@
 				<div class="page_header">
 						<span>#{msg.edit_profile}</span>
 				</div>
-					<h:form id="profile_form" enctype="multipart/form-data">
+					<h:form id="profile_form" enctype="multipart/form-data" class="grey_border">
 		
 						<h:panelGrid columns="3" class="float-left" style="margin-right:20px;">
 							<h:outputText value="#{msg.username}:" />
-							<p:inputText id="username" value="#{profileBean.username}"  validator="#{profileBean.validateUsername}">
+							<p:inputText id="username" value="#{profileBean.username}" validator="#{profileBean.validateUsername}">
 								<f:ajax render="usernameMessage"/>							
 							</p:inputText>
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="username" id="usernameMessage" />					
@@ -91,7 +91,7 @@
 			<div class="page_header">
 						<span>#{msg.change_password}</span>
 				</div>
-					<h:form id="passwordform" style="border:1px solid #ccc; padding:0.5em 1em;">
+					<h:form id="passwordform" class="grey_border">
 						<h:panelGrid columns="3" >
 						
 							<h:outputLabel for="current_password" value="#{msg.current_password}:" />

@@ -41,20 +41,8 @@
 						lightbox_load();
 					}
 				</script>
-				<style>
-					#right_pane .ui-layout-unit-header{
-						text-align:left;
-						background-color:#eee !important;
-						color: #489a83 !important;
-						font-size: 20px !important;
-						font-weight: 100 !important;
-						border: 1px solid #ddd !important;
-						padding:10px;
-						width:88%;
-						margin:0 auto;
-					}
-				</style>
-				<h:form rendered="#{bean.newResourceClicked and !bean.editResourceClicked}" id="add_resource_form"  style="border:1px solid #ccc !important;">
+
+				<h:form rendered="#{bean.newResourceClicked and !bean.editResourceClicked}" id="add_resource_form" class="grey_border">
 					<table id="add_resource_table">
 						<tr>
 							<td>
@@ -76,7 +64,7 @@
 								#{msg.file}:
 							</td>
 							<td>
-								<p:commandButton styleClass="greenbutton" value="#{msg.choose_file}" onclick="PF('file_dialog').show()"></p:commandButton>
+								<p:commandButton value="#{msg.choose_file}" onclick="PF('file_dialog').show()"></p:commandButton>
 							</td>
 						</p:row>
 						<p:row id="resource_input2" rendered="#{addResourceBean.resource.storageType == 2}">
@@ -127,12 +115,12 @@
 						</tr>
 						<tr>
 							<td colspan="3">
-								<p:commandButton value="#{msg.addResource}" styleClass="greenbutton float-right" update=":growl :add_resource_panel" action="#{addResourceBean.addResource}" ajax="true" oncomplete="update_datagrid();">
+								<p:commandButton value="#{msg.addResource}" styleClass="float-right" update=":growl :add_resource_panel" action="#{addResourceBean.addResource}" ajax="true" oncomplete="update_datagrid();">
 									<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
 									<f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"></f:setPropertyActionListener>
 								</p:commandButton>
 								
-								<p:commandButton value="#{msg.cancel}" styleClass="greenbutton float-right" partialSubmit="true" process="@this" actionListener="#{addResourceBean.cancelUpload}" ajax="true" update=":add_resource_panel" oncomplete="update_header()" style="margin-right:0.5em;">
+								<p:commandButton value="#{msg.cancel}" styleClass="float-right" partialSubmit="true" process="@this" actionListener="#{addResourceBean.cancelUpload}" ajax="true" update=":add_resource_panel" oncomplete="update_header()" style="margin-right:0.5em;">
 									<f:setPropertyActionListener target="#{bean.newResourceClicked}" value="false"></f:setPropertyActionListener>
 								</p:commandButton>
 							</td>

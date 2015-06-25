@@ -1,6 +1,6 @@
 /*taken from new_main2.css*/
 
-#add_resource_form td{padding: 8px 0px !important;}
+#add_resource_form td{padding: 4px 0px !important;}
 #add_resource_form td:FIRST-CHILD {
 	font-weight: bold;
 	width: 100px;
@@ -17,7 +17,7 @@
 }
 
 #add_resource_table{
-	width: 90%; 
+	width:100%; 
 	margin: auto;
 }
 .add_field{
