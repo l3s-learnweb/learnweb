@@ -41,6 +41,49 @@ public class Search implements Serializable
 	TED, // stored in SOLR
 	Loro, // stored in SOLR
 	Learnweb // stored in SOLR
+	;
+
+	public String getCustomName()
+	{
+	    switch(this)
+	    {
+	    case Bing:
+		return "Bing";
+	    case Flickr:
+		return "Flickr";
+	    case YouTube:
+		return "YouTube";
+	    case Vimeo:
+		return "Vimeo";
+	    case SlideShare:
+		return "SlideShare";
+	    case Ipernity:
+		return "Ipernity";
+	    case TED:
+		return "TED";
+	    case Loro:
+		return "Loro";
+	    case Learnweb:
+		return "LearnWeb";
+	    default:
+		return "Any service";
+	    }
+	}
+
+	public boolean isLearnwebSource()
+	{
+	    switch(this)
+	    {
+	    case TED:
+		return true;
+	    case Loro:
+		return true;
+	    case Learnweb:
+		return true;
+	    default:
+		return false;
+	    }
+	}
     };
 
     public enum DATE
@@ -49,6 +92,49 @@ public class Search implements Serializable
 	w, // week (7 days)
 	m, // month
 	y // year
+	;
+
+	public String getCustomName()
+	{
+	    switch(this)
+	    {
+	    case d:
+		return "Past 24 hour";
+	    case w:
+		return "Past week";
+	    case m:
+		return "Past month";
+	    case y:
+		return "Past year";
+	    default:
+		return "Any time";
+	    }
+	}
+
+	@Override
+	public String toString()
+	{
+	    Calendar cal = Calendar.getInstance();
+	    switch(this)
+	    {
+	    case d:
+		cal.add(Calendar.DATE, -1);
+		break;
+	    case w:
+		cal.add(Calendar.DATE, -7);
+		break;
+	    case m:
+		cal.add(Calendar.MONTH, -1);
+		break;
+	    case y:
+		cal.add(Calendar.YEAR, -1);
+		break;
+	    default:
+		return null;
+	    }
+
+	    return DEFAULT_DATE_FORMAT.format(cal.getTime());
+	}
     }
 
     public enum SIZE
@@ -56,7 +142,58 @@ public class Search implements Serializable
 	small,
 	medium,
 	large,
-	extraLarge
+	extraLarge;
+
+	public String getCustomName()
+	{
+	    switch(this)
+	    {
+	    case small:
+		return "Small";
+	    case medium:
+		return "Medium";
+	    case large:
+		return "Large";
+	    case extraLarge:
+		return "Extra large";
+	    default:
+		return "Any size";
+	    }
+	}
+
+	public int getMaxWidth()
+	{
+	    switch(this)
+	    {
+	    case small:
+		return 150;
+	    case medium:
+		return 600;
+	    case large:
+		return 1200;
+	    case extraLarge:
+		return 0;
+	    default:
+		return 0;
+	    }
+	}
+
+	public int getMinWidth()
+	{
+	    switch(this)
+	    {
+	    case small:
+		return 0;
+	    case medium:
+		return 150;
+	    case large:
+		return 600;
+	    case extraLarge:
+		return 1200;
+	    default:
+		return 0;
+	    }
+	}
     }
 
     public enum MEDIA
@@ -78,9 +215,10 @@ public class Search implements Serializable
     private String query;
     private List<String> configMedia = new ArrayList<String>(Arrays.asList("image", "presentation", "video")); // the media types to search for
     private List<String> configService = new ArrayList<String>(Arrays.asList("Flickr", "YouTube", "Vimeo", "SlideShare", "Ipernity")); // the services to search in
-    private String configDate;
-    private int[] configSize = new int[2];
-    private Integer configResultsPerService = 20;
+    private DATE configDate;
+    private SIZE configSize;
+    private Integer configResultsPerService = 8;
+    private Integer configResultsPerOneService = 40;
     private String configLanguage;
 
     // all resources
@@ -94,7 +232,7 @@ public class Search implements Serializable
     private InterWeb interweb;
     private MODE mode;
     private boolean hasMoreResults = true;
-    private boolean hasMoreLearnwebResults = false; // false
+    private boolean hasMoreLearnwebResults = true; // Enable or disable Solr search
     private boolean hasMoreInterwebResults = true;
     private SolrSearch solrSearch;
     private int userId;
@@ -104,6 +242,7 @@ public class Search implements Serializable
 
     public Search(InterWeb interweb, String query, User user)
     {
+	// TODO Remove it, this video already removed
 	urlHashMap.add("http://vimeo.com/735450"); // hides a really stupid video, that appears in many search results
 
 	this.query = query;
@@ -159,12 +298,14 @@ public class Search implements Serializable
 
 	    resources.addAll(newResources);
 
-	    if(StringHelper.implode(configMedia, ",").equals("image") && configSize != null)
+	    // Check size filter for image search
+	    if(configMedia.size() == 1 && configMedia.get(0).equals("image") && configSize != null)
 	    {
 		for(Iterator<ResourceDecorator> it = resources.iterator(); it.hasNext();)
 		{
-		    int width = it.next().getThumbnail4().getWidth();
-		    if(configSize[0] > width || (configSize[1] != 0 && width > configSize[1]))
+		    int width = it.next().getThumbnail4().getWidth(), minWidth = configSize.getMinWidth(), maxWidth = configSize.getMaxWidth();
+
+		    if(minWidth > width || (maxWidth != 0 && width > maxWidth))
 		    {
 			it.remove();
 		    }
@@ -193,6 +334,8 @@ public class Search implements Serializable
     {
 	long start = System.currentTimeMillis();
 
+	this.solrSearch.setFilterSource(StringHelper.implode(configService, ","));
+	this.solrSearch.setFilterType(mode.name());
 	List<ResourceDecorator> learnwebResources = solrSearch.getResourcesByPage(page);
 
 	if(stopped)
@@ -250,18 +393,19 @@ public class Search implements Serializable
 	TreeMap<String, String> params = new TreeMap<String, String>();
 	params.put("media_types", StringHelper.implode(configMedia, ","));
 	params.put("services", StringHelper.implode(configService, ","));
-	params.put("number_of_results", configResultsPerService.toString());
+	params.put("number_of_results", configService.size() > 1 ? configResultsPerService.toString() : configResultsPerOneService.toString());
 	params.put("page", Integer.toString(page));
 	params.put("timeout", "50");
 
 	if(configDate != null)
 	{
-	    log.debug("Add date: " + configDate);
-	    params.put("date_from", configDate);
+	    params.put("date_from", configDate.toString());
 	}
 
 	if(configLanguage != null)
+	{
 	    params.put("language", configLanguage);
+	}
 
 	List<ResourceDecorator> interwebResults = interweb.search(query, params);
 
@@ -310,9 +454,8 @@ public class Search implements Serializable
      */
     public void setMode(MODE searchMode)
     {
-	this.solrSearch.setFilterType(searchMode.name());
-
 	this.mode = searchMode;
+
 	switch(searchMode)
 	{
 	case image:
@@ -362,55 +505,12 @@ public class Search implements Serializable
 
     public void setDate(DATE date)
     {
-	Calendar cal = Calendar.getInstance();
-	if(date.equals(DATE.d))
-	{
-	    cal.add(Calendar.DATE, -1);
-	}
-	else if(date.equals(DATE.w))
-	{
-	    cal.add(Calendar.DATE, -7);
-	}
-	else if(date.equals(DATE.m))
-	{
-	    cal.add(Calendar.MONTH, -1);
-	}
-	else if(date.equals(DATE.y))
-	{
-	    cal.add(Calendar.YEAR, -1);
-	}
-
-	this.configDate = DEFAULT_DATE_FORMAT.format(cal.getTime());
+	this.configDate = date;
     }
 
     public void setSize(SIZE size)
     {
-	int minWidth = 0;
-	int maxWidth = 0;
-
-	if(size.equals(SIZE.small))
-	{
-	    minWidth = 0;
-	    maxWidth = 150;
-	}
-	else if(size.equals(SIZE.medium))
-	{
-	    minWidth = 150;
-	    maxWidth = 600;
-	}
-	else if(size.equals(SIZE.large))
-	{
-	    minWidth = 600;
-	    maxWidth = 1200;
-	}
-	else if(size.equals(SIZE.extraLarge))
-	{
-	    minWidth = 1200;
-	    maxWidth = 0;
-	}
-
-	this.configSize[0] = minWidth;
-	this.configSize[1] = maxWidth;
+	this.configSize = size;
     }
 
     public void setResultsPerService(Integer configResultsPerService)

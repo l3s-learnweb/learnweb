@@ -644,6 +644,11 @@ public class SearchBean extends ApplicationBean implements Serializable
 	}
     }
 
+    public String getCurrentService()
+    {
+	return filterService.getCustomName();
+    }
+
     public String getFilterDate()
     {
 	if(filterDate == null)
@@ -670,6 +675,11 @@ public class SearchBean extends ApplicationBean implements Serializable
 	}
     }
 
+    public String getCurrentDate()
+    {
+	return filterDate.getCustomName();
+    }
+
     public String getFilterSize()
     {
 	if(filterSize == null)
@@ -694,6 +704,34 @@ public class SearchBean extends ApplicationBean implements Serializable
 		break;
 	    }
 	}
+    }
+
+    public String getCurrentSize()
+    {
+	return filterSize.getCustomName();
+    }
+
+    public boolean isFilterAvailable(String filter)
+    {
+	if(filter == "date")
+	{
+	    if(filterService != null && filterService != SERVICE.Flickr && filterService != SERVICE.Ipernity && filterService != SERVICE.YouTube)
+	    {
+		return false;
+	    }
+	}
+
+	return true;
+    }
+
+    public boolean isServiceAvailable(String service)
+    {
+	if(filterDate != null && !(service.equals(SERVICE.Flickr.name()) || service.equals(SERVICE.Ipernity.name()) || service.equals(SERVICE.YouTube.name())))
+	{
+	    return false;
+	}
+
+	return true;
     }
 
     public String generateFiltersLink(String param, String value)
