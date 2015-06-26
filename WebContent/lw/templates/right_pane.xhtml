@@ -137,7 +137,7 @@
 				
 				<h:panelGroup rendered="#{!bean.newResourceClicked and !bean.editResourceClicked and bean.clickedResource.id != -1}" layout="block">						
 					<ui:fragment rendered="#{bean.clickedResource.type.toLowerCase() eq 'text' or bean.clickedResource.type eq 'pdf' or bean.clickedResource.type.toLowerCase() eq 'video' or bean.clickedResource.type.toLowerCase() eq 'image'}">
-						<div class="center_align">
+						<div class="align-center">
 
 							<div id="lightbox">
 								<div id="lightbox_background" onclick="lightbox_close();"></div>
@@ -180,9 +180,7 @@
 							<ui:fragment rendered="#{(bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf' or bean.clickedResource.type eq 'Image') and not empty bean.clickedResource.thumbnail3}">
 								
 								
-									<img class="preview_box" src="#{bean.clickedResource.thumbnail3.url}" height="#{bean.clickedResource.thumbnail3.height}" width="#{bean.clickedResource.thumbnail3.width}" 
-										style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"
-										onmouseup="lightbox_open();" />								
+									<img class="preview_box" src="#{bean.clickedResource.thumbnail3.url}" height="#{bean.clickedResource.thumbnail3.height}" width="#{bean.clickedResource.thumbnail3.width}" style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;" onmouseup="lightbox_open();" />								
 								
 							</ui:fragment>
 							<ui:fragment rendered="#{(bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf') and empty bean.clickedResource.thumbnail3}">
@@ -198,7 +196,7 @@
 								</div>
 							</ui:fragment>
 						</div>
-						<div class="center_align" style="padding-top: 10px">
+						<div class="align-center" style="padding-top: 10px">
 							<a class="hyperlink" href="#{bean.clickedResource.url}" target="_blank">
 								<h:outputText styleClass="hyperlink" rendered="#{bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf'}" value="#{bean.clickedResource.url}"></h:outputText>
 							</a>
@@ -251,9 +249,11 @@
 						<ui:fragment rendered="#{not empty bean.clickedResource.groups}">
 							<tr>
 								<td style="padding-top:5px">
-									<span class="resource_field"><h:outputFormat value="#{msg.group_s}:">
+									<span class="resource_field">
+										<h:outputFormat value="#{msg.group_s}:">
 											<f:param value="#{bean.clickedResource.groups.size()}" />
-										</h:outputFormat></span>
+										</h:outputFormat>
+									</span>
 								</td>
 								<td style="padding-top:5px">
 									<ui:repeat var="group" value="#{bean.clickedResource.groups}">

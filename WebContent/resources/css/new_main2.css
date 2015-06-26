@@ -475,8 +475,9 @@ div#presentation_preview {
 
 .northunit{border: none;}
 
+
 /* overwrite primefaces options*/
-span.ui-autocomplete{border: 1px solid transparent !important;}
+/*span.ui-autocomplete{border: 1px solid transparent !important;}
 .ui-autocomplete-panel{border-radius: 0px !important;}
 .ui-autocomplete-row td{border: 0px solid transparent !important;}
 .ui-autocomplete-row.ui-state-highlight{
@@ -502,10 +503,10 @@ span.ui-autocomplete{border: 1px solid transparent !important;}
 .ui-state-hover{box-shadow: 0 0 0px 0px #fff !important;}
 .ui-panelmenu-header{
 	border-radius: 0px;
-	border-color: #fff !important;
+	border-color: #fff !important;*/
 	/*background: #c4c4c4 -webkit-gradient(linear, left top, left bottom, from(rgba(255,255,255,0.8)), to(rgba(255,255,255,0.4))) !important;
 	*/
-	background: white !important;
+	/*background: white !important;
 }
 .ui-state-hover.ui-panelmenu-header{
 	box-shadow: 0 0 0px 0px white !important;
@@ -532,10 +533,10 @@ span.ui-autocomplete{border: 1px solid transparent !important;}
 .ui-corner-bottom{
 	border-bottom-left-radius: 0px;
 	border-bottom-right-radius: 0px;
-}
+}*/
 
 /*overwritw primefaces option for some areas which have a id or a class */
-#center_pane .ui-layout-unit-header{
+/*#center_pane .ui-layout-unit-header{
 	background: none;
 	background-color: #eee !important;
 	border: 1px solid #ddd !important;
@@ -548,6 +549,6 @@ span.ui-autocomplete{border: 1px solid transparent !important;}
 .explore_history .ui-button .ui-button-text, .search_history .ui-button .ui-button-text{
 	display:block;
 	line-height: 0.6;
-}
+}*/
 
 

@@ -216,14 +216,14 @@
 			</p:outputPanel>
 
 		</div>
-		<div id="explorenew_results" style="display:none;">	
+		<div id="explorenew_results" class="display-none">	
 			<h:panelGroup id="nextPage" layout="block">				
 				<ui:decorate template="/lw/templates/resources_#{resultSetBean.resultSetView}.xhtml">
 					<ui:param name="resources" value="#{resultSetBean.resources}" />
 				</ui:decorate>		
 			</h:panelGroup>
 		</div>
-		<h:form style="display:none;">	
+		<h:form class="display-none">	
 		  	<p:remoteCommand update=":explore_resultset" name="updateresultset" oncomplete="prepareResources($('#explore_resultset .resource'));" />
 		  	<p:remoteCommand update=":exploretabView:right_bartab2" name="updatecurrentsearch" />
 			<p:remoteCommand actionListener="${resultSetBean.logResourceOpened()}" name="logResourceOpened" async="true" oncomplete="updatecurrentsearch();" />

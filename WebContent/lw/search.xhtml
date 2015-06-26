@@ -347,7 +347,7 @@
 		<div id="search_no_more_results">#{msg.no_more_results}</div>
 		<div id="search_nothing_found">#{msg.nothingFound}</div>
 
-		<div id="new_results" style="display:none;">	
+		<div id="new_results" class="display-none;">	
 			<h:panelGroup id="nextPage" layout="block">				
 				<ui:decorate  template="/lw/templates/resources_#{searchBean.view}.xhtml">
 					<ui:param name="resources" value="#{searchBean.nextPage}" />
@@ -356,11 +356,11 @@
 		</div>
 	
 		<!-- TODO: all remote commands cause an update of :nextPage  -->
-		<h:form style="display:none;">	
+		<h:form class="display-none;">	
 			<p:remoteCommand actionListener="${searchBean.loadNextPage()}" update=":nextPage" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this" partialSubmit="true" />
 			<p:remoteCommand actionListener="${searchBean.generateKnowledgeGraph()}" update=":factsheet" name="ajaxLoadFactsheet" async="true" process="@this" partialSubmit="true"/>
 		</h:form>
-		<h:form style="display:none;">	
+		<h:form class="display-none">	
 			<p:remoteCommand actionListener="${searchBean.setSelectedResource()}" name="setSelectedResource" update=":resource_form" process="@this" partialSubmit="true" />
 		  	<p:remoteCommand actionListener="${searchHistoryBean.updateSearchHistory()}" update=":tabView:tab3" name="ajaxLoadSearchHistory" process="@this" partialSubmit="true" />
 					  				

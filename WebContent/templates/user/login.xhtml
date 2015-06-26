@@ -6,29 +6,25 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<ui:composition> 
-		<style>
-			a{
-				color:#4f4f4f;
-			}
-			#login_div{
-				color:#4f4f4f;
-			}
-		</style>
+		<h:outputStylesheet library="main-template" name="main.css"/>
+		
 		<div class="page_header">
-			<span>#{msg.loginTitle}</span>
+			<span>
+				#{msg.loginTitle}
+			</span>
 		</div>
 		<div id="login_div" class="grey_border">
 		
 			<h:form rendered="#{!userBean.loggedIn}">
 				<p:focus for="username"/>
 				<h:panelGrid columns="3">
-					<h:outputLabel for="username" value="#{msg.username}:"></h:outputLabel>
+					<h:outputLabel for="username" value="#{msg.username}:"/>
 					<p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" />
-					<p:message  styleClass="error" for="username" />
+					<p:message styleClass="error" for="username" />
 					
-					<h:outputLabel for="password" value="#{msg.password}:"></h:outputLabel>
+					<h:outputLabel for="password" value="#{msg.password}:"/>
 					<p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" />
-					<p:message  styleClass="error" for="password" />
+					<p:message styleClass="error" for="password" />
 					
 					<h:outputText value="" />
 					<p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" />	

@@ -22,7 +22,7 @@
 						<input type="checkbox" name="ignore" value="1" class="checker" />
 						<h:outputText value="#{course.title}" style="font-weight:bold;"/>
 							
-						<ul style="display:none;">
+						<ul class="display-none">
 							<ui:repeat var="group" value="#{course.groups}">
 							<li>
 								<input name="selected_groups" id="us_form:us_checkbox:#{course.id}:#{group.id}" value="#{group.id}" type="checkbox" />

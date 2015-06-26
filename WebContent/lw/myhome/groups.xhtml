@@ -9,12 +9,14 @@
 	<ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
 	
 	<ui:define name="right_layout">
-	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;" id="right_pane"> <!-- header="#{msg.createGroup}" -->
+	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;" id="right_pane">
 		<h:panelGroup style= "left: 5%; position:relative;">
 			<h:form id="addgroupform" style="width: 90%;">
 				
 				<div class="page_header">
-					<span>#{msg.createGroup}</span>
+					<span>
+						#{msg.createGroup}
+					</span>
 				</div>
 				
 				<h5>#{msg.mandatory_field}</h5>
@@ -78,15 +80,10 @@
 </ui:define>
 	<ui:define name="center_layout">
 	
-	<style type="text/css">
-		.optionIcon {
-			text-decoration:none;
-			display:inline-block;
-			margin: 0 3px;	
-		}
-	</style>
 		<div class="page_header">
-			<span>#{msg.myGroups}</span>
+			<span>
+				#{msg.myGroups}
+			</span>
 		</div>
 		<h:form id="my_groups">
 					
@@ -136,7 +133,9 @@
 		<br/>
 		
 			<div class="page_header">
-				<span>#{msg.otherGroups}</span>
+				<span>
+					#{msg.otherGroups}
+				</span>
 			</div>
 			<h:form id="other_groups">
 				<p:dataTable var="group" value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}"  paginator="false" >

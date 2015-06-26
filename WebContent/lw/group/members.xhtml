@@ -97,80 +97,13 @@
 								scroller();
 							}
 						</script>
-						<style>
-						#right_pane .ui-layout-unit-header{
-							text-align:left;
-							background-color:#eee !important;
-							color: #489a83 !important;
-							font-size: 20px !important;
-							font-weight: 100 !important;
-							border: 1px solid #ddd !important;
-							padding:10px;
-							width:88%;
-							margin:0 auto;
-						}
-						</style>
 						
 						<ui:fragment rendered="#{groupDetailBean.clickedUser.id != -1}">
 						
 							<ui:decorate template="/templates/user/profile.xhtml">
 								<ui:param name="user" value="#{groupDetailBean.clickedUser}" />		
 							</ui:decorate>
-							<!-- 
-							<p:panel header="#{msg.myProfileTitle}">
-								<h:panelGrid columns="2" styleClass="members_panelgrid" style="width:75%;text-align:left;">
-									<h:outputText value="#{msg.username}:" />
-									<h:outputText id="username" value="#{groupDetailBean.clickedUser.username}" />
-					
-									<h:outputText value="#{msg.email_address}:" rendered="#{not empty groupDetailBean.clickedUser.email}" />
-									<h:outputText value="#{groupDetailBean.clickedUser.email}" rendered="#{not empty groupDetailBean.clickedUser.email}" />
-					
-									<h:outputText value="#{msg.gender}:" />
-7									<h:outputText value="-" rendered="#{groupDetailBean.clickedUser.gender == 0}" />					
-									<h:outputText value="#{msg.gender_male}" rendered="#{groupDetailBean.clickedUser.gender == 1}" />
-									<h:outputText value="#{msg.gender_female}" rendered="#{groupDetailBean.clickedUser.gender == 2}" />				
-									
-									<h:outputText value="#{msg.address}:" rendered="#{not empty groupDetailBean.clickedUser.address}" />
-									<h:outputText value="#{groupDetailBean.clickedUser.address}" rendered="#{not empty groupDetailBean.clickedUser.address}"/>
-					
-									<h:outputText value="#{msg.profession}:" rendered="#{not empty groupDetailBean.clickedUser.profession}"/> 
-									<h:outputText value="#{groupDetailBean.clickedUser.profession}" rendered="#{not empty groupDetailBean.clickedUser.profession}"/>
-					
-									<h:outputText value="#{msg.interest}:" rendered="#{not empty groupDetailBean.clickedUser.interest}" />
-									<h:outputText value="#{groupDetailBean.clickedUser.interest}" rendered="#{not empty groupDetailBean.clickedUser.interest}" />
-					
-									<h:outputText value="#{msg.additionalinformation}:" rendered="#{not empty groupDetailBean.clickedUser.additionalInformation}" />
-									<h:outputText value="#{groupDetailBean.clickedUser.additionalInformation}" rendered="#{not empty groupDetailBean.clickedUser.additionalInformation}" />
-								
-									<h:outputText value="#{msg.registered_since}:" />
-									<h:outputText value="#{groupDetailBean.clickedUser.registrationDate}">
-										<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
-									</h:outputText>
-								</h:panelGrid>
-								
-								<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(groupDetailBean.clickedUser)}" id="profile_image" alt="profile picture" />
-								<br class="clear" />
-							</p:panel>
 							
-							<br/>
-							
-							<p:panel header="#{groupDetailBean.clickedUser.username}'s #{msg.groupsTitle}">
-								<h:form>
-									<p:dataGrid var="group" value="#{groupDetailBean.clickedUser.groups}">
-										<p:column>
-											<h:outputLink value="group/overview.jsf">
-												<f:param name="group_id" value="#{group.id}" />
-												<h:outputText value="#{group.title}" />
-											</h:outputLink>
-										</p:column>
-									</p:dataGrid>
-								</h:form>
-					
-							</p:panel>
-							
-							<br class="clear" />
-							<br/>
-							-->
 						</ui:fragment>
 					</h:form>
 				</div>

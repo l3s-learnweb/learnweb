@@ -22,14 +22,14 @@
 						<input type="checkbox" name="ignore" value="1" class="checker" />
 						<h:outputText value="#{course.title}" style="font-weight:bold;"/>
 							
-						<ul style="display:none;">
+						<ul class="display-none">
 							<ui:repeat var="group" value="#{course.groups}">
 							<li>
 								<div class="klapper_zu klapper_auf">&nbsp;&#160;</div>
 								<input type="checkbox" name="ignore" value="1" class="checker" />				
 								<h:outputText value="#{group.title} (#{msg.group})" />
 								
-								<ul style="display:none;">
+								<ul class="display-none;">
 									<ui:repeat var="user" value="#{group.members}">
 									<li>
 										<input name="selected_users" id="us_form:us_checkbox:#{course.id}:#{group.id}:#{user.id}" value="#{user.id}" type="checkbox" />

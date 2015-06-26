@@ -8,12 +8,12 @@
 	<ui:composition template="/lw/templates/main.xhtml"> 
 
 		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="Change Log"/>
+		<ui:param name="pageTitle" value="#{msg.change_log}"/>
 
 		
 		<ui:define name="body">
 			
-		<p:panel header="Change Log">
+		<p:panel header="#{msg.change_log}">
 		<h:dataTable var="logEntry" value="#{adminChangeLogBean.changelogmessages}">
 					<h:column>
 						<h:outputText value="#{logEntry}" escape="false" />

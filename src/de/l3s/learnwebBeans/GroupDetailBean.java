@@ -1332,7 +1332,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public String firstPageButtonValue()
     {
 	if(page == 0)
-	    return "Seite " + (page + 1);
+	    return getLocaleMessage("page") + " " + (page + 1);
 	else if(page > 0 && page < totalPages)
 	    return "" + page;
 	else if(page == totalPages)
