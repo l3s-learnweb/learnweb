@@ -9,9 +9,11 @@
 	
 	<ui:composition template="/templates/main/main.xhtml">
 		<ui:param name="pageTitle" value="showGlossary" />
-
+		
+		
 		<ui:define name="center_layout">
 	
+			<link rel="stylesheet" href="Glossary.css"/>
 			
 			<br/>
 			<br/>
@@ -90,8 +92,8 @@
 						<f:facet name="header">
 							<h:outputText value="#{msg.options}"></h:outputText>
 						</f:facet>
-						<h:commandButton id="edit" action="${glossaryBean.edit(entry)}" value="#{msg.edit}" styleClass="button"></h:commandButton>
-						<h:commandButton id="delete" action="${glossaryBean.deleteEntry(entry)}" value="#{msg.delete}" styleClass="button">
+						<h:commandButton id="edit" action="${glossaryBean.edit(entry)}" value="#{msg.edit}" styleClass="greenbutton"></h:commandButton>
+						<h:commandButton id="delete" action="${glossaryBean.deleteEntry(entry)}" value="#{msg.delete}" styleClass="greenbutton">
 						</h:commandButton>
 					</p:column>
 					
@@ -142,7 +144,7 @@
 			<br/>
 			<br/>
 			
-			<h:commandButton id="new_entry" action="#{glossaryBean.addNewEntry}" value="#{msg.new_entry}" styleClass="button1">
+			<h:commandButton id="new_entry" action="#{glossaryBean.addNewEntry}" value="#{msg.new_entry}" styleClass="greenbutton">
 			</h:commandButton>
 				
 			</h:form>

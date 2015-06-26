@@ -7,9 +7,12 @@
 	lang="#{userBean.localeCode}">
 	
 <ui:composition template="/templates/main/main.xhtml">
+	
 	<ui:param name="pageTitle" value="editGlossary" />
-
+	
 	<ui:define name="center_layout">
+	
+	<link rel="stylesheet" href="Glossary.css"/>
 	
 	<style type="text/css">
 			h1{
@@ -60,9 +63,9 @@
 			<br/>
 			<br/>
 			
-			<h:commandButton id="save" action="#{glossaryBean.save}" value="#{msg.save}" styleClass="button"></h:commandButton>
+			<h:commandButton id="save" action="#{glossaryBean.save}" value="#{msg.save}" styleClass="greenbutton"></h:commandButton>
 			
-			<h:commandButton id="cancel" action="#{glossaryBean.quit}" value="#{msg.cancel}" styleClass="button"></h:commandButton>
+			<h:commandButton id="cancel" action="#{glossaryBean.quit}" value="#{msg.cancel}" styleClass="greenbutton"></h:commandButton>
 		
 		</h:form>
 	

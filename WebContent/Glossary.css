@@ -1,0 +1,46 @@
+.glossary{
+	text-align:center;
+	margin-left:1em;
+	margin-right:1em;
+	border-spacing:0px;
+}
+.glossary table {
+	width:auto !important;
+	min-width:100%;
+}
+.glossary td {
+	overflow:show !important;
+}
+.glossary th{
+	font-size:1.5rem;
+	border:1px solid grey;
+}
+.glossary td {border: 1px solid grey;}
+.button, .button1{
+	background-color:#616161 !important;
+	color:#489A83 !important;
+	font-size:1.5rem !important;
+	font-weight:bold !important;
+	border:1px solid #489A83 !important;
+	border-radius:5px !important;
+	padding:2px !important;
+	margin-right:1rem !important;
+}
+.button:last-child{margin-right:0rem;}
+.button:hover, .button1:hover{
+	color:#FFFFFF;
+	border:1px solid #FFFFFF;
+}
+.button1{margin-left:1rem;}
+.data{font-size:1.5rem;}
+.inputfield, .inputarea{
+	font-family:Arial;
+	font-size:1.5rem;
+	width:15em;
+}
+.datatype{
+	font-size:1.5rem;
+	margin-left:1rem;
+}
+.filter{font-size:1.5rem;}
+#message{display:none;}
