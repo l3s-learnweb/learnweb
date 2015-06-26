@@ -1356,7 +1356,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	if(page == 0)
 	    return "" + (page + 2);
 	else if(page > 0 && page < totalPages)
-	    return "Seite " + (page + 1);
+	    return getLocaleMessage("page") + " " + (page + 1);
 	else if(page == totalPages)
 	    return "" + page;
 	return "";
@@ -1380,7 +1380,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	else if(page > 0 && page < totalPages)
 	    return "" + (page + 2);
 	else if(page == totalPages)
-	    return "Seite " + (page + 1);
+	    return getLocaleMessage("page") + " " + (page + 1);
 	return "";
     }
 
