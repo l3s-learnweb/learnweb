@@ -3,7 +3,6 @@ package de.l3s.learnwebBeans;
 import java.io.Serializable;
 import java.sql.SQLException;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.event.ComponentSystemEvent;
@@ -11,7 +10,6 @@ import javax.faces.event.ComponentSystemEvent;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Group;
-import de.l3s.learnweb.Learnweb;
 
 @ManagedBean
 @RequestScoped
@@ -75,21 +73,22 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
 
     }
 
-    public void saveForumTopic()
-    {
-	try
-	{
-	    int group_id = 883;
-	    message = Learnweb.getInstance().getForumManager().saveForumTopic(topic, group_id);
-	    this.topic = "";
-	    addGrowl(FacesMessage.SEVERITY_INFO, message);
-	}
-	catch(SQLException e)
-	{
-	    // TODO Auto-generated catch block
-	    log.error("Error while inserting in db", e);
-	}
-    }
+    /*
+        public void saveForumTopic()
+        {
+    	try
+    	{
+    	    int group_id = 883;
+    	    //    message = Learnweb.getInstance().getForumManager().saveForumTopic(topic, group_id);
+    	    this.topic = "";
+    	    addGrowl(FacesMessage.SEVERITY_INFO, message);
+    	}
+    	catch(SQLException e)
+    	{
+    	    // TODO Auto-generated catch block
+    	    log.error("Error while inserting in db", e);
+    	}
+        }*/
 
     public String getMessage()
     {
