@@ -212,7 +212,7 @@
 							</h:panelGroup>
 						</ui:fragment>
 						<ui:fragment rendered="#{searchBean.searchMode == 'video'}">
-							<li>
+							<li class="source #{searchBean.filterService != null ? 'active' : null}">
 								<span class="filter-name">#{searchBean.filterService != null ? searchBean.currentService : msg.source} 
 									<span class="arrow"></span>
 								</span>
@@ -240,6 +240,11 @@
 									<h:link value="TED" outcome="search" styleClass="#{searchBean.filterService == 'TED' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('TED')}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
 										<f:param name="filter" value="srv:TED" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<h:link value="Yovisto" outcome="search" styleClass="#{searchBean.filterService == 'Yovisto' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('Yovisto')}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="srv:Yovisto" />
 										<f:param name="query" value="#{searchBean.query}" />
 									</h:link>
 									<h:link value="LearnWeb" outcome="search" styleClass="#{searchBean.filterService == 'Learnweb' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('Learnweb')}">

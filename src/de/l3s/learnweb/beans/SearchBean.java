@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -713,10 +714,19 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public boolean isFilterAvailable(String filter)
     {
-	if(filter == "date")
+	if(filter == null)
 	{
-	    if(filterService != null && filterService != SERVICE.Flickr && filterService != SERVICE.Ipernity && filterService != SERVICE.YouTube)
+	    return true;
+	}
+
+	if(filter.equals("date"))
+	{
+	    if(filterService != null)
 	    {
+		if(Arrays.asList(SERVICE.Flickr, SERVICE.Ipernity, SERVICE.YouTube).contains(filterService))
+		{
+		    return true;
+		}
 		return false;
 	    }
 	}

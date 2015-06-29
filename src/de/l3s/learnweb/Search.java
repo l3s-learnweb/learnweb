@@ -40,6 +40,7 @@ public class Search implements Serializable
 	Ipernity,
 	TED, // stored in SOLR
 	Loro, // stored in SOLR
+	Yovisto, // LearnWeb
 	Learnweb // stored in SOLR
 	;
 
@@ -63,6 +64,8 @@ public class Search implements Serializable
 		return "TED";
 	    case Loro:
 		return "Loro";
+	    case Yovisto:
+		return "Yovisto";
 	    case Learnweb:
 		return "LearnWeb";
 	    default:
@@ -77,6 +80,8 @@ public class Search implements Serializable
 	    case TED:
 		return true;
 	    case Loro:
+		return true;
+	    case Yovisto:
 		return true;
 	    case Learnweb:
 		return true;
@@ -232,7 +237,7 @@ public class Search implements Serializable
     private InterWeb interweb;
     private MODE mode;
     private boolean hasMoreResults = true;
-    private boolean hasMoreLearnwebResults = true; // Enable or disable Solr search
+    private boolean hasMoreLearnwebResults = true;
     private boolean hasMoreInterwebResults = true;
     private SolrSearch solrSearch;
     private int userId;
@@ -249,10 +254,6 @@ public class Search implements Serializable
 	this.interweb = interweb;
 	this.userId = (null == user) ? -1 : user.getId();
 	this.solrSearch = new SolrSearch(query, user);
-
-	//source:ted
-	if(query.startsWith("source:"))
-	    hasMoreInterwebResults = false; // disable interweb for advanced search queries
     }
 
     private LinkedList<ResourceDecorator> doSearch(int page)
@@ -335,6 +336,7 @@ public class Search implements Serializable
 	long start = System.currentTimeMillis();
 
 	this.solrSearch.setFilterSource(StringHelper.implode(configService, ","));
+	this.solrSearch.setResultsPerPage(configService.size() > 1 ? configResultsPerService : configResultsPerOneService);
 	this.solrSearch.setFilterType(mode.name());
 	List<ResourceDecorator> learnwebResources = solrSearch.getResourcesByPage(page);
 
@@ -468,7 +470,7 @@ public class Search implements Serializable
 	    break;
 	case video:
 	    setMedia(MEDIA.video);
-	    setService(SERVICE.YouTube, SERVICE.Vimeo, SERVICE.Loro, SERVICE.TED, SERVICE.Learnweb); // , SERVICE.Flickr , SERVICE.SlideShare
+	    setService(SERVICE.YouTube, SERVICE.Vimeo, SERVICE.Loro, SERVICE.TED, SERVICE.Yovisto, SERVICE.Learnweb); // , SERVICE.Flickr , SERVICE.SlideShare
 	    break;
 	case multimedia:
 	    setMedia(MEDIA.video, MEDIA.image, MEDIA.text, MEDIA.presentation);
@@ -495,11 +497,30 @@ public class Search implements Serializable
 
     public void setService(SERVICE... args)
     {
-
 	configService.clear();
-	for(SERVICE service : args)
+
+	if(args.length == 1)
 	{
-	    configService.add(service.name());
+	    for(SERVICE service : args)
+	    {
+		if(service.isLearnwebSource())
+		{
+		    hasMoreInterwebResults = false; // disable interweb
+		}
+		/*else
+		{
+		    hasMoreLearnwebResults = false; // disable learnweb
+		}*/
+
+		configService.add(service.name());
+	    }
+	}
+	else
+	{
+	    for(SERVICE service : args)
+	    {
+		configService.add(service.name());
+	    }
 	}
     }
 
@@ -516,7 +537,6 @@ public class Search implements Serializable
     public void setResultsPerService(Integer configResultsPerService)
     {
 	this.configResultsPerService = configResultsPerService;
-	this.solrSearch.setResultsPerPage(configResultsPerService);
     }
 
     /**
