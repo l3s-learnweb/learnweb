@@ -136,7 +136,7 @@
 			</ui:fragment>
 				
 				<h:panelGroup rendered="#{!bean.newResourceClicked and !bean.editResourceClicked and bean.clickedResource.id != -1}" layout="block">						
-					<ui:fragment rendered="#{bean.clickedResource.type.toLowerCase() eq 'text' or bean.clickedResource.type eq 'pdf' or bean.clickedResource.type.toLowerCase() eq 'video' or bean.clickedResource.type.toLowerCase() eq 'image'}">
+					<ui:fragment rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'video' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'image'}">
 						<div class="align-center">
 
 							<div id="lightbox">
@@ -144,20 +144,20 @@
 								
 								<div id="lightbox_container">	
 									<div id="lightbox_title">
-										<h:outputText value="#{bean.clickedResource.title}" escape="false" />
+										<h:outputText value="#{resourceDetailBean.clickedResource.title}" escape="false" />
 										<a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="close"></a>
 									</div>
 									<div id="lightbox_content">
-										<ui:fragment rendered="#{bean.clickedResource.type eq 'text'}">
+										<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text'}">
 										    <div style="overflow:auto; height:100%; width:100%; text-align:center;">
-										    	<img src="#{bean.clickedResource.thumbnail4.url}" height="#{bean.clickedResource.thumbnail4.height}" width="#{bean.clickedResource.thumbnail4.width}" />
+										    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}" height="#{resourceDetailBean.clickedResource.thumbnail4.height}" width="#{resourceDetailBean.clickedResource.thumbnail4.width}" />
 										    </div>	
 									    </ui:fragment>
-									    <ui:fragment rendered="#{bean.clickedResource.type eq 'pdf'}">
-										   	<iframe src="#{bean.clickedResource.url}" style="width:100%; height:100%; "></iframe>									    	
+									    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'pdf'}">
+										   	<iframe src="#{resourceDetailBean.clickedResource.url}" style="width:100%; height:100%; "></iframe>									    	
 									    </ui:fragment>
-									    <ui:fragment rendered="#{bean.clickedResource.type eq 'Image'}">
-										    	<img src="#{bean.clickedResource.thumbnail4.url}" height="#{bean.clickedResource.thumbnail4.height}" width="#{bean.clickedResource.thumbnail4.width}" style="height:#{bean.clickedResource.thumbnail4.height gt 250? '100%':'auto'}; width:auto; display:block; margin:0 auto;"/>	
+									    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'Image'}">
+										    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}" height="#{resourceDetailBean.clickedResource.thumbnail4.height}" width="#{resourceDetailBean.clickedResource.thumbnail4.width}" style="height:#{resourceDetailBean.clickedResource.thumbnail4.height gt 250? '100%':'auto'}; width:auto; display:block; margin:0 auto;"/>	
 									    </ui:fragment>							
 									</div>
 									<!--  <div id="lightbox_url">
@@ -167,72 +167,72 @@
 							</div>						
 						 
 									
-							<ui:fragment rendered="#{bean.clickedResource.type == 'Video'}">
+							<ui:fragment rendered="#{resourceDetailBean.clickedResource.type == 'Video'}">
 								<div class="preview_box" style="min-height:400px; max-height:500px; height:100%;">
-									<h:outputText value='#{bean.clickedResource.embedded}' escape="false" />
+									<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
 								</div>
 							</ui:fragment>								
-							<ui:fragment rendered="#{bean.clickedResource.type != 'text' and bean.clickedResource.type != 'pdf' and bean.clickedResource.type != 'Video' and bean.clickedResource.type != 'Image'}">
+							<ui:fragment rendered="#{resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'Video' and resourceDetailBean.clickedResource.type != 'Image'}">
 								<div class="preview_box">
-									<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
+									<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
 								</div>
 							</ui:fragment>
-							<ui:fragment rendered="#{(bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf' or bean.clickedResource.type eq 'Image') and not empty bean.clickedResource.thumbnail3}">
+							<ui:fragment rendered="#{(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'Image') and not empty resourceDetailBean.clickedResource.thumbnail3}">
 								
 								
-									<img class="preview_box" src="#{bean.clickedResource.thumbnail3.url}" height="#{bean.clickedResource.thumbnail3.height}" width="#{bean.clickedResource.thumbnail3.width}" style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;" onmouseup="lightbox_open();" />								
+									<img class="preview_box" src="#{resourceDetailBean.clickedResource.thumbnail3.url}" height="#{resourceDetailBean.clickedResource.thumbnail3.height}" width="#{resourceDetailBean.clickedResource.thumbnail3.width}" style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;" onmouseup="lightbox_open();" />								
 								
 							</ui:fragment>
-							<ui:fragment rendered="#{(bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf') and empty bean.clickedResource.thumbnail3}">
+							<ui:fragment rendered="#{(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf') and empty resourceDetailBean.clickedResource.thumbnail3}">
 								<div class="preview_box" style="display: inline-block">
-									<a target="_blank" class="newsfeed_query_link" style="padding: 0px" href="#{bean.clickedResource.url}">
-										<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
+									<a target="_blank" class="newsfeed_query_link" style="padding: 0px" href="#{resourceDetailBean.clickedResource.url}">
+										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
 									</a>
 								</div>
 							</ui:fragment>
-							<ui:fragment rendered="#{bean.clickedResource.type eq 'Image' and empty bean.clickedResource.thumbnail3}">
+							<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'Image' and empty resourceDetailBean.clickedResource.thumbnail3}">
 								<div class="preview_box">
-									<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
+									<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"></h:outputText>
 								</div>
 							</ui:fragment>
 						</div>
 						<div class="align-center" style="padding-top: 10px">
-							<a class="hyperlink" href="#{bean.clickedResource.url}" target="_blank">
-								<h:outputText styleClass="hyperlink" rendered="#{bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf'}" value="#{bean.clickedResource.url}"></h:outputText>
+							<a class="hyperlink" href="#{resourceDetailBean.clickedResource.url}" target="_blank">
+								<h:outputText styleClass="hyperlink" rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf'}" value="#{resourceDetailBean.clickedResource.url}"></h:outputText>
 							</a>
 						</div>
 					</ui:fragment>
 					
 					<table cellpadding="0" cellspacing="0" style="width:40%">
-						<ui:fragment rendered="#{not empty bean.clickedResource.fileName and not bean.clickedResource.source.equals('LORO')}">
+						<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.fileName and not resourceDetailBean.clickedResource.source.equals('LORO')}">
 							<tr>
 								<td style="padding-top:5px">
 									<span class="resource_field">#{msg.file}:</span>
 								</td>
 								<td style="padding-top:5px">
-									<a href="#{bean.clickedResource.getUrl()}">#{bean.clickedResource.fileName}</a>
+									<a href="#{resourceDetailBean.clickedResource.getUrl()}">#{resourceDetailBean.clickedResource.fileName}</a>
 								</td>
 							</tr>
 						</ui:fragment>
 
-						<ui:fragment rendered="#{empty bean.clickedResource.fileName and bean.clickedResource.type.toLowerCase() != 'text' and bean.clickedResource.type != 'pdf' and bean.clickedResource.type.toLowerCase() != 'video' and bean.clickedResource.type.toLowerCase() != 'image'}">
+						<ui:fragment rendered="#{empty resourceDetailBean.clickedResource.fileName and resourceDetailBean.clickedResource.type.toLowerCase() != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type.toLowerCase() != 'video' and resourceDetailBean.clickedResource.type.toLowerCase() != 'image'}">
 							<tr>
 								<td style="padding-top:5px">
 									<span class="resource_field">#{msg.resource}:</span>
 								</td>
 								<td style="padding-top:5px">
-									<a style="color: #22e" href="#{bean.clickedResource.getUrl()}">#{bean.clickedResource.url}</a>
+									<a style="color: #22e" href="#{resourceDetailBean.clickedResource.getUrl()}">#{resourceDetailBean.clickedResource.url}</a>
 								</td>
 							</tr>
 						</ui:fragment>
 
-						<ui:fragment rendered="#{not empty bean.clickedResource.author}">
+						<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.author}">
 							<tr>
 								<td style="padding-top:5px">
 									<span class="resource_field">#{msg.author}:</span>
 								</td>
 								<td style="padding-top:5px">
-									<h:outputText value="#{bean.clickedResource.author}"/>
+									<h:outputText value="#{resourceDetailBean.clickedResource.author}"/>
 								</td>
 							</tr>
 						</ui:fragment>
@@ -241,22 +241,22 @@
 								<span class="resource_field">#{msg.source}:</span>
 							</td>
 							<td style="padding-top:5px">
-								<a href="#{bean.clickedResource.getUrl()}">
-									<h:outputText value="#{bean.clickedResource.source}" />
+								<a href="#{resourceDetailBean.clickedResource.getUrl()}">
+									<h:outputText value="#{resourceDetailBean.clickedResource.source}" />
 								</a>
 							</td>
 						</tr>
-						<ui:fragment rendered="#{not empty bean.clickedResource.groups}">
+						<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.groups}">
 							<tr>
 								<td style="padding-top:5px">
 									<span class="resource_field">
 										<h:outputFormat value="#{msg.group_s}:">
-											<f:param value="#{bean.clickedResource.groups.size()}" />
+											<f:param value="#{resourceDetailBean.clickedResource.groups.size()}" />
 										</h:outputFormat>
 									</span>
 								</td>
 								<td style="padding-top:5px">
-									<ui:repeat var="group" value="#{bean.clickedResource.groups}">
+									<ui:repeat var="group" value="#{resourceDetailBean.clickedResource.groups}">
 										<h:outputLink value="group/overview.jsf" style="display:inline-block; margin-right:1rem;">
 											<f:param name="group_id" value="#{group.id}" />
 											<h:outputText value="#{group.title}" />
@@ -265,23 +265,23 @@
 								</td>
 							</tr>
 						</ui:fragment>
-						<ui:fragment rendered="#{bean.clickedResource.source == 'TED'}">
+						<ui:fragment rendered="#{resourceDetailBean.clickedResource.source == 'TED'}">
 							<tr>
 								<td style="padding-top:5px">
 									<span class="resource_field">#{msg.transcript}:</span>
 								</td>
 								<td style="padding-top:5px">
 									<h:outputLink value="ted_transcript.jsf" style="text-decoration:underline;">
-										<f:param name="resource_id" value="#{bean.clickedResource.id}" />#{msg.link_to_transcript}</h:outputLink>
+										<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />#{msg.link_to_transcript}</h:outputLink>
 								</td>
 							</tr>
 						</ui:fragment>
 					</table>
 
-					<h:panelGroup rendered="#{not empty bean.clickedResource.description}">
+					<h:panelGroup rendered="#{not empty resourceDetailBean.clickedResource.description}">
 							<div class="resource_field" style="padding-top: 10px">#{msg.description}</div>
-								<h:outputText id="resource_description" value="#{bean.clickedResource.descriptionHTML}" escape="false" />
-							</h:panelGroup>
+							<h:outputText id="resource_description" value="#{resourceDetailBean.clickedResource.descriptionHTML}" escape="false" />
+					</h:panelGroup>
 							
 							<h:form id="archive_current_form" rendered="#{resourceDetailBean.clickedResource.storageType != 1}">
 									<span class="resource_field">#{msg.current_version}: </span>

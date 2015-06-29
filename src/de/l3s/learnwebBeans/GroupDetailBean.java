@@ -46,6 +46,7 @@ import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.NewsEntry;
 import de.l3s.learnweb.OwnerList;
+import de.l3s.learnweb.Paginator;
 import de.l3s.learnweb.Presentation;
 import de.l3s.learnweb.PresentationManager;
 import de.l3s.learnweb.Resource;
@@ -110,8 +111,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     private Group newGroup = new Group();
 
-    private int page = 0;
-    private int totalPages;
+    private Paginator paginator;
 
     public GroupDetailBean() throws SQLException
     {
@@ -124,9 +124,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	clickedPresentation = new Presentation();// TODO initilaize with null
 
 	numberOfColumns = 3;
-
+	int totalPages = 0;
 	if(groupId != 0)
 	    totalPages = getLearnweb().getResourceManager().getGroupResourcesPageCount(groupId);
+	paginator = new Paginator(totalPages > 0 ? totalPages : 0);
 	log.debug("init GroupDetailBean()");
     }
 
@@ -310,7 +311,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void loadResources() throws SQLException
     {
-	resourcesAll = new OwnerList<Resource, User>(group.getResources(page)); // copy resources
+	resourcesAll = new OwnerList<Resource, User>(group.getResources(paginator.getPageIndex())); // copy resources
 	Collections.sort(resourcesAll, Resource.createTitleComparator());
     }
 
@@ -1314,84 +1315,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	newResourceClicked = false;
     }
 
-    public int getPage()
+    public Paginator getPaginator()
     {
-	return page;
-    }
-
-    public void setPage(int page)
-    {
-	this.page = page;
-    }
-
-    public int getTotalPages()
-    {
-	return totalPages;
-    }
-
-    public String firstPageButtonValue()
-    {
-	if(page == 0)
-	    return getLocaleMessage("page") + " " + (page + 1);
-	else if(page > 0 && page < totalPages)
-	    return "" + page;
-	else if(page == totalPages)
-	    return "" + (page - 1);
-	return "";
-    }
-
-    public int firstPageButtonClick()
-    {
-	if(page == 0)
-	    return page;
-	else if(page > 0 && page < totalPages)
-	    return page - 1;
-	else if(page == totalPages)
-	    return page - 2;
-	return 0;
-    }
-
-    public String secondPageButtonValue()
-    {
-	if(page == 0)
-	    return "" + (page + 2);
-	else if(page > 0 && page < totalPages)
-	    return getLocaleMessage("page") + " " + (page + 1);
-	else if(page == totalPages)
-	    return "" + page;
-	return "";
-    }
-
-    public int secondPageButtonClick()
-    {
-	if(page == 0)
-	    return page + 1;
-	else if(page > 0 && page < totalPages)
-	    return page;
-	else if(page == totalPages)
-	    return page - 1;
-	return 0;
-    }
-
-    public String thirdPageButtonValue()
-    {
-	if(page == 0)
-	    return "" + (page + 3);
-	else if(page > 0 && page < totalPages)
-	    return "" + (page + 2);
-	else if(page == totalPages)
-	    return getLocaleMessage("page") + " " + (page + 1);
-	return "";
-    }
-
-    public int thirdPageButtonClick()
-    {
-	if(page == 0)
-	    return page + 2;
-	else if(page > 0 && page < totalPages)
-	    return page + 1;
-	else if(page == totalPages)
-	    return page;
-	return 0;
+	return paginator;
     }
 }

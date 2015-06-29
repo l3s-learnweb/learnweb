@@ -1,0 +1,51 @@
+<ui:composition 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<h:panelGroup id="paging_buttons" layout="block" styleClass="clear" rendered="#{bean.paginator.totalPages > 0}" style="padding-bottom:10px;text-align:center;">
+		<h:form>
+			<ui:fragment rendered="#{bean.paginator.lessThanNPages}">
+				<p:commandButton value="«" style="margin-right:5px;" styleClass="greenbutton" disabled="#{bean.paginator.pageIndex == 0}" update=":datagrid :paging_buttons">
+					<f:setPropertyActionListener target="#{bean.paginator.pageIndex}" value="#{bean.paginator.pageIndex - 1}" />
+				</p:commandButton>
+
+				<ui:repeat value="#{bean.paginator.listPages()}" var="page">
+					<p:commandButton value="#{page}" style="margin-right:5px;" styleClass="greenbutton #{page == bean.paginator.pageIndex + 1? 'active_button_green':''}" update=":datagrid :paging_buttons">
+						<f:setPropertyActionListener target="#{bean.paginator.pageIndex}" value="#{page - 1}" />
+					</p:commandButton>							
+				</ui:repeat>
+
+				<p:commandButton value="»" styleClass="greenbutton" disabled="#{bean.paginator.pageIndex == bean.paginator.totalPages}" update=":datagrid :paging_buttons">
+					<f:setPropertyActionListener target="#{bean.paginator.pageIndex}" value="#{bean.paginator.pageIndex + 1}" />
+				</p:commandButton>
+			</ui:fragment>
+
+			<ui:fragment rendered="#{!bean.paginator.lessThanNPages}">
+				<p:commandButton value="«" style="margin-right:5px;" styleClass="greenbutton" disabled="#{bean.paginator.pageIndex == 0}" update=":datagrid :paging_buttons">
+					<f:setPropertyActionListener target="#{bean.paginator.pageIndex}" value="#{bean.paginator.pageIndex - 1}" />
+				</p:commandButton>
+				<p:commandButton value="#{1}" style="margin-right:5px;" styleClass="greenbutton #{bean.paginator.pageIndex + 1 == 1? 'active_button_green':''}" update=":datagrid :paging_buttons">
+					<f:setPropertyActionListener target="#{bean.paginator.pageIndex}" value="0" />
+				</p:commandButton>
+				<p:commandButton value="…" style="margin-right:5px;" styleClass="greenbutton" disabled="true" rendered="#{bean.paginator.pageIndex >= 4}"/>
+
+				<ui:repeat value="#{bean.paginator.listPages()}" var="page">
+								<p:commandButton value="#{page}" style="margin-right:5px;" styleClass="greenbutton #{page == bean.paginator.pageIndex + 1? 'active_button_green':''}" update=":datagrid :paging_buttons">
+									<f:setPropertyActionListener target="#{bean.paginator.pageIndex}" value="#{page - 1}" />
+								</p:commandButton>							
+				</ui:repeat>
+	
+				<p:commandButton value="…" style="margin-right:5px;" styleClass="greenbutton" disabled="true" rendered="#{bean.paginator.lessThanNPagesFromLast}"/>
+				
+				<p:commandButton value="#{bean.paginator.totalPages + 1}" style="margin-right:5px;" styleClass="greenbutton #{bean.paginator.pageIndex == bean.paginator.totalPages? 'active_button_green':''}" update=":datagrid :paging_buttons">
+					<f:setPropertyActionListener target="#{bean.paginator.pageIndex}" value="#{bean.paginator.totalPages}" />
+				</p:commandButton>
+				<p:commandButton value="»" styleClass="greenbutton" disabled="#{bean.paginator.pageIndex == bean.paginator.totalPages}" update=":datagrid :paging_buttons">
+					<f:setPropertyActionListener target="#{bean.paginator.pageIndex}" value="#{bean.paginator.pageIndex + 1}" />
+				</p:commandButton>
+			</ui:fragment>
+		</h:form>
+	</h:panelGroup>
+</ui:composition>	

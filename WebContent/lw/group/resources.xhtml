@@ -170,7 +170,7 @@
 				            		<span class="groupid">#{result.id}</span>
 
 									<h:graphicImage styleClass="resource_thumbnail" width="150" height="150" value="#{result.thumbnail1.url}" rendered="#{not empty result.thumbnail1}" alt="#{result.title}" />
-						    		<h:outputText styleClass="resource_thumbnail" value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' escape="false" rendered="#{empty result.thumbnail1 and empty result.thumbnail0}"></h:outputText>
+						    		<h:outputText styleClass="resource_thumbnail" value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' escape="false" rendered="#{empty result.thumbnail1}"></h:outputText>
 
 				            		<div class="buttons">
 				            			<p:commandLink oncomplete="PF('resource_dialog').show()" title="#{msg.addToMyResources}" update=":resource_form" styleClass="buttons_link resource_commandlink" process="@this">
@@ -218,28 +218,10 @@
 				    </h:form>
 				    </ui:repeat>
 			    </h:panelGroup>
-			    
-				<h:panelGroup id="paging_buttons" layout="block" rendered="#{groupDetailBean.totalPages > 1}">
-				    <h:form>
-						<p:commandButton value="«" style="margin-right:5px;" styleClass="greenbutton" rendered="#{groupDetailBean.page > 0}" update=":datagrid :paging_buttons">
-							<f:setPropertyActionListener target="#{groupDetailBean.page}" value="#{groupDetailBean.page - 1}" />
-						</p:commandButton>
-						<p:commandButton value="#{groupDetailBean.firstPageButtonValue()}" style="margin-right:5px;" styleClass="greenbutton #{groupDetailBean.page == 0? 'active_button_green':''}" update=":datagrid :paging_buttons">
-							<f:setPropertyActionListener target="#{groupDetailBean.page}" value="#{groupDetailBean.firstPageButtonClick()}" />
-						</p:commandButton>		
-						<p:commandButton value="#{groupDetailBean.secondPageButtonValue()}" style="margin-right:5px;" styleClass="greenbutton active_button_green" update=":datagrid :paging_buttons">
-							<f:setPropertyActionListener target="#{groupDetailBean.page}" value="#{groupDetailBean.secondPageButtonClick()}" />
-						</p:commandButton>		
-						<p:commandButton value="#{groupDetailBean.thirdPageButtonValue()}" style="margin-right:5px;" styleClass="greenbutton #{groupDetailBean.page == groupDetailBean.totalPages? 'active_button_green':''}" update=":datagrid :paging_buttons">
-							<f:setPropertyActionListener target="#{groupDetailBean.page}" value="#{groupDetailBean.thirdPageButtonClick()}" />
-						</p:commandButton>
-						<p:commandButton value="»" styleClass="greenbutton" rendered="#{groupDetailBean.page != groupDetailBean.totalPages}" update=":datagrid :paging_buttons">
-							<f:setPropertyActionListener target="#{groupDetailBean.page}" value="#{groupDetailBean.page + 1}" />
-						</p:commandButton>
-					
-				    </h:form>
-			    </h:panelGroup>   
-			    
+
+				<ui:decorate  template="/lw/templates/paging.xhtml">
+					<ui:param name="bean" value="#{groupDetailBean}" />
+				</ui:decorate >
 		</ui:define>
 		<ui:define name="right_layout">
 			<ui:decorate  template="/lw/templates/right_pane.xhtml">
