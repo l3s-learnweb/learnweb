@@ -2,6 +2,7 @@ package de.l3s.learnweb;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,16 +24,14 @@ public class ForumManager
 
     // String topic, int group_id
 
-    public String saveForumTopic(ForumPost ForumPost) throws SQLException
+    public String saveForumTopic(String topic, int group_id) throws SQLException
     {
 
 	String sqlQuery = "Insert into forum_topics(topic_title,group_id) values (?,?) ";
 
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
-	ps.setString(1, topic);
 	ps.setInt(2, group_id);
 	int status = ps.executeUpdate();
-
 	if(status == 1)
 	    return "Forum topic inserted successfully";
 	else
@@ -62,4 +61,25 @@ public class ForumManager
 	    return "Forum post insert failed";
     }
 
+    public String editForumPost(int postId, String text) throws SQLException
+    {
+	ResultSet editPost = getForumPost(postId);
+
+	String sqlQuery = "Update forum_post set text = text Where postId = postId AND user_id = userId";
+	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
+	int status = ps.executeUpdate();
+
+	if(status == 1)
+	    return "Forum post Updated successfully";
+	else
+	    return "Forum post Update failed";
+    }
+
+    public ResultSet getForumPost(int postId) throws SQLException
+    {
+	String sqlQuery = "Select text, post_edit_count Where post_id = postId";
+	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
+	ResultSet editPost = ps.executeQuery();
+	return editPost;
+    }
 }
