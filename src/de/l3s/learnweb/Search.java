@@ -20,6 +20,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.interwebj.InterWeb;
+import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.solrClient.SolrSearch;
 import de.l3s.util.StringHelper;
 
@@ -69,7 +70,7 @@ public class Search implements Serializable
 	    case Learnweb:
 		return "LearnWeb";
 	    default:
-		return "Any service";
+		return UtilBean.getLocaleMessage("any_service");
 	    }
 	}
 
@@ -104,15 +105,15 @@ public class Search implements Serializable
 	    switch(this)
 	    {
 	    case d:
-		return "Past 24 hour";
+		return UtilBean.getLocaleMessage("past_24_hours");
 	    case w:
-		return "Past week";
+		return UtilBean.getLocaleMessage("past_week");
 	    case m:
-		return "Past month";
+		return UtilBean.getLocaleMessage("past_month");
 	    case y:
-		return "Past year";
+		return UtilBean.getLocaleMessage("past_year");
 	    default:
-		return "Any time";
+		return UtilBean.getLocaleMessage("any_time");
 	    }
 	}
 
@@ -154,15 +155,15 @@ public class Search implements Serializable
 	    switch(this)
 	    {
 	    case small:
-		return "Small";
+		return UtilBean.getLocaleMessage("small");
 	    case medium:
-		return "Medium";
+		return UtilBean.getLocaleMessage("medium");
 	    case large:
-		return "Large";
+		return UtilBean.getLocaleMessage("large");
 	    case extraLarge:
-		return "Extra large";
+		return UtilBean.getLocaleMessage("extra_large");
 	    default:
-		return "Any size";
+		return UtilBean.getLocaleMessage("any_size");
 	    }
 	}
 
