@@ -21,7 +21,9 @@ public class ForumManager
 	this.learnweb = learnweb;
     }
 
-    public String saveForumTopic(String topic, int group_id) throws SQLException
+    // String topic, int group_id
+
+    public String saveForumTopic(ForumPost ForumPost) throws SQLException
     {
 
 	String sqlQuery = "Insert into forum_topics(topic_title,group_id) values (?,?) ";
