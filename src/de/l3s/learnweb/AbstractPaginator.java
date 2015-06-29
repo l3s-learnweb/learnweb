@@ -13,7 +13,7 @@ public abstract class AbstractPaginator
     private int pageIndex;
     private int totalPages;
 
-    abstract List<Resource> getPage(int page) throws SQLException, SolrServerException;
+    abstract List<Resource> getCurrentPage() throws SQLException, SolrServerException;
 
     public AbstractPaginator(int totalPages)
     {

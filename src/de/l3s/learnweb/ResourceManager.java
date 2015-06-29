@@ -720,9 +720,9 @@ public class ResourceManager
 	{
 
 	    @Override
-	    List<Resource> getPage(int page) throws SQLException
+	    List<Resource> getCurrentPage() throws SQLException
 	    {
-		return getResourcesByGroupId(groupId, page);
+		return getResourcesByGroupId(groupId, getPageIndex());
 	    }
 	};
     }
