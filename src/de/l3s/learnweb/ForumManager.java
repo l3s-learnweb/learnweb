@@ -10,7 +10,7 @@ import org.apache.log4j.Logger;
 
 public class ForumManager
 {
-    enum ORDER
+    enum ORDER // possible order values; Not all values are applicable for every method
     {
 	DATE,
 	TITLE,
@@ -102,6 +102,16 @@ public class ForumManager
 	    return "Forum post inserted successfully"; // don't return  messages
 	else
 	    return "Forum post insert failed";
+    }
+
+    /**
+     * increment topic view counter
+     * 
+     * @param topicId
+     */
+    public void incTopicViews(int topicId)
+    {
+
     }
 
     /**
