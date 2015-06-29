@@ -36,6 +36,13 @@ public class ResourceManager
     private ICache<Resource> cache;
     private int pageSize;
 
+    public enum ORDER
+    {
+	TITLE,
+	TYPE,
+	DATE
+    } // ...
+
     protected ResourceManager(Learnweb learnweb)
     {
 	Properties properties = learnweb.getProperties();
@@ -73,10 +80,6 @@ public class ResourceManager
 	return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_tag USING ( resource_id ) WHERE tag_id = ? AND deleted = 0 LIMIT ? ", null, tagId, maxResults);
     }
 
-    /**
-     * @see de.l3s.learnweb.ResourceManager#getRatedResourcesByUserId(int)
-     */
-
     public List<Resource> getRatedResourcesByUserId(int userId) throws SQLException
     {
 	return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_rating USING ( resource_id ) WHERE user_id = ? AND deleted = 0 ", null, userId);
@@ -94,10 +97,6 @@ public class ResourceManager
 	return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `deleted` = 0 AND `thumbnail2_url` IS NULL AND  `max_image_url` IS NULL", null);
     }
 
-    /**
-     * @see de.l3s.learnweb.ResourceManager#isResourceRatedByUser(int, int)
-     */
-
     public boolean isResourceRatedByUser(int resourceId, int userId) throws Exception
     {
 	PreparedStatement stmt = learnweb.getConnection().prepareStatement("SELECT 1 FROM lw_resource_rating WHERE resource_id =  ? AND user_id = ?");
@@ -108,10 +107,6 @@ public class ResourceManager
 	stmt.close();
 	return response;
     }
-
-    /**
-     * @see de.l3s.learnweb.ResourceManager#rateResource(int, int, int)
-     */
 
     protected void rateResource(int resourceId, int userId, int value) throws Exception
     {
@@ -715,6 +710,21 @@ public class ResourceManager
 	resource.clearCaches();
 	group.clearCaches();
 	user.clearCaches();
+    }
+
+    public AbstractPaginator getResourcesByGroupId(final int groupId, ORDER order) throws SQLException
+    {
+	int pages = getGroupResourcesPageCount(groupId);
+
+	return new AbstractPaginator(pages)
+	{
+
+	    @Override
+	    List<Resource> getPage(int page) throws SQLException
+	    {
+		return getResourcesByGroupId(groupId, page);
+	    }
+	};
     }
 
     public OwnerList<Resource, User> getResourcesByGroupId(int groupId) throws SQLException
