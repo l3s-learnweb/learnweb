@@ -36,6 +36,15 @@ public class StringHelper
 	return str;
     }
 
+    public static boolean empty(String str)
+    {
+	if(null == str)
+	    return true;
+	if(str.length() == 0)
+	    return true;
+	return false;
+    }
+
     public static String implode(Collection<String> list, String delim)
     {
 	StringBuilder out = new StringBuilder();

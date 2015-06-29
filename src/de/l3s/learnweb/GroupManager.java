@@ -364,31 +364,6 @@ public class GroupManager
 	return time;
     }
 
-    /*
-    public static void main(String[] args) throws SQLException // tests	
-    {
-    	Learnweb lw = Learnweb.getInstance();
-    	GroupManager om = lw.getGroupManager();
-    	
-    	System.out.println("All Groups:");
-    	for(Group o : om.getGroupsAll())
-    		System.out.println(o);
-    	
-    	System.out.println("Create new Group");
-    	Group o2 = new Group();
-    	o2.setTitle("test title");
-    	o2.setLogo("logo");
-    	System.out.println("pre save: "+o2);
-    	om.save(o2);
-    	System.out.println("post save: "+o2);
-    	o2.setTitle("changed title");
-    	om.save(o2);
-    	
-    	System.out.println("All Groups:");
-    	for(Group o : om.getGroupsAll())
-    		System.out.println(o);
-    }*/
-
     public List<GroupCategory> getGroupCategoriesByCourse(int courseId) throws SQLException
     {
 	LinkedList<GroupCategory> categories = new LinkedList<GroupCategory>();

@@ -559,11 +559,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
     public void setDescription(String description)
     {
-	System.out.println(description);
-
 	this.description = description == null ? "" : StringHelper.clean(description, Whitelist.simpleText());
-
-	System.out.println(description);
     }
 
     public void setUrl(String url)

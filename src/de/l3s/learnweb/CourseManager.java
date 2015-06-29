@@ -254,18 +254,17 @@ public class CourseManager
 	insert.close();
     }
 
+    /*
     public static void main(String[] args) throws SQLException // tests	
     {
-	Learnweb lw = Learnweb.getInstance();
-	CourseManager cm = lw.getCourseManager();
+    Learnweb lw = Learnweb.getInstance();
+    CourseManager cm = lw.getCourseManager();
 
-	System.out.println("All courses:");
-	for(Course o : cm.getCoursesAll())
-	{
-	    System.out.println(o);
-	    if(o.getOrganisation() == null)
-		System.out.println("problem" + o.getOrganisationId());
-	}
+    for(Course o : cm.getCoursesAll())
+    {
+     
     }
+    }
+    */
 
 }

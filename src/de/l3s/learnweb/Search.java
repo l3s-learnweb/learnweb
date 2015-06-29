@@ -41,7 +41,7 @@ public class Search implements Serializable
 	Ipernity,
 	TED, // stored in SOLR
 	Loro, // stored in SOLR
-	Yovisto, // LearnWeb
+	Yovisto, //  stored in SOLR
 	Learnweb // stored in SOLR
 	;
 
@@ -248,13 +248,13 @@ public class Search implements Serializable
 
     public Search(InterWeb interweb, String query, User user)
     {
-	// TODO Remove it, this video already removed
-	urlHashMap.add("http://vimeo.com/735450"); // hides a really stupid video, that appears in many search results
-
 	this.query = query;
 	this.interweb = interweb;
 	this.userId = (null == user) ? -1 : user.getId();
 	this.solrSearch = new SolrSearch(query, user);
+
+	if(query.startsWith("source:"))
+	    hasMoreInterwebResults = false;
     }
 
     private LinkedList<ResourceDecorator> doSearch(int page)
@@ -289,7 +289,7 @@ public class Search implements Serializable
 
 	    if(page == 1) // on the first page get results from Interweb, only when Learnweb does not return results
 	    {
-		if(!hasMoreLearnwebResults)
+		if(!hasMoreLearnwebResults && hasMoreInterwebResults)
 		    newResources = getInterwebResults(page);
 		else
 		    interwebPageOffset = -1; // no interweb results were requested. so we have to request page 1 when Learnweb shows the next page
@@ -350,6 +350,7 @@ public class Search implements Serializable
 	    hasMoreLearnwebResults = false;
 
 	int privateResourceCount = 0; // number of resources that match the query but will not be displayed to the user
+	int duplicatedUrlCount = 0;
 
 	LinkedList<ResourceDecorator> newResources = new LinkedList<ResourceDecorator>();
 
@@ -362,14 +363,18 @@ public class Search implements Serializable
 	    {
 		// the resource is stored in learnweb, belongs to no group and the current user is not the owner 
 		// of the resource. So he is not allowed to view the resource
-		//System.out.println(resource);
 		privateResourceCount++;
 		continue;
 	    }
 
-	    // check if an other resource with the same url exists
-	    if(!urlHashMap.add(resource.getUrl()))
+	    // check if an other resource with the same url exists; Yovisto urls are not unique in this case we use the file url
+	    String url = !StringHelper.empty(resource.getFileUrl()) ? resource.getFileUrl() : resource.getUrl();
+
+	    if(!urlHashMap.add(url))
+	    {
+		duplicatedUrlCount++;
 		continue;
+	    }
 
 	    decoratedResource.setTempId(temporaryId);
 
@@ -379,8 +384,8 @@ public class Search implements Serializable
 	    newResources.add(decoratedResource);
 	}
 
-	if(privateResourceCount > 0)
-	    log.error("Skipped " + privateResourceCount + " private resources");
+	if(privateResourceCount > 0 || duplicatedUrlCount > 0)
+	    log.error("Skipped " + privateResourceCount + " private resources and " + duplicatedUrlCount + " dublicated resources");
 
 	return newResources;
     }

@@ -3,10 +3,10 @@ package de.l3s.interwebj;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
@@ -31,6 +31,7 @@ public class SearchQuery implements Serializable
     protected List<ResourceDecorator> results;
     protected String elapsedTime;
     protected long totalResults;
+    private Map<String, Long> serviceSet = new HashMap<String, Long>(); // service name, number of results at this service
 
     public SearchQuery(InputStream inputStream) throws IllegalResponseException
     {
@@ -53,7 +54,6 @@ public class SearchQuery implements Serializable
 	    int counter = 0;
 	    results = new LinkedList<ResourceDecorator>();
 	    totalResults = 0;
-	    Set<String> serviceSet = new HashSet<String>();
 
 	    JAXBContext jaxbContext = JAXBContext.newInstance(SearchResponse.class);
 	    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
@@ -97,10 +97,10 @@ public class SearchQuery implements Serializable
 		}
 		results.add(decoratedResource);
 
-		if(!serviceSet.contains(searchResult.getService()))
+		if(!serviceSet.containsKey(searchResult.getService()))
 		{
 		    totalResults += searchResult.getTotalResultsAtService();
-		    serviceSet.add(searchResult.getService());
+		    serviceSet.put(searchResult.getService(), searchResult.getTotalResultsAtService());
 		}
 	    }
 
@@ -118,6 +118,13 @@ public class SearchQuery implements Serializable
 
     public long getTotalResultCount()
     {
+
 	return totalResults;
     }
+
+    public Map<String, Long> getResultCountAtService()
+    {
+	return serviceSet;
+    }
+
 }
