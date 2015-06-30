@@ -1,13 +1,15 @@
 package de.l3s.learnweb;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.solr.client.solrj.SolrServerException;
 
-public abstract class AbstractPaginator
+public abstract class AbstractPaginator implements Serializable
 {
+    private static final long serialVersionUID = 2495539559727294482L;
     private static final int DEFAULT_PAGE_INDEX = 0;
     private static final int DEFAULT_N_PAGE_LIMIT = 5;
     private int pageIndex;

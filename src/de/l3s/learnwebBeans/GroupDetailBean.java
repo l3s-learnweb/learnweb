@@ -841,7 +841,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	else if(type.equals("spreadsheet"))
 	    newEntry = new SpreadsheetEntry();
 	else
-	    throw new IllegalArgumentException("title should be: document, presentation or spreadsheet");
+	    throw new IllegalArgumentException("type should be: document, presentation or spreadsheet");
 
 	newEntry.setTitle(new PlainTextConstruct(title));
 

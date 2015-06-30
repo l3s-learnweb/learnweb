@@ -192,6 +192,7 @@ public class SolrSearch implements Serializable
 	    filterGroupStr = "";
 	    for(Integer groupId : filterGroupIds)
 	    {
+		// TODO this filter should also work with groups
 		if(0 == filterGroupStr.length())
 		    filterGroupStr = "groups : " + groupId.toString();
 		else
@@ -199,9 +200,9 @@ public class SolrSearch implements Serializable
 		    filterGroupStr += " OR groups : " + groupId.toString();
 		}
 	    }
+	    solrQuery.addFilterQuery(filterGroupStr);
 	}
-	solrQuery.addFilterQuery(filterGroupStr);
-	solrQuery.addFilterQuery("-(id:r_* AND -(groups:* OR ownerUserId:" + userId + "))");
+	solrQuery.addFilterQuery("-(id:r_* AND -(groups:* OR ownerUserId:" + userId + "))"); // hide private resources
 	solrQuery.setStart((page - 1) * resultsPerPage);
 	solrQuery.setRows(resultsPerPage);
 
@@ -216,6 +217,8 @@ public class SolrSearch implements Serializable
 	solrQuery.setParam("f.title.hl.fragsize", "0");//size of snippet from title, 0 means return the whole field as snippet 
 	solrQuery.setHighlightSimplePre("<strong>");
 	solrQuery.setHighlightSimplePost("</strong>");
+
+	//log.debug(solrQuery);
 
 	//get solrServer
 	SolrServer server = Learnweb.getInstance().getSolrClient().getSolrServer();

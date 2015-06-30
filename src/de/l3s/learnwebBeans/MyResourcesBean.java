@@ -39,7 +39,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     private Boolean reloadLogs = false;
 
     private List<Resource> resourcesText = new LinkedList<Resource>();
-    private List<Resource> resourcesMultimedia = new LinkedList<Resource>();
+    //   private List<Resource> resourcesMultimedia = new LinkedList<Resource>();
     private Resource clickedResource;
     private String mode = "everything";
     private int numberOfColumns = 3;
@@ -175,7 +175,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     public void loadResources() throws SQLException
     {
 	resourcesAll = getUser().getResources();
-	resourcesMultimedia.clear();
+	//	resourcesMultimedia.clear();
 	resourcesText.clear();
 
 	/*
@@ -229,8 +229,10 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	    resources = resourcesAll;
 	else if(mode.equals("text"))
 	    resources = resourcesText;
+	/*
 	else if(mode.equals("multimedia"))
 	    resources = resourcesMultimedia;
+	    */
     }
 
     public void deleteResource() throws SQLException

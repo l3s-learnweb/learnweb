@@ -39,7 +39,7 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
     private List<Resource> resources;
     private OwnerList<Resource, User> resourcesAll;
     private List<Resource> resourcesText = new LinkedList<Resource>();
-    private List<Resource> resourcesMultimedia = new LinkedList<Resource>();
+    // private List<Resource> resourcesMultimedia = new LinkedList<Resource>();
     ArrayList<Resource> titleSlide;
 
     private ArrayList<String> queries = new ArrayList<String>();
@@ -244,11 +244,12 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
 	return resourcesText;
     }
 
-    public List<Resource> getResourcesMultimedia()
-    {
-	return resourcesMultimedia;
-    }
-
+    /*
+        public List<Resource> getResourcesMultimedia()
+        {
+    	return resourcesMultimedia;
+        }
+    */
     public ArrayList<String> getQueries()
     {
 	return queries;

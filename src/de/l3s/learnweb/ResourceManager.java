@@ -679,6 +679,8 @@ public class ResourceManager
 	targetGroup.clearCaches();
 	user.clearCaches();
 
+	learnweb.getSolrClient().reIndexResource(resource);
+
 	return true;
     }
 

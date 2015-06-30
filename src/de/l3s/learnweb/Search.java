@@ -40,39 +40,48 @@ public class Search implements Serializable
 	SlideShare,
 	Ipernity,
 	TED, // stored in SOLR
+	TEDx, // stored in SOLR
 	Loro, // stored in SOLR
 	Yovisto, //  stored in SOLR
-	Learnweb // stored in SOLR
+	LearnWeb // stored in SOLR
 	;
-
-	public String getCustomName()
-	{
-	    switch(this)
-	    {
-	    case Bing:
-		return "Bing";
-	    case Flickr:
-		return "Flickr";
-	    case YouTube:
-		return "YouTube";
-	    case Vimeo:
-		return "Vimeo";
-	    case SlideShare:
-		return "SlideShare";
-	    case Ipernity:
-		return "Ipernity";
-	    case TED:
-		return "TED";
-	    case Loro:
-		return "Loro";
-	    case Yovisto:
-		return "Yovisto";
-	    case Learnweb:
-		return "LearnWeb";
-	    default:
-		return UtilBean.getLocaleMessage("any_service");
-	    }
-	}
+	/*
+		public String getCustomName()
+		{
+		    if(this == null)
+			return UtilBean.getLocaleMessage("any_service");
+		    return this.name();
+		    /*
+		    switch(this)
+		    {
+		    case Bing:
+		    return "Bing";
+		    case Flickr:
+		    return "Flickr";
+		    case YouTube:
+		    return "YouTube";
+		    case Vimeo:
+		    return "Vimeo";
+		    case SlideShare:
+		    return "SlideShare";
+		    case Ipernity:
+		    return "Ipernity";
+		    case TED:
+		    return "TED";
+		    case TEDx:
+		    return "TEDx";
+		    case Loro:
+		    return "Loro";
+		    case Yovisto:
+		    return "Yovisto";
+		    case Learnweb:
+		    return "LearnWeb";
+		    default:
+		    return UtilBean.getLocaleMessage("any_service");
+		    
+		    }* /
+		}
+	    */
 
 	public boolean isLearnwebSource()
 	{
@@ -80,11 +89,13 @@ public class Search implements Serializable
 	    {
 	    case TED:
 		return true;
+	    case TEDx:
+		return true;
 	    case Loro:
 		return true;
 	    case Yovisto:
 		return true;
-	    case Learnweb:
+	    case LearnWeb:
 		return true;
 	    default:
 		return false;
@@ -214,8 +225,7 @@ public class Search implements Serializable
     {
 	image,
 	web,
-	video,
-	multimedia // todo remove
+	video
     };
 
     private String query;
@@ -336,6 +346,7 @@ public class Search implements Serializable
     {
 	long start = System.currentTimeMillis();
 
+	log.debug(StringHelper.implode(configService, ","));
 	this.solrSearch.setFilterSource(StringHelper.implode(configService, ","));
 	this.solrSearch.setResultsPerPage(configService.size() > 1 ? configResultsPerService : configResultsPerOneService);
 	this.solrSearch.setFilterType(mode.name());
@@ -468,19 +479,15 @@ public class Search implements Serializable
 	{
 	case image:
 	    setMedia(MEDIA.image);
-	    setService(SERVICE.Bing, SERVICE.Flickr, SERVICE.Ipernity, SERVICE.Loro, SERVICE.Learnweb); // , SERVICE.SlideShare  
+	    setService(SERVICE.Bing, SERVICE.Flickr, SERVICE.Ipernity, SERVICE.Loro, SERVICE.LearnWeb); // , SERVICE.SlideShare  
 	    break;
 	case web:
 	    setMedia(MEDIA.text);
-	    setService(SERVICE.Bing, SERVICE.Learnweb);
+	    setService(SERVICE.Bing, SERVICE.LearnWeb, SERVICE.Loro, SERVICE.SlideShare);
 	    break;
 	case video:
 	    setMedia(MEDIA.video);
-	    setService(SERVICE.YouTube, SERVICE.Vimeo, SERVICE.Loro, SERVICE.TED, SERVICE.Yovisto, SERVICE.Learnweb); // , SERVICE.Flickr , SERVICE.SlideShare
-	    break;
-	case multimedia:
-	    setMedia(MEDIA.video, MEDIA.image, MEDIA.text, MEDIA.presentation);
-	    setService(SERVICE.Flickr, SERVICE.YouTube, SERVICE.Vimeo, SERVICE.SlideShare, SERVICE.Ipernity);
+	    setService(SERVICE.YouTube, SERVICE.Vimeo, SERVICE.Loro, SERVICE.TED, SERVICE.Yovisto, SERVICE.LearnWeb); // , SERVICE.Flickr , SERVICE.SlideShare
 	    break;
 	default:
 	    throw new IllegalArgumentException("unknown searchmode: " + searchMode);

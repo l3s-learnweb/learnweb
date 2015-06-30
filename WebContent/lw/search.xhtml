@@ -82,7 +82,7 @@
 					<ul>
 						<ui:fragment rendered="#{searchBean.searchMode == 'web'}">
 							<li class="#{searchBean.filterService != null ? 'active' : null}">
-								<span class="filter-name">#{searchBean.filterSource != null ? searchBean.currentSource : msg.source} 
+								<span class="filter-name">#{searchBean.filterService != null ? searchBean.currentService : msg.source} 
 									<span class="arrow"></span>
 								</span>
 								<div class="filter-sub-bar">
@@ -96,9 +96,9 @@
 										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'Bing')}" />
 										<f:param name="query" value="#{searchBean.query}" />
 									</h:link>
-									<h:link value="LearnWeb" outcome="search" styleClass="#{searchBean.filterService == 'Learnweb' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('Learnweb')}">
+									<h:link value="LearnWeb" outcome="search" styleClass="#{searchBean.filterService == 'LearnWeb' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('LearnWeb')}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
-										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'Learnweb')}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'LearnWeb')}" />
 										<f:param name="query" value="#{searchBean.query}" />
 									</h:link>
 								</div>
@@ -135,9 +135,9 @@
 										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'Loro')}" />
 										<f:param name="query" value="#{searchBean.query}" />
 									</h:link>
-									<h:link value="LearnWeb" outcome="search" styleClass="#{searchBean.filterService == 'Learnweb' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('Learnweb')}">
+									<h:link value="LearnWeb" outcome="search" styleClass="#{searchBean.filterService == 'LearnWeb' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('LearnWeb')}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
-										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'Learnweb')}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'LearnWeb')}" />
 										<f:param name="query" value="#{searchBean.query}" />
 									</h:link>
 								</div>
@@ -247,9 +247,9 @@
 										<f:param name="filter" value="srv:Yovisto" />
 										<f:param name="query" value="#{searchBean.query}" />
 									</h:link>
-									<h:link value="LearnWeb" outcome="search" styleClass="#{searchBean.filterService == 'Learnweb' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('Learnweb')}">
+									<h:link value="LearnWeb" outcome="search" styleClass="#{searchBean.filterService == 'LearnWeb' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('LearnWeb')}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
-										<f:param name="filter" value="srv:Learnweb" />
+										<f:param name="filter" value="srv:LearnWeb" />
 										<f:param name="query" value="#{searchBean.query}" />
 									</h:link>
 								</div>

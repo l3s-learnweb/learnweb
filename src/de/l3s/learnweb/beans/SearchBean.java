@@ -148,12 +148,6 @@ public class SearchBean extends ApplicationBean implements Serializable
 	return onSearch();
     }
 
-    public String onSearchMultimedia()
-    {
-	searchMode = Search.MODE.multimedia;
-	return onSearch();
-    }
-
     public String onSearch()
     {
 	Date tempDate = new Date(); //For getting the query timestamp 
@@ -647,7 +641,10 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public String getCurrentService()
     {
-	return filterService.getCustomName();
+	//return filterService.getCustomName();
+	// is this really necessary?
+
+	return filterService.name();
     }
 
     public String getFilterDate()
