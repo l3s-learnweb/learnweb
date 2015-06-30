@@ -8,10 +8,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
+import de.l3s.interwebj.IllegalResponseException;
+import de.l3s.interwebj.SearchQuery;
 import de.l3s.learnweb.Transcript.Paragraph;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.solrClient.FileInspector;
@@ -253,10 +256,78 @@ public class TedManager
 	return resource;
     }
 
+    public void fetchTedX() throws IOException, IllegalResponseException, SQLException
+    {
+	ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
+
+	Group tedxGroup = learnweb.getGroupManager().getGroupById(921);
+	User admin = learnweb.getUserManager().getUser(7727);
+
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT resource_id FROM lw_resource WHERE url = ?");
+
+	TreeMap<String, String> params = new TreeMap<String, String>();
+	params.put("media_types", "video");
+	params.put("services", "YouTube");
+	params.put("number_of_results", "50");
+	params.put("timeout", "500");
+
+	List<ResourceDecorator> resources;
+	int page = 2;
+
+	do
+	{
+	    params.put("page", Integer.toString(page));
+
+	    SearchQuery interwebResponse = learnweb.getInterweb().search("user::TEDxTalks", params);
+	    log.debug(interwebResponse.getResultCountAtService());
+	    resources = interwebResponse.getResults();
+
+	    for(ResourceDecorator decoratedResource : resources)
+	    {
+		Resource resource = decoratedResource.getResource();
+
+		resource.setSource("TEDx");
+		resource.setLocation("TEDx");
+
+		String[] title = resource.getTitle().split("\\|");
+		if(title.length == 3 && title[2].startsWith(" TEDx"))
+		{
+		    resource.setAuthor(title[1].trim());
+		    resource.setTitle(title[0] + "|" + title[2]);
+		}
+
+		// check if resources is already stored in Learnweb
+		select.setString(1, resource.getUrl());
+		ResultSet rs = select.executeQuery();
+		if(rs.next())
+		{
+		    /*
+		    int resourceId = rs.getInt(1);
+		    learnweb.getResourceManager().deleteResourcePermanent(resourceId);
+		    System.out.println("delete: " + resourceId);
+		    */
+		    continue;
+		}
+		else
+		{
+		    rpm.processImage(resource, FileInspector.openStream(resource.getMaxImageUrl()));
+
+		    admin.addResource(resource);
+		    tedxGroup.addResource(resource, admin);
+		}
+		System.out.println(resource);
+	    }
+
+	    page++;
+	    break;
+	}
+	while(resources.size() > 0);
+    }
+
     public static void main(String[] args) throws Exception
     {
 
 	TedManager tm = Learnweb.getInstance().getTedManager();
-	tm.saveTedResource();
+	tm.fetchTedX(); //saveTedResource();
     }
 }

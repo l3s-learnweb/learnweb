@@ -20,6 +20,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.interwebj.InterWeb;
+import de.l3s.interwebj.SearchQuery;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.solrClient.SolrSearch;
 import de.l3s.util.StringHelper;
@@ -426,7 +427,9 @@ public class Search implements Serializable
 	    params.put("language", configLanguage);
 	}
 
-	List<ResourceDecorator> interwebResults = interweb.search(query, params);
+	SearchQuery interwebResponse = interweb.search(query, params);
+	//interwebResponse.getResultCountAtService();
+	List<ResourceDecorator> interwebResults = interwebResponse.getResults();
 
 	if(stopped)
 	    return new LinkedList<ResourceDecorator>();
@@ -487,7 +490,7 @@ public class Search implements Serializable
 	    break;
 	case video:
 	    setMedia(MEDIA.video);
-	    setService(SERVICE.YouTube, SERVICE.Vimeo, SERVICE.Loro, SERVICE.TED, SERVICE.Yovisto, SERVICE.LearnWeb); // , SERVICE.Flickr , SERVICE.SlideShare
+	    setService(SERVICE.YouTube, SERVICE.Vimeo, SERVICE.Loro, SERVICE.TED, SERVICE.TEDx, SERVICE.Yovisto, SERVICE.LearnWeb); // , SERVICE.Flickr , SERVICE.SlideShare
 	    break;
 	default:
 	    throw new IllegalArgumentException("unknown searchmode: " + searchMode);

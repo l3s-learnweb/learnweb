@@ -666,6 +666,9 @@ public class ResourceManager
 
     protected boolean addResourceToGroup(Resource resource, Group targetGroup, User user) throws SQLException
     {
+	if(resource.getId() <= 0)
+	    throw new IllegalStateException();
+
 	// TODO prüfen ob schon vorhanden
 
 	PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `lw_group_resource` (`group_id` , `resource_id`, user_id) VALUES (?, ?, ?)");
@@ -835,8 +838,12 @@ public class ResourceManager
 
 	    if(resource.getSource().equals("TED")) // This must be set manually because we store all TED videos in Learnweb/Solr
 		resource.setLocation("TED");
-	    if(resource.getSource().equals("LORO")) // This must be set manually because we store all LORO resources in Learnweb/Solr
+	    else if(resource.getSource().equals("TEDx")) // This must be set manually because we store all TEDx resources in Learnweb/Solr
+		resource.setLocation("TEDx");
+	    else if(resource.getSource().equals("LORO")) // This must be set manually because we store all LORO resources in Learnweb/Solr
 		resource.setLocation("LORO");
+	    else if(resource.getSource().equals("Yovisto")) // This must be set manually because we store all Yovisto resources in Learnweb/Solr
+		resource.setLocation("Yovisto");
 	    else
 		resource.setLocation("Learnweb");
 

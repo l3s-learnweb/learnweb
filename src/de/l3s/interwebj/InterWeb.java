@@ -30,7 +30,6 @@ import com.sun.jersey.oauth.signature.OAuthSecrets;
 
 import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
 import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.beans.UtilBean;
 
 public class InterWeb implements Serializable
@@ -396,7 +395,7 @@ public class InterWeb implements Serializable
      * @throws IOException
      * @throws IllegalResponseException
      */
-    public List<ResourceDecorator> search(String query, TreeMap<String, String> params) throws IOException, IllegalResponseException
+    public SearchQuery search(String query, TreeMap<String, String> params) throws IOException, IllegalResponseException
     {
 	if(null == query || query.length() == 0)
 	{
@@ -421,7 +420,7 @@ public class InterWeb implements Serializable
 
 	//SearchResponse r = response.getEntity(SearchResponse.class);
 
-	return new SearchQuery(response.getEntityInputStream()).getResults();
+	return new SearchQuery(response.getEntityInputStream()); //.getResults();
     }
 
     public static void main(String[] args) throws Exception

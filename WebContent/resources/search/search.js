@@ -299,7 +299,7 @@ function lightbox_resize_content()
 	var outer = $('#lightbox_content');
 	var inner = outer.find('.embedded').first().children();	
 	
-	if(inner.first().attr('width') == '100%' || inner.first().attr('type') == 'application/x-shockwave-flash')
+	if(inner.first().attr('width') == '100%' || inner.first().attr('type') == 'application/x-shockwave-flash' || inner.first().is('iframe'))
 	{
 		inner.css({
 		   position:'absolute',
