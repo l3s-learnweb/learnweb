@@ -22,6 +22,7 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.validator.ValidatorException;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.hibernate.validator.constraints.NotBlank;
 
 import com.google.gdata.client.docs.DocsService;
@@ -35,6 +36,7 @@ import com.google.gdata.data.docs.PresentationEntry;
 import com.google.gdata.data.docs.SpreadsheetEntry;
 import com.google.gdata.util.ServiceException;
 
+import de.l3s.learnweb.AbstractPaginator;
 import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Group;
@@ -46,11 +48,11 @@ import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.NewsEntry;
 import de.l3s.learnweb.OwnerList;
-import de.l3s.learnweb.Paginator;
 import de.l3s.learnweb.Presentation;
 import de.l3s.learnweb.PresentationManager;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceManager;
+import de.l3s.learnweb.ResourceManager.ORDER;
 import de.l3s.learnweb.Tag;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
@@ -111,7 +113,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     private Group newGroup = new Group();
 
-    private Paginator paginator;
+    private AbstractPaginator paginator;
 
     public GroupDetailBean() throws SQLException
     {
@@ -124,10 +126,17 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	clickedPresentation = new Presentation();// TODO initilaize with null
 
 	numberOfColumns = 3;
-	int totalPages = 0;
-	if(groupId != 0)
-	    totalPages = getLearnweb().getResourceManager().getGroupResourcesPageCount(groupId);
-	paginator = new Paginator(totalPages > 0 ? totalPages : 0);
+
+	try
+	{
+	    paginator = group.getResources(ORDER.TITLE);
+	}
+	catch(SolrServerException e)
+	{
+	    e.printStackTrace();
+	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	}
+
 	log.debug("init GroupDetailBean()");
     }
 
@@ -311,7 +320,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void loadResources() throws SQLException
     {
-	resourcesAll = new OwnerList<Resource, User>(group.getResources(paginator.getPageIndex())); // copy resources
+	//resourcesAll = new OwnerList<Resource, User>(group.getResources(paginator.getPageIndex())); // copy resources
 	Collections.sort(resourcesAll, Resource.createTitleComparator());
     }
 
@@ -405,13 +414,14 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	try
 	{
-	    loadResources();
+	    resourcesAll = (OwnerList<Resource, User>) paginator.getCurrentPage();
 	}
-	catch(SQLException e)
+	catch(SQLException | SolrServerException e)
 	{
 	    e.printStackTrace();
 	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 	}
+
 	return resourcesAll;
     }
 
@@ -1315,7 +1325,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	newResourceClicked = false;
     }
 
-    public Paginator getPaginator()
+    public AbstractPaginator getPaginator()
     {
 	return paginator;
     }

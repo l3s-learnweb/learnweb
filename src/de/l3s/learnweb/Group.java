@@ -10,10 +10,12 @@ import java.util.List;
 
 import javax.validation.constraints.Size;
 
+import org.apache.solr.client.solrj.SolrServerException;
 import org.hibernate.validator.constraints.NotBlank;
 
 import de.l3s.learnweb.Link.LinkType;
 import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.ResourceManager.ORDER;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.util.HasId;
 
@@ -165,11 +167,10 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	return resources;
     }
 
-    public OwnerList<Resource, User> getResources(int page) throws SQLException
+    public AbstractPaginator getResources(ORDER order) throws SQLException, SolrServerException
     {
 	ResourceManager rm = Learnweb.getInstance().getResourceManager();
-	resources = rm.getResourcesByGroupId(id, page);
-	return resources;
+	return rm.getResourcesByGroupId(id, order);
     }
 
     public boolean addResource(Resource resource, User user) throws SQLException

@@ -720,7 +720,7 @@ public class ResourceManager
 	{
 
 	    @Override
-	    List<Resource> getCurrentPage() throws SQLException
+	    public List<Resource> getCurrentPage() throws SQLException
 	    {
 		return getResourcesByGroupId(groupId, getPageIndex());
 	    }
@@ -779,7 +779,7 @@ public class ResourceManager
     public int getGroupResourcesPageCount(int groupId) throws SQLException
     {
 	int count = 0;
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT count(*) as count from lw_resource where resource_id IN (select resource_id from lw_group_resource WHERE group_id=?)");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT count(*) as count from lw_resource r JOIN lw_group_resource g USING(resource_id) WHERE group_id=?");
 	select.setInt(1, groupId);
 	ResultSet rs = select.executeQuery();
 	if(rs.next())
