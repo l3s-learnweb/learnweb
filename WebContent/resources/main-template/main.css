@@ -603,6 +603,33 @@ h5 {
 	color:#4f4f4f;
 }
 
+/*paging-template*/
+.pagebutton{
+	border:none !important;
+	background:none !important;
+	vertical-align: middle;
+}
+.active_page_button{
+	color:#489a83 !important;
+	font-size:1.8rem !important;
+}
+.next_button, .previous_button{
+	background-image:url(img/ui-icons.png) !important;
+	background-repeat:no-repeat !important;
+	display:inline-block;
+	height:16px;
+	width:16px;
+	position:absolute;
+	margin-top:7.5px;
+}
+.next_button{
+	background-position:-32px 0px !important;
+	margin-left:-8px;
+}
+.previous_button{
+	background-position:-96px -0px !important;
+}
+
 /* change primefaces ui */
 .ui-button,
 .ui-inputfield{
@@ -1004,7 +1031,7 @@ div#presentation_preview {
 
 @media screen and (min-width:70em) and (max-width:93.9999em) {
 	.resource_panel{
-		margin-right: 10px;
+		margin-right: 10xp;
 	}
 }
 @media screen and (min-width:94em) and (max-width:120em){
