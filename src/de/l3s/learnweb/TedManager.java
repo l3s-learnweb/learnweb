@@ -315,13 +315,13 @@ public class TedManager
 		    admin.addResource(resource);
 		    tedxGroup.addResource(resource, admin);
 		}
-		System.out.println(resource);
+		log.debug(resource);
 	    }
 
 	    page++;
-	    break;
+	    log.debug("page: " + page);
 	}
-	while(resources.size() > 0);
+	while(resources.size() > 0 && page < 100);
     }
 
     public static void main(String[] args) throws Exception
