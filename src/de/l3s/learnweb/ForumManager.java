@@ -70,11 +70,15 @@ public class ForumManager
 
     public ForumTopic saveTopic(ForumTopic forumTopic) throws SQLException
     {
+	// TODO use static columns var (see user manager)
 	String sqlQuery = "Insert into forum_topic(topic_title,group_id) values (?,?) ";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
 	ps.setString(1, forumTopic.getTopic());
 	ps.setInt(2, forumTopic.getGroupId());
 	ps.executeUpdate();
+
+	// TODO set assigned id ; see user manager
+
 	return null;
     }
 
