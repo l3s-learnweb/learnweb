@@ -1043,14 +1043,28 @@ div#presentation_preview {
 .resource_commandlink{margin-top: 0px;}
 .resource_dialog_field{width:400px;}
 
-.resource_panel{
+.resource_panel {
 	width:195px;
 	height:197px;
-	margin-bottom:4px;
+	margin-bottom:8px;
 	margin-right:3%;
 	position:relative;
 	display:inline-block;
+	
+	/*
+	
+	TODO
+	display:block;
+	float:left;
+	box-sizing:border-box;
+	margin-right:calc(33% - 221px);
+	*/
+	
 }
+/*
+.resource_panel:nth-child(3n+0) {
+	margin-right:0;	
+}*/
 
 /*@media screen and (min-width:50em) and (max-width:69.9999em) {
 	.resource_panel{

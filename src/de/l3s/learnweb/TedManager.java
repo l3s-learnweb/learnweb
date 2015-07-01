@@ -261,6 +261,7 @@ public class TedManager
 	ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
 
 	Group tedxGroup = learnweb.getGroupManager().getGroupById(921);
+	Group tedxTrentoGroup = learnweb.getGroupManager().getGroupById(922);
 	User admin = learnweb.getUserManager().getUser(7727);
 
 	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT resource_id FROM lw_resource WHERE url = ?");
@@ -299,32 +300,44 @@ public class TedManager
 		// check if resources is already stored in Learnweb
 		select.setString(1, resource.getUrl());
 		ResultSet rs = select.executeQuery();
-		if(rs.next())
+
+		if(rs.next()) // it is already stored
 		{
-		    /*
 		    int resourceId = rs.getInt(1);
-		    learnweb.getResourceManager().deleteResourcePermanent(resourceId);
-		    System.out.println("delete: " + resourceId);
-		    */
+		    Resource learnwebResource = learnweb.getResourceManager().getResource(resourceId);
+
+		    if(learnwebResource.getIdAtService() == null || learnwebResource.getIdAtService().length() == 0)
+		    {
+			learnwebResource.setIdAtService(resource.getIdAtService());
+			learnwebResource.save();
+		    }
+
+		    if(!tedxTrentoGroup.addResource(learnwebResource, admin))
+			log.error("resource is already part of the group");
+
 		    log.debug("Already stored: " + resource);
-		    continue;
+
+		    resource = learnwebResource;
 		}
 		else
 		{
 		    rpm.processImage(resource, FileInspector.openStream(resource.getMaxImageUrl().replace("hqdefault", "mqdefault")));
 
 		    admin.addResource(resource);
-		    tedxGroup.addResource(resource, admin);
+		    tedxTrentoGroup.addResource(resource, admin);
 
-		    log.debug("new video yeah");
+		    log.debug("new video added");
 		}
+
+		// TODO check if new transcripts are available for "resource" variable
+
 	    }
 
 	    page++;
 	    log.debug("page: " + page);
 	    // break;
 	}
-	while(resources.size() > 0 && page < 100);
+	while(resources.size() > 0 && page < 3);
     }
 
     public static void main(String[] args) throws Exception

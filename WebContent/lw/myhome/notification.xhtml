@@ -9,12 +9,20 @@
 <ui:composition template="/lw/templates/new_main_t.xhtml">
 
 	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="#{msg.myCommentsTitle}" />
+	<ui:param name="pageTitle" value="#{msg.notification}" />
 
 
 	<ui:define name="center_layout" >
+		<ui:repeat var="message" value="#{notificationReaderBean.receivedMessages}">
+			StyleClass="#{message.read ? 'read' : 'notRead'}"
+			<h:outputText value="#{message.fromUser.username}" />
+			<h:outputText value="#{message.title}" />
+			<h:outputText value="#{message.time}" />
+			<h:outputText escape="false" value="#{message.text}" />
+		</ui:repeat>
 
 
+<!--  alles hier drunter soll weg  -->
     
 		<h:form>
 		
@@ -111,6 +119,9 @@ border-right: solid 0px #4e6769;
 
 
 		</h:form>
+		
+		
+
 
 	</ui:define>
 </ui:composition>

@@ -110,20 +110,11 @@
 									<h:outputText value="#{msg.search_history}" />
 								</a>
 							</li>
-							<!--  
 							<li>
-								<a href="#{request.contextPath}/lw/myhome/profile.jsf" id="profile">
-									<h:outputText value="#{msg.myProfileTitle}" />
+								<a href="#{request.contextPath}/lw/myhome/notification.jsf">
+									<h:outputText value="#{msg.notification}" />
 								</a>
 							</li>
-							-->
-							<!-- 							
-							<li>
-								<a href="#{request.contextPath}/lw/myhome/services.jsf">
-									<h:outputText value="#{msg.web2_0services}" />
-								</a>
-							</li>
-							 -->
 							
 							<li>
 								<a href="#{request.contextPath}/lw/user/login.jsf" id="login">#{msg.loginLabel}</a>
@@ -134,6 +125,12 @@
 								</h:form>
 							</li>
 							<ui:fragment rendered="#{userBean.admin}">
+								<li>
+									<a href="#{request.contextPath}/lw/myhome/services.jsf">
+										<h:outputText value="#{msg.web2_0services}" />
+									</a>
+								</li>
+								
 								<li class="menupoint">
 									<h:outputText value="#{msg.admin}" />
 								</li>
@@ -162,13 +159,11 @@
 								<li class="menupoint">
 									<h:outputText value="#{msg.moderator}" />
 								</li>
-								<!-- 
 								<li>
 									<a href="#{request.contextPath}/lw/admin/notification.jsf">
 										<h:outputText value="#{msg.notification}" />
 									</a>
 								</li>
-								 -->
 								<li>
 									<a href="#{request.contextPath}/lw/admin/users_moderator.jsf">
 										<h:outputText value="#{msg.users}" />
@@ -184,7 +179,6 @@
 										<h:outputText value="#{msg.organization}" />
 									</a>
 								</li>
-								<!-- 
 								<li>
 									<a href="#{request.contextPath}/lw/admin/text_analysis.jsf">
 										<h:outputText value="#{msg.text_analysis}" />
@@ -195,7 +189,6 @@
 										<h:outputText value="#{msg.statistics}" />
 									</a>
 								</li>
-								 -->
 								<li>
 									<a href="#{request.contextPath}/lw/transcript_log.jsf">
 										<h:outputText value="Transcript Log" />
@@ -228,12 +221,17 @@
 				</h:form>
 			</div>
 
+
+
+										
 			<p:graphicImage value="/resources/main-template/img/question.png" alt="#{msg.help}" onclick="footerToggle();" rendered="#{not empty helpText}" id="informationonscreen" />
 
-			<ui:fragment rendered="#{userBean.loggedIn}">
-				<span id="message_span" style="display:none;">1</span>
-				<img alt="message" src="#{request.contextPath}/resources/main-template/img/message.png" id="message_button" class="header_buttons hover-white" style="display:none;"/>
-			</ui:fragment>
+		
+			<h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" rendered="#{userBean.loggedIn and false}">
+				<h:outputText value="#{notificationReaderBean.howManyNewMessages}" rendered="#{notificationReaderBean.howManyNewMessages gt -1}" id="message_span"/>
+				
+				<img alt="message" src="#{request.contextPath}/resources/main-template/img/message.png" id="message_button" class="header_buttons hover-white" style="display:block;"/>
+			</h:outputLink>
 
 			<h:outputLink id="loginbutton" value="#{request.contextPath}/lw/user/login.jsf" rendered="#{not userBean.loggedIn}" class="hover-white">
 				#{msg.loginLabel}

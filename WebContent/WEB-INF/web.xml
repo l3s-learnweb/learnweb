@@ -4,6 +4,7 @@
   <context-param>
     <param-name>javax.faces.PROJECT_STAGE</param-name>
     <param-value>Development</param-value>
+    <!-- Development  Production -->
   </context-param>
   <context-param>
     <param-name>facelets.DEVELOPMENT</param-name>
@@ -22,7 +23,7 @@
     <exception-type>java.lang.Throwable</exception-type>
     <location>/lw/error_runtime.jsf</location>
   </error-page>
-  <!-- Filter not used at the moment
+
   <filter>
     <filter-name>UrlRewriteFilter</filter-name>
     <filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
@@ -35,7 +36,7 @@
     <filter-name>UrlRewriteFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-   -->
+
   <filter>
     <filter-name>PrimeFaces FileUpload Filter</filter-name>
     <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>

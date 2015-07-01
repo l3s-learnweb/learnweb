@@ -369,6 +369,8 @@ public class ResourceManager
 	}
 
 	replace.close();
+
+	learnweb.getSolrClient().reIndexResource(resource);
     }
 
     /**
@@ -667,9 +669,14 @@ public class ResourceManager
     protected boolean addResourceToGroup(Resource resource, Group targetGroup, User user) throws SQLException
     {
 	if(resource.getId() <= 0)
-	    throw new IllegalStateException();
+	    throw new IllegalStateException("The resource has to be saved before: user.addResource()");
 
-	// TODO prüfen ob schon vorhanden
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM `lw_group_resource` WHERE `group_id` = ? AND `resource_id` = ?");
+	select.setInt(1, targetGroup.getId());
+	select.setInt(2, resource.getId());
+	ResultSet rs = select.executeQuery();
+	if(rs.next())
+	    return false; // resource is already part of this group
 
 	PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `lw_group_resource` (`group_id` , `resource_id`, user_id) VALUES (?, ?, ?)");
 	insert.setInt(1, targetGroup.getId());
@@ -701,6 +708,9 @@ public class ResourceManager
 	resource.clearCaches();
 	targetGroup.clearCaches();
 	user.clearCaches();
+
+	learnweb.getSolrClient().reIndexResource(resource);
+
 	return true;
     }
 
@@ -715,6 +725,8 @@ public class ResourceManager
 	resource.clearCaches();
 	group.clearCaches();
 	user.clearCaches();
+
+	learnweb.getSolrClient().reIndexResource(resource);
     }
 
     public AbstractPaginator getResourcesByGroupId(final int groupId, ORDER order) throws SQLException
@@ -933,29 +945,31 @@ public class ResourceManager
 
     public static Resource getResourceFromInterwebResult(SearchResultEntity searchResult)
     {
-	Resource currentResult = new Resource();
+	Resource resource = new Resource();
+	resource.setType(searchResult.getType());
+	resource.setTitle(searchResult.getTitle());
+	resource.setLocation(searchResult.getService());
+	resource.setSource(searchResult.getService());
+	resource.setViews(searchResult.getNumberOfViews());
+	resource.setIdAtService(searchResult.getIdAtService());
+	resource.setDuration(searchResult.getDuration());
 
-	currentResult.setType(searchResult.getType());
-	currentResult.setTitle(searchResult.getTitle());
+	if(!resource.getTitle().equals(searchResult.getDescription()))
+	    resource.setDescription(searchResult.getDescription());
 
-	if(!currentResult.getTitle().equals(searchResult.getDescription()))
-	    currentResult.setDescription(searchResult.getDescription());
-	currentResult.setLocation(searchResult.getService());
-	currentResult.setSource(searchResult.getService());
+	resource.setUrl(StringHelper.urlDecode(searchResult.getUrl()));
 
-	currentResult.setViews(searchResult.getNumberOfViews());
-	currentResult.setUrl(StringHelper.urlDecode(searchResult.getUrl()));
-	currentResult.setEmbeddedSize1Raw(searchResult.getEmbeddedSize1());
-	currentResult.setEmbeddedSize3Raw(searchResult.getEmbeddedSize3());
-	currentResult.setEmbeddedSize4Raw(searchResult.getEmbeddedSize4());
-	//currentResult.setMaxImageUrl(searchResult.getImageUrl());
-	currentResult.setDuration(searchResult.getDuration());
+	/*
+	resource.setEmbeddedSize1Raw(searchResult.getEmbeddedSize1());
+	resource.setEmbeddedSize3Raw(searchResult.getEmbeddedSize3());
+	resource.setEmbeddedSize4Raw(searchResult.getEmbeddedSize4());
+	*/
 
-	if(!currentResult.getType().equalsIgnoreCase("image"))
+	if(!resource.getType().equalsIgnoreCase("image"))
 	{
-	    currentResult.setEmbeddedRaw(searchResult.getEmbeddedSize4());
-	    if(null == currentResult.getEmbeddedRaw())
-		currentResult.setEmbeddedRaw(searchResult.getEmbeddedSize3());
+	    resource.setEmbeddedRaw(searchResult.getEmbeddedSize4());
+	    if(null == resource.getEmbeddedRaw())
+		resource.setEmbeddedRaw(searchResult.getEmbeddedSize3());
 	}
 
 	ThumbnailEntity biggestThumbnail = null;
@@ -991,27 +1005,27 @@ public class ResourceManager
 	    Thumbnail thumbnail = new Thumbnail(url, width, height);
 
 	    if(thumbnail.getHeight() <= 100 && thumbnail.getWidth() <= 100)
-		currentResult.setThumbnail0(thumbnail);
+		resource.setThumbnail0(thumbnail);
 	    else if(thumbnail.getHeight() < 170 && thumbnail.getWidth() < 170)
 	    {
 		thumbnail = thumbnail.resize(120, 100);
-		currentResult.setThumbnail1(thumbnail);
+		resource.setThumbnail1(thumbnail);
 	    }
 	    else if(thumbnail.getHeight() < 500 && thumbnail.getWidth() < 500)
 	    {
-		currentResult.setThumbnail2(thumbnail.resize(300, 220));
+		resource.setThumbnail2(thumbnail.resize(300, 220));
 	    }
 	    else
 	    //if(thumbnail.getHeight() < 600 && thumbnail.getWidth() < 600)
 	    {
-		currentResult.setThumbnail4(thumbnail);
+		resource.setThumbnail4(thumbnail);
 	    }
 	}
 
 	if(biggestThumbnail != null)
-	    currentResult.setMaxImageUrl(biggestThumbnail.getUrl());
+	    resource.setMaxImageUrl(biggestThumbnail.getUrl());
 
-	return currentResult;
+	return resource;
     }
 
     public static void main(String[] args) throws Exception
