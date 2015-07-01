@@ -312,9 +312,10 @@ public class TedManager
 			learnwebResource.save();
 		    }
 
+		    /*
 		    if(!tedxTrentoGroup.addResource(learnwebResource, admin))
-			log.error("resource is already part of the group");
-
+		    log.error("resource is already part of the group");
+		    */
 		    log.debug("Already stored: " + resource);
 
 		    resource = learnwebResource;
