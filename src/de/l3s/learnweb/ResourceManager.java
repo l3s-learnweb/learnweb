@@ -723,6 +723,7 @@ public class ResourceManager
 
 	return new AbstractPaginator(pages)
 	{
+	    private static final long serialVersionUID = 399863025926697377L;
 
 	    @Override
 	    public List<Resource> getCurrentPage() throws SQLException

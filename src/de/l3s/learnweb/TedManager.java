@@ -278,7 +278,7 @@ public class TedManager
 	{
 	    params.put("page", Integer.toString(page));
 
-	    SearchQuery interwebResponse = learnweb.getInterweb().search("user::TEDxTalks", params);
+	    SearchQuery interwebResponse = learnweb.getInterweb().search("user::TEDxTalks trento", params);
 	    log.debug(interwebResponse.getResultCountAtService());
 	    resources = interwebResponse.getResults();
 
@@ -286,7 +286,6 @@ public class TedManager
 	    {
 		Resource resource = decoratedResource.getResource();
 
-		/*
 		resource.setSource("TEDx");
 		resource.setLocation("TEDx");
 
@@ -296,7 +295,6 @@ public class TedManager
 		    resource.setAuthor(title[1].trim());
 		    resource.setTitle(title[0] + "|" + title[2]);
 		}
-		*/
 
 		// check if resources is already stored in Learnweb
 		select.setString(1, resource.getUrl());
@@ -313,18 +311,18 @@ public class TedManager
 		}
 		else
 		{
-		    /*
-		    		    rpm.processImage(resource, FileInspector.openStream(resource.getMaxImageUrl()));
+		    rpm.processImage(resource, FileInspector.openStream(resource.getMaxImageUrl().replace("hqdefault", "mqdefault")));
 
-		    		    admin.addResource(resource);
-		    		    tedxGroup.addResource(resource, admin);
-		    */
+		    admin.addResource(resource);
+		    tedxGroup.addResource(resource, admin);
+
 		    log.debug("new video yeah");
 		}
 	    }
 
 	    page++;
 	    log.debug("page: " + page);
+	    // break;
 	}
 	while(resources.size() > 0 && page < 100);
     }
