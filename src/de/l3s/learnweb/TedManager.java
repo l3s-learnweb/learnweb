@@ -279,7 +279,7 @@ public class TedManager
 	{
 	    params.put("page", Integer.toString(page));
 
-	    SearchQuery interwebResponse = learnweb.getInterweb().search("user::TEDxTalks trento", params);
+	    SearchQuery interwebResponse = learnweb.getInterweb().search("user::TEDxTalks tedxtrento", params);
 	    log.debug(interwebResponse.getResultCountAtService());
 	    resources = interwebResponse.getResults();
 
@@ -312,10 +312,9 @@ public class TedManager
 			learnwebResource.save();
 		    }
 
-		    /*
 		    if(!tedxTrentoGroup.addResource(learnwebResource, admin))
-		    log.error("resource is already part of the group");
-		    */
+			log.error("resource is already part of the group");
+
 		    log.debug("Already stored: " + resource);
 
 		    resource = learnwebResource;
@@ -338,7 +337,7 @@ public class TedManager
 	    log.debug("page: " + page);
 	    // break;
 	}
-	while(resources.size() > 0 && page < 3);
+	while(resources.size() > 0 && page < 6);
     }
 
     public static void main(String[] args) throws Exception
