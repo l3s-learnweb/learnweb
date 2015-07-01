@@ -3,7 +3,6 @@ package de.l3s.learnwebBeans;
 import java.io.Serializable;
 import java.sql.SQLException;
 
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.event.ComponentSystemEvent;
@@ -82,9 +81,8 @@ public class ForumPostBean extends ApplicationBean implements Serializable
 	    int group_id = 883;
 	    int user_id = 1;
 	    int topic_id = 1;
-	    message = Learnweb.getInstance().getForumManager().saveForumPost(post, topic_id, group_id, user_id);
+	    Learnweb.getInstance().getForumManager().saveForumPost(post, topic_id, group_id, user_id);
 	    this.topic = "";
-	    addGrowl(FacesMessage.SEVERITY_INFO, message);
 	}
 	catch(SQLException e)
 	{

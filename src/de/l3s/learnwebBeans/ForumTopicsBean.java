@@ -10,6 +10,7 @@ import javax.faces.event.ComponentSystemEvent;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Group;
+import de.l3s.learnweb.Learnweb;
 
 @ManagedBean
 @RequestScoped
@@ -21,7 +22,7 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
 
     private int groupId;
 
-    private String topic, message;
+    private String topic;
 
     private Group group;
 
@@ -40,8 +41,6 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
 	{
 	    log.error("Cant load group", e1);
 	}
-
-	//log.debug(group.getTitle());
     }
 
     private void loadGroup() throws SQLException
@@ -73,31 +72,29 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
 
     }
 
-    /*
-        public void saveForumTopic()
-        {
-    	try
-    	{
-    	    int group_id = 883;
-    	    //    message = Learnweb.getInstance().getForumManager().saveForumTopic(topic, group_id);
-    	    this.topic = "";
-    	    addGrowl(FacesMessage.SEVERITY_INFO, message);
-    	}
-    	catch(SQLException e)
-    	{
-    	    // TODO Auto-generated catch block
-    	    log.error("Error while inserting in db", e);
-    	}
-        }*/
-
-    public String getMessage()
+    public void saveForumTopic(String topic, int groupId) throws SQLException
     {
-	return message;
+	try
+	{
+	    int group_id = groupId;
+	    Learnweb.getInstance().getForumManager().saveTopic(topic, group_id);
+	    this.topic = "";
+	}
+	catch(SQLException e)
+	{
+	    // TODO Auto-generated catch block
+	    log.error("Error while inserting in db", e);
+	}
     }
-
-    public void setMessage(String message)
-    {
-	this.message = message;
-    }
-
+    /**
+     * public String getMessage()
+     * {
+     * return message;
+     * }
+     * 
+     * public void setMessage(String message)
+     * {
+     * this.message = message;
+     * }
+     **/
 }
