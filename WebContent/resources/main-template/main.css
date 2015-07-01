@@ -193,19 +193,34 @@ iframe { border: none }
 .hover-white:hover	{
 	background-color:#4ea68d; /* old color: #74beaa*/
 }
-
-#logoutbutton{
+.header_buttons{
+	float:right;
 	display:block;
 	border:1px solid #FFFFFF; /* option color: #317360*/
 	border-radius:5px;
 	padding:2px;
-	float:right;
-    margin-right:1rem;
+	margin-right:1rem;
     margin-top:1rem;
     width:2rem;
     height:2rem;
+}
+#logoutbutton{
     position:relative;
     z-index:5;
+}
+#message_button{
+    width:2.5rem;
+}
+#message_span{
+	background-color:#616161;
+	position:absolute;
+	border-radius:10px;
+	text-align:center;
+	right:10rem;
+	border:1px solid #fff;
+	width:15px;
+	padding:1px;
+	color:#fff;
 }
 #loginbutton{
 	display:block;
@@ -824,7 +839,6 @@ button{
 	width: 100%;
 	/*width:99%;
 	margin:0 auto;*/
-	/*text-align:center;*/
 }
 
 p:dataList {background-color: blue;}
@@ -1033,14 +1047,12 @@ div#presentation_preview {
 	width:195px;
 	height:197px;
 	margin-bottom:4px;
-	margin-right:35px;
-	/*margin:0px 13px 4px;*/
+	margin-right:3%;
 	position:relative;
-	float:left;
-	/*display:inline-block;*/
+	display:inline-block;
 }
 
-@media screen and (min-width:50em) and (max-width:69.9999em) {
+/*@media screen and (min-width:50em) and (max-width:69.9999em) {
 	.resource_panel{
 		margin-right: 1px;
 	}
@@ -1055,67 +1067,8 @@ div#presentation_preview {
 	.resource_panel{
 		margin-right: 28px;
 	}
-}
-/*media queries for version with margin:0 auto*/
-/*@media screen and (min-width:65em) and (max-width:70.9999em) {
-	.resource_panel{
-		margin:0px 50px 4px;
-	}
-}
+}*/
 
-@media screen and (min-width:71em) and (max-width:73.9999em) {
-	.resource_panel{
-		margin:0px 5px 4px;
-	}
-}
-
-@media screen and (min-width:73em) and (max-width:76.9999em) {
-	.resource_panel{
-		margin:0px 10px 4px;
-	}
-}
-
-@media screen and (min-width:77em) and (max-width:80.9999em) {
-	.resource_panel{
-		margin:0px 20px 4px;
-	}
-}
-
-@media screen and (min-width:81em) and (max-width:85.9999em) {
-	.resource_panel{
-		margin:0px 30px 4px;
-	}
-}
-
-@media screen and (min-width:86em) and (max-width:89.9999em) {
-	.resource_panel{
-		margin:0px 40px 4px;
-	}
-}
-
-@media screen and (min-width:90em) and (max-width:94.9999em) {
-	.resource_panel{
-		margin:0px 50px 4px;
-	}
-}
-
-@media screen and (min-width:95em) and (max-width:96.9999em) {
-	.resource_panel{
-		margin:0px 5px 4px;
-	}
-}
-
-@media screen and (min-width:97em) and (max-width:98.9999em) {
-	.resource_panel{
-		margin:0px 8px 4px;
-	}
-}
-@media screen and (min-width:99em) and (max-width:120em){
-	.resource_panel{
-		margin:0px 12px 4px;
-	}
-}
-*/
 #resource_description{
 	display: block;
 	padding: 5px 0px;
