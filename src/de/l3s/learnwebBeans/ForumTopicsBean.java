@@ -9,6 +9,7 @@ import javax.faces.event.ComponentSystemEvent;
 
 import org.apache.log4j.Logger;
 
+import de.l3s.learnweb.ForumTopic;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 
@@ -72,12 +73,14 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
 
     }
 
-    public void saveForumTopic(String topic, int groupId) throws SQLException
+    public void saveForumTopic() throws SQLException
     {
 	try
 	{
-	    int group_id = groupId;
-	    Learnweb.getInstance().getForumManager().saveTopic(topic, group_id);
+	    ForumTopic forumTopic = new ForumTopic();
+	    forumTopic.setTopic(topic);
+	    forumTopic.setGroupId(groupId);
+	    Learnweb.getInstance().getForumManager().saveTopic(forumTopic);
 	    this.topic = "";
 	}
 	catch(SQLException e)

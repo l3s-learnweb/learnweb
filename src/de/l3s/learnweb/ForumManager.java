@@ -68,12 +68,12 @@ public class ForumManager
 
     // todo user object ForumPost
 
-    public ForumTopic saveTopic(String topic, int group_id) throws SQLException
+    public ForumTopic saveTopic(ForumTopic forumTopic) throws SQLException
     {
 	String sqlQuery = "Insert into forum_topic(topic_title,group_id) values (?,?) ";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
-	ps.setInt(2, group_id);
-	ps.setString(3, topic);
+	ps.setString(1, forumTopic.getTopic());
+	ps.setInt(2, forumTopic.getGroupId());
 	ps.executeUpdate();
 	return null;
     }
