@@ -79,7 +79,7 @@
 		        	<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{result}"></f:setPropertyActionListener>
 									
 			            <h:panelGrid columns="1" styleClass="resource_panelgrid"> 
-			            	<h:outputText value="#{result.title}" escape="false" styleClass="resource_short_title" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; max-width:185px; width:185px; display:block;" /> 
+			            	<h:outputText value="#{result.title}" escape="false" styleClass="resource_short_title" /> 
 				        
 			            	<p:row>
 			            		<span class="groupid">#{result.id}</span>
@@ -115,7 +115,7 @@
 			            		</div>
 			            	</p:row>
 			            	
-			            	<div class="resource_summary" style="white-space: nowrap; overflow:hidden; text-overflow: ellipsis; max-width:185px; width:185px;">
+			            	<div class="resource_summary">
 								<span>${learnwebBean.getLocaleMessage(result.type)}</span> #{msg.added_by} <span>#{result.getOwnerUser().username}</span>
 					        </div>
 			            </h:panelGrid>  
