@@ -272,7 +272,7 @@ public class TedManager
 	params.put("timeout", "500");
 
 	List<ResourceDecorator> resources;
-	int page = 2;
+	int page = 1; // you have to start at page one due to youtupe api limitations
 
 	do
 	{
@@ -286,6 +286,7 @@ public class TedManager
 	    {
 		Resource resource = decoratedResource.getResource();
 
+		/*
 		resource.setSource("TEDx");
 		resource.setLocation("TEDx");
 
@@ -295,6 +296,7 @@ public class TedManager
 		    resource.setAuthor(title[1].trim());
 		    resource.setTitle(title[0] + "|" + title[2]);
 		}
+		*/
 
 		// check if resources is already stored in Learnweb
 		select.setString(1, resource.getUrl());
@@ -306,16 +308,19 @@ public class TedManager
 		    learnweb.getResourceManager().deleteResourcePermanent(resourceId);
 		    System.out.println("delete: " + resourceId);
 		    */
+		    log.debug("Already stored: " + resource);
 		    continue;
 		}
 		else
 		{
-		    rpm.processImage(resource, FileInspector.openStream(resource.getMaxImageUrl()));
+		    /*
+		    		    rpm.processImage(resource, FileInspector.openStream(resource.getMaxImageUrl()));
 
-		    admin.addResource(resource);
-		    tedxGroup.addResource(resource, admin);
+		    		    admin.addResource(resource);
+		    		    tedxGroup.addResource(resource, admin);
+		    */
+		    log.debug("new video yeah");
 		}
-		log.debug(resource);
 	    }
 
 	    page++;
