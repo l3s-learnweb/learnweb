@@ -78,15 +78,15 @@ public class ForumManager
 	return null;
     }
 
-    public ForumPost saveForumPost(String post, int topic_id, int group_id, int user_id) throws SQLException
+    public ForumPost saveForumPost(ForumPost forumPost) throws SQLException
     {
 	String sqlQuery = "Insert into forum_post(text, topic_id, group_id, user_id) values (?,?,?,?) ";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
-	ps.setString(1, post);
-	ps.setInt(2, topic_id);
-	ps.setInt(2, group_id);
-	ps.setInt(2, user_id);
-	int status = ps.executeUpdate();
+	ps.setString(1, forumPost.getText());
+	ps.setInt(2, forumPost.getTopicId());
+	ps.setInt(2, forumPost.getGroupId());
+	ps.setInt(2, forumPost.getUserId());
+	ps.executeUpdate();
 	return null;
     }
 

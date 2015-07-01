@@ -61,17 +61,17 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
 
     }
 
-    public String getTopic()
-    {
-	return topic;
-    }
+    //   public String getTopic()
+    // {
+    //	return topic;
+    //   }
 
-    public void setTopic(String topic)
-    {
-	this.topic = topic;
-	System.out.println(topic);
+    //   public void setTopic(String topic)
+    //  {
+    //	this.topic = topic;
+    //	System.out.println(topic);
 
-    }
+    //}
 
     public void saveForumTopic() throws SQLException
     {

@@ -9,6 +9,7 @@ import javax.faces.event.ComponentSystemEvent;
 
 import org.apache.log4j.Logger;
 
+import de.l3s.learnweb.ForumPost;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 
@@ -20,9 +21,9 @@ public class ForumPostBean extends ApplicationBean implements Serializable
 
     private final static Logger log = Logger.getLogger(ForumPostBean.class);
 
-    private int groupId;
+    private int groupId, topicId, userId;
 
-    private String topic, message, post;
+    private String text, post;
 
     private Group group;
 
@@ -62,43 +63,24 @@ public class ForumPostBean extends ApplicationBean implements Serializable
 
     }
 
-    public String getPost()
-    {
-	return post;
-    }
-
-    public void setPost(String post)
-    {
-	this.post = post;
-	System.out.println(post);
-
-    }
-
     public void saveForumPost()
     {
 	try
 	{
-	    int group_id = 883;
-	    int user_id = 1;
-	    int topic_id = 1;
-	    Learnweb.getInstance().getForumManager().saveForumPost(post, topic_id, group_id, user_id);
-	    this.topic = "";
+	    ForumPost forumPost = new ForumPost();
+	    forumPost.setText(text);
+	    forumPost.setTopicId(topicId);
+	    forumPost.setGroupId(groupId);
+	    forumPost.setUserId(userId);
+
+	    Learnweb.getInstance().getForumManager().saveForumPost(forumPost);
+	    this.text = "";
 	}
 	catch(SQLException e)
 	{
 	    // TODO Auto-generated catch block
 	    log.error("Error while inserting in db", e);
 	}
-    }
-
-    public String getMessage()
-    {
-	return message;
-    }
-
-    public void setMessage(String message)
-    {
-	this.message = message;
     }
 
 }
