@@ -20,13 +20,6 @@
 	</ui:define>
 
 	<ui:define name="center_layout" >
-		<style>
-			#message_informations{padding:4px;}
-			.message_title{font-weight: bold;font-size:1.8rem;}
-			.message_user{color:#3399FF;}
-			.message_time{color: grey;}
-			#message_div{border:1px solid #ccc; padding:4px;}
-		</style>
 		<div class="page_header">
 			<span>
 				#{msg.myNotifications}
@@ -35,17 +28,17 @@
 		
 		<ui:repeat var="message" value="#{notificationReaderBean.receivedMessages}">
 		
-			<div class="#{message.read ? 'read' : 'notRead'}" id="message_informations">
-				<h:outputText value="#{message.title} " class="message_title"/>
+			<div class="#{message.read ? 'read' : 'notRead'}" style="padding:4px;">
+				<h:outputText value="#{message.title} " style="font-weight: bold;font-size:1.8rem;"/>
 				<br></br>
 				<h:outputText value="#{msg.from} "/>
-				<h:outputText value="#{message.fromUser.username} "  class="message_user"/>
-				<h:outputText value="#{message.time}" class="message_time">
+				<h:outputText value="#{message.fromUser.username} " style="color:#3399FF;"/>
+				<h:outputText value="#{message.time}" style="color: grey;">
 					<f:convertDateTime type="both" timeStyle="short" dateStyle="long"  timeZone="#{userBean.timeZone}"/>
 				</h:outputText>
 			</div>
 			<br/>
-				<div id="message_div">
+				<div style="border:1px solid #ccc; padding:4px;">
 					<h:outputText escape="false" value="#{message.text}"/>
 				</div>
 			<br/>

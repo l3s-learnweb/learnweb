@@ -208,7 +208,7 @@ iframe { border: none }
     position:relative;
     z-index:5;
 }
-#message{
+#message_div{
 	position:relative; 
 	float:right;
 	z-index:5;
@@ -1009,10 +1009,12 @@ div#presentation_preview {
 .members_panelgrid{
 	float:left;
 	margin-right:20px;
-	text-align: center;
+	text-align:center;
+	width:130px;
+	height:130px;
 }
 
-.resource_panelgrid, .members_panelgrid{width:100%;}
+.resource_panelgrid {width:100%;}
 .resource_panel:HOVER, .members_panel:HOVER{
 	cursor: pointer;
 	border-color: #666;

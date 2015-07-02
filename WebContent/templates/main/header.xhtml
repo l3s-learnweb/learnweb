@@ -227,7 +227,7 @@
 			<p:graphicImage value="/resources/main-template/img/question.png" alt="#{msg.help}" onclick="footerToggle();" rendered="#{not empty helpText}" id="informationonscreen" />
 
 		
-			<h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" rendered="#{userBean.loggedIn}" id="message">
+			<h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" rendered="#{userBean.loggedIn}" id="message_div">
 				<h:outputText value="#{notificationReaderBean.howManyNewMessages}" rendered="#{notificationReaderBean.howManyNewMessages gt 0}" id="message_count"/>
 				
 				<img alt="message" src="#{request.contextPath}/resources/main-template/img/message.png" id="message_button" class="header_buttons hover-white"/>
