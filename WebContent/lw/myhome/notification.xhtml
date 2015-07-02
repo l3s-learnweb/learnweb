@@ -11,20 +11,51 @@
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.notification}" />
 
+	<ui:define name="right_layout">
+		<p:layoutUnit position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;"  id="right_pane" rendered="#{userBean.loggedIn}">
+			<div style="width:90%; position:relative; margin-left:auto; margin-right:auto;">
+				
+			</div>
+		</p:layoutUnit>
+	</ui:define>
 
 	<ui:define name="center_layout" >
+		<style>
+			#message_informations{padding:4px;}
+			.message_title{font-weight: bold;font-size:1.8rem;}
+			.message_user{color:#3399FF;}
+			.message_time{color: grey;}
+			#message_div{border:1px solid #ccc; padding:4px;}
+		</style>
+		<div class="page_header">
+			<span>
+				#{msg.myNotifications}
+			</span>
+		</div>
+		
 		<ui:repeat var="message" value="#{notificationReaderBean.receivedMessages}">
-			StyleClass="#{message.read ? 'read' : 'notRead'}"
-			<h:outputText value="#{message.fromUser.username}" />
-			<h:outputText value="#{message.title}" />
-			<h:outputText value="#{message.time}" />
-			<h:outputText escape="false" value="#{message.text}" />
+		
+			<div class="#{message.read ? 'read' : 'notRead'}" id="message_informations">
+				<h:outputText value="#{message.title} " class="message_title"/>
+				<br></br>
+				<h:outputText value="#{msg.from} "/>
+				<h:outputText value="#{message.fromUser.username} "  class="message_user"/>
+				<h:outputText value="#{message.time}" class="message_time">
+					<f:convertDateTime type="both" timeStyle="short" dateStyle="long"  timeZone="#{userBean.timeZone}"/>
+				</h:outputText>
+			</div>
+			<br/>
+				<div id="message_div">
+					<h:outputText escape="false" value="#{message.text}"/>
+				</div>
+			<br/>
+			<hr style="border:1px solid #ccc"></hr>
 		</ui:repeat>
 
-
+		
 <!--  alles hier drunter soll weg  -->
     
-		<h:form>
+<!--  		<h:form>
 		
     
 	<style type="text/css">
@@ -118,9 +149,9 @@ border-right: solid 0px #4e6769;
  
 
 
-		</h:form>
+		</h:form>-->
 		
-		
+
 
 
 	</ui:define>

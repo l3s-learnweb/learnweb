@@ -227,10 +227,10 @@
 			<p:graphicImage value="/resources/main-template/img/question.png" alt="#{msg.help}" onclick="footerToggle();" rendered="#{not empty helpText}" id="informationonscreen" />
 
 		
-			<h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" rendered="#{userBean.loggedIn and false}">
-				<h:outputText value="#{notificationReaderBean.howManyNewMessages}" rendered="#{notificationReaderBean.howManyNewMessages gt -1}" id="message_span"/>
+			<h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" rendered="#{userBean.loggedIn}" id="message">
+				<h:outputText value="#{notificationReaderBean.howManyNewMessages}" rendered="#{notificationReaderBean.howManyNewMessages gt 0}" id="message_count"/>
 				
-				<img alt="message" src="#{request.contextPath}/resources/main-template/img/message.png" id="message_button" class="header_buttons hover-white" style="display:block;"/>
+				<img alt="message" src="#{request.contextPath}/resources/main-template/img/message.png" id="message_button" class="header_buttons hover-white"/>
 			</h:outputLink>
 
 			<h:outputLink id="loginbutton" value="#{request.contextPath}/lw/user/login.jsf" rendered="#{not userBean.loggedIn}" class="hover-white">
