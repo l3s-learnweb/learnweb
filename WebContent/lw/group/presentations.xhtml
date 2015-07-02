@@ -86,8 +86,7 @@
 
 		<p:confirmDialog id="confirmDialog" message="#{msg.delete_message_presentation}" header="delete_presentation" severity="alert" widgetVar="confirmation" appendTo="@(body)">
 			<h:form>
-				<p:commandButton id="confirm" value="#{msg.yes}" update=":datagrid :right_form" oncomplete="update_header(); PF('confirmation').hide();"
-					actionListener="#{groupDetailBean.removePresentationFromGroup}" process=":right_form" />
+				<p:commandButton id="confirm" value="#{msg.yes}" update=":datagrid :right_form" oncomplete="update_header(); PF('confirmation').hide();" actionListener="#{groupDetailBean.removePresentationFromGroup}" process=":right_form" />
 				<p:commandButton id="decline" value="#{msg.no}" onclick="PF('confirmation').hide()" type="button" />
 			</h:form>
 		</p:confirmDialog>
@@ -127,22 +126,20 @@
 				    <h:form>
 				        <p:commandLink rendered="#{groupDetailBean.numberOfColumns != 10 and groupDetailBean.numberOfColumns != 3}" styleClass="resource_command_link" update=":right_form :edit_presentation_layout" oncomplete="update_header()">
 				        	<f:setPropertyActionListener target="#{groupDetailBean.clickedPresentation}" value="#{result}"></f:setPropertyActionListener>
-					        <p:panel styleClass="members_panel">  
-					            <h:panelGrid columns="1" styleClass="members_panelgrid"> 
+					            <div class="members_panelgrid">
 					            	<img src="../resources/icon/presentation.png" width="120" height="120" />
 					            	<div class="member_username">#{result.presentationName}</div>
 					            	<span class="groupid">#{result.presentationId}</span>
-					            </h:panelGrid>
-					        </p:panel>
+					            </div>
 					    </p:commandLink>
 					    <p:commandLink rendered="#{groupDetailBean.numberOfColumns == 3}" styleClass="resource_command_link" update=":right_form :edit_presentation_layout" oncomplete="update_header()">
 				        	<f:setPropertyActionListener target="#{groupDetailBean.clickedPresentation}" value="#{result}"></f:setPropertyActionListener>
 					        <p:panel styleClass="members_panel_small">  
-					            <h:panelGrid columns="1" styleClass="members_panelgrid"> 
+					            <div class="members_panelgrid"> 
 					            	<img src="../resources/icon/presentation.png" width="100" height="100" />
 					            	<div class="member_username_small">#{result.presentationName}</div>
 					            	<span class="groupid">#{result.presentationId}</span>
-					            </h:panelGrid>
+					            </div>
 					        </p:panel>
 					    </p:commandLink>
 				    </h:form>

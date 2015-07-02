@@ -58,6 +58,7 @@
 			<h:form>
 			 	<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{groupDetailBean.updateColumns}"></p:remoteCommand>
 	        </h:form>
+	        
 	        <h:panelGrid id="resource_disp">
 	        <h:form>
 			<p:dataGrid id="datagrid" var="result" value="#{groupDetailBean.getMembers()}" columns="#{groupDetailBean.numberOfColumns}" paginator="false" rows="100" widgetVar="datagrid">  
@@ -85,6 +86,7 @@
 		    </h:form>
 		    </h:panelGrid>
 		</ui:define>
+		
 		<ui:define name="right_layout">
 			<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" header="#{groupDetailBean.clickedUser.id eq -1? msg.user_details : groupDetailBean.clickedUser.username}" id="right_pane">
 				<div id="right_pane_wrapper">
