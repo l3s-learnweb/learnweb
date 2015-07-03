@@ -91,7 +91,7 @@
 										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'all')}" />
 										<f:param name="query" value="#{searchBean.query}" />
 									</h:link>
-									<h:link value="Bing" outcome="search" styleClass="#{searchBean.filterService == 'Bing' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('Bing')}">
+									<h:link value="Bing #{searchBean.getTotalResultsFrom('Bing') != null ? searchBean.getTotalResultsFrom('Bing') : null}" outcome="search" styleClass="#{searchBean.filterService == 'Bing' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('Bing')}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
 										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'Bing')}" />
 										<f:param name="query" value="#{searchBean.query}" />
@@ -115,17 +115,17 @@
 										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'all')}" />
 										<f:param name="query" value="#{searchBean.query}" />
 									</h:link>
-									<h:link value="Bing" outcome="search" styleClass="#{searchBean.filterService == 'Bing' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('Bing')}">
+									<h:link value="Bing #{searchBean.getTotalResultsFrom('Bing') != null ? searchBean.getTotalResultsFrom('Bing') : null}" outcome="search" styleClass="#{searchBean.filterService == 'Bing' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('Bing')}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
 										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'Bing')}" />
 										<f:param name="query" value="#{searchBean.query}" />
 									</h:link>
-									<h:link value="Flickr" outcome="search" styleClass="#{searchBean.filterService == 'Flickr' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('Flickr')}">
+									<h:link value="Flickr #{searchBean.getTotalResultsFrom('Flickr') != null ? searchBean.getTotalResultsFrom('Flickr') : null}" outcome="search" styleClass="#{searchBean.filterService == 'Flickr' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('Flickr')}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
 										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'Flickr')}" />
 										<f:param name="query" value="#{searchBean.query}" />
 									</h:link>
-									<h:link value="Ipernity" outcome="search" styleClass="#{searchBean.filterService == 'Ipernity' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('Ipernity')}">
+									<h:link value="Ipernity #{searchBean.getTotalResultsFrom('Ipernity') != null ? searchBean.getTotalResultsFrom('Ipernity') : null}" outcome="search" styleClass="#{searchBean.filterService == 'Ipernity' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('Ipernity')}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
 										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'Ipernity')}" />
 										<f:param name="query" value="#{searchBean.query}" />
@@ -222,12 +222,12 @@
 										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'all')}" />
 										<f:param name="query" value="#{searchBean.query}" />
 									</h:link>
-									<h:link value="YouTube" outcome="search" styleClass="#{searchBean.filterService == 'YouTube' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('YouTube')}">
+									<h:link value="YouTube #{searchBean.getTotalResultsFrom('YouTube') != null ? searchBean.getTotalResultsFrom('YouTube') : null}" outcome="search" styleClass="#{searchBean.filterService == 'YouTube' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('YouTube')}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
 										<f:param name="filter" value="srv:YouTube" />
 										<f:param name="query" value="#{searchBean.query}" />
 									</h:link>
-									<h:link value="Vimeo" outcome="search" styleClass="#{searchBean.filterService == 'Vimeo' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('Vimeo')}">
+									<h:link value="Vimeo #{searchBean.getTotalResultsFrom('Vimeo') != null ? searchBean.getTotalResultsFrom('Vimeo') : null}" outcome="search" styleClass="#{searchBean.filterService == 'Vimeo' ? 'active' : null}" rendered="#{searchBean.isServiceAvailable('Vimeo')}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
 										<f:param name="filter" value="srv:Vimeo" />
 										<f:param name="query" value="#{searchBean.query}" />

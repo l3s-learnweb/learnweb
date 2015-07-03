@@ -775,6 +775,17 @@ public class SearchBean extends ApplicationBean implements Serializable
 	return StringUtils.join(output, ',');
     }
 
+    public String getTotalResultsFrom(String service)
+    {
+	Long count = search.getResultsCountAtService(service);
+	if(count == null)
+	{
+	    return null;
+	}
+
+	return " (" + count.toString() + ")";
+    }
+
     public Resource getSelectedResource()
     {
 	return selectedResource;

@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
@@ -240,6 +241,7 @@ public class Search implements Serializable
 
     // all resources
     private LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
+    private Map<String, Long> resultsCountAtService = new HashMap<String, Long>();
 
     // resources grouped by pages
     private HashMap<Integer, LinkedList<ResourceDecorator>> pages = new HashMap<Integer, LinkedList<ResourceDecorator>>();
@@ -428,7 +430,7 @@ public class Search implements Serializable
 	}
 
 	SearchQuery interwebResponse = interweb.search(query, params);
-	//interwebResponse.getResultCountAtService();
+	setResultsCountAtService(interwebResponse.getResultCountAtService());
 	List<ResourceDecorator> interwebResults = interwebResponse.getResults();
 
 	if(stopped)
@@ -607,6 +609,25 @@ public class Search implements Serializable
     public Resource getResourceByTempId(int tempId)
     {
 	return tempIdIndex.get(tempId);
+    }
+
+    public Map<String, Long> getResultsCountAtService()
+    {
+	return resultsCountAtService;
+    }
+
+    public void setResultsCountAtService(Map<String, Long> resultsCountAtService)
+    {
+	this.resultsCountAtService = resultsCountAtService;
+    }
+
+    public Long getResultsCountAtService(String service)
+    {
+	if(resultsCountAtService.containsKey(service))
+	{
+	    return resultsCountAtService.get(service);
+	}
+	return null;
     }
 
     public void stop()
