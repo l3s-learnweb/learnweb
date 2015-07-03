@@ -55,13 +55,10 @@
 			/* --> */
 			</script>
 		
-			<h:form>
-			 	<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{groupDetailBean.updateColumns}"></p:remoteCommand>
-	        </h:form>
 	        
 	        <h:panelGrid id="resource_disp">
 	        <h:form>
-			<p:dataGrid id="datagrid" var="result" value="#{groupDetailBean.getMembers()}" columns="#{groupDetailBean.numberOfColumns}" paginator="false" rows="100" widgetVar="datagrid">  
+			<ui:repeat id="datagrid" var="result" value="#{groupDetailBean.getMembers()}">  
 		      
 		        <p:commandLink rendered="#{groupDetailBean.numberOfColumns != 3}" styleClass="resource_command_link" update=":right_form" oncomplete="update_header()">
 		        	<f:setPropertyActionListener target="#{groupDetailBean.clickedUser}" value="#{result}"></f:setPropertyActionListener>
@@ -79,7 +76,7 @@
 			            </div>
 		        </p:commandLink>
 		        
-		    </p:dataGrid>
+		    </ui:repeat>
 		    </h:form>
 		    </h:panelGrid>
 		</ui:define>

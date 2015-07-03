@@ -20,130 +20,36 @@
 	</ui:define>
 
 	<ui:define name="center_layout" >
-		<div class="page_header">
-			<span>
-				#{msg.myNotifications}
-			</span>
-		</div>
-		
 		<ui:repeat var="message" value="#{notificationReaderBean.receivedMessages}">
 		
-			<div class="#{message.read ? 'read' : 'notRead'}" style="padding:4px;">
-				<h:outputText value="#{message.title} " style="font-weight: bold;font-size:1.8rem;"/>
-				<br></br>
-				<h:outputText value="#{msg.from} "/>
-				<h:outputText value="#{message.fromUser.username} " style="color:#3399FF;"/>
-				<h:outputText value="#{message.time}" style="color: grey;">
-					<f:convertDateTime type="both" timeStyle="short" dateStyle="long"  timeZone="#{userBean.timeZone}"/>
-				</h:outputText>
+		<div class="#{message.read ? 'read' : 'notRead'}" style="padding:4px;">
+		
+			<div class="page_header">
+				<h:graphicImage id="userpic" url="#{message.fromUser.image}" width="30" height="30" style="margin-right: 10px;" alt="Profile picture" class="float-left"/> 
+				<span>
+					<h:outputText value="#{message.title} "></h:outputText>
+				</span>
+				#{msg.from} #{message.fromUser.username} 
+				<span style="color: grey;font-size:1.2rem;">
+					#{msg.at} 
+					<h:outputText value="#{message.time}">
+						<f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+					</h:outputText>
+				</span>
+				<h:outputText value="#{msg.new_word}" style="color:red;font-size:1.2rem;float:right" rendered="#{message.read}"/>
+			
 			</div>
+			
+			<div style="border:1px solid #ccc; padding:0.5em 1rem;">
+				<h:outputText escape="false" value="#{message.text}"/>
+			</div>
+			
 			<br/>
-				<div style="border:1px solid #ccc; padding:4px;">
-					<h:outputText escape="false" value="#{message.text}"/>
-				</div>
-			<br/>
-			<hr style="border:1px solid #ccc"></hr>
+		</div>
+				
+
 		</ui:repeat>
 
-		
-<!--  alles hier drunter soll weg  -->
-    
-<!--  		<h:form>
-		
-    
-	<style type="text/css">
-	
-.odd-row {  
-    background: red; background-color: #A80000
-} 	
-.new-message {  
-    background: red ; background-color: #99CCFF
-} 
-.message {  
-    border : 0px
-} 
-
-.ui-datatable .ui-datatable-data .notRead td{
-background-color:#6CDFEA;
-border-right: solid 0px #4e6769;
-}
-
-.ui-datatable .ui-datatable-data .read td{
-background-color:#ffffff;
-border-right: solid 0px #4e6769;
-}
-
-</style>
-			<p:dataTable rowStyleClass="#{message.read ? 'read' : 'notRead'}"
-			 var="message" value="#{notificationReaderBean.receivedMessages}">
-
-				<f:facet name="header">  
-             Expand rows to see the notification  
-        
-    </f:facet>
-
-				<p:column  style="width:16px">
-					<p:rowToggler toggleListener="#{notificationReaderBean.messageSelected}">
-					
-					</p:rowToggler>
-					
-				</p:column>
-
-				<p:column style="width:160px">
-					<f:facet name="header">  
-                    <h:outputText value="#{msg.from}"></h:outputText>  
-            </f:facet>
-					<h:outputText value="#{message.fromUser.username}" />
-				</p:column>
-
-			<p:column style="width:160px;">
-					<f:facet name="header">  
-                    <h:outputText value="#{msg.date}"></h:outputText> 
-            </f:facet>
-					<h:outputText value="#{message.formatedTime}" />
-				</p:column>
-				
-				<p:column>
-					<f:facet name="header">  
-                    <h:outputText value="#{msg.subject}"></h:outputText> 
-            </f:facet>
-					<h:outputText value="#{message.title}" />
-				</p:column>
-
-				<p:rowExpansion style="border:0px"  >
-					
-					<h:panelGrid columns="1" columnClasses="message" rowClasses="message" >
-						
-						<h:column> 
-						<h:outputText value="From: #{message.fromUser.username}" style="width:1000px;border:0px" />
-						 </h:column>
-						
-						 <h:column > 
-						<h:outputText value="Date: #{message.time}" style="width:1000px;border:0px" />
-						 </h:column>
-						 
-						 <h:column> 
-						 
-						 	<script>#{message.read}</script> 
-							
-							
-						 </h:column>
-						 <h:column> 
-						 </h:column>
-						<h:column > 
-						<h:outputText escape="false" value="#{message.text}"  style="width:1000px;border:0px"/>
-						 </h:column>
-
-					</h:panelGrid>
-
-				</p:rowExpansion>
-			</p:dataTable>
-
- 
-
-
-		</h:form>-->
-		
 
 
 

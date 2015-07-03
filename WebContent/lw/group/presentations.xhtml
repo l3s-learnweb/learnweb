@@ -62,24 +62,6 @@
 		
 			$("#center_pane").prepend($("#group_header"));
 			
-			var columns = 3;
-			function nCol(){
-				var w = $(window).width();
-				var c = 3;
-				
-				if(w < 1400)
-					c = 2;
-				else if(w > 1800)
-					c = 4;
-				
-				if(columns != c) {
-					columns = c;
-					updateColumns([{name:'cols',value: columns}]);
-				}						
-			}
-			
-			window.onresize = nCol;
-			$(nCol);
 			
 		/* ]]> */
 		</script>
@@ -118,13 +100,14 @@
 		    	</h:form>
 		    </p:dialog>
 		    
-			<h:form>
-			 	<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{groupDetailBean.updateColumns}"></p:remoteCommand>
-	        </h:form>
+		
+
 	        
 			<h:panelGroup id="resource_disp">
 				
-			<p:dataGrid emptyMessage="#{msg.no_presentation}" id="datagrid" var="result" value="#{groupDetailBean.presentations}" columns="#{groupDetailBean.numberOfColumns}" paginator="false" widgetVar="datagrid">
+			<h:outputText value="#{msg.no_presentation}" rendered="#{empty groupDetailBean.presentations}"></h:outputText>
+			
+			<ui:repeat id="datagrid" var="result" value="#{groupDetailBean.presentations}" >
 				   
 				    <h:form id="datagrid" value="#{groupDetailBean.presentations}">
 				    
@@ -148,7 +131,7 @@
 					    
 				    </h:form>
 				    
-			   </p:dataGrid>
+			   </ui:repeat>
 			    
 		    </h:panelGroup>
 		    <script type="text/javascript">

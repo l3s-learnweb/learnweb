@@ -41,7 +41,9 @@ h4 { text-decoration:underline;	font-size:1.3rem; margin: 0.8rem 0 0.4rem; }
 	border-left:2px solid #489a83; 
 	box-sizing:border-box;
 }
-
+#div_right a{
+	text-decoration:none;
+}
 .ui-inputfield.inputbox{
 	box-sizing:border-box;
 	width: 100%;

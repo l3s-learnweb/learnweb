@@ -23,7 +23,7 @@
 			#content { padding-top: 6.7rem; }
 		</style>		
 		<div id="sub_menu_bar">  			
-			<h:outputLink value="group/overview.jsf" id="backtogroup" rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
+			<h:outputLink value="group/overview.jsf" id="backtogroup" class="float-left" rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
        		  #{msg.back_to} <i>#{userBean.user.activeGroup.title}</i>
 				<f:param name="group_id" value="#{userBean.user.activeGroup.id}" />
 			</h:outputLink>		
