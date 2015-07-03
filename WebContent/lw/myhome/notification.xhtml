@@ -12,7 +12,7 @@
 	<ui:param name="pageTitle" value="#{msg.notification}" />
 
 	<ui:define name="right_layout">
-		<p:layoutUnit position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;"  id="right_pane" rendered="#{userBean.loggedIn}">
+		<p:layoutUnit position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;" id="right_pane" rendered="#{userBean.loggedIn}">
 			<div style="width:90%; position:relative; margin-left:auto; margin-right:auto;">
 				
 			</div>
@@ -25,7 +25,7 @@
 		<div class="#{message.read ? 'read' : 'notRead'}" style="padding:4px;">
 		
 			<div class="page_header">
-				<h:graphicImage id="userpic" url="#{message.fromUser.image}" width="30" height="30" style="margin-right: 10px;" alt="Profile picture" class="float-left"/> 
+				<h:graphicImage id="userpic" url="#{message.fromUser.image}" width="30" height="30" style="margin-right:10px;margin-top:-3px" alt="Profile picture" class="float-left"/> 
 				<span>
 					<h:outputText value="#{message.title} "></h:outputText>
 				</span>
@@ -36,7 +36,7 @@
 						<f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
 					</h:outputText>
 				</span>
-				<h:outputText value="#{msg.new_word}" style="color:red;font-size:1.2rem;float:right" rendered="#{message.read}"/>
+				<h:outputText value="#{msg.new_word}" style="color:red;font-size:1.5rem;float:right;font-weight:bold;" rendered="#{not message.read}"/>
 			
 			</div>
 			

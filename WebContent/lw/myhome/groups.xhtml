@@ -18,50 +18,43 @@
 						#{msg.createGroup}
 					</span>
 				</div>
-				
-				<h5>#{msg.mandatory_field}</h5>
-				<br/>
+			
 				<div class="grey_border">
 					<h:panelGrid columns="3" columnClasses="medium-width">						
 					
-						<h:outputText value="#{msg.title}:" />
-						<p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" />
+						<h:outputText value="#{msg.title}*:" />
+						<p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" style="width:20rem"/>
 						<p:message for="new_title" showSummary="true" showDetail="false" id="message_new_title"/>
 						
 											 
-						<h:outputText value="#{msg.course}:" />
-						<h:selectOneMenu value="#{groupsBean.newGroup.courseId}" id="course_id" style="width:130px;">	
+						<h:outputText value="#{msg.course}*:" />
+						<h:selectOneMenu value="#{groupsBean.newGroup.courseId}" id="course_id" style="width:21rem;">	
 							<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
 						</h:selectOneMenu>
 						<h:outputText value="" />				
 						
-						<h:outputText value="#{msg.category}:" rendered="#{not empty userBean.activeCourse.groupCategories}" />
+						<h:outputText value="#{msg.category}*:" rendered="#{not empty userBean.activeCourse.groupCategories}" />
 						<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{not empty userBean.activeCourse.groupCategories}" >	
 							<f:selectItems value="#{userBean.activeCourse.groupCategories}" var="cat" itemValue="#{cat.id}" itemLabel="#{cat.title} [#{cat.abbreviation}]" />
 						</h:selectOneMenu>
 						<h:outputText value="" rendered="#{not empty userBean.activeCourse.groupCategories}" />						
 							
-					</h:panelGrid>		 
-				</div> 
-				<br/>
-				
-				<h5>#{msg.optional_data}</h5>
-				<br/>
-				<div class="grey_border">
-					
-					<h:panelGrid columns="3" columnClasses="medium-width">
-					
 						<h:outputText value="#{msg.description}:" />					
-						<p:inputTextarea id="new_description" value="#{groupsBean.newGroup.description}" />
+						<p:inputTextarea id="new_description" value="#{groupsBean.newGroup.description}" style="width:20rem"/>
 						<p:message for="new_description" showSummary="true" showDetail="false"/>	
 
 						<h:outputText value="#{msg.language}:" />
-						<p:inputText id="new_language" value="#{groupsBean.newGroup.language}"/>
+						<p:inputText id="new_language" value="#{groupsBean.newGroup.language}" style="width:20rem"/>
 						<p:message for="new_language" showSummary="true" showDetail="false"/>
-							
-					</h:panelGrid>
-				</div>
-				<br/>
+						
+						<h:outputText value="" />
+			
+					</h:panelGrid>	
+						<br/>
+						
+					<span>#{msg.mandatory_field_text}</span> 
+				</div> 
+			
 				<p:fieldset legend="Group protection" rendered="false">
 					<h:panelGrid columns="3" columnClasses="medium-width">	
 					

@@ -289,8 +289,8 @@
 								<h:panelGroup layout="block" style="padding-top: 15px;" rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
 									<span class="resource_field" style="position:relative;">#{msg.archive_versions}: </span>
 									
-									<p:commandButton id="list_button" styleClass="greenbutton splitbutton_left" value="#{msg.list_view}" onclick="return open_list_view();" ></p:commandButton>
-									<p:commandButton id="timeline_button" styleClass="greenbutton splitbutton_right" value="#{msg.timeline_view}" onclick="return open_timeline_view();"></p:commandButton>
+									<p:commandButton id="list_button" styleClass="greenbutton" value="#{msg.list_view}" onclick="return open_list_view();" style=""></p:commandButton>
+									<p:commandButton id="timeline_button" styleClass="greenbutton" value="#{msg.timeline_view}" onclick="return open_timeline_view();"></p:commandButton>
 							
 									<!--  
 									<a href="#" onclick="return open_list_view();" style="font-weight: bold; padding-left:5rem; position:relative; bottom:6px;">#{msg.list_view}</a>
@@ -302,7 +302,11 @@
 								<h:panelGroup id="archive_list_view" layout="block" rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
 									<ul>
 										<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.archiveUrls}">
-											<li><a href="#{entry.archiveUrl}" target="_blank"><h:outputText value="${userBean.formatDate(entry.timestamp)}"/></a></li>
+											<li>
+												<a href="#{entry.archiveUrl}" target="_blank">
+													<h:outputText value="${userBean.formatDate(entry.timestamp)}"/>
+												</a>
+											</li>
 										</ui:repeat>
 									</ul>
 								</h:panelGroup>

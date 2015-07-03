@@ -50,12 +50,12 @@
 .preview_box iframe {min-height:400px;}
 
 #archive_list_view{
-	padding-top: 10px;
-    position: relative;
-    max-height: 350px;
-    width: 100%;
-    float: left;
-    overflow: auto;
+	padding-top:10px;
+    position:relative;
+    max-height:350px;
+    width:100%;
+    float:left;
+    overflow:auto;
     display:none;
 }
 
@@ -77,12 +77,12 @@
 	background-color: #b5ebdc;
 }
 
-.splitbutton_left{
+#list_button{
 	margin-right:0rem !important;
 	border-top-right-radius:0px !important;
 	border-bottom-right-radius:0px !important;
 }
-.splitbutton_right{
+#timeline_button{
 	border-top-left-radius:0px !important;
 	border-bottom-left-radius:0px !important;
 }
@@ -153,8 +153,8 @@
     -o-transition: all 0.5s ease-in; /* opera */
 }
 #lightbox_close:hover{
--webkit-box-shadow: 0px 0px 5px 1px rgba(238,238,238,1);
--moz-box-shadow: 0px 0px 5px 1px rgba(238,238,238,1);
-box-shadow: 0px 0px 5px 1px rgba(238,238,238,1);
-border-radius:15px;
+	-webkit-box-shadow: 0px 0px 5px 1px rgba(238,238,238,1);
+	-moz-box-shadow: 0px 0px 5px 1px rgba(238,238,238,1);
+	box-shadow: 0px 0px 5px 1px rgba(238,238,238,1);
+	border-radius:15px;
 }
