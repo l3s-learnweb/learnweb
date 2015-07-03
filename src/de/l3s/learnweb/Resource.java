@@ -56,6 +56,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private String transcript; //To store the English transcripts for TED videos
     private int ratingSum;
     private int rateNumber;
+    private String language = ""; // 2-letter language code
     private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
     private HashMap<Integer, Boolean> isRatedByUser = new HashMap<Integer, Boolean>(); // userId : hasRated
 
@@ -1280,4 +1281,28 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	// restore transient objects
 	//log.debug("deserialize: " + id);
     }
+
+    /**
+     * 
+     * @return 2-letter language code ISO 639-1
+     */
+    public String getLanguage()
+    {
+	return language;
+    }
+
+    /**
+     * 
+     * @param language 2-letter language code ISO 639-1
+     */
+    public void setLanguage(String language)
+    {
+	if(null == language)
+	    language = "";
+	else if(language.length() != 0 && language.length() != 2)
+	    throw new IllegalArgumentException("expected 2-letter language code");
+	else
+	    this.language = language.toLowerCase();
+    }
+
 }

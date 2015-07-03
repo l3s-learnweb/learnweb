@@ -81,10 +81,9 @@
 			            <h:panelGrid columns="1" styleClass="resource_panelgrid"> 
 			            	<h:outputText value="#{result.title}" escape="false" styleClass="resource_short_title" /> 
 				        
-			            	<p:row>
-			            		<span class="groupid">#{result.id}</span>
-			            		<h:graphicImage styleClass="resource_thumbnail" width="150" height="150" value="#{result.thumbnail1.url}" rendered="#{not empty result.thumbnail1}" alt="#{result.title}"></h:graphicImage>
-				            	<h:outputText styleClass="resource_thumbnail" value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' escape="false" rendered="#{empty result.thumbnail1 and empty result.thumbnail0}"></h:outputText>
+			            	<p:row>	
+								<h:graphicImage styleClass="resource_thumbnail" width="150" height="150" value="#{result.thumbnail1.url}" rendered="#{not empty result.thumbnail1}" alt="#{result.title}" />
+						    	<h:outputText styleClass="resource_thumbnail" value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' escape="false" rendered="#{empty result.thumbnail1}"></h:outputText>
 
 			            		<div class="buttons">
 				            		

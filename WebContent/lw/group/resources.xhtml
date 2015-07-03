@@ -15,24 +15,23 @@
 
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.group} - #{msg.resources}" />
-
 	  
 		<ui:define name="center_layout">
-		
-		<style>
-
-		</style>
 	
 			<div class="center-header" id="group_header">
 				<span>
 					#{msg.resources}
 				</span> 
-			#{msg.of} #{groupDetailBean.group.title}
-				<h:form id="center_header_form" rendered="#{groupDetailBean.member}">
-					<p:commandButton styleClass="resource_button greenbutton" value="#{msg.upload_resource}" update=":add_resource_panel" oncomplete="update_header()">
+				#{msg.of} #{groupDetailBean.group.title}
+				<h:form id="center_header_form">
+					<p:commandButton rendered="#{groupDetailBean.member}" styleClass="resource_button greenbutton" value="#{msg.upload_resource}" update=":add_resource_panel" oncomplete="update_header()">
 						<f:setPropertyActionListener target="#{addResourceBean.resourceTargetGroupId}" value="#{groupDetailBean.groupId}"></f:setPropertyActionListener>
 						<f:setPropertyActionListener target="#{groupDetailBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
 					</p:commandButton>
+				
+					<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" styleClass="resource_button greenbutton"  update=":growl :group_menu @form" partialSubmit="true" process="@this" value="#{msg.join_group}">
+						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
+					</p:commandLink>
 				</h:form>
 				
 				<ul>								
@@ -65,8 +64,10 @@
 			</div>			
 			<br />
 	
-			<script type="text/javascript">				
-			$("#center_pane").prepend($("#group_header"));
+			<script type="text/javascript">
+			/* <!-- */
+				$("#center_pane").prepend($("#group_header"));
+			/* --> */
 			</script>
 				
 				<p:dialog id="confirmDialog" header="#{msg.delete_resource_title}"  widgetVar="confirmation" appendTo="@(body)" >
@@ -218,8 +219,8 @@
 				    </p:commandLink>
 				    </h:form>
 				    </ui:repeat>
-			    </h:panelGroup>
-
+			    </h:panelGroup>				
+			
 				<ui:decorate  template="/lw/templates/paging.xhtml">
 					<ui:param name="bean" value="#{groupDetailBean}" />
 				</ui:decorate >

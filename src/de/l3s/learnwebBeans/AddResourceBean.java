@@ -222,7 +222,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 		}
 	    }
 
-	    if(resource.getId() == -1) // not stored at fedora
+	    if(resource.getId() == -1) // a new resource which is not stored in the database yet
 		resource = getUser().addResource(resource);
 	    else
 		resource.save();
@@ -449,6 +449,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	    {
 		log.debug("Create thumbnail for resource " + resource.getId());
 		ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
+		log.debug("url " + resource.getUrl());
+		log.debug("max url " + resource.getMaxImageUrl());
+		log.debug("source " + resource.getSource());
 
 		if(resource.getType().equalsIgnoreCase("text") || resource.getType().equalsIgnoreCase("unknown"))
 		{

@@ -14,7 +14,7 @@
     <param-name>javax.faces.STATE_SAVING_METHOD</param-name>
     <param-value>server</param-value>
   </context-param>
-  <!--  
+   
   <error-page>
     <exception-type>javax.faces.application.ViewExpiredException</exception-type>
     <location>/lw/error_expired.jsf</location>
@@ -35,9 +35,9 @@
 
   <filter-mapping>
     <filter-name>UrlRewriteFilter</filter-name>
-    <url-pattern>/new</url-pattern>
+    <url-pattern>/new/*</url-pattern>
   </filter-mapping>
-    -->
+    
   <filter>
     <filter-name>PrimeFaces FileUpload Filter</filter-name>
     <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>

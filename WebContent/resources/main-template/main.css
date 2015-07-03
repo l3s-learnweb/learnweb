@@ -631,6 +631,11 @@ h5 {
 }
 
 /*paging-template*/
+#paging_buttons { 
+	margin:5px 5px 10px 0px; 
+	text-align:center;
+}
+
 .pagebutton{
 	border:none !important;
 	background:none !important;
