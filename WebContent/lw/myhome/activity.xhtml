@@ -14,8 +14,8 @@
 
 		
 		<ui:define name="center_layout">
-			<h:form id="add_resource">
-				<p:commandButton styleClass="resource_button greenbutton" update=":add_resource_panel" value="#{msg.upload_resource}" widgetVar="add_resource" oncomplete="update_header()">
+			<h:form id="center_header_form">
+				<p:commandButton styleClass="resource_button greenbutton" update=":add_resource_panel" value="#{msg.upload_resource}" oncomplete="update_header()">
 					<f:setPropertyActionListener target="#{activityResourceBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
 				</p:commandButton>
 			</h:form>
@@ -27,12 +27,12 @@
 				var group_owner = document.createElement("span");
 				$(group_owner).addClass("group_owner");
 				$(group_owner).html("#{msg.activity_message}");
-				var cl = $("#add_resource").clone();
+				var cl = $("#center_header_form").clone();
 	            $(cl).appendTo(div);
-	            $("#add_resource").remove()
+	            $("#center_header_form").remove()
 				$(div).append(group_header);
 	            $(div).append(group_owner);
-				$(div).addClass("ui-layout-unit-header ui-widget-header ui-corner-all");
+				$(div).addClass("center-header");
 				$("#center_pane").prepend(div);
 			</script>
 			

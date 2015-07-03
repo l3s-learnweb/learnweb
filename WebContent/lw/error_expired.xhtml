@@ -10,13 +10,9 @@
 	<ui:param name="disableGrowl" value="true" />
 	
 	<ui:define name="center_layout">
-		<p class="error">
-			Your session has expired. Please try again.
-		</p>
-	
-		<ui:fragment rendered="#{not userBean.loggedIn}">
-			<ui:include src="/templates/user/login.xhtml" />
-		</ui:fragment>
+		<div class="error" style="font-size:1.4rem">#{msg.reload_page}</div>	        
+        <br/><br/>
+        <a href="#" onclick="document.location.href = document.location.href; return false;">Reload</a>
 	</ui:define>
 
 </ui:composition>

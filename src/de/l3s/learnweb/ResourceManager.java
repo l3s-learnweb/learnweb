@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.interwebj.jaxb.SearchResultEntity;
 import de.l3s.interwebj.jaxb.ThumbnailEntity;
@@ -729,20 +730,29 @@ public class ResourceManager
 	learnweb.getSolrClient().reIndexResource(resource);
     }
 
-    public AbstractPaginator getResourcesByGroupId(final int groupId, ORDER order) throws SQLException
+    public AbstractPaginator getResourcesByGroupId(int groupId, ORDER order) throws SQLException
     {
 	int pages = getGroupResourcesPageCount(groupId);
 
-	return new AbstractPaginator(pages)
-	{
-	    private static final long serialVersionUID = 399863025926697377L;
+	return new GroupPaginator(pages, groupId);
+    }
 
-	    @Override
-	    public List<Resource> getCurrentPage() throws SQLException
-	    {
-		return getResourcesByGroupId(groupId, getPageIndex());
-	    }
-	};
+    private class GroupPaginator extends AbstractPaginator
+    {
+	private static final long serialVersionUID = 399863025926697377L;
+	private final int groupId;
+
+	public GroupPaginator(int totalPages, int groupId)
+	{
+	    super(totalPages);
+	    this.groupId = groupId;
+	}
+
+	@Override
+	public List<Resource> getCurrentPage() throws SQLException, SolrServerException
+	{
+	    return Learnweb.getInstance().getResourceManager().getResourcesByGroupId(groupId, getPageIndex());
+	}
     }
 
     public OwnerList<Resource, User> getResourcesByGroupId(int groupId) throws SQLException

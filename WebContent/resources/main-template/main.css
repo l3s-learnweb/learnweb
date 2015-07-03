@@ -493,33 +493,44 @@ iframe { border: none }
 	text-indent:-99999px;
 }
 
-/* group header ; maybe move to a separate file */
-#group_header {padding-bottom:0 !important;}
-#group_header li {
+/* center header */
+.center-header{
+	background: none;
+	background-color: #eee !important;
+	border: 1px solid #ddd !important;
+	border-radius: 0px !important;
+	margin-right: 5px;
+	margin-bottom: 5px;
+	padding: 10px; 
+	font-weight: bold;
+	font-size: 1.2rem;
+	text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.7);
+}
+.center-header li {
 	float:left;
 	display:block;
 	border-right: 1px solid rgb(230, 230, 230);
 }
-#group_header a {	
+.center-header a {	
 	padding:5px 15px; 
 	display:block;
 }
-#group_header a.active,
-#group_header a:hover {	background-color: #EEE;}
-#group_header ul {
+.center-header a.active,
+.center-header a:hover {	background-color: #EEE;}
+.center-header ul {
 	list-style: outside none none;
-	margin: 10px -10px 0px;
+	margin: 10px -10px -10px;
 	padding: 0px;
 	border-top: 1px solid #DDD !important;
 	background-color: rgb(230, 230, 230);
 	clear: both;
 }
-#group_header ul:after {
+.center-header ul:after {
     content:'';
     display:block;
     clear: both;
 }
-.group_header, .page_header span{
+.center-header > span, .page_header span{
 	font-size: 20px;
 	font-weight: 100;
 	color: #489a83;
@@ -533,7 +544,7 @@ iframe { border: none }
 }
 
 
-form#add_resource { float:right; }
+form#center_header_form { float:right; }
 .resource_button{
 	float:right;
 	position:relative;
@@ -719,16 +730,7 @@ span.ui-autocomplete{border: 1px solid transparent !important;}
 	border-bottom-right-radius: 0px;
 }
 
-/*overwritw primefaces option for some areas which have a id or a class */
-#center_pane .ui-layout-unit-header{
-	background: none;
-	background-color: #eee !important;
-	border: 1px solid #ddd !important;
-	border-radius: 0px !important;
-	margin-right: 5px;
-	margin-bottom: 5px;
-	padding: 10px;
-}
+
 #datagrid .ui-panel-content{padding: 5px;}
 .explore_history .ui-button .ui-button-text, .search_history .ui-button .ui-button-text{
 	display:block;

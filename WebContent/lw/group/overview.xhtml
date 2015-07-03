@@ -11,19 +11,22 @@
 		</f:metadata>
 	</ui:define>
 	
-	<ui:param name="loginRequired" value="true" />
+	<ui:param name="loginRequired" value="true"  />
 	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" escape="false" />
 	<ui:param name="helpText" value="#{msg.groupOverviewHelp}"/>
-
+ 
 	<ui:define name="center_layout">
-	
-		<div class="ui-layout-unit-header ui-widget-header ui-corner-all" id="group_header">
-			<span class="group_header">#{groupDetailBean.group.title}</span> #{msg.created_by} #{groupDetailBean.group.leader.username}
-			<h:form id="add_resource" rendered="#{groupDetailBean.member}">
-				<p:commandButton styleClass="resource_button greenbutton" value="#{msg.upload_resource}" widgetVar="add_resource" update=":add_resource_panel" oncomplete="update_header()">
+		<div class="center-header" id="group_header">
+			<span>#{groupDetailBean.group.title}</span> #{msg.created_by} #{groupDetailBean.group.leader.username}
+			<h:form id="center_header_form">
+				<p:commandButton rendered="#{groupDetailBean.member}" styleClass="resource_button greenbutton" value="#{msg.upload_resource}" update=":add_resource_panel" oncomplete="update_header()" partialSubmit="true">
 					<f:setPropertyActionListener target="#{addResourceBean.resourceTargetGroupId}" value="#{groupDetailBean.groupId}"></f:setPropertyActionListener>
 					<f:setPropertyActionListener target="#{groupDetailBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
 				</p:commandButton>
+				
+				<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" styleClass="resource_button greenbutton"  update=":growl :group_menu @form :datagrid" partialSubmit="true" process="@this" value="#{msg.join}">
+					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
+				</p:commandLink>
 			</h:form>
 			
 			<ul>								
@@ -55,9 +58,15 @@
 			</ul>
 		</div>
 			
+			<div class="ui-layout-unit-footer" id="center_footer">
+			test
+			</div>
+		
 		<script type="text/javascript">
 		/* <!-- */
 			$("#center_pane").prepend($("#group_header"));
+		
+			$("#center_pane").append($("#center_footer"));
 		/* --> */
 		</script>
 		

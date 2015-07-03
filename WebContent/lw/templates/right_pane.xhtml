@@ -160,9 +160,6 @@
 										    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}" height="#{resourceDetailBean.clickedResource.thumbnail4.height}" width="#{resourceDetailBean.clickedResource.thumbnail4.width}" style="height:#{resourceDetailBean.clickedResource.thumbnail4.height gt 250? '100%':'auto'}; width:auto; display:block; margin:0 auto;"/>	
 									    </ui:fragment>							
 									</div>
-									<!--  <div id="lightbox_url">
-										<a href="#{bean.clickedResource.url}">#{bean.clickedResource.url}</a>
-									</div>-->
 								</div>
 							</div>						
 						 
@@ -204,7 +201,7 @@
 					</ui:fragment>
 					
 					<table cellpadding="0" cellspacing="0" style="width:40%">
-						<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.fileName and not resourceDetailBean.clickedResource.source.equals('LORO')}">
+						<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.fileName and not resourceDetailBean.clickedResource.source.equals('LORO')}">
 							<tr>
 								<td style="padding-top:5px">
 									<span class="resource_field">#{msg.file}:</span>
@@ -215,7 +212,7 @@
 							</tr>
 						</ui:fragment>
 
-						<ui:fragment rendered="#{empty resourceDetailBean.clickedResource.fileName and resourceDetailBean.clickedResource.type.toLowerCase() != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type.toLowerCase() != 'video' and resourceDetailBean.clickedResource.type.toLowerCase() != 'image'}">
+						<ui:fragment rendered="${empty resourceDetailBean.clickedResource.fileName and resourceDetailBean.clickedResource.type.toLowerCase() != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type.toLowerCase() != 'video' and resourceDetailBean.clickedResource.type.toLowerCase() != 'image'}">
 							<tr>
 								<td style="padding-top:5px">
 									<span class="resource_field">#{msg.resource}:</span>

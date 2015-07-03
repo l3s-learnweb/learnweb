@@ -18,13 +18,13 @@
 		    		
 		<ui:define name="center_layout">
 			<h:form target="new_presentation" id="new_presentation_form"></h:form>
-			<div class="ui-layout-unit-header ui-widget-header ui-corner-all" id="group_header">
-				<span class="group_header">
+			<div class="center-header" id="group_header">
+				<span>
 					#{msg.presentations}
 				</span> 
 				#{msg.of} #{groupDetailBean.group.title}
-				<h:form id="add_resource" rendered="#{groupDetailBean.member}">
-					<p:commandButton id="add_resource" styleClass="resource_button greenbutton" onclick="PF('format_dialog').show()" value="#{msg.presentation_new}"></p:commandButton>
+				<h:form id="center_header_form" rendered="#{groupDetailBean.member}">
+					<p:commandButton styleClass="resource_button greenbutton" onclick="PF('format_dialog').show()" value="#{msg.presentation_new}" />
 				</h:form>
 				
 				<ul>								
