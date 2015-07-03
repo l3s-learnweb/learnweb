@@ -20,6 +20,12 @@
 			<div class="center-header" id="group_header">
 				<span>#{msg.members}</span> #{msg.of} #{groupDetailBean.group.title}
 				
+				<h:form id="center_header_form">
+					<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" styleClass="resource_button greenbutton"  update=":growl :group_menu @form :resource_disp" partialSubmit="true" process="@this" value="#{msg.join_group}">
+						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
+					</p:commandLink>
+				</h:form>
+				
 				<ul>								
 					<li>
 						<a class="" href="./group/overview.jsf?group_id=#{groupDetailBean.group.id}">

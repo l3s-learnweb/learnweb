@@ -157,7 +157,7 @@
 										   	<iframe src="#{resourceDetailBean.clickedResource.url}" style="width:100%; height:100%; "></iframe>									    	
 									    </ui:fragment>
 									    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'Image'}">
-										    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}" height="#{resourceDetailBean.clickedResource.thumbnail4.height}" width="#{resourceDetailBean.clickedResource.thumbnail4.width}" style="height:#{resourceDetailBean.clickedResource.thumbnail4.height gt 250? '100%':'auto'}; width:auto; display:block; margin:0 auto;"/>	
+										    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}" height="#{resourceDetailBean.clickedResource.thumbnail4.height}" width="#{resourceDetailBean.clickedResource.thumbnail4.width}" style="height:auto; width:auto; max-height:100%; max-width:100%; display:block; margin:0 auto; position: relative; top: 50%; transform: translateY(-50%)"/>	
 									    </ui:fragment>							
 									</div>
 								</div>

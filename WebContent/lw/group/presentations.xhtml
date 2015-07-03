@@ -23,8 +23,12 @@
 					#{msg.presentations}
 				</span> 
 				#{msg.of} #{groupDetailBean.group.title}
-				<h:form id="center_header_form" rendered="#{groupDetailBean.member}">
-					<p:commandButton styleClass="resource_button greenbutton" onclick="PF('format_dialog').show()" value="#{msg.presentation_new}" />
+				<h:form id="center_header_form">
+					<p:commandButton rendered="#{groupDetailBean.member}" styleClass="resource_button greenbutton" onclick="PF('format_dialog').show()" value="#{msg.presentation_new}" />
+				
+					<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" styleClass="resource_button greenbutton"  update=":growl :group_menu @form" partialSubmit="true" process="@this" value="#{msg.join_group}">
+						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
+					</p:commandLink>
 				</h:form>
 				
 				<ul>								
