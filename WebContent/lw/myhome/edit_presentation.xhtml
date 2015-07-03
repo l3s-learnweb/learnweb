@@ -306,11 +306,11 @@
 					            <div id="#{result.id}" class="display-none"></div>
 					        </p:column>
 					        
-					        <p:column class="align-center" style="width:28%;" rendered="#{result.id != 1}" >  
+					        <p:column styleClass="align-center" style="width:28%;" rendered="#{result.id != 1}" >  
 					            <h:outputText escape="false" value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"50\" height=\"50\" />")}' ></h:outputText>  
 					        </p:column>  
 					  
-					  		<p:column class="align-center" style="width:28%;" rendered="#{result.id == 1}" >  
+					  		<p:column styleClass="align-center" style="width:28%;" rendered="#{result.id == 1}" >  
 					            <h:outputText escape="false" style="padding: 19px 0px; display: inline-block;" value='[#{msg.title}]' ></h:outputText>  
 					        </p:column> 
 					  
