@@ -745,9 +745,9 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	if(getThumbnail1() != null)
 	    return getThumbnail1().toHTML();
 	if(getThumbnail2() != null)
-	    return getThumbnail2().resize(140, 140).toHTML();
+	    return getThumbnail2().resize(150, 150).toHTML();
 	if(getThumbnail3() != null)
-	    return getThumbnail3().resize(140, 140).toHTML();
+	    return getThumbnail3().resize(150, 150).toHTML();
 
 	return embeddedSize1;
     }
