@@ -164,8 +164,13 @@
 							</div>						
 						 
 									
-							<ui:fragment rendered="#{resourceDetailBean.clickedResource.type == 'Video'}">
+							<ui:fragment rendered="#{resourceDetailBean.clickedResource.type == 'Video' and resourceDetailBean.clickedResource.source != 'Yovisto'}">
 								<div class="preview_box" style="min-height:400px; max-height:500px; height:100%;">
+									<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
+								</div>
+							</ui:fragment>
+							<ui:fragment rendered="#{resourceDetailBean.clickedResource.type == 'Video' and resourceDetailBean.clickedResource.source == 'Yovisto'}">
+								<div class="preview_box" style="height:400px; width:100%;">
 									<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
 								</div>
 							</ui:fragment>								

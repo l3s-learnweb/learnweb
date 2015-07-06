@@ -251,7 +251,7 @@ public class YovistoManager
 	int yovistoId = result.getInt("yovisto_id");
 	resource.setIdAtService(Integer.toString(yovistoId));
 	resource.setFileUrl("http://www.yovisto.com/streams/" + result.getInt("yovisto_id") + ".mp4");
-	resource.setEmbeddedRaw("<iframe id=\"embPlayer"
+	resource.setEmbeddedRaw("<embed id=\"embPlayer"
 		+ yovistoId
 		+ "\"  src=\"http://www.yovisto.com/yoexply.swf?vid="
 		+ yovistoId
@@ -259,7 +259,7 @@ public class YovistoManager
 		+ yovistoId
 		+ ".mp4&amp;prev="
 		+ result.getString("thumbnail_url")
-		+ "\" scale=\"exactfit\" quality=\"high\" name=\"FlashMovie\" swliveconnect=\"true\" allowFullScreen=\"true\" wmode=\"transparent\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" style=\"height:100%; width:100%;\" flashvars=\"var1=0&amp;enablejs=true\"></iframe>");
+		+ "\" scale=\"exactfit\" quality=\"high\" name=\"FlashMovie\" swliveconnect=\"true\" allowFullScreen=\"true\" wmode=\"transparent\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" style=\"height:100%; width:100%;\" flashvars=\"var1=0&amp;enablejs=true\"></embed>");
 
 	resource.setAuthor(result.getString("organization"));
 
