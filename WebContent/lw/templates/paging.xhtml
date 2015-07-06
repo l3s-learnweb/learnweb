@@ -4,54 +4,54 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<h:panelGroup id="paging_buttons" layout="block" rendered="#{bean.paginator.totalPages > 0}">
+	<h:panelGroup id="paging_buttons" layout="block" rendered="#{paginator.totalPages > 0}">
 		<h:form class="grey_border" style="padding:0; background-color:#eee;">
-			<ui:fragment rendered="#{bean.paginator.lessThanNPages}">
+			<ui:fragment rendered="#{paginator.lessThanNPages}">
 				<span class="previous_button"></span>				
 				
-				<p:commandButton value="#{msg.previous} #{msg.page}" style="margin:0 5px;" styleClass="pagebutton" disabled="#{bean.paginator.pageIndex == 0}" update=":datagrid :paging_buttons">
-					<f:setPropertyActionListener target="#{bean.paginator.pageIndex}" value="#{bean.paginator.pageIndex - 1}" />
+				<p:commandButton value="#{msg.previous} #{msg.page}" style="margin:0 5px;" styleClass="pagebutton" disabled="#{paginator.pageIndex == 0}" update=":datagrid :paging_buttons">
+					<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.pageIndex - 1}" />
 				</p:commandButton>
 				
-				<ui:repeat value="#{bean.paginator.listPages()}" var="page">
-					<p:commandButton value="#{page}" styleClass="pagebutton #{page == bean.paginator.pageIndex + 1? 'active_page_button':''}" update=":datagrid :paging_buttons">
-						<f:setPropertyActionListener target="#{bean.paginator.pageIndex}" value="#{page - 1}" />
+				<ui:repeat value="#{paginator.listPages()}" var="page">
+					<p:commandButton value="#{page}" styleClass="pagebutton #{page == paginator.pageIndex + 1? 'active_page_button':''}" update=":datagrid :paging_buttons">
+						<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{page - 1}" />
 					</p:commandButton>							
 				</ui:repeat>
 				
-				<p:commandButton value="#{msg.next} #{msg.page}" styleClass="pagebutton" disabled="#{bean.paginator.pageIndex == bean.paginator.totalPages}" update=":datagrid :paging_buttons">
-					<f:setPropertyActionListener target="#{bean.paginator.pageIndex}" value="#{bean.paginator.pageIndex + 1}" />
+				<p:commandButton value="#{msg.next} #{msg.page}" styleClass="pagebutton" disabled="#{paginator.pageIndex == paginator.totalPages}" update=":datagrid :paging_buttons">
+					<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.pageIndex + 1}" />
 				</p:commandButton>
 				
 				<span class="next_button"></span>				
 			</ui:fragment>
 
-			<ui:fragment rendered="#{!bean.paginator.lessThanNPages}">
+			<ui:fragment rendered="#{!paginator.lessThanNPages}">
 				<span class="previous_button"></span>
 				
-				<p:commandButton value="#{msg.previous} #{msg.page}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" style="margin:0 5px;" styleClass="pagebutton" disabled="#{bean.paginator.pageIndex == 0}" update=":datagrid :paging_buttons">
-					<f:setPropertyActionListener target="#{bean.paginator.pageIndex}" value="#{bean.paginator.pageIndex - 1}" />
+				<p:commandButton value="#{msg.previous} #{msg.page}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" style="margin:0 5px;" styleClass="pagebutton" disabled="#{paginator.pageIndex == 0}" update=":datagrid :paging_buttons">
+					<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.pageIndex - 1}" />
 				</p:commandButton>
 				
-				<p:commandButton value="#{1}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" styleClass="pagebutton #{bean.paginator.pageIndex + 1 == 1? 'active_page_button':''}" update=":datagrid :paging_buttons">
-					<f:setPropertyActionListener target="#{bean.paginator.pageIndex}" value="0" />
+				<p:commandButton value="#{1}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" styleClass="pagebutton #{paginator.pageIndex + 1 == 1? 'active_page_button':''}" update=":datagrid :paging_buttons">
+					<f:setPropertyActionListener target="#{paginator.pageIndex}" value="0" />
 				</p:commandButton>
-				<p:commandButton value="…" styleClass="pagebutton" disabled="true" rendered="#{bean.paginator.pageIndex >= 4}"/>
+				<p:commandButton value="…" styleClass="pagebutton" disabled="true" rendered="#{paginator.pageIndex >= 4}"/>
 
-				<ui:repeat value="#{bean.paginator.listPages()}" var="page">
-					<p:commandButton value="#{page}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" style="margin-right:5px;" styleClass="pagebutton #{page == bean.paginator.pageIndex + 1? 'active_page_button':''}" update=":datagrid :paging_buttons">
-						<f:setPropertyActionListener target="#{bean.paginator.pageIndex}" value="#{page - 1}" />
+				<ui:repeat value="#{paginator.listPages()}" var="page">
+					<p:commandButton value="#{page}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" style="margin-right:5px;" styleClass="pagebutton #{page == paginator.pageIndex + 1? 'active_page_button':''}" update=":datagrid :paging_buttons">
+						<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{page - 1}" />
 					</p:commandButton>							
 				</ui:repeat>
 	
-				<p:commandButton value="…" styleClass="pagebutton" disabled="true" rendered="#{bean.paginator.lessThanNPagesFromLast}"/>
+				<p:commandButton value="…" styleClass="pagebutton" disabled="true" rendered="#{paginator.lessThanNPagesFromLast}"/>
 				
-				<p:commandButton value="#{bean.paginator.totalPages + 1}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" styleClass="pagebutton #{bean.paginator.pageIndex == bean.paginator.totalPages? 'active_page_button':''}" update=":datagrid :paging_buttons">
-					<f:setPropertyActionListener target="#{bean.paginator.pageIndex}" value="#{bean.paginator.totalPages}" />
+				<p:commandButton value="#{paginator.totalPages + 1}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" styleClass="pagebutton #{paginator.pageIndex == paginator.totalPages? 'active_page_button':''}" update=":datagrid :paging_buttons">
+					<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.totalPages}" />
 				</p:commandButton>
 				
-				<p:commandButton value="#{msg.next} #{msg.page}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" styleClass="pagebutton" disabled="#{bean.paginator.pageIndex == bean.paginator.totalPages}" update=":datagrid :paging_buttons">
-					<f:setPropertyActionListener target="#{bean.paginator.pageIndex}" value="#{bean.paginator.pageIndex + 1}" />
+				<p:commandButton value="#{msg.next} #{msg.page}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" styleClass="pagebutton" disabled="#{paginator.pageIndex == paginator.totalPages}" update=":datagrid :paging_buttons">
+					<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.pageIndex + 1}" />
 				</p:commandButton>
 				
 				<span class="next_button"></span>

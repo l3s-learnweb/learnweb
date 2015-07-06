@@ -187,8 +187,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 		}
 		catch(Exception e)
 		{
-		    // TODO Auto-generated catch block
 		    e.printStackTrace();
+		    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 		}
 		if(r != null && deletedResources.contains(r.getId()))
 		    resourceaction = false;
@@ -210,8 +210,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 		}
 		catch(Exception e)
 		{
-		    // TODO Auto-generated catch block
-
+		    e.printStackTrace();
+		    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 		}
 
 		try
@@ -221,8 +221,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 		}
 		catch(Exception e)
 		{
-		    // TODO Auto-generated catch block
-
+		    e.printStackTrace();
+		    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 		}
 
 		if(l.getAction() == filter[0]) //add_resource
@@ -250,8 +250,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 		    }
 		    catch(SQLException e)
 		    {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
+			addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 		    }
 		    text = text + " with " + "<b>" + commenttobeadded.getText() + "</b>";
 		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
@@ -720,16 +720,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    temp = rm.getResource(Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id")));
 	    setClickedResource(temp);
 	}
-	catch(NumberFormatException e)
+	catch(NumberFormatException | SQLException e)
 	{
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
+	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 
-	}
-	catch(SQLException e)
-	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
 	}
     }
 
@@ -742,8 +737,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
 	catch(SQLException e)
 	{
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
+	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 	}
     }
 
@@ -805,8 +800,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
 	catch(SQLException e)
 	{
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
+	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 	}
     }
 
@@ -819,15 +814,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    temp = pm.getPresentationsById(Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id")));
 	    setClickedPresentation(temp);
 	}
-	catch(NumberFormatException e)
+	catch(NumberFormatException | SQLException e)
 	{
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
-	}
-	catch(SQLException e)
-	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 	}
     }
 
@@ -966,7 +956,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     }
     catch(Exception e)
     {
-        // TODO Auto-generated catch block
         e.printStackTrace();
     }
     }*/
@@ -1090,8 +1079,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
 	catch(SQLException e)
 	{
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
+	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 	}
 	return wizardURL;
     }

@@ -222,7 +222,7 @@
 			    </h:panelGroup>				
 			
 				<ui:decorate  template="/lw/templates/paging.xhtml">
-					<ui:param name="bean" value="#{groupDetailBean}" />
+					<ui:param name="paginator" value="${groupDetailBean.paginator}" />
 				</ui:decorate >
 		</ui:define>
 		<ui:define name="right_layout">
