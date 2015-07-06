@@ -279,16 +279,6 @@ public class YovistoManager
 
 	YovistoManager lm = Learnweb.getInstance().getYovistoManager();
 	lm.saveYovistoResource();
-	/*String lang = "";
-	String[] languages = "pt, fr, it, da, fi, es".split(",");
-	for(String language : languages)
-	{
-	    Locale locale = new Locale(language.trim());
-	    lang += locale.getDisplayLanguage() + ", ";
-	}
-	if(!lang.isEmpty())
-	    lang = lang.substring(0, lang.lastIndexOf(","));
-	System.out.println(lang);*/
 
 	System.exit(0);
     }
