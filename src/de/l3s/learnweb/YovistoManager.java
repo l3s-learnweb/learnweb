@@ -37,24 +37,24 @@ public class YovistoManager
 	ResourceManager resourceManager = learnweb.getResourceManager();
 
 	ResultSet result = null;
-	/*	User rishita = learnweb.getUserManager().getUser(7727);
+	/*User rishita = learnweb.getUserManager().getUser(7727);
 
-		for(Resource resource : yovistoGroup.getResources())
-		{
+	for(Resource resource : yovistoGroup.getResources())
+	{
 
-		    try
-		    {
-			solr.indexResource(resource);
-		    }
-		    catch(IOException |SolrServerException e)
-		    {
-			log.error(e);
-		    }
-		    System.out.println(resource.getTitle());
+	    try
+	    {
+		solr.indexResource(resource);
+	    }
+	    catch(IOException | SolrServerException e)
+	    {
+		log.error(e);
+	    }
+	    System.out.println(resource.getTitle());
 
-		}
+	}
 
-		System.exit(0);*/
+	System.exit(0);*/
 	try
 	{
 
@@ -216,29 +216,26 @@ public class YovistoManager
 	if(!result.getString("language").isEmpty())
 	{
 	    //Decode the language through its representation
-	    String lang = "";
-	    if(result.getString("language").contains("de"))
-		lang += "German, ";
-	    if(result.getString("language").contains("en"))
-		lang += "English, ";
-	    if(result.getString("language").contains("pt"))
-		lang += "Portuguese, ";
-	    if(result.getString("language").contains("fr"))
-		lang += "French, ";
-	    if(result.getString("language").contains("it"))
-		lang += "Italian, ";
-	    if(result.getString("language").contains("da"))
-		lang += "Danish, ";
-	    if(result.getString("language").contains("fi"))
-		lang += "Finnish, ";
-	    if(result.getString("language").contains("es"))
-		lang += "Spanish, ";
-	    else if(lang.isEmpty() && !lang.contains("none"))
-		lang += result.getString("language") + ", ";
+	    String lang = result.getString("language").toLowerCase();
+	    lang = lang.replace("none", "").trim();
+	    if(lang.endsWith(","))
+	    {
+		lang.substring(0, lang.lastIndexOf(","));
+	    }
+
 	    if(!lang.isEmpty())
 	    {
-		lang = lang.substring(0, lang.lastIndexOf(","));
-		description = description + "\nLanguage: " + lang;
+		String finalLanguage = "";
+		String[] languages = lang.split(",");
+		for(String language : languages)
+		{
+		    resource.setLanguage(language.trim());
+		    Locale locale = new Locale(language.trim());
+		    finalLanguage += locale.getDisplayLanguage() + ", ";
+		}
+
+		finalLanguage = finalLanguage.substring(0, finalLanguage.lastIndexOf(","));
+		description = description + "\nLanguage: " + finalLanguage.trim();
 	    }
 
 	}
@@ -280,9 +277,9 @@ public class YovistoManager
     public static void main(String[] args) throws Exception
     {
 
-	/*YovistoManager lm = Learnweb.getInstance().getYovistoManager();
-	lm.saveYovistoResource();*/
-	String lang = "";
+	YovistoManager lm = Learnweb.getInstance().getYovistoManager();
+	lm.saveYovistoResource();
+	/*String lang = "";
 	String[] languages = "pt, fr, it, da, fi, es".split(",");
 	for(String language : languages)
 	{
@@ -291,7 +288,7 @@ public class YovistoManager
 	}
 	if(!lang.isEmpty())
 	    lang = lang.substring(0, lang.lastIndexOf(","));
-	System.out.println(lang);
+	System.out.println(lang);*/
 
 	System.exit(0);
     }
