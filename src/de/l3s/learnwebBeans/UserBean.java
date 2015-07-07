@@ -494,4 +494,34 @@ public class UserBean implements Serializable
 	*/
 	return model;
     }
+
+    private boolean showMessageJoinGroup = true;
+    private Boolean showMessageAddResource = null;
+
+    public boolean isShowMessageJoinGroup() throws SQLException
+    {
+	if(showMessageJoinGroup) // check until the user has joined a group 
+	{
+	    User user = getUser();
+	    if(null != user)
+		showMessageJoinGroup = getUser().getGroups().size() == 0;
+	}
+	return showMessageJoinGroup;
+    }
+
+    public boolean isShowMessageAddResource() throws SQLException
+    {
+	if(showMessageAddResource != false) // check until the user has added a resource
+	{
+	    if(isShowMessageJoinGroup())
+		return false;
+
+	    User user = getUser();
+	    if(null == user)
+		return false;
+
+	    showMessageAddResource = getUser().getResources().size() == 0;
+	}
+	return showMessageAddResource;
+    }
 }

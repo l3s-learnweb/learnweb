@@ -57,6 +57,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private int ratingSum;
     private int rateNumber;
     private String language = ""; // 2-letter language code
+    private Date creationDate = new Date();
     private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
     private HashMap<Integer, Boolean> isRatedByUser = new HashMap<Integer, Boolean>(); // userId : hasRated
 
@@ -1303,6 +1304,16 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	    throw new IllegalArgumentException("expected 2-letter language code");
 	else
 	    this.language = language.toLowerCase();
+    }
+
+    public Date getCreationDate()
+    {
+	return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate)
+    {
+	this.creationDate = creationDate;
     }
 
 }
