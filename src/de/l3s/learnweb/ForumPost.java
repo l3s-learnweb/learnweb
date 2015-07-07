@@ -12,6 +12,7 @@ public class ForumPost
     private Date date;
     private int editCount;
     private Date lastEditDate;
+    private int editUserId;
 
     public int getPostId()
     {
@@ -91,6 +92,16 @@ public class ForumPost
     public void setLastEditDate(Date lastEditDate)
     {
 	this.lastEditDate = lastEditDate;
+    }
+
+    public int getEditUserId()
+    {
+	return editUserId;
+    }
+
+    public void setEditUserId(int editUserId)
+    {
+	this.editUserId = editUserId;
     }
 
 }

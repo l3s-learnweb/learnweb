@@ -8,8 +8,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.util.ICache;
-
 public class ForumManager
 {
     enum ORDER // possible order values; Not all values are applicable for every method
@@ -26,17 +24,12 @@ public class ForumManager
     private final static String FORUMTOPICCOLUMNS = "topic_id, group_id, topic_title, user_id, topic_time, topic_views, topic_replies, topic_last_post_id";
 
     private Learnweb learnweb;
-    private ICache<ForumPost> cache;
 
     protected ForumManager(Learnweb learnweb) throws SQLException
     {
 	super();
 	this.learnweb = learnweb;
     }
-
-    // String topic, int group_id
-    //ForumTopic topic 
-    // user 
 
     /**
      * returns all topic of the define group. Sorted by ORDER
@@ -45,10 +38,17 @@ public class ForumManager
      * @param order
      * @return
      */
-    public List<ForumTopic> getTopicsByGroup(int groupId, ORDER order)
+    public List<ForumTopic> getTopicsByGroup(int groupId, ORDER order) throws SQLException
     {
 	LinkedList<ForumTopic> topics = new LinkedList<ForumTopic>();
-	// TODO
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FORUMTOPICCOLUMNS + " FROM `forum_topic` WHERE group_id = ? ORDER BY ORDER");
+	select.setInt(1, groupId);
+	ResultSet rs = select.executeQuery();
+	while(rs.next())
+	{
+	    topics.add(createTopic(rs));
+	}
+	select.close();
 	return topics;
     }
 
@@ -62,7 +62,7 @@ public class ForumManager
     {
 	LinkedList<ForumPost> posts = new LinkedList<ForumPost>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FORUMPOSTCOLUMNS + " FROM `forum_post` WHERE topic_id = ? ORDER BY post_time");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FORUMPOSTCOLUMNS + " FROM `forum_post` WHERE topic_id = ? ORDER BY ORDER");
 	select.setInt(1, topicId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -78,7 +78,7 @@ public class ForumManager
     {
 	LinkedList<ForumPost> posts = new LinkedList<ForumPost>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FORUMPOSTCOLUMNS + " FROM `forum_post` WHERE user_id = ? ORDER BY order");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FORUMPOSTCOLUMNS + " FROM `forum_post` WHERE user_id = ? ORDER BY ORDER");
 	select.setInt(1, userId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -174,13 +174,31 @@ public class ForumManager
     public ForumPost createPost(ResultSet rs) throws SQLException
     {
 	int postId = rs.getInt("post_id");
-	ForumPost forumPost = cache.get(postId);
-
+	ForumPost forumPost = new ForumPost();
+	forumPost.setPostId(postId);
+	forumPost.setTopicId(rs.getInt("topic_id"));
+	forumPost.setUserId(rs.getInt("user_id"));
+	forumPost.setGroupId(rs.getInt("group_id"));
+	forumPost.setText(rs.getString("text"));
+	forumPost.setDate(rs.getDate("post_time"));
+	forumPost.setLastEditDate(rs.getDate("post_edit_time"));
+	forumPost.setEditCount(rs.getInt("post_edit_count"));
+	forumPost.setEditUserId(rs.getInt("post_edit_user_id"));
 	return forumPost;
     }
 
-    public void createTopic()
+    public ForumTopic createTopic(ResultSet rs) throws SQLException
     {
-
+	int topicId = rs.getInt("topic_id");
+	ForumTopic forumTopic = new ForumTopic();
+	forumTopic.setTopicId(topicId);
+	forumTopic.setUserId(rs.getInt("user_id"));
+	forumTopic.setGroupId(rs.getInt("group_id"));
+	forumTopic.setTopic(rs.getString("topic_title"));
+	forumTopic.setDate(rs.getDate("topic_time"));
+	forumTopic.setTopicView(rs.getInt("topic_views"));
+	forumTopic.setTopicReplies(rs.getInt("topic_replies"));
+	forumTopic.setTopicLastPostId(rs.getInt("topic_last_post_id"));
+	return forumTopic;
     }
 }

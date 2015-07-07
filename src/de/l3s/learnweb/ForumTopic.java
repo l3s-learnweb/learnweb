@@ -9,6 +9,9 @@ public class ForumTopic
     private int groupId;
     private String topic;
     private Date date;
+    private int topicView;
+    private int topicReplies;
+    private int topicLastPostId;
 
     public int getUserId()
     {
@@ -58,6 +61,36 @@ public class ForumTopic
     public void setDate(Date date)
     {
 	this.date = date;
+    }
+
+    public int getTopicView()
+    {
+	return topicView;
+    }
+
+    public void setTopicView(int topicView)
+    {
+	this.topicView = topicView;
+    }
+
+    public int getTopicReplies()
+    {
+	return topicReplies;
+    }
+
+    public void setTopicReplies(int topicReplies)
+    {
+	this.topicReplies = topicReplies;
+    }
+
+    public int getTopicLastPostId()
+    {
+	return topicLastPostId;
+    }
+
+    public void setTopicLastPostId(int topicLastPostId)
+    {
+	this.topicLastPostId = topicLastPostId;
     }
 
 }
