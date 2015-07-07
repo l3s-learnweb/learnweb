@@ -372,7 +372,7 @@
 									</ui:repeat>
 								</h:panelGroup>
 								<p:inputTextarea style="width:100%; box-sizing:border-box;" rows="2" value="#{resourceDetailBean.newComment}" /><br/>
-								<p:commandButton styleClass="greenbutton" value="#{msg.comment}" actionListener="#{resourceDetailBean.addComment()}" update=":datagrid :comment_form" style="float:right;margin-right:0;margin-top: 4px">
+								<p:commandButton styleClass="greenbutton" value="#{msg.addComment}" actionListener="#{resourceDetailBean.addComment()}" update=":datagrid :comment_form" style="float:right;margin-right:0;margin-top: 4px">
 									<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
 								</p:commandButton>
 								<br class="clear" />								
