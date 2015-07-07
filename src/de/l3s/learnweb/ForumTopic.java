@@ -5,7 +5,7 @@ import java.util.Date;
 public class ForumTopic
 {
     private int userId;
-    private int topicId;
+    private int topicId = -1;
     private int groupId;
     private String topic;
     private Date date;

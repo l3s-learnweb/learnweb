@@ -1,11 +1,14 @@
 package de.l3s.learnweb;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
+
+import de.l3s.util.ICache;
 
 public class ForumManager
 {
@@ -19,8 +22,11 @@ public class ForumManager
     }
 
     private final static Logger log = Logger.getLogger(ForumManager.class);
+    private final static String FORUMPOSTCOLUMNS = "post_id, topic_id,group_id, user_id, text, post_time, post_edit_time, post_edit_user_id";
+    private final static String FORUMTOPICCOLUMNS = "topic_id, group_id, topic_title, user_id, topic_time, topic_views, topic_replies, topic_last_post_id";
 
     private Learnweb learnweb;
+    private ICache<ForumPost> cache;
 
     protected ForumManager(Learnweb learnweb) throws SQLException
     {
@@ -52,17 +58,35 @@ public class ForumManager
      * @param topicId
      * @return
      */
-    public List<ForumPost> getPostsByTopic(int topicId)
+    public List<ForumPost> getPostsByTopic(int topicId) throws SQLException
     {
 	LinkedList<ForumPost> posts = new LinkedList<ForumPost>();
-	// TODO
+
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FORUMPOSTCOLUMNS + " FROM `forum_post` WHERE topic_id = ? ORDER BY post_time");
+	select.setInt(1, topicId);
+	ResultSet rs = select.executeQuery();
+	while(rs.next())
+	{
+	    posts.add(createPost(rs));
+	}
+	select.close();
+
 	return posts;
     }
 
-    public List<ForumPost> getPostsByUser(int userId, ORDER order)
+    public List<ForumPost> getPostsByUser(int userId, ORDER order) throws SQLException
     {
 	LinkedList<ForumPost> posts = new LinkedList<ForumPost>();
-	// TODO
+
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FORUMPOSTCOLUMNS + " FROM `forum_post` WHERE user_id = ? ORDER BY order");
+	select.setInt(1, userId);
+	ResultSet rs = select.executeQuery();
+	while(rs.next())
+	{
+	    posts.add(createPost(rs));
+	}
+	select.close();
+
 	return posts;
     }
 
@@ -98,11 +122,22 @@ public class ForumManager
      * increment topic view counter
      * 
      * @param topicId
+     * 
+     * 
+     *            public void incTopicViews(int topicId)
+     *            {
+     *            int readCount = getReadStatus() + 1;
+     *            String sqlQuery = "UPDATE forum_topic WHERE "
+     * 
+     * 
+     *            }
+     * 
+     *            private int getReadStatus()
+     *            {
+     *            // TODO Auto-generated method stub
+     *            return 0;
+     *            }
      */
-    public void incTopicViews(int topicId)
-    {
-
-    }
 
     /**
      * 
@@ -130,14 +165,18 @@ public class ForumManager
     {
 	ForumPost editPost = new ForumPost();
 	String sqlQuery = "Select text, post_edit_count Where post_id = postId";
+	@SuppressWarnings("unused")
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
 	//	editPost = ps.executeQuery();
 	return editPost;
     }
 
-    public void createPost()
+    public ForumPost createPost(ResultSet rs) throws SQLException
     {
+	int postId = rs.getInt("post_id");
+	ForumPost forumPost = cache.get(postId);
 
+	return forumPost;
     }
 
     public void createTopic()

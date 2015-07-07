@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class ForumPost
 {
+    private int postId = -1;
     private int userId;
     private int topicId;
     private int groupId;
@@ -11,6 +12,16 @@ public class ForumPost
     private Date date;
     private int editCount;
     private Date lastEditDate;
+
+    public int getPostId()
+    {
+	return postId;
+    }
+
+    public void setPostId(int postId)
+    {
+	this.postId = postId;
+    }
 
     public int getUserId()
     {
