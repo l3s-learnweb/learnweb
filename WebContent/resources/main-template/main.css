@@ -792,8 +792,8 @@ button{
 }
 .buttons{
 	float:right;
-	margin-top:8px;
-	margin-right:6px;
+	/*margin-top:8px;*/
+	margin-right:8px;
 }
 .buttons img{
 	filter:grayscale(100%); /* Current draft standard */
@@ -1049,7 +1049,7 @@ div#presentation_preview {
 	display:block;
 }
 .resource_command_link{text-decoration:none;}
-.resource_commandlink{margin-top:0px;}
+/*.resource_commandlink{margin-top:0px;}*/
 .resource_dialog_field{width:400px;}
 
 .resource_panel {
