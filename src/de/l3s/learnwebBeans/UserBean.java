@@ -500,18 +500,18 @@ public class UserBean implements Serializable
 
     public boolean isShowMessageJoinGroup() throws SQLException
     {
-	if(showMessageJoinGroup) // check until the user has joined a group 
-	{
-	    User user = getUser();
-	    if(null != user)
-		showMessageJoinGroup = getUser().getGroups().size() == 0;
-	}
+	//if(showMessageJoinGroup) // check until the user has joined a group 
+	//{
+	User user = getUser();
+	if(null != user)
+	    showMessageJoinGroup = getUser().getGroups().size() == 0;
+	//}
 	return showMessageJoinGroup;
     }
 
     public boolean isShowMessageAddResource() throws SQLException
     {
-	if(showMessageAddResource != false) // check until the user has added a resource
+	if(showMessageAddResource == null || showMessageAddResource) // check until the user has added a resource
 	{
 	    if(isShowMessageJoinGroup())
 		return false;

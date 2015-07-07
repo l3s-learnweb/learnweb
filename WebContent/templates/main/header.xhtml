@@ -31,14 +31,21 @@
 			      $('.tooltip').tooltipster('hide');
 			   });
 		});
+		<ui:fragment rendered="#{userBean.showMessageJoinGroup}">
+		alert('join group');
+		
+		
+		</ui:fragment>	
+		
     	</script>
-	
+
 		<div id="main_menu_bar" style="background-color: #{userBean.bannerColor}; #{userBean.bannerImage}">			
+		<!--  #{userBean.showMessageAddResource}--> 
 		
 			<img src="#{request.contextPath}/resources/main-template/img/ajax-loader.gif" alt="Loading" id="loadingsymbol"/>
 			<p:ajaxStatus onstart="document.getElementById('loadingsymbol').style.visibility='visible';" onsuccess="document.getElementById('loadingsymbol').style.visibility='hidden';" />			
 		 
-			<form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
+			<form action=" #{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
 				<a href="#{userBean.bannerLink}" id="learnweb_logo">Logo</a>
 				<input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" id="searchfield" />
 				<input type="hidden" name="action" value="#{searchBean.searchMode}" />

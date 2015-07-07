@@ -607,10 +607,6 @@ a:hover{text-decoration:underline;}
 
 h1 { margin-bottom:1rem; }
 h2 { margin-bottom:0.8rem; }
-h5 {
-	font-weight:bold; 
-	font-size:1.5rem;
-}
 
 .grey_border{
 	border:1px solid #ccc;
@@ -664,6 +660,9 @@ h5 {
 .previous_button{
 	background-position:-96px -0px !important;
 }
+
+/*lightbox*/
+#lightbox_container {box-shadow: 0 0 3px 3px #bfbfbf;}
 
 /* change primefaces ui */
 .ui-button,

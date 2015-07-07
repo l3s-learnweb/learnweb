@@ -116,7 +116,7 @@
     z-index:901; 
     box-sizing: border-box;    
 	padding-top:3rem;
-	/*padding-bottom:3rem;*/
+	box-shadow: 0 0 3px 3px #bfbfbf;
 }
 #lightbox_content {
     height:100%;
@@ -132,12 +132,7 @@
 	position:absolute;
 }
 #lightbox_title{top:0;}
-/*#lightbox_url{bottom:0;}
-#lightbox_url a{
-	color:white;
-	text-decoration:none;
-}
-#lightbox_url a:hover{text-decoration:underline;}*/
+
 #lightbox_close {
 	position:absolute;
 	right:1.5rem;
@@ -147,14 +142,6 @@
 	width:24px;
 	height:24px;
 	background:url(../resources/search/icon/cancel-inv.png) center no-repeat;
-	transition: all 2s ease-in 2s; /* explorer 10 */
-    -webkit-transition: all 0.5s ease-in; /* chrome & safari */
-    -moz-transition: all 0.5s ease-in; /* firefox */
-    -o-transition: all 0.5s ease-in; /* opera */
+	
 }
-#lightbox_close:hover{
-	-webkit-box-shadow: 0px 0px 5px 1px rgba(238,238,238,1);
-	-moz-box-shadow: 0px 0px 5px 1px rgba(238,238,238,1);
-	box-shadow: 0px 0px 5px 1px rgba(238,238,238,1);
-	border-radius:15px;
-}
+

@@ -362,7 +362,8 @@ img.smallImage { cursor:pointer; margin:4px; }
     background: #191919; 
     margin:81px 32px 5px 32px; 
     color:white;   
-    z-index:901; 
+    z-index:901;
+    box-shadow: 0 0 3px 3px #bfbfbf; 
 } 
 
 #lightbox_title .title { 

@@ -61,7 +61,7 @@
 }
 
 @media screen and (max-width: 48em){
-	#informationonscreen{
+	#informationonscreen, #message_button{
 		display:none;
 	}
 }
