@@ -80,8 +80,8 @@
 			<div id="filters_menu_bar">
 				<h:panelGroup styleClass="search-filters #{searchBean.searchMode}" layout="block">
 					<ul>
-						<h:panelGroup rendered="#{searchBean.isFilterAvailable('service')}">
-							<li class="#{searchBean.filterService != null ? 'active' : null}">
+						<ui:fragment rendered="#{searchBean.isFilterAvailable('service')}">
+							<li class="filter source#{searchBean.filterService != null ? ' active' : null}">
 								<span class="filter-name">#{searchBean.filterService != null ? searchBean.currentService : msg.source} 
 									<span class="arrow"></span>
 								</span>
@@ -100,9 +100,9 @@
 									</ui:repeat>
 								</div>
 							</li>
-						</h:panelGroup>
-						<h:panelGroup rendered="#{searchBean.isFilterAvailable('date')}">
-							<li class="date #{searchBean.filterDate != null ? 'active' : null}">
+						</ui:fragment>
+						<ui:fragment rendered="#{searchBean.isFilterAvailable('date')}">
+							<li class="filter date#{searchBean.filterDate != null ? ' active' : null}">
 								<span class="filter-name">#{searchBean.filterDate != null ? searchBean.currentDate : msg.date} 
 									<span class="arrow"></span>
 								</span>
@@ -121,9 +121,9 @@
 									</ui:repeat>
 								</div>
 							</li>
-						</h:panelGroup>
-						<h:panelGroup rendered="#{searchBean.isFilterAvailable('size')}">
-							<li class="size #{searchBean.filterSize != null ? 'active' : null}">
+						</ui:fragment>
+						<ui:fragment rendered="#{searchBean.isFilterAvailable('size')}">
+							<li class="filter size#{searchBean.filterSize != null ? ' active' : null}">
 								<span class="filter-name">#{searchBean.filterSize != null ? searchBean.currentSize : msg.size} 
 									<span class="arrow"></span>
 								</span>
@@ -142,7 +142,7 @@
 									</ui:repeat>
 								</div>
 							</li>
-						</h:panelGroup>
+						</ui:fragment>
 					</ul>
 					<h:link value="#{msg.clear_filters}" outcome="search" rendered="#{searchBean.searchFilters != null}" styleClass="clear-filter">
 						<f:param name="action" value="#{searchBean.searchMode}" />

@@ -804,7 +804,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     public String getTotalResultsFrom(String service)
     {
 	Long count = search.getResultsCountAtService(service);
-	if(count == null)
+	if(count == null || count < 0)
 	{
 	    return null;
 	}
