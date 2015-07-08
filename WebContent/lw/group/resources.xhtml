@@ -156,6 +156,9 @@
 
 	
 				<h:panelGroup id="datagrid" layout="block">
+				
+					<h:outputText value="#{msg.no_resources_found}" rendered="#{empty groupDetailBean.resources}"></h:outputText>
+					
 				    <ui:repeat var="result" value="#{groupDetailBean.resources}"> 
 				     
 			  		<h:form styleClass="resource_panel grey_border">

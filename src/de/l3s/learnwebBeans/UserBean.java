@@ -511,17 +511,17 @@ public class UserBean implements Serializable
 
     public boolean isShowMessageAddResource() throws SQLException
     {
-	if(showMessageAddResource == null || showMessageAddResource) // check until the user has added a resource
-	{
-	    if(isShowMessageJoinGroup())
-		return false;
+	//if(showMessageAddResource == null || showMessageAddResource) // check until the user has added a resource
+	//{
+	if(isShowMessageJoinGroup())
+	    return false;
 
-	    User user = getUser();
-	    if(null == user)
-		return false;
+	User user = getUser();
+	if(null == user)
+	    return false;
 
-	    showMessageAddResource = getUser().getResources().size() == 0;
-	}
+	showMessageAddResource = getUser().getResources().size() == 0;
+	//}
 	return showMessageAddResource;
     }
 }

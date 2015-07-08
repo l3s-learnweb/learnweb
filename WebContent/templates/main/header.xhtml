@@ -31,65 +31,111 @@
 			   });
 		});
 		
-		/*
-		class="tooltip1" title="Hier klicken um einer Gruppe beizutreten."
 		<ui:fragment rendered="#{userBean.showMessageJoinGroup}">
-		
 			$(document).ready(function() {
 			
 				   // first on page load, initiate the Tooltipster plugin
-				   $('.tooltip1').tooltipster({
+				   $('#mygroups').tooltipster({
 					   animation: 'grow',
-					   delay: 1000,
+					   delay: 500,
 					   theme: 'tooltipster-default',
 					   touchDevices: false,
-					   trigger: 'hover'
+					   trigger: 'hover',
+					   content:'Hier klicken um einer Gruppe beizutreten.'
 					});
 	
 				   // then immediately show the tooltips
 				   setTimeout(function()
 					{ 
-							   $('.tooltip1').tooltipster('show');
-					}, 1000);
+							   $('#mygroups').tooltipster('show');
+					}, 500);
 				  
 	
 				   // as soon as a key is pressed on the keyboard, hide the tooltip.
 				  $(window).keypress(function() {
-				      $('.tooltip1').tooltipster('hide');
+				      $('#mygroups').tooltipster('hide');
+				   });
+				   
+				  // first on page load, initiate the Tooltipster plugin
+				   $('#create_group_button').tooltipster({
+					   animation: 'grow',
+					   delay: 500,
+					   theme: 'tooltipster-default',
+					   touchDevices: false,
+					   trigger: 'hover',
+					   content:'Hier kannst du deine eigene Gruppe erstellen'
+					});
+	
+				   // then immediately show the tooltips
+				   setTimeout(function()
+					{ 
+							   $('#create_group_button').tooltipster('show');
+					}, 500);
+				  
+	
+				   // as soon as a key is pressed on the keyboard, hide the tooltip.
+				  $(window).keypress(function() {
+				      $('#create_group_button').tooltipster('hide');
 				   });
 			});
-		</ui:fragment>	
+			
+		</ui:fragment>
 		
-		class="tooltip2" title="Hier klicken um Ressourcen hinzufügen."
 		<ui:fragment rendered="#{userBean.showMessageAddResource}">
 		$(document).ready(function() {
 			
 			   // first on page load, initiate the Tooltipster plugin
-			   $('.tooltip2').tooltipster({
+			   $('#myresources').tooltipster({
 				   animation: 'grow',
-				   delay: 1000,
+				   delay: 500,
 				   theme: 'tooltipster-default',
 				   touchDevices: false,
-				   trigger: 'hover'
+				   trigger: 'hover',
+				   content:'Hier klicken um eine Ressource hinzuzufügen.'
 				});
 
 			   // then immediately show the tooltips
 			   setTimeout(function()
 				{ 
-						   $('.tooltip2').tooltipster('show');
-				}, 1000);
+						   $('#myresources').tooltipster('show');
+				}, 500);
 			  
 
 			   // as soon as a key is pressed on the keyboard, hide the tooltip.
 			  $(window).keypress(function() {
-			      $('.tooltip2').tooltipster('hide');
+			      $('#myresources').tooltipster('hide');
 			   });
+			   
+			   // first on page load, initiate the Tooltipster plugin
+			   $('#upload_resources_button').tooltipster({
+				   animation: 'grow',
+				   delay: 500,
+				   theme: 'tooltipster-default',
+				   touchDevices: false,
+				   trigger: 'hover',
+				   content:'Füge Ressourcen hinzu.'
+				});
+
+			   // then immediately show the tooltips
+			   setTimeout(function()
+				{ 
+						   $('#upload_resources_button').tooltipster('show');
+				}, 500);
+			  
+
+			   // as soon as a key is pressed on the keyboard, hide the tooltip.
+			  $(window).keypress(function() {
+			      $('#upload_resources_button').tooltipster('hide');
+			   });
+			   
 		});
-		</ui:fragment>*/	
+		
+		</ui:fragment>
+	
     	</script>
 
 		<div id="main_menu_bar" style="background-color: #{userBean.bannerColor}; #{userBean.bannerImage}">			
-		<!--  #{userBean.showMessageAddResource} #{userBean.showMessageJoinGroup}-->
+		<!--  #{userBean.showMessageAddResource} #{userBean.showMessageJoinGroup} -->
 		
 			<img src="#{request.contextPath}/resources/main-template/img/ajax-loader.gif" alt="Loading" id="loadingsymbol"/>
 			<p:ajaxStatus onstart="document.getElementById('loadingsymbol').style.visibility='visible';" onsuccess="document.getElementById('loadingsymbol').style.visibility='hidden';" />			

@@ -673,7 +673,7 @@ h2 { margin-bottom:0.8rem; }
 }
 .ui-widget {font-size:1.2rem;}
 .ui-widget-content a{text-decoration:none;}
-.ui-widget-content a:hover{text-decoration:underline;}
+/*.ui-widget-content a:hover{text-decoration:underline;}*/
 .ui-corner-all{border-radius:0px;}
 
 span.ui-autocomplete{border:1px solid transparent !important;}
