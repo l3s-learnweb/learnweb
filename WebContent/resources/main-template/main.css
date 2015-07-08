@@ -52,7 +52,10 @@ iframe { border:none }
 	background-size:contain;
 	font-family:"Lato", sans-serif;
 	width:100%;
-	height:4.6rem;	
+	height:4.6rem;
+	
+	/*  just testing: */
+	box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);	
 }
 #searchform {
 	height:100%; 
@@ -663,7 +666,7 @@ h2 { margin-bottom:0.8rem; }
 }
 
 /*lightbox*/
-#lightbox_container {box-shadow: 0 0 3px 3px #bfbfbf;}
+#lightbox_container { box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.8); }
 
 /* change primefaces ui */
 .ui-button,
@@ -1037,6 +1040,7 @@ div#presentation_preview {
 .resource_thumbnail{
 	float:left;
 	margin-top:5px;
+	border: 1px solid #CCC;
 }
 .resource_short_title{
 	font-weight:bold;
@@ -1044,9 +1048,9 @@ div#presentation_preview {
 	white-space:nowrap; 
 	overflow:hidden; 
 	text-overflow:ellipsis; 
-	max-width:185px; 
-	width:185px; 
+	width:178px; 
 	display:block;
+	margin-left: 4px;
 }
 .resource_command_link{text-decoration:none;}
 /*.resource_commandlink{margin-top:0px;}*/
@@ -1062,6 +1066,7 @@ div#presentation_preview {
 	box-sizing:border-box;
 	margin-right:calc(33% - 195px);
 	padding:6px 4px;
+	box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
 }
 
 @media screen  and (max-width:1050px) {

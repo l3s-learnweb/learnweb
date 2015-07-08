@@ -116,7 +116,6 @@
     z-index:901; 
     box-sizing:border-box;    
 	padding-top:3rem;
-	box-shadow:0 0 3px 3px #bfbfbf;
 }
 #lightbox_content {
     height:100%;
