@@ -11,12 +11,11 @@
 		<script type="text/javascript" src="#{request.contextPath}/resources/js/jquery.tooltipster.min.js" />
 		
 		<script>
-
 		$(document).ready(function() {
 
 			   // first on page load, initiate the Tooltipster plugin
 			   $('.tooltip').tooltipster({
-				   animation: 'fall',
+				   animation: 'grow',
 				   delay: 200,
 				   theme: 'tooltipster-default',
 				   touchDevices: false,
@@ -31,16 +30,40 @@
 			      $('.tooltip').tooltipster('hide');
 			   });
 		});
+		
 		<ui:fragment rendered="#{userBean.showMessageJoinGroup}">
-		alert('join group');
 		
 		
+		
+			$(document).ready(function() {
+			
+				   // first on page load, initiate the Tooltipster plugin
+				   $('.tooltip1').tooltipster({
+					   animation: 'grow',
+					   delay: 1000,
+					   theme: 'tooltipster-default',
+					   touchDevices: false,
+					   trigger: 'hover'
+					});
+	
+				   // then immediately show the tooltips
+				   setTimeout(function()
+					{ 
+							   $('.toolti1p').tooltipster('show');
+					}, 1000);
+				  
+	
+				   // as soon as a key is pressed on the keyboard, hide the tooltip.
+				  $(window).keypress(function() {
+				      $('.tooltip1').tooltipster('hide');
+				   });
+			});
 		</ui:fragment>	
 		
     	</script>
 
 		<div id="main_menu_bar" style="background-color: #{userBean.bannerColor}; #{userBean.bannerImage}">			
-		<!--  #{userBean.showMessageAddResource}--> 
+		<!-- #{userBean.showMessageAddResource}--> 
 		
 			<img src="#{request.contextPath}/resources/main-template/img/ajax-loader.gif" alt="Loading" id="loadingsymbol"/>
 			<p:ajaxStatus onstart="document.getElementById('loadingsymbol').style.visibility='visible';" onsuccess="document.getElementById('loadingsymbol').style.visibility='hidden';" />			
@@ -59,7 +82,7 @@
 						</a>
 					</li>
 					<li>
-						<a href="#{request.contextPath}/lw/myhome/groups.jsf" id="mygroups">
+						<a href="#{request.contextPath}/lw/myhome/groups.jsf" id="mygroups" class="tooltip1" title="Hier klicken um einer Gruppe beizutreten.">
 							<h:outputText value="#{msg.groupOverview}" />
 						</a>
 					</li>

@@ -110,13 +110,13 @@
 } 
 #lightbox_container {
 	position:relative; 
-    background: #191919; 
+    background:#191919; 
     margin:81px 8% 5px 8%; 
     color:white;   
     z-index:901; 
-    box-sizing: border-box;    
+    box-sizing:border-box;    
 	padding-top:3rem;
-	box-shadow: 0 0 3px 3px #bfbfbf;
+	box-shadow:0 0 3px 3px #bfbfbf;
 }
 #lightbox_content {
     height:100%;
