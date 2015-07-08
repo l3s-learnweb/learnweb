@@ -31,8 +31,6 @@
 			   });
 		});
 		
-		/*
-		class="tooltip1" title="Hier klicken um einer Gruppe beizutreten."
 		<ui:fragment rendered="#{userBean.showMessageJoinGroup}">
 		
 			$(document).ready(function() {
@@ -60,7 +58,6 @@
 			});
 		</ui:fragment>	
 		
-		class="tooltip2" title="Hier klicken um Ressourcen hinzufügen."
 		<ui:fragment rendered="#{userBean.showMessageAddResource}">
 		$(document).ready(function() {
 			
@@ -85,7 +82,7 @@
 			      $('.tooltip2').tooltipster('hide');
 			   });
 		});
-		</ui:fragment>*/	
+		</ui:fragment>	
     	</script>
 
 		<div id="main_menu_bar" style="background-color: #{userBean.bannerColor}; #{userBean.bannerImage}">			
@@ -103,12 +100,12 @@
 			<div class="userbar">
 				<ul>
 					<li>
-						<a href="#{request.contextPath}/lw/myhome/resources.jsf" id="myresources">
+						<a href="#{request.contextPath}/lw/myhome/resources.jsf" id="myresources" class="tooltip2" title="Hier klicken um Ressourcen hinzufügen.">
 							<h:outputText value="#{msg.myResourcesTitle}" />
 						</a>
 					</li>
 					<li>
-						<a href="#{request.contextPath}/lw/myhome/groups.jsf" id="mygroups">
+						<a href="#{request.contextPath}/lw/myhome/groups.jsf" id="mygroups" class="tooltip1" title="Hier klicken um einer Gruppe beizutreten.">
 							<h:outputText value="#{msg.groupOverview}" />
 						</a>
 					</li>

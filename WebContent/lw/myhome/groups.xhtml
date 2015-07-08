@@ -154,8 +154,10 @@
 						<h:outputText value="#{group.course.title}" />						
 					</p:column>
 					
-					<p:column headerText="#{msg.options}" styleClass="nowrap align-center" width="70">	
-							
+					<p:column styleClass="nowrap align-center" width="70">	
+							<f:facet name="header">
+								<h:outputText value="#{msg.options}"/> <!-- class="tooltip1" title="Hier kannst du einer Gruppe beitreten." -->
+							</f:facet>
 						<p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :group_menu :my_groups"  process="@this" styleClass="optionIcon" title="#{msg.join}">
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 							<h:graphicImage value="/resources/icon/silk/group_add.png" width="16" height="16" alt="#{msg.join}" />
