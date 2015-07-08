@@ -731,14 +731,40 @@ public class SearchBean extends ApplicationBean implements Serializable
 	return true;
     }
 
-    public boolean isServiceAvailable(String service)
+    public List<SERVICE> getAvailiableServices()
     {
-	if(filterDate != null && !(service.equals(SERVICE.Flickr.name()) || service.equals(SERVICE.Ipernity.name()) || service.equals(SERVICE.YouTube.name())))
+	if(searchMode.equals(MODE.web))
 	{
-	    return false;
+	    return Arrays.asList(SERVICE.Bing, SERVICE.Loro, SERVICE.LearnWeb);
+	}
+	else if(searchMode.equals(MODE.image))
+	{
+	    if(filterDate != null)
+	    {
+		return Arrays.asList(SERVICE.Flickr, SERVICE.Ipernity);
+	    }
+	    return Arrays.asList(SERVICE.Bing, SERVICE.Flickr, SERVICE.Ipernity, SERVICE.Loro, SERVICE.LearnWeb);
+	}
+	else if(searchMode.equals(MODE.video))
+	{
+	    if(filterDate != null)
+	    {
+		return Arrays.asList(SERVICE.YouTube);
+	    }
+	    return Arrays.asList(SERVICE.YouTube, SERVICE.Vimeo, SERVICE.TED, SERVICE.TEDx, SERVICE.Yovisto, SERVICE.Loro, SERVICE.LearnWeb);
 	}
 
-	return true;
+	return null;
+    }
+
+    public List<SIZE> getAvailiableSizes()
+    {
+	return Arrays.asList(SIZE.values());
+    }
+
+    public List<DATE> getAvailiableDates()
+    {
+	return Arrays.asList(DATE.values());
     }
 
     public String generateFiltersLink(String param, String value)
