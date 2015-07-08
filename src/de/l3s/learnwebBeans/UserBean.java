@@ -47,6 +47,9 @@ public class UserBean implements Serializable
 
     private List<Group> newGroups = null;
 
+    private boolean cacheShowMessageJoinGroup = true;
+    private boolean cacheShowMessageAddResource = true;
+
     public UserBean()
     {
 	locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
@@ -106,6 +109,8 @@ public class UserBean implements Serializable
 	userCache = null;
 	activeCourseId = 0;
 	activeCourseCache = null;
+	cacheShowMessageJoinGroup = true;
+	cacheShowMessageAddResource = true;
 
 	// store the user also in the session so that it is accessible in the download servlet
 	HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
@@ -495,33 +500,40 @@ public class UserBean implements Serializable
 	return model;
     }
 
-    private boolean showMessageJoinGroup = true;
-    private Boolean showMessageAddResource = null;
-
     public boolean isShowMessageJoinGroup() throws SQLException
     {
-	//if(showMessageJoinGroup) // check until the user has joined a group 
-	//{
-	User user = getUser();
-	if(null != user)
-	    showMessageJoinGroup = getUser().getGroups().size() == 0;
-	//}
-	return showMessageJoinGroup;
+	if(cacheShowMessageJoinGroup) // check until the user has joined a group 
+	{
+	    User user = getUser();
+	    if(null == user)
+		return false;
+	    cacheShowMessageJoinGroup = getUser().getGroups().size() == 0;
+	}
+	return cacheShowMessageJoinGroup;
+    }
+
+    public boolean isShowMessageJoinGroupInHeader() throws SQLException
+    {
+	String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
+	if(viewId.contains("groups.xhtml"))
+	    return false;
+
+	return isShowMessageJoinGroup();
     }
 
     public boolean isShowMessageAddResource() throws SQLException
     {
-	//if(showMessageAddResource == null || showMessageAddResource) // check until the user has added a resource
-	//{
-	if(isShowMessageJoinGroup())
-	    return false;
+	if(cacheShowMessageAddResource) // check until the user has added a resource
+	{
+	    if(isShowMessageJoinGroup())
+		return false;
 
-	User user = getUser();
-	if(null == user)
-	    return false;
+	    User user = getUser();
+	    if(null == user)
+		return false;
 
-	showMessageAddResource = getUser().getResources().size() == 0;
-	//}
-	return showMessageAddResource;
+	    cacheShowMessageAddResource = getUser().getResources().size() == 0;
+	}
+	return cacheShowMessageAddResource;
     }
 }

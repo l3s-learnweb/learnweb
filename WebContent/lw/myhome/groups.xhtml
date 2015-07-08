@@ -11,7 +11,7 @@
 	<ui:define name="right_layout">
 	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;" id="right_pane">
 		<h:panelGroup style= "left: 5%; position:relative;">
-			<h:form id="addgroupform" style="width: 90%;">
+			<h:form id="addgroupform" style="width: 90%;" prependId="false">
 				
 				<div class="page_header">
 					<span>
@@ -65,7 +65,7 @@
 					</h:panelGrid>
 				 </p:fieldset>
 				<br/>
-				<p:commandButton id="create_group_button" ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" styleClass="greenbutton" process="@form" update="@form :my_groups :growl :group_menu" />
+				<p:commandButton  id="create_group_button" ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" styleClass="greenbutton" process="@form" update="@form :my_groups :growl :group_menu" />
 				
 			</h:form>
 		</h:panelGroup>
