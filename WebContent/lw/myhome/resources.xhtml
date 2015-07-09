@@ -16,7 +16,7 @@
 			<br></br>
 
 			<h:form  id="center_header_form">
-				<p:commandButton id="upload_resources_button" styleClass="resource_button greenbutton" value="#{msg.upload_resource}" update=":add_resource_panel" oncomplete="update_header()">
+				<p:commandButton styleClass="resource_button greenbutton" value="#{msg.upload_resource}" update=":add_resource_panel" oncomplete="update_header()">
 					<f:setPropertyActionListener target="#{myResourcesBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
 				</p:commandButton>
 			</h:form>
@@ -71,7 +71,7 @@
        
 			<h:panelGroup layout="block" id="datagrid">  
 			
-				<h:outputText value="#{msg.no_resources_found}" rendered="#{empty myResourcesBean.resources}"></h:outputText>
+				<h:outputText value="#{msg.no_resources_found}" rendered="#{empty myResourcesBean.resources}" class="nothing_found"></h:outputText>
 				
 		       <ui:repeat var="result" value="#{myResourcesBean.resources}" >
 		       
@@ -98,7 +98,7 @@
 										</p:commandLink>
 				            			 -->
 				            			<p:commandLink oncomplete="PF('resource_link_dialog').show();" title="#{msg.link_to}" rendered="#{userBean.isModerator() or true}" styleClass="buttons_link resource_commandlink">
-											<h:graphicImage alt="Add" value="/resources/icon/Add_blue.png" title="#{msg.link_to}" /> 
+											<h:graphicImage alt="Add" value="/resources/icon/Add_blue.png" title="#{msg.link_to}" id="add"/> 
 											<f:setPropertyActionListener value="#{result}" target="#{myResourcesBean.clickedResource}" />
 										</p:commandLink>
 										 

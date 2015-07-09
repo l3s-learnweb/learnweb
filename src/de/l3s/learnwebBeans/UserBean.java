@@ -514,6 +514,15 @@ public class UserBean implements Serializable
 	return isShowMessageJoinGroup();
     }
 
+    public boolean isShowMessageAddResourceInHeader() throws SQLException
+    {
+	String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
+	if(viewId.contains("overview.xhtml") || viewId.contains("resources.xhtml") || viewId.contains("activity.xhtml"))
+	    return false;
+
+	return isShowMessageAddResource();
+    }
+
     public boolean isShowMessageAddResource() throws SQLException
     {
 	if(cacheShowMessageAddResource) // check until the user has added a resource

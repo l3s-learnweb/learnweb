@@ -552,7 +552,12 @@ form#center_header_form { float:right; }
 	position:relative;
 	top:-3px;
 	right:-5px;
-	border-radius:2px !important;
+}
+
+.nothing_found{
+	font-size:1.5rem;
+	font-weight:bold;
+	padding-left:1rem;
 }
 
 /* general settings */

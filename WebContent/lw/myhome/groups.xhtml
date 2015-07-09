@@ -47,8 +47,6 @@
 						<p:inputText id="new_language" value="#{groupsBean.newGroup.language}" style="width:20rem"/>
 						<p:message for="new_language" showSummary="true" showDetail="false"/>
 						
-						<h:outputText value="" />
-			
 					</h:panelGrid>	
 						<br/>
 						
@@ -154,8 +152,12 @@
 						<h:outputText value="#{group.course.title}" />						
 					</p:column>
 					
-					<p:column headerText="#{msg.options}" styleClass="nowrap align-center" width="70">	
-							
+					<p:column styleClass="nowrap align-center" width="70">	
+						<f:facet name="header">
+								<span id="option_join_group">
+									#{msg.options}
+								</span>
+						</f:facet>	
 						<p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :group_menu :my_groups"  process="@this" styleClass="optionIcon" title="#{msg.join}">
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 							<h:graphicImage value="/resources/icon/silk/group_add.png" width="16" height="16" alt="#{msg.join}" />
