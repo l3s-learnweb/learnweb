@@ -482,21 +482,14 @@ public class UserBean implements Serializable
 	for(Course course : getUser().getCourses())
 	{
 	    DefaultMenuItem item = new DefaultMenuItem(course.getTitle());
-	    //item.setIcon("ui-icon-disk");
 	    item.setCommand("#{userBean.onCourseChange(" + course.getId() + ")}");
 	    item.setAjax(false);
 
 	    firstSubmenu.addElement(item);
-	    System.out.println(course.getTitle());
 	}
 
 	model.addElement(firstSubmenu);
 
-	/*
-		secondSubmenu.addElement(item);
-
-		model.addElement(secondSubmenu);
-	*/
 	return model;
     }
 
