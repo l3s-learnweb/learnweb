@@ -268,7 +268,7 @@
 								</td>
 							</tr>
 						</ui:fragment>
-						<ui:fragment rendered="#{resourceDetailBean.clickedResource.source == 'TED'}">
+						<ui:fragment rendered="#{resourceDetailBean.clickedResource.source == 'TED' or resourceDetailBean.clickedResource.source == 'TEDx'}">
 							<tr>
 								<td style="padding-top:5px">
 									<span class="resource_field">#{msg.transcript}:</span>

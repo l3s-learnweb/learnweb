@@ -26,6 +26,7 @@ jboss-logging-3.1.0.CR2.jar			Hibernate validator
 jersey-bundle-1.14.jar				Interweb
 jersey-multipart-1.14.jar			Interweb
 json-simple-1.1.1.jar				Archive, generating json data for timeline and calendar representation
+org.json.jar						TEDx transcript, generating JSON from XML String
 jsoup-1.7.1.jar						Resource, remove Html from String
 log4j-1.2.17.jar					Logging
 mail-1.4.4.jar						Interweb (Jersey), Creating google docs

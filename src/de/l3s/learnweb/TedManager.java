@@ -10,8 +10,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
+import javax.ws.rs.core.MediaType;
+
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 
 import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.interwebj.SearchQuery;
@@ -51,16 +61,16 @@ public class TedManager
 
     }
 
-    public List<Transcript> getTransscripts(int tedId) throws SQLException
+    public List<Transcript> getTransscripts(int resourceId) throws SQLException
     {
 	List<Transcript> transcripts = new ArrayList<Transcript>();
-	String selectTranscripts = "SELECT language_code FROM ted_transcripts WHERE ted_id = ?";
-	String selectTranscriptParagraphs = "SELECT starttime, paragraph FROM ted_transcripts_paragraphs WHERE ted_id = ? AND language = ?";
+	String selectTranscripts = "SELECT language_code FROM ted_transcripts WHERE resource_id = ?";
+	String selectTranscriptParagraphs = "SELECT starttime, paragraph FROM ted_transcripts_paragraphs WHERE resource_id = ? AND language = ?";
 
 	PreparedStatement ipStmt = Learnweb.getInstance().getConnection().prepareStatement(selectTranscriptParagraphs);
 
 	PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement(selectTranscripts);
-	pStmt.setInt(1, tedId);
+	pStmt.setInt(1, resourceId);
 	ResultSet rs = pStmt.executeQuery(), rsParagraphs;
 	while(rs.next())
 	{
@@ -69,7 +79,7 @@ public class TedManager
 	    transcript.setLanguageCode(languageCode);
 	    transcript.setParagraphs(new ArrayList<Transcript.Paragraph>());
 
-	    ipStmt.setInt(1, tedId);
+	    ipStmt.setInt(1, resourceId);
 	    ipStmt.setString(2, languageCode);
 	    ipStmt.executeQuery();
 
@@ -105,12 +115,12 @@ public class TedManager
 	return tedId;
     }
 
-    public Map<String, String> getLangList(int tedId) throws SQLException
+    public Map<String, String> getLangList(int resourceId) throws SQLException
     {
 	String langFromPropFile;
 	Map<String, String> langList = new HashMap<String, String>();
-	PreparedStatement getLangList = learnweb.getConnection().prepareStatement("SELECT language_code, language FROM ted_transcripts WHERE ted_id=?");
-	getLangList.setInt(1, tedId);
+	PreparedStatement getLangList = learnweb.getConnection().prepareStatement("SELECT language_code, language FROM ted_transcripts WHERE resource_id=?");
+	getLangList.setInt(1, resourceId);
 	ResultSet rs = getLangList.executeQuery();
 
 	while(rs.next())
@@ -126,13 +136,13 @@ public class TedManager
 	return langList;
     }
 
-    public String getTranscript(int tedId, String language) throws SQLException
+    public String getTranscript(int resourceId, String language) throws SQLException
     {
-	String selectTranscript = "SELECT `starttime`, `paragraph` FROM ted_transcripts_paragraphs where ted_id = ? AND `language` = ?";
+	String selectTranscript = "SELECT `starttime`, `paragraph` FROM ted_transcripts_paragraphs where resource_id = ? AND `language` = ?";
 	String transcript = "";
 
 	PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement(selectTranscript);
-	pStmt.setInt(1, tedId);
+	pStmt.setInt(1, resourceId);
 	pStmt.setString(2, language);
 	pStmt.executeQuery();
 
@@ -177,7 +187,7 @@ public class TedManager
 
 	PreparedStatement update = Learnweb.getInstance().getConnection().prepareStatement("UPDATE ted_video SET resource_id = ? WHERE ted_id = ?");
 
-	PreparedStatement getTedVideos = Learnweb.getInstance().getConnection().prepareStatement("SELECT ted_id, title, description, slug, photo2_url, duration, resource_id FROM ted_video ");
+	PreparedStatement getTedVideos = Learnweb.getInstance().getConnection().prepareStatement("SELECT ted_id, title, description, slug, photo2_url, duration, resource_id, published_at FROM ted_video");
 	getTedVideos.executeQuery();
 
 	ResultSet rs = getTedVideos.getResultSet();
@@ -207,6 +217,13 @@ public class TedManager
 
 		solr.indexResource(tedVideo);
 
+	    }
+	    else if(tedVideo.getOwnerUserId() == 0)
+	    {
+		rpm.processImage(tedVideo, FileInspector.openStream(tedVideo.getMaxImageUrl()));
+		admin.addResource(tedVideo);
+		tedGroup.addResource(tedVideo, admin);
+		solr.indexResource(tedVideo);
 	    }
 	    else
 		tedVideo.save();
@@ -249,10 +266,9 @@ public class TedManager
 	resource.setDuration(rs.getInt("duration"));
 	resource.setMaxImageUrl(rs.getString("photo2_url"));
 	resource.setIdAtService(Integer.toString(rs.getInt("ted_id")));
-
+	resource.setCreationDate(rs.getTimestamp("published_at"));
 	resource.setEmbeddedRaw("<iframe src=\"http://embed.ted.com/talks/" + rs.getString("slug") + ".html\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>");
 	resource.setTranscript("");
-
 	return resource;
     }
 
@@ -330,7 +346,7 @@ public class TedManager
 		}
 
 		// TODO check if new transcripts are available for "resource" variable
-
+		fetchTedXTranscripts(resource.getIdAtService(), resource.getId());
 	    }
 
 	    page++;
@@ -340,10 +356,115 @@ public class TedManager
 	while(resources.size() > 0 && page < 6);
     }
 
+    public void insertTedXTranscripts(String resourceIdAtService, int resourceId, JSONObject transcriptItem) throws JSONException, SQLException
+    {
+	String langCode = transcriptItem.getString("lang_code");
+	String langName = transcriptItem.getString("lang_translated");
+
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM `ted_transcripts` WHERE `resource_id` = ? AND `language_code` = ?");
+	select.setInt(1, resourceId);
+	select.setString(2, langCode);
+	ResultSet rs = select.executeQuery();
+	if(rs.next())
+	{
+	    log.info("Transcript :" + langCode + " for Ted video: " + resourceId + " already inserted.");
+	    return; // transcript is already part of the database
+	}
+
+	ClientResponse resp = getTedxData("http://video.google.com/timedtext?lang=" + langCode + "&v=", resourceIdAtService);
+	if(resp.getStatus() != 200 || resp.getLength() == 0)
+	{
+	    log.info("Transcript :" + langCode + " for resource ID: " + resourceIdAtService + " does not exist.");
+	    return; //no transcript available for this language code
+	}
+
+	JSONObject transcriptJSON = XML.toJSONObject(resp.getEntity(String.class));
+
+	String dbStmt = "REPLACE INTO `ted_transcripts`(`resource_id`, `language_code`, `language`, `json`) VALUES (?,?,?,?)";
+	PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement(dbStmt);
+	pStmt2.setInt(1, resourceId);
+	pStmt2.setString(2, langCode);
+	pStmt2.setString(3, langName);
+	pStmt2.setString(4, transcriptJSON.toString());
+	pStmt2.executeUpdate();
+	pStmt2.close();
+
+	dbStmt = "REPLACE INTO `ted_transcripts_paragraphs`(`resource_id`, `language`, `starttime`, `paragraph`) VALUES (?,?,?,?)";
+	PreparedStatement pStmt3 = Learnweb.getInstance().getConnection().prepareStatement(dbStmt);
+	pStmt3.setInt(1, resourceId);
+	pStmt3.setString(2, langCode);
+
+	JSONObject transcript = transcriptJSON.getJSONObject("transcript");
+	JSONArray text = transcript.getJSONArray("text");
+	for(int j = 0; j < text.length(); j++)
+	{
+	    JSONObject contentObject = text.getJSONObject(j);
+	    String paragraph = contentObject.getString("content").replace("\n", " ");
+	    double startTime = contentObject.getDouble("start");
+	    int startTimeInt = (int) (startTime * 1000);
+
+	    pStmt3.setInt(3, startTimeInt);
+	    pStmt3.setString(4, paragraph);
+	    pStmt3.addBatch();
+	}
+	pStmt3.executeBatch();
+	pStmt3.close();
+    }
+
+    public void fetchTedXTranscripts(String resourceIdAtService, int resourceId) throws SQLException
+    {
+	ClientResponse resp = getTedxData("http://video.google.com/timedtext?type=list&v=", resourceIdAtService);
+
+	if(resp.getStatus() != 200)
+	{
+	    log.error("Failed to get list of transcripts for video: " + resourceIdAtService + "and HTTP error code : " + resp.getStatus());
+	    return;
+	}
+
+	String response = resp.getEntity(String.class);
+
+	try
+	{
+	    JSONObject xmlJSONObj = XML.toJSONObject(response);
+	    JSONObject transcriptList = xmlJSONObj.getJSONObject("transcript_list");
+	    Object track = transcriptList.get("track");
+	    JSONArray trackJSONArray = null;
+
+	    if(track instanceof JSONArray)
+	    {
+		trackJSONArray = (JSONArray) track;
+		for(int i = 0; i < trackJSONArray.length(); i++)
+		{
+		    insertTedXTranscripts(resourceIdAtService, resourceId, trackJSONArray.getJSONObject(i));
+		}
+	    }
+	    else
+	    {
+		insertTedXTranscripts(resourceIdAtService, resourceId, (JSONObject) track);
+
+	    }
+	}
+	catch(JSONException je)
+	{
+	    log.error(je.toString());
+	}
+
+    }
+
+    public ClientResponse getTedxData(String url, String videoId)
+    {
+	Client tedxClient = Client.create();
+	WebResource web = tedxClient.resource(url + videoId);
+
+	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+
+	return resp;
+    }
+
     public static void main(String[] args) throws Exception
     {
 
 	TedManager tm = Learnweb.getInstance().getTedManager();
-	tm.fetchTedX(); //saveTedResource();
+	tm.fetchTedX(); //saveTedResource(); 
     }
 }

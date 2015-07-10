@@ -34,9 +34,6 @@ import de.l3s.learnweb.beans.UtilBean;
 public class TedTranscriptBean extends ApplicationBean implements Serializable
 {
     private final static Logger log = Logger.getLogger(TedTranscriptBean.class);
-    /**
-     * 
-     */
     private static final long serialVersionUID = -1803725556672379697L;
     //private static ILexicalDatabase db = new NictWordNet();
     //private static HashMap<String, RelatednessCalculator> rcs = new HashMap<String, RelatednessCalculator>();
@@ -83,21 +80,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     public void setTedResource(Resource tedResource)
     {
 	this.tedResource = tedResource;
-	if(tedResource.getIdAtService() == null || tedResource.getIdAtService().equals(""))
-	{
-	    try
-	    {
-		tedId = Learnweb.getInstance().getTedManager().getTedId(tedResource.getUrl());
-	    }
-	    catch(SQLException e)
-	    {
-		addFatalMessage(e);
-		log.fatal(e);
-	    }
-	}
-	else
-	    tedId = Integer.parseInt(tedResource.getIdAtService());
-
+	if(tedResource.getSource().equalsIgnoreCase("TEDx"))
+	    //this.tedResource.setEmbeddedRaw("<iframe width='100%' height='100%' src='https://www.youtube.com/embed/" + tedResource.getIdAtService() + "' frameborder='0' scrolling='no' webkitAllowFullScreen mozallowfullscreen allowfullscreen></iframe>");
+	    this.tedResource.setEmbeddedRaw(tedResource.getEmbeddedRaw().replace("width=\"500\" height=\"400\"", "width='100%' height='100%'"));
 	String transcript = tedResource.getTranscript();
 	noteId = 0;
 	if(transcript != null && transcript != "")
@@ -124,8 +109,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
 	try
 	{
-	    //String transcript = sparqlClient.search(tedResource.getTitle(), transcriptLanguage);
-	    String transcript = Learnweb.getInstance().getTedManager().getTranscript(tedId, transcriptLanguage);
+	    String transcript = Learnweb.getInstance().getTedManager().getTranscript(tedResource.getId(), transcriptLanguage);
 	    String regex = "\n";
 	    Pattern pattern = Pattern.compile(regex);
 	    Matcher matcher = pattern.matcher(transcript);
@@ -174,7 +158,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
 	    TranscriptLog transcriptLog = new TranscriptLog(UtilBean.getUserBean().getActiveCourse().getId(), getUser().getId(), tedResource.getId(), word, userAnnotation, action, actionTimestamp);
 	    getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
-	    //getLearnweb().getSearchlogClient().saveTranscriptLog(8638, getUser().getId(), tedResource.getId(), word, userAnnotation, action, dateToTimestamp.format(actionTimestamp));
 	}
 	catch(Exception e)
 	{
@@ -308,14 +291,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	    {
 		Map<String, String> langList;
 		languageList = new LinkedList<SelectItem>();
-		if(tedResource.getIdAtService() != null)
-		{
-		    langList = Learnweb.getInstance().getTedManager().getLangList(Integer.parseInt(tedResource.getIdAtService()));
-		}
-		else
-		{
-		    langList = Learnweb.getInstance().getTedManager().getLangList(tedId);
-		}
+		langList = Learnweb.getInstance().getTedManager().getLangList(tedResource.getId());
 
 		if(!langList.isEmpty())
 		{
