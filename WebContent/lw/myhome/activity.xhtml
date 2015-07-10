@@ -15,7 +15,7 @@
 		
 		<ui:define name="center_layout">
 			<h:form id="center_header_form">
-				<p:commandButton styleClass="resource_button greenbutton" update=":add_resource_panel" value="#{msg.upload_resource}" oncomplete="update_header()">
+				<p:commandButton styleClass="resource_button greenbutton ressourcetoolbutton" update=":add_resource_panel" value="#{msg.upload_resource}" oncomplete="update_header()">
 					<f:setPropertyActionListener target="#{activityResourceBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
 				</p:commandButton>
 			</h:form>
