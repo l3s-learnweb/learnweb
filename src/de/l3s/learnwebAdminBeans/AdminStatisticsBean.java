@@ -18,10 +18,10 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
 import de.l3s.learnweb.Comment;
-import de.l3s.learnweb.JForumManager;
-import de.l3s.learnweb.JForumManager.ForumStatistic;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.GroupManager;
+import de.l3s.learnweb.JForumManager;
+import de.l3s.learnweb.JForumManager.ForumStatistic;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.OwnerList;
 import de.l3s.learnweb.Resource;
@@ -97,8 +97,10 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 	    String query = "SELECT g.title, g.forum_id, COUNT(r.resource_id) AS resources, IFNULL(SUM(rate_number), 0) AS ratings, "
 		    + "(SELECT count(*) FROM lw_group_resource gr JOIN lw_resource ir ON gr.resource_id = ir.resource_id AND ir.deleted=0 JOIN lw_thumb c ON c.resource_id=ir.resource_id WHERE gr.group_id = g.group_id) as thumb_ratings, "
 		    + "(SELECT count(*) FROM lw_group_resource gr JOIN lw_resource ir ON gr.resource_id = ir.resource_id AND ir.deleted=0 JOIN lw_comment c ON c.resource_id=ir.resource_id WHERE gr.group_id = g.group_id) as comments, "
-		    + "(SELECT count(*) FROM lw_group_resource gr JOIN lw_resource ir ON gr.resource_id = ir.resource_id AND ir.deleted=0 JOIN lw_resource_tag t ON t.resource_id=ir.resource_id WHERE gr.group_id = g.group_id) as tags " + "FROM `lw_group` g "
-		    + "LEFT JOIN lw_group_resource ogr USING(group_id) " + "LEFT JOIN lw_resource r ON r.resource_id=ogr.resource_id AND r.deleted=0 " + "WHERE group_id IN(" + StringHelper.implodeInt(selectedGroups, ",") + ") " + "GROUP BY group_id";
+		    + "(SELECT count(*) FROM lw_group_resource gr JOIN lw_resource ir ON gr.resource_id = ir.resource_id AND ir.deleted=0 JOIN lw_resource_tag t ON t.resource_id=ir.resource_id WHERE gr.group_id = g.group_id) as tags, "
+		    + "(SELECT count(*) FROM lw_group_resource gr JOIN lw_resource ir ON gr.resource_id = ir.resource_id AND ir.deleted=0 JOIN lw_resource_archiveurl t ON t.resource_id=ir.resource_id WHERE gr.group_id = g.group_id) as no_of_archived_versions, "
+		    + "(SELECT count(distinct(t.resource_id)) FROM lw_group_resource gr JOIN lw_resource ir ON gr.resource_id = ir.resource_id AND ir.deleted=0 JOIN lw_resource_archiveurl t ON t.resource_id=ir.resource_id WHERE gr.group_id = g.group_id) as no_of_archived_resources "
+		    + "FROM `lw_group` g " + "LEFT JOIN lw_group_resource ogr USING(group_id) " + "LEFT JOIN lw_resource r ON r.resource_id=ogr.resource_id AND r.deleted=0 " + "WHERE group_id IN(" + StringHelper.implodeInt(selectedGroups, ",") + ") " + "GROUP BY group_id";
 	    System.out.println(StringHelper.implodeInt(selectedGroups, ","));
 
 	    ResultSet rs = Learnweb.getInstance().getConnection().createStatement().executeQuery(query);
@@ -115,6 +117,8 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 		result.put("thumb_ratings", rs.getString("thumb_ratings"));
 		result.put("comments", rs.getString("comments"));
 		result.put("tags", rs.getString("tags"));
+		result.put("no_of_archived_versions", rs.getString("no_of_archived_versions"));
+		result.put("no_of_archived_resources", rs.getString("no_of_archived_resources"));
 
 		ForumStatistic forumStatistics = forumManager.getForumStatistics(rs.getInt("forum_id"));
 
