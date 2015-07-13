@@ -95,7 +95,8 @@ public class ForumManager
     public ForumTopic saveTopic(ForumTopic forumTopic) throws SQLException
     {
 	// TODO use static columns var (see user manager)
-	String sqlQuery = "Insert into forum_topic(topic_title,group_id) values (?,?) ";
+
+	String sqlQuery = "replace into forum_topic(topic_title,group_id) values (?,?) ";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
 	ps.setString(1, forumTopic.getTopic());
 	ps.setInt(2, forumTopic.getGroupId());
@@ -108,7 +109,7 @@ public class ForumManager
 
     public ForumPost saveForumPost(ForumPost forumPost) throws SQLException
     {
-	String sqlQuery = "Insert into forum_post(text, topic_id, group_id, user_id) values (?,?,?,?) ";
+	String sqlQuery = "replace into forum_post(text, topic_id, group_id, user_id) values (?,?,?,?) ";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
 	ps.setString(1, forumPost.getText());
 	ps.setInt(2, forumPost.getTopicId());
@@ -122,41 +123,15 @@ public class ForumManager
      * increment topic view counter
      * 
      * @param topicId
-     * 
-     * 
-     *            public void incTopicViews(int topicId)
-     *            {
-     *            int readCount = getReadStatus() + 1;
-     *            String sqlQuery = "UPDATE forum_topic WHERE "
-     * 
-     * 
-     *            }
-     * 
-     *            private int getReadStatus()
-     *            {
-     *            // TODO Auto-generated method stub
-     *            return 0;
-     *            }
-     */
-
-    /**
-     * 
-     * @param postId
-     * @param text new text
-     * @param user the user who changed the text
-     * @return
      * @throws SQLException
+     * 
      */
-
-    public ForumPost editForumPost(int postId, String text, User user) throws SQLException
+    public void incTopicViews(int topicId) throws SQLException
     {
-	// ResultSet editPost = getForumPost(postId);
-
-	String sqlQuery = "Update forum_post set text = text Where postId = postId AND user_id = userId"; //increase change counter set user who changed the post
+	String sqlQuery = "UPDATE forum_topic SET topic_views = topic_views +1 WHERE topic_id = ?";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
-	int status = ps.executeUpdate();
-
-	return null;
+	ps.setInt(1, topicId);
+	ps.executeUpdate();
     }
 
     // don't return a resultset return a ForumPost object; write a createPost and createTopic method (you will need it multiple times).
