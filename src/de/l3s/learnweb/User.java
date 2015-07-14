@@ -215,6 +215,11 @@ public class User implements Comparable<User>, Serializable, HasId
 	return resources;
     }
 
+    public int getResourceCount() throws SQLException
+    {
+	return Learnweb.getInstance().getResourceManager().getResourceCountByUserId(this.getId());
+    }
+
     public List<Resource> getRatedResources() throws SQLException
     {
 	return Learnweb.getInstance().getResourceManager().getRatedResourcesByUserId(this.getId());
@@ -318,6 +323,16 @@ public class User implements Comparable<User>, Serializable, HasId
 	    groupsCacheTime = System.currentTimeMillis();
 	}
 	return groups;
+    }
+
+    /**
+     * 
+     * @return number of groups this user is member of
+     * @throws SQLException
+     */
+    public int getGroupCount() throws SQLException
+    {
+	return Learnweb.getInstance().getGroupManager().getGroupCountByUserId(id);
     }
 
     /**

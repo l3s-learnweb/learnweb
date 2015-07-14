@@ -23,6 +23,7 @@ import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
 import de.l3s.util.Image;
+import de.l3s.util.Sql;
 import de.l3s.util.StringHelper;
 
 public class ResourceManager
@@ -54,18 +55,16 @@ public class ResourceManager
 	this.pageSize = Integer.parseInt(properties.getProperty("RESOURCES_PAGE_SIZE"));
     }
 
-    /**
-     * @see de.l3s.learnweb.ResourceManager#getResourcesByUserId(int)
-     */
+    public int getResourceCountByUserId(int userId) throws SQLException
+    {
+	Long count = (Long) Sql.getSingleResult("SELECT COUNT(*) FROM lw_resource r WHERE owner_user_id = " + userId + " AND deleted = 0");
+	return count.intValue();
+    }
 
     public List<Resource> getResourcesByUserId(int userId) throws SQLException
     {
-	return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE owner_user_id = ? AND deleted = 0", null, userId);
+	return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE owner_user_id = ? AND deleted = 0 limit 250", null, userId); // TODO implement paging remove limit
     }
-
-    /**
-     * @see de.l3s.learnweb.ResourceManager#getResourcesByTagId(int)
-     */
 
     public List<Resource> getResourcesByTagId(int tagId) throws SQLException
     {

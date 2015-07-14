@@ -12,6 +12,7 @@ import java.util.Properties;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
+import de.l3s.util.Sql;
 
 /**
  * DAO for the Group class.
@@ -71,8 +72,14 @@ public class GroupManager
      */
     public List<Group> getGroupsByUserId(int userId) throws SQLException
     {
-	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_group_user u USING(group_id) WHERE u.user_id = ? AND g.deleted = 0 ORDER BY title";
+	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_group_user u USING(group_id) WHERE u.user_id = ? ORDER BY title";
 	return getGroups(query, userId);
+    }
+
+    public int getGroupCountByUserId(int userId) throws SQLException
+    {
+	String query = "SELECT COUNT(*) FROM `lw_group` g JOIN lw_group_user u USING(group_id) WHERE u.user_id = " + userId;
+	return ((Long) Sql.getSingleResult(query)).intValue();
     }
 
     /**

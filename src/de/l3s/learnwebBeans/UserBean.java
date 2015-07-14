@@ -500,7 +500,7 @@ public class UserBean implements Serializable
 	    User user = getUser();
 	    if(null == user)
 		return false;
-	    cacheShowMessageJoinGroup = getUser().getGroups().size() == 0;
+	    cacheShowMessageJoinGroup = getUser().getGroupCount() == 0;
 	}
 	return cacheShowMessageJoinGroup;
     }
@@ -534,7 +534,7 @@ public class UserBean implements Serializable
 	    if(null == user)
 		return false;
 
-	    cacheShowMessageAddResource = getUser().getResources().size() == 0;
+	    cacheShowMessageAddResource = getUser().getResourceCount() == 0;
 	}
 	return cacheShowMessageAddResource;
     }

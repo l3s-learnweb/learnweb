@@ -42,7 +42,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     //   private List<Resource> resourcesMultimedia = new LinkedList<Resource>();
     private Resource clickedResource;
     private String mode = "everything";
-    private int numberOfColumns = 3;
 
     public MyResourcesBean() throws SQLException
     {
@@ -50,24 +49,9 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	    return;
 
 	loadResources();
-	Resource temp = new Resource();
-	clickedResource = temp;
-    }
 
-    public void updateColumns()
-    {
-	numberOfColumns = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("cols"));
-
-	if(numberOfColumns < 1)
-	{
-	    log.warn("Tried to set invalid numberOfColumns: " + numberOfColumns);
-	    numberOfColumns = 3;
-	}
-    }
-
-    public int getNumberOfColumns()
-    {
-	return numberOfColumns;
+	clickedResource = new Resource();
+	;
     }
 
     public boolean canDeleteTag(Object tagO) throws SQLException

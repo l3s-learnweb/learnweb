@@ -56,18 +56,9 @@
 			 	<p:remoteCommand name="updateColumns" update=":resource_disp" actionListener="#{groupDetailBean.updateColumns}"></p:remoteCommand>
 	        </h:form>
 			<h:panelGroup id="resource_disp">
-				<p:dataGrid id="datagrid" var="result" value="#{groupDetailBean.getGroup().getSubgroups()}" columns="#{groupDetailBean.numberOfColumns}" paginator="false" widgetVar="datagrid">  
-			        <ui:fragment rendered="#{groupDetailBean.numberOfColumns != 10 and groupDetailBean.numberOfColumns != 3}">
-				        <a class="newsfeed_query_link" href="group/overview.jsf?group_id=#{result.id}">
-					        <p:panel styleClass="members_panel">  
-					            <h:panelGrid columns="1" styleClass="members_panelgrid"> 
-					            	<img src="../resources/icon/subgroup.jpg" width="120" height="120" />
-					            	<div class="member_username">#{result.title}</div>
-					            </h:panelGrid>
-					        </p:panel>
-				        </a>
-			        </ui:fragment>
-			        <ui:fragment rendered="#{groupDetailBean.numberOfColumns == 3}">
+				<p:dataGrid id="datagrid" var="result" value="#{groupDetailBean.getGroup().getSubgroups()}" columns="3" paginator="false" widgetVar="datagrid">  
+
+			      
 				        <a class="newsfeed_query_link" href="group/overview.jsf?group_id=#{result.id}">
 					        <p:panel styleClass="members_panel_small">  
 					            <h:panelGrid columns="1" styleClass="members_panelgrid"> 
@@ -76,7 +67,7 @@
 					            </h:panelGrid>
 					        </p:panel>
 				        </a>
-			        </ui:fragment>
+			     
 			    </p:dataGrid>
 			</h:panelGroup>
 		    <script type="text/javascript">

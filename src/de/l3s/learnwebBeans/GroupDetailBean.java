@@ -87,8 +87,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private Resource selectedResource;
     public Resource clickedResource;
     public Presentation clickedPresentation;
-    //public Comment clickedComment;
-    private int numberOfColumns;
 
     private boolean allLogs = false;
     private boolean reloadLogs = false;
@@ -125,8 +123,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	clickedGroup = new Group();// TODO initilaize with null
 	clickedPresentation = new Presentation();// TODO initilaize with null
 
-	numberOfColumns = 3;
-
 	try
 	{
 	    paginator = group.getResources(ORDER.TITLE);
@@ -158,11 +154,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 		addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 	    }
 	}
-    }
-
-    public void updateColumns()
-    {
-	numberOfColumns = Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("cols"));
     }
 
     private void convert()
@@ -1244,16 +1235,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         return true;
     return false;
     }*/
-
-    public int getNumberOfColumns()
-    {
-	return numberOfColumns;
-    }
-
-    public void setNumberOfColumns(int numberOfColumns)
-    {
-	this.numberOfColumns = numberOfColumns;
-    }
 
     public void addSelectedResourceLink() throws SQLException
     {
