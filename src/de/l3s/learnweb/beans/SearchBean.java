@@ -716,19 +716,37 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    return true;
 	}
 
-	if(filter.equals("date"))
+	if(searchMode.equals(MODE.web))
 	{
-	    if(filterService != null)
+	    if(filter.equals("service"))
 	    {
-		if(Arrays.asList(SERVICE.Flickr, SERVICE.Ipernity, SERVICE.YouTube).contains(filterService))
-		{
-		    return true;
-		}
-		return false;
+		return true;
+	    }
+	}
+	else if(searchMode.equals(MODE.image))
+	{
+	    if(filter.equals("date"))
+	    {
+		return (filterService == null || Arrays.asList(SERVICE.Flickr, SERVICE.Ipernity).contains(filterService));
+	    }
+	    else if(filter.equals("size") || filter.equals("service"))
+	    {
+		return true;
+	    }
+	}
+	else if(searchMode.equals(MODE.video))
+	{
+	    if(filter.equals("date"))
+	    {
+		return (filterService == null || Arrays.asList(SERVICE.YouTube).contains(filterService));
+	    }
+	    else if(filter.equals("service"))
+	    {
+		return true;
 	    }
 	}
 
-	return true;
+	return false;
     }
 
     public List<SERVICE> getAvailiableServices()
