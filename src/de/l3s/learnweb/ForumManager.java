@@ -170,7 +170,7 @@ public class ForumManager
 	forumTopic.setUserId(rs.getInt("user_id"));
 	forumTopic.setGroupId(rs.getInt("group_id"));
 	forumTopic.setTopic(rs.getString("topic_title"));
-	forumTopic.setDate(rs.getDate("topic_time"));
+	forumTopic.setDate(rs.getDate("topic_time")); // TODO sql.date contains only the date not the time you have to use rs.getTimeStamp (see usermanager for example) This must is also a problem while saving a date
 	forumTopic.setTopicView(rs.getInt("topic_views"));
 	forumTopic.setTopicReplies(rs.getInt("topic_replies"));
 	forumTopic.setTopicLastPostId(rs.getInt("topic_last_post_id"));
