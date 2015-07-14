@@ -110,6 +110,8 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	try
 	{
 	    String transcript = Learnweb.getInstance().getTedManager().getTranscript(tedResource.getId(), transcriptLanguage);
+
+	    // TODO  String.replaceAll() does exactly the same thing but is easier to read ;)
 	    String regex = "\n";
 	    Pattern pattern = Pattern.compile(regex);
 	    Matcher matcher = pattern.matcher(transcript);
