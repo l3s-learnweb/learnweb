@@ -11,6 +11,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Locale;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -87,27 +88,37 @@ public class LoroManager
     private void metaData(ResultSet rs, Resource resource) throws SQLException
     {
 
-	String description = resource.getDescription();
-	if(description == null)
-	    description = "";
-	if(rs.getString("description") != null && !description.contains(rs.getString("description")))
+	String description = "";
+	if(rs.getString("description") != null)
 	    description = rs.getString("description");
-	if(rs.getString("language_level") != null && !description.contains(rs.getString("language_level")))
+	if(rs.getString("language_level") != null)
 	    description += "\nLanguage Level: " + rs.getString("language_level");
-	if(rs.getString("languages") != null && !description.contains(rs.getString("languages")))
+	if(rs.getString("languages") != null)
+	{
 	    description += "\nLanguage: " + rs.getString("languages");
-	/*if(rs.getString("course_code") != null)
-	    description += "\nCourse Code: " + rs.getString("course_code");*/
-	if(rs.getString("tags") != null && !description.contains("KeyWords:"))
+	    String language = rs.getString("languages");
+	    Locale[] allLocale = Locale.getAvailableLocales();
+	    for(Locale l : allLocale)
+	    {
+		if(l.getDisplayName().toLowerCase().trim().contains(language.toLowerCase().trim()))
+		{
+		    resource.setLanguage(l.getLanguage().trim());
+		    break;
+		}
+	    }
+
+	}
+	if(rs.getString("tags") != null)
 	    description += "\nKeyWords: " + rs.getString("tags");
-	if(!description.contains("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/"))
-	    description += "\nThis file is a part of resource collection available on LORO - http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
+
+	description += "\nThis file is a part of resource collection available on LORO - http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/";
 
 	resource.setDescription(description);
 	resource.setUrl("http://loro.open.ac.uk/" + String.valueOf(rs.getInt("loro_resource_id")) + "/");
 	resource.setSource("LORO");
 	resource.setLocation("LORO");
 
+	resource.setCreationDate(rs.getTimestamp("added_on"));
 	//set maxImageUrl for different types
 	//Restricted
 	if(rs.getString("preview_img_url").contains("RestrictedAccess"))
@@ -200,7 +211,7 @@ public class LoroManager
 	User admin = learnweb.getUserManager().getUser(7727);
 
 	PreparedStatement getLoroResource = DBConnection
-		.prepareStatement("SELECT t1.loro_resource_id , t2.resource_id , t1.description , t1.tags , t1.title , t1.creator_name , t1.course_code , t1.language_level , t1.languages , t1.flag , t1.preview_img_url,  t2.filename , t2.doc_format , t2.doc_url FROM LORO_resource t1 JOIN LORO_resource_docs t2 ON t1.loro_resource_id = t2.loro_resource_id WHERE t1.`loro_resource_id` = ?");
+		.prepareStatement("SELECT t1.loro_resource_id , t2.resource_id , t1.description , t1.tags , t1.title , t1.creator_name , t1.course_code , t1.language_level , t1.languages , t1.flag , t1.preview_img_url, t1.added_on , t2.filename , t2.doc_format , t2.doc_url FROM LORO_resource t1 JOIN LORO_resource_docs t2 ON t1.loro_resource_id = t2.loro_resource_id WHERE t1.`loro_resource_id` = ?");
 	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource_docs SET resource_id = ? WHERE loro_resource_id = ? AND doc_url= ?");
 	PreparedStatement getCount = DBConnection.prepareStatement("SELECT loro_resource_id, COUNT( * ) AS rowcount FROM  `LORO_resource_docs` group by `loro_resource_id`");
 	getCount.executeQuery();
@@ -299,9 +310,9 @@ public class LoroManager
 				    if(isLoroResourceDeleted(loroResource, loroUrl))
 				    {
 					resourceManager.deleteResourcePermanent(loroResource.getId());
-					PreparedStatement delete = DBConnection.prepareStatement("DELETE FROM `loro_resource_docs` WHERE `resource_id` = ? and title = ?");
+					PreparedStatement delete = DBConnection.prepareStatement("DELETE FROM `LORO_resource_docs` WHERE `resource_id` = ? and filename = ?");
 					delete.setInt(1, loroResource.getId());
-					delete.setString(2, rs.getString("title"));
+					delete.setString(2, rs.getString("filename"));
 					delete.executeUpdate();
 					delete.close();
 				    }
@@ -323,9 +334,9 @@ public class LoroManager
 				    if(isLoroResourceDeleted(loroResource, rs.getString("doc_url")))
 				    {
 					resourceManager.deleteResourcePermanent(loroResource.getId());
-					PreparedStatement delete = DBConnection.prepareStatement("DELETE FROM `loro_resource_docs` WHERE `resource_id` = ? and title = ?");
+					PreparedStatement delete = DBConnection.prepareStatement("DELETE FROM `LORO_resource_docs` WHERE `resource_id` = ? and filename = ?");
 					delete.setInt(1, loroResource.getId());
-					delete.setString(2, rs.getString("title"));
+					delete.setString(2, rs.getString("filename"));
 					delete.executeUpdate();
 					delete.close();
 				    }
@@ -350,9 +361,9 @@ public class LoroManager
 				if(isLoroResourceDeleted(loroResource, loroUrl))
 				{
 				    resourceManager.deleteResourcePermanent(loroResource.getId());
-				    PreparedStatement delete = DBConnection.prepareStatement("DELETE FROM `loro_resource_docs` WHERE `resource_id` = ? and title = ?");
+				    PreparedStatement delete = DBConnection.prepareStatement("DELETE FROM `LORO_resource_docs` WHERE `resource_id` = ? and filename = ?");
 				    delete.setInt(1, loroResource.getId());
-				    delete.setString(2, rs.getString("title"));
+				    delete.setString(2, rs.getString("filename"));
 				    delete.executeUpdate();
 				    delete.close();
 				}
@@ -454,7 +465,7 @@ public class LoroManager
 	writer.close();
 
 	DBConnection.close();
+
 	System.exit(0);
     }
-
 }
