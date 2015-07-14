@@ -77,7 +77,9 @@ public class TedManager
 	    Transcript transcript = new Transcript();
 	    String languageCode = rs.getString("language_code");
 	    transcript.setLanguageCode(languageCode);
-	    transcript.setParagraphs(new ArrayList<Transcript.Paragraph>());
+	    transcript.setParagraphs(new ArrayList<Transcript.Paragraph>()); // why is this set here and not by default in the Transcript class?
+	    // of course it gives you the opportunity to use the list type that fits your needs. But I think that's not so common.
+	    // as always: if you only plan to iterate over a list and don't use direct access like get(x) use a linkedlist
 
 	    ipStmt.setInt(1, resourceId);
 	    ipStmt.setString(2, languageCode);
@@ -86,7 +88,9 @@ public class TedManager
 	    rsParagraphs = ipStmt.getResultSet();
 	    while(rsParagraphs.next())
 	    {
-		transcript.getParagraphs().add(transcript.new Paragraph(rsParagraphs.getInt("starttime"), rsParagraphs.getString("paragraph")));
+		// this is just a little bit ugly:
+		//transcript.getParagraphs().add(transcript.new Paragraph(rsParagraphs.getInt("starttime"), rsParagraphs.getString("paragraph")));
+		transcript.addParagraph(rsParagraphs.getInt("starttime"), rsParagraphs.getString("paragraph"));
 	    }
 
 	    transcripts.add(transcript);

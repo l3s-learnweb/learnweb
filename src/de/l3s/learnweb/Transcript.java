@@ -33,6 +33,11 @@ public class Transcript
 	this.paragraphs = paragraphs;
     }
 
+    public void addParagraph(int startTime, String text)
+    {
+	getParagraphs().add(new Paragraph(startTime, text));
+    }
+
     public class Paragraph
     {
 	private int startTime;
