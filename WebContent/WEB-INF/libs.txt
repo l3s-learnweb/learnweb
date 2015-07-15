@@ -1,23 +1,25 @@
 make a note for every lib you add
 
 commons-beanutils-1.8.3.jar			JSF Base
-commons-codec-1.3.jar				JSF Base
+commons-codec-1.3.jar				JSF Base, Dependency of Google API
 commons-collections-3.2.jar			JSF Base
 commons-digester-1.8.jar			JSF Base
 commons-fileupload-1.3.jar			primefaces file upload
 commons-io-2.4.jar					FileManager, primefacces file upload
 commons-lang3-3.1.jar				Interweb, primefaces-extensions, Others
-commons-logging-1.1.1.jar			JSF Base
+commons-logging-1.1.1.jar			JSF Base, Dependency of Google API
 core.jar							Added by Trevor; for sprql client?
 dom4j-2.0.0-ALPHA-2.jar				Interweb
 Filters.jar							image scaling (Thumbnails)
-gdata-base-1.0.jar					Creating google docs 
-gdata-client-1.0.jar				------"------
-gdata-core-1.0.jar					------"------
-gdata-docs-3.0.jar					------"------
-gdata-media-1.0.jar					------"------
+google-api-client-1.20.0.jar						Google API Client
+google-api-services-drive-v2-rev177-1.20.0.jar		Google Drive API
+google-http-client-1.20.0.jar						Google API Client
+google-http-client-jackson2-1.20.0.jar				Google API Client
+google-oauth-client-1.20.0.jar						Google API Client
+guava-jdk5-13.0.jar					Dependency of Google API
+jackson-core-2.1.3.jar				Dependency of Google API
+jsr305-1.3.9.jar					Dependency of Google API
 geronimo-atinject_1.0_spec-1.0		required by my-faces-bundle
-guava-r09.jar						Creating google docs 
 hibernate-validator-4.3.0.Final.jar Bean Validator
 java-image-scaling-0.8.5.jar		Thumbnails
 javax.servlet.jsp.jstl-1.2.1.jar	JSF Base
@@ -29,7 +31,7 @@ json-simple-1.1.1.jar				Archive, generating json data for timeline and calendar
 org.json.jar						TEDx transcript, generating JSON from XML String
 jsoup-1.7.1.jar						Resource, remove Html from String
 log4j-1.2.17.jar					Logging
-mail-1.4.4.jar						Interweb (Jersey), Creating google docs
+mail-1.4.4.jar						Interweb (Jersey)
 myfaces-bundle-2.1.8.jar			JSF Base
 nekohtml-1.9.13.jar					added by Asharma 
 mysql-connector-java-5.1.22-bin.jar	MySQL
@@ -56,8 +58,8 @@ apache-solr-test-framework-4.0.0.jar	SolrClient,added by Siyu
 apache-solr-uima-4.0.0.jar			SolrClient,added by Siyu
 apache-solr-velocity-4.0.0.jar		SolrClient,added by Siyu
 commons-io-2.1.jar					SolrClient,added by Siyu
-httpclient-4.1.3.jar				SolrClient,added by Siyu
-httpcore-4.1.4.jar					SolrClient,added by Siyu
+httpclient-4.1.3.jar				SolrClient,added by Siyu, Dependency of Google API
+httpcore-4.1.4.jar					SolrClient,added by Siyu, Dependency of Google API
 httpmime-4.1.3.jar					SolrClient,added by Siyu
 jcl-over-slf4j-1.6.4.jar			SolrClient,added by Siyu
 log4j-over-slf4j-1.6.4.jar			SolrClient,added by Siyu

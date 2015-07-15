@@ -2,6 +2,8 @@ package de.l3s.learnwebBeans;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -25,16 +27,15 @@ import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.google.gdata.client.docs.DocsService;
-import com.google.gdata.data.PlainTextConstruct;
-import com.google.gdata.data.acl.AclEntry;
-import com.google.gdata.data.acl.AclRole;
-import com.google.gdata.data.acl.AclScope;
-import com.google.gdata.data.docs.DocumentEntry;
-import com.google.gdata.data.docs.DocumentListEntry;
-import com.google.gdata.data.docs.PresentationEntry;
-import com.google.gdata.data.docs.SpreadsheetEntry;
-import com.google.gdata.util.ServiceException;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.services.drive.Drive;
+import com.google.api.services.drive.DriveScopes;
+import com.google.api.services.drive.model.File;
+import com.google.api.services.drive.model.ParentReference;
 
 import de.l3s.learnweb.AbstractPaginator;
 import de.l3s.learnweb.Comment;
@@ -812,31 +813,50 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
     }
 
-    private String createNewGoogleDocument(String title, String type) throws IOException, ServiceException, SQLException
+    private String createNewGoogleDocument(String title, String type) throws IOException, SQLException
     {
-	DocumentListEntry newEntry = null;
+	HttpTransport httpTransport = null;
+	GoogleCredential credential = null;
+	JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+
+	try
+	{
+	    httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+	    credential = new GoogleCredential.Builder().setTransport(httpTransport).setJsonFactory(jsonFactory).setServiceAccountId("181029990744-vegd7p8ugh5amn1ilgunba03d1pai4sb@developer.gserviceaccount.com")
+		    .setServiceAccountScopes(Collections.singleton(DriveScopes.DRIVE_FILE)).setServiceAccountPrivateKeyFromP12File(new java.io.File(getClass().getClassLoader().getResource("Learnweb-55153726550a.p12").toURI())).build();
+	    credential.refreshToken();
+	}
+	catch(GeneralSecurityException e)
+	{
+	    log.error("Can not access to Google API");
+	    //e.printStackTrace();
+	}
+	catch(URISyntaxException e)
+	{
+	    log.error("Can not load P12File for Google API");
+	    //e.printStackTrace();
+	}
+
+	Drive drive = new Drive.Builder(httpTransport, jsonFactory, credential).setApplicationName("LearnWeb").build();
+
+	File fileMetadata = new File();
+	fileMetadata.setTitle(title);
+	fileMetadata.setParents(Collections.singletonList(new ParentReference().setId("0B_Sy7ytn1dadbkxEZGFZTm5kZU0")));
+
 	if(type.equals("document"))
-	    newEntry = new DocumentEntry();
+	    fileMetadata.setMimeType("application/vnd.google-apps.document");
 	else if(type.equals("presentation"))
-	    newEntry = new PresentationEntry();
+	    fileMetadata.setMimeType("application/vnd.google-apps.presentation");
 	else if(type.equals("spreadsheet"))
-	    newEntry = new SpreadsheetEntry();
+	    fileMetadata.setMimeType("application/vnd.google-apps.spreadsheet");
 	else
 	    throw new IllegalArgumentException("type should be: document, presentation or spreadsheet");
 
-	newEntry.setTitle(new PlainTextConstruct(title));
-
-	DocsService client = new DocsService("l3s.de-learnweb-v1");
-	client.setUserCredentials("interweb9@googlemail.com", "QDsG}GM5");
-	DocumentListEntry newDoc = client.insert(new java.net.URL("https://docs.google.com/feeds/default/private/full/"), newEntry);
-
-	// change user rights to public
-	AclEntry aclEntry = new AclEntry();
-	aclEntry.setRole(AclRole.WRITER);
-	aclEntry.setScope(new AclScope(AclScope.Type.DEFAULT, null));
-	client.insert(new java.net.URL(newDoc.getAclFeedLink().getHref()), aclEntry);
-
-	return newDoc.getDocumentLink().getHref();
+	Drive.Files.Insert insert = drive.files().insert(fileMetadata);
+	File uploadedFile = insert.execute();
+	log.debug("Added new Google Document: " + uploadedFile.getAlternateLink());
+	log.debug("ThumbnailLink: " + uploadedFile.getThumbnailLink());
+	return uploadedFile.getAlternateLink();
     }
 
     public boolean hasViewPermission(User user) throws SQLException
