@@ -1045,7 +1045,7 @@ div#presentation_preview {
 .resource_thumbnail{
 	float:left;
 	margin-top:5px;
-	border: 1px solid #CCC;
+	border: 1px solid #EEE;
 }
 .resource_short_title{
 	font-weight:bold;
@@ -1058,7 +1058,6 @@ div#presentation_preview {
 	margin-left: 4px;
 }
 .resource_command_link{text-decoration:none;}
-/*.resource_commandlink{margin-top:0px;}*/
 .resource_dialog_field{width:400px;}
 
 .resource_panel {
