@@ -63,7 +63,7 @@ public class FileManager
     }
 
     /**
-     * Get an File by his id
+     * Get a File by his id
      * 
      * @param id
      * @return null if not found
