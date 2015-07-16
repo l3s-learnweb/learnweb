@@ -95,28 +95,42 @@ public class ForumManager
     public ForumTopic saveTopic(ForumTopic forumTopic) throws SQLException
     {
 	// TODO use static columns var (see user manager)
-
-	String sqlQuery = "replace into forum_topic(topic_title,group_id) values (?,?) ";
+	String sqlQuery = "REPLACE INTO `forum_topics` (" + FORUMTOPICCOLUMNS + ") VALUES (?,?,?,?,?,?,?,?)";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
-	ps.setString(1, forumTopic.getTopic());
+	if(forumTopic.getTopicId() < 0)
+	    ps.setNull(1, java.sql.Types.INTEGER);
+	else
+	    ps.setInt(1, forumTopic.getTopicId());
 	ps.setInt(2, forumTopic.getGroupId());
+	ps.setString(3, forumTopic.getTopic());
+	ps.setInt(4, forumTopic.getUserId());
+	ps.setDate(4, forumTopic.getDate() == null ? null : new java.sql.Date(forumTopic.getDate().getTime()));
+	ps.setInt(5, forumTopic.getTopicView());
+	ps.setInt(6, forumTopic.getTopicReplies());
+	ps.setInt(7, forumTopic.getTopicLastPostId());
 	ps.executeUpdate();
-
 	// TODO set assigned id ; see user manager
-
-	return null;
+	return forumTopic;
     }
 
     public ForumPost saveForumPost(ForumPost forumPost) throws SQLException
     {
-	String sqlQuery = "replace into forum_post(text, topic_id, group_id, user_id) values (?,?,?,?) ";
+	String sqlQuery = "REPLACE INTO `forum_post` (" + FORUMPOSTCOLUMNS + ") VALUES (?,?,?,?,?,?,?,?)";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
-	ps.setString(1, forumPost.getText());
+
+	if(forumPost.getPostId() < 0)
+	    ps.setNull(1, java.sql.Types.INTEGER);
+	else
+	    ps.setInt(1, forumPost.getPostId());
 	ps.setInt(2, forumPost.getTopicId());
-	ps.setInt(2, forumPost.getGroupId());
-	ps.setInt(2, forumPost.getUserId());
+	ps.setInt(3, forumPost.getGroupId());
+	ps.setInt(4, forumPost.getUserId());
+	ps.setString(5, forumPost.getText());
+	ps.setDate(6, forumPost.getDate() == null ? null : new java.sql.Date(forumPost.getDate().getTime()));
+	ps.setDate(7, forumPost.getLastEditDate() == null ? null : new java.sql.Date(forumPost.getLastEditDate().getTime()));
+	ps.setInt(8, forumPost.getEditUserId());
 	ps.executeUpdate();
-	return null;
+	return forumPost;
     }
 
     /**
@@ -126,6 +140,7 @@ public class ForumManager
      * @throws SQLException
      * 
      */
+
     public void incTopicViews(int topicId) throws SQLException
     {
 	String sqlQuery = "UPDATE forum_topic SET topic_views = topic_views +1 WHERE topic_id = ?";
@@ -135,17 +150,17 @@ public class ForumManager
     }
 
     // don't return a resultset return a ForumPost object; write a createPost and createTopic method (you will need it multiple times).
-
-    public ForumPost getForumPost(int postId) throws SQLException
-    {
-	ForumPost editPost = new ForumPost();
-	String sqlQuery = "Select text, post_edit_count Where post_id = postId";
-	@SuppressWarnings("unused")
-	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
-	//	editPost = ps.executeQuery();
-	return editPost;
-    }
-
+    /*
+        public ForumPost getForumPost(int postId) throws SQLException
+        {
+    	ForumPost editPost = new ForumPost();
+    	String sqlQuery = "Select text, post_edit_count Where post_id = postId";
+    	@SuppressWarnings("unused")
+    	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
+    	//	editPost = ps.executeQuery();
+    	return editPost;
+        }
+    */
     public ForumPost createPost(ResultSet rs) throws SQLException
     {
 	int postId = rs.getInt("post_id");
@@ -155,6 +170,9 @@ public class ForumManager
 	forumPost.setUserId(rs.getInt("user_id"));
 	forumPost.setGroupId(rs.getInt("group_id"));
 	forumPost.setText(rs.getString("text"));
+
+	// forumPost.setDate(rs.getDate(postId, null) == null ? null : new java.sql.Date(forumPost.getDate().getTime()));
+
 	forumPost.setDate(rs.getDate("post_time"));
 	forumPost.setLastEditDate(rs.getDate("post_edit_time"));
 	forumPost.setEditCount(rs.getInt("post_edit_count"));

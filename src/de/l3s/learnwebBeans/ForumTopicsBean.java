@@ -52,7 +52,7 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
 	    if(temp != null && temp.length() != 0)
 	    {
 		groupId = Integer.parseInt(temp);
-		group = getLearnweb().getGroupManager().getGroupById(groupId);
+		setGroup(getLearnweb().getGroupManager().getGroupById(groupId));
 	    }
 
 	    if(0 == groupId)
@@ -100,4 +100,14 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
      * this.message = message;
      * }
      **/
+
+    public Group getGroup()
+    {
+	return group;
+    }
+
+    public void setGroup(Group group)
+    {
+	this.group = group;
+    }
 }
