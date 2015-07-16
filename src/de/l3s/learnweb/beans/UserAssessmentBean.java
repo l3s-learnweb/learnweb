@@ -13,7 +13,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
-import org.apache.log4j.Logger;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
@@ -23,47 +22,59 @@ import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
 import de.l3s.learnweb.Course;
+import de.l3s.learnweb.Group;
+import de.l3s.learnweb.GroupManager;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.UserManager;
 import de.l3s.learnwebBeans.ApplicationBean;
 import de.l3s.util.Sql;
 
-/**
- * User Assessment Bean
- * 
- * @author Alana Morais
- */
 @ManagedBean
 @SessionScoped
 public class UserAssessmentBean extends ApplicationBean implements Serializable
 {
-    private final static long serialVersionUID = 3991177737812918816L;
-    private final static Logger log = Logger.getLogger(UserAssessmentBean.class);
+    /**
+     * User Assessment Bean
+     * 
+     * @author Alana Morais
+     */
 
+    private static final long serialVersionUID = 1L;
     private List<User> group1 = new ArrayList<User>();
     private List<User> group2 = new ArrayList<User>();
     private List<User> group3 = new ArrayList<User>();
     private List<Course> courses = new ArrayList<Course>();
     private List<User> users = new ArrayList<User>();
+    private List<Group> groups = new ArrayList<Group>();
 
     private Map<String, String> infoDetailUser = new HashMap<String, String>();
 
     private String selectCourse1;
-    private String selectCourse20; // TODO please use better names
+    private String selectCourse20;
     private String selectCourse21;
     private String selectCourse3;
     private String selectedUser;
+    private String selectedGroup1;
+    private String selectedGroup2;
     private String selectChart1;
     private String selectChart2;
     private String selectChart3;
+    private String phaseLW0;
+    private String phaseLW;
+    private String phaseLW2;
 
     private boolean showb3, showl3, showp3 = false;
     private boolean showb2, showl2, showp2 = false;
+    private boolean showb1, showl1, showp1 = false;
+    private BarChartModel barModel0 = new BarChartModel();
     private BarChartModel barModel = new BarChartModel();
     private BarChartModel barModel2 = new BarChartModel();
+    private PieChartModel pieModel00 = new PieChartModel();
+    private PieChartModel pieModel01 = new PieChartModel();
     private PieChartModel pieModel = new PieChartModel();
-    private PieChartModel pieModel20 = new PieChartModel(); // TODO please use better names
+    private PieChartModel pieModel20 = new PieChartModel();
     private PieChartModel pieModel21 = new PieChartModel();
+    private LineChartModel lineModel0 = new LineChartModel();
     private LineChartModel lineModel = new LineChartModel();
     private LineChartModel lineModel2 = new LineChartModel();
 
@@ -74,6 +85,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	this.selectCourse21 = null;
 	this.selectCourse3 = null;
 	this.selectedUser = null;
+	this.selectedGroup1 = null;
+	this.selectedGroup2 = null;
 	this.selectChart1 = null;
 	this.selectChart2 = null;
 	this.selectChart3 = null;
@@ -84,6 +97,13 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	this.pieModel20 = null;
 	this.pieModel21 = null;
 	this.lineModel2 = null;
+	this.barModel0 = null;
+	this.pieModel00 = null;
+	this.pieModel01 = null;
+	this.lineModel0 = null;
+	this.phaseLW0 = null;
+	this.phaseLW = null;
+	this.phaseLW2 = null;
     }
 
     @PostConstruct
@@ -111,84 +131,194 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	}
     }
 
-    public HashMap<String, Long> searchGeneralActivities(String classe)
+    public void changeGroup()
     {
-	//General Activities in each class
-	// SELECT * FROM `lw_user_log` A1 INNER JOIN `lw_user_course` A2 ON A1.user_id = A2.user_id WHERE A2.course_id=640 AND A1.action=X
-	HashMap<String, Long> listGeneralActivities = new HashMap<String, Long>();
+	//Function responsible to change the groups list after the class selection on menu.
+	int idCourse = Integer.valueOf(this.selectCourse1);
 	try
 	{
-	    Long ratting = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=1");
-	    Long tagging = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=0");
-	    Long commenting = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=2");
-	    Long searching = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=5");
-	    Long downloading = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=32");
-	    Long editResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=19");
-
-	    /**
-	     * I guess one query will be faster than 6.
-	     * 
-	     * WHERE A2.course_id=" + classe + " AND A1.action=19
-	     * 
-	     * Adding a parameter to the query is a security vulnerability.
-	     * PrepearedStatements are more secure.
-	     * 
-	     * PreparedStatement select = getLearnweb().getConnection().prepareStatement(
-	     * "SELECT action, count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 USING(user_id) WHERE A2.course_id=? GROUP BY A1.action");
-	     * select.setString(1, classe);
-	     * ResultSet rs = select.executeQuery();
-	     * while(rs.next())
-	     * {
-	     * int action = rs.getInt(1);
-	     * int count = rs.getInt(2);
-	     * 
-	     * if(action == 19)
-	     * listGeneralActivities.put("Edit Resource", (long) count);
-	     * }
-	     * rs.close();
-	     */
-	    listGeneralActivities.put("Ratting Resources", ratting);
-	    listGeneralActivities.put("Tagging Resources", tagging);
-	    listGeneralActivities.put("Comments", commenting);
-	    listGeneralActivities.put("Searching", searching);
-	    listGeneralActivities.put("Downloading", downloading);
-	    listGeneralActivities.put("Edit Resource", editResource);
-	    return listGeneralActivities;
+	    GroupManager usm = getLearnweb().getGroupManager();
+	    this.groups = usm.getGroupsByCourseId(idCourse);
+	    this.setShowb1(false);
+	    this.setShowl1(false);
+	    this.setShowp1(false);
 	}
 	catch(SQLException e)
 	{
-	    log.error("Couldn't genereta statistics", e); // TODO use log.info/debug/error instead of system.println
+	    e.printStackTrace();
+	}
+    }
+
+    public HashMap<String, Long> searchGeneralActivitiesbyGroup(String group)
+    {
+	//General Activities by Group
+	HashMap<String, Long> listActivitiesGroup = new HashMap<String, Long>();
+	try
+	{
+	    /* Searching(s) - Download- Open resource - Add resource - Delete resource - Create group - Group joining - Group leaving*/
+	    if(this.phaseLW0.compareTo("searching") == 0)
+	    {
+		Long searching = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + group + " AND A1.action=5");
+		Long downloading = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + group + " AND A1.action=32");
+		Long addResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + group + " AND A1.action=15");
+		Long delResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + group + " AND A1.action=14");
+		Long openResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + group + " AND A1.action=3");
+		Long createGroup = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + group + " AND A1.action=7");
+		Long groupJoining = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + group + " AND A1.action=6");
+		Long groupLeaving = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + group + " AND A1.action=8");
+		//Add new activities here
+
+		listActivitiesGroup.put("Searching", searching);
+		listActivitiesGroup.put("Downloading", downloading);
+		listActivitiesGroup.put("Open Resource", openResource);
+		listActivitiesGroup.put("Add Resource", addResource);
+		listActivitiesGroup.put("Delete Resource", delResource);
+		listActivitiesGroup.put("Create Group", createGroup);
+		listActivitiesGroup.put("Group Joining", groupJoining);
+		listActivitiesGroup.put("Group Leaving", groupLeaving);
+		//Add new activities here
+
+	    }
+
+	    if(this.phaseLW0.compareTo("annotation") == 0)
+	    {
+		Long rating = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + group + " AND A1.action=1");
+		Long tagging = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + group + " AND A1.action=0");
+		Long editResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + group + " AND A1.action=19");
+		Long commenting = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + group + " AND A1.action=2");
+		Long deleteComments = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + group + " AND A1.action=17");
+		//Add new activities here
+
+		listActivitiesGroup.put("Rating", rating);
+		listActivitiesGroup.put("Tagging", tagging);
+		listActivitiesGroup.put("Comments", commenting);
+		listActivitiesGroup.put("Edit Resource", editResource);
+		listActivitiesGroup.put("Deleting Comments", deleteComments);
+		//Add new activities here
+	    }
+
+	    return listActivitiesGroup;
+
+	}
+	catch(SQLException e)
+	{
+	    e.printStackTrace();
 	    return null;
 	}
     }
 
+    public HashMap<String, Long> searchGeneralActivities(String classe, String phase)
+    {
+	//General Activities in each class
+	// SELECT * FROM `lw_user_log` A1 INNER JOIN `lw_user_course` A2 ON A1.user_id = A2.user_id WHERE A2.course_id=640 AND A1.action=X
+	HashMap<String, Long> listGeneralActivities = new HashMap<String, Long>();
+
+	if(phase.compareTo("searching") == 0)
+	{
+	    try
+	    {
+		/* Searching(s) - Download- Open resource - Add resource - Delete resource - Create group - Group joining - Group leaving*/
+		Long searching = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=5");
+		Long downloading = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=32");
+		Long openResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=3");
+		Long addResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=15");
+		Long deleteResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=14");
+		Long createGroup = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=7");
+		Long groupJoining = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=6");
+		Long groupLeaving = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=8");
+		//Add new activities here
+
+		listGeneralActivities.put("Searching", searching);
+		listGeneralActivities.put("Downloading", downloading);
+		listGeneralActivities.put("Open Resource", openResource);
+		listGeneralActivities.put("Add Resource", addResource);
+		listGeneralActivities.put("Delete Resource", deleteResource);
+		listGeneralActivities.put("Create Group", createGroup);
+		listGeneralActivities.put("Group Joining", groupJoining);
+		listGeneralActivities.put("Group Leaving", groupLeaving);
+		//Add new activities here
+	    }
+	    catch(SQLException e)
+	    {
+		e.printStackTrace();
+		return null;
+	    }
+	}
+
+	if(phase.compareTo("annotation") == 0)
+	{
+	    try
+	    {
+		Long rating = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=1");
+		Long tagging = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=0");
+		Long editResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=19");
+		Long commenting = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=2");
+		Long deleteComments = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + classe + " AND A1.action=17");
+		//Add new activities here
+
+		listGeneralActivities.put("Rating", rating);
+		listGeneralActivities.put("Tagging", tagging);
+		listGeneralActivities.put("Comments", commenting);
+		listGeneralActivities.put("Edit Resource", editResource);
+		listGeneralActivities.put("Deleting Comments", deleteComments);
+		//Add new activities here
+	    }
+	    catch(SQLException e)
+	    {
+		e.printStackTrace();
+		return null;
+	    }
+	}
+	return listGeneralActivities;
+
+    }
+
     public HashMap<String, Long> searchActivities()
     {
-	// SELECT * FROM `lw_user_log` A1 INNER JOIN `lw_user_course` A2 ON A1.user_id = A2.user_id WHERE A2.course_id =640 AND A1.user_id =7727 
 	HashMap<String, Long> listActivities = new HashMap<String, Long>();
 	try
 	{
-	    Long ratting = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=1");
-	    Long tagging = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=0");
-	    Long commenting = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=2");
-	    Long searching = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=5");
-	    Long downloading = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=32");
-	    Long editResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=19");
+	    /* Searching(s) - Download- Open resource - Add resource - Delete resource - Create group - Group joining - Group leaving*/
+	    if(this.phaseLW2.compareTo("searching") == 0)
+	    {
+		Long searching = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=5");
+		Long downloading = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=32");
+		Long addResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=15");
+		Long delResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=14");
+		Long openResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=3");
+		Long createGroup = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=7");
+		Long groupJoining = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=6");
+		Long groupLeaving = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=8");
+		//Add new activities here
 
-	    listActivities.put("Ratting Resources", ratting);
-	    listActivities.put("Tagging Resources", tagging);
-	    listActivities.put("Comments", commenting);
-	    listActivities.put("Searching", searching);
-	    listActivities.put("Downloading", downloading);
-	    listActivities.put("Edit Resource", editResource);
+		listActivities.put("Searching", searching);
+		listActivities.put("Downloading", downloading);
+		listActivities.put("Open Resource", openResource);
+		listActivities.put("Add Resource", addResource);
+		listActivities.put("Delete Resource", delResource);
+		listActivities.put("Create Group", createGroup);
+		listActivities.put("Group Joining", groupJoining);
+		listActivities.put("Group Leaving", groupLeaving);
+		//Add new activities here
+	    }
 
-	    System.out.println("Ratting Resource" + ratting);
-	    System.out.println("Tagging Resources" + tagging);
-	    System.out.println("Comments" + commenting);
-	    System.out.println("Searching" + searching);
+	    if(this.phaseLW2.compareTo("annotation") == 0)
+	    {
+		Long rating = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=1");
+		Long tagging = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=0");
+		Long editResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=19");
+		Long commenting = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=2");
+		Long deleteComments = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectCourse3 + " AND A1.user_id =" + this.selectedUser + " AND A1.action=17");
+		//Add new activities here
 
-	    //GraphGenerator gg = new GraphGenerator("User Details", "", "User Activities", "", "Activities", "", "Values", "", "bar", listActivities, null);
-	    //this.barModel = gg.getBarModel();
+		listActivities.put("Rating", rating);
+		listActivities.put("Tagging", tagging);
+		listActivities.put("Comments", commenting);
+		listActivities.put("Edit Resource", editResource);
+		listActivities.put("Deleting Comments", deleteComments);
+		//Add new activities here
+	    }
+
 	    return listActivities;
 
 	}
@@ -199,10 +329,115 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	}
     }
 
+    public HashMap<String, Double> selectInteractionMeanClass()
+    {
+	HashMap<String, Double> listActClass = new HashMap<String, Double>();
+
+	try
+	{
+	    /* Searching(s) - Download- Open resource - Add resource - Delete resource - Create group - Group joining - Group leaving*/
+	    Long numStudents = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectChart3 + " AND A1.action=5");
+
+	    if(this.phaseLW2.compareTo("searching") == 0)
+	    {
+		Double searching = (Double) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectChart3 + " AND A1.action=5");
+		Double downloading = (Double) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectChart3 + " AND A1.action=32");
+		Double openResource = (Double) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectChart3 + " AND A1.action=3");
+		Double addResource = (Double) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectChart3 + " AND A1.action=15");
+		Double deleteResource = (Double) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectChart3 + " AND A1.action=14");
+		Double createGroup = (Double) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectChart3 + " AND A1.action=7");
+		Double groupJoining = (Double) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectChart3 + " AND A1.action=6");
+		Double groupLeaving = (Double) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectChart3 + " AND A1.action=8");//Add new activities here
+
+		listActClass.put("Searching", searching / numStudents);
+		listActClass.put("Downloading", downloading / numStudents);
+		listActClass.put("Open Resource", openResource / numStudents);
+		listActClass.put("Add Resource", addResource / numStudents);
+		listActClass.put("Delete Resource", deleteResource / numStudents);
+		listActClass.put("Create Group", createGroup / numStudents);
+		listActClass.put("Group Joining", groupJoining / numStudents);
+		listActClass.put("Group Leaving", groupLeaving / numStudents);
+		//Add new activities here
+
+	    }
+
+	    if(this.phaseLW2.compareTo("annotation") == 0)
+	    {
+		Double rating = (Double) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectChart3 + " AND A1.action=1");
+		Double tagging = (Double) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectChart3 + " AND A1.action=0");
+		Double editResource = (Double) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectChart3 + " AND A1.action=19");
+		Double commenting = (Double) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectChart3 + " AND A1.action=2");
+		Double deleteComments = (Double) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.selectChart3 + " AND A1.action=17");
+		//Add new activities here
+
+		listActClass.put("Rating", rating / numStudents);
+		listActClass.put("Tagging", tagging / numStudents);
+		listActClass.put("Comments", commenting / numStudents);
+		listActClass.put("Edit Resource", editResource / numStudents);
+		listActClass.put("Deleting Comments", deleteComments / numStudents);
+		//Add new activities here
+	    }
+
+	    return listActClass;
+
+	}
+	catch(SQLException e)
+	{
+	    e.printStackTrace();
+	    return null;
+	}
+    }
+
+    public String getNameCourse(String idCourse)
+    {
+	try
+	{
+	    String courseName = (String) Sql.getSingleResult("SELECT title FROM lw_course WHERE course_id=" + idCourse);
+	    return courseName;
+	}
+	catch(SQLException e)
+	{
+	    e.printStackTrace();
+	    return null;
+	}
+
+    }
+
+    public String getNameUser(String idUser)
+    {
+	try
+	{
+	    String userName = (String) Sql.getSingleResult("SELECT username FROM lw_user WHERE user_id=" + idUser);
+	    return userName;
+	}
+	catch(SQLException e)
+	{
+	    e.printStackTrace();
+	    return null;
+	}
+
+    }
+
+    public String getNameGroup(String idGroup)
+    {
+	try
+	{
+	    System.out.println("idGroup: " + idGroup);
+	    idGroup = idGroup.trim();
+	    String name = (String) Sql.getSingleResult("SELECT title FROM lw_group WHERE group_id=" + idGroup);
+	    return name;
+	}
+	catch(SQLException e)
+	{
+	    e.printStackTrace();
+	    return null;
+	}
+
+    }
+
     public void generateUserChart()
     {
 	System.out.println("generateUserChart");
-	System.out.println(this.selectChart3);
 
 	if((this.selectChart3 != "") && (this.selectedUser != "") && (this.selectChart3.compareTo("bar") == 0))
 	{
@@ -227,33 +462,96 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	{
 	    HashMap<String, Long> list = new HashMap<String, Long>();
 	    list = this.searchActivities();
+	    String userName = getNameUser(this.selectedUser);
 	    System.out.println(list);
-	    this.initBarModelUser("User Details:" + this.selectedUser, "User Activities", list, "Activities", "Number of Interactions");
-
-	    System.out.println("Aqui if B");
+	    this.initBarModelUser("Details of " + userName, "User Activities", list, "Activities", "Number of Interactions");
 	}
 
 	if((this.selectChart3.compareTo("line") == 0) && (this.showl3 == true))
 	{
 	    HashMap<String, Long> list = new HashMap<String, Long>();
 	    list = this.searchActivities();
+	    String userName = getNameUser(this.selectedUser);
 	    System.out.println(list);
-	    this.initLineModelUser("User Details:" + this.selectedUser, "User Activities", list, "Activities", "Number of Interactions");
+	    this.initLineModelUser("Details of " + userName, "User Activities", list, "Activities", "Number of Interactions");
 	}
 
 	if((this.selectChart3.compareTo("pie") == 0) && (this.showp3 == true))
 	{
 	    HashMap<String, Long> list = new HashMap<String, Long>();
 	    list = this.searchActivities();
+	    String userName = getNameUser(this.selectedUser);
 	    System.out.println(list);
-	    this.initPieModelUser("User Details:" + this.selectedUser, "User Activities", list);
+	    this.initPieModelUser("Details of " + userName, "User Activities", list);
+	}
+    }
+
+    public void generateComparativeGraphGroups()
+    {
+	System.out.println("generateComparativeGraphGraphs");
+	System.out.println("Group 1:" + this.selectedGroup1);
+	System.out.println("Group 2:" + this.selectedGroup2);
+
+	if((this.selectChart1 != "") && (this.selectedGroup1 != "") && (this.selectedGroup2 != "") && (this.selectChart1.compareTo("bar") == 0))
+	{
+	    this.setShowb1(true);
+	    this.setShowl1(false);
+	    this.setShowp1(false);
+	}
+	if((this.selectChart1 != "") && (this.selectedGroup1 != "") && (this.selectedGroup2 != "") && (this.selectChart1.compareTo("line") == 0))
+	{
+	    this.setShowl1(true);
+	    this.setShowb1(false);
+	    this.setShowp1(false);
+	}
+	if((this.selectChart1 != "") && (this.selectedGroup1 != "") && (this.selectedGroup2 != "") && (this.selectChart1.compareTo("pie") == 0))
+	{
+	    this.setShowp1(true);
+	    this.setShowl1(false);
+	    this.setShowb1(false);
+	}
+
+	if((this.selectChart1.compareTo("bar") == 0) && (this.showb1 == true))
+	{
+	    HashMap<String, Long> list = new HashMap<String, Long>();
+	    HashMap<String, Long> list2 = new HashMap<String, Long>();
+	    list = this.searchGeneralActivitiesbyGroup(this.selectedGroup1);
+	    list2 = this.searchGeneralActivitiesbyGroup(this.selectedGroup2);
+	    System.out.println(list);
+	    System.out.println(list2);
+	    this.barModel0 = this.initBarComparative("Comparison between " + getNameGroup(this.selectedGroup1) + " and " + getNameGroup(this.selectedGroup2) + " groups", getNameGroup(this.selectedGroup1), getNameGroup(this.selectedGroup2), list, list2, "Activities",
+		    "Number of Interactions");
+	}
+
+	if((this.selectChart1.compareTo("line") == 0) && (this.showl1 == true))
+	{
+	    HashMap<String, Long> list = new HashMap<String, Long>();
+	    HashMap<String, Long> list2 = new HashMap<String, Long>();
+	    list = this.searchGeneralActivitiesbyGroup(this.selectedGroup1);
+	    list2 = this.searchGeneralActivitiesbyGroup(this.selectedGroup2);
+	    System.out.println(list);
+	    System.out.println(list2);
+	    this.lineModel0 = this.initLineComparative("Comparison between " + getNameGroup(this.selectedGroup1) + " and " + getNameGroup(this.selectedGroup2) + " groups", getNameGroup(this.selectedGroup1), getNameGroup(this.selectedGroup2), list, list2, "Activities",
+		    "Number of Interactions");
+	}
+
+	if((this.selectChart1.compareTo("pie") == 0) && (this.showp1 == true))
+	{
+	    HashMap<String, Long> list = new HashMap<String, Long>();
+	    HashMap<String, Long> list2 = new HashMap<String, Long>();
+	    list = this.searchGeneralActivitiesbyGroup(this.selectedGroup1);
+	    list2 = this.searchGeneralActivitiesbyGroup(this.selectedGroup2);
+	    System.out.println(list);
+	    System.out.println(list2);
+	    List<PieChartModel> pies = this.initPieComparative(getNameGroup(this.selectedGroup1), getNameGroup(this.selectedGroup2), list, list2);
+	    this.pieModel00 = pies.get(0);
+	    this.pieModel01 = pies.get(1);
 	}
     }
 
     public void generateComparativeGraph()
     {
 	System.out.println("generateComparativeGraph");
-	System.out.println(this.selectChart2);
 
 	if((this.selectChart2 != "") && (this.selectCourse20 != "") && (this.selectCourse21 != "") && (this.selectChart2.compareTo("bar") == 0))
 	{
@@ -278,33 +576,41 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	{
 	    HashMap<String, Long> list = new HashMap<String, Long>();
 	    HashMap<String, Long> list2 = new HashMap<String, Long>();
-	    list = this.searchGeneralActivities(this.selectCourse20);
-	    list2 = this.searchGeneralActivities(this.selectCourse21);
+	    list = this.searchGeneralActivities(this.selectCourse20, this.phaseLW);
+	    list2 = this.searchGeneralActivities(this.selectCourse21, this.phaseLW);
+	    String c1 = getNameCourse(this.selectCourse20);
+	    String c2 = getNameCourse(this.selectCourse21);
 	    System.out.println(list);
 	    System.out.println(list2);
-	    this.initBarComparative("Comparison between " + this.selectCourse20 + " and " + this.selectCourse21 + " class", this.selectCourse20, this.selectCourse21, list, list2, "Activities", "Number of Interactions");
+	    this.barModel2 = this.initBarComparative("Comparison between " + c1 + " and " + c2 + " class", c1, c2, list, list2, "Activities", "Number of Interactions");
 	}
 
 	if((this.selectChart2.compareTo("line") == 0) && (this.showl2 == true))
 	{
 	    HashMap<String, Long> list = new HashMap<String, Long>();
 	    HashMap<String, Long> list2 = new HashMap<String, Long>();
-	    list = this.searchGeneralActivities(this.selectCourse20);
-	    list2 = this.searchGeneralActivities(this.selectCourse21);
+	    list = this.searchGeneralActivities(this.selectCourse20, this.phaseLW);
+	    list2 = this.searchGeneralActivities(this.selectCourse21, this.phaseLW);
+	    String c1 = getNameCourse(this.selectCourse20);
+	    String c2 = getNameCourse(this.selectCourse21);
 	    System.out.println(list);
 	    System.out.println(list2);
-	    this.initLineComparative("Comparison between " + this.selectCourse20 + " and " + this.selectCourse21 + " class", this.selectCourse20, this.selectCourse21, list, list2, "Activities", "Number of Interactions");
+	    this.lineModel2 = this.initLineComparative("Comparison between " + c1 + " and " + c2 + " class", c1, c2, list, list2, "Activities", "Number of Interactions");
 	}
 
 	if((this.selectChart2.compareTo("pie") == 0) && (this.showp2 == true))
 	{
 	    HashMap<String, Long> list = new HashMap<String, Long>();
 	    HashMap<String, Long> list2 = new HashMap<String, Long>();
-	    list = this.searchGeneralActivities(this.selectCourse20);
-	    list2 = this.searchGeneralActivities(this.selectCourse21);
+	    list = this.searchGeneralActivities(this.selectCourse20, this.phaseLW);
+	    list2 = this.searchGeneralActivities(this.selectCourse21, this.phaseLW);
+	    String c1 = getNameCourse(this.selectCourse20);
+	    String c2 = getNameCourse(this.selectCourse21);
 	    System.out.println(list);
 	    System.out.println(list2);
-	    this.initPieComparative(this.selectCourse20, this.selectCourse21, list, list2);
+	    List<PieChartModel> pies = this.initPieComparative(c1, c2, list, list2);
+	    this.pieModel20 = pies.get(0);
+	    this.pieModel21 = pies.get(1);
 	}
     }
 
@@ -318,6 +624,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     {
 	System.out.println("initLineModelUser");
 	this.lineModel = new LineChartModel();
+	Long maxValue = 0l;
 
 	ChartSeries class1 = new ChartSeries();
 	class1.setLabel(label);
@@ -325,6 +632,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	{
 	    Long value = data.get(key);
 	    class1.set(key, value);
+	    if(value > maxValue)
+		maxValue = value;
 	    System.out.println("key:" + key + ", value:" + value);
 	}
 
@@ -335,17 +644,24 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	this.lineModel.getAxes().put(AxisType.X, new CategoryAxis(xLabel));
 	Axis yAxis = this.lineModel.getAxis(AxisType.Y);
 	yAxis.setLabel(yLabel);
+
+	while(maxValue % 10 != 0)
+	    maxValue++;
+
 	yAxis.setMin(0);
-	yAxis.setMax(50);
+	yAxis.setMax(maxValue);
+	this.lineModel.setAnimate(true);
+
     }
 
     public void initBarModelUser(String text, String label, HashMap<String, Long> data, String xLabel, String yLabel)
     {
 	System.out.println("initBarModelUser");
 	this.barModel = new BarChartModel();
+	Long maxValue = 0l;
 
 	this.barModel.setTitle(text);
-	this.barModel.setLegendPosition("ne");
+	this.barModel.setLegendPosition("e");
 
 	ChartSeries group1 = new ChartSeries();
 	group1.setLabel(label);
@@ -354,6 +670,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	{
 	    Long value = data.get(key);
 	    group1.set(key, value);
+	    if(value > maxValue)
+		maxValue = value;
 	    System.out.println("key:" + key + ", value:" + value);
 	}
 
@@ -362,8 +680,15 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	xAxis.setLabel(xLabel);
 	Axis yAxis = this.barModel.getAxis(AxisType.Y);
 	yAxis.setLabel(yLabel);
+
+	this.barModel.setAnimate(true);
+
+	while(maxValue % 10 != 0)
+	    maxValue++;
+
 	yAxis.setMin(0);
-	yAxis.setMax(50);
+	yAxis.setMax(maxValue);
+	this.barModel.setAnimate(true);
 
 	if(this.barModel != null)
 	    System.out.println(this.barModel.toString());
@@ -382,124 +707,149 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	}
 
 	this.pieModel.setTitle(text);
-	this.pieModel.setLegendPosition("e");
+	this.pieModel.setLegendPosition("ne");
 	this.pieModel.setFill(false);
 	this.pieModel.setShowDataLabels(true);
-	this.pieModel.setDiameter(200);
+	this.pieModel.setDiameter(250);
     }
 
-    public void initBarComparative(String text, String label, String label1, HashMap<String, Long> data, HashMap<String, Long> data2, String xLabel, String yLabel)
+    public BarChartModel initBarComparative(String text, String label, String label1, HashMap<String, Long> data, HashMap<String, Long> data2, String xLabel, String yLabel)
     {
 	System.out.println("initBarComparative");
-	this.barModel2 = new BarChartModel();
+	BarChartModel b1 = new BarChartModel();
+	Long maxValue = 0l;
 
-	this.barModel2.setTitle(text);
-	this.barModel2.setLegendPosition("ne");
+	b1.setTitle(text);
+	b1.setLegendPosition("ne");
 
 	ChartSeries group1 = new ChartSeries();
-	group1.setLabel("id " + label);
+	group1.setLabel(label);
 
 	for(String key : data.keySet())
 	{
 	    Long value = data.get(key);
 	    group1.set(key, value);
+	    if(value > maxValue)
+		maxValue = value;
 	    System.out.println("key:" + key + ", value:" + value);
 	}
 
 	ChartSeries group2 = new ChartSeries();
-	group2.setLabel("id " + label1);
+	group2.setLabel(label1);
 
 	for(String key2 : data2.keySet())
 	{
 	    Long value = data2.get(key2);
 	    group2.set(key2, value);
+	    if(value > maxValue)
+		maxValue = value;
 	    System.out.println("key:" + key2 + ", value:" + value);
 	}
 
-	this.barModel2.addSeries(group1);
-	this.barModel2.addSeries(group2);
-	Axis xAxis = this.barModel2.getAxis(AxisType.X);
+	b1.addSeries(group1);
+	b1.addSeries(group2);
+	Axis xAxis = b1.getAxis(AxisType.X);
 	xAxis.setLabel(xLabel);
-	Axis yAxis = this.barModel2.getAxis(AxisType.Y);
+	Axis yAxis = b1.getAxis(AxisType.Y);
 	yAxis.setLabel(yLabel);
 	yAxis.setMin(0);
-	yAxis.setMax(1200);
 
+	while(maxValue % 10 != 0)
+	    maxValue++;
+
+	yAxis.setMax(maxValue);
+	b1.setAnimate(true);
+
+	return b1;
     }
 
-    public void initLineComparative(String text, String label, String label1, HashMap<String, Long> data, HashMap<String, Long> data2, String xLabel, String yLabel)
+    public LineChartModel initLineComparative(String text, String label, String label1, HashMap<String, Long> data, HashMap<String, Long> data2, String xLabel, String yLabel)
     {
 	System.out.println("initLineComprative");
-	this.lineModel2 = new LineChartModel();
+	LineChartModel l1 = new LineChartModel();
+	Long maxValue = 0l;
 
 	ChartSeries class1 = new ChartSeries();
-	class1.setLabel("id " + label);
+	class1.setLabel(label);
 	for(String key : data.keySet())
 	{
 	    Long value = data.get(key);
 	    class1.set(key, value);
+	    if(value > maxValue)
+		maxValue = value;
 	    System.out.println("key:" + key + ", value:" + value);
 	}
 
 	ChartSeries class2 = new ChartSeries();
-	class2.setLabel("id " + label1);
+	class2.setLabel(label1);
 	for(String key : data2.keySet())
 	{
 	    Long value = data2.get(key);
 	    class2.set(key, value);
+	    if(value > maxValue)
+		maxValue = value;
 	    System.out.println("key:" + key + ", value:" + value);
 	}
+	while(maxValue % 10 != 0)
+	    maxValue++;
 
-	this.lineModel2.addSeries(class1);
-	this.lineModel2.addSeries(class2);
-	this.lineModel2.setTitle(text);
-	this.lineModel2.setLegendPosition("e");
-	this.lineModel2.setShowPointLabels(true);
-	this.lineModel2.getAxes().put(AxisType.X, new CategoryAxis(xLabel));
-	Axis yAxis = this.lineModel2.getAxis(AxisType.Y);
+	l1.addSeries(class1);
+	l1.addSeries(class2);
+	l1.setTitle(text);
+	l1.setLegendPosition("e");
+	l1.setShowPointLabels(true);
+	l1.getAxes().put(AxisType.X, new CategoryAxis(xLabel));
+	Axis yAxis = l1.getAxis(AxisType.Y);
 	yAxis.setLabel(yLabel);
 	yAxis.setMin(0);
-	yAxis.setMax(1200);
+	yAxis.setMax(maxValue);
+	l1.setAnimate(true);
+	return l1;
     }
 
-    public void initPieComparative(String label, String label1, HashMap<String, Long> data, HashMap<String, Long> data2)
+    public List<PieChartModel> initPieComparative(String label, String label1, HashMap<String, Long> data, HashMap<String, Long> data2)
     {
-	System.out.println("initLineModelComparative");
-	this.pieModel20 = new PieChartModel();
-	this.pieModel21 = new PieChartModel();
+	System.out.println("initPieModelComparative");
+	PieChartModel p1 = new PieChartModel();
+	PieChartModel p2 = new PieChartModel();
 
 	for(String key : data.keySet())
 	{
 	    Long value = data.get(key);
-	    this.pieModel20.set(key, value);
+	    p1.set(key, value);
 	    System.out.println("key:" + key + ", value:" + value);
 	}
 
 	for(String key : data2.keySet())
 	{
 	    Long value = data2.get(key);
-	    this.pieModel21.set(key, value);
+	    p2.set(key, value);
 	    System.out.println("key:" + key + ", value:" + value);
 	}
 
-	this.pieModel20.setTitle(label);
-	this.pieModel20.setLegendPosition("e");
-	this.pieModel20.setFill(false);
-	this.pieModel20.setShowDataLabels(true);
-	this.pieModel20.setDiameter(200);
+	p1.setTitle(label);
+	p1.setLegendPosition("e");
+	p1.setFill(false);
+	p1.setShowDataLabels(true);
+	p1.setDiameter(200);
 
-	this.pieModel21.setTitle(label1);
-	this.pieModel21.setLegendPosition("e");
-	this.pieModel21.setFill(false);
-	this.pieModel21.setShowDataLabels(true);
-	this.pieModel21.setDiameter(200);
+	p2.setTitle(label1);
+	p2.setLegendPosition("e");
+	p2.setFill(false);
+	p2.setShowDataLabels(true);
+	p2.setDiameter(200);
+
+	List<PieChartModel> listPie = new ArrayList<PieChartModel>();
+	listPie.add(p1);
+	listPie.add(p2);
+	return listPie;
 
     }
 
     public void removeFakeUsers(List<User> listU)
     {
-	List<Integer> listUsers = new ArrayList<Integer>(Arrays.asList(new Integer[] { 2282, 2298, 2300, 2302, 2310, 2401, 2405, 2507, 2509, 2539, 2541, 2761, 2857, 3045, 3417, 3439, 3673, 5215, 5217, 7205, 7208, 7210, 7213, 7254, 7252, 7292, 7321, 7381, 7448, 7449, 7512, 7822,
-		8110, 8111, 8306, 8875, 8876, 8881, 8910, 8920, 8921, 8925, 8964, 9069, 1656, 1674, 1676, 1678, 1680, 1682, 2292, 5287, 2225, 5289, 7207, 7209, 5305, 5407, 7727, 2969, 5143, 7662, 5229 }));
+	//I should improve the class Sql to automatize this process (talk with Philipp)
+	List<Integer> listUsers = new ArrayList<Integer>(Arrays.asList(new Integer[] { 1515, 1518, 1519, 1525, 1570, 1682, 2407, 2535, 2537, 2569, 2599, 2763, 2833, 2969, 3007, 3679, 5407, 5229, 5143, 7662, 7727, 8827, 8963, 8975, 9051, 9108 }));
 	List<User> removeList = new ArrayList<User>();
 
 	for(User u : listU)
@@ -808,6 +1158,136 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     public void setShowp2(boolean showp2)
     {
 	this.showp2 = showp2;
+    }
+
+    public String getPhaseLW()
+    {
+	return phaseLW;
+    }
+
+    public void setPhaseLW(String phaseLW)
+    {
+	this.phaseLW = phaseLW;
+    }
+
+    public String getPhaseLW2()
+    {
+	return phaseLW2;
+    }
+
+    public void setPhaseLW2(String phaseLW2)
+    {
+	this.phaseLW2 = phaseLW2;
+    }
+
+    public BarChartModel getBarModel0()
+    {
+	return barModel0;
+    }
+
+    public void setBarModel0(BarChartModel barModel0)
+    {
+	this.barModel0 = barModel0;
+    }
+
+    public PieChartModel getPieModel00()
+    {
+	return pieModel00;
+    }
+
+    public void setPieModel00(PieChartModel pieModel00)
+    {
+	this.pieModel00 = pieModel00;
+    }
+
+    public PieChartModel getPieModel01()
+    {
+	return pieModel01;
+    }
+
+    public void setPieModel01(PieChartModel pieModel01)
+    {
+	this.pieModel01 = pieModel01;
+    }
+
+    public boolean isShowl1()
+    {
+	return showl1;
+    }
+
+    public void setShowl1(boolean showl1)
+    {
+	this.showl1 = showl1;
+    }
+
+    public boolean isShowb1()
+    {
+	return showb1;
+    }
+
+    public void setShowb1(boolean showb1)
+    {
+	this.showb1 = showb1;
+    }
+
+    public boolean isShowp1()
+    {
+	return showp1;
+    }
+
+    public void setShowp1(boolean showp1)
+    {
+	this.showp1 = showp1;
+    }
+
+    public List<Group> getGroups()
+    {
+	return groups;
+    }
+
+    public void setGroups(List<Group> groups)
+    {
+	this.groups = groups;
+    }
+
+    public String getSelectedGroup1()
+    {
+	return selectedGroup1;
+    }
+
+    public void setSelectedGroup1(String selectedGroup1)
+    {
+	this.selectedGroup1 = selectedGroup1;
+    }
+
+    public String getSelectedGroup2()
+    {
+	return selectedGroup2;
+    }
+
+    public void setSelectedGroup2(String selectedGroup2)
+    {
+	this.selectedGroup2 = selectedGroup2;
+    }
+
+    public String getPhaseLW0()
+    {
+	return phaseLW0;
+    }
+
+    public void setPhaseLW0(String phaseLW0)
+    {
+	this.phaseLW0 = phaseLW0;
+    }
+
+    public LineChartModel getLineModel0()
+    {
+	return lineModel0;
+    }
+
+    public void setLineModel0(LineChartModel lineModel0)
+    {
+	this.lineModel0 = lineModel0;
     }
 
 }
