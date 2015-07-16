@@ -8,8 +8,6 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -41,7 +39,12 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     private Resource tedResource;
     private String transcriptLanguage;
     private int noteId;
-    private int tedId;
+
+    /* To get the resource id from ted_video table since id_at_service may or may not be null in lw_resource for TED and
+     * To get the resource id from lw_resource table corresponding to the video added by the admin for TEDx
+     */
+    private int videoResourceId;
+
     private int resourceId;
     private List<SelectItem> languageList;
     private String locale;
@@ -80,6 +83,20 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     public void setTedResource(Resource tedResource)
     {
 	this.tedResource = tedResource;
+
+	try
+	{
+	    if(tedResource.getSource().equalsIgnoreCase("ted"))
+		this.videoResourceId = Learnweb.getInstance().getTedManager().getTedVideoResourceId(tedResource.getUrl());
+	    else if(tedResource.getSource().equalsIgnoreCase("tedx"))
+		this.videoResourceId = Learnweb.getInstance().getTedManager().getTedXVideoResourceId(tedResource.getUrl());
+	}
+	catch(SQLException e)
+	{
+	    addFatalMessage(e);
+	    log.fatal(e);
+	}
+
 	if(tedResource.getSource().equalsIgnoreCase("TEDx"))
 	    //this.tedResource.setEmbeddedRaw("<iframe width='100%' height='100%' src='https://www.youtube.com/embed/" + tedResource.getIdAtService() + "' frameborder='0' scrolling='no' webkitAllowFullScreen mozallowfullscreen allowfullscreen></iframe>");
 	    this.tedResource.setEmbeddedRaw(tedResource.getEmbeddedRaw().replace("width=\"500\" height=\"400\"", "width='100%' height='100%'"));
@@ -109,13 +126,8 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
 	try
 	{
-	    String transcript = Learnweb.getInstance().getTedManager().getTranscript(tedResource.getId(), transcriptLanguage);
-
-	    // TODO  String.replaceAll() does exactly the same thing but is easier to read ;)
-	    String regex = "\n";
-	    Pattern pattern = Pattern.compile(regex);
-	    Matcher matcher = pattern.matcher(transcript);
-	    transcript = matcher.replaceAll("<br/><br/>");
+	    String transcript = Learnweb.getInstance().getTedManager().getTranscript(videoResourceId, transcriptLanguage);
+	    transcript = transcript.replaceAll("\n", "<br/><br/>");
 	    Document doc = Jsoup.parse(transcript);
 	    tedResource.setTranscript(doc.getElementsByTag("body").html());
 	}
@@ -293,7 +305,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	    {
 		Map<String, String> langList;
 		languageList = new LinkedList<SelectItem>();
-		langList = Learnweb.getInstance().getTedManager().getLangList(tedResource.getId());
+		langList = Learnweb.getInstance().getTedManager().getLangList(videoResourceId);
 
 		if(!langList.isEmpty())
 		{

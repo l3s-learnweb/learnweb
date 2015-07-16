@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -63,7 +64,7 @@ public class TedManager
 
     public List<Transcript> getTransscripts(int resourceId) throws SQLException
     {
-	List<Transcript> transcripts = new ArrayList<Transcript>();
+	List<Transcript> transcripts = new LinkedList<Transcript>();
 	String selectTranscripts = "SELECT language_code FROM ted_transcripts WHERE resource_id = ?";
 	String selectTranscriptParagraphs = "SELECT starttime, paragraph FROM ted_transcripts_paragraphs WHERE resource_id = ? AND language = ?";
 
@@ -77,9 +78,6 @@ public class TedManager
 	    Transcript transcript = new Transcript();
 	    String languageCode = rs.getString("language_code");
 	    transcript.setLanguageCode(languageCode);
-	    transcript.setParagraphs(new ArrayList<Transcript.Paragraph>()); // why is this set here and not by default in the Transcript class?
-	    // of course it gives you the opportunity to use the list type that fits your needs. But I think that's not so common.
-	    // as always: if you only plan to iterate over a list and don't use direct access like get(x) use a linkedlist
 
 	    ipStmt.setInt(1, resourceId);
 	    ipStmt.setString(2, languageCode);
@@ -102,21 +100,33 @@ public class TedManager
 	return transcripts;
     }
 
-    public int getTedId(String url) throws SQLException
+    public int getTedVideoResourceId(String url) throws SQLException
     {
-
-	int tedId = 0;
-
+	int tedVideoResourceId = 0;
 	String slug = url.substring(url.lastIndexOf("/") + 1, url.length());
-	PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("SELECT ted_id FROM ted_video WHERE slug = ?");
+	PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("SELECT resource_id FROM ted_video WHERE slug = ?");
 	pStmt.setString(1, slug);
 	ResultSet rs = pStmt.executeQuery();
 	if(rs.next())
 	{
-	    tedId = rs.getInt("ted_id");
+	    tedVideoResourceId = rs.getInt("resource_id");
 	}
 
-	return tedId;
+	return tedVideoResourceId;
+    }
+
+    public int getTedXVideoResourceId(String url) throws SQLException
+    {
+	int tedxVideoResourceId = 0;
+	PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("SELECT resource_id FROM lw_resource WHERE url = ? and owner_user_id = 7727");
+	pStmt.setString(1, url);
+	ResultSet rs = pStmt.executeQuery();
+	if(rs.next())
+	{
+	    tedxVideoResourceId = rs.getInt("resource_id");
+	}
+
+	return tedxVideoResourceId;
     }
 
     public Map<String, String> getLangList(int resourceId) throws SQLException
@@ -202,7 +212,7 @@ public class TedManager
 	    Resource tedVideo = createResource(rs, learnwebResourceId);
 	    int tedId = Integer.parseInt(tedVideo.getIdAtService());
 
-	    tedVideo.setMachineDescription(concatenateTranscripts(tedId));
+	    tedVideo.setMachineDescription(concatenateTranscripts(learnwebResourceId));
 	    tedVideo.setOwner(admin);
 
 	    if(learnwebResourceId == 0) // not yet stored in Learnweb
@@ -237,11 +247,11 @@ public class TedManager
 
     }
 
-    private String concatenateTranscripts(int tedId) throws SQLException
+    private String concatenateTranscripts(int learnwebResourceId) throws SQLException
     {
 	StringBuilder sb = new StringBuilder();
 
-	for(Transcript transcript : getTransscripts(tedId))
+	for(Transcript transcript : getTransscripts(learnwebResourceId))
 	{
 	    if(transcript.getLanguageCode().equals("en") || transcript.getLanguageCode().equals("fr") || transcript.getLanguageCode().equals("de") || transcript.getLanguageCode().equals("es") || transcript.getLanguageCode().equals("it"))
 		for(Paragraph paragraph : transcript.getParagraphs())

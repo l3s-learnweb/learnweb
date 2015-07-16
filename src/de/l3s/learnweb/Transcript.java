@@ -1,5 +1,6 @@
 package de.l3s.learnweb;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import de.l3s.util.StringHelper;
@@ -7,7 +8,7 @@ import de.l3s.util.StringHelper;
 public class Transcript
 {
     private String languageCode;
-    private List<Paragraph> paragraphs;
+    private List<Paragraph> paragraphs = new LinkedList<Transcript.Paragraph>();
 
     public String getLanguageCode()
     {
