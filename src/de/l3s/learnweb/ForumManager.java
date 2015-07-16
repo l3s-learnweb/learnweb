@@ -38,10 +38,10 @@ public class ForumManager
      * @param order
      * @return
      */
-    public List<ForumTopic> getTopicsByGroup(int groupId, ORDER order) throws SQLException
+    public List<ForumTopic> getTopicsByGroup(int groupId) throws SQLException
     {
 	LinkedList<ForumTopic> topics = new LinkedList<ForumTopic>();
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FORUMTOPICCOLUMNS + " FROM `forum_topic` WHERE group_id = ? ORDER BY ORDER");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FORUMTOPICCOLUMNS + " FROM `forum_topic` WHERE group_id = ? ORDER BY topic_time DESC");
 	select.setInt(1, groupId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -130,6 +130,7 @@ public class ForumManager
 	ps.setDate(7, forumPost.getLastEditDate() == null ? null : new java.sql.Date(forumPost.getLastEditDate().getTime()));
 	ps.setInt(8, forumPost.getEditUserId());
 	ps.executeUpdate();
+
 	return forumPost;
     }
 

@@ -471,6 +471,8 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     @Override
     public Resource clone()
     {
+	// TODO copy archive urls?
+
 	Resource r = new Resource();
 	r.setId(-1);
 	r.setTitle(title);
@@ -489,6 +491,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	r.setEmbeddedSize4Raw(embeddedSize4);
 	r.setMaxImageUrl(maxImageUrl);
 	r.setFileName(fileName);
+	r.setFileUrl(fileUrl);
 	r.setQuery(query);
 	r.setOriginalResourceId(id); // sets the originalResourceId to the id of the source resource
 	r.setThumbnail0(thumbnail0);
@@ -503,7 +506,6 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	r.setTranscript(transcript);
 	r.setOnlineStatus(onlineStatus);
 	r.setIdAtService(idAtService);
-	r.setFileUrl(fileUrl);
 	r.setRestricted(restricted);
 
 	return r;
