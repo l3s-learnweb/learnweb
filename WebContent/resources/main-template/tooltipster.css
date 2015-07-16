@@ -2,8 +2,9 @@
 .tooltipster-default{
 	border-radius: 5px; 
 	border: 2px solid #000;
-	background:#489a83 ;	/*standard #4c4c4c*/
-	color: #fff;			/*standard #fff*/
+	background:#489a83 ;
+	color: #fff;	
+	box-shadow: 6px 6px 7px 0px rgba(0,0,0,0.5);
 }
 
 /* Use this next selector to style things like font-size and line-height: */
@@ -20,19 +21,11 @@
 	/* border-color: ... !important; */
 }
 
-
 /* If you're using the icon option, use this next selector to style them */
 .tooltipster-icon {
 	cursor: help;
 	margin-left: 4px;
 }
-
-
-
-
-
-
-
 
 /* This is the base styling required to make all Tooltipsters work */
 .tooltipster-base{
@@ -50,7 +43,6 @@
 .tooltipster-base .tooltipster-content {
 	overflow: hidden;
 }
-
 
 /* These next classes handle the styles for the little arrow attached to the tooltip. By default, the arrow will inherit the same colors and border as what is set on the main tooltip itself. */
 .tooltipster-arrow{
@@ -260,15 +252,4 @@
 	transition-property: all;
 	left: 0px !important;
 	opacity: 0;
-}
-
-
-/* CSS transition for when contenting is changing in a tooltip that is still open. The only properties that will NOT transition are: width, height, top, and left */
-.tooltipster-content-changing {
-	opacity: 0.5;
-	-webkit-transform: scale(1.1, 1.1);
-	-moz-transform: scale(1.1, 1.1);
-	-o-transform: scale(1.1, 1.1);
-	-ms-transform: scale(1.1, 1.1);
-	transform: scale(1.1, 1.1);
 }

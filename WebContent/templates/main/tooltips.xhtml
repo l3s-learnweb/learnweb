@@ -1,0 +1,169 @@
+<html xmlns:ui="http://java.sun.com/jsf/facelets" 
+      xmlns:h="http://java.sun.com/jsf/html" 
+      xmlns:f="http://java.sun.com/jsf/core">
+      
+<ui:composition>
+	
+	<h:outputStylesheet library="main-template" name="tooltipster.css" />
+	<script type="text/javascript" src="#{request.contextPath}/resources/js/jquery.tooltipster.min.js" />
+	
+	<script>
+		
+	$(document).ready(function() {
+		<ui:fragment rendered="#{userBean.showMessageJoinGroupInHeader}">
+		
+			   // first on page load, initiate the Tooltipster plugin
+			   $('#mygroups').tooltipster({
+				   animation: 'grow',
+				   delay: 600,
+				   theme: 'tooltipster-default',
+				   touchDevices: false,
+				   trigger: 'hover',
+				   content:'Hier klicken um einer Gruppe beizutreten'
+				});
+
+			   // then immediately show the tooltips
+			   setTimeout(function()
+				{ 
+						   $('#mygroups').tooltipster('show');
+				}, 600);
+			  
+
+			   // as soon as a key is pressed on the keyboard, hide the tooltip.
+			  $(window).mousedown(function() {
+			      $('#mygroups').tooltipster('hide');
+			   });
+		</ui:fragment>
+	
+		<ui:fragment rendered="#{userBean.showMessageJoinGroup}">
+			  // first on page load, initiate the Tooltipster plugin
+			   $('#create_group_button').tooltipster({
+				   animation: 'grow',
+				   delay: 600,
+				   theme: 'tooltipster-default',
+				   touchDevices: false,
+				   trigger: 'hover',
+				   content:'Hier kannst du deine eigene Gruppe erstellen',
+				   position:'bottom'
+				});
+
+			   // then immediately show the tooltips
+			   setTimeout(function()
+				{ 
+						   $('#create_group_button').tooltipster('show');
+				}, 1200);
+			  
+
+			   // as soon as a key is pressed on the keyboard, hide the tooltip.
+			  $(window).mousedown(function() {
+			      $('#create_group_button').tooltipster('hide');
+			   });
+			  
+		</ui:fragment>
+		
+		<ui:fragment rendered="#{userBean.showMessageJoinGroup}">
+		// first on page load, initiate the Tooltipster plugin
+		   $('#option_join_group').tooltipster({
+			   animation: 'grow',
+			   delay: 600,
+			   theme: 'tooltipster-default',
+			   touchDevices: false,
+			   trigger: 'hover',
+			   content:'Hier klicken um einer Gruppe beizutreten',
+			   position:'top'
+			});
+
+		   // then immediately show the tooltips
+		   setTimeout(function()
+			{ 
+					   $('#option_join_group').tooltipster('show');
+			}, 600);
+		  
+
+		   // as soon as a key is pressed on the keyboard, hide the tooltip.
+		  $(window).mousedown(function() {
+		      $('#option_join_group').tooltipster('hide');
+		   });
+	  </ui:fragment>
+	  
+	  /*<ui:fragment rendered="#{userBean.showMessageJoinGroup}">
+		// first on page load, initiate the Tooltipster plugin
+		   $('.group_link').tooltipster({
+			   animation: 'grow',
+			   delay: 600,
+			   theme: 'tooltipster-default',
+			   touchDevices: false,
+			   trigger: 'hover',
+			   content:'Hier kannst du einen Blick in die Gruppe werfen',
+			   position:'right'
+			});
+
+		   // then immediately show the tooltips
+		   setTimeout(function()
+			{ 
+					   $('.group_link').tooltipster('show');
+			}, 600);
+		  
+
+		   // as soon as a key is pressed on the keyboard, hide the tooltip.
+		  $(window).keypress(function() {
+		      $('.group_link').tooltipster('hide');
+		   });
+	  </ui:fragment>*/
+	  
+	  
+	  <ui:fragment rendered="#{userBean.showMessageAddResourceInHeader}">
+		   // first on page load, initiate the Tooltipster plugin
+		   $('#myresources').tooltipster({
+			   animation: 'grow',
+			   delay: 600,
+			   theme: 'tooltipster-default',
+			   touchDevices: false,
+			   trigger: 'hover',
+			   content:'Hier klicken um eine Ressource hinzuzufügen.'
+			});
+
+		   // then immediately show the tooltips
+		   setTimeout(function()
+			{ 
+					   $('#myresources').tooltipster('show');
+			}, 600);
+		  
+
+		   // as soon as a key is pressed on the keyboard, hide the tooltip.
+		  $(window).keypress(function() {
+		      $('#myresources').tooltipster('hide');
+		   });
+		</ui:fragment>   
+		
+		<ui:fragment rendered="#{userBean.showMessageAddResource}">
+		   // first on page load, initiate the Tooltipster plugin
+		   $('.ressourcetoolbutton').tooltipster({
+			   animation: 'grow',
+			   delay: 600,
+			   theme: 'tooltipster-default',
+			   touchDevices: false,
+			   trigger: 'hover',
+			   content:'Füge Ressourcen hinzu.',
+			   position:'bottom'
+			});
+
+		   // then immediately show the tooltips
+		   setTimeout(function()
+			{ 
+					   $('.ressourcetoolbutton').tooltipster('show');
+			}, 600);
+		  
+
+		   // as soon as a key is pressed on the keyboard, hide the tooltip.
+		  $(window).keypress(function() {
+		      $('.ressourcetoolbutton').tooltipster('hide');
+		   });
+		</ui:fragment>
+		
+	 });
+   	</script>
+
+</ui:composition>
+
+</html>
