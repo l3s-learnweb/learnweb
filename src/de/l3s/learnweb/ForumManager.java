@@ -161,6 +161,7 @@ public class ForumManager
     	return editPost;
         }
     */
+
     public ForumPost createPost(ResultSet rs) throws SQLException
     {
 	int postId = rs.getInt("post_id");
@@ -170,11 +171,8 @@ public class ForumManager
 	forumPost.setUserId(rs.getInt("user_id"));
 	forumPost.setGroupId(rs.getInt("group_id"));
 	forumPost.setText(rs.getString("text"));
-
-	// forumPost.setDate(rs.getDate(postId, null) == null ? null : new java.sql.Date(forumPost.getDate().getTime()));
-
-	forumPost.setDate(rs.getDate("post_time"));
-	forumPost.setLastEditDate(rs.getDate("post_edit_time"));
+	forumPost.setDate(rs.getDate("post_time") == null ? null : new java.sql.Date(rs.getDate("post_time").getTime()));
+	forumPost.setLastEditDate(rs.getDate("post_edit_time") == null ? null : new java.sql.Date(rs.getDate("post_edit_time").getTime()));
 	forumPost.setEditCount(rs.getInt("post_edit_count"));
 	forumPost.setEditUserId(rs.getInt("post_edit_user_id"));
 	return forumPost;
@@ -188,7 +186,7 @@ public class ForumManager
 	forumTopic.setUserId(rs.getInt("user_id"));
 	forumTopic.setGroupId(rs.getInt("group_id"));
 	forumTopic.setTopic(rs.getString("topic_title"));
-	forumTopic.setDate(rs.getDate("topic_time")); // TODO sql.date contains only the date not the time you have to use rs.getTimeStamp (see usermanager for example) This must is also a problem while saving a date
+	forumTopic.setDate(rs.getDate("topic_time") == null ? null : new java.sql.Date(rs.getDate("topic_time").getTime())); // TODO sql.date contains only the date not the time you have to use rs.getTimeStamp (see usermanager for example) This must is also a problem while saving a date
 	forumTopic.setTopicView(rs.getInt("topic_views"));
 	forumTopic.setTopicReplies(rs.getInt("topic_replies"));
 	forumTopic.setTopicLastPostId(rs.getInt("topic_last_post_id"));
