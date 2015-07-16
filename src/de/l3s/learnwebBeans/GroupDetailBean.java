@@ -8,6 +8,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -113,6 +114,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private Group newGroup = new Group();
 
     private AbstractPaginator paginator;
+
+    private HttpTransport httpTransport;
+    private JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
+    private Drive drive = null;
 
     public GroupDetailBean() throws SQLException
     {
@@ -815,30 +820,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     private String createNewGoogleDocument(String title, String type) throws IOException, SQLException
     {
-	HttpTransport httpTransport = null;
-	GoogleCredential credential = null;
-	JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-
-	try
-	{
-	    httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-	    credential = new GoogleCredential.Builder().setTransport(httpTransport).setJsonFactory(jsonFactory).setServiceAccountId("181029990744-vegd7p8ugh5amn1ilgunba03d1pai4sb@developer.gserviceaccount.com")
-		    .setServiceAccountScopes(Collections.singleton(DriveScopes.DRIVE_FILE)).setServiceAccountPrivateKeyFromP12File(new java.io.File(getClass().getClassLoader().getResource("Learnweb-55153726550a.p12").toURI())).build();
-	    credential.refreshToken();
-	}
-	catch(GeneralSecurityException e)
-	{
-	    log.error("Can not access to Google API");
-	    //e.printStackTrace();
-	}
-	catch(URISyntaxException e)
-	{
-	    log.error("Can not load P12File for Google API");
-	    //e.printStackTrace();
-	}
-
-	Drive drive = new Drive.Builder(httpTransport, jsonFactory, credential).setApplicationName("LearnWeb").build();
-
 	File fileMetadata = new File();
 	fileMetadata.setTitle(title);
 	fileMetadata.setParents(Collections.singletonList(new ParentReference().setId("0B_Sy7ytn1dadbkxEZGFZTm5kZU0")));
@@ -849,14 +830,62 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    fileMetadata.setMimeType("application/vnd.google-apps.presentation");
 	else if(type.equals("spreadsheet"))
 	    fileMetadata.setMimeType("application/vnd.google-apps.spreadsheet");
+	else if(type.equals("drawing"))
+	    fileMetadata.setMimeType("application/vnd.google-apps.drawing");
 	else
-	    throw new IllegalArgumentException("type should be: document, presentation or spreadsheet");
+	    throw new IllegalArgumentException("type should be: document, presentation, drawing or spreadsheet");
 
-	Drive.Files.Insert insert = drive.files().insert(fileMetadata);
+	Drive.Files.Insert insert = getGoogleDocument().files().insert(fileMetadata);
 	File uploadedFile = insert.execute();
 	log.debug("Added new Google Document: " + uploadedFile.getAlternateLink());
-	log.debug("ThumbnailLink: " + uploadedFile.getThumbnailLink());
+	log.debug("Thumbnail: " + getGoogleDocumentThumbnail(uploadedFile.getId()));
 	return uploadedFile.getAlternateLink();
+    }
+
+    private String getGoogleDocumentThumbnail(String dicId) throws IOException
+    {
+	return getGoogleDocumentThumbnail(dicId, false);
+    }
+
+    private String getGoogleDocumentThumbnail(String dicId, boolean isCheckDate) throws IOException
+    {
+	File file = getGoogleDocument().files().get(dicId).execute();
+	Calendar now = Calendar.getInstance();
+	if(isCheckDate && (now.getTimeInMillis() - file.getModifiedDate().getValue() >= 86400000)) // 24 * 60 * 60 * 1000
+	{
+	    return null;
+	}
+
+	return file.getThumbnailLink();
+    }
+
+    private Drive getGoogleDocument() throws IOException
+    {
+	if(drive == null)
+	{
+	    GoogleCredential credential = null;
+	    try
+	    {
+		httpTransport = GoogleNetHttpTransport.newTrustedTransport();
+		credential = new GoogleCredential.Builder().setTransport(httpTransport).setJsonFactory(jsonFactory).setServiceAccountId("181029990744-vegd7p8ugh5amn1ilgunba03d1pai4sb@developer.gserviceaccount.com")
+			.setServiceAccountScopes(Collections.singleton(DriveScopes.DRIVE_FILE)).setServiceAccountPrivateKeyFromP12File(new java.io.File(getClass().getClassLoader().getResource("Learnweb-55153726550a.p12").toURI())).build();
+		credential.refreshToken();
+	    }
+	    catch(GeneralSecurityException e)
+	    {
+		log.error("Can not access to Google API");
+		//e.printStackTrace();
+	    }
+	    catch(URISyntaxException e)
+	    {
+		log.error("Can not load P12File for Google API");
+		//e.printStackTrace();
+	    }
+
+	    drive = new Drive.Builder(httpTransport, jsonFactory, credential).setApplicationName("LearnWeb").build();
+	}
+
+	return drive;
     }
 
     public boolean hasViewPermission(User user) throws SQLException
