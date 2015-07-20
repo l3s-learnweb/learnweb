@@ -24,6 +24,7 @@ import org.primefaces.context.RequestContext;
 import rita.wordnet.RiWordnet;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.SimpleTranscriptLog;
 import de.l3s.learnweb.TranscriptLog;
 import de.l3s.learnweb.beans.UtilBean;
 
@@ -343,6 +344,12 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     {
 	List<TranscriptLog> transcriptLogs = getLearnweb().getTedManager().getTranscriptLogs(UtilBean.getUserBean().getActiveCourse().getId());
 	return transcriptLogs;
+    }
+
+    public List<SimpleTranscriptLog> getSimpleTranscriptLogs() throws SQLException
+    {
+	List<SimpleTranscriptLog> simpleTranscriptLogs = getLearnweb().getTedManager().getSimpleTranscriptLogs(UtilBean.getUserBean().getActiveCourse().getId());
+	return simpleTranscriptLogs;
     }
 
     public int getResourceId()

@@ -1,0 +1,42 @@
+<ui:composition template="/templates/main/main.xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	lang="#{userBean.localeCode}">
+	
+	<ui:param name="pageTitle" value="#{msg.transcript_logs}" />
+	<ui:param name="loginRequired" value="true"/>
+
+	<ui:define name="center_layout">
+		<h:form style="padding:5px">
+			<p:dataTable var="log" value="#{tedTranscriptBean.simpleTranscriptLogs}" rows="30"
+				paginator="true"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+				rowsPerPageTemplate="20,25,30">
+				<p:column headerText="#{msg.username}">
+					<h:outputText value="#{log.user.username}" />
+				</p:column>
+
+				<p:column headerText="#{msg.tedTalk}">
+					<h:outputLink value="#{request.contextPath}/lw/ted_transcript.jsf" target="_blank" style="text-decoration:underline">
+						<h:outputText value="#{log.resource.title}" />
+						<f:param name="resource_id" value="#{log.resource.id}"/>
+					</h:outputLink>
+				</p:column>
+	
+				<p:column headerText="#{msg.selection_count}">
+					<h:outputText value="#{log.selectionCount}" />
+				</p:column>
+					
+				<p:column headerText="#{msg.deselection_count}">
+					<h:outputText value="#{log.deselectionCount}" />
+				</p:column>
+	
+				<p:column headerText="#{msg.user_annotation_count}">
+					<h:outputText value="#{log.userAnnotationCount}" />
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</ui:define>
+</ui:composition>

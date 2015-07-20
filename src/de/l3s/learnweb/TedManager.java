@@ -191,6 +191,32 @@ public class TedManager
 	return transcriptLogs;
     }
 
+    public List<SimpleTranscriptLog> getSimpleTranscriptLogs(int courseId) throws SQLException
+    {
+	List<SimpleTranscriptLog> simpleTranscriptLogs = new LinkedList<SimpleTranscriptLog>();
+
+	PreparedStatement getUsers = learnweb.getConnection().prepareStatement("SELECT t1.user_id FROM `lw_user_course` t1 WHERE t1.course_id = ? AND t1.user_id !=7727");
+	getUsers.setInt(1, courseId);
+	ResultSet rs = getUsers.executeQuery();
+	int userId;
+	while(rs.next())
+	{
+	    userId = rs.getInt("user_id");
+	    PreparedStatement pStmt = learnweb
+		    .getConnection()
+		    .prepareStatement(
+			    "SELECT t1.resource_id,title, SUM(action = 'selection') as selcount, SUM(action = 'deselection') as deselcount, SUM(user_annotation != '') as uacount FROM lw_resource t1 LEFT JOIN lw_transcript_actions t2 ON t1.resource_id = t2.resource_id WHERE (action = 'selection' OR action = 'deselection' OR user_annotation != '' OR action IS NULL) AND t1.owner_user_id = ? AND t1.deleted = 0 GROUP BY t1.resource_id");
+	    pStmt.setInt(1, userId);
+	    ResultSet rs2 = pStmt.executeQuery();
+	    while(rs2.next())
+	    {
+		SimpleTranscriptLog simpleTranscriptLog = new SimpleTranscriptLog(userId, rs2.getInt("resource_id"), rs2.getInt("selcount"), rs2.getInt("deselcount"), rs2.getInt("uacount"));
+		simpleTranscriptLogs.add(simpleTranscriptLog);
+	    }
+	}
+	return simpleTranscriptLogs;
+    }
+
     //For saving crawled ted videos into lw_resource table
     public void saveTedResource() throws SQLException, IOException, SolrServerException
     {
@@ -359,7 +385,7 @@ public class TedManager
 		    log.debug("new video added");
 		}
 
-		// TODO check if new transcripts are available for "resource" variable
+		//check if new transcripts are available for "resource" variable
 		fetchTedXTranscripts(resource.getIdAtService(), resource.getId());
 	    }
 

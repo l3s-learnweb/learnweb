@@ -9,7 +9,7 @@
 	<ui:param name="loginRequired" value="true"/>
 
 	<ui:define name="center_layout">
-		<h:form  style="padding-right:5px;">
+		<h:form  style="padding:5px;">
 			<p:dataTable var="log" value="#{tedTranscriptBean.transcriptLogs}" rows="30"
 				paginator="true"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
@@ -18,7 +18,7 @@
 					<h:outputText value="#{log.user.username}" />
 				</p:column>
 
-				<p:column headerText="TED Talk">
+				<p:column headerText="#{msg.tedTalk}">
 					<h:outputText value="#{log.resource.title}" />
 				</p:column>
 

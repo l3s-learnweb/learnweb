@@ -17,10 +17,10 @@ public class JobScheduler
 	this.learnweb = learnweb;
 	this.scheduler = new Scheduler();
 
-	UpdateTedVideos task = new UpdateTedVideos();
+	//UpdateTedVideos task = new UpdateTedVideos();
 	//Schedules the task, at 1:00 everyday
 	//description about Scheduling patterns : http://www.sauronsoftware.it/projects/cron4j/manual.php#p02 
-	scheduler.schedule("0 1 * * *", task);
+	//scheduler.schedule("0 1 * * *", task);
 
 	//AddArchiveUrlToResource archiveTask = new AddArchiveUrlToResource();
 	//Schedule the archiveTask every minute
