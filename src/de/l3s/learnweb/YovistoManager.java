@@ -108,8 +108,6 @@ public class YovistoManager
 		    catch(SQLException e)
 		    {
 			log.error(e);
-			e.printStackTrace();
-
 		    }
 
 		    try

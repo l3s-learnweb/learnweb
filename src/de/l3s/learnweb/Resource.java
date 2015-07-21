@@ -155,6 +155,19 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	    setThumbnail3(restrictedImage);
 	    setThumbnail4(restrictedImage);
 	}
+	else if(getOnlineStatus().equals(OnlineStatus.OFFLINE))
+	{
+	    embeddedSize1 = "<img src=\"../resources/resources/img/page_not_found.jpg\" width=\"300\" height=\"300\" />";
+
+	    // TODO find a better solution; don't set a fixed error image
+	    Thumbnail pageNotFoundImage = new Thumbnail("../resources/resources/img/page_not_found.jpg", 300, 300);
+	    setThumbnail0(pageNotFoundImage);
+	    setThumbnail1(pageNotFoundImage);
+	    setThumbnail2(pageNotFoundImage);
+	    setThumbnail3(pageNotFoundImage);
+	    setThumbnail4(pageNotFoundImage);
+
+	}
 	else if(null == embeddedSize1 || null == embeddedSize3)
 	{
 

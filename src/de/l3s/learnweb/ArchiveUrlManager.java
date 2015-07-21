@@ -15,7 +15,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Queue;
@@ -33,8 +32,10 @@ import java.util.regex.Pattern;
 import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.learnweb.Resource.OnlineStatus;
+import de.l3s.learnweb.solrClient.SolrClient;
 
 public class ArchiveUrlManager
 {
@@ -301,141 +302,171 @@ public class ArchiveUrlManager
     public void saveArchiveItResources() throws SQLException
     {
 	ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
+	SolrClient solr = learnweb.getSolrClient();
+	Group humanRightsGroup = learnweb.getGroupManager().getGroupById(927);
+	User admin = learnweb.getUserManager().getUser(7727);
 
-	Group humanRightsGroup = learnweb.getGroupManager().getGroupById(917);
-	User archiveDemo = learnweb.getUserManager().getUser(9182);
+	//int tagCount = 0;
 
 	PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM archiveit_collection WHERE collection_id = ?");
 	pStmt.setInt(1, collectionId);
 	ResultSet rs = pStmt.executeQuery();
 	while(rs.next())
 	{
-	    String urlString = rs.getString("url");
-	    String description = rs.getString("description");
-	    String title = rs.getString("title");
-	    String author = rs.getString("creator");
-	    String language = rs.getString("language");
-	    String subject = rs.getString("subject");
-	    String[] languages;
-	    String lwLang = "";
-	    if(!language.isEmpty())
-	    {
-		languages = language.split("[,;]+");
-		lwLang = languages[0];
-
-		Locale[] allLocale = Locale.getAvailableLocales();
-		for(Locale l : allLocale)
-		{
-		    if(l.getDisplayName().toLowerCase().trim().contains(lwLang.toLowerCase().trim()))
-		    {
-			lwLang = l.getLanguage().trim();
-			break;
-		    }
-		}
-		if(lwLang.length() != 2)
-		    lwLang = "";
-	    }
+	    //String subject = rs.getString("subject");
+	    int resourceId = rs.getInt("resource_id");
 
 	    boolean toProcessUrl = false, redirect = false;
-	    Resource archiveResource = createResource(urlString, title, description, author, lwLang);
+	    int learnwebResourceId = rs.getInt("lw_resource_id");
+	    String archiveitUrl = rs.getString("url"); //To fetch Archive-It versions of a resource 
+	    Resource archiveResource = createResource(learnwebResourceId, rs);
 
-	    try
+	    if(learnwebResourceId == 0)
 	    {
-		URL url = new URL(archiveResource.getUrl());
-		URLConnection con = url.openConnection();
-		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
-		con.setRequestProperty("Accept-Language", "en-US");
-		con.setConnectTimeout(60000);
-		con.connect();
-		HttpURLConnection httpCon = (HttpURLConnection) con;
-		int status = httpCon.getResponseCode();
-
-		if(status != HttpURLConnection.HTTP_OK)
+		try
 		{
-		    // Handling, 3xx which is redirect
-		    if(status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM || status == HttpURLConnection.HTTP_SEE_OTHER)
+		    URL url = new URL(archiveResource.getUrl());
+		    URLConnection con = url.openConnection();
+		    con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+		    con.setRequestProperty("Accept-Language", "en-US");
+		    con.setConnectTimeout(60000);
+		    con.connect();
+		    HttpURLConnection httpCon = (HttpURLConnection) con;
+		    int status = httpCon.getResponseCode();
+
+		    if(status != HttpURLConnection.HTTP_OK)
 		    {
-			redirect = true;
-			toProcessUrl = true;
+			// Handling, 3xx which is redirect
+			if(status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM || status == HttpURLConnection.HTTP_SEE_OTHER)
+			{
+			    redirect = true;
+			    toProcessUrl = true;
+			}
+			else
+			    log.info("Failed : HTTP error code : " + httpCon.getResponseCode() + " URL:" + con.getURL());
+
 		    }
 		    else
-			log.info("Failed : HTTP error code : " + httpCon.getResponseCode() + " URL:" + con.getURL());
+			toProcessUrl = true;
 
-		}
-		else
-		    toProcessUrl = true;
-
-		if(redirect)
-		{
-		    archiveResource.setUrl(con.getHeaderField("Location"));
-		}
-		if(toProcessUrl)
-		{
-		    log.info("Url Still Alive " + httpCon.getResponseCode() + " URL:" + archiveResource.getUrl());
-		    try
+		    if(redirect)
 		    {
-			rpm.processWebsite(archiveResource);
+			archiveResource.setUrl(con.getHeaderField("Location"));
 		    }
-		    catch(Exception e)
+		    if(toProcessUrl)
 		    {
-			log.error(e);
-			archiveResource.setOnlineStatus(OnlineStatus.OFFLINE); // offline
+			log.info("Url Still Alive " + httpCon.getResponseCode() + " URL:" + archiveResource.getUrl());
+			try
+			{
+			    rpm.processWebsite(archiveResource);
+			    archiveResource.setOnlineStatus(OnlineStatus.ONLINE);
+			}
+			catch(Exception e)
+			{
+			    log.error(e);
+			    archiveResource.setOnlineStatus(OnlineStatus.OFFLINE); // offline
+			}
+		    }
+		    else
+		    {
+			archiveResource.setOnlineStatus(OnlineStatus.OFFLINE);
 		    }
 		}
-		else
+		catch(IOException | IllegalArgumentException e)
 		{
+		    log.error("Error while trying to connect to the URL", e);
 		    archiveResource.setOnlineStatus(OnlineStatus.OFFLINE);
 		}
-	    }
-	    catch(IOException | IllegalArgumentException e)
-	    {
-		log.error("Error while trying to connect to the URL", e);
-		archiveResource.setOnlineStatus(OnlineStatus.OFFLINE);
-	    }
-	    /*archiveResource = archiveDemo.addResource(archiveResource);
-	    humanRightsGroup.addResource(archiveResource, archiveDemo);
-	    MementoClient mClient = learnweb.getMementoClient();
-	    List<ArchiveUrl> archiveVersions = mClient.getArchiveItVersions(collectionId, archiveResource.getUrl());
-	    saveArchiveItVersions(archiveResource.getId(), archiveVersions);*/
-	    System.out.println(archiveResource.getUrl() + " " + archiveResource.getTitle() + " " + archiveResource.getOnlineStatus() + " " + archiveResource.getLanguage());
+		PreparedStatement update = Learnweb.getInstance().getConnection().prepareStatement("UPDATE archiveit_collection SET lw_resource_id = ? WHERE collection_id = ? AND resource_id = ?");
+		archiveResource = admin.addResource(archiveResource);
+		humanRightsGroup.addResource(archiveResource, admin);
 
-	    String[] tags = subject.split(",");
-	    HashSet<String> lwTags = new HashSet<String>();
+		update.setInt(1, archiveResource.getId());
+		update.setInt(2, collectionId);
+		update.setInt(3, resourceId);
+		update.executeUpdate();
 
-	    for(String tag : tags)
-	    {
+		try
+		{
+		    solr.indexResource(archiveResource);
+		}
+		catch(IOException | SolrServerException e)
+		{
+		    log.error("Error in indexing the Archive-It resource with lw_resource ID: " + archiveResource.getId(), e);
+		}
+
+		MementoClient mClient = learnweb.getMementoClient();
+		List<ArchiveUrl> archiveVersions = mClient.getArchiveItVersions(collectionId, archiveitUrl);
+		saveArchiveItVersions(archiveResource.getId(), archiveVersions);
+		System.out.println(archiveResource.getUrl() + " " + archiveResource.getTitle() + " " + archiveResource.getOnlineStatus() + " " + archiveResource.getLanguage());
+
+		/*String[] tags = subject.split(",");
+		HashSet<String> lwTags = new HashSet<String>();
+		tagCount = 0;
+		for(String tag : tags)
+		{
+		tagCount++;
 		tag = tag.trim();
 		tag = tag.replace("and ", "");
 		lwTags.add(tag);
+		if(tagCount == 9)
+		    break;
+		}
+		lwTags.add(humanRightsGroup.getTitle());
+		for(String tagName : lwTags)
+		{*/
+		String tagName = humanRightsGroup.getTitle();
+		try
+		{
+		    addTagToResource(archiveResource, tagName, admin);
+		}
+		catch(Exception e)
+		{
+		    log.error("Error in adding tags " + tagName, e);
+		}
+		//}
 	    }
-
-	    /*for(String tagName : lwTags)
-	    {
-	    try
-	    {
-	        addTagToResource(archiveResource, tagName, archiveDemo);
-	    }
-	    catch(Exception e)
-	    {
-	        log.error("Error in adding tags " + tagName, e);
-	    }
-	    }*/
-	    System.out.println(lwTags.size() + " " + lwTags.toString());
+	    else
+		archiveResource.save();
+	    log.info("Processed; lw: " + archiveResource.getId() + " collection ID: " + collectionId + " resource ID: " + resourceId + " title:" + archiveResource.getTitle());
 	}
     }
 
-    private Resource createResource(String url, String title, String description, String author, String language)
+    private Resource createResource(int learnwebResourceId, ResultSet rs) throws SQLException
     {
 	Resource resource = new Resource();
 
-	if(title != null)
-	    resource.setTitle(title);
-	if(description != null)
-	    resource.setDescription(description);
-	resource.setUrl(url);
-	resource.setAuthor(author);
-	resource.setLanguage(language);
-	resource.setSource("ArchiveIt");
+	if(learnwebResourceId != 0) // the video is already stored and will be updated
+	    resource = learnweb.getResourceManager().getResource(learnwebResourceId);
+
+	resource.setTitle(rs.getString("title"));
+	resource.setDescription(rs.getString("description"));
+	resource.setUrl(rs.getString("url"));
+	resource.setAuthor(rs.getString("creator"));
+
+	String language = rs.getString("language");
+	String[] languages;
+	String lwLang = "";
+	if(!language.isEmpty())
+	{
+	    languages = language.split("[,;]+");
+	    lwLang = languages[0];
+
+	    Locale[] allLocale = Locale.getAvailableLocales();
+	    for(Locale l : allLocale)
+	    {
+		if(l.getDisplayName().toLowerCase().trim().contains(lwLang.toLowerCase().trim()))
+		{
+		    lwLang = l.getLanguage().trim();
+		    break;
+		}
+	    }
+	    if(lwLang.length() != 2)
+		lwLang = "";
+	}
+
+	resource.setLanguage(lwLang);
+	resource.setSource("Archive-It");
 	resource.setType("text");
 
 	return resource;
@@ -476,6 +507,40 @@ public class ArchiveUrlManager
 	}
     }
 
+    public void createArchiveItGroups()
+    {
+	try
+	{
+	    int courseId = 891;
+	    User admin = learnweb.getUserManager().getUser(7727);
+	    PreparedStatement prepStmt = learnweb
+		    .getConnection()
+		    .prepareStatement(
+			    "SELECT collection_id, collection_name, t2.url, COUNT(*) FROM `archiveit_collection` t1 JOIN archiveit_subject t2 USING (collection_id) WHERE collection_id NOT IN (3358, 5407, 2252, 3547, 1417, 3123, 1036, 1042) GROUP BY collection_id HAVING COUNT(*) >= 50 ORDER BY COUNT(*) DESC");
+	    PreparedStatement updateGroupId = learnweb.getConnection().prepareStatement("UPDATE archiveit_subject SET group_id = ? WHERE collection_id = ?");
+	    ResultSet rs = prepStmt.executeQuery();
+	    while(rs.next())
+	    {
+		Group newGroup = new Group();
+		newGroup.setTitle(rs.getString("collection_name"));
+		newGroup.setDescription(rs.getString("url"));
+		newGroup.setCourseId(courseId);
+		newGroup.setLeader(admin);
+		Group group = learnweb.getGroupManager().save(newGroup);
+		updateGroupId.setInt(1, group.getId());
+		updateGroupId.setInt(2, rs.getInt("collection_id"));
+		updateGroupId.executeUpdate();
+	    }
+	    updateGroupId.close();
+	    prepStmt.close();
+	}
+	catch(SQLException e)
+	{
+	    log.error("Error while trying to save the resource with the archived URL", e);
+	}
+
+    }
+
     /*public static String getMementoDatetime(String archiveURL)
     {
     Client client = Client.create();
@@ -505,6 +570,7 @@ public class ArchiveUrlManager
 
 	ArchiveUrlManager archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
 	archiveUrlManager.saveArchiveItResources();
+	//archiveUrlManager.createArchiveItGroups();
 
 	/*Client client = Client.create();
 	WebResource webResource = client.resource("https://archive.is/submit/");

@@ -83,7 +83,7 @@ public abstract class AbstractPaginator implements Serializable
 	    endIndex = totalPages;
 	}
 
-	if(totalPages < 5)
+	if(totalPages <= 5)
 	    for(int i = 0; i < totalPages + 1; i++)
 		pages.add(i + 1);
 	else

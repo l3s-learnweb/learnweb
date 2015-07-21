@@ -282,6 +282,14 @@ public class ResourceManager
 	    resource.setThumbnail3(null);
 	    resource.setThumbnail4(null);
 	}
+	if(resource.getOnlineStatus().equals(OnlineStatus.OFFLINE)) // TODO this is only a workaround; remove as soon as possible
+	{
+	    resource.setThumbnail0(null);
+	    resource.setThumbnail1(null);
+	    resource.setThumbnail2(null);
+	    resource.setThumbnail3(null);
+	    resource.setThumbnail4(null);
+	}
 
 	PreparedStatement replace = learnweb
 		.getConnection()
