@@ -8,39 +8,25 @@
 			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
 			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{forumTopicsBean.preRenderView}" /> 
 		</f:metadata>
-	</ui:define>
-	
-<style>
-table, th, td {
-    border: 1px solid black;
-    border-collapse: collapse;
-}
-th, td {
-    padding: 5px;
-    text-align: left;
-}
-</style>	
-	
+	</ui:define>		
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="forum" escape="false" />
 	<ui:define name="center_layout">  	
 		<p:panel header="Forum post">
-			<table style="width:100%">
-			  <caption> <h2>Group Forum </h2> 
-			  </caption>
-			  <tr>
-			    <th> Forum Topic </th>
-			    <th> Latest Post </th>
-			  </tr>
-			  <tr>
-			    <td>xxxx</td>
-			    <td>xxxx</td>
-			  </tr>
-			  <tr>
-			    <td>xxxx</td>
-			    <td>xxxx</td>
-			  </tr>
-			</table>
+			<h:form>
+			    <p:dataTable var="car" value="#{dtPaginatorView.cars}" rows="10"
+			                         paginator="true"
+			                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			                         rowsPerPageTemplate="5,10,15">
+			        <p:column headerText="Forum Topics">
+			            <h:outputText value="#{}" />
+			        </p:column>
+			 
+			        <p:column headerText="Latest Post">
+			            <h:outputText value="#{}" />
+			        </p:column>
+			    </p:dataTable>
+			</h:form>
 		</p:panel>
 	</ui:define>
 </ui:composition>
