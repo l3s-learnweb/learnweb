@@ -3,6 +3,7 @@ package de.l3s.learnweb.solrClient;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -13,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 import de.l3s.learnweb.Group;
@@ -37,6 +39,9 @@ public class SolrSearch implements Serializable
     private String filterLocation = ""; // Bing, Flickr, YouTube, Vimeo, SlideShare, Ipernity, TED, Learnweb ...
     private String filterFormat = ""; // for example: application/pdf
     private List<Integer> filterGroupIds;
+
+    protected long totalResults = -1;
+    private Map<String, Long> serviceSet = new HashMap<String, Long>(); // service name, number of results at this service
 
     private String filterGroupStr = "";
     private int userId;
@@ -147,19 +152,14 @@ public class SolrSearch implements Serializable
 	this.filterType = "";
     }
 
-    /**
-     * 
-     * @return How many results the current search will return overall
-     * @throws SolrServerException
-     * @throws SQLException
-     */
-    public long getTotalResultCount() throws SQLException, SolrServerException
+    public long getTotalResultCount()
     {
-	QueryResponse rsp = getSolrResourcesByPage(1);
-	if(rsp != null)
-	    return rsp.getResults().getNumFound();
-	else
-	    return -1;
+	return totalResults;
+    }
+
+    public Map<String, Long> getResultCountAtService()
+    {
+	return serviceSet;
     }
 
     private QueryResponse getSolrResourcesByPage(int page) throws SQLException, SolrServerException
@@ -218,7 +218,9 @@ public class SolrSearch implements Serializable
 	solrQuery.setHighlightSimplePre("<strong>");
 	solrQuery.setHighlightSimplePost("</strong>");
 
-	//log.debug(solrQuery);
+	solrQuery.set("facet", "true");
+	solrQuery.set("facet.field", "location");
+	log.debug(solrQuery);
 
 	//get solrServer
 	SolrServer server = Learnweb.getInstance().getSolrClient().getSolrServer();
@@ -241,6 +243,16 @@ public class SolrSearch implements Serializable
 
 	ResourceManager resourceManager = Learnweb.getInstance().getResourceManager();
 	QueryResponse response = getSolrResourcesByPage(page);
+
+	if(response != null)
+	{
+	    totalResults = response.getResults().getNumFound();
+	    for(Count f : response.getFacetFields().get(0).getValues())
+	    {
+		serviceSet.put(f.getName(), f.getCount());
+	    }
+	}
+
 	// SolrDocumentList docs = response.getResults(); // to get the score
 	List<SolrResourceBean> solrResources = response.getBeans(SolrResourceBean.class);
 	Map<String, Map<String, List<String>>> highlight = response.getHighlighting();

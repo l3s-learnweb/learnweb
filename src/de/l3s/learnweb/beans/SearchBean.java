@@ -15,6 +15,8 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -68,6 +70,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     private InterWeb interweb;
     private Resource selectedResource;
     private int selectedResourceTargetGroupId;
+    private Map<String, Long> resultsCountAtService = new TreeMap<String, Long>(String.CASE_INSENSITIVE_ORDER);
 
     private FactSheet graph = new FactSheet();
     private Search images;
@@ -163,6 +166,11 @@ public class SearchBean extends ApplicationBean implements Serializable
 	// search if a query is given and (it was not searched before or the query or searchmode has been changed)
 	if(!isEmpty(query) && (null == search || !query.equals(search.getQuery()) || searchMode != search.getMode() || !StringUtils.equals(queryFilters, searchFilters)))
 	{
+	    if(search == null || !query.equals(search.getQuery()) || searchMode != search.getMode())
+	    {
+		resultsCountAtService.clear();
+	    }
+
 	    if(null != search)
 		search.stop();
 
@@ -821,7 +829,13 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public String getTotalResultsFrom(String service)
     {
-	Long count = search.getResultsCountAtService(service);
+	if(!resultsCountAtService.containsKey(service))
+	{
+	    resultsCountAtService.putAll(search.getResultsCountAtService());
+	}
+
+	Long count = resultsCountAtService.get(service);
+
 	if(count == null || count < 0)
 	{
 	    return null;

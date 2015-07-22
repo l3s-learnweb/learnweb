@@ -350,10 +350,12 @@ public class Search implements Serializable
 	long start = System.currentTimeMillis();
 
 	log.debug(StringHelper.implode(configService, ","));
-	this.solrSearch.setFilterSource(StringHelper.implode(configService, ","));
+	this.solrSearch.setFilterLocation(StringHelper.implode(configService, ","));
 	this.solrSearch.setResultsPerPage(configService.size() > 1 ? configResultsPerService : configResultsPerOneService);
 	this.solrSearch.setFilterType(mode.name());
+
 	List<ResourceDecorator> learnwebResources = solrSearch.getResourcesByPage(page);
+	setResultsCountAtService(solrSearch.getResultCountAtService());
 
 	if(stopped)
 	    return null;
@@ -610,7 +612,7 @@ public class Search implements Serializable
     {
 	return tempIdIndex.get(tempId);
     }
-
+    
     public Map<String, Long> getResultsCountAtService()
     {
 	return resultsCountAtService;
@@ -618,16 +620,7 @@ public class Search implements Serializable
 
     public void setResultsCountAtService(Map<String, Long> resultsCountAtService)
     {
-	this.resultsCountAtService = resultsCountAtService;
-    }
-
-    public Long getResultsCountAtService(String service)
-    {
-	if(resultsCountAtService.containsKey(service))
-	{
-	    return resultsCountAtService.get(service);
-	}
-	return null;
+	this.resultsCountAtService.putAll(resultsCountAtService);
     }
 
     public void stop()
