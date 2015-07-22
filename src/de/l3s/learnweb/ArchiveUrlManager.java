@@ -44,7 +44,7 @@ public class ArchiveUrlManager
 
     private String archiveTodayURL;
     private URL serviceUrlObj;
-    private static int collectionId;
+    //private static int collectionId;
     private Queue<Resource> resources = new ConcurrentLinkedQueue<Resource>();
     //private Map<Integer, Date> trackResources = new ConcurrentHashMap<Integer, Date>();
     private ExecutorService executerService;
@@ -53,7 +53,7 @@ public class ArchiveUrlManager
     {
 	this.learnweb = learnweb;
 	archiveTodayURL = learnweb.getProperties().getProperty("ARCHIVE_TODAY_URL");
-	collectionId = Integer.parseInt(learnweb.getProperties().getProperty("COLLECTION_ID"));
+	//collectionId = Integer.parseInt(learnweb.getProperties().getProperty("COLLECTION_ID"));
 	try
 	{
 	    serviceUrlObj = new URL(archiveTodayURL);
@@ -303,132 +303,141 @@ public class ArchiveUrlManager
     {
 	ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
 	SolrClient solr = learnweb.getSolrClient();
-	Group humanRightsGroup = learnweb.getGroupManager().getGroupById(927);
 	User admin = learnweb.getUserManager().getUser(7727);
 
 	//int tagCount = 0;
-
 	PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM archiveit_collection WHERE collection_id = ?");
-	pStmt.setInt(1, collectionId);
-	ResultSet rs = pStmt.executeQuery();
-	while(rs.next())
+	PreparedStatement pStmtCollections = learnweb
+		.getConnection()
+		.prepareStatement(
+			"SELECT collection_id, t3.group_id FROM  `archiveit_collection` t1 JOIN archiveit_subject t2 USING (collection_id) JOIN lw_group t3 ON t3.title = t2.collection_name WHERE collection_id NOT IN (3358, 5407, 2252, 3547, 1417, 3123, 1036, 1042) AND t2.subject LIKE '%society%' GROUP BY collection_id HAVING COUNT(*) >=50 AND COUNT(*) < 200 ORDER BY COUNT(*) LIMIT 0,10");
+	ResultSet rsCollections = pStmtCollections.executeQuery();
+	while(rsCollections.next())
 	{
-	    //String subject = rs.getString("subject");
-	    int resourceId = rs.getInt("resource_id");
-
-	    boolean toProcessUrl = false, redirect = false;
-	    int learnwebResourceId = rs.getInt("lw_resource_id");
-	    String archiveitUrl = rs.getString("url"); //To fetch Archive-It versions of a resource 
-	    Resource archiveResource = createResource(learnwebResourceId, rs);
-
-	    if(learnwebResourceId == 0)
+	    Group archiveGroup = learnweb.getGroupManager().getGroupById(rsCollections.getInt("group_id"));
+	    int collectionId = rsCollections.getInt("collection_id");
+	    pStmt.setInt(1, collectionId);
+	    ResultSet rs = pStmt.executeQuery();
+	    while(rs.next())
 	    {
-		try
-		{
-		    URL url = new URL(archiveResource.getUrl());
-		    URLConnection con = url.openConnection();
-		    con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
-		    con.setRequestProperty("Accept-Language", "en-US");
-		    con.setConnectTimeout(60000);
-		    con.connect();
-		    HttpURLConnection httpCon = (HttpURLConnection) con;
-		    int status = httpCon.getResponseCode();
+		//String subject = rs.getString("subject");
+		int resourceId = rs.getInt("resource_id");
 
-		    if(status != HttpURLConnection.HTTP_OK)
+		boolean toProcessUrl = false, redirect = false;
+		int learnwebResourceId = rs.getInt("lw_resource_id");
+		String archiveitUrl = rs.getString("url"); //To fetch Archive-It versions of a resource 
+		Resource archiveResource = createResource(learnwebResourceId, rs);
+
+		if(learnwebResourceId == 0)
+		{
+		    try
 		    {
-			// Handling, 3xx which is redirect
-			if(status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM || status == HttpURLConnection.HTTP_SEE_OTHER)
+			URL url = new URL(archiveResource.getUrl());
+			URLConnection con = url.openConnection();
+			con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
+			con.setRequestProperty("Accept-Language", "en-US");
+			con.setConnectTimeout(60000);
+			con.connect();
+			HttpURLConnection httpCon = (HttpURLConnection) con;
+			int status = httpCon.getResponseCode();
+
+			if(status != HttpURLConnection.HTTP_OK)
 			{
-			    redirect = true;
-			    toProcessUrl = true;
+			    // Handling, 3xx which is redirect
+			    if(status == HttpURLConnection.HTTP_MOVED_TEMP || status == HttpURLConnection.HTTP_MOVED_PERM || status == HttpURLConnection.HTTP_SEE_OTHER)
+			    {
+				redirect = true;
+				toProcessUrl = true;
+			    }
+			    else
+				log.info("Failed : HTTP error code : " + httpCon.getResponseCode() + " URL:" + con.getURL());
+
 			}
 			else
-			    log.info("Failed : HTTP error code : " + httpCon.getResponseCode() + " URL:" + con.getURL());
+			    toProcessUrl = true;
 
-		    }
-		    else
-			toProcessUrl = true;
-
-		    if(redirect)
-		    {
-			archiveResource.setUrl(con.getHeaderField("Location"));
-		    }
-		    if(toProcessUrl)
-		    {
-			log.info("Url Still Alive " + httpCon.getResponseCode() + " URL:" + archiveResource.getUrl());
-			try
+			if(redirect)
 			{
-			    rpm.processWebsite(archiveResource);
-			    archiveResource.setOnlineStatus(OnlineStatus.ONLINE);
+			    archiveResource.setUrl(con.getHeaderField("Location"));
 			}
-			catch(Exception e)
+			if(toProcessUrl)
 			{
-			    log.error(e);
-			    archiveResource.setOnlineStatus(OnlineStatus.OFFLINE); // offline
+			    log.info("Url Still Alive " + httpCon.getResponseCode() + " URL:" + archiveResource.getUrl());
+			    try
+			    {
+				rpm.processWebsite(archiveResource);
+				archiveResource.setOnlineStatus(OnlineStatus.ONLINE);
+			    }
+			    catch(Exception e)
+			    {
+				log.error(e);
+				archiveResource.setOnlineStatus(OnlineStatus.OFFLINE); // offline
+			    }
+			}
+			else
+			{
+			    archiveResource.setOnlineStatus(OnlineStatus.OFFLINE);
 			}
 		    }
-		    else
+		    catch(IOException | IllegalArgumentException e)
 		    {
+			log.error("Error while trying to connect to the URL", e);
 			archiveResource.setOnlineStatus(OnlineStatus.OFFLINE);
 		    }
-		}
-		catch(IOException | IllegalArgumentException e)
-		{
-		    log.error("Error while trying to connect to the URL", e);
-		    archiveResource.setOnlineStatus(OnlineStatus.OFFLINE);
-		}
-		PreparedStatement update = Learnweb.getInstance().getConnection().prepareStatement("UPDATE archiveit_collection SET lw_resource_id = ? WHERE collection_id = ? AND resource_id = ?");
-		archiveResource = admin.addResource(archiveResource);
-		humanRightsGroup.addResource(archiveResource, admin);
+		    PreparedStatement update = Learnweb.getInstance().getConnection().prepareStatement("UPDATE archiveit_collection SET lw_resource_id = ? WHERE collection_id = ? AND resource_id = ?");
+		    archiveResource = admin.addResource(archiveResource);
+		    archiveGroup.addResource(archiveResource, admin);
 
-		update.setInt(1, archiveResource.getId());
-		update.setInt(2, collectionId);
-		update.setInt(3, resourceId);
-		update.executeUpdate();
+		    update.setInt(1, archiveResource.getId());
+		    update.setInt(2, collectionId);
+		    update.setInt(3, resourceId);
+		    update.executeUpdate();
 
-		try
-		{
-		    solr.indexResource(archiveResource);
-		}
-		catch(IOException | SolrServerException e)
-		{
-		    log.error("Error in indexing the Archive-It resource with lw_resource ID: " + archiveResource.getId(), e);
-		}
+		    try
+		    {
+			solr.indexResource(archiveResource);
+		    }
+		    catch(IOException | SolrServerException e)
+		    {
+			log.error("Error in indexing the Archive-It resource with lw_resource ID: " + archiveResource.getId(), e);
+		    }
 
-		MementoClient mClient = learnweb.getMementoClient();
-		List<ArchiveUrl> archiveVersions = mClient.getArchiveItVersions(collectionId, archiveitUrl);
-		saveArchiveItVersions(archiveResource.getId(), archiveVersions);
-		System.out.println(archiveResource.getUrl() + " " + archiveResource.getTitle() + " " + archiveResource.getOnlineStatus() + " " + archiveResource.getLanguage());
+		    MementoClient mClient = learnweb.getMementoClient();
+		    List<ArchiveUrl> archiveVersions = mClient.getArchiveItVersions(collectionId, archiveitUrl);
+		    saveArchiveItVersions(archiveResource.getId(), archiveVersions);
+		    System.out.println(archiveResource.getUrl() + " " + archiveResource.getTitle() + " " + archiveResource.getOnlineStatus() + " " + archiveResource.getLanguage());
 
-		/*String[] tags = subject.split(",");
-		HashSet<String> lwTags = new HashSet<String>();
-		tagCount = 0;
-		for(String tag : tags)
-		{
-		tagCount++;
-		tag = tag.trim();
-		tag = tag.replace("and ", "");
-		lwTags.add(tag);
-		if(tagCount == 9)
-		    break;
+		    /*String[] tags = subject.split(",");
+		    HashSet<String> lwTags = new HashSet<String>();
+		    tagCount = 0;
+		    for(String tag : tags)
+		    {
+		    tagCount++;
+		    tag = tag.trim();
+		    tag = tag.replace("and ", "");
+		    lwTags.add(tag);
+		    if(tagCount == 9)
+		        break;
+		    }
+		    lwTags.add(humanRightsGroup.getTitle());
+		    for(String tagName : lwTags)
+		    {*/
+		    String tagName = archiveGroup.getTitle();
+		    try
+		    {
+			addTagToResource(archiveResource, tagName, admin);
+		    }
+		    catch(Exception e)
+		    {
+			log.error("Error in adding tags " + tagName, e);
+		    }
+		    //}
 		}
-		lwTags.add(humanRightsGroup.getTitle());
-		for(String tagName : lwTags)
-		{*/
-		String tagName = humanRightsGroup.getTitle();
-		try
-		{
-		    addTagToResource(archiveResource, tagName, admin);
-		}
-		catch(Exception e)
-		{
-		    log.error("Error in adding tags " + tagName, e);
-		}
-		//}
+		else
+		    archiveResource.save();
+		log.info("Processed; lw: " + archiveResource.getId() + " collection ID: " + collectionId + " resource ID: " + resourceId + " title:" + archiveResource.getTitle());
 	    }
-	    else
-		archiveResource.save();
-	    log.info("Processed; lw: " + archiveResource.getId() + " collection ID: " + collectionId + " resource ID: " + resourceId + " title:" + archiveResource.getTitle());
+	    log.info("Processed; lw_group: " + archiveGroup.getId() + " collection ID: " + collectionId + " group title:" + archiveGroup.getTitle());
 	}
     }
 
@@ -503,7 +512,7 @@ public class ArchiveUrlManager
 	    {
 		log.error("Error while trying to save the resource with the archived URL", e);
 	    }
-	    System.out.println(version.getArchiveUrl() + " " + gmtDate.format(version.getTimestamp()));
+	    //System.out.println(version.getArchiveUrl() + " " + gmtDate.format(version.getTimestamp()));
 	}
     }
 
