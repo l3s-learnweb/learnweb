@@ -821,7 +821,7 @@ public class ResourceManager
 	ResultSet rs = select.executeQuery();
 	if(rs.next())
 	    count = rs.getInt("count");
-	return count / pageSize;
+	return (count + pageSize - 1) / pageSize;
     }
 
     private Resource createResource(ResultSet rs) throws SQLException

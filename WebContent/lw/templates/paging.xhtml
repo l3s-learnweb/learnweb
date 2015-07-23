@@ -4,7 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 	
-	<h:panelGroup id="paging_buttons" layout="block" rendered="#{paginator.totalPages > 0}">
+	<h:panelGroup id="paging_buttons" layout="block" rendered="#{paginator.totalPages > 1}">
 		<h:form class="grey_border" style="padding:0; background-color:#eee;">
 			<ui:fragment rendered="#{paginator.lessThanNPages}">
 				<span class="previous_button"></span>				
@@ -46,8 +46,8 @@
 	
 				<p:commandButton value="…" styleClass="pagebutton" disabled="true" rendered="#{paginator.lessThanNPagesFromLast}"/>
 				
-				<p:commandButton value="#{paginator.totalPages + 1}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" styleClass="pagebutton #{paginator.pageIndex == paginator.totalPages? 'active_page_button':''}" update=":datagrid :paging_buttons">
-					<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.totalPages}" />
+				<p:commandButton value="#{paginator.totalPages}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" styleClass="pagebutton #{paginator.pageIndex == paginator.totalPages? 'active_page_button':''}" update=":datagrid :paging_buttons">
+					<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.totalPages -1}" />
 				</p:commandButton>
 				
 				<p:commandButton value="#{msg.next} #{msg.page}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" styleClass="pagebutton" disabled="#{paginator.pageIndex == paginator.totalPages}" update=":datagrid :paging_buttons">

@@ -50,22 +50,22 @@ public abstract class AbstractPaginator implements Serializable
 	if(pageIndex == 0)
 	{
 	    fromIndex = pageIndex + 1;
-	    endIndex = fromIndex + 2;
+	    endIndex = fromIndex + 3;
 	}
 	else if(pageIndex >= 1 && pageIndex < 3)
 	{
 	    fromIndex = 1;
-	    endIndex = pageIndex + 3;
+	    endIndex = pageIndex + 4;
 	}
 	else if(pageIndex >= 3 && pageIndex < 4)
 	{
 	    fromIndex = 1;
-	    endIndex = pageIndex + 2;
+	    endIndex = pageIndex + 3;
 	}
 	else if(pageIndex >= 4 && pageIndex < totalPages - 3)
 	{
 	    fromIndex = pageIndex - 1;
-	    endIndex = fromIndex + 3;
+	    endIndex = fromIndex + 4;
 	}
 	else if(pageIndex == totalPages - 3)
 	{
@@ -84,10 +84,10 @@ public abstract class AbstractPaginator implements Serializable
 	}
 
 	if(totalPages <= 5)
-	    for(int i = 0; i < totalPages + 1; i++)
+	    for(int i = 0; i < totalPages; i++)
 		pages.add(i + 1);
 	else
-	    for(int i = fromIndex; i < endIndex; i++)
+	    for(int i = fromIndex; i < endIndex - 1; i++)
 		pages.add(i + 1);
 
 	return pages;
