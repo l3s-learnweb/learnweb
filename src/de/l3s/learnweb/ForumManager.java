@@ -62,7 +62,7 @@ public class ForumManager
     {
 	LinkedList<ForumPost> posts = new LinkedList<ForumPost>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FORUMPOSTCOLUMNS + " FROM `forum_post` WHERE topic_id = ? ORDER BY ORDER");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FORUMPOSTCOLUMNS + " FROM `forum_post` WHERE topic_id = ? ORDER BY topic_time DESC");
 	select.setInt(1, topicId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -78,7 +78,7 @@ public class ForumManager
     {
 	LinkedList<ForumPost> posts = new LinkedList<ForumPost>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FORUMPOSTCOLUMNS + " FROM `forum_post` WHERE user_id = ? ORDER BY ORDER");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FORUMPOSTCOLUMNS + " FROM `forum_post` WHERE user_id = ? ORDER BY topic_time DESC");
 	select.setInt(1, userId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())

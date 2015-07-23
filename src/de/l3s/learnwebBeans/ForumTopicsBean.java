@@ -2,6 +2,7 @@ package de.l3s.learnwebBeans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -89,6 +90,17 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
 	    log.error("Error while inserting in db", e);
 	}
     }
+
+    public List<ForumTopic> getForumTopics() throws SQLException
+    {
+	// ForumTopic forumTopic = new ForumTopic();
+	//  forumTopic.setGroupId(groupId);
+	List<ForumTopic> topics = Learnweb.getInstance().getForumManager().getTopicsByGroup(groupId);
+
+	return topics;
+
+    }
+
     /**
      * public String getMessage()
      * {
