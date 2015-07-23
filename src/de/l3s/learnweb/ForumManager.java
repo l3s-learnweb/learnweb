@@ -110,6 +110,15 @@ public class ForumManager
 	ps.setInt(7, forumTopic.getTopicLastPostId());
 	ps.executeUpdate();
 	// TODO set assigned id ; see user manager
+
+	if(forumTopic.getTopicId() < 0) // get the assigned id
+	{
+	    ResultSet rs = ps.getGeneratedKeys();
+	    if(!rs.next())
+		throw new SQLException("database error: no id generated");
+	    forumTopic.setTopicId(rs.getInt(1));
+	}
+
 	return forumTopic;
     }
 
@@ -130,6 +139,14 @@ public class ForumManager
 	ps.setDate(7, forumPost.getLastEditDate() == null ? null : new java.sql.Date(forumPost.getLastEditDate().getTime()));
 	ps.setInt(8, forumPost.getEditUserId());
 	ps.executeUpdate();
+
+	if(forumPost.getPostId() < 0) // get the assigned id
+	{
+	    ResultSet rs = ps.getGeneratedKeys();
+	    if(!rs.next())
+		throw new SQLException("database error: no id generated");
+	    forumPost.setTopicId(rs.getInt(1));
+	}
 
 	return forumPost;
     }
