@@ -1,9 +1,12 @@
 package de.l3s.learnweb;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.DataOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -26,13 +29,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.solrClient.SolrClient;
@@ -298,19 +301,52 @@ public class ArchiveUrlManager
 	}*/
     }
 
+    class ProcessWebsiteWorker implements Callable<String>
+    {
+	Resource archiveResource;
+	ResourcePreviewMaker rpm;
+	PrintWriter writer;
+
+	public ProcessWebsiteWorker(Resource archiveResource, ResourcePreviewMaker rpm, PrintWriter writer)
+	{
+	    this.archiveResource = archiveResource;
+	    this.rpm = rpm;
+	    this.writer = writer;
+	}
+
+	@Override
+	public String call() throws Exception
+	{
+	    try
+	    {
+		rpm.processWebsite(archiveResource);
+		archiveResource.setOnlineStatus(OnlineStatus.ONLINE);
+	    }
+	    catch(Exception e)
+	    {
+		log.error(e);
+		writer.println("prometheus url: " + archiveResource.getUrl());
+		archiveResource.setOnlineStatus(OnlineStatus.OFFLINE); // offline
+	    }
+	    return "website thumbnails created";
+	}
+    }
+
     //For saving crawled Archive-It Urls to lw_resource_table as resource
-    public void saveArchiveItResources() throws SQLException
+    public void saveArchiveItResources() throws SQLException, IOException
     {
 	ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
 	SolrClient solr = learnweb.getSolrClient();
 	User admin = learnweb.getUserManager().getUser(7727);
+
+	PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("Process-Website.txt", true)));
 
 	//int tagCount = 0;
 	PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM archiveit_collection WHERE collection_id = ?");
 	PreparedStatement pStmtCollections = learnweb
 		.getConnection()
 		.prepareStatement(
-			"SELECT collection_id, t3.group_id FROM  `archiveit_collection` t1 JOIN archiveit_subject t2 USING (collection_id) JOIN lw_group t3 ON t3.title = t2.collection_name WHERE collection_id NOT IN (3358, 5407, 2252, 3547, 1417, 3123, 1036, 1042) AND t2.subject LIKE '%society%' GROUP BY collection_id HAVING COUNT(*) >=50 AND COUNT(*) < 200 ORDER BY COUNT(*) LIMIT 0,10");
+			"SELECT collection_id, t3.group_id FROM  `archiveit_collection` t1 JOIN archiveit_subject t2 USING (collection_id) JOIN lw_group t3 ON t3.title = t2.collection_name WHERE collection_id NOT IN (3358, 5407, 2252, 3547, 1417, 3123, 1036, 1042) AND t2.subject LIKE '%society%' GROUP BY collection_id HAVING COUNT(*) >=50 AND COUNT(*) < 200 ORDER BY COUNT(*) LIMIT 21,20");
 	ResultSet rsCollections = pStmtCollections.executeQuery();
 	while(rsCollections.next())
 	{
@@ -355,23 +391,41 @@ public class ArchiveUrlManager
 			}
 			else
 			    toProcessUrl = true;
-
+			if(archiveitUrl.equalsIgnoreCase("http://www.lacorps.org/"))
+			    toProcessUrl = false;
 			if(redirect)
 			{
-			    archiveResource.setUrl(con.getHeaderField("Location"));
+			    if(con.getHeaderField("Location") != null)
+				archiveResource.setUrl(con.getHeaderField("Location"));
+			    else
+				toProcessUrl = false;
 			}
 			if(toProcessUrl)
 			{
 			    log.info("Url Still Alive " + httpCon.getResponseCode() + " URL:" + archiveResource.getUrl());
+			    Future<String> processResponse = executerService.submit(new ProcessWebsiteWorker(archiveResource, rpm, writer));
 			    try
 			    {
-				rpm.processWebsite(archiveResource);
-				archiveResource.setOnlineStatus(OnlineStatus.ONLINE);
+				log.info(processResponse.get(2, TimeUnit.MINUTES));
 			    }
-			    catch(Exception e)
+			    catch(InterruptedException e)
 			    {
-				log.error(e);
-				archiveResource.setOnlineStatus(OnlineStatus.OFFLINE); // offline
+				log.error("Execution of the thread was interrupted", e);
+				writer.println("interruptexp url: " + archiveResource.getUrl());
+				archiveResource.setOnlineStatus(OnlineStatus.OFFLINE);
+			    }
+			    catch(ExecutionException e)
+			    {
+				log.error("Error while retrieving response from a task that was interrupted by an exception", e);
+				writer.println("executionexp url: " + archiveResource.getUrl());
+				archiveResource.setOnlineStatus(OnlineStatus.OFFLINE);
+			    }
+			    catch(TimeoutException e)
+			    {
+				log.info("Taking too long to create thumbnail for " + archiveResource.getUrl());
+				writer.println("timeout url: " + archiveResource.getUrl());
+				processResponse.cancel(true);
+				archiveResource.setOnlineStatus(OnlineStatus.OFFLINE);
 			    }
 			}
 			else
@@ -393,14 +447,14 @@ public class ArchiveUrlManager
 		    update.setInt(3, resourceId);
 		    update.executeUpdate();
 
-		    try
+		    /*try
 		    {
-			solr.indexResource(archiveResource);
+		    solr.indexResource(archiveResource);
 		    }
 		    catch(IOException | SolrServerException e)
 		    {
-			log.error("Error in indexing the Archive-It resource with lw_resource ID: " + archiveResource.getId(), e);
-		    }
+		    log.error("Error in indexing the Archive-It resource with lw_resource ID: " + archiveResource.getId(), e);
+		    }*/
 
 		    MementoClient mClient = learnweb.getMementoClient();
 		    List<ArchiveUrl> archiveVersions = mClient.getArchiveItVersions(collectionId, archiveitUrl);
@@ -439,6 +493,8 @@ public class ArchiveUrlManager
 	    }
 	    log.info("Processed; lw_group: " + archiveGroup.getId() + " collection ID: " + collectionId + " group title:" + archiveGroup.getTitle());
 	}
+
+	writer.close();
     }
 
     private Resource createResource(int learnwebResourceId, ResultSet rs) throws SQLException
@@ -460,16 +516,25 @@ public class ArchiveUrlManager
 	{
 	    languages = language.split("[,;]+");
 	    lwLang = languages[0];
-
-	    Locale[] allLocale = Locale.getAvailableLocales();
-	    for(Locale l : allLocale)
+	    if(lwLang.contains("-") || lwLang.contains("_"))
 	    {
-		if(l.getDisplayName().toLowerCase().trim().contains(lwLang.toLowerCase().trim()))
+		String[] lwLangSplit = lwLang.split("[-_]+");
+		Locale l2 = new Locale(lwLangSplit[0], lwLangSplit[1]);
+		lwLang = l2.getLanguage();
+	    }
+	    else if(lwLang.length() != 2)
+	    {
+		Locale[] allLocale = Locale.getAvailableLocales();
+		for(Locale l : allLocale)
 		{
-		    lwLang = l.getLanguage().trim();
-		    break;
+		    if(l.getDisplayName().toLowerCase().trim().contains(lwLang.toLowerCase().trim()))
+		    {
+			lwLang = l.getLanguage().trim();
+			break;
+		    }
 		}
 	    }
+
 	    if(lwLang.length() != 2)
 		lwLang = "";
 	}
@@ -574,13 +639,32 @@ public class ArchiveUrlManager
     return null;
     }*/
 
-    public static void main(String[] args) throws SQLException, ParseException
+    public static void main(String[] args) throws SQLException, ParseException, IOException
     {
 
 	ArchiveUrlManager archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
 	archiveUrlManager.saveArchiveItResources();
 	//archiveUrlManager.createArchiveItGroups();
+	/*PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM lw_resource WHERE title = '' AND online_status = 'ONLINE' ORDER BY resource_id DESC");
+	PreparedStatement pStmt2 = Learnweb.getInstance().getConnection().prepareStatement("UPDATE lw_resource SET title=? WHERE resource_id=?");
+	ResultSet rs = pStmt.executeQuery();
+	while(rs.next())
+	{
+	    try
+	    {
+		String url = rs.getString("url");
 
+		Document doc = Jsoup.connect(url).userAgent("Mozilla").get();
+		System.out.println(rs.getInt("resource_id") + " " + doc.title());
+		pStmt2.setString(1, doc.title());
+		pStmt2.setInt(2, rs.getInt("resource_id"));
+		pStmt2.executeUpdate();
+	    }
+	    catch(IOException e)
+	    {
+		log.error(e);
+	    }
+	}*/
 	/*Client client = Client.create();
 	WebResource webResource = client.resource("https://archive.is/submit/");
 	MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
