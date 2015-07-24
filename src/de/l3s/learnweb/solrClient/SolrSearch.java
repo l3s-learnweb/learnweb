@@ -64,8 +64,7 @@ public class SolrSearch implements Serializable
 	    }
 	    catch(SQLException e)
 	    {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
+		log.error("Could not retriev users group", e);
 	    }
 	}
 	this.userId = user == null ? 0 : user.getId();
@@ -192,13 +191,10 @@ public class SolrSearch implements Serializable
 	    filterGroupStr = "";
 	    for(Integer groupId : filterGroupIds)
 	    {
-		// TODO this filter should also work with groups
 		if(0 == filterGroupStr.length())
 		    filterGroupStr = "groups : " + groupId.toString();
 		else
-		{
 		    filterGroupStr += " OR groups : " + groupId.toString();
-		}
 	    }
 	    solrQuery.addFilterQuery(filterGroupStr);
 	}
@@ -372,7 +368,7 @@ public class SolrSearch implements Serializable
     private String removeMyGroupQuery(String query)
     {
 	String newquery = "";
-	Pattern pattern = Pattern.compile("groups\\s*:\\s*my\\s+");
+	Pattern pattern = Pattern.compile("groups\\s*:\\s*my\\s*");
 	Matcher matcher = pattern.matcher(query.toLowerCase());
 	if(matcher.find())
 	{

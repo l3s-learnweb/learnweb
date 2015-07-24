@@ -131,7 +131,7 @@
 			<h:form id="other_groups">
 				<p:dataTable var="group" value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}"  paginator="false" >
 					
-					<p:column headerText="#{msg.title}" sortBy="#{group.title}" width="17%">
+					<p:column headerText="#{msg.title}" sortBy="#{group.title}" style="min-width:17%">
 						<h:outputLink value="group/overview.jsf">
 							<f:param name="group_id" value="#{group.id}" />
 							<h:outputText value="#{group.longTitle}" />
@@ -144,7 +144,7 @@
 						<h:outputText value="#{group.description}" />
 					</p:column>					
 					
-					<p:column headerText="#{msg.language}" width="7%">
+					<p:column headerText="#{msg.language}" width="7%" rendered="#{groupsBean.otherGroupsShowLanguage}">
 						<h:outputText value="#{group.language}" />			
 					</p:column>
 					

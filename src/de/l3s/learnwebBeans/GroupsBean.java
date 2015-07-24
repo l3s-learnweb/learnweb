@@ -13,6 +13,8 @@ import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 
+import org.apache.commons.lang3.StringUtils;
+
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.User;
@@ -34,6 +36,7 @@ public class GroupsBean extends ApplicationBean implements Serializable
     private int editLeaderId;
 
     private Group newGroup;
+    private boolean otherGroupsShowLanguage;
 
     public GroupsBean() throws SQLException
     {
@@ -42,8 +45,9 @@ public class GroupsBean extends ApplicationBean implements Serializable
 
 	joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
 	myGroups = getUser().getGroups();
-
 	newGroup = new Group();
+
+	otherGroupsShowLanguage = isLanguageSet(joinAbleGroups);
     }
 
     public void joinGroup() throws Exception
@@ -297,4 +301,18 @@ public class GroupsBean extends ApplicationBean implements Serializable
 	return yourList;
     }
 
+    public boolean isOtherGroupsShowLanguage()
+    {
+	return otherGroupsShowLanguage;
+    }
+
+    private boolean isLanguageSet(List<Group> groups)
+    {
+	for(Group group : groups)
+	{
+	    if(StringUtils.isEmpty(group.getLanguage()))
+		return false;
+	}
+	return true;
+    }
 }

@@ -47,43 +47,6 @@ public class Search implements Serializable
 	Yovisto, //  stored in SOLR
 	LearnWeb // stored in SOLR
 	;
-	/*
-		public String getCustomName()
-		{
-		    if(this == null)
-			return UtilBean.getLocaleMessage("any_service");
-		    return this.name();
-		    /*
-		    switch(this)
-		    {
-		    case Bing:
-		    return "Bing";
-		    case Flickr:
-		    return "Flickr";
-		    case YouTube:
-		    return "YouTube";
-		    case Vimeo:
-		    return "Vimeo";
-		    case SlideShare:
-		    return "SlideShare";
-		    case Ipernity:
-		    return "Ipernity";
-		    case TED:
-		    return "TED";
-		    case TEDx:
-		    return "TEDx";
-		    case Loro:
-		    return "Loro";
-		    case Yovisto:
-		    return "Yovisto";
-		    case Learnweb:
-		    return "LearnWeb";
-		    default:
-		    return UtilBean.getLocaleMessage("any_service");
-		    
-		    }* /
-		}
-	    */
 
 	public boolean isLearnwebSource()
 	{
@@ -266,7 +229,7 @@ public class Search implements Serializable
 	this.userId = (null == user) ? -1 : user.getId();
 	this.solrSearch = new SolrSearch(query, user);
 
-	if(query.startsWith("source:"))
+	if(query.startsWith("source:") || query.startsWith("location:") || query.startsWith("groups:") || query.startsWith("title:"))
 	    hasMoreInterwebResults = false;
     }
 
@@ -350,7 +313,7 @@ public class Search implements Serializable
 	long start = System.currentTimeMillis();
 
 	log.debug(StringHelper.implode(configService, ","));
-	this.solrSearch.setFilterLocation(StringHelper.implode(configService, ","));
+	//this.solrSearch.setFilterLocation(StringHelper.implode(configService, ","));
 	this.solrSearch.setResultsPerPage(configService.size() > 1 ? configResultsPerService : configResultsPerOneService);
 	this.solrSearch.setFilterType(mode.name());
 
@@ -612,7 +575,7 @@ public class Search implements Serializable
     {
 	return tempIdIndex.get(tempId);
     }
-    
+
     public Map<String, Long> getResultsCountAtService()
     {
 	return resultsCountAtService;
