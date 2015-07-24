@@ -192,7 +192,7 @@
 .list_view a.resourceWebLink { color:rgb(88, 147, 236); font-size: 1.6rem; font-family: "Segoe UI",Arial,Helvetica,sans-serif; }
 .list_view a.resourceWebLink:visited { color:rgb(60, 110, 200); }
 
-
+.list_view .group_left_padding {padding-left:10px;}
 
 .page_counter {
 	font-weight:bold;
@@ -209,7 +209,7 @@ div.float_view {
 	padding:1px 6px;
 	text-align: justify;
 	max-width:100%;
-	/* width:75%; für die search history scheisse; aktivieren und max width deaktivieren, zerschießt aber normales design */
+	/* width:75%; fï¿½r die search history scheisse; aktivieren und max width deaktivieren, zerschieï¿½t aber normales design */
 
 	position:relative;
 }
@@ -232,7 +232,7 @@ div.float_view .smallImage:hover {box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);   }
 div.grid_view {
 	margin:5px 10px;
 	max-width:100%;
-	/* width:75%; für die search history scheisse aktivieren und max width deaktivieren, zerschießt aber normales design */
+	/* width:75%; fï¿½r die search history scheisse aktivieren und max width deaktivieren, zerschieï¿½t aber normales design */
 	position:relative;
 	border-left:1px solid #CCCCCC;
 	border-top:1px solid #CCCCCC;	

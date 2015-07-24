@@ -36,6 +36,7 @@ import java.util.regex.Pattern;
 import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.solrClient.SolrClient;
@@ -346,7 +347,7 @@ public class ArchiveUrlManager
 	PreparedStatement pStmtCollections = learnweb
 		.getConnection()
 		.prepareStatement(
-			"SELECT collection_id, t3.group_id FROM  `archiveit_collection` t1 JOIN archiveit_subject t2 USING (collection_id) JOIN lw_group t3 ON t3.title = t2.collection_name WHERE collection_id NOT IN (3358, 5407, 2252, 3547, 1417, 3123, 1036, 1042) AND t2.subject LIKE '%society%' GROUP BY collection_id HAVING COUNT(*) >=50 AND COUNT(*) < 200 ORDER BY COUNT(*) LIMIT 21,20");
+			"SELECT collection_id, t3.group_id FROM  `archiveit_collection` t1 JOIN archiveit_subject t2 USING (collection_id) JOIN lw_group t3 ON t3.title = t2.collection_name WHERE collection_id NOT IN (3358, 5407, 2252, 3547, 1417, 3123, 1036, 1042) GROUP BY collection_id HAVING COUNT(*) >=200 AND COUNT(*) < 500 ORDER BY COUNT(*) LIMIT 25,10");
 	ResultSet rsCollections = pStmtCollections.executeQuery();
 	while(rsCollections.next())
 	{
@@ -447,14 +448,14 @@ public class ArchiveUrlManager
 		    update.setInt(3, resourceId);
 		    update.executeUpdate();
 
-		    /*try
+		    try
 		    {
-		    solr.indexResource(archiveResource);
+			solr.indexResource(archiveResource);
 		    }
 		    catch(IOException | SolrServerException e)
 		    {
-		    log.error("Error in indexing the Archive-It resource with lw_resource ID: " + archiveResource.getId(), e);
-		    }*/
+			log.error("Error in indexing the Archive-It resource with lw_resource ID: " + archiveResource.getId(), e);
+		    }
 
 		    MementoClient mClient = learnweb.getMementoClient();
 		    List<ArchiveUrl> archiveVersions = mClient.getArchiveItVersions(collectionId, archiveitUrl);
@@ -644,7 +645,42 @@ public class ArchiveUrlManager
 
 	ArchiveUrlManager archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
 	archiveUrlManager.saveArchiveItResources();
+	/*ResourceManager rm = Learnweb.getInstance().getResourceManager();
+	SolrClient solr = Learnweb.getInstance().getSolrClient();
 	//archiveUrlManager.createArchiveItGroups();
+	PreparedStatement pStmtCollections = Learnweb
+		.getInstance()
+		.getConnection()
+		.prepareStatement(
+			"SELECT collection_id, t3.group_id FROM  `archiveit_collection` t1 JOIN archiveit_subject t2 USING (collection_id) JOIN lw_group t3 ON t3.title = t2.collection_name WHERE collection_id NOT IN (3358, 5407, 2252, 3547, 1417, 3123, 1036, 1042) AND t2.subject NOT LIKE '%society%' GROUP BY collection_id HAVING COUNT(*) >=50 AND COUNT(*) < 200 ORDER BY COUNT(*) LIMIT 6,30");
+	PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM archiveit_collection WHERE collection_id = ?");
+	ResultSet rsCollections = pStmtCollections.executeQuery();
+
+	while(rsCollections.next())
+	{
+	    int collectionId = rsCollections.getInt("collection_id");
+	    pStmt.setInt(1, collectionId);
+	    ResultSet rs = pStmt.executeQuery();
+	    while(rs.next())
+	    {
+		int lwResourceId = rs.getInt("lw_resource_id");
+		if(lwResourceId > 0)
+		{
+		    Resource archiveResource = rm.getResource(lwResourceId);
+		    try
+		    {
+			solr.indexResource(archiveResource);
+			log.info("Indexed resource ID:" + archiveResource.getId());
+		    }
+		    catch(IOException | SolrServerException e)
+		    {
+			log.error("Error in indexing the Archive-It resource with lw_resource ID: " + archiveResource.getId(), e);
+		    }
+		}
+		else
+		    log.info("Not in lw_resource collection ID:" + rs.getInt("collection_id") + " Resource ID:" + rs.getInt("resource_id"));
+	    }
+	}*/
 	/*PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM lw_resource WHERE title = '' AND online_status = 'ONLINE' ORDER BY resource_id DESC");
 	PreparedStatement pStmt2 = Learnweb.getInstance().getConnection().prepareStatement("UPDATE lw_resource SET title=? WHERE resource_id=?");
 	ResultSet rs = pStmt.executeQuery();
@@ -654,7 +690,7 @@ public class ArchiveUrlManager
 	    {
 		String url = rs.getString("url");
 
-		Document doc = Jsoup.connect(url).userAgent("Mozilla").get();
+		Document doc = Jsoup.connect(url).timeout(60000).userAgent("Mozilla").get();
 		System.out.println(rs.getInt("resource_id") + " " + doc.title());
 		pStmt2.setString(1, doc.title());
 		pStmt2.setInt(2, rs.getInt("resource_id"));
