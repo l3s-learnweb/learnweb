@@ -192,8 +192,6 @@
 .list_view a.resourceWebLink { color:rgb(88, 147, 236); font-size: 1.6rem; font-family: "Segoe UI",Arial,Helvetica,sans-serif; }
 .list_view a.resourceWebLink:visited { color:rgb(60, 110, 200); }
 
-.list_view .group_left_padding {padding-left:10px;}
-
 .page_counter {
 	font-weight:bold;
 	margin:5px 0 -10px 15px;

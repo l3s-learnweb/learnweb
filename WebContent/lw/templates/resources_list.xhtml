@@ -27,7 +27,7 @@
 				</div>
 				
 					<h:panelGroup rendered="#{utilBean.searchPage}" layout="block">
-						<h:panelGroup rendered="#{userBean.loggedIn}" class="add_resource_link" style="float:left;padding-top:3px;display:inline-block" layout="block">				
+						<h:panelGroup rendered="#{userBean.loggedIn}" class="add_resource_link" style="float:left;padding-top:3px;margin-right:10px" layout="block">				
 							<h:form>
 								<b><h:outputText value="#{msg.options}: " /></b>
 								<p:commandLink update=":resource_form"
@@ -41,7 +41,7 @@
 								</p:commandLink>
 							</h:form>
 						</h:panelGroup>
-						<h:panelGroup layout="block" rendered="#{not empty res.groups}" styleClass="#{userBean.loggedIn ? 'group_left_padding' : ''}" style="float:left;padding-top:3px;display:inline-block;">
+						<h:panelGroup layout="block" rendered="#{not empty res.groups}" style="padding-top:3px;display:inline-block;">
 							<b><h:outputText value="#{msg.group}: " /></b>	
 				
 							<ui:repeat var="group" value="#{res.groups}">
