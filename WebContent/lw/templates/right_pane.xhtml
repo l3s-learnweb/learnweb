@@ -347,9 +347,28 @@
 						    	  	<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
 						        </p:commandButton>
 						    </h:form>
+						    <!--  <script>
+						   	$(document).ready(function(){
+						   		$("#addCommentButton").css("display","none")	
+						   	
+						    	$("#userpic").focus(function(){
+						    		$("#addCommentButton").css("display","block")
+						    	})
+						   	})	
+						    </script>-->
 						    <h:form id="comment_form" styleClass="clear"> 
 								<div class="resource_field" style="padding-top: 10px">#{msg.comments}</div>								
 							
+								<br/>
+								<h:graphicImage id="userpic" url="${learnwebBean.getProfileImage(userBean.user)}" width="50" height="50" style="position:absolute;left:28px" alt="Profile picture"/> 
+								
+								<p:inputTextarea style="width:85%;min-height:42px;margin-left:72px;" rows="2" value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}"/><br/>
+							
+								<p:commandButton id="addCommentButton" styleClass="greenbutton float-right" value="#{msg.addComment}" actionListener="#{resourceDetailBean.addComment()}" update=":datagrid :comment_form" style="margin-right:0;margin-top: 4px;">
+									<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
+								</p:commandButton>
+								
+								<br class="clear" />
 								<h:panelGroup layout="block" rendered="#{not empty resourceDetailBean.clickedResource.comments}" styleClass="comments">
 									<ui:repeat var="comment" value="#{resourceDetailBean.clickedResource.comments}">
 										<div class="comment">
@@ -372,11 +391,7 @@
 										</div>
 									</ui:repeat>
 								</h:panelGroup>
-								<p:inputTextarea style="width:100%; box-sizing:border-box;" rows="2" value="#{resourceDetailBean.newComment}" /><br/>
-								<p:commandButton styleClass="greenbutton" value="#{msg.addComment}" actionListener="#{resourceDetailBean.addComment()}" update=":datagrid :comment_form" style="float:right;margin-right:0;margin-top: 4px">
-									<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
-								</p:commandButton>
-								<br class="clear" />								
+							<br class="clear" />								
 							</h:form>
 											
 						</h:panelGroup>

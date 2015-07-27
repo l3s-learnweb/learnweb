@@ -75,8 +75,8 @@
 				
 				
 					<p:panel header="#{msg.statistics_detailed}" rendered="#{adminStatisticsBean.showDetails}" style="margin-top:30px;">
-						<p:selectBooleanButton offLabel="toggle Description" onLabel="toggle Description" onchange="$('.description').toggle();" value="off" />
-						<p:selectBooleanButton offLabel="toggle Comments" onLabel="toggle Comments" onchange="$('.admin_comments').toggle();" value="on" />
+						<p:selectBooleanButton offLabel="#{msg.toggle_description}" onLabel="#{msg.toggle_description}" onchange="$('.description').toggle();" value="off" />
+						<p:selectBooleanButton offLabel="#{msg.toggle_comments}" onLabel="#{msg.toggle_comments}" onchange="$('.admin_comments').toggle();" value="on" />
 						<hr />
 						<h:outputText value="#{adminStatisticsBean.detailedDescription}" escape="false" />					
 					</p:panel>
