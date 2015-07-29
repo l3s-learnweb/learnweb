@@ -119,6 +119,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
     private Drive drive = null;
 
+    private String query;
+
     public GroupDetailBean() throws SQLException
     {
 	loadGroup();
@@ -1348,4 +1350,15 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	return paginator;
     }
+
+    public String getQuery()
+    {
+	return query;
+    }
+
+    public void setQuery(String query)
+    {
+	this.query = query;
+    }
+
 }

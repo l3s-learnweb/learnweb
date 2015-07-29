@@ -64,7 +64,7 @@ public class SolrClient
     {
 	if(resource.getUrl().indexOf("localhost") != -1)
 	{
-	    System.out.println("Skip local resource with ID : " + resource.getId());
+	    log.warn("Skip local resource with ID : " + resource.getId());
 	    return;
 	}
 	SolrResourceBean solrResource = new SolrResourceBean(resource);
@@ -123,7 +123,7 @@ public class SolrClient
 	}
 	catch(Throwable t)
 	{
-	    log.fatal(t);
+	    log.fatal("Couldn't reindex resource", t);
 	}
     }
 

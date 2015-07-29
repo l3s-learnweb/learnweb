@@ -32,8 +32,9 @@ import de.l3s.learnweb.beans.UtilBean;
 @ViewScoped
 public class ResourceDetailBean extends ApplicationBean implements Serializable
 {
-    private static final long serialVersionUID = -4468979717844804599L;
+    private final static long serialVersionUID = -4468979717844804599L;
     private final static Logger log = Logger.getLogger(ResourceDetailBean.class);
+
     private int resourceId = 0;
     private Resource clickedResource;
     private Tag selectedTag;
@@ -41,6 +42,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     private Comment clickedComment;
     private String newComment;
 
+    // TODO rename to indicate that this function is used bei the archive timeline
     public String getHighChartsJsonData()
     {
 	JSONArray highChartsData = new JSONArray();
@@ -64,6 +66,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	return highChartsData.toJSONString();
     }
 
+    // TODO rename to indicate that this function is used bei the archive timeline
     public String getCalendarJsonData()
     {
 	JSONObject archiveDates = new JSONObject();
@@ -115,7 +118,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	{
 	    monthNames.add(month);
 	}
+	// TODO why don't you make sure not to add empty string? This  
 	monthNames.remove(""); //To remove empty string from the array
+
 	return monthNames.toJSONString();
     }
 
@@ -259,6 +264,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 	}
     }
+
+    // -------------------  Simple getters ans setters ---------------------------
 
     public int getResourceId()
     {
