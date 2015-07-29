@@ -60,11 +60,23 @@
 							<h:outputText value="#{msg.links}" />
 						</a>
 					</li>
+					<li>
+						<img alt="" src="#{request.contextPath}/resources/main-template/img/search.png" height="20" width="20" id="search_group_resource" style="padding:1px 15px;"/>
+					</li>
 				</ul>
 				
 				<h:form id="header_query_form">
-					<h:inputText value="#{groupDetailBean.query}" />
+					<h:inputText value="#{groupDetailBean.query}" style="float:left;margin-top:-12px;" id="input_query_form"/>
 				</h:form>
+				
+				<script type="text/javascript">
+					$("#header_query_form").css("display","none");
+					
+					$("#search_group_resource").click(function () {
+				          $("#header_query_form").toggle('slide', { direction: "left" }, 1000);
+				          $("#search_group_resource").hide();
+				    });
+				</script>
 			</div>			
 			<br />
 	

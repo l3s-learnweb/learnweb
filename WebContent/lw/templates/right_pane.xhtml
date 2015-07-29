@@ -39,7 +39,9 @@
 						
 						scroller();
 						lightbox_load();
+				   
 					}
+					
 				</script>
 				<ui:fragment rendered="#{bean.newResourceClicked and !bean.editResourceClicked}">
 			
@@ -347,24 +349,28 @@
 						    	  	<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
 						        </p:commandButton>
 						    </h:form>
-						    <script>
-						   	$(document).ready(function(){
-						   		$("#addCommentButton").css("display","none")	
-						   	
-						    	$("#userpic").focus(function(){
-						    		$("#addCommentButton").css("display","block")
-						    	})
-						   	})	
-						    </script>
-						    <h:form id="comment_form" styleClass="clear"> 
+						   
+						   <script type="text/javascript">
+								$('#commentfield').focus(function() {
+						 			$('#comment_button').slideDown();
+								});
+								$('#comment_form').focusout(function() {
+						 			$('#comment_button').slideUp(1000);
+								});
+						   </script>
+						   
+						    <h:form id="comment_form" styleClass="clear" prependId="false">
+						   
 								<div class="resource_field" style="padding-top: 10px">#{msg.comments}</div>								
 							
 								<br/>
-								<h:graphicImage id="userpic" url="${learnwebBean.getProfileImage(userBean.user)}" width="50" height="50" style="position:absolute;left:28px" alt="Profile picture"/> 
 								
-								<p:inputTextarea style="width:85%;min-height:42px;margin-left:72px;" rows="2" value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}"/><br/>
-							
-								<p:commandButton id="addCommentButton" styleClass="greenbutton float-right" value="#{msg.addComment}" actionListener="#{resourceDetailBean.addComment()}" update=":datagrid :comment_form" style="margin-right:0;margin-top: 4px;">
+								<div style="width:100%;padding-left:60px;box-sizing:border-box;">
+									<h:graphicImage id="userpic" url="${learnwebBean.getProfileImage(userBean.user)}" width="50" height="50" style="position:absolute;left:28px" alt="Profile picture"/> 
+									
+									<p:inputTextarea id="commentfield" style="width:100%;min-height:50px;box-sizing:border-box;" rows="2" value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}"/><br/>
+								</div>
+								<p:commandButton id="comment_button" styleClass="greenbutton float-right" value="#{msg.addComment}" actionListener="#{resourceDetailBean.addComment()}" update=":datagrid :comment_form" style="display:none; margin-right:0;margin-top: 4px;">
 									<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"></f:setPropertyActionListener>	
 								</p:commandButton>
 								
@@ -379,7 +385,7 @@
 												</span>
 													<span style="vertical-align: top; padding-left:5px;">#{comment.text}</span>
 											</div>
-											<div style="clear: both"></div>
+											<div class="clear"></div>
 											<div style="padding-left: 40px;">
 												<p:commandLink rendered="#{resourceDetailBean.canEditComment(comment)}" style="margin-right: 5px; font-size: 10px !important; color: green" value="#{msg.edit}" onstart="PF('comment_dialog').show();" ajax="true" update=":comment_dialog_form">
 													<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"></f:setPropertyActionListener>
@@ -390,8 +396,7 @@
 											</div>
 										</div>
 									</ui:repeat>
-								</h:panelGroup>
-							<br class="clear" />								
+								</h:panelGroup>								
 							</h:form>
 											
 						</h:panelGroup>
