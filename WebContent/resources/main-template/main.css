@@ -550,9 +550,10 @@ iframe { border:none }
 	padding:10px !important;
 	font-weight:bold;
 }
-.center-header > span .group_owner{
+.center-header > span .group_owner, #of_group, #group_name{
 	font-size:1.2rem !important;
-	color:black !important;
+	color:#4f4f4f !important;
+	font-weight:bold;
 }
 
 
@@ -639,7 +640,6 @@ h2 { margin-bottom:0.8rem; }
 	margin:0 3px;	
 }
 	
-
 /*login-template*/
 #login_div{
 	color:#4f4f4f;

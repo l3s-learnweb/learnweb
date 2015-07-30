@@ -6,7 +6,7 @@
     	margin-left:-6em;
     }
 }
- 
+
 /* options for different screen sizes */
 
 @media screen and (max-width: 82em){
@@ -45,6 +45,19 @@
 	}
 	#myresources{
 		display:none;
+	}
+	#group_header #green-header{
+		font-size:1.2rem;
+		font-weight:bold;
+	}
+}
+
+@media screen and (max-width:1006px){
+	#group_header #green-header, #of_group{
+		display:none;
+	}
+	#group_name{
+		color: #489a83 !important;
 	}
 }
 
