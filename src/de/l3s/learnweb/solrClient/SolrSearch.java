@@ -38,6 +38,8 @@ public class SolrSearch implements Serializable
     private String filterSource = ""; // Bing, Flickr, YouTube, Vimeo, SlideShare, Ipernity, TED, Desktop ...
     private String filterLocation = ""; // Bing, Flickr, YouTube, Vimeo, SlideShare, Ipernity, TED, Learnweb ...
     private String filterFormat = ""; // for example: application/pdf
+    private String filterDateFrom = "";
+    private String filterDateTo = "";
     private List<Integer> filterGroupIds;
 
     protected long totalResults = -1;
@@ -109,6 +111,16 @@ public class SolrSearch implements Serializable
 	this.filterFormat = filterFormat;
     }
 
+    public void setFilterDateFrom(String date)
+    {
+	this.filterDateFrom = date;
+    }
+
+    public void setFilterDateTo(String date)
+    {
+	this.filterDateTo = date;
+    }
+
     /**
      * Either provide a list of groups
      * 
@@ -149,6 +161,8 @@ public class SolrSearch implements Serializable
 	this.filterLocation = "";
 	this.filterSource = "";
 	this.filterType = "";
+	this.filterDateFrom = "";
+	this.filterDateTo = "";
     }
 
     public long getTotalResultCount()
@@ -185,6 +199,13 @@ public class SolrSearch implements Serializable
 	    solrQuery.addFilterQuery("location : " + filterLocation);
 	if(0 != filterFormat.length())
 	    solrQuery.addFilterQuery("format : " + filterFormat);
+	if(0 != filterDateFrom.length())
+	{
+	    if(0 != filterDateTo.length())
+		solrQuery.addFilterQuery("timestamp : [" + filterDateFrom + " TO " + filterDateTo + "]");
+	    else
+		solrQuery.addFilterQuery("timestamp : [" + filterDateFrom + " TO NOW]");
+	}
 
 	if(null != filterGroupIds)
 	{
@@ -216,7 +237,7 @@ public class SolrSearch implements Serializable
 
 	solrQuery.set("facet", "true");
 	solrQuery.set("facet.field", "location");
-	log.debug(solrQuery);
+	//log.debug(solrQuery);
 
 	//get solrServer
 	SolrServer server = Learnweb.getInstance().getSolrClient().getSolrServer();

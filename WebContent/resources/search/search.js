@@ -517,4 +517,6 @@ $(document).ready(function()
 		logResourceOpened([{name:'resource_id', value:tempResourceId}]);
 		return true;
 	});
+	
+	loadInterwebCounts();
 });

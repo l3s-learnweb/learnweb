@@ -85,7 +85,7 @@
 								<span class="filter-name">#{searchBean.filterService != null ? searchBean.currentService : msg.source} 
 									<span class="arrow"></span>
 								</span>
-								<div class="filter-sub-bar">
+								<h:panelGroup id="filter-service" styleClass="filter-sub-bar" layout="block">
 									<h:link value="#{msg.any_service}" outcome="search" styleClass="#{searchBean.filterService == null ? 'active' : null}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
 										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'all')}" />
@@ -98,7 +98,7 @@
 											<f:param name="query" value="#{searchBean.query}" />
 										</h:link>
 									</ui:repeat>
-								</div>
+								</h:panelGroup>
 							</li>
 						</ui:fragment>
 						<ui:fragment rendered="#{searchBean.isFilterAvailable('date')}">
@@ -106,7 +106,7 @@
 								<span class="filter-name">#{searchBean.filterDate != null ? searchBean.currentDate : msg.date} 
 									<span class="arrow"></span>
 								</span>
-								<div class="filter-sub-bar">
+								<h:panelGroup id="filter-date" styleClass="filter-sub-bar" layout="block">
 									<h:link value="#{msg.any_time}" outcome="search" styleClass="#{searchBean.filterDate == null ? 'active' : null}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
 										<f:param name="filter" value="#{searchBean.generateFiltersLink('date', 'all')}" />
@@ -119,7 +119,7 @@
 											<f:param name="query" value="#{searchBean.query}" />
 										</h:link>
 									</ui:repeat>
-								</div>
+								</h:panelGroup>
 							</li>
 						</ui:fragment>
 						<ui:fragment rendered="#{searchBean.isFilterAvailable('size')}">
@@ -127,7 +127,7 @@
 								<span class="filter-name">#{searchBean.filterSize != null ? searchBean.currentSize : msg.size} 
 									<span class="arrow"></span>
 								</span>
-								<div class="filter-sub-bar">
+								<h:panelGroup id="filter-size" styleClass="filter-sub-bar" layout="block">
 									<h:link value="#{msg.any_size}" outcome="search" styleClass="#{searchBean.filterSize == null ? 'active' : null}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
 										<f:param name="filter" value="#{searchBean.generateFiltersLink('size', 'all')}" />
@@ -140,7 +140,28 @@
 											<f:param name="query" value="#{searchBean.query}" />
 										</h:link>
 									</ui:repeat>
-								</div>
+								</h:panelGroup>
+							</li>
+						</ui:fragment>
+						<ui:fragment rendered="#{searchBean.isFilterAvailable('duration')}">
+							<li class="filter duration#{searchBean.filterDuration != null ? ' active' : null}">
+								<span class="filter-name">#{searchBean.filterDuration != null ? searchBean.currentDuration : msg.duration} 
+									<span class="arrow"></span>
+								</span>
+								<h:panelGroup id="filter-duration" styleClass="filter-sub-bar" layout="block">
+									<h:link value="#{msg.any_duration}" outcome="search" styleClass="#{searchBean.filterDuration == null ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('duration', 'all')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<ui:repeat value="#{searchBean.availiableDurations}" var="duration">
+										<h:link value="#{duration.customName}" outcome="search" styleClass="#{searchBean.filterDuration == duration ? 'active' : null}">
+											<f:param name="action" value="#{searchBean.searchMode}" />
+											<f:param name="filter" value="#{searchBean.generateFiltersLink('duration', duration)}" />
+											<f:param name="query" value="#{searchBean.query}" />
+										</h:link>
+									</ui:repeat>
+								</h:panelGroup>
 							</li>
 						</ui:fragment>
 					</ul>
@@ -231,6 +252,9 @@
 					  				
 			<p:remoteCommand actionListener="${searchBean.logResourceOpened()}" name="logResourceOpened" async="true" process="@this" partialSubmit="true" />
 			<p:remoteCommand actionListener="${searchBean.logEndTime()}" update=":tabView:tab2" name="logEndTime" async="true" process="@this" partialSubmit="true"/>
+			
+			<p:remoteCommand actionListener="${searchBean.loadInterwebCounts()}" update=":filter-service" name="loadInterwebCounts" async="false" process="@this" partialSubmit="true"/>
+				
 		</h:form>
  
 		<p:dialog header="#{msg.options}" widgetVar="resource_dialog" modal="false" minWidth="600" resizable="false" style="z-index:1500;">			

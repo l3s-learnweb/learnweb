@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import javax.faces.application.FacesMessage;
@@ -36,6 +37,7 @@ import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.Search;
 import de.l3s.learnweb.Search.DATE;
+import de.l3s.learnweb.Search.DURATION;
 import de.l3s.learnweb.Search.MEDIA;
 import de.l3s.learnweb.Search.MODE;
 import de.l3s.learnweb.Search.SERVICE;
@@ -66,6 +68,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     private SERVICE filterService;
     private DATE filterDate;
     private SIZE filterSize;
+    private DURATION filterDuration;
 
     private InterWeb interweb;
     private Resource selectedResource;
@@ -219,6 +222,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 		setFilterDate(null);
 		setFilterService(null);
 		setFilterSize(null);
+		setFilterDuration(null);
 
 		for(String filter : tempFilters)
 		{
@@ -239,6 +243,10 @@ public class SearchBean extends ApplicationBean implements Serializable
 		    {
 			setFilterSize(nameValue[1]);
 		    }
+		    else if(nameValue[0].equals("duration"))
+		    {
+			setFilterDuration(nameValue[1]);
+		    }
 		}
 
 		if(filterService != null)
@@ -255,12 +263,18 @@ public class SearchBean extends ApplicationBean implements Serializable
 		{
 		    search.setSize(filterSize);
 		}
+
+		if(filterDuration != null)
+		{
+		    search.setDuration(filterDuration);
+		}
 	    }
 	    else if(searchFilters != null)
 	    {
 		setFilterDate(null);
 		setFilterService(null);
 		setFilterSize(null);
+		setFilterDuration(null);
 		searchFilters = null;
 	    }
 
@@ -647,6 +661,16 @@ public class SearchBean extends ApplicationBean implements Serializable
 	}
     }
 
+    public void loadInterwebCounts()
+    {
+	if(search != null)
+	{
+	    search.getResourcesByPage(2);
+	}
+
+	log.info("loadInterwebCounts");
+    }
+
     public String getCurrentService()
     {
 	//return filterService.getCustomName();
@@ -717,6 +741,37 @@ public class SearchBean extends ApplicationBean implements Serializable
 	return filterSize.getCustomName();
     }
 
+    public String getFilterDuration()
+    {
+	if(filterDuration == null)
+	{
+	    return null;
+	}
+	return filterDuration.name();
+    }
+
+    public void setFilterDuration(String stringDuration)
+    {
+	if(stringDuration == null)
+	{
+	    this.filterDuration = null;
+	}
+
+	for(DURATION duration : DURATION.values())
+	{
+	    if(duration.name().equals(stringDuration))
+	    {
+		this.filterDuration = duration;
+		break;
+	    }
+	}
+    }
+
+    public String getCurrentDuration()
+    {
+	return filterDuration.getCustomName();
+    }
+
     public boolean isFilterAvailable(String filter)
     {
 	if(filter == null)
@@ -726,7 +781,11 @@ public class SearchBean extends ApplicationBean implements Serializable
 
 	if(searchMode.equals(MODE.web))
 	{
-	    if(filter.equals("service"))
+	    if(filter.equals("date"))
+	    {
+		return (filterService == null || filterService.isLearnwebSource());
+	    }
+	    else if(filter.equals("service"))
 	    {
 		return true;
 	    }
@@ -735,7 +794,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	{
 	    if(filter.equals("date"))
 	    {
-		return (filterService == null || Arrays.asList(SERVICE.Flickr, SERVICE.Ipernity).contains(filterService));
+		return (filterService == null || Arrays.asList(SERVICE.Flickr, SERVICE.Ipernity).contains(filterService) || filterService.isLearnwebSource());
 	    }
 	    else if(filter.equals("size") || filter.equals("service"))
 	    {
@@ -746,9 +805,9 @@ public class SearchBean extends ApplicationBean implements Serializable
 	{
 	    if(filter.equals("date"))
 	    {
-		return (filterService == null || Arrays.asList(SERVICE.YouTube).contains(filterService));
+		return (filterService == null || Arrays.asList(SERVICE.YouTube).contains(filterService) || filterService.isLearnwebSource());
 	    }
-	    else if(filter.equals("service"))
+	    else if(filter.equals("duration") || filter.equals("service"))
 	    {
 		return true;
 	    }
@@ -767,7 +826,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	{
 	    if(filterDate != null)
 	    {
-		return Arrays.asList(SERVICE.Flickr, SERVICE.Ipernity);
+		return Arrays.asList(SERVICE.Flickr, SERVICE.Ipernity, SERVICE.Loro, SERVICE.LearnWeb);
 	    }
 	    return Arrays.asList(SERVICE.Bing, SERVICE.Flickr, SERVICE.Ipernity, SERVICE.Loro, SERVICE.LearnWeb);
 	}
@@ -775,7 +834,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	{
 	    if(filterDate != null)
 	    {
-		return Arrays.asList(SERVICE.YouTube);
+		return Arrays.asList(SERVICE.YouTube, SERVICE.TED, SERVICE.TEDx, SERVICE.Yovisto, SERVICE.Loro, SERVICE.LearnWeb);
 	    }
 	    return Arrays.asList(SERVICE.YouTube, SERVICE.Vimeo, SERVICE.TED, SERVICE.TEDx, SERVICE.Yovisto, SERVICE.Loro, SERVICE.LearnWeb);
 	}
@@ -791,6 +850,11 @@ public class SearchBean extends ApplicationBean implements Serializable
     public List<DATE> getAvailiableDates()
     {
 	return Arrays.asList(DATE.values());
+    }
+
+    public List<DURATION> getAvailiableDurations()
+    {
+	return Arrays.asList(DURATION.values());
     }
 
     public String generateFiltersLink(String param, String value)
@@ -824,6 +888,15 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    output.add("size:" + filterSize.name());
 	}
 
+	if(param.equals("duration") && !value.equals("all"))
+	{
+	    output.add("duration:" + value);
+	}
+	else if(!param.equals("duration") && filterDuration != null)
+	{
+	    output.add("duration:" + filterDuration.name());
+	}
+
 	return StringUtils.join(output, ',');
     }
 
@@ -831,7 +904,13 @@ public class SearchBean extends ApplicationBean implements Serializable
     {
 	if(!resultsCountAtService.containsKey(service))
 	{
-	    resultsCountAtService.putAll(search.getResultsCountAtService());
+	    for(Entry<String, Long> entry : search.getResultsCountAtService().entrySet())
+	    {
+		if(!resultsCountAtService.containsKey(entry.getKey()))
+		{
+		    resultsCountAtService.put(entry.getKey(), entry.getValue());
+		}
+	    }
 	}
 
 	Long count = resultsCountAtService.get(service);
@@ -988,32 +1067,6 @@ public class SearchBean extends ApplicationBean implements Serializable
 	// restore transient objects
 	searchLogClient = getLearnweb().getSearchlogClient();
     }
-
-    /*
-    public List<Search.SERVICE> getLocationFilterOptions()
-    {
-    LinkedList<SERVICE> services = new LinkedList<Search.SERVICE>();
-
-    services.add(Search.SERVICE.Learnweb);
-
-    if(MODE.web == searchMode)
-        services.add(Search.SERVICE.Bing);
-    else if(MODE.image == searchMode)
-    {
-        services.add(Search.SERVICE.Bing);
-        services.add(Search.SERVICE.Ipernity);
-        services.add(Search.SERVICE.Flickr);
-    }
-    else if(MODE.video == searchMode)
-    {
-        services.add(Search.SERVICE.TED);
-        services.add(Search.SERVICE.Vimeo);
-        services.add(Search.SERVICE.YouTube);
-    }
-
-    return services;
-    }
-    */
 
     public void generateKnowledgeGraph()
     {

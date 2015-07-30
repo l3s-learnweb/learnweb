@@ -8,8 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +32,7 @@ public class Search implements Serializable
     final static Logger log = Logger.getLogger(Search.class);
 
     private static final DateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     public enum SERVICE
     {
@@ -93,8 +94,7 @@ public class Search implements Serializable
 	    }
 	}
 
-	@Override
-	public String toString()
+	public Date getDate()
 	{
 	    Calendar cal = Calendar.getInstance();
 	    switch(this)
@@ -115,7 +115,18 @@ public class Search implements Serializable
 		return null;
 	    }
 
-	    return DEFAULT_DATE_FORMAT.format(cal.getTime());
+	    return cal.getTime();
+	}
+
+	@Override
+	public String toString()
+	{
+	    return DEFAULT_DATE_FORMAT.format(this.getDate());
+	}
+
+	public String toSolrString()
+	{
+	    return SOLR_DATE_FORMAT.format(this.getDate());
 	}
     }
 
@@ -178,6 +189,58 @@ public class Search implements Serializable
 	}
     }
 
+    public enum DURATION
+    {
+	s,
+	m,
+	l;
+
+	public String getCustomName()
+	{
+	    switch(this)
+	    {
+	    case s:
+		return UtilBean.getLocaleMessage("short");
+	    case m:
+		return UtilBean.getLocaleMessage("medium");
+	    case l:
+		return UtilBean.getLocaleMessage("long");
+	    default:
+		return UtilBean.getLocaleMessage("any_duration");
+	    }
+	}
+
+	public int getMaxDuration()
+	{
+	    switch(this)
+	    {
+	    case s:
+		return 300;
+	    case m:
+		return 1200;
+	    case l:
+		return 0;
+	    default:
+		return 0;
+	    }
+	}
+
+	public int getMinDuration()
+	{
+	    switch(this)
+	    {
+	    case s:
+		return 0;
+	    case m:
+		return 300;
+	    case l:
+		return 1200;
+	    default:
+		return 0;
+	    }
+	}
+    }
+
     public enum MEDIA
     {
 	image,
@@ -198,6 +261,7 @@ public class Search implements Serializable
     private List<String> configService = new ArrayList<String>(Arrays.asList("Flickr", "YouTube", "Vimeo", "SlideShare", "Ipernity")); // the services to search in
     private DATE configDate;
     private SIZE configSize;
+    private DURATION configDuration;
     private Integer configResultsPerService = 8;
     private Integer configResultsPerOneService = 40;
     private String configLanguage;
@@ -275,21 +339,6 @@ public class Search implements Serializable
 		hasMoreResults = false;
 
 	    resources.addAll(newResources);
-
-	    // Check size filter for image search
-	    if(configMedia.size() == 1 && configMedia.get(0).equals("image") && configSize != null)
-	    {
-		for(Iterator<ResourceDecorator> it = resources.iterator(); it.hasNext();)
-		{
-		    int width = it.next().getThumbnail4().getWidth(), minWidth = configSize.getMinWidth(), maxWidth = configSize.getMaxWidth();
-
-		    if(minWidth > width || (maxWidth != 0 && width > maxWidth))
-		    {
-			it.remove();
-		    }
-		}
-	    }
-
 	    pages.put(page, newResources);
 	}
 	catch(Exception e)
@@ -312,10 +361,14 @@ public class Search implements Serializable
     {
 	long start = System.currentTimeMillis();
 
-	log.debug(StringHelper.implode(configService, ","));
 	//this.solrSearch.setFilterLocation(StringHelper.implode(configService, ","));
 	this.solrSearch.setResultsPerPage(configService.size() > 1 ? configResultsPerService : configResultsPerOneService);
 	this.solrSearch.setFilterType(mode.name());
+
+	if(configDate != null)
+	{
+	    this.solrSearch.setFilterDateFrom(configDate.toSolrString());
+	}
 
 	List<ResourceDecorator> learnwebResources = solrSearch.getResourcesByPage(page);
 	setResultsCountAtService(solrSearch.getResultCountAtService());
@@ -355,12 +408,15 @@ public class Search implements Serializable
 		continue;
 	    }
 
-	    decoratedResource.setTempId(temporaryId);
+	    if(isSatisfyAfterLoadFilters(decoratedResource))
+	    {
+		decoratedResource.setTempId(temporaryId);
 
-	    tempIdIndex.put(temporaryId, resource);
-	    temporaryId++;
+		tempIdIndex.put(temporaryId, decoratedResource.getResource());
+		temporaryId++;
 
-	    newResources.add(decoratedResource);
+		newResources.add(decoratedResource);
+	    }
 	}
 
 	if(privateResourceCount > 0 || duplicatedUrlCount > 0)
@@ -415,12 +471,15 @@ public class Search implements Serializable
 	    if(!urlHashMap.add(decoratedResource.getUrl()))
 		continue;
 
-	    decoratedResource.setTempId(temporaryId);
+	    if(isSatisfyAfterLoadFilters(decoratedResource))
+	    {
+		decoratedResource.setTempId(temporaryId);
 
-	    tempIdIndex.put(temporaryId, decoratedResource.getResource());
-	    temporaryId++;
+		tempIdIndex.put(temporaryId, decoratedResource.getResource());
+		temporaryId++;
 
-	    newResources.add(decoratedResource);
+		newResources.add(decoratedResource);
+	    }
 	}
 
 	/*
@@ -429,6 +488,38 @@ public class Search implements Serializable
 	*/
 
 	return newResources;
+    }
+
+    /**
+     * Check filters like image width and video duration
+     * 
+     * @param res
+     * @return boolean
+     */
+    private boolean isSatisfyAfterLoadFilters(ResourceDecorator res)
+    {
+	//String type = res.getResource().getType(); // text Image Video
+	if(configSize != null && res.getResource().getType().equals("Image"))
+	{
+	    int width = res.getThumbnail4().getWidth(), minWidth = configSize.getMinWidth(), maxWidth = configSize.getMaxWidth();
+
+	    if(minWidth > width || (maxWidth != 0 && width > maxWidth))
+	    {
+		return false;
+	    }
+	}
+
+	if(configDuration != null && res.getResource().getType().equals("Video"))
+	{
+	    int duration = res.getResource().getDuration(), minDuration = configDuration.getMinDuration(), maxDuration = configDuration.getMaxDuration();
+
+	    if(minDuration > duration || (maxDuration != 0 && duration > maxDuration))
+	    {
+		return false;
+	    }
+	}
+
+	return true;
     }
 
     public String getQuery()
@@ -517,6 +608,11 @@ public class Search implements Serializable
 	this.configSize = size;
     }
 
+    public void setDuration(DURATION duration)
+    {
+	this.configDuration = duration;
+    }
+
     public void setResultsPerService(Integer configResultsPerService)
     {
 	this.configResultsPerService = configResultsPerService;
@@ -550,6 +646,8 @@ public class Search implements Serializable
      */
     public synchronized LinkedList<ResourceDecorator> getResourcesByPage(int page)
     {
+	if(page == 2)
+	    getResourcesByPage(1);
 
 	if(page > 50)
 	{
