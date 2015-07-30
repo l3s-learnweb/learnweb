@@ -17,6 +17,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
+import de.l3s.learnweb.AbstractPaginator;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
@@ -424,5 +425,23 @@ public class SolrSearch implements Serializable
 
 	// this is only an example it. This search will not necessarily return results
 	*/
+    }
+
+    public static class SearchPaginator extends AbstractPaginator
+    {
+	private static final long serialVersionUID = 399863025926697377L;
+	private final int groupId;
+
+	public SearchPaginator(int totalPages, int groupId)
+	{
+	    super(totalPages);
+	    this.groupId = groupId;
+	}
+
+	@Override
+	public List<Resource> getCurrentPage() throws SQLException, SolrServerException
+	{
+	    return Learnweb.getInstance().getResourceManager().getResourcesByGroupId(groupId, getPageIndex());
+	}
     }
 }

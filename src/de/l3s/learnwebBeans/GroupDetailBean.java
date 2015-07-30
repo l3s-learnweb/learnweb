@@ -45,6 +45,7 @@ import de.l3s.learnweb.ResourceManager.ORDER;
 import de.l3s.learnweb.Tag;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.solrClient.SolrSearch;
 import de.l3s.util.MD5;
 
 @ManagedBean
@@ -1276,4 +1277,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	this.query = query;
     }
 
+    public void onQueryChange()
+    {
+	log.debug("Group search: " + query);
+
+	SolrSearch search = new SolrSearch(query, getUser());
+	search.setFilterGroups(groupId);
+	//search.getResourcesByPage(page)
+    }
 }

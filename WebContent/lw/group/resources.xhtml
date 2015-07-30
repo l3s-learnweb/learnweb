@@ -66,7 +66,9 @@
 				</ul>
 				
 				<h:form id="header_query_form">
-					<h:inputText value="#{groupDetailBean.query}" style="float:left;margin-top:-12px;" id="input_query_form"/>
+
+					<h:inputText value="#{groupDetailBean.query}" style="float:left;margin-top:-12px;" id="input_query_form" valueChangeListener="#{groupDetailBean.onQueryChange}"/>
+
 				</h:form>
 				
 				<script type="text/javascript">
