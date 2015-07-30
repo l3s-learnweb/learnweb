@@ -1,14 +1,10 @@
 package de.l3s.learnwebBeans;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.net.URISyntaxException;
-import java.security.GeneralSecurityException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
@@ -28,19 +24,10 @@ import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.hibernate.validator.constraints.NotBlank;
 
-import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
-import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
-import com.google.api.client.http.HttpTransport;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.jackson2.JacksonFactory;
-import com.google.api.services.drive.Drive;
-import com.google.api.services.drive.DriveScopes;
-import com.google.api.services.drive.model.File;
-import com.google.api.services.drive.model.ParentReference;
-
 import de.l3s.learnweb.AbstractPaginator;
 import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.Course;
+import de.l3s.learnweb.GoogleDriveManager;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.JForumManager;
 import de.l3s.learnweb.Learnweb;
@@ -114,10 +101,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private Group newGroup = new Group();
 
     private AbstractPaginator paginator;
-
-    private HttpTransport httpTransport;
-    private JsonFactory jsonFactory = JacksonFactory.getDefaultInstance();
-    private Drive drive = null;
 
     private String query;
 
@@ -659,7 +642,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
 	    if(!newLinkType.equals("url")) // newLinkType == google document
 	    {
-		newLinkUrl = createNewGoogleDocument(group.getTitle() + " - " + newLinkTitle, newLinkType);
+		// Folder in learnweb account: https://drive.google.com/drive/u/0/folders/0B_Sy7ytn1dadbkxEZGFZTm5kZU0
+		String parentFolder = "0B_Sy7ytn1dadbkxEZGFZTm5kZU0";
+		newLinkUrl = new GoogleDriveManager().createEmptyDocument(group.getTitle() + " - " + newLinkTitle, newLinkType, parentFolder).getAlternateLink();
 		type = LinkType.DOCUMENT;
 		log(Action.group_adding_document, group.getId(), newLinkTitle);
 	    }
@@ -818,76 +803,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    e.printStackTrace();
 	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 	}
-    }
-
-    private String createNewGoogleDocument(String title, String type) throws IOException, SQLException
-    {
-	File fileMetadata = new File();
-	fileMetadata.setTitle(title);
-	fileMetadata.setParents(Collections.singletonList(new ParentReference().setId("0B_Sy7ytn1dadbkxEZGFZTm5kZU0")));
-
-	if(type.equals("document"))
-	    fileMetadata.setMimeType("application/vnd.google-apps.document");
-	else if(type.equals("presentation"))
-	    fileMetadata.setMimeType("application/vnd.google-apps.presentation");
-	else if(type.equals("spreadsheet"))
-	    fileMetadata.setMimeType("application/vnd.google-apps.spreadsheet");
-	else if(type.equals("drawing"))
-	    fileMetadata.setMimeType("application/vnd.google-apps.drawing");
-	else
-	    throw new IllegalArgumentException("type should be: document, presentation, drawing or spreadsheet");
-
-	Drive.Files.Insert insert = getGoogleDocument().files().insert(fileMetadata);
-	File uploadedFile = insert.execute();
-	log.debug("Added new Google Document: " + uploadedFile.getAlternateLink());
-	log.debug("Thumbnail: " + getGoogleDocumentThumbnail(uploadedFile.getId()));
-	return uploadedFile.getAlternateLink();
-    }
-
-    private String getGoogleDocumentThumbnail(String dicId) throws IOException
-    {
-	return getGoogleDocumentThumbnail(dicId, false);
-    }
-
-    private String getGoogleDocumentThumbnail(String dicId, boolean isCheckDate) throws IOException
-    {
-	File file = getGoogleDocument().files().get(dicId).execute();
-	Calendar now = Calendar.getInstance();
-	if(isCheckDate && (now.getTimeInMillis() - file.getModifiedDate().getValue() >= 86400000)) // 24 * 60 * 60 * 1000
-	{
-	    return null;
-	}
-
-	return file.getThumbnailLink();
-    }
-
-    private Drive getGoogleDocument() throws IOException
-    {
-	if(drive == null)
-	{
-	    GoogleCredential credential = null;
-	    try
-	    {
-		httpTransport = GoogleNetHttpTransport.newTrustedTransport();
-		credential = new GoogleCredential.Builder().setTransport(httpTransport).setJsonFactory(jsonFactory).setServiceAccountId("181029990744-vegd7p8ugh5amn1ilgunba03d1pai4sb@developer.gserviceaccount.com")
-			.setServiceAccountScopes(Collections.singleton(DriveScopes.DRIVE_FILE)).setServiceAccountPrivateKeyFromP12File(new java.io.File(getClass().getClassLoader().getResource("Learnweb-55153726550a.p12").toURI())).build();
-		credential.refreshToken();
-	    }
-	    catch(GeneralSecurityException e)
-	    {
-		log.error("Can not access to Google API");
-		//e.printStackTrace();
-	    }
-	    catch(URISyntaxException e)
-	    {
-		log.error("Can not load P12File for Google API");
-		//e.printStackTrace();
-	    }
-
-	    drive = new Drive.Builder(httpTransport, jsonFactory, credential).setApplicationName("LearnWeb").build();
-	}
-
-	return drive;
     }
 
     public boolean hasViewPermission(User user) throws SQLException
