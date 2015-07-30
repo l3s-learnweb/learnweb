@@ -19,10 +19,13 @@
 		<ui:define name="center_layout">
 	
 			<div class="center-header" id="group_header">
-				<span>
+				<span id="green-header">
 					#{msg.resources}
 				</span> 
-				#{msg.of} #{groupDetailBean.group.title}
+				<span id="of_group">
+					#{msg.of} 
+				</span>
+				#{groupDetailBean.group.title}
 				<h:form id="center_header_form">
 					<p:commandButton rendered="#{groupDetailBean.member}" styleClass="resource_button greenbutton ressourcetoolbutton" value="#{msg.upload_resource}" update=":add_resource_panel" oncomplete="update_header()">
 						<f:setPropertyActionListener target="#{addResourceBean.resourceTargetGroupId}" value="#{groupDetailBean.groupId}"></f:setPropertyActionListener>
@@ -61,24 +64,24 @@
 						</a>
 					</li>
 					<li>
-						<img alt="" src="#{request.contextPath}/resources/main-template/img/search.png" height="20" width="20" id="search_group_resource" style="padding:1px 15px;"/>
+						<img alt="" src="#{request.contextPath}/resources/main-template/img/search.png" height="16" width="16" id="search_group_resource" style="padding:3px 15px;cursor:pointer"/>
+					
+						<h:form id="header_query_form" prependId="false">
+							<h:inputText value="#{groupDetailBean.query}" id="input_query_form" style="margin-top:2.5px;width:20rem" />
+						</h:form>
 					</li>
 				</ul>
-				
-				<h:form id="header_query_form">
-
-					<h:inputText value="#{groupDetailBean.query}" style="float:left;margin-top:-12px;" id="input_query_form" valueChangeListener="#{groupDetailBean.onQueryChange}"/>
-
-				</h:form>
 				
 				<script type="text/javascript">
 					$("#header_query_form").css("display","none");
 					
 					$("#search_group_resource").click(function () {
-				          $("#header_query_form").toggle('slide', { direction: "left" }, 1000);
+				          $("#header_query_form").animate({ width: "toggle" },500);
+				          $("#input_query_form").focus();
 				          $("#search_group_resource").hide();
 				    });
 				</script>
+				
 			</div>			
 			<br />
 	
