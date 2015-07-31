@@ -19,10 +19,16 @@
 		<ui:define name="center_layout">
 			<h:form target="new_presentation" id="new_presentation_form"></h:form>
 			<div class="center-header" id="group_header">
-				<span>
+				<span id="green-header">
 					#{msg.presentations}
 				</span> 
-				#{msg.of} #{groupDetailBean.group.title}
+				<span id="of_group">
+					#{msg.of} 
+				</span>
+				<span id="group_name">
+					#{groupDetailBean.group.title}
+				</span>
+				
 				<h:form id="center_header_form">
 					<p:commandButton rendered="#{groupDetailBean.member}" styleClass="resource_button greenbutton" onclick="PF('format_dialog').show()" value="#{msg.presentation_new}" />
 				
