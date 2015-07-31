@@ -646,6 +646,19 @@ public class ResourceManager
 	return archiveUrls;
     }
 
+    public void saveArchiveUrlsByResourceId(int resourceId, List<ArchiveUrl> archiveUrls) throws SQLException
+    {
+	for(ArchiveUrl version : archiveUrls)
+	{
+	    PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)");
+	    prepStmt.setInt(1, resourceId);
+	    prepStmt.setString(2, version.getArchiveUrl());
+	    prepStmt.setTimestamp(3, new java.sql.Timestamp(version.getTimestamp().getTime()));
+	    prepStmt.executeUpdate();
+	    prepStmt.close();
+	}
+    }
+
     public List<Resource> search(String terms, String type, int resultsPerPage, int page) throws Exception
     {
 	String typeQuery = "";
@@ -770,7 +783,7 @@ public class ResourceManager
 
 	OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT 250"); // TODO remove limit and implement paginator on group page
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? ORDER BY resource_id ASC"); // TODO remove limit and implement paginator on group page
 	select.setInt(1, groupId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
