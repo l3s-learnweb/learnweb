@@ -21,10 +21,6 @@ public class JobScheduler
 	//Schedules the task, at 1:00 everyday
 	//description about Scheduling patterns : http://www.sauronsoftware.it/projects/cron4j/manual.php#p02 
 	//scheduler.schedule("0 1 * * *", task);
-
-	//AddArchiveUrlToResource archiveTask = new AddArchiveUrlToResource();
-	//Schedule the archiveTask every minute
-	//scheduler.schedule("* * * * *", archiveTask);
     }
 
     public void startAllJobs()
@@ -79,48 +75,6 @@ public class JobScheduler
 		log.fatal("Can't update TED videos", t);
 	    }
 	}
-    }
-
-    private class AddArchiveUrlToResource extends Task
-    {
-
-	@Override
-	public boolean canBePaused()
-	{
-	    return true;
-	}
-
-	@Override
-	public boolean canBeStopped()
-	{
-	    return true;
-	}
-
-	@Override
-	public boolean supportsCompletenessTracking()
-	{
-	    return true;
-	}
-
-	@Override
-	public boolean supportsStatusTracking()
-	{
-	    return true;
-	}
-
-	@Override
-	public void execute(TaskExecutionContext context2)
-	{
-	    try
-	    {
-		learnweb.getArchiveUrlManager().addArchiveUrlToResource();
-	    }
-	    catch(Throwable t)
-	    {
-		log.fatal("Can't archive certain resource links", t);
-	    }
-	}
-
     }
 
     public static void main(String[] args)

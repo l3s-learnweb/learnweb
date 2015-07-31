@@ -20,10 +20,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.Queue;
 import java.util.TimeZone;
 import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -49,7 +47,7 @@ public class ArchiveUrlManager
     private String archiveTodayURL;
     private URL serviceUrlObj;
     //private static int collectionId;
-    private Queue<Resource> resources = new ConcurrentLinkedQueue<Resource>();
+    //private Queue<Resource> resources = new ConcurrentLinkedQueue<Resource>();
     //private Map<Integer, Date> trackResources = new ConcurrentHashMap<Integer, Date>();
     private ExecutorService executerService;
 
@@ -193,113 +191,6 @@ public class ArchiveUrlManager
 	    }
 	    //resources.add(resource);
 	}
-    }
-
-    public void addArchiveUrlToResource() throws SQLException
-    {
-	String urlParameters;
-
-	while(!resources.isEmpty())
-	{
-	    Resource resource = resources.poll();
-
-	    DateFormat responseDate = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
-
-	    if(resource == null)
-		continue;
-
-	    resource = learnweb.getResourceManager().getResource(resource.getId());
-
-	    try
-	    {
-		if(resource.getArchiveUrls() != null)
-		{
-		    int versions = resource.getArchiveUrls().size();
-		    if(versions > 0)
-		    {
-			long timeDifference = (new Date().getTime() - resource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
-			if(timeDifference < 300)
-			    continue;
-		    }
-		}
-	    }
-	    catch(SQLException e1)
-	    {
-		log.error("Error while retrieving archive urls for resource", e1);
-	    }
-
-	    try
-	    {
-		HttpsURLConnection con = (HttpsURLConnection) serviceUrlObj.openConnection();
-		con.setRequestMethod("POST");
-		con.setDoOutput(true);
-
-		urlParameters = "url=" + resource.getUrl();
-
-		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-		wr.writeBytes(urlParameters);
-		wr.flush();
-		wr.close();
-
-		log.debug("Sending archive request for URL : " + resource.getUrl());
-		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
-
-		while((inputLine = in.readLine()) != null)
-		{
-		    response.append(inputLine);
-		}
-		in.close();
-
-		String resp = response.toString();
-
-		Pattern p = Pattern.compile("https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
-		Matcher filenameParts = p.matcher(resp);
-		String archiveURL = null;
-		if(filenameParts.find())
-		    archiveURL = resp.substring(filenameParts.start(), filenameParts.end());
-
-		log.debug("Archived URL: " + archiveURL);
-		String responseDateGMTString = con.getHeaderField("Date");
-		Date archiveUrlDate = null;
-
-		if(responseDateGMTString != null)
-		    archiveUrlDate = responseDate.parse(responseDateGMTString);
-
-		PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)");
-		prepStmt.setInt(1, resource.getId());
-		prepStmt.setString(2, archiveURL);
-		prepStmt.setTimestamp(3, new java.sql.Timestamp(archiveUrlDate.getTime()));
-		prepStmt.executeUpdate();
-		prepStmt.close();
-
-		//resource.addArchiveUrl(null); 
-	    }
-	    catch(IOException e)
-	    {
-		log.error("HTTPs URL connection to the archive service causing error:", e);
-	    }
-	    catch(SQLException e)
-	    {
-		log.error("Error while trying to save the resource with the archived URL", e);
-	    }
-	    catch(ParseException e)
-	    {
-		log.error("Error while trying to parse the response date for archive URL service", e);
-	    }
-	}
-
-	/*Iterator<Map.Entry<Integer, Date>> trackResourceIterator = trackResources.entrySet().iterator();
-	while(trackResourceIterator.hasNext())
-	{
-	    Map.Entry<Integer, Date> entry = trackResourceIterator.next();
-	    long timeDifference = (new Date().getTime() - entry.getValue().getTime()) / 1000;
-	    if(timeDifference > 300)
-	    {
-		trackResourceIterator.remove();
-	    }
-	}*/
     }
 
     class ProcessWebsiteWorker implements Callable<String>

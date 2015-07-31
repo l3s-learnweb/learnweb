@@ -42,8 +42,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     private Comment clickedComment;
     private String newComment;
 
-    // TODO rename to indicate that this function is used bei the archive timeline
-    public String getHighChartsJsonData()
+    public String getArchiveTimelineJsonData()
     {
 	JSONArray highChartsData = new JSONArray();
 	try
@@ -66,8 +65,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	return highChartsData.toJSONString();
     }
 
-    // TODO rename to indicate that this function is used bei the archive timeline
-    public String getCalendarJsonData()
+    public String getArchiveCalendarJsonData()
     {
 	JSONObject archiveDates = new JSONObject();
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -116,23 +114,24 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	JSONArray monthNames = new JSONArray();
 	for(String month : symbols.getMonths())
 	{
-	    monthNames.add(month);
+	    if(!month.equals(""))
+		monthNames.add(month);
 	}
-	// TODO why don't you make sure not to add empty string? This  
-	monthNames.remove(""); //To remove empty string from the array
 
 	return monthNames.toJSONString();
     }
 
+    //Function to get localized short month names for the timeline
     public String getShortMonthNames()
     {
 	DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
 	JSONArray monthNames = new JSONArray();
 	for(String month : symbols.getShortMonths())
 	{
-	    monthNames.add(month);
+	    if(!month.equals(""))
+		monthNames.add(month);
 	}
-	monthNames.remove(""); //To remove empty string from the array
+
 	return monthNames.toJSONString();
     }
 
