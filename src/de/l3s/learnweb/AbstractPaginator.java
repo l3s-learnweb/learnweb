@@ -109,4 +109,8 @@ public abstract class AbstractPaginator implements Serializable
 	    return false;
     }
 
+    public boolean empty()
+    {
+	return false;
+    }
 }

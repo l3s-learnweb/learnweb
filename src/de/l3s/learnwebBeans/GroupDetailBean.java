@@ -26,7 +26,6 @@ import org.hibernate.validator.constraints.NotBlank;
 
 import de.l3s.learnweb.AbstractPaginator;
 import de.l3s.learnweb.Comment;
-import de.l3s.learnweb.Course;
 import de.l3s.learnweb.GoogleDriveManager;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.JForumManager;
@@ -72,8 +71,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     //private String newComment;
     private Boolean newResourceClicked = false;
     private Boolean editResourceClicked = false;
-    //private Tag selectedTag;
-    private boolean loaded = false;
     private Resource selectedResource;
     public Resource clickedResource;
     public Presentation clickedPresentation;
@@ -109,11 +106,19 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	loadGroup();
 
+	if(null == group)
+	{
+	    addMessage(FacesMessage.SEVERITY_ERROR, "invalid group id");
+	    return;
+	}
+
+	updateLinksList();
+
 	Resource temp = new Resource();
 	clickedResource = temp;
-	clickedUser = new User(); // TODO initilaize with null
-	clickedGroup = new Group();// TODO initilaize with null
-	clickedPresentation = new Presentation();// TODO initilaize with null
+	clickedUser = new User(); // TODO initialize with null
+	clickedGroup = new Group();// TODO initialize with null
+	clickedPresentation = new Presentation();// TODO initialize with null
 
 	try
 	{
@@ -121,11 +126,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
 	catch(SolrServerException e)
 	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
 	}
-
-	log.debug("init GroupDetailBean()");
     }
 
     public void preRenderView(ComponentSystemEvent e)
@@ -310,45 +312,23 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private void loadGroup() throws SQLException
     {
 	if(0 == groupId)
-	{
+	{/*
 	    String temp = getFacesContext().getExternalContext().getRequestParameterMap().get("group_id");
 	    if(temp != null && temp.length() != 0)
-		groupId = Integer.parseInt(temp);
+	 groupId = Integer.parseInt(temp);
 
 	    if(0 == groupId)
+	 return;
+	   */
+	    Integer id = getParameterInt("group_id");
+
+	    if(null == id)
 		return;
+
+	    groupId = id.intValue();
 	}
 
 	group = getLearnweb().getGroupManager().getGroupById(groupId);
-    }
-
-    private void load()
-    {
-	/*if(loaded)
-	    return;
-	loaded = true;*/
-
-	try
-	{
-	    loadGroup();
-
-	    if(null == group)
-	    {
-		addMessage(FacesMessage.SEVERITY_ERROR, "invalid group id");
-		return;
-	    }
-
-	    loadResources();
-
-	    isNewestResourceHidden = group.getCourse().getOption(Course.Option.Groups_Hide_newest_resource);
-
-	    updateLinksList();
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	}
     }
 
     private void loadLogs(Integer limit)
