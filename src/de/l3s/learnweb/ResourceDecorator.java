@@ -2,6 +2,7 @@ package de.l3s.learnweb;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import org.jsoup.Jsoup;
@@ -26,6 +27,9 @@ public class ResourceDecorator implements Serializable
     private boolean newResource; //Used to highlight new resources when we compare the current result set with a result set from a similar query posted earlier
     private int rankAtService; // the rank which the resource had at its original service (youtube, flickr...)
     private String title;
+
+    private User addedToGroupBy; // only set if the resource is loaded in a group context
+    private Date addedToGroupOn; // only set if the resource is loaded in a group context 
 
     public ResourceDecorator(Resource resource)
     {
@@ -187,6 +191,36 @@ public class ResourceDecorator implements Serializable
     public void setRankAtService(int rankAtService)
     {
 	this.rankAtService = rankAtService;
+    }
+
+    public User getAddedToGroupBy()
+    {
+	return addedToGroupBy;
+    }
+
+    public void setAddedToGroupBy(User addedToGroupBy)
+    {
+	this.addedToGroupBy = addedToGroupBy;
+    }
+
+    public Date getAddedToGroupOn()
+    {
+	return addedToGroupOn;
+    }
+
+    public void setAddedToGroupOn(Date addedToGroupOn)
+    {
+	this.addedToGroupOn = addedToGroupOn;
+    }
+
+    public int getId()
+    {
+	return resource.getId();
+    }
+
+    public String getType()
+    {
+	return resource.getType();
     }
 
 }

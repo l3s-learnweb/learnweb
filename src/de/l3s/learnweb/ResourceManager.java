@@ -9,7 +9,6 @@ import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -23,6 +22,7 @@ import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
 import de.l3s.util.Image;
+import de.l3s.util.PropertiesBundle;
 import de.l3s.util.Sql;
 import de.l3s.util.StringHelper;
 
@@ -36,9 +36,8 @@ public class ResourceManager
     private final Learnweb learnweb;
 
     private ICache<Resource> cache;
-    private int pageSize;
 
-    public enum ORDER
+    public enum Order2
     {
 	TITLE,
 	TYPE,
@@ -47,12 +46,12 @@ public class ResourceManager
 
     protected ResourceManager(Learnweb learnweb)
     {
-	Properties properties = learnweb.getProperties();
-	int cacheSize = Integer.parseInt(properties.getProperty("RESOURCE_CACHE"));
+	PropertiesBundle properties = learnweb.getProperties();
+	int cacheSize = properties.getPropertyIntValue("RESOURCE_CACHE");
 
 	this.learnweb = learnweb;
 	this.cache = cacheSize == 0 ? new DummyCache<Resource>() : new Cache<Resource>(cacheSize);
-	this.pageSize = Integer.parseInt(properties.getProperty("RESOURCES_PAGE_SIZE"));
+
     }
 
     public int getResourceCountByUserId(int userId) throws SQLException
@@ -752,28 +751,30 @@ public class ResourceManager
 	learnweb.getSolrClient().reIndexResource(resource);
     }
 
-    public AbstractPaginator getResourcesByGroupId(int groupId, ORDER order) throws SQLException
+    public AbstractPaginator getResourcesByGroupId(int groupId, Order2 order) throws SQLException
     {
-	int pages = getGroupResourcesPageCount(groupId);
+	int results = getGroupResourcesresultsCount(groupId);
 
-	return new GroupPaginator(pages, groupId);
+	return new GroupPaginator(results, groupId, order);
     }
 
     private static class GroupPaginator extends AbstractPaginator
     {
 	private static final long serialVersionUID = 399863025926697377L;
 	private final int groupId;
+	private final Order2 order;
 
-	public GroupPaginator(int totalPages, int groupId)
+	public GroupPaginator(int totalResults, int groupId, Order2 order)
 	{
-	    super(totalPages);
+	    super(totalResults);
 	    this.groupId = groupId;
+	    this.order = order;
 	}
 
 	@Override
-	public List<Resource> getCurrentPage() throws SQLException, SolrServerException
+	public List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException
 	{
-	    return Learnweb.getInstance().getResourceManager().getResourcesByGroupId(groupId, getPageIndex());
+	    return Learnweb.getInstance().getResourceManager().getResourcesByGroupId(groupId, getPageIndex(), PAGE_SIZE, order);
 	}
     }
 
@@ -800,11 +801,39 @@ public class ResourceManager
 	return resources;
     }
 
-    public OwnerList<Resource, User> getResourcesByGroupId(int groupId, int page) throws SQLException
+    /*
+    public OwnerList<Resource, User> getResourcesByGroupId(int groupId, int page, int pageSize, Order order) throws SQLException
+    {
+    UserManager um = learnweb.getUserManager();
+
+    OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
+
+    PreparedStatement select = learnweb.getConnection().prepareStatement(
+    	"SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
+    select.setInt(1, groupId);
+    select.setInt(2, pageSize);
+    select.setInt(3, page * pageSize);
+    ResultSet rs = select.executeQuery();
+    while(rs.next())
+    {
+        int userId = rs.getInt(1);
+        Resource resource = createResource(rs);
+        User user = userId == 0 ? null : um.getUser(userId);
+
+        if(null != resource)
+    	resources.add(resource, user, rs.getDate(2));
+    }
+    select.close();
+
+    return resources;
+    }
+    */
+
+    public List<ResourceDecorator> getResourcesByGroupId(int groupId, int page, int pageSize, Order2 order) throws SQLException
     {
 	UserManager um = learnweb.getUserManager();
 
-	OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
+	List<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
 
 	PreparedStatement select = learnweb.getConnection().prepareStatement(
 		"SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
@@ -818,23 +847,35 @@ public class ResourceManager
 	    Resource resource = createResource(rs);
 	    User user = userId == 0 ? null : um.getUser(userId);
 
+	    ResourceDecorator decoratedResource = new ResourceDecorator(resource);
+	    decoratedResource.setAddedToGroupBy(user);
+	    decoratedResource.setAddedToGroupOn(new Date(rs.getTimestamp("add_to_group_time").getTime()));
+
+	    resources.add(decoratedResource);
+	    /*
 	    if(null != resource)
-		resources.add(resource, user, rs.getDate(2));
+	    resources.add(resource, user, rs.getDate(2));
+	    */
 	}
 	select.close();
 
 	return resources;
     }
 
-    public int getGroupResourcesPageCount(int groupId) throws SQLException
+    public int getGroupResourcesresultsCount(int groupId) throws SQLException
     {
 	int count = 0;
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT count(*) as count from lw_resource r JOIN lw_group_resource g USING(resource_id) WHERE group_id=?");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM lw_group_resource WHERE group_id = ?");
 	select.setInt(1, groupId);
 	ResultSet rs = select.executeQuery();
 	if(rs.next())
-	    count = rs.getInt("count");
-	return (count + pageSize - 1) / pageSize;
+	    count = rs.getInt(1);
+	else
+	    throw new IllegalStateException("SQL query returned no result");
+
+	select.close();
+
+	return count;
     }
 
     private Resource createResource(ResultSet rs) throws SQLException

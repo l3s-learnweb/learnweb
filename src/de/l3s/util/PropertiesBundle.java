@@ -26,4 +26,9 @@ public class PropertiesBundle extends Properties
 
 	return fallback.getProperty(key);
     }
+
+    public int getPropertyIntValue(String key)
+    {
+	return Integer.parseInt(getProperty(key));
+    }
 }

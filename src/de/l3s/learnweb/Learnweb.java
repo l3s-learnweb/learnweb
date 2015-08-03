@@ -38,7 +38,7 @@ public class Learnweb
 
     private PreparedStatement pstmtGetChangeLog;
     private PreparedStatement pstmtLog;
-    private Properties properties;
+    private PropertiesBundle properties;
     private String contextUrl;
 
     // Manager (Data Access Objects):
@@ -62,7 +62,7 @@ public class Learnweb
     private final LoroManager loroManager;
     private final ResourcePreviewMaker resourcePreviewMaker;
     private final YovistoManager yovistoManager;
-    private JobScheduler jobScheduler;
+    private final JobScheduler jobScheduler;
 
     private static Learnweb learnweb = null;
 
@@ -305,7 +305,7 @@ public class Learnweb
 	return interweb;
     }
 
-    public Properties getProperties()
+    public PropertiesBundle getProperties()
     {
 	return properties;
     }

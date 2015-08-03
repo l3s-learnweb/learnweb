@@ -39,8 +39,9 @@ import de.l3s.learnweb.OwnerList;
 import de.l3s.learnweb.Presentation;
 import de.l3s.learnweb.PresentationManager;
 import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.ResourceManager;
-import de.l3s.learnweb.ResourceManager.ORDER;
+import de.l3s.learnweb.ResourceManager.Order2;
 import de.l3s.learnweb.Tag;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
@@ -66,9 +67,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private ArrayList<NewsEntry> newslist;
     private User clickedUser;
     private Group clickedGroup;
-    //private String tagName;
-    private String wizardURL = null;
-    //private String newComment;
+
     private Boolean newResourceClicked = false;
     private Boolean editResourceClicked = false;
     private Resource selectedResource;
@@ -94,7 +93,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private boolean isNewestResourceHidden = false;
 
     private int selectedResourceTargetGroupId;
-    private String gridColumns = "2";
 
     private Group newGroup = new Group();
 
@@ -122,7 +120,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
 	try
 	{
-	    paginator = group.getResources(ORDER.TITLE);
+	    paginator = group.getResources(Order2.TITLE);
 	}
 	catch(SolrServerException e)
 	{
@@ -371,21 +369,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    members = group.getMembers();
 	}
 	return members;
-    }
-
-    public List<Resource> getResources()
-    {
-	try
-	{
-	    resourcesAll = (OwnerList<Resource, User>) paginator.getCurrentPage();
-	}
-	catch(SQLException | SolrServerException e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	}
-
-	return resourcesAll;
     }
 
     public Group getGroup() throws SQLException
@@ -982,55 +965,36 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return false;
     }
 
-    public boolean canDeleteResource(Object resource2)
+    public boolean canDeleteResourceCompletely(Object resource)
     {
-	if(!(resource2 instanceof Resource))
-	{
-	    return false;
-	}
-	Resource resource = (Resource) resource2;
 	User user = getUser();
 
 	if(user.isModerator())
 	    return true;
 
-	User owner = resourcesAll.getElementOwner(resource);
+	if(!(resource instanceof ResourceDecorator))
+	{
+	    throw new IllegalArgumentException("Method called with an unexpected class type: " + resource.getClass());
+	}
+	ResourceDecorator decoratedResource = (ResourceDecorator) resource;
 
-	if(getUser().equals(owner))
+	if(user.getId() == decoratedResource.getResource().getOwnerUserId())
 	    return true;
 
 	return false;
     }
 
-    public OwnerList<Resource, User> getResourcesAll()
+    public boolean canDeleteResourceFromGroup(Object resource) throws SQLException
     {
-	return resourcesAll;
-    }
+	if(canDeleteResourceCompletely(resource))
+	    return true;
 
-    public String getWizardURL()
-    {
-	if(wizardURL != null)
-	    return wizardURL;
-	try
-	{
-	    wizardURL = "http://learnweb.l3s.uni-hannover.de/lw/user/register.jsf?wizard=" + group.getCourse().getWizardParam();
-	}
-	catch(SQLException e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	}
-	return wizardURL;
-    }
+	ResourceDecorator decoratedResource = (ResourceDecorator) resource;
 
-    public String getGridColumns()
-    {
-	return gridColumns;
-    }
+	if(getUser().equals(decoratedResource.getAddedToGroupBy()) || getUser().getId() == getGroup().getLeaderUserId())
+	    return true;
 
-    public void setGridColumns(String gridColumns)
-    {
-	this.gridColumns = gridColumns;
+	return false;
     }
 
     public List<Presentation> getPresentations() throws SQLException
@@ -1043,16 +1007,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	this.presentations = presentations;
     }
-
-    /*public String getNewComment()
-    {
-    return newComment;
-    }
-
-    public void setNewComment(String newComment)
-    {
-    this.newComment = newComment;
-    }*/
 
     public Boolean getNewResourceClicked()
     {
@@ -1116,73 +1070,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	this.reloadLogs = reloadLogs;
     }
 
-    /*public String getTagName()
-    {
-    return tagName;
-    }
-
-    public void setTagName(String tagName)
-    {
-    this.tagName = tagName;
-    }
-
-    public Tag getSelectedTag()
-    {
-    return selectedTag;
-    }
-
-    public void setSelectedTag(Tag selectedTag)
-    {
-    this.selectedTag = selectedTag;
-    }
-
-    public void onEditComment()
-    {
-    try
-    {
-        getLearnweb().getResourceManager().saveComment(clickedComment);
-        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-    }
-    catch(Exception e)
-    {
-        e.printStackTrace();
-        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-    }
-    }
-
-    public void onDeleteComment()
-    {
-    try
-    {
-        clickedResource.deleteComment(clickedComment);
-        addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
-        log(Action.deleting_comment, clickedComment.getResourceId(), clickedComment.getId() + "");
-    }
-    catch(Exception e)
-    {
-        e.printStackTrace();
-        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-    }
-    }
-
-    public boolean canEditComment(Object commentO) throws Exception
-    {
-    if(!(commentO instanceof Comment))
-        return false;
-
-    User user = getUser();
-    if(null == user)// || true)
-        return false;
-    if(user.isAdmin() || user.isModerator())
-        return true;
-
-    Comment comment = (Comment) commentO;
-    User owner = comment.getUser();
-    if(user.equals(owner))
-        return true;
-    return false;
-    }*/
-
     public void addSelectedResourceLink() throws SQLException
     {
 	User user = getUser();
@@ -1206,16 +1093,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
 
     }
-
-    /*public Comment getClickedComment()
-    {
-    return clickedComment;
-    }
-
-    public void setClickedComment(Comment clickedComment)
-    {
-    this.clickedComment = clickedComment;
-    }*/
 
     public Presentation getClickedPresentation()
     {
@@ -1263,6 +1140,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
 	SolrSearch search = new SolrSearch(query, getUser());
 	search.setFilterGroups(groupId);
-	//search.getResourcesByPage(page)
+	search.setResultsPerPage(AbstractPaginator.PAGE_SIZE);
+
+	paginator = new SolrSearch.SearchPaginator(search);
     }
 }

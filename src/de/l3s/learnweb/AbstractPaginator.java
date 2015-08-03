@@ -12,17 +12,43 @@ public abstract class AbstractPaginator implements Serializable
     private static final long serialVersionUID = 2495539559727294482L;
     private static final int DEFAULT_PAGE_INDEX = 0;
     private static final int DEFAULT_N_PAGE_LIMIT = 5;
-    private int pageIndex;
+    public static final int PAGE_SIZE = Learnweb.getInstance().getProperties().getPropertyIntValue("RESOURCES_PAGE_SIZE");
+
+    private int pageIndex = DEFAULT_PAGE_INDEX;
     private int totalPages;
+    private int totalResults = Integer.MIN_VALUE;
 
-    public abstract List<Resource> getCurrentPage() throws SQLException, SolrServerException;
+    public abstract List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException;
 
-    public AbstractPaginator(int totalPages)
+    public AbstractPaginator(int totalResults)
     {
-	pageIndex = DEFAULT_PAGE_INDEX;
-	this.totalPages = totalPages;
+	setTotalResults(totalResults);
     }
 
+    /**
+     * Class which use this constructor must call setTotalResults(int totalResults) as soon as possible
+     */
+    public AbstractPaginator()
+    {
+	setTotalResults(totalResults);
+    }
+
+    public int getTotalResults()
+    {
+	return totalResults;
+    }
+
+    protected void setTotalResults(int totalResults)
+    {
+	this.totalResults = totalResults;
+	this.totalPages = (totalResults + PAGE_SIZE - 1) / PAGE_SIZE;
+    }
+
+    /**
+     * Starting from 0
+     * 
+     * @return
+     */
     public int getPageIndex()
     {
 	return pageIndex;
@@ -109,8 +135,12 @@ public abstract class AbstractPaginator implements Serializable
 	    return false;
     }
 
-    public boolean empty()
+    public boolean isEmpty()
     {
+	if(totalResults == Integer.MIN_VALUE)
+	    throw new IllegalStateException("Call getPageIndex() first");
+	if(totalResults == 0)
+	    return true;
 	return false;
     }
 }

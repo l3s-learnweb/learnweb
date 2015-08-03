@@ -69,8 +69,7 @@
 						<img alt="" src="#{request.contextPath}/resources/main-template/img/search.png" height="16" width="16" id="search_group_resource" style="padding:3px 15px;cursor:pointer"/>
 					
 						<h:form id="header_query_form" prependId="false">
-							<h:inputText value="#{groupDetailBean.query}" id="input_query_form" style="margin-top:2.5px;width:20rem" />
-							<p:commandButton actionListener="${groupDetailBean.onQueryChange()}" partialSubmit="true" process="@form" update=":datagrid :paging_buttons"/> 
+							<h:inputText value="#{groupDetailBean.query}" id="input_query_form" style="margin-top:2.5px;width:20rem" /><p:commandButton actionListener="${groupDetailBean.onQueryChange()}" partialSubmit="true" process="@form" update=":datagrid :paging_buttons" value="#{msg.searchLabel}"/> 
 						</h:form>
 					</li>
 				</ul>
@@ -180,8 +179,6 @@
 
 
 			<h:panelGroup id="datagrid" layout="block">
-			
-				<h:outputText value="#{msg.no_resources_found}" rendered="#{empty groupDetailBean.resources}" class="nothing_found"></h:outputText>
 				
 			    <ui:repeat var="result" value="#{groupDetailBean.paginator.currentPage}"> 
 			     
@@ -197,7 +194,7 @@
 					            		<span class="groupid">#{result.id}</span>
 	
 										<h:graphicImage styleClass="resource_thumbnail" width="150" height="150" value="#{result.thumbnail1.url}" rendered="#{not empty result.thumbnail1}" alt="#{result.title}" />
-							    		<h:outputText styleClass="resource_thumbnail" value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' escape="false" rendered="#{empty result.thumbnail1}"></h:outputText>
+							    		<h:outputText styleClass="resource_thumbnail" value='#{result.resource.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' escape="false" rendered="#{empty result.thumbnail1}"></h:outputText>
 	
 					            		<div class="buttons">
 					            			<p:commandLink oncomplete="PF('resource_dialog').show()" title="#{msg.addToMyResources}" update=":resource_form" styleClass="buttons_link" process="@this"> <!-- resource_commandlink -->
@@ -212,14 +209,14 @@
 												<f:param name="group_id" value="#{groupDetailBean.groupId}" /> 
 											</p:commandLink>
 					            			
-					            			<p:commandLink  oncomplete="PF('confirmation').show();" title="#{msg.removeFromGroup}" rendered="#{groupDetailBean.canDeleteResource(result)}" styleClass="buttons_link" update=":confirm_dialog_form">
+					            			<p:commandLink  oncomplete="PF('confirmation').show();" title="#{msg.removeFromGroup}" rendered="${groupDetailBean.canDeleteResourceFromGroup(result)}" styleClass="buttons_link" update=":confirm_dialog_form">
 												<h:graphicImage alt="Remove" value="../resources/icon/Remove.png"/>
 												
 												<f:setPropertyActionListener value="#{result}" target="#{groupDetailBean.clickedResource}" />
 												<f:param name="group_id" value="#{groupDetailBean.groupId}" />
 											</p:commandLink>
 											
-											<p:commandLink title="#{msg.edit}" rendered="#{groupDetailBean.canDeleteResource(result)}" update=":add_resource_panel" styleClass="buttons_link">
+											<p:commandLink title="#{msg.edit}" rendered="${groupDetailBean.canDeleteResourceFromGroup(result)}" update=":add_resource_panel" styleClass="buttons_link">
 												<h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
 													<f:setPropertyActionListener value="#{result}" target="#{groupDetailBean.clickedResource}" />
 													<f:setPropertyActionListener target="#{groupDetailBean.editResourceClicked}" value="true"></f:setPropertyActionListener>
@@ -235,15 +232,16 @@
 					            	</p:row>
 					            	
 					            	<div class="resource_summary">
-										<span>${learnwebBean.getLocaleMessage(result.type)}</span> #{msg.added_by} <span>#{result.getOwnerUser().username}</span>
-							        </div>
-					            
+										<span>${learnwebBean.getLocaleMessage(result.type)}</span> #{msg.added_by} <span>#{result.addedToGroupBy.username}</span>
+							        </div>					            
 						          
-					            </h:panelGrid>  
-					            
+					            </h:panelGrid>  					            
 					    </p:commandLink>
 				    </h:form>
 			    </ui:repeat>
+			    			
+				<h:outputText value="#{msg.no_resources_found}" rendered="${groupDetailBean.paginator.isEmpty()}" class="nothing_found" />
+			    
 		    </h:panelGroup>				
 		
 			<ui:decorate template="/lw/templates/paging.xhtml">

@@ -429,19 +429,22 @@ public class SolrSearch implements Serializable
 
     public static class SearchPaginator extends AbstractPaginator
     {
-	private static final long serialVersionUID = 399863025926697377L;
-	private final int groupId;
+	private final static long serialVersionUID = 3823389610985272265L;
+	private final SolrSearch search;
 
-	public SearchPaginator(int totalPages, int groupId)
+	public SearchPaginator(SolrSearch search)
 	{
-	    super(totalPages);
-	    this.groupId = groupId;
+	    super();
+	    this.search = search;
 	}
 
 	@Override
-	public List<Resource> getCurrentPage() throws SQLException, SolrServerException
+	public List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException
 	{
-	    return Learnweb.getInstance().getResourceManager().getResourcesByGroupId(groupId, getPageIndex());
+	    List<ResourceDecorator> results = search.getResourcesByPage(getPageIndex() + 1);
+	    setTotalResults((int) search.getTotalResultCount());
+
+	    return results;
 	}
     }
 }
