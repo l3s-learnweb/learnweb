@@ -295,7 +295,7 @@
 									
 							<h:panelGroup id="archive_view_options" layout="block">
 								<h:panelGroup layout="block" style="padding-top: 15px;" rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
-									<span class="resource_field" style="position:relative;">#{msg.archive_versions}: </span>
+									<span class="resource_field" style="position:relative;">#{msg.archive_versions} (<span style="color:red">#{resourceDetailBean.clickedResource.archiveUrls.size()}</span>): </span>
 									
 									<p:commandButton id="list_button" styleClass="greenbutton" value="#{msg.list_view}" onclick="return open_list_view();" style=""></p:commandButton>
 									<p:commandButton id="timeline_button" styleClass="greenbutton" value="#{msg.timeline_view}" onclick="return open_timeline_view();"></p:commandButton>

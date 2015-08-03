@@ -46,7 +46,7 @@
 	
 				<p:commandButton value="…" styleClass="pagebutton" disabled="true" rendered="#{paginator.lessThanNPagesFromLast}"/>
 				
-				<p:commandButton value="#{paginator.totalPages}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" styleClass="pagebutton #{paginator.pageIndex == paginator.totalPages? 'active_page_button':''}" update=":datagrid :paging_buttons">
+				<p:commandButton value="#{paginator.totalPages}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" styleClass="pagebutton #{paginator.pageIndex == paginator.totalPages - 1? 'active_page_button':''}" update=":datagrid :paging_buttons">
 					<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.totalPages -1}" />
 				</p:commandButton>
 				
