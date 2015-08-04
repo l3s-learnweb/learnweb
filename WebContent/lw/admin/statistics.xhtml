@@ -29,7 +29,7 @@
 				
 				<h:panelGroup id="output">
 					<p:panel header="#{msg.statistics}" >
-						 <p:dataTable var="entry" value="#{adminStatisticsBean.groupStatistics}">  
+						 <p:dataTable var="entry" value="#{adminStatisticsBean.groupStatistics}" emptyMessage="#{msg.no_results_found}">  
 					        <p:column headerText="#{msg.group}" sortBy="#{entry.title}">  
 					            <h:outputText value="#{entry.title}" />  
 					        </p:column>  

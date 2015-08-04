@@ -33,9 +33,9 @@
 							</h:panelGroup> 
 								<h:outputText value="#{msg.type}: #{addResourceBean.resource.type}" rendered="#{not empty addResourceBean.resource.type}" />
 
-
 							<h3>#{msg.description}:</h3> 
-								<p:inputTextarea id="description" value="#{addResourceBean.resource.description}"autoResize="true" style="width:430px; min-height:100px;" /></td>
+								<p:inputTextarea id="description" value="#{addResourceBean.resource.description}"autoResize="true" style="width:430px; min-height:100px;" />
+						</td>
 						<td valign="top" style="background-color: #D8E0EB; font-size: 11px;">
 							<div style="padding: 10px;">
 								<p>
@@ -45,7 +45,6 @@
 										<f:selectItem itemLabel="URL" itemValue="2" />
 										<f:selectItem itemLabel="#{msg.file}" itemValue="1" />
 											<f:ajax render=":resource_form:resource_input" immediate="true" listener="#{addResourceBean.doNothing}"  />
-									
 									</p:selectOneMenu>
 								</p>
 								<p>
@@ -54,7 +53,6 @@
 										<h:outputLabel value="#{msg.file}:" rendered="#{addResourceBean.resource.storageType == 1}" />
 										<br />
 										  <p:fileUpload fileUploadListener="#{addResourceBean.handleFileUpload}" mode="advanced" auto="true" update="embedded :growl description" sizeLimit="10000000"/>  
-            
 										<p:inputText value="#{addResourceBean.resource.url}" style="width:100%;" required="true" requiredmessage="#{msg.mandatory_field}" id="url_input" rendered="#{addResourceBean.resource.storageType == 2}">
 											<f:ajax render="url_message embedded" event="change" listener="#{addResourceBean.handleUrlChange}" />
 										</p:inputText>
@@ -90,8 +88,8 @@
 								<h:panelGroup id="upload_services">
 									<h:panelGroup rendered="#{not empty addResourceBean.uploadServices}">
 										<p>
-											<h:outputText value="#{msg.upload_to}" />
-											:<br />
+											<h:outputText value="#{msg.upload_to}:" />
+											<br />
 											<h:selectManyCheckbox value="#{addResourceBean.selectedUploadServices}" layout="pageDirection">
 												<f:selectItems value="#{addResourceBean.uploadServices}" var="service" itemLabel="#{service.title}" itemValue="#{service.id}" />
 											</h:selectManyCheckbox>

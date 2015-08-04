@@ -33,30 +33,28 @@
 								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
 							</h:outputLink>	
 							
-							<p:commandLink actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this" 
-								update=":courseform :growl" rendered="#{course.memberCount == 0}"
-								onstart="return confirm('Do you really want to delete course \'#{course.title}\'?');"								
-								style="text-decoration:none;" title="#{msg.delete}">
-															
+							<p:commandLink actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this" update=":courseform :growl" rendered="#{course.memberCount == 0}" onstart="return confirm('Do you really want to delete course \'#{course.title}\'?');" style="text-decoration:none;" title="#{msg.delete}">							
 								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
 							</p:commandLink>						
 						</p:column>
 					</p:dataTable>	
 				</h:form>
 			</p:panel>
-			<p:panel header="Add New Course">
+			<p:panel header="#{msg.add_new_course}">
 			<h:form id="addcourse">
-				#{msg.course_title}: <h:inputText value="#{adminCoursesBean.newCourseTitle}" id="c_title"/>
+				#{msg.course_title}: 
+				<h:inputText value="#{adminCoursesBean.newCourseTitle}" id="c_title"/>
 				<p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
-				<h:commandButton action="${adminCoursesBean.onCreateCourse}" value="add" process="@form"></h:commandButton>
+				<h:commandButton action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" process="@form"></h:commandButton>
 			</h:form>
 			</p:panel>
 			
-			<p:panel header="Add New Organization" rendered="#{userBean.admin}">
+			<p:panel header="#{msg.add_new_organization}" rendered="#{userBean.admin}">
 			<h:form id="addorganisation">
-				#{msg.organization_title}: <h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>
+				#{msg.organization_title}: 
+				<h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>
 				<p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation"/>
-				<h:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="add" process="@form"></h:commandButton>
+				<h:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" process="@form"></h:commandButton>
 			</h:form>
 			</p:panel>
 		</ui:define>

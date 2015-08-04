@@ -69,7 +69,8 @@
 						<img alt="" src="#{request.contextPath}/resources/main-template/img/search.png" height="16" width="16" id="search_group_resource" style="padding:3px 15px;cursor:pointer"/>
 					
 						<h:form id="header_query_form" prependId="false">
-							<h:inputText value="#{groupDetailBean.query}" id="input_query_form" style="margin-top:2.5px;width:20rem" /><p:commandButton actionListener="${groupDetailBean.onQueryChange()}" partialSubmit="true" process="@form" update=":datagrid :paging_buttons" value="#{msg.searchLabel}"/> 
+							<h:inputText value="#{groupDetailBean.query}" id="input_query_form" style="margin-top:2.5px;width:20rem" />
+							<p:commandButton actionListener="${groupDetailBean.onQueryChange()}" partialSubmit="true" process="@form" update=":datagrid :paging_buttons" value="#{msg.searchLabel}" style="margin-left:5px;"/> 
 						</h:form>
 					</li>
 				</ul>
@@ -96,19 +97,26 @@
 			<p:dialog id="confirmDialog" header="#{msg.delete_resource_title}"  widgetVar="confirmation" appendTo="@(body)" >
 		        
 		        <h:form prependId="false" id="confirm_dialog_form">
-			        <p> <h:outputText value="#{msg.theResource}"/>
-			        <b> <h:outputText value="#{groupDetailBean.clickedResource.title}" escape="false" /> </b> 
-			        <h:outputText value=" #{msg.part_of}:"/></p>
+			        <p> 
+			        	<h:outputText value="#{msg.theResource}"/>
+			        	<b> 
+			        		<h:outputText value="#{groupDetailBean.clickedResource.title}" escape="false" /> 
+			        	</b> 
+			        	<h:outputText value=" #{msg.part_of}:"/>
+			        </p>
 			        <ul>
 				        <ui:repeat var="group" value="#{groupDetailBean.clickedResource.groups}" escape="false">				       
-				        	<li><h:outputText value="#{msg.the_group_genitive} " />
+				        	<li>
+				        		<h:outputText value="#{msg.the_group_genitive} " />
 					        	<h:outputLink value="group/overview.jsf?group_id=#{group.id}">
 					        		<h:outputText value="#{group.title}" />
 					        	</h:outputLink>
 				        	</li>
 				        </ui:repeat>
-				        <li> <h:outputText value="#{msg.private_resource} "/>
-				         <h:outputText value=" #{groupDetailBean.clickedResource.ownerUser.username}"/></li>
+				        <li> 
+				        	<h:outputText value="#{msg.private_resource} "/>
+				         	<h:outputText value=" #{groupDetailBean.clickedResource.ownerUser.username}"/>
+				         </li>
 			        </ul>
 			        <p:commandButton value="#{msg.delete_from_group} '#{groupDetailBean.group.title}'" update=":datagrid :growl :add_resource_panel" oncomplete="PF('confirmation').hide(); update_header(); ;" actionListener="#{groupDetailBean.removeResourceFromGroup}" process=":datagrid" style="display:block; margin: 10px 0;"/>  
 		        
@@ -151,7 +159,7 @@
 						<h:outputText value="#{msg.author}:" />
 						<p:inputText value="#{groupDetailBean.clickedResource.author}" styleClass="resource_dialog_field" />
 						
-						<h:outputText value=""></h:outputText>
+						<h:outputText value=""/>
 						<h:panelGroup layout="block" styleClass="align-right">
 							<p:commandButton value="#{msg.cancel}" onclick="PF('resource_dialog').hide(); return false;" />
 							
@@ -191,7 +199,9 @@
 					             
 					            <h:panelGrid styleClass="resource_panelgrid" columns="1">
 					            	<p:row>
-					            		<span class="groupid">#{result.id}</span>
+					            		<span class="groupid">
+					            			#{result.id}
+					            		</span>
 	
 										<h:graphicImage styleClass="resource_thumbnail" width="150" height="150" value="#{result.thumbnail1.url}" rendered="#{not empty result.thumbnail1}" alt="#{result.title}" />
 							    		<h:outputText styleClass="resource_thumbnail" value='#{result.resource.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' escape="false" rendered="#{empty result.thumbnail1}"></h:outputText>
@@ -232,7 +242,13 @@
 					            	</p:row>
 					            	
 					            	<div class="resource_summary">
-										<span>${learnwebBean.getLocaleMessage(result.type)}</span> #{msg.added_by} <span>#{result.addedToGroupBy.username}</span>
+										<span>
+											${learnwebBean.getLocaleMessage(result.type)}
+										</span> 
+										#{msg.added_by} 
+										<span>
+											#{result.addedToGroupBy.username}
+										</span>
 							        </div>					            
 						          
 					            </h:panelGrid>  					            
