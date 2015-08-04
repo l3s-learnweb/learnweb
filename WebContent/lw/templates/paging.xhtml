@@ -19,7 +19,7 @@
 					</p:commandButton>							
 				</ui:repeat>
 				
-				<p:commandButton value="#{msg.next} #{msg.page}" styleClass="pagebutton" disabled="#{paginator.pageIndex == paginator.totalPages}" update=":datagrid :paging_buttons">
+				<p:commandButton value="#{msg.next} #{msg.page}" styleClass="pagebutton" disabled="#{paginator.pageIndex == paginator.totalPages - 1}" update=":datagrid :paging_buttons">
 					<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.pageIndex + 1}" />
 				</p:commandButton>
 				
@@ -50,7 +50,7 @@
 					<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.totalPages -1}" />
 				</p:commandButton>
 				
-				<p:commandButton value="#{msg.next} #{msg.page}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" styleClass="pagebutton" disabled="#{paginator.pageIndex == paginator.totalPages}" update=":datagrid :paging_buttons">
+				<p:commandButton value="#{msg.next} #{msg.page}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" styleClass="pagebutton" disabled="#{paginator.pageIndex == paginator.totalPages - 1}" update=":datagrid :paging_buttons">
 					<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.pageIndex + 1}" />
 				</p:commandButton>
 				
