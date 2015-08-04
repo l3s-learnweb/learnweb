@@ -506,7 +506,6 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	r.setFileName(fileName);
 	r.setFileUrl(fileUrl);
 	r.setQuery(query);
-	r.setOriginalResourceId(id); // sets the originalResourceId to the id of the source resource
 	r.setThumbnail0(thumbnail0);
 	r.setThumbnail1(thumbnail1);
 	r.setThumbnail2(thumbnail2);
@@ -520,6 +519,13 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	r.setOnlineStatus(onlineStatus);
 	r.setIdAtService(idAtService);
 	r.setRestricted(restricted);
+	r.setCreationDate(creationDate);
+
+	// sets the originalResourceId to the id of the source resource
+	if(originalResourceId == 0)
+	    r.setOriginalResourceId(id);
+	else
+	    r.setOriginalResourceId(originalResourceId);
 
 	return r;
     }

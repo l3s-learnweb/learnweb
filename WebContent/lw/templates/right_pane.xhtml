@@ -208,11 +208,11 @@
 						</div>
 					</ui:fragment>
 					
-					<table cellpadding="0" cellspacing="0" style="width:100%">
+					<table cellpadding="0" cellspacing="0">
 						<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.fileName and not resourceDetailBean.clickedResource.source.equals('LORO')}">
 							<tr>
 								<td style="padding-top:5px">
-									<span class="resource_field">#{msg.file}:</span>
+									<span class="resource_field">#{msg.file}: </span>
 								</td>
 								<td style="padding-top:5px">
 									<a href="#{resourceDetailBean.clickedResource.getUrl()}">#{resourceDetailBean.clickedResource.fileName}</a>
@@ -223,7 +223,7 @@
 						<ui:fragment rendered="${empty resourceDetailBean.clickedResource.fileName and resourceDetailBean.clickedResource.type.toLowerCase() != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type.toLowerCase() != 'video' and resourceDetailBean.clickedResource.type.toLowerCase() != 'image'}">
 							<tr>
 								<td style="padding-top:5px">
-									<span class="resource_field">#{msg.resource}:</span>
+									<span class="resource_field">#{msg.resource}: </span>
 								</td>
 								<td style="padding-top:5px">
 									<a style="color: #22e" href="#{resourceDetailBean.clickedResource.getUrl()}">#{resourceDetailBean.clickedResource.url}</a>
@@ -234,7 +234,7 @@
 						<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.author}">
 							<tr>
 								<td style="padding-top:5px">
-									<span class="resource_field">#{msg.author}:</span>
+									<span class="resource_field">#{msg.author}: </span>
 								</td>
 								<td style="padding-top:5px">
 									<h:outputText value="#{resourceDetailBean.clickedResource.author}"/>
@@ -243,7 +243,7 @@
 						</ui:fragment>
 						<tr>
 							<td style="padding-top:5px">
-								<span class="resource_field">#{msg.source}:</span>
+								<span class="resource_field">#{msg.source}: </span>
 							</td>
 							<td style="padding-top:5px">
 								<a href="#{resourceDetailBean.clickedResource.getUrl()}">
@@ -273,11 +273,21 @@
 						<ui:fragment rendered="#{resourceDetailBean.clickedResource.source == 'TED' or resourceDetailBean.clickedResource.source == 'TEDx'}">
 							<tr>
 								<td style="padding-top:5px">
-									<span class="resource_field">#{msg.transcript}:</span>
+									<span class="resource_field">#{msg.transcript}: </span>
 								</td>
 								<td style="padding-top:5px">
 									<h:outputLink value="ted_transcript.jsf" style="text-decoration:underline;">
 										<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />#{msg.link_to_transcript}</h:outputLink>
+								</td>
+							</tr>
+						</ui:fragment>						
+						<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.creationDate}">
+							<tr>
+								<td style="padding-top:5px">
+									<span class="resource_field">Date:</span>
+								</td>
+								<td style="padding-top:5px">
+									<h:outputText value="#{resourceDetailBean.clickedResource.creationDate}"/>
 								</td>
 							</tr>
 						</ui:fragment>
@@ -289,21 +299,16 @@
 					</h:panelGroup>
 							
 							<h:form id="archive_current_form" rendered="#{resourceDetailBean.clickedResource.storageType != 1}">
-									<span class="resource_field">#{msg.current_version}: </span>
-									<p:commandButton action="#{resourceDetailBean.archiveCurrentVersion}" styleClass="greenbutton" value="#{msg.archive_now}" update=":growl :archive_view :archive_view_options" style="margin-top:10px"/>
+								<span class="resource_field">#{msg.current_version}: </span>
+								<p:commandButton action="#{resourceDetailBean.archiveCurrentVersion}" styleClass="greenbutton" value="#{msg.archive_now}" update=":growl :archive_view :archive_view_options" style="margin-top:10px"/>
 							</h:form>
 									
 							<h:panelGroup id="archive_view_options" layout="block">
 								<h:panelGroup layout="block" style="padding-top: 15px;" rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
 									<span class="resource_field" style="position:relative;">#{msg.archive_versions} (<span style="color:red">#{resourceDetailBean.clickedResource.archiveUrls.size()}</span>): </span>
 									
-									<p:commandButton id="list_button" styleClass="greenbutton" value="#{msg.list_view}" onclick="return open_list_view();" style=""></p:commandButton>
-									<p:commandButton id="timeline_button" styleClass="greenbutton" value="#{msg.timeline_view}" onclick="return open_timeline_view();"></p:commandButton>
-							
-									<!--  
-									<a href="#" onclick="return open_list_view();" style="font-weight: bold; padding-left:5rem; position:relative; bottom:6px;">#{msg.list_view}</a>
-									<a href="#" onclick="return open_timeline_view();" style="font-weight: bold; padding-left:5rem; position:relative; bottom:6px;">#{msg.timeline_view}</a>
-									-->
+									<p:commandButton id="list_button" styleClass="greenbutton" value="#{msg.list_view}" onclick="return open_list_view();" />
+									<p:commandButton id="timeline_button" styleClass="greenbutton" value="#{msg.timeline_view}" onclick="return open_timeline_view();" />
 								</h:panelGroup>
 							</h:panelGroup>
 							<h:panelGroup id="archive_view" layout="block">

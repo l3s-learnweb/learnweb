@@ -20,21 +20,11 @@ import de.l3s.learnweb.beans.UtilBean;
 public class LearnwebBean implements Serializable
 {
     private static final long serialVersionUID = 1286475643761742147L;
-
     private transient Learnweb learnweb;
-    //private LinkedList<LocaleContainer> supportedLocales = new LinkedList<LocaleContainer>();
-    private String contextUrl;
+    private final String contextUrl;
 
     public LearnwebBean() throws IOException
     {
-	// load supported languages. See WEB-INF/faces-config.xml 
-	/*
-	Iterator<Locale> locales = FacesContext.getCurrentInstance().getApplication().getSupportedLocales();
-	while(locales.hasNext())
-	{
-	    supportedLocales.add(new LocaleContainer(locales.next()));
-	}
-	*/
 	ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
 
 	if(ext.getRequestServerPort() == 80 || ext.getRequestServerPort() == 443)
@@ -92,41 +82,6 @@ public class LearnwebBean implements Serializable
 	learnweb.onDestroy();
     }
 
-    /*
-        public LinkedList<LocaleContainer> getSupportedLocales()
-        {
-    	return supportedLocales;
-        }
-
-        public class LocaleContainer
-        {
-    	private Locale locale;
-    	private String countryCode;
-    	private String languageName;
-
-    	public LocaleContainer(Locale locale)
-    	{
-    	    this.locale = locale;
-    	    this.countryCode = locale.getCountry().toLowerCase();
-    	    this.languageName = locale.getDisplayLanguage(locale);
-    	}
-
-    	public Locale getLocale()
-    	{
-    	    return locale;
-    	}
-
-    	public String getCountryCode()
-    	{
-    	    return countryCode;
-    	}
-
-    	public String getLanguageName()
-    	{
-    	    return languageName;
-    	}
-        }
-    */
     /**
      * returns the path to the users profile image or a default image if no available
      * 

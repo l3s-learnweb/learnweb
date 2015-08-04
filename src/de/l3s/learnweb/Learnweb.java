@@ -183,7 +183,11 @@ public class Learnweb
     public void initLearnwebServer()
     {
 	log.debug("Init LearnwebServer");
-	jobScheduler.startAllJobs();
+
+	if(getContextUrl().contains("uni-hannover.de"))
+	    jobScheduler.startAllJobs();
+	else
+	    log.debug("JobScheduler not started in local mode");
     }
 
     public FileManager getFileManager()

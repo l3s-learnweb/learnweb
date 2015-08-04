@@ -26,7 +26,7 @@ public abstract class AbstractPaginator implements Serializable
     }
 
     /**
-     * Class which use this constructor must call setTotalResults(int totalResults) as soon as possible
+     * Classes which use this constructor must call setTotalResults(int totalResults) as soon as possible
      */
     public AbstractPaginator()
     {

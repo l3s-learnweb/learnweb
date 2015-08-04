@@ -37,7 +37,7 @@ public class ResourceManager
 
     private ICache<Resource> cache;
 
-    public enum Order2
+    public enum Order
     {
 	TITLE,
 	TYPE,
@@ -751,7 +751,7 @@ public class ResourceManager
 	learnweb.getSolrClient().reIndexResource(resource);
     }
 
-    public AbstractPaginator getResourcesByGroupId(int groupId, Order2 order) throws SQLException
+    public AbstractPaginator getResourcesByGroupId(int groupId, Order order) throws SQLException
     {
 	int results = getGroupResourcesresultsCount(groupId);
 
@@ -762,9 +762,9 @@ public class ResourceManager
     {
 	private static final long serialVersionUID = 399863025926697377L;
 	private final int groupId;
-	private final Order2 order;
+	private final Order order;
 
-	public GroupPaginator(int totalResults, int groupId, Order2 order)
+	public GroupPaginator(int totalResults, int groupId, Order order)
 	{
 	    super(totalResults);
 	    this.groupId = groupId;
@@ -829,7 +829,7 @@ public class ResourceManager
     }
     */
 
-    public List<ResourceDecorator> getResourcesByGroupId(int groupId, int page, int pageSize, Order2 order) throws SQLException
+    public List<ResourceDecorator> getResourcesByGroupId(int groupId, int page, int pageSize, Order order) throws SQLException
     {
 	UserManager um = learnweb.getUserManager();
 

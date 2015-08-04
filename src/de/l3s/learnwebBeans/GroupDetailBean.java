@@ -20,8 +20,8 @@ import javax.faces.event.ComponentSystemEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.validator.ValidatorException;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.hibernate.validator.constraints.NotBlank;
 
 import de.l3s.learnweb.AbstractPaginator;
@@ -41,7 +41,7 @@ import de.l3s.learnweb.PresentationManager;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.ResourceManager;
-import de.l3s.learnweb.ResourceManager.Order2;
+import de.l3s.learnweb.ResourceManager.Order;
 import de.l3s.learnweb.Tag;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
@@ -97,6 +97,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private Group newGroup = new Group();
 
     private AbstractPaginator paginator;
+    private Order order = Order.TITLE;
 
     private String query;
 
@@ -118,14 +119,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	clickedGroup = new Group();// TODO initialize with null
 	clickedPresentation = new Presentation();// TODO initialize with null
 
-	try
-	{
-	    paginator = group.getResources(Order2.TITLE);
-	}
-	catch(SolrServerException e)
-	{
-	    addFatalMessage(e);
-	}
+	paginator = group.getResources(order);
     }
 
     public void preRenderView(ComponentSystemEvent e)
@@ -1134,9 +1128,15 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	this.query = query;
     }
 
-    public void onQueryChange()
+    public void onQueryChange() throws SQLException
     {
 	log.debug("Group search: " + query);
+
+	if(StringUtils.isEmpty(query))
+	{
+	    paginator = group.getResources(order);
+	    return;
+	}
 
 	SolrSearch search = new SolrSearch(query, getUser());
 	search.setFilterGroups(groupId);

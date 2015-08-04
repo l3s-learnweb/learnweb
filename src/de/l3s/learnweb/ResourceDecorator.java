@@ -193,8 +193,10 @@ public class ResourceDecorator implements Serializable
 	this.rankAtService = rankAtService;
     }
 
-    public User getAddedToGroupBy()
+    public User getAddedToGroupBy() throws SQLException
     {
+	if(addedToGroupBy == null)
+	    return resource.getOwnerUser();
 	return addedToGroupBy;
     }
 
