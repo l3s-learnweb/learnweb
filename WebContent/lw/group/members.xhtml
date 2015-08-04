@@ -18,10 +18,19 @@
 	    		
 		<ui:define name="center_layout">
 			<div class="center-header" id="group_header">
-				<span>#{msg.members}</span> #{msg.of} #{groupDetailBean.group.title}
+				<span>
+					#{msg.members}
+				</span> 
+				#{msg.of} #{groupDetailBean.group.title}
 				
 				<h:form id="center_header_form">
-					<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" styleClass="resource_button greenbutton"  update=":growl :group_menu @form :resource_disp" partialSubmit="true" process="@this" value="#{msg.join_group}">
+					<p:commandLink rendered="#{not groupDetailBean.member}" 
+						action="#{groupsBean.joinGroup}" 
+						styleClass="resource_button greenbutton" 
+						update=":growl :group_menu @form :resource_disp" 
+						partialSubmit="true" 
+						process="@this" 
+						value="#{msg.join_group}">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
 					</p:commandLink>
 				</h:form>
@@ -67,10 +76,12 @@
 			<ui:repeat id="datagrid" var="result" value="#{groupDetailBean.getMembers()}">  
 		        
 		        <p:commandLink  styleClass="resource_command_link" update=":right_form" oncomplete="update_header()">
-		        	<f:setPropertyActionListener target="#{groupDetailBean.clickedUser}" value="#{result}"></f:setPropertyActionListener>
+		        	<f:setPropertyActionListener target="#{groupDetailBean.clickedUser}" value="#{result}"/>
 			            <div class="members_panelgrid grey_border"> 
 			            	<img src="#{result.image}" width="100" height="100" />
-			            	<div class="member_username_small">#{result.username}</div>
+			            	<div class="member_username_small">
+			            		#{result.username}
+			            	</div>
 			            </div>
 		        </p:commandLink>
 		        
@@ -80,7 +91,14 @@
 		</ui:define>
 		
 		<ui:define name="right_layout">
-			<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" header="#{groupDetailBean.clickedUser.id eq -1? msg.user_details : groupDetailBean.clickedUser.username}" id="right_pane">
+			<p:layoutUnit rendered="#{userBean.loggedIn}" 
+				position="east" 
+				size="38%" 
+				resizable="false" 
+				closable="false" 
+				collapsible="false" 
+				header="#{groupDetailBean.clickedUser.id eq -1? msg.user_details : groupDetailBean.clickedUser.username}" 
+				id="right_pane">
 				<div id="right_pane_wrapper">
 					<h:form id="right_form" target="presentation">
 						<script type="text/javascript">

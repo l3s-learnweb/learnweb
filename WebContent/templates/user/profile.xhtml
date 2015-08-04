@@ -19,19 +19,19 @@
 			<h:outputText value="#{msg.username}:" />
 			<h:outputText id="username" value="#{user.username}" />
 		
-			<h:outputText value="#{msg.email_address}:"/>
-			<h:outputText value="#{user.email}"/>
+			<h:outputText value="#{msg.email_address}:" rendered="#{not empty user.email}"/>
+			<h:outputText value="#{user.email}" rendered="#{not empty user.email}"/>
 		
 			<h:outputText value="#{msg.gender}:" />
 			<h:outputText value="-" rendered="#{user.gender == 0}" />					
 			<h:outputText value="#{msg.gender_male}" rendered="#{user.gender == 1}" />
 			<h:outputText value="#{msg.gender_female}" rendered="#{user.gender == 2}" />				
 						
-			<h:outputText value="#{msg.address}:" />
-			<h:outputText value="#{user.address}"/>
+			<h:outputText value="#{msg.address}:" rendered="#{not empty user.address}"/>
+			<h:outputText value="#{user.address}" rendered="#{not empty user.address}"/>
 		
-			<h:outputText value="#{msg.profession}:"/>
-			<h:outputText value="#{user.profession}"/>
+			<h:outputText value="#{msg.profession}:" rendered="#{not empty user.profession}"/>
+			<h:outputText value="#{user.profession}" rendered="#{not empty user.profession}"/>
 		
 			<h:outputText value="#{msg.interest}:" rendered="#{not empty user.interest}" />
 			<h:outputText value="#{user.interest}" rendered="#{not empty user.interest}" />
@@ -45,7 +45,12 @@
 			</h:outputText>
 		</h:panelGrid>
 					
-		<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(user)}" id="profile_image" alt="profile image" class="float-right"/>
+		<h:graphicImage height="100" 
+			width="100" 
+			value="${learnwebBean.getProfileImage(user)}" 
+			id="profile_image" 
+			alt="profile image" 
+			class="float-right"/>
 		
 		<br class="clear" />
 	 </div>

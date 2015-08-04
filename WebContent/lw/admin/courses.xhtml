@@ -28,7 +28,9 @@
 						</p:column>
 						
 						<p:column headerText="#{msg.options}">
-							<f:facet name="header">#{msg.options}</f:facet>
+							<f:facet name="header">
+								#{msg.options}
+							</f:facet>
 							<h:outputLink value="admin/course.jsf?course_id=#{course.id}" style="text-decoration:none;" title="#{msg.edit}">
 								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
 							</h:outputLink>	
@@ -49,7 +51,7 @@
 				#{msg.course_title}: 
 				<h:inputText value="#{adminCoursesBean.newCourseTitle}" id="c_title"/>
 				<p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
-				<h:commandButton action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" process="@form"></h:commandButton>
+				<h:commandButton action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" process="@form"/>
 			</h:form>
 			</p:panel>
 			
@@ -58,7 +60,7 @@
 				#{msg.organization_title}: 
 				<h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>
 				<p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation"/>
-				<h:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" process="@form"></h:commandButton>
+				<h:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" process="@form"/>
 			</h:form>
 			</p:panel>
 		</ui:define>

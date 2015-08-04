@@ -80,7 +80,9 @@
 					</c:forEach>
 				</p:accordionPanel>
 				
-				<p>Users won't actually see changes until they login next time.</p>		
+				<p>
+					#{msg.changes_login_again}
+				</p>		
 				
 				<p:commandButton actionListener="#{adminCourseBean.save}" value="#{msg.save}" update=":growl">
 					<f:param name="course_id" value="#{adminCourseBean.courseId}" />
@@ -88,7 +90,8 @@
 				
 				<br/><br/>
 				
-				<p:commandButton actionListener="#{adminCourseBean.onEnableForum}" value="Enable Forum" update=":growl :message" rendered="#{adminCourseBean.course.forumCategoryId == 0}">
+				<p:commandButton actionListener="#{adminCourseBean.onEnableForum}" 
+					value="Enable Forum" update=":growl :message" rendered="#{adminCourseBean.course.forumCategoryId == 0}">
 					<f:param name="course_id" value="#{adminCourseBean.courseId}" />
 				</p:commandButton>
 			</h:form>
