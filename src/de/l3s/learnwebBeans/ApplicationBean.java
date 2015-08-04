@@ -255,6 +255,12 @@ public class ApplicationBean
 	getLearnweb().log(getUser(), action, targetId, params, getSessionId(), executionTime);
     }
 
+    protected void log(LogEntry.Action action, int groupId, int targetId, String params)
+    {
+	int executionTime = (int) (System.currentTimeMillis() - startTime);
+	getLearnweb().log(getUser(), action, groupId, targetId, params, getSessionId(), executionTime);
+    }
+
     /**
      * Logs a user action for the currently active user.
      * The parameters "targetId" depend on the logged action.

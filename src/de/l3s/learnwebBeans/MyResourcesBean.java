@@ -109,52 +109,12 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	    getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(newResource, getUser());
 	    user.setActiveGroup(selectedResourceTargetGroupId);
 
-	    log(Action.adding_resource, newResource.getId(), selectedResourceTargetGroupId + "");
-
 	    addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
 	}
 
-    }
+	log(Action.adding_resource, selectedResourceTargetGroupId, newResource.getId(), "");
 
-    /*public void onDeleteTag()
-    {
-    try
-    {
-        clickedResource.deleteTag(selectedTag);
-        addMessage(FacesMessage.SEVERITY_INFO, "tag_deleted");
     }
-    catch(Exception e)
-    {
-        e.printStackTrace();
-        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-    }
-    }
-
-    public String addTag()
-    {
-    if(null == getUser())
-    {
-        addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
-        return null;
-    }
-
-    if(tagName == null || tagName.length() == 0)
-        return null;
-
-    try
-    {
-        clickedResource.addTag(tagName, getUser());
-        addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
-        log(Action.tagging_resource, clickedResource.getId(), tagName);
-        tagName = ""; // clear tag input field 
-    }
-    catch(Exception e)
-    {
-        e.printStackTrace();
-        addGrowl(FacesMessage.SEVERITY_ERROR, "fatal_error");
-    }
-    return null;
-    }*/
 
     public void loadResources() throws SQLException
     {

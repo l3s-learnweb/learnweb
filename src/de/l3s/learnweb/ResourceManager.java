@@ -189,6 +189,16 @@ public class ResourceManager
 	return getResource(resourceId, true);
     }
 
+    public void deleteResource(Resource resource) throws SQLException
+    {
+	for(Group group : resource.getGroups())
+	{
+	    group.clearCaches();
+	}
+
+	deleteResource(resource.getId());
+    }
+
     public void deleteResource(int resourceId) throws SQLException
     {
 	// delete resource from SOLR index
@@ -213,10 +223,12 @@ public class ResourceManager
 	update.executeUpdate();
 	update.close();
 
+	/* this causes error becaus a thumbnail can be used by multiple resources when they were copied
 	update = Learnweb.getConnectionStatic().prepareStatement("UPDATE `lw_file` SET deleted = 1 WHERE `resource_id` = ?");
 	update.setInt(1, resourceId);
 	update.executeUpdate();
 	update.close();
+	*/
 
 	// remove resource from cache
 	cache.remove(resourceId);
@@ -577,7 +589,7 @@ public class ResourceManager
 
     protected Comment commentResource(String text, User user, Resource resource) throws Exception
     {
-	Comment c = new Comment(-1, text, new Date(), resource, user);
+	Comment c = new Comment(text, new Date(), resource, user);
 	saveComment(c);
 
 	return c;

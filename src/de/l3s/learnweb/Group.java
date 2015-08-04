@@ -59,13 +59,11 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     public void clearCaches()
     {
-
 	documentLinks = null;
 	resources = null;
 	members = null;
 	links = null;
 	subgroups = null;
-
     }
 
     public Group()
@@ -101,7 +99,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     public List<User> getMembers() throws SQLException
     {
-	//  disabled because the members variableis not updated correctly when a user is added/deleted
+	//  disabled because the members variable is not updated correctly when a user is added/deleted
 	//if(null == members)
 	//{
 	members = Learnweb.getInstance().getUserManager().getUsersByGroupId(id);
@@ -155,9 +153,9 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     public OwnerList<Resource, User> getResources() throws SQLException
     {
-	// caching is restricted to 1 sec until a good strategy exist how to deal with deleting resources in other beans
+	// caching is restricted to 2 sec until a good strategy exist how to deal with deleting resources in other beans
 
-	if(null == resources || resourcesCacheTime + 1000L < System.currentTimeMillis())
+	if(null == resources || resourcesCacheTime + 3000L < System.currentTimeMillis())
 	{
 	    ResourceManager rm = Learnweb.getInstance().getResourceManager();
 	    resources = rm.getResourcesByGroupId(id);

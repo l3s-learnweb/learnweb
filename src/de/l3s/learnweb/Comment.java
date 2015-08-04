@@ -6,7 +6,6 @@ import java.util.Date;
 
 public class Comment implements Serializable, Comparable<Comment>
 {
-
     private static final long serialVersionUID = -5854582234222584285L;
     private int id = -1;
     private String text;
@@ -21,10 +20,9 @@ public class Comment implements Serializable, Comparable<Comment>
     {
     }
 
-    public Comment(int id, String text, Date date, Resource resource, User user)
+    public Comment(String text, Date date, Resource resource, User user)
     {
 	super();
-	this.id = id;
 	this.text = text;
 	this.date = date;
 	this.resource = resource;

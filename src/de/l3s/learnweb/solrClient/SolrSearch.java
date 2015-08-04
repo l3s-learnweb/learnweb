@@ -48,6 +48,7 @@ public class SolrSearch implements Serializable
 
     private String filterGroupStr = "";
     private int userId;
+    private boolean skipResourcesWithoutThumbnails = true;
 
     public SolrSearch(String query, User user)
     {
@@ -174,6 +175,11 @@ public class SolrSearch implements Serializable
     public Map<String, Long> getResultCountAtService()
     {
 	return serviceSet;
+    }
+
+    public void setSkipResourcesWithoutThumbnails(boolean skipResourcesWithoutThumbnails)
+    {
+	this.skipResourcesWithoutThumbnails = skipResourcesWithoutThumbnails;
     }
 
     private QueryResponse getSolrResourcesByPage(int page) throws SQLException, SolrServerException
@@ -326,7 +332,7 @@ public class SolrSearch implements Serializable
 		continue;
 	    }
 
-	    if((resource.getType().equals("Image") || resource.getType().equals("Video")) && resource.getThumbnail2() == null)
+	    if(skipResourcesWithoutThumbnails && (resource.getType().equals("Image") || resource.getType().equals("Video")) && resource.getThumbnail2() == null)
 	    {
 		skippedResources++;
 		continue;

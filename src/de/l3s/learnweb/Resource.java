@@ -93,15 +93,12 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     // caches
     private transient OwnerList<Tag, User> tags = null;
     private transient List<Comment> comments;
-    private transient List<Group> groups;
     private transient User owner;
     private transient LinkedList<ArchiveUrl> archiveUrls = null;//To store the archive URL from archive.today service
 
     protected void clearCaches()
     {
-	// tags = null; tags are updated every time a tag is added, don't have to be reset
-	// comments = null;
-	groups = null;
+
     }
 
     /**
@@ -135,9 +132,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
      */
     public List<Group> getGroups() throws SQLException
     {
-	//if(null == groups)
-	groups = Learnweb.getInstance().getGroupManager().getGroupsByResourceId(id);
-	return groups;
+	return Learnweb.getInstance().getGroupManager().getGroupsByResourceId(id);
     }
 
     @Deprecated
@@ -293,7 +288,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
     public List<Comment> getComments() throws SQLException
     {
-	if(id != -1)
+	if(id != -1 && comments == null)
 	{
 	    comments = Learnweb.getInstance().getResourceManager().getCommentsByResourceId(id);
 	    //Collections.sort(comments);

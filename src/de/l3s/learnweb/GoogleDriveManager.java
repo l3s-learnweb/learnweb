@@ -45,7 +45,7 @@ public class GoogleDriveManager
 	}
 	catch(Throwable e)
 	{
-	    log.error("Can not init HTTP transpotr");
+	    log.error("Can not init HTTP transport");
 	    e.printStackTrace();
 	}
     }

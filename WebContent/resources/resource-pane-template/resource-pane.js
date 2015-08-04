@@ -1,10 +1,8 @@
-/**
- * Method required to open archive versions in a new tab 
-
-function archive_url_select(){
-	if(PF('archive_versions_menu').getSelectedValue() != 0)
-		window.open(PF('archive_versions_menu').getSelectedValue(),'_blank');
-} */
+function scrollToElement(element)
+{
+	//$('#right_pane .content').animate({ scrollTop: (element.offset().top + element.height() + 5 - $('#center_pane .content').height())}, 'slow');
+	//console.log(element.offset().top, element.position().top, $('#center_pane .content').height(), element.height());
+}
 
 function open_timeline_view(){
 	if($('#archive_list_view').is(':visible'))
@@ -20,6 +18,7 @@ function open_timeline_view(){
 			$('#container').width($('#timeline_view').width());
 			chart.setSize($('#timeline_view').width(), $('#container').height());
 			chart.reflow();
+			scrollToElement($('#timeline_view'));
 		}
 	});
 	return false;
@@ -35,6 +34,10 @@ function open_list_view(){
 	$('#archive_list_view').slideToggle("slow",function(){
 		scroller();
 		$('#list_button').toggleClass("button-active");
+		
+		if($('#archive_list_view').is(':visible')){
+			scrollToElement($('#archive_list_view'));
+		}
 	});
 	return false;
 }

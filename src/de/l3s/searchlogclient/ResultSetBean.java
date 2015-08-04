@@ -340,7 +340,8 @@ public class ResultSetBean extends ApplicationBean
 	    searchLogClient.saveResourceLog(user.getId(), date, ACTION.resource_saved, newResource.getUrl(), tempresourceId, newResource.getTitle(), newResource.getSource());
 	    searchLogClient.addResourceSavedList(tempresourceId, newResource.getId());
 
-	    log(Action.adding_resource, newResource.getId(), selectedResourceTargetGroupId + "");
+	    log(Action.adding_resource, selectedResourceTargetGroupId, newResource.getId(), "");
+
 	    addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
 	}
 	catch(Exception e)

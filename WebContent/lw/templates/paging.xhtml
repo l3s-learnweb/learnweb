@@ -29,28 +29,28 @@
 			<ui:fragment rendered="#{!paginator.lessThanNPages}">
 				<span class="previous_button"></span>
 				
-				<p:commandButton value="#{msg.previous} #{msg.page}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" style="margin:0 5px;" styleClass="pagebutton" disabled="#{paginator.pageIndex == 0}" update=":datagrid :paging_buttons">
+				<p:commandButton value="#{msg.previous} #{msg.page}" oncomplete="$('#center_pane .content').scrollTop(0);" style="margin:0 5px;" styleClass="pagebutton" disabled="#{paginator.pageIndex == 0}" update=":datagrid :paging_buttons">
 					<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.pageIndex - 1}" />
 				</p:commandButton>
 				
-				<p:commandButton value="#{1}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" styleClass="pagebutton #{paginator.pageIndex + 1 == 1? 'active_page_button':''}" update=":datagrid :paging_buttons">
+				<p:commandButton value="#{1}" oncomplete="$('#center_pane .content').scrollTop(0);" styleClass="pagebutton #{paginator.pageIndex + 1 == 1? 'active_page_button':''}" update=":datagrid :paging_buttons">
 					<f:setPropertyActionListener target="#{paginator.pageIndex}" value="0" />
 				</p:commandButton>
 				<p:commandButton value="…" styleClass="pagebutton" disabled="true" rendered="#{paginator.pageIndex >= 4}"/>
 
 				<ui:repeat value="#{paginator.listPages()}" var="page">
-					<p:commandButton value="#{page}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" style="margin-right:5px;" styleClass="pagebutton #{page == paginator.pageIndex + 1? 'active_page_button':''}" update=":datagrid :paging_buttons">
+					<p:commandButton value="#{page}" oncomplete="$('#center_pane .content').scrollTop(0);" style="margin-right:5px;" styleClass="pagebutton #{page == paginator.pageIndex + 1? 'active_page_button':''}" update=":datagrid :paging_buttons">
 						<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{page - 1}" />
 					</p:commandButton>							
 				</ui:repeat>
 	
 				<p:commandButton value="…" styleClass="pagebutton" disabled="true" rendered="#{paginator.lessThanNPagesFromLast}"/>
 				
-				<p:commandButton value="#{paginator.totalPages}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" styleClass="pagebutton #{paginator.pageIndex == paginator.totalPages - 1? 'active_page_button':''}" update=":datagrid :paging_buttons">
+				<p:commandButton value="#{paginator.totalPages}" oncomplete="$('#center_pane .content').scrollTop(0);" styleClass="pagebutton #{paginator.pageIndex == paginator.totalPages - 1? 'active_page_button':''}" update=":datagrid :paging_buttons">
 					<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.totalPages -1}" />
 				</p:commandButton>
 				
-				<p:commandButton value="#{msg.next} #{msg.page}" oncomplete="console.log('scroll');$('#center_pane .content').scrollTop(0);" styleClass="pagebutton" disabled="#{paginator.pageIndex == paginator.totalPages - 1}" update=":datagrid :paging_buttons">
+				<p:commandButton value="#{msg.next} #{msg.page}" oncomplete="$('#center_pane .content').scrollTop(0);" styleClass="pagebutton" disabled="#{paginator.pageIndex == paginator.totalPages - 1}" update=":datagrid :paging_buttons">
 					<f:setPropertyActionListener target="#{paginator.pageIndex}" value="#{paginator.pageIndex + 1}" />
 				</p:commandButton>
 				
@@ -58,10 +58,4 @@
 			</ui:fragment>
 		</h:form>
 	</h:panelGroup>
-	
-	<script type="text/javascript">
-	/* <!-- */
-		$("#center_pane").append($("#paging_buttons"));
-	/* --> */
-	</script>
 </ui:composition>	

@@ -204,7 +204,7 @@ public class User implements Comparable<User>, Serializable, HasId
 	if(null != resources)
 	    resources.remove(resource);
 
-	Learnweb.getInstance().getResourceManager().deleteResource(resource.getId());
+	Learnweb.getInstance().getResourceManager().deleteResource(resource);
     }
 
     public List<Resource> getResources() throws SQLException

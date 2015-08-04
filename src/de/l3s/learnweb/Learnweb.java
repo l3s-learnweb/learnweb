@@ -388,6 +388,11 @@ public class Learnweb
      */
     public void log(User user, LogEntry.Action action, int targetId, String params, String sessionId, int executionTime)
     {
+	log(user, action, -1, targetId, params, sessionId, executionTime);
+    }
+
+    public void log(User user, LogEntry.Action action, int groupId, int targetId, String params, String sessionId, int executionTime)
+    {
 	if(null == action)
 	    throw new IllegalArgumentException();
 
@@ -395,7 +400,9 @@ public class Learnweb
 	    params = "";
 
 	int userId = (null == user) ? 0 : user.getId();
-	int groupId = (null == user) ? 0 : user.getActiveGroupId();
+
+	if(groupId == -1)
+	    groupId = (null == user) ? 0 : user.getActiveGroupId();
 
 	synchronized(pstmtLog)
 	{

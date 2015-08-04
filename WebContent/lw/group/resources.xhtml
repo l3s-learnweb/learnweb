@@ -66,12 +66,12 @@
 						</a>
 					</li>								
 					<li>
-						<a class="" href="./group/presentations.jsf?group_id=#{groupDetailBean.group.id}">
+						<a class="" href="./group/presentations.jsf?group_id=#{groupDetailBean.group.id}" onclick="$(body).trigger('resize'); return false;">
 							<h:outputText value="#{msg.presentations}" />
 						</a>
 					</li>								
 					<li>
-						<a class="" href="./group/links.jsf?group_id=#{groupDetailBean.group.id}">
+						<a class="" href="./group/links.jsf?group_id=#{groupDetailBean.group.id}" onclick="$(document).trigger('resize'); return false;">
 							<h:outputText value="#{msg.links}" />
 						</a>
 					</li>
@@ -79,12 +79,12 @@
 						<img alt="" src="#{request.contextPath}/resources/main-template/img/search.png" height="16" width="16" 
 							id="search_group_resource" style="padding:3px 15px;cursor:pointer"/>
 					
-						<h:form id="header_query_form" prependId="false">
+						<h:form id="header_query_form" prependId="false" style="white-space : nowrap;">
 							<h:inputText value="#{groupDetailBean.query}" id="input_query_form" style="margin-top:2.5px;width:20rem" />
+
 							<p:commandButton actionListener="${groupDetailBean.onQueryChange()}" 
-								partialSubmit="true" 
-								process="@form" 
-								update=":datagrid :paging_buttons" 
+								oncomplete="resetCenterPaneHeight(); $('#center_pane .content').scrollTop(0);"
+								partialSubmit="true" process="@form" update=":datagrid :paginator" 
 								value="#{msg.searchLabel}" 
 								style="margin-left:5px;"/> 
 						</h:form>
@@ -92,15 +92,27 @@
 				</ul>
 				
 				<script type="text/javascript">
+					function resetCenterPaneHeight()
+					{console.log(
+						$('#center_pane').height(),
+						$('#group_header').outerHeight(true),
+						$('#paginator').outerHeight(true),
+						$('#center_pane > .ui-layout-unit-content').height());
+						var height = $('#center_pane').height() - $('#group_header').outerHeight(true) - $('#paginator').outerHeight(true);
+						$('#center_pane > .ui-layout-unit-content').height(height);
+					}
+				
 					$("#header_query_form").css("display","none");
 					
 					$("#search_group_resource").click(function () {
-				          $("#header_query_form").animate({ width: "toggle" },500);
+				          $("#header_query_form").animate({ width: "toggle" }, 500, 'swing', function() {
+				        	  resetCenterPaneHeight();
+					          console.log('fertig');
+					        });
 				          $("#input_query_form").focus();
 				          $("#search_group_resource").hide();
 				    });
-				</script>
-				
+				</script>				
 			</div>			
 			<br />
 	
@@ -139,7 +151,12 @@
 			        	oncomplete="PF('confirmation').hide(); update_header();" 
 			        	actionListener="#{groupDetailBean.removeResourceFromGroup}" 
 			        	process=":datagrid" 
-			        	style="display:block; margin: 10px 0;"/>  
+			        	style="display:block; margin: 10px 0;"/> 
+			        		   			
+		   			<p:commandButton value="#{msg.delete_resource_completely}" update=":datagrid :growl :add_resource_panel" 
+		   				oncomplete="PF('confirmation').hide(); update_header();" actionListener="#{groupDetailBean.deleteResource}" 
+		   				process=":datagrid" style="display:block; margin: 10px 0;"
+		   				rendered="${groupDetailBean.canDeleteResourceCompletely(groupDetailBean.clickedResource)}"/>  
 		        </h:form>
 		    </p:dialog>
 			
@@ -224,18 +241,15 @@
 					</h:panelGrid>					
 				</h:form>			
 			</p:dialog>			
-	
 
-
-			<h:panelGroup id="datagrid" layout="block">
-				
-			    <ui:repeat var="result" value="#{groupDetailBean.paginator.currentPage}"> 
-			     
+			<h:panelGroup id="datagrid" layout="block">				
+			    <ui:repeat var="result" value="#{groupDetailBean.paginator.currentPage}"> 			     
 			  		<h:form styleClass="resource_panel grey_border">				  		
 				        <p:commandLink styleClass="resource_command_link" update=":add_resource_panel" oncomplete="update_header()">
-				        	<f:setPropertyActionListener target="#{groupDetailBean.clickedResource}" value="#{result.resource}"/>
-				        	<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{result.resource}"/>
-				        	
+
+				        	<f:setPropertyActionListener target="#{groupDetailBean.clickedResource}" value="#{result.resource}" />
+				        	<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{result.resource}" />
+       	
 					        	<h:outputText value="#{result.title}" escape="false" styleClass="resource_short_title" /> 
 					             
 					            <h:panelGrid styleClass="resource_panelgrid" columns="1">
@@ -325,14 +339,28 @@
 					    </p:commandLink>
 				    </h:form>
 			    </ui:repeat>
-			    			
-				<h:outputText value="#{msg.no_resources_found}" rendered="${groupDetailBean.paginator.isEmpty()}" class="nothing_found" />
+					
+				<h:outputText value="${msg.no_resources_found}" rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}" class="nothing_found" />
+
+				<h:outputText value="#{msg.no_results_found}" rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}" class="nothing_found" />
 			    
 		    </h:panelGroup>				
 		
-			<ui:decorate template="/lw/templates/paging.xhtml">
-				<ui:param name="paginator" value="${groupDetailBean.paginator}" />
-			</ui:decorate>
+			<h:panelGroup id="paginator" layout="block">
+				<ui:decorate template="/lw/templates/paging.xhtml">
+					<ui:param name="paginator" value="${groupDetailBean.paginator}" />
+				</ui:decorate>
+			</h:panelGroup>
+			
+				<script type="text/javascript">
+			/* <!-- */
+				$("#center_pane").append($("#paginator"));
+			/* --> */
+			</script>
+			
+			
+			
+			
 		</ui:define>
 		<ui:define name="right_layout">
 			<ui:decorate  template="/lw/templates/right_pane.xhtml">

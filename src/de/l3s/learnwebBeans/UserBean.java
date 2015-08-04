@@ -26,6 +26,7 @@ import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.util.StringHelper;
 
 @ManagedBean
 @SessionScoped
@@ -537,5 +538,10 @@ public class UserBean implements Serializable
 	    cacheShowMessageAddResource = getUser().getResourceCount() == 0;
 	}
 	return cacheShowMessageAddResource;
+    }
+
+    public String getPrettyDate(Date date)
+    {
+	return StringHelper.getPrettyDate(date, locale);
     }
 }

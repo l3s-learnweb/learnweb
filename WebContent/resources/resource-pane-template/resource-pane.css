@@ -146,9 +146,10 @@
 	
 }
 
-#resources_informations_table tbody td:nth-child(1){
+#resources_informations_table { border-collapse : collapse; }
+#resources_informations_table .resource_field {
 	padding-right:5px;
 } 
 #resources_informations_table td{
-	padding-top:5px;
+	padding:5px 0 0 0;
 }

@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -470,12 +469,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	try
 	{
 	    group.removeResource(clickedResource, getUser());
-	    addMessage(FacesMessage.SEVERITY_INFO, "resource_deleted");
+	    addMessage(FacesMessage.SEVERITY_INFO, "resource_removed_from_group");
 	    getUser().setActiveGroup(group);
 	    log(Action.group_removing_resource, clickedResource.getId());
-	    loadResources();
-	    Resource temp = new Resource();
-	    clickedResource = temp;
+
+	    //loadResources();
+	    clickedResource = new Resource();
 	}
 	catch(Exception e)
 	{
@@ -485,12 +484,17 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void deleteResource() throws SQLException
     {
+	for(Group group : clickedResource.getGroups())
+	{
+	    log(Action.group_removing_resource, group.getId(), clickedResource.getId(), "");
+	}
+
 	getUser().deleteResource(clickedResource);
-	getUser().clearCaches();
 	addGrowl(FacesMessage.SEVERITY_INFO, "resource_deleted");
-	log(Action.deleting_resource, clickedResource.getId(), clickedResource.getTitle());
+	log(Action.deleting_resource, clickedResource.getId());
 	clickedResource = new Resource();
-	loadResources();
+	//loadResources();
+
     }
 
     public void removePresentationFromGroup()
@@ -725,20 +729,18 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    if(clickedResource.getId() == -1) // resource is not yet stored at fedora
 		newResource = clickedResource;
 	    else
-		// create a copy 
-		newResource = clickedResource.clone();
+		newResource = clickedResource.clone(); // create a copy 
 
 	    Resource res = getUser().addResource(newResource);
 	    if(selectedResourceTargetGroupId != 0)
 	    {
 		getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(res, getUser());
 		getUser().setActiveGroup(selectedResourceTargetGroupId);
-		log(Action.adding_resource, res.getId(), selectedResourceTargetGroupId + "");
+
 	    }
 
+	    log(Action.adding_resource, selectedResourceTargetGroupId, res.getId(), "");
 	    loadLogs(50);
-	    loadResources();
-	    //log(Action.adding_resource, res.getId(), ""+selectedResourceTargetGroupId);
 	}
 	catch(SQLException e)
 	{
@@ -779,16 +781,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void onSortingChanged(ValueChangeEvent e)
     {
-	String sort = e.getNewValue().toString();
-
-	Comparator<Resource> comparator;
-
-	if(sort.equals("title"))
-	    comparator = Resource.createTitleComparator();
-	else
-	    throw new RuntimeException("unknow sort type: " + sort);
-
-	Collections.sort(resourcesAll, comparator);
+	// TODO implement
+	order = Order.TYPE;
     }
 
     public String getResourceSorting()
@@ -959,20 +953,23 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return false;
     }
 
-    public boolean canDeleteResourceCompletely(Object resource)
+    public boolean canDeleteResourceCompletely(Object obj)
     {
 	User user = getUser();
 
 	if(user.isModerator())
 	    return true;
 
-	if(!(resource instanceof ResourceDecorator))
-	{
-	    throw new IllegalArgumentException("Method called with an unexpected class type: " + resource.getClass());
-	}
-	ResourceDecorator decoratedResource = (ResourceDecorator) resource;
+	Resource resource = null;
 
-	if(user.getId() == decoratedResource.getResource().getOwnerUserId())
+	if(obj instanceof ResourceDecorator)
+	    resource = ((ResourceDecorator) obj).getResource();
+	else if(obj instanceof Resource)
+	    resource = (Resource) obj;
+	else
+	    throw new IllegalArgumentException("Method called with an unexpected class type: " + obj.getClass());
+
+	if(user.getId() == resource.getOwnerUserId())
 	    return true;
 
 	return false;
@@ -1073,19 +1070,14 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    return;
 	}
 
-	Resource newResource = clickedResource;
-
 	// add resource to a group if selected
 	if(selectedResourceTargetGroupId != 0)
 	{
-	    getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(newResource, getUser());
-	    user.setActiveGroup(selectedResourceTargetGroupId);
+	    getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(clickedResource, getUser());
+	    log(Action.adding_resource, selectedResourceTargetGroupId, clickedResource.getId(), "");
 
-	    log(Action.adding_resource, newResource.getId(), selectedResourceTargetGroupId + "");
-
-	    addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
+	    addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", clickedResource.getTitle());
 	}
-
     }
 
     public Presentation getClickedPresentation()
@@ -1130,8 +1122,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void onQueryChange() throws SQLException
     {
-	log.debug("Group search: " + query);
-
 	if(StringUtils.isEmpty(query))
 	{
 	    paginator = group.getResources(order);
@@ -1141,6 +1131,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	SolrSearch search = new SolrSearch(query, getUser());
 	search.setFilterGroups(groupId);
 	search.setResultsPerPage(AbstractPaginator.PAGE_SIZE);
+	search.setSkipResourcesWithoutThumbnails(false);
 
 	paginator = new SolrSearch.SearchPaginator(search);
     }

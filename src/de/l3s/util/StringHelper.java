@@ -4,11 +4,14 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Collection;
+import java.util.Date;
+import java.util.Locale;
 
 import org.apache.commons.codec.binary.Base64;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
+import org.ocpsoft.prettytime.PrettyTime;
 
 public class StringHelper
 {
@@ -163,6 +166,14 @@ public class StringHelper
 	document.select("p").prepend("\\n\\n");
 	String s = document.html().replaceAll("\\\\n", "\n");
 	return Jsoup.clean(s, "", whitelist, new Document.OutputSettings().prettyPrint(false));
+    }
+
+    public static String getPrettyDate(Date date, Locale locale)
+    {
+	PrettyTime p = new PrettyTime();
+	p.setLocale(locale);
+	System.out.println(p.format(date));
+	return p.format(date);
     }
 
 }

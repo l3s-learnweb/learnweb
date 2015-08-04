@@ -233,8 +233,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 		getLearnweb().getGroupManager().getGroupById(resourceTargetGroupId).addResource(resource, getUser());
 		getUser().setActiveGroup(resourceTargetGroupId);
 	    }
-	    log(Action.adding_resource, resource.getId());
-	    //resource = getUser().addResource(resource);
+
+	    log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
+
 	    addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
 	    resource = new Resource();
 	    resource.setSource("Internet");

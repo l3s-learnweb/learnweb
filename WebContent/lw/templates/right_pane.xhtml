@@ -452,11 +452,13 @@
 						    </h:form>
 						   
 						   <script type="text/javascript">
-								$('#commentfield').focus(function() {
-						 			$('#comment_button').slideDown();
+							   $('#commentfield').focus(function() {
+									var button = $('#comment_button');
+									button.slideDown();
+									scrollToElement(button);
 								});
 								$('#comment_form').focusout(function() {
-						 			$('#comment_button').slideUp(1000);
+									$('#comment_button').slideUp(1000);
 								});
 						   </script>
 						   
@@ -499,13 +501,16 @@
 											<h:graphicImage class="userpic" url="#{comment.getUser().image}" width="30" height="30"/>
 											<div class="username_div">
 												<span class="username">
-													<a href="user/detail.jsf?user_id=#{comment.getUser().getId()}" class="username_link">
-														#{comment.getUser().username}
+													<a href="user/detail.jsf?user_id=#{comment.user.id}" class="username_link">
+														#{comment.user.username}
 													</a>
 												</span>
-													<span style="vertical-align: top; padding-left:5px;">
-														#{comment.text}
-													</span>
+												<span title="#{comment.date}">#{userBean.getPrettyDate(comment.date)}</span>												
+<br/>
+												<span style="vertical-align: top; padding-left:5px;">
+													#{comment.text}
+												</span>
+
 											</div>
 											<div class="clear"></div>
 											<div style="padding-left: 40px;">
