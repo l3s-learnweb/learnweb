@@ -81,7 +81,25 @@ public class GroupManager
 	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE forum_id != ?";
 
 	PreparedStatement jforumGetTopics = jfm.getConnection().prepareStatement("select * from jforum_topics t join jforum_users using(user_id) join jforum_posts on topic_last_post_id = post_id WHERE t.`forum_id` = ?");
+	PreparedStatement jforumGetPosts = jfm.getConnection().prepareStatement("select * from jforum_posts join jforum_users using(user_id)");
 
+	ResultSet rs = jforumGetPosts.executeQuery();
+	while(rs.next())
+	{
+	    ForumPost post = new ForumPost();
+	    post.setId(rs.getInt("post_id"));
+	    post.setText("");
+
+	    int user = um.getUserIdByUsername(rs.getString("username"));
+	    if(user < 0)
+		user = 0;
+	    post.setUserId(user);
+
+	    System.out.println(post);
+	    //fm.save(post);
+	}
+
+	/*
 	List<Group> groups = gm.getGroups(query, 0);
 	for(Group group : groups)
 	{
@@ -108,8 +126,8 @@ public class GroupManager
 	    }
 
 	    System.out.print(group.getTitle() + " - " + group.getForumId() + " - ");
-
 	}
+	*/
 
     }
 
