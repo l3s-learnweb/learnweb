@@ -53,11 +53,13 @@
 						<h:outputText value="#{msg.links}" />
 					</a>
 				</li>								
-				<li>
-					<a href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
-						<h:outputText value="#{msg.forum}" />
-					</a>
-				</li>
+				<ui:fragment rendered="#{userBean.admin || userBean.moderator}">
+					<li>
+						<a href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.forum}" />
+						</a>
+					</li>
+				</ui:fragment>
 			</ul>
 		</div>
 		

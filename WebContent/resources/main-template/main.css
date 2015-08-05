@@ -606,6 +606,20 @@ a:hover{text-decoration:underline;}
 	font-weight:bolder !imporant;
 	text-decoration:none;
 }
+
+#group_resource_searchbutton{
+	cursor:pointer;
+	background:url(img/search.png) no-repeat scroll center center;
+	background-size:16px 16px;
+	height:19px;
+	border:none;
+	background-color:rgb(230, 230, 230) !important;
+}
+#group_resource_searchbutton:hover,
+#group_resource_searchbutton:focus{
+	background-color:#eee !important;
+}
+
 .clear {clear:both;}
 
 .display-none {display:none;}

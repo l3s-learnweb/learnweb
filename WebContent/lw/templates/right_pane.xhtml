@@ -69,7 +69,7 @@
 										
 										<f:selectItem itemLabel="URL" itemValue="2" />
 										<f:selectItem itemLabel="#{msg.file}" itemValue="1" />
-											<p:ajax update="@form" immediate="true" listener="#{addResourceBean.doNothing}"  />
+											<p:ajax update="@form" immediate="true" listener="#{addResourceBean.doNothing}"/>
 									</h:selectOneMenu>
 								</td>
 								<td rowspan="3" class="align-right" style="padding: 0px !important;">
@@ -505,9 +505,11 @@
 														#{comment.user.username}
 													</a>
 												</span>
-												<span title="#{comment.date}">#{userBean.getPrettyDate(comment.date)}</span>												
-<br/>
-												<span style="vertical-align: top; padding-left:5px;">
+												<span title="#{comment.date}" id="comment_date">
+													#{userBean.getPrettyDate(comment.date)}
+												</span>												
+												<br style="margin-bottom:5px;"/>
+												<span>
 													#{comment.text}
 												</span>
 

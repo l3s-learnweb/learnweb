@@ -84,9 +84,11 @@
 
 							<p:commandButton actionListener="${groupDetailBean.onQueryChange()}" 
 								oncomplete="resetCenterPaneHeight(); $('#center_pane .content').scrollTop(0);"
-								partialSubmit="true" process="@form" update=":datagrid :paginator" 
-								value="#{msg.searchLabel}" 
-								style="margin-left:5px;"/> 
+								partialSubmit="true" 
+								process="@form" 
+								update=":datagrid :paginator" 
+								value="" 
+								id="group_resource_searchbutton"/>
 						</h:form>
 					</li>
 				</ul>
