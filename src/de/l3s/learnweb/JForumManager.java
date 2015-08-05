@@ -36,7 +36,7 @@ public class JForumManager
 	this.databaseUrl = properties.getProperty("FORUM_MYSQL_URL");
     }
 
-    private Connection getConnection() throws SQLException
+    public Connection getConnection() throws SQLException
     {
 	Connection dbConnection = DriverManager.getConnection(databaseUrl, databaseUser, databasePassword);
 
@@ -161,53 +161,6 @@ public class JForumManager
 	return forumUrl + "api/go/1.page?forumId=" + forumId + "&username=" + StringHelper.urlEncode(user.getUsername()) + "&email=user" + user.getId() + "@learnweb.xyz" + "&password=" + MD5.hash(user.getId() + "supersicher") + "&language="
 		+ UtilBean.getUserBean().getLocale().toString();
 	//TODO besser mit user.getLocale().getLanguage()
-    }
-
-    public static void main(String[] args) throws SQLException
-    {
-	/*
-	Learnweb lw = Learnweb.getInstance();
-	ForumManager fm = lw.getForumManger();
-
-	List<Group> groups = lw.getGroups(null);
-	for(Group group : groups)
-	{
-		if(group.getForumId() == 0)
-			continue;
-		
-		System.out.print(group.getTitle()+" - "+group.getForumId()+" - ");
-		
-		if(!fm.isForumExisting(group.getForumId()))
-		{
-			//group.setForumId(0);
-			
-			System.out.println("nein");
-		}
-		else
-			System.out.println("ja");		
-	}
-	*/
-	/*
-	 *
-	List<Course> courses = lw.getCourses();
-	for(Course course : courses)
-	{
-		if(course.getId() == 1 || course.getId() == 2)
-			continue;
-		
-		System.out.println(course);
-		
-		int categoryId = fm.createCategory("test-"+course.getTitle());
-		int forumId = fm.createForum("test-"+course.getTitle(), categoryId);
-		
-		course.setForumCategoryId(categoryId);
-		course.setForumId(forumId);
-		//course.save();
-
-		
-	}*/
-	//System.out.println(fm.createCategory("test"));
-
     }
 
     public class ForumStatistic

@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.event.ComponentSystemEvent;
@@ -49,56 +50,39 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
     {
 	if(0 == groupId)
 	{
-	    String temp = getFacesContext().getExternalContext().getRequestParameterMap().get("group_id");
-	    if(temp != null && temp.length() != 0)
-	    {
-		groupId = Integer.parseInt(temp);
-		setGroup(getLearnweb().getGroupManager().getGroupById(groupId));
-	    }
-
-	    if(0 == groupId)
-		return;
+	    Integer id = getParameterInt("group_id");
+	    if(id != null)
+		groupId = id.intValue();
 	}
 
+	group = getLearnweb().getGroupManager().getGroupById(groupId);
+
+	if(null == group)
+	    addMessage(FacesMessage.SEVERITY_ERROR, "invalid or no group id");
+
     }
-
-    //   public String getTopic()
-    // {
-    //	return topic;
-    //   }
-
-    //   public void setTopic(String topic)
-    //  {
-    //	this.topic = topic;
-    //	System.out.println(topic);
-
-    //}
 
     public void saveForumTopic() throws SQLException
     {
 	try
 	{
 	    ForumTopic forumTopic = new ForumTopic();
-	    forumTopic.setTopic(topic);
+	    forumTopic.setTitle(topic);
 	    forumTopic.setGroupId(groupId);
-	    Learnweb.getInstance().getForumManager().saveTopic(forumTopic);
+	    Learnweb.getInstance().getForumManager().save(forumTopic);
 	    this.topic = "";
 	}
 	catch(SQLException e)
 	{
-	    // TODO Auto-generated catch block
-	    log.error("Error while inserting in db", e);
+	    addFatalMessage(e);
 	}
     }
 
-    public List<ForumTopic> getForumTopics() throws SQLException
+    public List<ForumTopic> getTopics() throws SQLException
     {
-	// ForumTopic forumTopic = new ForumTopic();
-	//  forumTopic.setGroupId(groupId);
-	List<ForumTopic> topics = Learnweb.getInstance().getForumManager().getTopicsByGroup(groupId);
+	List<ForumTopic> topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);
 
 	return topics;
-
     }
 
     /**
@@ -116,10 +100,5 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
     public Group getGroup()
     {
 	return group;
-    }
-
-    public void setGroup(Group group)
-    {
-	this.group = group;
     }
 }

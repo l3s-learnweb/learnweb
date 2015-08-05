@@ -182,14 +182,11 @@ public class UserManager
 
     public User getUser(int userId) throws SQLException
     {
-
-	if(userId < 1)
-	{
-	    if(userId != 0)
-		new IllegalArgumentException("invalid user id was requested: " + userId).printStackTrace();
-
+	if(userId == 0)
 	    return null;
-	}
+	else if(userId < 1)
+	    new IllegalArgumentException("invalid user id was requested: " + userId).printStackTrace();
+
 	User user = cache.get(userId);
 
 	if(null != user)

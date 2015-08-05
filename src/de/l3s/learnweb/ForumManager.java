@@ -3,6 +3,7 @@ package de.l3s.learnweb;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -20,14 +21,13 @@ public class ForumManager
     }
 
     private final static Logger log = Logger.getLogger(ForumManager.class);
-    private final static String FORUMPOSTCOLUMNS = "post_id, topic_id,group_id, user_id, text, post_time, post_edit_time, post_edit_user_id";
-    private final static String FORUMTOPICCOLUMNS = "topic_id, group_id, topic_title, user_id, topic_time, topic_views, topic_replies, topic_last_post_id";
+    private final static String POST_COLUMNS = "post_id, topic_id,group_id, user_id, text, post_time, post_edit_time, post_edit_user_id";
+    private final static String TOPIC_COLUMNS = "topic_id, group_id, topic_title, user_id, topic_time, topic_views, topic_replies, topic_last_post_id, topic_last_post_time";
 
-    private Learnweb learnweb;
+    private final Learnweb learnweb;
 
     protected ForumManager(Learnweb learnweb) throws SQLException
     {
-	super();
 	this.learnweb = learnweb;
     }
 
@@ -41,7 +41,7 @@ public class ForumManager
     public List<ForumTopic> getTopicsByGroup(int groupId) throws SQLException
     {
 	LinkedList<ForumTopic> topics = new LinkedList<ForumTopic>();
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FORUMTOPICCOLUMNS + " FROM `forum_topic` WHERE group_id = ? ORDER BY topic_time DESC");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `forum_topic` WHERE group_id = ? ORDER BY topic_time DESC");
 	select.setInt(1, groupId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -58,11 +58,11 @@ public class ForumManager
      * @param topicId
      * @return
      */
-    public List<ForumPost> getPostsByTopic(int topicId) throws SQLException
+    public List<ForumPost> getPostsBy(int topicId) throws SQLException
     {
 	LinkedList<ForumPost> posts = new LinkedList<ForumPost>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FORUMPOSTCOLUMNS + " FROM `forum_post` WHERE topic_id = ? ORDER BY topic_time DESC");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `forum_post` WHERE topic_id = ? ORDER BY topic_time DESC");
 	select.setInt(1, topicId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -78,7 +78,7 @@ public class ForumManager
     {
 	LinkedList<ForumPost> posts = new LinkedList<ForumPost>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + FORUMPOSTCOLUMNS + " FROM `forum_post` WHERE user_id = ? ORDER BY topic_time DESC");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `forum_post` WHERE user_id = ? ORDER BY topic_time DESC");
 	select.setInt(1, userId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -90,62 +90,62 @@ public class ForumManager
 	return posts;
     }
 
-    // todo user object ForumPost
-
-    public ForumTopic saveTopic(ForumTopic forumTopic) throws SQLException
+    public ForumTopic save(ForumTopic forum) throws SQLException
     {
-	// TODO use static columns var (see user manager)
-	String sqlQuery = "REPLACE INTO `forum_topics` (" + FORUMTOPICCOLUMNS + ") VALUES (?,?,?,?,?,?,?,?)";
+	String sqlQuery = "REPLACE INTO `forum_topic` (" + TOPIC_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?)";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
-	if(forumTopic.getTopicId() < 0)
+	if(forum.getId() < 0)
 	    ps.setNull(1, java.sql.Types.INTEGER);
 	else
-	    ps.setInt(1, forumTopic.getTopicId());
-	ps.setInt(2, forumTopic.getGroupId());
-	ps.setString(3, forumTopic.getTopic());
-	ps.setInt(4, forumTopic.getUserId());
-	ps.setDate(4, forumTopic.getDate() == null ? null : new java.sql.Date(forumTopic.getDate().getTime()));
-	ps.setInt(5, forumTopic.getTopicView());
-	ps.setInt(6, forumTopic.getTopicReplies());
-	ps.setInt(7, forumTopic.getTopicLastPostId());
+	    ps.setInt(1, forum.getId());
+	ps.setInt(2, forum.getGroupId());
+	ps.setString(3, forum.getTitle());
+	ps.setInt(4, forum.getUserId());
+	ps.setTimestamp(5, new java.sql.Timestamp(forum.getDate().getTime()));
+	ps.setInt(6, forum.getViews());
+	ps.setInt(7, forum.getReplies());
+	ps.setInt(8, forum.getLastPostId());
+	ps.setTimestamp(9, new java.sql.Timestamp(forum.getLastPostDate().getTime()));
 	ps.executeUpdate();
-	// TODO set assigned id ; see user manager
 
-	if(forumTopic.getTopicId() < 0) // get the assigned id
+	if(forum.getId() < 0) // get the assigned id
 	{
 	    ResultSet rs = ps.getGeneratedKeys();
 	    if(!rs.next())
 		throw new SQLException("database error: no id generated");
-	    forumTopic.setTopicId(rs.getInt(1));
+	    forum.setId(rs.getInt(1));
 	}
 
-	return forumTopic;
+	return forum;
     }
 
-    public ForumPost saveForumPost(ForumPost forumPost) throws SQLException
+    public ForumPost save(ForumPost forumPost) throws SQLException
     {
-	String sqlQuery = "REPLACE INTO `forum_post` (" + FORUMPOSTCOLUMNS + ") VALUES (?,?,?,?,?,?,?,?)";
+	String sqlQuery = "REPLACE INTO `forum_post` (" + POST_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?)";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
 
-	if(forumPost.getPostId() < 0)
+	if(forumPost.getId() < 0)
 	    ps.setNull(1, java.sql.Types.INTEGER);
 	else
-	    ps.setInt(1, forumPost.getPostId());
-	ps.setInt(2, forumPost.getTopicId());
+	    ps.setInt(1, forumPost.getId());
+	ps.setInt(2, forumPost.getId());
 	ps.setInt(3, forumPost.getGroupId());
 	ps.setInt(4, forumPost.getUserId());
 	ps.setString(5, forumPost.getText());
-	ps.setDate(6, forumPost.getDate() == null ? null : new java.sql.Date(forumPost.getDate().getTime()));
-	ps.setDate(7, forumPost.getLastEditDate() == null ? null : new java.sql.Date(forumPost.getLastEditDate().getTime()));
+	ps.setTimestamp(6, new java.sql.Timestamp(forumPost.getDate().getTime()));
+	ps.setTimestamp(7, new java.sql.Timestamp(forumPost.getLastEditDate().getTime()));
 	ps.setInt(8, forumPost.getEditUserId());
 	ps.executeUpdate();
 
-	if(forumPost.getPostId() < 0) // get the assigned id
+	if(forumPost.getId() < 0) // get the assigned id
 	{
 	    ResultSet rs = ps.getGeneratedKeys();
 	    if(!rs.next())
 		throw new SQLException("database error: no id generated");
-	    forumPost.setTopicId(rs.getInt(1));
+	    forumPost.setId(rs.getInt(1));
+
+	    // TODO update topic count, last post id and last post time
+
 	}
 
 	return forumPost;
@@ -159,7 +159,7 @@ public class ForumManager
      * 
      */
 
-    public void incTopicViews(int topicId) throws SQLException
+    public void incViews(int topicId) throws SQLException
     {
 	String sqlQuery = "UPDATE forum_topic SET topic_views = topic_views +1 WHERE topic_id = ?";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
@@ -167,47 +167,33 @@ public class ForumManager
 	ps.executeUpdate();
     }
 
-    // don't return a resultset return a ForumPost object; write a createPost and createTopic method (you will need it multiple times).
-    /*
-        public ForumPost getForumPost(int postId) throws SQLException
-        {
-    	ForumPost editPost = new ForumPost();
-    	String sqlQuery = "Select text, post_edit_count Where post_id = postId";
-    	@SuppressWarnings("unused")
-    	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
-    	//	editPost = ps.executeQuery();
-    	return editPost;
-        }
-    */
-
     public ForumPost createPost(ResultSet rs) throws SQLException
     {
-	int postId = rs.getInt("post_id");
-	ForumPost forumPost = new ForumPost();
-	forumPost.setPostId(postId);
-	forumPost.setTopicId(rs.getInt("topic_id"));
-	forumPost.setUserId(rs.getInt("user_id"));
-	forumPost.setGroupId(rs.getInt("group_id"));
-	forumPost.setText(rs.getString("text"));
-	forumPost.setDate(rs.getDate("post_time") == null ? null : new java.sql.Date(rs.getDate("post_time").getTime()));
-	forumPost.setLastEditDate(rs.getDate("post_edit_time") == null ? null : new java.sql.Date(rs.getDate("post_edit_time").getTime()));
-	forumPost.setEditCount(rs.getInt("post_edit_count"));
-	forumPost.setEditUserId(rs.getInt("post_edit_user_id"));
-	return forumPost;
+	ForumPost post = new ForumPost();
+	post.setId(rs.getInt("post_id"));
+	post.setId(rs.getInt("topic_id"));
+	post.setUserId(rs.getInt("user_id"));
+	post.setGroupId(rs.getInt("group_id"));
+	post.setText(rs.getString("text"));
+	post.setDate(new Date(rs.getTimestamp("post_time").getTime()));
+	post.setLastEditDate(new Date(rs.getTimestamp("post_edit_time").getTime()));
+	post.setEditCount(rs.getInt("post_edit_count"));
+	post.setEditUserId(rs.getInt("post_edit_user_id"));
+	return post;
     }
 
     public ForumTopic createTopic(ResultSet rs) throws SQLException
     {
-	int topicId = rs.getInt("topic_id");
-	ForumTopic forumTopic = new ForumTopic();
-	forumTopic.setTopicId(topicId);
-	forumTopic.setUserId(rs.getInt("user_id"));
-	forumTopic.setGroupId(rs.getInt("group_id"));
-	forumTopic.setTopic(rs.getString("topic_title"));
-	forumTopic.setDate(rs.getDate("topic_time") == null ? null : new java.sql.Date(rs.getDate("topic_time").getTime())); // TODO sql.date contains only the date not the time you have to use rs.getTimeStamp (see usermanager for example) This must is also a problem while saving a date
-	forumTopic.setTopicView(rs.getInt("topic_views"));
-	forumTopic.setTopicReplies(rs.getInt("topic_replies"));
-	forumTopic.setTopicLastPostId(rs.getInt("topic_last_post_id"));
-	return forumTopic;
+	ForumTopic topic = new ForumTopic();
+	topic.setId(rs.getInt("topic_id"));
+	topic.setUserId(rs.getInt("user_id"));
+	topic.setGroupId(rs.getInt("group_id"));
+	topic.setTitle(rs.getString("topic_title"));
+	topic.setDate(new Date(rs.getTimestamp("topic_time").getTime()));
+	topic.setViews(rs.getInt("topic_views"));
+	topic.setReplies(rs.getInt("topic_replies"));
+	topic.setLastPostId(rs.getInt("topic_last_post_id"));
+	topic.setLastPostDate(new Date(rs.getTimestamp("topic_last_post_time").getTime()));
+	return topic;
     }
 }

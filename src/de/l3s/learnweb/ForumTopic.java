@@ -1,17 +1,24 @@
 package de.l3s.learnweb;
 
+import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.Date;
 
-public class ForumTopic
+public class ForumTopic implements Serializable
 {
+    private static final long serialVersionUID = 5370327788969640983L;
+
+    private int id = -1;
     private int userId;
-    private int topicId = -1;
     private int groupId;
-    private String topic;
+    private String title;
     private Date date;
-    private int topicView;
-    private int topicReplies;
-    private int topicLastPostId;
+    private int views;
+    private int replies;
+    private int lastPostId;
+    private Date lastPostDate;
+
+    private transient User user;
 
     public int getUserId()
     {
@@ -23,14 +30,13 @@ public class ForumTopic
 	this.userId = userId;
     }
 
-    public int getTopicId()
+    public User getUser() throws SQLException
     {
-	return topicId;
-    }
-
-    public void setTopicId(int topicId)
-    {
-	this.topicId = topicId;
+	if(user == null)
+	{
+	    user = Learnweb.getInstance().getUserManager().getUser(userId);
+	}
+	return user;
     }
 
     public int getGroupId()
@@ -43,16 +49,6 @@ public class ForumTopic
 	this.groupId = groupId;
     }
 
-    public String getTopic()
-    {
-	return topic;
-    }
-
-    public void setTopic(String topic)
-    {
-	this.topic = topic;
-    }
-
     public Date getDate()
     {
 	return date;
@@ -63,34 +59,70 @@ public class ForumTopic
 	this.date = date;
     }
 
-    public int getTopicView()
+    public int getId()
     {
-	return topicView;
+	return id;
     }
 
-    public void setTopicView(int topicView)
+    public String getTitle()
     {
-	this.topicView = topicView;
+	return title;
     }
 
-    public int getTopicReplies()
+    public int getViews()
     {
-	return topicReplies;
+	return views;
     }
 
-    public void setTopicReplies(int topicReplies)
+    public int getReplies()
     {
-	this.topicReplies = topicReplies;
+	return replies;
     }
 
-    public int getTopicLastPostId()
+    public int getLastPostId()
     {
-	return topicLastPostId;
+	return lastPostId;
     }
 
-    public void setTopicLastPostId(int topicLastPostId)
+    public void setId(int id)
     {
-	this.topicLastPostId = topicLastPostId;
+	this.id = id;
+    }
+
+    public void setTitle(String title)
+    {
+	this.title = title;
+    }
+
+    public void setViews(int views)
+    {
+	this.views = views;
+    }
+
+    public void setReplies(int replies)
+    {
+	this.replies = replies;
+    }
+
+    public void setLastPostId(int lastPostId)
+    {
+	this.lastPostId = lastPostId;
+    }
+
+    public Date getLastPostDate()
+    {
+	return lastPostDate;
+    }
+
+    public void setLastPostDate(Date lastPostDate)
+    {
+	this.lastPostDate = lastPostDate;
+    }
+
+    @Override
+    public String toString()
+    {
+	return "ForumTopic [id=" + id + ", userId=" + userId + ", groupId=" + groupId + ", title=" + title + ", date=" + date + ", views=" + views + ", replies=" + replies + ", lastPostId=" + lastPostId + ", lastPostDate=" + lastPostDate + "]";
     }
 
 }

@@ -14,12 +14,12 @@
 	<ui:define name="center_layout">  	
 		<p:panel header="Forum post">
 			<h:form>
-			    <p:dataTable var="forumTopic" value="#{forumTopicsBean.getForumTopics()}" rows="10"
-			                         paginator="true"
+			    <p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20"
+			                         paginator="true" lazy="true" paginatorPosition="bottom"
 			                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 			                         rowsPerPageTemplate="5,10,15">
 			        <p:column headerText="Forum">
-			            <h:outputText value="#{forumTopic.topic}" />
+			            <h:outputText value="#{topic.title}" />
 			        </p:column>
 			    </p:dataTable>
 			</h:form>

@@ -73,13 +73,12 @@ public class ForumPostBean extends ApplicationBean implements Serializable
 	    forumPost.setGroupId(groupId);
 	    forumPost.setUserId(userId);
 
-	    Learnweb.getInstance().getForumManager().saveForumPost(forumPost);
+	    Learnweb.getInstance().getForumManager().save(forumPost);
 	    this.text = "";
 	}
 	catch(SQLException e)
 	{
-	    // TODO Auto-generated catch block
-	    log.error("Error while inserting in db", e);
+	    addFatalMessage(e);
 	}
     }
 

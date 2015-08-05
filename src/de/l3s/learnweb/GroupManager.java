@@ -65,6 +65,54 @@ public class GroupManager
 	return groups;
     }
 
+    public static void main(String[] args) throws SQLException
+    {
+
+	Learnweb lw = Learnweb.getInstance();
+	JForumManager jfm = lw.getJForumManager();
+	ForumManager fm = lw.getForumManager();
+	GroupManager gm = lw.getGroupManager();
+	UserManager um = lw.getUserManager();
+
+	Statement stmt = lw.getConnection().createStatement();
+	stmt.execute("TRUNCATE TABLE `forum_topic` ");
+	stmt.execute("TRUNCATE TABLE `forum_post` ");
+
+	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE forum_id != ?";
+
+	PreparedStatement jforumGetTopics = jfm.getConnection().prepareStatement("select * from jforum_topics t join jforum_users using(user_id) join jforum_posts on topic_last_post_id = post_id WHERE t.`forum_id` = ?");
+
+	List<Group> groups = gm.getGroups(query, 0);
+	for(Group group : groups)
+	{
+	    jforumGetTopics.setInt(1, group.getForumId());
+	    ResultSet rs = jforumGetTopics.executeQuery();
+	    while(rs.next())
+	    {
+		ForumTopic topic = new ForumTopic();
+		topic.setId(rs.getInt("topic_id"));
+		topic.setGroupId(group.getId());
+		topic.setTitle(rs.getString("topic_title"));
+		int user = um.getUserIdByUsername(rs.getString("username"));
+		if(user < 0)
+		    user = 0;
+		topic.setUserId(user);
+		topic.setDate(new Date(rs.getTimestamp("topic_time").getTime()));
+		topic.setViews(rs.getInt("topic_views"));
+		topic.setReplies(rs.getInt("topic_replies"));
+		topic.setLastPostId(rs.getInt("topic_last_post_id"));
+		topic.setLastPostDate(new Date(rs.getTimestamp("post_time").getTime()));
+
+		System.out.println(topic);
+		fm.save(topic);
+	    }
+
+	    System.out.print(group.getTitle() + " - " + group.getForumId() + " - ");
+
+	}
+
+    }
+
     /**
      * Returns a list of all Groups a user belongs to
      * 
