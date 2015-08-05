@@ -1,5 +1,8 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+<html xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition template="/lw/templates/new_main_t.xhtml">
@@ -9,7 +12,13 @@
 	<ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
 	
 	<ui:define name="right_layout">
-	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;" id="right_pane">
+	<p:layoutUnit rendered="#{userBean.loggedIn}" 
+		position="east" 
+		size="38%" 
+		resizable="false" 
+		closable="false" 
+		collapsible="false" 
+		style="border: none;" id="right_pane">
 		<h:panelGroup style= "left: 5%; position:relative;">
 			<h:form id="addgroupform" style="width: 90%;" prependId="false">
 				
@@ -23,7 +32,10 @@
 					<h:panelGrid columns="3" columnClasses="medium-width">						
 					
 						<h:outputText value="#{msg.title}*:" />
-						<p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" style="width:20rem"/>
+						<p:inputText id="new_title" 
+							value="#{groupsBean.newGroup.title}" 
+							validator="#{groupsBean.validateGroupTitle}" 
+							style="width:20rem"/>
 						<p:message for="new_title" showSummary="true" showDetail="false" id="message_new_title"/>
 						
 											 
@@ -35,7 +47,10 @@
 						
 						<h:outputText value="#{msg.category}*:" rendered="#{not empty userBean.activeCourse.groupCategories}" />
 						<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{not empty userBean.activeCourse.groupCategories}" >	
-							<f:selectItems value="#{userBean.activeCourse.groupCategories}" var="cat" itemValue="#{cat.id}" itemLabel="#{cat.title} [#{cat.abbreviation}]" />
+							<f:selectItems value="#{userBean.activeCourse.groupCategories}" 
+								var="cat" 
+								itemValue="#{cat.id}" 
+								itemLabel="#{cat.title} [#{cat.abbreviation}]" />
 						</h:selectOneMenu>
 						<h:outputText value="" rendered="#{not empty userBean.activeCourse.groupCategories}" />						
 							
@@ -63,7 +78,13 @@
 					</h:panelGrid>
 				 </p:fieldset>
 				<br/>
-				<p:commandButton  id="create_group_button" ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" styleClass="greenbutton" process="@form" update="@form :my_groups :growl :group_menu" />
+				<p:commandButton id="create_group_button" 
+					ajax="true" 
+					value="#{msg.createGroup}" 
+					action="#{groupsBean.onCreateGroup}" 
+					styleClass="greenbutton" 
+					process="@form" 
+					update="@form :my_groups :growl :group_menu" />
 				
 			</h:form>
 		</h:panelGroup>
@@ -102,17 +123,32 @@
 				</p:column>		
 				
 				<p:column headerText="#{msg.options}" styleClass="nowrap align-center" width="70">					
-					<p:commandLink action="#{groupsBean.leaveGroup}" styleClass="optionIcon" process="@this" update=":other_groups :growl :group_menu :my_groups"  title="#{msg.leave}">
+					<p:commandLink action="#{groupsBean.leaveGroup}" 
+						styleClass="optionIcon" 
+						process="@this" 
+						update=":other_groups :growl :group_menu :my_groups"  
+						title="#{msg.leave}">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 						<h:graphicImage value="/resources/icon/silk/group_delete.png" width="16" height="16" alt="#{msg.leave}" />
 					</p:commandLink>					
 					
-					<p:commandLink process="@this" update=":group_moderator_form" styleClass="optionIcon" title="#{msg.edit}" rendered="#{groupsBean.canDeleteGroup(group)}" oncomplete="PF('group_moderator_dialog').show()">
+					<p:commandLink process="@this" 
+						update=":group_moderator_form" 
+						styleClass="optionIcon" 
+						title="#{msg.edit}" 
+						rendered="#{groupsBean.canDeleteGroup(group)}" 
+						oncomplete="PF('group_moderator_dialog').show()">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 						<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" /> 								
 					</p:commandLink>
 					
-					<p:commandLink action="#{groupsBean.deleteGroup}" update=":growl :group_menu :my_groups" styleClass="optionIcon" title="#{msg.delete}" process="@this" onstart="return confirm('${groupsBean.getLocaleMessage('group_delete_question', group.title)}');" rendered="#{groupsBean.canDeleteGroup(group)}">
+					<p:commandLink action="#{groupsBean.deleteGroup}" 
+						update=":growl :group_menu :my_groups" 
+						styleClass="optionIcon" 
+						title="#{msg.delete}" 
+						process="@this" 
+						onstart="return confirm('${groupsBean.getLocaleMessage('group_delete_question', group.title)}');" 
+						rendered="#{groupsBean.canDeleteGroup(group)}">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 						<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/> 							
 					</p:commandLink>						
@@ -140,7 +176,7 @@
 						<h:outputText value=" (#{msg.new_word})" styleClass="bold_red" rendered="${userBean.newGroups.contains(group)}"/>
 					</p:column>
 
-					<p:column  headerText="#{msg.description}" >
+					<p:column headerText="#{msg.description}" >
 						<h:outputText value="#{group.description}" />
 					</p:column>					
 					
@@ -158,19 +194,35 @@
 									#{msg.options}
 								</span>
 						</f:facet>	
-						<p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :group_menu :my_groups"  process="@this" styleClass="optionIcon" title="#{msg.join}">
+						<p:commandLink action="#{groupsBean.joinGroup}" 
+							update=":other_groups :growl :group_menu :my_groups"  
+							process="@this" 
+							styleClass="optionIcon" 
+							title="#{msg.join}">
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 							<h:graphicImage value="/resources/icon/silk/group_add.png" width="16" height="16" alt="#{msg.join}" />
 						</p:commandLink>
 						
 						
-						<p:commandLink process="@this" update=":group_moderator_form" styleClass="optionIcon" title="#{msg.edit}" rendered="#{userBean.admin || userBean.moderator}" onsuccess="PF('group_moderator_dialog').show()" onerror="alert('error');">
+						<p:commandLink process="@this" 
+							update=":group_moderator_form" 
+							styleClass="optionIcon" 
+							title="#{msg.edit}" 
+							rendered="#{userBean.admin || userBean.moderator}" 
+							onsuccess="PF('group_moderator_dialog').show()" 
+							onerror="alert('error');">
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 							<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" /> 								
 						</p:commandLink>	
 						
 						
-						<p:commandLink action="#{groupsBean.deleteGroup}" update=":other_groups :growl" styleClass="optionIcon" title="#{msg.delete}" process="@this" onstart="return confirm('${groupsBean.getLocaleMessage('group_delete_question', group.title)}');" rendered="#{userBean.admin || userBean.moderator}">
+						<p:commandLink action="#{groupsBean.deleteGroup}" 
+							update=":other_groups :growl" 
+							styleClass="optionIcon" 
+							title="#{msg.delete}" 
+							process="@this" 
+							onstart="return confirm('${groupsBean.getLocaleMessage('group_delete_question', group.title)}');" 
+							rendered="#{userBean.admin || userBean.moderator}">
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 							<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/> 								
 						</p:commandLink>				 	
@@ -198,7 +250,13 @@
 					<p:inputTextarea value="#{groupsBean.selectedGroupDescription}" id="edit_group_description" autoResize="true"  style="width:300px;"/>
 					
 					<h:outputText value="" />
-					<p:commandButton disabled="false" value="#{msg.save}" ajax="false" action="#{groupsBean.onGroupEdit}" update=":other_groups :growl :group_menu :my_groups" oncomplete="PF('group_moderator_dialog').hide()" style="border-radius:0px;">
+					<p:commandButton disabled="false" 
+						value="#{msg.save}" 
+						ajax="false" 
+						action="#{groupsBean.onGroupEdit}" 
+						update=":other_groups :growl :group_menu :my_groups" 
+						oncomplete="PF('group_moderator_dialog').hide()" 
+						style="border-radius:0px;">
 						<f:setPropertyActionListener target="#{groupsBean.editGroup}" value="#{groupsBean.selectedGroup}" />
 					</p:commandButton>
 				</h:panelGrid>

@@ -10,19 +10,106 @@
 		</f:metadata>
 	</ui:define>		
 	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="forum" escape="false" />
-	<ui:define name="center_layout">  	
-		<p:panel header="Forum post">
+	<ui:param name="pageTitle" value="#{msg.forum}" escape="false" />
+	<ui:define name="center_layout">
+	
+	<div class="center-header" id="group_header">
+			<span>
+				#{msg.forum}
+			</span> 
+			#{msg.of} #{groupDetailBean.group.title}
+			
+			<h:form id="center_header_form">
+				<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" styleClass="resource_button greenbutton"  update=":growl :group_menu @form" partialSubmit="true" process="@this" value="#{msg.join_group}">
+					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
+				</p:commandLink>
+			</h:form>
+				
+			<ul>								
+				<li>
+					<a href="./group/overview.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.overview}" />
+					</a>
+				</li>								
+				<li>
+					<a href="./group/resources.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.resources}" />
+					</a>
+				</li>								
+				<li>
+					<a href="./group/members.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.members}" />
+					</a>
+				</li>								
+				<li>
+					<a href="./group/presentations.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.presentations}" />
+					</a>
+				</li>								
+				<li>
+					<a class="" href="./group/links.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.links}" />
+					</a>
+				</li>								
+				<li>
+					<a class="active" href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.forum}" />
+					</a>
+				</li>
+			</ul>
+		</div>  	
 			<h:form>
 			    <p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20"
 			                         paginator="true" lazy="true" paginatorPosition="bottom"
 			                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-			                         rowsPerPageTemplate="5,10,15">
-			        <p:column headerText="Forum">
+			                         rowsPerPageTemplate="5,10,15"
+			                         style="width:99.7%">
+			      
+			        <p:column headerText="#{msg.forum_topics}" style="width:55%">
 			            <h:outputText value="#{topic.title}" />
 			        </p:column>
+			        <p:column headerText="#{msg.author}" styleClass="align-center">
+			        	<a href="./user/detail.jsf?user_id=#{topic.userId}">
+			        		<h:outputText value="#{topic.user}" style="color:#3399ff"/>
+			        	</a>
+			        </p:column>
+			        <p:column headerText="#{msg.views}" style="width:5%" styleClass="align-center">
+			        	<h:outputText value="#{topic.views}"/>
+			        </p:column>
+			        <p:column headerText="#{msg.replies}" style="width:5%" styleClass="align-center">
+			        	<h:outputText value="#{topic.replies}"/>
+			        </p:column>
+			        <p:column headerText="#{msg.last_message}" style="width:12%">
+			        	<h:outputText value="#{topic.lastPostDate}">
+			        		<f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+			        	</h:outputText>
+			        </p:column>
+			    
 			    </p:dataTable>
 			</h:form>
-		</p:panel>
+			
+			<div style="margin-top:2rem;margin-bottom:1rem;font-weight:bold;font-size:1.5rem;">
+				#{msg.new_forum_topic}
+			</div>
+			
+			<div style="margin-bottom:2rem;">
+				#{msg.topic}:
+				<h:inputText value="" style="width:25%"/>
+			</div>
+			<h:form>           
+				<p:editor id="editor" widgetVar="editorWidget" value="#{editorView.text}" width="600" />
+				 
+				    <h:panelGrid columns="2" style="margin-top: 10px">
+				        <p:commandButton value="#{msg.save}" update="display" oncomplete="PF('dlg').show()" icon="ui-icon-disk" />
+				 
+				        <p:commandButton value="#{msg.clear}" type="button" onclick="PF('editorWidget').clear();" icon="ui-icon-close" />
+				    </h:panelGrid>
+				 
+				    <p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade">
+				        <h:outputText id="display" value="#{editorView.text}" escape="false" />
+				    </p:dialog>
+			</h:form> 
+			
+			<br style="margin-bottom:5rem"/>
 	</ui:define>
 </ui:composition>

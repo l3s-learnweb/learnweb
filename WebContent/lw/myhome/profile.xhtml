@@ -12,10 +12,19 @@
 	<ui:param name="helpText" value="#{msg.myhomeProfileHelp}"/>	
 	
 	<ui:define name="right_layout">
-		<p:layoutUnit position="east" size="38%" resizable="false" closable="false" collapsible="false" style="border: none;"  id="right_pane" rendered="#{userBean.loggedIn}">
+		<p:layoutUnit position="east" 
+			size="38%" 
+			resizable="false" 
+			closable="false" 
+			collapsible="false" 
+			style="border: none;"  
+			id="right_pane" 
+			rendered="#{userBean.loggedIn}">
 			<div style="width:90%; position:relative; margin-left:auto; margin-right:auto;">
 				<div class="page_header">
-						<span>#{msg.edit_profile}</span>
+						<span>
+							#{msg.edit_profile}
+						</span>
 				</div>
 					<h:form id="profile_form" enctype="multipart/form-data" class="grey_border">
 		
@@ -59,7 +68,13 @@
 						
 								
 					  		<h:outputText rendered="false" value="#{msg.dateofbirth}:" />
-					     	<p:calendar rendered="false" disabled="true" id="userdateofbirth" value="#{profileBean.dateofbirth}" navigator="true" maxdate="#{profileBean.maxBirthday}" locale="de"  />
+					     	<p:calendar rendered="false" 
+					     		disabled="true" 
+					     		id="userdateofbirth" 
+					     		value="#{profileBean.dateofbirth}" 
+					     		navigator="true" 
+					     		maxdate="#{profileBean.maxBirthday}" 
+					     		locale="de"  />
 						     	<p:message rendered="false" showSummary="true" showDetail="false" styleClass="error" for="userdateofbirth" id="userdateofbirthMessage" />
 		
 							<h:outputText value="#{msg.photo}:" />
@@ -89,7 +104,9 @@
 				<br/>
 		
 			<div class="page_header">
-						<span>#{msg.change_password}</span>
+						<span>
+							#{msg.change_password}
+						</span>
 				</div>
 					<h:form id="passwordform" class="grey_border">
 						<h:panelGrid columns="3" >
@@ -128,7 +145,9 @@
 	<ui:define name="center_layout">
 
 		<div class="page_header">
-			<span>#{msg.last_activities}</span>
+			<span>
+				#{msg.last_activities}
+			</span>
 		</div>
 		<h:panelGroup id="profile_news">		
 			<ui:decorate template="/lw/templates/activity_stream.xhtml">

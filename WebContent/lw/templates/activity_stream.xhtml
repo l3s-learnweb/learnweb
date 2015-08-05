@@ -10,7 +10,7 @@
 	<h:dataTable var="logEntry" value="#{news}" style=" width: 100%;" id="logEntry">
 							
 		<h:column>
-			<div style=" float: left;">
+			<div class="float-left">
 				<h:graphicImage id="userpic" url="#{logEntry.user.image}" width="30" height="30" style=" padding-right: 10px;" alt="Profile picture"/>
 			</div>
 			<div style="width: auto;">
@@ -18,20 +18,24 @@
 				<h:panelGroup rendered="#{logEntry.queryNeeded}">
 					<h:outputText value=" #{msg.with_query} " escape="false"  />	
 						<h:outputLink value="search.jsf" style="text-decoration:none">
-							<h:outputText value=" #{logEntry.resource.query}" escape="false"  style="color:#3399FF;font-weight:bold;"/>
-							<f:param name="query" value="#{logEntry.resource.query}"></f:param>
-							<f:param name="action" value="search"></f:param>
+							<h:outputText value=" #{logEntry.resource.query}" escape="false" style="color:#3399FF;font-weight:bold;"/>
+							<f:param name="query" value="#{logEntry.resource.query}"/>
+							<f:param name="action" value="search"/>
 						</h:outputLink>
 					<h:outputText value=" #{msg.from} #{logEntry.resource.source} " escape="false"  />
 				</h:panelGroup>
 			</div>
 						
-			<h:outputText value="#{logEntry.datedifference} [#{logEntry.date.toLocaleString()}]" escape="false" style="font-size:8pt; max-height:50px; color: grey;"/>	
+			<h:outputText value="#{logEntry.datedifference} [#{logEntry.date.toLocaleString()}]" 
+				escape="false" 
+				style="font-size:8pt; 
+				max-height:50px; 
+				color: grey;"/>	
 					
 			<br/>
 			<br/>
 					
-			<hr width="auto" style="border:1px solid #eee !important;" ></hr>
+			<hr width="auto" style="border:1px solid #eee !important;" />
 		</h:column>	
 									
 	</h:dataTable>

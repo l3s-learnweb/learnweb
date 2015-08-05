@@ -19,7 +19,10 @@
 	<ui:define name="center_layout">
 	
 		<div class="center-header" id="group_header">
-			<span>#{msg.links}</span> #{msg.of} #{groupDetailBean.group.title}
+			<span>
+				#{msg.links}
+			</span> 
+			#{msg.of} #{groupDetailBean.group.title}
 			
 			<h:form id="center_header_form">
 				<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" styleClass="resource_button greenbutton"  update=":growl :group_menu @form" partialSubmit="true" process="@this" value="#{msg.join_group}">
@@ -76,7 +79,12 @@
 					<p:inputText value="#{groupDetailBean.selectedLink.title}" id="link_title_edit" styleClass="links_input" />
 					
 					<h:outputText value="" />
-					<p:commandButton value="#{msg.save}" ajax="true" actionListener="#{groupDetailBean.onEditLink}" process="@form" oncomplete="PF('link_dialog').hide();" update=":message :grouplinks">
+					<p:commandButton value="#{msg.save}" 
+						ajax="true" 
+						actionListener="#{groupDetailBean.onEditLink}" 
+						process="@form" 
+						oncomplete="PF('link_dialog').hide();" 
+						update=":message :grouplinks">
 						<f:setPropertyActionListener target="#{groupDetailBean.editLink}" value="#{groupDetailBean.selectedLink}" />
 						<f:param name="group_id" value="#{groupDetailBean.group.id}"/>						
 					</p:commandButton>
@@ -90,7 +98,8 @@
 		
 			<h:panelGroup rendered="${not empty groupDetailBean.links}">	
 				<h:form styleClass="links_form">		
-					<h4 class="clear"><h:outputText value="#{msg.links}" />:</h4>
+					<h4 class="clear">
+					<h:outputText value="#{msg.links}" />:</h4>
 					<p:dataList var="link" value="${groupDetailBean.links}" styleClass="links_datalist">		
 						<p:column>
 							<h:outputLink value="#{link.url}" target="_blank" styleClass="links_output">#{link.title}</h:outputLink>	
