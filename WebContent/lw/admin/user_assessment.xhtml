@@ -43,15 +43,15 @@
 						<p:outputLabel for="phase2" value="LearnWeb phase:" />
 						<p:selectOneMenu id="phase2" value="#{userAssessmentBean.phaseLW}" style="width:250px">
 							<f:selectItem itemLabel="-" itemValue="" />
-						    <f:selectItem itemLabel="Search and exploration" itemValue="searching" />
-						    <f:selectItem itemLabel="Annotation and description" itemValue="annotation" />
+						    <f:selectItem itemLabel="Search and exploration" itemValue="Search and exploration" />
+						    <f:selectItem itemLabel="Annotation and description" itemValue="Annotation and description" />
 						    <f:selectItem itemLabel="Negotiation and discussion" itemValue="negotiation" />
 						    <f:selectItem itemLabel="Aggregation and presentation" itemValue="agregation" />
 						</p:selectOneMenu>
 						        
 				        <p:commandButton value="Compare" oncomplete="PF('dlg2').show()" update="dia" actionListener="#{userAssessmentBean.generateComparativeGraph}"/>
 				                
-						<p:dialog id="dia" modal="true" resizable="true" widgetVar="dlg2" header="May you notice the number of interactions in each activity according to the classes?" showEffect="clip">
+						<p:dialog id="dia" modal="true" resizable="true" widgetVar="dlg2" header="Course perspective" showEffect="clip">
 							<p:chart type="bar" model="#{userAssessmentBean.barModel2}" rendered="#{userAssessmentBean.showb2}" style="height:300px;width:1500px"/>
 							<p:chart type="line" model="#{userAssessmentBean.lineModel2}" rendered="#{userAssessmentBean.showl2}" style="height:300px;width:1500px"/>
 							<p:chart type="pie" model="#{userAssessmentBean.pieModel20}" rendered="#{userAssessmentBean.showp2}" style="height:300px;width:800px"/>
@@ -98,14 +98,14 @@
 				    	<p:outputLabel for="phase1" value="LearnWeb phase:" />
 						<p:selectOneMenu id="phase1" value="#{userAssessmentBean.phaseLW0}" style="width:250px">
 							<f:selectItem itemLabel="-" itemValue="" />
-						    <f:selectItem itemLabel="Search and exploration" itemValue="searching" />
-						    <f:selectItem itemLabel="Annotation and description" itemValue="annotation" />
+						    <f:selectItem itemLabel="Search and exploration" itemValue="Search and exploration" />
+						    <f:selectItem itemLabel="Annotation and description" itemValue="Annotation and description" />
 						    <f:selectItem itemLabel="Negotiation and discussion" itemValue="negotiation" />
 						    <f:selectItem itemLabel="Aggregation and presentation" itemValue="agregation" />
 						</p:selectOneMenu>
 				    	
 				    	<p:commandButton value="Compare" oncomplete="PF('dlg1').show()" update="g1" actionListener="#{userAssessmentBean.generateComparativeGraphGroups}"/>
-						<p:dialog id="g1" modal="true" resizable="true" widgetVar="dlg1" header="What kind of activity can be stimulated by you (teacher) in each group?" showEffect="clip">
+						<p:dialog id="g1" modal="true" resizable="true" widgetVar="dlg1" header="Class perspective" showEffect="clip">
 							<p:chart type="bar" model="#{userAssessmentBean.barModel0}" rendered="#{userAssessmentBean.showb1}" style="height:300px;width:1500px"/>
 							<p:chart type="line" model="#{userAssessmentBean.lineModel0}" rendered="#{userAssessmentBean.showl1}" style="height:300px;width:1500px"/>
 							<p:chart type="pie" model="#{userAssessmentBean.pieModel00}" rendered="#{userAssessmentBean.showp1}" style="height:300px;width:800px"/>
@@ -146,22 +146,22 @@
 				    	<p:outputLabel for="phase3" value="LearnWeb phase:" />
 						<p:selectOneMenu id="phase3" value="#{userAssessmentBean.phaseLW2}" style="width:250px">
 							<f:selectItem itemLabel="-" itemValue="" />
-						    <f:selectItem itemLabel="Search and exploration" itemValue="searching" />
-						    <f:selectItem itemLabel="Annotation and description" itemValue="annotation" />
+						    <f:selectItem itemLabel="Search and exploration" itemValue="Search and exploration" />
+						    <f:selectItem itemLabel="Annotation and description" itemValue="Annotation and description" />
 						    <f:selectItem itemLabel="Negotiation and discussion" itemValue="negotiation" />
 						    <f:selectItem itemLabel="Aggregation and presentation" itemValue="agregation" />
 						</p:selectOneMenu>
 						        
 						        
 				    	<p:commandButton id="button33" value="Generate Chart" oncomplete="PF('dlg3').show()" update="g3" actionListener="#{userAssessmentBean.generateUserChart}"/>
-				    	<p:dialog id="g3" modal="true" resizable="true" widgetVar="dlg3" header="Did student execute all tasks in the learning environment?" showEffect="clip">
+				    	<p:dialog id="g3" modal="true" resizable="true" widgetVar="dlg3" header="Personal perspective" showEffect="clip">
 						        	   <p:chart type="bar" model="#{userAssessmentBean.barModel}"  rendered="#{userAssessmentBean.showb3}" style="height:300px;width:1500px; align:center"/>
 						        	   <p:chart type="line" model="#{userAssessmentBean.lineModel}"  rendered="#{userAssessmentBean.showl3}" style="height:300px;width:1500px"/>
 						        	   <p:chart type="pie" model="#{userAssessmentBean.pieModel}"  rendered="#{userAssessmentBean.showp3}" style="width:700px;height:400px"/>
 						        	   
 						        	   <br /><br />
-						        	   
-						        	   <p:dataTable value="#{userAssessmentBean.listAClass}" var="infoMean" rendered="#{userAssessmentBean.showd3}" style="width:1000px; align:center">
+						        	   <center>
+						        	   <p:dataTable value="#{userAssessmentBean.listAClass}" var="infoMean" rendered="#{userAssessmentBean.showd3}" style="width:1000px">
 										   <p:column headerText="Activities">
 										      <h:outputLabel value="#{infoMean.nameE}" />
 										   </p:column>
@@ -169,6 +169,7 @@
 										       <h:outputLabel value="#{infoMean.valueD}" />
 										   </p:column>
 									  </p:dataTable> 
+									  </center>
 				    	</p:dialog>
 					</h:panelGrid>
 				</h:form>
