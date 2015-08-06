@@ -697,6 +697,11 @@ h2 { margin-bottom:0.8rem; }
 /*lightbox*/
 #lightbox_container { box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.8); }
 
+/*forum*/
+.grey_background{
+	background-color:#eee !important;
+}
+
 /* change primefaces ui */
 .ui-button,
 .ui-inputfield{
@@ -705,7 +710,6 @@ h2 { margin-bottom:0.8rem; }
 }
 .ui-widget {font-size:1.2rem;}
 .ui-widget-content a{text-decoration:none;}
-/*.ui-widget-content a:hover{text-decoration:underline;}*/
 .ui-corner-all{border-radius:0px;}
 
 span.ui-autocomplete{border:1px solid transparent !important;}
@@ -763,8 +767,18 @@ span.ui-autocomplete{border:1px solid transparent !important;}
 	border-bottom-left-radius:0px;
 	border-bottom-right-radius:0px;
 }
-
-
+.ui-datatable-odd{
+	background-color:#eee;
+}
+.ui-editor-toolbar{
+	background-color:#eee;
+	background-image:none;
+	border-bottom:1px solid #999;
+}
+.ui-state-default, .ui-widget-header{
+	background-image:none !important;
+	box-shadow:none;
+}
 #datagrid .ui-panel-content{padding:5px;}
 .explore_history .ui-button .ui-button-text, .search_history .ui-button .ui-button-text{
 	display:block;
