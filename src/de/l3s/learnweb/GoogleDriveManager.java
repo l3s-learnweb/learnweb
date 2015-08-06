@@ -35,6 +35,9 @@ public class GoogleDriveManager
     /** Global instance of the scopes required by Google Drive. */
     private static final List<String> SCOPES = Arrays.asList(DriveScopes.DRIVE_FILE);
 
+    /** Required for web access from LearnWeb account - https://drive.google.com/drive/u/0/folders/0B_Sy7ytn1dadbkxEZGFZTm5kZU0 */
+    private static String defaultParentFolder = "0B_Sy7ytn1dadbkxEZGFZTm5kZU0";
+
     private Drive drive = null;
 
     static
@@ -52,7 +55,7 @@ public class GoogleDriveManager
 
     public File createEmptyDocument(String title, String type)
     {
-	return createEmptyDocument(title, type, null);
+	return createEmptyDocument(title, type, defaultParentFolder);
     }
 
     public File createEmptyDocument(String title, String type, String parent)
@@ -69,7 +72,7 @@ public class GoogleDriveManager
 	else if(type.equals("drawing"))
 	    fileMetadata.setMimeType("application/vnd.google-apps.drawing");
 	else
-	    throw new IllegalArgumentException("type should be: document, presentation, drawing or spreadsheet");
+	    throw new IllegalArgumentException("type should be: document, presentation, spreadsheet or drawing");
 
 	if(parent != null && !parent.isEmpty())
 	{
@@ -81,7 +84,7 @@ public class GoogleDriveManager
 	{
 	    insert = getDrive().files().insert(fileMetadata);
 	    uploadedFile = insert.execute();
-	    log.debug("Added new Google Document: " + uploadedFile.getAlternateLink());
+	    log.debug("Created new Google Document: " + uploadedFile.getAlternateLink());
 	}
 	catch(IOException e)
 	{

@@ -20,7 +20,6 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.validator.ValidatorException;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotBlank;
 
 import de.l3s.learnweb.AbstractPaginator;
@@ -52,7 +51,6 @@ import de.l3s.util.MD5;
 public class GroupDetailBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -9105093690086624246L;
-    private final static Logger log = Logger.getLogger(GroupDetailBean.class);
 
     private int groupId;
     private Group group;
@@ -604,9 +602,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
 	    if(!newLinkType.equals("url")) // newLinkType == google document
 	    {
-		// Folder in learnweb account: https://drive.google.com/drive/u/0/folders/0B_Sy7ytn1dadbkxEZGFZTm5kZU0
-		String parentFolder = "0B_Sy7ytn1dadbkxEZGFZTm5kZU0";
-		newLinkUrl = new GoogleDriveManager().createEmptyDocument(group.getTitle() + " - " + newLinkTitle, newLinkType, parentFolder).getAlternateLink();
+		newLinkUrl = new GoogleDriveManager().createEmptyDocument(group.getTitle() + " - " + newLinkTitle, newLinkType).getAlternateLink();
 		type = LinkType.DOCUMENT;
 		log(Action.group_adding_document, group.getId(), newLinkTitle);
 	    }
