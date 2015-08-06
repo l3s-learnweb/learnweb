@@ -1,14 +1,20 @@
 package de.l3s.learnweb.beans;
 
+import java.sql.SQLException;
 import java.util.Date;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
 
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
 
 public class GlossaryEntry
 {
+    private int id; // auto incremented id
+    private int resourceId;
+    private int userId;
+
     @NotEmpty
     private String item;
     private String description;
@@ -16,12 +22,13 @@ public class GlossaryEntry
     private String italian;
     private String german;
     private String spanish;
-    private User user;
     private Date lastModified;
+
+    // cached values
+    private transient User user;
 
     @URL
     private String reference;
-    private String addby;
 
     public Date getLastModified()
     {
@@ -31,16 +38,6 @@ public class GlossaryEntry
     public void setLastModified(Date lastModified)
     {
 	this.lastModified = lastModified;
-    }
-
-    public String getAddby()
-    {
-	return addby;
-    }
-
-    public void setAddby(String addby)
-    {
-	this.addby = addby;
     }
 
     public String getReference()
@@ -113,14 +110,50 @@ public class GlossaryEntry
 	this.description = description;
     }
 
-    public User getUser()
+    public User getUser() throws SQLException
     {
+	if(user == null)
+	{
+	    user = Learnweb.getInstance().getUserManager().getUser(userId);
+	}
 	return user;
     }
 
     public void setUser(User user)
     {
 	this.user = user;
+	this.userId = user.getId();
+    }
+
+    public int getId()
+    {
+	return id;
+    }
+
+    public void setId(int id)
+    {
+	this.id = id;
+    }
+
+    public int getResourceId()
+    {
+	return resourceId;
+    }
+
+    public void setResourceId(int resourceId)
+    {
+	this.resourceId = resourceId;
+    }
+
+    public int getUserId()
+    {
+	return userId;
+    }
+
+    public void setUserId(int userId)
+    {
+	this.userId = userId;
+	this.user = null;
     }
 
 }

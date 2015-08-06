@@ -9,7 +9,7 @@
 	
 	<ui:composition template="/templates/main/main.xhtml">
 		<ui:param name="pageTitle" value="showGlossary" />
-		
+		<ui:param name="loginRequired" value="true" />
 		
 		<ui:define name="center_layout">
 	
@@ -76,7 +76,7 @@
 						<f:facet name="header">
 							<h:outputText value="#{msg.added_by}"></h:outputText>
 						</f:facet>
-							<h:outputText value="#{entry.addby}" styleClass="data">#{entry.user.username}</h:outputText>
+							<h:outputText styleClass="data">#{entry.user.username}</h:outputText>
 					</p:column>
 					
 					<p:column>

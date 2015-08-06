@@ -7,7 +7,6 @@ import java.sql.Statement;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
@@ -16,7 +15,6 @@ import de.l3s.util.Sql;
 
 /**
  * DAO for the Group class.
- * Because there are only a few Groups we keep them all in memory
  * 
  * @author Philipp
  * 
@@ -32,9 +30,7 @@ public class GroupManager
 
     protected GroupManager(Learnweb learnweb) throws SQLException
     {
-	super();
-	Properties properties = learnweb.getProperties();
-	int groupCacheSize = Integer.parseInt(properties.getProperty("GROUP_CACHE"));
+	int groupCacheSize = learnweb.getProperties().getPropertyIntValue("GROUP_CACHE");
 
 	this.learnweb = learnweb;
 	this.cache = groupCacheSize == 0 ? new DummyCache<Group>() : new Cache<Group>(groupCacheSize);
