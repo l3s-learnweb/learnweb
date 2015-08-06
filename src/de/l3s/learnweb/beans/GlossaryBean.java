@@ -79,18 +79,4 @@ public class GlossaryBean extends ApplicationBean
 	this.selectedEntry = selectedEntry;
     }
 
-    /*  public void linkvalidator(FacesContext ctx, UIComponent component, Object value) throws ValidatorException
-      {
-    if(value instanceof String)
-    {
-        String urlValue = (String) value;
-
-        if(!(urlValue.startsWith("http://")) || !(urlValue.startsWith("www.")))
-        {
-    	throw new ValidatorException(new FacesMessage("#{msg.linkvalidator_message}", null));
-        }
-    }
-
-    //super.
-      }*/
 }
