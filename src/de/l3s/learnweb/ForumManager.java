@@ -21,7 +21,7 @@ public class ForumManager
     }
 
     private final static Logger log = Logger.getLogger(ForumManager.class);
-    private final static String POST_COLUMNS = "post_id, topic_id,group_id, user_id, text, post_time, post_edit_time, post_edit_user_id";
+    private final static String POST_COLUMNS = "post_id, topic_id, user_id, text, post_time, post_edit_time, post_edit_count, post_edit_user_id";
     private final static String TOPIC_COLUMNS = "topic_id, group_id, topic_title, user_id, topic_time, topic_views, topic_replies, topic_last_post_id, topic_last_post_time";
 
     private final Learnweb learnweb;
@@ -62,7 +62,7 @@ public class ForumManager
     {
 	LinkedList<ForumPost> posts = new LinkedList<ForumPost>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `forum_post` WHERE topic_id = ? ORDER BY topic_time DESC");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `forum_post` WHERE topic_id = ? ORDER BY post_time DESC");
 	select.setInt(1, topicId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -119,36 +119,36 @@ public class ForumManager
 	return forum;
     }
 
-    public ForumPost save(ForumPost forumPost) throws SQLException
+    public ForumPost save(ForumPost post) throws SQLException
     {
 	String sqlQuery = "REPLACE INTO `forum_post` (" + POST_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?)";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
 
-	if(forumPost.getId() < 0)
+	if(post.getId() < 0)
 	    ps.setNull(1, java.sql.Types.INTEGER);
 	else
-	    ps.setInt(1, forumPost.getId());
-	ps.setInt(2, forumPost.getId());
-	ps.setInt(3, forumPost.getGroupId());
-	ps.setInt(4, forumPost.getUserId());
-	ps.setString(5, forumPost.getText());
-	ps.setTimestamp(6, new java.sql.Timestamp(forumPost.getDate().getTime()));
-	ps.setTimestamp(7, new java.sql.Timestamp(forumPost.getLastEditDate().getTime()));
-	ps.setInt(8, forumPost.getEditUserId());
+	    ps.setInt(1, post.getId());
+	ps.setInt(2, post.getId());
+	ps.setInt(3, post.getUserId());
+	ps.setString(4, post.getText());
+	ps.setTimestamp(5, new java.sql.Timestamp(post.getDate().getTime()));
+	ps.setTimestamp(6, new java.sql.Timestamp(post.getLastEditDate().getTime()));
+	ps.setInt(7, post.getEditCount());
+	ps.setInt(8, post.getEditUserId());
 	ps.executeUpdate();
 
-	if(forumPost.getId() < 0) // get the assigned id
+	if(post.getId() < 0) // get the assigned id
 	{
 	    ResultSet rs = ps.getGeneratedKeys();
 	    if(!rs.next())
 		throw new SQLException("database error: no id generated");
-	    forumPost.setId(rs.getInt(1));
+	    post.setId(rs.getInt(1));
 
 	    // TODO update topic count, last post id and last post time
 
 	}
 
-	return forumPost;
+	return post;
     }
 
     /**
@@ -173,7 +173,6 @@ public class ForumManager
 	post.setId(rs.getInt("post_id"));
 	post.setId(rs.getInt("topic_id"));
 	post.setUserId(rs.getInt("user_id"));
-	post.setGroupId(rs.getInt("group_id"));
 	post.setText(rs.getString("text"));
 	post.setDate(new Date(rs.getTimestamp("post_time").getTime()));
 	post.setLastEditDate(new Date(rs.getTimestamp("post_edit_time").getTime()));

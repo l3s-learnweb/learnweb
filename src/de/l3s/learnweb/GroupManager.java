@@ -5,8 +5,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
@@ -61,6 +63,46 @@ public class GroupManager
 	return groups;
     }
 
+    public static String bbcode(String text)
+    {
+	String html = text;
+
+	Map<String, String> bbMap = new HashMap<String, String>();
+
+	bbMap.put("(\r\n|\r|\n|\n\r)", "<br/>");
+	bbMap.put("\\[b\\](.+?)\\[/b\\]", "<strong>$1</strong>");
+	bbMap.put("\\[i\\](.+?)\\[/i\\]", "<span style='font-style:italic;'>$1</span>");
+	bbMap.put("\\[u\\](.+?)\\[/u\\]", "<span style='text-decoration:underline;'>$1</span>");
+	bbMap.put("\\[h1\\](.+?)\\[/h1\\]", "<h1>$1</h1>");
+	bbMap.put("\\[h2\\](.+?)\\[/h2\\]", "<h2>$1</h2>");
+	bbMap.put("\\[h3\\](.+?)\\[/h3\\]", "<h3>$1</h3>");
+	bbMap.put("\\[h4\\](.+?)\\[/h4\\]", "<h4>$1</h4>");
+	bbMap.put("\\[h5\\](.+?)\\[/h5\\]", "<h5>$1</h5>");
+	bbMap.put("\\[h6\\](.+?)\\[/h6\\]", "<h6>$1</h6>");
+	bbMap.put("\\[quote\\](.+?)\\[/quote\\]", "<blockquote>$1</blockquote>");
+	bbMap.put("\\[p\\](.+?)\\[/p\\]", "<p>$1</p>");
+	bbMap.put("\\[p=(.+?),(.+?)\\](.+?)\\[/p\\]", "<p style='text-indent:$1px;line-height:$2%;'>$3</p>");
+	bbMap.put("\\[center\\](.+?)\\[/center\\]", "<div align='center'>$1");
+	bbMap.put("\\[align=(.+?)\\](.+?)\\[/align\\]", "<div align='$1'>$2");
+	bbMap.put("\\[color=(.+?)\\](.+?)\\[/color\\]", "<span style='color:$1;'>$2</span>");
+	bbMap.put("\\[size=(.+?)\\](.+?)\\[/size\\]", "<span style='font-size:$1;'>$2</span>");
+	bbMap.put("\\[img\\](.+?)\\[/img\\]", "<img src='$1' />");
+	bbMap.put("\\[img=(.+?),(.+?)\\](.+?)\\[/img\\]", "<img width='$1' height='$2' src='$3' />");
+	bbMap.put("\\[email\\](.+?)\\[/email\\]", "<a href='mailto:$1'>$1</a>");
+	bbMap.put("\\[email=(.+?)\\](.+?)\\[/email\\]", "<a href='mailto:$1'>$2</a>");
+	bbMap.put("\\[url\\](.+?)\\[/url\\]", "<a href='$1'>$1</a>");
+	bbMap.put("\\[url=(.+?)\\](.+?)\\[/url\\]", "<a href='$1'>$2</a>");
+	bbMap.put("\\[youtube\\](.+?)\\[/youtube\\]", "<object width='640' height='380'><param name='movie' value='http://www.youtube.com/v/$1'></param><embed src='http://www.youtube.com/v/$1' type='application/x-shockwave-flash' width='640' height='380'></embed></object>");
+	bbMap.put("\\[video\\](.+?)\\[/video\\]", "<video src='$1' />");
+
+	for(Map.Entry entry : bbMap.entrySet())
+	{
+	    html = html.replaceAll(entry.getKey().toString(), entry.getValue().toString());
+	}
+
+	return html;
+    }
+
     public static void main(String[] args) throws SQLException
     {
 
@@ -71,31 +113,50 @@ public class GroupManager
 	UserManager um = lw.getUserManager();
 
 	Statement stmt = lw.getConnection().createStatement();
-	stmt.execute("TRUNCATE TABLE `forum_topic` ");
-	stmt.execute("TRUNCATE TABLE `forum_post` ");
+	//	stmt.execute("TRUNCATE TABLE `forum_topic` ");
+	//	stmt.execute("TRUNCATE TABLE `forum_post` ");
 
 	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE forum_id != ?";
 
 	PreparedStatement jforumGetTopics = jfm.getConnection().prepareStatement("select * from jforum_topics t join jforum_users using(user_id) join jforum_posts on topic_last_post_id = post_id WHERE t.`forum_id` = ?");
-	PreparedStatement jforumGetPosts = jfm.getConnection().prepareStatement("select * from jforum_posts join jforum_users using(user_id)");
-
-	ResultSet rs = jforumGetPosts.executeQuery();
-	while(rs.next())
-	{
-	    ForumPost post = new ForumPost();
-	    post.setId(rs.getInt("post_id"));
-	    post.setText("");
-
-	    int user = um.getUserIdByUsername(rs.getString("username"));
-	    if(user < 0)
-		user = 0;
-	    post.setUserId(user);
-
-	    System.out.println(post);
-	    //fm.save(post);
-	}
-
+	PreparedStatement jforumGetPosts = jfm.getConnection().prepareStatement("select * from jforum_posts join jforum_users using(user_id) join jforum_posts_text using(post_id)");
 	/*
+		ResultSet rs = jforumGetPosts.executeQuery();
+		while(rs.next())
+		{
+		    ForumPost post = new ForumPost();
+		    post.setId(rs.getInt("post_id"));
+		    post.setDate(new Date(rs.getTimestamp("post_time").getTime()));
+
+		    int user = um.getUserIdByUsername(rs.getString("username"));
+		    if(user < 0)
+			user = 0;
+		    post.setUserId(user);
+
+		    String text = bbcode(rs.getString("post_text"));
+
+		    if(text.contains("http:"))
+		    {
+			post.setText(text);
+
+			text = text.toLowerCase();
+			if(text.contains("arschfick") || text.contains("fuck") || text.contains("buy") || text.contains("nudists") || text.contains("so hot") || text.contains("nude") || text.contains("lolita") || text.contains("models") || text.contains("naked") || text.contains("porn")
+				|| text.contains("sex") || text.contains("sponsors") || text.contains("coupon") || text.contains("/user/view") || text.contains("cialis") || text.contains("prescription") || text.contains("pills") || text.contains("i'm busy at the moment")
+				|| text.contains("wolkrmfbsoxfc") || text.contains("iopskmfbsoxfc") || text.contains("qyqosmfbsoxfc") || text.contains("hnuqjmfbsoxfc") || text.contains("hoes") || text.contains("funny pictures") || text.contains("paid")
+				|| text.contains("i like watching")
+
+			)
+			{
+			    continue;
+			}
+		    }
+		    post.setText(text);
+
+		    //System.out.println(post);
+		    fm.save(post);
+		}
+		*/
+
 	List<Group> groups = gm.getGroups(query, 0);
 	for(Group group : groups)
 	{
@@ -123,7 +184,6 @@ public class GroupManager
 
 	    System.out.print(group.getTitle() + " - " + group.getForumId() + " - ");
 	}
-	*/
 
     }
 

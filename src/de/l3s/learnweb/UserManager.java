@@ -218,7 +218,7 @@ public class UserManager
      * Get a User ID given the username
      * 
      * @param username
-     * @return
+     * @return Returns -1 if an invalid username was given
      * @throws SQLException
      */
     public int getUserIdByUsername(String username) throws SQLException
@@ -229,7 +229,7 @@ public class UserManager
 
 	if(!rs.next())
 	{
-	    new IllegalArgumentException("invalid user name was requested: " + username).printStackTrace();
+	    //log.warn("invalid user name was requested: " + username);
 	    return -1; //throw new IllegalArgumentException("invalid user id");
 	}
 	int userId = rs.getInt("user_id");

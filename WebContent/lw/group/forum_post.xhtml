@@ -5,8 +5,8 @@
 	xmlns:p="http://primefaces.org/ui">
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
-			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{forumTopicsBean.preRenderView}" /> 
+			<f:viewParam name="topic_id" value="#{forumPostBean.topicId}" />
+			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{forumPostBean.preRenderView}" /> 
 		</f:metadata>
 	</ui:define>
 	
@@ -15,26 +15,27 @@
 
 	<ui:define name="center_layout">
 	  
-		<h:form id="forum_post" enctype="multipart/form-data">
-			<p:panel header="Forum post">
-				<table cellpadding="10" cellspacing="5" border="0">
-					<tr> 
-						<td>
-							Enter your topic : <p:inputText value="#{forumPostBean.post}" id="topic"></p:inputText>
-						</td>
-					</tr>					
-					<tr> 
-						<h3>Forum Post</h3>
-	   						 <p:inputTextarea value="#{forumPostBean.post}" id="post" rows="5" cols="30" counter="display" maxlength="500" counterTemplate="{0} characters remaining." autoResize="false" />
-	   						 <h:outputText id="display" />
-					</tr>
-					<tr>
-						<td>
-							 <p:commandButton type="submit" value="submit" ajax="true" update="post :growl" action="#{forumPostBean.saveForumPost}"/>
-						</td>
-					</tr>
-				</table>
-			</p:panel>
+		<h:form>
+		    <p:dataTable var="post" value="#{forumPostBean.posts}" rows="20"
+		                         paginator="true" lazy="true" paginatorPosition="bottom"
+		                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		                         rowsPerPageTemplate="5,10,15"
+		                         style="width:99.7%">
+		      
+		        <p:column headerText="#{msg.forum_topics}" style="width:55%">
+		            <h:outputText value="#{post.date}" />
+		        </p:column>
+		        <p:column headerText="#{msg.author}" styleClass="align-center">
+		        	<a href="./user/detail.jsf?user_id=#{post.userId}">
+		        		<h:outputText value="#{post.user}" style="color:#3399ff"/>
+		        	</a>
+		        </p:column>
+		        <p:column headerText="#{msg.views}" style="width:5%" styleClass="align-center">
+		        	<h:outputText value="#{post.text}" escape="false"/>
+		        </p:column>
+		   
+		    
+		    </p:dataTable>
 		</h:form>
 	</ui:define>
 
