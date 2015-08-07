@@ -10,7 +10,9 @@
 		<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{presentationBean.preRenderView}" /> 
 	</f:metadata>
 	<h:head>
-		<title>Presentation</title>
+		<title>
+			#{msg.presentation}
+		</title>
 		<link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />
 	    <link href="../../resources/css/impress.css" rel="stylesheet" />
 	    
@@ -68,7 +70,7 @@
 		</div>
 	
 		<div id="impress">
-			<h:outputText escape="false" value="#{presentationBean.presentation.code}"></h:outputText>
+			<h:outputText escape="false" value="#{presentationBean.presentation.code}"/>
 		</div>	
 		<div class="hint">
 		    <h:outputText value="#{msg.navigate}"/>

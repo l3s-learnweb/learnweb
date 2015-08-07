@@ -22,12 +22,23 @@
 			</span> 
 				#{msg.created_by} #{groupDetailBean.group.leader.username}
 			<h:form id="center_header_form">
-				<p:commandButton rendered="#{groupDetailBean.member}" styleClass="resource_button greenbutton ressourcetoolbutton" value="#{msg.upload_resource}" update=":add_resource_panel" oncomplete="update_header()" partialSubmit="true">
-					<f:setPropertyActionListener target="#{addResourceBean.resourceTargetGroupId}" value="#{groupDetailBean.groupId}"></f:setPropertyActionListener>
-					<f:setPropertyActionListener target="#{groupDetailBean.newResourceClicked}" value="true"></f:setPropertyActionListener>
+				<p:commandButton rendered="#{groupDetailBean.member}" 
+					styleClass="resource_button greenbutton ressourcetoolbutton" 
+					value="#{msg.upload_resource}" 
+					update=":add_resource_panel" 
+					oncomplete="update_header()" 
+					partialSubmit="true">
+					<f:setPropertyActionListener target="#{addResourceBean.resourceTargetGroupId}" value="#{groupDetailBean.groupId}"/>
+					<f:setPropertyActionListener target="#{groupDetailBean.newResourceClicked}" value="true"/>
 				</p:commandButton>
 				
-				<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" styleClass="resource_button greenbutton"  update=":growl :group_menu @form :datagrid" partialSubmit="true" process="@this" value="#{msg.join_group}">
+				<p:commandLink rendered="#{not groupDetailBean.member}" 
+					action="#{groupsBean.joinGroup}" 
+					styleClass="resource_button greenbutton"  
+					update=":growl :group_menu @form :datagrid" 
+					partialSubmit="true" 
+					process="@this" 
+					value="#{msg.join_group}">
 					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
 				</p:commandLink>
 			</h:form>
@@ -72,7 +83,12 @@
 				
 				<h:column >
 					<div class="newsfeed_user_image_div">
-					    <h:graphicImage id="userpic"  url="#{datagrid.user.image}" alt="profile image" width="30" height="30" styleClass="newsfeed_user_image"/>
+					    <h:graphicImage id="userpic" 
+					    	url="#{datagrid.user.image}" 
+					    	alt="profile image" 
+					    	width="30" 
+					    	height="30" 
+					    	styleClass="newsfeed_user_image"/>
 					    </div>
 						<div class="newsfeed_text">
 						<h:outputText value="#{datagrid.text}" escape="false"  />
@@ -82,8 +98,8 @@
 						<h:outputLink styleClass="newsfeed_query_link" value="search.jsf">
 						<h:outputText value=" #{datagrid.resource.query}" escape="false" styleClass="newsfeed_query_link_text"/>
 						
-								<f:param name="query" value="#{datagrid.resource.query}"></f:param>
-						        <f:param name="action" value="search"></f:param>
+								<f:param name="query" value="#{datagrid.resource.query}"/>
+						        <f:param name="action" value="search"/>
 						</h:outputLink>
 						
 						<h:outputText value=" #{msg.from} #{datagrid.resource.source} " escape="false"  />
@@ -99,8 +115,8 @@
 						
 						<h:form>
 								<p:commandLink styleClass="newsfeed_query_link" update=":add_resource_panel" oncomplete="update_header()">
-				        			<f:setPropertyActionListener target="#{groupDetailBean.clickedResource}" value="#{datagrid.resource}"></f:setPropertyActionListener>
-				        			<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{datagrid.resource}"></f:setPropertyActionListener>
+				        			<f:setPropertyActionListener target="#{groupDetailBean.clickedResource}" value="#{datagrid.resource}"/>
+				        			<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{datagrid.resource}"/>
 										<h:outputText value="#{datagrid.resource.embeddedSize1}" escape="false" />
 								</p:commandLink>
 								</h:form>
@@ -112,16 +128,23 @@
 								
 								
 								<br />
-								<h:outputText value="#{msg.author}: #{datagrid.resource.author} " rendered="#{not empty datagrid.resource.author}" escape="false" styleClass="newsfeed_author"/>
+								<h:outputText value="#{msg.author}: #{datagrid.resource.author} " 
+									rendered="#{not empty datagrid.resource.author}" 
+									escape="false" 
+									styleClass="newsfeed_author"/>
 							
 							</div>
 						</h:panelGroup>
 						
 						<br class="clear"></br>
 						<h:panelGroup rendered="#{datagrid.resourceAction}">
-						<br></br><h:outputText value="tags: " escape="false" styleClass="newsfeed_tag" rendered="#{not empty datagrid.resource.tagsAsString}" />
+						<br></br>
+						<h:outputText value="tags: " escape="false" styleClass="newsfeed_tag" rendered="#{not empty datagrid.resource.tagsAsString}"/>
 						
-						<h:outputText value=" #{datagrid.resource.tagsAsString} " rendered="#{not empty datagrid.resource.tagsAsString}" escape="false" styleClass="newsfeed_tags"/>
+						<h:outputText value=" #{datagrid.resource.tagsAsString} " 
+							rendered="#{not empty datagrid.resource.tagsAsString}" 
+							escape="false" 
+							styleClass="newsfeed_tags"/>
 						
 						</h:panelGroup>
 						<hr width="auto" class="newsfeed_separator"></hr>
@@ -130,7 +153,11 @@
 					<br></br>
 					<h:form>
 					<h:panelGroup id="history" class="newsfeed_history">
-						<p:commandButton value="#{msg.full_history}"  styleClass="blackbutton" rendered="${not groupDetailBean.isAllLogs()}" update=":datagrid history" actionListener="#{groupDetailBean.fetchAllLogs()}"></p:commandButton>
+						<p:commandButton value="#{msg.full_history}"  
+							styleClass="blackbutton" 
+							rendered="${not groupDetailBean.isAllLogs()}" 
+							update=":datagrid history" 
+							actionListener="#{groupDetailBean.fetchAllLogs()}"/>
 					</h:panelGroup>
 					</h:form>
 					<br></br>
@@ -138,13 +165,26 @@
 
 		<p:dialog header="#{msg.upload_file}" widgetVar="file_dialog" modal="true" appendTo="@(body)" width="600" height="150">
 			<h:form>
-				<p:fileUpload  rendered="true" fileUploadListener="#{addResourceBean.handleFileUpload}" mode="advanced" auto="true" sizeLimit="10000000" widgetVar="fileUpload" oncomplete="PF('file_dialog').hide()" update=":add_resource_form:preview" label="#{msg.choose_file}" cancelLabel="abb"/> 
+				<p:fileUpload  rendered="true" 
+					fileUploadListener="#{addResourceBean.handleFileUpload}" 
+					mode="advanced" 
+					auto="true" 
+					sizeLimit="10000000" 
+					widgetVar="fileUpload" 
+					oncomplete="PF('file_dialog').hide()" 
+					update=":add_resource_form:preview" 
+					label="#{msg.choose_file}" 
+					cancelLabel="abb"/> 
 			</h:form>
 		</p:dialog>
 		<p:dialog header="#{msg.edit}" id="comment_dialog1" modal="true" minWidth="440" appendTo="@(body)" widgetVar="comment_dialog">
 			<h:form id="comment_dialog_form">	
-				<p:inputTextarea autoResize="1" maxHeight="20" value="#{resourceDetailBean.clickedComment.text}" id="edit_comment_textbox"></p:inputTextarea>
-				<p:commandButton actionListener="#{resourceDetailBean.onEditComment}" update=":add_resource_panel" title="#{msg.save}" value="#{msg.save}"	onsuccess="PF('comment_dialog').hide();"></p:commandButton>
+				<p:inputTextarea autoResize="1" maxHeight="20" value="#{resourceDetailBean.clickedComment.text}" id="edit_comment_textbox"/>
+				<p:commandButton actionListener="#{resourceDetailBean.onEditComment}" 
+					update=":add_resource_panel" 
+					title="#{msg.save}" 
+					value="#{msg.save}"	
+					onsuccess="PF('comment_dialog').hide();"/>
 			</h:form>
 		</p:dialog>
 	

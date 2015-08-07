@@ -609,8 +609,8 @@ a:hover{text-decoration:underline;}
 
 #group_resource_searchbutton{
 	cursor:pointer;
-	background:url(img/search.png) no-repeat scroll center center;
-	background-size:16px 16px;
+	background:url(img/search.png) no-repeat scroll center center !important;
+	background-size:16px 16px !important;
 	height:19px;
 	border:none;
 	background-color:rgb(230, 230, 230) !important;
@@ -698,9 +698,9 @@ h2 { margin-bottom:0.8rem; }
 #lightbox_container { box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.8); }
 
 /*forum*/
-.grey_background{
+/*.grey_background{
 	background-color:#eee !important;
-}
+}*/
 
 /* change primefaces ui */
 .ui-button,
@@ -779,6 +779,7 @@ span.ui-autocomplete{border:1px solid transparent !important;}
 	background-image:none !important;
 	box-shadow:none;
 }
+
 #datagrid .ui-panel-content{padding:5px;}
 .explore_history .ui-button .ui-button-text, .search_history .ui-button .ui-button-text{
 	display:block;
