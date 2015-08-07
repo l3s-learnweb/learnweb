@@ -40,13 +40,13 @@ public class Search implements Serializable
 	Flickr,
 	YouTube,
 	Vimeo,
-	SlideShare,
 	Ipernity,
 	TED, // stored in SOLR
 	TEDx, // stored in SOLR
 	Loro, // stored in SOLR
 	Yovisto, //  stored in SOLR
-	LearnWeb // stored in SOLR
+	LearnWeb, // stored in SOLR
+	ArchiveIt// stored in SOLR
 	;
 
 	public boolean isLearnwebSource()
@@ -54,18 +54,41 @@ public class Search implements Serializable
 	    switch(this)
 	    {
 	    case TED:
-		return true;
 	    case TEDx:
-		return true;
 	    case Loro:
-		return true;
 	    case Yovisto:
-		return true;
 	    case LearnWeb:
+	    case ArchiveIt:
 		return true;
 	    default:
 		return false;
 	    }
+	}
+
+	public String getCustomName()
+	{
+	    switch(this)
+	    {
+	    case ArchiveIt:
+		return UtilBean.getLocaleMessage("Archive-It");
+	    default:
+		return this.name();
+	    }
+	}
+
+	public static SERVICE[] getWebServices()
+	{
+	    return new SERVICE[] { SERVICE.Bing, SERVICE.Loro, SERVICE.ArchiveIt, SERVICE.LearnWeb };
+	}
+
+	public static SERVICE[] getImageServices()
+	{
+	    return new SERVICE[] { SERVICE.Bing, SERVICE.Flickr, SERVICE.Ipernity, SERVICE.Loro, SERVICE.LearnWeb };
+	}
+
+	public static SERVICE[] getVideoServices()
+	{
+	    return new SERVICE[] { SERVICE.YouTube, SERVICE.Vimeo, SERVICE.Loro, SERVICE.TED, SERVICE.TEDx, SERVICE.Yovisto, SERVICE.LearnWeb };
 	}
     };
 
@@ -122,11 +145,6 @@ public class Search implements Serializable
 	public String toString()
 	{
 	    return DEFAULT_DATE_FORMAT.format(this.getDate());
-	}
-
-	public String toSolrString()
-	{
-	    return SOLR_DATE_FORMAT.format(this.getDate());
 	}
     }
 
@@ -241,60 +259,68 @@ public class Search implements Serializable
 	}
     }
 
-    public enum MEDIA
-    {
-	image,
-	presentation,
-	text,
-	video
-    };
-
     public enum MODE
     {
 	image,
 	web,
-	video
+	video;
+
+	public String getInterwebName()
+	{
+	    switch(this)
+	    {
+	    case web:
+		return "text";
+	    default:
+		return this.name();
+	    }
+	}
     };
 
     private String query;
-    private List<String> configMedia = new ArrayList<String>(Arrays.asList("image", "presentation", "video")); // the media types to search for
-    private List<String> configService = new ArrayList<String>(Arrays.asList("Flickr", "YouTube", "Vimeo", "SlideShare", "Ipernity")); // the services to search in
+    private MODE configMode;
     private DATE configDate;
     private SIZE configSize;
     private DURATION configDuration;
+    private String configGroup;
     private Integer configResultsPerService = 8;
     private Integer configResultsPerOneService = 40;
     private String configLanguage;
+    private List<SERVICE> configService = new ArrayList<SERVICE>(Arrays.asList(SERVICE.values())); // the services to search in
 
     // all resources
     private LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
-    private Map<String, Long> resultsCountAtService = new HashMap<String, Long>();
+    private Map<String, Long> resultsCountPerService = new HashMap<String, Long>();
+    private Map<String, Long> resultsCountPerGroup = new HashMap<String, Long>();
 
     // resources grouped by pages
+    private int temporaryId = 1;
     private HashMap<Integer, LinkedList<ResourceDecorator>> pages = new HashMap<Integer, LinkedList<ResourceDecorator>>();
     private HashMap<Integer, Resource> tempIdIndex = new HashMap<Integer, Resource>(); // makes it possible to retrieve resources by its tempId
-    private int temporaryId = 1;
     private TreeSet<String> urlHashMap = new TreeSet<String>(); // used to make sure that resources with the same url appear only once in the search results
+
+    private int userId;
     private InterWeb interweb;
-    private MODE mode;
+    private SolrSearch solrSearch;
+
     private boolean hasMoreResults = true;
     private boolean hasMoreLearnwebResults = true;
     private boolean hasMoreInterwebResults = true;
-    private SolrSearch solrSearch;
-    private int userId;
 
     private int interwebPageOffset = 0;
     private boolean stopped;
 
     public Search(InterWeb interweb, String query, User user)
     {
-	this.query = query;
 	this.interweb = interweb;
+	this.query = query;
 	this.userId = (null == user) ? -1 : user.getId();
 	this.solrSearch = new SolrSearch(query, user);
 
 	if(query.startsWith("source:") || query.startsWith("location:") || query.startsWith("groups:") || query.startsWith("title:"))
+	{
 	    hasMoreInterwebResults = false;
+	}
     }
 
     private LinkedList<ResourceDecorator> doSearch(int page)
@@ -306,40 +332,34 @@ public class Search implements Serializable
 
 	try
 	{
-
-	    if(page != 1 && hasMoreInterwebResults)
+	    if(configService.size() == 0 || stopped)
 	    {
-		do
-		{
-		    newResources.addAll(getInterwebResults(page + interwebPageOffset));
-
-		    if(newResources.size() > 0 || !hasMoreInterwebResults)
-			break;
-
-		    interwebPageOffset++;
-		}
-		while(true);
-	    }
-
-	    // get results from Learnweb
-	    if(hasMoreLearnwebResults)
-	    {
-		newResources.addAll(getLearnwebResults(page));
-	    }
-
-	    if(page == 1) // on the first page get results from Interweb, only when Learnweb does not return results
-	    {
-		if(!hasMoreLearnwebResults && hasMoreInterwebResults)
-		    newResources = getInterwebResults(page);
-		else
-		    interwebPageOffset = -1; // no interweb results were requested. so we have to request page 1 when Learnweb shows the next page
-	    }
-
-	    if(!hasMoreInterwebResults && !hasMoreLearnwebResults)
 		hasMoreResults = false;
+	    }
+	    else if(hasMoreResults)
+	    {
+		// get results from LearnWeb
+		if(hasMoreLearnwebResults)
+		{
+		    newResources.addAll(getLearnwebResults(page));
+		}
 
-	    resources.addAll(newResources);
-	    pages.put(page, newResources);
+		// get results from InterWeb
+		if(hasMoreInterwebResults)
+		{
+		    // on the first page get results from Interweb, only when Learnweb does not return results
+		    if(page == 1 && hasMoreLearnwebResults)
+			interwebPageOffset = -1; // no interweb results were requested. so we have to request page 1 when Learnweb shows the next page
+		    else
+			newResources.addAll(getInterwebResults(page + interwebPageOffset));
+		}
+
+		if(!hasMoreInterwebResults && !hasMoreLearnwebResults)
+		    hasMoreResults = false;
+
+		resources.addAll(newResources);
+		pages.put(page, newResources);
+	    }
 	}
 	catch(Exception e)
 	{
@@ -361,32 +381,35 @@ public class Search implements Serializable
     {
 	long start = System.currentTimeMillis();
 
-	//this.solrSearch.setFilterLocation(StringHelper.implode(configService, ","));
+	// Setup filters
+	this.solrSearch.setFilterLocation(getServicesForLearnweb(configService));
 	this.solrSearch.setResultsPerPage(configService.size() > 1 ? configResultsPerService : configResultsPerOneService);
-	this.solrSearch.setFilterType(mode.name());
-
+	this.solrSearch.setFilterType(configMode.name());
 	if(configDate != null)
-	{
-	    this.solrSearch.setFilterDateFrom(configDate.toSolrString());
-	}
+	    this.solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(configDate.getDate()));
+	if(configGroup != null)
+	    this.solrSearch.setFilterGroups(Integer.parseInt(configGroup));
 
 	List<ResourceDecorator> learnwebResources = solrSearch.getResourcesByPage(page);
-	setResultsCountAtService(solrSearch.getResultCountAtService());
+	log.debug("Solr returned " + learnwebResources.size() + " results in " + (System.currentTimeMillis() - start) + " ms");
 
 	if(stopped)
 	    return null;
 
-	log.debug("Solr returned " + learnwebResources.size() + " results in " + (System.currentTimeMillis() - start) + "ms");
+	resultsCountPerGroup.putAll(solrSearch.getResultCountPerGroup());
+
+	if(page == 1)
+	    resultsCountPerService.putAll(solrSearch.getResultCountPerService());
 
 	if(learnwebResources.size() == 0)
 	    hasMoreLearnwebResults = false;
 
 	int privateResourceCount = 0; // number of resources that match the query but will not be displayed to the user
-	int duplicatedUrlCount = 0;
+	int duplicatedUrlCount = 0; // number of resources that already displayed to the user
+	int notSatisfyFiltersCount = 0; // number of resources that not satisfy filters like video duration or image size
 
 	LinkedList<ResourceDecorator> newResources = new LinkedList<ResourceDecorator>();
 
-	// copy results
 	for(ResourceDecorator decoratedResource : learnwebResources)
 	{
 	    Resource resource = decoratedResource.getResource();
@@ -399,95 +422,145 @@ public class Search implements Serializable
 		continue;
 	    }
 
-	    // check if an other resource with the same url exists; Yovisto urls are not unique in this case we use the file url
-	    String url = !StringHelper.empty(resource.getFileUrl()) ? resource.getFileUrl() : resource.getUrl();
-
-	    if(!urlHashMap.add(url))
+	    // check if an other resource with the same url exists
+	    // Yovisto urls are not unique in this case we use the file url
+	    if(!urlHashMap.add(!StringHelper.empty(resource.getFileUrl()) ? resource.getFileUrl() : resource.getUrl()))
 	    {
 		duplicatedUrlCount++;
 		continue;
 	    }
 
-	    if(isSatisfyAfterLoadFilters(decoratedResource))
+	    if(!checkAfterLoadFilters(decoratedResource))
 	    {
-		decoratedResource.setTempId(temporaryId);
-
-		tempIdIndex.put(temporaryId, decoratedResource.getResource());
-		temporaryId++;
-
-		newResources.add(decoratedResource);
+		notSatisfyFiltersCount++;
+		continue;
 	    }
+
+	    decoratedResource.setTempId(temporaryId);
+
+	    tempIdIndex.put(temporaryId, decoratedResource.getResource());
+	    temporaryId++;
+
+	    newResources.add(decoratedResource);
 	}
 
-	if(privateResourceCount > 0 || duplicatedUrlCount > 0)
-	    log.error("Skipped " + privateResourceCount + " private resources and " + duplicatedUrlCount + " dublicated resources");
+	if(notSatisfyFiltersCount > 0 || privateResourceCount > 0 || duplicatedUrlCount > 0)
+	    log.debug("Filtered " + notSatisfyFiltersCount + " resources and skipped " + privateResourceCount + " private resources, " + duplicatedUrlCount + " dublicated resources");
 
 	return newResources;
     }
 
     private LinkedList<ResourceDecorator> getInterwebResults(int page) throws IOException, IllegalResponseException
     {
-	if(configService.size() == 0 || stopped)
+	// TODO: If have problems implemented it here (I don't understand why we do it)
+	/* do // we have loop here when stopped = true
 	{
-	    hasMoreInterwebResults = false;
-	    return new LinkedList<ResourceDecorator>();
+		newResources.addAll(getInterwebResults(page + interwebPageOffset));
+		if(newResources.size() > 0 || !hasMoreInterwebResults)
+			break;
+		interwebPageOffset++;
 	}
+	while(true); */
 
+	long start = System.currentTimeMillis();
+
+	// Setup filters
 	TreeMap<String, String> params = new TreeMap<String, String>();
-	params.put("media_types", StringHelper.implode(configMedia, ","));
-	params.put("services", StringHelper.implode(configService, ","));
+	params.put("services", getServicesForInterweb(configService));
 	params.put("number_of_results", configService.size() > 1 ? configResultsPerService.toString() : configResultsPerOneService.toString());
+	params.put("media_types", configMode.getInterwebName());
 	params.put("page", Integer.toString(page));
 	params.put("timeout", "50");
-
 	if(configDate != null)
-	{
 	    params.put("date_from", configDate.toString());
-	}
-
 	if(configLanguage != null)
-	{
 	    params.put("language", configLanguage);
-	}
 
 	SearchQuery interwebResponse = interweb.search(query, params);
-	setResultsCountAtService(interwebResponse.getResultCountAtService());
 	List<ResourceDecorator> interwebResults = interwebResponse.getResults();
+	log.debug("Interweb returned " + interwebResults.size() + " results in " + (System.currentTimeMillis() - start) + " ms");
 
 	if(stopped)
-	    return new LinkedList<ResourceDecorator>();
+	    return null;
+
+	if(page == 1)
+	    resultsCountPerService.putAll(interwebResponse.getResultCountAtService());
 
 	if(interwebResults.size() == 0)
 	    hasMoreInterwebResults = false;
 
-	log.debug("Interweb returned " + interwebResults.size() + " results");
+	int duplicatedUrlCount = 0; // number of resources that already displayed to the user
+	int notSatisfyFiltersCount = 0; // number of resources that not satisfy filters like video duration or image size
 
 	LinkedList<ResourceDecorator> newResources = new LinkedList<ResourceDecorator>();
 
-	// copy results
 	for(ResourceDecorator decoratedResource : interwebResults)
 	{
 	    // check if an other resource with the same url exists
 	    if(!urlHashMap.add(decoratedResource.getUrl()))
-		continue;
-
-	    if(isSatisfyAfterLoadFilters(decoratedResource))
 	    {
-		decoratedResource.setTempId(temporaryId);
+		duplicatedUrlCount++;
+		continue;
+	    }
 
-		tempIdIndex.put(temporaryId, decoratedResource.getResource());
-		temporaryId++;
+	    if(!checkAfterLoadFilters(decoratedResource))
+	    {
+		notSatisfyFiltersCount++;
+		continue;
+	    }
 
-		newResources.add(decoratedResource);
+	    decoratedResource.setTempId(temporaryId);
+
+	    tempIdIndex.put(temporaryId, decoratedResource.getResource());
+	    temporaryId++;
+
+	    newResources.add(decoratedResource);
+	}
+
+	if(notSatisfyFiltersCount > 0 || duplicatedUrlCount > 0)
+	    log.debug("Filtered " + notSatisfyFiltersCount + " resources and skipped " + duplicatedUrlCount + " dublicated resources");
+
+	return newResources;
+    }
+
+    /**
+     * Select only services which stored in Solr
+     * 
+     * @param listService
+     * @return String
+     */
+    private String getServicesForLearnweb(List<SERVICE> listService)
+    {
+	String learnweb = "";
+	for(SERVICE service : listService)
+	{
+	    if(service.isLearnwebSource())
+	    {
+		learnweb += service.getCustomName() + ",";
 	    }
 	}
 
-	/*
-	if(page < 4) // cache the best new results
-	    SolrCache.getInstance().cacheResources(newResources);
-	*/
+	return StringHelper.removeLastComma(learnweb);
+    }
 
-	return newResources;
+    /**
+     * Select only services which available in InterWeb
+     * 
+     * @param listService
+     * @return String
+     */
+    private String getServicesForInterweb(List<SERVICE> listService)
+    {
+	String interweb = "";
+	for(SERVICE service : listService)
+	{
+	    if(!service.isLearnwebSource())
+	    {
+		interweb += service.getCustomName() + ",";
+	    }
+	}
+
+	return StringHelper.removeLastComma(interweb);
     }
 
     /**
@@ -496,7 +569,7 @@ public class Search implements Serializable
      * @param res
      * @return boolean
      */
-    private boolean isSatisfyAfterLoadFilters(ResourceDecorator res)
+    private boolean checkAfterLoadFilters(ResourceDecorator res)
     {
 	//String type = res.getResource().getType(); // text Image Video
 	if(configSize != null && res.getResource().getType().equals("Image"))
@@ -530,25 +603,22 @@ public class Search implements Serializable
     /**
      * This function sets the default media and service options for the defined search mode
      * 
-     * @param mode
+     * @param configMode
      */
     public void setMode(MODE searchMode)
     {
-	this.mode = searchMode;
+	this.configMode = searchMode;
 
 	switch(searchMode)
 	{
-	case image:
-	    setMedia(MEDIA.image);
-	    setService(SERVICE.Bing, SERVICE.Flickr, SERVICE.Ipernity, SERVICE.Loro, SERVICE.LearnWeb); // , SERVICE.SlideShare  
-	    break;
 	case web:
-	    setMedia(MEDIA.text);
-	    setService(SERVICE.Bing, SERVICE.LearnWeb, SERVICE.Loro, SERVICE.SlideShare);
+	    setService(SERVICE.getWebServices());
+	    break;
+	case image:
+	    setService(SERVICE.getImageServices());
 	    break;
 	case video:
-	    setMedia(MEDIA.video);
-	    setService(SERVICE.YouTube, SERVICE.Vimeo, SERVICE.Loro, SERVICE.TED, SERVICE.TEDx, SERVICE.Yovisto, SERVICE.LearnWeb); // , SERVICE.Flickr , SERVICE.SlideShare
+	    setService(SERVICE.getVideoServices());
 	    break;
 	default:
 	    throw new IllegalArgumentException("unknown searchmode: " + searchMode);
@@ -557,16 +627,7 @@ public class Search implements Serializable
 
     public MODE getMode()
     {
-	return mode;
-    }
-
-    public void setMedia(MEDIA... args)
-    {
-	configMedia.clear();
-	for(MEDIA media : args)
-	{
-	    configMedia.add(media.name());
-	}
+	return configMode;
     }
 
     public void setService(SERVICE... args)
@@ -581,36 +642,67 @@ public class Search implements Serializable
 		{
 		    hasMoreInterwebResults = false; // disable interweb
 		}
-		/*else
+		else
 		{
 		    hasMoreLearnwebResults = false; // disable learnweb
-		}*/
+		}
 
-		configService.add(service.name());
+		configService.add(service);
 	    }
 	}
 	else
 	{
 	    for(SERVICE service : args)
 	    {
-		configService.add(service.name());
+		configService.add(service);
 	    }
 	}
     }
 
-    public void setDate(DATE date)
+    public List<SERVICE> getService()
+    {
+	return configService;
+    }
+
+    public void setFilterByDate(DATE date)
     {
 	this.configDate = date;
     }
 
-    public void setSize(SIZE size)
+    public DATE getDate()
+    {
+	return configDate;
+    }
+
+    public void setFilterBySize(SIZE size)
     {
 	this.configSize = size;
     }
 
-    public void setDuration(DURATION duration)
+    public SIZE getSize()
+    {
+	return configSize;
+    }
+
+    public void setFilterByDuration(DURATION duration)
     {
 	this.configDuration = duration;
+    }
+
+    public DURATION getDuration()
+    {
+	return configDuration;
+    }
+
+    public void setFilterByGroup(String group)
+    {
+	this.hasMoreInterwebResults = false;
+	this.configGroup = group;
+    }
+
+    public String getGroup()
+    {
+	return configGroup;
     }
 
     public void setResultsPerService(Integer configResultsPerService)
@@ -651,7 +743,7 @@ public class Search implements Serializable
 
 	if(page > 50)
 	{
-	    log.fatal("requested more than 50 pages", new Exception());
+	    log.fatal("Requested more than 50 pages", new Exception());
 	    return null;
 	}
 
@@ -674,52 +766,18 @@ public class Search implements Serializable
 	return tempIdIndex.get(tempId);
     }
 
-    public Map<String, Long> getResultsCountAtService()
+    public Map<String, Long> getResultsCountPerService()
     {
-	return resultsCountAtService;
+	return resultsCountPerService;
     }
 
-    public void setResultsCountAtService(Map<String, Long> resultsCountAtService)
+    public Map<String, Long> getResultsCountPerGroup()
     {
-	this.resultsCountAtService.putAll(resultsCountAtService);
+	return resultsCountPerGroup;
     }
 
     public void stop()
     {
 	this.stopped = true;
     }
-
-    /*
-    //dataTypeCount example {Video:5, Audio:8, ....}
-    private HashMap<String, Integer> dataTypeCount = new HashMap<String, Integer>();
-    private HashMap<String, Integer> sourceCount = new HashMap<String, Integer>();
-    
-    private void countData(Resource res)
-    {
-    	String type = StringHelper.ucFirst(res.getType());
-    	if(type.length() > 12)
-    		type = type.substring(0, 11) +"...";
-    	
-    	Integer count = dataTypeCount.get(type);
-    	if (null == count)
-    	{
-    		dataTypeCount.put(type, 1);
-    		if(configPage == 1)
-    			typeFilterInput.add(type); // set this value preselected 
-    	}
-    	else dataTypeCount.put(type, count + 1);
-    	
-    	String source = res.getSource();
-    	if(source.length() < 3)
-    		return;
-    	count = sourceCount.get(source);
-    	if (null == count)
-    	{
-    		sourceCount.put(source, 1);
-    		if(configPage == 1)
-    			sourceFilterInput.add(source);
-    	}
-    	else sourceCount.put(source, count + 1);
-    }
-    */
 }

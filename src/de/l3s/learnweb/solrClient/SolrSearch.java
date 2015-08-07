@@ -45,6 +45,7 @@ public class SolrSearch implements Serializable
 
     protected long totalResults = -1;
     private Map<String, Long> serviceSet = new HashMap<String, Long>(); // service name, number of results at this service
+    private Map<String, Long> groupSet = new HashMap<String, Long>(); // group name, number of results at this group
 
     private String filterGroupStr = "";
     private int userId;
@@ -105,7 +106,15 @@ public class SolrSearch implements Serializable
 
     public void setFilterLocation(String filterLocation)
     {
-	this.filterLocation = filterLocation;
+	// TODO: Remove it
+	if(filterLocation.equals("Archive-It"))
+	{
+	    this.filterSource = filterLocation;
+	}
+	else
+	{
+	    this.filterLocation = filterLocation;
+	}
     }
 
     public void setFilterFormat(String filterFormat)
@@ -172,9 +181,14 @@ public class SolrSearch implements Serializable
 	return totalResults;
     }
 
-    public Map<String, Long> getResultCountAtService()
+    public Map<String, Long> getResultCountPerService()
     {
 	return serviceSet;
+    }
+
+    public Map<String, Long> getResultCountPerGroup()
+    {
+	return groupSet;
     }
 
     public void setSkipResourcesWithoutThumbnails(boolean skipResourcesWithoutThumbnails)
@@ -243,7 +257,7 @@ public class SolrSearch implements Serializable
 	solrQuery.setHighlightSimplePost("</strong>");
 
 	solrQuery.set("facet", "true");
-	solrQuery.set("facet.field", "location");
+	solrQuery.addFacetField("location", "groups");
 	//log.debug(solrQuery);
 
 	//get solrServer
@@ -271,9 +285,15 @@ public class SolrSearch implements Serializable
 	if(response != null)
 	{
 	    totalResults = response.getResults().getNumFound();
+
 	    for(Count f : response.getFacetFields().get(0).getValues())
 	    {
 		serviceSet.put(f.getName(), f.getCount());
+	    }
+
+	    for(Count f : response.getFacetFields().get(1).getValues())
+	    {
+		groupSet.put(f.getName(), f.getCount());
 	    }
 	}
 

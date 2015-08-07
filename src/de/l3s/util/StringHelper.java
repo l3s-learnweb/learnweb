@@ -176,4 +176,19 @@ public class StringHelper
 	return p.format(date);
     }
 
+    /**
+     * Remove last character if it is ','
+     * 
+     * @param str
+     * @return String
+     */
+    public static String removeLastComma(String str)
+    {
+	if(str.endsWith(","))
+	{
+	    str = str.substring(0, str.length() - 1);
+	}
+	return str;
+    }
+
 }

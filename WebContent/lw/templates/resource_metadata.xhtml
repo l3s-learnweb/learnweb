@@ -28,9 +28,11 @@
 			<br />
 			
 			<b><h:outputText value="#{msg.resource_found_at}: " /></b> 
-		
 				<h:outputText value="#{res.source}" />
-		
+			<br />
+			
+			<b><h:outputText value="#{msg.author}: " /></b> 
+				<h:outputText value="#{res.resource.author}" />
 			<br />
 			
 			<h:panelGroup rendered="#{not empty res.groups}">
@@ -42,6 +44,15 @@
 						<h:outputText value="#{group.title}" />
 					</h:outputLink>
 					<br/>
+				</ui:repeat>						
+				<br/>
+			</h:panelGroup>
+			
+			<h:panelGroup rendered="#{not empty res.resource.tags}">
+				<b><h:outputText value="#{msg.tags}: " /></b>	
+				
+				<ui:repeat var="tag" value="#{res.resource.tags}" varStatus="status">
+					<h:outputText value="#{tag.name}" /><h:outputText value=", " rendered="#{!status.last}" />
 				</ui:repeat>						
 				<br/>
 			</h:panelGroup>

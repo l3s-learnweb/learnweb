@@ -92,7 +92,7 @@
 										<f:param name="query" value="#{searchBean.query}" />
 									</h:link>
 									<ui:repeat value="#{searchBean.availiableServices}" var="service">
-										<h:link value="#{service} #{searchBean.getTotalResultsFrom(service) != null ? searchBean.getTotalResultsFrom(service) : null}" outcome="search" styleClass="#{searchBean.filterService == service ? 'active' : null}">
+										<h:link value="#{service.customName} #{searchBean.getTotalResultsFrom(service) != null ? searchBean.getTotalResultsFrom(service) : null}" outcome="search" styleClass="#{searchBean.filterService == service ? 'active' : null}">
 											<f:param name="action" value="#{searchBean.searchMode}" />
 											<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', service)}" />
 											<f:param name="query" value="#{searchBean.query}" />
@@ -158,6 +158,27 @@
 										<h:link value="#{duration.customName}" outcome="search" styleClass="#{searchBean.filterDuration == duration ? 'active' : null}">
 											<f:param name="action" value="#{searchBean.searchMode}" />
 											<f:param name="filter" value="#{searchBean.generateFiltersLink('duration', duration)}" />
+											<f:param name="query" value="#{searchBean.query}" />
+										</h:link>
+									</ui:repeat>
+								</h:panelGroup>
+							</li>
+						</ui:fragment>
+						<ui:fragment rendered="#{searchBean.isFilterAvailable('group')}">
+							<li class="filter group#{searchBean.filterGroup != null ? ' active' : null}">
+								<span class="filter-name">#{searchBean.filterGroup != null ? searchBean.currentGroup : msg.group} 
+									<span class="arrow"></span>
+								</span>
+								<h:panelGroup id="filter-group" styleClass="filter-sub-bar" layout="block">
+									<h:link value="#{msg.any_group}" outcome="search" styleClass="#{searchBean.filterGroup == null ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('group', 'all')}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+									<ui:repeat value="#{searchBean.availiableGroups}" var="group">
+										<h:link value="#{group.key} (#{group.value})" outcome="search" styleClass="#{searchBean.filterGroup == group.key ? 'active' : null}">
+											<f:param name="action" value="#{searchBean.searchMode}" />
+											<f:param name="filter" value="#{searchBean.generateFiltersLink('group', group.key)}" />
 											<f:param name="query" value="#{searchBean.query}" />
 										</h:link>
 									</ui:repeat>
