@@ -155,6 +155,10 @@
 	margin-left: 5px;
 }
 
+.result-count { color:grey; }
+.result-count::before { content: " ("; } 
+.result-count::after { content: ")"; }
+
 /* ----------------------- List view ------------------------*/
 
 .list_view#results {
@@ -179,7 +183,7 @@
 	background: rgba(204, 204, 204, 0.03);
 }
 
-.list_view a {  text-decoration: none; }
+.list_view a {  text-decoration: none; color:#1020D0}
 .list_view a:hover { text-decoration: underline;}
 
 .list_view .add_resource_link a:link, 
@@ -189,9 +193,9 @@
 .list_view .add_resource_link img { vertical-align: top; margin-right:3px; }
 
 .list_view a.resourceWebLink:link, 
-.list_view a.resourceWebLink { color:rgb(88, 147, 236); font-size: 1.6rem; font-family: "Segoe UI",Arial,Helvetica,sans-serif; }
+.list_view a.resourceWebLink { font-size: 1.6rem; font-family: "Segoe UI",Arial,Helvetica,sans-serif; }
 .list_view a.resourceWebLink:visited { color:rgb(60, 110, 200); }
-
+/* color:rgb(88, 147, 236); */
 .page_counter {
 	font-weight:bold;
 	margin:5px 0 -10px 15px;

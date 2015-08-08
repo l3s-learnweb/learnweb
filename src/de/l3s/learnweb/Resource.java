@@ -144,8 +144,8 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
 	    // TODO find a better solution; don't set a fixed error image
 	    Thumbnail restrictedImage = new Thumbnail("../resources/resources/img/RestrictedAccess.jpg", 300, 214);
-	    setThumbnail0(restrictedImage);
-	    setThumbnail1(restrictedImage);
+	    setThumbnail0(restrictedImage.resize(150, 120));
+	    setThumbnail1(restrictedImage.resize(150, 150));
 	    setThumbnail2(restrictedImage);
 	    setThumbnail3(restrictedImage);
 	    setThumbnail4(restrictedImage);
@@ -156,8 +156,8 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
 	    // TODO find a better solution; don't set a fixed error image
 	    Thumbnail pageNotFoundImage = new Thumbnail("../resources/resources/img/page_not_found.jpg", 300, 300);
-	    setThumbnail0(pageNotFoundImage);
-	    setThumbnail1(pageNotFoundImage);
+	    setThumbnail0(null);
+	    setThumbnail1(pageNotFoundImage.resize(150, 150));
 	    setThumbnail2(pageNotFoundImage);
 	    setThumbnail3(pageNotFoundImage);
 	    setThumbnail4(pageNotFoundImage);

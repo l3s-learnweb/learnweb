@@ -261,8 +261,7 @@
 					            		</span>
 	
 										<h:graphicImage styleClass="resource_thumbnail" 
-											width="150" 
-											height="150" 
+											width="#{result.thumbnail1.width}" height="#{result.thumbnail1.height}" 
 											value="#{result.thumbnail1.url}" 
 											rendered="#{not empty result.thumbnail1}" 
 											alt="#{result.title}" />
@@ -317,8 +316,7 @@
 												title="#{msg.move_to}" 
 												rendered="#{userBean.isModerator() and false}" >
 												<h:graphicImage value="/resources/icon/silk/delete.png" 
-													width="16" 
-													height="16" 
+													width="16" height="16" 
 													title="#{msg.move_to}" 
 													style="padding: 3px;"/> 
 												<f:setPropertyActionListener value="#{result.resource}" target="#{searchBean.selectedResource}" />

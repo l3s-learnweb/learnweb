@@ -6,28 +6,25 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.event.ComponentSystemEvent;
 
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.ForumTopic;
 import de.l3s.learnweb.Group;
-import de.l3s.learnweb.Learnweb;
 
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class ForumTopicsBean extends ApplicationBean implements Serializable
 {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 8303246537720508084L;
 
     private final static Logger log = Logger.getLogger(ForumTopicsBean.class);
 
     private int groupId;
-
-    private String topic;
-
     private Group group;
+    private List<ForumTopic> topics;
 
     public ForumTopicsBean()
     {
@@ -58,30 +55,34 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
 	group = getLearnweb().getGroupManager().getGroupById(groupId);
 
 	if(null == group)
+	{
 	    addMessage(FacesMessage.SEVERITY_ERROR, "invalid or no group id");
+	    return;
+	}
 
+	topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);
     }
 
+    /*
     public void saveForumTopic() throws SQLException
     {
-	try
-	{
-	    ForumTopic forumTopic = new ForumTopic();
-	    forumTopic.setTitle(topic);
-	    forumTopic.setGroupId(groupId);
-	    Learnweb.getInstance().getForumManager().save(forumTopic);
-	    this.topic = "";
-	}
-	catch(SQLException e)
-	{
-	    addFatalMessage(e);
-	}
+    try
+    {
+        ForumTopic forumTopic = new ForumTopic();
+        forumTopic.setTitle(topic);
+        forumTopic.setGroupId(groupId);
+        Learnweb.getInstance().getForumManager().save(forumTopic);
+        this.topic = "";
     }
+    catch(SQLException e)
+    {
+        addFatalMessage(e);
+    }
+    }
+    */
 
     public List<ForumTopic> getTopics() throws SQLException
     {
-	List<ForumTopic> topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);
-
 	return topics;
     }
 

@@ -6,7 +6,7 @@
 	
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
+			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}"  />
 			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{forumTopicsBean.preRenderView}" /> 
 		</f:metadata>
 	</ui:define>	
@@ -64,30 +64,35 @@
 		
 		<h:form style="margin-top:1rem;">
 			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" style="width:99.7%;"
-				paginator="true" lazy="true" paginatorPosition="bottom"
-			    paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-			    rowsPerPageTemplate="5,10,15">
+				paginator="true" lazy="false" paginatorPosition="bottom"
+			    paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 			      
-			 	<p:column headerText="#{msg.topic}" style="width:55%;height:25px">
-			    	<a href="./group/forum_post.jsf?id=#{topic.id}">
+			 	<p:column headerText="#{msg.topic}" style="width:55%;height:25px" sortBy="#{topic.title}">
+			    	<a href="./group/forum_post.jsf?topic_id=#{topic.id}">
 			    		<h:outputText value="#{topic.title}" style="font-weight:bold;color:#489a83;"/>
 			    	</a>
 			    </p:column>
-			    <p:column headerText="#{msg.author}" styleClass="align-center">
+			    <p:column headerText="#{msg.author}" styleClass="align-center" sortBy="#{topic.user.username}">
 			       	<a href="./user/detail.jsf?user_id=#{topic.userId}">
 			        	<h:outputText value="#{topic.user.username}" style="font-weight:bold;color:#489a83;"/>
 			        </a>
 			    </p:column>
-			    <p:column headerText="#{msg.replies}" style="width:5%" styleClass="align-center">
+			    <p:column headerText="#{msg.replies}" style="width:5%" styleClass="align-center" sortBy="#{topic.replies}">
 			        <h:outputText value="#{topic.replies}"/>
 			    </p:column>
-			    <p:column headerText="#{msg.views}" style="width:5%" styleClass="align-center">
+			    <p:column headerText="#{msg.views}" style="width:5%" styleClass="align-center" sortBy="#{topic.views}">
 			       	<h:outputText value="#{topic.views}"/>
 			    </p:column>
-			    <p:column headerText="#{msg.last_message}" style="width:12%" styleClass="align-center">
+			    <p:column headerText="#{msg.last_message}" style="width:12%" styleClass="align-center" sortBy="#{topic.lastPostDate}">
 			       	<h:outputText value="#{topic.lastPostDate}">
-			        	<f:convertDateTime type="both" timeStyle="short" dateStyle="short" timeZone="#{userBean.timeZone}"/>
+			        	<f:convertDateTime type="both" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
 			        </h:outputText>
+			        <br/>
+			        <h:outputText value="by" />
+			        <a href="./user/detail.jsf?user_id=#{topic.userId}"> <!-- TODO replace with real user -->
+			        	<h:outputText value="#{topic.user.username}" style="font-weight:bold;color:#489a83;"/>
+			        </a>
+			        
 			    </p:column>
 			    
 			</p:dataTable>
@@ -122,9 +127,9 @@
 					width="600" 
 					controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering alignleft center alignright justify undo redo rule image link unlink"/>
 					 
-				 <h:panelGrid columns="2" style="margin-top: 10px">
-					<h:commandButton value="#{msg.save}" update="display" oncomplete="PF('dlg').show()" styleClass="greenbutton"/>
-				</h:panelGrid>
+				
+				<h:commandButton value="#{msg.save}"  styleClass="greenbutton"/>
+			
 					 
 				<p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade">
 					<h:outputText id="display" value="#{editorView.text}" escape="false" />

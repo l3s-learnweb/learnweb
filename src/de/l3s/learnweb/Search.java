@@ -18,6 +18,7 @@ import java.util.TreeSet;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.response.FacetField.Count;
 
 import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.interwebj.InterWeb;
@@ -291,7 +292,7 @@ public class Search implements Serializable
     // all resources
     private LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
     private Map<String, Long> resultsCountPerService = new HashMap<String, Long>();
-    private Map<String, Long> resultsCountPerGroup = new HashMap<String, Long>();
+    private List<Count> resultsCountPerGroup;
 
     // resources grouped by pages
     private int temporaryId = 1;
@@ -396,7 +397,8 @@ public class Search implements Serializable
 	if(stopped)
 	    return null;
 
-	resultsCountPerGroup.putAll(solrSearch.getResultCountPerGroup());
+	//resultsCountPerGroup.putAll(solrSearch.getResultCountPerGroup());  
+	resultsCountPerGroup = solrSearch.getResultCountPerGroup();
 
 	if(page == 1)
 	    resultsCountPerService.putAll(solrSearch.getResultCountPerService());
@@ -771,7 +773,7 @@ public class Search implements Serializable
 	return resultsCountPerService;
     }
 
-    public Map<String, Long> getResultsCountPerGroup()
+    public List<Count> getResultsCountPerGroup()
     {
 	return resultsCountPerGroup;
     }

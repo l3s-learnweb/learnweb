@@ -45,11 +45,12 @@ public class SolrSearch implements Serializable
 
     protected long totalResults = -1;
     private Map<String, Long> serviceSet = new HashMap<String, Long>(); // service name, number of results at this service
-    private Map<String, Long> groupSet = new HashMap<String, Long>(); // group name, number of results at this group
+    private Map<Group, Long> groupSet = new HashMap<Group, Long>(); // group name, number of results at this group
 
     private String filterGroupStr = "";
     private int userId;
     private boolean skipResourcesWithoutThumbnails = true;
+    private List<Count> groupCount;
 
     public SolrSearch(String query, User user)
     {
@@ -186,9 +187,15 @@ public class SolrSearch implements Serializable
 	return serviceSet;
     }
 
-    public Map<String, Long> getResultCountPerGroup()
+    /*
+    public Map<Group, Long> getResultCountPerGroup()
     {
-	return groupSet;
+    return groupSet;
+    }
+    */
+    public List<Count> getResultCountPerGroup()
+    {
+	return groupCount;
     }
 
     public void setSkipResourcesWithoutThumbnails(boolean skipResourcesWithoutThumbnails)
@@ -258,7 +265,11 @@ public class SolrSearch implements Serializable
 
 	solrQuery.set("facet", "true");
 	solrQuery.addFacetField("location", "groups");
-	//log.debug(solrQuery);
+	solrQuery.setFacetLimit(20); // TODO set to -1 to show all facets (implement "more" button on frontend)
+	solrQuery.setFacetSort("count");
+	solrQuery.setFacetMinCount(1);
+
+	log.debug(solrQuery);
 
 	//get solrServer
 	SolrServer server = Learnweb.getInstance().getSolrClient().getSolrServer();
@@ -291,10 +302,15 @@ public class SolrSearch implements Serializable
 		serviceSet.put(f.getName(), f.getCount());
 	    }
 
+	    groupCount = response.getFacetFields().get(1).getValues();
+	    /*
+	    GroupManager groupManager = Learnweb.getInstance().getGroupManager();
+
 	    for(Count f : response.getFacetFields().get(1).getValues())
 	    {
-		groupSet.put(f.getName(), f.getCount());
-	    }
+	    int groupId = Integer.parseInt(f.getName());
+	    groupSet.put(groupManager.getGroupById(groupId), f.getCount());
+	    }*/
 	}
 
 	// SolrDocumentList docs = response.getResults(); // to get the score

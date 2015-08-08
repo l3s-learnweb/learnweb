@@ -17,8 +17,10 @@ public class ForumTopic implements Serializable
     private int replies;
     private int lastPostId;
     private Date lastPostDate;
+    private int lastPostUserId;
 
     private transient User user;
+    private transient User lastPostUser;
 
     public int getUserId()
     {
@@ -37,6 +39,25 @@ public class ForumTopic implements Serializable
 	    user = Learnweb.getInstance().getUserManager().getUser(userId);
 	}
 	return user;
+    }
+
+    public User getLastPostUser() throws SQLException
+    {
+	if(lastPostUser == null)
+	{
+	    lastPostUser = Learnweb.getInstance().getUserManager().getUser(lastPostUserId);
+	}
+	return lastPostUser;
+    }
+
+    public int getLastPostUserId()
+    {
+	return lastPostUserId;
+    }
+
+    public void setLastPostUserId(int lastPostUserId)
+    {
+	this.lastPostUserId = lastPostUserId;
     }
 
     public int getGroupId()

@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.TreeMap;
 
 import javax.faces.application.FacesMessage;
@@ -26,11 +25,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.response.FacetField.Count;
 
 import com.sun.jersey.api.client.ClientHandlerException;
 
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.FactSheet;
+import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
@@ -892,19 +893,34 @@ public class SearchBean extends ApplicationBean implements Serializable
 	return Arrays.asList(DURATION.values());
     }
 
+    /*
     public Object[] getAvailiableGroups()
     {
-	Map<String, Long> a = new TreeMap<String, Long>();
+    Map<String, Long> a = new TreeMap<String, Long>();
 
-	for(Entry<String, Long> b : search.getResultsCountPerGroup().entrySet())
-	{
-	    if(b.getValue() != 0)
-	    {
-		a.put(b.getKey(), b.getValue());
-	    }
-	}
+    for(Entry<String, Long> b : search.getResultsCountPerGroup().entrySet())
+    {
+        if(b.getValue() != 0)
+        {
+    	a.put(b.getKey(), b.getValue());
+        }
+    }
 
-	return a.entrySet().toArray();
+    return a.entrySet().toArray();
+    }*/
+
+    public List<Count> getAvailiableGroups()
+    {
+	return search.getResultsCountPerGroup();
+    }
+
+    public String getGroupNameById(String id) throws NumberFormatException, SQLException
+    {
+	Group group = getLearnweb().getGroupManager().getGroupById(Integer.parseInt(id));
+	if(null == group)
+	    return "deleted";
+	return group.getTitle();
+
     }
 
     public String generateFiltersLink(String param, String value)

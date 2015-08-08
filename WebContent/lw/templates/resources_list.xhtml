@@ -20,6 +20,13 @@
 				<table style="border-spacing:0px;padding-right: 0px;    padding-left: 0px;">
 				<tr>
 					<td>
+						<h:graphicImage styleClass="resource_thumbnail" 
+							width="#{res.thumbnail0.width}" height="#{res.thumbnail0.height}" 
+							value="#{res.thumbnail0.url}" 
+							rendered="#{not empty res.thumbnail0} and false" 
+							alt="#{res.title}" />
+					</td>
+					<td>
 				<div style="display:inline; vertical-align:top;">
 				<h:outputLink  value="#{res.learnwebUrl}" title="" style="color:green;">#{res.learnwebUrl}</h:outputLink><br/>
 				

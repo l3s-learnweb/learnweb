@@ -6,7 +6,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.event.ComponentSystemEvent;
 
 import org.apache.log4j.Logger;
@@ -14,10 +14,10 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.ForumPost;
 
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class ForumPostBean extends ApplicationBean implements Serializable
 {
-    private static final long serialVersionUID = 1L;
+    private static final long serialVersionUID = 6077135964610986190L;
 
     private final static Logger log = Logger.getLogger(ForumPostBean.class);
 
@@ -38,7 +38,6 @@ public class ForumPostBean extends ApplicationBean implements Serializable
 	    return;
 	}
 	posts = getLearnweb().getForumManager().getPostsBy(topicId);
-
     }
 
     public int getTopicId()

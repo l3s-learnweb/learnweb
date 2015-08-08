@@ -58,9 +58,7 @@
 												<f:param name="group_id" value="#{group.id}" />
 												<h:outputText value="#{group.title}" />
 											
-											(<h:outputText value="#{group.resources.getElementTimestamp(resourceBean.resource)}">
-													<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
-												</h:outputText>)<br />
+										
 											</h:outputLink>
 										</ui:repeat></td>
 								</tr>

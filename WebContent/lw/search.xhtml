@@ -48,7 +48,7 @@
 				</h:link>
 			</h:form>		
 	
-			<h:panelGroup rendered="#{userBean.searchHistoryEnabled and false}">		
+			<h:panelGroup rendered="#{userBean.searchHistoryEnabled}">		
 
 				<h:form styleClass="resourcestype">
 				<span class="float-right" style="padding-right:5px; margin-top:-2.1rem;">
@@ -69,130 +69,132 @@
 					</p:submenu>
 				</p:menu>
 				</h:form>
-			</h:panelGroup>
+			</h:panelGroup>			
+		</div>	
 			
+		<style type="text/css">
+			#content { padding-top: 11rem; }
+		</style>	
+		<div id="filters_menu_bar">
+			<h:panelGroup styleClass="search-filters #{searchBean.searchMode}" layout="block">
+				<ul>
+					<ui:fragment rendered="#{searchBean.isFilterAvailable('service')}">
+						<li class="filter source#{searchBean.filterService != null ? ' active' : null}">
+							<span class="filter-name">#{searchBean.filterService != null ? searchBean.currentService : msg.source} 
+								<span class="arrow"></span>
+							</span>
+							<h:panelGroup id="filter-service" styleClass="filter-sub-bar" layout="block">
+								<h:link value="#{msg.any_service}" outcome="search" styleClass="#{searchBean.filterService == null ? 'active' : null}">
+									<f:param name="action" value="#{searchBean.searchMode}" />
+									<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'all')}" />
+									<f:param name="query" value="#{searchBean.query}" />
+								</h:link>
+								<ui:repeat value="#{searchBean.availiableServices}" var="service">
+									<h:link value="#{service.customName} #{searchBean.getTotalResultsFrom(service) != null ? searchBean.getTotalResultsFrom(service) : null}" outcome="search" styleClass="#{searchBean.filterService == service ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', service)}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+								</ui:repeat>
+							</h:panelGroup>
+						</li>
+					</ui:fragment>
+					<ui:fragment rendered="#{searchBean.isFilterAvailable('date')}">
+						<li class="filter date#{searchBean.filterDate != null ? ' active' : null}">
+							<span class="filter-name">#{searchBean.filterDate != null ? searchBean.currentDate : msg.date} 
+								<span class="arrow"></span>
+							</span>
+							<h:panelGroup id="filter-date" styleClass="filter-sub-bar" layout="block">
+								<h:link value="#{msg.any_time}" outcome="search" styleClass="#{searchBean.filterDate == null ? 'active' : null}">
+									<f:param name="action" value="#{searchBean.searchMode}" />
+									<f:param name="filter" value="#{searchBean.generateFiltersLink('date', 'all')}" />
+									<f:param name="query" value="#{searchBean.query}" />
+								</h:link>
+								<ui:repeat value="#{searchBean.availiableDates}" var="date">
+									<h:link value="#{date.customName}" outcome="search" styleClass="#{searchBean.filterDate == date ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('date', date)}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+								</ui:repeat>
+							</h:panelGroup>
+						</li>
+					</ui:fragment>
+					<ui:fragment rendered="#{searchBean.isFilterAvailable('size')}">
+						<li class="filter size#{searchBean.filterSize != null ? ' active' : null}">
+							<span class="filter-name">#{searchBean.filterSize != null ? searchBean.currentSize : msg.size} 
+								<span class="arrow"></span>
+							</span>
+							<h:panelGroup id="filter-size" styleClass="filter-sub-bar" layout="block">
+								<h:link value="#{msg.any_size}" outcome="search" styleClass="#{searchBean.filterSize == null ? 'active' : null}">
+									<f:param name="action" value="#{searchBean.searchMode}" />
+									<f:param name="filter" value="#{searchBean.generateFiltersLink('size', 'all')}" />
+									<f:param name="query" value="#{searchBean.query}" />
+								</h:link>
+								<ui:repeat value="#{searchBean.availiableSizes}" var="size">
+									<h:link value="#{size.customName}" outcome="search" styleClass="#{searchBean.filterSize == size ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('size', size)}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+								</ui:repeat>
+							</h:panelGroup>
+						</li>
+					</ui:fragment>
+					<ui:fragment rendered="#{searchBean.isFilterAvailable('duration') and userBean.moderator}">
+						<li class="filter duration#{searchBean.filterDuration != null ? ' active' : null}">
+							<span class="filter-name">#{searchBean.filterDuration != null ? searchBean.currentDuration : msg.duration} 
+								<span class="arrow"></span>
+							</span>
+							<h:panelGroup id="filter-duration" styleClass="filter-sub-bar" layout="block">
+								<h:link value="#{msg.any_duration}" outcome="search" styleClass="#{searchBean.filterDuration == null ? 'active' : null}">
+									<f:param name="action" value="#{searchBean.searchMode}" />
+									<f:param name="filter" value="#{searchBean.generateFiltersLink('duration', 'all')}" />
+									<f:param name="query" value="#{searchBean.query}" />
+								</h:link>
+								<ui:repeat value="#{searchBean.availiableDurations}" var="duration">
+									<h:link value="#{duration.customName}" outcome="search" styleClass="#{searchBean.filterDuration == duration ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('duration', duration)}" />
+										<f:param name="query" value="#{searchBean.query}" />
+									</h:link>
+								</ui:repeat>
+							</h:panelGroup>
+						</li>
+					</ui:fragment>
+					<ui:fragment rendered="#{searchBean.isFilterAvailable('group') and userBean.moderator}">
+						<li class="filter group#{searchBean.filterGroup != null ? ' active' : null}">
+							<span class="filter-name">#{searchBean.filterGroup != null ? searchBean.getGroupNameById(searchBean.currentGroup) : msg.group} 
+								<span class="arrow"></span>
+							</span>
+							<h:panelGroup id="filter-group" styleClass="filter-sub-bar" layout="block">
+								<h:link value="#{msg.any_group}" outcome="search" styleClass="#{searchBean.filterGroup == null ? 'active' : null}">
+									<f:param name="action" value="#{searchBean.searchMode}" />
+									<f:param name="filter" value="#{searchBean.generateFiltersLink('group', 'all')}" />
+									<f:param name="query" value="#{searchBean.query}" />
+								</h:link>
+								<ui:repeat value="#{searchBean.availiableGroups}" var="group">
+									<h:link outcome="search" styleClass="#{searchBean.filterGroup == group.name ? 'active' : null}">
+										<f:param name="action" value="#{searchBean.searchMode}" />
+										<f:param name="filter" value="#{searchBean.generateFiltersLink('group', group.name)}" />
+										<f:param name="query" value="#{searchBean.query}" />
+										
+										<h:outputText value="#{searchBean.getGroupNameById(group.name)}" />
+										<h:outputText value="#{group.count}" class="result-count" />
+										
+									</h:link>
+								</ui:repeat>
+							</h:panelGroup>
+						</li>
+					</ui:fragment>
+				</ul>
+				<h:link value="#{msg.clear_filters}" outcome="search" rendered="#{searchBean.searchFilters != null}" styleClass="clear-filter">
+					<f:param name="action" value="#{searchBean.searchMode}" />
+					<f:param name="query" value="#{searchBean.query}" />
+				</h:link>
+			</h:panelGroup>	
 		</div>
-		<ui:fragment rendered="#{userBean.moderator}">
-			
-			<style type="text/css">
-				#content { padding-top: 11rem; }
-			</style>	
-			<div id="filters_menu_bar">
-				<h:panelGroup styleClass="search-filters #{searchBean.searchMode}" layout="block">
-					<ul>
-						<ui:fragment rendered="#{searchBean.isFilterAvailable('service')}">
-							<li class="filter source#{searchBean.filterService != null ? ' active' : null}">
-								<span class="filter-name">#{searchBean.filterService != null ? searchBean.currentService : msg.source} 
-									<span class="arrow"></span>
-								</span>
-								<h:panelGroup id="filter-service" styleClass="filter-sub-bar" layout="block">
-									<h:link value="#{msg.any_service}" outcome="search" styleClass="#{searchBean.filterService == null ? 'active' : null}">
-										<f:param name="action" value="#{searchBean.searchMode}" />
-										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', 'all')}" />
-										<f:param name="query" value="#{searchBean.query}" />
-									</h:link>
-									<ui:repeat value="#{searchBean.availiableServices}" var="service">
-										<h:link value="#{service.customName} #{searchBean.getTotalResultsFrom(service) != null ? searchBean.getTotalResultsFrom(service) : null}" outcome="search" styleClass="#{searchBean.filterService == service ? 'active' : null}">
-											<f:param name="action" value="#{searchBean.searchMode}" />
-											<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', service)}" />
-											<f:param name="query" value="#{searchBean.query}" />
-										</h:link>
-									</ui:repeat>
-								</h:panelGroup>
-							</li>
-						</ui:fragment>
-						<ui:fragment rendered="#{searchBean.isFilterAvailable('date')}">
-							<li class="filter date#{searchBean.filterDate != null ? ' active' : null}">
-								<span class="filter-name">#{searchBean.filterDate != null ? searchBean.currentDate : msg.date} 
-									<span class="arrow"></span>
-								</span>
-								<h:panelGroup id="filter-date" styleClass="filter-sub-bar" layout="block">
-									<h:link value="#{msg.any_time}" outcome="search" styleClass="#{searchBean.filterDate == null ? 'active' : null}">
-										<f:param name="action" value="#{searchBean.searchMode}" />
-										<f:param name="filter" value="#{searchBean.generateFiltersLink('date', 'all')}" />
-										<f:param name="query" value="#{searchBean.query}" />
-									</h:link>
-									<ui:repeat value="#{searchBean.availiableDates}" var="date">
-										<h:link value="#{date.customName}" outcome="search" styleClass="#{searchBean.filterDate == date ? 'active' : null}">
-											<f:param name="action" value="#{searchBean.searchMode}" />
-											<f:param name="filter" value="#{searchBean.generateFiltersLink('date', date)}" />
-											<f:param name="query" value="#{searchBean.query}" />
-										</h:link>
-									</ui:repeat>
-								</h:panelGroup>
-							</li>
-						</ui:fragment>
-						<ui:fragment rendered="#{searchBean.isFilterAvailable('size')}">
-							<li class="filter size#{searchBean.filterSize != null ? ' active' : null}">
-								<span class="filter-name">#{searchBean.filterSize != null ? searchBean.currentSize : msg.size} 
-									<span class="arrow"></span>
-								</span>
-								<h:panelGroup id="filter-size" styleClass="filter-sub-bar" layout="block">
-									<h:link value="#{msg.any_size}" outcome="search" styleClass="#{searchBean.filterSize == null ? 'active' : null}">
-										<f:param name="action" value="#{searchBean.searchMode}" />
-										<f:param name="filter" value="#{searchBean.generateFiltersLink('size', 'all')}" />
-										<f:param name="query" value="#{searchBean.query}" />
-									</h:link>
-									<ui:repeat value="#{searchBean.availiableSizes}" var="size">
-										<h:link value="#{size.customName}" outcome="search" styleClass="#{searchBean.filterSize == size ? 'active' : null}">
-											<f:param name="action" value="#{searchBean.searchMode}" />
-											<f:param name="filter" value="#{searchBean.generateFiltersLink('size', size)}" />
-											<f:param name="query" value="#{searchBean.query}" />
-										</h:link>
-									</ui:repeat>
-								</h:panelGroup>
-							</li>
-						</ui:fragment>
-						<ui:fragment rendered="#{searchBean.isFilterAvailable('duration')}">
-							<li class="filter duration#{searchBean.filterDuration != null ? ' active' : null}">
-								<span class="filter-name">#{searchBean.filterDuration != null ? searchBean.currentDuration : msg.duration} 
-									<span class="arrow"></span>
-								</span>
-								<h:panelGroup id="filter-duration" styleClass="filter-sub-bar" layout="block">
-									<h:link value="#{msg.any_duration}" outcome="search" styleClass="#{searchBean.filterDuration == null ? 'active' : null}">
-										<f:param name="action" value="#{searchBean.searchMode}" />
-										<f:param name="filter" value="#{searchBean.generateFiltersLink('duration', 'all')}" />
-										<f:param name="query" value="#{searchBean.query}" />
-									</h:link>
-									<ui:repeat value="#{searchBean.availiableDurations}" var="duration">
-										<h:link value="#{duration.customName}" outcome="search" styleClass="#{searchBean.filterDuration == duration ? 'active' : null}">
-											<f:param name="action" value="#{searchBean.searchMode}" />
-											<f:param name="filter" value="#{searchBean.generateFiltersLink('duration', duration)}" />
-											<f:param name="query" value="#{searchBean.query}" />
-										</h:link>
-									</ui:repeat>
-								</h:panelGroup>
-							</li>
-						</ui:fragment>
-						<ui:fragment rendered="#{searchBean.isFilterAvailable('group')}">
-							<li class="filter group#{searchBean.filterGroup != null ? ' active' : null}">
-								<span class="filter-name">#{searchBean.filterGroup != null ? searchBean.currentGroup : msg.group} 
-									<span class="arrow"></span>
-								</span>
-								<h:panelGroup id="filter-group" styleClass="filter-sub-bar" layout="block">
-									<h:link value="#{msg.any_group}" outcome="search" styleClass="#{searchBean.filterGroup == null ? 'active' : null}">
-										<f:param name="action" value="#{searchBean.searchMode}" />
-										<f:param name="filter" value="#{searchBean.generateFiltersLink('group', 'all')}" />
-										<f:param name="query" value="#{searchBean.query}" />
-									</h:link>
-									<ui:repeat value="#{searchBean.availiableGroups}" var="group">
-										<h:link value="#{group.key} (#{group.value})" outcome="search" styleClass="#{searchBean.filterGroup == group.key ? 'active' : null}">
-											<f:param name="action" value="#{searchBean.searchMode}" />
-											<f:param name="filter" value="#{searchBean.generateFiltersLink('group', group.key)}" />
-											<f:param name="query" value="#{searchBean.query}" />
-										</h:link>
-									</ui:repeat>
-								</h:panelGroup>
-							</li>
-						</ui:fragment>
-					</ul>
-					<h:link value="#{msg.clear_filters}" outcome="search" rendered="#{searchBean.searchFilters != null}" styleClass="clear-filter">
-						<f:param name="action" value="#{searchBean.searchMode}" />
-						<f:param name="query" value="#{searchBean.query}" />
-					</h:link>
-				</h:panelGroup>	
-			</div>
-		</ui:fragment>
+
 	</ui:define>
 				
 	<ui:define name="center_layout">

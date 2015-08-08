@@ -1,10 +1,13 @@
 package de.l3s.learnweb;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
 
-public class ForumPost
+public class ForumPost implements Serializable
 {
+    private static final long serialVersionUID = 4093915855537221830L;
+
     private int id = -1;
     private int userId;
     private int topicId;
