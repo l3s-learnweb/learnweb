@@ -16,25 +16,42 @@
 	<ui:define name="center_layout">
 	  
 		<h:form>
+			
+			<h:outputText value="#{msg.forum_posts}" style="font-weight:bold;color:#489a83;font-size:2rem"/>
+			
 		    <p:dataTable var="post" value="#{forumPostBean.posts}" rows="20"
 		                         paginator="true" lazy="true" paginatorPosition="bottom"
 		                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 		                         rowsPerPageTemplate="5,10,15"
-		                         style="width:99.7%">
+		                         style="width:99.7%;margin-top:2rem;">
 		      
-		        <p:column headerText="#{msg.forum_topics}" style="width:55%">
-		            <h:outputText value="#{post.date}" />
-		        </p:column>
-		        <p:column headerText="#{msg.author}" styleClass="align-center">
-		        	<a href="./user/detail.jsf?user_id=#{post.userId}">
-		        		<h:outputText value="#{post.user}" style="color:#3399ff"/>
+		      	<p:column headerText="#{msg.author}" styleClass="align-center" style="width:13%">
+		        	<a href="./user/detail.jsf?user_id=#{post.userId}" >
+		        		<h:outputText value="#{post.user.username}" style="font-weight:bold;color:#489a83;"/>
 		        	</a>
+		        	<br style="margin-bottom:0.5rem;"/>
+		        	<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(user)}" id="profile_image" alt="profile image"/>
+		        	<div style="margin-bottom:1rem;" class="align-left">
+			        	<h:outputText value="#{msg.registered_since}: "/>
+							<h:outputText value="#{post.user.registrationDate}">
+								<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
+							</h:outputText>
+			        	<br/>
+			        	<h:outputText value="Beitraege: 5" />
+		        	</div>
 		        </p:column>
-		        <p:column headerText="#{msg.views}" style="width:5%" styleClass="align-center">
-		        	<h:outputText value="#{post.text}" escape="false"/>
+		        
+		        <p:column headerText="Beitrag">
+		        	<div style="margin-top:-7rem; height:2.5rem; line-height:2.5rem;">
+			        	posted on 
+			        	<h:outputText value="#{post.date}">
+				        	<f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+				        </h:outputText>
+		        	</div>
+		        	<hr style="margin:1rem 0;color:#eee"/>
+		            <h:outputText value="#{post.text}" escape="false"/>
 		        </p:column>
-		   
-		    
+		        
 		    </p:dataTable>
 		</h:form>
 	</ui:define>
