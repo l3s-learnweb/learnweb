@@ -65,7 +65,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     private Search search;
     private Map<String, Long> searchServiceCounters = new TreeMap<String, Long>(String.CASE_INSENSITIVE_ORDER);
-    private Map<String, Long> searchGroupCounters = new TreeMap<String, Long>(String.CASE_INSENSITIVE_ORDER);
+    private List<Count> searchGroupCounters = new ArrayList<Count>();
 
     // Filters for search
     private String searchFilters;
@@ -228,6 +228,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 		setFilterService(null);
 		setFilterSize(null);
 		setFilterDuration(null);
+		setFilterGroup(null);
 
 		for(String filter : tempFilters)
 		{
@@ -893,25 +894,14 @@ public class SearchBean extends ApplicationBean implements Serializable
 	return Arrays.asList(DURATION.values());
     }
 
-    /*
-    public Object[] getAvailiableGroups()
-    {
-    Map<String, Long> a = new TreeMap<String, Long>();
-
-    for(Entry<String, Long> b : search.getResultsCountPerGroup().entrySet())
-    {
-        if(b.getValue() != 0)
-        {
-    	a.put(b.getKey(), b.getValue());
-        }
-    }
-
-    return a.entrySet().toArray();
-    }*/
-
     public List<Count> getAvailiableGroups()
     {
-	return search.getResultsCountPerGroup();
+	if(filterGroup == null || filterGroup.isEmpty())
+	{
+	    searchGroupCounters = search.getResultsCountPerGroup();
+	}
+
+	return searchGroupCounters;
     }
 
     public String getGroupNameById(String id) throws NumberFormatException, SQLException
