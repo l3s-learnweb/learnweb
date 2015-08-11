@@ -747,6 +747,7 @@ span.ui-autocomplete{border:1px solid transparent !important;}
 	background-image:none !important;
 	background-color:#d1d1d1 !important;
 	box-shadow:none !important;
+	border:1px solid #a8a8a8 !important;
 }
 .ui-panelmenu-header{
 	border-radius:0px;

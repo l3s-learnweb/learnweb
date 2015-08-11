@@ -11,19 +11,57 @@
 	</ui:define>
 	
 	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="forum" escape="false" />
+	<ui:param name="pageTitle" value="#{msg.forum}" escape="false" />
 
 	<ui:define name="center_layout">
-	  
+	
+	<style type="text/css">
+		table td:last-child{vertical-align: top;}
+	</style>
+		
+		<div class="center-header" id="group_header">
+			<span>
+				#{msg.forum_posts}
+			</span> 
+			#{msg.of} Beitragtitle/Betreff
+				
+			<ul>								
+				<li>
+					<a href="./group/overview.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.overview}" />
+					</a>
+				</li>								
+				<li>
+					<a href="./group/resources.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.resources}" />
+					</a>
+				</li>								
+				<li>
+					<a href="./group/members.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.members}" />
+					</a>
+				</li>								
+				<li>
+					<a href="./group/presentations.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.presentations}" />
+					</a>
+				</li>								
+				<li>
+					<a class="" href="./group/links.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.links}" />
+					</a>
+				</li>								
+				<li>
+					<a class="active" href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.forum}" />
+					</a>
+				</li>
+			</ul>
+		</div>  	
+		
 		<h:form>
-			
-			<h:outputText value="#{msg.forum_posts}" style="font-weight:bold;color:#489a83;font-size:2rem"/>
-			
-		    <p:dataTable var="post" value="#{forumPostBean.posts}" rows="20"
-		                         paginator="true" lazy="true" paginatorPosition="bottom"
-		                         paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-		                         rowsPerPageTemplate="5,10,15"
-		                         style="width:99.7%;margin-top:2rem;">
+		    <p:dataTable var="post" value="#{forumPostBean.posts}" rows="20" paginator="true" lazy="false" paginatorPosition="bottom"
+		    	paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" style="width:99.7%;margin-top:2rem;">
 		      
 		      	<p:column headerText="#{msg.author}" styleClass="align-center" style="width:13%">
 		        	<a href="./user/detail.jsf?user_id=#{post.userId}" >
@@ -41,14 +79,17 @@
 		        	</div>
 		        </p:column>
 		        
-		        <p:column headerText="Beitrag">
-		        	<div style="margin-top:-7rem; height:2.5rem; line-height:2.5rem;">
-			        	posted on 
-			        	<h:outputText value="#{post.date}">
-				        	<f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
-				        </h:outputText>
-		        	</div>
-		        	<hr style="margin:1rem 0;color:#eee"/>
+		        <p:column headerText="Contribution">
+		        	<div style="border-bottom:1px solid #a8a8a8; margin:1rem 0; padding-bottom:1rem">
+				       	posted on 
+				        <h:outputText value="#{post.date}">
+					        <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+					    </h:outputText>
+					    <span>
+					    	<h:commandButton value="quote" styleClass="greenbutton float-right" style="margin-top:-1.1rem"/>
+					    </span>
+				    </div>
+				   
 		            <h:outputText value="#{post.text}" escape="false"/>
 		        </p:column>
 		        
