@@ -64,34 +64,34 @@
 			</ul>
 		</div>  	
 		
-		<h:form>
-			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" 
+		<h:form prependId="false">
+			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table"
 				paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 			      
-			 	<p:column headerText="#{msg.topic}" style="width:58%;height:25px" sortBy="#{topic.title}">
+			 	<p:column headerText="#{msg.topic}" sortBy="#{topic.title}">
 			    	<a href="./group/forum_post.jsf?topic_id=#{topic.id}">
-			    		<h:outputText value="#{topic.title}" style="font-weight:bold;color:#489a83;"/>
+			    		<h:outputText value="#{topic.title}"/>
 			    	</a>
 			    </p:column>
 			    <p:column headerText="#{msg.author}" styleClass="align-center" sortBy="#{topic.user.username}">
 			       	<a href="./user/detail.jsf?user_id=#{topic.userId}">
-			        	<h:outputText value="#{topic.user.username}" style="font-weight:bold;color:#489a83;"/>
+			        	<h:outputText value="#{topic.user.username}"/>
 			        </a>
 			    </p:column>
-			    <p:column headerText="#{msg.replies}" style="width:6%; white-space:nowrap" styleClass="align-center" sortBy="#{topic.replies}">
+			    <p:column headerText="#{msg.replies}" styleClass="align-center" sortBy="#{topic.replies}">
 			        <h:outputText value="#{topic.replies}"/>
 			    </p:column>
-			    <p:column headerText="#{msg.views}" style="width:7%; white-space:nowrap" styleClass="align-center" sortBy="#{topic.views}">
+			    <p:column headerText="#{msg.views}" styleClass="align-center" sortBy="#{topic.views}">
 			       	<h:outputText value="#{topic.views}"/>
 			    </p:column>
-			    <p:column headerText="#{msg.last_message}" style="width:10%" styleClass="align-center" sortBy="#{topic.lastPostDate}">
+			    <p:column headerText="#{msg.last_message}" styleClass="align-center" sortBy="#{topic.lastPostDate}">
 			       	<h:outputText value="#{topic.lastPostDate}">
 			        	<f:convertDateTime type="both" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
 			        </h:outputText>
 			        <br/>
 			        <h:outputText value="#{msg.by}" />
 			        <a href="./user/detail.jsf?user_id=#{topic.userId}"> <!-- TODO replace with real user -->
-			        	<h:outputText value="#{topic.user.username}" style="font-weight:bold;color:#489a83;"/>
+			        	<h:outputText value="#{topic.user.username}" />
 			        </a>
 			    </p:column>
 			    
@@ -109,7 +109,7 @@
 			<h:panelGrid columns="2" id="new_topic_table">
 				#{msg.topic}:
 				
-				<h:inputText value="" style="height:20px;padding-left:5px;width:296%"/>
+				<h:inputText value=""/>
 					
 				<h:outputText value="#{msg.category}: "/>
 				
@@ -129,7 +129,7 @@
 				<p:editor id="editor" widgetVar="editorWidget" value="#{editorView.text}" width="600" 
 					controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink"/>
 					 
-				<h:commandButton value="#{msg.save}" styleClass="greenbutton" style="margin-top:1rem;margin-bottom:1em;"/>
+				<h:commandButton value="#{msg.save}" styleClass="greenbutton save_button"/>
 	 
 				<p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade">
 					<h:outputText id="display" value="#{editorView.text}" escape="false" />

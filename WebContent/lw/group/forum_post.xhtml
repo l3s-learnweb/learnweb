@@ -19,7 +19,7 @@
 		
 		<div class="center-header" id="group_header">
 			<span>
-				#{msg.message} #{forumPostsBean.topic.title}
+				#{msg.message}s #{forumPostsBean.topic.title}
 			</span> 
 			#{msg.of} Subject
 			
@@ -65,34 +65,37 @@
 		
 		<h:form prependId="false">
 		    <p:dataTable var="post" value="#{forumPostBean.posts}" rows="20" paginator="true" 
-		    	lazy="false" paginatorPosition="bottom" id="forum_post_table" 
+		    	lazy="false" paginatorPosition="bottom" id="forum_post_table"
 		    	paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" >
 		      
 		      	<p:column headerText="#{msg.author}" styleClass="align-center" >
 		        	<a href="./user/detail.jsf?user_id=#{post.userId}" >
 		        		<h:outputText value="#{post.user.username}"/>
 		        	</a>
-		        	<br style="margin-bottom:0.5rem;"/>
+		
+					<br style="margin-bottom:0.5rem;"/>
+					
 		        	<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(user)}" id="profile_image" alt="profile image"/>
-		        	<div style="margin-bottom:1rem;" class="align-left">
+		        	
+		        	<div class="align-left">
 			        	<h:outputText value="#{msg.registered_since}: "/>
 							<h:outputText value="#{post.user.registrationDate}">
 								<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
 							</h:outputText>
 			        	<br/>
-			        	<h:outputText value="Messages: " />
+			        	<h:outputText value="#{msg.message}s: " />
 		        	</div>
 		        </p:column>
 		        
-		        <p:column headerText="Message">
-		        	<div style="border-bottom:1px solid #a8a8a8; margin:1rem 0; padding-bottom:1rem">
+		        <p:column headerText="#{msg.message}s">
+		        	<div>
 				       	posted on 
 				        <h:outputText value="#{post.date}">
 					        <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
 					    </h:outputText>
-					    <span>
-					    	<h:commandButton value="quote" styleClass="greenbutton float-right" style="margin-top:-1.1rem"/>
-					    </span>
+					    
+					    <h:commandButton value="quote" styleClass="greenbutton float-right"/>
+					    
 				    </div>
 				   
 		            <h:outputText value="#{post.text}" escape="false"/>
@@ -113,7 +116,7 @@
 				<p:editor id="editor" widgetVar="editorWidget" value="#{editorView.text}" width="600" 
 					controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink"/>
 					 
-				<h:commandButton value="#{msg.save}" styleClass="greenbutton" style="margin-top:1rem;margin-bottom:1em;"/>
+				<h:commandButton value="#{msg.save}" styleClass="greenbutton save_button" />
 	 
 				<p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade">
 					<h:outputText id="display" value="#{editorView.text}" escape="false" />
