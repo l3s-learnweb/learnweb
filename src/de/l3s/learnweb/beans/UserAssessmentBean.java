@@ -68,6 +68,10 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     private String phaseLW;
     private String phaseLW2;
 
+    //variables Feedback
+    private String title, message;
+    private String classFeedback, groupFeedback, userFeedback;
+
     //Control variables
     private boolean showb3, showl3, showp3, showd3 = false;
     private boolean showb2, showl2, showp2 = false;
@@ -315,7 +319,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    list2 = this.searchGeneralActivitiesbyGroup(this.selectedGroup2);
 	    System.out.println(list);
 	    System.out.println(list2);
-	    String title = "Comparison between " + getNameGroup(this.selectedGroup1) + " and " + getNameGroup(this.selectedGroup2) + " groups during the " + this.phaseLW0 + " phase.";
+	    String title = "Comparison among activities of " + getNameGroup(this.selectedGroup1) + " and " + getNameGroup(this.selectedGroup2) + " groups during the " + this.phaseLW0 + " phase.";
 	    this.barModel0 = this.initBarComparative(title, getNameGroup(this.selectedGroup1), getNameGroup(this.selectedGroup2), list, list2, "Activities", "Number of Interactions");
 	}
 	if((this.selectChart1.compareTo("line") == 0) && (this.showl1 == true))
@@ -326,7 +330,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    list2 = this.searchGeneralActivitiesbyGroup(this.selectedGroup2);
 	    System.out.println(list);
 	    System.out.println(list2);
-	    String title = "Comparison between " + getNameGroup(this.selectedGroup1) + " and " + getNameGroup(this.selectedGroup2) + " groups during the " + this.phaseLW0 + " phase.";
+	    String title = "Comparison among activities of " + getNameGroup(this.selectedGroup1) + " and " + getNameGroup(this.selectedGroup2) + " groups during the " + this.phaseLW0 + " phase.";
 	    this.lineModel0 = this.initLineComparative(title, getNameGroup(this.selectedGroup1), getNameGroup(this.selectedGroup2), list, list2, "Activities", "Number of Interactions");
 	}
 	if((this.selectChart1.compareTo("pie") == 0) && (this.showp1 == true))
@@ -379,7 +383,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    String c2 = getNameCourse(this.selectCourse21);
 	    System.out.println(list);
 	    System.out.println(list2);
-	    String title = "Comparison between " + c1 + " and " + c2 + " classes during the " + this.phaseLW + " phase.";
+	    String title = "Comparison among activities of " + c1 + " and " + c2 + " classes during the " + this.phaseLW + " phase.";
 	    this.barModel2 = this.initBarComparative(title, c1, c2, list, list2, "Activities", "Number of Interactions");
 	}
 	if((this.selectChart2.compareTo("line") == 0) && (this.showl2 == true))
@@ -392,7 +396,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    String c2 = getNameCourse(this.selectCourse21);
 	    System.out.println(list);
 	    System.out.println(list2);
-	    String title = "Comparison between " + c1 + " and " + c2 + " classes during the " + this.phaseLW + " phase.";
+	    String title = "Comparison among activities of " + c1 + " and " + c2 + " classes during the " + this.phaseLW + " phase.";
 	    this.lineModel2 = this.initLineComparative(title, c1, c2, list, list2, "Activities", "Number of Interactions");
 	}
 	if((this.selectChart2.compareTo("pie") == 0) && (this.showp2 == true))
@@ -701,6 +705,13 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	}
     }
 
+    public void sendFeedback()
+    {
+	System.out.println("sendFeedback");
+	if(this.classFeedback != null)
+	    System.out.println(this.classFeedback);
+    }
+
     /*
      * Remove administrators and moderators users
      * */
@@ -943,7 +954,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    p2.set(key, value);
 	    System.out.println("key:" + key + ", value:" + value);
 	}
-	String title = "Comparison between " + label + " and " + label1 + " during the " + this.phaseLW + " phase. <br/><br/>" + label;
+	String title = "Comparison among activities of " + label + " and " + label1 + " during the " + this.phaseLW + " phase. <br/><br/>" + label;
 	p1.setTitle(title);
 	p1.setLegendPosition("e");
 	p1.setFill(false);
@@ -1384,6 +1395,56 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     public void setListAClass(List<Metric> listAClass)
     {
 	this.listAClass = listAClass;
+    }
+
+    public String getMessage()
+    {
+	return message;
+    }
+
+    public void setMessage(String message)
+    {
+	this.message = message;
+    }
+
+    public String getTitle()
+    {
+	return title;
+    }
+
+    public void setTitle(String title)
+    {
+	this.title = title;
+    }
+
+    public String getClassFeedback()
+    {
+	return classFeedback;
+    }
+
+    public void setClassFeedback(String classFeedback)
+    {
+	this.classFeedback = classFeedback;
+    }
+
+    public String getGroupFeedback()
+    {
+	return groupFeedback;
+    }
+
+    public void setGroupFeedback(String groupFeedback)
+    {
+	this.groupFeedback = groupFeedback;
+    }
+
+    public String getUserFeedback()
+    {
+	return userFeedback;
+    }
+
+    public void setUserFeedback(String userFeedback)
+    {
+	this.userFeedback = userFeedback;
     }
 
 }
