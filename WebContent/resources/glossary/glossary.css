@@ -1,0 +1,57 @@
+.glossary{
+	text-align:center;
+	margin-right:1em;
+	border-spacing:0px;
+	margin-bottom:5rem;
+	margin-top:1rem;
+}
+.glossary table {
+	width:auto !important;
+	min-width:100%;
+}
+.glossary td {
+	overflow:show !important;
+}
+.glossary th{
+	font-size:1.5rem;
+	border:1px solid grey;
+}
+.glossary td {
+	border: 1px solid grey;
+	}
+.data{
+	font-size:1.5rem;
+}
+.inputfield, .inputarea{
+	font-family:Arial;
+	font-size:1.5rem;
+	width:15em !important;
+}
+.datatype{
+	font-size:1.5rem;
+	margin-left:1rem;
+}
+.filter{
+	font-size:1.5rem;
+}
+#message{
+	display:none;
+}
+form input, .inputarea{
+	margin-left:1rem;
+}
+hr{
+	margin-bottom:5rem;
+}
+
+/*both pages*/
+#group_header{
+	margin-top:1rem;
+	margin-left:5px;
+}
+.grey_border{
+	margin:0 5px;
+}
+#searchbutton{
+	margin-left:0;
+}

@@ -8,32 +8,19 @@
 	
 <ui:composition template="/templates/main/main.xhtml">
 	
-	<ui:param name="pageTitle" value="editGlossary" />
+	<ui:param name="pageTitle" value="#{msg.edit_glossary}" />
 	
 	<ui:define name="center_layout">
 	
-	<link rel="stylesheet" href="Glossary.css"/>
-	
-	<style type="text/css">
-			h1{
-				font-size:2rem;
-				margin-left:1rem;
-			}
-			.button{			
-				margin-right:2rem;
-				margin-left:2rem;
-			}
-			.inputfield{
-				width:25rem;
-			}
-		</style>
+	<h:outputStylesheet library="glossary" name="glossary.css"/>
 		
-	<br/>
-	<br/>
-		<h1> Glossary </h1>
-	<br/>
-	<br/>
-		<h:form id="form">
+		<div class="center-header" id="group_header">
+			<span>
+				#{msg.edit_glossary_entry}
+			</span> 
+		</div>	
+				
+		<h:form id="form" styleClass="grey_border">
 		
 			<h:panelGrid id="grid" columns="2">
 			

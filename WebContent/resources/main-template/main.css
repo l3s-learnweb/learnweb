@@ -244,6 +244,7 @@ iframe { border:none }
 	margin-right:1rem;
 	text-decoration:none;
 	position:relative;
+	z-index:5;
 }
 .menu{
 	cursor:pointer;
