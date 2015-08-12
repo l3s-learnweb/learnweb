@@ -16,25 +16,8 @@
 
 	<ui:define name="center_layout">
 	
-	<style type="text/css">
-		#center_header_form a{padding:6px 12px;}
-		#group_header ul{box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.1);}
-		#category{width:300%;}
-		#group_header{margin-bottom:1rem;}
-		#new_topic{
-			margin-top:2rem;
-			margin-right:5px;
-		}
-		#new_topic_table{
-			font-size:1.5rem;
-			margin-bottom:1rem;
-		}
-		#new_topic_table tr td:first-child, #new_topic_table tr td:first-child + td + td{padding-right:1rem;}
-		.grey_border{
-			margin-bottom:5rem;
-			margin-right:5px;
-		}
-	</style>
+	<h:outputStylesheet library="forum" name="forum.css" />
+	
 		<div class="center-header" id="group_header">
 			<span>
 				#{msg.forum}
@@ -82,7 +65,7 @@
 		</div>  	
 		
 		<h:form>
-			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" style="width:99.7%;" paginator="true" lazy="false" 
+			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" 
 				paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 			      
 			 	<p:column headerText="#{msg.topic}" style="width:58%;height:25px" sortBy="#{topic.title}">

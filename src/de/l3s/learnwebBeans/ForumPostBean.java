@@ -12,6 +12,7 @@ import javax.faces.event.ComponentSystemEvent;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.ForumPost;
+import de.l3s.learnweb.ForumTopic;
 
 @ManagedBean
 @ViewScoped
@@ -24,6 +25,8 @@ public class ForumPostBean extends ApplicationBean implements Serializable
     private int topicId;
 
     private List<ForumPost> posts;
+
+    private ForumTopic topic;
 
     public ForumPostBean()
     {
@@ -38,6 +41,7 @@ public class ForumPostBean extends ApplicationBean implements Serializable
 	    return;
 	}
 	posts = getLearnweb().getForumManager().getPostsBy(topicId);
+	//topic = getLearnweb().getForumManager().gett
     }
 
     public int getTopicId()
@@ -53,6 +57,11 @@ public class ForumPostBean extends ApplicationBean implements Serializable
     public List<ForumPost> getPosts()
     {
 	return posts;
+    }
+
+    public ForumTopic getTopic()
+    {
+	return topic;
     }
 
 }

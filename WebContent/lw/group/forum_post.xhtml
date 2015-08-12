@@ -15,17 +15,21 @@
 
 	<ui:define name="center_layout">
 	
-	<style type="text/css">
-		table td:last-child{vertical-align: top;}
-	</style>
+	<h:outputStylesheet library="forum" name="forum.css" />
 		
 		<div class="center-header" id="group_header">
 			<span>
-				#{msg.forum_posts}
+				#{msg.message} #{forumPostsBean.topic.title}
 			</span> 
-			#{msg.of} Beitragtitle/Betreff
+			#{msg.of} Subject
+			
+			<h:form id="center_header_form">
+				<a href="./group/forum_post.jsf?topic_id=#{forumPostsBean.topic.id}#reply" class="resource_button greenbutton"> <!-- doesn't work yet -->
+					Reply
+				</a>
+			</h:form>
 				
-			<ul>								
+			<ul>
 				<li>
 					<a href="./group/overview.jsf?group_id=#{groupDetailBean.group.id}">
 						<h:outputText value="#{msg.overview}" />
@@ -59,13 +63,14 @@
 			</ul>
 		</div>  	
 		
-		<h:form>
-		    <p:dataTable var="post" value="#{forumPostBean.posts}" rows="20" paginator="true" lazy="false" paginatorPosition="bottom"
-		    	paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" style="width:99.7%;margin-top:2rem;">
+		<h:form prependId="false">
+		    <p:dataTable var="post" value="#{forumPostBean.posts}" rows="20" paginator="true" 
+		    	lazy="false" paginatorPosition="bottom" id="forum_post_table" 
+		    	paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" >
 		      
-		      	<p:column headerText="#{msg.author}" styleClass="align-center" style="width:13%">
+		      	<p:column headerText="#{msg.author}" styleClass="align-center" >
 		        	<a href="./user/detail.jsf?user_id=#{post.userId}" >
-		        		<h:outputText value="#{post.user.username}" style="font-weight:bold;color:#489a83;"/>
+		        		<h:outputText value="#{post.user.username}"/>
 		        	</a>
 		        	<br style="margin-bottom:0.5rem;"/>
 		        	<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(user)}" id="profile_image" alt="profile image"/>
@@ -75,11 +80,11 @@
 								<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
 							</h:outputText>
 			        	<br/>
-			        	<h:outputText value="Beitraege: 5" />
+			        	<h:outputText value="Messages: " />
 		        	</div>
 		        </p:column>
 		        
-		        <p:column headerText="Contribution">
+		        <p:column headerText="Message">
 		        	<div style="border-bottom:1px solid #a8a8a8; margin:1rem 0; padding-bottom:1rem">
 				       	posted on 
 				        <h:outputText value="#{post.date}">
@@ -95,6 +100,28 @@
 		        
 		    </p:dataTable>
 		</h:form>
+		
+		<div class="page_header" id="reply">
+			<span>
+				Reply
+			</span>
+		</div>
+			
+		<div class="grey_border">
+			
+			<h:form>           
+				<p:editor id="editor" widgetVar="editorWidget" value="#{editorView.text}" width="600" 
+					controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink"/>
+					 
+				<h:commandButton value="#{msg.save}" styleClass="greenbutton" style="margin-top:1rem;margin-bottom:1em;"/>
+	 
+				<p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade">
+					<h:outputText id="display" value="#{editorView.text}" escape="false" />
+				</p:dialog>
+			</h:form> 
+			
+		</div>
+		
 	</ui:define>
 
 </ui:composition>
