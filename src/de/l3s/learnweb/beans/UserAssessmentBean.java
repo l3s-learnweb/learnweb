@@ -256,7 +256,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    String userName = getNameUser(this.selectedUser);
 	    System.out.println(list);
 	    this.selectInteractionMeanClass();
-	    String title = "Details about interactions of " + userName + " during the " + this.phaseLW2 + " phase.";
+	    String title = "Details about " + userName + "'s interactions during the " + this.phaseLW2 + " phase.";
 	    this.initBarModelUser(title, "User Activities", list, "Activities", "Number of Interactions");
 	}
 	if((this.selectChart3.compareTo("line") == 0) && (this.showl3 == true))
@@ -266,7 +266,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    list = this.searchActivities();
 	    String userName = getNameUser(this.selectedUser);
 	    System.out.println(list);
-	    String title = "Details about interactions of " + userName + " during the " + this.phaseLW2 + " phase.";
+	    String title = "Details about " + userName + "'s interactions during the " + this.phaseLW2 + " phase.";
 	    this.initLineModelUser(title, "User Activities", list, "Activities", "Number of Interactions");
 	    this.selectInteractionMeanClass();
 	}
@@ -277,7 +277,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    list = this.searchActivities();
 	    String userName = getNameUser(this.selectedUser);
 	    System.out.println(list);
-	    String title = "Details about interactions of " + userName + " during the " + this.phaseLW2 + " phase.";
+	    String title = "Details about " + userName + "'s interactions during the " + this.phaseLW2 + " phase.";
 	    this.initPieModelUser(title, "User Activities", list);
 	    this.selectInteractionMeanClass();
 	}
