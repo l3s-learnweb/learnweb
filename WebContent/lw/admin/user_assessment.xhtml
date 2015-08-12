@@ -49,14 +49,37 @@
 						    <f:selectItem itemLabel="Aggregation and presentation" itemValue="agregation" />
 						</p:selectOneMenu>
 						        
-				        <p:commandButton value="Compare" oncomplete="PF('dlg2').show()" update="dia" actionListener="#{userAssessmentBean.generateComparativeGraph}"/>
-				                
+				        <p:commandButton value="Compare Classes" oncomplete="PF('dlg2').show()" update="dia" actionListener="#{userAssessmentBean.generateComparativeGraph}"/>
+				        
 						<p:dialog id="dia" modal="true" resizable="true" widgetVar="dlg2" header="Course perspective" showEffect="clip">
 							<p:chart type="bar" model="#{userAssessmentBean.barModel2}" rendered="#{userAssessmentBean.showb2}" style="height:300px;width:1500px"/>
 							<p:chart type="line" model="#{userAssessmentBean.lineModel2}" rendered="#{userAssessmentBean.showl2}" style="height:300px;width:1500px"/>
 							<p:chart type="pie" model="#{userAssessmentBean.pieModel20}" rendered="#{userAssessmentBean.showp2}" style="height:300px;width:800px"/>
 							<p:chart type="pie" model="#{userAssessmentBean.pieModel21}" rendered="#{userAssessmentBean.showp2}" style="height:300px;width:800px"/>
+						
+							<p:commandButton value="Send a Feedback" oncomplete="PF('dlg21').show()" update="dia21"/>
 						</p:dialog>
+						
+						<p:dialog id="dia21" modal="true" resizable="true" widgetVar="dlg21" header="Send a Notification" showEffect="clip">
+							<h:panelGrid columns="2" cellspacing="1" id="pg22">
+								<p:outputLabel for="op11" value="Title:" />
+								<p:inputText id="op11" value="#{userAssessmentBean.title}" />
+								
+								<p:outputLabel for="op11" value="Message" />
+								<p:inputTextarea rows="5" cols="30" counter="displayFeedback" maxlength="300" counterTemplate="{0} characters remaining." autoResize="false" value="#{userAssessmentBean.message}" />
+	    						<h:outputText value="" />
+	    						<h:outputText id="displayFeedback" />
+							
+								<p:outputLabel for="op13" value="Class:" />
+						        <p:selectOneRadio id="op13" value="#{userAssessmentBean.classFeedback}">
+						            <f:selectItem itemLabel="#{userAssessmentBean.selectCourse20}" itemValue="#{userAssessmentBean.selectCourse20}" />
+						            <f:selectItem itemLabel="#{userAssessmentBean.selectCourse21}" itemValue="#{userAssessmentBean.selectCourse21}" />
+						        </p:selectOneRadio>
+					         </h:panelGrid>
+					        <p:commandButton value="Send feedback" actionListener="#{userAssessmentBean.sendFeedback}" />
+					        		
+						</p:dialog>
+						
 				    </h:panelGrid>
 			    </h:form>
 			</p:tab>
@@ -104,12 +127,13 @@
 						    <f:selectItem itemLabel="Aggregation and presentation" itemValue="agregation" />
 						</p:selectOneMenu>
 				    	
-				    	<p:commandButton value="Compare" oncomplete="PF('dlg1').show()" update="g1" actionListener="#{userAssessmentBean.generateComparativeGraphGroups}"/>
+				    	<p:commandButton value="Compare Groups" oncomplete="PF('dlg1').show()" update="g1" actionListener="#{userAssessmentBean.generateComparativeGraphGroups}"/>
 						<p:dialog id="g1" modal="true" resizable="true" widgetVar="dlg1" header="Class perspective" showEffect="clip">
 							<p:chart type="bar" model="#{userAssessmentBean.barModel0}" rendered="#{userAssessmentBean.showb1}" style="height:300px;width:1500px"/>
 							<p:chart type="line" model="#{userAssessmentBean.lineModel0}" rendered="#{userAssessmentBean.showl1}" style="height:300px;width:1500px"/>
 							<p:chart type="pie" model="#{userAssessmentBean.pieModel00}" rendered="#{userAssessmentBean.showp1}" style="height:300px;width:800px"/>
 							<p:chart type="pie" model="#{userAssessmentBean.pieModel01}" rendered="#{userAssessmentBean.showp1}" style="height:300px;width:800px"/>
+						
 						</p:dialog>
 				    		   
 					</h:panelGrid>
@@ -152,8 +176,8 @@
 						    <f:selectItem itemLabel="Aggregation and presentation" itemValue="agregation" />
 						</p:selectOneMenu>
 						        
-						        
-				    	<p:commandButton id="button33" value="Generate Chart" oncomplete="PF('dlg3').show()" update="g3" actionListener="#{userAssessmentBean.generateUserChart}"/>
+						
+				    	<p:commandButton id="button33" value="Details about User" oncomplete="PF('dlg3').show()" update="g3" actionListener="#{userAssessmentBean.generateUserChart}"/>
 				    	<p:dialog id="g3" modal="true" resizable="true" widgetVar="dlg3" header="Personal perspective" showEffect="clip">
 						        	   <p:chart type="bar" model="#{userAssessmentBean.barModel}"  rendered="#{userAssessmentBean.showb3}" style="height:300px;width:1500px; align:center"/>
 						        	   <p:chart type="line" model="#{userAssessmentBean.lineModel}"  rendered="#{userAssessmentBean.showl3}" style="height:300px;width:1500px"/>
@@ -171,6 +195,7 @@
 									  </p:dataTable> 
 									  </center>
 				    	</p:dialog>
+				    	
 					</h:panelGrid>
 				</h:form>
 			</p:tab>
