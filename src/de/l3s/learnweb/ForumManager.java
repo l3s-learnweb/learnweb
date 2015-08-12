@@ -3,6 +3,7 @@ package de.l3s.learnweb;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,7 +23,7 @@ public class ForumManager
 
     private final static Logger log = Logger.getLogger(ForumManager.class);
     private final static String POST_COLUMNS = "post_id, topic_id, user_id, text, post_time, post_edit_time, post_edit_count, post_edit_user_id";
-    private final static String TOPIC_COLUMNS = "topic_id, group_id, topic_title, user_id, topic_time, topic_views, topic_replies, topic_last_post_id, topic_last_post_time";
+    private final static String TOPIC_COLUMNS = "topic_id, group_id, topic_title, user_id, topic_time, topic_views, topic_replies, topic_last_post_id, topic_last_post_time, topic_last_post_user_id";
 
     private final Learnweb learnweb;
 
@@ -50,6 +51,27 @@ public class ForumManager
 	}
 	select.close();
 	return topics;
+    }
+
+    /**
+     * 
+     * @param topicId
+     * @return null if not found
+     * @throws SQLException
+     */
+    public ForumTopic getTopicById(int topicId) throws SQLException
+    {
+	ForumTopic topic = null;
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `forum_topic` WHERE topic_id = ?");
+	select.setInt(1, topicId);
+	ResultSet rs = select.executeQuery();
+	if(rs.next())
+	{
+	    topic = createTopic(rs);
+	}
+	select.close();
+
+	return topic;
     }
 
     /**
@@ -90,33 +112,34 @@ public class ForumManager
 	return posts;
     }
 
-    public ForumTopic save(ForumTopic forum) throws SQLException
+    public ForumTopic save(ForumTopic topic) throws SQLException
     {
-	String sqlQuery = "REPLACE INTO `forum_topic` (" + TOPIC_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?)";
+	String sqlQuery = "REPLACE INTO `forum_topic` (" + TOPIC_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?)";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
-	if(forum.getId() < 0)
+	if(topic.getId() < 0)
 	    ps.setNull(1, java.sql.Types.INTEGER);
 	else
-	    ps.setInt(1, forum.getId());
-	ps.setInt(2, forum.getGroupId());
-	ps.setString(3, forum.getTitle());
-	ps.setInt(4, forum.getUserId());
-	ps.setTimestamp(5, new java.sql.Timestamp(forum.getDate().getTime()));
-	ps.setInt(6, forum.getViews());
-	ps.setInt(7, forum.getReplies());
-	ps.setInt(8, forum.getLastPostId());
-	ps.setTimestamp(9, new java.sql.Timestamp(forum.getLastPostDate().getTime()));
+	    ps.setInt(1, topic.getId());
+	ps.setInt(2, topic.getGroupId());
+	ps.setString(3, topic.getTitle());
+	ps.setInt(4, topic.getUserId());
+	ps.setTimestamp(5, new java.sql.Timestamp(topic.getDate().getTime()));
+	ps.setInt(6, topic.getViews());
+	ps.setInt(7, topic.getReplies());
+	ps.setInt(8, topic.getLastPostId());
+	ps.setTimestamp(9, new java.sql.Timestamp(topic.getLastPostDate().getTime()));
+	ps.setInt(10, topic.getLastPostUserId());
 	ps.executeUpdate();
 
-	if(forum.getId() < 0) // get the assigned id
+	if(topic.getId() < 0) // get the assigned id
 	{
 	    ResultSet rs = ps.getGeneratedKeys();
 	    if(!rs.next())
 		throw new SQLException("database error: no id generated");
-	    forum.setId(rs.getInt(1));
+	    topic.setId(rs.getInt(1));
 	}
 
-	return forum;
+	return topic;
     }
 
     public ForumPost save(ForumPost post) throws SQLException
@@ -144,8 +167,13 @@ public class ForumManager
 		throw new SQLException("database error: no id generated");
 	    post.setId(rs.getInt(1));
 
-	    // TODO update topic count, last post id and last post time
-
+	    sqlQuery = "UPDATE forum_topic SET topic_replies = topic_replies + 1, topic_last_post_id = ?, topic_last_post_time = ?, topic_last_post_user_id = ? WHERE topic_id = ?";
+	    PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE");
+	    update.setInt(1, post.getId());
+	    update.setTimestamp(2, new Timestamp(post.getDate().getTime()));
+	    update.setInt(3, post.getUserId());
+	    update.setInt(4, post.getTopicId());
+	    update.executeUpdate();
 	}
 
 	return post;
@@ -193,6 +221,8 @@ public class ForumManager
 	topic.setReplies(rs.getInt("topic_replies"));
 	topic.setLastPostId(rs.getInt("topic_last_post_id"));
 	topic.setLastPostDate(new Date(rs.getTimestamp("topic_last_post_time").getTime()));
+	topic.setLastPostUserId(rs.getInt("topic_last_post_user_id"));
+
 	return topic;
     }
 }

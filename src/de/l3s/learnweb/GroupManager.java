@@ -116,48 +116,10 @@ public class GroupManager
 	//	stmt.execute("TRUNCATE TABLE `forum_topic` ");
 	//	stmt.execute("TRUNCATE TABLE `forum_post` ");
 
-	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE forum_id != ?";
-
-	PreparedStatement jforumGetTopics = jfm.getConnection().prepareStatement("select * from jforum_topics t join jforum_users using(user_id) join jforum_posts on topic_last_post_id = post_id WHERE t.`forum_id` = ?");
-	PreparedStatement jforumGetPosts = jfm.getConnection().prepareStatement("select * from jforum_posts join jforum_users using(user_id) join jforum_posts_text using(post_id)");
 	/*
-		ResultSet rs = jforumGetPosts.executeQuery();
-		while(rs.next())
-		{
-		    ForumPost post = new ForumPost();
-		    post.setId(rs.getInt("post_id"));
-		    post.setDate(new Date(rs.getTimestamp("post_time").getTime()));
-
-		    int user = um.getUserIdByUsername(rs.getString("username"));
-		    if(user < 0)
-			user = 0;
-		    post.setUserId(user);
-
-		    String text = bbcode(rs.getString("post_text"));
-
-		    if(text.contains("http:"))
-		    {
-			post.setText(text);
-
-			text = text.toLowerCase();
-			if(text.contains("arschfick") || text.contains("fuck") || text.contains("buy") || text.contains("nudists") || text.contains("so hot") || text.contains("nude") || text.contains("lolita") || text.contains("models") || text.contains("naked") || text.contains("porn")
-				|| text.contains("sex") || text.contains("sponsors") || text.contains("coupon") || text.contains("/user/view") || text.contains("cialis") || text.contains("prescription") || text.contains("pills") || text.contains("i'm busy at the moment")
-				|| text.contains("wolkrmfbsoxfc") || text.contains("iopskmfbsoxfc") || text.contains("qyqosmfbsoxfc") || text.contains("hnuqjmfbsoxfc") || text.contains("hoes") || text.contains("funny pictures") || text.contains("paid")
-				|| text.contains("i like watching")
-
-			)
-			{
-			    continue;
-			}
-		    }
-		    post.setText(text);
-
-		    //System.out.println(post);
-		    fm.save(post);
-		}
-		*/
-
-	List<Group> groups = gm.getGroups(query, 0);
+		PreparedStatement jforumGetTopics = jfm.getConnection().prepareStatement("select * from jforum_topics t join jforum_users using(user_id) join jforum_posts on topic_last_post_id = post_id WHERE t.`forum_id` = ?");
+	
+	List<Group> groups = gm.getGroups("SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE forum_id != ?", 0);
 	for(Group group : groups)
 	{
 	    jforumGetTopics.setInt(1, group.getForumId());
@@ -174,15 +136,53 @@ public class GroupManager
 		topic.setUserId(user);
 		topic.setDate(new Date(rs.getTimestamp("topic_time").getTime()));
 		topic.setViews(rs.getInt("topic_views"));
-		topic.setReplies(rs.getInt("topic_replies"));
-		topic.setLastPostId(rs.getInt("topic_last_post_id"));
-		topic.setLastPostDate(new Date(rs.getTimestamp("post_time").getTime()));
+		//topic.setReplies(rs.getInt("topic_replies"));
+		//topic.setLastPostId(rs.getInt("topic_last_post_id"));
+		//topic.setLastPostDate(new Date(rs.getTimestamp("post_time").getTime()));
 
 		System.out.println(topic);
 		fm.save(topic);
 	    }
 
 	    System.out.print(group.getTitle() + " - " + group.getForumId() + " - ");
+	}	
+	*/
+	PreparedStatement jforumGetPosts = jfm.getConnection().prepareStatement("select * from jforum_posts join jforum_users using(user_id) join jforum_posts_text using(post_id) where topic_id = 329");
+
+	ResultSet rs = jforumGetPosts.executeQuery();
+	while(rs.next())
+	{
+	    ForumPost post = new ForumPost();
+	    post.setId(rs.getInt("post_id"));
+	    post.setDate(new Date(rs.getTimestamp("post_time").getTime()));
+
+	    int user = um.getUserIdByUsername(rs.getString("username"));
+	    if(user < 0)
+		user = 0;
+	    post.setUserId(user);
+
+	    String text = bbcode(rs.getString("post_text"));
+
+	    if(text.contains("http:"))
+	    {
+		post.setText(text);
+
+		text = text.toLowerCase();
+		if(text.contains("arschfick") || text.contains("fuck") || text.contains("buy") || text.contains("nudists") || text.contains("so hot") || text.contains("nude") || text.contains("lolita") || text.contains("models") || text.contains("naked") || text.contains("porn")
+			|| text.contains("sex") || text.contains("sponsors") || text.contains("coupon") || text.contains("/user/view") || text.contains("cialis") || text.contains("prescription") || text.contains("pills") || text.contains("i'm busy at the moment")
+			|| text.contains("wolkrmfbsoxfc") || text.contains("iopskmfbsoxfc") || text.contains("qyqosmfbsoxfc") || text.contains("hnuqjmfbsoxfc") || text.contains("hoes") || text.contains("funny pictures") || text.contains("paid")
+			|| text.contains("i like watching")
+
+		)
+		{
+		    System.out.println("skipped");
+		    continue;
+		}
+	    }
+	    post.setText(text);
+
+	    System.out.println(post);
+	    //fm.save(post);
 	}
 
     }

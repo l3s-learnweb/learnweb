@@ -110,4 +110,10 @@ public class ForumPost implements Serializable
 	return user;
     }
 
+    @Override
+    public String toString()
+    {
+	return "ForumPost [id=" + id + ", userId=" + userId + ", topicId=" + topicId + ", text=" + text + ", date=" + date + ", editCount=" + editCount + ", lastEditDate=" + lastEditDate + ", editUserId=" + editUserId + "]";
+    }
+
 }
