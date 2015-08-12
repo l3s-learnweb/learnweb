@@ -120,7 +120,7 @@ public class Learnweb
 		propteriesFileName = "lw_local_rishita";
 	    else if((new File("C:\\Users\\morais").exists()))
 		propteriesFileName = "lw_local_alana";
-	    else if((new File("/Users/alkafikKAFIhan/").exists()))
+	    else if((new File("C:\\Users\\Kafi").exists()))
 		propteriesFileName = "lw_local_kafi";
 	    else if((new File("C:\\Users\\astap_000").exists()))
 		propteriesFileName = "lw_local_oleg";
