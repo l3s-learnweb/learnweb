@@ -3,25 +3,15 @@ package de.l3s.learnweb;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 public class ForumManager
 {
-    enum ORDER // possible order values; Not all values are applicable for every method
-    {
-	DATE,
-	TITLE,
-	REPLIES,
-	VIEWS,
-	TOPIC
-    }
-
-    private final static Logger log = Logger.getLogger(ForumManager.class);
+    // private final static Logger log = Logger.getLogger(ForumManager.class);
     private final static String POST_COLUMNS = "post_id, topic_id, user_id, text, post_time, post_edit_time, post_edit_count, post_edit_user_id";
     private final static String TOPIC_COLUMNS = "topic_id, group_id, topic_title, user_id, topic_time, topic_views, topic_replies, topic_last_post_id, topic_last_post_time, topic_last_post_user_id";
 
@@ -42,7 +32,7 @@ public class ForumManager
     public List<ForumTopic> getTopicsByGroup(int groupId) throws SQLException
     {
 	LinkedList<ForumTopic> topics = new LinkedList<ForumTopic>();
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `forum_topic` WHERE group_id = ? ORDER BY topic_time DESC");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `lw_forum_topic` WHERE group_id = ? ORDER BY topic_last_post_time DESC");
 	select.setInt(1, groupId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -62,7 +52,7 @@ public class ForumManager
     public ForumTopic getTopicById(int topicId) throws SQLException
     {
 	ForumTopic topic = null;
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `forum_topic` WHERE topic_id = ?");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `lw_forum_topic` WHERE topic_id = ?");
 	select.setInt(1, topicId);
 	ResultSet rs = select.executeQuery();
 	if(rs.next())
@@ -84,7 +74,7 @@ public class ForumManager
     {
 	LinkedList<ForumPost> posts = new LinkedList<ForumPost>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `forum_post` WHERE topic_id = ? ORDER BY post_time DESC");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `lw_forum_post` WHERE topic_id = ? ORDER BY post_time DESC");
 	select.setInt(1, topicId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -96,11 +86,11 @@ public class ForumManager
 	return posts;
     }
 
-    public List<ForumPost> getPostsByUser(int userId, ORDER order) throws SQLException
+    public List<ForumPost> getPostsByUser(int userId) throws SQLException
     {
 	LinkedList<ForumPost> posts = new LinkedList<ForumPost>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `forum_post` WHERE user_id = ? ORDER BY topic_time DESC");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `lw_forum_post` WHERE user_id = ? ORDER BY topic_time DESC");
 	select.setInt(1, userId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -114,8 +104,8 @@ public class ForumManager
 
     public ForumTopic save(ForumTopic topic) throws SQLException
     {
-	String sqlQuery = "REPLACE INTO `forum_topic` (" + TOPIC_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?)";
-	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
+	String sqlQuery = "REPLACE INTO `lw_forum_topic` (" + TOPIC_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?)";
+	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
 	if(topic.getId() < 0)
 	    ps.setNull(1, java.sql.Types.INTEGER);
 	else
@@ -144,14 +134,14 @@ public class ForumManager
 
     public ForumPost save(ForumPost post) throws SQLException
     {
-	String sqlQuery = "REPLACE INTO `forum_post` (" + POST_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?)";
-	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
+	String sqlQuery = "REPLACE INTO `lw_forum_post` (" + POST_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?)";
+	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
 
 	if(post.getId() < 0)
 	    ps.setNull(1, java.sql.Types.INTEGER);
 	else
 	    ps.setInt(1, post.getId());
-	ps.setInt(2, post.getId());
+	ps.setInt(2, post.getTopicId());
 	ps.setInt(3, post.getUserId());
 	ps.setString(4, post.getText());
 	ps.setTimestamp(5, new java.sql.Timestamp(post.getDate().getTime()));
@@ -167,8 +157,8 @@ public class ForumManager
 		throw new SQLException("database error: no id generated");
 	    post.setId(rs.getInt(1));
 
-	    sqlQuery = "UPDATE forum_topic SET topic_replies = topic_replies + 1, topic_last_post_id = ?, topic_last_post_time = ?, topic_last_post_user_id = ? WHERE topic_id = ?";
-	    PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE");
+	    sqlQuery = "UPDATE lw_forum_topic SET topic_replies = topic_replies + 1, topic_last_post_id = ?, topic_last_post_time = ?, topic_last_post_user_id = ? WHERE topic_id = ?";
+	    PreparedStatement update = learnweb.getConnection().prepareStatement(sqlQuery);
 	    update.setInt(1, post.getId());
 	    update.setTimestamp(2, new Timestamp(post.getDate().getTime()));
 	    update.setInt(3, post.getUserId());
@@ -189,7 +179,7 @@ public class ForumManager
 
     public void incViews(int topicId) throws SQLException
     {
-	String sqlQuery = "UPDATE forum_topic SET topic_views = topic_views +1 WHERE topic_id = ?";
+	String sqlQuery = "UPDATE lw_forum_topic SET topic_views = topic_views +1 WHERE topic_id = ?";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
 	ps.setInt(1, topicId);
 	ps.executeUpdate();
@@ -199,7 +189,7 @@ public class ForumManager
     {
 	ForumPost post = new ForumPost();
 	post.setId(rs.getInt("post_id"));
-	post.setId(rs.getInt("topic_id"));
+	post.setTopicId(rs.getInt("topic_id"));
 	post.setUserId(rs.getInt("user_id"));
 	post.setText(rs.getString("text"));
 	post.setDate(new Date(rs.getTimestamp("post_time").getTime()));

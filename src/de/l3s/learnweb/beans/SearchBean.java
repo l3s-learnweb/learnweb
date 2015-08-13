@@ -128,6 +128,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 		onSearchVideo();
 	}
 
+	getFacesContext().getExternalContext().setResponseCharacterEncoding("UTF-8");
 	// stop caching (back button problem)
 	HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
 

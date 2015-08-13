@@ -113,12 +113,11 @@ public class GroupManager
 	UserManager um = lw.getUserManager();
 
 	Statement stmt = lw.getConnection().createStatement();
-	//	stmt.execute("TRUNCATE TABLE `forum_topic` ");
-	//	stmt.execute("TRUNCATE TABLE `forum_post` ");
+	stmt.execute("TRUNCATE TABLE `lw_forum_topic` ");
+	stmt.execute("TRUNCATE TABLE `lw_forum_post` ");
 
-	/*
-		PreparedStatement jforumGetTopics = jfm.getConnection().prepareStatement("select * from jforum_topics t join jforum_users using(user_id) join jforum_posts on topic_last_post_id = post_id WHERE t.`forum_id` = ?");
-	
+	PreparedStatement jforumGetTopics = jfm.getConnection().prepareStatement("select * from jforum_topics t join jforum_users using(user_id) join jforum_posts on topic_last_post_id = post_id WHERE t.`forum_id` = ?");
+
 	List<Group> groups = gm.getGroups("SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE forum_id != ?", 0);
 	for(Group group : groups)
 	{
@@ -138,22 +137,23 @@ public class GroupManager
 		topic.setViews(rs.getInt("topic_views"));
 		//topic.setReplies(rs.getInt("topic_replies"));
 		//topic.setLastPostId(rs.getInt("topic_last_post_id"));
-		//topic.setLastPostDate(new Date(rs.getTimestamp("post_time").getTime()));
+		topic.setLastPostDate(new Date(rs.getTimestamp("post_time").getTime()));
 
 		System.out.println(topic);
 		fm.save(topic);
 	    }
 
 	    System.out.print(group.getTitle() + " - " + group.getForumId() + " - ");
-	}	
-	*/
-	PreparedStatement jforumGetPosts = jfm.getConnection().prepareStatement("select * from jforum_posts join jforum_users using(user_id) join jforum_posts_text using(post_id) where topic_id = 329");
+	}
+
+	PreparedStatement jforumGetPosts = jfm.getConnection().prepareStatement("select * from jforum_posts join jforum_users using(user_id) join jforum_posts_text using(post_id)");
 
 	ResultSet rs = jforumGetPosts.executeQuery();
 	while(rs.next())
 	{
 	    ForumPost post = new ForumPost();
-	    post.setId(rs.getInt("post_id"));
+	    // post.setId(rs.getInt("post_id"));
+	    post.setTopicId(rs.getInt("topic_id"));
 	    post.setDate(new Date(rs.getTimestamp("post_time").getTime()));
 
 	    int user = um.getUserIdByUsername(rs.getString("username"));
@@ -181,8 +181,8 @@ public class GroupManager
 	    }
 	    post.setText(text);
 
-	    System.out.println(post);
-	    //fm.save(post);
+	    //System.out.println(post);
+	    fm.save(post);
 	}
 
     }
