@@ -12,14 +12,8 @@
 	<ui:param name="helpText" value="#{msg.myhomeProfileHelp}"/>	
 	
 	<ui:define name="right_layout">
-		<p:layoutUnit position="east" 
-			size="38%" 
-			resizable="false" 
-			closable="false" 
-			collapsible="false" 
-			style="border: none;"  
-			id="right_pane" 
-			rendered="#{userBean.loggedIn}">
+		<p:layoutUnit position="east" size="38%" resizable="false" closable="false" collapsible="false" 
+			style="border: none;"  id="right_pane" rendered="#{userBean.loggedIn}">
 			<div style="width:90%; position:relative; margin-left:auto; margin-right:auto;">
 				<div class="page_header">
 						<span>
@@ -68,18 +62,16 @@
 						
 								
 					  		<h:outputText rendered="false" value="#{msg.dateofbirth}:" />
-					     	<p:calendar rendered="false" 
-					     		disabled="true" 
-					     		id="userdateofbirth" 
-					     		value="#{profileBean.dateofbirth}" 
-					     		navigator="true" 
-					     		maxdate="#{profileBean.maxBirthday}" 
-					     		locale="de"  />
-						     	<p:message rendered="false" showSummary="true" showDetail="false" styleClass="error" for="userdateofbirth" id="userdateofbirthMessage" />
+					     	<p:calendar rendered="false" disabled="true" id="userdateofbirth" value="#{profileBean.dateofbirth}" 
+					     		navigator="true" maxdate="#{profileBean.maxBirthday}" locale="de"  />
+						     	<p:message rendered="false" showSummary="true" showDetail="false" styleClass="error" for="userdateofbirth" 
+						     		id="userdateofbirthMessage" />
 		
 							<h:outputText value="#{msg.photo}:" />
 		
-							<p:fileUpload id="userphoto" fileUploadListener="${profileBean.handleFileUpload}" mode="advanced" update=":growl profile_image" auto="true" label="#{msg.choose_file}" cancelLabel="abb" sizeLimit="10485760" allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+							<p:fileUpload id="userphoto" fileUploadListener="${profileBean.handleFileUpload}" mode="advanced" 
+								update=":growl profile_image" auto="true" label="#{msg.choose_file}" cancelLabel="abb" sizeLimit="10485760" 
+								allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
 		
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="userphoto" id="userphotoMessage" />
 		
@@ -87,16 +79,19 @@
 		
 							<h:outputText value="#{msg.additionalinformation}:" />
 							<p:inputTextarea id="useradditionalinformation" value="#{profileBean.additionalInformation}" style="width:200px;" />
-							<p:message showSummary="true" showDetail="false" styleClass="error" for="useradditionalinformation" id="useradditionalinformationMessage" />					
+							<p:message showSummary="true" showDetail="false" styleClass="error" for="useradditionalinformation" 
+								id="useradditionalinformationMessage" />					
 											
 						
 							<h:outputText value="" />
-							<p:commandButton actionListener="#{profileBean.saveProfile}" value="#{msg.save}" ajax="true" process="@form" update=":growl @form :profile_news"/>		
+							<p:commandButton actionListener="#{profileBean.saveProfile}" value="#{msg.save}" ajax="true" process="@form" 
+								update=":growl @form :profile_news"/>		
 							<h:outputText value="" />
 							
 						</h:panelGrid>		
 
-						<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(userBean.user)}" id="profile_image" alt="Profile image" />
+						<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(userBean.user)}" id="profile_image" 
+							alt="Profile image" />
 						<br class="clear" />
 					</h:form>
 				
@@ -112,7 +107,8 @@
 						<h:panelGrid columns="3" >
 						
 							<h:outputLabel for="current_password" value="#{msg.current_password}:" />
-							<p:password id="current_password" value="#{profileBean.currentPassword}" validator="#{profileBean.validateCurrentPassword}" feedback="false" autocomplete="off" >
+							<p:password id="current_password" value="#{profileBean.currentPassword}" validator="#{profileBean.validateCurrentPassword}" 
+								feedback="false" autocomplete="off" >
 								<f:ajax render="currentPasswordMessage"/>					
 							</p:password>
 							<p:message id="currentPasswordMessage" showSummary="true" showDetail="false" styleClass="error" for="current_password" />
@@ -122,15 +118,20 @@
 							<h:outputText value="&nbsp;" style="font-size:5px; line-height:5px;" />
 							
 							<h:outputLabel for="password" value="#{msg.new_password}:" />
-							<p:password id="password" value="#{profileBean.password}" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}" goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}"></p:password>
+							<p:password id="password" value="#{profileBean.password}" promptLabel="#{msg.passwordStrength_prompt}" 
+								weakLabel="#{msg.passwordStrength_weak}" goodLabel="#{msg.passwordStrength_good}" 
+								strongLabel="#{msg.passwordStrength_strong}"/>
 							<p:message id="passwordMessage" showSummary="true" showDetail="false" styleClass="error" for="password" />
 		
 							<h:outputLabel for="confirm_password" value="#{msg.confirm_password}:" />
-							<p:password id="confirm_password" value="#{profileBean.confirmPassword}" validator="#{profileBean.validatePassword}" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}" goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}"></p:password>
+							<p:password id="confirm_password" value="#{profileBean.confirmPassword}" validator="#{profileBean.validatePassword}" 
+								promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}" 
+								goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}"/>
 							<p:message id="confirmPasswordMessage" showSummary="true" showDetail="false" styleClass="error" for="confirm_password" />
 		
 							<h:outputText value="" />
-							<p:commandButton actionListener="#{profileBean.onChangePassword}" value="#{msg.save}" ajax="true" process="@form" update=":growl @form"/>		
+							<p:commandButton actionListener="#{profileBean.onChangePassword}" value="#{msg.save}" ajax="true" process="@form" 
+								update=":growl @form"/>		
 							<h:outputText value="" />				
 						</h:panelGrid>			
 					</h:form>

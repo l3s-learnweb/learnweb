@@ -6,9 +6,6 @@
 	font-weight:bold;
 	color:#489a83;
 }
-#forum_post_table_paginator_bottom,#forum_table_paginator_bottom{
-	width:99.3%;
-}
 #center_header_form a{
 	padding:6px 12px;
 }
@@ -29,10 +26,28 @@
 .save_button{
 	margin:1rem 0;
 }
+form{
+	margin-right:5px;
+}
 
 /*change primefaces ui*/
-.ui-datatable table{
-	width:99.7%;
+.ui-selectonemenu .ui-selectonemenu-label, 
+.ui-selectonemenu .ui-selectonemenu-trigger,
+.ui-selectonemenu-item .ui-selectonemenu-list-item:hover,
+.ui-selectonemenu-item .ui-selectonemenu-list-item:focus{
+	border:none !important;
+}
+.ui-shadow{
+	box-shadow:none;
+}
+.ui-state-highlight{
+	background-image:none !important;
+	background-color:#c4c4c4 !important;
+	color:#000000 !important;
+	text-shadow:none !important;
+}
+.ui-state-hover, .ui-state-focus{
+	border:none !important;
 }
 
 /*forum_page*/
@@ -53,26 +68,23 @@
 #forum_table tr th:last-child{
 	width:10%;
 }
-#new_topic_table{
+#new_topic_table,#category_table{
 	font-size:1.5rem;
 	margin-bottom:1rem;
 }
-#new_topic_table tr td:first-child, #new_topic_table tr td:first-child + td + td{
-	padding-right:1rem;
+#new_topic_table tr td:first-child, #new_topic_table tr td:first-child + td + td, #category_table tr td:first-child{
+	padding-right:20px;
 }
-#new_topic_table input{
+#new_topic_table input:first-child{
 	height:20px;
 	padding-left:5px;
-	width:296%;
+	width:504px !important;
 }
-#category{
-	width:300%;
+.category{
+	width:100% !important;
 }
 
 /*forum_post_page*/
-#forum_post_table{
-	margin-top:2rem;
-}
 #forum_post_table tr th:first-child{
 	width:13%;
 	min-width:100px !important;
@@ -82,6 +94,7 @@
 }
 #forum_post_table tr td:last-child{
 	vertical-align: top;
+	padding-bottom:1rem;
 }
 #forum_post_table tr td:last-child div{
 	border-bottom:1px solid #a8a8a8; 
@@ -89,5 +102,6 @@
 	padding-bottom:1rem;
 }
 #forum_post_table tr td:last-child div input{
-	margin-top:-1.1rem;
+	margin-top:-0.5rem;
+	padding:2px 8px;
 }

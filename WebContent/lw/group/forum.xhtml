@@ -26,7 +26,7 @@
 			
 			<h:form id="center_header_form">
 				<a href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}#new_topic" class="resource_button greenbutton">
-					#{msg.new_topic}
+					#{msg['ForumIndex.new_topic']}
 				</a>
 			</h:form>
 				
@@ -68,30 +68,30 @@
 			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table"
 				paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 			      
-			 	<p:column headerText="#{msg.topic}" sortBy="#{topic.title}">
+			 	<p:column headerText="#{msg['ForumIndex.topic']}" sortBy="#{topic.title}">
 			    	<a href="./group/forum_post.jsf?topic_id=#{topic.id}">
 			    		<h:outputText value="#{topic.title}"/>
 			    	</a>
 			    </p:column>
-			    <p:column headerText="#{msg.author}" styleClass="align-center" sortBy="#{topic.user.username}">
+			    <p:column headerText="#{msg['ForumIndex.author']}" styleClass="align-center" sortBy="#{topic.user.username}">
 			       	<a href="./user/detail.jsf?user_id=#{topic.userId}">
 			        	<h:outputText value="#{topic.user.username}"/>
 			        </a>
 			    </p:column>
-			    <p:column headerText="#{msg.replies}" styleClass="align-center" sortBy="#{topic.replies}">
+			    <p:column headerText="#{msg['ForumIndex.replies']}" styleClass="align-center" sortBy="#{topic.replies}">
 			        <h:outputText value="#{topic.replies}"/>
 			    </p:column>
-			    <p:column headerText="#{msg.views}" styleClass="align-center" sortBy="#{topic.views}">
+			    <p:column headerText="#{msg['ForumIndex.views']}" styleClass="align-center" sortBy="#{topic.views}">
 			       	<h:outputText value="#{topic.views}"/>
 			    </p:column>
-			    <p:column headerText="#{msg.last_message}" styleClass="align-center" sortBy="#{topic.lastPostDate}">
+			    <p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="align-center" sortBy="#{topic.lastPostDate}">
 			       	<h:outputText value="#{topic.lastPostDate}">
 			        	<f:convertDateTime type="both" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
 			        </h:outputText>
 			        <br/>
 			        <h:outputText value="#{msg.by}" />
 			        <a href="./user/detail.jsf?user_id=#{topic.userId}"> <!-- TODO replace with real user -->
-			        	<h:outputText value="#{topic.user.username}" />
+			        	<h:outputText value="#{topic.lastPostUser.username}" />
 			        </a>
 			    </p:column>
 			    
@@ -100,32 +100,26 @@
 			
 		<div class="page_header" id="new_topic">
 			<span>
-				#{msg.new_topic}
+				#{msg['ForumIndex.new_topic']}
 			</span>
 		</div>
 			
 		<div class="grey_border">
-			
-			<h:panelGrid columns="2" id="new_topic_table">
-				#{msg.topic}:
-				
+			<form>
+				<h:panelGrid columns="2" id="new_topic_table">
+				#{msg['ForumIndex.topic']}:
 				<h:inputText value=""/>
-					
+	
 				<h:outputText value="#{msg.category}: "/>
+			       <p:selectOneMenu styleClass="category" value="#{selectOneMenuView.category}" effect="fold" editable="true">
+			           <f:selectItem itemLabel="Select One" itemValue="" />
+			           <f:selectItem itemLabel="#{msg.category} 1" itemValue="" />
+			           <f:selectItem itemLabel="#{msg.category} 2" itemValue="" />
+			           <f:selectItems value="#{selectOneMenuView.category}" />
+			       </p:selectOneMenu>	
 				
-				<form>	
-					<select name="category" id="category" size="1">
-						<option>
-							#{msg.category} 1
-						</option>
-						<option>
-							#{msg.category} 2
-						</option>
-					</select>
-				</form>
-			</h:panelGrid>
-			
-			<h:form>           
+				</h:panelGrid>
+			          
 				<p:editor id="editor" widgetVar="editorWidget" value="#{editorView.text}" width="600" 
 					controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink"/>
 					 
@@ -134,8 +128,7 @@
 				<p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade">
 					<h:outputText id="display" value="#{editorView.text}" escape="false" />
 				</p:dialog>
-			</h:form> 
-			
+			</form> 
 		</div>
 	</ui:define>
 </ui:composition>

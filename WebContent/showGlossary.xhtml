@@ -8,7 +8,7 @@
 
 	
 	<ui:composition template="/templates/main/main.xhtml">
-		<ui:param name="pageTitle" value="#{msg.glossary}" />
+		<ui:param name="pageTitle" value="#{msg['Glossary.glossary']}" />
 		<ui:param name="loginRequired" value="true" />
 		
 		<ui:define name="center_layout">
@@ -62,7 +62,7 @@
 					
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{msg.reference_material}"/>
+							<h:outputText value="#{msg['Glossary.reference_material']}"/>
 						</f:facet>
 						<a href="#{entry.reference}">
 							#{entry.reference}
@@ -74,16 +74,18 @@
 							<h:outputText value="#{msg.added_by}"/>
 						</f:facet>
 							<h:outputText styleClass="data">
-								#{entry.user.username}
+								<a href="./user/detail.jsf?user_id=#{entry.userId}">
+									#{entry.user.username}
+								</a>
 							</h:outputText>
 					</p:column>
 					
 					<p:column>
 						<f:facet name="header">
-							<h:outputText value="#{msg.last_modified}"/>
+							<h:outputText value="#{msg['Glossary.last_modified']}"/>
 						</f:facet>
 							<h:outputText value="#{entry.lastModified}">
-           					 	<f:convertDateTime type="both" timeStyle="short" dateStyle="long"  timeZone="#{userBean.timeZone}"/>
+           					 	<f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
        						 </h:outputText>						
 					</p:column>
 					
@@ -102,7 +104,7 @@
 				
 			<div class="center-header" id="group_header">
 				<span>
-					#{msg.add_new_entry}
+					#{msg['Glossary.add_new_entry']}
 				</span> 
 			</div>	
 				
@@ -110,7 +112,8 @@
 				<h:panelGrid id="grid" columns="3" styleClass="grid">
 			
 					<h:outputLabel value="#{msg.item}" for="item" styleClass="datatype"/>
-					<h:inputText id="item" value="#{glossaryBean.selectedEntry.item}" styleClass="inputfield" validatorMessage="The item may not be empty. Please enter an item. "/>
+					<h:inputText id="item" value="#{glossaryBean.selectedEntry.item}" styleClass="inputfield" 
+						validatorMessage="#{msg['Glossary.entry_item_message']}"/> 
 					<p:message for="item" />
 					
 					<h:outputLabel value="#{msg.description}" for="description" styleClass="datatype"/>
@@ -133,15 +136,16 @@
 					<h:inputText id="spanish" value="#{glossaryBean.selectedEntry.spanish}" styleClass="inputfield"/>
 					<p:message for="spanish" />
 					
-					<h:outputLabel value="#{msg.reference_material}" for="reference_material" styleClass="datatype"/>
-					<h:inputText id="reference_material" value="#{glossaryBean.selectedEntry.reference}" styleClass="inputfield" validatorMessage="#{msg.linkvalidator_message}"/>
+					<h:outputLabel value="#{msg['Glossary.reference_material']}" for="reference_material" styleClass="datatype"/>
+					<h:inputText id="reference_material" value="#{glossaryBean.selectedEntry.reference}" styleClass="inputfield" 
+						validatorMessage="#{msg.linkvalidator_message}"/>
 					<p:message for="reference_material" />			
 			</h:panelGrid>
 			
 				<br/>
 				<br/>
 			
-			<h:commandButton id="new_entry" action="#{glossaryBean.addNewEntry}" value="#{msg.new_entry}" styleClass="greenbutton"/>
+			<h:commandButton id="new_entry" action="#{glossaryBean.addNewEntry}" value="#{msg['Glossary.new_entry']}" styleClass="greenbutton"/>
 				
 		</h:form>
 	

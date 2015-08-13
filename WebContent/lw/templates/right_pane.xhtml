@@ -371,19 +371,15 @@
 								<span class="resource_field">
 									#{msg.current_version}: 
 								</span>
-								<p:commandButton action="#{resourceDetailBean.archiveCurrentVersion}" 
-									styleClass="greenbutton" 
-									value="#{msg.archive_now}" 
-									update=":growl :archive_view :archive_view_options" 
-									style="margin-top:10px"/>
+								<p:commandButton action="#{resourceDetailBean.archiveCurrentVersion}" styleClass="greenbutton" 
+									value="#{msg['Archive.now']}" update=":growl :archive_view :archive_view_options" style="margin-top:10px"/>
 							</h:form>
 									
 							<h:panelGroup id="archive_view_options" layout="block">
-								<h:panelGroup layout="block" 
-									style="padding-top: 15px;" 
+								<h:panelGroup layout="block" style="padding-top: 15px;" 
 									rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
 									<span class="resource_field" style="position:relative;">
-										#{msg.archive_versions} (
+										#{msg['Archive.versions']} (
 										<span style="color:red">
 											#{resourceDetailBean.clickedResource.archiveUrls.size()}
 										</span>

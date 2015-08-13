@@ -8,7 +8,7 @@
 	
 <ui:composition template="/templates/main/main.xhtml">
 	
-	<ui:param name="pageTitle" value="#{msg.edit_glossary}" />
+	<ui:param name="pageTitle" value="#{msg['Glossary.edit_glossary']}" />
 	
 	<ui:define name="center_layout">
 	
@@ -16,7 +16,7 @@
 		
 		<div class="center-header" id="group_header">
 			<span>
-				#{msg.edit_glossary_entry}
+				#{msg['Glossary.edit_glossary_entry']}
 			</span> 
 		</div>	
 				
@@ -42,7 +42,7 @@
 				<h:outputLabel value="#{msg.language_es}" for="spanish" styleClass="datatype"/>
 				<h:inputText id="spanish" value="#{glossaryBean.selectedEntry.spanish}" styleClass="inputfield"/>
 				
-				<h:outputLabel value="#{msg.reference_material}" for="reference_material" styleClass="datatype"/>
+				<h:outputLabel value="#{msg['Glossary.reference_material']}" for="reference_material" styleClass="datatype"/>
 				<h:inputText id="reference_material" value="#{glossaryBean.selectedEntry.reference}" styleClass="inputfield"/>
 										
 			</h:panelGrid>

@@ -19,13 +19,13 @@
 		
 		<div class="center-header" id="group_header">
 			<span>
-				#{msg.message}s #{forumPostsBean.topic.title}
+				#{msg['ForumIndex.messages']}
 			</span> 
-			#{msg.of} Subject
+			#{msg.of} "#{forumPostBean.topic.title}"
 			
 			<h:form id="center_header_form">
-				<a href="./group/forum_post.jsf?topic_id=#{forumPostsBean.topic.id}#reply" class="resource_button greenbutton"> <!-- doesn't work yet -->
-					Reply
+				<a href="./group/forum_post.jsf?topic_id=#{forumPostBean.topic.id}#reply" class="resource_button greenbutton">
+					#{msg['ForumIndex.replies']}
 				</a>
 			</h:form>
 				
@@ -56,7 +56,7 @@
 					</a>
 				</li>								
 				<li>
-					<a class="active" href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
+					<a class="active" href="./group/forum.jsf?group_id=#{forumPostBean.topic.groupId}">
 						<h:outputText value="#{msg.forum}" />
 					</a>
 				</li>
@@ -75,7 +75,8 @@
 		
 					<br style="margin-bottom:0.5rem;"/>
 					
-		        	<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(user)}" id="profile_image" alt="profile image"/>
+		        	<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(user)}" id="profile_image" 
+		        		alt="profile image"/>
 		        	
 		        	<div class="align-left">
 			        	<h:outputText value="#{msg.registered_since}: "/>
@@ -83,19 +84,25 @@
 								<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
 							</h:outputText>
 			        	<br/>
-			        	<h:outputText value="#{msg.message}s: " />
+			        	<h:outputText value="#{msg['ForumIndex.messages']}: " />
 		        	</div>
 		        </p:column>
 		        
-		        <p:column headerText="#{msg.message}s">
+		        <p:column headerText="#{msg['ForumIndex.messages']}">
 		        	<div>
-				       	posted on 
-				        <h:outputText value="#{post.date}">
-					        <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
-					    </h:outputText>
-					    
-					    <h:commandButton value="quote" styleClass="greenbutton float-right"/>
-					    
+		        		<span>
+		        			#{msg.category}: #{selectOneMenuView.category}
+		        		</span>
+		        		<span class="float-right"> 
+					       	#{msg['ForumIndex.postedOn']}
+					        <h:outputText value="#{post.date}">
+						        <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+						    </h:outputText>
+						</span>
+						
+					    <!-- doesn't work yet. 
+					    	<h:commandButton value="#{msg['ForumIndex.quote']}" styleClass="greenbutton float-right"/>
+					    -->
 				    </div>
 				   
 		            <h:outputText value="#{post.text}" escape="false"/>
@@ -106,13 +113,23 @@
 		
 		<div class="page_header" id="reply">
 			<span>
-				Reply
+				#{msg['ForumIndex.reply']}
 			</span>
 		</div>
 			
 		<div class="grey_border">
 			
-			<h:form>           
+			<form>
+				<h:panelGrid columns="2" id="category_table">
+					<h:outputText value="#{msg.category}: "/>
+				       <p:selectOneMenu styleClass="category" value="#{selectOneMenuView.category}" effect="fold" editable="true" style="width:512px !important;">
+				           <f:selectItem itemLabel="Select One" itemValue="" />
+				           <f:selectItem itemLabel="#{msg.category} 1" itemValue="" />
+				           <f:selectItem itemLabel="#{msg.category} 2" itemValue="" />
+				           <f:selectItems value="#{selectOneMenuView.category}" />
+				       </p:selectOneMenu>	
+			    </h:panelGrid> 
+			          
 				<p:editor id="editor" widgetVar="editorWidget" value="#{editorView.text}" width="600" 
 					controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink"/>
 					 
@@ -121,7 +138,7 @@
 				<p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade">
 					<h:outputText id="display" value="#{editorView.text}" escape="false" />
 				</p:dialog>
-			</h:form> 
+			</form> 
 			
 		</div>
 		

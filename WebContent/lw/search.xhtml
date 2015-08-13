@@ -23,8 +23,12 @@
 			#content { padding-top: 6.7rem; }
 		</style>		
 		<div id="sub_menu_bar">  			
-			<h:outputLink value="group/overview.jsf" id="backtogroup" class="float-left" rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
-       		  #{msg.back_to} <i>#{userBean.user.activeGroup.title}</i>
+			<h:outputLink value="group/overview.jsf" id="backtogroup" class="float-left" 
+				rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
+       		  	#{msg.back_to} 
+       		  		<i>
+       		  			#{userBean.user.activeGroup.title}
+       		  		</i>
 				<f:param name="group_id" value="#{userBean.user.activeGroup.id}" />
 			</h:outputLink>		
 					
@@ -80,7 +84,8 @@
 				<ul>
 					<ui:fragment rendered="#{searchBean.isFilterAvailable('service')}">
 						<li class="filter source#{searchBean.filterService != null ? ' active' : null}">
-							<span class="filter-name">#{searchBean.filterService != null ? searchBean.currentService : msg.source} 
+							<span class="filter-name">
+								#{searchBean.filterService != null ? searchBean.currentService : msg.source} 
 								<span class="arrow"></span>
 							</span>
 							<h:panelGroup id="filter-service" styleClass="filter-sub-bar" layout="block">
@@ -90,7 +95,8 @@
 									<f:param name="query" value="#{searchBean.query}" />
 								</h:link>
 								<ui:repeat value="#{searchBean.availiableServices}" var="service">
-									<h:link value="#{service.customName} #{searchBean.getTotalResultsFrom(service) != null ? searchBean.getTotalResultsFrom(service) : null}" outcome="search" styleClass="#{searchBean.filterService == service ? 'active' : null}">
+									<h:link value="#{service.customName} #{searchBean.getTotalResultsFrom(service) != null ? searchBean.getTotalResultsFrom(service) : null}" 
+										outcome="search" styleClass="#{searchBean.filterService == service ? 'active' : null}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
 										<f:param name="filter" value="#{searchBean.generateFiltersLink('srv', service)}" />
 										<f:param name="query" value="#{searchBean.query}" />
@@ -101,17 +107,20 @@
 					</ui:fragment>
 					<ui:fragment rendered="#{searchBean.isFilterAvailable('date')}">
 						<li class="filter date#{searchBean.filterDate != null ? ' active' : null}">
-							<span class="filter-name">#{searchBean.filterDate != null ? searchBean.currentDate : msg.date} 
+							<span class="filter-name">
+								#{searchBean.filterDate != null ? searchBean.currentDate : msg.date} 
 								<span class="arrow"></span>
 							</span>
 							<h:panelGroup id="filter-date" styleClass="filter-sub-bar" layout="block">
-								<h:link value="#{msg.any_time}" outcome="search" styleClass="#{searchBean.filterDate == null ? 'active' : null}">
+								<h:link value="#{msg.any_time}" outcome="search" 
+									styleClass="#{searchBean.filterDate == null ? 'active' : null}">
 									<f:param name="action" value="#{searchBean.searchMode}" />
 									<f:param name="filter" value="#{searchBean.generateFiltersLink('date', 'all')}" />
 									<f:param name="query" value="#{searchBean.query}" />
 								</h:link>
 								<ui:repeat value="#{searchBean.availiableDates}" var="date">
-									<h:link value="#{date.customName}" outcome="search" styleClass="#{searchBean.filterDate == date ? 'active' : null}">
+									<h:link value="#{date.customName}" outcome="search" 
+										styleClass="#{searchBean.filterDate == date ? 'active' : null}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
 										<f:param name="filter" value="#{searchBean.generateFiltersLink('date', date)}" />
 										<f:param name="query" value="#{searchBean.query}" />
@@ -122,7 +131,8 @@
 					</ui:fragment>
 					<ui:fragment rendered="#{searchBean.isFilterAvailable('size')}">
 						<li class="filter size#{searchBean.filterSize != null ? ' active' : null}">
-							<span class="filter-name">#{searchBean.filterSize != null ? searchBean.currentSize : msg.size} 
+							<span class="filter-name">
+								#{searchBean.filterSize != null ? searchBean.currentSize : msg.size} 
 								<span class="arrow"></span>
 							</span>
 							<h:panelGroup id="filter-size" styleClass="filter-sub-bar" layout="block">
@@ -143,7 +153,8 @@
 					</ui:fragment>
 					<ui:fragment rendered="#{searchBean.isFilterAvailable('duration') and userBean.moderator}">
 						<li class="filter duration#{searchBean.filterDuration != null ? ' active' : null}">
-							<span class="filter-name">#{searchBean.filterDuration != null ? searchBean.currentDuration : msg.duration} 
+							<span class="filter-name">
+								#{searchBean.filterDuration != null ? searchBean.currentDuration : msg.duration} 
 								<span class="arrow"></span>
 							</span>
 							<h:panelGroup id="filter-duration" styleClass="filter-sub-bar" layout="block">
@@ -153,7 +164,8 @@
 									<f:param name="query" value="#{searchBean.query}" />
 								</h:link>
 								<ui:repeat value="#{searchBean.availiableDurations}" var="duration">
-									<h:link value="#{duration.customName}" outcome="search" styleClass="#{searchBean.filterDuration == duration ? 'active' : null}">
+									<h:link value="#{duration.customName}" outcome="search" 
+										styleClass="#{searchBean.filterDuration == duration ? 'active' : null}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
 										<f:param name="filter" value="#{searchBean.generateFiltersLink('duration', duration)}" />
 										<f:param name="query" value="#{searchBean.query}" />
@@ -164,7 +176,8 @@
 					</ui:fragment>
 					<ui:fragment rendered="#{searchBean.isFilterAvailable('group') and userBean.moderator}">
 						<li class="filter group#{searchBean.filterGroup != null ? ' active' : null}">
-							<span class="filter-name">#{searchBean.filterGroup != null ? searchBean.getGroupNameById(searchBean.currentGroup) : msg.group} 
+							<span class="filter-name">
+								#{searchBean.filterGroup != null ? searchBean.getGroupNameById(searchBean.currentGroup) : msg.group} 
 								<span class="arrow"></span>
 							</span>
 							<h:panelGroup id="filter-group" styleClass="filter-sub-bar" layout="block">
@@ -252,9 +265,15 @@
 			</p:outputPanel>
 		</h:panelGroup>		
 
-		<div id="search_loading_more_results">#{msg.loading_more_results}</div>
-		<div id="search_no_more_results">#{msg.no_more_results}</div>
-		<div id="search_nothing_found">#{msg.nothingFound}</div>
+		<div id="search_loading_more_results">
+			#{msg.loading_more_results}
+		</div>
+		<div id="search_no_more_results">
+			#{msg.no_more_results}
+		</div>
+		<div id="search_nothing_found">
+			#{msg.nothingFound}
+		</div>
 
 		<div id="new_results" style="display:none;">	
 			<h:panelGroup id="nextPage" layout="block">				

@@ -8,10 +8,13 @@
 		<div id="main_menu_bar" style="background-color: #{userBean.bannerColor}; #{userBean.bannerImage}">			
 		
 			<img src="#{request.contextPath}/resources/main-template/img/ajax-loader.gif" alt="Loading" id="loadingsymbol"/>
-			<p:ajaxStatus onstart="document.getElementById('loadingsymbol').style.visibility='visible';" onsuccess="document.getElementById('loadingsymbol').style.visibility='hidden';" />			
+			<p:ajaxStatus onstart="document.getElementById('loadingsymbol').style.visibility='visible';" 
+				onsuccess="document.getElementById('loadingsymbol').style.visibility='hidden';" />			
 		 
 			<form action=" #{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
-				<a href="#{userBean.bannerLink}" id="learnweb_logo">Logo</a>
+				<a href="#{userBean.bannerLink}" id="learnweb_logo">
+					Logo
+				</a>
 				<input type="search" name="query" value="#{searchBean.query}" size="50" maxlength="100" id="searchfield" />
 				<input type="hidden" name="action" value="#{searchBean.searchMode}" />
 				<input type="submit" value=" " id="searchbutton" title="#{msg.searchLabel}" />
@@ -39,7 +42,8 @@
 						</a>
 					</li>				
 					<li>
-						<img alt="" src="#{request.contextPath}/resources/main-template/img/dropdownmenu.png" height="28" width="28" class="menu" tabindex="0" />
+						<img alt="" src="#{request.contextPath}/resources/main-template/img/dropdownmenu.png" height="28" width="28" 
+							class="menu" tabindex="0" />
 
 						<ul>
 							
@@ -89,11 +93,14 @@
 							</li>
 							
 							<li>
-								<a href="#{request.contextPath}/lw/user/login.jsf" id="login">#{msg.loginLabel}</a>
+								<a href="#{request.contextPath}/lw/user/login.jsf" id="login">
+									#{msg.loginLabel}
+								</a>
 							</li>
 							<li>
 								<h:form id="logout">
-									<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true" title="#{msg.logoutLabel}" value="#{msg.logoutLabel}" />
+									<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true" 
+										title="#{msg.logoutLabel}" value="#{msg.logoutLabel}" />
 								</h:form>
 							</li>
 							<ui:fragment rendered="#{userBean.admin}">
@@ -183,16 +190,24 @@
 				<h:form>
 					<ul>
 						<li>
-							<h:commandLink action="#{userBean.setLocaleCode('de')}" styleClass="language_de">Deutsch</h:commandLink>
+							<h:commandLink action="#{userBean.setLocaleCode('de')}" styleClass="language_de">
+								Deutsch
+							</h:commandLink>
 						</li>
 						<li>
-							<h:commandLink action="#{userBean.setLocaleCode('en')}" styleClass="language_en">English</h:commandLink>
+							<h:commandLink action="#{userBean.setLocaleCode('en')}" styleClass="language_en">
+								English
+							</h:commandLink>
 						</li>
 						<li>
-							<h:commandLink action="#{userBean.setLocaleCode('it')}" styleClass="language_it">Italiano</h:commandLink>
+							<h:commandLink action="#{userBean.setLocaleCode('it')}" styleClass="language_it">
+								Italiano
+							</h:commandLink>
 						</li>
 						<li>
-							<h:commandLink action="#{userBean.setLocaleCode('pt')}" styleClass="language_pt">Português</h:commandLink>
+							<h:commandLink action="#{userBean.setLocaleCode('pt')}" styleClass="language_pt">
+								Português
+							</h:commandLink>
 						</li>
 					</ul>
 				</h:form>
@@ -201,22 +216,27 @@
 
 
 										
-			<p:graphicImage value="/resources/main-template/img/question.png" alt="#{msg.help}" onclick="footerToggle();" rendered="#{not empty helpText}" id="informationonscreen" />
+			<p:graphicImage value="/resources/main-template/img/question.png" alt="#{msg.help}" onclick="footerToggle();" 
+				rendered="#{not empty helpText}" id="informationonscreen" />
 
 		
 			<h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" rendered="#{userBean.loggedIn}" id="message_div">
-				<h:outputText value="#{notificationReaderBean.howManyNewMessages}" rendered="#{notificationReaderBean.howManyNewMessages gt 0}" id="message_count"/>
+				<h:outputText value="#{notificationReaderBean.howManyNewMessages}" rendered="#{notificationReaderBean.howManyNewMessages gt 0}" 
+					id="message_count"/>
 				
-				<img alt="message" src="#{request.contextPath}/resources/main-template/img/message.png" id="message_button" class="header_buttons hover-white"/>
+				<img alt="message" src="#{request.contextPath}/resources/main-template/img/message.png" id="message_button" 
+					class="header_buttons hover-white"/>
 			</h:outputLink>
 
-			<h:outputLink id="loginbutton" value="#{request.contextPath}/lw/user/login.jsf" rendered="#{not userBean.loggedIn}" class="hover-white">
+			<h:outputLink id="loginbutton" value="#{request.contextPath}/lw/user/login.jsf" rendered="#{not userBean.loggedIn}" 
+				class="hover-white">
 				#{msg.loginLabel}
 			</h:outputLink>
 
 			<h:form>
 				<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true" title="#{msg.logoutLabel}">
-					<img alt="#{msg.logoutLabel}" src="#{request.contextPath}/resources/main-template/img/logout.png" id="logoutbutton" class="header_buttons hover-white" />
+					<img alt="#{msg.logoutLabel}" src="#{request.contextPath}/resources/main-template/img/logout.png" id="logoutbutton" 
+						class="header_buttons hover-white" />
 				</h:commandLink>
 			</h:form>
 			
@@ -235,15 +255,20 @@
 		<p:ajaxExceptionHandler type="java.lang.Exception" update="exceptionDialog" onexception="PF('exceptionDialoge').show();" />
 
 		<p:dialog id="exceptionDialog" header="Exception '#{pfExceptionHandler.type}' occured!" widgetVar="exceptionDialog" height="500px">
-	        #{msg.message}: #{pfExceptionHandler.message} <br />
-	        StackTrace: <h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
+	        #{msg.message}: #{pfExceptionHandler.message} 
+	        <br />
+	        StackTrace: 
+	        <h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
 			<br />
 		</p:dialog>
 
-		<p:dialog header="Session expired" widgetVar="expiredExceptionDialog">
-			<div class="error" style="font-size:1.4rem">#{msg.reload_page}</div>	        
-	        <br/><br/>
-	        <p:button onclick="document.location.href = document.location.href; return false;" value="Reload" />	        
+		<p:dialog header="#{msg.session_expired}" widgetVar="expiredExceptionDialog">
+			<div class="error" style="font-size:1.4rem">
+				#{msg.reload_page}
+			</div>	        
+	        <br/>
+	        <br/>
+	        <p:button onclick="document.location.href = document.location.href; return false;" value="#{msg.reload}" />	        
 		</p:dialog>
 	</h:form>
 

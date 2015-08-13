@@ -26,11 +26,8 @@
 				</h:panelGroup>
 			</div>
 						
-			<h:outputText value="#{logEntry.datedifference} [#{logEntry.date.toLocaleString()}]" 
-				escape="false" 
-				style="font-size:8pt; 
-				max-height:50px; 
-				color: grey;"/>	
+			<h:outputText value="#{logEntry.datedifference}" escape="false" style="font-size:8pt; max-height:50px; color: grey;"/>	
+			<!-- double date: remove [#{logEntry.date.toLocaleString()}] -->
 					
 			<br/>
 			<br/>

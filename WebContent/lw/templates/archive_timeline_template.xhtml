@@ -25,10 +25,10 @@
 			});
 			
 			var no_of_versions = '#{msg.no_of_versions}';
-			var timeline_title = '#{msg.archive_timeline_title}';
-			var timeline_series_name = '#{msg.archive_timeline_series_name}';
-			var msgClickZoom = '#{msg.archive_timeline_click_zoom}';
-			var msgTouchZoom = '#{msg.archive_timeline_touch_zoom}';
+			var timeline_title = '#{msg["Archive.timeline_title"]}';
+			var timeline_series_name = '#{msg["Archive.timeline_series_name"]}';
+			var msgClickZoom = '#{msg["Archive.timeline_click_zoom"]}';
+			var msgTouchZoom = '#{msg["Archive.timeline_touch_zoom"]}';
 			
 			loadTimeline(#{resourceDetailBean.archiveTimelineJsonData});
 			loadCalendar(#{resourceDetailBean.archiveCalendarJsonData});
