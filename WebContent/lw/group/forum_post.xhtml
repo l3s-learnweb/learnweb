@@ -31,27 +31,27 @@
 				
 			<ul>
 				<li>
-					<a href="./group/overview.jsf?group_id=#{groupDetailBean.group.id}">
+					<a href="./group/overview.jsf?group_id=#{forumPostBean.topic.groupId}">
 						<h:outputText value="#{msg.overview}" />
 					</a>
 				</li>								
 				<li>
-					<a href="./group/resources.jsf?group_id=#{groupDetailBean.group.id}">
+					<a href="./group/resources.jsf?group_id=#{forumPostBean.topic.groupId}">
 						<h:outputText value="#{msg.resources}" />
 					</a>
 				</li>								
 				<li>
-					<a href="./group/members.jsf?group_id=#{groupDetailBean.group.id}">
+					<a href="./group/members.jsf?group_id=#{forumPostBean.topic.groupId}">
 						<h:outputText value="#{msg.members}" />
 					</a>
 				</li>								
 				<li>
-					<a href="./group/presentations.jsf?group_id=#{groupDetailBean.group.id}">
+					<a href="./group/presentations.jsf?group_id=#{forumPostBean.topic.groupId}">
 						<h:outputText value="#{msg.presentations}" />
 					</a>
 				</li>								
 				<li>
-					<a class="" href="./group/links.jsf?group_id=#{groupDetailBean.group.id}">
+					<a class="" href="./group/links.jsf?group_id=#{forumPostBean.topic.groupId}">
 						<h:outputText value="#{msg.links}" />
 					</a>
 				</li>								
@@ -84,14 +84,15 @@
 								<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
 							</h:outputText>
 			        	<br/>
-			        	<h:outputText value="#{msg['ForumIndex.messages']}: " />
+			        	<h:outputText value="#{msg['ForumIndex.messages']}: #{post.user.forumPostCount}" />
+			        	
 		        	</div>
 		        </p:column>
 		        
 		        <p:column headerText="#{msg['ForumIndex.messages']}">
 		        	<div>
 		        		<span>
-		        			#{msg.category}: #{selectOneMenuView.category}
+		        			#{msg.category}: Not set
 		        		</span>
 		        		<span class="float-right"> 
 					       	#{msg['ForumIndex.postedOn']}

@@ -794,6 +794,9 @@ span.ui-autocomplete{border:1px solid transparent !important;}
 	background-image:none !important;
 	box-shadow:none;
 }
+.ui-state-error {
+    border: 1px solid #CD0A0A !important;
+}
 
 #datagrid .ui-panel-content{padding:5px;}
 .explore_history .ui-button .ui-button-text, .search_history .ui-button .ui-button-text{

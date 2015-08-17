@@ -27,7 +27,7 @@
 	</h:head>
 
 	<h:body>
-		<p:growl id="growl" rendered="#{userBean.loggedIn}" />
+		<p:growl id="growl" rendered="#{userBean.loggedIn and not disableGrowl}" />
 		
 		<ui:decorate template="/templates/main/tooltips.xhtml" />
 		<ui:decorate template="/templates/main/header.xhtml" />

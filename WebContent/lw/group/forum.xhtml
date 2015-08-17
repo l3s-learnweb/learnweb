@@ -5,13 +5,14 @@
 	xmlns:p="http://primefaces.org/ui">
 	
 	<ui:define name="metadata">
-		<f:metadata>
-			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}"  />
+		<f:metadata> 
+			<f:viewParam name="group_id" value="#{forumTopicsBean.groupId}"  />
 			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{forumTopicsBean.preRenderView}" /> 
 		</f:metadata>
 	</ui:define>	
 		
 	<ui:param name="loginRequired" value="true" />
+	<ui:param name="disableGrowl" value="true" />
 	<ui:param name="pageTitle" value="#{msg.forum}" escape="false" />
 
 	<ui:define name="center_layout">
@@ -22,49 +23,49 @@
 			<span>
 				#{msg.forum}
 			</span> 
-			#{msg.of} #{groupDetailBean.group.title}
+			#{msg.of} #{forumTopicsBean.group.title}
 			
 			<h:form id="center_header_form">
-				<a href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}#new_topic" class="resource_button greenbutton">
+				<a href="./group/forum.jsf?group_id=#{forumTopicsBean.group.id}#new_topic" class="resource_button greenbutton">
 					#{msg['ForumIndex.new_topic']}
 				</a>
 			</h:form>
 				
 			<ul>								
 				<li>
-					<a href="./group/overview.jsf?group_id=#{groupDetailBean.group.id}">
+					<a href="./group/overview.jsf?group_id=#{forumTopicsBean.group.id}">
 						<h:outputText value="#{msg.overview}" />
 					</a>
 				</li>								
 				<li>
-					<a href="./group/resources.jsf?group_id=#{groupDetailBean.group.id}">
+					<a href="./group/resources.jsf?group_id=#{forumTopicsBean.group.id}">
 						<h:outputText value="#{msg.resources}" />
 					</a>
 				</li>								
 				<li>
-					<a href="./group/members.jsf?group_id=#{groupDetailBean.group.id}">
+					<a href="./group/members.jsf?group_id=#{forumTopicsBean.group.id}">
 						<h:outputText value="#{msg.members}" />
 					</a>
 				</li>								
 				<li>
-					<a href="./group/presentations.jsf?group_id=#{groupDetailBean.group.id}">
+					<a href="./group/presentations.jsf?group_id=#{forumTopicsBean.group.id}">
 						<h:outputText value="#{msg.presentations}" />
 					</a>
 				</li>								
 				<li>
-					<a class="" href="./group/links.jsf?group_id=#{groupDetailBean.group.id}">
+					<a class="" href="./group/links.jsf?group_id=#{forumTopicsBean.group.id}">
 						<h:outputText value="#{msg.links}" />
 					</a>
 				</li>								
 				<li>
-					<a class="active" href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
+					<a class="active" href="./group/forum.jsf?group_id=#{forumTopicsBean.group.id}">
 						<h:outputText value="#{msg.forum}" />
 					</a>
 				</li>
 			</ul>
 		</div>  	
 		
-		<h:form prependId="false">
+		<h:form prependId="false" rendered="#{not facesContext.validationFailed}">
 			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table"
 				paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 			      
@@ -105,32 +106,32 @@
 		</div>
 			
 		<div class="grey_border">
-			<form>
-				<h:panelGrid columns="2" id="new_topic_table">
-					#{msg['ForumIndex.topic']}:
-				<h:inputText value=""/>
-	
-				<h:outputText value="#{msg.category}: "/>
-			       <p:selectOneMenu styleClass="category" value="#{selectOneMenuView.category}" effect="fold" editable="true">
-				           <f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="" />
-				           <f:selectItem itemLabel="#{msg['ForumIndex.answer']}" itemValue="" />
-				           <f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="" />
-				           <f:selectItems value="#{selectOneMenuView.category}" />
-			       </p:selectOneMenu>	
-			   
-			   		<h:outputText value=""/>
-			   		
-					<p:editor id="editor" widgetVar="editorWidget" value="#{editorView.text}"
-						controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink"/>
-		 
-					<p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade">
-						<h:outputText id="display" value="#{editorView.text}" escape="false" />
-					</p:dialog>
-				
-				</h:panelGrid>
-				
-				<h:commandButton value="#{msg.save}" styleClass="greenbutton save_button"/>
-			</form> 
+			<h:form prependId="false">
+				<h:panelGrid columns="3" id="new_topic_table">				
+					<h:outputText value="#{msg['ForumIndex.topic']}:"/>
+					<p:inputText value="#{forumTopicsBean.newTopic}" id="post_topic" style="box-sizing:border-box;" label="#{msg['ForumIndex.topic']}"/>
+					<p:message for="post_topic"/>
+					
+					<h:outputText value="#{msg.category}: "/>
+					<p:selectOneMenu id="post_category" styleClass="category" value="#{forumTopicsBean.newPost.category}" editable="true" label="#{msg.category}" >
+						<f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="" />
+						<f:selectItem itemLabel="#{msg['ForumIndex.answer']}" itemValue="" />
+						<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="" />
+						<f:selectItems value="#{selectOneMenuView.category}" />
+					</p:selectOneMenu>	
+					<p:message for="post_category"/>
+					
+					<h:outputText value=""/>			
+					<p:editor id="post_message" widgetVar="editorWidget" value="#{forumTopicsBean.newPost.text}" label="Message"
+						controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">
+						<f:validateLength minimum="5" maximum="50000" />
+					</p:editor>
+					<p:message for="post_message"/>
+			
+				</h:panelGrid>		
+					
+					<p:commandButton ajax="false" value="#{msg.save}" styleClass="greenbutton save_button" action="#{forumTopicsBean.onSavePost}" validateClient="true"/>	
+			</h:form> 
 		</div>
 	</ui:define>
 </ui:composition>

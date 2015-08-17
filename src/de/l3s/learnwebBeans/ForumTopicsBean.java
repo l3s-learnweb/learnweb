@@ -2,6 +2,7 @@ package de.l3s.learnwebBeans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -10,7 +11,10 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.event.ComponentSystemEvent;
 
 import org.apache.log4j.Logger;
+import org.hibernate.validator.constraints.NotBlank;
 
+import de.l3s.learnweb.ForumManager;
+import de.l3s.learnweb.ForumPost;
 import de.l3s.learnweb.ForumTopic;
 import de.l3s.learnweb.Group;
 
@@ -26,80 +30,98 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
     private Group group;
     private List<ForumTopic> topics;
 
+    @NotBlank
+    private String newTopicTitle;
+    private ForumPost newPost;
+
     public ForumTopicsBean()
     {
-
+	newPost = new ForumPost();
     }
 
     public void preRenderView(ComponentSystemEvent e)
     {
 	try
 	{
-	    loadGroup();
+	    if(0 == groupId)
+	    {
+		Integer id = getParameterInt("group_id");
+		if(id != null)
+		    groupId = id.intValue();
+	    }
+
+	    group = getLearnweb().getGroupManager().getGroupById(groupId);
+	    topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);
 	}
 	catch(SQLException e1)
 	{
 	    log.error("Cant load group", e1);
 	}
-    }
-
-    private void loadGroup() throws SQLException
-    {
-	if(0 == groupId)
-	{
-	    Integer id = getParameterInt("group_id");
-	    if(id != null)
-		groupId = id.intValue();
-	}
-
-	group = getLearnweb().getGroupManager().getGroupById(groupId);
 
 	if(null == group)
 	{
 	    addMessage(FacesMessage.SEVERITY_ERROR, "invalid or no group id");
 	    return;
 	}
-
-	topics = getLearnweb().getForumManager().getTopicsByGroup(groupId);
     }
 
-    /*
-    public void saveForumTopic() throws SQLException
+    public String onSavePost() throws SQLException
     {
-    try
-    {
-        ForumTopic forumTopic = new ForumTopic();
-        forumTopic.setTitle(topic);
-        forumTopic.setGroupId(groupId);
-        Learnweb.getInstance().getForumManager().save(forumTopic);
-        this.topic = "";
+	Date now = new Date();
+
+	ForumTopic topic = new ForumTopic();
+	topic.setGroupId(groupId);
+	topic.setTitle(newTopicTitle);
+	topic.setUserId(getUser().getId());
+	topic.setDate(now);
+	topic.setLastPostUserId(getUser().getId());
+	topic.setLastPostDate(now);
+
+	ForumManager fm = getLearnweb().getForumManager();
+	topic = fm.save(topic);
+
+	newPost.setUserId(getUser().getId());
+	newPost.setDate(now);
+	newPost.setTopicId(topic.getId());
+
+	fm.save(newPost);
+
+	return "forum_post.jsf?faces-redirect=true&topic_id=" + topic.getId();
     }
-    catch(SQLException e)
-    {
-        addFatalMessage(e);
-    }
-    }
-    */
 
     public List<ForumTopic> getTopics() throws SQLException
     {
 	return topics;
     }
 
-    /**
-     * public String getMessage()
-     * {
-     * return message;
-     * }
-     * 
-     * public void setMessage(String message)
-     * {
-     * this.message = message;
-     * }
-     **/
-
     public Group getGroup()
     {
 	return group;
     }
+
+    public int getGroupId()
+    {
+	return groupId;
+    }
+
+    public void setGroupId(int groupId)
+    {
+	this.groupId = groupId;
+    }
+
+    public ForumPost getNewPost()
+    {
+	return newPost;
+    }
+
+    public String getNewTopic()
+    {
+	return newTopicTitle;
+    }
+
+    public void setNewTopic(String newTopic)
+    {
+	this.newTopicTitle = newTopic;
+    }
+
 }

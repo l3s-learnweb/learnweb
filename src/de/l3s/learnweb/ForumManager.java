@@ -102,6 +102,22 @@ public class ForumManager
 	return posts;
     }
 
+    int getPostCountByUser(int userId) throws SQLException
+    {
+	int posts = 0;
+
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM `lw_forum_post` WHERE user_id = ?");
+	select.setInt(1, userId);
+	ResultSet rs = select.executeQuery();
+
+	if(rs.next())
+	    posts = rs.getInt(1);
+
+	select.close();
+
+	return posts;
+    }
+
     public ForumTopic save(ForumTopic topic) throws SQLException
     {
 	String sqlQuery = "REPLACE INTO `lw_forum_topic` (" + TOPIC_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?)";
@@ -157,13 +173,15 @@ public class ForumManager
 		throw new SQLException("database error: no id generated");
 	    post.setId(rs.getInt(1));
 
-	    sqlQuery = "UPDATE lw_forum_topic SET topic_replies = topic_replies + 1, topic_last_post_id = ?, topic_last_post_time = ?, topic_last_post_user_id = ? WHERE topic_id = ?";
+	    sqlQuery = "UPDATE lw_forum_topic SET topic_replies = topic_replies + 1, topic_last_post_id = ?, topic_last_post_time = ?, topic_last_post_user_id = ? WHERE topic_id = ? AND topic_replies > 0";
 	    PreparedStatement update = learnweb.getConnection().prepareStatement(sqlQuery);
 	    update.setInt(1, post.getId());
 	    update.setTimestamp(2, new Timestamp(post.getDate().getTime()));
 	    update.setInt(3, post.getUserId());
 	    update.setInt(4, post.getTopicId());
 	    update.executeUpdate();
+
+	    post.getUser().incForumPostCount();
 	}
 
 	return post;

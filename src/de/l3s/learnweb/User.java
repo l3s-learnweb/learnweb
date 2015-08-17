@@ -58,15 +58,14 @@ public class User implements Comparable<User>, Serializable, HasId
     private HashMap<String, String> preferences;
 
     // caches
-
-    private List<Course> courses;
-    private List<Resource> resources;
-    private List<Group> groups;
-    private LinkedList<Group> writeAbleGroups;
+    private transient List<Course> courses;
+    private transient List<Resource> resources;
+    private transient List<Group> groups;
+    private transient LinkedList<Group> writeAbleGroups;
     private String imageUrl;
-
     private TimeZone timeZone = TimeZone.getTimeZone("Europe/Berlin");
     private Date lastLoginDate = null;
+    private int forumPostCount = -1;
 
     public User()
     {
@@ -652,4 +651,20 @@ public class User implements Comparable<User>, Serializable, HasId
     {
 	return "userId: " + getId() + " name: " + getUsername();
     }
+
+    public int getForumPostCount() throws SQLException
+    {
+	if(forumPostCount == -1)
+	{
+	    forumPostCount = Learnweb.getInstance().getForumManager().getPostCountByUser(id);
+	}
+	return forumPostCount;
+    }
+
+    public void incForumPostCount()
+    {
+	if(forumPostCount != -1)
+	    forumPostCount++;
+    }
+
 }

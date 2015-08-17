@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
 
+import org.hibernate.validator.constraints.NotBlank;
+
 public class ForumPost implements Serializable
 {
     private static final long serialVersionUID = 4093915855537221830L;
@@ -11,11 +13,13 @@ public class ForumPost implements Serializable
     private int id = -1;
     private int userId;
     private int topicId;
+    @NotBlank()
     private String text;
     private Date date;
     private int editCount;
     private Date lastEditDate;
     private int editUserId;
+    private String category;
 
     // cached value
     private transient User user;
@@ -68,7 +72,8 @@ public class ForumPost implements Serializable
     public void setDate(Date date)
     {
 	this.date = date;
-	this.lastEditDate = date;
+	if(lastEditDate == null)
+	    this.lastEditDate = date;
     }
 
     public int getEditCount()
@@ -108,6 +113,16 @@ public class ForumPost implements Serializable
 	    user = Learnweb.getInstance().getUserManager().getUser(userId);
 	}
 	return user;
+    }
+
+    public String getCategory()
+    {
+	return category;
+    }
+
+    public void setCategory(String category)
+    {
+	this.category = category;
     }
 
     @Override
