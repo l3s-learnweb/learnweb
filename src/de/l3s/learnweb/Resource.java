@@ -984,6 +984,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
     public LinkedHashMap<Integer, File> getFiles()
     {
+	// TODO add lazy loading ass soon as embedded images are removed
 	return files;
     }
 
@@ -1330,6 +1331,18 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     public void setCreationDate(Date creationDate)
     {
 	this.creationDate = creationDate;
+    }
+
+    private String collector;
+
+    public String getCollector()
+    {
+	return collector;
+    }
+
+    public void setCollector(String collector)
+    {
+	this.collector = collector;
     }
 
 }

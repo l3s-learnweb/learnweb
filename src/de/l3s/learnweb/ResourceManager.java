@@ -18,6 +18,7 @@ import de.l3s.interwebj.jaxb.ThumbnailEntity;
 import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
+import de.l3s.learnweb.solrClient.SolrClient;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
@@ -935,20 +936,23 @@ public class ResourceManager
 	    resource.setRestricted(rs.getInt("restricted") == 1);
 	    resource.setCreationDate(rs.getTimestamp("creation_date") == null ? null : new Date(rs.getTimestamp("creation_date").getTime()));
 
-	    if(resource.getSource().equals("TED")) // This must be set manually because we store all TED videos in Learnweb/Solr
+	    // This must be set manually because we stored some external sources in Learnweb/Solr
+	    if(resource.getSource().equals("TED"))
 		resource.setLocation("TED");
-	    else if(resource.getSource().equals("TEDx")) // This must be set manually because we store all TEDx resources in Learnweb/Solr
+	    else if(resource.getSource().equals("TEDx"))
 		resource.setLocation("TEDx");
-	    else if(resource.getSource().equals("LORO")) // This must be set manually because we store all LORO resources in Learnweb/Solr
+	    else if(resource.getSource().equals("LORO"))
 		resource.setLocation("LORO");
-	    else if(resource.getSource().equals("Yovisto")) // This must be set manually because we store all Yovisto resources in Learnweb/Solr
+	    else if(resource.getSource().equals("Yovisto"))
 		resource.setLocation("Yovisto");
+	    else if(resource.getSource().equals("Archive-It"))
+		resource.setLocation("Archive-It");
 	    else
 		resource.setLocation("Learnweb");
 
+	    // TODO remove as soon as embedded images are removed
 	    if(rs.getInt("deleted") == 0)
 	    {
-
 		List<File> files = learnweb.getFileManager().getFilesByResource(resource.getId());
 		for(File file : files)
 		{
@@ -974,13 +978,17 @@ public class ResourceManager
 
 	if(fileId != 0)
 	{
+	    /* This version is correct but slow because it requires a separate sql query:
+	     * 
 	    File file = learnweb.getFileManager().getFileById(fileId);
 	    if(null == file)
 	    {
-		log.error("resource " + rs.getInt("resource_id") + ": thumbnail file " + fileId + " size=" + thumbnailSize + " does not exist");
-		return null;
+	    log.error("resource " + rs.getInt("resource_id") + ": thumbnail file " + fileId + " size=" + thumbnailSize + " does not exist");
+	    return null;
 	    }
 	    url = file.getUrl();
+	    */
+	    url = learnweb.getFileManager().getThumbnailUrl(fileId);
 	}
 	else if(url == null)
 	{
@@ -1013,6 +1021,7 @@ public class ResourceManager
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
 	{
+	    //log.debug(rs.getInt("resource_id"));
 	    resources.add(createResource(rs));
 	}
 	select.close();
@@ -1112,33 +1121,6 @@ public class ResourceManager
 	    resource.setMaxImageUrl(biggestThumbnail.getUrl());
 
 	return resource;
-    }
-
-    public static void main(String[] args) throws Exception
-    {
-	//fixThumbnailsForWebResources();
-	createThumbnailsForWebResources();
-	/*
-	Learnweb lw = Learnweb.getInstance();
-	ResourceManager rm = new ResourceManager(lw);
-	ResourcePreviewMaker rpm = lw.getResourcePreviewMaker();
-
-	Resource r = rm.getResource(110873);
-
-	rpm.processWebsite(r);
-
-	//createThumbnailsForTEDVideos();
-	//createThumbnailsForWebResources();
-
-	//Learnweb.getInstance().getResourcePreviewMaker().processImage(new Resource(), FileInspector.openStream("http://www.educaplay.com/es/recursoseducativos/1460084/mi_barrio.htm")); // For all other resources of type != video
-	/*
-		Resource video = new Resource();
-		video.setUrl("http://loro.open.ac.uk/2130/1/Teaser_Trailer_1.mp4");
-		Learnweb.getInstance().getResourcePreviewMaker().processVideo(video);
-	*/
-	log.debug("done");
-
-	//Learnweb.getInstance().onDestroy();
     }
 
     public static void fixThumbnailsForWebResources() throws Exception
@@ -1318,6 +1300,41 @@ public class ResourceManager
 	    else
 		System.out.println(resource.getType());
 	}
+    }
+
+    public static void reindexArchiveItResources() throws SQLException
+    {
+	Learnweb lw = Learnweb.getInstance();
+	ResourceManager rm = lw.getResourceManager();
+	SolrClient sm = lw.getSolrClient();
+
+	PreparedStatement detailSelect = lw.getConnection().prepareStatement("SELECT collector FROM `archiveit_collection` WHERE `lw_resource_id` = ?");
+
+	List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where deleted=0 AND source=?", "Archive-It");
+
+	log.debug("Resources loaded");
+
+	for(Resource resource : resources)
+	{
+	    log.debug("Process: " + resource.getId());
+
+	    detailSelect.setInt(1, resource.getId());
+	    ResultSet rs = detailSelect.executeQuery();
+
+	    if(rs.next())
+	    {
+		resource.setCollector(rs.getString("collector"));
+
+		sm.reIndexResource(resource);
+	    }
+	    else
+		log.error("no archiveit_collection entry for id: " + resource.getId());
+	}
+    }
+
+    public static void main(String[] args) throws Exception
+    {
+	reindexArchiveItResources();
     }
 
 }

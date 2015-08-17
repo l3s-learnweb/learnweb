@@ -219,7 +219,7 @@ public class FileManager
 	if(files.size() == 0)
 	    return;
 
-	ArrayList<Integer> fileIds = new ArrayList<Integer>(files.size());
+	List<Integer> fileIds = new ArrayList<Integer>(files.size());
 
 	for(File file : files)
 	{
@@ -270,7 +270,7 @@ public class FileManager
 
 	if(!file.getActualFile().exists())
 	{
-	    log.error("Can't find file: " + file.getActualFile().getAbsolutePath());
+	    log.error("Can't find file: " + file.getActualFile().getAbsolutePath(), new Exception());
 
 	    file.setExists(false);
 
@@ -290,6 +290,18 @@ public class FileManager
     private String createUrl(File file)
     {
 	return baseUrl + file.getId() + "/" + StringHelper.urlEncode(file.getName());
+    }
+
+    /**
+     * Returns the download url for a specific file and appends "thumbnail.png".
+     * this method doesn't check if the file exists or the mime type is correct
+     * 
+     * @param fileId
+     * @return
+     */
+    public String getThumbnailUrl(int fileId)
+    {
+	return baseUrl + fileId + "/thumbnail.png";
     }
 
     private java.io.File createActualFile(File file)

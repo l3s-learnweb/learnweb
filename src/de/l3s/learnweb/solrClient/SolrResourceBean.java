@@ -93,6 +93,10 @@ public class SolrResourceBean
     @Field("url")
     private String url;
 
+    // dynamic fields
+    @Field("collector_s")
+    private String collector;
+
     public SolrResourceBean() // empty constructor necessary for SolrSearch
     {
 
@@ -103,8 +107,9 @@ public class SolrResourceBean
 	this(decoratedResource.getResource());
 
 	setOldRank(decoratedResource.getRankAtService());
-	setEmbeddedCode(decoratedResource.getResource().getEmbeddedRaw());
+	//setEmbeddedCode(decoratedResource.getResource().getEmbeddedRaw());
 	setId(decoratedResource.getResource().getUrl());
+
 	if(null != decoratedResource.getResource().getThumbnail4())
 	{
 	    setThumbnailUrl2(decoratedResource.getResource().getThumbnail2().getUrl());
@@ -124,14 +129,15 @@ public class SolrResourceBean
 	this.id = "r_" + resource.getId();
 	this.title = resource.getTitle();
 	this.description = resource.getDescription();
-	this.source = resource.getSource();
-	this.location = resource.getLocation();
+	this.source = resource.getSource().equals("Archive-It")? "ArchiveIt" : resource.getSource();
+	this.location = resource.getLocation().equals("Archive-It")? "ArchiveIt" : resource.getLocation();
 	this.type = resource.getType();
 	this.format = resource.getFormat();
-	//this.language = resource.getLanguage();
+	this.language = resource.getLanguage();
 	this.author = resource.getAuthor();
 	this.ownerUserId = resource.getOwnerUserId();
 	this.url = resource.getUrl();
+
 	if(null != resource.getTags())
 	{
 	    this.tags = new LinkedList<String>();
@@ -150,6 +156,14 @@ public class SolrResourceBean
 	    for(Group group : resource.getGroups())
 		groups.add(group.getId());
 	}
+
+	if(null != resource.getThumbnail4())
+	{
+	    setThumbnailHeight4(resource.getThumbnail4().getHeight());
+	    setThumnailWidth4(resource.getThumbnail4().getWidth());
+	}
+
+	this.collector = resource.getCollector();
     }
 
     public String getAuthor()
@@ -420,6 +434,16 @@ public class SolrResourceBean
     public void setUrl(String url)
     {
 	this.url = url;
+    }
+
+    public String getCollector()
+    {
+	return collector;
+    }
+
+    public void setCollector(String collector)
+    {
+	this.collector = collector;
     }
 
 }
