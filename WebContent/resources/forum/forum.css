@@ -25,6 +25,7 @@
 }
 .save_button{
 	margin:1rem 0;
+	margin-left:9rem;
 }
 form{
 	margin-right:5px;
@@ -37,10 +38,13 @@ form{
 .ui-selectonemenu-item .ui-selectonemenu-list-item:focus{
 	border:none !important;
 }
+.ui-selectonemenu-panel .ui-selectonemenu-list-item{
+	border:1px solid #ffffff !important;
+}
 .ui-shadow{
 	box-shadow:none;
 }
-.ui-state-highlight{
+.ui-state-active, .ui-state-highlight{
 	background-image:none !important;
 	background-color:#c4c4c4 !important;
 	color:#000000 !important;
@@ -48,6 +52,10 @@ form{
 }
 .ui-state-hover, .ui-state-focus{
 	border:none !important;
+}
+.ui-corner-right{
+	border-radius:0 !important;
+	border-right: 1px solid #a8a8a8 !important;
 }
 
 /*forum_page*/
@@ -71,17 +79,20 @@ form{
 #new_topic_table,#category_table{
 	font-size:1.5rem;
 	margin-bottom:1rem;
+	width:100% !important;
 }
 #new_topic_table tr td:first-child, #new_topic_table tr td:first-child + td + td, #category_table tr td:first-child{
 	padding-right:20px;
 }
-#new_topic_table input:first-child{
-	height:20px;
-	padding-left:5px;
-	width:504px !important;
+#new_topic_table input:first-child, #editor{
+	width:100% !important;
+	min-width:300px !important;
 }
 .category{
-	width:100% !important;
+	width:50% !important;
+}
+.category input{
+	width:95% !important;
 }
 
 /*forum_post_page*/

@@ -107,27 +107,29 @@
 		<div class="grey_border">
 			<form>
 				<h:panelGrid columns="2" id="new_topic_table">
-				#{msg['ForumIndex.topic']}:
+					#{msg['ForumIndex.topic']}:
 				<h:inputText value=""/>
 	
 				<h:outputText value="#{msg.category}: "/>
 			       <p:selectOneMenu styleClass="category" value="#{selectOneMenuView.category}" effect="fold" editable="true">
-			           <f:selectItem itemLabel="Question" itemValue="" />
-			           <f:selectItem itemLabel="Answer" itemValue="" />
-			           <f:selectItem itemLabel="Explanation" itemValue="" />
-			           <f:selectItems value="#{selectOneMenuView.category}" />
+				           <f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="" />
+				           <f:selectItem itemLabel="#{msg['ForumIndex.answer']}" itemValue="" />
+				           <f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="" />
+				           <f:selectItems value="#{selectOneMenuView.category}" />
 			       </p:selectOneMenu>	
+			   
+			   		<h:outputText value=""/>
+			   		
+					<p:editor id="editor" widgetVar="editorWidget" value="#{editorView.text}"
+						controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink"/>
+		 
+					<p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade">
+						<h:outputText id="display" value="#{editorView.text}" escape="false" />
+					</p:dialog>
 				
 				</h:panelGrid>
-			          
-				<p:editor id="editor" widgetVar="editorWidget" value="#{editorView.text}" width="600" 
-					controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink"/>
-					 
+				
 				<h:commandButton value="#{msg.save}" styleClass="greenbutton save_button"/>
-	 
-				<p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade">
-					<h:outputText id="display" value="#{editorView.text}" escape="false" />
-				</p:dialog>
 			</form> 
 		</div>
 	</ui:define>
