@@ -613,7 +613,7 @@ a:hover{text-decoration:underline;}
 	background:url(img/search.png) no-repeat scroll center center !important;
 	background-size:16px 16px !important;
 	height:19px;
-	border:none;
+	border:none !important;
 	background-color:rgb(230, 230, 230) !important;
 }
 #group_resource_searchbutton:hover,
@@ -698,10 +698,18 @@ h2 { margin-bottom:0.8rem; }
 /*lightbox*/
 #lightbox_container { box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.8); }
 
-/*forum*/
-/*.grey_background{
-	background-color:#eee !important;
-}*/
+/*group_overview*/
+#other_groups{
+	margin-bottom:20px;
+}
+
+/*group_header*/
+#group_header ul{
+	box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.1);
+}
+#group_header{
+	margin-bottom:1rem;
+}
 
 /* change primefaces ui */
 .ui-button,

@@ -15,7 +15,7 @@
 		
 		<ui:define name="center_layout">
 			<h:form id="center_header_form">
-				<p:commandButton styleClass="resource_button greenbutton ressourcetoolbutton" update=":add_resource_panel" 
+				<p:commandButton styleClass="resource_button greenbutton resourcetoolbutton" update=":add_resource_panel" 
 					value="#{msg.upload_resource}" oncomplete="update_header()">
 					<f:setPropertyActionListener target="#{activityResourceBean.newResourceClicked}" value="true"/>
 				</p:commandButton>
@@ -111,7 +111,7 @@
 							escape="false" styleClass="newsfeed_tags"/>
 						
 					</h:panelGroup>
-					<hr width="auto" class="newsfeed_separator" ></hr>
+					<hr width="auto" class="newsfeed_separator" />
 				</h:column>	
 								
 			</h:dataTable>

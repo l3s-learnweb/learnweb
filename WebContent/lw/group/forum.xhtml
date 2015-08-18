@@ -67,7 +67,8 @@
 		
 		<h:form prependId="false" rendered="#{not facesContext.validationFailed}">
 			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table"
-				paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+				paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+				emptyMessage="#{msg['ForumIndex.no_forum_topics']}">
 			      
 			 	<p:column headerText="#{msg['ForumIndex.topic']}" sortBy="#{topic.title}">
 			    	<a href="./group/forum_post.jsf?topic_id=#{topic.id}">
@@ -91,7 +92,7 @@
 			        </h:outputText>
 			        <br/>
 			        <h:outputText value="#{msg.by}" />
-			        <a href="./user/detail.jsf?user_id=#{topic.userId}"> <!-- TODO replace with real user -->
+			        <a href="./user/detail.jsf?user_id=#{topic.userId}">
 			        	<h:outputText value="#{topic.lastPostUser.username}" />
 			        </a>
 			    </p:column>
@@ -109,11 +110,12 @@
 			<h:form prependId="false">
 				<h:panelGrid columns="3" id="new_topic_table">				
 					<h:outputText value="#{msg['ForumIndex.topic']}:"/>
-					<p:inputText value="#{forumTopicsBean.newTopic}" id="post_topic" style="box-sizing:border-box;" label="#{msg['ForumIndex.topic']}"/>
+					<p:inputText value="#{forumTopicsBean.newTopic}" id="post_topic" label="#{msg['ForumIndex.topic']}"/>
 					<p:message for="post_topic"/>
 					
 					<h:outputText value="#{msg.category}: "/>
-					<p:selectOneMenu id="post_category" styleClass="category" value="#{forumTopicsBean.newPost.category}" editable="true" label="#{msg.category}" >
+					<p:selectOneMenu id="post_category" styleClass="category" value="#{forumTopicsBean.newPost.category}" editable="true" 
+						label="#{msg.category}" >
 						<f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="" />
 						<f:selectItem itemLabel="#{msg['ForumIndex.answer']}" itemValue="" />
 						<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="" />
@@ -122,15 +124,19 @@
 					<p:message for="post_category"/>
 					
 					<h:outputText value=""/>			
-					<p:editor id="post_message" widgetVar="editorWidget" value="#{forumTopicsBean.newPost.text}" label="Message"
+					<p:editor id="post_message" widgetVar="editorWidget" value="#{forumTopicsBean.newPost.text}" 
+						label="#{msg['PostShow.postContent']}"
 						controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">
 						<f:validateLength minimum="5" maximum="50000" />
 					</p:editor>
 					<p:message for="post_message"/>
-			
-				</h:panelGrid>		
 					
-					<p:commandButton ajax="false" value="#{msg.save}" styleClass="greenbutton save_button" action="#{forumTopicsBean.onSavePost}" validateClient="true"/>	
+					<h:outputText value=""/>
+					<h:commandButton ajax="false" value="#{msg.save}" styleClass="greenbutton save_button" action="#{forumTopicsBean.onSavePost}" 
+						validateClient="true"/>
+					<h:outputText value=""/>
+				</h:panelGrid>		
+						
 			</h:form> 
 		</div>
 	</ui:define>

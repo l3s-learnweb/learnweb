@@ -9,23 +9,19 @@
 #center_header_form a{
 	padding:6px 12px;
 }
-#group_header ul{
-	box-shadow: 0px 5px 5px 0px rgba(0,0,0,0.1);
-}
-#group_header{
-	margin-bottom:1rem;
-}
-#new_topic, #reply{
+
+#new_topic, 
+#reply{
 	margin-top:2rem;
 	margin-right:5px;
 }
 .grey_border{
 	margin-bottom:5rem;
 	margin-right:5px;
+	overflow:auto;
 }
 .save_button{
 	margin:1rem 0;
-	margin-left:9rem;
 }
 form{
 	margin-right:5px;
@@ -39,7 +35,7 @@ form{
 	border:none !important;
 }
 .ui-selectonemenu-panel .ui-selectonemenu-list-item{
-	border:1px solid #ffffff !important;
+	border:1px solid #ffffff;
 }
 .ui-shadow{
 	box-shadow:none;
@@ -51,11 +47,11 @@ form{
 	text-shadow:none !important;
 }
 .ui-state-hover, .ui-state-focus{
-	border:none !important;
+	border:none;
 }
 .ui-corner-right{
-	border-radius:0 !important;
-	border-right: 1px solid #a8a8a8 !important;
+	border-radius:0;
+	border-right: 1px solid #a8a8a8;
 }
 
 /*forum_page*/
@@ -76,17 +72,22 @@ form{
 #forum_table tr th:last-child{
 	width:10%;
 }
-#new_topic_table,#category_table{
+#new_topic_table,#answer_table{
 	font-size:1.5rem;
 	margin-bottom:1rem;
-	width:100% !important;
+	width:100%;
+	min-width:300px !important; /* doesn't work?!*/
 }
-#new_topic_table tr td:first-child, #new_topic_table tr td:first-child + td + td, #category_table tr td:first-child{
+#new_topic_table tr td:first-child,
+#new_topic_table tr td:first-child + td + td, 
+#answer_table tr td:first-child{
 	padding-right:20px;
 }
-#new_topic_table input:first-child, #editor{
-	width:100% !important;
-	min-width:300px !important;
+#post_topic, #post_message{
+	width:100%;
+}
+#post_topic{
+	box-sizing:border-box;
 }
 .category{
 	width:50% !important;
@@ -96,23 +97,35 @@ form{
 }
 
 /*forum_post_page*/
-#forum_post_table tr th:first-child{
+#forum_post_table tr th:first-child,
+#forum_post_table tr td:first-child{
 	width:13%;
-	min-width:100px !important;
+	min-width:100px !important; /* doesn't work?!*/
+}
+#forum_post_table tr td:first-child{
+	vertical-align: top;
 }
 #forum_post_table tr td:first-child div{
 	margin-bottom:1rem;
 }
 #forum_post_table tr td:last-child{
-	vertical-align: top;
+	vertical-align:top;
 	padding-bottom:1rem;
 }
-#forum_post_table tr td:last-child div{
+.post_information_div_top{
 	border-bottom:1px solid #a8a8a8; 
 	margin:1rem 0; 
 	padding-bottom:1rem;
 }
-#forum_post_table tr td:last-child div input{
-	margin-top:-0.5rem;
+.post_information_div_bottom{
+	border-top:1px solid #a8a8a8;
+	padding-top:1rem;
+	vertical-align:bottom;
+}
+
+/*quote, edit, clear button at the moment not show in the html*/
+.post_information_div input{
+	margin-top:-0.8rem;
 	padding:2px 8px;
+	margin-left:5px;
 }

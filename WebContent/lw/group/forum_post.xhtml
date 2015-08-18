@@ -68,7 +68,7 @@
 		    	lazy="false" paginatorPosition="bottom" id="forum_post_table"
 		    	paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" >
 		      
-		      	<p:column headerText="#{msg.author}" styleClass="align-center" >
+		      	<p:column headerText="#{msg.author}" styleClass="align-center">
 		        	<a href="./user/detail.jsf?user_id=#{post.userId}" >
 		        		<h:outputText value="#{post.user.username}"/>
 		        	</a>
@@ -85,28 +85,37 @@
 							</h:outputText>
 			        	<br/>
 			        	<h:outputText value="#{msg['ForumIndex.messages']}: #{post.user.forumPostCount}" />
-			        	
 		        	</div>
 		        </p:column>
 		        
 		        <p:column headerText="#{msg['ForumIndex.messages']}">
-		        	<div>
+		        	<div class="post_information_div_top">
 		        		<span>
 		        			#{msg.category}: Not set
 		        		</span>
-		        		<span class="float-right"> 
+		        		
+					    <!-- doesn't work yet. 
+					    	<h:commandButton value="#{msg.clear}" styleClass="greenbutton float-right"/>
+					    	<h:commandButton value="#{msg.edit}" styleClass="greenbutton float-right"/>
+					  		<h:commandButton value="#{msg['ForumIndex.quote']}" styleClass="greenbutton float-right"/>
+					   -->
+					   <span class="float-right">
 					       	#{msg['ForumIndex.postedOn']}
 					        <h:outputText value="#{post.date}">
 						        <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
 						    </h:outputText>
 						</span>
-						
-					    <!-- doesn't work yet. 
-					    	<h:commandButton value="#{msg['ForumIndex.quote']}" styleClass="greenbutton float-right"/>
-					    -->
 				    </div>
 				   
-		            <h:outputText value="#{post.text}" escape="false"/>
+		            <h:outputText value="#{post.text}" escape="false" />
+		            
+		            <div class="post_information_div_bottom">
+		            	<h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
+		            		<f:param value="1"/>
+							<f:param value="18.08.2015"/>
+							<f:param value="pkb6"/>
+		            	</h:outputFormat>
+		            </div>
 		        </p:column>
 		        
 		    </p:dataTable>
@@ -121,26 +130,29 @@
 		<div class="grey_border">
 			
 			<form>
-				<h:panelGrid columns="2" id="category_table">
+				<h:panelGrid columns="3" id="answer_table">
 					<h:outputText value="#{msg.category}: "/>
-				       <p:selectOneMenu styleClass="category" value="#{selectOneMenuView.category}" effect="fold" editable="true">
-				            <f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="" />
-			          		<f:selectItem itemLabel="#{msg['ForumIndex.answer']}" itemValue="" />
-			           		<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="" />
-				           	<f:selectItems value="#{selectOneMenuView.category}" />
+				    <p:selectOneMenu id="post_category" styleClass="category" value="" editable="true" label="#{msg.category}">
+				     	<f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="" />
+			          	<f:selectItem itemLabel="#{msg['ForumIndex.answer']}" itemValue="" />
+			           	<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="" />
+				        <f:selectItems value="#{selectOneMenuView.category}" />
 				       </p:selectOneMenu>	
+			  		<p:message for="post_category"/>
 			  
 			  		<h:outputText value=""/>
 			  
-					<p:editor id="editor" widgetVar="editorWidget" value="#{editorView.text}" 
-						controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink"/>
-		 
-					<p:dialog header="Content" widgetVar="dlg" showEffect="fade" hideEffect="fade">
-						<h:outputText id="display" value="#{editorView.text}" escape="false" />
-					</p:dialog>
-				  </h:panelGrid> 
-				  
-				  <h:commandButton value="#{msg.save}" styleClass="greenbutton save_button" />
+					<p:editor id="post_message" widgetVar="editorWidget" value="" label="#{msg['PostShow.postContent']}"
+						controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">
+		 				<f:validateLength minimum="5" maximum="50000" />
+		 			</p:editor>
+		 			<p:message for="post_message"/>
+		 			
+		 			<h:outputText value=""/>
+		 			<h:commandButton ajax="false" value="#{msg.save}" styleClass="greenbutton save_button" action="#{forumTopicsBean.onSavePost}" 
+		 				validateClient="true"/>
+		 			<h:outputText value=""/>
+				</h:panelGrid> 
 			</form> 
 			
 		</div>

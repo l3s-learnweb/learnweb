@@ -24,13 +24,9 @@
 				#{msg.of} #{groupDetailBean.group.title}
 				
 				<h:form id="center_header_form">
-					<p:commandLink rendered="#{not groupDetailBean.member}" 
-						action="#{groupsBean.joinGroup}" 
-						styleClass="resource_button greenbutton" 
-						update=":growl :group_menu @form :resource_disp" 
-						partialSubmit="true" 
-						process="@this" 
-						value="#{msg.join_group}">
+					<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" 
+						styleClass="resource_button greenbutton" update=":growl :group_menu @form :resource_disp" partialSubmit="true" 
+						process="@this" value="#{msg.join_group}">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
 					</p:commandLink>
 				</h:form>
@@ -59,6 +55,11 @@
 					<li>
 						<a class="" href="./group/links.jsf?group_id=#{groupDetailBean.group.id}">
 							<h:outputText value="#{msg.links}" />
+						</a>
+					</li>
+					<li>
+						<a href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.forum}" />
 						</a>
 					</li>
 				</ul>

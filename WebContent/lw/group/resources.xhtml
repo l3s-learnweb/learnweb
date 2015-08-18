@@ -29,22 +29,15 @@
 					#{groupDetailBean.group.title}
 				</span>
 				<h:form id="center_header_form">
-					<p:commandButton rendered="#{groupDetailBean.member}" 
-						styleClass="resource_button greenbutton ressourcetoolbutton" 
-						value="#{msg.upload_resource}" 
-						update=":add_resource_panel" 
-						oncomplete="update_header()">
+					<p:commandButton rendered="#{groupDetailBean.member}" styleClass="resource_button greenbutton resourcetoolbutton" 
+						value="#{msg.upload_resource}" update=":add_resource_panel" oncomplete="update_header()">
 						<f:setPropertyActionListener target="#{addResourceBean.resourceTargetGroupId}" value="#{groupDetailBean.groupId}"/>
 						<f:setPropertyActionListener target="#{groupDetailBean.newResourceClicked}" value="true"/>
 					</p:commandButton>
 				
-					<p:commandLink rendered="#{not groupDetailBean.member}" 
-						action="#{groupsBean.joinGroup}" 
-						styleClass="resource_button greenbutton" 
-						update=":growl :group_menu @form" 
-						partialSubmit="true" 
-						process="@this" 
-						value="#{msg.join_group}">
+					<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" 
+						styleClass="resource_button greenbutton" update=":growl :group_menu @form" partialSubmit="true" 
+						process="@this" value="#{msg.join_group}">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
 					</p:commandLink>
 				</h:form>
@@ -76,19 +69,20 @@
 						</a>
 					</li>
 					<li>
+						<a href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.forum}" />
+						</a>
+					</li>
+					<li>
 						<img alt="" src="#{request.contextPath}/resources/main-template/img/search.png" height="16" width="16" 
 							id="search_group_resource" style="padding:3px 15px;cursor:pointer"/>
 					
 						<h:form id="header_query_form" prependId="false" style="white-space : nowrap;">
 							<h:inputText value="#{groupDetailBean.query}" id="input_query_form" style="margin-top:2.5px;width:20rem" />
 
-							<p:commandButton actionListener="${groupDetailBean.onQueryChange()}" 
-								oncomplete="resetCenterPaneHeight(); $('#center_pane .content').scrollTop(0);"
-								partialSubmit="true" 
-								process="@form" 
-								update=":datagrid :paginator" 
-								value="" 
-								id="group_resource_searchbutton"/>
+							<p:commandButton actionListener="${groupDetailBean.onQueryChange()}" partialSubmit="true" 
+								oncomplete="resetCenterPaneHeight(); $('#center_pane .content').scrollTop(0);" process="@form" 
+								update=":datagrid :paginator" value="" id="group_resource_searchbutton"/>
 						</h:form>
 					</li>
 				</ul>
@@ -193,14 +187,16 @@
 						<h:selectOneMenu value="#{groupDetailBean.selectedResourceTargetGroupId}">
 							<f:selectItem itemLabel="#{msg.myResourcesTitle}" itemValue="0" />
 							<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />
-							<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" itemValue="#{group.id}" />
+							<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" 
+								itemValue="#{group.id}" />
 						</h:selectOneMenu>
 	
 						<h:outputText value="#{msg.title}:" />
 						<p:inputText value="#{groupDetailBean.clickedResource.title}" styleClass="resource_dialog_field" />
 	
 						<h:outputText value="#{msg.description}:" />
-						<p:inputTextarea value="#{groupDetailBean.clickedResource.description}" autoResize="true" styleClass="resource_dialog_field"/>
+						<p:inputTextarea value="#{groupDetailBean.clickedResource.description}" autoResize="true" 
+							styleClass="resource_dialog_field"/>
 	
 						<h:outputText value="Url:" />
 						<p:inputText value="#{groupDetailBean.clickedResource.url}" disabled="true" styleClass="resource_dialog_field" />
@@ -215,11 +211,8 @@
 						<h:panelGroup layout="block" styleClass="align-right">
 							<p:commandButton value="#{msg.cancel}" onclick="PF('resource_dialog').hide(); return false;" />
 							
-							<p:commandButton value="#{msg.save}" 
-								action="#{groupDetailBean.addSelectedResource}" 
-								update=":datagrid :growl" 
-								process="@form :datagrid" 
-								oncomplete="PF('resource_dialog').hide()" />
+							<p:commandButton value="#{msg.save}" action="#{groupDetailBean.addSelectedResource}" 
+								update=":datagrid :growl" process="@form :datagrid" oncomplete="PF('resource_dialog').hide()" />
 						</h:panelGroup>
 						
 					</h:panelGrid>
@@ -231,15 +224,13 @@
 					<h:panelGrid columns="2">
 						<h:outputText value="#{msg.link_to}:"/>
 						<h:selectOneMenu value="#{groupDetailBean.selectedResourceTargetGroupId}">
-							<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
+							<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" 
+								itemValue="#{group.id}"/>
 						</h:selectOneMenu>					
 						
 						<h:outputText value="" />
-						<p:commandButton value="#{msg.save}" 
-							action="#{groupDetailBean.addSelectedResourceLink}" 
-							process="@form" 
-							update=":growl" 
-							oncomplete="PF('resource_link_dialog').hide()"/>
+						<p:commandButton value="#{msg.save}" action="#{groupDetailBean.addSelectedResourceLink}" process="@form" 
+							update=":growl" oncomplete="PF('resource_link_dialog').hide()"/>
 					</h:panelGrid>					
 				</h:form>			
 			</p:dialog>			
@@ -260,41 +251,31 @@
 					            			#{result.id}
 					            		</span>
 	
-										<h:graphicImage styleClass="resource_thumbnail" 
-											width="#{result.thumbnail1.width}" height="#{result.thumbnail1.height}" 
-											value="#{result.thumbnail1.url}" 
-											rendered="#{not empty result.thumbnail1}" 
-											alt="#{result.title}" />
-							    		<h:outputText styleClass="resource_thumbnail"
+										<h:graphicImage styleClass="resource_thumbnail" width="#{result.thumbnail1.width}" 
+											height="#{result.thumbnail1.height}" value="#{result.thumbnail1.url}" 
+											rendered="#{not empty result.thumbnail1}" alt="#{result.title}" />
+							    		<h:outputText styleClass="resource_thumbnail" escape="false" 
 							    			 value='#{result.resource.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' 
-							    			 escape="false" 
 							    			 rendered="#{empty result.thumbnail1}"/>
 	
 					            		<div class="buttons">
-					            			<p:commandLink oncomplete="PF('resource_dialog').show()" 
-					            				title="#{msg.addToMyResources}" 
-					            				update=":resource_form" 
-					            				styleClass="buttons_link" 
-					            				process="@this"> <!-- resource_commandlink -->
+					            			<p:commandLink oncomplete="PF('resource_dialog').show()" title="#{msg.addToMyResources}" 
+					            				update=":resource_form" styleClass="buttons_link" process="@this"> <!-- resource_commandlink -->
 												<h:graphicImage alt="Add" value="/resources/icon/Add.png"/>
 												<f:setPropertyActionListener value="#{result.resource}" target="#{groupDetailBean.clickedResource}" />
 												<f:param name="group_id" value="#{groupDetailBean.groupId}" />
 											</p:commandLink>
 											
-											<p:commandLink oncomplete="PF('resource_link_dialog').show();" 
-												title="#{msg.link_to}" 
-												rendered="#{userBean.isModerator() or true}" 
-												styleClass="buttons_link"> <!-- resource_commandlink -->
+											<p:commandLink oncomplete="PF('resource_link_dialog').show();" title="#{msg.link_to}" 
+												rendered="#{userBean.isModerator() or true}" styleClass="buttons_link"> <!-- resource_commandlink -->
 												<h:graphicImage alt="Add" value="/resources/icon/Add_blue.png" title="#{msg.link_to}" /> 
 												<f:setPropertyActionListener value="#{result.resource}" target="#{groupDetailBean.clickedResource}" />
 												<f:param name="group_id" value="#{groupDetailBean.groupId}" /> 
 											</p:commandLink>
 					            			
-					            			<p:commandLink oncomplete="PF('confirmation').show();" 
-					            				title="#{msg.removeFromGroup}" 
+					            			<p:commandLink oncomplete="PF('confirmation').show();" title="#{msg.removeFromGroup}" 
 					            				rendered="${groupDetailBean.canDeleteResourceFromGroup(result)}" 
-					            				styleClass="buttons_link" 
-					            				update=":confirm_dialog_form">
+					            				styleClass="buttons_link" update=":confirm_dialog_form">
 												<h:graphicImage alt="Remove" value="../resources/icon/Remove.png"/>
 												
 												<f:setPropertyActionListener value="#{result.resource}" target="#{groupDetailBean.clickedResource}" />
@@ -311,14 +292,10 @@
 												<f:param name="group_id" value="#{groupDetailBean.groupId}" />
 											</p:commandLink>
 											
-											<p:commandLink update=":resource_form" 
-												oncomplete="PF('resource_move_dialog').show();" 
-												title="#{msg.move_to}" 
-												rendered="#{userBean.isModerator() and false}" >
-												<h:graphicImage value="/resources/icon/silk/delete.png" 
-													width="16" height="16" 
-													title="#{msg.move_to}" 
-													style="padding: 3px;"/> 
+											<p:commandLink update=":resource_form" oncomplete="PF('resource_move_dialog').show();" 
+												title="#{msg.move_to}" rendered="#{userBean.isModerator() and false}" >
+												<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" 
+													title="#{msg.move_to}" style="padding: 3px;"/> 
 												<f:setPropertyActionListener value="#{result.resource}" target="#{searchBean.selectedResource}" />
 												<f:param name="group_id" value="#{groupDetailBean2.groupId}" /> 
 											</p:commandLink>

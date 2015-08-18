@@ -142,7 +142,7 @@
 		
 		<ui:fragment rendered="#{userBean.showMessageAddResource}">
 		   // first on page load, initiate the Tooltipster plugin
-		   $('.ressourcetoolbutton').tooltipster({
+		   $('.resourcetoolbutton').tooltipster({
 			   animation: 'grow',
 			   delay: 600,
 			   theme: 'tooltipster-default',
@@ -156,13 +156,13 @@
 		   // then immediately show the tooltips
 		   setTimeout(function()
 			{ 
-					   $('.ressourcetoolbutton').tooltipster('show');
+					   $('.resourcetoolbutton').tooltipster('show');
 			}, 600);
 		  
 
 		   // as soon as a key is pressed on the keyboard, hide the tooltip.
 		  $(window).keypress(function() {
-		      $('.ressourcetoolbutton').tooltipster('hide');
+		      $('.resourcetoolbutton').tooltipster('hide');
 		   });
 		</ui:fragment>
 		

@@ -30,9 +30,12 @@
 				</span>
 				
 				<h:form id="center_header_form">
-					<p:commandButton rendered="#{groupDetailBean.member}" styleClass="resource_button greenbutton" onclick="PF('format_dialog').show()" value="#{msg.presentation_new}" />
+					<p:commandButton rendered="#{groupDetailBean.member}" styleClass="resource_button greenbutton" 
+						onclick="PF('format_dialog').show()" value="#{msg.presentation_new}" />
 				
-					<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" styleClass="resource_button greenbutton"  update=":growl :group_menu @form" partialSubmit="true" process="@this" value="#{msg.join_group}">
+					<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" 
+						styleClass="resource_button greenbutton"  update=":growl :group_menu @form" partialSubmit="true" 
+						process="@this" value="#{msg.join_group}">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
 					</p:commandLink>
 				</h:form>
@@ -63,6 +66,11 @@
 							<h:outputText value="#{msg.links}" />
 						</a>
 					</li>
+					<li>
+						<a href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.forum}" />
+						</a>
+					</li>
 				</ul>
 			</div>
 			
@@ -76,9 +84,12 @@
 		/* ]]> */
 		</script>
 
-		<p:confirmDialog id="confirmDialog" message="#{msg.delete_message_presentation}" header="delete_presentation" severity="alert" widgetVar="confirmation" appendTo="@(body)">
+		<p:confirmDialog id="confirmDialog" message="#{msg.delete_message_presentation}" header="delete_presentation" severity="alert" 
+			widgetVar="confirmation" appendTo="@(body)">
 			<h:form>
-				<p:commandButton id="confirm" value="#{msg.yes}" update=":datagrid :right_form" oncomplete="update_header(); PF('confirmation').hide();" actionListener="#{groupDetailBean.removePresentationFromGroup}" process=":right_form" />
+				<p:commandButton id="confirm" value="#{msg.yes}" update=":datagrid :right_form" 
+					oncomplete="update_header(); PF('confirmation').hide();" actionListener="#{groupDetailBean.removePresentationFromGroup}" 
+					process=":right_form" />
 				<p:commandButton id="decline" value="#{msg.no}" onclick="PF('confirmation').hide()" type="button" />
 			</h:form>
 		</p:confirmDialog>
@@ -86,12 +97,16 @@
 		<p:dialog resizable="false" header="#{msg.layout_selection}" widgetVar="format_dialog" modal="true" appendTo="@(body)">
 				<h:form>
 					#{msg.select_layout}<br/><br/>
-			    	<a onclick="PF('format_dialog').hide()" class="format_button_link" target="new_presentation" href="#{groupDetailBean.edit('1')}">
-						<img class="format_button" src="../resources/icon/format1.jpg"></img><br/>
+			    	<a onclick="PF('format_dialog').hide()" class="format_button_link" target="new_presentation" 
+			    		href="#{groupDetailBean.edit('1')}">
+						<img class="format_button" src="../resources/icon/format1.jpg"></img>
+						<br/>
 						#{msg.layout_single_silde}
 					</a>
-			    	<a onclick="PF('format_dialog').hide()" class="format_button_link" target="new_presentation" href="#{groupDetailBean.edit('2')}">
-						<img class="format_button" src="../resources/icon/format2.jpg"></img><br/>
+			    	<a onclick="PF('format_dialog').hide()" class="format_button_link" target="new_presentation" 
+			    		href="#{groupDetailBean.edit('2')}">
+						<img class="format_button" src="../resources/icon/format2.jpg"></img>
+						<br/>
 						#{msg.layout_two_silde}
 					</a>
 		    	</h:form>
@@ -99,12 +114,16 @@
 		    <p:dialog resizable="false" header="#{msg.layout_selection}" widgetVar="format_dialog2" modal="true" appendTo="@(body)">
 				<h:form id="edit_presentation_layout">
 					#{msg.select_layout}<br/><br/>
-			    	<a onclick="PF('format_dialog2').hide()" class="format_button_link" target="edit_presentation" href="#{groupDetailBean.editPresentation('1')}">
-						<img class="format_button" src="../resources/icon/format1.jpg"></img><br/>
+			    	<a onclick="PF('format_dialog2').hide()" class="format_button_link" target="edit_presentation" 
+			    		href="#{groupDetailBean.editPresentation('1')}">
+						<img class="format_button" src="../resources/icon/format1.jpg"></img>
+						<br/>
 						#{msg.layout_single_silde}
 					</a>
-			    	<a onclick="PF('format_dialog2').hide()" class="format_button_link" target="edit_presentation" href="#{groupDetailBean.editPresentation('2')}">
-						<img class="format_button" src="../resources/icon/format2.jpg"></img><br/>
+			    	<a onclick="PF('format_dialog2').hide()" class="format_button_link" target="edit_presentation" 
+			    		href="#{groupDetailBean.editPresentation('2')}">
+						<img class="format_button" src="../resources/icon/format2.jpg"></img>
+						<br/>
 						#{msg.layout_two_silde}
 					</a>
 		    	</h:form>
@@ -117,12 +136,17 @@
 				   
 				    <h:form value="#{groupDetailBean.presentations}">   
 					    
-					    <p:commandLink styleClass="resource_command_link" update=":right_form :edit_presentation_layout" oncomplete="update_header()">
-				        	<f:setPropertyActionListener target="#{groupDetailBean.clickedPresentation}" value="#{result}"></f:setPropertyActionListener>
+					    <p:commandLink styleClass="resource_command_link" update=":right_form :edit_presentation_layout" 
+					    	oncomplete="update_header()">
+				        	<f:setPropertyActionListener target="#{groupDetailBean.clickedPresentation}" value="#{result}"/>
 					            <div class="members_panelgrid grey_border"> 
 					            	<img src="../resources/icon/presentation.png" width="100" height="100" />
-					            	<div class="member_username_small">#{result.presentationName}</div>
-					            	<span class="groupid">#{result.presentationId}</span>
+					            	<div class="member_username_small">
+					            		#{result.presentationName}
+					            	</div>
+					            	<span class="groupid">
+					            		#{result.presentationId}
+					            	</span>
 					            </div>
 					    </p:commandLink>
 					    
@@ -147,7 +171,9 @@
 		</ui:define>
 		
 		<ui:define name="right_layout">
-			<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" header="#{groupDetailBean.clickedPresentation.presentationId eq -1? msg.presentation_details:groupDetailBean.clickedPresentation.presentationName}" id="right_pane">
+			<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" 
+				header="#{groupDetailBean.clickedPresentation.presentationId eq -1? msg.presentation_details:groupDetailBean.clickedPresentation.presentationName}" 
+				id="right_pane">
 				<div id="right_pane_wrapper">
 					<h:form id="right_form" target="presentation">
 						<script type="text/javascript">
@@ -162,11 +188,16 @@
 							
 							<div id="presentation_preview">
 							    <span class="aligner"></span>
-							    <h:outputText value="#{groupDetailBean.clickedPresentation.presentationTitle}" escape="false" styleClass="align" />
+							    <h:outputText value="#{groupDetailBean.clickedPresentation.presentationTitle}" escape="false" 
+							    	styleClass="align" />
 							</div>
-							<p:commandButton styleClass="presentation_commandbutton" action="#{groupDetailBean.present}" ajax="false" value="#{msg.present}"></p:commandButton>
-							<p:commandButton styleClass="presentation_commandbutton" onclick="PF('format_dialog2').show(); return false" ajax="false" value="#{msg.edit}"></p:commandButton>
-							<p:commandButton styleClass="presentation_commandbutton" rendered="#{userBean.admin || userBean.moderator || groupDetailBean.clickedPresentation.ownerId == userBean.user.id || groupDetailBean.group.leaderUserId == userBean.user.id}" onclick="PF('confirmation').show(); return false" ajax="false" value="#{msg.delete}"></p:commandButton>
+							<p:commandButton styleClass="presentation_commandbutton" action="#{groupDetailBean.present}" ajax="false" 
+								value="#{msg.present}"/>
+							<p:commandButton styleClass="presentation_commandbutton" onclick="PF('format_dialog2').show(); return false" 
+								ajax="false" value="#{msg.edit}"/>
+							<p:commandButton styleClass="presentation_commandbutton" onclick="PF('confirmation').show(); return false" 
+								ajax="false" value="#{msg.delete}"
+								rendered="#{userBean.admin || userBean.moderator || groupDetailBean.clickedPresentation.ownerId == userBean.user.id || groupDetailBean.group.leaderUserId == userBean.user.id}" />
 							<div class="presentation_clear"></div>
 							<div class="presentation_detail_div">
 								<div class="data">
@@ -176,7 +207,9 @@
 									#{groupDetailBean.clickedPresentation.getOwner().username}
 								</div>
 								<div class="data">
-									<span class="resource_field">#{msg.date}: </span>
+									<span class="resource_field">
+										#{msg.date}: 
+									</span>
 									<h:outputText value="#{groupDetailBean.clickedPresentation.date}">	
 										<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}" />
 									</h:outputText>

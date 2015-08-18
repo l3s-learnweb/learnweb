@@ -62,13 +62,11 @@
 						<h:outputText value="#{msg.links}" />
 					</a>
 				</li>								
-				<ui:fragment rendered="#{userBean.admin || userBean.moderator}">
-					<li>
-						<a href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
-							<h:outputText value="#{msg.forum}" />
-						</a>
-					</li>
-				</ui:fragment>
+				<li>
+					<a href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.forum}" />
+					</a>
+				</li>
 			</ul>
 		</div>
 		
@@ -105,7 +103,16 @@
 			<h:panelGroup rendered="${not empty groupDetailBean.links}">	
 				<h:form styleClass="links_form">		
 					<h4 class="clear">
-					<h:outputText value="#{msg.links}" />:</h4>
+						<h:outputText value="#{msg.links}" />
+						:
+					</h4>
+					<h:outputText value="new Forum:" style="font-weight:bold"/>
+					<div class="grey_border">
+						<a href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
+							<h:outputText value="#{msg.forum}" />
+						</a>
+					</div>
+					<br class="clear"/>
 					<p:dataList var="link" value="${groupDetailBean.links}" styleClass="links_datalist">		
 						<p:column>
 							<h:outputLink value="#{link.url}" target="_blank" styleClass="links_output">
