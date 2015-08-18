@@ -107,15 +107,21 @@
 						</span>
 				    </div>
 				   
-		            <h:outputText value="#{post.text}" escape="false" />
-		            
-		            <div class="post_information_div_bottom">
-		            	<h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
-		            		<f:param value="1"/>
-							<f:param value="18.08.2015"/>
-							<f:param value="pkb6"/>
-		            	</h:outputFormat>
-		            </div>
+					<div style="min-height:70px">
+						<h:outputText value="#{post.text}" escape="false" />
+					</div>
+					
+			      <!--    
+			      	<ui:fragment>
+						<div class="post_information_div_bottom" >
+				        	<h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
+				        		<f:param value=""/>	edit times 
+								<f:param value=""/> last edit date
+								<f:param value=""/> last edit username 
+				            </h:outputFormat>
+			           	</div>
+			          </ui:fragment>
+			      -->
 		        </p:column>
 		        
 		    </p:dataTable>

@@ -110,7 +110,6 @@ form{
 }
 #forum_post_table tr td:last-child{
 	vertical-align:top;
-	padding-bottom:1rem;
 }
 .post_information_div_top{
 	border-bottom:1px solid #a8a8a8; 
@@ -120,12 +119,12 @@ form{
 .post_information_div_bottom{
 	border-top:1px solid #a8a8a8;
 	padding-top:1rem;
-	vertical-align:bottom;
+	margin:1rem 0; 
 }
 
-/*quote, edit, clear button at the moment not show in the html*/
+/*quote, edit, clear button at the moment not show in the html
 .post_information_div input{
 	margin-top:-0.8rem;
 	padding:2px 8px;
 	margin-left:5px;
-}
+}*/
