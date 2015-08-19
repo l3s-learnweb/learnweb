@@ -191,21 +191,30 @@ public class LoroManager
 
 	/*User rishita = learnweb.getUserManager().getUser(7727);
 
+	
 	for(Resource resource : loroGroup.getResources())
 	{
+	    checkConnection(DBConnection);
 	    if(resource.getType().contains("Video") || resource.getType().contains("Image"))
 	    {
-		resource.setUrl("http://loro.open.ac.uk/" + resource.getIdAtService() + "/");
-		resource.save();
-		System.out.println(resource.getUrl());
+		int idatserv = Integer.parseInt(resource.getIdAtService());
+		PreparedStatement ps = DBConnection.prepareStatement("UPDATE `LORO_resource_docs` SET `resource_id`=" + resource.getId() + "  WHERE `loro_resource_id`=" + idatserv + " AND `doc_url`=\"" + resource.getFileUrl() + "\"");
+		ps.executeUpdate();
+	    }
+	    else
+	    {
+		int idatserv = Integer.parseInt(resource.getIdAtService());
+		PreparedStatement ps1 = DBConnection.prepareStatement("UPDATE `LORO_resource_docs` SET `resource_id`=" + resource.getId() + " WHERE (`loro_resource_id`=" + idatserv + " AND doc_format NOT LIKE \"%image%\") OR (`loro_resource_id`=" + idatserv
+			+ " AND `doc_format` NOT LIKE \"%video%\")");
+		ps1.executeUpdate();
 	    }
 
 	    System.out.println(resource.getTitle());
 
 	}
 
-	System.exit(0);*/
-
+	System.exit(0);
+	*/
 	getConnection();
 
 	User admin = learnweb.getUserManager().getUser(7727);
