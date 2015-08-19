@@ -110,37 +110,55 @@
 			
 		<div class="grey_border">
 			<h:form prependId="false">
-				<h:panelGrid columns="3" id="new_topic_table">				
-					<h:outputText value="#{msg['ForumIndex.topic']}:"/>
-					<p:inputText value="#{forumTopicsBean.newTopicTitle}" id="post_topic" label="#{msg['ForumIndex.topic']}">
-						<f:validateLength minimum="0" maximum="100" />
-					</p:inputText>
-					<p:message for="post_topic"/>
-					
-					<h:outputText value="#{msg.category}: "/>
-					<p:selectOneMenu id="post_category" styleClass="category" value="#{forumTopicsBean.newPost.category}" editable="true" 
-						label="#{msg.category}" >
-						<f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="" />
-						<f:selectItem itemLabel="#{msg['ForumIndex.answer']}" itemValue="" />
-						<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="" />
-						<f:selectItems value="#{selectOneMenuView.category}" />
-					</p:selectOneMenu>	
-					<p:message for="post_category"/>
-					
-					<h:outputText value=""/>			
-					<p:editor id="post_message" widgetVar="editorWidget" value="#{forumTopicsBean.newPost.text}" 
-						label="#{msg['PostShow.postContent']}"
-						controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">
-
-					</p:editor>
-					<p:message for="post_message"/>
-					
-					<h:outputText value=""/>
-					<h:commandButton ajax="false" value="#{msg.save}" styleClass="greenbutton save_button" action="#{forumTopicsBean.onSavePost}" 
-						validateClient="true"/>
-					<h:outputText value=""/>
-				</h:panelGrid>		
-						
+				<table id="new_topic_table">
+					<tr>
+						<td class="width_10">
+							<h:outputText value="#{msg['ForumIndex.topic']}: " style="margin-top:5px;margin-bottom:5px;"/>
+						</td>
+						<td>
+							<h:inputText value="#{forumTopicsBean.newTopicTitle}" id="post_topic" label="#{msg['ForumIndex.topic']}">
+								<f:validateLength minimum="0" maximum="100" />
+							</h:inputText>
+						</td>
+						<td class="width_30">
+							<p:message for="post_topic"/>
+						</td>
+					</tr>
+					<tr>
+						<td class="width_10">
+							<h:outputText value="#{msg.category}: " /> 
+						</td>
+						<td>
+							<p:selectOneMenu id="post_category" styleClass="category" value="#{forumTopicsBean.newPost.category}" editable="true" 
+								label="#{msg.category}" >
+								<f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="" />
+								<f:selectItem itemLabel="#{msg['ForumIndex.answer']}" itemValue="" />
+								<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="" />
+								<f:selectItems value="#{selectOneMenuView.category}" />
+							</p:selectOneMenu>	
+						</td>
+						<td class="width_30">
+							<p:message for="post_category"/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="2">
+							<p:editor id="post_message" widgetVar="editorWidget" value="#{forumTopicsBean.newPost.text}" 
+								label="#{msg['PostShow.postContent']}"
+								controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">
+							</p:editor>
+						</td>
+						<td class="width_30">
+							<p:message for="post_message"/>
+						</td>
+					</tr>
+					<tr>
+						<td colspan="3">
+							<h:commandButton ajax="false" value="#{msg.save}" styleClass="greenbutton save_button" 
+								action="#{forumTopicsBean.onSavePost}" validateClient="true"/>
+						</td>
+					</tr>
+				</table>
 			</h:form> 
 		</div>
 	</ui:define>

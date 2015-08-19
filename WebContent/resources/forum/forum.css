@@ -42,12 +42,17 @@ form{
 }
 .ui-state-active, .ui-state-highlight{
 	background-image:none !important;
-	background-color:#c4c4c4 !important;
-	color:#000000 !important;
+	background-color:#d1d1d1 !important;
+	color:#4f4f4f !important;
 	text-shadow:none !important;
+	border:1px solid #8F8F8F !important;
 }
 .ui-state-hover, .ui-state-focus{
-	border:none;
+	box-shadow:none !important;
+	border:1px solid #a8a8a8 !important;
+	background-color:#d1d1d1 !important;
+	background-image:none !important;
+	color:#4f4f4f !important;
 }
 .ui-corner-right{
 	border-radius:0;
@@ -78,19 +83,26 @@ form{
 	width:100%;
 	min-width:300px !important; /* doesn't work?!*/
 }
-#new_topic_table tr td:first-child,
-#new_topic_table tr td:first-child + td + td, 
-#answer_table tr td:first-child{
-	padding-right:20px;
+.width_10{
+	width:10%;
 }
-#post_topic, #post_message{
-	width:100%;
+.width_30{
+	width:30%;
+}
+#post_message{
+	margin-top:10px;
+}
+#post_category{
+	vertical-align:middle;
 }
 #post_topic{
 	box-sizing:border-box;
+	width:100%;
+	margin-top:5px;
+	margin-bottom:5px;
 }
 .category{
-	width:50% !important;
+	width:30% !important;
 }
 .category input{
 	width:95% !important;

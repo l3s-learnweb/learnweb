@@ -22,8 +22,17 @@
 						#{msg.createGroup}
 					</span>
 				</div>
-			
+		
+				<style type="text/css">
+					.ui-state-hover, .ui-state-focus, .ui-state-active{
+						box-shadow:0 0 0px 0px #fff !important;
+						background-color:#d1d1d1 !important;
+						background-image:none !important;
+						border:1px solid #a8a8a8 !important;
+					}
+				</style>
 				<div class="grey_border">
+					
 					<h:panelGrid columns="3" columnClasses="medium-width">						
 					
 						<h:outputText value="#{msg.title}*:" />
@@ -73,7 +82,7 @@
 					</h:panelGrid>
 				 </p:fieldset>
 				<br/>
-				<p:commandButton id="create_group_button" ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" 
+				<h:commandButton id="create_group_button" ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" 
 					styleClass="greenbutton" process="@form" update="@form :my_groups :growl :group_menu" />
 				
 			</h:form>
