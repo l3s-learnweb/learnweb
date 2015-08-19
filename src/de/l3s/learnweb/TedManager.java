@@ -336,7 +336,7 @@ public class TedManager
 	    params.put("page", Integer.toString(page));
 
 	    SearchQuery interwebResponse = learnweb.getInterweb().search("user::TEDxTalks tedxtrento", params);
-	    log.debug(interwebResponse.getResultCountAtService());
+	    //log.debug(interwebResponse.getResultCountAtService());
 	    resources = interwebResponse.getResults();
 
 	    for(ResourceDecorator decoratedResource : resources)

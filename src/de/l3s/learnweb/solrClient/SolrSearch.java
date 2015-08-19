@@ -3,7 +3,6 @@ package de.l3s.learnweb.solrClient;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -14,7 +13,7 @@ import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.response.FacetField.Count;
+import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 
 import de.l3s.learnweb.AbstractPaginator;
@@ -41,16 +40,14 @@ public class SolrSearch implements Serializable
     private String filterFormat = ""; // for example: application/pdf
     private String filterDateFrom = "";
     private String filterDateTo = "";
+    private String filterCollector = "";
     private List<Integer> filterGroupIds;
 
     protected long totalResults = -1;
-    private Map<String, Long> serviceSet = new HashMap<String, Long>(); // service name, number of results at this service
-    private Map<Group, Long> groupSet = new HashMap<Group, Long>(); // group name, number of results at this group
-
     private String filterGroupStr = "";
     private int userId;
     private boolean skipResourcesWithoutThumbnails = true;
-    private List<Count> groupCount;
+    private List<FacetField> facetFields;
 
     public SolrSearch(String query, User user)
     {
@@ -107,15 +104,7 @@ public class SolrSearch implements Serializable
 
     public void setFilterLocation(String filterLocation)
     {
-	// TODO: Remove it
-	if(filterLocation.equals("Archive-It"))
-	{
-	    this.filterSource = filterLocation;
-	}
-	else
-	{
-	    this.filterLocation = filterLocation;
-	}
+	this.filterLocation = filterLocation;
     }
 
     public void setFilterFormat(String filterFormat)
@@ -163,6 +152,16 @@ public class SolrSearch implements Serializable
 	}
     }
 
+    /**
+     * Or directly provide the list of group ids to search in
+     * 
+     * @param filterGroupIds
+     */
+    public void setFilterCollector(String collector)
+    {
+	this.filterCollector = collector;
+    }
+
     public void clearAllFilters()
     {
 	this.filterFormat = "";
@@ -175,6 +174,7 @@ public class SolrSearch implements Serializable
 	this.filterType = "";
 	this.filterDateFrom = "";
 	this.filterDateTo = "";
+	this.filterCollector = "";
     }
 
     public long getTotalResultCount()
@@ -182,20 +182,9 @@ public class SolrSearch implements Serializable
 	return totalResults;
     }
 
-    public Map<String, Long> getResultCountPerService()
+    public List<FacetField> getFacetFields()
     {
-	return serviceSet;
-    }
-
-    /*
-    public Map<Group, Long> getResultCountPerGroup()
-    {
-    return groupSet;
-    }
-    */
-    public List<Count> getResultCountPerGroup()
-    {
-	return groupCount;
+	return facetFields;
     }
 
     public void setSkipResourcesWithoutThumbnails(boolean skipResourcesWithoutThumbnails)
@@ -235,6 +224,11 @@ public class SolrSearch implements Serializable
 		solrQuery.addFilterQuery("timestamp : [" + filterDateFrom + " TO NOW]");
 	}
 
+	if(0 != filterCollector.length())
+	{
+	    solrQuery.addFilterQuery("collector_s : \"" + filterCollector + "\"");
+	}
+
 	if(null != filterGroupIds)
 	{
 	    filterGroupStr = "";
@@ -264,7 +258,7 @@ public class SolrSearch implements Serializable
 	solrQuery.setHighlightSimplePost("</strong>");
 
 	solrQuery.set("facet", "true");
-	solrQuery.addFacetField("location", "groups");
+	solrQuery.addFacetField("location", "groups", "collector_s");
 	solrQuery.setFacetLimit(20); // TODO set to -1 to show all facets (implement "more" button on frontend)
 	solrQuery.setFacetSort("count");
 	solrQuery.setFacetMinCount(1);
@@ -296,21 +290,7 @@ public class SolrSearch implements Serializable
 	if(response != null)
 	{
 	    totalResults = response.getResults().getNumFound();
-
-	    for(Count f : response.getFacetFields().get(0).getValues())
-	    {
-		serviceSet.put(f.getName(), f.getCount());
-	    }
-
-	    groupCount = response.getFacetFields().get(1).getValues();
-	    /*
-	    GroupManager groupManager = Learnweb.getInstance().getGroupManager();
-
-	    for(Count f : response.getFacetFields().get(1).getValues())
-	    {
-	    int groupId = Integer.parseInt(f.getName());
-	    groupSet.put(groupManager.getGroupById(groupId), f.getCount());
-	    }*/
+	    facetFields = response.getFacetFields();
 	}
 
 	// SolrDocumentList docs = response.getResults(); // to get the score

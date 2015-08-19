@@ -3,16 +3,17 @@ package de.l3s.interwebj;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.response.FacetField;
+import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 import org.xml.sax.SAXException;
@@ -31,7 +32,8 @@ public class SearchQuery implements Serializable
     protected List<ResourceDecorator> results;
     protected String elapsedTime;
     protected long totalResults;
-    private Map<String, Long> serviceSet = new HashMap<String, Long>(); // service name, number of results at this service
+    private List<Count> serviceCount = new ArrayList<Count>(); //service name, number of results at this service
+    private List<String> serviceCountSaver = new ArrayList<String>();
 
     public SearchQuery(InputStream inputStream) throws IllegalResponseException
     {
@@ -51,6 +53,7 @@ public class SearchQuery implements Serializable
     {
 	try
 	{
+	    FacetField ff = new FacetField("location");
 	    int counter = 0;
 	    results = new LinkedList<ResourceDecorator>();
 	    totalResults = 0;
@@ -97,10 +100,11 @@ public class SearchQuery implements Serializable
 		}
 		results.add(decoratedResource);
 
-		if(!serviceSet.containsKey(searchResult.getService()))
+		if(!serviceCountSaver.contains(searchResult.getService()))
 		{
+		    serviceCountSaver.add(searchResult.getService());
 		    totalResults += searchResult.getTotalResultsAtService();
-		    serviceSet.put(searchResult.getService(), searchResult.getTotalResultsAtService());
+		    serviceCount.add(new Count(ff, searchResult.getService(), searchResult.getTotalResultsAtService()));
 		}
 	    }
 
@@ -122,9 +126,8 @@ public class SearchQuery implements Serializable
 	return totalResults;
     }
 
-    public Map<String, Long> getResultCountAtService()
+    public List<Count> getResultCountPerService()
     {
-	return serviceSet;
+	return serviceCount;
     }
-
 }

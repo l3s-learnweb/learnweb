@@ -9,14 +9,10 @@ import java.security.InvalidParameterException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -25,23 +21,19 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.response.FacetField.Count;
 
 import com.sun.jersey.api.client.ClientHandlerException;
 
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.FactSheet;
-import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.Search;
-import de.l3s.learnweb.Search.DATE;
-import de.l3s.learnweb.Search.DURATION;
 import de.l3s.learnweb.Search.MODE;
-import de.l3s.learnweb.Search.SERVICE;
-import de.l3s.learnweb.Search.SIZE;
+import de.l3s.learnweb.SearchFilters;
+import de.l3s.learnweb.SearchFilters.Filter;
 import de.l3s.learnweb.User;
 import de.l3s.learnwebBeans.AddResourceBean;
 import de.l3s.learnwebBeans.ApplicationBean;
@@ -64,27 +56,19 @@ public class SearchBean extends ApplicationBean implements Serializable
     private int page;
 
     private Search search;
-    private Map<String, Long> searchServiceCounters = new TreeMap<String, Long>(String.CASE_INSENSITIVE_ORDER);
-    private List<Count> searchGroupCounters = new ArrayList<Count>();
-
-    // Filters for search
-    private String searchFilters;
-    private MODE searchMode;
-    private SERVICE filterService;
-    private DATE filterDate;
-    private SIZE filterSize;
-    private DURATION filterDuration;
-    private String filterGroup;
-
     private InterWeb interweb;
+    private SearchFilters searchFilters;
+
     private Resource selectedResource;
     private int selectedResourceTargetGroupId;
 
     private FactSheet graph = new FactSheet();
     private Search images;
+    private MODE searchMode;
     private String view = "float"; // float, grid or list
 
     private boolean graphLoaded = false;
+    private int counter = 0;
 
     /* For logging */
     private boolean logEnabled; //Only carry out search log functions if user is logged in
@@ -102,10 +86,13 @@ public class SearchBean extends ApplicationBean implements Serializable
     {
 	interweb = Learnweb.getInstance().getInterweb();
 	searchMode = MODE.image; // default search mode
+	queryMode = getPreference("SEARCH_ACTION", "web");
+
+	searchFilters = new SearchFilters();
+	searchFilters.setLanguageFilter(UtilBean.getUserBean().getLocaleCode());
+
 	logEnabled = false;
 	historyResources = new HashSet<String>();
-
-	queryMode = getPreference("SEARCH_ACTION", "web");
     }
 
     public void preRenderView() throws SQLException
@@ -173,12 +160,8 @@ public class SearchBean extends ApplicationBean implements Serializable
 	}
 
 	// search if a query is given and (it was not searched before or the query or searchmode has been changed)
-	if(!isEmpty(query) && (null == search || !query.equals(search.getQuery()) || searchMode != search.getMode() || !StringUtils.equals(queryFilters, searchFilters)))
+	if(!isEmpty(query) && (null == search || !query.equals(search.getQuery()) || searchMode != search.getMode() || !StringUtils.equals(queryFilters, searchFilters.getFiltersString())))
 	{
-	    if(search == null || !query.equals(search.getQuery()) || searchMode != search.getMode())
-	    {
-		searchServiceCounters.clear();
-	    }
 
 	    if(null != search)
 		search.stop();
@@ -214,94 +197,12 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    log.debug("Search log client braucht " + (System.currentTimeMillis() - start) + "ms");
 
 	    page = 1;
-	    search = new Search(interweb, query, getUser());
+	    searchFilters.setFiltersFromString(queryFilters);
+	    search = new Search(interweb, query, searchFilters, getUser());
 	    search.setMode(searchMode);
-	    search.setLanguage(UtilBean.getUserBean().getLocaleCode());
-
-	    log.debug("Filters: " + queryFilters);
-	    if(queryFilters != null)
-	    {
-		String[] tempFilters = queryFilters.split(",");
-		searchFilters = queryFilters;
-		queryFilters = null;
-
-		setFilterDate(null);
-		setFilterService(null);
-		setFilterSize(null);
-		setFilterDuration(null);
-		setFilterGroup(null);
-
-		for(String filter : tempFilters)
-		{
-		    String[] nameValue = filter.split(":");
-		    if(nameValue.length != 2)
-		    {
-			continue;
-		    }
-		    else if(nameValue[0].equals("srv"))
-		    {
-			setFilterService(nameValue[1]);
-		    }
-		    else if(nameValue[0].equals("date"))
-		    {
-			setFilterDate(nameValue[1]);
-		    }
-		    else if(nameValue[0].equals("size"))
-		    {
-			setFilterSize(nameValue[1]);
-		    }
-		    else if(nameValue[0].equals("duration"))
-		    {
-			setFilterDuration(nameValue[1]);
-		    }
-		    else if(nameValue[0].equals("group"))
-		    {
-			setFilterGroup(nameValue[1]);
-		    }
-		}
-
-		if(filterService != null)
-		{
-		    search.setService(filterService);
-		}
-
-		if(filterDate != null)
-		{
-		    search.setFilterByDate(filterDate);
-		}
-
-		if(filterSize != null)
-		{
-		    search.setFilterBySize(filterSize);
-		}
-
-		if(filterDuration != null)
-		{
-		    search.setFilterByDuration(filterDuration);
-		}
-
-		if(filterGroup != null)
-		{
-		    search.setFilterByGroup(filterGroup);
-		}
-	    }
-	    else if(searchFilters != null)
-	    {
-		setFilterDate(null);
-		setFilterService(null);
-		setFilterSize(null);
-		setFilterDuration(null);
-		setFilterGroup(null);
-		searchFilters = null;
-	    }
-
-	    if(getUser() != null && searchMode.equals(MODE.video) && UtilBean.getUserBean().getActiveCourse().getId() == 855)
-	    {
-		search.setService();
-		search.setResultsPerService(20);
-	    }
-
 	    LinkedList<ResourceDecorator> res = search.getResourcesByPage(1);
+
+	    queryFilters = null;
 
 	    try
 	    {
@@ -323,6 +224,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	return "/lw/search.xhtml?faces-redirect=true";
     }
 
+    // TODO We use it somewhere?
     //For comparing the resources in the current result set with another result set from a similar query in the past
     public String compareHistoryResources()
     {
@@ -434,11 +336,6 @@ public class SearchBean extends ApplicationBean implements Serializable
 
 	}
 	return newResources;
-    }
-
-    public void loadNextPage()
-    {
-	page++;
     }
 
     // -------------------------------------------------------------------------
@@ -591,6 +488,31 @@ public class SearchBean extends ApplicationBean implements Serializable
 	return search != null;
     }
 
+    public void loadNextPage()
+    {
+	page++;
+    }
+
+    public void loadInterwebCounts()
+    {
+	if(search != null)
+	{
+	    search.getResourcesByPage(2);
+	}
+
+	log.info("loadInterwebCounts");
+    }
+
+    public List<Filter> getAvailableFilters()
+    {
+	return searchFilters.getAvailableFilters();
+    }
+
+    public String getSearchFilters()
+    {
+	return searchFilters.getFiltersString();
+    }
+
     public String getSearchMode()
     {
 	return searchMode.name();
@@ -601,14 +523,14 @@ public class SearchBean extends ApplicationBean implements Serializable
 	return search;
     }
 
-    public String getQuery()
-    {
-	return query;
-    }
-
     public int getPage()
     {
 	return page;
+    }
+
+    public String getQuery()
+    {
+	return query;
     }
 
     public void setQuery(String query)
@@ -623,7 +545,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public void setQueryMode(String queryMode)
     {
-	if(queryMode != null && queryMode.length() != 0)
+	if(queryMode != null && !queryMode.isEmpty())
 	{
 	    this.queryMode = queryMode;
 	}
@@ -636,351 +558,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public void setQueryFilters(String queryFilters)
     {
-	if(queryFilters != null && queryFilters.length() != 0)
-	{
-	    this.queryFilters = queryFilters;
-	}
-    }
-
-    public String getSearchFilters()
-    {
-	return searchFilters;
-    }
-
-    public void setSearchFilters(String searchFilters)
-    {
-	this.searchFilters = searchFilters;
-    }
-
-    public String getFilterService()
-    {
-	if(filterService == null)
-	{
-	    return null;
-	}
-	return filterService.name();
-    }
-
-    public void setFilterService(String stringService)
-    {
-	if(stringService == null)
-	{
-	    this.filterService = null;
-	}
-
-	for(SERVICE serv : SERVICE.values())
-	{
-	    if(serv.name().equals(stringService))
-	    {
-		this.filterService = serv;
-		break;
-	    }
-	}
-    }
-
-    public void loadInterwebCounts()
-    {
-	if(search != null)
-	{
-	    search.getResourcesByPage(2);
-	}
-
-	log.info("loadInterwebCounts");
-    }
-
-    public String getCurrentService()
-    {
-	return filterService.getCustomName();
-    }
-
-    public String getFilterDate()
-    {
-	if(filterDate == null)
-	{
-	    return null;
-	}
-	return filterDate.name();
-    }
-
-    public void setFilterDate(String stringDate)
-    {
-	if(stringDate == null)
-	{
-	    this.filterDate = null;
-	}
-
-	for(DATE date : DATE.values())
-	{
-	    if(date.name().equals(stringDate))
-	    {
-		this.filterDate = date;
-		break;
-	    }
-	}
-    }
-
-    public String getCurrentDate()
-    {
-	return filterDate.getCustomName();
-    }
-
-    public String getFilterSize()
-    {
-	if(filterSize == null)
-	{
-	    return null;
-	}
-	return filterSize.name();
-    }
-
-    public void setFilterSize(String stringSize)
-    {
-	if(stringSize == null)
-	{
-	    this.filterSize = null;
-	}
-
-	for(SIZE size : SIZE.values())
-	{
-	    if(size.name().equals(stringSize))
-	    {
-		this.filterSize = size;
-		break;
-	    }
-	}
-    }
-
-    public String getCurrentSize()
-    {
-	return filterSize.getCustomName();
-    }
-
-    public String getFilterDuration()
-    {
-	if(filterDuration == null)
-	{
-	    return null;
-	}
-	return filterDuration.name();
-    }
-
-    public void setFilterDuration(String stringDuration)
-    {
-	if(stringDuration == null)
-	{
-	    this.filterDuration = null;
-	}
-
-	for(DURATION duration : DURATION.values())
-	{
-	    if(duration.name().equals(stringDuration))
-	    {
-		this.filterDuration = duration;
-		break;
-	    }
-	}
-    }
-
-    public String getCurrentDuration()
-    {
-	return filterDuration.getCustomName();
-    }
-
-    public String getFilterGroup()
-    {
-	return filterGroup;
-    }
-
-    public void setFilterGroup(String stringGroup)
-    {
-	this.filterGroup = stringGroup;
-    }
-
-    public String getCurrentGroup()
-    {
-	return filterGroup;
-    }
-
-    public boolean isFilterAvailable(String filter)
-    {
-	if(filter == null)
-	{
-	    return true;
-	}
-
-	if(filter.equals("group"))
-	{
-	    if(!search.getResultsCountPerGroup().isEmpty())
-	    {
-		return true;
-	    }
-	    return false;
-	}
-
-	if(searchMode.equals(MODE.web))
-	{
-	    if(filter.equals("date"))
-	    {
-		return (filterService == null || filterService.isLearnwebSource());
-	    }
-	    else if(filter.equals("service"))
-	    {
-		return true;
-	    }
-	}
-	else if(searchMode.equals(MODE.image))
-	{
-	    if(filter.equals("date"))
-	    {
-		return (filterService == null || Arrays.asList(SERVICE.Flickr, SERVICE.Ipernity).contains(filterService) || filterService.isLearnwebSource());
-	    }
-	    else if(filter.equals("size") || filter.equals("service"))
-	    {
-		return true;
-	    }
-	}
-	else if(searchMode.equals(MODE.video))
-	{
-	    if(filter.equals("date"))
-	    {
-		return (filterService == null || Arrays.asList(SERVICE.YouTube).contains(filterService) || filterService.isLearnwebSource());
-	    }
-	    else if(filter.equals("duration") || filter.equals("service"))
-	    {
-		return true;
-	    }
-	}
-
-	return false;
-    }
-
-    public List<SERVICE> getAvailiableServices()
-    {
-	if(searchMode.equals(MODE.web))
-	{
-	    return Arrays.asList(SERVICE.getWebServices());
-	}
-	else if(searchMode.equals(MODE.image))
-	{
-	    if(filterDate != null)
-	    {
-		return Arrays.asList(SERVICE.Flickr, SERVICE.Ipernity, SERVICE.Loro, SERVICE.LearnWeb);
-	    }
-	    return Arrays.asList(SERVICE.getImageServices());
-	}
-	else if(searchMode.equals(MODE.video))
-	{
-	    if(filterDate != null)
-	    {
-		return Arrays.asList(SERVICE.YouTube, SERVICE.TED, SERVICE.TEDx, SERVICE.Yovisto, SERVICE.Loro, SERVICE.LearnWeb);
-	    }
-	    return Arrays.asList(SERVICE.getVideoServices());
-	}
-
-	return null;
-    }
-
-    public List<SIZE> getAvailiableSizes()
-    {
-	return Arrays.asList(SIZE.values());
-    }
-
-    public List<DATE> getAvailiableDates()
-    {
-	return Arrays.asList(DATE.values());
-    }
-
-    public List<DURATION> getAvailiableDurations()
-    {
-	return Arrays.asList(DURATION.values());
-    }
-
-    public List<Count> getAvailiableGroups()
-    {
-	if(filterGroup == null || filterGroup.isEmpty())
-	{
-	    searchGroupCounters = search.getResultsCountPerGroup();
-	}
-
-	return searchGroupCounters;
-    }
-
-    public String getGroupNameById(String id) throws NumberFormatException, SQLException
-    {
-	Group group = getLearnweb().getGroupManager().getGroupById(Integer.parseInt(id));
-	if(null == group)
-	    return "deleted";
-	return group.getTitle();
-
-    }
-
-    public String generateFiltersLink(String param, String value)
-    {
-	List<String> output = new ArrayList<String>();
-
-	if(param.equals("srv") && !value.equals("all"))
-	{
-	    output.add("srv:" + value);
-	}
-	else if(!param.equals("srv") && filterService != null)
-	{
-	    output.add("srv:" + filterService.name());
-	}
-
-	if(param.equals("date") && !value.equals("all"))
-	{
-	    output.add("date:" + value);
-	}
-	else if(!param.equals("date") && filterDate != null)
-	{
-	    output.add("date:" + filterDate.name());
-	}
-
-	if(param.equals("size") && !value.equals("all"))
-	{
-	    output.add("size:" + value);
-	}
-	else if(!param.equals("size") && filterSize != null)
-	{
-	    output.add("size:" + filterSize.name());
-	}
-
-	if(param.equals("duration") && !value.equals("all"))
-	{
-	    output.add("duration:" + value);
-	}
-	else if(!param.equals("duration") && filterDuration != null)
-	{
-	    output.add("duration:" + filterDuration.name());
-	}
-
-	if(param.equals("group") && !value.equals("all"))
-	{
-	    output.add("group:" + value);
-	}
-	else if(!param.equals("group") && filterGroup != null)
-	{
-	    output.add("group:" + filterGroup);
-	}
-
-	return StringUtils.join(output, ',');
-    }
-
-    public String getTotalResultsFrom(String service)
-    {
-	if(!searchServiceCounters.containsKey(service))
-	{
-	    searchServiceCounters.putAll(search.getResultsCountPerService());
-	}
-
-	Long count = searchServiceCounters.get(service);
-
-	if(count == null || count < 0)
-	{
-	    return null;
-	}
-
-	return " (" + count.toString() + ")";
+	this.queryFilters = queryFilters;
     }
 
     public Resource getSelectedResource()
@@ -1069,8 +647,6 @@ public class SearchBean extends ApplicationBean implements Serializable
 	return images;
     }
 
-    private int counter = 0;
-
     public int getCounter()
     {
 	return counter++;
@@ -1143,9 +719,9 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    }
 	    String label = graph.getEntities().get(0).getLabel();
 
-	    images = new Search(getLearnweb().getInterweb(), label, getUser());
+	    images = new Search(getLearnweb().getInterweb(), label, searchFilters, getUser());
 	    images.setMode(MODE.image);
-	    images.setService(SERVICE.Ipernity, SERVICE.Flickr);
+	    //images.setService(SERVICE.Ipernity, SERVICE.Flickr);
 	    images.setResultsPerService(10);
 	    images.getResourcesByPage(1);
 	    //images.getResourcesByPage(2);			
