@@ -64,10 +64,12 @@
 		</div>  	
 		
 		<h:form prependId="false">
-		    <p:dataTable var="post" value="#{forumPostBean.posts}" rows="20" paginator="true" 
+		    <p:dataTable var="post" value="#{forumPostBean.posts}" rows="5" paginator="true" 
 		    	lazy="false" paginatorPosition="bottom" id="forum_post_table"
 		    	paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" >
 		      
+				<p:ajax event="page" onsuccess="$('#center_pane .content').scrollTop(0); setTimeout('$(\'#center_pane .content\').scrollTop(0)', 10);" />
+				
 		      	<p:column headerText="#{msg.author}" styleClass="align-center">
 		        	<a href="./user/detail.jsf?user_id=#{post.userId}" >
 		        		<h:outputText value="#{post.user.username}"/>

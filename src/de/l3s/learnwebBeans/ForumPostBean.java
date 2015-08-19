@@ -47,6 +47,8 @@ public class ForumPostBean extends ApplicationBean implements Serializable
 	posts = fm.getPostsBy(topicId);
 	topic = fm.getTopicById(topicId);
 	group = getLearnweb().getGroupManager().getGroupById(topic.getGroupId());
+
+	fm.incViews(topicId);
     }
 
     public String onSavePost() throws SQLException

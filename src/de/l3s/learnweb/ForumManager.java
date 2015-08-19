@@ -80,7 +80,6 @@ public class ForumManager
 	while(rs.next())
 	{
 	    posts.add(createPost(rs));
-	    System.out.println(rs.getString("text"));
 	}
 	select.close();
 
@@ -174,7 +173,7 @@ public class ForumManager
 		throw new SQLException("database error: no id generated");
 	    post.setId(rs.getInt(1));
 
-	    sqlQuery = "UPDATE lw_forum_topic SET topic_replies = topic_replies + 1, topic_last_post_id = ?, topic_last_post_time = ?, topic_last_post_user_id = ? WHERE topic_id = ? AND topic_replies > 0";
+	    sqlQuery = "UPDATE lw_forum_topic SET topic_replies = topic_replies + 1, topic_last_post_id = ?, topic_last_post_time = ?, topic_last_post_user_id = ? WHERE topic_id = ? AND topic_views > 0";
 	    PreparedStatement update = learnweb.getConnection().prepareStatement(sqlQuery);
 	    update.setInt(1, post.getId());
 	    update.setTimestamp(2, new Timestamp(post.getDate().getTime()));
