@@ -114,14 +114,14 @@ public class ForumTopicsBean extends ApplicationBean implements Serializable
 	return newPost;
     }
 
-    public String getNewTopic()
+    public String getNewTopicTitle()
     {
 	return newTopicTitle;
     }
 
-    public void setNewTopic(String newTopic)
+    public void setNewTopicTitle(String newTopicTitle)
     {
-	this.newTopicTitle = newTopic;
+	this.newTopicTitle = newTopicTitle;
     }
 
 }

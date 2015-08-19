@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
 
-import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 public class ForumPost implements Serializable
 {
@@ -13,7 +13,7 @@ public class ForumPost implements Serializable
     private int id = -1;
     private int userId;
     private int topicId;
-    @NotBlank()
+    @NotEmpty
     private String text;
     private Date date;
     private int editCount;

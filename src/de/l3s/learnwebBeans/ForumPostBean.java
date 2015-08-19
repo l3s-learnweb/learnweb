@@ -2,6 +2,7 @@ package de.l3s.learnwebBeans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -28,10 +29,11 @@ public class ForumPostBean extends ApplicationBean implements Serializable
     private List<ForumPost> posts;
     private ForumTopic topic;
     private Group group;
+    private ForumPost newPost;
 
     public ForumPostBean()
     {
-
+	newPost = new ForumPost();
     }
 
     public void preRenderView(ComponentSystemEvent e) throws SQLException
@@ -45,6 +47,24 @@ public class ForumPostBean extends ApplicationBean implements Serializable
 	posts = fm.getPostsBy(topicId);
 	topic = fm.getTopicById(topicId);
 	group = getLearnweb().getGroupManager().getGroupById(topic.getGroupId());
+    }
+
+    public String onSavePost() throws SQLException
+    {
+	Date now = new Date();
+
+	ForumManager fm = getLearnweb().getForumManager();
+	topic = fm.save(topic);
+
+	newPost.setUserId(getUser().getId());
+	newPost.setDate(now);
+	newPost.setTopicId(topicId);
+
+	fm.save(newPost);
+
+	newPost = new ForumPost();
+
+	return null;//"forum_post.jsf?faces-redirect=true&topic_id=" + topicId + "#lastPost";
     }
 
     public int getTopicId()
@@ -71,4 +91,10 @@ public class ForumPostBean extends ApplicationBean implements Serializable
     {
 	return group;
     }
+
+    public ForumPost getNewPost()
+    {
+	return newPost;
+    }
+
 }

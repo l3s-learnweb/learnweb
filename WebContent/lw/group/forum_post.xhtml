@@ -135,10 +135,10 @@
 			
 		<div class="grey_border">
 			
-			<form>
+			<h:form>
 				<h:panelGrid columns="3" id="answer_table">
 					<h:outputText value="#{msg.category}: "/>
-				    <p:selectOneMenu id="post_category" styleClass="category" value="" editable="true" label="#{msg.category}">
+				    <p:selectOneMenu id="post_category" styleClass="category" value="#{forumPostBean.newPost.category}" editable="true" label="#{msg.category}">
 				     	<f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="" />
 			          	<f:selectItem itemLabel="#{msg['ForumIndex.answer']}" itemValue="" />
 			           	<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="" />
@@ -147,19 +147,19 @@
 			  		<p:message for="post_category"/>
 			  
 			  		<h:outputText value=""/>
-			  
-					<p:editor id="post_message" widgetVar="editorWidget" value="" label="#{msg['PostShow.postContent']}"
+			   
+					<p:editor id="post_message" widgetVar="editorWidget" value="#{forumPostBean.newPost.text}" label="#{msg['PostShow.postContent']}"
 						controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">
-		 				<f:validateLength minimum="5" maximum="50000" />
+		 				
 		 			</p:editor>
 		 			<p:message for="post_message"/>
 		 			
 		 			<h:outputText value=""/>
-		 			<h:commandButton ajax="false" value="#{msg.save}" styleClass="greenbutton save_button" action="#{forumTopicsBean.onSavePost}" 
-		 				validateClient="true"/>
+		 			<p:commandButton ajax="true" value="#{msg.save}" styleClass="greenbutton save_button" action="#{forumPostBean.onSavePost}" 
+		 				validateClient="true" update="@form :forum_post_table"/>
 		 			<h:outputText value=""/>
 				</h:panelGrid> 
-			</form> 
+			</h:form> 
 			
 		</div>
 		
