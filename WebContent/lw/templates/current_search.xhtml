@@ -28,16 +28,20 @@
 			<ul style="margin: 0px; padding: 0px">
 			<ui:repeat var="tag" value="#{currentSearchBean.getTags()}">
 				<li class="tag_list">
-					<p:commandButton styleClass="tag_name ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" style="cursor:default !important;" value="#{tag.name}" onclick="return false;"/>
-					<p:commandButton styleClass="tag_x" action="#{currentSearchBean.onDeleteTag()}" value="x" oncomplete="tabselection('currentsearch')">
+					<p:commandButton styleClass="tag_name ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
+						style="cursor:default !important;" value="#{tag.name}" onclick="return false;"/>
+					<p:commandButton styleClass="tag_x" action="#{currentSearchBean.onDeleteTag()}" value="x" 
+						oncomplete="tabselection('currentsearch')">
 					 	<f:setPropertyActionListener target="#{currentSearchBean.selectedTag}" value="#{tag}" /> 
-					</p:commandButton></li>
+					</p:commandButton>
+				</li>
 			</ui:repeat>
 			</ul>
 			<h:form id="tag_form">
 				<p:inputText styleClass="tag_field" value="#{currentSearchBean.tagName}" /> 
 				<div class="align-right">
-					<p:commandButton actionListener="#{currentSearchBean.addTag()}" styleClass="greenbutton" value="#{msg.addTag}" oncomplete="tabselection('currentsearch')"></p:commandButton>
+					<p:commandButton actionListener="#{currentSearchBean.addTag()}" styleClass="greenbutton" value="#{msg.addTag}" 
+						oncomplete="tabselection('currentsearch')"></p:commandButton>
 				</div>
 			</h:form>
 			<br/>
@@ -60,10 +64,11 @@
 			<div class="comments">
 				<b>#{msg.search_process_comment}:</b>
 				<h:form id="comment_form">
-					<p:inputTextarea style="width: 97.6%;" rows="2" value="#{currentSearchBean.newSearchComment}"></p:inputTextarea>
+					<p:inputTextarea style="width: 97.6%;" rows="2" value="#{currentSearchBean.newSearchComment}"/>
 					<br />
 					<div class="align-right" style="margin-top: 5px">
-						<p:commandButton styleClass="greenbutton" value="#{msg.comment}" actionListener="#{currentSearchBean.addSearchComment()}" oncomplete="tabselection('currentsearch')"/>
+						<p:commandButton styleClass="greenbutton" value="#{msg.comment}" 
+							actionListener="#{currentSearchBean.addSearchComment()}" oncomplete="tabselection('currentsearch')"/>
 					</div>
 				</h:form>
 			</div>
@@ -71,7 +76,9 @@
 		<table id="clickedresources_table" style="width: 100%; padding: 0px 10px 0px 10px;">
 			<tr>
 				<td colspan="2" class="history_parent">
-					<h3>#{msg.resources_clicked}</h3>
+					<h3>
+						#{msg.resources_clicked}
+					</h3>
 				</td>
 			</tr>
 			<ui:repeat value="#{currentSearchBean.clickedResourcesList}" var="clickedresource">
@@ -111,7 +118,9 @@
 		<table id="savedresources_table" style="width: 100%; padding: 0px 10px 0px 10px;">
 			<tr>
 				<td colspan="2" class="history_parent">
-					<h3>#{msg.resources_saved}</h3>
+					<h3>
+						#{msg.resources_saved}
+					</h3>
 				</td>
 			</tr>
 			<ui:repeat value="#{currentSearchBean.savedResourcesList}" var="savedresource">

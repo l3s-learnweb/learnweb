@@ -36,9 +36,7 @@
 					<h:panelGrid columns="3" columnClasses="medium-width">						
 					
 						<h:outputText value="#{msg.title}*:" />
-						<p:inputText id="new_title" 
-							value="#{groupsBean.newGroup.title}" 
-							validator="#{groupsBean.validateGroupTitle}" 
+						<p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" 
 							style="width:20rem"/>
 						<p:message for="new_title" showSummary="true" showDetail="false" id="message_new_title"/>
 						

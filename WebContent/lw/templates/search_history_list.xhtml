@@ -32,7 +32,8 @@
 		}
 	</script>
 	<div id="listview_history_filter" style="padding-left: 5px; width: 99%;">
-		<p:panel id="listview_history_filter_panel" header="#{msg.search_history_filter}" toggleable="true" toggleSpeed="500" widgetVar="panel" style="padding:5px;">
+		<p:panel id="listview_history_filter_panel" header="#{msg.search_history_filter}" toggleable="true" toggleSpeed="500" 
+			widgetVar="panel" style="padding:5px;">
 			<script type="text/javascript">
 				$(function() {
 					$(".Fromdatepicker").datepicker(
@@ -75,7 +76,8 @@
 						<h:inputText styleClass="Fromdatepicker" id="from_date" value="#{exploreBean.fromFilterQueries}" />
 					#{msg.to}:
 					<h:inputText styleClass="Todatepicker" id="to_date" value="#{exploreBean.toFilterQueries}" />
-				<p:commandButton value="#{msg.update} #{msg.Task_based_View}" actionListener="#{exploreBean.filterQueries()}" process="@form" update=":search_history_list :growl" oncomplete="displayButton();"/>
+				<p:commandButton value="#{msg.update} #{msg.Task_based_View}" actionListener="#{exploreBean.filterQueries()}" 
+					process="@form" update=":search_history_list :growl" oncomplete="displayButton();"/>
 
 			</h:form>
 		</p:panel>
@@ -87,12 +89,16 @@
 			<table id="list_table" style="width: 60%; padding: 0px 10px 0px 10px;font-family:'verdana';font-size:14px;">
 				<tr>
 					<td colspan="2" style="padding-right:1px;">
-						<p:commandButton value="#{msg.delete_queries}" update=":search_history_list :growl" action="#{exploreBean.deleteSelectedQueries()}" icon="ui-icon-trash" style="float:left;" oncomplete="displayButton();"/>
+						<p:commandButton value="#{msg.delete_queries}" update=":search_history_list :growl" 
+							action="#{exploreBean.deleteSelectedQueries()}" icon="ui-icon-trash" style="float:left;" 
+							oncomplete="displayButton();"/>
 						<span class="float-right">
-							<p:commandButton value="#{msg.previous}" action="#{exploreBean.redirect('Previous')}" disabled="#{exploreBean.page == 1}" icon="ui-icon-carat-1-w" ajax="false" >
+							<p:commandButton value="#{msg.previous}" action="#{exploreBean.redirect('Previous')}" 
+								disabled="#{exploreBean.page == 1}" icon="ui-icon-carat-1-w" ajax="false" >
 								<f:setPropertyActionListener target="#{exploreBean.page}" value="#{exploreBean.page - 1}" />
 							</p:commandButton>
-							<p:commandButton value="#{msg.next}" action="#{exploreBean.redirect('Next')}" icon="ui-icon-carat-1-e" ajax="false" iconPos="right" >
+							<p:commandButton value="#{msg.next}" action="#{exploreBean.redirect('Next')}" icon="ui-icon-carat-1-e" 
+								ajax="false" iconPos="right" >
 	 							<f:setPropertyActionListener target="#{exploreBean.page}" value="#{exploreBean.page + 1}" />
 	 						</p:commandButton>
 						</span>
@@ -149,7 +155,9 @@
 												<ui:repeat value="#{queryhistory.timelines}" var="timelineDate">
 													<tr>
 														<td style="font-size:12px;">
-															<i>#{timelineDate.date}</i>
+															<i>
+																#{timelineDate.date}
+															</i>
 														</td>
 													</tr>
 												<tr>
@@ -162,7 +170,8 @@
 																			<i class="fa fa-hand-o-up"></i>
 																		</td>
 																		<td style="margin-bottom: 10px; width: 83%;">
-																			<a href="#{queryhistory.getResourceClicked(timestamp).url}" class="align-left" style="color: blue" target="_blank">
+																			<a href="#{queryhistory.getResourceClicked(timestamp).url}" 
+																				class="align-left" style="color: blue" target="_blank">
 																				#{queryhistory.getResourceClicked(timestamp).filename}
 																			</a>
 																			<span style="color: green;"> 
@@ -183,7 +192,8 @@
 																			<i class="fa fa-star-o"></i>
 																		</td>
 																		<td style="margin-bottom: 10px; width: 83%;">
-																			<a href="#{queryhistory.getResourceSaved(timestamp).url}" class="align-left" style="color: blue" target="_blank">
+																			<a href="#{queryhistory.getResourceSaved(timestamp).url}" 
+																				class="align-left" style="color: blue" target="_blank">
 																				#{queryhistory.getResourceSaved(timestamp).filename}
 																			</a>
 																			<span style="color: green;"> 
@@ -206,7 +216,8 @@
 																				</h:panelGroup>
 																			</td>
 																		<td style="margin-bottom: 10px; width: 83%;">
-																			<a href="#{queryhistory.getResourceClickedAndSaved(timestamp).url}" class="align-left" style="color: blue" target="_blank">
+																			<a href="#{queryhistory.getResourceClickedAndSaved(timestamp).url}" 
+																				class="align-left" style="color: blue" target="_blank">
 																				#{queryhistory.getResourceClickedAndSaved(timestamp).filename}
 																			</a>
 																			<span style="color: green;"> 

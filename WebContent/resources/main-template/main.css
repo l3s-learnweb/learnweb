@@ -751,12 +751,6 @@ span.ui-autocomplete{border:1px solid transparent !important;}
     -ms-filter:grayscale(0); 
     -o-filter:grayscale(0);
 }
-.ui-state-active{
-	/*background-image:none !important;
-	background-color:#d1d1d1 !important;
-	box-shadow:none !important;
-	border:1px solid #a8a8a8 !important;*/
-}
 .ui-panelmenu-header{
 	border-radius:0px;
 	border-color:#fff !important;

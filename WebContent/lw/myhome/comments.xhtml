@@ -14,18 +14,24 @@
 	<ui:define name="center_layout">
 
 		<div class="page_header">
-			<span>#{msg.myCommentsTitle}</span>
+			<span>
+				#{msg.myCommentsTitle}
+			</span>
 		</div>			
 			<h:form>
 				<p:dataTable var="comment" value="#{userBean.user.comments}">
 					<!-- <f:facet name="header">#{msg.myCommentsTitle}</f:facet>-->
 					<p:column>
-						<f:facet name="header">#{msg.comment}</f:facet>
+						<f:facet name="header">
+							#{msg.comment}
+						</f:facet>
 						<h:outputText value="#{comment.text}" />
 					</p:column>
 					
 					<p:column>
-						<f:facet name="header">#{msg.resource}</f:facet>
+						<f:facet name="header">
+							#{msg.resource}
+						</f:facet>
 						<h:outputLink value="resource.jsf">
 							<f:param name="resource_id" value="#{comment.resource.id}" />
 							<h:outputText value="#{comment.resource.title}" escape="false" />
@@ -33,16 +39,15 @@
 					</p:column>
 
 					<p:column>
-						<f:facet name="header">#{msg.date}</f:facet>
+						<f:facet name="header">
+							#{msg.date}
+						</f:facet>
 						<h:outputText value="#{comment.date}" >
 							<f:convertDateTime dateStyle="default" type="both" />								
 						</h:outputText>
 					</p:column>
-
 				</p:dataTable>
-
 			</h:form>
-
 
 	</ui:define>
 </ui:composition>

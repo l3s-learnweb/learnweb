@@ -60,19 +60,22 @@
 			}
 		</script>	
 		<br/>
-		<div class='box'>
+	<div class='box'>
 		<h:panelGroup layout="block" id="container"></h:panelGroup>
 		<div id="calendar">
 			<!-- Responsive calendar - START -->
 			<div class="responsive-calendar">
 				<div class="controls">
-					<a class="pull-left" data-go="prev"><h:panelGroup layout="block" class="btn btn-primary" style="background-color:#489a83;border-color: #3b8b74;border-radius:2px;">
+					<a class="pull-left" data-go="prev"><h:panelGroup layout="block" class="btn btn-primary" 
+						style="background-color:#489a83;border-color: #3b8b74;border-radius:2px;">
 							#{msg.previous}
 						</h:panelGroup></a>
 					<h4 id="head-year-month">
 						<span id="year" data-head-year="data-head-year"></span> <span id="month" data-head-month="data-head-month"></span>
 					</h4>
-					<a class="pull-right" data-go="next"><h:panelGroup layout="block" class="btn btn-primary" style="background-color:#489a83;border-color: #3b8b74;border-radius:2px;">
+					<a class="pull-right" data-go="next">
+						<h:panelGroup layout="block" class="btn btn-primary" 
+							style="background-color:#489a83;border-color: #3b8b74;border-radius:2px;">
 							#{msg.next} 
 						</h:panelGroup>
 					</a>
@@ -80,7 +83,9 @@
 				<hr />
 				<h:panelGroup layout="block" class="day-headers">
 					<ui:repeat var="day" value="${resourceDetailBean.shortWeekDays}">
-						<h:panelGroup layout="block" class="day header">#{day}</h:panelGroup>
+						<h:panelGroup layout="block" class="day header">
+							#{day}
+						</h:panelGroup>
 					</ui:repeat>
 				</h:panelGroup>
 				<div class="days" data-group="days">
@@ -88,8 +93,10 @@
 				</div>
 			</div>
 			<!-- Responsive calendar - END -->
-			<h:outputLink style="float:right;color:#489a83" onclick="return returnToTimeline();">#{msg.back_to_timeline_view}</h:outputLink>
+			<h:outputLink style="float:right;color:#489a83" onclick="return returnToTimeline();">
+				#{msg.back_to_timeline_view}
+			</h:outputLink>
 		</div>
-		</div>
+	</div>
 	
 </ui:composition>	

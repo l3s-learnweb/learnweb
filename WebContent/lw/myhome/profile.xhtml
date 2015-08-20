@@ -78,7 +78,7 @@
 		
 		
 							<h:outputText value="#{msg.additionalinformation}:" />
-							<p:inputTextarea id="useradditionalinformation" value="#{profileBean.additionalInformation}" style="width:200px;" />
+							<p:inputTextarea id="useradditionalinformation" value="#{profileBean.additionalInformation}" style="width:200px;"/>
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="useradditionalinformation" 
 								id="useradditionalinformationMessage" />					
 											
@@ -107,11 +107,12 @@
 						<h:panelGrid columns="3" >
 						
 							<h:outputLabel for="current_password" value="#{msg.current_password}:" />
-							<p:password id="current_password" value="#{profileBean.currentPassword}" validator="#{profileBean.validateCurrentPassword}" 
-								feedback="false" autocomplete="off" >
+							<p:password id="current_password" value="#{profileBean.currentPassword}" 
+								validator="#{profileBean.validateCurrentPassword}" feedback="false" autocomplete="off" >
 								<f:ajax render="currentPasswordMessage"/>					
 							</p:password>
-							<p:message id="currentPasswordMessage" showSummary="true" showDetail="false" styleClass="error" for="current_password" />
+							<p:message id="currentPasswordMessage" showSummary="true" showDetail="false" styleClass="error" 
+								for="current_password" />
 							
 							<h:outputText value="&nbsp;" style="font-size:5px; line-height:5px;"/>
 							<h:outputText value="&nbsp;" style="font-size:5px; line-height:5px;" />
@@ -127,7 +128,7 @@
 							<p:password id="confirm_password" value="#{profileBean.confirmPassword}" validator="#{profileBean.validatePassword}" 
 								promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}" 
 								goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}"/>
-							<p:message id="confirmPasswordMessage" showSummary="true" showDetail="false" styleClass="error" for="confirm_password" />
+							<p:message id="confirmPasswordMessage" showSummary="true" showDetail="false" styleClass="error" for="confirm_password"/>
 		
 							<h:outputText value="" />
 							<p:commandButton actionListener="#{profileBean.onChangePassword}" value="#{msg.save}" ajax="true" process="@form" 

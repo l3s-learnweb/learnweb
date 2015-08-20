@@ -113,7 +113,9 @@
 		    </p:dialog>
 		    <p:dialog resizable="false" header="#{msg.layout_selection}" widgetVar="format_dialog2" modal="true" appendTo="@(body)">
 				<h:form id="edit_presentation_layout">
-					#{msg.select_layout}<br/><br/>
+					#{msg.select_layout}
+					<br/>
+					<br/>
 			    	<a onclick="PF('format_dialog2').hide()" class="format_button_link" target="edit_presentation" 
 			    		href="#{groupDetailBean.editPresentation('1')}">
 						<img class="format_button" src="../resources/icon/format1.jpg"></img>

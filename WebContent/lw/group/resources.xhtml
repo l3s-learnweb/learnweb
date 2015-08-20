@@ -143,10 +143,8 @@
 				         </li>
 			        </ul>
 			        <p:commandButton value="#{msg.delete_from_group} '#{groupDetailBean.group.title}'" 
-			        	update=":datagrid :growl :add_resource_panel" 
-			        	oncomplete="PF('confirmation').hide(); update_header();" 
-			        	actionListener="#{groupDetailBean.removeResourceFromGroup}" 
-			        	process=":datagrid" 
+			        	update=":datagrid :growl :add_resource_panel"  oncomplete="PF('confirmation').hide(); update_header();" 
+			        	actionListener="#{groupDetailBean.removeResourceFromGroup}" process=":datagrid" 
 			        	style="display:block; margin: 10px 0;"/> 
 			        		   			
 		   			<p:commandButton value="#{msg.delete_resource_completely}" update=":datagrid :growl :add_resource_panel" 
@@ -158,26 +156,16 @@
 			
 			<p:dialog header="#{msg.upload_file}" widgetVar="file_dialog" modal="true" appendTo="@(body)" width="600" height="150">
 				<h:form>
-					<p:fileUpload rendered="true" 
-						fileUploadListener="#{addResourceBean.handleFileUpload}" 
-						mode="advanced" 
-						auto="true" 
-						sizeLimit="10000000" 
-						widgetVar="fileUpload" 
-						oncomplete="PF('file_dialog').hide()" 
-						update=":add_resource_form:preview" 
-						label="#{msg.choose_file}" 
-						cancelLabel="abb"/> 
+					<p:fileUpload rendered="true" fileUploadListener="#{addResourceBean.handleFileUpload}" mode="advanced" 
+						auto="true" sizeLimit="10000000" widgetVar="fileUpload" oncomplete="PF('file_dialog').hide()" 
+						update=":add_resource_form:preview" label="#{msg.choose_file}" cancelLabel="abb"/> 
 				</h:form>
 			</p:dialog>
 			<p:dialog header="#{msg.edit}" id="comment_dialog1" modal="true" minWidth="440" appendTo="@(body)" widgetVar="comment_dialog">
 				<h:form id="comment_dialog_form">	
 					<p:inputTextarea autoResize="1" maxHeight="20" value="#{resourceDetailBean.clickedComment.text}" id="edit_comment_textbox"/>
-					<p:commandButton actionListener="#{resourceDetailBean.onEditComment}" 
-						update=":add_resource_panel" 
-						title="#{msg.save}" 
-						value="#{msg.save}"	
-						onsuccess="PF('comment_dialog').hide();"/>
+					<p:commandButton actionListener="#{resourceDetailBean.onEditComment}" update=":add_resource_panel" title="#{msg.save}" 
+						value="#{msg.save}"	onsuccess="PF('comment_dialog').hide();"/>
 				</h:form>
 			</p:dialog>
 			<p:dialog header="#{msg.options}" closable="false" widgetVar="resource_dialog" appendTo="@(body)" modal="true" minWidth="540">
@@ -287,7 +275,8 @@
 												update=":add_resource_panel" 
 												styleClass="buttons_link">
 												<h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
-													<f:setPropertyActionListener value="#{result.resource}" target="#{groupDetailBean.clickedResource}" />
+													<f:setPropertyActionListener value="#{result.resource}" 
+														target="#{groupDetailBean.clickedResource}" />
 													<f:setPropertyActionListener target="#{groupDetailBean.editResourceClicked}" value="true"/>
 												<f:param name="group_id" value="#{groupDetailBean.groupId}" />
 											</p:commandLink>
@@ -317,9 +306,11 @@
 				    </h:form>
 			    </ui:repeat>
 					
-				<h:outputText value="${msg.no_resources_found}" rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}" class="nothing_found" />
+				<h:outputText value="${msg.no_resources_found}" class="nothing_found"
+					rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}"/>
 
-				<h:outputText value="#{msg.no_results_found}" rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}" class="nothing_found" />
+				<h:outputText value="#{msg.no_results_found}" class="nothing_found" 
+					rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}"/>
 			    
 		    </h:panelGroup>				
 		
@@ -334,9 +325,6 @@
 				$("#center_pane").append($("#paginator"));
 			/* --> */
 			</script>
-			
-			
-			
 			
 		</ui:define>
 		<ui:define name="right_layout">

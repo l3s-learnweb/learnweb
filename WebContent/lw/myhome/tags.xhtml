@@ -40,22 +40,23 @@
 			-->
 				<ui:repeat var="tag" value="#{userBean.user.tags}">
 					
-						<h3 style="font-size: 1.3rem"><h:outputText value="#{tag.name}" /></h3>
+					<h3 style="font-size: 1.3rem">
+						<h:outputText value="#{tag.name}" />
+					</h3>
 						<ul>
 							<ui:repeat var="res" value="#{tag.resources}">
-							<li>
-								<h:outputLink value="resource.jsf">
-									<f:param name="resource_id" value="#{res.id}" />
-									<h:outputText value="#{res.title}" escape="false" /> 
-								</h:outputLink>
-							</li>
+								<li>
+									<h:outputLink value="resource.jsf">
+										<f:param name="resource_id" value="#{res.id}" />
+										<h:outputText value="#{res.title}" escape="false" /> 
+									</h:outputLink>
+								</li>
 							</ui:repeat>
 						</ul>
 					
 				</ui:repeat>
 			
 		</p:panel>
-
 
 	</ui:define>
 </ui:composition>

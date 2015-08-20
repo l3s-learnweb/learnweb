@@ -80,11 +80,7 @@
 				
 				<h:column >
 					<div class="newsfeed_user_image_div">
-					    <h:graphicImage id="userpic" 
-					    	url="#{datagrid.user.image}" 
-					    	alt="profile image" 
-					    	width="30" 
-					    	height="30" 
+					    <h:graphicImage id="userpic" url="#{datagrid.user.image}" alt="profile image" width="30" height="30" 
 					    	styleClass="newsfeed_user_image"/>
 					    </div>
 						<div class="newsfeed_text">
@@ -125,10 +121,8 @@
 								
 								
 								<br />
-								<h:outputText value="#{msg.author}: #{datagrid.resource.author} " 
-									rendered="#{not empty datagrid.resource.author}" 
-									escape="false" 
-									styleClass="newsfeed_author"/>
+								<h:outputText value="#{msg.author}: #{datagrid.resource.author} " rendered="#{not empty datagrid.resource.author}" 
+									escape="false" styleClass="newsfeed_author"/>
 							
 							</div>
 						</h:panelGroup>
@@ -138,10 +132,8 @@
 						<br></br>
 						<h:outputText value="tags: " escape="false" styleClass="newsfeed_tag" rendered="#{not empty datagrid.resource.tagsAsString}"/>
 						
-						<h:outputText value=" #{datagrid.resource.tagsAsString} " 
-							rendered="#{not empty datagrid.resource.tagsAsString}" 
-							escape="false" 
-							styleClass="newsfeed_tags"/>
+						<h:outputText value=" #{datagrid.resource.tagsAsString} " rendered="#{not empty datagrid.resource.tagsAsString}" 
+							escape="false" styleClass="newsfeed_tags"/>
 						
 						</h:panelGroup>
 						<hr width="auto" class="newsfeed_separator"></hr>
@@ -150,11 +142,8 @@
 					<br></br>
 					<h:form>
 					<h:panelGroup id="history" class="newsfeed_history">
-						<p:commandButton value="#{msg.full_history}"  
-							styleClass="blackbutton" 
-							rendered="${not groupDetailBean.isAllLogs()}" 
-							update=":datagrid history" 
-							actionListener="#{groupDetailBean.fetchAllLogs()}"/>
+						<p:commandButton value="#{msg.full_history}"  styleClass="blackbutton" rendered="${not groupDetailBean.isAllLogs()}" 
+							update=":datagrid history" actionListener="#{groupDetailBean.fetchAllLogs()}"/>
 					</h:panelGroup>
 					</h:form>
 					<br></br>
@@ -162,26 +151,16 @@
 
 		<p:dialog header="#{msg.upload_file}" widgetVar="file_dialog" modal="true" appendTo="@(body)" width="600" height="150">
 			<h:form>
-				<p:fileUpload  rendered="true" 
-					fileUploadListener="#{addResourceBean.handleFileUpload}" 
-					mode="advanced" 
-					auto="true" 
-					sizeLimit="10000000" 
-					widgetVar="fileUpload" 
-					oncomplete="PF('file_dialog').hide()" 
-					update=":add_resource_form:preview" 
-					label="#{msg.choose_file}" 
-					cancelLabel="abb"/> 
+				<p:fileUpload  rendered="true" fileUploadListener="#{addResourceBean.handleFileUpload}" mode="advanced" 
+					auto="true" sizeLimit="10000000" widgetVar="fileUpload" oncomplete="PF('file_dialog').hide()" 
+					update=":add_resource_form:preview" label="#{msg.choose_file}" cancelLabel="abb"/> 
 			</h:form>
 		</p:dialog>
 		<p:dialog header="#{msg.edit}" id="comment_dialog1" modal="true" minWidth="440" appendTo="@(body)" widgetVar="comment_dialog">
 			<h:form id="comment_dialog_form">	
 				<p:inputTextarea autoResize="1" maxHeight="20" value="#{resourceDetailBean.clickedComment.text}" id="edit_comment_textbox"/>
-				<p:commandButton actionListener="#{resourceDetailBean.onEditComment}" 
-					update=":add_resource_panel" 
-					title="#{msg.save}" 
-					value="#{msg.save}"	
-					onsuccess="PF('comment_dialog').hide();"/>
+				<p:commandButton actionListener="#{resourceDetailBean.onEditComment}" update=":add_resource_panel" title="#{msg.save}" 
+					value="#{msg.save}"	onsuccess="PF('comment_dialog').hide();"/>
 			</h:form>
 		</p:dialog>
 	

@@ -31,10 +31,14 @@
 							<h:panelGroup id="embedded" layout="block" styleClass="align-center">
 								<h:outputText value="#{addResourceBean.embeddedSize3}" escape="false" />
 							</h:panelGroup> 
-								<h:outputText value="#{msg.type}: #{addResourceBean.resource.type}" rendered="#{not empty addResourceBean.resource.type}" />
+								<h:outputText value="#{msg.type}: #{addResourceBean.resource.type}" 
+									rendered="#{not empty addResourceBean.resource.type}" />
 
-							<h3>#{msg.description}:</h3> 
-								<p:inputTextarea id="description" value="#{addResourceBean.resource.description}"autoResize="true" style="width:430px; min-height:100px;" />
+							<h3>
+								#{msg.description}:
+							</h3> 
+								<p:inputTextarea id="description" value="#{addResourceBean.resource.description}" autoResize="true" 
+									style="width:430px; min-height:100px;" />
 						</td>
 						<td valign="top" style="background-color: #D8E0EB; font-size: 11px;">
 							<div style="padding: 10px;">
@@ -44,7 +48,7 @@
 									<p:selectOneMenu value="#{addResourceBean.resource.storageType}" >
 										<f:selectItem itemLabel="URL" itemValue="2" />
 										<f:selectItem itemLabel="#{msg.file}" itemValue="1" />
-											<f:ajax render=":resource_form:resource_input" immediate="true" listener="#{addResourceBean.doNothing}"  />
+											<f:ajax render=":resource_form:resource_input" immediate="true" listener="#{addResourceBean.doNothing}"/>
 									</p:selectOneMenu>
 								</p>
 								<p>
@@ -52,8 +56,11 @@
 										<h:outputLabel value="URL:" rendered="#{addResourceBean.resource.storageType == 2}" />
 										<h:outputLabel value="#{msg.file}:" rendered="#{addResourceBean.resource.storageType == 1}" />
 										<br />
-										  <p:fileUpload fileUploadListener="#{addResourceBean.handleFileUpload}" mode="advanced" auto="true" update="embedded :growl description" sizeLimit="10000000"/>  
-										<p:inputText value="#{addResourceBean.resource.url}" style="width:100%;" required="true" requiredmessage="#{msg.mandatory_field}" id="url_input" rendered="#{addResourceBean.resource.storageType == 2}">
+										  <p:fileUpload fileUploadListener="#{addResourceBean.handleFileUpload}" mode="advanced" auto="true" 
+										  	update="embedded :growl description" sizeLimit="10000000"/>  
+										<p:inputText value="#{addResourceBean.resource.url}" style="width:100%;" required="true" 
+											requiredmessage="#{msg.mandatory_field}" id="url_input" 
+											rendered="#{addResourceBean.resource.storageType == 2}">
 											<f:ajax render="url_message embedded" event="change" listener="#{addResourceBean.handleUrlChange}" />
 										</p:inputText>
 										<p:message for="url_input" id="url_message" />
@@ -65,13 +72,15 @@
 									<h:selectOneMenu value="#{addResourceBean.resourceTargetGroupId}">
 										<f:selectItem itemLabel="#{msg.myResourcesTitle}" itemValue="0" />
 										<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />
-										<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" itemValue="#{group.id}" />
+										<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" 
+											itemValue="#{group.id}" />
 									</h:selectOneMenu>
 								</p>
 								<p>
 									<h:outputLabel value="#{msg.title}:" />
 									<br />
-									<p:inputText value="#{addResourceBean.resource.title}" style="width:100%;" required="true" requiredmessage="#{msg.mandatory_field}" id="title_input" />
+									<p:inputText value="#{addResourceBean.resource.title}" style="width:100%;" required="true" 
+										requiredmessage="#{msg.mandatory_field}" id="title_input" />
 									<p:message for="title_input" />
 								</p>
 								<!-- 
@@ -91,7 +100,8 @@
 											<h:outputText value="#{msg.upload_to}:" />
 											<br />
 											<h:selectManyCheckbox value="#{addResourceBean.selectedUploadServices}" layout="pageDirection">
-												<f:selectItems value="#{addResourceBean.uploadServices}" var="service" itemLabel="#{service.title}" itemValue="#{service.id}" />
+												<f:selectItems value="#{addResourceBean.uploadServices}" var="service" 
+													itemLabel="#{service.title}" itemValue="#{service.id}" />
 											</h:selectManyCheckbox>
 										</p>
 									</h:panelGroup>
@@ -99,7 +109,8 @@
 								<p>
 									<h:outputText value="" />
 									<br />
-									<p:commandButton value="#{msg.addResource}" action="#{addResourceBean.addResource}" process="@form"  ajax="false" update=":growl" />
+									<p:commandButton value="#{msg.addResource}" action="#{addResourceBean.addResource}" process="@form" 
+										ajax="false" update=":growl" />
 								</p>
 							</div>
 						</td>

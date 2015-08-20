@@ -24,27 +24,29 @@
 
 				<h:panelGrid columns="3">					
 					<h:outputLabel for="username" value="#{msg.username}: *" />
-					<p:inputText id="username" value="#{registrationBean.username}" validator="#{registrationBean.validateUsername}" label="#{msg.username}" />
+					<p:inputText id="username" value="#{registrationBean.username}" validator="#{registrationBean.validateUsername}" 
+						label="#{msg.username}" />
 					<p:message showSummary="true" showDetail="false" styleClass="error" for="username" id="usernameMessage" />
 
 					<h:outputLabel for="password" value="#{msg.password}: *" />
-					<p:password id="password" value="#{registrationBean.password}" autocomplete="false" label="#{msg.password}" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
+					<p:password id="password" value="#{registrationBean.password}" autocomplete="false" label="#{msg.password}" 
+						promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
 						goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}">
 					
 					</p:password>
 					<p:message id="passwordMessage" showSummary="true" showDetail="false" styleClass="error" for="password" />
 
 					<h:outputLabel for="confirm_password" value="#{msg.confirm_password}: *" />
-					<p:password id="confirm_password" value="#{registrationBean.confirmPassword}" label="#{msg.confirm_password}" validator="#{registrationBean.validatePassword}" promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
-						goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}">
+					<p:password id="confirm_password" value="#{registrationBean.confirmPassword}" label="#{msg.confirm_password}" 
+						validator="#{registrationBean.validatePassword}" promptLabel="#{msg.passwordStrength_prompt}" 
+						weakLabel="#{msg.passwordStrength_weak}" goodLabel="#{msg.passwordStrength_good}" 
+						strongLabel="#{msg.passwordStrength_strong}">
 					
 					</p:password>
 					<p:message id="confirmPasswordMessage" showSummary="true" showDetail="false" styleClass="error" for="confirm_password" />
 
 					<h:outputLabel for="email" value="#{msg.email_address}:" />
-					<p:inputText id="email" value="#{registrationBean.email}" label="#{msg.email_address}">
-					
-					</p:inputText>
+					<p:inputText id="email" value="#{registrationBean.email}" label="#{msg.email_address}"/>
 					<p:message id="emailMessage" showSummary="true" showDetail="false" styleClass="error" for="email" />
 
 					<h:outputText value="" />			
