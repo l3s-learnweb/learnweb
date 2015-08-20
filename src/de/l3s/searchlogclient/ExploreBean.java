@@ -96,7 +96,7 @@ public class ExploreBean extends ApplicationBean implements Serializable
      */
     public String redirect(String buttonType)
     {
-	int pageNo = page + 1;
+	int pageNo = page;// + 1;
 	return getTemplateDir() + "/explore.xhtml?page=" + pageNo + "&amp;mode=list_view&amp;faces-redirect=true";
     }
 
@@ -171,7 +171,7 @@ public class ExploreBean extends ApplicationBean implements Serializable
 	    {
 		int userId = getUser() == null ? -1 : getUser().getId();
 		searchHistoryLogs = searchLogClient.getSearchHistoryByPages(userId, page * pageSize, pageSize);
-		page++;
+		//page++;
 		convertResourceLogHashMaptoList();
 		createResourceLogTimeline();
 	    }
@@ -381,7 +381,7 @@ public class ExploreBean extends ApplicationBean implements Serializable
 
     public void setPage(int page)
     {
-	this.page = page - 1;
+	this.page = page;
     }
 
     public int getPageSize()

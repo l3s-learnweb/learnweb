@@ -54,22 +54,29 @@ public class MementoClient
 	    con.setRequestMethod("GET");
 	    con.setDoOutput(true);
 
-	    BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-	    String inputLine;
-	    StringBuffer response = new StringBuffer();
-
-	    while((inputLine = in.readLine()) != null)
+	    if(con.getResponseCode() == 404)
 	    {
-		response.append(inputLine);
+		log.info("Not found in archive");
 	    }
-
-	    Pattern p = Pattern.compile("(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])(>; rel=\"[^\"]+\"; )(datetime=)(\"[^\"]+\")");
-	    Matcher m = p.matcher(response.toString());
-	    while(m.find())
+	    else
 	    {
-		archiveVersions.add(new ArchiveUrl(m.group(1), dateTimeFormat.parse(m.group(4).replaceAll("\"", ""))));
+		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+		String inputLine;
+		StringBuffer response = new StringBuffer();
+
+		while((inputLine = in.readLine()) != null)
+		{
+		    response.append(inputLine);
+		}
+
+		Pattern p = Pattern.compile("(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])(>; rel=\"[^\"]+\"; )(datetime=)(\"[^\"]+\")");
+		Matcher m = p.matcher(response.toString());
+		while(m.find())
+		{
+		    archiveVersions.add(new ArchiveUrl(m.group(1), dateTimeFormat.parse(m.group(4).replaceAll("\"", ""))));
+		}
+		in.close();
 	    }
-	    in.close();
 	}
 	catch(IOException e)
 	{

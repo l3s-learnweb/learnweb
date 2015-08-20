@@ -57,7 +57,9 @@
 						<h:outputText value="" rendered="#{not empty userBean.activeCourse.groupCategories}" />						
 							
 						<h:outputText value="#{msg.description}:" />					
-						<p:inputTextarea id="new_description" value="#{groupsBean.newGroup.description}" style="width:20rem"/>
+						<p:editor id="new_description" widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" 
+							controls="bold italic underline bullets numbering undo redo link unlink" style="width:28rem;" height="150">
+						</p:editor>
 						<p:message for="new_description" showSummary="true" showDetail="false"/>	
 
 						<h:outputText value="#{msg.language}:" />
@@ -109,8 +111,8 @@
 					<h:outputText value=" (#{msg.new_word})" styleClass="bold_red" rendered="${userBean.newGroups.contains(group)}"/>
 				</p:column>
 
-				<p:column headerText="#{msg.description}" sortBy="#{group.description}">
-					<h:outputText value="#{group.description}" />
+				<p:column headerText="#{msg.description}" sortBy="#{group.description}" styleClass="group_description" >
+					<h:outputText value="#{group.description}" escape="false"/>
 				</p:column>
 
 				<p:column headerText="#{msg.leader}" sortBy="#{group.leader.username}" width="9%">
@@ -164,8 +166,8 @@
 						<h:outputText value=" (#{msg.new_word})" styleClass="bold_red" rendered="${userBean.newGroups.contains(group)}"/>
 					</p:column>
 
-					<p:column headerText="#{msg.description}" >
-						<h:outputText value="#{group.description}" />
+					<p:column headerText="#{msg.description}" styleClass="group_description" >
+						<h:outputText value="#{group.description}" escape="false"/>
 					</p:column>					
 					
 					<p:column headerText="#{msg.language}" width="7%" rendered="#{groupsBean.otherGroupsShowLanguage}">

@@ -21,6 +21,14 @@ public class JobScheduler
 	//Schedules the task, at 1:00 everyday
 	//description about Scheduling patterns : http://www.sauronsoftware.it/projects/cron4j/manual.php#p02 
 	//scheduler.schedule("0 1 * * *", task);
+
+	//Schedules the task at 1:00 on 14th and 28th of every month
+	//UpdateLoroResources loroTask = new UpdateLoroResources();
+	//scheduler.schedule("0 1 14,28 * *", loroTask);
+
+	//Schedules the task at 1:00 on 13th and 27th of every month
+	//UpdateYovistoVideos yovistoTask = new UpdateYovistoResources();
+	//scheduler.schedule("0 1 13,27 * *", yovistoTask);
     }
 
     public void startAllJobs()
@@ -73,6 +81,90 @@ public class JobScheduler
 	    catch(Throwable t)
 	    {
 		log.fatal("Can't update TED videos", t);
+	    }
+	}
+    }
+
+    private class UpdateLoroResources extends Task
+    {
+
+	@Override
+	public boolean canBePaused()
+	{
+	    return true;
+	}
+
+	@Override
+	public boolean canBeStopped()
+	{
+	    return true;
+	}
+
+	@Override
+	public boolean supportsCompletenessTracking()
+	{
+	    return true;
+	}
+
+	@Override
+	public boolean supportsStatusTracking()
+	{
+	    return true;
+	}
+
+	@Override
+	public void execute(TaskExecutionContext context)
+	{
+
+	    try
+	    {
+		learnweb.getLoroManager().saveLoroResource();
+	    }
+	    catch(Throwable t)
+	    {
+		log.fatal("Can't update LORO resources to learnweb", t);
+	    }
+	}
+    }
+
+    private class UpdateYovistoVideos extends Task
+    {
+
+	@Override
+	public boolean canBePaused()
+	{
+	    return true;
+	}
+
+	@Override
+	public boolean canBeStopped()
+	{
+	    return true;
+	}
+
+	@Override
+	public boolean supportsCompletenessTracking()
+	{
+	    return true;
+	}
+
+	@Override
+	public boolean supportsStatusTracking()
+	{
+	    return true;
+	}
+
+	@Override
+	public void execute(TaskExecutionContext context)
+	{
+
+	    try
+	    {
+		learnweb.getYovistoManager().saveYovistoResource();
+	    }
+	    catch(Throwable t)
+	    {
+		log.fatal("Can't update Yovisto videos to learnweb", t);
 	    }
 	}
     }
