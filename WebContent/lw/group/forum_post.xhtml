@@ -11,6 +11,7 @@
 	</ui:define>
 	
 	<ui:param name="loginRequired" value="true" />
+	<ui:param name="disableGrowl" value="true" />
 	<ui:param name="pageTitle" value="#{forumPostBean.topic.title}" escape="false" />
 
 	<ui:define name="center_layout">
@@ -24,7 +25,8 @@
 			#{msg.of} "#{forumPostBean.topic.title}"
 			
 			<h:form id="center_header_form">
-				<a href="./group/forum_post.jsf?topic_id=#{forumPostBean.topic.id}#reply" class="resource_button greenbutton">
+				<a href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{forumPostBean.topic.id}#reply" class="resource_button greenbutton"
+					onclick="$('#center_pane .content').animate({ scrollTop: 1000 }, 'slow'); return false;">
 					#{msg['ForumIndex.post _reply']} 
 				</a>
 			</h:form>
@@ -114,14 +116,15 @@
 						<h:outputText value="#{post.text}" escape="false" />
 					</div>
 					
+					<ui:fragment rendered="#{post.editCount gt 0}">
 						<div class="post_information_div_bottom" >
 				        	<h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
-				        		<f:param value="#{post.user.forumPostCount}"/>	<!-- toDo: create a function: post edit count -->
-								<f:param value="#{post.date}"/> <!-- toDo: create a function: post edit last date -->
-								<f:param value="#{post.user.username}"/>  <!-- toDo: create a function: post edit last user -->
+				        		<f:param value="#{post.editCount}"/>	<!-- toDo: create a function: post edit count -->
+								<f:param value="#{post.lastEditDate}"/> <!-- toDo: create a function: post edit last date -->
+								<f:param value="#{post.editUser.username}"/>  <!-- toDo: create a function: post edit last user -->
 				            </h:outputFormat>
 			           	</div>
-			     
+			     	</ui:fragment>
 		        </p:column>
 		        
 		    </p:dataTable>
@@ -166,7 +169,7 @@
 					</tr>
 					<tr>
 						<td colspan="3">
-							<h:commandButton ajax="true" value="#{msg.save}" styleClass="greenbutton save_button" 
+							<p:commandButton ajax="true" value="#{msg.save}" styleClass="greenbutton save_button" 
 								action="#{forumPostBean.onSavePost}" validateClient="true" update="@form :forum_post_table"/>
 						</td>
 					</tr>

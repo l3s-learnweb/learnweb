@@ -23,6 +23,7 @@ public class ForumPost implements Serializable
 
     // cached value
     private transient User user;
+    private transient User editUser;
 
     public int getId()
     {
@@ -113,6 +114,15 @@ public class ForumPost implements Serializable
 	    user = Learnweb.getInstance().getUserManager().getUser(userId);
 	}
 	return user;
+    }
+
+    public User getEditUser() throws SQLException
+    {
+	if(editUser == null)
+	{
+	    editUser = Learnweb.getInstance().getUserManager().getUser(editUserId);
+	}
+	return editUser;
     }
 
     public String getCategory()
