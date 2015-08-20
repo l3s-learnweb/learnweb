@@ -479,24 +479,19 @@ public class SearchFilters implements Serializable
 	List<Filter> list = new ArrayList<Filter>();
 	for(FILTERS fs : FILTERS.getFilterByMode(configMode))
 	{
-	    boolean isShow = true;
 	    boolean containsFilter = configFilters.containsKey(fs);
 	    Filter nf = new Filter(containsFilter ? fs.getItemName(configFilters.get(fs).toString()) : fs.toString(), fs.getLocaleAnyString(), changeFilterInUrl(fs, null), containsFilter);
 
 	    switch(fs)
 	    {
 	    case service:
-		if(availableResources.containsKey(FILTERS.service))
+		if(availableResources.containsKey(fs))
 		{
-		    for(Count c : availableResources.get(FILTERS.service))
+		    for(Count c : availableResources.get(fs))
 		    {
 			FilterItem fi = new FilterItem(fs.getItemName(c.getName()), c.getCount() > 0 ? Long.toString(c.getCount()) : null, changeFilterInUrl(fs, c.getName()), containsFilter && configFilters.get(fs).toString().equals(c.getName()));
 			nf.addFilterItem(fi);
 		    }
-		}
-		else
-		{
-		    isShow = false;
 		}
 		break;
 	    case date:
@@ -508,52 +503,19 @@ public class SearchFilters implements Serializable
 			nf.addFilterItem(fi);
 		    }
 		}
-		else
-		{
-		    isShow = false;
-		}
 		break;
 	    case group:
-		if(availableResources.containsKey(FILTERS.group))
-		{
-		    for(Count c : availableResources.get(FILTERS.group))
-		    {
-			FilterItem fi = new FilterItem(fs.getItemName(c.getName()), Long.toString(c.getCount()), changeFilterInUrl(fs, c.getName()), containsFilter && configFilters.get(fs).equals(c.getName()));
-			nf.addFilterItem(fi);
-		    }
-		}
-		else
-		{
-		    isShow = false;
-		}
-		break;
-
 	    case collector:
-		if(availableResources.containsKey(FILTERS.collector))
-		{
-		    for(Count c : availableResources.get(FILTERS.collector))
-		    {
-			FilterItem fi = new FilterItem(fs.getItemName(c.getName()), Long.toString(c.getCount()), changeFilterInUrl(fs, c.getName()), containsFilter && configFilters.get(fs).equals(c.getName()));
-			nf.addFilterItem(fi);
-		    }
-		}
-		else
-		{
-		    isShow = false;
-		}
-		break;
 	    case author:
-		if(availableResources.containsKey(FILTERS.author))
+		if(availableResources.containsKey(fs))
 		{
-		    for(Count c : availableResources.get(FILTERS.author))
+		    for(Count c : availableResources.get(fs))
 		    {
+			if(c.getName().isEmpty())
+			    continue;
 			FilterItem fi = new FilterItem(fs.getItemName(c.getName()), Long.toString(c.getCount()), changeFilterInUrl(fs, c.getName()), containsFilter && configFilters.get(fs).equals(c.getName()));
 			nf.addFilterItem(fi);
 		    }
-		}
-		else
-		{
-		    isShow = false;
 		}
 		break;
 	    case videoDuration:
@@ -571,11 +533,10 @@ public class SearchFilters implements Serializable
 		}
 		break;
 	    case language:
-		isShow = false;
 		break;
 	    }
 
-	    if(isShow)
+	    if(nf.getItems().size() != 0)
 	    {
 		list.add(nf);
 	    }
@@ -729,23 +690,27 @@ public class SearchFilters implements Serializable
 	{
 	    return null;
 	}
-	else if(name.equalsIgnoreCase("learnweb"))
+	else if(name.equals("learnweb"))
 	{
 	    return "LearnWeb";
 	}
-	else if(name.equalsIgnoreCase("archiveit"))
+	else if(name.equals("archiveit"))
 	{
 	    return "Archive-It";
 	}
-	else if(name.equalsIgnoreCase("loro"))
+	else if(name.equals("loro"))
 	{
 	    return "Loro";
 	}
-	else if(name.equalsIgnoreCase("ted"))
+	else if(name.equals("ted"))
 	{
 	    return "TED";
 	}
-	else if(name.equalsIgnoreCase("yovisto"))
+	else if(name.equals("tedx"))
+	{
+	    return "TEDx";
+	}
+	else if(name.equals("yovisto"))
 	{
 	    return "Yovisto";
 	}
