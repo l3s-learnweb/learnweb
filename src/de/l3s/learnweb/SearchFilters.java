@@ -237,6 +237,7 @@ public class SearchFilters implements Serializable
 	date,
 	group,
 	collector,
+	author,
 	imageSize,
 	videoDuration,
 	language;
@@ -246,11 +247,11 @@ public class SearchFilters implements Serializable
 	    switch(m)
 	    {
 	    case web:
-		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector };
+		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector, FILTERS.author };
 	    case image:
-		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector, FILTERS.imageSize };
+		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector, FILTERS.author, FILTERS.imageSize };
 	    case video:
-		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector, FILTERS.videoDuration };
+		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector, FILTERS.author, FILTERS.videoDuration };
 	    default:
 		return FILTERS.values();
 	    }
@@ -336,6 +337,10 @@ public class SearchFilters implements Serializable
 	    {
 		putResourceCounter(FILTERS.collector, ff.getValues());
 	    }
+	    else if(ff.getName().equals("author_s"))
+	    {
+		putResourceCounter(FILTERS.author, ff.getValues());
+	    }
 	}
     }
 
@@ -397,10 +402,8 @@ public class SearchFilters implements Serializable
 			    configFilters.put(f, DATE.valueOf(nameValue[1]));
 			    break;
 			case group:
-			    canNotRequestInterweb = true;
-			    configFilters.put(f, nameValue[1]);
-			    break;
 			case collector:
+			case author:
 			    canNotRequestInterweb = true;
 			    configFilters.put(f, nameValue[1]);
 			    break;
@@ -539,6 +542,20 @@ public class SearchFilters implements Serializable
 		    isShow = false;
 		}
 		break;
+	    case author:
+		if(availableResources.containsKey(FILTERS.author))
+		{
+		    for(Count c : availableResources.get(FILTERS.author))
+		    {
+			FilterItem fi = new FilterItem(fs.getItemName(c.getName()), Long.toString(c.getCount()), changeFilterInUrl(fs, c.getName()), containsFilter && configFilters.get(fs).equals(c.getName()));
+			nf.addFilterItem(fi);
+		    }
+		}
+		else
+		{
+		    isShow = false;
+		}
+		break;
 	    case videoDuration:
 		for(DURATION d : DURATION.values())
 		{
@@ -645,6 +662,11 @@ public class SearchFilters implements Serializable
     public String getCollectorFilter()
     {
 	return (String) configFilters.get(FILTERS.collector);
+    }
+
+    public String getAuthorFilter()
+    {
+	return (String) configFilters.get(FILTERS.author);
     }
 
     public void setMode(MODE m)

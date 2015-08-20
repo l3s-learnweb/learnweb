@@ -172,6 +172,8 @@ public class Search implements Serializable
 	    this.solrSearch.setFilterGroups(Integer.parseInt(searchFilters.getGroupFilter()));
 	if(searchFilters.getCollectorFilter() != null)
 	    this.solrSearch.setFilterCollector(searchFilters.getCollectorFilter());
+	if(searchFilters.getAuthorFilter() != null)
+	    this.solrSearch.setFilterAuthor(searchFilters.getAuthorFilter());
 
 	List<ResourceDecorator> learnwebResources = solrSearch.getResourcesByPage(page);
 	log.debug("Solr returned " + learnwebResources.size() + " results in " + (System.currentTimeMillis() - start) + " ms");

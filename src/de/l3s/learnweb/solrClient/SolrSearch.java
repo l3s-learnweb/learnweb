@@ -41,6 +41,7 @@ public class SolrSearch implements Serializable
     private String filterDateFrom = "";
     private String filterDateTo = "";
     private String filterCollector = "";
+    private String filterAuthor = "";
     private List<Integer> filterGroupIds;
 
     protected long totalResults = -1;
@@ -152,14 +153,14 @@ public class SolrSearch implements Serializable
 	}
     }
 
-    /**
-     * Or directly provide the list of group ids to search in
-     * 
-     * @param filterGroupIds
-     */
     public void setFilterCollector(String collector)
     {
 	this.filterCollector = collector;
+    }
+
+    public void setFilterAuthor(String author)
+    {
+	this.filterAuthor = author;
     }
 
     public void clearAllFilters()
@@ -175,6 +176,7 @@ public class SolrSearch implements Serializable
 	this.filterDateFrom = "";
 	this.filterDateTo = "";
 	this.filterCollector = "";
+	this.filterAuthor = "";
     }
 
     public long getTotalResultCount()
@@ -229,6 +231,11 @@ public class SolrSearch implements Serializable
 	    solrQuery.addFilterQuery("collector_s : \"" + filterCollector + "\"");
 	}
 
+	if(0 != filterAuthor.length())
+	{
+	    solrQuery.addFilterQuery("author_s : \"" + filterAuthor + "\"");
+	}
+
 	if(null != filterGroupIds)
 	{
 	    filterGroupStr = "";
@@ -258,7 +265,7 @@ public class SolrSearch implements Serializable
 	solrQuery.setHighlightSimplePost("</strong>");
 
 	solrQuery.set("facet", "true");
-	solrQuery.addFacetField("location", "groups", "collector_s");
+	solrQuery.addFacetField("location", "groups", "collector_s", "author_s");
 	solrQuery.setFacetLimit(20); // TODO set to -1 to show all facets (implement "more" button on frontend)
 	solrQuery.setFacetSort("count");
 	solrQuery.setFacetMinCount(1);
