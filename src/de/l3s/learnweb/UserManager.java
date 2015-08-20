@@ -1,9 +1,7 @@
 package de.l3s.learnweb;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -21,6 +19,7 @@ import de.l3s.interwebj.AuthCredentials;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
+import de.l3s.util.Sql;
 
 /**
  * DAO for the User class.
@@ -363,7 +362,7 @@ public class UserManager
 	replace.setDate(19, user.getRegistrationDate() == null ? null : new java.sql.Date(user.getRegistrationDate().getTime()));
 	replace.setString(20, user.getPassword());
 
-	serializeObjectAndSet(replace, 21, user.getPreferences());
+	Sql.serializeObjectAndSet(replace, 21, user.getPreferences());
 
 	replace.executeUpdate();
 
@@ -379,29 +378,6 @@ public class UserManager
 	replace.close();
 
 	return user;
-    }
-
-    private static void serializeObjectAndSet(PreparedStatement stmt, int parameterIndex, Object obj) throws SQLException
-    {
-	ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
-	try
-	{
-	    ObjectOutputStream oos = new ObjectOutputStream(baos);
-	    oos.writeObject(obj);
-
-	    byte[] employeeAsBytes = baos.toByteArray();
-
-	    stmt.setBinaryStream(parameterIndex, new ByteArrayInputStream(employeeAsBytes), employeeAsBytes.length);
-
-	    return;
-	}
-	catch(Exception e)
-	{
-	    log.error("Couldn't serialize preferences: " + obj.toString(), e);
-	}
-
-	stmt.setNull(parameterIndex, java.sql.Types.BLOB);
     }
 
     @SuppressWarnings("unchecked")

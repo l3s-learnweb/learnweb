@@ -132,7 +132,8 @@ public class Learnweb
 	    e.printStackTrace();
 	}
 
-	Class.forName("com.mysql.jdbc.Driver");
+	//Class.forName("com.mysql.jdbc.Driver");
+	Class.forName("org.mariadb.jdbc.Driver");
 	connect();
 
 	/*

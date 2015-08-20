@@ -11,6 +11,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -60,6 +62,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private Date creationDate = new Date();
     private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
     private HashMap<Integer, Boolean> isRatedByUser = new HashMap<Integer, Boolean>(); // userId : hasRated
+    private HashMap<String, String> metadata = new HashMap<String, String>(); // userId : hasRated
 
     private int thumbUp;
     private int thumbDown;
@@ -1333,16 +1336,45 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	this.creationDate = creationDate;
     }
 
-    private String collector;
-
-    public String getCollector()
+    /**
+     * 
+     * @param key
+     * @param value
+     * @return the previous value associated with key, or null if there was no mapping for key. (A null return can also indicate that the map
+     *         previously associated null with key.)
+     */
+    public String setMetadataValue(String key, String value)
     {
-	return collector;
+	key = key.toLowerCase();
+	if(key.equals("author"))
+	    throw new IllegalArgumentException(key + " is a reserved name");
+
+	return metadata.put(key, value);
     }
 
-    public void setCollector(String collector)
+    public Set<String> getMetadataKeys()
     {
-	this.collector = collector;
+	return metadata.keySet();
+    }
+
+    public Set<Entry<String, String>> getMetadataEntries()
+    {
+	return metadata.entrySet();
+    }
+
+    public String getMetadataValue(String key)
+    {
+	return metadata.get(key);
+    }
+
+    public HashMap<String, String> getMetadata()
+    {
+	return metadata;
+    }
+
+    public void setMetadata(HashMap<String, String> metadata)
+    {
+	this.metadata = metadata;
     }
 
 }

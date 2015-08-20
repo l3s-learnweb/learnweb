@@ -129,8 +129,8 @@ public class SolrResourceBean
 	this.id = "r_" + resource.getId();
 	this.title = resource.getTitle();
 	this.description = resource.getDescription();
-	this.source = resource.getSource().equals("Archive-It")? "ArchiveIt" : resource.getSource();
-	this.location = resource.getLocation().equals("Archive-It")? "ArchiveIt" : resource.getLocation();
+	this.source = resource.getSource().equals("Archive-It") ? "ArchiveIt" : resource.getSource();
+	this.location = resource.getLocation().equals("Archive-It") ? "ArchiveIt" : resource.getLocation();
 	this.type = resource.getType();
 	this.format = resource.getFormat();
 	this.language = resource.getLanguage();
@@ -163,7 +163,7 @@ public class SolrResourceBean
 	    setThumnailWidth4(resource.getThumbnail4().getWidth());
 	}
 
-	this.collector = resource.getCollector();
+	//TODO metadata
     }
 
     public String getAuthor()

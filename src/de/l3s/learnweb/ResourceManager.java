@@ -1,5 +1,7 @@
 package de.l3s.learnweb;
 
+import java.io.ByteArrayInputStream;
+import java.io.ObjectInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -7,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collection;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -302,12 +305,37 @@ public class ResourceManager
 	    resource.setThumbnail3(null);
 	    resource.setThumbnail4(null);
 	}
+	/*
+		// create the SQL query to store the metadata fields in the dynamic column "metadata"
+		int metadataFields = resource.getMetadataKeys().size();
+		String metadataSQLvalue = "NULL";
+		if(metadataFields > 0)
+		{
+		    StringBuilder sb = new StringBuilder("COLUMN_CREATE(");
+		    /*
+		    	    for(int i = 0; i < metadataFields; i++)
+		    		sb.append("?,?,");
+		    * /
+		    for(Entry<String, String> entry : resource.getMetadataEntries())
+		    {
+			sb.append("'");
+			sb.append(entry.getKey().replace("'", "\\'"));
+			sb.append("','");
+			sb.append(entry.getValue().replace("'", "\\'"));
+			sb.append("',");
+		    }
 
-	PreparedStatement replace = learnweb
-		.getConnection()
-		.prepareStatement(
-			"REPLACE INTO `lw_resource` (`resource_id` ,`title` ,`description` ,`url` ,`storage_type` ,`rights` ,`source` ,`type` ,`format` ,`owner_user_id` ,`rating` ,`rate_number` ,`query`, embedded_size1, embedded_size2, embedded_size3, embedded_size4, filename,	max_image_url, original_resource_id, machine_description, author, file_url, thumbnail0_url, thumbnail0_file_id, thumbnail0_width, thumbnail0_height, thumbnail1_url, thumbnail1_file_id, thumbnail1_width, thumbnail1_height, thumbnail2_url, thumbnail2_file_id, thumbnail2_width, thumbnail2_height, thumbnail3_url, thumbnail3_file_id, thumbnail3_width, thumbnail3_height, thumbnail4_url, thumbnail4_file_id, thumbnail4_width, thumbnail4_height, embeddedRaw, transcript, online_status, id_at_service, duration, restricted, language, creation_date) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-			Statement.RETURN_GENERATED_KEYS);
+		    sb.setLength(sb.length() - 1);
+		    sb.append(")");
+		    metadataSQLvalue = sb.toString();
+		}
+		//metadataSQLvalue = "?";
+
+		log.debug(metadataSQLvalue);
+	*/
+	String query = "REPLACE INTO `lw_resource` (`resource_id` ,`title` ,`description` ,`url` ,`storage_type` ,`rights` ,`source` ,`type` ,`format` ,`owner_user_id` ,`rating` ,`rate_number` ,`query`, embedded_size1, embedded_size2, embedded_size3, embedded_size4, filename, max_image_url, original_resource_id, machine_description, author, file_url, thumbnail0_url, thumbnail0_file_id, thumbnail0_width, thumbnail0_height, thumbnail1_url, thumbnail1_file_id, thumbnail1_width, thumbnail1_height, thumbnail2_url, thumbnail2_file_id, thumbnail2_width, thumbnail2_height, thumbnail3_url, thumbnail3_file_id, thumbnail3_width, thumbnail3_height, thumbnail4_url, thumbnail4_file_id, thumbnail4_width, thumbnail4_height, embeddedRaw, transcript, online_status, id_at_service, duration, restricted, language, creation_date, metadata) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
+		+ "?)";
+	PreparedStatement replace = learnweb.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
 	if(resource.getId() < 0) // the Resource is not yet stored at the database
 	    replace.setNull(1, java.sql.Types.INTEGER);
@@ -368,7 +396,19 @@ public class ResourceManager
 	replace.setInt(49, resource.isRestricted() ? 1 : 0);
 	replace.setString(50, resource.getLanguage());
 	replace.setTimestamp(51, resource.getCreationDate() == null ? null : new java.sql.Timestamp(resource.getCreationDate().getTime()));
+	//replace.setString(52, "metadataSQLvalue('test', 'ka')");
 
+	Sql.serializeObjectAndSet(replace, 52, resource.getMetadata());
+
+	/*
+	int m = 52;
+	for(Entry<String, String> entry : resource.getMetadataEntries())
+	{
+	    replace.setString(m++, entry.getKey());
+	    replace.setString(m++, entry.getValue());
+	}
+	*/
+	//log.debug(replace);
 	replace.executeUpdate();
 
 	if(resource.getId() < 0) // get the assigned id
@@ -891,6 +931,7 @@ public class ResourceManager
 	return count;
     }
 
+    @SuppressWarnings("unchecked")
     private Resource createResource(ResultSet rs) throws SQLException
     {
 	int id = rs.getInt("resource_id");
@@ -964,6 +1005,32 @@ public class ResourceManager
 	    else
 		log.debug(resource.getTitle() + " is deleted");
 
+	    // deserialize preferences
+	    HashMap<String, String> metadata = null;
+
+	    byte[] metadataBytes = rs.getBytes("metadata");
+
+	    if(metadataBytes != null && metadataBytes.length > 0)
+	    {
+		ByteArrayInputStream metadataBAIS = new ByteArrayInputStream(metadataBytes);
+
+		try
+		{
+		    ObjectInputStream metadataOIS = new ObjectInputStream(metadataBAIS);
+
+		    // re-create the object
+		    metadata = (HashMap<String, String>) metadataOIS.readObject();
+		}
+		catch(Exception e)
+		{
+		    log.error("Couldn't load metadata for resource " + resource.getId(), e);
+		}
+	    }
+
+	    if(metadata == null)
+		metadata = new HashMap<String, String>();
+
+	    resource.setMetadata(metadata);
 	    resource.prepareEmbeddedCodes();
 	    resource = cache.put(resource);
 	}
@@ -1308,9 +1375,9 @@ public class ResourceManager
 	ResourceManager rm = lw.getResourceManager();
 	SolrClient sm = lw.getSolrClient();
 
-	PreparedStatement detailSelect = lw.getConnection().prepareStatement("SELECT collector FROM `archiveit_collection` WHERE `lw_resource_id` = ?");
+	PreparedStatement detailSelect = lw.getConnection().prepareStatement("SELECT collector, coverage, publisher FROM `archiveit_collection` WHERE `lw_resource_id` = ?");
 
-	List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where deleted=0 AND source=?", "Archive-It");
+	List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where deleted=0 AND source=? limit 1", "Archive-It");
 
 	log.debug("Resources loaded");
 
@@ -1323,9 +1390,14 @@ public class ResourceManager
 
 	    if(rs.next())
 	    {
-		resource.setCollector(rs.getString("collector"));
+		resource.setMetadataValue("collector", rs.getString("collector").trim());
+		resource.setMetadataValue("coverage", rs.getString("coverage").trim());
+		resource.setMetadataValue("publisher", rs.getString("publisher").trim());
 
-		sm.reIndexResource(resource);
+		System.out.println(resource.getMetadataEntries());
+
+		resource.save();
+		//sm.reIndexResource(resource);
 	    }
 	    else
 		log.error("no archiveit_collection entry for id: " + resource.getId());
