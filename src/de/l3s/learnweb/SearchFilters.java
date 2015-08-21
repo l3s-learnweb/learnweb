@@ -26,9 +26,9 @@ public class SearchFilters implements Serializable
     private MODE configMode;
     private Map<FILTERS, Object> configFilters = new EnumMap<>(FILTERS.class);
     private Map<FILTERS, List<Count>> availableResources = new HashMap<FILTERS, List<Count>>();
+    private FILTERS lastFilter = null;
     private boolean canNotRequestLearnweb = false;
     private boolean canNotRequestInterweb = false;
-    private boolean resourceCounterFlag = true; // Uses for collect counters from interweb and solr and merge them
 
     public enum SERVICE
     {
@@ -302,17 +302,17 @@ public class SearchFilters implements Serializable
 
     public void clean()
     {
+	lastFilter = null;
 	configFilters.clear();
-	resourceCounterFlag = true;
 	canNotRequestLearnweb = false;
 	canNotRequestInterweb = false;
     }
 
     public void cleanAll()
     {
+	lastFilter = null;
 	configFilters.clear();
 	availableResources.clear();
-	resourceCounterFlag = true;
 	canNotRequestLearnweb = false;
 	canNotRequestInterweb = false;
     }
@@ -321,47 +321,37 @@ public class SearchFilters implements Serializable
     {
 	for(FacetField ff : ffs)
 	{
-	    if(ff.getValues().size() <= 0)
+	    if(ff.getName().equals("location"))
 	    {
-		continue;
-	    }
-	    else if(ff.getName().equals("location"))
-	    {
-		putResourceCounter(FILTERS.service, ff.getValues());
+		putResourceCounter(FILTERS.service, ff.getValues(), false);
 	    }
 	    else if(ff.getName().equals("groups"))
 	    {
-		putResourceCounter(FILTERS.group, ff.getValues());
+		putResourceCounter(FILTERS.group, ff.getValues(), false);
 	    }
 	    else if(ff.getName().equals("collector_s"))
 	    {
-		putResourceCounter(FILTERS.collector, ff.getValues());
+		putResourceCounter(FILTERS.collector, ff.getValues(), false);
 	    }
 	    else if(ff.getName().equals("author_s"))
 	    {
-		putResourceCounter(FILTERS.author, ff.getValues());
+		putResourceCounter(FILTERS.author, ff.getValues(), false);
 	    }
 	}
     }
 
-    public void putResourceCounter(FILTERS f, List<Count> counts)
+    public void putResourceCounter(FILTERS f, List<Count> counts, boolean merge)
     {
-	if(!configFilters.containsKey(f))
+	if(lastFilter == null || lastFilter != f)
 	{
-	    if(f.equals(FILTERS.service))
+	    if(counts.size() <= 0 && availableResources.containsKey(f))
 	    {
-		if(!resourceCounterFlag)
-		{
-		    List<Count> current = availableResources.get(f);
-		    current.addAll(counts);
-		    availableResources.put(f, current);
-		    resourceCounterFlag = true;
-		}
-		else
-		{
-		    resourceCounterFlag = false;
-		    availableResources.put(f, counts);
-		}
+		availableResources.remove(f);
+	    }
+	    else if(merge && availableResources.containsKey(f))
+	    {
+		counts.addAll(availableResources.get(f));
+		availableResources.put(f, counts);
 	    }
 	    else
 	    {
@@ -396,25 +386,25 @@ public class SearchFilters implements Serializable
 			switch(f)
 			{
 			case service:
-			    configFilters.put(f, SERVICE.valueOf(nameValue[1]));
+			    setFilter(f, SERVICE.valueOf(nameValue[1]));
 			    break;
 			case date:
-			    configFilters.put(f, DATE.valueOf(nameValue[1]));
+			    setFilter(f, DATE.valueOf(nameValue[1]));
 			    break;
 			case group:
 			case collector:
 			case author:
 			    canNotRequestInterweb = true;
-			    configFilters.put(f, nameValue[1]);
+			    setFilter(f, nameValue[1]);
 			    break;
 			case videoDuration:
-			    configFilters.put(f, DURATION.valueOf(nameValue[1]));
+			    setFilter(f, DURATION.valueOf(nameValue[1]));
 			    break;
 			case imageSize:
-			    configFilters.put(f, SIZE.valueOf(nameValue[1]));
+			    setFilter(f, SIZE.valueOf(nameValue[1]));
 			    break;
 			default:
-			    configFilters.put(f, nameValue[1]);
+			    setFilter(f, nameValue[1]);
 			    break;
 			}
 
@@ -511,7 +501,7 @@ public class SearchFilters implements Serializable
 		{
 		    for(Count c : availableResources.get(fs))
 		    {
-			if(c.getName().isEmpty())
+			if(c.getName().isEmpty() || c.getName().equals("\n"))
 			    continue;
 			FilterItem fi = new FilterItem(fs.getItemName(c.getName()), Long.toString(c.getCount()), changeFilterInUrl(fs, c.getName()), containsFilter && configFilters.get(fs).equals(c.getName()));
 			nf.addFilterItem(fi);
@@ -576,6 +566,12 @@ public class SearchFilters implements Serializable
 	}
 
 	return true;
+    }
+
+    public void setFilter(FILTERS f, Object o)
+    {
+	this.lastFilter = f;
+	this.configFilters.put(f, o);
     }
 
     public String getServiceFilter()
@@ -646,7 +642,7 @@ public class SearchFilters implements Serializable
 
     public void setLanguageFilter(String language)
     {
-	configFilters.put(FILTERS.language, language);
+	setFilter(FILTERS.language, language);
     }
 
     public boolean isLearnwebSearchEnabled()

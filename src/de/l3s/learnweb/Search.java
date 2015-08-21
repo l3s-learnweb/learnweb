@@ -292,7 +292,7 @@ public class Search implements Serializable
 
 	if(page == 1)
 	{
-	    searchFilters.putResourceCounter(FILTERS.service, interwebResponse.getResultCountPerService());
+	    searchFilters.putResourceCounter(FILTERS.service, interwebResponse.getResultCountPerService(), true);
 	}
 
 	if(interwebResults.size() == 0)
