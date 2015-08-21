@@ -119,7 +119,7 @@
 								<td colspan="3">
 									#{msg.description}:
 								</td>
-							</tr>
+							</tr>							
 							<tr>
 								<td colspan="3">
 									<p:inputTextarea id="description" value="#{addResourceBean.resource.description}" autoResize="true" 
@@ -285,6 +285,20 @@
 								</a>
 							</td>
 						</tr>
+						
+						<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.metadataEntries}">
+							<tr>
+								<td>
+									<span class="resource_field">
+										<h:outputText value="${utilBean.getLocaleMessage(entry.key, '')}" />: 
+									</span>
+								</td>
+								<td>
+									<h:outputText value="#{entry.value}" />									
+								</td>
+							</tr>
+						</ui:repeat>
+						
 						<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.groups}">
 							<tr>
 								<td>

@@ -97,6 +97,12 @@ public class SolrResourceBean
     @Field("collector_s")
     private String collector;
 
+    @Field("coverage_s")
+    private String coverage;
+
+    @Field("publisher_s")
+    private String publisher;
+
     public SolrResourceBean() // empty constructor necessary for SolrSearch
     {
 
@@ -163,7 +169,9 @@ public class SolrResourceBean
 	    setThumnailWidth4(resource.getThumbnail4().getWidth());
 	}
 
-	//TODO metadata
+	this.collector = resource.getMetadataValue("collector");
+	this.coverage = resource.getMetadataValue("coverage");
+	this.publisher = resource.getMetadataValue("publisher");
     }
 
     public String getAuthor()
@@ -444,6 +452,26 @@ public class SolrResourceBean
     public void setCollector(String collector)
     {
 	this.collector = collector;
+    }
+
+    public String getCoverage()
+    {
+	return coverage;
+    }
+
+    public void setCoverage(String coverage)
+    {
+	this.coverage = coverage;
+    }
+
+    public String getPublisher()
+    {
+	return publisher;
+    }
+
+    public void setPublisher(String publisher)
+    {
+	this.publisher = publisher;
     }
 
 }

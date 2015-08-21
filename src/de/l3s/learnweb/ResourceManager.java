@@ -837,7 +837,7 @@ public class ResourceManager
 
 	OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? ORDER BY resource_id ASC"); // TODO remove limit and implement paginator on group page
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? ORDER BY resource_id ASC");
 	select.setInt(1, groupId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -992,19 +992,20 @@ public class ResourceManager
 		resource.setLocation("Learnweb");
 
 	    // TODO remove as soon as embedded images are removed
+	    /*
 	    if(rs.getInt("deleted") == 0)
 	    {
-		List<File> files = learnweb.getFileManager().getFilesByResource(resource.getId());
-		for(File file : files)
-		{
-		    resource.addFile(file);
-		    if(file.getResourceFileNumber() == File.ORIGINAL_FILE)
-			resource.setUrl(file.getUrl());
-		}
+	    List<File> files = learnweb.getFileManager().getFilesByResource(resource.getId());
+	    for(File file : files)
+	    {
+	        resource.addFile(file);
+	        if(file.getResourceFileNumber() == File.ORIGINAL_FILE)
+	    	resource.setUrl(file.getUrl());
+	    }
 	    }
 	    else
-		log.debug(resource.getTitle() + " is deleted");
-
+	    log.debug(resource.getTitle() + " is deleted");
+	    */
 	    // deserialize preferences
 	    HashMap<String, String> metadata = null;
 
@@ -1377,7 +1378,7 @@ public class ResourceManager
 
 	PreparedStatement detailSelect = lw.getConnection().prepareStatement("SELECT collector, coverage, publisher FROM `archiveit_collection` WHERE `lw_resource_id` = ?");
 
-	List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where deleted=0 AND source=? limit 1", "Archive-It");
+	List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where deleted=0 AND source=?", "Archive-It");
 
 	log.debug("Resources loaded");
 
@@ -1393,8 +1394,6 @@ public class ResourceManager
 		resource.setMetadataValue("collector", rs.getString("collector").trim());
 		resource.setMetadataValue("coverage", rs.getString("coverage").trim());
 		resource.setMetadataValue("publisher", rs.getString("publisher").trim());
-
-		System.out.println(resource.getMetadataEntries());
 
 		resource.save();
 		//sm.reIndexResource(resource);
