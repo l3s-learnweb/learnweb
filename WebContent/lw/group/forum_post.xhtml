@@ -119,9 +119,9 @@
 					<ui:fragment rendered="#{post.editCount gt 0}">
 						<div class="post_information_div_bottom" >
 				        	<h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
-				        		<f:param value="#{post.editCount}"/>	<!-- toDo: create a function: post edit count -->
-								<f:param value="#{post.lastEditDate}"/> <!-- toDo: create a function: post edit last date -->
-								<f:param value="#{post.editUser.username}"/>  <!-- toDo: create a function: post edit last user -->
+				        		<f:param value="#{post.editCount}"/>
+								<f:param value="#{post.lastEditDate}"/>
+								<f:param value="#{post.editUser.username}"/>
 				            </h:outputFormat>
 			           	</div>
 			     	</ui:fragment>
@@ -146,9 +146,11 @@
 						<td>
 							<p:selectOneMenu id="post_category" styleClass="category" value="#{forumPostBean.newPost.category}" editable="true"
 								 label="#{msg.category}">
-						     	<!--  <f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="#{msg['ForumIndex.question']}" />
+						     	<!-- defaults  
+						     	<f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="#{msg['ForumIndex.question']}" />
 					          	<f:selectItem itemLabel="#{msg['ForumIndex.answer']}" itemValue="#{msg['ForumIndex.answer']}" />
-					           	<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="#{msg['ForumIndex.explanation']}" />-->
+					           	<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="#{msg['ForumIndex.explanation']}" />
+					           	-->
 						        
 						        <f:selectItem itemLabel="Select one" itemValue=""/>
 						        <f:selectItems value="#{forumPostBean.newPost.categories}" />

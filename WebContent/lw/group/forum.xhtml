@@ -134,9 +134,11 @@
 						<td>
 							<p:selectOneMenu id="post_category" styleClass="category" value="#{forumTopicsBean.newPost.category}" 
 								editable="true" label="#{msg.category}" >
-								<!-- <f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="#{msg['ForumIndex.question']}" />
+								<!-- defaults 
+								<f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="#{msg['ForumIndex.question']}" />
 								<f:selectItem itemLabel="#{msg['ForumIndex.answer']}" itemValue="#{msg['ForumIndex.answer']}" />
-								<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="#{msg['ForumIndex.explanation']}" /> -->
+								<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="#{msg['ForumIndex.explanation']}" /> 
+								-->
 								
 								<f:selectItem itemLabel="Select one" itemValue="" />
 								<f:selectItems value="#{forumTopicsBean.newPost.categories}" />

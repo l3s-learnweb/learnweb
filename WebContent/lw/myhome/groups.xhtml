@@ -37,12 +37,11 @@
 					
 						<h:outputText value="#{msg.title}*:" />
 						<p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" 
-							style="width:20rem"/>
+							style="width:21rem"/>
 						<p:message for="new_title" showSummary="true" showDetail="false" id="message_new_title"/>
-						
 											 
 						<h:outputText value="#{msg.course}*:" />
-						<h:selectOneMenu value="#{groupsBean.newGroup.courseId}" id="course_id" style="width:21rem;">	
+						<h:selectOneMenu value="#{groupsBean.newGroup.courseId}" id="course_id" style="width:22rem;">	
 							<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
 						</h:selectOneMenu>
 						<h:outputText value="" />				
@@ -56,12 +55,12 @@
 							
 						<h:outputText value="#{msg.description}:" />					
 						<p:editor id="new_description" widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" 
-							controls="bold italic underline bullets numbering undo redo link unlink" style="width:28rem;" height="150">
+							controls="bold italic underline bullets numbering undo redo link unlink" style="width:22rem;" height="150">
 						</p:editor>
 						<p:message for="new_description" showSummary="true" showDetail="false"/>	
 
 						<h:outputText value="#{msg.language}:" />
-						<p:inputText id="new_language" value="#{groupsBean.newGroup.language}" style="width:20rem"/>
+						<p:inputText id="new_language" value="#{groupsBean.newGroup.language}" style="width:21rem"/>
 						<p:message for="new_language" showSummary="true" showDetail="false"/>
 						
 					</h:panelGrid>	
