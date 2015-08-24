@@ -141,16 +141,20 @@ public class ForumPost implements Serializable
     {
 
 	SelectItemGroup g1 = new SelectItemGroup(UtilBean.getLocaleMessage("Forum.cell.category.1"));
-	g1.setSelectItems(new SelectItem[] { new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.1a")), new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.1b")), new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.1c")),
-		new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.1d")) });
+	g1.setSelectItems(new SelectItem[] { new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.1a"), UtilBean.getLocaleMessage("Forum.cell.category.1a")),
+		new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.1b"), UtilBean.getLocaleMessage("Forum.cell.category.1b")), new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.1c"), UtilBean.getLocaleMessage("Forum.cell.category.1c")),
+		new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.1d"), UtilBean.getLocaleMessage("Forum.cell.category.1d")) });
 
 	SelectItemGroup g2 = new SelectItemGroup(UtilBean.getLocaleMessage("Forum.cell.category.2"));
-	g2.setSelectItems(new SelectItem[] { new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.2a")), new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.2b")), new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.2c")),
-		new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.2d")), new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.2e")), new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.2f")),
-		new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.2g")), new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.2h")) });
+	g2.setSelectItems(new SelectItem[] { new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.2a"), UtilBean.getLocaleMessage("Forum.cell.category.2a")),
+		new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.2b"), UtilBean.getLocaleMessage("Forum.cell.category.2b")), new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.2c"), UtilBean.getLocaleMessage("Forum.cell.category.2c")),
+		new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.2d"), UtilBean.getLocaleMessage("Forum.cell.category.2d")), new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.2e"), UtilBean.getLocaleMessage("Forum.cell.category.2e")),
+		new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.2f"), UtilBean.getLocaleMessage("Forum.cell.category.2f")), new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.2g"), UtilBean.getLocaleMessage("Forum.cell.category.2g")),
+		new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.2h"), UtilBean.getLocaleMessage("Forum.cell.category.2h")) });
 
 	SelectItemGroup g3 = new SelectItemGroup(UtilBean.getLocaleMessage("Forum.cell.category.3"));
-	g3.setSelectItems(new SelectItem[] { new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.3a")), new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.3b")), new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.3c")) });
+	g3.setSelectItems(new SelectItem[] { new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.3a"), UtilBean.getLocaleMessage("Forum.cell.category.3a")),
+		new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.3b"), UtilBean.getLocaleMessage("Forum.cell.category.3b")), new SelectItem(UtilBean.getLocaleMessage("Forum.cell.category.3c"), UtilBean.getLocaleMessage("Forum.cell.category.3c")) });
 
 	categories = new ArrayList<SelectItem>();
 	categories.add(g1);
