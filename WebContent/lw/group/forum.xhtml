@@ -111,6 +111,7 @@
 		</div>
 			
 		<div class="grey_border">
+	
 			<h:form prependId="false">
 				<table id="new_topic_table">
 					<tr>
@@ -131,12 +132,14 @@
 							<h:outputText value="#{msg.category}: " /> 
 						</td>
 						<td>
-							<p:selectOneMenu id="post_category" styleClass="category" value="#{forumTopicsBean.newPost.category}" editable="true" 
-								label="#{msg.category}" >
-								<f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="" />
+							<p:selectOneMenu id="post_category" styleClass="category" value="#{forumTopicsBean.newPost.category}" 
+								editable="true" label="#{msg.category}" >
+								<!-- <f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="" />
 								<f:selectItem itemLabel="#{msg['ForumIndex.answer']}" itemValue="" />
-								<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="" />
-								<f:selectItems value="#{selectOneMenuView.category}" />
+								<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="" /> -->
+								
+								<f:selectItem itemLabel="Select one" itemValue="" />
+								<f:selectItems value="#{forumTopicsBean.newPost.categories}" />
 							</p:selectOneMenu>	
 						</td>
 						<td class="width_30">

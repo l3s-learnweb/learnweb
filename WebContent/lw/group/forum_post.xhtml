@@ -144,12 +144,16 @@
 							<h:outputText value="#{msg.category}: "/>
 						</td>
 						<td>
-							<p:selectOneMenu id="post_category" styleClass="category" value="#{forumPostBean.newPost.category}" 
-								editable="true" label="#{msg.category}">
-						     	<f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="" />
+							<p:selectOneMenu id="post_category" styleClass="category" value="#{forumPostBean.newPost.category}" editable="true"
+								 label="#{msg.category}">
+						     	<!--  <f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="" />
 					          	<f:selectItem itemLabel="#{msg['ForumIndex.answer']}" itemValue="" />
-					           	<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="" />
-						        <f:selectItems value="#{selectOneMenuView.category}" />
+					           	<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="" />-->
+						        
+						        <f:selectItem itemLabel="Select one" itemValue=""/>
+						        
+						        <f:selectItems value="#{forumPostBean.newPost.categories}" />
+						        
 					       	</p:selectOneMenu>	
 						</td>
 						<td class="width_30">
