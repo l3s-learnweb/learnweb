@@ -6,82 +6,83 @@
 	xmlns:f="http://java.sun.com/jsf/core" 
 	xmlns:p="http://primefaces.org/ui">
  
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg.statistics_group}"/>
 
-		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="#{msg.statistics_group}"/>
+	<ui:define name="center_layout">
 
-		
-		<ui:define name="center_layout">
-		
-			<h:form id="anlyse_form">
-				<p:panel header="#{msg.select_groups}">
-					<ui:include src="/lw/templates/group_select_form.xhtml" />	
-					<br/>
-					<p>
-						<p:selectBooleanCheckbox value="#{adminStatisticsBean.showDetails}" /> 
-						#{msg.statistics_show_detailed}
-					</p>
-					<p:commandButton actionListener="#{adminStatisticsBean.onGroupStatistics}" value="#{msg.statistics_show}" process="@form" update=":growl output"/>
-					
-				</p:panel>
-						
+		<h:form id="anlyse_form">
+			<p:panel header="#{msg.select_groups}">
+				<ui:include src="/lw/templates/group_select_form.xhtml" />	
 				<br/>
-				
-				<h:panelGroup id="output">
-					<p:panel header="#{msg.statistics}" >
-						 <p:dataTable var="entry" value="#{adminStatisticsBean.groupStatistics}" emptyMessage="#{msg.no_results_found}">  
-					        <p:column headerText="#{msg.group}" sortBy="#{entry.title}">  
-					            <h:outputText value="#{entry.title}" />  
-					        </p:column>  
-					        
-					        <p:column headerText="#{msg.resources}" >  
-					            <h:outputText value="#{entry.resources}" />  
-					        </p:column> 
-					        
-					        <p:column headerText="#{msg.thumb_ratings}" >  
-					            <h:outputText value="#{entry.thumb_ratings}" />  
-					        </p:column> 
-					        
-					        <p:column headerText="#{msg.star_ratings}" >  
-					            <h:outputText value="#{entry.star_ratings}" />  
-					        </p:column> 
-					        
-					        <p:column headerText="#{msg.comments}" >  
-					            <h:outputText value="#{entry.comments}" />  
-					        </p:column> 
-					        
-					        <p:column headerText="#{msg.tags}" >  
-					            <h:outputText value="#{entry.tags}" />  
-					        </p:column> 
-
-					        <p:column headerText="#{msg.no_of_archived_versions}" >  
-					            <h:outputText value="#{entry.no_of_archived_versions}" />  
-					        </p:column>
-
-					        <p:column headerText="#{msg.no_of_archived_resources}" >  
-					            <h:outputText value="#{entry.no_of_archived_resources}" />  
-					        </p:column>
-					        					        					        
-					        <p:column headerText="#{msg.forum_topics}" >  
-					            <h:outputText value="#{entry.forum_topics}" />  
-					        </p:column> 
-					        
-					        <p:column headerText="#{msg.forum_posts}" >  
-					            <h:outputText value="#{entry.forum_posts}" />  
-					        </p:column> 
+				<p>
+					<p:selectBooleanCheckbox value="#{adminStatisticsBean.showDetails}" /> 
+					#{msg.statistics_show_detailed}
+				</p>
+				<p:commandButton actionListener="#{adminStatisticsBean.onGroupStatistics}" value="#{msg.statistics_show}" process="@form" 
+					update=":growl output"/>
+					
+			</p:panel>
 						
-						</p:dataTable>					
-					</p:panel>
+			<br/>
 				
-				
-					<p:panel header="#{msg.statistics_detailed}" rendered="#{adminStatisticsBean.showDetails}" style="margin-top:30px;">
-						<p:selectBooleanButton offLabel="#{msg.toggle_description}" onLabel="#{msg.toggle_description}" onchange="$('.description').toggle();" value="off" />
-						<p:selectBooleanButton offLabel="#{msg.toggle_comments}" onLabel="#{msg.toggle_comments}" onchange="$('.admin_comments').toggle();" value="on" />
-						<hr />
-						<h:outputText value="#{adminStatisticsBean.detailedDescription}" escape="false" />					
-					</p:panel>
-				</h:panelGroup> 
-			</h:form>
+			<h:panelGroup id="output">
+				<p:panel header="#{msg.statistics}" >
+					 <p:dataTable var="entry" value="#{adminStatisticsBean.groupStatistics}" emptyMessage="#{msg.no_results_found}">  
+					 	<p:column headerText="#{msg.group}" sortBy="#{entry.title}">  
+					    	<h:outputText value="#{entry.title}" />  
+					    </p:column>  
+					        
+					    <p:column headerText="#{msg.resources}" >  
+					    	<h:outputText value="#{entry.resources}" />  
+					    </p:column> 
+					        
+					    <p:column headerText="#{msg.thumb_ratings}" >  
+					   		<h:outputText value="#{entry.thumb_ratings}" />  
+					    </p:column> 
+					        
+					    <p:column headerText="#{msg.star_ratings}" >  
+					    	<h:outputText value="#{entry.star_ratings}" />  
+					    </p:column> 
+					        
+					    <p:column headerText="#{msg.comments}" >  
+					    	<h:outputText value="#{entry.comments}" />  
+					    </p:column> 
+					        
+					    <p:column headerText="#{msg.tags}" >  
+					    	<h:outputText value="#{entry.tags}" />  
+					    </p:column> 
 
-		</ui:define>
-	</ui:composition>
+					  	<p:column headerText="#{msg.no_of_archived_versions}" >  
+					    	<h:outputText value="#{entry.no_of_archived_versions}" />  
+					    </p:column>
+
+					  	<p:column headerText="#{msg.no_of_archived_resources}" >  
+					    	<h:outputText value="#{entry.no_of_archived_resources}" />  
+					    </p:column>
+					        					        					        
+					    <p:column headerText="#{msg.forum_topics}" >  
+					    	<h:outputText value="#{entry.forum_topics}" />  
+					    </p:column> 
+					        
+					    <p:column headerText="#{msg.forum_posts}" >  
+					  		<h:outputText value="#{entry.forum_posts}" />  
+					    </p:column> 
+						
+					</p:dataTable>					
+				</p:panel>
+				
+				
+				<p:panel header="#{msg.statistics_detailed}" rendered="#{adminStatisticsBean.showDetails}" style="margin-top:30px;">
+					<p:selectBooleanButton offLabel="#{msg.toggle_description}" onLabel="#{msg.toggle_description}" 
+						onchange="$('.description').toggle();" value="off" />
+					<p:selectBooleanButton offLabel="#{msg.toggle_comments}" onLabel="#{msg.toggle_comments}" 
+						onchange="$('.admin_comments').toggle();" value="on" />
+					<hr />
+					<h:outputText value="#{adminStatisticsBean.detailedDescription}" escape="false" />					
+				</p:panel>
+			</h:panelGroup> 
+		</h:form>
+
+	</ui:define>
+</ui:composition>

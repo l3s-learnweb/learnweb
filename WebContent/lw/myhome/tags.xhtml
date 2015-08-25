@@ -9,54 +9,69 @@
 	<ui:param name="helpText" value="#{msg.myhomeTagsHelp}"/>
 
 	<ui:define name="center_layout">
-		 <p:panel header="#{msg.tagsTitle}">
-			
-				<!-- <p:dataTable var="tag" value="#{userBean.user.tags}">
-					<f:facet name="header">#{msg.myCommentsTitle}</f:facet>
-					<p:column>
-						<f:facet name="header">#{msg.comment}</f:facet>
-						<h:outputText value="#{tag.name}" />
-					</p:column>
+	
+	<style type="text/css">
+		a:hover, a:focus{
+			color:#489a83;
+		}
+	</style>
+		
+		<div class="page_header">
+			<span>
+				#{msg.tagsTitle}
+			</span>
+		</div>	
+		
+		<form>
+			<p:dataTable var="tag" value="#{userBean.user.tags}">
+				<p:column>
+					<f:facet name="header">
+						#{msg.tags}
+					</f:facet>
+					<h:outputText value="#{tag.name}" />
+				</p:column>
 					
-					<p:column>
-						<f:facet name="header">#{msg.resource}</f:facet>
+				<p:column>
+					<f:facet name="header">
+						#{msg.resource}
+					</f:facet>
+					<ui:repeat var="res" value="#{tag.resources}">
 						<h:outputLink value="resource.jsf">
-							<h:outputLink value="resource.jsf">
-									<f:param name="resource_id" value="#{res.id}" />
-									<h:outputText value="#{res.title}" escape="false" /> 
-								</h:outputLink>
-							<f:param name="resource_id" value="#{comment.resource.id}" />
-							<h:outputText value="#{tag.resource.title}" escape="false" />
+							<f:param name="resource_id" value="#{res.id}" />
+							<h:outputText value="#{res.title}" escape="false" /> 
 						</h:outputLink>
-					</p:column>
-
-					<p:column>
-						<f:facet name="header">#{msg.date}</f:facet>
-						<h:outputText value="#{tag.date}" >
-							<f:convertDateTime dateStyle="default" type="both" />								
-						</h:outputText>
-					</p:column>
-				</p:dataTable>
+					</ui:repeat>
+				</p:column>
+			<!-- don't work yet, create a funktion date
+				<p:column>
+					<f:facet name="header">
+						#{msg.date}
+					</f:facet>	
+					<h:outputText value="#{tag.date}" >
+						<f:convertDateTime dateStyle="default" type="both" />								
+					</h:outputText>
+				</p:column>
 			-->
-				<ui:repeat var="tag" value="#{userBean.user.tags}">
-					
-					<h3 style="font-size: 1.3rem">
-						<h:outputText value="#{tag.name}" />
-					</h3>
-						<ul>
-							<ui:repeat var="res" value="#{tag.resources}">
-								<li>
-									<h:outputLink value="resource.jsf">
-										<f:param name="resource_id" value="#{res.id}" />
-										<h:outputText value="#{res.title}" escape="false" /> 
-									</h:outputLink>
-								</li>
-							</ui:repeat>
-						</ul>
-					
-				</ui:repeat>
+			</p:dataTable>
 			
-		</p:panel>
+			<!--	old version of visualization the tags
+			<ui:repeat var="tag" value="#{userBean.user.tags}">
+				<h3 style="font-size: 1.3rem">
+					<h:outputText value="#{tag.name}" />
+				</h3>
+				<ul>
+					<ui:repeat var="res" value="#{tag.resources}">
+						<li>
+							<h:outputLink value="resource.jsf">
+								<f:param name="resource_id" value="#{res.id}" />
+								<h:outputText value="#{res.title}" escape="false" /> 
+							</h:outputLink>
+						</li>
+					</ui:repeat>
+				</ul>	
+			</ui:repeat>
+			-->
+		</form>
 
 	</ui:define>
 </ui:composition>

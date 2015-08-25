@@ -6,25 +6,21 @@
 	xmlns:f="http://java.sun.com/jsf/core" 
 	xmlns:p="http://primefaces.org/ui">
 
-
-		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="#{msg.change_log}"/>
-
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg.change_log}"/>
 	
-		
-		<ui:define name="center_layout">
-			
-
+	<ui:define name="center_layout">
 			
 		<p:panel header="#{msg.change_log}">
-		<h:dataTable var="logEntry" value="#{adminChangeLogBean.changelogmessages}">
-					<h:column>
-						<h:outputText value="#{logEntry}" escape="false" />
-					</h:column>
-					<br />
-				</h:dataTable>
+		
+			<h:dataTable var="logEntry" value="#{adminChangeLogBean.changelogmessages}">
+				<h:column>
+					<h:outputText value="#{logEntry}" escape="false" />
+				</h:column>
+				<br />
+			</h:dataTable>
 
 		</p:panel>
 	
-		</ui:define>
-	</ui:composition>
+	</ui:define>
+</ui:composition>

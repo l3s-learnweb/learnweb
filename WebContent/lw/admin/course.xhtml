@@ -16,8 +16,6 @@
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{adminCourseBean.course.title} #{msg.course}" />
 	
-	
-	
 	<ui:define name="center_layout">
 
 		<p:panel header="#{adminCourseBean.course.title} - #{msg.course}">
@@ -49,13 +47,8 @@
 					<p:message for="popupCP" showSummary="true" showDetail="false" />
 					
 					<h:outputText value="Banner image:" />
-					  <p:fileUpload fileUploadListener="#{adminCourseBean.handleFileUpload}"  
-					    id="imageupload"
-			            mode="advanced"  
-			            update="message_c_bannerimage"  
-			            auto="true"  
-			            sizeLimit="1000000"   
-			            allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/> 
+					  <p:fileUpload fileUploadListener="#{adminCourseBean.handleFileUpload}" id="imageupload" mode="advanced"  
+			            update="message_c_bannerimage" auto="true" sizeLimit="1000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/> 
 					<p:message for="imageupload" showSummary="true" showDetail="false" id="message_c_bannerimage"/>
 
 				</h:panelGrid>
@@ -90,8 +83,8 @@
 				
 				<br/><br/>
 				
-				<p:commandButton actionListener="#{adminCourseBean.onEnableForum}" 
-					value="Enable Forum" update=":growl :message" rendered="#{adminCourseBean.course.forumCategoryId == 0}">
+				<p:commandButton actionListener="#{adminCourseBean.onEnableForum}" value="Enable Forum" update=":growl :message" 
+					rendered="#{adminCourseBean.course.forumCategoryId == 0}">
 					<f:param name="course_id" value="#{adminCourseBean.courseId}" />
 				</p:commandButton>
 			</h:form>

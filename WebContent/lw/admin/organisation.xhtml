@@ -6,34 +6,45 @@
 	xmlns:f="http://java.sun.com/jsf/core" 
 	xmlns:p="http://primefaces.org/ui"> 
 
-		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="#{msg.organization}"/>
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg.organization}"/>
 
-	
-		<ui:define name="center_layout">
-			
-			<script type="text/javascript">
+	<ui:define name="center_layout">	
+		<script type="text/javascript">
 			function enableEdit()
 			{			
 				//$('#welcometext').hide();
 				$('#editwelcomeform').css('display', 'block');				
 			}			
-			</script>	
-			<style type="text/css">
+		</script>	
+		<style type="text/css">
 			p { margin: 12px 0 6px 0; }
-			</style>
+		</style>
+			
+		<div class="page_header" style="margin-top:5px;">
+			<span>
+				#{adminOrganisationBean.organisation.title}
+			</span>
+		</div>		
 						
-			<p:panel header="#{adminOrganisationBean.organisation.title}" style="min-width:628px;">
+		<p:panel style="min-width:628px;">
 				
-				<h:form id="editwelcomeform">
-					<p><h:outputText value="#{msg.title}:" /></p>
-					<p:inputText value="#{adminOrganisationBean.organisation.title}" style="width:400px" />
-					<p><h:outputText value="#{msg.welcome_message}:" /></p>
-					<p:editor value="#{adminOrganisationBean.organisation.welcomeMessage}" width="600" />
-					<p><p:commandButton action="#{adminOrganisationBean.onSave}" value="#{msg.save}" ajax="false"/></p>
-				</h:form>		
-			</p:panel>			
+			<h:form id="editwelcomeform">
+				<p>
+					<h:outputText value="#{msg.title}:" />
+				</p>
+				<p:inputText value="#{adminOrganisationBean.organisation.title}" style="width:400px" />
+				<p>
+					<h:outputText value="#{msg.welcome_message}:" />
+				</p>
+				<p:editor value="#{adminOrganisationBean.organisation.welcomeMessage}" width="600" />
+				<p>
+					<p:commandButton action="#{adminOrganisationBean.onSave}" value="#{msg.save}" ajax="false"/>
+				</p>
+			</h:form>
+					
+		</p:panel>			
 
 	
-		</ui:define>
-	</ui:composition>
+	</ui:define>
+</ui:composition>

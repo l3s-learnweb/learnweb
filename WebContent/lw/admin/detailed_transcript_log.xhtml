@@ -9,11 +9,12 @@
 	<ui:param name="loginRequired" value="true"/>
 
 	<ui:define name="center_layout">
+	
 		<h:form  style="padding:5px;">
-			<p:dataTable var="log" value="#{tedTranscriptBean.transcriptLogs}" rows="30"
-				paginator="true"
+			<p:dataTable var="log" value="#{tedTranscriptBean.transcriptLogs}" rows="30" paginator="true"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
 				rowsPerPageTemplate="20,25,30">
+				
 				<p:column headerText="#{msg.student}">
 					<h:outputText value="#{log.user.username}" />
 				</p:column>
@@ -41,7 +42,9 @@
 				<p:column headerText="#{msg.time_stamp}">
 					<h:outputText value="#{log.timestamp}" />
 				</p:column>
+				
 			</p:dataTable>
 		</h:form>
+		
 	</ui:define>
 </ui:composition>

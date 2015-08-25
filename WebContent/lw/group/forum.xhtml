@@ -17,7 +17,7 @@
 
 	<ui:define name="center_layout">
 	
-	<h:outputStylesheet library="forum" name="forum.css" />
+		<h:outputStylesheet library="forum" name="forum.css" />
 	
 		<div class="center-header" id="group_header">
 			<span>
@@ -26,8 +26,8 @@
 			#{msg.of} #{forumTopicsBean.group.title}
 			
 			<h:form id="center_header_form">
-				<a href="#{request.contextPath}/lw/group/forum.jsf?group_id=#{forumTopicsBean.group.id}#new_topic" class="resource_button greenbutton"
-					onclick="$('#center_pane .content').animate({ scrollTop: 1000 }, 'slow'); return false;">
+				<a href="#{request.contextPath}/lw/group/forum.jsf?group_id=#{forumTopicsBean.group.id}#new_topic" 
+					class="resource_button greenbutton" onclick="$('#center_pane .content').animate({ scrollTop: 1000 }, 'slow'); return false;">
 					#{msg['ForumIndex.new_topic']}
 				</a>
 			</h:form>
@@ -140,7 +140,9 @@
 								<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="#{msg['ForumIndex.explanation']}" /> 
 								-->
 								
+								<!--  
 								<f:selectItem itemLabel="Select one" itemValue="" />
+								-->
 								<f:selectItems value="#{forumTopicsBean.newPost.categories}" />
 							</p:selectOneMenu>	
 						</td>

@@ -6,21 +6,24 @@
 	xmlns:f="http://java.sun.com/jsf/core" 
 	xmlns:p="http://primefaces.org/ui">
 
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg.admin_messages_Title}"/>
 
-		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="#{msg.admin_messages_Title}"/>
-
+	<ui:define name="center_layout">
+		<div class="page_header" style="margin-top:5px">
+			<span>
+				#{msg.admin_message}
+			</span>
+		</div>
 		
-		
-		<ui:define name="center_layout">
-			<p:panel header="#{msg.admin_message}">
-			<h:form id="msgform" >
-			<h:outputText value="#{msg.message}:"/><br />
-			<h:inputTextarea style="width:260px; height:60px;" value="#{adminMessageBean.message}"></h:inputTextarea>
-			<br /><h:commandButton value="#{msg.update}" actionListener="#{adminMessageBean.update()}"></h:commandButton><br />
-			<h:commandButton value="#{msg.admin_message_clear}" actionListener="#{adminMessageBean.clear()}" process="@form" update="msgform"></h:commandButton>
-			</h:form>
-		</p:panel>
+		<h:form id="msgform" styleClass="grey_border">
+			<h:outputText value="#{msg.message}:" style="font-weight:bold;"/>
+			<br style="margin-bottom:10px;"/>
+			<h:inputTextarea style="width:300px; height:80px;" value="#{adminMessageBean.message}"/>
+			<br style="margin-bottom:15px;"/>
+			<h:commandButton value="#{msg.update}" actionListener="#{adminMessageBean.update()}" style="margin-right:10px;"/>
+			<h:commandButton value="#{msg.admin_message_clear}" actionListener="#{adminMessageBean.clear()}" process="@form" update="msgform"/>
+		</h:form>
 	
-		</ui:define>
-	</ui:composition>
+	</ui:define>
+</ui:composition>

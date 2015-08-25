@@ -6,40 +6,41 @@
 	xmlns:f="http://java.sun.com/jsf/core" 
 	xmlns:p="http://primefaces.org/ui">
 
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg.users}"/>
 
-		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="#{msg.users}"/>
-
-	
-		
-		<ui:define name="center_layout">
-				<h:form>
-					<p:dataTable var="user" value="#{adminUserBean.users}">
-						<p:column filterBy="#{user.username}" headerText="#{msg.username}">
-	
-							<h:outputText value="#{user.username}" />				
-						
-						</p:column>	
+	<ui:define name="center_layout">
+		<h:form>
+			<p:dataTable var="user" value="#{adminUserBean.users}">
+				<p:column filterBy="#{user.username}" headerText="#{msg.username}">
+					<h:outputText value="#{user.username}" />					
+				</p:column>	
 					
-						<p:column>
-							<f:facet name="header">#{msg.email_address}</f:facet>
-							<h:outputText value="#{user.email}" />
-									
-						</p:column>
+				<p:column>
+					<f:facet name="header">
+						#{msg.email_address}
+					</f:facet>
+					<h:outputText value="#{user.email}" />			
+				</p:column>
 						
-						<p:column>
-							<f:facet name="header">#{msg.organization}</f:facet>
-							<h:outputText value="#{user.organisation.title}" />
-									
-						</p:column>
+				<p:column>
+					<f:facet name="header">
+						#{msg.organization}
+					</f:facet>
+					<h:outputText value="#{user.organisation.title}" />			
+				</p:column>
 						
-						<p:column>
-							<f:facet name="header">#{msg.options}</f:facet>
-							<h:commandLink action="${adminUserBean.login(user)}">#{msg.loginLabel}</h:commandLink>
-										
-						</p:column>
-					</p:dataTable>	
-				</h:form>
+				<p:column>
+					<f:facet name="header">
+						#{msg.options}
+					</f:facet>
+					<h:commandLink action="${adminUserBean.login(user)}">
+						#{msg.loginLabel}
+					</h:commandLink>
+				</p:column>
+					
+			</p:dataTable>	
+		</h:form>
 
-		</ui:define>
-	</ui:composition>
+	</ui:define>
+</ui:composition>

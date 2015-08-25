@@ -7,13 +7,12 @@
 	
 	<ui:composition template="/lw/templates/new_main_t.xhtml"> 
 	
-	
-		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="#{msg.activity_stream}"/>	
-		<ui:param name="helpText" value="#{msg.myhomeActivityHelp}" />		
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg.activity_stream}"/>	
+	<ui:param name="helpText" value="#{msg.myhomeActivityHelp}" />		
 
-		
-		<ui:define name="center_layout">
+			
+	<ui:define name="center_layout">
 			<h:form id="center_header_form">
 				<p:commandButton styleClass="resource_button greenbutton resourcetoolbutton" update=":add_resource_panel" 
 					value="#{msg.upload_resource}" oncomplete="update_header()">
@@ -121,6 +120,7 @@
 			<ui:decorate  template="/lw/templates/right_pane.xhtml">
 				<ui:param name="bean" value="#{activityResourceBean}" />
 			</ui:decorate >
-		</ui:define>	
+		</ui:define>
+			
 	</ui:composition>
 </html>

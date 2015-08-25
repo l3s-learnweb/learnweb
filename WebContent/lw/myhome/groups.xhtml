@@ -12,82 +12,83 @@
 	<ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
 	
 	<ui:define name="right_layout">
-	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" 
-		collapsible="false" style="border: none;" id="right_pane">
-		<h:panelGroup style= "left: 5%; position:relative;">
-			<h:form id="addgroupform" style="width: 90%;" prependId="false">
-				
-				<div class="page_header">
-					<span>
-						#{msg.createGroup}
-					</span>
-				</div>
-		
-				<style type="text/css">
-					.ui-state-hover, .ui-state-focus, .ui-state-active{
-						box-shadow:0 0 0px 0px #fff !important;
-						background-color:#d1d1d1 !important;
-						background-image:none !important;
-						border:1px solid #a8a8a8 !important;
-					}
-				</style>
-				<div class="grey_border">
+		<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" 
+			collapsible="false" style="border: none;" id="right_pane">
+			<h:panelGroup style= "left: 5%; position:relative;">
+				<h:form id="addgroupform" style="width: 90%;" prependId="false">
 					
-					<h:panelGrid columns="3" columnClasses="medium-width">						
-					
-						<h:outputText value="#{msg.title}*:" />
-						<p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" 
-							style="width:21rem"/>
-						<p:message for="new_title" showSummary="true" showDetail="false" id="message_new_title"/>
-											 
-						<h:outputText value="#{msg.course}*:" />
-						<h:selectOneMenu value="#{groupsBean.newGroup.courseId}" id="course_id" style="width:22rem;">	
-							<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
-						</h:selectOneMenu>
-						<h:outputText value="" />				
-						
-						<h:outputText value="#{msg.category}*:" rendered="#{not empty userBean.activeCourse.groupCategories}" />
-						<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{not empty userBean.activeCourse.groupCategories}">	
-							<f:selectItems value="#{userBean.activeCourse.groupCategories}" var="cat" itemValue="#{cat.id}" 
-								itemLabel="#{cat.title} [#{cat.abbreviation}]" />
-						</h:selectOneMenu>
-						<h:outputText value="" rendered="#{not empty userBean.activeCourse.groupCategories}" />						
-							
-						<h:outputText value="#{msg.description}:" />					
-						<p:editor id="new_description" widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" 
-							controls="bold italic underline bullets numbering undo redo link unlink" style="width:22rem;" height="150">
-						</p:editor>
-						<p:message for="new_description" showSummary="true" showDetail="false"/>	
-
-						<h:outputText value="#{msg.language}:" />
-						<p:inputText id="new_language" value="#{groupsBean.newGroup.language}" style="width:21rem"/>
-						<p:message for="new_language" showSummary="true" showDetail="false"/>
-						
-					</h:panelGrid>	
-						<br/>
-						
-					<span>
-						* #{msg.mandatory_field}
-					</span> 
-				</div> 
+					<div class="page_header">
+						<span>
+							#{msg.createGroup}
+						</span>
+					</div>
 			
-				<p:fieldset legend="Group protection" rendered="false">
-					<h:panelGrid columns="3" columnClasses="medium-width">	
+					<style type="text/css">
+						.ui-state-hover, .ui-state-focus, .ui-state-active{
+							box-shadow:0 0 0px 0px #fff !important;
+							background-color:#d1d1d1 !important;
+							background-image:none !important;
+							border:1px solid #a8a8a8 !important;
+						}
+					</style>
+					<div class="grey_border">
+						
+						<h:panelGrid columns="3" columnClasses="medium-width">						
+						
+							<h:outputText value="#{msg.title}*:" />
+							<p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" 
+								style="width:21rem"/>
+							<p:message for="new_title" showSummary="true" showDetail="false" id="message_new_title"/>
+												 
+							<h:outputText value="#{msg.course}*:" />
+							<h:selectOneMenu value="#{groupsBean.newGroup.courseId}" id="course_id" style="width:22rem;">	
+								<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
+							</h:selectOneMenu>
+							<h:outputText value="" />				
+							
+							<h:outputText value="#{msg.category}*:" rendered="#{not empty userBean.activeCourse.groupCategories}" />
+							<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{not empty userBean.activeCourse.groupCategories}">	
+								<f:selectItems value="#{userBean.activeCourse.groupCategories}" var="cat" itemValue="#{cat.id}" 
+									itemLabel="#{cat.title} [#{cat.abbreviation}]" />
+							</h:selectOneMenu>
+							<h:outputText value="" rendered="#{not empty userBean.activeCourse.groupCategories}" />						
+								
+							<h:outputText value="#{msg.description}:" />					
+							<p:editor id="new_description" widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" 
+								controls="bold italic underline bullets numbering undo redo link unlink" style="width:22rem;" height="150">
+							</p:editor>
+							<p:message for="new_description" showSummary="true" showDetail="false"/>	
+	
+							<h:outputText value="#{msg.language}:" />
+							<p:inputText id="new_language" value="#{groupsBean.newGroup.language}" style="width:21rem"/>
+							<p:message for="new_language" showSummary="true" showDetail="false"/>
+							
+						</h:panelGrid>	
+							<br/>
+							
+						<span>
+							* #{msg.mandatory_field}
+						</span> 
+					</div> 
+				
+					<p:fieldset legend="Group protection" rendered="false">
+						<h:panelGrid columns="3" columnClasses="medium-width">	
+						
+							<h:outputText value="" />
+							<h:selectBooleanCheckbox value="#{groupsBean.newGroup.restrictionOnlyLeaderCanAddResources}" />
+							<h:outputText value="#{msg.add_resource_group_leader}" />
 					
-						<h:outputText value="" />
-						<h:selectBooleanCheckbox value="#{groupsBean.newGroup.restrictionOnlyLeaderCanAddResources}" />
-						<h:outputText value="#{msg.add_resource_group_leader}" />
-				
-					</h:panelGrid>
-				 </p:fieldset>
-				<br/>
-				<h:commandButton id="create_group_button" ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" 
-					styleClass="greenbutton" process="@form" update="@form :my_groups :growl :group_menu" />
-				
-			</h:form>
-		</h:panelGroup>
-</p:layoutUnit>
-</ui:define>
+						</h:panelGrid>
+					 </p:fieldset>
+					<br/>
+					<h:commandButton id="create_group_button" ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" 
+						styleClass="greenbutton" process="@form" update="@form :my_groups :growl :group_menu" />
+					
+				</h:form>
+			</h:panelGroup>
+		</p:layoutUnit>
+	</ui:define>
+	
 	<ui:define name="center_layout">
 	
 		<div class="page_header">
@@ -95,6 +96,7 @@
 				#{msg.myGroups}
 			</span>
 		</div>
+		
 		<h:form id="my_groups">
 					
 			<p:dataTable var="group" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">

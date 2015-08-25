@@ -6,62 +6,80 @@
 	xmlns:f="http://java.sun.com/jsf/core" 
 	xmlns:p="http://primefaces.org/ui">
 
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg.courses}"/>
 
-		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="#{msg.courses}"/>
-
-		
-		<ui:define name="center_layout">
-			<p:panel header="#{msg.courses}">
-				<h:form id="courseform">
-					<p:dataTable var="course" value="#{adminCoursesBean.courses}">					
-						<p:column headerText="#{msg.title}" sortBy="#{course.title}">
-							<h:outputText value="#{course.title}" />						
-						</p:column>	
+	<ui:define name="center_layout">
+	
+	<style type="text/css">
+		.ui-state-hover, .ui-state-focus, .ui-state-active{
+			box-shadow:0 0 0px 0px #fff !important;
+			background-color:#d1d1d1 !important;
+			background-image:none !important;
+			border:1px solid #a8a8a8 !important;
+		}
+	</style>
+	
+		<div class="page_header" style="margin-top:5px;">
+			<span>
+				#{msg.courses}
+			</span>
+		</div>		
+	
+		<h:form id="courseform">
+			<p:dataTable var="course" value="#{adminCoursesBean.courses}">					
+				<p:column headerText="#{msg.title}" sortBy="#{course.title}">
+					<h:outputText value="#{course.title}" />						
+				</p:column>	
 						
-						<p:column headerText="#{msg.organization}" sortBy="#{course.organisation.title}">
-							<h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}" />						
-						</p:column>	
+				<p:column headerText="#{msg.organization}" sortBy="#{course.organisation.title}">
+					<h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}" />						
+				</p:column>	
 					
-						<p:column headerText="#{msg.members}" sortBy="#{course.memberCount}">
-							<h:outputText value="#{course.memberCount}" />									
-						</p:column>
+				<p:column headerText="#{msg.members}" sortBy="#{course.memberCount}">
+					<h:outputText value="#{course.memberCount}" />									
+				</p:column>
 						
-						<p:column headerText="#{msg.options}">
-							<f:facet name="header">
-								#{msg.options}
-							</f:facet>
-							<h:outputLink value="admin/course.jsf?course_id=#{course.id}" style="text-decoration:none;" title="#{msg.edit}">
-								<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
-							</h:outputLink>	
+				<p:column headerText="#{msg.options}">
+					<f:facet name="header">
+						#{msg.options}
+					</f:facet>
+					<h:outputLink value="admin/course.jsf?course_id=#{course.id}" style="text-decoration:none;" title="#{msg.edit}">
+						<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
+					</h:outputLink>	
 							
-							<p:commandLink actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this" 
-								update=":courseform :growl" rendered="#{course.memberCount == 0}"
-								onstart="return confirm('Do you really want to delete course \'#{course.title}\'?');"								
-								style="text-decoration:none;" title="#{msg.delete}">
+					<p:commandLink actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this" 
+						update=":courseform :growl" rendered="#{course.memberCount == 0}"
+						onstart="return confirm('Do you really want to delete course \'#{course.title}\'?');"								
+						style="text-decoration:none;" title="#{msg.delete}">
 															
-								<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
-							</p:commandLink>						
-						</p:column>
-					</p:dataTable>	
-				</h:form>
-			</p:panel>
-			<p:panel header="#{msg.add_new_course}">
+						<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
+					</p:commandLink>						
+				</p:column>
+			</p:dataTable>	
+		</h:form>
+		
+		<br/>
+		
+		<p:panel header="#{msg.add_new_course}">
 			<h:form id="addcourse">
 				#{msg.course_title}: 
 				<h:inputText value="#{adminCoursesBean.newCourseTitle}" id="c_title"/>
 				<p:message for="c_title" showSummary="true" showDetail="false" id="message_c_title"/>
-				<h:commandButton action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" process="@form"/>
+				<h:commandButton action="${adminCoursesBean.onCreateCourse}" value="#{msg.add}" process="@form" style="margin-top:10px;"/>
 			</h:form>
-			</p:panel>
+		</p:panel>
+		
+		<br/>
 			
-			<p:panel header="#{msg.add_new_organization}" rendered="#{userBean.admin}">
+		<p:panel header="#{msg.add_new_organization}" rendered="#{userBean.admin}" style="margin-bottom:15px;">
 			<h:form id="addorganisation">
 				#{msg.organization_title}: 
 				<h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>
 				<p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation"/>
-				<h:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" process="@form"/>
+				<h:commandButton action="${adminCoursesBean.onCreateOrganisation}" value="#{msg.add}" process="@form" style="margin-top:10px;"/>
 			</h:form>
-			</p:panel>
-		</ui:define>
-	</ui:composition>
+		</p:panel>
+		
+	</ui:define>
+</ui:composition>
