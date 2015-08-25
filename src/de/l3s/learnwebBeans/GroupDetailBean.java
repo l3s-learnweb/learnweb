@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -13,11 +12,9 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.faces.event.ValueChangeEvent;
-import javax.faces.validator.ValidatorException;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotBlank;
@@ -33,14 +30,12 @@ import de.l3s.learnweb.Link.LinkType;
 import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.NewsEntry;
-import de.l3s.learnweb.OwnerList;
 import de.l3s.learnweb.Presentation;
 import de.l3s.learnweb.PresentationManager;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.ResourceManager;
 import de.l3s.learnweb.ResourceManager.Order;
-import de.l3s.learnweb.Tag;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.solrClient.SolrSearch;
@@ -57,7 +52,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private List<User> members;
 
     private List<Presentation> presentations;
-    private OwnerList<Resource, User> resourcesAll;
 
     private String mode = "everything";
     private List<LogEntry> logMessages;
@@ -90,8 +84,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private boolean isNewestResourceHidden = false;
 
     private int selectedResourceTargetGroupId;
-
-    private Group newGroup = new Group();
 
     private AbstractPaginator paginator;
     private Order order = Order.TITLE;
@@ -290,12 +282,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public String getMode()
     {
 	return mode;
-    }
-
-    public void loadResources() throws SQLException
-    {
-	//resourcesAll = new OwnerList<Resource, User>(group.getResources(paginator.getPageIndex())); // copy resources
-	Collections.sort(resourcesAll, Resource.createTitleComparator());
     }
 
     private void loadGroup() throws SQLException
@@ -849,104 +835,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return getLocaleMessage("subgroupsLabel");
     }
 
-    /*public void addComment()
-    {
-    try
-    {
-        //getLearnweb().getResourceManager().commentResource(newComment, getUser(), clickedResource);
-        Comment comment = clickedResource.addComment(newComment, getUser());
-        log(Action.commenting_resource, clickedResource.getId(), comment.getId() + "");
-        addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
-        newComment = "";
-    }
-    catch(Exception e)
-    {
-        e.printStackTrace();
-    }
-    }*/
-
-    public Group getNewGroup()
-    {
-	return newGroup;
-    }
-
-    public void onCreateGroup()
-    {
-	if(null == getUser())
-	    return;
-
-	try
-	{
-	    newGroup.setLeader(getUser());
-	    newGroup.setCourseId(group.getCourseId());
-	    group.addSubgroup(newGroup);
-	    getUser().joinGroup(newGroup);
-	    getLearnweb().getGroupManager().resetCache();//causes a bug in the menu otherwise
-
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	    return;
-	}
-
-	// log and show notification
-	log(Action.group_creating, group.getId());
-	addMessage(FacesMessage.SEVERITY_INFO, "groupCreated", newGroup.getTitle());
-
-	// reset new group var
-	newGroup = new Group();
-    }
-
     public List<Link> getLinks() throws SQLException
     {
 	if(null == links)
 	    updateLinksList();
 
 	return links;
-    }
-
-    public void validateGroupTitle(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
-    {
-	String title = (String) value;
-
-	if(getLearnweb().getGroupManager().getGroupByTitleFilteredByOrganisation(title, getUser().getOrganisationId()) != null)
-	{
-	    throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "title_already_taken"));
-	}
-    }
-
-    /*public void onDeleteTag()
-    {
-    try
-    {
-        clickedResource.deleteTag(selectedTag);
-        addMessage(FacesMessage.SEVERITY_INFO, "tag_deleted");
-    }
-    catch(Exception e)
-    {
-        e.printStackTrace();
-        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-    }
-    }*/
-
-    public boolean canDeleteTag(Object tagO) throws SQLException
-    {
-	if(!(tagO instanceof Tag))
-	    return false;
-
-	User user = getUser();
-	if(null == user)// || true)
-	    return false;
-	if(user.isAdmin() || user.isModerator())
-	    return true;
-
-	Tag tag = (Tag) tagO;
-	User owner = clickedResource.getTags().getElementOwner(tag);
-	if(user.equals(owner))
-	    return true;
-	return false;
     }
 
     public boolean canDeleteResourceCompletely(Object obj)
@@ -1131,4 +1025,56 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
 	paginator = new SolrSearch.SearchPaginator(search);
     }
+
+    /*
+    
+    sub group stuff:
+    
+    
+    private Group newGroup;
+    public Group getNewGroup()
+    {
+    return newGroup;
+    }
+
+    public void onCreateGroup()
+    {
+    if(null == getUser())
+        return;
+
+    try
+    {
+        newGroup.setLeader(getUser());
+        newGroup.setCourseId(group.getCourseId());
+        group.addSubgroup(newGroup);
+        getUser().joinGroup(newGroup);
+        getLearnweb().getGroupManager().resetCache();//causes a bug in the menu otherwise
+
+    }
+    catch(Exception e)
+    {
+        e.printStackTrace();
+        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+        return;
+    }
+
+    // log and show notification
+    log(Action.group_creating, group.getId());
+    addMessage(FacesMessage.SEVERITY_INFO, "groupCreated", newGroup.getTitle());
+
+    // reset new group var
+    newGroup = new Group();
+    }
+    
+    
+    public void validateGroupTitle(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
+    {
+    String title = (String) value;
+
+    if(getLearnweb().getGroupManager().getGroupByTitleFilteredByOrganisation(title, getUser().getOrganisationId()) != null)
+    {
+        throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "title_already_taken"));
+    }
+    }
+     */
 }

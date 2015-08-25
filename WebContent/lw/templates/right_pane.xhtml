@@ -14,8 +14,7 @@
 		<h:outputStylesheet library="resource-pane-template" name="resource-pane.css"/>
 
 		<h:form id="remote_form">
-			<p:remoteCommand name="update_datagrid" actionListener="#{bean.loadResources}" update=":datagrid :add_resource_panel" 
-				oncomplete="update_header()"/>
+			<p:remoteCommand name="update_datagrid" update=":datagrid :add_resource_panel" oncomplete="update_header()"/>
 		</h:form>
 
 		<div id="right_pane_wrapper">
@@ -60,7 +59,8 @@
 										
 										<f:selectItem itemLabel="URL" itemValue="2" />
 										<f:selectItem itemLabel="#{msg.file}" itemValue="1" />
-											<p:ajax update="@form" immediate="true" listener="#{addResourceBean.doNothing}"/>
+										
+										<p:ajax update="@form" immediate="true" listener="#{addResourceBean.doNothing}"/>
 									</h:selectOneMenu>
 								</td>
 								<td rowspan="3" class="align-right" style="padding: 0px !important;">
@@ -132,6 +132,7 @@
 										action="#{addResourceBean.addResource}" ajax="true" oncomplete="update_datagrid();">
 										<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>	
 										<f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"/>
+										<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{addResourceBean.resource}"/>
 									</p:commandButton>
 									
 									<p:commandButton value="#{msg.cancel}" styleClass="float-right" partialSubmit="true" process="@this" 

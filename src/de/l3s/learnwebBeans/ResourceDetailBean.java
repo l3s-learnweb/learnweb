@@ -170,8 +170,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	}
 	catch(Exception e)
 	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
 	}
     }
 
@@ -195,8 +194,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	}
 	catch(Exception e)
 	{
-	    e.printStackTrace();
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "fatal_error");
+	    addFatalMessage(e);
 	}
 	return null;
     }
@@ -207,13 +205,31 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	    return false;
 
 	User user = getUser();
-	if(null == user)// || true)
+	if(null == user)
 	    return false;
 	if(user.isAdmin() || user.isModerator())
 	    return true;
 
 	Comment comment = (Comment) commentO;
 	User owner = comment.getUser();
+	if(user.equals(owner))
+	    return true;
+	return false;
+    }
+
+    public boolean canDeleteTag(Object tagO) throws SQLException
+    {
+	if(!(tagO instanceof Tag))
+	    return false;
+
+	User user = getUser();
+	if(null == user)
+	    return false;
+	if(user.isAdmin() || user.isModerator())
+	    return true;
+
+	Tag tag = (Tag) tagO;
+	User owner = clickedResource.getTags().getElementOwner(tag); // TODO improve (faster) use in frontend
 	if(user.equals(owner))
 	    return true;
 	return false;
@@ -228,8 +244,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	}
 	catch(Exception e)
 	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
 	}
     }
 
@@ -243,8 +258,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	}
 	catch(Exception e)
 	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
 	}
     }
 
@@ -259,12 +273,11 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	}
 	catch(Exception e)
 	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
 	}
     }
 
-    // -------------------  Simple getters ans setters ---------------------------
+    // -------------------  Simple getters and setters ---------------------------
 
     public int getResourceId()
     {
