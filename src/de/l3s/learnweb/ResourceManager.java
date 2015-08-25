@@ -992,20 +992,20 @@ public class ResourceManager
 		resource.setLocation("Learnweb");
 
 	    // TODO remove as soon as embedded images are removed
-	    /*
+
 	    if(rs.getInt("deleted") == 0)
 	    {
-	    List<File> files = learnweb.getFileManager().getFilesByResource(resource.getId());
-	    for(File file : files)
-	    {
-	        resource.addFile(file);
-	        if(file.getResourceFileNumber() == File.ORIGINAL_FILE)
-	    	resource.setUrl(file.getUrl());
-	    }
+		List<File> files = learnweb.getFileManager().getFilesByResource(resource.getId());
+		for(File file : files)
+		{
+		    resource.addFile(file);
+		    if(file.getResourceFileNumber() == File.ORIGINAL_FILE)
+			resource.setUrl(file.getUrl());
+		}
 	    }
 	    else
-	    log.debug(resource.getTitle() + " is deleted");
-	    */
+		log.debug(resource.getTitle() + " is deleted");
+
 	    // deserialize preferences
 	    HashMap<String, String> metadata = null;
 
@@ -1262,7 +1262,7 @@ public class ResourceManager
 		.getResources(
 			"SELECT "
 				+ RESOURCE_COLUMNS
-				+ " FROM `lw_resource` r where `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`resource_id` in (SELECT p.resource_id  FROM `lw_group_resource` p WHERE p.`group_id` =341) and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown'",
+				+ " FROM `lw_resource` r where `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`resource_id` in (SELECT p.resource_id  FROM `lw_group_resource` p WHERE p.`group_id` =420) and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown'",
 			null);
 	for(Resource resource : resources)
 	{
@@ -1405,7 +1405,8 @@ public class ResourceManager
 
     public static void main(String[] args) throws Exception
     {
-	reindexArchiveItResources();
+	//reindexArchiveItResources();
+	//createThumbnailsForWebResources();
     }
 
 }
