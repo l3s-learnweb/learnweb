@@ -231,6 +231,12 @@
 						</div>
 					</ui:fragment>
 					
+					<style type="text/css">
+						#resources_informations_table a:hover, #resources_informations_table a:focus{
+							text-decoration:underline; 
+						}
+					</style>
+					
 					<table id="resources_informations_table">
 						<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.fileName and not resourceDetailBean.clickedResource.source.equals('LORO')}">
 							<tr>

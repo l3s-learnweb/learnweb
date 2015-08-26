@@ -5,35 +5,43 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core" 
 	xmlns:p="http://primefaces.org/ui">
+	
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg.text_analysis}"/>
 
-
-		<ui:param name="loginRequired" value="true"/>
-		<ui:param name="pageTitle" value="#{msg.text_analysis}"/>
-
+	<ui:define name="center_layout">
 		
-		<ui:define name="center_layout">
+		<div class="page_header" style="margin:5px;">
+			<span>
+				#{msg.text_analysis}
+			</span>
+		</div>
 		
-			<h:form id="anlyse_form">
-				<p:panel header="#{msg.select_users}">
-					<ui:include src="/lw/templates/user_select_form.xhtml" />	
-					<br/>
-					<p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}" process="@form" update=":growl output"/>
-					
-				</p:panel>
-						
+		<h:form id="anlyse_form" style="margin:5px;">
+			<p:panel header="#{msg.select_users}">
+				<ui:include src="/lw/templates/user_select_form.xhtml" />	
 				<br/>
-				
-				<h:panelGroup id="output">
-					<p:panel header="#{msg.comments}" value="#{adminTextAnalysisBean.commentCount lt 0}">
-						#{msg.selected_comments}: <h:outputText value="#{adminTextAnalysisBean.commentCount}" />
-						<hr/>
-						<a href="admin/wanderer.jsf" target="_blank" style="padding:5px 10px" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">#{msg.comments_analyse}</a>
-						<hr/>
+				<p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}" 
+					process="@form" update=":growl output"/>	
+			</p:panel>
 						
-						<h:outputText value="#{adminTextAnalysisBean.textBR}" escape="false"/>
-					</p:panel>
-				</h:panelGroup> 
-			</h:form>
+			<br/>
+				
+			<h:panelGroup id="output">
+				<p:panel header="#{msg.comments}" value="#{adminTextAnalysisBean.commentCount lt 0}">
+					#{msg.selected_comments}: 
+					<h:outputText value="#{adminTextAnalysisBean.commentCount}" />
+					<hr/>
+					<a href="admin/wanderer.jsf" target="_blank" style="padding:5px 10px" 
+						class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only">
+						#{msg.comments_analyse}
+					</a>
+					<hr/>
+						
+					<h:outputText value="#{adminTextAnalysisBean.textBR}" escape="false"/>
+				</p:panel>
+			</h:panelGroup> 
+		</h:form>
 
-		</ui:define>
-	</ui:composition>
+	</ui:define>
+</ui:composition>

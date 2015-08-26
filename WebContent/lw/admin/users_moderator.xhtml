@@ -10,21 +10,38 @@
 	<ui:param name="pageTitle" value="#{msg.users}"/>
 
 	<ui:define name="center_layout">
-		<h:form>
-			<p:dataTable var="user" value="#{adminUserBean.users}" style="margin-top:5px; margin-bottom:15px;">
+		<style type="text/css">
+			.ui-state-hover, .ui-state-focus, .ui-state-active{
+				box-shadow:0 0 0px 0px #fff !important;
+				background-color:#d1d1d1 !important;
+				background-image:none !important;
+				border:1px solid #a8a8a8 !important;
+			}
+		</style>
+	
+		<div class="page_header" style="margin:5px 5px 0px 5px;">
+			<span>
+				#{msg.users}
+			</span>
+		</div>
+		
+		<h:form style="padding:5px;">
+			<p:dataTable var="user" value="#{adminUserBean.users}" rows="50" paginator="true" rowsPerPageTemplate="50,100,250,500,1000,1500,2500"
+               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+               style="margin-top:5px; margin-bottom:15px;">
 			
-				<p:column headerText="#{msg.username}">
+				<p:column filterBy="#{user.username}" sortBy="#{user.username}" headerText="#{msg.username}">
 					<h:outputLink value="user/detail.jsf">
 						<f:param name="user_id" value="#{user.id}" />
 						<h:outputText value="#{user.username}" />
 					</h:outputLink>
 				</p:column>	
 					
-				<p:column headerText="#{msg.email_address}">
+				<p:column headerText="#{msg.email_address}" sortBy="#{user.email}">
 					<h:outputText value="#{user.email}" />					
 				</p:column>
 						
-				<p:column headerText="#{msg.registered_since}">
+				<p:column headerText="#{msg.registered_since}" sortBy="#{user.registrationDate}">
 					<h:outputText value="#{user.registrationDate}">
 						<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
 					</h:outputText>					

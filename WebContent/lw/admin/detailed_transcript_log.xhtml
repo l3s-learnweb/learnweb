@@ -10,10 +10,25 @@
 
 	<ui:define name="center_layout">
 	
-		<h:form  style="padding:5px;">
+		<div class="page_header" style="margin:5px;">
+			<span>
+				#{msg.transcript_logs}
+			</span>
+		</div>
+		
+		<style type="text/css">
+			.ui-state-hover, .ui-state-focus, .ui-state-active{
+				box-shadow:0 0 0px 0px #fff !important;
+				background-color:#d1d1d1 !important;
+				background-image:none !important;
+				border:1px solid #a8a8a8 !important;
+			}
+		</style>
+	
+		<h:form style="padding:5px;">
 			<p:dataTable var="log" value="#{tedTranscriptBean.transcriptLogs}" rows="30" paginator="true"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-				rowsPerPageTemplate="20,25,30">
+				rowsPerPageTemplate="20,25,30,35,40">
 				
 				<p:column headerText="#{msg.student}">
 					<h:outputText value="#{log.user.username}" />

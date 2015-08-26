@@ -7,6 +7,9 @@
 	width:33%; 
 	padding:0.5em 0;
 }
+#group_table a:hover, #group_table a:focus{
+	text-decoration:underline;
+}
 .profilebox{
 	width:95%; 
 	margin-right:30px;

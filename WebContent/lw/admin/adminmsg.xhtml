@@ -10,19 +10,21 @@
 	<ui:param name="pageTitle" value="#{msg.admin_messages_Title}"/>
 
 	<ui:define name="center_layout">
-		<div class="page_header" style="margin-top:5px">
+		
+		<div class="page_header" style="margin:5px">
 			<span>
 				#{msg.admin_message}
 			</span>
 		</div>
 		
-		<h:form id="msgform" styleClass="grey_border">
-			<h:outputText value="#{msg.message}:" style="font-weight:bold;"/>
+		<h:form id="msgform" styleClass="grey_border" style="margin:5px">
+			<h:outputText value="#{msg.message}:" style="font-weight:bold;color:#4f4f4f;"/>
 			<br style="margin-bottom:10px;"/>
-			<h:inputTextarea style="width:300px; height:80px;" value="#{adminMessageBean.message}"/>
+			<p:editor value="#{adminMessageBean.message}" widgetVar="editor" style="width:600px;" />
 			<br style="margin-bottom:15px;"/>
-			<h:commandButton value="#{msg.update}" actionListener="#{adminMessageBean.update()}" style="margin-right:10px;"/>
-			<h:commandButton value="#{msg.admin_message_clear}" actionListener="#{adminMessageBean.clear()}" process="@form" update="msgform"/>
+			<h:commandButton value="#{msg.update}" actionListener="#{adminMessageBean.update()}" style="margin-right:10px;color:#4f4f4f;"/>
+			<h:commandButton value="#{msg.admin_message_clear}" actionListener="#{adminMessageBean.clear()}" process="@form" update="msgform"
+				style="color:#4f4f4f;"/>
 		</h:form>
 	
 	</ui:define>

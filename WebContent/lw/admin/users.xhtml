@@ -10,6 +10,12 @@
 	<ui:param name="pageTitle" value="#{msg.users}"/>
 
 	<ui:define name="center_layout">
+		<div class="page_header" style="margin-top:5px;">
+			<span>
+				#{msg.users}
+			</span>
+		</div>
+	
 		<h:form>
 			<p:dataTable var="user" value="#{adminUserBean.users}">
 				<p:column filterBy="#{user.username}" headerText="#{msg.username}">

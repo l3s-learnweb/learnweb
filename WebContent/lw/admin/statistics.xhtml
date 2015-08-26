@@ -11,7 +11,22 @@
 
 	<ui:define name="center_layout">
 
-		<h:form id="anlyse_form">
+		<style type="text/css">
+			.ui-state-hover, .ui-state-focus, .ui-state-active{
+				box-shadow:0 0 0px 0px #fff !important;
+				background-color:#d1d1d1 !important;
+				background-image:none !important;
+				border:1px solid #a8a8a8 !important;
+			}
+		</style>
+		
+		<div class="page_header" style="margin:5px;">
+			<span>
+				#{msg.statistics_group}
+			</span>
+		</div>
+		
+		<h:form id="anlyse_form" style="margin:5px;">
 			<p:panel header="#{msg.select_groups}">
 				<ui:include src="/lw/templates/group_select_form.xhtml" />	
 				<br/>
@@ -20,14 +35,14 @@
 					#{msg.statistics_show_detailed}
 				</p>
 				<p:commandButton actionListener="#{adminStatisticsBean.onGroupStatistics}" value="#{msg.statistics_show}" process="@form" 
-					update=":growl output"/>
-					
+					update=":growl output"/>	
 			</p:panel>
 						
 			<br/>
 				
 			<h:panelGroup id="output">
 				<p:panel header="#{msg.statistics}" >
+					
 					 <p:dataTable var="entry" value="#{adminStatisticsBean.groupStatistics}" emptyMessage="#{msg.no_results_found}">  
 					 	<p:column headerText="#{msg.group}" sortBy="#{entry.title}">  
 					    	<h:outputText value="#{entry.title}" />  
@@ -82,6 +97,7 @@
 					<h:outputText value="#{adminStatisticsBean.detailedDescription}" escape="false" />					
 				</p:panel>
 			</h:panelGroup> 
+			
 		</h:form>
 
 	</ui:define>

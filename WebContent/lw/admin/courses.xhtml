@@ -20,13 +20,13 @@
 		}
 	</style>
 	
-		<div class="page_header" style="margin-top:5px;">
+		<div class="page_header" style="margin:5px 5px 0px 5px;">
 			<span>
 				#{msg.courses}
 			</span>
 		</div>		
 	
-		<h:form id="courseform">
+		<h:form id="courseform" style="padding:5px;">
 			<p:dataTable var="course" value="#{adminCoursesBean.courses}">					
 				<p:column headerText="#{msg.title}" sortBy="#{course.title}">
 					<h:outputText value="#{course.title}" />						
@@ -61,7 +61,7 @@
 		
 		<br/>
 		
-		<p:panel header="#{msg.add_new_course}">
+		<p:panel header="#{msg.add_new_course}" style="margin:5px;">
 			<h:form id="addcourse">
 				#{msg.course_title}: 
 				<h:inputText value="#{adminCoursesBean.newCourseTitle}" id="c_title"/>
@@ -72,7 +72,7 @@
 		
 		<br/>
 			
-		<p:panel header="#{msg.add_new_organization}" rendered="#{userBean.admin}" style="margin-bottom:15px;">
+		<p:panel header="#{msg.add_new_organization}" rendered="#{userBean.admin}" style="margin:5px 5px 15px 5px;;">
 			<h:form id="addorganisation">
 				#{msg.organization_title}: 
 				<h:inputText value="#{adminCoursesBean.newOrganisationTitle}" id="c_organisation"/>

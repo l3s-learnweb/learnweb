@@ -11,12 +11,18 @@
 		
 	<ui:define name="center_layout">
 		
-		<p:panel header="#{msg.info}" style="margin-top:5px;">
+		<div class="page_header" style="margin:5px">
+			<span>
+				#{msg.admin_changelog}
+			</span>
+		</div>
+		
+		<p:panel header="#{msg.info}" style="margin:5px;">
 			#{infoBean.info}
 		</p:panel>	
 	<br/>
-		<p:panel header="#{msg.admin_changelog}">
-			<h:form id="msgform" >
+		<p:panel header="#{msg.admin_changelog}" style="margin:5px">
+			<h:form id="msgform">
 				<h:outputText value="#{msg.enter_update}:"/>
 				<br style="margin-bottom:15px;"/>
 				<h:inputTextarea style="width:300px; height:80px;" value="#{adminChangeLogBean.message}"/>
@@ -26,7 +32,7 @@
 			</h:form>
 		</p:panel>
 	<br/>
-		<p:panel header="#{msg['Changelog.title']}">
+		<p:panel header="#{msg['Changelog.title']}" style="margin:5px">
 			<h:dataTable var="logEntry" value="#{adminChangeLogBean.changelogmessages}">
 				<h:column>
 					<h:outputText value="#{logEntry}" escape="false" />

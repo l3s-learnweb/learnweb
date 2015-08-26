@@ -12,13 +12,13 @@
 	<ui:define name="center_layout">
 		<h:outputText value="Missing authentication" rendered="#{not (userBean.admin || userBean.moderator)}" />
 
-		<div class="page_header" style="margin-top:5px;">
+		<div class="page_header" style="margin:5px;">
 			<span>
 				#{msg.notification}
 			</span>
 		</div>			
 		
-		<p:panel rendered="#{userBean.admin || userBean.moderator}">
+		<p:panel rendered="#{userBean.admin || userBean.moderator}" style="margin:5px;">
 
 			<h:form id="us_form">
 				<h:panelGrid id="grid" columns="1">
