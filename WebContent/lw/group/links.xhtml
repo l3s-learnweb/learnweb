@@ -5,7 +5,9 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<ui:param name="helpText" value="#{msg.groupLinkHelp}"/>
-
+	<ui:define name="head-meta">
+		<meta name="google-signin-client_id" content="948054065586-oh9uobccisi7lkt832q9n2hmk4mk410s.apps.googleusercontent.com" />
+	</ui:define>
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
@@ -17,7 +19,8 @@
 	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" />
 
 	<ui:define name="center_layout">
-	
+		<script src="https://apis.google.com/js/platform.js" async="async" defer="defer"></script>
+		<h:outputScript library="js" name="links.js" target="head"/>
 		<div class="center-header" id="group_header">
 			<span>
 				#{msg.links}
@@ -86,11 +89,11 @@
 				</h:panelGrid>
 			</h:form>						
 		</p:dialog>	
-		
+
 		
 		<h:panelGroup id="grouplinks" layout="block" style="padding-right:5px;">		
 
-		
+					
 			<h:panelGroup rendered="${not empty groupDetailBean.links}">	
 				<h:form styleClass="links_form">		
 					<h4 class="clear">
@@ -138,7 +141,7 @@
 					</h4>
 					<p:dataList var="link" value="${groupDetailBean.documentLinks}" styleClass="links_datalist">		
 						<p:column>
-							<h:outputLink value="#{link.url}" target="_blank" styleClass="links_output">
+							<h:outputLink value="#{link.url}" target="_blank" styleClass="links_output" onclick="return onlinkClick(this);">
 								#{link.title}
 							</h:outputLink>	
 							
