@@ -9,16 +9,8 @@ import java.util.List;
 
 public class GlossaryManager
 {
-    enum ORDER// possible order values; Not all values are applicable for every method
-    {
-	DATE,
-	TITLE,
-	REPLIES,
-	VIEWS,
-	TOPIC
-    }
 
-    private final static String GLOSSARY = "resource_id, user_id, item, description, topic, italian, german, spanisch, spanish, lastModified";
+    private final static String GLOSSARY = "glossary_id, resource_id, user_id, item, description, topic, italian, german, spanish, last_modified";
 
     private final Learnweb learnweb;
 
@@ -35,27 +27,43 @@ public class GlossaryManager
      * @return
      */
 
-    public List<Glossary> getGlosseryByResourceId(int resourceId) throws SQLException
+    public List<Glossary> getGlossaryByResourceId(int resourceId) throws SQLException
     {
-	LinkedList<Glossary> glosserys = new LinkedList<Glossary>();
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + GLOSSARY + " FROM `glossery` WHERE resource_id = ? ORDER BY lastModified DESC");
+	LinkedList<Glossary> glossarys = new LinkedList<Glossary>();
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + GLOSSARY + " FROM `lw_glossary` WHERE resource_id = ? ORDER BY last_modified DESC");
 	select.setInt(1, resourceId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
 	{
-	    glosserys.add(createGlossery(rs));
+	    glossarys.add(createGlossary(rs));
 	}
 
 	select.close();
-	return glosserys;
+	return glossarys;
     }
 
-    private Glossary createGlossery(ResultSet rs) throws SQLException
+    public List<Glossary> getGlossaryByUserId(int userId) throws SQLException
+    {
+	LinkedList<Glossary> glossarys = new LinkedList<Glossary>();
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + GLOSSARY + " FROM `lw_glossary` WHERE user_id = ? ORDER BY last_modified DESC");
+	select.setInt(1, userId);
+	ResultSet rs = select.executeQuery();
+	while(rs.next())
+	{
+	    glossarys.add(createGlossary(rs));
+	}
+
+	select.close();
+	return glossarys;
+    }
+
+    private Glossary createGlossary(ResultSet rs) throws SQLException
     {
 	Glossary glossary = new Glossary();
-	glossary.setId(rs.getInt("glossery_id"));
+	glossary.setId(rs.getInt("glossary_id"));
 	glossary.setResourceId(rs.getInt("resource_id"));
 	glossary.setUserId(rs.getInt("user_id"));
+	glossary.setItem(rs.getString("item"));
 	glossary.setTopic(rs.getString("topic"));
 	glossary.setDescription(rs.getString("description"));
 	glossary.setGerman(rs.getString("german"));
@@ -65,39 +73,41 @@ public class GlossaryManager
 	return glossary;
     }
 
-    public Glossary save(Glossary glossary) throws SQLException
+    public Glossary save(Glossary selectedEntry) throws SQLException
     {
-	String sqlQuery = "REPLACE INTO `glossery` (" + GLOSSARY + ") VALUES (?,?,?,?,?,?,?,?,?)";
+	String sqlQuery = "REPLACE INTO `lw_glossary` (" + GLOSSARY + ") VALUES (?,?,?,?,?,?,?,?,?,?)";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
 
-	if(glossary.getId() < 0)
+	if(selectedEntry.getId() < 0)
 	    ps.setNull(1, java.sql.Types.INTEGER);
 	else
-	    ps.setInt(1, glossary.getId());
-	ps.setInt(2, glossary.getResourceId());
-	ps.setInt(3, glossary.getUserId());
-	ps.setString(4, glossary.getTopic());
-	ps.setString(5, glossary.getDescription());
-	ps.setString(6, glossary.getGerman());
-	ps.setString(7, glossary.getItalian());
-	ps.setString(8, glossary.getSpanish());
-	ps.setTimestamp(9, new java.sql.Timestamp(glossary.getLastModified().getTime()));
+	    ps.setInt(1, selectedEntry.getId());
+	ps.setInt(2, selectedEntry.getResourceId());
+	ps.setInt(3, selectedEntry.getUserId());
+	ps.setString(4, selectedEntry.getItem());
+	ps.setString(5, selectedEntry.getTopic());
+	ps.setString(6, selectedEntry.getDescription());
+	ps.setString(7, selectedEntry.getGerman());
+	ps.setString(8, selectedEntry.getItalian());
+	ps.setString(9, selectedEntry.getSpanish());
+	ps.setTimestamp(10, new java.sql.Timestamp(selectedEntry.getLastModified().getTime()));
 	ps.executeUpdate();
 
-	if(glossary.getId() < 0)
+	if(selectedEntry.getId() < 0)
 	{
 	    ResultSet rs = ps.getGeneratedKeys();
 	    if(!rs.next())
 		throw new SQLException("database error: no id generated");
-	    glossary.setId(rs.getInt(1));
+	    selectedEntry.setId(rs.getInt(1));
 	}
 
-	return glossary;
+	return selectedEntry;
     }
 
-    public int deleteByGlossaryId(int glossaryId) throws SQLException
+    public int delete(int glossaryId) throws SQLException
     {
-	PreparedStatement select = learnweb.getConnection().prepareStatement("DELETE FROM `glossery` WHERE glossary_id = ?");
+
+	PreparedStatement select = learnweb.getConnection().prepareStatement("DELETE FROM `lw_glossary` WHERE glossary_id = ?");
 	select.setInt(1, glossaryId);
 	select.executeQuery();
 	return glossaryId;

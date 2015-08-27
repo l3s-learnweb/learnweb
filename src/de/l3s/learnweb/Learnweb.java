@@ -63,6 +63,7 @@ public class Learnweb
     private final ResourcePreviewMaker resourcePreviewMaker;
     private final YovistoManager yovistoManager;
     private final JobScheduler jobScheduler;
+    private final GlossaryManager glossaryManager;
 
     private static Learnweb learnweb = null;
 
@@ -169,6 +170,7 @@ public class Learnweb
 	loroManager = new LoroManager(this);
 	jobScheduler = new JobScheduler(this);
 	yovistoManager = new YovistoManager(this);
+	glossaryManager = new GlossaryManager(this);
 	/*
 	PreparedStatement pstmt = dbConnection.prepareStatement("select * from lw_admin_message");
 	ResultSet rs = pstmt.executeQuery();
@@ -687,5 +689,10 @@ public class Learnweb
     public YovistoManager getYovistoManager()
     {
 	return yovistoManager;
+    }
+
+    public GlossaryManager getGlossaryManager()
+    {
+	return glossaryManager;
     }
 }

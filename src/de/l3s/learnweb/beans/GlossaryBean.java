@@ -1,67 +1,75 @@
 package de.l3s.learnweb.beans;
 
-import java.util.ArrayList;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 
+import de.l3s.learnweb.Glossary;
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnwebBeans.ApplicationBean;
 
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class GlossaryBean extends ApplicationBean
 {
 
-    private GlossaryEntry selectedEntry = new GlossaryEntry();
+    private Glossary selectedEntry = new Glossary();
 
-    private List<GlossaryEntry> entries = new ArrayList<GlossaryEntry>();
+    private List<Glossary> entries;
+    private int resourceId = 0;
 
-    public void setEntries(List<GlossaryEntry> entries)
+    public GlossaryBean() throws SQLException
     {
-	this.entries = entries;
+	Learnweb lw = getLearnweb();
+	//lw.getGlossaryManager();
+	//GlossaryManager gm = new GlossaryManager(lw);
+	entries = lw.getGlossaryManager().getGlossaryByResourceId(this.resourceId);
     }
 
-    public List<GlossaryEntry> getEntries()
+    public List<Glossary> getEntries()
     {
 	return entries;
     }
 
-    public String edit(GlossaryEntry entry)
+    public String edit(Glossary entry)
     {
 	selectedEntry = entry;
 
 	return "editGlossary.xhtml";
     }
 
-    public String addNewEntry()
+    public String addNewEntry() throws SQLException
     {
 	selectedEntry.setUser(getUser());
-
 	selectedEntry.setLastModified(new Date());
-
 	entries.add(selectedEntry);
-
-	selectedEntry = new GlossaryEntry();
+	Learnweb lw = getLearnweb();
+	lw.getGlossaryManager().save(selectedEntry);
+	selectedEntry = new Glossary();
 
 	return "showGlossary.xhtml";
     }
 
-    public String save()
+    public String save() throws SQLException
     {
 	selectedEntry.setLastModified(new Date());
-
-	selectedEntry = new GlossaryEntry();
+	Learnweb lw = getLearnweb();
+	lw.getGlossaryManager().save(selectedEntry);
+	selectedEntry = new Glossary();
 
 	return "showGlossary.xhtml";
     }
 
-    public String deleteEntry(GlossaryEntry entries)
+    public String deleteEntry(Glossary entry) throws SQLException
     {
-	getEntries().remove(entries);
 
-	return null;
+	Learnweb lw = getLearnweb();
+	lw.getGlossaryManager().delete(entry.getId());
+
+	return "showGlossary.xhtml";
     }
 
     public String quit()
@@ -69,12 +77,12 @@ public class GlossaryBean extends ApplicationBean
 	return "showGlossary.xhtml";
     }
 
-    public GlossaryEntry getSelectedEntry()
+    public Glossary getSelectedEntry()
     {
 	return selectedEntry;
     }
 
-    public void setSelectedEntry(GlossaryEntry selectedEntry)
+    public void setSelectedEntry(Glossary selectedEntry)
     {
 	this.selectedEntry = selectedEntry;
     }

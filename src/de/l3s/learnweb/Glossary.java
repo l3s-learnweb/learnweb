@@ -8,7 +8,7 @@ import org.hibernate.validator.constraints.URL;
 
 public class Glossary
 {
-    private int id; // auto incremented id
+    private int glossaryId; // auto incremented id
     private int resourceId;
     private int userId;
 
@@ -124,12 +124,12 @@ public class Glossary
 
     public int getId()
     {
-	return id;
+	return glossaryId;
     }
 
-    public void setId(int id)
+    public void setId(int glossaryId)
     {
-	this.id = id;
+	this.glossaryId = glossaryId;
     }
 
     public int getResourceId()
