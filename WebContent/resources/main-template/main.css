@@ -747,7 +747,7 @@ span.ui-autocomplete{border:1px solid transparent !important;}
 }
 .ui-panel:HOVER .buttons{display:block !important;}
 .ui-panel:HOVER .buttons img{
-	filter:none;
+	filter:grayscale(0);
 	-webkit-filter:grayscale(0);
 	-moz-filter:grayscale(0);
     -ms-filter:grayscale(0); 
@@ -1130,6 +1130,7 @@ div#presentation_preview {
 	display:block;
 	float:left;
 	box-sizing:border-box;
+	margin-right:20px;
 	margin-right:calc(33% - 195px);
 	margin-right:-moz-calc(33% - 195px);  
     margin-right:-webkit-calc(33% - 195px);
