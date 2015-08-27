@@ -171,7 +171,7 @@ public class ResourceManager
 	if(null != resource && useCache)
 	    return resource;
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + RESOURCE_COLUMNS + " FROM `lw_resource` r WHERE resource_id = ? and deleted = 0");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + RESOURCE_COLUMNS + " FROM `lw_resource` r WHERE resource_id = ?"); //  and deleted = 0
 	select.setInt(1, resourceId);
 	ResultSet rs = select.executeQuery();
 
@@ -1004,7 +1004,7 @@ public class ResourceManager
 		}
 	    }
 	    else
-		log.debug(resource.getTitle() + " is deleted");
+		log.debug("resource " + resource.getId() + " was requested but is deleted", new Exception());
 
 	    // deserialize preferences
 	    HashMap<String, String> metadata = null;

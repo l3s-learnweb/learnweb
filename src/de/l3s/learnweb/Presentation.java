@@ -42,6 +42,8 @@ public class Presentation extends ApplicationBean implements Serializable
 	    Elements slides = doc.getElementsByClass("slide");
 	    Resource r = new Resource();
 	    String lastId = "";
+	    ResourceManager resourceManager = getLearnweb().getResourceManager();
+
 	    for(Element slide : slides)
 	    {
 		if(slide.id().equals("resource_slide_1"))
@@ -55,7 +57,10 @@ public class Presentation extends ApplicationBean implements Serializable
 			if(!lastId.contains(slide.id()))
 			{
 			    int id = Integer.parseInt(slide.id().replace("resource_slide_", ""));
-			    r = getLearnweb().getResourceManager().getResource(id).clone();
+			    r = resourceManager.getResource(id);
+			    if(r == null)
+				continue;
+			    r = r.clone();
 			    r.setId(id);
 			    r.setTitle(slide.children().first().html());
 			    r.setDescription(slide.children().last().getElementsByTag("td").last().html());

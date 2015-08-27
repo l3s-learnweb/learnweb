@@ -670,42 +670,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
     }
 
-    /*public String addTag()
-    {
-    if(null == getUser())
-    {
-        addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
-        return null;
-    }
-
-    if(tagName == null || tagName.length() == 0)
-        return null;
-
-    try
-    {
-        int index = 0;
-        while(!getResources().get(index).getTitle().equals(clickedResource.getTitle()))
-    	index++;
-        clickedResource.addTag(tagName, getUser());
-        getResources().remove(index);
-        getResources().add(clickedResource);
-        addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
-        log(Action.tagging_resource, clickedResource.getId(), tagName);
-        tagName = ""; // clear tag input field 
-    }
-    catch(Exception e)
-    {
-        e.printStackTrace();
-        addGrowl(FacesMessage.SEVERITY_ERROR, "fatal_error");
-    }
-    return null;
-    }*/
-
     public void addSelectedResource()
     {
 	try
 	{
-
 	    Resource newResource;
 
 	    if(clickedResource.getId() == -1) // resource is not yet stored at fedora
@@ -716,18 +684,52 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    Resource res = getUser().addResource(newResource);
 	    if(selectedResourceTargetGroupId != 0)
 	    {
-		getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(res, getUser());
+		Group targetGroup = getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId);
+		targetGroup.addResource(res, getUser());
 		getUser().setActiveGroup(selectedResourceTargetGroupId);
 
+		addGrowl(FacesMessage.SEVERITY_INFO, "addedResourceToGroup", clickedResource.getTitle(), targetGroup.getTitle());
 	    }
+	    else
+		addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", clickedResource.getTitle());
 
 	    log(Action.adding_resource, selectedResourceTargetGroupId, res.getId(), "");
-	    loadLogs(50);
 	}
 	catch(SQLException e)
 	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
+	}
+    }
+
+    public void addSelectedResourceLink() throws SQLException
+    {
+	try
+	{
+	    User user = getUser();
+	    if(null == user)
+	    {
+		addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
+		return;
+	    }
+
+	    // add resource to a group if selected
+	    if(selectedResourceTargetGroupId != 0)
+	    {
+		Group targetGroup = getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId);
+		targetGroup.addResource(clickedResource, getUser());
+		log(Action.adding_resource, selectedResourceTargetGroupId, clickedResource.getId(), "");
+
+		addGrowl(FacesMessage.SEVERITY_INFO, "addedResourceToGroup", clickedResource.getTitle(), targetGroup.getTitle());
+	    }
+	    else
+	    {
+		getUser().addResource(clickedResource);
+		addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", clickedResource.getTitle());
+	    }
+	}
+	catch(SQLException e)
+	{
+	    addFatalMessage(e);
 	}
     }
 
@@ -949,25 +951,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void setReloadLogs(boolean reloadLogs)
     {
 	this.reloadLogs = reloadLogs;
-    }
-
-    public void addSelectedResourceLink() throws SQLException
-    {
-	User user = getUser();
-	if(null == user)
-	{
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
-	    return;
-	}
-
-	// add resource to a group if selected
-	if(selectedResourceTargetGroupId != 0)
-	{
-	    getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(clickedResource, getUser());
-	    log(Action.adding_resource, selectedResourceTargetGroupId, clickedResource.getId(), "");
-
-	    addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", clickedResource.getTitle());
-	}
     }
 
     public Presentation getClickedPresentation()
