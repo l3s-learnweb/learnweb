@@ -30,6 +30,7 @@
 	font-family:Arial;
 	font-size:1.5rem;
 	width:15em !important;
+	outline:none;
 }
 .datatype{
 	font-size:1.5rem;
@@ -50,9 +51,19 @@ hr{
 
 /*both pages*/
 #group_header{
-	margin-top:1rem;
-	margin-left:5px;
+	margin:1rem 5px 0px 5px;
 }
 #searchbutton{
 	margin-left:0;
+}
+.grey_border{
+	margin:0px 5px;
+}
+
+/*change primefaces ui*/
+.ui-state-hover, .ui-state-focus, .ui-state-active{
+	box-shadow:0 0 0px 0px #fff !important;
+	background-color:#d1d1d1 !important;
+	background-image:none !important;
+	border:1px solid #a8a8a8 !important;
 }

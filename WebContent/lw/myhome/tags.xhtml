@@ -11,9 +11,7 @@
 	<ui:define name="center_layout">
 	
 	<style type="text/css">
-		a:hover, a:focus{
-			color:#489a83;
-		}
+		table a:hover, a:focus{color:#489a83;}
 	</style>
 		
 		<div class="page_header">
@@ -36,7 +34,7 @@
 						#{msg.resource}
 					</f:facet>
 					<ui:repeat var="res" value="#{tag.resources}">
-						<div class="float-left" style="width:50%;padding:5px 0;">
+						<div class="float-left" style="width:50%;padding:1px 0;">
 							<h:outputLink value="resource.jsf">
 								<f:param name="resource_id" value="#{res.id}" />
 								<h:outputText value="#{res.title}" escape="false" /> 

@@ -5,6 +5,9 @@
     .userbar ul li ul{
     	margin-left:-6em;
     }
+    .resource_panel{
+    	margin-right:calc(33% - 195px);
+    }
 }
 
 /* options for different screen sizes */

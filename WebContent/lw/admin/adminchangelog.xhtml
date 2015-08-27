@@ -21,11 +21,11 @@
 			#{infoBean.info}
 		</p:panel>	
 	<br/>
-		<p:panel header="#{msg.admin_changelog}" style="margin:5px">
+		<p:panel header="#{msg.admin_changelog}" style="margin:5px;">
 			<h:form id="msgform">
 				<h:outputText value="#{msg.enter_update}:"/>
 				<br style="margin-bottom:15px;"/>
-				<h:inputTextarea style="width:300px; height:80px;" value="#{adminChangeLogBean.message}"/>
+				<h:inputTextarea style="width:300px; height:80px;" value="#{adminChangeLogBean.message}" id="admin_changelog_id"/>
 				<br style="margin-bottom:10px;"/>
 				<h:commandButton value="#{msg.update}" actionListener="#{adminChangeLogBean.update()}"/>
 				<br />
