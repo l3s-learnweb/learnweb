@@ -17,18 +17,24 @@
 				background-image:none !important;
 				border:1px solid #a8a8a8 !important;
 			}
+			.page_header{margin:5px 5px 0px 5px;}
+			#user_form{padding:5px;}
+			#user_table{
+				margin-top:5px;
+				margin-bottom:15px;
+			}
 		</style>
 	
-		<div class="page_header" style="margin:5px 5px 0px 5px;">
+		<div class="page_header">
 			<span>
 				#{msg.users}
 			</span>
 		</div>
 		
-		<h:form style="padding:5px;">
+		<h:form id="user_form">
 			<p:dataTable var="user" value="#{adminUserBean.users}" rows="50" paginator="true" rowsPerPageTemplate="50,100,250,500,1000,1500,2500"
                paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
-               style="margin-top:5px; margin-bottom:15px;">
+               id="user_table">
 			
 				<p:column filterBy="#{user.username}" sortBy="#{user.username}" headerText="#{msg.username}">
 					<h:outputLink value="user/detail.jsf">

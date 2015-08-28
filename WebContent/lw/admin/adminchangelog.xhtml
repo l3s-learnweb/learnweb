@@ -11,7 +11,24 @@
 		
 	<ui:define name="center_layout">
 		
-		<div class="page_header" style="margin:5px">
+		<style type="text/css">
+			.page_header{margin:5px}
+			#msgform{
+				color:#4f4f4f;
+				font-weight:bold;
+			}
+			#msgform input{color:#4f4f4f;}
+			#msgform input:hover{
+				cursor:pointer;
+				color:#000;
+			}
+			#admin_changelog_id{
+				width:300px;
+				height:80px;
+			}
+		</style>
+		
+		<div class="page_header">
 			<span>
 				#{msg.admin_changelog}
 			</span>
@@ -25,7 +42,7 @@
 			<h:form id="msgform">
 				<h:outputText value="#{msg.enter_update}:"/>
 				<br style="margin-bottom:15px;"/>
-				<h:inputTextarea style="width:300px; height:80px;" value="#{adminChangeLogBean.message}" id="admin_changelog_id"/>
+				<h:inputTextarea value="#{adminChangeLogBean.message}" id="admin_changelog_id"/>
 				<br style="margin-bottom:10px;"/>
 				<h:commandButton value="#{msg.update}" actionListener="#{adminChangeLogBean.update()}"/>
 				<br />

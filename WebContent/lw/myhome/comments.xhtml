@@ -12,10 +12,6 @@
 		<ui:param name="helpText" value="#{msg.myhomeCommentsHelp}"/>	
 	
 		<ui:define name="center_layout">
-		
-			<style type="text/css">
-				table a:hover, a:focus{color:#489a83;}
-			</style>
 	
 			<div class="page_header">
 				<span>
@@ -23,8 +19,8 @@
 				</span>
 			</div>
 						
-				<h:form>
-					<p:dataTable var="comment" value="#{userBean.user.comments}">
+				<h:form prependId="false">
+					<p:dataTable var="comment" value="#{userBean.user.comments}" id="comment_table">
 						<p:column>
 							<f:facet name="header">
 								#{msg.comment}

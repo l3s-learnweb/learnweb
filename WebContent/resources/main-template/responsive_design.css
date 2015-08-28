@@ -5,12 +5,31 @@
     .userbar ul li ul{
     	margin-left:-6em;
     }
-    .resource_panel{
-    	margin-right:calc(33% - 195px);
-    }
+   .optionIcon{
+   		margin:0 1px;
+   }
 }
 
 /* options for different screen sizes */
+
+@media screen and (max-width:1024px){
+	#my_groups table th:first-child{
+		width:13% !important;
+	}
+	#my_groups table th:first-child+th,
+	#other_groups table th:first-child+th+th{
+		width:15% !important;
+	}
+	#other_groups table th:first-child{
+		width:30% !important;
+	}	
+	#my_groups table th:last-child{
+		width:11% !important;
+	}
+	#other_groups table th:last-child{
+		width:18% !important;
+	}
+}
 
 @media screen and (max-width: 82em){
 	#moreprofile{

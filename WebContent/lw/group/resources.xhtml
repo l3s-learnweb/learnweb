@@ -77,8 +77,8 @@
 						<img alt="" src="#{request.contextPath}/resources/main-template/img/search.png" height="16" width="16" 
 							id="search_group_resource" style="padding:3px 15px;cursor:pointer"/>
 					
-						<h:form id="header_query_form" prependId="false" style="white-space : nowrap;">
-							<h:inputText value="#{groupDetailBean.query}" id="input_query_form" style="margin-top:2.5px;width:20rem" />
+						<h:form id="header_query_form" prependId="false">
+							<h:inputText value="#{groupDetailBean.query}" id="input_query_form" />
 
 							<p:commandButton actionListener="${groupDetailBean.onQueryChange()}" partialSubmit="true" 
 								oncomplete="resetCenterPaneHeight(); $('#center_pane .content').scrollTop(0);" process="@form" 

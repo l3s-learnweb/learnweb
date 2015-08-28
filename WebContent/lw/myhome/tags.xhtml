@@ -9,19 +9,15 @@
 	<ui:param name="helpText" value="#{msg.myhomeTagsHelp}"/>
 
 	<ui:define name="center_layout">
-	
-	<style type="text/css">
-		table a:hover, a:focus{color:#489a83;}
-	</style>
-		
+
 		<div class="page_header">
 			<span>
 				#{msg.tagsTitle}
 			</span>
 		</div>	
 		
-		<form>
-			<p:dataTable var="tag" value="#{userBean.user.tags}">
+		<h:form prependId="false">
+			<p:dataTable var="tag" value="#{userBean.user.tags}" id="tag_table">
 				<p:column style="width:20%">
 					<f:facet name="header">
 						#{msg.tags}
@@ -53,7 +49,7 @@
 				</p:column>
 			-->
 			</p:dataTable>
-		</form>
+		</h:form>
 
 	</ui:define>
 </ui:composition>

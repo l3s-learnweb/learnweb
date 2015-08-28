@@ -11,20 +11,33 @@
 
 	<ui:define name="center_layout">
 		
-		<div class="page_header" style="margin:5px">
+		<style type="text/css">
+			#msgform input{color:#4f4f4f;}
+			#msgform input:hover{
+				cursor:pointer;
+				color:#000;
+			}
+			#msgform{
+				margin:5px;
+				color:#4f4f4f;
+				font-weight:bold;
+			}
+			.page_header{margin:5px}
+		</style>
+		
+		<div class="page_header">
 			<span>
 				#{msg.admin_message}
 			</span>
 		</div>
 		
-		<h:form id="msgform" styleClass="grey_border" style="margin:5px">
-			<h:outputText value="#{msg.message}:" style="font-weight:bold;color:#4f4f4f;"/>
+		<h:form id="msgform" styleClass="grey_border" >
+			<h:outputText value="#{msg.message}:" />
 			<br style="margin-bottom:10px;"/>
 			<p:editor value="#{adminMessageBean.message}" widgetVar="editor" style="width:600px;" />
 			<br style="margin-bottom:15px;"/>
-			<h:commandButton value="#{msg.update}" actionListener="#{adminMessageBean.update()}" style="margin-right:10px;color:#4f4f4f;"/>
-			<h:commandButton value="#{msg.admin_message_clear}" actionListener="#{adminMessageBean.clear()}" process="@form" update="msgform"
-				style="color:#4f4f4f;"/>
+			<h:commandButton value="#{msg.update}" actionListener="#{adminMessageBean.update()}" style="margin-right:10px;"/>
+			<h:commandButton value="#{msg.admin_message_clear}" actionListener="#{adminMessageBean.clear()}" process="@form" update="msgform"/>
 		</h:form>
 	
 	</ui:define>
