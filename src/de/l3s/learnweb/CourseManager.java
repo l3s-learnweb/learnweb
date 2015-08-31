@@ -43,7 +43,7 @@ public class CourseManager
     {
 	super();
 	this.learnweb = learnweb;
-	this.cache = Collections.synchronizedMap(new LinkedHashMap<Integer, Course>(50));
+	this.cache = Collections.synchronizedMap(new LinkedHashMap<Integer, Course>(70));
 	this.resetCache();
     }
 
@@ -53,7 +53,7 @@ public class CourseManager
 
 	// load all courses into cache
 	Statement select = learnweb.getConnection().createStatement();
-	ResultSet rs = select.executeQuery("SELECT " + COLUMNS + ", COUNT(user_id) AS member_count FROM lw_course LEFT JOIN lw_user_course USING(course_id) GROUP BY course_id ORDER BY title");
+	ResultSet rs = select.executeQuery("SELECT " + COLUMNS + " FROM lw_course LEFT JOIN lw_user_course USING(course_id) ORDER BY title");
 	while(rs.next())
 	    cache.put(rs.getInt("course_id"), new Course(rs));
 	select.close();

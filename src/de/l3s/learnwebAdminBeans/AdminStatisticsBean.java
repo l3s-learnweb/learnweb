@@ -101,7 +101,6 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 		    + "(SELECT count(*) FROM lw_group_resource gr JOIN lw_resource ir ON gr.resource_id = ir.resource_id AND ir.deleted=0 JOIN lw_resource_archiveurl t ON t.resource_id=ir.resource_id WHERE gr.group_id = g.group_id) as no_of_archived_versions, "
 		    + "(SELECT count(distinct(t.resource_id)) FROM lw_group_resource gr JOIN lw_resource ir ON gr.resource_id = ir.resource_id AND ir.deleted=0 JOIN lw_resource_archiveurl t ON t.resource_id=ir.resource_id WHERE gr.group_id = g.group_id) as no_of_archived_resources "
 		    + "FROM `lw_group` g " + "LEFT JOIN lw_group_resource ogr USING(group_id) " + "LEFT JOIN lw_resource r ON r.resource_id=ogr.resource_id AND r.deleted=0 " + "WHERE group_id IN(" + StringHelper.implodeInt(selectedGroups, ",") + ") " + "GROUP BY group_id";
-	    System.out.println(StringHelper.implodeInt(selectedGroups, ","));
 
 	    ResultSet rs = Learnweb.getInstance().getConnection().createStatement().executeQuery(query);
 

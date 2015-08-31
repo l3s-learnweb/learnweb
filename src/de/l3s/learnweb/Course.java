@@ -71,12 +71,12 @@ public class Course implements Serializable, Comparable<Course>
 	this.wizardParam = rs.getString("wizard_param");
 	this.wizardEnabled = rs.getInt("wizard_enabled") == 1;
 	this.nextXUsersBecomeModerator = rs.getInt("next_x_users_become_moderator");
-	this.memberCount = rs.getInt("member_count");
 	this.defaultInterwebUsername = rs.getString("default_interweb_username");
 	this.defaultInterwebPassword = rs.getString("default_interweb_password");
 	this.welcomeMessage = rs.getString("welcome_message");
 	this.bannerColor = rs.getString("banner_color");
 	this.bannerImageFileId = rs.getInt("banner_image_file_id");
+	this.memberCount = -1;
 
 	for(int i = 0; i < CourseManager.FIELDS;)
 	    options[i] = rs.getInt("options_field" + (++i));
@@ -235,8 +235,12 @@ public class Course implements Serializable, Comparable<Course>
 	this.nextXUsersBecomeModerator = nextXUsersBecomeModerator;
     }
 
-    public int getMemberCount()
+    public int getMemberCount() throws SQLException
     {
+	if(memberCount == -1)
+	{
+	    memberCount = Learnweb.getInstance().getUserManager().getUsersByCourseId(id).size();
+	}
 	return memberCount;
     }
 
@@ -247,7 +251,8 @@ public class Course implements Serializable, Comparable<Course>
 
     public void addUser(User user) throws SQLException
     {
-	memberCount++;
+	if(memberCount != -1)
+	    memberCount++;
 	Learnweb.getInstance().getCourseManager().addUser(this, user);
 	user.clearCaches();
     }
