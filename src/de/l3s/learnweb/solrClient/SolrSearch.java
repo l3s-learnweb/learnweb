@@ -42,6 +42,9 @@ public class SolrSearch implements Serializable
     private String filterDateTo = "";
     private String filterCollector = "";
     private String filterAuthor = "";
+    private String filterCoverage = "";
+    private String filterPublisher = "";
+    private String filterTags = "";
     private List<Integer> filterGroupIds;
 
     protected long totalResults = -1;
@@ -163,6 +166,21 @@ public class SolrSearch implements Serializable
 	this.filterAuthor = author;
     }
 
+    public void setFilterCoverage(String coverage)
+    {
+	this.filterCoverage = coverage;
+    }
+
+    public void setFilterPublisher(String publisher)
+    {
+	this.filterPublisher = publisher;
+    }
+
+    public void setFilterTags(String tags)
+    {
+	this.filterTags = tags;
+    }
+
     public void clearAllFilters()
     {
 	this.filterFormat = "";
@@ -177,6 +195,9 @@ public class SolrSearch implements Serializable
 	this.filterDateTo = "";
 	this.filterCollector = "";
 	this.filterAuthor = "";
+	this.filterCoverage = "";
+	this.filterPublisher = "";
+	this.filterTags = "";
     }
 
     public long getTotalResultCount()
@@ -236,6 +257,21 @@ public class SolrSearch implements Serializable
 	    solrQuery.addFilterQuery("author_s : \"" + filterAuthor + "\"");
 	}
 
+	if(0 != filterCoverage.length())
+	{
+	    solrQuery.addFilterQuery("coverage_s : \"" + filterCoverage + "\"");
+	}
+
+	if(0 != filterPublisher.length())
+	{
+	    solrQuery.addFilterQuery("publisher_s : \"" + filterPublisher + "\"");
+	}
+
+	if(0 != filterTags.length())
+	{
+	    solrQuery.addFilterQuery("tags : \"" + filterTags + "\"");
+	}
+
 	if(null != filterGroupIds)
 	{
 	    filterGroupStr = "";
@@ -265,7 +301,7 @@ public class SolrSearch implements Serializable
 	solrQuery.setHighlightSimplePost("</strong>");
 
 	solrQuery.set("facet", "true");
-	solrQuery.addFacetField("location", "groups", "collector_s", "author_s");
+	solrQuery.addFacetField("location", "groups", "collector_s", "author_s", "coverage_s", "publisher_s", "tags");
 	solrQuery.setFacetLimit(20); // TODO set to -1 to show all facets (implement "more" button on frontend)
 	solrQuery.setFacetSort("count");
 	solrQuery.setFacetMinCount(1);

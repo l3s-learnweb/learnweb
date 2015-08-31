@@ -238,6 +238,9 @@ public class SearchFilters implements Serializable
 	group,
 	collector,
 	author,
+	coverage,
+	publisher,
+	tags,
 	imageSize,
 	videoDuration,
 	language;
@@ -247,11 +250,11 @@ public class SearchFilters implements Serializable
 	    switch(m)
 	    {
 	    case web:
-		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector, FILTERS.author };
+		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector, FILTERS.author, FILTERS.coverage, FILTERS.publisher, FILTERS.tags };
 	    case image:
-		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector, FILTERS.author, FILTERS.imageSize };
+		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector, FILTERS.author, FILTERS.coverage, FILTERS.publisher, FILTERS.tags, FILTERS.imageSize };
 	    case video:
-		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector, FILTERS.author, FILTERS.videoDuration };
+		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector, FILTERS.author, FILTERS.coverage, FILTERS.publisher, FILTERS.tags, FILTERS.videoDuration };
 	    default:
 		return FILTERS.values();
 	    }
@@ -337,6 +340,18 @@ public class SearchFilters implements Serializable
 	    {
 		putResourceCounter(FILTERS.author, ff.getValues(), false);
 	    }
+	    else if(ff.getName().equals("coverage_s"))
+	    {
+		putResourceCounter(FILTERS.coverage, ff.getValues(), false);
+	    }
+	    else if(ff.getName().equals("publisher_s"))
+	    {
+		putResourceCounter(FILTERS.publisher, ff.getValues(), false);
+	    }
+	    else if(ff.getName().equals("tags"))
+	    {
+		putResourceCounter(FILTERS.tags, ff.getValues(), false);
+	    }
 	}
     }
 
@@ -394,6 +409,9 @@ public class SearchFilters implements Serializable
 			case group:
 			case collector:
 			case author:
+			case coverage:
+			case publisher:
+			case tags:
 			    canNotRequestInterweb = true;
 			    setFilter(f, nameValue[1]);
 			    break;
@@ -497,6 +515,9 @@ public class SearchFilters implements Serializable
 	    case group:
 	    case collector:
 	    case author:
+	    case coverage:
+	    case publisher:
+	    case tags:
 		if(availableResources.containsKey(fs))
 		{
 		    for(Count c : availableResources.get(fs))
@@ -624,6 +645,21 @@ public class SearchFilters implements Serializable
     public String getAuthorFilter()
     {
 	return (String) configFilters.get(FILTERS.author);
+    }
+
+    public String getCoverageFilter()
+    {
+	return (String) configFilters.get(FILTERS.coverage);
+    }
+
+    public String getPublisherFilter()
+    {
+	return (String) configFilters.get(FILTERS.publisher);
+    }
+
+    public String getTagsFilter()
+    {
+	return (String) configFilters.get(FILTERS.tags);
     }
 
     public void setMode(MODE m)
