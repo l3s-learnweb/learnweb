@@ -447,4 +447,13 @@ public class UserManager
 	return user;
     }
 
+    public void saveGmailId(String gmailId, int userId) throws SQLException
+    {
+	PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT IGNORE INTO `lw_user_gmail` (`user_id` , `gmail_id`) VALUES (?, ?)");
+	insert.setInt(1, userId);
+	insert.setString(2, gmailId);
+	insert.executeUpdate();
+	insert.close();
+    }
+
 }

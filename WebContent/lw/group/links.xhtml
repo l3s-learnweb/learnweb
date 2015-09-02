@@ -7,6 +7,7 @@
 	<ui:param name="helpText" value="#{msg.groupLinkHelp}"/>
 	<ui:define name="head-meta">
 		<meta name="google-signin-client_id" content="948054065586-oh9uobccisi7lkt832q9n2hmk4mk410s.apps.googleusercontent.com" />
+		<script src="https://apis.google.com/js/platform.js" async="async" defer="defer"></script>
 	</ui:define>
 	<ui:define name="metadata">
 		<f:metadata>
@@ -19,8 +20,8 @@
 	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" />
 
 	<ui:define name="center_layout">
-		<script src="https://apis.google.com/js/platform.js" async="async" defer="defer"></script>
-		<h:outputScript library="js" name="links.js" target="head"/>
+		
+		<h:outputScript library="group" name="links.js" target="head"/>
 		<div class="center-header" id="group_header">
 			<span>
 				#{msg.links}
@@ -214,6 +215,10 @@
 					<h:outputText value="" />
 				</h:panelGrid>
 			</h:form>
-		</p:panel>	
+		</p:panel>
+		
+		<h:form style="display:none;">	
+			<p:remoteCommand actionListener="${groupDetailBean.saveGmailId()}" name="saveGmailId" process="@this"/>
+		</h:form>	
 	</ui:define>
 </ui:composition>

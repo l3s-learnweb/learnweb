@@ -1,21 +1,18 @@
 function onlinkClick(element) {
 	var googleAuthObj = gapi.auth2.getAuthInstance();
-	googleAuthObj.signIn().then(function(){window.open(element.href, '_blank')});
+	googleAuthObj.signIn().then(function(){window.open(element.href, '_blank');onSignIn(googleAuthObj.currentUser.get());});
 	return false;
 }
 
 function onSignIn(googleUser) {
   var profile = googleUser.getBasicProfile();
-  console.log('ID: ' + profile.getId()); 
-  console.log('Name: ' + profile.getName());
-  console.log('Image URL: ' + profile.getImageUrl());
-  console.log('Email: ' + profile.getEmail());
+  saveGmailId([{name:'gmail_id', value:profile.getEmail()}]);
 }
 
 $(document).ready(function(){
 	gapi.load('auth2', function() {
 
-	      gapi.auth2.init({fetch_basic_profile: false,
+	      gapi.auth2.init({fetch_basic_profile: true,
 	          scope:'https://www.googleapis.com/auth/plus.login'}).then(
 	            function (){
 	              console.log('init google sign in');
@@ -23,4 +20,4 @@ $(document).ready(function(){
 	    });
 
 
-})
+});

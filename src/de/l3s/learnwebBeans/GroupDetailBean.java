@@ -1009,6 +1009,18 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	paginator = new SolrSearch.SearchPaginator(search);
     }
 
+    public void saveGmailId()
+    {
+	String gmailId = getParameter("gmail_id");
+	try
+	{
+	    Learnweb.getInstance().getUserManager().saveGmailId(gmailId, getUser().getId());
+	}
+	catch(SQLException e)
+	{
+	    System.out.println("Error while inserting gmail id" + e);
+	}
+    }
     /*
     
     sub group stuff:

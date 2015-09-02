@@ -38,7 +38,7 @@ public class MementoClient
 
 	try
 	{
-	    mementoArchiveUrlObj = new URL(mementoArchiveURL + collectionId + "/timemap/" + resourceURI);
+	    mementoArchiveUrlObj = new URL(mementoArchiveURL + collectionId + "/timemap/link/" + resourceURI);
 	}
 	catch(MalformedURLException e)
 	{

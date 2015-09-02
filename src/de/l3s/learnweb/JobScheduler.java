@@ -23,12 +23,12 @@ public class JobScheduler
 	//scheduler.schedule("0 1 * * *", task);
 
 	//Schedules the task at 1:00 on 14th and 28th of every month
-	//UpdateLoroResources loroTask = new UpdateLoroResources();
-	//scheduler.schedule("0 1 14,28 * *", loroTask);
+	UpdateLoroResources loroTask = new UpdateLoroResources();
+	scheduler.schedule("0 1 14,28 * *", loroTask);
 
 	//Schedules the task at 1:00 on 13th and 27th of every month
-	//UpdateYovistoVideos yovistoTask = new UpdateYovistoResources();
-	//scheduler.schedule("0 1 13,27 * *", yovistoTask);
+	UpdateYovistoVideos yovistoTask = new UpdateYovistoVideos();
+	scheduler.schedule("0 1 13,27 * *", yovistoTask);
     }
 
     public void startAllJobs()
