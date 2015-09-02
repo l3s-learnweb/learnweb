@@ -1,0 +1,87 @@
+<ui:composition template="templates/main.xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="pageTitle" value="#{msg.searchTitle}"/>
+	
+	<ui:define name="center_layout">
+
+		<h1><h:outputText value="#{msg.statistics}" escape="false" /></h1>
+	
+		<div class="ui-datatable ui-widget">
+			<table role="grid" >
+				<thead>
+					<tr role="row">
+						<th class="ui-state-default" role="columnheader"><div class="ui-dt-c">
+								<span>Description</span>
+							</div></th>
+						<th class="ui-state-default" role="columnheader"><div class="ui-dt-c">
+								<span>Value</span>
+							</div></th>
+			
+					</tr>
+				</thead>
+				<tbody class="ui-datatable-data ui-widget-content">
+					<tr class="ui-widget-content ui-datatable-even">
+						<td><div class="ui-dt-c">users</div></td>
+						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.users}"/></div></td>
+					</tr>
+					<tr class="ui-widget-content ui-datatable-even">
+						<td><div class="ui-dt-c">groups</div></td>
+						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.groups}"/></div></td>
+					</tr>
+					<tr class="ui-widget-content ui-datatable-even">
+						<td><div class="ui-dt-c">resources</div></td>
+						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.resources}"/></div></td>
+					</tr>
+					
+					<tr class="ui-widget-content ui-datatable-even">
+						<td><div class="ui-dt-c">number of rated resources</div></td>
+						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.ratedResourcesCount}"/></div></td>
+					</tr>
+					<tr class="ui-widget-content ui-datatable-even">
+						<td><div class="ui-dt-c">number of tagged resources</div></td>
+						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.taggedResourcesCount}"/></div></td>
+					</tr>
+					<tr class="ui-widget-content ui-datatable-even">
+						<td><div class="ui-dt-c">number of commented resources</div></td>
+						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.commentedResourcesCount}"/></div></td>
+					</tr>
+					
+					<tr class="ui-widget-content ui-datatable-even">
+						<td><div class="ui-dt-c">number of rates</div></td>
+						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.rateCount}"/></div></td>
+					</tr>
+					<tr class="ui-widget-content ui-datatable-even">
+						<td><div class="ui-dt-c">number of tags</div></td>
+						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.tagCount}"/></div></td>
+					</tr>
+					<tr class="ui-widget-content ui-datatable-even">
+						<td><div class="ui-dt-c">number of comments</div></td>
+						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.commentCount}"/></div></td>
+					</tr>
+					
+					<tr class="ui-widget-content ui-datatable-even">
+						<td><div class="ui-dt-c">average number of rates per rated resource</div></td>
+						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.ratedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2" /></h:outputText></div></td>
+					</tr>
+					<tr class="ui-widget-content ui-datatable-even">
+						<td><div class="ui-dt-c">average number of tags per tagged resource</div></td>
+						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.taggedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2" /></h:outputText></div></td>
+					</tr>
+					<tr class="ui-widget-content ui-datatable-even">
+						<td><div class="ui-dt-c">average number of comments per commented resource</div></td>
+						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.commentedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2" /></h:outputText></div></td>
+					</tr>
+					
+					<tr class="ui-widget-content ui-datatable-even">
+						<td><div class="ui-dt-c">average session length</div></td>
+						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.averageUsageTime}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2" /></h:outputText> minutes</div></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>		
+	</ui:define>		
+</ui:composition>

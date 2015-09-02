@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:p="http://primefaces.org/ui" 
+	lang="#{userBean.localeCode}">
+
+<f:view locale="#{userBean.localeCode}" contentType="text/html">
+	<ui:insert name="metadata" />
+
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>#{pageTitle} - Learnweb</title>
+		<link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/main.css" />
+		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />
+
+		<h:outputScript library="primefaces" name="jquery/jquery.js" />
+		<h:outputScript library="main-template" name="default.js" />
+
+		<base href="#{request.contextPath}/lw/" />
+	</h:head>
+
+	<h:body>
+		<p:growl id="growl" rendered="#{not disableGrowl}"/> 
+		
+		<ui:decorate template="/archive/templates/header.xhtml" /> 		
+
+		<section id="content" class="#{smallPage? 'small_page':''}">
+			<p:messages id="message" showDetail="false" showSummary="true" escape="false" />
+	
+			<h:panelGroup layout="block" styleClass="small_page" rendered="#{loginRequired and !userBean.loggedIn}">
+				<ui:include src="/templates/user/login.xhtml" />
+			</h:panelGroup>
+
+			<h:panelGroup rendered="#{!loginRequired || userBean.loggedIn}">
+				<ui:insert name="center_layout"></ui:insert>
+			</h:panelGroup>
+		</section>
+		
+		
+		<h:panelGroup layout="block" id="footer" rendered="#{not empty helpText}" styleClass="#{userBean.getPreference('helptext_hide')? 'display-none':''}">
+			<h:outputText value="?" id="footer_question_mark"/>
+			<h:outputText value="#{helpText}" escape="false" id="footer_text" />
+			<a href="#" onclick="return footerClose();" id="footer_close" title="#{msg.close}"></a>
+		</h:panelGroup>
+		
+		<h:form styleClass="display-none">	
+			<p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" />
+		</h:form>
+
+	</h:body>
+</f:view>
+
+</html>

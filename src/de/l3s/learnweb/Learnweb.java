@@ -18,6 +18,7 @@ import javax.faces.bean.ManagedBean;
 
 import org.apache.log4j.Logger;
 
+import de.l3s.archivedemo.ArchiveSearchManager;
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.solrClient.SolrClient;
@@ -64,6 +65,7 @@ public class Learnweb
     private final YovistoManager yovistoManager;
     private final JobScheduler jobScheduler;
     private final GlossaryManager glossaryManager;
+    private final ArchiveSearchManager archiveSearchManager;
 
     private static Learnweb learnweb = null;
 
@@ -171,6 +173,7 @@ public class Learnweb
 	jobScheduler = new JobScheduler(this);
 	yovistoManager = new YovistoManager(this);
 	glossaryManager = new GlossaryManager(this);
+	archiveSearchManager = new ArchiveSearchManager(this);
 	/*
 	PreparedStatement pstmt = dbConnection.prepareStatement("select * from lw_admin_message");
 	ResultSet rs = pstmt.executeQuery();
@@ -696,4 +699,10 @@ public class Learnweb
     {
 	return glossaryManager;
     }
+
+    public ArchiveSearchManager getArchiveSearchManager()
+    {
+	return archiveSearchManager;
+    }
+
 }
