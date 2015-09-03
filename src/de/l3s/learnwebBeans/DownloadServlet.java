@@ -71,9 +71,11 @@ public class DownloadServlet extends HttpServlet
 	    if(file.isDownloadLogActivated())
 	    {
 		HttpSession session = request.getSession(true);
-		//User user = (User) session.getAttribute("learnweb_user");
+		User user = null;
 		Integer userId = (Integer) session.getAttribute("learnweb_user_id");
-		User user = learnweb.getUserManager().getUser(userId);
+
+		if(userId != null)
+		    user = learnweb.getUserManager().getUser(userId);
 
 		if(null != user)
 		    Learnweb.getInstance().log(user, Action.downloading, file.getResourceId(), null, session.getId(), 0);

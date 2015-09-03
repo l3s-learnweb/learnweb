@@ -164,7 +164,8 @@
 .list_view#results {
 	float: left;
 	width: 61%;
-	min-width: 631px;
+	min-width: 500px;
+	max-width: 700px;
 }
 
 .list_view#explore_resultset{

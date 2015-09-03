@@ -5,12 +5,18 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.util.PropertiesBundle;
 
 public class ArchiveSearchManager
@@ -31,7 +37,7 @@ public class ArchiveSearchManager
     public List<String> getQuerySuggestions(String query, int count) throws SQLException
     {
 	ArrayList<String> suggestions = new ArrayList<String>(count);
-	PreparedStatement select = getConnection().prepareStatement("SELECT DISTINCT query_string FROM `pw_query` WHERE `query_string` LIKE ? LIMIT ?");
+	PreparedStatement select = getConnection().prepareStatement("SELECT DISTINCT query_string FROM `pw_query` WHERE `query_string` LIKE ? AND loaded_results > 0 LIMIT ?");
 	select.setString(1, query + "%");
 	select.setInt(2, count);
 	ResultSet rs = select.executeQuery();
@@ -40,8 +46,78 @@ public class ArchiveSearchManager
 	{
 	    suggestions.add(rs.getString(1));
 	}
-
+	select.close();
 	return suggestions;
+    }
+
+    private final static String QUERY_COLUMNS = "query_id, query_string, timestamp";
+
+    public Query getQueryByQueryString(String queryString) throws SQLException
+    {
+	Query query = null;
+	PreparedStatement select = getConnection().prepareStatement("SELECT " + QUERY_COLUMNS + " FROM pw_query WHERE query_string = ? ORDER BY loaded_results DESC LIMIT 1");
+	select.setString(1, queryString);
+	ResultSet rs = select.executeQuery();
+	if(rs.next())
+	{
+	    query = createQuery(rs);
+	}
+
+	select.close();
+	return query;
+    }
+
+    private Query createQuery(ResultSet rs) throws SQLException
+    {
+	Query query = new Query();
+	query.setId(rs.getInt("query_id"));
+	query.setQueryString(rs.getString("query_string"));
+	query.setTimestamp(new Date(rs.getTimestamp("timestamp").getTime()));
+
+	return query;
+    }
+
+    private String formatDate(Timestamp timestamp, DateFormat df)
+    {
+	if(timestamp == null || timestamp.getTime() == 0L)
+	    return "01.01.70";
+
+	return df.format(new Date(timestamp.getTime()));
+    }
+
+    public List<ResourceDecorator> getResultsByQueryId(int queryId) throws SQLException
+    {
+	List<ResourceDecorator> results = new LinkedList<ResourceDecorator>();
+	DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);//, UtilBean.getUserBean().getLocale());
+
+	PreparedStatement select = getConnection().prepareStatement(
+		"SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description FROM `url_captures_count` JOIN pw_result USING (query_id, rank) WHERE `query_id` = ? and url_captures > 0 ORDER BY rank");
+	select.setInt(1, queryId);
+	ResultSet rs = select.executeQuery();
+	int counter = 1;
+	while(rs.next())
+	{
+	    Resource resource = new Resource();
+	    resource.setUrl(rs.getString("url"));
+	    resource.setDescription(rs.getString("description"));
+	    resource.setTitle(rs.getString("title"));
+	    resource.setMetadataValue("rank", rs.getString("rank"));
+	    resource.setMetadataValue("url_captures", rs.getString("url_captures"));
+	    resource.setMetadataValue("first_timestamp", formatDate(rs.getTimestamp("first_timestamp"), df));
+	    resource.setMetadataValue("last_timestamp", formatDate(rs.getTimestamp("last_timestamp"), df));
+
+	    //	    System.out.println(resource.getMetadataValue("rank") + " - " + resource.getTitle() + " - " + resource.getMetadataValue("last_timestamp"));
+
+	    ResourceDecorator decoratedResource = new ResourceDecorator(resource);
+	    decoratedResource.setTempId(counter++);
+	    decoratedResource.setSnippet(rs.getString("description"));
+
+	    results.add(decoratedResource);
+	}
+
+	select.close();
+
+	return results;
     }
 
     private void checkConnection() throws SQLException
@@ -80,6 +156,8 @@ public class ArchiveSearchManager
     {
 
 	ArchiveSearchManager lm = Learnweb.getInstance().getArchiveSearchManager();
+
+	lm.getResultsByQueryId(65158);
 
 	System.exit(0);
     }

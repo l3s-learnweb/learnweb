@@ -88,6 +88,11 @@ public class ResourceDecorator implements Serializable
 	return resource.getTitle();
     }
 
+    public String getMetadataValue(String key)
+    {
+	return resource.getMetadataValue(key);
+    }
+
     public void setTitle(String title)
     {
 	this.title = title;

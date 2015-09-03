@@ -4,31 +4,46 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.RequestScoped;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.Resource;
+import de.l3s.archivedemo.Query;
+import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnwebBeans.ApplicationBean;
 
 @ManagedBean
-@ViewScoped
+@RequestScoped
 public class ArchiveDemoBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -8426331759352561208L;
     private static final Logger log = Logger.getLogger(ArchiveDemoBean.class);
-    private String query;
-    private List<Resource> resources;
+    private String queryString;
+    private List<ResourceDecorator> resources;
 
-    public ArchiveDemoBean()
+    public ArchiveDemoBean() throws SQLException
     {
 
     }
 
-    public String onSearch()
+    public String onSearch() throws SQLException
     {
-	log.debug("Query: " + query);
+	log.debug("Query: " + queryString);
+
+	Query q = getLearnweb().getArchiveSearchManager().getQueryByQueryString(queryString);
+
+	if(q == null)
+	{
+	    addMessage(FacesMessage.SEVERITY_ERROR, "ArchiveSearch.select_suggested_entity");
+	    resources = null;
+	    return null;
+	}
+
+	resources = q.getResults();
+	if(resources.size() == 0)
+	    addMessage(FacesMessage.SEVERITY_ERROR, "No archived URLs found");
 
 	return null;
     }
@@ -40,15 +55,15 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     public String getQuery()
     {
-	return query;
+	return queryString;
     }
 
     public void setQuery(String query)
     {
-	this.query = query;
+	this.queryString = query;
     }
 
-    public List<Resource> getResources()
+    public List<ResourceDecorator> getResources()
     {
 	return resources;
     }

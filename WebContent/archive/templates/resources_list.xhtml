@@ -9,28 +9,26 @@
 
 	<ui:repeat var="res" value="#{resources}">
 		
-		<h:panelGroup layout="block" styleClass="page_counter" rendered="#{res.tempId gt 1 and res.tempId % 8 eq 1}">
-			<h:outputText value="#{msg.page}  #{utilBean.toInt(res.tempId / 8)}" />
+		<h:panelGroup layout="block" styleClass="page_counter" rendered="#{res.tempId gt 1 and res.tempId % 10 eq 1}">
+			<h:outputText value="#{msg.page}  #{utilBean.toInt(res.tempId / 10)}" />
 		</h:panelGroup>	
 			
 		<div class="resource" id="resource_${res.tempId}">		
-			<h:panelGroup layout="block" styleClass="#{res.newResource ? 'list_newResource':'oldResource'}">
+			<h:panelGroup layout="block">
 				<h:outputLink class="resourceWebLink" target="_blank" value="#{res.url}"><h:outputText value="#{res.title}" escape="false"/></h:outputLink>
+				
 				
 				<table style="border-spacing:0px;padding-right: 0px;    padding-left: 0px;">
 				<tr>
 					<td>
-						<h:graphicImage styleClass="resource_thumbnail" 
-							width="#{res.thumbnail0.width}" height="#{res.thumbnail0.height}" 
-							value="#{res.thumbnail0.url}" 
-							rendered="#{not empty res.thumbnail0} and false" 
-							alt="#{res.title}" />
-					</td>
-					<td>
 				<div style="display:inline; vertical-align:top;">
-				<h:outputLink  value="#{res.learnwebUrl}" title="" style="color:green;">#{res.learnwebUrl}</h:outputLink><br/>
+				<h:outputLink  value="#{res.learnwebUrl}" title="" style="color:green;">#{res.learnwebUrl}</h:outputLink>
+				
+				<div style="margin-bottom:2px;"><span style="font-weight:bold;">#{res.getMetadataValue('url_captures')}</span> captures between <a href="#" style="color:green;">#{res.getMetadataValue('first_timestamp')}</a> and <a href="#" style="color:green;">#{res.getMetadataValue('last_timestamp')}</a></div>
+				
 				
 				<h:outputText value="#{res.snippet}" style="display:block;width:94%;" escape="false"></h:outputText>
+				
 				</div>
 				
 					<h:panelGroup rendered="#{utilBean.searchPage}" layout="block">
