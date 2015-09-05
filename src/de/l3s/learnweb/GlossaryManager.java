@@ -10,7 +10,7 @@ import java.util.List;
 public class GlossaryManager
 {
 
-    private final static String GLOSSARY = "glossary_id, resource_id, user_id, item, description, topic, italian, german, spanish, last_modified";
+    private final static String GLOSSARY = "glossary_id, resource_id, user_id, item, description, topic, italian, german, spanish, reference_url, last_modified";
 
     private final Learnweb learnweb;
 
@@ -69,13 +69,14 @@ public class GlossaryManager
 	glossary.setGerman(rs.getString("german"));
 	glossary.setItalian(rs.getString("italian"));
 	glossary.setSpanish(rs.getString("spanish"));
+	glossary.setReference(rs.getString("reference_url"));
 	glossary.setLastModified(new Date(rs.getTimestamp("last_modified").getTime()));
 	return glossary;
     }
 
     public Glossary save(Glossary selectedEntry) throws SQLException
     {
-	String sqlQuery = "REPLACE INTO `lw_glossary` (" + GLOSSARY + ") VALUES (?,?,?,?,?,?,?,?,?,?)";
+	String sqlQuery = "REPLACE INTO `lw_glossary` (" + GLOSSARY + ") VALUES (?,?,?,?,?,?,?,?,?,?,?)";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
 
 	if(selectedEntry.getId() < 0)
@@ -85,12 +86,13 @@ public class GlossaryManager
 	ps.setInt(2, selectedEntry.getResourceId());
 	ps.setInt(3, selectedEntry.getUserId());
 	ps.setString(4, selectedEntry.getItem());
-	ps.setString(5, selectedEntry.getTopic());
-	ps.setString(6, selectedEntry.getDescription());
+	ps.setString(5, selectedEntry.getDescription());
+	ps.setString(6, selectedEntry.getTopic());
 	ps.setString(7, selectedEntry.getGerman());
 	ps.setString(8, selectedEntry.getItalian());
 	ps.setString(9, selectedEntry.getSpanish());
-	ps.setTimestamp(10, new java.sql.Timestamp(selectedEntry.getLastModified().getTime()));
+	ps.setString(10, selectedEntry.getReference());
+	ps.setTimestamp(11, new java.sql.Timestamp(selectedEntry.getLastModified().getTime()));
 	ps.executeUpdate();
 
 	if(selectedEntry.getId() < 0)

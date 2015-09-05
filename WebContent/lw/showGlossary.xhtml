@@ -64,7 +64,7 @@
 						<f:facet name="header">
 							<h:outputText value="#{msg['Glossary.reference_material']}"/>
 						</f:facet>
-						<a href="#{entry.reference}">
+						<a href="#{entry.reference}" target="_blank">
 							#{entry.reference}
 						</a>
 					</p:column>
@@ -93,7 +93,7 @@
 						<f:facet name="header">
 							<h:outputText value="#{msg.options}"/>
 						</f:facet>
-						<h:commandButton process="@this" rendered="#{}" id="edit" action="${glossaryBean.edit(entry)}" value="#{msg.edit}" 
+						<h:commandButton process="@this" id="edit" action="${glossaryBean.edit(entry)}" value="#{msg.edit}" 
 							styleClass="greenbutton"/>
 						
 						

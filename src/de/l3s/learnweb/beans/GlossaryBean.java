@@ -5,14 +5,14 @@ import java.util.Date;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 
 import de.l3s.learnweb.Glossary;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnwebBeans.ApplicationBean;
 
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class GlossaryBean extends ApplicationBean
 {
 
@@ -38,7 +38,7 @@ public class GlossaryBean extends ApplicationBean
     {
 	selectedEntry = entry;
 
-	return "editGlossary.xhtml";
+	return "editGlossary.xhtml?faces-redirect=true";
     }
 
     public String addNewEntry() throws SQLException
@@ -60,7 +60,7 @@ public class GlossaryBean extends ApplicationBean
 	lw.getGlossaryManager().save(selectedEntry);
 	selectedEntry = new Glossary();
 
-	return "showGlossary.xhtml";
+	return "showGlossary.xhtml?faces-redirect=true";
     }
 
     public String deleteEntry(Glossary entry) throws SQLException
@@ -74,7 +74,8 @@ public class GlossaryBean extends ApplicationBean
 
     public String quit()
     {
-	return "showGlossary.xhtml";
+	selectedEntry = new Glossary();
+	return "showGlossary.xhtml?faces-redirect=true";
     }
 
     public Glossary getSelectedEntry()
