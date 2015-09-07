@@ -2,6 +2,9 @@ package de.l3s.learnweb.beans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -26,6 +29,16 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
     public ArchiveDemoBean() throws SQLException
     {
 
+    }
+
+    public String formatDate(String timestamp) throws ParseException
+    {
+	DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
+	DateFormat waybackDf = new SimpleDateFormat("yyyyMMddhhmmss");
+	if(timestamp == null)
+	    return "01.01.70";
+
+	return df.format(waybackDf.parse(timestamp));
     }
 
     public String onSearch() throws SQLException

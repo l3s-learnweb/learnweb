@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
@@ -88,10 +89,10 @@ public class ArchiveSearchManager
     public List<ResourceDecorator> getResultsByQueryId(int queryId) throws SQLException
     {
 	List<ResourceDecorator> results = new LinkedList<ResourceDecorator>();
-	DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);//, UtilBean.getUserBean().getLocale());
+	DateFormat df = new SimpleDateFormat("yyyyMMddhhmmss");//DateFormat.getDateInstance(DateFormat.SHORT);//, UtilBean.getUserBean().getLocale());
 
 	PreparedStatement select = getConnection().prepareStatement(
-		"SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description FROM `url_captures_count` JOIN pw_result USING (query_id, rank) WHERE `query_id` = ? and url_captures > 0 ORDER BY rank");
+		"SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description FROM `url_captures_count_2` JOIN pw_result USING (query_id, rank) WHERE `query_id` = ? and url_captures > 0 ORDER BY rank");
 	select.setInt(1, queryId);
 	ResultSet rs = select.executeQuery();
 	int counter = 1;
