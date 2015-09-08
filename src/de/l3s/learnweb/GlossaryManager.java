@@ -30,7 +30,7 @@ public class GlossaryManager
     public List<Glossary> getGlossaryByResourceId(int resourceId) throws SQLException
     {
 	LinkedList<Glossary> glossarys = new LinkedList<Glossary>();
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + GLOSSARY + " FROM `lw_glossary` WHERE resource_id = ? ORDER BY last_modified DESC");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + GLOSSARY + " FROM `lw_glossary` WHERE resource_id = ? AND deleted = 0 ORDER BY last_modified DESC");
 	select.setInt(1, resourceId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -45,7 +45,7 @@ public class GlossaryManager
     public List<Glossary> getGlossaryByUserId(int userId) throws SQLException
     {
 	LinkedList<Glossary> glossarys = new LinkedList<Glossary>();
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + GLOSSARY + " FROM `lw_glossary` WHERE user_id = ? ORDER BY last_modified DESC");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + GLOSSARY + " FROM `lw_glossary` WHERE user_id = ? AND deleted = 0 ORDER BY last_modified DESC");
 	select.setInt(1, userId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -109,10 +109,10 @@ public class GlossaryManager
     public int delete(int glossaryId) throws SQLException
     {
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("DELETE FROM `lw_glossary` WHERE glossary_id = ?");
-	select.setInt(1, glossaryId);
-	select.executeQuery();
-	return glossaryId;
+	PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary` SET deleted = 1 WHERE glossary_id = ?");
+	update.setInt(1, glossaryId);
+	int updateVal = update.executeUpdate();
+	return updateVal;
     }
 
 }

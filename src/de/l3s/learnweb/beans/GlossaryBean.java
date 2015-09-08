@@ -68,7 +68,7 @@ public class GlossaryBean extends ApplicationBean
 
 	Learnweb lw = getLearnweb();
 	lw.getGlossaryManager().delete(entry.getId());
-
+	entries.remove(entry);
 	return "showGlossary.xhtml";
     }
 
