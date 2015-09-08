@@ -84,7 +84,8 @@
 				<ul>
 					<ui:repeat value="#{searchBean.availableFilters}" var="filter">
 						<li class="filter #{filter.active ? 'active' : null}">
-							<span class="filter-name">#{filter.name} 
+							<span class="filter-name">
+								<span class="trimmed-text">#{filter.name}</span> 
 								<span class="arrow"></span>
 							</span>
 							<h:panelGroup styleClass="filter-sub-bar" layout="block">

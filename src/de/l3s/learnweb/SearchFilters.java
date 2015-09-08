@@ -387,7 +387,7 @@ public class SearchFilters implements Serializable
 	else
 	{
 	    clean();
-	    String[] tempFilters = filters.split(",");
+	    String[] tempFilters = filters.split(";");
 
 	    for(String filter : tempFilters)
 	    {
@@ -447,7 +447,7 @@ public class SearchFilters implements Serializable
 	{
 	    String output = "";
 	    int startIndex = stringFilters.indexOf(f.name());
-	    int endIndex = stringFilters.indexOf(',', startIndex);
+	    int endIndex = stringFilters.indexOf(';', startIndex);
 
 	    if(startIndex != 0)
 	    {
@@ -459,7 +459,7 @@ public class SearchFilters implements Serializable
 		output += stringFilters.substring(endIndex + 1);
 	    }
 
-	    return value == null ? (output.isEmpty() ? null : output) : (output.isEmpty() ? (f.name() + ":" + value) : (output + ',' + f.name() + ":" + value));
+	    return value == null ? (output.isEmpty() ? null : output) : (output.isEmpty() ? (f.name() + ":" + value) : (output + ';' + f.name() + ":" + value));
 
 	    /*for(final Entry<FILTERS, Object> entry : configFilters.entrySet())
 	    {
@@ -476,7 +476,7 @@ public class SearchFilters implements Serializable
 	}
 	else if(value != null)
 	{
-	    return stringFilters == null ? (f.name() + ":" + value) : (stringFilters + ',' + f.name() + ":" + value);
+	    return stringFilters == null ? (f.name() + ":" + value) : (stringFilters + ';' + f.name() + ":" + value);
 	}
 
 	return stringFilters;

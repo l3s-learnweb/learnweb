@@ -101,6 +101,13 @@
 	color: #fff;
 }
 
+#filters_menu_bar .filter-name .trimmed-text {
+	text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 200px;
+    float: left;
+}
+
 #filters_menu_bar .search-filters li:hover .filter-sub-bar {
 	display: block;
 }
