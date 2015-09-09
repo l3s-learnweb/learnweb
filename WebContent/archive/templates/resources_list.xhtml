@@ -22,7 +22,7 @@
 				<tr>
 					<td>
 				<div style="display:inline; vertical-align:top;">
-				<h:outputLink  value="#{res.learnwebUrl}" title="" style="color:green;">#{res.learnwebUrl}</h:outputLink>
+				<h:outputLink  value="https://web.archive.org/web/*/#{res.learnwebUrl}" title="" style="color:green;">https://web.archive.org/web/*/#{res.learnwebUrl}</h:outputLink>
 				
 				<div style="margin-bottom:2px;"><span style="font-weight:bold;">#{res.getMetadataValue('url_captures')}</span> captures between <a href="https://web.archive.org/web/#{res.getMetadataValue('first_timestamp')}/#{res.url}" style="color:green;" target="_blank">#{archiveDemoBean.formatDate(res.getMetadataValue('first_timestamp'))}</a> and <a href="https://web.archive.org/web/#{res.getMetadataValue('last_timestamp')}/#{res.url}" style="color:green;" target="_blank">#{archiveDemoBean.formatDate(res.getMetadataValue('last_timestamp'))}</a></div>
 				
