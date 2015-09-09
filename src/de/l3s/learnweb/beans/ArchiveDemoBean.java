@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.DateFormat;
@@ -9,16 +10,17 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.archivedemo.Query;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnwebBeans.ApplicationBean;
 
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class ArchiveDemoBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -8426331759352561208L;
@@ -63,7 +65,12 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     public List<String> completeQuery(String query) throws SQLException
     {
-	return getLearnweb().getArchiveSearchManager().getQuerySuggestions(query, 20);
+	return getLearnweb().getArchiveSearchManager().getQueryCompletions(query, 20);
+    }
+
+    public List<String> suggestQueries() throws SQLException, SolrServerException, IOException
+    {
+	return getLearnweb().getArchiveSearchManager().getQuerySuggestions(queryString, 10);
     }
 
     public String getQuery()

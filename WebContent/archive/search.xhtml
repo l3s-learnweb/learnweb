@@ -9,7 +9,19 @@
 	
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="search" name="search.css"  />
-		
+		<style type="text/css">
+			a.suggestWebLink:link,a.suggestWebLink{font-size: 1.3rem; font-family: "Segoe UI",Arial,Helvetica,sans-serif;}
+			a.suggestWebLink:visited{color:blue;}
+			.related_entities
+			{
+				float:left;
+				margin-top:20px;
+				margin-left:100px;
+				width:415px;
+				padding:10px 20px;
+				background-color:#f9f9f9;
+			}	
+		</style>
 		
 		<div id="results" class="list_view">			
 			<div class="resources">
@@ -20,7 +32,17 @@
 			<div class="clear"></div>
 		</div>			
 		
-		
+		<h:panelGroup layout="block" class="related_entities" rendered="${not empty archiveDemoBean.suggestQueries()}">
+			<h3>Related Entities:</h3>
+			<br/>
+			<ui:repeat var="query" value="${archiveDemoBean.suggestQueries()}">
+				<h:form>
+					<h:commandLink class="suggestWebLink" value="#{query}" action="#{archiveDemoBean.onSearch}">         
+	 					<f:setPropertyActionListener target="#{archiveDemoBean.query}" value="#{query}" />
+					</h:commandLink>
+				</h:form>
+			</ui:repeat>
+		</h:panelGroup>
 		
 		
 		<p:dialog header="#{msg.options}" widgetVar="resource_dialog" modal="false" minWidth="600" resizable="false" style="z-index:1500;">			

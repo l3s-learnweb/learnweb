@@ -1,5 +1,6 @@
 package de.l3s.archivedemo;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -10,10 +11,18 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.common.SolrDocumentList;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
@@ -26,16 +35,18 @@ public class ArchiveSearchManager
     private PropertiesBundle properties;
     private Connection dbConnection;
     private long lastCheck;
+    private HttpSolrServer solr;
 
     public ArchiveSearchManager(Learnweb learnweb) throws SQLException
     {
 	this.properties = learnweb.getProperties();
 
 	this.dbConnection = DriverManager.getConnection(properties.getProperty("mysql_archive_url"), properties.getProperty("mysql_archive_user"), properties.getProperty("mysql_archive_password"));
+	solr = new HttpSolrServer("http://prometheus.kbs.uni-hannover.de:8984/solr/WebpageIndexBig2");
 
     }
 
-    public List<String> getQuerySuggestions(String query, int count) throws SQLException
+    public List<String> getQueryCompletions(String query, int count) throws SQLException
     {
 	ArrayList<String> suggestions = new ArrayList<String>(count);
 	PreparedStatement select = getConnection().prepareStatement("SELECT DISTINCT query_string FROM `pw_query` WHERE `query_string` LIKE ? AND loaded_results > 0 LIMIT ?");
@@ -48,6 +59,43 @@ public class ArchiveSearchManager
 	    suggestions.add(rs.getString(1));
 	}
 	select.close();
+	return suggestions;
+    }
+
+    @SuppressWarnings("unchecked")
+    public List<String> getQuerySuggestions(String query, int count) throws SQLException, SolrServerException, IOException
+    {
+	SolrQuery solrQuery = new SolrQuery();
+	solrQuery.setQuery(query);
+	solrQuery.setFields("query_id");
+	solrQuery.setStart(0);
+
+	QueryResponse response = solr.query(solrQuery);
+	SolrDocumentList results = response.getResults();
+	Set<Long> set = new HashSet<Long>();
+	for(int i = 0; i < results.size(); i++)
+	{
+	    set.add(((ArrayList<Long>) results.get(i).get("query_id")).get(0));
+	    if(set.size() == count)
+		break;
+	}
+
+	ArrayList<String> suggestions = new ArrayList<String>();
+
+	PreparedStatement select = getConnection().prepareStatement("SELECT query_string FROM pw_query WHERE query_id = ?");
+
+	Iterator<Long> it = set.iterator();
+	while(it.hasNext())
+	{
+	    select.setInt(1, it.next().intValue());
+	    ResultSet rs = select.executeQuery();
+	    if(rs.next())
+	    {
+		suggestions.add(rs.getString(1));
+	    }
+	}
+	select.close();
+
 	return suggestions;
     }
 
