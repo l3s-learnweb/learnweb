@@ -4,6 +4,12 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="query" value="#{archiveDemoBean.query}" />
+			<f:event type="preRenderView" listener="#{archiveDemoBean.preRenderView}" />
+		</f:metadata>
+	</ui:define>
 	<ui:param name="pageTitle" value="#{msg.searchTitle}"/>
 	<ui:param name="disableGrowl" value="true"/>
 	
@@ -11,7 +17,7 @@
 		<h:outputStylesheet library="search" name="search.css"  />
 		<style type="text/css">
 			a.suggestWebLink:link,a.suggestWebLink{font-size: 1.3rem; font-family: "Segoe UI",Arial,Helvetica,sans-serif;}
-			a.suggestWebLink:visited{color:blue;}
+			
 			.related_entities
 			{
 				float:left;
@@ -20,6 +26,12 @@
 				width:415px;
 				padding:10px 20px;
 				background-color:#f9f9f9;
+			}
+			.entity_links
+			{
+				list-style-type:none;
+				padding:0;
+				margin:0;
 			}	
 		</style>
 		
@@ -35,13 +47,15 @@
 		<h:panelGroup layout="block" class="related_entities" rendered="${not empty archiveDemoBean.suggestQueries()}">
 			<h3>Related Entities:</h3>
 			<br/>
+			<ul class="entity_links">
 			<ui:repeat var="query" value="${archiveDemoBean.suggestQueries()}">
-				<h:form>
-					<h:commandLink class="suggestWebLink" value="#{query}" action="#{archiveDemoBean.onSearch}">         
-	 					<f:setPropertyActionListener target="#{archiveDemoBean.query}" value="#{query}" />
-					</h:commandLink>
-				</h:form>
+				<li>
+					<h:link value="#{query}" class="suggestWebLink" outcome="search" >
+						<f:param name="query" value="#{query}" />
+					</h:link>
+				</li>
 			</ui:repeat>
+			</ul>
 		</h:panelGroup>
 		
 		

@@ -2,6 +2,9 @@ package de.l3s.learnweb.beans;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -10,7 +13,8 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -20,7 +24,7 @@ import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnwebBeans.ApplicationBean;
 
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class ArchiveDemoBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -8426331759352561208L;
@@ -33,6 +37,24 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     }
 
+    public void preRenderView() throws SQLException, UnsupportedEncodingException
+    {
+	if(isAjaxRequest())
+	{
+	    return;
+	}
+	if(queryString != null)
+	    onSearch();
+	getFacesContext().getExternalContext().setResponseCharacterEncoding("UTF-8");
+
+	// stop caching (back button problem)
+	HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
+
+	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+	response.setDateHeader("Expires", 0); // Proxies.
+    }
+
     public String formatDate(String timestamp) throws ParseException
     {
 	DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT);
@@ -43,10 +65,10 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	return df.format(waybackDf.parse(timestamp));
     }
 
-    public String onSearch() throws SQLException
+    public String onSearch() throws SQLException, UnsupportedEncodingException
     {
 	log.debug("Query: " + queryString);
-
+	queryString = URLDecoder.decode(queryString, "UTF-8");
 	Query q = getLearnweb().getArchiveSearchManager().getQueryByQueryString(queryString);
 
 	if(q == null)
@@ -60,7 +82,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	if(resources.size() == 0)
 	    addMessage(FacesMessage.SEVERITY_ERROR, "No archived URLs found");
 
-	return null;
+	return "/archive/search.xhtml?query=" + URLEncoder.encode(queryString, "UTF-8") + "&amp;faces-redirect=true";
     }
 
     public List<String> completeQuery(String query) throws SQLException
