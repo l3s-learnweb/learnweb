@@ -297,7 +297,7 @@ public class UserBean implements Serializable
 	return "userId: " + user.getId() + " name: " + user.getUsername();
     }
 
-    // -------------------- Front ent ---------------------------
+    // -------------------- Frontend ---------------------------
 
     /**
      * Function to format Date variables in the UI depending on the users locale
@@ -451,6 +451,13 @@ public class UserBean implements Serializable
 		item.setValue(UtilBean.getLocaleMessage("links"));
 		item.setUrl("./group/links.jsf?group_id=" + group.getId());
 		if(isActiveGroup && viewId.endsWith("links.xhtml"))
+		    item.setStyleClass("active");
+		submenu.addElement(item);
+
+		item = new DefaultMenuItem();
+		item.setValue(UtilBean.getLocaleMessage("forum"));
+		item.setUrl("./group/forum.jsf?group_id=" + group.getId());
+		if(isActiveGroup && (viewId.endsWith("forum.xhtml") || viewId.endsWith("forum_post.xhtml")))
 		    item.setStyleClass("active");
 		submenu.addElement(item);
 

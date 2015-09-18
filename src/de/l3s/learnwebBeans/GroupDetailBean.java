@@ -23,7 +23,6 @@ import de.l3s.learnweb.AbstractPaginator;
 import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.GoogleDriveManager;
 import de.l3s.learnweb.Group;
-import de.l3s.learnweb.JForumManager;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Link;
 import de.l3s.learnweb.Link.LinkType;
@@ -327,9 +326,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	documentLinks = group.getDocumentLinks();
 	links = new LinkedList<Link>(group.getLinks());
-	String forumUrl = group.getForumUrl(getUser());
-	if(forumUrl != null)
-	    links.add(0, new Link(Link.LinkType.LINK, getLocaleMessage("forum"), forumUrl));
     }
 
     public List<User> getMembers() throws SQLException
@@ -503,14 +499,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	try
 	{
-	    if(linkId == -1)
-	    {
-		deleteForum();
-	    }
-	    else
-	    {
-		group.deleteLink(linkId);
-	    }
+
+	    group.deleteLink(linkId);
+
 	    addMessage(FacesMessage.SEVERITY_INFO, "link_deleted");
 	    updateLinksList();
 	}
@@ -521,46 +512,47 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
     }
 
-    public void onCreateForum()
-    {
-	if(group.getForumId() != 0) // meanwhile the forum has been created by an other user
-	{
-	    addMessage(FacesMessage.SEVERITY_INFO, "forum_created");
-	    return;
-	}
+    /*
+        public void onCreateForum()
+        {
+    	if(group.getForumId() != 0) // meanwhile the forum has been created by an other user
+    	{
+    	    addMessage(FacesMessage.SEVERITY_INFO, "forum_created");
+    	    return;
+    	}
 
-	JForumManager fm = getLearnweb().getJForumManager();
+    	JForumManager fm = getLearnweb().getJForumManager();
 
-	try
-	{
-	    int forumId = fm.createForum(group.getTitle(), group.getCourse().getForumCategoryId());
+    	try
+    	{
+    	    int forumId = fm.createForum(group.getTitle(), group.getCourse().getForumCategoryId());
 
-	    group.setForumId(forumId);
-	    getLearnweb().getGroupManager().save(group);
+    	    group.setForumId(forumId);
+    	    getLearnweb().getGroupManager().save(group);
 
-	    addMessage(FacesMessage.SEVERITY_INFO, "forum_created");
-	    updateLinksList();
+    	    addMessage(FacesMessage.SEVERITY_INFO, "forum_created");
+    	    updateLinksList();
 
-	    log(Action.group_adding_link, group.getId(), "Forum");
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
+    	    log(Action.group_adding_link, group.getId(), "Forum");
+    	}
+    	catch(Exception e)
+    	{
+    	    e.printStackTrace();
 
-	    addMessage(FacesMessage.SEVERITY_ERROR, "The forum couldn't be created, try again later");
-	}
-    }
+    	    addMessage(FacesMessage.SEVERITY_ERROR, "The forum couldn't be created, try again later");
+    	}
+        }
 
-    private void deleteForum() throws SQLException
-    {
-	group.setForumId(0);
-	getLearnweb().getGroupManager().save(group);
+        private void deleteForum() throws SQLException
+        {
+    	group.setForumId(0);
+    	getLearnweb().getGroupManager().save(group);
 
-	updateLinksList();
+    	updateLinksList();
 
-	log(Action.group_deleting_link, group.getId(), "Forum");
-    }
-
+    	log(Action.group_deleting_link, group.getId(), "Forum");
+        }
+    */
     public boolean isMember() throws SQLException
     {
 	User user = getUser();

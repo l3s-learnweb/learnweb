@@ -100,12 +100,7 @@
 					<h4 class="clear">
 						<h:outputText value="#{msg.links}:" />
 					</h4>
-					<h:outputText value="new Forum:" style="font-weight:bold"/>
-					<div class="grey_border">
-						<a href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
-							<h:outputText value="#{msg.forum}" />
-						</a>
-					</div>
+				
 					<br class="clear"/>
 					<p:dataList var="link" value="${groupDetailBean.links}" styleClass="links_datalist">		
 						<p:column>
@@ -171,13 +166,7 @@
 		<p:panel toggleable="true" header="#{msg.options}" rendered="${groupDetailBean.group.isMember(userBean.user)}" 
 			styleClass="clear links_panel" style="margin-top:20px; margin-right:5px;">
 			<h:form id="link_form">
-				<h:panelGrid columns="3">	
-					<h:outputText value="" rendered="${groupDetailBean.group.forumId == 0}" />
-					<p:commandButton rendered="${groupDetailBean.group.forumId == 0}" immediate="true" value="#{msg.createForum}" 
-						actionListener="#{groupDetailBean.onCreateForum}" update=":message :grouplinks @form" style="margin-bottom:10px;">
-						<f:param name="group_id" value="#{groupDetailBean.group.id}"/>
-					</p:commandButton>
-					<h:outputText value="" rendered="${groupDetailBean.group.forumId == 0}" />					
+				<h:panelGrid columns="3">					
 							
 					<h:outputLabel value="#{msg.type}:" for="link_type" />
 					<h:selectOneMenu value="#{groupDetailBean.newLinkType}" id="link_type">
