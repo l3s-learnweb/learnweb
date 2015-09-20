@@ -47,7 +47,9 @@
 							<h:outputText value="" />				
 							
 							<h:outputText value="#{msg.category}*:" rendered="#{not empty userBean.activeCourse.groupCategories}" />
-							<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{not empty userBean.activeCourse.groupCategories}">	
+							<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{not empty userBean.activeCourse.groupCategories}">
+								<f:selectItem itemValue="0" itemLabel="#{msg.no_category}" />
+								<f:selectItem itemValue="-1" itemLabel="---------------" itemDisabled="true" />	
 								<f:selectItems value="#{userBean.activeCourse.groupCategories}" var="cat" itemValue="#{cat.id}" 
 									itemLabel="#{cat.title} [#{cat.abbreviation}]" />
 							</h:selectOneMenu>
