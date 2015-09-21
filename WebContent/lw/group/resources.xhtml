@@ -29,7 +29,7 @@
 					#{groupDetailBean.group.title}
 				</span>
 				<h:form id="center_header_form">
-					<p:commandButton rendered="#{groupDetailBean.member}" styleClass="resource_button greenbutton resourcetoolbutton" 
+					<p:commandButton rendered="#{groupDetailBean.member and !groupDetailBean.group.restrictionOnlyLeaderCanAddResources}" styleClass="resource_button greenbutton resourcetoolbutton" 
 						value="#{msg.upload_resource}" update=":add_resource_panel" oncomplete="update_header()">
 						<f:setPropertyActionListener target="#{addResourceBean.resourceTargetGroupId}" value="#{groupDetailBean.groupId}"/>
 						<f:setPropertyActionListener target="#{groupDetailBean.newResourceClicked}" value="true"/>
@@ -255,7 +255,7 @@
 											</p:commandLink>
 											
 											<p:commandLink oncomplete="PF('resource_link_dialog').show();" title="#{msg.link_to}" 
-												rendered="#{userBean.isModerator() or true}" styleClass="buttons_link"> <!-- resource_commandlink -->
+												rendered="#{userBean.isModerator() or !groupDetailBean.group.readOnly}" styleClass="buttons_link"> <!-- resource_commandlink -->
 												<h:graphicImage alt="Add" value="/resources/icon/Add_blue.png" title="#{msg.link_to}" /> 
 												<f:setPropertyActionListener value="#{result.resource}" target="#{groupDetailBean.clickedResource}" />
 												<f:param name="group_id" value="#{groupDetailBean.groupId}" /> 

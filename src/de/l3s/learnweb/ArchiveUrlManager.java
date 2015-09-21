@@ -235,7 +235,7 @@ public class ArchiveUrlManager
 
 	//int tagCount = 0;
 	PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM archiveit_collection WHERE collection_id = ?");
-	PreparedStatement pStmtCollections = learnweb.getConnection().prepareStatement("SELECT collection_id, group_id FROM `archiveit_subject` WHERE collection_id = 1068");
+	PreparedStatement pStmtCollections = learnweb.getConnection().prepareStatement("SELECT * FROM `archiveit_subject` JOIN lw_group USING(group_id) WHERE collection_id = 2349 AND deleted != 0");
 	ResultSet rsCollections = pStmtCollections.executeQuery();
 	while(rsCollections.next())
 	{
@@ -392,10 +392,10 @@ public class ArchiveUrlManager
 	if(learnwebResourceId != 0) // the video is already stored and will be updated
 	    resource = learnweb.getResourceManager().getResource(learnwebResourceId);
 
-	resource.setTitle(rs.getString("title"));
-	resource.setDescription(rs.getString("description"));
-	resource.setUrl(rs.getString("url"));
-	resource.setAuthor(rs.getString("creator"));
+	resource.setTitle(rs.getString("title").trim());
+	resource.setDescription(rs.getString("description").trim());
+	resource.setUrl(rs.getString("url").trim());
+	resource.setAuthor(rs.getString("creator").trim());
 
 	String language = rs.getString("language");
 	String[] languages;
@@ -475,7 +475,7 @@ public class ArchiveUrlManager
 	{
 	    int courseId = 891;
 	    User admin = learnweb.getUserManager().getUser(7727);
-	    PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("SELECT * FROM `archiveit_subject` WHERE collection_id in (3682,5748)");
+	    PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("SELECT * FROM `archiveit_subject` WHERE `collectedby` LIKE 'Cornell University Library' AND group_id = 0");
 	    PreparedStatement updateGroupId = learnweb.getConnection().prepareStatement("UPDATE archiveit_subject SET group_id = ? WHERE collection_id = ?");
 	    ResultSet rs = prepStmt.executeQuery();
 	    while(rs.next())
@@ -584,21 +584,7 @@ public class ArchiveUrlManager
 		    log.info("Not in lw_resource collection ID:" + rs.getInt("collection_id") + " Resource ID:" + rs.getInt("resource_id"));
 	    }
 	}*/
-	/*PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("SELECT collection_id,group_id, t2.title, t1.url, t1.description, t2.deleted  FROM `archiveit_subject` t1 JOIN lw_group t2 USING(group_id)");
-	PreparedStatement pStmt2 = Learnweb.getInstance().getConnection().prepareStatement("UPDATE lw_group SET description=? WHERE group_id=?");
-	ResultSet rs = pStmt.executeQuery();
-	while(rs.next())
-	{
-	    int groupId = rs.getInt("group_id");
-	    String description = rs.getString("description").trim();
-	    if(!description.equalsIgnoreCase("no description."))
-		description += "<br/>URL: <a href=\"" + rs.getString("url").trim() + "\" target=\"_blank\">" + rs.getString("url") + "</a>";
-	    else
-		description = "URL: <a href=\"" + rs.getString("url").trim() + "\" target=\"_blank\">" + rs.getString("url") + "</a>";
-	    pStmt2.setString(1, description);
-	    pStmt2.setInt(2, groupId);
-	    pStmt2.executeUpdate();
-	}*/
+
 	/*PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM lw_resource WHERE title = '' AND online_status = 'ONLINE' ORDER BY resource_id DESC");
 	PreparedStatement pStmt2 = Learnweb.getInstance().getConnection().prepareStatement("UPDATE lw_resource SET title=? WHERE resource_id=?");
 	ResultSet rs = pStmt.executeQuery();

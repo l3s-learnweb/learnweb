@@ -25,7 +25,7 @@ public class GroupManager
 {
 
     // if you change this, you have to change the constructor of Group too
-    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.course, g.location, g.language, g.forum_id, g.restriction_only_leader_can_add_resources, g.parent_group_id, g.subgroup_label, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation";
+    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.course, g.location, g.language, g.forum_id, g.restriction_only_leader_can_add_resources, g.parent_group_id, g.subgroup_label, g.read_only, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation";
 
     private Learnweb learnweb;
     private ICache<Group> cache;

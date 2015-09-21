@@ -366,7 +366,7 @@
 								escape="false" />
 					</h:panelGroup>
 							
-							<h:form id="archive_current_form" rendered="#{resourceDetailBean.clickedResource.storageType != 1}">
+							<h:form id="archive_current_form" rendered="#{resourceDetailBean.clickedResource.storageType != 1 and !groupDetailBean.group.readOnly}">
 								<span class="resource_field">
 									#{msg.current_version}: 
 								</span>
@@ -429,14 +429,14 @@
 									         		<f:param name="query" value="#{tag.name}"/>
 							         		</h:outputLink>
 							         		<p:commandButton styleClass="tag_x float-right" action="#{resourceDetailBean.onDeleteTag}" 
-							         			value="x" update=":add_resource_panel" process="@form">
+							         			value="x" update=":add_resource_panel" process="@form" rendered="#{!groupDetailBean.group.readOnly}">
 							         			<f:setPropertyActionListener target="#{resourceDetailBean.selectedTag}" value="#{tag}"/>
 							         		</p:commandButton>
 							         	</li>
 							         </ui:repeat>
 							    </ul>
 							</h:form> 
-							<h:form id="tag_input_form">  
+							<h:form id="tag_input_form" rendered="#{!groupDetailBean.group.readOnly}">  
 							    <p:inputText styleClass="tag_field" value="#{resourceDetailBean.tagName}"/>
 						    	<p:commandButton actionListener="#{resourceDetailBean.addTag}" styleClass="greenbutton clearfix" 
 						    		value="#{msg.addTag}" update=":datagrid :tag_form" process="@form" 
@@ -458,29 +458,32 @@
 						   
 						    <h:form id="comment_form" styleClass="clear" prependId="false">
 						   
-								<div class="resource_field" style="padding-top: 10px">
+								<h:panelGroup layout="block" class="resource_field" style="padding-top: 10px" rendered="#{!groupDetailBean.group.readOnly}">
 									#{msg.comments}
-								</div>								
+								</h:panelGroup>								
 							
 								<br/>
-								
-								<div style="width:100%;padding-left:60px;box-sizing:border-box;">
-									<h:graphicImage id="userpic" url="${learnwebBean.getProfileImage(userBean.user)}" width="50" height="50" 
-										style="position:absolute;left:28px" alt="Profile picture"/> 
-									
-									<p:inputTextarea id="commentfield" style="width:100%;min-height:50px;box-sizing:border-box;" rows="2" 
-										value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}"/>
-									<br/>
-								</div>
-								<p:commandButton id="comment_button" styleClass="greenbutton float-right" value="#{msg.addComment}" 
-									actionListener="#{resourceDetailBean.addComment()}" update=":datagrid :comment_form" 
-									style="display:none; margin-right:0;margin-top: 4px;">
-									<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>	
-								</p:commandButton>
-								
+								<h:panelGroup layout="block" rendered="#{!groupDetailBean.group.readOnly}">
+									<div style="width:100%;padding-left:60px;box-sizing:border-box;">
+										<h:graphicImage id="userpic" url="${learnwebBean.getProfileImage(userBean.user)}" width="50" height="50" 
+											style="position:absolute;left:28px" alt="Profile picture"/> 
+										
+										<p:inputTextarea id="commentfield" style="width:100%;min-height:50px;box-sizing:border-box;" rows="2" 
+											value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}"/>
+										<br/>
+									</div>
+									<p:commandButton id="comment_button" styleClass="greenbutton float-right" value="#{msg.addComment}" 
+										actionListener="#{resourceDetailBean.addComment()}" update=":datagrid :comment_form" 
+										style="display:none; margin-right:0;margin-top: 4px;">
+										<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>	
+									</p:commandButton>
+								</h:panelGroup>
 								<br class="clear" />
 								<h:panelGroup layout="block" rendered="#{not empty resourceDetailBean.clickedResource.comments}" 
 									styleClass="comments">
+									<h:panelGroup layout="block" class="resource_field" style="padding-top: 10px" rendered="#{groupDetailBean.group.readOnly}">
+										#{msg.comments}
+									</h:panelGroup>
 									<ui:repeat var="comment" value="#{resourceDetailBean.clickedResource.comments}">
 										<div class="comment">
 											<h:graphicImage class="userpic" url="#{comment.getUser().image}" width="30" height="30"/>

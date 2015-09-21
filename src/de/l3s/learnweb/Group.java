@@ -48,6 +48,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     // caches
     private String categoryTitle;
     private String categoryAbbreviation;
+    private boolean readOnly = false;
 
     private transient List<Link> documentLinks;
     private transient OwnerList<Resource, User> resources;
@@ -89,6 +90,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	this.categoryId = rs.getInt("group_category_id");
 	this.categoryTitle = rs.getString("category_title");
 	this.categoryAbbreviation = rs.getString("category_abbreviation");
+	this.readOnly = rs.getInt("read_only") == 1;
     }
 
     @Override
@@ -510,6 +512,16 @@ public class Group implements Comparable<Group>, HasId, Serializable
     public void setCategoryAbbreviation(String categoryAbbreviation)
     {
 	this.categoryAbbreviation = categoryAbbreviation;
+    }
+
+    public boolean isReadOnly()
+    {
+	return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly)
+    {
+	this.readOnly = readOnly;
     }
 
 }
