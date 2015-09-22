@@ -482,7 +482,6 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     @Override
     public Resource clone()
     {
-	// TODO copy archive urls?
 
 	Resource r = new Resource();
 	r.setId(-1);
@@ -518,7 +517,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	r.setIdAtService(idAtService);
 	r.setRestricted(restricted);
 	r.setCreationDate(creationDate);
-
+	r.setArchiveUrls(getArchiveUrls());
 	// sets the originalResourceId to the id of the source resource
 	if(originalResourceId == 0)
 	    r.setOriginalResourceId(id);
@@ -1256,11 +1255,18 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	this.idAtService = idAtService;
     }
 
-    public LinkedList<ArchiveUrl> getArchiveUrls() throws SQLException
+    public LinkedList<ArchiveUrl> getArchiveUrls()
     {
 	if(id != -1 && archiveUrls == null)
 	{
-	    archiveUrls = Learnweb.getInstance().getResourceManager().getArchiveUrlsByResourceId(id);
+	    try
+	    {
+		archiveUrls = Learnweb.getInstance().getResourceManager().getArchiveUrlsByResourceId(id);
+	    }
+	    catch(SQLException e)
+	    {
+		log.error("Error while retrieving archive urls for resource: ", e);
+	    }
 	}
 
 	return archiveUrls;
@@ -1375,6 +1381,11 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     public void setMetadata(HashMap<String, String> metadata)
     {
 	this.metadata = metadata;
+    }
+
+    public void setArchiveUrls(LinkedList<ArchiveUrl> archiveUrls)
+    {
+	this.archiveUrls = archiveUrls;
     }
 
 }

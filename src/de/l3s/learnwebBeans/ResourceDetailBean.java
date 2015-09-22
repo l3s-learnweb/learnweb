@@ -138,27 +138,23 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     public void archiveCurrentVersion()
     {
 	boolean addToQueue = true;
-	try
+	if(clickedResource.getArchiveUrls().size() > 0)
 	{
-	    if(clickedResource.getArchiveUrls().size() > 0)
-	    {
-		long timeDifference = (new Date().getTime() - clickedResource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
-		addToQueue = timeDifference > 300;
-	    }
+	    long timeDifference = (new Date().getTime() - clickedResource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
+	    addToQueue = timeDifference > 300;
+	}
 
-	    if(addToQueue)
-	    {
-		getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
-		addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
-	    }
-	    else
-		addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
-	}
-	catch(SQLException e)
+	if(addToQueue)
 	{
-	    log.error("Error while fetching the archive urls from a resource", e);
-	    addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
+	    String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(clickedResource);
+	    if(response.equalsIgnoreCase("archive_success"))
+		addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
+	    else if(response.equalsIgnoreCase("robots_error"))
+		addGrowl(FacesMessage.SEVERITY_INFO, "archiveRobotsMessage");
 	}
+	else
+	    addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
+
     }
 
     public void onDeleteTag()

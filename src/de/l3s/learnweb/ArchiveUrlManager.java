@@ -1,14 +1,10 @@
 package de.l3s.learnweb;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.DataOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.PreparedStatement;
@@ -28,13 +24,13 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.net.ssl.HttpsURLConnection;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 
 import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.solrClient.SolrClient;
@@ -44,8 +40,8 @@ public class ArchiveUrlManager
     private final static Logger log = Logger.getLogger(ArchiveUrlManager.class);
     private final Learnweb learnweb;
 
-    private String archiveTodayURL;
-    private URL serviceUrlObj;
+    private String archiveSaveURL;
+    //private URL serviceUrlObj;
     //private static int collectionId;
     //private Queue<Resource> resources = new ConcurrentLinkedQueue<Resource>();
     //private Map<Integer, Date> trackResources = new ConcurrentHashMap<Integer, Date>();
@@ -54,16 +50,16 @@ public class ArchiveUrlManager
     protected ArchiveUrlManager(Learnweb learnweb)
     {
 	this.learnweb = learnweb;
-	archiveTodayURL = learnweb.getProperties().getProperty("ARCHIVE_TODAY_URL");
+	archiveSaveURL = learnweb.getProperties().getProperty("INTERNET_ARCHIVE_SAVE_URL");
 	//collectionId = Integer.parseInt(learnweb.getProperties().getProperty("COLLECTION_ID"));
-	try
+	/*try
 	{
-	    serviceUrlObj = new URL(archiveTodayURL);
+	    serviceUrlObj = new URL(archiveSaveURL);
 	}
 	catch(MalformedURLException e)
 	{
 	    log.error("The archive today service URL is malformed:", e);
-	}
+	}*/
 
 	executerService = Executors.newCachedThreadPool();//new ThreadPoolExecutor(maxThreads, maxThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(maxThreads * 1000, true), new ThreadPoolExecutor.CallerRunsPolicy());
 
@@ -88,27 +84,20 @@ public class ArchiveUrlManager
 
 	    //resource = learnweb.getResourceManager().getResource(resource.getId());
 
-	    try
+	    if(resource.getArchiveUrls() != null)
 	    {
-		if(resource.getArchiveUrls() != null)
+		int versions = resource.getArchiveUrls().size();
+		if(versions > 0)
 		{
-		    int versions = resource.getArchiveUrls().size();
-		    if(versions > 0)
-		    {
-			long timeDifference = (new Date().getTime() - resource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
-			if(timeDifference < 300)
-			    return "resource was last archived less than 5 minutes ago";
-		    }
+		    long timeDifference = (new Date().getTime() - resource.getArchiveUrls().getLast().getTimestamp().getTime()) / 1000;
+		    if(timeDifference < 300)
+			return "resource was last archived less than 5 minutes ago";
 		}
-	    }
-	    catch(SQLException e1)
-	    {
-		log.error("Error while retrieving archive urls for resource", e1);
 	    }
 
 	    try
 	    {
-		HttpsURLConnection con = (HttpsURLConnection) serviceUrlObj.openConnection();
+		/*HttpsURLConnection con = (HttpsURLConnection) serviceUrlObj.openConnection();
 		con.setRequestMethod("POST");
 		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
 		con.setDoOutput(true);
@@ -143,20 +132,43 @@ public class ArchiveUrlManager
 		Date archiveUrlDate = null;
 
 		if(responseDateGMTString != null)
-		    archiveUrlDate = responseDate.parse(responseDateGMTString);
-		log.info("Archived URL:" + archiveURL + " Response Date:" + responseDateGMTString);
-		PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)");
-		prepStmt.setInt(1, resource.getId());
-		prepStmt.setString(2, archiveURL);
-		prepStmt.setTimestamp(3, new java.sql.Timestamp(archiveUrlDate.getTime()));
-		prepStmt.executeUpdate();
-		prepStmt.close();
+		    archiveUrlDate = responseDate.parse(responseDateGMTString);*/
+		Client client = Client.create();
+		WebResource webResource = client.resource(archiveSaveURL + resource.getUrl());
+		ClientResponse response = webResource.get(ClientResponse.class);
+		if(response.getStatus() == HttpURLConnection.HTTP_OK)
+		{
+		    String archiveURL = null, mementoDateString = null;
+		    if(response.getHeaders().containsKey("Content-Location"))
+			archiveURL = "http://web.archive.org" + response.getHeaders().getFirst("Content-Location");
+		    else
+			log.info("Content Location not found");
+		    if(response.getHeaders().containsKey("X-Archive-Orig-Date"))
+			mementoDateString = response.getHeaders().getFirst("X-Archive-Orig-Date");
+		    else
+			log.info("X-Archive-Orig-Date not found");
+		    Date archiveUrlDate = null;
+		    if(mementoDateString != null)
+			archiveUrlDate = responseDate.parse(mementoDateString);
 
-		resource.addArchiveUrl(null); // TODO 
-	    }
-	    catch(IOException e)
-	    {
-		log.error("HTTPs URL connection to the archive service causing error:", e);
+		    log.info("Archived URL:" + archiveURL + " Memento DateTime:" + mementoDateString);
+		    PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)");
+		    prepStmt.setInt(1, resource.getId());
+		    prepStmt.setString(2, archiveURL);
+		    prepStmt.setTimestamp(3, new java.sql.Timestamp(archiveUrlDate.getTime()));
+		    prepStmt.executeUpdate();
+		    prepStmt.close();
+
+		    resource.addArchiveUrl(null); // TODO 
+		}
+		else if(response.getStatus() == HttpURLConnection.HTTP_FORBIDDEN)
+		{
+		    if(response.getHeaders().containsKey("X-Archive-Wayback-Liveweb-Error"))
+			if(response.getHeaders().getFirst("X-Archive-Wayback-Liveweb-Error").equalsIgnoreCase("RobotAccessControlException: Blocked By Robots"))
+			    return "ROBOTS_ERROR";
+			else
+			    log.info("Cannot save URL because of an error other than robots.txt");
+		}
 	    }
 	    catch(SQLException e)
 	    {
@@ -167,19 +179,22 @@ public class ArchiveUrlManager
 		log.error("Error while trying to parse the response date for archive URL service", e);
 	    }
 
-	    return "Archived url successfully added to resource";
+	    return "ARCHIVE_SUCCESS";
 	}
 
     }
 
-    public void addResourceToArchive(Resource resource)
+    public String addResourceToArchive(Resource resource)
     {
+	String response = "";
 	if(!(resource.getStorageType() == Resource.FILE_RESOURCE))
 	{
 	    Future<String> executorResponse = executerService.submit(new ArchiveIsWorker(resource));
+
 	    try
 	    {
-		log.info(executorResponse.get());
+		response = executorResponse.get();
+		log.info(response);
 	    }
 	    catch(InterruptedException e)
 	    {
@@ -191,6 +206,7 @@ public class ArchiveUrlManager
 	    }
 	    //resources.add(resource);
 	}
+	return response;
     }
 
     class ProcessWebsiteWorker implements Callable<String>
@@ -532,7 +548,7 @@ public class ArchiveUrlManager
     public static void main(String[] args) throws SQLException, ParseException, IOException
     {
 	ArchiveUrlManager archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
-	archiveUrlManager.saveArchiveItResources();
+	archiveUrlManager.addResourceToArchive(Learnweb.getInstance().getResourceManager().getResource(110605));
 	//archiveUrlManager.createArchiveItGroups();
 	/*MementoClient mClient = Learnweb.getInstance().getMementoClient();
 	PreparedStatement pStmtCollections = Learnweb.getInstance().getConnection().prepareStatement("SELECT collection_id, group_id FROM archiveit_subject WHERE group_id in (1095,1096,1097,1098)");

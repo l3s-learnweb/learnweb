@@ -444,6 +444,8 @@ public class ResourceManager
 	resource.setOwner(user);
 
 	saveResource(resource);
+	//To copy archive versions of a resource if it exists
+	saveArchiveUrlsByResourceId(resource.getId(), resource.getArchiveUrls());
 
 	resource = cache.put(resource);
 
