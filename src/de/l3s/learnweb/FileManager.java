@@ -118,40 +118,40 @@ public class FileManager
     public static void main(String[] args) throws SQLException
     {
     // delete files which are not stored on the server
-
+    
     FileManager fm = Learnweb.getInstance().getFileManager();
     List<File> files = fm.getAllFiles();
-
+    
     HashSet<Integer> set = new HashSet<Integer>();
-
+    
     for(File file : files)
     {
         if(file.actualFile == null)
         {
     	System.out.println("file fehlt resource: " + file.getResourceId());
-
+    
     	set.add(file.getResourceId());
-
+    
     	//fm.delete(file);
         }
     }
-
+    
     Iterator<Integer> iter = set.iterator();
-
+    
     // delete the resources 
     ResourceManager rm = Learnweb.getInstance().getResourceManager();
-
+    
     while(iter.hasNext())
     {
         Integer id = iter.next();
-
+    
         if(id == 0)
     	continue;
-
+    
         rm.deleteResourcePermanent(id);
-
+    
     }
-
+    
     System.out.println("deleted " + set.size());
     }
     */
@@ -270,7 +270,7 @@ public class FileManager
 
 	if(!file.getActualFile().exists())
 	{
-	    log.error("Can't find file: " + file.getActualFile().getAbsolutePath(), new Exception());
+	    log.error("Can't find file: " + file.getActualFile().getAbsolutePath());
 
 	    file.setExists(false);
 
@@ -350,9 +350,9 @@ public class FileManager
 	for(final java.io.File file : fm.folder.listFiles())
 	{
 	    //System.out.println(file.getName());
-
+	
 	    String[] splits = file.getName().split("\\.");
-
+	
 	    if(splits[1] == "dat")
 	    {
 		int id = Integer.parseInt(splits[0]);
@@ -360,7 +360,7 @@ public class FileManager
 		{
 		    System.err.println("abandoned");
 		}
-
+	
 	    }
 	}
 	*/
