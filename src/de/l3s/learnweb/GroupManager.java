@@ -5,10 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
@@ -25,7 +23,7 @@ public class GroupManager
 {
 
     // if you change this, you have to change the constructor of Group too
-    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.course, g.location, g.language, g.forum_id, g.restriction_only_leader_can_add_resources, g.parent_group_id, g.subgroup_label, g.read_only, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation";
+    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.course, g.location, g.language, g.restriction_only_leader_can_add_resources, g.read_only, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation";
 
     private Learnweb learnweb;
     private ICache<Group> cache;
@@ -61,130 +59,6 @@ public class GroupManager
 	select.close();
 
 	return groups;
-    }
-
-    public static String bbcode(String text)
-    {
-	String html = text;
-
-	Map<String, String> bbMap = new HashMap<String, String>();
-
-	bbMap.put("(\r\n|\r|\n|\n\r)", "<br/>");
-	bbMap.put("\\[b\\](.+?)\\[/b\\]", "<strong>$1</strong>");
-	bbMap.put("\\[i\\](.+?)\\[/i\\]", "<span style='font-style:italic;'>$1</span>");
-	bbMap.put("\\[u\\](.+?)\\[/u\\]", "<span style='text-decoration:underline;'>$1</span>");
-	bbMap.put("\\[h1\\](.+?)\\[/h1\\]", "<h1>$1</h1>");
-	bbMap.put("\\[h2\\](.+?)\\[/h2\\]", "<h2>$1</h2>");
-	bbMap.put("\\[h3\\](.+?)\\[/h3\\]", "<h3>$1</h3>");
-	bbMap.put("\\[h4\\](.+?)\\[/h4\\]", "<h4>$1</h4>");
-	bbMap.put("\\[h5\\](.+?)\\[/h5\\]", "<h5>$1</h5>");
-	bbMap.put("\\[h6\\](.+?)\\[/h6\\]", "<h6>$1</h6>");
-	bbMap.put("\\[quote\\](.+?)\\[/quote\\]", "<blockquote>$1</blockquote>");
-	bbMap.put("\\[p\\](.+?)\\[/p\\]", "<p>$1</p>");
-	bbMap.put("\\[p=(.+?),(.+?)\\](.+?)\\[/p\\]", "<p style='text-indent:$1px;line-height:$2%;'>$3</p>");
-	bbMap.put("\\[center\\](.+?)\\[/center\\]", "<div align='center'>$1");
-	bbMap.put("\\[align=(.+?)\\](.+?)\\[/align\\]", "<div align='$1'>$2");
-	bbMap.put("\\[color=(.+?)\\](.+?)\\[/color\\]", "<span style='color:$1;'>$2</span>");
-	bbMap.put("\\[size=(.+?)\\](.+?)\\[/size\\]", "<span style='font-size:$1;'>$2</span>");
-	bbMap.put("\\[img\\](.+?)\\[/img\\]", "<img src='$1' />");
-	bbMap.put("\\[img=(.+?),(.+?)\\](.+?)\\[/img\\]", "<img width='$1' height='$2' src='$3' />");
-	bbMap.put("\\[email\\](.+?)\\[/email\\]", "<a href='mailto:$1'>$1</a>");
-	bbMap.put("\\[email=(.+?)\\](.+?)\\[/email\\]", "<a href='mailto:$1'>$2</a>");
-	bbMap.put("\\[url\\](.+?)\\[/url\\]", "<a href='$1'>$1</a>");
-	bbMap.put("\\[url=(.+?)\\](.+?)\\[/url\\]", "<a href='$1'>$2</a>");
-	bbMap.put("\\[youtube\\](.+?)\\[/youtube\\]", "<object width='640' height='380'><param name='movie' value='http://www.youtube.com/v/$1'></param><embed src='http://www.youtube.com/v/$1' type='application/x-shockwave-flash' width='640' height='380'></embed></object>");
-	bbMap.put("\\[video\\](.+?)\\[/video\\]", "<video src='$1' />");
-
-	for(Map.Entry entry : bbMap.entrySet())
-	{
-	    html = html.replaceAll(entry.getKey().toString(), entry.getValue().toString());
-	}
-
-	return html;
-    }
-
-    public static void main(String[] args) throws SQLException
-    {
-
-	Learnweb lw = Learnweb.getInstance();
-	JForumManager jfm = lw.getJForumManager();
-	ForumManager fm = lw.getForumManager();
-	GroupManager gm = lw.getGroupManager();
-	UserManager um = lw.getUserManager();
-
-	Statement stmt = lw.getConnection().createStatement();
-	stmt.execute("TRUNCATE TABLE `lw_forum_topic` ");
-	stmt.execute("TRUNCATE TABLE `lw_forum_post` ");
-
-	PreparedStatement jforumGetTopics = jfm.getConnection().prepareStatement("select * from jforum_topics t join jforum_users using(user_id) join jforum_posts on topic_last_post_id = post_id WHERE t.`forum_id` = ?");
-
-	List<Group> groups = gm.getGroups("SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE forum_id != ?", 0);
-	for(Group group : groups)
-	{
-	    jforumGetTopics.setInt(1, group.getForumId());
-	    ResultSet rs = jforumGetTopics.executeQuery();
-	    while(rs.next())
-	    {
-		ForumTopic topic = new ForumTopic();
-		topic.setId(rs.getInt("topic_id"));
-		topic.setGroupId(group.getId());
-		topic.setTitle(rs.getString("topic_title"));
-		int user = um.getUserIdByUsername(rs.getString("username"));
-		if(user < 0)
-		    user = 0;
-		topic.setUserId(user);
-		topic.setDate(new Date(rs.getTimestamp("topic_time").getTime()));
-		topic.setViews(rs.getInt("topic_views"));
-		//topic.setReplies(rs.getInt("topic_replies"));
-		//topic.setLastPostId(rs.getInt("topic_last_post_id"));
-		topic.setLastPostDate(new Date(rs.getTimestamp("post_time").getTime()));
-
-		System.out.println(topic);
-		fm.save(topic);
-	    }
-
-	    System.out.print(group.getTitle() + " - " + group.getForumId() + " - ");
-	}
-
-	PreparedStatement jforumGetPosts = jfm.getConnection().prepareStatement("select * from jforum_posts join jforum_users using(user_id) join jforum_posts_text using(post_id)");
-
-	ResultSet rs = jforumGetPosts.executeQuery();
-	while(rs.next())
-	{
-	    ForumPost post = new ForumPost();
-	    // post.setId(rs.getInt("post_id"));
-	    post.setTopicId(rs.getInt("topic_id"));
-	    post.setDate(new Date(rs.getTimestamp("post_time").getTime()));
-
-	    int user = um.getUserIdByUsername(rs.getString("username"));
-	    if(user < 0)
-		user = 0;
-	    post.setUserId(user);
-
-	    String text = bbcode(rs.getString("post_text"));
-
-	    if(text.contains("http:"))
-	    {
-		post.setText(text);
-
-		text = text.toLowerCase();
-		if(text.contains("arschfick") || text.contains("fuck") || text.contains("buy") || text.contains("nudists") || text.contains("so hot") || text.contains("nude") || text.contains("lolita") || text.contains("models") || text.contains("naked") || text.contains("porn")
-			|| text.contains("sex") || text.contains("sponsors") || text.contains("coupon") || text.contains("/user/view") || text.contains("cialis") || text.contains("prescription") || text.contains("pills") || text.contains("i'm busy at the moment")
-			|| text.contains("wolkrmfbsoxfc") || text.contains("iopskmfbsoxfc") || text.contains("qyqosmfbsoxfc") || text.contains("hnuqjmfbsoxfc") || text.contains("hoes") || text.contains("funny pictures") || text.contains("paid")
-			|| text.contains("i like watching")
-
-		)
-		{
-		    System.out.println("skipped");
-		    continue;
-		}
-	    }
-	    post.setText(text);
-
-	    //System.out.println(post);
-	    fm.save(post);
-	}
-
     }
 
     /**
@@ -282,7 +156,7 @@ public class GroupManager
      */
     public List<Group> getJoinAbleGroups(User user) throws SQLException
     {
-	StringBuilder sb = new StringBuilder(",-1");
+	StringBuilder sb = new StringBuilder(",0");
 	for(Course course : user.getCourses())
 	    sb.append("," + course.getId());
 	String coursesIn = sb.substring(1);
@@ -292,7 +166,7 @@ public class GroupManager
 	    sb.append("," + group.getId());
 	String groupsIn = sb.substring(1);
 
-	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.group_id NOT IN(" + groupsIn + ") AND g.course_id IN(" + coursesIn + ") AND g.deleted = 0 ORDER BY title";
+	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.course_id IN(" + coursesIn + ") AND g.deleted = 0 AND g.group_id NOT IN(" + groupsIn + ") ORDER BY title";
 	return getGroups(query);
     }
 
@@ -335,7 +209,8 @@ public class GroupManager
     public synchronized Group save(Group group) throws SQLException
     {
 	PreparedStatement replace = learnweb.getConnection().prepareStatement(
-		"REPLACE INTO `lw_group` (group_id, `title` ,`description` ,`leader_id` , university, course, location, language, course_id, parent_group_id, subgroup_label, forum_id, group_category_id) VALUES (?, ?,?, ?, ?, ?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+		"REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, university, course, location, language, course_id, group_category_id, restriction_only_leader_can_add_resources, read_only) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+		Statement.RETURN_GENERATED_KEYS);
 
 	if(group.getId() < 0) // the Group is not yet stored at the database 
 	{
@@ -352,16 +227,15 @@ public class GroupManager
 	    replace.setInt(1, group.getId());
 	replace.setString(2, group.getTitle());
 	replace.setString(3, group.getDescription());
-	replace.setInt(4, group.getLeaderUserId()); // leader id		
+	replace.setInt(4, group.getLeaderUserId());
 	replace.setString(5, group.getUniversity());
 	replace.setString(6, group.getMetaInfo1());
 	replace.setString(7, group.getLocation());
 	replace.setString(8, group.getLanguage());
 	replace.setInt(9, group.getCourseId());
-	replace.setInt(10, group.getParentGroupId());
-	replace.setString(11, group.getSubgroupsLabel());
-	replace.setInt(12, group.getForumId());
-	replace.setInt(13, group.getCategoryId());
+	replace.setInt(10, group.getCategoryId());
+	replace.setInt(11, group.isRestrictionOnlyLeaderCanAddResources() ? 1 : 0);
+	replace.setInt(12, group.isReadOnly() ? 1 : 0);
 	replace.executeUpdate();
 
 	if(group.getId() < 0) // get the assigned id
@@ -372,7 +246,7 @@ public class GroupManager
 	    group.setId(rs.getInt(1));
 	    group = cache.put(group.getId(), group); // add the new Group to the cache
 	}
-	else if(cache.get(group.getId()) != null)//remove old group and add the new one
+	else if(cache.get(group.getId()) != null) //remove old group and add the new one
 	{
 	    cache.remove(group.getId());
 	    cache.put(group);

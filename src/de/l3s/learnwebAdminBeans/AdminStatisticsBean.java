@@ -20,8 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.GroupManager;
-import de.l3s.learnweb.JForumManager;
-import de.l3s.learnweb.JForumManager.ForumStatistic;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.OwnerList;
 import de.l3s.learnweb.Resource;
@@ -104,8 +102,6 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 
 	    ResultSet rs = Learnweb.getInstance().getConnection().createStatement().executeQuery(query);
 
-	    JForumManager forumManager = Learnweb.getInstance().getJForumManager();
-
 	    while(rs.next())
 	    {
 		Map<String, String> result = new HashMap<String, String>();
@@ -119,30 +115,21 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 		result.put("no_of_archived_versions", rs.getString("no_of_archived_versions"));
 		result.put("no_of_archived_resources", rs.getString("no_of_archived_resources"));
 
+		/*
 		ForumStatistic forumStatistics = forumManager.getForumStatistics(rs.getInt("forum_id"));
-
+		
 		if(forumStatistics != null)
 		{
 		    result.put("forum_topics", Integer.toString(forumStatistics.getTopics()));
 		    result.put("forum_posts", Integer.toString(forumStatistics.getPosts()));
-		}
-		else
-		{
-		    result.put("forum_topics", "-");
-		    result.put("forum_posts", "-");
-		}
+		}*/
+
+		result.put("forum_topics", "-");
+		result.put("forum_posts", "-");
 
 		groupStatistics.add(result);
 
 	    }
-	    /*
-	     * - Group:  English Language Lab 3
-	        - resources uploaded in this group from the desktop  (in alphabetical order)
-	            - resource A - Title, source, description, type, comments, tags
-	            - resource B - Title, source, description, type, comments, tags
-	            - resource C - -----
-	        - resources uploaded from the Web (in alphabetical order)
-	     */
 
 	    if(showDetails)
 	    {
@@ -179,7 +166,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 						{
 						    sb.append("; no comments");
 						}
-
+			
 						if(resource.getDescription().length() == 0)
 						{
 						    sb.append("; no description");

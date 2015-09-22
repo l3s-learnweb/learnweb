@@ -80,13 +80,6 @@
 				<p:commandButton actionListener="#{adminCourseBean.save}" value="#{msg.save}" update=":growl">
 					<f:param name="course_id" value="#{adminCourseBean.courseId}" />
 				</p:commandButton>
-				
-				<br/><br/>
-				
-				<p:commandButton actionListener="#{adminCourseBean.onEnableForum}" value="Enable Forum" update=":growl :message" 
-					rendered="#{adminCourseBean.course.forumCategoryId == 0}">
-					<f:param name="course_id" value="#{adminCourseBean.courseId}" />
-				</p:commandButton>
 			</h:form>
 		</p:panel>
 	</ui:define>

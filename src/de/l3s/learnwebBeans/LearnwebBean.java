@@ -41,6 +41,7 @@ public class LearnwebBean implements Serializable
     {
 	// initialize stuff which is not required by console tasks
 	learnweb.initLearnwebServer();
+
     }
 
     /**

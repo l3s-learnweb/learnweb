@@ -7,7 +7,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.LogEntry.Action;
@@ -20,9 +20,9 @@ public class LoginBean extends ApplicationBean implements Serializable
 {
 
     private static final long serialVersionUID = 7980062591522267111L;
-    @NotBlank
+    @NotEmpty
     private String username;
-    @NotBlank
+    @NotEmpty
     private String password;
 
     public String getUsername()

@@ -215,11 +215,11 @@ public class UserBean implements Serializable
 	if(localeCode.equals("de"))
 	    locale = Locale.GERMANY;
 	else if(localeCode.equals("en"))
-	    locale = new Locale("en", "gb");
+	    locale = new Locale("en", "GB");
 	else if(localeCode.equals("it"))
 	    locale = Locale.ITALY;
 	else if(localeCode.equals("pt"))
-	    locale = new Locale("pt", "br");
+	    locale = new Locale("pt", "BR");
 	else
 	{
 	    locale = Locale.ENGLISH;

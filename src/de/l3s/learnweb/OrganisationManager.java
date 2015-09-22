@@ -98,7 +98,6 @@ public class OrganisationManager
 	    Group group = new Group();
 	    group.setTitle(organisation.getTitle());
 	    group.setDescription("Organisation");
-	    group.setSubgroupLabel("Courses");
 	    learnweb.getGroupManager().save(group);
 	    learnweb.getGroupManager().deleteGroup(group.getId());
 	    organisation.setId(group.getId());
@@ -137,11 +136,11 @@ public class OrganisationManager
      {
     Learnweb lw = Learnweb.getInstance();
     OrganisationManagerInterface om = lw.getOrganisationManager();
-
+    
     PreparedStatement update1 = lw.getConnection().prepareStatement("update lw_course set organisation_id = ? where organisation_id = ?");
     PreparedStatement update2 = lw.getConnection().prepareStatement("update lw_user set organisation_id = ? where organisation_id = ?");
     PreparedStatement delete = lw.getConnection().prepareStatement("DELETE FROM `lw_organisation` WHERE organisation_id = ?");
-
+    
     System.out.println("Edit organisation ids");
     for(Organisation o : om.getOrganisationsAll())
     {
@@ -150,25 +149,25 @@ public class OrganisationManager
         om.save(o);
         int newId = o.getId();
         System.out.println("old id: " + oldId + " - new id: " + newId);
-
+    
         update1.setInt(1, newId);
         update1.setInt(2, oldId);
         update1.executeUpdate();
-
+    
         update2.setInt(1, newId);
         update2.setInt(2, oldId);
         update2.executeUpdate();
-
+    
         delete.setInt(1, oldId);
         delete.executeUpdate();
     }
     update1.close();
     update2.close();
-
+    
     update1 = lw.getConnection().prepareStatement("update lw_user_course set course_id = ? where course_id = ?");
     update2 = lw.getConnection().prepareStatement("update lw_group set course_id = ? where course_id = ?");
     delete = lw.getConnection().prepareStatement("DELETE FROM `lw_course` WHERE course_id = ?");
-
+    
     CourseManager cm = lw.getCourseManager();
     System.out.println("Edit course ids");
     for(Course c : cm.getCoursesAll())
@@ -178,15 +177,15 @@ public class OrganisationManager
         cm.save(c);
         int newId = c.getId();
         System.out.println("old id: " + oldId + " - new id: " + newId);
-
+    
         update1.setInt(1, newId);
         update1.setInt(2, oldId);
         update1.executeUpdate();
-
+    
         update2.setInt(1, newId);
         update2.setInt(2, oldId);
         update2.executeUpdate();
-
+    
         delete.setInt(1, oldId);
         delete.executeUpdate();
     }

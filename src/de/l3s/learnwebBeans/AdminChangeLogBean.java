@@ -6,51 +6,45 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 
-import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 @ManagedBean
 
+public class AdminChangeLogBean extends ApplicationBean
+{
 
-public class AdminChangeLogBean  extends ApplicationBean{
-	
-	@NotBlank
-	private String message;
-	private List<String> changelogmessages;
-	
-	public void update() throws SQLException
-	{
-		java.sql.PreparedStatement pstmt = getLearnweb().getConnectionStatic().prepareStatement("INSERT INTO admin_change_log (message)	VALUES (?)");
-		pstmt.setString(1,message);
-	    pstmt.executeUpdate();
-	    /*getLearnweb().setAdminMessage(message);*/
-		
-	}
-	
-	
-	
+    @NotEmpty
+    private String message;
+    private List<String> changelogmessages;
 
-	public String getMessage() {
-		return message;
-	}
+    public void update() throws SQLException
+    {
+	java.sql.PreparedStatement pstmt = getLearnweb().getConnection().prepareStatement("INSERT INTO admin_change_log (message)	VALUES (?)");
+	pstmt.setString(1, message);
+	pstmt.executeUpdate();
+	/*getLearnweb().setAdminMessage(message);*/
 
-	public void setMessage(String message) {
-		this.message = message;
-	}
+    }
 
+    public String getMessage()
+    {
+	return message;
+    }
 
+    public void setMessage(String message)
+    {
+	this.message = message;
+    }
 
+    public void setChangelogmessages(LinkedList<String> changelogmessages)
+    {
+	this.changelogmessages = changelogmessages;
+    }
 
-	public void setChangelogmessages(LinkedList<String> changelogmessages) {
-		this.changelogmessages = changelogmessages;
-	}
-
-
-
-
-	public List<String> getChangelogmessages() throws SQLException {
-		changelogmessages=getLearnweb().getChangeLog();
-		return changelogmessages;
-	}
-	
+    public List<String> getChangelogmessages() throws SQLException
+    {
+	changelogmessages = getLearnweb().getChangeLog();
+	return changelogmessages;
+    }
 
 }

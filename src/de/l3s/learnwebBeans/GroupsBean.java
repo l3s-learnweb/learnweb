@@ -95,10 +95,6 @@ public class GroupsBean extends ApplicationBean implements Serializable
 	myGroups = getUser().getGroups();
 	joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
 
-	Group parentGroup = selectedGroup.getParentGroup();
-	if(null != parentGroup)
-	    parentGroup.clearCaches();
-
 	addGrowl(FacesMessage.SEVERITY_INFO, "group_deleted", selectedGroup.getTitle());
     }
 

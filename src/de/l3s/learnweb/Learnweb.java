@@ -44,7 +44,6 @@ public class Learnweb
 
     // Manager (Data Access Objects):
 
-    private final JForumManager jforumManager;
     private final ForumManager forumManager;
     private final ResourceManager resourceManager;
     private final PresentationManager presentationManager;
@@ -154,7 +153,6 @@ public class Learnweb
 
 	resourceManager = new ResourceManager(this);
 	presentationManager = new PresentationManager(this);
-	jforumManager = new JForumManager(this);
 	forumManager = new ForumManager(this);
 	organisationManager = new OrganisationManager(this);
 	courseManager = new CourseManager(this);
@@ -204,11 +202,6 @@ public class Learnweb
     public ResourceManager getResourceManager()
     {
 	return resourceManager;
-    }
-
-    public JForumManager getJForumManager()
-    {
-	return jforumManager;
     }
 
     public OrganisationManager getOrganisationManager()

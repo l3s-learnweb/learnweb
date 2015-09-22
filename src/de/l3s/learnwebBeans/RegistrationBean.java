@@ -13,7 +13,6 @@ import javax.faces.validator.ValidatorException;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.learnweb.Course;
@@ -28,14 +27,13 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 4567220515408089722L;
 
-    @NotBlank
     @Size(min = 2, max = 50)
     private String username;
 
     @NotEmpty
     private String password;
 
-    @NotBlank
+    @NotEmpty
     private String confirmPassword;
 
     @Email

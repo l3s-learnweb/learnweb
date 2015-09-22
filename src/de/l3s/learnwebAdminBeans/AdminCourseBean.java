@@ -18,7 +18,6 @@ import org.primefaces.model.UploadedFile;
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Course.Option;
 import de.l3s.learnweb.File;
-import de.l3s.learnweb.JForumManager;
 import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.ResourcePreviewMaker;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
@@ -116,29 +115,6 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
 	{
 	    e.printStackTrace();
 	    addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	}
-    }
-
-    public void onEnableForum()
-    {
-	JForumManager fm = getLearnweb().getJForumManager();
-
-	try
-	{
-	    int categoryId = fm.createCategory(course.getTitle());
-	    int forumId = fm.createForum(course.getTitle(), categoryId);
-
-	    course.setForumCategoryId(categoryId);
-	    course.setForumId(forumId);
-	    getLearnweb().getCourseManager().save(course);
-
-	    addGrowl(FacesMessage.SEVERITY_INFO, "forum_created");
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "The forum couldn't be created, try again later");
 	}
     }
 

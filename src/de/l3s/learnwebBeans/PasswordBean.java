@@ -117,7 +117,6 @@ public class PasswordBean extends ApplicationBean implements Serializable
 	message.setFrom(new InternetAddress("interweb9@googlemail.com"));
 
 	message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(user.getEmail(), false));
-	message.setRecipients(Message.RecipientType.BCC, InternetAddress.parse("kemkes@l3s.de", false));
 
 	message.setSubject("Retrieve learnweb password");
 

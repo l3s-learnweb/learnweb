@@ -28,6 +28,7 @@ public class CourseManager
      */
     protected final static int FIELDS = (int) Math.ceil(Option.values().length / 64.0);
     private final static String COLUMNS;
+
     static
     {
 	StringBuilder qry = new StringBuilder(
@@ -36,6 +37,7 @@ public class CourseManager
 	    qry.append(", options_field").append(i);
 	COLUMNS = qry.toString();
     }
+
     private Learnweb learnweb;
     private Map<Integer, Course> cache;
 
@@ -149,34 +151,13 @@ public class CourseManager
 	    Group group = new Group();
 	    group.setTitle(course.getTitle());
 	    group.setDescription("Course");
-	    group.setSubgroupLabel("Groups");
+	    // group.setSubgroupLabel("Groups");
 
 	    learnweb.getGroupManager().save(group);
 	    learnweb.getGroupManager().deleteGroup(group.getId());
 	    course.setId(group.getId());
 
 	    cache.put(course.getId(), course);
-
-	    if(course.getForumCategoryId() < 1 && course.getForumId() < 1)
-	    {
-		// try to set up the forum:
-		JForumManager fm = learnweb.getJForumManager();
-		try
-		{
-		    int categoryId = fm.createCategory(course.getTitle());
-		    int forumId = fm.createForum(course.getTitle(), categoryId);
-
-		    course.setForumCategoryId(categoryId);
-		    course.setForumId(forumId);
-		}
-		catch(Exception e)
-		{
-		    e.printStackTrace();
-
-		    course.setOption(Option.Course_Forum_enabled, false);
-		    course.setOption(Option.Groups_Forum_enabled, false);
-		}
-	    }
 	}
 
 	PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_course` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
@@ -259,7 +240,7 @@ public class CourseManager
     {
     Learnweb lw = Learnweb.getInstance();
     CourseManager cm = lw.getCourseManager();
-
+    
     for(Course o : cm.getCoursesAll())
     {
      

@@ -17,7 +17,6 @@ import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
 import org.hibernate.validator.constraints.Email;
-import org.hibernate.validator.constraints.NotBlank;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.primefaces.event.FileUploadEvent;
 
@@ -48,7 +47,6 @@ public class ProfileBean extends ApplicationBean implements Serializable
     @Size(min = 0, max = 50)
     private String interest;
 
-    @NotBlank
     @Size(min = 2, max = 50)
     private String username;
 
@@ -64,10 +62,10 @@ public class ProfileBean extends ApplicationBean implements Serializable
     @NotEmpty
     private String password;
 
-    @NotBlank
+    @NotEmpty
     private String confirmPassword;
 
-    @NotBlank
+    @NotEmpty
     private String currentPassword;
 
     private List<LogEntry> logMessages;

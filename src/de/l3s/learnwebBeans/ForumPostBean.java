@@ -2,6 +2,7 @@ package de.l3s.learnwebBeans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -9,21 +10,22 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ComponentSystemEvent;
-
-import org.apache.log4j.Logger;
+import javax.faces.model.SelectItem;
+import javax.faces.model.SelectItemGroup;
 
 import de.l3s.learnweb.ForumManager;
 import de.l3s.learnweb.ForumPost;
 import de.l3s.learnweb.ForumTopic;
 import de.l3s.learnweb.Group;
+import de.l3s.learnweb.User;
+import de.l3s.learnweb.beans.UtilBean;
 
 @ManagedBean
 @ViewScoped
 public class ForumPostBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6077135964610986190L;
-
-    private final static Logger log = Logger.getLogger(ForumPostBean.class);
+    // private static final Logger log = Logger.getLogger(ForumPostBean.class);
 
     private int topicId;
     private List<ForumPost> posts;
@@ -66,7 +68,49 @@ public class ForumPostBean extends ApplicationBean implements Serializable
 
 	newPost = new ForumPost();
 
-	return null;//"forum_post.jsf?faces-redirect=true&topic_id=" + topicId + "#lastPost";
+	return null;
+    }
+
+    public boolean isMember() throws SQLException
+    {
+	User user = getUser();
+
+	if(null == user)
+	    return false;
+
+	if(null == group)
+	    return false;
+
+	return group.isMember(user);
+    }
+
+    public List<SelectItem> getCategories()
+    {
+	return getCategoriesByCourse(group.getCourseId());
+    }
+
+    protected static List<SelectItem> getCategoriesByCourse(int courseId)
+    {
+	SelectItemGroup g1 = new SelectItemGroup(UtilBean.getLocaleMessage("Forum.cell.category.1"));
+	g1.setSelectItems(new SelectItem[] { new SelectItem("Forum.cell.category.1a", UtilBean.getLocaleMessage("Forum.cell.category.1a")), new SelectItem("Forum.cell.category.1b", UtilBean.getLocaleMessage("Forum.cell.category.1b")),
+		new SelectItem("Forum.cell.category.1c", UtilBean.getLocaleMessage("Forum.cell.category.1c")), new SelectItem("Forum.cell.category.1d", UtilBean.getLocaleMessage("Forum.cell.category.1d")) });
+
+	SelectItemGroup g2 = new SelectItemGroup(UtilBean.getLocaleMessage("Forum.cell.category.2"));
+	g2.setSelectItems(new SelectItem[] { new SelectItem("Forum.cell.category.2a", UtilBean.getLocaleMessage("Forum.cell.category.2a")), new SelectItem("Forum.cell.category.2b", UtilBean.getLocaleMessage("Forum.cell.category.2b")),
+		new SelectItem("Forum.cell.category.2c", UtilBean.getLocaleMessage("Forum.cell.category.2c")), new SelectItem("Forum.cell.category.2d", UtilBean.getLocaleMessage("Forum.cell.category.2d")),
+		new SelectItem("Forum.cell.category.2e", UtilBean.getLocaleMessage("Forum.cell.category.2e")), new SelectItem("Forum.cell.category.2f", UtilBean.getLocaleMessage("Forum.cell.category.2f")),
+		new SelectItem("Forum.cell.category.2g", UtilBean.getLocaleMessage("Forum.cell.category.2g")), new SelectItem("Forum.cell.category.2h", UtilBean.getLocaleMessage("Forum.cell.category.2h")) });
+
+	SelectItemGroup g3 = new SelectItemGroup(UtilBean.getLocaleMessage("Forum.cell.category.3"));
+	g3.setSelectItems(new SelectItem[] { new SelectItem("Forum.cell.category.3a", UtilBean.getLocaleMessage("Forum.cell.category.3a")), new SelectItem("Forum.cell.category.3b", UtilBean.getLocaleMessage("Forum.cell.category.3b")),
+		new SelectItem("Forum.cell.category.3c", UtilBean.getLocaleMessage("Forum.cell.category.3c")) });
+
+	ArrayList<SelectItem> categories = new ArrayList<SelectItem>();
+	categories.add(g1);
+	categories.add(g2);
+	categories.add(g3);
+
+	return categories;
     }
 
     public int getTopicId()

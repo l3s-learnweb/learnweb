@@ -92,8 +92,6 @@ public class UtilBean implements Serializable
     public static String getLocaleMessage(String msgKey, Object... args)
     {
 	ResourceBundle bundle = ResourceBundle.getBundle("de.l3s.learnweb.lang.messages", UtilBean.getUserBean().getLocale());
-	if(msgKey.startsWith("add"))
-	    System.out.println(args);
 
 	String msg;
 	try

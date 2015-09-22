@@ -117,11 +117,6 @@ public class Course implements Serializable, Comparable<Course>
 	return Learnweb.getInstance().getGroupManager().getGroupsByUserIdFilteredByCourseId(user.getId(), id);
     }
 
-    public String getForumUrl(User user) throws SQLException
-    {
-	return Learnweb.getInstance().getJForumManager().getForumUrl(user, forumId);
-    }
-
     /**
      * A negative id indicates, that this object is not stored at the database
      * 

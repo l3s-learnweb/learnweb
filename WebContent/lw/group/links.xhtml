@@ -94,6 +94,9 @@
 		
 		<h:panelGroup id="grouplinks" layout="block" style="padding-right:5px;">		
 
+			<ui:fragment rendered="${empty groupDetailBean.links or empty groupDetailBean.documentLinks}">
+			No links have been added.
+			</ui:fragment>	
 					
 			<h:panelGroup rendered="${not empty groupDetailBean.links}">	
 				<h:form styleClass="links_form">		

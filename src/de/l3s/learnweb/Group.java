@@ -3,14 +3,13 @@ package de.l3s.learnweb;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.validation.constraints.Size;
 
-import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.learnweb.Link.LinkType;
 import de.l3s.learnweb.LogEntry.Action;
@@ -26,9 +25,8 @@ public class Group implements Comparable<Group>, HasId, Serializable
     private int leaderUserId;
     private User leader;
     private int courseId;
-    private int forumId;
 
-    @NotBlank
+    @NotEmpty
     @Size(min = 3, max = 60)
     private String title;
     private String description;
@@ -38,23 +36,23 @@ public class Group implements Comparable<Group>, HasId, Serializable
     @Size(max = 50)
     private String language;
     private Course course;
+    /*
     private int parentGroupId;
     private transient Group parentGroup;
     private String subgroupsLabel;
-
+    */
     private boolean restrictionOnlyLeaderCanAddResources;
+    private boolean readOnly = false;
 
     private int categoryId;
     // caches
     private String categoryTitle;
     private String categoryAbbreviation;
-    private boolean readOnly = false;
 
     private transient List<Link> documentLinks;
     private transient OwnerList<Resource, User> resources;
     private transient List<User> members;
     private transient List<Link> links;
-    private transient List<Group> subgroups;
 
     private HashMap<Integer, Integer> lastVisitCache = new HashMap<Integer, Integer>();
 
@@ -64,7 +62,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	resources = null;
 	members = null;
 	links = null;
-	subgroups = null;
     }
 
     public Group()
@@ -83,13 +80,15 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	this.location = rs.getString("location");
 	this.language = rs.getString("language");
 	this.courseId = rs.getInt("course_id");
+	/*
 	this.forumId = rs.getInt("forum_id");
-	this.restrictionOnlyLeaderCanAddResources = rs.getInt("restriction_only_leader_can_add_resources") == 1;
 	this.parentGroupId = rs.getInt("parent_group_id");
 	this.subgroupsLabel = rs.getString("subgroup_label");
+	*/
 	this.categoryId = rs.getInt("group_category_id");
 	this.categoryTitle = rs.getString("category_title");
 	this.categoryAbbreviation = rs.getString("category_abbreviation");
+	this.restrictionOnlyLeaderCanAddResources = rs.getInt("restriction_only_leader_can_add_resources") == 1;
 	this.readOnly = rs.getInt("read_only") == 1;
     }
 
@@ -304,11 +303,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	this.courseId = courseId;
     }
 
-    public int getForumId()
-    {
-	return forumId;
-    }
-
     public int getLeaderUserId()
     {
 	return leaderUserId;
@@ -334,17 +328,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
     public void setRestrictionOnlyLeaderCanAddResources(boolean restrictionOnlyLeaderCanAddResources) throws SQLException
     {
 	this.restrictionOnlyLeaderCanAddResources = restrictionOnlyLeaderCanAddResources;
-    }
-
-    @Override
-    public String toString()
-    {
-	return "Group [id=" + id + ", courseId=" + courseId + ", forumId=" + forumId + ", title=" + title + "]";
-    }
-
-    public void setForumId(int forumId) throws SQLException
-    {
-	this.forumId = forumId;
     }
 
     public List<Link> getDocumentLinks() throws SQLException
@@ -384,65 +367,76 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	documentLinks = null;
     }
 
+    /*
+    public int getForumId()
+    {
+    	return forumId;
+    }
+    
+    
+    public void setForumId(int forumId) throws SQLException
+    {
+    	this.forumId = forumId;
+    }
     public String getForumUrl(User user) throws SQLException
     {
-	return Learnweb.getInstance().getJForumManager().getForumUrl(user, forumId);
+    	return Learnweb.getInstance().getJForumManager().getForumUrl(user, forumId);
     }
-
+    
     public int getParentGroupId()
     {
-	return parentGroupId;
+    	return parentGroupId;
     }
-
+    
     public void setParentGroupId(int parentGroupId)
     {
-	this.parentGroupId = parentGroupId;
-	this.parentGroup = null; // force reload
+    	this.parentGroupId = parentGroupId;
+    	this.parentGroup = null; // force reload
     }
-
+    
     public Group getParentGroup() throws IllegalArgumentException, SQLException
     {
-	if(parentGroupId != 0 && null == parentGroup)
-	    parentGroup = Learnweb.getInstance().getGroupManager().getGroupById(parentGroupId);
-	return parentGroup;
+    	if(parentGroupId != 0 && null == parentGroup)
+    	    parentGroup = Learnweb.getInstance().getGroupManager().getGroupById(parentGroupId);
+    	return parentGroup;
     }
-
+    
     public void setParentGroup(Group parentGroup)
     {
-	this.parentGroupId = parentGroup.getId();
-	this.parentGroup = parentGroup;
+    	this.parentGroupId = parentGroup.getId();
+    	this.parentGroup = parentGroup;
     }
-
+    
     public String getSubgroupsLabel()
     {
-	return subgroupsLabel;
+    	return subgroupsLabel;
     }
-
+    
     public void setSubgroupLabel(String subgroupLabel)
     {
-	this.subgroupsLabel = subgroupLabel;
+    	this.subgroupsLabel = subgroupLabel;
     }
-
+    
     public List<Group> getSubgroups() throws SQLException
     {
-	if(null == subgroups)
-	{
-	    subgroups = Learnweb.getInstance().getGroupManager().getSubgroups(this);
-	}
-	return subgroups;
+    	if(null == subgroups)
+    	{
+    	    subgroups = Learnweb.getInstance().getGroupManager().getSubgroups(this);
+    	}
+    	return subgroups;
     }
-
+    
     public void addSubgroup(Group subgroup) throws SQLException
     {
-	subgroup.setParentGroup(this);
-	Learnweb.getInstance().getGroupManager().addSubgroup(this, subgroup);
-
-	// update cache
-	if(subgroups == null)
-	    subgroups = new ArrayList<Group>();
-	subgroups.add(subgroup);
+    	subgroup.setParentGroup(this);
+    	Learnweb.getInstance().getGroupManager().addSubgroup(this, subgroup);
+    
+    	// update cache
+    	if(subgroups == null)
+    	    subgroups = new ArrayList<Group>();
+    	subgroups.add(subgroup);
     }
-
+    */
     public void setLastVisit(User user) throws Exception
     {
 	int time = UtilBean.time();

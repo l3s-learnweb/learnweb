@@ -12,7 +12,7 @@ import java.util.List;
 public class ForumManager
 {
     // private final static Logger log = Logger.getLogger(ForumManager.class);
-    private final static String POST_COLUMNS = "post_id, topic_id, user_id, text, post_time, post_edit_time, post_edit_count, post_edit_user_id";
+    private final static String POST_COLUMNS = "post_id, topic_id, user_id, text, post_time, post_edit_time, post_edit_count, post_edit_user_id, category";
     private final static String TOPIC_COLUMNS = "topic_id, group_id, topic_title, user_id, topic_time, topic_views, topic_replies, topic_last_post_id, topic_last_post_time, topic_last_post_user_id";
 
     private final Learnweb learnweb;
@@ -150,7 +150,7 @@ public class ForumManager
 
     public ForumPost save(ForumPost post) throws SQLException
     {
-	String sqlQuery = "REPLACE INTO `lw_forum_post` (" + POST_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?)";
+	String sqlQuery = "REPLACE INTO `lw_forum_post` (" + POST_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?)";
 	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
 
 	if(post.getId() < 0)
@@ -164,6 +164,7 @@ public class ForumManager
 	ps.setTimestamp(6, new java.sql.Timestamp(post.getLastEditDate().getTime()));
 	ps.setInt(7, post.getEditCount());
 	ps.setInt(8, post.getEditUserId());
+	ps.setString(9, post.getCategory());
 	ps.executeUpdate();
 
 	if(post.getId() < 0) // get the assigned id
@@ -214,6 +215,7 @@ public class ForumManager
 	post.setLastEditDate(new Date(rs.getTimestamp("post_edit_time").getTime()));
 	post.setEditCount(rs.getInt("post_edit_count"));
 	post.setEditUserId(rs.getInt("post_edit_user_id"));
+	post.setCategory(rs.getString("category"));
 	return post;
     }
 

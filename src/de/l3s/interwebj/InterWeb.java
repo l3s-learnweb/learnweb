@@ -30,7 +30,6 @@ import com.sun.jersey.oauth.signature.OAuthSecrets;
 
 import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
 import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.beans.UtilBean;
 
 public class InterWeb implements Serializable
@@ -436,7 +435,8 @@ public class InterWeb implements Serializable
 	InterWeb iw = new InterWeb("http://learnweb.l3s.uni-hannover.de/interweb/api/", "***REMOVED***", "***REMOVED***");
 
 	SearchQuery interwebResponse = iw.search("london", params);
-	List<ResourceDecorator> interwebResults = interwebResponse.getResults();
+	interwebResponse.getResults();
+
     }
 
     /**

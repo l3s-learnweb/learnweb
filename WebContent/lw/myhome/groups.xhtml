@@ -37,7 +37,7 @@
 						
 							<h:outputText value="#{msg.title}*:" />
 							<p:inputText id="new_title" value="#{groupsBean.newGroup.title}" validator="#{groupsBean.validateGroupTitle}" 
-								style="width:21rem"/>
+								style="width:21rem" label="#{msg.title}"/>
 							<p:message for="new_title" showSummary="true" showDetail="false" id="message_new_title"/>
 												 
 							<h:outputText value="#{msg.course}*:" />

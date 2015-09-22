@@ -26,10 +26,18 @@
 			#{msg.of} #{forumTopicsBean.group.title}
 			
 			<h:form id="center_header_form">
-				<a href="#{request.contextPath}/lw/group/forum.jsf?group_id=#{forumTopicsBean.group.id}#new_topic" 
-					class="resource_button greenbutton" onclick="$('#center_pane .content').animate({ scrollTop: 1000 }, 'slow'); return false;">
-					#{msg['ForumIndex.new_topic']}
-				</a>
+				<ui:fragment rendered="#{groupDetailBean.member}">
+					<a href="#{request.contextPath}/lw/group/forum.jsf?group_id=#{forumTopicsBean.group.id}#new_topic" 
+						class="resource_button greenbutton" onclick="$('#center_pane .content').animate({ scrollTop: 1000 }, 'slow'); return false;">
+						#{msg['ForumIndex.new_topic']}
+					</a>
+				</ui:fragment>
+				
+				<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" 
+					styleClass="resource_button greenbutton" update=":growl :group_menu @form" partialSubmit="true" 
+					process="@this" value="#{msg.join_group}">
+					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
+				</p:commandLink>
 			</h:form>
 				
 			<ul>								
@@ -104,71 +112,64 @@
 			</p:dataTable>
 		</h:form>
 			
-		<div class="page_header" id="new_topic">
-			<span>
-				#{msg['ForumIndex.new_topic']}
-			</span>
-		</div>
-			
-		<div class="grey_border">
-	
-			<h:form prependId="false">
-				<table id="new_topic_table">
-					<tr>
-						<td class="width_10">
-							<h:outputText value="#{msg['ForumIndex.topic']}: " style="margin-top:5px;margin-bottom:5px;"/>
-						</td>
-						<td>
-							<h:inputText value="#{forumTopicsBean.newTopicTitle}" id="post_topic" label="#{msg['ForumIndex.topic']}">
-								<f:validateLength minimum="0" maximum="100" />
-							</h:inputText>
-						</td>
-						<td class="width_30">
-							<p:message for="post_topic"/>
-						</td>
-					</tr>
-					<tr>
-						<td class="width_10">
-							<h:outputText value="#{msg.category}: " /> 
-						</td>
-						<td>
-							<p:selectOneMenu id="post_category" styleClass="category" value="#{forumTopicsBean.newPost.category}" 
-								editable="true" label="#{msg.category}" >
-								<!-- defaults 
-								<f:selectItem itemLabel="#{msg['ForumIndex.question']}" itemValue="#{msg['ForumIndex.question']}" />
-								<f:selectItem itemLabel="#{msg['ForumIndex.answer']}" itemValue="#{msg['ForumIndex.answer']}" />
-								<f:selectItem itemLabel="#{msg['ForumIndex.explanation']}" itemValue="#{msg['ForumIndex.explanation']}" /> 
-								-->
-								
-								<!--  
-								<f:selectItem itemLabel="Select one" itemValue="" />
-								-->
-								<f:selectItems value="#{forumTopicsBean.newPost.categories}" />
-							</p:selectOneMenu>	
-						</td>
-						<td class="width_30">
-							<p:message for="post_category"/>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="2">
-							<p:editor id="post_message" widgetVar="editorWidget" value="#{forumTopicsBean.newPost.text}" 
-								label="#{msg['PostShow.postContent']}"
-								controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">
-							</p:editor>
-						</td>
-						<td class="width_30">
-							<p:message for="post_message"/>
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3">
-							<p:commandButton ajax="false" value="#{msg.save}" styleClass="greenbutton save_button" 
-								action="#{forumTopicsBean.onSavePost}" validateClient="true" update="@form"  />
-						</td>
-					</tr>
-				</table>
-			</h:form> 
-		</div>
+		<ui:fragment rendered="#{groupDetailBean.member or true}">
+			<div class="page_header" id="new_topic">
+				<span>
+					#{msg['ForumIndex.new_topic']}
+				</span>
+			</div>
+				
+			<div class="grey_border">
+		
+				<h:form prependId="false">
+					<table id="new_topic_table">
+						<tr>
+							<td class="width_10">
+								<h:outputText value="#{msg['ForumIndex.topic']}: " style="margin-top:5px;margin-bottom:5px;"/>
+							</td>
+							<td>
+								<h:inputText value="#{forumTopicsBean.newTopicTitle}" id="post_topic" label="#{msg['ForumIndex.topic']}">
+									<f:validateLength minimum="0" maximum="100" />
+								</h:inputText>
+							</td>
+							<td class="width_30">
+								<p:message for="post_topic"/>
+							</td>
+						</tr>
+						<tr>
+							<td class="width_10">
+								<h:outputText value="#{msg.category}: " /> 
+							</td>
+							<td>
+								<p:selectOneMenu id="post_category" styleClass="category" value="#{forumTopicsBean.newPost.category}" 
+									editable="true" label="#{msg.category}" >
+									<f:selectItems value="#{forumTopicsBean.categories}" />
+								</p:selectOneMenu>	
+							</td>
+							<td class="width_30">
+								<p:message for="post_category"/>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<p:editor id="post_message" widgetVar="editorWidget" value="#{forumTopicsBean.newPost.text}" 
+									label="#{msg['PostShow.postContent']}"
+									controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">
+								</p:editor>
+							</td>
+							<td class="width_30">
+								<p:message for="post_message"/>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								<p:commandButton ajax="false" value="#{msg.save}" styleClass="greenbutton save_button" 
+									action="#{forumTopicsBean.onSavePost}" validateClient="true" update="@form"  />
+							</td>
+						</tr>
+					</table>
+				</h:form> 
+			</div>
+		</ui:fragment>
 	</ui:define>
 </ui:composition>

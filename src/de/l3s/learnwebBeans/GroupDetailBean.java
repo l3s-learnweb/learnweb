@@ -17,7 +17,7 @@ import javax.faces.event.ComponentSystemEvent;
 import javax.faces.event.ValueChangeEvent;
 
 import org.apache.commons.lang3.StringUtils;
-import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.learnweb.AbstractPaginator;
 import de.l3s.learnweb.Comment;
@@ -67,9 +67,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private boolean allLogs = false;
     private boolean reloadLogs = false;
 
-    @NotBlank
+    @NotEmpty
     private String newLinkUrl;
-    @NotBlank
+    @NotEmpty
     private String newLinkTitle;
     private String newLinkType;
 
@@ -134,7 +134,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	HashSet<Integer> deletedResources = new HashSet<Integer>();
 	Action[] filter = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
-		Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.group_removing_resource };
+		Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource,
+		Action.group_removing_resource };
 	List<LogEntry> feed = logMessages;
 
 	if(feed != null)
@@ -287,11 +288,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	if(0 == groupId)
 	{/*
-	    String temp = getFacesContext().getExternalContext().getRequestParameterMap().get("group_id");
-	    if(temp != null && temp.length() != 0)
+	 String temp = getFacesContext().getExternalContext().getRequestParameterMap().get("group_id");
+	 if(temp != null && temp.length() != 0)
 	 groupId = Integer.parseInt(temp);
-
-	    if(0 == groupId)
+	 
+	 if(0 == groupId)
 	 return;
 	   */
 	    Integer id = getParameterInt("group_id");
@@ -520,36 +521,36 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     	    addMessage(FacesMessage.SEVERITY_INFO, "forum_created");
     	    return;
     	}
-
+    
     	JForumManager fm = getLearnweb().getJForumManager();
-
+    
     	try
     	{
     	    int forumId = fm.createForum(group.getTitle(), group.getCourse().getForumCategoryId());
-
+    
     	    group.setForumId(forumId);
     	    getLearnweb().getGroupManager().save(group);
-
+    
     	    addMessage(FacesMessage.SEVERITY_INFO, "forum_created");
     	    updateLinksList();
-
+    
     	    log(Action.group_adding_link, group.getId(), "Forum");
     	}
     	catch(Exception e)
     	{
     	    e.printStackTrace();
-
+    
     	    addMessage(FacesMessage.SEVERITY_ERROR, "The forum couldn't be created, try again later");
     	}
         }
-
+    
         private void deleteForum() throws SQLException
         {
     	group.setForumId(0);
     	getLearnweb().getGroupManager().save(group);
-
+    
     	updateLinksList();
-
+    
     	log(Action.group_deleting_link, group.getId(), "Forum");
         }
     */
@@ -820,15 +821,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
     }
 
-    public String getSubgroupsLabel()
-    {
-	String label = group.getSubgroupsLabel();
-	if(null != label && label.length() > 0)
-	    return label;
-
-	return getLocaleMessage("subgroupsLabel");
-    }
-
     public List<Link> getLinks() throws SQLException
     {
 	if(null == links)
@@ -1023,12 +1015,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
     return newGroup;
     }
-
+    
     public void onCreateGroup()
     {
     if(null == getUser())
         return;
-
+    
     try
     {
         newGroup.setLeader(getUser());
@@ -1036,7 +1028,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         group.addSubgroup(newGroup);
         getUser().joinGroup(newGroup);
         getLearnweb().getGroupManager().resetCache();//causes a bug in the menu otherwise
-
+    
     }
     catch(Exception e)
     {
@@ -1044,11 +1036,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
         return;
     }
-
+    
     // log and show notification
     log(Action.group_creating, group.getId());
     addMessage(FacesMessage.SEVERITY_INFO, "groupCreated", newGroup.getTitle());
-
+    
     // reset new group var
     newGroup = new Group();
     }
@@ -1057,7 +1049,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void validateGroupTitle(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
     {
     String title = (String) value;
-
+    
     if(getLearnweb().getGroupManager().getGroupByTitleFilteredByOrganisation(title, getUser().getOrganisationId()) != null)
     {
         throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "title_already_taken"));
