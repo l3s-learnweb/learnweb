@@ -209,16 +209,16 @@
 										</li>
 									</ui:repeat>
 								</ul>
-								<p:inputText value="#{resourceBean.tagName}" style="width:100%;" />
+								<p:inputText value="#{resourceBean.tagName}" style="width:100%;" rendered="false"/>
 								<div class="align-right" style="margin-top:5px">
-									<p:commandButton actionListener="#{resourceBean.addTag}" value="#{msg.addTag}" update=":growl,tag_form" process="@form">
+									<p:commandButton actionListener="#{resourceBean.addTag}" value="#{msg.addTag}" update=":growl,tag_form" process="@form" rendered="false">
 										<f:param name="resource_id" value="#{resourceBean.resource.id}" />
 									</p:commandButton>
 								</div>
 							</h:form>
 							
 							<br />
-							<h:form id="comment_form">
+							<h:form id="comment_form" rendered="false">
 								<p:inputTextarea style="width:100%" value="#{resourceBean.commentText}" />
 								<div class="align-right" style="margin-top:5px">
 									<p:commandButton actionListener="#{resourceBean.addComment}" value="#{msg.addComment}" update=":growl comment_form :comments" process="@form">
