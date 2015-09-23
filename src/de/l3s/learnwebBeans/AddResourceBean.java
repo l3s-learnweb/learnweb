@@ -510,7 +510,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
 		log.error(e);
 
-		resource.setOnlineStatus(OnlineStatus.OFFLINE); // offline
+		resource.setOnlineStatus(OnlineStatus.UNKNOWN); // most probably offline
 		try
 		{
 		    resource.save();
