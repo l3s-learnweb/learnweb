@@ -97,7 +97,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private transient OwnerList<Tag, User> tags = null;
     private transient List<Comment> comments;
     private transient User owner;
-    private transient LinkedList<ArchiveUrl> archiveUrls = null;//To store the archive URL from archive.today service
+    private transient LinkedList<ArchiveUrl> archiveUrls = null;//To store the archived URLs 
 
     protected void clearCaches()
     {
@@ -1388,4 +1388,8 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	this.archiveUrls = archiveUrls;
     }
 
+    public Group getPrimaryGroup() throws SQLException
+    {
+	return Learnweb.getInstance().getGroupManager().getPrimaryGroupByResourceId(id);
+    }
 }

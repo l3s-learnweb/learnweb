@@ -110,7 +110,7 @@ function setSynonyms(xhr,status,args){
 function noteSelectedText() {
 	usertext = "";
 	escape_key_flag = true;
-	
+
 	sel = rangy.getSelection();
 	sel_str = sel.toString();
 	if(sel_str != "")

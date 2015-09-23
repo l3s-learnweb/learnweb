@@ -135,6 +135,18 @@ public class GroupManager
 	return group;
     }
 
+    public Group getPrimaryGroupByResourceId(int resourceId) throws SQLException
+    {
+	PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT group_id FROM `lw_group_resource` JOIN lw_group g USING(group_id) WHERE resource_id = ? AND g.deleted = 0 ORDER BY timestamp LIMIT 1");
+	pstmtGetGroup.setInt(1, resourceId);
+	ResultSet rs = pstmtGetGroup.executeQuery();
+
+	if(!rs.next())
+	    return null;
+
+	return getGroupById(rs.getInt(1));
+    }
+
     private Group createGroup(ResultSet rs) throws SQLException
     {
 	Group group = cache.get(rs.getInt("group_id"));
@@ -208,9 +220,9 @@ public class GroupManager
      */
     public synchronized Group save(Group group) throws SQLException
     {
-	PreparedStatement replace = learnweb.getConnection().prepareStatement(
-		"REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, university, course, location, language, course_id, group_category_id, restriction_only_leader_can_add_resources, read_only) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
-		Statement.RETURN_GENERATED_KEYS);
+	PreparedStatement replace = learnweb.getConnection()
+		.prepareStatement("REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, university, course, location, language, course_id, group_category_id, restriction_only_leader_can_add_resources, read_only) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+			Statement.RETURN_GENERATED_KEYS);
 
 	if(group.getId() < 0) // the Group is not yet stored at the database 
 	{

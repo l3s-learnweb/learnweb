@@ -23,19 +23,20 @@
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveResource()}" name="saveTedResource" process="@this" update=":growl" />
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveLog()}" name="saveTranscriptLog" process="@this" update="@none" />
 		</h:form>	
-		<h:outputStylesheet library="css" name="ted_transcript.css"  />
+		
 		<h:outputStylesheet library="css" name="tipped.css"  />
-		<h:outputScript library="js" name="ted_transcript.js" target="head"/>
+		<h:outputStylesheet library="ted_transcript" name="ted_transcript.css"  />
 		<h:outputScript library="js" name="tipped.js" target="head"/>
-		<h:outputScript library="js" name="imagesloaded.pkgd.min.js" target="head"/>
-		<h:outputScript library="js" name="log4javascript_stub.js" target="head"/>
-	    <h:outputScript library="js" name="rangy-core.js" target="head"/>
-	    <h:outputScript library="js" name="rangy-dom.js" target="head"/>
-	    <h:outputScript library="js" name="rangy-domrange.js" target="head"/>
-	    <h:outputScript library="js" name="rangy-wrappedrange.js" target="head"/>
-	    <h:outputScript library="js" name="rangy-wrappedselection.js" target="head"/>
-	    <h:outputScript library="js" name="rangy-cssclassapplier.js" target="head"/>
-	    <h:outputScript library="js" name="rangy-highlighter.js" target="head"/>
+		<h:outputScript library="ted_transcript" name="ted_transcript.js" target="head"/>		
+		<h:outputScript library="ted_transcript" name="imagesloaded.pkgd.min.js" target="head"/>
+		<h:outputScript library="ted_transcript" name="log4javascript_stub.js" target="head"/>
+	    <h:outputScript library="ted_transcript" name="rangy-core.js" target="head"/>
+	    <h:outputScript library="ted_transcript" name="rangy-dom.js" target="head"/>
+	    <h:outputScript library="ted_transcript" name="rangy-domrange.js" target="head"/>
+	    <h:outputScript library="ted_transcript" name="rangy-wrappedrange.js" target="head"/>
+	    <h:outputScript library="ted_transcript" name="rangy-wrappedselection.js" target="head"/>
+	    <h:outputScript library="ted_transcript" name="rangy-cssclassapplier.js" target="head"/>
+	    <h:outputScript library="ted_transcript" name="rangy-highlighter.js" target="head"/>
 	    
   		<script type="text/javascript">
   			var noteid = #{tedTranscriptBean.noteId};
@@ -54,20 +55,23 @@
 				        <h:selectOneMenu id="select_lang" value="#{tedTranscriptBean.transcriptLanguage}" >
 				           <f:selectItem itemValue="----------------------------"/>
 				           <f:selectItems value="#{tedTranscriptBean.getLanguageList()}"/>
-				           <p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":ted_transcript"/>
+				           <p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript"/>
 				        </h:selectOneMenu>
-						<p:commandButton styleClass="button_position greenbutton" value="#{msg.save}" onclick="saveEditing();"/>
+						<p:commandButton styleClass="button_position greenbutton" value="#{msg.save}" onclick="saveEditing();" rendered="#{!tedTranscriptBean.tedResource.primaryGroup.readOnly}"/>
 					</h:form>
 				</div>
 				<div class="transcript_note">
 					<b>#{msg.note}:</b> #{msg.transcript_note}
 				</div>
 			</p:outputPanel>
-
-			<h:panelGroup layout="block" onmouseup="noteSelectedText()" id="ted_transcript" class="tedTranscript">
-					<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
+			<h:panelGroup layout="block" id="transcript">
+				<h:panelGroup layout="block" onmouseup="noteSelectedText()" id="ted_transcript" class="tedTranscript" rendered="#{!tedTranscriptBean.tedResource.primaryGroup.readOnly}">
+						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
+				</h:panelGroup>
+				<h:panelGroup layout="block" class="tedTranscript" rendered="#{tedTranscriptBean.tedResource.primaryGroup.readOnly}">
+						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
+				</h:panelGroup>
 			</h:panelGroup>
-
 		</h:panelGroup>
 		</div>
 
