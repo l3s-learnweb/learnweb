@@ -449,14 +449,14 @@
 							   $('#commentfield').focus(function() {
 									var button = $('#comment_button');
 									button.slideDown();
-									scrollToElement(button);
+									//scrollToElement(button);
 								});
 								$('#comment_form').focusout(function() {
 									$('#comment_button').slideUp(1000);
 								});
 						   </script>
 						   
-						    <h:form id="comment_form" styleClass="clear" prependId="false">
+						    <h:form id="comment_form" styleClass="clear" prependId="false" style="margin-bottom:40px;">
 						   
 								<h:panelGroup layout="block" class="resource_field" style="padding-top: 10px" rendered="#{!groupDetailBean.group.readOnly}">
 									#{msg.comments}
