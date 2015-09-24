@@ -14,7 +14,8 @@
 	<ui:param name="disableGrowl" value="true"/>
 	
 	<ui:define name="center_layout">
-		<h:outputStylesheet library="search" name="search.css"  />
+		<h:outputStylesheet library="search" name="search.css"  />	
+		<h:outputScript library="search" name="search.js" target="head"/>
 		<style type="text/css">
 			a.suggestWebLink:link,a.suggestWebLink{font-size: 1.3rem; font-family: "Segoe UI",Arial,Helvetica,sans-serif;}
 			
@@ -22,7 +23,7 @@
 			{
 				float:left;
 				margin-top:20px;
-				margin-left:100px;
+				margin-left:10px;
 				width:415px;
 				padding:10px 20px;
 				background-color:#f9f9f9;
@@ -35,14 +36,48 @@
 			}	
 		</style>
 		
-		<div id="results" class="list_view">			
-			<div class="resources">
-				<ui:decorate template="/archive/templates/resources_list.xhtml">
-					<ui:param name="resources" value="#{archiveDemoBean.resources}" />				
-				</ui:decorate>
-			</div>	
-			<div class="clear"></div>
-		</div>			
+		<script type="text/javascript">
+			var view = 'list';
+			var userId = '#{userBean.user.id}';
+			var searchHistoryEnabled = false;				
+			var ajaxLoadFactsheet = function() {}; // necessary to use default search script	
+			var loadFilterCounts = function() {}; 
+			var logResourceOpened = function() {}; 
+		</script>	
+			
+		<div class="float-left" style="width:600px;">
+			<div id="results" class="list_view">			
+				<div class="resources">
+					<ui:decorate template="/archive/templates/resources_list.xhtml">
+						<ui:param name="resources" value="#{archiveDemoBean.resources}" />				
+					</ui:decorate>
+				</div>	
+				<div class="clear"></div>
+			</div>			
+			
+			<div id="search_loading_more_results">
+				#{msg.loading_more_results}
+			</div>
+			<div id="search_no_more_results">
+				#{msg.no_more_results}
+			</div>
+			<div id="search_nothing_found">
+				#{msg.nothingFound}
+			</div>
+	
+			<div id="new_results" style="display:none;">	
+				<h:panelGroup id="nextPage" layout="block">				
+					<ui:decorate  template="/archive/templates/resources_list.xhtml">
+						<ui:param name="resources" value="#{archiveDemoBean.nextPage}" />
+					</ui:decorate>		
+				</h:panelGroup>
+			</div>
+		
+			<!-- TODO: all remote commands cause an update of :nextPage  -->
+			<h:form style="display:none;">	
+				<p:remoteCommand actionListener="${archiveDemoBean.loadNextPage()}" update=":nextPage" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this" partialSubmit="true" />
+			</h:form>
+		</div>
 		
 		<h:panelGroup layout="block" class="related_entities" rendered="${not empty archiveDemoBean.suggestQueries()}">
 			<h3>Related Entities:</h3>
@@ -56,8 +91,7 @@
 				</li>
 			</ui:repeat>
 			</ul>
-		</h:panelGroup>
-		
+		</h:panelGroup>		
 		
 		<p:dialog header="#{msg.options}" widgetVar="resource_dialog" modal="false" minWidth="600" resizable="false" style="z-index:1500;">			
 			<h:form id="resource_form">

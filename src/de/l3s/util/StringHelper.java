@@ -1,6 +1,8 @@
 package de.l3s.util;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Collection;
@@ -8,6 +10,7 @@ import java.util.Date;
 import java.util.Locale;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
@@ -15,6 +18,8 @@ import org.ocpsoft.prettytime.PrettyTime;
 
 public class StringHelper
 {
+    private static final Logger log = Logger.getLogger(StringHelper.class);
+
     /**
      * If the string is longer than maxLength it is split at the nearest blankspace
      * 
@@ -37,6 +42,29 @@ public class StringHelper
 	    str = str.substring(0, endIdx) + "...";
 	}
 	return str;
+    }
+
+    public static String getDomainName(String url)
+    {
+	int index = url.indexOf('?');
+	if(index > 0) // remove parameters they can contain illegal characters
+	    url = url.substring(0, index);
+
+	try
+	{
+	    URL uri = new URL(url);
+	    return uri.getHost();
+	}
+	catch(MalformedURLException e)
+	{
+	    log.error("Can't get domain for url: " + url, e);
+	    return null;
+	}
+	/*
+	String domain = uri.getHost();
+	return domain;
+	return domain.startsWith("www.") ? domain.substring(4) : domain;
+	*/
     }
 
     public static boolean empty(String str)

@@ -199,7 +199,7 @@
 			<p:remoteCommand actionListener="${searchBean.logResourceOpened()}" name="logResourceOpened" async="true" process="@this" partialSubmit="true" />
 			<p:remoteCommand actionListener="${searchBean.logEndTime()}" update=":tabView:tab2" name="logEndTime" async="true" process="@this" partialSubmit="true"/>
 			
-			<p:remoteCommand actionListener="${searchBean.loadInterwebCounts()}" update=":filters" name="loadInterwebCounts" async="false" process="@this" partialSubmit="true"/>
+			<p:remoteCommand actionListener="${searchBean.loadInterwebCounts()}" update=":filters" name="loadFilterCounts" async="false" process="@this" partialSubmit="true"/>
 				
 		</h:form>
  

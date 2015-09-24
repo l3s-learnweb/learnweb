@@ -17,21 +17,18 @@
 			<h:panelGroup layout="block">
 				<h:outputLink class="resourceWebLink" target="_blank" value="#{res.url}"><h:outputText value="#{res.title}" escape="false"/></h:outputLink>
 				
-				
-				<table style="border-spacing:0px;padding-right: 0px;padding-left: 0px;">
-				<tr>
-					<td>
+	
 				<div style="display:inline; vertical-align:top;">
-				<h:outputLink value="https://web.archive.org/web/*/#{res.learnwebUrl}" title="" style="color:green;text-overflow:ellipsis;overflow:hidden;display:block;white-space: nowrap;width:75%;" target="_blank">https://web.archive.org/web/*/#{res.learnwebUrl}</h:outputLink>
+				<h:outputLink value="https://web.archive.org/web/*/#{res.learnwebUrl}" title="" style="color:green;text-overflow:ellipsis;overflow:hidden;display:block;white-space: nowrap;width:100%;" target="_blank">#{res.learnwebUrl}</h:outputLink>
 				
 				<div style="margin-bottom:2px;"><span style="font-weight:bold;">#{res.getMetadataValue('url_captures')}</span> captures between <a href="https://web.archive.org/web/#{res.getMetadataValue('first_timestamp')}/#{res.url}" style="color:green;" target="_blank">#{archiveDemoBean.formatDate(res.getMetadataValue('first_timestamp'))}</a> and <a href="https://web.archive.org/web/#{res.getMetadataValue('last_timestamp')}/#{res.url}" style="color:green;" target="_blank">#{archiveDemoBean.formatDate(res.getMetadataValue('last_timestamp'))}</a></div>
 				
 				
-				<h:outputText value="#{res.snippet}" style="display:block;width:94%;" escape="false"></h:outputText>
+				<h:outputText value="#{res.snippet}" style="display:block;width:100%;" escape="false"></h:outputText>
 				
 				</div>
 				
-					<h:panelGroup rendered="#{utilBean.searchPage}" layout="block">
+			
 						<h:panelGroup rendered="#{userBean.loggedIn}" class="add_resource_link" style="float:left;padding-top:3px;margin-right:10px" layout="block">				
 							<h:form>
 								<b><h:outputText value="#{msg.options}: " /></b>
@@ -56,24 +53,9 @@
 									</h:outputLink>
 							</ui:repeat>						
 						</h:panelGroup>
-					</h:panelGroup>
-					<h:panelGroup rendered="#{utilBean.viewResultSetPage}">
-						<h:form rendered="#{userBean.loggedIn}" class="add_resource_link">
-							<p:commandLink update=":resource_form"
-								oncomplete="PF('resource_dialog').show();"
-								title="#{msg.addToMyResources}"
-								style="display:block; margin-top:4px;">
-								<h:graphicImage value="/resources/icon/silk/add.png" width="16"
-									height="16" alt="#{msg.addToMyResources}" />#{msg.addToMyResources}
-							<f:setPropertyActionListener value="#{res.resource}"
-									target="#{resultSetBean.selectedResource}" />
-							</p:commandLink>
-						</h:form>
-					</h:panelGroup>					
 				
-				</td>
-				</tr>
-				</table>
+								
+			
 			</h:panelGroup>
 		</div>		
 	</ui:repeat>

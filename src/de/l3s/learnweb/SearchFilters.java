@@ -23,7 +23,7 @@ public class SearchFilters implements Serializable
     final static Logger log = Logger.getLogger(SearchFilters.class);
 
     private String stringFilters = null;
-    private MODE configMode;
+    private MODE configMode = MODE.web;
     private Map<FILTERS, Object> configFilters = new EnumMap<>(FILTERS.class);
     private Map<FILTERS, List<Count>> availableResources = new HashMap<FILTERS, List<Count>>();
     private FILTERS lastFilter = null;

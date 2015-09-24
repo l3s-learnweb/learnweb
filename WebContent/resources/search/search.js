@@ -478,7 +478,7 @@ $(document).ready(function()
 		ajaxLoadFactsheet();
 	}
 	
-	if(view=='grid'||view=='float')
+	if(view=='grid' || view=='float')
 	{	
 		if(localStorage.getItem(userId) === null || localStorage.getItem(userId) !== "true" || !searchHistoryEnabled)
 		{
@@ -493,7 +493,8 @@ $(document).ready(function()
 		}
 	}
 	
-	ajaxLoadSearchHistory();
+	if(searchHistoryEnabled)
+		ajaxLoadSearchHistory();
 	
 	// register cursor left/right and esc key
 	$(document).keydown(function(event) {
@@ -518,5 +519,5 @@ $(document).ready(function()
 		return true;
 	});
 	
-	loadInterwebCounts();
+	loadFilterCounts();
 });

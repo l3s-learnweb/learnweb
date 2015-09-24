@@ -7,13 +7,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Timestamp;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -36,14 +34,16 @@ public class ArchiveSearchManager
     private Connection dbConnection;
     private long lastCheck;
     private HttpSolrServer solr;
+    private SimpleDateFormat waybackDateFormat;
 
     public ArchiveSearchManager(Learnweb learnweb) throws SQLException
     {
 	this.properties = learnweb.getProperties();
 
 	this.dbConnection = DriverManager.getConnection(properties.getProperty("mysql_archive_url"), properties.getProperty("mysql_archive_user"), properties.getProperty("mysql_archive_password"));
-	solr = new HttpSolrServer("http://prometheus.kbs.uni-hannover.de:8984/solr/WebpageIndex");
+	this.solr = new HttpSolrServer("http://prometheus.kbs.uni-hannover.de:8984/solr/WebpageIndex");
 
+	this.waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
     }
 
     public List<String> getQueryCompletions(String query, int count) throws SQLException
@@ -126,41 +126,50 @@ public class ArchiveSearchManager
 	return query;
     }
 
-    private String formatDate(Timestamp timestamp, DateFormat df)
+    private String formatDate(Timestamp timestamp)
     {
 	if(timestamp == null || timestamp.getTime() == 0L)
-	    return "01.01.70";
+	    return "";
 
-	return df.format(new Date(timestamp.getTime()));
+	return waybackDateFormat.format(new Date(timestamp.getTime()));
     }
 
     public List<ResourceDecorator> getResultsByQueryId(int queryId) throws SQLException
     {
-	List<ResourceDecorator> results = new LinkedList<ResourceDecorator>();
-	DateFormat df = new SimpleDateFormat("yyyyMMddhhmmss");//DateFormat.getDateInstance(DateFormat.SHORT);//, UtilBean.getUserBean().getLocale());
+	List<ResourceDecorator> results = new ArrayList<ResourceDecorator>();
 
 	PreparedStatement select = getConnection().prepareStatement(
-		"SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description FROM `url_captures_count_2` JOIN pw_result USING (query_id, rank) WHERE `query_id` = ? and url_captures > 0 ORDER BY rank");
+		"SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description, url_captures is null as not_checked FROM pw_result LEFT JOIN `url_captures_count_2` USING (query_id, rank) WHERE `query_id` = ? and (url_captures is null OR url_captures > 0) ORDER BY rank");
 	select.setInt(1, queryId);
 	ResultSet rs = select.executeQuery();
-	int counter = 1;
+
 	while(rs.next())
 	{
+	    String url = rs.getString("url");
+
+	    /*
+	    if(rs.getInt("not_checked") == 1)
+	    {
+	    String domain = StringHelper.getDomainName(url);
+	    
+	    if(domain == "de")
+	        continue;
+	    }*/
+
 	    Resource resource = new Resource();
-	    resource.setUrl(rs.getString("url"));
+	    resource.setUrl(url);
 	    resource.setDescription(rs.getString("description"));
 	    resource.setTitle(rs.getString("title"));
-	    resource.setMetadataValue("rank", rs.getString("rank"));
+	    resource.setMetadataValue("query_id", Integer.toString(queryId));
 	    resource.setMetadataValue("url_captures", rs.getString("url_captures"));
-	    resource.setMetadataValue("first_timestamp", formatDate(rs.getTimestamp("first_timestamp"), df));
-	    resource.setMetadataValue("last_timestamp", formatDate(rs.getTimestamp("last_timestamp"), df));
+	    resource.setMetadataValue("first_timestamp", formatDate(rs.getTimestamp("first_timestamp")));
+	    resource.setMetadataValue("last_timestamp", formatDate(rs.getTimestamp("last_timestamp")));
 
 	    //	    System.out.println(resource.getMetadataValue("rank") + " - " + resource.getTitle() + " - " + resource.getMetadataValue("last_timestamp"));
-
+	    System.out.println(resource);
 	    ResourceDecorator decoratedResource = new ResourceDecorator(resource);
-	    decoratedResource.setTempId(counter++);
 	    decoratedResource.setSnippet(rs.getString("description"));
-
+	    decoratedResource.setRankAtService(rs.getInt("rank"));
 	    results.add(decoratedResource);
 	}
 
@@ -206,9 +215,15 @@ public class ArchiveSearchManager
 
 	ArchiveSearchManager lm = Learnweb.getInstance().getArchiveSearchManager();
 
-	lm.getResultsByQueryId(65158);
+	//lm.getResultsByQueryId(65158);
 
 	System.exit(0);
+    }
+
+    public void cacheCaptureCount(String queryId, int rank, Date firstCapture, Date lastCapture, String captures)
+    {
+	log.debug("cacheCaptureCount");
+
     }
 
 }
