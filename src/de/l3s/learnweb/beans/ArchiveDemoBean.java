@@ -142,7 +142,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	return resources;
     }
 
-    public synchronized LinkedList<ResourceDecorator> getNextPage()
+    public synchronized LinkedList<ResourceDecorator> getNextPage() throws NumberFormatException, SQLException
     {
 	log.debug("getNextPage");
 
@@ -156,13 +156,11 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	    {
 		ResourceDecorator resource = resourcesRaw.get(processedResources);
 
-		String captures = resource.getMetadataValue("url_captures");
-
-		if(null == captures)
+		if(resource.getMetadataValue("url_captures") == null)
 		{
-		    captures = "0";
+		    int captures = 0;
 		    requests++;
-		    String url = resource.getUrl().substring(resource.getUrl().indexOf("//") + 2);
+		    String url = resource.getUrl().substring(resource.getUrl().indexOf("//") + 2); // remove leading http://
 
 		    Date lastCapture = null, firstCapture = getFirstCaptureDate(url);
 
@@ -174,21 +172,24 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 			{
 			    resource.getResource().setMetadataValue("first_timestamp", waybackDateFormat.format(firstCapture));
 			    resource.getResource().setMetadataValue("last_timestamp", waybackDateFormat.format(lastCapture));
-			    captures = "1"; // no capture date -> no captures at all
+			    captures = 1; // one capture date -> at least one capture
 			}
 		    }
 
-		    archiveSearchManager.cacheCaptureCount(resource.getMetadataValue("query_id"), resource.getRankAtService(), firstCapture, lastCapture, captures);
+		    archiveSearchManager.cacheCaptureCount(Integer.parseInt(resource.getMetadataValue("query_id")), resource.getRankAtService(), firstCapture, lastCapture, captures);
 
-		    if(captures == "0")
+		    if(captures == 0)
 			continue; // no captures found -> don't display this resource
 		}
 
 		resource.setTempId(++addedResources);
 
-		System.out.println(resource.getTempId() + " - " + resource.getTitle());
+		//System.out.println(resource.getTempId() + " - " + resource.getTitle());
 
 		newResources.add(resource);
+
+		if(page == 1 && processedResources == 10)
+		    break;
 	    }
 
 	    pages.put(page, newResources);

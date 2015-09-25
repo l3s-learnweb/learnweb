@@ -166,7 +166,7 @@ public class ArchiveSearchManager
 	    resource.setMetadataValue("last_timestamp", formatDate(rs.getTimestamp("last_timestamp")));
 
 	    //	    System.out.println(resource.getMetadataValue("rank") + " - " + resource.getTitle() + " - " + resource.getMetadataValue("last_timestamp"));
-	    System.out.println(resource);
+	    //System.out.println(resource);
 	    ResourceDecorator decoratedResource = new ResourceDecorator(resource);
 	    decoratedResource.setSnippet(rs.getString("description"));
 	    decoratedResource.setRankAtService(rs.getInt("rank"));
@@ -220,10 +220,17 @@ public class ArchiveSearchManager
 	System.exit(0);
     }
 
-    public void cacheCaptureCount(String queryId, int rank, Date firstCapture, Date lastCapture, String captures)
+    public void cacheCaptureCount(int queryId, int rank, Date firstCapture, Date lastCapture, int captures) throws SQLException
     {
-	log.debug("cacheCaptureCount");
-
+	//log.debug("cacheCaptureCount");
+	PreparedStatement insert = getConnection().prepareStatement("INSERT DELAYED INTO `archive_bing_big`.`url_captures_count_2` (`query_id`, `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, `crawl_time`) VALUES (?,?,?,?,?,?)");
+	insert.setInt(1, queryId);
+	insert.setInt(2, rank);
+	insert.setInt(3, captures);
+	insert.setTimestamp(4, firstCapture == null ? null : new Timestamp(firstCapture.getTime()));
+	insert.setTimestamp(5, lastCapture == null ? null : new Timestamp(lastCapture.getTime()));
+	insert.setTimestamp(6, new Timestamp(new Date().getTime()));
+	insert.executeUpdate();
     }
 
 }
