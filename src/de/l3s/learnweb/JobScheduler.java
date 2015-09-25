@@ -6,6 +6,9 @@ import it.sauronsoftware.cron4j.TaskExecutionContext;
 
 import org.apache.log4j.Logger;
 
+import de.l3s.tedapi.crawler.CheckNewTedVideos;
+import de.l3s.tedapi.crawler.CheckUpdatedTedVideos;
+
 public class JobScheduler
 {
     private final Logger log = Logger.getLogger(JobScheduler.class);
@@ -29,6 +32,12 @@ public class JobScheduler
 	//Schedules the task at 1:00 on 13th and 27th of every month
 	UpdateYovistoVideos yovistoTask = new UpdateYovistoVideos();
 	scheduler.schedule("0 1 13,27 * *", yovistoTask);
+
+	//Schedules the task, at 1:00 everyday to check for new TED videos
+	scheduler.schedule("0 1 * * *", new CheckNewTedVideos());
+
+	//Schedules the task at 1:00 on alternate days to update existing TED videos
+	scheduler.schedule("0 1 2-30/2 * *", new CheckUpdatedTedVideos());
     }
 
     public void startAllJobs()
