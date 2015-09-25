@@ -76,7 +76,7 @@ public class Entity implements Serializable
 	Client client = Client.create();
 	//WebResource resource = client.resource("http://prometheus.kbs.uni-hannover.de:8890/sparql?default-graph-uri=http%3A%2F%2F"+ SERVER +"&query=DESCRIBE+%3C" + url + "%3E&output=application%2Fmicrodata%2Bjson");
 	url = url.replaceFirst("dbpedia.org", SERVER);
-	WebResource resource = client.resource(url.replaceFirst("resource", "data") + ".json?timeout=1000");
+	WebResource resource = client.resource(url.replaceFirst("resource", "data") + ".json?timeout=5000");
 
 	ClientResponse response = resource.get(ClientResponse.class);
 	if(response.getClientResponseStatus().getFamily() == Family.SUCCESSFUL)
