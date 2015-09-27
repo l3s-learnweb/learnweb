@@ -38,6 +38,7 @@ import de.l3s.learnweb.ResourceManager.Order;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.solrClient.SolrSearch;
+import de.l3s.learnweb.solrClient.SolrSearch.SearchPaginator;
 import de.l3s.util.MD5;
 
 @ManagedBean
@@ -106,8 +107,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	clickedUser = new User(); // TODO initialize with null
 	clickedGroup = new Group();// TODO initialize with null
 	clickedPresentation = new Presentation();// TODO initialize with null
-
-	paginator = group.getResources(order);
+	paginator = getResourcesFromSolr(groupId, query, getUser());
     }
 
     public void preRenderView(ComponentSystemEvent e)
@@ -979,18 +979,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void onQueryChange() throws SQLException
     {
-	if(StringUtils.isEmpty(query))
-	{
-	    paginator = group.getResources(order);
-	    return;
-	}
-
-	SolrSearch search = new SolrSearch(query, getUser());
-	search.setFilterGroups(groupId);
-	search.setResultsPerPage(AbstractPaginator.PAGE_SIZE);
-	search.setSkipResourcesWithoutThumbnails(false);
-
-	paginator = new SolrSearch.SearchPaginator(search);
+	paginator = getResourcesFromSolr(groupId, query, getUser());
     }
 
     public void saveGmailId()
@@ -1005,6 +994,17 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    System.out.println("Error while inserting gmail id" + e);
 	}
     }
+
+    public SearchPaginator getResourcesFromSolr(int groupId, String query, User user)
+    {
+	SolrSearch search = new SolrSearch(StringUtils.isEmpty(query) ? "*" : query, user);
+	search.setFilterGroups(groupId);
+	search.setResultsPerPage(AbstractPaginator.PAGE_SIZE);
+	search.setSkipResourcesWithoutThumbnails(false);
+
+	return new SolrSearch.SearchPaginator(search);
+    }
+
     /*
     
     sub group stuff:

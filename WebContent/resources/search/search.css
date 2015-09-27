@@ -90,7 +90,7 @@
 }
 
 #filters_menu_bar ul li.active, #filters_menu_bar ul li:hover {
-	background-color: #7B7B7B;
+	background-color: #616161;
 }
 
 #filters_menu_bar .filter-name {
@@ -110,6 +110,18 @@
 
 #filters_menu_bar .search-filters li:hover .filter-sub-bar {
 	display: block;
+}
+
+#filters_menu_bar .search-filters li.disabled:hover .filter-sub-bar {
+	display: none;
+}
+
+#filters_menu_bar ul li.disabled {
+	opacity: 0.4;
+}
+
+#filters_menu_bar ul li.disabled .filter-name {
+	cursor: default;
 }
 
 #filters_menu_bar .filter-sub-bar {

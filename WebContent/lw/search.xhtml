@@ -83,7 +83,7 @@
 			<h:panelGroup styleClass="search-filters #{searchBean.searchMode}" id="filters" layout="block">
 				<ul>
 					<ui:repeat value="#{searchBean.availableFilters}" var="filter">
-						<li class="filter #{filter.active ? 'active' : null}">
+						<li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
 							<span class="filter-name">
 								<span class="trimmed-text">#{filter.name}</span> 
 								<span class="arrow"></span>

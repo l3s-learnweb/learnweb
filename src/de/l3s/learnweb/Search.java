@@ -155,6 +155,13 @@ public class Search implements Serializable
 	long start = System.currentTimeMillis();
 
 	// Setup filters
+	if(page == 1)
+	{
+	    this.solrSearch.setFacetFields(searchFilters.getFacetFields());
+	    if(!searchFilters.isInterwebSearchEnabled())
+		this.solrSearch.setFacetQueries(searchFilters.getFacetQueries());
+	}
+
 	this.solrSearch.setFilterType(configMode.name());
 	if(searchFilters.getServiceFilter() != null)
 	{
@@ -190,6 +197,10 @@ public class Search implements Serializable
 	if(page == 1)
 	{
 	    searchFilters.putResourceCounter(solrSearch.getFacetFields());
+	    if(!searchFilters.isInterwebSearchEnabled())
+	    {
+		searchFilters.putResourceCounter(solrSearch.getFacetQueries());
+	    }
 	}
 
 	if(learnwebResources.size() == 0)

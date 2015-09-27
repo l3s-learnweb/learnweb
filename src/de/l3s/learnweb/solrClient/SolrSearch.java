@@ -33,6 +33,8 @@ public class SolrSearch implements Serializable
     private SolrQuery solrQuery;
 
     private Integer resultsPerPage = 8;
+    private String facetFields[] = null;
+    private String facetQueries[] = null;
     private String filterLanguage = ""; // for example en_US
     private String filterType = ""; // image, video or web
     private String filterSource = ""; // Bing, Flickr, YouTube, Vimeo, SlideShare, Ipernity, TED, Desktop ...
@@ -51,7 +53,8 @@ public class SolrSearch implements Serializable
     private String filterGroupStr = "";
     private int userId;
     private boolean skipResourcesWithoutThumbnails = true;
-    private List<FacetField> facetFields;
+    private List<FacetField> facetFieldsResult;
+    private Map<String, Integer> facetQueriesResult;
 
     public SolrSearch(String query, User user)
     {
@@ -80,6 +83,16 @@ public class SolrSearch implements Serializable
     public void setResultsPerPage(Integer configResultsPerPage)
     {
 	this.resultsPerPage = configResultsPerPage;
+    }
+
+    public void setFacetFields(String... facetFields)
+    {
+	this.facetFields = facetFields;
+    }
+
+    public void setFacetQueries(String... facetQueries)
+    {
+	this.facetQueries = facetQueries;
     }
 
     /**
@@ -183,6 +196,8 @@ public class SolrSearch implements Serializable
 
     public void clearAllFilters()
     {
+	this.facetFields = null;
+	this.facetQueries = null;
 	this.filterFormat = "";
 	if(null != filterGroupIds)
 	    this.filterGroupIds.clear();
@@ -207,7 +222,12 @@ public class SolrSearch implements Serializable
 
     public List<FacetField> getFacetFields()
     {
-	return facetFields;
+	return facetFieldsResult;
+    }
+
+    public Map<String, Integer> getFacetQueries()
+    {
+	return facetQueriesResult;
     }
 
     public void setSkipResourcesWithoutThumbnails(boolean skipResourcesWithoutThumbnails)
@@ -301,7 +321,17 @@ public class SolrSearch implements Serializable
 	solrQuery.setHighlightSimplePost("</strong>");
 
 	solrQuery.set("facet", "true");
-	solrQuery.addFacetField("location", "groups", "collector_s", "author_s", "coverage_s", "publisher_s", "tags");
+	if(facetFields != null)
+	{
+	    solrQuery.addFacetField(facetFields);
+	}
+	if(facetQueries != null && facetQueries.length > 0)
+	{
+	    for(String query : facetQueries)
+	    {
+		solrQuery.addFacetQuery(query);
+	    }
+	}
 	solrQuery.setFacetLimit(20); // TODO set to -1 to show all facets (implement "more" button on frontend)
 	solrQuery.setFacetSort("count");
 	solrQuery.setFacetMinCount(1);
@@ -333,7 +363,8 @@ public class SolrSearch implements Serializable
 	if(response != null)
 	{
 	    totalResults = response.getResults().getNumFound();
-	    facetFields = response.getFacetFields();
+	    facetFieldsResult = response.getFacetFields();
+	    facetQueriesResult = response.getFacetQuery();
 	}
 
 	// SolrDocumentList docs = response.getResults(); // to get the score
@@ -422,7 +453,7 @@ public class SolrSearch implements Serializable
 	    }
 
 	    String oneLineSnippets = snippet.toString().replaceAll("\n", " ");
-	    Pattern pattern = Pattern.compile("[^\"\'a-zA-Z]+");
+	    Pattern pattern = Pattern.compile("[^<\"\'a-zA-Z]+");
 	    Matcher matcher = pattern.matcher(oneLineSnippets);
 	    if(matcher.lookingAt())
 	    {

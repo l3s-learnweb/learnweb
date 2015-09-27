@@ -3,6 +3,7 @@ package de.l3s.learnweb;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.EnumMap;
@@ -72,8 +73,8 @@ public class SearchFilters implements Serializable
 	d, // day
 	w, // week (7 days)
 	m, // month
-	y // year
-	;
+	y, // year
+	old;
 
 	@Override
 	public String toString()
@@ -88,6 +89,8 @@ public class SearchFilters implements Serializable
 		return UtilBean.getLocaleMessage("past_month");
 	    case y:
 		return UtilBean.getLocaleMessage("past_year");
+	    case old:
+		return UtilBean.getLocaleMessage("older_than_year");
 	    default:
 		return UtilBean.getLocaleMessage("any_time");
 	    }
@@ -108,6 +111,8 @@ public class SearchFilters implements Serializable
 		cal.add(Calendar.MONTH, -1);
 		break;
 	    case y:
+		cal.add(Calendar.YEAR, -1);
+	    case old:
 		cal.add(Calendar.YEAR, -1);
 		break;
 	    default:
@@ -303,6 +308,16 @@ public class SearchFilters implements Serializable
 	}
     };
 
+    public String[] getFacetFields()
+    {
+	return new String[] { "location", "groups", "collector_s", "author_s", "coverage_s", "publisher_s", "tags" };
+    }
+
+    public String[] getFacetQueries()
+    {
+	return new String[] { "{!key='date.old'}timestamp:[* TO NOW-365DAY]", "{!key='date.y'}timestamp:[NOW-365DAY TO NOW]", "{!key='date.m'}timestamp:[NOW-30DAY TO NOW]", "{!key='date.w'}timestamp:[NOW-7DAY TO NOW]", "{!key='date.d'}timestamp:[NOW-1DAY TO NOW]" };
+    }
+
     public void clean()
     {
 	lastFilter = null;
@@ -355,6 +370,34 @@ public class SearchFilters implements Serializable
 	}
     }
 
+    public void putResourceCounter(Map<String, Integer> map)
+    {
+	List<FILTERS> mapContains = new ArrayList<SearchFilters.FILTERS>();
+	for(Map.Entry<String, Integer> entry : map.entrySet())
+	{
+	    String key = entry.getKey();
+	    String[] tempNames = key.split("\\.");
+	    if(tempNames.length != 2)
+	    {
+		continue;
+	    }
+	    else if(tempNames[0].equals("date"))
+	    {
+		if(!mapContains.contains(FILTERS.date))
+		{
+		    mapContains.add(FILTERS.date);
+		    if(availableResources.containsKey(FILTERS.date))
+		    {
+			availableResources.remove(FILTERS.date);
+		    }
+		}
+
+		Count c = new Count(new FacetField(tempNames[0]), tempNames[1], entry.getValue());
+		putResourceCounter(FILTERS.date, new ArrayList<>(Arrays.asList(c)), true);
+	    }
+	}
+    }
+
     public void putResourceCounter(FILTERS f, List<Count> counts, boolean merge)
     {
 	if(lastFilter == null || lastFilter != f)
@@ -365,8 +408,9 @@ public class SearchFilters implements Serializable
 	    }
 	    else if(merge && availableResources.containsKey(f))
 	    {
-		counts.addAll(availableResources.get(f));
-		availableResources.put(f, counts);
+		List<Count> c = availableResources.get(f);
+		c.addAll(counts);
+		availableResources.put(f, c);
 	    }
 	    else
 	    {
@@ -425,7 +469,6 @@ public class SearchFilters implements Serializable
 			    setFilter(f, nameValue[1]);
 			    break;
 			}
-
 		    }
 		    catch(IllegalArgumentException e)
 		    {
@@ -497,7 +540,7 @@ public class SearchFilters implements Serializable
 		{
 		    for(Count c : availableResources.get(fs))
 		    {
-			FilterItem fi = new FilterItem(fs.getItemName(c.getName()), c.getCount() > 0 ? Long.toString(c.getCount()) : null, changeFilterInUrl(fs, c.getName()), containsFilter && configFilters.get(fs).toString().equals(c.getName()));
+			FilterItem fi = new FilterItem(fs.getItemName(c.getName()), c.getCount() > 0 ? c.getCount() : null, changeFilterInUrl(fs, c.getName()), containsFilter && configFilters.get(fs).toString().equals(c.getName()));
 			nf.addFilterItem(fi);
 		    }
 		}
@@ -507,7 +550,24 @@ public class SearchFilters implements Serializable
 		{
 		    for(DATE d : DATE.values())
 		    {
-			FilterItem fi = new FilterItem(d.toString(), null, changeFilterInUrl(fs, d.name()), containsFilter && configFilters.get(fs).equals(d));
+			Long counter = null;
+			if(availableResources.containsKey(fs))
+			{
+			    for(Count c : availableResources.get(fs))
+			    {
+				if(c.getName().equals(d.name()))
+				{
+				    counter = c.getCount();
+				    break;
+				}
+			    }
+
+			    if(counter == null || counter == 0)
+			    {
+				continue;
+			    }
+			}
+			FilterItem fi = new FilterItem(d.toString(), counter, changeFilterInUrl(fs, d.name()), containsFilter && configFilters.get(fs).equals(d));
 			nf.addFilterItem(fi);
 		    }
 		}
@@ -524,7 +584,7 @@ public class SearchFilters implements Serializable
 		    {
 			if(c.getName().isEmpty() || c.getName().equals("\n"))
 			    continue;
-			FilterItem fi = new FilterItem(fs.getItemName(c.getName()), Long.toString(c.getCount()), changeFilterInUrl(fs, c.getName()), containsFilter && configFilters.get(fs).equals(c.getName()));
+			FilterItem fi = new FilterItem(fs.getItemName(c.getName()), c.getCount(), changeFilterInUrl(fs, c.getName()), containsFilter && configFilters.get(fs).equals(c.getName()));
 			nf.addFilterItem(fi);
 		    }
 		}
@@ -547,10 +607,7 @@ public class SearchFilters implements Serializable
 		break;
 	    }
 
-	    if(nf.getItems().size() != 0)
-	    {
-		list.add(nf);
-	    }
+	    list.add(nf);
 	}
 	return list;
     }
@@ -787,6 +844,11 @@ public class SearchFilters implements Serializable
 	    filterItems.add(i);
 	}
 
+	public boolean isDisabled()
+	{
+	    return filterItems.size() == 0;
+	}
+
 	public List<FilterItem> getItems()
 	{
 	    return filterItems;
@@ -801,11 +863,11 @@ public class SearchFilters implements Serializable
     public static class FilterItem
     {
 	private String name;
-	private String counter;
+	private Long counter;
 	private String filterUrl;
 	private boolean active;
 
-	public FilterItem(String name, String counter, String filterUrl, boolean active)
+	public FilterItem(String name, Long counter, String filterUrl, boolean active)
 	{
 	    this.name = name;
 	    this.counter = counter;
@@ -820,7 +882,10 @@ public class SearchFilters implements Serializable
 
 	public String getCounter()
 	{
-	    return counter;
+	    if(counter == null)
+		return null;
+	    else
+		return String.format("%,d", counter);
 	}
 
 	public String getUrl()
