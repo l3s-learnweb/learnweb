@@ -17,6 +17,7 @@ import org.apache.solr.client.solrj.response.FacetField.Count;
 
 import de.l3s.learnweb.Search.MODE;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.util.StringHelper;
 
 public class SearchFilters implements Serializable
 {
@@ -28,6 +29,8 @@ public class SearchFilters implements Serializable
     private Map<FILTERS, Object> configFilters = new EnumMap<>(FILTERS.class);
     private Map<FILTERS, List<Count>> availableResources = new HashMap<FILTERS, List<Count>>();
     private FILTERS lastFilter = null;
+    private int prevFilters = 0;
+    private boolean isFilterRemoved = false;
     private boolean canNotRequestLearnweb = false;
     private boolean canNotRequestInterweb = false;
 
@@ -306,6 +309,21 @@ public class SearchFilters implements Serializable
 		return item;
 	    }
 	}
+
+	public boolean isEncodeBase64()
+	{
+	    switch(this)
+	    {
+	    case collector:
+	    case author:
+	    case coverage:
+	    case publisher:
+	    case tags:
+		return true;
+	    default:
+		return false;
+	    }
+	}
     };
 
     public String[] getFacetFields()
@@ -372,7 +390,6 @@ public class SearchFilters implements Serializable
 
     public void putResourceCounter(Map<String, Integer> map)
     {
-	List<FILTERS> mapContains = new ArrayList<SearchFilters.FILTERS>();
 	for(Map.Entry<String, Integer> entry : map.entrySet())
 	{
 	    String key = entry.getKey();
@@ -383,15 +400,6 @@ public class SearchFilters implements Serializable
 	    }
 	    else if(tempNames[0].equals("date"))
 	    {
-		if(!mapContains.contains(FILTERS.date))
-		{
-		    mapContains.add(FILTERS.date);
-		    if(availableResources.containsKey(FILTERS.date))
-		    {
-			availableResources.remove(FILTERS.date);
-		    }
-		}
-
 		Count c = new Count(new FacetField(tempNames[0]), tempNames[1], entry.getValue());
 		putResourceCounter(FILTERS.date, new ArrayList<>(Arrays.asList(c)), true);
 	    }
@@ -400,19 +408,29 @@ public class SearchFilters implements Serializable
 
     public void putResourceCounter(FILTERS f, List<Count> counts, boolean merge)
     {
-	if(!counts.isEmpty() && (lastFilter == null || lastFilter != f))
+	if(lastFilter == null || lastFilter != f)
 	{
 	    if(counts.size() <= 0 && availableResources.containsKey(f))
 	    {
 		availableResources.remove(f);
 	    }
-	    else if(merge && availableResources.containsKey(f))
+	    else if(merge && availableResources.containsKey(f) && counts.size() > 0)
 	    {
 		List<Count> c = availableResources.get(f);
-		c.addAll(counts);
+		for(Count count : counts)
+		{
+		    if(c.contains(count))
+		    {
+			c.set(c.indexOf(count), count);
+		    }
+		    else
+		    {
+			c.add(count);
+		    }
+		}
 		availableResources.put(f, c);
 	    }
-	    else
+	    else if(counts.size() > 0)
 	    {
 		availableResources.put(f, counts);
 	    }
@@ -431,7 +449,10 @@ public class SearchFilters implements Serializable
 	else
 	{
 	    clean();
-	    String[] tempFilters = filters.split(";");
+	    String[] tempFilters = filters.split(",");
+
+	    isFilterRemoved = tempFilters.length < prevFilters;
+	    prevFilters = tempFilters.length;
 
 	    for(String filter : tempFilters)
 	    {
@@ -441,14 +462,15 @@ public class SearchFilters implements Serializable
 		    try
 		    {
 			FILTERS f = FILTERS.valueOf(nameValue[0]);
+			String fValue = f.isEncodeBase64() ? StringHelper.decodeBase64(nameValue[1]) : nameValue[1];
 
 			switch(f)
 			{
 			case service:
-			    setFilter(f, SERVICE.valueOf(nameValue[1]));
+			    setFilter(f, SERVICE.valueOf(fValue));
 			    break;
 			case date:
-			    setFilter(f, DATE.valueOf(nameValue[1]));
+			    setFilter(f, DATE.valueOf(fValue));
 			    break;
 			case group:
 			case collector:
@@ -457,16 +479,16 @@ public class SearchFilters implements Serializable
 			case publisher:
 			case tags:
 			    canNotRequestInterweb = true;
-			    setFilter(f, nameValue[1]);
+			    setFilter(f, fValue);
 			    break;
 			case videoDuration:
-			    setFilter(f, DURATION.valueOf(nameValue[1]));
+			    setFilter(f, DURATION.valueOf(fValue));
 			    break;
 			case imageSize:
-			    setFilter(f, SIZE.valueOf(nameValue[1]));
+			    setFilter(f, SIZE.valueOf(fValue));
 			    break;
 			default:
-			    setFilter(f, nameValue[1]);
+			    setFilter(f, fValue);
 			    break;
 			}
 		    }
@@ -486,11 +508,13 @@ public class SearchFilters implements Serializable
 
     private String changeFilterInUrl(FILTERS f, String value)
     {
+	value = value == null ? null : (f.isEncodeBase64() ? StringHelper.encodeBase64(value.getBytes()) : value);
+
 	if(configFilters.containsKey(f) && stringFilters != null)
 	{
 	    String output = "";
 	    int startIndex = stringFilters.indexOf(f.name());
-	    int endIndex = stringFilters.indexOf(';', startIndex);
+	    int endIndex = stringFilters.indexOf(',', startIndex);
 
 	    if(startIndex != 0)
 	    {
@@ -502,24 +526,11 @@ public class SearchFilters implements Serializable
 		output += stringFilters.substring(endIndex + 1);
 	    }
 
-	    return value == null ? (output.isEmpty() ? null : output) : (output.isEmpty() ? (f.name() + ":" + value) : (output + ';' + f.name() + ":" + value));
-
-	    /*for(final Entry<FILTERS, Object> entry : configFilters.entrySet())
-	    {
-	    if(f.equals(entry.getKey()) && value != null)
-	    {
-	        output += entry.getKey().name().toLowerCase() + ":" + value + ",";
-	    }
-	    else
-	    {
-	        output += entry.getKey().name().toLowerCase() + ":" + entry.getValue() + ",";
-	    }
-	    }
-	    return StringHelper.removeLastComma(output);*/
+	    return value == null ? (output.isEmpty() ? null : output) : (output.isEmpty() ? (f.name() + ":" + value) : (output + ',' + f.name() + ":" + value));
 	}
 	else if(value != null)
 	{
-	    return stringFilters == null ? (f.name() + ":" + value) : (stringFilters + ';' + f.name() + ":" + value);
+	    return stringFilters == null ? (f.name() + ":" + value) : (stringFilters + ',' + f.name() + ":" + value);
 	}
 
 	return stringFilters;
@@ -648,7 +659,11 @@ public class SearchFilters implements Serializable
 
     public void setFilter(FILTERS f, Object o)
     {
-	this.lastFilter = f;
+	if(!isFilterRemoved)
+	{
+	    this.lastFilter = f;
+	}
+
 	this.configFilters.put(f, o);
     }
 
