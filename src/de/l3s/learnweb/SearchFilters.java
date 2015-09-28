@@ -400,7 +400,7 @@ public class SearchFilters implements Serializable
 
     public void putResourceCounter(FILTERS f, List<Count> counts, boolean merge)
     {
-	if(lastFilter == null || lastFilter != f)
+	if(!counts.isEmpty() && (lastFilter == null || lastFilter != f))
 	{
 	    if(counts.size() <= 0 && availableResources.containsKey(f))
 	    {
