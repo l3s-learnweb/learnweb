@@ -719,7 +719,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    }
 	    String label = graph.getEntities().get(0).getLabel();
 
-	    images = new Search(getLearnweb().getInterweb(), label, searchFilters, getUser());
+	    images = new Search(getLearnweb().getInterweb(), label, new SearchFilters(), getUser());
 	    images.setMode(MODE.image);
 	    //images.setService(SERVICE.Ipernity, SERVICE.Flickr);
 	    images.setResultsPerService(10);
