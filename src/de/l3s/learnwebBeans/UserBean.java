@@ -13,7 +13,9 @@ import java.util.TimeZone;
 import javax.annotation.PreDestroy;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -113,10 +115,19 @@ public class UserBean implements Serializable
 	cacheShowMessageJoinGroup = true;
 	cacheShowMessageAddResource = true;
 
-	// store the user also in the session so that it is accessible in the download servlet
-	HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-	//session.setAttribute("learnweb_user", user);
+	ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+	HttpServletRequest request = (HttpServletRequest) context.getRequest();
+	String ipAddress = request.getHeader("X-FORWARDED-FOR");
+	if(ipAddress == null)
+	{
+	    ipAddress = request.getRemoteAddr();
+	}
+
+	// store the user also in the session so that it is accessible in the download Servlet
+	HttpSession session = (HttpSession) context.getSession(true);
 	session.setAttribute("learnweb_user_id", new Integer(user == null ? 0 : user.getId()));
+	session.setAttribute("userName", user == null ? "logged_out" : user.getUsername()); // set only to display it in tomcat manager app
+	session.setAttribute("Locale", ipAddress); // set only to display it in tomcat manager app	
 
 	if(user != null)
 	{
