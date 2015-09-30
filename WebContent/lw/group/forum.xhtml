@@ -72,7 +72,13 @@
 					</a>
 				</li>
 			</ul>
-		</div>  	
+		</div>  
+		
+		<script type="text/javascript">
+		/* <!-- */
+			$("#center_pane").prepend($("#group_header"));
+		/* --> */
+		</script>	
 		
 		<h:form prependId="false" rendered="#{not facesContext.validationFailed}">
 			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table"

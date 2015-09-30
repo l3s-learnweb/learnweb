@@ -1,0 +1,95 @@
+<ui:composition template="/lw/templates/new_main_t.xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="helpText" value="#{msg.groupLinkHelp}"/>
+	<ui:define name="head-meta">
+		<meta name="google-signin-client_id" content="948054065586-oh9uobccisi7lkt832q9n2hmk4mk410s.apps.googleusercontent.com" />
+		<script src="https://apis.google.com/js/platform.js" async="async" defer="defer"></script>
+	</ui:define>
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
+			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}" /> 
+		</f:metadata>
+	</ui:define>			
+
+	<ui:param name="loginRequired" value="true" />
+	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" />
+
+	<ui:define name="center_layout">
+		
+		<h:outputScript library="group" name="links.js" target="head"/>
+		<div class="center-header" id="group_header">
+			<span>
+				#{msg.options}
+			</span> 
+			#{msg.of} #{groupDetailBean.group.title}
+			
+			<h:form id="center_header_form">
+				<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" styleClass="resource_button greenbutton"  
+					update=":growl :group_menu @form" partialSubmit="true" process="@this" value="#{msg.join_group}">
+					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
+				</p:commandLink>
+			</h:form>
+				
+			<ul>								
+				<li>
+					<a href="./group/overview.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.overview}" />
+					</a>
+				</li>								
+				<li>
+					<a href="./group/resources.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.resources}" />
+					</a>
+				</li>								
+				<li>
+					<a href="./group/members.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.members}" />
+					</a>
+				</li>								
+				<li>
+					<a href="./group/presentations.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.presentations}" />
+					</a>
+				</li>								
+				<li>
+					<a href="./group/links.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.links}" />
+					</a>
+				</li>								
+				<li>
+					<a href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.forum}" />
+					</a>
+				</li>	
+				<ui:fragment rendered="${userBean.admin || userBean.moderator || groupDetailBean.group.isLeader(userBean.user)}">							
+				<li>
+					<a class="active" href="./group/options.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.options}" />
+					</a>
+				</li>
+				</ui:fragment>
+			</ul>
+		</div>
+		
+		<script type="text/javascript">
+		/* <!-- */
+			$("#center_pane").prepend($("#group_header"));
+		/* --> */
+		</script>
+		
+		<h1>Edit group metadata</h1>
+		
+		...
+		
+		<hr/>
+		<h1>Copy resources</h1>
+		Copy all resources of this group to ..
+		
+	
+	</ui:define>
+</ui:composition>

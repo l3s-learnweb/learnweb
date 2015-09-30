@@ -22,12 +22,12 @@
 	</h:head>
 
 	<h:body>
-		<p:growl id="growl" rendered="#{not disableGrowl}"/> 
+		<p:growl id="growl" rendered="#{not disableGrowl}" autoUpdate="true"/> 
 		
 		<ui:decorate template="/archive/templates/header.xhtml" /> 		
 
 		<section id="content" class="#{smallPage? 'small_page':''}">
-			<p:messages id="message" showDetail="false" showSummary="true" escape="false" />
+			<p:messages id="message" showDetail="false" showSummary="true" escape="false" autoUpdate="true" />
 	
 			<h:panelGroup layout="block" styleClass="small_page" rendered="#{loginRequired and !userBean.loggedIn}">
 				<ui:include src="/templates/user/login.xhtml" />

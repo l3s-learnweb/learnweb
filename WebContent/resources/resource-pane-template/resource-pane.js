@@ -76,6 +76,20 @@ function lightbox_open()
 	box.show();
 };
 
+function prepareCommentButton()
+{
+	var button = $('#comment_button');
+	
+	button.hide();
+	
+	$('#commentfield').focus(function() {
+		button.slideDown();
+	});
+	$('#comment_form').focusout(function() {
+		$('#comment_button').slideUp(1000);
+	});
+}
+
 $(document).ready(function() 
 {				
 	//lightbox_resize_container();	

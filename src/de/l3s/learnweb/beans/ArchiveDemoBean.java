@@ -37,6 +37,8 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -8426331759352561208L;
     private static final Logger log = Logger.getLogger(ArchiveDemoBean.class);
+    private static final int MAX_API_ERRORS = 3;
+
     private String queryString;
     private List<ResourceDecorator> resources = new LinkedList<>();
     private int page = 1;
@@ -45,12 +47,10 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
     private int processedResources = 0;
     private int addedResources = 0;
     private int waybackAPIerrors = 0;
-    private ArchiveSearchManager archiveSearchManager;
     private SimpleDateFormat waybackDateFormat;
 
     public ArchiveDemoBean() throws SQLException
     {
-	archiveSearchManager = getLearnweb().getArchiveSearchManager();
 	waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
     }
 
@@ -144,6 +144,8 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     public synchronized LinkedList<ResourceDecorator> getNextPage() throws NumberFormatException, SQLException
     {
+	ArchiveSearchManager archiveSearchManager = getLearnweb().getArchiveSearchManager();
+
 	log.debug("getNextPage");
 
 	LinkedList<ResourceDecorator> newResources = pages.get(page);
@@ -152,11 +154,12 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	{
 	    newResources = new LinkedList<ResourceDecorator>();
 
-	    for(int requests = 0; processedResources < resourcesRaw.size() && requests < 2; processedResources++)
+	    for(int requests = 0; processedResources < resourcesRaw.size(); processedResources++)
 	    {
 		ResourceDecorator resource = resourcesRaw.get(processedResources);
+		System.out.println("rank: " + resource.getRankAtService() + "; " + resource.getTitle());
 
-		if(resource.getMetadataValue("url_captures") == null)
+		if(resource.getMetadataValue("url_captures") == null && waybackAPIerrors < MAX_API_ERRORS)
 		{
 		    int captures = 0;
 		    requests++;
@@ -176,7 +179,8 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 			}
 		    }
 
-		    archiveSearchManager.cacheCaptureCount(Integer.parseInt(resource.getMetadataValue("query_id")), resource.getRankAtService(), firstCapture, lastCapture, captures);
+		    if(waybackAPIerrors == 0)
+			archiveSearchManager.cacheCaptureCount(Integer.parseInt(resource.getMetadataValue("query_id")), resource.getRankAtService(), firstCapture, lastCapture, captures);
 
 		    if(captures == 0)
 			continue; // no captures found -> don't display this resource
@@ -188,9 +192,14 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
 		newResources.add(resource);
 
-		if(page == 1 && processedResources == 10)
+		if(waybackAPIerrors == MAX_API_ERRORS)
+		    break;
+		else if(page == 1 && processedResources == 10)
+		    break;
+		else if(newResources.size() > 0 && requests > 2)
 		    break;
 	    }
+	    processedResources++;
 
 	    pages.put(page, newResources);
 	    resources.addAll(newResources);
@@ -236,10 +245,10 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	    if(e.getMessage().contains("HTTP response code: 403")) // blocked by robots
 		return null;
 
-	    log.error("wayback api error", e);
+	    log.error("wayback api error" + e.getMessage());
 	    waybackAPIerrors++;
 
-	    if(waybackAPIerrors > 10)
+	    if(waybackAPIerrors == MAX_API_ERRORS)
 	    {
 		addMessage(FacesMessage.SEVERITY_ERROR, "Archive.org API does not respond");
 	    }

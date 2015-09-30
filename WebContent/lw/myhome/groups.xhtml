@@ -158,7 +158,7 @@
 			<h:form id="other_groups">
 				<p:dataTable var="group" value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}"  paginator="false">
 					
-					<p:column headerText="#{msg.title}" sortBy="#{group.title}" style="min-width:17%">
+					<p:column headerText="#{msg.title}" sortBy="#{group.title}" style="min-width:17%" filterBy="#{group.longTitle}" filterMatchMode="contains">
 						<h:outputLink value="group/overview.jsf">
 							<f:param name="group_id" value="#{group.id}" />
 							<h:outputText value="#{group.longTitle}" />
@@ -167,7 +167,7 @@
 						<h:outputText value=" (#{msg.new_word})" styleClass="bold_red" rendered="${userBean.newGroups.contains(group)}"/>
 					</p:column>
 
-					<p:column headerText="#{msg.description}" styleClass="group_description" >
+					<p:column headerText="#{msg.description}" styleClass="group_description" filterBy="#{group.description}" filterMatchMode="contains">
 						<h:outputText value="#{group.description}" escape="false"/>
 					</p:column>					
 					

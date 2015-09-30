@@ -443,18 +443,7 @@
 						    		style="margin-right:0;margin-top:4px;float:right">
 						    	  	<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>	
 						        </p:commandButton>
-						    </h:form>
-						   
-						   <script type="text/javascript">
-							   $('#commentfield').focus(function() {
-									var button = $('#comment_button');
-									button.slideDown();
-									//scrollToElement(button);
-								});
-								$('#comment_form').focusout(function() {
-									$('#comment_button').slideUp(1000);
-								});
-						   </script>
+						    </h:form>						   
 						   
 						    <h:form id="comment_form" styleClass="clear" prependId="false" style="margin-bottom:40px;">
 						   
@@ -473,8 +462,7 @@
 										<br/>
 									</div>
 									<p:commandButton id="comment_button" styleClass="greenbutton float-right" value="#{msg.addComment}" 
-										actionListener="#{resourceDetailBean.addComment()}" update=":datagrid :comment_form" 
-										style="display:none; margin-right:0;margin-top: 4px;">
+										actionListener="#{resourceDetailBean.addComment()}" update=":datagrid :comment_form">
 										<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>	
 									</p:commandButton>
 								</h:panelGroup>
@@ -520,7 +508,10 @@
 									</ui:repeat>
 								</h:panelGroup>								
 							</h:form>
-											
+										
+							<script type="text/javascript">
+						   		prepareCommentButton();
+						   </script>	
 						</h:panelGroup>
 						<h:form rendered="#{bean.editResourceClicked and !bean.newResourceClicked}" id="edit_form">
 							<div class="align-center">
