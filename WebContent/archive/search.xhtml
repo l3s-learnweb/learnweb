@@ -79,11 +79,11 @@
 			</h:form>
 		</div>
 		
-		<h:panelGroup layout="block" class="related_entities" rendered="${not empty archiveDemoBean.suggestQueries()}">
-			<h3>Related Entities:</h3>
+		<h:panelGroup layout="block" class="related_entities" rendered="#{not empty archiveDemoBean.suggestQueries}">
+			<h3>#{msg['ArchiveSearch.related_entities']}:</h3>
 			<br/>
 			<ul class="entity_links">
-			<ui:repeat var="query" value="${archiveDemoBean.suggestQueries()}">
+			<ui:repeat var="query" value="#{archiveDemoBean.suggestQueries}">
 				<li>
 					<h:link value="#{query}" class="suggestWebLink" outcome="search" >
 						<f:param name="query" value="#{query}" />

@@ -46,12 +46,13 @@ public class ArchiveSearchManager
 	this.waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
     }
 
-    public List<String> getQueryCompletions(String query, int count) throws SQLException
+    public List<String> getQueryCompletions(String market, String query, int count) throws SQLException
     {
 	ArrayList<String> suggestions = new ArrayList<String>(count);
-	PreparedStatement select = getConnection().prepareStatement("SELECT DISTINCT query_string FROM `pw_query` WHERE `query_string` LIKE ? AND loaded_results > 0 LIMIT ?");
-	select.setString(1, query + "%");
-	select.setInt(2, count);
+	PreparedStatement select = getConnection().prepareStatement("SELECT DISTINCT query_string FROM `pw_query` WHERE market = ? AND `query_string` LIKE ? AND loaded_results > 0 LIMIT ?");
+	select.setString(1, market);
+	select.setString(2, query + "%");
+	select.setInt(3, count);
 	ResultSet rs = select.executeQuery();
 
 	while(rs.next())
@@ -63,7 +64,7 @@ public class ArchiveSearchManager
     }
 
     @SuppressWarnings("unchecked")
-    public List<String> getQuerySuggestions(String query, int count) throws SQLException, SolrServerException, IOException
+    public List<String> getQuerySuggestions(String market, String query, int count) throws SQLException, SolrServerException, IOException
     {
 	SolrQuery solrQuery = new SolrQuery();
 	solrQuery.setQuery(query);
@@ -101,11 +102,12 @@ public class ArchiveSearchManager
 
     private final static String QUERY_COLUMNS = "query_id, query_string, timestamp";
 
-    public Query getQueryByQueryString(String queryString) throws SQLException
+    public Query getQueryByQueryString(String market, String queryString) throws SQLException
     {
 	Query query = null;
-	PreparedStatement select = getConnection().prepareStatement("SELECT " + QUERY_COLUMNS + " FROM pw_query WHERE query_string = ? ORDER BY loaded_results DESC LIMIT 1");
-	select.setString(1, queryString);
+	PreparedStatement select = getConnection().prepareStatement("SELECT " + QUERY_COLUMNS + " FROM pw_query WHERE market = ? AND query_string = ? ORDER BY loaded_results DESC LIMIT 1");
+	select.setString(1, market);
+	select.setString(2, queryString);
 	ResultSet rs = select.executeQuery();
 	if(rs.next())
 	{
@@ -138,23 +140,15 @@ public class ArchiveSearchManager
     {
 	List<ResourceDecorator> results = new ArrayList<ResourceDecorator>();
 
-	PreparedStatement select = getConnection().prepareStatement(
-		"SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description, url_captures is null as not_checked FROM pw_result LEFT JOIN `url_captures_count_2` USING (query_id, rank) WHERE `query_id` = ? and (url_captures is null OR url_captures > 0) ORDER BY rank");
+	PreparedStatement select = getConnection()
+		.prepareStatement(
+			"SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description, url_captures is null as not_checked FROM pw_result LEFT JOIN `url_captures_count_2` USING (query_id, rank) WHERE `query_id` = ? and (url_captures is null OR url_captures > 0) ORDER BY rank");
 	select.setInt(1, queryId);
 	ResultSet rs = select.executeQuery();
 
 	while(rs.next())
 	{
 	    String url = rs.getString("url");
-
-	    /*
-	    if(rs.getInt("not_checked") == 1)
-	    {
-	    String domain = StringHelper.getDomainName(url);
-	    
-	    if(domain == "de")
-	        continue;
-	    }*/
 
 	    Resource resource = new Resource();
 	    resource.setUrl(url);
@@ -165,8 +159,6 @@ public class ArchiveSearchManager
 	    resource.setMetadataValue("first_timestamp", formatDate(rs.getTimestamp("first_timestamp")));
 	    resource.setMetadataValue("last_timestamp", formatDate(rs.getTimestamp("last_timestamp")));
 
-	    //	    System.out.println(resource.getMetadataValue("rank") + " - " + resource.getTitle() + " - " + resource.getMetadataValue("last_timestamp"));
-	    //System.out.println(resource);
 	    ResourceDecorator decoratedResource = new ResourceDecorator(resource);
 	    decoratedResource.setSnippet(rs.getString("description"));
 	    decoratedResource.setRankAtService(rs.getInt("rank"));

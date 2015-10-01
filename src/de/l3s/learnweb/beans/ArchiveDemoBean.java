@@ -5,8 +5,6 @@ import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLDecoder;
-import java.net.URLEncoder;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -48,10 +46,14 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
     private int addedResources = 0;
     private int waybackAPIerrors = 0;
     private SimpleDateFormat waybackDateFormat;
+    private String market;
 
     public ArchiveDemoBean() throws SQLException
     {
 	waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+	market = UtilBean.getUserBean().getLocaleAsString().replace("_", "-");
+
+	log.debug("market init: " + market);
     }
 
     public void preRenderView() throws SQLException, UnsupportedEncodingException
@@ -83,18 +85,8 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	return df.format(waybackDf.parse(timestamp));
     }
 
-    public String onSearch() throws SQLException, UnsupportedEncodingException
+    public String onSearch() throws SQLException
     {
-	queryString = URLDecoder.decode(queryString, "UTF-8");
-	Query q = getLearnweb().getArchiveSearchManager().getQueryByQueryString(queryString);
-
-	if(q == null)
-	{
-	    addMessage(FacesMessage.SEVERITY_ERROR, "ArchiveSearch.select_suggested_entity");
-	    resources = null;
-	    return null;
-	}
-
 	// reset values
 	page = 1;
 	pages.clear();
@@ -102,29 +94,39 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	addedResources = 0;
 	waybackAPIerrors = 0;
 
+	queryString = StringHelper.urlDecode(queryString);
+	Query q = getLearnweb().getArchiveSearchManager().getQueryByQueryString(market, queryString);
+
+	if(q == null)
+	{
+	    addMessage(FacesMessage.SEVERITY_ERROR, "ArchiveSearch.select_suggested_entity");
+	    resourcesRaw = null;
+	    return null;
+	}
+
 	resourcesRaw = q.getResults();
 	resources = getNextPage();
 
 	if(resourcesRaw.size() == 0)
 	    addMessage(FacesMessage.SEVERITY_ERROR, "No archived URLs found");
 
-	return "/archive/search.xhtml?query=" + URLEncoder.encode(queryString, "UTF-8") + "&amp;faces-redirect=true";
+	return "/archive/search.xhtml?query=" + StringHelper.urlEncode(queryString) + "&amp;faces-redirect=true";
     }
 
     public List<String> completeQuery(String query) throws SQLException
     {
-	return getLearnweb().getArchiveSearchManager().getQueryCompletions(query, 20);
+	return getLearnweb().getArchiveSearchManager().getQueryCompletions(market, query, 20);
     }
 
-    public List<String> suggestQueries() throws SQLException, SolrServerException, IOException
+    public List<String> getSuggestQueries() throws SQLException, SolrServerException, IOException
     {
 	if(queryString == null || queryString == "")
 	    return null;
 
-	//return getLearnweb().getArchiveSearchManager().getQueryCompletions(queryString, 10);
+	//return getLearnweb().getArchiveSearchManager().getQueryCompletions(market, queryString, 10);
 
 	//TODO
-	return getLearnweb().getArchiveSearchManager().getQuerySuggestions(queryString, 10);
+	return getLearnweb().getArchiveSearchManager().getQuerySuggestions(market, queryString, 10);
     }
 
     public String getQuery()
@@ -256,4 +258,19 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
 	return null;
     }
+
+    public String getMarket()
+    {
+	return market;
+    }
+
+    public String setMarket(String market)
+    {
+	this.market = market;
+
+	log.debug("set market " + market);
+
+	return UtilBean.getUserBean().setLocaleCode(market.substring(0, 2));
+    }
+
 }
