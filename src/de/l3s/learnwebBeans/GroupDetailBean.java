@@ -15,6 +15,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -49,6 +50,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     private int groupId;
     private Group group;
+    private String editedGroupDescription;
+    private String editedGroupTitle;
+    private int editedGroupLeaderId;
     private List<User> members;
 
     private List<Presentation> presentations;
@@ -57,7 +61,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private List<LogEntry> logMessages;
     private ArrayList<NewsEntry> newslist;
     private User clickedUser;
-    private Group clickedGroup;
 
     private Boolean newResourceClicked = false;
     private Boolean editResourceClicked = false;
@@ -105,7 +108,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	Resource temp = new Resource();
 	clickedResource = temp;
 	clickedUser = new User(); // TODO initialize with null
-	clickedGroup = new Group();// TODO initialize with null
 	clickedPresentation = new Presentation();// TODO initialize with null
 	paginator = getResourcesFromSolr(groupId, query, getUser());
     }
@@ -134,8 +136,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	HashSet<Integer> deletedResources = new HashSet<Integer>();
 	Action[] filter = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
-		Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource,
-		Action.group_removing_resource };
+		Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.group_removing_resource };
 	List<LogEntry> feed = logMessages;
 
 	if(feed != null)
@@ -304,6 +305,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
 
 	group = getLearnweb().getGroupManager().getGroupById(groupId);
+	if(group != null)
+	{
+	    editedGroupDescription = group.getDescription();
+	    editedGroupLeaderId = group.getLeader().getId();
+	    editedGroupTitle = group.getTitle();
+	}
     }
 
     private void loadLogs(Integer limit)
@@ -907,16 +914,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	this.clickedUser = clickedUser;
     }
 
-    public Group getClickedGroup()
-    {
-	return clickedGroup;
-    }
-
-    public void setClickedGroup(Group clickedGroup)
-    {
-	this.clickedGroup = clickedGroup;
-    }
-
     public boolean isAllLogs()
     {
 	return allLogs;
@@ -1003,6 +1000,115 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	search.setSkipResourcesWithoutThumbnails(false);
 
 	return new SolrSearch.SearchPaginator(search);
+    }
+
+    public List<SelectItem> getMembersSelectItemList() throws SQLException
+    {
+	if(null == group)
+	    return new ArrayList<SelectItem>();
+
+	List<SelectItem> yourList;
+	yourList = new ArrayList<SelectItem>();
+
+	for(User member : group.getMembers())
+	    yourList.add(new SelectItem(member.getId(), member.getUsername()));
+
+	return yourList;
+    }
+
+    public String getEditedGroupDescription()
+    {
+	return editedGroupDescription;
+    }
+
+    public void setEditedGroupDescription(String editedGroupDescription)
+    {
+	this.editedGroupDescription = editedGroupDescription;
+    }
+
+    public String getEditedGroupTitle()
+    {
+	return editedGroupTitle;
+    }
+
+    public void setEditedGroupTitle(String editedGroupTitle)
+    {
+	this.editedGroupTitle = editedGroupTitle;
+    }
+
+    public int getEditedGroupLeaderId()
+    {
+	return editedGroupLeaderId;
+    }
+
+    public void setEditedGroupLeaderId(int editedGroupLeaderId)
+    {
+	this.editedGroupLeaderId = editedGroupLeaderId;
+    }
+
+    public void onGroupEdit()
+    {
+	System.out.println("onGroupEdit");
+
+	if(null == group)
+	{
+	    addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
+	    return;
+	}
+
+	try
+	{
+	    getUser().setActiveGroup(group);
+
+	    if(!editedGroupDescription.equals(group.getDescription()))
+	    {
+		group.setDescription(editedGroupDescription);
+		log(Action.group_changing_description, group.getId());
+	    }
+	    if(!editedGroupTitle.equals(group.getTitle()))
+	    {
+		log(Action.group_changing_title, group.getId(), group.getTitle());
+		group.setTitle(editedGroupTitle);
+	    }
+	    if(editedGroupLeaderId != group.getLeaderUserId())
+	    {
+		group.setLeaderUserId(editedGroupLeaderId);
+		log(Action.group_changing_leader, group.getId());
+	    }
+	    getLearnweb().getGroupManager().save(group);
+	    //getLearnweb().getGroupManager().resetCache();
+	    getUser().clearCaches();
+
+	}
+	catch(SQLException e)
+	{
+	    addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
+	    e.printStackTrace();
+	}
+
+	addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+    }
+
+    public void copyGroup()
+    {
+
+	if(null == group)
+	{
+	    addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
+	    return;
+	}
+
+	/*try
+	{
+	    group.copyResourcesToGroupById(selectedResourceTargetGroupId, getUser());
+	}
+	catch(SQLException e)
+	{
+	    addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
+	    e.printStackTrace();
+	}*/
+	System.out.println("hello");
+	addGrowl(FacesMessage.SEVERITY_INFO, "Copied Resources");
     }
 
     /*

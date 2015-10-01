@@ -32,8 +32,6 @@ public class GroupsBean extends ApplicationBean implements Serializable
     private String selectedGroupDescription;
     private String selectedGroupTitle;
     private int selectedGroupLeaderId;
-    private User selectedGroupLeader;
-    private int editLeaderId;
 
     private Group newGroup;
     private boolean otherGroupsShowLanguage;
@@ -219,8 +217,6 @@ public class GroupsBean extends ApplicationBean implements Serializable
 	this.selectedGroupDescription = selectedGroup.getDescription();
 	this.selectedGroupTitle = selectedGroup.getTitle();
 	this.selectedGroupLeaderId = selectedGroup.getLeader().getId();
-	this.editLeaderId = selectedGroup.getLeader().getId();
-	this.selectedGroupLeader = selectedGroup.getLeader();
     }
 
     public String getSelectedGroupTitle()
@@ -253,16 +249,6 @@ public class GroupsBean extends ApplicationBean implements Serializable
 	this.selectedGroupDescription = selectedGroupDescription;
     }
 
-    public User getSelectedGroupLeader()
-    {
-	return selectedGroupLeader;
-    }
-
-    public void setSelectedGroupLeader(User selectedGroupLeader)
-    {
-	this.selectedGroupLeader = selectedGroupLeader;
-    }
-
     public Group getEditGroup()
     {
 	return editGroup;
@@ -271,16 +257,6 @@ public class GroupsBean extends ApplicationBean implements Serializable
     public void setEditGroup(Group editGroup)
     {
 	this.editGroup = editGroup;
-    }
-
-    public int getEditLeaderId()
-    {
-	return editLeaderId;
-    }
-
-    public void setEditLeaderId(int editLeaderId)
-    {
-	this.editLeaderId = editLeaderId;
     }
 
     public List<SelectItem> getMembersOfSelectedGroup() throws SQLException

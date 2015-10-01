@@ -20,10 +20,7 @@ public class JobScheduler
 	this.learnweb = learnweb;
 	this.scheduler = new Scheduler();
 
-	//UpdateTedVideos task = new UpdateTedVideos();
-	//Schedules the task, at 1:00 everyday
 	//description about Scheduling patterns : http://www.sauronsoftware.it/projects/cron4j/manual.php#p02 
-	//scheduler.schedule("0 1 * * *", task);
 
 	//Schedules the task at 1:00 on 14th and 28th of every month
 	UpdateLoroResources loroTask = new UpdateLoroResources();
@@ -50,48 +47,6 @@ public class JobScheduler
     {
 	if(scheduler.isStarted())
 	    scheduler.stop();
-    }
-
-    private class UpdateTedVideos extends Task
-    {
-
-	@Override
-	public boolean canBePaused()
-	{
-	    return true;
-	}
-
-	@Override
-	public boolean canBeStopped()
-	{
-	    return true;
-	}
-
-	@Override
-	public boolean supportsCompletenessTracking()
-	{
-	    return true;
-	}
-
-	@Override
-	public boolean supportsStatusTracking()
-	{
-	    return true;
-	}
-
-	@Override
-	public void execute(TaskExecutionContext context)
-	{
-
-	    try
-	    {
-		learnweb.getTedManager().saveTedResource();
-	    }
-	    catch(Throwable t)
-	    {
-		log.fatal("Can't update TED videos", t);
-	    }
-	}
     }
 
     private class UpdateLoroResources extends Task

@@ -174,15 +174,12 @@ public class Group implements Comparable<Group>, HasId, Serializable
     //Copy resource from this group to another group referred to by groupId, and by which user
     public void copyResourcesToGroupById(int groupId, User user) throws SQLException
     {
-	ResourceManager rm = Learnweb.getInstance().getResourceManager();
 	Group duplicateGroup = Learnweb.getInstance().getGroupManager().getGroupById(groupId);
 	for(Resource resource : getResources())
 	{
 	    Resource newResource = resource.clone();
 	    newResource = user.addResource(newResource);
 	    duplicateGroup.addResource(newResource, user);
-	    List<ArchiveUrl> archiveUrls = rm.getArchiveUrlsByResourceId(newResource.getOriginalResourceId());
-	    rm.saveArchiveUrlsByResourceId(newResource.getId(), archiveUrls);
 	}
     }
 
