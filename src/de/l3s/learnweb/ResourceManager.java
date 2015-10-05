@@ -324,13 +324,13 @@ public class ResourceManager
 			sb.append(entry.getValue().replace("'", "\\'"));
 			sb.append("',");
 		    }
-
+	
 		    sb.setLength(sb.length() - 1);
 		    sb.append(")");
 		    metadataSQLvalue = sb.toString();
 		}
 		//metadataSQLvalue = "?";
-
+	
 		log.debug(metadataSQLvalue);
 	*/
 	String query = "REPLACE INTO `lw_resource` (`resource_id` ,`title` ,`description` ,`url` ,`storage_type` ,`rights` ,`source` ,`type` ,`format` ,`owner_user_id` ,`rating` ,`rate_number` ,`query`, embedded_size1, embedded_size2, embedded_size3, embedded_size4, filename, max_image_url, original_resource_id, machine_description, author, file_url, thumbnail0_url, thumbnail0_file_id, thumbnail0_width, thumbnail0_height, thumbnail1_url, thumbnail1_file_id, thumbnail1_width, thumbnail1_height, thumbnail2_url, thumbnail2_file_id, thumbnail2_width, thumbnail2_height, thumbnail3_url, thumbnail3_file_id, thumbnail3_width, thumbnail3_height, thumbnail4_url, thumbnail4_file_id, thumbnail4_width, thumbnail4_height, embeddedRaw, transcript, online_status, id_at_service, duration, restricted, language, creation_date, metadata) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
@@ -860,9 +860,9 @@ public class ResourceManager
     public OwnerList<Resource, User> getResourcesByGroupId(int groupId, int page, int pageSize, Order order) throws SQLException
     {
     UserManager um = learnweb.getUserManager();
-
+    
     OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
-
+    
     PreparedStatement select = learnweb.getConnection().prepareStatement(
     	"SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
     select.setInt(1, groupId);
@@ -874,12 +874,12 @@ public class ResourceManager
         int userId = rs.getInt(1);
         Resource resource = createResource(rs);
         User user = userId == 0 ? null : um.getUser(userId);
-
+    
         if(null != resource)
     	resources.add(resource, user, rs.getDate(2));
     }
     select.close();
-
+    
     return resources;
     }
     */
@@ -890,8 +890,8 @@ public class ResourceManager
 
 	List<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement(
-		"SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
+	PreparedStatement select = learnweb.getConnection()
+		.prepareStatement("SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
 	select.setInt(1, groupId);
 	select.setInt(2, pageSize);
 	select.setInt(3, page * pageSize);
@@ -1187,9 +1187,15 @@ public class ResourceManager
 	    }
 	}
 
+	/* remove old bing images first
 	if(biggestThumbnail != null)
+	{
 	    resource.setMaxImageUrl(biggestThumbnail.getUrl());
-
+	
+	    if(resource.getThumbnail2() == null)
+		resource.setThumbnail2(new Thumbnail(biggestThumbnail.getUrl(), biggestThumbnail.getWidth(), biggestThumbnail.getHeight()));
+	}
+	*/
 	return resource;
     }
 
@@ -1260,12 +1266,10 @@ public class ResourceManager
 				+ " FROM `lw_resource` r where  `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`resource_id` > 20000 and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown' ORDER BY `resource_id` DESC limit 20",
 			null);
 	*/
-	List<Resource> resources = rm
-		.getResources(
-			"SELECT "
-				+ RESOURCE_COLUMNS
-				+ " FROM `lw_resource` r where `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`resource_id` in (SELECT p.resource_id  FROM `lw_group_resource` p WHERE p.`group_id` =420) and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown'",
-			null);
+	List<Resource> resources = rm.getResources(
+		"SELECT " + RESOURCE_COLUMNS
+			+ " FROM `lw_resource` r where `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`resource_id` in (SELECT p.resource_id  FROM `lw_group_resource` p WHERE p.`group_id` =420) and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown'",
+		null);
 	for(Resource resource : resources)
 	{
 	    System.out.println(resource);

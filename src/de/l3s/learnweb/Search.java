@@ -401,7 +401,7 @@ public class Search implements Serializable
 	    return null;
 	}
 
-	log.debug("called doSearch for page: " + page);
+	//	log.debug("called doSearch for page: " + page);
 	LinkedList<ResourceDecorator> res = pages.get(page);
 
 	if(null == res)

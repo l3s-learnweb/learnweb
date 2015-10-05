@@ -59,4 +59,10 @@ public class ThumbnailEntity
 	this.width = width;
     }
 
+    @Override
+    public String toString()
+    {
+	return "ThumbnailEntity [width=" + width + ", height=" + height + ", url=" + url + "]";
+    }
+
 }
