@@ -121,7 +121,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
 	// load related entities
 	//TODO
-	if(true)
+	if(false)
 	    relatedEntities = getLearnweb().getArchiveSearchManager().getQueryCompletions(market, queryString, 10);
 	else
 	{
@@ -247,7 +247,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     public Date getFirstCaptureDate(String url)
     {
-	log.debug("getFirstCaptureDate: " + url);
+	//log.debug("getFirstCaptureDate: " + url);
 	return getCaptureDate(url, 1);
     }
 
