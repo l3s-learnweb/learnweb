@@ -4,7 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="helpText" value="#{msg.groupLinkHelp}"/>
+	<ui:param name="helpText" value="#{msg.groupOptionsHelp}"/>
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
@@ -74,6 +74,11 @@
 		<script type="text/javascript">
 		/* <!-- */
 			$("#center_pane").prepend($("#group_header"));
+			function onClickCopyGroup()
+			{
+				var groupSize = #{groupDetailBean.group.resources.size()};
+				return confirm('Do you really want to copy '+ groupSize + ' resources?');
+			}
 		/* --> */
 		</script>
 		
@@ -108,11 +113,11 @@
 		<h:panelGrid columns="3">
 			<h:outputText value="Copy all resources of this group to:"/>
 			<h:selectOneMenu value="#{groupDetailBean.selectedResourceTargetGroupId}">
-				<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" 
+				<f:selectItems var="group" value="#{groupDetailBean.userCopyableGroups}" itemLabel="#{group.title}" 
 					itemValue="#{group.id}"/>
 			</h:selectOneMenu>					
 			<p:commandButton value="Copy" action="#{groupDetailBean.copyGroup}" process="@form" 
-				update=":growl" onclick="return confirm('do you want to continue?');"/>
+				update=":growl" onstart="return onClickCopyGroup();"/>
 		</h:panelGrid>				
 		</h:form>
 	</ui:define>

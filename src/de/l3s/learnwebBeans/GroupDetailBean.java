@@ -1098,7 +1098,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    return;
 	}
 
-	/*try
+	try
 	{
 	    group.copyResourcesToGroupById(selectedResourceTargetGroupId, getUser());
 	}
@@ -1106,9 +1106,15 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	{
 	    addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
 	    e.printStackTrace();
-	}*/
-	System.out.println("hello");
+	}
 	addGrowl(FacesMessage.SEVERITY_INFO, "Copied Resources");
+    }
+
+    public List<Group> getUserCopyableGroups() throws SQLException
+    {
+	List<Group> copyableGroups = getUser().getWriteAbleGroups();
+	copyableGroups.remove(group);
+	return copyableGroups;
     }
 
     /*

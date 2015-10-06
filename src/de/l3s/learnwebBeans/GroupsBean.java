@@ -28,10 +28,6 @@ public class GroupsBean extends ApplicationBean implements Serializable
     private List<Group> joinAbleGroups;
     private List<Group> myGroups;
     private Group selectedGroup;
-    private Group editGroup;
-    private String selectedGroupDescription;
-    private String selectedGroupTitle;
-    private int selectedGroupLeaderId;
 
     private Group newGroup;
     private boolean otherGroupsShowLanguage;
@@ -159,50 +155,6 @@ public class GroupsBean extends ApplicationBean implements Serializable
 	return newGroup;
     }
 
-    public void onGroupEdit()
-    {
-	System.out.println("onGroupEdit");
-
-	if(null == editGroup)
-	{
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
-	    return;
-	}
-
-	try
-	{
-	    getUser().setActiveGroup(editGroup);
-
-	    if(!selectedGroupDescription.equals(editGroup.getDescription()))
-	    {
-		editGroup.setDescription(selectedGroupDescription);
-		log(Action.group_changing_description, editGroup.getId());
-	    }
-	    if(!selectedGroupTitle.equals(editGroup.getTitle()))
-	    {
-		log(Action.group_changing_title, editGroup.getId(), editGroup.getTitle());
-		editGroup.setTitle(selectedGroupTitle);
-	    }
-	    if(selectedGroupLeaderId != editGroup.getLeaderUserId())
-	    {
-		editGroup.setLeaderUserId(selectedGroupLeaderId);
-		log(Action.group_changing_leader, editGroup.getId());
-	    }
-	    getLearnweb().getGroupManager().save(editGroup);
-	    //getLearnweb().getGroupManager().resetCache();
-	    getUser().clearCaches();
-	    myGroups = getUser().getGroups();
-
-	}
-	catch(SQLException e)
-	{
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
-	    e.printStackTrace();
-	}
-
-	addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
-    }
-
     public Group getSelectedGroup()
     {
 	return selectedGroup;
@@ -210,53 +162,7 @@ public class GroupsBean extends ApplicationBean implements Serializable
 
     public void setSelectedGroup(Group selectedGroup) throws SQLException
     {
-	System.out.println("setselected group");
-	System.out.println(selectedGroup);
-
 	this.selectedGroup = selectedGroup;
-	this.selectedGroupDescription = selectedGroup.getDescription();
-	this.selectedGroupTitle = selectedGroup.getTitle();
-	this.selectedGroupLeaderId = selectedGroup.getLeader().getId();
-    }
-
-    public String getSelectedGroupTitle()
-    {
-	return selectedGroupTitle;
-    }
-
-    public void setSelectedGroupTitle(String selectedGroupTitle)
-    {
-	this.selectedGroupTitle = selectedGroupTitle;
-    }
-
-    public int getSelectedGroupLeaderId()
-    {
-	return selectedGroupLeaderId;
-    }
-
-    public void setSelectedGroupLeaderId(int selectedGroupLeaderId)
-    {
-	this.selectedGroupLeaderId = selectedGroupLeaderId;
-    }
-
-    public String getSelectedGroupDescription()
-    {
-	return selectedGroupDescription;
-    }
-
-    public void setSelectedGroupDescription(String selectedGroupDescription)
-    {
-	this.selectedGroupDescription = selectedGroupDescription;
-    }
-
-    public Group getEditGroup()
-    {
-	return editGroup;
-    }
-
-    public void setEditGroup(Group editGroup)
-    {
-	this.editGroup = editGroup;
     }
 
     public List<SelectItem> getMembersOfSelectedGroup() throws SQLException
