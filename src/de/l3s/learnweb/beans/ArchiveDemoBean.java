@@ -53,10 +53,11 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
     {
 	waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
 	market = UtilBean.getUserBean().getLocaleAsString().replace("_", "-");
+	log.debug("market init: " + market);
 
-	if(market == "de")
+	if(market.equalsIgnoreCase("de"))
 	    market = "de-DE";
-	else if(market.equals("en"))
+	else if(market.equalsIgnoreCase("en"))
 	    market = "en-US";
 
 	log.debug("market init: " + market);
