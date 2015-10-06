@@ -27,7 +27,7 @@
 		<ui:decorate template="/archive/templates/header.xhtml" /> 		
 
 		<section id="content" class="#{smallPage? 'small_page':''}">
-			<p:messages id="message" showDetail="false" showSummary="true" escape="false" autoUpdate="true" />
+			<p:messages id="message" showDetail="false" showSummary="true" escape="false" autoUpdate="false" />
 	
 			<h:panelGroup layout="block" styleClass="small_page" rendered="#{loginRequired and !userBean.loggedIn}">
 				<ui:include src="/templates/user/login.xhtml" />

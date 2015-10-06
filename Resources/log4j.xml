@@ -12,7 +12,7 @@
  
 	<appender name="file" class="org.apache.log4j.RollingFileAppender">
 	    <param name="append" value="false" />
-	    <param name="maxFileSize" value="10MB" />
+	    <param name="maxFileSize" value="30MB" />
 	    <param name="maxBackupIndex" value="10" />
 	    <param name="file" value="${catalina.home}/logs/learnweb.log" />
 	    <layout class="org.apache.log4j.PatternLayout">

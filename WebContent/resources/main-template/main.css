@@ -203,6 +203,7 @@ iframe { border:none }
 .language_en { background-image:url(img/flag_en.png); }
 .language_pt { background-image:url(img/flag_pt.png); }
 .language_it { background-image:url(img/flag_it.png); }
+.language_us { background-image:url(img/flag_us.png); }
 
 .hover-white:focus,
 .hover-white:hover	{
@@ -310,6 +311,7 @@ iframe { border:none }
     border-bottom-right-radius:10px;
 	border-bottom-left-radius:10px;
 	min-width:20rem;
+	z-index: 1000;
 }
 .userbar ul li ul li{
 	border-left:0px;

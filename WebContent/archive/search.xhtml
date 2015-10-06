@@ -21,9 +21,9 @@
 			
 			.related_entities
 			{
-				float:left;
-				margin-top:20px;
-				margin-left:10px;
+				position: fixed;
+				top:70px;
+				left:610px;
 				width:415px;
 				padding:10px 20px;
 				background-color:#f9f9f9;
@@ -33,7 +33,8 @@
 				list-style-type:none;
 				padding:0;
 				margin:0;
-			}	
+			}
+			#loadingsymbol { left: 18rem; }	
 		</style>
 		
 		<script type="text/javascript">
@@ -45,7 +46,7 @@
 			var logResourceOpened = function() {}; 
 		</script>	
 			
-		<div class="float-left" style="width:600px;">
+		<div class="" style="width:600px;">
 			<div id="results" class="list_view">			
 				<div class="resources">
 					<ui:decorate template="/archive/templates/resources_list.xhtml">
@@ -73,17 +74,16 @@
 				</h:panelGroup>
 			</div>
 		
-			<!-- TODO: all remote commands cause an update of :nextPage  -->
 			<h:form style="display:none;">	
-				<p:remoteCommand actionListener="${archiveDemoBean.loadNextPage()}" update=":nextPage" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this" partialSubmit="true" />
+				<p:remoteCommand actionListener="${archiveDemoBean.loadNextPage()}" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this" partialSubmit="true" update=":nextPage" immediate="true"/>
 			</h:form>
 		</div>
-		
-		<h:panelGroup layout="block" class="related_entities" rendered="#{not empty archiveDemoBean.suggestQueries}">
+	
+		<h:panelGroup layout="block" class="related_entities" rendered="#{not empty archiveDemoBean.relatedEntities}">
 			<h3>#{msg['ArchiveSearch.related_entities']}:</h3>
 			<br/>
 			<ul class="entity_links">
-			<ui:repeat var="query" value="#{archiveDemoBean.suggestQueries}">
+			<ui:repeat var="query" value="#{archiveDemoBean.relatedEntities}">
 				<li>
 					<h:link value="#{query}" class="suggestWebLink" outcome="search" >
 						<f:param name="query" value="#{query}" />

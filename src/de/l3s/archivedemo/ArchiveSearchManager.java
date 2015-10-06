@@ -42,7 +42,7 @@ public class ArchiveSearchManager
 
 	this.dbConnection = DriverManager.getConnection(properties.getProperty("mysql_archive_url"), properties.getProperty("mysql_archive_user"), properties.getProperty("mysql_archive_password"));
 	this.solr = new HttpSolrServer("http://prometheus.kbs.uni-hannover.de:8984/solr/WebpageIndex");
-
+	this.solr.setConnectionTimeout(6000);
 	this.waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
     }
 
@@ -141,8 +141,7 @@ public class ArchiveSearchManager
 	List<ResourceDecorator> results = new ArrayList<ResourceDecorator>();
 
 	PreparedStatement select = getConnection()
-		.prepareStatement(
-			"SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description, url_captures is null as not_checked FROM pw_result LEFT JOIN `url_captures_count_2` USING (query_id, rank) WHERE `query_id` = ? and (url_captures is null OR url_captures > 0) ORDER BY rank");
+		.prepareStatement("SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description, UNIX_TIMESTAMP(crawl_time) as crawl_time2 FROM pw_result LEFT JOIN `url_captures_count_2` USING (query_id, rank) WHERE `query_id` = ? ORDER BY rank");
 	select.setInt(1, queryId);
 	ResultSet rs = select.executeQuery();
 
@@ -158,6 +157,7 @@ public class ArchiveSearchManager
 	    resource.setMetadataValue("url_captures", rs.getString("url_captures"));
 	    resource.setMetadataValue("first_timestamp", formatDate(rs.getTimestamp("first_timestamp")));
 	    resource.setMetadataValue("last_timestamp", formatDate(rs.getTimestamp("last_timestamp")));
+	    resource.setMetadataValue("crawl_time", rs.getString("crawl_time2"));
 
 	    ResourceDecorator decoratedResource = new ResourceDecorator(resource);
 	    decoratedResource.setSnippet(rs.getString("description"));
@@ -202,20 +202,23 @@ public class ArchiveSearchManager
 	return dbConnection;
     }
 
+    /*
     public static void main(String[] args) throws Exception
     {
-
-	ArchiveSearchManager lm = Learnweb.getInstance().getArchiveSearchManager();
-
-	//lm.getResultsByQueryId(65158);
-
-	System.exit(0);
+    
+    ArchiveSearchManager lm = Learnweb.getInstance().getArchiveSearchManager();
+    
+    //lm.getResultsByQueryId(65158);
+    
+    System.exit(0);
     }
+    */
 
     public void cacheCaptureCount(int queryId, int rank, Date firstCapture, Date lastCapture, int captures) throws SQLException
     {
-	//log.debug("cacheCaptureCount");
-	PreparedStatement insert = getConnection().prepareStatement("INSERT DELAYED INTO `archive_bing_big`.`url_captures_count_2` (`query_id`, `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, `crawl_time`) VALUES (?,?,?,?,?,?)");
+	//log.debug("cacheCaptureCount" + queryId + ", " + rank + ", " + firstCapture);
+
+	PreparedStatement insert = getConnection().prepareStatement("REPLACE DELAYED INTO `archive_bing_big`.`url_captures_count_2` (`query_id`, `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, `crawl_time`) VALUES (?,?,?,?,?,?)");
 	insert.setInt(1, queryId);
 	insert.setInt(2, rank);
 	insert.setInt(3, captures);

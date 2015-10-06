@@ -47,6 +47,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
     private int waybackAPIerrors = 0;
     private SimpleDateFormat waybackDateFormat;
     private String market;
+    private List<String> relatedEntities;
 
     public ArchiveDemoBean() throws SQLException
     {
@@ -104,8 +105,11 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
 	if(q == null)
 	{
+	    log.debug("No query found for: " + queryString + "; market: " + market);
 	    addMessage(FacesMessage.SEVERITY_ERROR, "ArchiveSearch.select_suggested_entity");
 	    resourcesRaw = null;
+	    resources.clear();
+	    relatedEntities = null;
 	    return null;
 	}
 
@@ -115,6 +119,22 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	if(resourcesRaw.size() == 0)
 	    addMessage(FacesMessage.SEVERITY_ERROR, "No archived URLs found");
 
+	// load related entities
+	//TODO
+	if(true)
+	    relatedEntities = getLearnweb().getArchiveSearchManager().getQueryCompletions(market, queryString, 10);
+	else
+	{
+	    try
+	    {
+		relatedEntities = getLearnweb().getArchiveSearchManager().getQuerySuggestions(market, queryString, 10);
+	    }
+	    catch(SolrServerException | IOException e)
+	    {
+		log.error("Can't get related entities", e);
+	    }
+	}
+
 	return "/archive/search.xhtml?query=" + StringHelper.urlEncode(queryString) + "&amp;faces-redirect=true";
     }
 
@@ -123,52 +143,60 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	return getLearnweb().getArchiveSearchManager().getQueryCompletions(market, query, 20);
     }
 
-    public List<String> getSuggestQueries() throws SQLException, SolrServerException, IOException
+    /*
+    public List<String> getSuggestQueries() throws SQLException
     {
-	if(queryString == null || queryString == "")
-	    return null;
-
-	//return getLearnweb().getArchiveSearchManager().getQueryCompletions(market, queryString, 10);
-
-	//TODO
-	return getLearnweb().getArchiveSearchManager().getQuerySuggestions(market, queryString, 10);
-    }
-
-    public String getQuery()
+    
+    if(queryString == null || queryString == "")
+        return null;
+    
+    //TODO
+    if(true)
+        return getLearnweb().getArchiveSearchManager().getQueryCompletions(market, queryString, 10);
+    
+    try
     {
-	return queryString;
+        return getLearnweb().getArchiveSearchManager().getQuerySuggestions(market, queryString, 10);
     }
-
-    public void setQuery(String query)
+    catch(SolrServerException | IOException e)
     {
-	this.queryString = query;
+        log.error("Can't get related entities", e);
+        return null;
     }
-
-    public List<ResourceDecorator> getResources()
-    {
-	return resources;
     }
+    */
 
     public synchronized LinkedList<ResourceDecorator> getNextPage() throws NumberFormatException, SQLException
     {
 	ArchiveSearchManager archiveSearchManager = getLearnweb().getArchiveSearchManager();
 
-	log.debug("getNextPage");
+	log.debug("getPage " + page);
 
-	LinkedList<ResourceDecorator> newResources = pages.get(page);
+	LinkedList<ResourceDecorator> resourcePage = pages.get(page);
 
-	if(null == newResources && resourcesRaw != null)
+	if(null == resourcePage && resourcesRaw != null)
 	{
-	    newResources = new LinkedList<ResourceDecorator>();
+	    int resourcesPerPage = (page < 3) ? 5 : 10; // display at most 5 resources on the first two pages
+	    int minCrawlTime = (int) (new Date().getTime() / 1000) - 86400 * 10; // the latest valid crawl date
+	    resourcePage = new LinkedList<ResourceDecorator>();
 
 	    for(int requests = 0; processedResources < resourcesRaw.size(); processedResources++)
 	    {
 		ResourceDecorator resource = resourcesRaw.get(processedResources);
-		System.out.println("rank: " + resource.getRankAtService() + "; " + resource.getTitle());
 
-		if(resource.getMetadataValue("url_captures") == null && waybackAPIerrors < MAX_API_ERRORS)
+		int crawlTime = 0, captures = 0;
+
+		if(resource.getMetadataValue("url_captures") != null) // the capture dates have been crawled before
 		{
-		    int captures = 0;
+		    crawlTime = Integer.parseInt(resource.getMetadataValue("crawl_time"));
+		    captures = Integer.parseInt(resource.getMetadataValue("url_captures"));
+		}
+
+		//System.out.println("rank: " + resource.getRankAtService() + "; " + captures + "; " + minCrawlTime + "; " + resource.getTitle());
+
+		if(crawlTime < minCrawlTime) //&& waybackAPIerrors < MAX_API_ERRORS)
+		{
+		    captures = 0;
 		    requests++;
 		    String url = resource.getUrl().substring(resource.getUrl().indexOf("//") + 2); // remove leading http://
 
@@ -188,31 +216,27 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
 		    if(waybackAPIerrors == 0)
 			archiveSearchManager.cacheCaptureCount(Integer.parseInt(resource.getMetadataValue("query_id")), resource.getRankAtService(), firstCapture, lastCapture, captures);
-
-		    if(captures == 0)
-			continue; // no captures found -> don't display this resource
 		}
+
+		if(captures == 0)
+		    continue; // no captures found -> don't display this resource
 
 		resource.setTempId(++addedResources);
 
-		//System.out.println(resource.getTempId() + " - " + resource.getTitle());
+		resourcePage.add(resource);
+		resourcesPerPage--;
 
-		newResources.add(resource);
-
-		if(waybackAPIerrors == MAX_API_ERRORS)
-		    break;
-		else if(page == 1 && processedResources == 10)
-		    break;
-		else if(newResources.size() > 0 && requests > 2)
+		// return the result when to many errors occurred or enough results were found
+		if(waybackAPIerrors == MAX_API_ERRORS || resourcePage.size() > 0 && requests >= 2 || resourcePage.size() > 0 && resourcesPerPage <= 0)
 		    break;
 	    }
 	    processedResources++;
 
-	    pages.put(page, newResources);
-	    resources.addAll(newResources);
+	    pages.put(page, resourcePage);
+	    resources.addAll(resourcePage);
 	}
 
-	return newResources;
+	return resourcePage;
 
     }
 
@@ -223,6 +247,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     public Date getFirstCaptureDate(String url)
     {
+	log.debug("getFirstCaptureDate: " + url);
 	return getCaptureDate(url, 1);
     }
 
@@ -233,6 +258,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     private Date getCaptureDate(String url, int limit)
     {
+	//log.debug("getCaptureDate");
 	String response;
 	try
 	{
@@ -274,6 +300,28 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	this.market = market;
 
 	return UtilBean.getUserBean().setLocaleCode(market.substring(0, 2));
+    }
+
+    public String getQuery()
+    {
+	return queryString;
+    }
+
+    public void setQuery(String query)
+    {
+	this.queryString = query;
+    }
+
+    public List<ResourceDecorator> getResources()
+    {
+	return resources;
+    }
+
+    public List<String> getRelatedEntities()
+    {
+	//log.debug("getRelatedEntities");
+
+	return relatedEntities;
     }
 
 }
