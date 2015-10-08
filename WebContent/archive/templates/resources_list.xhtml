@@ -15,13 +15,13 @@
 			
 		<div class="resource" id="resource_${res.tempId}">		
 			<h:panelGroup layout="block">
-				<h:outputLink class="resourceWebLink" target="_blank" value="#{res.url}"><h:outputText value="#{res.title}" escape="false"/></h:outputLink>
+				<h:outputLink class="resourceWebLink" target="_blank" value="#{res.url}" onmouseup="return logClick(#{res.rankAtService}, 1)"><h:outputText value="#{res.title}" escape="false"/></h:outputLink>
 				
 	
 				<div style="display:inline; vertical-align:top;">
-				<h:outputLink value="https://web.archive.org/web/*/#{res.learnwebUrl}" title="" style="color:green;text-overflow:ellipsis;overflow:hidden;display:block;white-space: nowrap;width:100%;" target="_blank">#{res.learnwebUrl}</h:outputLink>
+				<h:outputLink value="https://web.archive.org/web/*/#{res.learnwebUrl}" title="" style="color:green;text-overflow:ellipsis;overflow:hidden;display:block;white-space: nowrap;width:100%;" target="_blank" onmouseup="return logClick(#{res.rankAtService}, 2)">#{res.learnwebUrl}</h:outputLink>
 				
-				<div style="margin-bottom:2px;">#{msg['ArchiveSearch.captured_between']} <a href="https://web.archive.org/web/#{res.getMetadataValue('first_timestamp')}/#{res.url}" style="color:green;" target="_blank">#{archiveDemoBean.formatDate(res.getMetadataValue('first_timestamp'))}</a> #{msg['ArchiveSearch.captured_between_and']} <a href="https://web.archive.org/web/#{res.getMetadataValue('last_timestamp')}/#{res.url}" style="color:green;" target="_blank">#{archiveDemoBean.formatDate(res.getMetadataValue('last_timestamp'))}</a></div>
+				<div style="margin-bottom:2px;">#{msg['ArchiveSearch.captured_between']} <a href="https://web.archive.org/web/#{res.getMetadataValue('first_timestamp')}/#{res.url}" style="color:green;" target="_blank" onmouseup="return logClick(#{res.rankAtService}, 3)">#{archiveDemoBean.formatDate(res.getMetadataValue('first_timestamp'))}</a> #{msg['ArchiveSearch.captured_between_and']} <a href="https://web.archive.org/web/#{res.getMetadataValue('last_timestamp')}/#{res.url}" style="color:green;" target="_blank" onmouseup="return logClick(#{res.rankAtService}, 4)">#{archiveDemoBean.formatDate(res.getMetadataValue('last_timestamp'))}</a></div>
 				
 				
 				<h:outputText value="#{res.snippet}" style="display:block;width:100%;" escape="false"></h:outputText>

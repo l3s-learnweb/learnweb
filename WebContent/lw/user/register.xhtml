@@ -19,6 +19,12 @@
 	<ui:param name="disableGrowl" value="true" />
 	
 	<ui:define name="center_layout">
+		<ui:fragment rendered="#{not empty registrationBean.wizard}">
+			<style type="text/css">
+				header {display:none; }
+			</style>
+		</ui:fragment>
+		
 		<p:panel header="#{msg.registerLabel}">
 			<h:form id="registerform">
 

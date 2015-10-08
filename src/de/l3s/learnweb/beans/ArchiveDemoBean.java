@@ -9,15 +9,18 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -41,26 +44,30 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
     private List<ResourceDecorator> resources = new LinkedList<>();
     private int page = 1;
     private List<ResourceDecorator> resourcesRaw;
-    private HashMap<Integer, LinkedList<ResourceDecorator>> pages = new HashMap<Integer, LinkedList<ResourceDecorator>>();
+    private Map<Integer, LinkedList<ResourceDecorator>> pages = Collections.synchronizedMap(new HashMap<Integer, LinkedList<ResourceDecorator>>());
     private int processedResources = 0;
     private int addedResources = 0;
     private int waybackAPIerrors = 0;
     private SimpleDateFormat waybackDateFormat;
     private String market;
     private List<String> relatedEntities;
+    private final String sessionId;
+    private int queryId;
 
     public ArchiveDemoBean() throws SQLException
     {
+	HttpSession session = (HttpSession) getFacesContext().getExternalContext().getSession(true);
+	sessionId = session.getId();
 	waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
 	market = UtilBean.getUserBean().getLocaleAsString().replace("_", "-");
-	log.debug("market init: " + market);
 
+	System.out.println("market:" + market);
 	if(market.equalsIgnoreCase("de"))
 	    market = "de-DE";
 	else if(market.equalsIgnoreCase("en"))
 	    market = "en-US";
 
-	log.debug("market init: " + market);
+	System.out.println("market:" + market);
     }
 
     public void preRenderView() throws SQLException, UnsupportedEncodingException
@@ -111,8 +118,11 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	    resourcesRaw = null;
 	    resources.clear();
 	    relatedEntities = null;
+	    queryId = -1;
 	    return null;
 	}
+
+	queryId = q.getId(); // necessary for click log
 
 	resourcesRaw = q.getResults();
 	resources = getNextPage();
@@ -120,21 +130,27 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	if(resourcesRaw.size() == 0)
 	    addMessage(FacesMessage.SEVERITY_ERROR, "No archived URLs found");
 
+	ArchiveSearchManager archiveManager = getLearnweb().getArchiveSearchManager();
+
+	long start = System.currentTimeMillis();
 	// load related entities
 	//TODO
-	if(false)
-	    relatedEntities = getLearnweb().getArchiveSearchManager().getQueryCompletions(market, queryString, 10);
+	if(false) // true == simple related entities from database only
+	    relatedEntities = archiveManager.getQueryCompletions(market, queryString, 10);
 	else
 	{
 	    try
 	    {
-		relatedEntities = getLearnweb().getArchiveSearchManager().getQuerySuggestions(market, queryString, 10);
+		relatedEntities = archiveManager.getQuerySuggestions(market, queryString, 10);
 	    }
 	    catch(SolrServerException | IOException e)
 	    {
 		log.error("Can't get related entities", e);
 	    }
 	}
+	log.debug("Loaded related entities in " + (System.currentTimeMillis() - start) + "ms");
+
+	archiveManager.logQuery(queryString, sessionId, market);
 
 	return "/archive/search.xhtml?query=" + StringHelper.urlEncode(queryString) + "&amp;faces-redirect=true";
     }
@@ -144,40 +160,28 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	return getLearnweb().getArchiveSearchManager().getQueryCompletions(market, query, 20);
     }
 
-    /*
-    public List<String> getSuggestQueries() throws SQLException
-    {
-    
-    if(queryString == null || queryString == "")
-        return null;
-    
-    //TODO
-    if(true)
-        return getLearnweb().getArchiveSearchManager().getQueryCompletions(market, queryString, 10);
-    
-    try
-    {
-        return getLearnweb().getArchiveSearchManager().getQuerySuggestions(market, queryString, 10);
-    }
-    catch(SolrServerException | IOException e)
-    {
-        log.error("Can't get related entities", e);
-        return null;
-    }
-    }
-    */
-
     public synchronized LinkedList<ResourceDecorator> getNextPage() throws NumberFormatException, SQLException
     {
+	if(waybackAPIerrors > MAX_API_ERRORS)
+	{
+	    addMessage(FacesMessage.SEVERITY_ERROR, "Archive.org API does not respond");
+	    return null;
+	}
+	if(queryId == -1)
+	{
+	    addMessage(FacesMessage.SEVERITY_ERROR, "ArchiveSearch.select_suggested_entity");
+	    return null;
+	}
+
 	ArchiveSearchManager archiveSearchManager = getLearnweb().getArchiveSearchManager();
 
-	log.debug("getPage " + page);
+	//log.debug("getPage " + page);
 
 	LinkedList<ResourceDecorator> resourcePage = pages.get(page);
 
 	if(null == resourcePage && resourcesRaw != null)
 	{
-	    int resourcesPerPage = (page < 3) ? 5 : 10; // display at most 5 resources on the first two pages
+	    final int resourcesPerPage = (page < 3) ? 5 : 10; // display at most 5 resources on the first two pages
 	    int minCrawlTime = (int) (new Date().getTime() / 1000) - 86400 * 10; // the latest valid crawl date
 	    resourcePage = new LinkedList<ResourceDecorator>();
 
@@ -225,10 +229,14 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 		resource.setTempId(++addedResources);
 
 		resourcePage.add(resource);
-		resourcesPerPage--;
 
 		// return the result when to many errors occurred or enough results were found
-		if(waybackAPIerrors == MAX_API_ERRORS || resourcePage.size() > 0 && requests >= 2 || resourcePage.size() > 0 && resourcesPerPage <= 0)
+		if(waybackAPIerrors > MAX_API_ERRORS)
+		{
+		    addMessage(FacesMessage.SEVERITY_ERROR, "Archive.org API does not respond");
+		    break;
+		}
+		if(resourcesPerPage == resourcePage.size() || resourcePage.size() > 0 && requests >= 2)
 		    break;
 	    }
 	    processedResources++;
@@ -238,6 +246,17 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	}
 
 	return resourcePage;
+
+    }
+
+    public void logClick()
+    {
+	int rank = getParameterInt("rank");
+	int type = getParameterInt("type");
+
+	log.debug(rank + " - " + type);
+
+	getLearnweb().getArchiveSearchManager().logClick(queryId, rank, type, sessionId);
 
     }
 
@@ -279,13 +298,8 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	    if(e.getMessage().contains("HTTP response code: 403")) // blocked by robots
 		return null;
 
-	    log.error("wayback api error" + e.getMessage());
+	    log.error("wayback api error", e);
 	    waybackAPIerrors++;
-
-	    if(waybackAPIerrors == MAX_API_ERRORS)
-	    {
-		addMessage(FacesMessage.SEVERITY_ERROR, "Archive.org API does not respond");
-	    }
 	}
 
 	return null;

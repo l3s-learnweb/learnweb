@@ -14,8 +14,8 @@
 	<ui:param name="disableGrowl" value="true"/>
 	
 	<ui:define name="center_layout">
-		<h:outputStylesheet library="search" name="search.css"  />	
-		<h:outputScript library="search" name="search.js" target="head"/>
+		<h:outputStylesheet library="search" name="search2.css"  />	
+		<h:outputScript library="search" name="search2.js" target="head"/>
 		<style type="text/css">
 			a.suggestWebLink:link,a.suggestWebLink{font-size: 1.3rem; font-family: "Segoe UI",Arial,Helvetica,sans-serif;}
 			
@@ -35,6 +35,12 @@
 				margin:0;
 			}
 			#loadingsymbol { left: 18rem; }	
+			
+			#message {
+				position: fixed;
+				width: 100%;
+				z-index: 10000;
+			}
 		</style>
 		
 		<script type="text/javascript">
@@ -44,6 +50,13 @@
 			var ajaxLoadFactsheet = function() {}; // necessary to use default search script	
 			var loadFilterCounts = function() {}; 
 			var logResourceOpened = function() {}; 
+			loadAheadPx = 1000;
+			
+			function logClick(rank, type)
+			{
+				ajaxLogClick([{name:'rank', value:rank}, {name:'type', value:type}]); 
+				return true;
+			}
 		</script>	
 			
 		<div class="" style="width:600px;">
@@ -58,6 +71,7 @@
 			
 			<div id="search_loading_more_results">
 				#{msg.loading_more_results}
+				<span class="loading-icon"></span>
 			</div>
 			<div id="search_no_more_results">
 				#{msg.no_more_results}
@@ -75,7 +89,8 @@
 			</div>
 		
 			<h:form style="display:none;">	
-				<p:remoteCommand actionListener="${archiveDemoBean.loadNextPage()}" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this" partialSubmit="true" update=":nextPage" immediate="true"/>
+				<p:remoteCommand global="false" actionListener="${archiveDemoBean.loadNextPage()}" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this" partialSubmit="true" update=":nextPage :message" immediate="true"/>
+				<p:remoteCommand global="false" actionListener="${archiveDemoBean.logClick()}" name="ajaxLogClick" process="@this" partialSubmit="true" immediate="true" async="true"/>
 			</h:form>
 		</div>
 	

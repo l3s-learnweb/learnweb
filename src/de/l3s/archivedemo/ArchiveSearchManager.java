@@ -228,4 +228,39 @@ public class ArchiveSearchManager
 	insert.executeUpdate();
     }
 
+    public void logQuery(String queryString, String sessionId, String language)
+    {
+	if(queryString.length() > 255)
+	    queryString = queryString.substring(0, 255);
+
+	try
+	{
+	    PreparedStatement insert = getConnection().prepareStatement("INSERT DELAYED INTO `search_log` (`query`, `session_id`, `language`) VALUES(?, ?, ?)");
+	    insert.setString(1, queryString);
+	    insert.setString(2, sessionId);
+	    insert.setString(3, language);
+	    insert.executeUpdate();
+	}
+	catch(SQLException e)
+	{
+	    log.fatal("Can't log query: " + queryString, e);
+	}
+    }
+
+    public void logClick(int queryId, int rank, int type, String sessionId)
+    {
+	try
+	{
+	    PreparedStatement insert = getConnection().prepareStatement("INSERT DELAYED INTO `click_log` (query_id, `rank`, `type`, `session_id`) VALUES(?, ?, ?, ?)");
+	    insert.setInt(1, queryId);
+	    insert.setInt(2, rank);
+	    insert.setInt(3, type);
+	    insert.setString(4, sessionId);
+	    insert.executeUpdate();
+	}
+	catch(SQLException e)
+	{
+	    log.fatal("Can't log click", e);
+	}
+    }
 }
