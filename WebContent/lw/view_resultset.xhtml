@@ -22,11 +22,6 @@
 		<div id="sub_menu_bar">
 			
 			<h:form class="links" style="vertical-align: middle;">
-				<h:outputText value="#{msg.Task_based_View}" styleClass="activeResource" rendered="#{exploreBean.exploreMode == 'task_based'}" />
-				<h:link value="#{msg.Task_based_View}" outcome="/lw/explore" rendered="#{exploreBean.exploreMode != 'task_based'}" >
-					<f:param name="mode" value="task_based" />
-				</h:link>			
-
 				<h:outputText value="#{msg.list_view}" styleClass="activeResource" rendered="#{exploreBean.exploreMode == 'list_view'}" />
 				<h:link value="#{msg.list_view}" outcome="/lw/explore" rendered="#{exploreBean.exploreMode != 'list_view'}" >
 					<f:param name="mode" value="list_view" />
@@ -58,21 +53,21 @@
 		
 		<ui:decorate  template="/lw/templates/resource_lightbox.xhtml"></ui:decorate>		
 		<h:panelGroup layout="block" id="explore_resultset" >
-		<div class="#{resultSetBean.resultSetView}_view">			
-			
-			<div class="resources">
-			<h:panelGroup layout="block" rendered="${resultSetBean.resources.size() > 0 }">
-				<ui:decorate template="/lw/templates/resources.xhtml" >
-					<ui:param name="resources" value="#{resultSetBean.resources}" />
-					<ui:param name="view" value="#{resultSetBean.resultSetView}" />					
-				</ui:decorate>
-			</h:panelGroup>
-			<h:panelGroup layout="block" rendered="${resultSetBean.resources.size() == 0}">
-				<p:messages id="no_resources" showDetail="true" autoUpdate="true"/>
-			</h:panelGroup>
-			</div>	
-			<div class="clear"></div> 
-		</div>
+			<div class="#{resultSetBean.resultSetView}_view">			
+				
+				<div class="resources">
+				<h:panelGroup layout="block" rendered="${resultSetBean.resources.size() > 0 }">
+					<ui:decorate template="/lw/templates/resources.xhtml" >
+						<ui:param name="resources" value="#{resultSetBean.resources}" />
+						<ui:param name="view" value="#{resultSetBean.resultSetView}" />					
+					</ui:decorate>
+				</h:panelGroup>
+				<h:panelGroup layout="block" rendered="${resultSetBean.resources.size() == 0}">
+					<p:messages id="no_resources" showDetail="true" autoUpdate="true"/>
+				</h:panelGroup>
+				</div>	
+				<div class="clear"></div> 
+			</div>
 		</h:panelGroup>
 		<div id="explore_right_bar" class="right_bar">
 			<p:outputPanel autoUpdate="true"  >
@@ -80,12 +75,12 @@
 					<p:tab title="#{msg.ResultSet_Timeline}">
 						<p:panel id="resultview_filter_panel" header="#{msg.ResultSet_Filter}" toggleable="true" toggleSpeed="500" widgetVar="resultview_panel" style="padding:5px;">
 							<h:form>
-								<p:selectOneRadio layout="pageDirection" value="#{resultSetBean.resultsetfilter}" required="true"  >
+								<p:selectOneRadio layout="pageDirection" value="#{resultSetBean.resultsetfilter}" required="true">
 									<f:selectItem itemValue="resource_click" itemLabel="#{msg.resources_clicked}" />
 									<f:selectItem itemValue="resources_not_clicked" itemLabel="#{msg.resources_not_clicked}"/>
 									<f:selectItem itemValue="resource_saved" itemLabel="#{msg.resources_saved}"/>
 									<f:selectItem itemValue="all_resources" itemLabel="#{msg.resources_all}" />
-									<p:ajax listener="#{resultSetBean.setResultsetfilter()}" oncomplete="updateresultset(); "/>
+									<p:ajax listener="#{resultSetBean.selectFilter}" oncomplete="updateresultset();" process="@form" />
 								</p:selectOneRadio>
 							</h:form>
 						</p:panel>
@@ -224,7 +219,7 @@
 			</h:panelGroup>
 		</div>
 		<h:form class="display-none">	
-		  	<p:remoteCommand update=":explore_resultset" name="updateresultset" oncomplete="prepareResources($('#explore_resultset .resource'));" />
+		  	<p:remoteCommand update=":explore_resultset" name="updateresultset" oncomplete="prepareResources($('#explore_resultset .resource'));open_searchbar();" />
 		  	<p:remoteCommand update=":exploretabView:right_bartab2" name="updatecurrentsearch" />
 			<p:remoteCommand actionListener="${resultSetBean.logResourceOpened()}" name="logResourceOpened" async="true" oncomplete="updatecurrentsearch();" />
 			<p:remoteCommand actionListener="${resultSetBean.logEndTime()}" name="logEndTime" async="false" />

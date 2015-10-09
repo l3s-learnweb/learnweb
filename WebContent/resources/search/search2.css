@@ -41,12 +41,9 @@
 	float: right;
 	height: 91%;
 	width: 24%;
-	padding:5px;
-	display: inline-block;
 	position: fixed;
 	right: 8px; 
 	top: 75px;
-	
 }
 
 .web_right_bar
@@ -54,8 +51,6 @@
 	float: right;
 	height: 91%;
 	width: 31%;
-	padding:5px;
-	display: inline-block;
 	position: fixed;
 	right: 8px; 
 	top: 100px;

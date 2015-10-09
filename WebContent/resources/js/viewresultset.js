@@ -68,19 +68,19 @@ function prepareResources(resources)
 						offset.left = mindist;					
 					else if(offset.left + width + mindist > containerWidth)
 						offset.left = containerWidth - width - mindist;
-					
-					if(offset.top < 79)
-						offset.top = 79;	
-					
+					console.log(offset.top, previewHeight, containerHeight, headerHeight, scrollTop);
+					if(offset.top < headerHeight)
+						offset.top = headerHeight;						
 					else if(offset.top + previewHeight > containerHeight)
 						offset.top = containerHeight - previewHeight;
 
+					offset.top += scrollTop;
+					
 					openPreview.hide();
 					openPreview = preview;
 				
 					preview.show();	
-					preview.offset(offset);  
-				
+					preview.offset(offset);   
 		        }
 			}, 320 );
 		});
@@ -172,72 +172,13 @@ function resizeGridResources()
 
 	$('#explore_resultset .resource').width(gridItemWidth);
 }
-/*
-var loading = false;
-function loadNextPage()
-{
-	if(no_more_results || loading) // nothing found || not searched
-		return;
-	
-	loading = true;
-	$('#search_loading_more_results').show();
-
-	//ajaxLoadNextPage();
-}
-
-function displayNextPage(xhr, status, args)
-{	
-	var results = $('#new_results > div > div');  // this can include additional html like the "Page x:" on textsearch
-	var resources = results.filter('.resource');
-	
-	$('#search_loading_more_results').hide();
-	
-	if(resources.length == 0 || status != "success") 
-	{
-		if(status != "success")
-			console.log('fehler', status);
-		
-		if($('#results .resource').size() > 0)
-			$('#search_no_more_results').show();
-		else		
-			$('#search_nothing_found').show();
-		
-		no_more_results = true;
-		return;
-	}
-
-	$('#results > .resources').append(results);		
-
-	prepareResources(resources);	
-	
-	loading = false;
-	
-	testIfResultsFillPage();
-
-}
-
-function testIfResultsFillPage()
-{	
-	console.log($('.content').scrollTop() , $('#results').height() , $('#center_pane').height());
-	
-	// if results don't fill the page -> load more results
-	
-	if($('.content').scrollTop()*0.90 > ($('#results').height() - $('#center_pane').height())*0.80)
-    {		
-		loadNextPage();
-    }	
-}
-*/
 
 function lightbox_close()
 {
 	openPreview.hide();	
 	
 	$('#lightbox').hide();
-	
-	//Trevor Changes
-	logEndTime([{name:'resource_id', value:lightboxActiveResource.attr('id').substring(9)}]);
-	//Trevor Changes
+	logEndTime([{name:'resource_id', value:lightboxActiveResource.attr('id').substring(9)}]); //To log lightbox close 
 	$('#lightbox_content .embedded').remove();	
 
 	lightboxActiveResource = null;
@@ -268,9 +209,9 @@ function lightbox_next()
 	if(!next.hasClass('resource')) {
 		next = $('#explore_resultset .resource').first();
 	}
-	//Trevor Changes
-	logEndTime([{name:'resource_id', value:lightboxActiveResource.attr('id').substring(9)}]);
-	//Trevor Changes
+
+	logEndTime([{name:'resource_id', value:lightboxActiveResource.attr('id').substring(9)}]); //To log lightbox close for a particular resource
+	
 	next.trigger('openLightbox');
 }
 
@@ -285,9 +226,9 @@ function lightbox_prev()
 	if(!prev.hasClass('resource')) {
 		prev = $('#explore_resultset .resource').last();
 	}
-	//Trevor Changes
+
 	logEndTime([{name:'resource_id', value:lightboxActiveResource.attr('id').substring(9)}]);
-	//Trevor Changes
+
 	prev.trigger('openLightbox');	
 }
 
@@ -378,8 +319,6 @@ function resizeend() {
     }               
 }
 
-//window.onload = testIfResultsFillPage;
-
 function tabselection(current_tab){
 	if(current_tab == "currentsearch"){
 			exploretabViewer.select(1);
@@ -461,13 +400,6 @@ $(document).ready(function()
 		else if (event.which == 27)
 			lightbox_close();		
 	});
-	
-	//$('#center_pane > div').scroll(testIfResultsFillPage);	
-
-	/*$(".content").bind("scroll", function(e){
-		testIfResultsFillPage();
-	});
-	*/
 	
 	$('.resourceWebLink').click(function(){
 		var tempResourceId = $(this).closest('div.resource').attr('id').substring(9);

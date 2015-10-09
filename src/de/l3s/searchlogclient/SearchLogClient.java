@@ -420,8 +420,7 @@ public class SearchLogClient
 			.getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(), resource.getResource().getThumbnail4().getUrl(), resultsetId,
 			resource.getTempId());
 	    else
-		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
-			resource.getTempId());
+		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId, resource.getTempId());
 
 	    //posting the resource to the web service
 	    ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, resourceSend);
@@ -455,8 +454,7 @@ public class SearchLogClient
 			.getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(), resource.getResource().getThumbnail4().getUrl(), resultsetId,
 			resource.getTempId());
 	    else
-		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
-			resource.getTempId());
+		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId, resource.getTempId());
 	    resourcelist.add(resourceSend);
 	}
 
@@ -1074,6 +1072,7 @@ public class SearchLogClient
 		resourcesResultset.put(resource.getUrl(), resource);
 		de.l3s.learnweb.Resource tempResource = new de.l3s.learnweb.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
 			resource.getThumbnail4_height(), resource.getThumbnail4_width(), resource.getThumbnail4_url(), resource.getUrl(), resource.getType());
+		tempResource.setLocation(tempResource.getSource());
 		ResourceDecorator decoratedResource = new ResourceDecorator(tempResource);
 		decoratedResource.setTempId(resource.getResource_rank());
 		resources.add(decoratedResource);

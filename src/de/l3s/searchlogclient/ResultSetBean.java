@@ -128,7 +128,7 @@ public class ResultSetBean extends ApplicationBean
 		    resources = searchLogClient.getResourcesByResultSetIdAndAction(resultSetId, resultsetfilter);
 	    }
 	    if(resources.size() == 0 && FacesContext.getCurrentInstance().getMessageList().size() == 0)
-		addMessage(FacesMessage.SEVERITY_INFO, "Info", "There are no resources for the action '" + resultsetfilter + "' to be displayed");
+		addMessage(FacesMessage.SEVERITY_INFO, "There are no resources for the action '" + resultsetfilter + "' to be displayed");
 	    return resources;
 	}
 	catch(ClientHandlerException e)
@@ -265,8 +265,12 @@ public class ResultSetBean extends ApplicationBean
 
     public void setResultsetfilter(String resultsetfilter)
     {
-	resources = null;
 	this.resultsetfilter = resultsetfilter;
+    }
+
+    public void selectFilter()
+    {
+	resources = null;
     }
 
     public String getQuery()
