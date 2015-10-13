@@ -118,7 +118,41 @@ public class UserManager
 
 	return users;
     }
+	
+ 	/**
+     * Method constructed to remove admins and moderators users
+     * 
+     * @param Users List
+     * @author Alana
+     * @return list without Admin users
+     * @throws SQLException
+     */
+    public List<User> removeAdminUsers(List<User> list) throws SQLException
+    {
+	List<User> finalList = new ArrayList<User>();
 
+	for(User u : list)
+	{
+	    int valueAdmin = 0, valueModerator = 0;
+	    PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_user` WHERE user_id = ?");
+	    select.setInt(1, u.getId());
+	    ResultSet rs = select.executeQuery();
+
+	    while(rs.next())
+	    {
+		valueAdmin = rs.getInt("is_admin");
+		valueModerator = rs.getInt("is_moderator");
+		System.out.println(valueAdmin + "-" + valueModerator);
+
+		if((valueAdmin == 0) && (valueModerator == 0))
+		    finalList.add(u);
+	    }
+	    select.close();
+	}
+
+	return finalList;
+    }
+	
     /**
      * get a user by username and password
      * 
