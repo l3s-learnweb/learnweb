@@ -26,6 +26,8 @@ public class AdminNotificationBean extends ApplicationBean
     private String text;
     @NotEmpty
     private String title;
+	//Alana
+    private String[] listStudents;
 
     public void send() throws SQLException
     {
@@ -65,6 +67,43 @@ public class AdminNotificationBean extends ApplicationBean
 	addMessage(FacesMessage.SEVERITY_INFO, counter + " Notifications send");
     }
 
+	//Alana
+    public void send2() throws SQLException
+    {
+	System.out.println("Send2");
+	System.out.println("lista no admin:" + this.listStudents[0]);
+	if(null == this.listStudents || this.listStudents.length == 0)
+	{
+	    addMessage(FacesMessage.SEVERITY_ERROR, "Please select the users you want to send a message.");
+	    return;
+	}
+
+	TreeSet<Integer> selectedUsers = new TreeSet<Integer>();
+	for(String userId : this.listStudents)
+	{
+	    selectedUsers.add(Integer.parseInt(userId));
+	}
+
+	User fromUser = getUser();
+
+	Message message = new Message();
+	message.setFromUser(fromUser);
+	message.setTitle(this.title);
+	message.setText(this.text);
+	message.setTime(new Date());
+
+	UserManager um = getLearnweb().getUserManager();
+	int counter = 0;
+
+	for(int userId : selectedUsers)
+	{
+	    message.setToUser(um.getUser(userId));
+	    message.save();
+	    counter++;
+	}
+	addMessage(FacesMessage.SEVERITY_INFO, counter + " Notifications send");
+    }
+	
     public String getText()
     {
 	return text;
@@ -83,5 +122,16 @@ public class AdminNotificationBean extends ApplicationBean
     public void setTitle(String title)
     {
 	this.title = title;
+    }
+	
+	//Alana
+    public String[] getListStudents()
+    {
+	return listStudents;
+    }
+
+    public void setListStudents(String[] listStudents)
+    {
+	this.listStudents = listStudents;
     }
 }
