@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -118,8 +119,8 @@ public class UserManager
 
 	return users;
     }
-	
- 	/**
+
+    /**
      * Method constructed to remove admins and moderators users
      * 
      * @param Users List
@@ -152,7 +153,7 @@ public class UserManager
 
 	return finalList;
     }
-	
+
     /**
      * get a user by username and password
      * 
