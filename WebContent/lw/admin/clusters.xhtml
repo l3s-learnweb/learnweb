@@ -1,0 +1,47 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<ui:composition> 
+		<h:outputStylesheet name="css/admin.css" />
+		<h:outputScript library="primefaces" target="head" name="jquery/jquery.js" />
+		<h:outputScript library="js" target="head" name="selectionTree.js" />
+
+		<h:form>
+			<h:panelGrid columns="2" cellspacing="1" id="pg4">
+				<f:facet name="cla">
+				      	<h:outputText value="Visualise the Groups" /> 
+			 	</f:facet>
+				
+					<p:outputLabel value="Select Class:  " /> 
+					<p:selectOneMenu id="classCluster" value="#{clusterBean.classId}" style="width:250px">
+						<f:selectItem itemLabel="-" itemValue="" />
+						<f:selectItems value="#{userAssessmentBean.courses}" var="cl21" itemLabel="#{cl21.title}" itemValue="#{cl21.id}"/>
+					</p:selectOneMenu>
+					
+					<p:outputLabel value="Feature 1:  " /> 
+					<p:selectOneMenu id="feat1" value="#{clusterBean.feature1}" style="width:250px">
+						<f:selectItem itemLabel="-" itemValue="" />
+						<f:selectItems value="#{clusterBean.listFeatures.entrySet().toArray()}" var="f1" itemLabel="#{f1.key}" itemValue="#{f1.value}"/>
+					</p:selectOneMenu>
+					
+					<p:outputLabel value="Feature 2:  " /> 
+					<p:selectOneMenu id="feat2" value="#{clusterBean.feature2}" style="width:250px">
+						<f:selectItem itemLabel="-" itemValue="" />
+						<f:selectItems value="#{clusterBean.listFeatures.entrySet().toArray()}" var="f2" itemLabel="#{f2.key}" itemValue="#{f2.value}"/>
+					</p:selectOneMenu>
+					
+					
+					<p:commandButton value="Visualise" update="usercl" oncomplete="PF('clg1').show()" actionListener="#{clusterBean.executeClusters}"/>
+					<p:dialog id="usercl" modal="true" widgetVar="clg1" resizable="true" header="Class" maximizable="true">
+							<p:chart type="bubble" model="#{clusterBean.bubbleModel}" rendered="#{clusterBean.showBubble}" style="height:300px;width:1500px"/>
+					</p:dialog>
+					
+			</h:panelGrid>		
+		</h:form>
+
+	</ui:composition>
+</html>
