@@ -9,13 +9,12 @@
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="Group Log Analysis" />
-
 	<ui:define name="center_layout">
 			
 		<p:tabView cache="true">  
 			<p:tab title="Course perspective">
-				<h:form id="form2">
-					<h:panelGrid columns="2" cellspacing="1" id="pg2">
+				<h:form id="form1">
+					<h:panelGrid columns="2" cellspacing="1" id="pg1">
 				    	<f:facet name="header">
 				        	<h:outputText value="Comparison between classes" /> 
 				    	</f:facet>
@@ -51,33 +50,37 @@
 						        
 				        <p:commandButton value="Compare Classes" oncomplete="PF('dlg2').show()" update="dia" actionListener="#{userAssessmentBean.generateComparativeGraph}"/>
 				        
-						<p:dialog id="dia" modal="true" resizable="true" widgetVar="dlg2" header="Course perspective" showEffect="clip">
+						<p:dialog id="dia" modal="true" resizable="true" widgetVar="dlg2" header="Course perspective" showEffect="clip" maximizable="true">
 							<p:chart type="bar" model="#{userAssessmentBean.barModel2}" rendered="#{userAssessmentBean.showb2}" style="height:300px;width:1500px"/>
 							<p:chart type="line" model="#{userAssessmentBean.lineModel2}" rendered="#{userAssessmentBean.showl2}" style="height:300px;width:1500px"/>
 							<p:chart type="pie" model="#{userAssessmentBean.pieModel20}" rendered="#{userAssessmentBean.showp2}" style="height:300px;width:800px"/>
 							<p:chart type="pie" model="#{userAssessmentBean.pieModel21}" rendered="#{userAssessmentBean.showp2}" style="height:300px;width:800px"/>
 						
-							<p:commandButton value="Send a Feedback" oncomplete="PF('dlg21').show()" update="dia21"/>
+							<p:commandButton value="Send a Feedback" oncomplete="PF('dlg11').show()" update="dia11"/>
 						</p:dialog>
 						
-						<p:dialog id="dia21" modal="true" resizable="true" widgetVar="dlg21" header="Send a Notification" showEffect="clip">
-							<h:panelGrid columns="2" cellspacing="1" id="pg22">
-								<p:outputLabel for="op11" value="Title:" />
-								<p:inputText id="op11" value="#{userAssessmentBean.title}" />
+						<p:dialog id="dia11" modal="true" resizable="true" widgetVar="dlg11" header="Send a Notification" showEffect="clip">
+							<h:panelGrid columns="2" cellspacing="1" id="pg12">
 								
-								<p:outputLabel for="op11" value="Message" />
-								<p:inputTextarea rows="5" cols="30" counter="displayFeedback" maxlength="300" counterTemplate="{0} characters remaining." autoResize="false" value="#{userAssessmentBean.message}" />
+								<p:outputLabel value="Title:" />
+								<p:inputText id="op11" value="#{userAssessmentBean.title}"/>
+								
+								<p:outputLabel value="Message" />
+								<p:inputTextarea rows="5" cols="30" counter="displayFeedback" maxlength="300" counterTemplate="{0} characters remaining." autoResize="false" value="#{userAssessmentBean.message}"/>
 	    						<h:outputText value="" />
 	    						<h:outputText id="displayFeedback" />
 							
-								<p:outputLabel for="op13" value="Class:" />
-						        <p:selectOneRadio id="op13" value="#{userAssessmentBean.classFeedback}">
-						            <f:selectItem itemLabel="#{userAssessmentBean.selectCourse20}" itemValue="#{userAssessmentBean.selectCourse20}" />
-						            <f:selectItem itemLabel="#{userAssessmentBean.selectCourse21}" itemValue="#{userAssessmentBean.selectCourse21}" />
-						        </p:selectOneRadio>
-					         </h:panelGrid>
-					        <p:commandButton value="Send feedback" actionListener="#{userAssessmentBean.sendFeedback}" />
-					        		
+								<p:outputLabel value="Class:" />
+						        <p:selectOneMenu id="op13" value="#{userAssessmentBean.classFeedback}">
+						            <p:ajax update="param" listener="#{userAssessmentBean.selectListUserClass}" /> 
+						            <f:selectItem itemLabel="-" itemValue="" />
+						            <f:selectItem itemLabel="#{userAssessmentBean.selectCourse20_name}" itemValue="#{userAssessmentBean.selectCourse20}" />
+						            <f:selectItem itemLabel="#{userAssessmentBean.selectCourse21_name}" itemValue="#{userAssessmentBean.selectCourse21}" /> 
+						        </p:selectOneMenu>
+
+						     	<f:param id="param" name="selected_users" value="#{userAssessmentBean.listUserClass}" /> 	
+						     	<p:commandButton value="Send feedback" actionListener="#{userAssessmentBean.sendFeedback}" />			        
+					        </h:panelGrid>
 						</p:dialog>
 						
 				    </h:panelGrid>
@@ -85,8 +88,8 @@
 			</p:tab>
 			
 			<p:tab title="Class perspective">
-				<h:form id="form1">
-					<h:panelGrid columns="2" cellspacing="1" id="pg1">
+				<h:form id="form2">
+					<h:panelGrid columns="2" cellspacing="1" id="pg2">
 						<f:facet name="header"> 
 							<p:outputLabel for="selectCourse1" value="Comparison between groups" /> 
 						</f:facet>
@@ -128,14 +131,38 @@
 						</p:selectOneMenu>
 				    	
 				    	<p:commandButton value="Compare Groups" oncomplete="PF('dlg1').show()" update="g1" actionListener="#{userAssessmentBean.generateComparativeGraphGroups}"/>
-						<p:dialog id="g1" modal="true" resizable="true" widgetVar="dlg1" header="Class perspective" showEffect="clip">
+						<p:dialog id="g1" modal="true" resizable="true" widgetVar="dlg1" header="Class perspective" showEffect="clip" maximizable="true">
 							<p:chart type="bar" model="#{userAssessmentBean.barModel0}" rendered="#{userAssessmentBean.showb1}" style="height:300px;width:1500px"/>
 							<p:chart type="line" model="#{userAssessmentBean.lineModel0}" rendered="#{userAssessmentBean.showl1}" style="height:300px;width:1500px"/>
 							<p:chart type="pie" model="#{userAssessmentBean.pieModel00}" rendered="#{userAssessmentBean.showp1}" style="height:300px;width:800px"/>
 							<p:chart type="pie" model="#{userAssessmentBean.pieModel01}" rendered="#{userAssessmentBean.showp1}" style="height:300px;width:800px"/>
 						
+							<p:commandButton value="Send a Feedback" oncomplete="PF('dlg21').show()" update="dia21"/>
 						</p:dialog>
-				    		   
+				    	
+				    	<p:dialog id="dia21" modal="true" resizable="true" widgetVar="dlg21" header="Send a Notification" showEffect="clip">
+							<h:panelGrid columns="2" cellspacing="1" id="pg22">
+								
+								<p:outputLabel value="Title:" />
+								<p:inputText id="op21" value="#{userAssessmentBean.title}" />
+								
+								<p:outputLabel value="Message" />
+								<p:inputTextarea rows="5" cols="30" counter="displayFeedback" maxlength="300" counterTemplate="{0} characters remaining." autoResize="false" value="#{userAssessmentBean.message}" />
+	    						<h:outputText value="" />
+	    						<h:outputText id="displayFeedback" />
+							
+								<p:outputLabel value="Group:" />
+						        <p:selectOneMenu id="op23" value="#{userAssessmentBean.groupFeedback}">
+						            <p:ajax update="param2" listener="#{userAssessmentBean.selectListUserGroup}" /> 
+						            <f:selectItem itemLabel="-" itemValue="" />
+						            <f:selectItem itemLabel="#{userAssessmentBean.selectedGroup1_name}" itemValue="#{userAssessmentBean.selectedGroup1}" />
+						            <f:selectItem itemLabel="#{userAssessmentBean.selectedGroup2_name}" itemValue="#{userAssessmentBean.selectedGroup2}" /> 
+						        </p:selectOneMenu>
+
+						     	<f:param id="param2" name="selected_users" value="#{userAssessmentBean.listUserGroup}" /> 	
+						     	<p:commandButton value="Send feedback" actionListener="#{userAssessmentBean.sendFeedback}" />			        
+					        </h:panelGrid>
+						</p:dialog>	   
 					</h:panelGrid>
 				</h:form>
 			</p:tab>
@@ -178,7 +205,7 @@
 						        
 						
 				    	<p:commandButton id="button33" value="Details about User" oncomplete="PF('dlg3').show()" update="g3" actionListener="#{userAssessmentBean.generateUserChart}"/>
-				    	<p:dialog id="g3" modal="true" resizable="true" widgetVar="dlg3" header="Personal perspective" showEffect="clip">
+				    	<p:dialog id="g3" modal="true" resizable="true" widgetVar="dlg3" header="Personal perspective" showEffect="clip" maximizable="true">
 						        	   <p:chart type="bar" model="#{userAssessmentBean.barModel}"  rendered="#{userAssessmentBean.showb3}" style="height:300px;width:1500px; align:center"/>
 						        	   <p:chart type="line" model="#{userAssessmentBean.lineModel}"  rendered="#{userAssessmentBean.showl3}" style="height:300px;width:1500px"/>
 						        	   <p:chart type="pie" model="#{userAssessmentBean.pieModel}"  rendered="#{userAssessmentBean.showp3}" style="width:700px;height:400px"/>
@@ -194,11 +221,34 @@
 										   </p:column>
 									  </p:dataTable> 
 									  </center>
-				    	</p:dialog>
+									  
+									  <p:commandButton value="Send a Feedback" oncomplete="PF('dlg31').show()" update="dia31"/>
+				    	</p:dialog> 
 				    	
+				    	<p:dialog id="dia31" modal="true" resizable="true" widgetVar="dlg31" header="Send a Notification" showEffect="bounce" hideEffect="bounce">
+							<h:panelGrid columns="2" cellspacing="1" id="pg32">
+								<p:outputLabel value="Title:" />
+								<p:inputText id="op31" value="#{userAssessmentBean.title}" />
+								
+								<p:outputLabel value="Message" />
+								<p:inputTextarea rows="5" cols="30" counter="displayFeedback" maxlength="300" counterTemplate="{0} characters remaining." autoResize="false" value="#{userAssessmentBean.message}" />
+	    						<h:outputText value="" />
+	    						<h:outputText id="displayFeedback" />
+					        </h:panelGrid>
+					        
+					        <p:commandButton value="Send feedback" actionListener="#{userAssessmentBean.sendFeedbackUser}" >
+					        	<f:param name="selected_users" value="#{userAssessmentBean.selectedUser}" />
+					        </p:commandButton>   		
+						</p:dialog>
+									    	
 					</h:panelGrid>
 				</h:form>
 			</p:tab>
+			
+			<p:tab title="User Groups">
+				<ui:decorate template="/lw/admin/clusters.xhtml" />
+			</p:tab>
+			
 		</p:tabView>
 	</ui:define>
 </ui:composition>
