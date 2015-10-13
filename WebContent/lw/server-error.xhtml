@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:p="http://primefaces.org/ui">
+
+	<h:head>
+		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+		<title>#{msg.error} - Learnweb</title>
+		<link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico" />
+		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/main.css" />
+		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />
+
+		<h:outputScript library="primefaces" name="jquery/jquery.js" />
+		<h:outputScript library="main-template" name="default.js" />
+	
+		<base href="#{request.contextPath}/lw/" />
+	
+	</h:head>
+	
+	<h:body>
+
+	<header id="header">
+		<div id="main_menu_bar"></div>		
+	</header>
+	<section id="content" class="small_page">
+		<div class="error" style="font-size:1.4rem">#{msg.service_unavailable}</div>	        
+        <br/><br/>
+	</section>
+
+	</h:body>
+</html>
