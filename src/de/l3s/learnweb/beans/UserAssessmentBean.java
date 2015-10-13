@@ -1,11 +1,11 @@
 package de.l3s.learnweb.beans;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,6 +14,9 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
@@ -29,6 +32,7 @@ import de.l3s.learnweb.GroupManager;
 import de.l3s.learnweb.Metric;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.UserManager;
+import de.l3s.learnwebAdminBeans.AdminNotificationBean;
 import de.l3s.learnwebBeans.ApplicationBean;
 import de.l3s.util.Sql;
 
@@ -56,11 +60,15 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 
     private String selectCourse1;
     private String selectCourse20;
+    private String selectCourse20_name;
     private String selectCourse21;
+    private String selectCourse21_name;
     private String selectCourse3;
     private String selectedUser;
     private String selectedGroup1;
+    private String selectedGroup1_name;
     private String selectedGroup2;
+    private String selectedGroup2_name;
     private String selectChart1;
     private String selectChart2;
     private String selectChart3;
@@ -71,6 +79,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     //variables Feedback
     private String title, message;
     private String classFeedback, groupFeedback, userFeedback;
+    private String[] listUserGroup, listUserClass;
 
     //Control variables
     private boolean showb3, showl3, showp3, showd3 = false;
@@ -92,16 +101,6 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 
     public UserAssessmentBean()
     {
-	this.selectCourse1 = null;
-	this.selectCourse20 = null;
-	this.selectCourse21 = null;
-	this.selectCourse3 = null;
-	this.selectedUser = null;
-	this.selectedGroup1 = null;
-	this.selectedGroup2 = null;
-	this.selectChart1 = null;
-	this.selectChart2 = null;
-	this.selectChart3 = null;
 	this.barModel = null;
 	this.pieModel = null;
 	this.lineModel = null;
@@ -113,16 +112,57 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	this.pieModel00 = null;
 	this.pieModel01 = null;
 	this.lineModel0 = null;
-	this.phaseLW0 = null;
-	this.phaseLW = null;
-	this.phaseLW2 = null;
     }
 
     @PostConstruct
     public void init()
     {
+	clearVariables();
 	//Show the class on menu
 	this.selectClasses();
+    }
+
+    public void clearVariables()
+    {
+	group1 = null;
+	group2 = null;
+	group3 = null;
+	infoDetailUser = null;
+	listAClass = null;
+	selectCourse1 = null;
+	selectCourse20 = null;
+	selectCourse20_name = null;
+	selectCourse21 = null;
+	selectCourse21_name = null;
+	selectCourse3 = null;
+	selectedUser = null;
+	selectedGroup1 = null;
+	selectedGroup1_name = null;
+	selectedGroup2 = null;
+	selectedGroup2_name = null;
+	selectChart1 = null;
+	selectChart2 = null;
+	selectChart3 = null;
+	phaseLW0 = null;
+	phaseLW = null;
+	phaseLW2 = null;
+	title = null;
+	message = null;
+	classFeedback = null;
+	groupFeedback = null;
+	userFeedback = null;
+	listUserGroup = null;
+	listUserClass = null;
+	showb3 = false;
+	showl3 = false;
+	showp3 = false;
+	showd3 = false;
+	showb2 = false;
+	showl2 = false;
+	showp2 = false;
+	showb1 = false;
+	showl1 = false;
+	showp1 = false;
     }
 
     /* 
@@ -134,7 +174,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	try
 	{
 	    UserManager usm = getLearnweb().getUserManager();
-	    removeFakeUsers(usm.getUsersByCourseId(idCourse));
+	    this.setUsers(removeAdminUsers(usm.getUsersByCourseId(idCourse)));
 	    this.setShowb3(false);
 	    this.setShowl3(false);
 	    this.setShowp3(false);
@@ -417,6 +457,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 
     public void identifyGroups()
     {
+	//Exportar em um Json os dados
 	//Kmeans algorithm
 	//Pode ser uma outra classe
     }
@@ -705,20 +746,139 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	}
     }
 
-    public void sendFeedback()
+    /*
+     * Method to select the Users in the class
+     * */
+    public void selectListUserClass()
+    {
+	System.out.println("selectListUserClass");
+	int idCourse = Integer.valueOf(this.classFeedback);
+	System.out.println("class:" + this.classFeedback);
+
+	UserManager usm = getLearnweb().getUserManager();
+	try
+	{
+	    List<User> l = new ArrayList<User>();
+	    l = removeAdminUsers(usm.getUsersByCourseId(idCourse));
+	    this.listUserClass = new String[l.size()];
+	    System.out.println("lista users:" + l);
+
+	    for(int i = 0; i < l.size(); i++)
+	    {
+		this.listUserClass[i] = String.valueOf(l.get(i).getId());
+	    }
+	    System.out.println("versao final" + this.listUserClass[0]);
+	}
+	catch(SQLException e)
+	{
+	    e.printStackTrace();
+	}
+    }
+
+    /*
+     * Method to select the Users in the class
+     * */
+    public void selectListUserGroup()
+    {
+	System.out.println("selectListUserGroup");
+	int idGroup = Integer.valueOf(this.groupFeedback);
+	System.out.println("Group:" + this.groupFeedback);
+
+	UserManager usm = getLearnweb().getUserManager();
+	try
+	{
+	    List<User> l = new ArrayList<User>();
+	    l = removeAdminUsers(usm.getUsersByGroupId(idGroup));
+	    this.listUserGroup = new String[l.size()];
+	    System.out.println("lista users:" + l);
+
+	    for(int i = 0; i < l.size(); i++)
+	    {
+		this.listUserGroup[i] = String.valueOf(l.get(i).getId());
+	    }
+	    System.out.println("versao final" + this.listUserGroup[0]);
+	}
+	catch(SQLException e)
+	{
+	    e.printStackTrace();
+	}
+    }
+
+    /*
+     * Method sends a feedBack in the Group Perspective
+     * */
+    public void sendFeedback() throws IOException
     {
 	System.out.println("sendFeedback");
-	if(this.classFeedback != null)
-	    System.out.println(this.classFeedback);
+	try
+	{
+	    AdminNotificationBean notBean = new AdminNotificationBean();
+	    if(this.listUserClass != null)
+	    {
+		notBean.setListStudents(this.listUserClass);
+		System.out.println(this.listUserClass);
+		this.listUserClass = null;
+	    }
+	    if(this.listUserGroup != null)
+	    {
+		notBean.setListStudents(this.listUserGroup);
+		System.out.println(this.listUserGroup);
+		this.listUserGroup = null;
+	    }
+	    notBean.setTitle(this.title);
+	    notBean.setText(this.message);
+	    notBean.send2();
+
+	    this.title = "";
+	    this.message = "";
+	    this.classFeedback = null;
+	    ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+	    context.redirect("admin/user_assessment.jsf");
+	    clearVariables();
+	}
+	catch(SQLException e)
+	{
+	    e.printStackTrace();
+	}
+    }
+
+    /*
+     * Method sends a feedBack to the User
+     * */
+    public void sendFeedbackUser() throws IOException
+    {
+	System.out.println("sendFeedbackUser");
+	HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
+	System.out.println("Parametro:" + request.getAttribute("selected_users"));
+	try
+	{
+	    AdminNotificationBean notBean = new AdminNotificationBean();
+	    notBean.setTitle(this.title);
+	    notBean.setText(this.message);
+	    notBean.send();
+	    this.title = "";
+	    this.message = "";
+	    ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+	    context.redirect("admin/user_assessment.jsf");
+	}
+	catch(SQLException e)
+	{
+	    e.printStackTrace();
+	}
     }
 
     /*
      * Remove administrators and moderators users
      * */
-    public void removeFakeUsers(List<User> listU)
+    public List<User> removeAdminUsers(List<User> listU) throws SQLException
     {
+	UserManager usm = getLearnweb().getUserManager();
+	List<User> l = new ArrayList<User>();
+	l = usm.removeAdminUsers(listU);
+	return l;
+
 	//I should improve the class Sql to automatize this process (talk with Philipp)
-	List<Integer> listUsers = new ArrayList<Integer>(Arrays.asList(new Integer[] { 1515, 1518, 1519, 1525, 1570, 1682, 2407, 2535, 2537, 2569, 2599, 2763, 2833, 2969, 3007, 3679, 5407, 5229, 5143, 7662, 7727, 8827, 8963, 8975, 9051, 9108 }));
+	/*List<Integer> listUsers = new ArrayList<Integer>(Arrays.asList(new Integer[] { 1515, 1518, 1519, 1525, 1570, 1682, 2407, 2535, 2537, 2569, 2599, 2763, 2833, 2969, 3007, 3679, 5407, 5229, 5143, 7662, 7727, 8827, 8963, 8975, 9051, 9108 }));
 	List<User> removeList = new ArrayList<User>();
 
 	for(User u : listU)
@@ -734,7 +894,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    if(listU.contains(u1))
 		listU.remove(u1);
 
-	this.setUsers(listU);
+	//this.setUsers(listU);
+	return listU;*/
     }
 
     /*
@@ -1045,6 +1206,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     public void setSelectCourse20(String selectCourse20)
     {
 	this.selectCourse20 = selectCourse20;
+	this.selectCourse20_name = this.getNameCourse(this.selectCourse20);
     }
 
     public String getSelectedUser()
@@ -1185,6 +1347,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     public void setSelectCourse21(String selectCourse21)
     {
 	this.selectCourse21 = selectCourse21;
+	this.selectCourse21_name = this.getNameCourse(this.selectCourse21);
     }
 
     public boolean isShowb3()
@@ -1355,6 +1518,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     public void setSelectedGroup1(String selectedGroup1)
     {
 	this.selectedGroup1 = selectedGroup1;
+	this.selectedGroup1_name = this.getNameGroup(this.selectedGroup1);
     }
 
     public String getSelectedGroup2()
@@ -1365,6 +1529,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     public void setSelectedGroup2(String selectedGroup2)
     {
 	this.selectedGroup2 = selectedGroup2;
+	this.selectedGroup2_name = this.getNameGroup(this.selectedGroup2);
     }
 
     public String getPhaseLW0()
@@ -1445,6 +1610,66 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     public void setUserFeedback(String userFeedback)
     {
 	this.userFeedback = userFeedback;
+    }
+
+    public String getSelectCourse20_name()
+    {
+	return selectCourse20_name;
+    }
+
+    public void setSelectCourse20_name(String selectCourse20_name)
+    {
+	this.selectCourse20_name = selectCourse20_name;
+    }
+
+    public String getSelectCourse21_name()
+    {
+	return selectCourse21_name;
+    }
+
+    public void setSelectCourse21_name(String selectCourse21_name)
+    {
+	this.selectCourse21_name = selectCourse21_name;
+    }
+
+    public String getSelectedGroup1_name()
+    {
+	return selectedGroup1_name;
+    }
+
+    public void setSelectedGroup1_name(String selectedGroup1_name)
+    {
+	this.selectedGroup1_name = selectedGroup1_name;
+    }
+
+    public String getSelectedGroup2_name()
+    {
+	return selectedGroup2_name;
+    }
+
+    public void setSelectedGroup2_name(String selectedGroup2_name)
+    {
+	this.selectedGroup2_name = selectedGroup2_name;
+    }
+
+    public String[] getListUserGroup()
+    {
+	return listUserGroup;
+    }
+
+    public void setListUserGroup(String[] listUserGroup)
+    {
+	this.listUserGroup = listUserGroup;
+    }
+
+    public String[] getListUserClass()
+    {
+	return listUserClass;
+    }
+
+    public void setListUserClass(String[] listUserClass)
+    {
+	this.listUserClass = listUserClass;
     }
 
 }
