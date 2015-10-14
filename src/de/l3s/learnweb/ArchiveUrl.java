@@ -36,4 +36,20 @@ public class ArchiveUrl implements Serializable
 	this.timestamp = timestamp;
     }
 
+    @Override
+    public boolean equals(Object o)
+    {
+	if(o == null)
+	    return false;
+	if(!(o instanceof ArchiveUrl))
+	    return false;
+
+	ArchiveUrl other = (ArchiveUrl) o;
+	if(!this.archiveUrl.equalsIgnoreCase(other.archiveUrl))
+	    return false;
+	if(!this.timestamp.equals(other.timestamp))
+	    return false;
+
+	return true;
+    }
 }

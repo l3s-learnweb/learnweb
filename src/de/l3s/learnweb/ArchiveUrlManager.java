@@ -485,6 +485,58 @@ public class ArchiveUrlManager
 	}
     }
 
+    public List<ArchiveUrl> getArchiveItVersions(int resourceId)
+    {
+	MementoClient mClient = learnweb.getMementoClient();
+	List<ArchiveUrl> archiveVersions = null;
+	try
+	{
+	    PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("SELECT collection_id, url FROM archiveit_collection WHERE lw_resource_id = ?");
+	    prepStmt.setInt(1, resourceId);
+	    ResultSet rs = prepStmt.executeQuery();
+	    if(rs.next())
+	    {
+		int collectionId = rs.getInt("collection_id");
+		String archiveItURL = rs.getString("url");
+		archiveVersions = mClient.getArchiveItVersions(collectionId, archiveItURL);
+	    }
+	    prepStmt.close();
+	}
+	catch(SQLException e)
+	{
+	    log.error("Error while trying to save the resource with the archived URL", e);
+	}
+	return archiveVersions;
+    }
+
+    public void updateArchiveItVersions() throws SQLException
+    {
+	PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM archiveit_collection WHERE collection_id = ?");
+	PreparedStatement pStmtCollections = learnweb.getConnection().prepareStatement("SELECT t1.*, COUNT(*) FROM `archiveit_subject` t1 JOIN lw_group t2 USING(group_id) JOIN archiveit_collection t3 USING(collection_id) WHERE t2.deleted = 0 GROUP BY collection_id LIMIT 3,1");
+	ResultSet rsCollections = pStmtCollections.executeQuery();
+	while(rsCollections.next())
+	{
+	    int collectionId = rsCollections.getInt("collection_id");
+	    pStmt.setInt(1, collectionId);
+	    ResultSet rs = pStmt.executeQuery();
+	    while(rs.next())
+	    {
+		int learnwebResourceId = rs.getInt("lw_resource_id");
+		List<ArchiveUrl> savedArchiveUrls = learnweb.getResourceManager().getArchiveUrlsByResourceId(learnwebResourceId);
+		List<ArchiveUrl> archiveUrlsFromArchiveIt = getArchiveItVersions(learnwebResourceId);
+		if(archiveUrlsFromArchiveIt != null)
+		{
+		    archiveUrlsFromArchiveIt.removeAll(savedArchiveUrls);
+		    if(archiveUrlsFromArchiveIt.size() > 0)
+		    {
+			System.out.println("learnweb resource id:" + learnwebResourceId + " before:" + savedArchiveUrls.size());
+			saveArchiveItVersions(learnwebResourceId, archiveUrlsFromArchiveIt);
+		    }
+		}
+	    }
+	}
+    }
+
     public void createArchiveItGroups()
     {
 	try
@@ -548,7 +600,7 @@ public class ArchiveUrlManager
     public static void main(String[] args) throws SQLException, ParseException, IOException
     {
 	ArchiveUrlManager archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
-	archiveUrlManager.addResourceToArchive(Learnweb.getInstance().getResourceManager().getResource(110605));
+	archiveUrlManager.updateArchiveItVersions();
 	//archiveUrlManager.createArchiveItGroups();
 	/*MementoClient mClient = Learnweb.getInstance().getMementoClient();
 	PreparedStatement pStmtCollections = Learnweb.getInstance().getConnection().prepareStatement("SELECT collection_id, group_id FROM archiveit_subject WHERE group_id in (1095,1096,1097,1098)");
