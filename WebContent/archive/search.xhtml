@@ -17,7 +17,8 @@
 		<h:outputStylesheet library="search" name="search2.css"  />	
 		<h:outputScript library="search" name="search2.js" target="head"/>
 		<style type="text/css">
-			a.suggestWebLink:link,a.suggestWebLink{font-size: 1.3rem; font-family: "Segoe UI",Arial,Helvetica,sans-serif;}
+			a.suggestSolrWebLink:link,a.suggestSolrWebLink{font-size: 1.3rem; font-family: "Segoe UI",Arial,Helvetica,sans-serif;}
+			a.suggestWebLink:link,a.suggestWebLink{font-size: 1.3rem; font-family: "Segoe UI",Arial,Helvetica,sans-serif; color:green;}
 			
 			.related_entities
 			{
@@ -100,7 +101,7 @@
 			<ul class="entity_links">
 			<ui:repeat var="query" value="#{archiveDemoBean.relatedEntities}">
 				<li>
-					<h:link value="#{query}" class="suggestWebLink" outcome="search" >
+					<h:link value="#{query}" outcome="search" styleClass="#{archiveDemoBean.fromSolr? 'suggestSolrWebLink':'suggestWebLink'}">
 						<f:param name="query" value="#{query}" />
 					</h:link>
 				</li>

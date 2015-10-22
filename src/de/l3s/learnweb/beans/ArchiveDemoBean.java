@@ -53,6 +53,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
     private List<String> relatedEntities;
     private final String sessionId;
     private int queryId;
+    private boolean fromSolr = false;
 
     public ArchiveDemoBean() throws SQLException
     {
@@ -107,6 +108,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	processedResources = 0;
 	addedResources = 0;
 	waybackAPIerrors = 0;
+	fromSolr = false;
 
 	queryString = StringHelper.urlDecode(queryString);
 	Query q = getLearnweb().getArchiveSearchManager().getQueryByQueryString(market, queryString);
@@ -143,7 +145,10 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	    {
 		relatedEntities = archiveManager.getNewQuerySuggestions(market, queryString, 10);
 		if(relatedEntities.size() == 0)
+		{
 		    relatedEntities = archiveManager.getQuerySuggestions(market, queryString, 10);
+		    fromSolr = true;
+		}
 	    }
 	    catch(SolrServerException | IOException e)
 	    {
@@ -339,6 +344,11 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	//log.debug("getRelatedEntities");
 
 	return relatedEntities;
+    }
+
+    public boolean isFromSolr()
+    {
+	return fromSolr;
     }
 
 }
