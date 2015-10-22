@@ -141,7 +141,9 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	{
 	    try
 	    {
-		relatedEntities = archiveManager.getQuerySuggestions(market, queryString, 10);
+		relatedEntities = archiveManager.getNewQuerySuggestions(market, queryString, 10);
+		if(relatedEntities.size() == 0)
+		    relatedEntities = archiveManager.getQuerySuggestions(market, queryString, 10);
 	    }
 	    catch(SolrServerException | IOException e)
 	    {

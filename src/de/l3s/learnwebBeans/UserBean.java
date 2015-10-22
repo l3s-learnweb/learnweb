@@ -472,6 +472,15 @@ public class UserBean implements Serializable
 		    item.setStyleClass("active");
 		submenu.addElement(item);
 
+		if(isModerator() || isAdmin() || group.isLeader(getUser()))
+		{
+		    item = new DefaultMenuItem();
+		    item.setValue(UtilBean.getLocaleMessage("options"));
+		    item.setUrl("./group/options.jsf?group_id=" + group.getId());
+		    if(isActiveGroup && viewId.endsWith("options.xhtml"))
+			item.setStyleClass("active");
+		    submenu.addElement(item);
+		}
 		menu.add(submenu);
 	    }
 
