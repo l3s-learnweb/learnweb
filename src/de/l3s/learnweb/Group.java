@@ -42,6 +42,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     private String subgroupsLabel;
     */
     private boolean restrictionOnlyLeaderCanAddResources;
+    private boolean restrictionForumCategoryRequired = false;
     private boolean readOnly = false;
 
     private int categoryId;
@@ -90,6 +91,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	this.categoryAbbreviation = rs.getString("category_abbreviation");
 	this.restrictionOnlyLeaderCanAddResources = rs.getInt("restriction_only_leader_can_add_resources") == 1;
 	this.readOnly = rs.getInt("read_only") == 1;
+	this.restrictionForumCategoryRequired = rs.getInt("restriction_forum_category_required") == 1;
     }
 
     @Override
@@ -513,6 +515,16 @@ public class Group implements Comparable<Group>, HasId, Serializable
     public void setReadOnly(boolean readOnly)
     {
 	this.readOnly = readOnly;
+    }
+
+    public boolean isRestrictionForumCategoryRequired()
+    {
+	return restrictionForumCategoryRequired;
+    }
+
+    public void setRestrictionForumCategoryRequired(boolean restrictionForumCategoryRequired)
+    {
+	this.restrictionForumCategoryRequired = restrictionForumCategoryRequired;
     }
 
 }

@@ -23,7 +23,7 @@ public class GroupManager
 {
 
     // if you change this, you have to change the constructor of Group too
-    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.course, g.location, g.language, g.restriction_only_leader_can_add_resources, g.read_only, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation";
+    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.course, g.location, g.language, g.restriction_only_leader_can_add_resources, g.read_only, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation, g.restriction_forum_category_required";
 
     private Learnweb learnweb;
     private ICache<Group> cache;
@@ -220,8 +220,10 @@ public class GroupManager
      */
     public synchronized Group save(Group group) throws SQLException
     {
-	PreparedStatement replace = learnweb.getConnection()
-		.prepareStatement("REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, university, course, location, language, course_id, group_category_id, restriction_only_leader_can_add_resources, read_only) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",
+	PreparedStatement replace = learnweb
+		.getConnection()
+		.prepareStatement(
+			"REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, university, course, location, language, course_id, group_category_id, restriction_only_leader_can_add_resources, read_only, restriction_forum_category_required) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
 			Statement.RETURN_GENERATED_KEYS);
 
 	if(group.getId() < 0) // the Group is not yet stored at the database 
@@ -248,6 +250,7 @@ public class GroupManager
 	replace.setInt(10, group.getCategoryId());
 	replace.setInt(11, group.isRestrictionOnlyLeaderCanAddResources() ? 1 : 0);
 	replace.setInt(12, group.isReadOnly() ? 1 : 0);
+	replace.setInt(13, group.isRestrictionForumCategoryRequired() ? 1 : 0);
 	replace.executeUpdate();
 
 	if(group.getId() < 0) // get the assigned id

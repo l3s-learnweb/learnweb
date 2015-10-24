@@ -22,7 +22,7 @@ public class ForumPost implements Serializable
     private int editCount;
     private Date lastEditDate;
     private int editUserId;
-    @NotEmpty
+
     private String category;
 
     // cached value

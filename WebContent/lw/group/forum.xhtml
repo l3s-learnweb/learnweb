@@ -148,7 +148,7 @@
 							</td>
 							<td>
 								<p:selectOneMenu id="post_category" styleClass="category" value="#{forumTopicsBean.newPost.category}" 
-									editable="true" label="#{msg.category}" >
+									editable="true" label="#{msg.category}" required="#{forumTopicsBean.group.restrictionForumCategoryRequired}">
 									<f:selectItems value="#{forumTopicsBean.categories}" />
 								</p:selectOneMenu>	
 							</td>
