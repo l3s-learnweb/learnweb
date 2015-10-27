@@ -597,10 +597,10 @@ public class ArchiveUrlManager
     return null;
     }*/
 
-    public static void main(String[] args) throws SQLException, ParseException, IOException
+    public static void main(String[] args) throws SQLException, ParseException
     {
-	ArchiveUrlManager archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
-	archiveUrlManager.updateArchiveItVersions();
+	//ArchiveUrlManager archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
+	//archiveUrlManager.updateArchiveItVersions();
 	//archiveUrlManager.createArchiveItGroups();
 	/*MementoClient mClient = Learnweb.getInstance().getMementoClient();
 	PreparedStatement pStmtCollections = Learnweb.getInstance().getConnection().prepareStatement("SELECT collection_id, group_id FROM archiveit_subject WHERE group_id in (1095,1096,1097,1098)");
@@ -616,42 +616,91 @@ public class ArchiveUrlManager
 	    }
 	}*/
 
-	/*ResourceManager rm = Learnweb.getInstance().getResourceManager();
+	ResourceManager rm = Learnweb.getInstance().getResourceManager();
 	SolrClient solr = Learnweb.getInstance().getSolrClient();
-	
-	PreparedStatement pStmtCollections = Learnweb
-		.getInstance()
-		.getConnection()
-		.prepareStatement(
-			"SELECT collection_id, t3.group_id FROM  `archiveit_collection` t1 JOIN archiveit_subject t2 USING (collection_id) JOIN lw_group t3 ON t3.title = t2.collection_name WHERE collection_id NOT IN (3358, 5407, 2252, 3547, 1417, 3123, 1036, 1042) AND t2.subject NOT LIKE '%society%' GROUP BY collection_id HAVING COUNT(*) >=50 AND COUNT(*) < 200 ORDER BY COUNT(*) LIMIT 6,30");
-	PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM archiveit_collection WHERE collection_id = ?");
-	ResultSet rsCollections = pStmtCollections.executeQuery();
-
-	while(rsCollections.next())
+	ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
+	/*Group group = Learnweb.getInstance().getGroupManager().getGroupById(1125);
+	for(Resource resource : group.getResources())
 	{
-	    int collectionId = rsCollections.getInt("collection_id");
-	    pStmt.setInt(1, collectionId);
-	    ResultSet rs = pStmt.executeQuery();
-	    while(rs.next())
+	    if(resource.getOnlineStatus() == OnlineStatus.OFFLINE)
 	    {
-		int lwResourceId = rs.getInt("lw_resource_id");
-		if(lwResourceId > 0)
+		FileInfo info = null;
+		try
 		{
-		    Resource archiveResource = rm.getResource(lwResourceId);
-		    try
+		    info = new FileInspector().inspect(FileInspector.openStream(resource.getUrl()), "unknown");
+
+		    if(info != null)
 		    {
-			solr.indexResource(archiveResource);
-			log.info("Indexed resource ID:" + archiveResource.getId());
-		    }
-		    catch(IOException | SolrServerException e)
-		    {
-			log.error("Error in indexing the Archive-It resource with lw_resource ID: " + archiveResource.getId(), e);
+			System.out.println(info.getFileName() + " " + info.getMimeType());
+			if(info.getMimeType().equalsIgnoreCase("application/pdf"))
+			{
+			    resource.setMachineDescription(info.getTextContent());
+			    rpm.processFile(resource, FileInspector.openStream(resource.getUrl()), info);
+			    resource.save();
+			    solr.reIndexResource(resource);
+			}
 		    }
 		}
-		else
-		    log.info("Not in lw_resource collection ID:" + rs.getInt("collection_id") + " Resource ID:" + rs.getInt("resource_id"));
+		catch(IOException e)
+		{
+		    e.printStackTrace();
+		}
+
 	    }
 	}*/
+	PreparedStatement select = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM lw_resource WHERE url LIKE '%facebook%' AND online_status = 'OFFLINE' AND deleted = 0 AND source= 'Archive-It'");
+	ResultSet rs = select.executeQuery();
+
+	while(rs.next())
+	{
+	    if(rs.getInt("resource_id") <= 0)
+	    {
+		log.info("Not in lw_resource collection ID:" + rs.getInt("collection_id") + " Resource ID:" + rs.getInt("resource_id"));
+		continue;
+	    }
+
+	    Resource resource = rm.getResource(rs.getInt("resource_id"));
+
+	    try
+	    {
+		HttpURLConnection con;
+		con = (HttpURLConnection) new URL(resource.getUrl()).openConnection();
+		con.setInstanceFollowRedirects(true);
+		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0");
+		System.out.println(resource.getUrl());
+		for(int i = 0; i < 10; i++)
+		{
+		    if(con.getResponseCode() == HttpURLConnection.HTTP_MOVED_PERM || con.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP || con.getResponseCode() == HttpURLConnection.HTTP_SEE_OTHER)
+		    {
+			System.out.println(con.getResponseCode());
+			con = (HttpURLConnection) new URL(con.getHeaderField("Location")).openConnection();
+			con.setInstanceFollowRedirects(true);
+			con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0");
+
+			if(con.getResponseCode() == HttpURLConnection.HTTP_OK)
+			    break;
+		    }
+		}
+		String redirectUrl = con.getURL().toString();
+		int status = con.getResponseCode();
+		System.out.println(resource.getId() + " " + status + " " + redirectUrl);
+		if(!redirectUrl.contains("login.php") && status == HttpURLConnection.HTTP_OK)
+		{
+		    String originalUrl = resource.getUrl();
+		    resource.setUrl(con.getURL().toString());
+		    rpm.processWebsite(resource);
+		    resource.setOnlineStatus(OnlineStatus.ONLINE);
+		    resource.setUrl(originalUrl);
+		    resource.save();
+		    solr.reIndexResource(resource);
+		    System.out.println("processed:" + resource.getId());
+		}
+	    }
+	    catch(IOException e)
+	    {
+		log.error("Error in indexing the Archive-It resource with lw_resource ID: " + resource.getId(), e);
+	    }
+	}
 
 	/*PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM lw_resource WHERE title = '' AND online_status = 'ONLINE' ORDER BY resource_id DESC");
 	PreparedStatement pStmt2 = Learnweb.getInstance().getConnection().prepareStatement("UPDATE lw_resource SET title=? WHERE resource_id=?");

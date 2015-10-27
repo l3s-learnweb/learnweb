@@ -104,7 +104,26 @@
 				<h2>
 					#{msg['Changelog.title']}
 				</h2>
-	
+				
+				<h4>
+					<h:outputText value="${utilBean.StringToDate('16.10.2015')}">
+           				<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+       				</h:outputText>	
+       			</h4>
+				<h:panelGrid columns="2" columnClasses="first_column,description">
+					<h:outputText value="#{msg['Changelog.search_filters']}:" class="changes"/>
+					<h:outputText value="#{msg['Changelog.2015_10_search_filters_description']}"/>
+
+					<h:outputText value="#{msg['Changelog.group_search']}:" class="changes"/>
+					<h:outputText value="#{msg['Changelog.2015_10_group_search_description']}"/>
+				
+					<h:outputText value="#{msg['Changelog.group_options']}:" class="changes"/>
+					<h:outputText value="#{msg['Changelog.2015_10_group_options_description']}"/>					
+				
+					<h:outputText value="#{msg['Changelog.forum']}:" class="changes"/>
+					<h:outputText value="#{msg['Changelog.2015_10_forum_description']}"/>	
+				</h:panelGrid>
+     			
 				<h4>
 					<h:outputText value="${utilBean.StringToDate('20.7.2015')}">
            				<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
@@ -121,24 +140,7 @@
 					<h:outputText value="#{msg['Changelog.2015_07_text_analysis_description']}" escape="false" id="link"/>
 					
 				</h:panelGrid>
-				
-				<h4>
-					<h:outputText value="${utilBean.StringToDate('12.05.2015')}">
-           				<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
-       				</h:outputText>	
-       			</h4>
-				<p>
-					<h:outputText value="#{msg['Changelog.2015_05_new_design_description']}:"/>
-				</p>				
 
-				<h:panelGrid columns="2" columnClasses="first_column,description">
-					<h:outputText value="#{msg['Changelog.header']}:" class="changes"/>
-					<h:outputText value="#{msg['Changelog.2015_05_header_description']}"/>
-
-					<h:outputText value="#{msg['Changelog.languages']}:" class="changes"/>
-					<h:outputText value="#{msg['Changelog.2015_05_languages_description']}"/>
-				</h:panelGrid>
-     			
 			</div>
 
 			<br class="clear" />
