@@ -175,9 +175,7 @@ public class SolrResourceBean
 	this.collector = resource.getMetadataValue("collector");
 	this.coverage = resource.getMetadataValue("coverage");
 	this.publisher = resource.getMetadataValue("publisher");
-
-	// TODO this.path = transform path structure to a string /folder_id/folder_id/
-
+	this.path = resource.getPath();
     }
 
     public String getAuthor()

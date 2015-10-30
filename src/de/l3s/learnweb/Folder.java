@@ -1,13 +1,41 @@
 package de.l3s.learnweb;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Folder
+public class Folder implements Serializable
 {
     private int folderId = -1;
     private int groupId = -1;
     private int parentFolderId;
     private String name;
+
+    // cache
+    private transient String path;
+
+    /**
+     * returns a string representation of the resources path
+     * 
+     * @return
+     */
+    public String getPath()
+    {
+	if(null == path)
+	{
+	    StringBuilder sb = new StringBuilder();
+
+	    Folder folder = getParentFolder();
+	    while(folder != null)
+	    {
+		sb.insert(0, "/");
+		sb.insert(0, folder.getFolderId());
+		folder = folder.getParentFolder();
+	    }
+
+	    path = sb.toString();
+	}
+	return path;
+    }
 
     public List<Folder> getSubfolders()
     {

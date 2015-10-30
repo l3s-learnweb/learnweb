@@ -99,7 +99,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private transient List<Comment> comments;
     private transient User owner;
     private transient LinkedList<ArchiveUrl> archiveUrls = null;//To store the archived URLs 
-    private transient String path; //TODO
+    private transient String path = "";
 
     protected void clearCaches()
     {
@@ -1407,17 +1407,9 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     {
 	if(null == path)
 	{
-	    StringBuilder sb = new StringBuilder();
-
 	    Folder folder = getFolder();
-	    while(folder != null)
-	    {
-		sb.append(folder.getFolderId());
-		sb.append("/");
-		folder = folder.getParentFolder();
-	    }
-
-	    path = sb.toString();
+	    if(folder != null)
+		path = folder.getPath();
 	}
 	return path;
     }
