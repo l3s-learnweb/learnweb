@@ -579,6 +579,115 @@ form#center_header_form { float:right; }
 	padding-left:1rem;
 }
 
+
+
+/* Resource filters bar */ 
+.resources-filters {
+    margin: 10px -10px -10px;
+}
+
+.resources-filters ul {
+	list-style: none outside none;
+	margin: 0;
+	padding: 0;
+}
+
+.resources-filters ul li {
+	float: left;
+	display: block;
+	position: relative;
+	white-space: nowrap;
+}
+
+.resources-filters ul li.active, .resources-filters ul li:hover {
+	background-color: #EEE;
+}
+
+.resources-filters .filter-name {
+	cursor: pointer;
+	display: inline-block;
+	padding: 0.6rem 1.5rem 0.5rem;
+}
+
+.resources-filters .filter-name .trimmed-text {
+	text-overflow: ellipsis;
+    overflow: hidden;
+    max-width: 200px;
+    float: left;
+}
+
+.resources-filters li:hover .filter-sub-bar {
+	display: block;
+}
+
+.resources-filters ul li.disabled {
+	display: none;
+}
+
+.resources-filters .filter-sub-bar {
+	display: none;
+	position: absolute;
+	top: 3.1rem;
+	left: 0;
+	width: auto;
+	z-index: 10;
+	border: solid 1px #ccc;
+	background: #E6E6E6;
+	margin: -6px -1px;
+}
+
+.resources-filters .filter-sub-bar button {
+  display: block;
+  background: none;
+  border: 0;
+  width: 100%;
+}
+
+.resources-filters .filter-sub-bar button span {
+  padding: 0 15px 0 10px;
+  line-height: 32px;
+  white-space: nowrap;
+  text-decoration: none;
+  color: #000 !important;
+  text-align: left;
+}
+
+.resources-filters .filter-sub-bar button.active span,
+.resources-filters .filter-sub-bar button:hover span {
+	background: #eee;
+}
+
+.resources-filters .clear-filters:hover {
+	background: none;
+}
+
+.resources-filters .clear-filters button {
+	background: none !important;
+	border: 0;
+}
+
+.resources-filters .clear-filters span {
+	cursor: pointer;
+	padding: 0.6rem 0.5rem 0.5rem;
+}
+
+.resources-filters .clear-filters span:hover {
+	text-decoration: underline;
+}
+
+.resources-filters .arrow {
+	width: 0; 
+	height: 0; 
+	border-left: 0.5rem solid transparent;
+	border-right: 0.5rem solid transparent;
+	border-top: 0.4rem solid #333;
+	display: inline-block;
+	margin-bottom: 2px;
+	margin-left: 5px;
+}
+
+
+
 /* general settings */
 a{text-decoration:none;}
 a:hover{text-decoration:underline;}

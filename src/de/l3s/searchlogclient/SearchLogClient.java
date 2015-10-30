@@ -18,7 +18,7 @@ import com.sun.jersey.api.client.WebResource;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.ResourceDecorator;
-import de.l3s.learnweb.Search.MODE;
+import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.searchlogclient.Actions.ACTION;
 import de.l3s.searchlogclient.jaxb.CommentonSearch;
 import de.l3s.searchlogclient.jaxb.HistoryByDate;

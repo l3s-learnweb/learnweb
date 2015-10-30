@@ -31,9 +31,9 @@ import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.Search;
-import de.l3s.learnweb.Search.MODE;
 import de.l3s.learnweb.SearchFilters;
 import de.l3s.learnweb.SearchFilters.Filter;
+import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.User;
 import de.l3s.learnwebBeans.AddResourceBean;
 import de.l3s.learnwebBeans.ApplicationBean;
@@ -128,21 +128,21 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public String onSearchVideo()
     {
-	searchMode = Search.MODE.video;
+	searchMode = MODE.video;
 	setView("grid");
 	return onSearch();
     }
 
     public String onSearchImage()
     {
-	searchMode = Search.MODE.image;
+	searchMode = MODE.image;
 	setView("float");
 	return onSearch();
     }
 
     public String onSearchText()
     {
-	searchMode = Search.MODE.web;
+	searchMode = MODE.web;
 	setView("list");
 	return onSearch();
     }

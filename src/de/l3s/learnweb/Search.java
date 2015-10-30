@@ -18,6 +18,7 @@ import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.interwebj.InterWeb;
 import de.l3s.interwebj.SearchQuery;
 import de.l3s.learnweb.SearchFilters.FILTERS;
+import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.solrClient.SolrSearch;
 import de.l3s.util.StringHelper;
 
@@ -28,24 +29,6 @@ public class Search implements Serializable
 
     private static final DateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-    public enum MODE
-    {
-	image,
-	web,
-	video;
-
-	public String getInterwebName()
-	{
-	    switch(this)
-	    {
-	    case web:
-		return "text";
-	    default:
-		return this.name();
-	    }
-	}
-    };
 
     private String query;
     private MODE configMode;
@@ -175,6 +158,8 @@ public class Search implements Serializable
 
 	if(searchFilters.getDateFromFilterAsString() != null)
 	    this.solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getDateFromFilter()));
+	if(searchFilters.getDateToFilterAsString() != null)
+	    this.solrSearch.setFilterDateTo(SOLR_DATE_FORMAT.format(searchFilters.getDateToFilter()));
 	if(searchFilters.getGroupFilter() != null)
 	    this.solrSearch.setFilterGroups(Integer.parseInt(searchFilters.getGroupFilter()));
 	if(searchFilters.getCollectorFilter() != null)
@@ -296,6 +281,9 @@ public class Search implements Serializable
 
 	if(searchFilters.getDateFromFilterAsString() != null)
 	    params.put("date_from", DEFAULT_DATE_FORMAT.format(searchFilters.getDateFromFilter()));
+
+	if(searchFilters.getDateToFilterAsString() != null)
+	    params.put("date_to", DEFAULT_DATE_FORMAT.format(searchFilters.getDateToFilter()));
 
 	if(searchFilters.getLanguageFilter() != null)
 	    params.put("language", searchFilters.getLanguageFilter());

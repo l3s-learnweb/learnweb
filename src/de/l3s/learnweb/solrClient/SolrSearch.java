@@ -53,8 +53,8 @@ public class SolrSearch implements Serializable
     private String filterGroupStr = "";
     private int userId;
     private boolean skipResourcesWithoutThumbnails = true;
-    private List<FacetField> facetFieldsResult;
-    private Map<String, Integer> facetQueriesResult;
+    private List<FacetField> facetFieldsResult = null;
+    private Map<String, Integer> facetQueriesResult = null;
 
     public SolrSearch(String query, User user)
     {
@@ -198,6 +198,8 @@ public class SolrSearch implements Serializable
     {
 	this.facetFields = null;
 	this.facetQueries = null;
+	this.facetFieldsResult = null;
+	this.facetQueriesResult = null;
 	this.filterFormat = "";
 	if(null != filterGroupIds)
 	    this.filterGroupIds.clear();
@@ -222,12 +224,26 @@ public class SolrSearch implements Serializable
 
     public List<FacetField> getFacetFields()
     {
-	return facetFieldsResult;
+	if(facetFieldsResult == null)
+	{
+	    getFaced();
+	}
+
+	List<FacetField> ff = facetFieldsResult;
+	this.facetFieldsResult = null;
+	return ff;
     }
 
     public Map<String, Integer> getFacetQueries()
     {
-	return facetQueriesResult;
+	if(facetQueriesResult == null)
+	{
+	    getFaced();
+	}
+
+	Map<String, Integer> fq = facetQueriesResult;
+	this.facetQueriesResult = null;
+	return fq;
     }
 
     public void setSkipResourcesWithoutThumbnails(boolean skipResourcesWithoutThumbnails)
@@ -265,6 +281,10 @@ public class SolrSearch implements Serializable
 		solrQuery.addFilterQuery("timestamp : [" + filterDateFrom + " TO " + filterDateTo + "]");
 	    else
 		solrQuery.addFilterQuery("timestamp : [" + filterDateFrom + " TO NOW]");
+	}
+	else if(0 != filterDateTo.length())
+	{
+	    solrQuery.addFilterQuery("timestamp : [* TO " + filterDateTo + "]");
 	}
 
 	if(0 != filterCollector.length())
@@ -343,6 +363,33 @@ public class SolrSearch implements Serializable
 
 	//get response
 	return server.query(solrQuery);
+    }
+
+    /**
+     * Execute query and set facet results
+     * 
+     * @throws SQLException
+     * @throws SolrServerException
+     */
+    public void getFaced()
+    {
+	QueryResponse response = null;
+	try
+	{
+	    response = getSolrResourcesByPage(1);
+	}
+	catch(SQLException | SolrServerException e)
+	{
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+
+	if(response != null)
+	{
+	    totalResults = response.getResults().getNumFound();
+	    facetFieldsResult = response.getFacetFields();
+	    facetQueriesResult = response.getFacetQuery();
+	}
     }
 
     /**

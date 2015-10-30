@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -36,6 +38,9 @@ import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.ResourceManager;
 import de.l3s.learnweb.ResourceManager.Order;
+import de.l3s.learnweb.SearchFilters;
+import de.l3s.learnweb.SearchFilters.Filter;
+import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.solrClient.SolrSearch;
@@ -47,6 +52,8 @@ import de.l3s.util.MD5;
 public class GroupDetailBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -9105093690086624246L;
+
+    private static final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     private int groupId;
     private Group group;
@@ -92,6 +99,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private Order order = Order.TITLE;
 
     private String query;
+    private SearchFilters searchFilters;
 
     public GroupDetailBean() throws SQLException
     {
@@ -109,6 +117,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	clickedResource = temp;
 	clickedUser = new User(); // TODO initialize with null
 	clickedPresentation = new Presentation();// TODO initialize with null
+
+	searchFilters = new SearchFilters();
+	searchFilters.setMode(MODE.group);
 	paginator = getResourcesFromSolr(groupId, query, getUser());
     }
 
@@ -964,6 +975,18 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return paginator;
     }
 
+    public String changeFilters(String queryFilters)
+    {
+	searchFilters.setFiltersFromString(queryFilters);
+	paginator = getResourcesFromSolr(groupId, query, getUser());
+	return queryFilters;
+    }
+
+    public void onQueryFiltersChange() throws SQLException
+    {
+	paginator = getResourcesFromSolr(groupId, query, getUser());
+    }
+
     public String getQuery()
     {
 	return query;
@@ -992,14 +1015,47 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
     }
 
+    public List<Filter> getAvailableFilters()
+    {
+	return searchFilters.getAvailableFilters();
+    }
+
+    public String getSearchFilters()
+    {
+	return searchFilters.getFiltersString();
+    }
+
     public SearchPaginator getResourcesFromSolr(int groupId, String query, User user)
     {
-	SolrSearch search = new SolrSearch(StringUtils.isEmpty(query) ? "*" : query, user);
-	search.setFilterGroups(groupId);
-	search.setResultsPerPage(AbstractPaginator.PAGE_SIZE);
-	search.setSkipResourcesWithoutThumbnails(false);
+	SolrSearch solrSearch = new SolrSearch(StringUtils.isEmpty(query) ? "*" : query, user);
+	solrSearch.setFilterGroups(groupId);
+	solrSearch.setResultsPerPage(AbstractPaginator.PAGE_SIZE);
+	solrSearch.setSkipResourcesWithoutThumbnails(false);
+	solrSearch.setFacetFields(searchFilters.getFacetFields());
+	solrSearch.setFacetQueries(searchFilters.getFacetQueries());
 
-	return new SolrSearch.SearchPaginator(search);
+	if(searchFilters.getServiceFilter() != null)
+	    solrSearch.setFilterLocation(searchFilters.getServiceFilter());
+
+	if(searchFilters.getDateFromFilterAsString() != null)
+	    solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getDateFromFilter()));
+	if(searchFilters.getDateToFilterAsString() != null)
+	    solrSearch.setFilterDateTo(SOLR_DATE_FORMAT.format(searchFilters.getDateToFilter()));
+	if(searchFilters.getCollectorFilter() != null)
+	    solrSearch.setFilterCollector(searchFilters.getCollectorFilter());
+	if(searchFilters.getAuthorFilter() != null)
+	    solrSearch.setFilterAuthor(searchFilters.getAuthorFilter());
+	if(searchFilters.getCoverageFilter() != null)
+	    solrSearch.setFilterCoverage(searchFilters.getCoverageFilter());
+	if(searchFilters.getPublisherFilter() != null)
+	    solrSearch.setFilterPublisher(searchFilters.getPublisherFilter());
+	if(searchFilters.getTagsFilter() != null)
+	    solrSearch.setFilterTags(searchFilters.getTagsFilter());
+
+	searchFilters.putResourceCounter(solrSearch.getFacetFields());
+	searchFilters.putResourceCounter(solrSearch.getFacetQueries());
+
+	return new SolrSearch.SearchPaginator(solrSearch);
     }
 
     public List<SelectItem> getMembersSelectItemList() throws SQLException

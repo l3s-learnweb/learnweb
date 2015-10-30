@@ -15,7 +15,6 @@ import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 
-import de.l3s.learnweb.Search.MODE;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.util.StringHelper;
 
@@ -33,6 +32,25 @@ public class SearchFilters implements Serializable
     private boolean isFilterRemoved = false;
     private boolean canNotRequestLearnweb = false;
     private boolean canNotRequestInterweb = false;
+
+    public enum MODE
+    {
+	image,
+	web,
+	video,
+	group;
+
+	public String getInterwebName()
+	{
+	    switch(this)
+	    {
+	    case web:
+		return "text";
+	    default:
+		return this.name();
+	    }
+	}
+    };
 
     public enum SERVICE
     {
@@ -99,7 +117,7 @@ public class SearchFilters implements Serializable
 	    }
 	}
 
-	public Date getDate()
+	public Date getDateFrom()
 	{
 	    Calendar cal = Calendar.getInstance();
 	    switch(this)
@@ -115,6 +133,21 @@ public class SearchFilters implements Serializable
 		break;
 	    case y:
 		cal.add(Calendar.YEAR, -1);
+		break;
+	    case old:
+		return null;
+	    default:
+		break;
+	    }
+
+	    return cal.getTime();
+	}
+
+	public Date getDateTo()
+	{
+	    Calendar cal = Calendar.getInstance();
+	    switch(this)
+	    {
 	    case old:
 		cal.add(Calendar.YEAR, -1);
 		break;
@@ -260,9 +293,11 @@ public class SearchFilters implements Serializable
 	    case web:
 		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector, FILTERS.author, FILTERS.coverage, FILTERS.publisher, FILTERS.tags };
 	    case image:
-		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector, FILTERS.author, FILTERS.coverage, FILTERS.publisher, FILTERS.tags, FILTERS.imageSize };
+		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.author, FILTERS.tags, FILTERS.imageSize };
 	    case video:
-		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector, FILTERS.author, FILTERS.coverage, FILTERS.publisher, FILTERS.tags, FILTERS.videoDuration };
+		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.author, FILTERS.tags, FILTERS.videoDuration };
+	    case group:
+		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.collector, FILTERS.author, FILTERS.coverage, FILTERS.publisher, FILTERS.tags };
 	    default:
 		return FILTERS.values();
 	    }
@@ -440,15 +475,16 @@ public class SearchFilters implements Serializable
     public void setFiltersFromString(String filters)
     {
 	log.debug("Filters: " + filters);
-	this.stringFilters = filters;
 
-	if(filters == null)
+	if(filters == null || filters.isEmpty())
 	{
 	    cleanAll();
+	    this.stringFilters = null;
 	}
 	else
 	{
 	    clean();
+	    this.stringFilters = filters;
 	    String[] tempFilters = filters.split(",");
 
 	    isFilterRemoved = tempFilters.length < prevFilters;
@@ -678,7 +714,7 @@ public class SearchFilters implements Serializable
 
     public String getDateFromFilterAsString()
     {
-	if(configFilters.containsKey(FILTERS.date))
+	if(configFilters.containsKey(FILTERS.date) && ((DATE) configFilters.get(FILTERS.date)).getDateFrom() != null)
 	{
 	    return configFilters.get(FILTERS.date).toString();
 	}
@@ -689,13 +725,26 @@ public class SearchFilters implements Serializable
     {
 	if(configFilters.containsKey(FILTERS.date))
 	{
-	    return ((DATE) configFilters.get(FILTERS.date)).getDate();
+	    return ((DATE) configFilters.get(FILTERS.date)).getDateFrom();
 	}
 	return null;
     }
 
-    public String getDateToFilter()
+    public String getDateToFilterAsString()
     {
+	if(configFilters.containsKey(FILTERS.date) && ((DATE) configFilters.get(FILTERS.date)).getDateTo() != null)
+	{
+	    return configFilters.get(FILTERS.date).toString();
+	}
+	return null;
+    }
+
+    public Date getDateToFilter()
+    {
+	if(configFilters.containsKey(FILTERS.date))
+	{
+	    return ((DATE) configFilters.get(FILTERS.date)).getDateTo();
+	}
 	return null;
     }
 
