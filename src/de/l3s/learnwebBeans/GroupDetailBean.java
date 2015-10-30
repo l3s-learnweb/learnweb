@@ -1102,6 +1102,15 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	this.editedGroupLeaderId = editedGroupLeaderId;
     }
 
+    public void onMoveResource()
+    {
+
+	//clickedResource.setTitle("sldfjsdif");
+	//clickedResource.save();
+
+	//getLearnweb().getSolrClient().reIndexResource(resource);
+    }
+
     public void onGroupEdit()
     {
 	System.out.println("onGroupEdit");

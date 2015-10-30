@@ -33,7 +33,7 @@ import de.l3s.util.StringHelper;
 public class ResourceManager
 {
     private final static String COMMENT_COLUMNS = "`comment_id`, `resource_id`, `user_id`, `text`, `date`";
-    private final static String RESOURCE_COLUMNS = "r.deleted, r.resource_id, r.title, r.description, r.url, r.storage_type, r.rights, r.source, r.language, r.type, r.format, r.owner_user_id, r.rating, r.rate_number, r.embedded_size1, r.embedded_size2, r.embedded_size3, r.embedded_size4, r.filename, r.max_image_url, r.query, r.original_resource_id, r.author, r.file_url, r.thumbnail0_url, r.thumbnail0_file_id, r.thumbnail0_width, r.thumbnail0_height, r.thumbnail1_url, r.thumbnail1_file_id, r.thumbnail1_width, r.thumbnail1_height, r.thumbnail2_url, r.thumbnail2_file_id, r.thumbnail2_width, r.thumbnail2_height, r.thumbnail3_url, r.thumbnail3_file_id, r.thumbnail3_width, r.thumbnail3_height, r.thumbnail4_url, r.thumbnail4_file_id, r.thumbnail4_width, r.thumbnail4_height, r.embeddedRaw, r.transcript, r.online_status, r.id_at_service, r.duration, r.restricted, r.creation_date, r.metadata";
+    private final static String RESOURCE_COLUMNS = "r.deleted, r.resource_id, r.title, r.description, r.url, r.storage_type, r.rights, r.source, r.language, r.type, r.format, r.owner_user_id, r.rating, r.rate_number, r.embedded_size1, r.embedded_size2, r.embedded_size3, r.embedded_size4, r.filename, r.max_image_url, r.query, r.original_resource_id, r.author, r.file_url, r.thumbnail0_url, r.thumbnail0_file_id, r.thumbnail0_width, r.thumbnail0_height, r.thumbnail1_url, r.thumbnail1_file_id, r.thumbnail1_width, r.thumbnail1_height, r.thumbnail2_url, r.thumbnail2_file_id, r.thumbnail2_width, r.thumbnail2_height, r.thumbnail3_url, r.thumbnail3_file_id, r.thumbnail3_width, r.thumbnail3_height, r.thumbnail4_url, r.thumbnail4_file_id, r.thumbnail4_width, r.thumbnail4_height, r.embeddedRaw, r.transcript, r.online_status, r.id_at_service, r.duration, r.restricted, r.creation_date, r.metadata, r.folder_id";
 
     private final static Logger log = Logger.getLogger(ResourceManager.class);
 
@@ -297,7 +297,7 @@ public class ResourceManager
 	    resource.setThumbnail3(null);
 	    resource.setThumbnail4(null);
 	}
-	if(resource.getOnlineStatus().equals(OnlineStatus.OFFLINE)) // TODO this is only a workaround; remove as soon as possible
+	if(resource.getOnlineStatus().equals(OnlineStatus.OFFLINE)) // TODO this is only a workaround; remove later
 	{
 	    resource.setThumbnail0(null);
 	    resource.setThumbnail1(null);
@@ -333,7 +333,7 @@ public class ResourceManager
 	
 		log.debug(metadataSQLvalue);
 	*/
-	String query = "REPLACE INTO `lw_resource` (`resource_id` ,`title` ,`description` ,`url` ,`storage_type` ,`rights` ,`source` ,`type` ,`format` ,`owner_user_id` ,`rating` ,`rate_number` ,`query`, embedded_size1, embedded_size2, embedded_size3, embedded_size4, filename, max_image_url, original_resource_id, machine_description, author, file_url, thumbnail0_url, thumbnail0_file_id, thumbnail0_width, thumbnail0_height, thumbnail1_url, thumbnail1_file_id, thumbnail1_width, thumbnail1_height, thumbnail2_url, thumbnail2_file_id, thumbnail2_width, thumbnail2_height, thumbnail3_url, thumbnail3_file_id, thumbnail3_width, thumbnail3_height, thumbnail4_url, thumbnail4_file_id, thumbnail4_width, thumbnail4_height, embeddedRaw, transcript, online_status, id_at_service, duration, restricted, language, creation_date, metadata) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
+	String query = "REPLACE INTO `lw_resource` (`resource_id` ,`title` ,`description` ,`url` ,`storage_type` ,`rights` ,`source` ,`type` ,`format` ,`owner_user_id` ,`rating` ,`rate_number` ,`query`, embedded_size1, embedded_size2, embedded_size3, embedded_size4, filename, max_image_url, original_resource_id, machine_description, author, file_url, thumbnail0_url, thumbnail0_file_id, thumbnail0_width, thumbnail0_height, thumbnail1_url, thumbnail1_file_id, thumbnail1_width, thumbnail1_height, thumbnail2_url, thumbnail2_file_id, thumbnail2_width, thumbnail2_height, thumbnail3_url, thumbnail3_file_id, thumbnail3_width, thumbnail3_height, thumbnail4_url, thumbnail4_file_id, thumbnail4_width, thumbnail4_height, embeddedRaw, transcript, online_status, id_at_service, duration, restricted, language, creation_date, metadata, folder_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
 		+ "?)";
 	PreparedStatement replace = learnweb.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
@@ -396,10 +396,8 @@ public class ResourceManager
 	replace.setInt(49, resource.isRestricted() ? 1 : 0);
 	replace.setString(50, resource.getLanguage());
 	replace.setTimestamp(51, resource.getCreationDate() == null ? null : new java.sql.Timestamp(resource.getCreationDate().getTime()));
-	//replace.setString(52, "metadataSQLvalue('test', 'ka')");
-
 	Sql.serializeObjectAndSet(replace, 52, resource.getMetadata());
-
+	replace.setInt(53, resource.getFolderId());
 	/*
 	int m = 52;
 	for(Entry<String, String> entry : resource.getMetadataEntries())
@@ -713,36 +711,6 @@ public class ResourceManager
 	}
     }
 
-    public List<Resource> search(String terms, String type, int resultsPerPage, int page) throws Exception
-    {
-	String typeQuery = "";
-
-	if(type != null)
-	{
-	    if(type.equals("image") || type.equals("video"))
-		typeQuery = "AND type = '" + type + "' AND thumbnail2_width > 0";
-	    else if(type.equals("text"))
-		typeQuery = "AND type != 'video ' AND type != 'image'";
-	    else
-		throw new IllegalArgumentException("Invalid type:" + type);
-	}
-
-	StringBuilder query = new StringBuilder();
-	String[] termsArray = terms.split(" ");
-	for(String term : termsArray)
-	{
-	    term = term.trim();
-	    if(term.length() == 0)
-		continue;
-	    query.append(" +");
-	    query.append(term);
-	}
-
-	int limit = (page - 1) * resultsPerPage;
-
-	return getResources("SELECT * FROM lw_resource WHERE resource_id > 20000 AND deleted = 0 " + typeQuery + " AND MATCH (title,description,machine_description,filename) AGAINST (? IN BOOLEAN MODE) LIMIT ?, ?", query.toString(), limit, limit + resultsPerPage);
-    }
-
     protected boolean addResourceToGroup(Resource resource, Group targetGroup, User user) throws SQLException
     {
 	if(resource.getId() <= 0)
@@ -773,7 +741,6 @@ public class ResourceManager
 
     public boolean moveResourceToGroup(Resource resource, Group targetGroup, Group sourceGroup, User user) throws SQLException
     {
-	// TODO prüfen ob schon vorhanden
 	PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_group_resource` SET `group_id` = ?, user_id = ? WHERE `group_id` = ? AND `resource_id` = ?");
 	update.setInt(1, targetGroup.getId());
 	update.setInt(2, user.getId());
@@ -890,8 +857,8 @@ public class ResourceManager
 
 	List<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
 
-	PreparedStatement select = learnweb.getConnection()
-		.prepareStatement("SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
+	PreparedStatement select = learnweb.getConnection().prepareStatement(
+		"SELECT g.user_id, g.timestamp as add_to_group_time, " + RESOURCE_COLUMNS + " FROM `lw_group_resource` g JOIN lw_resource r USING(resource_id) WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
 	select.setInt(1, groupId);
 	select.setInt(2, pageSize);
 	select.setInt(3, page * pageSize);
@@ -978,6 +945,7 @@ public class ResourceManager
 	    resource.setLanguage(rs.getString("language"));
 	    resource.setRestricted(rs.getInt("restricted") == 1);
 	    resource.setCreationDate(rs.getTimestamp("creation_date") == null ? null : new Date(rs.getTimestamp("creation_date").getTime()));
+	    resource.setFolderId(rs.getInt("folder_id"));
 
 	    // This must be set manually because we stored some external sources in Learnweb/Solr
 	    if(resource.getSource().equals("TED"))
@@ -1104,10 +1072,6 @@ public class ResourceManager
 	cache.clear();
     }
 
-    /*
-     *  All methods beyond should be deleted soon
-     */
-
     public static Resource getResourceFromInterwebResult(SearchResultEntity searchResult)
     {
 	Resource resource = new Resource();
@@ -1199,6 +1163,65 @@ public class ResourceManager
 	return resource;
     }
 
+    private Folder createFolder(ResultSet rs)
+    {
+	return null; // TODO
+
+    }
+
+    public Folder getFolder(int folderId)
+    {
+	// TODO
+	return null;
+    }
+
+    /**
+     * 
+     * @param groupId
+     * @param parentFolderId
+     */
+    public List<Folder> getFolders(int groupId, int parentFolderId)
+    {
+	// TODO
+	return null;
+    }
+
+    public Folder saveFolder(Folder foler)
+    {
+	/*
+	
+	PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_tag` (tag_id, name) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
+
+	if(tag.getId() < 0) // the tag is not yet stored at the database
+	    replace.setNull(1, java.sql.Types.INTEGER);
+	else
+	    replace.setInt(1, tag.getId());
+	replace.setString(2, tag.getName());
+	replace.executeUpdate();
+
+	if(tag.getId() < 0) // get the assigned id
+	{
+	    ResultSet rs = replace.getGeneratedKeys();
+	    if(!rs.next())
+		throw new SQLException("database error: no id generated");
+	    tag.setId(rs.getInt(1));
+	}
+
+	replace.close();
+	*/
+
+	return null;
+    }
+
+    public List<Resource> getResourcesByFolder(int folderId) throws SQLException
+    {
+	return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r  WHERE folder_id = ? AND deleted = 0", null, folderId);
+    }
+
+    /*
+     *  All methods beyond should be deleted soon
+     */
+
     public static void fixThumbnailsForWebResources() throws Exception
     {
 
@@ -1266,10 +1289,12 @@ public class ResourceManager
 				+ " FROM `lw_resource` r where  `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`resource_id` > 20000 and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown' ORDER BY `resource_id` DESC limit 20",
 			null);
 	*/
-	List<Resource> resources = rm.getResources(
-		"SELECT " + RESOURCE_COLUMNS
-			+ " FROM `lw_resource` r where `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`resource_id` in (SELECT p.resource_id  FROM `lw_group_resource` p WHERE p.`group_id` =420) and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown'",
-		null);
+	List<Resource> resources = rm
+		.getResources(
+			"SELECT "
+				+ RESOURCE_COLUMNS
+				+ " FROM `lw_resource` r where `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`resource_id` in (SELECT p.resource_id  FROM `lw_group_resource` p WHERE p.`group_id` =420) and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown'",
+			null);
 	for(Resource resource : resources)
 	{
 	    System.out.println(resource);

@@ -60,6 +60,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private int rateNumber;
     private String language = ""; // 2-letter language code
     private Date creationDate = new Date();
+    private int folderId;
     private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
     private HashMap<Integer, Boolean> isRatedByUser = new HashMap<Integer, Boolean>(); // userId : hasRated
     private HashMap<String, String> metadata = new HashMap<String, String>(); // userId : hasRated
@@ -98,6 +99,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private transient List<Comment> comments;
     private transient User owner;
     private transient LinkedList<ArchiveUrl> archiveUrls = null;//To store the archived URLs 
+    private transient String path; //TODO
 
     protected void clearCaches()
     {
@@ -1386,6 +1388,48 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     public void setArchiveUrls(LinkedList<ArchiveUrl> archiveUrls)
     {
 	this.archiveUrls = archiveUrls;
+    }
+
+    public Folder getFolder()
+    {
+	if(folderId == 0)
+	    return null;
+
+	return Learnweb.getInstance().getResourceManager().getFolder(folderId);
+    }
+
+    /**
+     * returns a string representation of the resources path
+     * 
+     * @return
+     */
+    public String getPath()
+    {
+	if(null == path)
+	{
+	    StringBuilder sb = new StringBuilder();
+
+	    Folder folder = getFolder();
+	    while(folder != null)
+	    {
+		sb.append(folder.getFolderId());
+		sb.append("/");
+		folder = folder.getParentFolder();
+	    }
+
+	    path = sb.toString();
+	}
+	return path;
+    }
+
+    public int getFolderId()
+    {
+	return folderId;
+    }
+
+    public void setFolderId(int folderId)
+    {
+	this.folderId = folderId;
     }
 
     public Group getPrimaryGroup() throws SQLException

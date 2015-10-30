@@ -556,7 +556,9 @@ iframe { border:none }
 	background-color:#eee;
 	margin-bottom:5px;
 	padding:10px !important;
-	font-weight:bold;
+	/*
+	font-weight:bold; should nowhere be necessary TODO check
+	*/
 }
 .center-header > span .group_owner, #of_group, #group_name{
 	font-size:1.2rem !important;

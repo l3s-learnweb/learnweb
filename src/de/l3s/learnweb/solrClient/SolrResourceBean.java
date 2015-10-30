@@ -103,6 +103,9 @@ public class SolrResourceBean
     @Field("publisher_s")
     private String publisher;
 
+    @Field("path_s")
+    private String path;
+
     public SolrResourceBean() // empty constructor necessary for SolrSearch
     {
 
@@ -172,6 +175,9 @@ public class SolrResourceBean
 	this.collector = resource.getMetadataValue("collector");
 	this.coverage = resource.getMetadataValue("coverage");
 	this.publisher = resource.getMetadataValue("publisher");
+
+	// TODO this.path = transform path structure to a string /folder_id/folder_id/
+
     }
 
     public String getAuthor()
@@ -472,6 +478,16 @@ public class SolrResourceBean
     public void setPublisher(String publisher)
     {
 	this.publisher = publisher;
+    }
+
+    public String getPath()
+    {
+	return path;
+    }
+
+    public void setPath(String path)
+    {
+	this.path = path;
     }
 
 }
