@@ -135,3 +135,14 @@
 	padding:2px 8px;
 	margin-left:5px;
 }*/
+
+.new-topic-date {
+	font-weight: bold;
+}
+.new-topic-title {
+	background:url(../resources/main-template/img/message.png) left no-repeat;
+		background-size: 18px 18px;
+	padding-left:26px; 
+ }
+
+

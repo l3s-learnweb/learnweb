@@ -85,8 +85,8 @@
 		/* <!-- */
 			$("#center_pane").prepend($("#group_header"));
 		/* --> */
-		</script>	
-		
+		</script>			
+	
 		<h:form prependId="false" rendered="#{not facesContext.validationFailed}">
 			<p:dataTable var="topic" value="#{forumTopicsBean.topics}" rows="20" paginator="true" lazy="false" id="forum_table"
 				paginatorPosition="bottom" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
@@ -96,7 +96,7 @@
 			    	onsuccess="$('#center_pane .content').scrollTop(0); setTimeout('$(\'#center_pane .content\').scrollTop(0)', 10);" />
 				
 			 	<p:column headerText="#{msg['ForumIndex.topic']}" sortBy="#{topic.title}">
-			    	<a href="./group/forum_post.jsf?topic_id=#{topic.id}">
+			    	<a href="./group/forum_post.jsf?topic_id=#{topic.id}" class="${userBean.user.lastLoginDate lt topic.lastPostDate? 'new-topic-title':''}">
 			    		<h:outputText value="#{topic.title}"/>
 			    	</a>
 			    </p:column>
@@ -112,7 +112,7 @@
 			       	<h:outputText value="#{topic.views}"/>
 			    </p:column>
 			    <p:column headerText="#{msg['ForumIndex.lastMessage']}" styleClass="align-center" sortBy="#{topic.lastPostDate}">
-			       	<h:outputText value="#{topic.lastPostDate}">
+			       	<h:outputText value="#{topic.lastPostDate}" styleClass="${userBean.user.lastLoginDate lt topic.lastPostDate? 'new-topic-date':''}">
 			        	<f:convertDateTime type="both" timeStyle="short" dateStyle="medium" timeZone="#{userBean.timeZone}"/>
 			        </h:outputText>
 			        <br/>
@@ -120,6 +120,8 @@
 			        <a href="./user/detail.jsf?user_id=#{topic.userId}">
 			        	<h:outputText value="#{topic.lastPostUser.username}" />
 			        </a>
+			        
+			        <h:outputText value="waa" rendered="" />
 			    </p:column>
 			    
 			</p:dataTable>

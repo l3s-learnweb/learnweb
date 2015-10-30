@@ -974,7 +974,7 @@ public class ResourceManager
 		}
 	    }
 	    else
-		log.debug("resource " + resource.getId() + " was requested but is deleted", new Exception());
+		log.debug("resource " + resource.getId() + " was requested but is deleted");
 
 	    // deserialize preferences
 	    HashMap<String, String> metadata = null;
@@ -1438,6 +1438,17 @@ public class ResourceManager
     {
 	//reindexArchiveItResources();
 	//createThumbnailsForWebResources();
+
+	/*
+	SolrClient solr = Learnweb.getInstance().getSolrClient();
+	List<Resource> resources = Learnweb.getInstance().getResourceManager().getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where deleted=1", null);
+	for(Resource resource : resources)
+	{
+	    log.debug("Process: " + resource.getId());
+
+	    solr.deleteFromIndex(resource.getId());
+	}
+	*/
     }
 
 }
