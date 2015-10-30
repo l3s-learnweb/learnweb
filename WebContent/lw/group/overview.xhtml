@@ -66,6 +66,13 @@
 						<h:outputText value="#{msg.forum}" />
 					</a>
 				</li>
+				<ui:fragment rendered="${userBean.moderator || groupDetailBean.group.isLeader(userBean.user)}">							
+				<li>
+					<a href="./group/options.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.options}" />
+					</a>
+				</li>
+				</ui:fragment>
 			</ul>
 		</div>
 		

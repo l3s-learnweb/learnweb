@@ -82,43 +82,67 @@
 		/* --> */
 		</script>
 		
-		<h1>Edit group metadata</h1>
-		<h:form id="group_moderator_form">
-			<h:panelGrid columns="2">
-				<h:outputLabel value="#{msg.leader}:" for="edit_group_leader"/>		
+		<ui:fragment rendered="${userBean.moderator || groupDetailBean.group.isLeader(userBean.user)}">	
+	
+			<div class="page_header">
+				<span>
+					Edit group metadata
+				</span>
+			</div>
+			<h:form id="group_moderator_form">
+				<h:panelGrid columns="2">
+					<h:outputLabel value="#{msg.leader}:" for="edit_group_leader"/>		
+						
+					<h:selectOneMenu value="#{groupDetailBean.editedGroupLeaderId}" immediate="true" id="edit_group_leader">
+						<f:selectItems value="#{groupDetailBean.membersSelectItemList}" />
+					</h:selectOneMenu>
+	
+					<h:outputLabel value="#{msg.title}:" for="edit_group_title"/>
+					<p:inputText value="#{groupDetailBean.editedGroupTitle}" id="edit_group_title" style="width:29rem;"/>
+						
+					<h:outputLabel value="#{msg.description}:" for="edit_group_description"/>
+					<p:editor id="edit_group_description" value="#{groupDetailBean.editedGroupDescription}" 
+								controls="bold italic underline bullets numbering undo redo link unlink" style="width:30rem;" height="150">
+					</p:editor>
+						
+					<h:outputText value="#{msg.options}:" />
+					<h:panelGrid columns="2">
+						<p:selectBooleanCheckbox value="#{groupDetailBean.group.restrictionForumCategoryRequired}" id="restriction_mandatory_forum_category"/>	
+						<h:outputLabel value="Users have to enter a forum category" for="restriction_mandatory_forum_category"/>
+						
+						<p:selectBooleanCheckbox value="#{groupDetailBean.group.restrictionOnlyLeaderCanAddResources}" id="restriction_only_leader_can_add"/>	
+						<h:outputLabel value="Only the group leader can add resources" for="restriction_only_leader_can_add"/>	
+						
+						<p:selectBooleanCheckbox value="#{groupDetailBean.group.readOnly}" id="restriction_read_only"/>	
+						<h:outputLabel value="Only the group leader can edit, delete or comment resources" for="restriction_read_only"/>						
+						
+					</h:panelGrid>
 					
-				<h:selectOneMenu value="#{groupDetailBean.editedGroupLeaderId}" immediate="true" id="edit_group_leader">
-					<f:selectItems value="#{groupDetailBean.membersSelectItemList}" />
-				</h:selectOneMenu>
-
-				<h:outputLabel value="#{msg.title}:" for="edit_group_title"/>
-				<p:inputText value="#{groupDetailBean.editedGroupTitle}" id="edit_group_title" style="width:29rem;"/>
-					
-				<h:outputLabel value="#{msg.description}:" for="edit_group_description"/>
-				<p:editor id="edit_group_description" value="#{groupDetailBean.editedGroupDescription}" 
-							controls="bold italic underline bullets numbering undo redo link unlink" style="width:30rem;" height="150">
-				</p:editor>
-					
-				<h:outputText value="" />
-				<p:commandButton disabled="false" value="#{msg.save}" ajax="false" action="#{groupDetailBean.onGroupEdit}" 
-					update=":growl :group_menu"	style="border-radius:0px;">
-				</p:commandButton>
-			</h:panelGrid>
-		</h:form>
+					<h:outputText value="" />
+					<p:commandButton disabled="false" value="#{msg.save}" ajax="false" action="#{groupDetailBean.onGroupEdit}" 
+						update=":growl :group_menu"	style="border-radius:0px;">
+					</p:commandButton>
+				</h:panelGrid>
+			</h:form>
 		
-		<hr/>
-		<h1>Copy resources</h1>
-		
-		<h:form id="group_copy_form">
-		<h:panelGrid columns="3">
-			<h:outputText value="Copy all resources of this group to:"/>
-			<h:selectOneMenu value="#{groupDetailBean.selectedResourceTargetGroupId}">
-				<f:selectItems var="group" value="#{groupDetailBean.userCopyableGroups}" itemLabel="#{group.title}" 
-					itemValue="#{group.id}"/>
-			</h:selectOneMenu>					
-			<p:commandButton value="Copy" action="#{groupDetailBean.copyGroup}" process="@form" 
-				update=":growl" onstart="return onClickCopyGroup();"/>
-		</h:panelGrid>				
-		</h:form>
+			<br/>
+			<div class="page_header">
+				<span>
+					Copy resources
+				</span>
+			</div>
+			
+			<h:form id="group_copy_form">
+				<h:panelGrid columns="3">
+					<h:outputText value="Copy all resources of this group to:"/>
+					<h:selectOneMenu value="#{groupDetailBean.selectedResourceTargetGroupId}">
+						<f:selectItems var="group" value="#{groupDetailBean.userCopyableGroups}" itemLabel="#{group.title}" 
+							itemValue="#{group.id}"/>
+					</h:selectOneMenu>					
+					<p:commandButton value="Copy" action="#{groupDetailBean.copyGroup}" process="@form" 
+						update=":growl" onstart="return onClickCopyGroup();"/>
+				</h:panelGrid>				
+			</h:form>
+		</ui:fragment>
 	</ui:define>
 </ui:composition>

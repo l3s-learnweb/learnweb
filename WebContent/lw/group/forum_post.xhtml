@@ -61,7 +61,7 @@
 					</a>
 				</li>								
 				<li>
-					<a class="" href="./group/links.jsf?group_id=#{forumPostBean.topic.groupId}">
+					<a href="./group/links.jsf?group_id=#{forumPostBean.topic.groupId}">
 						<h:outputText value="#{msg.links}" />
 					</a>
 				</li>								
@@ -70,6 +70,13 @@
 						<h:outputText value="#{msg.forum}" />
 					</a>
 				</li>
+				<ui:fragment rendered="${userBean.admin || userBean.moderator || groupDetailBean.group.isLeader(userBean.user)}">							
+				<li>
+					<a href="./group/options.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.options}" />
+					</a>
+				</li>
+				</ui:fragment>
 			</ul>
 		</div>  	
 	
