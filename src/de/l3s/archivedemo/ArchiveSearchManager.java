@@ -268,6 +268,49 @@ public class ArchiveSearchManager
 	}
     }
 
+    /*
+    
+    4	related_entity	
+    5	rank	
+    6	method	varchar(10)	
+
+    7	timestamp
+    */
+
+    /**
+     * Log every click on a related entity
+     * 
+     * @param queryString
+     * @param sessionId
+     * @param language
+     * @param relatedEntity
+     * @param rank
+     * @param method The method which was used to created this related entity suggestion
+     */
+    public void logRelatedEntityClick(String queryString, String sessionId, String language, String relatedEntity, int rank, String method)
+    {
+	if(queryString.length() > 255)
+	    queryString = queryString.substring(0, 255);
+	if(relatedEntity.length() > 255)
+	    queryString = relatedEntity.substring(0, 255);
+
+	try
+	{
+	    PreparedStatement insert = getConnection().prepareStatement("INSERT DELAYED INTO `log_related` (`query`, `session_id`, `language`, related_entity, rank, method) VALUES(?, ?, ?, ?, ?, ?)");
+	    insert.setString(1, queryString);
+	    insert.setString(2, sessionId);
+	    insert.setString(3, language);
+	    insert.setString(4, relatedEntity);
+	    insert.setInt(5, rank);
+	    insert.setString(6, method);
+	    insert.executeUpdate();
+	}
+	catch(SQLException e)
+	{
+	    log.fatal("Can't log related entity for: " + queryString + "; " + relatedEntity, e);
+	}
+    }
+
     public void logClick(int queryId, int rank, int type, String sessionId)
     {
 	try

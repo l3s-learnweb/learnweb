@@ -105,10 +105,12 @@ public class Learnweb
 
 	    this.properties = new PropertiesBundle(fallbackProperties);
 
-	    String propteriesFileName = "learnweb";
+	    String propteriesFileName = "lw_local_other";
 
 	    // if you need to override values in learnweb.properties file for local testing, do it in a separate properties file and add it here:
-	    if((new File("C:\\programmieren\\philipp.txt")).exists())
+	    if((new File("/home/learnweb_user")).exists())
+		propteriesFileName = "learnweb";
+	    else if((new File("C:\\programmieren\\philipp.txt")).exists())
 		propteriesFileName = "lw_local_philipp";
 	    else if((new File("C:\\programmieren\\philipp_uni.txt")).exists())
 		propteriesFileName = "lw_local_philipp_uni";
