@@ -70,7 +70,7 @@ public class ResourceDecorator implements Serializable
 
     // Convenience methods which call the underlying resource
 
-    public String getLearnwebUrl()
+    public String getLearnwebUrl() throws SQLException
     {
 	return resource.getLearnwebUrl();
     }
@@ -230,4 +230,22 @@ public class ResourceDecorator implements Serializable
 	return resource.getType();
     }
 
+    public boolean isArchived()
+    {
+	if(resource.getArchiveUrls() != null)
+	    return resource.getArchiveUrls().size() > 0;
+	else
+	    return false;
+    }
+
+    public ArchiveUrl getFirstArchivedObject()
+    {
+	return resource.getArchiveUrls().get(0);
+    }
+
+    public ArchiveUrl getLastArchivedObject()
+    {
+	int size = resource.getArchiveUrls().size();
+	return resource.getArchiveUrls().get(size - 1);
+    }
 }

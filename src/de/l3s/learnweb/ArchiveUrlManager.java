@@ -599,8 +599,8 @@ public class ArchiveUrlManager
 
     public static void main(String[] args) throws SQLException, ParseException
     {
-	//ArchiveUrlManager archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
-	//archiveUrlManager.updateArchiveItVersions();
+	ArchiveUrlManager archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
+	archiveUrlManager.updateArchiveItVersions();
 	//archiveUrlManager.createArchiveItGroups();
 	/*MementoClient mClient = Learnweb.getInstance().getMementoClient();
 	PreparedStatement pStmtCollections = Learnweb.getInstance().getConnection().prepareStatement("SELECT collection_id, group_id FROM archiveit_subject WHERE group_id in (1095,1096,1097,1098)");
@@ -616,10 +616,10 @@ public class ArchiveUrlManager
 	    }
 	}*/
 
-	ResourceManager rm = Learnweb.getInstance().getResourceManager();
+	/*ResourceManager rm = Learnweb.getInstance().getResourceManager();
 	SolrClient solr = Learnweb.getInstance().getSolrClient();
 	ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
-	/*Group group = Learnweb.getInstance().getGroupManager().getGroupById(1125);
+	Group group = Learnweb.getInstance().getGroupManager().getGroupById(1125);
 	for(Resource resource : group.getResources())
 	{
 	    if(resource.getOnlineStatus() == OnlineStatus.OFFLINE)
@@ -647,7 +647,7 @@ public class ArchiveUrlManager
 		}
 
 	    }
-	}*/
+	}
 	PreparedStatement select = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM lw_resource WHERE url LIKE '%facebook%' AND online_status = 'OFFLINE' AND deleted = 0 AND source= 'Archive-It'");
 	ResultSet rs = select.executeQuery();
 
@@ -700,7 +700,7 @@ public class ArchiveUrlManager
 	    {
 		log.error("Error in indexing the Archive-It resource with lw_resource ID: " + resource.getId(), e);
 	    }
-	}
+	}*/
 
 	/*PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM lw_resource WHERE title = '' AND online_status = 'ONLINE' ORDER BY resource_id DESC");
 	PreparedStatement pStmt2 = Learnweb.getInstance().getConnection().prepareStatement("UPDATE lw_resource SET title=? WHERE resource_id=?");

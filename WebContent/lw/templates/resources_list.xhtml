@@ -29,7 +29,9 @@
 					<td>
 				<div style="display:inline; vertical-align:top;">
 				<h:outputLink  value="#{res.learnwebUrl}" title="" style="color:green;">#{res.learnwebUrl}</h:outputLink><br/>
-				
+				<ui:fragment rendered="${res.archived}">
+					<div>#{msg['ArchiveSearch.captured_between']} <a href="${res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank"><h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short" /></h:outputText></a> #{msg['ArchiveSearch.captured_between_and']} <a href="${res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank"><h:outputText value="${res.lastArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText></a></div>
+				</ui:fragment>				
 				<h:outputText value="#{res.snippet}" style="display:block;width:94%;" escape="false"></h:outputText>
 				</div>
 				
