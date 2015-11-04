@@ -48,6 +48,7 @@ public class ArchiveSearchManager
 
     public List<String> getQueryCompletions(String market, String query, int count) throws SQLException
     {
+
 	ArrayList<String> suggestions = new ArrayList<String>(count);
 	PreparedStatement select = getConnection().prepareStatement("SELECT DISTINCT query_string FROM `pw_query` WHERE market = ? AND `query_string` LIKE ? AND loaded_results > 0 LIMIT ?");
 	select.setString(1, market);

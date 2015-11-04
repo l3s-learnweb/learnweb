@@ -240,12 +240,11 @@ public class ResourceDecorator implements Serializable
 
     public ArchiveUrl getFirstArchivedObject()
     {
-	return resource.getArchiveUrls().get(0);
+	return resource.getArchiveUrls().getFirst();
     }
 
     public ArchiveUrl getLastArchivedObject()
     {
-	int size = resource.getArchiveUrls().size();
-	return resource.getArchiveUrls().get(size - 1);
+	return resource.getArchiveUrls().getLast();
     }
 }

@@ -99,11 +99,11 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private transient List<Comment> comments;
     private transient User owner;
     private transient LinkedList<ArchiveUrl> archiveUrls = null;//To store the archived URLs 
-    private transient String path = "";
+    private transient String path = null;
 
     protected void clearCaches()
     {
-
+	path = null;
     }
 
     /**
