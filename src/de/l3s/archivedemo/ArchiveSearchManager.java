@@ -48,12 +48,12 @@ public class ArchiveSearchManager
 
     public List<String> getQueryCompletions(String market, String query, int count) throws SQLException
     {
-
-	ArrayList<String> suggestions = new ArrayList<String>(count);
-	PreparedStatement select = getConnection().prepareStatement("SELECT DISTINCT query_string FROM `pw_query` WHERE market = ? AND `query_string` LIKE ? AND loaded_results > 0 LIMIT ?");
-	select.setString(1, market);
-	select.setString(2, query + "%");
-	select.setInt(3, count);
+	String table = "main_pages_" + market.substring(0, 2);
+	System.out.println(table);
+	List<String> suggestions = new ArrayList<String>(count);
+	PreparedStatement select = getConnection().prepareStatement("SELECT title FROM `" + table + "` WHERE title LIKE ? ORDER BY views DESC LIMIT ?");
+	select.setString(1, query + "%");
+	select.setInt(2, count);
 	ResultSet rs = select.executeQuery();
 
 	while(rs.next())

@@ -64,7 +64,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     private List<Presentation> presentations;
 
-    private String mode = "everything";
     private List<LogEntry> logMessages;
     private ArrayList<NewsEntry> newslist;
     private User clickedUser;
@@ -291,22 +290,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return "../lw/myhome/edit_presentation.jsf?group_id=" + groupId + "&format=" + format;
     }
 
-    public String getMode()
-    {
-	return mode;
-    }
-
     private void loadGroup() throws SQLException
     {
-	if(0 == groupId)
-	{/*
-	 String temp = getFacesContext().getExternalContext().getRequestParameterMap().get("group_id");
-	 if(temp != null && temp.length() != 0)
-	 groupId = Integer.parseInt(temp);
-	 
-	 if(0 == groupId)
-	 return;
-	   */
+	if(null == group)
+	{
 	    Integer id = getParameterInt("group_id");
 
 	    if(null == id)
@@ -365,7 +352,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public Group getGroup() throws SQLException
     {
-	loadGroup();
+	//loadGroup();
 	return group;
     }
 
@@ -1113,8 +1100,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void onGroupEdit()
     {
-	System.out.println("onGroupEdit");
-
 	if(null == group)
 	{
 	    addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");

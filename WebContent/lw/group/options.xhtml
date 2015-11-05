@@ -86,7 +86,7 @@
 	
 			<div class="page_header">
 				<span>
-					Edit group metadata
+					#{msg.edit_group_metadata}
 				</span>
 			</div>
 			<h:form id="group_moderator_form">
@@ -114,12 +114,11 @@
 						<h:outputLabel value="Only the group leader can add resources" for="restriction_only_leader_can_add"/>	
 						
 						<p:selectBooleanCheckbox value="#{groupDetailBean.group.readOnly}" id="restriction_read_only"/>	
-						<h:outputLabel value="Only the group leader can edit, delete or comment resources" for="restriction_read_only"/>						
-						
+						<h:outputLabel value="Only the group leader can edit, delete or comment resources" for="restriction_read_only"/>							
 					</h:panelGrid>
 					
 					<h:outputText value="" />
-					<p:commandButton disabled="false" value="#{msg.save}" ajax="false" action="#{groupDetailBean.onGroupEdit}" 
+					<p:commandButton value="#{msg.save}" ajax="false" action="#{groupDetailBean.onGroupEdit}" 
 						update=":growl :group_menu"	style="border-radius:0px;">
 					</p:commandButton>
 				</h:panelGrid>
@@ -128,7 +127,7 @@
 			<br/>
 			<div class="page_header">
 				<span>
-					Copy resources
+					#{msg.copy_resources}
 				</span>
 			</div>
 			

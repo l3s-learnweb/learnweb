@@ -8,9 +8,9 @@
 	<ui:param name="disableGrowl" value="true" />
 
 	<ui:define name="center_layout">
-		<h:outputStylesheet library="frontpage" name="index.css" />
+		<h:outputStylesheet library="frontpage" name="index2.css" />
 
-		<div class="info">
+		<div class="content_box">
 			<h1>
 				#{msg.homepageTitle}
 			</h1>
@@ -21,10 +21,10 @@
 
 				<ui:fragment rendered="#{!userBean.loggedIn}">
 
-					<h2>
+					<h2 class="page_header">
 						#{msg.loginLabel}
 					</h2>
-					<h:form>
+					<h:form class="grey_border">
 						<p:focus for="username"/>
 						<h:panelGrid columns="3">
 							<h:outputLabel for="username" value="#{msg.username}:"/>
@@ -51,7 +51,7 @@
 				</ui:fragment>
 				
 			
-				<h2>
+				<h2 class="page_header">
 					#{msg.video_guide}
 				</h2>
 				<p:lightBox>
@@ -71,76 +71,80 @@
 
 				<ui:fragment rendered="#{!userBean.loggedIn}">
 
-					<h2>
+					<h2 class="page_header">
 						#{msg.sign_up_for}:
 					</h2>
-					<h3>
-						<h:outputText value="#{msg.public_courses}" />
-					</h3>
-
-					<h:panelGrid columns="2" columnClasses="first_column,description">
-						<h:outputLink styleClass="greenbutton" value="user/register.jsf">
-							<h:outputText value="#{msg.standard_version}" />
-						</h:outputLink>
-
-						<h:outputText value="#{msg.standard_version_description}" />
-					</h:panelGrid>
+					
+					<div class="grey_border">
+						<h3>
+							<h:outputText value="#{msg.public_courses}" />
+						</h3>
+	
+						<h:panelGrid columns="2" columnClasses="first_column,description">
+							<h:outputLink styleClass="greenbutton" value="user/register.jsf">
+								<h:outputText value="#{msg.standard_version}" />
+							</h:outputLink>
+	
+							<h:outputText value="#{msg.standard_version_description}" />
+						</h:panelGrid>
+					
+						<h3>
+							<h:outputText value="#{msg.specific_courses}" />
+						</h3>
 				
-					<h3>
-						<h:outputText value="#{msg.specific_courses}" />
-					</h3>
-			
-					<h:panelGrid columns="2" columnClasses="first_column,description">
-						<h:outputLink styleClass="greenbutton" value="user/register.jsf">
-							<h:outputText value="YELL"/>
-							<f:param name="wizard" value="yell"/>
-						</h:outputLink>
-						
-						<h:outputText value="#{msg.yell_description}"/>
-					</h:panelGrid>
+						<h:panelGrid columns="2" columnClasses="first_column,description">
+							<h:outputLink styleClass="greenbutton" value="user/register.jsf">
+								<h:outputText value="YELL"/>
+								<f:param name="wizard" value="yell"/>
+							</h:outputLink>
+							
+							<h:outputText value="#{msg.yell_description}"/>
+						</h:panelGrid>
+					</div>
+					<br/>
 				</ui:fragment>
-
-				<br/>
-				<h2>
+				
+				<h2 class="page_header">
 					#{msg['Changelog.title']}
 				</h2>
 				
-				<h4>
-					<h:outputText value="${utilBean.StringToDate('16.10.2015')}">
-           				<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
-       				</h:outputText>	
-       			</h4>
-				<h:panelGrid columns="2" columnClasses="first_column,description">
-					<h:outputText value="#{msg['Changelog.search_filters']}:" class="changes"/>
-					<h:outputText value="#{msg['Changelog.2015_10_search_filters_description']}"/>
-
-					<h:outputText value="#{msg['Changelog.group_search']}:" class="changes"/>
-					<h:outputText value="#{msg['Changelog.2015_10_group_search_description']}"/>
-				
-					<h:outputText value="#{msg['Changelog.group_options']}:" class="changes"/>
-					<h:outputText value="#{msg['Changelog.2015_10_group_options_description']}"/>					
-				
-					<h:outputText value="#{msg['Changelog.forum']}:" class="changes"/>
-					<h:outputText value="#{msg['Changelog.2015_10_forum_description']}"/>	
-				</h:panelGrid>
-     			
-				<h4>
-					<h:outputText value="${utilBean.StringToDate('20.7.2015')}">
-           				<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
-       				</h:outputText>	
-				</h4>
-				<h:panelGrid columns="2" columnClasses="first_column,description">	
-					<h:outputText value="#{msg['Changelog.tooltips']}:" class="changes"/>
-					<h:outputText value="#{msg['Changelog.2015_07_tooltips_description']}"/>
-											
-					<h:outputText value="#{msg['Changelog.notifications']}:" class="changes" />
-					<h:outputText value="#{msg['Changelog.2015_07_notification_description']}"/>
+				<div class="grey_border">
+					<h4>
+						<h:outputText value="${utilBean.StringToDate('16.10.2015')}">
+	           				<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+	       				</h:outputText>	
+	       			</h4>
+					<h:panelGrid columns="2" columnClasses="first_column,description">
+						<h:outputText value="#{msg['Changelog.search_filters']}:" class="changes"/>
+						<h:outputText value="#{msg['Changelog.2015_10_search_filters_description']}"/>
+	
+						<h:outputText value="#{msg['Changelog.group_search']}:" class="changes"/>
+						<h:outputText value="#{msg['Changelog.2015_10_group_search_description']}"/>
 					
-					<h:outputText value="#{msg.text_analysis}:" class="changes"/>
-					<h:outputText value="#{msg['Changelog.2015_07_text_analysis_description']}" escape="false" id="link"/>
+						<h:outputText value="#{msg['Changelog.group_options']}:" class="changes"/>
+						<h:outputText value="#{msg['Changelog.2015_10_group_options_description']}"/>					
 					
-				</h:panelGrid>
-
+						<h:outputText value="#{msg['Changelog.forum']}:" class="changes"/>
+						<h:outputText value="#{msg['Changelog.2015_10_forum_description']}"/>	
+					</h:panelGrid>
+	     			
+					<h4>
+						<h:outputText value="${utilBean.StringToDate('20.7.2015')}">
+	           				<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+	       				</h:outputText>	
+					</h4>
+					<h:panelGrid columns="2" columnClasses="first_column,description">	
+						<h:outputText value="#{msg['Changelog.tooltips']}:" class="changes"/>
+						<h:outputText value="#{msg['Changelog.2015_07_tooltips_description']}"/>
+												
+						<h:outputText value="#{msg['Changelog.notifications']}:" class="changes" />
+						<h:outputText value="#{msg['Changelog.2015_07_notification_description']}"/>
+						
+						<h:outputText value="#{msg.text_analysis}:" class="changes"/>
+						<h:outputText value="#{msg['Changelog.2015_07_text_analysis_description']}" escape="false" id="link"/>
+						
+					</h:panelGrid>
+				</div>
 			</div>
 
 			<br class="clear" />
