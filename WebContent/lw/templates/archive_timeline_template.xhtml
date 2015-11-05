@@ -30,9 +30,12 @@
 			var msgClickZoom = '#{msg["Archive.timeline_click_zoom"]}';
 			var msgTouchZoom = '#{msg["Archive.timeline_touch_zoom"]}';
 			
-			loadTimeline(#{resourceDetailBean.archiveTimelineJsonData});
-			loadCalendar(#{resourceDetailBean.archiveCalendarJsonData});
-
+			function loadCharts()
+			{
+				loadTimeline(#{resourceDetailBean.archiveTimelineJsonData});
+				loadCalendar(#{resourceDetailBean.archiveCalendarJsonData});
+			}
+			
 			$.fn.tooltipster('setDefaults', {
 				interactive: true,
 		    	interactiveTolerance: 150,
@@ -61,7 +64,7 @@
 		</script>	
 		<br/>
 	<div class='box'>
-		<h:panelGroup layout="block" id="container"></h:panelGroup>
+		<div id="container"></div>
 		<div id="calendar">
 			<!-- Responsive calendar - START -->
 			<div class="responsive-calendar">

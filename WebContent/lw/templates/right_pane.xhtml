@@ -8,7 +8,7 @@
 	<ui:composition> 
 
 	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" 
-		header="#{bean.clickedResource.id eq -1? msg.click_to_view_details : bean.clickedResource.title}" id="right_pane">
+		header="#{resourceDetailBean.clickedResource.id eq -1? msg.click_to_view_details : resourceDetailBean.clickedResource.title}" id="right_pane">
 
 		<h:outputScript library="resource-pane-template" name="resource-pane2.js"/>
 		<h:outputStylesheet library="resource-pane-template" name="resource-pane.css"/>
@@ -32,7 +32,7 @@
 						}
 						else
 						{
-							$(".ui-layout-unit-header","#right_pane").html("#{bean.clickedResource.title}");
+							$(".ui-layout-unit-header","#right_pane").html("#{resourceDetailBean.clickedResource.title}");
 						}
 						console.log('scoller', $('#right_pane .content').scrollTop());
 						
@@ -42,7 +42,6 @@
 						lightbox_load();
 				   
 					}
-					
 				</script>
 				<ui:fragment rendered="#{bean.newResourceClicked and !bean.editResourceClicked}">
 			
@@ -151,7 +150,7 @@
 					</h:form>
 			</ui:fragment>
 				
-				<h:panelGroup rendered="#{!bean.newResourceClicked and !bean.editResourceClicked and bean.clickedResource.id != -1}" 
+				<h:panelGroup rendered="#{!bean.newResourceClicked and !bean.editResourceClicked and resourceDetailBean.clickedResource.id != -1}" 
 					layout="block">						
 					<ui:fragment rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'video' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'image'}">
 						<div class="align-center">

@@ -13,6 +13,7 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.event.ComponentSystemEvent;
 
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
@@ -20,6 +21,7 @@ import org.json.simple.JSONObject;
 
 import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.Comment;
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Tag;
@@ -41,6 +43,32 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     private String tagName;
     private Comment clickedComment;
     private String newComment;
+
+    public ResourceDetailBean()
+    {
+	clickedResource = new Resource();
+    }
+
+    public void preRenderView(ComponentSystemEvent e)
+    {
+	if(isAjaxRequest())
+	{
+	    return;
+	}
+
+	if(resourceId > 0)
+	{
+	    try
+	    {
+		clickedResource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+	    }
+	    catch(SQLException e1)
+	    {
+		e1.printStackTrace();
+		addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    }
+	}
+    }
 
     public String getArchiveTimelineJsonData()
     {

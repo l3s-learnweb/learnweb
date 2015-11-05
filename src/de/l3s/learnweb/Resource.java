@@ -680,10 +680,10 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
     // the following functions are JLearnweb specific and only for convenience included in this class
 
-    public String getLearnwebUrl()
+    public String getLearnwebUrl() throws SQLException
     {
 	if(getId() != -1)
-	    return "resource.jsf?resource_id=" + getId();
+	    return "group/resources.jsf?group_id=" + getPrimaryGroup().getId() + "&resource_id=" + getId();
 
 	return getUrl();
     }
@@ -1426,6 +1426,6 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
     public Group getPrimaryGroup() throws SQLException
     {
-	return Learnweb.getInstance().getGroupManager().getPrimaryGroupByResourceId(id);
+	return Learnweb.getInstance().getGroupManager().getPrimaryGroupByResourceId(getId());
     }
 }

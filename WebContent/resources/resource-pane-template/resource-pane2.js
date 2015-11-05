@@ -90,6 +90,33 @@ function prepareCommentButton()
 	});
 }
 
+function update_url(resource_id)
+{
+	var updated_url = window.location.protocol + "//" + window.location.host + window.location.pathname + "?";
+	var query_params = window.location.search.substring(1);
+	if(query_params.indexOf("resource_id") > -1)
+	{	
+		var params = query_params.split("&");
+		for(var i=0; i<params.length;i++)
+		{
+			var param = params[i].split("=");
+			if(param[0] == "resource_id")
+				updated_url += param[0] + "=" + resource_id + "&";
+			else
+				updated_url += param[0] + "=" + param[1] + "&";
+		}
+	}
+	else
+		updated_url += query_params + "&resource_id=" + resource_id + "?"; 
+	updated_url = updated_url.substring(0, updated_url.length - 1);
+	window.history.pushState({"url":window.location.href}, "resource_id" + resource_id, updated_url);
+	//document.title = resource_title;
+}
+
+window.onpopstate = function(e){
+	location.reload(true);
+};
+
 $(document).ready(function() 
 {				
 	//lightbox_resize_container();	
@@ -99,5 +126,8 @@ $(document).ready(function()
 	$(document).keydown(function(event) {
 		if (event.which == 27)
 			lightbox_close();		
-	});		
+	});
+	
+	if(document.getElementById("#container") != null)
+		loadCharts();
 });
