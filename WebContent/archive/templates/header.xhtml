@@ -44,7 +44,7 @@
 	}
 	</script>
 	<header id="header">
-		<div id="main_menu_bar" style="background-image:url(http://learnweb.l3s.uni-hannover.de/download/82037/archivelogo.png);">			
+		<div id="main_menu_bar">			
 		
 			<img src="#{request.contextPath}/resources/main-template/img/ajax-loader.gif" alt="Loading" id="loadingsymbol"/>
 			<p:ajaxStatus onstart="document.getElementById('loadingsymbol').style.visibility='visible';" 
@@ -54,176 +54,11 @@
 				<a href="/archive/search.jsf" id="learnweb_logo">
 					Logo
 				</a>
-				<p:autoComplete forceSelection="true" value="#{archiveDemoBean.query}" completeMethod="#{archiveDemoBean.completeQuery}" id="archive_searchfield" />	
+				<p:autoComplete forceSelection="true" value="#{archiveDemoBean.query}" completeMethod="#{archiveDemoBean.completeQuery}" id="archive_searchfield" placeholder="#{msg['ArchiveSearch.search_placeholder']}"/>	
 				<input type="hidden" name="query" value="#{archiveDemoBean.query}"/>		
 				<h:commandButton value=" " action="#{archiveDemoBean.onSearch}" id="searchbutton" title="#{msg.searchLabel}"/>
 			</h:form>
-			<ui:fragment rendered="#{userBean.loggedIn}">	
-			<div class="userbar">
-				<ul>
-					<li>
-						<a href="#{request.contextPath}/lw/myhome/resources.jsf" id="myresources">
-							<h:outputText value="#{msg.myResourcesTitle}" />
-						</a>
-					</li>
-					<li>
-						<a href="#{request.contextPath}/lw/myhome/groups.jsf" id="mygroups">
-							<h:outputText value="#{msg.groupOverview}" />
-						</a>
-					</li>
-					<li>
-						<a href="#{request.contextPath}/lw/myhome/activity.jsf" id="activitystream">
-							<h:outputText value="#{msg.activity_stream}" />
-						</a>
-					</li>	
-					<li>
-						<a href="#{request.contextPath}/lw/myhome/profile.jsf" id="profile">
-							<h:outputText value="#{msg.myProfileTitle}" />
-						</a>
-					</li>				
-					<li>
-						<img alt="" src="#{request.contextPath}/resources/main-template/img/dropdownmenu.png" height="28" width="28" 
-							class="menu" tabindex="0" />
-
-						<ul>
-							
-							<li class="menupoint">
-								<h:outputText value="#{msg.my_stuff}" />
-							</li>
-							
-							<li>
-								<a href="#{request.contextPath}/lw/myhome/resources.jsf" id="moremyresources">
-									<h:outputText value="#{msg.myResourcesTitle}" />
-								</a>
-							</li>
-							<li>
-								<a href="#{request.contextPath}/lw/myhome/groups.jsf" id="moremygroups">
-									<h:outputText value="#{msg.groupOverview}" />
-								</a>
-							</li>
-							<li>
-								<a href="#{request.contextPath}/lw/myhome/activity.jsf" id="moreactivitystream">
-									<h:outputText value="#{msg.activity_stream}" />
-								</a>
-							</li>							
-							<li>
-								<a href="#{request.contextPath}/lw/myhome/profile.jsf" id="moreprofile">
-									<h:outputText value="#{msg.myProfileTitle}" />
-								</a>
-							</li>
-							<li>
-								<a href="#{request.contextPath}/lw/myhome/comments.jsf">
-									<h:outputText value="#{msg.myCommentsTitle}" />
-								</a>
-							</li>
-							<li>
-								<a href="#{request.contextPath}/lw/myhome/tags.jsf">
-									<h:outputText value="#{msg.myTags}" />
-								</a>
-							</li>
-							<li>
-								<a href="#{request.contextPath}/lw/explore.jsf">
-									<h:outputText value="#{msg.search_history}" />
-								</a>
-							</li>
-							<li>
-								<a href="#{request.contextPath}/lw/myhome/notification.jsf">
-									<h:outputText value="#{msg.notification}" />
-								</a>
-							</li>
-							
-							<li>
-								<a href="#{request.contextPath}/lw/user/login.jsf" id="login">
-									#{msg.loginLabel}
-								</a>
-							</li>
-							<li>
-								<h:form id="logout">
-									<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true" 
-										title="#{msg.logoutLabel}" value="#{msg.logoutLabel}" />
-								</h:form>
-							</li>
-							<ui:fragment rendered="#{userBean.admin}">
-								<li>
-									<a href="#{request.contextPath}/lw/myhome/services.jsf">
-										<h:outputText value="#{msg.web2_0services}" />
-									</a>
-								</li>
-								
-								<li class="menupoint">
-									<h:outputText value="#{msg.admin}" />
-								</li>
-								<li>
-									<a href="#{request.contextPath}/lw/admin/courses.jsf">
-										<h:outputText value="#{msg.courses}" />
-									</a>
-								</li>
-								<li>
-									<a href="#{request.contextPath}/lw/admin/users.jsf">
-										<h:outputText value="#{msg.users}" />
-									</a>
-								</li>
-								<li>
-									<a href="#{request.contextPath}/lw/admin/adminmsg.jsf">
-										<h:outputText value="#{msg.admin_messages_Title}" />
-									</a>
-								</li>
-								<li>
-									<a href="#{request.contextPath}/lw/admin/adminchangelog.jsf">
-										<h:outputText value="#{msg.change_log}" />
-									</a>
-								</li>
-							</ui:fragment>
-							<ui:fragment rendered="#{userBean.admin || userBean.moderator}">
-								<li class="menupoint">
-									<h:outputText value="#{msg.moderator}" />
-								</li>
-								<li>
-									<a href="#{request.contextPath}/lw/admin/notification.jsf">
-										<h:outputText value="#{msg.send_notification}" />
-									</a>
-								</li>
-								<li>
-									<a href="#{request.contextPath}/lw/admin/users_moderator.jsf">
-										<h:outputText value="#{msg.users}" />
-									</a>
-								</li>
-								<li>
-									<a href="#{request.contextPath}/lw/admin/courses.jsf">
-										<h:outputText value="#{msg.courses}" />
-									</a>
-								</li>
-								<li>
-									<a href="#{request.contextPath}/lw/admin/organisation.jsf">
-										<h:outputText value="#{msg.organization}" />
-									</a>
-								</li>
-								<li>
-									<a href="#{request.contextPath}/lw/admin/text_analysis.jsf">
-										<h:outputText value="#{msg.text_analysis}" />
-									</a>
-								</li>
-								<li>
-									<a href="#{request.contextPath}/lw/admin/statistics.jsf">
-										<h:outputText value="#{msg.statistics}" />
-									</a>
-								</li>
-								<li>
-									<a href="#{request.contextPath}/lw/admin/detailed_transcript_log.jsf">
-										<h:outputText value="#{msg.detailed_transcript_log}" />
-									</a>
-								</li>
-								<li>
-									<a href="#{request.contextPath}/lw/admin/simple_transcript_log.jsf">
-										<h:outputText value="#{msg.simple_transcript_log}" />
-									</a>
-								</li>
-							</ui:fragment>
-						</ul>
-					</li>
-				</ul>
-			</div>	
-			</ui:fragment>	
+		
 			
 			<div id="language_selector" class="hover-white" tabindex="0">
 				<img alt="#{userBean.localeCode}" src="#{request.contextPath}/resources/main-template/img/flag_archive_#{userBean.localeCode}.png" />
@@ -243,35 +78,37 @@
 					</ul>
 				</h:form>
 			</div>
-
-
-
-			<ui:fragment rendered="#{userBean.loggedIn}">				
-				<p:graphicImage value="/resources/main-template/img/question.png" alt="#{msg.help}" onclick="footerToggle();" 
-					rendered="#{not empty helpText}" id="informationonscreen" />
-	
+						
+			<p:graphicImage value="/resources/main-template/img/question.png" alt="#{msg.help}" onclick="PF('about_dlg').show();" id="informationonscreen" />
+				
+				
+			<p:dialog header="About" widgetVar="about_dlg">
 			
-				<h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" rendered="#{userBean.loggedIn}" id="message_div">
-					<h:outputText value="#{notificationReaderBean.howManyNewMessages}" rendered="#{notificationReaderBean.howManyNewMessages gt 0}" 
-						id="message_count"/>
-					
-					<img alt="message" src="#{request.contextPath}/resources/main-template/img/message.png" id="message_button" 
-						class="header_buttons hover-white"/>
-				</h:outputLink>
-	
-				<h:outputLink id="loginbutton" value="#{request.contextPath}/lw/user/login.jsf" rendered="#{not userBean.loggedIn}" 
-					class="hover-white">
-					#{msg.loginLabel}
-				</h:outputLink>
-	
-				<h:form>
-					<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true" title="#{msg.logoutLabel}">
-						<img alt="#{msg.logoutLabel}" src="#{request.contextPath}/resources/main-template/img/logout.png" id="logoutbutton" 
-							class="header_buttons hover-white" />
-					</h:commandLink>
-				</h:form>
-			</ui:fragment>	
-			
+<h2>People involved</h2>
+<pre>
+Felipe Reis
+Nattiya Kanhabua
+Philipp Kemkes
+Trevor Fernando
+Tu Nguyen
+Wolfgang Nejdl
+</pre>
+<br/>
+<a href="http://alexandria-project.eu"><img src="http://alexandria-project.eu/wp-content/uploads/2015/07/alexandria_logo_rgb_small-300x233.png" height="94" width="121"  /></a>
+
+<!-- 
+
+possible to search for any entity from the Wikipedia
+gives you current results from bing which are also archived by the Internet Archive
+
+the blue link ...
+the green link ...
+
+the shown related entities are based on paper xy
+
+link to terms of use
+ -->
+			</p:dialog>			
 
 		</div>
 

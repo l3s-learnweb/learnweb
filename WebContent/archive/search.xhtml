@@ -14,36 +14,8 @@
 	<ui:param name="disableGrowl" value="true"/>
 	
 	<ui:define name="center_layout">
-		<h:outputStylesheet library="search" name="search2.css"  />	
-		<h:outputScript library="search" name="search2.js" target="head"/>
-		<style type="text/css">
-			a.suggestSolrWebLink:link,a.suggestSolrWebLink{font-size: 1.3rem; font-family: "Segoe UI",Arial,Helvetica,sans-serif;}
-			a.suggestWebLink:link,a.suggestWebLink{font-size: 1.3rem; font-family: "Segoe UI",Arial,Helvetica,sans-serif; color:green;}
-			a.suggestWebLink:visited{color:purple;}
-			
-			.related_entities
-			{
-				position: fixed;
-				top:70px;
-				left:610px;
-				width:415px;
-				padding:10px 20px;
-				background-color:#f9f9f9;
-			}
-			.entity_links
-			{
-				list-style-type:none;
-				padding:0;
-				margin:0;
-			}
-			#loadingsymbol { left: 18rem; }	
-			
-			#message {
-				position: fixed;
-				width: 100%;
-				z-index: 10000;
-			}
-		</style>
+		<h:outputStylesheet library="search" name="search.css"  />	
+		<h:outputScript library="search" name="search.js" target="head"/>
 		
 		<script type="text/javascript">
 			var view = 'list';
@@ -59,9 +31,19 @@
 				ajaxLogClick([{name:'rank', value:rank}, {name:'type', value:type}]); 
 				return true;
 			}
-		</script>	
 			
-		<div class="" style="width:600px;">
+			$().ready(function() {
+				$('#archive_searchfield_input').focus();
+			});
+			
+			<ui:fragment rendered="#{empty archiveDemoBean.query}">
+			no_more_results = true;
+			</ui:fragment>
+		</script>	
+		
+		
+			
+		<div class="" style="width:60rem;">
 			<div id="results" class="list_view">			
 				<div class="resources">
 					<ui:decorate template="/archive/templates/resources_list.xhtml">

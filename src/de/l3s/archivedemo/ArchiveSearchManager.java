@@ -49,7 +49,7 @@ public class ArchiveSearchManager
     public List<String> getQueryCompletions(String market, String query, int count) throws SQLException
     {
 	String table = "main_pages_" + market.substring(0, 2);
-	System.out.println(table);
+
 	List<String> suggestions = new ArrayList<String>(count);
 	PreparedStatement select = getConnection().prepareStatement("SELECT title FROM `" + table + "` WHERE title LIKE ? ORDER BY views DESC LIMIT ?");
 	select.setString(1, query + "%");
@@ -164,8 +164,8 @@ public class ArchiveSearchManager
     {
 	List<ResourceDecorator> results = new ArrayList<ResourceDecorator>();
 
-	PreparedStatement select = getConnection().prepareStatement(
-		"SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description, UNIX_TIMESTAMP(crawl_time) as crawl_time2 FROM pw_result LEFT JOIN `url_captures_count_2` USING (query_id, rank) WHERE `query_id` = ? ORDER BY rank");
+	PreparedStatement select = getConnection()
+		.prepareStatement("SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description, UNIX_TIMESTAMP(crawl_time) as crawl_time2 FROM pw_result LEFT JOIN `url_captures_count_2` USING (query_id, rank) WHERE `query_id` = ? ORDER BY rank");
 	select.setInt(1, queryId);
 	ResultSet rs = select.executeQuery();
 
@@ -228,11 +228,11 @@ public class ArchiveSearchManager
 
     /*public static void main(String[] args) throws Exception
     {
-
+    
     ArchiveSearchManager lm = Learnweb.getInstance().getArchiveSearchManager();
-
+    
     lm.getResultsByQueryId(65158);
-
+    
     System.exit(0);
     }*/
 
@@ -274,7 +274,7 @@ public class ArchiveSearchManager
     4	related_entity	
     5	rank	
     6	method	varchar(10)	
-
+    
     7	timestamp
     */
 

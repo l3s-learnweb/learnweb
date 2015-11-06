@@ -261,10 +261,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	int rank = getParameterInt("rank");
 	int type = getParameterInt("type");
 
-	log.debug(rank + " - " + type);
-
 	getLearnweb().getArchiveSearchManager().logClick(queryId, rank, type, sessionId);
-
     }
 
     public void loadNextPage()
@@ -274,7 +271,6 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     public Date getFirstCaptureDate(String url)
     {
-	//log.debug("getFirstCaptureDate: " + url);
 	return getCaptureDate(url, 1);
     }
 
@@ -285,7 +281,6 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     private Date getCaptureDate(String url, int limit)
     {
-	//log.debug("getCaptureDate");
 	String response;
 	try
 	{
