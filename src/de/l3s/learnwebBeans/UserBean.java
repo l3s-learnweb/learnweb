@@ -231,6 +231,8 @@ public class UserBean implements Serializable
 	    locale = Locale.ITALY;
 	else if(localeCode.equals("pt"))
 	    locale = new Locale("pt", "BR");
+	else if(localeCode.equals("xx")) // only for translation editors
+	    locale = new Locale("xx", "xx");
 	else
 	{
 	    locale = Locale.ENGLISH;

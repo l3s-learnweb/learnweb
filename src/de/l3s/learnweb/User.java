@@ -64,7 +64,8 @@ public class User implements Comparable<User>, Serializable, HasId
     private transient LinkedList<Group> writeAbleGroups;
     private String imageUrl;
     private TimeZone timeZone = TimeZone.getTimeZone("Europe/Berlin");
-    private Date lastLoginDate = null;
+    private transient Date lastLoginDate = null;
+    private transient Date currentLoginDate = null;
     private int forumPostCount = -1;
 
     public User()
@@ -644,6 +645,21 @@ public class User implements Comparable<User>, Serializable, HasId
 	    lastLoginDate = Learnweb.getInstance().getUserManager().getLastLoginDate(id);
 	}
 	return lastLoginDate;
+    }
+
+    public Date getCurrentLoginDate()
+    {
+	return currentLoginDate;
+    }
+
+    public void setCurrentLoginDate(Date currentLoginDate) throws SQLException
+    {
+	if(this.currentLoginDate != null)
+	    lastLoginDate = this.currentLoginDate;
+	else
+	    lastLoginDate = Learnweb.getInstance().getUserManager().getLastLoginDate(id);
+
+	this.currentLoginDate = currentLoginDate;
     }
 
     @Override

@@ -2,11 +2,13 @@ package de.l3s.learnwebBeans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Date;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.interwebj.InterWeb;
@@ -57,8 +59,11 @@ public class LoginBean extends ApplicationBean implements Serializable
 
 	UtilBean.getUserBean().setUser(user); // logs the user in
 	//addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
+	user.setCurrentLoginDate(new Date());
 
 	log(Action.login, 0);
+
+	Logger.getLogger(LoginBean.class).debug("Login time; current: " + user.getCurrentLoginDate() + ", last: " + user.getLastLoginDate());
 
 	// uncommented until interwebJ works correct
 	Runnable preFetch = new Runnable()

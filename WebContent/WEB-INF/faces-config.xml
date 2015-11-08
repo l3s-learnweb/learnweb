@@ -15,6 +15,7 @@
 		</locale-config>
 		
 		<resource-bundle>
+		
 			<base-name>de.l3s.learnweb.lang.messages</base-name>
 			<var>msg</var>
 		</resource-bundle>
