@@ -184,15 +184,9 @@
 									    </ui:fragment>							
 									</div>
 								</div>
-							</div>						
-						 
-									
-							<ui:fragment rendered="#{resourceDetailBean.clickedResource.type == 'Video' and resourceDetailBean.clickedResource.source != 'Yovisto'}">
-								<div class="preview_box" style="min-height:400px; max-height:500px; height:100%;">
-									<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
-								</div>
-							</ui:fragment>
-							<ui:fragment rendered="#{resourceDetailBean.clickedResource.type == 'Video' and resourceDetailBean.clickedResource.source == 'Yovisto'}">
+							</div>				
+		
+							<ui:fragment rendered="#{resourceDetailBean.clickedResource.type == 'Video'}">
 								<div class="preview_box" style="height:400px; width:100%;">
 									<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
 								</div>
@@ -203,13 +197,13 @@
 										escape="false"/>
 								</div>
 							</ui:fragment>
-							<ui:fragment rendered="#{(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'Image') and not empty resourceDetailBean.clickedResource.thumbnail3}">
+							<ui:fragment rendered="#{(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'Image') and not empty resourceDetailBean.clickedResource.thumbnail3 or resourceDetailBean.clickedResource.type eq 'pdf'}">
 									<img class="preview_box" src="#{resourceDetailBean.clickedResource.thumbnail3.url}" 
 										height="#{resourceDetailBean.clickedResource.thumbnail3.height}" onmouseup="lightbox_open();" 
 										width="#{resourceDetailBean.clickedResource.thumbnail3.width}" 
 										style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"/>	
 							</ui:fragment>
-							<ui:fragment rendered="#{(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf') and empty resourceDetailBean.clickedResource.thumbnail3}">
+							<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text'  and empty resourceDetailBean.clickedResource.thumbnail3}">
 								<div class="preview_box" style="display: inline-block">
 									<a target="_blank" class="newsfeed_query_link" style="padding: 0px" 
 										href="#{resourceDetailBean.clickedResource.url}">
