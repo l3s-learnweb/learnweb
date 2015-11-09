@@ -30,6 +30,8 @@
 							background-image:none !important;
 							border:1px solid #a8a8a8 !important;
 						}
+						.other_groups_course_title > input { max-width:100%; box-sizing: border-box; }
+						
 					</style>
 					<div class="grey_border">
 						
@@ -174,7 +176,7 @@
 						<h:outputText value="#{group.language}" />			
 					</p:column>
 					
-					<p:column headerText="#{msg.course}" width="8%" filterBy="#{group.course.title}">
+					<p:column headerText="#{msg.course}" width="8%" filterBy="#{group.course.title}" filterMatchMode="contains" styleClass="other_groups_course_title">
 						<h:outputText value="#{group.course.title}" />						
 					</p:column>
 					
