@@ -113,7 +113,13 @@ function update_url(resource_id)
 	//document.title = resource_title;
 }
 
+//To detect if its an initial page load or a reload from the History entry in Safari.
+var popped = ('state' in window.history), initialURL = location.href;
 window.onpopstate = function(e){
+	var initialPop = !popped && location.href == initialURL;
+	popped = true;
+	if(initialPop) return;
+	
 	location.reload(true);
 };
 
