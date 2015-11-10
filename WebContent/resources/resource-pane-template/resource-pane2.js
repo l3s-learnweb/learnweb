@@ -92,8 +92,8 @@ function prepareCommentButton()
 
 function update_url(resource_id)
 {
-	var updated_url = window.location.protocol + "//" + window.location.host + window.location.pathname + "?";
-	var query_params = window.location.search.substring(1);
+	var updated_url = location.protocol + "//" + location.host + location.pathname + "?";
+	var query_params = location.search.substring(1);
 	if(query_params.indexOf("resource_id") > -1)
 	{	
 		var params = query_params.split("&");
@@ -109,7 +109,7 @@ function update_url(resource_id)
 	else
 		updated_url += query_params + "&resource_id=" + resource_id + "?"; 
 	updated_url = updated_url.substring(0, updated_url.length - 1);
-	window.history.pushState({"url":window.location.href}, "resource_id" + resource_id, updated_url);
+	window.history.pushState({"url":location.href}, "resource_id" + resource_id, updated_url);
 	//document.title = resource_title;
 }
 
@@ -133,7 +133,5 @@ $(document).ready(function()
 		if (event.which == 27)
 			lightbox_close();		
 	});
-	
-	if(document.getElementById("#container") != null)
-		loadCharts();
+
 });
