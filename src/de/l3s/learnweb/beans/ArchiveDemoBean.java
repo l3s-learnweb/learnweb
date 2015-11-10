@@ -3,14 +3,12 @@ package de.l3s.learnweb.beans;
 import java.io.IOException;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,11 +20,11 @@ import javax.faces.bean.SessionScoped;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.archivedemo.ArchiveSearchManager;
+import de.l3s.archivedemo.CDXClient;
 import de.l3s.archivedemo.Query;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnwebBeans.ApplicationBean;
@@ -47,19 +45,18 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
     private Map<Integer, LinkedList<ResourceDecorator>> pages = Collections.synchronizedMap(new HashMap<Integer, LinkedList<ResourceDecorator>>());
     private int processedResources = 0;
     private int addedResources = 0;
-    private int waybackAPIerrors = 0;
-    private SimpleDateFormat waybackDateFormat;
     private String market;
     private List<String> relatedEntities;
     private final String sessionId;
     private int queryId;
     private boolean fromSolr = false;
 
+    private transient CDXClient cdxClient = null;
+
     public ArchiveDemoBean() throws SQLException
     {
 	HttpSession session = (HttpSession) getFacesContext().getExternalContext().getSession(true);
 	sessionId = session.getId();
-	waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
 	market = UtilBean.getUserBean().getLocaleAsString().replace("_", "-");
 
 	System.out.println("market:" + market);
@@ -105,10 +102,9 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	// reset values
 	page = 1;
 	pages.clear();
+	getCDXClient().resetAPICounters();
 	processedResources = 0;
 	addedResources = 0;
-	waybackAPIerrors = 0;
-	fromSolr = false;
 
 	queryString = StringHelper.urlDecode(queryString);
 	Query q = getLearnweb().getArchiveSearchManager().getQueryByQueryString(market, queryString);
@@ -136,25 +132,22 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
 	long start = System.currentTimeMillis();
 	// load related entities
-	//TODO
-	if(false) // true == simple related entities from database only
-	    relatedEntities = archiveManager.getQueryCompletions(market, queryString, 10);
-	else
+	try
 	{
-	    try
+	    relatedEntities = archiveManager.getQuerySuggestionsWikiLink(market, queryString, 10);
+	    if(relatedEntities.size() == 0)
 	    {
-		relatedEntities = archiveManager.getNewQuerySuggestions(market, queryString, 10);
-		if(relatedEntities.size() == 0)
-		{
-		    relatedEntities = archiveManager.getQuerySuggestions(market, queryString, 10);
-		    fromSolr = true;
-		}
+		relatedEntities = archiveManager.getQuerySuggestionsSOLR(market, queryString, 10);
+		fromSolr = true;
 	    }
-	    catch(SolrServerException | IOException e)
-	    {
-		log.error("Can't get related entities", e);
-	    }
+	    else
+		fromSolr = false;
 	}
+	catch(SolrServerException | IOException e)
+	{
+	    log.error("Can't get related entities", e);
+	}
+
 	log.debug("Loaded related entities in " + (System.currentTimeMillis() - start) + "ms");
 
 	archiveManager.logQuery(queryString, sessionId, market);
@@ -169,7 +162,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     public synchronized LinkedList<ResourceDecorator> getNextPage() throws NumberFormatException, SQLException
     {
-	if(waybackAPIerrors > MAX_API_ERRORS)
+	if(getCDXClient().getWaybackAPIerrors() > MAX_API_ERRORS)
 	{
 	    addMessage(FacesMessage.SEVERITY_ERROR, "Archive.org API does not respond");
 	    return null;
@@ -180,57 +173,18 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	    return null;
 	}
 
-	ArchiveSearchManager archiveSearchManager = getLearnweb().getArchiveSearchManager();
-
-	//log.debug("getPage " + page);
-
 	LinkedList<ResourceDecorator> resourcePage = pages.get(page);
 
 	if(null == resourcePage && resourcesRaw != null)
 	{
 	    final int resourcesPerPage = (page < 3) ? 5 : 10; // display at most 5 resources on the first two pages
-	    int minCrawlTime = (int) (new Date().getTime() / 1000) - 86400 * 10; // the latest valid crawl date
 	    resourcePage = new LinkedList<ResourceDecorator>();
 
-	    for(int requests = 0; processedResources < resourcesRaw.size(); processedResources++)
+	    for(; processedResources < resourcesRaw.size(); processedResources++)
 	    {
 		ResourceDecorator resource = resourcesRaw.get(processedResources);
 
-		int crawlTime = 0, captures = 0;
-
-		if(resource.getMetadataValue("url_captures") != null) // the capture dates have been crawled before
-		{
-		    crawlTime = Integer.parseInt(resource.getMetadataValue("crawl_time"));
-		    captures = Integer.parseInt(resource.getMetadataValue("url_captures"));
-		}
-
-		//System.out.println("rank: " + resource.getRankAtService() + "; " + captures + "; " + minCrawlTime + "; " + resource.getTitle());
-
-		if(crawlTime < minCrawlTime) //&& waybackAPIerrors < MAX_API_ERRORS)
-		{
-		    captures = 0;
-		    requests++;
-		    String url = resource.getUrl().substring(resource.getUrl().indexOf("//") + 2); // remove leading http://
-
-		    Date lastCapture = null, firstCapture = getFirstCaptureDate(url);
-
-		    if(firstCapture != null)
-		    {
-			lastCapture = getLastCaptureDate(url);
-
-			if(lastCapture != null)
-			{
-			    resource.getResource().setMetadataValue("first_timestamp", waybackDateFormat.format(firstCapture));
-			    resource.getResource().setMetadataValue("last_timestamp", waybackDateFormat.format(lastCapture));
-			    captures = 1; // one capture date -> at least one capture
-			}
-		    }
-
-		    if(waybackAPIerrors == 0)
-			archiveSearchManager.cacheCaptureCount(Integer.parseInt(resource.getMetadataValue("query_id")), resource.getRankAtService(), firstCapture, lastCapture, captures);
-		}
-
-		if(captures == 0)
+		if(!getCDXClient().isArchived(resource))
 		    continue; // no captures found -> don't display this resource
 
 		resource.setTempId(++addedResources);
@@ -238,12 +192,12 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 		resourcePage.add(resource);
 
 		// return the result when to many errors occurred or enough results were found
-		if(waybackAPIerrors > MAX_API_ERRORS)
+		if(getCDXClient().getWaybackAPIerrors() > MAX_API_ERRORS)
 		{
 		    addMessage(FacesMessage.SEVERITY_ERROR, "Archive.org API does not respond");
 		    break;
 		}
-		if(resourcesPerPage == resourcePage.size() || resourcePage.size() > 0 && requests >= 2)
+		if(resourcesPerPage == resourcePage.size() || resourcePage.size() > 0 && cdxClient.getWaybackAPIrequests() >= 2)
 		    break;
 	    }
 	    processedResources++;
@@ -253,7 +207,6 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	}
 
 	return resourcePage;
-
     }
 
     public void logClick()
@@ -267,44 +220,6 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
     public void loadNextPage()
     {
 	page++;
-    }
-
-    public Date getFirstCaptureDate(String url)
-    {
-	return getCaptureDate(url, 1);
-    }
-
-    public Date getLastCaptureDate(String url)
-    {
-	return getCaptureDate(url, -1);
-    }
-
-    private Date getCaptureDate(String url, int limit)
-    {
-	String response;
-	try
-	{
-	    response = IOUtils.toString(new URL("http://web.archive.org/cdx/search/cdx?url=" + StringHelper.urlEncode(url) + "&fl=timestamp&limit=" + limit));
-
-	    if(response.trim().length() == 0)
-		return null;
-
-	    return waybackDateFormat.parse(response);
-	}
-	catch(MalformedURLException e)
-	{
-	    throw new RuntimeException(e);
-	}
-	catch(ParseException | IOException e)
-	{
-	    if(e.getMessage().contains("HTTP response code: 403")) // blocked by robots
-		return null;
-
-	    log.error("wayback api error", e);
-	    waybackAPIerrors++;
-	}
-
-	return null;
     }
 
     public String getMarket()
@@ -336,14 +251,23 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     public List<String> getRelatedEntities()
     {
-	//log.debug("getRelatedEntities");
-
 	return relatedEntities;
     }
 
     public boolean isFromSolr()
     {
 	return fromSolr;
+    }
+
+    private CDXClient getCDXClient()
+    {
+	if(null == cdxClient)
+	{
+	    Calendar minCrawlTime = Calendar.getInstance();
+	    minCrawlTime.add(Calendar.DATE, -30);
+	    cdxClient = new CDXClient(minCrawlTime.getTime());
+	}
+	return cdxClient;
     }
 
 }

@@ -9,6 +9,7 @@ import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -64,7 +65,7 @@ public class ArchiveSearchManager
 	return suggestions;
     }
 
-    public List<String> getNewQuerySuggestions(String market, String query, int count) throws SQLException
+    public List<String> getQuerySuggestionsWikiLink(String market, String query, int count) throws SQLException
     {
 	ArrayList<String> suggestions = new ArrayList<String>(count);
 	PreparedStatement select = getConnection().prepareStatement("SELECT query_id FROM `pw_query` WHERE market = ? AND `query_string` LIKE ?");
@@ -88,7 +89,7 @@ public class ArchiveSearchManager
     }
 
     @SuppressWarnings("unchecked")
-    public List<String> getQuerySuggestions(String market, String query, int count) throws SQLException, SolrServerException, IOException
+    public List<String> getQuerySuggestionsSOLR(String market, String query, int count) throws SQLException, SolrServerException, IOException
     {
 	SolrQuery solrQuery = new SolrQuery();
 	solrQuery.setQuery(query);
@@ -164,8 +165,8 @@ public class ArchiveSearchManager
     {
 	List<ResourceDecorator> results = new ArrayList<ResourceDecorator>();
 
-	PreparedStatement select = getConnection()
-		.prepareStatement("SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description, UNIX_TIMESTAMP(crawl_time) as crawl_time2 FROM pw_result LEFT JOIN `url_captures_count_2` USING (query_id, rank) WHERE `query_id` = ? ORDER BY rank");
+	PreparedStatement select = getConnection().prepareStatement(
+		"SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description, UNIX_TIMESTAMP(crawl_time) as crawl_time2 FROM pw_result LEFT JOIN `url_captures_count_2` USING (query_id, rank) WHERE `query_id` = ? ORDER BY rank");
 	select.setInt(1, queryId);
 	ResultSet rs = select.executeQuery();
 
@@ -192,6 +193,75 @@ public class ArchiveSearchManager
 	select.close();
 
 	return results;
+    }
+
+    private void prefetchResults(String market, int page) throws SQLException
+    {
+	Calendar minCrawlTime = Calendar.getInstance();
+	minCrawlTime.add(Calendar.DATE, -30);
+	final CDXClient cdxClient = new CDXClient(minCrawlTime.getTime());
+	final int resultsToFetch = 10;
+
+	// statistic counters
+	int checkedResources = 0;
+	int checkedEntities = 0;
+	int limit = 100;
+
+	PreparedStatement select = getConnection().prepareStatement("SELECT query_id FROM `main_pages_" + market + "` ORDER BY `main_pages_en`.`views` DESC LIMIT " + (page * limit) + "," + limit);
+	ResultSet rs = select.executeQuery();
+
+	log.info("start check");
+	while(rs.next())
+	{
+	    int queryId = rs.getInt(1);
+	    int archivedResources = 0;
+	    List<ResourceDecorator> results = getResultsByQueryId(queryId);
+
+	    for(ResourceDecorator resource : results)
+	    {
+		checkedResources++;
+
+		if(cdxClient.isArchived(resource))
+		    archivedResources++;
+
+		if(cdxClient.getWaybackAPIerrors() > 0)
+		{
+		    sleep(9000);
+		    cdxClient.resetAPICounters();
+		}
+
+		if(archivedResources == resultsToFetch) // have found enough archived resources for this entity -> continue with next entity
+		    break;
+
+		sleep(400);
+	    }
+
+	    checkedEntities++;
+	    log.info("query_id: " + queryId + "; entity: " + checkedEntities + "; checked Resources: " + checkedResources);
+
+	}
+
+	log.info("checked Resources: " + checkedResources + "; avg: " + (checkedResources / checkedEntities));
+    }
+
+    private static void sleep(long millis)
+    {
+	try
+	{
+	    Thread.sleep(millis);
+	}
+	catch(InterruptedException e)
+	{
+	}
+    }
+
+    public static void main(String[] args) throws SQLException
+    {
+	for(int page = 0; page < 10000; page++)
+	{
+	    log.info("page: " + page);
+	    Learnweb.getInstance().getArchiveSearchManager().prefetchResults("en", page);
+	}
     }
 
     private void checkConnection() throws SQLException
