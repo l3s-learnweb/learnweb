@@ -32,8 +32,15 @@
 				return true;
 			}
 			
+			function logRelatedEntity(relatedEntity, rank)
+			{
+				ajaxLogRelatedEntity([{name:'rank', value:rank}, {name:'relatedEntity', value:relatedEntity}]); 
+				return true;
+			}			
+			
 			$().ready(function() {
 				$('#archive_searchfield_input').focus();
+				loadRelatedEntities();
 			});
 			
 			<ui:fragment rendered="#{empty archiveDemoBean.query}">
@@ -75,22 +82,26 @@
 			<h:form style="display:none;">	
 				<p:remoteCommand global="false" actionListener="${archiveDemoBean.loadNextPage()}" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this" partialSubmit="true" update=":nextPage :message" immediate="true"/>
 				<p:remoteCommand global="false" actionListener="${archiveDemoBean.logClick()}" name="ajaxLogClick" process="@this" partialSubmit="true" immediate="true" async="true"/>
+				<p:remoteCommand global="false" actionListener="${archiveDemoBean.logRelatedEntityClick()}" name="ajaxLogRelatedEntity" process="@this" partialSubmit="true" immediate="true" async="true"/>
+				<p:remoteCommand global="false" actionListener="${archiveDemoBean.loadRelatedEntities()}" name="loadRelatedEntities" update=":related_entities" process="@this" partialSubmit="true" immediate="true" async="true"/>
 			</h:form>
 		</div>
 	
-		<h:panelGroup layout="block" class="related_entities" rendered="#{not empty archiveDemoBean.relatedEntities}">
-			<h3>#{msg['ArchiveSearch.related_entities']}:</h3>
-			<br/>
-			<ul class="entity_links">
-			<ui:repeat var="query" value="#{archiveDemoBean.relatedEntities}">
-				<li>
-					<h:link value="#{query}" outcome="search" styleClass="#{archiveDemoBean.fromSolr? 'suggestSolrWebLink':'suggestWebLink'}">
-						<f:param name="query" value="#{query}" />
-					</h:link>
-				</li>
-			</ui:repeat>
-			</ul>
-		</h:panelGroup>		
+		<h:panelGroup id="related_entities" >
+			<h:panelGroup layout="block" class="related_entities" rendered="#{not empty archiveDemoBean.relatedEntities}">
+				<h3>#{msg['ArchiveSearch.related_entities']}:</h3>
+				<br/>
+				<ul class="entity_links">
+				<ui:repeat var="query" value="#{archiveDemoBean.relatedEntities}">
+					<li>
+						<h:link value="#{query}" outcome="search" styleClass="#{archiveDemoBean.fromSolr? 'suggestSolrWebLink':'suggestWebLink'}">
+							<f:param name="query" value="#{query}" />
+						</h:link>
+					</li>
+				</ui:repeat>
+				</ul>
+			</h:panelGroup>		
+		</h:panelGroup>	
 		
 		<p:dialog header="#{msg.options}" widgetVar="resource_dialog" modal="false" minWidth="600" resizable="false" style="z-index:1500;">			
 			<h:form id="resource_form">

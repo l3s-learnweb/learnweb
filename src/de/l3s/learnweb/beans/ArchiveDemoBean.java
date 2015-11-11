@@ -16,7 +16,7 @@ import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
@@ -28,10 +28,9 @@ import de.l3s.archivedemo.CDXClient;
 import de.l3s.archivedemo.Query;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnwebBeans.ApplicationBean;
-import de.l3s.util.StringHelper;
 
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class ArchiveDemoBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -8426331759352561208L;
@@ -46,10 +45,9 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
     private int processedResources = 0;
     private int addedResources = 0;
     private String market;
-    private List<String> relatedEntities;
     private final String sessionId;
-    private int queryId;
-    private boolean fromSolr = false;
+    private List<String> relatedEntities;
+    private boolean relatedEntitiesFromSolr = false; // indicates whether the related entities are loaded from solr
 
     private transient CDXClient cdxClient = null;
 
@@ -59,13 +57,10 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	sessionId = session.getId();
 	market = UtilBean.getUserBean().getLocaleAsString().replace("_", "-");
 
-	System.out.println("market:" + market);
 	if(market.equalsIgnoreCase("de"))
 	    market = "de-DE";
 	else if(market.equalsIgnoreCase("en"))
 	    market = "en-US";
-
-	System.out.println("market:" + market);
     }
 
     public void preRenderView() throws SQLException, UnsupportedEncodingException
@@ -74,8 +69,10 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	{
 	    return;
 	}
+
+	log.debug("pre render: " + queryString);
 	if(queryString != null)
-	    onSearch();
+	    search();
 
 	getFacesContext().getExternalContext().setResponseCharacterEncoding("UTF-8");
 
@@ -99,14 +96,20 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     public String onSearch() throws SQLException
     {
+	return "/archive/search.xhtml?includeViewParams=true&amp;faces-redirect=true"; // query=" + StringHelper.urlEncode(queryString) + "
+    }
+
+    private void search() throws SQLException
+    {
 	// reset values
 	page = 1;
 	pages.clear();
 	getCDXClient().resetAPICounters();
 	processedResources = 0;
 	addedResources = 0;
+	relatedEntities = null;
 
-	queryString = StringHelper.urlDecode(queryString);
+	//queryString = StringHelper.urlDecode(queryString);
 	Query q = getLearnweb().getArchiveSearchManager().getQueryByQueryString(market, queryString);
 
 	if(q == null)
@@ -115,12 +118,8 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	    addMessage(FacesMessage.SEVERITY_ERROR, "ArchiveSearch.select_suggested_entity");
 	    resourcesRaw = null;
 	    resources.clear();
-	    relatedEntities = null;
-	    queryId = -1;
-	    return null;
+	    return;
 	}
-
-	queryId = q.getId(); // necessary for click log
 
 	resourcesRaw = q.getResults();
 	resources = getNextPage();
@@ -130,29 +129,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
 	ArchiveSearchManager archiveManager = getLearnweb().getArchiveSearchManager();
 
-	long start = System.currentTimeMillis();
-	// load related entities
-	try
-	{
-	    relatedEntities = archiveManager.getQuerySuggestionsWikiLink(market, queryString, 10);
-	    if(relatedEntities.size() == 0)
-	    {
-		relatedEntities = archiveManager.getQuerySuggestionsSOLR(market, queryString, 10);
-		fromSolr = true;
-	    }
-	    else
-		fromSolr = false;
-	}
-	catch(SolrServerException | IOException e)
-	{
-	    log.error("Can't get related entities", e);
-	}
-
-	log.debug("Loaded related entities in " + (System.currentTimeMillis() - start) + "ms");
-
 	archiveManager.logQuery(queryString, sessionId, market);
-
-	return "/archive/search.xhtml?query=" + StringHelper.urlEncode(queryString) + "&amp;faces-redirect=true";
     }
 
     public List<String> completeQuery(String query) throws SQLException
@@ -167,11 +144,13 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	    addMessage(FacesMessage.SEVERITY_ERROR, "Archive.org API does not respond");
 	    return null;
 	}
+	/*
 	if(queryId == -1)
 	{
 	    addMessage(FacesMessage.SEVERITY_ERROR, "ArchiveSearch.select_suggested_entity");
 	    return null;
 	}
+	*/
 
 	LinkedList<ResourceDecorator> resourcePage = pages.get(page);
 
@@ -214,7 +193,16 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	int rank = getParameterInt("rank");
 	int type = getParameterInt("type");
 
-	getLearnweb().getArchiveSearchManager().logClick(queryId, rank, type, sessionId);
+	getLearnweb().getArchiveSearchManager().logClick(queryString, getMarket(), rank, type, sessionId);
+    }
+
+    public void logRelatedEntityClick()
+    {
+	String relatedEntity = getParameter("relatedEntity");
+	int rank = getParameterInt("rank");
+	String method = relatedEntitiesFromSolr ? "solr" : "wiki_link";
+
+	getLearnweb().getArchiveSearchManager().logRelatedEntityClick(queryString, sessionId, getMarket(), relatedEntity, rank, method);
     }
 
     public void loadNextPage()
@@ -249,6 +237,34 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	return resources;
     }
 
+    public void loadRelatedEntities() throws SQLException
+    {
+	if(relatedEntities == null)
+	{
+	    long start = System.currentTimeMillis();
+	    // load related entities
+
+	    ArchiveSearchManager archiveManager = getLearnweb().getArchiveSearchManager();
+	    try
+	    {
+		relatedEntities = archiveManager.getQuerySuggestionsWikiLink(market, queryString, 10);
+		if(relatedEntities.size() == 0)
+		{
+		    relatedEntities = archiveManager.getQuerySuggestionsSOLR(market, queryString, 10);
+		    relatedEntitiesFromSolr = true;
+		}
+		else
+		    relatedEntitiesFromSolr = false;
+	    }
+	    catch(SolrServerException | IOException e)
+	    {
+		log.error("Can't get related entities", e);
+	    }
+
+	    log.debug("Loaded related entities in " + (System.currentTimeMillis() - start) + "ms");
+	}
+    }
+
     public List<String> getRelatedEntities()
     {
 	return relatedEntities;
@@ -256,7 +272,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     public boolean isFromSolr()
     {
-	return fromSolr;
+	return relatedEntitiesFromSolr;
     }
 
     private CDXClient getCDXClient()

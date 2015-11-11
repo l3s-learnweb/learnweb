@@ -233,7 +233,7 @@ public class ArchiveSearchManager
 		if(archivedResources == resultsToFetch) // have found enough archived resources for this entity -> continue with next entity
 		    break;
 
-		sleep(400);
+		sleep(50);
 	    }
 
 	    checkedEntities++;
@@ -257,7 +257,7 @@ public class ArchiveSearchManager
 
     public static void main(String[] args) throws SQLException
     {
-	for(int page = 0; page < 10000; page++)
+	for(int page = 58; page < 10000; page++)
 	{
 	    log.info("page: " + page);
 	    Learnweb.getInstance().getArchiveSearchManager().prefetchResults("en", page);
@@ -327,7 +327,7 @@ public class ArchiveSearchManager
 
 	try
 	{
-	    PreparedStatement insert = getConnection().prepareStatement("INSERT DELAYED INTO `search_log` (`query`, `session_id`, `language`) VALUES(?, ?, ?)");
+	    PreparedStatement insert = getConnection().prepareStatement("INSERT DELAYED INTO `log_search` (`query`, `session_id`, `language`) VALUES(?, ?, ?)");
 	    insert.setString(1, queryString);
 	    insert.setString(2, sessionId);
 	    insert.setString(3, language);
@@ -382,15 +382,16 @@ public class ArchiveSearchManager
 	}
     }
 
-    public void logClick(int queryId, int rank, int type, String sessionId)
+    public void logClick(String queryString, String language, int rank, int type, String sessionId)
     {
 	try
 	{
-	    PreparedStatement insert = getConnection().prepareStatement("INSERT DELAYED INTO `click_log` (query_id, `rank`, `type`, `session_id`) VALUES(?, ?, ?, ?)");
-	    insert.setInt(1, queryId);
-	    insert.setInt(2, rank);
-	    insert.setInt(3, type);
-	    insert.setString(4, sessionId);
+	    PreparedStatement insert = getConnection().prepareStatement("INSERT DELAYED INTO `log_click` (query, language, `rank`, `type`, `session_id`) VALUES(?, ?, ?, ?, ?)");
+	    insert.setString(1, queryString);
+	    insert.setString(2, language);
+	    insert.setInt(3, rank);
+	    insert.setInt(4, type);
+	    insert.setString(5, sessionId);
 	    insert.executeUpdate();
 	}
 	catch(SQLException e)
