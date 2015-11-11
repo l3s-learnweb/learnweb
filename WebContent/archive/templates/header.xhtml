@@ -5,6 +5,9 @@
       
 <ui:composition>
 	<style type="text/css">
+	
+		
+		
 		#archive_searchfield {
 		    float: left;
 		    margin-left: 23rem;
@@ -81,32 +84,78 @@
 			<p:graphicImage value="/resources/main-template/img/question.png" alt="#{msg.help}" title="#{msg.help}" onclick="PF('about_dlg').show();" id="informationonscreen" />
 				
 				
-			<p:dialog header="About" widgetVar="about_dlg">
-			
-<h2>People involved</h2>
-<pre>
-Felipe Reis
-Nattiya Kanhabua
-Philipp Kemkes
-Trevor Fernando
-Tu Nguyen
-Wolfgang Nejdl
-</pre>
-<br/>
-<a href="http://alexandria-project.eu"><img src="http://alexandria-project.eu/wp-content/uploads/2015/07/alexandria_logo_rgb_small-300x233.png" height="94" width="121"  /></a>
-
-<!-- 
-
-possible to search for any entity from the Wikipedia
-gives you current results from bing which are also archived by the Internet Archive
-
-the blue link ...
-the green link ...
-
-the shown related entities are based on paper xy
-
-link to terms of use
- -->
+			<p:dialog header="#{msg['ArchiveSearch.about.title']}" widgetVar="about_dlg">				
+				<div class="about_popup">
+					<h2>Archive Search</h2>
+					<div id="about_description">
+						<div>
+							<h3>
+							<h:outputLabel value="#{msg['ArchiveSearch.about.description.title']}"></h:outputLabel>
+							</h3>
+						</div>
+						<div>
+							<h:outputLabel value="#{msg['ArchiveSearch.about.description.value']}"></h:outputLabel>
+						</div>
+					</div>
+					<div id="about_howto">
+						<div>
+							<h3>
+							<h:outputLabel value="#{msg['ArchiveSearch.about.how_to.title']}"></h:outputLabel>
+							</h3>
+						</div>
+						<div>
+							<div>
+								<div>
+									<h4>
+										<h:outputLabel value="#{msg['ArchiveSearch.about.how_to.blue_link.title']}"></h:outputLabel>
+									</h4>
+								</div>
+								<div>
+									<h:outputLabel value="#{msg['ArchiveSearch.about.how_to.blue_link.value']}"></h:outputLabel>
+								</div>
+							</div>
+							<div>
+								<div>
+								<h4>
+									<h:outputLabel value="#{msg['ArchiveSearch.about.how_to.green_link.title']}"></h:outputLabel>
+								</h4>
+								</div>
+								<div>
+									<h:outputLabel value="#{msg['ArchiveSearch.about.how_to.green_link.value']}"></h:outputLabel>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div id="about_basedon">
+						<div>
+							<h3>
+							<h:outputLabel value="#{msg['ArchiveSearch.about.basedon_link.title']}"></h:outputLabel>
+							</h3>
+						</div>
+						<div>						
+							
+							<!-- @felipe link for article -->							
+						</div>
+					</div>
+					
+					<br/>
+					<div align="center">
+						<a href="http://alexandria-project.eu"><img src="http://alexandria-project.eu/wp-content/uploads/2015/07/alexandria_logo_rgb_small-300x233.png" height="94" width="121"  /></a>
+					</div>
+					<!-- 
+					
+					possible to search for any entity from the Wikipedia
+					gives you current results from bing which are also archived by the Internet Archive
+					
+					the blue link ...
+					the green link ...
+					
+					the shown related entities are based on paper xy
+					
+					link to terms of use
+					 -->					
+					</div>
+								
 			</p:dialog>			
 
 		</div>
