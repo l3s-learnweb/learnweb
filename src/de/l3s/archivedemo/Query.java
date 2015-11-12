@@ -12,7 +12,7 @@ public class Query
 {
     //  private final static Logger log = Logger.getLogger(Query.class);
 
-    private int id;
+    private int id = -1;
     private int estimatedResultCount = -2;
     private int loadedResultCount = -2;
     private int requestedResultCount;
@@ -33,6 +33,11 @@ public class Query
 	if(null == results)
 	    results = Learnweb.getInstance().getArchiveSearchManager().getResultsByQueryId(id);
 	return results;
+    }
+
+    public void setResults(List<ResourceDecorator> results)
+    {
+	this.results = results;
     }
 
     /**

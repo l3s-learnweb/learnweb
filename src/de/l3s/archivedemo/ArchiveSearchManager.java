@@ -6,6 +6,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -153,6 +154,36 @@ public class ArchiveSearchManager
 	return query;
     }
 
+    public void saveQuery(Query query) throws SQLException
+    {
+	PreparedStatement replace = getConnection().prepareStatement("REPLACE INTO `pw_query` (query_id, query_string, results, loaded_results, requested_results, type, market, disable_query_alteration, timestamp) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+		Statement.RETURN_GENERATED_KEYS);
+
+	if(query.getId() < 0) // the tag is not yet stored at the database
+	    replace.setNull(1, java.sql.Types.INTEGER);
+	else
+	    replace.setInt(1, query.getId());
+	replace.setString(2, query.getQueryString());
+	replace.setInt(3, query.getEstimatedResultCount());
+	replace.setInt(4, query.getLoadedResultCount());
+	replace.setInt(5, query.getRequestedResultCount());
+	replace.setString(6, "web");
+	replace.setString(7, query.getMarket());
+	replace.setString(8, Boolean.toString(query.isDisableQueryAlterations()));
+	replace.setTimestamp(9, new Timestamp(query.getTimestamp().getTime()));
+	replace.executeUpdate();
+
+	if(query.getId() < 0) // get the assigned id
+	{
+	    ResultSet rs = replace.getGeneratedKeys();
+	    if(!rs.next())
+		throw new SQLException("database error: no id generated");
+	    query.setId(rs.getInt(1));
+	}
+
+	replace.close();
+    }
+
     private String formatDate(Timestamp timestamp)
     {
 	if(timestamp == null || timestamp.getTime() == 0L)
@@ -165,8 +196,8 @@ public class ArchiveSearchManager
     {
 	List<ResourceDecorator> results = new ArrayList<ResourceDecorator>();
 
-	PreparedStatement select = getConnection().prepareStatement(
-		"SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description, UNIX_TIMESTAMP(crawl_time) as crawl_time2 FROM pw_result LEFT JOIN `url_captures_count_2` USING (query_id, rank) WHERE `query_id` = ? ORDER BY rank");
+	PreparedStatement select = getConnection()
+		.prepareStatement("SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description, UNIX_TIMESTAMP(crawl_time) as crawl_time2 FROM pw_result LEFT JOIN `url_captures_count_2` USING (query_id, rank) WHERE `query_id` = ? ORDER BY rank");
 	select.setInt(1, queryId);
 	ResultSet rs = select.executeQuery();
 
@@ -296,16 +327,6 @@ public class ArchiveSearchManager
 	return dbConnection;
     }
 
-    /*public static void main(String[] args) throws Exception
-    {
-    
-    ArchiveSearchManager lm = Learnweb.getInstance().getArchiveSearchManager();
-    
-    lm.getResultsByQueryId(65158);
-    
-    System.exit(0);
-    }*/
-
     public void cacheCaptureCount(int queryId, int rank, Date firstCapture, Date lastCapture, int captures) throws SQLException
     {
 	//log.debug("cacheCaptureCount" + queryId + ", " + rank + ", " + firstCapture);
@@ -317,6 +338,19 @@ public class ArchiveSearchManager
 	insert.setTimestamp(4, firstCapture == null ? null : new Timestamp(firstCapture.getTime()));
 	insert.setTimestamp(5, lastCapture == null ? null : new Timestamp(lastCapture.getTime()));
 	insert.setTimestamp(6, new Timestamp(new Date().getTime()));
+	insert.executeUpdate();
+    }
+
+    public void insertResult(int queryId, int rank, String title, String description, String url) throws SQLException
+    {
+	//log.debug("cacheCaptureCount" + queryId + ", " + rank + ", " + firstCapture);
+
+	PreparedStatement insert = getConnection().prepareStatement("INSERT DELAYED INTO `pw_result` (`query_id`, `rank`, `title`, description, url) VALUES (?,?,?,?,?)");
+	insert.setInt(1, queryId);
+	insert.setInt(2, rank);
+	insert.setString(3, title);
+	insert.setString(4, description);
+	insert.setString(5, url);
 	insert.executeUpdate();
     }
 
@@ -338,15 +372,6 @@ public class ArchiveSearchManager
 	    log.fatal("Can't log query: " + queryString, e);
 	}
     }
-
-    /*
-    
-    4	related_entity	
-    5	rank	
-    6	method	varchar(10)	
-    
-    7	timestamp
-    */
 
     /**
      * Log every click on a related entity

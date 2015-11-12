@@ -2,7 +2,6 @@ package de.l3s.learnweb.beans;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -22,8 +21,10 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.dom4j.DocumentException;
 
 import de.l3s.archivedemo.ArchiveSearchManager;
+import de.l3s.archivedemo.BingAzure;
 import de.l3s.archivedemo.CDXClient;
 import de.l3s.archivedemo.Query;
 import de.l3s.learnweb.ResourceDecorator;
@@ -63,7 +64,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	    market = "en-US";
     }
 
-    public void preRenderView() throws SQLException, UnsupportedEncodingException
+    public void preRenderView() throws SQLException, DocumentException, IOException
     {
 	if(isAjaxRequest())
 	{
@@ -99,7 +100,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	return "/archive/search.xhtml?includeViewParams=true&amp;faces-redirect=true"; // query=" + StringHelper.urlEncode(queryString) + "
     }
 
-    private void search() throws SQLException
+    private void search() throws SQLException, DocumentException, IOException
     {
 	// reset values
 	page = 1;
@@ -114,11 +115,23 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
 	if(q == null)
 	{
-	    log.debug("No query found for: " + queryString + "; market: " + market);
-	    addMessage(FacesMessage.SEVERITY_ERROR, "ArchiveSearch.select_suggested_entity");
-	    resourcesRaw = null;
-	    resources.clear();
-	    return;
+	    log.debug("No cached query found for: " + queryString + "; market: " + market);
+
+	    q = new Query();
+	    q.setQueryString(queryString);
+	    q.setRequestedResultCount(50);
+	    q.setMarket(market);
+
+	    BingAzure bing = new BingAzure();
+	    bing.search(q, "web");
+
+	    if(q.getLoadedResultCount() == 0)
+	    {
+		addMessage(FacesMessage.SEVERITY_ERROR, "ArchiveSearch.select_suggested_entity");
+		resourcesRaw = null;
+		resources.clear();
+		return;
+	    }
 	}
 
 	resourcesRaw = q.getResults();

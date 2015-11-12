@@ -34,7 +34,6 @@ public class Learnweb
     public final static Logger log = Logger.getLogger(Learnweb.class);
 
     private Connection dbConnection;
-    private Connection querydbConnection;
     private InterWeb interweb;
 
     private PreparedStatement pstmtGetChangeLog;
@@ -129,7 +128,18 @@ public class Learnweb
 	    else if((new File("C:\\Users\\astap_000").exists()))
 		propteriesFileName = "lw_local_oleg";
 
+	    System.out.println(propteriesFileName);
 	    properties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propteriesFileName + ".properties"));
+
+	    Properties test = new Properties();
+	    test.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propteriesFileName + ".properties"));
+
+	    System.out.println(test.getProperty("FORUM_MYSQL_URL"));
+	    System.out.println(test.getProperty("mysql_url"));
+	    System.out.println("---");
+	    System.out.println(properties.getProperty("FORUM_MYSQL_URL"));
+	    System.out.println(properties.getProperty("mysql_url"));
+
 	}
 	catch(IOException e)
 	{
@@ -139,17 +149,6 @@ public class Learnweb
 	//Class.forName("com.mysql.jdbc.Driver");
 	Class.forName("org.mariadb.jdbc.Driver");
 	connect();
-
-	/*
-	try
-	{
-	    querySuggestionDBConnect();//different db connection needed to get suggestions from google DB
-	}
-	catch(SQLException e)
-	{
-	    System.err.println("Failed to connect to querySuggestionDB");
-	} // this connection is not mandatory and shouldn't prevent learnweb from starting
-	*/
 
 	interweb = new InterWeb(properties.getProperty("INTERWEBJ_API_URL"), properties.getProperty("INTERWEBJ_API_KEY"), properties.getProperty("INTERWEBJ_API_SECRET"));
 
@@ -238,6 +237,7 @@ public class Learnweb
 
     private void connect() throws SQLException
     {
+	System.out.println(properties.getProperty("mysql_url"));
 	dbConnection = DriverManager.getConnection(properties.getProperty("mysql_url"), properties.getProperty("mysql_user"), properties.getProperty("mysql_password"));
 
 	dbConnection.createStatement().execute("SET @@SQL_MODE = REPLACE(@@SQL_MODE, 'ONLY_FULL_GROUP_BY', '')");
@@ -245,37 +245,7 @@ public class Learnweb
 	pstmtGetChangeLog = dbConnection.prepareStatement("SELECT * FROM  `admin_change_log` ORDER BY  `admin_change_log`.`log_entry_num` DESC LIMIT 0 , 30");
     }
 
-    private void querySuggestionDBConnect() throws SQLException
-    {
-	querydbConnection = DriverManager.getConnection(properties.getProperty("mysql_google_url"), properties.getProperty("mysql_google_user"), properties.getProperty("mysql_google_password"));
-
-    }
-
     private long lastCheck = 0L;
-    private long lastQueryCheck = 0L;
-
-    private void checkQuerySuggestionConnection() throws SQLException
-    {
-	if(lastQueryCheck > System.currentTimeMillis() - 2000)
-	    return;
-
-	if(!querydbConnection.isValid(1))
-	{
-	    System.err.println("Database connection invalid try to reconnect");
-
-	    try
-	    {
-		querydbConnection.close();
-	    }
-	    catch(SQLException e)
-	    {
-	    }
-
-	    querySuggestionDBConnect();
-	}
-
-	lastQueryCheck = System.currentTimeMillis();
-    }
 
     private void checkConnection() throws SQLException
     {
@@ -623,12 +593,6 @@ public class Learnweb
     public PresentationManager getPresentationManager()
     {
 	return presentationManager;
-    }
-
-    public Connection getQuerydbConnection() throws SQLException
-    {
-	checkQuerySuggestionConnection();
-	return querydbConnection;
     }
 
     public SearchLogClient getSearchlogClient()
