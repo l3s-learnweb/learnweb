@@ -52,6 +52,21 @@ public class SearchFilters implements Serializable
 	}
     };
 
+    public enum TYPE
+    {
+	image,
+	text,
+	video,
+	pdf,
+	other;
+
+	@Override
+	public String toString()
+	{
+	    return UtilBean.getLocaleMessage(this.name());
+	}
+    };
+
     public enum SERVICE
     {
 	Bing, // Not support filter by date
@@ -275,6 +290,7 @@ public class SearchFilters implements Serializable
     public enum FILTERS
     {
 	service,
+	type,
 	date,
 	group,
 	collector,
@@ -297,7 +313,7 @@ public class SearchFilters implements Serializable
 	    case video:
 		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.author, FILTERS.tags, FILTERS.videoDuration };
 	    case group:
-		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.collector, FILTERS.author, FILTERS.coverage, FILTERS.publisher, FILTERS.tags };
+		return new FILTERS[] { FILTERS.service, FILTERS.type, FILTERS.date, FILTERS.collector, FILTERS.author, FILTERS.coverage, FILTERS.publisher, FILTERS.tags };
 	    default:
 		return FILTERS.values();
 	    }
@@ -363,12 +379,13 @@ public class SearchFilters implements Serializable
 
     public String[] getFacetFields()
     {
-	return new String[] { "location", "groups", "collector_s", "author_s", "coverage_s", "publisher_s", "tags" };
+	return new String[] { "location", "type", "groups", "collector_s", "author_s", "coverage_s", "publisher_s", "tags" };
     }
 
     public String[] getFacetQueries()
     {
-	return new String[] { "{!key='date.old'}timestamp:[* TO NOW-365DAY]", "{!key='date.y'}timestamp:[NOW-365DAY TO NOW]", "{!key='date.m'}timestamp:[NOW-30DAY TO NOW]", "{!key='date.w'}timestamp:[NOW-7DAY TO NOW]", "{!key='date.d'}timestamp:[NOW-1DAY TO NOW]" };
+	return new String[] { "{!key='type.other'}-type:text,video,image,pdf", "{!key='date.old'}timestamp:[* TO NOW-365DAY]", "{!key='date.y'}timestamp:[NOW-365DAY TO NOW]", "{!key='date.m'}timestamp:[NOW-30DAY TO NOW]", "{!key='date.w'}timestamp:[NOW-7DAY TO NOW]",
+		"{!key='date.d'}timestamp:[NOW-1DAY TO NOW]" };
     }
 
     public void clean()
@@ -395,6 +412,10 @@ public class SearchFilters implements Serializable
 	    if(ff.getName().equals("location"))
 	    {
 		putResourceCounter(FILTERS.service, ff.getValues(), false);
+	    }
+	    else if(ff.getName().equals("type"))
+	    {
+		putResourceCounter(FILTERS.type, ff.getValues(), false);
 	    }
 	    else if(ff.getName().equals("groups"))
 	    {
@@ -437,6 +458,11 @@ public class SearchFilters implements Serializable
 	    {
 		Count c = new Count(new FacetField(tempNames[0]), tempNames[1], entry.getValue());
 		putResourceCounter(FILTERS.date, new ArrayList<>(Arrays.asList(c)), true);
+	    }
+	    else if(tempNames[0].equals("type"))
+	    {
+		Count c = new Count(new FacetField(tempNames[0]), tempNames[1], entry.getValue());
+		putResourceCounter(FILTERS.type, new ArrayList<>(Arrays.asList(c)), true);
 	    }
 	}
     }
@@ -504,6 +530,9 @@ public class SearchFilters implements Serializable
 			{
 			case service:
 			    setFilter(f, SERVICE.valueOf(fValue));
+			    break;
+			case type:
+			    setFilter(f, TYPE.valueOf(fValue));
 			    break;
 			case date:
 			    setFilter(f, DATE.valueOf(fValue));
@@ -588,6 +617,33 @@ public class SearchFilters implements Serializable
 		    for(Count c : availableResources.get(fs))
 		    {
 			FilterItem fi = new FilterItem(fs.getItemName(c.getName()), c.getCount() > 0 ? c.getCount() : null, changeFilterInUrl(fs, c.getName()), containsFilter && configFilters.get(fs).toString().equals(c.getName()));
+			nf.addFilterItem(fi);
+		    }
+		}
+		break;
+	    case type:
+		if(availableResources.containsKey(fs))
+		{
+		    for(TYPE t : TYPE.values())
+		    {
+			Long counter = null;
+			if(availableResources.containsKey(fs))
+			{
+			    for(Count c : availableResources.get(fs))
+			    {
+				if(c.getName().equals(t.name()))
+				{
+				    counter = c.getCount();
+				    break;
+				}
+			    }
+
+			    if(counter == null || counter == 0)
+			    {
+				continue;
+			    }
+			}
+			FilterItem fi = new FilterItem(t.toString(), counter, changeFilterInUrl(fs, t.name()), containsFilter && configFilters.get(fs).equals(t));
 			nf.addFilterItem(fi);
 		    }
 		}
@@ -708,6 +764,15 @@ public class SearchFilters implements Serializable
 	if(configFilters.containsKey(FILTERS.service))
 	{
 	    return configFilters.get(FILTERS.service).toString();
+	}
+	return null;
+    }
+
+    public String getTypeFilter()
+    {
+	if(configFilters.containsKey(FILTERS.type))
+	{
+	    return configFilters.get(FILTERS.type).toString();
 	}
 	return null;
     }

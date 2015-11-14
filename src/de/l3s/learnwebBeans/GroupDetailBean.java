@@ -1023,7 +1023,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
 	if(searchFilters.getServiceFilter() != null)
 	    solrSearch.setFilterLocation(searchFilters.getServiceFilter());
-
+	if(searchFilters.getTypeFilter() != null)
+	    solrSearch.setFilterType(searchFilters.getTypeFilter());
 	if(searchFilters.getDateFromFilterAsString() != null)
 	    solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getDateFromFilter()));
 	if(searchFilters.getDateToFilterAsString() != null)

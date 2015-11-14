@@ -266,6 +266,13 @@ public class SolrSearch implements Serializable
 		solrQuery.addFilterQuery("-type : image");
 		solrQuery.addFilterQuery("-type : video");
 	    }
+	    else if(filterType.equalsIgnoreCase("other"))
+	    {
+		solrQuery.addFilterQuery("-type : text");
+		solrQuery.addFilterQuery("-type : image");
+		solrQuery.addFilterQuery("-type : video");
+		solrQuery.addFilterQuery("-type : pdf");
+	    }
 	    else
 		solrQuery.addFilterQuery("type : " + filterType);
 	}
