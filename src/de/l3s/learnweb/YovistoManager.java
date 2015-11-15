@@ -96,8 +96,8 @@ public class YovistoManager
 		{
 		    rpm.processVideo(yovistoVideo);
 
+		    yovistoVideo.setGroup(yovistoGroup);
 		    admin.addResource(yovistoVideo);
-		    yovistoGroup.addResource(yovistoVideo, admin);
 		    try
 		    {
 			update.setInt(1, yovistoVideo.getId());

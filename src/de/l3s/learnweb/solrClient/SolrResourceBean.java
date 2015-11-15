@@ -1,13 +1,13 @@
 package de.l3s.learnweb.solrClient;
 
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.solr.client.solrj.beans.Field;
 
 import de.l3s.learnweb.Comment;
-import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.Tag;
@@ -159,11 +159,9 @@ public class SolrResourceBean
 	    for(Comment comment : resource.getComments())
 		comments.add(comment.getText());
 	}
-	if(null != resource.getGroups())
+	if(null != resource.getGroup())
 	{
-	    this.groups = new LinkedList<Integer>();
-	    for(Group group : resource.getGroups())
-		groups.add(group.getId());
+	    this.groups = new LinkedList<Integer>(Arrays.asList(resource.getGroupId()));
 	}
 
 	if(null != resource.getThumbnail4())

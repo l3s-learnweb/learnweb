@@ -252,8 +252,8 @@ public class TedManager
 		update.setInt(2, tedId);
 		update.executeUpdate();
 
+		tedVideo.setGroup(tedGroup);
 		admin.addResource(tedVideo);
-		tedGroup.addResource(tedVideo, admin);
 
 		solr.indexResource(tedVideo);
 
@@ -261,8 +261,8 @@ public class TedManager
 	    else if(tedVideo.getOwnerUserId() == 0)
 	    {
 		rpm.processImage(tedVideo, FileInspector.openStream(tedVideo.getMaxImageUrl()));
+		tedVideo.setGroup(tedGroup);
 		admin.addResource(tedVideo);
-		tedGroup.addResource(tedVideo, admin);
 		solr.indexResource(tedVideo);
 	    }
 	    else
@@ -365,11 +365,17 @@ public class TedManager
 		    if(learnwebResource.getIdAtService() == null || learnwebResource.getIdAtService().length() == 0)
 		    {
 			learnwebResource.setIdAtService(resource.getIdAtService());
+
+			if(learnwebResource.getGroupId() == tedxTrentoGroup.getId())
+			{
+			    log.error("resource is already part of the group");
+			}
+			else
+			{
+			    learnwebResource.setGroup(tedxTrentoGroup);
+			}
 			learnwebResource.save();
 		    }
-
-		    if(!tedxTrentoGroup.addResource(learnwebResource, admin))
-			log.error("resource is already part of the group");
 
 		    log.debug("Already stored: " + resource);
 
@@ -378,9 +384,8 @@ public class TedManager
 		else
 		{
 		    rpm.processImage(resource, FileInspector.openStream(resource.getMaxImageUrl().replace("hqdefault", "mqdefault")));
-
+		    resource.setGroup(tedxTrentoGroup);
 		    admin.addResource(resource);
-		    tedxTrentoGroup.addResource(resource, admin);
 
 		    log.debug("new video added");
 		}

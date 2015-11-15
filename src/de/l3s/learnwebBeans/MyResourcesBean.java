@@ -12,6 +12,7 @@ import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 
+import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
@@ -92,7 +93,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     }
     } */
 
-    public void addSelectedResourceLink() throws SQLException
+    public void addSelectedResourceToGroup() throws SQLException
     {
 	User user = getUser();
 	if(null == user)
@@ -101,18 +102,31 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	    return;
 	}
 
-	Resource newResource = clickedResource;
+	Resource resource = clickedResource;
+
+	Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(selectedResourceTargetGroupId);
 
 	// add resource to a group if selected
-	if(selectedResourceTargetGroupId != 0)
+	if(targetGroup != null && targetGroup.getId() > 0)
 	{
-	    getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(newResource, getUser());
-	    user.setActiveGroup(selectedResourceTargetGroupId);
 
-	    addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
+	    if(resource.getGroupId() == 0)
+	    {
+		resource.setGroupId(targetGroup.getId());
+		resource.save();
+	    }
+	    else
+	    {
+		Resource newResource = resource.clone();
+		newResource.setGroupId(targetGroup.getId());
+		getUser().addResource(newResource);
+	    }
+
+	    user.setActiveGroup(targetGroup.getId());
+	    addGrowl(FacesMessage.SEVERITY_INFO, "addedResourceToGroup", resource.getTitle(), targetGroup.getTitle());
 	}
 
-	log(Action.adding_resource, selectedResourceTargetGroupId, newResource.getId(), "");
+	log(Action.adding_resource, selectedResourceTargetGroupId, resource.getId(), "");
 
     }
 

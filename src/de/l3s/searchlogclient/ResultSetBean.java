@@ -328,14 +328,15 @@ public class ResultSetBean extends ApplicationBean
 		newResource = selectedResource.clone();
 
 	    newResource.setQuery(query);
-	    newResource = user.addResource(newResource);
 
 	    // add resource to a group if selected
 	    if(selectedResourceTargetGroupId != 0)
 	    {
-		getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(newResource, getUser());
+		newResource.setGroupId(selectedResourceTargetGroupId);
 		user.setActiveGroup(selectedResourceTargetGroupId);
 	    }
+
+	    newResource = user.addResource(newResource);
 
 	    if(createNewResource)
 		new AddResourceBean.CreateThumbnailThread(newResource).start();

@@ -24,6 +24,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.learnweb.AbstractPaginator;
 import de.l3s.learnweb.Comment;
+import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.GoogleDriveManager;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
@@ -56,7 +57,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private static final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     private int groupId;
+    private int folderId;
     private Group group;
+    private Folder folder;
     private String editedGroupDescription;
     private String editedGroupTitle;
     private int editedGroupLeaderId;
@@ -119,7 +122,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
 	searchFilters = new SearchFilters();
 	searchFilters.setMode(MODE.group);
-	paginator = getResourcesFromSolr(groupId, query, getUser());
+	paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
     }
 
     public void preRenderView(ComponentSystemEvent e)
@@ -302,6 +305,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    groupId = id.intValue();
 	}
 
+	if(null == folder)
+	{
+	    Integer id = getParameterInt("folder_id");
+
+	    folderId = null == id ? 0 : id.intValue();
+	}
+
 	group = getLearnweb().getGroupManager().getGroupById(groupId);
 	if(group != null)
 	{
@@ -364,6 +374,16 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void setGroupId(int groupId)
     {
 	this.groupId = groupId;
+    }
+
+    public int getFolderId()
+    {
+	return folderId;
+    }
+
+    public void setFolderId(int folderId)
+    {
+	this.folderId = folderId;
     }
 
     public List<LogEntry> getLogMessages() throws SQLException
@@ -454,7 +474,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	try
 	{
-	    group.removeResource(clickedResource, getUser());
+	    Resource res = clickedResource;
+	    res.setGroupId(0);
+	    res.save();
+
 	    addMessage(FacesMessage.SEVERITY_INFO, "resource_removed_from_group");
 	    getUser().setActiveGroup(group);
 	    log(Action.group_removing_resource, clickedResource.getId());
@@ -470,10 +493,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void deleteResource() throws SQLException
     {
-	for(Group group : clickedResource.getGroups())
-	{
-	    log(Action.group_removing_resource, group.getId(), clickedResource.getId(), "");
-	}
+	log(Action.group_removing_resource, clickedResource.getGroupId(), clickedResource.getId(), "");
 
 	getUser().deleteResource(clickedResource);
 	addGrowl(FacesMessage.SEVERITY_INFO, "resource_deleted");
@@ -677,15 +697,15 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    if(clickedResource.getId() == -1) // resource is not yet stored at fedora
 		newResource = clickedResource;
 	    else
-		newResource = clickedResource.clone(); // create a copy 
+		newResource = clickedResource.clone(); // create a copy
 
+	    Group targetGroup = getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId);
+
+	    newResource.setGroup(targetGroup);
 	    Resource res = getUser().addResource(newResource);
-	    if(selectedResourceTargetGroupId != 0)
-	    {
-		Group targetGroup = getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId);
-		targetGroup.addResource(res, getUser());
-		getUser().setActiveGroup(selectedResourceTargetGroupId);
 
+	    if(res.getGroupId() != 0)
+	    {
 		addGrowl(FacesMessage.SEVERITY_INFO, "addedResourceToGroup", clickedResource.getTitle(), targetGroup.getTitle());
 	    }
 	    else
@@ -699,37 +719,37 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
     }
 
-    public void addSelectedResourceLink() throws SQLException
+    /*public void addSelectedResourceLink() throws SQLException
     {
-	try
-	{
-	    User user = getUser();
-	    if(null == user)
-	    {
-		addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
-		return;
-	    }
+    try
+    {
+        User user = getUser();
+        if(null == user)
+        {
+    	addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
+    	return;
+        }
 
-	    // add resource to a group if selected
-	    if(selectedResourceTargetGroupId != 0)
-	    {
-		Group targetGroup = getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId);
-		targetGroup.addResource(clickedResource, getUser());
-		log(Action.adding_resource, selectedResourceTargetGroupId, clickedResource.getId(), "");
+        // add resource to a group if selected
+        if(selectedResourceTargetGroupId != 0)
+        {
+    	Group targetGroup = getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId);
+    	targetGroup.addResource(clickedResource, getUser());
+    	log(Action.adding_resource, selectedResourceTargetGroupId, clickedResource.getId(), "");
 
-		addGrowl(FacesMessage.SEVERITY_INFO, "addedResourceToGroup", clickedResource.getTitle(), targetGroup.getTitle());
-	    }
-	    else
-	    {
-		getUser().addResource(clickedResource);
-		addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", clickedResource.getTitle());
-	    }
-	}
-	catch(SQLException e)
-	{
-	    addFatalMessage(e);
-	}
+    	addGrowl(FacesMessage.SEVERITY_INFO, "addedResourceToGroup", clickedResource.getTitle(), targetGroup.getTitle());
+        }
+        else
+        {
+    	getUser().addResource(clickedResource);
+    	addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", clickedResource.getTitle());
+        }
     }
+    catch(SQLException e)
+    {
+        addFatalMessage(e);
+    }
+    }*/
 
     public void onSelectPresentation()
     {
@@ -808,12 +828,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    try
 	    {
 		Group targetGroup = getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId);
-		getLearnweb().getResourceManager().moveResourceToGroup(selectedResource, targetGroup, group, getUser());
-
-		log(Action.group_removing_resource, selectedResource.getId());
+		resource.setGroup(targetGroup);
+		resource.save();
 
 		user.setActiveGroup(selectedResourceTargetGroupId);
 
+		log(Action.group_removing_resource, selectedResource.getId());
 		log(Action.adding_resource, resource.getId(), selectedResourceTargetGroupId + "");
 
 		addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
@@ -965,13 +985,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public String changeFilters(String queryFilters)
     {
 	searchFilters.setFiltersFromString(queryFilters);
-	paginator = getResourcesFromSolr(groupId, query, getUser());
+	paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
 	return queryFilters;
     }
 
     public void onQueryFiltersChange() throws SQLException
     {
-	paginator = getResourcesFromSolr(groupId, query, getUser());
+	paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
     }
 
     public String getQuery()
@@ -986,7 +1006,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void onQueryChange() throws SQLException
     {
-	paginator = getResourcesFromSolr(groupId, query, getUser());
+	paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
     }
 
     public void saveGmailId()
@@ -1012,10 +1032,14 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return searchFilters.getFiltersString();
     }
 
-    public SearchPaginator getResourcesFromSolr(int groupId, String query, User user)
+    public SearchPaginator getResourcesFromSolr(int groupId, int folderId, String query, User user)
     {
 	SolrSearch solrSearch = new SolrSearch(StringUtils.isEmpty(query) ? "*" : query, user);
 	solrSearch.setFilterGroups(groupId);
+	if(folderId != 0)
+	{
+	    solrSearch.setFilterFolder(folderId);
+	}
 	solrSearch.setResultsPerPage(AbstractPaginator.PAGE_SIZE);
 	solrSearch.setSkipResourcesWithoutThumbnails(false);
 	solrSearch.setFacetFields(searchFilters.getFacetFields());

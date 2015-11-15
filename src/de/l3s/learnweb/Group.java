@@ -167,6 +167,11 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	return resources;
     }
 
+    public List<Folder> getFolders() throws SQLException
+    {
+	return Learnweb.getInstance().getGroupManager().getFolders(id);
+    }
+
     public AbstractPaginator getResources(Order order) throws SQLException
     {
 	ResourceManager rm = Learnweb.getInstance().getResourceManager();
@@ -176,24 +181,12 @@ public class Group implements Comparable<Group>, HasId, Serializable
     //Copy resource from this group to another group referred to by groupId, and by which user
     public void copyResourcesToGroupById(int groupId, User user) throws SQLException
     {
-	Group duplicateGroup = Learnweb.getInstance().getGroupManager().getGroupById(groupId);
 	for(Resource resource : getResources())
 	{
 	    Resource newResource = resource.clone();
+	    newResource.setGroupId(groupId);
 	    newResource = user.addResource(newResource);
-	    duplicateGroup.addResource(newResource, user);
 	}
-    }
-
-    public boolean addResource(Resource resource, User user) throws SQLException
-    {
-	resources = null;
-	return Learnweb.getInstance().getResourceManager().addResourceToGroup(resource, this, user);
-    }
-
-    public void removeResource(Resource resource, User user) throws SQLException
-    {
-	Learnweb.getInstance().getResourceManager().removeResourceFromGroup(resource, this, user);
     }
 
     //metadata

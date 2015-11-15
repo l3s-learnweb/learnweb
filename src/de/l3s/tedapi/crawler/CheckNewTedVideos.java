@@ -137,8 +137,8 @@ public class CheckNewTedVideos extends BaseTedApiCrawler implements Runnable
 
 		tedResource.setTranscript("");
 		rpm.processImage(tedResource, FileInspector.openStream(tedResource.getMaxImageUrl()));
+		tedResource.setGroup(tedGroup);
 		admin.addResource(tedResource);
-		tedGroup.addResource(tedResource, admin);
 
 		solr.indexResource(tedResource);
 		/*prepareStmt = "REPLACE INTO `lw_resource`(`title`, `description`, `url`, `source`, `type`, `duration`, `id_at_service`, `max_image_url`, `embeddedRaw`, `storage_type`, `rights`, `author`, `format`, `owner_user_id`, `rating`, `rate_number`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";

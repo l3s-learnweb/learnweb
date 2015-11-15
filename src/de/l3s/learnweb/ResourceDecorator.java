@@ -3,7 +3,6 @@ package de.l3s.learnweb;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
@@ -168,9 +167,9 @@ public class ResourceDecorator implements Serializable
 	return resource.getDurationInMinutes();
     }
 
-    public List<Group> getGroups() throws SQLException
+    public Group getGroup() throws SQLException
     {
-	return resource.getGroups();
+	return resource.getGroup();
     }
 
     public boolean isNewResource()

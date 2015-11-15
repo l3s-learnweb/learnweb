@@ -9,6 +9,7 @@
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
+			<f:viewParam name="folder_id" value="#{groupDetailBean.folderId}" />
 			<f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}" />
 			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}" />
 			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{resourceDetailBean.preRenderView}" /> 
@@ -96,6 +97,33 @@
 					</li>
 				</ul>
 				
+				<h:form styleClass="resources-filters" id="filters">
+					<ul>
+						<ui:repeat value="#{groupDetailBean.availableFilters}" var="filter">
+							<li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
+								<span class="filter-name">
+									<span class="trimmed-text">#{filter.name}</span>
+									<span class="arrow"></span>
+								</span>
+								<h:panelGroup styleClass="filter-sub-bar" layout="block">
+									
+									<p:commandButton value="#{filter.anyText}" action="#{groupDetailBean.changeFilters(filter.anyUrl)}" update=":datagrid :paginator :filters" styleClass="#{!filter.active ? 'active' : null}"/>
+									
+									<ui:repeat value="#{filter.items}" var="item">
+										<p:commandButton value="#{item.name} #{item.counter != null ? '('.concat(item.counter).concat(')') : null}" action="#{groupDetailBean.changeFilters(item.url)}" update=":datagrid :paginator :filters" styleClass="#{item.active ? 'active' : null}"/>
+									</ui:repeat>
+									
+								</h:panelGroup>
+							</li>
+						</ui:repeat>
+						<h:panelGroup rendered="#{groupDetailBean.searchFilters != null}">
+							<li class="filter clear-filters">
+								<p:commandButton value="#{msg.clear_filters}" action="#{groupDetailBean.changeFilters(null)}" update=":datagrid :paginator :filters"/>
+							</li>
+						</h:panelGroup>
+					</ul>
+				</h:form>
+				
 				<script type="text/javascript">
 					function resetCenterPaneHeight()
 					{console.log(
@@ -138,14 +166,12 @@
 			        	<h:outputText value=" #{msg.part_of}:"/>
 			        </p>
 			        <ul>
-				        <ui:repeat var="group" value="#{groupDetailBean.clickedResource.groups}" escape="false">				       
-				        	<li>
+				        <li>
 				        		<h:outputText value="#{msg.the_group_genitive} " />
-					        	<h:outputLink value="group/overview.jsf?group_id=#{group.id}">
-					        		<h:outputText value="#{group.title}" />
+					        	<h:outputLink value="group/overview.jsf?group_id=#{groupDetailBean.clickedResource.group.id}">
+					        		<h:outputText value="#{groupDetailBean.clickedResource.group.title}" />
 					        	</h:outputLink>
 				        	</li>
-				        </ui:repeat>
 				        <li> 
 				        	<h:outputText value="#{msg.private_resource} "/>
 				         	<h:outputText value=" #{groupDetailBean.clickedResource.ownerUser.username}"/>
@@ -215,22 +241,6 @@
 					</h:panelGrid>
 				</h:form>
 			</p:dialog>
-			
-			<p:dialog header="#{msg.link_to}" widgetVar="resource_link_dialog" modal="false" minWidth="540" styleClass="zindex10000">			
-				<h:form id="resource_link_form">
-					<h:panelGrid columns="2">
-						<h:outputText value="#{msg.link_to}:"/>
-						<h:selectOneMenu value="#{groupDetailBean.selectedResourceTargetGroupId}">
-							<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" 
-								itemValue="#{group.id}"/>
-						</h:selectOneMenu>					
-						
-						<h:outputText value="" />
-						<p:commandButton value="#{msg.save}" action="#{groupDetailBean.addSelectedResourceLink}" process="@form" 
-							update=":growl" oncomplete="PF('resource_link_dialog').hide()"/>
-					</h:panelGrid>					
-				</h:form>			
-			</p:dialog>
 						
 			<h:panelGroup id="datagrid" layout="block">				
 			    <ui:repeat var="result" value="#{groupDetailBean.paginator.currentPage}"> 			     
@@ -261,13 +271,6 @@
 												<h:graphicImage alt="Add" value="/resources/icon/Add.png"/>
 												<f:setPropertyActionListener value="#{result.resource}" target="#{groupDetailBean.clickedResource}" />
 												<f:param name="group_id" value="#{groupDetailBean.groupId}" />
-											</p:commandLink>
-											
-											<p:commandLink oncomplete="PF('resource_link_dialog').show();" title="#{msg.link_to}" 
-												rendered="#{userBean.isModerator() or !groupDetailBean.group.readOnly}" styleClass="buttons_link"> <!-- resource_commandlink -->
-												<h:graphicImage alt="Add" value="/resources/icon/Add_blue.png" title="#{msg.link_to}" /> 
-												<f:setPropertyActionListener value="#{result.resource}" target="#{groupDetailBean.clickedResource}" />
-												<f:param name="group_id" value="#{groupDetailBean.groupId}" /> 
 											</p:commandLink>
 					            			
 					            			<p:commandLink oncomplete="PF('confirmation').show();" title="#{msg.removeFromGroup}" 

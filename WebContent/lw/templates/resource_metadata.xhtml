@@ -35,16 +35,13 @@
 				<h:outputText value="#{res.resource.author}" />
 			<br />
 			
-			<h:panelGroup rendered="#{not empty res.groups}">
+			<h:panelGroup rendered="#{not empty res.group}">
 				<b><h:outputText value="#{msg.group}: " /></b>	
 				
-				<ui:repeat var="group" value="#{res.groups}">
-					<h:outputLink value="group/overview.jsf">
-						<f:param name="group_id" value="#{group.id}" />
-						<h:outputText value="#{group.title}" />
-					</h:outputLink>
-					<br/>
-				</ui:repeat>						
+				<h:outputLink value="group/overview.jsf">
+					<f:param name="group_id" value="#{res.group.id}" />
+					<h:outputText value="#{res.group.title}" />
+				</h:outputLink>
 				<br/>
 			</h:panelGroup>
 			

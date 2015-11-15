@@ -201,7 +201,7 @@ public class Search implements Serializable
 	{
 	    Resource resource = decoratedResource.getResource();
 
-	    if(resource.getId() > 0 && resource.getGroups().size() == 0 && resource.getOwnerUserId() != userId)
+	    if(resource.getId() > 0 && resource.getGroupId() == 0 && resource.getOwnerUserId() != userId)
 	    {
 		// the resource is stored in learnweb, belongs to no group and the current user is not the owner 
 		// of the resource. So he is not allowed to view the resource

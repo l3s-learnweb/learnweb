@@ -23,23 +23,25 @@
 		<ui:repeat value="#{userBean.groupMenu}" var="group">
 			<div class="panelmenu #{group.styleClass}">
 				<h3 class="group_link">
-					<span class="iconarrow"></span>
+					<h:panelGroup rendered="#{not empty group.elements}" class="iconarrow" />
 					<a href="./group/resources.jsf?group_id=#{group.id}">
 						#{group.label}
 					</a>
 				</h3>
 			
-				<div class="ui-panelmenu-content ui-widget-content ui-helper-hidden">
-					<ul class="ui-menu-list ui-helper-reset">					
-						<ui:repeat value="#{group.elements}" var="link">								
-							<li>
-								<a class="#{link.styleClass}" href="#{link.url}">
-									#{link.value}
-								</a>
-							</li>
-						</ui:repeat>
-					</ul>	
-				</div>
+				<h:panelGroup rendered="#{not empty group.elements}">
+					<div class="ui-panelmenu-content ui-widget-content ui-helper-hidden">
+						<ul class="ui-menu-list ui-helper-reset">					
+							<ui:repeat value="#{group.elements}" var="link">								
+								<li>
+									<a class="#{link.styleClass}" href="#{link.url}">
+										#{link.value}
+									</a>
+								</li>
+							</ui:repeat>
+						</ul>	
+					</div>
+				</h:panelGroup>
 			
 			</div>
 		</ui:repeat>

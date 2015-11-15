@@ -343,8 +343,8 @@ public class ArchiveUrlManager
 			archiveResource.setOnlineStatus(OnlineStatus.OFFLINE);
 		    }
 		    PreparedStatement update = Learnweb.getInstance().getConnection().prepareStatement("UPDATE archiveit_collection SET lw_resource_id = ? WHERE collection_id = ? AND resource_id = ?");
+		    archiveResource.setGroup(archiveGroup);
 		    archiveResource = admin.addResource(archiveResource);
-		    archiveGroup.addResource(archiveResource, admin);
 
 		    update.setInt(1, archiveResource.getId());
 		    update.setInt(2, collectionId);

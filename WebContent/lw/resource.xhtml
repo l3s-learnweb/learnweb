@@ -63,18 +63,16 @@
 								</tr>
 							</h:panelGroup>
 
-							<h:panelGroup rendered="#{not empty resourceBean.resource.groups}">
+							<h:panelGroup rendered="#{not empty resourceBean.resource.group}">
 								<tr>
 									<td>
 										<h:outputText value="#{msg.group}: " style="color:#388222;" />
 									</td>
 									<td>
-										<ui:repeat var="group" value="#{resourceBean.resource.groups}">
-											<h:outputLink value="group/overview.jsf">
-												<f:param name="group_id" value="#{group.id}" />
-												<h:outputText value="#{group.title}" />
-											</h:outputLink>
-										</ui:repeat>
+										<h:outputLink value="group/overview.jsf">
+											<f:param name="group_id" value="#{resourceBean.resource.group.id}" />
+											<h:outputText value="#{resourceBean.resource.group.title}" />
+										</h:outputLink>
 									</td>
 								</tr>
 							</h:panelGroup>

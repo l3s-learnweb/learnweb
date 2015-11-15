@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
@@ -98,13 +99,23 @@ public class GroupManager
 	return getGroups(query, courseId, (int) (newerThan.getTime() / 1000));
     }
 
-    public List<Group> getGroupsByResourceId(int resourceId) throws SQLException
+    /**
+     * Return a group by resource id
+     * 
+     * @param resourceId
+     * @return
+     * @throws SQLException
+     */
+    public Group getGroupByResourceId(int resourceId) throws SQLException
     {
-	if(resourceId <= 0)
-	    return new LinkedList<Group>();
+	PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT group_id FROM `lw_resource` JOIN lw_group g USING(group_id) WHERE resource_id = ? AND g.deleted = 0");
+	pstmtGetGroup.setInt(1, resourceId);
+	ResultSet rs = pstmtGetGroup.executeQuery();
 
-	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) JOIN lw_group_resource USING(group_id) WHERE resource_id = ? AND g.deleted = 0 ORDER BY g.title";
-	return getGroups(query, resourceId);
+	if(!rs.next())
+	    return null;
+
+	return getGroupById(rs.getInt(1));
     }
 
     /**
@@ -133,18 +144,6 @@ public class GroupManager
 	pstmtGetGroup.close();
 
 	return group;
-    }
-
-    public Group getPrimaryGroupByResourceId(int resourceId) throws SQLException
-    {
-	PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT group_id FROM `lw_group_resource` JOIN lw_group g USING(group_id) WHERE resource_id = ? AND g.deleted = 0 ORDER BY timestamp LIMIT 1");
-	pstmtGetGroup.setInt(1, resourceId);
-	ResultSet rs = pstmtGetGroup.executeQuery();
-
-	if(!rs.next())
-	    return null;
-
-	return getGroupById(rs.getInt(1));
     }
 
     private Group createGroup(ResultSet rs) throws SQLException
@@ -341,6 +340,111 @@ public class GroupManager
 	delete.close();
 
 	cache.remove(groupId);
+    }
+
+    private Folder createFolder(ResultSet rs) throws SQLException
+    {
+	Folder folder = new Folder();
+	folder.setFolderId(rs.getInt("folder_id"));
+	folder.setGroupId(rs.getInt("group_id"));
+	folder.setParentFolderId(rs.getInt("parent_folder_id"));
+	folder.setName(rs.getString("name"));
+	return folder;
+    }
+
+    public Folder getFolder(int folderId) throws SQLException
+    {
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name FROM `lw_group_folder` WHERE `folder_id` = ?");
+	select.setInt(1, folderId);
+	ResultSet rs = select.executeQuery();
+
+	if(!rs.next())
+	    return null;
+
+	Folder folder = createFolder(rs);
+	select.close();
+	return folder;
+    }
+
+    /**
+     * 
+     * @param groupId
+     * @throws SQLException
+     */
+    public List<Folder> getFolders(int groupId) throws SQLException
+    {
+	List<Folder> folders = new ArrayList<Folder>();
+
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name FROM `lw_group_folder` WHERE `group_id` = ?");
+	select.setInt(1, groupId);
+	ResultSet rs = select.executeQuery();
+	while(rs.next())
+	{
+	    folders.add(createFolder(rs));
+	}
+	select.close();
+
+	return folders;
+    }
+
+    /**
+     * 
+     * @param groupId
+     * @param parentFolderId
+     * @throws SQLException
+     */
+    public List<Folder> getFolders(int groupId, int parentFolderId) throws SQLException
+    {
+	List<Folder> folders = new ArrayList<Folder>();
+
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name FROM `lw_group_folder` WHERE `group_id` = ? AND `parent_folder_id` = ?");
+	select.setInt(1, groupId);
+	select.setInt(2, parentFolderId);
+	ResultSet rs = select.executeQuery();
+	while(rs.next())
+	{
+	    folders.add(createFolder(rs));
+	}
+	select.close();
+
+	return folders;
+    }
+
+    public Folder saveFolder(Folder folder) throws SQLException
+    {
+	PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group_folder` (folder_id, group_id, parent_folder_id, name) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+
+	if(folder.getFolderId() < 0) // the foler is not yet stored at the database
+	    replace.setNull(1, java.sql.Types.INTEGER);
+	else
+	    replace.setInt(1, folder.getFolderId());
+	replace.setInt(2, folder.getGroupId());
+	replace.setInt(3, folder.getParentFolderId());
+	replace.setString(4, folder.getName());
+	replace.executeUpdate();
+
+	if(folder.getFolderId() < 0) // get the assigned id
+	{
+	    ResultSet rs = replace.getGeneratedKeys();
+	    if(!rs.next())
+		throw new SQLException("database error: no id generated");
+	    folder.setFolderId(rs.getInt(1));
+	}
+
+	replace.close();
+	return folder;
+    }
+
+    public Folder getFolderByResourceId(int id) throws SQLException
+    {
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id FROM `lw_group_resource` WHERE resource_id = ? AND folder_id > 0 LIMIT 1");
+	select.setInt(1, id);
+	ResultSet rs = select.executeQuery();
+
+	if(!rs.next())
+	    return null;
+
+	return getFolder(rs.getInt(1));
     }
 
     /**

@@ -47,6 +47,7 @@ public class SolrSearch implements Serializable
     private String filterCoverage = "";
     private String filterPublisher = "";
     private String filterTags = "";
+    private String filterPath = "";
     private List<Integer> filterGroupIds;
 
     protected long totalResults = -1;
@@ -138,7 +139,7 @@ public class SolrSearch implements Serializable
     {
 	this.filterDateTo = date;
     }
-
+    
     /**
      * Either provide a list of groups
      * 
@@ -194,6 +195,11 @@ public class SolrSearch implements Serializable
 	this.filterTags = tags;
     }
 
+    public void setFilterFolder(int folderId)
+    {
+	this.filterPath = "*/" + folderId;
+    }
+
     public void clearAllFilters()
     {
 	this.facetFields = null;
@@ -215,6 +221,7 @@ public class SolrSearch implements Serializable
 	this.filterCoverage = "";
 	this.filterPublisher = "";
 	this.filterTags = "";
+	this.filterPath = "";
     }
 
     public long getTotalResultCount()
@@ -317,6 +324,11 @@ public class SolrSearch implements Serializable
 	if(0 != filterTags.length())
 	{
 	    solrQuery.addFilterQuery("tags : \"" + filterTags + "\"");
+	}
+
+	if(0 != filterPath.length())
+	{
+	    solrQuery.addFilterQuery("path_s : " + filterPath);
 	}
 
 	if(null != filterGroupIds)

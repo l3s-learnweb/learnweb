@@ -270,8 +270,8 @@ public class LoroManager
 
 		if(learnwebResourceId == 0) // not yet stored in Learnweb
 		{
+		    loroResource.setGroup(loroGroup);
 		    loroResource = admin.addResource(loroResource);
-		    loroGroup.addResource(loroResource, admin);
 		    if(!docFormat.contains("video") && !docFormat.contains("image"))
 		    {
 			if(resourceId == 0)

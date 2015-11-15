@@ -24,6 +24,7 @@ import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
 
 import de.l3s.learnweb.Course;
+import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
@@ -483,6 +484,50 @@ public class UserBean implements Serializable
 			item.setStyleClass("active");
 		    submenu.addElement(item);
 		}
+		menu.add(submenu);
+	    }
+
+	}
+	catch(SQLException e)
+	{
+	    log.error("Can't create menu model", e);
+	}
+
+	return menu;
+    }
+
+    public LinkedList<DefaultSubMenu> getGroupFoldersAsMenu()
+    {
+	Integer groupId = ApplicationBean.getParameterInt("group_id");
+	Integer folderId = ApplicationBean.getParameterInt("folder_id");
+
+	LinkedList<DefaultSubMenu> menu = new LinkedList<DefaultSubMenu>();
+	try
+	{
+	    for(Group group : getUser().getGroups())// getActiveCourse().getGroupsFilteredByUser(getUser()))
+	    {
+		boolean isActiveGroup = false;
+
+		DefaultSubMenu submenu = new DefaultSubMenu();
+		submenu.setLabel(group.getLongTitle());
+		submenu.setId(Integer.toString(group.getId()));
+
+		if(groupId != null && groupId.equals(group.getId()))
+		{
+		    submenu.setStyleClass("active");
+		    isActiveGroup = true;
+		}
+
+		for(Folder folder : group.getFolders())
+		{
+		    DefaultMenuItem item = new DefaultMenuItem();
+		    item.setValue(folder.getPrettyPath());
+		    item.setUrl("./group/resources.jsf?group_id=" + group.getId() + "&folder_id=" + folder.getFolderId());
+		    if(isActiveGroup && folderId != null && folderId.equals(folder.getFolderId()))
+			item.setStyleClass("active");
+		    submenu.addElement(item);
+		}
+
 		menu.add(submenu);
 	    }
 

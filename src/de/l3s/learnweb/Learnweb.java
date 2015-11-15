@@ -407,7 +407,7 @@ public class Learnweb
 	}
     }
 
-    private final static String LOG_SELECT = "SELECT user_id, u.username, action, target_id, params, timestamp, group_id, r.title AS resource_title, g.title AS group_title FROM `lw_user_log` JOIN lw_user u USING(user_id) LEFT JOIN lw_resource r ON action IN(0,1,2,3,14,15,19,21,30,31) AND target_id = r.resource_id LEFT JOIN lw_group g USING(group_id) ";
+    private final static String LOG_SELECT = "SELECT user_id, u.username, action, target_id, params, timestamp, ul.group_id, r.title AS resource_title, g.title AS group_title FROM lw_user_log ul JOIN lw_user u USING(user_id) LEFT JOIN lw_resource r ON action IN(0,1,2,3,14,15,19,21,30,31) AND target_id = r.resource_id LEFT JOIN lw_group g ON ul.group_id = g.group_id";
     private final static Action[] LOG_DEFAULT_FILTER = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description,
 	    Action.group_changing_leader, Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource,
 	    Action.group_removing_resource, Action.group_deleting_link };
@@ -489,7 +489,7 @@ public class Learnweb
 	if(limit > 0)
 	    limitStr = "LIMIT " + limit;
 
-	PreparedStatement select = dbConnection.prepareStatement(LOG_SELECT + " WHERE group_id = ? AND user_id != 0 AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
+	PreparedStatement select = dbConnection.prepareStatement(LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
 	select.setInt(1, groupId);
 
 	ResultSet rs = select.executeQuery();
@@ -522,7 +522,7 @@ public class Learnweb
 	if(limit > 0)
 	    limitStr = "LIMIT " + limit;
 
-	PreparedStatement select = dbConnection.prepareStatement(LOG_SELECT + " WHERE group_id IN(SELECT group_id FROM lw_group_user WHERE user_id=?) AND user_id != 0 AND user_id!=? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
+	PreparedStatement select = dbConnection.prepareStatement(LOG_SELECT + " WHERE ul.group_id IN(SELECT group_id FROM lw_group_user WHERE user_id=?) AND user_id != 0 AND user_id!=? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
 	select.setInt(1, userId);
 	select.setInt(2, userId);
 

@@ -26,6 +26,9 @@ import de.l3s.util.StringHelper;
 
 public class Resource implements HasId, Serializable // AbstractResultItem,
 {
+    private static final long serialVersionUID = -8486919346993051937L;
+    private final static Logger log = Logger.getLogger(Resource.class);
+
     public enum OnlineStatus
     {
 	UNKNOWN,
@@ -33,58 +36,40 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	OFFLINE
     };
 
-    private static final long serialVersionUID = -8486919346993051937L;
-    private final static Logger log = Logger.getLogger(Resource.class);
-
     public static final int FILE_RESOURCE = 1;
     public static final int WEB_RESOURCE = 2;
 
     private int id = -1; // default id, that indicates that this resource is not stored at fedora
+    private int groupId;
+    private int folderId;
     private String title;
     private String description = "";
-    private String machineDescription;
     private String url;
     private int storageType = WEB_RESOURCE;
     private int rights = 0;
-    private String author = "";
     private String source = ""; // The place where the resource was found
     private String location = ""; // The location where the resource (metadata) is stored; for example Learnweb, Flickr, Youtube ...
+    private String language = ""; // 2-letter language code
+    private String author = "";
     private String type = "";
     private String format = "";
-    private String idAtService = "";
     private int duration;
     private int ownerUserId;
-    private int views;
-    private String transcript; //To store the English transcripts for TED videos
+    private String idAtService = "";
     private int ratingSum;
     private int rateNumber;
-    private String language = ""; // 2-letter language code
-    private Date creationDate = new Date();
-    private int folderId;
-    private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
-    private HashMap<Integer, Boolean> isRatedByUser = new HashMap<Integer, Boolean>(); // userId : hasRated
-    private HashMap<String, String> metadata = new HashMap<String, String>(); // userId : hasRated
-
-    private int thumbUp;
-    private int thumbDown;
-    private HashMap<Integer, Boolean> isThumbRatedByUser = new HashMap<Integer, Boolean>(); // userId : hasRated
-
-    private LinkedHashMap<Integer, File> files = new LinkedHashMap<Integer, File>(); // resource_file_number : file
-
     private String embeddedSize1;
     private String embeddedSize3;
     private String embeddedSize4;
     private String embeddedSize1Raw;
     private String embeddedSize3Raw;
     private String embeddedSize4Raw;
-    private String maxImageUrl; // an url to the largest image preview of this resource
     private String fileName; // stores the file name of uploaded resource
     private String fileUrl;
-
+    private String maxImageUrl; // an url to the largest image preview of this resource
     private String query; // the query which was used to find this resource
     private int originalResourceId = 0; // if the resource was copied from an older fedora resource this stores the id of the original resource
-    private boolean restricted = false;
-
+    private String machineDescription;
     private Thumbnail thumbnail0;
     private Thumbnail thumbnail1;
     private Thumbnail thumbnail2;
@@ -93,6 +78,18 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private Thumbnail thumbnail3;
     private Thumbnail thumbnail4;
     private String embeddedRaw;
+    private String transcript; //To store the English transcripts for TED videos
+    private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
+    private boolean restricted = false;
+    private Date creationDate = new Date();
+    private HashMap<String, String> metadata = new HashMap<String, String>(); // userId : hasRated
+
+    private int views;
+    private int thumbUp;
+    private int thumbDown;
+    private HashMap<Integer, Boolean> isThumbRatedByUser = new HashMap<Integer, Boolean>(); // userId : hasRated
+    private HashMap<Integer, Boolean> isRatedByUser = new HashMap<Integer, Boolean>(); // userId : hasRated
+    private LinkedHashMap<Integer, File> files = new LinkedHashMap<Integer, File>(); // resource_file_number : file
 
     // caches
     private transient OwnerList<Tag, User> tags = null;
@@ -100,6 +97,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private transient User owner;
     private transient LinkedList<ArchiveUrl> archiveUrls = null;//To store the archived URLs 
     private transient String path = null;
+    private transient String prettyPath = null;
 
     protected void clearCaches()
     {
@@ -127,17 +125,6 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	this.type = type;
 	setThumbnail2(new Thumbnail(thumbnail_url, thumbnail_width, thumbnail_height));
 	setThumbnail4(new Thumbnail(thumbnail4_url, thumbnail4_width, thumbnail4_height));
-    }
-
-    /**
-     * returns the groups this resource is part of
-     * 
-     * @return
-     * @throws SQLException
-     */
-    public List<Group> getGroups() throws SQLException
-    {
-	return Learnweb.getInstance().getGroupManager().getGroupsByResourceId(id);
     }
 
     @Deprecated
@@ -320,6 +307,44 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	return id;
     }
 
+    public int getGroupId()
+    {
+	return groupId;
+    }
+
+    public void setGroupId(int groupId)
+    {
+	this.groupId = groupId;
+    }
+
+    public Group getGroup() throws SQLException
+    {
+	return Learnweb.getInstance().getGroupManager().getGroupByResourceId(getId());
+    }
+
+    public void setGroup(Group group)
+    {
+	this.groupId = group.getId();
+    }
+
+    public int getFolderId()
+    {
+	return folderId;
+    }
+
+    public void setFolderId(int folderId)
+    {
+	this.folderId = folderId;
+    }
+
+    public Folder getFolder() throws SQLException
+    {
+	if(folderId == 0)
+	    return null;
+
+	return Learnweb.getInstance().getGroupManager().getFolder(folderId);
+    }
+
     public String getTitle()
     {
 	return title;
@@ -487,6 +512,8 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
 	Resource r = new Resource();
 	r.setId(-1);
+	r.setGroupId(groupId);
+	r.setFolderId(folderId);
 	r.setTitle(title);
 	r.setDescription(description);
 	r.setUrl(url);
@@ -683,7 +710,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     public String getLearnwebUrl() throws SQLException
     {
 	if(getId() != -1)
-	    return "group/resources.jsf?group_id=" + getPrimaryGroup().getId() + "&resource_id=" + getId();
+	    return "group/resources.jsf?group_id=" + getGroup().getId() + "&resource_id=" + getId();
 
 	return getUrl();
     }
@@ -1390,20 +1417,13 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	this.archiveUrls = archiveUrls;
     }
 
-    public Folder getFolder()
-    {
-	if(folderId == 0)
-	    return null;
-
-	return Learnweb.getInstance().getResourceManager().getFolder(folderId);
-    }
-
     /**
      * returns a string representation of the resources path
      * 
      * @return
+     * @throws SQLException
      */
-    public String getPath()
+    public String getPath() throws SQLException
     {
 	if(null == path)
 	{
@@ -1414,18 +1434,20 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	return path;
     }
 
-    public int getFolderId()
+    /**
+     * returns a string representation of the resources path
+     * 
+     * @return
+     * @throws SQLException
+     */
+    public String getPrettyPath() throws SQLException
     {
-	return folderId;
-    }
-
-    public void setFolderId(int folderId)
-    {
-	this.folderId = folderId;
-    }
-
-    public Group getPrimaryGroup() throws SQLException
-    {
-	return Learnweb.getInstance().getGroupManager().getPrimaryGroupByResourceId(getId());
+	if(null == prettyPath)
+	{
+	    Folder folder = getFolder();
+	    if(folder != null)
+		prettyPath = folder.getPrettyPath();
+	}
+	return prettyPath;
     }
 }

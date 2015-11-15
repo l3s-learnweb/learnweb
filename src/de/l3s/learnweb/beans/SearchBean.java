@@ -362,17 +362,17 @@ public class SearchBean extends ApplicationBean implements Serializable
 
 	    newResource.setQuery(query);
 	    newResource.setEmbeddedSize1Raw("");
-	    newResource = user.addResource(newResource);
-
-	    // create thumbnails for the resource
 
 	    // add resource to a group if selected
 	    if(selectedResourceTargetGroupId != 0)
 	    {
-		getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(newResource, getUser());
+		newResource.setGroupId(selectedResourceTargetGroupId);
 		user.setActiveGroup(selectedResourceTargetGroupId);
 	    }
 
+	    newResource = user.addResource(newResource);
+
+	    // create thumbnails for the resource
 	    if(newResource.getThumbnail2() == null || newResource.getThumbnail2().getFileId() == 0)
 		new AddResourceBean.CreateThumbnailThread(newResource).start();
 

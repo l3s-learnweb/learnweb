@@ -301,22 +301,18 @@
 							</tr>
 						</ui:repeat>
 						
-						<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.groups}">
+						<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.group}">
 							<tr>
 								<td>
 									<span class="resource_field">
-										<h:outputFormat value="#{msg.group_s}:">
-											<f:param value="#{resourceDetailBean.clickedResource.groups.size()}" />
-										</h:outputFormat>
+										#{msg.group}: 
 									</span>
 								</td>
 								<td>
-									<ui:repeat var="group" value="#{resourceDetailBean.clickedResource.groups}">
-										<h:outputLink value="group/overview.jsf" style="display:inline-block; margin-right:1rem;">
-											<f:param name="group_id" value="#{group.id}" />
-											<h:outputText value="#{group.title}" />
-										</h:outputLink>
-									</ui:repeat>
+									<h:outputLink value="group/overview.jsf" style="display:inline-block; margin-right:1rem;">
+										<f:param name="group_id" value="#{resourceDetailBean.clickedResource.group.id}" />
+										<h:outputText value="#{resourceDetailBean.clickedResource.group.title}" />
+									</h:outputLink>
 								</td>
 							</tr>
 						</ui:fragment>
@@ -346,6 +342,18 @@
 									<h:outputText value="#{resourceDetailBean.clickedResource.creationDate}">
 										<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
 									</h:outputText>
+								</td>
+							</tr>
+						</ui:fragment>
+						<ui:fragment rendered="#{resourceDetailBean.clickedResource.folderId != 0}">
+							<tr>
+								<td>
+									<span class="resource_field">
+										#{msg.path}:
+									</span>
+								</td>
+								<td>
+									<h:outputText value="#{resourceDetailBean.clickedResource.prettyPath}" />
 								</td>
 							</tr>
 						</ui:fragment>

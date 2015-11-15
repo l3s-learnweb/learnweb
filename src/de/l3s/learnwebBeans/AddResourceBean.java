@@ -21,6 +21,7 @@ import org.primefaces.model.UploadedFile;
 
 import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
 import de.l3s.interwebj.IllegalResponseException;
+import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
@@ -42,6 +43,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     private Resource resource;
 
     private int resourceTargetGroupId; // the id of the group the new resource will be added to
+    private int resourceTargetFolderId;
 
     private String newUrl;
 
@@ -222,17 +224,22 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 		}
 	    }
 
+	    // add resource to a group if selected
+	    if(resourceTargetGroupId != 0)
+	    {
+		resource.setGroupId(resourceTargetGroupId);
+		getUser().setActiveGroup(resourceTargetGroupId);
+	    }
+
+	    if(resourceTargetFolderId != 0)
+	    {
+		resource.setFolderId(resourceTargetFolderId);
+	    }
+
 	    if(resource.getId() == -1) // a new resource which is not stored in the database yet
 		resource = getUser().addResource(resource);
 	    else
 		resource.save();
-
-	    // add resource to a group if selected
-	    if(resourceTargetGroupId != 0)
-	    {
-		getLearnweb().getGroupManager().getGroupById(resourceTargetGroupId).addResource(resource, getUser());
-		getUser().setActiveGroup(resourceTargetGroupId);
-	    }
 
 	    log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
 
@@ -266,6 +273,16 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     public void setResourceTargetGroupId(int resourceTargetGroupId)
     {
 	this.resourceTargetGroupId = resourceTargetGroupId;
+    }
+
+    public int getResourceTargetFolderId()
+    {
+	return resourceTargetFolderId;
+    }
+
+    public void setResourceTargetFolderId(int resourceTargetFolderId)
+    {
+	this.resourceTargetFolderId = resourceTargetFolderId;
     }
 
     public String getNewUrl()
@@ -373,6 +390,16 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     public void setSelectedUploadServices(List<String> selectedUploadServices)
     {
 	this.selectedUploadServices = selectedUploadServices;
+    }
+
+    public List<Folder> getFoldersForCurrentGroup() throws SQLException
+    {
+	return Learnweb.getInstance().getGroupManager().getFolders(resourceTargetGroupId);
+    }
+
+    public void changeGroupListener()
+    {
+	log.debug("changeGroupListener");
     }
 
     public void preRenderView() throws IOException, DecoderException
