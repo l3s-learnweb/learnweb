@@ -20,7 +20,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.dom4j.DocumentException;
 
 import de.l3s.archivedemo.ArchiveSearchManager;
@@ -119,7 +118,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
 	    q = new Query();
 	    q.setQueryString(queryString);
-	    q.setRequestedResultCount(50);
+	    q.setRequestedResultCount(100);
 	    q.setMarket(market);
 
 	    BingAzure bing = new BingAzure();
@@ -261,6 +260,8 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	    try
 	    {
 		relatedEntities = archiveManager.getQuerySuggestionsWikiLink(market, queryString, 10);
+		relatedEntitiesFromSolr = false;
+		/*
 		if(relatedEntities.size() == 0)
 		{
 		    relatedEntities = archiveManager.getQuerySuggestionsSOLR(market, queryString, 10);
@@ -268,8 +269,9 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 		}
 		else
 		    relatedEntitiesFromSolr = false;
+		    */
 	    }
-	    catch(SolrServerException | IOException e)
+	    catch(Exception e)
 	    {
 		log.error("Can't get related entities", e);
 	    }

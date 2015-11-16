@@ -39,12 +39,14 @@
 			}			
 			
 			$().ready(function() {
-				$('#archive_searchfield_input').focus();
 				loadRelatedEntities();
 			});
 			
-			<ui:fragment rendered="#{empty archiveDemoBean.query}">
+			<ui:fragment rendered="#{empty archiveDemoBean.query or empty archiveDemoBean.resources}">
 			no_more_results = true;
+			$().ready(function() {
+				$('#archive_searchfield_input').focus();
+			});
 			</ui:fragment>
 		</script>	
 		

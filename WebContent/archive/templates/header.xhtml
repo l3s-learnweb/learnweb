@@ -4,9 +4,7 @@
       xmlns:p="http://primefaces.org/ui">
       
 <ui:composition>
-	<style type="text/css">
-	
-			
+	<style type="text/css">			
 		#archive_searchfield {
 		    float: left;
 		    margin-left: 23rem;
@@ -18,13 +16,10 @@
 		   	border: medium none !important;
 		}
 			
-		#archive_searchfield_input {
-		 
+		#archive_searchfield_input {		 
 		    font-size: 1.8rem !important;
-		    width: 36rem;
-		   
-		    height: 3.4rem;
-		    
+		    width: 36rem;		   
+		    height: 3.4rem;		    
 		    padding: 0px 1rem;
 		    border: medium none !important;
 		    background-color: #F7F7F7;
@@ -56,7 +51,9 @@
 				<a href="/archive/search.jsf" id="learnweb_logo">
 					Logo
 				</a>
-				<p:autoComplete forceSelection="false" value="#{archiveDemoBean.query}" completeMethod="#{archiveDemoBean.completeQuery}" id="archive_searchfield" placeholder="#{msg['ArchiveSearch.search_placeholder']}"/>		
+				<p:autoComplete forceSelection="true" value="#{archiveDemoBean.query}" completeMethod="#{archiveDemoBean.completeQuery}" id="archive_searchfield" placeholder="#{msg['ArchiveSearch.search_placeholder']}">
+					<p:ajax event="itemSelect" oncomplete="$('#searchbutton').click()"  />
+				</p:autoComplete>		
 				<h:commandButton value=" " action="#{archiveDemoBean.onSearch}" id="searchbutton" title="#{msg.searchLabel}"/>
 			</h:form>
 		

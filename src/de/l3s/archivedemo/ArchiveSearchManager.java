@@ -196,8 +196,8 @@ public class ArchiveSearchManager
     {
 	List<ResourceDecorator> results = new ArrayList<ResourceDecorator>();
 
-	PreparedStatement select = getConnection()
-		.prepareStatement("SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description, UNIX_TIMESTAMP(crawl_time) as crawl_time2 FROM pw_result LEFT JOIN `url_captures_count_2` USING (query_id, rank) WHERE `query_id` = ? ORDER BY rank");
+	PreparedStatement select = getConnection().prepareStatement(
+		"SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description, UNIX_TIMESTAMP(crawl_time) as crawl_time2 FROM pw_result LEFT JOIN `url_captures_count_2` USING (query_id, rank) WHERE `query_id` = ? ORDER BY rank");
 	select.setInt(1, queryId);
 	ResultSet rs = select.executeQuery();
 
@@ -218,6 +218,7 @@ public class ArchiveSearchManager
 	    ResourceDecorator decoratedResource = new ResourceDecorator(resource);
 	    decoratedResource.setSnippet(rs.getString("description"));
 	    decoratedResource.setRankAtService(rs.getInt("rank"));
+	    decoratedResource.setTitle(rs.getString("title"));
 	    results.add(decoratedResource);
 	}
 

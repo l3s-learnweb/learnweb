@@ -84,6 +84,7 @@ public class SearchQuery implements Serializable
 		ResourceDecorator decoratedResource = new ResourceDecorator(currentResource);
 		decoratedResource.setSnippet(searchResult.getSnippet());
 		decoratedResource.setRankAtService(searchResult.getRankAtService());
+		decoratedResource.setTitle(searchResult.getTitle());
 
 		// bing description contains snippet with term highlighting
 		if(currentResource.getSource().equalsIgnoreCase("bing") && decoratedResource.getSnippet() == null)

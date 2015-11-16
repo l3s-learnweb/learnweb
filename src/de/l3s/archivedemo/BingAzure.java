@@ -70,14 +70,14 @@ public class BingAzure
 	if(null == query.getQueryString())
 	    throw new IllegalArgumentException("queryString is null");
 
-	//archiveSearchManager.saveQuery(query);
+	archiveSearchManager.saveQuery(query);
 	this.query = query;
 	this.type = type;
 	this.page = 0;
 	this.loadedResourceDecorators = 0;
 	this.results = new LinkedList<ResourceDecorator>();
 
-	//	log.info("Search for: " + queryString);
+	log.debug("Search for: " + query.getQueryString());
 
 	boolean hasMoreResourceDecorators = doNormalSearch();
 
@@ -375,11 +375,14 @@ public class BingAzure
 
 	    Resource resource = new Resource();
 	    ResourceDecorator decoratedResource = new ResourceDecorator(resource);
-	    String ti = convertHighlighting(prop.elementText("Title"));
-	    resource.setTitle(ti);
-	    resource.setDescription(convertHighlighting(prop.elementText("Description")));
+	    String title = convertHighlighting(prop.elementText("Title"));
+	    String description = convertHighlighting(prop.elementText("Description"));
 
-	    System.out.println(prop.elementText("Title") + " --- " + ti + " --- " + resource.getTitle());
+	    resource.setTitle(title);
+	    resource.setDescription(description);
+
+	    decoratedResource.setTitle(title);
+	    decoratedResource.setSnippet(description);
 
 	    String url3 = prop.elementText("Url");
 	    String url4 = url3.replaceAll("[^\\u0000-\\uFFFF]", "\uFFFD");
@@ -389,10 +392,8 @@ public class BingAzure
 		log.warn("replaced 4 byte char in: " + url4);
 	    }
 	    resource.setUrl(url4);
-	    //ResourceDecorator.setResourceDecoratorId(prop.elementText("ID"));
-	    decoratedResource.setRankAtService(++loadedResourceDecorators);
 
-	    //ResourceDecorator.setThumbnails(thumbnails);
+	    decoratedResource.setRankAtService(++loadedResourceDecorators);
 
 	    resource.setMetadataValue("query_id", Integer.toString(query.getId()));
 	    resource.setMetadataValue("url_captures", null);
@@ -402,7 +403,7 @@ public class BingAzure
 
 	    results.add(decoratedResource);
 
-	    //archiveSearchManager.insertResult(query.getId(), decoratedResource.getRankAtService(), resource.getTitle(), resource.getDescription(), resource.getUrl());
+	    archiveSearchManager.insertResult(query.getId(), decoratedResource.getRankAtService(), title, description, resource.getUrl());
 
 	    counter++;
 	}
