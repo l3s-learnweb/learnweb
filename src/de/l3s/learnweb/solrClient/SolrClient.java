@@ -1,7 +1,6 @@
 package de.l3s.learnweb.solrClient;
 
 import java.io.IOException;
-import java.net.URL;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
@@ -15,12 +14,10 @@ import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 
 import de.l3s.learnweb.Comment;
-import de.l3s.learnweb.File;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.Tag;
-import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 
 public class SolrClient
 {
@@ -267,7 +264,7 @@ public class SolrClient
 	indexer.server.deleteByQuery("*:*");
 	indexer.server.commit();*/
 
-	indexer.deleteOldCachedResource();
+	indexer.indexAllResources();
 
 	System.out.println("end of test.");
     }
@@ -283,35 +280,43 @@ public class SolrClient
     public static void indexAllResources() throws SQLException, IOException, SolrServerException
     {
 	Learnweb learnweb = Learnweb.getInstance();
+	SolrClient indexer = learnweb.getSolrClient();
 
-	List<Resource> resources = learnweb.getResourceManager().getResourcesWithoutThumbnail(); // loads all resources (very slow)
-
-	SolrClient indexer = new SolrClient(learnweb);
-
-	for(Resource resource : resources)
+	for(int i = 10; i < 300; i++)
 	{
 
-	    File file = resource.getFile(4);
+	    List<Resource> resources = learnweb.getResourceManager().getResourcesAll(i, 1000); // loads all resources (very slow)
 
-	    if(file != null && file.getUrl().startsWith("http://learnweb.l3s.uni-hannover.de")) // resource has an attached file
+	    log.debug("page: " + i);
+
+	    for(Resource resource : resources)
 	    {
 
+		/*
+		File file = resource.getFile(4);
+		
+		if(file != null && file.getUrl().startsWith("http://learnweb.l3s.uni-hannover.de")) // resource has an attached file
+		{
+		
 		FileInspector inspector = new FileInspector();
 		FileInfo info = inspector.inspect((new URL(file.getUrl())).openStream(), file.getName());
-
+		
 		System.out.println(info);
-
+		
 		if(info.getTextContent() != null)
 		{
-		    resource.setMachineDescription(info.getTextContent());
-		    resource.save();
-
-		    System.out.println("saved description ");
+		resource.setMachineDescription(info.getTextContent());
+		resource.save();
+		
+		System.out.println("saved description ");
 		}
+		
+		}*/
+		//log.debug("Process resource: " + resource.getId());
+
+		indexer.reIndexResource(resource);
 
 	    }
-	    indexer.indexResource(resource);
-
 	}
 
     }

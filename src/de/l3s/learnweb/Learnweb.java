@@ -128,18 +128,7 @@ public class Learnweb
 	    else if((new File("C:\\Users\\astap_000").exists()))
 		propteriesFileName = "lw_local_oleg";
 
-	    System.out.println(propteriesFileName);
 	    properties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propteriesFileName + ".properties"));
-
-	    Properties test = new Properties();
-	    test.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propteriesFileName + ".properties"));
-
-	    System.out.println(test.getProperty("FORUM_MYSQL_URL"));
-	    System.out.println(test.getProperty("mysql_url"));
-	    System.out.println("---");
-	    System.out.println(properties.getProperty("FORUM_MYSQL_URL"));
-	    System.out.println(properties.getProperty("mysql_url"));
-
 	}
 	catch(IOException e)
 	{

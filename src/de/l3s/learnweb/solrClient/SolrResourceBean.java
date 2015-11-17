@@ -43,7 +43,10 @@ public class SolrResourceBean
     private String author;
 
     @Field("tags")
-    private List<String> tags;
+    private List<String> tags; // the facets of this field are splitted on every white space; the field type has to be change from text_general to string or better use a copy method
+
+    @Field("tags_ss")
+    private List<String> tagsTemp;
 
     @Field("groups")
     private List<Integer> groups;
@@ -86,6 +89,12 @@ public class SolrResourceBean
 
     @Field("thumbnailWidth4")
     private int thumnailWidth4;
+
+    @Field("thumbnailHeight4_i")
+    private int thumbnailHeight4Temp;
+
+    @Field("thumbnailWidth4_i")
+    private int thumnailWidth4Temp;
 
     @Field("ownerUserId")
     private int ownerUserId;
@@ -150,8 +159,12 @@ public class SolrResourceBean
 	if(null != resource.getTags())
 	{
 	    this.tags = new LinkedList<String>();
+	    this.tagsTemp = new LinkedList<String>();
 	    for(Tag tag : resource.getTags())
+	    {
 		tags.add(tag.getName());
+		tagsTemp.add(tag.getName());
+	    }
 	}
 	if(null != resource.getComments())
 	{
@@ -168,6 +181,9 @@ public class SolrResourceBean
 	{
 	    setThumbnailHeight4(resource.getThumbnail4().getHeight());
 	    setThumnailWidth4(resource.getThumbnail4().getWidth());
+
+	    this.thumbnailHeight4Temp = resource.getThumbnail4().getHeight();
+	    this.thumnailWidth4Temp = resource.getThumbnail4().getWidth();
 	}
 
 	this.collector = resource.getMetadataValue("collector");
@@ -484,6 +500,36 @@ public class SolrResourceBean
     public void setPath(String path)
     {
 	this.path = path;
+    }
+
+    public List<String> getTagsTemp()
+    {
+	return tagsTemp;
+    }
+
+    public void setTagsTemp(List<String> tagsTemp)
+    {
+	this.tagsTemp = tagsTemp;
+    }
+
+    public int getThumbnailHeight4Temp()
+    {
+	return thumbnailHeight4Temp;
+    }
+
+    public void setThumbnailHeight4Temp(int thumbnailHeight4Temp)
+    {
+	this.thumbnailHeight4Temp = thumbnailHeight4Temp;
+    }
+
+    public int getThumnailWidth4Temp()
+    {
+	return thumnailWidth4Temp;
+    }
+
+    public void setThumnailWidth4Temp(int thumnailWidth4Temp)
+    {
+	this.thumnailWidth4Temp = thumnailWidth4Temp;
     }
 
 }

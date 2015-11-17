@@ -270,7 +270,7 @@ public class FileManager
 
 	if(!file.getActualFile().exists())
 	{
-	    log.error("Can't find file: " + file.getActualFile().getAbsolutePath());
+	    //	    log.error("Can't find file: " + file.getActualFile().getAbsolutePath());
 
 	    file.setExists(false);
 
