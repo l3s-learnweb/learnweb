@@ -99,7 +99,7 @@ public class OrganisationManager
 	    group.setTitle(organisation.getTitle());
 	    group.setDescription("Organisation");
 	    learnweb.getGroupManager().save(group);
-	    learnweb.getGroupManager().deleteGroup(group.getId());
+	    learnweb.getGroupManager().deleteGroup(group);
 	    organisation.setId(group.getId());
 
 	    cache.put(organisation.getId(), organisation);

@@ -147,14 +147,13 @@ public class CourseManager
     public synchronized Course save(Course course) throws SQLException
     {
 	if(course.getId() < 0) // the course is not yet stored at the database 
-	{ // we have to get a new id from the groupmanager
+	{ // we have to get a new id from the group manager
 	    Group group = new Group();
 	    group.setTitle(course.getTitle());
 	    group.setDescription("Course");
-	    // group.setSubgroupLabel("Groups");
 
 	    learnweb.getGroupManager().save(group);
-	    learnweb.getGroupManager().deleteGroup(group.getId());
+	    learnweb.getGroupManager().deleteGroup(group);
 	    course.setId(group.getId());
 
 	    cache.put(course.getId(), course);

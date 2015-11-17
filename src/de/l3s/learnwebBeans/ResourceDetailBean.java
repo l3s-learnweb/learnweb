@@ -253,7 +253,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	    return true;
 
 	Tag tag = (Tag) tagO;
-	User owner = clickedResource.getTags().getElementOwner(tag); // TODO improve (faster) use in frontend
+	User owner = clickedResource.getTags().getElementOwner(tag);
 	if(user.equals(owner))
 	    return true;
 	return false;

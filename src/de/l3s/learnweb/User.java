@@ -388,7 +388,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public void deleteGroup(Group group) throws Exception
     {
-	Learnweb.getInstance().getGroupManager().deleteGroup(group.getId());
+	Learnweb.getInstance().getGroupManager().deleteGroup(group);
 
 	if(null != groups)
 	    groups.remove(group);

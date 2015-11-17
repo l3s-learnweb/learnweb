@@ -730,11 +730,11 @@ public class ResourceManager
 	}
     }
 
-    public OwnerList<Resource, User> getResourcesByGroupId(int groupId) throws SQLException
+    public List<Resource> getResourcesByGroupId(int groupId) throws SQLException
     {
-	OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
+	List<Resource> resources = new LinkedList<>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `group_id` = ?");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `group_id` = ? and deleted = 0");
 	select.setInt(1, groupId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -742,7 +742,7 @@ public class ResourceManager
 	    Resource resource = createResource(rs);
 
 	    if(null != resource)
-		resources.add(resource, resource.getOwnerUser(), resource.getCreationDate());
+		resources.add(resource);
 	}
 	select.close();
 

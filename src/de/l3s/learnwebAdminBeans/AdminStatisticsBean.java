@@ -21,9 +21,7 @@ import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.GroupManager;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.OwnerList;
 import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.User;
 import de.l3s.learnwebBeans.ApplicationBean;
 import de.l3s.util.StringHelper;
 
@@ -147,7 +145,7 @@ public class AdminStatisticsBean extends ApplicationBean implements Serializable
 		    sb.append(group.getTitle());
 		    sb.append("</div>\n<ul>");
 
-		    OwnerList<Resource, User> resources = group.getResources();
+		    List<Resource> resources = group.getResources();
 		    Collections.sort(resources, new ResourceComparater());
 
 		    for(Resource resource : resources)

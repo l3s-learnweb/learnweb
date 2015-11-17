@@ -327,19 +327,21 @@ public class GroupManager
 	delete.close();
     }
 
-    public void deleteGroup(int groupId) throws SQLException
+    public void deleteGroup(Group group) throws SQLException
     {
+	List<Resource> resources = group.getResources();
+
 	PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_user` WHERE `group_id` = ?");
-	delete.setInt(1, groupId);
+	delete.setInt(1, group.getId());
 	delete.execute();
 	delete.close();
 
 	delete = learnweb.getConnection().prepareStatement("UPDATE `lw_group` SET deleted = 1 WHERE `group_id` = ?");
-	delete.setInt(1, groupId);
+	delete.setInt(1, group.getId());
 	delete.execute();
 	delete.close();
 
-	cache.remove(groupId);
+	cache.remove(group.getId());
     }
 
     private Folder createFolder(ResultSet rs) throws SQLException

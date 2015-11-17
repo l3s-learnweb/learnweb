@@ -51,7 +51,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
     private String categoryAbbreviation;
 
     private transient List<Link> documentLinks;
-    private transient OwnerList<Resource, User> resources;
     private transient List<User> members;
     private transient List<Link> links;
 
@@ -60,7 +59,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
     public void clearCaches()
     {
 	documentLinks = null;
-	resources = null;
 	members = null;
 	links = null;
     }
@@ -152,19 +150,11 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	return false;
     }
 
-    private long resourcesCacheTime = 0L;
-
-    public OwnerList<Resource, User> getResources() throws SQLException
+    public List<Resource> getResources() throws SQLException
     {
-	// caching is restricted to 2 sec until a good strategy exist how to deal with deleting resources in other beans
+	ResourceManager rm = Learnweb.getInstance().getResourceManager();
+	return rm.getResourcesByGroupId(id);
 
-	if(null == resources || resourcesCacheTime + 3000L < System.currentTimeMillis())
-	{
-	    ResourceManager rm = Learnweb.getInstance().getResourceManager();
-	    resources = rm.getResourcesByGroupId(id);
-	    resourcesCacheTime = System.currentTimeMillis();
-	}
-	return resources;
     }
 
     public List<Folder> getFolders() throws SQLException

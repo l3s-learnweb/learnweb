@@ -18,7 +18,6 @@ import javax.faces.event.ComponentSystemEvent;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Group;
-import de.l3s.learnweb.OwnerList;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.User;
 
@@ -36,7 +35,7 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
     private Group group;
     private List<User> members;
     private List<Resource> resources;
-    private OwnerList<Resource, User> resourcesAll;
+    private List<Resource> resourcesAll;
     private List<Resource> resourcesText = new LinkedList<Resource>();
     // private List<Resource> resourcesMultimedia = new LinkedList<Resource>();
     ArrayList<Resource> titleSlide;
@@ -181,7 +180,7 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
 	    resource.setId(1);
 	    resource.setEmbeddedSize1Raw("<img src='../resources/icon/blank.png' width='1' height='50' />");
 	    //titleSlide.add(resource);
-	    resourcesAll.addFirst(resource);
+	    resourcesAll.add(0, resource);
 
 	    //Collections.sort(resourcesAll, Resource.createTitleComparator());	
 	}
@@ -233,7 +232,7 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
 	this.selectedResource = selectedResource;
     }
 
-    public OwnerList<Resource, User> getResourcesAll()
+    public List<Resource> getResourcesAll()
     {
 	return resourcesAll;
     }
