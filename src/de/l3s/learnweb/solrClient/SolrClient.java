@@ -282,7 +282,7 @@ public class SolrClient
 	Learnweb learnweb = Learnweb.getInstance();
 	SolrClient indexer = learnweb.getSolrClient();
 
-	for(int i = 10; i < 300; i++)
+	for(int i = 88; i < 300; i++)
 	{
 
 	    List<Resource> resources = learnweb.getResourceManager().getResourcesAll(i, 1000); // loads all resources (very slow)
