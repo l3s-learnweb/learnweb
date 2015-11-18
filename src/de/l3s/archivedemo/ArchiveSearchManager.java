@@ -128,6 +128,29 @@ public class ArchiveSearchManager
 
     private final static String QUERY_COLUMNS = "query_id, query_string, timestamp";
 
+    /**
+     * 
+     * @param market
+     * @param queryString
+     * @return the query id of this entity or -1 if queryString is no entity
+     * @throws SQLException
+     */
+    public int getQueryIdByEntity(String market, String queryString) throws SQLException
+    {
+	String table = "main_pages_" + market.substring(0, 2);
+	int queryId = -1;
+
+	PreparedStatement select = getConnection().prepareStatement("SELECT query_id FROM `" + table + "` WHERE title = ?");
+	select.setString(1, queryString);
+	ResultSet rs = select.executeQuery();
+	if(rs.next())
+	{
+	    queryId = rs.getInt(1);
+	}
+
+	return queryId;
+    }
+
     public Query getQueryByQueryString(String market, String queryString) throws SQLException
     {
 	Query query = null;
@@ -143,6 +166,21 @@ public class ArchiveSearchManager
 	select.close();
 	return query;
     }
+    /*
+    public Query getQueryByQueryId(int queryId) throws SQLException
+    {
+    	Query query = null;
+    	PreparedStatement select = getConnection().prepareStatement("SELECT " + QUERY_COLUMNS + " FROM pw_query WHERE market = ? AND query_string = ? ORDER BY loaded_results DESC LIMIT 1");
+    	select.setInt(1, market);
+    	ResultSet rs = select.executeQuery();
+    	if(rs.next())
+    	{
+    	    query = createQuery(rs);
+    	}
+    
+    	select.close();
+    	return query;
+    }*/
 
     private Query createQuery(ResultSet rs) throws SQLException
     {
@@ -196,8 +234,8 @@ public class ArchiveSearchManager
     {
 	List<ResourceDecorator> results = new ArrayList<ResourceDecorator>();
 
-	PreparedStatement select = getConnection().prepareStatement(
-		"SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description, UNIX_TIMESTAMP(crawl_time) as crawl_time2 FROM pw_result LEFT JOIN `url_captures_count_2` USING (query_id, rank) WHERE `query_id` = ? ORDER BY rank");
+	PreparedStatement select = getConnection()
+		.prepareStatement("SELECT `rank`, `url_captures`, `first_timestamp`, `last_timestamp`, url, title, description, UNIX_TIMESTAMP(crawl_time) as crawl_time2 FROM pw_result LEFT JOIN `url_captures_count_2` USING (query_id, rank) WHERE `query_id` = ? ORDER BY rank");
 	select.setInt(1, queryId);
 	ResultSet rs = select.executeQuery();
 

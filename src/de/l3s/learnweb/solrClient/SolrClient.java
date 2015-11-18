@@ -258,15 +258,17 @@ public class SolrClient
 	//deleteAllResource();
 	//indexAllResources();
 
+	/*
 	Learnweb learnweb = Learnweb.getInstance();
 	SolrClient indexer = new SolrClient(learnweb);
-	/*
+	
 	indexer.server.deleteByQuery("*:*");
-	indexer.server.commit();*/
-
+	indexer.server.commit();*
+	
 	indexer.indexAllResources();
-
+	
 	System.out.println("end of test.");
+	*/
     }
 
     /**
@@ -282,7 +284,7 @@ public class SolrClient
 	Learnweb learnweb = Learnweb.getInstance();
 	SolrClient indexer = learnweb.getSolrClient();
 
-	for(int i = 88; i < 300; i++)
+	for(int i = 300; i < 301; i++)
 	{
 
 	    List<Resource> resources = learnweb.getResourceManager().getResourcesAll(i, 1000); // loads all resources (very slow)
@@ -312,7 +314,7 @@ public class SolrClient
 		}
 		
 		}*/
-		//log.debug("Process resource: " + resource.getId());
+		log.debug("Process resource: " + resource.getId());
 
 		indexer.reIndexResource(resource);
 

@@ -100,25 +100,6 @@ public class GroupManager
     }
 
     /**
-     * Return a group by resource id
-     * 
-     * @param resourceId
-     * @return
-     * @throws SQLException
-     */
-    public Group getGroupByResourceId(int resourceId) throws SQLException
-    {
-	PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT group_id FROM `lw_resource` JOIN lw_group g USING(group_id) WHERE resource_id = ? AND g.deleted = 0");
-	pstmtGetGroup.setInt(1, resourceId);
-	ResultSet rs = pstmtGetGroup.executeQuery();
-
-	if(!rs.next())
-	    return null;
-
-	return getGroupById(rs.getInt(1));
-    }
-
-    /**
      * Returns a list of all Groups a user belongs to and which groups are also part of the defined course
      * 
      * @throws SQLException
@@ -219,11 +200,9 @@ public class GroupManager
      */
     public synchronized Group save(Group group) throws SQLException
     {
-	PreparedStatement replace = learnweb
-		.getConnection()
-		.prepareStatement(
-			"REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, university, course, location, language, course_id, group_category_id, restriction_only_leader_can_add_resources, read_only, restriction_forum_category_required) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
-			Statement.RETURN_GENERATED_KEYS);
+	PreparedStatement replace = learnweb.getConnection().prepareStatement(
+		"REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, university, course, location, language, course_id, group_category_id, restriction_only_leader_can_add_resources, read_only, restriction_forum_category_required) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+		Statement.RETURN_GENERATED_KEYS);
 
 	if(group.getId() < 0) // the Group is not yet stored at the database 
 	{
@@ -329,7 +308,11 @@ public class GroupManager
 
     public void deleteGroup(Group group) throws SQLException
     {
-	List<Resource> resources = group.getResources();
+	for(Resource resource : group.getResources())
+	{
+	    resource.setGroupId(0);
+	    resource.save();
+	}
 
 	PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_user` WHERE `group_id` = ?");
 	delete.setInt(1, group.getId());
