@@ -110,11 +110,12 @@ function update_url(resource_id)
 		updated_url += query_params + "&resource_id=" + resource_id + "?"; 
 	updated_url = updated_url.substring(0, updated_url.length - 1);
 	window.history.pushState({"url":location.href}, "resource_id" + resource_id, updated_url);
+	popped = true;
 	//document.title = resource_title;
 }
 
 //To detect if its an initial page load or a reload from the History entry in Safari.
-var popped = ('state' in window.history), initialURL = location.href;
+var popped = false, initialURL = location.href;
 window.onpopstate = function(e){
 	var initialPop = !popped && location.href == initialURL;
 	popped = true;
