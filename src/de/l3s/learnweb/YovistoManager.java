@@ -1,6 +1,5 @@
 package de.l3s.learnweb;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -38,11 +37,11 @@ public class YovistoManager
 	ResourceManager resourceManager = learnweb.getResourceManager();
 
 	ResultSet result = null;
-	User rishita = learnweb.getUserManager().getUser(7727);
-
+	/*User rishita = learnweb.getUserManager().getUser(7727);
+	
 	for(Resource resource : yovistoGroup.getResources())
 	{
-
+	
 	    int id = resource.getThumbnail0().getFileId();
 	    File fileName = new File("uploaded_files/" + id + ".dat");
 	    if(fileName.exists())
@@ -57,13 +56,14 @@ public class YovistoManager
 		    catch(IOException e)
 		    {
 			log.error("Black and white images not reset for the resource.", e);
-
+	
 		    }
+	
 		}
 	    }
-
+	
 	}
-	System.exit(0);
+	System.exit(0);*/
 	try
 	{
 
