@@ -105,15 +105,17 @@
 									<span class="trimmed-text">#{filter.name}</span>
 									<span class="arrow"></span>
 								</span>
-								<h:panelGroup styleClass="filter-sub-bar" layout="block">
-									
-									<p:commandButton value="#{filter.anyText}" action="#{groupDetailBean.changeFilters(filter.anyUrl)}" update=":datagrid :paginator :filters" styleClass="#{!filter.active ? 'active' : null}"/>
+								<ul class="filter-sub-bar">
+									<li class="#{!filter.active ? 'active' : null}">
+										<p:commandButton value="#{filter.anyText}" action="#{groupDetailBean.changeFilters(filter.anyUrl)}" update=":datagrid :paginator :filters"/>
+									</li>
 									
 									<ui:repeat value="#{filter.items}" var="item">
-										<p:commandButton value="#{item.name} #{item.counter != null ? '('.concat(item.counter).concat(')') : null}" action="#{groupDetailBean.changeFilters(item.url)}" update=":datagrid :paginator :filters" styleClass="#{item.active ? 'active' : null}"/>
+										<li class="#{item.active ? 'active' : null}">
+											<p:commandButton value="#{item.name} #{item.counter != null ? '('.concat(item.counter).concat(')') : null}" action="#{groupDetailBean.changeFilters(item.url)}" update=":datagrid :paginator :filters"/>
+										</li>
 									</ui:repeat>
-									
-								</h:panelGroup>
+								</ul>
 							</li>
 						</ui:repeat>
 						<h:panelGroup rendered="#{groupDetailBean.searchFilters != null}">

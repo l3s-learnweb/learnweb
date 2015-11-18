@@ -627,7 +627,7 @@ form#center_header_form { float:right; }
 	display: none;
 }
 
-.resources-filters .filter-sub-bar {
+.resources-filters ul.filter-sub-bar {
 	display: none;
 	position: absolute;
 	top: 3.1rem;
@@ -639,24 +639,25 @@ form#center_header_form { float:right; }
 	margin: -6px -1px;
 }
 
-.resources-filters .filter-sub-bar button {
+.resources-filters ul.filter-sub-bar li {
   display: block;
-  background: none;
-  border: 0;
+  background-color: rgb(230, 230, 230);
   width: 100%;
 }
 
-.resources-filters .filter-sub-bar button span {
-  padding: 0 15px 0 10px;
-  line-height: 32px;
-  white-space: nowrap;
-  text-decoration: none;
+.resources-filters ul.filter-sub-bar li button {
+  background: none !important;
+  border: 0;
+}
+
+.resources-filters ul.filter-sub-bar li button span {
+  padding: 0.6rem 1.5rem 0.5rem;
   color: #000 !important;
   text-align: left;
 }
 
-.resources-filters .filter-sub-bar button.active span,
-.resources-filters .filter-sub-bar button:hover span {
+.resources-filters ul.filter-sub-bar li.active,
+.resources-filters ul.filter-sub-bar li:hover {
 	background: #eee;
 }
 
