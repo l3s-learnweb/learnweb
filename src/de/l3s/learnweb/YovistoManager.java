@@ -1,5 +1,6 @@
 package de.l3s.learnweb;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -37,24 +38,32 @@ public class YovistoManager
 	ResourceManager resourceManager = learnweb.getResourceManager();
 
 	ResultSet result = null;
-	/*User rishita = learnweb.getUserManager().getUser(7727);
+	User rishita = learnweb.getUserManager().getUser(7727);
 
 	for(Resource resource : yovistoGroup.getResources())
 	{
 
-	    try
+	    int id = resource.getThumbnail0().getFileId();
+	    File fileName = new File("uploaded_files/" + id + ".dat");
+	    if(fileName.exists())
 	    {
-		solr.indexResource(resource);
+		double size = fileName.length();
+		if(size < 400.0)
+		{
+		    try
+		    {
+			rpm.processVideo(resource);
+		    }
+		    catch(IOException e)
+		    {
+			log.error("Black and white images not reset for the resource.", e);
+
+		    }
+		}
 	    }
-	    catch(IOException | SolrServerException e)
-	    {
-		log.error(e);
-	    }
-	    System.out.println(resource.getTitle());
 
 	}
-
-	System.exit(0);*/
+	System.exit(0);
 	try
 	{
 
@@ -246,14 +255,7 @@ public class YovistoManager
 	int yovistoId = result.getInt("yovisto_id");
 	resource.setIdAtService(Integer.toString(yovistoId));
 	resource.setFileUrl("http://www.yovisto.com/streams/" + result.getInt("yovisto_id") + ".mp4");
-	resource.setEmbeddedRaw("<embed id=\"embPlayer"
-		+ yovistoId
-		+ "\"  src=\"http://www.yovisto.com/yoexply.swf?vid="
-		+ yovistoId
-		+ "&amp;url=http://www.yovisto.com/streams/"
-		+ yovistoId
-		+ ".mp4&amp;prev="
-		+ result.getString("thumbnail_url")
+	resource.setEmbeddedRaw("<embed id=\"embPlayer" + yovistoId + "\"  src=\"http://www.yovisto.com/yoexply.swf?vid=" + yovistoId + "&amp;url=http://www.yovisto.com/streams/" + yovistoId + ".mp4&amp;prev=" + result.getString("thumbnail_url")
 		+ "\" scale=\"exactfit\" quality=\"high\" name=\"FlashMovie\" swliveconnect=\"true\" allowFullScreen=\"true\" wmode=\"transparent\" pluginspage=\"http://www.macromedia.com/go/getflashplayer\" type=\"application/x-shockwave-flash\" style=\"height:100%; width:100%;\" flashvars=\"var1=0&amp;enablejs=true\"></embed>");
 
 	resource.setAuthor(result.getString("organization"));
