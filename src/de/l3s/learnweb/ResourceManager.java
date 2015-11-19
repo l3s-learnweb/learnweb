@@ -97,7 +97,32 @@ public class ResourceManager
      */
     public List<Resource> getResourcesAll(int page, int pageSize) throws SQLException
     {
-	return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `deleted` = 0 ORDER BY resource_id LIMIT " + (page * pageSize) + "," + pageSize + "", null);
+	return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `deleted` = 1 ORDER BY resource_id LIMIT " + (page * pageSize) + "," + pageSize + "", null);
+    }
+
+    public List<Integer> getInvalidResourceIds() throws SQLException
+    {
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT resource_id FROM lw_resource ORDER BY resource_id ");
+	List<Integer> invalidIds = new LinkedList<>();
+
+	int counter = 1;
+	ResultSet rs = select.executeQuery();
+	while(rs.next())
+	{
+	    int validId = rs.getInt(1);
+
+	    while(counter < validId)
+	    {
+		//System.out.print(counter + ",");
+		invalidIds.add(counter);
+		counter++;
+	    }
+	    counter++;
+	    //System.out.println(validId + " echt");
+	}
+	select.close();
+
+	return invalidIds;
     }
 
     public boolean isResourceRatedByUser(int resourceId, int userId) throws Exception
@@ -217,7 +242,7 @@ public class ResourceManager
 	update.executeUpdate();
 	update.close();
 
-	/* this causes error becaus a thumbnail can be used by multiple resources when they were copied
+	/* this causes problems because a thumbnail can be used by multiple resources when they were copied
 	update = Learnweb.getConnectionStatic().prepareStatement("UPDATE `lw_file` SET deleted = 1 WHERE `resource_id` = ?");
 	update.setInt(1, resourceId);
 	update.executeUpdate();

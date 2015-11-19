@@ -23,9 +23,7 @@ import org.apache.log4j.Logger;
 import org.dom4j.DocumentException;
 
 import de.l3s.archivedemo.ArchiveSearchManager;
-import de.l3s.archivedemo.BingAzure;
 import de.l3s.archivedemo.CDXClient;
-import de.l3s.archivedemo.Query;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnwebBeans.ApplicationBean;
 
@@ -37,6 +35,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
     private static final Logger log = Logger.getLogger(ArchiveDemoBean.class);
     private static final int MAX_API_ERRORS = 3;
 
+    private String querySite;
     private String queryString;
     private List<ResourceDecorator> resources = new LinkedList<>();
     private int page = 1;
@@ -53,6 +52,8 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     public ArchiveDemoBean() throws SQLException
     {
+	log.debug("ArchiveDemoBean() constrcutor");
+
 	HttpSession session = (HttpSession) getFacesContext().getExternalContext().getSession(true);
 	sessionId = session.getId();
 	market = UtilBean.getUserBean().getLocaleAsString().replace("_", "-");
@@ -82,6 +83,8 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 	response.setDateHeader("Expires", 0); // Proxies.
+
+	response.setCharacterEncoding("UTF-8");
     }
 
     public String formatDate(String timestamp) throws ParseException
@@ -94,13 +97,25 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	return df.format(waybackDf.parse(timestamp));
     }
 
-    public String onSearch() throws SQLException
+    public String onSearch() throws SQLException, DocumentException, IOException
     {
-	return "/archive/search.xhtml?includeViewParams=true&amp;faces-redirect=true"; // query=" + StringHelper.urlEncode(queryString) + "
+	log.debug("onSearch: " + queryString);
+	//return "/archive/search.xhtml?faces-redirect=true&amp;includeViewParams=true";//query=" + StringHelper.urlEncode(queryString); //  includeViewParams=true would be better but causes encoding problems
+	//search();
+
+	// strange hack to solve encoding problem on faces redirect
+	byte[] utfBytes = queryString.getBytes("UTF-8");
+	queryString = new String(utfBytes, "ISO-8859-1");
+
+	log.debug("onSearch2: " + queryString);
+
+	return "/archive/search.xhtml?faces-redirect=true&amp;includeViewParams=true";//query=" + StringHelper.urlEncode(queryString); //  includeViewParams=true would be better but causes encoding problems
+
     }
 
     private void search() throws SQLException, DocumentException, IOException
     {
+	//queryString = StringHelper.urlDecode(queryString);
 	// reset values
 	page = 1;
 	pages.clear();
@@ -109,21 +124,33 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	addedResources = 0;
 	relatedEntities = null;
 
+	ArchiveSearchManager archiveSearchManager = getLearnweb().getArchiveSearchManager();
+
+	// check whether a valid entity was entered
+	int queryId = archiveSearchManager.getQueryIdByEntity(market, queryString);
+
+	if(queryId == -1)
+	{
+	    addMessage(FacesMessage.SEVERITY_ERROR, "ArchiveSearch.select_suggested_entity");
+	    return;
+	}
+
+	/*
 	//queryString = StringHelper.urlDecode(queryString);
 	Query q = getLearnweb().getArchiveSearchManager().getQueryByQueryString(market, queryString);
-
+	
 	if(q == null)
 	{
 	    log.debug("No cached query found for: " + queryString + "; market: " + market);
-
+	
 	    q = new Query();
 	    q.setQueryString(queryString);
 	    q.setRequestedResultCount(100);
 	    q.setMarket(market);
-
+	
 	    BingAzure bing = new BingAzure();
 	    bing.search(q, "web");
-
+	
 	    if(q.getLoadedResultCount() == 0)
 	    {
 		addMessage(FacesMessage.SEVERITY_ERROR, "ArchiveSearch.select_suggested_entity");
@@ -132,9 +159,11 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 		return;
 	    }
 	}
-
 	resourcesRaw = q.getResults();
-	resources = getNextPage();
+	
+	*/
+	resourcesRaw = archiveSearchManager.getResultsByQueryId(queryId);
+	getNextPage();
 
 	if(resourcesRaw.size() == 0)
 	    addMessage(FacesMessage.SEVERITY_ERROR, "No archived URLs found");
@@ -231,6 +260,8 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
     {
 	this.market = market;
 
+	log.debug("set market; query: " + queryString);
+
 	return UtilBean.getUserBean().setLocaleCode(market.substring(0, 2));
     }
 
@@ -242,6 +273,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
     public void setQuery(String query)
     {
 	this.queryString = query;
+
     }
 
     public List<ResourceDecorator> getResources()
@@ -251,7 +283,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     public void loadRelatedEntities() throws SQLException
     {
-	if(relatedEntities == null)
+	if(relatedEntities == null && queryString != null)
 	{
 	    long start = System.currentTimeMillis();
 	    // load related entities
@@ -276,7 +308,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 		log.error("Can't get related entities", e);
 	    }
 
-	    log.debug("Loaded related entities in " + (System.currentTimeMillis() - start) + "ms");
+	    log.debug("Loaded " + relatedEntities.size() + " related entities in " + (System.currentTimeMillis() - start) + "ms");
 	}
     }
 

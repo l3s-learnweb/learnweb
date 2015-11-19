@@ -47,7 +47,7 @@
 			<p:ajaxStatus onstart="document.getElementById('loadingsymbol').style.visibility='visible';" 
 				onsuccess="document.getElementById('loadingsymbol').style.visibility='hidden';" />			
 		 
-			<h:form id="searchform" prependId="false" onsubmit="return checkQuery();">
+			<h:form id="searchform" prependId="false" onsubmit="return checkQuery();" acceptcharset="UTF-8">
 				<a href="/archive/search.jsf" id="learnweb_logo">
 					Logo
 				</a>
@@ -64,6 +64,12 @@
 				<h:form>
 					<ul>
 						<li>
+							<h:link includeViewParams="true" outcome="search" value="Deutsch">
+								<f:param name="lang" value="de"/>
+							</h:link>
+							<h:link includeViewParams="true" outcome="search" value="English">
+								<f:param name="lang" value="en"/>
+							</h:link>
 							<h:commandLink action="#{archiveDemoBean.setMarket('de-DE')}" styleClass="language_de">
 								Deutsch
 							</h:commandLink>

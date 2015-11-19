@@ -264,11 +264,26 @@ public class SolrClient
 	
 	indexer.server.deleteByQuery("*:*");
 	indexer.server.commit();*
-	
-	indexer.indexAllResources();
-	
-	System.out.println("end of test.");
 	*/
+	//SolrClient.indexAllResources();
+	SolrClient.deleteInvalidEntries();
+
+	System.out.println("end of test.");
+
+    }
+
+    public static void deleteInvalidEntries() throws SQLException, SolrServerException, IOException
+    {
+	Learnweb learnweb = Learnweb.getInstance();
+	SolrClient indexer = learnweb.getSolrClient();
+
+	List<Integer> invalidIds = learnweb.getResourceManager().getInvalidResourceIds();
+
+	for(int id : invalidIds)
+	{
+	    System.out.println("delete: " + id);
+	    indexer.deleteFromIndex(id);
+	}
     }
 
     /**
@@ -284,7 +299,7 @@ public class SolrClient
 	Learnweb learnweb = Learnweb.getInstance();
 	SolrClient indexer = learnweb.getSolrClient();
 
-	for(int i = 300; i < 301; i++)
+	for(int i = 0; i < 101; i++)
 	{
 
 	    List<Resource> resources = learnweb.getResourceManager().getResourcesAll(i, 1000); // loads all resources (very slow)
@@ -316,8 +331,8 @@ public class SolrClient
 		}*/
 		log.debug("Process resource: " + resource.getId());
 
-		indexer.reIndexResource(resource);
-
+		//indexer.reIndexResource(resource);
+		indexer.deleteFromIndex(resource.getId());
 	    }
 	}
 
