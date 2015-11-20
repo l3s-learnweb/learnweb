@@ -57,7 +57,7 @@
 				           <f:selectItems value="#{tedTranscriptBean.getLanguageList()}"/>
 				           <p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript"/>
 				        </h:selectOneMenu>
-						<p:commandButton styleClass="button_position greenbutton" value="#{msg.save}" onclick="saveEditing();" rendered="#{!tedTranscriptBean.tedResource.primaryGroup.readOnly}"/>
+						<p:commandButton styleClass="button_position greenbutton" value="#{msg.save}" onclick="saveEditing();" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}"/>
 					</h:form>
 				</div>
 				<div class="transcript_note">
@@ -65,10 +65,10 @@
 				</div>
 			</p:outputPanel>
 			<h:panelGroup layout="block" id="transcript">
-				<h:panelGroup layout="block" onmouseup="noteSelectedText()" id="ted_transcript" class="tedTranscript" rendered="#{!tedTranscriptBean.tedResource.primaryGroup.readOnly}">
+				<h:panelGroup layout="block" onmouseup="noteSelectedText()" id="ted_transcript" class="tedTranscript" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 				</h:panelGroup>
-				<h:panelGroup layout="block" class="tedTranscript" rendered="#{tedTranscriptBean.tedResource.primaryGroup.readOnly}">
+				<h:panelGroup layout="block" class="tedTranscript" rendered="#{tedTranscriptBean.tedResource.group.readOnly}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 				</h:panelGroup>
 			</h:panelGroup>
