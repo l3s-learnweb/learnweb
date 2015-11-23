@@ -149,7 +149,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	HashSet<Integer> deletedResources = new HashSet<Integer>();
 	Action[] filter = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
-		Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.group_removing_resource };
+		Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource,
+		Action.group_removing_resource };
 	List<LogEntry> feed = logMessages;
 
 	if(feed != null)
@@ -701,10 +702,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
 	    Group targetGroup = getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId);
 
-	    newResource.setGroup(targetGroup);
+	    newResource.setGroupId(selectedResourceTargetGroupId);
 	    Resource res = getUser().addResource(newResource);
 
-	    if(res.getGroupId() != 0)
+	    if(selectedResourceTargetGroupId != 0)
 	    {
 		addGrowl(FacesMessage.SEVERITY_INFO, "addedResourceToGroup", clickedResource.getTitle(), targetGroup.getTitle());
 	    }
@@ -729,14 +730,14 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     	addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
     	return;
         }
-
+    
         // add resource to a group if selected
         if(selectedResourceTargetGroupId != 0)
         {
     	Group targetGroup = getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId);
     	targetGroup.addResource(clickedResource, getUser());
     	log(Action.adding_resource, selectedResourceTargetGroupId, clickedResource.getId(), "");
-
+    
     	addGrowl(FacesMessage.SEVERITY_INFO, "addedResourceToGroup", clickedResource.getTitle(), targetGroup.getTitle());
         }
         else
@@ -1044,6 +1045,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	solrSearch.setSkipResourcesWithoutThumbnails(false);
 	solrSearch.setFacetFields(searchFilters.getFacetFields());
 	solrSearch.setFacetQueries(searchFilters.getFacetQueries());
+	solrSearch.setSort("timestamp DESC");
 
 	if(searchFilters.getServiceFilter() != null)
 	    solrSearch.setFilterLocation(searchFilters.getServiceFilter());

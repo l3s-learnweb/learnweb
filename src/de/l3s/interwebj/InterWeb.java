@@ -168,7 +168,6 @@ public class InterWeb implements Serializable
 	}
 	String link = root.element("link").getStringValue();
 
-	System.out.println("redirecting to: [" + link + "]");
 	UtilBean.redirect(link);
     }
 
@@ -219,7 +218,6 @@ public class InterWeb implements Serializable
 
     public String getAuthorizeUrl(String callback) throws IllegalResponseException
     {
-	System.out.println("callback: [" + callback + "]");
 	WebResource resource = createPublicWebResource("oauth/OAuthGetRequestToken");
 	ClientResponse response = resource.get(ClientResponse.class);
 	Element root = asXML(response);
@@ -315,7 +313,6 @@ public class InterWeb implements Serializable
 	WebResource resource = createWebResource("users/default/services/" + serviceId + "/auth", getIWToken());
 	ClientResponse response = resource.delete(ClientResponse.class);
 	Element root = asXML(response);
-	System.out.println("revokeAuthorizationOnService" + root.asXML());
 	//force reload
 	resetAuthorizationCache();
     }
@@ -411,7 +408,6 @@ public class InterWeb implements Serializable
 	}
 
 	ClientResponse response = resource.get(ClientResponse.class);
-	//System.out.println(CoreUtils.getClientResponseContent(response));
 
 	if(response.getStatus() != 200)
 	{
@@ -448,9 +444,6 @@ public class InterWeb implements Serializable
      */
     public Resource upload(Resource resource, List<String> selectedUploadServices) throws IllegalResponseException
     {
-	if(selectedUploadServices != null)
-	    for(String s : selectedUploadServices)
-		System.out.println(s);
 
 	@SuppressWarnings("resource")
 	MultiPart multiPart = new MultiPart();
@@ -477,7 +470,7 @@ public class InterWeb implements Serializable
 	try
 	{
 		CoreUtils.printClientResponse(response);
-		System.out.println(CoreUtils.getClientResponseContent(response));
+		log.debug(CoreUtils.getClientResponseContent(response));
 	}
 	catch (IOException e)
 	{

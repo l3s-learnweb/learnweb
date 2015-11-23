@@ -11,6 +11,7 @@ import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
+import org.apache.solr.client.solrj.SolrQuery.ORDER;
 import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.FacetField;
@@ -56,6 +57,7 @@ public class SolrSearch implements Serializable
     private boolean skipResourcesWithoutThumbnails = true;
     private List<FacetField> facetFieldsResult = null;
     private Map<String, Integer> facetQueriesResult = null;
+    private String sorting;
 
     public SolrSearch(String query, User user)
     {
@@ -139,7 +141,7 @@ public class SolrSearch implements Serializable
     {
 	this.filterDateTo = date;
     }
-    
+
     /**
      * Either provide a list of groups
      * 
@@ -343,6 +345,11 @@ public class SolrSearch implements Serializable
 	    }
 	    solrQuery.addFilterQuery(filterGroupStr);
 	}
+
+	if(null != sorting)
+	{
+	    solrQuery.addSortField("timestamp", ORDER.desc);
+	}
 	solrQuery.addFilterQuery("-(id:r_* AND -(groups:* OR ownerUserId:" + userId + "))"); // hide private resources
 	solrQuery.setStart((page - 1) * resultsPerPage);
 	solrQuery.setRows(resultsPerPage);
@@ -536,6 +543,11 @@ public class SolrSearch implements Serializable
 	return resources;
     }
 
+    public void setSort(String sort)
+    {
+	this.sorting = sort;
+    }
+
     private int extractId(String id)
     {
 	try
@@ -578,13 +590,13 @@ public class SolrSearch implements Serializable
 	//search.setFilterType("web");
 	//search.setFilterGroups(128, 151);
 	// location, source and language are not set. this means they do not matter for this search
-
+	
 	// get the first 8 (resultsPerPage) search results 
 	List<ResourceDecorator> page1 = search.getResourcesByPage(1);
-
+	
 	// get the next 8 search results 
 	//List<ResourceDecorator> page2 = search.getResourcesByPage(2);
-
+	
 	// this is only an example it. This search will not necessarily return results
 	*/
     }
@@ -609,4 +621,5 @@ public class SolrSearch implements Serializable
 	    return results;
 	}
     }
+
 }

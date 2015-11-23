@@ -128,8 +128,9 @@ public class UserManager
      * @return list without Admin users
      * @throws SQLException
      */
-    public List<User> removeAdminUsers(List<User> list) throws SQLException
+    public List<User> removeAdminUsers(List<User> list) throws SQLException // TODO remove this method
     {
+
 	List<User> finalList = new ArrayList<User>();
 
 	for(User u : list)

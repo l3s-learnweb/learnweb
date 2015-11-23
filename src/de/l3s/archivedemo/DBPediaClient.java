@@ -65,6 +65,6 @@ public class DBPediaClient
 	DBPediaClient dbPediaClient = new DBPediaClient();
 	ArrayList<Entity> relatedEntities = dbPediaClient.lookup("german chancellor");
 	for(Entity e : relatedEntities)
-	    System.out.println(e.getLabel() + "-" + e.getUri());
+	    log.debug(e.getLabel() + "-" + e.getUri());
     }
 }

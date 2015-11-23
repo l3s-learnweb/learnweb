@@ -200,7 +200,6 @@ public class StringHelper
     {
 	PrettyTime p = new PrettyTime();
 	p.setLocale(locale);
-	System.out.println(p.format(date));
 	return p.format(date);
     }
 

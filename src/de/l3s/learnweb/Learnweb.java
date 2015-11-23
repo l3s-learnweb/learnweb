@@ -226,7 +226,6 @@ public class Learnweb
 
     private void connect() throws SQLException
     {
-	System.out.println(properties.getProperty("mysql_url"));
 	dbConnection = DriverManager.getConnection(properties.getProperty("mysql_url"), properties.getProperty("mysql_user"), properties.getProperty("mysql_password"));
 
 	dbConnection.createStatement().execute("SET @@SQL_MODE = REPLACE(@@SQL_MODE, 'ONLY_FULL_GROUP_BY', '')");

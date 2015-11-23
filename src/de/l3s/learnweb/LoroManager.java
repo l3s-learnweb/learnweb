@@ -41,9 +41,6 @@ public class LoroManager
 	    connProperties.setProperty("user", DB_USER);
 	    connProperties.setProperty("password", DB_PASSWORD);
 	    DBConnection = DriverManager.getConnection(DB_CONNECTION, connProperties);
-
-	    System.out.println("Connected to the database....");
-
 	}
 	catch(SQLException e)
 	{
@@ -189,38 +186,12 @@ public class LoroManager
 	    e.printStackTrace();
 	}
 
-	/*User rishita = learnweb.getUserManager().getUser(7727);
-
-	
-	for(Resource resource : loroGroup.getResources())
-	{
-	    checkConnection(DBConnection);
-	    if(resource.getType().contains("Video") || resource.getType().contains("Image"))
-	    {
-		int idatserv = Integer.parseInt(resource.getIdAtService());
-		PreparedStatement ps = DBConnection.prepareStatement("UPDATE `LORO_resource_docs` SET `resource_id`=" + resource.getId() + "  WHERE `loro_resource_id`=" + idatserv + " AND `doc_url`=\"" + resource.getFileUrl() + "\"");
-		ps.executeUpdate();
-	    }
-	    else
-	    {
-		int idatserv = Integer.parseInt(resource.getIdAtService());
-		PreparedStatement ps1 = DBConnection.prepareStatement("UPDATE `LORO_resource_docs` SET `resource_id`=" + resource.getId() + " WHERE (`loro_resource_id`=" + idatserv + " AND doc_format NOT LIKE \"%image%\") OR (`loro_resource_id`=" + idatserv
-			+ " AND `doc_format` NOT LIKE \"%video%\")");
-		ps1.executeUpdate();
-	    }
-
-	    System.out.println(resource.getTitle());
-
-	}
-
-	System.exit(0);
-	*/
 	getConnection();
 
 	User admin = learnweb.getUserManager().getUser(7727);
 
-	PreparedStatement getLoroResource = DBConnection
-		.prepareStatement("SELECT t1.loro_resource_id , t2.resource_id , t1.description , t1.tags , t1.title , t1.creator_name , t1.course_code , t1.language_level , t1.languages , t1.flag , t1.preview_img_url, t1.added_on , t2.filename , t2.doc_format , t2.doc_url FROM LORO_resource t1 JOIN LORO_resource_docs t2 ON t1.loro_resource_id = t2.loro_resource_id WHERE t1.`loro_resource_id` = ?");
+	PreparedStatement getLoroResource = DBConnection.prepareStatement(
+		"SELECT t1.loro_resource_id , t2.resource_id , t1.description , t1.tags , t1.title , t1.creator_name , t1.course_code , t1.language_level , t1.languages , t1.flag , t1.preview_img_url, t1.added_on , t2.filename , t2.doc_format , t2.doc_url FROM LORO_resource t1 JOIN LORO_resource_docs t2 ON t1.loro_resource_id = t2.loro_resource_id WHERE t1.`loro_resource_id` = ?");
 	PreparedStatement update = DBConnection.prepareStatement("UPDATE LORO_resource_docs SET resource_id = ? WHERE loro_resource_id = ? AND doc_url= ?");
 	PreparedStatement getCount = DBConnection.prepareStatement("SELECT loro_resource_id, COUNT( * ) AS rowcount FROM  `LORO_resource_docs` group by `loro_resource_id`");
 	getCount.executeQuery();
@@ -436,8 +407,9 @@ public class LoroManager
 	else if(rs.getString("doc_format").contains("video"))
 	{
 	    resource.setType("Video");
-	    resource.setEmbeddedRaw("<link href=\"http://vjs.zencdn.net/4.12/video-js.css\" rel=\"stylesheet\"/><script src=\"http://vjs.zencdn.net/4.12/video.js\"></script><video id=\"MY_VIDEO_1\" class=\"video-js vjs-default-skin vjs-big-play-centered\" controls=\"preload=none\" width=\"100%\" height=\"100%\" data-setup=\"{}\"><source src=\""
-		    + rs.getString("doc_url") + "\"> </video>");
+	    resource.setEmbeddedRaw(
+		    "<link href=\"http://vjs.zencdn.net/4.12/video-js.css\" rel=\"stylesheet\"/><script src=\"http://vjs.zencdn.net/4.12/video.js\"></script><video id=\"MY_VIDEO_1\" class=\"video-js vjs-default-skin vjs-big-play-centered\" controls=\"preload=none\" width=\"100%\" height=\"100%\" data-setup=\"{}\"><source src=\""
+			    + rs.getString("doc_url") + "\"> </video>");
 	    String titleFilename = StringHelper.urlDecode(rs.getString("filename"));
 	    resource.setFileName(titleFilename);
 	    resource.setTitle(rs.getString("title") + " - " + titleFilename);

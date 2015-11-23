@@ -54,8 +54,6 @@ public class CDXClient
 	    captures = Integer.parseInt(resource.getMetadataValue("url_captures"));
 	}
 
-	//System.out.println("rank: " + resource.getRankAtService() + "; " + captures + "; " + minCrawlTime + "; " + resource.getTitle());
-
 	if(crawlTime < minCrawlTime) //&& waybackAPIerrors < MAX_API_ERRORS)
 	{
 	    captures = 0;

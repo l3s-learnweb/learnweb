@@ -26,7 +26,7 @@ public class AdminNotificationBean extends ApplicationBean
     private String text;
     @NotEmpty
     private String title;
-	//Alana
+    //Alana
     private String[] listStudents;
 
     public void send() throws SQLException
@@ -41,6 +41,7 @@ public class AdminNotificationBean extends ApplicationBean
 	    return;
 	}
 
+	// tree is used to make sure that every user gets the message only once
 	TreeSet<Integer> selectedUsers = new TreeSet<Integer>();
 	for(String userId : tempSelectedUsers)
 	{
@@ -67,7 +68,7 @@ public class AdminNotificationBean extends ApplicationBean
 	addMessage(FacesMessage.SEVERITY_INFO, counter + " Notifications send");
     }
 
-	//Alana
+    //Alana
     public void send2() throws SQLException
     {
 	System.out.println("Send2");
@@ -103,7 +104,7 @@ public class AdminNotificationBean extends ApplicationBean
 	}
 	addMessage(FacesMessage.SEVERITY_INFO, counter + " Notifications send");
     }
-	
+
     public String getText()
     {
 	return text;
@@ -123,8 +124,8 @@ public class AdminNotificationBean extends ApplicationBean
     {
 	this.title = title;
     }
-	
-	//Alana
+
+    //Alana
     public String[] getListStudents()
     {
 	return listStudents;

@@ -128,7 +128,6 @@ public class FileManager
     {
         if(file.actualFile == null)
         {
-    	System.out.println("file fehlt resource: " + file.getResourceId());
     
     	set.add(file.getResourceId());
     
@@ -152,7 +151,6 @@ public class FileManager
     
     }
     
-    System.out.println("deleted " + set.size());
     }
     */
 
@@ -316,15 +314,16 @@ public class FileManager
 
     public static void main(String[] args) throws SQLException
     {
+	/*
 	Learnweb learnweb = Learnweb.getInstance();
-
+	
 	findAbandonedFiles();
-
-	System.out.println("fertig");
+	
 	learnweb.onDestroy();
+	*/
     }
 
-    private static void findAbandonedFiles() throws SQLException
+    protected static void findAbandonedFiles() throws SQLException
     {
 	FileManager fm = Learnweb.getInstance().getFileManager();
 
@@ -334,36 +333,15 @@ public class FileManager
 	{
 	    if(!file.exists())
 	    {
-		System.out.println(file.toString());
 
 		update.setInt(1, file.getId());
 		update.executeUpdate();
 	    }
-	    else
-		System.out.print(file.getId() + ",");
 
 	}
 
 	update.close();
 
-	/*
-	for(final java.io.File file : fm.folder.listFiles())
-	{
-	    //System.out.println(file.getName());
-	
-	    String[] splits = file.getName().split("\\.");
-	
-	    if(splits[1] == "dat")
-	    {
-		int id = Integer.parseInt(splits[0]);
-		if(fm.getFileById(id) == null)
-		{
-		    System.err.println("abandoned");
-		}
-	
-	    }
-	}
-	*/
     }
 
 }

@@ -6,6 +6,7 @@ import java.util.Date;
 
 import javax.ws.rs.core.Response.Status.Family;
 
+import org.apache.log4j.Logger;
 import org.primefaces.json.JSONArray;
 import org.primefaces.json.JSONException;
 import org.primefaces.json.JSONObject;
@@ -19,6 +20,8 @@ import de.l3s.util.StringHelper;
 public class Entity implements Serializable
 {
     private static final long serialVersionUID = -103883497340301020L;
+    private final static String SERVER = "prometheus.kbs.uni-hannover.de:8890";
+    private final Logger log = Logger.getLogger(Entity.class);
 
     private String type;
     private Boolean supported = false;
@@ -60,8 +63,6 @@ public class Entity implements Serializable
     private String timeZone;
     private JSONObject json;
 
-    private final static String SERVER = "prometheus.kbs.uni-hannover.de:8890";
-
     public static void main(String[] args)
     {
 	Entity ent = new Entity();
@@ -84,7 +85,6 @@ public class Entity implements Serializable
 	    try
 	    {
 		String strangeDBurl = url.substring(url.lastIndexOf('/') + 1);
-		System.out.println("http://" + SERVER + "/resource/" + strangeDBurl);
 
 		// only the last part of the url has to be url encoded
 		strangeDBurl = "http://" + SERVER + "/resource/" + StringHelper.urlEncode(url.substring(url.lastIndexOf('/') + 1));
@@ -150,7 +150,7 @@ public class Entity implements Serializable
 	}
 	else
 	{
-	    System.out.println("Error");
+	    log.error("unpexted status: " + response.getClientResponseStatus());
 	}
     }
 

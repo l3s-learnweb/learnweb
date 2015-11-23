@@ -6,12 +6,13 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 public class PresentationManager
 {
-
+    private final static Logger log = Logger.getLogger(PresentationManager.class);
     private final Learnweb learnweb;
 
     protected PresentationManager(Learnweb learnweb) throws SQLException
@@ -50,7 +51,7 @@ public class PresentationManager
 	}
 	catch(Exception e)
 	{
-	    System.out.println(e);
+	    log.error("presenation error", e);
 	}
 	return p;
     }

@@ -15,39 +15,42 @@ import de.l3s.learnwebBeans.ApplicationBean;
 @RequestScoped
 public class AdminOrganisationBean extends ApplicationBean implements Serializable
 {
-	private static final long serialVersionUID = -4337683111157393180L;
-	private Organisation organisation;
+    private static final long serialVersionUID = -4337683111157393180L;
+    private Organisation organisation;
 
-	public AdminOrganisationBean()
+    public AdminOrganisationBean()
+    {
+	User user = getUser();
+	if(null == user)
+	    return;
+
+	try
 	{
-		User user = getUser();
-		if(null == user)
-			return;
-		
-		try {
-			organisation = user.getOrganisation();
-		}
-		catch (SQLException e) {			
-			e.printStackTrace();
-			addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-		}
+	    organisation = user.getOrganisation();
 	}
-	
-	public void onSave()
+	catch(SQLException e)
 	{
-		System.out.println("on save");
-		
-		try {
-			getLearnweb().getOrganisationManager().save(organisation);
-			addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-		} 
-		catch (SQLException e) {
-			addFatalMessage(e);
-		}		
-		
+	    e.printStackTrace();
+	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	}
+    }
+
+    public void onSave()
+    {
+	try
+	{
+	    getLearnweb().getOrganisationManager().save(organisation);
+	    addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+	}
+	catch(SQLException e)
+	{
+	    addFatalMessage(e);
 	}
 
-	public Organisation getOrganisation() {
-		return organisation;
-	}	
+    }
+
+    public Organisation getOrganisation()
+    {
+	return organisation;
+    }
 }

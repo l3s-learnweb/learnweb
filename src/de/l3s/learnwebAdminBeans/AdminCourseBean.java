@@ -134,7 +134,6 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
 	{
 	    this.courseId = courseId;
 	    loadCourse();
-	    System.out.println("load course:" + courseId);
 	}
 
     }
@@ -156,7 +155,6 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
 
     public void handleFileUpload(FileUploadEvent event)
     {
-	System.out.println("upload");
 
 	UploadedFile uploadedFile = event.getFile();
 
@@ -173,7 +171,6 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
 	    file.setMimeType(info.getMimeType());
 
 	    file = getLearnweb().getFileManager().save(file, uploadedFile.getInputstream());
-	    System.out.println(file.getId());
 
 	    course.setBannerImageFileId(file.getId());
 

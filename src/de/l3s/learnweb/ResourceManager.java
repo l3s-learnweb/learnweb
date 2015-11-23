@@ -113,12 +113,10 @@ public class ResourceManager
 
 	    while(counter < validId)
 	    {
-		//System.out.print(counter + ",");
 		invalidIds.add(counter);
 		counter++;
 	    }
 	    counter++;
-	    //System.out.println(validId + " echt");
 	}
 	select.close();
 
@@ -564,7 +562,6 @@ public class ResourceManager
 	PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_resource_tag WHERE resource_id = ? AND tag_id = ?");
 	delete.setInt(1, resource.getId());
 	delete.setInt(2, tag.getId());
-	System.out.println(delete);
 	delete.executeUpdate();
 	delete.close();
     }
@@ -1132,7 +1129,6 @@ public class ResourceManager
 
 	    if(thumbnail == null)
 	    {
-		//System.out.println("resource: " + resource.getId());
 		continue;
 	    }
 
@@ -1154,15 +1150,10 @@ public class ResourceManager
 
 		Thumbnail thumbnail4 = new Thumbnail(null, image.getWidth(), image.getHeight(), file.getId());
 
-		System.out.println(thumbnail4);
-
 		resource.setThumbnail4(thumbnail4);
 		resource.save();
 	    }
-	    /*
-	    else
-	    System.out.println("schlecht");
-	    */
+
 	}
 
     }
@@ -1188,7 +1179,6 @@ public class ResourceManager
 		null);
 	for(Resource resource : resources)
 	{
-	    System.out.println(resource);
 	    String url = FileInspector.checkUrl(resource.getUrl());
 
 	    if(null == url)
@@ -1208,13 +1198,10 @@ public class ResourceManager
 
 	    if(url.contains("loro") && resource.getMaxImageUrl() != null)
 	    {
-		System.out.println("skipped LORO");
+		log.debug("skipped LORO");
 		continue;
 	    }
 
-	    //System.out.println(url);
-
-	    //System.out.println(IOUtils.toString(FileInspector.openStream(url)));
 	    try
 	    {
 		FileInfo info = new FileInspector().inspect(FileInspector.openStream(url), "unknown");
@@ -1235,7 +1222,7 @@ public class ResourceManager
 		}
 		else if(info.getMimeType().equals("application/pdf"))
 		{
-		    System.out.println("process " + info.getMimeType());
+		    log.debug("process " + info.getMimeType());
 		    resource.setMachineDescription(info.getTextContent());
 
 		    rpm.processFile(resource, FileInspector.openStream(url), info);
@@ -1251,7 +1238,6 @@ public class ResourceManager
 		else
 		    System.err.println(info.getMimeType());
 
-		System.out.println("--------------");
 	    }
 	    catch(Exception e)
 	    {
@@ -1279,7 +1265,6 @@ public class ResourceManager
 	ResourcePreviewMaker rpm = lw.getResourcePreviewMaker();
 	for(Resource resource : resources)
 	{
-	    System.out.println(resource.getUrl());
 	    if(resource.getType().equals("Video") || resource.getType().equals("Image"))
 	    {
 		if(resource.getThumbnail4().getUrl() != null)
@@ -1287,8 +1272,6 @@ public class ResourceManager
 
 		resource.save();
 	    }
-	    else
-		System.out.println(resource.getType());
 	}
     }
 
