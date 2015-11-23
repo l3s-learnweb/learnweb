@@ -18,6 +18,8 @@ public abstract class AbstractPaginator implements Serializable
     private int totalPages;
     private int totalResults = Integer.MIN_VALUE;
 
+    private transient List<ResourceDecorator> currentPageCache = null;
+
     public abstract List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException;
 
     public AbstractPaginator(int totalResults)
@@ -57,6 +59,8 @@ public abstract class AbstractPaginator implements Serializable
     public void setPageIndex(int pageIndex)
     {
 	this.pageIndex = pageIndex;
+
+	setCurrentPageCache(null); // invalidate cache
     }
 
     public int getTotalPages()
@@ -67,6 +71,16 @@ public abstract class AbstractPaginator implements Serializable
     public void setTotalPages(int totalPages)
     {
 	this.totalPages = totalPages;
+    }
+
+    protected List<ResourceDecorator> getCurrentPageCache()
+    {
+	return currentPageCache;
+    }
+
+    protected void setCurrentPageCache(List<ResourceDecorator> currentPageCache)
+    {
+	this.currentPageCache = currentPageCache;
     }
 
     public List<Integer> listPages()

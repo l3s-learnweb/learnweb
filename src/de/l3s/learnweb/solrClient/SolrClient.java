@@ -59,12 +59,15 @@ public class SolrClient
      */
     public void indexResource(Resource resource) throws SQLException, IOException, SolrServerException
     {
+
 	if(resource.getUrl().indexOf("localhost") != -1)
 	{
 	    log.warn("Skip local resource with ID : " + resource.getId());
 	    return;
 	}
 	SolrResourceBean solrResource = new SolrResourceBean(resource);
+
+	log.debug("index resource: " + resource.getId() + " " + solrResource.getDescription());
 
 	server.addBean(solrResource);
 	server.commit();
@@ -265,10 +268,8 @@ public class SolrClient
 	indexer.server.deleteByQuery("*:*");
 	indexer.server.commit();*
 	*/
-	//SolrClient.indexAllResources();
-	SolrClient.deleteInvalidEntries();
-
-	System.out.println("end of test.");
+	SolrClient.indexAllResources();
+	//SolrClient.deleteInvalidEntries();
 
     }
 
@@ -299,10 +300,12 @@ public class SolrClient
 	Learnweb learnweb = Learnweb.getInstance();
 	SolrClient indexer = learnweb.getSolrClient();
 
-	for(int i = 0; i < 101; i++)
+	for(int i = 0; i < 1; i++)
 	{
 
-	    List<Resource> resources = learnweb.getResourceManager().getResourcesAll(i, 1000); // loads all resources (very slow)
+	    //List<Resource> resources = learnweb.getResourceManager().getResourcesAll(i, 1000); // loads all resources (very slow)
+
+	    List<Resource> resources = learnweb.getGroupManager().getGroupById(118).getResources();
 
 	    log.debug("page: " + i);
 
@@ -331,8 +334,7 @@ public class SolrClient
 		}*/
 		log.debug("Process resource: " + resource.getId());
 
-		//indexer.reIndexResource(resource);
-		indexer.deleteFromIndex(resource.getId());
+		indexer.reIndexResource(resource);
 	    }
 	}
 

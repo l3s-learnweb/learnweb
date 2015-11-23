@@ -50,6 +50,7 @@ public class SolrSearch implements Serializable
     private String filterTags = "";
     private String filterPath = "";
     private List<Integer> filterGroupIds;
+    private String sorting;
 
     protected long totalResults = -1;
     private String filterGroupStr = "";
@@ -57,7 +58,6 @@ public class SolrSearch implements Serializable
     private boolean skipResourcesWithoutThumbnails = true;
     private List<FacetField> facetFieldsResult = null;
     private Map<String, Integer> facetQueriesResult = null;
-    private String sorting;
 
     public SolrSearch(String query, User user)
     {
@@ -346,7 +346,7 @@ public class SolrSearch implements Serializable
 	    solrQuery.addFilterQuery(filterGroupStr);
 	}
 
-	if(null != sorting)
+	if(null != sorting) // TODO implement 
 	{
 	    solrQuery.addSortField("timestamp", ORDER.desc);
 	}
@@ -382,7 +382,7 @@ public class SolrSearch implements Serializable
 	solrQuery.setFacetSort("count");
 	solrQuery.setFacetMinCount(1);
 
-	log.debug(solrQuery);
+	log.debug("solr query: " + solrQuery, new Exception());
 
 	//get solrServer
 	SolrServer server = Learnweb.getInstance().getSolrClient().getSolrServer();
@@ -613,10 +613,15 @@ public class SolrSearch implements Serializable
 	}
 
 	@Override
-	public List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException
+	public synchronized List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException
 	{
+	    if(getCurrentPageCache() != null)
+		return getCurrentPageCache();
+
 	    List<ResourceDecorator> results = search.getResourcesByPage(getPageIndex() + 1);
 	    setTotalResults((int) search.getTotalResultCount());
+
+	    setCurrentPageCache(results);
 
 	    return results;
 	}

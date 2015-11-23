@@ -311,8 +311,10 @@ public class InterWeb implements Serializable
     public void revokeAuthorizationOnService(String serviceId) throws IOException, IllegalResponseException
     {
 	WebResource resource = createWebResource("users/default/services/" + serviceId + "/auth", getIWToken());
-	ClientResponse response = resource.delete(ClientResponse.class);
-	Element root = asXML(response);
+	//ClientResponse response = 
+	resource.delete(ClientResponse.class);
+	//	Element root = asXML(response);
+
 	//force reload
 	resetAuthorizationCache();
     }
