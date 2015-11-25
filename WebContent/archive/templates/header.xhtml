@@ -24,7 +24,23 @@
 		    border: medium none !important;
 		    background-color: #F7F7F7;
 		    outline: medium none;
+		}
+		.aboutstyle {
+			width:500px; 
+			height:300px; 
+			float:left;
+		}
+		
+		.aboutstyle h3{
+		
+			font-size:2rem;
+			padding:40px 10px 10px 0px;
+		}
+		.aboutstyle h4{
+		
+			padding:10px 5px 5px 0px;
 		}	
+		
 	</style>
 	<script type="text/javascript">
 	function checkQuery()
@@ -86,78 +102,97 @@
 			<p:graphicImage value="/resources/main-template/img/question.png" alt="#{msg.help}" title="#{msg.help}" onclick="PF('about_dlg').show();" id="informationonscreen" />
 				
 				
-			<p:dialog header="#{msg['ArchiveSearch.about.title']}" widgetVar="about_dlg">				
-				<div class="about_popup">
-					<h2>Archive Search</h2>
-					<div id="about_description">
-						<div>
-							<h3>
-							<h:outputText value="#{msg['ArchiveSearch.about.description.title']}"></h:outputText>
-							</h3>
+			<p:dialog header="#{msg['ArchiveSearch.about.title']}" widgetVar="about_dlg">
+			
+				<div Style="width:1010px; height:500px; margin: 0px; padding: opx;">
+				
+						<div align="center">
+							<h2>Archive Search</h2>
 						</div>
-						<div>
-							<h:outputText value="#{msg['ArchiveSearch.about.description.value']}"></h:outputText>
-						</div>
-					</div>
-					<div id="about_howto">
-						<div>
-							<h3>
-							<h:outputText value="#{msg['ArchiveSearch.about.how_to.title']}"></h:outputText>
-							</h3>
-						</div>
-						<div>
-							<div>
+						
+						<div class="aboutstyle">
+							<div id="about_description">
 								<div>
-									<h4>
-										<h:outputText value="#{msg['ArchiveSearch.about.how_to.blue_link.title']}"></h:outputText>
-									</h4>
+									<h3>
+									<h:outputText value="#{msg['ArchiveSearch.about.description.title']}"></h:outputText>
+									</h3>
 								</div>
 								<div>
-									<h:outputText value="#{msg['ArchiveSearch.about.how_to.blue_link.value']}"></h:outputText>
+									<h:outputText value="#{msg['ArchiveSearch.about.description.value']}"></h:outputText>
 								</div>
 							</div>
-							<div>
+							<div id="about_howto">
 								<div>
-								<h4>
-									<h:outputText value="#{msg['ArchiveSearch.about.how_to.green_link.title']}"></h:outputText>
-								</h4>
+									<h3>
+									<h:outputText value="#{msg['ArchiveSearch.about.how_to.title']}"></h:outputText>
+									</h3>
 								</div>
 								<div>
-									<h:outputText value="#{msg['ArchiveSearch.about.how_to.green_link.value']}"></h:outputText>
+									<div>
+										<div>
+											<h4>
+												<h:outputText value="#{msg['ArchiveSearch.about.how_to.blue_link.title']}"></h:outputText>
+											</h4>
+										</div>
+										<div>
+											<h:outputText value="#{msg['ArchiveSearch.about.how_to.blue_link.value']}"></h:outputText>
+										</div>
+									</div>
+									<div>
+										<div>
+										<h4>
+											<h:outputText value="#{msg['ArchiveSearch.about.how_to.green_link.title']}"></h:outputText>
+										</h4>
+										</div>
+										<div>
+											<h:outputText value="#{msg['ArchiveSearch.about.how_to.green_link.value']}"></h:outputText>
+										</div>
+									</div>
 								</div>
 							</div>
-						</div>
-					</div>
-					<div id="about_basedon">
-						<div>
-							<h3>
-							<h:outputText value="#{msg['ArchiveSearch.about.basedon_link.title']}"></h:outputText>
-							</h3>
-						</div>
-						<div>						
+							<div id="about_basedon">
+								<div>
+									<h3>
+									<h:outputText value="#{msg['ArchiveSearch.about.basedon_link.title']}"></h:outputText>
+									</h3>
+								</div>
+								<div>
+									<h:outputText value="#{msg['ArchiveSearch.about.basedon_link.value']}"></h:outputText>								
+									<a style="color:blue !important; font-weight:light; font-size:1.2rem;" href="https://www.aaai.org/Papers/Workshops/2008/WS-08-15/WS08-15-005.pdf">
+										Milne and Witten 2008
+									</a>	
+									
+															
+								</div>
 							
-							<!-- @felipe link for article -->							
-						</div>
-					</div>
-					
-					<br/>
-					<div align="center">
-						<a href="http://alexandria-project.eu"><img src="http://alexandria-project.eu/wp-content/uploads/2015/07/alexandria_logo_rgb_small-300x233.png" height="94" width="121"  /></a>
-					</div>
-					<!-- 
-					
-					possible to search for any entity from the Wikipedia
-					gives you current results from bing which are also archived by the Internet Archive
-					
-					the blue link ...
-					the green link ...
-					
-					the shown related entities are based on paper xy
-					
-					link to terms of use
-					 -->					
-					</div>
+							</div>
+							
+							<br/>
+							
+								<!-- 
 								
+								possible to search for any entity from the Wikipedia
+								gives you current results from bing which are also archived by the Internet Archive
+								
+								the blue link ...
+								the green link ...
+								
+								the shown related entities are based on paper xy
+								
+								link to terms of use
+								 -->		
+						
+						
+						</div>
+						<div style="width:500px; background-color:red; height:300px; float:left">
+							<img src="/Learnweb-Tomcat/resources/About/help_sample.jpg"></img>
+						</div>						
+				</div>
+				<div align="center">
+					<a href="http://alexandria-project.eu"><img src="http://alexandria-project.eu/wp-content/uploads/2015/07/alexandria_logo_rgb_small-300x233.png" height="94" width="121"  /></a>
+				</div>
+							
+				
 			</p:dialog>			
 
 		</div>
