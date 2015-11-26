@@ -1,6 +1,5 @@
 package de.l3s.archivedemo;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -12,18 +11,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrServer;
-import org.apache.solr.client.solrj.response.QueryResponse;
-import org.apache.solr.common.SolrDocumentList;
 
+import de.l3s.archiveSearch.QueryCompletor;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
@@ -31,12 +24,16 @@ import de.l3s.util.PropertiesBundle;
 
 public class ArchiveSearchManager
 {
-    public static Logger log = Logger.getLogger(ArchiveSearchManager.class);
+    private final static Logger log = Logger.getLogger(ArchiveSearchManager.class);
+    private final static String QUERY_COLUMNS = "query_id, query_string, timestamp";
+
     private PropertiesBundle properties;
     private Connection dbConnection;
     private long lastCheck;
     private HttpSolrServer solr;
     private SimpleDateFormat waybackDateFormat;
+    private QueryCompletor queryCompletorEnglish;
+    private QueryCompletor queryCompletorGerman;
 
     public ArchiveSearchManager(Learnweb learnweb) throws SQLException
     {
@@ -46,9 +43,30 @@ public class ArchiveSearchManager
 	this.solr = new HttpSolrServer("http://prometheus.kbs.uni-hannover.de:8984/solr/WebpageIndex");
 	this.solr.setConnectionTimeout(6000);
 	this.waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+
+	loadQueryCompletor();
     }
 
-    public List<String> getQueryCompletions(String market, String query, int count) throws SQLException
+    /**
+     * loads the query completors asynchronously to memory
+     */
+    public void loadQueryCompletor()
+    {
+	new Thread()
+	{
+	    @Override
+	    public void run()
+	    {
+		queryCompletorEnglish = new QueryCompletor("de/l3s/archiveSearch/main_pages_en.csv");
+		log.debug("Loaded english entities");
+		//queryCompletorGerman = new QueryCompletor("de/l3s/archiveSearch/main_pages_de.csv");
+		log.debug("Loaded german entities");
+	    }
+	}.start();
+
+    }
+
+    public List<String> getQueryCompletionsFromDB(String market, String query, int count) throws SQLException
     {
 	String table = "main_pages_" + market.substring(0, 2);
 
@@ -64,6 +82,20 @@ public class ArchiveSearchManager
 	}
 	select.close();
 	return suggestions;
+    }
+
+    public List<String> getQueryCompletionsFromMem(String market, String query, int count) throws SQLException
+    {
+	// when the index isn't loaded yet use database
+	//if(null == queryCompletorEnglish)
+	//    return getQueryCompletionsFromDB(market, query, count);
+
+	if(market.startsWith("en") && null != queryCompletorEnglish)
+	    return queryCompletorEnglish.getSuggestions(query, count);
+	else if(market.startsWith("de") && null != queryCompletorGerman)
+	    return queryCompletorGerman.getSuggestions(query, count);
+
+	return getQueryCompletionsFromDB(market, query, count);
     }
 
     public List<String> getQuerySuggestionsWikiLink(String market, String query, int count) throws SQLException
@@ -88,45 +120,6 @@ public class ArchiveSearchManager
 	select_suggestions.close();
 	return suggestions;
     }
-
-    @SuppressWarnings("unchecked")
-    public List<String> getQuerySuggestionsSOLR(String market, String query, int count) throws SQLException, SolrServerException, IOException
-    {
-	SolrQuery solrQuery = new SolrQuery();
-	solrQuery.setQuery(query);
-	solrQuery.setFields("query_id");
-	solrQuery.setStart(0);
-
-	QueryResponse response = solr.query(solrQuery);
-	SolrDocumentList results = response.getResults();
-	Set<Long> set = new HashSet<Long>();
-	for(int i = 0; i < results.size(); i++)
-	{
-	    set.add(((ArrayList<Long>) results.get(i).get("query_id")).get(0));
-	    if(set.size() == count)
-		break;
-	}
-
-	ArrayList<String> suggestions = new ArrayList<String>();
-
-	PreparedStatement select = getConnection().prepareStatement("SELECT query_string FROM pw_query WHERE query_id = ?");
-
-	Iterator<Long> it = set.iterator();
-	while(it.hasNext())
-	{
-	    select.setInt(1, it.next().intValue());
-	    ResultSet rs = select.executeQuery();
-	    if(rs.next())
-	    {
-		suggestions.add(rs.getString(1));
-	    }
-	}
-	select.close();
-
-	return suggestions;
-    }
-
-    private final static String QUERY_COLUMNS = "query_id, query_string, timestamp";
 
     /**
      * 
@@ -154,9 +147,10 @@ public class ArchiveSearchManager
     public Query getQueryByQueryString(String market, String queryString) throws SQLException
     {
 	Query query = null;
-	PreparedStatement select = getConnection().prepareStatement("SELECT " + QUERY_COLUMNS + " FROM pw_query WHERE market = ? AND query_string = ? ORDER BY loaded_results DESC LIMIT 1");
-	select.setString(1, market);
+	PreparedStatement select = getConnection().prepareStatement("SELECT " + QUERY_COLUMNS + " FROM pw_query WHERE market LIKE ? AND query_string LIKE ? ORDER BY loaded_results DESC LIMIT 1");
+	select.setString(1, market.substring(0, 2) + "%");
 	select.setString(2, queryString);
+	log.debug(select);
 	ResultSet rs = select.executeQuery();
 	if(rs.next())
 	{
@@ -268,7 +262,7 @@ public class ArchiveSearchManager
     private void prefetchResults(String market, int page) throws SQLException
     {
 	Calendar minCrawlTime = Calendar.getInstance();
-	minCrawlTime.add(Calendar.DATE, -30);
+	minCrawlTime.add(Calendar.DATE, -60);
 	final CDXClient cdxClient = new CDXClient(minCrawlTime.getTime());
 	final int resultsToFetch = 10;
 
@@ -303,7 +297,7 @@ public class ArchiveSearchManager
 		if(archivedResources == resultsToFetch) // have found enough archived resources for this entity -> continue with next entity
 		    break;
 
-		sleep(50);
+		sleep(20);
 	    }
 
 	    checkedEntities++;
@@ -327,7 +321,7 @@ public class ArchiveSearchManager
 
     public static void main(String[] args) throws SQLException
     {
-	for(int page = 58; page < 10000; page++)
+	for(int page = 609; page < 10000; page++)
 	{
 	    log.info("page: " + page);
 	    Learnweb.getInstance().getArchiveSearchManager().prefetchResults("en", page);

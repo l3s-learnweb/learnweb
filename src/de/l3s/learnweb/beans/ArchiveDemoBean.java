@@ -24,6 +24,7 @@ import org.dom4j.DocumentException;
 
 import de.l3s.archivedemo.ArchiveSearchManager;
 import de.l3s.archivedemo.CDXClient;
+import de.l3s.archivedemo.Query;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnwebBeans.ApplicationBean;
 
@@ -71,6 +72,18 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	    return;
 	}
 
+	String language = getParameter("lang");
+	if(language != null)
+	{
+	    log.debug("land ist not null:" + language);
+	    if(language.equalsIgnoreCase("de"))
+		market = "de-DE";
+	    else if(language.equalsIgnoreCase("en"))
+		market = "en-US";
+
+	    setMarket(market);
+	}
+
 	log.debug("pre render: " + queryString);
 	if(queryString != null)
 	    search();
@@ -83,7 +96,6 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
 	response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
 	response.setDateHeader("Expires", 0); // Proxies.
-
 	response.setCharacterEncoding("UTF-8");
     }
 
@@ -127,9 +139,11 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	ArchiveSearchManager archiveSearchManager = getLearnweb().getArchiveSearchManager();
 
 	// check whether a valid entity was entered
-	int queryId = archiveSearchManager.getQueryIdByEntity(market, queryString);
+	//int queryId = archiveSearchManager.getQueryIdByEntity(market, queryString);
 
-	if(queryId == -1)
+	Query query = archiveSearchManager.getQueryByQueryString(market, queryString);
+
+	if(query == null)
 	{
 	    addMessage(FacesMessage.SEVERITY_ERROR, "ArchiveSearch.select_suggested_entity");
 	    return;
@@ -162,7 +176,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	resourcesRaw = q.getResults();
 	
 	*/
-	resourcesRaw = archiveSearchManager.getResultsByQueryId(queryId);
+	resourcesRaw = query.getResults();//archiveSearchManager.getResultsByQueryId(queryId);
 	getNextPage();
 
 	if(resourcesRaw.size() == 0)
@@ -175,7 +189,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     public List<String> completeQuery(String query) throws SQLException
     {
-	return getLearnweb().getArchiveSearchManager().getQueryCompletions(market, query, 20);
+	return getLearnweb().getArchiveSearchManager().getQueryCompletionsFromMem(market, query, 20);
     }
 
     public synchronized LinkedList<ResourceDecorator> getNextPage() throws NumberFormatException, SQLException

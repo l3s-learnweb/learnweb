@@ -70,7 +70,7 @@
 				<a href="/archive/search.jsf" id="learnweb_logo">
 					Logo
 				</a>
-				<p:autoComplete forceSelection="true" value="#{archiveDemoBean.query}" completeMethod="#{archiveDemoBean.completeQuery}" id="archive_searchfield" placeholder="#{msg['ArchiveSearch.search_placeholder']}">
+				<p:autoComplete  queryDelay="50" forceSelection="true" value="#{archiveDemoBean.query}" completeMethod="#{archiveDemoBean.completeQuery}" id="archive_searchfield" placeholder="#{msg['ArchiveSearch.search_placeholder']}">
 					<p:ajax event="itemSelect" oncomplete="$('#searchbutton').click()"  />
 				</p:autoComplete>		
 				<h:commandButton value=" " action="#{archiveDemoBean.onSearch}" id="searchbutton" title="#{msg.searchLabel}"/>
@@ -83,21 +83,15 @@
 				<h:form>
 					<ul>
 						<li>
-							<h:link includeViewParams="true" outcome="search" value="Deutsch">
+							<h:link includeViewParams="true" outcome="search" value="Deutsch" styleClass="language_de">
 								<f:param name="lang" value="de"/>
 							</h:link>
-							<h:link includeViewParams="true" outcome="search" value="English">
+						</li>
+						<li>
+							<h:link includeViewParams="true" outcome="search" value="English" styleClass="language_us">
 								<f:param name="lang" value="en"/>
-							</h:link>
-							<h:commandLink action="#{archiveDemoBean.setMarket('de-DE')}" styleClass="language_de">
-								Deutsch
-							</h:commandLink>
-						</li>
-						<li> 
-							<h:commandLink action="#{archiveDemoBean.setMarket('en-US')}" styleClass="language_us">
-								English
-							</h:commandLink>
-						</li>
+							</h:link>	
+						</li>						
 					</ul>
 				</h:form>
 			</div>

@@ -110,9 +110,12 @@
   <listener>
     <listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
   </listener>
-  <listener>
+  <!-- 
+    <listener>
     <listener-class>de.l3s.searchlogclient.MyHttpSessionListener</listener-class>
   </listener>
+  -->
+  
   <servlet>
     <description>Simple Servlet for Streaming Files to the Clients Browser</description>
     <display-name>Simple DownloadServlet</display-name>

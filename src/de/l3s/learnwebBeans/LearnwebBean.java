@@ -11,6 +11,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
+import org.apache.log4j.Logger;
+
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
@@ -20,6 +22,8 @@ import de.l3s.learnweb.beans.UtilBean;
 public class LearnwebBean implements Serializable
 {
     private static final long serialVersionUID = 1286475643761742147L;
+    private static final Logger log = Logger.getLogger(LearnwebBean.class);
+
     private transient Learnweb learnweb;
     private final String contextUrl;
 
@@ -34,6 +38,8 @@ public class LearnwebBean implements Serializable
 
 	learnweb = Learnweb.getInstance();
 	learnweb.setContextUrl(contextUrl);
+
+	log.debug("created LearnwebBean: contextUrl=" + contextUrl);
     }
 
     @PostConstruct
@@ -41,7 +47,6 @@ public class LearnwebBean implements Serializable
     {
 	// initialize stuff which is not required by console tasks
 	learnweb.initLearnwebServer();
-
     }
 
     /**

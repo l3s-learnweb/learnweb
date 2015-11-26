@@ -3,10 +3,11 @@ make a note for every lib you add
 commons-beanutils-1.8.3.jar			JSF Base
 commons-codec-1.3.jar				JSF Base, Dependency of Google API
 commons-collections-3.2.jar			JSF Base
+commons-collections4-4.0.jar		ArchiveSearch
 commons-digester-1.8.jar			JSF Base
 commons-fileupload-1.3.jar			primefaces file upload
 commons-io-2.4.jar					FileManager, primefacces file upload
-commons-lang3-3.1.jar				Interweb, primefaces-extensions, Others
+commons-lang3-3.1.jar				Interweb, primefaces-extensions, Others, ArchiveSearch
 commons-logging-1.1.1.jar			JSF Base, Dependency of Google API
 core.jar							Added by Trevor; for sprql client?
 dom4j-2.0.0-ALPHA-2.jar				Interweb
@@ -33,17 +34,17 @@ jsoup-1.7.1.jar						Resource, remove Html from String
 log4j-1.2.17.jar					Logging
 mail-1.4.4.jar						Interweb (Jersey)
 myfaces-bundle-2.1.8.jar			JSF Base
-nekohtml-1.9.13.jar					added by Asharma 
+# nekohtml-1.9.13.jar					added by Asharma 
 mysql-connector-java-5.1.22-bin.jar	MySQL
 oauth-client-1.5.jar				Interweb
 oauth-signature-1.5.jar				Interweb
 PDFRenderer-0.9.1.jar				ResourcePreviewMaker
-simmetrics-1.3.jar					added by Asharma; maybe for the query suggestion
-simpack-0.91-bin.jar				added by Asharma 
+# simmetrics-1.3.jar					added by Asharma; maybe for the query suggestion
+# simpack-0.91-bin.jar				added by Asharma 
 primefaces-3.4.1.jar				JSF Base
 validation-api-1.0.0.GA.jar			Hibernate validator
 urlrewritefilter-4.0.3.jar			needed to redirect /new to /
-xerces-2.9.1.jar					added by Asharma 
+# xerces-2.9.1.jar					added by Asharma 
 
 # sort your input
 apache-solr-analysis-extras-4.0.0.jar	SolrClient,added by Siyu

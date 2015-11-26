@@ -4,11 +4,8 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
 
-import javax.faces.bean.ManagedBean;
-
 import org.hibernate.validator.constraints.NotEmpty;
 
-@ManagedBean
 public class ForumPost implements Serializable
 {
     private static final long serialVersionUID = 4093915855537221830L;

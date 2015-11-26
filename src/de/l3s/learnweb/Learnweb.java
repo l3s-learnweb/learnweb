@@ -13,9 +13,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.faces.bean.ApplicationScoped;
-import javax.faces.bean.ManagedBean;
-
 import org.apache.log4j.Logger;
 
 import de.l3s.archivedemo.ArchiveSearchManager;
@@ -25,8 +22,6 @@ import de.l3s.learnweb.solrClient.SolrClient;
 import de.l3s.searchlogclient.SearchLogClient;
 import de.l3s.util.PropertiesBundle;
 
-@ManagedBean
-@ApplicationScoped
 public class Learnweb
 {
     public final static String salt1 = "ff4a9ff19306ee0407cf69d592";
@@ -184,6 +179,8 @@ public class Learnweb
 	    jobScheduler.startAllJobs();
 	else
 	    log.debug("JobScheduler not started in local mode");
+
+	//archiveSearchManager.loadQueryCompletor();
     }
 
     public FileManager getFileManager()

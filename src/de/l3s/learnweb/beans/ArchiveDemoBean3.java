@@ -146,7 +146,7 @@ public class ArchiveDemoBean3 extends ApplicationBean implements Serializable
 
     public List<String> completeQuery(String query) throws SQLException
     {
-	return getLearnweb().getArchiveSearchManager().getQueryCompletions(market, query, 20);
+	return getLearnweb().getArchiveSearchManager().getQueryCompletionsFromMem(market, query, 20);
     }
 
     public synchronized LinkedList<ResourceDecorator> getNextPage() throws NumberFormatException, SQLException
