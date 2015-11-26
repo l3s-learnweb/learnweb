@@ -37,32 +37,54 @@ public class YovistoManager
 	ResourceManager resourceManager = learnweb.getResourceManager();
 
 	ResultSet result = null;
-	/*User rishita = learnweb.getUserManager().getUser(7727);
-	
-	for(Resource resource : yovistoGroup.getResources())
+	User rishita = learnweb.getUserManager().getUser(7727);
+
+	/*for(Resource resource : yovistoGroup.getResources())
 	{
+	    int id = -1;
+	    try
+	    {
 	
-	    int id = resource.getThumbnail0().getFileId();
+		id = resource.getThumbnail0().getFileId();
+	    }
+	    catch(Exception e)
+	    {
+		log.error("Error in getting thumbnail id", e);
+	    }
+	    if(id < 0)
+		continue;
 	    File fileName = new File("uploaded_files/" + id + ".dat");
 	    if(fileName.exists())
 	    {
 		double size = fileName.length();
-		if(size < 400.0)
+	
+		if(size < 500.0)
 		{
+		    System.out.println(fileName);
 		    try
 		    {
 			rpm.processVideo(resource);
 		    }
-		    catch(IOException e)
+		    catch(Exception e)
 		    {
 			log.error("Black and white images not reset for the resource.", e);
 	
 		    }
+		    try
+		    {
+			Thread.sleep(1000);
+		    }
+		    catch(InterruptedException e)
+		    {
+			log.error(e);
+		    }
+		    resource.save();
 	
 		}
 	    }
 	
 	}
+	System.out.println("Exit");
 	System.exit(0);*/
 	try
 	{
