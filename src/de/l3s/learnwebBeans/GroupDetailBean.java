@@ -1066,10 +1066,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	if(searchFilters.getTagsFilter() != null)
 	    solrSearch.setFilterTags(searchFilters.getTagsFilter());
 
-	searchFilters.putResourceCounter(solrSearch.getFacetFields());
-	searchFilters.putResourceCounter(solrSearch.getFacetQueries());
-
-	return new SolrSearch.SearchPaginator(solrSearch);
+	SearchPaginator sp = new SolrSearch.SearchPaginator(solrSearch);
+	searchFilters.putResourceCounter(sp.getFacetFields());
+	searchFilters.putResourceCounter(sp.getFacetQueries());
+	return sp;
     }
 
     public List<SelectItem> getMembersSelectItemList() throws SQLException

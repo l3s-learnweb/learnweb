@@ -606,6 +606,9 @@ public class SolrSearch implements Serializable
 	private final static long serialVersionUID = 3823389610985272265L;
 	private final SolrSearch search;
 
+	private List<FacetField> facetFieldsResult = null;
+	private Map<String, Integer> facetQueriesResult = null;
+
 	public SearchPaginator(SolrSearch search)
 	{
 	    super();
@@ -620,10 +623,48 @@ public class SolrSearch implements Serializable
 
 	    List<ResourceDecorator> results = search.getResourcesByPage(getPageIndex() + 1);
 	    setTotalResults((int) search.getTotalResultCount());
+	    facetFieldsResult = search.getFacetFields();
+	    facetQueriesResult = search.getFacetQueries();
 
 	    setCurrentPageCache(results);
 
 	    return results;
+	}
+
+	public List<FacetField> getFacetFields()
+	{
+	    if(facetFieldsResult == null)
+	    {
+		try
+		{
+		    getCurrentPage();
+		}
+		catch(SQLException | SolrServerException e)
+		{
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
+	    }
+
+	    return facetFieldsResult;
+	}
+
+	public Map<String, Integer> getFacetQueries()
+	{
+	    if(facetQueriesResult == null)
+	    {
+		try
+		{
+		    getCurrentPage();
+		}
+		catch(SQLException | SolrServerException e)
+		{
+		    // TODO Auto-generated catch block
+		    e.printStackTrace();
+		}
+	    }
+
+	    return facetQueriesResult;
 	}
     }
 
