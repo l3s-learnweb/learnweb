@@ -59,7 +59,7 @@ public class ArchiveSearchManager
 	    {
 		queryCompletorEnglish = new QueryCompletor("de/l3s/archiveSearch/main_pages_en.csv");
 		log.debug("Loaded english entities");
-		//queryCompletorGerman = new QueryCompletor("de/l3s/archiveSearch/main_pages_de.csv");
+		queryCompletorGerman = new QueryCompletor("de/l3s/archiveSearch/main_pages_de.csv");
 		log.debug("Loaded german entities");
 	    }
 	}.start();

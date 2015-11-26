@@ -139,16 +139,19 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	ArchiveSearchManager archiveSearchManager = getLearnweb().getArchiveSearchManager();
 
 	// check whether a valid entity was entered
-	//int queryId = archiveSearchManager.getQueryIdByEntity(market, queryString);
+	int queryId = archiveSearchManager.getQueryIdByEntity(market, queryString);
 
-	Query query = archiveSearchManager.getQueryByQueryString(market, queryString);
-
-	if(query == null)
+	if(queryId == -1)
 	{
-	    addMessage(FacesMessage.SEVERITY_ERROR, "ArchiveSearch.select_suggested_entity");
-	    return;
-	}
+	    Query query = archiveSearchManager.getQueryByQueryString(market, queryString);
 
+	    if(query == null)
+	    {
+		addMessage(FacesMessage.SEVERITY_ERROR, "ArchiveSearch.select_suggested_entity");
+		return;
+	    }
+	    queryId = query.getId();
+	}
 	/*
 	//queryString = StringHelper.urlDecode(queryString);
 	Query q = getLearnweb().getArchiveSearchManager().getQueryByQueryString(market, queryString);
@@ -176,7 +179,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	resourcesRaw = q.getResults();
 	
 	*/
-	resourcesRaw = query.getResults();//archiveSearchManager.getResultsByQueryId(queryId);
+	resourcesRaw = archiveSearchManager.getResultsByQueryId(queryId);
 	getNextPage();
 
 	if(resourcesRaw.size() == 0)
