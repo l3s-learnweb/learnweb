@@ -25,7 +25,7 @@ $(document).ready(function(){
 	      gapi.auth2.init(
 	    	{
 	    		fetch_basic_profile: true,
-	    		scope:'profile'
+	    		scope:'https://www.googleapis.com/auth/plus.login'
 	    	}).then(
 	            function (){
 	              console.log('init google sign in');
