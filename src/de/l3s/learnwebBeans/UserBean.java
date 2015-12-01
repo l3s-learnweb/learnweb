@@ -428,6 +428,14 @@ public class UserBean implements Serializable
 	return getActiveCourse().getOption(Course.Option.Search_History_log_enabled);
     }
 
+    public boolean isGoogleDocsSignInEnabled()
+    {
+	if(!isLoggedIn())
+	    return false;
+
+	return getActiveCourse().getOption(Course.Option.Course_Google_Docs_Sign_In_enabled);
+    }
+
     /**
      * Model for the group menu
      * 

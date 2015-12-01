@@ -21,7 +21,8 @@ public class Course implements Serializable, Comparable<Course>
 	Course_Forum_enabled,
 	Services_Allow_user_to_logout_from_interweb,
 	Groups_Hide_newest_resource,
-	Search_History_log_enabled
+	Search_History_log_enabled,
+	Course_Google_Docs_Sign_In_enabled
     }
 
     private int id;

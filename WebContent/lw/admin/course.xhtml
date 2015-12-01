@@ -19,7 +19,7 @@
 	<ui:define name="center_layout">
 
 		<p:panel header="#{adminCourseBean.course.title} - #{msg.course}">
-			<h:form id="course_form" >
+			<h:form id="course_form" prependId="false">
 				<h:panelGrid columns="3" columnClasses="medium-width">
 					
 					<h:outputText value="#{msg.title}:" />
@@ -56,11 +56,11 @@
 				<p:editor value="#{adminCourseBean.course.welcomeMessage}" width="600" />
 			 
 			 	<br/>
-				<p:accordionPanel autoHeight="false">
-					<c:forEach items="#{adminCourseBean.optionGroups}" var="group">					
+				<p:accordionPanel autoHeight="false" id="courseoptions">
+					<c:forEach items="#{adminCourseBean.optionGroups}" var="group" varStatus="status">					
 
-						<p:tab title="#{group.title}">
-							<h:dataTable value="#{group.options}" var="option">
+						<p:tab title="#{adminCourseBean.optionGroups[status.index].title}">
+							<h:dataTable value="#{adminCourseBean.optionGroups[status.index].options}" var="option">
 								<h:column>
 									<h:selectBooleanCheckbox value="#{option.value}" id="checkbox"/>
 								</h:column>
@@ -77,7 +77,7 @@
 					#{msg.changes_login_again}
 				</p>		
 				
-				<p:commandButton actionListener="#{adminCourseBean.save}" value="#{msg.save}" update=":growl">
+				<p:commandButton actionListener="#{adminCourseBean.save}" value="#{msg.save}" update=":growl :courseoptions">
 					<f:param name="course_id" value="#{adminCourseBean.courseId}" />
 				</p:commandButton>
 			</h:form>

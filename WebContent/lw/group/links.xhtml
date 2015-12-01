@@ -20,7 +20,9 @@
 	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" />
 
 	<ui:define name="center_layout">
-		
+		<script type="text/javascript">
+			var googleSignInEnabled = #{userBean.googleDocsSignInEnabled};
+		</script>
 		<h:outputScript library="group" name="links.js" target="head"/>
 		<div class="center-header" id="group_header">
 			<span>
