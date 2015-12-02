@@ -382,7 +382,7 @@ public class SolrSearch implements Serializable
 	solrQuery.setFacetSort("count");
 	solrQuery.setFacetMinCount(1);
 
-	log.debug("solr query: " + solrQuery, new Exception());
+	log.debug("solr query: " + solrQuery);
 
 	//get solrServer
 	SolrServer server = Learnweb.getInstance().getSolrClient().getSolrServer();

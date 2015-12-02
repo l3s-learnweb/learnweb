@@ -8,7 +8,7 @@
 	<ui:param name="disableGrowl" value="true" />
 
 	<ui:define name="center_layout">
-		<h:outputStylesheet library="frontpage" name="index2.css" />
+		<h:outputStylesheet library="frontpage" name="index3.css" />
 
 		<div class="content_box">
 			<h1>
@@ -50,19 +50,19 @@
 				<br/>
 				</ui:fragment>
 				
-			
-				<h2 class="page_header">
-					#{msg.video_guide}
-				</h2>
-				<p:lightBox>
-					<div class="video_guide">
-						<h:outputLink value="#"/>
-						<f:facet name="inline">
-							<iframe width="1000" height="563" src="https://www.youtube.com/embed/hWA-YdiHIWw"/>
-						</f:facet>
-					</div>
-				</p:lightBox>
-
+				<ui:remove>
+					<h2 class="page_header">
+						#{msg.video_guide}
+					</h2>
+					<p:lightBox>
+						<div class="video_guide">
+							<h:outputLink value="#"/>
+							<f:facet name="inline">
+								<iframe width="1000" height="563" src="https://www.youtube.com/embed/hWA-YdiHIWw"/>
+							</f:facet>
+						</div>
+					</p:lightBox>
+				</ui:remove>
 			</div>
 		
 		

@@ -25,7 +25,7 @@ import de.l3s.util.PropertiesBundle;
 public class ArchiveSearchManager
 {
     private final static Logger log = Logger.getLogger(ArchiveSearchManager.class);
-    private final static String QUERY_COLUMNS = "query_id, query_string, timestamp";
+    private final static String QUERY_COLUMNS = "query_id, query_string, timestamp, loaded_results, requested_results";
 
     private PropertiesBundle properties;
     private Connection dbConnection;
@@ -40,11 +40,9 @@ public class ArchiveSearchManager
 	this.properties = learnweb.getProperties();
 
 	this.dbConnection = DriverManager.getConnection(properties.getProperty("mysql_archive_url"), properties.getProperty("mysql_archive_user"), properties.getProperty("mysql_archive_password"));
-	this.solr = new HttpSolrServer("http://prometheus.kbs.uni-hannover.de:8984/solr/WebpageIndex");
-	this.solr.setConnectionTimeout(6000);
 	this.waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
 
-	loadQueryCompletor();
+	//loadQueryCompletor();
     }
 
     /**
@@ -182,6 +180,8 @@ public class ArchiveSearchManager
 	query.setId(rs.getInt("query_id"));
 	query.setQueryString(rs.getString("query_string"));
 	query.setTimestamp(new Date(rs.getTimestamp("timestamp").getTime()));
+	query.setLoadedResultCount(rs.getInt("loaded_results"));
+	query.setRequestedResultCount(rs.getInt("requested_results"));
 
 	return query;
     }

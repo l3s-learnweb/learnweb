@@ -99,7 +99,7 @@ public class BingAzure
 	query.setLoadedResultCount(loadedResourceDecorators);
 	query.setResults(results);
 
-	//archiveSearchManager.saveQuery(query);
+	archiveSearchManager.saveQuery(query);
 
 	return results;
     }

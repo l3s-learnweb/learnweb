@@ -58,6 +58,7 @@ public class CDXClient
 	{
 	    captures = 0;
 	    waybackAPIrequests++;
+	    int oldwaybackAPIerrors = waybackAPIerrors;
 	    String url = resource.getUrl().substring(resource.getUrl().indexOf("//") + 2); // remove leading http(s)://
 
 	    Date lastCapture = null, firstCapture = getFirstCaptureDate(url);
@@ -74,7 +75,7 @@ public class CDXClient
 		}
 	    }
 
-	    if(waybackAPIerrors == 0)
+	    if(oldwaybackAPIerrors == waybackAPIerrors)
 		archiveSearchManager.cacheCaptureCount(Integer.parseInt(resource.getMetadataValue("query_id")), resource.getRankAtService(), firstCapture, lastCapture, captures);
 	}
 
@@ -132,7 +133,7 @@ public class CDXClient
     public void resetAPICounters()
     {
 	this.waybackAPIrequests = 0;
-	this.waybackAPIrequests = 0;
+	this.waybackAPIerrors = 0;
     }
 
     public int getWaybackAPIerrors()

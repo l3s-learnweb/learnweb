@@ -78,7 +78,9 @@
 			/* --> */
 			</script>
 		
+	        <style type="text/css">
 	        
+	        </style>
 	        <h:panelGrid id="resource_disp">
 	        <h:form>
 			<ui:repeat id="datagrid" var="result" value="#{groupDetailBean.getMembers()}">  
@@ -87,6 +89,8 @@
 		        	<f:setPropertyActionListener target="#{groupDetailBean.clickedUser}" value="#{result}"/>
 			            <div class="members_panelgrid grey_border"> 
 			            	<img src="#{result.image}" width="100" height="100" />
+			            	<div class="star"></div>
+			            	
 			            	<div class="member_username_small">
 			            		#{result.username}
 			            	</div>
