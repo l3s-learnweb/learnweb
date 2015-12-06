@@ -19,7 +19,6 @@ import javax.faces.event.ComponentSystemEvent;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Group;
-import de.l3s.learnweb.OwnerList;
 import de.l3s.learnweb.Presentation;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.User;
@@ -34,7 +33,7 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
     private Group group;
     private List<User> members;
     private List<Resource> resources;
-    private OwnerList<Resource, User> resourcesAll;
+    private LinkedList<Resource> resourcesAll;
     private List<Resource> resourcesText = new LinkedList<Resource>();
     private List<Resource> resourcesMultimedia = new LinkedList<Resource>();
     ArrayList<Resource> titleSlide;
@@ -166,7 +165,7 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
 
 	try
 	{
-	    group = getLearnweb().getGroupManager().getGroupById(groupId);
+	    group = getLearnweb().getGroupManager().getGroupById(groupId, false);
 
 	    if(null == group)
 	    {
@@ -180,7 +179,7 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
 	    prevTitle = presentation.getPresentationName();
 	    prevId = presentation.getPresentationId();
 
-	    resourcesAll = new OwnerList<Resource, User>();
+	    resourcesAll = new LinkedList<Resource>();
 
 	    for(Resource r : presentation.getResources())
 	    {
@@ -287,7 +286,7 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
 	this.selectedResource = selectedResource;
     }
 
-    public OwnerList<Resource, User> getResourcesAll()
+    public LinkedList<Resource> getResourcesAll()
     {
 	return resourcesAll;
     }

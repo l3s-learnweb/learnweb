@@ -14,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.impl.HttpSolrServer;
 
 import de.l3s.archiveSearch.QueryCompletor;
 import de.l3s.learnweb.Learnweb;
@@ -30,7 +29,6 @@ public class ArchiveSearchManager
     private PropertiesBundle properties;
     private Connection dbConnection;
     private long lastCheck;
-    private HttpSolrServer solr;
     private SimpleDateFormat waybackDateFormat;
     private QueryCompletor queryCompletorEnglish;
     private QueryCompletor queryCompletorGerman;

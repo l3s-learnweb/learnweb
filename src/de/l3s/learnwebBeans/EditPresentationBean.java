@@ -27,8 +27,8 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
 {
 
     /**
-	 * 
-	 */
+     * 
+     */
     private static final long serialVersionUID = 5990525657898323276L;
     private static final Logger log = Logger.getLogger(EditPresentationBean.class);
     private int groupId;
@@ -162,7 +162,7 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
 	}
 	try
 	{
-	    group = getLearnweb().getGroupManager().getGroupById(groupId);
+	    group = getLearnweb().getGroupManager().getGroupById(groupId, false); // avoid cache to get a separate instance
 
 	    if(null == group)
 	    {
@@ -172,7 +172,17 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
 
 	    members = group.getMembers();
 
-	    resourcesAll = group.getResources();
+	    //resourcesAll = group.getResources();
+
+	    // make sure the presentations use copies of the resources
+	    resourcesAll = new LinkedList<Resource>();
+
+	    for(Resource r : group.getResources())
+	    {
+		Resource clone = r.clone();
+		clone.setId(r.getId());
+		resourcesAll.add(clone);
+	    }
 
 	    titleSlide = new ArrayList<Resource>();
 	    Resource resource = new Resource();

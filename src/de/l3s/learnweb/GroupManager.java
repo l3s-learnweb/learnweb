@@ -171,7 +171,12 @@ public class GroupManager
      */
     public Group getGroupById(int id) throws SQLException
     {
-	Group group = cache.get(id);
+	return getGroupById(id, true);
+    }
+
+    public Group getGroupById(int id, boolean useCache) throws SQLException
+    {
+	Group group = useCache ? cache.get(id) : null;
 
 	if(null != group)
 	    return group;
@@ -186,7 +191,9 @@ public class GroupManager
 	group = new Group(rs);
 	pstmtGetGroup.close();
 
-	group = cache.put(group);
+	if(useCache)
+	    group = cache.put(group);
+
 	return group;
     }
 
