@@ -26,9 +26,17 @@
 		</div>
 	
 		<h:form style="padding:5px">
-			<p:dataTable var="log" value="#{tedTranscriptBean.simpleTranscriptLogs}" rows="30" paginator="true"
-				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+			<p:dataTable id = "tbl" var="log" value="#{tedTranscriptBean.simpleTranscriptLogs}" rows="30" paginator="true"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
 				rowsPerPageTemplate="20,25,30">
+				 
+				 <f:facet name="{Exporters}">
+            		<h:commandLink>
+                		<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24"/>
+               	 		<p:dataExporter type="xls" target="tbl" fileName="simple_transcript_log"/>
+           	 		</h:commandLink>
+        		</f:facet>
+				
 				<p:column headerText="#{msg.username}">
 					<h:outputText value="#{log.user.username}" />
 				</p:column>
