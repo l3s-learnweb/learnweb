@@ -69,3 +69,5 @@ slf4j-jdk14-1.6.4.jar				SolrClient,added by Siyu
 wstx-asl-3.2.7.jar					SolrClient,added by Siyu
 zookeeper-3.3.6.jar					SolrClient,added by Siyu
 cron4j-2.2.5.jar					Job Scheduler, added by Siyu
+
+poi-3.9-20121203.jar                Primefaces table exporter, added by Rishita Kalyani
