@@ -300,6 +300,8 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     public void loadRelatedEntities() throws SQLException
     {
+	log.debug("load related entites for: " + queryString);
+
 	if(relatedEntities == null && queryString != null)
 	{
 	    long start = System.currentTimeMillis();
@@ -308,29 +310,31 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	    ArchiveSearchManager archiveManager = getLearnweb().getArchiveSearchManager();
 	    try
 	    {
-		relatedEntities = archiveManager.getQuerySuggestionsWikiLink(market, queryString, 10);
-		relatedEntitiesFromSolr = false;
-		/*
-		if(relatedEntities.size() == 0)
+		relatedEntities = archiveManager.getQuerySuggestionsTu2(market, queryString, 10);
+		relatedEntitiesFromSolr = true;
+
+		if(relatedEntities == null || relatedEntities.size() == 0)
 		{
-		    relatedEntities = archiveManager.getQuerySuggestionsSOLR(market, queryString, 10);
-		    relatedEntitiesFromSolr = true;
-		}
-		else
+		    relatedEntities = archiveManager.getQuerySuggestionsWikiLink(market, queryString, 10);
 		    relatedEntitiesFromSolr = false;
-		    */
+		}
 	    }
 	    catch(Exception e)
 	    {
 		log.error("Can't get related entities", e);
 	    }
 
-	    log.debug("Loaded " + relatedEntities.size() + " related entities in " + (System.currentTimeMillis() - start) + "ms");
+	    log.debug("Loaded " + (relatedEntities == null ? "null" : relatedEntities.size()) + " related entities in " + (System.currentTimeMillis() - start) + "ms");
+
+	    if(relatedEntities != null && relatedEntities.size() == 0)
+		relatedEntities = null;
 	}
     }
 
     public List<String> getRelatedEntities()
     {
+	log.debug("getRelatedEntities for: " + queryString + "; size: " + (relatedEntities == null ? "null" : relatedEntities.size()));
+
 	return relatedEntities;
     }
 

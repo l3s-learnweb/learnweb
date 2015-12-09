@@ -1192,36 +1192,7 @@ div#presentation_preview {
 	max-width:100%;
 }
 
-.member_username{
-	font-size:12px;
-	margin-bottom:0px;
-	margin-top:10px;
-}
-.member_username_small{
-	font-size:11px;
-	margin-bottom:0px;
-	margin-top:10px;
-}
-.members_panel{
-	width:140px;
-	height:160px;
-	margin-bottom:4px;
-	position:relative;
-}
-.members_panel_small{
-	width:122px;
-	height:145px;
-	margin-bottom:4px;
-	position:relative;
-}
-.members_panelgrid{
-	float:left;
-	margin-right:20px;
-	text-align:center;
-	width:130px;
-	height:130px;
-	margin-bottom:10px;
-}
+
 
 .resource_panelgrid {width:100%;}
 .resource_panel:HOVER, .members_panel:HOVER{

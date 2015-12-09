@@ -117,6 +117,33 @@ public class ArchiveSearchManager
 	return suggestions;
     }
 
+    public List<String> getQuerySuggestionsTu2(String market, String query, int count) throws SQLException
+    {
+	String table = "suggestions_" + market.substring(0, 2);
+	query = query.replace(' ', '_');
+
+	ArrayList<String> suggestions = new ArrayList<String>(count);
+
+	PreparedStatement select = getConnection().prepareStatement("SELECT suggestions FROM `" + table + "` WHERE page_title = ?");
+	select.setString(1, query);
+	ResultSet rs = select.executeQuery();
+
+	if(rs.next())
+	{
+	    for(String suggestion : rs.getString(1).split(" "))
+	    {
+		suggestion = suggestion.replace('_', ' ');
+		suggestions.add(suggestion);
+	    }
+	}
+	else
+	    log.debug("No Tu2 suggestions found for: " + query);
+
+	select.close();
+
+	return suggestions;
+    }
+
     /**
      * 
      * @param market

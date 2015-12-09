@@ -1,0 +1,48 @@
+.member_username{
+	font-size:12px;
+	margin-bottom:0px;
+	margin-top:10px;
+}
+.member_username_small{
+	font-size:11px;
+	margin-bottom:0px;
+	margin-top:10px;
+}
+.members_panel{
+	width:140px;
+	height:160px;
+	margin-bottom:4px;
+	position:relative;
+}
+.members_panel_small{
+	width:122px;
+	height:145px;
+	margin-bottom:4px;
+	position:relative;
+}
+.members_panelgrid{
+	position: relative;
+	float:left;
+	margin-right:20px;
+	text-align:center;
+	width:130px;
+	height:130px;
+	margin-bottom:10px;
+}
+.member_star {
+	height: 30px;
+	width: 30px;
+	background: url(../resources/group/member_star.gif);
+	background-size: cover;
+}
+.members_panelgrid > .member_star {
+	position: absolute;
+	right: 5px;
+	bottom: 5px;
+}
+.page_header > .member_star {
+	display: inline-block;
+	margin-bottom: -0.9rem;
+	margin-left: 0.5rem;
+	margin-top: -0.1rem;
+}

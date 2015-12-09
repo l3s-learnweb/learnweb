@@ -15,53 +15,56 @@
 
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.groupMember}" />	
-	    		
-		<ui:define name="center_layout">
-			<div class="center-header" id="group_header">
-				<span>
-					#{msg.members}
-				</span> 
-				#{msg.of} #{groupDetailBean.group.title}
-				
-				<h:form id="center_header_form">
-					<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" 
-						styleClass="resource_button greenbutton" update=":growl :group_menu @form :resource_disp" partialSubmit="true" 
-						process="@this" value="#{msg.join_group}">
-						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
-					</p:commandLink>
-				</h:form>
-				
-				<ul>								
-					<li>
-						<a class="" href="./group/overview.jsf?group_id=#{groupDetailBean.group.id}">
-							<h:outputText value="#{msg.overview}" />
-						</a>
-					</li>								
-					<li>
-						<a class="" href="./group/resources.jsf?group_id=#{groupDetailBean.group.id}">
-							<h:outputText value="#{msg.resources}" />
-						</a>
-					</li>								
-					<li>
-						<a class="active" href="./group/members.jsf?group_id=#{groupDetailBean.group.id}">
-							<h:outputText value="#{msg.members}" />
-						</a>
-					</li>								
-					<li>
-						<a class="" href="./group/presentations.jsf?group_id=#{groupDetailBean.group.id}">
-							<h:outputText value="#{msg.presentations}" />
-						</a>
-					</li>								
-					<li>
-						<a class="" href="./group/links.jsf?group_id=#{groupDetailBean.group.id}">
-							<h:outputText value="#{msg.links}" />
-						</a>
-					</li>
-					<li>
-						<a href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
-							<h:outputText value="#{msg.forum}" />
-						</a>
-					</li>
+    		
+	<ui:define name="center_layout">
+	
+		<h:outputStylesheet library="group" name="group.css" />
+
+		<div class="center-header" id="group_header">
+			<span>
+				#{msg.members}
+			</span> 
+			#{msg.of} #{groupDetailBean.group.title}
+			
+			<h:form id="center_header_form">
+				<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" 
+					styleClass="resource_button greenbutton" update=":growl :group_menu @form :resource_disp" partialSubmit="true" 
+					process="@this" value="#{msg.join_group}">
+					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
+				</p:commandLink>
+			</h:form>
+			
+			<ul>								
+				<li>
+					<a class="" href="./group/overview.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.overview}" />
+					</a>
+				</li>								
+				<li>
+					<a class="" href="./group/resources.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.resources}" />
+					</a>
+				</li>								
+				<li>
+					<a class="active" href="./group/members.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.members}" />
+					</a>
+				</li>								
+				<li>
+					<a class="" href="./group/presentations.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.presentations}" />
+					</a>
+				</li>								
+				<li>
+					<a class="" href="./group/links.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.links}" />
+					</a>
+				</li>
+				<li>
+					<a href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
+						<h:outputText value="#{msg.forum}" />
+					</a>
+				</li>
 				<ui:fragment rendered="${userBean.admin || userBean.moderator || groupDetailBean.group.isLeader(userBean.user)}">							
 				<li>
 					<a href="./group/options.jsf?group_id=#{groupDetailBean.group.id}">
@@ -69,62 +72,60 @@
 					</a>
 				</li>
 				</ui:fragment>
-				</ul>
-			</div>
-			
-			<script type="text/javascript">
-			/* <!-- */
-				$("#center_pane").prepend($("#group_header"));
-			/* --> */
-			</script>
+			</ul>
+		</div>
 		
-	        <style type="text/css">
-	        
-	        </style>
-	        <h:panelGrid id="resource_disp">
+		<script type="text/javascript">
+		/* <!-- */
+			$("#center_pane").prepend($("#group_header"));
+		/* --> */
+		</script>	
+      
+        <h:panelGrid id="resource_disp">
 	        <h:form>
-			<ui:repeat id="datagrid" var="result" value="#{groupDetailBean.getMembers()}">  
-		        
-		        <p:commandLink  styleClass="resource_command_link" update=":right_form" oncomplete="update_header()">
-		        	<f:setPropertyActionListener target="#{groupDetailBean.clickedUser}" value="#{result}"/>
-			            <div class="members_panelgrid grey_border"> 
-			            	<img src="#{result.image}" width="100" height="100" />
-			            	<div class="star"></div>
-			            	
-			            	<div class="member_username_small">
-			            		#{result.username}
-			            	</div>
-			            </div>
-		        </p:commandLink>
-		        
-		    </ui:repeat>
+				<ui:repeat id="datagrid" var="result" value="#{groupDetailBean.getMembers()}">  
+			        
+			        <p:commandLink  styleClass="resource_command_link" update=":right_form" oncomplete="update_header()">
+			        	<f:setPropertyActionListener target="#{groupDetailBean.clickedUser}" value="#{result}"/>
+				            <div class="members_panelgrid grey_border"> 
+				            	<img src="#{result.image}" width="100" height="100" />
+				            	<div class="member_star"></div>
+				            	
+				            	<div class="member_username_small">
+				            		#{result.username}
+				            	</div>
+				            	
+				            	<div></div>
+				            </div>
+			        </p:commandLink>	        
+			    </ui:repeat>
 		    </h:form>
-		    </h:panelGrid>
-		</ui:define>
-		
-		<ui:define name="right_layout">
-			<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" 
-				header="#{groupDetailBean.clickedUser.id eq -1? msg.user_details : groupDetailBean.clickedUser.username}" id="right_pane">
-				<div id="right_pane_wrapper">
-					<h:form id="right_form" target="presentation">
-						<script type="text/javascript">
-							function update_header()
-							{
-								//$(".ui-layout-unit-header","#right_pane").html("#{groupDetailBean.clickedUser.username}");
-								$(".ui-layout-unit-header","#right_pane").hide();
-								scroller();
-							}
-						</script>
+	    </h:panelGrid>
+	</ui:define>
+	
+	<ui:define name="right_layout">
+		<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" 
+			header="#{groupDetailBean.clickedUser.id eq -1? msg.user_details : groupDetailBean.clickedUser.username}" id="right_pane">
+			<div id="right_pane_wrapper">
+				<h:form id="right_form" target="presentation">
+					<script type="text/javascript">
+						function update_header()
+						{
+							//$(".ui-layout-unit-header","#right_pane").html("#{groupDetailBean.clickedUser.username}");
+							$(".ui-layout-unit-header","#right_pane").hide();
+							scroller();
+						}
+					</script>
+					
+					<ui:fragment rendered="#{groupDetailBean.clickedUser.id != -1}">
+					
+						<ui:decorate template="/templates/user/profile.xhtml">
+							<ui:param name="user" value="#{groupDetailBean.clickedUser}" />		
+						</ui:decorate>
 						
-						<ui:fragment rendered="#{groupDetailBean.clickedUser.id != -1}">
-						
-							<ui:decorate template="/templates/user/profile.xhtml">
-								<ui:param name="user" value="#{groupDetailBean.clickedUser}" />		
-							</ui:decorate>
-							
-						</ui:fragment>
-					</h:form>
-				</div>
-			</p:layoutUnit>
-		</ui:define>
+					</ui:fragment>
+				</h:form>
+			</div>
+		</p:layoutUnit>
+	</ui:define>
 </ui:composition>
