@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Queue;
 import java.util.TimeZone;
 
 import javax.annotation.PreDestroy;
@@ -56,6 +57,8 @@ public class UserBean implements Serializable
 
     private boolean cacheShowMessageJoinGroup = true;
     private boolean cacheShowMessageAddResource = true;
+
+    private Queue<Long> requests = new LinkedList<>();
 
     public UserBean()
     {
@@ -649,4 +652,10 @@ public class UserBean implements Serializable
     {
 	return StringHelper.getPrettyDate(date, locale);
     }
+
+    public Queue<Long> getRequests()
+    {
+	return requests;
+    }
+
 }

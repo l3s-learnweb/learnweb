@@ -37,11 +37,11 @@
 				ajaxLogRelatedEntity([{name:'rank', value:rank}, {name:'relatedEntity', value:relatedEntity}]); 
 				return true;
 			}			
-			
+			/*
 			$().ready(function() {
 				loadRelatedEntities();
 			});
-			
+			*/
 			<ui:fragment rendered="#{empty archiveDemoBean.query or empty archiveDemoBean.resources}">
 			no_more_results = true;
 			$().ready(function() {

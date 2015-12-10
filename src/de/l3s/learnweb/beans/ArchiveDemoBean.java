@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Queue;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -82,6 +83,21 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 		market = "en-US";
 
 	    setMarket(market);
+	}
+
+	long currentTime = System.currentTimeMillis();
+	Queue<Long> requests = UtilBean.getUserBean().getRequests();
+	requests.add(currentTime);
+
+	if(requests.size() > 5) // allow only 5 requests per minute
+	{
+	    Long oldTime = requests.poll();
+	    log.debug("current: " + currentTime + " old: " + oldTime);
+	    if(oldTime > currentTime - 60000L)
+	    {
+		addMessage(FacesMessage.SEVERITY_WARN, "You are not allowed to make more than 5 requests per minute");
+		return;
+	    }
 	}
 
 	log.debug("pre render: " + queryString);
@@ -188,6 +204,8 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 	ArchiveSearchManager archiveManager = getLearnweb().getArchiveSearchManager();
 
 	archiveManager.logQuery(queryString, sessionId, market);
+
+	loadRelatedEntities();
     }
 
     public List<String> completeQuery(String query) throws SQLException
@@ -333,7 +351,7 @@ public class ArchiveDemoBean extends ApplicationBean implements Serializable
 
     public List<String> getRelatedEntities()
     {
-	log.debug("getRelatedEntities for: " + queryString + "; size: " + (relatedEntities == null ? "null" : relatedEntities.size()));
+	//	log.debug("getRelatedEntities for: " + queryString + "; size: " + (relatedEntities == null ? "null" : relatedEntities.size()));
 
 	return relatedEntities;
     }

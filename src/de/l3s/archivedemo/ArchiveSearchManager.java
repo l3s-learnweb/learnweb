@@ -40,7 +40,7 @@ public class ArchiveSearchManager
 	this.dbConnection = DriverManager.getConnection(properties.getProperty("mysql_archive_url"), properties.getProperty("mysql_archive_user"), properties.getProperty("mysql_archive_password"));
 	this.waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
 
-	//loadQueryCompletor();
+	loadQueryCompletor();
     }
 
     /**
@@ -96,8 +96,9 @@ public class ArchiveSearchManager
 
     public List<String> getQuerySuggestionsWikiLink(String market, String query, int count) throws SQLException
     {
+	market = market.substring(0, 2) + "%";
 	ArrayList<String> suggestions = new ArrayList<String>(count);
-	PreparedStatement select = getConnection().prepareStatement("SELECT query_id FROM `pw_query` WHERE market = ? AND `query_string` LIKE ?");
+	PreparedStatement select = getConnection().prepareStatement("SELECT query_id FROM `pw_query` WHERE market LIKE ? AND `query_string` LIKE ?");
 	select.setString(1, market);
 	select.setString(2, query);
 	ResultSet rs = select.executeQuery();
@@ -114,6 +115,9 @@ public class ArchiveSearchManager
 	    suggestions.add(rs_suggest.getString(1));
 	}
 	select_suggestions.close();
+
+	log.debug("search old suggestions for: " + market + "; " + query + "; " + suggestions.size());
+
 	return suggestions;
     }
 
