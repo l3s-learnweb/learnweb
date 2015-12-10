@@ -34,7 +34,7 @@ public class UserManager
     private final static Logger log = Logger.getLogger(UserManager.class);
 
     // if you change this, you have to change the constructor of User too
-    private final static String COLUMNS = "user_id, username, email, organisation_id, iw_token, iw_secret, active_group_id, image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, is_moderator, image_resource_id, registration_date, password, preferences";
+    private final static String COLUMNS = "user_id, username, email, organisation_id, iw_token, iw_secret, active_group_id, image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, is_moderator, image_resource_id, registration_date, password, preferences, credits";
 
     private Learnweb learnweb;
     private ICache<User> cache;
@@ -370,7 +370,7 @@ public class UserManager
 
     public User save(User user) throws SQLException
     {
-	PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+	PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
 	if(user.getId() < 0) // the User is not yet stored at the database 
 	    replace.setNull(1, java.sql.Types.INTEGER);
@@ -398,6 +398,7 @@ public class UserManager
 
 	Sql.serializeObjectAndSet(replace, 21, user.getPreferences());
 
+	replace.setString(22, user.getCredits());
 	replace.executeUpdate();
 
 	if(user.getId() < 0) // get the assigned id
@@ -441,6 +442,7 @@ public class UserManager
 	user.setInterest(rs.getString("interest"));
 	user.setPhone(rs.getString("phone"));
 	user.setRegistrationDate(rs.getDate("registration_date"));
+	user.setCredits(rs.getString("credits"));
 
 	user.setAdmin(rs.getInt("is_admin") == 1);
 	user.setModerator(rs.getInt("is_moderator") == 1);

@@ -83,19 +83,18 @@
       
         <h:panelGrid id="resource_disp">
 	        <h:form>
-				<ui:repeat id="datagrid" var="result" value="#{groupDetailBean.getMembers()}">  
+				<ui:repeat id="datagrid" var="user" value="#{groupDetailBean.getMembers()}">  
 			        
 			        <p:commandLink  styleClass="resource_command_link" update=":right_form" oncomplete="update_header()">
-			        	<f:setPropertyActionListener target="#{groupDetailBean.clickedUser}" value="#{result}"/>
+			        	<f:setPropertyActionListener target="#{groupDetailBean.clickedUser}" value="#{user}"/>
 				            <div class="members_panelgrid grey_border"> 
-				            	<img src="#{result.image}" width="100" height="100" />
-				            	<div class="member_star"></div>
-				            	
+				            	<img src="#{user.image}" width="100" height="100" />
+				            	<ui:fragment rendered="#{not empty user.credits}">
+				            		<div class="member_star"></div>
+				            	</ui:fragment>
 				            	<div class="member_username_small">
-				            		#{result.username}
+				            		#{user.username}
 				            	</div>
-				            	
-				            	<div></div>
 				            </div>
 			        </p:commandLink>	        
 			    </ui:repeat>

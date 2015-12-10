@@ -11,6 +11,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.TimeZone;
 
+import javax.validation.constraints.Size;
+
 import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.AuthCredentials;
@@ -43,6 +45,8 @@ public class User implements Comparable<User>, Serializable, HasId
     private String interest;
     private String phone;
     private Date registrationDate;
+    @Size(max = 255)
+    private String credits;
 
     private boolean destroyed = false;
 
@@ -681,6 +685,16 @@ public class User implements Comparable<User>, Serializable, HasId
     {
 	if(forumPostCount != -1)
 	    forumPostCount++;
+    }
+
+    public String getCredits()
+    {
+	return credits;
+    }
+
+    public void setCredits(String credits)
+    {
+	this.credits = credits;
     }
 
 }
