@@ -40,7 +40,7 @@ public class ArchiveSearchManager
 	this.dbConnection = DriverManager.getConnection(properties.getProperty("mysql_archive_url"), properties.getProperty("mysql_archive_user"), properties.getProperty("mysql_archive_password"));
 	this.waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
 
-	loadQueryCompletor();
+	//loadQueryCompletor();
     }
 
     /**
