@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+#{query}<!DOCTYPE html>
 <html xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:h="http://java.sun.com/jsf/html" 
 	xmlns:f="http://java.sun.com/jsf/core" 
@@ -28,9 +28,7 @@
 		 
 			<form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
 				<a href="./" id="learnweb_logo">Logo</a>
-				<div>
 				<input type="search" name="query" value="" size="50" maxlength="100" id="searchfield" />
-				</div>
 				<input type="hidden" name="action" value="web" />
 				<input type="submit" value=" " id="searchbutton" title="#{msg.searchLabel}" />
 			</form>

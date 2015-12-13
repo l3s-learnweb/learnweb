@@ -348,9 +348,17 @@ public class ArchiveSearchManager
 	}
     }
 
+    /**
+     * todo starten mit 800, 900, 1000
+     * 
+     * @param args
+     * @throws SQLException
+     */
     public static void main(String[] args) throws SQLException
     {
-	for(int page = 609; page < 10000; page++)
+	int start = Integer.parseInt(args[0]);
+
+	for(int page = start; page < start + 100; page++)
 	{
 	    log.info("page: " + page);
 	    Learnweb.getInstance().getArchiveSearchManager().prefetchResults("en", page);

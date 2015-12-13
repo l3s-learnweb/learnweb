@@ -101,7 +101,7 @@
 				<ul class="entity_links">
 				<ui:repeat var="query" value="#{archiveDemoBean.relatedEntities}">
 					<li>
-						<h:link value="#{query}" outcome="search" styleClass="#{archiveDemoBean.fromSolr? 'suggestSolrWebLink':'suggestWebLink'}">
+						<h:link value="#{query}" outcome="search" styleClass="#{archiveDemoBean.fromSolr? 'suggestSolrWebLink':'suggestWebLink'}" onclick="logRelatedEntity('#{query}', 100)">
 							<f:param name="query" value="#{query}" />
 						</h:link>
 					</li>
