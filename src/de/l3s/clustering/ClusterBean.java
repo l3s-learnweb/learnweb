@@ -7,40 +7,49 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.SessionScoped;
 
-import org.primefaces.model.chart.Axis;
-import org.primefaces.model.chart.AxisType;
-import org.primefaces.model.chart.BubbleChartModel;
-import org.primefaces.model.chart.BubbleChartSeries;
-
+import de.l3s.learnweb.Group;
+import de.l3s.learnweb.GroupManager;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.UserManager;
 import de.l3s.learnwebBeans.ApplicationBean;
 import de.l3s.util.Sql;
 
 @ManagedBean
-@RequestScoped
+@SessionScoped
 public class ClusterBean extends ApplicationBean
 {
     private String jsonTextFormat = null;
+    //Load from jsf pages
     private String classId;
-    private HashMap<Integer, HashMap<String, Long>> listActivities = new HashMap<Integer, HashMap<String, Long>>();
-    private int Min = 10000;
-    private int Max = -10000;
-    private int numOfPoints = 0;
-    private List<Integer> cluster0 = new ArrayList<Integer>(), cluster1 = new ArrayList<Integer>(), cluster2 = new ArrayList<Integer>(), cluster3 = new ArrayList<Integer>(), cluster4 = new ArrayList<Integer>();
-    private BubbleChartModel bubbleModel = new BubbleChartModel();
-    private boolean showBubble = false;
-    private String feature1, feature2, feature1_name, feature2_name;
-    private HashMap<String, String> listFeatures = new HashMap<String, String>();
+    private String groupId;
 
+    private List<Group> groups = new ArrayList<Group>();
+    private List<List<Integer>> cluster = new ArrayList<List<Integer>>();
+    private List<Integer> clusS;
+    private HashMap<Integer, HashMap<String, Long>> listActivities = new HashMap<Integer, HashMap<String, Long>>();
+    private HashMap<String, String> listFeatures = new HashMap<String, String>();
+    private List<StudentClusterInfo> listData = new ArrayList<StudentClusterInfo>();
+
+    //Load info to create the bubbles
+    private List<StudentClusterInfo> cars1 = new ArrayList<StudentClusterInfo>();
+    private List<Point> listPositions = new ArrayList<Point>();
+
+    //Info to create the clusters
+    private int[] Min = { 0, 10000 };
+    private int[] Max = { 0, -10000 };
+    private int numOfPoints = 0;
+    private String numCluster;
+
+    private boolean showBubble = false;
+    private String feature1, feature1_name;
+
+    //Initialize the chart
     public ClusterBean()
     {
 	setShowBubble(false);
-
 	listFeatures.put("Searching", "5");
-	listFeatures.put("Downloading", "32");
 	listFeatures.put("Open Resource", "15");
 	listFeatures.put("Add Resource", "14");
 	listFeatures.put("Delete Resource", "3");
@@ -53,9 +62,53 @@ public class ClusterBean extends ApplicationBean
 	listFeatures.put("Comments", "19");
 	listFeatures.put("Edit Resource", "2");
 	listFeatures.put("Deleting Comments", "17");
+
+	this.listPositions.add(new Point(131.76, 163.75));
+	this.listPositions.add(new Point(361.37, 363.75));
+	this.listPositions.add(new Point(146.85, 133.05));
+	this.listPositions.add(new Point(323, 343.8));
+	this.listPositions.add(new Point(104, 153.72));
+	this.listPositions.add(new Point(307.34, 385.63));
+	this.listPositions.add(new Point(144.20, 197.21));
+	this.listPositions.add(new Point(382.25, 389.09));
+	this.listPositions.add(new Point(189.39, 157.81));
+	this.listPositions.add(new Point(384.90, 324.40));
+	this.listPositions.add(new Point(155.10, 284.19));
+	this.listPositions.add(new Point(315.82, 312.31));
+	this.listPositions.add(new Point(293.96, 331.08));
+	this.listPositions.add(new Point(280.04, 347.77));
+	this.listPositions.add(new Point(285.40, 367.09));
+	this.listPositions.add(new Point(168.25, 192.91));
+	this.listPositions.add(new Point(295.3, 412.22));
+	this.listPositions.add(new Point(315.72, 411.27));
+	this.listPositions.add(new Point(329.64, 424.14));
+	this.listPositions.add(new Point(149.15, 227.55));
+	this.listPositions.add(new Point(367.90, 418.30));
+	this.listPositions.add(new Point(286.52, 214.87));
+	this.listPositions.add(new Point(489.4, 259));
+	this.listPositions.add(new Point(467.9, 259.03));
+	this.listPositions.add(new Point(460.6, 221.26));
+	this.listPositions.add(new Point(404.71, 166.03));
+	this.listPositions.add(new Point(377.11, 170.92));
+	this.listPositions.add(new Point(361.43, 192.28));
+	this.listPositions.add(new Point(261.58, 237.49));
+	this.listPositions.add(new Point(222.75, 243.67));
+	this.listPositions.add(new Point(189.12, 439.64));
+	this.listPositions.add(new Point(227.99, 466.23));
+	this.listPositions.add(new Point(519.23, 418.4));
+	this.listPositions.add(new Point(553.74, 418.40));
+	this.listPositions.add(new Point(572.74, 416.61));
+	this.listPositions.add(new Point(580.33, 334.32));
+	this.listPositions.add(new Point(576.6, 304.32));
+	this.listPositions.add(new Point(562.44, 283.18));
+	this.listPositions.add(new Point(565.44, 283.18));
+	this.listPositions.add(new Point(583.0, 263.1));
+	this.listPositions.add(new Point(538, 241.5));
+	this.listPositions.add(new Point(418.74, 117.73));
+
     }
 
-    // This info doesn't exist in the database
+    // This info doesn't exist in the database, so I have to include it
     public String getNamesFeatures(int feature)
     {
 	String name = "";
@@ -97,176 +150,315 @@ public class ClusterBean extends ApplicationBean
 	case 19:
 	    name = "Comments";
 	    break;
-	case 32:
-	    name = "Downloading";
-	    break;
 	}
 	return name;
     }
 
+    //Load and update info related to the groups
+    public void changeGroup()
+    {
+	int idCourse = Integer.valueOf(this.classId);
+	try
+	{
+	    GroupManager usm = getLearnweb().getGroupManager();
+	    this.setGroups(usm.getGroupsByCourseId(idCourse));
+	}
+	catch(SQLException e)
+	{
+	    e.printStackTrace();
+	}
+    }
+
+    //Function responsible to obtain the list of users
     public void getListUsers() throws NumberFormatException, SQLException
     {
 	UserManager usm = getLearnweb().getUserManager();
 	List<User> l = new ArrayList<User>();
-	l = usm.removeAdminUsers(usm.getUsersByCourseId(Integer.parseInt(classId)));
-	System.out.println(l);
+	if(this.groupId.compareTo("0") == 0)
+	{
+	    l = usm.removeAdminUsers(usm.getUsersByCourseId(Integer.valueOf(this.classId)));
+	    //System.out.println(l);
+	}
+	else
+	{
+	    l = usm.removeAdminUsers(usm.getUsersByGroupId(Integer.valueOf(this.groupId)));
+	    //System.out.println(l);
+	}
 
 	for(User u : l)
 	{
 	    HashMap<String, Long> listAll = new HashMap<String, Long>();
 	    listAll = getActivitiesClass(u.getId());
 	    listActivities.put(u.getId(), listAll);
-	    System.out.println("lista:" + u.getId() + "-" + listAll.toString());
+	    //System.out.println("lista:" + u.getId() + "-" + listAll.toString());
 	}
-	System.out.println("____________");
+	//System.out.println("-------------------------------");
     }
 
+    //APAGAR
     public String[] selectValues(int userId, String codAc1, String codAc2) throws SQLException
     {
-	String[] list = new String[4];
+	String[] list = new String[3];
 
 	Long valueX = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=" + String.valueOf(codAc1));
 	Long valueY = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=" + String.valueOf(codAc2));
 	list[0] = String.valueOf(userId);
 	list[1] = String.valueOf(valueX);
 	list[2] = String.valueOf(valueY);
-	list[3] = "36";
 	return list;
     }
 
-    public void createBubblePlot() throws SQLException
+    //Clean some lists related to the clusters and users
+    public void cleanClusters()
     {
-	String[] list0, list1, list2, list3, list4;
-	bubbleModel = new BubbleChartModel();
-
-	for(int i : cluster0)
-	{
-	    list0 = selectValues(i, this.feature1, this.feature2);
-	    bubbleModel.add(new BubbleChartSeries(list0[0], Integer.valueOf(list0[1]), Integer.valueOf(list0[2]), 36));
-	    bubbleModel.setSeriesColors("00cc66");
-	}
-	for(int i : cluster1)
-	{
-	    list1 = selectValues(i, this.feature1, this.feature2);
-	    bubbleModel.add(new BubbleChartSeries(list1[0], Integer.valueOf(list1[1]), Integer.valueOf(list1[2]), 36));
-	    bubbleModel.setSeriesColors("66cc66");
-	}
-	for(int i : cluster2)
-	{
-	    list2 = selectValues(i, this.feature1, this.feature2);
-	    bubbleModel.add(new BubbleChartSeries(list2[0], Integer.valueOf(list2[1]), Integer.valueOf(list2[2]), 36));
-	    bubbleModel.setSeriesColors("66ff66");
-	}
-	for(int i : cluster3)
-	{
-	    list3 = selectValues(i, this.feature1, this.feature2);
-	    bubbleModel.add(new BubbleChartSeries(list3[0], Integer.valueOf(list3[1]), Integer.valueOf(list3[2]), 36));
-	    bubbleModel.setSeriesColors("93b75f");
-	}
-	for(int i : cluster4)
-	{
-	    list4 = selectValues(i, this.feature1, this.feature2);
-	    bubbleModel.add(new BubbleChartSeries(list4[0], Integer.valueOf(list4[1]), Integer.valueOf(list4[2]), 36));
-	    bubbleModel.setSeriesColors("E7E658");
-	}
-
-	bubbleModel.setTitle("Bubble Chart - User Groups");
-	bubbleModel.getAxis(AxisType.X).setLabel(getNamesFeatures(Integer.valueOf(this.feature1)));
-	bubbleModel.setShadow(false);
-	bubbleModel.setBubbleGradients(true);
-	bubbleModel.setBubbleAlpha(0.5);
-
-	bubbleModel.getAxis(AxisType.X).setTickAngle(-50);
-	Axis yAxis = bubbleModel.getAxis(AxisType.Y);
-	yAxis.setMin(0);
-	yAxis.setMax(250);
-	yAxis.setLabel(getNamesFeatures(Integer.valueOf(this.feature2)));
-	yAxis.setTickAngle(50);
-
-	this.setShowBubble(true);
+	this.cluster = new ArrayList<List<Integer>>();
+	this.listData = new ArrayList<StudentClusterInfo>();
     }
 
-    public void executeClusters() throws NumberFormatException, SQLException
+    //Load the user's name according to his Id
+    public String getUserNamebyId(int cod)
     {
-	//metodo q for calcular os grupos
+	try
+	{
+	    String userName = (String) Sql.getSingleResult("SELECT username FROM lw_user WHERE user_id=" + cod);
+	    return userName;
+	}
+	catch(SQLException e)
+	{
+	    e.printStackTrace();
+	    return null;
+	}
+    }
+
+    //Function called the clusters method and 
+    public void executeGeneralClusters() throws NumberFormatException, SQLException
+    {
+	cleanClusters();
+
+	//getUsers by id group
 	getListUsers();
-	//System.out.println("Max:" + Max + "- Min:" + Min);
+
+	this.setShowBubble(false);
 
 	Iterator<Integer> itr = listActivities.keySet().iterator();
 	KMeans kmeans = new KMeans();
-	kmeans.setNUM_CLUSTERS(5);
-	kmeans.setMAX_COORDINATE(Max);
-	kmeans.setMIN_COORDINATE(Min);
+	kmeans.setNUM_CLUSTERS(Integer.valueOf(numCluster));
+	kmeans.setMAX_COORDINATE(Max[0] / 35);
+	kmeans.setMIN_COORDINATE(Min[0]);
 	kmeans.init();
 
 	while(itr.hasNext())
 	{
 	    int pos = itr.next();
 	    kmeans.setListActivities(listActivities.get(pos));
-	    //Add real values
 	    kmeans.addRealPoints();
 	    kmeans.calculate();
 
 	    //organize the clusters
 	    defineCluster(kmeans, pos);
 	}
-	plotClusters(0, cluster0);
-	plotClusters(1, cluster1);
-	plotClusters(2, cluster2);
-	plotClusters(3, cluster3);
-	plotClusters(4, cluster4);
 
-	//Format and Set the dataset String
-	//jsonTextConstrut();
-	createBubblePlot();
+	int count = 0;
+	for(int i = 0; i < Integer.valueOf(numCluster); i++)
+	{
+	    int value = 0;
+	    //plotClusters(i, cluster.get(i)); //print the groups on console (for me)
+	    double r_old = 0;
+
+	    for(int j : cluster.get(i))
+	    {
+		double r = interactionaProfileFunction(listActivities.get(j));
+
+		StudentClusterInfo st = new StudentClusterInfo();
+		st.setRadius(r);
+		st.setNome(this.getUserNamebyId(j));
+		st.setInfo(this.loadInfoBubble(listActivities.get(j), this.getUserNamebyId(j)));
+		st.setCx(listPositions.get(value).getX() + r_old + r);
+		st.setCy(listPositions.get(value).getY());
+
+		value++;
+
+		switch(count)
+		{
+		case 0:
+		    st.setColor("#3182BD");
+		    break;
+		case 1:
+		    st.setColor("#3D93C4");
+		    break;
+		case 2:
+		    st.setColor("#42A9E5");
+		    break;
+		case 3:
+		    st.setColor("#48B2DE");
+		    break;
+		case 4:
+		    st.setColor("#6BAED6");
+		    break;
+		default:
+		    break;
+		}
+		listData.add(st);
+		st.toString();
+	    }
+	    count++;
+	}
+
+	/*System.out.println("ListaData Final");
+	for(StudentClusterInfo s : listData)
+	    System.out.println("-" + s);
+	*/
     }
 
+    //Verify some null values in cluster
+    public boolean otherValuesNull(List<Integer> s, int pos)
+    {
+	int count = 0;
+	for(int i = 0; i < s.size(); i++)
+	{
+	    if((i != pos) && (s.get(i) == 0))
+	    {
+		count++;
+	    }
+	}
+	if(count == s.size() - 1)
+	    return true;
+	else
+	    return false;
+    }
+
+    public void updateVar()
+    {
+	for(int i = 0; i < Integer.valueOf(numCluster); i++)
+	{
+	    this.clusS.add(i, getClusS(i));
+	}
+    }
+
+    //verify if all point of cluster interaction are null
+    public boolean nullAllPoints(Cluster clusters)
+    {
+	int notNull = 0;
+	for(Point p : clusters.getPoints())
+	{
+	    if(p.getX() == 0)
+		notNull++;
+	}
+
+	if(notNull == clusters.getPoints().size())
+	    return true;
+	return false;
+    }
+
+    //Function responsible for include the users in its cluster according the most predominant behavior
     public void defineCluster(KMeans k, int id)
     {
-	int val0 = 0, val1 = 0, val2 = 0, val3 = 0, val4 = 0;
-	val0 = k.getClusters().get(0).getPoints().size();
-	val1 = k.getClusters().get(1).getPoints().size();
-	val2 = k.getClusters().get(2).getPoints().size();
-	val3 = k.getClusters().get(3).getPoints().size();
-	val4 = k.getClusters().get(4).getPoints().size();
-	System.out.println("val0:" + val0 + " val1:" + val1 + " val2:" + val2 + " val3:" + val3 + " val4:" + val4);
+	List<Integer> s = new ArrayList<Integer>();
 
-	int max = Math.max(val2, (Math.max(val0, val1)));
-	int max1 = Math.max(val4, (Math.max(max, val3)));
+	for(int i = 0; i < Integer.valueOf(numCluster); i++)
+	{
+	    if(nullAllPoints(k.getClusters().get(i)) == true)
+		s.add(0);
+	    else
+		s.add(k.getClusters().get(i).getPoints().size());
+	}
 
-	if(max1 == val0)
-	    this.cluster0.add(id);
-	if(max1 == val1)
-	    this.cluster1.add(id);
-	if(max1 == val2)
-	    this.cluster2.add(id);
-	if(max1 == val3)
-	    this.cluster3.add(id);
-	if(max1 == val4)
-	    this.cluster4.add(id);
+	//System.out.println("Id-" + id + ":" + s.get(0) + "," + s.get(1) + "," + s.get(2));
+
+	int max = 0;
+	for(int a = 0; a < s.size(); a++)
+	{
+	    if((s.get(a) > max) || (s.get(a) == max))
+		max = s.get(a);
+	}
+
+	for(int i = 0; i < Integer.valueOf(numCluster); i++)
+	{
+	    ArrayList<Integer> list = new ArrayList<Integer>();
+	    cluster.add(list);
+	}
+
+	int add = 0;
+	for(int i = 0; i < Integer.valueOf(numCluster); i++)
+	{
+	    if((max == s.get(i)) && (add == 0))
+	    {
+		cluster.get(i).add(id);
+		add++;
+	    }
+	}
     }
 
+    public String loadInfoBubble(HashMap<String, Long> list, String userName)
+    {
+	String outcome = "-- " + userName + " -- \n";
+	outcome = outcome.concat("Searching: " + list.get("Searching") + "\n");
+	outcome = outcome.concat("Open Resource: " + list.get("Open Resource") + "\n");
+	outcome = outcome.concat("Add Resource: " + list.get("Add Resource") + "\n");
+	outcome = outcome.concat("Delete Resource: " + list.get("Delete Resource") + "\n");
+	outcome = outcome.concat("Create Group: " + list.get("Create Group") + "\n");
+	outcome = outcome.concat("Group Joining: " + list.get("Group Joining") + "\n");
+	outcome = outcome.concat("Group Leaving: " + list.get("Group Leaving") + "\n");
+	outcome = outcome.concat("Rating: " + list.get("Rating") + "\n");
+	outcome = outcome.concat("Tagging: " + list.get("Tagging") + "\n");
+	outcome = outcome.concat("Comments: " + list.get("Comments") + "\n");
+	outcome = outcome.concat("Edit Resource: " + list.get("Edit Resource") + "\n");
+	return outcome;
+    }
+
+    //Get info about user in group or class
     public HashMap<String, Long> getActivitiesClass(int userId) throws SQLException
     {
+	Long searching, addResource, delResource, openResource, createGroup, groupJoining, groupLeaving;
+	Long rating, tagging, editResource, commenting, deleteComments;
 	HashMap<String, Long> listActUsers = new HashMap<String, Long>();
 
-	Long searching = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=5");
-	Long downloading = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=32");
-	Long addResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=15");
-	Long delResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=14");
-	Long openResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=3");
-	Long createGroup = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=7");
-	Long groupJoining = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=6");
-	Long groupLeaving = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=8");
+	if(this.groupId.compareTo("0") == 0)
+	{
+	    searching = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=5");
+	    addResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=15");
+	    delResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=14");
+	    openResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=3");
+	    createGroup = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=7");
+	    groupJoining = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=6");
+	    groupLeaving = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=8");
 
-	Long rating = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=1");
-	Long tagging = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=0");
-	Long editResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=19");
-	Long commenting = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=2");
-	Long deleteComments = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=17");
+	    rating = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=1");
+	    tagging = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=0");
+	    editResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=19");
+	    commenting = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=2");
+	    deleteComments = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_user_course A2 ON A1.user_id = A2.user_id WHERE A2.course_id=" + this.classId + " AND A1.user_id =" + String.valueOf(userId) + " AND A1.action=17");
+	}
+	else
+	{
+	    searching = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id="
+		    + String.valueOf(userId) + " AND A1.action=5");
+	    addResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id="
+		    + String.valueOf(userId) + " AND A1.action=15");
+	    delResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id="
+		    + String.valueOf(userId) + " AND A1.action=14");
+	    openResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id="
+		    + String.valueOf(userId) + " AND A1.action=3");
+	    createGroup = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id="
+		    + String.valueOf(userId) + " AND A1.action=7");
+	    groupJoining = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id="
+		    + String.valueOf(userId) + " AND A1.action=6");
+	    groupLeaving = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id="
+		    + String.valueOf(userId) + " AND A1.action=8");
 
+	    rating = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + String.valueOf(userId)
+		    + " AND A1.action=1");
+	    tagging = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id=" + String.valueOf(userId)
+		    + " AND A1.action=0");
+	    editResource = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id="
+		    + String.valueOf(userId) + " AND A1.action=19");
+	    commenting = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id="
+		    + String.valueOf(userId) + " AND A1.action=2");
+	    deleteComments = (Long) Sql.getSingleResult("SELECT count(*) FROM lw_user_log A1 INNER JOIN lw_group_user A2 ON (A1.user_id = A2.user_id)  INNER JOIN lw_group A3 ON (A2.group_id = A3.group_id) WHERE A3.group_id=" + this.groupId + " AND A1.user_id="
+		    + String.valueOf(userId) + " AND A1.action=17");
+
+	}
 	listActUsers.put("Searching", searching);
-	listActUsers.put("Downloading", downloading);
 	listActUsers.put("Open Resource", openResource);
 	listActUsers.put("Add Resource", addResource);
 	listActUsers.put("Delete Resource", delResource);
@@ -281,24 +473,62 @@ public class ClusterBean extends ApplicationBean
 	listActUsers.put("Deleting Comments", deleteComments);
 
 	Iterator<String> itr = listActUsers.keySet().iterator();
+	int i = 0, im = 0;
 	while(itr.hasNext())
 	{
 	    Long current = listActUsers.get(itr.next());
-	    if(Max < Integer.valueOf(current.toString()))
-		Max = Integer.valueOf(current.toString());
-	    if(Min > Integer.valueOf(current.toString()))
-		Min = Integer.valueOf(current.toString());
+	    if(Max[1] < Integer.valueOf(current.toString()))
+	    {
+		Max[0] = Max[1];
+		Max[1] = Integer.valueOf(current.toString());
+		if(i == 0)
+		{
+		    Max[0] = Max[1];
+		    i++;
+		}
+	    }
+	    if(Min[1] > Integer.valueOf(current.toString()))
+	    {
+		Min[0] = Min[1];
+		Min[1] = Integer.valueOf(current.toString());
+		if(im == 0)
+		{
+		    Min[0] = Min[1];
+		    im++;
+		}
+
+	    }
 	}
 	return listActUsers;
     }
 
-    public void plotClusters(int id, List<Integer> cluster)
+    //Radius of the bubble
+    public double interactionaProfileFunction(HashMap<String, Long> listUsers)
+    {
+	int w1 = 4, w2 = 2, w3 = 2, w4 = 2;
+	long s1, s2, s3, s4;
+	double fi = 0;
+
+	s1 = listUsers.get("Comments") + listUsers.get("Add Resource") + listUsers.get("Tagging") + listUsers.get("Rating") + listUsers.get("Create Group");
+	s2 = listUsers.get("Searching") + listUsers.get("Edit Resource") + listUsers.get("Open Resource");
+	s3 = listUsers.get("Group Joining") + listUsers.get("Delete Resource");
+	s4 = listUsers.get("Deleting Comments") + listUsers.get("Group Leaving");
+
+	fi = (w1 * s1 + w2 * s2 + w3 * s3 + w4 * s4) / 10;
+
+	return fi;
+
+    }
+
+    public void plotClusters(int id, List<Integer> cluster) throws SQLException
     {
 	System.out.println("[Cluster: " + id + "]");
 	System.out.println("[Elements: \n");
 	for(int p : cluster)
 	{
-	    System.out.println(p);
+	    String u = (String) Sql.getSingleResult("SELECT username FROM lw_user WHERE user_id=" + p);
+	    System.out.println(u);
+
 	}
 	System.out.println("]");
     }
@@ -323,22 +553,22 @@ public class ClusterBean extends ApplicationBean
 	this.classId = classId;
     }
 
-    public int getMin()
+    public int[] getMin()
     {
 	return Min;
     }
 
-    public void setMin(int min)
+    public void setMin(int[] min)
     {
 	Min = min;
     }
 
-    public int getMax()
+    public int[] getMax()
     {
 	return Max;
     }
 
-    public void setMax(int max)
+    public void setMax(int[] max)
     {
 	Max = max;
     }
@@ -353,16 +583,6 @@ public class ClusterBean extends ApplicationBean
 	this.numOfPoints = numOfPoints;
     }
 
-    public BubbleChartModel getBubbleModel()
-    {
-	return bubbleModel;
-    }
-
-    public void setBubbleModel(BubbleChartModel bubbleModel)
-    {
-	this.bubbleModel = bubbleModel;
-    }
-
     public boolean isShowBubble()
     {
 	return showBubble;
@@ -371,16 +591,6 @@ public class ClusterBean extends ApplicationBean
     public void setShowBubble(boolean showBubble)
     {
 	this.showBubble = showBubble;
-    }
-
-    public String getFeature2()
-    {
-	return feature2;
-    }
-
-    public void setFeature2(String feature2)
-    {
-	this.feature2 = feature2;
     }
 
     public String getFeature1()
@@ -413,14 +623,80 @@ public class ClusterBean extends ApplicationBean
 	this.feature1_name = feature1_name;
     }
 
-    public String getFeature2_name()
+    public List<List<Integer>> getCluster()
     {
-	return feature2_name;
+	return cluster;
     }
 
-    public void setFeature2_name(String feature2_name)
+    public void setCluster(List<List<Integer>> cluster)
     {
-	this.feature2_name = feature2_name;
+	this.cluster = cluster;
+    }
+
+    public String getNumCluster()
+    {
+	return numCluster;
+    }
+
+    public void setNumCluster(String numCluster)
+    {
+	this.numCluster = numCluster;
+    }
+
+    public List<Integer> getClusS()
+    {
+	return clusS;
+    }
+
+    public void setClusS(List<Integer> clusS)
+    {
+	this.clusS = clusS;
+    }
+
+    public int getClusS(int i)
+    {
+	int val = clusS.get(i);
+	return val;
+    }
+
+    public List<StudentClusterInfo> getListData()
+    {
+	return listData;
+    }
+
+    public void setListData(List<StudentClusterInfo> listData)
+    {
+	this.listData = listData;
+    }
+
+    public List<StudentClusterInfo> getCars1()
+    {
+	return cars1;
+    }
+
+    public void setCars1(List<StudentClusterInfo> cars1)
+    {
+	this.cars1 = cars1;
+    }
+
+    public String getGroupId()
+    {
+	return groupId;
+    }
+
+    public void setGroupId(String groupId)
+    {
+	this.groupId = groupId;
+    }
+
+    public List<Group> getGroups()
+    {
+	return groups;
+    }
+
+    public void setGroups(List<Group> groups)
+    {
+	this.groups = groups;
     }
 
 }

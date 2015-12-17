@@ -2,7 +2,6 @@ package de.l3s.clustering;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class KMeans
@@ -14,7 +13,7 @@ public class KMeans
     private int MAX_COORDINATE;
 
     private List<Point> points;
-    private List<Cluster> clusters = new ArrayList<Cluster>();;
+    private List<Cluster> clusters = new ArrayList<Cluster>();
 
     private HashMap<String, Long> listActivities = new HashMap<String, Long>();
 
@@ -31,6 +30,8 @@ public class KMeans
 
 	//Create Clusters
 	//Set Random Centroids
+	System.out.println("MIN:" + MIN_COORDINATE);
+	System.out.println("MAX:" + MAX_COORDINATE);
 	for(int i = 0; i < NUM_CLUSTERS; i++)
 	{
 	    Cluster cluster = new Cluster(i);
@@ -62,6 +63,55 @@ public class KMeans
     {
 	List<Point> p = new ArrayList<Point>();
 	System.out.println("listOfPoints");
+
+	Point pt = new Point(listActivities.get("Searching"), listActivities.get("Open Resource"));
+	p.add(pt);
+	Point pt2 = new Point(listActivities.get("Open Resource"), listActivities.get("Add Resource"));
+	p.add(pt2);
+	Point pt3 = new Point(listActivities.get("Add Resource"), listActivities.get("Delete Resource"));
+	p.add(pt3);
+	Point pt4 = new Point(listActivities.get("Delete Resource"), listActivities.get("Create Group"));
+	p.add(pt4);
+	Point pt5 = new Point(listActivities.get("Create Group"), listActivities.get("Group Joining"));
+	p.add(pt5);
+	Point pt6 = new Point(listActivities.get("Group Joining"), listActivities.get("Group Leaving"));
+	p.add(pt6);
+	Point pt7 = new Point(listActivities.get("Group Leaving"), listActivities.get("Rating"));
+	p.add(pt7);
+	Point pt8 = new Point(listActivities.get("Rating"), listActivities.get("Tagging"));
+	p.add(pt8);
+	Point pt9 = new Point(listActivities.get("Tagging"), listActivities.get("Comments"));
+	p.add(pt9);
+	Point pt10 = new Point(listActivities.get("Comments"), listActivities.get("Edit Resource"));
+	p.add(pt10);
+	Point pt11 = new Point(listActivities.get("Edit Resource"), listActivities.get("Deleting Comments"));
+	p.add(pt11);
+	Point pt12 = new Point(listActivities.get("Deleting Comments"), listActivities.get("Searching"));
+	p.add(pt12);
+
+	//for(Point pp : p)
+	//System.out.println(pp);
+
+	/*Iterator<String> itr = listActivities.keySet().iterator();
+	Iterator<String> itr2 = listActivities.keySet().iterator();
+	while(itr.hasNext())
+	{
+	    Long current = listActivities.get(itr.next());
+	    int value = Integer.valueOf(current.toString());
+	    while(itr2.hasNext())
+	    {
+		Long current2 = listActivities.get(itr2.next());
+		int value2 = Integer.valueOf(current2.toString());
+		Point pt = new Point(value, value2);
+		p.add(pt);
+		System.out.println(pt.toString());
+	    }
+	}*/
+
+	return p;
+
+	/*List<Point> p = new ArrayList<Point>();
+	System.out.println("listOfPoints");
 	Iterator<String> itr = listActivities.keySet().iterator();
 	while(itr.hasNext())
 	{
@@ -70,10 +120,7 @@ public class KMeans
 	    Point pt = new Point(value, value);
 	    p.add(pt);
 	}
-	/*System.out.println("Lista de Pontos de Entrada");
-	for(Point p1 : p)
-	    System.out.println(p1.toString());*/
-	return p;
+	return p;*/
     }
 
     //The process to calculate the K Means, with iterating method.
@@ -110,7 +157,6 @@ public class KMeans
 	    //System.out.println("#################");
 	    //System.out.println("Iteration: " + iteration);
 	    //System.out.println("Centroid distances: " + distance);
-	    //plotClusters();
 
 	    if(distance == 0)
 	    {

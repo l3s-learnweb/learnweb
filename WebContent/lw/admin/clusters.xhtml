@@ -3,6 +3,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 	
 	<ui:composition> 
@@ -12,36 +13,46 @@
 
 		<h:form>
 			<h:panelGrid columns="2" cellspacing="1" id="pg4">
-				<f:facet name="cla">
-				      	<h:outputText value="Visualise the Groups" /> 
+				<f:facet name="header">
+				      	<h:outputText value="#{msg.FormativeAssessment_visualiseGroups}" /> 
 			 	</f:facet>
 				
-					<p:outputLabel value="Select Class:  " /> 
-					<p:selectOneMenu id="classCluster" value="#{clusterBean.classId}" style="width:250px">
-						<f:selectItem itemLabel="-" itemValue="" />
-						<f:selectItems value="#{userAssessmentBean.courses}" var="cl21" itemLabel="#{cl21.title}" itemValue="#{cl21.id}"/>
-					</p:selectOneMenu>
-					
-					<p:outputLabel value="Feature 1:  " /> 
-					<p:selectOneMenu id="feat1" value="#{clusterBean.feature1}" style="width:250px">
-						<f:selectItem itemLabel="-" itemValue="" />
-						<f:selectItems value="#{clusterBean.listFeatures.entrySet().toArray()}" var="f1" itemLabel="#{f1.key}" itemValue="#{f1.value}"/>
-					</p:selectOneMenu>
-					
-					<p:outputLabel value="Feature 2:  " /> 
-					<p:selectOneMenu id="feat2" value="#{clusterBean.feature2}" style="width:250px">
-						<f:selectItem itemLabel="-" itemValue="" />
-						<f:selectItems value="#{clusterBean.listFeatures.entrySet().toArray()}" var="f2" itemLabel="#{f2.key}" itemValue="#{f2.value}"/>
-					</p:selectOneMenu>
-					
-					
-					<p:commandButton value="Visualise" update="usercl" oncomplete="PF('clg1').show()" actionListener="#{clusterBean.executeClusters}"/>
-					<p:dialog id="usercl" modal="true" widgetVar="clg1" resizable="true" header="Class" maximizable="true">
-							<p:chart type="bubble" model="#{clusterBean.bubbleModel}" rendered="#{clusterBean.showBubble}" style="height:300px;width:1500px"/>
-					</p:dialog>
-					
-			</h:panelGrid>		
+				<p:outputLabel value="#{msg.FormativeAssessment_class}" for="classCluster"/> 
+				<p:selectOneMenu id="classCluster" value="#{clusterBean.classId}" style="width:250px">
+					<p:ajax update="group" listener="#{clusterBean.changeGroup}" />
+					<f:selectItem itemLabel="-" itemValue="" />
+					<f:selectItems value="#{userAssessmentBean.courses}" var="cl21" itemLabel="#{cl21.title}" itemValue="#{cl21.id}"/>
+				</p:selectOneMenu>
+				
+				<p:outputLabel for="group" value="#{msg.FormativeAssessment_selectGroup}" />
+				    	<p:selectOneMenu id="group" value="#{clusterBean.groupId}" style="width:250px">  
+	                    			<f:selectItem itemLabel="#{msg.FormativeAssessment_allGroups}" itemValue="0" />  
+	                    			<f:selectItems value="#{clusterBean.groups}" var="g" itemLabel="#{g.title}" itemValue="#{g.id}" />
+				    	</p:selectOneMenu>
+				
+				<p:outputLabel value="#{msg.FormativeAssessment_numCl}" for="nCl"/> 
+				<p:selectOneRadio id="nCl" value="#{clusterBean.numCluster}">
+		            <f:selectItem itemLabel="3" itemValue="3" />
+		            <f:selectItem itemLabel="4" itemValue="4" />
+		            <f:selectItem itemLabel="5" itemValue="5" />
+       			</p:selectOneRadio>
+				
+				<p:commandButton value="#{msg.FormativeAssessment_compareClulButton}" update="usercl" oncomplete="PF('clg1').show()" actionListener="#{clusterBean.executeGeneralClusters}"/>
+			</h:panelGrid>	
+			
+			<p:dialog id="usercl" modal="true" widgetVar="clg1" resizable="true" header="#{msg.FormativeAssessment_visualiseGroups}" maximizable="true">
+				<p:chart type="bubble" model="#{clusterBean.bubbleModel}" rendered="#{clusterBean.showBubble}" style="height:650px;width:1500px"/>
+				
+				<svg class="bubble" height="650" width="1500">
+				<c:forEach items="#{clusterBean.listData}" var="user">
+					<g transform="translate(#{user.cx},#{user.cy})" class="node">
+						<title>#{user.info}</title>
+						<circle r="#{user.radius}" fill="#{user.color}"></circle>
+						<text style="text-anchor: middle; text-font: 15px sans-serif;" dy=".3em">#{user.nome}</text>
+					</g>
+			    </c:forEach>
+				</svg>
+			</p:dialog>
 		</h:form>
-
 	</ui:composition>
 </html>
