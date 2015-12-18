@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 import java.util.TreeSet;
@@ -224,10 +225,14 @@ public class YovistoManager
 
     private Resource createResource(ResultSet result, int learnwebResourceId) throws SQLException
     {
+
+	Date date = new Date();
 	Resource resource = new Resource();
 
 	if(learnwebResourceId != 0) // the video is already stored and will be updated
 	    resource = learnweb.getResourceManager().getResource(learnwebResourceId);
+	else
+	    resource.setCreationDate(date);
 
 	resource.setTitle(result.getString("title"));
 	String description = result.getString("description");
