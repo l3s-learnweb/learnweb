@@ -19,7 +19,6 @@ import javax.faces.event.ComponentSystemEvent;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Group;
-import de.l3s.learnweb.OwnerList;
 import de.l3s.learnweb.Presentation;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.User;

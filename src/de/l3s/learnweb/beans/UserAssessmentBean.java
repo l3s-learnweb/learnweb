@@ -950,8 +950,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	yAxis.setMin(0);
 	yAxis.setMax(maxValue);
 
-	if(this.barModel != null)
-	    //System.out.println(this.barModel.toString());
+	//if(this.barModel != null)
+	//System.out.println(this.barModel.toString());
     }
 
     public void initPieModelUser(String text, String label, HashMap<String, Long> data)
