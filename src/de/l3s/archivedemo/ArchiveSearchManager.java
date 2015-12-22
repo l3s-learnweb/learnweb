@@ -354,14 +354,21 @@ public class ArchiveSearchManager
      * @param args
      * @throws SQLException
      */
-    public static void main(String[] args) throws SQLException
+    public static void main(String[] args)
     {
-	int start = Integer.parseInt(args[0]);
-
-	for(int page = start; page < start + 100; page++)
+	try
 	{
-	    log.info("page: " + page);
-	    Learnweb.getInstance().getArchiveSearchManager().prefetchResults("en", page);
+	    int start = 840;//Integer.parseInt(args[0]);
+
+	    for(int page = start; page < start + 100; page++)
+	    {
+		log.info("page: " + page);
+		Learnweb.getInstance().getArchiveSearchManager().prefetchResults("en", page);
+	    }
+	}
+	catch(Exception e)
+	{
+	    log.fatal("stopped", e);
 	}
     }
 

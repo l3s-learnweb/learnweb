@@ -64,19 +64,22 @@ public class Learnweb
 
     public static Learnweb getInstance()
     {
-	try
+	synchronized(Learnweb.class)
 	{
-	    if(learnweb == null)
+	    try
 	    {
-		new Learnweb();
+		if(learnweb == null)
+		{
+		    new Learnweb();
+		}
+		return learnweb;
 	    }
-	    return learnweb;
-	}
-	catch(Exception e)
-	{
-	    learnweb = null;
-	    log.fatal(e);
-	    throw new RuntimeException(e);
+	    catch(Exception e)
+	    {
+		learnweb = null;
+		log.fatal(e);
+		throw new RuntimeException(e);
+	    }
 	}
     }
 
