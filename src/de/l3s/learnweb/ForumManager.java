@@ -93,32 +93,34 @@ public class ForumManager
      * @param lowerBound
      * @return
      * @throws SQLException
+     *             /
+     *             public List<ForumPost> getNewPostsByUser(User user, Date lowerBound) throws SQLException
+     *             {
+     *             StringBuilder sb = new StringBuilder();
+     *             for(Group group : user.getGroups())
+     *             {
+     *             sb.append(',');
+     *             sb.append(Integer.toString(group.getId()));
+     *             }
+     *             String ids = sb.substring(1);
+     * 
+     *             LinkedList<ForumPost> posts = new LinkedList<ForumPost>();
+     * 
+     * 
+     * 
+     *             PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS +
+     *             " FROM `lw_forum_post` WHERE topic_id = ? ORDER BY post_time");
+     *             select.setInt(1, topicId);
+     *             ResultSet rs = select.executeQuery();
+     *             while(rs.next())
+     *             {
+     *             posts.add(createPost(rs));
+     *             }
+     *             select.close();
+     * 
+     *             return posts;
+     *             }
      */
-    public List<ForumPost> getNewPostsByUser(User user, Date lowerBound) throws SQLException
-    {
-	StringBuilder sb = new StringBuilder();
-	for(Group group : user.getGroups())
-	{
-	    sb.append(',');
-	    sb.append(Integer.toString(group.getId()));
-	}
-	String ids = sb.substring(1);
-
-	LinkedList<ForumPost> posts = new LinkedList<ForumPost>();
-
-	//TODO
-	/*
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `lw_forum_post` WHERE topic_id = ? ORDER BY post_time");
-	select.setInt(1, topicId);
-	ResultSet rs = select.executeQuery();
-	while(rs.next())
-	{
-	    posts.add(createPost(rs));
-	}
-	select.close();
-	*/
-	return posts;
-    }
 
     public List<ForumPost> getPostsByUser(int userId) throws SQLException
     {

@@ -19,9 +19,7 @@ import org.apache.log4j.Logger;
 
 public class MementoClient
 {
-
     private final static Logger log = Logger.getLogger(ArchiveUrlManager.class);
-    private final Learnweb learnweb;
 
     private static String mementoArchiveURL;
     private URL mementoArchiveUrlObj;
@@ -29,7 +27,6 @@ public class MementoClient
 
     protected MementoClient(Learnweb learnweb)
     {
-	this.learnweb = learnweb;
 	mementoArchiveURL = learnweb.getProperties().getProperty("MEMENTO_ARCHIVE_URL");
     }
 

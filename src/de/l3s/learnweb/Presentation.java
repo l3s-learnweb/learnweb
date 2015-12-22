@@ -11,13 +11,8 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import de.l3s.learnwebBeans.ApplicationBean;
-
-public class Presentation extends ApplicationBean implements Serializable
+public class Presentation implements Serializable
 {
-    /**
-	 * 
-	 */
     private static final long serialVersionUID = 8403450212340352749L;
     private int groupId;
     private int ownerId;
@@ -42,7 +37,7 @@ public class Presentation extends ApplicationBean implements Serializable
 	    Elements slides = doc.getElementsByClass("slide");
 	    Resource r = new Resource();
 	    String lastId = "";
-	    ResourceManager resourceManager = getLearnweb().getResourceManager();
+	    ResourceManager resourceManager = Learnweb.getInstance().getResourceManager();
 
 	    for(Element slide : slides)
 	    {
@@ -85,7 +80,7 @@ public class Presentation extends ApplicationBean implements Serializable
 			{
 			    lastId = slide.id();
 			    int id = Integer.parseInt(slide.id().replace("resource_slide_", "").replace("_iframe", ""));
-			    r = getLearnweb().getResourceManager().getResource(id).clone();
+			    r = Learnweb.getInstance().getResourceManager().getResource(id).clone();
 			    r.setId(id);
 			}
 			catch(SQLException se)
@@ -107,7 +102,6 @@ public class Presentation extends ApplicationBean implements Serializable
 	}
 	catch(SQLException e)
 	{
-	    // TODO Auto-generated catch block
 	    e.printStackTrace();
 	}
 	return owner;
