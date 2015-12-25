@@ -48,15 +48,6 @@
 							</h:selectOneMenu>
 							<h:outputText value="" />				
 							
-							<h:outputText value="#{msg.category}*:" rendered="#{not empty userBean.activeCourse.groupCategories}" />
-							<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{not empty userBean.activeCourse.groupCategories}">
-								<f:selectItem itemValue="0" itemLabel="#{msg.no_category}" />
-								<f:selectItem itemValue="-1" itemLabel="---------------" itemDisabled="true" />	
-								<f:selectItems value="#{userBean.activeCourse.groupCategories}" var="cat" itemValue="#{cat.id}" 
-									itemLabel="#{cat.title} [#{cat.abbreviation}]" />
-							</h:selectOneMenu>
-							<h:outputText value="" rendered="#{not empty userBean.activeCourse.groupCategories}" />						
-								
 							<h:outputText value="#{msg.description}:" />					
 							<p:editor id="new_description" widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" 
 								controls="bold italic underline bullets numbering undo redo link unlink" style="width:22rem;" height="150">
