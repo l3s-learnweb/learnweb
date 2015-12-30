@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -42,6 +43,12 @@ public class DownloadServlet extends HttpServlet
 	this.learnweb = Learnweb.getInstance();
 	this.urlPattern = learnweb.getProperties().getProperty("FILE_MANAGER_URL_PATTERN");
 	this.fileManager = learnweb.getFileManager();
+    }
+
+    @Override
+    public void init(ServletConfig config) throws ServletException
+    {
+	super.init(config);
     }
 
     @Override

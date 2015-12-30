@@ -99,7 +99,6 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 
 	if(null != wizardTitle && wizardTitle.length() != 0)
 	{
-	    System.out.println("wirzard " + wizardTitle);
 	    course = learnweb.getCourseManager().getCourseByWizard(wizardTitle);
 
 	    if(null == course)
@@ -107,12 +106,8 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 		addMessage(FacesMessage.SEVERITY_FATAL, "invalid wizard parameter");
 		return null;
 	    }
+	}
 
-	}
-	else
-	{
-	    System.out.println("kein wizard");
-	}
 	final User user = learnweb.getUserManager().registerUser(username, password, email, wizardTitle);
 
 	//addMessage(FacesMessage.SEVERITY_INFO, "register_success");
@@ -145,7 +140,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 	};
 	new Thread(preFetch).start();
 	*/
-	System.out.println(getTemplateDir() + "/" + user.getOrganisation().getWelcomePage() + "?faces-redirect=true");
+
 	return getTemplateDir() + "/" + user.getOrganisation().getWelcomePage() + "?faces-redirect=true";
 
 	//return getTemplateDir()+ "/myhome/resources.xhtml";		

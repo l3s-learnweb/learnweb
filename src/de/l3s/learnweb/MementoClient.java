@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 
 public class MementoClient
 {
-    private final static Logger log = Logger.getLogger(ArchiveUrlManager.class);
+    private final static Logger log = Logger.getLogger(MementoClient.class);
 
     private static String mementoArchiveURL;
     private URL mementoArchiveUrlObj;

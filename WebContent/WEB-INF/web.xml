@@ -121,6 +121,7 @@
     <display-name>Simple DownloadServlet</display-name>
     <servlet-name>downloadServlet</servlet-name>
     <servlet-class>de.l3s.learnwebBeans.DownloadServlet</servlet-class>
+        <load-on-startup>2</load-on-startup>
   </servlet>
   <servlet-mapping>
     <servlet-name>downloadServlet</servlet-name>

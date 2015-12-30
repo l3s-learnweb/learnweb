@@ -64,23 +64,24 @@ public class Learnweb
 
     public static Learnweb getInstance()
     {
+	/*
 	synchronized(Learnweb.class)
+	{*/
+	try
 	{
-	    try
+	    if(learnweb == null)
 	    {
-		if(learnweb == null)
-		{
-		    new Learnweb();
-		}
-		return learnweb;
+		new Learnweb();
 	    }
-	    catch(Exception e)
-	    {
-		learnweb = null;
-		log.fatal(e);
-		throw new RuntimeException(e);
-	    }
+	    return learnweb;
 	}
+	catch(Exception e)
+	{
+	    learnweb = null;
+	    log.fatal(e);
+	    throw new RuntimeException(e);
+	}
+	//}
     }
 
     /**
@@ -127,6 +128,8 @@ public class Learnweb
 		propteriesFileName = "lw_local_oleg";
 	    else if((new File("C:\\L3S").exists()))
 		propteriesFileName = "lw_local_felipe";
+
+	    log.debug("Load config file: " + propteriesFileName);
 
 	    properties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propteriesFileName + ".properties"));
 	}
@@ -183,7 +186,7 @@ public class Learnweb
 	else
 	    log.debug("JobScheduler not started in local mode");
 
-	//archiveSearchManager.loadQueryCompletor();
+	archiveSearchManager.loadQueryCompletor();
     }
 
     public FileManager getFileManager()
@@ -654,4 +657,8 @@ public class Learnweb
 	return archiveSearchManager;
     }
 
+    public static void main(String[] args)
+    {
+	Learnweb.getInstance();
+    }
 }

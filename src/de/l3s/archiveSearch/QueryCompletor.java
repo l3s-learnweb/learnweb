@@ -21,10 +21,13 @@ public class QueryCompletor
 
 	final QueryCompletor queryCompletor = new QueryCompletor("de/l3s/archiveSearch/main_pages_de.csv");
 
-	String[] queries = { "obam", "francois de", "schrö", "o", "familia", "gerhard schrod" };
+	//String[] queries = { "obam", "francois de", "schrö", "o", "familia", "gerhard schrod" };
+
+	String[] queries = { "4", "47" };
 
 	for(final String query : queries)
 	{
+	    System.out.println("\n" + query + "\n-------------");
 	    System.out.println(queryCompletor.getSuggestions(query, 20));
 	}
     }
