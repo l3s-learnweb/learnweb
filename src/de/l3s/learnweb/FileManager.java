@@ -16,7 +16,6 @@ import java.util.List;
 import java.util.Properties;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.log4j.Logger;
 
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
@@ -31,7 +30,7 @@ import de.l3s.util.StringHelper;
  */
 public class FileManager
 {
-    private final static Logger log = Logger.getLogger(FileManager.class);
+    // private final static Logger log = Logger.getLogger(FileManager.class);
 
     // if you change this, remember to change createFile()
     private final static String COLUMNS = "file_id, resource_id, resource_file_number, name, mime_type, log_actived, timestamp";

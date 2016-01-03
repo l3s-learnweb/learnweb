@@ -539,47 +539,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
     }
 
-    /*
-        public void onCreateForum()
-        {
-    	if(group.getForumId() != 0) // meanwhile the forum has been created by an other user
-    	{
-    	    addMessage(FacesMessage.SEVERITY_INFO, "forum_created");
-    	    return;
-    	}
-    
-    	JForumManager fm = getLearnweb().getJForumManager();
-    
-    	try
-    	{
-    	    int forumId = fm.createForum(group.getTitle(), group.getCourse().getForumCategoryId());
-    
-    	    group.setForumId(forumId);
-    	    getLearnweb().getGroupManager().save(group);
-    
-    	    addMessage(FacesMessage.SEVERITY_INFO, "forum_created");
-    	    updateLinksList();
-    
-    	    log(Action.group_adding_link, group.getId(), "Forum");
-    	}
-    	catch(Exception e)
-    	{
-    	    e.printStackTrace();
-    
-    	    addMessage(FacesMessage.SEVERITY_ERROR, "The forum couldn't be created, try again later");
-    	}
-        }
-    
-        private void deleteForum() throws SQLException
-        {
-    	group.setForumId(0);
-    	getLearnweb().getGroupManager().save(group);
-    
-    	updateLinksList();
-    
-    	log(Action.group_deleting_link, group.getId(), "Forum");
-        }
-    */
     public boolean isMember() throws SQLException
     {
 	User user = getUser();
@@ -1008,6 +967,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void onQueryChange() throws SQLException
     {
 	paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
+
+	log(Action.group_resource_search, groupId, -1, query);
     }
 
     public void saveGmailId()

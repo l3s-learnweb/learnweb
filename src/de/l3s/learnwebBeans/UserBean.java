@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Queue;
 import java.util.TimeZone;
 
 import javax.annotation.PreDestroy;
@@ -20,6 +19,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
+import org.ocpsoft.prettytime.PrettyTime;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
@@ -33,7 +33,6 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.searchlogclient.SearchLogClient;
-import de.l3s.util.StringHelper;
 
 @ManagedBean
 @SessionScoped
@@ -47,6 +46,7 @@ public class UserBean implements Serializable
     private transient long userCacheTime = 0L; // stores when the userCache was refreshed the last time
 
     private Locale locale;
+    private PrettyTime localePrettyTime;
     private HashMap<String, String> preferences; // user preferences like search mode
 
     private int activeCourseId = 0;
@@ -57,8 +57,6 @@ public class UserBean implements Serializable
 
     private boolean cacheShowMessageJoinGroup = true;
     private boolean cacheShowMessageAddResource = true;
-
-    private Queue<Long> requests = new LinkedList<>();
 
     public UserBean()
     {
@@ -265,6 +263,8 @@ public class UserBean implements Serializable
 	    locale = Locale.ENGLISH;
 	    log.error("Unsupported language: " + localeCode);
 	}
+
+	localePrettyTime = null; // reset date formatter 
 
 	FacesContext facesContext = FacesContext.getCurrentInstance();
 	facesContext.getViewRoot().setLocale(locale);
@@ -602,6 +602,20 @@ public class UserBean implements Serializable
 	return model;
     }
 
+    /**
+     * Returns true when there is any tooltip message to show
+     * 
+     * @return
+     * @throws SQLException
+     */
+    public boolean isShowMessageAny() throws SQLException
+    {
+	if(!isLoggedIn())
+	    return false;
+
+	return isShowMessageJoinGroup() || isShowMessageAddResource();
+    }
+
     public boolean isShowMessageJoinGroup() throws SQLException
     {
 	if(cacheShowMessageJoinGroup) // check until the user has joined a group 
@@ -650,12 +664,10 @@ public class UserBean implements Serializable
 
     public String getPrettyDate(Date date)
     {
-	return StringHelper.getPrettyDate(date, locale);
-    }
+	//return StringHelper.getPrettyDate(date, locale);
+	if(localePrettyTime == null)
+	    localePrettyTime = new PrettyTime(locale);
 
-    public Queue<Long> getRequests()
-    {
-	return requests;
+	return localePrettyTime.format(date);
     }
-
 }

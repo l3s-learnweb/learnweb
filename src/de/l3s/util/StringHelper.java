@@ -6,15 +6,12 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.Collection;
-import java.util.Date;
-import java.util.Locale;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
-import org.ocpsoft.prettytime.PrettyTime;
 
 public class StringHelper
 {
@@ -60,11 +57,6 @@ public class StringHelper
 	    log.error("Can't get domain for url: " + url, e);
 	    return null;
 	}
-	/*
-	String domain = uri.getHost();
-	return domain;
-	return domain.startsWith("www.") ? domain.substring(4) : domain;
-	*/
     }
 
     public static boolean empty(String str)
@@ -195,27 +187,4 @@ public class StringHelper
 	String s = document.html().replaceAll("\\\\n", "\n");
 	return Jsoup.clean(s, "", whitelist, new Document.OutputSettings().prettyPrint(false));
     }
-
-    public static String getPrettyDate(Date date, Locale locale)
-    {
-	PrettyTime p = new PrettyTime();
-	p.setLocale(locale);
-	return p.format(date);
-    }
-
-    /**
-     * Remove last character if it is ','
-     * 
-     * @param str
-     * @return String
-     */
-    public static String removeLastComma(String str)
-    {
-	if(str.endsWith(","))
-	{
-	    str = str.substring(0, str.length() - 1);
-	}
-	return str;
-    }
-
 }

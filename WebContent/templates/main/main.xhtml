@@ -17,15 +17,14 @@
 
 		<h:outputScript library="primefaces" name="jquery/jquery.js" />
 		<h:outputScript library="main-template" name="default.js" />
+		<ui:decorate template="/templates/main/tooltips.xhtml"  />
 
 		<base href="#{request.contextPath}/lw/" />
 	</h:head>
 
 	<h:body>
 		<p:growl id="growl" rendered="#{not disableGrowl}"/> 
-		<!--  TODO remove growl -->
 		
-		<ui:decorate template="/templates/main/tooltips.xhtml" />
 		<ui:decorate template="/templates/main/header.xhtml" /> 		
 
 		<section id="content" class="#{smallPage? 'small_page':''}">

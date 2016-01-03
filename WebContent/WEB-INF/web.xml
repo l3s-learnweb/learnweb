@@ -46,7 +46,12 @@
     <filter-name>UrlRewriteFilter</filter-name>
     <url-pattern>/new/*</url-pattern>
   </filter-mapping>
-    
+ 
+  <filter-mapping>
+    <filter-name>UrlRewriteFilter</filter-name>
+    <url-pattern>/archive/*</url-pattern>
+  </filter-mapping>
+     
   <filter>
     <filter-name>PrimeFaces FileUpload Filter</filter-name>
     <filter-class>org.primefaces.webapp.filter.FileUploadFilter</filter-class>

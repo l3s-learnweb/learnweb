@@ -128,21 +128,23 @@
 				
 				<script type="text/javascript">
 					function resetCenterPaneHeight()
-					{console.log(
+					{/*
+						console.log(
 						$('#center_pane').height(),
 						$('#group_header').outerHeight(true),
 						$('#paginator').outerHeight(true),
 						$('#center_pane > .ui-layout-unit-content').height());
 						var height = $('#center_pane').height() - $('#group_header').outerHeight(true) - $('#paginator').outerHeight(true);
 						$('#center_pane > .ui-layout-unit-content').height(height);
+						*/
 					}
 				
 					$("#header_query_form").css("display","none");
 					
 					$("#search_group_resource").click(function () {
 				          $("#header_query_form").animate({ width: "toggle" }, 500, 'swing', function() {
-				        	  resetCenterPaneHeight();
-					          console.log('fertig');
+				        	 // resetCenterPaneHeight();
+					          //console.log('fertig');
 					        });
 				          $("#input_query_form").focus();
 				          $("#search_group_resource").hide();

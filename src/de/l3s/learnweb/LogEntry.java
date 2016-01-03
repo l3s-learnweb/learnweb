@@ -47,7 +47,8 @@ public class LogEntry implements Serializable
 	group_removing_resource, // target_id = resource id
 	unused, // target_id = resource id
 	downloading, // target_id = file_id
-	group_deleting_link // param = title
+	group_deleting_link, // param = title
+	group_resource_search // param = query
     }
 
     private int userId;

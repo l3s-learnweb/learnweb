@@ -9,15 +9,15 @@
 
 -->
 <urlrewrite>
-
-
-
 	<rule>
 		<from>/new/(.*)</from>
 		<to type="redirect">/$1</to>
 	</rule>
 	
-
+	<rule>
+		<from>/archive/(.*)</from>
+		<to type="redirect">http://alexandria-project.eu/archivesearch/$1</to>
+	</rule>
 
 <!--         
     

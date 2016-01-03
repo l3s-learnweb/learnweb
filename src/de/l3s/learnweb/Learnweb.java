@@ -15,7 +15,6 @@ import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.archivedemo.ArchiveSearchManager;
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.solrClient.SolrClient;
@@ -58,7 +57,6 @@ public class Learnweb
     private final YovistoManager yovistoManager;
     private final JobScheduler jobScheduler;
     private final GlossaryManager glossaryManager;
-    private final ArchiveSearchManager archiveSearchManager;
 
     private static Learnweb learnweb = null;
 
@@ -164,14 +162,6 @@ public class Learnweb
 	jobScheduler = new JobScheduler(this);
 	yovistoManager = new YovistoManager(this);
 	glossaryManager = new GlossaryManager(this);
-	archiveSearchManager = new ArchiveSearchManager(this);
-	/*
-	PreparedStatement pstmt = dbConnection.prepareStatement("select * from lw_admin_message");
-	ResultSet rs = pstmt.executeQuery();
-	if(rs.next())
-	    adminMessage = rs.getString(1);
-	pstmt.close();
-	*/
     }
 
     /**
@@ -185,8 +175,6 @@ public class Learnweb
 	    jobScheduler.startAllJobs();
 	else
 	    log.debug("JobScheduler not started in local mode");
-
-	archiveSearchManager.loadQueryCompletor();
     }
 
     public FileManager getFileManager()
@@ -650,11 +638,6 @@ public class Learnweb
     public GlossaryManager getGlossaryManager()
     {
 	return glossaryManager;
-    }
-
-    public ArchiveSearchManager getArchiveSearchManager()
-    {
-	return archiveSearchManager;
     }
 
     public static void main(String[] args)

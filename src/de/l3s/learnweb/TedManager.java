@@ -202,10 +202,8 @@ public class TedManager
 	while(rs.next())
 	{
 	    userId = rs.getInt("user_id");
-	    PreparedStatement pStmt = learnweb
-		    .getConnection()
-		    .prepareStatement(
-			    "SELECT t1.resource_id,title, SUM(action = 'selection') as selcount, SUM(action = 'deselection') as deselcount, SUM(user_annotation != '') as uacount FROM lw_resource t1 LEFT JOIN lw_transcript_actions t2 ON t1.resource_id = t2.resource_id WHERE (action = 'selection' OR action = 'deselection' OR user_annotation != '' OR action IS NULL) AND t1.owner_user_id = ? AND t1.deleted = 0 GROUP BY t1.resource_id");
+	    PreparedStatement pStmt = learnweb.getConnection().prepareStatement(
+		    "SELECT t1.resource_id,title, SUM(action = 'selection') as selcount, SUM(action = 'deselection') as deselcount, SUM(user_annotation != '') as uacount FROM lw_resource t1 LEFT JOIN lw_transcript_actions t2 ON t1.resource_id = t2.resource_id WHERE (action = 'selection' OR action = 'deselection' OR user_annotation != '' OR action IS NULL) AND t1.owner_user_id = ? AND t1.deleted = 0 GROUP BY t1.resource_id");
 	    pStmt.setInt(1, userId);
 	    ResultSet rs2 = pStmt.executeQuery();
 	    while(rs2.next())
@@ -316,7 +314,7 @@ public class TedManager
     {
 	ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
 
-	Group tedxGroup = learnweb.getGroupManager().getGroupById(921);
+	//Group tedxGroup = learnweb.getGroupManager().getGroupById(921);
 	Group tedxTrentoGroup = learnweb.getGroupManager().getGroupById(922);
 	User admin = learnweb.getUserManager().getUser(7727);
 

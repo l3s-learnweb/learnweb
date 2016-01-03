@@ -207,10 +207,6 @@ public class ResourceManager
 	return resource;
     }
 
-    /**
-     * @see de.l3s.learnweb.ResourceManager#getResource(int)
-     */
-
     public Resource getResource(int resourceId) throws SQLException
     {
 	return getResource(resourceId, true);
@@ -218,7 +214,6 @@ public class ResourceManager
 
     public void deleteResource(Resource resource) throws SQLException
     {
-	resource.getGroup().clearCaches();
 	deleteResource(resource.getId());
     }
 
@@ -241,6 +236,7 @@ public class ResourceManager
 	update.close();
 
 	/* this causes problems because a thumbnail can be used by multiple resources when they were copied
+	 * 
 	update = Learnweb.getConnectionStatic().prepareStatement("UPDATE `lw_file` SET deleted = 1 WHERE `resource_id` = ?");
 	update.setInt(1, resourceId);
 	update.executeUpdate();
