@@ -27,8 +27,7 @@
 				</h:panelGroup>
 			</div>
 						
-			<h:outputText value="#{logEntry.datedifference}" escape="false" style="font-size:8pt; max-height:50px; color: grey;"/>	
-			<!-- double date: remove [#{logEntry.date.toLocaleString()}] -->
+			<h:outputText value="${userBean.getPrettyDate(datagrid.date)}" title="${userBean.formatDate(datagrid.date)}" escape="false" style="font-size:8pt; max-height:50px; color: grey;"/>	
 					
 			<br/>
 			<br/>

@@ -20,6 +20,7 @@ import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.learnweb.AbstractPaginator;
@@ -53,7 +54,7 @@ import de.l3s.util.MD5;
 public class GroupDetailBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -9105093690086624246L;
-
+    private static final Logger log = Logger.getLogger(GroupDetailBean.class);
     private static final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     private int groupId;
@@ -968,7 +969,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
 
-	log(Action.group_resource_search, groupId, -1, query);
+	log(Action.group_resource_search, groupId, 0, query);
     }
 
     public void saveGmailId()
@@ -980,7 +981,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
 	catch(SQLException e)
 	{
-	    System.out.println("Error while inserting gmail id" + e);
+	    log.error("Error while inserting gmail id" + e);
 	}
     }
 

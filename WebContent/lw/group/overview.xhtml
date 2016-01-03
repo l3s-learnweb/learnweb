@@ -106,7 +106,7 @@
 						</h:panelGroup>
 						</div>
 						
-						<h:outputText value="#{datagrid.datedifference}" escape="false" styleClass="newsfeed_date_difference"/>	
+						<h:outputText value="${userBean.getPrettyDate(datagrid.date)}" title="${userBean.formatDate(datagrid.date)}" escape="false" styleClass="newsfeed_date_difference"/>	
 						
 						<br></br>
 						<br></br>

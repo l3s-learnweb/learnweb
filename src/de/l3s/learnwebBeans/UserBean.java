@@ -46,14 +46,14 @@ public class UserBean implements Serializable
     private transient long userCacheTime = 0L; // stores when the userCache was refreshed the last time
 
     private Locale locale;
-    private PrettyTime localePrettyTime;
+    private transient PrettyTime localePrettyTime;
     private HashMap<String, String> preferences; // user preferences like search mode
 
     private int activeCourseId = 0;
     private transient Course activeCourseCache = null;
     private transient long activeCourseCacheTime = 0L;
 
-    private List<Group> newGroups = null;
+    private transient List<Group> newGroups = null;
 
     private boolean cacheShowMessageJoinGroup = true;
     private boolean cacheShowMessageAddResource = true;
@@ -63,6 +63,37 @@ public class UserBean implements Serializable
 	locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
 
 	preferences = new HashMap<String, String>();
+
+	storeMetadataInSession(null);
+    }
+
+    /**
+     * This methods sets values which are required by the Download Servlet
+     * ands provides data which is shown on the Tomcat mananger session page
+     * and
+     */
+    private void storeMetadataInSession(User user)
+    {
+	ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
+	HttpServletRequest request = (HttpServletRequest) context.getRequest();
+
+	// get ip
+	String ipAddress = request.getHeader("X-FORWARDED-FOR");
+	if(ipAddress == null)
+	{
+	    ipAddress = request.getRemoteAddr();
+	}
+
+	String userAgent = request.getHeader("User-Agent");
+	String userName = user == null ? "logged_out" : user.getUsername();
+
+	String info = userName + " | " + ipAddress + " | " + userAgent;
+
+	// store the user also in the session so that it is accessible by DownloadServlet and TomcatManager
+	HttpSession session = (HttpSession) context.getSession(true);
+	session.setAttribute("userName", info); // set only to display it in Tomcat manager app
+	session.setAttribute("Locale", locale); // set only to display it in Tomcat manager app	
+	session.setAttribute("learnweb_user_id", new Integer(user == null ? 0 : user.getId())); // required by DownloadServlet
     }
 
     public boolean isLoggedIn()
@@ -120,24 +151,12 @@ public class UserBean implements Serializable
 	cacheShowMessageJoinGroup = true;
 	cacheShowMessageAddResource = true;
 
-	ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
-	HttpServletRequest request = (HttpServletRequest) context.getRequest();
-	String ipAddress = request.getHeader("X-FORWARDED-FOR");
-	if(ipAddress == null)
-	{
-	    ipAddress = request.getRemoteAddr();
-	}
-
-	// store the user also in the session so that it is accessible in the download Servlet
-	HttpSession session = (HttpSession) context.getSession(true);
-	session.setAttribute("learnweb_user_id", new Integer(user == null ? 0 : user.getId()));
-	session.setAttribute("userName", user == null ? "logged_out" : user.getUsername()); // set only to display it in tomcat manager app
-	session.setAttribute("Locale", ipAddress); // set only to display it in tomcat manager app	
-
 	if(user != null)
 	{
 	    preferences = user.getPreferences();
 	    userId = user.getId();
+
+	    storeMetadataInSession(user);
 
 	    try
 	    {

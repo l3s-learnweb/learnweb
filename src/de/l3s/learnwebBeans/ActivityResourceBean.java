@@ -49,29 +49,29 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
     {
     return tagName;
     }
-
+    
     public void setTagName(String tagName)
     {
     this.tagName = tagName;
     }
-
+    
     private Tag selectedTag;
-
+    
     public Tag getSelectedTag()
     {
     return selectedTag;
     }
-
+    
     public void setSelectedTag(Tag selectedTag)
     {
     this.selectedTag = selectedTag;
     }
-
+    
     public String getNewComment()
     {
     return newComment;
     }
-
+    
     public void setNewComment(String newComment)
     {
     this.newComment = newComment;
@@ -102,7 +102,7 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
 	    return false;
 
 	User user = getUser();
-	if(null == user)// || true)
+	if(null == user) // || true)
 	    return false;
 	if(user.isAdmin() || user.isModerator())
 	    return true;
@@ -127,7 +127,7 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
         addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
     }
     }
-
+    
     public String addTag()
     {
     if(null == getUser())
@@ -135,10 +135,10 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
         addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
         return null;
     }
-
+    
     if(tagName == null || tagName.length() == 0)
         return null;
-
+    
     try
     {
         clickedResource.addTag(tagName, getUser());
@@ -180,8 +180,6 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
 		}
 		if(r != null && deletedResources.contains(r.getId()))
 		    resourceaction = false;
-
-		System.out.println(l.getAction().toString());
 
 		int commentcount = 0;
 		int tagcount = 0;
@@ -324,12 +322,12 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
     {
     return clickedComment;
     }
-
+    
     public void setClickedComment(Comment clickedComment)
     {
     this.clickedComment = clickedComment;
     }
-
+    
     public void onEditComment()
     {
     try
@@ -343,7 +341,7 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
         addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
     }
     }
-
+    
     public void onDeleteComment()
     {
     try
@@ -358,18 +356,18 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
         addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
     }
     }
-
+    
     public boolean canEditComment(Object commentO) throws Exception
     {
     if(!(commentO instanceof Comment))
         return false;
-
+    
     User user = getUser();
     if(null == user)// || true)
         return false;
     if(user.isAdmin() || user.isModerator())
         return true;
-
+    
     Comment comment = (Comment) commentO;
     User owner = comment.getUser();
     if(user.equals(owner))
