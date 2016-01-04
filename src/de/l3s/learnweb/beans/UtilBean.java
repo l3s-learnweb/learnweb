@@ -14,8 +14,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
-import org.apache.log4j.Logger;
-
 import de.l3s.learnwebBeans.LearnwebBean;
 import de.l3s.learnwebBeans.UserBean;
 
@@ -24,7 +22,7 @@ import de.l3s.learnwebBeans.UserBean;
 public class UtilBean implements Serializable
 {
     private final static long serialVersionUID = 6252597111468136574L;
-    private final static Logger log = Logger.getLogger(UtilBean.class);
+    //    private final static Logger log = Logger.getLogger(UtilBean.class);
 
     public int toInt(double number)
     {
