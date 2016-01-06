@@ -17,7 +17,7 @@
 			<h:panelGroup layout="block" styleClass="#{res.newResource ? 'list_newResource':'oldResource'}">
 				<h:outputLink class="resourceWebLink" target="_blank" value="#{res.url}"><h:outputText value="#{res.title}" escape="false"/></h:outputLink>
 				
-				<table style="border-spacing:0px;padding-right: 0px;    padding-left: 0px;">
+				<table style="border-spacing:0px;padding-right: 0px;padding-left: 0px;" cellpadding="0">
 				<tr>
 					<td>
 						<h:graphicImage styleClass="resource_thumbnail" 
@@ -28,7 +28,8 @@
 					</td>
 					<td>
 				<div style="display:inline; vertical-align:top;">
-				<h:outputLink  value="#{res.learnwebUrl}" title="" style="color:green;">#{res.url}</h:outputLink><br/>
+				<h:outputLink  value="#{res.learnwebUrl}" title="" style="color:green;" rendered="${res.id != -1}"><h:outputText rendered="#{userBean.activeCourse.id != 891}">LearnWeb</h:outputText><h:outputText rendered="#{userBean.activeCourse.id == 891}">ArchiveWeb</h:outputText> <span style="font-family:Verdana">&#187;</span> #{res.url}</h:outputLink>
+				<h:outputLink  value="https://web.archive.org/web/*/#{res.learnwebUrl}" title="" style="color:green;" rendered="${res.id == -1}" target="_blank">Wayback <span style="font-family:Verdana">&#187;</span> #{res.url}</h:outputLink><br/>
 				<ui:fragment rendered="${res.archived}">
 					<div>#{msg['ArchiveSearch.captured_between']} <a href="${res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank"><h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short" /></h:outputText></a> #{msg['ArchiveSearch.captured_between_and']} <a href="${res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank"><h:outputText value="${res.lastArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText></a></div>
 				</ui:fragment>				
