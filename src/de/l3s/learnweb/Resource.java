@@ -144,10 +144,10 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	}
 	else if(getOnlineStatus().equals(OnlineStatus.OFFLINE))
 	{
-	    embeddedSize1 = "<img src=\"../resources/resources/img/page_not_found.jpg\" width=\"300\" height=\"300\" />";
+	    embeddedSize1 = "<img src=\"../resources/resources/img/page_no_longer_available.jpg\" width=\"300\" height=\"300\" />";
 
 	    // TODO find a better solution; don't set a fixed error image
-	    Thumbnail pageNotFoundImage = new Thumbnail("../resources/resources/img/page_not_found.jpg", 300, 300);
+	    Thumbnail pageNotFoundImage = new Thumbnail("../resources/resources/img/page_no_longer_available.jpg", 300, 300);
 	    setThumbnail0(null);
 	    setThumbnail1(pageNotFoundImage.resize(150, 150));
 	    setThumbnail2(pageNotFoundImage);

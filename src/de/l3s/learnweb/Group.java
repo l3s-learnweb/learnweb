@@ -157,6 +157,12 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     }
 
+    public int getResourcesCount() throws SQLException
+    {
+	ResourceManager rm = Learnweb.getInstance().getResourceManager();
+	return rm.getCountResourcesByGroupId(id);
+    }
+
     public List<Folder> getFolders() throws SQLException
     {
 	return Learnweb.getInstance().getGroupManager().getFolders(id);
