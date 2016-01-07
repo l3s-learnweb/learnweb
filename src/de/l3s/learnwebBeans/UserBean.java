@@ -366,11 +366,16 @@ public class UserBean implements Serializable
      */
     public String formatDate(Date date)
     {
-	long timeDifference = (new Date().getTime() - date.getTime());
-	if(timeDifference > 300000)
-	    return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, getLocale()).format(date);
+	if(date != null)
+	{
+	    long timeDifference = (new Date().getTime() - date.getTime());
+	    if(timeDifference > 300000)
+		return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT, getLocale()).format(date);
+	    else
+		return UtilBean.getLocaleMessage("a_few_minutes_ago");
+	}
 	else
-	    return UtilBean.getLocaleMessage("a_few_minutes_ago");
+	    return "";
     }
 
     /**
