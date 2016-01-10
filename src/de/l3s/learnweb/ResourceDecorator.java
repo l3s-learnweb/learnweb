@@ -246,4 +246,11 @@ public class ResourceDecorator implements Serializable
     {
 	return resource.getArchiveUrls().getLast();
     }
+
+    public User getOwnerUser() throws SQLException
+    {
+	if(resource.getOwnerUserId() == 7727)
+	    return null;
+	return resource.getOwnerUser();
+    }
 }

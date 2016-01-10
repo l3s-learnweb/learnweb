@@ -195,7 +195,7 @@ public class User implements Comparable<User>, Serializable, HasId
 	Learnweb learnweb = Learnweb.getInstance();
 	resource = learnweb.getResourceManager().addResource(resource, this);
 
-	learnweb.getArchiveUrlManager().addResourceToArchive(resource);
+	//learnweb.getArchiveUrlManager().addResourceToArchive(resource);
 
 	if(null != resources)
 	    resources.add(resource);

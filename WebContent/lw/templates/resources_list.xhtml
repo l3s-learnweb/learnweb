@@ -59,6 +59,14 @@
 									<h:outputText value="#{res.group.title}; " />
 								</h:outputLink>
 						</h:panelGroup>
+						<h:panelGroup layout="block" style="padding-top:3px;padding-left:3px;display:inline-block;" rendered="#{not empty res.getMetadataValue('collector')}">
+							<b><h:outputText value=" #{msg.collector}: " /></b>	
+							<h:outputText value="#{res.getMetadataValue('collector')}" />
+						</h:panelGroup>
+						<h:panelGroup layout="block" style="padding-top:3px;padding-left:3px;display:inline-block;" rendered="#{empty res.getMetadataValue('collector') and not empty res.ownerUser}">
+							<b><h:outputText value=" #{msg.collector}: " /></b>	
+							<h:outputText value="#{res.resource.ownerUser.username}" />
+						</h:panelGroup>
 					</h:panelGroup>
 					<h:panelGroup rendered="#{utilBean.viewResultSetPage}">
 						<h:form rendered="#{userBean.loggedIn}" class="add_resource_link">

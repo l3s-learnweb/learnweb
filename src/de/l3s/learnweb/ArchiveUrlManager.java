@@ -26,14 +26,12 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 import de.l3s.learnweb.Resource.OnlineStatus;
-import de.l3s.learnweb.solrClient.SolrClient;
 
 public class ArchiveUrlManager
 {
@@ -101,36 +99,36 @@ public class ArchiveUrlManager
 		con.setRequestMethod("POST");
 		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
 		con.setDoOutput(true);
-
+		
 		String urlParameters = "url=" + resource.getUrl();
-
+		
 		DataOutputStream wr = new DataOutputStream(con.getOutputStream());
 		wr.writeBytes(urlParameters);
 		wr.flush();
 		wr.close();
-
+		
 		log.debug("Sending archive request for URL : " + resource.getUrl());
 		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
 		String inputLine;
 		StringBuffer response = new StringBuffer();
-
+		
 		while((inputLine = in.readLine()) != null)
 		{
 		    response.append(inputLine);
 		}
 		in.close();
-
+		
 		String resp = response.toString();
-
+		
 		Pattern p = Pattern.compile("https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
 		Matcher filenameParts = p.matcher(resp);
 		String archiveURL = null;
 		if(filenameParts.find())
 		    archiveURL = resp.substring(filenameParts.start(), filenameParts.end());
-
+		
 		String responseDateGMTString = con.getHeaderField("Date");
 		Date archiveUrlDate = null;
-
+		
 		if(responseDateGMTString != null)
 		    archiveUrlDate = responseDate.parse(responseDateGMTString);*/
 		Client client = Client.create();
@@ -244,14 +242,13 @@ public class ArchiveUrlManager
     public void saveArchiveItResources() throws SQLException, IOException
     {
 	ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
-	SolrClient solr = learnweb.getSolrClient();
 	User admin = learnweb.getUserManager().getUser(7727);
 
 	PrintWriter writer = new PrintWriter(new BufferedWriter(new FileWriter("Process-Website.txt", true)));
 
 	//int tagCount = 0;
 	PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM archiveit_collection WHERE collection_id = ?");
-	PreparedStatement pStmtCollections = learnweb.getConnection().prepareStatement("SELECT * FROM `archiveit_subject` JOIN lw_group USING(group_id) WHERE collection_id = 2349 AND deleted != 0");
+	PreparedStatement pStmtCollections = learnweb.getConnection().prepareStatement("SELECT * FROM `archiveit_subject` JOIN lw_group USING(group_id) WHERE collection_id = 1064 AND deleted != 0");
 	ResultSet rsCollections = pStmtCollections.executeQuery();
 	while(rsCollections.next())
 	{
@@ -342,23 +339,24 @@ public class ArchiveUrlManager
 			log.error("Error while trying to connect to the URL", e);
 			archiveResource.setOnlineStatus(OnlineStatus.OFFLINE);
 		    }
-		    PreparedStatement update = Learnweb.getInstance().getConnection().prepareStatement("UPDATE archiveit_collection SET lw_resource_id = ? WHERE collection_id = ? AND resource_id = ?");
+
 		    archiveResource.setGroup(archiveGroup);
 		    archiveResource = admin.addResource(archiveResource);
 
+		    PreparedStatement update = Learnweb.getInstance().getConnection().prepareStatement("UPDATE archiveit_collection SET lw_resource_id = ? WHERE collection_id = ? AND resource_id = ?");
 		    update.setInt(1, archiveResource.getId());
 		    update.setInt(2, collectionId);
 		    update.setInt(3, resourceId);
 		    update.executeUpdate();
 
-		    try
+		    /*try
 		    {
-			solr.indexResource(archiveResource);
+		    solr.indexResource(archiveResource);
 		    }
 		    catch(IOException | SolrServerException e)
 		    {
-			log.error("Error in indexing the Archive-It resource with lw_resource ID: " + archiveResource.getId(), e);
-		    }
+		    log.error("Error in indexing the Archive-It resource with lw_resource ID: " + archiveResource.getId(), e);
+		    }*/
 
 		    MementoClient mClient = learnweb.getMementoClient();
 		    List<ArchiveUrl> archiveVersions = mClient.getArchiveItVersions(collectionId, archiveitUrl);
@@ -405,7 +403,7 @@ public class ArchiveUrlManager
     {
 	Resource resource = new Resource();
 
-	if(learnwebResourceId != 0) // the video is already stored and will be updated
+	if(learnwebResourceId != 0) // the resource is already stored and will be updated
 	    resource = learnweb.getResourceManager().getResource(learnwebResourceId);
 
 	resource.setTitle(rs.getString("title").trim());
@@ -446,7 +444,9 @@ public class ArchiveUrlManager
 	resource.setLanguage(lwLang);
 	resource.setSource("Archive-It");
 	resource.setType("text");
-
+	resource.setMetadataValue("collector", rs.getString("collector").trim());
+	resource.setMetadataValue("coverage", rs.getString("coverage").trim());
+	resource.setMetadataValue("publisher", rs.getString("publisher").trim());
 	return resource;
     }
 
@@ -597,10 +597,11 @@ public class ArchiveUrlManager
     return null;
     }*/
 
-    public static void main(String[] args) throws SQLException, ParseException
+    public static void main(String[] args) throws SQLException, ParseException, IOException
     {
 	ArchiveUrlManager archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
-	archiveUrlManager.updateArchiveItVersions();
+	archiveUrlManager.saveArchiveItResources();
+	//archiveUrlManager.updateArchiveItVersions();
 	//archiveUrlManager.createArchiveItGroups();
 	/*MementoClient mClient = Learnweb.getInstance().getMementoClient();
 	PreparedStatement pStmtCollections = Learnweb.getInstance().getConnection().prepareStatement("SELECT collection_id, group_id FROM archiveit_subject WHERE group_id in (1095,1096,1097,1098)");
@@ -628,7 +629,7 @@ public class ArchiveUrlManager
 		try
 		{
 		    info = new FileInspector().inspect(FileInspector.openStream(resource.getUrl()), "unknown");
-
+	
 		    if(info != null)
 		    {
 			System.out.println(info.getFileName() + " " + info.getMimeType());
@@ -645,12 +646,12 @@ public class ArchiveUrlManager
 		{
 		    e.printStackTrace();
 		}
-
+	
 	    }
 	}
 	PreparedStatement select = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM lw_resource WHERE url LIKE '%facebook%' AND online_status = 'OFFLINE' AND deleted = 0 AND source= 'Archive-It'");
 	ResultSet rs = select.executeQuery();
-
+	
 	while(rs.next())
 	{
 	    if(rs.getInt("resource_id") <= 0)
@@ -658,9 +659,9 @@ public class ArchiveUrlManager
 		log.info("Not in lw_resource collection ID:" + rs.getInt("collection_id") + " Resource ID:" + rs.getInt("resource_id"));
 		continue;
 	    }
-
+	
 	    Resource resource = rm.getResource(rs.getInt("resource_id"));
-
+	
 	    try
 	    {
 		HttpURLConnection con;
@@ -676,7 +677,7 @@ public class ArchiveUrlManager
 			con = (HttpURLConnection) new URL(con.getHeaderField("Location")).openConnection();
 			con.setInstanceFollowRedirects(true);
 			con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0");
-
+	
 			if(con.getResponseCode() == HttpURLConnection.HTTP_OK)
 			    break;
 		    }
@@ -710,7 +711,7 @@ public class ArchiveUrlManager
 	    try
 	    {
 		String url = rs.getString("url");
-
+	
 		Document doc = Jsoup.connect(url).timeout(60000).userAgent("Mozilla").get();
 		System.out.println(rs.getInt("resource_id") + " " + doc.title());
 		pStmt2.setString(1, doc.title());
@@ -728,7 +729,7 @@ public class ArchiveUrlManager
 	formData.add("url", "http://docs.oracle.com/javase/7/docs/api/java/net/HttpURLConnection.html#setFollowRedirects(boolean)");
 	ClientResponse response = webResource.accept(MediaType.APPLICATION_FORM_URLENCODED).header(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0").post(ClientResponse.class, formData);
 	String refreshHeader = null;
-
+	
 	if(response.getHeaders().containsKey("Refresh"))
 	    refreshHeader = response.getHeaders().get("Refresh").get(0);
 	Pattern p = Pattern.compile("https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");

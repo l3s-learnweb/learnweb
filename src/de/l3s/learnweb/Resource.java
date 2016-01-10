@@ -721,7 +721,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
     public String getLearnwebUrl() throws SQLException
     {
-	if(getId() != -1)
+	if(getId() != -1 && getGroupId() != 0)
 	    return "group/resources.jsf?group_id=" + getGroup().getId() + "&resource_id=" + getId();
 
 	return getUrl();
