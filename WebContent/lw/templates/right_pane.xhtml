@@ -289,16 +289,18 @@
 						</tr>
 						
 						<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.metadataEntries}">
-							<tr>
-								<td>
-									<span class="resource_field">
-										<h:outputText value="${utilBean.getLocaleMessage(entry.key, null)}" />: 
-									</span>
-								</td>
-								<td>
-									<h:outputText value="#{entry.value}" />									
-								</td>
-							</tr>
+							<ui:fragment rendered="#{not empty entry.value}">
+								<tr>
+									<td>
+										<span class="resource_field">
+											<h:outputText value="${utilBean.getLocaleMessage(entry.key, null)}" />: 
+										</span>
+									</td>
+									<td>
+										<h:outputText value="#{entry.value}" />									
+									</td>
+								</tr>
+							</ui:fragment>
 						</ui:repeat>
 						
 						<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.group}">
@@ -312,6 +314,21 @@
 									<h:outputLink value="group/overview.jsf" style="display:inline-block; margin-right:1rem;">
 										<f:param name="group_id" value="#{resourceDetailBean.clickedResource.group.id}" />
 										<h:outputText value="#{resourceDetailBean.clickedResource.group.title}" />
+									</h:outputLink>
+								</td>
+							</tr>
+						</ui:fragment>
+						<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.originalGroup}">
+							<tr>
+								<td>
+									<span class="resource_field">
+										#{msg.comes_from}: 
+									</span>
+								</td>
+								<td>
+									<h:outputLink value="group/overview.jsf" style="display:inline-block; margin-right:1rem;">
+										<f:param name="group_id" value="#{resourceDetailBean.clickedResource.originalGroup.id}" />
+										<h:outputText value="#{resourceDetailBean.clickedResource.originalGroup.title}" />
 									</h:outputLink>
 								</td>
 							</tr>

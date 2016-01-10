@@ -325,6 +325,15 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	return Learnweb.getInstance().getGroupManager().getGroupById(groupId);
     }
 
+    public Group getOriginalGroup() throws SQLException
+    {
+	if(originalResourceId == 0)
+	    return null;
+
+	Resource originalResource = Learnweb.getInstance().getResourceManager().getResource(originalResourceId);
+	return Learnweb.getInstance().getGroupManager().getGroupById(originalResource.getGroupId());
+    }
+
     public void setGroup(Group group)
     {
 	this.groupId = group.getId();
