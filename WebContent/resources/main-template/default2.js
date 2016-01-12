@@ -51,4 +51,24 @@ $(document).ready(function()
 			return true;
 		});		
 	});
-})  
+
+	$("#searchfield").autocomplete({
+        source: function (request, response) {
+            console.log("source");
+            $.ajax({
+                url: "http://api.bing.com/osjson.aspx?Query=" + encodeURIComponent(request.term) + "&JsonType=callback&JsonCallback=?",
+                dataType: "jsonp",
+    
+                success: function (data) {
+                    console.log("success!");
+                    var suggestions = [];
+                    $.each(data[1], function (i, val) {
+                        suggestions.push(val);
+                    });
+                    response(suggestions);
+
+                }
+            });
+        }
+    });
+});	

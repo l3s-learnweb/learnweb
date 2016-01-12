@@ -61,6 +61,18 @@ public class SearchQuery implements Serializable
 	    JAXBContext jaxbContext = JAXBContext.newInstance(SearchResponse.class);
 	    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
 	    SearchResponse response = (SearchResponse) jaxbUnmarshaller.unmarshal(inputStream);
+
+	    if(response == null)
+	    {
+		log.fatal("response is null");
+		return;
+	    }
+	    if(response.getQuery() == null)
+	    {
+		log.fatal("response query is null");
+		return;
+	    }
+
 	    List<SearchResultEntity> searchResults = response.getQuery().getResults();
 
 	    for(SearchResultEntity searchResult : searchResults)
