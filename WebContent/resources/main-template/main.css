@@ -1385,3 +1385,34 @@ div#presentation_preview {
 
 .northunit{border:none;}
 
+.ui-autocomplete {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    cursor: default;
+    border: 1px solid #DDD;
+	background: #FFF none repeat scroll 0% 0%;
+	color: #333;
+	list-style: outside none none;
+	padding: 0px;
+	margin: 0px;
+	outline: medium none;
+	z-index: 100;
+}
+.ui-autocomplete .ui-state-focus {
+	box-shadow: none;
+	border: none;
+	background: #ededed none repeat scroll 0 0;
+	margin:0;
+    color: #2b2b2b;
+    font-weight: normal;
+}
+.ui-autocomplete .ui-menu-item {
+    position: relative;
+    margin: 0px;
+    padding: 3px 1em 3px 0.4em;
+    cursor: pointer;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow:hidden;
+}
