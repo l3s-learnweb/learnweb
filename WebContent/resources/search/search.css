@@ -206,7 +206,7 @@
 	background: rgba(204, 204, 204, 0.03);
 }
 
-.list_view a {  text-decoration: none; color:#1020D0}
+.list_view a {  text-decoration: none; color:#1020D0;}
 .list_view a:hover { text-decoration: underline;}
 
 .list_view .add_resource_link a:link, 
@@ -218,6 +218,8 @@
 .list_view a.resourceWebLink:link, 
 .list_view a.resourceWebLink { font-size: 1.6rem; font-family: "Segoe UI",Arial,Helvetica,sans-serif; }
 .list_view a.resourceWebLink:visited { color:rgb(60, 110, 200); }
+
+.list_view a.resourceReferenceUrl{color:green; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block}
 /* color:rgb(88, 147, 236); */
 .page_counter {
 	font-weight:bold;

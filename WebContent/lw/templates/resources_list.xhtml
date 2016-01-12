@@ -14,10 +14,10 @@
 		</h:panelGroup>	
 			
 		<div class="resource" id="resource_${res.tempId}">		
-			<h:panelGroup layout="block" styleClass="#{res.newResource ? 'list_newResource':'oldResource'}">
+			
 				<h:outputLink class="resourceWebLink" target="_blank" value="#{res.url}"><h:outputText value="#{res.title}" escape="false"/></h:outputLink>
 				
-				<table style="border-spacing:0px;padding-right: 0px;padding-left: 0px;" cellpadding="0">
+				<!-- <table style="border-spacing:0px;padding-right: 0px;padding-left: 0px;" cellpadding="0">
 				<tr>
 					<td>
 						<h:graphicImage styleClass="resource_thumbnail" 
@@ -26,66 +26,65 @@
 							rendered="#{not empty res.thumbnail0} and false" 
 							alt="#{res.title}" />
 					</td>
-					<td>
-				<div style="display:inline; vertical-align:top;">
-				<h:outputLink  value="#{res.learnwebUrl}" title="" style="color:green;" rendered="${res.id != -1}"><h:outputText rendered="#{userBean.activeCourse.id != 891}">LearnWeb</h:outputText><h:outputText rendered="#{userBean.activeCourse.id == 891}">ArchiveWeb</h:outputText> <span style="font-family:Verdana">&#187;</span> #{res.url}</h:outputLink>
-				<h:outputLink  value="https://web.archive.org/web/*/#{res.learnwebUrl}" title="" style="color:green;" rendered="${res.id == -1}" target="_blank">Wayback <span style="font-family:Verdana">&#187;</span> #{res.url}</h:outputLink><br/>
-				<ui:fragment rendered="${res.archived}">
-					<div>#{msg['ArchiveSearch.captured_between']} <a href="${res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank"><h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short" /></h:outputText></a> #{msg['ArchiveSearch.captured_between_and']} <a href="${res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank"><h:outputText value="${res.lastArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText></a></div>
-				</ui:fragment>				
+					<td> -->
+				<div style="margin:0.2rem 0 0.2rem 0;">
+					<h:outputLink class="resourceReferenceUrl" value="#{res.learnwebUrl}" title="" rendered="${res.id != -1}"><h:outputText rendered="#{userBean.activeCourse.id != 891}">LearnWeb</h:outputText><h:outputText rendered="#{userBean.activeCourse.id == 891}">ArchiveWeb</h:outputText> <span style="font-family:Verdana">&#187;</span> #{res.url}</h:outputLink>
+					<h:outputLink class="resourceReferenceUrl" value="https://web.archive.org/web/*/#{res.learnwebUrl}" title="" rendered="${res.id == -1}" target="_blank">Wayback <span style="font-family:Verdana">&#187;</span> #{res.url}</h:outputLink>
+					<ui:fragment rendered="${res.archived}">
+						<div>#{msg['ArchiveSearch.captured_between']} <a href="${res.firstArchivedObject.archiveUrl}" style="color:green;" target="_blank"><h:outputText value="${res.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short" /></h:outputText></a> #{msg['ArchiveSearch.captured_between_and']} <a href="${res.lastArchivedObject.archiveUrl}" style="color:green;" target="_blank"><h:outputText value="${res.lastArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short"/></h:outputText></a></div>
+					</ui:fragment>
+				</div>				
 				<h:outputText value="#{res.snippet}" style="display:block;width:94%;" escape="false"></h:outputText>
-				</div>
 				
-					<h:panelGroup rendered="#{utilBean.searchPage}" layout="block">
-						<h:panelGroup rendered="#{userBean.loggedIn}" class="add_resource_link" style="float:left;padding-top:3px;margin-right:10px" layout="block">				
-							<h:form>
-								<b><h:outputText value="#{msg.options}: " /></b>
-								<p:commandLink update=":resource_form"
-									oncomplete="PF('resource_dialog').show();"
-									title="#{msg.addToMyResources}"
-									style="display:inline;">
-									<h:graphicImage value="/resources/icon/silk/add.png" width="16"
-										height="16" alt="#{msg.addToMyResources}" />#{msg.addToMyResources}
-								<f:setPropertyActionListener value="#{res.resource}"
-										target="#{searchBean.selectedResource}" />
-								</p:commandLink>
-							</h:form>
-						</h:panelGroup>
-						<h:panelGroup layout="block" rendered="#{not empty res.group}" style="padding-top:3px;display:inline-block;">
-							<b><h:outputText value="#{msg.group}: " /></b>	
-				
-								<h:outputLink value="group/resources.jsf">
-									<f:param name="group_id" value="#{res.group.id}" />
-									<h:outputText value="#{res.group.title}; " />
-								</h:outputLink>
-						</h:panelGroup>
-						<h:panelGroup layout="block" style="padding-top:3px;padding-left:3px;display:inline-block;" rendered="#{not empty res.getMetadataValue('collector')}">
-							<b><h:outputText value=" #{msg.collector}: " /></b>	
-							<h:outputText value="#{res.getMetadataValue('collector')}" />
-						</h:panelGroup>
-						<h:panelGroup layout="block" style="padding-top:3px;padding-left:3px;display:inline-block;" rendered="#{empty res.getMetadataValue('collector') and not empty res.ownerUser}">
-							<b><h:outputText value=" #{msg.collector}: " /></b>	
-							<h:outputText value="#{res.resource.ownerUser.username}" />
-						</h:panelGroup>
-					</h:panelGroup>
-					<h:panelGroup rendered="#{utilBean.viewResultSetPage}">
-						<h:form rendered="#{userBean.loggedIn}" class="add_resource_link">
+				<h:panelGroup rendered="#{utilBean.searchPage}" layout="block">
+					<h:panelGroup rendered="#{userBean.loggedIn}" class="add_resource_link" style="padding-top:3px;margin-right:10px;display:inline-block" layout="block">				
+						<h:form>
+							<b><h:outputText value="#{msg.options}: " /></b>
 							<p:commandLink update=":resource_form"
 								oncomplete="PF('resource_dialog').show();"
 								title="#{msg.addToMyResources}"
-								style="display:block; margin-top:4px;">
+								style="display:inline;">
 								<h:graphicImage value="/resources/icon/silk/add.png" width="16"
 									height="16" alt="#{msg.addToMyResources}" />#{msg.addToMyResources}
-							<f:setPropertyActionListener value="#{res.resource}"
-									target="#{resultSetBean.selectedResource}" />
+								<f:setPropertyActionListener value="#{res.resource}"
+									target="#{searchBean.selectedResource}" />
 							</p:commandLink>
 						</h:form>
-					</h:panelGroup>					
+					</h:panelGroup>
+					<h:panelGroup layout="block" rendered="#{not empty res.group}" style="padding-top:3px;margin-right:10px;display:inline-block;">
+						<b><h:outputText value="#{msg.group}: " /></b>	
 				
-				</td>
+						<h:outputLink value="group/resources.jsf">
+							<f:param name="group_id" value="#{res.group.id}" />
+							<h:outputText value="#{res.group.title}; " />
+						</h:outputLink>
+					</h:panelGroup>
+					<h:panelGroup layout="block" style="padding-top:3px;display:inline-block;white-space:nowrap;position:absolute;" rendered="#{not empty res.getMetadataValue('collector')}">
+						<b><h:outputText value=" #{msg.collector}: " /></b>	
+						<h:outputText value="#{res.getMetadataValue('collector')}" />
+					</h:panelGroup>
+					<h:panelGroup layout="block" style="padding-top:3px;display:inline-block;white-space:nowrap;position:absolute;" rendered="#{empty res.getMetadataValue('collector') and not empty res.ownerUser}">
+						<b><h:outputText value=" #{msg.collector}: " /></b>	
+						<h:outputText value="#{res.resource.ownerUser.username}" />
+					</h:panelGroup>
+				</h:panelGroup>
+				<h:panelGroup rendered="#{utilBean.viewResultSetPage}">
+					<h:form rendered="#{userBean.loggedIn}" class="add_resource_link">
+						<p:commandLink update=":resource_form"
+							oncomplete="PF('resource_dialog').show();"
+							title="#{msg.addToMyResources}"
+							style="display:block; margin-top:4px;">
+							<h:graphicImage value="/resources/icon/silk/add.png" width="16"
+								height="16" alt="#{msg.addToMyResources}" />#{msg.addToMyResources}
+							<f:setPropertyActionListener value="#{res.resource}"
+									target="#{resultSetBean.selectedResource}" />
+						</p:commandLink>
+					</h:form>
+				</h:panelGroup>					
+				
+				<!-- </td>
 				</tr>
-				</table>
-			</h:panelGroup>
+				</table> -->			
 		</div>		
 	</ui:repeat>
 </ui:composition>
