@@ -113,6 +113,93 @@ public class ForumPostBean extends ApplicationBean implements Serializable
 	return categories;
     }
 
+    public boolean canDeletePost(ForumPost obj)
+    {
+	User user = getUser();
+
+	if(user.isModerator())
+	    return true;
+
+	if(user.getId() == obj.getUserId())
+	    return true;
+
+	return false;
+    }
+
+    public boolean canEditPost(ForumPost obj)
+    {
+	User user = getUser();
+
+	if(user.getId() == obj.getUserId())
+	    return true;
+
+	return false;
+    }
+
+    public void deletePost(ForumPost post) throws SQLException
+    {
+
+	User user = getUser();
+	if(user.isModerator() || user.getId() == post.getUserId())
+	{
+
+	    ForumManager fm = getLearnweb().getForumManager();
+	    fm.deletePost(post);
+	}
+    }
+
+    /* public String editPost(ForumPost post) throws SQLException
+    {
+    String text = "text replaced by this";
+    
+    User user = getUser();
+    if(user.getId() == post.getUserId())
+    {
+        ForumManager fm = getLearnweb().getForumManager();
+        post.setText(text);
+        fm.save(post);
+        return "forum_post.jsf"; // + post.getId();
+    }
+    else
+    {
+        return null;
+    }
+    
+    } */
+
+    public void quotePost(ForumPost post) throws SQLException
+    {
+
+	//newPost.setText(post.getText());	//normal
+	//newPost.setText(post.getUser().getUsername() + ": " + "<br>" + post.getText() + "<br>" + " "); //with name
+	//newPost.setText("<div style='margin-left: 40px;'>" + post.getText() + "<br></div>" + " " + "<br>"); //right
+	//newPost.setText(post.getText() + "<br><hr><br>"); //line
+	//newPost.setText("<span style='background-color: rgb(255, 255, 153);'><span style='font-style: italic;'>" + post.getText() + "<br></span></span>" + " " + "<br>"); //colored
+	//newPost.setText("<span class='fakeInput'> <input type='text' value='" + post.getText() + "'/></span>"); //in textbox
+	//newPost.setText("<input  readonly='true' value=  " + post.getText() + "><br><hr><br>");
+	newPost.setText("<div style='margin-left: 40px; border: 1px solid black ; background-color: rgb(255, 255, 153);'>" + post.getUser().getUsername() + ": " + "<br>" + post.getText() + "<br></span></div>" + " " + "<hr><br>");
+	newPost.setCategory(post.getCategory());
+
+	System.out.println(post.getText());
+    }
+
+    /*public void nameTag(String text)
+    {
+    Scanner s = new Scanner(text);
+    
+    while(s.next() != null)
+    {
+        if(s.next().contains("@"))
+        {
+    	System.out.println("@ gefunden");
+        }
+    }
+    //search @User
+    
+    //write message to User
+    s.close();
+    } */
+
     public int getTopicId()
     {
 	return topicId;

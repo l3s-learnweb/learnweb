@@ -86,6 +86,22 @@ public class ForumManager
 	return posts;
     }
 
+    public ForumPost getPostById(int postId) throws SQLException
+    {
+	ForumPost post = null;
+
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `lw_forum_post` WHERE post_id = ?");
+	select.setInt(1, postId);
+	ResultSet rs = select.executeQuery();
+	if(rs.next())
+	{
+	    post = createPost(rs);
+	}
+	select.close();
+
+	return post;
+    }
+
     /**
      * Returns all posts that were created in the users group after the Date "lowerBound"
      * 
@@ -271,4 +287,15 @@ public class ForumManager
 
 	return topic;
     }
+
+    public void deletePost(ForumPost post) throws SQLException
+    {
+
+	String sqlQuery = "DELETE FROM lw_forum_post WHERE post_id=? ";
+	PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
+	ps.setInt(1, post.getId());
+
+	ps.executeUpdate();
+    }
+
 }

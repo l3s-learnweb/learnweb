@@ -1,0 +1,74 @@
+<ui:composition template="/lw/templates/new_main_t.xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+	
+	<ui:define name="metadata">
+		<f:metadata> 
+			<f:viewParam name="post_id" value="#{forumEditBean.postId}" />
+			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{forumEditBean.preRenderView}" /> 
+		</f:metadata>
+	</ui:define>
+	
+	<ui:param name="loginRequired" value="true" />
+	<ui:param name="disableGrowl" value="true" />
+	<ui:param name="pageTitle" value="#{forumPostBean.topic.title}" escape="false" />
+
+	<ui:define name="center_layout">
+	
+	
+	<h:outputStylesheet library="forum" name="forum.css" />
+		
+	<ui:fragment rendered="#{true}">
+			<div class="page_header" id="reply">
+				<span>
+					#{msg.edit}
+				</span>
+			</div>
+				
+			<div class="grey_border">
+				<h:form>
+					<table id="answer_table">
+						<tr>
+							<td class="width_10">
+								<h:outputText value="#{msg.category}: "/>
+							</td>
+							<td>
+								<p:selectOneMenu id="post_category" styleClass="category" value="#{forumEditBean.post.category}" editable="true"
+									 label="#{msg.category}" required="#{forumEditBean.group.restrictionForumCategoryRequired}">
+				
+							        <f:selectItems value="#{forumEditBean.categories}" />
+						       	</p:selectOneMenu>	
+							</td>
+							<td class="width_30">
+								<p:message for="post_category"/>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="2">
+								<p:editor id="post_message" widgetVar="editorWidget" value="#{forumEditBean.post.text}" 
+									label="#{msg['PostShow.postContent']}"
+									controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">	
+			 					</p:editor>
+							</td>
+							<td class="width_30">
+								<p:message for="post_message"/>
+							</td>
+						</tr>
+						<tr>
+							<td colspan="3">
+								<h:commandLink id="save" action="#{forumEditBean.onSavePost}" value="#{msg.save}"   styleClass="greenbutton save_button" 
+									 validateClient="true" >									
+								</h:commandLink>
+							</td>
+						</tr>
+					</table>
+				</h:form> 
+			</div>
+		</ui:fragment>
+			
+			
+		
+	</ui:define>
+</ui:composition>

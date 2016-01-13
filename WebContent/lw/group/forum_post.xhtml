@@ -130,11 +130,15 @@
 		        		
 		        		<div class="clear"></div>
 		        		
-					    <!-- doesn't work yet. 
-					    	<h:commandButton value="#{msg.clear}" styleClass="greenbutton float-right"/>
-					    	<h:commandButton value="#{msg.edit}" styleClass="greenbutton float-right"/>
-					  		<h:commandButton value="#{msg['ForumIndex.quote']}" styleClass="greenbutton float-right"/>
-					   -->
+					      
+					    	<h:commandLink value="#{msg.clear}" rendered="#{forumPostBean.canDeletePost(post)}" actionListener="#{forumPostBean.deletePost(post)}" styleClass="greenbutton float-right"/>
+					    	<h:outputLink value="group/forum_post_edit.jsf"  rendered="#{forumPostBean.canEditPost(post)}" styleClass="greenbutton float-right">
+						    	<f:param name="post_id" value="#{post.id}" />
+						    	#{msg.edit}
+					    	</h:outputLink>
+					  		<h:commandLink value="#{msg['ForumIndex.quote']}" actionListener="#{forumPostBean.quotePost(post)}" update="post_message" styleClass="greenbutton float-right" />
+					   
+					   
 				    </div>
 				   
 					<div style="min-height:70px">
@@ -155,7 +159,7 @@
 		    </p:dataTable>
 		</h:form>
 		
-		<ui:fragment rendered="#{forumPostBean.member or true}">
+		<ui:fragment rendered="#{forumPostBean.member}">
 			<div class="page_header" id="reply">
 				<span>
 					#{msg['ForumIndex.reply']}
