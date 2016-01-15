@@ -248,7 +248,7 @@ public class ArchiveUrlManager
 
 	//int tagCount = 0;
 	PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM archiveit_collection WHERE collection_id = ?");
-	PreparedStatement pStmtCollections = learnweb.getConnection().prepareStatement("SELECT * FROM `archiveit_subject` JOIN lw_group USING(group_id) WHERE collection_id = 1064 AND deleted != 0");
+	PreparedStatement pStmtCollections = learnweb.getConnection().prepareStatement("SELECT group_id,collection_id FROM `archiveit_subject` JOIN lw_group USING(group_id) WHERE collector LIKE 'Stanford University.%' AND deleted != 0");
 	ResultSet rsCollections = pStmtCollections.executeQuery();
 	while(rsCollections.next())
 	{
@@ -543,7 +543,7 @@ public class ArchiveUrlManager
 	{
 	    int courseId = 891;
 	    User admin = learnweb.getUserManager().getUser(7727);
-	    PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("SELECT * FROM `archiveit_subject` WHERE `collectedby` LIKE 'Cornell University Library' AND group_id = 0");
+	    PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("SELECT * FROM  `archiveit_subject` WHERE  `collector` LIKE  'Stanford University.%' AND group_id = 0");
 	    PreparedStatement updateGroupId = learnweb.getConnection().prepareStatement("UPDATE archiveit_subject SET group_id = ? WHERE collection_id = ?");
 	    ResultSet rs = prepStmt.executeQuery();
 	    while(rs.next())

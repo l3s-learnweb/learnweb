@@ -38,7 +38,11 @@
 								<f:ajax render="usernameMessage"/>							
 							</p:inputText>
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="username" id="usernameMessage" />					
-			
+
+							<h:outputText value="#{msg.full_name}:" />
+							<p:inputText id="userfullname" value="#{profileBean.fullName}" style="width:200px;" />
+							<p:message showSummary="true" showDetail="false" styleClass="error" for="userfullname" id="userfullnameMessage" />
+										
 							<h:outputText value="#{msg.email_address}:" />
 							<p:inputText id="useremail" value="#{profileBean.email}" validatorMessage="#{msg.email_message}" style="width:200px;">
 								<f:ajax render="useremailMessage"/>							
@@ -53,6 +57,10 @@
 							</h:selectOneMenu>						
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="usergender" id="usergenderMessage" />					
 						
+							<h:outputText value="#{msg.affiliation}:" />
+							<p:inputText id="useraffiliation" value="#{profileBean.affiliation}" style="width:200px;" />
+							<p:message showSummary="true" showDetail="false" styleClass="error" for="useraffiliation" id="useraffiliationMessage" />
+							
 							<h:outputText value="#{msg.address}:" />
 							<p:inputTextarea id="useraddress" value="#{profileBean.address}" style="width:200px;" />
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="useraddress" id="useraddressMessage" />					

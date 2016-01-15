@@ -68,6 +68,12 @@ public class ProfileBean extends ApplicationBean implements Serializable
     @NotEmpty
     private String currentPassword;
 
+    @Size(min = 0, max = 250)
+    private String fullName;
+
+    @Size(min = 0, max = 250)
+    private String affiliation;
+
     private List<LogEntry> logMessages;
 
     public List<LogEntry> getLogMessages()
@@ -91,6 +97,8 @@ public class ProfileBean extends ApplicationBean implements Serializable
 	interest = user.getInterest();
 	address = user.getAddress();
 	profession = user.getProfession();
+	fullName = user.getFullName();
+	affiliation = user.getAffiliation();
 
     }
 
@@ -135,6 +143,8 @@ public class ProfileBean extends ApplicationBean implements Serializable
 	user.setPhone(phone);
 	user.setProfession(profession);
 	user.setUsername(username);
+	user.setAffiliation(affiliation);
+	user.setFullName(fullName);
 
 	getLearnweb().getUserManager().save(user);
 
@@ -309,6 +319,26 @@ public class ProfileBean extends ApplicationBean implements Serializable
     public void setCurrentPassword(String currentPassword)
     {
 	this.currentPassword = currentPassword;
+    }
+
+    public String getFullName()
+    {
+	return fullName;
+    }
+
+    public void setFullName(String fullName)
+    {
+	this.fullName = fullName;
+    }
+
+    public String getAffiliation()
+    {
+	return affiliation;
+    }
+
+    public void setAffiliation(String affiliation)
+    {
+	this.affiliation = affiliation;
     }
 
     public void validateCurrentPassword(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException

@@ -33,6 +33,8 @@ public class User implements Comparable<User>, Serializable, HasId
     private InterWeb interweb;
     private int imageFileId; // profile image
     private int organisationId;
+    private String fullName; //Full Name
+    private String affiliation; //affiliated with which institute
     private String username;
     private String email;
     private String password; // md5 hash
@@ -695,6 +697,26 @@ public class User implements Comparable<User>, Serializable, HasId
     public void setCredits(String credits)
     {
 	this.credits = credits;
+    }
+
+    public String getFullName()
+    {
+	return fullName;
+    }
+
+    public void setFullName(String fullName)
+    {
+	this.fullName = fullName;
+    }
+
+    public String getAffiliation()
+    {
+	return affiliation;
+    }
+
+    public void setAffiliation(String affiliation)
+    {
+	this.affiliation = affiliation;
     }
 
 }
