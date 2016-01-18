@@ -113,9 +113,9 @@
 		        	</div>
 		        </p:column>
 		        
-		        <p:column headerText="#{msg['ForumIndex.messages']}">
-		        	<div class="post_information_div_top">
-					   <div class="float-right">
+		        <p:column headerText="#{msg['ForumIndex.messages']}" style="position: relative">
+		        	<div class="post_information_div_top" >
+					   <div class="float-right" >
 					       	#{msg['ForumIndex.postedOn']}
 					        <h:outputText value="#{post.date}">
 						        <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
@@ -130,18 +130,14 @@
 		        		
 		        		<div class="clear"></div>
 		        		
-					      
-					    	<h:commandLink value="#{msg.clear}" rendered="#{forumPostBean.canDeletePost(post)}" actionListener="#{forumPostBean.deletePost(post)}" styleClass="greenbutton float-right"/>
-					    	<h:outputLink value="group/forum_post_edit.jsf"  rendered="#{forumPostBean.canEditPost(post)}" styleClass="greenbutton float-right">
-						    	<f:param name="post_id" value="#{post.id}" />
-						    	#{msg.edit}
-					    	</h:outputLink>
-					  		<h:commandLink value="#{msg['ForumIndex.quote']}" actionListener="#{forumPostBean.quotePost(post)}" update="post_message" styleClass="greenbutton float-right" />
+		        		
+		        		
+					   	
+					</div>
 					   
-					   
-				    </div>
+				    
 				   
-					<div style="min-height:70px">
+					<div style="min-height:70px; padding-bottom: 6rem;">
 						<h:outputText value="#{post.text}" escape="false" />
 					</div>
 					
@@ -154,6 +150,17 @@
 				            </h:outputFormat>
 			           	</div>
 			     	</ui:fragment>
+			     	
+			     	
+				     <div style="bottom: 0px; position: absolute; width: 98%; left: 0.9rem; padding: 1.1rem; box-sizing: border-box; text-align: right; padding-bottom: 1rem; border-top: 1px solid rgb(168, 168, 168);">
+	        		
+				    	<h:commandLink value="#{msg.clear}" rendered="#{forumPostBean.canDeletePost(post)}" actionListener="#{forumPostBean.deletePost(post)}" styleClass="greenbutton float-right"/>
+				    	<h:outputLink value="group/forum_post_edit.jsf"  rendered="#{forumPostBean.canEditPost(post)}" styleClass="greenbutton float-right">
+					    	<f:param name="post_id" value="#{post.id}" />
+					    	#{msg.edit}
+				    	</h:outputLink>
+				  		<h:commandLink value="#{msg['ForumIndex.quote']}" actionListener="#{forumPostBean.quotePost(post)}" onclick="$('#center_pane .content').animate({ scrollTop: 1000 }, 'slow'); return true;" update="post_message" styleClass="greenbutton float-right" />
+				   	</div>
 		        </p:column>
 		        
 		    </p:dataTable>

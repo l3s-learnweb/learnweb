@@ -148,25 +148,6 @@ public class ForumPostBean extends ApplicationBean implements Serializable
 	}
     }
 
-    /* public String editPost(ForumPost post) throws SQLException
-    {
-    String text = "text replaced by this";
-    
-    User user = getUser();
-    if(user.getId() == post.getUserId())
-    {
-        ForumManager fm = getLearnweb().getForumManager();
-        post.setText(text);
-        fm.save(post);
-        return "forum_post.jsf"; // + post.getId();
-    }
-    else
-    {
-        return null;
-    }
-    
-    } */
-
     public void quotePost(ForumPost post) throws SQLException
     {
 
@@ -177,28 +158,10 @@ public class ForumPostBean extends ApplicationBean implements Serializable
 	//newPost.setText("<span style='background-color: rgb(255, 255, 153);'><span style='font-style: italic;'>" + post.getText() + "<br></span></span>" + " " + "<br>"); //colored
 	//newPost.setText("<span class='fakeInput'> <input type='text' value='" + post.getText() + "'/></span>"); //in textbox
 	//newPost.setText("<input  readonly='true' value=  " + post.getText() + "><br><hr><br>");
-	newPost.setText("<div style='margin-left: 40px; border: 1px solid black ; background-color: rgb(255, 255, 153);'>" + post.getUser().getUsername() + ": " + "<br>" + post.getText() + "<br></span></div>" + " " + "<hr><br>");
+	newPost.setText("<div style='margin-left: 40px; border: 1px solid black ; background-color: rgb(204, 255, 255);'>" + post.getUser().getUsername() + ": " + "<br>" + post.getText() + "</span></div><br>");
 	newPost.setCategory(post.getCategory());
-
 	System.out.println(post.getText());
     }
-
-    /*public void nameTag(String text)
-    {
-    Scanner s = new Scanner(text);
-    
-    while(s.next() != null)
-    {
-        if(s.next().contains("@"))
-        {
-    	System.out.println("@ gefunden");
-        }
-    }
-    //search @User
-    
-    //write message to User
-    s.close();
-    } */
 
     public int getTopicId()
     {
