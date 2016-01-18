@@ -60,11 +60,13 @@ public class Learnweb
 
     private static Learnweb learnweb = null;
 
+    /**
+     * The Same as getInstanceRaw() but hides all exceptions
+     * 
+     * @return
+     */
     public static Learnweb getInstance()
     {
-	/*
-	synchronized(Learnweb.class)
-	{*/
 	try
 	{
 	    if(learnweb == null)
@@ -79,7 +81,24 @@ public class Learnweb
 	    log.fatal(e);
 	    throw new RuntimeException(e);
 	}
-	//}
+    }
+
+    public static Learnweb getInstanceRaw() throws ClassNotFoundException, SQLException
+    {
+	try
+	{
+	    if(learnweb == null)
+	    {
+		new Learnweb();
+	    }
+	    return learnweb;
+	}
+	catch(Exception e)
+	{
+	    learnweb = null;
+	    log.fatal(e);
+	    throw e;
+	}
     }
 
     /**

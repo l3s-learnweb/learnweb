@@ -139,9 +139,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    }
 	    catch(Exception e1)
 	    {
-		e1.printStackTrace();
-
-		addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+		addFatalMessage(e1);
 	    }
 	}
     }
@@ -620,7 +618,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void onSelect()
     {
-	ResourceManager rm = Learnweb.getInstance().getResourceManager();
+	ResourceManager rm = getLearnweb().getResourceManager();
 	Resource temp;
 	try
 	{
@@ -680,41 +678,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
     }
 
-    /*public void addSelectedResourceLink() throws SQLException
-    {
-    try
-    {
-        User user = getUser();
-        if(null == user)
-        {
-    	addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
-    	return;
-        }
-    
-        // add resource to a group if selected
-        if(selectedResourceTargetGroupId != 0)
-        {
-    	Group targetGroup = getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId);
-    	targetGroup.addResource(clickedResource, getUser());
-    	log(Action.adding_resource, selectedResourceTargetGroupId, clickedResource.getId(), "");
-    
-    	addGrowl(FacesMessage.SEVERITY_INFO, "addedResourceToGroup", clickedResource.getTitle(), targetGroup.getTitle());
-        }
-        else
-        {
-    	getUser().addResource(clickedResource);
-    	addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", clickedResource.getTitle());
-        }
-    }
-    catch(SQLException e)
-    {
-        addFatalMessage(e);
-    }
-    }*/
-
     public void onSelectPresentation()
     {
-	PresentationManager pm = Learnweb.getInstance().getPresentationManager();
+	PresentationManager pm = getLearnweb().getPresentationManager();
 	Presentation temp;
 	try
 	{

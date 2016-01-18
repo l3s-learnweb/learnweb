@@ -27,7 +27,7 @@ public class LearnwebBean implements Serializable
     private transient Learnweb learnweb;
     private final String contextUrl;
 
-    public LearnwebBean() throws IOException
+    public LearnwebBean() throws IOException, ClassNotFoundException, SQLException
     {
 	ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
 
@@ -36,7 +36,7 @@ public class LearnwebBean implements Serializable
 	else
 	    contextUrl = ext.getRequestScheme() + "://" + ext.getRequestServerName() + ":" + ext.getRequestServerPort() + ext.getRequestContextPath();
 
-	learnweb = Learnweb.getInstance();
+	learnweb = Learnweb.getInstanceRaw();
 	learnweb.setContextUrl(contextUrl);
 
 	log.debug("created LearnwebBean: contextUrl=" + contextUrl);

@@ -26,7 +26,6 @@ import com.sun.jersey.api.client.ClientHandlerException;
 
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.FactSheet;
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
@@ -84,7 +83,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public SearchBean()
     {
-	interweb = Learnweb.getInstance().getInterweb();
+	interweb = getLearnweb().getInterweb();
 	searchMode = MODE.image; // default search mode
 	queryMode = getPreference("SEARCH_ACTION", "web");
 
