@@ -31,6 +31,7 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
+import de.l3s.archiveSearch.CDXClient;
 import de.l3s.learnweb.Resource.OnlineStatus;
 
 public class ArchiveUrlManager
@@ -43,7 +44,8 @@ public class ArchiveUrlManager
     //private static int collectionId;
     //private Queue<Resource> resources = new ConcurrentLinkedQueue<Resource>();
     //private Map<Integer, Date> trackResources = new ConcurrentHashMap<Integer, Date>();
-    private ExecutorService executerService;
+    private ExecutorService executorService;
+    private ExecutorService cdxExecutorService;
 
     protected ArchiveUrlManager(Learnweb learnweb)
     {
@@ -59,15 +61,15 @@ public class ArchiveUrlManager
 	    log.error("The archive today service URL is malformed:", e);
 	}*/
 
-	executerService = Executors.newCachedThreadPool();//new ThreadPoolExecutor(maxThreads, maxThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(maxThreads * 1000, true), new ThreadPoolExecutor.CallerRunsPolicy());
-
+	executorService = Executors.newCachedThreadPool();//new ThreadPoolExecutor(maxThreads, maxThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(maxThreads * 1000, true), new ThreadPoolExecutor.CallerRunsPolicy());
+	cdxExecutorService = Executors.newSingleThreadExecutor();//In order to sequentially poll the CDX server and not overload it
     }
 
-    class ArchiveIsWorker implements Callable<String>
+    class ArchiveNowWorker implements Callable<String>
     {
 	Resource resource;
 
-	public ArchiveIsWorker(Resource resource)
+	public ArchiveNowWorker(Resource resource)
 	{
 	    this.resource = resource;
 	}
@@ -182,12 +184,36 @@ public class ArchiveUrlManager
 
     }
 
+    class CDXWorker implements Callable<String>
+    {
+	ResourceDecorator resource;
+
+	public CDXWorker(ResourceDecorator resource)
+	{
+	    this.resource = resource;
+	}
+
+	@Override
+	public String call() throws NumberFormatException, SQLException
+	{
+	    CDXClient cdxClient = new CDXClient();
+	    cdxClient.isArchived(resource);
+	    return null;
+	}
+
+    }
+
+    public void checkWaybackCaptures(ResourceDecorator resource)
+    {
+	cdxExecutorService.submit(new CDXWorker(resource));
+    }
+
     public String addResourceToArchive(Resource resource)
     {
 	String response = "";
 	if(!(resource.getStorageType() == Resource.FILE_RESOURCE))
 	{
-	    Future<String> executorResponse = executerService.submit(new ArchiveIsWorker(resource));
+	    Future<String> executorResponse = executorService.submit(new ArchiveNowWorker(resource));
 
 	    try
 	    {
@@ -304,7 +330,7 @@ public class ArchiveUrlManager
 			if(toProcessUrl)
 			{
 			    log.info("Url Still Alive " + httpCon.getResponseCode() + " URL:" + archiveResource.getUrl());
-			    Future<String> processResponse = executerService.submit(new ProcessWebsiteWorker(archiveResource, rpm, writer));
+			    Future<String> processResponse = executorService.submit(new ProcessWebsiteWorker(archiveResource, rpm, writer));
 			    try
 			    {
 				log.info(processResponse.get(2, TimeUnit.MINUTES));
@@ -745,20 +771,33 @@ public class ArchiveUrlManager
 
     public void onDestroy()
     {
-	executerService.shutdown();
+	executorService.shutdown();
+	cdxExecutorService.shutdown();
 	try
 	{
 	    //Wait for a while for currently executing tasks to terminate
-	    if(!executerService.awaitTermination(1, TimeUnit.MINUTES))
-		executerService.shutdownNow(); //cancelling currently executing tasks
+	    if(!executorService.awaitTermination(1, TimeUnit.MINUTES))
+		executorService.shutdownNow(); //cancelling currently executing tasks
 	}
 	catch(InterruptedException e)
 	{
 	    // (Re-)Cancel if current thread also interrupted
-	    executerService.shutdownNow();
+	    executorService.shutdownNow();
 	    // Preserve interrupt status
 	    Thread.currentThread().interrupt();
-
+	}
+	try
+	{
+	    //Wait for a while for currently executing tasks to terminate
+	    if(!cdxExecutorService.awaitTermination(1, TimeUnit.SECONDS))
+		cdxExecutorService.shutdownNow(); //cancelling currently executing tasks
+	}
+	catch(InterruptedException e)
+	{
+	    // (Re-)Cancel if current thread also interrupted
+	    cdxExecutorService.shutdownNow();
+	    // Preserve interrupt status
+	    Thread.currentThread().interrupt();
 	}
 
     }

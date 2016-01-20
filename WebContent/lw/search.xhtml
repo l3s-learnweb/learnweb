@@ -227,6 +227,9 @@
 					
 					<h:outputText value="#{msg.source}:"/>
 					<h:outputText value="#{searchBean.selectedResource.source}" style="width:400px; padding:4px;" />
+					
+					<h:outputText value="#{msg['Archive.captured_between']}:" rendered="${not empty searchBean.selectedResource.getMetadataValue('first_timestamp')}"/>
+					<h:panelGroup rendered="${not empty searchBean.selectedResource.getMetadataValue('first_timestamp')}" class="wayback_span"><a href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('first_timestamp')}/#{searchBean.selectedResource.url}" target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('first_timestamp'))}</a> #{msg['Archive.captured_between_and']} <a href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('last_timestamp')}/#{searchBean.selectedResource.url}" target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('last_timestamp'))}</a></h:panelGroup>
 					  
 					<h:outputText value="" />
 					<p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" process="@form" update=":backtogroup :growl" oncomplete="PF('resource_dialog').hide()"/>

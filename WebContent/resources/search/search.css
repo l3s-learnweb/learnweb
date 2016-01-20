@@ -61,6 +61,10 @@
 	position:relative;
 }
 
+.wayback_span {width: 400px; padding: 4px}
+.wayback_span a {color: #1020D0}
+.wayback_span a:visited {color: rgb(60, 110, 200)}
+
 /*To indicate if the resource is an old resource*/
 .oldResource{
 }

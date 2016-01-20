@@ -132,9 +132,9 @@ public class Learnweb
 	    else if((new File("C:\\Users\\Michaela")).exists())
 		propteriesFileName = "lw_local_michaela";
 	    else if((new File("/home/fernando/trevor.txt").exists()))
+		propteriesFileName = "lw_local_trevor_uni";
+	    else if((new File("/home/tf/learnweb.txt").exists()))
 		propteriesFileName = "lw_local_trevor";
-	    else if((new File("C:\\Users\\TF").exists()))
-		propteriesFileName = "lw_local_trevor_win";
 	    else if((new File("/home/kalyani").exists()))
 		propteriesFileName = "lw_local_rishita";
 	    else if((new File("C:\\Users\\morais").exists()))

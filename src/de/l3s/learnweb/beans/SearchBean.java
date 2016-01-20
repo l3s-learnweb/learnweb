@@ -8,6 +8,7 @@ import java.io.Serializable;
 import java.security.InvalidParameterException;
 import java.sql.SQLException;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
@@ -731,5 +732,18 @@ public class SearchBean extends ApplicationBean implements Serializable
 	{
 	    log.error("Can't create FactSheet", e);
 	}
+    }
+
+    /**
+     * Formats wayback date format to short DateFormat.
+     */
+    public String formatDate(String timestamp) throws ParseException
+    {
+	DateFormat df = DateFormat.getDateInstance(DateFormat.SHORT, UtilBean.getUserBean().getLocale());
+	DateFormat waybackDf = new SimpleDateFormat("yyyyMMddhhmmss");
+	if(timestamp == null)
+	    return null;
+
+	return df.format(waybackDf.parse(timestamp));
     }
 }
