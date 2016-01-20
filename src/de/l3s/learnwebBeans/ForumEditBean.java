@@ -49,8 +49,11 @@ public class ForumEditBean extends ApplicationBean implements Serializable
 
     public String onSavePost() throws SQLException
     {
-
+	Date date = new Date();
 	User user = getUser();
+	post.setLastEditDate(date);
+	post.setEditCount(post.getEditCount() + 1);
+	post.setEditUserId(user.getId());
 	if(user.getId() == post.getUserId())
 	{
 	    ForumManager fm = getLearnweb().getForumManager();
@@ -61,7 +64,7 @@ public class ForumEditBean extends ApplicationBean implements Serializable
 	nameTag(post.getText());
 	//return null;
 	//return "forum_post";
-	System.out.println(post.getTopicId());
+	//System.out.println(post.getTopicId());
 	//log
 	return "/lw/group/forum_post.xhtml?topic_id=" + post.getTopicId() + "&faces-redirect=true";
     }

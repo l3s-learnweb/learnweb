@@ -142,7 +142,7 @@
 					</div>
 					
 					<ui:fragment rendered="#{post.editCount gt 0}">
-						<div class="post_information_div_bottom" >
+						<div class="post_information_div_bottom" > <!-- remove border top -->
 				        	<h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
 				        		<f:param value="#{post.editCount}"/>
 								<f:param value="#{post.lastEditDate}"/>
