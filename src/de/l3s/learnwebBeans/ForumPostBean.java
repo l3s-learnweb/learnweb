@@ -158,9 +158,9 @@ public class ForumPostBean extends ApplicationBean implements Serializable
 	//newPost.setText("<span style='background-color: rgb(255, 255, 153);'><span style='font-style: italic;'>" + post.getText() + "<br></span></span>" + " " + "<br>"); //colored
 	//newPost.setText("<span class='fakeInput'> <input type='text' value='" + post.getText() + "'/></span>"); //in textbox
 	//newPost.setText("<input  readonly='true' value=  " + post.getText() + "><br><hr><br>");
-	newPost.setText("<div style='margin-left: 40px; border: 1px solid black ; background-color: rgb(204, 255, 255);'>" + post.getUser().getUsername() + ": " + "<br>" + post.getText() + "</span></div><br>");
+	newPost.setText("<div style='margin-left: 40px;  border-left: 1px solid #000000; background-color: rgb(187, 187, 187);'>" + post.getUser().getUsername() + ": " + "<br>" + post.getText() + "</span></div><br>");
 	newPost.setCategory(post.getCategory());
-	System.out.println(post.getText());
+
     }
 
     public int getTopicId()

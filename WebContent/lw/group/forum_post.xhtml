@@ -137,29 +137,32 @@
 					   
 				    
 				   
-					<div style="min-height:70px; padding-bottom: 6rem;">
+					<div style="min-height:70px; padding-bottom: 6.9rem;">
 						<h:outputText value="#{post.text}" escape="false" />
 					</div>
 					
-					<ui:fragment rendered="#{post.editCount gt 0}">
-						<div class="post_information_div_bottom" > <!-- remove border top -->
-				        	<h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
-				        		<f:param value="#{post.editCount}"/>
-								<f:param value="#{post.lastEditDate}"/>
-								<f:param value="#{post.editUser.username}"/>
-				            </h:outputFormat>
-			           	</div>
-			     	</ui:fragment>
+					
 			     	
 			     	
-				     <div style="bottom: 0px; position: absolute; width: 98%; left: 0.9rem; padding: 1.1rem; box-sizing: border-box; text-align: right; padding-bottom: 1rem; border-top: 1px solid rgb(168, 168, 168);">
+				     <div style="bottom: 0px; position: absolute; width: 98%; left: 0.9rem; padding: 1.1rem; padding-top: 0.8rem; box-sizing: border-box; text-align: right; padding-bottom: 0.8rem; border-top: 1px solid rgb(168, 168, 168);">
 	        		
+	        			<ui:fragment rendered="#{post.editCount gt 0}">
+							<div style="padding-bottom: 2.2rem; float:left;" >
+					        	<h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
+					        		<f:param value="#{post.editCount}"/>
+									<f:param value="#{post.lastEditDate}"/>
+									<f:param value="#{post.editUser.username}"/>
+					            </h:outputFormat>
+				           	</div>
+				     	</ui:fragment>
+			     	
 				    	<h:commandLink value="#{msg.clear}" rendered="#{forumPostBean.canDeletePost(post)}" actionListener="#{forumPostBean.deletePost(post)}" styleClass="greenbutton float-right"/>
 				    	<h:outputLink value="group/forum_post_edit.jsf"  rendered="#{forumPostBean.canEditPost(post)}" styleClass="greenbutton float-right">
 					    	<f:param name="post_id" value="#{post.id}" />
 					    	#{msg.edit}
 				    	</h:outputLink>
-				  		<h:commandLink value="#{msg['ForumIndex.quote']}" actionListener="#{forumPostBean.quotePost(post)}" onclick="$('#center_pane .content').animate({ scrollTop: 1000 }, 'slow'); return true;" update="post_message" styleClass="greenbutton float-right" />
+				  		<p:commandLink value="#{msg['ForumIndex.quote']}" actionListener="#{forumPostBean.quotePost(post)}" oncomplete="$('#center_pane .content').animate({ scrollTop: 1000 }, 'slow');" update=":post_form:post_message" ajax="true" styleClass="greenbutton float-right" />
+				  
 				   	</div>
 		        </p:column>
 		        
@@ -174,7 +177,7 @@
 			</div>
 				
 			<div class="grey_border">
-				<h:form>
+				<h:form id="post_form">
 					<table id="answer_table">
 						<tr>
 							<td class="width_10">
