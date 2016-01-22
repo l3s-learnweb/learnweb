@@ -137,17 +137,17 @@
 					   
 				    
 				   
-					<div style="min-height:70px; padding-bottom: 6.9rem;">
+					<div class="post_bot_padding">
 						<h:outputText value="#{post.text}" escape="false" />
 					</div>
 					
 					
 			     	
 			     	
-				     <div style="bottom: 0px; position: absolute; width: 98%; left: 0.9rem; padding: 1.1rem; padding-top: 0.8rem; box-sizing: border-box; text-align: right; padding-bottom: 0.8rem; border-top: 1px solid rgb(168, 168, 168);">
+				     <div class="post_button">
 	        		
 	        			<ui:fragment rendered="#{post.editCount gt 0}">
-							<div style="padding-bottom: 2.2rem; float:left;" >
+							<div class="post_button_position" >
 					        	<h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
 					        		<f:param value="#{post.editCount}"/>
 									<f:param value="#{post.lastEditDate}"/>

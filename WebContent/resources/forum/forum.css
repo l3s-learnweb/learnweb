@@ -145,4 +145,35 @@
 	padding-left:26px; 
  }
 
+.post_bot_padding { 
+min-height:70px;
+padding-bottom: 6.9rem;
+}
+
+.post_button {
+	bottom: 0px; position: absolute;
+	width: 98%;
+	left: 0.9rem; padding: 1.1rem;
+	padding-top: 0.8rem;
+	box-sizing: border-box;
+	text-align: right; padding-bottom: 0.8rem;
+	border-top: 1px solid rgb(168, 168, 168);
+}
+
+.post_button_position {
+	padding-bottom: 2.2rem;
+	float:left;
+}
+
+.post_quote {
+	margin-left: 40px;
+	border-left: 1px solid #000000;
+	background-color: rgb(187, 187, 187);
+	
+}
+
+.post_quote .post_quote {
+	background-color:green;
+	
+}
 
