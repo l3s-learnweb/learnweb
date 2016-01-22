@@ -37,6 +37,7 @@ function setPreference(prefKey, prefValue)
 	setPreferenceRemote([{name:'key', value:prefKey}, {name:'value', value:prefValue}]);
 }
 
+
 $(document).ready(function()
 {	
 	$("#group_menu > .panelmenu").each(function( index ) 
@@ -51,22 +52,36 @@ $(document).ready(function()
 			return true;
 		});		
 	});
+	
+	if(market == "de")
+		market = "de-DE";
+	else if(market == "pt")
+		market = "pt-BR";
+	else if(market == "it")
+		market = "it-IT";
+	else
+		market = "en-US";
 
 	$("#searchfield").autocomplete({
         source: function (request, response) {
             console.log("source");
             $.ajax({
-                url: "http://api.bing.com/osjson.aspx?Query=" + encodeURIComponent(request.term) + "&JsonType=callback&JsonCallback=?",
+                url: "http://api.bing.com/osjson.aspx?Query=" + encodeURIComponent(request.term) + "&Market="+ market +"&JsonType=callback&JsonCallback=?",
                 dataType: "jsonp",
     
                 success: function (data) {
-                    console.log("success!");
                     var suggestions = [];
                     $.each(data[1], function (i, val) {
                         suggestions.push(val);
                     });
                     response(suggestions);
 
+                    //console.log(request.term, suggestions);
+                    
+                    var logQuerySuggestionAsync = function() {
+                    	logQuerySuggestion([{name:'query', value:request.term},{name:'suggestions', value:suggestions},{name:'market', value:market}]);
+                    };
+                    setTimeout(logQuerySuggestionAsync, 0);
                 }
             });
         }

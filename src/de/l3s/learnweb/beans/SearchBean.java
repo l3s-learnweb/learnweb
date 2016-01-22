@@ -449,6 +449,15 @@ public class SearchBean extends ApplicationBean implements Serializable
 	}
     }
 
+    public void logQuerySuggestion()
+    {
+	String query = getParameter("query");
+	String suggestions = getParameter("suggestions");
+
+	log.debug("query: " + query + "; suggestions: " + suggestions);
+
+    }
+
     /**
      * This method keeps track of the end of the viewing time for a particular resource
      */
@@ -746,4 +755,5 @@ public class SearchBean extends ApplicationBean implements Serializable
 
 	return df.format(waybackDf.parse(timestamp));
     }
+
 }

@@ -279,6 +279,13 @@
 	        <p:button onclick="document.location.href = document.location.href; return false;" value="#{msg.reload}" />	        
 		</p:dialog>
 	</h:form>
+	
+	<h:form class="display-none">	
+		<p:remoteCommand actionListener="${searchBean.logQuerySuggestion()}" name="logQuerySuggestion" async="true" process="@this" partialSubmit="true" global="false"/>
+	</h:form>
+	<script type="text/javascript">
+		var market = '#{userBean.localeCode}';
+	</script>	
 
 </ui:composition>
 

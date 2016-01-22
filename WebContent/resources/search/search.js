@@ -72,7 +72,7 @@ function prepareResources(resources)
 					else if(offset.left + width + mindist > containerWidth)
 						offset.left = containerWidth - width - mindist;					
 					
-					console.log(offset.top, previewHeight, containerHeight, headerHeight, scrollTop);
+					//console.log(offset.top, previewHeight, containerHeight, headerHeight, scrollTop);
 					
 					if(offset.top < headerHeight)
 						offset.top = headerHeight;						

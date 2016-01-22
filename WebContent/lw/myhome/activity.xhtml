@@ -61,16 +61,16 @@
 					<div class="newsfeed_text">
 						<h:outputText value="#{datagrid.text}" escape="false"  />
 						<h:panelGroup rendered="#{datagrid.queryNeeded}">
-						<h:outputText value=" #{msg.with_query} " escape="false"  />
+							<h:outputText value=" #{msg.with_query} " escape="false"  />
+							
+							<h:outputLink value="search.jsf" styleClass="newsfeed_query_link">
+								<h:outputText value=" #{datagrid.resource.query}" escape="false" styleClass="newsfeed_query_link_text"/>
 						
-						<h:outputLink value="search.jsf" styleClass="newsfeed_query_link">
-							<h:outputText value=" #{datagrid.resource.query}" escape="false" styleClass="newsfeed_query_link_text"/>
-					
-							<f:param name="query" value="#{datagrid.resource.query}"/>
-					        <f:param name="action" value="search"/>
-						</h:outputLink>
-						
-						<h:outputText value=" #{msg.from} #{datagrid.resource.source} " escape="false"  />
+								<f:param name="query" value="#{datagrid.resource.query}"/>
+						        <f:param name="action" value="search"/>
+							</h:outputLink>
+							
+							<h:outputText value=" #{msg.from} #{datagrid.resource.source} " escape="false"  />
 						</h:panelGroup>
 					</div>
 					
