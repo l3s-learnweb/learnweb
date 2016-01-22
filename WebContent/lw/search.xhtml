@@ -206,11 +206,25 @@
 			<h:form id="resource_form">
 				<h:panelGrid columns="2" rendered="#{userBean.loggedIn}" style="width:100%;">
 					<h:outputText value="#{msg.add_to}:"/>
-					<h:selectOneMenu value="#{searchBean.selectedResourceTargetGroupId}">
-						<f:selectItem itemLabel="#{msg.myResourcesTitle}" itemValue="0" />
-						<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />	
-						<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
-					</h:selectOneMenu>
+					<p:row>
+						<p:tree id="folders_tree" value="#{userBean.user.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{searchBean.selectedNode}">				        						     						        
+					        <p:ajax event="select" listener="#{searchBean.onNodeSelect}"/>
+					        
+					        <p:treeNode type="group">
+					        	<h:outputText id="group" value="#{node.title}"/>
+					        </p:treeNode>
+					        
+					        <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+						        <h:outputText value="#{node.name}" />
+					        </p:treeNode>
+					    </p:tree>
+					    
+						<!-- <h:selectOneMenu value="#{searchBean.selectedResourceTargetGroupId}">
+							<f:selectItem itemLabel="#{msg.myResourcesTitle}" itemValue="0" />
+							<f:selectItem itemLabel="123" itemValue="-1" itemDisabled="true" />	
+							<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
+						</h:selectOneMenu> -->
+				    </p:row>
 					
 					<h:outputLabel value="#{msg.title}:" for="title"/>
 					<p:inputText value="#{searchBean.selectedResource.title}" id="title" style="width:100%;"/>					

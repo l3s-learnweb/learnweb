@@ -16,18 +16,25 @@ public class Folder implements Serializable
     // cache
     private transient String path;
     private transient String prettyPath = null;
+    private transient List<Folder> subfolders;
 
     public Folder()
     {
 	super();
     }
 
-    public Folder(int folderId, int groupId, int parentFolderId, String name)
+    public Folder(int groupId, String name)
+    {
+	super();
+	this.groupId = groupId;
+	this.name = name;
+    }
+
+    public Folder(int folderId, int groupId, String name)
     {
 	super();
 	this.folderId = folderId;
 	this.groupId = groupId;
-	this.parentFolderId = parentFolderId;
 	this.name = name;
     }
 
@@ -39,6 +46,18 @@ public class Folder implements Serializable
     public void setFolderId(int folderId)
     {
 	this.folderId = folderId;
+    }
+
+    public Group getGroup() throws SQLException
+    {
+	return Learnweb.getInstance().getGroupManager().getGroupById(groupId);
+    }
+
+    public List<Resource> getResources() throws SQLException
+    {
+	ResourceManager rm = Learnweb.getInstance().getResourceManager();
+	return rm.getResourcesByFolderId(folderId);
+
     }
 
     public int getGroupId()
@@ -114,19 +133,24 @@ public class Folder implements Serializable
 	    Folder folder = getParentFolder();
 	    while(folder != null)
 	    {
-		sb.insert(0, "/" + folder.getName());
+		sb.insert(0, " > " + folder.getName());
 		folder = folder.getParentFolder();
 	    }
 
-	    sb.append("/" + this.getName());
-	    path = sb.toString();
+	    sb.append(" > " + this.getName());
+	    path = getGroup().getTitle() + sb.toString();
 	}
 	return path;
     }
 
     public List<Folder> getSubfolders() throws SQLException
     {
-	return Learnweb.getInstance().getGroupManager().getFolders(groupId, folderId);
+	if(subfolders == null)
+	{
+	    subfolders = Learnweb.getInstance().getGroupManager().getFolders(groupId, folderId);
+	}
+
+	return subfolders;
     }
 
     public Folder getParentFolder() throws SQLException
@@ -135,5 +159,36 @@ public class Folder implements Serializable
 	    return null;
 
 	return Learnweb.getInstance().getGroupManager().getFolder(parentFolderId);
+    }
+
+    public Folder save() throws SQLException
+    {
+	return Learnweb.getInstance().getGroupManager().saveFolder(this);
+    }
+
+    public Folder moveTo(int newGroupId, int newParentFolderId) throws SQLException
+    {
+	return Learnweb.getInstance().getGroupManager().moveFolder(this, newGroupId, newParentFolderId);
+    }
+
+    public void delete() throws SQLException
+    {
+	Learnweb.getInstance().getGroupManager().deleteFolder(this);
+    }
+
+    public int getCountResources() throws SQLException
+    {
+	return Learnweb.getInstance().getGroupManager().getCountResources(groupId, folderId);
+    }
+
+    public int getCountSubfolders() throws SQLException
+    {
+	return Learnweb.getInstance().getGroupManager().getCountFolders(groupId, folderId);
+    }
+
+    @Override
+    public String toString()
+    {
+	return this.name;
     }
 }

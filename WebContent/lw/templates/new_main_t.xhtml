@@ -73,10 +73,8 @@
 			</p:layoutUnit>
 
 			<p:layoutUnit id="left_pane" rendered="#{userBean.loggedIn and !utilBean.viewResultSetPage}" position="west" size="223" resizable="false" closable="false" collapsible="false">
-				
 				<div class="content">
-					<ui:decorate  template="/templates/main/group_menu.xhtml" />
-				
+					<ui:decorate template="/templates/main/group_menu.xhtml" />
 				</div>
 			</p:layoutUnit>
 
@@ -84,15 +82,15 @@
 			
 			<p:layoutUnit id="center_pane" position="center" >
 				<div class="content" style="padding-right: 7px;">
-				<p:messages id="message" styleClass="#{userBean.loggedIn? '':'small_page'}" escape="false" />
-				
-				<h:panelGroup layout="block" styleClass="small_page" rendered="#{loginRequired and !userBean.loggedIn}">
-					<ui:include src="/templates/user/login.xhtml" />
-				</h:panelGroup>
-				
-				<h:panelGroup rendered="#{!loginRequired || userBean.loggedIn}">
-					<ui:insert name="center_layout"></ui:insert>
-				</h:panelGroup>
+					<p:messages id="message" styleClass="#{userBean.loggedIn? '':'small_page'}" escape="false" />
+					
+					<h:panelGroup layout="block" styleClass="small_page" rendered="#{loginRequired and !userBean.loggedIn}">
+						<ui:include src="/templates/user/login.xhtml" />
+					</h:panelGroup>
+					
+					<h:panelGroup rendered="#{!loginRequired || userBean.loggedIn}">
+						<ui:insert name="center_layout"></ui:insert>
+					</h:panelGroup>
 				</div>
 
 			</p:layoutUnit>

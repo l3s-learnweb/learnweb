@@ -1,7 +1,7 @@
 /*-----easy solution TODO improve late -------*/
 .resource_panel:HOVER .resource_short_title
 {
- white-space: normal;
+	white-space: normal;
 }
 .resource_panel {
 	overflow: hidden;
@@ -471,26 +471,26 @@ iframe { border:none }
 	font-size:1em;
 	color:#2F556A;
 }
-#group_menu h3{ margin-top:10px; }
-#group_menu h3:hover{ background-color:#eeeeee;  }
-#group_menu .active > div { display:block; }
-#group_menu .active h3 { text-decoration:underline;}
-#group_menu a.active { font-weight:bold; }
-#group_menu .active h3 .iconarrow { background-position:-64px -16px; }
-#group_menu a{
+.group-menu h3{ margin-top:10px; }
+.group-menu h3:hover{ background-color:#eeeeee;  }
+.group-menu .active > div { display:block; }
+.group-menu .active h3 { text-decoration:underline;}
+.group-menu a.active { font-weight:bold; }
+.group-menu .active h3 .iconarrow { background-position:-64px -16px; }
+.group-menu a{
 	display:block;
 	padding:0.5em;
 	margin-left:2.2em;
 }
-#group_menu li{
+.group-menu li{
 	padding-left:0.3em;
 	margin-right:1rem;
 }
-#group_menu li a:hover{
+.group-menu li a:hover{
 	background-color:#eeeeee;
 	border-radius:5px;
 }
-#group_menu li a{
+.group-menu li a{
 	margin-left:1em;
 	margin-right:2em;
 }
@@ -936,7 +936,7 @@ span.ui-autocomplete{border:1px solid transparent !important;}
 	outline:none;
 }
 
-#datagrid .ui-panel-content{padding:5px;}
+.datagrid .ui-panel-content{padding:5px;}
 .explore_history .ui-button .ui-button-text, .search_history .ui-button .ui-button-text{
 	display:block;
 	line-height:0.6;
@@ -1041,16 +1041,17 @@ button{
 	font-weight:bold;
 }
 
-.data{
+.data {
 	width:95%;
 	margin:auto;
 	margin-top:5px;
 	margin-left:0px;
 }
 
-#datagrid{
+.datagrid > div{
 	border:0px;
 	width:100%;
+	clear: both;
 }
 
 p:dataList {background-color:blue;}
@@ -1192,9 +1193,21 @@ div#presentation_preview {
 	max-width:100%;
 }
 
+.resource_panelgrid {
+	width:100%;
+}
 
+.resource_panelgrid.folder_control {
+	position: absolute;
+    right: 0;
+    top: 0;
+    width: auto;
+}
 
-.resource_panelgrid {width:100%;}
+.resource_panelgrid.folder_control .buttons_link {
+	margin-top: 1px;
+}
+
 .resource_panel:HOVER, .members_panel:HOVER{
 	cursor:pointer;
 	border-color:#666;
@@ -1243,6 +1256,23 @@ div#presentation_preview {
     margin-right:-webkit-calc(33% - 195px);
 	padding:6px 4px;
 	box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
+}
+
+.resource_panel.resource_folder {
+	height: 42px;
+	background: #F3F3F3;
+}
+
+.resource_panel.resource_folder .resource_short_title {
+	background: url("img/folder.png") no-repeat left center;
+	padding: 0 0 0 24px;
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.resource_panel.resource_folder:hover {
+	background: #FBE5B3;
 }
 
 @media screen  and (max-width:1050px) {

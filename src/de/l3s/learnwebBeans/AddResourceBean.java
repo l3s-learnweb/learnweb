@@ -22,6 +22,7 @@ import org.primefaces.model.UploadedFile;
 import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
 import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.learnweb.Folder;
+import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
@@ -42,8 +43,11 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     private Resource resource;
 
-    private int resourceTargetGroupId; // the id of the group the new resource will be added to
-    private int resourceTargetFolderId;
+    private int resourceTargetGroupId = 0; // the id of the group the new resource will be added to
+    private int resourceTargetFolderId = 0;
+
+    private Folder targetFolder;
+    private Group targetGroup;
 
     private String newUrl;
 
@@ -70,12 +74,12 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     {
     
     String urlString = ((String) value).trim();
-
+    
     log.debug("validate Url: " + urlString);
-
+    
     if(!urlString.startsWith("http"))
         urlString = "http://" + urlString;
-
+    
     
         throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_url"));
     
@@ -85,20 +89,20 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     {
     System.out.println("handleUrlChange");
     System.out.println(resource.getUrl());
-
+    
     if(!resource.getUrl().startsWith("http"))
         resource.setUrl("http://" + resource.getUrl());
-
+    
     try
     {
         new URL(resource.getUrl());
-
+    
     }
     catch(MalformedURLException e)
     {
         throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_url"));
     }
-
+    
     URL url = new URL(resource.getUrl());
     URLExtractor ue = new URLExtractor();
     URLInfo urlinfo = ue.extract(url);
@@ -115,7 +119,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         resource.setEmbeddedSize1Raw("<img src=\"" + urlinfo.getImage() + "\" width=\"100\" height=\"100\" />");
         e.printStackTrace();
     }
-
+    
     System.out.println(resource.getTitle());
     System.out.println(resource.getEmbeddedSize1());
     System.out.println(resource.getDescription());
@@ -272,7 +276,20 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     public void setResourceTargetGroupId(int resourceTargetGroupId)
     {
-	this.resourceTargetGroupId = resourceTargetGroupId;
+	try
+	{
+	    Group group = getLearnweb().getGroupManager().getGroupById(resourceTargetGroupId);
+	    if(group != null)
+	    {
+		this.targetGroup = group;
+		this.resourceTargetGroupId = group.getId();
+	    }
+	}
+	catch(SQLException e)
+	{
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
     }
 
     public int getResourceTargetFolderId()
@@ -282,7 +299,20 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     public void setResourceTargetFolderId(int resourceTargetFolderId)
     {
-	this.resourceTargetFolderId = resourceTargetFolderId;
+	try
+	{
+	    Folder folder = getLearnweb().getGroupManager().getFolder(resourceTargetFolderId);
+	    if(folder != null)
+	    {
+		this.targetFolder = folder;
+		this.resourceTargetFolderId = folder.getFolderId();
+	    }
+	}
+	catch(SQLException e)
+	{
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
     }
 
     public String getNewUrl()
@@ -392,9 +422,19 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	this.selectedUploadServices = selectedUploadServices;
     }
 
-    public List<Folder> getFoldersForCurrentGroup() throws SQLException
+    public String getCurrentPath() throws SQLException
     {
-	return Learnweb.getInstance().getGroupManager().getFolders(resourceTargetGroupId);
+	if(targetGroup != null)
+	{
+	    if(targetFolder != null)
+	    {
+		return targetFolder.getPrettyPath();
+	    }
+
+	    return targetGroup.getTitle();
+	}
+
+	return UtilBean.getLocaleMessage("myResourcesTitle");
     }
 
     public void changeGroupListener()

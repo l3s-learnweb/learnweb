@@ -9,6 +9,9 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
+
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
@@ -388,6 +391,10 @@ public class GroupManager
     public List<Folder> getFolders(int groupId, int parentFolderId) throws SQLException
     {
 	List<Folder> folders = new ArrayList<Folder>();
+	if(parentFolderId < 0)
+	{
+	    parentFolderId = 0;
+	}
 
 	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name FROM `lw_group_folder` WHERE `group_id` = ? AND `parent_folder_id` = ?");
 	select.setInt(1, groupId);
@@ -400,6 +407,87 @@ public class GroupManager
 	select.close();
 
 	return folders;
+    }
+
+    /**
+     * 
+     * @param groupId
+     * @param parentFolderId
+     * @throws SQLException
+     */
+    public int getCountFolders(int groupId, int parentFolderId) throws SQLException
+    {
+	if(parentFolderId < 0)
+	{
+	    parentFolderId = 0;
+	}
+
+	int numberOfRows = 0;
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM `lw_group_folder` WHERE `group_id` = ? AND `parent_folder_id` = ?");
+	select.setInt(1, groupId);
+	select.setInt(2, parentFolderId);
+	ResultSet rs = select.executeQuery();
+	if(rs.next())
+	{
+	    numberOfRows = rs.getInt(1);
+	}
+	select.close();
+
+	return numberOfRows;
+    }
+
+    /**
+     * 
+     * @param groupId
+     * @param parentFolderId
+     * @throws SQLException
+     */
+    public int getCountResources(int groupId, int parentFolderId) throws SQLException
+    {
+	int numberOfRows = 0;
+	PreparedStatement select = null;
+	if(parentFolderId < 0)
+	{
+	    select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM `lw_resource` WHERE `group_id` = ?");
+	    select.setInt(1, groupId);
+	}
+	else
+	{
+	    select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM `lw_resource` WHERE `group_id` = ? AND `folder_id` = ?");
+	    select.setInt(1, groupId);
+	    select.setInt(2, parentFolderId);
+	}
+
+	ResultSet rs = select.executeQuery();
+	if(rs.next())
+	{
+	    numberOfRows = rs.getInt(1);
+	}
+	select.close();
+
+	return numberOfRows;
+    }
+
+    public Folder moveFolder(Folder original, int newGroupId, int newParentFolderId) throws SQLException
+    {
+	if(original.getGroupId() != newGroupId)
+	{
+	    original.setGroupId(newGroupId);
+
+	    for(Resource res : original.getResources())
+	    {
+		res.setGroupId(newGroupId);
+		res.save();
+	    }
+
+	    for(Folder subfolder : original.getSubfolders())
+	    {
+		this.moveFolder(subfolder, newGroupId, original.getFolderId());
+	    }
+	}
+
+	original.setParentFolderId(newParentFolderId);
+	return this.saveFolder(original);
     }
 
     public Folder saveFolder(Folder folder) throws SQLException
@@ -437,6 +525,31 @@ public class GroupManager
 	    return null;
 
 	return getFolder(rs.getInt(1));
+    }
+
+    public void deleteFolder(Folder folder) throws SQLException
+    {
+	List<Folder> subfolders = folder.getSubfolders();
+
+	if(!subfolders.isEmpty())
+	{
+	    for(Folder subFolder : subfolders)
+	    {
+		deleteFolder(subFolder);
+	    }
+	}
+
+	for(Resource resource : folder.getResources())
+	{
+	    resource.setGroupId(0);
+	    resource.setFolderId(0);
+	    resource.save();
+	}
+
+	PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_folder` WHERE `folder_id` = ?");
+	delete.setInt(1, folder.getFolderId());
+	delete.execute();
+	delete.close();
     }
 
     /**
@@ -534,5 +647,47 @@ public class GroupManager
 	replace.close();
 
 	return category;
+    }
+
+    public TreeNode getFoldersTree(int groupId, int selectedFolderId) throws SQLException
+    {
+	if(groupId < 1)
+	{
+	    return null;
+	}
+
+	Group group = getGroupById(groupId);
+	TreeNode root = new DefaultTreeNode("GroupFolders");
+	TreeNode rootFolder = new DefaultTreeNode("root", new Folder(0, group.getId(), group.getTitle()), root);
+	if(selectedFolderId == 0)
+	{
+	    rootFolder.setSelected(true);
+	    rootFolder.setExpanded(true);
+	}
+	getChildNodesRecursively(groupId, 0, rootFolder, selectedFolderId);
+	return root;
+    }
+
+    public void getChildNodesRecursively(int groupId, int parentFolderId, TreeNode parent, int selectedFolderId) throws SQLException
+    {
+	for(Folder folder : this.getFolders(groupId, parentFolderId))
+	{
+	    TreeNode folderNode = new DefaultTreeNode("folder", folder, parent);
+	    if(folder.getFolderId() == selectedFolderId)
+	    {
+		folderNode.setSelected(true);
+		expand(folderNode);
+	    }
+	    getChildNodesRecursively(groupId, folder.getFolderId(), folderNode, selectedFolderId);
+	}
+    }
+
+    protected void expand(TreeNode treeNode)
+    {
+	if(treeNode.getParent() != null)
+	{
+	    treeNode.getParent().setExpanded(true);
+	    expand(treeNode.getParent());
+	}
     }
 }

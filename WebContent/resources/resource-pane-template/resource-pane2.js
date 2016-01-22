@@ -90,28 +90,38 @@ function prepareCommentButton()
 	});
 }
 
-function update_url(resource_id)
+function update_url(resource_id, folder_id)
 {
-	var updated_url = location.protocol + "//" + location.host + location.pathname + "?";
-	var query_params = location.search.substring(1);
-	if(query_params.indexOf("resource_id") > -1)
-	{	
-		var params = query_params.split("&");
-		for(var i=0; i<params.length;i++)
-		{
-			var param = params[i].split("=");
-			if(param[0] == "resource_id")
-				updated_url += param[0] + "=" + resource_id + "&";
-			else
-				updated_url += param[0] + "=" + param[1] + "&";
-		}
+	var page_schema = location.protocol + "//" + location.host + location.pathname;
+	var query_params = location.search;
+	
+	if (!folder_id) {
+		folder_id = $("#folderGrid").data("folderid");
 	}
-	else
-		updated_url += query_params + "&resource_id=" + resource_id + "?"; 
-	updated_url = updated_url.substring(0, updated_url.length - 1);
-	window.history.pushState({"url":location.href}, "resource_id" + resource_id, updated_url);
+	
+	if (folder_id != undefined) {
+		query_params = updateUrlParameters(query_params, "folder_id", folder_id);
+	}
+	
+	if (resource_id != undefined) {
+		query_params = updateUrlParameters(query_params, "resource_id", resource_id);
+	}
+	
+	updated_url = page_schema + query_params;
+	
+	window.history.pushState({"url": location.href}, "resource_id" + resource_id, updated_url);
 	popped = true;
 	//document.title = resource_title;
+}
+
+function updateUrlParameters(url, key, value) {
+	var re = new RegExp("([?&])" + key + "=.*?(&|$)", "i");
+	var separator = url.indexOf('?') !== -1 ? "&" : "?";
+	if (url.match(re)) {
+		return url.replace(re, '$1' + key + "=" + value + '$2');
+	} else {
+		return url + separator + key + "=" + value;
+	}
 }
 
 //To detect if its an initial page load or a reload from the History entry in Safari.

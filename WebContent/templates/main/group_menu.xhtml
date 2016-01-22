@@ -1,7 +1,8 @@
 <html xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:h="http://java.sun.com/jsf/html" 
 	xmlns:f="http://java.sun.com/jsf/core" 
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 	
 <ui:composition>
 	<div id="groupoverview_link">
@@ -15,38 +16,71 @@
 			<h:outputFormat value="#{msg.new_groups_message}">
 			    <f:param value="#{userBean.newGroupsCount}" />
 			</h:outputFormat>
-		</p:tooltip> 
+		</p:tooltip>
 	</div>
 
-	<h:panelGroup layout="block" id="group_menu">
+	<ui:fragment rendered="#{!userBean.groupResourcesPage}">
+		<h:panelGroup layout="block" id="group_menu" styleClass="group-menu">
+			<ui:repeat value="#{userBean.groupMenu}" var="group">
+				<div class="panelmenu">
+					<h3 class="group_link">
+						<a href="./group/resources.jsf?group_id=#{group.id}">#{group.label}</a>
+					</h3>
+				</div>
+			</ui:repeat>
+		</h:panelGroup>
+	</ui:fragment>
+
+	<ui:fragment rendered="#{userBean.groupResourcesPage}">
 	
-		<ui:repeat value="#{userBean.groupMenu}" var="group">
-			<div class="panelmenu #{group.styleClass}">
-				<h3 class="group_link">
-					<h:panelGroup rendered="#{not empty group.elements}" class="iconarrow" />
-					<a href="./group/resources.jsf?group_id=#{group.id}">
-						#{group.label}
-					</a>
-				</h3>
-			
-				<h:panelGroup rendered="#{not empty group.elements}">
-					<div class="ui-panelmenu-content ui-widget-content ui-helper-hidden">
-						<ul class="ui-menu-list ui-helper-reset">					
-							<ui:repeat value="#{group.elements}" var="link">								
-								<li>
-									<a class="#{link.styleClass}" href="#{link.url}">
-										#{link.value}
-									</a>
-								</li>
-							</ui:repeat>
-						</ul>	
+		<h:panelGroup layout="block" id="group_menu_tree" styleClass="group-menu">
+			<ui:repeat value="#{userBean.groupMenu}" var="group">
+				<h:panelGroup rendered="#{groupDetailBean.groupId != group.id}">
+					<div class="panelmenu">
+						<h3 class="group_link">
+							<a href="./group/resources.jsf?group_id=#{group.id}">#{group.label}</a>
+						</h3>
 					</div>
 				</h:panelGroup>
-			
-			</div>
-		</ui:repeat>
+				<h:panelGroup rendered="#{groupDetailBean.groupId == group.id}">
+					<div class="panelmenu active folder-tree">
+						<div class="ui-panelmenu-content ui-widget-content ui-helper-hidden">
+							<h:form id="folders_tree_form">								
+							    <p:tree id="folders_tree" value="#{groupDetailBean.getFoldersTree(group.id)}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{groupDetailBean.selectedNode}" datakey="#{node.folderId}" draggable="true" droppable="true" dragdropScope="folder">				        						     						        
+							        <p:ajax event="select" update=":folderGrid :resourceGrid :paginator :add_resource_panel" listener="#{groupDetailBean.onNodeSelect}" oncomplete="update_url()"/>
+							        <p:ajax event="dragdrop" listener="#{groupDetailBean.onFolderMove}"/>
+							        
+							        <p:treeNode type="root" pt:data-folderId="#{node.name}">
+							        	<h:outputText id="root" value="#{node.name}" pt:data-folderId="#{node.name}"/>
+							        </p:treeNode>
+							        
+							        <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+								        <h:outputText value="#{node.name}" />
+							        </p:treeNode>
+							    </p:tree>
+							    							    
+							    <p:contextMenu for="folders_tree" nodeType="root" rendered="${groupDetailBean.canEditFoldersInGroup()}">
+									<p:menuitem value="Create subfolder" onstart="PF('createFolderDialog').show()" icon="ui-icon-plus"/>
+								</p:contextMenu>
+							    
+							    <p:contextMenu for="folders_tree" nodeType="folder" rendered="${groupDetailBean.canEditFoldersInGroup()}">
+							    	<p:menuitem value="#{msg.edit}" update=":add_resource_panel" oncomplete="update_header();" icon="ui-icon-plus">
+										<f:setPropertyActionListener target="#{groupDetailBean.rightPanelAction}" value="editFolder"/>
+							    	</p:menuitem>
+									<p:menuitem value="#{msg.create_subfolder}" update=":add_resource_panel" oncomplete="update_header();" icon="ui-icon-plus">
+										<f:setPropertyActionListener target="#{groupDetailBean.rightPanelAction}" value="newFolder"/>
+									</p:menuitem>
+									<p:menuitem value="#{msg.delete}" update=":confirm_folder_dialog_form" oncomplete="PF('confirmationFolder').show();" icon="ui-icon-close"/>
+								</p:contextMenu>
+							</h:form>
+						</div>				
+					</div>
+				</h:panelGroup>
+			</ui:repeat>		
+		</h:panelGroup>
+		
+	</ui:fragment>
 	
-	</h:panelGroup>
 	<!-- 
 	<br/>
 	<h:form rendered="#{userBean.searchHistoryEnabled} and false">

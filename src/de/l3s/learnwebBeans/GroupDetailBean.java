@@ -22,6 +22,9 @@ import javax.faces.model.SelectItem;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.event.TreeDragDropEvent;
+import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.AbstractPaginator;
 import de.l3s.learnweb.Comment;
@@ -58,25 +61,42 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private static final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     private int groupId;
-    private int folderId;
     private Group group;
-    private Folder folder;
     private String editedGroupDescription;
     private String editedGroupTitle;
     private int editedGroupLeaderId;
+
     private List<User> members;
 
     private List<Presentation> presentations;
 
     private List<LogEntry> logMessages;
     private ArrayList<NewsEntry> newslist;
-    private User clickedUser;
 
-    private Boolean newResourceClicked = false;
-    private Boolean editResourceClicked = false;
+    public enum RPAction
+    {
+	none,
+	newResource,
+	viewResource,
+	editResource,
+	newFolder,
+	editFolder,
+	viewFolder
+    }
+
+    private RPAction rightPanelAction = RPAction.none;
+
     private Resource selectedResource;
     public Resource clickedResource;
+
+    private Folder selectedFolder;
+    private Folder clickedFolder;
+    private String newFolderName;
+    private TreeNode selectedNode;
+
     public Presentation clickedPresentation;
+
+    private User clickedUser;
 
     private boolean allLogs = false;
     private boolean reloadLogs = false;
@@ -93,19 +113,19 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private List<Link> links; // the same as group.getLinks() but with a link to the forum
     private List<Link> documentLinks;
     private String resourceSorting = "title";
+    private Order order = Order.TITLE;
 
     private boolean isNewestResourceHidden = false;
 
     private int selectedResourceTargetGroupId;
 
-    private AbstractPaginator paginator;
-    private Order order = Order.TITLE;
-
     private String query;
     private SearchFilters searchFilters;
+    private AbstractPaginator paginator;
 
     public GroupDetailBean() throws SQLException
     {
+	log.debug("construct group detail bean" + getParameter("group_id"));
 	loadGroup();
 
 	if(null == group)
@@ -123,7 +143,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
 	searchFilters = new SearchFilters();
 	searchFilters.setMode(MODE.group);
-	paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
+	paginator = getResourcesFromSolr(groupId, selectedFolder, query, getUser());
+
+	//UtilBean.getUserBean()
     }
 
     public void preRenderView(ComponentSystemEvent e)
@@ -305,19 +327,27 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    groupId = id.intValue();
 	}
 
-	if(null == folder)
-	{
-	    Integer id = getParameterInt("folder_id");
-
-	    folderId = null == id ? 0 : id.intValue();
-	}
-
 	group = getLearnweb().getGroupManager().getGroupById(groupId);
 	if(group != null)
 	{
 	    editedGroupDescription = group.getDescription();
 	    editedGroupLeaderId = group.getLeader().getId();
 	    editedGroupTitle = group.getTitle();
+
+	    if(null == selectedFolder)
+	    {
+		Integer id = getParameterInt("folder_id");
+
+		if(null == id)
+		{
+		    selectedFolder = new Folder(0, groupId, group.getTitle());
+		}
+		else
+		{
+		    selectedFolder = getLearnweb().getGroupManager().getFolder(id.intValue());
+		    clickedFolder = selectedFolder;
+		}
+	    }
 	}
     }
 
@@ -376,14 +406,17 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	this.groupId = groupId;
     }
 
-    public int getFolderId()
+    public int getSelectedFolderId()
     {
-	return folderId;
+	return selectedFolder == null || selectedFolder.getFolderId() <= 0 ? 0 : selectedFolder.getFolderId();
     }
 
-    public void setFolderId(int folderId)
+    public void setSelectedFolderId(int folderId) throws SQLException
     {
-	this.folderId = folderId;
+	if(folderId > 0)
+	{
+	    selectedFolder = getLearnweb().getGroupManager().getFolder(folderId);
+	}
     }
 
     public List<LogEntry> getLogMessages() throws SQLException
@@ -495,7 +528,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	log(Action.group_removing_resource, clickedResource.getGroupId(), clickedResource.getId(), "");
 
-	getUser().deleteResource(clickedResource);
+	//getUser().deleteResource(clickedResource);
+
+	clickedResource.setGroupId(0);
+	clickedResource.setFolderId(0);
+	clickedResource.save();
+
 	addGrowl(FacesMessage.SEVERITY_INFO, "resource_deleted");
 	log(Action.deleting_resource, clickedResource.getId());
 	clickedResource = new Resource();
@@ -816,6 +854,14 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return false;
     }
 
+    public boolean canEditFoldersInGroup() throws SQLException
+    {
+	if(getUser().getId() == getGroup().getLeaderUserId() && (getUser().isModerator() || getUser().isAdmin()))
+	    return true;
+
+	return false;
+    }
+
     public List<Presentation> getPresentations() throws SQLException
     {
 	presentations = getLearnweb().getPresentationManager().getPresentationsByGroupId(groupId);
@@ -827,26 +873,26 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	this.presentations = presentations;
     }
 
-    public Boolean getNewResourceClicked()
+    public RPAction getRightPanelAction()
     {
-	return newResourceClicked;
+	return rightPanelAction;
     }
 
-    public void setNewResourceClicked(Boolean newResourceClicked)
+    public void setRightPanelAction(RPAction rightPanelAction)
     {
-	editResourceClicked = false;
-	this.newResourceClicked = newResourceClicked;
+	this.rightPanelAction = rightPanelAction;
     }
 
-    public Boolean getEditResourceClicked()
+    public void setRightPanelAction(String value)
     {
-	return editResourceClicked;
-    }
-
-    public void setEditResourceClicked(Boolean editResourceClicked)
-    {
-	newResourceClicked = false;
-	this.editResourceClicked = editResourceClicked;
+	try
+	{
+	    this.rightPanelAction = RPAction.valueOf(value);
+	}
+	catch(Exception e)
+	{
+	    this.rightPanelAction = null;
+	}
     }
 
     public User getClickedUser()
@@ -896,12 +942,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void setClickedResource(Resource clickedResource)
     {
-	if(!editResourceClicked || this.clickedResource != clickedResource)
+	if(this.rightPanelAction != RPAction.editResource || this.clickedResource != clickedResource)
 	{
-	    editResourceClicked = false;
 	    this.clickedResource = clickedResource;
+	    this.rightPanelAction = RPAction.viewResource;
 	}
-	newResourceClicked = false;
     }
 
     public AbstractPaginator getPaginator()
@@ -912,13 +957,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public String changeFilters(String queryFilters)
     {
 	searchFilters.setFiltersFromString(queryFilters);
-	paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
+	paginator = getResourcesFromSolr(groupId, selectedFolder, query, getUser());
 	return queryFilters;
     }
 
     public void onQueryFiltersChange() throws SQLException
     {
-	paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
+	paginator = getResourcesFromSolr(groupId, selectedFolder, query, getUser());
     }
 
     public String getQuery()
@@ -933,7 +978,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void onQueryChange() throws SQLException
     {
-	paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
+	paginator = getResourcesFromSolr(groupId, selectedFolder, query, getUser());
 
 	log(Action.group_resource_search, groupId, 0, query);
     }
@@ -961,13 +1006,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return searchFilters.getFiltersString();
     }
 
-    public SearchPaginator getResourcesFromSolr(int groupId, int folderId, String query, User user)
+    public SearchPaginator getResourcesFromSolr(int groupId, Folder folder, String query, User user)
     {
 	SolrSearch solrSearch = new SolrSearch(StringUtils.isEmpty(query) ? "*" : query, user);
 	solrSearch.setFilterGroups(groupId);
-	if(folderId != 0)
+	if(folder != null && folder.getFolderId() > 0)
 	{
-	    solrSearch.setFilterFolder(folderId);
+	    solrSearch.setFilterFolder(folder.getFolderId(), !StringUtils.isEmpty(query));
 	}
 	solrSearch.setResultsPerPage(AbstractPaginator.PAGE_SIZE);
 	solrSearch.setSkipResourcesWithoutThumbnails(false);
@@ -998,6 +1043,151 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	searchFilters.putResourceCounter(sp.getFacetFields());
 	searchFilters.putResourceCounter(sp.getFacetQueries());
 	return sp;
+    }
+
+    public List<Folder> getSubfolders() throws SQLException
+    {
+	return Learnweb.getInstance().getGroupManager().getFolders(groupId, getSelectedFolderId());
+    }
+
+    public String getCurrentPath() throws SQLException
+    {
+	if(this.group != null)
+	{
+	    return this.selectedFolder == null ? this.group.getTitle() : selectedFolder.getPrettyPath();
+	}
+
+	return null;
+    }
+
+    public TreeNode getFoldersTree(int groupId) throws SQLException
+    {
+	return Learnweb.getInstance().getGroupManager().getFoldersTree(groupId, getSelectedFolderId());
+    }
+
+    public void onFolderMove(TreeDragDropEvent event) throws SQLException
+    {
+	TreeNode dragNode = event.getDragNode(); // who
+	TreeNode dropNode = event.getDropNode(); // where
+	int dropIndex = event.getDropIndex();
+
+	if(dragNode.getType().equals("folder"))
+	{
+	    Folder dragFolder = (Folder) dragNode.getData();
+	    Folder dropFolder = (Folder) dropNode.getData();
+
+	    dragFolder.moveTo(dropFolder.getGroupId(), dropFolder.getFolderId());
+	}
+    }
+
+    public void addFolder() throws SQLException
+    {
+	if(newFolderName != null && !newFolderName.isEmpty() && selectedFolder != null)
+	{
+	    Folder newFolder = new Folder(groupId, newFolderName);
+	    newFolder.setParentFolderId(getSelectedFolderId());
+	    newFolder.save();
+
+	    addMessage(FacesMessage.SEVERITY_INFO, "folderCreated", newFolder.getName());
+	}
+
+	newFolderName = null;
+    }
+
+    public void editFolder() throws SQLException
+    {
+	if(clickedFolder != null && clickedFolder.getFolderId() > 0)
+	{
+	    log(Action.edit_folder, clickedFolder.getFolderId(), null);
+
+	    try
+	    {
+		clickedFolder.save();
+	    }
+	    catch(SQLException e)
+	    {
+		e.printStackTrace();
+		addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    }
+
+	    addMessage(FacesMessage.SEVERITY_INFO, "folderUpdated", clickedFolder.getName());
+	}
+    }
+
+    public void deleteFolder() throws SQLException
+    {
+	if(clickedFolder != null)
+	{
+	    String folderName = clickedFolder.getName();
+
+	    if(selectedFolder == clickedFolder)
+	    {
+		selectedFolder = selectedFolder.getParentFolder() == null ? null : selectedFolder.getParentFolder();
+	    }
+
+	    clickedFolder.delete();
+	    clickedFolder = null;
+
+	    addMessage(FacesMessage.SEVERITY_INFO, "folderDeleted", folderName);
+	}
+    }
+
+    public Folder getSelectedFolder()
+    {
+	return selectedFolder;
+    }
+
+    public void setSelectedFolder(Folder folder)
+    {
+	if(folder != null)
+	{
+	    this.selectedFolder = folder;
+	    this.clickedFolder = selectedFolder;
+
+	    paginator = getResourcesFromSolr(groupId, selectedFolder, query, getUser());
+	    UtilBean.getAddResourceBean().setResourceTargetFolderId(getSelectedFolderId());
+	}
+    }
+
+    public Folder getClickedFolder()
+    {
+	return clickedFolder;
+    }
+
+    public void setClickedFolder(Folder clickedFolder)
+    {
+	this.clickedFolder = clickedFolder;
+    }
+
+    public TreeNode getSelectedNode()
+    {
+	return selectedNode;
+    }
+
+    public void setSelectedNode(TreeNode selectedNode)
+    {
+	this.selectedNode = selectedNode;
+    }
+
+    public void onNodeSelect(NodeSelectEvent event)
+    {
+	Folder selectedFolder = (Folder) selectedNode.getData();
+	setSelectedFolder(selectedFolder);
+    }
+
+    public String getNewFolderName()
+    {
+	return newFolderName;
+    }
+
+    public void setNewFolderName(String newFolderName)
+    {
+	this.newFolderName = newFolderName;
+    }
+
+    public void setGroup(Group group)
+    {
+	this.group = group;
     }
 
     public List<SelectItem> getMembersSelectItemList() throws SQLException

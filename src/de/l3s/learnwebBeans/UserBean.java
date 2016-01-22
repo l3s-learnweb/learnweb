@@ -27,7 +27,6 @@ import org.primefaces.model.menu.DefaultSubMenu;
 import com.sun.jersey.api.client.ClientHandlerException;
 
 import de.l3s.learnweb.Course;
-import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
@@ -470,81 +469,24 @@ public class UserBean implements Serializable
      */
     public LinkedList<DefaultSubMenu> getGroupMenu()
     {
-	String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
-
+	LinkedList<DefaultSubMenu> menu = new LinkedList<DefaultSubMenu>();
 	Integer groupId = ApplicationBean.getParameterInt("group_id");
 
-	LinkedList<DefaultSubMenu> menu = new LinkedList<DefaultSubMenu>();
 	try
 	{
 	    for(Group group : getUser().getGroups())// getActiveCourse().getGroupsFilteredByUser(getUser()))
 	    {
-		boolean isActiveGroup = false;
-
 		DefaultSubMenu submenu = new DefaultSubMenu();
 		submenu.setLabel(group.getLongTitle());
 		submenu.setId(Integer.toString(group.getId()));
 
 		if(groupId != null && groupId.equals(group.getId()))
 		{
-		    submenu.setStyleClass("active");
-		    isActiveGroup = true;
+		    submenu.setExpanded(true);
 		}
 
-		DefaultMenuItem item = new DefaultMenuItem();
-		item.setValue(UtilBean.getLocaleMessage("overview"));
-		item.setUrl("./group/overview.jsf?group_id=" + group.getId());
-		if(isActiveGroup && viewId.endsWith("overview.xhtml"))
-		    item.setStyleClass("active");
-		submenu.addElement(item);
-
-		item = new DefaultMenuItem();
-		item.setValue(UtilBean.getLocaleMessage("resources"));
-		item.setUrl("./group/resources.jsf?group_id=" + group.getId());
-		if(isActiveGroup && viewId.endsWith("resources.xhtml"))
-		    item.setStyleClass("active");
-		submenu.addElement(item);
-
-		item = new DefaultMenuItem();
-		item.setValue(UtilBean.getLocaleMessage("members"));
-		item.setUrl("./group/members.jsf?group_id=" + group.getId());
-		if(isActiveGroup && viewId.endsWith("members.xhtml"))
-		    item.setStyleClass("active");
-		submenu.addElement(item);
-
-		item = new DefaultMenuItem();
-		item.setValue(UtilBean.getLocaleMessage("presentations"));
-		item.setUrl("./group/presentations.jsf?group_id=" + group.getId());
-		if(isActiveGroup && viewId.endsWith("presentations.xhtml"))
-		    item.setStyleClass("active");
-		submenu.addElement(item);
-
-		item = new DefaultMenuItem();
-		item.setValue(UtilBean.getLocaleMessage("links"));
-		item.setUrl("./group/links.jsf?group_id=" + group.getId());
-		if(isActiveGroup && viewId.endsWith("links.xhtml"))
-		    item.setStyleClass("active");
-		submenu.addElement(item);
-
-		item = new DefaultMenuItem();
-		item.setValue(UtilBean.getLocaleMessage("forum"));
-		item.setUrl("./group/forum.jsf?group_id=" + group.getId());
-		if(isActiveGroup && (viewId.endsWith("forum.xhtml") || viewId.endsWith("forum_post.xhtml")))
-		    item.setStyleClass("active");
-		submenu.addElement(item);
-
-		if(isModerator() || isAdmin() || group.isLeader(getUser()))
-		{
-		    item = new DefaultMenuItem();
-		    item.setValue(UtilBean.getLocaleMessage("options"));
-		    item.setUrl("./group/options.jsf?group_id=" + group.getId());
-		    if(isActiveGroup && viewId.endsWith("options.xhtml"))
-			item.setStyleClass("active");
-		    submenu.addElement(item);
-		}
 		menu.add(submenu);
 	    }
-
 	}
 	catch(SQLException e)
 	{
@@ -554,48 +496,10 @@ public class UserBean implements Serializable
 	return menu;
     }
 
-    public LinkedList<DefaultSubMenu> getGroupFoldersAsMenu()
+    public boolean isGroupResourcesPage()
     {
-	Integer groupId = ApplicationBean.getParameterInt("group_id");
-	Integer folderId = ApplicationBean.getParameterInt("folder_id");
-
-	LinkedList<DefaultSubMenu> menu = new LinkedList<DefaultSubMenu>();
-	try
-	{
-	    for(Group group : getUser().getGroups())// getActiveCourse().getGroupsFilteredByUser(getUser()))
-	    {
-		boolean isActiveGroup = false;
-
-		DefaultSubMenu submenu = new DefaultSubMenu();
-		submenu.setLabel(group.getLongTitle());
-		submenu.setId(Integer.toString(group.getId()));
-
-		if(groupId != null && groupId.equals(group.getId()))
-		{
-		    submenu.setStyleClass("active");
-		    isActiveGroup = true;
-		}
-
-		for(Folder folder : group.getFolders())
-		{
-		    DefaultMenuItem item = new DefaultMenuItem();
-		    item.setValue(folder.getPrettyPath());
-		    item.setUrl("./group/resources.jsf?group_id=" + group.getId() + "&folder_id=" + folder.getFolderId());
-		    if(isActiveGroup && folderId != null && folderId.equals(folder.getFolderId()))
-			item.setStyleClass("active");
-		    submenu.addElement(item);
-		}
-
-		menu.add(submenu);
-	    }
-
-	}
-	catch(SQLException e)
-	{
-	    log.error("Can't create menu model", e);
-	}
-
-	return menu;
+	String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
+	return viewId.contains("group/resources.xhtml");
     }
 
     public String onCourseChange(int courseId) throws SQLException

@@ -22,11 +22,15 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.model.TreeNode;
 
 import com.sun.jersey.api.client.ClientHandlerException;
 
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.FactSheet;
+import de.l3s.learnweb.Folder;
+import de.l3s.learnweb.Group;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
@@ -60,7 +64,9 @@ public class SearchBean extends ApplicationBean implements Serializable
     private SearchFilters searchFilters;
 
     private Resource selectedResource;
-    private int selectedResourceTargetGroupId;
+    private TreeNode selectedNode;
+    private int selectedResourceTargetGroupId = 0;
+    private int selectedResourceTargetFolderId = 0;
 
     private FactSheet graph = new FactSheet();
     private Search images;
@@ -368,6 +374,11 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    {
 		newResource.setGroupId(selectedResourceTargetGroupId);
 		user.setActiveGroup(selectedResourceTargetGroupId);
+
+		if(selectedResourceTargetFolderId != 0)
+		{
+		    newResource.setFolderId(selectedResourceTargetFolderId);
+		}
 	    }
 
 	    newResource = user.addResource(newResource);
@@ -621,6 +632,40 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     }
 
+    public TreeNode getSelectedNode()
+    {
+	return selectedNode;
+    }
+
+    public void setSelectedNode(TreeNode selectedNode)
+    {
+	this.selectedNode = selectedNode;
+    }
+
+    public void onNodeSelect(NodeSelectEvent event)
+    {
+	String type = event.getTreeNode().getType();
+
+	if(type.equals("group"))
+	{
+	    Group group = (Group) event.getTreeNode().getData();
+	    if(group != null)
+	    {
+		selectedResourceTargetGroupId = group.getId();
+		selectedResourceTargetFolderId = 0;
+	    }
+	}
+	else if(type.equals("folder"))
+	{
+	    Folder folder = (Folder) event.getTreeNode().getData();
+	    if(folder != null)
+	    {
+		selectedResourceTargetGroupId = folder.getGroupId();
+		selectedResourceTargetFolderId = folder.getFolderId();
+	    }
+	}
+    }
+
     public int getSelectedResourceTargetGroupId()
     {
 	return selectedResourceTargetGroupId;
@@ -629,6 +674,16 @@ public class SearchBean extends ApplicationBean implements Serializable
     public void setSelectedResourceTargetGroupId(int selectedResourceTargetGroupId)
     {
 	this.selectedResourceTargetGroupId = selectedResourceTargetGroupId;
+    }
+
+    public int getSelectedResourceTargetFolderId()
+    {
+	return selectedResourceTargetFolderId;
+    }
+
+    public void setSelectedResourceTargetFolderId(int selectedResourceTargetFolderId)
+    {
+	this.selectedResourceTargetFolderId = selectedResourceTargetFolderId;
     }
 
     public String getView()

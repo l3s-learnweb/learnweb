@@ -14,6 +14,8 @@ import java.util.TimeZone;
 import javax.validation.constraints.Size;
 
 import org.apache.log4j.Logger;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
 
 import de.l3s.interwebj.AuthCredentials;
 import de.l3s.interwebj.InterWeb;
@@ -360,6 +362,34 @@ public class User implements Comparable<User>, Serializable, HasId
 	}
 	//}
 	return writeAbleGroups;
+    }
+
+    /**
+     * returns the groups tree where the user can add resources to
+     * 
+     * @return
+     * @throws SQLException
+     */
+    public TreeNode getWriteAbleGroupsTree() throws SQLException
+    {
+	TreeNode tree = new DefaultTreeNode("WriteAbleGroups");
+
+	Group myRes = new Group();
+	myRes.setId(0);
+	myRes.setTitle(UtilBean.getLocaleMessage("myResourcesTitle"));
+	TreeNode myResNode = new DefaultTreeNode("group", myRes, tree);
+
+	for(Group group : getGroups())
+	{
+	    if(!group.isRestrictionOnlyLeaderCanAddResources() || group.isLeader(this))
+	    {
+
+		TreeNode groupNode = new DefaultTreeNode("group", group, tree);
+		Learnweb.getInstance().getGroupManager().getChildNodesRecursively(group.getId(), 0, groupNode, 0);
+	    }
+	}
+
+	return tree;
     }
 
     public void joinGroup(int groupId) throws Exception

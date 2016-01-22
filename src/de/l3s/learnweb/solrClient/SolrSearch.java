@@ -197,9 +197,14 @@ public class SolrSearch implements Serializable
 	this.filterTags = tags;
     }
 
-    public void setFilterFolder(int folderId)
+    public void setFilterFolder(int folderId, boolean isIncludeChild)
     {
-	this.filterPath = "*/" + folderId;
+	this.filterPath = Integer.toString(folderId) + (isIncludeChild ? "/*" : "");
+    }
+
+    public void setFilterFolder(String folder)
+    {
+	this.filterPath = folder;
     }
 
     public void clearAllFilters()
@@ -328,9 +333,24 @@ public class SolrSearch implements Serializable
 	    solrQuery.addFilterQuery("tags : \"" + filterTags + "\"");
 	}
 
-	if(0 != filterPath.length())
+	if(filterPath != null && 0 != filterPath.length())
 	{
-	    solrQuery.addFilterQuery("path_s : " + filterPath);
+	    if(filterPath.startsWith("0"))
+	    {
+		if(filterPath.equals("0/*"))
+		{
+		    // skip this filter, because it is root directory and all subdirectories
+		}
+		else
+		{
+		    // Where field not exists or equal to "/"
+		    solrQuery.addFilterQuery("(*:* NOT path_s:*) || path_s: \"/\"");
+		}
+	    }
+	    else
+	    {
+		solrQuery.addFilterQuery("path_s : */" + filterPath);
+	    }
 	}
 
 	if(null != filterGroupIds)

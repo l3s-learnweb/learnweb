@@ -14,6 +14,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
+import de.l3s.learnwebBeans.AddResourceBean;
+import de.l3s.learnwebBeans.GroupDetailBean;
 import de.l3s.learnwebBeans.LearnwebBean;
 import de.l3s.learnwebBeans.UserBean;
 
@@ -71,6 +73,16 @@ public class UtilBean implements Serializable
     public static UserBean getUserBean()
     {
 	return (UserBean) getManagedBean("userBean");
+    }
+
+    public static GroupDetailBean getGroupDetailBean()
+    {
+	return (GroupDetailBean) getManagedBean("groupDetailBean");
+    }
+
+    public static AddResourceBean getAddResourceBean()
+    {
+	return (AddResourceBean) getManagedBean("addResourceBean");
     }
 
     public static void redirect(String redirectPath)

@@ -867,6 +867,11 @@ public class SearchFilters implements Serializable
 	setFilter(FILTERS.language, language);
     }
 
+    public boolean isFiltersEnabled()
+    {
+	return configFilters.size() > 0;
+    }
+
     public boolean isLearnwebSearchEnabled()
     {
 	if(configFilters.containsKey(FILTERS.service))

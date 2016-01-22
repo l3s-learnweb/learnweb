@@ -12,6 +12,7 @@ import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 
+import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
@@ -19,6 +20,7 @@ import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceManager;
 import de.l3s.learnweb.Tag;
 import de.l3s.learnweb.User;
+import de.l3s.learnwebBeans.GroupDetailBean.RPAction;
 
 @ManagedBean
 @ViewScoped
@@ -32,8 +34,8 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     //private String newComment;
 
     private int selectedResourceTargetGroupId;
-    private Boolean newResourceClicked = false;
-    private Boolean editResourceClicked = false;
+
+    private RPAction rightPanelAction = null;
     //private Tag selectedTag;
     //private String tagName;
     //private Comment clickedComment;
@@ -42,6 +44,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     private List<Resource> resourcesText = new LinkedList<Resource>();
     //   private List<Resource> resourcesMultimedia = new LinkedList<Resource>();
     private Resource clickedResource;
+    private Folder clickedFolder;
     private String mode = "everything";
 
     public MyResourcesBean() throws SQLException
@@ -81,11 +84,11 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         //Resource res = getUser().addResource(clickedResource.clone());
         getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId).addResource(clickedResource, getUser());
         //getLearnweb().getResourceManager().addResourceToGroup(res, getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId), getUser());
-
+    
         log(Action.adding_resource, clickedResource.getId(), selectedResourceTargetGroupId + "");
-
+    
         addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", clickedResource.getTitle());
-
+    
     }
     catch(SQLException e)
     {
@@ -209,12 +212,21 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
     public void setClickedResource(Resource clickedResource)
     {
-	if(!editResourceClicked || this.clickedResource != clickedResource)
+	if(rightPanelAction != RPAction.editResource || this.clickedResource != clickedResource)
 	{
-	    editResourceClicked = false;
+	    rightPanelAction = RPAction.viewResource;
 	    this.clickedResource = clickedResource;
 	}
-	newResourceClicked = false;
+    }
+
+    public Folder getClickedFolder()
+    {
+	return clickedFolder;
+    }
+
+    public void setClickedFolder(Folder clickedFolder)
+    {
+	this.clickedFolder = clickedFolder;
     }
 
     public int getSelectedResourceTargetGroupId()
@@ -227,38 +239,16 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	this.selectedResourceTargetGroupId = selectedResourceTargetGroupId;
     }
 
-    public Boolean getNewResourceClicked()
-    {
-	return newResourceClicked;
-    }
-
-    public void setNewResourceClicked(Boolean newResourceClicked)
-    {
-	editResourceClicked = false;
-	this.newResourceClicked = newResourceClicked;
-    }
-
-    public Boolean getEditResourceClicked()
-    {
-	return editResourceClicked;
-    }
-
-    public void setEditResourceClicked(Boolean editResourceClicked)
-    {
-	newResourceClicked = false;
-	this.editResourceClicked = editResourceClicked;
-    }
-
     /*public Tag getSelectedTag()
     {
     return selectedTag;
     }
-
+    
     public void setSelectedTag(Tag selectedTag)
     {
     this.selectedTag = selectedTag;
     }
-
+    
     public void onEditComment()
     {
     try
@@ -272,7 +262,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
     }
     }
-
+    
     public void onDeleteComment()
     {
     try
@@ -287,24 +277,46 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
     }
     }
-
+    
     public boolean canEditComment(Object commentO) throws Exception
     {
     if(!(commentO instanceof Comment))
         return false;
-
+    
     User user = getUser();
     if(null == user)// || true)
         return false;
     if(user.isAdmin() || user.isModerator())
         return true;
-
+    
     Comment comment = (Comment) commentO;
     User owner = comment.getUser();
     if(user.equals(owner))
         return true;
     return false;
     }*/
+
+    public RPAction getRightPanelAction()
+    {
+	return rightPanelAction;
+    }
+
+    public void setRightPanelAction(RPAction rightPanelAction)
+    {
+	this.rightPanelAction = rightPanelAction;
+    }
+
+    public void setRightPanelAction(String value)
+    {
+	try
+	{
+	    this.rightPanelAction = RPAction.valueOf(value);
+	}
+	catch(Exception e)
+	{
+	    this.rightPanelAction = null;
+	}
+    }
 
     public Boolean getReloadLogs()
     {
@@ -320,27 +332,27 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     {
     return clickedComment;
     }
-
+    
     public void setClickedComment(Comment clickedComment)
     {
     this.clickedComment = clickedComment;
     }
-
+    
     public String getTagName()
     {
     return tagName;
     }
-
+    
     public void setTagName(String tagName)
     {
     this.tagName = tagName;
     }
-
+    
     public String getNewComment()
     {
     return newComment;
     }
-
+    
     public void setNewComment(String newComment)
     {
     this.newComment = newComment;

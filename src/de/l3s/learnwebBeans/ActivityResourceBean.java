@@ -10,6 +10,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import de.l3s.learnweb.Comment;
+import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.NewsEntry;
@@ -17,6 +18,7 @@ import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Tag;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnwebBeans.GroupDetailBean.RPAction;
 
 @ManagedBean
 @ViewScoped
@@ -28,8 +30,9 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
     private static final long serialVersionUID = -7630987853810267209L;
     private ArrayList<NewsEntry> newslist;
     private Resource clickedResource;
-    private Boolean newResourceClicked = false;
-    private Boolean editResourceClicked = false;
+    private Folder clickedFolder;
+
+    private RPAction rightPanelAction = null;
     //private String newComment;
     //private Comment clickedComment;
     //private String tagName;
@@ -281,25 +284,29 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
 	this.newslist = newslist;
     }
 
+    public RPAction getRightPanelAction()
+    {
+	return rightPanelAction;
+    }
+
+    public void setRightPanelAction(RPAction rightPanelAction)
+    {
+	this.rightPanelAction = rightPanelAction;
+    }
+
     public Resource getClickedResource()
     {
 	return clickedResource;
     }
 
-    public void setClickedResource(Resource clickedResource)
+    public Folder getClickedFolder()
     {
-	newResourceClicked = false;
-	this.clickedResource = clickedResource;
+	return clickedFolder;
     }
 
-    public Boolean getNewResourceClicked()
+    public void setClickedFolder(Folder clickedFolder)
     {
-	return newResourceClicked;
-    }
-
-    public void setNewResourceClicked(Boolean newResourceClicked)
-    {
-	this.newResourceClicked = newResourceClicked;
+	this.clickedFolder = clickedFolder;
     }
 
     private List<LogEntry> getfeed()
@@ -374,15 +381,4 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
         return true;
     return false;
     }*/
-
-    public Boolean getEditResourceClicked()
-    {
-	return editResourceClicked;
-    }
-
-    public void setEditResourceClicked(Boolean editResourceClicked)
-    {
-	this.editResourceClicked = editResourceClicked;
-    }
-
 }

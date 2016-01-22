@@ -320,7 +320,14 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public void setClickedResource(Resource clickedResource)
     {
-	this.clickedResource = clickedResource;
+	if(clickedResource != null && clickedResource.getType().equals("folder"))
+	{
+	    this.clickedResource = new Resource();
+	}
+	else
+	{
+	    this.clickedResource = clickedResource;
+	}
     }
 
     public Tag getSelectedTag()
