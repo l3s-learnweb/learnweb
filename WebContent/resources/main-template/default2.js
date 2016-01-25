@@ -53,7 +53,9 @@ $(document).ready(function()
 		});		
 	});
 	
-	if(market == "de")
+	if (typeof market == 'undefined')
+		var market = "en-US";
+	else if(market == "de")
 		market = "de-DE";
 	else if(market == "pt")
 		market = "pt-BR";
