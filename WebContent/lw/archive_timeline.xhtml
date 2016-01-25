@@ -125,9 +125,14 @@
 		<h:form id="myForm">
 			<h:inputHidden id="res_id" value="#{archiveTimeLineBean.resourceId}" />
 			<p:commandButton action="#{archiveTimeLineBean.getResourceJsonData()}" value="Click Here" oncomplete="handleJsonData(xhr, status, args);" onstart="changeValue();"></p:commandButton>
+			<p:selectOneMenu value="#{archiveTimeLineBean.filename}">
+				<f:selectItem itemLabel="-----" itemValue=""/>
+				<f:selectItems value="#{archiveTimeLineBean.fileOptions}"></f:selectItems>
+			</p:selectOneMenu>
 		</h:form>
-		<div class='box'>
-		<h:panelGroup layout="block" id="container"></h:panelGroup>
+		<div class='box2'>
+		<h:panelGroup layout="block" id="container3"></h:panelGroup><br style="clear:both;"/>
+		<h:panelGroup layout="block" id="container2"></h:panelGroup>
 		<div id="calendar">
 			<!-- Responsive calendar - START -->
 			<div class="responsive-calendar">
