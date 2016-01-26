@@ -57,6 +57,7 @@ public class Learnweb
     private final YovistoManager yovistoManager;
     private final JobScheduler jobScheduler;
     private final GlossaryManager glossaryManager;
+    private final SuggestionLogger suggestionLogger;
 
     private static Learnweb learnweb = null;
 
@@ -181,6 +182,7 @@ public class Learnweb
 	jobScheduler = new JobScheduler(this);
 	yovistoManager = new YovistoManager(this);
 	glossaryManager = new GlossaryManager(this);
+	suggestionLogger = new SuggestionLogger(this);
     }
 
     /**
@@ -295,6 +297,7 @@ public class Learnweb
 
 	jobScheduler.stopAllJobs();
 	archiveUrlManager.onDestroy();
+	suggestionLogger.stop();
 
 	try
 	{
@@ -657,6 +660,11 @@ public class Learnweb
     public GlossaryManager getGlossaryManager()
     {
 	return glossaryManager;
+    }
+
+    public SuggestionLogger getSuggestionLogger()
+    {
+	return suggestionLogger;
     }
 
     public static void main(String[] args)

@@ -388,6 +388,7 @@ public class User implements Comparable<User>, Serializable, HasId
 	    myRes.setTitle(UtilBean.getLocaleMessage("myResourcesTitle"));
 	    TreeNode myResNode = new DefaultTreeNode("group", myRes, tree);
 	    // TODO unused code???
+
 	    for(Group group : getGroups())
 	    {
 		if(!group.isRestrictionOnlyLeaderCanAddResources() || group.isLeader(this))

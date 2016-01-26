@@ -38,7 +38,7 @@ public class YovistoManager
 	ResourceManager resourceManager = learnweb.getResourceManager();
 
 	ResultSet result = null;
-	User rishita = learnweb.getUserManager().getUser(7727);
+	//User rishita = learnweb.getUserManager().getUser(7727);
 
 	/*for(Resource resource : yovistoGroup.getResources())
 	{

@@ -348,6 +348,8 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    newResource.getMetadataEntries().remove("first_timestamp");
 	    newResource.getMetadataEntries().remove("last_timestamp");
 
+	    log.debug("Add resource); group: " + selectedResourceTargetGroupId + "; folder: " + selectedResourceTargetFolderId);
+
 	    // add resource to a group if selected
 	    if(selectedResourceTargetGroupId != 0)
 	    {
@@ -406,6 +408,9 @@ public class SearchBean extends ApplicationBean implements Serializable
      */
     public void logResourceOpened()
     {
+	if(!logEnabled)
+	    return;
+
 	try
 	{
 	    startTime = new Date(); //Recording the beginning of viewing time for a resource.
@@ -417,21 +422,20 @@ public class SearchBean extends ApplicationBean implements Serializable
 		throw new InvalidParameterException("unknown resource id:" + tempResourceId);
 
 	    int userId = getUser() == null ? -1 : getUser().getId(); // search can be anonymous
-	    if(logEnabled)
+
+	    try
 	    {
-		try
-		{
-		    searchLogClient.saveResourceLog(userId, startTime, ACTION.resource_click, resource.getUrl(), tempResourceId, resource.getTitle(), resource.getSource());
-		}
-		catch(ClientHandlerException e)
-		{
-		    log.debug("Search Tracker service is down");
-		}
-		catch(RuntimeException e)
-		{
-		    log.debug(e.getMessage());
-		}
+		searchLogClient.saveResourceLog(userId, startTime, ACTION.resource_click, resource.getUrl(), tempResourceId, resource.getTitle(), resource.getSource());
 	    }
+	    catch(ClientHandlerException e)
+	    {
+		log.debug("Search Tracker service is down");
+	    }
+	    catch(RuntimeException e)
+	    {
+		log.debug(e.getMessage());
+	    }
+
 	}
 	catch(Throwable e)
 	{
@@ -443,9 +447,11 @@ public class SearchBean extends ApplicationBean implements Serializable
     {
 	String query = getParameter("query");
 	String suggestions = getParameter("suggestions");
+	String market = getParameter("market");
 
-	log.debug("query: " + query + "; suggestions: " + suggestions);
+	//log.debug("query: " + query + "; suggestions: " + suggestions + "; market: " + market);
 
+	getLearnweb().getSuggestionLogger().log(query, market, suggestions);
     }
 
     /**
@@ -453,6 +459,9 @@ public class SearchBean extends ApplicationBean implements Serializable
      */
     public void logEndTime()
     {
+	if(!logEnabled)
+	    return;
+
 	endTime = new Date();
 	String tempResourceId = getParameter("resource_id");
 	Resource resource = search.getResourceByTempId(Integer.parseInt(tempResourceId));

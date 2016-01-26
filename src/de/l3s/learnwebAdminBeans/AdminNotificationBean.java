@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import de.l3s.clustering.KMeans;
 import de.l3s.learnweb.Message;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.UserManager;

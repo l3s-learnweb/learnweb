@@ -37,6 +37,7 @@ function setPreference(prefKey, prefValue)
 	setPreferenceRemote([{name:'key', value:prefKey}, {name:'value', value:prefValue}]);
 }
 
+var myMarket = "en-US";
 
 $(document).ready(function()
 {	
@@ -52,36 +53,34 @@ $(document).ready(function()
 			return true;
 		});		
 	});
-	
-	if (typeof market == 'undefined')
-		var market = "en-US";
-	else if(market == "de")
-		market = "de-DE";
-	else if(market == "pt")
-		market = "pt-BR";
-	else if(market == "it")
-		market = "it-IT";
-	else
-		market = "en-US";
 
+	
+	if (typeof market != 'undefined')
+	{
+		if(market == "de")
+			myMarket = "de-DE";
+		else if(market == "pt")
+			myMarket = "pt-BR";
+		else if(market == "it")
+			myMarket = "it-IT";
+	}
+	
 	$("#searchfield").autocomplete({
         source: function (request, response) {
-            console.log("source");
             $.ajax({
-                url: "http://api.bing.com/osjson.aspx?Query=" + encodeURIComponent(request.term) + "&Market="+ market +"&JsonType=callback&JsonCallback=?",
+                url: "http://api.bing.com/osjson.aspx?Query=" + encodeURIComponent(request.term) + "&Market="+ myMarket +"&JsonType=callback&JsonCallback=?",
                 dataType: "jsonp",
     
                 success: function (data) {
+                	console.log('myMarket',myMarket, 'market', market);
                     var suggestions = [];
                     $.each(data[1], function (i, val) {
                         suggestions.push(val);
                     });
                     response(suggestions);
-
-                    //console.log(request.term, suggestions);
-                    
+               
                     var logQuerySuggestionAsync = function() {
-                    	logQuerySuggestion([{name:'query', value:request.term},{name:'suggestions', value:suggestions},{name:'market', value:market}]);
+                    	logQuerySuggestion([{name:'query', value:request.term},{name:'suggestions', value:suggestions},{name:'market', value:myMarket}]);
                     };
                     setTimeout(logQuerySuggestionAsync, 0);
                 }
