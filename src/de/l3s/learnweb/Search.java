@@ -310,6 +310,11 @@ public class Search implements Serializable
 
 	for(ResourceDecorator decoratedResource : interwebResults)
 	{
+	    if(null == decoratedResource.getUrl())
+	    {
+		log.warn("url is null: " + decoratedResource.toString());
+		continue;
+	    }
 	    // check if an other resource with the same url exists
 	    if(!urlHashMap.add(decoratedResource.getUrl()))
 	    {

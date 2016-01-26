@@ -223,7 +223,7 @@
 		  	<p:remoteCommand update=":exploretabView:right_bartab2" name="updatecurrentsearch" />
 			<p:remoteCommand actionListener="${resultSetBean.logResourceOpened()}" name="logResourceOpened" async="true" oncomplete="updatecurrentsearch();" />
 			<p:remoteCommand actionListener="${resultSetBean.logEndTime()}" name="logEndTime" async="false" />
-			<p:remoteCommand actionListener="${resultSetBean.setSelectedResource()}" name="setSelectedResource" update=":resource_form" />		  	
+			<p:remoteCommand actionListener="${resultSetBean.setSelectedResource()}" oncomplete="PF('resource_dialog').show();" name="setSelectedResource" update=":resource_form" />		  	
 		</h:form>
 		<p:dialog header="#{msg.options}" widgetVar="resource_dialog" modal="false" minWidth="600" resizable="false">			
 			<h:form id="resource_form">

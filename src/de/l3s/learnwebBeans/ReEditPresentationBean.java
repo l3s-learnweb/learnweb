@@ -170,6 +170,7 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
 	    if(null == group)
 	    {
 		addMessage(FacesMessage.SEVERITY_ERROR, "invalid group id");
+		log.debug("invalid group id");
 		return;
 	    }
 

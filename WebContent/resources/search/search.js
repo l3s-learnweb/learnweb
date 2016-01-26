@@ -160,8 +160,7 @@ function prepareResources(resources)
 		
 		resource.on('openLightbox', lightbox_open);
 		previewImage.mousedown(lightbox_open);
-		image.mousedown(lightbox_open);
-	
+		image.mousedown(lightbox_open);	
 	});	
 	
 	

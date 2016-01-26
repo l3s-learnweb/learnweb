@@ -253,4 +253,11 @@ public class ResourceDecorator implements Serializable
 	    return null;
 	return resource.getOwnerUser();
     }
+
+    @Override
+    public String toString()
+    {
+	return "ResourceDecorator [resource=" + resource + ", tempId=" + tempId + ", snippet=" + snippet + ", rankAtService=" + rankAtService + ", title=" + title + ", addedToGroupBy=" + addedToGroupBy + ", addedToGroupOn=" + addedToGroupOn + "]";
+    }
+
 }

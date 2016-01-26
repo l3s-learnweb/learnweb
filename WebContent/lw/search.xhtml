@@ -189,42 +189,44 @@
 	
 		<!-- TODO: all remote commands cause an update of :nextPage  -->
 		<h:form class="display-none">	
-			<p:remoteCommand actionListener="${searchBean.loadNextPage()}" update=":nextPage" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this" partialSubmit="true" />
-			<p:remoteCommand actionListener="${searchBean.generateKnowledgeGraph()}" update=":factsheet" name="ajaxLoadFactsheet" async="true" process="@this" partialSubmit="true"/>
-	
-		
-			<p:remoteCommand actionListener="${searchBean.setSelectedResource()}" name="setSelectedResource" update=":resource_form" process="@this" partialSubmit="true" />
-		  	<p:remoteCommand actionListener="${searchHistoryBean.updateSearchHistory()}" update=":tabView:tab3" name="ajaxLoadSearchHistory" process="@this" partialSubmit="true" />
-					  				
-			<p:remoteCommand actionListener="${searchBean.logResourceOpened()}" name="logResourceOpened" async="true" process="@this" partialSubmit="true" />
-			<p:remoteCommand actionListener="${searchBean.logEndTime()}" update=":tabView:tab2" name="logEndTime" async="true" process="@this" partialSubmit="true"/>
-		
-			<p:remoteCommand actionListener="${searchBean.loadInterwebCounts()}" update=":filters" name="loadFilterCounts" async="false" process="@this" partialSubmit="true"/>				
+			<p:remoteCommand actionListener="${searchBean.loadNextPage()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('loadNextPage')" update=":nextPage" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this" partialSubmit="true" />
+
+			<p:remoteCommand actionListener="${searchBean.generateKnowledgeGraph()}"  immediate="true" ignoreAutoUpdate="true" onstart="console.log('generateKnowledgeGraph')" update=":factsheet" name="ajaxLoadFactsheet" async="true" process="@this" partialSubmit="true"/>
+
+			<p:remoteCommand actionListener="${searchBean.setSelectedResource()}" immediate="true"  ignoreAutoUpdate="true" onstart="console.log('setSelectedResource')" name="setSelectedResource" update=":resource_form" process="@this" partialSubmit="true"/>
+
+			<p:remoteCommand actionListener="${searchHistoryBean.updateSearchHistory()}"  immediate="true" ignoreAutoUpdate="true" onstart="console.log('updateSearchHistory')" update=":tabView:tab3" name="ajaxLoadSearchHistory" process="@this" partialSubmit="true" />
+
+			<p:remoteCommand actionListener="${searchBean.logResourceOpened()}" immediate="true" ignoreAutoUpdate="true"  onstart="console.log('logResourceOpened')" update=":nothing" name="logResourceOpened" async="true" process="@form" partialSubmit="true" />
+
+			<p:remoteCommand actionListener="${searchBean.logEndTime()}" immediate="true"  ignoreAutoUpdate="true" onstart="console.log('logEndTime')" update=":tabView:tab2" name="logEndTime" async="true" process="@this" partialSubmit="true"/>
+
+			<p:remoteCommand actionListener="${searchBean.loadInterwebCounts()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('loadInterwebCounts')" update=":filters" name="loadFilterCounts" async="false" process="@this" partialSubmit="true"/>				
 		</h:form>
  
+ 		<h:panelGroup id="nothing"></h:panelGroup>
+ 		
 		<p:dialog header="#{msg.options}" widgetVar="resource_dialog" modal="false" minWidth="600" resizable="false" style="z-index:1500;">			
 			<h:form id="resource_form">
-				<h:panelGrid columns="2" rendered="#{userBean.loggedIn}" style="width:100%;">
-					<h:outputText value="#{msg.add_to}:"/>
-					<p:row>
-						<p:tree id="folders_tree" value="#{userBean.user.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{searchBean.selectedNode}">				        						     						        
-					        <p:ajax event="select" listener="#{searchBean.onNodeSelect}"/>
-					        
-					        <p:treeNode type="group">
-					        	<h:outputText id="group" value="#{node.title}"/>
-					        </p:treeNode>
-					        
-					        <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
-						        <h:outputText value="#{node.name}" />
-					        </p:treeNode>
-					    </p:tree>
-					    
-						<!-- <h:selectOneMenu value="#{searchBean.selectedResourceTargetGroupId}">
+			<!-- <h:selectOneMenu value="#{searchBean.selectedResourceTargetGroupId}">
 							<f:selectItem itemLabel="#{msg.myResourcesTitle}" itemValue="0" />
 							<f:selectItem itemLabel="123" itemValue="-1" itemDisabled="true" />	
 							<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
 						</h:selectOneMenu> -->
-				    </p:row>
+				<h:panelGrid columns="2" rendered="#{userBean.loggedIn}" style="width:100%;">				
+					<h:outputText value="#{msg.add_to}:" escape="false" />					
+					<p:tree id="folders_tree" value="#{userBean.user.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{searchBean.selectedNode}">				        						     						        
+				        <p:ajax event="select" listener="#{searchBean.onNodeSelect}"/>
+				        
+				        <p:treeNode type="group">
+				        	<h:outputText id="group" value="#{node.title}"/>
+				        </p:treeNode>
+				        
+				        <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
+					        <h:outputText value="#{node.name}" />
+				        </p:treeNode>
+				    </p:tree> 						
+				   
 					
 					<h:outputLabel value="#{msg.title}:" for="title"/>
 					<p:inputText value="#{searchBean.selectedResource.title}" id="title" style="width:100%;"/>					

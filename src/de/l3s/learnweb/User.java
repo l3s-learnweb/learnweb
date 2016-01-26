@@ -26,6 +26,7 @@ import de.l3s.util.MD5;
 
 public class User implements Comparable<User>, Serializable, HasId
 {
+    private static final Logger log = Logger.getLogger(User.class);
     private static final long serialVersionUID = 2482790243930271009L;
 
     public static final int GENDER_MALE = 1;
@@ -370,24 +371,34 @@ public class User implements Comparable<User>, Serializable, HasId
      * @return
      * @throws SQLException
      */
+    private long treeCacheTime = 0L;
+    private DefaultTreeNode tree;
+
+    // TODO move method to userbean and use user.getWriteAbleGroups()
     public TreeNode getWriteAbleGroupsTree() throws SQLException
     {
-	TreeNode tree = new DefaultTreeNode("WriteAbleGroups");
-
-	Group myRes = new Group();
-	myRes.setId(0);
-	myRes.setTitle(UtilBean.getLocaleMessage("myResourcesTitle"));
-	TreeNode myResNode = new DefaultTreeNode("group", myRes, tree);
-
-	for(Group group : getGroups())
+	long start = System.currentTimeMillis();
+	if(null == tree || treeCacheTime + 10000L < System.currentTimeMillis())
 	{
-	    if(!group.isRestrictionOnlyLeaderCanAddResources() || group.isLeader(this))
-	    {
+	    treeCacheTime = System.currentTimeMillis();
+	    tree = new DefaultTreeNode("WriteAbleGroups");
 
-		TreeNode groupNode = new DefaultTreeNode("group", group, tree);
-		Learnweb.getInstance().getGroupManager().getChildNodesRecursively(group.getId(), 0, groupNode, 0);
+	    Group myRes = new Group();
+	    myRes.setId(0);
+	    myRes.setTitle(UtilBean.getLocaleMessage("myResourcesTitle"));
+	    TreeNode myResNode = new DefaultTreeNode("group", myRes, tree);
+	    // TODO unused code???
+	    for(Group group : getGroups())
+	    {
+		if(!group.isRestrictionOnlyLeaderCanAddResources() || group.isLeader(this))
+		{
+
+		    TreeNode groupNode = new DefaultTreeNode("group", group, tree);
+		    Learnweb.getInstance().getGroupManager().getChildNodesRecursively(group.getId(), 0, groupNode, 0);
+		}
 	    }
 	}
+	log.debug("getWriteAbleGroupsTree in " + (System.currentTimeMillis() - start) + "ms");
 
 	return tree;
     }

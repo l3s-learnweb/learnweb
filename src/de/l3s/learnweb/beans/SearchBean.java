@@ -160,11 +160,13 @@ public class SearchBean extends ApplicationBean implements Serializable
 	searchLogClient = getLearnweb().getSearchlogClient();
 
 	int userId = getUser() == null ? -1 : getUser().getId();
+
+	/* TODO enable when log service is working again
 	if(userId > 0)
 	{
 	    logEnabled = true;
 	}
-
+	*/
 	// search if a query is given and (it was not searched before or the query or searchmode has been changed)
 	if(!isEmpty(query) && (null == search || !query.equals(search.getQuery()) || searchMode != search.getMode() || !StringUtils.equals(queryFilters, searchFilters.getFiltersString())))
 	{
@@ -230,7 +232,6 @@ public class SearchBean extends ApplicationBean implements Serializable
 	return "/lw/search.xhtml?faces-redirect=true";
     }
 
-    // TODO We use it somewhere?
     //For comparing the resources in the current result set with another result set from a similar query in the past
     public String compareHistoryResources()
     {
@@ -311,37 +312,12 @@ public class SearchBean extends ApplicationBean implements Serializable
 	if(!isSearched())
 	    return null;
 
-	//	log.debug("getNextPage");
+	log.debug("getNextPage");
 
-	batchrsTimeout = new Date().getTime() - batchrsStartTime;
-	LinkedList<ResourceDecorator> newResources = search.getResourcesByPage(page);
+	// don't log anything here.
+	// this method will be called multiple times for each page
 
-	if(logEnabled)
-	{
-	    try
-	    {
-		//Saves the resources returned for a page 
-		searchLogClient.saveSERP(page, searchMode, newResources);
-		//Saves the batch resources after a timeout of 10 minutes
-		if(batchrsTimeout > 600000)
-		{
-		    searchLogClient.pushBatchResultsetList();
-		    searchLogClient.postResourceLog();
-		    searchLogClient.passUpdateResultset();
-		    batchrsStartTime = new Date().getTime();
-		}
-	    }
-	    catch(ClientHandlerException e)
-	    {
-		log.debug("Search Tracker service is down");
-	    }
-	    catch(RuntimeException e)
-	    {
-		log.debug(e.getMessage());
-	    }
-
-	}
-	return newResources;
+	return search.getResourcesByPage(page);
     }
 
     // -------------------------------------------------------------------------
@@ -586,6 +562,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public Resource getSelectedResource()
     {
+	log.debug("getSelectedResource");
 	return selectedResource;
     }
 
@@ -604,7 +581,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	}
 	catch(Throwable e)
 	{
-	    e.printStackTrace();
+	    log.fatal(e);
 	}
     }
 
@@ -691,6 +668,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public String getView()
     {
+	log.debug("getView");
 	return view;
     }
 

@@ -1018,17 +1018,11 @@ public class ResourceManager
 	resource.setViews(searchResult.getNumberOfViews());
 	resource.setIdAtService(searchResult.getIdAtService());
 	resource.setDuration(searchResult.getDuration());
-
-	if(!resource.getTitle().equals(searchResult.getDescription()))
-	    resource.setDescription(searchResult.getDescription());
-
+	resource.setDescription(searchResult.getDescription());
 	resource.setUrl(StringHelper.urlDecode(searchResult.getUrl()));
 
-	/*
-	resource.setEmbeddedSize1Raw(searchResult.getEmbeddedSize1());
-	resource.setEmbeddedSize3Raw(searchResult.getEmbeddedSize3());
-	resource.setEmbeddedSize4Raw(searchResult.getEmbeddedSize4());
-	*/
+	if(resource.getTitle().equals(resource.getDescription())) // delete description when equal to title
+	    resource.setDescription("");
 
 	if(!resource.getType().equalsIgnoreCase("image"))
 	{
@@ -1095,7 +1089,10 @@ public class ResourceManager
 	    if(resource.getThumbnail2() == null)
 		resource.setThumbnail2(new Thumbnail(biggestThumbnail.getUrl(), biggestThumbnail.getWidth(), biggestThumbnail.getHeight()));
 	}
-
+	else if(!searchResult.getType().equals("text"))
+	{
+	    log.warn("no image url for: " + searchResult.toString());
+	}
 	return resource;
     }
 

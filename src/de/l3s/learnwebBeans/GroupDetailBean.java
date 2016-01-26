@@ -130,7 +130,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
 	if(null == group)
 	{
+	    /*
 	    addMessage(FacesMessage.SEVERITY_ERROR, "invalid group id");
+	    log.debug("invalid group id");*/
 	    return;
 	}
 
@@ -145,7 +147,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	searchFilters.setMode(MODE.group);
 	paginator = getResourcesFromSolr(groupId, selectedFolder, query, getUser());
 
-	//UtilBean.getUserBean()
     }
 
     public void preRenderView(ComponentSystemEvent e)

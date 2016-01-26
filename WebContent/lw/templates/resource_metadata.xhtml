@@ -15,27 +15,29 @@
 			 
 		<div class="description">
 		
-			<h:panelGroup rendered="#{not empty res.description}">
-				<b><h:outputText value="#{msg.description}:" /></b><br/>
+			<ui:fragment rendered="#{not empty res.description}">
+				<b><h:outputText value="#{msg.description}:" escape="false"/></b><br/>
 				<h:outputText value="${res.descriptionHTML}" escape="false" />
 				<br/><br/>				
-			</h:panelGroup> 			
+			</ui:fragment> 			
 			
-			<b><h:outputText value="#{msg.location}: " /></b>
+			<b><h:outputText value="#{msg.location}: " escape="false" /></b>
 			<h:outputLink value="${res.url}">
-				 <h:outputText value="${res.location}" />
+				 <h:outputText value="${res.location}" escape="false" />
 			</h:outputLink>
 			<br />
 			
-			<b><h:outputText value="#{msg.resource_found_at}: " /></b> 
-				<h:outputText value="#{res.source}" />
+			<b><h:outputText value="#{msg.resource_found_at}: " escape="false" /></b> 
+			<h:outputText value="#{res.source}" escape="false" />
 			<br />
 			
-			<b><h:outputText value="#{msg.author}: " /></b> 
+			<ui:fragment rendered="#{not empty res.description}" >
+				<b><h:outputText value="#{msg.author}: " escape="false" /></b> 
 				<h:outputText value="#{res.resource.author}" />
-			<br />
+				<br />
+			</ui:fragment> 	
 			
-			<h:panelGroup rendered="#{not empty res.group}">
+			<ui:fragment rendered="#{not empty res.group}">
 				<b><h:outputText value="#{msg.group}: " /></b>	
 				
 				<h:outputLink value="group/overview.jsf">
@@ -43,16 +45,16 @@
 					<h:outputText value="#{res.group.title}" />
 				</h:outputLink>
 				<br/>
-			</h:panelGroup>
+			</ui:fragment>
 			
-			<h:panelGroup rendered="#{not empty res.resource.tags}">
-				<b><h:outputText value="#{msg.tags}: " /></b>	
+			<ui:fragment rendered="#{not empty res.resource.tags}">
+				<b><h:outputText value="#{msg.tags}: " escape="false" /></b>	
 				
 				<ui:repeat var="tag" value="#{res.resource.tags}" varStatus="status">
-					<h:outputText value="#{tag.name}" /><h:outputText value=", " rendered="#{!status.last}" />
+					<h:outputText value="#{tag.name}" /><h:outputText value=", " rendered="#{!status.last}" escape="false" />
 				</ui:repeat>						
 				<br/>
-			</h:panelGroup>
+			</ui:fragment>
 			
 			<br /> 
 		</div>
@@ -60,12 +62,12 @@
 		
 		<div class="snippet">
 		
-			<h:panelGroup rendered="#{(not empty res.snippet) and false}">
-			<br/>
-			    <b><h:outputText value="#{msg.snippet}:" /></b><br/>
-				<h:outputText value="${res.snippet}"  />
+			<ui:fragment rendered="#{(not empty res.snippet) and false}">
+				<br/>
+			    <b><h:outputText value="#{msg.snippet}:" escape="false" /></b><br/>
+				<h:outputText value="${res.snippet}" escape="false"  />
 				<br/><br/>				
-			</h:panelGroup> 
+			</ui:fragment> 
 			
 			<br /> 
 		</div>

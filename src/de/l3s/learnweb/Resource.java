@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -615,12 +616,13 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
     public void setTitle(String title)
     {
-	this.title = StringUtils.isNotEmpty(title) ? Jsoup.clean(title, Whitelist.none()) : "no title";
+
+	this.title = StringUtils.isNotEmpty(title) ? StringEscapeUtils.unescapeHtml4(Jsoup.clean(title, Whitelist.none())) : "no title";
     }
 
     public void setDescription(String description)
     {
-	this.description = description == null ? "" : StringHelper.clean(description, Whitelist.simpleText());
+	this.description = description == null ? "" : StringEscapeUtils.unescapeHtml4(StringHelper.clean(description, Whitelist.simpleText()));
     }
 
     public void setUrl(String url)

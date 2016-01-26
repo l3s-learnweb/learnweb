@@ -494,7 +494,7 @@ public class GroupManager
     {
 	PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group_folder` (folder_id, group_id, parent_folder_id, name) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
-	if(folder.getFolderId() < 0) // the foler is not yet stored at the database
+	if(folder.getFolderId() < 0) // the folder is not yet stored at the database
 	    replace.setNull(1, java.sql.Types.INTEGER);
 	else
 	    replace.setInt(1, folder.getFolderId());
@@ -513,18 +513,6 @@ public class GroupManager
 
 	replace.close();
 	return folder;
-    }
-
-    public Folder getFolderByResourceId(int id) throws SQLException
-    {
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id FROM `lw_group_resource` WHERE resource_id = ? AND folder_id > 0 LIMIT 1");
-	select.setInt(1, id);
-	ResultSet rs = select.executeQuery();
-
-	if(!rs.next())
-	    return null;
-
-	return getFolder(rs.getInt(1));
     }
 
     public void deleteFolder(Folder folder) throws SQLException
