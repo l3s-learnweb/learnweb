@@ -46,6 +46,8 @@
 						process="@this" value="#{msg.join_group}">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
 					</p:commandLink>
+					
+					<p:remoteCommand name="moveToFolder" actionListener="#{groupDetailBean.moveToFolder}" update=":group_menu_tree :folderGrid :resourceGrid" oncomplete="resourceDND()"/>
 				</h:form>
 				
 				<ul>								
@@ -268,10 +270,10 @@
 			</p:dialog>
 			
 			<h:panelGroup id="datagrid" styleClass="datagrid" layout="block">
-				<h:panelGroup id="folderGrid" layout="block" pt:data-folderId="#{groupDetailBean.selectedFolderId}">				
+				<h:panelGroup id="folderGrid" layout="block" pt:data-selectedFolderId="#{groupDetailBean.selectedFolderId}">				
 				    <ui:repeat var="folder" value="#{groupDetailBean.subfolders}"> 			     
-				  		<h:form styleClass="resource_panel resource_folder grey_border">
-					        <p:commandLink styleClass="resource_command_link" update=":group_menu_tree :datagrid :paginator :add_resource_panel" oncomplete="update_header();update_url(0, #{folder.folderId});">
+				  		<h:form styleClass="resource_panel resource_folder grey_border" pt:data-folderId="#{folder.folderId}">
+					        <p:commandLink styleClass="resource_command_link" update=":group_menu_tree :datagrid :paginator :add_resource_panel" oncomplete="update_header();update_url(0, #{folder.folderId});resourceDND();">
 	       						<f:setPropertyActionListener target="#{groupDetailBean.selectedFolder}" value="#{folder}" />
 	       	
 					        	<h:outputText value="#{folder.name}" escape="false" styleClass="resource_short_title" /> 
@@ -300,10 +302,10 @@
 				    
 			    </h:panelGroup>
 							
-				<h:panelGroup id="resourceGrid" layout="block">				
+				<h:panelGroup id="resourceGrid" layout="block" pt:data-selectedResourceId="#{groupDetailBean.selectedResource.id}">				
 				    <ui:repeat var="result" value="#{groupDetailBean.paginator.currentPage}"> 			     
-				  		<h:form styleClass="resource_panel grey_border">
-						    <p:commandLink styleClass="resource_command_link" update=":add_resource_panel" oncomplete="update_header();update_url(#{result.resource.id});">
+				  		<h:form styleClass="resource_panel grey_border" pt:data-resourceId="#{result.resource.id}">
+						    <p:commandLink styleClass="resource_command_link" update=":add_resource_panel" oncomplete="update_header();update_url(#{result.resource.id});resourceDND();">
 	
 					        	<f:setPropertyActionListener target="#{groupDetailBean.clickedResource}" value="#{result.resource}" />
 					        	<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{result.resource}" />

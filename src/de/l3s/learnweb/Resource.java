@@ -100,11 +100,6 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private transient String path = null;
     private transient String prettyPath = null;
 
-    protected void clearCaches()
-    {
-	path = null;
-    }
-
     /**
      * Do nothing constructor
      */
@@ -1431,6 +1426,11 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	this.archiveUrls = archiveUrls;
     }
 
+    public Resource moveTo(int newGroupId, int newFolderId) throws SQLException
+    {
+	return Learnweb.getInstance().getGroupManager().moveResource(this, newGroupId, newFolderId);
+    }
+
     /**
      * returns a string representation of the resources path
      * 
@@ -1463,5 +1463,11 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 		prettyPath = folder.getPrettyPath();
 	}
 	return prettyPath;
+    }
+
+    protected void clearCaches()
+    {
+	path = null;
+	prettyPath = null;
     }
 }

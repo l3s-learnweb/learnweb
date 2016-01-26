@@ -95,8 +95,8 @@ function update_url(resource_id, folder_id)
 	var page_schema = location.protocol + "//" + location.host + location.pathname;
 	var query_params = location.search;
 	
-	if (!folder_id) {
-		folder_id = $("#folderGrid").data("folderid");
+	if (folder_id == undefined) {
+		folder_id = $("#folderGrid").data("selectedFolderid");
 	}
 	
 	if (folder_id != undefined) {
@@ -134,8 +134,72 @@ window.onpopstate = function(e){
 	location.reload(true);
 };
 
+
+
+function dropHandle(event, ui) {
+	var destFolderId = $(this).is("[data-folderId]") ? $(this).attr("data-folderId") : $(this).parents(".ui-treenode").attr("data-datakey");
+	
+	if (ui.draggable.is("[data-resourceId]")) {
+		var resourceId = ui.draggable.attr("data-resourceId");
+		console.log("Resource " + resourceId + " moved to folder " + destFolderId);
+   
+		moveToFolder([
+          {name: 'destFolderId', value: destFolderId},
+          {name: 'type', value: 'resource'},
+          {name: 'objectId', value: resourceId}
+		]);
+	} else {
+		var folderId = ui.draggable.is("[data-folderId]") ? ui.draggable.attr("data-folderId") : ui.draggable.attr("data-datakey");
+		console.log("Folder " + folderId + " moved to folder " + destFolderId);
+		
+		moveToFolder([
+          {name: 'destFolderId', value: destFolderId},
+          {name: 'type', value: 'folder'},
+          {name: 'objectId', value: folderId}
+		]);
+	}
+}
+
+function resourceDND() {
+	$('#folderGrid .resource_panel').draggable({
+        helper: 'clone',
+        scope: 'resfolder',
+        zIndex: ++PrimeFaces.zindex
+     });
+	
+    $('#resourceGrid .resource_panel').draggable({
+       helper: 'clone',
+       scope: 'resfolder',
+       zIndex: ++PrimeFaces.zindex
+    });
+    
+    $('#folders_tree_wrap .ui-treenode:not([data-datakey="0"])').draggable({
+        helper: 'clone',
+        scope: 'resfolder',
+        zIndex: ++PrimeFaces.zindex
+     });
+
+    $('#folderGrid .resource_panel').droppable({
+       activeClass: 'ui-state-active',
+       hoverClass: 'ui-state-highlight',
+       tolerance: 'pointer',
+       scope: 'resfolder',
+       drop: dropHandle
+    });
+    
+    $('#folders_tree_wrap .ui-treenode .ui-treenode-content').droppable({
+        activeClass: 'ui-state-active',
+        hoverClass: 'ui-state-highlight',
+        tolerance: 'pointer',
+        scope: 'resfolder',
+        drop: dropHandle
+     });
+}
+
 $(document).ready(function() 
-{				
+{
+	resourceDND();
+	
 	//lightbox_resize_container();	
 	$(window).resize(lightbox_resize_container);
 	

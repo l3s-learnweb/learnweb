@@ -437,6 +437,7 @@ public class ResourceManager
 	{
 	    cache.remove(resource.getId());
 	    cache.put(resource);
+	    resource.clearCaches();
 	}
 
 	replace.close();

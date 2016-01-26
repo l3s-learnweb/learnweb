@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -23,7 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.primefaces.event.NodeSelectEvent;
-import org.primefaces.event.TreeDragDropEvent;
 import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.AbstractPaginator;
@@ -138,14 +138,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
 	updateLinksList();
 
-	Resource temp = new Resource();
-	clickedResource = temp;
+	clickedResource = new Resource();
 	clickedUser = new User(); // TODO initialize with null
 	clickedPresentation = new Presentation();// TODO initialize with null
 
 	searchFilters = new SearchFilters();
 	searchFilters.setMode(MODE.group);
-	paginator = getResourcesFromSolr(groupId, selectedFolder, query, getUser());
+	updateResourcesFromSolr();
 
     }
 
@@ -958,13 +957,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public String changeFilters(String queryFilters)
     {
 	searchFilters.setFiltersFromString(queryFilters);
-	paginator = getResourcesFromSolr(groupId, selectedFolder, query, getUser());
+	updateResourcesFromSolr();
 	return queryFilters;
     }
 
     public void onQueryFiltersChange() throws SQLException
     {
-	paginator = getResourcesFromSolr(groupId, selectedFolder, query, getUser());
+	updateResourcesFromSolr();
     }
 
     public String getQuery()
@@ -979,8 +978,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void onQueryChange() throws SQLException
     {
-	paginator = getResourcesFromSolr(groupId, selectedFolder, query, getUser());
-
+	updateResourcesFromSolr();
 	log(Action.group_resource_search, groupId, 0, query);
     }
 
@@ -1007,14 +1005,17 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return searchFilters.getFiltersString();
     }
 
-    public SearchPaginator getResourcesFromSolr(int groupId, Folder folder, String query, User user)
+    public void updateResourcesFromSolr()
+    {
+	int folderId = (selectedFolder != null && selectedFolder.getFolderId() > 0) ? selectedFolder.getFolderId() : 0;
+	paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
+    }
+
+    public SearchPaginator getResourcesFromSolr(int groupId, int folderId, String query, User user)
     {
 	SolrSearch solrSearch = new SolrSearch(StringUtils.isEmpty(query) ? "*" : query, user);
 	solrSearch.setFilterGroups(groupId);
-	if(folder != null && folder.getFolderId() > 0)
-	{
-	    solrSearch.setFilterFolder(folder.getFolderId(), !StringUtils.isEmpty(query));
-	}
+	solrSearch.setFilterFolder(folderId, !StringUtils.isEmpty(query));
 	solrSearch.setResultsPerPage(AbstractPaginator.PAGE_SIZE);
 	solrSearch.setSkipResourcesWithoutThumbnails(false);
 	solrSearch.setFacetFields(searchFilters.getFacetFields());
@@ -1066,18 +1067,36 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return Learnweb.getInstance().getGroupManager().getFoldersTree(groupId, getSelectedFolderId());
     }
 
-    public void onFolderMove(TreeDragDropEvent event) throws SQLException
+    public void moveToFolder()
     {
-	TreeNode dragNode = event.getDragNode(); // who
-	TreeNode dropNode = event.getDropNode(); // where
-	int dropIndex = event.getDropIndex();
+	Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+	String strDestFolderId = params.get("destFolderId");
+	String type = params.get("type");
+	String objectId = params.get("objectId");
 
-	if(dragNode.getType().equals("folder"))
+	try
 	{
-	    Folder dragFolder = (Folder) dragNode.getData();
-	    Folder dropFolder = (Folder) dropNode.getData();
+	    int destFolderId = Integer.parseInt(strDestFolderId);
 
-	    dragFolder.moveTo(dropFolder.getGroupId(), dropFolder.getFolderId());
+	    if(type.equals("folder"))
+	    {
+		Folder folder = Learnweb.getInstance().getGroupManager().getFolder(Integer.parseInt(objectId));
+		folder.moveTo(groupId, destFolderId);
+	    }
+	    else if(type.equals("resource"))
+	    {
+		Resource res = Learnweb.getInstance().getResourceManager().getResource(Integer.parseInt(objectId));
+		res.moveTo(groupId, destFolderId);
+		updateResourcesFromSolr();
+	    }
+	    else
+	    {
+		throw new Exception("wrong type");
+	    }
+	}
+	catch(Exception e)
+	{
+
 	}
     }
 
@@ -1145,7 +1164,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    this.selectedFolder = folder;
 	    this.clickedFolder = selectedFolder;
 
-	    paginator = getResourcesFromSolr(groupId, selectedFolder, query, getUser());
+	    updateResourcesFromSolr();
 	    UtilBean.getAddResourceBean().setResourceTargetFolderId(getSelectedFolderId());
 	}
     }

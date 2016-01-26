@@ -168,7 +168,7 @@ public class Folder implements Serializable
 
     public Folder moveTo(int newGroupId, int newParentFolderId) throws SQLException
     {
-	return Learnweb.getInstance().getGroupManager().moveFolder(this, newGroupId, newParentFolderId);
+	return Learnweb.getInstance().getGroupManager().moveFolder(this, newParentFolderId, newGroupId);
     }
 
     public void delete() throws SQLException
@@ -184,6 +184,17 @@ public class Folder implements Serializable
     public int getCountSubfolders() throws SQLException
     {
 	return Learnweb.getInstance().getGroupManager().getCountFolders(groupId, folderId);
+    }
+
+    protected void clearCaches()
+    {
+	path = null;
+	prettyPath = null;
+    }
+
+    protected void clearSubfolders()
+    {
+	subfolders = null;
     }
 
     @Override

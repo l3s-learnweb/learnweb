@@ -468,26 +468,41 @@ public class GroupManager
 	return numberOfRows;
     }
 
-    public Folder moveFolder(Folder original, int newGroupId, int newParentFolderId) throws SQLException
+    public Folder moveFolder(Folder original, int newParentFolderId, int newGroupId) throws SQLException
     {
-	if(original.getGroupId() != newGroupId)
+	// because we must "save" resource anyway, for updating path
+	//if(original.getGroupId() != newGroupId)
+	//{
+	for(Resource res : original.getResources())
 	{
-	    original.setGroupId(newGroupId);
-
-	    for(Resource res : original.getResources())
-	    {
-		res.setGroupId(newGroupId);
-		res.save();
-	    }
-
-	    for(Folder subfolder : original.getSubfolders())
-	    {
-		this.moveFolder(subfolder, newGroupId, original.getFolderId());
-	    }
+	    res.setGroupId(newGroupId);
+	    res.save();
 	}
 
+	for(Folder subfolder : original.getSubfolders())
+	{
+	    this.moveFolder(subfolder, original.getFolderId(), newGroupId);
+	}
+	//}
+
+	original.setGroupId(newGroupId);
 	original.setParentFolderId(newParentFolderId);
-	return this.saveFolder(original);
+	original.save();
+
+	if(newParentFolderId > 0)
+	{
+	    getFolder(newParentFolderId).clearSubfolders();
+	}
+
+	return original;
+    }
+
+    public Resource moveResource(Resource original, int newGroupId, int newFolderId) throws SQLException
+    {
+	original.setGroupId(newGroupId);
+	original.setFolderId(newFolderId);
+	original.save();
+	return original;
     }
 
     public Folder saveFolder(Folder folder) throws SQLException
@@ -509,6 +524,10 @@ public class GroupManager
 	    if(!rs.next())
 		throw new SQLException("database error: no id generated");
 	    folder.setFolderId(rs.getInt(1));
+	}
+	else
+	{
+	    folder.clearCaches();
 	}
 
 	replace.close();
