@@ -5,8 +5,22 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<ui:composition> 
-
+<ui:composition>
+	<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/tooltipster.min.css" />
+	<script type="text/javascript" src="#{request.contextPath}/resources/js/jquery.tooltipster.min.js" />
+ 
+	<script type="text/javascript">
+        $(document).ready(function() {
+            $('.tooltip').tooltipster({
+            	contentAsHTML:true,
+            	maxWidth: 400,
+            	position:'right',
+            	interactive:true,
+            	interactiveTolerance:150,
+            	theme:'tooltipster-custom-theme'
+            });
+        });
+    </script>
 	<ui:repeat var="res" value="#{resources}">
 		
 		<h:panelGroup layout="block" styleClass="page_counter" rendered="#{res.tempId gt 1 and res.tempId % 8 eq 1}">
@@ -54,7 +68,7 @@
 					<h:panelGroup layout="block" rendered="#{not empty res.group}" style="padding-top:3px;margin-right:10px;display:inline-block;">
 						<b><h:outputText value="#{msg.group}: " /></b>	
 				
-						<h:outputLink value="group/resources.jsf">
+						<h:outputLink value="group/resources.jsf" class="tooltip" title="#{res.group.description}">
 							<f:param name="group_id" value="#{res.group.id}" />
 							<h:outputText value="#{res.group.title}; " />
 						</h:outputLink>
@@ -63,9 +77,9 @@
 						<b><h:outputText value=" #{msg.collector}: " /></b>	
 						<h:outputText value="#{res.getMetadataValue('collector')}" />
 					</h:panelGroup>
-					<h:panelGroup layout="block" style="padding-top:3px;display:inline-block;white-space:nowrap;position:absolute;" rendered="#{empty res.getMetadataValue('collector') and not empty res.ownerUser}">
+					<h:panelGroup layout="block" style="padding-top:3px;display:inline-block;white-space:nowrap;position:absolute;" rendered="#{empty res.getMetadataValue('collector') and not empty res.ownerUser.fullName}">
 						<b><h:outputText value=" #{msg.collector}: " /></b>	
-						<h:outputText value="#{res.resource.ownerUser.username}" />
+						<h:outputText value="#{res.resource.ownerUser.fullName}" />
 					</h:panelGroup>
 				</h:panelGroup>
 				<h:panelGroup rendered="#{utilBean.viewResultSetPage}">
