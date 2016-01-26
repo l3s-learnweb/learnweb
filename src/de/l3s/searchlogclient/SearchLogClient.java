@@ -140,7 +140,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("searchlog client SearchLogClient Failed : HTTP error code : " + resp.getStatus(), new Exception());
 	}
 
 	ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
@@ -168,7 +168,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
@@ -247,7 +247,7 @@ public class SearchLogClient
 
 	    if(resp.getStatus() != 200)
 	    {
-		throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	    }
 
 	    tagList = resp.getEntity(TagList.class);
@@ -268,11 +268,11 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 	ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
 	tag.setTagId(serviceresp.getReturnid());
-	//System.out.println(serviceresp.getMessage() + Integer.toString(serviceresp.getReturnid()));
+	//log.debug(serviceresp.getMessage() + Integer.toString(serviceresp.getReturnid()));
 
 	return tag;
     }
@@ -289,10 +289,10 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 	//ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	//System.out.println(serviceresp.getMessage() + Integer.toString(serviceresp.getReturnid()));
+	//log.debug(serviceresp.getMessage() + Integer.toString(serviceresp.getReturnid()));
     }
 
     /**
@@ -309,7 +309,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	TagList tagList = resp.getEntity(TagList.class);
@@ -329,7 +329,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	TagList tagList = resp.getEntity(TagList.class);
@@ -349,10 +349,10 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 	//ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	//System.out.println(serviceresp.getMessage() + Integer.toString(serviceresp.getReturnid()));
+	//log.debug(serviceresp.getMessage() + Integer.toString(serviceresp.getReturnid()));
     }
 
     /**
@@ -369,7 +369,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	SharedResultsetList sharedResultsetList = resp.getEntity(SharedResultsetList.class);
@@ -390,7 +390,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	QueryLog resultsetInfo = resp.getEntity(QueryLog.class);
@@ -416,22 +416,23 @@ public class SearchLogClient
 	    Resource resourceSend;
 	    //creating a new resource type for the web service
 	    if(mode != MODE.web)
-		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resource.getThumbnail2()
-			.getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(), resource.getResource().getThumbnail4().getUrl(), resultsetId,
-			resource.getTempId());
+		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
+			resource.getThumbnail2().getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(),
+			resource.getResource().getThumbnail4().getUrl(), resultsetId, resource.getTempId());
 	    else
-		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId, resource.getTempId());
+		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
+			resource.getTempId());
 
 	    //posting the resource to the web service
 	    ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, resourceSend);
 
 	    if(resp.getStatus() != 200)
 	    {
-		throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	    }
 	}
 
-	//System.out.println("Successfully stored all the resources");
+	//log.debug("Successfully stored all the resources");
     }
 
     /**
@@ -450,11 +451,12 @@ public class SearchLogClient
 	    Resource resourceSend;
 	    //creating a new resource type for the web service
 	    if(mode != MODE.web)
-		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resource.getThumbnail2()
-			.getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(), resource.getResource().getThumbnail4().getUrl(), resultsetId,
-			resource.getTempId());
+		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
+			resource.getThumbnail2().getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(),
+			resource.getResource().getThumbnail4().getUrl(), resultsetId, resource.getTempId());
 	    else
-		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId, resource.getTempId());
+		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
+			resource.getTempId());
 	    resourcelist.add(resourceSend);
 	}
 
@@ -468,10 +470,10 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
-	//System.out.println(resp.getEntity(ServiceResponse.class).getMessage() + Integer.toString(resp.getStatus()));
+	//log.debug(resp.getEntity(ServiceResponse.class).getMessage() + Integer.toString(resp.getStatus()));
     }
 
     /**
@@ -496,9 +498,9 @@ public class SearchLogClient
 		//creating a new resource type for the web service
 		Resource resourceSend;
 		if(mode != MODE.web)
-		    resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resource.getThumbnail2()
-			    .getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(), resource.getResource().getThumbnail4().getUrl(), resultsetId,
-			    resource.getTempId());
+		    resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
+			    resource.getThumbnail2().getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(),
+			    resource.getResource().getThumbnail4().getUrl(), resultsetId, resource.getTempId());
 		else
 		    resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
 			    resource.getTempId());
@@ -539,10 +541,10 @@ public class SearchLogClient
 
 	    if(resp.getStatus() != 200)
 	    {
-		throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	    }
 
-	    //System.out.println(resp.getEntity(ServiceResponse.class).getMessage() + Integer.toString(resp.getStatus()));
+	    //log.debug(resp.getEntity(ServiceResponse.class).getMessage() + Integer.toString(resp.getStatus()));
 	}
     }
 
@@ -593,12 +595,12 @@ public class SearchLogClient
 
 	    if(resp.getStatus() != 200)
 	    {
-		throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	    }
 
 	    resourceLogList.clear();
 	    //ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	    //System.out.println(serviceresp.getMessage() + "successfully captured : " + serviceresp.getReturnid());
+	    //log.debug(serviceresp.getMessage() + "successfully captured : " + serviceresp.getReturnid());
 	}
     }
 
@@ -633,12 +635,12 @@ public class SearchLogClient
 
 	    if(resp.getStatus() != 200)
 	    {
-		throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	    }
 
 	    savedResourceList.clear();
 	    //ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	    //System.out.println("Successfully updated the resultset table: " + serviceresp.getReturnid());
+	    //log.debug("Successfully updated the resultset table: " + serviceresp.getReturnid());
 	}
 
     }
@@ -661,11 +663,11 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	//ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	//System.out.println("Successfully updated the viewing time table: " + serviceresp.getReturnid());
+	//log.debug("Successfully updated the viewing time table: " + serviceresp.getReturnid());
 
     }
 
@@ -697,12 +699,12 @@ public class SearchLogClient
 
 	    if(resp.getStatus() != 200)
 	    {
-		throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	    }
 
 	    viewingTimeList.clear();
 	    //ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	    //System.out.println("Successfully updated the viewing time table: " + serviceresp.getReturnid());
+	    //log.debug("Successfully updated the viewing time table: " + serviceresp.getReturnid());
 	}
 
     }
@@ -718,11 +720,11 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	//ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	//System.out.println(serviceresp.getMessage() + serviceresp.getReturnid());
+	//log.debug(serviceresp.getMessage() + serviceresp.getReturnid());
     }
 
     /**
@@ -740,11 +742,11 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	//ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	//System.out.println(serviceresp.getMessage() + serviceresp.getReturnid());
+	//log.debug(serviceresp.getMessage() + serviceresp.getReturnid());
     }
 
     /**
@@ -769,10 +771,10 @@ public class SearchLogClient
 
 	    if(resp.getStatus() != 200)
 	    {
-		throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	    }
 
-	    //System.out.println(resp.getEntity(ServiceResponse.class).getMessage() + Integer.toString(resp.getStatus()));
+	    //log.debug(resp.getEntity(ServiceResponse.class).getMessage() + Integer.toString(resp.getStatus()));
 	}
     }
 
@@ -795,7 +797,7 @@ public class SearchLogClient
 
 	    if(resp.getStatus() != 200)
 	    {
-		throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	    }
 
 	    HistoryByDateList historyByDateList = resp.getEntity(HistoryByDateList.class);
@@ -826,7 +828,7 @@ public class SearchLogClient
 
 	    if(resp.getStatus() != 200)
 	    {
-		throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	    }
 
 	    HistoryByDateList historyByDateList = resp.getEntity(HistoryByDateList.class);
@@ -862,7 +864,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	HistoryByDateList historyByDateList = resp.getEntity(HistoryByDateList.class);
@@ -898,7 +900,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	HistoryByDateList historyByDateList = resp.getEntity(HistoryByDateList.class);
@@ -935,7 +937,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	HistoryByDateList historyByDateList = resp.getEntity(HistoryByDateList.class);
@@ -968,7 +970,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	UrlList urlList = resp.getEntity(UrlList.class);
@@ -993,7 +995,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	UrlList urlList = resp.getEntity(UrlList.class);
@@ -1027,7 +1029,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
@@ -1060,7 +1062,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new IllegalStateException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new IllegalStateException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
@@ -1107,7 +1109,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
@@ -1141,7 +1143,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
@@ -1186,7 +1188,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	ResourceLogList resourcesLog = resp.getEntity(ResourceLogList.class);
@@ -1209,7 +1211,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	ResourceLogList resourcesLog = resp.getEntity(ResourceLogList.class);
@@ -1231,7 +1233,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	SearchCommentsList searchComments = resp.getEntity(SearchCommentsList.class);
@@ -1252,7 +1254,7 @@ public class SearchLogClient
 
 	if(resp.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + resp.getStatus());
+	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
 	}
 
 	QueryLog recentQuery = resp.getEntity(QueryLog.class);

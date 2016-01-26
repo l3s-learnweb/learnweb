@@ -387,7 +387,7 @@ public class ArchiveUrlManager
 		    MementoClient mClient = learnweb.getMementoClient();
 		    List<ArchiveUrl> archiveVersions = mClient.getArchiveItVersions(collectionId, archiveitUrl);
 		    saveArchiveItVersions(archiveResource.getId(), archiveVersions);
-		    System.out.println(archiveResource.getUrl() + " " + archiveResource.getTitle() + " " + archiveResource.getOnlineStatus() + " " + archiveResource.getLanguage());
+		    log.debug(archiveResource.getUrl() + " " + archiveResource.getTitle() + " " + archiveResource.getOnlineStatus() + " " + archiveResource.getLanguage());
 
 		    /*String[] tags = subject.split(",");
 		    HashSet<String> lwTags = new HashSet<String>();
@@ -507,7 +507,7 @@ public class ArchiveUrlManager
 	    {
 		log.error("Error while trying to save the resource with the archived URL", e);
 	    }
-	    //System.out.println(version.getArchiveUrl() + " " + gmtDate.format(version.getTimestamp()));
+	    //log.debug(version.getArchiveUrl() + " " + gmtDate.format(version.getTimestamp()));
 	}
     }
 
@@ -555,7 +555,7 @@ public class ArchiveUrlManager
 		    archiveUrlsFromArchiveIt.removeAll(savedArchiveUrls);
 		    if(archiveUrlsFromArchiveIt.size() > 0)
 		    {
-			System.out.println("learnweb resource id:" + learnwebResourceId + " before:" + savedArchiveUrls.size());
+			log.debug("learnweb resource id:" + learnwebResourceId + " before:" + savedArchiveUrls.size());
 			saveArchiveItVersions(learnwebResourceId, archiveUrlsFromArchiveIt);
 		    }
 		}
@@ -610,7 +610,7 @@ public class ArchiveUrlManager
         if(response.getHeaders().containsKey("Memento-Datetime"))
     	return response.getHeaders().getFirst("Memento-Datetime");
         else
-    	System.out.println("Memento Datetime not found");
+    	log.debug("Memento Datetime not found");
         try
         {
     	Thread.sleep(1000 * (int) Math.pow(2, i));
@@ -658,7 +658,7 @@ public class ArchiveUrlManager
 	
 		    if(info != null)
 		    {
-			System.out.println(info.getFileName() + " " + info.getMimeType());
+			log.debug(info.getFileName() + " " + info.getMimeType());
 			if(info.getMimeType().equalsIgnoreCase("application/pdf"))
 			{
 			    resource.setMachineDescription(info.getTextContent());
@@ -694,12 +694,12 @@ public class ArchiveUrlManager
 		con = (HttpURLConnection) new URL(resource.getUrl()).openConnection();
 		con.setInstanceFollowRedirects(true);
 		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0");
-		System.out.println(resource.getUrl());
+		log.debug(resource.getUrl());
 		for(int i = 0; i < 10; i++)
 		{
 		    if(con.getResponseCode() == HttpURLConnection.HTTP_MOVED_PERM || con.getResponseCode() == HttpURLConnection.HTTP_MOVED_TEMP || con.getResponseCode() == HttpURLConnection.HTTP_SEE_OTHER)
 		    {
-			System.out.println(con.getResponseCode());
+			log.debug(con.getResponseCode());
 			con = (HttpURLConnection) new URL(con.getHeaderField("Location")).openConnection();
 			con.setInstanceFollowRedirects(true);
 			con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0");
@@ -710,7 +710,7 @@ public class ArchiveUrlManager
 		}
 		String redirectUrl = con.getURL().toString();
 		int status = con.getResponseCode();
-		System.out.println(resource.getId() + " " + status + " " + redirectUrl);
+		log.debug(resource.getId() + " " + status + " " + redirectUrl);
 		if(!redirectUrl.contains("login.php") && status == HttpURLConnection.HTTP_OK)
 		{
 		    String originalUrl = resource.getUrl();
@@ -720,7 +720,7 @@ public class ArchiveUrlManager
 		    resource.setUrl(originalUrl);
 		    resource.save();
 		    solr.reIndexResource(resource);
-		    System.out.println("processed:" + resource.getId());
+		    log.debug("processed:" + resource.getId());
 		}
 	    }
 	    catch(IOException e)
@@ -739,7 +739,7 @@ public class ArchiveUrlManager
 		String url = rs.getString("url");
 	
 		Document doc = Jsoup.connect(url).timeout(60000).userAgent("Mozilla").get();
-		System.out.println(rs.getInt("resource_id") + " " + doc.title());
+		log.debug(rs.getInt("resource_id") + " " + doc.title());
 		pStmt2.setString(1, doc.title());
 		pStmt2.setInt(2, rs.getInt("resource_id"));
 		pStmt2.executeUpdate();
@@ -763,10 +763,10 @@ public class ArchiveUrlManager
 	String archiveURL = null;
 	if(filenameParts.find())
 	    archiveURL = refreshHeader.substring(filenameParts.start(), filenameParts.end());
-	System.out.println(archiveURL);
+	log.debug(archiveURL);
 	String mementoDatetime = getMementoDatetime(archiveURL);
 	if(mementoDatetime != null)
-	    System.out.println(mementoDatetime);*/
+	    log.debug(mementoDatetime);*/
     }
 
     public void onDestroy()

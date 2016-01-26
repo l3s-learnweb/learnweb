@@ -276,17 +276,17 @@ public class ResourceBean extends ApplicationBean implements Serializable
 
     public String saveResource()
     {
-	System.out.println("saveResource()");
+	log.debug("saveResource()");
 	if(null == getUser())
 	{
 	    addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
 	    return null;
 	}
-	System.out.println("saveResource() 2");
+	log.debug("saveResource() 2");
 	try
 	{
 	    //loadResource();
-	    System.out.println("drin" + resource.getTitle());
+	    log.debug("drin" + resource.getTitle());
 	    resource.save();
 
 	    log(Action.edit_resource, resource.getId());

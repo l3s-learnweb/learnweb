@@ -70,7 +70,7 @@ public class MultiGroupFeedBean extends ApplicationBean
 		if(r != null && deletedResources.contains(r.getId()))
 		    resourceaction = false;
 
-		//System.out.println(l.getAction().toString());
+		//log.debug(l.getAction().toString());
 
 		int commentcount = 0;
 		int tagcount = 0;

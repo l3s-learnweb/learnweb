@@ -56,7 +56,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     public void doNothing(AjaxBehaviorEvent obj)
     {
-	System.out.println("aaa" + obj.toString());
+	log.debug("aaa" + obj.toString());
 
 	resource.setStorageType(Resource.WEB_RESOURCE);
     }
@@ -87,8 +87,8 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     
     public void handleUrlChange(AjaxBehaviorEvent event) throws IOException
     {
-    System.out.println("handleUrlChange");
-    System.out.println(resource.getUrl());
+    log.debug("handleUrlChange");
+    log.debug(resource.getUrl());
     
     if(!resource.getUrl().startsWith("http"))
         resource.setUrl("http://" + resource.getUrl());
@@ -120,9 +120,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         e.printStackTrace();
     }
     
-    System.out.println(resource.getTitle());
-    System.out.println(resource.getEmbeddedSize1());
-    System.out.println(resource.getDescription());
+    log.debug(resource.getTitle());
+    log.debug(resource.getEmbeddedSize1());
+    log.debug(resource.getDescription());
     resource.prepareEmbeddedCodes();
     }
     */
@@ -499,6 +499,16 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	}
     }
 
+    public static void main(String[] args) throws SQLException, InterruptedException
+    {
+	Resource resource = Learnweb.getInstance().getResourceManager().getResource(190236);
+	log.debug(resource);
+
+	new CreateThumbnailThread(resource).start();
+
+	Thread.sleep(99999999);
+    }
+
     public static class CreateThumbnailThread extends Thread
     {
 
@@ -540,7 +550,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 		    }
 		    else if(info.getMimeType().equals("application/pdf"))
 		    {
-			System.out.println("process " + info.getMimeType());
+			log.debug("process " + info.getMimeType());
 			resource.setMachineDescription(info.getTextContent());
 
 			rpm.processFile(resource, FileInspector.openStream(resource.getUrl()), info);

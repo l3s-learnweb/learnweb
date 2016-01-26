@@ -60,7 +60,7 @@ public class LoroManager
 
 	if(!DBConnection.isValid(1))
 	{
-	    System.err.println("Database connection invalid try to reconnect");
+	    log.error("Database connection invalid try to reconnect");
 
 	    try
 	    {

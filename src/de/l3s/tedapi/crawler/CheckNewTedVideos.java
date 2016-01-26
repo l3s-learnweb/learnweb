@@ -296,7 +296,7 @@ public class CheckNewTedVideos extends BaseTedApiCrawler implements Runnable
     public void run()
     {
 
-	System.out.println("Entering new videos thread at " + new Date());
+	log.debug("Entering new videos thread at " + new Date());
 	String fields = "updated_at,viewed_count,languages,media,tags,photo_urls";
 	int limit = 100, offset = 0;
 	String apiKey = properties.getProperty("ted_apikey_2");

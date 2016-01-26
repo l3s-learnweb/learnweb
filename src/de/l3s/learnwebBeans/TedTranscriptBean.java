@@ -269,7 +269,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 		    }
 		    }*/
 		}
-		System.out.println(synonyms[i]);
+		log.debug(synonyms[i]);
 		synonymsList += synonyms[i] + "&lt;br/&gt;";
 
 	    }

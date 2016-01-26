@@ -16,6 +16,7 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.log4j.Logger;
 
 import com.sun.jersey.api.client.ClientHandlerException;
 
@@ -39,7 +40,7 @@ import de.l3s.searchlogclient.jaxb.ViewingTime;
 @SessionScoped
 public class ResultSetBean extends ApplicationBean
 {
-
+    private static final Logger log = Logger.getLogger(ResultSetBean.class);
     private int resultSetId;
     private String resultSetIdMd5;
     private String resultSetView;
@@ -133,12 +134,12 @@ public class ResultSetBean extends ApplicationBean
 	}
 	catch(ClientHandlerException e)
 	{
-	    System.out.println("Search Tracker service is down");
+	    log.debug("Search Tracker service is down");
 	    return null;
 	}
 	catch(RuntimeException e)
 	{
-	    System.out.println(e.getMessage());
+	    log.debug(e.getMessage());
 	    return null;
 	}
     }
@@ -149,7 +150,7 @@ public class ResultSetBean extends ApplicationBean
     		clickedResources = searchLogClient.getResourcesLogByResultsetIdAndAction(resultSetId, "resource_click");
     	return clickedResources;
     }
-
+    
     public ArrayList<ResourceLog> getSavedResources() {
     	if(savedResources == null)
     		savedResources = searchLogClient.getResourcesLogByResultsetIdAndAction(resultSetId, "resource_saved");
@@ -250,11 +251,11 @@ public class ResultSetBean extends ApplicationBean
 	}
 	catch(ClientHandlerException e)
 	{
-	    System.out.println("Search Tracker service is down");
+	    log.debug("Search Tracker service is down");
 	}
 	catch(RuntimeException e)
 	{
-	    System.out.println(e.getMessage());
+	    log.debug(e.getMessage());
 	}
     }
 
@@ -375,15 +376,15 @@ public class ResultSetBean extends ApplicationBean
 	    int userId = getUser() == null ? -1 : getUser().getId(); // search can be anonymous
 
 	    searchLogClient.saveResourceLog(userId, startTime, ACTION.resource_click, resource.getUrl(), tempResourceId, resource.getTitle(), resource.getSource());
-	    System.out.println("userId:" + userId + "; tempId:" + tempResourceId + "; realId:" + resource.getId() + " stored in Learnweb:" + storedInLearnweb);
+	    log.debug("userId:" + userId + "; tempId:" + tempResourceId + "; realId:" + resource.getId() + " stored in Learnweb:" + storedInLearnweb);
 	}
 	catch(ClientHandlerException e)
 	{
-	    System.out.println("Search Tracker service is down");
+	    log.debug("Search Tracker service is down");
 	}
 	catch(RuntimeException e)
 	{
-	    System.out.println(e.getMessage());
+	    log.debug(e.getMessage());
 	}
     }
 
@@ -405,11 +406,11 @@ public class ResultSetBean extends ApplicationBean
 	}
 	catch(ClientHandlerException e)
 	{
-	    System.out.println("Search Tracker service is down");
+	    log.debug("Search Tracker service is down");
 	}
 	catch(RuntimeException e)
 	{
-	    System.out.println(e.getMessage());
+	    log.debug(e.getMessage());
 	}
     }
 
@@ -575,12 +576,12 @@ public class ResultSetBean extends ApplicationBean
 	}
 	catch(ClientHandlerException e)
 	{
-	    System.out.println("Search Tracker service is down");
+	    log.debug("Search Tracker service is down");
 	    return null;
 	}
 	catch(RuntimeException e)
 	{
-	    System.out.println(e.getMessage());
+	    log.debug(e.getMessage());
 	    return null;
 	}
 
@@ -636,11 +637,11 @@ public class ResultSetBean extends ApplicationBean
 	    }
 	    catch(ClientHandlerException e)
 	    {
-		System.out.println("Search Tracker service is down");
+		log.debug("Search Tracker service is down");
 	    }
 	    catch(RuntimeException e)
 	    {
-		System.out.println(e.getMessage());
+		log.debug(e.getMessage());
 	    }
 
 	}
@@ -655,12 +656,12 @@ public class ResultSetBean extends ApplicationBean
 	}
 	catch(ClientHandlerException e)
 	{
-	    System.out.println("Search Tracker service is down");
+	    log.debug("Search Tracker service is down");
 	    return null;
 	}
 	catch(RuntimeException e)
 	{
-	    System.out.println(e.getMessage());
+	    log.debug(e.getMessage());
 	    return null;
 	}
     }
@@ -741,12 +742,12 @@ public class ResultSetBean extends ApplicationBean
 	}
 	catch(ClientHandlerException e)
 	{
-	    System.out.println("Search Tracker service is down");
+	    log.debug("Search Tracker service is down");
 	    return null;
 	}
 	catch(RuntimeException e)
 	{
-	    System.out.println(e.getMessage());
+	    log.debug(e.getMessage());
 	    return null;
 	}
     }
@@ -770,12 +771,12 @@ public class ResultSetBean extends ApplicationBean
 	}
 	catch(ClientHandlerException e)
 	{
-	    System.out.println("Search Tracker service is down");
+	    log.debug("Search Tracker service is down");
 	    return null;
 	}
 	catch(RuntimeException e)
 	{
-	    System.out.println(e.getMessage());
+	    log.debug(e.getMessage());
 	    return null;
 	}
     }
@@ -804,11 +805,11 @@ public class ResultSetBean extends ApplicationBean
 	}
 	catch(ClientHandlerException e)
 	{
-	    System.out.println("Search Tracker service is down");
+	    log.debug("Search Tracker service is down");
 	}
 	catch(RuntimeException e)
 	{
-	    System.out.println(e.getMessage());
+	    log.debug(e.getMessage());
 	}
 	catch(SQLException e)
 	{
@@ -844,7 +845,7 @@ public class ResultSetBean extends ApplicationBean
 	}
 	catch(NullPointerException e)
 	{
-	    System.out.println("Search Tracker service is down");
+	    log.debug("Search Tracker service is down");
 	    return null;
 	}
 	catch(ClientHandlerException e)
@@ -879,11 +880,11 @@ public class ResultSetBean extends ApplicationBean
 	}
 	catch(ClientHandlerException e)
 	{
-	    System.out.println("Search Tracker service is down");
+	    log.debug("Search Tracker service is down");
 	}
 	catch(RuntimeException e)
 	{
-	    System.out.println(e.getMessage());
+	    log.debug(e.getMessage());
 	}
     }
 }

@@ -4,8 +4,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 public class KMeans
 {
+    private static final Logger log = Logger.getLogger(KMeans.class);
     //Number of Clusters. This metric should be related to the number of points
     private int NUM_CLUSTERS;
     //Min and Max X and Y
@@ -30,8 +33,8 @@ public class KMeans
 
 	//Create Clusters
 	//Set Random Centroids
-	System.out.println("MIN:" + MIN_COORDINATE);
-	System.out.println("MAX:" + MAX_COORDINATE);
+	log.debug("MIN:" + MIN_COORDINATE);
+	log.debug("MAX:" + MAX_COORDINATE);
 	for(int i = 0; i < NUM_CLUSTERS; i++)
 	{
 	    Cluster cluster = new Cluster(i);
@@ -62,7 +65,7 @@ public class KMeans
     public List<Point> listOfPoints()
     {
 	List<Point> p = new ArrayList<Point>();
-	System.out.println("listOfPoints");
+	log.debug("listOfPoints");
 
 	Point pt = new Point(listActivities.get("Searching"), listActivities.get("Open Resource"));
 	p.add(pt);
@@ -90,7 +93,7 @@ public class KMeans
 	p.add(pt12);
 
 	//for(Point pp : p)
-	//System.out.println(pp);
+	//log.debug(pp);
 
 	/*Iterator<String> itr = listActivities.keySet().iterator();
 	Iterator<String> itr2 = listActivities.keySet().iterator();
@@ -104,14 +107,14 @@ public class KMeans
 		int value2 = Integer.valueOf(current2.toString());
 		Point pt = new Point(value, value2);
 		p.add(pt);
-		System.out.println(pt.toString());
+		log.debug(pt.toString());
 	    }
 	}*/
 
 	return p;
 
 	/*List<Point> p = new ArrayList<Point>();
-	System.out.println("listOfPoints");
+	log.debug("listOfPoints");
 	Iterator<String> itr = listActivities.keySet().iterator();
 	while(itr.hasNext())
 	{
@@ -154,9 +157,9 @@ public class KMeans
 	    {
 		distance += p.distance(lastCentroids.get(i), currentCentroids.get(i));
 	    }
-	    //System.out.println("#################");
-	    //System.out.println("Iteration: " + iteration);
-	    //System.out.println("Centroid distances: " + distance);
+	    //log.debug("#################");
+	    //log.debug("Iteration: " + iteration);
+	    //log.debug("Centroid distances: " + distance);
 
 	    if(distance == 0)
 	    {

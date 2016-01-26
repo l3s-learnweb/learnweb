@@ -54,14 +54,19 @@ public class Cluster
 
     public void plotCluster()
     {
-	System.out.println("[Cluster: " + id + "]");
-	System.out.println("[Centroid: " + centroid + "]");
-	System.out.println("[Points: \n");
+	// TODO
+	/* use the logger instead of println
+	  
+	 
+	log.debug("[Cluster: " + id + "]");
+	log.debug("[Centroid: " + centroid + "]");
+	log.debug("[Points: \n");
 	for(Point p : points)
 	{
-	    System.out.println(p);
+	    log.debug(p);
 	}
-	System.out.println("]");
+	log.debug("]");
+	*/
     }
 
 }

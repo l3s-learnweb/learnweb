@@ -109,7 +109,6 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
     public void handleFileUpload(FileUploadEvent event)
     {
-	System.out.println("upload");
 	try
 	{
 	    getUser().setImage(event.getFile().getInputstream());

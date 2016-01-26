@@ -230,7 +230,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     {
 	try
 	{
-	    //System.out.println("idGroup: " + idGroup);
+	    //log.debug("idGroup: " + idGroup);
 	    idGroup = idGroup.trim();
 	    String name = (String) Sql.getSingleResult("SELECT title FROM lw_group WHERE group_id=" + idGroup);
 	    return name;
@@ -264,7 +264,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
      * */
     public void generateUserChart()
     {
-	//System.out.println("generateUserChart");
+	//log.debug("generateUserChart");
 
 	if((this.selectChart3 != "") && (this.selectedUser != "") && (this.selectChart3.compareTo("bar") == 0) && (this.phaseLW2 != null))
 	{
@@ -294,7 +294,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    HashMap<String, Long> list = new HashMap<String, Long>();
 	    list = this.searchActivities();
 	    String userName = getNameUser(this.selectedUser);
-	    //System.out.println(list);
+	    //log.debug(list);
 	    this.selectInteractionMeanClass();
 	    String title = "Details about " + userName + "'s interactions during the " + this.phaseLW2 + " phase.";
 	    this.initBarModelUser(title, "User Activities", list, "Activities", "Number of Interactions");
@@ -305,7 +305,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    HashMap<String, Long> list = new HashMap<String, Long>();
 	    list = this.searchActivities();
 	    String userName = getNameUser(this.selectedUser);
-	    //System.out.println(list);
+	    //log.debug(list);
 	    String title = "Details about " + userName + "'s interactions during the " + this.phaseLW2 + " phase.";
 	    this.initLineModelUser(title, "User Activities", list, "Activities", "Number of Interactions");
 	    this.selectInteractionMeanClass();
@@ -316,7 +316,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    HashMap<String, Long> list = new HashMap<String, Long>();
 	    list = this.searchActivities();
 	    String userName = getNameUser(this.selectedUser);
-	    //System.out.println(list);
+	    //log.debug(list);
 	    String title = "Details about " + userName + "'s interactions during the " + this.phaseLW2 + " phase.";
 	    this.initPieModelUser(title, "User Activities", list);
 	    this.selectInteractionMeanClass();
@@ -328,9 +328,9 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
      * */
     public void generateComparativeGraphGroups()
     {
-	//System.out.println("generateComparativeGraphGraphs");
-	//System.out.println("Group 1:" + this.selectedGroup1);
-	//System.out.println("Group 2:" + this.selectedGroup2);
+	//log.debug("generateComparativeGraphGraphs");
+	//log.debug("Group 1:" + this.selectedGroup1);
+	//log.debug("Group 2:" + this.selectedGroup2);
 
 	if((this.selectChart1 != "") && (this.selectedGroup1 != "") && (this.selectedGroup2 != "") && (this.selectChart1.compareTo("bar") == 0))
 	{
@@ -357,8 +357,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    HashMap<String, Long> list2 = new HashMap<String, Long>();
 	    list = this.searchGeneralActivitiesbyGroup(this.selectedGroup1);
 	    list2 = this.searchGeneralActivitiesbyGroup(this.selectedGroup2);
-	    //System.out.println(list);
-	    //System.out.println(list2);
+	    //log.debug(list);
+	    //log.debug(list2);
 	    String title = "Comparison among activities of " + getNameGroup(this.selectedGroup1) + " and " + getNameGroup(this.selectedGroup2) + " groups during the " + this.phaseLW0 + " phase.";
 	    this.barModel0 = this.initBarComparative(title, getNameGroup(this.selectedGroup1), getNameGroup(this.selectedGroup2), list, list2, "Activities", "Number of Interactions");
 	}
@@ -368,8 +368,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    HashMap<String, Long> list2 = new HashMap<String, Long>();
 	    list = this.searchGeneralActivitiesbyGroup(this.selectedGroup1);
 	    list2 = this.searchGeneralActivitiesbyGroup(this.selectedGroup2);
-	    //System.out.println(list);
-	    //System.out.println(list2);
+	    //log.debug(list);
+	    //log.debug(list2);
 	    String title = "Comparison among activities of " + getNameGroup(this.selectedGroup1) + " and " + getNameGroup(this.selectedGroup2) + " groups during the " + this.phaseLW0 + " phase.";
 	    this.lineModel0 = this.initLineComparative(title, getNameGroup(this.selectedGroup1), getNameGroup(this.selectedGroup2), list, list2, "Activities", "Number of Interactions");
 	}
@@ -379,8 +379,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    HashMap<String, Long> list2 = new HashMap<String, Long>();
 	    list = this.searchGeneralActivitiesbyGroup(this.selectedGroup1);
 	    list2 = this.searchGeneralActivitiesbyGroup(this.selectedGroup2);
-	    //System.out.println(list);
-	    //System.out.println(list2);
+	    //log.debug(list);
+	    //log.debug(list2);
 	    List<PieChartModel> pies = this.initPieComparative(getNameGroup(this.selectedGroup1), getNameGroup(this.selectedGroup2), list, list2, this.phaseLW0);
 	    this.pieModel00 = pies.get(0);
 	    this.pieModel01 = pies.get(1);
@@ -392,7 +392,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
      * */
     public void generateComparativeGraph()
     {
-	//System.out.println("generateComparativeGraph");
+	//log.debug("generateComparativeGraph");
 
 	if((this.selectChart2 != "") && (this.selectCourse20 != "") && (this.selectCourse21 != "") && (this.selectChart2.compareTo("bar") == 0))
 	{
@@ -421,8 +421,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    list2 = this.searchGeneralActivities(this.selectCourse21, this.phaseLW);
 	    String c1 = getNameCourse(this.selectCourse20);
 	    String c2 = getNameCourse(this.selectCourse21);
-	    //System.out.println(list);
-	    //System.out.println(list2);
+	    //log.debug(list);
+	    //log.debug(list2);
 	    String title = "Comparison among activities of " + c1 + " and " + c2 + " classes during the " + this.phaseLW + " phase.";
 	    this.barModel2 = this.initBarComparative(title, c1, c2, list, list2, "Activities", "Number of Interactions");
 	}
@@ -434,8 +434,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    list2 = this.searchGeneralActivities(this.selectCourse21, this.phaseLW);
 	    String c1 = getNameCourse(this.selectCourse20);
 	    String c2 = getNameCourse(this.selectCourse21);
-	    //System.out.println(list);
-	    //System.out.println(list2);
+	    //log.debug(list);
+	    //log.debug(list2);
 	    String title = "Comparison among activities of " + c1 + " and " + c2 + " classes during the " + this.phaseLW + " phase.";
 	    this.lineModel2 = this.initLineComparative(title, c1, c2, list, list2, "Activities", "Number of Interactions");
 	}
@@ -447,8 +447,8 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    list2 = this.searchGeneralActivities(this.selectCourse21, this.phaseLW);
 	    String c1 = getNameCourse(this.selectCourse20);
 	    String c2 = getNameCourse(this.selectCourse21);
-	    //System.out.println(list);
-	    //System.out.println(list2);
+	    //log.debug(list);
+	    //log.debug(list2);
 	    List<PieChartModel> pies = this.initPieComparative(c1, c2, list, list2, this.phaseLW);
 	    this.pieModel20 = pies.get(0);
 	    this.pieModel21 = pies.get(1);
@@ -651,7 +651,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	try
 	{
 	    courses = getUser().getCourses();
-	    //System.out.println(courses.toString());
+	    //log.debug(courses.toString());
 	}
 	catch(SQLException e1)
 	{
@@ -665,7 +665,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
      * */
     public void selectInteractionMeanClass()
     {
-	//System.out.println("selectInteractionMeanClass");
+	//log.debug("selectInteractionMeanClass");
 	try
 	{
 	    //SELECT count(*) FROM lw_user_course A1 INNER JOIN lw_user A2 ON A1.user_id = A2.user_id WHERE A1.course_id=640 AND ((A2.is_admin=0) AND (A2.is_moderator=0))
@@ -741,9 +741,9 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
      * */
     public void selectListUserClass()
     {
-	//System.out.println("selectListUserClass");
+	//log.debug("selectListUserClass");
 	int idCourse = Integer.valueOf(this.classFeedback);
-	//System.out.println("class:" + this.classFeedback);
+	//log.debug("class:" + this.classFeedback);
 
 	UserManager usm = getLearnweb().getUserManager();
 	try
@@ -751,13 +751,13 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    List<User> l = new ArrayList<User>();
 	    l = removeAdminUsers(usm.getUsersByCourseId(idCourse));
 	    this.listUserClass = new String[l.size()];
-	    //System.out.println("lista users:" + l);
+	    //log.debug("lista users:" + l);
 
 	    for(int i = 0; i < l.size(); i++)
 	    {
 		this.listUserClass[i] = String.valueOf(l.get(i).getId());
 	    }
-	    //System.out.println("versao final" + this.listUserClass[0]);
+	    //log.debug("versao final" + this.listUserClass[0]);
 	}
 	catch(SQLException e)
 	{
@@ -770,9 +770,9 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
      * */
     public void selectListUserGroup()
     {
-	//System.out.println("selectListUserGroup");
+	//log.debug("selectListUserGroup");
 	int idGroup = Integer.valueOf(this.groupFeedback);
-	//System.out.println("Group:" + this.groupFeedback);
+	//log.debug("Group:" + this.groupFeedback);
 
 	UserManager usm = getLearnweb().getUserManager();
 	try
@@ -780,13 +780,13 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    List<User> l = new ArrayList<User>();
 	    l = removeAdminUsers(usm.getUsersByGroupId(idGroup));
 	    this.listUserGroup = new String[l.size()];
-	    //System.out.println("lista users:" + l);
+	    //log.debug("lista users:" + l);
 
 	    for(int i = 0; i < l.size(); i++)
 	    {
 		this.listUserGroup[i] = String.valueOf(l.get(i).getId());
 	    }
-	    //System.out.println("versao final" + this.listUserGroup[0]);
+	    //log.debug("versao final" + this.listUserGroup[0]);
 	}
 	catch(SQLException e)
 	{
@@ -799,20 +799,20 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
      * */
     public void sendFeedback() throws IOException
     {
-	//System.out.println("sendFeedback");
+	//log.debug("sendFeedback");
 	try
 	{
 	    AdminNotificationBean notBean = new AdminNotificationBean();
 	    if(this.listUserClass != null)
 	    {
 		notBean.setListStudents(this.listUserClass);
-		//System.out.println(this.listUserClass);
+		//log.debug(this.listUserClass);
 		this.listUserClass = null;
 	    }
 	    if(this.listUserGroup != null)
 	    {
 		notBean.setListStudents(this.listUserGroup);
-		//System.out.println(this.listUserGroup);
+		//log.debug(this.listUserGroup);
 		this.listUserGroup = null;
 	    }
 	    notBean.setTitle(this.title);
@@ -837,9 +837,9 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
      * */
     public void sendFeedbackUser() throws IOException
     {
-	//System.out.println("sendFeedbackUser");
+	//log.debug("sendFeedbackUser");
 	HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
-	//System.out.println("Parametro:" + request.getAttribute("selected_users"));
+	//log.debug("Parametro:" + request.getAttribute("selected_users"));
 	try
 	{
 	    AdminNotificationBean notBean = new AdminNotificationBean();
@@ -882,7 +882,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
      * */
     public void initLineModelUser(String text, String label, HashMap<String, Long> data, String xLabel, String yLabel)
     {
-	//System.out.println("initLineModelUser");
+	//log.debug("initLineModelUser");
 	this.lineModel = new LineChartModel();
 	Long maxValue = 0l;
 
@@ -894,7 +894,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    class1.set(key, value);
 	    if(value > maxValue)
 		maxValue = value;
-	    //System.out.println("key:" + key + ", value:" + value);
+	    //log.debug("key:" + key + ", value:" + value);
 	}
 
 	this.lineModel.addSeries(class1);
@@ -917,7 +917,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 
     public void initBarModelUser(String text, String label, HashMap<String, Long> data, String xLabel, String yLabel)
     {
-	//System.out.println("initBarModelUser");
+	//log.debug("initBarModelUser");
 	this.barModel = new BarChartModel();
 	Long maxValue = 0l;
 
@@ -935,7 +935,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    group1.set(key, value);
 	    if(value > maxValue)
 		maxValue = value;
-	    //System.out.println("key:" + key + ", value:" + value);
+	    //log.debug("key:" + key + ", value:" + value);
 	}
 
 	this.barModel.addSeries(group1);
@@ -951,19 +951,19 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	yAxis.setMax(maxValue);
 
 	//if(this.barModel != null)
-	//System.out.println(this.barModel.toString());
+	//log.debug(this.barModel.toString());
     }
 
     public void initPieModelUser(String text, String label, HashMap<String, Long> data)
     {
-	//System.out.println("initPieModelUser");
+	//log.debug("initPieModelUser");
 	this.pieModel = new PieChartModel();
 
 	for(String key : data.keySet())
 	{
 	    Long value = data.get(key);
 	    this.pieModel.set(key, value);
-	    //System.out.println("key:" + key + ", value:" + value);
+	    //log.debug("key:" + key + ", value:" + value);
 	}
 	this.pieModel.setTitle(text);
 	this.pieModel.setLegendPosition("ne");
@@ -974,7 +974,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 
     public BarChartModel initBarComparative(String text, String label, String label1, HashMap<String, Long> data, HashMap<String, Long> data2, String xLabel, String yLabel)
     {
-	//System.out.println("initBarComparative");
+	//log.debug("initBarComparative");
 	BarChartModel b1 = new BarChartModel();
 	Long maxValue = 0l;
 
@@ -990,7 +990,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    group1.set(key, value);
 	    if(value > maxValue)
 		maxValue = value;
-	    //System.out.println("key:" + key + ", value:" + value);
+	    //log.debug("key:" + key + ", value:" + value);
 	}
 
 	ChartSeries group2 = new ChartSeries();
@@ -1002,7 +1002,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    group2.set(key2, value);
 	    if(value > maxValue)
 		maxValue = value;
-	    //System.out.println("key:" + key2 + ", value:" + value);
+	    //log.debug("key:" + key2 + ", value:" + value);
 	}
 
 	b1.addSeries(group1);
@@ -1024,7 +1024,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 
     public LineChartModel initLineComparative(String text, String label, String label1, HashMap<String, Long> data, HashMap<String, Long> data2, String xLabel, String yLabel)
     {
-	//System.out.println("initLineComprative");
+	//log.debug("initLineComprative");
 	LineChartModel l1 = new LineChartModel();
 	Long maxValue = 0l;
 
@@ -1036,7 +1036,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    class1.set(key, value);
 	    if(value > maxValue)
 		maxValue = value;
-	    //System.out.println("key:" + key + ", value:" + value);
+	    //log.debug("key:" + key + ", value:" + value);
 	}
 
 	ChartSeries class2 = new ChartSeries();
@@ -1047,7 +1047,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	    class2.set(key, value);
 	    if(value > maxValue)
 		maxValue = value;
-	    //System.out.println("key:" + key + ", value:" + value);
+	    //log.debug("key:" + key + ", value:" + value);
 	}
 	while(maxValue % 10 != 0)
 	    maxValue++;
@@ -1068,7 +1068,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 
     public List<PieChartModel> initPieComparative(String label, String label1, HashMap<String, Long> data, HashMap<String, Long> data2, String phase)
     {
-	//System.out.println("initPieModelComparative");
+	//log.debug("initPieModelComparative");
 	PieChartModel p1 = new PieChartModel();
 	PieChartModel p2 = new PieChartModel();
 
@@ -1076,14 +1076,14 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	{
 	    Long value = data.get(key);
 	    p1.set(key, value);
-	    //System.out.println("key:" + key + ", value:" + value);
+	    //log.debug("key:" + key + ", value:" + value);
 	}
 
 	for(String key : data2.keySet())
 	{
 	    Long value = data2.get(key);
 	    p2.set(key, value);
-	    //System.out.println("key:" + key + ", value:" + value);
+	    //log.debug("key:" + key + ", value:" + value);
 	}
 	String title = "Comparison among activities of " + label + " and " + label1 + " during the " + this.phaseLW + " phase. <br/><br/>" + label;
 	p1.setTitle(title);

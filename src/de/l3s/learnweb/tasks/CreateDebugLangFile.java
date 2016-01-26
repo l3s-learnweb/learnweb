@@ -6,6 +6,8 @@ import java.util.Enumeration;
 import java.util.Properties;
 import java.util.ResourceBundle;
 
+import org.apache.log4j.Logger;
+
 /**
  * 
  * @author Philipp
@@ -13,6 +15,7 @@ import java.util.ResourceBundle;
  */
 public class CreateDebugLangFile
 {
+    private static final Logger log = Logger.getLogger(CreateDebugLangFile.class);
 
     public static void main(String[] args) throws IOException
     {
@@ -27,7 +30,7 @@ public class CreateDebugLangFile
 
 	    String key = keys.nextElement();
 	    props.setProperty(key, "#" + key + "#");
-	    System.out.println(key);
+	    log.debug(key);
 
 	}
 

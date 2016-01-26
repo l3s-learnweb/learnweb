@@ -245,7 +245,7 @@ public class SolrClient
 	}
 	catch(NumberFormatException e)
 	{
-	    System.err.println("SolrSearch, NumberFormatException: " + e.getMessage());
+	    log.error("SolrSearch, NumberFormatException: " + e.getMessage());
 	    return -1;
 	}
     }
@@ -282,7 +282,7 @@ public class SolrClient
 
 	for(int id : invalidIds)
 	{
-	    System.out.println("delete: " + id);
+	    log.debug("delete: " + id);
 	    indexer.deleteFromIndex(id);
 	}
     }
@@ -321,14 +321,14 @@ public class SolrClient
 		FileInspector inspector = new FileInspector();
 		FileInfo info = inspector.inspect((new URL(file.getUrl())).openStream(), file.getName());
 		
-		System.out.println(info);
+		log.debug(info);
 		
 		if(info.getTextContent() != null)
 		{
 		resource.setMachineDescription(info.getTextContent());
 		resource.save();
 		
-		System.out.println("saved description ");
+		log.debug("saved description ");
 		}
 		
 		}*/

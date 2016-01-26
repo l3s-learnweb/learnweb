@@ -341,7 +341,7 @@ public class FileInspector
 	if(url != null && url.startsWith("http://immediatenet.com"))
 	    return;
 
-	System.out.println(imageUrl);
+	log.debug(imageUrl);
 
 	if(imageUrl == null || checkUrl(imageUrl) == null)
 	{
@@ -373,7 +373,7 @@ public class FileInspector
     // tests
     public static void main(String[] args) throws Exception
     {
-	System.out.println(checkUrl("www.storyofstuff.org"));
+	log.debug(checkUrl("www.storyofstuff.org"));
 	/*
 	Learnweb learnweb = Learnweb.getInstance();
 	List<Resource> resources = learnweb.getResourceManager().getResources("SELECT * FROM `lw_resource` WHERE `source` LIKE 'flickr' AND `max_image_url` LIKE '%z.jpg' ORDER BY `resource_id` ASC ", null); // loads all resources (very slow)

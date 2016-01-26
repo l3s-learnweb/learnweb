@@ -262,7 +262,7 @@ public class BaseTedApiCrawler
 		pStmt3.setString(1, "<iframe src=\"https://www.youtube.com/embed/" + external.get("code") + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>");
 		pStmt3.setInt(2, rs.getInt("resource_id"));
 		pStmt3.executeUpdate();
-		System.out.println(external.get("code"));
+		log.debug(external.get("code"));
 	    }
 	    catch(ParseException | NullPointerException e)
 	    {

@@ -61,7 +61,7 @@ public class YovistoManager
 	
 		if(size < 500.0)
 		{
-		    System.out.println(fileName);
+		    log.debug(fileName);
 		    try
 		    {
 			rpm.processVideo(resource);
@@ -85,7 +85,7 @@ public class YovistoManager
 	    }
 	
 	}
-	System.out.println("Exit");
+	log.debug("Exit");
 	System.exit(0);*/
 	try
 	{

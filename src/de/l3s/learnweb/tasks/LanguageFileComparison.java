@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Properties;
 
+import org.apache.log4j.Logger;
+
 /**
  * Uses the list of corrected translations provided by Marco to check which translations were not yet checked.
  * 
@@ -14,6 +16,7 @@ import java.util.Properties;
  */
 public class LanguageFileComparison
 {
+    private static final Logger log = Logger.getLogger(LanguageFileComparison.class);
 
     public static void main(String[] args) throws Exception
     {
@@ -29,7 +32,7 @@ public class LanguageFileComparison
 
 	    if(!line.startsWith("#") && line.endsWith("#"))
 	    {
-		System.err.println("Corrupted file at line: " + line);
+		log.error("Corrupted file at line: " + line);
 		continue;
 	    }
 
@@ -37,25 +40,25 @@ public class LanguageFileComparison
 
 	    String translation = languageProperties.getProperty(line);
 
-	    System.out.println(line);
+	    log.debug(line);
 
 	    if(translation == null)
 	    {
-		System.err.println("Illegal key: " + line);
+		log.error("Illegal key: " + line);
 		continue;
 	    }
 
 	    languageProperties.remove(line);
 	}
 
-	System.out.println("unchecked keys:");
+	log.debug("unchecked keys:");
 	for(Object key : languageProperties.keySet())
 	{
 	    String keyStr = (String) key;
 	    if(keyStr.startsWith("ArchiveSearch.") || keyStr.startsWith("language_"))
 		continue;
 
-	    System.out.println(key);
+	    log.debug(key);
 	}
 
 	buffer.close();

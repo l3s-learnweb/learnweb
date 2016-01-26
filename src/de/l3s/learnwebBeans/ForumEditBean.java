@@ -15,6 +15,8 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.event.ComponentSystemEvent;
 import javax.faces.model.SelectItem;
 
+import org.apache.log4j.Logger;
+
 import de.l3s.learnweb.ForumManager;
 import de.l3s.learnweb.ForumPost;
 import de.l3s.learnweb.ForumTopic;
@@ -26,6 +28,7 @@ import de.l3s.learnweb.User;
 @ViewScoped
 public class ForumEditBean extends ApplicationBean implements Serializable
 {
+    private static final Logger log = Logger.getLogger(ForumEditBean.class);
     private static final long serialVersionUID = 6561750124856501158L;
     int postId;
     int topicId;
@@ -40,6 +43,7 @@ public class ForumEditBean extends ApplicationBean implements Serializable
 	    addMessage(FacesMessage.SEVERITY_ERROR, "No post_id provided");
 	    return;
 	}
+
 	ForumManager fm = getLearnweb().getForumManager();
 	post = fm.getPostById(postId);
 	topic = fm.getTopicById(post.getTopicId());
@@ -54,6 +58,7 @@ public class ForumEditBean extends ApplicationBean implements Serializable
 	post.setLastEditDate(date);
 	post.setEditCount(post.getEditCount() + 1);
 	post.setEditUserId(user.getId());
+
 	if(user.getId() == post.getUserId())
 	{
 	    ForumManager fm = getLearnweb().getForumManager();
@@ -61,11 +66,8 @@ public class ForumEditBean extends ApplicationBean implements Serializable
 	}
 
 	addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-	nameTag(post.getText());
-	//return null;
-	//return "forum_post";
-	//System.out.println(post.getTopicId());
-	//log
+	//nameTag(post.getText());
+
 	return "/lw/group/forum_post.xhtml?topic_id=" + post.getTopicId() + "&faces-redirect=true";
     }
 
@@ -82,7 +84,7 @@ public class ForumEditBean extends ApplicationBean implements Serializable
 	    if(user.contains("@"))
 	    {
 
-		System.out.println("@ gefunden");
+		log.debug("@ gefunden");
 		//user = user.replaceAll("[@]", "");
 
 		user = user.substring(user.lastIndexOf('@') + 1);
@@ -94,7 +96,7 @@ public class ForumEditBean extends ApplicationBean implements Serializable
 		//{
 		//    user = s.next();
 		//}
-		System.out.println(user);
+		log.debug(user);
 	    }
 	}
 

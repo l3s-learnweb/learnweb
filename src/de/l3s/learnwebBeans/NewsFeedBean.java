@@ -88,7 +88,7 @@ public class NewsFeedBean extends ApplicationBean
 		u = userManager.getUser(l.getUserId());
 		r = resourceManager.getResource(l.getResourceId());
 
-		//System.out.println(l.getAction().toString());
+		//log.debug(l.getAction().toString());
 
 		int commentcount = 0;
 		int tagcount = 0;

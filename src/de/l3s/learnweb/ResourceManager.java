@@ -1087,15 +1087,15 @@ public class ResourceManager
 	    }
 	}
 
-	/* remove old bing images first
+	// remove old bing images first
 	if(biggestThumbnail != null)
 	{
 	    resource.setMaxImageUrl(biggestThumbnail.getUrl());
-	
+
 	    if(resource.getThumbnail2() == null)
 		resource.setThumbnail2(new Thumbnail(biggestThumbnail.getUrl(), biggestThumbnail.getWidth(), biggestThumbnail.getHeight()));
 	}
-	*/
+
 	return resource;
     }
 
@@ -1179,7 +1179,7 @@ public class ResourceManager
 
 	    if(null == url)
 	    {
-		System.err.println("invalid url");
+		log.error("invalid url");
 
 		resource.setOnlineStatus(OnlineStatus.OFFLINE); // offline
 		resource.save();
@@ -1188,7 +1188,7 @@ public class ResourceManager
 
 	    if(url.contains("ted.com") || url.contains("youtube") || url.contains("vimeo") || url.contains("slideshare") || url.contains("flickr") || resource.getId() == 71989 || resource.getId() == 71536 || resource.getId() == 71100)
 	    {
-		System.err.println("skipeed: " + url);
+		log.error("skipeed: " + url);
 		continue;
 	    }
 
@@ -1232,7 +1232,7 @@ public class ResourceManager
 		    resource.save();
 		}
 		else
-		    System.err.println(info.getMimeType());
+		    log.error(info.getMimeType());
 
 	    }
 	    catch(Exception e)

@@ -11,6 +11,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.event.ComponentSystemEvent;
 
+import org.apache.log4j.Logger;
+
 import de.l3s.interwebj.AuthCredentials;
 import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
 import de.l3s.interwebj.IllegalResponseException;
@@ -22,6 +24,7 @@ import de.l3s.learnweb.beans.UtilBean;
 @ViewScoped
 public class ServicesBean extends ApplicationBean implements Serializable
 {
+    private static final Logger log = Logger.getLogger(ServicesBean.class);
     private static final long serialVersionUID = 8811380147552369046L;
 
     private String action = null;
@@ -32,7 +35,7 @@ public class ServicesBean extends ApplicationBean implements Serializable
 
     public ServicesBean() throws SQLException, IllegalResponseException, IOException
     {
-	System.out.println("ServicesBean()");
+	log.debug("ServicesBean()");
 	user = getUser();
     }
 
@@ -81,7 +84,7 @@ public class ServicesBean extends ApplicationBean implements Serializable
 
     public void preRenderView(ComponentSystemEvent ev) throws IOException, SQLException
     {
-	System.out.println("preRenderView");
+	log.debug("preRenderView");
 	UserBean userBean = UtilBean.getUserBean();
 	if(!userBean.isLoggedIn())
 	{
@@ -101,7 +104,7 @@ public class ServicesBean extends ApplicationBean implements Serializable
 		
 		if(referer != null && !referer.startsWith(Util.getLearnwebBean().getBaseUrl()))
 		{
-			System.out.println("reload getAuthorizationInformation");
+			log.debug("reload getAuthorizationInformation");
 			user.getInterweb().getAuthorizationInformation(false);
 		}
 	}*/
@@ -152,21 +155,16 @@ public class ServicesBean extends ApplicationBean implements Serializable
 	}
     }
 
-    public void test()
-    {
-	System.out.println("test call");
-    }
-
     public String signOutFromService(String serviceId) throws IOException, IllegalResponseException
     {
-	System.out.println("drin");
+	log.debug("signOutFromService");
 	user.getInterweb().revokeAuthorizationOnService(serviceId);
 	return null;
     }
 
     public String signInOnService(ServiceInformation service) throws IOException, IllegalResponseException
     {
-	System.out.println("signing in on service " + service.getId());
+	log.debug("signing in on service " + service.getId());
 	InterWeb interWeb = user.getInterweb();
 	String callback = UtilBean.getLearnwebBean().getBaseUrl() + "/myhome/services.jsf";
 	interWeb.authorizeService(service, callback);
@@ -175,7 +173,7 @@ public class ServicesBean extends ApplicationBean implements Serializable
 
     public String signOutFromInterweb()
     {
-	System.out.println("sign out from interweb");
+	log.debug("sign out from interweb");
 	user.setInterwebToken(null);
 	return null;
     }

@@ -25,22 +25,22 @@ public class GenerateThumbnailsForImageVideoResources
 	//query = "SELECT * FROM `lw_resource` WHERE `thumbnail2_file_id` != 0 and type not in( 'image','pdf')";
 
 	List<Resource> resources = rm.getResources(query, null);
-	System.out.println("start");
+	log.debug("start");
 	for(Resource resource : resources)
 	{
 
 	    String url = resource.getMaxImageUrl();
 
-	    System.out.println(url);
+	    log.debug(url);
 	    url = FileInspector.checkUrl(url);
 
 	    if(null == url || url.contains("unavailable"))
 	    {
-		System.err.println("bild nicht erreichbar" + resource.getUrl());
+		log.error("bild nicht erreichbar" + resource.getUrl());
 
 		url = FileInspector.checkUrl(resource.getUrl());
 
-		System.out.println(url);
+		log.debug(url);
 		break;
 	    }
 

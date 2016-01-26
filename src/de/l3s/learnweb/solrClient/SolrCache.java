@@ -55,7 +55,7 @@ public class SolrCache
 	    {
 		cacheQueue.put(decoratedResource);
 
-		//System.out.println("Debug: add Resource to cache Queue: " + decoratedResource.getTitle());
+		//log.debug("Debug: add Resource to cache Queue: " + decoratedResource.getTitle());
 	    }
 	    catch(InterruptedException e)
 	    {
@@ -84,7 +84,7 @@ public class SolrCache
 	    {
 		try
 		{
-		    System.out.println("wait");
+		    log.debug("wait");
 		    List<ResourceDecorator> workList = new LinkedList<ResourceDecorator>();
 		    workList.add(workQueue.take());
 		    workQueue.drainTo(workList, maxResourcesIndexedOneTime - 1);

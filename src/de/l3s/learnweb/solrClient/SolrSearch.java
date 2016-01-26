@@ -471,7 +471,7 @@ public class SolrSearch implements Serializable
 	for(int i = 0; i < solrResources.size(); i++)
 	{
 	    //print solr scores for each returned result from solr
-	    //System.out.println(docs.get(i).getFieldValue("score"));
+	    //log.debug(docs.get(i).getFieldValue("score"));
 	    SolrResourceBean solrResource = solrResources.get(i);
 
 	    Resource resource = null;
@@ -576,7 +576,7 @@ public class SolrSearch implements Serializable
 	}
 	catch(NumberFormatException e)
 	{
-	    System.err.println("SolrSearch, NumberFormatException: " + e.getMessage());
+	    log.error("SolrSearch, NumberFormatException: " + e.getMessage());
 	    return -1;
 	}
     }
@@ -605,7 +605,7 @@ public class SolrSearch implements Serializable
 	/*
 	User user = new User();
 	user.setId(2376);
-	System.out.println(user.getGroups());
+	log.debug(user.getGroups());
 	SolrSearch search = new SolrSearch("groups:my bike", user);
 	//search.setFilterType("web");
 	//search.setFilterGroups(128, 151);

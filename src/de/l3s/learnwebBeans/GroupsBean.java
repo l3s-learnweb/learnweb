@@ -14,6 +14,7 @@ import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.LogEntry.Action;
@@ -23,7 +24,7 @@ import de.l3s.learnweb.User;
 @ViewScoped
 public class GroupsBean extends ApplicationBean implements Serializable
 {
-
+    private static final Logger log = Logger.getLogger(GroupsBean.class);
     private static final long serialVersionUID = 5364340827474357098L;
     private List<Group> joinAbleGroups;
     private List<Group> myGroups;
@@ -46,7 +47,7 @@ public class GroupsBean extends ApplicationBean implements Serializable
 
     public void joinGroup() throws Exception
     {
-	System.out.println("joinGroup" + selectedGroup);
+	log.debug("joinGroup" + selectedGroup);
 	if(null == getUser() || null == selectedGroup)
 	    return;
 
@@ -75,8 +76,10 @@ public class GroupsBean extends ApplicationBean implements Serializable
     public void deleteGroup() throws Exception
     {
 	if(selectedGroup == null)
-	    System.err.println("selectedGroup is null");
-
+	{
+	    log.error("selectedGroup is null");
+	    return;
+	}
 	if(!canDeleteGroup(selectedGroup))
 	{
 	    addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");

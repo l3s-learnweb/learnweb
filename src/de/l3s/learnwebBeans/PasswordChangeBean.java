@@ -11,6 +11,7 @@ import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 
+import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.learnweb.User;
@@ -20,6 +21,7 @@ import de.l3s.learnweb.UserManager;
 @RequestScoped
 public class PasswordChangeBean extends ApplicationBean implements Serializable
 {
+    private static final Logger log = Logger.getLogger(PasswordChangeBean.class);
     private static final long serialVersionUID = 2237249691332567548L;
 
     private String parameter;
@@ -50,7 +52,7 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
 	String hash = splits[1];
 
 	user = getLearnweb().getUserManager().getUser(userId);
-	System.out.println(hash + " - " + PasswordBean.createHash(user));
+	log.debug(hash + " - " + PasswordBean.createHash(user));
 
 	if(null == user || !hash.equals(PasswordBean.createHash(user)))
 	{
@@ -67,7 +69,7 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
 
     public void onChangePassword()
     {
-	System.out.println("onChangePassword");
+	log.debug("onChangePassword");
 	UserManager um = getLearnweb().getUserManager();
 	try
 	{
@@ -146,7 +148,7 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
     	
     		canChangePassword = true;		
     	}
-
+    
     	public boolean canChangePassword() {
     		return canChangePassword;
     	}

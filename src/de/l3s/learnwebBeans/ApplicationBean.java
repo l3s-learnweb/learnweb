@@ -31,13 +31,13 @@ public class ApplicationBean
 	UIViewRoot viewRoot = facesContext.getViewRoot();
 	
 	if(null == viewRoot)
-		System.err.println("ApplicationBean::viewRoot is null");
+		log.error("ApplicationBean::viewRoot is null");
 	else
 	{
 		String request = viewRoot.getViewId();		
 		String ip = servletRequest.getRemoteAddr();			
 	
-		System.out.println(request +" - "+ ip);
+		log.debug(request +" - "+ ip);
 	}
 	*/
 	startTime = System.currentTimeMillis();
@@ -89,7 +89,7 @@ public class ApplicationBean
 		e.printStackTrace();
 	}
 	
-	System.out.println(param +": "+ value +" oder "+ v2);
+	log.debug(param +": "+ value +" oder "+ v2);
 	*/
 	return value;
     }

@@ -32,11 +32,11 @@ public class MyHttpSessionListener implements HttpSessionListener
 	}
 	catch(ClientHandlerException e)
 	{
-	    System.out.println("Search Tracker service is down");
+	    log.debug("Search Tracker service is down");
 	}
 	catch(RuntimeException e)
 	{
-	    System.out.println(e.getMessage());
+	    log.debug(e.getMessage());
 	}
 	HttpSession session = se.getSession();
 	log.debug("Ssession Destroyed:ID=" + session.getId());

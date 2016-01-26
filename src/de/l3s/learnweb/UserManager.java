@@ -144,7 +144,7 @@ public class UserManager
 	    {
 		valueAdmin = rs.getInt("is_admin");
 		valueModerator = rs.getInt("is_moderator");
-		System.out.println(valueAdmin + "-" + valueModerator);
+		log.debug(valueAdmin + "-" + valueModerator);
 
 		if((valueAdmin == 0) && (valueModerator == 0))
 		    finalList.add(u);

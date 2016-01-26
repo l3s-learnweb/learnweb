@@ -404,7 +404,6 @@ public class ExploreBean extends ApplicationBean implements Serializable
 	{
 	    toBeDeletedIDSet.add(id);
 	}
-	System.out.println(toBeDeletedIDSet.toString());
     }
 
     public boolean isSelectedQuery()

@@ -191,11 +191,11 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    }
 	    catch(ClientHandlerException e)
 	    {
-		System.out.println("Search Tracker service is down");
+		log.debug("Search Tracker service is down");
 	    }
 	    catch(RuntimeException e)
 	    {
-		System.out.println(e.getMessage());
+		log.debug(e.getMessage());
 	    }
 
 	    batchrsStartTime = new Date().getTime();
@@ -216,11 +216,11 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    }
 	    catch(ClientHandlerException e)
 	    {
-		System.out.println("Search Tracker service is down");
+		log.debug("Search Tracker service is down");
 	    }
 	    catch(RuntimeException e)
 	    {
-		System.out.println(e.getMessage());
+		log.debug(e.getMessage());
 	    }
 	    graphLoaded = false;
 
@@ -244,7 +244,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    }
 	    catch(ClientHandlerException e)
 	    {
-		System.out.println("Search Tracker service is down");
+		log.debug("Search Tracker service is down");
 		return null;
 	    }
 	    catch(RuntimeException e)
@@ -311,7 +311,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	if(!isSearched())
 	    return null;
 
-	log.debug("getNextPage");
+	//	log.debug("getNextPage");
 
 	batchrsTimeout = new Date().getTime() - batchrsStartTime;
 	LinkedList<ResourceDecorator> newResources = search.getResourcesByPage(page);
@@ -333,11 +333,11 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    }
 	    catch(ClientHandlerException e)
 	    {
-		System.out.println("Search Tracker service is down");
+		log.debug("Search Tracker service is down");
 	    }
 	    catch(RuntimeException e)
 	    {
-		System.out.println(e.getMessage());
+		log.debug(e.getMessage());
 	    }
 
 	}
@@ -401,11 +401,11 @@ public class SearchBean extends ApplicationBean implements Serializable
 		}
 		catch(ClientHandlerException e)
 		{
-		    System.out.println("Search Tracker service is down");
+		    log.debug("Search Tracker service is down");
 		}
 		catch(RuntimeException e)
 		{
-		    System.out.println(e.getMessage());
+		    log.debug(e.getMessage());
 		}
 	    }
 	    user.setActiveGroup(selectedResourceTargetGroupId);
@@ -449,11 +449,11 @@ public class SearchBean extends ApplicationBean implements Serializable
 		}
 		catch(ClientHandlerException e)
 		{
-		    System.out.println("Search Tracker service is down");
+		    log.debug("Search Tracker service is down");
 		}
 		catch(RuntimeException e)
 		{
-		    System.out.println(e.getMessage());
+		    log.debug(e.getMessage());
 		}
 	    }
 	}
@@ -491,11 +491,11 @@ public class SearchBean extends ApplicationBean implements Serializable
 	}
 	catch(ClientHandlerException e)
 	{
-	    System.out.println("Search Tracker service is down");
+	    log.debug("Search Tracker service is down");
 	}
 	catch(RuntimeException e)
 	{
-	    System.out.println(e.getMessage());
+	    log.debug(e.getMessage());
 	}
     }
 
@@ -611,7 +611,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     public void setSelectedResource(Resource selectedResource)
     {
 	Date timestamp = new Date(); //To record when the resource dialog box is opened.
-	System.out.println(selectedResource.getTitle());
+	log.debug("Selected resource: " + selectedResource.getTitle());
 	this.selectedResource = selectedResource;
 
 	//logs a resource dialog open event
@@ -625,11 +625,11 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    }
 	    catch(ClientHandlerException e)
 	    {
-		System.out.println("Search Tracker service is down");
+		log.debug("Search Tracker service is down");
 	    }
 	    catch(RuntimeException e)
 	    {
-		System.out.println(e.getMessage());
+		log.debug(e.getMessage());
 	    }
 	}
 
@@ -755,11 +755,11 @@ public class SearchBean extends ApplicationBean implements Serializable
 	}
 	catch(ClientHandlerException e)
 	{
-	    System.out.println("Search Tracker service is down");
+	    log.debug("Search Tracker service is down");
 	}
 	catch(RuntimeException e)
 	{
-	    System.out.println(e.getMessage());
+	    log.debug(e.getMessage());
 	}
     }
 

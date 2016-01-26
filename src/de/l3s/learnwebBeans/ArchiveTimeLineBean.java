@@ -46,7 +46,7 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 	    outerArray.add(innerArray);
 	}
 	//outerArray.add(innerArray);
-	System.out.println(outerArray.toJSONString());
+	log.debug(outerArray.toJSONString());
 	RequestContext.getCurrentInstance().addCallbackParam("timelineData", outerArray.toJSONString());
 
     }
@@ -73,7 +73,7 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 	    log.error("Error while fetching the archive urls as json data for a resource", e);
 	    addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
 	}
-	System.out.println(outerArray.toJSONString());
+	log.debug(outerArray.toJSONString());
 	RequestContext.getCurrentInstance().addCallbackParam("timelineData", outerArray.toJSONString());
 	return outerArray.toJSONString();
     }
@@ -106,7 +106,7 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 	    archiveDay.put("dayEvents", archiveVersions);
 	    archiveDates.put(rs.getString("day"), archiveDay);
 	}
-	System.out.println(archiveDates.toJSONString());
+	log.debug(archiveDates.toJSONString());
 	RequestContext.getCurrentInstance().addCallbackParam("calendarData", archiveDates.toJSONString());
 	return archiveDates.toJSONString();
 
@@ -161,7 +161,7 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
 	    archiveDay.put("dayEvents", archiveVersions);
 	    archiveDates.put(rs.getString("day"), archiveDay);
 	}
-	System.out.println(archiveDates.toJSONString());
+	log.debug(archiveDates.toJSONString());
     }
 
     public int getResourceId()
@@ -172,7 +172,7 @@ public class ArchiveTimeLineBean extends ApplicationBean implements Serializable
     public void setResourceId(int resourceId)
     {
 	this.resourceId = resourceId;
-	System.out.println(resourceId);
+	log.debug(resourceId);
     }
 
 }

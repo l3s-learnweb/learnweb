@@ -127,7 +127,7 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
 		    }
 		    prevId = newId;
 		    prevTitle = getPresentationName();
-		    System.out.println(newId);
+		    log.debug(newId);
 		}
 	    }
 	    addGrowl(FacesMessage.SEVERITY_INFO, "presentation_saved");

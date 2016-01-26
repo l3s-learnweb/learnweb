@@ -5,13 +5,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Serializable;
+import java.io.StringWriter;
 import java.util.List;
 import java.util.TreeMap;
 
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.dom4j.Document;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
@@ -34,6 +37,7 @@ import de.l3s.learnweb.beans.UtilBean;
 
 public class InterWeb implements Serializable
 {
+    private static final Logger log = Logger.getLogger(InterWeb.class);
     private static final long serialVersionUID = -1621494088505203391L;
 
     private final String consumerKey;
@@ -380,7 +384,7 @@ public class InterWeb implements Serializable
 
     public String buildSignature(String string, TreeMap<String, String> params)
     {
-	System.err.println("Interweb.buildSignature hat olex nicht implementiert");
+	log.fatal("Interweb.buildSignature hat olex nicht implementiert");
 	return null;
     }
 
@@ -413,7 +417,12 @@ public class InterWeb implements Serializable
 
 	if(response.getStatus() != 200)
 	{
-	    throw new RuntimeException("Failed : HTTP error code : " + response.getStatus());
+	    StringWriter writer = new StringWriter();
+	    IOUtils.copy(response.getEntityInputStream(), writer, "UTF-8");
+	    String content = writer.toString();
+
+	    log.fatal("Interweb request failes; Error code : " + response.getStatus() + "; for query:" + query + " | " + params + "; response: " + content);
+	    throw new RuntimeException("Interweb request failed : HTTP error code : " + response.getStatus());
 	}
 
 	//SearchResponse r = response.getEntity(SearchResponse.class);
