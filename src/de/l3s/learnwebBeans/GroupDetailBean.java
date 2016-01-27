@@ -517,6 +517,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
 	    //loadResources();
 	    clickedResource = new Resource();
+	    updateResourcesFromSolr();
 	}
 	catch(Exception e)
 	{
@@ -536,9 +537,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
 	addGrowl(FacesMessage.SEVERITY_INFO, "resource_deleted");
 	log(Action.deleting_resource, clickedResource.getId());
-	clickedResource = new Resource();
-	//loadResources();
 
+	//loadResources();
+	clickedResource = new Resource();
+	updateResourcesFromSolr();
     }
 
     public void removePresentationFromGroup()
