@@ -378,6 +378,7 @@ public class User implements Comparable<User>, Serializable, HasId
     public TreeNode getWriteAbleGroupsTree() throws SQLException
     {
 	long start = System.currentTimeMillis();
+
 	if(null == tree || treeCacheTime + 10000L < System.currentTimeMillis())
 	{
 	    treeCacheTime = System.currentTimeMillis();
@@ -386,8 +387,7 @@ public class User implements Comparable<User>, Serializable, HasId
 	    Group myRes = new Group();
 	    myRes.setId(0);
 	    myRes.setTitle(UtilBean.getLocaleMessage("myResourcesTitle"));
-	    TreeNode myResNode = new DefaultTreeNode("group", myRes, tree);
-	    // TODO unused code???
+	    new DefaultTreeNode("group", myRes, tree);
 
 	    for(Group group : getGroups())
 	    {

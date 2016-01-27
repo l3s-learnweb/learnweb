@@ -168,11 +168,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	return Learnweb.getInstance().getGroupManager().getFolders(id);
     }
 
-    public List<Folder> getFolders(int parentId) throws SQLException
-    {
-	return Learnweb.getInstance().getGroupManager().getFolders(id, parentId);
-    }
-
     public AbstractPaginator getResources(Order order) throws SQLException
     {
 	ResourceManager rm = Learnweb.getInstance().getResourceManager();

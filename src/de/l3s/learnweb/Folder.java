@@ -4,9 +4,14 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
-public class Folder implements Serializable
+import org.apache.log4j.Logger;
+
+import de.l3s.util.HasId;
+
+public class Folder implements Serializable, HasId
 {
     private static final long serialVersionUID = 2147007718176177138L;
+    private static Logger log = Logger.getLogger(Folder.class);
 
     private int folderId = -1;
     private int groupId = -1;
@@ -168,12 +173,15 @@ public class Folder implements Serializable
 
     public Folder moveTo(int newGroupId, int newParentFolderId) throws SQLException
     {
+	// TODO update both parent folder
 	return Learnweb.getInstance().getGroupManager().moveFolder(this, newParentFolderId, newGroupId);
     }
 
     public void delete() throws SQLException
     {
+	// TODO update parent folder
 	Learnweb.getInstance().getGroupManager().deleteFolder(this);
+
     }
 
     public int getCountResources() throws SQLException
@@ -190,6 +198,23 @@ public class Folder implements Serializable
     {
 	path = null;
 	prettyPath = null;
+
+	if(subfolders != null)
+	{
+	    for(Folder folder : subfolders)
+		folder.clearCaches();
+
+	    subfolders = null;
+	}
+
+	try
+	{
+	    getParentFolder().clearCaches();
+	}
+	catch(SQLException e)
+	{
+	    log.fatal("Couldn't clear folder cache", e);
+	}
     }
 
     protected void clearSubfolders()
@@ -201,5 +226,11 @@ public class Folder implements Serializable
     public String toString()
     {
 	return this.name;
+    }
+
+    @Override
+    public int getId()
+    {
+	return getFolderId();
     }
 }

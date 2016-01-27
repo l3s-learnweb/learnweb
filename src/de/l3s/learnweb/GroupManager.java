@@ -32,12 +32,16 @@ public class GroupManager
     private Learnweb learnweb;
     private ICache<Group> cache;
 
+    private Cache<Folder> folderCache;
+
     protected GroupManager(Learnweb learnweb) throws SQLException
     {
 	int groupCacheSize = learnweb.getProperties().getPropertyIntValue("GROUP_CACHE");
 
 	this.learnweb = learnweb;
 	this.cache = groupCacheSize == 0 ? new DummyCache<Group>() : new Cache<Group>(groupCacheSize);
+
+	this.folderCache = new Cache<Folder>(10000);
     }
 
     public void resetCache() throws SQLException
@@ -339,16 +343,28 @@ public class GroupManager
 
     private Folder createFolder(ResultSet rs) throws SQLException
     {
-	Folder folder = new Folder();
-	folder.setFolderId(rs.getInt("folder_id"));
-	folder.setGroupId(rs.getInt("group_id"));
-	folder.setParentFolderId(rs.getInt("parent_folder_id"));
-	folder.setName(rs.getString("name"));
+	int folderId = rs.getInt("folder_id");
+
+	Folder folder = folderCache.get(folderId);
+	if(null == folder)
+	{
+	    folder = new Folder();
+	    folder.setFolderId(folderId);
+	    folder.setGroupId(rs.getInt("group_id"));
+	    folder.setParentFolderId(rs.getInt("parent_folder_id"));
+	    folder.setName(rs.getString("name"));
+
+	    folderCache.put(folder);
+	}
 	return folder;
     }
 
     public Folder getFolder(int folderId) throws SQLException
     {
+	Folder folder = folderCache.get(folderId);
+
+	if(folder == null)
+	{
 	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name FROM `lw_group_folder` WHERE `folder_id` = ?");
 	select.setInt(1, folderId);
 	ResultSet rs = select.executeQuery();
@@ -356,8 +372,9 @@ public class GroupManager
 	if(!rs.next())
 	    return null;
 
-	Folder folder = createFolder(rs);
+	folder = createFolder(rs);
 	select.close();
+	}
 	return folder;
     }
 
