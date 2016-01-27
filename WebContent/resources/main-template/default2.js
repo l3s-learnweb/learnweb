@@ -55,7 +55,7 @@ $(document).ready(function()
 	});
 
 	
-	if (typeof market != 'undefined')
+	if(typeof market != 'undefined')
 	{
 		if(market == "de")
 			myMarket = "de-DE";
@@ -72,7 +72,6 @@ $(document).ready(function()
                 dataType: "jsonp",
     
                 success: function (data) {
-                	console.log('myMarket',myMarket, 'market', market);
                     var suggestions = [];
                     $.each(data[1], function (i, val) {
                         suggestions.push(val);

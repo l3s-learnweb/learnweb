@@ -215,7 +215,7 @@
 						</h:selectOneMenu> -->
 				<h:panelGrid columns="2" rendered="#{userBean.loggedIn}" style="width:100%;">				
 					<h:outputText value="#{msg.add_to}:" escape="false" />					
-					<p:tree id="folders_tree" value="#{userBean.user.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{searchBean.selectedNode}">				        						     						        
+					<p:tree id="folders_tree" value="#{userBean.user.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{searchBean.selectedNode}" style="max-height:28rem; overflow:auto;">				        						     						        
 				        <p:ajax event="select" listener="#{searchBean.onNodeSelect}"/>
 				        
 				        <p:treeNode type="group">
@@ -229,22 +229,24 @@
 				   
 					
 					<h:outputLabel value="#{msg.title}:" for="title"/>
-					<p:inputText value="#{searchBean.selectedResource.title}" id="title" style="width:100%;"/>					
+					<p:inputText value="#{searchBean.selectedResource.title}" id="title" style="width:100%; box-sizing:border-box;"/>					
 					
 					<h:outputLabel value="#{msg.description}:" for="description"/>
-					<p:inputTextarea  value="#{searchBean.selectedResource.description}" id="description" autoResize="true"  style="width:100%;"/>
+					<p:inputTextarea  value="#{searchBean.selectedResource.description}" id="description" autoResize="true" style="width:100%; box-sizing:border-box;"/>
 					
 					<h:outputText value="Url:" for="url"/>
-					<h:outputText value="#{searchBean.selectedResource.url}" style="width:400px; padding:4px;" />
+					<h:outputText value="#{searchBean.selectedResource.url}" style="padding:4px;" />
 					
 					<h:outputText value="#{msg.type}:"/>
-					<h:outputText value="#{searchBean.selectedResource.type}" style="width:400px; padding:4px;" />
+					<h:outputText value="#{searchBean.selectedResource.type}" style="padding:4px;" />
 					
 					<h:outputText value="#{msg.source}:"/>
-					<h:outputText value="#{searchBean.selectedResource.source}" style="width:400px; padding:4px;" />
+					<h:outputText value="#{searchBean.selectedResource.source}" style="padding:4px;" />
 					
-					<h:outputText value="#{msg['Archive.captured_between']}:" rendered="${not empty searchBean.selectedResource.getMetadataValue('first_timestamp')}"/>
-					<h:panelGroup rendered="${not empty searchBean.selectedResource.getMetadataValue('first_timestamp')}" class="wayback_span"><a href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('first_timestamp')}/#{searchBean.selectedResource.url}" target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('first_timestamp'))}</a> #{msg['Archive.captured_between_and']} <a href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('last_timestamp')}/#{searchBean.selectedResource.url}" target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('last_timestamp'))}</a></h:panelGroup>
+					<ui:fragment rendered="${not empty searchBean.selectedResource.getMetadataValue('first_timestamp')}">
+						<h:outputText value="#{msg['Archive.captured_between']}:" />
+						<h:panelGroup  class="wayback_span"><a href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('first_timestamp')}/#{searchBean.selectedResource.url}" target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('first_timestamp'))}</a> #{msg['Archive.captured_between_and']} <a href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('last_timestamp')}/#{searchBean.selectedResource.url}" target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('last_timestamp'))}</a></h:panelGroup>
+					</ui:fragment>
 					  
 					<h:outputText value="" />
 					<p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" process="@form" update=":backtogroup :growl" oncomplete="PF('resource_dialog').hide()" async="true" onclick="PF('add_button').disable()" widgetVar="add_button"/>
