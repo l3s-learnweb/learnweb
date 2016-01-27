@@ -26,7 +26,7 @@
 			<h:form id="center_header_form">
 				<ui:fragment rendered="#{forumPostBean.member}">
 					<a href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{forumPostBean.topic.id}#reply" 
-						class="resource_button greenbutton" onclick="$('#center_pane .content').animate({ scrollTop: 1000 }, 'slow'); return false;">
+						class="resource_button greenbutton" onclick="$('#center_pane .content').animate({ scrollTop: 2500 }, 'slow'); return false;">
 						#{msg['ForumIndex.post_reply']} 
 					</a>
 				</ui:fragment>
@@ -86,7 +86,7 @@
 		</script>	
 				
 		<h:form prependId="false">
-		    <p:dataTable var="post" value="#{forumPostBean.posts}" rows="5" paginator="true" 
+		    <p:dataTable var="post" value="#{forumPostBean.posts}" rows="10" paginator="true" 
 		    	lazy="false" paginatorPosition="bottom" id="forum_post_table"
 		    	paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" >
 		      
@@ -161,7 +161,7 @@
 					    	<f:param name="post_id" value="#{post.id}" />
 					    	#{msg.edit}
 				    	</h:outputLink>
-				  		<p:commandLink value="#{msg['ForumIndex.quote']}" actionListener="#{forumPostBean.quotePost(post)}" oncomplete="$('#center_pane .content').animate({ scrollTop: 1000 }, 'slow');" update=":post_form:post_message" ajax="true" styleClass="greenbutton float-right" />
+				  		<p:commandLink value="#{msg['ForumIndex.quote']}" actionListener="#{forumPostBean.quotePost(post)}" oncomplete="$('#center_pane .content').animate({ scrollTop: 2500 }, 'slow');" update=":post_form:post_message" ajax="true" styleClass="greenbutton float-right" />
 				  
 				   	</div>
 		        </p:column>

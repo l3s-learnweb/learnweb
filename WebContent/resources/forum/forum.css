@@ -166,14 +166,17 @@ padding-bottom: 6.9rem;
 }
 
 .post_quote {
-	margin-left: 40px;
-	border-left: 1px solid #000000;
+	margin-left: 20px;
+	margin-right: 20px;
+	border-left: 1px solid #666666;
 	background-color: rgb(187, 187, 187);
 	
 }
 
 .post_quote .post_quote {
-	background-color:green;
+	
+	background-color: rgb(167, 167, 167);
+	
 	
 }
 
