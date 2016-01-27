@@ -161,6 +161,11 @@ function dropHandle(event, ui) {
 }
 
 function resourceDND() {
+	
+	if (!$('#datagrid') || $('#datagrid').attr('data-isenablemoving') != 'true') {
+		return;
+	}
+	
 	$('#folderGrid .resource_panel').draggable({
         helper: 'clone',
         scope: 'resfolder',

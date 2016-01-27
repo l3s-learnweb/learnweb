@@ -269,7 +269,7 @@
 				</h:form>
 			</p:dialog>
 			
-			<h:panelGroup id="datagrid" styleClass="datagrid" layout="block">
+			<h:panelGroup id="datagrid" styleClass="datagrid" layout="block" pt:data-isEnableMoving="#{groupDetailBean.canMoveResourcesInGroup()}">
 				<h:panelGroup id="folderGrid" layout="block" pt:data-selectedFolderId="#{groupDetailBean.selectedFolderId}">				
 				    <ui:repeat var="folder" value="#{groupDetailBean.subfolders}"> 			     
 				  		<h:form styleClass="resource_panel resource_folder grey_border" pt:data-folderId="#{folder.folderId}">
