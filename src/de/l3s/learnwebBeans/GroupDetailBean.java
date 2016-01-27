@@ -858,7 +858,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public boolean canMoveResourcesInGroup() throws SQLException
     {
-	if(getUser().getId() == getGroup().getLeaderUserId() && (getUser().isModerator() || getUser().isAdmin()))
+	if(getUser().getId() == getGroup().getLeaderUserId() && getUser().isModerator())
 	    return true;
 
 	return false;
@@ -866,7 +866,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public boolean canEditFoldersInGroup() throws SQLException
     {
-	if(getUser().getId() == getGroup().getLeaderUserId() && (getUser().isModerator() || getUser().isAdmin()))
+	if(getUser().getId() == getGroup().getLeaderUserId() && getUser().isModerator())
 	    return true;
 
 	return false;
