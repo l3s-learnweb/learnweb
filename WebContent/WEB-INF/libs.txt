@@ -65,4 +65,5 @@ urlrewritefilter-4.0.3.jar			needed to redirect /new to /
 supportWN.jar						TEDWordnet, added by Trevor
 validation-api-1.0.0.GA.jar			required by Hibernate validator added by Philipp
 wstx-asl-3.2.7.jar					SolrClient,added by Siyu
+xercesImpl-2.6.2-jaxb-1.0.6.jar		could be required by dom4j
 zookeeper-3.3.6.jar					SolrClient,added by Siyu
