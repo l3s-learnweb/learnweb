@@ -312,7 +312,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	if(!isSearched())
 	    return null;
 
-	log.debug("getNextPage");
+	//log.debug("getNextPage");
 
 	// don't log anything here.
 	// this method will be called multiple times for each page
@@ -677,7 +677,6 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public String getView()
     {
-	log.debug("getView");
 	return view;
     }
 

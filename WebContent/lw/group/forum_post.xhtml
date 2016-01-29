@@ -113,56 +113,41 @@
 		        	</div>
 		        </p:column>
 		        
-		        <p:column headerText="#{msg['ForumIndex.messages']}" style="position: relative">
-		        	<div class="post_information_div_top" >
+		        <p:column headerText="#{msg['ForumIndex.messages']}" style="position:relative;">
+		        	<div class="post_title" >
 					   <div class="float-right" >
 					       	#{msg['ForumIndex.postedOn']}
 					        <h:outputText value="#{post.date}">
 						        <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
 						    </h:outputText>
-						</div>
-						
-		        		<div>
-			        		<ui:fragment rendered="#{not empty post.category}">
-			        			#{msg.category}: #{post.category}
-			        		</ui:fragment>
-		        		</div>
-		        		
-		        		<div class="clear"></div>
-		        		
-		        		
-		        		
-					   	
-					</div>
-					   
-				    
+						</div>	
+		        		<ui:fragment rendered="#{not empty post.category}">
+		        			#{msg.category}: #{post.category}
+		        		</ui:fragment>	        		
+		        		<div class="clear"></div>				   	
+					</div>				    
 				   
-					<div class="post_bot_padding">
-						<h:outputText value="#{post.text}" escape="false" />
-					</div>
-					
-					
+					<div class="post_text">
+						<h:outputText value="#{post.text}" escape="false" />					
 			     	
-			     	
-				     <div class="post_button">
-	        		
-	        			<ui:fragment rendered="#{post.editCount gt 0}">
-							<div class="post_button_position" >
-					        	<h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
-					        		<f:param value="#{post.editCount}"/>
-									<f:param value="#{post.lastEditDate}"/>
-									<f:param value="#{post.editUser.username}"/>
-					            </h:outputFormat>
-				           	</div>
-				     	</ui:fragment>
-			     	
-				    	<h:commandLink value="#{msg.clear}" rendered="#{forumPostBean.canDeletePost(post)}" actionListener="#{forumPostBean.deletePost(post)}" styleClass="greenbutton float-right"/>
-				    	<h:outputLink value="group/forum_post_edit.jsf"  rendered="#{forumPostBean.canEditPost(post)}" styleClass="greenbutton float-right">
-					    	<f:param name="post_id" value="#{post.id}" />
-					    	#{msg.edit}
-				    	</h:outputLink>
-				  		<p:commandLink value="#{msg['ForumIndex.quote']}" actionListener="#{forumPostBean.quotePost(post)}" oncomplete="$('#center_pane .content').animate({ scrollTop: 2500 }, 'slow');" update=":post_form:post_message" ajax="true" styleClass="greenbutton float-right" />
-				  
+					     <div class="post_button">	        		
+		        			<ui:fragment rendered="#{post.editCount gt 0}">
+								<div class="post_info" >
+						        	<h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
+						        		<f:param value="#{post.editCount}"/>
+										<f:param value="#{post.lastEditDate}"/>
+										<f:param value="#{post.editUser.username}"/>
+						            </h:outputFormat>
+					           	</div>
+					     	</ui:fragment>
+				     	
+					    	<h:commandLink value="#{msg.clear}" rendered="#{forumPostBean.canDeletePost(post)}" actionListener="#{forumPostBean.deletePost(post)}" styleClass="greenbutton float-right"/>
+					    	<h:outputLink value="group/forum_post_edit.jsf" rendered="#{forumPostBean.canEditPost(post)}" styleClass="greenbutton float-right">
+						    	<f:param name="post_id" value="#{post.id}" />
+						    	#{msg.edit}
+					    	</h:outputLink>
+					  		<p:commandLink value="#{msg['ForumIndex.quote']}" actionListener="#{forumPostBean.quotePost(post)}" oncomplete="$('#center_pane .content').animate({ scrollTop: 2500 }, 'slow');" update=":post_form:post_message" ajax="true" styleClass="greenbutton float-right" />
+				  		</div>
 				   	</div>
 		        </p:column>
 		        

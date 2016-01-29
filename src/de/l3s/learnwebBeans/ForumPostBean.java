@@ -150,18 +150,9 @@ public class ForumPostBean extends ApplicationBean implements Serializable
 
     public void quotePost(ForumPost post) throws SQLException
     {
-
-	//newPost.setText(post.getText());	//normal
-	//newPost.setText(post.getUser().getUsername() + ": " + "<br>" + post.getText() + "<br>" + " "); //with name
-	//newPost.setText("<div style='margin-left: 40px;'>" + post.getText() + "<br></div>" + " " + "<br>"); //right
-	//newPost.setText(post.getText() + "<br><hr><br>"); //line
-	//newPost.setText("<span style='background-color: rgb(255, 255, 153);'><span style='font-style: italic;'>" + post.getText() + "<br></span></span>" + " " + "<br>"); //colored
-	//newPost.setText("<span class='fakeInput'> <input type='text' value='" + post.getText() + "'/></span>"); //in textbox
-	//newPost.setText("<input  readonly='true' value=  " + post.getText() + "><br><hr><br>");
-	newPost.setText("<div class='post_quote_name' style='margin: 0rem 2rem; padding: 0px 0.5rem;border-left: 3px solid rgb(168, 168, 168); background-color: rgb(168, 168, 168);'>" + post.getUser().getUsername()
-		+ "</div><div class='post_quote'  style='margin: 0rem 2rem; padding: 0px 0.5rem; border-left: 2px solid rgb(168, 168, 168); border-right: 2px solid rgb(168, 168, 168); background-color: rgb(207, 207, 207);'> " + post.getText() + "</span></div><br>");
-	newPost.setCategory(post.getCategory());
-
+	newPost.setText(
+		"<div class='post_quote' style='margin: 0.6rem 2rem; border-left: 2px solid rgb(168, 168, 168); border-right: 2px solid rgb(168, 168, 168); background-color: rgb(207, 207, 207);'><div class='post_quote_name' style='font-weight: bold; padding: 0.2rem 0.5rem;background-color: rgb(168, 168, 168);'>"
+			+ post.getUser().getUsername() + "</div><div class='post_quote_text' style='padding: 0.2rem 0.5rem;'> " + post.getText() + "</div></div><br/>");
     }
 
     public int getTopicId()

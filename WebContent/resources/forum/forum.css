@@ -118,77 +118,52 @@
 #forum_post_table tr td:last-child{
 	vertical-align:top;
 }
-.post_information_div_top{
-	border-bottom:1px solid #a8a8a8; 
-	margin:1rem 0; 
-	padding-bottom:1rem;
+.post_title{
+	border-bottom: 1px solid #a8a8a8;
+	padding: 1rem 0;
+	margin-top: -4px;
 }
-.post_information_div_bottom{
-	border-top:1px solid #a8a8a8;
-	padding-top:1rem;
-	margin:1rem 0; 
+/*quote, edit, clear buttons*/
+.post_button a {
+	padding:0.2rem 0.8rem;
+	margin-left:0.5rem;
+}
+.post_text { 
+	position:relative;
+	min-height: 7rem;
+	padding-bottom: 6rem;
+	margin-bottom:-4px;
+	margin-top:0.4rem;
+}
+.post_button {
+	position: absolute;
+	bottom: 0px; 
+	width: 100%;
+	padding: 0.6rem 0;
+	box-sizing: border-box;
+	text-align: right; 
+	border-top: 1px solid rgb(168, 168, 168);
+}
+.post_info {
+	float: left;
+	line-height: 2.4rem;
 }
 
-/*quote, edit, clear button at the moment not show in the html
-.post_information_div input{
-	margin-top:-0.8rem;
-	padding:2px 8px;
-	margin-left:5px;
-}*/
+.post_quote .post_quote {	
+	background-color: rgb(187, 187, 187) !important;
+}
+/* These values have to be set when the style tags in forumPostBean are changed
+.post_quote {
+}
+.post_quote_name{
+}
+*/
 
 .new-topic-date {
 	font-weight: bold;
 }
 .new-topic-title {
 	background:url(../resources/main-template/img/message.png) left no-repeat;
-		background-size: 18px 18px;
+	background-size: 18px 18px;
 	padding-left:26px; 
- }
-
-.post_bot_padding { 
-min-height:70px;
-padding-bottom: 6.9rem;
 }
-
-.post_button {
-	bottom: 0px; position: absolute;
-	width: 98%;
-	left: 0.9rem; padding: 1.1rem;
-	padding-top: 0.8rem;
-	box-sizing: border-box;
-	text-align: right; padding-bottom: 0.8rem;
-	border-top: 1px solid rgb(168, 168, 168);
-}
-
-.post_button_position {
-	padding-bottom: 2.2rem;
-	float:left;
-}
-
-.post_quote {
-	margin-left: 20px;
-	margin-right: 20px;
-	border-left: 1px solid #666666;
-	background-color: rgb(207, 207, 207);
-	
-}
-
-.post_quote_name{
-margin: 1rem 2rem;
-padding: 0px 0.5rem;
-border-left: 2px solid rgb(168, 168, 168);
-background-color: rgb(207, 207, 207);
-}
-
-.post_quote .post_quote_name{
-border-top: 1rem solid rgb(208, 208, 208);	
-}
-
-.post_quote .post_quote {
-	
-	background-color: rgb(187, 187, 187);
-	
-	
-	
-}
-
