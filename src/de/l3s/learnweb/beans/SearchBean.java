@@ -345,8 +345,8 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    newResource.setQuery(query);
 	    newResource.setEmbeddedSize1Raw("");
 	    //These metadata entries are not required while storing resource at the database
-	    newResource.getMetadataEntries().remove("first_timestamp");
-	    newResource.getMetadataEntries().remove("last_timestamp");
+	    newResource.getMetadata().remove("first_timestamp");
+	    newResource.getMetadata().remove("last_timestamp");
 
 	    log.debug("Add resource); group: " + selectedResourceTargetGroupId + "; folder: " + selectedResourceTargetFolderId);
 

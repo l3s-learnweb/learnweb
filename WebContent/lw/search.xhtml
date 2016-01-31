@@ -213,7 +213,7 @@
 							<f:selectItem itemLabel="123" itemValue="-1" itemDisabled="true" />	
 							<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
 						</h:selectOneMenu> -->
-				<h:panelGrid columns="2" rendered="#{userBean.loggedIn}" style="width:100%;">				
+				<h:panelGrid columns="2" rendered="#{userBean.loggedIn}" style="width:100%;">
 					<h:outputText value="#{msg.add_to}:" escape="false" />					
 					<p:tree id="folders_tree" value="#{userBean.user.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{searchBean.selectedNode}" style="max-height:28rem; overflow:auto;">				        						     						        
 				        <p:ajax event="select" listener="#{searchBean.onNodeSelect}"/>
@@ -243,10 +243,8 @@
 					<h:outputText value="#{msg.source}:"/>
 					<h:outputText value="#{searchBean.selectedResource.source}" style="padding:4px;" />
 					
-					<ui:fragment rendered="${not empty searchBean.selectedResource.getMetadataValue('first_timestamp')}">
-						<h:outputText value="#{msg['Archive.captured_between']}:" />
-						<h:panelGroup  class="wayback_span"><a href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('first_timestamp')}/#{searchBean.selectedResource.url}" target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('first_timestamp'))}</a> #{msg['Archive.captured_between_and']} <a href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('last_timestamp')}/#{searchBean.selectedResource.url}" target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('last_timestamp'))}</a></h:panelGroup>
-					</ui:fragment>
+					<h:outputText value="#{msg['Archive.captured_between']}:" rendered="${not empty searchBean.selectedResource.getMetadataValue('first_timestamp')}"/>
+					<h:panelGroup class="wayback_span" rendered="${not empty searchBean.selectedResource.getMetadataValue('first_timestamp')}"><a href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('first_timestamp')}/#{searchBean.selectedResource.url}" target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('first_timestamp'))}</a> #{msg['Archive.captured_between_and']} <a href="https://web.archive.org/web/#{searchBean.selectedResource.getMetadataValue('last_timestamp')}/#{searchBean.selectedResource.url}" target="_blank">#{searchBean.formatDate(searchBean.selectedResource.getMetadataValue('last_timestamp'))}</a></h:panelGroup>
 					  
 					<h:outputText value="" />
 					<p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" process="@form" update=":backtogroup :growl" oncomplete="PF('resource_dialog').hide()" async="true" onclick="PF('add_button').disable()" widgetVar="add_button"/>
