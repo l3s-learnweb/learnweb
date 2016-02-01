@@ -58,6 +58,7 @@ public class Learnweb
     private final JobScheduler jobScheduler;
     private final GlossaryManager glossaryManager;
     private final SuggestionLogger suggestionLogger;
+    private final WaybackCapturesLogger waybackCapturesLogger;
 
     private static Learnweb learnweb = null;
 
@@ -183,6 +184,7 @@ public class Learnweb
 	yovistoManager = new YovistoManager(this);
 	glossaryManager = new GlossaryManager(this);
 	suggestionLogger = new SuggestionLogger(this);
+	waybackCapturesLogger = new WaybackCapturesLogger(this);
     }
 
     /**
@@ -665,6 +667,11 @@ public class Learnweb
     public SuggestionLogger getSuggestionLogger()
     {
 	return suggestionLogger;
+    }
+
+    public WaybackCapturesLogger getWaybackCapturesLogger()
+    {
+	return waybackCapturesLogger;
     }
 
     public static void main(String[] args)

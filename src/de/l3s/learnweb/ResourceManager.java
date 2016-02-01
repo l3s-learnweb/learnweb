@@ -7,6 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
@@ -21,7 +22,6 @@ import de.l3s.interwebj.jaxb.ThumbnailEntity;
 import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
-import de.l3s.learnweb.solrClient.SolrClient;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
@@ -709,6 +709,29 @@ public class ResourceManager
 	return archiveUrls;
     }
 
+    public LinkedList<ArchiveUrl> getArchiveUrlsByResourceUrl(String url) throws SQLException
+    {
+	SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+	LinkedList<ArchiveUrl> archiveUrls = new LinkedList<ArchiveUrl>();
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT url_id FROM `wb_url` WHERE `url` = ?");
+	select.setString(1, url);
+	ResultSet rs = select.executeQuery();
+	if(rs.next())
+	{
+	    PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT timestamp FROM `wb_url_capture` WHERE `url_id` = ? ORDER BY timestamp");
+	    pStmt.setInt(1, rs.getInt(1));
+	    ResultSet rs2 = pStmt.executeQuery();
+	    while(rs2.next())
+	    {
+		Date timestamp = rs2.getTimestamp(1);
+		archiveUrls.add(new ArchiveUrl("https://web.archive.org/web/" + waybackDateFormat.format(timestamp) + "/" + url, timestamp));
+	    }
+	    pStmt.close();
+	}
+	select.close();
+	return archiveUrls;
+    }
+
     public void saveArchiveUrlsByResourceId(int resourceId, List<ArchiveUrl> archiveUrls) throws SQLException
     {
 	for(ArchiveUrl version : archiveUrls)
@@ -1273,7 +1296,7 @@ public class ResourceManager
     {
 	Learnweb lw = Learnweb.getInstance();
 	ResourceManager rm = lw.getResourceManager();
-	SolrClient sm = lw.getSolrClient();
+	//SolrClient sm = lw.getSolrClient();
 
 	PreparedStatement detailSelect = lw.getConnection().prepareStatement("SELECT collector, coverage, publisher FROM `archiveit_collection` WHERE `lw_resource_id` = ?");
 

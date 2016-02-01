@@ -136,6 +136,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    return;
 	}
 
+	if(getParameterInt("resource_id") != null)
+	    setRightPanelAction("viewResource");
+
 	updateLinksList();
 
 	clickedResource = new Resource();

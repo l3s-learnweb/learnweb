@@ -47,6 +47,8 @@ public class ArchiveUrlManager
     private ExecutorService executorService;
     private ExecutorService cdxExecutorService;
 
+    private SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+
     protected ArchiveUrlManager(Learnweb learnweb)
     {
 	this.learnweb = learnweb;
@@ -205,7 +207,23 @@ public class ArchiveUrlManager
 
     public void checkWaybackCaptures(ResourceDecorator resource)
     {
-	cdxExecutorService.submit(new CDXWorker(resource));
+	try
+	{
+	    PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT first_capture, last_capture FROM wb_url WHERE url = ?");
+	    pStmt.setString(1, resource.getUrl());
+	    ResultSet rs = pStmt.executeQuery();
+	    if(rs.next())
+	    {
+		resource.getResource().setMetadataValue("first_timestamp", waybackDateFormat.format(rs.getDate(1)));
+		resource.getResource().setMetadataValue("last_timestamp", waybackDateFormat.format(rs.getDate(2)));
+	    }
+	    else
+		cdxExecutorService.submit(new CDXWorker(resource));
+	}
+	catch(SQLException e)
+	{
+	    log.error("Error while fetching wayback url capture info: ", e);
+	}
     }
 
     public String addResourceToArchive(Resource resource)

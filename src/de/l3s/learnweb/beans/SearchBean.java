@@ -337,7 +337,11 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    Resource newResource;
 
 	    if(selectedResource.getId() == -1) // resource is not yet stored at the database
+	    {
 		newResource = selectedResource;
+		if(newResource.getSource().equalsIgnoreCase("Bing")) //resource which is already saved in database already has wayback captures stored
+		    getLearnweb().getWaybackCapturesLogger().logWaybackCaptures(newResource);
+	    }
 	    else
 		// create a copy 
 		newResource = selectedResource.clone();

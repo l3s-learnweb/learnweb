@@ -75,7 +75,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	JSONArray highChartsData = new JSONArray();
 	try
 	{
-	    List<TimelineData> timelineMonthlyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByMonth(clickedResource.getId());
+	    List<TimelineData> timelineMonthlyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByMonth(clickedResource.getId(), clickedResource.getUrl());
 
 	    for(TimelineData timelineData : timelineMonthlyData)
 	    {
@@ -99,13 +99,13 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 	try
 	{
-	    List<TimelineData> timelineDailyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByDay(clickedResource.getId());
+	    List<TimelineData> timelineDailyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByDay(clickedResource.getId(), clickedResource.getUrl());
 	    for(TimelineData timelineData : timelineDailyData)
 	    {
 		JSONObject archiveDay = new JSONObject();
 		archiveDay.put("number", timelineData.getNumberOfVersions());
 		archiveDay.put("badgeClass", "badge-warning");
-		List<ArchiveUrl> archiveUrlsData = getLearnweb().getTimelineManager().getArchiveUrlsByResourceIdAndTimestamp(clickedResource.getId(), timelineData.getTimestamp());
+		List<ArchiveUrl> archiveUrlsData = getLearnweb().getTimelineManager().getArchiveUrlsByResourceIdAndTimestamp(clickedResource.getId(), timelineData.getTimestamp(), clickedResource.getUrl());
 		JSONArray archiveVersions = new JSONArray();
 		for(ArchiveUrl archiveUrl : archiveUrlsData)
 		{

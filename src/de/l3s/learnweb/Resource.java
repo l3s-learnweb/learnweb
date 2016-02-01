@@ -1297,9 +1297,11 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     {
 	if(id != -1 && archiveUrls == null)
 	{
+	    ResourceManager rm = Learnweb.getInstance().getResourceManager();
 	    try
 	    {
-		archiveUrls = Learnweb.getInstance().getResourceManager().getArchiveUrlsByResourceId(id);
+		archiveUrls = rm.getArchiveUrlsByResourceId(id);
+		archiveUrls.addAll(rm.getArchiveUrlsByResourceUrl(url));
 	    }
 	    catch(SQLException e)
 	    {
