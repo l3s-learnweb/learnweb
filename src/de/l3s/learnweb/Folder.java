@@ -143,9 +143,9 @@ public class Folder implements Serializable, HasId
 	    }
 
 	    sb.append(" > " + this.getName());
-	    path = getGroup().getTitle() + sb.toString();
+	    prettyPath = getGroup().getTitle() + sb.toString();
 	}
-	return path;
+	return prettyPath;
     }
 
     public List<Folder> getSubfolders() throws SQLException
