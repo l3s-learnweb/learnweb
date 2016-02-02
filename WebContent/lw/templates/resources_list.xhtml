@@ -51,19 +51,14 @@
 				<h:outputText value="#{res.snippet}" style="display:block;width:94%;" escape="false"></h:outputText>
 				
 				<h:panelGroup rendered="#{utilBean.searchPage}" layout="block">
-					<h:panelGroup rendered="#{userBean.loggedIn}" class="add_resource_link" style="padding-top:3px;margin-right:10px;display:inline-block" layout="block">				
-						<h:form>
+					<h:panelGroup rendered="#{userBean.loggedIn}" class="add_resource_link" style="padding-top:3px;margin-right:10px;display:inline-block" layout="block">					
 							<b><h:outputText value="#{msg.options}: " /></b>
-							<p:commandLink update=":resource_form"
-								oncomplete="PF('resource_dialog').show();"
-								title="#{msg.addToMyResources}"
-								style="display:inline;">
-								<h:graphicImage value="/resources/icon/silk/add.png" width="16"
-									height="16" alt="#{msg.addToMyResources}" />#{msg.addToMyResources}
-								<f:setPropertyActionListener value="#{res.resource}"
-									target="#{searchBean.selectedResource}" />
-							</p:commandLink>
-						</h:form>
+							
+							<h:outputLink value="#" 
+							onclick="setSelectedResource([{name:'resource_id', value:${res.tempId}}]); PF('resource_dialog').show(); return false;"
+							rendered="#{userBean.loggedIn}" title="#{msg.addToMyResources}">
+								<h:graphicImage value="/resources/icon/silk/add.png" width="16" height="16" alt="#{msg.addToMyResources}" style="vertical-align: middle; margin-right:4px;" />#{msg.addToMyResources}
+							</h:outputLink>	
 					</h:panelGroup>
 					<h:panelGroup layout="block" rendered="#{not empty res.group}" style="padding-top:3px;margin-right:10px;display:inline-block;">
 						<b><h:outputText value="#{msg.group}: " /></b>	
