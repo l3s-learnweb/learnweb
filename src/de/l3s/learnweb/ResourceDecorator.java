@@ -231,20 +231,17 @@ public class ResourceDecorator implements Serializable
 
     public boolean isArchived()
     {
-	if(resource.getArchiveUrls() != null)
-	    return resource.getArchiveUrls().size() > 0;
-	else
-	    return false;
+	return resource.isArchived();
     }
 
     public ArchiveUrl getFirstArchivedObject()
     {
-	return resource.getArchiveUrls().getFirst();
+	return resource.getFirstArchivedObject();
     }
 
     public ArchiveUrl getLastArchivedObject()
     {
-	return resource.getArchiveUrls().getLast();
+	return resource.getLastArchivedObject();
     }
 
     public User getOwnerUser() throws SQLException

@@ -1318,6 +1318,24 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	archiveUrls = null;
     }
 
+    public boolean isArchived()
+    {
+	if(getArchiveUrls() != null)
+	    return archiveUrls.size() > 0;
+	else
+	    return false;
+    }
+
+    public ArchiveUrl getFirstArchivedObject()
+    {
+	return archiveUrls.getFirst();
+    }
+
+    public ArchiveUrl getLastArchivedObject()
+    {
+	return archiveUrls.getLast();
+    }
+
     public boolean isRestricted()
     {
 	return restricted;

@@ -227,7 +227,7 @@ public class Search implements Serializable
 
 	    tempIdIndex.put(temporaryId, decoratedResource.getResource());
 	    temporaryId++;
-	    Learnweb.getInstance().getArchiveUrlManager().checkWaybackCaptures(decoratedResource);
+	    //Learnweb.getInstance().getArchiveUrlManager().checkWaybackCaptures(decoratedResource);
 	    newResources.add(decoratedResource);
 	}
 
