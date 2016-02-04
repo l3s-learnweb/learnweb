@@ -214,8 +214,8 @@
 							<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
 						</h:selectOneMenu> -->
 				<h:panelGrid columns="2" rendered="#{userBean.loggedIn}" style="width:100%;">
-					<h:outputText value="#{msg.add_to}:" escape="false" />					
-					<p:tree id="folders_tree" value="#{userBean.user.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{searchBean.selectedNode}" style="max-height:28rem; overflow:auto;">				        						     						        
+					<h:outputText value="#{msg.add_to}:" escape="false" />
+					<p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{searchBean.selectedNode}" style="max-height:28rem; overflow:auto;">				        						     						        
 				        <p:ajax event="select" listener="#{searchBean.onNodeSelect}"/>
 				        
 				        <p:treeNode type="group">

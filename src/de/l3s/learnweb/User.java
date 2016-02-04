@@ -14,8 +14,6 @@ import java.util.TimeZone;
 import javax.validation.constraints.Size;
 
 import org.apache.log4j.Logger;
-import org.primefaces.model.DefaultTreeNode;
-import org.primefaces.model.TreeNode;
 
 import de.l3s.interwebj.AuthCredentials;
 import de.l3s.interwebj.InterWeb;
@@ -363,45 +361,6 @@ public class User implements Comparable<User>, Serializable, HasId
 	}
 	//}
 	return writeAbleGroups;
-    }
-
-    /**
-     * returns the groups tree where the user can add resources to
-     * 
-     * @return
-     * @throws SQLException
-     */
-    private long treeCacheTime = 0L;
-    private DefaultTreeNode tree;
-
-    // TODO move method to userbean and use user.getWriteAbleGroups()
-    public TreeNode getWriteAbleGroupsTree() throws SQLException
-    {
-	long start = System.currentTimeMillis();
-
-	if(null == tree || treeCacheTime + 10000L < System.currentTimeMillis())
-	{
-	    treeCacheTime = System.currentTimeMillis();
-	    tree = new DefaultTreeNode("WriteAbleGroups");
-
-	    Group myRes = new Group();
-	    myRes.setId(0);
-	    myRes.setTitle(UtilBean.getLocaleMessage("myResourcesTitle"));
-	    new DefaultTreeNode("group", myRes, tree);
-
-	    for(Group group : getGroups())
-	    {
-		if(!group.isRestrictionOnlyLeaderCanAddResources() || group.isLeader(this))
-		{
-
-		    TreeNode groupNode = new DefaultTreeNode("group", group, tree);
-		    Learnweb.getInstance().getGroupManager().getChildNodesRecursively(group.getId(), 0, groupNode, 0);
-		}
-	    }
-	}
-	log.debug("getWriteAbleGroupsTree in " + (System.currentTimeMillis() - start) + "ms");
-
-	return tree;
     }
 
     public void joinGroup(int groupId) throws Exception

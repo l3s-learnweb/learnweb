@@ -861,7 +861,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public boolean canMoveResourcesInGroup() throws SQLException
     {
-	if(getUser().getId() == getGroup().getLeaderUserId() && getUser().isModerator())
+	if((!getGroup().isReadOnly() && (!getGroup().isRestrictionOnlyLeaderCanAddResources() || getUser().getId() == getGroup().getLeaderUserId())) || getUser().isModerator())
 	    return true;
 
 	return false;
@@ -869,7 +869,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public boolean canEditFoldersInGroup() throws SQLException
     {
-	if(getUser().getId() == getGroup().getLeaderUserId() && getUser().isModerator())
+	if((!getGroup().isReadOnly() && (!getGroup().isRestrictionOnlyLeaderCanAddResources() || getUser().getId() == getGroup().getLeaderUserId())) || getUser().isModerator())
 	    return true;
 
 	return false;
@@ -1119,6 +1119,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	{
 	    Folder newFolder = new Folder(groupId, newFolderName);
 	    newFolder.setParentFolderId(getSelectedFolderId());
+	    newFolder.setUser(getUser());
 	    newFolder.save();
 
 	    addMessage(FacesMessage.SEVERITY_INFO, "folderCreated", newFolder.getName());
@@ -1189,7 +1190,16 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void setClickedFolder(Folder clickedFolder)
     {
-	this.clickedFolder = clickedFolder;
+	if(this.clickedFolder != null && this.clickedFolder.equals(clickedFolder))
+	{
+	    this.rightPanelAction = RPAction.none;
+	    setSelectedFolder(this.clickedFolder);
+	}
+	else
+	{
+	    this.rightPanelAction = RPAction.viewFolder;
+	    this.clickedFolder = clickedFolder;
+	}
     }
 
     public TreeNode getSelectedNode()

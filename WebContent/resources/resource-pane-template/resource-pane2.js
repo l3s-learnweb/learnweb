@@ -166,31 +166,46 @@ function resourceDND() {
 		return;
 	}
 	
-	$('#folderGrid .resource_panel').draggable({
-        helper: 'clone',
-        scope: 'resfolder',
-        zIndex: ++PrimeFaces.zindex
-     });
-	
+	/* Resources inside datagrid */
     $('#resourceGrid .resource_panel').draggable({
        helper: 'clone',
        scope: 'resfolder',
+       appendTo: 'body',
+       revert: 'invalid',
+       cursorAt: { top: 0, left: 0 },
+       scroll: false,
        zIndex: ++PrimeFaces.zindex
     });
-    
-    $('#folders_tree_wrap .ui-treenode:not([data-datakey="0"])').draggable({
+	
+	/* Folders inside datagrid */
+	$('#folderGrid .resource_panel').draggable({
         helper: 'clone',
         scope: 'resfolder',
+        appendTo: 'body',
+        revert: 'invalid',
+        cursorAt: { top: 0, left: 0 },
+        scroll: false,
         zIndex: ++PrimeFaces.zindex
      });
-
-    $('#folderGrid .resource_panel').droppable({
+	
+	$('#folderGrid .resource_panel').droppable({
        activeClass: 'ui-state-active',
        hoverClass: 'ui-state-highlight',
        tolerance: 'pointer',
        scope: 'resfolder',
        drop: dropHandle
     });
+    
+    /* Folders in the tree */
+    $('#folders_tree_wrap .ui-treenode:not([data-datakey="0"])').draggable({
+        helper: 'clone',
+        scope: 'resfolder',
+        appendTo: 'body',
+        revert: 'invalid',
+        cursorAt: { top: 0, left: 0 },
+        scroll: false,
+        zIndex: ++PrimeFaces.zindex
+     });
     
     $('#folders_tree_wrap .ui-treenode .ui-treenode-content').droppable({
         activeClass: 'ui-state-active',

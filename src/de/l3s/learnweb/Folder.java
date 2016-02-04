@@ -17,6 +17,7 @@ public class Folder implements Serializable, HasId
     private int groupId = -1;
     private int parentFolderId;
     private String name;
+    private int userId = -1;
 
     // cache
     private transient String path;
@@ -41,6 +42,12 @@ public class Folder implements Serializable, HasId
 	this.folderId = folderId;
 	this.groupId = groupId;
 	this.name = name;
+    }
+
+    @Override
+    public int getId()
+    {
+	return getFolderId();
     }
 
     public int getFolderId()
@@ -166,6 +173,28 @@ public class Folder implements Serializable, HasId
 	return Learnweb.getInstance().getGroupManager().getFolder(parentFolderId);
     }
 
+    public User getUser() throws SQLException
+    {
+	if(userId < 0)
+	    return null;
+	return Learnweb.getInstance().getUserManager().getUser(userId);
+    }
+
+    public void setUser(User user)
+    {
+	this.userId = user.getId();
+    }
+
+    public int getUserId()
+    {
+	return userId;
+    }
+
+    public void setUserId(int userId)
+    {
+	this.userId = userId;
+    }
+
     public Folder save() throws SQLException
     {
 	return Learnweb.getInstance().getGroupManager().saveFolder(this);
@@ -173,15 +202,12 @@ public class Folder implements Serializable, HasId
 
     public Folder moveTo(int newGroupId, int newParentFolderId) throws SQLException
     {
-	// TODO update both parent folder
 	return Learnweb.getInstance().getGroupManager().moveFolder(this, newParentFolderId, newGroupId);
     }
 
     public void delete() throws SQLException
     {
-	// TODO update parent folder
 	Learnweb.getInstance().getGroupManager().deleteFolder(this);
-
     }
 
     public int getCountResources() throws SQLException
@@ -198,11 +224,14 @@ public class Folder implements Serializable, HasId
     {
 	path = null;
 	prettyPath = null;
+	subfolders = null;
 
 	if(subfolders != null)
 	{
 	    for(Folder folder : subfolders)
+	    {
 		folder.clearCaches();
+	    }
 
 	    subfolders = null;
 	}
@@ -217,20 +246,9 @@ public class Folder implements Serializable, HasId
 	}
     }
 
-    protected void clearSubfolders()
-    {
-	subfolders = null;
-    }
-
     @Override
     public String toString()
     {
 	return this.name;
-    }
-
-    @Override
-    public int getId()
-    {
-	return getFolderId();
     }
 }

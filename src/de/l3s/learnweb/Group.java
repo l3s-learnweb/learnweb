@@ -53,6 +53,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     private transient List<Link> documentLinks;
     private transient List<User> members;
     private transient List<Link> links;
+    private transient List<Folder> folders;
 
     private HashMap<Integer, Integer> lastVisitCache = new HashMap<Integer, Integer>();
 
@@ -61,6 +62,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	documentLinks = null;
 	members = null;
 	links = null;
+	folders = null;
     }
 
     public Group()
@@ -163,9 +165,20 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	return rm.getCountResourcesByGroupId(id);
     }
 
+    /**
+     * Only root folders
+     * 
+     * @return
+     * @throws SQLException
+     */
     public List<Folder> getFolders() throws SQLException
     {
-	return Learnweb.getInstance().getGroupManager().getFolders(id);
+	if(folders == null)
+	{
+	    folders = Learnweb.getInstance().getGroupManager().getFolders(id, 0);
+	}
+
+	return folders;
     }
 
     public AbstractPaginator getResources(Order order) throws SQLException

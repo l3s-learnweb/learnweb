@@ -1309,6 +1309,11 @@ div#presentation_preview {
 	background: #FBE5B3;
 }
 
+.resource_panel.resource_folder.ui-state-highlight {
+    background: #E3E3E3;
+    border: 2px solid #7096ab;
+}
+
 @media screen  and (max-width:1050px) {
 	.resource_panel{
 		float:none;

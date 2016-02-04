@@ -20,6 +20,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.ocpsoft.prettytime.PrettyTime;
+import org.primefaces.model.DefaultTreeNode;
+import org.primefaces.model.TreeNode;
 import org.primefaces.model.menu.DefaultMenuItem;
 import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
@@ -28,6 +30,7 @@ import com.sun.jersey.api.client.ClientHandlerException;
 
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Group;
+import de.l3s.learnweb.GroupManager;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
@@ -56,6 +59,9 @@ public class UserBean implements Serializable
 
     private boolean cacheShowMessageJoinGroup = true;
     private boolean cacheShowMessageAddResource = true;
+
+    private long groupsTreeCacheTime = 0L;
+    private DefaultTreeNode groupsTree;
 
     public UserBean()
     {
@@ -500,6 +506,39 @@ public class UserBean implements Serializable
     {
 	String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
 	return viewId.contains("group/resources.xhtml");
+    }
+
+    /**
+     * returns the groups tree where the user can add resources to
+     * 
+     * @return
+     * @throws SQLException
+     */
+    public TreeNode getWriteAbleGroupsTree() throws SQLException
+    {
+	long start = System.currentTimeMillis();
+
+	if(null == groupsTree || groupsTreeCacheTime + 10000L < System.currentTimeMillis())
+	{
+	    groupsTreeCacheTime = System.currentTimeMillis();
+	    groupsTree = new DefaultTreeNode("WriteAbleGroups");
+
+	    GroupManager gm = Learnweb.getInstance().getGroupManager();
+	    Group myResources = new Group();
+	    myResources.setId(0);
+	    myResources.setTitle(UtilBean.getLocaleMessage("myResourcesTitle"));
+	    new DefaultTreeNode("group", myResources, groupsTree);
+
+	    for(Group group : getUser().getWriteAbleGroups())
+	    {
+		TreeNode groupNode = new DefaultTreeNode("group", group, groupsTree);
+		gm.getChildNodesRecursively(group.getId(), 0, groupNode, 0);
+	    }
+	}
+
+	log.debug("getWriteAbleGroupsTree in " + (System.currentTimeMillis() - start) + "ms");
+
+	return groupsTree;
     }
 
     public String onCourseChange(int courseId) throws SQLException

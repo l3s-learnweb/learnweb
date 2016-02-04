@@ -353,6 +353,7 @@ public class GroupManager
 	    folder.setGroupId(rs.getInt("group_id"));
 	    folder.setParentFolderId(rs.getInt("parent_folder_id"));
 	    folder.setName(rs.getString("name"));
+	    folder.setUserId(rs.getInt("user_id"));
 
 	    folderCache.put(folder);
 	}
@@ -365,15 +366,15 @@ public class GroupManager
 
 	if(folder == null)
 	{
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name FROM `lw_group_folder` WHERE `folder_id` = ?");
-	select.setInt(1, folderId);
-	ResultSet rs = select.executeQuery();
+	    PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, user_id FROM `lw_group_folder` WHERE `folder_id` = ?");
+	    select.setInt(1, folderId);
+	    ResultSet rs = select.executeQuery();
 
-	if(!rs.next())
-	    return null;
+	    if(!rs.next())
+		return null;
 
-	folder = createFolder(rs);
-	select.close();
+	    folder = createFolder(rs);
+	    select.close();
 	}
 	return folder;
     }
@@ -387,7 +388,7 @@ public class GroupManager
     {
 	List<Folder> folders = new ArrayList<Folder>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name FROM `lw_group_folder` WHERE `group_id` = ?");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, user_id FROM `lw_group_folder` WHERE `group_id` = ?");
 	select.setInt(1, groupId);
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
@@ -413,7 +414,7 @@ public class GroupManager
 	    parentFolderId = 0;
 	}
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name FROM `lw_group_folder` WHERE `group_id` = ? AND `parent_folder_id` = ?");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, user_id FROM `lw_group_folder` WHERE `group_id` = ? AND `parent_folder_id` = ?");
 	select.setInt(1, groupId);
 	select.setInt(2, parentFolderId);
 	ResultSet rs = select.executeQuery();
@@ -487,28 +488,32 @@ public class GroupManager
 
     public Folder moveFolder(Folder original, int newParentFolderId, int newGroupId) throws SQLException
     {
-	// because we must "save" resource anyway, for updating path
-	//if(original.getGroupId() != newGroupId)
-	//{
+	int parentFolderId = original.getParentFolderId();
+	List<Folder> subfolders = original.getSubfolders();
+
+	original.setGroupId(newGroupId);
+	original.setParentFolderId(newParentFolderId);
+	original.save();
+
+	for(Folder subfolder : subfolders)
+	{
+	    this.moveFolder(subfolder, original.getFolderId(), newGroupId);
+	}
+
 	for(Resource res : original.getResources())
 	{
 	    res.setGroupId(newGroupId);
 	    res.save();
 	}
 
-	for(Folder subfolder : original.getSubfolders())
-	{
-	    this.moveFolder(subfolder, original.getFolderId(), newGroupId);
-	}
-	//}
-
-	original.setGroupId(newGroupId);
-	original.setParentFolderId(newParentFolderId);
-	original.save();
-
 	if(newParentFolderId > 0)
 	{
-	    getFolder(newParentFolderId).clearSubfolders();
+	    getFolder(newParentFolderId).clearCaches();
+	}
+
+	if(parentFolderId > 0)
+	{
+	    getFolder(parentFolderId).clearCaches();
 	}
 
 	return original;
@@ -524,7 +529,7 @@ public class GroupManager
 
     public Folder saveFolder(Folder folder) throws SQLException
     {
-	PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group_folder` (folder_id, group_id, parent_folder_id, name) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+	PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group_folder` (folder_id, group_id, parent_folder_id, name, user_id) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
 	if(folder.getFolderId() < 0) // the folder is not yet stored at the database
 	    replace.setNull(1, java.sql.Types.INTEGER);
@@ -533,6 +538,7 @@ public class GroupManager
 	replace.setInt(2, folder.getGroupId());
 	replace.setInt(3, folder.getParentFolderId());
 	replace.setString(4, folder.getName());
+	replace.setInt(5, folder.getUserId());
 	replace.executeUpdate();
 
 	if(folder.getFolderId() < 0) // get the assigned id
@@ -559,7 +565,7 @@ public class GroupManager
 	{
 	    for(Folder subFolder : subfolders)
 	    {
-		deleteFolder(subFolder);
+		this.deleteFolder(subFolder);
 	    }
 	}
 
@@ -570,10 +576,17 @@ public class GroupManager
 	    resource.save();
 	}
 
+	Folder parentFolder = folder.getParentFolder();
+
 	PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_folder` WHERE `folder_id` = ?");
 	delete.setInt(1, folder.getFolderId());
 	delete.execute();
 	delete.close();
+
+	if(parentFolder != null)
+	{
+	    parentFolder.clearCaches();
+	}
     }
 
     /**
