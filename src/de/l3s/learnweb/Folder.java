@@ -238,7 +238,11 @@ public class Folder implements Serializable, HasId
 
 	try
 	{
-	    getParentFolder().clearCaches();
+	    if(this.getParentFolderId() > 0)
+	    {
+		getParentFolder().clearCaches();
+	    }
+
 	}
 	catch(SQLException e)
 	{
