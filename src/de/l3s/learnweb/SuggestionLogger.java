@@ -24,10 +24,11 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
+
+import de.l3s.util.StringHelper;
 
 public class SuggestionLogger
 {
@@ -46,11 +47,11 @@ public class SuggestionLogger
 	this.consumerThread.start();
     }
 
-    public void log(String query, String market, String suggestionBing)
+    public void log(String query, String market, String suggestionBing, String sessionId, User user)
     {
 	try
 	{
-	    queue.put(new Container(query, market, suggestionBing));
+	    queue.put(new Container(query, market, suggestionBing, sessionId, user));
 	}
 	catch(InterruptedException e)
 	{
@@ -90,12 +91,14 @@ public class SuggestionLogger
 
 		    try
 		    {
-			PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO `lw_log_suggestions` (`query`, `market`, `timestamp`, `suggestions_bing`, `suggestions_google`) VALUES (?, ?, ?, ?, ?)");
+			PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO `lw_log_suggestions` (`query`, `market`, `timestamp`, `suggestions_bing`, `suggestions_google`, session_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
 			insert.setString(1, container.query);
 			insert.setString(2, container.market);
 			insert.setTimestamp(3, new Timestamp(container.timestamp));
 			insert.setString(4, container.suggestionBing);
 			insert.setString(5, suggestionsGoogle);
+			insert.setString(6, container.sessionId);
+			insert.setInt(7, container.userId);
 			insert.executeUpdate();
 
 			//log.debug("Logged suggestion: " + container);
@@ -123,121 +126,129 @@ public class SuggestionLogger
 	    }
 	    String suggestorUrl = "http://suggestqueries.google.com/complete/search?output=toolbar&hl=" + market + "&q=" + query;
 	    URL queryUrl = null;
+
 	    try
 	    {
-		try
-		{
-		    queryUrl = new URL(suggestorUrl);
-		}
-		catch(MalformedURLException e)
-		{
-		    log.error("Error in URL formation of Google suggest query", e);
-		}
-
-		HttpURLConnection connection = null;
-		try
-		{
-		    connection = (HttpURLConnection) queryUrl.openConnection();
-		}
-		catch(IOException e)
-		{
-		    log.error("Error in establishing connection with Google suggest query URL", e);
-		}
-		try
-		{
-		    connection.setRequestMethod("GET");
-		}
-		catch(ProtocolException e)
-		{
-		    log.error(e);
-		}
-		connection.setRequestProperty("Accept", "application/xml");
-
-		InputStream xml = null;
-		try
-		{
-		    xml = connection.getInputStream();
-		}
-		catch(IOException e)
-		{
-		    log.error("IO exception in getting google suggestions in xml form", e);
-		}
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = null;
-		try
-		{
-		    db = dbf.newDocumentBuilder();
-		}
-		catch(ParserConfigurationException e)
-		{
-		    log.error(e);
-		}
-		Document doc = null;
-		try
-		{
-		    doc = db.parse(xml);
-		}
-		catch(SAXException e)
-		{
-		    log.error("Exception in parsing xml doc of google suggestion", e);
-		}
-		catch(IOException e)
-		{
-		    log.error("Exception in parsing xml doc of google suggestion", e);
-		}
-		TransformerFactory tf = TransformerFactory.newInstance();
-		Transformer transformer = null;
-		try
-		{
-		    transformer = tf.newTransformer();
-		}
-		catch(TransformerConfigurationException e2)
-		{
-		    log.error(e2);
-		}
-		transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
-		StringWriter writer = new StringWriter();
-		try
-		{
-		    transformer.transform(new DOMSource(doc), new StreamResult(writer));
-		}
-		catch(TransformerException e1)
-		{
-		    log.error(e1);
-		}
-		String output = writer.getBuffer().toString().trim();
-		ArrayList<String> queries = new ArrayList<String>();
-		while(output.contains("=\""))
-		{
-		    int subStringIndex = output.indexOf("=\"", 0);
-		    output = output.substring(subStringIndex + 2, output.length() - 1);
-
-		    queries.add(output.substring(0, output.indexOf("\"")));
-		}
-		suggestion = StringUtils.join(queries).replaceAll("\\[|\\]", "");
+		queryUrl = new URL(suggestorUrl);
 	    }
-	    catch(NullPointerException e)
+	    catch(MalformedURLException e)
 	    {
-		log.error("Error in getting Google suggestions", e);
+		log.error("Error in URL formation of Google suggest query", e);
+		return "";
 	    }
+
+	    HttpURLConnection connection = null;
+	    try
+	    {
+		connection = (HttpURLConnection) queryUrl.openConnection();
+	    }
+	    catch(IOException e)
+	    {
+		log.error("Error in establishing connection with Google suggest query URL", e);
+		return "";
+	    }
+	    try
+	    {
+		connection.setRequestMethod("GET");
+	    }
+	    catch(ProtocolException e)
+	    {
+		log.error(e);
+		return "";
+	    }
+	    connection.setRequestProperty("Accept", "application/xml");
+
+	    InputStream xml = null;
+	    try
+	    {
+		xml = connection.getInputStream();
+	    }
+	    catch(IOException e)
+	    {
+		log.error("IO exception in getting google suggestions in xml form", e);
+		return "";
+	    }
+	    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	    DocumentBuilder db = null;
+	    try
+	    {
+		db = dbf.newDocumentBuilder();
+	    }
+	    catch(ParserConfigurationException e)
+	    {
+		log.error(e);
+		return "";
+	    }
+	    Document doc = null;
+	    try
+	    {
+		doc = db.parse(xml);
+	    }
+	    catch(IOException | SAXException e)
+	    {
+		log.error("Exception in parsing xml doc of google suggestion", e);
+		return "";
+	    }
+
+	    TransformerFactory tf = TransformerFactory.newInstance();
+	    Transformer transformer = null;
+	    try
+	    {
+		transformer = tf.newTransformer();
+	    }
+	    catch(TransformerConfigurationException e2)
+	    {
+		log.error(e2);
+		return "";
+	    }
+	    transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+	    StringWriter writer = new StringWriter();
+	    try
+	    {
+		transformer.transform(new DOMSource(doc), new StreamResult(writer));
+	    }
+	    catch(TransformerException e1)
+	    {
+		log.error(e1);
+		return "";
+	    }
+	    String output = writer.getBuffer().toString().trim();
+
+	    ArrayList<String> queries = new ArrayList<String>();
+	    while(output.contains("=\""))
+	    {
+		int subStringIndex = output.indexOf("=\"", 0);
+		output = output.substring(subStringIndex + 2, output.length() - 1);
+
+		queries.add(output.substring(0, output.indexOf("\"")));
+	    }
+	    suggestion = StringHelper.implode(queries, ",").replaceAll("\\[|\\]", "");
+
+	    // replaced to get rid of eclipse warning
+	    //suggestion = StringUtils.join(queries).replaceAll("\\[|\\]", "");
+
 	    return suggestion;
 	}
     }
 
     private class Container
     {
-	String query;
-	String market;
-	String suggestionBing;
-	long timestamp;
+	private String query;
+	private String market;
+	private String suggestionBing;
+	private long timestamp;
+	private String sessionId;
+	private int userId;
 
-	public Container(String query, String market, String suggestionBing)
+	public Container(String query, String market, String suggestionBing, String sessionId, User user)
 	{
 	    super();
 	    this.query = query;
 	    this.market = market;
 	    this.suggestionBing = suggestionBing;
 	    this.timestamp = System.currentTimeMillis();
+	    this.sessionId = sessionId;
+	    this.userId = user == null ? 0 : user.getId();
 	}
 
 	@Override

@@ -91,7 +91,7 @@
 							<h:panelGroup styleClass="filter-sub-bar" layout="block">
 								<h:link value="#{filter.anyText}" outcome="search" styleClass="#{!filter.active ? 'active' : null}">
 									<f:param name="action" value="#{searchBean.searchMode}" />
-									<f:param name="filter" value="#{filter.anyUrl}" />
+									<f:param name="filter" value="#{filter.anyUrl}" disable="#{empty filter.anyUrl}" />
 									<f:param name="query" value="#{searchBean.query}" />
 								</h:link>
 								<ui:repeat value="#{filter.items}" var="item">

@@ -516,6 +516,9 @@ public class UserBean implements Serializable
      */
     public TreeNode getWriteAbleGroupsTree() throws SQLException
     {
+	if(!isLoggedIn())
+	    return null;
+
 	long start = System.currentTimeMillis();
 
 	if(null == groupsTree || groupsTreeCacheTime + 10000L < System.currentTimeMillis())

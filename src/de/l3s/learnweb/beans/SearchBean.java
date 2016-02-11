@@ -455,7 +455,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
 	//log.debug("query: " + query + "; suggestions: " + suggestions + "; market: " + market);
 
-	getLearnweb().getSuggestionLogger().log(query, market, suggestions);
+	getLearnweb().getSuggestionLogger().log(query, market, suggestions, getSessionId(), getUser());
     }
 
     /**
