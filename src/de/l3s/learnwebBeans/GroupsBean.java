@@ -196,4 +196,5 @@ public class GroupsBean extends ApplicationBean implements Serializable
 	}
 	return true;
     }
+
 }

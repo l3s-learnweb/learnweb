@@ -1560,3 +1560,62 @@ div#presentation_preview {
     white-space: nowrap;
     overflow:hidden;
 }
+
+.tooltipster-custom-theme {
+	border: 1px solid #000;
+	background: #ffffff;
+	border-color: #489a83;
+	box-shadow: 1px 1px 5px #888888;
+}
+
+.tooltipster-custom-theme .tooltipster-content {
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+	line-height: 16px;
+	padding: 8px 10px;
+	text-align:justify;
+}
+
+.tooltipster-custom-b {
+	border-radius: 10px;
+	background: #c4c4c4;
+	border-color: #a8a8a8;
+	box-shadow: 1px 1px 5px #888888;
+	
+}
+
+.tooltipster-custom-c {
+	border-radius: 10px;
+	background: #489a83;
+	border-color: #a8a8a8;
+	box-shadow: 1px 1px 5px #888888;
+}
+
+.tooltipster-custom-d {
+	border-radius: 10px;
+	background: #489a83;
+	border-color: #a8a8a8;
+	box-shadow: 1px 1px 5px #888888;
+}
+
+.tooltipster-custom-b .tooltipster-content {
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+	line-height: 16px;
+	padding: 8px 10px;
+	text-align:justify;
+}
+.tooltipster-custom-c .tooltipster-content {
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+	line-height: 16px;
+	padding: 8px 10px;
+	text-align:justify;
+}
+.tooltipster-custom-d .tooltipster-content {
+	font-family: Arial, sans-serif;
+	font-size: 12px;
+	line-height: 16px;
+	padding: 8px 10px;
+	text-align:justify;
+}

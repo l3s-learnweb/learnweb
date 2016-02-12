@@ -9,6 +9,7 @@ import java.util.List;
 
 import javax.validation.constraints.Size;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.learnweb.Link.LinkType;
@@ -230,7 +231,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     public void setDescription(String description) throws SQLException
     {
-	this.description = description;
+	this.description = description == null ? null : description.trim();
     }
 
     public String getUniversity()
@@ -533,5 +534,46 @@ public class Group implements Comparable<Group>, HasId, Serializable
     public String toString()
     {
 	return this.title;
+    }
+
+    public String getTooltip() throws SQLException
+    {
+	String tooltip = "<ul style='list-style: none; margin: 0px; padding: 0px;'><h3>" + getTitle() + "</h3>";
+
+	if(StringUtils.isEmpty(getDescription()) == false)
+	{
+	    tooltip += "<li>" + getDescription() + "</li>";
+	}
+	if(getResourcesCount() != 0)
+	{
+	    tooltip += "<li>" + UtilBean.getLocaleMessage("resources") + ": " + getResourcesCount() + "</li>";
+	}
+	tooltip += "<li>" + UtilBean.getLocaleMessage("users") + ": " + getMembers().size() + "</li>";
+	if(getFolders() != null && getFolders().size() > 0)
+	{
+	    if(getFolders().size() == 1)
+	    {
+		tooltip += "<li>" + UtilBean.getLocaleMessage("folder", getFolders().size()) + ":";
+
+		for(Folder folder : getFolders())
+		{
+		    tooltip += " " + folder.getName();
+		}
+	    }
+	    else
+	    {
+		tooltip += "<li>" + UtilBean.getLocaleMessage("folder", getFolders().size()) + ":" + "<ul>";
+
+		for(Folder folder : getFolders())
+		{
+		    tooltip += "<li>" + folder.getName() + "</li>";
+		}
+		tooltip += "</ul>";
+	    }
+	}
+	tooltip += "</li>";
+
+	tooltip += "</ul>";
+	return tooltip;
     }
 }
