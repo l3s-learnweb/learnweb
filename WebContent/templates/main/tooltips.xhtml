@@ -4,8 +4,8 @@
       
 <ui:composition>
 <ui:fragment rendered="#{userBean.showMessageAny}">	
-	<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/tooltipster.min.css" />
-	<script type="text/javascript" src="#{request.contextPath}/resources/js/jquery.tooltipster.min.js" />
+	<h:outputStylesheet name="main-template/tooltipster.min.css"  />		
+	<h:outputScript name="js/jquery.tooltipster.min.js" target="head"/>	
 	
 	<script type="text/javascript">
 		
