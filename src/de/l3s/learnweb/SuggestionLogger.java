@@ -195,7 +195,7 @@ public class SuggestionLogger
 		    suggestion += currentSuggestion.getAttributes().getNamedItem("data").getNodeValue();
 		    suggestion += ", ";
 		}
-		suggestion.substring(0, suggestion.lastIndexOf(","));
+		suggestion.substring(0, suggestion.lastIndexOf(",") - 1);
 	    }
 	    catch(NullPointerException e)
 	    {
