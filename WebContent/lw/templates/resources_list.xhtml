@@ -6,9 +6,13 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition>
+<!-- 
+	only aload in head:
 	<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/tooltipster.min.css" />
+	
+	will be executed once on every page:
 	<script type="text/javascript" src="#{request.contextPath}/resources/js/jquery.tooltipster.min.js" />
- 
+ -->
 	<script type="text/javascript">
         $(document).ready(function() {
             $('.tooltip').tooltipster({
@@ -22,6 +26,7 @@
             });
         });
     </script>
+     
 	<ui:repeat var="res" value="#{resources}">
 		
 		<h:panelGroup layout="block" styleClass="page_counter" rendered="#{res.tempId gt 1 and res.tempId % 8 eq 1}">
