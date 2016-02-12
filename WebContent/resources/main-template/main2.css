@@ -1258,16 +1258,57 @@ div#presentation_preview {
 }
 
 .folder-tree .ui-tree .ui-treenode-label.ui-state-hover,
+.ui-treenode.ui-draggable-helper .ui-treenode-label,
 .folder-tree .ui-tree .ui-treenode-label.ui-state-highlight {
 	background: none;
     text-shadow: none;
     box-shadow: none;
     font-weight: bold;
+    border: 0 !important;
     outline: none !important;
 }
 
 .folder-tree .ui-tree .ui-treenode-label.ui-state-highlight {
     color: #4285f4;
+}
+
+.folder-tree .ui-tree .ui-treenode.ui-draggable-grayscale {
+	opacity: 0.3;
+}
+
+.folder-tree .ui-tree .ui-treenode.ui-draggable-grayscale .ui-treenode-icon,
+.folder-tree .ui-tree .ui-treenode.ui-draggable-grayscale .ui-tree-toggler,
+.folder-tree .ui-tree .ui-treenode.ui-draggable-grayscale .ui-treenode-label {
+	font-weight: normal !important;
+	cursor: default !important;
+}
+
+.ui-treenode.ui-draggable-helper {
+    width: 180px;
+    padding: 10px;
+    background: #4285f4;
+    height: 20px;
+    line-height: 20px;
+	box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+	border: 0;
+	list-style: none;
+}
+
+.ui-treenode.ui-draggable-helper .ui-treenode-icon {
+    position: absolute;
+    left: 8px;
+    top: 11px;
+}
+
+.ui-treenode.ui-draggable-helper .ui-treenode-label {
+    padding-left: 18px;
+    color: #fff;
+    font-weight: normal;
+}
+
+.ui-treenode.ui-draggable-helper .ui-treenode-children,
+.ui-treenode.ui-draggable-helper .ui-tree-toggler {
+	display: none;
 }
 
 .resource_panelgrid {
