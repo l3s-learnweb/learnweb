@@ -1227,6 +1227,49 @@ div#presentation_preview {
 	max-width:100%;
 }
 
+.folder-tree .ui-tree {
+	width: auto;
+}
+
+.folder-tree .ui-tree .ui-treenode-content {
+	display: block;
+	border: 1px solid transparent;
+}
+
+.folder-tree .ui-tree .ui-treenode[data-nodetype="root"] > span > .ui-treenode-label {
+	font-size: 1.1em;
+}
+
+.folder-tree .ui-state-active,
+.folder-tree .ui-widget-content .ui-state-active,
+.folder-tree .ui-widget-header .ui-state-active {
+	background: none;
+    border: 1px solid transparent;
+	color: #000;
+	text-shadow: none;
+	box-shadow: none;
+}
+
+.folder-tree .ui-state-active.ui-state-highlight,
+.folder-tree .ui-widget-content .ui-state-active.ui-state-highlight,
+.folder-tree .ui-widget-header .ui-state-active.ui-state-highlight {
+	border: 1px dashed #6B9CB8;
+    background: #EAF8FF;
+}
+
+.folder-tree .ui-tree .ui-treenode-label.ui-state-hover,
+.folder-tree .ui-tree .ui-treenode-label.ui-state-highlight {
+	background: none;
+    text-shadow: none;
+    box-shadow: none;
+    font-weight: bold;
+    outline: none !important;
+}
+
+.folder-tree .ui-tree .ui-treenode-label.ui-state-highlight {
+    color: #4285f4;
+}
+
 .resource_panelgrid {
 	width:100%;
 }
@@ -1306,12 +1349,43 @@ div#presentation_preview {
 }
 
 .resource_panel.resource_folder:hover {
-	background: #FBE5B3;
+	background: #E6E6E6;
 }
 
 .resource_panel.resource_folder.ui-state-highlight {
-    background: #E3E3E3;
-    border: 2px solid #7096ab;
+    background: #E1F2FD;
+    border: 2px solid #4285f4;
+    text-shadow: none;
+}
+
+.resource_panel.ui-draggable-helper {
+	background: #4285f4;
+	height: 40px;
+	box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+	border: 0;
+}
+
+.resource_panel.ui-draggable-helper .resource_short_title {
+	color: #fff;
+	padding: 5px;
+}
+
+.resource_panel.ui-draggable-helper .resource_panelgrid {
+	display: none;
+}
+
+.resource_panel.resource_folder.ui-draggable-helper .resource_short_title {
+	padding: 0 0 0 24px;
+}
+
+.resource_panel.ui-draggable-grayscale {
+	opacity: 0.3;
+	border-color: #ccc !important;
+	cursor: default !important;
+}
+
+.resource_panel.resource_folder.ui-draggable-grayscale {
+	background: #F3F3F3 !important;
 }
 
 @media screen  and (max-width:1050px) {

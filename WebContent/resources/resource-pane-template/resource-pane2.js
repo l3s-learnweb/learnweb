@@ -161,7 +161,6 @@ function dropHandle(event, ui) {
 }
 
 function resourceDND() {
-	
 	if (!$('#datagrid') || $('#datagrid').attr('data-isenablemoving') != 'true') {
 		return;
 	}
@@ -169,6 +168,13 @@ function resourceDND() {
 	/* Resources inside datagrid */
     $('#resourceGrid .resource_panel').draggable({
        helper: 'clone',
+       start: function(e, ui) {
+    	   $(this).addClass("ui-draggable-grayscale");
+    	   $(ui.helper).addClass("ui-draggable-helper");
+       },
+       stop: function(e) {
+    	   $(this).removeClass("ui-draggable-grayscale");
+       },
        scope: 'resfolder',
        appendTo: 'body',
        revert: 'invalid',
@@ -180,6 +186,13 @@ function resourceDND() {
 	/* Folders inside datagrid */
 	$('#folderGrid .resource_panel').draggable({
         helper: 'clone',
+        start: function(e, ui) {
+     	   $(this).addClass("ui-draggable-grayscale");
+     	   $(ui.helper).addClass("ui-draggable-helper");
+        },
+        stop: function(e) {
+     	   $(this).removeClass("ui-draggable-grayscale");
+        },
         scope: 'resfolder',
         appendTo: 'body',
         revert: 'invalid',
@@ -199,6 +212,13 @@ function resourceDND() {
     /* Folders in the tree */
     $('#folders_tree_wrap .ui-treenode:not([data-datakey="0"])').draggable({
         helper: 'clone',
+        start: function(e, ui) {
+     	   $(this).addClass("ui-draggable-grayscale");
+     	   $(ui.helper).addClass("ui-draggable-helper");
+        },
+        stop: function(e) {
+     	   $(this).removeClass("ui-draggable-grayscale");
+        },
         scope: 'resfolder',
         appendTo: 'body',
         revert: 'invalid',
