@@ -315,6 +315,20 @@ public class UserBean implements Serializable
 	return user.isModerator();
     }
 
+    public boolean canModerateCourse(Course course)
+    {
+	User user = getUser();
+	if(null == user)
+	    return false;
+
+	if(user.isAdmin())
+	    return true;
+
+	// TODO add other cases
+
+	return false;
+    }
+
     public TimeZone getTimeZone()
     {
 	User user = getUser();
