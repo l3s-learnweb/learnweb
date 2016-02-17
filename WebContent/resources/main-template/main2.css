@@ -707,7 +707,8 @@ a:hover{text-decoration:underline;}
 	width:200px;
 }
 
-.greenbutton{
+.greenbutton,
+.graybutton {
 	border:1px solid #3b8b74 !important;
 	background:none !important;
 	background-color:#489a83 !important;
@@ -720,13 +721,29 @@ a:hover{text-decoration:underline;}
 	border-radius:2px !important;
 }
 
-.greenbutton .ui-button-text  {padding:0;}
-.greenbutton:hover, .greenbutton:focus{
+.greenbutton .ui-button-text,
+.graybutton .ui-button-text {
+	padding:0;
+}
+
+.greenbutton:hover, .greenbutton:focus,
+.graybutton:hover, .graybutton:focus {
 	background:none repeat scroll 0 0 #4ea68d !important;
 	box-shadow:0px 1px 2px rgba(0,0,0,0.1) !important;
 	font-weight:bolder !imporant;
 	text-decoration:none;
 	outline: none;
+}
+
+.graybutton {
+	border:1px solid #a8a8a8 !important;
+	background-color: #c4c4c4 !important;
+	color: #4F4F4E !important;
+}
+
+.graybutton:hover, .graybutton:focus {
+	background:none repeat scroll 0 0 #DBDBDB !important;
+	box-shadow:0px 1px 2px rgba(0,0,0,0.1) !important;
 }
 
 #group_resource_searchbutton{
@@ -977,6 +994,9 @@ span.ui-autocomplete{border:1px solid transparent !important;}
 }
 #right_pane .ui-button{border-radius:0px;}
 #right_pane .greenbutton{border-radius:2px;}
+#right_pane table {
+	width: 100%;
+}
 
 /*taken from new_main2.css*/
 

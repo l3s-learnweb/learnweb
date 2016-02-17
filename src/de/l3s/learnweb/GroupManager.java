@@ -9,9 +9,12 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.solr.client.solrj.SolrServerException;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.solrClient.SolrSearch;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
@@ -463,31 +466,30 @@ public class GroupManager
     public int getCountResources(int groupId, int parentFolderId) throws SQLException
     {
 	int numberOfRows = 0;
-	PreparedStatement select = null;
-	if(parentFolderId < 0)
-	{
-	    select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM `lw_resource` WHERE `group_id` = ?");
-	    select.setInt(1, groupId);
-	}
-	else
-	{
-	    select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM `lw_resource` WHERE `group_id` = ? AND `folder_id` = ?");
-	    select.setInt(1, groupId);
-	    select.setInt(2, parentFolderId);
-	}
+	SolrSearch solrSearch = new SolrSearch("*", UtilBean.getUserBean().getUser());
+	solrSearch.setFilterGroups(groupId);
+	solrSearch.setFilterFolder(parentFolderId, true);
 
-	ResultSet rs = select.executeQuery();
-	if(rs.next())
+	try
 	{
-	    numberOfRows = rs.getInt(1);
+	    solrSearch.getResourcesByPage(1);
+	    numberOfRows = (int) solrSearch.getTotalResultCount();
 	}
-	select.close();
+	catch(SolrServerException e)
+	{
+	    e.printStackTrace();
+	}
 
 	return numberOfRows;
     }
 
     public Folder moveFolder(Folder original, int newParentFolderId, int newGroupId) throws SQLException
     {
+	if(original.getFolderId() == newParentFolderId)
+	{
+	    return original;
+	}
+
 	int parentFolderId = original.getParentFolderId();
 	List<Folder> subfolders = original.getSubfolders();
 
@@ -521,6 +523,11 @@ public class GroupManager
 
     public Resource moveResource(Resource original, int newGroupId, int newFolderId) throws SQLException
     {
+	if(original.getGroupId() == newGroupId && original.getFolderId() == newFolderId)
+	{
+	    return original;
+	}
+
 	original.setGroupId(newGroupId);
 	original.setFolderId(newFolderId);
 	original.save();

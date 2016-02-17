@@ -637,12 +637,12 @@
 								</td>
 							</tr>
 							<tr>
-								<td colspan="3">
-									<p:commandButton value="#{msg.createFolder}" styleClass="greenbutton float-right" update=":group_menu_tree :folderGrid :growl :add_resource_panel" action="#{bean.addFolder}" ajax="true" oncomplete="update_header();update_datagrid();resourceDND();">
+								<td colspan="3" class="align-right">
+									<p:commandButton value="#{msg.cancel}" styleClass="graybutton" update=":add_resource_panel" oncomplete="update_header()" style="margin-right:0.5em;" partialSubmit="true" process="@this">
 										<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none"/>
 									</p:commandButton>
-									
-									<p:commandButton value="#{msg.cancel}" styleClass="greenbutton float-right" update=":add_resource_panel" oncomplete="update_header()" style="margin-right:0.5em;" partialSubmit="true" process="@this">
+								
+									<p:commandButton value="#{msg.createFolder}" styleClass="greenbutton" update=":group_menu_tree :folderGrid :growl :add_resource_panel" action="#{bean.addFolder}" ajax="true" oncomplete="update_header();update_datagrid();resourceDND();">
 										<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none"/>
 									</p:commandButton>
 								</td>
@@ -716,14 +716,14 @@
 							</td>
 						</tr>
 						<tr>
-							<td colspan="2">
-								<p:commandButton styleClass="greenbutton float-right" value="#{msg.save}" 
-									actionListener="#{bean.editFolder}" update=":group_menu_tree :folderGrid :add_resource_panel :growl" 
-									oncomplete="update_header();resourceDND();" style="margin-right:0.5em;">
+							<td colspan="2" class="align-right">
+								<p:commandButton styleClass="graybutton" value="#{msg.cancel}" 
+									update=":add_resource_panel" oncomplete="update_header();" style="margin-right:0.5em;">
 									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewFolder"/>
 								</p:commandButton>
-								<p:commandButton styleClass="greenbutton float-right" value="#{msg.cancel}" 
-									update=":add_resource_panel" oncomplete="update_header();" style="margin-right:0.5em;">
+								<p:commandButton styleClass="greenbutton" value="#{msg.save}" 
+									actionListener="#{bean.editFolder}" update=":group_menu_tree :folderGrid :add_resource_panel :growl" 
+									oncomplete="update_header();resourceDND();" style="margin-right:0.5em;">
 									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewFolder"/>
 								</p:commandButton>
 							</td>

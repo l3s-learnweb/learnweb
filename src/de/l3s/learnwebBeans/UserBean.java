@@ -544,7 +544,8 @@ public class UserBean implements Serializable
 	    Group myResources = new Group();
 	    myResources.setId(0);
 	    myResources.setTitle(UtilBean.getLocaleMessage("myResourcesTitle"));
-	    new DefaultTreeNode("group", myResources, groupsTree);
+	    TreeNode myResourcesNode = new DefaultTreeNode("group", myResources, groupsTree);
+	    myResourcesNode.setSelected(true);
 
 	    for(Group group : getUser().getWriteAbleGroups())
 	    {

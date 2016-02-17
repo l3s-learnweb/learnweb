@@ -208,11 +208,6 @@
  		
 		<p:dialog header="#{msg.options}" widgetVar="resource_dialog" modal="false" minWidth="600" resizable="false" style="z-index:1500;">			
 			<h:form id="resource_form">
-			<!-- <h:selectOneMenu value="#{searchBean.selectedResourceTargetGroupId}">
-							<f:selectItem itemLabel="#{msg.myResourcesTitle}" itemValue="0" />
-							<f:selectItem itemLabel="123" itemValue="-1" itemDisabled="true" />	
-							<f:selectItems var="group" value="#{userBean.user.writeAbleGroups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
-						</h:selectOneMenu> -->
 				<h:panelGrid columns="2" rendered="#{userBean.loggedIn}" style="width:100%;">
 					<h:outputText value="#{msg.add_to}:" escape="false" />
 					<p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{searchBean.selectedNode}" style="max-height:28rem; overflow:auto;">				        						     						        

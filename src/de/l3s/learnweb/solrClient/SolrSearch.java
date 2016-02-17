@@ -199,12 +199,43 @@ public class SolrSearch implements Serializable
 
     public void setFilterFolder(int folderId, boolean isIncludeChild)
     {
-	this.filterPath = Integer.toString(folderId) + (isIncludeChild ? "/*" : "");
+	setFilterFolder(Integer.toString(folderId), isIncludeChild);
     }
 
-    public void setFilterFolder(String folder)
+    public void setFilterFolder(String folder, boolean isIncludeChild)
     {
-	this.filterPath = folder;
+	if(folder != null)
+	{
+	    if(folder.startsWith("0"))
+	    {
+		if(isIncludeChild)
+		{
+		    // skip this filter, because it is root directory and all subdirectories
+		    this.filterPath = "";
+		}
+		else
+		{
+		    // Where field not exists or equal to "/"
+		    this.filterPath = "(*:* NOT path_s:*) || path_s: \"/\"";
+		}
+	    }
+	    else
+	    {
+		if(isIncludeChild)
+		{
+		    this.filterPath = "path_s : (*/" + folder + "/* OR */" + folder + ")";
+		}
+		else
+		{
+		    this.filterPath = "path_s : */" + folder;
+		}
+
+	    }
+	}
+	else
+	{
+	    this.filterPath = "";
+	}
     }
 
     public void clearAllFilters()
@@ -333,24 +364,9 @@ public class SolrSearch implements Serializable
 	    solrQuery.addFilterQuery("tags : \"" + filterTags + "\"");
 	}
 
-	if(filterPath != null && 0 != filterPath.length())
+	if(0 != filterPath.length())
 	{
-	    if(filterPath.startsWith("0"))
-	    {
-		if(filterPath.equals("0/*"))
-		{
-		    // skip this filter, because it is root directory and all subdirectories
-		}
-		else
-		{
-		    // Where field not exists or equal to "/"
-		    solrQuery.addFilterQuery("(*:* NOT path_s:*) || path_s: \"/\"");
-		}
-	    }
-	    else
-	    {
-		solrQuery.addFilterQuery("path_s : */" + filterPath);
-	    }
+	    solrQuery.addFilterQuery(filterPath);
 	}
 
 	if(null != filterGroupIds)

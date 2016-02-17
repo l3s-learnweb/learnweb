@@ -117,7 +117,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     private boolean isNewestResourceHidden = false;
 
+    private TreeNode selectedTargetNode;
     private int selectedResourceTargetGroupId;
+    private int selectedResourceTargetFolderId;
 
     private String query;
     private SearchFilters searchFilters;
@@ -704,6 +706,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    Group targetGroup = getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId);
 
 	    newResource.setGroupId(selectedResourceTargetGroupId);
+	    newResource.setFolderId(selectedResourceTargetFolderId);
 	    Resource res = getUser().addResource(newResource);
 
 	    if(selectedResourceTargetGroupId != 0)
@@ -780,6 +783,50 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void setSelectedResourceTargetGroupId(int selectedResourceTargetGroupId)
     {
 	this.selectedResourceTargetGroupId = selectedResourceTargetGroupId;
+    }
+
+    public int getSelectedResourceTargetFolderId()
+    {
+	return selectedResourceTargetFolderId;
+    }
+
+    public void setSelectedResourceTargetFolderId(int selectedResourceTargetFolderId)
+    {
+	this.selectedResourceTargetFolderId = selectedResourceTargetFolderId;
+    }
+
+    public TreeNode getSelectedTargetNode()
+    {
+	return selectedTargetNode;
+    }
+
+    public void setSelectedTargetNode(TreeNode selectedTargetNode)
+    {
+	this.selectedTargetNode = selectedTargetNode;
+    }
+
+    public void onTargetNodeSelect(NodeSelectEvent event)
+    {
+	String type = event.getTreeNode().getType();
+
+	if(type.equals("group"))
+	{
+	    Group group = (Group) event.getTreeNode().getData();
+	    if(group != null)
+	    {
+		selectedResourceTargetGroupId = group.getId();
+		selectedResourceTargetFolderId = 0;
+	    }
+	}
+	else if(type.equals("folder"))
+	{
+	    Folder folder = (Folder) event.getTreeNode().getData();
+	    if(folder != null)
+	    {
+		selectedResourceTargetGroupId = folder.getGroupId();
+		selectedResourceTargetFolderId = folder.getFolderId();
+	    }
+	}
     }
 
     public void onMoveSelectedResource()
@@ -1115,7 +1162,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void addFolder() throws SQLException
     {
-	if(newFolderName != null && !newFolderName.isEmpty() && selectedFolder != null)
+	if(canEditFoldersInGroup() && newFolderName != null && !newFolderName.isEmpty() && selectedFolder != null)
 	{
 	    Folder newFolder = new Folder(groupId, newFolderName);
 	    newFolder.setParentFolderId(getSelectedFolderId());
@@ -1130,7 +1177,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void editFolder() throws SQLException
     {
-	if(clickedFolder != null && clickedFolder.getFolderId() > 0)
+	if(canEditFoldersInGroup() && clickedFolder != null && clickedFolder.getFolderId() > 0)
 	{
 	    log(Action.edit_folder, clickedFolder.getFolderId(), null);
 
@@ -1150,7 +1197,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void deleteFolder() throws SQLException
     {
-	if(clickedFolder != null)
+	if(canEditFoldersInGroup() && clickedFolder != null)
 	{
 	    String folderName = clickedFolder.getName();
 
