@@ -1,11 +1,7 @@
 package de.l3s.learnweb;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
-import java.net.URL;
+import java.io.StringReader;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
@@ -19,7 +15,12 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource;
 
 public class SuggestionLogger
 {
@@ -116,50 +117,13 @@ public class SuggestionLogger
 		market = market.substring(0, 2);
 	    }
 	    String suggestorUrl = "http://suggestqueries.google.com/complete/search?output=toolbar&hl=" + market + "&q=" + query;
-	    URL queryUrl = null;
 	    try
 	    {
-		try
-		{
-		    queryUrl = new URL(suggestorUrl);
-		}
-		catch(MalformedURLException e)
-		{
-		    log.error("Error in URL formation of Google suggest query", e);
-		    return "";
-		}
+		Client client = Client.create();
+		WebResource webResource = client.resource(suggestorUrl);
+		ClientResponse response = webResource.get(ClientResponse.class);
+		String xml = response.getEntity(String.class);
 
-		HttpURLConnection connection = null;
-		try
-		{
-		    connection = (HttpURLConnection) queryUrl.openConnection();
-		}
-		catch(IOException e)
-		{
-		    log.error("Error in establishing connection with Google suggest query URL", e);
-		    return "";
-		}
-		try
-		{
-		    connection.setRequestMethod("GET");
-		}
-		catch(ProtocolException e)
-		{
-		    log.error(e);
-		    return "";
-		}
-		connection.setRequestProperty("Accept", "application/xml");
-
-		InputStream xml = null;
-		try
-		{
-		    xml = connection.getInputStream();
-		}
-		catch(IOException e)
-		{
-		    log.error("IO exception in getting google suggestions in xml form", e);
-		    return "";
-		}
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 		DocumentBuilder db = null;
 		try
@@ -176,7 +140,7 @@ public class SuggestionLogger
 		{
 		    try
 		    {
-			doc = db.parse(xml, "UTF-8");
+			doc = db.parse(new InputSource(new StringReader(xml)));
 		    }
 		    catch(IOException e)
 		    {
@@ -195,7 +159,7 @@ public class SuggestionLogger
 		    suggestion += currentSuggestion.getAttributes().getNamedItem("data").getNodeValue();
 		    suggestion += ", ";
 		}
-		suggestion.substring(0, suggestion.lastIndexOf(",") - 1);
+		suggestion = suggestion.substring(0, suggestion.lastIndexOf(","));
 	    }
 	    catch(NullPointerException e)
 	    {
