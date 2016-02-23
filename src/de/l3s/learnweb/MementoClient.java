@@ -25,7 +25,7 @@ public class MementoClient
     private URL mementoArchiveUrlObj;
     private DateFormat dateTimeFormat = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss z", Locale.US);
 
-    protected MementoClient(Learnweb learnweb)
+    public MementoClient(Learnweb learnweb)
     {
 	mementoArchiveURL = learnweb.getProperties().getProperty("MEMENTO_ARCHIVE_URL");
     }
