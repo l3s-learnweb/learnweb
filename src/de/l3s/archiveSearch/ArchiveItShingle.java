@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -73,15 +74,16 @@ public class ArchiveItShingle
 	listOfArchives = archiveItShingle.mementoclient.getArchiveItVersions(227, "http://www.conservateur.ca/");
 	List<String> wordList = new ArrayList<String>();
 	List<String> shingleList = new LinkedList<String>();
-	List<Float> Jaccard = new ArrayList<Float>();
 
 	Set<String> setOfShingles = new HashSet<String>();
-	Set<String> setOfNearUniqueArchives = new HashSet<String>();
+	Set<String> setOfNearUniqueArchivesPair = new HashSet<String>();
+	Set<String> setOfNearUniqueArchivesSequence = new HashSet<String>();
 	Set<String> setOfNonUniqueUrls = new HashSet<String>();
 
-	HashMap<String, Set<String>> hashmap = new HashMap<String, Set<String>>();
+	HashMap<String, Set<String>> hashmap = new LinkedHashMap<String, Set<String>>();
 	for(ArchiveUrl archiveUrl : listOfArchives)
 	{
+	    wordList.clear();
 	    setOfShingles.clear();
 	    url = archiveUrl.getArchiveUrl();
 	    Document document = Jsoup.connect(url).get(); //fetch the web pages
@@ -96,34 +98,49 @@ public class ArchiveItShingle
 	    }
 	    hashmap.put(url, new HashSet<>(setOfShingles));
 	}
-	url = null;
 	for(Map.Entry<String, Set<String>> entry1 : hashmap.entrySet())
 	{
 	    for(Map.Entry<String, Set<String>> entry2 : hashmap.entrySet())
 	    {
 		if(entry1 != entry2 && !setOfNonUniqueUrls.contains(entry2.getKey()))
 		{
-		    if(setOfNearUniqueArchives.contains(entry2.getKey()))
+		    if(setOfNearUniqueArchivesPair.contains(entry2.getKey()))
 		    {
 
 		    }
 		    else
 		    {
 			d = archiveItShingle.computeIndex(entry1.getValue(), entry2.getValue());
-			Jaccard.add(d);
 			if(d <= 0.5)
 			{
-			    setOfNearUniqueArchives.add(entry1.getKey());
-			    setOfNearUniqueArchives.add(entry2.getKey());
+			    setOfNearUniqueArchivesPair.add(entry1.getKey());
+			    setOfNearUniqueArchivesPair.add(entry2.getKey());
 			}
 		    }
 		}
 	    }
 	    setOfNonUniqueUrls.add(entry1.getKey());
 	}
-	d = 0;
-	for(String str : setOfNearUniqueArchives)
-	    archiveItShingle.processWebsite(str, Float.toString(++d));
-
+	for(String str : setOfNearUniqueArchivesPair)
+	    archiveItShingle.processWebsite(str, "pair-" + str.substring(34, 45));
+	int i = 0;
+	url = null;
+	String key = listOfArchives.get(0).getArchiveUrl();
+	for(i = 1; i < listOfArchives.size(); i++)
+	{
+	    url = listOfArchives.get(i).getArchiveUrl();
+	    if(key != url && !setOfNearUniqueArchivesSequence.contains(url))
+	    {
+		d = archiveItShingle.computeIndex(hashmap.get(url), hashmap.get(key));
+		if(d <= 0.5)
+		{
+		    setOfNearUniqueArchivesSequence.add(key.toString());
+		    setOfNearUniqueArchivesSequence.add(url);
+		    key = url;
+		}
+	    }
+	}
+	for(String str : setOfNearUniqueArchivesSequence)
+	    archiveItShingle.processWebsite(str, "seq-" + str.substring(34, 45));
     }
 }
