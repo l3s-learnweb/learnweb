@@ -63,10 +63,70 @@ public class ArchiveItShingle
 	outputStream.close();
     }
 
+    public void processThumbnails(Set<String> set, String type) throws IOException
+    {
+	for(String str : set)
+	    processWebsite(str, type + "-" + str.substring(34, 45));
+    }
+
+    public Set<String> computeUniqueArchivesByPair(HashMap<String, Set<String>> hashmap)
+    {
+	float d = 0;
+	Set<String> setOfNonUniqueUrls = new HashSet<String>();
+	Set<String> setOfNearUniqueArchivesPair = new HashSet<String>();
+	for(Map.Entry<String, Set<String>> entry1 : hashmap.entrySet())
+	{
+	    for(Map.Entry<String, Set<String>> entry2 : hashmap.entrySet())
+	    {
+		if(entry1 != entry2 && !setOfNonUniqueUrls.contains(entry2.getKey()))
+		{
+		    if(setOfNearUniqueArchivesPair.contains(entry2.getKey()))
+		    {
+
+		    }
+		    else
+		    {
+			d = computeIndex(entry1.getValue(), entry2.getValue());
+			if(d <= 0.5)
+			{
+			    setOfNearUniqueArchivesPair.add(entry1.getKey());
+			    setOfNearUniqueArchivesPair.add(entry2.getKey());
+			}
+		    }
+		}
+	    }
+	    setOfNonUniqueUrls.add(entry1.getKey());
+	}
+	return setOfNearUniqueArchivesPair;
+    }
+
+    public Set<String> computeUniqueArchivesBySequence(HashMap<String, Set<String>> hashmap, List<ArchiveUrl> listOfArchives)
+    {
+	Set<String> setOfNearUniqueArchivesSequence = new HashSet<String>();
+	int i = 0;
+	float d = 0;
+	String url = null;
+	String key = listOfArchives.get(0).getArchiveUrl();
+	for(i = 1; i < listOfArchives.size(); i++)
+	{
+	    url = listOfArchives.get(i).getArchiveUrl();
+	    if(key != url && !setOfNearUniqueArchivesSequence.contains(url))
+	    {
+		d = computeIndex(hashmap.get(url), hashmap.get(key));
+		if(d <= 0.5)
+		{
+		    setOfNearUniqueArchivesSequence.add(key.toString());
+		    setOfNearUniqueArchivesSequence.add(url);
+		    key = url;
+		}
+	    }
+	}
+	return setOfNearUniqueArchivesSequence;
+    }
+
     public static void main(String[] args) throws IOException
     {
 	String url = null;
-	float d = 0;
 
 	ArchiveItShingle archiveItShingle = new ArchiveItShingle();
 
@@ -78,7 +138,6 @@ public class ArchiveItShingle
 	Set<String> setOfShingles = new HashSet<String>();
 	Set<String> setOfNearUniqueArchivesPair = new HashSet<String>();
 	Set<String> setOfNearUniqueArchivesSequence = new HashSet<String>();
-	Set<String> setOfNonUniqueUrls = new HashSet<String>();
 
 	HashMap<String, Set<String>> hashmap = new LinkedHashMap<String, Set<String>>();
 	for(ArchiveUrl archiveUrl : listOfArchives)
@@ -98,49 +157,9 @@ public class ArchiveItShingle
 	    }
 	    hashmap.put(url, new HashSet<>(setOfShingles));
 	}
-	for(Map.Entry<String, Set<String>> entry1 : hashmap.entrySet())
-	{
-	    for(Map.Entry<String, Set<String>> entry2 : hashmap.entrySet())
-	    {
-		if(entry1 != entry2 && !setOfNonUniqueUrls.contains(entry2.getKey()))
-		{
-		    if(setOfNearUniqueArchivesPair.contains(entry2.getKey()))
-		    {
-
-		    }
-		    else
-		    {
-			d = archiveItShingle.computeIndex(entry1.getValue(), entry2.getValue());
-			if(d <= 0.5)
-			{
-			    setOfNearUniqueArchivesPair.add(entry1.getKey());
-			    setOfNearUniqueArchivesPair.add(entry2.getKey());
-			}
-		    }
-		}
-	    }
-	    setOfNonUniqueUrls.add(entry1.getKey());
-	}
-	for(String str : setOfNearUniqueArchivesPair)
-	    archiveItShingle.processWebsite(str, "pair-" + str.substring(34, 45));
-	int i = 0;
-	url = null;
-	String key = listOfArchives.get(0).getArchiveUrl();
-	for(i = 1; i < listOfArchives.size(); i++)
-	{
-	    url = listOfArchives.get(i).getArchiveUrl();
-	    if(key != url && !setOfNearUniqueArchivesSequence.contains(url))
-	    {
-		d = archiveItShingle.computeIndex(hashmap.get(url), hashmap.get(key));
-		if(d <= 0.5)
-		{
-		    setOfNearUniqueArchivesSequence.add(key.toString());
-		    setOfNearUniqueArchivesSequence.add(url);
-		    key = url;
-		}
-	    }
-	}
-	for(String str : setOfNearUniqueArchivesSequence)
-	    archiveItShingle.processWebsite(str, "seq-" + str.substring(34, 45));
+	setOfNearUniqueArchivesPair = archiveItShingle.computeUniqueArchivesByPair(hashmap);
+	setOfNearUniqueArchivesSequence = archiveItShingle.computeUniqueArchivesBySequence(hashmap, listOfArchives);
+	archiveItShingle.processThumbnails(setOfNearUniqueArchivesPair, "pair");
+	archiveItShingle.processThumbnails(setOfNearUniqueArchivesSequence, "seq");
     }
 }
