@@ -238,6 +238,7 @@ public class Folder implements Serializable, HasId
 
 	try
 	{
+	    // clear all parents folders recursively
 	    if(this.getParentFolderId() > 0)
 	    {
 		getParentFolder().clearCaches();

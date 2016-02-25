@@ -33,23 +33,23 @@ public class GroupManager
     private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.course, g.location, g.language, g.restriction_only_leader_can_add_resources, g.read_only, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation, g.restriction_forum_category_required";
 
     private Learnweb learnweb;
-    private ICache<Group> cache;
-
-    private Cache<Folder> folderCache;
+    private ICache<Group> groupCache;
+    private ICache<Folder> folderCache;
 
     protected GroupManager(Learnweb learnweb) throws SQLException
     {
 	int groupCacheSize = learnweb.getProperties().getPropertyIntValue("GROUP_CACHE");
+	int folderCacheSize = learnweb.getProperties().getPropertyIntValue("FOLDER_CACHE");
 
 	this.learnweb = learnweb;
-	this.cache = groupCacheSize == 0 ? new DummyCache<Group>() : new Cache<Group>(groupCacheSize);
-
-	this.folderCache = new Cache<Folder>(10000);
+	this.groupCache = groupCacheSize == 0 ? new DummyCache<Group>() : new Cache<Group>(groupCacheSize);
+	this.folderCache = groupCacheSize == 0 ? new DummyCache<Folder>() : new Cache<Folder>(folderCacheSize);
     }
 
     public void resetCache() throws SQLException
     {
-	cache.clear();
+	groupCache.clear();
+	folderCache.clear();
     }
 
     private List<Group> getGroups(String query, int... params) throws SQLException
@@ -139,11 +139,11 @@ public class GroupManager
 
     private Group createGroup(ResultSet rs) throws SQLException
     {
-	Group group = cache.get(rs.getInt("group_id"));
+	Group group = groupCache.get(rs.getInt("group_id"));
 	if(null == group)
 	{
 	    group = new Group(rs);
-	    group = cache.put(group);
+	    group = groupCache.put(group);
 	}
 	return group;
     }
@@ -186,7 +186,7 @@ public class GroupManager
 
     public Group getGroupById(int id, boolean useCache) throws SQLException
     {
-	Group group = useCache ? cache.get(id) : null;
+	Group group = useCache ? groupCache.get(id) : null;
 
 	if(null != group)
 	    return group;
@@ -202,7 +202,7 @@ public class GroupManager
 	pstmtGetGroup.close();
 
 	if(useCache)
-	    group = cache.put(group);
+	    group = groupCache.put(group);
 
 	return group;
     }
@@ -254,12 +254,12 @@ public class GroupManager
 	    if(!rs.next())
 		throw new SQLException("database error: no id generated");
 	    group.setId(rs.getInt(1));
-	    group = cache.put(group.getId(), group); // add the new Group to the cache
+	    group = groupCache.put(group.getId(), group); // add the new Group to the cache
 	}
-	else if(cache.get(group.getId()) != null) //remove old group and add the new one
+	else if(groupCache.get(group.getId()) != null) //remove old group and add the new one
 	{
-	    cache.remove(group.getId());
-	    cache.put(group);
+	    groupCache.remove(group.getId());
+	    group = groupCache.put(group.getId(), group);
 	}
 	replace.close();
 
@@ -341,7 +341,7 @@ public class GroupManager
 	delete.execute();
 	delete.close();
 
-	cache.remove(group.getId());
+	groupCache.remove(group.getId());
     }
 
     private Folder createFolder(ResultSet rs) throws SQLException
@@ -358,7 +358,7 @@ public class GroupManager
 	    folder.setName(rs.getString("name"));
 	    folder.setUserId(rs.getInt("user_id"));
 
-	    folderCache.put(folder);
+	    folder = folderCache.put(folder.getFolderId(), folder);
 	}
 	return folder;
     }
@@ -431,6 +431,7 @@ public class GroupManager
     }
 
     /**
+     * TODO: do request recursively
      * 
      * @param groupId
      * @param parentFolderId
@@ -554,10 +555,13 @@ public class GroupManager
 	    if(!rs.next())
 		throw new SQLException("database error: no id generated");
 	    folder.setFolderId(rs.getInt(1));
+	    folder = folderCache.put(folder.getFolderId(), folder);
 	}
 	else
 	{
 	    folder.clearCaches();
+	    folderCache.remove(folder.getFolderId());
+	    folder = folderCache.put(folder.getFolderId(), folder);
 	}
 
 	replace.close();
@@ -589,6 +593,8 @@ public class GroupManager
 	delete.setInt(1, folder.getFolderId());
 	delete.execute();
 	delete.close();
+
+	folderCache.remove(folder.getFolderId());
 
 	if(parentFolder != null)
 	{
