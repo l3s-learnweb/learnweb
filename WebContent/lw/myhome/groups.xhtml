@@ -6,12 +6,12 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition template="/lw/templates/new_main_t.xhtml">
-
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.groupsTitle}" />
 	<ui:param name="helpText" value="#{msg.myhomeGroupsHelp}"/>
 	
 	<ui:define name="right_layout">
+	
 		<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" 
 			collapsible="false" style="border: none;" id="right_pane">
 			<h:panelGroup style= "left: 5%; position:relative;">
@@ -94,6 +94,34 @@
 	</ui:define>
 	
 	<ui:define name="center_layout">
+		 
+		<h:outputStylesheet name="main-template/tooltipster.min.css" />
+		
+		<!-- 
+		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/tooltipster.min.css" />
+	    -->
+	    <script type="text/javascript" src="#{request.contextPath}/resources/js/jquery.tooltipster.min.js" />
+	    
+	    <script type="text/javascript">
+	    	function applyTooltip()
+	    	{
+	    		$('.tooltip').tooltipster({
+	            	 
+	                contentAsHTML:true,
+	                //maxWidth: 400,
+	                position:'top',
+	                //hideOnClick: true;,
+	                interactive:true,
+	                interactiveTolerance:150,
+	                //theme:'tooltipster-custom-theme'	
+	                //theme:'tooltipster-custom-b'
+	            });
+	    	}
+	        $(document).ready(function() {
+	        	applyTooltip();
+	        	
+	        });
+	    </script>	
 	
 		<div class="page_header">
 			<span>
@@ -104,9 +132,13 @@
 		<h:form id="my_groups">
 					
 			<p:dataTable var="group" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
+				<p:ajax event="sort" oncomplete="applyTooltip()"/>
+				
 				
 				<p:column headerText="#{msg.title}" sortBy="#{group.title}" width="17%">
-					<h:outputLink value="group/overview.jsf">
+					
+					<h:outputLink value="group/overview.jsf" styleClass="tooltip" title="#{group.tooltip}">
+					
 						<f:param name="group_id" value="#{group.id}" />
 						<h:outputText value="#{group.longTitle}" />
 					</h:outputLink>
@@ -157,10 +189,13 @@
 				</span>
 			</div>
 			<h:form id="other_groups">
-				<p:dataTable var="group" value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}"  paginator="false">
+				<p:dataTable var="group" value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}"  paginator="false" >
+					<p:ajax event="filter" oncomplete="applyTooltip()"/>
+					<p:ajax event="sort" oncomplete="applyTooltip()"/>
 					
 					<p:column headerText="#{msg.title}" sortBy="#{group.title}" style="min-width:17%" filterBy="#{group.longTitle}" filterMatchMode="contains">
-						<h:outputLink value="group/overview.jsf">
+						
+						<h:outputLink value="group/overview.jsf" styleClass="tooltip" title="#{group.tooltip}">
 							<f:param name="group_id" value="#{group.id}" />
 							<h:outputText value="#{group.longTitle}" />
 						</h:outputLink>
