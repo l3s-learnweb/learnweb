@@ -50,9 +50,6 @@
 		
 		<br class="clear" />
 	</div>
-	 
-	<br/>
-	<br/>
 
 	<div class="page_header">
 		<span>
@@ -72,10 +69,6 @@
 		</ui:repeat>
 		<br class="clear"/>		
 	</div>
-	
-
-	<br/>
-	<br/>
 
 	<ui:fragment rendered="#{not empty user.credits}">
 		<div class="page_header">
@@ -89,6 +82,21 @@
 			<h:outputText value="#{user.credits}" escape="false"/>
 		</div>
 	</ui:fragment>
+
+	<ui:fragment rendered="${userBean.canModerateCourses(user.courses)}">
+		<div class="page_header">
+			<span>
+				#{msg.moderator_options}
+			</span> 
+		</div>
+					
+		<div class="grey_border">
+			<h:outputLink value="myhome/profile.jsf">
+				<f:param name="user_id" value="#{user.id}" />
+				<h:outputText value="#{msg.edit_profile}" escape="false"/>
+			</h:outputLink>
+		</div>
+	</ui:fragment>	
 	
 </ui:composition>
 </html>

@@ -995,6 +995,11 @@ span.ui-autocomplete{border:1px solid transparent !important;}
 #right_pane .ui-button{border-radius:0px;}
 #right_pane .greenbutton{border-radius:2px;}
 
+.member_star {
+	height: 40px;
+	width: 28px;
+	background: transparent url("../group/member_badge.gif") repeat scroll 0% 0% / cover;
+}
 /*taken from new_main2.css*/
 
 img {border: none;}

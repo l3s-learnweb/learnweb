@@ -16,3 +16,13 @@
 .profilebox table{
 	width:70%;
 }
+
+.page_header > .member_star {
+	display: inline-block;
+	margin-bottom: -0.9rem;
+	margin-left: 0.5rem;
+	margin-top: -0.1rem;
+}
+.grey_border {
+	margin-bottom:3rem;
+}

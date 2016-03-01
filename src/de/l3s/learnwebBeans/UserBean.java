@@ -317,6 +317,20 @@ public class UserBean implements Serializable
 
     public boolean canModerateCourse(Course course)
     {
+	LinkedList<Course> courses = new LinkedList<Course>();
+	courses.add(course);
+
+	return canModerateCourses(courses);
+    }
+
+    /**
+     * returns true when the currently logged in user is allowed to moderate one of the given courses
+     * 
+     * @param courses
+     * @return
+     */
+    public boolean canModerateCourses(List<Course> courses)
+    {
 	User user = getUser();
 	if(null == user)
 	    return false;

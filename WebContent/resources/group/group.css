@@ -29,25 +29,9 @@
 	height:130px;
 	margin-bottom:10px;
 }
-.member_star {
-	/*
-	height: 30px;
-	width: 30px;
-	background: url(../resources/group/member_star.gif);
-	background-size: cover;
-	*/
-	height: 40px;
-width: 28px;
-background: transparent url("../resources/group/member_badge.gif") repeat scroll 0% 0% / cover;
-}
+
 .members_panelgrid > .member_star {
 	position: absolute;
 	right: 5px;
 	bottom: 5px;
-}
-.page_header > .member_star {
-	display: inline-block;
-	margin-bottom: -0.9rem;
-	margin-left: 0.5rem;
-	margin-top: -0.1rem;
 }
