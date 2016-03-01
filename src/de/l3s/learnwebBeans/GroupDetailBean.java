@@ -22,6 +22,7 @@ import javax.faces.model.SelectItem;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
@@ -149,8 +150,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
 	searchFilters = new SearchFilters();
 	searchFilters.setMode(MODE.group);
-	updateResourcesFromSolr();
 
+	//updateResourcesFromSolr(); //not necessary on most pages
     }
 
     public void preRenderView(ComponentSystemEvent e)
@@ -1011,6 +1012,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public AbstractPaginator getPaginator()
     {
+	if(null == paginator)
+	    updateResourcesFromSolr();
+
 	return paginator;
     }
 
@@ -1065,13 +1069,20 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return searchFilters.getFiltersString();
     }
 
-    public void updateResourcesFromSolr()
+    private void updateResourcesFromSolr()
     {
 	int folderId = (selectedFolder != null && selectedFolder.getFolderId() > 0) ? selectedFolder.getFolderId() : 0;
-	paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
+	try
+	{
+	    paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
+	}
+	catch(SQLException | SolrServerException e)
+	{
+	    addFatalMessage(e);
+	}
     }
 
-    public SearchPaginator getResourcesFromSolr(int groupId, int folderId, String query, User user)
+    private SearchPaginator getResourcesFromSolr(int groupId, int folderId, String query, User user) throws SQLException, SolrServerException
     {
 	SolrSearch solrSearch = new SolrSearch(StringUtils.isEmpty(query) ? "*" : query, user);
 	solrSearch.setFilterGroups(groupId);
@@ -1184,14 +1195,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    try
 	    {
 		clickedFolder.save();
+		addMessage(FacesMessage.SEVERITY_INFO, "folderUpdated", clickedFolder.getName());
 	    }
 	    catch(SQLException e)
 	    {
-		e.printStackTrace();
-		addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+		addFatalMessage(e);
 	    }
-
-	    addMessage(FacesMessage.SEVERITY_INFO, "folderUpdated", clickedFolder.getName());
 	}
     }
 

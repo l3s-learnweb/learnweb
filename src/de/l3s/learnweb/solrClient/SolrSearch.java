@@ -667,19 +667,11 @@ public class SolrSearch implements Serializable
 	    return results;
 	}
 
-	public List<FacetField> getFacetFields()
+	public List<FacetField> getFacetFields() throws SQLException, SolrServerException
 	{
 	    if(facetFieldsResult == null)
 	    {
-		try
-		{
-		    getCurrentPage();
-		}
-		catch(SQLException | SolrServerException e)
-		{
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		}
+		getCurrentPage();
 	    }
 
 	    return facetFieldsResult;
