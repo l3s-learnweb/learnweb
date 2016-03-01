@@ -222,26 +222,32 @@ public class Folder implements Serializable, HasId
 
     protected void clearCaches()
     {
+	this.clearCaches(true, true);
+    }
+
+    protected void clearCaches(boolean isClearParent, boolean isClearSubRecurs)
+    {
 	path = null;
 	prettyPath = null;
-	subfolders = null;
-
-	if(subfolders != null)
-	{
-	    for(Folder folder : subfolders)
-	    {
-		folder.clearCaches();
-	    }
-
-	    subfolders = null;
-	}
 
 	try
 	{
-	    // clear all parents folders recursively
-	    if(this.getParentFolderId() > 0)
+	    if(getSubfolders() != null)
 	    {
-		getParentFolder().clearCaches();
+		if(isClearSubRecurs)
+		{
+		    for(Folder folder : getSubfolders())
+		    {
+			folder.clearCaches(false, true);
+		    }
+		}
+
+		subfolders = null;
+	    }
+
+	    if(isClearParent && this.getParentFolderId() > 0)
+	    {
+		getParentFolder().clearCaches(false, false);
 	    }
 
 	}
