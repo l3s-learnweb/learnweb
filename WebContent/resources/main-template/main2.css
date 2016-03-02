@@ -1682,3 +1682,11 @@ div#presentation_preview {
 	padding: 8px 10px;
 	text-align:justify;
 }
+
+.tooltipster-default a { 
+	color: #e8e6e6; 
+	text-decoration: underline;
+}
+.tooltipster-default a:hover {
+	text-decoration: none;
+}
