@@ -27,7 +27,7 @@ public class LogEntry implements Serializable
 	logout,
 	unused3,
 	register,
-	changing_profile,
+	changing_profile, // target_id = user_id of the user whose profile was changed
 	deleting_resource, // param = resource title, target_id = resource id
 	adding_resource, // target_id = resource id
 	open_link,

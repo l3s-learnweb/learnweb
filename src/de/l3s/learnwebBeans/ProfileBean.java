@@ -16,6 +16,7 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.Size;
 
+import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.primefaces.event.FileUploadEvent;
@@ -24,12 +25,13 @@ import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.UserManager;
+import de.l3s.learnweb.beans.UtilBean;
 
 @ManagedBean
 @RequestScoped
 public class ProfileBean extends ApplicationBean implements Serializable
 {
-
+    private static final Logger log = Logger.getLogger(ProfileBean.class);
     private static final long serialVersionUID = -2460055719611784132L;
 
     @Size(min = 0, max = 250)
@@ -74,16 +76,38 @@ public class ProfileBean extends ApplicationBean implements Serializable
     @Size(min = 0, max = 250)
     private String affiliation;
 
+    @Size(min = 0, max = 250)
+    private String credits;
+
     private List<LogEntry> logMessages;
+
+    private User user;
+    private boolean moderatorAccess = false;
 
     public List<LogEntry> getLogMessages()
     {
 	return logMessages;
     }
 
-    public ProfileBean()
+    public ProfileBean() throws SQLException
     {
-	User user = getUser();
+	Integer userId = getParameterInt("user_id");
+
+	if(userId != null) // moderator edits the defined user
+	{
+	    user = getLearnweb().getUserManager().getUser(userId);
+
+	    if(!UtilBean.getUserBean().canModerateCourses(user.getCourses()))
+	    {
+		user = null;
+		addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to edit this user");
+		return;
+	    }
+	    else
+		moderatorAccess = true;
+	}
+	else // edit own profile
+	    user = getUser();
 
 	if(user == null)
 	    return;
@@ -99,7 +123,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
 	profession = user.getProfession();
 	fullName = user.getFullName();
 	affiliation = user.getAffiliation();
-
+	credits = user.getCredits();
     }
 
     public String getUrlBase()
@@ -132,7 +156,6 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
     public void saveProfile() throws SQLException
     {
-	User user = getUser();
 	user.setAdditionalinformation(additionalInformation);
 	user.setAddress(address);
 	user.setDateofbirth(dateofbirth);
@@ -145,9 +168,12 @@ public class ProfileBean extends ApplicationBean implements Serializable
 	user.setAffiliation(affiliation);
 	user.setFullName(fullName);
 
+	if(isModeratorAccess())
+	    user.setCredits(credits);
+
 	getLearnweb().getUserManager().save(user);
 
-	log(Action.changing_profile, 0);
+	log(Action.changing_profile, user.getId());
 	addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
@@ -156,10 +182,9 @@ public class ProfileBean extends ApplicationBean implements Serializable
 	UserManager um = getLearnweb().getUserManager();
 	try
 	{
-
 	    getUser().setPassword(password, false);
 	    um.save(getUser());
-	    //um.setPassword(getUser().getId(), password);
+
 	    addMessage(FacesMessage.SEVERITY_INFO, "password_changed");
 
 	    password = "";
@@ -168,7 +193,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
 	}
 	catch(SQLException e)
 	{
-	    e.printStackTrace();
+	    log.error("Can't change password", e);
 	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 	}
     }
@@ -185,15 +210,6 @@ public class ProfileBean extends ApplicationBean implements Serializable
 	    throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_already_taken"));
 	}
     }
-
-    /*
-    @SuppressWarnings("deprecation")
-    public Date getMinBirthday()
-    {
-    	Date date = new Date();
-    	date.setYear(date.getYear()-100);
-    	return date;
-    }*/
 
     public Date getMaxBirthday()
     {
@@ -275,6 +291,11 @@ public class ProfileBean extends ApplicationBean implements Serializable
 	return profession;
     }
 
+    public boolean isModeratorAccess()
+    {
+	return moderatorAccess;
+    }
+
     public void setProfession(String profession)
     {
 	this.profession = profession;
@@ -338,6 +359,16 @@ public class ProfileBean extends ApplicationBean implements Serializable
     public void setAffiliation(String affiliation)
     {
 	this.affiliation = affiliation;
+    }
+
+    public String getCredits()
+    {
+	return credits;
+    }
+
+    public void setCredits(String credits)
+    {
+	this.credits = credits;
     }
 
     public void validateCurrentPassword(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
