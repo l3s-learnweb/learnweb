@@ -315,7 +315,7 @@ public class UserBean implements Serializable
 	return user.isModerator();
     }
 
-    public boolean canModerateCourse(Course course)
+    public boolean canModerateCourse(Course course) throws SQLException
     {
 	LinkedList<Course> courses = new LinkedList<Course>();
 	courses.add(course);
@@ -328,8 +328,9 @@ public class UserBean implements Serializable
      * 
      * @param courses
      * @return
+     * @throws SQLException
      */
-    public boolean canModerateCourses(List<Course> courses)
+    public boolean canModerateCourses(List<Course> courses) throws SQLException
     {
 	User user = getUser();
 	if(null == user)
@@ -338,7 +339,16 @@ public class UserBean implements Serializable
 	if(user.isAdmin())
 	    return true;
 
-	// TODO add other cases
+	if(user.isModerator()) // check whether the user is moderator of one of the given courses
+	{
+	    List<Course> moderatorsCourses = user.getCourses();
+
+	    for(Course course : courses)
+	    {
+		if(moderatorsCourses.contains(course))
+		    return true;
+	    }
+	}
 
 	return false;
     }

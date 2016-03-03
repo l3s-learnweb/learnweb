@@ -12,7 +12,10 @@
 		<ui:param name="helpText" value="#{msg.myhomeProfileHelp}"/>	
 
 			
-		<ui:define name="right_layout">		
+		<ui:define name="right_layout">	
+		
+			<h:outputStylesheet library="user-template" name="user.css"/>
+				
 			<style type="text/css">
 				.ui-state-hover, .ui-state-focus, .ui-state-active{
 					box-shadow:0 0 0px 0px #fff !important;
@@ -26,7 +29,6 @@
 					max-width:40rem;
 					box-sizing: border-box;
 				}
-				.grey_border { margin-bottom:2rem; }
 				.first-column { width:19%; }
 			</style>
 		
@@ -112,7 +114,7 @@
 									id="usercreditsMessage" />			
 												
 							<h:outputText value="" />
-							<p:commandButton actionListener="#{profileBean.saveProfile}" value="#{msg.save}" ajax="true" process="@form" 
+							<p:commandButton actionListener="#{profileBean.saveProfile}" value="#{msg.save}" ajax="false" process="@form" 
 									update=":growl @form :profile_news"/>		
 							<h:outputText value="" />	
 						</h:panelGrid>			

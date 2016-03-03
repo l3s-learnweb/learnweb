@@ -14,6 +14,8 @@ import java.util.TimeZone;
 import javax.validation.constraints.Size;
 
 import org.apache.log4j.Logger;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 
 import de.l3s.interwebj.AuthCredentials;
 import de.l3s.interwebj.InterWeb;
@@ -697,6 +699,13 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public void setCredits(String credits)
     {
+	if(credits != null)
+	{
+	    if(credits.startsWith("<br>"))
+		credits = credits.substring(4);
+
+	    credits = Jsoup.clean(credits, Whitelist.basic());
+	}
 	this.credits = credits;
     }
 

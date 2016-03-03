@@ -55,7 +55,8 @@ public class Group implements Comparable<Group>, HasId, Serializable
     private transient List<User> members;
     private transient List<Link> links;
     private transient List<Folder> folders;
-
+    private long cacheTime = 0L;
+    private int resourceCount = -1;
     private HashMap<Integer, Integer> lastVisitCache = new HashMap<Integer, Integer>();
 
     public void clearCaches()
@@ -103,11 +104,13 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     public List<User> getMembers() throws SQLException
     {
-	//  disabled because the members variable is not updated correctly when a user is added/deleted
-	//if(null == members)
-	//{
-	members = Learnweb.getInstance().getUserManager().getUsersByGroupId(id);
-	//}
+	long now = System.currentTimeMillis();
+
+	if(null == members || cacheTime < now - 3000L)
+	{
+	    members = Learnweb.getInstance().getUserManager().getUsersByGroupId(id);
+	    cacheTime = now;
+	}
 	return members;
     }
 
@@ -162,8 +165,15 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     public int getResourcesCount() throws SQLException
     {
-	ResourceManager rm = Learnweb.getInstance().getResourceManager();
-	return rm.getCountResourcesByGroupId(id);
+	long now = System.currentTimeMillis();
+
+	if(resourceCount == -1 || cacheTime < now - 3000L)
+	{
+	    ResourceManager rm = Learnweb.getInstance().getResourceManager();
+	    resourceCount = rm.getCountResourcesByGroupId(id);
+	    cacheTime = now;
+	}
+	return resourceCount;
     }
 
     /**

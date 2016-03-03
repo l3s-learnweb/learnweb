@@ -31,19 +31,6 @@ public class NewsFeedBean extends ApplicationBean
 
     public NewsFeedBean()
     {
-	/*
-	String temp = getFacesContext().getExternalContext().getRequestParameterMap().get("group_id");
-
-	type = BIG;
-	if(temp != null && temp.length() != 0)
-	    entityId = Integer.parseInt(temp);
-	else
-	{
-	    User u = getUser();
-	    entityId = u.getId();
-	    userlog = true;
-	}
-	*/
 	Integer groupId = getParameterInt("group_id");
 	Integer userId = getParameterInt("user_id");
 
@@ -60,13 +47,13 @@ public class NewsFeedBean extends ApplicationBean
 	    entityId = getUser().getId();
 	    userlog = true;
 	}
-
     }
 
     private void convert() throws SQLException
     {
 	Action[] filter = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
-		Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.group_removing_resource };
+		Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource,
+		Action.group_removing_resource };
 	List<LogEntry> feed = null;
 
 	if(userlog)

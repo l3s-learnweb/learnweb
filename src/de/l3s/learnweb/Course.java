@@ -343,6 +343,18 @@ public class Course implements Serializable, Comparable<Course>
 	}
     }
 
+    @Override
+    public boolean equals(Object obj)
+    {
+	if(obj == null)
+	    return false;
+	if(obj.getClass() != getClass())
+	    return false;
+
+	Course otherCourse = (Course) obj;
+	return otherCourse.getId() == getId();
+    }
+
     public List<GroupCategory> getGroupCategories() throws SQLException
     {
 	if(null == groupCategories)

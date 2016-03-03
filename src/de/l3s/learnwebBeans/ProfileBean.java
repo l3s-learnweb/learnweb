@@ -184,8 +184,8 @@ public class ProfileBean extends ApplicationBean implements Serializable
 	UserManager um = getLearnweb().getUserManager();
 	try
 	{
-	    getUser().setPassword(password, false);
-	    um.save(getUser());
+	    getSelectedUser().setPassword(password, false);
+	    um.save(getSelectedUser());
 
 	    addMessage(FacesMessage.SEVERITY_INFO, "password_changed");
 
@@ -202,7 +202,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
     public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
     {
-	if(getUser().getUsername().equals(value))
+	if(getSelectedUser().getUsername().equals(value))
 	{ // username not changed
 	    return;
 	}
@@ -381,7 +381,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
     public void validateCurrentPassword(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
     {
 	UserManager um = getLearnweb().getUserManager();
-	User user = getUser(); // the current user
+	User user = getSelectedUser(); // the current user
 
 	String password = (String) value;
 
