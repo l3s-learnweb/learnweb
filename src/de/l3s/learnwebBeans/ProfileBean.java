@@ -7,7 +7,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.RequestScoped;
+import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.component.UIInput;
 import javax.faces.context.FacesContext;
@@ -28,7 +28,7 @@ import de.l3s.learnweb.UserManager;
 import de.l3s.learnweb.beans.UtilBean;
 
 @ManagedBean
-@RequestScoped
+@ViewScoped
 public class ProfileBean extends ApplicationBean implements Serializable
 {
     private static final Logger log = Logger.getLogger(ProfileBean.class);
@@ -95,6 +95,8 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
 	if(userId != null) // moderator edits the defined user
 	{
+	    log.debug("Edit profile of user: " + userId);
+
 	    user = getLearnweb().getUserManager().getUser(userId);
 
 	    if(!UtilBean.getUserBean().canModerateCourses(user.getCourses()))
@@ -369,6 +371,11 @@ public class ProfileBean extends ApplicationBean implements Serializable
     public void setCredits(String credits)
     {
 	this.credits = credits;
+    }
+
+    public User getSelectedUser()
+    {
+	return user;
     }
 
     public void validateCurrentPassword(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
