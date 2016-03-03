@@ -55,6 +55,8 @@ public class AdminSystemBean extends ApplicationBean implements Serializable
 	    ps.setInfo(rs.getString("Info"));
 	    ps.setProgress(rs.getString("Progress"));
 
+	    databaseProcessList.add(ps);
+
 	    log.debug(ps);
 	}
     }

@@ -1,0 +1,95 @@
+<ui:composition 
+	template="/templates/main/main.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="loginRequired" value="true" />
+	<ui:param name="pageTitle" value="#{msg.notification}" />
+
+	<ui:define name="center_layout">
+		<h:outputText value="Missing authentication" rendered="#{not (userBean.admin || userBean.moderator)}" />
+
+		<div class="page_header" style="margin:5px;">
+			<span>
+				#{msg.notification}
+			</span>
+		</div>			
+		
+		<!--  <p:panel rendered="#{userBean.admin || userBean.moderator}" style="margin:5px;"> -->
+
+<h:head>
+	<title>Connection Checker</title>
+</h:head>
+
+<h:body>
+	<div>
+		<h:form>
+			<h2>Connection Checker</h2>
+	
+			Open Connection: ... Scanning ... Bibub ... Found ... There are <h:outputText value="#{adminSystemBean.databaseProcessList.size()}" /> Connections open
+	
+			
+			
+			<p:dataTable id="processTable" var="process" style="margin-top: 2rem; text-align: right;" value="#{adminSystemBean.databaseProcessList}" >
+			
+				<p:column headerText="id">
+					<h:outputText value="#{process.id}"  />
+				</p:column>
+			
+			
+				<p:column headerText="user">
+					<h:outputText value="#{process.user}" />
+				</p:column>
+				
+				<p:column headerText="host">
+					<h:outputText value="#{process.host}" />
+				</p:column>
+				
+				<p:column headerText="db">
+					<h:outputText value="#{process.db}" />
+				</p:column>
+				
+				<p:column headerText="command">
+					<h:outputText value="#{process.command}" />
+				</p:column>
+				
+				<p:column headerText="time">
+					<h:outputText value="#{process.time}" >
+					<f:convertNumber />
+					</h:outputText>
+				</p:column>
+				
+				
+								
+				<p:column headerText="state">
+					<h:outputText value="#{process.state}" />
+				</p:column>
+				
+				<p:column headerText="info">
+					<h:outputText value="#{process.info}" />
+				</p:column>
+				
+				<p:column headerText="progress">
+					<h:outputText value="#{process.progress}" />
+				</p:column>
+				
+				<p:column headerText="Terminate">
+					<p:commandButton value="terminate" actionListener="#{adminSystemBean.onKillDatabaseProcess(process.id)}"/>
+				</p:column>
+				
+				
+			</p:dataTable>
+		
+		<p:poll interval="1" update="processTable" />
+		
+		</h:form>
+	</div>
+</h:body>
+<!-- </p:panel> -->
+
+</ui:define>
+
+</ui:composition> 
