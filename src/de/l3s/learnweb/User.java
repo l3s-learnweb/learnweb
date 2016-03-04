@@ -26,7 +26,7 @@ import de.l3s.util.MD5;
 
 public class User implements Comparable<User>, Serializable, HasId
 {
-    private static final Logger log = Logger.getLogger(User.class);
+    //    private static final Logger log = Logger.getLogger(User.class);
     private static final long serialVersionUID = 2482790243930271009L;
 
     public static final int GENDER_MALE = 1;

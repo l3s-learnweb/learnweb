@@ -1,13 +1,10 @@
-package de.l3s.learnweb.beans;
+package de.l3s.learnweb;
 
 import java.sql.SQLException;
 import java.util.Date;
 
 import org.hibernate.validator.constraints.NotEmpty;
 import org.hibernate.validator.constraints.URL;
-
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.User;
 
 public class GlossaryEntry
 {

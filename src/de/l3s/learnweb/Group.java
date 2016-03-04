@@ -57,6 +57,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     private transient List<Folder> folders;
     private long cacheTime = 0L;
     private int resourceCount = -1;
+    private int memberCount = -1;
     private HashMap<Integer, Integer> lastVisitCache = new HashMap<Integer, Integer>();
 
     public void clearCaches()
@@ -114,6 +115,18 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	return members;
     }
 
+    public int getMemberCount() throws SQLException
+    {
+	long now = System.currentTimeMillis();
+
+	if(-1 == memberCount || cacheTime < now - 3000L)
+	{
+	    memberCount = Learnweb.getInstance().getGroupManager().getMemberCount(id);
+	    cacheTime = now;
+	}
+	return memberCount;
+    }
+
     /**
      * 
      * @param user Returns TRUE if the user is member of this group
@@ -121,7 +134,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
      */
     public boolean isMember(User user) throws SQLException
     {
-	List<User> members = getMembers(); // make sure members are loaded
+	List<User> members = getMembers();
 
 	return members.contains(user);
     }
@@ -169,8 +182,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
 	if(resourceCount == -1 || cacheTime < now - 3000L)
 	{
-	    ResourceManager rm = Learnweb.getInstance().getResourceManager();
-	    resourceCount = rm.getCountResourcesByGroupId(id);
+	    resourceCount = Learnweb.getInstance().getResourceManager().getCountResourceByGroupId(id);
 	    cacheTime = now;
 	}
 	return resourceCount;
@@ -559,6 +571,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	{
 	    tooltip += "<li>" + getDescription() + "</li>";
 	}
+
 	if(getResourcesCount() != 0)
 	{
 	    //tooltip += "<li>" + UtilBean.getLocaleMessage("resources") + ": <p:link outcome='/group/resources.jsf?group_id='" + getId() + "'>" + getResourcesCount() + "</p:link></li>";
@@ -570,7 +583,8 @@ public class Group implements Comparable<Group>, HasId, Serializable
 	    //tooltip += "<li>" + UtilBean.getLocaleMessage("resources") + ": " + getResourcesCount() + "</li>";
 	}
 	//tooltip += "<li>" + UtilBean.getLocaleMessage("users") + ": " + getMembers().size() + "</li>";
-	tooltip += "<li><a href='group/members.jsf?group_id=" + getId() + "' >" + UtilBean.getLocaleMessage("users") + " (" + getMembers().size() + ")</a></li>";
+	tooltip += "<li><a href='group/members.jsf?group_id=" + getId() + "' >" + UtilBean.getLocaleMessage("users") + " (" + getMemberCount() + ")</a></li>";
+
 	if(getFolders() != null && getFolders().size() > 0)
 	{
 	    if(getFolders().size() == 1)
@@ -580,8 +594,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
 		for(Folder folder : getFolders())
 		{
 		    tooltip += " <a href='group/resources.jsf?group_id=" + getId() + "&folder_id=" + folder.getId() + "&resource_id=0'>" + folder.getName() + "</a>";
-
-		    //<p:link outcome='/group/overview.jsf' value=" + folder.getName() + "> <f:param name='folder_id' value=" + folder.getId() + " /> <f:param name='resource_id' value='0' /> </p:link>"
 		}
 	    }
 	    else

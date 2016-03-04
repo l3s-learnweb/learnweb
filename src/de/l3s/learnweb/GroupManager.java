@@ -740,4 +740,20 @@ public class GroupManager
 	    expand(treeNode.getParent());
 	}
     }
+
+    public int getMemberCount(int groupId) throws SQLException
+    {
+	int count = 0;
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM lw_group_user WHERE group_id = ?");
+	select.setInt(1, groupId);
+	ResultSet rs = select.executeQuery();
+	if(rs.next())
+	    count = rs.getInt(1);
+	else
+	    throw new IllegalStateException("SQL query returned no result");
+
+	select.close();
+
+	return count;
+    }
 }

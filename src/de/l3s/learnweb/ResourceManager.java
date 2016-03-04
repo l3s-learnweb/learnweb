@@ -747,7 +747,7 @@ public class ResourceManager
 
     public AbstractPaginator getResourcesByGroupId(int groupId, Order order) throws SQLException
     {
-	int results = getCountResourcesByGroupId(groupId);
+	int results = getCountResourceByGroupId(groupId);
 
 	return new GroupPaginator(results, groupId, order);
     }
@@ -843,7 +843,7 @@ public class ResourceManager
 	return resources;
     }
 
-    public int getCountResourcesByGroupId(int groupId) throws SQLException
+    public int getCountResourceByGroupId(int groupId) throws SQLException
     {
 	int count = 0;
 	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM lw_resource WHERE group_id = ?");
