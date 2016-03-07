@@ -1684,7 +1684,7 @@ div#presentation_preview {
 }
 
 .tooltipster-default a { 
-	color: #e8e6e6; 
+	color: white; 
 	text-decoration: underline;
 }
 .tooltipster-default a:hover {

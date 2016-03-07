@@ -33,46 +33,42 @@
 	
 			
 			
-			<p:dataTable id="processTable" var="process" style="margin-top: 2rem; text-align: right;" value="#{adminSystemBean.databaseProcessList}" >
+			<p:dataTable id="processTable" var="process" style="margin: 2rem;text-align: right;" value="#{adminSystemBean.databaseProcessList}" tableStyle="width: 96%;table-layout:auto" emptyMessage="no open connection" >
 			
-				<p:column headerText="id">
+				<p:column headerText="id" sortBy="#{process.id}">
 					<h:outputText value="#{process.id}"  />
 				</p:column>
 			
 			
-				<p:column headerText="user">
+				<p:column headerText="user" sortBy="#{process.user}">
 					<h:outputText value="#{process.user}" />
 				</p:column>
 				
-				<p:column headerText="host">
+				<p:column headerText="host" sortBy="#{process.host}">
 					<h:outputText value="#{process.host}" />
 				</p:column>
 				
-				<p:column headerText="db">
+				<p:column headerText="db" sortBy="#{process.db}">
 					<h:outputText value="#{process.db}" />
 				</p:column>
 				
-				<p:column headerText="command">
+				<p:column headerText="command" sortBy="#{process.command}">
 					<h:outputText value="#{process.command}" />
 				</p:column>
 				
-				<p:column headerText="time">
-					<h:outputText value="#{process.time}" >
-					<f:convertNumber />
-					</h:outputText>
+				<p:column headerText="time" sortBy="#{process.time}">
+					<h:outputText value="#{process.time}" />
 				</p:column>
 				
-				
-								
-				<p:column headerText="state">
+				<p:column headerText="state" sortBy="#{process.state}">
 					<h:outputText value="#{process.state}" />
 				</p:column>
 				
-				<p:column headerText="info">
+				<p:column headerText="info" sortBy="#{process.info}">
 					<h:outputText value="#{process.info}" />
 				</p:column>
 				
-				<p:column headerText="progress">
+				<p:column headerText="progress" sortBy="#{process.progress}">
 					<h:outputText value="#{process.progress}" />
 				</p:column>
 				
@@ -83,7 +79,7 @@
 				
 			</p:dataTable>
 		
-		<p:poll interval="1" update="processTable" />
+		
 		
 		</h:form>
 	</div>
