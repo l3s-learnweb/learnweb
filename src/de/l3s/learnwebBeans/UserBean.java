@@ -622,6 +622,10 @@ public class UserBean implements Serializable
 	if(!isLoggedIn())
 	    return false;
 
+	String viewId = FacesContext.getCurrentInstance().getViewRoot().getViewId();
+	if(viewId.contains("register.xhtml")) // don't show any tooltips on the registration page
+	    return false;
+
 	return isShowMessageJoinGroup() || isShowMessageAddResource();
     }
 
