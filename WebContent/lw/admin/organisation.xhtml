@@ -8,6 +8,11 @@
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.organization}"/>
+	
+	<f:metadata>
+		<f:viewParam name="id" value="#{adminOrganisationsBean.selectedId}" />
+	</f:metadata>
+	
 
 	<ui:define name="center_layout">	
 		<script type="text/javascript">
@@ -36,11 +41,21 @@
 				</p>
 				<p:inputText value="#{adminOrganisationBean.organisation.title}" style="width:400px" />
 				<p>
+				<h:outputText value="Welcome Page: " />
+				</p>
+				
+       				 <p:selectOneMenu id="welcomePage" value="#{adminOrganisationBean.organisation.welcomePage}" style="width:400px" editable="true">
+         					 <!--  <f:selectItem itemLabel="Select One" itemValue="" />  -->
+         					 <f:selectItem itemLabel="Activity" itemValue="myhome/activity.jsf" />
+         					 <f:selectItem itemLabel="#{msg.welcome}" itemValue="myhome/welcome.jsf" />  					 
+        		</p:selectOneMenu>
+				
+				<p>
 					<h:outputText value="#{msg.welcome_message}:" />
 				</p>
 				<p:editor value="#{adminOrganisationBean.organisation.welcomeMessage}" width="600" />
 				<p>
-					<p:commandButton action="#{adminOrganisationBean.onSave}" value="#{msg.save}" ajax="false"/>
+					<p:commandButton action="#{adminOrganisationBean.organisation.onSave}" value="#{msg.save}" ajax="false"/>
 				</p>
 			</h:form>
 					
