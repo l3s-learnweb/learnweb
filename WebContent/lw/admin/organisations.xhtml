@@ -32,62 +32,27 @@
 	
 		<h:form id="organisationform">
 			<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}" style="margin: 0px 0px 0px 5px;text-align: center; width:122.7rem" >					
-				<p:column headerText="#{msg.title}" sortBy="#{organisation.title}">
-					<h:outputText value="#{organisation.title}" />						
+				<p:column headerText="#{msg.title}" >
+					<p:link value="#{organisation.title}" outcome="organisation" >
+						<f:param name="id" value="#{organisation.id}" />
+					</p:link>			
 				</p:column>	
 				
-				<p:column headerText="id" sortBy="#{organisation.id}">
+				<p:column headerText="id" >
 					<h:outputText value="#{organisation.id}" />						
 				</p:column>	
 				
 				
-				<p:column headerText="Welcome Page" sortBy="#{organisation.welcomePage}">
+				<p:column headerText="Welcome Page" >
 					<h:outputText value="#{organisation.welcomePage}" />						
 				</p:column>	
 				
 				<p:column headerText="#{msg.edit}">
 					<p:button outcome="organisation" value="Edit">
-    					<f:param name="Id" value="#{organisation.id}" />
+    					<f:param name="id" value="#{organisation.id}" />
 					</p:button>						
 				</p:column>	
 				
-				<!-- 
-				<p:column headerText="Welcome Message" sortBy="#{organisation.welcomeMessage}" styleClass="group_description" >
-					<h:outputText value="#{organisation.welcomeMessage}" />						
-				</p:column>	
-				 -->
-				<!--  
-				<p:column headerText="Option_Field1" sortBy="#{organisation.option_field1}">
-					<h:outputText value="#{organisation.option_field1}" />						
-				</p:column>	
-				-->		
-				<!--  <p:column headerText="#{msg.organization}" sortBy="#{course.organisation.title}">
-					<h:outputText value="#{course.organisation.title}" rendered="#{not empty course.organisation}" />						
-				</p:column>	
-				-->
-				<!-- 
-				<p:column headerText="#{msg.members}" sortBy="#{course.memberCount}">
-					<h:outputText value="#{course.memberCount}" />									
-				</p:column>
-						
-				<p:column headerText="#{msg.options}">
-					<f:facet name="header">
-						#{msg.options}
-					</f:facet>
-					<h:outputLink value="admin/course.jsf?course_id=#{course.id}" style="text-decoration:none;" title="#{msg.edit}">
-						<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
-					</h:outputLink>	
-							
-					<p:commandLink actionListener="#{adminCoursesBean.onDeleteCourse(course)}" process="@this" 
-						update=":courseform :growl" rendered="#{course.memberCount == 0}"
-						onstart="return confirm('Do you really want to delete course \'#{course.title}\'?');"								
-						style="text-decoration:none;" title="#{msg.delete}">
-															
-						<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
-					</p:commandLink>
-										
-				</p:column>
-				-->	
 			</p:dataTable>	
 		</h:form>
 		

@@ -14,7 +14,7 @@
 	</f:metadata>
 	
 
-	<ui:define name="center_layout">	
+	<ui:define name="center_layout" >	
 		<script type="text/javascript">
 			function enableEdit()
 			{			
@@ -27,9 +27,9 @@
 			p { margin: 12px 0 6px 0; }
 		</style>
 			
-		<div class="page_header" style="margin:5px;">
+		<div class="page_header" style="margin:5px;" onload="#{adminOrganisationsBean.selectedOrganisationBySelectedId()}">
 			<span>
-				#{adminOrganisationBean.organisation.title}
+				#{adminOrganisationsBean.selectedOrganisation.title}
 			</span>
 		</div>		
 						
@@ -39,23 +39,25 @@
 				<p>
 					<h:outputText value="#{msg.title}:" />
 				</p>
-				<p:inputText value="#{adminOrganisationBean.organisation.title}" style="width:400px" />
+				<p:inputText value="#{adminOrganisationsBean.selectedOrganisation.title}" style="width:400px" />
 				<p>
 				<h:outputText value="Welcome Page: " />
 				</p>
 				
-       				 <p:selectOneMenu id="welcomePage" value="#{adminOrganisationBean.organisation.welcomePage}" style="width:400px" editable="true">
+       				 <p:selectOneMenu id="welcomePage" value="#{adminOrganisationsBean.selectedOrganisation.welcomePage}" style="width:400px" editable="true">
          					 <!--  <f:selectItem itemLabel="Select One" itemValue="" />  -->
-         					 <f:selectItem itemLabel="Activity" itemValue="myhome/activity.jsf" />
-         					 <f:selectItem itemLabel="#{msg.welcome}" itemValue="myhome/welcome.jsf" />  					 
+         					 <f:selectItem itemLabel="myhome/activity.jsf" itemValue="myhome/activity.jsf" />
+         					 <f:selectItem itemLabel="myhome/welcome.jsf" itemValue="myhome/welcome.jsf" />  					 
         		</p:selectOneMenu>
 				
 				<p>
 					<h:outputText value="#{msg.welcome_message}:" />
 				</p>
-				<p:editor value="#{adminOrganisationBean.organisation.welcomeMessage}" width="600" />
+				<p:editor value="#{adminOrganisationsBean.selectedOrganisation.welcomeMessage}" width="600" />
 				<p>
-					<p:commandButton action="#{adminOrganisationBean.organisation.onSave}" value="#{msg.save}" ajax="false"/>
+					<p:commandButton action="#{adminOrganisationsBean.onSave}" value="#{msg.save}" ajax="false"/>
+					
+					<p:button style="margin-left:5px;" outcome="organisations" value="Back to Organisations" />
 				</p>
 			</h:form>
 					
