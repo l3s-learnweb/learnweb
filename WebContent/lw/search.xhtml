@@ -85,22 +85,25 @@
 					<ui:repeat value="#{searchBean.availableFilters}" var="filter">
 						<li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
 							<span class="filter-name">
-								<span class="trimmed-text">#{filter.name}</span> 
+								<span class="trimmed-text">#{filter.name}</span>
 								<span class="arrow"></span>
 							</span>
-							<h:panelGroup styleClass="filter-sub-bar" layout="block">
-								<h:link value="#{filter.anyText}" outcome="search" styleClass="#{!filter.active ? 'active' : null}">
-									<f:param name="action" value="#{searchBean.searchMode}" />
-									<f:param name="filter" value="#{filter.anyUrl}" disable="#{empty filter.anyUrl}" />
-									<f:param name="query" value="#{searchBean.query}" />
-								</h:link>
-								<ui:repeat value="#{filter.items}" var="item">
-									<h:link value="#{item.name} #{item.counter != null ? '('.concat(item.counter).concat(')') : null}" outcome="search" styleClass="#{item.active ? 'active' : null}">
+							<h:panelGroup styleClass="filter-sub-bar vCarousel-wrapper filter-vCarousel" layout="block">
+								<h:panelGroup styleClass="vCarousel-container" layout="block">
+									<h:link value="#{filter.anyText}" outcome="search" styleClass="#{!filter.active ? 'active' : null}">
 										<f:param name="action" value="#{searchBean.searchMode}" />
-										<f:param name="filter" value="#{item.url}" />
+										<f:param name="filter" value="#{filter.anyUrl}" disable="#{empty filter.anyUrl}" />
 										<f:param name="query" value="#{searchBean.query}" />
 									</h:link>
-								</ui:repeat>
+									<ui:repeat value="#{filter.items}" var="item">
+										<h:link value="#{item.name} #{item.counter != null ? '('.concat(item.counter).concat(')') : null}" outcome="search" styleClass="#{item.active ? 'active' : null}">
+											<f:param name="action" value="#{searchBean.searchMode}" />
+											<f:param name="filter" value="#{item.url}" />
+											<f:param name="query" value="#{searchBean.query}" />
+										</h:link>
+									</ui:repeat>
+								</h:panelGroup>
+								<h:link value="#{msg.filter_carousel_all}" styleClass="vCarousel-expand"></h:link>
 							</h:panelGroup>
 						</li>
 					</ui:repeat>
@@ -116,7 +119,7 @@
 				
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="search" name="search.css"  />		
-		<h:outputScript library="search" name="search.js" target="head"/>		
+		<h:outputScript library="search" name="search.js" target="head"/>
 		<link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet"/>
 		<script src="http://vjs.zencdn.net/4.12/video.js"></script>
 
@@ -124,6 +127,8 @@
 			var view = '#{searchBean.view}';
 			var userId = '#{userBean.user.id}';
 			var searchHistoryEnabled = #{userBean.searchHistoryEnabled};
+
+			updateCarousel();
 		</script>			
 		 
 		<ui:decorate template="/lw/templates/resource_lightbox.xhtml" /> 	
@@ -201,7 +206,7 @@
 
 			<p:remoteCommand actionListener="${searchBean.logEndTime()}" immediate="true"  ignoreAutoUpdate="true" onstart="console.log('logEndTime')" update=":tabView:tab2" name="logEndTime" async="true" process="@this" partialSubmit="true"/>
 
-			<p:remoteCommand actionListener="${searchBean.loadInterwebCounts()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('loadInterwebCounts')" update=":filters" name="loadFilterCounts" async="false" process="@this" partialSubmit="true"/>				
+			<p:remoteCommand actionListener="${searchBean.loadInterwebCounts()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('loadInterwebCounts')" update=":filters" name="loadFilterCounts" oncomplete="updateCarousel();" async="false" process="@this" partialSubmit="true"/>				
 		</h:form>
  
  		<h:panelGroup id="nothing"></h:panelGroup>

@@ -466,6 +466,10 @@ iframe { border:none }
 	margin-bottom:0px;
 }
 
+#right_pane table.full-width {
+    width: 100%;
+}
+
 /* group menu */
 #groupoverview_link {
 	padding:0.5em 0.5em 0.5em 2.2em;
@@ -570,11 +574,15 @@ iframe { border:none }
 
 
 form#center_header_form { float:right; }
-.resource_button{
+.resource_button {
 	float:right;
 	position:relative;
 	top:-3px;
 	right:-5px;
+}
+
+.resource_button > button {
+    padding: 6px 26px 6px 12px !important;
 }
 
 .nothing_found{
@@ -621,7 +629,7 @@ form#center_header_form { float:right; }
 }
 
 .resources-filters li:hover .filter-sub-bar {
-	display: block;
+    visibility: visible;
 }
 
 .resources-filters ul li.disabled {
@@ -629,7 +637,7 @@ form#center_header_form { float:right; }
 }
 
 .resources-filters ul.filter-sub-bar {
-	display: none;
+    visibility: hidden;
 	position: absolute;
 	top: 3.1rem;
 	left: 0;
@@ -660,6 +668,27 @@ form#center_header_form { float:right; }
 .resources-filters ul.filter-sub-bar li.active,
 .resources-filters ul.filter-sub-bar li:hover {
 	background: #eee;
+}
+
+.vCarousel-expand {
+	display: none !important;
+}
+
+.vCarousel-small .vCarousel-container {
+	overflow: hidden;
+}
+
+.vCarousel-small .vCarousel-expand {
+	display: block !important;
+}
+
+.vCarousel-expanded .vCarousel-container {
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+
+.vCarousel-expanded .vCarousel-expand {
+	display: none !important;
 }
 
 .resources-filters .clear-filters:hover {
@@ -708,8 +737,12 @@ a:hover{text-decoration:underline;}
 	width:200px;
 }
 
-.greenbutton,
-.graybutton {
+.greenbutton > button,
+.graybutton > button,
+button.greenbutton,
+a.greenbutton,
+button.graybutton,
+a.graybutton {
 	border:1px solid #3b8b74 !important;
 	background:none !important;
 	background-color:#489a83 !important;
@@ -727,8 +760,18 @@ a:hover{text-decoration:underline;}
 	padding:0;
 }
 
-.greenbutton:hover, .greenbutton:focus,
-.graybutton:hover, .graybutton:focus {
+.greenbutton > button:hover,
+.greenbutton > button:focus,
+.graybutton > button:hover,
+.graybutton > button:focus,
+button.greenbutton:hover,
+a.greenbutton:hover,
+button.graybutton:hover,
+a.graybutton:hover,
+button.greenbutton:focus,
+a.greenbutton:focus,
+button.graybutton:focus,
+a.graybutton:focus {
 	background:none repeat scroll 0 0 #4ea68d !important;
 	box-shadow:0px 1px 2px rgba(0,0,0,0.1) !important;
 	font-weight:bolder !imporant;
@@ -736,13 +779,20 @@ a:hover{text-decoration:underline;}
 	outline: none;
 }
 
-.graybutton {
+.graybutton > button,
+button.graybutton,
+a.graybutton {
 	border:1px solid #a8a8a8 !important;
 	background-color: #c4c4c4 !important;
 	color: #4F4F4E !important;
 }
 
-.graybutton:hover, .graybutton:focus {
+.graybutton > button:hover,
+.graybutton > button:focus,
+button.graybutton:hover,
+a.graybutton:hover,
+button.graybutton:focus,
+a.graybutton:focus {
 	background:none repeat scroll 0 0 #DBDBDB !important;
 	box-shadow:0px 1px 2px rgba(0,0,0,0.1) !important;
 }

@@ -47,7 +47,7 @@
 						<div class="ui-panelmenu-content ui-widget-content ui-helper-hidden" id="folders_tree_wrap">
 							<h:form id="folders_tree_form">								
 							    <p:tree id="folders_tree" value="#{groupDetailBean.getFoldersTree(group.id)}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{groupDetailBean.selectedNode}" datakey="#{node.folderId}">				        						     						        
-							        <p:ajax event="select" update=":folderGrid :resourceGrid :paginator :filters :add_resource_panel" listener="#{groupDetailBean.onNodeSelect}" oncomplete="update_url(0,0);resourceDND();update_header();"/>
+							        <p:ajax event="select" update=":folderGrid :resourceGrid :paginator :filters :add_resource_panel" listener="#{groupDetailBean.onNodeSelect}" oncomplete="updateCarousel();update_url(0,0);resourceDND();update_header();"/>
 							        <p:ajax event="expand" oncomplete="resourceDND();"/>
         							<p:ajax event="collapse" oncomplete="resourceDND();"/>
 							        

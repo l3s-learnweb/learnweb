@@ -86,84 +86,74 @@
 		<h:dataTable var="datagrid" value="#{groupDetailBean.newslist}" id="datagrid" >
 					
 				
-				<h:column >
-					<div class="newsfeed_user_image_div">
-					    <h:graphicImage id="userpic" url="#{datagrid.user.image}" alt="profile image" width="30" height="30" 
-					    	styleClass="newsfeed_user_image"/>
-					    </div>
-						<div class="newsfeed_text">
-						<h:outputText value="#{datagrid.text}" escape="false"  />
-						<h:panelGroup rendered="#{datagrid.queryNeeded}">
-						<h:outputText value=" #{msg.with_query} " escape="false"  />
-						
-						<h:outputLink styleClass="newsfeed_query_link" value="search.jsf">
-						<h:outputText value=" #{datagrid.resource.query}" escape="false" styleClass="newsfeed_query_link_text"/>
-						
-								<f:param name="query" value="#{datagrid.resource.query}"/>
-						        <f:param name="action" value="web"/>
-						</h:outputLink>
-						
-						<h:outputText value=" #{msg.from} #{datagrid.resource.source} " escape="false"  />
-						</h:panelGroup>
-						</div>
-						
-						<h:outputText value="${userBean.getPrettyDate(datagrid.date)}" title="${userBean.formatDate(datagrid.date)}" escape="false" styleClass="newsfeed_date_difference"/>	
-						
-						<br></br>
-						<br></br>
-						<h:panelGroup rendered="#{datagrid.resourceAction}">
-							<div class="newsfeed_left">
-						
-						<h:form>
-								<p:commandLink styleClass="newsfeed_query_link" update=":add_resource_panel" oncomplete="update_header()">
-				        			<f:setPropertyActionListener target="#{groupDetailBean.clickedResource}" value="#{datagrid.resource}"/>
-				        			<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{datagrid.resource}"/>
-										<h:outputText value="#{datagrid.resource.embeddedSize1}" escape="false" />
-								</p:commandLink>
-								</h:form>
-				
-		                   </div>
-							
-							<div class="newsfeed_right">
-								<h:outputText value="#{datagrid.resource.shortDescription} " escape="false" styleClass="newsfeed_description"/>
-								
-								
-								<br />
-								<h:outputText value="#{msg.author}: #{datagrid.resource.author} " rendered="#{not empty datagrid.resource.author}" 
-									escape="false" styleClass="newsfeed_author"/>
-							
-							</div>
-						</h:panelGroup>
-						
-						<br class="clear"></br>
-						<h:panelGroup rendered="#{datagrid.resourceAction}">
-						<br></br>
-						<h:outputText value="tags: " escape="false" styleClass="newsfeed_tag" rendered="#{not empty datagrid.resource.tagsAsString}"/>
-						
-						<h:outputText value=" #{datagrid.resource.tagsAsString} " rendered="#{not empty datagrid.resource.tagsAsString}" 
-							escape="false" styleClass="newsfeed_tags"/>
-						
-						</h:panelGroup>
-						<hr width="auto" class="newsfeed_separator"></hr>
-						</h:column>				
-					</h:dataTable>
-					<br></br>
-					<h:form>
-					<h:panelGroup id="history" class="newsfeed_history">
-						<p:commandButton value="#{msg.full_history}"  styleClass="blackbutton" rendered="${not groupDetailBean.isAllLogs()}" 
-							update=":datagrid history" actionListener="#{groupDetailBean.fetchAllLogs()}"/>
-					</h:panelGroup>
-					</h:form>
-					<br></br>
+			<h:column >
+				<div class="newsfeed_user_image_div">
+			    	<h:graphicImage id="userpic" url="#{datagrid.user.image}" alt="profile image" width="30" height="30" styleClass="newsfeed_user_image"/>
+			    </div>
+				<div class="newsfeed_text">
+					<h:outputText value="#{datagrid.text}" escape="false"  />
+					<h:panelGroup rendered="#{datagrid.queryNeeded}">
+					<h:outputText value=" #{msg.with_query} " escape="false"  />
 					
-
-		<p:dialog header="#{msg.upload_file}" widgetVar="file_dialog" modal="true" appendTo="@(body)" width="600" height="150">
-			<h:form>
-				<p:fileUpload  rendered="true" fileUploadListener="#{addResourceBean.handleFileUpload}" mode="advanced" 
-					auto="true" sizeLimit="10000000" widgetVar="fileUpload" oncomplete="PF('file_dialog').hide()" 
-					update=":add_resource_form:preview" label="#{msg.choose_file}" cancelLabel="abb"/> 
-			</h:form>
-		</p:dialog>
+					<h:outputLink styleClass="newsfeed_query_link" value="search.jsf">
+					<h:outputText value=" #{datagrid.resource.query}" escape="false" styleClass="newsfeed_query_link_text"/>
+					
+							<f:param name="query" value="#{datagrid.resource.query}"/>
+					        <f:param name="action" value="web"/>
+					</h:outputLink>
+					
+					<h:outputText value=" #{msg.from} #{datagrid.resource.source} " escape="false"  />
+					</h:panelGroup>
+				</div>
+					
+				<h:outputText value="${userBean.getPrettyDate(datagrid.date)}" title="${userBean.formatDate(datagrid.date)}" escape="false" styleClass="newsfeed_date_difference"/>	
+					
+				<br></br>
+				<br></br>
+				<h:panelGroup rendered="#{datagrid.resourceAction}">
+					<div class="newsfeed_left">
+					
+						<h:form>
+							<p:commandLink styleClass="newsfeed_query_link" update=":add_resource_panel" oncomplete="update_header()">
+			        			<f:setPropertyActionListener target="#{groupDetailBean.clickedResource}" value="#{datagrid.resource}"/>
+			        			<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{datagrid.resource}"/>
+									<h:outputText value="#{datagrid.resource.embeddedSize1}" escape="false" />
+							</p:commandLink>
+						</h:form>
+			
+                    </div>
+						
+					<div class="newsfeed_right">
+						<h:outputText value="#{datagrid.resource.shortDescription} " escape="false" styleClass="newsfeed_description"/>
+							
+							
+						<br />
+						<h:outputText value="#{msg.author}: #{datagrid.resource.author} " rendered="#{not empty datagrid.resource.author}" 
+							escape="false" styleClass="newsfeed_author"/>
+						
+					</div>
+				</h:panelGroup>
+					
+				<br class="clear"></br>
+				<h:panelGroup rendered="#{datagrid.resourceAction}">
+					<br></br>
+					<h:outputText value="tags: " escape="false" styleClass="newsfeed_tag" rendered="#{not empty datagrid.resource.tagsAsString}"/>
+					
+					<h:outputText value=" #{datagrid.resource.tagsAsString} " rendered="#{not empty datagrid.resource.tagsAsString}" 
+						escape="false" styleClass="newsfeed_tags"/>
+					
+				</h:panelGroup>
+				<hr width="auto" class="newsfeed_separator"></hr>
+			</h:column>				
+		</h:dataTable>
+		<br></br>
+		<h:form>
+			<h:panelGroup id="history" class="newsfeed_history">
+				<p:commandButton value="#{msg.full_history}"  styleClass="blackbutton" rendered="${not groupDetailBean.isAllLogs()}" 
+					update=":datagrid history" actionListener="#{groupDetailBean.fetchAllLogs()}"/>
+			</h:panelGroup>
+		</h:form>
+		<br></br>
 		<p:dialog header="#{msg.edit}" id="comment_dialog1" modal="true" minWidth="440" appendTo="@(body)" widgetVar="comment_dialog">
 			<h:form id="comment_dialog_form">	
 				<p:inputTextarea autoResize="1" maxHeight="20" value="#{resourceDetailBean.clickedComment.text}" id="edit_comment_textbox"/>

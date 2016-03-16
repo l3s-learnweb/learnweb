@@ -36,14 +36,6 @@
 				$(div).addClass("center-header");
 				$("#center_pane").prepend(div);
 			</script>
-			
-			<p:dialog header="#{msg.upload_file}" widgetVar="file_dialog" modal="true" appendTo="@(body)" width="600" height="150">
-				<h:form>
-					<p:fileUpload rendered="true" fileUploadListener="#{addResourceBean.handleFileUpload}" 
-						mode="advanced" auto="true" sizeLimit="10000000" widgetVar="fileUpload" oncomplete="PF('file_dialog').hide()" 
-						update=":add_resource_form:preview" label="#{msg.choose_file}" cancelLabel="abb"/> 
-				</h:form>
-			</p:dialog>
 			<p:dialog header="#{msg.edit}" id="comment_dialog1" modal="true" minWidth="440" appendTo="@(body)" widgetVar="comment_dialog">
 				<h:form id="comment_dialog_form">	
 					<p:inputTextarea autoResize="1" maxHeight="20" value="#{resourceDetailBean.clickedComment.text}" id="edit_comment_textbox"/>

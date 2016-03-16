@@ -435,22 +435,19 @@ public class SolrSearch implements Serializable
      */
     public void getFaced()
     {
-	QueryResponse response = null;
 	try
 	{
-	    response = getSolrResourcesByPage(1);
+	    QueryResponse response = getSolrResourcesByPage(1);
+	    if(response != null)
+	    {
+		totalResults = response.getResults().getNumFound();
+		facetFieldsResult = response.getFacetFields();
+		facetQueriesResult = response.getFacetQuery();
+	    }
 	}
 	catch(SQLException | SolrServerException e)
 	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-
-	if(response != null)
-	{
-	    totalResults = response.getResults().getNumFound();
-	    facetFieldsResult = response.getFacetFields();
-	    facetQueriesResult = response.getFacetQuery();
+	    log.fatal("Couldn't read faced fields from Solr", e);
 	}
     }
 
@@ -677,19 +674,11 @@ public class SolrSearch implements Serializable
 	    return facetFieldsResult;
 	}
 
-	public Map<String, Integer> getFacetQueries()
+	public Map<String, Integer> getFacetQueries() throws SQLException, SolrServerException
 	{
 	    if(facetQueriesResult == null)
 	    {
-		try
-		{
-		    getCurrentPage();
-		}
-		catch(SQLException | SolrServerException e)
-		{
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		}
+		getCurrentPage();
 	    }
 
 	    return facetQueriesResult;

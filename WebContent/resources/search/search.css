@@ -116,7 +116,7 @@
 }
 
 #filters_menu_bar .search-filters li:hover .filter-sub-bar {
-	display: block;
+	visibility: visible;
 }
 
 #filters_menu_bar .search-filters li.disabled:hover .filter-sub-bar {
@@ -132,7 +132,7 @@
 }
 
 #filters_menu_bar .filter-sub-bar {
-	display: none;
+	visibility: hidden;
 	position: absolute;
 	top: 2.8rem;
 	left: 0;

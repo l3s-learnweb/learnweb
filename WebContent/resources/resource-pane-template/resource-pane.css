@@ -1,12 +1,25 @@
 /*taken from new_main2.css*/
-
-#add_resource_form td{padding: 4px 0px !important;}
-#add_resource_form td:FIRST-CHILD {
+#add_resource_upload_form .ui-fileupload-files tr td:first-child,
+#add_resource_upload_form .ui-fileupload-files tr td:last-child {
+	display: none;
+}
+.right-panel .create-block table tr,
+.right-panel .create-block table td {
+	border: 0;
+}
+.right-panel .create-block table td {
+	padding: 4px 0px !important;
+}
+.right-panel .create-block table .form-preview {
+	padding: 4px !important;
+}
+.right-panel .create-block table td:FIRST-CHILD {
 	font-weight: bold;
 	width: 100px;
 }
-#add_resource_form td:LAST-CHILD {width: 100px;}
-#add_resource_form input, #add_resource_form textarea, #add_resource_form button{
+.right-panel .create-block table input,
+.right-panel .create-block table textarea,
+.right-panel .create-block table button{
 	border-radius: 2px;
 	box-shadow: 0 0 0px 0px #fff !important;
 }

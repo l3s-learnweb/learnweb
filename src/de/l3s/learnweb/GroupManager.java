@@ -9,6 +9,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
@@ -31,6 +32,7 @@ public class GroupManager
 
     // if you change this, you have to change the constructor of Group too
     private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.course, g.location, g.language, g.restriction_only_leader_can_add_resources, g.read_only, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation, g.restriction_forum_category_required";
+    private static Logger log = Logger.getLogger(GroupManager.class);
 
     private Learnweb learnweb;
     private ICache<Group> groupCache;
@@ -478,7 +480,7 @@ public class GroupManager
 	}
 	catch(SolrServerException e)
 	{
-	    e.printStackTrace();
+	    log.fatal("Couldn't get resource counter in group", e);
 	}
 
 	return numberOfRows;

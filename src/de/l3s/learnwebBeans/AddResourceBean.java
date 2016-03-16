@@ -43,7 +43,8 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     private Resource resource;
 
-    private int resourceTargetGroupId = 0; // the id of the group the new resource will be added to
+    // the id of the group and folder the new resource will be added to
+    private int resourceTargetGroupId = 0;
     private int resourceTargetFolderId = 0;
 
     private Folder targetFolder;
@@ -54,10 +55,10 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     private List<ServiceInformation> uploadServices;
     private List<String> selectedUploadServices;
 
+    private int formStep = 1;
+
     public void doNothing(AjaxBehaviorEvent obj)
     {
-	log.debug("aaa" + obj.toString());
-
 	resource.setStorageType(Resource.WEB_RESOURCE);
     }
 
@@ -129,6 +130,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     public void clearForm()
     {
 	resource = new Resource();
+	formStep = 1;
     }
 
     public void handleFileUpload(FileUploadEvent event)
@@ -176,6 +178,8 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 		    }
 		}
 	    }
+
+	    nextStep();
 	}
 	catch(Exception e)
 	{
@@ -187,6 +191,16 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     public Resource getResource()
     {
 	return resource;
+    }
+
+    public String getStorageType()
+    {
+	if(resource.getStorageType() == Resource.FILE_RESOURCE)
+	    return UtilBean.getLocaleMessage("file");
+	else if(resource.getStorageType() == Resource.WEB_RESOURCE)
+	    return UtilBean.getLocaleMessage("web");
+	else
+	    return UtilBean.getLocaleMessage("unknown_storage_type");
     }
 
     public void addResource()
@@ -435,6 +449,21 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	}
 
 	return UtilBean.getLocaleMessage("myResourcesTitle");
+    }
+
+    public void nextStep()
+    {
+	this.formStep++;
+    }
+
+    public void setFormStep(int step)
+    {
+	this.formStep = step;
+    }
+
+    public int getFormStep()
+    {
+	return formStep;
     }
 
     public void changeGroupListener()
