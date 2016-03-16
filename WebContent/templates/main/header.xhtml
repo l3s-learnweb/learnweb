@@ -45,8 +45,8 @@
 					<li>
 						<img alt="" src="#{request.contextPath}/resources/main-template/img/dropdownmenu.png" height="28" width="28" 
 							class="menu" tabindex="0" />
-
-						<ul>
+						
+						<ul style="overflow-y: auto;">
 							
 							<li class="menupoint">
 								<h:outputText value="#{msg.my_stuff}" />
@@ -114,9 +114,16 @@
 								<li class="menupoint">
 									<h:outputText value="#{msg.admin}" />
 								</li>
+								<ui:fragment rendered="!(userBean.moderator)" >
 								<li>
 									<a href="#{request.contextPath}/lw/admin/courses.jsf">
 										<h:outputText value="#{msg.courses}" />
+									</a>
+								</li>
+								</ui:fragment>
+								<li>
+									<a href="#{request.contextPath}/lw/admin/connectionChecker.jsf">
+										<h:outputText value="System Tools" />
 									</a>
 								</li>
 								<li>
@@ -181,6 +188,7 @@
 								</li>
 							</ui:fragment>
 						</ul>
+						
 					</li>
 				</ul>
 			</div>
