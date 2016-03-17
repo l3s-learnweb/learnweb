@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.beans.UtilBean;
 
 @ManagedBean
 @ViewScoped
@@ -80,11 +81,13 @@ public class GroupsBean extends ApplicationBean implements Serializable
 	    log.error("selectedGroup is null");
 	    return;
 	}
+
 	if(!canDeleteGroup(selectedGroup))
 	{
 	    addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
 	    return;
 	}
+
 	getUser().setActiveGroup(selectedGroup);
 	log(Action.group_deleting, selectedGroup.getId(), selectedGroup.getTitle());
 
@@ -102,7 +105,10 @@ public class GroupsBean extends ApplicationBean implements Serializable
 	if(null == getUser() || null == group)
 	    return false;
 
-	if(user.isAdmin() || user.isModerator() || group.isLeader(user))
+	if(group.isLeader(user))
+	    return true;
+
+	if(UtilBean.getUserBean().canModerateCourse(group.getCourse()))
 	    return true;
 
 	return false;
@@ -117,8 +123,6 @@ public class GroupsBean extends ApplicationBean implements Serializable
 
 	Group group = getLearnweb().getGroupManager().save(newGroup);
 	getUser().joinGroup(group);
-
-	//getUser().createGroup(newGroup);
 
 	// refresh group list
 	myGroups = getUser().getGroups();

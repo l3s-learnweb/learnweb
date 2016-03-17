@@ -37,35 +37,25 @@
 		</style>
 		<p:layout fullPage="true" widgetVar="mainLayout">
 			<p:layoutUnit position="north" resizable="false" closable="false" collapsible="false" styleClass="northunit" style="display:block; height:46px;">
-				<script type="text/javascript">			
+				<script type="text/javascript">	
 				
 					function scroller()
 					{
 						$(".nano").nanoScroller();
 					}
 					
-					$(document).ready(function(){
+					$(document).ready(function()
+					{
 						if($(".ui-layout-unit-content","#right_pane"))
 						{
 							$(".ui-layout-unit-content","#right_pane").addClass("nano");
 							$(".ui-layout-unit-content","#right_pane").wrapInner('&lt;div class="content" /&gt;');
 							$(".ui-layout-unit-content","#center_pane").addClass("nano");
 							$(".ui-layout-unit-content","#left_pane").addClass("nano");
-						}
-						
-					
-						
+						}				
 						scroller();
-						setInterval("scroller()",500);  // TODO get rid of this. Should be handled on resize windows, but that doesn't work
-						
-						
-						//scroller();
+						setInterval("scroller()",500); 
 					});	
-					/*
-					$(window).resize(function() {
-						scroller();		
-					});	
-				*/
 				</script>				
 			
 				<ui:insert name="sub_menu_bar"></ui:insert>
