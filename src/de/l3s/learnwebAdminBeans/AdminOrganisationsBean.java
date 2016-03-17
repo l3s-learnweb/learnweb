@@ -68,20 +68,16 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
     public void setSelectedId(int selectedId)
     {
 	this.selectedId = selectedId;
-
-	//System.out.println(selectedId + " selectedId");
     }
 
     public void setSelectedOrganisationById(int id)
     {
-
 	this.selectedOrganisation = getLearnweb().getOrganisationManager().getOrganisationById(id);
     }
 
     public void selectedOrganisationBySelectedId()
     {
 	int id = getSelectedId();
-	//System.out.println(id);
 	selectedOrganisation = getLearnweb().getOrganisationManager().getOrganisationById(id);
     }
 

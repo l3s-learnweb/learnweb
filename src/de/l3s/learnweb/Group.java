@@ -602,7 +602,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
 		for(Folder folder : getFolders())
 		{
-		    //tooltip += "<li>" + folder.getName() + "</li>";
 		    tooltip += "<li><a href='group/resources.jsf?group_id=" + getId() + "&folder_id=" + folder.getId() + "&resource_id=0'>" + folder.getName() + "</a></li>";
 		}
 		tooltip += "</ul>";

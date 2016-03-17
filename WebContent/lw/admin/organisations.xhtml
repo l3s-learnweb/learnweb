@@ -20,7 +20,7 @@
 			background-image:none !important;
 			border:1px solid #a8a8a8 !important;
 		}
-		.page_header{margin:5px 5px 0px 5px;}
+		.page_header{margin:5px 5px 5px 5px;}
 		#courseform{padding:5px;}
 	</style>
 	
@@ -31,7 +31,7 @@
 		</div>		
 	
 		<h:form id="organisationform">
-			<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}" style="margin: 0px 0px 0px 5px;text-align: center; width:122.7rem" >					
+			<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}" style="margin: 0px 0px 0px 5px;text-align: center; width:122.7rem"  >					
 				<p:column headerText="#{msg.title}" >
 					<p:link value="#{organisation.title}" outcome="organisation" >
 						<f:param name="id" value="#{organisation.id}" />

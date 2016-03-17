@@ -312,7 +312,7 @@ iframe { border:none }
 	border-bottom-left-radius:10px;
 	min-width:20rem;
 	z-index: 1000;
-	
+	height: 24.75rem;
 }
 .userbar ul li ul li{
 	border-left:0px;

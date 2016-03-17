@@ -14,22 +14,20 @@
 
 		<div class="page_header" style="margin:5px;">
 			<span>
-				#{msg.notification}
+				Database connections
 			</span>
 		</div>			
 		
 		  <p:panel rendered="#{userBean.admin || userBean.moderator}" style="margin:5px;">
 
-<h:head>
-	<title>System Tools</title>
-</h:head>
+
 
 <h:body>
 	<div>
 		<h:form>
-			<h2>Connection Checker</h2>
+			
 	
-			Open Connection: ... Scanning ... Bibub ... Found ... There are <h:outputText value="#{adminSystemBean.databaseProcessList.size()}" /> Connections open
+			There are <h:outputText value="#{adminSystemBean.databaseProcessList.size()}" /> Connections open
 	
 			
 			

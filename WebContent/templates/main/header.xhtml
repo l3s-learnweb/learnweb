@@ -5,6 +5,11 @@
       
 <ui:composition>
 	<h:outputScript name="main-template/jquery-ui.min.js" />
+	<script>
+		function normalCheck() {
+    								
+		}
+	</script>
 	<header id="header">
 		<div id="main_menu_bar" style="background-color: #{userBean.bannerColor}; #{userBean.bannerImage}">			
 		
@@ -46,7 +51,9 @@
 						<img alt="" src="#{request.contextPath}/resources/main-template/img/dropdownmenu.png" height="28" width="28" 
 							class="menu" tabindex="0" />
 						
-						<ul style="overflow-y: auto;">
+						<ul style="overflow-y: auto;" onload="normalCheck()">
+						
+						
 							
 							<li class="menupoint">
 								<h:outputText value="#{msg.my_stuff}" />
@@ -122,7 +129,7 @@
 								</li>
 								</ui:fragment>
 								<li>
-									<a href="#{request.contextPath}/lw/admin/connectionChecker.jsf">
+									<a href="#{request.contextPath}/lw/admin/systemtools.jsf">
 										<h:outputText value="System Tools" />
 									</a>
 								</li>

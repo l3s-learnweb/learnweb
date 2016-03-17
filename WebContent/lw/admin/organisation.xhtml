@@ -57,7 +57,7 @@
 				<p>
 					<p:commandButton action="#{adminOrganisationsBean.onSave}" value="#{msg.save}" ajax="false"/>
 					
-					<p:button style="margin-left:5px;" outcome="organisations" value="Back to Organisations" />
+					<p:button style="margin-left:5px;" rendered="#{userBean.admin}" outcome="organisations" value="Back to Organisations" />
 				</p>
 			</h:form>
 					
