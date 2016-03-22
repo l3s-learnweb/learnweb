@@ -70,6 +70,13 @@ public class UserBean implements Serializable
 	preferences = new HashMap<String, String>();
 
 	storeMetadataInSession(null);
+
+	HttpServletRequest httpRequest = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+
+	if(FrontpageServlet.isArchiveWebRequest(httpRequest))
+	{
+	    setActiveCourseId(891); // enabled archive course when archiveweb.l3s.uni-hannover.de is used
+	}
     }
 
     /**

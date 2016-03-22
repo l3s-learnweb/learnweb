@@ -574,15 +574,8 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
 	if(getResourcesCount() != 0)
 	{
-	    //tooltip += "<li>" + UtilBean.getLocaleMessage("resources") + ": <p:link outcome='/group/resources.jsf?group_id='" + getId() + "'>" + getResourcesCount() + "</p:link></li>";
 	    tooltip += "<li><a href='group/resources.jsf?group_id=" + getId() + "' >" + UtilBean.getLocaleMessage("resources") + " (" + getResourcesCount() + ")</a></li>";
-	    //tooltip += "<li><h:form><p:commandLink actionListener='#{group.resourceLink}' > <h:outputText value=" + UtilBean.getLocaleMessage("resources") + " /> </p:commandLink></h:form>: " + getResourcesCount() + "</li>";
-	    //tooltip += "<li><p:link outcome='group/resources.jsf?group_id=896' >" + UtilBean.getLocaleMessage("resources") + "</p:link>: " + getResourcesCount() + "</li>";
-	    //tooltip += "<li><element onclick='resourceLink()>" + UtilBean.getLocaleMessage("resources") + "</element>" + ": " + getResourcesCount() + "</li>";
-	    //http://localhost:8080/Learnweb-Tomcat/lw/group/resources.jsf?group_id=896
-	    //tooltip += "<li>" + UtilBean.getLocaleMessage("resources") + ": " + getResourcesCount() + "</li>";
 	}
-	//tooltip += "<li>" + UtilBean.getLocaleMessage("users") + ": " + getMembers().size() + "</li>";
 	tooltip += "<li><a href='group/members.jsf?group_id=" + getId() + "' >" + UtilBean.getLocaleMessage("users") + " (" + getMemberCount() + ")</a></li>";
 
 	if(getFolders() != null && getFolders().size() > 0)

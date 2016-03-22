@@ -5,12 +5,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
 import de.l3s.learnwebBeans.ApplicationBean;
 
@@ -26,13 +26,8 @@ public class AdminSystemBean extends ApplicationBean implements Serializable
     {
 	User user = getUser();
 
-	if(null == user) // not logged in
+	if(null == user || !user.isAdmin()) // not logged in
 	    return;
-
-	/*
-	if(user.isAdmin())
-	    return;
-	*/
 
 	loadDatabaseProcessList();
     }
@@ -40,7 +35,7 @@ public class AdminSystemBean extends ApplicationBean implements Serializable
     private void loadDatabaseProcessList() throws SQLException
     {
 	databaseProcessList = new LinkedList<>();
-	ResultSet rs = Learnweb.getInstance().getConnection().createStatement().executeQuery("SHOW FULL PROCESSLIST");
+	ResultSet rs = getLearnweb().getConnection().createStatement().executeQuery("SHOW FULL PROCESSLIST");
 
 	while(rs.next())
 	{
@@ -56,8 +51,6 @@ public class AdminSystemBean extends ApplicationBean implements Serializable
 	    ps.setProgress(rs.getString("Progress"));
 
 	    databaseProcessList.add(ps);
-
-	    log.debug(ps);
 	}
     }
 
@@ -66,10 +59,13 @@ public class AdminSystemBean extends ApplicationBean implements Serializable
 	return databaseProcessList;
     }
 
-    public void onKillDatabaseProcess(int processId)
+    public void onKillDatabaseProcess(int processId) throws SQLException
     {
-	log.debug("Kill database process: " + processId);
-	// TODO implement
+	getLearnweb().getConnection().createStatement().executeUpdate("KILL " + processId);
+
+	addMessage(FacesMessage.SEVERITY_INFO, "Killed process " + processId);
+
+	loadDatabaseProcessList(); // update list
     }
 
     public static class DatabaseProcessStatistic

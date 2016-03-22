@@ -98,13 +98,22 @@ public class LoginBean extends ApplicationBean implements Serializable
 
     public String logout()
     {
-	//setKeepMessages();
+	UserBean userBean = UtilBean.getUserBean();
+	int activeCourse = userBean.getActiveCourseId();
 
 	log(Action.logout, 0, null);
-	UtilBean.getUserBean().setUser(null);
+	userBean.setUser(null);
 
 	//addMessage(FacesMessage.SEVERITY_INFO, "logout_success");
 	//FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-	return "/lw/index.xhtml?faces-redirect=true";
+
+	if(activeCourse == 891) // is archive web course
+	{
+	    userBean.setActiveCourseId(891);
+
+	    return "/aw/index.xhtml?faces-redirect=true";
+	}
+	else
+	    return "/lw/index.xhtml?faces-redirect=true";
     }
 }

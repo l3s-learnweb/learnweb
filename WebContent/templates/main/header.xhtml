@@ -5,11 +5,7 @@
       
 <ui:composition>
 	<h:outputScript name="main-template/jquery-ui.min.js" />
-	<script>
-		function normalCheck() {
-    								
-		}
-	</script>
+
 	<header id="header">
 		<div id="main_menu_bar" style="background-color: #{userBean.bannerColor}; #{userBean.bannerImage}">			
 		
@@ -235,13 +231,9 @@
 					</ul>
 				</h:form>
 			</div>
-
-
-
-										
+									
 			<p:graphicImage value="/resources/main-template/img/question.png" alt="#{msg.help}" onclick="footerToggle();" 
 				rendered="#{not empty helpText}" id="informationonscreen" />
-
 		
 			<h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" rendered="#{userBean.loggedIn}" id="message_div">
 				<h:outputText value="#{notificationReaderBean.howManyNewMessages}" rendered="#{notificationReaderBean.howManyNewMessages gt 0}" 
