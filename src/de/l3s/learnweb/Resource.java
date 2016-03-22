@@ -22,6 +22,7 @@ import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
+import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
 
@@ -376,6 +377,16 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     public int getStorageType()
     {
 	return storageType;
+    }
+
+    public String getStringStorageType()
+    {
+	if(storageType == Resource.FILE_RESOURCE)
+	    return UtilBean.getLocaleMessage("file");
+	else if(storageType == Resource.WEB_RESOURCE)
+	    return UtilBean.getLocaleMessage("web");
+	else
+	    return UtilBean.getLocaleMessage("unknown_storage_type");
     }
 
     public void setStorageType(int type)

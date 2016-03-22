@@ -70,7 +70,7 @@
 										<h:outputText value="#{msg.type}:" />
 									</p:column>
 									<p:column>
-										<h:outputText value="#{addResourceBean.getStorageType()}"/>
+										<h:outputText value="#{addResourceBean.resource.getStringStorageType()}"/>
 									</p:column>
 								</p:row>
 								
@@ -91,7 +91,7 @@
 										<p:fileUpload fileUploadListener="#{addResourceBean.handleFileUpload}" mode="advanced" auto="true" sizeLimit="10000000" fileLimit="1" label="#{msg.choose_file}" update=":growl :add_resource_section"/>
 									</p:column>
 									<p:column rendered="#{addResourceBean.formStep > 1}">
-										<h:outputText value="#{addResourceBean.resource.url}" />
+										<h:outputText value="#{addResourceBean.resource.url}"/>
 									</p:column>
 								</p:row>
 								
@@ -99,8 +99,20 @@
 									<p:column>
 										<h:outputText value="URL:" />
 									</p:column>
+									<p:column rendered="#{addResourceBean.formStep == 1}">
+										<p:inputText value="#{addResourceBean.resource.url}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="url_input" validator="#{addResourceBean.validateUrl}"/>
+									</p:column>
+									<p:column rendered="#{addResourceBean.formStep > 1}">
+										<h:outputText value="#{addResourceBean.resource.url}"/>
+									</p:column>
+								</p:row>
+								
+								<p:row rendered="#{addResourceBean.formStep > 1}">
 									<p:column>
-										<p:inputText value="#{addResourceBean.resource.url}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="url_input" />
+										<h:outputText value="#{msg.preview}:" />
+									</p:column>
+									<p:column styleClass="form-preview">
+										<h:outputText id="preview" escape="false" value="#{addResourceBean.resource.embeddedSize1}"/>
 									</p:column>
 								</p:row>
 							</p:panelGrid>
@@ -122,9 +134,6 @@
 									<p:column>
 										<p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field" required="true" 
 												requiredmessage="#{msg.mandatory_field}" id="title_input" />
-									</p:column>
-									<p:column rowspan="3" styleClass="form-preview">
-										<h:outputText id="preview" escape="false" value="#{addResourceBean.resource.embeddedSize1}"/>
 									</p:column>
 								</p:row>
 										
@@ -156,7 +165,7 @@
 							<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{addResourceBean.resource}"/>
 						</p:commandButton>
 						
-						<p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right" partialSubmit="true" process="@this" 
+						<p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right" immediate="true" 
 							actionListener="#{addResourceBean.cancelUpload}" ajax="true" update=":add_resource_panel" 
 							oncomplete="update_header()" style="margin-right:0.5em;">
 							<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none"/>
@@ -489,7 +498,7 @@
 									style="position:absolute;left:28px" alt="Profile picture"/> 
 								
 								<p:inputTextarea id="commentfield" style="width:100%;min-height:50px;box-sizing:border-box;" rows="2" 
-									value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}"/>
+									value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}" required="true"/>
 								<br/>
 							</div>
 							<p:commandButton id="comment_button" styleClass="greenbutton float-right" value="#{msg.addComment}" 
@@ -528,7 +537,7 @@
 											<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
 										</p:commandLink>
 										<p:commandLink rendered="#{resourceDetailBean.canEditComment(comment)}" 
-											action="#{resourceDetailBean.onDeleteComment}" 
+											action="#{resourceDetailBean.onDeleteComment}"
 											style="margin-right: 5px; font-size: 10px !important; color: red" value="#{msg.delete}" 
 											onstart="return confirm('#{msg.delete_message_comments}');" ajax="true" 
 											update=":add_resource_panel">
@@ -601,7 +610,7 @@
 									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewResource"/>
 								</p:commandButton>
 								<p:commandButton styleClass="greenbutton float-right" value="#{msg.cancel}" 
-									update=":add_resource_panel" style="margin-right:0.5em;">
+									update=":add_resource_panel" style="margin-right:0.5em;" immediate="true">
 									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewResource"/>
 								</p:commandButton>
 							</td>
@@ -660,7 +669,7 @@
 							<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none"/>
 						</p:commandButton>	
 						
-						<p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right" update=":add_resource_panel" oncomplete="update_header()" style="margin-right:0.5em;" partialSubmit="true" process="@this">
+						<p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right" update=":add_resource_panel" oncomplete="update_header()" style="margin-right:0.5em;" immediate="true">
 							<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none"/>
 						</p:commandButton>												
 					</h:form>
@@ -733,7 +742,7 @@
 								</p:commandButton>
 								<p:commandButton styleClass="greenbutton" value="#{msg.save}" 
 									actionListener="#{bean.editFolder}" update=":group_menu_tree :folderGrid :add_resource_panel :growl" 
-									oncomplete="update_header();resourceDND();" style="margin-right:0.5em;">
+									oncomplete="update_header();resourceDND();" style="margin-right:0.5em;" immediate="true">
 									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewFolder"/>
 								</p:commandButton>
 							</td>
