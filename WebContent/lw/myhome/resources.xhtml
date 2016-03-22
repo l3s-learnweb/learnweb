@@ -16,10 +16,16 @@
 			<br></br>
 
 			<h:form  id="center_header_form">
-				<p:commandButton styleClass="resource_button greenbutton resourcetoolbutton" value="#{msg.upload_resource}" 
-					update=":add_resource_panel" oncomplete="update_header()">
-					<f:setPropertyActionListener target="#{myResourcesBean.rightPanelAction}" value="newResource"/>
-				</p:commandButton>
+				<p:menuButton value="#{msg.upload_resource}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton">
+			        <p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" update=":add_resource_panel" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
+						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="1"/>
+						<f:setPropertyActionListener target="#{myResourcesBean.rightPanelAction}" value="newResource"/>
+			        </p:menuitem>
+			        <p:menuitem value="#{msg.upload_url}" icon="ui-icon-link" update=":add_resource_panel" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
+						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="2"/>
+						<f:setPropertyActionListener target="#{myResourcesBean.rightPanelAction}" value="newResource"/>
+			        </p:menuitem>
+			    </p:menuButton>
 			</h:form>
 			<script type="text/javascript">			
 				var div = document.createElement("div");
