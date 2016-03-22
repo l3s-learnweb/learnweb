@@ -386,7 +386,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	else if(storageType == Resource.WEB_RESOURCE)
 	    return UtilBean.getLocaleMessage("web");
 	else
-	    return UtilBean.getLocaleMessage("unknown_storage_type");
+	    throw new RuntimeException();
     }
 
     public void setStorageType(int type)

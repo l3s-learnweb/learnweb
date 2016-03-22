@@ -13,11 +13,17 @@
 
 			
 	<ui:define name="center_layout">
-			<h:form id="center_header_form">
-				<p:commandButton styleClass="resource_button greenbutton resourcetoolbutton" update=":add_resource_panel" 
-					value="#{msg.upload_resource}" oncomplete="update_header()">
-					<f:setPropertyActionListener target="#{activityResourceBean.newResourceClicked}" value="true"/>
-				</p:commandButton>
+			<h:form id="center_header_form">				
+				<p:menuButton value="#{msg.upload_resource}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton">
+			        <p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" update=":add_resource_panel" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
+						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="1"/>
+						<f:setPropertyActionListener target="#{activityResourceBean.rightPanelAction}" value="newResource"/>
+			        </p:menuitem>
+			        <p:menuitem value="#{msg.upload_url}" icon="ui-icon-link" update=":add_resource_panel" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
+						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="2"/>
+						<f:setPropertyActionListener target="#{activityResourceBean.rightPanelAction}" value="newResource"/>
+			        </p:menuitem>
+			    </p:menuButton>
 			</h:form>
 			<script type="text/javascript">
 				var div = document.createElement("div");
