@@ -18,7 +18,7 @@
 				Welcome to ArchiveWeb
 			</h1>
 
-			<h:outputText value="#{msg.homepage}" styleClass="homepage_infotext" />
+			<h:outputText value="#{msg['ArchiveWeb.homepage']}" styleClass="homepage_infotext" />
 
 			<div id="div_left">
 
@@ -63,10 +63,12 @@
 				<ui:fragment rendered="#{!userBean.loggedIn}">
 
 					<h2 class="page_header">
-						#{msg.sign_up_for}:
+						#{msg['ArchiveWeb.sign_up']}
 					</h2>
 					
 					<div class="grey_border">
+						<h:outputText value="#{msg['ArchiveWeb.sign_up_description']}"/>
+						<!-- 
 						<h3>
 							<h:outputText value="#{msg.public_courses}" />
 						</h3>
@@ -78,7 +80,7 @@
 	
 							<h:outputText value="#{msg.standard_version_description}" />
 						</h:panelGrid>
-		
+						 -->
 					</div>
 					<br/>
 				</ui:fragment>
@@ -109,10 +111,10 @@
 		</div>
 
 		<div id="index_footer">
-			<h:outputText value="#{msg.index_footer_text} "/>
-			<a href="mailto:learnweb-support@l3s.de" >
+			<h:outputText value="#{msg['ArchiveWeb.index_footer_text']} "/>
+			<!-- <a href="mailto:learnweb-support@l3s.de" >
 				<h:outputText value="learnweb-support@l3s.de"/>
-			</a>
+			</a> -->
 		</div>
 	</ui:define>
 
