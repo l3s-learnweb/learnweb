@@ -1069,8 +1069,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return searchFilters.getFiltersString();
     }
 
-    private void updateResourcesFromSolr()
+    public void updateResourcesFromSolr()
     {
+	if(this.searchFilters == null)
+	{
+	    return;
+	}
+
 	int folderId = (selectedFolder != null && selectedFolder.getFolderId() > 0) ? selectedFolder.getFolderId() : 0;
 	try
 	{

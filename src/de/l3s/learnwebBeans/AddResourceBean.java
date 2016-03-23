@@ -2,6 +2,9 @@ package de.l3s.learnwebBeans;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -10,7 +13,10 @@ import java.util.List;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
+import javax.faces.validator.ValidatorException;
 
 import org.apache.commons.codec.DecoderException;
 import org.apache.log4j.Logger;
@@ -188,6 +194,34 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	}
     }
 
+    public void validateUrl(FacesContext context, UIComponent comp, Object value) throws ValidatorException
+    {
+	String urlValue = value.toString().trim();
+	log.debug("validateUrl: " + urlValue);
+
+	if(!urlValue.startsWith("http"))
+	{
+	    urlValue = "http://" + urlValue;
+	}
+
+	try
+	{
+	    URL url = new URL(urlValue);
+	    URLConnection conn = url.openConnection();
+	    conn.connect();
+	}
+	catch(MalformedURLException e)
+	{
+	    // the URL is not in a valid form
+	    throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_url"));
+	}
+	catch(IOException e)
+	{
+	    // the connection couldn't be established
+	    throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_url"));
+	}
+    }
+
     public Resource getResource()
     {
 	return resource;
@@ -262,6 +296,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	    log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
 
 	    addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
+
+	    UtilBean.getGroupDetailBean().updateResourcesFromSolr();
+
 	    resource = new Resource();
 	    resource.setSource("Internet");
 	    resource.setLocation("Learnweb");
