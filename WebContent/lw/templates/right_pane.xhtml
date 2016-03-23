@@ -639,7 +639,7 @@
 								
 								<p:row rendered="#{bean.clickedFolder != null and bean.clickedFolder.folderId > 0}">
 									<p:column>
-										<h:outputText value="#{msg.folder_path}:" />
+										<h:outputText value="#{msg.path}:" />
 									</p:column>
 									<p:column>
 										<h:outputText value="#{bean.clickedFolder.prettyPath}"/>
@@ -669,7 +669,7 @@
 							* #{msg.mandatory_field}
 						</p:fieldset>
 						
-						<p:commandButton value="#{msg.createFolder}" styleClass="greenbutton float-right" update=":group_menu_tree :folderGrid :growl :add_resource_panel" action="#{bean.addFolder}" ajax="true" oncomplete="update_header();update_datagrid();resourceDND();">
+						<p:commandButton value="#{msg.create_folder}" styleClass="greenbutton float-right" update=":group_menu_tree :folderGrid :growl :add_resource_panel" action="#{bean.addFolder}" ajax="true" oncomplete="update_header();update_datagrid();resourceDND();">
 							<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none"/>
 						</p:commandButton>	
 						
@@ -692,7 +692,7 @@
 						<ui:fragment rendered="#{bean.clickedFolder.parentFolder != null}">
 							<tr>
 								<td>
-									#{msg.folder_path}:
+									#{msg.path}:
 								</td>
 								<td>
 									<h:outputText style="width: 96%" value="#{bean.clickedFolder.parentFolder.prettyPath}"/>
@@ -723,7 +723,7 @@
 						<ui:fragment rendered="#{bean.clickedFolder.parentFolder != null}">
 							<tr>
 								<td>
-									#{msg.folder_path}:
+									#{msg.path}:
 								</td>
 								<td>
 									<h:outputText style="width: 96%" value="#{bean.clickedFolder.parentFolder.prettyPath}"/>
