@@ -67,20 +67,35 @@
 					</h2>
 					
 					<div class="grey_border">
-						<h:outputText value="#{msg['ArchiveWeb.sign_up_description']}"/>
-						<!-- 
-						<h3>
-							<h:outputText value="#{msg.public_courses}" />
-						</h3>
-	
-						<h:panelGrid columns="2" columnClasses="first_column,description">
-							<h:outputLink styleClass="greenbutton" value="user/register.jsf">
-								<h:outputText value="#{msg.standard_version}" />
-							</h:outputLink>
-	
-							<h:outputText value="#{msg.standard_version_description}" />
-						</h:panelGrid>
-						 -->
+						<h:outputText value="#{msg['ArchiveWeb.sign_up_description']}" />
+						<h:form id="registerform">
+							<h:panelGrid columns="3">
+								<h:outputLabel for="register_username" value="#{msg.username}: *" />
+								<p:inputText id="register_username" value="#{archiveWebRegistrationBean.username}"
+									label="#{msg.username}" />
+								<p:message showSummary="true" showDetail="false"
+									styleClass="error" for="register_username" id="usernameMessage" />
+
+								<h:outputLabel for="register_password" value="#{msg.password}: *" />
+								<p:password id="register_password" value="#{archiveWebRegistrationBean.password}"
+									autocomplete="false" label="#{msg.password}">
+								</p:password>
+								<p:message id="passwordMessage" showSummary="true"
+									showDetail="false" styleClass="error" for="register_password" />
+
+								<h:outputLabel for="email" value="#{msg.email_address}: " />
+								<p:inputText id="email" value="#{archiveWebRegistrationBean.email}"
+									label="#{msg.email_address}" />
+								<p:message id="emailMessage" showSummary="true"
+									showDetail="false" styleClass="error" for="email" />
+
+								<h:outputText value="" />
+								<p:commandButton action="#{archiveWebRegistrationBean.sendMail}"
+									value="#{msg['ArchiveWeb.send_request']}" ajax="false"/>
+								<h:outputText value="" />
+							</h:panelGrid>
+							<h:outputText value="* #{msg.mandatory_field}" />
+						</h:form>
 					</div>
 					<br/>
 				</ui:fragment>
