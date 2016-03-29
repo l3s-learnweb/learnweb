@@ -38,8 +38,6 @@ public class FrontpageServlet extends HttpServlet
     {
 	try
 	{
-	    System.out.println(request.getContextPath() + " , " + request.getRequestURI());
-
 	    String url = request.getContextPath();
 
 	    if(isArchiveWebRequest(request))

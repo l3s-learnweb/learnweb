@@ -345,6 +345,9 @@ public class MimeTypes
 		put("odi", "application/vnd.oasis.opendocument.image");
 		put("oxt", "application/vnd.openofficeorg.extension");
 
+		put("mp4", "video/mp4");
+		put("mkv", "video/x-matroska");
+
 	    }
 	};
     }

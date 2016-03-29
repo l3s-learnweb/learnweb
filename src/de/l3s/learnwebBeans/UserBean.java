@@ -564,8 +564,6 @@ public class UserBean implements Serializable
 	if(!isLoggedIn())
 	    return null;
 
-	long start = System.currentTimeMillis();
-
 	if(null == groupsTree || groupsTreeCacheTime + 10000L < System.currentTimeMillis())
 	{
 	    groupsTreeCacheTime = System.currentTimeMillis();
@@ -585,7 +583,7 @@ public class UserBean implements Serializable
 	    }
 	}
 
-	log.debug("getWriteAbleGroupsTree in " + (System.currentTimeMillis() - start) + "ms");
+	//log.debug("getWriteAbleGroupsTree in " + (System.currentTimeMillis() - start) + "ms");
 
 	return groupsTree;
     }

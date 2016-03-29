@@ -28,7 +28,6 @@ import com.mortennobel.imagescaling.MultiStepRescaleOp;
  */
 public class Image
 {
-
     BufferedImage img;
 
     /**
@@ -46,14 +45,6 @@ public class Image
 	    throw new IllegalArgumentException("Can't create image from this stream");
     }
 
-    /*
-    public Image(String url) throws IOException
-    {
-    img = new buf
-    	new ImageIcon(url).getImage().;
-    }
-    */
-
     /**
      * Constructor for taking a BufferedImage
      * 
@@ -70,8 +61,6 @@ public class Image
 	Graphics2D g = img.createGraphics();
 	g.drawImage(image, null, null);
     }
-
-    // waitForImage(bufferedImage);
 
     /**
      * @return Width of the image in pixels

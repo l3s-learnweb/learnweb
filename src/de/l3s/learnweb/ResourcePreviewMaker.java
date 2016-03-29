@@ -1,9 +1,9 @@
 package de.l3s.learnweb;
 
 import java.io.ByteArrayOutputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
@@ -93,6 +93,7 @@ public class ResourcePreviewMaker
 
 	resource.addFile(file);
 	resource.setUrl(file.getUrl());
+	resource.setFileUrl(file.getUrl()); // for Loro resources the file url is different from the url
 	resource.setFileName(info.getFileName());
 	resource.setFormat(info.getMimeType());
 	resource.setType(type);
@@ -106,6 +107,10 @@ public class ResourcePreviewMaker
 	else if(type.equals("image"))
 	{
 	    processImage(resource, inputStream);
+	}
+	else if(type.equals("video"))
+	{
+	    processVideo(resource);
 	}
 	inputStream.close();
     }
@@ -153,33 +158,65 @@ public class ResourcePreviewMaker
 	createThumbnails(resource, img, true);
     }
 
-    public void processVideo(Resource resource) throws IOException, SQLException
+    public void processVideo(Resource resource)
     {
-	URL thumbnailUrl = new URL(videoThumbnailService + StringHelper.urlEncode(resource.getFileUrl()));
+	try
+	{
+	    // get website thumbnail
+	    URL thumbnailUrl = new URL(videoThumbnailService + StringHelper.urlEncode(resource.getFileUrl()));
 
-	// process image
-	Image img = new Image(thumbnailUrl.openStream());
+	    Image img = new Image(thumbnailUrl.openStream());
 
-	createThumbnails(resource, img, false);
+	    createThumbnails(resource, img, false);
+
+	    return;
+	}
+	catch(Exception e)
+	{
+	    log.fatal("Can't create thumbnail for video. resource_id=" + resource + "; file=" + resource.getFileUrl(), e);
+	}
+
+	// use default image when we can't create one
+	Thumbnail videoImage = new Thumbnail("../resources/resources/img/video.png", 200, 200);
+	resource.setThumbnail0(videoImage.resize(150, 120));
+	resource.setThumbnail1(videoImage.resize(150, 150));
+	resource.setThumbnail2(videoImage);
+	resource.setThumbnail3(videoImage);
+	resource.setThumbnail4(videoImage);
     }
 
-    public static void main(String[] ar)
+    public static void main(String[] ar) throws MalformedURLException
     {
 
+	URL thumbnailUrl = new URL("http://prometheus.kbs.uni-hannover.de/thumbnail/video.php?url=" + StringHelper.urlEncode("http://learnweb.l3s.uni-hannover.de/test/download/568382/MediaCoder_test1_1m9s_AVC_VBR_.mp4"));
+
+	// process image
+	try
+	{
+	    Image img = new Image(thumbnailUrl.openStream());
+
+	}
+	catch(Exception e)
+	{
+	    log.fatal("Can't create thumbnail for video. resource_id=", e);
+	}
+
+	/*
 	try
 	{
 	    Image img = new Image(FileInspector.openStream("http://www.filehippo.com/de/download/file/b9915e2b3dbaf63cc505890ee4cadd48302780c53bb04d55ecc8b3bd913ed7ce/"));
-
+	
 	    ;
-
+	
 	    FileOutputStream out = new FileOutputStream("c:\\ablage\\test.dat");
 	    IOUtils.copy(img.getInputStream(), out);
 	}
 	catch(Exception e)
 	{
 	    log.fatal("Couldn't create an image of website: ", e);
-
+	
 	}
+	*/
 
     }
 
@@ -289,7 +326,7 @@ public class ResourcePreviewMaker
 	}
 	/*
 	File file;
-
+	
 	if(page == 1)
 	{
 	Image thumbnail = image.getResizedToSquare2(SIZE1_WIDTH, 0.05);
@@ -301,7 +338,7 @@ public class ResourcePreviewMaker
 	thumbnail.dispose();
 	resource.setEmbeddedSize1Raw("<img src=\"" + Resource.createPlaceholder(1) + "\" width=\"" + thumbnail.getWidth() + "\" height=\"" + thumbnail.getHeight() + "\" />");
 	resource.addFile(file);
-
+	
 	thumbnail = image.getResized(SIZE2_MAX_WIDTH, SIZE2_MAX_HEIGHT, 30);
 	file = new File();
 	file.setResourceFileNumber(2); // number 1 is reserved for the squared thumbnail
@@ -311,7 +348,7 @@ public class ResourcePreviewMaker
 	thumbnail.dispose();
 	resource.setEmbeddedSize2Raw("<img src=\"" + Resource.createPlaceholder(2) + "\" width=\"" + thumbnail.getWidth() + "\" height=\"" + thumbnail.getHeight() + "\" />");
 	resource.addFile(file);
-
+	
 	thumbnail = image.getResized(SIZE3_MAX_WIDTH, SIZE3_MAX_HEIGHT, 30);
 	file = new File();
 	file.setResourceFileNumber(3); // number 1 is reserved for the squared thumbnail
@@ -327,7 +364,7 @@ public class ResourcePreviewMaker
 	}
 	
 	
-
+	
 	file = new File();
 	file.setResourceFileNumber(fileCounter);
 	file.setName("preview.png");
@@ -337,9 +374,9 @@ public class ResourcePreviewMaker
 	resource.addFile(file);
 	size3.append(",'" + Resource.createPlaceholder(fileCounter) + "'");
 	fileCounter++;
-
+	
 	}
-
+	
 	size3.append("]);\" />");
 	// resource.setEmbeddedSize2Raw(size2.toString());
 	resource.setEmbeddedSize3Raw(size3.toString());

@@ -50,7 +50,7 @@
 						{
 							$(".ui-layout-unit-header","#right_pane").html("#{msg.click_to_view_details}");
 						}
-						console.log('scoller', $('#right_pane .content').scrollTop());
+						//console.log('scoller', $('#right_pane .content').scrollTop());
 						
 						$('#right_pane .content').scrollTop(0);
 						
@@ -88,7 +88,7 @@
 										<h:outputText value="#{msg.file}:" />
 									</p:column>
 									<p:column rendered="#{addResourceBean.formStep == 1}">
-										<p:fileUpload fileUploadListener="#{addResourceBean.handleFileUpload}" mode="advanced" auto="true" sizeLimit="10000000" fileLimit="1" label="#{msg.choose_file}" update=":growl :add_resource_section"/>
+										<p:fileUpload fileUploadListener="#{addResourceBean.handleFileUpload}" mode="advanced" auto="true" sizeLimit="10000000000" fileLimit="1" label="#{msg.choose_file}" update=":growl :add_resource_section"/>
 									</p:column>
 									<p:column rendered="#{addResourceBean.formStep > 1}">
 										<h:outputText value="#{addResourceBean.resource.url}"/>

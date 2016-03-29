@@ -85,6 +85,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private boolean restricted = false;
     private Date creationDate = new Date();
     private HashMap<String, String> metadata = new HashMap<String, String>(); // userId : hasRated
+    private boolean deleted = false; // indicates whether this resource has been deleted
 
     private int views;
     private int thumbUp;
@@ -145,12 +146,11 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
 	    // TODO find a better solution; don't set a fixed error image
 	    Thumbnail pageNotFoundImage = new Thumbnail("../resources/resources/img/page_no_longer_available.jpg", 300, 300);
-	    setThumbnail0(null);
+	    setThumbnail0(pageNotFoundImage.resize(150, 120));
 	    setThumbnail1(pageNotFoundImage.resize(150, 150));
 	    setThumbnail2(pageNotFoundImage);
 	    setThumbnail3(pageNotFoundImage);
 	    setThumbnail4(pageNotFoundImage);
-
 	}
 	else if(null == embeddedSize1 || null == embeddedSize3)
 	{
@@ -227,6 +227,17 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 		    embeddedSize1 = "<img src=\"../resources/resources/img/website-140.png\" width=\"100\" height=\"100\" />";
 		else if(format.startsWith("text/"))
 		    embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
+		else if(isRestricted())
+		{
+		    //embeddedSize1 = "<img src=\"../resources/resources/img/video.png\" width=\"200\" height=\"200\" />";
+
+		    Thumbnail videoImage = new Thumbnail("../resources/resources/img/video.png", 200, 200);
+		    setThumbnail0(videoImage.resize(150, 120));
+		    setThumbnail1(videoImage.resize(150, 150));
+		    setThumbnail2(videoImage);
+		    setThumbnail3(videoImage);
+		    setThumbnail4(videoImage);
+		}
 	    }
 
 	}
@@ -566,6 +577,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	r.setRestricted(restricted);
 	r.setCreationDate(creationDate);
 	r.setArchiveUrls(getArchiveUrls());
+	r.setDeleted(deleted);
 	// sets the originalResourceId to the id of the source resource
 	if(originalResourceId == 0)
 	    r.setOriginalResourceId(id);
@@ -1208,7 +1220,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	    return "<iframe src=\"" + getUrl() + "\" />";
 	else if(getType().equalsIgnoreCase("video"))
 	{
-	    if(getSource().equalsIgnoreCase("loro"))
+	    if(getSource().equalsIgnoreCase("loro") || getSource().equalsIgnoreCase("desktop"))
 	    {
 		return "<iframe src=\"video.jsf?resource_id=" + id + "\" width=\"100%\" height=\"100%\" />";
 		//log.debug("" + getFileUrl());
@@ -1455,6 +1467,16 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     public void setArchiveUrls(LinkedList<ArchiveUrl> archiveUrls)
     {
 	this.archiveUrls = archiveUrls;
+    }
+
+    public boolean isDeleted()
+    {
+	return deleted;
+    }
+
+    public void setDeleted(boolean deleted)
+    {
+	this.deleted = deleted;
     }
 
     public Resource moveTo(int newGroupId, int newFolderId) throws SQLException

@@ -1,17 +1,17 @@
 <html xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:h="http://java.sun.com/jsf/html" 
 	xmlns:f="http://java.sun.com/jsf/core" 
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+	xmlns:p="http://primefaces.org/ui">
 	
 <ui:composition>
-	<div id="groupoverview_link">
-		<h:outputLink value="myhome/groups.jsf">
-			<h:outputText value="#{msg.groupOverview}"/>
-			<h:outputText value="(#{userBean.newGroupsCount})" rendered="#{userBean.newGroupsCount gt 0}" id="new_group_count" 
-				styleClass="bold_red" style="padding-left:3px;"/>
-		</h:outputLink>
-		
+	<div class="group-menu">
+		<h3 class="group_link">
+			<h:outputLink value="myhome/groups.jsf" style="font-weight:normal;">
+				<h:outputText value="#{msg.groupOverview}"/>
+				<h:outputText value="(#{userBean.newGroupsCount})" rendered="#{userBean.newGroupsCount gt 0}" id="new_group_count" 
+					styleClass="bold_red" style="padding-left:3px;"/>
+			</h:outputLink>
+		</h3>
 		<p:tooltip for="new_group_count"  showEffect="fade" hideEffect="fade">
 			<h:outputFormat value="#{msg.new_groups_message}">
 			    <f:param value="#{userBean.newGroupsCount}" />
@@ -44,7 +44,7 @@
 				</h:panelGroup>
 				<h:panelGroup rendered="#{groupDetailBean.groupId == group.id}">
 					<div class="panelmenu active folder-tree">
-						<div class="ui-panelmenu-content ui-widget-content ui-helper-hidden" id="folders_tree_wrap">
+						<div id="folders_tree_wrap">
 							<h:form id="folders_tree_form">								
 							    <p:tree id="folders_tree" value="#{groupDetailBean.getFoldersTree(group.id)}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{groupDetailBean.selectedNode}" datakey="#{node.folderId}">				        						     						        
 							        <p:ajax event="select" update=":folderGrid :resourceGrid :paginator :filters :add_resource_panel" listener="#{groupDetailBean.onNodeSelect}" oncomplete="updateCarousel();update_url(0,0);resourceDND();update_header();"/>

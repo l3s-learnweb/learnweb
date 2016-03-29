@@ -4,15 +4,15 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/*
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-
+*/
 public class AuthorizationInformation implements Serializable
 {
     private static final long serialVersionUID = -9050656498265764056L;
@@ -23,31 +23,38 @@ public class AuthorizationInformation implements Serializable
     {
 	services = new ArrayList<AuthorizationInformation.ServiceInformation>();
 
-	Document res;
+	/*    
+	Document document;
 	try
 	{
-	    res = new SAXReader().read(xmlInputStream);
+	    DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+	    DocumentBuilder builder = factory.newDocumentBuilder();
+	      document = builder.parse( xmlInputStream );
 	}
-	catch(DocumentException e)
+	catch(Exception e)
 	{
 	    throw new IllegalResponseException(e.getMessage());
 	}
-	Element root = res.getRootElement();
-
-	if(!root.attribute("stat").getValue().equals("ok"))
-	    throw new IllegalResponseException(root.asXML());
-
-	for(Element service : root.element("services").elements("service"))
+	Element root = document.getDocumentElement();
+	System.out.println(root);
+	if(!root.getAttribute("stat").equals("ok"))
+	    throw new IllegalResponseException(root.toString());
+	
+	NodeList servicesEl = root.getElementsByTagName("service");
+	
+	for(int i=0; i<servicesEl.getLength(); i++)//.item(0).getElementsByTagName("service"))
 	{
+	    Node service = servicesEl.item(i);
 	    ServiceInformation info = new ServiceInformation();
-	    info.setId(service.attributeValue("id"));
-	    info.setTitle(service.elementText("title"));
+	    info.setId(service.getAttribute("id"));
+	    info.setTitle(service.getElementsByTagName("title").item(0).getTextContent())
+	    /*;
 	    info.setMediaTypes(service.elementText("mediatypes"));
 	    info.setAuthorized(Boolean.parseBoolean(service.elementText("authorized")));
-
+	
 	    if(info.getTitle().equals("BibSonomy"))
 		continue;
-
+	
 	    if(info.isAuthorized())
 	    {
 		info.setUserIdAtService(service.elementText("serviceuserid"));
@@ -57,7 +64,7 @@ public class AuthorizationInformation implements Serializable
 	    {
 		Element authorization = service.element("authorization");
 		info.setAuthorizationType(authorization.attributeValue("type"));
-
+	
 		Map<String, String> params = new HashMap<String, String>();
 		if(info.getAuthorizationType().equals("login"))
 		{
@@ -68,8 +75,58 @@ public class AuthorizationInformation implements Serializable
 		}
 		info.setAuthorization(params);
 	    }
+	    * /
 	    services.add(info);
 	}
+	    /*****************************************************************************
+	Document res;
+	try
+	{
+	   res = new SAXReader().read(xmlInputStream);
+	}
+	catch(DocumentException e)
+	{
+	   throw new IllegalResponseException(e.getMessage());
+	}
+	Element root = res.getRootElement();
+	
+	if(!root.attribute("stat").getValue().equals("ok"))
+	   throw new IllegalResponseException(root.asXML());
+	
+	for(Element service : root.element("services").elements("service"))
+	{
+	   ServiceInformation info = new ServiceInformation();
+	   info.setId(service.attributeValue("id"));
+	   info.setTitle(service.elementText("title"));
+	   info.setMediaTypes(service.elementText("mediatypes"));
+	   info.setAuthorized(Boolean.parseBoolean(service.elementText("authorized")));
+	
+	   if(info.getTitle().equals("BibSonomy"))
+	continue;
+	
+	   if(info.isAuthorized())
+	   {
+	info.setUserIdAtService(service.elementText("serviceuserid"));
+	//info.setRevokeauthorization(service.element("revokeauthorization").elementText("link"));
+	   }
+	   else
+	   {
+	Element authorization = service.element("authorization");
+	info.setAuthorizationType(authorization.attributeValue("type"));
+	
+	Map<String, String> params = new HashMap<String, String>();
+	if(info.getAuthorizationType().equals("login"))
+	{
+	    for(Element param : authorization.element("parameters").elements("parameter"))
+	    {
+		params.put(param.attributeValue("type"), param.getText());
+	    }
+	}
+	info.setAuthorization(params);
+	   }
+	   services.add(info);
+	}
+	*/
     }
 
     public List<ServiceInformation> getServices()

@@ -2,7 +2,6 @@ package de.l3s.learnwebBeans;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.sql.SQLException;
@@ -74,6 +73,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	resource.setSource("Internet");
 	resource.setLocation("Learnweb");
 	resource.setStorageType(Resource.FILE_RESOURCE);
+	resource.setDeleted(true); // hide the resource from the frontend until it is finally saved
     }
 
     /*
@@ -148,6 +148,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	    resource.setStorageType(Resource.FILE_RESOURCE);
 	    resource.setSource("Desktop");
 	    resource.setLocation("Learnweb");
+	    resource.setDeleted(true);
 
 	    UploadedFile uploadedFile = event.getFile();
 
@@ -189,8 +190,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	}
 	catch(Exception e)
 	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
 	}
     }
 
@@ -209,11 +209,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	    URL url = new URL(urlValue);
 	    URLConnection conn = url.openConnection();
 	    conn.connect();
-	}
-	catch(MalformedURLException e)
-	{
-	    // the URL is not in a valid form
-	    throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_url"));
 	}
 	catch(IOException e)
 	{
@@ -271,10 +266,11 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 		}
 		catch(IllegalResponseException e)
 		{
-		    e.printStackTrace();
-		    addMessage(FacesMessage.SEVERITY_FATAL, "The resource could not be uploaded to Interweb");
+		    addFatalMessage(e);
 		}
 	    }
+
+	    resource.setDeleted(false);
 
 	    // add resource to a group if selected
 	    if(resourceTargetGroupId != 0)
@@ -303,12 +299,11 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	    resource.setSource("Internet");
 	    resource.setLocation("Learnweb");
 	    resource.setStorageType(Resource.FILE_RESOURCE);
-
+	    resource.setDeleted(true);
 	}
 	catch(Exception e)
 	{
 	    addFatalMessage(e);
-	    log.fatal(e);
 	}
     }
 
@@ -338,8 +333,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	}
 	catch(SQLException e)
 	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    addFatalMessage(e);
 	}
     }
 
@@ -361,8 +355,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	}
 	catch(SQLException e)
 	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
+	    addFatalMessage(e);
 	}
     }
 
@@ -390,7 +383,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	return Jsoup.clean(resource.getEmbeddedSize3(), UtilBean.getLearnwebBean().getBaseUrl(), Whitelist.basicWithImages().addTags("embed", "object", "param"));
     }
 
-    // functions and variables for adding resourc by get request:
+    // functions and variables for adding resource by get request:
     private String paramUrl;
     private String paramTitle;
     private String paramDescription;
@@ -517,12 +510,12 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	{
 	    if(null == paramUrl || paramUrl.length() == 0)
 	    {
-		addMessage(FacesMessage.SEVERITY_FATAL, "Missing required param: url");
+		addMessage(FacesMessage.SEVERITY_ERROR, "Missing required param: url");
 		return;
 	    }
 	    if(null == paramTitle || paramTitle.length() == 0)
 	    {
-		addMessage(FacesMessage.SEVERITY_FATAL, "Missing required param: title");
+		addMessage(FacesMessage.SEVERITY_ERROR, "Missing required param: title");
 		return;
 	    }
 
@@ -558,9 +551,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	    }
 	    catch(Exception e)
 	    {
-
-		e.printStackTrace();
-		addMessage(FacesMessage.SEVERITY_FATAL, "fatal error");
+		addFatalMessage(e);
 	    }
 	}
     }
@@ -650,7 +641,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	    }
 	    catch(Exception e)
 	    {
-
 		log.error(e);
 
 		resource.setOnlineStatus(OnlineStatus.UNKNOWN); // most probably offline

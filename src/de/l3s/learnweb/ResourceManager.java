@@ -298,7 +298,7 @@ public class ResourceManager
 
     public void saveResource(Resource resource) throws SQLException
     {
-	if(resource.isRestricted()) // TODO this is only a workaround; remove as soon as possible
+	if(resource.isRestricted() || resource.getOnlineStatus().equals(OnlineStatus.OFFLINE)) // TODO this is only a workaround; remove as soon as possible
 	{
 	    resource.setThumbnail0(null);
 	    resource.setThumbnail1(null);
@@ -306,14 +306,7 @@ public class ResourceManager
 	    resource.setThumbnail3(null);
 	    resource.setThumbnail4(null);
 	}
-	if(resource.getOnlineStatus().equals(OnlineStatus.OFFLINE)) // TODO this is only a workaround; remove later
-	{
-	    resource.setThumbnail0(null);
-	    resource.setThumbnail1(null);
-	    resource.setThumbnail2(null);
-	    resource.setThumbnail3(null);
-	    resource.setThumbnail4(null);
-	}
+
 	/*
 		// create the SQL query to store the metadata fields in the dynamic column "metadata"
 		int metadataFields = resource.getMetadataKeys().size();
@@ -342,7 +335,7 @@ public class ResourceManager
 	
 		log.debug(metadataSQLvalue);
 	*/
-	String query = "REPLACE INTO `lw_resource` (`resource_id` ,`title` ,`description` ,`url` ,`storage_type` ,`rights` ,`source` ,`type` ,`format` ,`owner_user_id` ,`rating` ,`rate_number` ,`query`, embedded_size1, embedded_size2, embedded_size3, embedded_size4, filename, max_image_url, original_resource_id, machine_description, author, file_url, thumbnail0_url, thumbnail0_file_id, thumbnail0_width, thumbnail0_height, thumbnail1_url, thumbnail1_file_id, thumbnail1_width, thumbnail1_height, thumbnail2_url, thumbnail2_file_id, thumbnail2_width, thumbnail2_height, thumbnail3_url, thumbnail3_file_id, thumbnail3_width, thumbnail3_height, thumbnail4_url, thumbnail4_file_id, thumbnail4_width, thumbnail4_height, embeddedRaw, transcript, online_status, id_at_service, duration, restricted, language, creation_date, metadata, group_id, folder_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
+	String query = "REPLACE INTO `lw_resource` (`resource_id` ,`title` ,`description` ,`url` ,`storage_type` ,`rights` ,`source` ,`type` ,`format` ,`owner_user_id` ,`rating` ,`rate_number` ,`query`, embedded_size1, embedded_size2, embedded_size3, embedded_size4, filename, max_image_url, original_resource_id, machine_description, author, file_url, thumbnail0_url, thumbnail0_file_id, thumbnail0_width, thumbnail0_height, thumbnail1_url, thumbnail1_file_id, thumbnail1_width, thumbnail1_height, thumbnail2_url, thumbnail2_file_id, thumbnail2_width, thumbnail2_height, thumbnail3_url, thumbnail3_file_id, thumbnail3_width, thumbnail3_height, thumbnail4_url, thumbnail4_file_id, thumbnail4_width, thumbnail4_height, embeddedRaw, transcript, online_status, id_at_service, duration, restricted, language, creation_date, metadata, group_id, folder_id, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
 		+ "?)";
 	PreparedStatement replace = learnweb.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
@@ -408,6 +401,7 @@ public class ResourceManager
 	Sql.serializeObjectAndSet(replace, 52, resource.getMetadata());
 	replace.setInt(53, resource.getGroupId());
 	replace.setInt(54, resource.getFolderId());
+	replace.setInt(55, resource.isDeleted() ? 1 : 0);
 
 	/*
 	int m = 52;
@@ -906,6 +900,7 @@ public class ResourceManager
 	    resource.setCreationDate(rs.getTimestamp("creation_date") == null ? null : new Date(rs.getTimestamp("creation_date").getTime()));
 	    resource.setGroupId(rs.getInt("group_id"));
 	    resource.setFolderId(rs.getInt("folder_id"));
+	    resource.setDeleted(rs.getInt("deleted") == 1);
 
 	    // This must be set manually because we stored some external sources in Learnweb/Solr
 	    if(resource.getSource().equals("TED"))

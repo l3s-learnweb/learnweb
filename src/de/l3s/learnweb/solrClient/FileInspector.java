@@ -96,6 +96,9 @@ public class FileInspector
 	    info.title = fileName;
 	}
 
+	if(info.mimeType.startsWith("video/")) // solr/tika doesn't work good with videos
+	    return info;
+
 	SolrServer server = solrClient.getSolrServer();
 
 	ContentStreamUpdateRequest up = new ContentStreamUpdateRequest("/update/extract");
@@ -110,7 +113,7 @@ public class FileInspector
 	}
 	catch(Exception e)
 	{
-	    log.error("FileInspector: Can't extract Text from File");
+	    log.error("FileInspector: Can't extract Text from File", e);
 
 	    return info;
 	}
@@ -377,11 +380,11 @@ public class FileInspector
 	/*
 	Learnweb learnweb = Learnweb.getInstance();
 	List<Resource> resources = learnweb.getResourceManager().getResources("SELECT * FROM `lw_resource` WHERE `source` LIKE 'flickr' AND `max_image_url` LIKE '%z.jpg' ORDER BY `resource_id` ASC ", null); // loads all resources (very slow)
-
+	
 	for(Resource resource : resources)
 	{
 	    getBestImage(resource);
-
+	
 	}
 	*/
     }

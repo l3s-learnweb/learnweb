@@ -476,7 +476,8 @@ iframe { border:none }
 	font-size:1em;
 	color:#2F556A;
 }
-.group-menu h3{ margin-top:10px; }
+.group-menu .folder-tree,
+.group-menu h3 { margin-top: 0.8rem; }
 .group-menu h3:hover{ background-color:#eeeeee;  }
 .group-menu .active > div { display:block; }
 .group-menu .active h3 { text-decoration:underline;}
@@ -1311,6 +1312,15 @@ div#presentation_preview {
 
 .folder-tree .ui-tree .ui-treenode[data-nodetype="root"] > span > .ui-treenode-label {
 	font-size: 1.1em;
+}
+.folder-tree .ui-tree-container {
+	padding:0.3rem 0.1rem;
+}
+.folder-tree .ui-widget-content {
+	border:none;
+	border-top:1px solid rgb(210,210,210);
+	border-bottom:1px solid rgb(210,210,210);
+	margin:0 1rem;
 }
 
 .folder-tree .ui-state-active,
