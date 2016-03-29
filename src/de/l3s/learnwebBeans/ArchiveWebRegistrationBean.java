@@ -1,11 +1,15 @@
 package de.l3s.learnwebBeans;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.Properties;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.component.UIComponent;
+import javax.faces.context.FacesContext;
+import javax.faces.validator.ValidatorException;
 import javax.mail.Message;
 import javax.mail.MessagingException;
 import javax.mail.Session;
@@ -31,6 +35,7 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
     @NotEmpty
     private String password;
 
+    @NotEmpty
     @Email
     private String email;
 
@@ -92,7 +97,7 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
 	    addFatalMessage(mex);
 	}
 	clearForm();
-	addMessage(FacesMessage.SEVERITY_INFO, "Email Request Sent Successfully");
+	addMessage(FacesMessage.SEVERITY_INFO, "Request sent successfully. We will get back to your shortly.");
     }
 
     public void clearForm()
@@ -100,5 +105,13 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
 	username = null;
 	password = null;
 	email = null;
+    }
+
+    public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
+    {
+	if(getLearnweb().getUserManager().isUsernameAlreadyTaken((String) value))
+	{
+	    throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_already_taken"));
+	}
     }
 }

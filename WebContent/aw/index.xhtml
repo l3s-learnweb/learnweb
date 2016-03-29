@@ -72,7 +72,7 @@
 							<h:panelGrid columns="3">
 								<h:outputLabel for="register_username" value="#{msg.username}: *" />
 								<p:inputText id="register_username" value="#{archiveWebRegistrationBean.username}"
-									label="#{msg.username}" />
+									validator="#{archiveWebRegistrationBean.validateUsername}" label="#{msg.username}" />
 								<p:message showSummary="true" showDetail="false"
 									styleClass="error" for="register_username" id="usernameMessage" />
 
@@ -83,7 +83,7 @@
 								<p:message id="passwordMessage" showSummary="true"
 									showDetail="false" styleClass="error" for="register_password" />
 
-								<h:outputLabel for="email" value="#{msg.email_address}: " />
+								<h:outputLabel for="email" value="#{msg.email_address}: *" />
 								<p:inputText id="email" value="#{archiveWebRegistrationBean.email}"
 									label="#{msg.email_address}" />
 								<p:message id="emailMessage" showSummary="true"
