@@ -215,7 +215,7 @@ public class ArchiveItShingle
 		    wordList.clear();
 		    setOfShingles.clear();
 		    url = archiveUrl.getArchiveUrl();
-		    resourcePreviewMaker.processArchiveWebsite(resource_id, url);
+		    //resourcePreviewMaker.processArchiveWebsite(resource_id, url);
 		    Document document = Jsoup.connect(url).ignoreHttpErrors(true).timeout(900000).get();
 		    Response response = Jsoup.connect(url).ignoreHttpErrors(true).timeout(900000).execute();
 		    if(response.statusCode() != 200)

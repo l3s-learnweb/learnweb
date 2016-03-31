@@ -27,7 +27,7 @@ public class MementoClient
 
     public MementoClient(Learnweb learnweb)
     {
-	mementoArchiveURL = learnweb.getProperties().getProperty("MEMENTO_ARCHIVE_URL");
+	mementoArchiveURL = "http://wayback.archive-it.org/";//learnweb.getProperties().getProperty("MEMENTO_ARCHIVE_URL");
     }
 
     public List<ArchiveUrl> getArchiveItVersions(int collectionId, String resourceURI)
