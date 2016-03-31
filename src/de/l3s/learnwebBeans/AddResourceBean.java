@@ -154,9 +154,10 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
 	    ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
 
-	    // get the mime type and extract text if possible
+	    log.debug("Get the mime type and extract text if possible");
 	    FileInfo info = rpm.getFileInfo(uploadedFile.getInputstream(), uploadedFile.getFileName());
 
+	    log.debug("Create thumbnails");
 	    rpm.processFile(resource, uploadedFile.getInputstream(), info);
 
 	    User user = getUser();
