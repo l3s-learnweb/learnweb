@@ -10,6 +10,7 @@ import java.net.URLConnection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -65,6 +66,16 @@ public class ArchiveUrlManager
 
 	executorService = Executors.newCachedThreadPool();//new ThreadPoolExecutor(maxThreads, maxThreads, 0L, TimeUnit.MILLISECONDS, new ArrayBlockingQueue<Runnable>(maxThreads * 1000, true), new ThreadPoolExecutor.CallerRunsPolicy());
 	cdxExecutorService = Executors.newSingleThreadExecutor();//In order to sequentially poll the CDX server and not overload it
+    }
+
+    public void updateArchiveUrl(int fileId, int resourceId, String archiveUrl) throws SQLException
+    {
+	PreparedStatement replace = learnweb.getConnection().prepareStatement("UPDATE `lw_resource_archiveurl` " + "SET `file_id` = ? " + " WHERE `resource_id`=? and `archive_url`=?;", Statement.RETURN_GENERATED_KEYS);
+	replace.setInt(1, fileId);
+	replace.setInt(2, resourceId);
+	replace.setString(3, archiveUrl);
+	replace.executeUpdate();
+	replace.close();
     }
 
     class ArchiveNowWorker implements Callable<String>

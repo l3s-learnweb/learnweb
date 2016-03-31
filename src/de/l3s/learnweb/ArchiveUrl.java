@@ -9,6 +9,9 @@ public class ArchiveUrl implements Serializable
     private static final long serialVersionUID = 63994605834754451L;
     private String archiveUrl;
     private Date timestamp;
+    private long htmlText;
+    private long htmlTags;
+    private int fileId;
 
     public ArchiveUrl(String archiveUrl, Date timestamp)
     {
@@ -19,6 +22,21 @@ public class ArchiveUrl implements Serializable
     public String getArchiveUrl()
     {
 	return archiveUrl;
+    }
+
+    public long gethtmltags()
+    {
+	return htmlTags;
+    }
+
+    public long gethtmltext()
+    {
+	return htmlText;
+    }
+
+    public int getfileId()
+    {
+	return fileId;
     }
 
     public void setArchiveUrl(String archiveUrl)
@@ -51,5 +69,10 @@ public class ArchiveUrl implements Serializable
 	    return false;
 
 	return true;
+    }
+
+    public void setFileId(int fileId)
+    {
+	this.fileId = fileId;
     }
 }
