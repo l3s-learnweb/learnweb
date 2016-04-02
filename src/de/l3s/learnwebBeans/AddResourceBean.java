@@ -76,6 +76,17 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	resource.setDeleted(true); // hide the resource from the frontend until it is finally saved
     }
 
+    public Resource getClickedResource()
+    {
+	return resource;
+    }
+
+    public void setClickedResource(Resource clickedResource)
+    {
+	log.warn("setClickedResource() was called but is not implemented");
+	// this method might be called due to the strange right_panel implementation
+    }
+
     /*
     public void validateUrl(FacesContext context, UIComponent component, Object value) throws ValidatorException
     {

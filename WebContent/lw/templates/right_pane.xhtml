@@ -167,7 +167,7 @@
 						<p:commandButton value="#{msg.addResource}" styleClass="greenbutton float-right" update=":growl :add_resource_panel :datagrid" 
 							action="#{addResourceBean.addResource}" ajax="true" oncomplete="update_datagrid();resourceDND();">
 							<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>
-							<f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"/>
+					 		<f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"/>
 							<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{addResourceBean.resource}"/>
 						</p:commandButton>
 						

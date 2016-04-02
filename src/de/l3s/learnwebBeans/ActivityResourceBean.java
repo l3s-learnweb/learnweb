@@ -299,6 +299,11 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
 	return clickedResource;
     }
 
+    public void setClickedResource(Resource clickedResource)
+    {
+	this.clickedResource = clickedResource;
+    }
+
     public Folder getClickedFolder()
     {
 	return clickedFolder;
