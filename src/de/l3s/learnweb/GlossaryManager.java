@@ -108,7 +108,6 @@ public class GlossaryManager
 
     public int delete(int glossaryId) throws SQLException
     {
-
 	PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_glossary` SET deleted = 1 WHERE glossary_id = ?");
 	update.setInt(1, glossaryId);
 	int updateVal = update.executeUpdate();
