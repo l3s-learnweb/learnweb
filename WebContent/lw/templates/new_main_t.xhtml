@@ -21,24 +21,7 @@
 		
 		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/main2.css" />
 		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />
-
-		<script>
-			(function(){
-			        var t,i,e,n=window,o=document,a=arguments,s="script",r=["config","track","identify","visit","push","call","trackForm","trackClick"],c=function(){var t,i=this;for(i._e=[],t=0;r.length>t;t++)(function(t){i[t]=function(){return i._e.push([t].concat(Array.prototype.slice.call(arguments,0))),i}})(r[t])};for(n._w=n._w||{},t=0;a.length>t;t++)n._w[a[t]]=n[a[t]]=n[a[t]]||new c;i=o.createElement(s),i.async=1,i.src="//static.woopra.com/js/w.js",e=o.getElementsByTagName(s)[0],e.parentNode.insertBefore(i,e)
-			})("woopra");
-			
-			woopra.config({
-			    domain: 'learnweb.l3s.uni-hannover.de'
-			});
-		<ui:fragment rendered="#{userBean.loggedIn}">	
-			woopra.identify({
-		        email: "#{userBean.user.id}@learnweb.de",
-		        name: "#{userBean.user.username}",
-		        company: "#{userBean.activeCourse.title}"
-			});		
-		</ui:fragment>	
-			woopra.track();
-		</script>		
+		
 		<base href="#{request.contextPath}/lw/" />
 		<ui:insert name="head-meta" />
 	</h:head>

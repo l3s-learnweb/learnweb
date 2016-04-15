@@ -9,6 +9,10 @@ import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import de.l3s.util.HasCache;
+
 /**
  * DAO for the Organisation class.
  * Because there are only a few organisations we keep them all in memory
@@ -16,9 +20,9 @@ import java.util.Map;
  * @author Philipp
  * 
  */
-public class OrganisationManager
+public class OrganisationManager implements HasCache
 {
-
+    public final static Logger log = Logger.getLogger(OrganisationManager.class);
     // if you change this, you have to change the constructor of Organisation too
     private final static String COLUMNS = "organisation_id, title, logo, welcome_page, welcome_message, options_field1";
 
@@ -33,16 +37,22 @@ public class OrganisationManager
 	this.resetCache();
     }
 
-    public void resetCache() throws SQLException
+    @Override
+    public void resetCache()
     {
 	cache.clear();
 
-	// load all organisations into cache
-	Statement select = learnweb.getConnection().createStatement();
-	ResultSet rs = select.executeQuery("SELECT " + COLUMNS + " FROM lw_organisation ORDER BY title");
-	while(rs.next())
-	    cache.put(rs.getInt("organisation_id"), new Organisation(rs));
-	select.close();
+	// load all organizations into cache
+	try(Statement select = learnweb.getConnection().createStatement())
+	{
+	    ResultSet rs = select.executeQuery("SELECT " + COLUMNS + " FROM lw_organisation ORDER BY title");
+	    while(rs.next())
+		cache.put(rs.getInt("organisation_id"), new Organisation(rs));
+	}
+	catch(SQLException e)
+	{
+	    throw new RuntimeException(e);
+	}
     }
 
     /**
@@ -129,6 +139,12 @@ public class OrganisationManager
 	replace.close();
 
 	return organisation;
+    }
+
+    @Override
+    public int getCacheSize()
+    {
+	return cache.size();
     }
 
 }

@@ -16,7 +16,8 @@ public class Organisation implements Serializable, Comparable<Organisation>
     public static enum Option implements Comparable<Option>
     {
 	Resource_Hide_Star_rating,
-	Resource_Hide_Thumb_rating
+	Resource_Hide_Thumb_rating,
+	Groups_Hide_public_groups
     }
 
     private int id;

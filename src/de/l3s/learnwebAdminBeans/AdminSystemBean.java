@@ -68,6 +68,13 @@ public class AdminSystemBean extends ApplicationBean implements Serializable
 	loadDatabaseProcessList(); // update list
     }
 
+    public void onClearCaches()
+    {
+	getLearnweb().getOrganisationManager().resetCache();
+
+	addMessage(FacesMessage.SEVERITY_INFO, "Caches cleared");
+    }
+
     public static class DatabaseProcessStatistic
     {
 	private int id;

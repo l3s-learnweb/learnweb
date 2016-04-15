@@ -55,6 +55,7 @@ function updateCarousel() {
 	});
 }
 
+// store preferences in user account settings
 function setPreference(prefKey, prefValue)
 {
 	setPreferenceRemote([{name:'key', value:prefKey}, {name:'value', value:prefValue}]);
@@ -77,7 +78,7 @@ $(document).ready(function()
 		});		
 	});
 
-	
+	// initialize search field auto completion
 	if(typeof market != 'undefined')
 	{
 		if(market == "de")

@@ -6,84 +6,78 @@
 	xmlns:f="http://java.sun.com/jsf/core" 
 	xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="System Tools" />
+<ui:param name="loginRequired" value="true" />
+<ui:param name="pageTitle" value="System Tools" />
 
-	<ui:define name="center_layout">
-		<h:outputText value="Missing authentication" rendered="#{not (userBean.admin || userBean.moderator)}" />
-
-		<div class="page_header" style="margin:5px;">
+<ui:define name="center_layout">
+	<h:outputText value="Missing authentication" rendered="#{not userBean.admin}" />
+	<ui:fragment rendered="#{userBean.admin}">
+		<div class="page_header" >
 			<span>
-				Database connections
+				Database connections asd
 			</span>
-		</div>			
-		
-		  <p:panel rendered="#{userBean.admin || userBean.moderator}" style="margin:5px;">
+		</div>
 
 
+		<h:form>		
+			<p:dataTable id="processTable" var="process"
+					style="margin: 2rem;text-align: right;"
+					value="#{adminSystemBean.databaseProcessList}"
+					tableStyle="width: 96%;table-layout:auto"
+					emptyMessage="no open connection">
 
-<h:body>
-	<div>
-		<h:form>
-			
-	
-			There are <h:outputText value="#{adminSystemBean.databaseProcessList.size()}" /> Connections open
-	
-			
-			
-			<p:dataTable id="processTable" var="process" style="margin: 2rem;text-align: right;" value="#{adminSystemBean.databaseProcessList}" tableStyle="width: 96%;table-layout:auto" emptyMessage="no open connection" >
-			
-				<p:column headerText="id" sortBy="#{process.id}">
-					<h:outputText value="#{process.id}"  />
-				</p:column>
-			
-			
-				<p:column headerText="#{msg.username}" sortBy="#{process.user}">
-					<h:outputText value="#{process.user}" />
-				</p:column>
-				
-				<p:column headerText="host" sortBy="#{process.host}">
-					<h:outputText value="#{process.host}" />
-				</p:column>
-				
-				<p:column headerText="db" sortBy="#{process.db}">
-					<h:outputText value="#{process.db}" />
-				</p:column>
-				
-				<p:column headerText="command" sortBy="#{process.command}">
-					<h:outputText value="#{process.command}" />
-				</p:column>
-				
-				<p:column headerText="time" sortBy="#{process.time}">
-					<h:outputText value="#{process.time}" />
-				</p:column>
-				
-				<p:column headerText="state" sortBy="#{process.state}">
-					<h:outputText value="#{process.state}" />
-				</p:column>
-				
-				<p:column headerText="#{msg.info}" sortBy="#{process.info}">
-					<h:outputText value="#{process.info}" />
-				</p:column>
-				
-				<p:column headerText="progress" sortBy="#{process.progress}">
-					<h:outputText value="#{process.progress}" />
-				</p:column>
-				
-				<p:column headerText="Terminate">
-					<p:commandButton value="terminate" actionListener="#{adminSystemBean.onKillDatabaseProcess(process.id)}"/>
-				</p:column>
-				
-				
-			</p:dataTable>
+					<p:column headerText="id" sortBy="#{process.id}">
+						<h:outputText value="#{process.id}" />
+					</p:column>
+
+
+					<p:column headerText="#{msg.username}" sortBy="#{process.user}">
+						<h:outputText value="#{process.user}" />
+					</p:column>
+
+					<p:column headerText="host" sortBy="#{process.host}">
+						<h:outputText value="#{process.host}" />
+					</p:column>
+
+					<p:column headerText="db" sortBy="#{process.db}">
+						<h:outputText value="#{process.db}" />
+					</p:column>
+
+					<p:column headerText="command" sortBy="#{process.command}">
+						<h:outputText value="#{process.command}" />
+					</p:column>
+
+					<p:column headerText="time" sortBy="#{process.time}">
+						<h:outputText value="#{process.time}" />
+					</p:column>
+
+					<p:column headerText="state" sortBy="#{process.state}">
+						<h:outputText value="#{process.state}" />
+					</p:column>
+
+					<p:column headerText="#{msg.info}" sortBy="#{process.info}">
+						<h:outputText value="#{process.info}" />
+					</p:column>
+
+					<p:column headerText="progress" sortBy="#{process.progress}">
+						<h:outputText value="#{process.progress}" />
+					</p:column>
+
+					<p:column headerText="Terminate">
+						<p:commandButton value="terminate"
+							actionListener="#{adminSystemBean.onKillDatabaseProcess(process.id)}" />
+					</p:column>
+
+				</p:dataTable>
+			</h:form>
 		
-		
-		
+		<div class="page_header" style="margin:5px;">
+			<span>Caches</span>
+		</div>
+		<h:form styleClass="grey_border" >
+			<p:commandButton actionListener="#{adminSystemBean.onClearCaches()}" value="Clear caches" />
 		</h:form>
-	</div>
-</h:body>
-</p:panel>
-
+	</ui:fragment>
 </ui:define>
 
 </ui:composition> 

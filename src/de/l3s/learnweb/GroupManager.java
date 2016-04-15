@@ -14,6 +14,7 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import de.l3s.learnweb.Organisation.Option;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.solrClient.SolrSearch;
 import de.l3s.util.Cache;
@@ -160,10 +161,16 @@ public class GroupManager
      */
     public List<Group> getJoinAbleGroups(User user) throws SQLException
     {
-	StringBuilder sb = new StringBuilder(",0");
+	StringBuilder sb = new StringBuilder();
 	for(Course course : user.getCourses())
 	    sb.append("," + course.getId());
+
+	if(!user.getOrganisation().getOption(Option.Groups_Hide_public_groups))
+	    sb.append(",0");
+
 	String coursesIn = sb.substring(1);
+
+	log.debug(coursesIn);
 
 	sb = new StringBuilder(",-1"); // make sure that the string is not empty
 	for(Group group : user.getGroups())
