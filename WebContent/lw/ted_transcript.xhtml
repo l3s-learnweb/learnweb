@@ -76,7 +76,7 @@
 		</div>
 
 		<p:dialog widgetVar="userinput_dialog" modal="true" header="#{msg.userAnnotation}" minWidth="600" resizable="false" closable="false" appendTo="@(body)">
-			<h:form id="userinput_form">
+			<h:form id="userinput_form" prependId="false">
 				<h:outputLabel value="#{msg.justify_selection}:" for="text"/>
 				<p:inputText id="text" style="width:97%;"/>
 				<p:commandButton value="Ok" onclick="getUserText('ok');return false;"></p:commandButton>
