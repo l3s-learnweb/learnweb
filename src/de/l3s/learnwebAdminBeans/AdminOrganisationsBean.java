@@ -2,7 +2,8 @@ package de.l3s.learnwebAdminBeans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -12,18 +13,18 @@ import de.l3s.learnweb.Organisation;
 import de.l3s.learnwebBeans.ApplicationBean;
 
 //----------------------
-// NOT USED AT THE MOMEMNT
+// USED AT organisations.xhtml
 @ManagedBean
 @ViewScoped
 public class AdminOrganisationsBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -4815509777068370043L;
-    private Collection<Organisation> organisations;
+    private List<Organisation> organisations;
     private Organisation selectedOrganisation;
 
     public AdminOrganisationsBean()
     {
-	organisations = getLearnweb().getOrganisationManager().getOrganisationsAll();
+	organisations = new ArrayList(getLearnweb().getOrganisationManager().getOrganisationsAll());
     }
 
     public void onSave()
@@ -32,7 +33,7 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
 	{
 	    getLearnweb().getOrganisationManager().save(selectedOrganisation);
 
-	    organisations = getLearnweb().getOrganisationManager().getOrganisationsAll(); // reload
+	    organisations = new ArrayList(getLearnweb().getOrganisationManager().getOrganisationsAll()); // reload
 
 	    addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
 
@@ -86,7 +87,7 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
 	this.selectedOrganisation = selectedOrganisation;
     }
 
-    public Collection<Organisation> getOrganisations()
+    public List<Organisation> getOrganisations()
     {
 	return organisations;
     }

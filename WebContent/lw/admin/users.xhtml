@@ -26,14 +26,14 @@
 					</p:link>					
 				</p:column>	
 					
-				<p:column sortBy="#{user.email}">
+				<p:column sortBy="#{user.email}" filterBy="#{user.email}">
 					<f:facet name="header">
 						#{msg.email_address}
 					</f:facet>
 					<h:outputText value="#{user.email}" />			
 				</p:column>
 						
-				<p:column sortBy="#{user.organisation.title}">
+				<p:column sortBy="#{user.organisation.title}" filterBy="#{user.organisation.title}">
 					<f:facet name="header">
 						#{msg.organization}
 					</f:facet>
