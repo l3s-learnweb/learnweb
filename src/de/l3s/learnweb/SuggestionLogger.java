@@ -22,6 +22,8 @@ import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
+import de.l3s.util.StringHelper;
+
 public class SuggestionLogger
 {
     private static final Logger log = Logger.getLogger(SuggestionLogger.class);
@@ -82,7 +84,7 @@ public class SuggestionLogger
 		    String suggestionsGoogle = null;
 		    try
 		    {
-			suggestionsGoogle = googleLogger(container.market, container.query);
+			suggestionsGoogle = googleSuggestion(container.market, container.query);
 		    }
 		    catch(Exception e)
 		    {
@@ -114,14 +116,14 @@ public class SuggestionLogger
 	    }
 	}
 
-	private String googleLogger(String market, String query)
+	private String googleSuggestion(String market, String query)
 	{
 	    String suggestion = "";
 	    if(market.length() > 2)
 	    {
 		market = market.substring(0, 2);
 	    }
-	    String suggestorUrl = "http://suggestqueries.google.com/complete/search?output=toolbar&hl=" + market + "&q=" + query;
+	    String suggestorUrl = "http://suggestqueries.google.com/complete/search?output=toolbar&hl=" + market + "&q=" + StringHelper.urlEncode(query);
 	    try
 	    {
 		Client client = Client.create();
