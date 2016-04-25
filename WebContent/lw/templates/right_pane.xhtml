@@ -473,7 +473,7 @@
 							         		<f:param name="query" value="#{tag.name}"/>
 					         		</h:outputLink>
 					         		<p:commandButton styleClass="tag_x float-right" action="#{resourceDetailBean.onDeleteTag}" 
-					         			value="x" update=":add_resource_panel" process="@form" rendered="#{!groupDetailBean.group.readOnly}">
+					         			value="x" update=":add_resource_panel :growl" process="@form" rendered="#{!groupDetailBean.group.readOnly}">
 					         			<f:setPropertyActionListener target="#{resourceDetailBean.selectedTag}" value="#{tag}"/>
 					         		</p:commandButton>
 					         	</li>
@@ -481,9 +481,9 @@
 					    </ul>
 					</h:form> 
 					<h:form id="tag_input_form" rendered="#{!groupDetailBean.group.readOnly}">  
-					    <p:inputText styleClass="tag_field" value="#{resourceDetailBean.tagName}"/>
+					    <p:inputText styleClass="tag_field" value="#{resourceDetailBean.tagName}" id="tag_name"/>
 				    	<p:commandButton actionListener="#{resourceDetailBean.addTag}" styleClass="greenbutton clearfix" 
-				    		value="#{msg.addTag}" update=":datagrid :tag_form" process="@form" 
+				    		value="#{msg.addTag}" update=":datagrid :tag_form :growl :tag_input_form:tag_name" process="@form" 
 				    		style="margin-right:0;margin-top:4px;float:right">
 				    	  	<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>	
 				        </p:commandButton>
@@ -518,7 +518,7 @@
 							</h:panelGroup>
 							<ui:repeat var="comment" value="#{resourceDetailBean.clickedResource.comments}">
 								<div class="comment">
-									<h:graphicImage class="userpic" url="#{comment.getUser().image}" width="30" height="30"/>
+									<h:graphicImage class="userpic" url="#{comment.getUser().image}" width="30" height="30" alt="Profile picture"/>
 									<div class="username_div">
 										<span class="username">
 											<a href="user/detail.jsf?user_id=#{comment.user.id}" class="username_link">
