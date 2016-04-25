@@ -79,11 +79,18 @@ public class SuggestionLogger
 		    if(container == null) // stop method was called
 			break;
 
-		    String suggestionsGoogle = googleLogger(container.market, container.query);
-
+		    String suggestionsGoogle = null;
 		    try
 		    {
-			PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO `lw_log_suggestions` (`query`, `market`, `timestamp`, `suggestions_bing`, `suggestions_google`, session_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)");
+			suggestionsGoogle = googleLogger(container.market, container.query);
+		    }
+		    catch(Exception e)
+		    {
+			log.fatal("Couldn't get google suggestion for: " + container, e);
+		    }
+
+		    try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO `lw_log_suggestions` (`query`, `market`, `timestamp`, `suggestions_bing`, `suggestions_google`, session_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)");)
+		    {
 			insert.setString(1, container.query);
 			insert.setString(2, container.market);
 			insert.setTimestamp(3, new Timestamp(container.timestamp));
@@ -92,8 +99,6 @@ public class SuggestionLogger
 			insert.setString(6, container.sessionId);
 			insert.setInt(7, container.userId);
 			insert.executeUpdate();
-
-			//log.debug("Logged suggestion: " + container);
 		    }
 		    catch(SQLException e)
 		    {
