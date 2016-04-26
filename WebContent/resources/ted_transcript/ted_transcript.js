@@ -8,11 +8,6 @@ $(document).ready(function(){
 		}
 	});
 	
-	/*var hiddeninput = document.getElementById("transcript_form:hidden_transcript");
-	var ted_transcript = hiddeninput.value;
-	var div = document.getElementById("ted_transcript");
-	div.innerHTML = ted_transcript;
-    */
 	Tipped.create('.note', function() {
         return {
           title: $(this).data('title'),
@@ -32,8 +27,8 @@ $(document).ready(function(){
 		selected_word.onclick = function(){
 	        if (window.confirm("Delete this selection (" + $(this).text() + ")?")) {
 	        	saveTranscriptLog([{name:'word', value:$(this).text()},{name:'user_annotation', value:$(this).attr("data-title")},{ name:'action',value:'deselection'}]);
+	        	Tipped.remove($(this));
 	        	$(this).contents().unwrap();
-	            
             }
 		};
 	}
@@ -41,24 +36,30 @@ $(document).ready(function(){
 	$('#text').keypress(function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		if(keycode == '13')
-			getUserText('ok');
+		{
+			$('#userinput_ok').click();
+			return false;
+		}
 	});
 		
 	$(document).keyup(function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		if(keycode == '27')
-			getUserText('cancel');
+		{
+			$('#userinput_cancel').click();
+			return false;
+		}
 
 	});
 
 	//Initializing rangy highlighter
-    rangy.init();
+    /*rangy.init();
     highlighter = rangy.createHighlighter();
     //Adding the css class highlight to the rangy highlighter object
     highlighter.addClassApplier(rangy.createCssClassApplier("highlight", {
         ignoreWhiteSpace: true,
         tagNames: ["span", "a"]
-    }));
+    }));*/
 });
 
 var highlighter;
@@ -83,7 +84,22 @@ function setSynonyms(xhr,status,args){
 	synonyms = synonyms + args.synonyms;
 		
 	noteid++;
-	highlighter.addClassApplier(rangy.createCssClassApplier("note", {
+	var st = window.getSelection();
+	var range = st.getRangeAt(0);    
+	var span = document.createElement("span");
+	span.setAttribute("class", "note");
+	span.setAttribute("id", noteid);
+	span.appendChild(range.extractContents());
+	$(span).on('click',function(){
+		if (window.confirm("Delete this selection (" + $(this).text() + ")?")) {
+			saveTranscriptLog([{name:'word', value:$(this).text()},{name:'user_annotation', value:$(this).attr("data-title")},{ name:'action',value:'deselection'}]);
+			Tipped.remove($(this));
+			$(this).contents().unwrap();
+			$(this).remove();
+		}
+	});
+	range.insertNode(span);
+	/*highlighter.addClassApplier(rangy.createCssClassApplier("note", {
         ignoreWhiteSpace: true,
         elementTagName: "span",
         elementProperties: {
@@ -103,7 +119,7 @@ function setSynonyms(xhr,status,args){
             }
           }
     }));
-	highlighter.highlightSelection("note");
+	highlighter.highlightSelection("note");*/
 	PF('userinput_dialog').show();
 }
 
@@ -111,7 +127,7 @@ function noteSelectedText() {
 	usertext = "";
 	escape_key_flag = true;
 
-	sel = rangy.getSelection();
+	sel = window.getSelection();
 	sel_str = sel.toString();
 	if(sel_str != "")
 		setSynonymsForWord([{name:'word', value:sel_str}]);
@@ -129,19 +145,24 @@ function getUserText(buttonClicked){
 		$('#'+noteid).attr({'data-content':usertext});
 	
 	//Tooltip creation
-	Tipped.create('#'+noteid,function() {
-      return {
-          title: $(this).data('title'),
-          content: $(this).data('content')
-        	 };
-      	},{
-    	  containment:{selector:"#ted_transcript", padding:0},
-    	  maxWidth:300,
-    	  size:'x-small',
-    	  radius:5,
-    	  position:"bottom"
-    	}
-     );
+	if(synonyms == "multiple" && usertext == "")
+	{}
+	else
+	{
+		Tipped.create('#'+noteid,function() {
+	      return {
+	          title: $(this).data('title'),
+	          content: $(this).data('content')
+	        	 };
+	      	},{
+	    	  containment:{selector:"#ted_transcript", padding:0},
+	    	  maxWidth:300,
+	    	  size:'x-small',
+	    	  radius:5,
+	    	  position:"bottom"
+	    	}
+	     );
+	}
 	if(escape_key_flag)
 	{	saveTranscriptLog([{name:'word', value:sel_str},{name:'user_annotation', value:usertext},{ name:'action',value:'selection'}]);
 		escape_key_flag = false;
@@ -153,6 +174,6 @@ function saveEditing(){
 	saveTedResource([{name:'transcript',value:update}]);
 }
 
-function removeHighlightFromSelectedText() {
+/*function removeHighlightFromSelectedText() {
     highlighter.unhighlightSelection();
-}
+}*/

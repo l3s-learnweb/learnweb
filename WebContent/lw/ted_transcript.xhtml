@@ -28,7 +28,7 @@
 		<h:outputStylesheet library="ted_transcript" name="ted_transcript.css"  />
 		<h:outputScript library="js" name="tipped.js" target="head"/>
 		<h:outputScript library="ted_transcript" name="ted_transcript.js" target="head"/>		
-		<h:outputScript library="ted_transcript" name="imagesloaded.pkgd.min.js" target="head"/>
+		<!-- <h:outputScript library="ted_transcript" name="imagesloaded.pkgd.min.js" target="head"/>
 		<h:outputScript library="ted_transcript" name="log4javascript_stub.js" target="head"/>
 	    <h:outputScript library="ted_transcript" name="rangy-core.js" target="head"/>
 	    <h:outputScript library="ted_transcript" name="rangy-dom.js" target="head"/>
@@ -36,7 +36,7 @@
 	    <h:outputScript library="ted_transcript" name="rangy-wrappedrange.js" target="head"/>
 	    <h:outputScript library="ted_transcript" name="rangy-wrappedselection.js" target="head"/>
 	    <h:outputScript library="ted_transcript" name="rangy-cssclassapplier.js" target="head"/>
-	    <h:outputScript library="ted_transcript" name="rangy-highlighter.js" target="head"/>
+	    <h:outputScript library="ted_transcript" name="rangy-highlighter.js" target="head"/> -->
 	    
   		<script type="text/javascript">
   			var noteid = #{tedTranscriptBean.noteId};
@@ -80,8 +80,8 @@
 			<h:form id="userinput_form" prependId="false">
 				<h:outputLabel value="#{msg.justify_selection}:" for="text"/>
 				<p:inputText id="text" style="width:97%;"/>
-				<p:commandButton value="Ok" onclick="getUserText('ok');return false;"></p:commandButton>
-				<p:commandButton value="#{msg.cancel}" onclick="getUserText('cancel');return false;"></p:commandButton>
+				<p:commandButton id="userinput_ok" value="Ok" onclick="getUserText('ok');return false;"></p:commandButton>
+				<p:commandButton id="userinput_cancel" value="#{msg.cancel}" onclick="getUserText('cancel');return false;"></p:commandButton>
 			</h:form>
 		</p:dialog>
 
