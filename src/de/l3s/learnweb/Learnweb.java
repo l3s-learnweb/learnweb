@@ -149,8 +149,8 @@ public class Learnweb
 		propteriesFileName = "lw_local_oleg";
 	    else if((new File("F:\\DevTools\\Work stuff\\Crawler\\Learnweb").exists()))
 		propteriesFileName = "lw_local_abhinav";
-	    else if((new File("C:\\L3S").exists()))
-		propteriesFileName = "lw_local_felipe";
+	    else if((new File("/learnweb_data").exists()))
+		propteriesFileName = "lw_local_chenyang";
 
 	    log.debug("Load config file: " + propteriesFileName);
 
