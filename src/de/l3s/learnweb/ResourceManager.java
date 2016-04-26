@@ -840,7 +840,7 @@ public class ResourceManager
     public int getCountResourceByGroupId(int groupId) throws SQLException
     {
 	int count = 0;
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM lw_resource WHERE group_id = ?");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM lw_resource WHERE group_id = ? AND deleted = 0");
 	select.setInt(1, groupId);
 	ResultSet rs = select.executeQuery();
 	if(rs.next())
@@ -1293,9 +1293,9 @@ public class ResourceManager
 	ResourceManager rm = lw.getResourceManager();
 	//SolrClient sm = lw.getSolrClient();
 
-	PreparedStatement detailSelect = lw.getConnection().prepareStatement("SELECT collector, coverage, publisher FROM `archiveit_collection` WHERE `lw_resource_id` = ?");
+	PreparedStatement detailSelect = lw.getConnection().prepareStatement("SELECT collector, coverage, publisher FROM `archiveit_collection` WHERE `lw_resource_id` = ? and collection_id = 1068");
 
-	List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where deleted=0 AND source=?", "Archive-It");
+	List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where deleted=0 AND group_id = 943 AND source=?", "Archive-It");
 
 	log.debug("Resources loaded");
 
@@ -1322,7 +1322,7 @@ public class ResourceManager
 
     public static void main(String[] args) throws Exception
     {
-	//reindexArchiveItResources();
+	reindexArchiveItResources();
 	//createThumbnailsForWebResources();
 
 	/*
@@ -1335,6 +1335,7 @@ public class ResourceManager
 	    solr.deleteFromIndex(resource.getId());
 	}
 	*/
+	System.exit(0);
     }
 
 }

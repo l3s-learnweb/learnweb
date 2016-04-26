@@ -102,7 +102,7 @@ public class GroupsBean extends ApplicationBean implements Serializable
     {
 	User user = getUser();
 
-	if(null == getUser() || null == group)
+	if(null == getUser() || null == group || group.isReadOnly())
 	    return false;
 
 	if(group.isLeader(user))

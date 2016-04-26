@@ -50,7 +50,7 @@ public class LogEntry implements Serializable
 	group_deleting_link, // param = title
 	group_resource_search, // param = query
 	add_folder,
-	edit_folder,
+	edit_folder, // target_id = folder_id
     }
 
     private int userId;

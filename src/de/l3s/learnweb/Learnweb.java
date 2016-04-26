@@ -135,7 +135,7 @@ public class Learnweb
 		propteriesFileName = "lw_local_michaela";
 	    else if((new File("/home/fernando/trevor.txt").exists()))
 		propteriesFileName = "lw_local_trevor_uni";
-	    else if((new File("/home/tf/learnweb.txt").exists()))
+	    else if((new File("/Users/trevor").exists()))
 		propteriesFileName = "lw_local_trevor";
 	    else if((new File("/home/kalyani").exists()))
 		propteriesFileName = "lw_local_rishita";

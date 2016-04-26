@@ -61,7 +61,8 @@
 					</h:form>
 				</div>
 				<div class="transcript_note">
-					<b>#{msg.note}:</b> #{msg.transcript_note}
+					<b>#{msg.note}:</b><h:outputText value = " #{msg.transcript_warning}" rendered="#{tedTranscriptBean.tedResource.group.readOnly}"/>
+					<h:outputText value = " #{msg.transcript_note}" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}"/>
 				</div>
 			</p:outputPanel>
 			<h:panelGroup layout="block" id="transcript">

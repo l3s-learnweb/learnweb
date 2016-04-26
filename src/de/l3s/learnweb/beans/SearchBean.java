@@ -365,6 +365,8 @@ public class SearchBean extends ApplicationBean implements Serializable
 		    newResource.setFolderId(selectedResourceTargetFolderId);
 		}
 	    }
+	    else
+		newResource.setGroupId(selectedResourceTargetGroupId); //This is for resources to be added to MyResources
 
 	    newResource = user.addResource(newResource);
 
