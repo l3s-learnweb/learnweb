@@ -53,7 +53,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private String location = ""; // The location where the resource (metadata) is stored; for example Learnweb, Flickr, Youtube ...
     private String language = ""; // 2-letter language code
     private String author = "";
-    private String type = "";
+    private String type = ""; // possible types: text, image, video, pdf
     private String format = "";
     private int duration;
     private int ownerUserId;

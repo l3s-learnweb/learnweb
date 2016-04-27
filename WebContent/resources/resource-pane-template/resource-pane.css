@@ -66,7 +66,7 @@
 	border: 1px solid #ccc !important;
 	box-shadow: 0 0 3px 3px #dfdfdf;
 }
-.preview_box iframe {min-height:400px;}
+.preview_box iframe {min-height:400px;width:100%;}
 
 #archive_list_view{
 	padding-top:10px;

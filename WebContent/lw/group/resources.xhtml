@@ -327,7 +327,7 @@
 			    </h:panelGroup>
 							
 				<h:panelGroup id="resourceGrid" layout="block" pt:data-selectedResourceId="#{groupDetailBean.selectedResource.id}">				
-				    <ui:repeat var="result" value="#{groupDetailBean.paginator.currentPage}"> 			     
+				    <ui:repeat var="result" value="#{groupDetailBean.paginator.currentPage}">
 				  		<h:form styleClass="resource_panel grey_border" pt:data-resourceId="#{result.resource.id}">
 						    <p:commandLink styleClass="resource_command_link" update=":add_resource_panel" oncomplete="update_header();update_url(#{result.resource.id});resourceDND();">
 	

@@ -2,8 +2,9 @@ package de.l3s.learnwebBeans;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
+import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -14,7 +15,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.validator.ValidatorException;
 
 import org.apache.commons.codec.DecoderException;
@@ -31,11 +31,10 @@ import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.Resource.OnlineStatus;
+import de.l3s.learnweb.ResourceMetadataExtractor;
 import de.l3s.learnweb.ResourcePreviewMaker;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 import de.l3s.util.StringHelper;
 
@@ -62,11 +61,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     private int formStep = 1;
 
-    public void doNothing(AjaxBehaviorEvent obj)
-    {
-	resource.setStorageType(Resource.WEB_RESOURCE);
-    }
-
     public AddResourceBean()
     {
 	resource = new Resource();
@@ -87,66 +81,11 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	// this method might be called due to the strange right_panel implementation
     }
 
-    /*
-    public void validateUrl(FacesContext context, UIComponent component, Object value) throws ValidatorException
-    {
-    
-    String urlString = ((String) value).trim();
-    
-    log.debug("validate Url: " + urlString);
-    
-    if(!urlString.startsWith("http"))
-        urlString = "http://" + urlString;
-    
-    
-        throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_url"));
-    
-    }
-    
-    public void handleUrlChange(AjaxBehaviorEvent event) throws IOException
-    {
-    log.debug("handleUrlChange");
-    log.debug(resource.getUrl());
-    
-    if(!resource.getUrl().startsWith("http"))
-        resource.setUrl("http://" + resource.getUrl());
-    
-    try
-    {
-        new URL(resource.getUrl());
-    
-    }
-    catch(MalformedURLException e)
-    {
-        throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_url"));
-    }
-    
-    URL url = new URL(resource.getUrl());
-    URLExtractor ue = new URLExtractor();
-    URLInfo urlinfo = ue.extract(url);
-    resource.setTitle(urlinfo.getTitle());
-    resource.setDescription(urlinfo.getDescription());
-    ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
-    URL img = new URL(urlinfo.getImage());
-    try
-    {
-        rpm.processImage(resource, img.openStream());
-    }
-    catch(SQLException e)
-    {
-        resource.setEmbeddedSize1Raw("<img src=\"" + urlinfo.getImage() + "\" width=\"100\" height=\"100\" />");
-        e.printStackTrace();
-    }
-    
-    log.debug(resource.getTitle());
-    log.debug(resource.getEmbeddedSize1());
-    log.debug(resource.getDescription());
-    resource.prepareEmbeddedCodes();
-    }
-    */
     public void clearForm()
     {
 	resource = new Resource();
+	resource.setSource("Internet");
+	resource.setLocation("Learnweb");
 	formStep = 1;
     }
 
@@ -156,9 +95,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	{
 	    log.debug("Handle File upload");
 
-	    resource.setStorageType(Resource.FILE_RESOURCE);
 	    resource.setSource("Desktop");
 	    resource.setLocation("Learnweb");
+	    resource.setStorageType(Resource.FILE_RESOURCE);
 	    resource.setDeleted(true);
 
 	    UploadedFile uploadedFile = event.getFile();
@@ -208,40 +147,28 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     public void validateUrl(FacesContext context, UIComponent comp, Object value) throws ValidatorException
     {
-	String urlValue = value.toString().trim();
-	log.debug("validateUrl: " + urlValue);
-
-	if(!urlValue.startsWith("http"))
+	if(checkUrl(value.toString().trim()) == null)
 	{
-	    urlValue = "http://" + urlValue;
-	}
-
-	try
-	{
-	    URL url = new URL(urlValue);
-	    URLConnection conn = url.openConnection();
-	    conn.connect();
-	}
-	catch(IOException e)
-	{
-	    // the connection couldn't be established
 	    throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "invalid_url"));
 	}
+    }
+
+    public void handleUrlInput()
+    {
+	log.debug("Handle Url input");
+
+	resource.setStorageType(Resource.WEB_RESOURCE);
+	resource.setUrl(checkUrl(resource.getUrl()));
+
+	ResourceMetadataExtractor rme = new ResourceMetadataExtractor(this.resource);
+	rme.process();
+
+	nextStep();
     }
 
     public Resource getResource()
     {
 	return resource;
-    }
-
-    public String getStorageType()
-    {
-	if(resource.getStorageType() == Resource.FILE_RESOURCE)
-	    return UtilBean.getLocaleMessage("file");
-	else if(resource.getStorageType() == Resource.WEB_RESOURCE)
-	    return UtilBean.getLocaleMessage("web");
-	else
-	    return UtilBean.getLocaleMessage("unknown_storage_type");
     }
 
     public void addResource()
@@ -255,14 +182,11 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 		addGrowl(FacesMessage.SEVERITY_ERROR, "Select a file first");
 		return;
 	    }
-	    if(resource.getStorageType() == Resource.WEB_RESOURCE && (resource.getType() == null || resource.getType().isEmpty()))
+
+	    if(resource.getStorageType() == Resource.WEB_RESOURCE)
 	    {
 		if(!resource.getUrl().startsWith("http"))
 		    resource.setUrl("http://" + resource.getUrl());
-
-		resource.setType("text");
-
-		new CreateThumbnailThread(resource).start();
 	    }
 
 	    if(null != selectedUploadServices && selectedUploadServices.size() > 0) // the resource has to be uploaded to interweb
@@ -568,6 +492,60 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	}
     }
 
+    /**
+     * This function checks if a given String is a valid url.
+     * When the url leads to a redirect the function will return the target of the redirect.
+     * Returns null if the url is invalid or not reachable.
+     * 
+     * @param url
+     * @return
+     */
+    public static String checkUrl(String url)
+    {
+	if(url == null)
+	    return null;
+
+	if(!url.startsWith("http"))
+	    url = "http://" + url;
+
+	HttpURLConnection con;
+	try
+	{
+	    con = (HttpURLConnection) new URL(url).openConnection();
+	    con.setInstanceFollowRedirects(false);
+	    con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0");
+
+	    int responseCode = con.getResponseCode();
+	    if(responseCode / 100 == 2)
+	    {
+		return url;
+	    }
+	    else if(responseCode / 100 == 3)
+	    {
+		String location = con.getHeaderField("Location");
+		if(location.startsWith("/"))
+		{
+		    String domain = url.substring(0, url.indexOf("/", url.indexOf("//") + 2));
+		    return domain + location;
+		}
+		else
+		    return location;
+	    }
+	    else
+		return null;
+	}
+	catch(UnknownHostException e)
+	{
+	    log.info(e.getMessage());
+	    return null;
+	}
+	catch(Throwable t)
+	{
+	    log.error("invalid url", t);
+	    return null;
+	}
+    }
+
     public static void main(String[] args) throws SQLException, InterruptedException
     {
 	Resource resource = Learnweb.getInstance().getResourceManager().getResource(190236);
@@ -594,68 +572,14 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
 	    try
 	    {
-		log.debug("Create thumbnail for resource " + resource.getId());
-		ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
-		log.debug("url " + resource.getUrl());
-		log.debug("max url " + resource.getMaxImageUrl());
-		log.debug("source " + resource.getSource());
-
-		if(resource.getType().equalsIgnoreCase("text") || resource.getType().equalsIgnoreCase("unknown"))
-		{
-		    FileInfo info = new FileInspector().inspect(FileInspector.openStream(resource.getUrl()), "unknown");
-
-		    if(info.getMimeType().equals("text/html") || info.getMimeType().equals("text/plain") || info.getMimeType().equals("application/xhtml+xml") || info.getMimeType().equals("application/octet-stream") || info.getMimeType().equals("blog-post")
-			    || info.getMimeType().equals("application/x-gzip"))
-		    {
-			resource.setMachineDescription(info.getTextContent());
-
-			rpm.processWebsite(resource);
-			resource.setOnlineStatus(OnlineStatus.ONLINE);
-			if(resource.getSource() == null)
-			    resource.setSource("Internet");
-
-			resource.save();
-
-		    }
-		    else if(info.getMimeType().equals("application/pdf"))
-		    {
-			log.debug("process " + info.getMimeType());
-			resource.setMachineDescription(info.getTextContent());
-
-			rpm.processFile(resource, FileInspector.openStream(resource.getUrl()), info);
-			resource.save();
-		    }
-		    else if(info.getMimeType().startsWith("image/"))
-		    {
-			rpm.processImage(resource, FileInspector.openStream(resource.getUrl()));
-			resource.setFormat(info.getMimeType());
-			resource.setType("Image");
-			resource.save();
-		    }
-		    else
-		    {
-			log.error("Can't create thumbnail for mimetype: " + info.getMimeType());
-			return;
-		    }
-		}
-		else if(resource.getStorageType() == Resource.WEB_RESOURCE && resource.getMaxImageUrl() != null && resource.getMaxImageUrl().length() > 4)
-		{
-		    log.debug("Create Thumbnails from: " + resource.getMaxImageUrl());
-		    rpm.processImage(resource, FileInspector.openStream(resource.getMaxImageUrl()));
-		    resource.save();
-		}
-		else
-		{
-		    log.error("Can't create thumbnail. Don't know how to handle resource " + resource.getId());
-		    return;
-		}
-		log.debug("Create thumbnail for resource " + resource.getId() + "; Done");
+		ResourceMetadataExtractor rme = new ResourceMetadataExtractor(this.resource);
+		rme.process();
+		rme.getResource().save();
 	    }
 	    catch(Exception e)
 	    {
 		log.error(e);
 
-		resource.setOnlineStatus(OnlineStatus.UNKNOWN); // most probably offline
 		try
 		{
 		    resource.save();

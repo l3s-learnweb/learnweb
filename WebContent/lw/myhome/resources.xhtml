@@ -27,18 +27,18 @@
 			        </p:menuitem>
 			    </p:menuButton>
 			</h:form>
-			<script type="text/javascript">			
+			<script type="text/javascript">
 				var div = document.createElement("div");
 				var group_header = document.createElement("span");
 				$(group_header).addClass("group_header");
 				$(group_header).html("#{msg.myResourcesTitle}");
 				var cl = $("#center_header_form").clone();
 	            $(cl).appendTo(div);
-	            $("#center_header_form").remove()
+	            $("#center_header_form").remove();
 				$(div).append(group_header);
 				$(div).addClass("center-header");
-				$("#center_pane").prepend(div);				
-			</script> 
+				$("#center_pane").prepend(div);
+			</script>
 			
 			
 			<p:confirmDialog id="confirmDialog" message="#{msg.delete_message_resource}" header="#{msg.delete_resource_title}" severity="alert" 

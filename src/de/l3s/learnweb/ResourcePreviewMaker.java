@@ -7,6 +7,8 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -16,6 +18,7 @@ import com.sun.pdfview.PDFPage;
 
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
+import de.l3s.learnwebBeans.AddResourceBean;
 import de.l3s.util.Image;
 import de.l3s.util.StringHelper;
 
@@ -138,6 +141,28 @@ public class ResourcePreviewMaker
     }
 
     public void processWebsite(Resource resource) throws IOException, SQLException
+    {
+	resource.setType("text");
+	resource.setFormat("text/html");
+
+	URL thumbnailUrl = new URL(websiteThumbnailService + StringHelper.urlEncode(resource.getUrl()));
+
+	// process image
+	Image img = new Image(thumbnailUrl.openStream());
+
+	File file = new File();
+	file.setResourceFileNumber(5);
+	file.setName("website.png");
+	file.setMimeType("image/png");
+	fileManager.save(file, img.getInputStream());
+
+	resource.addFile(file);
+	resource.setThumbnail4(new Thumbnail(file.getUrl(), img.getWidth(), img.getHeight(), file.getId()));
+
+	createThumbnails(resource, img, true);
+    }
+
+    public void processUrl(Resource resource) throws IOException, SQLException
     {
 	resource.setType("text");
 	resource.setFormat("text/html");
@@ -387,6 +412,175 @@ public class ResourcePreviewMaker
 	resource.setEmbeddedSize3Raw(size3.toString());
 	
 	*/
+    }
+
+    private static String getBetterSize(String imageUrl, int start, int end)
+    {
+	int size[] = { 1024, 800, 640, 500, 320, 240, 150, 100, 75 };
+	int originalSize = Integer.parseInt(imageUrl.substring(start, end));
+	int i = 0;
+	String newUrl = null;
+	while(i < size.length && size[i] > originalSize)
+	{
+	    newUrl = imageUrl.substring(0, start) + size[i] + imageUrl.substring(end, imageUrl.length());
+	    if(AddResourceBean.checkUrl(newUrl) != null)
+		return newUrl;
+	    i++;
+	}
+	return imageUrl;
+    }
+
+    private static void getBestImage(Resource resource) throws SQLException
+    {
+	String url = resource.getUrl();
+	String imageUrl = null;
+	Pattern pattern = Pattern.compile("<.+src=\"([^\"<>]+)\".*/>");
+	if(null != resource.getEmbeddedSize1())
+	{
+	    Matcher matcher = pattern.matcher(resource.getEmbeddedSize1());
+	    if(matcher.matches())
+		imageUrl = matcher.group(1);
+	}
+
+	if(resource.getSource().equalsIgnoreCase("YouTube"))
+	{
+	    url = AddResourceBean.checkUrl(url);
+	    if(url != null)
+	    {
+		Pattern pattern1 = Pattern.compile("v[/=]([^&]+)");
+		Matcher matcher1 = pattern1.matcher(url);
+		if(matcher1.find())
+		{
+		    String videoId = matcher1.group(1);
+		    imageUrl = "http://img.youtube.com/vi/" + videoId + "/hqdefault.jpg";
+		}
+	    }
+	}
+	else if(resource.getSource().equalsIgnoreCase("Google") && resource.getType().equalsIgnoreCase("Video"))
+	{
+	    if(url != null)
+	    {
+		Pattern pattern1 = Pattern.compile("youtube.com/watch%3Fv%3D([^&]+)");
+		Matcher matcher1 = pattern1.matcher(url);
+		if(matcher1.find())
+		{
+		    String videoId = matcher1.group(1);
+		    imageUrl = "http://img.youtube.com/vi/" + videoId + "/hqdefault.jpg";
+		}
+	    }
+	}
+	else if(resource.getSource().equalsIgnoreCase("Vimeo"))
+	{
+	    if(imageUrl != null)
+	    {
+		Pattern pattern1 = Pattern.compile("([^_]+)_([0-9]+)\\.[a-zA-Z]+");
+		Matcher matcher1 = pattern1.matcher(imageUrl);
+		if(matcher1.matches())
+		    imageUrl = getBetterSize(imageUrl, imageUrl.lastIndexOf('_') + 1, imageUrl.lastIndexOf('.'));
+	    }
+	}
+	else if(resource.getSource().equalsIgnoreCase("Ipernity"))
+	{
+	    if(imageUrl != null)
+	    {
+		Pattern pattern1 = Pattern.compile(".+\\.[0-9]+\\.[a-zA-Z]+");
+		Matcher matcher1 = pattern1.matcher(imageUrl);
+		if(matcher1.matches())
+		    imageUrl = getBetterSize(imageUrl, imageUrl.lastIndexOf('.', imageUrl.lastIndexOf('.') - 1) + 1, imageUrl.lastIndexOf('.'));
+	    }
+	}
+	else if(resource.getSource().equalsIgnoreCase("Flickr"))
+	{
+	    imageUrl = resource.getMaxImageUrl();
+	    if(imageUrl != null)
+	    {
+		Pattern pattern1 = Pattern.compile("http://.+\\.[a-zA-Z]+");
+		Matcher matcher1 = pattern1.matcher(imageUrl);
+		if(matcher1.matches())
+		{
+		    char size[] = { 'o', 'b', 'c', 'z', 'n', 'm', 't', 'q', 's' };
+		    int end = imageUrl.lastIndexOf('.');
+		    char original = 'm';
+		    if(imageUrl.charAt(end - 2) == '_')
+			original = imageUrl.charAt(end - 1);
+		    int i = 0;
+		    String newUrl = null;
+		    while(i < size.length && size[i] != original)
+		    {
+			if(size[i] == 'm')
+			{
+			    newUrl = imageUrl.substring(0, end - 2) + imageUrl.substring(end, imageUrl.length());
+			    newUrl = AddResourceBean.checkUrl(newUrl);
+			    if(newUrl != null && !newUrl.contains("unavailable"))
+			    {
+				imageUrl = newUrl;
+				break;
+			    }
+			}
+			else
+			{
+			    if(original == 'm')
+				newUrl = imageUrl.substring(0, end) + "_" + size[i] + imageUrl.substring(end, imageUrl.length());
+			    else
+				newUrl = imageUrl.substring(0, end - 2) + "_" + size[i] + imageUrl.substring(end, imageUrl.length());
+
+			    newUrl = AddResourceBean.checkUrl(newUrl);
+			    if(newUrl != null && !newUrl.contains("unavailable"))
+			    {
+				imageUrl = newUrl;
+				break;
+			    }
+			}
+			i++;
+		    }
+
+		    if(size[i] == 'z')
+			imageUrl += "?zz=1";
+		}
+	    }
+	}
+	else if(resource.getSource().equalsIgnoreCase("Desktop"))
+	{
+	    if(null != resource.getEmbeddedSize4())
+	    {
+		Matcher matcher = pattern.matcher(resource.getEmbeddedSize4());
+		if(matcher.matches())
+		    imageUrl = matcher.group(1);
+	    }
+	    else if(null != resource.getEmbeddedSize3())
+	    {
+		Matcher matcher = pattern.matcher(resource.getEmbeddedSize3());
+		if(matcher.matches())
+		    imageUrl = matcher.group(1);
+	    }
+	}
+	else
+	{
+	    // that's ok. This seem to be mostly web sites
+	    log.debug("unhandled resource " + resource);
+	    return;
+
+	}
+
+	if(imageUrl == null) // why can't we get an images for this resource...
+	{
+	    log.error("can't get image for " + resource);
+	}
+
+	if(url != null && url.startsWith("http://immediatenet.com"))
+	    return;
+
+	log.debug(imageUrl);
+
+	if(imageUrl == null || AddResourceBean.checkUrl(imageUrl) == null)
+	{
+	    resource.setMaxImageUrl("-1");
+	}
+	else
+	    resource.setMaxImageUrl(imageUrl);
+
+	resource.save();
+
     }
 
 }

@@ -22,6 +22,7 @@ import de.l3s.interwebj.jaxb.ThumbnailEntity;
 import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
+import de.l3s.learnwebBeans.AddResourceBean;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
@@ -1191,7 +1192,7 @@ public class ResourceManager
 		null);
 	for(Resource resource : resources)
 	{
-	    String url = FileInspector.checkUrl(resource.getUrl());
+	    String url = AddResourceBean.checkUrl(resource.getUrl());
 
 	    if(null == url)
 	    {

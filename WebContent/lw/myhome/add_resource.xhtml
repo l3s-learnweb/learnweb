@@ -48,7 +48,8 @@
 									<p:selectOneMenu value="#{addResourceBean.resource.storageType}" >
 										<f:selectItem itemLabel="URL" itemValue="2" />
 										<f:selectItem itemLabel="#{msg.file}" itemValue="1" />
-											<f:ajax render=":resource_form:resource_input" immediate="true" listener="#{addResourceBean.doNothing}"/>
+										
+										<f:ajax render=":resource_form:resource_input" immediate="true"/>
 									</p:selectOneMenu>
 								</p>
 								<p>
