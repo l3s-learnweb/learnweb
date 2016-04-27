@@ -84,12 +84,10 @@ function setSynonyms(xhr,status,args){
 	synonyms = synonyms + args.synonyms;
 		
 	noteid++;
-	var st = window.getSelection();
-	var range = st.getRangeAt(0);    
+	
 	var span = document.createElement("span");
 	span.setAttribute("class", "note");
 	span.setAttribute("id", noteid);
-	span.appendChild(range.extractContents());
 	$(span).on('click',function(){
 		if (window.confirm("Delete this selection (" + $(this).text() + ")?")) {
 			saveTranscriptLog([{name:'word', value:$(this).text()},{name:'user_annotation', value:$(this).attr("data-title")},{ name:'action',value:'deselection'}]);
@@ -98,7 +96,20 @@ function setSynonyms(xhr,status,args){
 			$(this).remove();
 		}
 	});
-	range.insertNode(span);
+	
+	if(document.selection && !window.getSelection)
+	{
+		var range = document.selection.createRange();
+		span.appendChild(range.htmlText);
+		range.pasteHTML(span.outerHTML);
+	}
+	else
+	{
+		var range = window.getSelection().getRangeAt(0);    
+		span.appendChild(range.extractContents());
+		range.insertNode(span);
+	}
+	
 	/*highlighter.addClassApplier(rangy.createCssClassApplier("note", {
         ignoreWhiteSpace: true,
         elementTagName: "span",
@@ -127,8 +138,11 @@ function noteSelectedText() {
 	usertext = "";
 	escape_key_flag = true;
 
-	sel = window.getSelection();
-	sel_str = sel.toString();
+	if(window.getSelection)
+		sel_str = window.getSelection().toString();
+	else if(document.selection && document.selection.type != "Control") //support IE browsers
+		sel_str = document.selection.createRange().text;
+	//sel_str = sel.toString();
 	if(sel_str != "")
 		setSynonymsForWord([{name:'word', value:sel_str}]);
 }
