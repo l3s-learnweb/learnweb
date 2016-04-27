@@ -38,7 +38,7 @@ public class ResourceMetadataExtractor
     private static final String FLICKR_API_REQUEST = "https://api.flickr.com/services/rest/?method=flickr.photos.getInfo&api_key=***REMOVED***&format=json&nojsoncallback=1&photo_id=";
     private static final String IPERNITY_API_REQUEST = "http://api.ipernity.com/api/doc.get/json?api_key=***REMOVED***&extra=tags&doc_id=";
 
-    private static final int DESCRIPTION_LIMIT = 250;
+    private static final int DESCRIPTION_LIMIT = 1000;
 
     private Resource resource;
     private FileInfo fileinfo;
@@ -61,28 +61,6 @@ public class ResourceMetadataExtractor
 	}
 
 	return fileinfo;
-    }
-
-    protected void canBeUpdated()
-    {
-	// from url
-	resource.setUrl("");
-	resource.setType(""); // text, video, image, pdf
-	resource.setFormat("");
-	resource.setSource(""); // yovisto|ted|youtube|flickr|tedx|vimeo|ipernity|slideshare
-
-	// from metadata
-	resource.setTitle("");
-	resource.setDescription("");
-	resource.setAuthor("");
-	resource.setDuration(0);
-	resource.setLanguage("");
-
-	/*
-	 * TODO:
-	 * Recognize youtube, flickr, vimeo resources from url
-	 * Recognize type of resource
-	 */
     }
 
     public void process()
@@ -139,6 +117,7 @@ public class ResourceMetadataExtractor
 		    resource.setTitle(snippet.getString("title"));
 		    resource.setDescription(StringHelper.shortnString(snippet.getString("description"), DESCRIPTION_LIMIT));
 		    resource.setAuthor(snippet.getString("channelTitle"));
+		    resource.setEmbeddedRaw("<iframe src=\"https://www.youtube.com/embed/" + resource.getIdAtService() + "\" frameborder=\"0\" allowfullscreen></iframe>");
 
 		    // TODO: save tags for resource
 		    /*JSONArray tags = (JSONArray) snippet.get("tags");
@@ -197,6 +176,7 @@ public class ResourceMetadataExtractor
 		    resource.setDescription(StringHelper.shortnString(json.getString("description"), DESCRIPTION_LIMIT));
 		    resource.setAuthor(json.getString("user_name"));
 		    resource.setDuration(json.getInt("duration"));
+		    resource.setEmbeddedRaw("<iframe src=\"//player.vimeo.com/video/" + resource.getIdAtService() + "\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>");
 
 		    // TODO: save tags for resource
 		    /*String tags = object.get("tags").toString();
@@ -303,6 +283,7 @@ public class ResourceMetadataExtractor
 
 			    if(newWeight > weight)
 			    {
+				weight = newWeight;
 				thumbnailUrl = th.getString("url");
 			    }
 			}
