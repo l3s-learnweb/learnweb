@@ -605,9 +605,37 @@
 						<tr>
 							<td colspan="2">
 								<p:inputTextarea rows="4" style="width: 97%; overflow-y: scroll" id="resource_description" 
-									value="#{bean.clickedResource.description}"/>
+									value="#{bean.clickedResource.description}"/>#{userBean.user.organisation}
 							</td>
 						</tr>
+						
+						
+						<ui:repeat var="field" value="#{userBean.user.organisation.metadataFields}">							
+							<tr>
+								<td>
+									<span class="resource_field">
+										<h:outputText value="${utilBean.getLocaleMessage(field.name, null)}" />: 
+									</span>
+								</td>
+								<td>
+									
+									
+									<ui:fragment rendered="#{field.moderatorOnly}">
+										<h:outputText value="#{bean.clickedResource.metadata[field.name]}" /> 
+									</ui:fragment>	
+									
+									<ui:fragment rendered="#{not field.moderatorOnly}">									
+									
+										<p:inputText style="width: 96%" value="#{bean.clickedResource.metadata[field.name]}" rendered="#{field.type == 'INPUT_TEXT'}"/>
+										<h:outputText value="#{field.type}" rendered="#{field.type != 'INPUT_TEXT'}" /> 
+										
+									</ui:fragment>								
+								</td>
+								
+								
+							</tr>							
+						</ui:repeat>
+						
 						<tr>
 							<td colspan="2">
 								<p:commandButton styleClass="greenbutton float-right" value="#{msg.save}" 

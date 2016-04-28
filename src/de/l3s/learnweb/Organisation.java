@@ -3,9 +3,12 @@ package de.l3s.learnweb;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.validation.constraints.Size;
+
+import de.l3s.learnweb.ResourceMetadataField.MetadataType;
 
 public class Organisation implements Serializable, Comparable<Organisation>
 {
@@ -27,6 +30,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
     private String welcomeMessage;
     private String welcomePage;
     private long[] options = new long[1];
+    private List<ResourceMetadataField> metadataFields = new LinkedList<ResourceMetadataField>();
 
     /**
      * Constructs a temporary object. Can be persisted by OrganisationManager.save()
@@ -53,6 +57,31 @@ public class Organisation implements Serializable, Comparable<Organisation>
 
 	for(int i = 0; i < 1;)
 	    options[i] = rs.getInt("options_field" + (++i));
+
+	if(id == 893) // Admin only
+	{
+	    ResourceMetadataField metadata = new ResourceMetadataField("language", MetadataType.ONE_MENU);
+	    metadata.getOptions().add("german");
+	    metadata.getOptions().add("english");
+	    metadata.getOptions().add("french");
+	    metadata.getOptions().add("greek");
+	    metadataFields.add(metadata);
+	    metadataFields.add(new ResourceMetadataField("coverage", MetadataType.INPUT_TEXT));
+	    metadata = new ResourceMetadataField("test2", MetadataType.ONE_MENU);
+	    metadata.setModeratorOnly(true);
+	    metadataFields.add(metadata);
+	}
+	else if(id == 848) // Demo (archive course)
+	{
+	    metadataFields.add(new ResourceMetadataField("collector", MetadataType.INPUT_TEXT, true));
+	    metadataFields.add(new ResourceMetadataField("coverage", MetadataType.INPUT_TEXT, true));
+	    metadataFields.add(new ResourceMetadataField("publisher", MetadataType.INPUT_TEXT, true));
+	}
+    }
+
+    public List<ResourceMetadataField> getMetadataFields()
+    {
+	return metadataFields;
     }
 
     public List<Course> getCourses() throws SQLException

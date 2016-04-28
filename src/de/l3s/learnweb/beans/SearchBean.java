@@ -36,8 +36,10 @@ import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.Search;
 import de.l3s.learnweb.SearchFilters;
+import de.l3s.learnweb.SearchFilters.FILTERS;
 import de.l3s.learnweb.SearchFilters.Filter;
 import de.l3s.learnweb.SearchFilters.MODE;
+import de.l3s.learnweb.SearchFilters.SERVICE;
 import de.l3s.learnweb.User;
 import de.l3s.learnwebBeans.AddResourceBean;
 import de.l3s.learnwebBeans.ApplicationBean;
@@ -778,11 +780,18 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    }
 	    String label = graph.getEntities().get(0).getLabel();
 
-	    images = new Search(getLearnweb().getInterweb(), label, new SearchFilters(), getUser());
+	    SearchFilters filter = new SearchFilters();
+	    images = new Search(getLearnweb().getInterweb(), label, filter, getUser());
 	    images.setMode(MODE.image);
+	    filter.setFilter(FILTERS.service, SERVICE.Bing);
+
 	    //images.setService(SERVICE.Ipernity, SERVICE.Flickr);
 	    images.setResultsPerService(10);
 	    images.getResourcesByPage(1);
+
+	    LinkedList<ResourceDecorator> resources = images.getResources();
+	    for(ResourceDecorator resource : resources)
+		System.out.println(resource.getSource());
 	    //images.getResourcesByPage(2);			
 
 	    graphLoaded = true;
