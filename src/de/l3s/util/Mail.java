@@ -1,0 +1,90 @@
+package de.l3s.util;
+
+import java.util.Properties;
+
+import javax.mail.Authenticator;
+import javax.mail.Message.RecipientType;
+import javax.mail.MessagingException;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.AddressException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+public class Mail
+{
+    private static Authenticator authenticator = new PasswordAuthenticator("learnweb", "5-FN!@QENtrXh6V][C}*h8-S=yju");
+    private Session session;
+    private MimeMessage message;
+
+    public Mail() throws AddressException, MessagingException
+    {
+	System.setProperty("mail.mime.charset", "UTF-8");
+	Properties props = new Properties();
+	//props.put("mail.smtp.host", "smtp.gmail.com");
+	props.put("mail.smtp.host", "mail.kbs.uni-hannover.de");
+	props.put("mail.smtp.socketFactory.port", "465");
+	props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+	props.put("mail.smtp.auth", "true");
+	props.put("mail.smtp.port", "465");
+	props.put("mail.debug", "true");
+
+	//Session session1 = Session.getDefaultInstance(props, new GMailAuthenticator("interweb9@googlemail.com", "QDsG}GM5"));
+
+	session = Session.getDefaultInstance(props, authenticator);
+
+	message = new MimeMessage(session);
+	message.setFrom(new InternetAddress("learnweb@kbs.uni-hannover.de"));
+    }
+
+    public void sendMail() throws MessagingException
+    {
+	message.saveChanges();
+	Transport.send(message);
+    }
+
+    private static class PasswordAuthenticator extends Authenticator
+    {
+	String user;
+	String pw;
+
+	public PasswordAuthenticator(String username, String password)
+	{
+	    super();
+	    this.user = username;
+	    this.pw = password;
+	}
+
+	@Override
+	public PasswordAuthentication getPasswordAuthentication()
+	{
+	    return new PasswordAuthentication(user, pw);
+	}
+    }
+
+    public void setFrom(InternetAddress internetAddress) throws MessagingException
+    {
+	message.setFrom(internetAddress);
+    }
+
+    public void setRecipient(RecipientType type, InternetAddress adress) throws MessagingException
+    {
+	message.setRecipient(type, adress);
+    }
+
+    public void setRecipients(RecipientType type, InternetAddress[] adresses) throws MessagingException
+    {
+	message.setRecipients(type, adresses);
+    }
+
+    public void setSubject(String subject) throws MessagingException
+    {
+	message.setSubject(subject);
+    }
+
+    public void setText(String text) throws MessagingException
+    {
+	message.setText(text);
+    }
+}

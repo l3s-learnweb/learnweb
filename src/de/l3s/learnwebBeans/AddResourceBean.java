@@ -36,7 +36,6 @@ import de.l3s.learnweb.ResourcePreviewMaker;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
-import de.l3s.util.StringHelper;
 
 @ViewScoped
 @ManagedBean
@@ -442,6 +441,11 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	if(getUser() == null) // not logged in
 	    return;
 
+	/*
+	Add resources through get parameter.
+	Implemented for collaboration with an Italian software.
+	Currently not used.  
+	 
 	if(null != paramUrl || null != paramTitle || null != paramDescription || null != paramSource || null != paramType)
 	{
 	    if(null == paramUrl || paramUrl.length() == 0)
@@ -454,42 +458,43 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 		addMessage(FacesMessage.SEVERITY_ERROR, "Missing required param: title");
 		return;
 	    }
-
+	
 	    resource = new Resource();
 	    resource.setStorageType(Resource.WEB_RESOURCE);
 	    resource.setUrl(StringHelper.decodeBase64(paramUrl));
 	    resource.setTitle(StringHelper.decodeBase64(paramTitle));
 	    resource.setSource("Internet");
 	    resource.setLocation("Learnweb");
-
+	
 	    if(null != paramThumbnail && paramThumbnail.length() != 0)
 	    {
 		String image = "<img src\"" + StringHelper.decodeBase64(paramThumbnail) + "\" />";
 		resource.setEmbeddedSize1Raw(image);
 	    }
-
+	
 	    if(null != paramDescription)
 		resource.setDescription(StringHelper.decodeBase64(paramDescription));
-
+	
 	    if(null != paramSource)
 		resource.setLocation(StringHelper.decodeBase64(paramSource));
-
+	
 	    if(null != paramType)
 		resource.setType(StringHelper.decodeBase64(paramType));
-
+	
 	    try
 	    {
 		addResource();
-
+	
 		String redirect = UtilBean.getLearnwebBean().getContextUrl() + getTemplateDir() + "/resource.jsf?resource_id=" + resource.getId();
 		getFacesContext().getExternalContext().redirect(redirect);
-
+	
 	    }
 	    catch(Exception e)
 	    {
 		addFatalMessage(e);
 	    }
 	}
+	*/
     }
 
     /**

@@ -405,33 +405,33 @@ public class ResourceMetadataExtractor
 	{
 	    //resource.setEmbeddedRaw(embeddedRaw);
 	    resource.setType("video");
-	    resource.setSource("youtube");
+	    resource.setSource("Youtube");
 	    resource.setIdAtService(youTubeMatcher.group(1));
 	    resource.setEmbeddedRaw("<iframe src=\"https://www.youtube.com/embed/" + resource.getIdAtService() + "\" frameborder=\"0\" allowfullscreen></iframe>");
 	}
 	else if(vimeoMatcher.find())
 	{
 	    resource.setType("video");
-	    resource.setSource("vimeo");
+	    resource.setSource("Vimeo");
 	    resource.setIdAtService(vimeoMatcher.group(1));
 	}
 	else if(flickrMatcher.find())
 	{
 	    // TODO: add pattern for short urls encoded with base58
 	    resource.setType("image");
-	    resource.setSource("flickr");
+	    resource.setSource("Flickr");
 	    resource.setIdAtService(flickrMatcher.group(1));
 	}
 	else if(ipernityMatcher.find())
 	{
 	    resource.setType("image");
-	    resource.setSource("ipernity");
+	    resource.setSource("Ipernity");
 	    resource.setIdAtService(ipernityMatcher.group(1));
 	}
 	else
 	{
 	    resource.setType("text");
-	    resource.setSource("internet");
+	    resource.setSource("Internet");
 	}
     }
 

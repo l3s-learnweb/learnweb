@@ -10,8 +10,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
-import org.apache.log4j.Logger;
-
 import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
@@ -27,7 +25,7 @@ import de.l3s.learnwebBeans.GroupDetailBean.RPAction;
 public class MyResourcesBean extends ApplicationBean implements Serializable
 {
     private final static long serialVersionUID = 5680533799976460331L;
-    private final static Logger log = Logger.getLogger(MyResourcesBean.class);
+    //    private final static Logger log = Logger.getLogger(MyResourcesBean.class);
 
     private List<Resource> resources;
     private List<Resource> resourcesAll;

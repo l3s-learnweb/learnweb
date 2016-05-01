@@ -162,31 +162,9 @@ public class ResourcePreviewMaker
 	createThumbnails(resource, img, true);
     }
 
-    public void processUrl(Resource resource) throws IOException, SQLException
-    {
-	resource.setType("text");
-	resource.setFormat("text/html");
-
-	URL thumbnailUrl = new URL(websiteThumbnailService + StringHelper.urlEncode(resource.getUrl()));
-
-	// process image
-	Image img = new Image(thumbnailUrl.openStream());
-
-	File file = new File();
-	file.setResourceFileNumber(5);
-	file.setName("website.png");
-	file.setMimeType("image/png");
-	fileManager.save(file, img.getInputStream());
-
-	resource.addFile(file);
-	resource.setThumbnail4(new Thumbnail(file.getUrl(), img.getWidth(), img.getHeight(), file.getId()));
-
-	createThumbnails(resource, img, true);
-    }
-
     public void processArchiveWebsite(int resource_id, String url) throws IOException, SQLException
     {
-	ArchiveUrlManager archiveurlmanager = new ArchiveUrlManager(learnweb);
+	ArchiveUrlManager archiveurlManager = new ArchiveUrlManager(learnweb);
 	URL thumbnailUrl = new URL(archiveThumbnailService + StringHelper.urlEncode(url));
 
 	Image img = new Image(thumbnailUrl.openStream());
@@ -199,7 +177,7 @@ public class ResourcePreviewMaker
 
 	if(file.getId() > 0)
 	{
-	    archiveurlmanager.updateArchiveUrl(file.getId(), resource_id, url);
+	    archiveurlManager.updateArchiveUrl(file.getId(), resource_id, url);
 	}
     }
 
