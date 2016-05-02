@@ -70,11 +70,11 @@
 							<h:outputText value="#{res.group.title}; " />
 						</h:outputLink>
 					</h:panelGroup>
-					<h:panelGroup layout="block" style="padding-top:3px;display:inline-block;white-space:nowrap;position:absolute;" rendered="#{not empty res.getMetadataValue('collector')}">
+					<h:panelGroup layout="block" style="padding-top:3px;display:inline-block;position:absolute;" rendered="#{not empty res.getMetadataValue('collector')}">
 						<b><h:outputText value=" #{msg.collector}: " /></b>	
 						<h:outputText value="#{res.getMetadataValue('collector')}" />
 					</h:panelGroup>
-					<h:panelGroup layout="block" style="padding-top:3px;display:inline-block;white-space:nowrap;position:absolute;" rendered="#{empty res.getMetadataValue('collector') and not empty res.ownerUser.fullName}">
+					<h:panelGroup layout="block" style="padding-top:3px;display:inline-block;position:absolute;" rendered="#{empty res.getMetadataValue('collector') and not empty res.ownerUser.fullName}">
 						<b><h:outputText value=" #{msg.collector}: " /></b>	
 						<h:outputText value="#{res.resource.ownerUser.fullName}" />
 					</h:panelGroup>
