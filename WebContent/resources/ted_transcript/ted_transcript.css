@@ -93,6 +93,10 @@
 	padding: 10px;
 }
 
+.tedTranscript{
+	padding:3px 3px 0px;
+	border: 1px solid #A4A4A4;
+}
 ::selection{
 	background: yellow;
 }

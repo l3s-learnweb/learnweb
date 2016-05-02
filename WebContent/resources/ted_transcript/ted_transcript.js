@@ -96,8 +96,8 @@ function setSynonyms(xhr,status,args){
 			$(this).remove();
 		}
 	});
-	
-	if(document.selection && !window.getSelection)
+	var sel = window.getSelection && window.getSelection();
+	if(document.selection && !sel)
 	{
 		var range = document.selection.createRange();
 		span.appendChild(range.htmlText);
@@ -105,9 +105,12 @@ function setSynonyms(xhr,status,args){
 	}
 	else
 	{
-		var range = window.getSelection().getRangeAt(0);    
-		span.appendChild(range.extractContents());
-		range.insertNode(span);
+		if(sel.rangeCount > 0)
+		{
+			var range = sel.getRangeAt(0);    
+			span.appendChild(range.extractContents());
+			range.insertNode(span);
+		}
 	}
 	
 	/*highlighter.addClassApplier(rangy.createCssClassApplier("note", {
