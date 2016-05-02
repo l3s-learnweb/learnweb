@@ -291,13 +291,22 @@ public class UserManager
 	if(null == course)
 	    throw new IllegalArgumentException("Invalid registration wizard parameter");
 
-	// register a createUser at interweb
-	AuthCredentials iwToken = learnweb.getInterweb().registerUser(username, password, course.getDefaultInterwebUsername(), course.getDefaultInterwebPassword());
+	AuthCredentials iwToken = null;
 
-	int counter = 2;
-	while(null == iwToken) // username already taken
+	try
 	{
-	    iwToken = learnweb.getInterweb().registerUser(username + "_" + counter++, password, course.getDefaultInterwebUsername(), course.getDefaultInterwebPassword());
+	    // register a createUser at interweb
+	    iwToken = learnweb.getInterweb().registerUser(username, password, course.getDefaultInterwebUsername(), course.getDefaultInterwebPassword());
+
+	    int counter = 2;
+	    while(null == iwToken) // username already taken
+	    {
+		iwToken = learnweb.getInterweb().registerUser(username + "_" + counter++, password, course.getDefaultInterwebUsername(), course.getDefaultInterwebPassword());
+	    }
+	}
+	catch(Exception e)
+	{
+	    log.error("Could not create interweb account for user: " + username, e);
 	}
 
 	User user = new User();

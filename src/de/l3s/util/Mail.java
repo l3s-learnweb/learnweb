@@ -22,15 +22,12 @@ public class Mail
     {
 	System.setProperty("mail.mime.charset", "UTF-8");
 	Properties props = new Properties();
-	//props.put("mail.smtp.host", "smtp.gmail.com");
 	props.put("mail.smtp.host", "mail.kbs.uni-hannover.de");
 	props.put("mail.smtp.socketFactory.port", "465");
 	props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
 	props.put("mail.smtp.auth", "true");
 	props.put("mail.smtp.port", "465");
-	props.put("mail.debug", "true");
-
-	//Session session1 = Session.getDefaultInstance(props, new GMailAuthenticator("interweb9@googlemail.com", "QDsG}GM5"));
+	//props.put("mail.debug", "true");
 
 	session = Session.getDefaultInstance(props, authenticator);
 

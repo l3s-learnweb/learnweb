@@ -85,8 +85,9 @@
 						</h:panelGrid>
 					 </p:fieldset>
 					<br/>
-					<h:commandButton id="create_group_button" ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" 
-						styleClass="greenbutton" process="@form" update="@form :my_groups :growl :group_menu" />
+						
+					<p:commandButton id="create_group_button" ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" 
+						styleClass="greenbutton" process="@form" update="@form :my_groups :growl :group_menu" />	
 					
 				</h:form>
 			</h:panelGroup>
@@ -96,10 +97,7 @@
 	<ui:define name="center_layout">
 		 
 		<h:outputStylesheet name="main-template/tooltipster.min.css" />
-		
-		<!-- 
-		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/tooltipster.min.css" />
-	    -->
+
 	    <script type="text/javascript" src="#{request.contextPath}/resources/js/jquery.tooltipster.min.js" />
 	    
 	    <script type="text/javascript">
