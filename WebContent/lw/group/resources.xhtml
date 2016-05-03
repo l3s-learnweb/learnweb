@@ -283,10 +283,9 @@
 						
 						<h:outputText value="" />
 						<h:panelGroup colspan="2" styleClass="float-right" style="margin: 10px 0;">
-							<p:commandButton styleClass="graybutton" value="#{msg.cancel}" onclick="PF('resource_dialog').hide(); return false;" />
-							
 							<p:commandButton styleClass="greenbutton" value="#{msg.save}" action="#{groupDetailBean.addSelectedResource}" 
-								update=":resourceGrid :growl" process="@form :resourceGrid" oncomplete="PF('resource_dialog').hide()" />
+								update=":resourceGrid :growl" process="@form :resourceGrid" oncomplete="PF('resource_dialog').hide()" style="float:right;"/>
+							<p:commandButton styleClass="graybutton" value="#{msg.cancel}" onclick="PF('resource_dialog').hide(); return false;" style="float:left;"/>
 						</h:panelGroup>
 						
 					</h:panelGrid>
