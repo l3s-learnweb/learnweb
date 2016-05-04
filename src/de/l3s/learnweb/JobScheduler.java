@@ -1,13 +1,12 @@
 package de.l3s.learnweb;
 
-import it.sauronsoftware.cron4j.Scheduler;
-import it.sauronsoftware.cron4j.Task;
-import it.sauronsoftware.cron4j.TaskExecutionContext;
-
 import org.apache.log4j.Logger;
 
 import de.l3s.tedapi.crawler.CheckNewTedVideos;
 import de.l3s.tedapi.crawler.CheckUpdatedTedVideos;
+import it.sauronsoftware.cron4j.Scheduler;
+import it.sauronsoftware.cron4j.Task;
+import it.sauronsoftware.cron4j.TaskExecutionContext;
 
 public class JobScheduler
 {
@@ -35,6 +34,8 @@ public class JobScheduler
 
 	//Schedules the task at 1:00 on alternate days to update existing TED videos
 	scheduler.schedule("0 1 2-30/2 * *", new CheckUpdatedTedVideos());
+
+	//scheduler.schedule("0 1 * * *", new TedCrawlController());
     }
 
     public void startAllJobs()
