@@ -491,7 +491,7 @@
 				        </p:commandButton>
 				    </h:form>						   
 				   
-				    <h:form id="comment_form" styleClass="clear" prependId="false" style="margin-bottom:40px;">
+				    <h:form id="comment_input_form" styleClass="clear" prependId="false">
 				   
 						<h:panelGroup layout="block" class="resource_field" style="padding-top: 10px" rendered="#{!groupDetailBean.group.readOnly}">
 							#{msg.comments}
@@ -508,11 +508,13 @@
 								<br/>
 							</div>
 							<p:commandButton id="comment_button" styleClass="greenbutton float-right" value="#{msg.addComment}" 
-								actionListener="#{resourceDetailBean.addComment()}" update=":datagrid :comment_form">
+								actionListener="#{resourceDetailBean.addComment()}" update=":datagrid :comment_input_form :comment_form :growl">
 								<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>	
 							</p:commandButton>
 						</h:panelGroup>
-						<br class="clear" />
+					</h:form>
+					<br class="clear" />
+					<h:form id="comment_form" styleClass="clear" prependId="false" style="margin-bottom:40px;">
 						<h:panelGroup layout="block" rendered="#{not empty resourceDetailBean.clickedResource.comments}" 
 							styleClass="comments">
 							<h:panelGroup layout="block" class="resource_field" style="padding-top: 10px" rendered="#{groupDetailBean.group.readOnly}">
@@ -546,7 +548,7 @@
 											action="#{resourceDetailBean.onDeleteComment}"
 											style="margin-right: 5px; font-size: 10px !important; color: red" value="#{msg.delete}" 
 											onstart="return confirm('#{msg.delete_message_comments}');" ajax="true" 
-											update=":add_resource_panel">
+											update=":add_resource_panel :growl">
 											<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
 										</p:commandLink>
 									</div>
