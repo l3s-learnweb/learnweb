@@ -495,7 +495,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public boolean isModerator()
     {
-	return moderator;
+	return moderator || admin;
     }
 
     public void setModerator(boolean moderator)
