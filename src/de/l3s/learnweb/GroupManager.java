@@ -440,6 +440,32 @@ public class GroupManager
     }
 
     /**
+     * 
+     * @param userId
+     * @return
+     * @throws SQLException
+     */
+    public List<Folder> getGroupsForMyResources(int userId) throws SQLException
+    {
+	LinkedList<Folder> folders = new LinkedList<Folder>();
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT DISTINCT(group_id), lw_group.title FROM `lw_resource` JOIN lw_group USING(group_id) WHERE `owner_user_id` = ? AND lw_resource.deleted = 0");
+	select.setInt(1, userId);
+	ResultSet rs = select.executeQuery();
+	while(rs.next())
+	{
+	    Folder folder = new Folder();
+	    folder.setFolderId(0);
+	    folder.setGroupId(rs.getInt("group_id"));
+	    folder.setParentFolderId(0);
+	    folder.setName(rs.getString("title"));
+	    folder.setUserId(userId);
+	    folders.add(folder);
+	}
+	select.close();
+	return folders;
+    }
+
+    /**
      * TODO: do request recursively
      * 
      * @param groupId

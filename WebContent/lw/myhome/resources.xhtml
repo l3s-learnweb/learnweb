@@ -4,7 +4,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core" 
 	xmlns:c="http://java.sun.com/jsp/jstl/core" 
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
 <ui:composition template="/lw/templates/new_main_t.xhtml">
 
@@ -31,7 +32,12 @@
 				var div = document.createElement("div");
 				var group_header = document.createElement("span");
 				$(group_header).addClass("group_header");
-				$(group_header).html("#{msg.myResourcesTitle}");
+				var group_title = document.createElement("a");
+				group_title.href = "myhome/resources.jsf";
+				group_title.innerHTML = "#{msg.myResourcesTitle}";
+				group_title.setAttribute("style","color: #489a83;padding:0px;");
+				$(group_header).html(group_title);
+				//$(group_header).html("#{msg.myResourcesTitle}");
 				var cl = $("#center_header_form").clone();
 	            $(cl).appendTo(div);
 	            $("#center_header_form").remove();
@@ -77,68 +83,81 @@
 	
        
 			<h:panelGroup layout="block" id="datagrid" styleClass="datagrid">  
-			
-				<h:outputText value="#{msg.no_resources_found}" rendered="#{empty myResourcesBean.resources}" class="nothing_found"/>
-				
-		       <ui:repeat var="result" value="#{myResourcesBean.resources}" >
-		       
-		       <h:form styleClass="resource_panel grey_border">
-		        
-		        <p:commandLink styleClass="resource_command_link" update=":add_resource_panel" oncomplete="update_header()">
-		        	<f:setPropertyActionListener target="#{myResourcesBean.clickedResource}" value="#{result}"/>
-		        	<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{result}"/>
-							
-						<h:outputText value="#{result.title}" escape="false" styleClass="resource_short_title" /> 			
+				<ul style="padding:5px;">
+					<ui:repeat var="folder" value="#{myResourcesBean.breadcrumb}">
+						<li style="display:inline;">
+							<h:form style="display:inline;">
+								<p:commandLink update=":datagrid :add_resource_panel" oncomplete="update_header();">
+			       						<f:setPropertyActionListener target="#{myResourcesBean.clickedFolder}" value="#{folder}" />
+							        	<h:outputText value="#{folder.name} &gt;" escape="false"/> 
+								</p:commandLink>
+							</h:form>
+						</li>
+					</ui:repeat>
+				</ul>
+				<h:panelGroup id="folderGrid" layout="block" pt:data-selectedFolderId="#{myResourcesBean.selectedFolderId}">
+					<ui:repeat var="folder" value="#{myResourcesBean.folders}"> 			     
+				  		<h:form styleClass="resource_panel resource_folder grey_border" pt:data-folderId="#{folder.folderId}">
+				  			<p:commandLink styleClass="resource_command_link" update=":datagrid :add_resource_panel" oncomplete="update_header();">
+	       						<f:setPropertyActionListener target="#{myResourcesBean.clickedFolder}" value="#{folder}" />
+	       	
+					        	<h:outputText value="#{folder.name}" escape="false" styleClass="resource_short_title" /> 
+							</p:commandLink>
+				  		</h:form>
+					</ui:repeat>
+				</h:panelGroup>
+				<h:panelGroup id="resourceGrid" layout="block">
+					<ui:repeat var="result" value="#{myResourcesBean.resources}" >
+				       <h:form styleClass="resource_panel grey_border">
+							<p:commandLink styleClass="resource_command_link" update=":add_resource_panel" oncomplete="update_header();">
+		        				<f:setPropertyActionListener target="#{myResourcesBean.clickedResource}" value="#{result}"/>
+		        				<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{result}"/>
+								<h:outputText value="#{result.title}" escape="false" styleClass="resource_short_title" /> 			
 			           
-			            <h:panelGrid columns="1" styleClass="resource_panelgrid"> 
+			            		<h:panelGrid columns="1" styleClass="resource_panelgrid"> 
 			            
-			            	<p:row>	
-								<h:graphicImage styleClass="resource_thumbnail" width="150" height="150" value="#{result.thumbnail1.url}" 
-									rendered="#{not empty result.thumbnail1}" alt="#{result.title}" />
-						    	<h:outputText styleClass="resource_thumbnail" escape="false" rendered="#{empty result.thumbnail1}"
-						    		value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}'/>
+			            			<p:row>	
+										<h:graphicImage styleClass="resource_thumbnail" width="150" height="150" value="#{result.thumbnail1.url}" 
+											rendered="#{not empty result.thumbnail1}" alt="#{result.title}" />
+						    			<h:outputText styleClass="resource_thumbnail" escape="false" rendered="#{empty result.thumbnail1}"
+						    				value='#{result.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}'/>
+			            				<div class="buttons">
+			            					<p:commandLink oncomplete="PF('resource_add_dialog').show();" title="#{msg.add_to}" 
+				            					rendered="#{userBean.isModerator() or true}" styleClass="buttons_link resource_commandlink">
+												<h:graphicImage alt="Add" value="/resources/icon/Add_blue.png" title="#{msg.add_to}" id="add"/> 
+												<f:setPropertyActionListener value="#{result}" target="#{myResourcesBean.clickedResource}" />
+											</p:commandLink>
 
-			            		<div class="buttons">
-			            		
-			            			<p:commandLink oncomplete="PF('resource_add_dialog').show();" title="#{msg.add_to}" 
-				            				rendered="#{userBean.isModerator() or true}" styleClass="buttons_link resource_commandlink">
-											<h:graphicImage alt="Add" value="/resources/icon/Add_blue.png" title="#{msg.add_to}" id="add"/> 
-											<f:setPropertyActionListener value="#{result}" target="#{myResourcesBean.clickedResource}" />
-										</p:commandLink>
-
-			            			<p:commandLink onclick="PF('confirmation').show()" title="#{msg.delete_resource_title}" rendered="true" 
-			            				styleClass="buttons_link">
-										<h:graphicImage alt="Remove" value="../resources/icon/Remove.png" width="16" height="16" />
-											<f:setPropertyActionListener value="#{result}" target="#{myResourcesBean.clickedResource}" />
-									</p:commandLink>
+			            					<p:commandLink onclick="PF('confirmation').show()" title="#{msg.delete_resource_title}" rendered="true" 
+			            						styleClass="buttons_link">
+												<h:graphicImage alt="Remove" value="../resources/icon/Remove.png" width="16" height="16" />
+												<f:setPropertyActionListener value="#{result}" target="#{myResourcesBean.clickedResource}" />
+											</p:commandLink>
 									
-									<p:commandLink title="#{msg.edit}" update=":add_resource_panel" styleClass="buttons_link">
-										<h:graphicImage alt="Edit" value="../resources/icon/Edit.png" width="16" height="16" />
-											<f:setPropertyActionListener value="#{result}" target="#{myResourcesBean.clickedResource}" />
-											<f:setPropertyActionListener target="#{myResourcesBean.rightPanelAction}" value="editResource"/>
-
-									</p:commandLink>
-									
-			            		</div>
-			            	</p:row>
+											<p:commandLink title="#{msg.edit}" update=":add_resource_panel" styleClass="buttons_link">
+												<h:graphicImage alt="Edit" value="../resources/icon/Edit.png" width="16" height="16" />
+												<f:setPropertyActionListener value="#{result}" target="#{myResourcesBean.clickedResource}" />
+												<f:setPropertyActionListener target="#{myResourcesBean.rightPanelAction}" value="editResource"/>
+											</p:commandLink>
+			            				</div>
+			            			</p:row>
 			            	
-			            	<div class="resource_summary">
-								<span>
-									${learnwebBean.getLocaleMessage(result.type)}
-								</span> 
-								#{msg.added_by} 
-								<span>
-									#{result.getOwnerUser().username}
-								</span>
-					        </div>
-			            </h:panelGrid>  
-			            
-
-			    </p:commandLink>
-			    
-			    </h:form>
-
-			    </ui:repeat>
+			            			<div class="resource_summary">
+										<span>
+											${learnwebBean.getLocaleMessage(result.type)}
+										</span> 
+										#{msg.added_by} 
+										<span>
+											#{result.getOwnerUser().username}
+										</span>
+					        		</div>
+			            		</h:panelGrid>  
+						    </p:commandLink>
+			    		</h:form>
+				    </ui:repeat>
+				    <!-- <h:outputText value="#{msg.no_resources_found}" rendered="#{empty myResourcesBean.resources}" class="nothing_found"/> -->
+				</h:panelGroup>
+				
 		    </h:panelGroup>
 		  
 	

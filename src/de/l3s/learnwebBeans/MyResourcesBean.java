@@ -2,13 +2,17 @@ package de.l3s.learnwebBeans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+
+import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.Group;
@@ -18,6 +22,7 @@ import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceManager;
 import de.l3s.learnweb.Tag;
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnwebBeans.GroupDetailBean.RPAction;
 
 @ManagedBean
@@ -25,35 +30,33 @@ import de.l3s.learnwebBeans.GroupDetailBean.RPAction;
 public class MyResourcesBean extends ApplicationBean implements Serializable
 {
     private final static long serialVersionUID = 5680533799976460331L;
-    //    private final static Logger log = Logger.getLogger(MyResourcesBean.class);
+    private final static Logger log = Logger.getLogger(MyResourcesBean.class);
 
     private List<Resource> resources;
     private List<Resource> resourcesAll;
-    //private String newComment;
 
     private int selectedResourceTargetGroupId;
 
     private RPAction rightPanelAction = null;
-    //private Tag selectedTag;
-    //private String tagName;
-    //private Comment clickedComment;
     private Boolean reloadLogs = false;
 
     private List<Resource> resourcesText = new LinkedList<Resource>();
-    //   private List<Resource> resourcesMultimedia = new LinkedList<Resource>();
     private Resource clickedResource;
     private Folder clickedFolder;
+    private Folder selectedFolder;
     private String mode = "everything";
+
+    private boolean rootFolder = true;
+    private List<Folder> breadcrumb;
 
     public MyResourcesBean() throws SQLException
     {
 	if(getUser() == null) // not logged in
 	    return;
 
-	loadResources();
-
+	//loadResources();
+	breadcrumb = new ArrayList<Folder>();
 	clickedResource = new Resource();
-	;
     }
 
     public boolean canDeleteTag(Object tagO) throws SQLException
@@ -134,25 +137,13 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     public void loadResources() throws SQLException
     {
 	resourcesAll = getUser().getResources();
-	//	resourcesMultimedia.clear();
 	resourcesText.clear();
-
-	/*
-	for(Resource resource : resourcesAll)
-	{
-	    if(resource.isMultimedia())
-		resourcesMultimedia.add(resource);
-	    else
-		resourcesText.add(resource);
-	}*/
 	setMode(mode);
     }
 
     public void editClickedResource() throws SQLException
     {
-
 	clickedResource.save();
-
     }
 
     public void onSelect() throws NumberFormatException, SQLException
@@ -164,12 +155,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	setClickedResource(temp);
 
     }
-
-    /*public void addComment() throws Exception
-    {
-    clickedResource.addComment(newComment, getUser());
-    newComment = "";
-    }*/
 
     public List<Resource> getResources()
     {
@@ -188,10 +173,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	    resources = resourcesAll;
 	else if(mode.equals("text"))
 	    resources = resourcesText;
-	/*
-	else if(mode.equals("multimedia"))
-	    resources = resourcesMultimedia;
-	    */
     }
 
     public void deleteResource() throws SQLException
@@ -222,9 +203,47 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	return clickedFolder;
     }
 
-    public void setClickedFolder(Folder clickedFolder)
+    private void deleteEntriesFromBreadcrumb()
     {
-	this.clickedFolder = clickedFolder;
+	ListIterator<Folder> iter = breadcrumb.listIterator();
+	boolean delete = false;
+	while(iter.hasNext())
+	{
+	    Folder f = iter.next();
+	    if(delete)
+	    {
+		iter.remove();
+		continue;
+	    }
+	    if(f.equals(clickedFolder))
+		delete = true;
+	}
+    }
+
+    public void setClickedFolder(Folder clickedFolder) throws SQLException
+    {
+	if(this.clickedFolder != null && this.clickedFolder.equals(clickedFolder))
+	{
+	    this.rightPanelAction = RPAction.none;
+	    setSelectedFolder(this.clickedFolder);
+	    this.rootFolder = false;
+	    if(breadcrumb.contains(clickedFolder))
+		deleteEntriesFromBreadcrumb();
+	    else
+		breadcrumb.add(selectedFolder);
+	}
+	else
+	{
+	    this.rightPanelAction = RPAction.viewFolder;
+	    this.clickedFolder = clickedFolder;
+	    setSelectedFolder(this.clickedFolder);
+	    this.rootFolder = false;
+	    if(breadcrumb.contains(clickedFolder))
+		deleteEntriesFromBreadcrumb();
+	    else
+		breadcrumb.add(selectedFolder);
+	}
+	resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(clickedFolder.getGroupId(), clickedFolder.getFolderId(), getUser().getId());
     }
 
     public int getSelectedResourceTargetGroupId()
@@ -236,63 +255,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     {
 	this.selectedResourceTargetGroupId = selectedResourceTargetGroupId;
     }
-
-    /*public Tag getSelectedTag()
-    {
-    return selectedTag;
-    }
-    
-    public void setSelectedTag(Tag selectedTag)
-    {
-    this.selectedTag = selectedTag;
-    }
-    
-    public void onEditComment()
-    {
-    try
-    {
-        getLearnweb().getResourceManager().saveComment(clickedComment);
-        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-    }
-    catch(Exception e)
-    {
-        e.printStackTrace();
-        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-    }
-    }
-    
-    public void onDeleteComment()
-    {
-    try
-    {
-        clickedResource.deleteComment(clickedComment);
-        addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
-        log(Action.deleting_comment, clickedComment.getResourceId(), clickedComment.getId() + "");
-    }
-    catch(Exception e)
-    {
-        e.printStackTrace();
-        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-    }
-    }
-    
-    public boolean canEditComment(Object commentO) throws Exception
-    {
-    if(!(commentO instanceof Comment))
-        return false;
-    
-    User user = getUser();
-    if(null == user)// || true)
-        return false;
-    if(user.isAdmin() || user.isModerator())
-        return true;
-    
-    Comment comment = (Comment) commentO;
-    User owner = comment.getUser();
-    if(user.equals(owner))
-        return true;
-    return false;
-    }*/
 
     public RPAction getRightPanelAction()
     {
@@ -313,6 +275,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	catch(Exception e)
 	{
 	    this.rightPanelAction = null;
+	    log.debug(e);
 	}
     }
 
@@ -326,36 +289,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	this.reloadLogs = reloadLogs;
     }
 
-    /*public Comment getClickedComment()
-    {
-    return clickedComment;
-    }
-    
-    public void setClickedComment(Comment clickedComment)
-    {
-    this.clickedComment = clickedComment;
-    }
-    
-    public String getTagName()
-    {
-    return tagName;
-    }
-    
-    public void setTagName(String tagName)
-    {
-    this.tagName = tagName;
-    }
-    
-    public String getNewComment()
-    {
-    return newComment;
-    }
-    
-    public void setNewComment(String newComment)
-    {
-    this.newComment = newComment;
-    }*/
-
     public List<Resource> getResourcesAll()
     {
 	return resourcesAll;
@@ -364,5 +297,51 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     public void setResourcesAll(List<Resource> resourcesAll)
     {
 	this.resourcesAll = resourcesAll;
+    }
+
+    public List<Folder> getFolders() throws SQLException
+    {
+	if(rootFolder)
+	{
+	    LinkedList<Folder> folders = new LinkedList<Folder>();
+	    folders.add(new Folder(0, 0, "My Private Resources"));
+	    folders.addAll(Learnweb.getInstance().getGroupManager().getGroupsForMyResources(getUser().getId()));
+	    return folders;
+	}
+	else
+	    return Learnweb.getInstance().getGroupManager().getFolders(getClickedFolder().getGroupId(), getSelectedFolderId());
+    }
+
+    public Folder getSelectedFolder()
+    {
+	return selectedFolder;
+    }
+
+    public void setSelectedFolder(Folder folder)
+    {
+	if(folder != null)
+	{
+	    this.selectedFolder = folder;
+	    this.clickedFolder = selectedFolder;
+	    UtilBean.getAddResourceBean().setResourceTargetFolderId(getSelectedFolderId());
+	}
+    }
+
+    public int getSelectedFolderId()
+    {
+	return selectedFolder == null || selectedFolder.getFolderId() <= 0 ? 0 : selectedFolder.getFolderId();
+    }
+
+    public void setSelectedFolderId(int folderId) throws SQLException
+    {
+	if(folderId > 0)
+	{
+	    selectedFolder = getLearnweb().getGroupManager().getFolder(folderId);
+	}
+    }
+
+    public List<Folder> getBreadcrumb()
+    {
+	return breadcrumb;
     }
 }
