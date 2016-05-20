@@ -1,0 +1,59 @@
+<ui:composition 
+	template="/templates/main/main.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:p="http://primefaces.org/ui">
+	<ui:param name="pageTitle" value="Advanced Search" />
+	<ui:define name="center_layout">
+		
+		
+		<p:panel header="#{msg.advancedSearch}">
+		
+			<h:form id="advacedSearchForm" onsubmit="this.action='#{request.contextPath}/advancedSearch/search_result.jsf';">
+
+				<h:panelGrid columns="2">					
+					<h:outputLabel for="query" value="Query" />
+					<p:inputText id="query" value="#{advancedSearchBean.query}" 
+						label="query" />
+						
+					<h:outputLabel for="extractWord" value="This exact word or phrase:" />
+					<p:inputText id="extractWord" value="#{advancedSearchBean.extractWord}"  
+						label="extractWord" />
+						
+					<h:outputLabel for="anyWords" value="Any of these words:" />
+					<p:inputText id="anyWords" value="#{advancedSearchBean.anyWords}"  
+						label="anyWords" />
+					
+					<h:outputLabel for="noneWords" value="None of these words:" />
+					<p:inputText id="noneWords" value="#{advancedSearchBean.noneWords}"  
+						label="noneWords" />
+			
+		         
+		            <p:outputLabel for="country" value="Country: " />
+		            <p:selectOneMenu id="country" value="#{advancedSearchBean.country}" style="width:150px">
+		                <p:ajax listener="#{advancedSearchBean.onCountryChange}" update="city" />
+		                <f:selectItem itemLabel="Select Country" itemValue="" noSelectionOption="true" />
+		                <f:selectItems value="#{advancedSearchBean.countries}" />
+		            </p:selectOneMenu>
+		 
+		            <p:outputLabel for="city" value="City: " />
+		            <p:selectOneMenu id="city" value="#{advancedSearchBean.city}" style="width:150px">
+		                <f:selectItem itemLabel="Select City" itemValue="" noSelectionOption="true" />
+		                <f:selectItems value="#{advancedSearchBean.cities}" />
+		            </p:selectOneMenu>
+		        	
+						
+					<p:outputLabel for="language" value="language:" />
+		            <p:selectOneMenu id="language" value="#{advancedSearchBean.language}" style="width:150px">
+		                <f:selectItem itemLabel="Select language" itemValue="" noSelectionOption="true" />
+		                <f:selectItems value="#{advancedSearchBean.languages}" />
+		            </p:selectOneMenu>
+			
+					<p:commandButton value="Search" ajax="false"/>
+				</h:panelGrid>
+			</h:form>
+		</p:panel>
+	</ui:define>
+</ui:composition>
