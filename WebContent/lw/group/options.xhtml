@@ -151,21 +151,28 @@
 					
 						<h2>Who can join this group?</h2>
 						<p:selectOneRadio value="#{groupDetailBean.editedGroupTitle}" layout="grid" columns="1">
-				            <f:selectItem itemLabel="All members of course 'YELL'" itemValue="All members of course 'YELL'" />
 				            <f:selectItem itemLabel="Only invided people" itemValue="Only invided people" />
+				            <f:selectItem itemLabel="All members of course 'YELL'" itemValue="All members of course 'YELL'" />
 				            <f:selectItem itemLabel="All Learnweb users" itemValue="All learnweb users" />
 				        </p:selectOneRadio>	
 				        
-						<h2>Who can add resources to this group?</h2>
+						<h2>Who can add resources and folders to this group?</h2>
 						<p:selectOneRadio value="#{groupDetailBean.editedGroupTitle}" layout="grid" columns="1">
-				            <f:selectItem itemLabel="All group members" itemValue="All members of course 'YELL'" />
-				            <f:selectItem itemLabel="Only me the group leader" itemValue="Only invided people" />
+							<f:selectItem itemLabel="Only me, the group leader" itemValue="Only invided people" />
+							<f:selectItem itemLabel="All group members" itemValue="All members of course 'YELL'" />
 				        </p:selectOneRadio>	
 				        	
-						<h2>Who can edit, delete or comment resources of this group?</h2>
+						<h2>Who can delete or edit resources and folders of this group?</h2>
 						<p:selectOneRadio value="#{groupDetailBean.editedGroupTitle}" layout="grid" columns="1">
-				            <f:selectItem itemLabel="Only group members" itemValue="All members of course 'YELL'" />
-				            <f:selectItem itemLabel="Only me the group leader" itemValue="Only invided people" />
+							<f:selectItem itemLabel="Only me, the group leader" itemValue="Only invided people" />
+							<f:selectItem itemLabel="All group members" itemValue="All members of course 'YELL'" />
+				        </p:selectOneRadio>	
+				        
+						<h2>Who can tag or comment resources of this group?</h2>
+						<p:selectOneRadio value="#{groupDetailBean.editedGroupTitle}" layout="grid" columns="1">
+				            <f:selectItem itemLabel="Only me, the group leader" itemValue="Only invided people" />
+				            <f:selectItem itemLabel="All group members" itemValue="All members of course 'YELL'" />
+				            <f:selectItem itemLabel="All Learnweb users" itemValue="All learnweb users" />				      
 				        </p:selectOneRadio>	
 				        
 				        <h2>Who can view resources of this group?</h2>
