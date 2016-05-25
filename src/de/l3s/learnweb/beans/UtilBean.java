@@ -133,4 +133,9 @@ public class UtilBean implements Serializable
 	SimpleDateFormat format = new SimpleDateFormat("dd.MM.yyyy");
 	return format.parse(dateStr);
     }
+
+    public String addSlashes(String input)
+    {
+	return input.replace("\"", "\\\"");
+    }
 }

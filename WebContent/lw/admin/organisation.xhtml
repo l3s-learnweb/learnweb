@@ -8,11 +8,6 @@
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.organization}"/>
-	
-	<f:metadata>
-		<f:viewParam name="id" value="#{adminOrganisationsBean.selectedId}" />
-	</f:metadata>
-	
 
 	<ui:define name="center_layout" >	
 		<script type="text/javascript">
@@ -27,7 +22,7 @@
 			p { margin: 12px 0 6px 0; }
 		</style>
 			
-		<div class="page_header" style="margin:5px;" onload="#{adminOrganisationsBean.selectedOrganisationBySelectedId()}">
+		<div class="page_header" style="margin:5px;">
 			<span>
 				#{adminOrganisationsBean.selectedOrganisation.title}
 			</span>
@@ -36,20 +31,16 @@
 		<p:panel style="min-width:628px; margin:5px;">
 				
 			<h:form id="editwelcomeform">
-				<p>
-					<h:outputText value="#{msg.title}:" />
-				</p>
-				<p:inputText value="#{adminOrganisationsBean.selectedOrganisation.title}" style="width:400px" />
-				<p>
-				<h:outputText value="Welcome Page: " />
-				</p>
+				<p><h:outputText value="#{msg.title}:" /></p>
+				<p:inputText value="#{adminOrganisationsBean.selectedOrganisation.title}" style="width:40rem" />
 				
-       				 <p:selectOneMenu id="welcomePage" value="#{adminOrganisationsBean.selectedOrganisation.welcomePage}" style="width:400px" editable="true">
-         					 <!--  <f:selectItem itemLabel="Select One" itemValue="" />  -->
-         					 <f:selectItem itemLabel="myhome/activity.jsf" itemValue="myhome/activity.jsf" />
-         					 <f:selectItem itemLabel="myhome/welcome.jsf" itemValue="myhome/welcome.jsf" />  					 
-        		</p:selectOneMenu>
-				
+				<p><h:outputText value="Welcome Page: " /></p>
+
+				<p:selectOneMenu id="welcomePage" value="#{adminOrganisationsBean.selectedOrganisation.welcomePage}" style="width:40rem" editable="true">
+					<f:selectItem itemLabel="myhome/activity.jsf" itemValue="myhome/activity.jsf" />
+					<f:selectItem itemLabel="myhome/welcome.jsf" itemValue="myhome/welcome.jsf" />
+				</p:selectOneMenu>
+
 				<p>
 					<h:outputText value="#{msg.welcome_message}:" />
 				</p>

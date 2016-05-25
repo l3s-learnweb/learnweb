@@ -114,13 +114,11 @@
 								<li class="menupoint">
 									<h:outputText value="#{msg.admin}" />
 								</li>
-								<ui:fragment rendered="!(userBean.moderator)" >
 								<li>
-									<a href="#{request.contextPath}/lw/admin/courses.jsf">
-										<h:outputText value="#{msg.courses}" />
+									<a href="#{request.contextPath}/lw/admin/organisations.jsf">
+										<h:outputText value="Organisations" />
 									</a>
 								</li>
-								</ui:fragment>
 								<li>
 									<a href="#{request.contextPath}/lw/admin/systemtools.jsf">
 										<h:outputText value="System Tools" />

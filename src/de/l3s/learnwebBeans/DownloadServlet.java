@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
 import de.l3s.learnweb.File;
 import de.l3s.learnweb.FileManager;
 import de.l3s.learnweb.Learnweb;
@@ -28,6 +30,7 @@ import de.l3s.learnweb.User;
 public class DownloadServlet extends HttpServlet
 {
     private final static long serialVersionUID = 7083477094183456614L;
+    private final static Logger log = Logger.getLogger(DownloadServlet.class);
 
     private final static int CACHE_DURATION_IN_SECOND = 60 * 60 * 24 * 365; // 1 year
     private final static long CACHE_DURATION_IN_MS = CACHE_DURATION_IN_SECOND * 1000L;
@@ -61,6 +64,7 @@ public class DownloadServlet extends HttpServlet
 	    int index = requestString.indexOf(urlPattern);
 	    if(index == -1)
 	    {
+		log.warn("Invalid download URL: " + requestString);
 		response.setStatus(404);
 		return;
 	    }
@@ -70,7 +74,8 @@ public class DownloadServlet extends HttpServlet
 
 	    File file = fileManager.getFileById(fileId);
 	    if(null == file)
-	    { // file not found
+	    {
+		log.warn("Requested file " + fileId + " does not exist or was deleted");
 		response.setStatus(404);
 		return;
 	    }

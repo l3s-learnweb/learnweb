@@ -22,17 +22,20 @@
 				<script type="text/javascript">
 					function update_header()
 					{
+						var resourceTitle = "#{utilBean.addSlashes(bean.clickedResource.title)}";
+						var folderTitle = "#{utilBean.addSlashes(bean.clickedFolder.name)}";
+						
 						if(#{bean.rightPanelAction == 'newResource'})
 						{
 							$(".ui-layout-unit-header","#right_pane").html("#{msg.upload_resource}");
 						}
 						else if(#{bean.rightPanelAction == 'editResource'})
 						{
-							$(".ui-layout-unit-header","#right_pane").html("#{msg.edit_resource} - #{bean.clickedResource.title}");
+							$(".ui-layout-unit-header","#right_pane").html("#{msg.edit_resource} - "+ resourceTitle);
 						}
 						else if(#{bean.rightPanelAction == 'viewResource'})
 						{
-							$(".ui-layout-unit-header","#right_pane").html("#{resourceDetailBean.clickedResource.title}");
+							$(".ui-layout-unit-header","#right_pane").html(resourceTitle);
 						}
 						else if(#{bean.rightPanelAction == 'newFolder'})
 						{
@@ -40,17 +43,16 @@
 						}
 						else if(#{bean.rightPanelAction == 'editFolder'})
 						{
-							$(".ui-layout-unit-header","#right_pane").html("#{msg.edit_folder} - #{bean.clickedFolder.name}");
+							$(".ui-layout-unit-header","#right_pane").html("#{msg.edit_folder} - "+ folderTitle);
 						}
 						else if(#{bean.rightPanelAction == 'viewFolder'})
 						{
-							$(".ui-layout-unit-header","#right_pane").html("#{msg.folder} - #{bean.clickedFolder.name}");
+							$(".ui-layout-unit-header","#right_pane").html("#{msg.folder} - "+ folderTitle);
 						}
 						else
 						{
 							$(".ui-layout-unit-header","#right_pane").html("#{msg.click_to_view_details}");
 						}
-						//console.log('scoller', $('#right_pane .content').scrollTop());
 						
 						$('#right_pane .content').scrollTop(0);
 						
