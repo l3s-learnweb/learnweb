@@ -9,9 +9,6 @@ public class ArchiveUrl implements Serializable
     private static final long serialVersionUID = 63994605834754451L;
     private String archiveUrl;
     private Date timestamp;
-    private long htmlText;
-    private long htmlTags;
-    private int fileId;
 
     public ArchiveUrl(String archiveUrl, Date timestamp)
     {
@@ -24,21 +21,35 @@ public class ArchiveUrl implements Serializable
 	return archiveUrl;
     }
 
+    /*
+     * Added by abhinav
+     * but methods are never used and have invalid names (lowercase)
+     * TODO remove?
+     * 
+    private long htmlText;
+    private long htmlTags;
+    private int fileId;
+    
+       public void setFileId(int fileId)
+    {
+    	this.fileId = fileId;
+    }
+    
     public long gethtmltags()
     {
-	return htmlTags;
+    	return htmlTags;
     }
-
+    
     public long gethtmltext()
     {
-	return htmlText;
+    	return htmlText;
     }
-
+    
     public int getfileId()
     {
-	return fileId;
+    	return fileId;
     }
-
+    */
     public void setArchiveUrl(String archiveUrl)
     {
 	this.archiveUrl = archiveUrl;
@@ -71,8 +82,4 @@ public class ArchiveUrl implements Serializable
 	return true;
     }
 
-    public void setFileId(int fileId)
-    {
-	this.fileId = fileId;
-    }
 }

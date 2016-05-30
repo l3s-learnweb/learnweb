@@ -180,7 +180,7 @@ public class Learnweb
 	resourcePreviewMaker = new ResourcePreviewMaker(this);
 	searchlogClient = new SearchLogClient(this);
 	tedManager = new TedManager(this);
-	archiveUrlManager = new ArchiveUrlManager(this);
+	archiveUrlManager = ArchiveUrlManager.getInstance(this);
 	timelineManager = new TimelineManager(this);
 	mementoClient = new MementoClient(this);
 	loroManager = new LoroManager(this);

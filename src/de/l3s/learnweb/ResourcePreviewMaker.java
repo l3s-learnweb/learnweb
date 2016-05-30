@@ -162,22 +162,21 @@ public class ResourcePreviewMaker
 	createThumbnails(resource, img, true);
     }
 
-    public void processArchiveWebsite(int resource_id, String url) throws IOException, SQLException
+    public void processArchiveWebsite(int resourceId, String url) throws IOException, SQLException
     {
-	ArchiveUrlManager archiveurlManager = new ArchiveUrlManager(learnweb);
 	URL thumbnailUrl = new URL(archiveThumbnailService + StringHelper.urlEncode(url));
 
 	Image img = new Image(thumbnailUrl.openStream());
 	File file = new File();
 	file.setResourceFileNumber(5);
-	file.setResourceId(resource_id);
+	file.setResourceId(resourceId);
 	file.setName("wayback_thumbnail.jpg");
 	file.setMimeType("image/png");
 	fileManager.save(file, img.getInputStream());
 
 	if(file.getId() > 0)
 	{
-	    archiveurlManager.updateArchiveUrl(file.getId(), resource_id, url);
+	    learnweb.getArchiveUrlManager().updateArchiveUrl(file.getId(), resourceId, url);
 	}
     }
 

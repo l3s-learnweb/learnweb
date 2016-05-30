@@ -10,14 +10,12 @@ import java.net.URLConnection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
-import java.util.TimeZone;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -38,6 +36,7 @@ import de.l3s.learnweb.Resource.OnlineStatus;
 public class ArchiveUrlManager
 {
     private final static Logger log = Logger.getLogger(ArchiveUrlManager.class);
+    private static ArchiveUrlManager instance;
     private final Learnweb learnweb;
 
     private String archiveSaveURL;
@@ -50,7 +49,17 @@ public class ArchiveUrlManager
 
     private SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
 
-    protected ArchiveUrlManager(Learnweb learnweb)
+    // there should exist only one instance of this class because of the executor services
+    protected static ArchiveUrlManager getInstance(Learnweb learnweb)
+    {
+	if(instance == null)
+	{
+	    instance = new ArchiveUrlManager(learnweb);
+	}
+	return instance;
+    }
+
+    private ArchiveUrlManager(Learnweb learnweb)
     {
 	this.learnweb = learnweb;
 	archiveSaveURL = learnweb.getProperties().getProperty("INTERNET_ARCHIVE_SAVE_URL");
@@ -70,7 +79,7 @@ public class ArchiveUrlManager
 
     public void updateArchiveUrl(int fileId, int resourceId, String archiveUrl) throws SQLException
     {
-	PreparedStatement replace = learnweb.getConnection().prepareStatement("UPDATE `lw_resource_archiveurl` " + "SET `file_id` = ? " + " WHERE `resource_id`=? and `archive_url`=?;", Statement.RETURN_GENERATED_KEYS);
+	PreparedStatement replace = learnweb.getConnection().prepareStatement("UPDATE `lw_resource_archiveurl` SET `file_id` = ?  WHERE `resource_id`=? and `archive_url`=?");
 	replace.setInt(1, fileId);
 	replace.setInt(2, resourceId);
 	replace.setString(3, archiveUrl);
@@ -518,9 +527,10 @@ public class ArchiveUrlManager
 
     public void saveArchiveItVersions(int resourceId, List<ArchiveUrl> archiveVersions)
     {
+	/* never used TODO remove?
 	DateFormat gmtDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 	gmtDate.setTimeZone(TimeZone.getTimeZone("GMT"));
-
+	*/
 	for(ArchiveUrl version : archiveVersions)
 	{
 	    try
