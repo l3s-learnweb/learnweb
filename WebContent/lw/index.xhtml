@@ -17,8 +17,22 @@
 
 			<h:outputText value="#{msg.homepage}" styleClass="homepage_infotext" />
 
-			<div id="div_left">
+			
+			<p:lightBox >
+			<h:outputLink value="ToolGuide/ppt1.png" title="Presentation Guide" style="height:auto; width:auto; max-height:80%; max-width:80%; display:block; margin:0 auto; position: relative;" >
+			<h:outputText value="Presentation Guide" style="font-weight:bold"></h:outputText>
+			</h:outputLink>
+			<h:outputLink value="ToolGuide/ppt2.png" title="Presentation Guide"></h:outputLink>
+			<h:outputLink value="ToolGuide/ppt3.png" title="Presentation Guide"></h:outputLink>
+			<h:outputLink value="ToolGuide/ppt4.png" title="Presentation Guide"></h:outputLink>
+			<h:outputLink value="ToolGuide/ppt5.png" title="Presentation Guide"></h:outputLink>
+         	
+    		
+    
+    		
+			</p:lightBox>
 
+<div id="div_left">
 				<ui:fragment rendered="#{!userBean.loggedIn}">
 
 					<h2 class="page_header">

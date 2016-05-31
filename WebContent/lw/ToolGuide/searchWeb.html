@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style type="text/css">
+body{
+background: url("web_search.png"); 
+background-size: auto;
+background-repeat: no-repeat;
+}
+</style>
+</head>
+<body >
+
+<svg  width="2500" height="1500">
+<!-- Search Filter -->
+ <rect x="400" y="130" width="1400px" height="50px" style="fill:#ffffff;stroke:red;stroke-width:5;fill-opacity:0.0;"/>
+ <line x1="1540" y1="180" x2="1740" y2="220" stroke="red" stroke-width="5" marker-end="url(#redArrow)" />
+<!-- Red Arrow head -->
+<defs>
+    <marker id="redArrow" markerWidth="10" markerHeight="10" refx="0" refy="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="red" />
+    </marker>
+  </defs>
+    <text x="1790" y = "240" fill="black" font-size="30px">Search filters</text>
+<!-- Blue Link 1 -->
+    <path d="M1450,350 Q1300,100 460,260"
+      style="stroke: blue;    fill:none;
+             stroke-width:5;
+             stroke-linejoin: round;" marker-end="url(#blueArrow)" />
+   <!-- Blue Arrow head --> 
+   <defs>
+    <marker id="blueArrow" markerWidth="10" markerHeight="10" refx="0" refy="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="blue" />
+    </marker>
+  </defs>
+  <text x="1450" y = "380" fill="black" font-size="30px">Link in blue refers to current page on Web</text>
+  <rect x="1400" y="350" width="600px" height="50px" style="fill:#ffffff;stroke:blue;stroke-width:3;fill-opacity:0.0;"/>
+ <!-- Green Link -->
+ <line x2="830" y2="515" x1="1400" y1="515" stroke="green" stroke-width="5" marker-end="url(#greenArrow)" />
+ <!-- Green Arrow head --> 
+   <defs>
+    <marker id="greenArrow" markerWidth="10" markerHeight="10" refx="0" refy="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="green" />
+    </marker>
+  </defs>
+  <text x="1430" y = "525" fill="black" font-size="30px">Link in green refers to resource in LearnWeb</text>
+  <rect x="1400" y="490" width="600px" height="50px" style="fill:#ffffff;stroke:green;stroke-width:3;fill-opacity:0.0;"/>
+<!-- Blue Link 2 -->
+  <path d="M1400,700 Q1000,900 660,660"
+      style="stroke: blue;    fill:none;
+             stroke-width:5;
+             stroke-linejoin: round;" marker-end="url(#blueArrow)" />
+  <text x="1430" y = "700" fill="black" font-size="30px">Link to group of which the resource is part of on LearnWeb</text>
+  <rect x="1400" y="670" width="770px" height="50px" style="fill:#ffffff;stroke:blue;stroke-width:3;fill-opacity:0.0;"/>
+
+</svg>
+
+
+   <!--  <div class="arrow"></div>
+   <p id="group">Current groups<br>joined by you</p>
+    <div id="MiddleRec"></div>
+    <div class="rightArrow"></div> -->
+
+</body>
+</html>
+
+
+
