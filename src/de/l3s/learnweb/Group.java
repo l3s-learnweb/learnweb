@@ -565,11 +565,11 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     public String getTooltip() throws SQLException
     {
-	String tooltip = "<ul style='list-style: none; margin: 0px; padding: 0px;'><h2>" + getTitle() + "</h2>";
+	String tooltip = "<ul style='list-style: none; max-width:50rem; margin: 0px; padding: 0px;'><h2>" + getTitle() + "</h2>";
 
 	if(StringUtils.isEmpty(getDescription()) == false)
 	{
-	    tooltip += "<li>" + getDescription() + "</li>";
+	    tooltip += "<li style='overflow: auto;max-height: 10rem;'>" + getDescription() + "</li>";
 	}
 
 	if(getResourcesCount() != 0)

@@ -38,69 +38,69 @@
 			<div id="fact_sheet_contents">
 				<div id="fact_sheet_label">#{searchBean.graph.entities[0].label}</div>
 				<div id="fact_sheet_description">#{searchBean.graph.entities[0].description}</div>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].capital != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].capital}">
 					<div class="fact_sheet_detail">
 						<span class="fact_sheet_field">Capital : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].capital}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].dialingCode != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].dialingCode}">
 					<div class="fact_sheet_detail">
 						<span class="fact_sheet_field">Dialing Code : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].dialingCode}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].languages != '' and searchBean.graph.entities[0].languages != 'none'}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].languages and searchBean.graph.entities[0].languages != 'none'}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Languages : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].languages}</span>
+						<h:outputText value="#{msg.language}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].languages}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].governmentType != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].governmentType}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Government Type : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].governmentType}</span>
+						<h:outputText value="#{msg.Government_type}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].governmentType}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].nationalAnthem != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].nationalAnthem}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">National Anthem : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].nationalAnthem}</span>
+						<h:outputText value="#{msg.National_anthem}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].nationalAnthem}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].currencies != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].currencies}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Currencies : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].currencies}</span>
+						<h:outputText value="#{msg.Currency}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].currencies}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].country != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].country}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Country : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].country}</span>
+						<h:outputText value="#{msg.Country}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].country}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].area != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].area}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Total Area : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].area} sq. km.</span>
+						<h:outputText value="#{msg.Total_area}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].area} sq. km.</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].governor != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].governor}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Governor : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].governor}</span>
+						<h:outputText value="#{msg.Governor}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].governor}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].population != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].population}">
 					<div class="fact_sheet_detail">
 						<span class="fact_sheet_field">Population (as of #{searchBean.graph.entities[0].populationAsOf}) : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].population}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].senators != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].senators}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Senators : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].senators}</span>
+						<h:outputText value="#{msg.Senators}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].senators}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].state != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].state}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">State : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].state}</span>
+						<h:outputText value="#{msg.State}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].state}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].timeZone != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].timeZone}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Time Zone : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].timeZone}</span>
+						<h:outputText value="#{msg.Time_zone}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].timeZone}</span>
 					</div>
 				</ui:fragment>
 				<ui:fragment rendered="#{searchBean.graph.entities.size() gt 1}">

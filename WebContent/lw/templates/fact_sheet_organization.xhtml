@@ -38,49 +38,50 @@
 			<div id="fact_sheet_contents">
 				<div id="fact_sheet_label">#{searchBean.graph.entities[0].label}</div>
 				<div id="fact_sheet_description">#{searchBean.graph.entities[0].description}</div>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].homepage != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].homepage}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Homepage : </span><span class="fact_sheet_value"><a target="_new" href="http://#{searchBean.graph.entities[0].homepage}">#{searchBean.graph.entities[0].homepage}</a></span>
+						<span class="fact_sheet_field">Homepage: </span><span class="fact_sheet_value"><a target="_new" href="http://#{searchBean.graph.entities[0].homepage}">#{searchBean.graph.entities[0].homepage}</a></span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].foundedBy != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].foundedBy}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Founded By : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].foundedBy}</span>
+						<h:outputText value="#{msg.Founded_by}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].foundedBy}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].foundingDate != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].foundingDate }">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Founding Date : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].foundingDate}</span>
+						<h:outputText value="#{msg.Founding_date}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].foundingDate}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].foundingDate == '' and searchBean.graph.entities[0].launchDate != ''}">
+				<ui:fragment rendered="#{empty searchBean.graph.entities[0].foundingDate and not empty searchBean.graph.entities[0].launchDate}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Launch Date : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].foundingYear}</span>
+						<h:outputText value="#{msg.Launch_date}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].launchDate}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].foundingDate == '' and searchBean.graph.entities[0].launchDate == '' and searchBean.graph.entities[0].foundingYear != ''}">
+				<ui:fragment rendered="#{empty searchBean.graph.entities[0].foundingDate and empty searchBean.graph.entities[0].launchDate  and not empty searchBean.graph.entities[0].foundingYear}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Founding Year : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].launchDate}</span>
+						<h:outputText value="#{msg.Founding_year}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].foundingYear}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].industry != ''}">
+				
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].industry}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Industry : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].industry}</span>
+						<h:outputText value="#{msg.Industry}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].industry}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].companyType != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].companyType}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Company Type : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].companyType}</span>
+						<h:outputText value="#{msg.Company_type}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].companyType}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].areaServed != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].areaServed}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Area Served : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].areaServed}</span>
+						<h:outputText value="#{msg.Area_served}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].areaServed}</span>
 					</div>
 				</ui:fragment>
-				<ui:fragment rendered="#{searchBean.graph.entities[0].numberOfEmployees != ''}">
+				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].numberOfEmployees}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Number Of Employees : </span><span class="fact_sheet_value">#{searchBean.graph.entities[0].numberOfEmployees}</span>
+						<h:outputText value="#{msg.Number_of_employees}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].numberOfEmployees}</span>
 					</div>
 				</ui:fragment>
 				<ui:fragment rendered="#{searchBean.graph.entities.size() gt 1}">

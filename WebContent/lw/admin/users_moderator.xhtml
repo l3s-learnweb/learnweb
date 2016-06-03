@@ -23,6 +23,7 @@
 				margin-top:5px;
 				margin-bottom:15px;
 			}
+			.ui-widget-content .ui-state-disabled{opacity: 1;}
 		</style>
 	
 		<div class="page_header">
@@ -43,14 +44,18 @@
 					</h:outputLink>
 				</p:column>	
 					
-				<p:column headerText="#{msg.email_address}" sortBy="#{user.email}">
+				<p:column headerText="#{msg.email_address}" sortBy="#{user.email}" filterBy="#{user.email}">
 					<h:outputText value="#{user.email}" />					
 				</p:column>
 						
-				<p:column headerText="#{msg.registered_since}" sortBy="#{user.registrationDate}">
+				<p:column headerText="#{msg.registered_since}" sortBy="#{user.registrationDate}" filterBy="#{user.registrationDate}">
 					<h:outputText value="#{user.registrationDate}">
 						<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
 					</h:outputText>					
+				</p:column>
+				
+				<p:column headerText="Moderator" sortBy="#{user.moderator}" style="width: 8%;">
+				<p:selectBooleanCheckbox value="#{user.moderator}" disabled="true" />
 				</p:column>
 	
 			</p:dataTable>	

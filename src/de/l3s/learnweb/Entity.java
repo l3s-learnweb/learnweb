@@ -29,20 +29,20 @@ public class Entity implements Serializable
     private String url;
     private String description;
     private String thumbnail;
-    private String birthDate;
+    private Object birthDate;
     private String birthPlace;
     private String children;
     private String fullName;
     private String alternativeNames;
     private String birthName;
-    private String deathDate;
+    private Object deathDate;
     private String deathPlace;
     private String spouse;
     private String homepage;
     private String foundedBy;
     private String foundingDate;
     private String foundingYear;
-    private String launchDate;
+    private Object launchDate;
     private String industry;
     private String companyType;
     private String areaServed;
@@ -97,50 +97,50 @@ public class Entity implements Serializable
 
 		if(type.equals("person"))
 		{
-		    thumbnail = getValue("http://" + SERVER + "/ontology/thumbnail");
+		    thumbnail = (String) getValue("http://" + SERVER + "/ontology/thumbnail");
 		    birthDate = getValue("http://" + SERVER + "/ontology/birthDate");
-		    birthPlace = getValue("http://" + SERVER + "/property/placeOfBirth");
-		    children = getValue("http://" + SERVER + "/property/children");
-		    fullName = getValue("http://" + SERVER + "/property/fullname");
-		    alternativeNames = getValue("http://" + SERVER + "/property/alternativeNames");
-		    birthName = getValue("http://" + SERVER + "/property/birthName");
+		    birthPlace = (String) getValue("http://" + SERVER + "/property/placeOfBirth");
+		    children = (String) getValue("http://" + SERVER + "/property/children");
+		    fullName = (String) getValue("http://" + SERVER + "/property/fullname");
+		    alternativeNames = (String) getValue("http://" + SERVER + "/property/alternativeNames");
+		    birthName = (String) getValue("http://" + SERVER + "/property/birthName");
 		    deathDate = getValue("http://" + SERVER + "/ontology/deathDate");
-		    deathPlace = getValue("http://" + SERVER + "/property/placeOfDeath");
-		    spouse = getValue("http://" + SERVER + "/property/spouse");
+		    deathPlace = (String) getValue("http://" + SERVER + "/property/placeOfDeath");
+		    spouse = (String) getValue("http://" + SERVER + "/property/spouse");
 		}
 		if(type.equals("organization"))
 		{
-		    thumbnail = getValue("http://" + SERVER + "/ontology/thumbnail");
-		    homepage = getValue("http://" + SERVER + "/property/homepage");
+		    thumbnail = (String) getValue("http://" + SERVER + "/ontology/thumbnail");
+		    homepage = (String) getValue("http://" + SERVER + "/property/homepage");
 		    if(homepage.equals(""))
-			homepage = getValue("http://xmlns.com/foaf/0.1/homepage");
-		    foundedBy = getValue("http://" + SERVER + "/ontology/foundedBy");
-		    foundingDate = getValue("http://" + SERVER + "/ontology/foundingDate");
+			homepage = (String) getValue("http://xmlns.com/foaf/0.1/homepage");
+		    foundedBy = (String) getValue("http://" + SERVER + "/ontology/foundedBy");
+		    foundingDate = (String) getValue("http://" + SERVER + "/ontology/foundingDate");
 		    if(foundingDate.equals(""))
-			foundingYear = getValue("http://" + SERVER + "/ontology/foundingYear");
+			foundingYear = (String) getValue("http://" + SERVER + "/ontology/foundingYear");
 		    launchDate = getValue("http://" + SERVER + "/ontology/launchDate");
-		    industry = getValue("http://" + SERVER + "/ontology/industry");
-		    companyType = getValue("http://" + SERVER + "/property/companyType");
-		    areaServed = getValue("http://" + SERVER + "/property/areaServed");
-		    numberOfEmployees = getValue("http://" + SERVER + "/ontology/numberOfEmployees");
+		    industry = (String) getValue("http://" + SERVER + "/ontology/industry");
+		    companyType = (String) getValue("http://" + SERVER + "/property/companyType");
+		    areaServed = (String) getValue("http://" + SERVER + "/property/areaServed");
+		    numberOfEmployees = (String) getValue("http://" + SERVER + "/ontology/numberOfEmployees");
 		}
 		if(type.equals("place"))
 		{
-		    thumbnail = getValue("http://" + SERVER + "/ontology/thumbnail");
-		    capital = getValue("http://" + SERVER + "/property/capital");
-		    dialingCode = getValue("http://" + SERVER + "/property/callingCode");
-		    population = getValue("http://" + SERVER + "/property/populationTotal");
-		    populationAsOf = getValue("http://" + SERVER + "/property/populationAsOf");
-		    languages = getValue("http://" + SERVER + "/property/languages");
-		    governmentType = getValue("http://" + SERVER + "/property/governmentType");
-		    nationalAnthem = getValue("http://" + SERVER + "/property/nationalAnthem");
-		    currencies = getValue("http://" + SERVER + "/property/currency");
-		    country = getValue("http://" + SERVER + "/ontology/country");
-		    area = getValue("http://" + SERVER + "/property/areaTotalKm");
-		    governor = getValue("http://" + SERVER + "/property/governor");
-		    senators = getValue("http://" + SERVER + "/property/senators");
-		    state = getValue("http://" + SERVER + "/ontology/isPartOf");
-		    timeZone = getValue("http://" + SERVER + "/ontology/timeZone");
+		    thumbnail = (String) getValue("http://" + SERVER + "/ontology/thumbnail");
+		    capital = (String) getValue("http://" + SERVER + "/property/capital");
+		    dialingCode = (String) getValue("http://" + SERVER + "/property/callingCode");
+		    population = (String) getValue("http://" + SERVER + "/property/populationTotal");
+		    populationAsOf = (String) getValue("http://" + SERVER + "/property/populationAsOf");
+		    languages = (String) getValue("http://" + SERVER + "/property/languages");
+		    governmentType = (String) getValue("http://" + SERVER + "/property/governmentType");
+		    nationalAnthem = (String) getValue("http://" + SERVER + "/property/nationalAnthem");
+		    currencies = (String) getValue("http://" + SERVER + "/property/currency");
+		    country = (String) getValue("http://" + SERVER + "/ontology/country");
+		    area = (String) getValue("http://" + SERVER + "/property/areaTotalKm");
+		    governor = (String) getValue("http://" + SERVER + "/property/governor");
+		    senators = (String) getValue("http://" + SERVER + "/property/senators");
+		    state = (String) getValue("http://" + SERVER + "/ontology/isPartOf");
+		    timeZone = (String) getValue("http://" + SERVER + "/ontology/timeZone");
 		}
 	    }
 	    catch(Exception e)
@@ -154,7 +154,7 @@ public class Entity implements Serializable
 	}
     }
 
-    public String getValue(String field)
+    public Object getValue(String field)
     {
 
 	String value = "";
@@ -178,10 +178,15 @@ public class Entity implements Serializable
 		    try
 		    {
 			String datatype = jo.getString("datatype");
+
 			if(datatype.contains("date"))
 			{
 			    Date date = new SimpleDateFormat("yyyy-MM-dd").parse(jo.getString("value"));
-			    value = new SimpleDateFormat("MMMM dd, yyyy").format(date) + ", ";
+
+			    if(date != null)
+				return date;
+			    value = jo.getString("value");
+			    //value = new SimpleDateFormat("MMMM dd, yyyy").format(date) + ", ";
 			}
 			else if(datatype.contains("gYear"))
 			{
@@ -275,7 +280,7 @@ public class Entity implements Serializable
 	this.supported = supported;
     }
 
-    public String getBirthDate()
+    public Object getBirthDate()
     {
 	return birthDate;
     }
@@ -335,7 +340,7 @@ public class Entity implements Serializable
 	this.birthName = birthName;
     }
 
-    public String getDeathDate()
+    public Object getDeathDate()
     {
 	return deathDate;
     }
@@ -405,7 +410,7 @@ public class Entity implements Serializable
 	this.foundingYear = foundingYear;
     }
 
-    public String getLaunchDate()
+    public Object getLaunchDate()
     {
 	return launchDate;
     }
