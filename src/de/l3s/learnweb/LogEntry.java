@@ -70,8 +70,7 @@ public class LogEntry implements Serializable
 	action = Action.values()[rs.getInt(3)];
 	int targetId = rs.getInt(4);
 	params = rs.getString(5);
-	date = rs.getTimestamp(6);
-	//date = rs.getDate(6);
+	date = new Date(rs.getTimestamp(6).getTime());
 	setResourceId(targetId);
 	setUserId(userId);
 	String url = UtilBean.getLearnwebBean().getContextUrl() + "/lw/";

@@ -595,7 +595,7 @@ public class ResourceManager
 	ResultSet rs = select.executeQuery();
 	while(rs.next())
 	{
-	    tags.add(new Tag(rs.getInt("tag_id"), rs.getString("name")), um.getUser(rs.getInt("user_id")), rs.getDate("timestamp"));
+	    tags.add(new Tag(rs.getInt("tag_id"), rs.getString("name")), um.getUser(rs.getInt("user_id")), new Date(rs.getTimestamp("timestamp").getTime()));
 	}
 	select.close();
 	return tags;

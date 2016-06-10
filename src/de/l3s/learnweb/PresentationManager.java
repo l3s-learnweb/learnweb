@@ -3,6 +3,7 @@ package de.l3s.learnweb;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class PresentationManager
 		title = "Title Not Available";
 	    }
 	    p.setPresentationTitle(title);
-	    p.setDate(rs.getDate("timestamp"));
+	    p.setDate(new Date(rs.getTimestamp("timestamp").getTime()));
 	    /*
 	    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	    Date date = new Date(rs.getTimestamp("timestamp").getTime());

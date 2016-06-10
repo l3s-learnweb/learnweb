@@ -264,7 +264,7 @@ public class FileManager
 	file.setDownloadLogActivated(rs.getInt("log_actived") == 1);
 	file.setActualFile(createActualFile(file));
 	file.setUrl(createUrl(file));
-	file.setLastModified(rs.getDate("timestamp"));
+	file.setLastModified(new Date(rs.getTimestamp("timestamp").getTime()));
 
 	if(!file.getActualFile().exists())
 	{

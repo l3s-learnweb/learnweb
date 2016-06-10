@@ -454,7 +454,7 @@ public class UserManager
 	user.setAdditionalinformation(rs.getString("additionalinformation"));
 	user.setInterest(rs.getString("interest"));
 	user.setPhone(rs.getString("phone"));
-	user.setRegistrationDate(rs.getDate("registration_date"));
+	user.setRegistrationDate(new Date(rs.getTimestamp("registration_date").getTime()));
 	user.setCredits(rs.getString("credits"));
 
 	user.setAdmin(rs.getInt("is_admin") == 1);

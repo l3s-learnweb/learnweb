@@ -10,6 +10,7 @@ import java.net.URLConnection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -234,8 +235,14 @@ public class ArchiveUrlManager
 	    ResultSet rs = pStmt.executeQuery();
 	    if(rs.next())
 	    {
-		resource.getResource().setMetadataValue("first_timestamp", waybackDateFormat.format(rs.getDate(1)));
-		resource.getResource().setMetadataValue("last_timestamp", waybackDateFormat.format(rs.getDate(2)));
+		Timestamp first = rs.getTimestamp(1);
+		Timestamp last = rs.getTimestamp(2);
+		if(first != null && last != null) // url was checked and has captures
+		{
+		    resource.getResource().setMetadataValue("first_timestamp", waybackDateFormat.format(new Date(first.getTime())));
+		    resource.getResource().setMetadataValue("last_timestamp", waybackDateFormat.format(new Date(last.getTime())));
+		}
+
 	    }
 	    else
 		cdxExecutorService.submit(new CDXWorker(resource));
