@@ -18,7 +18,7 @@ public class LogEntry implements Serializable
 	rating_resource, // param = rate; target_id = id of the resource
 	commenting_resource, // param = comment id; target_id = id of the resource		
 	opening_resource, // target_id = id of the tagged resource
-	opening_url, // param = the url
+	unused, // param = the url
 	searching, // param = search query
 	group_joining, // target_id = group_id
 	group_creating, // target_id = group_id
@@ -127,10 +127,12 @@ public class LogEntry implements Serializable
 	    description = usernameLink + UtilBean.getLocaleMessage("log_opening_resource", resource);
 	    //description = usernameLink + " has opened " + resource;
 	    break;
+	/*
 	case opening_url:
-	    description = usernameLink + UtilBean.getLocaleMessage("log_opening_url_resource", params);
-	    //description = usernameLink + " has opened the following url: " + params;
-	    break;
+	description = usernameLink + UtilBean.getLocaleMessage("log_opening_url_resource", params);
+	//description = usernameLink + " has opened the following url: " + params;
+	break;
+	*/
 	case searching:
 	    description = usernameLink + UtilBean.getLocaleMessage("log_searching_resource", params);
 	    //description = usernameLink + " searched for \"" + params + "\"";

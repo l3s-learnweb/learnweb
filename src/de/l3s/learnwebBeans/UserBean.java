@@ -22,8 +22,6 @@ import org.apache.log4j.Logger;
 import org.ocpsoft.prettytime.PrettyTime;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
-import org.primefaces.model.menu.DefaultMenuItem;
-import org.primefaces.model.menu.DefaultMenuModel;
 import org.primefaces.model.menu.DefaultSubMenu;
 
 import com.sun.jersey.api.client.ClientHandlerException;
@@ -369,6 +367,12 @@ public class UserBean implements Serializable
 	return user.getTimeZone();
     }
 
+    @Deprecated
+    /**
+     * Don't use this any longer. Users don't have a option to change the active course
+     * 
+     * @return
+     */
     public Course getActiveCourse()
     {
 	if(activeCourseCacheTime + 6000000 < System.currentTimeMillis() || activeCourseCache == null)
@@ -595,26 +599,28 @@ public class UserBean implements Serializable
 	return ApplicationBean.getTemplateDir() + "/" + getUser().getOrganisation().getWelcomePage() + "?faces-redirect=true";
     }
 
+    /*
     public DefaultMenuModel getCourseMenuModel() throws SQLException
     {
-	DefaultMenuModel model = new DefaultMenuModel();
-
-	//First submenu
-	DefaultSubMenu firstSubmenu = new DefaultSubMenu("Active course: " + getActiveCourse().getTitle());
-
-	for(Course course : getUser().getCourses())
-	{
-	    DefaultMenuItem item = new DefaultMenuItem(course.getTitle());
-	    item.setCommand("#{userBean.onCourseChange(" + course.getId() + ")}");
-	    item.setAjax(false);
-
-	    firstSubmenu.addElement(item);
-	}
-
-	model.addElement(firstSubmenu);
-
-	return model;
+    DefaultMenuModel model = new DefaultMenuModel();
+    
+    //First submenu
+    DefaultSubMenu firstSubmenu = new DefaultSubMenu("Active course: " + getActiveCourse().getTitle());
+    
+    for(Course course : getUser().getCourses())
+    {
+        DefaultMenuItem item = new DefaultMenuItem(course.getTitle());
+        item.setCommand("#{userBean.onCourseChange(" + course.getId() + ")}");
+        item.setAjax(false);
+    
+        firstSubmenu.addElement(item);
     }
+    
+    model.addElement(firstSubmenu);
+    
+    return model;
+    }
+    */
 
     /**
      * Returns true when there is any tooltip message to show
