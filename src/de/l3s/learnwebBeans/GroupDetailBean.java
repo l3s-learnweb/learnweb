@@ -1185,6 +1185,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    newFolder.setUser(getUser());
 	    newFolder.save();
 
+	    log(Action.add_folder, newFolder.getGroupId(), newFolder.getFolderId(), newFolder.getName());
+
 	    addMessage(FacesMessage.SEVERITY_INFO, "folderCreated", newFolder.getName());
 	}
 
@@ -1195,7 +1197,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	if(canEditFoldersInGroup() && clickedFolder != null && clickedFolder.getFolderId() > 0)
 	{
-	    log(Action.edit_folder, clickedFolder.getFolderId(), null);
+	    log(Action.edit_folder, clickedFolder.getGroupId(), clickedFolder.getFolderId(), clickedFolder.getName());
 
 	    try
 	    {
@@ -1222,6 +1224,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
 	    clickedFolder.delete();
 	    clickedFolder = null;
+
+	    log(Action.deleting_folder, clickedFolder.getGroupId(), clickedFolder.getFolderId(), clickedFolder.getName());
 
 	    addMessage(FacesMessage.SEVERITY_INFO, "folderDeleted", folderName);
 	}

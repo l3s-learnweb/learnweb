@@ -24,7 +24,7 @@ public class CDXClient
     private int waybackAPIerrors = 0;
     private int waybackAPIrequests = 0;
 
-    private SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+    private SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
     //private ArchiveSearchManager archiveSearchManager;
 

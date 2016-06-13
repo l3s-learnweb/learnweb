@@ -18,7 +18,7 @@ public class LogEntry implements Serializable
 	rating_resource, // param = rate; target_id = id of the resource
 	commenting_resource, // param = comment id; target_id = id of the resource		
 	opening_resource, // target_id = id of the tagged resource
-	opening_url, //param = the url
+	opening_url, // param = the url
 	searching, // param = search query
 	group_joining, // target_id = group_id
 	group_creating, // target_id = group_id
@@ -28,29 +28,29 @@ public class LogEntry implements Serializable
 	unused3,
 	register,
 	changing_profile, // target_id = user_id of the user whose profile was changed
-	deleting_resource, // param = resource title, target_id = resource id
+	deleting_resource, // param = resource title; target_id = resource id
 	adding_resource, // target_id = resource id
 	open_link,
-	deleting_comment, // target_id = resource id, param = comment_id 
+	deleting_comment, // target_id = resource id; param = comment_id 
 	unused2,
 	edit_resource, // target_id = resource id
 	unused4,
 	thumb_rating_resource, // target_id = resource id
 	group_deleting, // target_id = group_id
 	group_changing_description, // target_id = group_id
-	group_changing_title, // target_id = group_id, param = old title
+	group_changing_title, // target_id = group_id; param = old title
 	group_changing_leader, // target_id = group_id
 	group_changing_restriction, // target_id = group_id
-	group_adding_link, // target_id = group_id, param = title
-	group_adding_document, // target_id = group_id, param = title
-	error,
+	group_adding_link, // target_id = group_id; param = title
+	group_adding_document, // target_id = group_id; param = title
+	unused5,
 	group_removing_resource, // target_id = resource id
-	unused, // target_id = resource id
+	deleting_folder, // param = folder name; target_id = folder_id
 	downloading, // target_id = file_id
-	group_deleting_link, // param = title
+	group_deleting_link, // param = title of deleted link; out dated
 	group_resource_search, // param = query
-	add_folder,
-	edit_folder, // target_id = folder_id
+	add_folder, // param = folder name; target_id = folder_id
+	edit_folder, // param = folder name; target_id = folder_id
     }
 
     private int userId;

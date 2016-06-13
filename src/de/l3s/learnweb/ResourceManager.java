@@ -706,7 +706,7 @@ public class ResourceManager
 
     public LinkedList<ArchiveUrl> getArchiveUrlsByResourceUrl(String url) throws SQLException
     {
-	SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+	SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 	LinkedList<ArchiveUrl> archiveUrls = new LinkedList<ArchiveUrl>();
 	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT url_id FROM `wb_url` WHERE `url` = ?");
 	select.setString(1, url);
@@ -718,7 +718,7 @@ public class ResourceManager
 	    ResultSet rs2 = pStmt.executeQuery();
 	    while(rs2.next())
 	    {
-		Date timestamp = rs2.getTimestamp(1);
+		Date timestamp = new Date(rs2.getTimestamp(1).getTime());
 		archiveUrls.add(new ArchiveUrl("https://web.archive.org/web/" + waybackDateFormat.format(timestamp) + "/" + url, timestamp));
 	    }
 	    pStmt.close();

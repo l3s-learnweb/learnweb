@@ -48,7 +48,7 @@ public class ArchiveUrlManager
     private ExecutorService executorService;
     private ExecutorService cdxExecutorService;
 
-    private SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+    private SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 
     // there should exist only one instance of this class because of the executor services
     protected static ArchiveUrlManager getInstance(Learnweb learnweb)

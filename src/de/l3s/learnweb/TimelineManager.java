@@ -100,7 +100,7 @@ public class TimelineManager
 
     public List<ArchiveUrl> getArchiveUrlsByResourceIdAndTimestamp(int resourceId, Date timestamp, String url) throws SQLException
     {
-	SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddhhmmss");
+	SimpleDateFormat waybackDateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 	List<ArchiveUrl> archiveUrlsData = new LinkedList<ArchiveUrl>();
 	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_resource_archiveurl WHERE `resource_id`=? AND DATE(timestamp)= DATE(?)");
 	select.setInt(1, resourceId);
