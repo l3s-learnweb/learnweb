@@ -230,22 +230,25 @@ public class ArchiveUrlManager
     {
 	try
 	{
-	    PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT first_capture, last_capture FROM wb_url WHERE url = ?");
-	    pStmt.setString(1, resource.getUrl());
-	    ResultSet rs = pStmt.executeQuery();
-	    if(rs.next())
+	    if(resource.getResource().getMetadataValue("first_timestamp") == null)
 	    {
-		Timestamp first = rs.getTimestamp(1);
-		Timestamp last = rs.getTimestamp(2);
-		if(first != null && last != null) // url was checked and has captures
+		PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT first_capture, last_capture FROM wb_url WHERE url = ?");
+		pStmt.setString(1, resource.getUrl());
+		ResultSet rs = pStmt.executeQuery();
+		if(rs.next())
 		{
-		    resource.getResource().setMetadataValue("first_timestamp", waybackDateFormat.format(new Date(first.getTime())));
-		    resource.getResource().setMetadataValue("last_timestamp", waybackDateFormat.format(new Date(last.getTime())));
-		}
+		    Timestamp first = rs.getTimestamp(1);
+		    Timestamp last = rs.getTimestamp(2);
+		    if(first != null && last != null) // url was checked and has captures
+		    {
+			resource.getResource().setMetadataValue("first_timestamp", waybackDateFormat.format(new Date(first.getTime())));
+			resource.getResource().setMetadataValue("last_timestamp", waybackDateFormat.format(new Date(last.getTime())));
+		    }
 
+		}
+		else
+		    cdxExecutorService.submit(new CDXWorker(resource));
 	    }
-	    else
-		cdxExecutorService.submit(new CDXWorker(resource));
 	}
 	catch(SQLException e)
 	{
@@ -796,10 +799,11 @@ public class ArchiveUrlManager
 	    }
 	}*/
 	/*Client client = Client.create();
-	WebResource webResource = client.resource("https://archive.is/submit/");
+	WebResource webResource = client.resource("http://suggestqueries.google.com/complete/search?output=firefox&hl=de&q=kr");
 	MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
 	formData.add("url", "http://docs.oracle.com/javase/7/docs/api/java/net/HttpURLConnection.html#setFollowRedirects(boolean)");
-	ClientResponse response = webResource.accept(MediaType.APPLICATION_FORM_URLENCODED).header(HttpHeaders.USER_AGENT, "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0").post(ClientResponse.class, formData);
+	ClientResponse response = webResource.get(ClientResponse.class);
+	System.out.println(response.getEntity(String.class));
 	String refreshHeader = null;
 	
 	if(response.getHeaders().containsKey("Refresh"))

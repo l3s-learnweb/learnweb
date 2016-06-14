@@ -37,7 +37,9 @@ public class WaybackCapturesLogger
     {
 	try
 	{
-	    queue.put(new Container(url, firstCapture, lastCapture));
+	    Container c = new Container(url, firstCapture, lastCapture);
+	    if(!queue.contains(c))
+		queue.put(c);
 	}
 	catch(InterruptedException e)
 	{
