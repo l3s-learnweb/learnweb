@@ -301,11 +301,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     }
 
-    public void setNewslist(ArrayList<NewsEntry> newslist)
-    {
-	this.newslist = newslist;
-    }
-
     public String present()
     {
 	return "presentation?id=" + clickedPresentation.getPresentationId() + "&faces-redirect=true";
@@ -533,7 +528,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void deleteResource() throws SQLException
     {
-	log(Action.group_removing_resource, clickedResource.getGroupId(), clickedResource.getId(), "");
+	log(Action.group_removing_resource, clickedResource.getGroupId(), clickedResource.getId(), clickedResource.getTitle());
 
 	//getUser().deleteResource(clickedResource);
 
@@ -542,7 +537,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	clickedResource.save();
 
 	addGrowl(FacesMessage.SEVERITY_INFO, "resource_deleted");
-	log(Action.deleting_resource, clickedResource.getId());
+	log(Action.deleting_resource, clickedResource.getGroupId(), clickedResource.getId(), clickedResource.getTitle());
 
 	//loadResources();
 	clickedResource = new Resource();

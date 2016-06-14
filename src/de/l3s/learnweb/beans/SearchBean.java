@@ -395,7 +395,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 		}
 	    }
 	    user.setActiveGroup(selectedResourceTargetGroupId);
-	    log(Action.adding_resource, newResource.getId());
+	    log(Action.adding_resource, selectedResourceTargetGroupId, newResource.getId(), "");
 
 	    // add query as tag 
 	    //newResource.addTag(query, user);

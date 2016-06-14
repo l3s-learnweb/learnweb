@@ -47,7 +47,6 @@ public class UserBean implements Serializable
 
     private Locale locale;
     private transient PrettyTime localePrettyTime;
-    private HashMap<String, String> preferences; // user preferences like search mode
 
     private int activeCourseId = 0;
     private transient Course activeCourseCache = null;
@@ -60,12 +59,11 @@ public class UserBean implements Serializable
 
     private long groupsTreeCacheTime = 0L;
     private DefaultTreeNode groupsTree;
+    private HashMap<String, String> anonymousPreferences = new HashMap<String, String>(); // preferences for logout users
 
     public UserBean()
     {
 	locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
-
-	preferences = new HashMap<String, String>();
 
 	storeMetadataInSession(null);
 
@@ -163,7 +161,6 @@ public class UserBean implements Serializable
 
 	if(user != null)
 	{
-	    preferences = user.getPreferences();
 	    userId = user.getId();
 
 	    storeMetadataInSession(user);
@@ -174,6 +171,8 @@ public class UserBean implements Serializable
 		    activeCourseId = 884; // activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(884);
 		else if(user.getId() == 5143) // yell set to yell // TODO this is only a quick fix
 		    activeCourseId = 505; //activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(505);
+		else if(user.getId() == 8963) // LAbInt set active course to LabInt 2016
+		    activeCourseId = 1225; //activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(505);
 		else
 		{
 		    String lastActiveCourse = getPreference("active_course");
@@ -209,7 +208,6 @@ public class UserBean implements Serializable
 	User user = getUser();
 	if(null != user)
 	{
-	    user.setPreferences(preferences);
 	    user.onDestroy();
 	}
 
@@ -235,11 +233,16 @@ public class UserBean implements Serializable
 
     public String getPreference(String key)
     {
-	return preferences.get(key);
+	if(isLoggedIn())
+	    return getUser().getPreferences().get(key);
+
+	return anonymousPreferences.get(key);
     }
 
     public void setPreference(String key, String value)
     {
+	HashMap<String, String> preferences = isLoggedIn() ? getUser().getPreferences() : anonymousPreferences;
+
 	preferences.put(key, value);
     }
 

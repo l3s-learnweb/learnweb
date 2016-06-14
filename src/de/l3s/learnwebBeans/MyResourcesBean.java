@@ -179,7 +179,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     {
 	getUser().deleteResource(clickedResource);
 	addGrowl(FacesMessage.SEVERITY_INFO, "resource_deleted");
-	log(Action.deleting_resource, clickedResource.getId(), clickedResource.getTitle());
+	log(Action.deleting_resource, 0, clickedResource.getId(), clickedResource.getTitle());
 	resources.remove(clickedResource);
 	clickedResource = new Resource();
 	//loadResources();

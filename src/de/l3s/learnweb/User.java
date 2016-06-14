@@ -729,4 +729,14 @@ public class User implements Comparable<User>, Serializable, HasId
 	this.affiliation = affiliation;
     }
 
+    public String getPreference(String key)
+    {
+	return preferences.get(key);
+    }
+
+    public void setPreference(String key, String value)
+    {
+	preferences.put(key, value);
+    }
+
 }

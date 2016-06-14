@@ -107,7 +107,7 @@ public class LogEntry implements Serializable
 	    //description = usernameLink + " has edited " + resource;
 	    break;
 	case deleting_resource:
-	    description = usernameLink + UtilBean.getLocaleMessage("log_deleting_resource", resourceTitle);
+	    description = usernameLink + UtilBean.getLocaleMessage("log_deleting_resource", params); // resourceTitle
 	    //description = usernameLink + " has deleted " + resourceTitle;
 	    break;
 	case tagging_resource:
@@ -178,7 +178,7 @@ public class LogEntry implements Serializable
 	    //description = usernameLink + " has deleted a link from " + group;
 	    break;
 	case group_removing_resource:
-	    description = usernameLink + UtilBean.getLocaleMessage("log_group_removing_resource", resourceTitle, group);
+	    description = usernameLink + UtilBean.getLocaleMessage("log_group_removing_resource", params, group);
 	    //description = usernameLink + " has deleted " + resourceTitle + " from " + group;
 	    break;
 	case downloading:

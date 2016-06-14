@@ -26,7 +26,7 @@ import de.l3s.util.StringHelper;
  */
 public class ResourceMetadataExtractor
 {
-    private final static Logger log = Logger.getLogger(FileInspector.class);
+    private final static Logger log = Logger.getLogger(ResourceMetadataExtractor.class);
 
     private final static String YOUTUBE_PATTERN = "https?:\\/\\/(?:[0-9A-Z-]+\\.)?(?:youtu\\.be\\/|youtube\\.com\\S*[^\\w\\-\\s])([\\w\\-]{11})(?=[^\\w\\-]|$)(?![?=&+%\\w]*(?:['\"][^<>]*>|<\\/a>))[?=&+%\\w]*";
     private final static String VIMEO_PATTERN = "https?:\\/\\/(?:www\\.)?(?:player\\.)?vimeo\\.com\\/(?:[a-z]*\\/)*([0-9]{6,11})[?]?.*";
