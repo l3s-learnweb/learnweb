@@ -511,13 +511,25 @@ public class ResourceManager
 	return comments;
     }
 
-    /**
-     * @see de.l3s.learnweb.ResourceManager#getCommentsByResourceId(int)
-     */
+    public Comment getComment(int commentId) throws SQLException
+    {
+	Comment comment = null;
+
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COMMENT_SELECT + " FROM `lw_comment` WHERE `comment_id` = ?");
+	select.setInt(1, commentId);
+	ResultSet rs = select.executeQuery();
+
+	if(rs.next())
+	{
+	    comment = createComment(rs);
+	}
+	select.close();
+
+	return comment;
+    }
 
     public List<Comment> getCommentsByResourceId(int id) throws SQLException
     {
-
 	List<Comment> comments = new LinkedList<Comment>();
 
 	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COMMENT_SELECT + " FROM `lw_comment` WHERE `resource_id` = ? ORDER BY date DESC");

@@ -287,7 +287,12 @@ public class FileManager
 
     private String createUrl(File file)
     {
-	return baseUrl + file.getId() + "/" + StringHelper.urlEncode(file.getName());
+	return createUrl(file.getId(), file.getName());
+    }
+
+    public String createUrl(int fileId, String fileName)
+    {
+	return baseUrl + fileId + "/" + StringHelper.urlEncode(fileName);
     }
 
     /**

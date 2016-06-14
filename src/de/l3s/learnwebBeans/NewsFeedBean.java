@@ -13,39 +13,38 @@ import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.NewsEntry;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceManager;
-import de.l3s.learnweb.User;
-import de.l3s.learnweb.UserManager;
 
 @RequestScoped
 @ManagedBean
 public class NewsFeedBean extends ApplicationBean
 {
-
+    /*
     public final static int LIST = 0;
     public final static int BIG = 2;
     public final static int SMALL = 1;
+    */
     ArrayList<NewsEntry> newslist;
     private int entityId;
-    private Boolean userlog = false;
-    private int type;
+    //private Boolean userlog = false;
+    //private int type;
 
     public NewsFeedBean()
     {
 	Integer groupId = getParameterInt("group_id");
 	Integer userId = getParameterInt("user_id");
 
-	type = BIG;
+	//type = BIG;
 	if(groupId != null)
 	    entityId = groupId;
 	else if(userId != null)
 	{
 	    entityId = userId;
-	    userlog = true;
+	    //userlog = true;
 	}
 	else
 	{
 	    entityId = getUser().getId();
-	    userlog = true;
+	    // userlog = true;
 	}
     }
 
@@ -56,12 +55,13 @@ public class NewsFeedBean extends ApplicationBean
 		Action.group_removing_resource };
 	List<LogEntry> feed = null;
 
-	if(userlog)
-	    feed = getLearnweb().getLogsByUser(entityId, filter, 50);
+	//if(userlog)
+	feed = getLearnweb().getLogsByUser(entityId, filter, 50);
+	/*
 	else
-	    feed = getLearnweb().getLogsByGroup(entityId, filter, 50);
-
-	UserManager userManager = getLearnweb().getUserManager();
+	feed = getLearnweb().getLogsByGroup(entityId, filter, 50);
+	*/
+	//UserManager userManager = getLearnweb().getUserManager();
 	ResourceManager resourceManager = getLearnweb().getResourceManager();
 
 	if(feed != null)
@@ -69,59 +69,86 @@ public class NewsFeedBean extends ApplicationBean
 	    newslist = new ArrayList<NewsEntry>();
 	    for(LogEntry l : feed)
 	    {
-		User u = null;
-		Resource r = null;
+		Resource r = l.getResource();
 
+		int commentcount = 0;
+		int tagcount = 0;
+		String text = l.getDescription();
+
+		if(r != null)
+		{
+		    if(r.getComments() != null)
+			commentcount = r.getComments().size();
+
+		    if(r.getTags() != null)
+			tagcount = r.getTags().size();
+
+		    if(l.getAction() == Action.commenting_resource && commentcount > 0)
+		    {
+			Comment comment = resourceManager.getComment(Integer.parseInt(l.getParams()));
+
+			if(comment != null)
+			    text = text + " " + getLocaleMessage("with") + " " + "<b>" + comment.getText() + "</b>";
+		    }
+
+		}
+
+		newslist.add(new NewsEntry(l, null, r, commentcount, tagcount, text, r != null, l.getDate()));
+		/*
+		User u = null;
+		Resource r = l.getResource();
+		
 		u = userManager.getUser(l.getUserId());
 		r = resourceManager.getResource(l.getResourceId());
-
+		
 		//log.debug(l.getAction().toString());
-
+		
 		int commentcount = 0;
 		int tagcount = 0;
 		String text = l.getDescription();
 		if(l.getAction() == filter[3] || r == null)
 		{
-		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, false, l.getDate()));
-		    continue;
+		newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, false, l.getDate()));
+		continue;
 		}
-
+		
 		if(r.getComments() != null)
-		    commentcount += r.getComments().size();
-
+		commentcount += r.getComments().size();
+		
 		if(r.getTags() != null)
-		    tagcount += r.getTags().size();
-
+		tagcount += r.getTags().size();
+		
 		if(l.getAction() == filter[0]) //add_resource
 		{
-		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, true, l.getDate()));
+		newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, true, l.getDate()));
 		}
-		else if(l.getAction() == filter[1] && commentcount > 0)
+		else if(l.getAction() == Action.commenting_resource && commentcount > 0)
 		{
-		    Comment commenttobeadded = new Comment();
-		    commenttobeadded.setText("comment removed!");
-
-		    for(Comment c : getLearnweb().getResourceManager().getCommentsByResourceId(r.getId()))
-		    {
-			if(c.getId() == Integer.parseInt(l.getParams()))
-			{
-			    commenttobeadded = c;
-			}
-		    }
-
-		    text = text + " " + getLocaleMessage("with") + " " + "<b>" + commenttobeadded.getText() + "</b>";
-		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, true, l.getDate()));
+		Comment commenttobeadded = new Comment();
+		commenttobeadded.setText("comment removed!");
+		
+		for(Comment c : getLearnweb().getResourceManager().getCommentsByResourceId(r.getId()))
+		{
+		if(c.getId() == Integer.parseInt(l.getParams()))
+		{
+		    commenttobeadded = c;
+		}
+		}
+		
+		text = text + " " + getLocaleMessage("with") + " " + "<b>" + commenttobeadded.getText() + "</b>";
+		newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, true, l.getDate()));
 		}
 		else if(l.getAction() == filter[15])
 		{
-		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, true, l.getDate()));
+		newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, true, l.getDate()));
 		}
 		else if(l.getAction() == filter[14])
 		{
-		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, true, l.getDate()));
+		newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, true, l.getDate()));
 		}
 		else
-		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, false, l.getDate()));
+		newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, false, l.getDate()));
+		*/
 	    }
 	}
     }
@@ -157,33 +184,24 @@ public class NewsFeedBean extends ApplicationBean
 	this.entityId = groupId;
     }
 
-    public Boolean getUserlog()
-    {
-	return userlog;
-    }
-
-    public void setUserlog(Boolean userlog)
-    {
-	this.userlog = userlog;
-    }
-
+    /*
     public int getType()
     {
-	return type;
+    return type;
     }
-
+    
     public void setType(int type)
     {
-	this.type = type;
-
-	try
-	{
-	    convert();
-	}
-	catch(SQLException e)
-	{
-	    addFatalMessage(e);
-	}
-
+    this.type = type;
+    
+    try
+    {
+        convert();
     }
+    catch(SQLException e)
+    {
+        addFatalMessage(e);
+    }
+    
+    } */
 }

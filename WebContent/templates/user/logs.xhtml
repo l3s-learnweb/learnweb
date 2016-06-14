@@ -11,8 +11,7 @@
 							
 		<h:column>
 			<div class="float-left">
-				<h:graphicImage id="userpic" url="#{logEntry.user.image}" width="30" height="30" style=" padding-right: 10px;" 
-					alt="Profile picture"/>
+				<h:graphicImage id="userpic" url="#{logEntry.logEntry.userImage}" width="30" height="30" style="padding-right: 10px;" alt="Profile picture"/>
 			</div>
 			<div style="width: auto;">
 				<h:outputText value="#{logEntry.text}" escape="false"  />

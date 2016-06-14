@@ -7,7 +7,6 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -172,19 +171,55 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
     }
 
-    private void convert()
+    /**
+     * die funktion ist totale scheisse. ersetzen sobald es geht
+     * 
+     * @throws SQLException
+     */
+    private void convert() throws SQLException
     {
+	/*
 	HashSet<Integer> deletedResources = new HashSet<Integer>();
 	Action[] filter = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
 		Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource,
 		Action.group_removing_resource };
+		*/
 	List<LogEntry> feed = logMessages;
 
 	if(feed != null)
 	{
+	    ResourceManager resourceManager = getLearnweb().getResourceManager();
+
 	    newslist = new ArrayList<NewsEntry>();
 	    for(LogEntry l : feed)
 	    {
+		Resource r = l.getResource();
+
+		int commentcount = 0;
+		int tagcount = 0;
+		String text = l.getDescription();
+
+		if(r != null)
+		{
+		    if(r.getComments() != null)
+			commentcount = r.getComments().size();
+
+		    if(r.getTags() != null)
+			tagcount = r.getTags().size();
+
+		    if(l.getAction() == Action.commenting_resource && commentcount > 0)
+		    {
+			Comment comment = resourceManager.getComment(Integer.parseInt(l.getParams()));
+
+			if(comment != null)
+			    text = text + " " + getLocaleMessage("with") + " " + "<b>" + comment.getText() + "</b>";
+		    }
+
+		}
+
+		newslist.add(new NewsEntry(l, null, r, commentcount, tagcount, text, r != null, l.getDate()));
+
+		/*
 		User u = null;
 		Resource r = null;
 		boolean resourceaction = true;
@@ -200,7 +235,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 		}
 		if(r != null && deletedResources.contains(r.getId()))
 		    resourceaction = false;
-
+		
 		int commentcount = 0;
 		int tagcount = 0;
 		String text = l.getDescription();
@@ -221,7 +256,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 		    e.printStackTrace();
 		    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 		}
-
+		
 		try
 		{
 		    if(r.getTags() != null)
@@ -232,13 +267,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 		    e.printStackTrace();
 		    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 		}
-
+		
 		if(l.getAction() == filter[0]) //add_resource
 		{
-
+		
 		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
 		    continue;
-
+		
 		}
 		if(l.getAction() == filter[1] && commentcount > 0)
 		{
@@ -246,7 +281,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 		    commenttobeadded.setText("comment removed!");
 		    try
 		    {
-
+		
 			for(Comment c : getLearnweb().getResourceManager().getCommentsByResourceId(r.getId()))
 			{
 			    if(c.getId() == Integer.parseInt(l.getParams()))
@@ -254,7 +289,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 				commenttobeadded = c;
 			    }
 			}
-
+		
 		    }
 		    catch(SQLException e)
 		    {
@@ -264,23 +299,23 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 		    text = text + " with " + "<b>" + commenttobeadded.getText() + "</b>";
 		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
 		    continue;
-
+		
 		}
 		if(l.getAction() == filter[15])
 		{
 		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
 		    continue;
-
+		
 		}
 		if(l.getAction() == filter[14])
 		{
 		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
 		    continue;
-
+		
 		}
-
+		
 		newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
-
+		*/
 	    }
 
 	}
@@ -360,13 +395,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 		logMessages = getLearnweb().getLogsByGroup(groupId, null, limit);
 	    else
 		logMessages = getLearnweb().getLogsByGroup(groupId, null);
+
+	    convert();
 	}
 	catch(SQLException e)
 	{
 	    addFatalMessage(e);
 	}
-	convert();
-
     }
 
     private void updateLinksList() throws SQLException
@@ -508,15 +543,14 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	try
 	{
-	    Resource res = clickedResource;
-	    res.setGroupId(0);
-	    res.save();
+	    int oldGroup = clickedResource.getGroupId();
+	    clickedResource.setGroupId(0);
+	    clickedResource.save();
 
 	    addMessage(FacesMessage.SEVERITY_INFO, "resource_removed_from_group");
 	    getUser().setActiveGroup(group);
-	    log(Action.group_removing_resource, clickedResource.getId());
+	    log(Action.group_removing_resource, oldGroup, clickedResource.getId(), clickedResource.getTitle());
 
-	    //loadResources();
 	    clickedResource = new Resource();
 	    updateResourcesFromSolr();
 	}
@@ -528,10 +562,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void deleteResource() throws SQLException
     {
-	log(Action.group_removing_resource, clickedResource.getGroupId(), clickedResource.getId(), clickedResource.getTitle());
-
-	//getUser().deleteResource(clickedResource);
-
 	clickedResource.setGroupId(0);
 	clickedResource.setFolderId(0);
 	clickedResource.save();
@@ -539,7 +569,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	addGrowl(FacesMessage.SEVERITY_INFO, "resource_deleted");
 	log(Action.deleting_resource, clickedResource.getGroupId(), clickedResource.getId(), clickedResource.getTitle());
 
-	//loadResources();
 	clickedResource = new Resource();
 	updateResourcesFromSolr();
     }
@@ -834,22 +863,22 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    return;
 	}
 
-	Resource resource = selectedResource;
-
 	if(selectedResourceTargetGroupId != 0)
 	{
 	    try
 	    {
+		int oldGroup = selectedResource.getGroupId();
+
 		Group targetGroup = getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId);
-		resource.setGroup(targetGroup);
-		resource.save();
+		selectedResource.setGroup(targetGroup);
+		selectedResource.save();
 
 		user.setActiveGroup(selectedResourceTargetGroupId);
 
-		log(Action.group_removing_resource, selectedResource.getId());
-		log(Action.adding_resource, resource.getId(), selectedResourceTargetGroupId + "");
+		log(Action.group_removing_resource, oldGroup, selectedResource.getId(), selectedResource.getTitle());
+		log(Action.adding_resource, selectedResourceTargetGroupId, selectedResource.getId(), "");
 
-		addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
+		addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", selectedResource.getTitle());
 	    }
 	    catch(Exception e)
 	    {

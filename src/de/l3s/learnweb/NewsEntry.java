@@ -18,6 +18,7 @@ public class NewsEntry implements Comparable<NewsEntry>, Serializable
     private Boolean resourceAction;
     private Date date;
     private Action newsAction;
+    private LogEntry logEntry;
 
     //variable for checking if the item is a resource oriented action or user oriented
 
@@ -32,6 +33,8 @@ public class NewsEntry implements Comparable<NewsEntry>, Serializable
 	this.resourceAction = resourceAction;
 	this.date = date;
 	this.newsAction = news.getAction();
+
+	this.logEntry = news;
     }
 
     public User getUser()
@@ -81,4 +84,10 @@ public class NewsEntry implements Comparable<NewsEntry>, Serializable
     {
 	return -getDate().compareTo(o.getDate());
     }
+
+    public LogEntry getLogEntry()
+    {
+	return logEntry;
+    }
+
 }

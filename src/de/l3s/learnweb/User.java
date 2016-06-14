@@ -514,15 +514,32 @@ public class User implements Comparable<User>, Serializable, HasId
     {
 	if(imageUrl == null)
 	{
+	    /*
 	    File file = Learnweb.getInstance().getFileManager().getFileById(imageFileId);
-
+	    
 	    if(null == file)
-		imageUrl = UtilBean.getLearnwebBean().getContextUrl() + "/resources/image/no_profile.jpg";
+	    imageUrl = UtilBean.getLearnwebBean().getContextUrl() + "/resources/image/no_profile.jpg";
 	    else
-		imageUrl = file.getUrl();
+	    imageUrl = file.getUrl();
+	    */
+	    imageUrl = getImage(imageFileId);
 	}
 
 	return imageUrl;
+    }
+
+    /**
+     * creates the URL for a given fileId of a profile image
+     * 
+     * @param fileId
+     * @return
+     */
+    public static String getImage(int fileId)
+    {
+	if(fileId > 0)
+	    return Learnweb.getInstance().getFileManager().createUrl(fileId, "profile.png");
+
+	return UtilBean.getLearnwebBean().getContextUrl() + "/resources/image/no_profile.jpg";
     }
 
     public void setId(int id)

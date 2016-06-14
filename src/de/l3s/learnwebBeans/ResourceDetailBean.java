@@ -61,10 +61,12 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	    try
 	    {
 		clickedResource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+
+		log(Action.opening_resource, clickedResource.getGroupId(), clickedResource.getId(), "");
 	    }
 	    catch(SQLException e1)
 	    {
-		e1.printStackTrace();
+		log.error("Can't view resource: " + resourceId, e1);
 		addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 	    }
 	}

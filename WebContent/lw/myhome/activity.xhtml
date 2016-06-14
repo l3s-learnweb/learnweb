@@ -53,7 +53,7 @@
 			<h:dataTable var="datagrid" value="#{activityResourceBean.newslist}" id="datagrid" style="width:100%">
 				<h:column>
 					<div class="newsfeed_user_image_div">
-					    <h:graphicImage id="userpic" url="#{datagrid.user.image}" width="30" height="30" styleClass="newsfeed_user_image" 
+					    <h:graphicImage id="userpic" url="#{datagrid.logEntry.userImage}" width="30" height="30" styleClass="newsfeed_user_image" 
 					    	alt="Profile foto"/>
 					</div>
 					<div class="newsfeed_text">
@@ -80,13 +80,13 @@
 						<div class="newsfeed_left">
 						
 							<h:form>
-								<p:commandLink styleClass="newsfeed_query_link" update=":add_resource_panel" oncomplete="update_header()" 
-									process="@form">
+								<p:commandLink styleClass="newsfeed_query_link" update=":add_resource_panel" oncomplete="update_header()">
 				        			<f:setPropertyActionListener target="#{activityResourceBean.clickedResource}" value="#{datagrid.resource}"/>
 				        			<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{datagrid.resource}"/>
 										<h:outputText value="#{datagrid.resource.embeddedSize1}" escape="false" />
 								</p:commandLink>
-							</h:form>		
+							</h:form>							
+		
 	                   </div>
 						
 						<div class="newsfeed_right">

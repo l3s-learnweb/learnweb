@@ -89,26 +89,25 @@
 		/* --> */
 		</script>
 		
-		<h:dataTable var="datagrid" value="#{groupDetailBean.newslist}" id="datagrid" >
+		<h:dataTable var="datagrid" value="#{groupDetailBean.newslist}" id="datagrid">
 					
 				
 			<h:column >
 				<div class="newsfeed_user_image_div">
-			    	<h:graphicImage id="userpic" url="#{datagrid.user.image}" alt="profile image" width="30" height="30" styleClass="newsfeed_user_image"/>
+			    	<h:graphicImage id="userpic" url="#{datagrid.logEntry.userImage}" alt="profile image" width="30" height="30" styleClass="newsfeed_user_image"/>
 			    </div>
 				<div class="newsfeed_text">
 					<h:outputText value="#{datagrid.text}" escape="false"  />
 					<h:panelGroup rendered="#{datagrid.queryNeeded}">
-					<h:outputText value=" #{msg.with_query} " escape="false"  />
-					
-					<h:outputLink styleClass="newsfeed_query_link" value="search.jsf">
-					<h:outputText value=" #{datagrid.resource.query}" escape="false" styleClass="newsfeed_query_link_text"/>
-					
-							<f:param name="query" value="#{datagrid.resource.query}"/>
-					        <f:param name="action" value="web"/>
-					</h:outputLink>
-					
-					<h:outputText value=" #{msg.from} #{datagrid.resource.source} " escape="false"  />
+						<h:outputText value=" #{msg.with_query} " escape="false" />
+						
+						<h:outputLink styleClass="newsfeed_query_link" value="search.jsf">
+						<h:outputText value=" #{datagrid.resource.query}" escape="false" styleClass="newsfeed_query_link_text"/>						
+								<f:param name="query" value="#{datagrid.resource.query}"/>
+						        <f:param name="action" value="web"/>
+						</h:outputLink>
+						
+						<h:outputText value=" #{msg.from} #{datagrid.resource.source} " escape="false" />
 					</h:panelGroup>
 				</div>
 					

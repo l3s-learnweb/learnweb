@@ -57,40 +57,27 @@ public class DownloadServlet extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+	// extract the file id from the request string
+	String requestString = request.getRequestURI();
+	int index = requestString.indexOf(urlPattern);
+	if(index == -1)
+	{
+	    log.warn("Invalid download URL: " + requestString);
+	    response.setStatus(404);
+	    return;
+	}
+	requestString = requestString.substring(index + urlPattern.length());
+	requestString = requestString.substring(0, requestString.indexOf("/"));
+	int fileId = Integer.parseInt(requestString);
+
 	try
 	{
-	    // extract the file id from the request string
-	    String requestString = request.getRequestURI();
-	    int index = requestString.indexOf(urlPattern);
-	    if(index == -1)
-	    {
-		log.warn("Invalid download URL: " + requestString);
-		response.setStatus(404);
-		return;
-	    }
-	    requestString = requestString.substring(index + urlPattern.length());
-	    requestString = requestString.substring(0, requestString.indexOf("/"));
-	    int fileId = Integer.parseInt(requestString);
-
 	    File file = fileManager.getFileById(fileId);
 	    if(null == file)
 	    {
 		log.warn("Requested file " + fileId + " does not exist or was deleted");
 		response.setStatus(404);
 		return;
-	    }
-
-	    if(file.isDownloadLogActivated())
-	    {
-		HttpSession session = request.getSession(true);
-		User user = null;
-		Integer userId = (Integer) session.getAttribute("learnweb_user_id");
-
-		if(userId != null)
-		    user = learnweb.getUserManager().getUser(userId);
-
-		if(null != user)
-		    Learnweb.getInstance().log(user, Action.downloading, file.getResourceId(), null, session.getId(), 0);
 	    }
 
 	    long ifModifiedSince = request.getDateHeader("If-Modified-Since");
@@ -111,10 +98,23 @@ public class DownloadServlet extends HttpServlet
 	    */
 	    prepareResponseFor(response, file);
 	    streamFileTo(response, file);
+
+	    if(file.isDownloadLogActivated())
+	    {
+		HttpSession session = request.getSession(true);
+		User user = null;
+		Integer userId = (Integer) session.getAttribute("learnweb_user_id");
+
+		if(userId != null)
+		    user = learnweb.getUserManager().getUser(userId);
+
+		if(null != user)
+		    Learnweb.getInstance().log(user, Action.downloading, file.getResourceId(), null, session.getId(), 0);
+	    }
 	}
 	catch(Exception e)
 	{
-	    e.printStackTrace();
+	    log.error("Error while downloading file: " + fileId, e);
 	    response.setStatus(500);
 	}
     }

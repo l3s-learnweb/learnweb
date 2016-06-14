@@ -361,6 +361,8 @@ iframe { border:none }
 	top:80px;
 }
 
+#datagrid { width:100%; }
+
 /* bottom bar */
 
 #backtogroup {
