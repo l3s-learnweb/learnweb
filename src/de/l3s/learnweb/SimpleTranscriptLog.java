@@ -1,9 +1,11 @@
 package de.l3s.learnweb;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 
-public class SimpleTranscriptLog
+public class SimpleTranscriptLog implements Serializable
 {
+    private static final long serialVersionUID = -5957511920632610709L;
 
     private int userId;
     private int resourceId;

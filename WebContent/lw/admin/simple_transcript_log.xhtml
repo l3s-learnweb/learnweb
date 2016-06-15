@@ -23,10 +23,23 @@
 			<span>
 				#{msg.transcript_logs}
 			</span>
+			<h:form style="display:inline-block" prependId="false">
+				<h:outputLabel for="course_options" value="#{msg.choose_course}: " />
+				<h:selectOneMenu id="course_options" value="#{tedTranscriptBean.selectedCourseId}"
+					style="width:125px">
+					<f:selectItems value="#{tedTranscriptBean.courses}" var="course" itemLabel="#{course.title}" itemValue="#{course.id}" />
+					<p:ajax listener="#{tedTranscriptBean.resetTranscriptLogs}" update=":transcript_table"/>
+				</h:selectOneMenu>
+				
+				<h:selectBooleanCheckbox value="#{tedTranscriptBean.showDeletedResources}" style="margin-left:5px">
+					<p:ajax listener="#{tedTranscriptBean.resetTranscriptLogs}" update=":transcript_table"/>
+				</h:selectBooleanCheckbox>
+				<h:outputText value=" #{msg.show_transcript_del_res}"/>
+			</h:form>
 		</div>
 	
-		<h:form style="padding:5px">
-			<p:dataTable id = "tbl" var="log" value="#{tedTranscriptBean.simpleTranscriptLogs}" rows="30" paginator="true"
+		<h:form style="padding:5px" prependId="false">
+			<p:dataTable id = "transcript_table" var="log" value="#{tedTranscriptBean.simpleTranscriptLogs}" rows="30" paginator="true"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
 				rowsPerPageTemplate="20,25,30">
 				 
@@ -37,26 +50,26 @@
            	 		</h:commandLink>
         		</f:facet>
 				
-				<p:column headerText="#{msg.username}">
+				<p:column headerText="#{msg.username}" filterBy="#{log.user.username}" sortBy="#{log.user.username}">
 					<h:outputText value="#{log.user.username}" />
 				</p:column>
 
-				<p:column headerText="#{msg.tedTalk}">
+				<p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}">
 					<h:outputLink value="#{request.contextPath}/lw/ted_transcript.jsf" target="_blank" style="text-decoration:underline">
 						<h:outputText value="#{log.resource.title}" />
 						<f:param name="resource_id" value="#{log.resource.id}"/>
 					</h:outputLink>
 				</p:column>
 	
-				<p:column headerText="#{msg.selection_count}">
+				<p:column headerText="#{msg.selection_count}" sortBy="#{log.selectionCount}">
 					<h:outputText value="#{log.selectionCount}" />
 				</p:column>
 					
-				<p:column headerText="#{msg.deselection_count}">
+				<p:column headerText="#{msg.deselection_count}" sortBy="#{log.deselectionCount}">
 					<h:outputText value="#{log.deselectionCount}" />
 				</p:column>
 	
-				<p:column headerText="#{msg.user_annotation_count}">
+				<p:column headerText="#{msg.user_annotation_count}" sortBy="#{log.userAnnotationCount}">
 					<h:outputText value="#{log.userAnnotationCount}" />
 				</p:column>
 			</p:dataTable>

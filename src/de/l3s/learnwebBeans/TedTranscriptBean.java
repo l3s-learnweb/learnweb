@@ -21,12 +21,13 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.primefaces.context.RequestContext;
 
-import rita.wordnet.RiWordnet;
+import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.SimpleTranscriptLog;
 import de.l3s.learnweb.TranscriptLog;
 import de.l3s.learnweb.beans.UtilBean;
+import rita.wordnet.RiWordnet;
 
 @ManagedBean
 @ViewScoped
@@ -50,7 +51,10 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     private List<SelectItem> languageList;
     private String locale;
 
-    //private transient SparqlClient sparqlClient;
+    private List<SimpleTranscriptLog> simpleTranscriptLogs;
+    private List<TranscriptLog> detailedTranscriptLogs;
+    private boolean showDeletedResources = false;
+    private int selectedCourseId;
 
     public void preRenderView() throws SQLException
     {
@@ -72,7 +76,11 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	//rcs.put("a", new Lesk(db));
 	//rcs.put("r", new Lesk(db));
 	locale = UtilBean.getUserBean().getLocaleAsString();
-	//sparqlClient = Learnweb.getInstance().getSparqlClient();
+
+	String logPreference = getPreference("transcript_show_del_res");
+	if(logPreference != null)
+	    showDeletedResources = Boolean.parseBoolean(logPreference);
+	selectedCourseId = UtilBean.getUserBean().getActiveCourseId();
 
     }
 
@@ -184,16 +192,16 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     /*public double wordSimilarity(String word1, String word2, String pos)
     {
     WS4JConfiguration.getInstance().setMFS(true);
-
+    
     double s = rcs.get(pos).calcRelatednessOfWords(word1, word2);
-
+    
     return s;
     }
-
+    
     public HashMap<String, Double> sortByValues(HashMap<String, Double> similarityMeasures)
     {
     List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(similarityMeasures.entrySet());
-
+    
     Collections.sort(list, new Comparator<Map.Entry<String, Double>>()
     {
         @Override
@@ -202,7 +210,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     	return (o2.getValue()).compareTo(o1.getValue());
         }
     });
-
+    
     HashMap<String, Double> sortedHashMap = new LinkedHashMap<String, Double>();
     for(Iterator<Map.Entry<String, Double>> it = list.iterator(); it.hasNext();)
     {
@@ -342,13 +350,15 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
     public List<TranscriptLog> getTranscriptLogs() throws SQLException
     {
-	List<TranscriptLog> transcriptLogs = getLearnweb().getTedManager().getTranscriptLogs(UtilBean.getUserBean().getActiveCourse().getId());
-	return transcriptLogs;
+	if(detailedTranscriptLogs == null)
+	    detailedTranscriptLogs = getLearnweb().getTedManager().getTranscriptLogs(selectedCourseId, showDeletedResources);
+	return detailedTranscriptLogs;
     }
 
     public List<SimpleTranscriptLog> getSimpleTranscriptLogs() throws SQLException
     {
-	List<SimpleTranscriptLog> simpleTranscriptLogs = getLearnweb().getTedManager().getSimpleTranscriptLogs(UtilBean.getUserBean().getActiveCourse().getId());
+	if(simpleTranscriptLogs == null)
+	    simpleTranscriptLogs = getLearnweb().getTedManager().getSimpleTranscriptLogs(selectedCourseId, showDeletedResources);
 	return simpleTranscriptLogs;
     }
 
@@ -362,6 +372,11 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	this.resourceId = resourceId;
     }
 
+    public List<Course> getCourses() throws SQLException
+    {
+	return getUser().getCourses();
+    }
+
     public static Comparator<SelectItem> languageComparator()
     {
 	return new Comparator<SelectItem>()
@@ -372,5 +387,32 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 		return o1.getLabel().compareTo(o2.getLabel());
 	    }
 	};
+    }
+
+    public int getSelectedCourseId()
+    {
+	return selectedCourseId;
+    }
+
+    public void setSelectedCourseId(int selectedCourseId)
+    {
+	this.selectedCourseId = selectedCourseId;
+    }
+
+    public boolean isShowDeletedResources()
+    {
+	return showDeletedResources;
+    }
+
+    public void setShowDeletedResources(boolean showDeletedResources)
+    {
+	this.showDeletedResources = showDeletedResources;
+	setPreference("transcript_show_del_res", Boolean.toString(showDeletedResources));
+    }
+
+    public void resetTranscriptLogs()
+    {
+	simpleTranscriptLogs = null;
+	detailedTranscriptLogs = null;
     }
 }

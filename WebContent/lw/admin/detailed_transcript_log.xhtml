@@ -14,6 +14,19 @@
 			<span>
 				#{msg.transcript_logs}
 			</span>
+			<h:form style="display:inline-block" prependId="false">
+				<h:outputLabel for="course_options" value="#{msg.choose_course}: " />
+				<h:selectOneMenu id="course_options" value="#{tedTranscriptBean.selectedCourseId}"
+					style="width:125px">
+					<f:selectItems value="#{tedTranscriptBean.courses}" var="course" itemLabel="#{course.title}" itemValue="#{course.id}" />
+					<p:ajax listener="#{tedTranscriptBean.resetTranscriptLogs}" update=":transcript_table"/>
+				</h:selectOneMenu>
+				
+				<h:selectBooleanCheckbox value="#{tedTranscriptBean.showDeletedResources}" style="margin-left:5px">
+					<p:ajax listener="#{tedTranscriptBean.resetTranscriptLogs}" update=":transcript_table"/>
+				</h:selectBooleanCheckbox>
+				<h:outputText value=" #{msg.show_transcript_del_res}"/>
+			</h:form>
 		</div>
 		
 		<style type="text/css">
@@ -25,10 +38,10 @@
 			}
 		</style>
 	
-		<h:form style="padding:5px;">
-			<p:dataTable id = "tbl" var="log" value="#{tedTranscriptBean.transcriptLogs}" rows="30" paginator="true"
+		<h:form style="padding:5px;" prependId="false">
+			<p:dataTable id = "transcript_table" var="log" value="#{tedTranscriptBean.transcriptLogs}" rows="30" paginator="true"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
-				rowsPerPageTemplate="20,25,30,35,40">
+				rowsPerPageTemplate="20,25,30,35,40" widgetVar="transcriptLogs">
 				
 				<f:facet name="{Exporters}">
             		<h:commandLink>
@@ -37,15 +50,15 @@
            	 		</h:commandLink>
         		</f:facet>
 				
-				<p:column headerText="#{msg.student}">
+				<p:column headerText="#{msg.student}" filterBy="#{log.user.username}" sortBy="#{log.user.username}">
 					<h:outputText value="#{log.user.username}" />
 				</p:column>
 
-				<p:column headerText="#{msg.tedTalk}">
+				<p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}" sortBy="#{log.resource.title}">
 					<h:outputText value="#{log.resource.title}" />
 				</p:column>
 
-				<p:column headerText="#{msg.added_by}">
+				<p:column headerText="#{msg.added_by}" filterBy="#{log.resource.ownerUser.username}" sortBy="#{log.resource.ownerUser.username}">
 					<h:outputText value="#{log.resource.ownerUser.username}" />
 				</p:column>
 				
@@ -53,15 +66,22 @@
 					<h:outputText value="#{log.wordsSelected}" />
 				</p:column>
 
-				<p:column headerText="#{msg.userAnnotation}">
+				<p:column headerText="#{msg.userAnnotation}" filterBy="#{log.userAnnotation}">
 					<h:outputText value="#{log.userAnnotation}" />
 				</p:column>
 
-				<p:column headerText="#{msg.action}">
+				<p:column headerText="#{msg.action}" filterMatchMode="equals" filterBy="#{log.action}">
+					<f:facet name="filter">
+						<p:selectOneMenu onchange="PF('transcriptLogs').filter()">
+							<f:selectItem itemLabel="All" itemValue="#{null}" noSelectionOption="true" />
+							<f:selectItem itemLabel="Selection" itemValue="selection" />
+							<f:selectItem itemLabel="Deselection" itemValue="deselection" />
+						</p:selectOneMenu>
+					</f:facet>
 					<h:outputText value="#{log.action}" />
 				</p:column>
-				
-				<p:column headerText="#{msg.time_stamp}">
+
+				<p:column headerText="#{msg.time_stamp}" sortBy="#{log.timestamp}">
 					<h:outputText value="#{log.timestamp}" />
 				</p:column>
 				
