@@ -22,6 +22,7 @@ commons-io-2.4.jar					FileManager, primefacces file upload
 commons-lang3-3.4.jar				Interweb, primefaces-extensions, Others, ArchiveSearch
 commons-logging-1.1.1.jar			JSF Base, Dependency of Google API
 core.jar							Added by Trevor; for sprql client?
+crawler4j-4.2.jar					TED crawler
 cron4j-2.2.5.jar					Job Scheduler, added by Siyu
 dom4j-2.0.0-ALPHA-2.jar				Interweb
 Filters.jar							image scaling (Thumbnails)
@@ -33,8 +34,8 @@ google-http-client-jackson2-1.20.0.jar				Google API Client
 google-oauth-client-1.20.0.jar						Google API Client
 guava-jdk5-13.0.jar					Dependency of Google API
 hibernate-validator-5.2.1.Final.jar Bean Validator
-httpclient-4.1.3.jar				SolrClient,added by Siyu, Dependency of Google API
-httpcore-4.1.4.jar					SolrClient,added by Siyu, Dependency of Google API
+httpclient-4.5.2.jar				SolrClient,added by Siyu, Dependency of Google API, crawler4j
+httpcore-4.4.4.jar					SolrClient,added by Siyu, Dependency of Google API, crawler4j
 httpmime-4.1.3.jar					SolrClient,added by Siyu
 jackson-core-2.1.3.jar				Dependency of Google API
 java-image-scaling-0.8.5.jar		Thumbnails
@@ -42,11 +43,13 @@ javax.servlet.jsp.jstl-1.2.1.jar	JSF Base
 javax.servlet.jsp.jstl-api-1.2.1.jar JSF Base
 jboss-logging-3.1.0.CR2.jar			Hibernate validator
 jcl-over-slf4j-1.6.4.jar			SolrClient,added by Siyu
+je-4.0.92.jar						Dependency of crawler4j
 jersey-bundle-1.14.jar				Interweb
 jersey-multipart-1.14.jar			Interweb
 json-simple-1.1.1.jar				Archive, generating json data for timeline and calendar representation
 jsoup-1.7.1.jar						Resource, remove Html from String
 jsr305-1.3.9.jar					Dependency of Google API
+lidalia-slf4j-ext-1.0.0.jar			Dependency of crawler4j
 log4j-1.2.17.jar					Logging
 log4j-over-slf4j-1.6.4.jar			SolrClient,added by Siyu
 mail-1.4.4.jar						Interweb (Jersey)
@@ -61,6 +64,9 @@ primefaces-5.2.jar					JSF Base
 ritaWN.jar							TEDWordnet, added by Trevor
 slf4j-api-1.6.4.jar					SolrClient,added by Siyu
 slf4j-jdk14-1.6.4.jar				SolrClient,added by Siyu
+tagsoup-1.2.1.jar					Dependency of crawler4j
+tika-core-1.3.jar					Dependency of crawler4j
+tika-parsers-1.13.jar				Dependency of crawler4j
 urlrewritefilter-4.0.3.jar			needed to redirect /new to /
 supportWN.jar						TEDWordnet, added by Trevor
 validation-api-1.0.0.GA.jar			required by Hibernate validator added by Philipp
