@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
@@ -23,39 +24,30 @@ public class SearchFilters implements Serializable
     private static final long serialVersionUID = 8012567994091306088L;
     final static Logger log = Logger.getLogger(SearchFilters.class);
 
+    private Long totalResultsLearnweb = null;
+    private Long totalResultsInterweb = null;
     private String stringFilters = null;
-    private MODE configMode = MODE.web;
-    private Map<FILTERS, Object> configFilters = new EnumMap<>(FILTERS.class);
-    private Map<FILTERS, List<Count>> availableResources = new HashMap<FILTERS, List<Count>>();
+    private MODE configMode = MODE.text;
     private FILTERS lastFilter = null;
     private int prevFilters = 0;
+    private Map<FILTERS, Object> configFilters = new EnumMap<>(FILTERS.class);
+    private Map<FILTERS, List<Count>> availableResources = new HashMap<FILTERS, List<Count>>();
     private boolean isFilterRemoved = false;
     private boolean canNotRequestLearnweb = false;
     private boolean canNotRequestInterweb = false;
 
     public enum MODE
     {
+	text,
 	image,
-	web,
 	video,
 	group;
-
-	public String getInterwebName()
-	{
-	    switch(this)
-	    {
-	    case web:
-		return "text";
-	    default:
-		return this.name();
-	    }
-	}
     };
 
     public enum TYPE
     {
-	image,
 	text,
+	image,
 	video,
 	pdf,
 	other;
@@ -69,11 +61,11 @@ public class SearchFilters implements Serializable
 
     public enum SERVICE
     {
-	Bing, // Not support filter by date
-	Flickr,
-	YouTube,
-	Vimeo, // Not support filter by date
-	Ipernity,
+	bing, // Not support filter by date
+	flickr,
+	youtube,
+	vimeo, // Not support filter by date
+	ipernity,
 	ted, // stored in SOLR
 	tedx, // stored in SOLR
 	loro, // stored in SOLR
@@ -86,11 +78,11 @@ public class SearchFilters implements Serializable
 	{
 	    switch(this)
 	    {
-	    case Bing:
-	    case Flickr:
-	    case YouTube:
-	    case Vimeo:
-	    case Ipernity:
+	    case bing:
+	    case flickr:
+	    case youtube:
+	    case vimeo:
+	    case ipernity:
 		return false;
 	    default:
 		return true;
@@ -100,7 +92,33 @@ public class SearchFilters implements Serializable
 	@Override
 	public String toString()
 	{
-	    return this.name();
+	    switch(this)
+	    {
+	    case bing:
+		return "Bing";
+	    case flickr:
+		return "Flickr";
+	    case youtube:
+		return "YouTube";
+	    case vimeo:
+		return "Vimeo";
+	    case ipernity:
+		return "Ipernity";
+	    case ted:
+		return "TED";
+	    case tedx:
+		return "TEDx";
+	    case loro:
+		return "LORO";
+	    case yovisto:
+		return "Youvisto";
+	    case learnweb:
+		return "LearnWeb";
+	    case archiveit:
+		return "Archive-It";
+	    default:
+		return this.name();
+	    }
 	}
     };
 
@@ -306,7 +324,7 @@ public class SearchFilters implements Serializable
 	{
 	    switch(m)
 	    {
-	    case web:
+	    case text:
 		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.collector, FILTERS.author, FILTERS.coverage, FILTERS.publisher, FILTERS.tags };
 	    case image:
 		return new FILTERS[] { FILTERS.service, FILTERS.date, FILTERS.group, FILTERS.author, FILTERS.tags, FILTERS.imageSize };
@@ -353,7 +371,7 @@ public class SearchFilters implements Serializable
 	    switch(this)
 	    {
 	    case service:
-		return normalizeServiceName(item);
+		return getServiceByName(item).toString();
 	    case group:
 		return getGroupNameById(item);
 	    default:
@@ -403,6 +421,8 @@ public class SearchFilters implements Serializable
 	availableResources.clear();
 	canNotRequestLearnweb = false;
 	canNotRequestInterweb = false;
+	totalResultsLearnweb = null;
+	totalResultsInterweb = null;
     }
 
     public void putResourceCounter(List<FacetField> ffs)
@@ -601,10 +621,36 @@ public class SearchFilters implements Serializable
 	return stringFilters;
     }
 
+    public List<FilterItem> getAvailableSources(Object current)
+    {
+	List<FilterItem> filters = new ArrayList<FilterItem>();
+
+	FILTERS fs = FILTERS.service;
+	if(availableResources.containsKey(fs))
+	{
+	    for(Count c : availableResources.get(fs))
+	    {
+		SERVICE src = getServiceByName(c.getName());
+		FilterItem fi = new FilterItem(src.toString(), c.getCount() > 0 ? c.getCount() : null, src.name(), current != null && current.equals(src));
+		filters.add(fi);
+	    }
+	}
+
+	return filters;
+    }
+
     public List<Filter> getAvailableFilters()
     {
+	FILTERS[] empty = {};
+	return this.getAvailableFilters(empty);
+    }
+
+    public List<Filter> getAvailableFilters(FILTERS[] except)
+    {
 	List<Filter> list = new ArrayList<Filter>();
-	for(FILTERS fs : FILTERS.getFilterByMode(configMode))
+	FILTERS[] filters = ArrayUtils.removeElements(FILTERS.getFilterByMode(configMode), except);
+
+	for(FILTERS fs : filters)
 	{
 	    boolean containsFilter = configFilters.containsKey(fs);
 	    Filter nf = new Filter(containsFilter ? fs.getItemName(configFilters.get(fs).toString()) : fs.toString(), fs.getLocaleAnyString(), changeFilterInUrl(fs, null), containsFilter);
@@ -616,7 +662,7 @@ public class SearchFilters implements Serializable
 		{
 		    for(Count c : availableResources.get(fs))
 		    {
-			FilterItem fi = new FilterItem(fs.getItemName(c.getName()), c.getCount() > 0 ? c.getCount() : null, changeFilterInUrl(fs, c.getName()), containsFilter && configFilters.get(fs).toString().equals(c.getName()));
+			FilterItem fi = new FilterItem(fs.getItemName(c.getName()), c.getCount() > 0 ? c.getCount() : null, changeFilterInUrl(fs, c.getName().toLowerCase()), containsFilter && configFilters.get(fs).toString().equals(c.getName()));
 			nf.addFilterItem(fi);
 		    }
 		}
@@ -649,7 +695,7 @@ public class SearchFilters implements Serializable
 		}
 		break;
 	    case date:
-		if(!configFilters.containsKey(FILTERS.service) || !configFilters.get(FILTERS.service).equals(SERVICE.Bing) || !configFilters.get(FILTERS.service).equals(SERVICE.Vimeo))
+		if(!configFilters.containsKey(FILTERS.service) || !configFilters.get(FILTERS.service).equals(SERVICE.bing) || !configFilters.get(FILTERS.service).equals(SERVICE.vimeo))
 		{
 		    for(DATE d : DATE.values())
 		    {
@@ -715,6 +761,22 @@ public class SearchFilters implements Serializable
 	return list;
     }
 
+    public Long getTotalResources(FILTERS fs, String fn)
+    {
+	if(availableResources.containsKey(fs))
+	{
+	    for(Count c : availableResources.get(fs))
+	    {
+		if(c.getName().equalsIgnoreCase(fn))
+		{
+		    return c.getCount();
+		}
+	    }
+	}
+
+	return 0L;
+    }
+
     /**
      * Check filters like image width and video duration
      * 
@@ -764,6 +826,15 @@ public class SearchFilters implements Serializable
 	if(configFilters.containsKey(FILTERS.service))
 	{
 	    return configFilters.get(FILTERS.service).toString();
+	}
+	return null;
+    }
+
+    public String getServiceFilterName()
+    {
+	if(configFilters.containsKey(FILTERS.service))
+	{
+	    return ((SERVICE) configFilters.get(FILTERS.service)).name();
 	}
 	return null;
     }
@@ -907,38 +978,44 @@ public class SearchFilters implements Serializable
 	}
     }
 
-    public static String normalizeServiceName(String name)
+    public static SERVICE getServiceByName(String name)
     {
-	if(name == null || name.isEmpty())
+	return SERVICE.valueOf(name.toLowerCase().replace("-", ""));
+    }
+
+    public Long getTotalResults()
+    {
+	Long total = 0L;
+	if(totalResultsInterweb != null)
 	{
-	    return null;
+	    total += totalResultsInterweb;
 	}
-	else if(name.equals("learnweb"))
+	if(totalResultsLearnweb != null)
 	{
-	    return "LearnWeb";
-	}
-	else if(name.equals("archiveit"))
-	{
-	    return "Archive-It";
-	}
-	else if(name.equals("loro"))
-	{
-	    return "Loro";
-	}
-	else if(name.equals("ted"))
-	{
-	    return "TED";
-	}
-	else if(name.equals("tedx"))
-	{
-	    return "TEDx";
-	}
-	else if(name.equals("yovisto"))
-	{
-	    return "Yovisto";
+	    total += totalResultsLearnweb;
 	}
 
-	return name;
+	return total;
+    }
+
+    public Long getTotalResultsLearnweb()
+    {
+	return totalResultsLearnweb;
+    }
+
+    public void setTotalResultsLearnweb(Long totalResultsLearnweb)
+    {
+	this.totalResultsLearnweb = totalResultsLearnweb;
+    }
+
+    public Long getTotalResultsInterweb()
+    {
+	return totalResultsInterweb;
+    }
+
+    public void setTotalResultsInterweb(Long totalResultsInterweb)
+    {
+	this.totalResultsInterweb = totalResultsInterweb;
     }
 
     public static class Filter
@@ -961,6 +1038,11 @@ public class SearchFilters implements Serializable
 	public String getName()
 	{
 	    return name;
+	}
+
+	public void setName(String name)
+	{
+	    this.name = name;
 	}
 
 	public String getAnyText()
@@ -988,13 +1070,23 @@ public class SearchFilters implements Serializable
 	    return filterItems;
 	}
 
+	public void setItems(List<FilterItem> items)
+	{
+	    this.filterItems = items;
+	}
+
 	public boolean isActive()
 	{
 	    return active;
 	}
+
+	public void setActive(boolean active)
+	{
+	    this.active = active;
+	}
     }
 
-    public static class FilterItem
+    public static class FilterItem implements Comparable<FilterItem>
     {
 	private String name;
 	private Long counter;
@@ -1009,17 +1101,27 @@ public class SearchFilters implements Serializable
 	    this.active = active;
 	}
 
+	@Override
+	public int compareTo(FilterItem another)
+	{
+	    if(this.getCounter() > another.getCounter())
+	    {
+		return -1;
+	    }
+	    else
+	    {
+		return 1;
+	    }
+	}
+
 	public String getName()
 	{
 	    return name;
 	}
 
-	public String getCounter()
+	public Long getCounter()
 	{
-	    if(counter == null)
-		return null;
-	    else
-		return String.format("%,d", counter);
+	    return counter;
 	}
 
 	public String getUrl()
@@ -1030,6 +1132,11 @@ public class SearchFilters implements Serializable
 	public boolean isActive()
 	{
 	    return active;
+	}
+
+	public void setActive(boolean active)
+	{
+	    this.active = active;
 	}
     }
 }

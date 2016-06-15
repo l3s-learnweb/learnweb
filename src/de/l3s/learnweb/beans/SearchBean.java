@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -17,7 +18,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.SessionScoped;
+import javax.faces.bean.ViewScoped;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
@@ -35,9 +36,11 @@ import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.Search;
+import de.l3s.learnweb.Search.GroupedResources;
 import de.l3s.learnweb.SearchFilters;
 import de.l3s.learnweb.SearchFilters.FILTERS;
 import de.l3s.learnweb.SearchFilters.Filter;
+import de.l3s.learnweb.SearchFilters.FilterItem;
 import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.SearchFilters.SERVICE;
 import de.l3s.learnweb.User;
@@ -47,7 +50,7 @@ import de.l3s.searchlogclient.Actions.ACTION;
 import de.l3s.searchlogclient.SearchLogClient;
 
 @ManagedBean
-@SessionScoped
+@ViewScoped
 public class SearchBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 8540469716342051138L;
@@ -58,12 +61,16 @@ public class SearchBean extends ApplicationBean implements Serializable
     // Values from views stored here
     private String query = "";
     private String queryMode;
+    private String queryService;
     private String queryFilters;
     private int page;
 
     private Search search;
     private InterWeb interweb;
     private SearchFilters searchFilters;
+
+    private Search metaSearch;
+    private SearchFilters metaFilters;
 
     private Resource selectedResource;
     private TreeNode selectedNode;
@@ -73,6 +80,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     private FactSheet graph = new FactSheet();
     private Search images;
     private MODE searchMode;
+    private SERVICE searchService;
     private String view = "float"; // float, grid or list
 
     private boolean graphLoaded = false;
@@ -90,14 +98,19 @@ public class SearchBean extends ApplicationBean implements Serializable
     private int resultsetId; //For getting the result set ID of the past query posted for comparison of resultsets
     private int resultsetViewId;
 
+    private List<GroupedResources> resourcesGroupedBySource = null;
+    private List<FilterItem> availableSources = null;
+
     public SearchBean()
     {
 	interweb = getLearnweb().getInterweb();
 	searchMode = MODE.image; // default search mode
-	queryMode = getPreference("SEARCH_ACTION", "web");
+	queryMode = getPreference("SEARCH_ACTION", "text");
 
 	searchFilters = new SearchFilters();
 	searchFilters.setLanguageFilter(UtilBean.getUserBean().getLocaleCode());
+
+	metaFilters = new SearchFilters();
 
 	logEnabled = false;
 	historyResources = new HashSet<String>();
@@ -115,7 +128,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    String modeTemp = queryMode;
 	    queryMode = null;
 
-	    if(modeTemp.equals("web"))
+	    if(modeTemp.equals("text") || modeTemp.equals("web"))
 		onSearchText();
 	    else if(modeTemp.equals("image"))
 		onSearchImage();
@@ -150,7 +163,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public String onSearchText()
     {
-	searchMode = MODE.web;
+	searchMode = MODE.text;
 	setView("list");
 	return onSearch();
     }
@@ -170,13 +183,14 @@ public class SearchBean extends ApplicationBean implements Serializable
 	}
 	*/
 	// search if a query is given and (it was not searched before or the query or searchmode has been changed)
-	if(!isEmpty(query) && (null == search || !query.equals(search.getQuery()) || searchMode != search.getMode() || !StringUtils.equals(queryFilters, searchFilters.getFiltersString())))
+	if(!isEmpty(query) && (null == search || !query.equals(search.getQuery()) || searchMode != search.getMode() || !queryService.equals(searchService.name()) || !StringUtils.equals(queryFilters, searchFilters.getFiltersString())))
 	{
-
 	    if(null != search)
 		search.stop();
 
 	    setPreference("search_action", searchMode.name());
+
+	    setSearchService(queryService);
 
 	    historyResourcesRetrieved = false;
 
@@ -207,10 +221,14 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    log.debug("Search log client braucht " + (System.currentTimeMillis() - start) + "ms");
 
 	    page = 1;
-	    searchFilters.setFiltersFromString(queryFilters);
 	    search = new Search(interweb, query, searchFilters, getUser());
 	    search.setMode(searchMode);
+	    searchFilters.setFiltersFromString(queryFilters);
+	    searchFilters.setFilter(FILTERS.service, searchService);
+
 	    LinkedList<ResourceDecorator> res = search.getResourcesByPage(1);
+	    resourcesGroupedBySource = null;
+	    availableSources = null;
 
 	    queryFilters = null;
 
@@ -521,7 +539,49 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public List<Filter> getAvailableFilters()
     {
-	return searchFilters.getAvailableFilters();
+	FILTERS[] except = { FILTERS.service };
+	return searchFilters.getAvailableFilters(except);
+    }
+
+    public List<FilterItem> getAvailableSources()
+    {
+	if(availableSources == null || availableSources.size() == 0)
+	{
+	    availableSources = metaFilters.getAvailableSources(searchService);
+	    Collections.sort(availableSources);
+	}
+	return availableSources;
+    }
+
+    public SERVICE getSearchService()
+    {
+	return searchService;
+    }
+
+    public void setSearchService(String service)
+    {
+	try
+	{
+	    if(service == null)
+		throw new IllegalArgumentException();
+	    searchService = SERVICE.valueOf(service);
+	}
+	catch(Exception e)
+	{
+	    if(searchMode == MODE.text)
+		searchService = SERVICE.valueOf(getPreference("SEARCH_SERVICE_TEXT", "bing"));
+	    else if(searchMode == MODE.image)
+		searchService = SERVICE.valueOf(getPreference("SEARCH_SERVICE_IMAGE", "flickr"));
+	    else if(searchMode == MODE.video)
+		searchService = SERVICE.valueOf(getPreference("SEARCH_SERVICE_VIDEO", "youtube"));
+	}
+
+	queryService = searchService.name();
+    }
+
+    public Long getTotalFromCurrentService()
+    {
+	return searchFilters.getTotalResults();
     }
 
     public String getSearchFilters()
@@ -564,6 +624,19 @@ public class SearchBean extends ApplicationBean implements Serializable
 	if(queryMode != null && !queryMode.isEmpty())
 	{
 	    this.queryMode = queryMode;
+	}
+    }
+
+    public String getQueryService()
+    {
+	return queryService;
+    }
+
+    public void setQueryService(String queryService)
+    {
+	if(queryService != null && !queryService.isEmpty())
+	{
+	    this.queryService = queryService;
 	}
     }
 
@@ -783,7 +856,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    SearchFilters filter = new SearchFilters();
 	    images = new Search(getLearnweb().getInterweb(), label, filter, getUser());
 	    images.setMode(MODE.image);
-	    filter.setFilter(FILTERS.service, SERVICE.Bing);
+	    filter.setFilter(FILTERS.service, SERVICE.bing);
 
 	    //images.setService(SERVICE.Ipernity, SERVICE.Flickr);
 	    images.setResultsPerService(10);
@@ -815,4 +888,19 @@ public class SearchBean extends ApplicationBean implements Serializable
 	return df.format(waybackDf.parse(timestamp));
     }
 
+    public List<GroupedResources> getResourcesGroupedBySource(Long limit)
+    {
+	if(resourcesGroupedBySource == null || resourcesGroupedBySource.isEmpty())
+	{
+	    metaSearch = new Search(interweb, query, metaFilters, getUser());
+	    metaSearch.setMode(searchMode);
+	    metaSearch.setResultsPerService(20);
+	    metaSearch.setConfigGroupResultsByField("location");
+	    metaSearch.setConfigResultsPerGroup(10);
+	    metaSearch.getResourcesByPage(2);
+	    resourcesGroupedBySource = metaSearch.getResourcesGroupedBySource(limit.intValue());
+	    Collections.sort(resourcesGroupedBySource);
+	}
+	return resourcesGroupedBySource;
+    }
 }

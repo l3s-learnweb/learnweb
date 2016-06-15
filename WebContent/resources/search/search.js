@@ -7,6 +7,9 @@ var gridItemWidth = 190;
 var tabActiveindex = 0;
 var loadAheadPx = 0;
 
+var step = 200;
+var scrolling = false;
+
 // jquery extension: uncomment function 
 (function($) {
 	$.fn.uncomment = function() {
@@ -27,6 +30,48 @@ var loadAheadPx = 0;
 		});
 	};
 })(jQuery);
+
+function setContentPadding()
+{		
+	var height = $("#header").height();
+	$("#content").css('padding-top', height + 'px');
+	
+	$("#scrollLeft").bind("click", function(event) {
+	    event.preventDefault();
+	    $(".group-menu-container").animate({
+	        scrollLeft: "-=" + step + "px"
+	    });
+	}).bind("mouseover", function(event) {
+	    scrolling = true;
+	    scrollContent("right");
+	}).bind("mouseout", function(event) {
+	    scrolling = false;
+	});
+
+
+	$("#scrollRight").bind("click", function(event) {
+	    event.preventDefault();
+	    $(".group-menu-container").animate({
+	        scrollLeft: "+=" + step + "px"
+	    });
+	}).bind("mouseover", function(event) {
+	    scrolling = true;
+	    scrollContent("down");
+	}).bind("mouseout", function(event) {
+	    scrolling = false;
+	});
+}
+
+function scrollContent(direction) {
+    var amount = (direction === "right" ? "-=1px" : "+=1px");
+    $(".group-menu-container").animate({
+        scrollLeft: amount
+    }, 1, function() {
+        if (scrolling) {
+            scrollContent(direction);
+        }
+    });
+}
 
 function prepareResources(resources)
 {

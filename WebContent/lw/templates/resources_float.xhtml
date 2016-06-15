@@ -9,8 +9,8 @@
 
 	<ui:repeat var="res" value="#{resources}" >
 		<div class="resource" id="resource_${res.tempId}">
-			<h:panelGroup styleClass="#{res.newResource ? 'float_newResource':'oldResource'}"> 
-				<img src="${res.thumbnail2b.url}" height="${res.thumbnail2b.height}" width="${res.thumbnail2b.width}" class="smallImage source_#{res.source.toLowerCase()}" />
+			<h:panelGroup styleClass="#{res.newResource ? 'float_newResource' : 'oldResource'}"> 
+				<img src="${res.thumbnail2b.url}" height="${res.thumbnail2b.height}" width="${res.thumbnail2b.width}" class="smallImage" />
 			</h:panelGroup>
 			<div class="preview" style="max-width:${res.thumbnail2.width>160? res.thumbnail2.width:180 }px;">
 				<img src="${res.thumbnail2.url}" height="${res.thumbnail2.height}" width="${res.thumbnail2.width}" class="mediumImage" />

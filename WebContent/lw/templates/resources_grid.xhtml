@@ -9,7 +9,7 @@
 
 	<ui:repeat var="res" value="#{resources}" >
 		<div class="resource" id="resource_${res.tempId}">
-			<h:panelGroup styleClass="#{res.newResource ? 'grid_newResource':'oldResource'}">
+			<h:panelGroup styleClass="#{res.newResource ? 'grid_newResource' : 'oldResource'}">
 				<div class="border">
 					<div class="stretchy-wrapper">
 						<div class="smallImage" style="background-image:url(${res.thumbnail2.url});">

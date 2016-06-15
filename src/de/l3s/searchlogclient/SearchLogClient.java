@@ -415,7 +415,7 @@ public class SearchLogClient
 	    WebResource web = client.resource(baseURL + resultsetLogURL);
 	    Resource resourceSend;
 	    //creating a new resource type for the web service
-	    if(mode != MODE.web)
+	    if(mode != MODE.text)
 		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
 			resource.getThumbnail2().getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(),
 			resource.getResource().getThumbnail4().getUrl(), resultsetId, resource.getTempId());
@@ -450,7 +450,7 @@ public class SearchLogClient
 	    resourceRank++;
 	    Resource resourceSend;
 	    //creating a new resource type for the web service
-	    if(mode != MODE.web)
+	    if(mode != MODE.text)
 		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
 			resource.getThumbnail2().getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(),
 			resource.getResource().getThumbnail4().getUrl(), resultsetId, resource.getTempId());
@@ -497,7 +497,7 @@ public class SearchLogClient
 		resourceRank++;
 		//creating a new resource type for the web service
 		Resource resourceSend;
-		if(mode != MODE.web)
+		if(mode != MODE.text)
 		    resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
 			    resource.getThumbnail2().getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(),
 			    resource.getResource().getThumbnail4().getUrl(), resultsetId, resource.getTempId());

@@ -5,6 +5,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -19,6 +20,7 @@ import de.l3s.interwebj.InterWeb;
 import de.l3s.interwebj.SearchQuery;
 import de.l3s.learnweb.SearchFilters.FILTERS;
 import de.l3s.learnweb.SearchFilters.MODE;
+import de.l3s.learnweb.SearchFilters.SERVICE;
 import de.l3s.learnweb.solrClient.SolrSearch;
 import de.l3s.util.StringHelper;
 
@@ -33,6 +35,8 @@ public class Search implements Serializable
     private String query;
     private MODE configMode;
     private Integer configResultsPerService = 8;
+    private String configGroupResultsByField = null;
+    private Integer configResultsPerGroup = 2;
 
     // all resources
     private LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
@@ -145,7 +149,7 @@ public class Search implements Serializable
 		this.solrSearch.setFacetQueries(searchFilters.getFacetQueries());
 	}
 
-	this.solrSearch.setFilterType(configMode.name());
+	this.solrSearch.setFilterType(configMode == MODE.text ? "web" : configMode.name());
 	if(searchFilters.getServiceFilter() != null)
 	{
 	    this.solrSearch.setFilterLocation(searchFilters.getServiceFilter());
@@ -154,6 +158,12 @@ public class Search implements Serializable
 	else
 	{
 	    this.solrSearch.setResultsPerPage(configResultsPerService);
+	}
+
+	if(this.configGroupResultsByField != null)
+	{
+	    this.solrSearch.setGroupField(this.configGroupResultsByField);
+	    this.solrSearch.setResultsPerGroup(this.configResultsPerGroup);
 	}
 
 	if(searchFilters.getDateFromFilterAsString() != null)
@@ -186,6 +196,8 @@ public class Search implements Serializable
 	    {
 		searchFilters.putResourceCounter(solrSearch.getFacetQueries());
 	    }
+
+	    searchFilters.setTotalResultsLearnweb(solrSearch.getTotalResultCount());
 	}
 
 	if(learnwebResources.size() == 0)
@@ -239,21 +251,11 @@ public class Search implements Serializable
 
     private LinkedList<ResourceDecorator> getInterwebResults(int page) throws IOException, IllegalResponseException
     {
-	// TODO: If have problems implemented it here (I don't understand why we do it)
-	/* do // we have loop here when stopped = true
-	{
-		newResources.addAll(getInterwebResults(page + interwebPageOffset));
-		if(newResources.size() > 0 || !hasMoreInterwebResults)
-			break;
-		interwebPageOffset++;
-	}
-	while(true); */
-
 	long start = System.currentTimeMillis();
 
 	// Setup filters
 	TreeMap<String, String> params = new TreeMap<String, String>();
-	params.put("media_types", configMode.getInterwebName());
+	params.put("media_types", configMode.name());
 	params.put("page", Integer.toString(page));
 	params.put("timeout", "50");
 
@@ -264,7 +266,7 @@ public class Search implements Serializable
 	}
 	else
 	{
-	    if(configMode == MODE.web)
+	    if(configMode == MODE.text)
 	    {
 		params.put("services", "Bing");
 	    }
@@ -298,6 +300,7 @@ public class Search implements Serializable
 	if(page == 1)
 	{
 	    searchFilters.putResourceCounter(FILTERS.service, interwebResponse.getResultCountPerService(), true);
+	    searchFilters.setTotalResultsInterweb(interwebResponse.getTotalResultCount());
 	}
 
 	if(interwebResults.size() == 0)
@@ -368,6 +371,26 @@ public class Search implements Serializable
 	return this.configResultsPerService;
     }
 
+    public String getConfigGroupResultsByField()
+    {
+	return configGroupResultsByField;
+    }
+
+    public void setConfigGroupResultsByField(String configGroupResultsByField)
+    {
+	this.configGroupResultsByField = configGroupResultsByField;
+    }
+
+    public Integer getConfigResultsPerGroup()
+    {
+	return configResultsPerGroup;
+    }
+
+    public void setConfigResultsPerGroup(Integer configResultsPerGroup)
+    {
+	this.configResultsPerGroup = configResultsPerGroup;
+    }
+
     /**
      * 
      * @return All resources that have been loaded
@@ -375,6 +398,37 @@ public class Search implements Serializable
     public LinkedList<ResourceDecorator> getResources()
     {
 	return resources;
+    }
+
+    /**
+     * @return All resources that have been loaded
+     */
+    public List<GroupedResources> getResourcesGroupedBySource(Integer limit)
+    {
+	List<GroupedResources> groupedResources = new ArrayList<GroupedResources>();
+
+	for(ResourceDecorator res : resources)
+	{
+	    GroupedResources gr = new GroupedResources();
+	    gr.setGroupName(res.getLocation());
+
+	    if(groupedResources.contains(gr))
+	    {
+		gr = groupedResources.get(groupedResources.indexOf(gr));
+		if(gr.getResources().size() < limit)
+		{
+		    gr.addResource(res);
+		}
+	    }
+	    else
+	    {
+		gr.setTotalResources(searchFilters.getTotalResources(FILTERS.service, gr.getGroupAlias()).intValue());
+		gr.addResource(res);
+		groupedResources.add(gr);
+	    }
+	}
+
+	return groupedResources;
     }
 
     /**
@@ -416,5 +470,95 @@ public class Search implements Serializable
     public void stop()
     {
 	this.stopped = true;
+    }
+
+    public class GroupedResources implements Comparable<GroupedResources>
+    {
+	String groupName;
+
+	String groupAlias;
+
+	Integer totalResources;
+
+	LinkedList<ResourceDecorator> resources;
+
+	@Override
+	public boolean equals(Object o)
+	{
+	    if(o == null)
+		return false;
+	    if(o == this)
+		return true;
+
+	    return this.groupAlias.equals(((GroupedResources) o).groupAlias);
+	}
+
+	@Override
+	public int compareTo(GroupedResources another)
+	{
+	    if(this.getTotalResources() > another.getTotalResources())
+	    {
+		return -1;
+	    }
+	    else
+	    {
+		return 1;
+	    }
+	}
+
+	public String getGroupName()
+	{
+	    return groupName;
+	}
+
+	public void setGroupName(String groupName)
+	{
+	    try
+	    {
+		SERVICE src = SearchFilters.getServiceByName(groupName);
+		this.groupAlias = src.name();
+		this.groupName = src.toString();
+	    }
+	    catch(IllegalArgumentException e)
+	    {
+		this.groupAlias = groupName.toLowerCase();
+		this.groupName = groupName;
+	    }
+	}
+
+	public String getGroupAlias()
+	{
+	    return groupAlias;
+	}
+
+	public Integer getTotalResources()
+	{
+	    return totalResources;
+	}
+
+	public void setTotalResources(Integer totalResources)
+	{
+	    this.totalResources = totalResources;
+	}
+
+	public LinkedList<ResourceDecorator> getResources()
+	{
+	    return resources;
+	}
+
+	public void setResources(LinkedList<ResourceDecorator> resources)
+	{
+	    this.resources = resources;
+	}
+
+	public void addResource(ResourceDecorator resources)
+	{
+	    if(this.resources == null)
+	    {
+		this.resources = new LinkedList<ResourceDecorator>();
+	    }
+
+	    this.resources.add(resources);
+	}
     }
 }

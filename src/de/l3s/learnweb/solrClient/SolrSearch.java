@@ -34,6 +34,7 @@ public class SolrSearch implements Serializable
     private SolrQuery solrQuery;
 
     private Integer resultsPerPage = 8;
+    private Integer resultsPerGroup = 2;
     private String facetFields[] = null;
     private String facetQueries[] = null;
     private String filterLanguage = ""; // for example en_US
@@ -51,6 +52,7 @@ public class SolrSearch implements Serializable
     private String filterPath = "";
     private List<Integer> filterGroupIds;
     private String sorting;
+    private String groupField = "";
 
     protected long totalResults = -1;
     private String filterGroupStr = "";
@@ -86,6 +88,11 @@ public class SolrSearch implements Serializable
     public void setResultsPerPage(Integer configResultsPerPage)
     {
 	this.resultsPerPage = configResultsPerPage;
+    }
+
+    public void setResultsPerGroup(Integer resultsPerGroup)
+    {
+	this.resultsPerGroup = resultsPerGroup;
     }
 
     public void setFacetFields(String... facetFields)
@@ -238,6 +245,11 @@ public class SolrSearch implements Serializable
 	}
     }
 
+    public void setGroupField(String groupField)
+    {
+	this.groupField = groupField;
+    }
+
     public void clearAllFilters()
     {
 	this.facetFields = null;
@@ -380,6 +392,14 @@ public class SolrSearch implements Serializable
 		    filterGroupStr += " OR groups : " + groupId.toString();
 	    }
 	    solrQuery.addFilterQuery(filterGroupStr);
+	}
+
+	if(0 != groupField.length())
+	{
+	    solrQuery.set("group", "true");
+	    solrQuery.set("group.field", groupField);
+	    solrQuery.set("group.limit", this.resultsPerGroup);
+	    solrQuery.set("group.main", "true");
 	}
 
 	if(null != sorting) // TODO implement 
