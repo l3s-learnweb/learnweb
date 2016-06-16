@@ -91,8 +91,8 @@ public class SearchBean extends ApplicationBean implements Serializable
     private Date startTime; //To log when viewing time is started for a resource
     private Date endTime; //To log when viewing time is ended for a resource
     private transient SearchLogClient searchLogClient;
-    private long batchrsStartTime; //To keep track of the start time for batch update of resultSet
-    private long batchrsTimeout; //To keep track of timeout for batch update of resultSet
+    // private long batchrsStartTime; //To keep track of the start time for batch update of resultSet
+    // private long batchrsTimeout; //To keep track of timeout for batch update of resultSet
     boolean historyResourcesRetrieved; //To keep track if the previous resultSet resources have already been retrieved 
     HashSet<String> historyResources; //Stores resource URLs from a previous resultSet
     private int resultsetId; //For getting the result set ID of the past query posted for comparison of resultsets
@@ -216,7 +216,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 		log.debug(e.getMessage());
 	    }
 
-	    batchrsStartTime = new Date().getTime();
+	    // batchrsStartTime = new Date().getTime();
 
 	    log.debug("Search log client braucht " + (System.currentTimeMillis() - start) + "ms");
 

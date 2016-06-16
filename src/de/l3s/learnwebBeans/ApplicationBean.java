@@ -216,7 +216,7 @@ public class ApplicationBean
     }
 
     /**
-     * returns defaultValue if no correspondig value is found for the key
+     * returns defaultValue if no corresponding value is found for the key
      * 
      * @param key
      * @param defaultValue
