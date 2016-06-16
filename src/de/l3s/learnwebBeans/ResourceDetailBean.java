@@ -293,7 +293,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	try
 	{
 	    Comment comment = clickedResource.addComment(newComment, getUser());
-	    log(Action.commenting_resource, clickedResource.getId(), comment.getId() + "");
+	    log(Action.commenting_resource, clickedResource.getGroupId(), clickedResource.getId(), comment.getId() + "");
 	    addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
 	    newComment = "";
 	}

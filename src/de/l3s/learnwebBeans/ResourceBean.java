@@ -65,7 +65,7 @@ public class ResourceBean extends ApplicationBean implements Serializable
 	    		org = getLearnweb().getOrganisationManager().getOrganisationByTitle("Public");
 	    	    else
 	    		org = user.getOrganisation();
-
+	    
 	    	    isStarRatingHidden = org.getOption(Option.Resource_Hide_Star_rating);
 	    	    isThumbRatingHidden = org.getOption(Option.Resource_Hide_Thumb_rating);
 	    	    */
@@ -178,7 +178,7 @@ public class ResourceBean extends ApplicationBean implements Serializable
 	{
 	    resource.addTag(tagName, getUser());
 	    addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
-	    log(Action.tagging_resource, resource.getId(), tagName);
+	    log(Action.tagging_resource, resource.getGroupId(), resource.getId(), tagName);
 	    tagName = ""; // clear tag input field 
 	}
 	catch(Exception e)
@@ -205,7 +205,7 @@ public class ResourceBean extends ApplicationBean implements Serializable
 	try
 	{
 	    Comment comment = resource.addComment(commentText, getUser());
-	    log(Action.commenting_resource, resource.getId(), comment.getId() + "");
+	    log(Action.commenting_resource, resource.getGroupId(), resource.getId(), comment.getId() + "");
 	    addGrowl(FacesMessage.SEVERITY_INFO, "comment_added");
 	    commentText = "";
 	}

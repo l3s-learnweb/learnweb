@@ -140,7 +140,7 @@
 								<span class="trimmed-text">#{searchBean.searchService.toString()}</span>
 								<span class="arrow"></span>
 							</span>
-							<h:panelGroup styleClass="filter-sub-bar" layout="block" rendered="#{searchBean.availableSources != null and searchBean.availableSources.size() > 0}">
+							<h:panelGroup styleClass="filter-sub-bar" layout="block" rendered="#{not empty searchBean.availableSources}">
 								<ui:repeat value="#{searchBean.availableSources}" var="item">
 									<h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">										
 										<h:outputText value="#{item.name}"/>
@@ -203,7 +203,7 @@
 	</ui:define>
 				
 	<ui:define name="center_layout">
-		<h:outputStylesheet library="search" name="search.css"  />		
+		<h:outputStylesheet library="search" name="search2.css"  />		
 		<h:outputScript library="search" name="search.js" target="head"/>
 		<link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet"/>
 		<script src="http://vjs.zencdn.net/4.12/video.js"></script>
