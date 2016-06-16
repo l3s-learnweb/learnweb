@@ -111,7 +111,7 @@ public class SearchFilters implements Serializable
 	    case loro:
 		return "LORO";
 	    case yovisto:
-		return "Youvisto";
+		return "Yovisto";
 	    case learnweb:
 		return "LearnWeb";
 	    case archiveit:
