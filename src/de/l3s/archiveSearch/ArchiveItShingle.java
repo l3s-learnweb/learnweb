@@ -6,6 +6,7 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
@@ -14,6 +15,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -45,7 +47,7 @@ public class ArchiveItShingle
     private final Set<String> intersect = new HashSet<String>();
     private final Set<String> union = new HashSet<String>();
 
-    private Set<String> computeShingles(List<String> wordList)
+    public Set<String> computeShingles(List<String> wordList)
     {
 	Set<String> setOfShingles = new HashSet<String>();
 	List<String> shingleList = new LinkedList<String>();
@@ -150,34 +152,133 @@ public class ArchiveItShingle
 	return setOfNearUniqueArchivesPair;
     }
 
+    /*
+     * identifies the duplicates based on html text and tags. Updates
+     * the shingle_id in the lw_resource_archiveurl table to identify 
+     * all the duplicate entires */
+
+    public void getDublicateShingles(int resource_id, int size) throws SQLException
+    {
+	List<Integer> dublicateShingleId = new ArrayList<Integer>();
+	Connection conn = Learnweb.getInstance().getConnection();
+	PreparedStatement ps = conn.prepareStatement("SELECT `shingle_id` FROM `lw_resource_archive_shingles` natural join `lw_resource_archiveurl` where `resource_id`=? group by `htmltext`, `htmltags` ORDER BY `lw_resource_archive_shingles`.`shingle_id` ASC");
+	ps.setInt(1, resource_id);
+	ResultSet rs = ps.executeQuery();
+	while(rs.next())
+	    dublicateShingleId.add(rs.getInt("shingle_id"));
+	dublicateShingleId.add(dublicateShingleId.get(0) + size - 1);
+	size = dublicateShingleId.get(dublicateShingleId.size() - 1);
+	int j = 0;
+	for(int i = dublicateShingleId.get(0); i <= size; i++)
+	{
+	    if(dublicateShingleId.contains(i))
+	    {
+		j++;
+	    }
+	    else
+	    {
+		ps = conn.prepareStatement("UPDATE `lw_resource_archiveurl` SET `shingle_id`=? where `resource_id`=? and `shingle_id`=?");
+		ps.setInt(1, dublicateShingleId.get(j - 1));
+		ps.setInt(2, resource_id);
+		ps.setInt(3, i);
+		ps.execute();
+	    }
+	}
+	dublicateShingleId.clear();
+	ps.close();
+    }
+
+    public void generateThumbnails(int resource_id) throws IOException, SQLException
+    {
+
+	ResourcePreviewMaker resourcePreviewMaker = Learnweb.getInstance().getResourcePreviewMaker();
+	Connection conn = Learnweb.getInstance().getConnection();
+	PreparedStatement ps = conn.prepareStatement("SELECT `archive_url`,`httpstatuscode` FROM `lw_resource_archiveurl` where `resource_id`=? group by `shingle_id`");
+	ps.setInt(1, resource_id);
+	ResultSet rs = ps.executeQuery();
+	while(rs.next())
+	{
+	    System.out.println(rs.getInt("httpstatuscode") + "  " + rs.getString("archive_url"));
+	    if(rs.getInt("httpstatuscode") == 200)
+		resourcePreviewMaker.processArchiveWebsite(resource_id, rs.getString("archive_url"));
+
+	}
+	ps.close();
+    }
+
+    public void computeUniqueArchivesByPair(HashMap<String, String> hashmap, int resource_id) throws SQLException
+    {
+	Set<String> setOfNearUniqueArchivesPair = new HashSet<String>();
+	ArrayList<String> values = new ArrayList<String>(hashmap.values());
+	int d = values.size();
+	int t = 0;
+	for(int i = 0; i < d - 1; i++)
+	{
+	    if(values.get(i).equals(values.get(i + 1)))
+	    {
+		t++;
+		setOfNearUniqueArchivesPair.add(values.get(i));
+	    }
+	    else
+	    {
+
+	    }
+	}
+	System.out.println(resource_id + " Amount of duplicates:" + t + " Total archive versions:" + d + " Percentage dublicates:" + (float) t * 100 / d);
+    }
+
     /*Calculating the unique achives by comparing each other by 
      * their order of insertion, starting from oldest archive to 
      * newest one.
      * 
      * */
-    public Set<String> computeUniqueArchivesBySequence(HashMap<String, Set<String>> hashmap, List<ArchiveUrl> listOfArchives)
+    public Set<String> computeUniqueArchivesBySequence(HashMap<String, Set<String>> hashmaptext, HashMap<String, Set<String>> hashmapframe, List<ArchiveUrl> listOfArchives, int resource_id, float frame, float text) throws SQLException
     {
-	Set<String> setOfNearUniqueArchivesSequence = new HashSet<String>();
-	int i = 0;
-	float d = 0;
+	Set<String> setOfNearUniqueArchivesSequence = new LinkedHashSet<String>();
+	Connection conn = Learnweb.getInstance().getConnection();
+	int i = 0, j = 0;
+	float t = 0, f = 0;
 	String url = null;
-	String key = listOfArchives.get(0).getArchiveUrl();
+	String key = listOfArchives.get(j).getArchiveUrl();
 	for(i = 1; i < listOfArchives.size(); i++)
 	{
 	    url = listOfArchives.get(i).getArchiveUrl();
 	    if(key != url && !setOfNearUniqueArchivesSequence.contains(url))
 	    {
-		d = computeIndex(hashmap.get(url), hashmap.get(key));
-		System.out.println(d + " " + key + " " + url);
-		if(d <= 0.7)
+		Timestamp sqlDate1 = new Timestamp(listOfArchives.get(j).getTimestamp().getTime());
+		Timestamp sqlDate2 = new Timestamp(listOfArchives.get(i).getTimestamp().getTime());
+		PreparedStatement ps = conn.prepareStatement("SELECT `jaccard_text` ,`jaccard_frame` FROM `lw_resource_archive_jaccardindex` WHERE `resource_id`=? AND `timestamp1`=? AND `timestamp2`=?;");
+		ps.setInt(1, resource_id);
+		ps.setTimestamp(2, sqlDate1);
+		ps.setTimestamp(3, sqlDate2);
+		ResultSet rs = ps.executeQuery();
+		if(rs.next())
+		{
+		    t = rs.getFloat("jaccard_text");
+		    f = rs.getFloat("jaccard_frame");
+		}
+		else
+		{
+		    t = computeIndex(hashmaptext.get(url), hashmaptext.get(key));
+		    f = computeIndex(hashmapframe.get(url), hashmapframe.get(key));
+		    ps = conn.prepareStatement("UPDATE `lw_resource_archive_jaccardindex` SET `jaccard_text`=? , `jaccard_frame`=? WHERE `resource_id`=? AND `timestamp1`=? AND `timestamp2`=?;");
+		    ps.setInt(3, resource_id);
+		    ps.setTimestamp(4, sqlDate1);
+		    ps.setTimestamp(5, sqlDate2);
+		    ps.setFloat(1, t);
+		    ps.setFloat(2, f);
+		    ps.execute();
+		}
+
+		if(Float.compare(t, text) <= 0 && Float.compare(f, frame) <= 0)
 		{
 		    setOfNearUniqueArchivesSequence.add(key.toString());
 		    setOfNearUniqueArchivesSequence.add(url);
 		    key = url;
+		    j = i;
 		}
 	    }
 	}
-	System.out.println();
 	return setOfNearUniqueArchivesSequence;
     }
 
@@ -186,26 +287,30 @@ public class ArchiveItShingle
 	String url = null;
 	final StringBuilder htmlString = new StringBuilder();
 
-	ResourcePreviewMaker resourcePreviewMaker = Learnweb.getInstance().getResourcePreviewMaker();
 	ArchiveItShingle archiveItShingle = new ArchiveItShingle();
 
 	Group group = Learnweb.getInstance().getGroupManager().getGroupById(1132);
 	List<Resource> listOfResources = new LinkedList<Resource>(group.getResources());
 
 	Connection conn = Learnweb.getInstance().getConnection();
-	for(int j = 36; j < listOfResources.size(); j++)
+	for(int j = 37; j < 38 && j != 44; j++)
 	{
 
 	    int resource_id = listOfResources.get(j).getId();
 	    List<ArchiveUrl> listOfArchives = new LinkedList<ArchiveUrl>();
+
 	    listOfArchives = listOfResources.get(j).getArchiveUrls();
 	    List<String> wordList = new ArrayList<String>();
+
+	    //archiveItShingle.getDublicateShingles(resource_id, listOfArchives.size());
+	    //archiveItShingle.generateThumbnails(resource_id);
 
 	    Set<String> setOfShingles = new HashSet<String>();
 	    Set<String> setOfNearUniqueArchives = new HashSet<String>();
 
 	    HashMap<String, Set<String>> hashmapframe = new LinkedHashMap<String, Set<String>>();
 	    HashMap<String, Set<String>> hashmaptext = new LinkedHashMap<String, Set<String>>();
+	    HashMap<String, String> hashmapstring = new LinkedHashMap<String, String>();
 	    hashmapframe.clear();
 	    hashmaptext.clear();
 	    try
@@ -215,8 +320,8 @@ public class ArchiveItShingle
 		    wordList.clear();
 		    setOfShingles.clear();
 		    url = archiveUrl.getArchiveUrl();
-		    //resourcePreviewMaker.processArchiveWebsite(resource_id, url);
 		    Document document = Jsoup.connect(url).ignoreHttpErrors(true).timeout(900000).get();
+
 		    Response response = Jsoup.connect(url).ignoreHttpErrors(true).timeout(900000).execute();
 		    if(response.statusCode() != 200)
 		    {
@@ -228,6 +333,7 @@ public class ArchiveItShingle
 			ps.close();
 			continue;
 		    }
+
 		    document.select("wb_div#wm-disclaim, script, style, head").remove();
 		    document.traverse(archiveItShingle.processNode(htmlString));
 		    String[] words = htmlString.toString().replaceAll("[!?,.]", "").split(" ");
@@ -241,12 +347,10 @@ public class ArchiveItShingle
 			continue;
 		    else
 			element = document.select("body, BODY").first().children();
-		    PreparedStatement ps = conn.prepareStatement("INSERT INTO `lw_resource_archive_shingles` VALUES (?,?,?,?);", Statement.RETURN_GENERATED_KEYS);
-		    ps.setInt(1, resource_id);
-		    ps.setString(2, url);
-		    ps.setString(3, htmlString.toString());
-		    ps.setString(4, element.text());
-		    ps.execute();
+		    PreparedStatement ps = conn.prepareStatement("INSERT INTO `lw_resource_archive_shingles` VALUES (?,?);", Statement.RETURN_GENERATED_KEYS);
+		    ps.setString(1, htmlString.toString());
+		    ps.setString(2, element.text());
+		    //ps.execute();
 		    ps.close();
 		    ps = conn.prepareStatement("UPDATE `lw_resource_archiveurl` SET `htmltext`=?,`htmltags`=?, `httpstatuscode`=? WHERE `resource_id`=? AND `archive_url`=?;", Statement.RETURN_GENERATED_KEYS);
 		    ps.setString(1, element.text());
@@ -254,9 +358,10 @@ public class ArchiveItShingle
 		    ps.setInt(3, response.statusCode());
 		    ps.setInt(4, resource_id);
 		    ps.setString(5, url);
-		    ps.execute();
+		    //ps.execute();
 		    ps.close();
 		    String[] words1 = element.text().replaceAll("[!?,.]", "").split(" ");
+		    hashmapstring.put(url, element.text());
 		    wordList.addAll(Arrays.asList(words1));
 		    setOfShingles = archiveItShingle.computeShingles(wordList);
 		    hashmaptext.put(url, new HashSet<>(setOfShingles));
@@ -278,7 +383,7 @@ public class ArchiveItShingle
 		    ps.setTimestamp(5, sqlDate2);
 		    ps.setFloat(1, frame);
 		    ps.setFloat(2, text);
-		    ps.execute();
+		    //ps.execute();
 		    if(d <= 0.6)
 		    {
 			setOfNearUniqueArchives.add(listOfArchives.get(i).getArchiveUrl());
@@ -290,7 +395,6 @@ public class ArchiveItShingle
 	    {
 		ex.printStackTrace();
 	    }
-	    //archiveItShingle.processThumbnails(setOfNearUniqueArchives, "final");
 	    listOfArchives.clear();
 	}
 	System.exit(0);

@@ -1,0 +1,109 @@
+<ui:composition template="/templates/main/main.xhtml" 
+xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions"
+	lang="#{userBean.localeCode}">
+
+<ui:define name="center_layout">
+<script>
+var cf;
+function loadCF(){
+	cf = new ContentFlow('contentFlow', {reflectionColor: "#000000", circularFlow: false, startItem: 'visible', reflectionHeight: 0.3});
+	cf._init();
+}
+$(document).ready(function(){
+	loadCF();
+});
+</script>	
+<h:outputScript name="archive-thumbnail/contentflow.js" target="head" />
+<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/archive-thumbnail/mycontentflow.css" />
+<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/archive-thumbnail/styles.css" />
+    <h:panelGroup id="maincontent"  layout="block">
+    <br/><br/>
+    <h:panelGroup id="contentFlow" styleClass="ContentFlow" layout="block">
+            <div class="loadIndicator"><div class="indicator"></div></div>
+            <div class="flow">
+                 <ui:repeat var="image" value="#{archiveThumbnailBean.listOfUrls}">
+                      <div class="item" id="#{image.timestamp}">
+                      <h:graphicImage value="#{image.fileUrl}" class="content"  />
+                      <div class="caption">Date: #{image.timestamp} <br/> Source: <a href="#{image.archiveUrl}" target="_blank"> #{image.archiveUrl} </a> </div>
+                      </div>
+                </ui:repeat>
+            </div>
+            <div class="globalCaption"></div>
+        </h:panelGroup>
+        <pe:timeline id="timeline" styleClass="timeline"
+                     value="#{archiveThumbnailBean.model}"  
+                     min="#{archiveThumbnailBean.min}"  
+                     max="#{archiveThumbnailBean.max}"  
+                     zoomMin="#{archiveThumbnailBean.zoomMin}"  
+                     zoomMax="#{archiveThumbnailBean.zoomMax}"
+                     zoomable="true"
+                     movable="true"
+                     axisOnTop="true" 
+                     height="227px" showNavigation="false" widgetVar="tmlnbar">
+        <pe:javascript event="select" execute="timelinecall()"/> 
+        </pe:timeline>
+        <script>
+        function timelinecall(){
+            //$('#'+PF('tmlnbar').getSelectedEvent().content);
+            console.log($('#'+PF('tmlnbar').getSelectedEvent().content));
+            cf.clickItem();
+            }
+        </script>
+        </h:panelGroup>      
+        <div class="timeSlider">
+         <h:form>
+          <h:panelGrid styleClass="timeGridSlider">
+          <div id="slideA" class="slideA" style="margin-top:10px;"></div>
+          <script>
+            $(function() {
+                jQuery("#slideA").slider({
+                    range: "min",
+                    step: 0.05,
+                    value: 1,
+                    min: 0,
+                    max: 1,
+                    slide: function(event, ui) {
+                        jQuery(txt.jqId).val(ui.value);
+                    } 
+                });
+                jQuery(txt.jqId).val(jQuery("#slideA").slider("value"));
+            });
+          </script>
+          </h:panelGrid>
+          <h:panelGrid columns="2" styleClass="timeGridInput">
+              <h:outputLabel styleClass="labelA" for="txt" value="Frame Slider(increments of 0.05):" />
+              <p:inputText id="txt" value="#{archiveThumbnailBean.frame}" styleClass="inputA" widgetVar="txt" >   
+              <f:convertNumber minFractionDigits="2" /></p:inputText>
+          </h:panelGrid>
+          <h:panelGrid columns="1" styleClass="timeGridSlider">
+              <div id="slideB" class="slideA"></div>
+          <script>
+            $(function() {
+                jQuery("#slideB").slider({
+                    range: "min",
+                    step: 0.05,
+                    value: 1,
+                    min: 0,
+                    max: 1,
+                    slide: function(event, ui) {
+                        jQuery(txt2.jqId).val(ui.value);
+                    } 
+                });
+                jQuery(txt2.jqId).val(jQuery("#slideB").slider("value"));
+            });
+          </script>
+          </h:panelGrid>
+          <h:panelGrid columns="2" styleClass="timeGridInput">
+              <h:outputLabel styleClass="labelA" for="txt2" value="Text Slider (increments of 0.05):" />
+              <p:inputText id="txt2" value="#{archiveThumbnailBean.text}" styleClass="inputA" widgetVar="txt2" >
+              <f:convertNumber minFractionDigits="2" /></p:inputText>   
+          </h:panelGrid>
+          <p:commandButton id="process" styleClass="button" value="Submit" title="Press to refresh the Coverflow" update=":maincontent :timeline" oncomplete="loadCF()" />    
+        </h:form>
+        </div>
+        </ui:define>
+</ui:composition>

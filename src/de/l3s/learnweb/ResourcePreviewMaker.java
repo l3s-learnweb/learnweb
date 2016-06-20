@@ -164,10 +164,29 @@ public class ResourcePreviewMaker
 
     public void processArchiveWebsite(int resourceId, String url) throws IOException, SQLException
     {
-	URL thumbnailUrl = new URL(archiveThumbnailService + StringHelper.urlEncode(url));
-
+	URL thumbnailUrl = new URL(websiteThumbnailService + StringHelper.urlEncode(url));
 	Image img = new Image(thumbnailUrl.openStream());
 	File file = new File();
+	int width = img.getWidth();
+	int height = img.getHeight();
+	if(width > SIZE3_MAX_WIDTH && height > SIZE3_MAX_HEIGHT)
+	{
+	    img = img.getResized(SIZE3_MAX_WIDTH, SIZE3_MAX_HEIGHT, true);
+	    file.setResourceFileNumber(3); // number 3 is reserved for the medium thumbnail
+	    file.setName("wayback_thumbnail3.jpg");
+	    file.setMimeType("image/png");
+	    fileManager.save(file, img.getInputStream());
+	}
+	else
+	{
+	    file.setResourceFileNumber(5);
+	    file.setResourceId(resourceId);
+	    file.setName("wayback_thumbnail.jpg");
+	    file.setMimeType("image/png");
+	    file = fileManager.save(file, img.getInputStream());
+	}
+	System.out.println(img.getHeight());
+	System.out.println(img.getWidth());
 	file.setResourceFileNumber(5);
 	file.setResourceId(resourceId);
 	file.setName("wayback_thumbnail.jpg");

@@ -211,7 +211,8 @@
 										    		style="height:auto; width:auto; max-height:100%; max-width:100%; display:block; margin:0 auto; position: relative; 
 										    		top: 50%; transform: translateY(-50%);-moz-transform:translateY(-50%);-webkit-transform:translateY(-50%);
 										    		-o-transform:translateY(-50%);-ms-transform:translateY(-50%);"/>	
-									    </ui:fragment>							
+									    </ui:fragment>	
+									    <!-- include your visualization template using ui-decorate -->						
 									</div>
 								</div>
 							</div>				
@@ -437,6 +438,7 @@
 								onclick="return open_list_view();" />
 							<p:commandButton id="timeline_button" styleClass="greenbutton" value="#{msg.timeline_view}" 
 								onclick="return open_timeline_view();" />
+								<!-- Insert thumbnail link visualization -->
 						</h:panelGroup>
 					</h:panelGroup>
 					<h:panelGroup id="archive_view" layout="block">

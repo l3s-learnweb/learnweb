@@ -256,6 +256,53 @@ public class ArchiveUrlManager
 	}
     }
 
+    public String getFileUrl(int resource_id, String archive_url) throws SQLException
+    {
+	int fileId = 0;
+	PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT `file_id`,`httpstatuscode` FROM `lw_resource_archiveurl` where `resource_id`=? and `archive_url`=?");
+	ps.setInt(1, resource_id);
+	ps.setString(2, archive_url);
+	ResultSet rs = ps.executeQuery();
+	if(rs.next())
+	{
+	    fileId = rs.getInt("file_id");
+	    if(rs.getInt("httpstatuscode") != 200)
+	    {
+		return null;
+	    }
+	    else
+	    {
+		String url = learnweb.getFileManager().getThumbnailUrl(fileId);
+		return url;
+	    }
+	}
+	else
+	{
+	    return null;
+	}
+    }
+
+    public Date getTimestamp(int resource_id, String archive_url) throws SQLException
+    {
+	Date timestamp = null;
+	PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT `timestamp`,`httpstatuscode` FROM `lw_resource_archiveurl` where `resource_id`=? and `archive_url`=?");
+	ps.setInt(1, resource_id);
+	ps.setString(2, archive_url);
+	ResultSet rs = ps.executeQuery();
+	if(rs.next())
+	{
+	    timestamp = rs.getDate("timestamp");
+	    if(rs.getInt("httpstatuscode") != 200)
+		return null;
+	    else
+		return timestamp;
+	}
+	else
+	{
+	    return null;
+	}
+    }
+
     public String addResourceToArchive(Resource resource)
     {
 	String response = "";

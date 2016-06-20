@@ -648,7 +648,7 @@ public class SearchFilters implements Serializable
     public List<Filter> getAvailableFilters(FILTERS[] except)
     {
 	List<Filter> list = new ArrayList<Filter>();
-	FILTERS[] filters = ArrayUtils.removeElements(FILTERS.getFilterByMode(configMode), except);
+	FILTERS[] filters = ArrayUtils.removeElement(FILTERS.getFilterByMode(configMode), except);
 
 	for(FILTERS fs : filters)
 	{
