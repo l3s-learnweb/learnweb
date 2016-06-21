@@ -25,7 +25,7 @@ public class Learnweb
 {
     public final static String salt1 = "ff4a9ff19306ee0407cf69d592";
     public final static String salt2 = "3a129713cc1b33650816d61450";
-    public final static Logger log = Logger.getLogger(Learnweb.class);
+    private final static Logger log = Logger.getLogger(Learnweb.class);
 
     private Connection dbConnection;
     private InterWeb interweb;

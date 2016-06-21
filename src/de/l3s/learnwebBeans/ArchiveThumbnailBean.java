@@ -1,6 +1,5 @@
 package de.l3s.learnwebBeans;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -37,6 +36,8 @@ import de.l3s.learnweb.Learnweb;
 @ViewScoped
 public class ArchiveThumbnailBean extends ApplicationBean
 {
+    public final static Logger log = Logger.getLogger(ArchiveThumbnailBean.class);
+
     private float frame;
     private float text;
 
@@ -50,8 +51,6 @@ public class ArchiveThumbnailBean extends ApplicationBean
 
     private ArchiveItShingle archiveItShingle;
     ArchiveUrlManager archiveUrlManager;
-    private Connection conn;
-    Logger log;
 
     private TimelineModel model;
     private Date min;
@@ -63,11 +62,9 @@ public class ArchiveThumbnailBean extends ApplicationBean
     {
 	frame = 1;
 	text = 1;
-	log = Learnweb.log;
 	hashmapframe = new LinkedHashMap<String, Set<String>>();
 	hashmaptext = new LinkedHashMap<String, Set<String>>();
 	archiveItShingle = new ArchiveItShingle();
-	conn = Learnweb.getInstance().getConnection();
 	listOfArchives = new LinkedList<ArchiveUrl>();
 	archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
 	listOfUrls = new ArrayList<ArchiveUrl>();
@@ -199,8 +196,8 @@ public class ArchiveThumbnailBean extends ApplicationBean
 
 	    Set<String> setOfShingles = new HashSet<String>();
 
-	    resource_id = 169891;
-	    PreparedStatement ps = conn.prepareStatement("SELECT * FROM `lw_resource_archiveurl` NATURAL JOIN `lw_resource_archive_shingles` WHERE `resource_id`=? group by `shingle_id`");
+	    resource_id = 169891; // TODO does this make sense?
+	    PreparedStatement ps = getLearnweb().getConnection().prepareStatement("SELECT * FROM `lw_resource_archiveurl` NATURAL JOIN `lw_resource_archive_shingles` WHERE `resource_id`=? group by `shingle_id`");
 	    ps.setInt(1, resource_id);
 	    ResultSet rs = ps.executeQuery();
 	    if(rs.next())

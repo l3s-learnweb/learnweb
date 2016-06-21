@@ -215,7 +215,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	{
 	    clickedResource.addTag(tagName, getUser());
 	    addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
-	    log(Action.tagging_resource, clickedResource.getId(), tagName);
+	    log(Action.tagging_resource, clickedResource.getGroupId(), clickedResource.getId(), tagName);
 	    tagName = ""; // clear tag input field 
 	}
 	catch(Exception e)
@@ -280,7 +280,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	{
 	    clickedResource.deleteComment(clickedComment);
 	    addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
-	    log(Action.deleting_comment, clickedComment.getResourceId(), clickedComment.getId() + "");
+	    log(Action.deleting_comment, clickedResource.getGroupId(), clickedComment.getResourceId(), clickedComment.getId() + "");
 	}
 	catch(Exception e)
 	{

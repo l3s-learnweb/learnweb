@@ -175,7 +175,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
 	getLearnweb().getUserManager().save(user);
 
-	log(Action.changing_profile, user.getId());
+	log(Action.changing_profile, 0, user.getId());
 	addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 

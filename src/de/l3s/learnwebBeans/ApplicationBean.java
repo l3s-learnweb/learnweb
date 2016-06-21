@@ -1,7 +1,5 @@
 package de.l3s.learnwebBeans;
 
-import java.sql.SQLException;
-
 import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpSession;
@@ -240,21 +238,26 @@ public class ApplicationBean
     }
 
     /**
-     * Logs a user action for the currently active user.
-     * The parameters "targetId" and "params" depend on the logged action.
-     * Look at the code of LogEntry.Action for explanation.
-     * 
-     * @param action one value of LogEntry.Action
-     * @param targetId optional value; should be 0 if not required
-     * @param params
-     * @throws SQLException
+     * Use log(LogEntry.Action action, int groupId, int targetId, String params)
+     * so that you explicitly set the group context
      */
+    @Deprecated
     protected void log(LogEntry.Action action, int targetId, String params)
     {
 	int executionTime = (int) (System.currentTimeMillis() - startTime);
 	getLearnweb().log(getUser(), action, targetId, params, getSessionId(), executionTime);
     }
 
+    /**
+     * Logs a user action for the currently active user.
+     * The parameters "targetId" and "params" depend on the logged action.
+     * Look at the code of LogEntry.Action for explanation.
+     * 
+     * @param action
+     * @param groupId
+     * @param targetId
+     * @param params
+     */
     protected void log(LogEntry.Action action, int groupId, int targetId, String params)
     {
 	int executionTime = (int) (System.currentTimeMillis() - startTime);
@@ -266,14 +269,14 @@ public class ApplicationBean
      * The parameters "targetId" depend on the logged action.
      * Look at the code of LogEntry.Action for explanation.
      * 
-     * @param action one value of LogEntry.Action
-     * @param targetId optional value; should be 0 if not required
-     * @throws SQLException
+     * @param action
+     * @param groupId
+     * @param targetId
      */
-    protected void log(LogEntry.Action action, int targetId)
+    protected void log(LogEntry.Action action, int groupId, int targetId)
     {
 	int executionTime = (int) (System.currentTimeMillis() - startTime);
-	getLearnweb().log(getUser(), action, targetId, null, getSessionId(), executionTime);
+	getLearnweb().log(getUser(), action, groupId, targetId, null, getSessionId(), executionTime);
     }
 
     protected void addFatalMessage(Throwable e)

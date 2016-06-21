@@ -30,7 +30,7 @@ public class LogEntry implements Serializable
 	group_leaving, // target_id = group_id
 	login,
 	logout,
-	unused3,
+	unused6,
 	register,
 	changing_profile, // target_id = user_id of the user whose profile was changed
 	deleting_resource, // param = resource title; target_id = resource id
@@ -132,6 +132,12 @@ public class LogEntry implements Serializable
 	    break;
 	case commenting_resource:
 	    description = usernameLink + UtilBean.getLocaleMessage("log_commenting_resource", resourceTitle);
+
+	    Comment comment = Learnweb.getInstance().getResourceManager().getComment(StringHelper.parseInt(params));
+
+	    if(comment != null)
+		description += " " + UtilBean.getLocaleMessage("with") + " " + "<b>" + comment.getText() + "</b>";
+
 	    //description = usernameLink + " has commented on " + resource;
 	    break;
 	case rating_resource:

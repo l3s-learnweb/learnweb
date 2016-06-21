@@ -41,6 +41,25 @@ public class StringHelper
 	return str;
     }
 
+    /**
+     * Uses Integer.parseInt but instead of an exception it returns -1 if the input can not be parsed
+     * 
+     * @param number
+     * @return
+     */
+    public static int parseInt(String number)
+    {
+	try
+	{
+	    return Integer.parseInt(number);
+	}
+	catch(NumberFormatException e)
+	{
+	    // ignore
+	}
+	return -1;
+    }
+
     public static String getDomainName(String url)
     {
 	int index = url.indexOf('?');

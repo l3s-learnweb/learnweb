@@ -1,12 +1,20 @@
 package de.l3s.learnweb;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.Date;
 
 //import org.ocpsoft.pretty.time.PrettyTime;
 
 import de.l3s.learnweb.LogEntry.Action;
 
+/**
+ * This whole stupid class should be removed
+ * 
+ * @author Philipp
+ *
+ */
+@Deprecated
 public class NewsEntry implements Comparable<NewsEntry>, Serializable
 {
     private static final long serialVersionUID = -8039903365395519945L;
@@ -35,6 +43,35 @@ public class NewsEntry implements Comparable<NewsEntry>, Serializable
 	this.newsAction = news.getAction();
 
 	this.logEntry = news;
+    }
+
+    public NewsEntry(LogEntry l) throws SQLException
+    {
+	Resource r = l.getResource();
+
+	int commentcount = 0;
+	int tagcount = 0;
+	String text = l.getDescription();
+
+	if(r != null)
+	{
+	    if(r.getComments() != null)
+		commentcount = r.getComments().size();
+
+	    if(r.getTags() != null)
+		tagcount = r.getTags().size();
+
+	}
+
+	this.resource = r;
+	this.comments = commentcount;
+	this.tags = tagcount;
+	this.text = text;
+	this.resourceAction = r != null;
+	this.date = l.getDate();
+	this.newsAction = l.getAction();
+
+	this.logEntry = l;
     }
 
     public User getUser()

@@ -117,11 +117,11 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 	addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
 
 	//logging
-	log(Action.register, 0);
+	log(Action.register, 0, 0);
 	if(null != course && course.getDefaultGroupId() != 0)
-	    log(Action.group_joining, course.getDefaultGroupId());
+	    log(Action.group_joining, course.getDefaultGroupId(), course.getDefaultGroupId());
 
-	log(Action.login, 0);
+	log(Action.login, 0, 0);
 
 	/* disabled because interweb isn't used
 	Runnable preFetch = new Runnable() {

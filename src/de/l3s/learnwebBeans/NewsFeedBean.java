@@ -7,12 +7,9 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.NewsEntry;
-import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.ResourceManager;
 
 @RequestScoped
 @ManagedBean
@@ -62,37 +59,31 @@ public class NewsFeedBean extends ApplicationBean
 	feed = getLearnweb().getLogsByGroup(entityId, filter, 50);
 	*/
 	//UserManager userManager = getLearnweb().getUserManager();
-	ResourceManager resourceManager = getLearnweb().getResourceManager();
 
 	if(feed != null)
 	{
 	    newslist = new ArrayList<NewsEntry>();
 	    for(LogEntry l : feed)
 	    {
+		newslist.add(new NewsEntry(l));
+		/*
 		Resource r = l.getResource();
-
+		
 		int commentcount = 0;
 		int tagcount = 0;
 		String text = l.getDescription();
-
+		
 		if(r != null)
 		{
 		    if(r.getComments() != null)
 			commentcount = r.getComments().size();
-
+		
 		    if(r.getTags() != null)
 			tagcount = r.getTags().size();
-
-		    if(l.getAction() == Action.commenting_resource && commentcount > 0)
-		    {
-			Comment comment = resourceManager.getComment(Integer.parseInt(l.getParams()));
-
-			if(comment != null)
-			    text = text + " " + getLocaleMessage("with") + " " + "<b>" + comment.getText() + "</b>";
-		    }
-
+		
+		
 		}
-
+		
 		newslist.add(new NewsEntry(l, null, r, commentcount, tagcount, text, r != null, l.getDate()));
 		/*
 		User u = null;
@@ -167,11 +158,6 @@ public class NewsFeedBean extends ApplicationBean
 	    }
 	}
 	return newslist;
-    }
-
-    public void setNewslist(ArrayList<NewsEntry> newslist)
-    {
-	this.newslist = newslist;
     }
 
     public int getEntityId()

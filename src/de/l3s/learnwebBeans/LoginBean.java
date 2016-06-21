@@ -20,6 +20,7 @@ import de.l3s.learnweb.beans.UtilBean;
 @RequestScoped
 public class LoginBean extends ApplicationBean implements Serializable
 {
+    private static final Logger log = Logger.getLogger(LoginBean.class);
 
     private static final long serialVersionUID = 7980062591522267111L;
     @NotEmpty
@@ -61,9 +62,9 @@ public class LoginBean extends ApplicationBean implements Serializable
 	//addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
 	user.setCurrentLoginDate(new Date());
 
-	log(Action.login, 0);
+	log(Action.login, 0, 0);
 
-	Logger.getLogger(LoginBean.class).debug("Login time; current: " + user.getCurrentLoginDate() + ", last: " + user.getLastLoginDate());
+	log.debug("Login time; current: " + user.getCurrentLoginDate() + ", last: " + user.getLastLoginDate());
 
 	// uncommented until interwebJ works correct
 	Runnable preFetch = new Runnable()
@@ -78,7 +79,7 @@ public class LoginBean extends ApplicationBean implements Serializable
 		}
 		catch(Exception e)
 		{
-		    e.printStackTrace();
+		    log.error("Interweb error", e);
 		}
 	    }
 	};
@@ -101,7 +102,7 @@ public class LoginBean extends ApplicationBean implements Serializable
 	UserBean userBean = UtilBean.getUserBean();
 	int activeCourse = userBean.getActiveCourseId();
 
-	log(Action.logout, 0, null);
+	log(Action.logout, 0, 0);
 	userBean.setUser(null);
 
 	//addMessage(FacesMessage.SEVERITY_INFO, "logout_success");

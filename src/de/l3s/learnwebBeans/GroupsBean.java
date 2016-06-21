@@ -55,7 +55,7 @@ public class GroupsBean extends ApplicationBean implements Serializable
 	getUser().joinGroup(selectedGroup);
 	myGroups = getUser().getGroups();
 	joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
-	log(Action.group_joining, selectedGroup.getId());
+	log(Action.group_joining, selectedGroup.getId(), selectedGroup.getId());
 	addGrowl(FacesMessage.SEVERITY_INFO, "groupJoined", selectedGroup.getTitle());
     }
 
@@ -64,8 +64,7 @@ public class GroupsBean extends ApplicationBean implements Serializable
 	if(null == getUser() || null == selectedGroup)
 	    return;
 
-	getUser().setActiveGroup(selectedGroup);
-	log(Action.group_leaving, selectedGroup.getId());
+	log(Action.group_leaving, selectedGroup.getId(), selectedGroup.getId());
 
 	getUser().leaveGroup(selectedGroup);
 	myGroups = getUser().getGroups();
@@ -89,7 +88,7 @@ public class GroupsBean extends ApplicationBean implements Serializable
 	}
 
 	getUser().setActiveGroup(selectedGroup);
-	log(Action.group_deleting, selectedGroup.getId(), selectedGroup.getTitle());
+	log(Action.group_deleting, selectedGroup.getId(), selectedGroup.getId(), selectedGroup.getTitle());
 
 	getUser().deleteGroup(selectedGroup);
 	myGroups = getUser().getGroups();
@@ -128,7 +127,7 @@ public class GroupsBean extends ApplicationBean implements Serializable
 	myGroups = getUser().getGroups();
 
 	// log and show notification
-	log(Action.group_creating, group.getId());
+	log(Action.group_creating, group.getId(), group.getId());
 	addGrowl(FacesMessage.SEVERITY_INFO, "groupCreated", newGroup.getTitle());
 
 	// reset new group var

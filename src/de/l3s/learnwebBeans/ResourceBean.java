@@ -14,8 +14,6 @@ import org.primefaces.event.RateEvent;
 import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.Tag;
-import de.l3s.learnweb.User;
 
 @ManagedBean
 @ViewScoped
@@ -114,7 +112,7 @@ public class ResourceBean extends ApplicationBean implements Serializable
 	    return;
 	}
 
-	log(Action.rating_resource, resource.getId());
+	log(Action.rating_resource, resource.getGroupId(), resource.getId());
 
 	addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
     }
@@ -146,7 +144,7 @@ public class ResourceBean extends ApplicationBean implements Serializable
 	    return;
 	}
 
-	log(Action.thumb_rating_resource, resource.getId());
+	log(Action.thumb_rating_resource, resource.getGroupId(), resource.getId());
 
 	addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
     }
@@ -289,7 +287,7 @@ public class ResourceBean extends ApplicationBean implements Serializable
 	    log.debug("drin" + resource.getTitle());
 	    resource.save();
 
-	    log(Action.edit_resource, resource.getId());
+	    log(Action.edit_resource, resource.getGroupId(), resource.getId());
 
 	    addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
 	}
@@ -322,82 +320,4 @@ public class ResourceBean extends ApplicationBean implements Serializable
 	return isThumbRatingHidden;
     }
 
-    public boolean canDeleteTag(Object tagO) throws SQLException
-    {
-	if(!(tagO instanceof Tag))
-	    return false;
-
-	User user = getUser();
-	if(null == user)// || true)
-	    return false;
-	if(user.isAdmin() || user.isModerator())
-	    return true;
-
-	Tag tag = (Tag) tagO;
-	User owner = resource.getTags().getElementOwner(tag);
-	if(user.equals(owner))
-	    return true;
-	return false;
-    }
-
-    public boolean canEditComment(Object commentO) throws Exception
-    {
-	if(!(commentO instanceof Comment))
-	    return false;
-
-	User user = getUser();
-	if(null == user)// || true)
-	    return false;
-	if(user.isAdmin() || user.isModerator())
-	    return true;
-
-	Comment comment = (Comment) commentO;
-	User owner = comment.getUser();
-	if(user.equals(owner))
-	    return true;
-	return false;
-    }
-
-    public void onDeleteTag(Tag tag)
-    {
-	try
-	{
-	    resource.deleteTag(tag);
-	    addMessage(FacesMessage.SEVERITY_INFO, "tag_deleted");
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	}
-    }
-
-    public void onDeleteComment(Comment comment)
-    {
-	try
-	{
-	    resource.deleteComment(comment);
-	    addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
-	    log(Action.deleting_comment, comment.getResourceId(), comment.getId() + "");
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	}
-    }
-
-    public void onEditComment(Comment comment)
-    {
-	try
-	{
-	    getLearnweb().getResourceManager().saveComment(comment);
-	    addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	}
-    }
 }

@@ -27,7 +27,6 @@ import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
 import de.l3s.learnweb.AbstractPaginator;
-import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.GoogleDriveManager;
 import de.l3s.learnweb.Group;
@@ -193,32 +192,35 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    newslist = new ArrayList<NewsEntry>();
 	    for(LogEntry l : feed)
 	    {
-		Resource r = l.getResource();
+		newslist.add(new NewsEntry(l));
 
+		/*
+		Resource r = l.getResource();
+		
 		int commentcount = 0;
 		int tagcount = 0;
 		String text = l.getDescription();
-
+		
 		if(r != null)
 		{
 		    if(r.getComments() != null)
 			commentcount = r.getComments().size();
-
+		
 		    if(r.getTags() != null)
 			tagcount = r.getTags().size();
-
+		
 		    if(l.getAction() == Action.commenting_resource && commentcount > 0)
 		    {
 			Comment comment = resourceManager.getComment(Integer.parseInt(l.getParams()));
-
+		
 			if(comment != null)
 			    text = text + " " + getLocaleMessage("with") + " " + "<b>" + comment.getText() + "</b>";
 		    }
-
+		
 		}
-
+		
 		newslist.add(new NewsEntry(l, null, r, commentcount, tagcount, text, r != null, l.getDate()));
-
+		
 		/*
 		User u = null;
 		Resource r = null;
@@ -637,12 +639,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    {
 		newLinkUrl = new GoogleDriveManager().createEmptyDocument(group.getTitle() + " - " + newLinkTitle, newLinkType).getAlternateLink();
 		type = LinkType.DOCUMENT;
-		log(Action.group_adding_document, group.getId(), newLinkTitle);
+		log(Action.group_adding_document, group.getId(), group.getId(), newLinkTitle);
 	    }
 	    else
 	    {
 		type = LinkType.LINK;
-		log(Action.group_adding_link, group.getId(), newLinkTitle);
+		log(Action.group_adding_link, group.getId(), group.getId(), newLinkTitle);
 	    }
 
 	    group.addLink(newLinkTitle, newLinkUrl, type);
@@ -705,7 +707,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void editClickedResource()
     {
-	log(Action.edit_resource, clickedResource.getId(), null);
+	log(Action.edit_resource, clickedResource.getGroupId(), clickedResource.getId(), null);
 	try
 	{
 	    clickedResource.save();
@@ -1390,17 +1392,17 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    if(!editedGroupDescription.equals(group.getDescription()))
 	    {
 		group.setDescription(editedGroupDescription);
-		log(Action.group_changing_description, group.getId());
+		log(Action.group_changing_description, group.getId(), group.getId());
 	    }
 	    if(!editedGroupTitle.equals(group.getTitle()))
 	    {
-		log(Action.group_changing_title, group.getId(), group.getTitle());
+		log(Action.group_changing_title, group.getId(), group.getId(), group.getTitle());
 		group.setTitle(editedGroupTitle);
 	    }
 	    if(editedGroupLeaderId != group.getLeaderUserId())
 	    {
 		group.setLeaderUserId(editedGroupLeaderId);
-		log(Action.group_changing_leader, group.getId());
+		log(Action.group_changing_leader, group.getId(), group.getId());
 	    }
 	    getLearnweb().getGroupManager().save(group);
 	    //getLearnweb().getGroupManager().resetCache();

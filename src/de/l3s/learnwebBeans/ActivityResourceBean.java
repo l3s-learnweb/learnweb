@@ -8,13 +8,10 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.LogEntry;
-import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.NewsEntry;
 import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.ResourceManager;
 import de.l3s.learnweb.Tag;
 import de.l3s.learnweb.User;
 import de.l3s.learnwebBeans.GroupDetailBean.RPAction;
@@ -82,35 +79,39 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
 
 	if(feed != null)
 	{
-	    ResourceManager resourceManager = getLearnweb().getResourceManager();
+
+	    //ResourceManager resourceManager = getLearnweb().getResourceManager();
 
 	    newslist = new ArrayList<NewsEntry>();
 	    for(LogEntry l : feed)
 	    {
-		Resource r = l.getResource();
+		newslist.add(new NewsEntry(l));
 
+		/*
+		Resource r = l.getResource();
+		
 		int commentcount = 0;
 		int tagcount = 0;
 		String text = l.getDescription();
-
+		
 		if(r != null)
 		{
 		    if(r.getComments() != null)
 			commentcount = r.getComments().size();
-
+		
 		    if(r.getTags() != null)
 			tagcount = r.getTags().size();
-
+		
 		    if(l.getAction() == Action.commenting_resource && commentcount > 0)
 		    {
 			Comment comment = resourceManager.getComment(Integer.parseInt(l.getParams()));
-
+		
 			if(comment != null)
 			    text = text + " " + getLocaleMessage("with") + " " + "<b>" + comment.getText() + "</b>";
 		    }
-
+		
 		}
-
+		
 		newslist.add(new NewsEntry(l, null, r, commentcount, tagcount, text, r != null, l.getDate()));
 		/*
 		User u = null;

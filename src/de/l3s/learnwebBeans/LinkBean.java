@@ -42,7 +42,7 @@ public class LinkBean extends ApplicationBean
 	    try
 	    {
 		servletResponse.sendRedirect(url);
-		log(Action.open_link, 0, url);
+		log(Action.open_link, 0, 0, url);
 
 	    }
 	    catch(IOException e)
