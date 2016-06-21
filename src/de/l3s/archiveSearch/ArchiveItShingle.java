@@ -44,9 +44,6 @@ public class ArchiveItShingle
 
     private final int w = 25; // the N-gram dimension i.e w words in a shingle
 
-    private final Set<String> intersect = new HashSet<String>();
-    private final Set<String> union = new HashSet<String>();
-
     public Set<String> computeShingles(List<String> wordList)
     {
 	Set<String> setOfShingles = new HashSet<String>();
@@ -59,15 +56,14 @@ public class ArchiveItShingle
 	return setOfShingles;
     }
 
-    public float computeIndex(Set<String> set1, Set<String> set2)
+    public float computeJaccardIndex(Set<String> set1, Set<String> set2)
     {
 	if(set1 == null || set2 == null)
 	    return 0;
-	intersect.clear();
-	intersect.addAll(set1);
+
+	Set<String> intersect = new HashSet<String>(set1);
 	intersect.retainAll(set2);
-	union.clear();
-	union.addAll(set1);
+	Set<String> union = new HashSet<String>(set1);
 	union.addAll(set2);
 	if(union.size() == 0)
 	    return 0;
@@ -77,11 +73,8 @@ public class ArchiveItShingle
     public void processWebsite(String url, String timestamp) throws IOException
     {
 	URL thumbnailUrl = new URL("http://prometheus.kbs.uni-hannover.de/thumbnail/thumb_wb.php?url=" + StringHelper.urlEncode(url));
-	// Process the Image
 	Image img = new Image(thumbnailUrl.openStream());
-	//java.io.File is the actual class File for creating files
 	java.io.File actualFile = new java.io.File("F://DevTools//Work stuff//Crawler//Thumbnails//", timestamp + ".png");
-	// copy the data into the file
 	OutputStream outputStream = new FileOutputStream(actualFile);
 	IOUtils.copy(img.getInputStream(), outputStream);
 	outputStream.close();
@@ -93,10 +86,10 @@ public class ArchiveItShingle
 	    processWebsite(str, type + "-" + str.substring(34, 45));
     }
 
-    /*used to get the html tags 
-     * to calculate jaccard index 
-     * by using the html DOM structure
-    * */
+    /**
+     * traverse HTML DOM structure
+     * 
+     */
     private NodeVisitor processNode(final StringBuilder htmlString)
     {
 	NodeVisitor node = new NodeVisitor()
@@ -118,51 +111,46 @@ public class ArchiveItShingle
 	return node;
     }
 
-    /*
-     * Calculating the unique archives by comparing
-     * each archive pair with each other*/
-    public Set<String> computeUniqueArchivesByPair(HashMap<String, Set<String>> hashmap)
+    /**
+     * return unique archives by comparing all pairs
+     */
+    public Set<String> computeUniqueArchivesByPair(HashMap<String, Set<String>> archiveUrls)
     {
 	float d = 0;
-	Set<String> setOfNonUniqueUrls = new HashSet<String>();
-	Set<String> setOfNearUniqueArchivesPair = new HashSet<String>();
-	for(Map.Entry<String, Set<String>> entry1 : hashmap.entrySet())
+	Set<String> nearDuplicateUrls = new HashSet<String>();
+	Set<String> uniqueUrls = new HashSet<String>();
+	for(Map.Entry<String, Set<String>> entry1 : archiveUrls.entrySet())
 	{
-	    for(Map.Entry<String, Set<String>> entry2 : hashmap.entrySet())
+	    for(Map.Entry<String, Set<String>> entry2 : archiveUrls.entrySet())
 	    {
-		if(entry1 != entry2 && !setOfNonUniqueUrls.contains(entry2.getKey()))
+		if(entry1 != entry2 && !nearDuplicateUrls.contains(entry2.getKey()))
 		{
-		    if(setOfNearUniqueArchivesPair.contains(entry2.getKey()))
+		    if(!uniqueUrls.contains(entry2.getKey()))
 		    {
-
-		    }
-		    else
-		    {
-			d = computeIndex(entry1.getValue(), entry2.getValue());
+			d = computeJaccardIndex(entry1.getValue(), entry2.getValue());
 			if(d <= 0.5)
 			{
-			    setOfNearUniqueArchivesPair.add(entry1.getKey());
-			    setOfNearUniqueArchivesPair.add(entry2.getKey());
+			    uniqueUrls.add(entry1.getKey());
+			    uniqueUrls.add(entry2.getKey());
 			}
 		    }
 		}
 	    }
-	    setOfNonUniqueUrls.add(entry1.getKey());
+	    nearDuplicateUrls.add(entry1.getKey());
 	}
-	return setOfNearUniqueArchivesPair;
+	return uniqueUrls;
     }
 
-    /*
-     * identifies the duplicates based on html text and tags. Updates
-     * the shingle_id in the lw_resource_archiveurl table to identify 
-     * all the duplicate entires */
-
-    public void getDublicateShingles(int resource_id, int size) throws SQLException
+    /**
+     * Updates duplicate shingle ids in lw_resource_archiveurl based on html
+     * text and tags
+     */
+    public void getDublicateShingles(int resourceId, int size) throws SQLException
     {
 	List<Integer> dublicateShingleId = new ArrayList<Integer>();
 	Connection conn = Learnweb.getInstance().getConnection();
 	PreparedStatement ps = conn.prepareStatement("SELECT `shingle_id` FROM `lw_resource_archive_shingles` natural join `lw_resource_archiveurl` where `resource_id`=? group by `htmltext`, `htmltags` ORDER BY `lw_resource_archive_shingles`.`shingle_id` ASC");
-	ps.setInt(1, resource_id);
+	ps.setInt(1, resourceId);
 	ResultSet rs = ps.executeQuery();
 	while(rs.next())
 	    dublicateShingleId.add(rs.getInt("shingle_id"));
@@ -179,7 +167,7 @@ public class ArchiveItShingle
 	    {
 		ps = conn.prepareStatement("UPDATE `lw_resource_archiveurl` SET `shingle_id`=? where `resource_id`=? and `shingle_id`=?");
 		ps.setInt(1, dublicateShingleId.get(j - 1));
-		ps.setInt(2, resource_id);
+		ps.setInt(2, resourceId);
 		ps.setInt(3, i);
 		ps.execute();
 	    }
@@ -188,28 +176,25 @@ public class ArchiveItShingle
 	ps.close();
     }
 
-    public void generateThumbnails(int resource_id) throws IOException, SQLException
+    public void generateThumbnails(int resourceId) throws IOException, SQLException
     {
-
 	ResourcePreviewMaker resourcePreviewMaker = Learnweb.getInstance().getResourcePreviewMaker();
 	Connection conn = Learnweb.getInstance().getConnection();
 	PreparedStatement ps = conn.prepareStatement("SELECT `archive_url`,`httpstatuscode` FROM `lw_resource_archiveurl` where `resource_id`=? group by `shingle_id`");
-	ps.setInt(1, resource_id);
+	ps.setInt(1, resourceId);
 	ResultSet rs = ps.executeQuery();
 	while(rs.next())
 	{
-	    System.out.println(rs.getInt("httpstatuscode") + "  " + rs.getString("archive_url"));
 	    if(rs.getInt("httpstatuscode") == 200)
-		resourcePreviewMaker.processArchiveWebsite(resource_id, rs.getString("archive_url"));
-
+		resourcePreviewMaker.processArchiveWebsite(resourceId, rs.getString("archive_url"));
 	}
 	ps.close();
     }
 
-    public void computeUniqueArchivesByPair(HashMap<String, String> hashmap, int resource_id) throws SQLException
+    public void computeUniqueArchivesByPair(HashMap<String, String> archiveUrls, int resourceId) throws SQLException
     {
 	Set<String> setOfNearUniqueArchivesPair = new HashSet<String>();
-	ArrayList<String> values = new ArrayList<String>(hashmap.values());
+	ArrayList<String> values = new ArrayList<String>(archiveUrls.values());
 	int d = values.size();
 	int t = 0;
 	for(int i = 0; i < d - 1; i++)
@@ -219,36 +204,31 @@ public class ArchiveItShingle
 		t++;
 		setOfNearUniqueArchivesPair.add(values.get(i));
 	    }
-	    else
-	    {
-
-	    }
 	}
-	System.out.println(resource_id + " Amount of duplicates:" + t + " Total archive versions:" + d + " Percentage dublicates:" + (float) t * 100 / d);
+	System.out.println(resourceId + " Amount of duplicates:" + t + " Total archive versions:" + d + " Percentage dublicates:" + (float) t * 100 / d);
     }
 
-    /*Calculating the unique achives by comparing each other by 
-     * their order of insertion, starting from oldest archive to 
-     * newest one.
+    /**
+     * Detecting near duplicates based on sequence algorithm
      * 
-     * */
-    public Set<String> computeUniqueArchivesBySequence(HashMap<String, Set<String>> hashmaptext, HashMap<String, Set<String>> hashmapframe, List<ArchiveUrl> listOfArchives, int resource_id, float frame, float text) throws SQLException
+     */
+    public Set<String> computeUniqueArchivesBySequence(HashMap<String, Set<String>> hashmaptext, HashMap<String, Set<String>> hashmapframe, List<ArchiveUrl> archiveUrls, int resourceId, float frame, float text) throws SQLException
     {
 	Set<String> setOfNearUniqueArchivesSequence = new LinkedHashSet<String>();
 	Connection conn = Learnweb.getInstance().getConnection();
 	int i = 0, j = 0;
 	float t = 0, f = 0;
 	String url = null;
-	String key = listOfArchives.get(j).getArchiveUrl();
-	for(i = 1; i < listOfArchives.size(); i++)
+	String key = archiveUrls.get(j).getArchiveUrl();
+	for(i = 1; i < archiveUrls.size(); i++)
 	{
-	    url = listOfArchives.get(i).getArchiveUrl();
+	    url = archiveUrls.get(i).getArchiveUrl();
 	    if(key != url && !setOfNearUniqueArchivesSequence.contains(url))
 	    {
-		Timestamp sqlDate1 = new Timestamp(listOfArchives.get(j).getTimestamp().getTime());
-		Timestamp sqlDate2 = new Timestamp(listOfArchives.get(i).getTimestamp().getTime());
+		Timestamp sqlDate1 = new Timestamp(archiveUrls.get(j).getTimestamp().getTime());
+		Timestamp sqlDate2 = new Timestamp(archiveUrls.get(i).getTimestamp().getTime());
 		PreparedStatement ps = conn.prepareStatement("SELECT `jaccard_text` ,`jaccard_frame` FROM `lw_resource_archive_jaccardindex` WHERE `resource_id`=? AND `timestamp1`=? AND `timestamp2`=?;");
-		ps.setInt(1, resource_id);
+		ps.setInt(1, resourceId);
 		ps.setTimestamp(2, sqlDate1);
 		ps.setTimestamp(3, sqlDate2);
 		ResultSet rs = ps.executeQuery();
@@ -259,10 +239,10 @@ public class ArchiveItShingle
 		}
 		else
 		{
-		    t = computeIndex(hashmaptext.get(url), hashmaptext.get(key));
-		    f = computeIndex(hashmapframe.get(url), hashmapframe.get(key));
+		    t = computeJaccardIndex(hashmaptext.get(url), hashmaptext.get(key));
+		    f = computeJaccardIndex(hashmapframe.get(url), hashmapframe.get(key));
 		    ps = conn.prepareStatement("UPDATE `lw_resource_archive_jaccardindex` SET `jaccard_text`=? , `jaccard_frame`=? WHERE `resource_id`=? AND `timestamp1`=? AND `timestamp2`=?;");
-		    ps.setInt(3, resource_id);
+		    ps.setInt(3, resourceId);
 		    ps.setTimestamp(4, sqlDate1);
 		    ps.setTimestamp(5, sqlDate2);
 		    ps.setFloat(1, t);
@@ -372,8 +352,8 @@ public class ArchiveItShingle
 		float par = (float) 0.3;
 		for(i = 0; i < listOfArchives.size() - 1; i++)
 		{
-		    text = archiveItShingle.computeIndex(hashmaptext.get(listOfArchives.get(i).getArchiveUrl()), hashmaptext.get(listOfArchives.get(i + 1).getArchiveUrl()));
-		    frame = archiveItShingle.computeIndex(hashmapframe.get(listOfArchives.get(i).getArchiveUrl()), hashmapframe.get(listOfArchives.get(i + 1).getArchiveUrl()));
+		    text = archiveItShingle.computeJaccardIndex(hashmaptext.get(listOfArchives.get(i).getArchiveUrl()), hashmaptext.get(listOfArchives.get(i + 1).getArchiveUrl()));
+		    frame = archiveItShingle.computeJaccardIndex(hashmapframe.get(listOfArchives.get(i).getArchiveUrl()), hashmapframe.get(listOfArchives.get(i + 1).getArchiveUrl()));
 		    d = par * text + (1 - par) * frame;
 		    Timestamp sqlDate1 = new Timestamp(listOfArchives.get(i).getTimestamp().getTime());
 		    Timestamp sqlDate2 = new Timestamp(listOfArchives.get(i + 1).getTimestamp().getTime());

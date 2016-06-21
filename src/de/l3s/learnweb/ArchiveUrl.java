@@ -63,15 +63,11 @@ public class ArchiveUrl implements Serializable
     @Override
     public boolean equals(Object o)
     {
-	if(o == null)
-	    return false;
-	if(!(o instanceof ArchiveUrl))
+	if(o == null || !(o instanceof ArchiveUrl))
 	    return false;
 
 	ArchiveUrl other = (ArchiveUrl) o;
-	if(!this.archiveUrl.equalsIgnoreCase(other.archiveUrl))
-	    return false;
-	if(!this.timestamp.equals(other.timestamp))
+	if(!this.archiveUrl.equalsIgnoreCase(other.archiveUrl) || !this.timestamp.equals(other.timestamp))
 	    return false;
 
 	return true;

@@ -256,51 +256,42 @@ public class ArchiveUrlManager
 	}
     }
 
-    public String getFileUrl(int resource_id, String archive_url) throws SQLException
+    public String getFileUrl(int resourceId, String archiveUrl) throws SQLException
     {
-	int fileId = 0;
 	PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT `file_id`,`httpstatuscode` FROM `lw_resource_archiveurl` where `resource_id`=? and `archive_url`=?");
-	ps.setInt(1, resource_id);
-	ps.setString(2, archive_url);
+	ps.setInt(1, resourceId);
+	ps.setString(2, archiveUrl);
 	ResultSet rs = ps.executeQuery();
 	if(rs.next())
 	{
-	    fileId = rs.getInt("file_id");
+	    int fileId = rs.getInt("file_id");
 	    if(rs.getInt("httpstatuscode") != 200)
-	    {
 		return null;
-	    }
 	    else
-	    {
-		String url = learnweb.getFileManager().getThumbnailUrl(fileId);
-		return url;
-	    }
+		return learnweb.getFileManager().getThumbnailUrl(fileId);
 	}
-	else
-	{
-	    return null;
-	}
+	return null;
     }
 
-    public Date getTimestamp(int resource_id, String archive_url) throws SQLException
+    /**
+     * 
+     * For archive visualisation timeline
+     */
+    public Date getTimestamp(int resourceId, String archiveUrl) throws SQLException
     {
-	Date timestamp = null;
 	PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT `timestamp`,`httpstatuscode` FROM `lw_resource_archiveurl` where `resource_id`=? and `archive_url`=?");
-	ps.setInt(1, resource_id);
-	ps.setString(2, archive_url);
+	ps.setInt(1, resourceId);
+	ps.setString(2, archiveUrl);
 	ResultSet rs = ps.executeQuery();
 	if(rs.next())
 	{
-	    timestamp = rs.getDate("timestamp");
+	    Date timestamp = new Date(rs.getTimestamp("timestamp").getTime());
 	    if(rs.getInt("httpstatuscode") != 200)
 		return null;
 	    else
 		return timestamp;
 	}
-	else
-	{
-	    return null;
-	}
+	return null;
     }
 
     public String addResourceToArchive(Resource resource)
@@ -584,10 +575,6 @@ public class ArchiveUrlManager
 
     public void saveArchiveItVersions(int resourceId, List<ArchiveUrl> archiveVersions)
     {
-	/* never used TODO remove?
-	DateFormat gmtDate = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-	gmtDate.setTimeZone(TimeZone.getTimeZone("GMT"));
-	*/
 	for(ArchiveUrl version : archiveVersions)
 	{
 	    try
