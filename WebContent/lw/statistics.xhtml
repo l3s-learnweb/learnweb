@@ -26,7 +26,7 @@
 				</thead>
 				<tbody class="ui-datatable-data ui-widget-content">
 					<tr class="ui-widget-content ui-datatable-even">
-						<td><div class="ui-dt-c">users</div></td>
+						<td><div class="ui-dt-c">Registered users</div></td>
 						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.users}"/></div></td>
 					</tr>
 					<tr class="ui-widget-content ui-datatable-even">
@@ -76,13 +76,27 @@
 						<td><div class="ui-dt-c">average number of comments per commented resource</div></td>
 						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.commentedResourcesAverage}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2" /></h:outputText></div></td>
 					</tr>
-					
+					<!-- 
 					<tr class="ui-widget-content ui-datatable-even">
 						<td><div class="ui-dt-c">average session length</div></td>
 						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.averageUsageTime}"><f:convertNumber minFractionDigits="2" maxFractionDigits="2" /></h:outputText> minutes</div></td>
 					</tr>
+					 -->
 				</tbody>
 			</table>
-		</div>		
+		</div>	
+		
+		<br/>
+		
+		<p:dataTable var="month" value="#{statisticsBean.activeUsersPerMonth}">
+		    <p:column headerText="Month">
+		        <h:outputText value="#{month.key}" />
+		    </p:column>
+		 
+		    <p:column headerText="Active users">
+		        <h:outputText value="#{month.value}" />
+		    </p:column>		 
+		</p:dataTable>	
+		
 	</ui:define>		
 </ui:composition>
