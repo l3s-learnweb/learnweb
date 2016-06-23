@@ -19,7 +19,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 import org.primefaces.context.RequestContext;
@@ -174,8 +173,7 @@ public class ArchiveThumbnailBean extends ApplicationBean
     {
 	TimelineEvent timelineEvent = e.getTimelineEvent();
 
-	FacesMessage msg = new FacesMessage(FacesMessage.SEVERITY_INFO, "Selected event:", timelineEvent.getData().toString());
-	FacesContext.getCurrentInstance().addMessage("Kill me", msg);
+	addMessage(FacesMessage.SEVERITY_INFO, "Selected event:", timelineEvent.getData().toString());
     }
 
     @PostConstruct

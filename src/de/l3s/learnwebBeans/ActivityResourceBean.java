@@ -10,6 +10,7 @@ import javax.faces.bean.ViewScoped;
 
 import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.LogEntry;
+import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.NewsEntry;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Tag;
@@ -20,10 +21,9 @@ import de.l3s.learnwebBeans.GroupDetailBean.RPAction;
 @ViewScoped
 public class ActivityResourceBean extends ApplicationBean implements Serializable
 {
-    /*
-    private static Action[] filter = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
-        Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.group_removing_resource };
-    */
+    private final static Action[] FILTER = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
+	    Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.group_removing_resource };
+
     private static final long serialVersionUID = -7630987853810267209L;
     private ArrayList<NewsEntry> newslist;
     private Resource clickedResource;
@@ -55,7 +55,7 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
 
     public boolean canDeleteTag(Object tagO) throws SQLException
     {
-	if(!(tagO instanceof Tag))
+	if(tagO == null || !(tagO instanceof Tag))
 	    return false;
 
 	User user = getUser();
@@ -75,7 +75,7 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
     {
 	//HashSet<Integer> deletedResources = new HashSet<Integer>();
 
-	List<LogEntry> feed = getfeed();
+	List<LogEntry> feed = getLearnweb().getActivityLogOfUserGroups(getUser().getId(), FILTER, 25);
 
 	if(feed != null)
 	{
@@ -87,129 +87,6 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
 	    {
 		newslist.add(new NewsEntry(l));
 
-		/*
-		Resource r = l.getResource();
-		
-		int commentcount = 0;
-		int tagcount = 0;
-		String text = l.getDescription();
-		
-		if(r != null)
-		{
-		    if(r.getComments() != null)
-			commentcount = r.getComments().size();
-		
-		    if(r.getTags() != null)
-			tagcount = r.getTags().size();
-		
-		    if(l.getAction() == Action.commenting_resource && commentcount > 0)
-		    {
-			Comment comment = resourceManager.getComment(Integer.parseInt(l.getParams()));
-		
-			if(comment != null)
-			    text = text + " " + getLocaleMessage("with") + " " + "<b>" + comment.getText() + "</b>";
-		    }
-		
-		}
-		
-		newslist.add(new NewsEntry(l, null, r, commentcount, tagcount, text, r != null, l.getDate()));
-		/*
-		User u = null;
-		Resource r = null;
-		boolean resourceaction = true;
-		try
-		{
-		    u = getLearnweb().getUserManager().getUser(l.getUserId());
-		    r = getLearnweb().getResourceManager().getResource(l.getResourceId());
-		}
-		catch(Exception e)
-		{
-		    // TODO Auto-generated catch block
-		    e.printStackTrace();
-		}
-		if(r != null && deletedResources.contains(r.getId()))
-		    resourceaction = false;
-		
-		int commentcount = 0;
-		int tagcount = 0;
-		String text = l.getDescription();
-		if(l.getAction() == Action.deleting_resource || r == null || l.getAction() == Action.group_removing_resource)
-		{
-		    if(r != null)
-			deletedResources.add(r.getId());
-		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, !resourceaction, l.getDate()));
-		    continue;
-		}
-		try
-		{
-		    if(r.getComments() != null)
-			commentcount += r.getComments().size();
-		}
-		catch(Exception e)
-		{
-		    // TODO Auto-generated catch block
-		
-		}
-		
-		try
-		{
-		    if(r.getTags() != null)
-			tagcount += r.getTags().size();
-		}
-		catch(Exception e)
-		{
-		    // TODO Auto-generated catch block
-		
-		}
-		
-		if(l.getAction() == filter[0]) //add_resource
-		{
-		
-		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
-		    continue;
-		
-		}
-		if(l.getAction() == filter[1] && commentcount > 0)
-		{
-		    Comment commenttobeadded = new Comment();
-		    commenttobeadded.setText("comment removed!");
-		    try
-		    {
-		
-			for(Comment c : getLearnweb().getResourceManager().getCommentsByResourceId(r.getId()))
-			{
-			    if(c.getId() == Integer.parseInt(l.getParams()))
-			    {
-				commenttobeadded = c;
-			    }
-			}
-		
-		    }
-		    catch(SQLException e)
-		    {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		    }
-		    text = text + " " + UtilBean.getLocaleMessage("with") + " " + "<i>" + commenttobeadded.getText() + "</i>";
-		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
-		    continue;
-		
-		}
-		if(l.getAction() == filter[15])
-		{
-		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
-		    continue;
-		
-		}
-		if(l.getAction() == filter[14])
-		{
-		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
-		    continue;
-		
-		}
-		
-		newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, false, l.getDate()));
-		*/
 	    }
 
 	}
@@ -264,76 +141,4 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
 	this.clickedFolder = clickedFolder;
     }
 
-    private List<LogEntry> getfeed()
-    {
-
-	List<LogEntry> logs = null;
-	try
-	{
-	    logs = getLearnweb().getActivityLogOfUserGroups(getUser().getId(), null, 20);
-	}
-	catch(SQLException e)
-	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-	return logs;
-    }
-
-    /*public Comment getClickedComment()
-    {
-    return clickedComment;
-    }
-    
-    public void setClickedComment(Comment clickedComment)
-    {
-    this.clickedComment = clickedComment;
-    }
-    
-    public void onEditComment()
-    {
-    try
-    {
-        getLearnweb().getResourceManager().saveComment(clickedComment);
-        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-    }
-    catch(Exception e)
-    {
-        e.printStackTrace();
-        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-    }
-    }
-    
-    public void onDeleteComment()
-    {
-    try
-    {
-        clickedResource.deleteComment(clickedComment);
-        addMessage(FacesMessage.SEVERITY_INFO, "comment_deleted");
-        log(Action.deleting_comment, clickedComment.getResourceId(), clickedComment.getId() + "");
-    }
-    catch(Exception e)
-    {
-        e.printStackTrace();
-        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-    }
-    }
-    
-    public boolean canEditComment(Object commentO) throws Exception
-    {
-    if(!(commentO instanceof Comment))
-        return false;
-    
-    User user = getUser();
-    if(null == user)// || true)
-        return false;
-    if(user.isAdmin() || user.isModerator())
-        return true;
-    
-    Comment comment = (Comment) commentO;
-    User owner = comment.getUser();
-    if(user.equals(owner))
-        return true;
-    return false;
-    }*/
 }

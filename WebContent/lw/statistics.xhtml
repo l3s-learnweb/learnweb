@@ -8,7 +8,9 @@
 	<ui:param name="smallPage" value="true"/>
 	
 	<ui:define name="center_layout">
-
+		<style type="text/css">
+		 .ui-datatable {margin-bottom:20rem;}
+		</style>
 		<h1><h:outputText value="#{msg.statistics}" escape="false" /></h1>
 	
 		<div class="ui-datatable ui-widget">
@@ -30,11 +32,11 @@
 						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.users}"/></div></td>
 					</tr>
 					<tr class="ui-widget-content ui-datatable-even">
-						<td><div class="ui-dt-c">groups</div></td>
+						<td><div class="ui-dt-c">Groups</div></td>
 						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.groups}"/></div></td>
 					</tr>
 					<tr class="ui-widget-content ui-datatable-even">
-						<td><div class="ui-dt-c">resources</div></td>
+						<td><div class="ui-dt-c">Resources overall</div></td>
 						<td><div class="ui-dt-c"><h:outputText value="#{statisticsBean.resources}"/></div></td>
 					</tr>
 					
@@ -85,16 +87,32 @@
 				</tbody>
 			</table>
 		</div>	
-		
-		<br/>
-		
-		<p:dataTable var="month" value="#{statisticsBean.activeUsersPerMonth}">
+			
+		<p:dataTable var="month" value="#{statisticsBean.activeUsersPerMonth}" >
+			<f:facet name="header">
+		        Active users per month
+		    </f:facet>
+    
 		    <p:column headerText="Month">
 		        <h:outputText value="#{month.key}" />
 		    </p:column>
 		 
 		    <p:column headerText="Active users">
 		        <h:outputText value="#{month.value}" />
+		    </p:column>		 
+		</p:dataTable>	
+			
+		<p:dataTable var="row" value="#{statisticsBean.resourcesPerSource}" >
+			<f:facet name="header">
+		    	Resource count per source
+		    </f:facet>
+    
+		    <p:column headerText="Source">
+		        <h:outputText value="#{row.key}" />
+		    </p:column>
+		 
+		    <p:column headerText="Resources">
+		        <h:outputText value="#{row.value}" />
 		    </p:column>		 
 		</p:dataTable>	
 		

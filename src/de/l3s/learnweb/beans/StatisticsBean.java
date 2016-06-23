@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.AbstractMap;
 import java.util.AbstractMap.SimpleEntry;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -32,7 +33,8 @@ public class StatisticsBean extends ApplicationBean implements Serializable
     private Long tagCount;
     private Long commentCount;
     private BigDecimal averageSessionTime;
-    private LinkedList<SimpleEntry<String, String>> activeUsersPerMonth;
+    private List<SimpleEntry<String, String>> activeUsersPerMonth;
+    private List<SimpleEntry<String, String>> resourcesPerSource;
 
     public StatisticsBean() throws SQLException
     {
@@ -61,22 +63,22 @@ public class StatisticsBean extends ApplicationBean implements Serializable
 	commentedResourcesAverage = (double) commentCount / (double) commentedResourcesCount;
 
 	//averageSessionTime = (BigDecimal) Sql.getSingleResult("SELECT avg(diff) / 60 FROM (SELECT count(*) as t, UNIX_TIMESTAMP(max(timestamp)) -  UNIX_TIMESTAMP(min(timestamp)) AS diff FROM `lw_user_log` GROUP BY session_id) AS DE");			
-	activeUsersPerMonth = new LinkedList<>();
-	ResultSet rs = getLearnweb().getConnection().createStatement().executeQuery(
+	activeUsersPerMonth = getEntriesForQuery(
 		"SELECT CONCAT(year(timestamp),'-',month(timestamp)) as month, count(distinct user_id) as active_users FROM `lw_user_log` WHERE `action` = 9 and timestamp > DATE_SUB(NOW(), INTERVAL 390 day) group by year(timestamp) ,month(timestamp) ORDER BY  year(timestamp) DESC,month(timestamp) DESC LIMIT 13");
+
+	resourcesPerSource = getEntriesForQuery("SELECT source, count( * ) FROM lw_resource WHERE deleted =0 GROUP BY source ORDER BY count( * ) DESC");
+    }
+
+    private List<SimpleEntry<String, String>> getEntriesForQuery(String query) throws SQLException
+    {
+	LinkedList<SimpleEntry<String, String>> results = new LinkedList<>();
+	ResultSet rs = getLearnweb().getConnection().createStatement().executeQuery(query);
 	while(rs.next())
 	{
 	    SimpleEntry<String, String> row = new AbstractMap.SimpleEntry<>(rs.getString(1), rs.getString(2));
-	    activeUsersPerMonth.add(row);
+	    results.add(row);
 	}
-
-	/*
-	SELECT source, count( * )
-	FROM lw_resource
-	WHERE deleted =0
-	GROUP BY source
-	ORDER BY count( * ) DESC
-	LIMIT 0 , 30*/
+	return results;
     }
 
     public Long getRatedResourcesCount()
@@ -144,9 +146,14 @@ public class StatisticsBean extends ApplicationBean implements Serializable
 	return resources;
     }
 
-    public LinkedList<SimpleEntry<String, String>> getActiveUsersPerMonth()
+    public List<SimpleEntry<String, String>> getActiveUsersPerMonth()
     {
 	return activeUsersPerMonth;
+    }
+
+    public List<SimpleEntry<String, String>> getResourcesPerSource()
+    {
+	return resourcesPerSource;
     }
 
 }
