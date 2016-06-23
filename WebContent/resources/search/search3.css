@@ -1,18 +1,18 @@
 
 #search_loading_more_results {
-	line-height:30px;	
+	line-height:3rem;	
 }
 #search_loading_more_results .loading-icon {
 	display:inline-block;
-	width:16px;
-	height:16px;
+	width:1.6rem;
+	height:1.6rem;
 	background-image:url(../resources/search/icon/loading.gif);
-	margin-bottom: -4px;
-	margin-left: 4px;
+	margin-bottom: -0.4rem;
+	margin-left: 0.4rem;
 }
 #search_loading_more_results img {
 	vertical-align:bottom;
-	margin-left:3px;
+	margin-left:0.3rem;
 }
 
 #search_loading_more_results,
@@ -20,11 +20,11 @@
 #search_no_more_results {
 	font-weight: bold;
 	display: none;
-	border: 1px solid black;
+	border: 0.1rem solid black;
 	background-color: #5C5C5C;
-	padding: 5px;	
+	padding: 0.5rem;	
 	color:white;
-	margin:10px;
+	margin:1rem;
 	text-align:center;
 	z-index:1;
 	clear:both; 
@@ -150,13 +150,13 @@
 	display: none;
 }
 
-.filters_menu_bar .filter-sub-bar a {
+#header .filters_menu_bar .filter-sub-bar a {
   display: block;
   white-space: nowrap;
   text-decoration: none;
   padding: 0 15px 0 10px;
-  line-height: 32px;
-  color: #000 !important;
+  line-height: 3.2rem;
+  color: #000;
 }
 
 .filters_menu_bar .filter-sub-bar a.active, .filters_menu_bar .filter-sub-bar a:hover {
@@ -181,8 +181,8 @@
 	border-right: 0.5rem solid transparent;
 	border-top: 0.4rem solid #fff;
 	display: inline-block;
-	margin-bottom: 2px;
-	margin-left: 5px;
+	margin-bottom: 0.2rem;
+	margin-left: 0.5rem;
 }
 
 .result-count { color:grey; }
@@ -195,19 +195,19 @@
 .list_view#results {
 	float: left;
 	width: 61%;
-	min-width: 540px;
-	max-width: 700px;
+	min-width: 54rem;
+	max-width: 70rem;
 }
 
 .list_view#explore_resultset{
 	float: left;
 	width: 61%;
-	min-width: 631px;	
+	min-width: 63rem;	
 }
 
 .list_view .resource
 {
-	margin:20px 15px;
+	margin:2rem 1.5rem;
 }
 
 .list_view .resource:hover

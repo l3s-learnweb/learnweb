@@ -31,19 +31,19 @@ body {
 }
 iframe { border:none }
 
-.header {
+#header {
 	position:fixed;
 	top:0;
 	width:100%;
 	z-index:100;
     background: #6E6E6E;
 }
-.header a {
-	color:#FFFFFF !important;	
+#header a {
+	color:#FFFFFF;	
 	font-size:1.5rem;
 	font-weight:bolder;
 }
-.header a:hover{text-decoration:none;}
+#header a:hover{text-decoration:none;}
 
 #content {
 	padding-top:4.6rem;	
@@ -390,9 +390,11 @@ iframe { border:none }
 	width:100%;
 	overflow:hidden;
 }
+/*
 @-moz-document url-prefix(){
     #sub_menu_bar { line-height:2.0rem; }
-}
+}*/
+
 #sub_menu_bar .links { margin-left:22rem; }
 
 #sub_menu_bar .activeResource,

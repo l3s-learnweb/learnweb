@@ -45,7 +45,7 @@
 	
 	<ui:define name="center_layout">
 	
-		<h:outputStylesheet library="search" name="search2.css"  />
+		<h:outputStylesheet library="search" name="search3.css"  />
 		<h:outputScript library="js" name="viewresultset.js" />		
 		
 		<script type="text/javascript">
@@ -63,7 +63,7 @@
 						<ui:param name="view" value="#{resultSetBean.resultSetView}" />					
 					</ui:decorate>
 				</h:panelGroup>
-				<h:panelGroup layout="block" rendered="${resultSetBean.resources.size() == 0}">
+				<h:panelGroup layout="block" rendered="#{empty resultSetBean.resources}">
 					<p:messages id="no_resources" showDetail="true" autoUpdate="true"/>
 				</h:panelGroup>
 				</div>	

@@ -413,7 +413,7 @@ public class Learnweb
 	    }
 	    catch(SQLException e)
 	    {
-		log.error("Can't store log entry: " + action + "; Target: " + targetId + "; User: " + user.getId(), e);
+		log.error("Can't store log entry: " + action + "; Target: " + targetId + "; User: " + userId, e);
 	    }
 	}
     }
