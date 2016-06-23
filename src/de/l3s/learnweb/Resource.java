@@ -750,16 +750,13 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     public String getServiceIcon()
     {
 	if(getId() != -1) // is stored at fedora
-	    return "/resources/icon/services/fedora.gif";
+	    return "/resources/icon/services/learnweb.gif";
 
-	return "/resources/icon/services/" + getLocation().toLowerCase() + ".gif";
-    }
+	String format = ".gif";
+	if(getLocation().equalsIgnoreCase("youtube") || getLocation().equalsIgnoreCase("flickr") || getLocation().equalsIgnoreCase("ipernity"))
+	    format = ".png";
 
-    public String getOriginalServiceIcon()
-    {
-	if(getLocation().equalsIgnoreCase("desktop"))
-	    return "/resources/icon/upload.gif";
-	return "/resources/icon/services/" + getLocation().toLowerCase() + ".gif";
+	return "/resources/icon/services/" + getLocation().toLowerCase() + format;
     }
 
     public static Comparator<Resource> createIdComparator()

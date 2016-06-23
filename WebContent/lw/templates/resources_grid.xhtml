@@ -28,7 +28,7 @@
 				</div>
 				<div class="location">
 					<h:outputLink value="${res.url}">
-						<img src="#{learnwebBean.contextUrl}/resources/icon/services/#{res.location.toLowerCase()}.gif" alt="${res.location}" /> <h:outputText value="${res.location}" />
+						<img src="#{learnwebBean.contextUrl}#{res.serviceIcon}" alt="${res.location}" height="16" width="16"/> <h:outputText value="${res.location}" />
 					</h:outputLink>
 				</div>
 			</div>

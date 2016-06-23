@@ -703,12 +703,12 @@ img.smallImage { cursor:pointer; margin:4px; }
 
 .group-menu-header .source_flickr,
 .group-menu-block.source_flickr .group-menu-title {
-	background-image: url('../resources/icon/services/flickr.gif');
+	background-image: url('../resources/icon/services/flickr.png');
 }
 
 .group-menu-header .source_youtube,
 .group-menu-block.source_youtube .group-menu-title {
-	background-image: url('../resources/icon/services/youtube.gif');
+	background-image: url('../resources/icon/services/youtube.png');
 }
 
 .group-menu-header .source_vimeo,

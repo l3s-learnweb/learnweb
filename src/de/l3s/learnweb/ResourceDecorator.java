@@ -69,6 +69,11 @@ public class ResourceDecorator implements Serializable
 
     // Convenience methods which call the underlying resource
 
+    public String getServiceIcon()
+    {
+	return resource.getServiceIcon();
+    }
+
     public String getLearnwebUrl() throws SQLException
     {
 	return resource.getLearnwebUrl();
