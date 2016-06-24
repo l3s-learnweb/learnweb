@@ -150,6 +150,7 @@ public class ForumPostBean extends ApplicationBean implements Serializable
 
     public void quotePost(ForumPost post) throws SQLException
     {
+	// the class is ignored in the WYSIWYG editor, though we have to add the style defintion 
 	newPost.setText(
 		"<div class='post_quote' style='margin: 0.6rem 2rem; border-left: 2px solid rgb(168, 168, 168); border-right: 2px solid rgb(168, 168, 168); background-color: rgb(207, 207, 207);'><div class='post_quote_name' style='font-weight: bold; padding: 0.2rem 0.5rem;background-color: rgb(168, 168, 168);'>"
 			+ post.getUser().getUsername() + "</div><div class='post_quote_text' style='padding: 0.2rem 0.5rem;'> " + post.getText() + "</div></div><br/>");

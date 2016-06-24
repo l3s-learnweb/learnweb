@@ -20,6 +20,7 @@ import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.solrClient.SolrClient;
 import de.l3s.searchlogclient.SearchLogClient;
 import de.l3s.util.PropertiesBundle;
+import de.l3s.util.StringHelper;
 
 public class Learnweb
 {
@@ -377,10 +378,7 @@ public class Learnweb
 	if(null == action)
 	    throw new IllegalArgumentException();
 
-	if(null == params)
-	    params = "";
-	else if(params.length() > 250)
-	    params = params.substring(0, 250);
+	params = StringHelper.shortnString(params, 250);
 
 	int userId = (null == user) ? 0 : user.getId();
 

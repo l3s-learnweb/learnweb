@@ -92,6 +92,15 @@ public class LoginBean extends ApplicationBean implements Serializable
 	    return "/lw/" + user.getOrganisation().getWelcomePage() + "?faces-redirect=true";
 	}
 
+	// set default search service if not already selected
+	if(getPreference("SEARCH_SERVICE_TEXT") == null || getPreference("SEARCH_SERVICE_IMAGE") == null || getPreference("SEARCH_SERVICE_VIDEO") == null)
+	{
+	    log.debug("set default search service for user: " + user.getUsername());
+	    setPreference("SEARCH_SERVICE_TEXT", user.getOrganisation().getDefaultSearchServiceText());
+	    setPreference("SEARCH_SERVICE_IMAGE", user.getOrganisation().getDefaultSearchServiceImage());
+	    setPreference("SEARCH_SERVICE_VIDEO", user.getOrganisation().getDefaultSearchServiceVideo());
+	}
+
 	// otherwise reload his last page
 	return viewId + "?faces-redirect=true&includeViewParams=true";
 

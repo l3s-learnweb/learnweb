@@ -29,6 +29,9 @@ public class Organisation implements Serializable, Comparable<Organisation>
     private String logo;
     private String welcomeMessage;
     private String welcomePage;
+    private String defaultSearchServiceText;
+    private String defaultSearchServiceImage;
+    private String defaultSearchServiceVideo;
     private long[] options = new long[1];
     private List<ResourceMetadataField> metadataFields = new LinkedList<ResourceMetadataField>();
 
@@ -54,10 +57,14 @@ public class Organisation implements Serializable, Comparable<Organisation>
 	this.logo = rs.getString("logo");
 	this.welcomePage = rs.getString("welcome_page");
 	this.welcomeMessage = rs.getString("welcome_message");
+	this.defaultSearchServiceText = rs.getString("default_search_text");
+	this.defaultSearchServiceImage = rs.getString("default_search_image");
+	this.defaultSearchServiceVideo = rs.getString("default_search_video");
 
 	for(int i = 0; i < 1;)
 	    options[i] = rs.getInt("options_field" + (++i));
 
+	// define optional resource fields for some courses
 	if(id == 893) // Admin only
 	{
 	    ResourceMetadataField metadata = new ResourceMetadataField("language", MetadataType.ONE_MENU);
@@ -201,4 +208,35 @@ public class Organisation implements Serializable, Comparable<Organisation>
     {
 	return options;
     }
+
+    public String getDefaultSearchServiceText()
+    {
+	return defaultSearchServiceText;
+    }
+
+    public void setDefaultSearchServiceText(String defaultSearchServiceText)
+    {
+	this.defaultSearchServiceText = defaultSearchServiceText;
+    }
+
+    public String getDefaultSearchServiceImage()
+    {
+	return defaultSearchServiceImage;
+    }
+
+    public void setDefaultSearchServiceImage(String defaultSearchServiceImage)
+    {
+	this.defaultSearchServiceImage = defaultSearchServiceImage;
+    }
+
+    public String getDefaultSearchServiceVideo()
+    {
+	return defaultSearchServiceVideo;
+    }
+
+    public void setDefaultSearchServiceVideo(String defaultSearchServiceVideo)
+    {
+	this.defaultSearchServiceVideo = defaultSearchServiceVideo;
+    }
+
 }

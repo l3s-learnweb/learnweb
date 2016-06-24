@@ -30,7 +30,7 @@ public class LogEntry implements Serializable
 	group_leaving, // target_id = group_id
 	login,
 	logout,
-	unused6,
+	forum_post_added, // target_id = 
 	register,
 	changing_profile, // target_id = user_id of the user whose profile was changed
 	deleting_resource, // param = resource title; target_id = resource id

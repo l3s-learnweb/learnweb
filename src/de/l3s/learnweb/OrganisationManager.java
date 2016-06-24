@@ -24,7 +24,7 @@ public class OrganisationManager implements HasCache
 {
     public final static Logger log = Logger.getLogger(OrganisationManager.class);
     // if you change this, you have to change the constructor of Organisation too
-    private final static String COLUMNS = "organisation_id, title, logo, welcome_page, welcome_message, options_field1";
+    private final static String COLUMNS = "organisation_id, title, logo, welcome_page, welcome_message, default_search_text, default_search_image, default_search_video, options_field1";
 
     private Learnweb learnweb;
     private Map<Integer, Organisation> cache;
@@ -115,7 +115,7 @@ public class OrganisationManager implements HasCache
 	    cache.put(organisation.getId(), organisation);
 	}
 
-	PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_organisation` (" + COLUMNS + ") VALUES (?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+	PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_organisation` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
 	if(organisation.getId() < 0) // the organisation is not yet stored at the database 
 	    replace.setNull(1, java.sql.Types.INTEGER);
@@ -125,7 +125,10 @@ public class OrganisationManager implements HasCache
 	replace.setString(3, organisation.getLogo());
 	replace.setString(4, organisation.getWelcomePage());
 	replace.setString(5, organisation.getWelcomeMessage());
-	replace.setLong(6, organisation.getOptions()[0]);
+	replace.setString(6, organisation.getDefaultSearchServiceText());
+	replace.setString(7, organisation.getDefaultSearchServiceImage());
+	replace.setString(8, organisation.getDefaultSearchServiceVideo());
+	replace.setLong(9, organisation.getOptions()[0]);
 	replace.executeUpdate();
 
 	if(organisation.getId() < 0) // get the assigned id

@@ -862,11 +862,13 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    images.setResultsPerService(10);
 	    images.getResourcesByPage(1);
 
+	    /*
 	    LinkedList<ResourceDecorator> resources = images.getResources();
+	    
 	    for(ResourceDecorator resource : resources)
-		System.out.println(resource.getSource());
+	    System.out.println(resource.getSource());
 	    //images.getResourcesByPage(2);			
-
+	    */
 	    graphLoaded = true;
 	}
 	catch(Exception e)
