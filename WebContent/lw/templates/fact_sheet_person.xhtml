@@ -42,7 +42,11 @@
 				<div id="fact_sheet_description">#{searchBean.graph.entities[0].description}</div>
 				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].birthDate  and not empty searchBean.graph.entities[0].birthPlace }">
 					<div class="fact_sheet_detail">
-						<h:outputText value="#{msg.Born}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].birthDate} #{msg.in_location} #{searchBean.graph.entities[0].birthPlace}</span>
+						<h:outputText value="#{msg.Born}: " styleClass="fact_sheet_field" />
+						<h:outputText value="#{searchBean.graph.entities[0].birthDate}" styleClass="fact_sheet_value">
+								<f:convertDateTime  dateStyle="long" />
+							</h:outputText>
+							#{msg.in_location} #{searchBean.graph.entities[0].birthPlace}
 					</div>
 				</ui:fragment>
 				<ui:fragment rendered="#{empty searchBean.graph.entities[0].birthDate and not empty searchBean.graph.entities[0].birthPlace }">
@@ -52,7 +56,10 @@
 				</ui:fragment>
 				<ui:fragment rendered="#{empty searchBean.graph.entities[0].birthPlace and not empty searchBean.graph.entities[0].birthDate}">
 					<div class="fact_sheet_detail">
-						<h:outputText value="#{msg.Date_of_birth}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].birthDate}</span>
+						<h:outputText value="#{msg.Date_of_birth}: " styleClass="fact_sheet_field" />
+						<h:outputText value="#{searchBean.graph.entities[0].birthDate}" styleClass="fact_sheet_value">
+								<f:convertDateTime  dateStyle="long" />
+							</h:outputText>
 					</div>
 				</ui:fragment>
 				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].deathDate and not empty searchBean.graph.entities[0].deathPlace }">
@@ -73,7 +80,11 @@
 				</ui:fragment>
 				<ui:fragment rendered="#{empty searchBean.graph.entities[0].deathPlace and not empty searchBean.graph.entities[0].deathDate}">
 					<div class="fact_sheet_detail">
-						<h:outputText value="#{msg.Date_of_death}: " styleClass="fact_sheet_field" /><span class="fact_sheet_value">#{searchBean.graph.entities[0].deathDate}</span>
+						<h:outputText value="#{msg.Date_of_death}: " styleClass="fact_sheet_field" />
+						
+						<h:outputText value="#{searchBean.graph.entities[0].deathDate}" styleClass="fact_sheet_value">
+								<f:convertDateTime  dateStyle="long" />
+							</h:outputText>
 					</div>
 				</ui:fragment>
 				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].fullName }">
