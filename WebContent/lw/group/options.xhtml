@@ -115,7 +115,7 @@
 						update=":growl :group_menu"	style="border-radius:0px;">
 					</p:commandButton>
 				</h:panelGrid>
-									<!-- 	
+										
 						
 					<h:outputText value="#{msg.options}:" />
 					
@@ -131,7 +131,7 @@
 						
 										
 					</h:panelGrid>
-					 -->
+					
 			</h:form>
 			
 			<style type="text/css">
@@ -140,6 +140,8 @@
 					font-size: 1.5rem;
 				}
 			</style>
+			
+			<ui:remove>
 			<div class="page_header" style="margin-top:0.5rem">
 				<span>
 					Privacy settings
@@ -187,7 +189,7 @@
 					</p:commandButton>
 				
 			</h:form>
-		
+			</ui:remove>
 			<br/>
 			<div class="page_header">
 				<span>
@@ -195,7 +197,7 @@
 				</span>
 			</div>
 			
-			<h:form id="group_copy_form">
+			<h:form id="group_copy_form" style="margin-bottom:4rem;">
 				<h:panelGrid columns="3">
 					<h:outputText value="Copy all resources of this group to:"/>
 					<h:selectOneMenu value="#{groupDetailBean.selectedResourceTargetGroupId}">

@@ -6,7 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -118,41 +117,6 @@ public class UserManager
 	select.close();
 
 	return users;
-    }
-
-    /**
-     * Method constructed to remove admins and moderators users
-     * 
-     * @param Users List
-     * @author Alana
-     * @return list without Admin users
-     * @throws SQLException
-     */
-    public List<User> removeAdminUsers(List<User> list) throws SQLException // TODO remove this method
-    {
-
-	List<User> finalList = new ArrayList<User>();
-
-	for(User u : list)
-	{
-	    int valueAdmin = 0, valueModerator = 0;
-	    PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_user` WHERE user_id = ?");
-	    select.setInt(1, u.getId());
-	    ResultSet rs = select.executeQuery();
-
-	    while(rs.next())
-	    {
-		valueAdmin = rs.getInt("is_admin");
-		valueModerator = rs.getInt("is_moderator");
-		log.debug(valueAdmin + "-" + valueModerator);
-
-		if((valueAdmin == 0) && (valueModerator == 0))
-		    finalList.add(u);
-	    }
-	    select.close();
-	}
-
-	return finalList;
     }
 
     /**

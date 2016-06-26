@@ -16,7 +16,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
@@ -838,7 +837,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
     public void sendFeedbackUser() throws IOException
     {
 	//log.debug("sendFeedbackUser");
-	HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
+	//HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
 	//log.debug("Parametro:" + request.getAttribute("selected_users"));
 	try
 	{
@@ -857,15 +856,25 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
 	}
     }
 
-    /*
-     * Remove administrators and moderators users
-     * */
-    public List<User> removeAdminUsers(List<User> listU) throws SQLException
+    /**
+     * Method constructed to remove admins and moderators users
+     * 
+     * @param Users List
+     * @author Alana
+     * @return list without Admin users
+     * @throws SQLException
+     */
+    public static List<User> removeAdminUsers(List<User> list) throws SQLException
     {
-	UserManager usm = getLearnweb().getUserManager();
-	List<User> l = new ArrayList<User>();
-	l = usm.removeAdminUsers(listU);
-	return l;
+	List<User> finalList = new ArrayList<User>();
+
+	for(User user : list)
+	{
+	    if(!user.isModerator() && !user.isAdmin())
+		finalList.add(user);
+	}
+
+	return finalList;
     }
 
     /*

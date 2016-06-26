@@ -9,7 +9,7 @@
 	
 	<ui:define name="center_layout">
 		<style type="text/css">
-		 .ui-datatable {margin-bottom:20rem;}
+		 .ui-datatable {margin-bottom:4rem;}
 		</style>
 		<h1><h:outputText value="#{msg.statistics}" escape="false" /></h1>
 	
@@ -113,7 +113,11 @@
 		 
 		    <p:column headerText="Resources">
 		        <h:outputText value="#{row.value}" />
-		    </p:column>		 
+		    </p:column>	
+		    
+		    <f:facet name="footer">
+		    	* Resources created by crawlers
+		    </f:facet>	 
 		</p:dataTable>	
 		
 	</ui:define>		

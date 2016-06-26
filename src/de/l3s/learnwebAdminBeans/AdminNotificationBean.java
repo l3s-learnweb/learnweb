@@ -42,7 +42,7 @@ public class AdminNotificationBean extends ApplicationBean
 	    return;
 	}
 
-	// tree is used to make sure that every user gets the message only once
+	// Set is used to make sure that every user gets the message only once
 	TreeSet<Integer> selectedUsers = new TreeSet<Integer>();
 	for(String userId : tempSelectedUsers)
 	{

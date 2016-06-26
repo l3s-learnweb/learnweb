@@ -13,6 +13,7 @@ import de.l3s.learnweb.Group;
 import de.l3s.learnweb.GroupManager;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.UserManager;
+import de.l3s.learnweb.beans.UserAssessmentBean;
 import de.l3s.learnwebBeans.ApplicationBean;
 import de.l3s.util.Sql;
 
@@ -173,15 +174,16 @@ public class ClusterBean extends ApplicationBean
     public void getListUsers() throws NumberFormatException, SQLException
     {
 	UserManager usm = getLearnweb().getUserManager();
+
 	List<User> l = new ArrayList<User>();
 	if(this.groupId.compareTo("0") == 0)
 	{
-	    l = usm.removeAdminUsers(usm.getUsersByCourseId(Integer.valueOf(this.classId)));
+	    l = UserAssessmentBean.removeAdminUsers(usm.getUsersByCourseId(Integer.valueOf(this.classId)));
 	    //log.debug(l);
 	}
 	else
 	{
-	    l = usm.removeAdminUsers(usm.getUsersByGroupId(Integer.valueOf(this.groupId)));
+	    l = UserAssessmentBean.removeAdminUsers(usm.getUsersByGroupId(Integer.valueOf(this.groupId)));
 	    //log.debug(l);
 	}
 

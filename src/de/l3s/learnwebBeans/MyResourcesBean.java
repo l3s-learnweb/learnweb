@@ -54,7 +54,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	if(getUser() == null) // not logged in
 	    return;
 
-	//loadResources();
 	breadcrumb = new ArrayList<Folder>();
 	clickedResource = new Resource();
     }
@@ -134,13 +133,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
     }
 
-    public void loadResources() throws SQLException
-    {
-	resourcesAll = getUser().getResources();
-	resourcesText.clear();
-	setMode(mode);
-    }
-
     public void editClickedResource() throws SQLException
     {
 	clickedResource.save();
@@ -182,7 +174,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	log(Action.deleting_resource, 0, clickedResource.getId(), clickedResource.getTitle());
 	resources.remove(clickedResource);
 	clickedResource = new Resource();
-	//loadResources();
     }
 
     public Resource getClickedResource()
