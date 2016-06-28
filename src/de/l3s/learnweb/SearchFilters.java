@@ -834,7 +834,7 @@ public class SearchFilters implements Serializable
     {
 	if(configFilters.containsKey(FILTERS.type))
 	{
-	    return configFilters.get(FILTERS.type).toString();
+	    return ((TYPE) configFilters.get(FILTERS.type)).name();
 	}
 	return null;
     }
