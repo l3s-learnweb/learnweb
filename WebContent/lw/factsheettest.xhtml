@@ -1,0 +1,34 @@
+<ui:composition 
+	template="/templates/main/main.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg.users}"/>
+
+	<ui:define name="center_layout">
+		<div class="page_header" style="margin:5px;">
+			<span>
+				#{msg.users}
+			</span>
+		</div>
+
+<h:form>
+<p:outputLabel  value="Editable: " />
+	<p:selectOneMenu id="Search"  editable="true" value="#{factSheetBean.search}" >
+		<f:selectItem itemLabel="Select One" itemValue="" />
+		<f:selectItem itemLabel="Obama" itemValue="Obama" />
+		<f:selectItem itemLabel="" itemValue="" />
+            
+  	</p:selectOneMenu>
+  	
+  	<p:commandButton value="Submit" update="output"/>
+  	
+  	<h:outputText id="output" value="#{factSheetBean.search}" />
+  	
+		</h:form>
+	</ui:define>
+</ui:composition>
