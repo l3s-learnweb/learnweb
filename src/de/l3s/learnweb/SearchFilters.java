@@ -825,15 +825,6 @@ public class SearchFilters implements Serializable
     {
 	if(configFilters.containsKey(FILTERS.service))
 	{
-	    return configFilters.get(FILTERS.service).toString();
-	}
-	return null;
-    }
-
-    public String getServiceFilterName()
-    {
-	if(configFilters.containsKey(FILTERS.service))
-	{
 	    return ((SERVICE) configFilters.get(FILTERS.service)).name();
 	}
 	return null;
