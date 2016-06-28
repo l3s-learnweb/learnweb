@@ -72,6 +72,12 @@ public class Folder implements Serializable, HasId
 
     }
 
+    public List<Resource> getResourcesSubset() throws SQLException
+    {
+	int subsetSize = 4;
+	return Learnweb.getInstance().getResourceManager().getFolderResourcesByUserId(groupId, parentFolderId, userId, subsetSize);
+    }
+
     public int getGroupId()
     {
 	return groupId;

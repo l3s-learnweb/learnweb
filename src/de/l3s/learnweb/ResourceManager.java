@@ -1133,9 +1133,9 @@ public class ResourceManager
 	return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r  WHERE folder_id = ? AND deleted = 0", null, folderId);
     }
 
-    public List<Resource> getFolderResourcesByUserId(int groupId, int folderId, int userId) throws SQLException
+    public List<Resource> getFolderResourcesByUserId(int groupId, int folderId, int userId, int limit) throws SQLException
     {
-	return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r  WHERE group_id = ? AND folder_id = ? AND owner_user_id = ? AND deleted = 0", null, groupId, folderId, userId);
+	return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r  WHERE group_id = ? AND folder_id = ? AND owner_user_id = ? AND deleted = 0 LIMIT ?", null, groupId, folderId, userId, limit);
     }
     /*
      *  All methods beyond should be deleted soon

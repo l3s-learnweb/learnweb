@@ -48,6 +48,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
     private boolean rootFolder = true;
     private List<Folder> breadcrumb;
+    private boolean folderView = false;
 
     public MyResourcesBean() throws SQLException
     {
@@ -235,7 +236,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	    else
 		breadcrumb.add(selectedFolder);
 	}
-	resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(clickedFolder.getGroupId(), clickedFolder.getFolderId(), getUser().getId());
+	resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(clickedFolder.getGroupId(), clickedFolder.getFolderId(), getUser().getId(), 1000);
     }
 
     public int getSelectedResourceTargetGroupId()
@@ -296,7 +297,9 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	if(rootFolder)
 	{
 	    LinkedList<Folder> folders = new LinkedList<Folder>();
-	    folders.add(new Folder(0, 0, "My Private Resources"));
+	    Folder myPrivateFolder = new Folder(0, 0, "My Private Resources");
+	    myPrivateFolder.setUserId(getUser().getId());
+	    folders.add(myPrivateFolder);
 	    folders.addAll(Learnweb.getInstance().getGroupManager().getGroupsForMyResources(getUser().getId()));
 	    return folders;
 	}
@@ -335,5 +338,25 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     public List<Folder> getBreadcrumb()
     {
 	return breadcrumb;
+    }
+
+    public boolean isRootFolder()
+    {
+	return rootFolder;
+    }
+
+    public void setRootFolder(boolean rootFolder)
+    {
+	this.rootFolder = rootFolder;
+    }
+
+    public boolean isFolderView()
+    {
+	return folderView;
+    }
+
+    public void setFolderView(boolean folderView)
+    {
+	this.folderView = folderView;
     }
 }
