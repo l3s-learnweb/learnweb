@@ -213,12 +213,12 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    }
 	    catch(RuntimeException e)
 	    {
-		log.debug(e.getMessage());
+		log.debug("Search log failed: " + e.getMessage());
 	    }
 
 	    // batchrsStartTime = new Date().getTime();
 
-	    log.debug("Search log client braucht " + (System.currentTimeMillis() - start) + "ms");
+	    log.debug("Search log client runtime: " + (System.currentTimeMillis() - start) + "ms");
 
 	    page = 1;
 	    search = new Search(interweb, query, searchFilters, getUser());
@@ -227,6 +227,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    searchFilters.setFilter(FILTERS.service, searchService);
 
 	    LinkedList<ResourceDecorator> res = search.getResourcesByPage(1);
+
 	    resourcesGroupedBySource = null;
 	    availableSources = null;
 

@@ -96,9 +96,9 @@ public class LoginBean extends ApplicationBean implements Serializable
 	if(getPreference("SEARCH_SERVICE_TEXT") == null || getPreference("SEARCH_SERVICE_IMAGE") == null || getPreference("SEARCH_SERVICE_VIDEO") == null)
 	{
 	    log.debug("set default search service for user: " + user.getUsername());
-	    setPreference("SEARCH_SERVICE_TEXT", user.getOrganisation().getDefaultSearchServiceText());
-	    setPreference("SEARCH_SERVICE_IMAGE", user.getOrganisation().getDefaultSearchServiceImage());
-	    setPreference("SEARCH_SERVICE_VIDEO", user.getOrganisation().getDefaultSearchServiceVideo());
+	    setPreference("SEARCH_SERVICE_TEXT", user.getOrganisation().getDefaultSearchServiceText().name());
+	    setPreference("SEARCH_SERVICE_IMAGE", user.getOrganisation().getDefaultSearchServiceImage().name());
+	    setPreference("SEARCH_SERVICE_VIDEO", user.getOrganisation().getDefaultSearchServiceVideo().name());
 	}
 
 	// otherwise reload his last page

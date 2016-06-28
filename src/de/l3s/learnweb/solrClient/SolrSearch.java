@@ -131,6 +131,14 @@ public class SolrSearch implements Serializable
 
     public void setFilterLocation(String filterLocation)
     {
+	// TODO solve root problem
+	if(filterLocation.equalsIgnoreCase("Archive-It"))
+	{
+	    log.error("invalid FilterLocation: " + filterLocation, new Exception());
+
+	    filterLocation = "archiveit";
+	}
+
 	this.filterLocation = filterLocation;
     }
 

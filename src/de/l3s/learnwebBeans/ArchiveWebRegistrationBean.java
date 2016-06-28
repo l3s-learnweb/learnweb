@@ -17,6 +17,8 @@ import javax.validation.constraints.Size;
 import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 
+import de.l3s.learnweb.SearchFilters;
+import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.util.Mail;
 
 @ManagedBean
@@ -34,6 +36,14 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
     @NotEmpty
     @Email
     private String email;
+
+    public ArchiveWebRegistrationBean()
+    {
+	System.out.println("set default search options for anonymous archiv it users");
+	// set default search options for anonymous archiv it users
+	setPreference("SEARCH_SERVICE_TEXT", SearchFilters.SERVICE.archiveit.name());
+	setPreference("search_action", MODE.image.name());
+    }
 
     public String getUsername()
     {
@@ -69,19 +79,8 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
     {
 	String to = "fernando@l3s.de";
 
-	/*
-	Properties props = new Properties();
-	props.put("mail.smtp.host", "smtp.gmail.com");
-	props.put("mail.smtp.socketFactory.port", "465");
-	props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-	props.put("mail.smtp.auth", "true");
-	props.put("mail.smtp.port", "465");
-	
-	Session session = Session.getDefaultInstance(props, new GMailAuthenticator("interweb9@googlemail.com", "QDsG}GM5"));
-	*/
 	try
 	{
-
 	    Mail message = new Mail();// new MimeMessage(session);
 	    //message.setFrom(new InternetAddress("interweb9@googlemail.com"));
 	    message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));

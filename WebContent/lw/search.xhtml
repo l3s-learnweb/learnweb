@@ -24,9 +24,9 @@
 			<h:outputLink value="group/overview.jsf" id="backtogroup" class="float-left" 
 				rendered="#{userBean.loggedIn and userBean.user.activeGroupId != 0}">
        		  	#{msg.back_to} 
-       		  		<i>
-       		  			#{userBean.user.activeGroup.title}
-       		  		</i>
+     		  	<i>
+     		  		#{userBean.user.activeGroup.title}
+   		  		</i>
 				<f:param name="group_id" value="#{userBean.user.activeGroup.id}" />
 			</h:outputLink>		
 					
@@ -73,6 +73,14 @@
 				</h:form>
 			</h:panelGroup>			
 		</div>
+	</ui:define>
+				
+	<ui:define name="center_layout">
+		<h:outputStylesheet library="search" name="search4.css"  />		
+		<h:outputScript library="search" name="search2.js" target="head"/>
+		<link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet"/>
+		<script src="http://vjs.zencdn.net/4.12/video.js"></script>
+
 		<h:panelGroup styleClass="group-menu-bar #{searchBean.queryFilters}" id="groups_menu_bar" layout="block" rendered="#{searchBean.searchFilters == null}">
 			<h:panelGroup styleClass="group-menu-header" layout="block" rendered="#{searchBean.searchService != null}">
 				<h:outputFormat value="#{msg.search_groups_header}" escape="false">
@@ -199,22 +207,41 @@
 				</h:link>
 			</h:panelGroup>	
 		</div>
-
-	</ui:define>
-				
-	<ui:define name="center_layout">
-		<h:outputStylesheet library="search" name="search3.css"  />		
-		<h:outputScript library="search" name="search.js" target="head"/>
-		<link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet"/>
-		<script src="http://vjs.zencdn.net/4.12/video.js"></script>
-
+		
 		<script type="text/javascript">
 			var view = '#{searchBean.view}';
 			var userId = '#{userBean.user.id}';
 			var searchHistoryEnabled = #{userBean.searchHistoryEnabled};
+			
+			var windw = this;
 
-			updateCarousel();
-			setContentPadding();
+			$.fn.followTo = function (  ) {
+			    var $this = this,
+			        $window = $(windw);
+			    
+			    $window.scroll(function(e)
+			    {
+			    	var height = $("#header").height();
+			    	
+			    	//   groups_menu_bar
+			        if ($window.scrollTop() > $("#groups_menu_bar").height()) {
+			            $this.css({
+			                position: 'fixed',
+			                top: height
+			            });
+			        } else {
+			            $this.css({
+			                position: 'relative',
+			                top: 0
+			            });
+			        }
+			    });
+			};
+
+			$(document).ready(function() 
+			{
+			$('#filters_menu_bar').followTo();
+			});
 		</script>			
 		 
 		<ui:decorate template="/lw/templates/resource_lightbox.xhtml" /> 	

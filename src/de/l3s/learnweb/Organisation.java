@@ -8,11 +8,14 @@ import java.util.List;
 
 import javax.validation.constraints.Size;
 
+import org.apache.log4j.Logger;
+
 import de.l3s.learnweb.ResourceMetadataField.MetadataType;
 
 public class Organisation implements Serializable, Comparable<Organisation>
 {
     private static final long serialVersionUID = -5187205229505825818L;
+    private static Logger log = Logger.getLogger(Organisation.class);
 
     // add new options add the end , don't delete options !!!!!
     // if you add 64 options you have to add one options_field{x} column in lw_organisation
@@ -29,9 +32,9 @@ public class Organisation implements Serializable, Comparable<Organisation>
     private String logo;
     private String welcomeMessage;
     private String welcomePage;
-    private String defaultSearchServiceText;
-    private String defaultSearchServiceImage;
-    private String defaultSearchServiceVideo;
+    private SearchFilters.SERVICE defaultSearchServiceText;
+    private SearchFilters.SERVICE defaultSearchServiceImage;
+    private SearchFilters.SERVICE defaultSearchServiceVideo;
     private long[] options = new long[1];
     private List<ResourceMetadataField> metadataFields = new LinkedList<ResourceMetadataField>();
 
@@ -57,9 +60,10 @@ public class Organisation implements Serializable, Comparable<Organisation>
 	this.logo = rs.getString("logo");
 	this.welcomePage = rs.getString("welcome_page");
 	this.welcomeMessage = rs.getString("welcome_message");
-	this.defaultSearchServiceText = rs.getString("default_search_text");
-	this.defaultSearchServiceImage = rs.getString("default_search_image");
-	this.defaultSearchServiceVideo = rs.getString("default_search_video");
+
+	setDefaultSearchServiceText(rs.getString("default_search_text"));
+	setDefaultSearchServiceImage(rs.getString("default_search_image"));
+	setDefaultSearchServiceVideo(rs.getString("default_search_video"));
 
 	for(int i = 0; i < 1;)
 	    options[i] = rs.getInt("options_field" + (++i));
@@ -209,34 +213,61 @@ public class Organisation implements Serializable, Comparable<Organisation>
 	return options;
     }
 
-    public String getDefaultSearchServiceText()
+    private static SearchFilters.SERVICE getServiceFromString(String name)
     {
-	return defaultSearchServiceText;
+	try
+	{
+	    return SearchFilters.SERVICE.valueOf(name);
+	}
+	catch(Exception e)
+	{
+	    log.fatal("Can't get service for " + name, e);
+	}
+	return null;
     }
 
     public void setDefaultSearchServiceText(String defaultSearchServiceText)
     {
-	this.defaultSearchServiceText = defaultSearchServiceText;
-    }
-
-    public String getDefaultSearchServiceImage()
-    {
-	return defaultSearchServiceImage;
+	this.defaultSearchServiceText = getServiceFromString(defaultSearchServiceText);
     }
 
     public void setDefaultSearchServiceImage(String defaultSearchServiceImage)
     {
-	this.defaultSearchServiceImage = defaultSearchServiceImage;
-    }
-
-    public String getDefaultSearchServiceVideo()
-    {
-	return defaultSearchServiceVideo;
+	this.defaultSearchServiceImage = getServiceFromString(defaultSearchServiceImage);
     }
 
     public void setDefaultSearchServiceVideo(String defaultSearchServiceVideo)
     {
-	this.defaultSearchServiceVideo = defaultSearchServiceVideo;
+	this.defaultSearchServiceVideo = getServiceFromString(defaultSearchServiceVideo);
     }
 
+    public SearchFilters.SERVICE getDefaultSearchServiceText()
+    {
+	return defaultSearchServiceText;
+    }
+
+    public void setDefaultSearchServiceText(SearchFilters.SERVICE defaultSearchServiceText)
+    {
+	this.defaultSearchServiceText = defaultSearchServiceText;
+    }
+
+    public SearchFilters.SERVICE getDefaultSearchServiceImage()
+    {
+	return defaultSearchServiceImage;
+    }
+
+    public void setDefaultSearchServiceImage(SearchFilters.SERVICE defaultSearchServiceImage)
+    {
+	this.defaultSearchServiceImage = defaultSearchServiceImage;
+    }
+
+    public SearchFilters.SERVICE getDefaultSearchServiceVideo()
+    {
+	return defaultSearchServiceVideo;
+    }
+
+    public void setDefaultSearchServiceVideo(SearchFilters.SERVICE defaultSearchServiceVideo)
+    {
+	this.defaultSearchServiceVideo = defaultSearchServiceVideo;
+    }
 }

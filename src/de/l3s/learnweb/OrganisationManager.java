@@ -125,9 +125,9 @@ public class OrganisationManager implements HasCache
 	replace.setString(3, organisation.getLogo());
 	replace.setString(4, organisation.getWelcomePage());
 	replace.setString(5, organisation.getWelcomeMessage());
-	replace.setString(6, organisation.getDefaultSearchServiceText());
-	replace.setString(7, organisation.getDefaultSearchServiceImage());
-	replace.setString(8, organisation.getDefaultSearchServiceVideo());
+	replace.setString(6, organisation.getDefaultSearchServiceText().name());
+	replace.setString(7, organisation.getDefaultSearchServiceImage().name());
+	replace.setString(8, organisation.getDefaultSearchServiceVideo().name());
 	replace.setLong(9, organisation.getOptions()[0]);
 	replace.executeUpdate();
 

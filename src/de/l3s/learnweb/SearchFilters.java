@@ -61,10 +61,10 @@ public class SearchFilters implements Serializable
 
     public enum SERVICE
     {
-	bing, // Not support filter by date
+	bing, // Does not support filtering by date
 	flickr,
 	youtube,
-	vimeo, // Not support filter by date
+	vimeo, // Does not support filtering by date
 	ipernity,
 	ted, // stored in SOLR
 	tedx, // stored in SOLR
@@ -601,7 +601,7 @@ public class SearchFilters implements Serializable
 	    int startIndex = stringFilters.indexOf(f.name());
 	    int endIndex = stringFilters.indexOf(',', startIndex);
 
-	    if(startIndex != 0)
+	    if(startIndex != 0) // TODO changed if(startIndex != 0)
 	    {
 		output += stringFilters.substring(0, startIndex - 1);
 	    }
@@ -648,7 +648,7 @@ public class SearchFilters implements Serializable
     public List<Filter> getAvailableFilters(FILTERS[] except)
     {
 	List<Filter> list = new ArrayList<Filter>();
-	FILTERS[] filters = ArrayUtils.removeElement(FILTERS.getFilterByMode(configMode), except);
+	FILTERS[] filters = ArrayUtils.removeElements(FILTERS.getFilterByMode(configMode), except);
 
 	for(FILTERS fs : filters)
 	{
