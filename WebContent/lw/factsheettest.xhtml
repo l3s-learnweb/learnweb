@@ -17,18 +17,29 @@
 		</div>
 
 <h:form>
-<p:outputLabel  value="Editable: " />
+<h:panelGrid columns="3">
+
 	<p:selectOneMenu id="Search"  editable="true" value="#{factSheetBean.search}" >
 		<f:selectItem itemLabel="Select One" itemValue="" />
-		<f:selectItem itemLabel="Obama" itemValue="Obama" />
-		<f:selectItem itemLabel="" itemValue="" />
-            
+		<f:selectItem itemLabel="Barack Obama" itemValue="Barack Obama" />
+		<f:selectItem itemLabel="Lion" itemValue="Lion" />
+		<f:selectItem itemLabel="Henry the Lion" itemValue="Henry the Lion" />
+		<f:selectItem itemLabel="Cloud Strife" itemValue="Cloud Strife" />
+        <f:selectItem itemLabel="Paris" itemValue="Paris" />
+        <f:selectItem itemLabel="Pokemon" itemValue="Pokemon" />
+        <f:selectItem itemLabel="Nil" itemValue="Nil" />
+        <f:selectItem itemLabel="Mars" itemValue="Mars" />
+        <f:selectItem itemLabel="Red Bull" itemValue="Red Bull" />
+        <f:selectItem itemLabel="BMW" itemValue="BMW" />
+        
+        
   	</p:selectOneMenu>
   	
   	<p:commandButton value="Submit" update="output"/>
   	
   	<h:outputText id="output" value="#{factSheetBean.search}" />
   	
+</h:panelGrid>
 		</h:form>
 	</ui:define>
 </ui:composition>
