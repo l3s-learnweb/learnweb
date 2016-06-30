@@ -177,7 +177,8 @@ public class YovistoManager
 		}
 		String output = out.toString();
 		Set<String> tagsFromLw = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-		tagsFromLw.addAll(Arrays.asList(output.split(", ")));
+		tagsFromLw.addAll(Arrays.asList(output.split(", "))); // Philipp - I dont assume tags from LW dont have commas
+		//I split them by commas to get a List
 		tag.removeAll(tagsFromLw); //Remove already added tags to avoid duplicate tags
 
 		for(String tagName : tag)
