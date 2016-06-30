@@ -273,27 +273,6 @@ public class ArchiveUrlManager
 	return null;
     }
 
-    /**
-     * 
-     * For archive visualisation timeline
-     */
-    public Date getTimestamp(int resourceId, String archiveUrl) throws SQLException
-    {
-	PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT `timestamp`,`httpstatuscode` FROM `lw_resource_archiveurl` where `resource_id`=? and `archive_url`=?");
-	ps.setInt(1, resourceId);
-	ps.setString(2, archiveUrl);
-	ResultSet rs = ps.executeQuery();
-	if(rs.next())
-	{
-	    Date timestamp = new Date(rs.getTimestamp("timestamp").getTime());
-	    if(rs.getInt("httpstatuscode") != 200)
-		return null;
-	    else
-		return timestamp;
-	}
-	return null;
-    }
-
     public String addResourceToArchive(Resource resource)
     {
 	String response = "";

@@ -3,26 +3,21 @@ package de.l3s.learnwebBeans;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
-import org.primefaces.context.RequestContext;
-import org.primefaces.extensions.event.timeline.TimelineSelectEvent;
 import org.primefaces.extensions.model.timeline.TimelineEvent;
 import org.primefaces.extensions.model.timeline.TimelineModel;
 
@@ -30,6 +25,7 @@ import de.l3s.archiveSearch.ArchiveItShingle;
 import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.ArchiveUrlManager;
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.beans.UtilBean;
 
 @ManagedBean
 @ViewScoped
@@ -37,96 +33,89 @@ public class ArchiveThumbnailBean extends ApplicationBean
 {
     public final static Logger log = Logger.getLogger(ArchiveThumbnailBean.class);
 
-    private float frame;
-    private float text;
+    private float frameSim;
+    private float textSim;
 
-    HashMap<String, Set<String>> hashmapframe;
-    HashMap<String, Set<String>> hashmaptext;
+    HashMap<String, Set<String>> hashmapFrame;
+    HashMap<String, Set<String>> hashmapText;
 
-    private int resource_id;
-    private List<ArchiveUrl> listOfArchives;
-    private List<ArchiveUrl> listOfUrls;
-    private List<String> dates;
+    private int resourceId;
+    private List<ArchiveUrl> archiveUrls;
+    private HashMap<String, Date> archiveUrlsHashMap;
 
     private ArchiveItShingle archiveItShingle;
     ArchiveUrlManager archiveUrlManager;
 
+    //Timeline properties
     private TimelineModel model;
     private Date min;
     private Date max;
     private long zoomMin;
     private long zoomMax;
 
+    private DateFormat df;
+
     public ArchiveThumbnailBean() throws SQLException
     {
-	frame = 1;
-	text = 1;
-	hashmapframe = new LinkedHashMap<String, Set<String>>();
-	hashmaptext = new LinkedHashMap<String, Set<String>>();
+	frameSim = 1f;
+	textSim = 1f;
+	hashmapFrame = new LinkedHashMap<String, Set<String>>();
+	hashmapText = new LinkedHashMap<String, Set<String>>();
 	archiveItShingle = new ArchiveItShingle();
-	listOfArchives = new LinkedList<ArchiveUrl>();
+	archiveUrls = new LinkedList<ArchiveUrl>();
+	archiveUrlsHashMap = new HashMap<String, Date>();
 	archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
-	listOfUrls = new ArrayList<ArchiveUrl>();
+
+	df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, UtilBean.getUserBean().getLocale());
     }
 
-    public List<ArchiveUrl> getListOfArchives()
+    public List<ArchiveUrl> getArchiveUrls()
     {
-	return listOfArchives;
+	return archiveUrls;
     }
 
-    public void setListOfArchives(List<ArchiveUrl> listOfArchives)
+    public void setArchiveUrls(List<ArchiveUrl> archiveUrls)
     {
-	this.listOfArchives = listOfArchives;
+	this.archiveUrls = archiveUrls;
     }
 
-    public float getFrame()
+    public float getFrameSim()
     {
-	return frame;
+	return frameSim;
     }
 
-    public void setFrame(float frame)
+    public void setFrameSim(float frameSim)
     {
-	this.frame = frame;
+	this.frameSim = frameSim;
     }
 
-    public float getText()
+    public float getTextSim()
     {
-	return text;
+	return textSim;
     }
 
-    public void setText(float text)
+    public void setTextSim(float textSim)
     {
-	this.text = text;
+	this.textSim = textSim;
     }
 
     public List<ArchiveUrl> getlistOfUrls() throws SQLException
     {
-	listOfUrls.clear();
+	List<ArchiveUrl> listOfUrls = new ArrayList<ArchiveUrl>();
 	model = new TimelineModel();
-	Set<String> setOfNearUniqueArchives = new LinkedHashSet<String>();
-	setOfNearUniqueArchives = archiveItShingle.computeUniqueArchivesBySequence(hashmaptext, hashmapframe, listOfArchives, resource_id, frame, text);
-	if(setOfNearUniqueArchives.isEmpty())
-	{
+	Set<String> setOfNearUniqueArchives = archiveItShingle.computeUniqueArchivesBySequence(hashmapText, hashmapFrame, archiveUrls, resourceId, frameSim, textSim);
 
-	}
-	for(String str : setOfNearUniqueArchives)
+	for(String archiveUrl : setOfNearUniqueArchives)
 	{
-	    String url = archiveUrlManager.getFileUrl(resource_id, str);
-	    Date timestamp = archiveUrlManager.getTimestamp(resource_id, str);
+	    String fileUrl = archiveUrlManager.getFileUrl(resourceId, archiveUrl);
+	    Date timestamp = archiveUrlsHashMap.get(archiveUrl);
 	    model = getModel(timestamp);
-	    if(url == null || timestamp == null)
+	    if(fileUrl == null)
 		log.debug("Thumbnail does not exist");
 	    else
-		listOfUrls.add(new ArchiveUrl(str, url, timestamp));
+		listOfUrls.add(new ArchiveUrl(archiveUrl, fileUrl, timestamp));
 	}
-	while(listOfUrls.remove(null))
-	    ;
 	return listOfUrls;
-    }
-
-    public List<String> getDates()
-    {
-	return dates;
     }
 
     public TimelineModel getModel()
@@ -138,7 +127,7 @@ public class ArchiveThumbnailBean extends ApplicationBean
     {
 	Calendar cal = Calendar.getInstance();
 	cal.setTime(timestamp);
-	model.add(new TimelineEvent(timestamp.toString(), cal.getTime()));
+	model.add(new TimelineEvent("", cal.getTime()));
 	return model;
     }
 
@@ -162,23 +151,24 @@ public class ArchiveThumbnailBean extends ApplicationBean
 	return zoomMax;
     }
 
-    public void save()
+    /*public void save()
     {
-	RequestContext context = RequestContext.getCurrentInstance();
-	context.update("contentFlow");
-	context.scrollTo("contentFlow");
+    RequestContext context = RequestContext.getCurrentInstance();
+    context.update("contentFlow");
+    context.scrollTo("contentFlow");
     }
-
+    
     public void onSelect(TimelineSelectEvent e)
     {
-	TimelineEvent timelineEvent = e.getTimelineEvent();
+    TimelineEvent timelineEvent = e.getTimelineEvent();
+    addMessage(FacesMessage.SEVERITY_INFO, "Selected event:", timelineEvent.getData().toString());
+    }*/
 
-	addMessage(FacesMessage.SEVERITY_INFO, "Selected event:", timelineEvent.getData().toString());
-    }
-
-    @PostConstruct
     public void init()
     {
+	if(getFacesContext().isPostback())
+	    return;
+
 	model = new TimelineModel();
 	Calendar cal = Calendar.getInstance();
 	max = cal.getTime(); // upper limit of visible range  
@@ -189,54 +179,47 @@ public class ArchiveThumbnailBean extends ApplicationBean
 	{
 	    String htmlText = null;
 	    String htmlTags = null;
-	    final StringBuilder htmlString = new StringBuilder();
-	    List<String> wordList = new ArrayList<String>();
 
-	    Set<String> setOfShingles = new HashSet<String>();
-
-	    resource_id = 169891; // TODO does this make sense?
-	    PreparedStatement ps = getLearnweb().getConnection().prepareStatement("SELECT * FROM `lw_resource_archiveurl` NATURAL JOIN `lw_resource_archive_shingles` WHERE `resource_id`=? group by `shingle_id`");
-	    ps.setInt(1, resource_id);
+	    PreparedStatement ps = getLearnweb().getConnection().prepareStatement("SELECT * FROM `lw_resource_archiveurl` JOIN `lw_resource_archive_shingles` USING(shingle_id) WHERE `resource_id`=? group by `shingle_id`");
+	    ps.setInt(1, resourceId);
 	    ResultSet rs = ps.executeQuery();
 	    if(rs.next())
 	    {
-		cal.setTime(rs.getDate("timestamp"));
-		cal.set(cal.get(Calendar.YEAR), 1, 1, 0, 0, 0);
+		cal.setTime(new Date(rs.getTimestamp("timestamp").getTime()));
+		cal.add(Calendar.YEAR, -1);
 		min = cal.getTime(); // lower limit of visible range 
 		rs.previous();
 	    }
+
 	    while(rs.next())
 	    {
 		Date timestamp = new Date(rs.getTimestamp("timestamp").getTime());
-		cal.setTime(timestamp);
-		model.add(new TimelineEvent(timestamp.toString(), cal.getTime()));
-		htmlString.setLength(0);
-		wordList.clear();
 		String url = rs.getString("archive_url");
-		listOfArchives.add(new ArchiveUrl(url, timestamp));
+		archiveUrls.add(new ArchiveUrl(url, timestamp));
+		archiveUrlsHashMap.put(url, timestamp);
+
 		htmlTags = rs.getString("htmltags");
-		htmlString.append(htmlTags);
-		String[] words = htmlString.toString().replaceAll("[!?,.]", "").split(" ");
-		wordList.addAll(Arrays.asList(words));
-		setOfShingles = archiveItShingle.computeShingles(wordList);
-		setOfShingles.clear();
-		hashmapframe.put(url, new HashSet<>(setOfShingles));
-		wordList.clear();
+		String[] words = htmlTags.replaceAll("[!?,.]", "").split(" ");
+		hashmapFrame.put(url, archiveItShingle.computeShingles(Arrays.asList(words)));
+
 		htmlText = rs.getString("htmltext");
 		words = htmlText.replaceAll("[!?,.]", "").split(" ");
-		wordList.addAll(Arrays.asList(words));
-		setOfShingles = archiveItShingle.computeShingles(wordList);
-		hashmaptext.put(url, new HashSet<>(setOfShingles));
-		url = archiveUrlManager.getFileUrl(resource_id, url);
-		if(url == null)
-		    log.debug("Thumbnail does not exist");
-		else
-		    listOfUrls.add(new ArchiveUrl(rs.getString("archive_url"), url, timestamp));
+		hashmapText.put(url, archiveItShingle.computeShingles(Arrays.asList(words)));
 	    }
 	}
 	catch(SQLException ex)
 	{
-	    ex.printStackTrace();
+	    log.error(ex);
 	}
+    }
+
+    public int getResourceId()
+    {
+	return resourceId;
+    }
+
+    public void setResourceId(int resourceId)
+    {
+	this.resourceId = resourceId;
     }
 }

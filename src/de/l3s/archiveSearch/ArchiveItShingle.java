@@ -145,34 +145,33 @@ public class ArchiveItShingle
      * Updates duplicate shingle ids in lw_resource_archiveurl based on html
      * text and tags
      */
-    public void getDublicateShingles(int resourceId, int size) throws SQLException
+    public void getDuplicateShingles(int resourceId, int size) throws SQLException
     {
-	List<Integer> dublicateShingleId = new ArrayList<Integer>();
+	List<Integer> duplicateShingleId = new ArrayList<Integer>();
 	Connection conn = Learnweb.getInstance().getConnection();
 	PreparedStatement ps = conn.prepareStatement("SELECT `shingle_id` FROM `lw_resource_archive_shingles` natural join `lw_resource_archiveurl` where `resource_id`=? group by `htmltext`, `htmltags` ORDER BY `lw_resource_archive_shingles`.`shingle_id` ASC");
 	ps.setInt(1, resourceId);
 	ResultSet rs = ps.executeQuery();
 	while(rs.next())
-	    dublicateShingleId.add(rs.getInt("shingle_id"));
-	dublicateShingleId.add(dublicateShingleId.get(0) + size - 1);
-	size = dublicateShingleId.get(dublicateShingleId.size() - 1);
+	    duplicateShingleId.add(rs.getInt("shingle_id"));
+	duplicateShingleId.add(duplicateShingleId.get(0) + size - 1);
+	size = duplicateShingleId.get(duplicateShingleId.size() - 1);
 	int j = 0;
-	for(int i = dublicateShingleId.get(0); i <= size; i++)
+	for(int i = duplicateShingleId.get(0); i <= size; i++)
 	{
-	    if(dublicateShingleId.contains(i))
+	    if(duplicateShingleId.contains(i))
 	    {
 		j++;
 	    }
 	    else
 	    {
 		ps = conn.prepareStatement("UPDATE `lw_resource_archiveurl` SET `shingle_id`=? where `resource_id`=? and `shingle_id`=?");
-		ps.setInt(1, dublicateShingleId.get(j - 1));
+		ps.setInt(1, duplicateShingleId.get(j - 1));
 		ps.setInt(2, resourceId);
 		ps.setInt(3, i);
 		ps.execute();
 	    }
 	}
-	dublicateShingleId.clear();
 	ps.close();
     }
 
@@ -212,54 +211,53 @@ public class ArchiveItShingle
      * Detecting near duplicates based on sequence algorithm
      * 
      */
-    public Set<String> computeUniqueArchivesBySequence(HashMap<String, Set<String>> hashmaptext, HashMap<String, Set<String>> hashmapframe, List<ArchiveUrl> archiveUrls, int resourceId, float frame, float text) throws SQLException
+    public Set<String> computeUniqueArchivesBySequence(HashMap<String, Set<String>> hashmaptext, HashMap<String, Set<String>> hashmapframe, List<ArchiveUrl> archiveUrls, int resourceId, float frameThreshold, float textThreshold) throws SQLException
     {
-	Set<String> setOfNearUniqueArchivesSequence = new LinkedHashSet<String>();
+	Set<String> uniqueUrls = new LinkedHashSet<String>();
 	Connection conn = Learnweb.getInstance().getConnection();
-	int i = 0, j = 0;
-	float t = 0, f = 0;
+	int j = 0;
+	float textSim = 0, frameSim = 0;
 	String url = null;
 	String key = archiveUrls.get(j).getArchiveUrl();
-	for(i = 1; i < archiveUrls.size(); i++)
-	{
-	    url = archiveUrls.get(i).getArchiveUrl();
-	    if(key != url && !setOfNearUniqueArchivesSequence.contains(url))
-	    {
-		Timestamp sqlDate1 = new Timestamp(archiveUrls.get(j).getTimestamp().getTime());
-		Timestamp sqlDate2 = new Timestamp(archiveUrls.get(i).getTimestamp().getTime());
-		PreparedStatement ps = conn.prepareStatement("SELECT `jaccard_text` ,`jaccard_frame` FROM `lw_resource_archive_jaccardindex` WHERE `resource_id`=? AND `timestamp1`=? AND `timestamp2`=?;");
-		ps.setInt(1, resourceId);
-		ps.setTimestamp(2, sqlDate1);
-		ps.setTimestamp(3, sqlDate2);
-		ResultSet rs = ps.executeQuery();
-		if(rs.next())
-		{
-		    t = rs.getFloat("jaccard_text");
-		    f = rs.getFloat("jaccard_frame");
-		}
-		else
-		{
-		    t = computeJaccardIndex(hashmaptext.get(url), hashmaptext.get(key));
-		    f = computeJaccardIndex(hashmapframe.get(url), hashmapframe.get(key));
-		    ps = conn.prepareStatement("UPDATE `lw_resource_archive_jaccardindex` SET `jaccard_text`=? , `jaccard_frame`=? WHERE `resource_id`=? AND `timestamp1`=? AND `timestamp2`=?;");
-		    ps.setInt(3, resourceId);
-		    ps.setTimestamp(4, sqlDate1);
-		    ps.setTimestamp(5, sqlDate2);
-		    ps.setFloat(1, t);
-		    ps.setFloat(2, f);
-		    ps.execute();
-		}
 
-		if(Float.compare(t, text) <= 0 && Float.compare(f, frame) <= 0)
-		{
-		    setOfNearUniqueArchivesSequence.add(key.toString());
-		    setOfNearUniqueArchivesSequence.add(url);
-		    key = url;
-		    j = i;
-		}
+	for(int i = 1; i < archiveUrls.size(); i++)
+	{
+
+	    url = archiveUrls.get(i).getArchiveUrl();
+	    Timestamp timestamp1 = new Timestamp(archiveUrls.get(j).getTimestamp().getTime());
+	    Timestamp timestamp2 = new Timestamp(archiveUrls.get(i).getTimestamp().getTime());
+	    PreparedStatement ps = conn.prepareStatement("SELECT `jaccard_text` ,`jaccard_frame` FROM `lw_resource_archive_jaccardindex` WHERE `resource_id`=? AND `timestamp1`=? AND `timestamp2`=?");
+	    ps.setInt(1, resourceId);
+	    ps.setTimestamp(2, timestamp1);
+	    ps.setTimestamp(3, timestamp2);
+	    ResultSet rs = ps.executeQuery();
+	    if(rs.next())
+	    {
+		textSim = rs.getFloat("jaccard_text");
+		frameSim = rs.getFloat("jaccard_frame");
+	    }
+	    else
+	    {
+		textSim = computeJaccardIndex(hashmaptext.get(url), hashmaptext.get(key));
+		frameSim = computeJaccardIndex(hashmapframe.get(url), hashmapframe.get(key));
+		ps = conn.prepareStatement("REPLACE INTO `lw_resource_archive_jaccardindex` VALUES(?,?,?,?,?)");
+		ps.setInt(1, resourceId);
+		ps.setTimestamp(2, timestamp1);
+		ps.setTimestamp(3, timestamp2);
+		ps.setFloat(4, frameSim);
+		ps.setFloat(5, textSim);
+		ps.execute();
+	    }
+
+	    if(Float.compare(textSim, textThreshold) <= 0 && Float.compare(frameSim, frameThreshold) <= 0)
+	    {
+		uniqueUrls.add(key);
+		key = url;
+		j = i;
 	    }
 	}
-	return setOfNearUniqueArchivesSequence;
+	uniqueUrls.add(key);
+	return uniqueUrls;
     }
 
     public static void main(String[] args) throws IOException, SQLException
@@ -300,12 +298,14 @@ public class ArchiveItShingle
 		    wordList.clear();
 		    setOfShingles.clear();
 		    url = archiveUrl.getArchiveUrl();
-		    Document document = Jsoup.connect(url).ignoreHttpErrors(true).timeout(900000).get();
-
-		    Response response = Jsoup.connect(url).ignoreHttpErrors(true).timeout(900000).execute();
-		    if(response.statusCode() != 200)
+		    Document document = null;
+		    org.jsoup.Connection urlConnection = Jsoup.connect(url).ignoreHttpErrors(true).timeout(900000);
+		    Response response = urlConnection.execute();
+		    if(response.statusCode() == 200)
+			document = urlConnection.get();
+		    else
 		    {
-			PreparedStatement ps = conn.prepareStatement("UPDATE `lw_resource_archiveurl` SET `httpstatuscode`=? WHERE `resource_id`=? AND `archive_url`=?;", Statement.RETURN_GENERATED_KEYS);
+			PreparedStatement ps = conn.prepareStatement("UPDATE `lw_resource_archiveurl` SET `httpstatuscode`=? WHERE `resource_id`=? AND `archive_url`=?");
 			ps.setInt(1, response.statusCode());
 			ps.setInt(2, resource_id);
 			ps.setString(3, url);
@@ -314,10 +314,10 @@ public class ArchiveItShingle
 			continue;
 		    }
 
-		    document.select("wb_div#wm-disclaim, script, style, head").remove();
+		    document.select("wb_div#wm-disclaim, script, style, head").remove(); //remove Archive disclaimer from html text
 		    document.traverse(archiveItShingle.processNode(htmlString));
 		    String[] words = htmlString.toString().replaceAll("[!?,.]", "").split(" ");
-		    wordList.addAll(Arrays.asList(words)); //remove Archive disclaimer from html text
+		    wordList.addAll(Arrays.asList(words));
 		    setOfShingles = archiveItShingle.computeShingles(wordList);
 		    hashmapframe.put(url, new HashSet<>(setOfShingles));
 		    wordList.clear();

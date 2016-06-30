@@ -1,14 +1,15 @@
 body {
-    background: black;
-    color: white;
-    font-size: 10pt;
-    height: 100%;
-    width: 100%;
-    padding: 0;
-    margin: 0;
-    font-family: sans-serif;
+	background: black;
+	color: white;
+	font-size: 10pt;
+	height: 100%;
+	width: 100%;
+	padding: 0;
+	margin: 0;
+	font-family: sans-serif;
 }
-.caption{
+
+.caption {
 	font-size: 20px;
 }
 
@@ -16,129 +17,118 @@ body {
 	padding-top: 10px;
 	margin-top: 50px;
 }
-.sliderContainer{
+
+.sliderContainer {
 	background-color: white;
 	width: 100%;
 	position: relative;
 	left: 0;
 	height: 90px;
 }
-.timeline{
+
+.timeline {
 	font-size: 15px;
 	background-color: grey;
 	width: 70%;
 	position: relative;
 	left: 15%;
-	box-shadow: 10px 30px 40px rgba(0,0,0,.4);
+	box-shadow: 10px 30px 40px rgba(0, 0, 0, .4);
 	display: block;
-	height: 90px;
+	height: 20px;
 }
-.timeSlider{
+
+.timeSlider {
 	font-size: 10px;
 	border-top: 2px solid grey;
 	border-bottom: 1px solid grey;
 	margin-bottom: 5px;
-	box-shadow: 10px 30px 40px rgba(0,0,0,.4);
+	box-shadow: 10px 30px 40px rgba(0, 0, 0, .4);
 	background-color: white;
 	width: 100%;
 	position: relative;
-	height: 180px;
+	height: 20%;
 	bottom: -140px;
 }
-.timeGridSlider{
+
+.timeGridSlider {
 	position: relative;
 	width: 50%;
 	height: auto;
 	left: 25%;
 }
-.timeGridInput{
-	width: 25%;
-	position: relative;
-	font-size: 16px;
-	left: 25%;
-	text-align: center;
-}
-.slideA{
+
+.slideA {
 	position: relative;
 	text-align: center;
 	margin-top: 5px;
 	margin-bottom: 5px;
 }
-.inputA{
+
+.textInput {
 	text-align: left;
 	position: relative;
 	width: auto;
 	color: black;
-	display: block;
+	display: inline;
 }
-.labelA{
+
+.textInputLabel {
+	font-size: 1.5rem;
 	text-align: left;
-	position: static;
-	display: inherit;
 	color: black;
 	margin-top: 5px;
 }
-.button{
-	margin-top: 5px;
-	position:relative;
-	background-color: blue;
+
+/* --------------------------Content Flow CSS------------------------------- */
+a, a:link, a:visited, a:active, a:hover {
+	text-decoration: none;
+	color: white;
 	font-weight: bold;
-	color: black;
-	left: 25%;
-	width: auto;
-	display: block;
-	cursor: pointer;
-	text-align: center;
-	line-height: normal;
-	font-size: 15px;
-}
-a,
-a:link,
-a:visited,
-a:active,
-a:hover {
-    text-decoration: none;
-    color: white;
-    font-weight: bold;
-}
-a:hover {
-    text-decoration: underline;
 }
 
-.clear { clear: both; }
+a:hover {
+	text-decoration: underline;
+}
 
-img { border: none; }
+img {
+	border: none;
+}
 
 h1 {
-    text-align: center;
-    text-decoration: underline;
-    font-family: serif;
-    color: white;
-    font-size: 1.8em;
+	text-align: center;
+	text-decoration: underline;
+	font-family: serif;
+	color: white;
+	font-size: 1.8em;
 }
+
 h2 {
-    margin-top: 2.5em;
-    font-size: 1.7em;
-    text-decoration: underline;
+	margin-top: 2.5em;
+	font-size: 1.7em;
+	text-decoration: underline;
 }
+
 h3 {
-    margin-top: 2em;
-    font-size: 1.3em;
-    text-decoration: underline;
+	margin-top: 2em;
+	font-size: 1.3em;
+	text-decoration: underline;
 }
+
 p {
-    line-height: 150%;
-    text-align: justify;
+	line-height: 150%;
+	text-align: justify;
 }
+
 pre {
-    font-family: sans-serif;
-    background: #222;
+	font-family: sans-serif;
+	background: #222;
 }
+
 .simpleBlack {
-    background: black;
-    width: 80ex;
-    margin: 0 auto;
-    font-family: sans-serif;
+	background: black;
+	width: 80ex;
+	margin: 0 auto;
+	font-family: sans-serif;
 }
 
 code {
@@ -151,33 +141,36 @@ dl {
     margin-left: 4ex;
 }
 
-    dl dt {
-        font-size: 0.9em;
-        font-weight: bold;
-        color: #eee;
-        font-family: monospace;
-    }
-        dl dd {
-            margin-bottom: 1.5em;
-            color: #ccc;
-            font-size: 0.85em;
-            line-height: 1.5em;
-        }
+dl dt {
+	font-size: 0.9em;
+	font-weight: bold;
+	color: #eee;
+	font-family: monospace;
+}
 
+dl dd {
+	margin-bottom: 1.5em;
+	color: #ccc;
+	font-size: 0.85em;
+	line-height: 1.5em;
+}
 
 ol {
+	
 }
-    ol li {
-        margin-bottom: 1em;
-        line-height: 150%;
-    }
+
+ol li {
+	margin-bottom: 1em;
+	line-height: 150%;
+}
 
 ul {
+	
 }
-    ul li {
-        margin-bottom: 0;
-    }
-/* ------------------------------------------------------------------------- */
+
+ul li {
+	margin-bottom: 0;
+}
 
 #title {
     margin: 0px auto;
@@ -204,10 +197,10 @@ div.maincontent {
     margin: 2em auto 4em auto;
 }
 
-    #menu li {
-        display: inline;
-        padding: 0px 20px;
-    }
+#menu li {
+	display: inline;
+	padding: 0px 20px;
+}
 
 .totop {
     text-align: center;
@@ -215,11 +208,11 @@ div.maincontent {
     padding: 0.25em;
     background: #161616;
 }
-    .totop a {
-        margin-right: 7%;
-        color: silver;
-    }
 
+.totop a {
+	margin-right: 7%;
+	color: silver;
+}
 
 .block {
     display: none;
@@ -230,30 +223,34 @@ div.maincontent {
     border-collapse: collapse;
     margin: 40px auto;
 }
-    #browserComp caption {
-        text-align: center;
-        margin: 20px auto;
-        font-size: 1.1em;
-        font-weight: bold;
-    }
-    #browserComp th {
-        font-size: 10px;
-        padding: 5px 10px;
-        border-bottom: 1px solid silver;
-    }
-        #browserComp th img {
-            width: 22px;
-        }
-        #browserComp td {
-            text-align: center;
-        }
-            #browserComp th.feature,
-            #browserComp td.feature {
-                text-align: right;
-                padding: 5px;
-                padding-right: 10px;
-                border-right: 1px solid silver;
-            }
+
+#browserComp caption {
+	text-align: center;
+	margin: 20px auto;
+	font-size: 1.1em;
+	font-weight: bold;
+}
+
+#browserComp th {
+	font-size: 10px;
+	padding: 5px 10px;
+	border-bottom: 1px solid silver;
+}
+
+#browserComp th img {
+	width: 22px;
+}
+
+#browserComp td {
+	text-align: center;
+}
+
+#browserComp th.feature, #browserComp td.feature {
+	text-align: right;
+	padding: 5px;
+	padding-right: 10px;
+	border-right: 1px solid silver;
+}
 
 .addon {
     border: 1px solid #222;
@@ -261,45 +258,53 @@ div.maincontent {
     margin-bottom: 20px;
     background: #222;
 }
-    .addon .flowBox {
-        width: 500px;
-        margin-right: 40px;
-        float: left;
-    }
-    .addon .discription {
-        margin-left: 540px;
-    }
-        .addon .title {
-                line-height: 1.3em;
-        }
-            .addon .title h3 {
-                margin: 0;
-                display: inline;
-            }
-            .addon .title .by {
-                margin-left: 2em;
-                font-size: 0.8em;
-                text-decoration: none;
-            }
-        .addon p {
-            font-size: 0.9em;
-        }
-        .addon .comment {
-            margin-top: 2em;
-            font-style: italic;
-        }
-        .addon .download {
-            font-size: 0.8em;
-            float: right;
-            margin: 0 0 2em 4em;
-            line-height: 1.5em;
-        }
-            .addon .download a {
-                font-weight: normal;
-            }
 
-#info { /* for example.php */
+.addon .flowBox {
+	width: 500px;
+	margin-right: 40px;
+	float: left;
+}
+
+.addon .discription {
+	margin-left: 540px;
+}
+
+.addon .title {
+	line-height: 1.3em;
+}
+
+.addon .title h3 {
+	margin: 0;
+	display: inline;
+}
+
+.addon .title .by {
+	margin-left: 2em;
+	font-size: 0.8em;
+	text-decoration: none;
+}
+
+.addon p {
+	font-size: 0.9em;
+}
+
+.addon .comment {
+	margin-top: 2em;
+	font-style: italic;
+}
+
+.addon .download {
+	font-size: 0.8em;
+	float: right;
+	margin: 0 0 2em 4em;
+	line-height: 1.5em;
+}
+
+.addon .download a {
+	font-weight: normal;
+}
+
+#info {
     color: white;
-    /*display: none;*/
 }
 
