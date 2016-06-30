@@ -7,31 +7,65 @@
 	<ui:param name="pageTitle" value="#{msg.homepageTitle}" />	
 	<ui:param name="disableGrowl" value="true" />
 
+	<pre><code class="js">baguetteBox.run('.baguetteBoxOne');</code></pre>
+	
 	<ui:define name="center_layout">
 		<h:outputStylesheet name="frontpage/index.min.css" />
-
+		<h:outputStylesheet library="css" name="guide.css"></h:outputStylesheet>
+		<h:outputScript library="js" name="guide.js" />
+		
 		<div class="content_box">
 			<h1>
 				#{msg.homepageTitle}
 			</h1>
-
+			
+	
 			<h:outputText value="#{msg.homepage}" styleClass="homepage_infotext" />
+			
+			<div id="lightbox">
+				<div id="lightbox_background" onclick="lightbox_close();"></div>
+
+				<div id="lightbox_container">
+
+
+
+					<div id="lightbox_content">
+	
+						<div id="lightbox_navigate_left" onclick="lightbox_prev();"></div>
+						<div id="lightbox_navigate_right" onclick="lightbox_next();"></div>
+					</div>
+
+
+
+
+				</div>
+
+			</div>
+			
+			
+			<div id="gallery" style="display:none;">
+				<!-- <a href="ToolGuide/Activity.html" data-caption="Image caption">
+
+					<img src="ToolGuide/thumb/ppt2.png" alt="First image"></img>
+				</a> <a href="ToolGuide/ppt2.png"></a> -->
+				<div class="resource" style="width: 100%; height: 100%">
+				<OBJECT type="image/svg+xml" data="ToolGuide/ppt1.svg" style="width: 100%; height: 100%"></OBJECT>
+				</div>
+				<div class="resource" style="width: 100%; height: 100%">
+				<OBJECT type="image/svg+xml" data="ToolGuide/ppt2.svg" style="width: 100%; height: 100%"></OBJECT>
+				</div>
+				<div class="resource" style="width: 100%; height: 100%">
+				<OBJECT type="image/svg+xml" data="ToolGuide/ppt3.svg" style="width: 100%; height: 100%"></OBJECT>
+				</div>
+				<div class="resource" style="width: 100%; height: 100%">
+				<OBJECT type="image/svg+xml" data="ToolGuide/ppt4.svg" style="width: 100%; height: 100%"></OBJECT>
+				</div>
+				<div class="resource" style="width: 100%; height: 100%">
+				<OBJECT type="image/svg+xml" data="ToolGuide/ppt5.svg" style="width: 100%; height: 100%"></OBJECT>
+				</div>
+			</div>
 
 			
-			<p:lightBox >
-			<h:outputLink value="ToolGuide/ppt1.png" title="Presentation Guide" style="height:auto; width:auto; max-height:80%; max-width:80%; display:block; margin:0 auto; position: relative;" >
-			<h:outputText value="Presentation Guide" style="font-weight:bold"></h:outputText>
-			</h:outputLink>
-			<h:outputLink value="ToolGuide/ppt2.png" title="Presentation Guide"></h:outputLink>
-			<h:outputLink value="ToolGuide/ppt3.png" title="Presentation Guide"></h:outputLink>
-			<h:outputLink value="ToolGuide/ppt4.png" title="Presentation Guide"></h:outputLink>
-			<h:outputLink value="ToolGuide/ppt5.png" title="Presentation Guide"></h:outputLink>
-         	
-    		
-    
-    		
-			</p:lightBox>
-
 <div id="div_left">
 				<ui:fragment rendered="#{!userBean.loggedIn}">
 
@@ -62,20 +96,22 @@
 					</h:form>
 				<br/>
 				<br/>
+				
+				
 				</ui:fragment>
 				
 				
 					<h2 class="page_header">
-						#{msg.video_guide}
+						#{msg.presentation_guide}
 					</h2>
-					<p:lightBox>
-						<div class="video_guide">
-							<h:outputLink value="#"/>
-							<f:facet name="inline">
-								<iframe width="1000" height="563" src="https://www.youtube.com/embed/hWA-YdiHIWw"/>
-							</f:facet>
+					
+						<div class="presentation_guide">
+						<h:outputLink onclick="lightbox_open(); return false;">
+							
+								<h:graphicImage value="ToolGuide/ppt_icon1.png"  height="50%" width="100%" alt=""></h:graphicImage>
+						</h:outputLink>	
+							<!-- <BUTTON onclick="lightbox_open();" style="width:50px; height: 40px; border: none;  background-color:rgba(222, 222, 222, 0);"><img src="ToolGuide/ppt_icon1.png" height="150%" width="150%"></img></BUTTON> -->
 						</div>
-					</p:lightBox>
 				
 			</div>
 		
