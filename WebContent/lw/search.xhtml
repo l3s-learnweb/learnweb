@@ -78,8 +78,6 @@
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="search" name="search4.css"  />		
 		<h:outputScript library="search" name="search2.js" target="head"/>
-		<link href="http://vjs.zencdn.net/4.12/video-js.css" rel="stylesheet"/>
-		<script src="http://vjs.zencdn.net/4.12/video.js"></script>
 
 		<h:panelGroup styleClass="group-menu-bar #{searchBean.queryFilters}" id="groups_menu_bar" layout="block" rendered="#{searchBean.searchFilters == null}">
 			<h:panelGroup styleClass="group-menu-header" layout="block" rendered="#{searchBean.searchService != null}">
@@ -139,73 +137,75 @@
 				</span>
 			</div>
 		</h:panelGroup>
-		<div id="filters_menu_bar" class="filters_menu_bar">
-			<h:panelGroup styleClass="search-filters #{searchBean.searchMode}" id="filters" layout="block">
-				<ul>
-					<h:panelGroup id="source_filter">
-						<li class="filter sources active">
-							<span class="filter-name">
-								<span class="trimmed-text">#{searchBean.searchService.toString()}</span>
-								<span class="arrow"></span>
-							</span>
-							<h:panelGroup styleClass="filter-sub-bar" layout="block" rendered="#{not empty searchBean.availableSources}">
-								<ui:repeat value="#{searchBean.availableSources}" var="item">
-									<h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">										
-										<h:outputText value="#{item.name}"/>
-										
-										<h:outputFormat value="#{msg.filter_counter}" escape="false" rendered="#{item.counter != null}">
-											<f:param value="#{item.counter}"/>
-										</h:outputFormat>
-																			
-										<f:param name="action" value="#{searchBean.searchMode}"/>
-										<f:param name="service" value="#{item.url}"/>
-										<f:param name="query" value="#{searchBean.query}"/>
-									</h:outputLink>
-								</ui:repeat>
-							</h:panelGroup>
-						</li>
-					</h:panelGroup>
-					<ui:repeat value="#{searchBean.availableFilters}" var="filter">
-						<li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
-							<span class="filter-name">
-								<span class="trimmed-text">#{filter.name}</span>
-								<span class="arrow"></span>
-							</span>
-							<h:panelGroup styleClass="filter-sub-bar vCarousel-wrapper filter-vCarousel" layout="block">
-								<h:panelGroup styleClass="vCarousel-container" layout="block">
-									<h:outputLink value="search.jsf" styleClass="#{!filter.active ? 'active' : null}">
-										<h:outputText value="#{filter.anyText}" />
-									
-										<f:param name="action" value="#{searchBean.searchMode}" />
-										<f:param name="filter" value="#{filter.anyUrl}" disable="#{empty filter.anyUrl}" />
-										<f:param name="service" value="#{searchBean.queryService}"/>
-										<f:param name="query" value="#{searchBean.query}"/>
-									</h:outputLink>
-									<ui:repeat value="#{filter.items}" var="item">
-										<h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">
+		<div id="filters_menu_bar_wrapper">
+			<div class="filters_menu_bar">
+				<h:panelGroup styleClass="search-filters #{searchBean.searchMode}" id="filters" layout="block">
+					<ul>
+						<h:panelGroup id="source_filter">
+							<li class="filter sources active">
+								<span class="filter-name">
+									<span class="trimmed-text">#{searchBean.searchService.toString()}</span>
+									<span class="arrow"></span>
+								</span>
+								<h:panelGroup styleClass="filter-sub-bar" layout="block" rendered="#{not empty searchBean.availableSources}">
+									<ui:repeat value="#{searchBean.availableSources}" var="item">
+										<h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">										
 											<h:outputText value="#{item.name}"/>
 											
 											<h:outputFormat value="#{msg.filter_counter}" escape="false" rendered="#{item.counter != null}">
 												<f:param value="#{item.counter}"/>
 											</h:outputFormat>
-										
-											<f:param name="action" value="#{searchBean.searchMode}" />
-											<f:param name="filter" value="#{item.url}" />
-											<f:param name="service" value="#{searchBean.queryService}"/>
-											<f:param name="query" value="#{searchBean.query}" />
+																				
+											<f:param name="action" value="#{searchBean.searchMode}"/>
+											<f:param name="service" value="#{item.url}"/>
+											<f:param name="query" value="#{searchBean.query}"/>
 										</h:outputLink>
 									</ui:repeat>
 								</h:panelGroup>
-								<h:link value="#{msg.filter_carousel_all}" styleClass="vCarousel-expand"></h:link>
-							</h:panelGroup>
-						</li>
-					</ui:repeat>
-				</ul>
-				<h:link value="#{msg.clear_filters}" outcome="search" rendered="#{searchBean.searchFilters != null}" styleClass="clear-filter">
-					<f:param name="action" value="#{searchBean.searchMode}" />
-					<f:param name="query" value="#{searchBean.query}" />
-				</h:link>
-			</h:panelGroup>	
+							</li>
+						</h:panelGroup>
+						<ui:repeat value="#{searchBean.availableFilters}" var="filter">
+							<li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
+								<span class="filter-name">
+									<span class="trimmed-text">#{filter.name}</span>
+									<span class="arrow"></span>
+								</span>
+								<h:panelGroup styleClass="filter-sub-bar vCarousel-wrapper filter-vCarousel" layout="block">
+									<h:panelGroup styleClass="vCarousel-container" layout="block">
+										<h:outputLink value="search.jsf" styleClass="#{!filter.active ? 'active' : null}">
+											<h:outputText value="#{filter.anyText}" />
+										
+											<f:param name="action" value="#{searchBean.searchMode}" />
+											<f:param name="filter" value="#{filter.anyUrl}" disable="#{empty filter.anyUrl}" />
+											<f:param name="service" value="#{searchBean.queryService}"/>
+											<f:param name="query" value="#{searchBean.query}"/>
+										</h:outputLink>
+										<ui:repeat value="#{filter.items}" var="item">
+											<h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">
+												<h:outputText value="#{item.name}"/>
+												
+												<h:outputFormat value="#{msg.filter_counter}" escape="false" rendered="#{item.counter != null}">
+													<f:param value="#{item.counter}"/>
+												</h:outputFormat>
+											
+												<f:param name="action" value="#{searchBean.searchMode}" />
+												<f:param name="filter" value="#{item.url}" />
+												<f:param name="service" value="#{searchBean.queryService}"/>
+												<f:param name="query" value="#{searchBean.query}" />
+											</h:outputLink>
+										</ui:repeat>
+									</h:panelGroup>
+									<h:link value="#{msg.filter_carousel_all}" styleClass="vCarousel-expand"></h:link>
+								</h:panelGroup>
+							</li>
+						</ui:repeat>
+					</ul>
+					<h:link value="#{msg.clear_filters}" outcome="search" rendered="#{searchBean.searchFilters != null}" styleClass="clear-filter">
+						<f:param name="action" value="#{searchBean.searchMode}" />
+						<f:param name="query" value="#{searchBean.query}" />
+					</h:link>
+				</h:panelGroup>	
+			</div>
 		</div>
 		
 		<script type="text/javascript">
@@ -213,26 +213,22 @@
 			var userId = '#{userBean.user.id}';
 			var searchHistoryEnabled = #{userBean.searchHistoryEnabled};
 			
-			var windw = this;
-
-			$.fn.followTo = function (  ) {
-			    var $this = this,
-			        $window = $(windw);
+				
+			function fixPositionOfFiltersMenuBar() {
+			    var menuBar = $('.filters_menu_bar'),
+			        $window = $(window),
+			    	headerHeight = $("#header").height(),
+			    	carusselHeight = $("#groups_menu_bar").outerHeight();
 			    
 			    $window.scroll(function(e)
-			    {
-			    	var height = $("#header").height();
-			    	
-			    	//   groups_menu_bar
-			        if ($window.scrollTop() > $("#groups_menu_bar").height()) {
-			            $this.css({
+			    {			    	
+			    	if ($window.scrollTop() > carusselHeight) {
+			        	menuBar.css({
 			                position: 'fixed',
-			                top: height
 			            });
 			        } else {
-			            $this.css({
+			        	menuBar.css({
 			                position: 'relative',
-			                top: 0
 			            });
 			        }
 			    });
@@ -240,7 +236,8 @@
 
 			$(document).ready(function() 
 			{
-			$('#filters_menu_bar').followTo();
+			//$('#filters_menu_bar').followTo();
+			fixPositionOfFiltersMenuBar();
 			});
 		</script>			
 		 

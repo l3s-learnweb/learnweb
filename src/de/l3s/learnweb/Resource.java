@@ -253,6 +253,9 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
     public void addTag(String tagName, User user) throws Exception
     {
+	if(tagName.length() > 250)
+	    throw new IllegalArgumentException("tag is to long");
+
 	ResourceManager rsm = Learnweb.getInstance().getResourceManager();
 	Tag tag = rsm.getTag(tagName);
 

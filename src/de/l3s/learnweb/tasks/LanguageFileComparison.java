@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
 /**
  * Uses the list of corrected translations provided by Marco to check which translations were not yet checked.
  * 
- * The returned list represents translation keys which were noch checked.
+ * The returned list represents translation keys which were not checked.
  * 
  * @author Philipp
  *

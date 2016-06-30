@@ -31,6 +31,7 @@ var scrolling = false;
 	};
 })(jQuery);
 
+// for search source carussel 
 function setContentPadding()
 {		
 	var height = $("#header").height();
@@ -47,7 +48,6 @@ function setContentPadding()
 	}).bind("mouseout", function(event) {
 	    scrolling = false;
 	});
-
 
 	$("#scrollRight").bind("click", function(event) {
 	    event.preventDefault();
@@ -86,8 +86,7 @@ function prepareResources(resources)
 		
 		var image = resource.find('.smallImage').first();
 		var preview = resource.find('.preview').first();
-		var previewImage = resource.find('.preview img').first();
-		
+		var previewImage = resource.find('.preview img').first();		
 		
 		// open preview delayed on mouseover 
 		image.mouseenter(function (event) 
@@ -281,7 +280,6 @@ function testIfResultsFillPage()
     }
     	
 }
-
 
 function lightbox_close()
 {
@@ -489,8 +487,7 @@ function open_searchbar()
 		$('#search_loading_more_results,#search_nothing_found,#search_no_more_results').css('width','75%');
 	}
 	else
-	{
-		
+	{		
 		$('.grid_view').animate({width:'75%'},1000);//.css('width','75%');
 		$('#search_right_bar').animate({width:'24%'},1000);//.css('width','24%');
 		$('#search_right_bar').addClass('right_bar').css('display','inline-block');

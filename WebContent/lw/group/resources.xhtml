@@ -237,9 +237,9 @@
 			        <p><h:outputFormat value="#{msg.delete_folder_confirm_message}"/></p>
 			        		   		
 			       	<h:panelGrid columns="2" styleClass="float-right" style="margin: 10px 0;">
-			   			<p:commandButton styleClass="graybutton" value="#{msg.delete_cancel_btn}" onclick="PF('confirmationFolder').hide(); return false;"/>
+			   			<p:commandButton styleClass="graybutton" value="#{msg.cancel}" onclick="PF('confirmationFolder').hide(); return false;"/>
 			   			
-			   			<p:commandButton styleClass="greenbutton" value="#{msg.delete_folder_btn}" update=":group_menu_tree :folderGrid :growl :add_resource_panel" 
+			   			<p:commandButton styleClass="greenbutton" value="#{msg.delete}" update=":group_menu_tree :folderGrid :growl :add_resource_panel" 
 			   				oncomplete="PF('confirmationFolder').hide(); update_header();" actionListener="#{groupDetailBean.deleteFolder}" 
 			   				process=":folderGrid" rendered="${groupDetailBean.canEditFoldersInGroup()}"/>
 		   			</h:panelGrid>

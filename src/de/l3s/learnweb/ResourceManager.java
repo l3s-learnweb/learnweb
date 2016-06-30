@@ -308,34 +308,6 @@ public class ResourceManager
 	    resource.setThumbnail4(null);
 	}
 
-	/*
-		// create the SQL query to store the metadata fields in the dynamic column "metadata"
-		int metadataFields = resource.getMetadataKeys().size();
-		String metadataSQLvalue = "NULL";
-		if(metadataFields > 0)
-		{
-		    StringBuilder sb = new StringBuilder("COLUMN_CREATE(");
-		    /*
-		    	    for(int i = 0; i < metadataFields; i++)
-		    		sb.append("?,?,");
-		    * /
-		    for(Entry<String, String> entry : resource.getMetadataEntries())
-		    {
-			sb.append("'");
-			sb.append(entry.getKey().replace("'", "\\'"));
-			sb.append("','");
-			sb.append(entry.getValue().replace("'", "\\'"));
-			sb.append("',");
-		    }
-	
-		    sb.setLength(sb.length() - 1);
-		    sb.append(")");
-		    metadataSQLvalue = sb.toString();
-		}
-		//metadataSQLvalue = "?";
-	
-		log.debug(metadataSQLvalue);
-	*/
 	String query = "REPLACE INTO `lw_resource` (`resource_id` ,`title` ,`description` ,`url` ,`storage_type` ,`rights` ,`source` ,`type` ,`format` ,`owner_user_id` ,`rating` ,`rate_number` ,`query`, embedded_size1, embedded_size2, embedded_size3, embedded_size4, filename, max_image_url, original_resource_id, machine_description, author, file_url, thumbnail0_url, thumbnail0_file_id, thumbnail0_width, thumbnail0_height, thumbnail1_url, thumbnail1_file_id, thumbnail1_width, thumbnail1_height, thumbnail2_url, thumbnail2_file_id, thumbnail2_width, thumbnail2_height, thumbnail3_url, thumbnail3_file_id, thumbnail3_width, thumbnail3_height, thumbnail4_url, thumbnail4_file_id, thumbnail4_width, thumbnail4_height, embeddedRaw, transcript, online_status, id_at_service, duration, restricted, language, creation_date, metadata, group_id, folder_id, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
 		+ "?)";
 	PreparedStatement replace = learnweb.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -403,16 +375,6 @@ public class ResourceManager
 	replace.setInt(53, resource.getGroupId());
 	replace.setInt(54, resource.getFolderId());
 	replace.setInt(55, resource.isDeleted() ? 1 : 0);
-
-	/*
-	int m = 52;
-	for(Entry<String, String> entry : resource.getMetadataEntries())
-	{
-	    replace.setString(m++, entry.getKey());
-	    replace.setString(m++, entry.getValue());
-	}
-	*/
-	//log.debug(replace);
 	replace.executeUpdate();
 
 	if(resource.getId() < 0) // get the assigned id
@@ -427,8 +389,7 @@ public class ResourceManager
 	    // persist the relation between the resource and its files
 	    learnweb.getFileManager().addFilesToResource(resource.getFiles().values(), resource);
 	}
-	else
-	// edited resource needs to be updated in the cache
+	else // edited resources need to be updated in the cache		
 	{
 	    cache.remove(resource.getId());
 	    cache.put(resource);
