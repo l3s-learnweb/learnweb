@@ -166,7 +166,7 @@ public class YovistoManager
 	    {
 		Set<String> tag = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER); //Tags from the yovisto_video table
 		tag.addAll(Arrays.asList(result.getString("user_tag").split(",")));
-
+		//Philipp: I start here
 		OwnerList<Tag, User> tagsFromResource = resourceManager.getTagsByResource(yovistoVideo.getId()); //Tags already added to this resource
 		StringBuilder out = new StringBuilder();
 		for(Tag tags : tagsFromResource)
@@ -177,8 +177,9 @@ public class YovistoManager
 		}
 		String output = out.toString();
 		Set<String> tagsFromLw = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
-		tagsFromLw.addAll(Arrays.asList(output.split(", "))); // Philipp - I dont assume tags from LW dont have commas
-		//I split them by commas to get a List
+		tagsFromLw.addAll(Arrays.asList(output.split(", ")));
+		//Philipp: I get tags as a "Tag" object. I suppose a Tag object won't have commas. Am I wrong to assume that?
+
 		tag.removeAll(tagsFromLw); //Remove already added tags to avoid duplicate tags
 
 		for(String tagName : tag)
