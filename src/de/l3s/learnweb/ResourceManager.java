@@ -1,6 +1,7 @@
 package de.l3s.learnweb;
 
 import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -124,7 +125,7 @@ public class ResourceManager
 	return invalidIds;
     }
 
-    public boolean isResourceRatedByUser(int resourceId, int userId) throws Exception
+    public boolean isResourceRatedByUser(int resourceId, int userId) throws SQLException
     {
 	PreparedStatement stmt = learnweb.getConnection().prepareStatement("SELECT 1 FROM lw_resource_rating WHERE resource_id =  ? AND user_id = ?");
 	stmt.setInt(1, resourceId);
@@ -135,7 +136,7 @@ public class ResourceManager
 	return response;
     }
 
-    protected void rateResource(int resourceId, int userId, int value) throws Exception
+    protected void rateResource(int resourceId, int userId, int value) throws SQLException
     {
 	PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO lw_resource_rating (`resource_id`, `user_id`, `rating`) VALUES(?, ?, ?)");
 	replace.setInt(1, resourceId);
@@ -505,13 +506,9 @@ public class ResourceManager
 	return comments;
     }
 
-    /**
-     * @see de.l3s.learnweb.ResourceManager#getTag(java.lang.String)
-     */
-
-    public Tag getTag(String tagName) throws Exception
+    public Tag getTag(String tagName) throws SQLException
     {
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT tag_id, name FROM lw_tag WHERE name LIKE ?");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT tag_id, name FROM lw_tag WHERE name LIKE ? ORDER BY tag_id LIMIT 1");
 	select.setString(1, tagName);
 	ResultSet rs = select.executeQuery();
 	if(!rs.next())
@@ -522,7 +519,7 @@ public class ResourceManager
 	return tag;
     }
 
-    protected void deleteTag(Tag tag, Resource resource) throws Exception
+    protected void deleteTag(Tag tag, Resource resource) throws SQLException
     {
 	PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_resource_tag WHERE resource_id = ? AND tag_id = ?");
 	delete.setInt(1, resource.getId());
@@ -531,7 +528,7 @@ public class ResourceManager
 	delete.close();
     }
 
-    protected void deleteComment(Comment comment) throws Exception
+    protected void deleteComment(Comment comment) throws SQLException
     {
 	PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_comment WHERE comment_id = ?");
 	delete.setInt(1, comment.getId());
@@ -543,7 +540,7 @@ public class ResourceManager
      * @see de.l3s.learnweb.ResourceManager#getTagsByUserId(int)
      */
 
-    public List<Tag> getTagsByUserId(int userId) throws Exception
+    public List<Tag> getTagsByUserId(int userId) throws SQLException
     {
 	LinkedList<Tag> tags = new LinkedList<Tag>();
 
@@ -579,7 +576,7 @@ public class ResourceManager
      * @see de.l3s.learnweb.ResourceManager#addTag(java.lang.String)
      */
 
-    protected Tag addTag(String tagName) throws Exception
+    protected Tag addTag(String tagName) throws SQLException
     {
 	Tag tag = new Tag(-1, tagName);
 
@@ -607,7 +604,7 @@ public class ResourceManager
      * @see de.l3s.learnweb.ResourceManager#commentResource(java.lang.String, de.l3s.learnweb.User, de.l3s.learnweb.Resource)
      */
 
-    protected Comment commentResource(String text, User user, Resource resource) throws Exception
+    protected Comment commentResource(String text, User user, Resource resource) throws SQLException
     {
 	Comment c = new Comment(text, new Date(), resource, user);
 	saveComment(c);
@@ -891,8 +888,7 @@ public class ResourceManager
 		resource.setLocation("Learnweb");
 
 	    // TODO remove as soon as embedded images are removed
-
-	    if(rs.getInt("deleted") == 0)
+	    if(!resource.isDeleted())
 	    {
 		List<File> files = learnweb.getFileManager().getFilesByResource(resource.getId());
 		for(File file : files)
@@ -945,16 +941,6 @@ public class ResourceManager
 
 	if(fileId != 0)
 	{
-	    /* This version is correct but slow because it requires a separate sql query:
-	     * 
-	    File file = learnweb.getFileManager().getFileById(fileId);
-	    if(null == file)
-	    {
-	    log.error("resource " + rs.getInt("resource_id") + ": thumbnail file " + fileId + " size=" + thumbnailSize + " does not exist");
-	    return null;
-	    }
-	    url = file.getUrl();
-	    */
 	    url = learnweb.getFileManager().getThumbnailUrl(fileId);
 	}
 	else if(url == null)
@@ -1102,7 +1088,7 @@ public class ResourceManager
      *  All methods beyond should be deleted soon
      */
 
-    public static void fixThumbnailsForWebResources() throws Exception
+    public static void fixThumbnailsForWebResources() throws SQLException, IOException
     {
 
 	Learnweb lw = Learnweb.getInstance();
@@ -1148,7 +1134,7 @@ public class ResourceManager
 
     }
 
-    public static void createThumbnailsForWebResources() throws Exception
+    public static void createThumbnailsForWebResources() throws SQLException
     {
 
 	Learnweb lw = Learnweb.getInstance();
@@ -1243,7 +1229,7 @@ public class ResourceManager
 	}
     }
 
-    public static void createThumbnailsForTEDVideos() throws Exception
+    public static void createThumbnailsForTEDVideos() throws SQLException, IOException
     {
 
 	Learnweb lw = Learnweb.getInstance();
@@ -1298,7 +1284,7 @@ public class ResourceManager
 	}
     }
 
-    public static void main(String[] args) throws Exception
+    public static void main(String[] args) throws SQLException
     {
 	reindexArchiveItResources();
 	//createThumbnailsForWebResources();

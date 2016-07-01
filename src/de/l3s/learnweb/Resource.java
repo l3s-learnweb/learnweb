@@ -128,31 +128,24 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     @Deprecated
     public void prepareEmbeddedCodes()
     {
+	Thumbnail dummyImage = null;
+
 	if(isRestricted())
 	{
 	    embeddedSize1 = "<img src=\"../resources/resources/img/RestrictedAccess.jpg\" width=\"300\" height=\"214\" />";
 
 	    // TODO find a better solution; don't set a fixed error image
-	    Thumbnail restrictedImage = new Thumbnail("../resources/resources/img/RestrictedAccess.jpg", 300, 214);
-	    setThumbnail0(restrictedImage.resize(150, 120));
-	    setThumbnail1(restrictedImage.resize(150, 150));
-	    setThumbnail2(restrictedImage);
-	    setThumbnail3(restrictedImage);
-	    setThumbnail4(restrictedImage);
+	    dummyImage = new Thumbnail("../resources/resources/img/RestrictedAccess.jpg", 300, 214);
+
 	}
 	else if(getOnlineStatus().equals(OnlineStatus.OFFLINE))
 	{
 	    embeddedSize1 = "<img src=\"../resources/resources/img/page_no_longer_available.jpg\" width=\"300\" height=\"300\" />";
 
 	    // TODO find a better solution; don't set a fixed error image
-	    Thumbnail pageNotFoundImage = new Thumbnail("../resources/resources/img/page_no_longer_available.jpg", 300, 300);
-	    setThumbnail0(pageNotFoundImage.resize(150, 120));
-	    setThumbnail1(pageNotFoundImage.resize(150, 150));
-	    setThumbnail2(pageNotFoundImage);
-	    setThumbnail3(pageNotFoundImage);
-	    setThumbnail4(pageNotFoundImage);
+	    dummyImage = new Thumbnail("../resources/resources/img/page_no_longer_available.jpg", 300, 300);
 	}
-	else if(null == embeddedSize1 || null == embeddedSize3)
+	else if(null == embeddedSize1 || null == embeddedSize3 || thumbnail1 == null || thumbnail2 == null)
 	{
 
 	    if(source.equalsIgnoreCase("YouTube"))
@@ -168,6 +161,8 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 		    if(null == embeddedSize3)
 			this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
 		    this.format = "application/x-shockwave-flash";
+
+		    dummyImage = new Thumbnail("http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg", 320, 180);
 		}
 	    }
 	    else if(source.equals("Google") && type.equals("Video"))
@@ -185,6 +180,8 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 		    this.source = "YouTube";
 		    this.url = "https://www.youtube.com/watch?v=" + videoId;
 
+		    dummyImage = new Thumbnail("http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg", 320, 180);
+
 		}
 	    }
 	    else if(source.equalsIgnoreCase("Vimeo"))
@@ -199,6 +196,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 			    + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" /><embed src=\"http://vimeo.com/moogaloop.swf?clip_id=" + videoId
 			    + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"500\" height=\"375\"></embed></object>";
 		    this.format = "application/x-shockwave-flash";
+
 		}
 
 	    }
@@ -209,6 +207,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 		    embeddedSize3 = embeddedSize1.replace(".100.", ".500.");
 		else
 		    embeddedSize3 = "<a href=\"" + url + "\">" + url + "</a>";
+
 	    }
 	    else if(source.equals("Flickr") && type.equals("Image") && embeddedSize1 != null)
 	    {
@@ -227,17 +226,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 		    embeddedSize1 = "<img src=\"../resources/resources/img/website-140.png\" width=\"100\" height=\"100\" />";
 		else if(format.startsWith("text/"))
 		    embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
-		else if(isRestricted())
-		{
-		    //embeddedSize1 = "<img src=\"../resources/resources/img/video.png\" width=\"200\" height=\"200\" />";
 
-		    Thumbnail videoImage = new Thumbnail("../resources/resources/img/video.png", 200, 200);
-		    setThumbnail0(videoImage.resize(150, 120));
-		    setThumbnail1(videoImage.resize(150, 150));
-		    setThumbnail2(videoImage);
-		    setThumbnail3(videoImage);
-		    setThumbnail4(videoImage);
-		}
 	    }
 
 	}
@@ -249,9 +238,34 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 		embeddedSize3 = replacePlaceholder(embeddedSize3, file);
 	    }
 	}
+
+	if(dummyImage == null && (thumbnail1 == null || thumbnail2 == null))
+	{
+	    if(type.equalsIgnoreCase("audio"))
+		dummyImage = new Thumbnail("../resources/resources/picol/document_music.svg", 200, 200);
+	    else if(format.startsWith("application/vnd.") || format.startsWith("application/ms"))
+		dummyImage = new Thumbnail("../resources/resources/picol/document_text.svg", 200, 200);
+	    else if(storageType == WEB_RESOURCE)
+		dummyImage = new Thumbnail("../resources/resources/picol/website.svg", 200, 200);
+	    else if(format.startsWith("text/"))
+		dummyImage = new Thumbnail("../resources/resources/picol/document_text.svg", 200, 200);
+	    else if(isRestricted())
+		dummyImage = new Thumbnail("../resources/resources/picol/badge_security.svg", 300, 214);
+	    else
+		dummyImage = new Thumbnail("../resources/resources/picol/document_video.svg", 200, 200);
+	}
+
+	if(dummyImage != null)
+	{
+	    setThumbnail0(dummyImage.resize(150, 120));
+	    setThumbnail1(dummyImage.resize(150, 150));
+	    setThumbnail2(dummyImage);
+	    setThumbnail3(dummyImage);
+	    setThumbnail4(dummyImage);
+	}
     }
 
-    public void addTag(String tagName, User user) throws Exception
+    public void addTag(String tagName, User user) throws SQLException
     {
 	if(tagName.length() > 250)
 	    throw new IllegalArgumentException("tag is to long");
@@ -273,7 +287,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	Learnweb.getInstance().getSolrClient().indexTag(tag, this);
     }
 
-    public void deleteTag(Tag tag) throws Exception
+    public void deleteTag(Tag tag) throws SQLException
     {
 	Learnweb.getInstance().getResourceManager().deleteTag(tag, this);
 	tags.remove(tag);
@@ -866,9 +880,10 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     @Deprecated
     public String getEmbeddedSize3()
     {
+	/*
 	if(getThumbnail3() != null)
 	    return getThumbnail3().toHTML();
-
+	*/
 	return embeddedSize3;
     }
 

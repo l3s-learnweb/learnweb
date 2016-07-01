@@ -105,7 +105,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     {
 	interweb = getLearnweb().getInterweb();
 	searchMode = MODE.image; // default search mode
-	queryMode = getPreference("SEARCH_ACTION", "text");
+	queryMode = getPreference("search_action", "text");
 
 	searchFilters = new SearchFilters();
 	searchFilters.setLanguageFilter(UtilBean.getUserBean().getLocaleCode());

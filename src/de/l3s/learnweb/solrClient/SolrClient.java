@@ -199,7 +199,7 @@ public class SolrClient
      * @param resource
      * @throws Exception
      */
-    public void deleteFromIndex(Tag tag, Resource resource) throws Exception
+    public void deleteFromIndex(Tag tag, Resource resource)
     {
 	reIndexResource(resource);
     }

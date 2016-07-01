@@ -180,6 +180,14 @@ public class YovistoManager
 		tagsFromLw.addAll(Arrays.asList(output.split(", ")));
 		//Philipp: I get tags as a "Tag" object. I suppose a Tag object won't have commas. Am I wrong to assume that?
 
+		// suggestion:
+		Set<String> tagsFromLw2 = new TreeSet<String>(String.CASE_INSENSITIVE_ORDER);
+		for(Tag tags : tagsFromResource)
+		{
+		    tagsFromLw2.add(tags.getName());
+		}
+		// tagsFromLw2 and tagsFromLw should be equal
+
 		tag.removeAll(tagsFromLw); //Remove already added tags to avoid duplicate tags
 
 		for(String tagName : tag)

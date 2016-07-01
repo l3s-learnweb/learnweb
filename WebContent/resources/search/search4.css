@@ -653,6 +653,7 @@ img.smallImage { cursor:pointer; margin:4px; }
     height: 100%;
     width: 4rem;
     top: 0;
+    z-index: 24;
 }
 
 .group-menu-bar .group-menu-panel .navigate:hover {
