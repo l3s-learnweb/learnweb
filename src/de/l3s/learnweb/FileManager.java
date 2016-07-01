@@ -272,13 +272,10 @@ public class FileManager
 
 	    file.setExists(false);
 
-	    if(file.getMimeType().startsWith("image/"))
-	    {
-		file.setActualFile(new java.io.File(folder, "404-no-file.png"));
-		file.setMimeType("image/png");
-	    }
-	    else
-		file.setActualFile(null);
+	    // if(file.getMimeType().startsWith("image/")) {
+	    file.setActualFile(new java.io.File(folder, "404-no-file.png"));
+	    file.setMimeType("image/png");
+	    //}  else file.setActualFile(null);
 	}
 
 	file = cache.put(file);

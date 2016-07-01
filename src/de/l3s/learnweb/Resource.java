@@ -134,7 +134,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	{
 	    embeddedSize1 = "<img src=\"../resources/resources/img/RestrictedAccess.jpg\" width=\"300\" height=\"214\" />";
 
-	    // TODO find a better solution; don't set a fixed error image
+	    // TODO find a better solution
 	    dummyImage = new Thumbnail("../resources/resources/img/RestrictedAccess.jpg", 300, 214);
 
 	}
@@ -142,10 +142,10 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	{
 	    embeddedSize1 = "<img src=\"../resources/resources/img/page_no_longer_available.jpg\" width=\"300\" height=\"300\" />";
 
-	    // TODO find a better solution; don't set a fixed error image
+	    // TODO find a better solution
 	    dummyImage = new Thumbnail("../resources/resources/img/page_no_longer_available.jpg", 300, 300);
 	}
-	else if(null == embeddedSize1 || null == embeddedSize3 || thumbnail1 == null || thumbnail2 == null)
+	else if(null == embeddedSize1 || null == embeddedSize3)
 	{
 
 	    if(source.equalsIgnoreCase("YouTube"))
@@ -215,20 +215,6 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 		if(null == embeddedSize3)
 		    embeddedSize3 = embeddedSize1.replace("_t.", ".");
 	    }
-
-	    if(embeddedSize1 == null || embeddedSize1.length() < 3)
-	    {
-		if(type.equalsIgnoreCase("audio"))
-		    embeddedSize1 = "<img src=\"../resources/resources/img/audio.png\" width=\"100\" height=\"100\" />";
-		else if(format.startsWith("application/vnd.") || format.startsWith("application/ms"))
-		    embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
-		else if(storageType == WEB_RESOURCE)
-		    embeddedSize1 = "<img src=\"../resources/resources/img/website-140.png\" width=\"100\" height=\"100\" />";
-		else if(format.startsWith("text/"))
-		    embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
-
-	    }
-
 	}
 	else
 	{
@@ -239,21 +225,29 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	    }
 	}
 
+	/*
 	if(dummyImage == null && (thumbnail1 == null || thumbnail2 == null))
 	{
-	    if(type.equalsIgnoreCase("audio"))
+	    String imageUrl = ResourcePreviewMaker.getBestImage(this);
+	
+	    if(imageUrl != null)
+		dummyImage = new Thumbnail(imageUrl, 300, 220);
+	    else if(type.equalsIgnoreCase("audio"))
 		dummyImage = new Thumbnail("../resources/resources/picol/document_music.svg", 200, 200);
+	    else if(type.equalsIgnoreCase("image"))
+		dummyImage = new Thumbnail("../resources/resources/picol/document_image.svg", 200, 200);
 	    else if(format.startsWith("application/vnd.") || format.startsWith("application/ms"))
 		dummyImage = new Thumbnail("../resources/resources/picol/document_text.svg", 200, 200);
-	    else if(storageType == WEB_RESOURCE)
-		dummyImage = new Thumbnail("../resources/resources/picol/website.svg", 200, 200);
 	    else if(format.startsWith("text/"))
 		dummyImage = new Thumbnail("../resources/resources/picol/document_text.svg", 200, 200);
 	    else if(isRestricted())
-		dummyImage = new Thumbnail("../resources/resources/picol/badge_security.svg", 300, 214);
+		dummyImage = new Thumbnail("../resources/resources/picol/badge_security.svg", 200, 200);
+	    else if(type.equalsIgnoreCase("video"))
+		dummyImage = new Thumbnail("../resources/resources/picol/video.svg", 200, 200);
 	    else
-		dummyImage = new Thumbnail("../resources/resources/picol/document_video.svg", 200, 200);
-	}
+		dummyImage = new Thumbnail("../resources/resources/picol/website.svg", 200, 200);
+	
+	}*/
 
 	if(dummyImage != null)
 	{
@@ -262,6 +256,18 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	    setThumbnail2(dummyImage);
 	    setThumbnail3(dummyImage);
 	    setThumbnail4(dummyImage);
+	}
+
+	if(embeddedSize1 == null || embeddedSize1.length() < 3)
+	{
+	    if(type.equalsIgnoreCase("audio"))
+		embeddedSize1 = "<img src=\"../resources/resources/img/audio.png\" width=\"100\" height=\"100\" />";
+	    else if(format.startsWith("application/vnd.") || format.startsWith("application/ms"))
+		embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
+	    else if(storageType == WEB_RESOURCE)
+		embeddedSize1 = "<img src=\"../resources/resources/img/website-140.png\" width=\"100\" height=\"100\" />";
+	    else if(format.startsWith("text/"))
+		embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
 	}
     }
 
@@ -835,6 +841,8 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     @Deprecated
     public String getEmbeddedSize1()
     {
+	if(embeddedSize1 != null)
+	    return embeddedSize1;
 
 	if(getThumbnail1() != null)
 	    return getThumbnail1().toHTML();
@@ -843,7 +851,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	if(getThumbnail3() != null)
 	    return getThumbnail3().resize(150, 150).toHTML();
 
-	return embeddedSize1;
+	return "<img src=\"../resources/resources/img/website-140.png\" width=\"100\" height=\"100\" />";
     }
 
     /**

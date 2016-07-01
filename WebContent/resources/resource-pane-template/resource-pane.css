@@ -139,7 +139,7 @@
 #lightbox_content {
     height:100%;
     width:100%;	
-    background:url(../resources/search/icon/grain-2.png) center no-repeat
+    background:url(../resources/search/icon/grain-2.png);
 }
 #lightbox_title {
 	font-size:2rem;

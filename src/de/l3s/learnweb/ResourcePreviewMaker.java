@@ -419,7 +419,7 @@ public class ResourcePreviewMaker
 	return imageUrl;
     }
 
-    private static void getBestImage(Resource resource) throws SQLException
+    public static String getBestImage(Resource resource)
     {
 	String url = resource.getUrl();
 	String imageUrl = null;
@@ -547,7 +547,7 @@ public class ResourcePreviewMaker
 	{
 	    // that's ok. This seem to be mostly web sites
 	    log.debug("unhandled resource " + resource);
-	    return;
+	    return null;
 
 	}
 
@@ -557,19 +557,22 @@ public class ResourcePreviewMaker
 	}
 
 	if(url != null && url.startsWith("http://immediatenet.com"))
-	    return;
+	    return null;
 
-	log.debug(imageUrl);
+	//log.debug(imageUrl);
 
+	return imageUrl;
+
+	/*
 	if(imageUrl == null || AddResourceBean.checkUrl(imageUrl) == null)
 	{
 	    resource.setMaxImageUrl("-1");
 	}
 	else
 	    resource.setMaxImageUrl(imageUrl);
-
+	
 	resource.save();
-
+	*/
     }
 
 }

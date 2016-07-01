@@ -51,13 +51,13 @@
 			var view = '#{resultSetBean.resultSetView}';
 	    </script>	
 	    
-		<ui:decorate  template="/lw/templates/resource_lightbox.xhtml"></ui:decorate>		
+		<ui:decorate  template="/templates/search/resource_lightbox.xhtml"></ui:decorate>		
 		<h:panelGroup layout="block" id="explore_resultset" >
 			<div class="#{resultSetBean.resultSetView}_view">			
 				
 				<div class="resources">
 				<h:panelGroup layout="block" rendered="#{not empty resultSetBean.resources}">
-					<ui:decorate template="/lw/templates/resources.xhtml" >
+					<ui:decorate template="/templates/search/resources.xhtml" >
 						<ui:param name="resources" value="#{resultSetBean.resources}" />
 						<ui:param name="view" value="#{resultSetBean.resultSetView}" />					
 					</ui:decorate>
@@ -213,7 +213,7 @@
 		</div>
 		<div id="explorenew_results" class="display-none">	
 			<h:panelGroup id="nextPage" layout="block">				
-				<ui:decorate template="/lw/templates/resources_#{resultSetBean.resultSetView}.xhtml">
+				<ui:decorate template="/templates/search/resources_#{resultSetBean.resultSetView}.xhtml">
 					<ui:param name="resources" value="#{resultSetBean.resources}" />
 				</ui:decorate>		
 			</h:panelGroup>

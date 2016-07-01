@@ -1,16 +1,5 @@
-/****************************************************************
-This file will be loaded on every page. 
-Include only methods which are required on every page.
-****************************************************************/
 
-/**
- * Method required for the search field
- */
 var lightboxActiveResource = null;
-
-
-
-
 var box;
 
 function lightbox_close()
@@ -34,7 +23,6 @@ function lightbox_next()
 
 	$('#lightbox_content').append(lightboxActiveResource.clone());
 	lightbox_open();
-	//next.trigger('openLightbox');
 }
 
 function lightbox_prev()
@@ -70,7 +58,6 @@ function lightbox_resize_container()
 //	$('#lightbox_content').height(height-titleHeight);
 }
 
-
 function lightbox_load()
 {
 	box = $('#lightbox');
@@ -79,20 +66,12 @@ function lightbox_load()
 }
 function lightbox_open()
 {
-	//lightboxActiveResource;	
-
 	box.appendTo(document.body);
 	lightbox_resize_container();
 	box.show();
 };
 
-
-
-
-
 $(document).ready(function()
 {	
-	lightbox_load();
-	
-	
+	lightbox_load();	
 });

@@ -5,19 +5,19 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<ui:fragment rendered="#{view eq 'list'}">
-		<ui:decorate template="/lw/templates/resources_list.xhtml">
+		<ui:decorate template="/templates/search/resources_list.xhtml">
 			<ui:param name="resources" value="#{resources}" />
 		</ui:decorate>
 	</ui:fragment>
 	
 	<ui:fragment rendered="#{view eq 'float'}">
-		<ui:decorate template="/lw/templates/resources_float.xhtml">
+		<ui:decorate template="/templates/search/resources_float.xhtml">
 			<ui:param name="resources" value="#{resources}" />
 		</ui:decorate>
 	</ui:fragment>
 	
 	<ui:fragment rendered="#{view eq 'grid'}">
-		<ui:decorate template="/lw/templates/resources_grid.xhtml">
+		<ui:decorate template="/templates/search/resources_grid.xhtml">
 			<ui:param name="resources" value="#{resources}" />
 		</ui:decorate>
 	</ui:fragment>

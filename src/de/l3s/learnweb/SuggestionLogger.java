@@ -74,9 +74,7 @@ public class SuggestionLogger
 	    {
 		while(true)
 		{
-		    Container container;
-
-		    container = queue.take();
+		    Container container = queue.take();
 
 		    if(container == null) // stop method was called
 			break;

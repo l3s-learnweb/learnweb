@@ -238,9 +238,9 @@ function resourceDND() {
 
 $(document).ready(function() 
 {
-	resourceDND();
-	
-	//lightbox_resize_container();	
+	resourceDND();	
+
+	lightbox_load();	
 	$(window).resize(lightbox_resize_container);
 	
 	// register  esc key
@@ -248,5 +248,4 @@ $(document).ready(function()
 		if (event.which == 27)
 			lightbox_close();		
 	});
-
 });

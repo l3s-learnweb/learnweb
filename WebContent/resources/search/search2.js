@@ -31,7 +31,7 @@ var scrolling = false;
 	};
 })(jQuery);
 
-// for search source carussel 
+// for search source carrousel 
 function setContentPadding()
 {		
 	var height = $("#header").height();
@@ -62,6 +62,7 @@ function setContentPadding()
 	});
 }
 
+//for search source carrousel 
 function scrollContent(direction) {
     var amount = (direction === "right" ? "-=1px" : "+=1px");
     $(".group-menu-container").animate({
@@ -263,6 +264,9 @@ function displayNextPage(xhr, status, args)
 	prepareResources(resources);	
 	
 	loading = false;
+	
+	if(view=='list')
+		createGroupTooltips();
 	
 	testIfResultsFillPage();
 }
@@ -497,6 +501,34 @@ function open_searchbar()
 	return false;
 }
 
+// set position of .filters_menu_bar to fixed when scrolled down
+function fixPositionOfFiltersMenuBar() 
+{
+    var menuBar = $('.filters_menu_bar'),
+        $window = $(window),
+    	carusselHeight = $("#groups_menu_bar").outerHeight();
+    
+    $window.scroll(function(e)
+    {			    	
+    	if ($window.scrollTop() > carusselHeight) 
+        	menuBar.css('position', 'fixed');
+        else 
+        	menuBar.css('position', 'relative');
+    });
+};
+
+function createGroupTooltips() {
+    $('.tooltip').tooltipster({
+    	contentAsHTML:true,
+    	maxWidth: 400,
+    	position:'right',
+    	interactive:true,
+    	multiple: true,
+    	interactiveTolerance:150,
+    	theme:'tooltipster-custom-theme'
+    });
+}
+
 $(document).ready(function() 
 {	
 	openPreview = $('#new_results'); // initialize openPreview with an element that can be hidden.
@@ -564,4 +596,6 @@ $(document).ready(function()
 	loadFilterCounts();
 	updateCarousel();
 	setContentPadding();
+	fixPositionOfFiltersMenuBar();
+	createGroupTooltips();
 });

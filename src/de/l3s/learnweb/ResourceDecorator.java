@@ -54,7 +54,6 @@ public class ResourceDecorator implements Serializable
     public String getShortSnippet()
     {
 	return Jsoup.clean(StringHelper.shortnString(getSnippet(), 80), Whitelist.none());
-	// return resource.getShorterDescription();
     }
 
     public void setSnippet(String snippet)

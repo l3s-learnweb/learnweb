@@ -86,6 +86,13 @@ public class Learnweb
 	}
     }
 
+    /**
+     * In comparison to getInstance() this method throws exceptions
+     * 
+     * @return
+     * @throws ClassNotFoundException
+     * @throws SQLException
+     */
     public static Learnweb getInstanceRaw() throws ClassNotFoundException, SQLException
     {
 	try
@@ -132,8 +139,6 @@ public class Learnweb
 		propteriesFileName = "lw_local_philipp";
 	    else if((new File("C:\\programmieren\\philipp_uni.txt")).exists())
 		propteriesFileName = "lw_local_philipp_uni";
-	    else if((new File("C:\\Users\\Michaela")).exists())
-		propteriesFileName = "lw_local_michaela";
 	    else if((new File("/home/fernando/trevor.txt").exists()))
 		propteriesFileName = "lw_local_trevor_uni";
 	    else if((new File("/Users/trevor").exists()))
@@ -144,12 +149,8 @@ public class Learnweb
 		propteriesFileName = "lw_local_rishita";
 	    else if((new File("C:\\Users\\morais").exists()))
 		propteriesFileName = "lw_local_alana";
-	    else if((new File("C:\\Users\\Kafi").exists()))
-		propteriesFileName = "lw_local_kafi";
 	    else if((new File("C:\\Users\\astappev").exists()))
 		propteriesFileName = "lw_local_oleg";
-	    else if((new File("F:\\DevTools\\Work stuff\\Crawler\\Learnweb").exists()))
-		propteriesFileName = "lw_local_abhinav";
 	    else if((new File("/learnweb_data").exists()))
 		propteriesFileName = "lw_local_chenyang";
 
@@ -159,7 +160,7 @@ public class Learnweb
 	}
 	catch(IOException e)
 	{
-	    e.printStackTrace();
+	    log.error("Property error", e);
 	}
 
 	//Class.forName("com.mysql.jdbc.Driver");
@@ -199,10 +200,10 @@ public class Learnweb
     {
 	log.debug("Init LearnwebServer");
 
-	if(getContextUrl().contains("uni-hannover.de"))
+	if(getContextUrl().equalsIgnoreCase("http://learnweb.l3s.uni-hannover.de"))
 	    jobScheduler.startAllJobs();
 	else
-	    log.debug("JobScheduler not started in local mode");
+	    log.debug("JobScheduler not started for context: " + getContextUrl());
     }
 
     public FileManager getFileManager()

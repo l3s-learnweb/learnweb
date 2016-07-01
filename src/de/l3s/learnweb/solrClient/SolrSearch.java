@@ -16,6 +16,8 @@ import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
 
 import de.l3s.learnweb.AbstractPaginator;
 import de.l3s.learnweb.Group;
@@ -24,6 +26,7 @@ import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.ResourceManager;
 import de.l3s.learnweb.User;
+import de.l3s.util.StringHelper;
 
 public class SolrSearch implements Serializable
 {
@@ -322,6 +325,8 @@ public class SolrSearch implements Serializable
 	    {
 		solrQuery.addFilterQuery("-type : image");
 		solrQuery.addFilterQuery("-type : video");
+
+		solrQuery.add("bq", "description:*^9+description:*^9"); // boost results which have a title and description		
 	    }
 	    else if(filterType.equalsIgnoreCase("other"))
 	    {
@@ -576,6 +581,12 @@ public class SolrSearch implements Serializable
 	    {
 		if(null != resourceSnippets.get("machineDescription"))
 		    snippet.append(resourceSnippets.get("machineDescription").get(0));
+	    }
+
+	    if(snippet.length() < 40) // still no real snippet => use description
+	    {
+		if(null != resource.getDescription())
+		    snippet.append(Jsoup.clean(StringHelper.shortnString(resource.getDescription(), 180), Whitelist.none()));
 	    }
 
 	    String oneLineSnippets = snippet.toString().replaceAll("\n", " ");

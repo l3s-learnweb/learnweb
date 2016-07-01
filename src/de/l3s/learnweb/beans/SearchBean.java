@@ -105,7 +105,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     {
 	interweb = getLearnweb().getInterweb();
 	searchMode = MODE.image; // default search mode
-	queryMode = getPreference("search_action", "text");
+	queryMode = getPreference("SEARCH_ACTION", "text");
 
 	searchFilters = new SearchFilters();
 	searchFilters.setLanguageFilter(UtilBean.getUserBean().getLocaleCode());
@@ -188,13 +188,13 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    if(null != search)
 		search.stop();
 
-	    setPreference("search_action", searchMode.name());
-
 	    setSearchService(queryService);
+
+	    setPreference("SEARCH_ACTION", searchMode.name());
+	    setPreference("SEARCH_SERVICE_" + searchMode.name().toUpperCase(), searchService.name());
 
 	    historyResourcesRetrieved = false;
 
-	    long start = System.currentTimeMillis();
 	    try
 	    {
 		//Posting the batch of resources stored part of the result set corresponding to the previous query
@@ -215,10 +215,6 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    {
 		log.debug("Search log failed: " + e.getMessage());
 	    }
-
-	    // batchrsStartTime = new Date().getTime();
-
-	    log.debug("Search log client runtime: " + (System.currentTimeMillis() - start) + "ms");
 
 	    page = 1;
 	    search = new Search(interweb, query, searchFilters, getUser());
@@ -534,8 +530,6 @@ public class SearchBean extends ApplicationBean implements Serializable
 	{
 	    search.getResourcesByPage(2);
 	}
-
-	log.info("loadInterwebCounts");
     }
 
     public List<Filter> getAvailableFilters()
@@ -559,7 +553,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	return searchService;
     }
 
-    public void setSearchService(String service)
+    private void setSearchService(String service)
     {
 	try
 	{
@@ -893,7 +887,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public List<GroupedResources> getResourcesGroupedBySource(Long limit)
     {
-	if(resourcesGroupedBySource == null || resourcesGroupedBySource.isEmpty())
+	if((resourcesGroupedBySource == null || resourcesGroupedBySource.isEmpty()) && StringUtils.isNotEmpty(query))
 	{
 	    metaSearch = new Search(interweb, query, metaFilters, getUser());
 	    metaSearch.setMode(searchMode);

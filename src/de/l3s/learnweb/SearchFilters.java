@@ -1009,8 +1009,10 @@ public class SearchFilters implements Serializable
 	this.totalResultsInterweb = totalResultsInterweb;
     }
 
-    public static class Filter
+    public static class Filter implements Serializable
     {
+	private static final long serialVersionUID = -6934984226460716244L;
+
 	private String name;
 	private String anyText;
 	private String anyUrl;
@@ -1077,8 +1079,10 @@ public class SearchFilters implements Serializable
 	}
     }
 
-    public static class FilterItem implements Comparable<FilterItem>
+    public static class FilterItem implements Serializable, Comparable<FilterItem>
     {
+	private static final long serialVersionUID = -4990304497787530456L;
+
 	private String name;
 	private Long counter;
 	private String filterUrl;

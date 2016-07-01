@@ -22,3 +22,10 @@
 		</ui:fragment>
 	</ui:composition>
 	</html>
+	
+	
+			<h:panelGroup id="nextPage" layout="block">				
+				<ui:decorate  template="/templates/search/resources_#{searchBean.view}.xhtml">
+					<ui:param name="resources" value="#{searchBean.nextPage}" />
+				</ui:decorate>		
+			</h:panelGroup>

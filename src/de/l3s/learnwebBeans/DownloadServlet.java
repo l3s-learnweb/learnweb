@@ -80,6 +80,11 @@ public class DownloadServlet extends HttpServlet
 		return;
 	    }
 
+	    if(!file.exists()) // show error image
+	    {
+		response.setStatus(404);
+	    }
+
 	    long ifModifiedSince = request.getDateHeader("If-Modified-Since");
 
 	    if(ifModifiedSince != -1)

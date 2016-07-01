@@ -194,130 +194,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    {
 		newslist.add(new NewsEntry(l));
 
-		/*
-		Resource r = l.getResource();
-		
-		int commentcount = 0;
-		int tagcount = 0;
-		String text = l.getDescription();
-		
-		if(r != null)
-		{
-		    if(r.getComments() != null)
-			commentcount = r.getComments().size();
-		
-		    if(r.getTags() != null)
-			tagcount = r.getTags().size();
-		
-		    if(l.getAction() == Action.commenting_resource && commentcount > 0)
-		    {
-			Comment comment = resourceManager.getComment(Integer.parseInt(l.getParams()));
-		
-			if(comment != null)
-			    text = text + " " + getLocaleMessage("with") + " " + "<b>" + comment.getText() + "</b>";
-		    }
-		
-		}
-		
-		newslist.add(new NewsEntry(l, null, r, commentcount, tagcount, text, r != null, l.getDate()));
-		
-		/*
-		User u = null;
-		Resource r = null;
-		boolean resourceaction = true;
-		try
-		{
-		    u = getLearnweb().getUserManager().getUser(l.getUserId());
-		    r = getLearnweb().getResourceManager().getResource(l.getResourceId());
-		}
-		catch(Exception e)
-		{
-		    e.printStackTrace();
-		    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-		}
-		if(r != null && deletedResources.contains(r.getId()))
-		    resourceaction = false;
-		
-		int commentcount = 0;
-		int tagcount = 0;
-		String text = l.getDescription();
-		if(l.getAction() == filter[3] || r == null || l.getAction() == filter[17])
-		{
-		    if(r != null)
-			deletedResources.add(r.getId());
-		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, !resourceaction, l.getDate()));
-		    continue;
-		}
-		try
-		{
-		    if(r.getComments() != null)
-			commentcount += r.getComments().size();
-		}
-		catch(Exception e)
-		{
-		    e.printStackTrace();
-		    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-		}
-		
-		try
-		{
-		    if(r.getTags() != null)
-			tagcount += r.getTags().size();
-		}
-		catch(Exception e)
-		{
-		    e.printStackTrace();
-		    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-		}
-		
-		if(l.getAction() == filter[0]) //add_resource
-		{
-		
-		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
-		    continue;
-		
-		}
-		if(l.getAction() == filter[1] && commentcount > 0)
-		{
-		    Comment commenttobeadded = new Comment();
-		    commenttobeadded.setText("comment removed!");
-		    try
-		    {
-		
-			for(Comment c : getLearnweb().getResourceManager().getCommentsByResourceId(r.getId()))
-			{
-			    if(c.getId() == Integer.parseInt(l.getParams()))
-			    {
-				commenttobeadded = c;
-			    }
-			}
-		
-		    }
-		    catch(SQLException e)
-		    {
-			e.printStackTrace();
-			addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-		    }
-		    text = text + " with " + "<b>" + commenttobeadded.getText() + "</b>";
-		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
-		    continue;
-		
-		}
-		if(l.getAction() == filter[15])
-		{
-		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
-		    continue;
-		
-		}
-		if(l.getAction() == filter[14])
-		{
-		    newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
-		    continue;
-		
-		}
-		
-		newslist.add(new NewsEntry(l, u, r, commentcount, tagcount, text, resourceaction, l.getDate()));
-		*/
 	    }
 
 	}
@@ -430,7 +306,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public Group getGroup() throws SQLException
     {
-	//loadGroup();
 	return group;
     }
 

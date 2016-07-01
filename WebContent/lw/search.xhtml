@@ -212,40 +212,13 @@
 			var view = '#{searchBean.view}';
 			var userId = '#{userBean.user.id}';
 			var searchHistoryEnabled = #{userBean.searchHistoryEnabled};
-			
-				
-			function fixPositionOfFiltersMenuBar() {
-			    var menuBar = $('.filters_menu_bar'),
-			        $window = $(window),
-			    	headerHeight = $("#header").height(),
-			    	carusselHeight = $("#groups_menu_bar").outerHeight();
-			    
-			    $window.scroll(function(e)
-			    {			    	
-			    	if ($window.scrollTop() > carusselHeight) {
-			        	menuBar.css({
-			                position: 'fixed',
-			            });
-			        } else {
-			        	menuBar.css({
-			                position: 'relative',
-			            });
-			        }
-			    });
-			};
-
-			$(document).ready(function() 
-			{
-			//$('#filters_menu_bar').followTo();
-			fixPositionOfFiltersMenuBar();
-			});
 		</script>			
 		 
-		<ui:decorate template="/lw/templates/resource_lightbox.xhtml" /> 	
+		<ui:decorate template="/templates/search/resource_lightbox.xhtml" /> 	
 
 		<div id="results" class="#{searchBean.view}_view">			
 			<div class="resources">
-				<ui:decorate  template="/lw/templates/resources.xhtml">
+				<ui:decorate  template="/templates/search/resources.xhtml">
 					<ui:param name="resources" value="#{searchBean.search.resources}" />
 					<ui:param name="view" value="#{searchBean.view}" />					
 				</ui:decorate>
@@ -296,7 +269,7 @@
 
 		<div id="new_results" style="display:none;">	
 			<h:panelGroup id="nextPage" layout="block">				
-				<ui:decorate  template="/lw/templates/resources_#{searchBean.view}.xhtml">
+				<ui:decorate  template="/templates/search/resources_#{searchBean.view}.xhtml">
 					<ui:param name="resources" value="#{searchBean.nextPage}" />
 				</ui:decorate>		
 			</h:panelGroup>

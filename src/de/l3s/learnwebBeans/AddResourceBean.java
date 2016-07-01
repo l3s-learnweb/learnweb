@@ -318,6 +318,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 	return Jsoup.clean(resource.getEmbeddedSize3(), UtilBean.getLearnwebBean().getBaseUrl(), Whitelist.basicWithImages().addTags("embed", "object", "param"));
     }
 
+    /*
     // functions and variables for adding resource by get request:
     private String paramUrl;
     private String paramTitle;
@@ -325,66 +326,67 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     private String paramSource;
     private String paramType;
     private String paramThumbnail;
-
+    
     public String getParamUrl()
     {
-	return paramUrl;
+    return paramUrl;
     }
-
+    
     public void setParamUrl(String paramUrl)
     {
-	this.paramUrl = paramUrl;
+    this.paramUrl = paramUrl;
     }
-
+    
     public String getParamTitle()
     {
-	return paramTitle;
+    return paramTitle;
     }
-
+    
     public void setParamTitle(String paramTitle)
     {
-	this.paramTitle = paramTitle;
+    this.paramTitle = paramTitle;
     }
-
+    
     public String getParamDescription()
     {
-	return paramDescription;
+    return paramDescription;
     }
-
+    
     public void setParamDescription(String paramDescription)
     {
-	this.paramDescription = paramDescription;
+    this.paramDescription = paramDescription;
     }
-
+    
     public String getParamSource()
     {
-	return paramSource;
+    return paramSource;
     }
-
+    
     public void setParamSource(String paramSource)
     {
-	this.paramSource = paramSource;
+    this.paramSource = paramSource;
     }
-
+    
     public String getParamType()
     {
-	return paramType;
+    return paramType;
     }
-
+    
     public void setParamType(String paramType)
     {
-	this.paramType = paramType;
+    this.paramType = paramType;
     }
-
+    
     public String getParamThumbnail()
     {
-	return paramThumbnail;
+    return paramThumbnail;
     }
-
+    
     public void setParamThumbnail(String paramThumbnail)
     {
-	this.paramThumbnail = paramThumbnail;
+    this.paramThumbnail = paramThumbnail;
     }
+    */
 
     public List<ServiceInformation> getUploadServices()
     {

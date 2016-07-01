@@ -238,10 +238,14 @@ public class ApplicationBean
     }
 
     /**
-     * Use log(LogEntry.Action action, int groupId, int targetId, String params)
-     * so that you explicitly set the group context
+     * Logs a user action for the currently active user.
+     * The parameters "targetId" and "params" depend on the logged action.
+     * Look at the code of LogEntry.Action for explanation.
+     * 
+     * @param action
+     * @param targetId
+     * @param params
      */
-    @Deprecated
     protected void log(LogEntry.Action action, int targetId, String params)
     {
 	int executionTime = (int) (System.currentTimeMillis() - startTime);
