@@ -1,3 +1,4 @@
+.green_header { margin-right: 0.5rem; }
 
 .ui-icon-mygrid {
 	background-image: url("img/Thumbnails.png") !important;
@@ -11,11 +12,20 @@
 	-webkit-border-radius:0px;
 }
 
-.more_resources_link {
+a.more_resources_link {
 	float:right;
+	margin-right: 1rem;
+	clear: both;
+	text-decoration: underline;
 }
+a.more_resources_link:hover { text-decoration: none; }
 
 .layout_button {
+	display: inline-block;
+	top: -2px;
+	position: relative;
+}
+.layout_button > button {
 	background-color:#eee !important;
 	border:none;
 	border-radius:2px;
@@ -44,4 +54,31 @@
     border-top: 0.2em solid #5f5f5f;
     transform: rotate(45deg);
     margin-right: 0.5em;
+}
+
+.myresource-listview .resource_panel { display:none; }
+
+#foldergrid {
+	padding-bottom: 1rem;
+}
+
+@media screen  and (max-width:1050px) {
+	.myresource-listview .resource_panel:nth-child(1)  { display: block; }
+}
+
+@media screen and (min-width:1050px) and (max-width:1360px) {
+	.myresource-listview .resource_panel:nth-child(1),
+	.myresource-listview .resource_panel:nth-child(2)  { display: block; }
+}
+
+@media screen and (min-width:1360px) and (max-width:1700px){
+	.myresource-listview .resource_panel:nth-child(1),
+	.myresource-listview .resource_panel:nth-child(2),
+	.myresource-listview .resource_panel:nth-child(3) { display: block; }
+}
+@media screen and (min-width:1700px) {
+	.myresource-listview .resource_panel:nth-child(1),
+	.myresource-listview .resource_panel:nth-child(2),
+	.myresource-listview .resource_panel:nth-child(3),
+	.myresource-listview .resource_panel:nth-child(4) { display: block; }
 }

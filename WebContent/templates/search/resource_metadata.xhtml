@@ -40,8 +40,9 @@
 			<ui:fragment rendered="#{not empty res.group}">
 				<b><h:outputText value="#{msg.group}: " /></b>	
 				
-				<h:outputLink value="group/overview.jsf">
+				<h:outputLink value="group/resources.jsf">
 					<f:param name="group_id" value="#{res.group.id}" />
+					<f:param name="resource_id" value="#{res.id}" />
 					<h:outputText value="#{res.group.title}" />
 				</h:outputLink>
 				<br/>
