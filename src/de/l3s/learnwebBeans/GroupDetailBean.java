@@ -23,6 +23,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
@@ -962,6 +963,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public List<Filter> getAvailableFilters()
     {
+	getPaginator();
 	return searchFilters.getAvailableFilters();
     }
 
@@ -972,6 +974,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void updateResourcesFromSolr()
     {
+	log.info("updateFromSolr");
+
 	if(this.searchFilters == null)
 	{
 	    return;
@@ -981,6 +985,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	try
 	{
 	    paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
+	    RequestContext.getCurrentInstance().update(":filters");
 	}
 	catch(SQLException | SolrServerException e)
 	{
