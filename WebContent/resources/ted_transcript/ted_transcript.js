@@ -102,6 +102,7 @@ function setSynonyms(xhr,status,args){
 		var range = document.selection.createRange();
 		span.appendChild(range.htmlText);
 		range.pasteHTML(span.outerHTML);
+		PF('userinput_dialog').show();
 	}
 	else
 	{
@@ -110,6 +111,7 @@ function setSynonyms(xhr,status,args){
 			var range = sel.getRangeAt(0);    
 			span.appendChild(range.extractContents());
 			range.insertNode(span);
+			PF('userinput_dialog').show();
 		}
 	}
 	
@@ -134,7 +136,6 @@ function setSynonyms(xhr,status,args){
           }
     }));
 	highlighter.highlightSelection("note");*/
-	PF('userinput_dialog').show();
 }
 
 function noteSelectedText() {
@@ -145,7 +146,7 @@ function noteSelectedText() {
 		sel_str = window.getSelection().toString();
 	else if(document.selection && document.selection.type != "Control") //support IE browsers
 		sel_str = document.selection.createRange().text;
-	//sel_str = sel.toString();
+	sel_str = sel_str.trim();
 	if(sel_str != "")
 		setSynonymsForWord([{name:'word', value:sel_str}]);
 }
