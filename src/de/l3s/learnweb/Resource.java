@@ -202,16 +202,13 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	    }
 	    else if(source.equals("Ipernity") && embeddedSize1 != null)
 	    {
-
 		if(type.equals("Image"))
 		    embeddedSize3 = embeddedSize1.replace(".100.", ".500.");
 		else
 		    embeddedSize3 = "<a href=\"" + url + "\">" + url + "</a>";
-
 	    }
 	    else if(source.equals("Flickr") && type.equals("Image") && embeddedSize1 != null)
 	    {
-
 		if(null == embeddedSize3)
 		    embeddedSize3 = embeddedSize1.replace("_t.", ".");
 	    }
@@ -251,11 +248,16 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
 	if(dummyImage != null)
 	{
-	    setThumbnail0(dummyImage.resize(150, 120));
-	    setThumbnail1(dummyImage.resize(150, 150));
-	    setThumbnail2(dummyImage);
-	    setThumbnail3(dummyImage);
-	    setThumbnail4(dummyImage);
+	    if(null == thumbnail0)
+		setThumbnail0(dummyImage.resize(150, 120));
+	    if(null == thumbnail1)
+		setThumbnail1(dummyImage.resize(150, 150));
+	    if(null == thumbnail2)
+		setThumbnail2(dummyImage);
+	    if(null == thumbnail3)
+		setThumbnail3(dummyImage);
+	    if(null == thumbnail4)
+		setThumbnail4(dummyImage);
 	}
 
 	if(embeddedSize1 == null || embeddedSize1.length() < 3)
@@ -841,9 +843,10 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     @Deprecated
     public String getEmbeddedSize1()
     {
+	/*
 	if(embeddedSize1 != null)
 	    return embeddedSize1;
-
+	*/
 	if(getThumbnail1() != null)
 	    return getThumbnail1().toHTML();
 	if(getThumbnail2() != null)
