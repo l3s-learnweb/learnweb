@@ -300,14 +300,14 @@ public class ResourceManager
 
     public void saveResource(Resource resource) throws SQLException
     {
-	if(resource.isRestricted() || resource.getOnlineStatus().equals(OnlineStatus.OFFLINE)) // TODO this is only a workaround; remove as soon as possible
+	/*if(resource.isRestricted() || resource.getOnlineStatus().equals(OnlineStatus.OFFLINE)) // TODO this is only a workaround; remove as soon as possible
 	{
 	    resource.setThumbnail0(null);
 	    resource.setThumbnail1(null);
 	    resource.setThumbnail2(null);
 	    resource.setThumbnail3(null);
 	    resource.setThumbnail4(null);
-	}
+	}*/
 
 	String query = "REPLACE INTO `lw_resource` (`resource_id` ,`title` ,`description` ,`url` ,`storage_type` ,`rights` ,`source` ,`type` ,`format` ,`owner_user_id` ,`rating` ,`rate_number` ,`query`, embedded_size1, embedded_size2, embedded_size3, embedded_size4, filename, max_image_url, original_resource_id, machine_description, author, file_url, thumbnail0_url, thumbnail0_file_id, thumbnail0_width, thumbnail0_height, thumbnail1_url, thumbnail1_file_id, thumbnail1_width, thumbnail1_height, thumbnail2_url, thumbnail2_file_id, thumbnail2_width, thumbnail2_height, thumbnail3_url, thumbnail3_file_id, thumbnail3_width, thumbnail3_height, thumbnail4_url, thumbnail4_file_id, thumbnail4_width, thumbnail4_height, embeddedRaw, transcript, online_status, id_at_service, duration, restricted, language, creation_date, metadata, group_id, folder_id, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
 		+ "?)";
@@ -1284,11 +1284,10 @@ public class ResourceManager
 	}
     }
 
-    public static void main(String[] args) throws SQLException
+    public static void main(String[] args) throws SQLException, IOException
     {
-	reindexArchiveItResources();
+	//reindexArchiveItResources();
 	//createThumbnailsForWebResources();
-
 	/*
 	SolrClient solr = Learnweb.getInstance().getSolrClient();
 	List<Resource> resources = Learnweb.getInstance().getResourceManager().getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where deleted=1", null);

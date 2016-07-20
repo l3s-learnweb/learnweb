@@ -130,22 +130,22 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     {
 	Thumbnail dummyImage = null;
 
-	if(isRestricted())
+	/*if(isRestricted())
 	{
 	    embeddedSize1 = "<img src=\"../resources/resources/img/RestrictedAccess.jpg\" width=\"300\" height=\"214\" />";
-
+	
 	    // TODO find a better solution
 	    dummyImage = new Thumbnail("../resources/resources/img/RestrictedAccess.jpg", 300, 214);
-
+	
 	}
 	else if(getOnlineStatus().equals(OnlineStatus.OFFLINE))
 	{
 	    embeddedSize1 = "<img src=\"../resources/resources/img/page_no_longer_available.jpg\" width=\"300\" height=\"300\" />";
-
+	
 	    // TODO find a better solution
 	    dummyImage = new Thumbnail("../resources/resources/img/page_no_longer_available.jpg", 300, 300);
 	}
-	else if(null == embeddedSize1 || null == embeddedSize3)
+	else*/ if(null == embeddedSize1 || null == embeddedSize3)
 	{
 
 	    if(source.equalsIgnoreCase("YouTube"))

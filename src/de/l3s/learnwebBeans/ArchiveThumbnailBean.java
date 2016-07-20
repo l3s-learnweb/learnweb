@@ -169,7 +169,7 @@ public class ArchiveThumbnailBean extends ApplicationBean
 	if(getFacesContext().isPostback())
 	    return;
 
-	model = new TimelineModel();
+	//model = new TimelineModel();
 	Calendar cal = Calendar.getInstance();
 	max = cal.getTime(); // upper limit of visible range  
 	zoomMin = 1000L * 60 * 60 * 24; // one day in milliseconds for zoomMin  

@@ -90,7 +90,7 @@ function prepareCommentButton()
 	});
 }
 
-function update_url(resource_id, folder_id)
+function update_url(resource_id, folder_id, group_id)
 {
 	var page_schema = location.protocol + "//" + location.host + location.pathname;
 	var query_params = location.search;
@@ -105,6 +105,10 @@ function update_url(resource_id, folder_id)
 	
 	if (resource_id != undefined) {
 		query_params = updateUrlParameters(query_params, "resource_id", resource_id);
+	}
+	
+	if(group_id != undefined) {
+		query_params = updateUrlParameters(query_params, "group_id", group_id);
 	}
 	
 	updated_url = page_schema + query_params;

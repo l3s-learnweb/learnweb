@@ -11,6 +11,7 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.ComponentSystemEvent;
 
 import org.apache.log4j.Logger;
 
@@ -50,13 +51,47 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     private List<Folder> breadcrumb;
     private boolean folderView = false;
 
+    private int groupId;
+
     public MyResourcesBean() throws SQLException
     {
 	if(getUser() == null) // not logged in
 	    return;
 
+	if(getParameterInt("resource_id") != null)
+	    setRightPanelAction("viewResource");
+
 	breadcrumb = new ArrayList<Folder>();
 	clickedResource = new Resource();
+    }
+
+    public void preRenderView(ComponentSystemEvent e) throws SQLException
+    {
+	if(isAjaxRequest())
+	{
+	    return;
+	}
+
+	if(groupId > 0)
+	{
+	    rootFolder = false;
+	    Group group = getLearnweb().getGroupManager().getGroupById(groupId);
+	    Folder folder = new Folder(groupId, group.getTitle());
+	    breadcrumb.add(0, folder);
+	    updateBreadcrumb();
+	    resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(groupId, getSelectedFolderId(), getUser().getId(), 1000);
+
+	}
+    }
+
+    public void updateBreadcrumb() throws SQLException
+    {
+	Folder folder = getSelectedFolder();
+	while(folder != null)
+	{
+	    breadcrumb.add(1, folder);
+	    folder = folder.getParentFolder();
+	}
     }
 
     public boolean canDeleteTag(Object tagO) throws SQLException
@@ -303,6 +338,8 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	    folders.addAll(Learnweb.getInstance().getGroupManager().getGroupsForMyResources(getUser().getId()));
 	    return folders;
 	}
+	else if(groupId > 0)
+	    return Learnweb.getInstance().getGroupManager().getFolders(groupId, getSelectedFolderId());
 	else
 	    return Learnweb.getInstance().getGroupManager().getFolders(getClickedFolder().getGroupId(), getSelectedFolderId());
     }
@@ -359,4 +396,15 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     {
 	this.folderView = folderView;
     }
+
+    public int getGroupId()
+    {
+	return groupId;
+    }
+
+    public void setGroupId(int groupId)
+    {
+	this.groupId = groupId;
+    }
+
 }
