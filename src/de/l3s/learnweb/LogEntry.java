@@ -51,7 +51,7 @@ public class LogEntry implements Serializable
 	unused5,
 	group_removing_resource, // target_id = resource id
 	deleting_folder, // param = folder name; target_id = folder_id
-	downloading, // target_id = file_id
+	downloading, // target_id = resource_id, param = file_id
 	group_deleting_link, // param = title of deleted link; out dated
 	group_resource_search, // param = query
 	add_folder, // param = folder name; target_id = folder_id

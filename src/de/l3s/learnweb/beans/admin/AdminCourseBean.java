@@ -1,4 +1,4 @@
-package de.l3s.learnwebAdminBeans;
+package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
 import java.util.ArrayList;

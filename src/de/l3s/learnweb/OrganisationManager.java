@@ -11,8 +11,6 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.util.HasCache;
-
 /**
  * DAO for the Organisation class.
  * Because there are only a few organisations we keep them all in memory
@@ -20,7 +18,7 @@ import de.l3s.util.HasCache;
  * @author Philipp
  * 
  */
-public class OrganisationManager implements HasCache
+public class OrganisationManager
 {
     public final static Logger log = Logger.getLogger(OrganisationManager.class);
     // if you change this, you have to change the constructor of Organisation too
@@ -37,7 +35,6 @@ public class OrganisationManager implements HasCache
 	this.resetCache();
     }
 
-    @Override
     public void resetCache()
     {
 	cache.clear();
@@ -53,6 +50,15 @@ public class OrganisationManager implements HasCache
 	{
 	    throw new RuntimeException(e);
 	}
+    }
+
+    /**
+     * 
+     * @return number of cached objects
+     */
+    public int getCacheSize()
+    {
+	return cache.size();
     }
 
     /**
@@ -143,11 +149,4 @@ public class OrganisationManager implements HasCache
 
 	return organisation;
     }
-
-    @Override
-    public int getCacheSize()
-    {
-	return cache.size();
-    }
-
 }

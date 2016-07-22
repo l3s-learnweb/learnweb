@@ -33,7 +33,7 @@ public class UserManager
     private final static Logger log = Logger.getLogger(UserManager.class);
 
     // if you change this, you have to change the constructor of User too
-    private final static String COLUMNS = "user_id, username, email, organisation_id, iw_token, iw_secret, active_group_id, image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, is_moderator, image_resource_id, registration_date, password, preferences, credits, fullname, affiliation";
+    private final static String COLUMNS = "user_id, username, email, organisation_id, iw_token, iw_secret, active_group_id, image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, is_moderator, active_course_id, registration_date, password, preferences, credits, fullname, affiliation";
 
     private Learnweb learnweb;
     private ICache<User> cache;
@@ -51,6 +51,15 @@ public class UserManager
     public void resetCache() throws SQLException
     {
 	cache.clear();
+    }
+
+    /**
+     * 
+     * @return number of cached objects
+     */
+    public int getCacheSize()
+    {
+	return cache.size();
     }
 
     public List<User> getUsersByCourseId(int courseId) throws SQLException
@@ -365,7 +374,7 @@ public class UserManager
 	replace.setString(15, user.getPhone());
 	replace.setInt(16, user.isAdmin() ? 1 : 0);
 	replace.setInt(17, user.isModerator() ? 1 : 0);
-	replace.setInt(18, 0); //user.getImageResourceId());
+	replace.setInt(18, user.getActiveCourseId());
 	replace.setDate(19, user.getRegistrationDate() == null ? null : new java.sql.Date(user.getRegistrationDate().getTime()));
 	replace.setString(20, user.getPassword());
 
@@ -407,6 +416,7 @@ public class UserManager
 	user.setPassword(rs.getString("password"), true);
 	user.setOrganisationId(rs.getInt("organisation_id"));
 	user.setActiveGroup(rs.getInt("active_group_id"));
+	user.setActiveCourseId(rs.getInt("active_course_id"));
 	user.setImageFileId(rs.getInt("image_file_id"));
 
 	user.setGender(rs.getInt("gender"));

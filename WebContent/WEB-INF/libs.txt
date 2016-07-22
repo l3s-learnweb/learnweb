@@ -14,6 +14,7 @@ apache-solr-velocity-4.0.0.jar		SolrClient,added by Siyu
 classmate-1.1.0.jar					required by Hibernate validator added by Philipp
 commons-beanutils-1.8.3.jar			JSF Base
 commons-codec-1.3.jar				JSF Base, Dependency of Google API
+commons-collections4-4.1.jar		LRUCache
 commons-collections4-4.0.jar		JSF Base
 commons-digester-1.8.jar			JSF Base
 commons-fileupload-1.3.jar			primefaces file upload

@@ -62,6 +62,15 @@ public class CourseManager
     }
 
     /**
+     * 
+     * @return number of cached objects
+     */
+    public int getCacheSize()
+    {
+	return cache.size();
+    }
+
+    /**
      * Get an Course by his id
      * 
      * @param id

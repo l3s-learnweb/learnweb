@@ -57,6 +57,8 @@ public class DownloadServlet extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+	long startTime = System.currentTimeMillis();
+
 	// extract the file id from the request string
 	String requestString = request.getRequestURI();
 	int index = requestString.indexOf(urlPattern);
@@ -114,7 +116,7 @@ public class DownloadServlet extends HttpServlet
 		    user = learnweb.getUserManager().getUser(userId);
 
 		if(null != user)
-		    Learnweb.getInstance().log(user, Action.downloading, file.getResourceId(), null, session.getId(), 0);
+		    Learnweb.getInstance().log(user, Action.downloading, 0, file.getResourceId(), Integer.toString(file.getId()), session.getId(), (int) (System.currentTimeMillis() - startTime));
 	    }
 	}
 	catch(Exception e)

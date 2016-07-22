@@ -1,4 +1,4 @@
-package de.l3s.learnwebAdminBeans;
+package de.l3s.learnweb.beans.admin;
 
 import java.sql.SQLException;
 import java.util.Date;

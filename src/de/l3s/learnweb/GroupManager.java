@@ -263,12 +263,12 @@ public class GroupManager
 	    if(!rs.next())
 		throw new SQLException("database error: no id generated");
 	    group.setId(rs.getInt(1));
-	    group = groupCache.put(group.getId(), group); // add the new Group to the cache
+	    group = groupCache.put(group); // add the new Group to the cache
 	}
 	else if(groupCache.get(group.getId()) != null) //remove old group and add the new one
 	{
 	    groupCache.remove(group.getId());
-	    group = groupCache.put(group.getId(), group);
+	    group = groupCache.put(group);
 	}
 	replace.close();
 
@@ -367,7 +367,7 @@ public class GroupManager
 	    folder.setName(rs.getString("name"));
 	    folder.setUserId(rs.getInt("user_id"));
 
-	    folder = folderCache.put(folder.getFolderId(), folder);
+	    folder = folderCache.put(folder);
 	}
 	return folder;
     }
@@ -590,17 +590,35 @@ public class GroupManager
 	    if(!rs.next())
 		throw new SQLException("database error: no id generated");
 	    folder.setFolderId(rs.getInt(1));
-	    folder = folderCache.put(folder.getFolderId(), folder);
+	    folder = folderCache.put(folder);
 	}
 	else
 	{
 	    folder.clearCaches();
 	    folderCache.remove(folder.getFolderId());
-	    folder = folderCache.put(folder.getFolderId(), folder);
+	    folder = folderCache.put(folder);
 	}
 
 	replace.close();
 	return folder;
+    }
+
+    /**
+     * 
+     * @return number of cached objects
+     */
+    public int getGroupCacheSize()
+    {
+	return groupCache.size();
+    }
+
+    /**
+     * 
+     * @return number of cached objects
+     */
+    public int getFolderCacheSize()
+    {
+	return folderCache.size();
     }
 
     public void deleteFolder(Folder folder) throws SQLException

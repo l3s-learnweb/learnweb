@@ -1,4 +1,4 @@
-package de.l3s.learnwebBeans;
+package de.l3s.learnweb.beans.admin;
 
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -7,6 +7,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 
 import org.hibernate.validator.constraints.NotEmpty;
+
+import de.l3s.learnwebBeans.ApplicationBean;
 
 @ManagedBean
 

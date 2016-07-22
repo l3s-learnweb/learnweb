@@ -1,16 +1,18 @@
-package de.l3s.learnwebAdminBeans;
+package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
+import java.util.Map.Entry;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import org.apache.log4j.Logger;
-
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
 import de.l3s.learnwebBeans.ApplicationBean;
 
@@ -19,8 +21,9 @@ import de.l3s.learnwebBeans.ApplicationBean;
 public class AdminSystemBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 1354024417928664741L;
-    private static final Logger log = Logger.getLogger(AdminSystemBean.class);
+    //private static final Logger log = Logger.getLogger(AdminSystemBean.class);
     private LinkedList<Object> databaseProcessList;
+    private String memoryInfo;
 
     public AdminSystemBean() throws SQLException
     {
@@ -30,6 +33,25 @@ public class AdminSystemBean extends ApplicationBean implements Serializable
 	    return;
 
 	loadDatabaseProcessList();
+
+	Runtime rt = Runtime.getRuntime();
+	memoryInfo = "Total: " + (rt.totalMemory() / 1024 / 1024) + "mb - Free:" + (rt.freeMemory() / 1024 / 1024) + "mb - Max:" + (rt.maxMemory() / 1024 / 1024);
+
+	List<Entry<String, String>> cacheSize = new ArrayList<>(6);
+	Learnweb lw = getLearnweb();
+
+	/*
+	cacheSize.add(new entry)lw.getOrganisationManager().getCacheSize()
+	lw.getUserManager.resetCache();
+	lw.getResourceManager.resetCache();
+	lw.getGroupManager.resetCache();
+	lw.getCourseManager.resetCache();
+	*/
+    }
+
+    public void onResetCaches() throws SQLException
+    {
+	getLearnweb().resetCaches();
     }
 
     private void loadDatabaseProcessList() throws SQLException

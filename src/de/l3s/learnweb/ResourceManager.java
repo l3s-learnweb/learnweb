@@ -987,6 +987,15 @@ public class ResourceManager
 	cache.clear();
     }
 
+    /**
+     * 
+     * @return number of cached objects
+     */
+    public int getCacheSize()
+    {
+	return cache.size();
+    }
+
     public static Resource getResourceFromInterwebResult(SearchResultEntity searchResult)
     {
 	Resource resource = new Resource();

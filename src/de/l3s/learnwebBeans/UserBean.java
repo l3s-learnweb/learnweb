@@ -372,7 +372,7 @@ public class UserBean implements Serializable
 
     @Deprecated
     /**
-     * Don't use this any currently. Users don't have an option to change the active course
+     * Don't use this currently. Users don't have an option to change the active course
      * 
      * @return
      */

@@ -314,6 +314,15 @@ public class FileManager
 	this.baseUrl = contextUrl + urlPattern;
     }
 
+    /**
+     * 
+     * @return number of cached objects
+     */
+    public int getCacheSize()
+    {
+	return cache.size();
+    }
+
     public static void main(String[] args) throws SQLException
     {
 	/*

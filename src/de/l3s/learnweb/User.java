@@ -57,6 +57,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     private Group activeGroup;
     private int activeGroupId;
+    private int activeCourseId;
 
     private boolean admin;
     private boolean moderator;
@@ -754,6 +755,16 @@ public class User implements Comparable<User>, Serializable, HasId
     public void setPreference(String key, String value)
     {
 	preferences.put(key, value);
+    }
+
+    public int getActiveCourseId()
+    {
+	return activeCourseId;
+    }
+
+    public void setActiveCourseId(int activeCourseId)
+    {
+	this.activeCourseId = activeCourseId;
     }
 
 }

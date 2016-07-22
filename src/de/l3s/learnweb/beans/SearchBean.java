@@ -243,7 +243,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    }
 	    graphLoaded = false;
 
-	    log(Action.searching, 0, query);
+	    log(Action.searching, 0, 0, query);
 	}
 
 	return "/lw/search.xhtml?faces-redirect=true";

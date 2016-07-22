@@ -1,7 +1,6 @@
 package de.l3s.learnwebBeans;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.MissingResourceException;
@@ -11,7 +10,6 @@ import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.User;
 
 /**
@@ -163,37 +161,6 @@ public class ApplicationDebuggingBean implements Serializable
     public void setPreference(String key, Object value)
     {
 
-    }
-
-    /**
-     * Logs a user action for the currently active user.
-     * The parameters "targetId" and "params" depend on the logged action.
-     * Look at the code of LogEntry.Action for explanation.
-     * 
-     * @param action one value of LogEntry.Action
-     * @param targetId optional value; should be 0 if not required
-     * @param params
-     * @throws SQLException
-     */
-    protected void log(LogEntry.Action action, int targetId, String params)
-    {
-	int executionTime = (int) (System.currentTimeMillis() - startTime);
-	getLearnweb().log(getUser(), action, targetId, params, getSessionId(), executionTime);
-    }
-
-    /**
-     * Logs a user action for the currently active user.
-     * The parameters "targetId" depend on the logged action.
-     * Look at the code of LogEntry.Action for explanation.
-     * 
-     * @param action one value of LogEntry.Action
-     * @param targetId optional value; should be 0 if not required
-     * @throws SQLException
-     */
-    protected void log(LogEntry.Action action, int targetId)
-    {
-	int executionTime = (int) (System.currentTimeMillis() - startTime);
-	getLearnweb().log(getUser(), action, targetId, null, getSessionId(), executionTime);
     }
 
 }

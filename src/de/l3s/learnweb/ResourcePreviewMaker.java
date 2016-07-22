@@ -104,15 +104,15 @@ public class ResourcePreviewMaker
 	resource.setDescription(StringHelper.shortnString(info.getTextContent(), 1400));
 	resource.setMachineDescription(info.getTextContent());
 
-	if(type.equals("pdf"))
+	if(type.equalsIgnoreCase("pdf"))
 	{
 	    processPdf(resource, inputStream);
 	}
-	else if(type.equals("image"))
+	else if(type.equalsIgnoreCase("image"))
 	{
 	    processImage(resource, inputStream);
 	}
-	else if(type.equals("video"))
+	else if(type.equalsIgnoreCase("video"))
 	{
 	    processVideo(resource);
 	}

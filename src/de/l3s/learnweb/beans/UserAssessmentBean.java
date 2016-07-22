@@ -31,7 +31,7 @@ import de.l3s.learnweb.GroupManager;
 import de.l3s.learnweb.Metric;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.UserManager;
-import de.l3s.learnwebAdminBeans.AdminNotificationBean;
+import de.l3s.learnweb.beans.admin.AdminNotificationBean;
 import de.l3s.learnwebBeans.ApplicationBean;
 import de.l3s.util.Sql;
 
