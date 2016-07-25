@@ -74,10 +74,10 @@ public class ApplicationBean
     {
 	String value = getFacesContext().getExternalContext().getRequestParameterMap().get(param);
 
+	/* utf 8 issue ...
 	if(null == value)
 	    return null;
-
-	/*
+	    	
 	byte ptext[] = value.getBytes();
 	String v2 = "fehler";
 	try {

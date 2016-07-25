@@ -50,7 +50,6 @@ import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.solrClient.SolrSearch;
 import de.l3s.learnweb.solrClient.SolrSearch.SearchPaginator;
-import de.l3s.util.MD5;
 
 @ManagedBean
 @ViewScoped
@@ -649,12 +648,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    return false;
 
 	return group.getMembers().contains(user);
-    }
-
-    public String getRssLink()
-    {
-	String hash = MD5.hash(groupId + Learnweb.salt1 + getUser().getId() + Learnweb.salt2);
-	return UtilBean.getLearnwebBean().getContextUrl() + "/feed/group.jsf?group_id=" + groupId + "&u=" + getUser().getId() + "&h=" + hash;
     }
 
     public void onSortingChanged(ValueChangeEvent e)

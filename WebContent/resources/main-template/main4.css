@@ -39,6 +39,7 @@ iframe { border:none }
 	color:#FFFFFF;	
 	font-size:1.5rem;
 	font-weight:bolder;
+	transition: background-color 0.3s;
 }
 #header a:hover{text-decoration:none;}
 

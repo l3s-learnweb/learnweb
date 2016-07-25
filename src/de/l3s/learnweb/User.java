@@ -19,7 +19,6 @@ import org.jsoup.safety.Whitelist;
 
 import de.l3s.interwebj.AuthCredentials;
 import de.l3s.interwebj.InterWeb;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.util.HasId;
 import de.l3s.util.Image;
 import de.l3s.util.MD5;
@@ -540,7 +539,7 @@ public class User implements Comparable<User>, Serializable, HasId
 	if(fileId > 0)
 	    return Learnweb.getInstance().getFileManager().createUrl(fileId, "profile.png");
 
-	return UtilBean.getLearnwebBean().getContextUrl() + "/resources/image/no_profile.jpg";
+	return Learnweb.getInstance().getContextUrl() + "/resources/image/no_profile.jpg";
     }
 
     public void setId(int id)

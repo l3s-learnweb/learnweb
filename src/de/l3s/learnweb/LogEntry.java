@@ -92,7 +92,7 @@ public class LogEntry implements Serializable
 	else if(folderActions.contains(action))
 	    fileId = targetId;   
 	*/
-	String url = UtilBean.getLearnwebBean().getContextUrl() + "/lw/";
+	String url = Learnweb.getInstance().getContextUrl() + "/lw/";
 
 	String usernameLink = "<a href=\"" + url + "user/detail.jsf?user_id=" + userId + "\" style=\" color:#3399FF;text-decoration:none;\">" + username + "</a> ";
 

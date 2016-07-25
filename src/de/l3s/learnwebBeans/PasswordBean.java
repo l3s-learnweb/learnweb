@@ -11,7 +11,6 @@ import javax.mail.internet.InternetAddress;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
-import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.util.MD5;
 import de.l3s.util.Mail;
 
@@ -38,9 +37,11 @@ public class PasswordBean extends ApplicationBean implements Serializable
 	    Mail message = new Mail();
 	    message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
 
+	    String url = getLearnweb().getContextUrl() + "/lw/user/change_password.jsf?u=";
+
 	    for(User user : users)
 	    {
-		String link = UtilBean.getLearnwebBean().getContextUrl() + "/lw/user/change_password.jsf?u=" + user.getId() + "_" + createHash(user);
+		String link = url + user.getId() + "_" + createHash(user);
 		String text = "Hi " + user.getUsername() + ",\n\nyou can change the password of your learnweb account '" + user.getUsername() + "' by clicking on this link:\n" + link + "\n\nOr just ignore this email, if you haven't requested it.\n\nBest regards\nLearnweb Team";
 
 		message.setText(text);

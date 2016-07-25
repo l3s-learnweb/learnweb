@@ -3,7 +3,6 @@ package de.l3s.learnwebBeans;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -25,7 +24,6 @@ import de.l3s.archiveSearch.ArchiveItShingle;
 import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.ArchiveUrlManager;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.UtilBean;
 
 @ManagedBean
 @ViewScoped
@@ -53,7 +51,7 @@ public class ArchiveThumbnailBean extends ApplicationBean
     private long zoomMin;
     private long zoomMax;
 
-    private DateFormat df;
+    //   private DateFormat df; was not used
 
     public ArchiveThumbnailBean() throws SQLException
     {
@@ -66,7 +64,7 @@ public class ArchiveThumbnailBean extends ApplicationBean
 	archiveUrlsHashMap = new HashMap<String, Date>();
 	archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
 
-	df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, UtilBean.getUserBean().getLocale());
+	//	df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, UtilBean.getUserBean().getLocale());
     }
 
     public List<ArchiveUrl> getArchiveUrls()
