@@ -139,7 +139,7 @@
 		</h:panelGroup>
 		<div id="filters_menu_bar_wrapper">
 			<div class="filters_menu_bar">
-				<h:panelGroup styleClass="search-filters #{searchBean.searchMode}" id="filters" layout="block">
+				<h:panelGroup styleClass="search-filters #{searchBean.searchMode} #{empty searchBean.availableSources ? 'no-source' : null}" id="filters" layout="block">
 					<ul>
 						<h:panelGroup id="source_filter">
 							<li class="filter sources active">

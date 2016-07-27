@@ -108,12 +108,14 @@
 	list-style: none outside none;
 	margin: 0;
 	padding: 0;
+	display: inline-block;
 }
 
 .filters_menu_bar ul li {
 	display: inline-block;
 	position: relative;
 	white-space: nowrap;
+    margin-right: -4px;
 }
 
 .filters_menu_bar ul li.active, .filters_menu_bar ul li:hover {
@@ -143,8 +145,11 @@
 	visibility: visible;
 }
 
-.filters_menu_bar .search-filters li.disabled:hover .filter-sub-bar {
-	display: none;
+.filters_menu_bar .search-filters.no-source #source_filter .arrow {
+    opacity: 0;
+}
+
+.filters_menu_bar .search-filters li:hover .filter-sub-bar {
 }
 
 .filters_menu_bar ul li.disabled {
@@ -207,6 +212,8 @@
 	margin-bottom: 0.2rem;
 	margin-left: 0.5rem;
 }
+
+
 
 .result-count { color:grey; }
 .result-count::before { content: " ("; } 
