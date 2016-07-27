@@ -97,12 +97,17 @@ public class User implements Comparable<User>, Serializable, HasId
 
 	try
 	{
-	    Learnweb.getInstance().getUserManager().save(this);
+	    this.save();
 	}
 	catch(SQLException e)
 	{
 	    Logger.getLogger(User.class).error("Couldn't save user onDestroy", e);
 	}
+    }
+
+    public void save() throws SQLException
+    {
+	Learnweb.getInstance().getUserManager().save(this);
     }
 
     public boolean isLoggedInInterweb()
@@ -318,6 +323,8 @@ public class User implements Comparable<User>, Serializable, HasId
 
     private long groupsCacheTime = 0L;
 
+    private Course activeCourse;
+
     /**
      * returns the groups the user is member off
      * 
@@ -480,7 +487,7 @@ public class User implements Comparable<User>, Serializable, HasId
 	imageFileId = file.getId();
 	imageUrl = file.getUrl();
 
-	Learnweb.getInstance().getUserManager().save(this);
+	this.save();
     }
 
     public boolean isAdmin()
@@ -691,7 +698,7 @@ public class User implements Comparable<User>, Serializable, HasId
     @Override
     public String toString()
     {
-	return "userId: " + getId() + " name: " + getUsername();
+	return "[userId: " + getId() + " name: " + getUsername() + "]";
     }
 
     public int getForumPostCount() throws SQLException
@@ -756,14 +763,27 @@ public class User implements Comparable<User>, Serializable, HasId
 	preferences.put(key, value);
     }
 
-    public int getActiveCourseId()
+    public int getActiveCourseId() throws SQLException
     {
+	if(activeCourseId == 0) // the course id wasn't set yet
+	{
+	    activeCourseId = getCourses().get(0).getId();
+	}
 	return activeCourseId;
+    }
+
+    public Course getActiveCourse() throws SQLException
+    {
+	if(null == activeCourse)
+	    activeCourse = Learnweb.getInstance().getCourseManager().getCourseById(getActiveCourseId());
+
+	return activeCourse;
     }
 
     public void setActiveCourseId(int activeCourseId)
     {
 	this.activeCourseId = activeCourseId;
+	this.activeCourse = null; // clear cache;
     }
 
 }

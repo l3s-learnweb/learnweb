@@ -59,7 +59,7 @@ public class UserBean implements Serializable
 
     private long groupsTreeCacheTime = 0L;
     private DefaultTreeNode groupsTree;
-    private HashMap<String, String> anonymousPreferences = new HashMap<String, String>(); // preferences for logout users
+    private HashMap<String, String> anonymousPreferences = new HashMap<String, String>(); // preferences for users who are not logged in
 
     public UserBean()
     {
@@ -77,8 +77,7 @@ public class UserBean implements Serializable
 
     /**
      * This methods sets values which are required by the Download Servlet
-     * ands provides data which is shown on the Tomcat mananger session page
-     * and
+     * and provides data which is shown on the Tomcat mananger session page
      */
     private void storeMetadataInSession(User user)
     {
@@ -594,36 +593,6 @@ public class UserBean implements Serializable
 
 	return groupsTree;
     }
-
-    public String onCourseChange(int courseId) throws SQLException
-    {
-	setActiveCourseId(courseId);
-
-	return ApplicationBean.getTemplateDir() + "/" + getUser().getOrganisation().getWelcomePage() + "?faces-redirect=true";
-    }
-
-    /*
-    public DefaultMenuModel getCourseMenuModel() throws SQLException
-    {
-    DefaultMenuModel model = new DefaultMenuModel();
-    
-    //First submenu
-    DefaultSubMenu firstSubmenu = new DefaultSubMenu("Active course: " + getActiveCourse().getTitle());
-    
-    for(Course course : getUser().getCourses())
-    {
-        DefaultMenuItem item = new DefaultMenuItem(course.getTitle());
-        item.setCommand("#{userBean.onCourseChange(" + course.getId() + ")}");
-        item.setAjax(false);
-    
-        firstSubmenu.addElement(item);
-    }
-    
-    model.addElement(firstSubmenu);
-    
-    return model;
-    }
-    */
 
     /**
      * Returns true when there is any tooltip message to show

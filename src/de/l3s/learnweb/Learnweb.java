@@ -62,6 +62,7 @@ public class Learnweb
     private final WaybackCapturesLogger waybackCapturesLogger;
 
     private static Learnweb learnweb = null;
+    private static boolean learnwebIsLoading = false;
 
     /**
      * The Same as getInstanceRaw() but hides all exceptions
@@ -74,6 +75,13 @@ public class Learnweb
 	{
 	    if(learnweb == null)
 	    {
+		if(learnwebIsLoading)
+		{
+		    log.warn("Learnweb instance requested while it was still loading. Happens mostly because of connection or config problems");
+
+		    return null;
+		}
+
 		new Learnweb();
 	    }
 	    return learnweb;
@@ -120,7 +128,8 @@ public class Learnweb
      */
     private Learnweb() throws ClassNotFoundException, SQLException
     {
-	this.contextUrl = "http://learnweb.l3s.uni-hannover.de";
+	learnwebIsLoading = true;
+	contextUrl = "http://learnweb.l3s.uni-hannover.de";
 	learnweb = this;
 
 	try
@@ -191,6 +200,8 @@ public class Learnweb
 	glossaryManager = new GlossaryManager(this);
 	suggestionLogger = new SuggestionLogger(this);
 	waybackCapturesLogger = new WaybackCapturesLogger(this);
+
+	learnwebIsLoading = false;
     }
 
     /**

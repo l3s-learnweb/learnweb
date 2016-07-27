@@ -36,14 +36,20 @@ public class CustomEvaluator implements TriggeringEventEvaluator
 	if(isRunningOnLocalhost == null) // called the first time
 	{
 	    lastCheck = System.currentTimeMillis();
+	    try
+	    {
+		String contextUrl = Learnweb.getInstance().getContextUrl();
 
-	    String contextUrl = Learnweb.getInstance().getContextUrl();
+		isRunningOnLocalhost = (contextUrl.startsWith("http://localhost") || contextUrl.startsWith("http://learnweb.dev"));
 
-	    isRunningOnLocalhost = (contextUrl.startsWith("http://localhost") || contextUrl.startsWith("http://learnweb.dev"));
+		Logger.getLogger(CustomEvaluator.class).info("Context url: " + contextUrl + "; email Logger disabled: " + isRunningOnLocalhost);
 
-	    Logger.getLogger(CustomEvaluator.class).info("Context url: " + contextUrl + "; email Logger disabled: " + isRunningOnLocalhost);
-
-	    return true; // true, to skip first error message
+		return true; // true, to skip first error message
+	    }
+	    catch(Exception e)
+	    {
+		isRunningOnLocalhost = true;
+	    }
 	}
 
 	return isRunningOnLocalhost;
