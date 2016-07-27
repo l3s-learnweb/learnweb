@@ -7,6 +7,7 @@ import javax.faces.bean.SessionScoped;
 @SessionScoped
 public class FactSheetBean
 {
+
     String search;
 
     public String getSearch()

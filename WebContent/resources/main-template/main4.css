@@ -822,7 +822,7 @@ a.graybutton:focus {
 .error {
 	color:red;
 	font-weight:bold;
-	padding:2rem;
+/*	padding:2rem; */
 }
 
 .align-left {text-align:left;}

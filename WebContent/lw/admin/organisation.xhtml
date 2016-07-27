@@ -35,12 +35,10 @@
 				<p:inputText value="#{adminOrganisationsBean.selectedOrganisation.title}" style="width:40rem" />
 				
 				<p><h:outputText value="Welcome Page: " /></p>
-
 				<p:selectOneMenu id="welcomePage" value="#{adminOrganisationsBean.selectedOrganisation.welcomePage}" style="width:40rem" editable="true">
 					<f:selectItem itemLabel="myhome/activity.jsf" itemValue="myhome/activity.jsf" />
 					<f:selectItem itemLabel="myhome/welcome.jsf" itemValue="myhome/welcome.jsf" />
 				</p:selectOneMenu>
-
 				<p>
 					<h:outputText value="#{msg.welcome_message}:" />
 				</p>
