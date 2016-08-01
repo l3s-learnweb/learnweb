@@ -126,14 +126,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public GroupDetailBean() throws SQLException
     {
-	log.debug("construct group detail bean" + getParameter("group_id"));
 	loadGroup();
 
 	if(null == group)
 	{
-	    /*
-	    addMessage(FacesMessage.SEVERITY_ERROR, "invalid group id");
-	    log.debug("invalid group id");*/
 	    return;
 	}
 
@@ -957,6 +953,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public List<Filter> getAvailableFilters()
     {
 	getPaginator();
+	if(searchFilters == null) // should only happen for private resources
+	    return null;
+
 	return searchFilters.getAvailableFilters();
     }
 
@@ -967,8 +966,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void updateResourcesFromSolr()
     {
-	log.info("updateFromSolr");
-
 	if(this.searchFilters == null)
 	{
 	    return;

@@ -12,11 +12,11 @@ apache-solr-test-framework-4.0.0.jar	SolrClient,added by Siyu
 apache-solr-uima-4.0.0.jar			SolrClient,added by Siyu
 apache-solr-velocity-4.0.0.jar		SolrClient,added by Siyu
 classmate-1.1.0.jar					required by Hibernate validator added by Philipp
-commons-beanutils-1.8.3.jar			JSF Base
+commons-beanutils-1.8.3.jar			JSF Base (MyFaces)
 commons-codec-1.3.jar				JSF Base, Dependency of Google API
 commons-collections4-4.1.jar		LRUCache
-commons-collections4-4.0.jar		JSF Base
-commons-digester-1.8.jar			JSF Base
+commons-collections-3.2.2			JSF Base (MyFaces)
+commons-digester-1.8.jar			JSF Base (MyFaces)
 commons-fileupload-1.3.jar			primefaces file upload
 commons-io-2.1.jar					SolrClient,added by Siyu
 commons-io-2.4.jar					FileManager, primefacces file upload
@@ -55,7 +55,7 @@ log4j-1.2.17.jar					Logging
 log4j-over-slf4j-1.6.4.jar			SolrClient,added by Siyu
 mail-1.4.4.jar						Interweb (Jersey)
 mariadb-java-client-1.2.0.jar		MySQL
-myfaces-bundle-2.2.8.jar			JSF Base
+myfaces-bundle-2.2.10.jar			JSF Base
 oauth-client-1.5.jar				Interweb
 oauth-signature-1.5.jar				Interweb
 org.json.jar						TEDx transcript, generating JSON from XML String

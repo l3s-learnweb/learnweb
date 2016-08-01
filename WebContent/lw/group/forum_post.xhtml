@@ -18,9 +18,9 @@
 		<h:outputStylesheet library="forum" name="forum.css" />
 		
 		<div class="center-header" id="group_header">
-			<span>
+			<h2>
 				#{msg['ForumIndex.messages']}
-			</span> 
+			</h2> 
 			#{msg.of} "#{forumPostBean.topic.title}"
 			
 			<h:form id="center_header_form">
@@ -71,7 +71,7 @@
 				</li>
 				<ui:fragment rendered="${userBean.admin || userBean.moderator || groupDetailBean.group.isLeader(userBean.user)}">							
 				<li>
-					<a href="./group/options.jsf?group_id=#{groupDetailBean.group.id}">
+					<a href="./group/options.jsf?group_id=#{forumPostBean.topic.groupId}">
 						<h:outputText value="#{msg.options}" />
 					</a>
 				</li>

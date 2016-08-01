@@ -25,9 +25,8 @@ public class FileInspector
     private final static Logger log = Logger.getLogger(FileInspector.class);
     private SolrClient solrClient;
 
-    public FileInspector()
+    public FileInspector(Learnweb learnweb)
     {
-	Learnweb learnweb = Learnweb.getInstance();
 	solrClient = learnweb.getSolrClient();
     }
 

@@ -180,7 +180,7 @@ public class FileManager
 	replace.setString(4, file.getName());
 	replace.setString(5, file.getMimeType());
 	replace.setInt(6, file.isDownloadLogActivated() ? 1 : 0);
-	replace.setDate(7, new java.sql.Date(file.getLastModified().getTime()));
+	replace.setTimestamp(7, new java.sql.Timestamp(file.getLastModified().getTime()));
 	replace.executeUpdate();
 
 	if(file.getId() < 0) // it's a new file -> get the assigned id

@@ -1,3 +1,35 @@
+
+#lightbox_container {
+	padding-top:3rem;
+}
+
+#lightbox_content {
+    height:100%;
+    width:100%;	
+    padding:0 !important;
+}
+#lightbox_title {
+	font-size:2rem;
+	line-height:3rem;
+	height:3rem;
+	width:100%;
+	font-weight:bold;
+	text-align:center;
+	position:absolute;
+	top:0;
+	background-color: black;
+}
+
+
+#lightbox_close {
+	position:absolute !important;
+	right:1.5rem !important;
+	top:50% !important;
+	margin-top:-12px !important;
+	margin-right:-12px !important;	
+}
+
+
 /*taken from new_main2.css*/
 #add_resource_upload_form .ui-fileupload-files tr td:first-child,
 #add_resource_upload_form .ui-fileupload-files tr td:last-child {
@@ -63,8 +95,9 @@
 #edit_table td:FIRST-CHILD{font-weight: bold;}
 .preview_box{
 	padding: 5px;
-	border: 1px solid #ccc !important;
-	box-shadow: 0 0 3px 3px #dfdfdf;
+	border: 1px solid #ccc;
+	box-shadow: 1px 1px 3px 3px #dfdfdf;
+	box-sizing: border-box;
 }
 .preview_box iframe {min-height:400px;width:100%;}
 
@@ -110,60 +143,6 @@
 	background-color:#4ea68d !important;
 }
 
-#lightbox {
-	display:none;
-    position:fixed; 
-    top: 0px;
-    left:0;
-    height:100%; 
-    width:100%; 
-    background: rgba(100, 100, 100, 0.6);
-    z-index:899;
-}
-
-#lightbox_background { 
-	position:absolute;
-    height:100%; 
-    width:100%; 
-    z-index:900; 
-} 
-#lightbox_container {
-	position:relative; 
-    background:#191919; 
-    margin:81px 8% 5px 8%; 
-    color:white;   
-    z-index:901; 
-    box-sizing:border-box;    
-	padding-top:3rem;
-}
-#lightbox_content {
-    height:100%;
-    width:100%;	
-    background:url(../resources/search/icon/grain-2.png);
-}
-#lightbox_title {
-	font-size:2rem;
-	line-height:3rem;
-	height:3rem;
-	width:100%;
-	font-weight:bold;
-	text-align:center;
-	position:absolute;
-	top:0;
-	background-color: black;
-}
-
-#lightbox_close {
-	position:absolute;
-	right:1.5rem;
-	top:50%;
-	margin-top:-12px;
-	margin-right:-12px;
-	width:24px;
-	height:24px;
-	background:url(../resources/search/icon/cancel-inv.png) center no-repeat;
-	
-}
 
 #resources_informations_table { border-collapse : collapse; }
 #resources_informations_table .resource_field {

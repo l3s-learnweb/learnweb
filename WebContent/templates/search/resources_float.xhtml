@@ -8,7 +8,7 @@
 <ui:composition> 
 
 	<ui:repeat var="res" value="#{resources}" >
-		<div class="resource" id="resource_${res.tempId}">
+		<div class="resource" id="resource_${res.tempId}" style="max-width:${res.thumbnail2b.width}px">
 			<h:panelGroup styleClass="#{res.newResource ? 'float_newResource' : 'oldResource'}"> 
 				<img src="${res.thumbnail2b.url}" height="${res.thumbnail2b.height}" width="${res.thumbnail2b.width}" class="smallImage" />
 			</h:panelGroup>

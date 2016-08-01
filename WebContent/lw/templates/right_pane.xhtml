@@ -10,15 +10,16 @@
 	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" 
 		header="#{resourceDetailBean.clickedResource.id eq -1? msg.click_to_view_details : resourceDetailBean.clickedResource.title}" id="right_pane">
 
-		<h:outputScript library="resource-pane-template" name="resource-pane2.js"/>
+		<h:outputScript library="resource-pane-template" name="resource-pane.js" target="head"/>
 		<h:outputStylesheet library="resource-pane-template" name="resource-pane.css"/>
+		<h:outputStylesheet library="lightbox" name="lightbox.css"/>
 
 		<h:form id="remote_form">
 			<p:remoteCommand name="update_datagrid" update=":datagrid :add_resource_panel" oncomplete="update_header()"/>
 		</h:form>
 
 		<div id="right_pane_wrapper" class="right-panel">
-			<p:panel id="add_resource_panel">
+			<h:panelGroup layout="block" id="add_resource_panel">
 				<script type="text/javascript">
 					function update_header()
 					{
@@ -64,8 +65,8 @@
 				<h:panelGroup id="add_resource_section" rendered="#{bean.rightPanelAction == 'newResource'}" styleClass="create-block new-resource" layout="block">
 				
 					<h:form id="add_resource_upload_form" rendered="#{addResourceBean.formStep > 0}">
-					
-						<p:fieldset legend="Step 1" style="margin-bottom:20px">
+					 
+						<p:fieldset legend="#{msg.step} 1" style="margin-bottom:20px">
 							<p:panelGrid styleClass="full-width">
 								<p:row>
 									<p:column>
@@ -187,7 +188,7 @@
 				
 				<h:panelGroup rendered="#{bean.rightPanelAction == 'viewResource' and resourceDetailBean.clickedResource.id != -1}" layout="block">						
 					<ui:fragment rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'video' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'image'}">
-						<div class="align-center">
+						<div class="align-center" style="margin-top: 5px;">
 
 							<div id="lightbox">
 								<div id="lightbox_background" onclick="lightbox_close();"></div>
@@ -222,7 +223,7 @@
 							</div>				
 		
 							<ui:fragment rendered="#{resourceDetailBean.clickedResource.type == 'Video'}">
-								<div class="preview_box" style="height:400px; width:100%;">
+								<div class="preview_box" style="height:412px; width:100%;">
 									<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
 								</div>
 							</ui:fragment>								
@@ -507,9 +508,9 @@
 					
 						<br/>
 						<h:panelGroup layout="block" rendered="#{!groupDetailBean.group.readOnly}">
-							<div style="width:100%;padding-left:60px;box-sizing:border-box;">
+							<div style="position:relative; padding-left:60px;">
 								<h:graphicImage id="userpic" url="${learnwebBean.getProfileImage(userBean.user)}" width="50" height="50" 
-									style="position:absolute;left:28px" alt="Profile picture"/> 
+									style="position:absolute;left:0" alt="Profile picture"/> 
 								
 								<p:inputTextarea id="commentfield" style="width:100%;min-height:50px;box-sizing:border-box;" rows="2" 
 									value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}" required="true"/>
@@ -799,7 +800,7 @@
 						scroller();
 					});
 				</script>
-			</p:panel>
+			</h:panelGroup>
 		</div>
 	</p:layoutUnit>
 	</ui:composition>

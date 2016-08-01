@@ -76,8 +76,10 @@
 	</ui:define>
 				
 	<ui:define name="center_layout">
-		<h:outputStylesheet library="search" name="search5.css"  />		
-		<h:outputScript library="search" name="search3.js" target="head"/>
+		<h:outputStylesheet library="lightbox" name="lightbox.css"  />		
+		<h:outputStylesheet name="search/search6.css"  />		
+		<h:outputScript name="search/search3.js" target="head"/>
+		
 
 		<h:panelGroup styleClass="group-menu-bar #{searchBean.queryFilters}" id="groups_menu_bar" layout="block" rendered="#{searchBean.searchFilters == null}">
 			<h:panelGroup styleClass="group-menu-header" layout="block" rendered="#{searchBean.searchService != null}">

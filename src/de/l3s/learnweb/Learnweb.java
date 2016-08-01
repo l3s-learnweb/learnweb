@@ -73,23 +73,10 @@ public class Learnweb
     {
 	try
 	{
-	    if(learnweb == null)
-	    {
-		if(learnwebIsLoading)
-		{
-		    log.warn("Learnweb instance requested while it was still loading. Happens mostly because of connection or config problems");
-
-		    return null;
-		}
-
-		new Learnweb();
-	    }
-	    return learnweb;
+	    return getInstanceRaw();
 	}
 	catch(Exception e)
 	{
-	    learnweb = null;
-	    log.fatal(e);
 	    throw new RuntimeException(e);
 	}
     }
@@ -107,16 +94,56 @@ public class Learnweb
 	{
 	    if(learnweb == null)
 	    {
-		new Learnweb();
+		if(learnwebIsLoading)
+		{
+		    log.warn("Learnweb instance requested while it was still loading. Happens mostly because of connection or config problems");
+
+		    return null; // to avoid infinite loop 
+		}
+
+		learnweb = new Learnweb();
 	    }
 	    return learnweb;
 	}
 	catch(Exception e)
 	{
-	    learnweb = null;
+	    learnwebIsLoading = false;
+	    //learnweb = null;
 	    log.fatal(e);
 	    throw e;
 	}
+    }
+
+    /**
+     * Returns the properties file to use depending on the machine Learnweb is running on.
+     * 
+     * @return
+     */
+    public static String getPropteriesFileName()
+    {
+	String propteriesFileName = "lw_local_other";
+
+	// if you need to override values in learnweb.properties file for local testing, do it in a separate properties file and add it here:
+	if((new File("/home/learnweb_user")).exists())
+	    propteriesFileName = "learnweb";
+	else if((new File("C:\\programmieren\\philipp.txt")).exists())
+	    propteriesFileName = "lw_local_philipp";
+	else if((new File("C:\\programmieren\\philipp_uni.txt")).exists())
+	    propteriesFileName = "lw_local_philipp_uni";
+	else if((new File("/home/fernando/trevor.txt").exists()))
+	    propteriesFileName = "lw_local_trevor_uni";
+	else if((new File("/Users/trevor").exists()))
+	    propteriesFileName = "lw_local_trevor";
+	else if((new File("/home/kalyani").exists()))
+	    propteriesFileName = "lw_local_rishita";
+	else if(new File("/Users/Rishita/").exists())
+	    propteriesFileName = "lw_local_rishita";
+	else if((new File("C:\\Users\\astappev").exists()))
+	    propteriesFileName = "lw_local_oleg";
+	else if((new File("/learnweb_data").exists()))
+	    propteriesFileName = "lw_local_chenyang";
+
+	return propteriesFileName;
     }
 
     /**
@@ -130,7 +157,7 @@ public class Learnweb
     {
 	learnwebIsLoading = true;
 	contextUrl = "http://learnweb.l3s.uni-hannover.de";
-	learnweb = this;
+	//learnweb = this;
 
 	try
 	{
@@ -139,30 +166,7 @@ public class Learnweb
 
 	    this.properties = new PropertiesBundle(fallbackProperties);
 
-	    String propteriesFileName = "lw_local_other";
-
-	    // if you need to override values in learnweb.properties file for local testing, do it in a separate properties file and add it here:
-	    if((new File("/home/learnweb_user")).exists())
-		propteriesFileName = "learnweb";
-	    else if((new File("C:\\programmieren\\philipp.txt")).exists())
-		propteriesFileName = "lw_local_philipp";
-	    else if((new File("C:\\programmieren\\philipp_uni.txt")).exists())
-		propteriesFileName = "lw_local_philipp_uni";
-	    else if((new File("/home/fernando/trevor.txt").exists()))
-		propteriesFileName = "lw_local_trevor_uni";
-	    else if((new File("/Users/trevor").exists()))
-		propteriesFileName = "lw_local_trevor";
-	    else if((new File("/home/kalyani").exists()))
-		propteriesFileName = "lw_local_rishita";
-	    else if(new File("/Users/Rishita/").exists())
-		propteriesFileName = "lw_local_rishita";
-	    else if((new File("C:\\Users\\morais").exists()))
-		propteriesFileName = "lw_local_alana";
-	    else if((new File("C:\\Users\\astappev").exists()))
-		propteriesFileName = "lw_local_oleg";
-	    else if((new File("/learnweb_data").exists()))
-		propteriesFileName = "lw_local_chenyang";
-
+	    String propteriesFileName = getPropteriesFileName();
 	    log.debug("Load config file: " + propteriesFileName);
 
 	    properties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propteriesFileName + ".properties"));
@@ -172,7 +176,6 @@ public class Learnweb
 	    log.error("Property error", e);
 	}
 
-	//Class.forName("com.mysql.jdbc.Driver");
 	Class.forName("org.mariadb.jdbc.Driver");
 	connect();
 

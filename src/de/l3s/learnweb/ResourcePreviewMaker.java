@@ -50,7 +50,7 @@ public class ResourcePreviewMaker
     {
 	this.learnweb = learnweb;
 	this.fileManager = this.learnweb.getFileManager();
-	this.fileInspector = new FileInspector();
+	this.fileInspector = new FileInspector(learnweb);
 	this.archiveThumbnailService = learnweb.getProperties().getProperty("ARCHIVE_WEBSITE_THUMBNAIL_SERVICE");
 	this.websiteThumbnailService = learnweb.getProperties().getProperty("WEBSITE_THUMBNAIL_SERVICE");
 	this.videoThumbnailService = learnweb.getProperties().getProperty("VIDEO_THUMBNAIL_SERVICE");

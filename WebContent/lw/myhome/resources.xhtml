@@ -29,7 +29,7 @@
 			<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/myresources/myresources.css" />
 			
 		    <div class="center-header" id="group_header">
-		    	<h:outputText value="#{msg.myResourcesTitle}" styleClass="green_header"/>
+		    	<h2>#{msg.myResourcesTitle}</h2>
 				<h:form  id="center_header_form">
 					<p:menuButton value="#{msg.upload_resource}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton">
 				        <p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" update=":add_resource_panel" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">

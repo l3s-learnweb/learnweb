@@ -1,4 +1,3 @@
-
 #search_loading_more_results {
 	line-height:3rem;	
 }
@@ -6,7 +5,7 @@
 	display:inline-block;
 	width:1.6rem;
 	height:1.6rem;
-	background-image:url(../resources/search/icon/loading.gif);
+	background-image:url(icon/loading.gif);
 	margin-bottom: -0.4rem;
 	margin-left: 0.4rem;
 }
@@ -269,7 +268,7 @@
 .list_view a.resourceWebLink:visited { color:rgb(60, 110, 200); }
 
 .list_view a.resourceReferenceUrl{color:green; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; display:block}
-/* color:rgb(88, 147, 236); */
+
 .page_counter {
 	font-weight:bold;
 	margin:5px 0 -10px 15px;
@@ -285,7 +284,7 @@ div.float_view {
 	padding:1px 6px;
 	text-align: justify;
 	max-width:100%;
-	/* width:75%; f�r die search history scheisse; aktivieren und max width deaktivieren, zerschie�t aber normales design */
+	/* width:75%; enable for search history, but has side effects */
 
 	position:relative;
 }
@@ -308,7 +307,7 @@ div.float_view .smallImage:hover {box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);   }
 div.grid_view {
 	margin:5px 10px;
 	max-width:100%;
-	/* width:75%; f�r die search history scheisse aktivieren und max width deaktivieren, zerschie�t aber normales design */
+	/* width:75%; enable for search history, but has side effects */
 	position:relative;
 	border-left:1px solid #CCCCCC;
 	border-top:1px solid #CCCCCC;	
@@ -329,7 +328,7 @@ div.grid_view .border {
 
 div.stretchy-wrapper {
 	width: 100%;
-	padding-bottom: 56.25%; /* 16:9 */
+	padding-bottom: 56.25%; /* to keep 16:9 ratio */
 	position: relative;
 }
 
@@ -415,138 +414,7 @@ img.smallImage { cursor:pointer; margin:4px; }
 	color: black;
 }
 
-/* ----------------------- Lightbox --------------------------*/
-#lightbox {
-	display:none;
-    position:fixed; 
-    top: 0px;
-    left:0;
-    height:100%; 
-    width:100%; 
-    background: rgba(100, 100, 100, 0.6);
-    z-index:899;
-}
-
-#lightbox_background { 
-	position:absolute;
-    height:100%; 
-    width:100%; 
-    z-index:900; 
-} 
-#lightbox_container {
-	position:relative; 
-    background: #191919; 
-    margin:81px 32px 5px 32px; 
-    color:white;   
-    z-index:901;
-    box-shadow:0 0 3px 3px #bfbfbf; 
-} 
-
-#lightbox_title .title { 
-    padding:5px; 
-    font-size:15px;
-    font-weight:bold;
-	background-color:transparent;
-    color: white;
-} 
-#lightbox_left { 
-	position:absolute;
-    top:0;
-    left:0;
-    height:100%;
-    width:70%; 
-}
-
-#lightbox_right { 
-	position:absolute;
-    top:0;
-    right:0;
-	height:100%;
-    width:30%; 
-    background-color:black;
-    overflow:auto;
-}
-
-#lightbox_content { 
-	position:relative; 
-	padding:0 30px;
-}
-
-#lightbox_content .embedded { 
-	display:block;
-	position:relative;
-	left:0;
-	top:0;
-	width:100%;
-	z-index:902;
-}
-#lightbox_metadata {
-	padding:30px 5px 5px 5px;
-}
-/*
-#lightbox .options {
-    background-color:transparent;
-    height:auto;
-    margin-bottom: 0;
-    min-width: auto;
-    padding: 0;
-    position: relative;
-    text-align: left;
-    vertical-align: middle;	
-}*/
-
-#lightbox_close {
-	position:absolute;
-	right:10px;
-	top:10px;
-	width:24px;
-	height:24px;
-	background:url(../resources/search/icon/cancel-inv.png) center no-repeat;
-}
-
-#lightbox_navigate_left {
-	position:absolute;
-	left:0;
-	top:0;
-	width:30px;
-	height:100%;
-	background:url(../resources/search/icon/media-backward-inv.png) center no-repeat;
-	cursor:pointer;
-	opacity: 0.5;
-	z-index:910;
-	transition: opacity .25s ease-in-out;
-	-moz-transition: opacity .25s ease-in-out;
-	-webkit-transition: opacity .25s ease-in-out;
-}
-
-#lightbox_navigate_left:hover {
-	opacity: 1;	
-}
-
-#lightbox_navigate_right {
-	position:absolute;
-	right:0;
-	top:0;
-	width:30px;
-	height:100%;
-	background:url(../resources/search/icon/media-play-inv.png) center no-repeat;
-	cursor:pointer;
-	opacity: 0.5;
-	z-index:910;
-	transition: opacity .25s ease-in-out;
-	-moz-transition: opacity .25s ease-in-out;
-	-webkit-transition: opacity .25s ease-in-out;
-}
-#lightbox_navigate_right:hover {
-	opacity: 1;
- }
-
-#lightbox_container a:link, #lightbox_container a:visited,
-#lightbox_container a { color:white; text-decoration:underline; }
-#lightbox_container a:hover { text-decoration:none;}
-
 /*------------------- Fact sheet -------------------------*/
-
 
 .fact_sheet_value a
 {
@@ -629,6 +497,8 @@ img.smallImage { cursor:pointer; margin:4px; }
 	padding: 0px;
 	color: black;
 }
+
+/*------------------- search filter, source selector -------------------------*/
 
 .group-menu-bar {
 	background-color: #808080;
@@ -747,57 +617,57 @@ img.smallImage { cursor:pointer; margin:4px; }
 
 .group-menu-header .source_bing,
 .group-menu-block.source_bing .group-menu-title {
-	background-image: url('../resources/icon/services/bing.gif');
+	background-image: url('../icon/services/bing.gif');
 }
 
 .group-menu-header .source_flickr,
 .group-menu-block.source_flickr .group-menu-title {
-	background-image: url('../resources/icon/services/flickr.png');
+	background-image: url('../icon/services/flickr.png');
 }
 
 .group-menu-header .source_youtube,
 .group-menu-block.source_youtube .group-menu-title {
-	background-image: url('../resources/icon/services/youtube.png');
+	background-image: url('../icon/services/youtube.png');
 }
 
 .group-menu-header .source_vimeo,
 .group-menu-block.source_vimeo .group-menu-title {
-	background-image: url('../resources/icon/services/vimeo.gif');
+	background-image: url('../icon/services/vimeo.gif');
 }
 
 .group-menu-header .source_ipernity,
 .group-menu-block.source_ipernity .group-menu-title {
-	background-image: url('../resources/icon/services/ipernity.gif');
+	background-image: url('../icon/services/ipernity.gif');
 }
 
 .group-menu-header .source_ted,
 .group-menu-block.source_ted .group-menu-title {
-	background-image: url('../resources/icon/services/ted.gif');
+	background-image: url('../icon/services/ted.gif');
 }
 
 .group-menu-header .source_tedx,
 .group-menu-block.source_tedx .group-menu-title {
-	background-image: url('../resources/icon/services/tedx.gif');
+	background-image: url('../icon/services/tedx.gif');
 }
 
 .group-menu-header .source_loro,
 .group-menu-block.source_loro .group-menu-title {
-	background-image: url('../resources/icon/services/loro.gif');
+	background-image: url('../icon/services/loro.gif');
 }
 
 .group-menu-header .source_yovisto,
 .group-menu-block.source_yovisto .group-menu-title {
-	background-image: url('../resources/icon/services/yovisto.gif');
+	background-image: url('../icon/services/yovisto.gif');
 }
 
 .group-menu-header .source_learnweb,
 .group-menu-block.source_learnweb .group-menu-title {
-	background-image: url('../resources/icon/services/learnweb.gif');
+	background-image: url('../icon/services/learnweb.gif');
 }
 
 .group-menu-header .source_archiveit,
 .group-menu-block.source_archiveit .group-menu-title {
-	background-image: url('../resources/icon/services/archiveit.gif');
+	background-image: url('../icon/services/archiveit.gif');
 }
 
 .group-menu-bar .group-menu-content {

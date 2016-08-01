@@ -17,9 +17,9 @@
  
 	<ui:define name="center_layout">
 		<div class="center-header" id="group_header">
-			<span id="">
+			<h2>
 				#{groupDetailBean.group.title}
-			</span> 
+			</h2> 
 				 #{msg.created_by} #{groupDetailBean.group.leader.username} (#{groupDetailBean.group.resourcesCount} #{msg.resources})
 			<h:form id="center_header_form">
 				<p:menuButton value="#{msg.upload_resource}" rendered="#{groupDetailBean.member and !groupDetailBean.group.restrictionOnlyLeaderCanAddResources}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton">
@@ -107,7 +107,7 @@
 						        <f:param name="action" value="web"/>
 						</h:outputLink>
 						
-						<h:outputText value=" #{msg.from} #{datagrid.resource.source} " escape="false" />
+						<h:outputText value=" #{msg.from_source} #{datagrid.resource.source} " escape="false" />
 					</h:panelGroup>
 				</div>
 					

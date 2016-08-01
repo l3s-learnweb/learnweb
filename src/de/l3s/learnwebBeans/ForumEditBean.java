@@ -41,13 +41,21 @@ public class ForumEditBean extends ApplicationBean implements Serializable
 	post = fm.getPostById(postId);
 	topic = fm.getTopicById(post.getTopicId());
 	group = getLearnweb().getGroupManager().getGroupById(topic.getGroupId());
+
+	if(!canEditPost())
+	    addMessage(FacesMessage.SEVERITY_ERROR, "no_view_right");
     }
 
     public String onSavePost() throws SQLException
     {
-	Date date = new Date();
+	if(!canEditPost())
+	{
+	    addMessage(FacesMessage.SEVERITY_ERROR, "no_view_right");
+	    return null;
+	}
+
 	User user = getUser();
-	post.setLastEditDate(date);
+	post.setLastEditDate(new Date());
 	post.setEditCount(post.getEditCount() + 1);
 	post.setEditUserId(user.getId());
 
@@ -58,61 +66,10 @@ public class ForumEditBean extends ApplicationBean implements Serializable
 	}
 
 	addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-	//nameTag(post.getText());
 
 	return "/lw/group/forum_post.xhtml?topic_id=" + post.getTopicId() + "&faces-redirect=true";
     }
 
-    /*
-    public void nameTag(String text)
-    {
-    Scanner s = new Scanner(text);
-    String user = null;
-    //if(scan.hasNext())
-    //scan.next();
-    
-    while(s.hasNext())
-    {
-        user = s.next();
-        if(user.contains("@"))
-        {
-    
-    	log.debug("@ gefunden");
-    	//user = user.replaceAll("[@]", "");
-    
-    	user = user.substring(user.lastIndexOf('@') + 1);
-    
-    	ForumManager fm = getLearnweb().getForumManager();
-    
-    	log.debug(user);
-        }
-    }
-    
-    //search @User
-    
-    //write message to User
-    s.close();
-    }
-    
-    public void sendMessage(User toUser, String text) throws SQLException
-    {
-    Date time = new Date();
-    DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-    
-    PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("INSERT INTO message (from_user, to_user, m_title, m_text, m_seen, m_read, m_time) " + "VALUES (?,?,?,?,?,?,?)");
-    stmt.setInt(1, toUser.getId());
-    stmt.setInt(2, toUser.getId());
-    stmt.setString(3, "you were mentioned in a Forumpost");
-    
-    //String convertedText = convertText(text);
-    stmt.setString(4, text);
-    stmt.setBoolean(5, false);
-    stmt.setBoolean(6, false);
-    stmt.setString(7, format.format(time.getTime()));
-    stmt.executeUpdate();
-    stmt.close();
-    }
-    */
     public ForumTopic getTopic()
     {
 	return topic;
@@ -147,6 +104,19 @@ public class ForumEditBean extends ApplicationBean implements Serializable
     public void setPostId(int postId)
     {
 	this.postId = postId;
+    }
+
+    public boolean canEditPost()
+    {
+	User user = getUser();
+
+	if(null == user)
+	    return false;
+
+	if(user.isAdmin() || user.getId() == post.getUserId())
+	    return true;
+
+	return false;
     }
 
 }

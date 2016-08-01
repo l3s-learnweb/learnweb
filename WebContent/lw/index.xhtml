@@ -10,63 +10,18 @@
 	<pre><code class="js">baguetteBox.run('.baguetteBoxOne');</code></pre>
 	
 	<ui:define name="center_layout">
-		<h:outputStylesheet name="frontpage/index.min.css" />
-		<h:outputStylesheet library="toolGuide" name="guide.css"></h:outputStylesheet>
-		<h:outputScript library="toolGuide" name="guide.js" />
+		<h:outputStylesheet name="frontpage/index.css" />
+		<h:outputStylesheet library="lightbox" name="lightbox.css" />
+		<h:outputScript library="frontpage" name="lightbox_guide.js" />
 		
 		<div class="content_box">
 			<h1>
 				#{msg.homepageTitle}
-			</h1>
-			
+			</h1>			
 	
 			<h:outputText value="#{msg.homepage}" styleClass="homepage_infotext" />
 			
-			<div id="lightbox">
-				<div id="lightbox_background" onclick="lightbox_close();"></div>
-
-				<div id="lightbox_container">
-
-
-
-					<div id="lightbox_content">
-	
-						<div id="lightbox_navigate_left" onclick="lightbox_prev();"></div>
-						<div id="lightbox_navigate_right" onclick="lightbox_next();"></div>
-					</div>
-
-
-
-
-				</div>
-
-			</div>
-			
-			
-			<div id="gallery" style="display:none;">
-				<!-- <a href="ToolGuide/Activity.html" data-caption="Image caption">
-
-					<img src="ToolGuide/thumb/ppt2.png" alt="First image"></img>
-				</a> <a href="ToolGuide/ppt2.png"></a> -->
-				<div class="resource" style="width: 100%; height: 100%">
-				<OBJECT type="image/svg+xml" data="ToolGuide/ppt1.svg" style="width: 100%; height: 100%"></OBJECT>
-				</div>
-				<div class="resource" style="width: 100%; height: 100%">
-				<OBJECT type="image/svg+xml" data="ToolGuide/ppt2.svg" style="width: 100%; height: 100%"></OBJECT>
-				</div>
-				<div class="resource" style="width: 100%; height: 100%">
-				<OBJECT type="image/svg+xml" data="ToolGuide/ppt3.svg" style="width: 100%; height: 100%"></OBJECT>
-				</div>
-				<div class="resource" style="width: 100%; height: 100%">
-				<OBJECT type="image/svg+xml" data="ToolGuide/ppt4.svg" style="width: 100%; height: 100%"></OBJECT>
-				</div>
-				<div class="resource" style="width: 100%; height: 100%">
-				<OBJECT type="image/svg+xml" data="ToolGuide/ppt5.svg" style="width: 100%; height: 100%"></OBJECT>
-				</div>
-			</div>
-
-			
-<div id="div_left">
+			<div id="div_left">
 				<ui:fragment rendered="#{!userBean.loggedIn}">
 
 					<h2 class="page_header">
@@ -84,7 +39,7 @@
 							<p:message styleClass="error" for="password" display="icon"/>
 
 							<h:outputText value="" />
-							<h:commandButton styleClass="greenbutton" action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" 
+							<p:commandButton styleClass="greenbutton" action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" 
 								style="margin-top:5px;"/>
 							<h:outputText value="" />
 
@@ -94,25 +49,23 @@
 							<h:outputText value="#{msg.forgotten_password}" />
 						</h:outputLink>
 					</h:form>
-				<br/>
-				<br/>
-				
-				
+					<br/>
+					<br/>		
 				</ui:fragment>
 				
 				
-					<h2 class="page_header">
-						#{msg.presentation_guide}
-					</h2>
-					
-						<div class="presentation_guide">
-						<h:outputLink onclick="lightbox_open(); return false;">
-							
-								<h:graphicImage value="ToolGuide/ppt_icon1.png"  height="50%" width="100%" alt=""></h:graphicImage>
-						</h:outputLink>	
-							<!-- <BUTTON onclick="lightbox_open();" style="width:50px; height: 40px; border: none;  background-color:rgba(222, 222, 222, 0);"><img src="ToolGuide/ppt_icon1.png" height="150%" width="150%"></img></BUTTON> -->
-						</div>
+				<h2 class="page_header">
+					#{msg.presentation_guide}
+				</h2>				
 				
+				<div class="video_guide grey_border" onclick="lightbox_open(); return false;"></div>
+				<!-- 
+				<div>
+					<h:outputLink onclick="lightbox_open(); return false;">							
+						<h:graphicImage value="ToolGuide/ppt_icon1.png"  height="50%" width="100%" alt=""></h:graphicImage>
+					</h:outputLink>	
+				</div>	
+				 -->
 			</div>
 		
 		
@@ -207,6 +160,37 @@
 				<h:outputText value="learnweb-support@l3s.de"/>
 			</a>
 		</div>
+
+		<div id="lightbox">
+			<div id="lightbox_background" onclick="lightbox_close();"></div>
+
+			<div id="lightbox_container">
+				<div id="lightbox_content">
+					<div id="lightbox_navigate_left" onclick="lightbox_prev();"></div>
+					<div id="lightbox_navigate_right" onclick="lightbox_next();"></div>
+				</div>
+			</div>
+		</div>
+
+
+		<div id="gallery">
+			<div class="resource">
+				<object type="image/svg+xml" data="../resources/frontpage/toolGuide/ppt1.svg" />
+			</div>
+			<div class="resource">
+				<object type="image/svg+xml" data="../resources/frontpage/toolGuide/ppt2.svg" />
+			</div>
+			<div class="resource">
+				<object type="image/svg+xml" data="../resources/frontpage/toolGuide/ppt3.svg" />
+			</div>
+			<div class="resource">
+				<object type="image/svg+xml" data="../resources/frontpage/toolGuide/ppt4.svg" />
+			</div>
+			<div class="resource">
+				<object type="image/svg+xml" data="../resources/frontpage/toolGuide/ppt5.svg" />
+			</div>
+			#{msg.searchHelp}
+		</div>		
 	</ui:define>
 
 </ui:composition>

@@ -8,18 +8,7 @@
 	margin-bottom:0px;
 	margin-top:10px;
 }
-.members_panel{
-	width:140px;
-	height:160px;
-	margin-bottom:4px;
-	position:relative;
-}
-.members_panel_small{
-	width:122px;
-	height:145px;
-	margin-bottom:4px;
-	position:relative;
-}
+
 .members_panelgrid{
 	position: relative;
 	float:left;
@@ -28,6 +17,7 @@
 	width:130px;
 	height:130px;
 	margin-bottom:10px;
+	transition: box-shadow 0.3s;
 }
 
 .members_panelgrid > .member_star {

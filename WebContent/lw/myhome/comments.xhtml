@@ -32,8 +32,9 @@
 							<f:facet name="header">
 								#{msg.resource}
 							</f:facet>
-							<h:outputLink value="resource.jsf">
+							<h:outputLink value="myhome/resources.jsf">
 								<f:param name="resource_id" value="#{comment.resource.id}" />
+								<f:param name="group_id" value="#{comment.resource.groupId}" />
 								<h:outputText value="#{comment.resource.title}" escape="false" />
 							</h:outputLink>
 						</p:column>

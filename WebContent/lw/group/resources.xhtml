@@ -23,16 +23,14 @@
 		<ui:define name="center_layout">
 	
 			<div class="center-header" id="group_header">
-				<span id="green-header">
+				<h2>
 					#{msg.resources}
-				</span> 
-				<span id="of_group">
+				</h2> 
+				<span class="header_detail">
 					#{msg.of} 
-				</span>
-				<span id="group_name">
 					#{groupDetailBean.group.title}
-				</span>
-				(#{groupDetailBean.group.resourcesCount} #{msg.resources})				
+					(#{groupDetailBean.group.resourcesCount} #{msg.resources})	
+				</span>			
 				<h:form id="center_header_form">
 				
 					<p:menuButton value="#{msg.upload_resource}" rendered="#{groupDetailBean.member and !groupDetailBean.group.restrictionOnlyLeaderCanAddResources}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton">
@@ -111,7 +109,7 @@
 							<h:inputText value="#{groupDetailBean.query}" id="input_query_form" />
 
 							<p:commandButton actionListener="${groupDetailBean.onQueryChange()}" partialSubmit="true" 
-								oncomplete="resetCenterPaneHeight(); $('#center_pane .content').scrollTop(0);" process="@form" 
+								oncomplete="$('#center_pane .content').scrollTop(0);" process="@form" 
 								update=":datagrid :paginator" value="" id="group_resource_searchbutton"/>
 						</h:form>
 					</li>
@@ -150,39 +148,22 @@
 							</li>
 						</h:panelGroup>
 					</ul>
-				</h:form>
-				
-				<script type="text/javascript">
-					function resetCenterPaneHeight()
-					{/*
-						console.log(
-						$('#center_pane').height(),
-						$('#group_header').outerHeight(true),
-						$('#paginator').outerHeight(true),
-						$('#center_pane > .ui-layout-unit-content').height());
-						var height = $('#center_pane').height() - $('#group_header').outerHeight(true) - $('#paginator').outerHeight(true);
-						$('#center_pane > .ui-layout-unit-content').height(height);
-						*/
-					}
-				
-					$("#header_query_form").css("display","none");
-					
-					$("#search_group_resource").click(function () {
-				          $("#header_query_form").animate({ width: "toggle" }, 500, 'swing', function() {
-				        	 // resetCenterPaneHeight();
-					          //console.log('fertig');
-					        });
-				          $("#input_query_form").focus();
-				          $("#search_group_resource").hide();
-				    });
-					
-					updateCarousel();
-				</script>				
+				</h:form>							
 			</div>			
 			<br />
 	
 			<script type="text/javascript">
 			/* <!-- */
+				$("#header_query_form").css("display","none");
+				
+				$("#search_group_resource").click(function () {
+			          $("#header_query_form").animate({ width: "toggle" }, 500, 'swing');
+			          $("#input_query_form").focus();
+			          $("#search_group_resource").hide();
+			    });
+				
+				updateCarousel();
+					
 				$("#center_pane").prepend($("#group_header"));
 			/* --> */
 			</script>
@@ -321,8 +302,7 @@
 					            </div> 					            
 						    </p:commandLink>
 					    </h:form>
-				    </ui:repeat>
-				    
+				    </ui:repeat>				    
 			    </h:panelGroup>
 							
 				<h:panelGroup id="resourceGrid" layout="block" pt:data-selectedResourceId="#{groupDetailBean.selectedResource.id}">				
@@ -333,7 +313,7 @@
 					        	<f:setPropertyActionListener target="#{groupDetailBean.clickedResource}" value="#{result.resource}" />
 					        	<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{result.resource}" />
 	       	
-						        	<h:outputText value="#{result.title}" escape="false" styleClass="resource_short_title" /> 
+						        	<h:outputText value="#{result.title}" escape="false" styleClass="resource_short_title" title="#{result.title}" /> 
 						             
 						            <h:panelGrid styleClass="resource_panelgrid" columns="1">
 						            	<p:row>

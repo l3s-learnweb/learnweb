@@ -31,23 +31,14 @@
 					</f:facet>
 					<ui:repeat var="res" value="#{tag.resources}">
 						<div class="float-left" style="width:50%;padding:1px 0;">
-							<h:outputLink value="resource.jsf">
+							<h:outputLink value="myhome/resources.jsf">
 								<f:param name="resource_id" value="#{res.id}" />
+								<f:param name="group_id" value="#{res.groupId}" />
 								<h:outputText value="#{res.title}" escape="false" /> 
 							</h:outputLink>
 						</div>
 					</ui:repeat>
 				</p:column>
-			<!-- don't work yet, create a funktion date
-				<p:column>
-					<f:facet name="header">
-						#{msg.date}
-					</f:facet>	
-					<h:outputText value="#{tag.date}" >
-						<f:convertDateTime dateStyle="default" type="both" />								
-					</h:outputText>
-				</p:column>
-			-->
 			</p:dataTable>
 		</h:form>
 

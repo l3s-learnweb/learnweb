@@ -1,15 +1,3 @@
-/*-----easy solution TODO improve late -------*/
-.resource_panel:HOVER .resource_short_title
-{
-	white-space: normal;
-}
-.resource_panel {
-	overflow: hidden;
-}
-
-
-/*------------*/
-
 @import url("http://fonts.googleapis.com/css?family=Lato:400,400italic,700,700italic|Source+Code+Pro:400");
 
 * { 
@@ -67,9 +55,7 @@ iframe { border:none }
 	font-family:"Lato", sans-serif;
 	width:100%;
 	height:4.6rem;
-	
-	/*  just testing: */
-	box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.1);	
+	box-shadow: 0px 5px 8px rgba(0, 0, 0, 0.1);	
 }
 #searchform {
 	height:100%; 
@@ -517,10 +503,10 @@ iframe { border:none }
 }
 
 /* center header */
-.center-header{
+.center-header {
 	background: none;
 	background-color: #eee !important;
-	border: 1px solid #ddd !important;
+	border: 1px solid #ccc !important;
 	border-radius: 0px !important;
 	margin-bottom: 5px;
 	padding: 10px; 
@@ -543,7 +529,7 @@ iframe { border:none }
 	list-style: outside none none;
 	margin: 10px -10px -10px;
 	padding: 0px;
-	border-top: 1px solid #DDD !important;
+	border-top: 1px solid #ccc !important;
 	background-color: rgb(230, 230, 230);
 	clear: both;
 }
@@ -552,13 +538,15 @@ iframe { border:none }
     display:block;
     clear: both;
 }
-.center-header > span, .page_header span{
-	font-size: 20px;
+.center-header > h2, 
+.page_header span{
+	font-size: 2rem;
 	font-weight: 100;
 	color: #489a83;
+	display:inline;
 }
 .page_header{
-	border:1px solid #ddd;
+	border:1px solid #ccc;
 	background-color:#eee;
 	margin-bottom:5px;
 	padding:10px !important;
@@ -566,13 +554,11 @@ iframe { border:none }
 	font-weight:bold; should nowhere be necessary TODO check
 	*/
 }
-.center-header > span .group_owner, #of_group, #group_name{
-	font-size:1.2rem !important;
-	color:#4f4f4f !important;
+.header_detail {
+	font-size:1.2rem;
+	color:#4f4f4f;
 	font-weight:bold;
 }
-
-
 
 form#center_header_form { float:right; }
 .resource_button {
@@ -580,6 +566,11 @@ form#center_header_form { float:right; }
 	position:relative;
 	top:-3px;
 	right:-5px;
+}
+
+h3.group_link {
+	font-size:1.2rem;
+	margin-top:0.4rem;
 }
 
 .resource_button > button {
@@ -724,16 +715,39 @@ form#center_header_form { float:right; }
 
 
 /* general settings */
-a{text-decoration:none;}
-a:hover{text-decoration:underline;}
+
+a { text-decoration:none; }
+a:hover{ text-decoration:underline; }
+a img { border: none; }
+
+h1, h2, h3 {
+	margin-top: 0;
+}
+
+h1 {
+	font-size: 2rem;
+	margin-bottom:1rem;
+}
+
+h2 {
+	font-size: 2rem;
+	margin-bottom:0.8rem;
+}
+
+h3 {
+	font-size: 1.4rem;
+}
+
 .small_page {
 	max-width:80rem;
 	padding:1rem;
-	margin-top:1rem;
+	margin-top:4rem;
 	margin-left:auto;
 	margin-right:auto;
 	color:#4f4f4f;
 }
+
+
 .small_page a{
 	color:#4f4f4f;
 }
@@ -758,6 +772,7 @@ a.graybutton {
 	cursor:pointer;
 	font-size:14px !important;
 	border-radius:2px !important;
+	transition: all 0.3s;
 }
 
 .greenbutton .ui-button-text,
@@ -765,6 +780,7 @@ a.graybutton {
 	padding:0;
 }
 
+/* TODO clean up these rules */
 .greenbutton > button:hover,
 .greenbutton > button:focus,
 .graybutton > button:hover,
@@ -822,7 +838,6 @@ a.graybutton:focus {
 .error {
 	color:red;
 	font-weight:bold;
-/*	padding:2rem; */
 }
 
 .align-left {text-align:left;}
@@ -834,12 +849,9 @@ a.graybutton:focus {
 
 .nowrap {white-space:nowrap;}
 
-h1 { margin-bottom:1rem; }
-h2 { margin-bottom:0.8rem; }
-
 .grey_border{
-	border:1px solid #ccc;
-	padding:0.5rem 1rem;
+	border: 1px solid #ccc;
+	padding: 1rem;
 }
 
 .one-column {	
@@ -861,7 +873,6 @@ h2 { margin-bottom:0.8rem; }
 	color:#489a83;
 }
 
-
 .optionIcon{
 	text-decoration:none;
 	display:inline-block;
@@ -870,9 +881,17 @@ h2 { margin-bottom:0.8rem; }
 	
 /*paging-template*/
 #paging_buttons { 
-	padding:5px 5px 10px 0px; 
+	padding:0px 8px 10px 0px;
 	text-align:center;
 }
+#paging_buttons > .grey_border {
+	padding: 0px;
+	background-color: rgb(238, 238, 238);
+	position: relative;
+	z-index: 10;
+	box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.1), 0px -2px 4px -1px rgba(255, 250, 250, 0.8);
+}
+
 .pagebutton{
 	border:none !important;
 	background:none !important;
@@ -899,26 +918,35 @@ h2 { margin-bottom:0.8rem; }
 	background-position:-96px -0px !important;
 }
 
-/*lightbox*/
-#lightbox_container { box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.8); }
-
 /*group_overview*/
 #other_groups{
 	margin-bottom:20px;
 }
 
-/*group_header*/
-#group_header ul{
-	box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.1);
+.ui-datatable,
+.ui-panel,
+.page_header,
+.center-header,
+.grey_border,
+#message {
+	box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1);
 }
-#group_header{
-	margin-bottom:1rem;
-	margin-right: 7px;
+#group_header {
+	margin-bottom: 0px;
+	margin-right: 8px;
+	box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(255,250,250,0.8);
+	z-index: 10;
+	position: relative;
 }
+
+#group_header + .ui-layout-unit-content .content {
+	padding-top: 0.8rem;
+}
+
 
 hr {
 	border: none;
-	border-top: 1px solid #DDD !important;
+	border-top: 1px solid #ccc !important;
 }
 
 /*group resource search*/
@@ -942,25 +970,13 @@ hr {
 .ui-widget-content a{text-decoration:none;}
 .ui-corner-all{border-radius:0px;}
 
-/*
-span.ui-autocomplete{border:1px solid transparent !important;}
-.ui-autocomplete-panel{border-radius:0px !important;}
-.ui-autocomplete-row td{border:0px solid transparent !important;}
-.ui-autocomplete-row.ui-state-highlight{
-	border:0px !important;
-	background:#dedede !important;
-	color:black;
-	text-shadow:0px 0px 0px #fff;
-}
-.ui-autocomplete-panel{border:0px !important;}
-*/
 /* for the new auto completion */
 .ui-autocomplete {
     position: absolute;
     top: 0px;
     left: 0px;
     cursor: default;
-    border: 1px solid #DDD;
+    border: 1px solid #ccc;
 	background: #FFF none repeat scroll 0% 0%;
 	color: #333;
 	list-style: outside none none;
@@ -1125,7 +1141,6 @@ button{
     -moz-filter:grayscale(100%);
     -ms-filter:grayscale(100%); 
     -o-filter:grayscale(100%); /* Not yet supported in Gecko, Opera or IE */ 
-    filter:url(../../resources/css/grayscale.svg#desaturate); /* Gecko */
     filter:url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale"); /* Firefox 10+, Firefox on Android */
     filter:gray; /* IE */
     -webkit-filter:grayscale(1); /* Old WebKit */
@@ -1152,6 +1167,7 @@ button{
 	border:none;
 	border-right:1px solid rgb(210,210,210);
 }
+#center_pane .content { padding:0 8px 0 1px; }
 
 .click_message{
 	text-align:center;
@@ -1419,11 +1435,6 @@ div#presentation_preview {
 	margin-top: 1px;
 }
 
-.resource_panel:HOVER, .members_panel:HOVER{
-	cursor:pointer;
-	border-color:#666;
-}
-
 .resource_summary{
 	color:#666;
 	font-size:9px;
@@ -1466,7 +1477,8 @@ div#presentation_preview {
 	margin-right:-moz-calc(33% - 195px);  
     margin-right:-webkit-calc(33% - 195px);
 	padding:6px 4px;
-	box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.05);
+	overflow: hidden;	
+	transition: all 0.3s;
 }
 
 .resource_panel.resource_folder {
@@ -1484,6 +1496,12 @@ div#presentation_preview {
 
 .resource_panel.resource_folder:hover {
 	background: #E6E6E6;
+}
+
+.resource_panel:HOVER, .members_panelgrid:HOVER{
+	cursor:pointer;
+	box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.1);
+	border: 1px solid #bfbfbf;
 }
 
 .resource_panel.resource_folder.ui-state-highlight {
@@ -1661,14 +1679,14 @@ div#presentation_preview {
 }
 
 .northunit{border:none;}
-
+ 
 /* for the new auto completion */
 .ui-autocomplete {
     position: absolute;
     top: 0px;
     left: 0px;
     cursor: default;
-    border: 1px solid #DDD;
+    border: 1px solid #ccc;
 	background: #FFF none repeat scroll 0% 0%;
 	color: #333;
 	list-style: outside none none;
@@ -1676,6 +1694,7 @@ div#presentation_preview {
 	margin: 0px;
 	outline: medium none;
 	z-index: 100;
+	box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
 }
 .ui-autocomplete .ui-state-focus {
 	box-shadow: none;
@@ -1693,6 +1712,7 @@ div#presentation_preview {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow:hidden;
+    font-size:1.5rem;
 }
 
 .tooltipster-custom-theme {
@@ -1718,14 +1738,8 @@ div#presentation_preview {
 	
 }
 
+.tooltipster-custom-d,
 .tooltipster-custom-c {
-	border-radius: 10px;
-	background: #489a83;
-	border-color: #a8a8a8;
-	box-shadow: 1px 1px 5px #888888;
-}
-
-.tooltipster-custom-d {
 	border-radius: 10px;
 	background: #489a83;
 	border-color: #a8a8a8;

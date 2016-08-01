@@ -5,14 +5,14 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core">
 	
-	<ui:param name="pageTitle" value="Error" />
+	<ui:param name="pageTitle" value="#{msg.error}" />
 	<ui:param name="smallPage" value="true" />
 	<ui:param name="disableGrowl" value="true" />
 	
 	<ui:define name="center_layout">
 		<div class="error" style="font-size:1.4rem">#{msg.reload_page}</div>	        
         <br/><br/>
-        <a href="user/login.jsf">Reload</a>
+        <a href="user/login.jsf">#{msg.reload}</a>
 	</ui:define>
 
 </ui:composition>

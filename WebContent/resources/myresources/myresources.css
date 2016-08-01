@@ -1,4 +1,4 @@
-.green_header { margin-right: 0.5rem; }
+.center-header > h2 { margin-right: 1rem; }
 
 .ui-icon-mygrid {
 	background-image: url("img/Thumbnails.png") !important;
@@ -57,6 +57,11 @@ a.more_resources_link:hover { text-decoration: none; }
 }
 
 .myresource-listview .resource_panel { display:none; }
+
+.myresource-listview  {
+	padding-right: 7px;
+	display: block;
+}
 
 #foldergrid {
 	padding-bottom: 1rem;

@@ -13,20 +13,25 @@
 	
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="disableGrowl" value="true" />
-	<ui:param name="pageTitle" value="#{forumPostBean.topic.title}" escape="false" />
+	<ui:param name="pageTitle" value="#{msg.forum} - #{msg.edit}" escape="false" />
 
-	<ui:define name="center_layout">
+	<ui:define name="center_layout">	
 	
-	
-	<h:outputStylesheet library="forum" name="forum.css" />
+		<h:outputStylesheet library="forum" name="forum.css" />			
 		
-	<ui:fragment rendered="#{true}">
-			<div class="page_header" id="reply">
-				<span>
-					#{msg.edit}
-				</span>
-			</div>
-				
+		<div id="group_header" class="center-header">
+			<h2>
+				#{msg.edit}
+			</h2>
+		</div>
+		
+		<script type="text/javascript">
+		/* <!-- */
+			$("#center_pane").prepend($("#group_header"));
+		/* --> */
+		</script>	
+		
+		<ui:fragment rendered="#{forumEditBean.canEditPost()}">		
 			<div class="grey_border">
 				<h:form>
 					<table id="answer_table">
@@ -58,9 +63,8 @@
 						</tr>
 						<tr>
 							<td colspan="3">
-								<h:commandLink id="save" action="#{forumEditBean.onSavePost}" value="#{msg.save}"   styleClass="greenbutton save_button" 
-									 validateClient="true" >									
-								</h:commandLink>
+								<p:commandButton id="save" action="#{forumEditBean.onSavePost}" value="#{msg.save}" styleClass="greenbutton save_button"
+									update="@form" ajax="true" validateClient="true" />	
 							</td>
 						</tr>
 					</table>

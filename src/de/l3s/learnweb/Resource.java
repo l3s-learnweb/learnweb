@@ -1065,9 +1065,10 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 
     public void setSource(String source)
     {
+	/*
 	if(null == source || source.length() == 0)
 	    log.info("Resource: " + id + "; source set to null");
-
+	*/
 	this.source = source;
     }
 

@@ -68,14 +68,14 @@
 	#myresources{
 		display:none;
 	}
-	#group_header #green-header{
+	#group_header h2 {
 		font-size:1.2rem;
 		font-weight:bold;
 	}
 }
 
 @media screen and (max-width:1006px){
-	#group_header #green-header, #of_group{
+	#group_header h2, .header_detail{
 		display:none;
 	}
 	#group_name{

@@ -3,6 +3,7 @@ package de.l3s.learnwebBeans;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.sql.SQLException;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -41,9 +42,9 @@ public class DownloadServlet extends HttpServlet
     private final String urlPattern; // as defined in web.xml
     private final FileManager fileManager;
 
-    public DownloadServlet()
+    public DownloadServlet() throws ClassNotFoundException, SQLException
     {
-	this.learnweb = Learnweb.getInstance();
+	this.learnweb = Learnweb.getInstanceRaw();
 	this.urlPattern = learnweb.getProperties().getProperty("FILE_MANAGER_URL_PATTERN");
 	this.fileManager = learnweb.getFileManager();
     }

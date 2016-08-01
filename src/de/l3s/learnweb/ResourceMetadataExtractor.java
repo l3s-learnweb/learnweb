@@ -57,7 +57,7 @@ public class ResourceMetadataExtractor
     {
 	if(fileinfo == null)
 	{
-	    fileinfo = new FileInspector().inspect(FileInspector.openStream(resource.getUrl()), "unknown");
+	    fileinfo = new FileInspector(Learnweb.getInstance()).inspect(FileInspector.openStream(resource.getUrl()), "unknown");
 	}
 
 	return fileinfo;
@@ -307,7 +307,7 @@ public class ResourceMetadataExtractor
 	}
     }
 
-    public void extractFileInfo()
+    private void extractFileInfo()
     {
 	try
 	{
