@@ -129,6 +129,17 @@
 	</listener>
 
 	<servlet>
+		<servlet-name>Push Servlet</servlet-name>
+		<servlet-class>org.primefaces.push.PushServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+		<async-supported>true</async-supported>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>Push Servlet</servlet-name>
+		<url-pattern>/primepush/*</url-pattern>
+	</servlet-mapping>  
+	
+	<servlet>
 		<description>Simple Servlet for Streaming Files to the Clients Browser</description>
 		<display-name>Simple DownloadServlet</display-name>
 		<servlet-name>downloadServlet</servlet-name>
