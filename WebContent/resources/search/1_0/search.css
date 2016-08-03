@@ -734,6 +734,6 @@ img.smallImage { cursor:pointer; margin:4px; }
 	height: 100%;
 }
 
-.vCarousel-container {
+.filter-sub-bar {
 	box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.1);
 }

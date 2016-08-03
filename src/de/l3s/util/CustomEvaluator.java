@@ -9,7 +9,7 @@ import de.l3s.learnweb.Learnweb;
 public class CustomEvaluator implements TriggeringEventEvaluator
 {
 
-    private long cycleSeconds = 360000L; // Sending a group of errors if the last check was more than an hour ago
+    private long cycleSeconds = 3600000L; // Sending a group of errors if the last check was more than an hour ago
     private long lastCheck = 0L;
     private Boolean isRunningOnLocalhost = null;
 

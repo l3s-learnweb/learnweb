@@ -171,7 +171,6 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 
     public void preRenderView() throws ValidatorException, SQLException
     {
-
 	if(wizardTitle == null)
 	    wizardTitle = getFacesContext().getExternalContext().getRequestParameterMap().get("wizard");
 

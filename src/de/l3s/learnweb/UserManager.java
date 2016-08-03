@@ -268,7 +268,7 @@ public class UserManager
 
 	try
 	{
-	    // register a createUser at interweb
+	    // register a User at interweb
 	    iwToken = learnweb.getInterweb().registerUser(username, password, course.getDefaultInterwebUsername(), course.getDefaultInterwebPassword());
 
 	    int counter = 2;
@@ -279,7 +279,7 @@ public class UserManager
 	}
 	catch(Exception e)
 	{
-	    log.error("Could not create interweb account for user: " + username, e);
+	    log.warn("Could not create interweb account for user: " + username);
 	}
 
 	User user = new User();

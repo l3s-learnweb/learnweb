@@ -27,8 +27,10 @@
 	
 	<factory>
 		<exception-handler-factory>
-			org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory
+			de.l3s.learnweb.beans.LearnwebExceptionHandlerFactory
 		</exception-handler-factory>
 	</factory>
-	
+	<!-- org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory
+	de.l3s.learnweb.beans.CustomExceptionHandlerFactory 
+	 -->
 </faces-config>
