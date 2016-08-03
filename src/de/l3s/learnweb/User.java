@@ -765,7 +765,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public int getActiveCourseId() throws SQLException
     {
-	if(activeCourseId == 0) // the course id wasn't set yet
+	if(activeCourseId == 0 && getCourses().size() > 0) // the course id wasn't set yet ; size can be 0 when the user was just registered
 	{
 	    activeCourseId = getCourses().get(0).getId();
 	}

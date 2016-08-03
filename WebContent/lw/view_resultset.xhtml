@@ -44,8 +44,9 @@
 	</ui:define>
 	
 	<ui:define name="center_layout">
-		<h:outputStylesheet name="search/search6.css"  />		
-		<h:outputScript name="search/search3.js" target="head"/>
+		<h:outputStylesheet library="lightbox" name="lightbox.css"  />		
+		<h:outputStylesheet library="search" name="search.css"  />		
+		<h:outputScript library="search" name="search.js" target="head"/>
 		
 		<script type="text/javascript">
 			var view = '#{resultSetBean.resultSetView}';

@@ -11,9 +11,6 @@
 	<h:head>	
 		<title><h:outputText value="#{pageTitle}" escape="false" /> - Learnweb</title>
 		<link rel="shortcut icon" href="#{learnwebBean.baseUrl}../resources/icon/favicon.ico" />
-<!-- 
-		<link type="text/css" rel="stylesheet" href="#{learnwebBean.baseUrl}../resources/css/default.css" />
-		 -->
         <link rel="stylesheet" type="text/css" href="#{learnwebBean.baseUrl}../resources/css/nanoscroller.css" />
 		<h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
 		<h:outputScript library="main-template" name="default2.js"/>
@@ -42,7 +39,11 @@
 				
 					function scroller()
 					{
-						$(".nano").nanoScroller();
+						try {
+							$(".nano").nanoScroller();
+						} catch(e) {
+							console.log(e);
+						}						
 					}
 					
 					$(document).ready(function()

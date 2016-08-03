@@ -96,16 +96,6 @@ public class DownloadServlet extends HttpServlet
 		response.setDateHeader("Expires", System.currentTimeMillis() + CACHE_DURATION_IN_MS);
 		return;
 	    }
-	    /*
-	        if (ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified) {
-	            response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-	            response.setHeader("ETag", eTag); // Required in 304.
-	            response.setDateHeader("Expires", expires); // Postpone cache with 1 week.
-	            return;
-	        }
-	    */
-	    prepareResponseFor(response, file);
-	    streamFileTo(response, file);
 
 	    if(file.isDownloadLogActivated())
 	    {
@@ -119,6 +109,16 @@ public class DownloadServlet extends HttpServlet
 		if(null != user)
 		    Learnweb.getInstance().log(user, Action.downloading, 0, file.getResourceId(), Integer.toString(file.getId()), session.getId(), (int) (System.currentTimeMillis() - startTime));
 	    }
+	    /*
+	        if (ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified) {
+	            response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+	            response.setHeader("ETag", eTag); // Required in 304.
+	            response.setDateHeader("Expires", expires); // Postpone cache with 1 week.
+	            return;
+	        }
+	    */
+	    prepareResponseFor(response, file);
+	    streamFileTo(response, file);
 	}
 	catch(Exception e)
 	{

@@ -5,9 +5,9 @@
 	display:inline-block;
 	width:1.6rem;
 	height:1.6rem;
-	background-image:url(icon/loading.gif);
 	margin-bottom: -0.4rem;
 	margin-left: 0.4rem;
+	background-image:url('#{resource['search:icon/loading.gif']}');
 }
 #search_loading_more_results img {
 	vertical-align:bottom;
@@ -383,7 +383,7 @@ img.smallImage { cursor:pointer; margin:4px; }
 	display:none;
 	background-color: white;
 	border: 1px solid grey;
-	box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+	box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.2);
 	padding: 8px;
 	z-index:10;
 }
@@ -617,57 +617,57 @@ img.smallImage { cursor:pointer; margin:4px; }
 
 .group-menu-header .source_bing,
 .group-menu-block.source_bing .group-menu-title {
-	background-image: url('../icon/services/bing.gif');
+	background-image: url('#{resource['icon:services/bing.gif']}');
 }
 
 .group-menu-header .source_flickr,
 .group-menu-block.source_flickr .group-menu-title {
-	background-image: url('../icon/services/flickr.png');
+	background-image: url('#{resource['icon:services/flickr.png']}');
 }
 
 .group-menu-header .source_youtube,
 .group-menu-block.source_youtube .group-menu-title {
-	background-image: url('../icon/services/youtube.png');
+	background-image: url('#{resource['icon:services/youtube.png']}');
 }
 
 .group-menu-header .source_vimeo,
 .group-menu-block.source_vimeo .group-menu-title {
-	background-image: url('../icon/services/vimeo.gif');
+	background-image: url('#{resource['icon:services/vimeo.gif']}');
 }
 
 .group-menu-header .source_ipernity,
 .group-menu-block.source_ipernity .group-menu-title {
-	background-image: url('../icon/services/ipernity.gif');
+	background-image: url('#{resource['icon:services/ipernity.gif']}');
 }
 
 .group-menu-header .source_ted,
 .group-menu-block.source_ted .group-menu-title {
-	background-image: url('../icon/services/ted.gif');
+	background-image: url('#{resource['icon:services/ted.gif']}');
 }
 
 .group-menu-header .source_tedx,
 .group-menu-block.source_tedx .group-menu-title {
-	background-image: url('../icon/services/tedx.gif');
+	background-image: url('#{resource['icon:services/tedx.gif']}');
 }
 
 .group-menu-header .source_loro,
 .group-menu-block.source_loro .group-menu-title {
-	background-image: url('../icon/services/loro.gif');
+	background-image: url('#{resource['icon:services/loro.gif']}');
 }
 
 .group-menu-header .source_yovisto,
 .group-menu-block.source_yovisto .group-menu-title {
-	background-image: url('../icon/services/yovisto.gif');
+	background-image: url('#{resource['icon:services/yovisto.gif']}');
 }
 
 .group-menu-header .source_learnweb,
 .group-menu-block.source_learnweb .group-menu-title {
-	background-image: url('../icon/services/learnweb.gif');
+	background-image: url('#{resource['icon:services/learnweb.gif']}');
 }
 
 .group-menu-header .source_archiveit,
 .group-menu-block.source_archiveit .group-menu-title {
-	background-image: url('../icon/services/archiveit.gif');
+	background-image: url('#{resource['icon:services/archiveit.gif']}');
 }
 
 .group-menu-bar .group-menu-content {
@@ -732,4 +732,8 @@ img.smallImage { cursor:pointer; margin:4px; }
 
 .group-menu-bar .group-menu-content .image-wrapper img {
 	height: 100%;
+}
+
+.vCarousel-container {
+	box-shadow: 1px 1px 5px 5px rgba(0, 0, 0, 0.1);
 }

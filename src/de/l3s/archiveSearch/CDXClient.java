@@ -122,11 +122,11 @@ public class CDXClient
 	{
 	    if(e.getMessage().contains("HTTP response code: 403")) // blocked by robots
 	    {
-		log.error("wayback api error:" + e.getMessage());
+		//log.error("wayback api error:" + e.getMessage());
 		return null;
 	    }
 
-	    log.error("wayback api error: " + e.getMessage());
+	    log.warn("wayback api error: " + e.getMessage());
 	    waybackAPIerrors++;
 	}
 

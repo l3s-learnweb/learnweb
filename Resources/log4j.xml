@@ -14,7 +14,7 @@
 	    <param name="append" value="false" />
 	    <param name="maxFileSize" value="300MB" />
 	    <param name="maxBackupIndex" value="10" />
-	    <param name="file" value="${catalina.home}/logs/learnweb2.5.5.log" />
+	    <param name="file" value="${catalina.home}/logs/learnweb.log" />
 	    <layout class="org.apache.log4j.PatternLayout">
 		<param name="ConversionPattern" 
 			value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />
