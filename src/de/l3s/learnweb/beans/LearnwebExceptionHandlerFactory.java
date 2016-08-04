@@ -5,6 +5,12 @@ import javax.faces.context.ExceptionHandlerFactory;
 
 import org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory;
 
+/**
+ * Used to log errors which are redirect to /lw/error.jsf
+ * 
+ * @author Kemkes
+ *
+ */
 public class LearnwebExceptionHandlerFactory extends PrimeExceptionHandlerFactory
 {
     private ExceptionHandlerFactory parent;

@@ -9,6 +9,12 @@ import javax.faces.event.ExceptionQueuedEvent;
 import org.apache.log4j.Logger;
 import org.primefaces.application.exceptionhandler.PrimeExceptionHandler;
 
+/**
+ * Used to log errors which are redirect to /lw/error.jsf
+ * 
+ * @author Kemkes
+ *
+ */
 public class LearnwebExceptionHandler extends PrimeExceptionHandler
 {
     private static final Logger log = Logger.getLogger(LearnwebExceptionHandler.class.getCanonicalName());
@@ -29,24 +35,4 @@ public class LearnwebExceptionHandler extends PrimeExceptionHandler
 	}
 	super.handle();
     }
-    /*
-    @Override
-    public void handle() throws FacesException
-    {
-    final Iterator<ExceptionQueuedEvent> i = getUnhandledExceptionQueuedEvents().iterator();
-    while(i.hasNext())
-    {
-        ExceptionQueuedEvent event = i.next();
-        ExceptionQueuedEventContext context = (ExceptionQueuedEventContext) event.getSource();
-    
-        // get the exception from context
-        Throwable t = context.getException();
-    
-        log.fatal("fatal unhandled error", t);
-    
-    }
-    //parent hanle
-    getWrapped().handle();
-    }*/
-
 }

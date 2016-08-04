@@ -6,40 +6,45 @@
 	xmlns:f="http://java.sun.com/jsf/core" 
 	xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="#{msg.users}"/>
+	<ui:param name="loginRequired" value="false" />
+	<ui:param name="pageTitle" value="Factsheet" />
 
 	<ui:define name="center_layout">
-		<div class="page_header" style="margin:5px;">
-			<span>
-				#{msg.users}
-			</span>
+		<div class="page_header" style="margin: 5px;">
+			<span>Facts</span>
 		</div>
 
-<h:form>
-<h:panelGrid columns="3">
+		<h:form>
+			<h:panelGrid columns="2">
 
-	<p:selectOneMenu id="Search"  editable="true" value="#{factSheetBean.search}" >
-		<f:selectItem itemLabel="Select One" itemValue="" />
-		<f:selectItem itemLabel="Barack Obama" itemValue="Barack Obama" />
-		<f:selectItem itemLabel="Lion" itemValue="Lion" />
-		<f:selectItem itemLabel="Henry the Lion" itemValue="Henry the Lion" />
-		<f:selectItem itemLabel="Cloud Strife" itemValue="Cloud Strife" />
-        <f:selectItem itemLabel="Paris" itemValue="Paris" />
-        <f:selectItem itemLabel="Pokemon" itemValue="Pokemon" />
-        <f:selectItem itemLabel="Nil" itemValue="Nil" />
-        <f:selectItem itemLabel="Mars" itemValue="Mars" />
-        <f:selectItem itemLabel="Red Bull" itemValue="Red Bull" />
-        <f:selectItem itemLabel="BMW" itemValue="BMW" />
-        
-        
-  	</p:selectOneMenu>
-  	
-  	<p:commandButton value="Submit" update="output"/>
-  	
-  	<h:outputText id="output" value="#{factSheetBean.search}" />
-  	
-</h:panelGrid>
+				<p:selectOneMenu id="Search" editable="true" value="#{factSheetBean.search}">
+					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItem itemLabel="Barack Obama" itemValue="Q76" />
+					<f:selectItem itemLabel="Donald Trump" itemValue="Q22686" />
+					<f:selectItem itemLabel="Lion" itemValue="Lion" />
+					<f:selectItem itemLabel="Henry the Lion" itemValue="Henry the Lion" />
+					<f:selectItem itemLabel="Cloud Strife" itemValue="Cloud Strife" />
+					<f:selectItem itemLabel="Paris" itemValue="Paris" />
+					<f:selectItem itemLabel="Pokemon" itemValue="Pokemon" />
+					<f:selectItem itemLabel="Nil" itemValue="Nil" />
+					<f:selectItem itemLabel="Mars" itemValue="Mars" />
+					<f:selectItem itemLabel="Red Bull" itemValue="Red Bull" />
+					<f:selectItem itemLabel="BMW" itemValue="BMW" />
+				</p:selectOneMenu>
+
+				<p:commandButton value="Submit" update="facts" action="#{factSheetBean.onClick}" />
+			</h:panelGrid>
 		</h:form>
+
+		<h:panelGroup id="facts">
+			<h:outputText value="#{factSheetBean.search}" />
+			
+			<ui:repeat var="fact" value="#{factSheetBean.facts}">
+				
+				<ui:decorate template="/templates/factsheet/fact.xhtml">
+					<ui:param name="fact" value="#{fact}" />
+				</ui:decorate>
+			</ui:repeat>
+		</h:panelGroup>
 	</ui:define>
 </ui:composition>
