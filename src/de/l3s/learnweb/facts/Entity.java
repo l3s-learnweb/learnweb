@@ -1,12 +1,16 @@
 package de.l3s.learnweb.facts;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-public class Entity
+public class Entity implements Serializable
 {
+    private static final long serialVersionUID = -540747321578066221L;
+
     private String wikiId;
     private String label;
+    private String title; // equal to the page title in Wikipedia    
     private String description;
     private String imageUrl;
     private Map<String, List<String>> wikiStats;
@@ -81,6 +85,16 @@ public class Entity
     public void setFacts(List<FactSheetEntry> facts)
     {
 	this.facts = facts;
+    }
+
+    public String getTitle()
+    {
+	return title;
+    }
+
+    public void setTitle(String title)
+    {
+	this.title = title;
     }
 
 }

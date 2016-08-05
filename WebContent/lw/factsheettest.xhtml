@@ -37,9 +37,26 @@
 		</h:form>
 
 		<h:panelGroup id="facts">
-			<h:outputText value="#{factSheetBean.search}" />
+			<h:panelGrid columns="2">
+				<h:outputText value="query" />
+				<h:outputText value="#{factSheetBean.search}" />
 			
-			<ui:repeat var="fact" value="#{factSheetBean.facts}">
+				<h:outputText value="label" />
+				<h:outputText value="#{factSheetBean.entity.label}" />
+				
+				<h:outputText value="description" />
+				<h:outputText value="#{factSheetBean.entity.description}" />
+				
+				<h:outputText value="wikiId" />
+				<h:outputText value="#{factSheetBean.entity.wikiId}" />
+				
+				<h:outputText value="image" />
+				<h:outputText value="#{factSheetBean.entity.imageUrl}" />
+				
+			
+			</h:panelGrid>
+			
+			<ui:repeat var="fact" value="#{factSheetBean.entity.facts}">
 				
 				<ui:decorate template="/templates/factsheet/fact.xhtml">
 					<ui:param name="fact" value="#{fact}" />
