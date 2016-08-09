@@ -7,27 +7,26 @@ $(document).ready(function(){
 		$(node).replaceWith(node.nodeValue);
 		}
 	});
-	
-	Tipped.create('.note', function() {
-        return {
-          title: $(this).data('title'),
-          content: $(this).data('content')
-        };
-      },{
-    	  containment:{selector:"#ted_transcript", padding:0},
-    	  maxWidth:300,
-    	  size:'x-small',
-    	  radius:5,
-    	  position:"bottom"
-    });
     
+	$('.note').tooltipster({
+		functionInit: function(origin, content) {
+	        if($(this).data('title'))
+	        	return $(this).data('title') + '<hr/>' + $(this).data('content').replace(new RegExp('&lt;br/&gt;','g'),'<br/>');
+	        else
+	        	return $(this).data('content').replace(new RegExp('&lt;br/&gt;','g'),'<br/>');
+	    },
+    	contentAsHTML: true,
+    	maxWidth: 300,
+    	position:'right',
+    	theme:'tooltipster-custom-theme'
+    });
+	
 	var selected_words = document.getElementsByClassName("note");
 	for(var i=0; i<selected_words.length; i++){
 		var selected_word = selected_words[i];
 		selected_word.onclick = function(){
 	        if (window.confirm("Delete this selection (" + $(this).text() + ")?")) {
 	        	saveTranscriptLog([{name:'word', value:$(this).text()},{name:'user_annotation', value:$(this).attr("data-title")},{ name:'action',value:'deselection'}]);
-	        	Tipped.remove($(this));
 	        	$(this).contents().unwrap();
             }
 		};
@@ -52,6 +51,9 @@ $(document).ready(function(){
 
 	});
 
+	$('.tedTranscript').mouseleave(function(){
+		deleteSelection();
+	});
 	//Initializing rangy highlighter
     /*rangy.init();
     highlighter = rangy.createHighlighter();
@@ -66,14 +68,6 @@ var highlighter;
 var usertext = "";
 var synonyms = "";
 var sel_str ="";
-
-/*function displayTranscript(){
-
-	var hiddeninput = document.getElementById("transcript_form:hidden_transcript");
-	var ted_transcript = hiddeninput.value;
-	var div = document.getElementById("ted_transcript");
-	div.innerHTML = ted_transcript;
-}*/
 
 function highlightSelectedText() {
     highlighter.highlightSelection("highlight");
@@ -91,7 +85,6 @@ function setSynonyms(xhr,status,args){
 	$(span).on('click',function(){
 		if (window.confirm("Delete this selection (" + $(this).text() + ")?")) {
 			saveTranscriptLog([{name:'word', value:$(this).text()},{name:'user_annotation', value:$(this).attr("data-title")},{ name:'action',value:'deselection'}]);
-			Tipped.remove($(this));
 			$(this).contents().unwrap();
 			$(this).remove();
 		}
@@ -151,6 +144,18 @@ function noteSelectedText() {
 		setSynonymsForWord([{name:'word', value:sel_str}]);
 }
 
+function deleteSelection() {
+	if (window.getSelection) {
+		if (window.getSelection().empty) {  // Chrome
+			window.getSelection().empty();
+		} else if (window.getSelection().removeAllRanges) {  // Firefox
+			window.getSelection().removeAllRanges();
+		}
+	} else if (document.selection) {  // IE
+		document.selection.empty();
+	}
+}
+
 function getUserText(buttonClicked){
 	if(buttonClicked == 'ok')
 		usertext = $("#text").val();
@@ -163,23 +168,22 @@ function getUserText(buttonClicked){
 		$('#'+noteid).attr({'data-content':usertext});
 	
 	//Tooltip creation
-	if(synonyms == "multiple" && usertext == "")
-	{}
+	if(synonyms && usertext == "")
+		{}
 	else
 	{
-		Tipped.create('#'+noteid,function() {
-	      return {
-	          title: $(this).data('title'),
-	          content: $(this).data('content')
-	        	 };
-	      	},{
-	    	  containment:{selector:"#ted_transcript", padding:0},
-	    	  maxWidth:300,
-	    	  size:'x-small',
-	    	  radius:5,
-	    	  position:"bottom"
-	    	}
-	     );
+		$('#'+noteid).tooltipster({
+			functionInit: function(origin, content) {
+		        if($(this).data('title'))
+		        	return $(this).data('title') + '<hr/>' + $(this).data('content').replace(new RegExp('&lt;br/&gt;','g'),'<br/>');
+		        else
+		        	return $(this).data('content').replace(new RegExp('&lt;br/&gt;','g'),'<br/>');
+		    },
+	    	contentAsHTML: true,
+	    	maxWidth: 300,
+	    	position:'right',
+	    	theme:'tooltipster-custom-theme'
+	    });
 	}
 	if(escape_key_flag)
 	{	saveTranscriptLog([{name:'word', value:sel_str},{name:'user_annotation', value:usertext},{ name:'action',value:'selection'}]);

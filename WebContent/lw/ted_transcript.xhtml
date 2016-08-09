@@ -11,7 +11,8 @@
 			<f:event type="preRenderView" listener="#{tedTranscriptBean.preRenderView}" />
 		</f:metadata>
 	</ui:define>
-
+	
+	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{msg.tedTranscriptTitle}" />	
 	<ui:param name="helpText" value="#{msg.tedTranscriptHelp}"/>
 	<ui:param name="helpTextStyle" value="tedtranscript_help" />
@@ -24,9 +25,7 @@
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveLog()}" name="saveTranscriptLog" process="@this" update="@none" />
 		</h:form>	
 		
-		<h:outputStylesheet library="css" name="tipped.css"  />
 		<h:outputStylesheet library="ted_transcript" name="ted_transcript.css"  />
-		<h:outputScript library="js" name="tipped.js" target="head"/>
 		<h:outputScript library="ted_transcript" name="ted_transcript.js" target="head"/>		
 		<!-- <h:outputScript library="ted_transcript" name="imagesloaded.pkgd.min.js" target="head"/>
 		<h:outputScript library="ted_transcript" name="log4javascript_stub.js" target="head"/>
@@ -49,7 +48,7 @@
 		
 		<h:panelGroup layout="block" id="transcript_column" class="right_bar">
 			<p:outputPanel>
-				<div class="center-header">
+				<div class="center-header noselect">
 					<h:form>
 						<p:outputLabel for="select_lang" value="#{msg.select_transcript_lang}:" />
 				        <h:selectOneMenu id="select_lang" value="#{tedTranscriptBean.transcriptLanguage}" >
@@ -60,7 +59,7 @@
 						<p:commandButton styleClass="button_position greenbutton" value="#{msg.save}" onclick="saveEditing();" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}"/>
 					</h:form>
 				</div>
-				<div class="transcript_note">
+				<div class="transcript_note noselect">
 					<b>#{msg.note}:</b><h:outputText value = " #{msg.transcript_warning}" rendered="#{tedTranscriptBean.tedResource.group.readOnly}"/>
 					<h:outputText value = " #{msg.transcript_note}" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}"/>
 				</div>

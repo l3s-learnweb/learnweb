@@ -1,25 +1,3 @@
-/*
-#ted_content{
-	width:100%;
-	height:100%;
-}
-.tedTranscript{
-	
-	overflow:auto;	
-}
-
-
-.savebutton
-{
-	border: none !important;
-	background: none !important;
-	background-color: #489a83 !important;
-	text-shadow: none !important;
-	color: white !important;
-	font-weight: normal !important;
-	cursor: pointer;
-}
-*/
 .right_bar
 {	
 	/*	
@@ -32,7 +10,7 @@
 	border-left-style: groove;
 	*/
 	float: right;
-	width: 45%;
+	width: 50%;
 	padding: 20px;
 	box-sizing: border-box;
 }
@@ -46,7 +24,7 @@
   	height: 92%;
   	max-height: 92%;
   	*/
-	width: 55%;
+	width: 50%;
 	box-sizing: border-box;
 	position: fixed;
 	height: 100%;
@@ -57,6 +35,7 @@
 	border:10px solid white;
 	box-sizing: border-box;
 }
+
 .transcript_note {
 	padding:10px;
 	margin:20px 0;
@@ -71,9 +50,14 @@
     background-color: yellow;
  }
  
- .tooltip{
- 	
+ .note:hover{
+ 	font-weight: bold;
+ 	background-color:#c4fcff;
  }
+ 
+ .tooltip{
+ }
+ 
  .ui-corner-all{
 	border-radius:0px;
  }
@@ -94,13 +78,24 @@
 }
 
 .tedTranscript{
-	padding:3px 3px 0px;
+	padding: 15px 5px 0px 15px;
+    text-align: justify;
 	border: 1px solid #A4A4A4;
 }
+
 ::selection{
 	background: yellow;
 }
 
 ::-moz-selection{
 	background: yellow;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none;   /* Chrome/Safari/Opera */
+  -khtml-user-select: none;    /* Konqueror */
+  -moz-user-select: none;      /* Firefox */
+  -ms-user-select: none;       /* Internet Explorer/Edge */
+   user-select: none;          
 }

@@ -158,7 +158,10 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	tedResource.setTranscript(transcript);
 	try
 	{
+	    Date actionTimestamp = new Date();
 	    tedResource.save();
+	    TranscriptLog transcriptLog = new TranscriptLog(UtilBean.getUserBean().getActiveCourse().getId(), getUser().getId(), tedResource.getId(), "", "", "save transcript", actionTimestamp);
+	    getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
 	}
 	catch(Exception e)
 	{
@@ -226,7 +229,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	String synonymsList = "";
 	RequestContext context = RequestContext.getCurrentInstance();
 	int wordCount = word.trim().split("\\s+").length;
-	if(wordCount == 1)
+	word = word.replaceAll("\\p{P}", "");
+	System.out.println(word);
+	if(wordCount <= 5)
 	{
 	    RiWordnet wordnet = new RiWordnet(null);
 
@@ -282,8 +287,10 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
 	    }
 
-	    if(pos.length == 0)
+	    if(pos.length == 0 && wordCount == 1)
 		synonymsList += "No synonyms";
+	    else if(synonymsList.isEmpty())
+		synonymsList += "multiple";
 	    context.addCallbackParam("synonyms", synonymsList);
 	}
 	else
@@ -415,4 +422,5 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	simpleTranscriptLogs = null;
 	detailedTranscriptLogs = null;
     }
+
 }
