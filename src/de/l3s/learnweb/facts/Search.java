@@ -16,7 +16,7 @@ import org.apache.jena.query.ResultSet;
 public class Search
 {
     public static String[] propertyList = { "P569", "P19", "P570", "P20", "P21", "P26", "P40", "P102", "P112", "P17", "P159", "P1128", "452", "P36", "P473", "P1082", "P2046", "P272", "P161", "P57", "P136", "P50", "P1712", "P674", "P170", "P136", "P1104", "P577", "P178", "P404",
-	    "P136", "P400", "P287", "P725", "P225", "P141", "P279", "P2067", "P2048" };
+	    "P136", "P400", "P287", "P725", "P225", "P141", "P279", "P2067", "P2048", "P18" };
 
     public static Entity searchRdfWikidata(String id, String language) throws ParseException
     {
@@ -36,9 +36,12 @@ public class Search
 	}
 	queryString += "   OPTIONAL {\n" + "       ?valUrl rdfs:label ?valLabel .\n" + "       FILTER( LANG(?valLabel) = '" + language + "' ) . \n" + "       }\n" + "       FILTER( LANG(?propLabel) = '" + language + "' ) . \n" + "   BIND (str(?propLabel) AS ?propLabel1) .\n"
 		+ "   BIND (str(?valUrl) AS ?valUrl1) .\n" + "   BIND (str(?valLabel) AS ?valLabel1) .\n" + "   FILTER regex(str(?propUrl),'direct') .\n" + "}\n";
+	String labelString = "PREFIX schema: <http://schema.org/>\n" + "PREFIX entity: <http://www.wikidata.org/entity/>\n" + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + "SELECT ?label1 ?title1 WHERE \n" + "{\n" + "  entity:" + id + " schema:description ?title .\n"
+		+ "  entity:" + id + " rdfs:label ?label .\n" + "  FILTER(LANG(?label) = 'en') .\n" + "  FILTER(LANG(?title) = 'en') .\n" + "   BIND(str(?label) AS ?label1) .\n" + "   BIND (str(?title) AS ?title1) .\n" + "}";
 	Map<String, List<String>> wikiProp = new HashMap<>();
 	Map<String, String> propList = new HashMap<>();
 	QueryExecution qexec = QueryExecutionFactory.sparqlService("https://query.wikidata.org/sparql", queryString);
+	QueryExecution labelExec = QueryExecutionFactory.sparqlService("http://query.wikidata.org/sparql", labelString);
 	try
 	{
 	    ResultSet results = qexec.execSelect();
@@ -74,6 +77,16 @@ public class Search
 	    }
 	    entity.setWikiStats(wikiProp);
 	    entity.setPropList(propList);
+	    ResultSet res = labelExec.execSelect();
+	    for(; res.hasNext();)
+	    {
+		QuerySolution soln = res.nextSolution();
+		String label = soln.get("label1").toString();
+		String title = soln.get("title1").toString();
+		entity.setLabel(label);
+		entity.setTitle(title);
+	    }
+
 	}
 	catch(Exception ex)
 	{
@@ -91,6 +104,11 @@ public class Search
     public static Entity formatProp(Entity entity) throws ParseException
     {
 	List<FactSheetEntry> factSheetEntries = new ArrayList<>();
+	if(entity.getPropList().containsKey("P18"))
+	{
+	    entity.setImageUrl(entity.getWikiStats().get("P18"));
+	    entity.getPropList().remove("P18");
+	}
 	if(entity.getPropList().containsKey("P569"))
 	{
 	    FactSheetEntry factSheetEntry = new FactSheetEntry();
@@ -113,6 +131,8 @@ public class Search
 	{
 	    FactSheetEntry factSheetEntry = new FactSheetEntry();
 	    List<Object> propValueList = new ArrayList<Object>();
+	    if(prop.equals("P2067"))
+		factSheetEntry.setLabelKey("weight");
 	    factSheetEntry.setLabel(entity.getPropList().get(prop));
 	    for(String propValue : entity.getWikiStats().get(prop))
 	    {

@@ -12,7 +12,7 @@ public class Entity implements Serializable
     private String label;
     private String title; // equal to the page title in Wikipedia    
     private String description;
-    private String imageUrl;
+    private List<String> imageUrl;
     private Map<String, List<String>> wikiStats;
     private Map<String, String> propList;
     private List<FactSheetEntry> facts;
@@ -47,12 +47,12 @@ public class Entity implements Serializable
 	this.description = description;
     }
 
-    public String getImageUrl()
+    public List<String> getImageUrl()
     {
 	return imageUrl;
     }
 
-    public void setImageUrl(String imageUrl)
+    public void setImageUrl(List<String> imageUrl)
     {
 	this.imageUrl = imageUrl;
     }
