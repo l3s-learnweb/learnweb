@@ -50,7 +50,7 @@ $(document).ready(function(){
 		}
 
 	});
-
+	$('.embedded').mousedown(function() {return false;}); 
 	$('.tedTranscript').mouseleave(function(){
 		deleteSelection();
 	});

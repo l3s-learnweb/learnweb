@@ -230,7 +230,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	RequestContext context = RequestContext.getCurrentInstance();
 	int wordCount = word.trim().split("\\s+").length;
 	word = word.replaceAll("\\p{P}", "");
-	System.out.println(word);
+
 	if(wordCount <= 5)
 	{
 	    RiWordnet wordnet = new RiWordnet(null);
