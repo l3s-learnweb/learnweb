@@ -1,6 +1,6 @@
 
 var lightboxActiveResource = null;
-var box;
+	var box;
 
 function lightbox_close()
 {
@@ -61,13 +61,16 @@ function lightbox_resize_container()
 }
 
 function lightbox_load()
-{
+{	
 	box = $('#lightbox');
 	lightboxActiveResource = $("#gallery .resource").first();
 	$('#lightbox_content').append(lightboxActiveResource.clone());
 }
 function lightbox_open()
-{
+{	
+	if(lightboxActiveResource == null){
+		lightbox_load();
+	}
 	box.appendTo(document.body);
 	lightbox_resize_container();
 	box.show();
@@ -75,7 +78,7 @@ function lightbox_open()
 
 $(document).ready(function()
 {	
-	lightbox_load();	
+		
 });
 
 $(document).resize(lightbox_resize_container);
