@@ -3,6 +3,7 @@ package de.l3s.learnweb.beans;
 import java.util.Iterator;
 
 import javax.faces.FacesException;
+import javax.faces.application.ViewExpiredException;
 import javax.faces.context.ExceptionHandler;
 import javax.faces.event.ExceptionQueuedEvent;
 
@@ -31,7 +32,11 @@ public class LearnwebExceptionHandler extends PrimeExceptionHandler
 	if(unhandledExceptionQueuedEvents.hasNext())
 	{
 	    Throwable exception = unhandledExceptionQueuedEvents.next().getContext().getException();
-	    log.fatal("fatal unhandled error", exception);
+	    if(exception instanceof ViewExpiredException)
+		log.info("view expired exception", exception);
+	    else
+		log.fatal("fatal unhandled error", exception);
+
 	}
 	super.handle();
     }

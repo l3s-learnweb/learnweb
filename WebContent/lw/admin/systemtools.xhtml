@@ -14,7 +14,7 @@
 	<ui:fragment rendered="#{userBean.admin}">
 		<div class="page_header" >
 			<span>
-				Database connections asd
+				Database connections
 			</span>
 		</div>
 
@@ -65,7 +65,7 @@
 
 					<p:column headerText="Terminate">
 						<p:commandButton value="terminate"
-							actionListener="#{adminSystemBean.onKillDatabaseProcess(process.id)}" />
+							actionListener="#{adminSystemBean.onKillDatabaseProcess(process.id)}" update=":processTable"/>
 					</p:column>
 
 				</p:dataTable>
