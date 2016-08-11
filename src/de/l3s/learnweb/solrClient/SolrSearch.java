@@ -602,7 +602,9 @@ public class SolrSearch implements Serializable
 	}
 
 	if(skippedResources > 0)
+	{
 	    log.error(skippedResources + " video/image resource had no thumbnail and were skipped");
+	}
 
 	return resources;
     }

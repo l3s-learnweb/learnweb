@@ -89,16 +89,16 @@
 					<f:param value="#{searchBean.searchService}"/>
 				</h:outputFormat>
 			</h:panelGroup>
-			<div class="group-menu-panel">
+			<h:panelGroup styleClass="group-menu-panel" layout="block" rendered="#{searchBean.getResourcesGroupedBySource().size() > 0}">
 				<span class="navigate left">
 					<a id="scrollLeft" href="#">
 						<span class="arrow"></span>
 					</a>
 				</span>
 				<div class="group-menu-container">
-					<ui:repeat value="#{searchBean.getResourcesGroupedBySource(4)}" var="gr">
-						<h:link outcome="search" styleClass="group-menu-block source_#{gr.groupAlias}" rendered="#{gr.resources.size() > 2 and searchBean.searchService.name() != gr.groupAlias}">
-							<f:param name="service" value="#{gr.groupAlias}"/>	
+					<ui:repeat value="#{searchBean.getResourcesGroupedBySource()}" var="gr">
+						<h:link outcome="search" styleClass="group-menu-block source_#{gr.groupAlias}" rendered="#{searchBean.searchService.name() != gr.groupAlias}">
+							<f:param name="service" value="#{gr.groupAlias}"/>
 							<f:param name="action" value="#{searchBean.searchMode}"/>
 							<f:param name="query" value="#{searchBean.query}"/>
 
@@ -137,42 +137,40 @@
 						<span class="arrow"></span>
 					</a>
 				</span>
-			</div>
+			</h:panelGroup>
 		</h:panelGroup>
 		<div id="filters_menu_bar_wrapper">
 			<div class="filters_menu_bar">
 				<h:panelGroup styleClass="search-filters #{searchBean.searchMode} #{empty searchBean.availableSources ? 'no-source' : null}" id="filters" layout="block">
 					<ul>
-						<h:panelGroup id="source_filter">
-							<li class="filter sources active">
-								<span class="filter-name">
-									<span class="trimmed-text">#{searchBean.searchService.toString()}</span>
-									<span class="arrow"></span>
-								</span>
-								<h:panelGroup styleClass="filter-sub-bar" layout="block" rendered="#{not empty searchBean.availableSources}">
-									<ui:repeat value="#{searchBean.availableSources}" var="item">
-										<h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">										
-											<h:outputText value="#{item.name}"/>
-											
-											<h:outputFormat value="#{msg.filter_counter}" escape="false" rendered="#{item.counter != null}">
-												<f:param value="#{item.counter}"/>
-											</h:outputFormat>
-																				
-											<f:param name="action" value="#{searchBean.searchMode}"/>
-											<f:param name="service" value="#{item.url}"/>
-											<f:param name="query" value="#{searchBean.query}"/>
-										</h:outputLink>
-									</ui:repeat>
-								</h:panelGroup>
-							</li>
-						</h:panelGroup>
+						<li class="filter sources active" id="source_filter">
+							<span class="filter-name">
+								<span class="trimmed-text">#{searchBean.searchService.toString()}</span>
+								<span class="arrow"></span>
+							</span>
+							<h:panelGroup styleClass="filter-sub-bar" layout="block" rendered="#{not empty searchBean.availableSources}">
+								<ui:repeat value="#{searchBean.availableSources}" var="item">
+									<h:outputLink value="search.jsf" styleClass="#{item.active ? 'active' : null}">										
+										<h:outputText value="#{item.name}"/>
+										
+										<h:outputFormat value="#{msg.filter_counter}" escape="false" rendered="#{item.counter != null}">
+											<f:param value="#{item.counter}"/>
+										</h:outputFormat>
+																			
+										<f:param name="action" value="#{searchBean.searchMode}"/>
+										<f:param name="service" value="#{item.url}"/>
+										<f:param name="query" value="#{searchBean.query}"/>
+									</h:outputLink>
+								</ui:repeat>
+							</h:panelGroup>
+						</li>
 						<ui:repeat value="#{searchBean.availableFilters}" var="filter">
 							<li class="filter #{filter.disabled ? 'disabled' : (filter.active ? 'active' : null)}">
 								<span class="filter-name">
 									<span class="trimmed-text">#{filter.name}</span>
 									<span class="arrow"></span>
 								</span>
-								<h:panelGroup styleClass="filter-sub-bar vCarousel-wrapper filter-vCarousel" layout="block">
+								<h:panelGroup styleClass="filter-sub-bar vCarousel-wrapper filter-vCarousel" layout="block" rendered="#{!filter.disabled}">
 									<h:panelGroup styleClass="vCarousel-container" layout="block">
 										<h:outputLink value="search.jsf" styleClass="#{!filter.active ? 'active' : null}">
 											<h:outputText value="#{filter.anyText}" />

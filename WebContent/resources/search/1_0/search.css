@@ -144,10 +144,6 @@
 	visibility: visible;
 }
 
-.filters_menu_bar .search-filters.no-source #source_filter .arrow {
-    opacity: 0;
-}
-
 .filters_menu_bar .search-filters li:hover .filter-sub-bar {
 }
 
@@ -157,6 +153,11 @@
 
 .filters_menu_bar ul li.disabled .filter-name {
 	cursor: default;
+}
+
+.filters_menu_bar .search-filters.no-source .filter.sources .arrow,
+.filters_menu_bar ul li.disabled .filter-name .arrow {
+	opacity: 0;
 }
 
 .filters_menu_bar .filter-sub-bar {

@@ -86,6 +86,8 @@ public class SearchBean extends ApplicationBean implements Serializable
     private boolean graphLoaded = false;
     private int counter = 0;
 
+    private int minResourcesPerGroup = 2;
+
     /* For logging */
     private boolean logEnabled; //Only carry out search log functions if user is logged in
     private Date startTime; //To log when viewing time is started for a resource
@@ -576,7 +578,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public Long getTotalFromCurrentService()
     {
-	return searchFilters.getTotalResults();
+	return searchFilters.getTotalResults() - search.getRemovedResourceCount();
     }
 
     public String getSearchFilters()
@@ -885,7 +887,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	return df.format(waybackDf.parse(timestamp));
     }
 
-    public List<GroupedResources> getResourcesGroupedBySource(Long limit)
+    public List<GroupedResources> getResourcesGroupedBySource()
     {
 	if((resourcesGroupedBySource == null || resourcesGroupedBySource.isEmpty()) && StringUtils.isNotEmpty(query))
 	{
@@ -895,7 +897,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 	    metaSearch.setConfigGroupResultsByField("location");
 	    metaSearch.setConfigResultsPerGroup(10);
 	    metaSearch.getResourcesByPage(2);
-	    resourcesGroupedBySource = metaSearch.getResourcesGroupedBySource(limit.intValue());
+	    resourcesGroupedBySource = metaSearch.getResourcesGroupedBySource(this.minResourcesPerGroup);
 	    Collections.sort(resourcesGroupedBySource);
 	}
 	return resourcesGroupedBySource;

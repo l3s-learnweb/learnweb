@@ -56,6 +56,7 @@ public class Search implements Serializable
     private boolean hasMoreLearnwebResults = true;
     private boolean hasMoreInterwebResults = true;
 
+    private int removedResourceCount = 0;
     private int interwebPageOffset = 0;
     private boolean stopped;
 
@@ -244,7 +245,10 @@ public class Search implements Serializable
 	}
 
 	if(notSatisfyFiltersCount > 0 || privateResourceCount > 0 || duplicatedUrlCount > 0)
+	{
+	    this.removedResourceCount += duplicatedUrlCount + privateResourceCount + notSatisfyFiltersCount;
 	    log.debug("Filtered " + notSatisfyFiltersCount + " resources and skipped " + privateResourceCount + " private resources, " + duplicatedUrlCount + " dublicated resources");
+	}
 
 	return newResources;
     }
@@ -342,7 +346,10 @@ public class Search implements Serializable
 	}
 
 	if(notSatisfyFiltersCount > 0 || duplicatedUrlCount > 0)
+	{
+	    this.removedResourceCount += duplicatedUrlCount + notSatisfyFiltersCount;
 	    log.debug("Filtered " + notSatisfyFiltersCount + " resources and skipped " + duplicatedUrlCount + " dublicated resources");
+	}
 
 	return newResources;
     }
@@ -391,6 +398,11 @@ public class Search implements Serializable
     public void setConfigResultsPerGroup(Integer configResultsPerGroup)
     {
 	this.configResultsPerGroup = configResultsPerGroup;
+    }
+
+    public int getRemovedResourceCount()
+    {
+	return this.removedResourceCount;
     }
 
     /**
