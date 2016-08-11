@@ -375,7 +375,7 @@ public class UserManager
 	replace.setInt(16, user.isAdmin() ? 1 : 0);
 	replace.setInt(17, user.isModerator() ? 1 : 0);
 	replace.setInt(18, user.getActiveCourseId());
-	replace.setDate(19, user.getRegistrationDate() == null ? null : new java.sql.Date(user.getRegistrationDate().getTime()));
+	replace.setDate(19, user.getRegistrationDate() == null ? new java.sql.Date(System.currentTimeMillis()) : new java.sql.Date(user.getRegistrationDate().getTime()));
 	replace.setString(20, user.getPassword());
 
 	Sql.serializeObjectAndSet(replace, 21, user.getPreferences());
