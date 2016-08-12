@@ -16,6 +16,7 @@ public class Entity implements Serializable
     private Map<String, List<String>> wikiStats;
     private Map<String, String> propList;
     private List<FactSheetEntry> facts;
+    private List<String> instance;
 
     public String getWikiId()
     {
@@ -95,6 +96,16 @@ public class Entity implements Serializable
     public void setTitle(String title)
     {
 	this.title = title;
+    }
+
+    public List<String> getInstance()
+    {
+	return instance;
+    }
+
+    public void setInstance(List<String> instance)
+    {
+	this.instance = instance;
     }
 
 }

@@ -26,7 +26,7 @@ import org.json.JSONObject;
 public class Search
 {
     private static String[] propertyList = { "P569", "P19", "P570", "P20", "P21", "P26", "P40", "P102", "P112", "P17", "P159", "P1128", "452", "P36", "P473", "P1082", "P2046", "P272", "P161", "P57", "P136", "P50", "P1712", "P674", "P170", "P136", "P1104", "P577", "P178", "P404",
-	    "P136", "P400", "P287", "P725", "P225", "P141", "P279", "P2067", "P2048", "P18" };
+	    "P136", "P400", "P287", "P725", "P225", "P141", "P279", "P2067", "P2048", "P18", "P31", "P131" };
     private static String serviceUrl = "http://godzilla.kbs.uni-hannover.de/bigdata/namespace/wdq/sparql";
 
     /*
@@ -191,6 +191,7 @@ public class Search
 	Map<String, List<String>> wikiProp = new HashMap<>();
 	Map<String, String> propList = new HashMap<>();
 	List<String> image = new ArrayList<>();
+	List<String> instance = new ArrayList<>();
 	try
 	{
 	    ResultSet results = qexec.execSelect();
@@ -213,6 +214,11 @@ public class Search
 		if(propUrl1.equals("P18")) //get imageUrl
 		{
 		    image.add(val);
+		}
+		if(propUrl1.equals("P31")) //get instanceOf
+		{
+		    String ins = soln.get("valUrl1").toString();
+		    instance.add(ins.substring(ins.indexOf("Q")));
 		}
 		if(propUrl1.equals("P19") || propUrl1.equals("P20")) //get place from city to country
 		{
@@ -252,6 +258,7 @@ public class Search
 	    entity.setWikiStats(wikiProp);
 	    entity.setPropList(propList);
 	    entity.setImageUrl(image);
+	    entity.setInstance(instance);
 	}
 	catch(Exception ex)
 	{
@@ -337,6 +344,7 @@ public class Search
     public static Entity formatProp(Entity entity) throws ParseException
     {
 	List<FactSheetEntry> factSheetEntries = new ArrayList<>();
+	entity.getPropList().remove("P31");
 
 	if(entity.getPropList().containsKey("P569")) //birth template
 	{
@@ -378,9 +386,10 @@ public class Search
 	{
 	    FactSheetEntry factSheetEntry = new FactSheetEntry();
 	    List<Object> propValueList = new ArrayList<Object>();
-	    if(prop.equals("P2067"))
-		factSheetEntry.setLabelKey("weight");
-	    factSheetEntry.setLabel(entity.getPropList().get(prop));
+	    if(prop.equals("P2067") && entity.getInstance().contains("Q5"))
+		factSheetEntry.setLabel("weight");
+	    else
+		factSheetEntry.setLabel(entity.getPropList().get(prop));
 	    for(String propValue : entity.getWikiStats().get(prop))
 	    {
 		if(!propValue.contains("http"))
