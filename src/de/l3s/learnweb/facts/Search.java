@@ -110,8 +110,14 @@ public class Search
 	return idList;
     }
 
-    public static Entity searchRdfWikidata(String id, String language) throws ParseException
+    public static Entity searchRdfWikidata(String name, String language) throws ParseException
     {
+	List<String> idList = searchWikiIdPhp(name);
+	String id = "";
+	if(!idList.isEmpty())
+	{
+	    id = idList.get(0);
+	}
 	Entity entity = new Entity();
 	entity.setWikiId(id);
 	String labelString = "PREFIX schema: <http://schema.org/>\n" + "PREFIX entity: <http://www.wikidata.org/entity/>\n" + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + "SELECT ?label1 ?title1 WHERE \n" + "{\n" + "  entity:" + id + " schema:description ?title .\n"
