@@ -62,7 +62,8 @@ lidalia-slf4j-ext-1.0.0.jar			Dependency of crawler4j
 log4j-1.2.17.jar					Logging
 log4j-over-slf4j-1.6.4.jar			SolrClient,added by Siyu
 mail-1.4.4.jar						Interweb (Jersey)
-mariadb-java-client-1.2.0.jar		MySQL
+mariadb-java-client-1.2.0.jar		MariaDB
+mysql-connector-java-5.1.39-bin.jar MySQL connector for LORO connection to prometheus DB
 myfaces-bundle-2.2.10.jar			JSF Base
 oauth-client-1.5.jar				Interweb
 oauth-signature-1.5.jar				Interweb
