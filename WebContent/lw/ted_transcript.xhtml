@@ -24,18 +24,10 @@
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveResource()}" name="saveTedResource" process="@this" update=":growl" />
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveLog()}" name="saveTranscriptLog" process="@this" update="@none" />
 		</h:form>	
-		
+		<h:outputStylesheet library="ted_transcript" name="jquery.contextMenu.css"  />
+		<h:outputScript library="ted_transcript" name="jquery.contextMenu.js"/>
 		<h:outputStylesheet library="ted_transcript" name="ted_transcript.css"  />
 		<h:outputScript library="ted_transcript" name="ted_transcript.js" target="head"/>		
-		<!-- <h:outputScript library="ted_transcript" name="imagesloaded.pkgd.min.js" target="head"/>
-		<h:outputScript library="ted_transcript" name="log4javascript_stub.js" target="head"/>
-	    <h:outputScript library="ted_transcript" name="rangy-core.js" target="head"/>
-	    <h:outputScript library="ted_transcript" name="rangy-dom.js" target="head"/>
-	    <h:outputScript library="ted_transcript" name="rangy-domrange.js" target="head"/>
-	    <h:outputScript library="ted_transcript" name="rangy-wrappedrange.js" target="head"/>
-	    <h:outputScript library="ted_transcript" name="rangy-wrappedselection.js" target="head"/>
-	    <h:outputScript library="ted_transcript" name="rangy-cssclassapplier.js" target="head"/>
-	    <h:outputScript library="ted_transcript" name="rangy-highlighter.js" target="head"/> -->
 	    
   		<script type="text/javascript">
   			var noteid = #{tedTranscriptBean.noteId};
