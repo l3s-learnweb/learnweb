@@ -279,7 +279,7 @@ public class Learnweb
 
 	if(!dbConnection.isValid(1))
 	{
-	    log.error("Database connection invalid try to reconnect");
+	    log.warn("Database connection invalid try to reconnect");
 
 	    try
 	    {

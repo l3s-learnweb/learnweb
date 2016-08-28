@@ -36,7 +36,9 @@ public class LoroManager
     {
 	try
 	{
-	    Class.forName("com.mysql.jdbc.Driver");
+	    //Class.forName("com.mysql.jdbc.Driver");
+	    Class.forName("org.mariadb.jdbc.Driver");
+
 	    java.util.Properties connProperties = new java.util.Properties();
 	    connProperties.setProperty("user", DB_USER);
 	    connProperties.setProperty("password", DB_PASSWORD);

@@ -139,7 +139,7 @@ public class SelectUsersBean extends ApplicationBean implements Serializable
 	ResourceLog resourcelog;
 	try
 	{
-	    Class.forName("com.mysql.jdbc.Driver");
+	    Class.forName("org.mariadb.jdbc.Driver");
 	    dbConnection = DriverManager.getConnection(mysql_url, mysql_user, mysql_password);
 	    PreparedStatement dbselect = dbConnection.prepareStatement(select);
 
@@ -178,7 +178,7 @@ public class SelectUsersBean extends ApplicationBean implements Serializable
 
 	try
 	{
-	    Class.forName("com.mysql.jdbc.Driver");
+	    Class.forName("org.mariadb.jdbc.Driver");
 
 	    dbConnection = DriverManager.getConnection(mysql_url, mysql_user, mysql_password);
 
@@ -225,7 +225,7 @@ public class SelectUsersBean extends ApplicationBean implements Serializable
 
 	try
 	{
-	    Class.forName("com.mysql.jdbc.Driver");
+	    Class.forName("org.mariadb.jdbc.Driver");
 	    dbConnection = DriverManager.getConnection(mysql_url, mysql_user, mysql_password);
 
 	    PreparedStatement dbselect = dbConnection.prepareStatement(select);
@@ -260,7 +260,7 @@ public class SelectUsersBean extends ApplicationBean implements Serializable
 
 	try
 	{
-	    Class.forName("com.mysql.jdbc.Driver");
+	    Class.forName("org.mariadb.jdbc.Driver");
 	    dbConnection = DriverManager.getConnection(mysql_url, mysql_user, mysql_password);
 
 	    PreparedStatement dbselect = dbConnection.prepareStatement(select);
