@@ -15,10 +15,12 @@
 		</div>
 
 		<h:form>
+		
 			<h:panelGrid columns="2">
 
 				<p:selectOneMenu id="Search" editable="false" value="#{factSheetBean.search}">
 					<f:selectItem itemLabel="Select One" itemValue="" />
+					<f:selectItem itemLabel="Random" itemValue="#{factSheetBean.random}" />
 					<f:selectItem itemLabel="Barack Obama" itemValue="Q76" />
 					<f:selectItem itemLabel="Donald Trump" itemValue="Q22686" />
 					<f:selectItem itemLabel="Lion"  itemValue="Q140"/>
@@ -28,8 +30,10 @@
 					<f:selectItem itemLabel="Pokémon"  itemValue="Q864"/>
 					<f:selectItem itemLabel="Nil"  itemValue="Q3392"/>
 					<f:selectItem itemLabel="Mars"  itemValue="Q111" />
-					<f:selectItem itemLabel="Red Bull"  itemValue="Q51482"/>
+					<f:selectItem itemLabel="Red Bull"  itemValue="Red Bull"/>
 					<f:selectItem itemLabel="BMW"  itemValue="Q26678"/>
+					<f:selectItem itemLabel="Cucumber" itemValue="Cucumber" />
+					<!-- /https://docs.google.com/spreadsheets/d/11UIURYRCUet1jGH_DbQUmzx4utKHIfCICssKZxgtVog/edit#gid=0 -->
 				</p:selectOneMenu>
 
 				<p:commandButton value="Submit" update="facts" action="#{factSheetBean.onClick}" />

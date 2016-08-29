@@ -388,6 +388,7 @@ public class Search
 	    List<Object> propValueList = new ArrayList<Object>();
 	    if(prop.equals("P2067") && entity.getInstance().contains("Q5"))
 		factSheetEntry.setLabel("weight");
+
 	    else
 		factSheetEntry.setLabel(entity.getPropList().get(prop));
 	    for(String propValue : entity.getWikiStats().get(prop))

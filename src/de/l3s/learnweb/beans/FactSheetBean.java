@@ -1,6 +1,7 @@
 package de.l3s.learnweb.beans;
 
 import java.text.ParseException;
+import java.util.Random;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.view.ViewScoped;
@@ -27,6 +28,16 @@ public class FactSheetBean extends ApplicationBean
     public void setSearch(String search)
     {
 	this.search = search;
+    }
+
+    public String getRandom()
+    {
+	String back;
+	Random randomGenerator = new Random();
+	int random = randomGenerator.nextInt(1000);
+	back = "Q" + random;
+	System.out.println(back);
+	return back;
     }
 
     public void onClick() throws ParseException
