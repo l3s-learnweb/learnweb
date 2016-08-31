@@ -9,10 +9,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
 import org.apache.log4j.Logger;
@@ -30,7 +32,7 @@ import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
 
 @SuppressWarnings("unchecked")
-@ManagedBean
+@ManagedBean(name = "resourceDetailBean")
 @ViewScoped
 public class ResourceDetailBean extends ApplicationBean implements Serializable
 {
@@ -300,6 +302,24 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	catch(Exception e)
 	{
 	    addFatalMessage(e);
+	}
+    }
+
+    public void selectResource()
+    {
+	Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+	String resourceIdStr = params.get("resourceId");
+
+	try
+	{
+	    int resourceId = Integer.parseInt(resourceIdStr);
+	    Resource res = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+
+	    this.setClickedResource(res);
+	}
+	catch(Exception e)
+	{
+
 	}
     }
 

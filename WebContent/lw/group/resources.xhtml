@@ -60,6 +60,8 @@
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
 					</p:commandLink>
 					
+					<p:remoteCommand name="selectResource" actionListener="#{groupDetailBean.selectResource}" update=":add_resource_panel" oncomplete="onSelectResourceCompleted(this.data)"/>
+					<p:remoteCommand name="selectFolder" actionListener="#{groupDetailBean.selectFolder}" update=":group_menu_tree :folderGrid :resourceGrid :add_resource_panel" oncomplete="onSelectFolderCompleted(this.data)"/>
 					<p:remoteCommand name="moveToFolder" actionListener="#{groupDetailBean.moveToFolder}" update=":group_menu_tree :folderGrid :resourceGrid" oncomplete="resourceDND()"/>
 				</h:form>
 				
@@ -149,8 +151,7 @@
 						</h:panelGroup>
 					</ul>
 				</h:form>							
-			</div>			
-			<br />
+			</div>
 	
 			<script type="text/javascript">
 			/* <!-- */
@@ -274,120 +275,127 @@
 			</p:dialog>
 			
 			<h:panelGroup id="datagrid" styleClass="datagrid" layout="block" pt:data-isEnableMoving="#{groupDetailBean.canMoveResourcesInGroup()}">
-				<h:panelGroup id="folderGrid" layout="block" pt:data-selectedFolderId="#{groupDetailBean.selectedFolderId}">				
-				    <ui:repeat var="folder" value="#{groupDetailBean.subfolders}"> 			     
-				  		<h:form styleClass="resource_panel resource_folder grey_border" pt:data-folderId="#{folder.folderId}">
-					        <p:commandLink styleClass="resource_command_link" update=":group_menu_tree :datagrid :paginator :filters :add_resource_panel" oncomplete="updateCarousel();update_header();update_url(0, #{folder.folderId});resourceDND();">
-	       						<f:setPropertyActionListener target="#{groupDetailBean.clickedFolder}" value="#{folder}" />
-	       	
-					        	<h:outputText value="#{folder.name}" escape="false" styleClass="resource_short_title" /> 
-					             
-					            <div class="resource_panelgrid folder_control">
-					            	<span class="groupid">#{folder.folderId}</span>
-	
-				            		<div class="buttons">
-				            			<p:commandLink title="#{msg.edit}" rendered="${groupDetailBean.canEditFoldersInGroup()}" update=":add_resource_panel" oncomplete="update_header();" styleClass="buttons_link">
+				<h:panelGroup id="folderGrid" styleClass="folder-grid" pt:data-selectedFolderId="#{groupDetailBean.selectedFolderId}" layout="block">				
+				    <ui:repeat value="#{groupDetailBean.subfolders}" var="folder"> 			     
+				  		<h:panelGroup styleClass="folder-item group-resources-item" pt:data-type="folder" pt:data-resourceId="#{folder.folderId}" layout="block">
+				    		<div class="folder-block">
+				    		
+				    			<div class="folder-icon">
+				    				<div class="folder-icon-wrapper">
+				    					<span class="icon icon-folder"></span>
+				    				</div>
+				    			</div>
+				    			
+				    			<div class="folder-title">
+			    					<div class="folder-title-wrapper">
+ 										<h:outputText value="#{folder.name}" escape="false" styleClass="folder-title-name" title="#{folder.name}" />
+									</div>
+									
+									<h:form class="resource-controls">
+										<p:commandLink oncomplete="update_header();" title="#{msg.edit}"
+											update=":add_resource_panel" styleClass="resource-controls-button"
+											rendered="${groupDetailBean.canEditFoldersInGroup()}">
 											<h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
+											
 											<f:setPropertyActionListener target="#{groupDetailBean.clickedFolder}" value="#{folder}"/>
 											<f:setPropertyActionListener target="#{groupDetailBean.rightPanelAction}" value="editFolder"/>
 											<f:param name="group_id" value="#{groupDetailBean.groupId}" />
 										</p:commandLink>
 										
-										<p:commandLink oncomplete="PF('confirmationFolder').show();" title="#{msg.delete}" update=":confirm_folder_dialog_form" rendered="${groupDetailBean.canEditFoldersInGroup()}" styleClass="buttons_link">
+										<p:commandLink oncomplete="PF('confirmationFolder').show();" title="#{msg.delete}"
+											update=":confirm_folder_dialog_form" styleClass="resource-controls-button"
+											rendered="${groupDetailBean.canEditFoldersInGroup()}">
 											<h:graphicImage alt="Remove" value="../resources/icon/Remove.png"/>
+											
 											<f:setPropertyActionListener target="#{groupDetailBean.clickedFolder}" value="#{folder}"/>
 											<f:param name="group_id" value="#{groupDetailBean.groupId}" />
 										</p:commandLink>
-				            		</div>
-					            </div> 					            
-						    </p:commandLink>
-					    </h:form>
+				            		</h:form>
+				    			</div>
+				    			
+				    		</div>
+	       				</h:panelGroup>
 				    </ui:repeat>				    
 			    </h:panelGroup>
-							
-				<h:panelGroup id="resourceGrid" layout="block" pt:data-selectedResourceId="#{groupDetailBean.selectedResource.id}">				
-				    <ui:repeat var="result" value="#{groupDetailBean.paginator.currentPage}">
-				  		<h:form styleClass="resource_panel grey_border" pt:data-resourceId="#{result.resource.id}">
-						    <p:commandLink styleClass="resource_command_link" update=":add_resource_panel" oncomplete="update_header();update_url(#{result.resource.id});resourceDND();">
-	
-					        	<f:setPropertyActionListener target="#{groupDetailBean.clickedResource}" value="#{result.resource}" />
-					        	<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{result.resource}" />
-	       	
-						        	<h:outputText value="#{result.title}" escape="false" styleClass="resource_short_title" title="#{result.title}" /> 
-						             
-						            <h:panelGrid styleClass="resource_panelgrid" columns="1">
-						            	<p:row>
-						            		<span class="groupid">
-						            			#{result.id}
-						            		</span>
-		
-											<h:graphicImage styleClass="resource_thumbnail" width="#{result.thumbnail1.width}" 
-												height="#{result.thumbnail1.height}" value="#{result.thumbnail1.url}" 
-												rendered="#{not empty result.thumbnail1}" alt="#{result.title}" />
-								    		<h:outputText styleClass="resource_thumbnail" escape="false" 
-								    			 value='#{result.resource.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' 
-								    			 rendered="#{empty result.thumbnail1}"/>
-		
-						            		<div class="buttons">
-						            			<p:commandLink oncomplete="PF('resource_dialog').show()" title="#{msg.addToMyResources}" 
-						            				update=":resource_form" styleClass="buttons_link" process="@this"> <!-- resource_commandlink -->
-													<h:graphicImage alt="Add" value="/resources/icon/Add.png"/>
-													<f:setPropertyActionListener value="#{result.resource}" target="#{groupDetailBean.clickedResource}" />
-													<f:param name="group_id" value="#{groupDetailBean.groupId}" />
-												</p:commandLink>
-						            			
-						            			<p:commandLink oncomplete="PF('confirmation').show();" title="#{msg.removeFromGroup}" 
-						            				rendered="${groupDetailBean.canDeleteResourceFromGroup(result)}" 
-						            				styleClass="buttons_link" update=":confirm_dialog_form">
-													<h:graphicImage alt="Remove" value="../resources/icon/Remove.png"/>
-													
-													<f:setPropertyActionListener value="#{result.resource}" target="#{groupDetailBean.clickedResource}" />
-													<f:param name="group_id" value="#{groupDetailBean.groupId}" />
-												</p:commandLink>
-												
-												<p:commandLink title="#{msg.edit}" 
-													rendered="${groupDetailBean.canDeleteResourceFromGroup(result)}" 
-													update=":add_resource_panel" 
-													styleClass="buttons_link">
-													<h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
-														<f:setPropertyActionListener value="#{result.resource}" 
-															target="#{groupDetailBean.clickedResource}" />
-														<f:setPropertyActionListener target="#{groupDetailBean.rightPanelAction}" value="editResource"/>
-													<f:param name="group_id" value="#{groupDetailBean.groupId}" />
-												</p:commandLink>
-												
-												<p:commandLink update=":resource_form" oncomplete="PF('resource_move_dialog').show();" 
-													title="#{msg.move_to}" rendered="#{userBean.isModerator() and false}" >
-													<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" 
-														title="#{msg.move_to}" style="padding: 3px;"/> 
-													<f:setPropertyActionListener value="#{result.resource}" target="#{searchBean.selectedResource}" />
-													<f:param name="group_id" value="#{groupDetailBean2.groupId}" /> 
-												</p:commandLink>
-						            		</div>
-						            	</p:row>
-						            	
-						            	<div class="resource_summary">
-											<span>
-												${learnwebBean.getLocaleMessage(result.type)}
-											</span> 
-											#{msg.added_by} 
-											<span>
-												#{result.addedToGroupBy.username}
-											</span>
-								        </div>					            
-							          
-						            </h:panelGrid>  					            
-						    </p:commandLink>
-					    </h:form>
-				    </ui:repeat>
-						
-					<h:outputText value="${msg.no_resources_found}" class="nothing_found"
-						rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}"/>
-	
-					<h:outputText value="#{msg.no_results_found}" class="nothing_found" 
-						rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}"/>
-				    
+			    
+			    <h:panelGroup id="resourceGrid" styleClass="resource-grid" pt:data-selectedResourceId="#{groupDetailBean.selectedResource.id}" layout="block">				
+				    <ui:repeat value="#{groupDetailBean.paginator.currentPage}" var="res">
+				    	<h:panelGroup styleClass="resource-item group-resources-item" pt:data-type="resource" pt:data-resourceId="#{res.resource.id}" layout="block">
+				    		<div class="resource-block">
+				    		
+				    			<div class="resource-preview">
+				    				<div class="resource-preview-wrapper">
+				    					<div class="resource-preview-wrapper2">
+				    						<div class="resource-preview-block"></div>
+				    						<div class="resource-preview-block2"></div>
+				    						<h:graphicImage styleClass="resource-preview-image" value="#{res.thumbnail1.url}" rendered="#{not empty res.thumbnail1}" alt="#{res.title}" />
+			    							<h:outputText styleClass="resource-preview-empty" escape="false" value='#{res.resource.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' rendered="#{empty res.thumbnail1}"/>
+			    						</div>
+	    							</div>
+	    							
+	    							<h:form class="resource-controls">
+				            			<p:commandLink oncomplete="PF('resource_dialog').show()" title="#{msg.addToMyResources}" 
+				            				update=":resource_form" styleClass="resource-controls-button" process="@this">
+											<h:graphicImage alt="Add" value="/resources/icon/Add.png"/>
+											<f:setPropertyActionListener value="#{res.resource}" target="#{groupDetailBean.clickedResource}" />
+											<f:param name="group_id" value="#{groupDetailBean.groupId}" />
+										</p:commandLink>
+										
+										<p:commandLink title="#{msg.edit}"
+											update=":add_resource_panel" styleClass="resource-controls-button"
+											rendered="${groupDetailBean.canDeleteResourceFromGroup(res)}">
+											<h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
+												<f:setPropertyActionListener value="#{res.resource}" 
+													target="#{groupDetailBean.clickedResource}" />
+												<f:setPropertyActionListener target="#{groupDetailBean.rightPanelAction}" value="editResource"/>
+											<f:param name="group_id" value="#{groupDetailBean.groupId}" />
+										</p:commandLink>
+										
+										<p:commandLink title="#{msg.move_to}" oncomplete="PF('resource_move_dialog').show();" 
+											update=":resource_form" styleClass="resource-controls-button"
+											rendered="#{userBean.isModerator() and false}">
+											<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" 
+												title="#{msg.move_to}" style="padding: 3px;"/> 
+											<f:setPropertyActionListener value="#{res.resource}" target="#{searchBean.selectedResource}" />
+											<f:param name="group_id" value="#{groupDetailBean2.groupId}" /> 
+										</p:commandLink>
+										
+										<p:commandLink oncomplete="PF('confirmation').show();" title="#{msg.removeFromGroup}" 
+				            				update=":confirm_dialog_form" styleClass="resource-controls-button"
+				            				rendered="${groupDetailBean.canDeleteResourceFromGroup(res)}">
+											<h:graphicImage alt="Remove" value="../resources/icon/Remove.png"/>
+											
+											<f:setPropertyActionListener value="#{res.resource}" target="#{groupDetailBean.clickedResource}" />
+											<f:param name="group_id" value="#{groupDetailBean.groupId}" />
+										</p:commandLink>
+				            		</h:form>
+				    			</div>
+				    			
+				    			<div class="resource-title">
+			    					<div class="resource-title-wrapper">
+		    							<div class="resource-title-icon">
+		    								<div class="resource-title-icon-wrapper">
+		    									<img src="//ssl.gstatic.com/docs/doclist/images/mediatype/icon_1_image_x16.png" alt="Compressed Archive" />
+	    									</div>
+    									</div>
+   										<div class="resource-title-text">
+   											<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
+   											<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.addedToGroupBy.username}</span></span>
+										</div>
+									</div>
+				    			</div>
+				    			
+				    		</div>
+	       				</h:panelGroup>
+				    </ui:repeat>				    
 			    </h:panelGroup>
+					
+				<h:outputText value="${msg.no_resources_found}" class="nothing_found"
+					rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}"/>
+
+				<h:outputText value="#{msg.no_results_found}" class="nothing_found" 
+					rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}"/>
+				    
 			</h:panelGroup>
 		
 			<h:panelGroup id="paginator" layout="block">

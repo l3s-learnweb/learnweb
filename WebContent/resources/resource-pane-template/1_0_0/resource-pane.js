@@ -1,3 +1,5 @@
+var selected = $([]); 
+
 function scrollToElement(element)
 {
 	//$('#right_pane .content').animate({ scrollTop: (element.offset().top + element.height() + 5 - $('#center_pane .content').height())}, 'slow');
@@ -91,13 +93,9 @@ function prepareCommentButton()
 }
 
 function update_url(resource_id, folder_id, group_id)
-{
+{	
 	var page_schema = location.protocol + "//" + location.host + location.pathname;
 	var query_params = location.search;
-	
-	if (folder_id == undefined) {
-		folder_id = $("#folderGrid").data("selectedFolderid");
-	}
 	
 	if (folder_id != undefined) {
 		query_params = updateUrlParameters(query_params, "folder_id", folder_id);
@@ -141,27 +139,43 @@ window.onpopstate = function(e){
 
 
 function dropHandle(event, ui) {
-	var destFolderId = $(this).is("[data-folderId]") ? $(this).attr("data-folderId") : $(this).parents(".ui-treenode").attr("data-datakey");
+	var destFolderId = null, objectsToMove = $([]);
 	
-	if (ui.draggable.is("[data-resourceId]")) {
-		var resourceId = ui.draggable.attr("data-resourceId");
-		console.log("Resource " + resourceId + " moved to folder " + destFolderId);
-   
-		moveToFolder([
-          {name: 'destFolderId', value: destFolderId},
-          {name: 'type', value: 'resource'},
-          {name: 'objectId', value: resourceId}
-		]);
+	// Process destination
+	if ($(this).is("[data-type=folder]")) {
+		destFolderId = $(this).attr("data-resourceId");
 	} else {
-		var folderId = ui.draggable.is("[data-folderId]") ? ui.draggable.attr("data-folderId") : ui.draggable.attr("data-datakey");
-		console.log("Folder " + folderId + " moved to folder " + destFolderId);
-		
-		moveToFolder([
-          {name: 'destFolderId', value: destFolderId},
-          {name: 'type', value: 'folder'},
-          {name: 'objectId', value: folderId}
-		]);
+		destFolderId = $(this).parents(".ui-treenode").attr("data-datakey");
 	}
+	
+	// Process elements
+	if (ui.draggable.hasClass("ui-selected")){
+		//console.log("has-selected", selected);
+		
+		var i = 1;
+		selected.not('.ui-draggable-helper').each(function() {
+			var type = $(this).attr("data-type");
+			var resourceId = $(this).attr("data-resourceId");
+			objectsToMove.push({ type: type, resourceId: resourceId });
+       });
+		
+		console.log("Resources and/or folders ", objectsToMove, " will move to folder " + destFolderId);
+	} else if (ui.draggable.is("[data-type=resource]")) {
+		var resourceId = ui.draggable.attr("data-resourceId");
+		
+		console.log("Resource " + resourceId + " will move to folder " + destFolderId);
+		objectsToMove.push({ type: "resource", resourceId: resourceId });
+	} else {
+		var resourceId = ui.draggable.is("[data-type=folder]") ? ui.draggable.attr("data-resourceId") : ui.draggable.attr("data-datakey");
+		
+		console.log("Folder " + resourceId + " will move to folder " + destFolderId);
+		objectsToMove.push({ type: "folder", resourceId: resourceId });
+	}
+		
+	moveToFolder([
+	  {name: 'destFolderId', value: destFolderId},
+	  {name: 'objectsToMove', value: JSON.stringify(objectsToMove)}
+	]);
 }
 
 function resourceDND() {
@@ -169,33 +183,36 @@ function resourceDND() {
 		return;
 	}
 	
-	/* Resources inside datagrid */
-    $('#resourceGrid .resource_panel').draggable({
-       helper: 'clone',
-       start: function(e, ui) {
-    	   $(this).addClass("ui-draggable-grayscale");
-    	   $(ui.helper).addClass("ui-draggable-helper");
-       },
-       stop: function(e) {
-    	   $(this).removeClass("ui-draggable-grayscale");
-       },
-       scope: 'resfolder',
-       appendTo: 'body',
-       revert: 'invalid',
-       cursorAt: { top: 0, left: 0 },
-       scroll: false,
-       zIndex: ++PrimeFaces.zindex
-    });
+	$('#datagrid').selectable({
+	    filter: 'div.group-resources-item',
+	});
 	
-	/* Folders inside datagrid */
-	$('#folderGrid .resource_panel').draggable({
+	/* Resources inside datagrid */
+    $('#datagrid .group-resources-item').draggable({
         helper: 'clone',
         start: function(e, ui) {
-     	   $(this).addClass("ui-draggable-grayscale");
-     	   $(ui.helper).addClass("ui-draggable-helper");
+     	  if ($(this).hasClass("ui-selected")){
+              selected = $(".ui-selected").each(function() {
+            	  $(this).addClass("ui-draggable-grayscale");
+              });
+              $(ui.helper).append("<div class='selected-icon'>" + (selected.length - 1) + "</div>");
+          } else {
+              selected = $([]);
+              $(this).addClass("ui-draggable-grayscale");
+              $("#datagrid div.group-resources-item").removeClass("ui-selected");
+          }
+     	  
+          var newWidth = $('.resource-item').width();
+      	  $(ui.helper).addClass("ui-draggable-helper").width(newWidth + "px");
         },
         stop: function(e) {
-     	   $(this).removeClass("ui-draggable-grayscale");
+        	if ($(this).hasClass("ui-selected")){
+                selected = $(".ui-selected").each(function() {
+                   $(this).removeClass("ui-draggable-grayscale");
+                });
+            } else {
+                $(this).removeClass("ui-draggable-grayscale");
+            }
         },
         scope: 'resfolder',
         appendTo: 'body',
@@ -205,7 +222,7 @@ function resourceDND() {
         zIndex: ++PrimeFaces.zindex
      });
 	
-	$('#folderGrid .resource_panel').droppable({
+	$('#folderGrid .group-resources-item').droppable({
        activeClass: 'ui-state-active',
        hoverClass: 'ui-state-highlight',
        tolerance: 'pointer',
@@ -240,16 +257,77 @@ function resourceDND() {
      });
 }
 
+function onSelectResourceCompleted(data) {
+	update_header();
+	
+	var resource_id = extractUrlParameters(data, "resourceId");
+	var type = extractUrlParameters(data, "type");
+	
+	if (type == "folder") {
+		//update_url(0, resource_id);
+	} else {
+		update_url(resource_id);
+	}
+	
+	$(".resource-item.selected").removeClass("selected");
+	$(".resource-item[data-resourceId=" + resource_id + "]").addClass("selected");
+	
+	resourceDND();
+}
+
+function onSelectFolderCompleted(data) {
+	update_header();
+	
+	var resource_id = extractUrlParameters(data, "resourceId");
+	update_url(0, resource_id);
+	
+	resourceDND();
+}
+
+function extractUrlParameters(data, key) {
+	if (!data) {
+		return data;
+	}
+	
+	var reg = new RegExp("&" + key + "=([^&]*)");
+	return decodeURIComponent(data.match(reg)[1]);
+}
+
 $(document).ready(function() 
 {
 	resourceDND();	
 
-	lightbox_load();	
+	lightbox_load();
+	
 	$(window).resize(lightbox_resize_container);
 	
 	// register  esc key
 	$(document).keydown(function(event) {
 		if (event.which == 27)
 			lightbox_close();		
+	});
+	
+	$(document).on('click', '.group-resources-item', function(e) {
+		var type = $(this).attr("data-type");
+		var resourceId = $(this).attr("data-resourceId");
+		
+		if ($(e.target).parents('.resource-controls-button').length > 0) {
+			console.log("Clicked on control button.");
+		} else if (type !== null && resourceId !== null) {
+			selectResource([
+                {name: 'type', value: type},
+                {name: 'resourceId', value: resourceId}
+    		]);
+		} else {
+			console.error("Wrong resource-item attributes!");
+		}		
+	});	
+	
+	$(document).on('dblclick', '.group-resources-item.folder-item', function(e) {
+		var resourceId = $(this).attr("data-resourceId");
+		
+		selectFolder([
+	        {name: 'resourceId', value: resourceId}
+		]);
 	});
 });

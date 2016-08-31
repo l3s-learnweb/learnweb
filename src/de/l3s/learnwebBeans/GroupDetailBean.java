@@ -13,6 +13,7 @@ import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
@@ -23,6 +24,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.json.JSONObject;
 import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
@@ -51,7 +53,7 @@ import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.solrClient.SolrSearch;
 import de.l3s.learnweb.solrClient.SolrSearch.SearchPaginator;
 
-@ManagedBean
+@ManagedBean(name = "groupDetailBean")
 @ViewScoped
 public class GroupDetailBean extends ApplicationBean implements Serializable
 {
@@ -123,6 +125,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private String query;
     private SearchFilters searchFilters;
     private AbstractPaginator paginator;
+
+    @ManagedProperty(value = "#{resourceDetailBean}")
+    private ResourceDetailBean resourceDetailBean;
 
     public GroupDetailBean() throws SQLException
     {
@@ -1043,32 +1048,47 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
 	String strDestFolderId = params.get("destFolderId");
-	String type = params.get("type");
-	String objectId = params.get("objectId");
+	String objectsToMoveJSON = params.get("objectsToMove");
 
 	try
 	{
+	    boolean isUpdateSolr = false;
 	    int destFolderId = Integer.parseInt(strDestFolderId);
+	    JSONObject objectsToMove = new JSONObject(objectsToMoveJSON);
 
-	    if(type.equals("folder"))
+	    for(Integer i = 0, len = objectsToMove.getInt("length"); i < len; ++i)
 	    {
-		Folder folder = Learnweb.getInstance().getGroupManager().getFolder(Integer.parseInt(objectId));
-		folder.moveTo(groupId, destFolderId);
+		JSONObject object = objectsToMove.getJSONObject(i.toString());
+
+		String type = object.getString("type");
+		String objectId = object.getString("resourceId");
+
+		if(type.equals("folder"))
+		{
+		    Folder folder = Learnweb.getInstance().getGroupManager().getFolder(Integer.parseInt(objectId));
+		    folder.moveTo(groupId, destFolderId);
+		}
+		else if(type.equals("resource"))
+		{
+		    Resource res = Learnweb.getInstance().getResourceManager().getResource(Integer.parseInt(objectId));
+		    res.moveTo(groupId, destFolderId);
+		    isUpdateSolr = true;
+		}
+		else
+		{
+		    throw new Exception("wrong type");
+		}
 	    }
-	    else if(type.equals("resource"))
+
+	    if(isUpdateSolr)
 	    {
-		Resource res = Learnweb.getInstance().getResourceManager().getResource(Integer.parseInt(objectId));
-		res.moveTo(groupId, destFolderId);
 		updateResourcesFromSolr();
-	    }
-	    else
-	    {
-		throw new Exception("wrong type");
 	    }
 	}
 	catch(Exception e)
 	{
-
+	    log.error(e.getMessage());
+	    e.printStackTrace();
 	}
     }
 
@@ -1137,9 +1157,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	if(folder != null)
 	{
 	    this.selectedFolder = folder;
-	    this.clickedFolder = selectedFolder;
+	    this.clickedFolder = null;
+	    this.rightPanelAction = RPAction.none;
 
 	    updateResourcesFromSolr();
+	    // TODO: inject bean into current
 	    UtilBean.getAddResourceBean().setResourceTargetFolderId(getSelectedFolderId());
 	}
     }
@@ -1151,12 +1173,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void setClickedFolder(Folder clickedFolder)
     {
-	if(this.clickedFolder != null && this.clickedFolder.equals(clickedFolder))
-	{
-	    this.rightPanelAction = RPAction.none;
-	    setSelectedFolder(this.clickedFolder);
-	}
-	else
+	if(this.rightPanelAction != RPAction.editFolder || this.clickedFolder != clickedFolder)
 	{
 	    this.rightPanelAction = RPAction.viewFolder;
 	    this.clickedFolder = clickedFolder;
@@ -1238,6 +1255,55 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	this.editedGroupLeaderId = editedGroupLeaderId;
     }
 
+    public void selectResource()
+    {
+	Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+	String resourceType = params.get("type");
+	String resourceId = params.get("resourceId");
+
+	try
+	{
+	    if(resourceType.equals("folder"))
+	    {
+		Folder folder = Learnweb.getInstance().getGroupManager().getFolder(Integer.parseInt(resourceId));
+
+		this.setClickedFolder(folder);
+	    }
+	    else if(resourceType.equals("resource"))
+	    {
+		Resource res = Learnweb.getInstance().getResourceManager().getResource(Integer.parseInt(resourceId));
+
+		this.setClickedResource(res);
+		this.getResourceDetailBean().setClickedResource(res);
+	    }
+	    else
+	    {
+		throw new RuntimeException("Wrong element type");
+	    }
+	}
+	catch(Exception e)
+	{
+
+	}
+    }
+
+    public void selectFolder()
+    {
+	Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+	String resourceId = params.get("resourceId");
+
+	try
+	{
+	    Folder folder = Learnweb.getInstance().getGroupManager().getFolder(Integer.parseInt(resourceId));
+
+	    this.setSelectedFolder(folder);
+	}
+	catch(Exception e)
+	{
+
+	}
+    }
+
     public void onMoveResource()
     {
 
@@ -1314,6 +1380,16 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	List<Group> copyableGroups = getUser().getWriteAbleGroups();
 	copyableGroups.remove(group);
 	return copyableGroups;
+    }
+
+    public ResourceDetailBean getResourceDetailBean()
+    {
+	return resourceDetailBean;
+    }
+
+    public void setResourceDetailBean(ResourceDetailBean resourceDetailBean)
+    {
+	this.resourceDetailBean = resourceDetailBean;
     }
 
     /*

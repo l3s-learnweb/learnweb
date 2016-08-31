@@ -23,7 +23,7 @@
 				<script type="text/javascript">
 					function update_header()
 					{
-						var resourceTitle = "#{utilBean.addSlashes(bean.clickedResource.title)}";
+						var resourceTitle = "#{utilBean.addSlashes(resourceDetailBean.clickedResource.title)}";
 						var folderTitle = "#{utilBean.addSlashes(bean.clickedFolder.name)}";
 						
 						if(#{bean.rightPanelAction == 'newResource'})
