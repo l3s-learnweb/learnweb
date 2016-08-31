@@ -350,7 +350,7 @@ public class Search
 	{
 	    FactSheetEntry factSheetEntry = new FactSheetEntry();
 	    List<Object> propValueList = new ArrayList<Object>();
-	    factSheetEntry.setLabel("birth");
+	    factSheetEntry.setLabel("born");
 	    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 	    Date date = df.parse(entity.getWikiStats().get("P569").get(0));
 	    propValueList.add(date);
@@ -368,7 +368,7 @@ public class Search
 	{
 	    FactSheetEntry factSheetEntry = new FactSheetEntry();
 	    List<Object> propValueList = new ArrayList<Object>();
-	    factSheetEntry.setLabel("death");
+	    factSheetEntry.setLabel("died");
 	    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 	    Date date = df.parse(entity.getWikiStats().get("P570").get(0));
 	    propValueList.add(date);
@@ -387,8 +387,13 @@ public class Search
 	    FactSheetEntry factSheetEntry = new FactSheetEntry();
 	    List<Object> propValueList = new ArrayList<Object>();
 	    if(prop.equals("P2067") && entity.getInstance().contains("Q5"))
+	    {
 		factSheetEntry.setLabel("weight");
-
+	    }
+	    else if(prop.equals("P21"))
+	    {
+		factSheetEntry.setLabel("gender");
+	    }
 	    else
 		factSheetEntry.setLabel(entity.getPropList().get(prop));
 	    for(String propValue : entity.getWikiStats().get(prop))
