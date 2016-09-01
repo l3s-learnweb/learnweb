@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.catalina.connector.ClientAbortException;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.File;
@@ -119,6 +120,10 @@ public class DownloadServlet extends HttpServlet
 	    */
 	    prepareResponseFor(response, file);
 	    streamFileTo(response, file);
+	}
+	catch(ClientAbortException e)
+	{
+	    log.debug("Download interrupted. File: " + fileId);
 	}
 	catch(Exception e)
 	{

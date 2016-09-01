@@ -14,8 +14,7 @@
 			<supported-locale>pt</supported-locale>
 		</locale-config>
 		
-		<resource-bundle>
-		
+		<resource-bundle>		
 			<base-name>de.l3s.learnweb.lang.messages</base-name>
 			<var>msg</var>
 		</resource-bundle>
