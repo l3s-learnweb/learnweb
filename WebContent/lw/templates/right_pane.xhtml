@@ -4,7 +4,8 @@
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
-
+<head></head>
+<h:body>
 	<ui:composition>
 
 	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" 
@@ -491,14 +492,24 @@
 					         </ui:repeat>
 					    </ul>
 					</h:form> 
+					
+					
+					
 					<h:form id="tag_input_form" rendered="#{!groupDetailBean.group.readOnly}">  
+					   <p:dialog id="myDialogID" header="Basic Dialog" widgetVar="myDialogVar" minHeight="40"  >
+    					<h:outputText value="Resistance to PrimeFaces is futile!" />
+					</p:dialog>	
 					    <p:inputText styleClass="tag_field" value="#{resourceDetailBean.tagName}" id="tag_name"/>
 				    	<p:commandButton actionListener="#{resourceDetailBean.addTag}" styleClass="greenbutton clearfix" 
-				    		value="#{msg.addTag}" update=":datagrid :tag_form :growl :tag_input_form:tag_name" process="@form" 
-				    		style="margin-right:0;margin-top:4px;float:right">
+				    		value="#{msg.addTag}" update=" :datagrid :tag_form :growl :tag_input_form:tag_name :tag_input_form:myDialogID" process="@form" 
+				    		style="margin-right:0;margin-top:4px;float:right" ajaxsingle="true" oncomplete="return false;">
+				    		
+				    	  	
 				    	  	<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>	
 				        </p:commandButton>
-				    </h:form>						   
+				        
+				    </h:form>	
+				    				   
 				   
 				    <h:form id="comment_input_form" styleClass="clear" prependId="false">
 				   
@@ -804,4 +815,5 @@
 		</div>
 	</p:layoutUnit>
 	</ui:composition>
+	</h:body>
 </html>

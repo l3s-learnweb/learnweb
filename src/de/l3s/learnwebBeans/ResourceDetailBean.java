@@ -10,6 +10,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -20,6 +21,7 @@ import javax.faces.event.ComponentSystemEvent;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.primefaces.context.RequestContext;
 
 import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.Comment;
@@ -204,6 +206,25 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public String addTag()
     {
+	int noOfSpace = tagName.length() - tagName.replace(" ", "").length();
+
+	//Limit of no. of spaces in a tag = 3
+	if(noOfSpace > 3)
+	{
+	    showMessage();
+	    return null;
+	}
+	else if(tagName.contains(","))
+	{
+	    showMessage();
+	    return null;
+	}
+	else if(tagName.contains("#"))
+	{
+	    showMessage();
+	    return null;
+	}
+
 	if(null == getUser())
 	{
 	    addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
@@ -225,6 +246,36 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	    addFatalMessage(e);
 	}
 	return null;
+    }
+
+    private void showMessage()
+    {
+	ResourceBundle bundle = getFacesContext().getApplication().getResourceBundle(getFacesContext(), "msg");
+	String title = bundle.getString("incorrect_tags");
+	if(tagName.contains("#"))
+	{
+	    String newTags = tagName.replaceAll("#", " ");
+	    int countTags = tagName.trim().length() - tagName.trim().replaceAll("#", "").length();
+	    FacesMessage message = null;
+	    String text = bundle.getString("tags_hashtag");
+	    if(countTags > 1)
+		message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text + newTags);
+	    else
+		message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, "Please add your tags without \"#\" <br/><br/> Hint: It should appear like: " + newTags);
+	    RequestContext.getCurrentInstance().showMessageInDialog(message);
+	}
+	else if(tagName.contains(","))
+	{
+	    String text = bundle.getString("tags_specialCharacter");
+	    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text);
+	    RequestContext.getCurrentInstance().showMessageInDialog(message);
+	}
+	else
+	{
+	    String text = bundle.getString("tags_tooLong");
+	    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text);
+	    RequestContext.getCurrentInstance().showMessageInDialog(message);
+	}
     }
 
     public boolean canEditComment(Object commentO) throws SQLException
