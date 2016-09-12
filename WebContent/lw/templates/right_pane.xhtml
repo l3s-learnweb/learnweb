@@ -492,12 +492,10 @@
 					
 					
 					<h:form id="tag_input_form" rendered="#{!groupDetailBean.group.readOnly}">  
-					   <p:dialog id="myDialogID" header="Basic Dialog" widgetVar="myDialogVar" minHeight="40"  >
-    					<h:outputText value="Resistance to PrimeFaces is futile!" />
-					</p:dialog>	
+					   
 					    <p:inputText styleClass="tag_field" value="#{resourceDetailBean.tagName}" id="tag_name"/>
 				    	<p:commandButton actionListener="#{resourceDetailBean.addTag}" styleClass="greenbutton clearfix" 
-				    		value="#{msg.addTag}" update=" :datagrid :tag_form :growl :tag_input_form:tag_name :tag_input_form:myDialogID" process="@form" 
+				    		value="#{msg.addTag}" update=" :datagrid :tag_form :growl :tag_input_form:tag_name" process="@form" 
 				    		style="margin-right:0;margin-top:4px;float:right" ajaxsingle="true" oncomplete="return false;">
 				    		
 				    	  	

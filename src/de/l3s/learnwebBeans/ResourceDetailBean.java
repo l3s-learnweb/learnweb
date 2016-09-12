@@ -207,12 +207,14 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public String addTag()
     {
-	int noOfSpace = StringUtils.countMatches(tagName, " ");
+
 
 	//Limit of no. of spaces in a tag = 3
-	if(noOfSpace > 3 || tagName.contains(",") || tagName.contains("#"))
+
+	if((StringUtils.countMatches(tagName, " ") > 3) || tagName.contains(",") || tagName.contains("#") || (tagName.length() > 50))
 	{
 	    showTagWarningMessage();
+
 	    return null;
 	}
 
@@ -253,12 +255,18 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	    if(countTags > 1)
 		message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text + newTags);
 	    else
-		message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, "Please add your tags without \"#\" <br/><br/> Hint: It should appear like: " + newTags);
+		message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text + newTags);
 	    RequestContext.getCurrentInstance().showMessageInDialog(message);
 	}
 	else if(tagName.contains(","))
 	{
 	    String text = bundle.getString("tags_specialCharacter");
+	    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text);
+	    RequestContext.getCurrentInstance().showMessageInDialog(message);
+	}
+	else if((StringUtils.countMatches(tagName, " ") > 3))
+	{
+	    String text = bundle.getString("tags_spaces");
 	    FacesMessage message = new FacesMessage(FacesMessage.SEVERITY_INFO, title, text);
 	    RequestContext.getCurrentInstance().showMessageInDialog(message);
 	}
