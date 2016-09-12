@@ -279,10 +279,15 @@ public class Search
 	String place = "";
 	String places = "";
 	String newPlaceId = "";
+	List<String> placeList = new ArrayList<>();
+	placeList.add("Q515"); //city
+	placeList.add("Q1549591"); //big city
+	placeList.add("Q6256"); //country
+
 	String query = "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + "PREFIX wdt: <http://www.wikidata.org/prop/direct/>\n" + "SELECT ?propUrl1 ?valUrl ?title ?otherTitle WHERE {\n" + "   <" + placeId + "> ?propUrl ?valUrl .\n"
 		+ "   values ?propUrl {wdt:P31 wdt:P131} .\n" + "   <" + placeId + "> rdfs:label ?title1 .\n" + "   FILTER(LANG(?title1)='en') .\n" + "   OPTIONAL {" + "       <" + placeId + "> rdfs:label ?otherTitle1 .\n" + "       FILTER(LANG(?otherTitle1)='" + language
 		+ "'). \n" + "       BIND (str(?otherTitle1) AS ?otherTitle) .\n" + "   }\n" + "   BIND (str(?title1) AS ?title) .\n" + "   BIND (str(?propUrl) AS ?propUrl1) .\n" + "}";
-	QueryExecution qexec = QueryExecutionFactory.sparqlService("http://query.wikidata.org/sparql", query);
+	QueryExecution qexec = QueryExecutionFactory.sparqlService(serviceUrl, query);
 	Map<String, List<String>> wikiProp = new HashMap<>();
 	try
 	{
@@ -304,30 +309,51 @@ public class Search
 			place = title;
 		    }
 		}
-
+		String valUrl = soln.get("valUrl").toString();
 		if(propUrl1.equals("P131"))
 		{
-		    newPlaceId = soln.get("valUrl").toString();
+		    newPlaceId = valUrl;
+		    if(wikiProp.containsKey("P131"))
+		    {
+			wikiProp.get(propUrl1).add(valUrl);
+		    }
+		    else
+		    {
+			List<String> valList = new ArrayList<>();
+			valList.add(valUrl);
+			wikiProp.put(propUrl1, valList);
+		    }
 
 		}
+		String valUrl1 = valUrl.substring(valUrl.indexOf("Q"));
 		if(wikiProp.containsKey(propUrl1))
 		{
-		    wikiProp.get(propUrl1).add(soln.get("valUrl").toString());
+		    if(placeList.contains(valUrl1))
+		    {
+			wikiProp.get(propUrl1).add(valUrl1);
+		    }
 		}
 		else
 		{
-		    List<String> valList = new ArrayList<>();
-		    valList.add(soln.get("valUrl").toString());
-		    wikiProp.put(propUrl1, valList);
+		    if(placeList.contains(valUrl1))
+		    {
+			List<String> valList = new ArrayList<>();
+			valList.add(valUrl1);
+			wikiProp.put(propUrl1, valList);
+		    }
 		}
 	    }
-	    if(wikiProp.containsKey("P131"))
-	    {
-		places = place + ", " + getPlaces(newPlaceId, language);
+	    if(!wikiProp.containsKey("P31") && wikiProp.containsKey("P131"))
+	    { //if not city, big city or country, not add to the list
+		places = getPlaces(newPlaceId, language);
+	    }
+	    else if(wikiProp.get("P31").equals("Q6256"))
+	    { //if country, stop trace
+		places = place;
 	    }
 	    else
 	    {
-		places = place;
+		places = place + ", " + getPlaces(newPlaceId, language);
 	    }
 	}
 	catch(Exception ex)

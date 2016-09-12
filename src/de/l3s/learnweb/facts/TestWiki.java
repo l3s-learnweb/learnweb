@@ -10,7 +10,7 @@ public class TestWiki
     public static void main(String[] args) throws IOException, ParseException
     {
 	System.out.println("hello");
-	Entity entity = Search.searchRdfWikidata("nil", "en");
+	Entity entity = Search.searchRdfWikidata("Barack Obama", "en");
 	JSONObject json = new JSONObject(entity);
 	System.out.println(json.toString());
 	System.out.println("bye");
