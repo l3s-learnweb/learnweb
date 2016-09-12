@@ -549,7 +549,7 @@ public class SearchFilters implements Serializable
 			switch(f)
 			{
 			case service:
-			    setFilter(f, SERVICE.valueOf(fValue));
+			    setFilter(f, getServiceByName(fValue));
 			    break;
 			case type:
 			    setFilter(f, TYPE.valueOf(fValue));
