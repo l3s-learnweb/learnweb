@@ -37,7 +37,7 @@ public class LearnwebExceptionHandler extends PrimeExceptionHandler
 	{
 	    Throwable exception = unhandledExceptionQueuedEvents.next().getContext().getException();
 	    if(exception instanceof ViewExpiredException)
-		log.info("view expired exception", exception);
+		log.info("View expired exception");
 	    else
 	    {
 		String queryString = null;

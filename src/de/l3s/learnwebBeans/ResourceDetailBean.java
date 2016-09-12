@@ -18,6 +18,7 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -206,22 +207,12 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public String addTag()
     {
-	int noOfSpace = tagName.length() - tagName.replace(" ", "").length();
+	int noOfSpace = StringUtils.countMatches(tagName, " ");
 
 	//Limit of no. of spaces in a tag = 3
-	if(noOfSpace > 3)
+	if(noOfSpace > 3 || tagName.contains(",") || tagName.contains("#"))
 	{
-	    showMessage();
-	    return null;
-	}
-	else if(tagName.contains(","))
-	{
-	    showMessage();
-	    return null;
-	}
-	else if(tagName.contains("#"))
-	{
-	    showMessage();
+	    showTagWarningMessage();
 	    return null;
 	}
 
@@ -248,10 +239,11 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	return null;
     }
 
-    private void showMessage()
+    private void showTagWarningMessage()
     {
 	ResourceBundle bundle = getFacesContext().getApplication().getResourceBundle(getFacesContext(), "msg");
 	String title = bundle.getString("incorrect_tags");
+	//getLocaleMessage(msgKey, args)
 	if(tagName.contains("#"))
 	{
 	    String newTags = tagName.replaceAll("#", " ");
