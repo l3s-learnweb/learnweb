@@ -80,16 +80,20 @@
 		<h:outputStylesheet library="search" name="search.css"  />		
 		<h:outputScript library="search" name="search.js" target="head"/>
 		
-
 		<h:panelGroup styleClass="group-menu-bar #{searchBean.queryFilters}" id="groups_menu_bar" layout="block" rendered="#{searchBean.searchFilters == null}">
 			<h:panelGroup styleClass="group-menu-header" layout="block" rendered="#{searchBean.searchService != null}">
-				<h:outputFormat value="#{msg.search_groups_header}" escape="false">
+				<h:outputFormat value="#{msg.search_groups_header_empty}" escape="false" rendered="#{searchBean.getResourcesGroupedBySource().size() == 1}">
+					<f:param value="#{searchBean.totalFromCurrentService}"/>
+					<f:param value="#{searchBean.searchService.name()}"/>
+					<f:param value="#{searchBean.searchService}"/>
+				</h:outputFormat>
+				<h:outputFormat value="#{msg.search_groups_header}" escape="false" rendered="#{searchBean.getResourcesGroupedBySource().size() != 1}">
 					<f:param value="#{searchBean.totalFromCurrentService}"/>
 					<f:param value="#{searchBean.searchService.name()}"/>
 					<f:param value="#{searchBean.searchService}"/>
 				</h:outputFormat>
 			</h:panelGroup>
-			<h:panelGroup styleClass="group-menu-panel" layout="block" rendered="#{searchBean.getResourcesGroupedBySource().size() > 0}">
+			<h:panelGroup styleClass="group-menu-panel" layout="block" rendered="#{searchBean.getResourcesGroupedBySource().size() > 1}">
 				<span class="navigate left">
 					<a id="scrollLeft" href="#">
 						<span class="arrow"></span>
