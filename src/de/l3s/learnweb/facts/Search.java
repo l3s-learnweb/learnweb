@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -26,7 +27,7 @@ import org.json.JSONObject;
 public class Search
 {
     private static String[] propertyList = { "P569", "P19", "P570", "P20", "P21", "P26", "P40", "P102", "P112", "P17", "P159", "P1128", "452", "P36", "P473", "P1082", "P2046", "P272", "P161", "P57", "P136", "P50", "P1712", "P674", "P170", "P136", "P1104", "P577", "P178", "P404",
-	    "P136", "P400", "P287", "P725", "P225", "P141", "P279", "P2067", "P2048", "P18", "P31", "P131" };
+	    "P136", "P400", "P287", "P725", "P225", "P141", "P279", "P2067", "P2048", "P18", "P31", "P131", "P154", "P41" };
     private static String serviceUrl = "http://godzilla.kbs.uni-hannover.de/bigdata/namespace/wdq/sparql";
 
     /*
@@ -121,7 +122,7 @@ public class Search
 	Entity entity = new Entity();
 	entity.setWikiId(id);
 	String labelString = "PREFIX schema: <http://schema.org/>\n" + "PREFIX entity: <http://www.wikidata.org/entity/>\n" + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" + "SELECT ?label1 ?title1 WHERE \n" + "{\n" + "  entity:" + id + " schema:description ?title .\n"
-		+ "  entity:" + id + " rdfs:label ?label .\n" + "  FILTER(LANG(?label) = 'en') .\n" + "  FILTER(LANG(?title) = 'en') .\n" + "   BIND(str(?label) AS ?label1) .\n" + "   BIND (str(?title) AS ?title1) .\n" + "}";
+		+ "  entity:" + id + " rdfs:label ?label .\n" + "  FILTER(LANG(?label) = 'en') .\n" + "  FILTER(LANG(?title) = '" + language + "') .\n" + "   BIND(str(?label) AS ?label1) .\n" + "   BIND (str(?title) AS ?title1) .\n" + "}";
 	QueryExecution labelExec = QueryExecutionFactory.sparqlService(serviceUrl, labelString);
 	try
 	{
@@ -190,7 +191,7 @@ public class Search
 	QueryExecution qexec = QueryExecutionFactory.sparqlService(serviceUrl, queryString);
 	Map<String, List<String>> wikiProp = new HashMap<>();
 	Map<String, String> propList = new HashMap<>();
-	List<String> image = new ArrayList<>();
+	List<ImageUrl> image = new ArrayList<>();
 	List<String> instance = new ArrayList<>();
 	try
 	{
@@ -211,9 +212,17 @@ public class Search
 		{
 		    val = soln.get("valUrl1").toString();
 		}
-		if(propUrl1.equals("P18")) //get imageUrl
+		if(propUrl1.equals("P154")) //get imageUrl: image, logo image, flag image
 		{
-		    image.add(val);
+		    image.add(new ImageUrl(val, 1));
+		}
+		if(propUrl1.equals("P41")) //get imageUrl: image, logo image, flag image
+		{
+		    image.add(new ImageUrl(val, 2));
+		}
+		if(propUrl1.equals("P18")) //get imageUrl: image, logo image, flag image
+		{
+		    image.add(new ImageUrl(val, 3));
 		}
 		if(propUrl1.equals("P31")) //get instanceOf
 		{
@@ -255,9 +264,13 @@ public class Search
 		    }
 		}
 	    }
+	    Collections.sort(image);
+	    ArrayList<String> images = new ArrayList<>();
+	    for(ImageUrl url : image)
+		images.add(url.url);
 	    entity.setWikiStats(wikiProp);
 	    entity.setPropList(propList);
-	    entity.setImageUrl(image);
+	    entity.setImageUrl(images);
 	    entity.setInstance(instance);
 	}
 	catch(Exception ex)
@@ -435,6 +448,27 @@ public class Search
 	}
 	entity.setFacts(factSheetEntries);
 	return entity;
+    }
+
+    private static class ImageUrl implements Comparable<ImageUrl>
+
+    {
+	private String url;
+	private int priority;
+
+	public ImageUrl(String url, int priority)
+	{
+	    super();
+	    this.url = url;
+	    this.priority = priority;
+	}
+
+	@Override
+	public int compareTo(ImageUrl o)
+	{
+	    return Integer.compare(priority, o.priority);
+	}
+
     }
 
 }
