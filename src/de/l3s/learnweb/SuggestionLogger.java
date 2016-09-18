@@ -164,7 +164,8 @@ public class SuggestionLogger
 		    suggestion += currentSuggestion.getAttributes().getNamedItem("data").getNodeValue();
 		    suggestion += ", ";
 		}
-		suggestion = suggestion.substring(0, suggestion.lastIndexOf(","));
+		if(suggestion.lastIndexOf(",") != -1)
+		    suggestion = suggestion.substring(0, suggestion.lastIndexOf(","));
 	    }
 	    catch(NullPointerException e)
 	    {

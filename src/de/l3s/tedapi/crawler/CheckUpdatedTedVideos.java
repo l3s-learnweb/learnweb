@@ -17,6 +17,7 @@ import org.json.simple.parser.ParseException;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.Resource;
 
 @SuppressWarnings("rawtypes")
 public class CheckUpdatedTedVideos extends BaseTedApiCrawler implements Runnable
@@ -42,7 +43,7 @@ public class CheckUpdatedTedVideos extends BaseTedApiCrawler implements Runnable
 	    Iterator i = talks.iterator();
 
 	    JSONObject jsonTempObj, jsonTalkObj;
-	    String talkUpdatedAt, langCode, prepareStmt;
+	    String talkUpdatedAt, langCode, prepareStmt, slug, title, description, slugFromDb;
 	    int tedId, lwResourceId, viewedCount, dbReturnVal;
 	    boolean updateTranscripts;
 	    PreparedStatement pStmt = null;
@@ -78,19 +79,21 @@ public class CheckUpdatedTedVideos extends BaseTedApiCrawler implements Runnable
 			pStmt.setInt(1, viewedCount);
 			pStmt.setInt(2, tedId);
 			dbReturnVal = pStmt.executeUpdate();
-			if(dbReturnVal == 1)
-			    log.info("Changed updated viewed count from " + viewedCountFromDb + "to " + viewedCount);
+			//if(dbReturnVal == 1)
+			//log.info("Changed updated viewed count from " + viewedCountFromDb + "to " + viewedCount);
 		    }
 
 		    if(!talkUpdatedAt.equals(updatedAt))
 		    {
-			prepareStmt = "SELECT resource_id FROM ted_video WHERE ted_id = ?";
+			prepareStmt = "SELECT resource_id, slug FROM ted_video WHERE ted_id = ?";
 			pStmt = Learnweb.getInstance().getConnection().prepareStatement(prepareStmt);
 			pStmt.setInt(1, tedId);
 			ResultSet rsResourceId = pStmt.executeQuery();
 			if(rsResourceId.next())
 			{
 			    lwResourceId = rsResourceId.getInt(1);
+			    slugFromDb = rsResourceId.getString(2);
+
 			    prepareStmt = "SELECT language_code FROM ted_transcripts WHERE `resource_id`=?";
 			    pStmt = Learnweb.getInstance().getConnection().prepareStatement(prepareStmt);
 			    pStmt.setInt(1, lwResourceId);
@@ -132,6 +135,30 @@ public class CheckUpdatedTedVideos extends BaseTedApiCrawler implements Runnable
 				    }
 				}
 			    }
+
+			    slug = jsonTalkObj.get("slug").toString();
+
+			    if(!slug.equalsIgnoreCase(slugFromDb))
+			    {
+				Resource r = Learnweb.getInstance().getResourceManager().getResource(lwResourceId);
+				title = jsonTalkObj.get("name").toString();
+				description = jsonTalkObj.get("description").toString();
+				r.setTitle(title);
+				r.setDescription(description);
+				r.setUrl("http://www.ted.com/talks/" + slug);
+				r.save();
+				prepareStmt = "UPDATE `ted_video` SET `title`=?, description=?, slug=? WHERE `ted_id`=?";
+				pStmt = Learnweb.getInstance().getConnection().prepareStatement(prepareStmt);
+				pStmt.setString(1, title);
+				pStmt.setString(2, description);
+				pStmt.setString(3, slug);
+				pStmt.setInt(4, tedId);
+				dbReturnVal = pStmt.executeUpdate();
+				if(dbReturnVal == 1)
+				    log.info("Changed slug from " + slugFromDb + "to " + slug);
+
+			    }
+
 			    prepareStmt = "UPDATE `ted_video` SET `talk_updated_at`=? WHERE `ted_id`=?";
 			    pStmt = Learnweb.getInstance().getConnection().prepareStatement(prepareStmt);
 			    pStmt.setString(1, talkUpdatedAt);
@@ -145,10 +172,6 @@ public class CheckUpdatedTedVideos extends BaseTedApiCrawler implements Runnable
 			{
 			    log.error("database error: no resource_id for for TED video ID:" + tedId + ", So couldn't update the video.");
 			}
-		    }
-		    else
-		    {
-			log.info("Video " + tedId + " hasn't been updated");
 		    }
 		}
 		else

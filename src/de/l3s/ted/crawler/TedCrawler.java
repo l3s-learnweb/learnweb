@@ -2,7 +2,6 @@ package de.l3s.ted.crawler;
 
 import java.io.IOException;
 import java.net.URL;
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,7 +33,7 @@ public class TedCrawler extends WebCrawler
 {
 
     /*No TED ID mentioned on the Ted talk page*/
-    static Connection dbcon;
+    //static Connection dbcon;
     public static final String CRAWL_FOR_NEW_VIDEOS = "crawler need to be run for only the newly added videos ";
     public static final String CRAWL_FOR_TRANSCRIPTS = "crawler is run for new transcripts that are added to old videos";
     //public static final String CRAWL_IF_NO_TRANSCRIPTS = "crawl videos which initially had no transcripts ";
@@ -52,6 +51,8 @@ public class TedCrawler extends WebCrawler
     public boolean neglectThisPage(Page page)
     {
 	if(page.getWebURL().getURL().contains("?v2"))
+	    return false;
+	else if(page.getWebURL().getURL().contains("?page"))
 	    return false;
 	else if(page.getWebURL().getURL().contains("/browse"))
 	    return false;
@@ -74,7 +75,7 @@ public class TedCrawler extends WebCrawler
 	try
 	{
 	    //Insert the crawled and the parsed values to into the Database
-	    PreparedStatement pStmt = dbcon.prepareStatement("INSERT DELAYED INTO `ted_transcripts_paragraphs`(`resource_id`, `language`,`starttime`,`paragraph`) VALUES(?,?,?,?)");
+	    PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("INSERT DELAYED INTO `ted_transcripts_paragraphs`(`resource_id`, `language`,`starttime`,`paragraph`) VALUES(?,?,?,?)");
 
 	    pStmt.setInt(1, resourceId);
 	    pStmt.setString(2, lang);
@@ -171,7 +172,7 @@ public class TedCrawler extends WebCrawler
 	    try
 	    {
 		// check the database to identify if the video has already been crawled or if any new transcripts are added to the video
-		PreparedStatement pStmnt = dbcon.prepareStatement("SELECT  resource_id, language_code FROM ted_video LEFT JOIN ted_transcripts USING(resource_id) WHERE slug=" + "\"" + slug + "\"");
+		PreparedStatement pStmnt = Learnweb.getInstance().getConnection().prepareStatement("SELECT  resource_id, language_code FROM ted_video LEFT JOIN ted_transcripts USING(resource_id) WHERE slug=" + "\"" + slug + "\"");
 		ResultSet rs = pStmnt.executeQuery();
 
 		while(rs.next())
@@ -261,10 +262,10 @@ public class TedCrawler extends WebCrawler
 		    }
 		    try
 		    {
-			String preQueryStatement = "INSERT INTO `ted_video`(`resource_id`,`slug`, `title`, `description`, `viewed_count`, `published_at`, `photo1_url`, `photo1_width`,`photo1_height`,`tags`,`duration`) VALUES (?,?,?,?,?,?,?,?,?,?)";
-			PreparedStatement pStmnt = dbcon.prepareStatement(preQueryStatement);
+			String preQueryStatement = "INSERT INTO `ted_video`(`resource_id`,`slug`, `title`, `description`, `viewed_count`, `published_at`, `photo1_url`, `photo1_width`,`photo1_height`,`tags`,`duration`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+			PreparedStatement pStmnt = Learnweb.getInstance().getConnection().prepareStatement(preQueryStatement);
 
-			pStmnt = dbcon.prepareStatement(preQueryStatement);
+			//pStmnt = dbcon.prepareStatement(preQueryStatement);
 			pStmnt.setInt(1, tedResource.getId());
 			pStmnt.setString(2, slug);
 			pStmnt.setString(3, title);
@@ -301,7 +302,7 @@ public class TedCrawler extends WebCrawler
 			for(Element transcriptLinkElement : transcriptlinkeles)
 			{
 			    String hrefLang = transcriptLinkElement.attr("hreflang");
-			    if(hrefLang != null && !hrefLang.equals("x-default"))
+			    if(hrefLang != null && !hrefLang.isEmpty() && !hrefLang.equals("x-default"))
 				languageSet.add(hrefLang);
 			}
 
