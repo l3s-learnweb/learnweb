@@ -7,12 +7,12 @@
 	<display-name>Learnweb 2.7.0</display-name>
 	<context-param>
 		<param-name>javax.faces.PROJECT_STAGE</param-name>
-		<param-value>Development</param-value>
+		<param-value>Production</param-value>
 		<!-- Development Production -->
 	</context-param>
 	<context-param>
 		<param-name>facelets.DEVELOPMENT</param-name>
-		<param-value>true</param-value>
+		<param-value>false</param-value>
 	</context-param>
 	<context-param>
 		<param-name>primefaces.LEGACY_WIDGET_NAMESPACE</param-name>
@@ -26,16 +26,16 @@
 
 	<error-page>
 		<exception-type>java.sql.SQLNonTransientConnectionException</exception-type>
-		<location>/lw/error_db.jsf</location>
+		<location>/lw/error-db.jsf</location>
 	</error-page>
 	<error-page>
 		<exception-type>javax.faces.application.ViewExpiredException</exception-type>
-		<location>/lw/error_expired.jsf</location>
-	</error-page>
+		<location>/lw/error-expired.jsf</location>
+	</error-page>	 
 	<error-page>
-		<exception-type>java.lang.Throwable</exception-type>
-		<location>/lw/error.jsf</location>
-	</error-page>
+		<error-code>404</error-code>
+		<location>/lw/error-404.jsf</location>
+	</error-page>	
 	<error-page>
 		<error-code>500</error-code>
 		<location>/lw/error-server.jsf</location>
@@ -44,7 +44,13 @@
 		<error-code>503</error-code>
 		<location>/lw/error-server.jsf</location>
 	</error-page>
-
+	<!-- 
+	<error-page>
+		<exception-type>java.lang.Throwable</exception-type>
+		<location>/lw/error.jsf</location>
+	</error-page>
+	 -->
+	 
 	<filter>
 		<filter-name>UrlRewriteFilter</filter-name>
 		<filter-class>org.tuckey.web.filters.urlrewrite.UrlRewriteFilter</filter-class>
@@ -128,17 +134,19 @@
 		<listener-class>org.apache.myfaces.webapp.StartupServletContextListener</listener-class>
 	</listener>
 
+	<!-- 
 	<servlet>
 		<servlet-name>Push Servlet</servlet-name>
 		<servlet-class>org.primefaces.push.PushServlet</servlet-class>
 		<load-on-startup>1</load-on-startup>
 		<async-supported>true</async-supported>
 	</servlet>
+	
 	<servlet-mapping>
 		<servlet-name>Push Servlet</servlet-name>
 		<url-pattern>/primepush/*</url-pattern>
 	</servlet-mapping>  
-	
+	 -->
 	<servlet>
 		<description>Simple Servlet for Streaming Files to the Clients Browser</description>
 		<display-name>Simple DownloadServlet</display-name>
@@ -174,7 +182,6 @@
 	</servlet>
 	<servlet-mapping>
 		<servlet-name>Faces Servlet</servlet-name>
-		<url-pattern>/faces/*</url-pattern>
 		<url-pattern>*.jsf</url-pattern>
 	</servlet-mapping>
 

@@ -1,0 +1,18 @@
+<ui:composition 
+	template="/templates/main/main.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+	
+	<ui:param name="pageTitle" value="#{msg.error}" />
+	<ui:param name="smallPage" value="true" />
+	<ui:param name="disableGrowl" value="true" />
+	
+	<ui:define name="center_layout">
+		<div class="error" style="font-size:1.4rem">Sorry this page does not exist</div>	        
+        <br/><br/>
+        <a href="user/login.jsf">#{msg.reload}</a>
+	</ui:define>
+
+</ui:composition>

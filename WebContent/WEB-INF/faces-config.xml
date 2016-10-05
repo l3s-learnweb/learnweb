@@ -23,13 +23,21 @@
 			org.primefaces.application.exceptionhandler.PrimeExceptionHandlerELResolver
 	    </el-resolver>
 	</application>
-	
+	<!--
+	<factory>
+		<exception-handler-factory>
+			org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory
+		</exception-handler-factory>
+	</factory>
+	 -->
 	<factory>
 		<exception-handler-factory>
 			de.l3s.learnweb.beans.LearnwebExceptionHandlerFactory
 		</exception-handler-factory>
 	</factory>
-	<!-- org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory
+	
+	<!--
+	 org.primefaces.application.exceptionhandler.PrimeExceptionHandlerFactory
 	de.l3s.learnweb.beans.CustomExceptionHandlerFactory 
 	 -->
 </faces-config>

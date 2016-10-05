@@ -1,7 +1,9 @@
 package de.l3s.learnwebBeans;
 
 import javax.faces.application.FacesMessage;
+import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -47,8 +49,15 @@ public class ApplicationBean
     {
 	if(null == sessionId)
 	{
-	    HttpSession session = (HttpSession) getFacesContext().getExternalContext().getSession(true);
-	    sessionId = session.getId();
+	    HttpSession session;
+	    FacesContext facesContect = getFacesContext();
+	    if(facesContect == null)
+		sessionId = null;
+	    else if((session = (HttpSession) facesContect.getExternalContext().getSession(true)) != null)
+		sessionId = session.getId();
+
+	    if(sessionId == null)
+		Logger.getLogger(ApplicationBean.class).warn("Couldn't create session");
 	}
 	return sessionId;
     }
@@ -285,10 +294,35 @@ public class ApplicationBean
 	getLearnweb().log(getUser(), action, groupId, targetId, null, getSessionId(), executionTime);
     }
 
-    protected void addFatalMessage(Throwable e)
+    protected void addFatalMessage(Throwable exception)
     {
 	addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 	addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	Logger.getLogger(ApplicationBean.class).fatal("fatal", e);
+
+	String queryString = null;
+	Integer userId = -1;
+	String referrer = null;
+	String ip = null;
+	String userAgent = null;
+	try
+	{
+	    FacesContext facesContext = FacesContext.getCurrentInstance();
+	    ExternalContext ext = facesContext.getExternalContext();
+	    HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();
+	    queryString = servletRequest.getRequestURI();
+	    referrer = servletRequest.getHeader("referer");
+	    ip = servletRequest.getRemoteAddr();
+	    userAgent = servletRequest.getHeader("User-Agent");
+
+	    HttpSession session = servletRequest.getSession(false);
+	    if(session != null)
+		userId = (Integer) session.getAttribute("learnweb_user_id");
+
+	}
+	catch(Throwable t)
+	{
+	    // ignore
+	}
+	Logger.getLogger(ApplicationBean.class).fatal("Fatal unhandled error on: " + queryString + "; userId: " + userId + "; ip: " + ip + "; referrer: " + referrer + "; userAgent: " + userAgent, exception);
     }
 }

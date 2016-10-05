@@ -38,26 +38,37 @@ public class LearnwebExceptionHandler extends PrimeExceptionHandler
 	    Throwable exception = unhandledExceptionQueuedEvents.next().getContext().getException();
 	    if(exception instanceof ViewExpiredException)
 		log.info("View expired exception");
+	    else if(exception instanceof IllegalStateException && exception.getMessage().startsWith("Cannot create a session"))
+	    {
+		log.info(exception.getMessage() + "; Happens mostly because of error 404");
+		return;
+	    }
 	    else
 	    {
 		String queryString = null;
-		Integer userId = null;
-
+		Integer userId = -1;
+		String referrer = null;
+		String ip = null;
+		String userAgent = null;
 		try
 		{
 		    FacesContext facesContext = FacesContext.getCurrentInstance();
 		    ExternalContext ext = facesContext.getExternalContext();
 		    HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();
 		    queryString = servletRequest.getRequestURI();
+		    referrer = servletRequest.getHeader("referer");
+		    ip = servletRequest.getRemoteAddr();
+		    userAgent = servletRequest.getHeader("User-Agent");
 
-		    HttpSession session = servletRequest.getSession(true);
-		    userId = (Integer) session.getAttribute("learnweb_user_id");
+		    HttpSession session = servletRequest.getSession(false);
+		    if(session != null)
+			userId = (Integer) session.getAttribute("learnweb_user_id");
 		}
 		catch(Throwable t)
 		{
 		    // ignore
 		}
-		log.fatal("Fatal unhandled error on: " + queryString + "; userId: " + userId, exception);
+		log.fatal("Fatal unhandled error on: " + queryString + "; userId: " + userId + "; ip: " + ip + "; referrer: " + referrer + "; userAgent: " + userAgent, exception);
 	    }
 
 	}
