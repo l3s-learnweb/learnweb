@@ -756,6 +756,10 @@ h3 {
 .small_page input[type=password] {
 	width:200px;
 }
+.border-box-100 {
+	box-sizing: border-box;
+	width: 100%;
+}
 
 .greenbutton > button,
 .graybutton > button,

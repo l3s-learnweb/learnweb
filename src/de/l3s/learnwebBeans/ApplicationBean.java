@@ -42,7 +42,7 @@ public class ApplicationBean
 	*/
 	startTime = System.currentTimeMillis();
 
-	getSessionId(); // hopefully prevents java.lang.IllegalStateException: Cannot create a session after the response has been committed 
+	//getSessionId(); // hopefully prevents java.lang.IllegalStateException: Cannot create a session after the response has been committed 
     }
 
     public String getSessionId()

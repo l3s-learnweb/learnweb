@@ -596,13 +596,16 @@
 							</div>
 						</ui:fragment>
 					</div>
+					<!-- 
+					TODO remove all style="width:100%; box-sizing: border-box;" attributes
+					 -->
 					<table id="edit_table" class="full-width">
 						<tr>
 							<td>
 								#{msg.title}:
 							</td>
 							<td>
-								<p:inputText style="width: 96%" value="#{bean.clickedResource.title}"/>
+								<p:inputText style="width:100%; box-sizing: border-box;" class="border-box-100" value="#{bean.clickedResource.title}"/>
 							</td>
 						</tr>
 						<tr>
@@ -610,7 +613,7 @@
 								#{msg.author}:
 							</td>
 							<td>
-								<p:inputText style="width: 96%" value="#{bean.clickedResource.author}"/>
+								<p:inputText style="width:100%; box-sizing: border-box;" class="border-box-100" value="#{bean.clickedResource.author}"/>
 							</td>
 						</tr>
 						<tr>
@@ -620,7 +623,7 @@
 						</tr>
 						<tr>
 							<td colspan="2">
-								<p:inputTextarea rows="4" style="width: 97%; overflow-y: scroll" id="resource_description" 
+								<p:inputTextarea rows="4" style="overflow-y: scroll; width:100%; box-sizing: border-box;" class="border-box-100" id="resource_description" 
 									value="#{bean.clickedResource.description}"/>
 							</td>
 						</tr>
@@ -636,14 +639,27 @@
 								<td>
 									
 									
-									<ui:fragment rendered="#{field.moderatorOnly}">
-										<h:outputText value="#{bean.clickedResource.metadata[field.name]}" /> 
+									<ui:fragment rendered="#{field.moderatorOnly and not userBean.moderator}">
+										mod Only:<h:outputText value="#{bean.clickedResource.metadata[field.name]}" /> 
 									</ui:fragment>	
 									
-									<ui:fragment rendered="#{not field.moderatorOnly}">									
+									<ui:fragment rendered="#{not field.moderatorOnly or userBean.moderator}">									
 									
-										<p:inputText style="width: 96%" value="#{bean.clickedResource.metadata[field.name]}" rendered="#{field.type == 'INPUT_TEXT'}"/>
+										<p:inputText style="width:100%; box-sizing: border-box;" class="border-box-100" value="#{bean.clickedResource.metadata[field.name]}" rendered="#{field.type eq 'INPUT_TEXT'}"/>
+
+										<p:selectOneMenu value="#{bean.clickedResource.metadata[field.name]}" rendered="#{field.type eq 'ONE_MENU'}"
+											style="width:100%; box-sizing: border-box;" class="border-box-100">
+											<f:selectItem itemLabel="Select One" itemValue="" />
+											<f:selectItem itemLabel="Xbox One" itemValue="Xbox One" />
+											<f:selectItem itemLabel="PS4" itemValue="PS4" />
+											<f:selectItem itemLabel="Wii U" itemValue="Wii U" />
+										</p:selectOneMenu>
+
+
 										<h:outputText value="#{field.type}" rendered="#{field.type != 'INPUT_TEXT'}" /> 
+										
+										<h:outputText value="ein menu" rendered="#{field.type == 'ONE_MENU'}" /> 
+										
 										
 									</ui:fragment>								
 								</td>

@@ -71,6 +71,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
 	// define optional resource fields for some courses
 	if(id == 893) // Admin only
 	{
+	    /*
 	    ResourceMetadataField metadata = new ResourceMetadataField("language", MetadataType.ONE_MENU);
 	    metadata.getOptions().add("german");
 	    metadata.getOptions().add("english");
@@ -80,6 +81,17 @@ public class Organisation implements Serializable, Comparable<Organisation>
 	    metadataFields.add(new ResourceMetadataField("coverage", MetadataType.INPUT_TEXT));
 	    metadata = new ResourceMetadataField("test2", MetadataType.ONE_MENU);
 	    metadata.setModeratorOnly(true);
+	    metadataFields.add(metadata);
+	    */
+
+	    ResourceMetadataField metadata = new ResourceMetadataField("language", MetadataType.ONE_MENU);
+	    metadata.getOptions().add("german");
+	    metadata.getOptions().add("english");
+	    metadata.getOptions().add("french");
+	    metadata.getOptions().add("greek");
+	    metadataFields.add(metadata);
+	    metadataFields.add(new ResourceMetadataField("coverage", MetadataType.INPUT_TEXT));
+	    metadata = new ResourceMetadataField("test2", MetadataType.ONE_MENU);
 	    metadataFields.add(metadata);
 	}
 	else if(id == 848) // Demo (archive course)
