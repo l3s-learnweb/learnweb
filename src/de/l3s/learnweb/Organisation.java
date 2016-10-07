@@ -84,15 +84,32 @@ public class Organisation implements Serializable, Comparable<Organisation>
 	    metadataFields.add(metadata);
 	    */
 
-	    ResourceMetadataField metadata = new ResourceMetadataField("language", MetadataType.ONE_MENU);
-	    metadata.getOptions().add("german");
-	    metadata.getOptions().add("english");
-	    metadata.getOptions().add("french");
-	    metadata.getOptions().add("greek");
+	    metadataFields.add(new ResourceMetadataField("language_level", "Language level (CEFR)", MetadataType.INPUT_TEXT));
+
+	    ResourceMetadataField metadata = new ResourceMetadataField("language", "Language(s)", MetadataType.ONE_MENU);
+	    metadata.getOptions().add("C2");
+	    metadata.getOptions().add("C1");
+	    metadata.getOptions().add("B2");
+	    metadata.getOptions().add("B1");
+	    metadata.getOptions().add("A2");
+	    metadata.getOptions().add("A1");
 	    metadataFields.add(metadata);
-	    metadataFields.add(new ResourceMetadataField("coverage", MetadataType.INPUT_TEXT));
-	    metadata = new ResourceMetadataField("test2", MetadataType.ONE_MENU);
+
+	    metadata = new ResourceMetadataField("yell_target_users", "Target users of resource", MetadataType.ONE_MENU_EDITABLE);
+	    metadata.getOptions().add("teachers");
+	    metadata.getOptions().add("university students");
+	    metadata.getOptions().add("secondary school students");
+	    metadata.getOptions().add("primary school children");
+	    metadata.getOptions().add("pre-school children");
 	    metadataFields.add(metadata);
+
+	    metadataFields.add(new ResourceMetadataField("resource_topic", "Topic of resource", MetadataType.INPUT_TEXT));
+	    metadataFields.add(new ResourceMetadataField("yell_resource_teaching_type", "Type of teaching/learning resource", MetadataType.INPUT_TEXT));
+
+	    metadata = new ResourceMetadataField("yell_keywords", "Keywords", MetadataType.INPUT_TEXT);
+	    metadata.setRequired(true);
+	    metadataFields.add(metadata);
+
 	}
 	else if(id == 848) // Demo (archive course)
 	{

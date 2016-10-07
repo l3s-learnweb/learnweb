@@ -15,15 +15,19 @@ public class ResourceMetadataField implements Serializable
 	ONE_MENU_EDITABLE
     }
 
-    private String name; // the name of this field, will be used as SOLR column name and as label on the website 
+    private String name; // the name of this field, will be used as SOLR column name  
+    private String label; // label on the website 
+    private String info; // an explanation, displayed as tooltip
     private MetadataType type;
     private List<String> options = new LinkedList<String>(); // default options for some input types like OneMenu
     private boolean moderatorOnly = false; // only admins and moderators have write access
+    private boolean required = false;
 
-    public ResourceMetadataField(String name, MetadataType type)
+    public ResourceMetadataField(String name, String label, MetadataType type)
     {
 	super();
 	this.name = name;
+	this.label = label;
 	this.type = type;
     }
 
@@ -31,6 +35,7 @@ public class ResourceMetadataField implements Serializable
     {
 	super();
 	this.name = name;
+	this.label = name;
 	this.type = type;
 	this.moderatorOnly = moderatorOnly;
     }
@@ -73,6 +78,36 @@ public class ResourceMetadataField implements Serializable
     public void setModeratorOnly(boolean moderatorOnly)
     {
 	this.moderatorOnly = moderatorOnly;
+    }
+
+    public String getLabel()
+    {
+	return label;
+    }
+
+    public void setLabel(String label)
+    {
+	this.label = label;
+    }
+
+    public String getInfo()
+    {
+	return info;
+    }
+
+    public void setInfo(String info)
+    {
+	this.info = info;
+    }
+
+    public boolean isRequired()
+    {
+	return required;
+    }
+
+    public void setRequired(boolean required)
+    {
+	this.required = required;
     }
 
 }

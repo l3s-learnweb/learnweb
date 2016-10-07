@@ -599,87 +599,97 @@
 					<!-- 
 					TODO remove all style="width:100%; box-sizing: border-box;" attributes
 					 -->
-					<table id="edit_table" class="full-width">
-						<tr>
-							<td>
-								#{msg.title}:
-							</td>
-							<td>
-								<p:inputText style="width:100%; box-sizing: border-box;" class="border-box-100" value="#{bean.clickedResource.title}"/>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								#{msg.author}:
-							</td>
-							<td>
-								<p:inputText style="width:100%; box-sizing: border-box;" class="border-box-100" value="#{bean.clickedResource.author}"/>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								#{msg.description}:
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2">
-								<p:inputTextarea rows="4" style="overflow-y: scroll; width:100%; box-sizing: border-box;" class="border-box-100" id="resource_description" 
-									value="#{bean.clickedResource.description}"/>
-							</td>
-						</tr>
-						
-						
-						<ui:repeat var="field" value="#{userBean.user.organisation.metadataFields}">							
-							<tr>
-								<td>
-									<span class="resource_field">
-										<h:outputText value="${utilBean.getLocaleMessage(field.name, null)}" />: 
-									</span>
-								</td>
-								<td>
-									
-									
-									<ui:fragment rendered="#{field.moderatorOnly and not userBean.moderator}">
-										mod Only:<h:outputText value="#{bean.clickedResource.metadata[field.name]}" /> 
-									</ui:fragment>	
-									
-									<ui:fragment rendered="#{not field.moderatorOnly or userBean.moderator}">									
-									
-										<p:inputText style="width:100%; box-sizing: border-box;" class="border-box-100" value="#{bean.clickedResource.metadata[field.name]}" rendered="#{field.type eq 'INPUT_TEXT'}"/>
+					 
+		<h:outputStylesheet name="main-template/tooltipster.min.css" />
 
-										<p:selectOneMenu value="#{bean.clickedResource.metadata[field.name]}" rendered="#{field.type eq 'ONE_MENU'}"
-											style="width:100%; box-sizing: border-box;" class="border-box-100">
-											<f:selectItem itemLabel="Select One" itemValue="" />
-											<f:selectItem itemLabel="Xbox One" itemValue="Xbox One" />
-											<f:selectItem itemLabel="PS4" itemValue="PS4" />
-											<f:selectItem itemLabel="Wii U" itemValue="Wii U" />
+	    <script type="text/javascript" src="#{request.contextPath}/resources/js/jquery.tooltipster.min.js" />
+	    
+	    <script type="text/javascript">
+	    	function applyTooltip()
+	    	{
+	    		$('.tooltip').tooltipster({
+	            	 
+	                contentAsHTML:true,
+	                //maxWidth: 400,
+	                position:'top',
+	                //hideOnClick: true;,
+	                interactive:true,
+	                interactiveTolerance:150, // increase to debug
+	                //theme:'tooltipster-custom-theme'	
+	                //theme:'tooltipster-custom-b'
+	            });
+	    	}
+	        $(document).ready(function() {
+	        	applyTooltip();
+	        	
+	        });
+	    </script>	
+	    
+					<table id="edit_table" class="full-width">
+						<colgroup>
+							<col span="1" style="width: 30%; min-width: 20rem;" />
+							<col span="1" />
+						</colgroup>
+						
+						<tr>
+							<td>#{msg.title}:</td>
+							<td><p:inputText style="width:100%; box-sizing: border-box;" class="border-box-100" value="#{bean.clickedResource.title}" /></td>
+						</tr>
+						<tr>
+							<td>#{msg.author}:</td>
+							<td>
+								<p:inputText style="width:100%; box-sizing: border-box;" class="border-box-100" value="#{bean.clickedResource.author}" id="author" title="please, carefully acknowledge authors of resources. In case the author is not clear, use all the details you have: URL, book reference, etc"/>
+								<p:tooltip for="author" showEvent="focus" hideEvent="blur" position="left">
+								
+								</p:tooltip>
+							</td>
+						</tr>
+
+						<ui:repeat var="field" value="#{userBean.user.organisation.metadataFields}">
+							<tr>
+								<td><span class="resource_field">
+										<h:outputText value="${utilBean.getLocaleMessage(field.label, null)}" />
+										:
+									</span></td>
+								<td><ui:fragment rendered="#{field.moderatorOnly and not userBean.moderator}">
+										<h:outputText value="#{bean.clickedResource.metadata[field.name]}" />
+									</ui:fragment> <ui:fragment rendered="#{not field.moderatorOnly or userBean.moderator}">
+
+										<p:inputText required="#{field.required}" style="width:100%; box-sizing: border-box;" class="border-box-100" value="#{bean.clickedResource.metadata[field.name]}"
+											rendered="#{field.type eq 'INPUT_TEXT'}" />
+
+										<p:selectOneMenu value="#{bean.clickedResource.metadata[field.name]}" rendered="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}"
+											editable="#{field.type eq 'ONE_MENU_EDITABLE'}" required="#{field.required}" style="width:100%; box-sizing: border-box;" class="border-box-100">
+											<f:selectItems value="#{field.options}" var="option" itemLabel="#{option}" itemValue="#{option}" />
 										</p:selectOneMenu>
 
-
+										<!-- 
 										<h:outputText value="#{field.type}" rendered="#{field.type != 'INPUT_TEXT'}" /> 
 										
 										<h:outputText value="ein menu" rendered="#{field.type == 'ONE_MENU'}" /> 
-										
-										
-									</ui:fragment>								
-								</td>
-								
-								
-							</tr>							
+	 -->
+
+									</ui:fragment></td>
+
+
+							</tr>
 						</ui:repeat>
-						
+
 						<tr>
-							<td colspan="2">
-								<p:commandButton styleClass="greenbutton float-right" value="#{msg.save}" 
-									actionListener="#{bean.editClickedResource}" update=":datagrid :add_resource_panel" 
-									oncomplete="update_header();resourceDND();" style="margin-right:0.5em;">
-									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewResource"/>
-								</p:commandButton>
-								<p:commandButton styleClass="greenbutton float-right" value="#{msg.cancel}" 
-									update=":add_resource_panel" style="margin-right:0.5em;" immediate="true">
-									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewResource"/>
-								</p:commandButton>
-							</td>
+							<td>#{msg.description}:</td>
+						</tr>
+						<tr>
+							<td colspan="2"><p:inputTextarea rows="4" style="overflow-y: scroll; width:100%; box-sizing: border-box;" class="border-box-100" id="resource_description"
+									value="#{bean.clickedResource.description}" /></td>
+						</tr>
+
+						<tr>
+							<td colspan="2"><p:commandButton styleClass="greenbutton float-right" value="#{msg.save}" actionListener="#{bean.editClickedResource}"
+									update=":datagrid :add_resource_panel" oncomplete="update_header();resourceDND();" style="margin-right:0;">
+									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewResource" />
+								</p:commandButton> <p:commandButton styleClass="greenbutton float-right" value="#{msg.cancel}" update=":add_resource_panel" style="margin-right:0.5em" immediate="true">
+									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewResource" />
+								</p:commandButton></td>
 						</tr>
 					</table>
 				</h:form>

@@ -761,6 +761,14 @@ h3 {
 	width: 100%;
 }
 
+.ui-tooltip .ui-tooltip-text {
+    max-width: 40rem;
+}
+
+.ui-icon {
+    background-image: url("/Learnweb-Tomcat/javax.faces.resource/images/ui-icons_616161_256x240.png.jsf?ln=primefaces-aristo") !important;
+}
+
 .greenbutton > button,
 .graybutton > button,
 button.greenbutton,
