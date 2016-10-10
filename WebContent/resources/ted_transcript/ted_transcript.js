@@ -1,5 +1,24 @@
 var escape_key_flag = false;
 var selectedNodeId;
+var tags = {}; 
+
+function openTagsDiv() {
+	if($('.overlay').width() == 0)
+    {
+		$('.overlay').width("256px");
+	    $('.embedded').width($('.embedded').width() - 256);
+	    $('.right_bar').css("margin-right","256px");
+    }
+}
+
+function closeTagsDiv() {
+	$('.overlay').width("0px");	
+    $('.embedded').width($('.embedded').width() + 256);
+    $('.right_bar').css("margin-right","0px");
+    //$('.note').tooltipster('hide');
+    $('.note').removeClass('hover');
+    $('.ui-selected').removeClass("ui-selected");
+}
 
 $(document).ready(function(){
 	
@@ -12,14 +31,16 @@ $(document).ready(function(){
     
 	$('.note').tooltipster({
 		functionInit: function(origin, content) {
-	        if($(this).data('title'))
+	        if($(this).data('title') && $(this).data('content'))
 	        	return $(this).data('title') + '<hr/>' + $(this).data('content').replace(new RegExp('&lt;br/&gt;','g'),'<br/>');
-	        else
+	        else if($(this).data('content'))
 	        	return $(this).data('content').replace(new RegExp('&lt;br/&gt;','g'),'<br/>');
+	        else if($(this).data('title'))
+	        	return $(this).data('title');
 	    },
     	contentAsHTML: true,
     	maxWidth: 300,
-    	position:'right',
+    	position:'left',
     	theme:'tooltipster-custom-theme'
     });
 	
@@ -29,9 +50,14 @@ $(document).ready(function(){
 		selected_word.onclick = function(){
 	        if (window.confirm("Delete this selection (" + $(this).text() + ")?")) {
 	        	saveTranscriptLog([{name:'word', value:$(this).text()},{name:'user_annotation', value:$(this).attr("data-title")},{ name:'action',value:'deselection'}]);
+	        	delete tags[$(this).attr('id')];
+	        	updateTagList();
 	        	$(this).contents().unwrap();
             }
 		};
+		
+		if(selected_word.getAttribute("data-title") != undefined)
+			tags[selected_word.id] = selected_word.getAttribute("data-title");
 	}
 
 	$('#text').keypress(function(event){
@@ -50,7 +76,6 @@ $(document).ready(function(){
 			$('#userinput_cancel').click();
 			return false;
 		}
-
 	});
 	
 	$('.embedded').mousedown(function() {return false;}); 
@@ -58,6 +83,66 @@ $(document).ready(function(){
 		deleteSelection();
 	});
 
+	initializeJQueryContextMenu();
+	initializeResizableDiv();
+	$( "#selectable" ).selectable({
+	      stop: function() {
+
+	        $( ".ui-selected", this ).each(function() {
+	          var text = $(this).text();
+	          //$('[data-title=' + text + ']').tooltipster('show');
+	          $('[data-title=' + text + ']').addClass("hover");
+	        });
+	      },
+	      unselected: function(event,ui){
+				var text = $(ui.unselected).text();
+				//$('[data-title=' + text + ']').tooltipster('hide');
+				$('[data-title=' + text + ']').removeClass("hover");
+			}
+	});
+	
+	updateTagList();
+	
+	/*$(window).bind('beforeunload',function(){
+		saveEditing();
+	});*/
+});
+
+function updateTagList(){
+	  //clear the existing list
+	  $('#selectable li').remove();
+	  $('.note').removeClass('hover');
+	  var tagSet = new Set();
+	  for(var k in tags)  
+		  tagSet.add(tags[k]);
+	  
+	  tagSet.forEach(function(value){
+		  $('#selectable').append('<li class="ui-widget-content">'+value+'</li>');
+	  });
+		  
+}
+	
+function initializeResizableDiv(){
+	$(".embedded").resizable({
+		  handles: "e"
+	});
+	
+	$('.embedded').resize(function(){
+	   $('.right_bar').width($("#ted_content").width() - $(".embedded").width() - 30); 
+	});	
+	
+	$(window).resize(function(){
+		
+		if($('.overlay').width() > 0)
+		   $('.right_bar').width($("#ted_content").width()-$(".embedded").width() - 30 - 256);
+		else
+		   $('.right_bar').width($("#ted_content").width()-$(".embedded").width() - 30);
+		
+		$('.right_bar').height($("#ted_content").height()); 
+		});
+}
+
+function initializeJQueryContextMenu(){
 	//Initializing JQuery contextmenu
 	$.contextMenu({
         selector: '.note', 
@@ -88,8 +173,8 @@ $(document).ready(function(){
             },
         }
     });
-});
-
+	
+}
 var usertext = "";
 //var synonyms = "";
 var sel_str ="";
@@ -118,6 +203,7 @@ function setSynonyms(xhr,status,args){
 			selectedNode.tooltipster('content',selectedNode.data('title') + '<hr/>' + selectedNode.data('content').replace(new RegExp('&lt;br/&gt;','g'),'<br/>'));
 		}
 		selectedNode.trigger("mouseenter");
+		saveTranscriptLog([{name:'word', value:selectedNode.text()},{name:'user_annotation', value:''},{ name:'action',value:'display definition'}]);
 	}
 	
 	/*noteid++;
@@ -171,6 +257,8 @@ function noteSelectedText() {
 		$(span).on('click',function(){
 			if (window.confirm("Delete this selection (" + $(this).text() + ")?")) {
 				saveTranscriptLog([{name:'word', value:$(this).text()},{name:'user_annotation', value:$(this).attr("data-title")},{ name:'action',value:'deselection'}]);
+				delete tags[$(this).attr('id')];
+				update_tags();
 				$(this).contents().unwrap();
 				$(this).remove();
 			}
@@ -193,6 +281,7 @@ function noteSelectedText() {
 				//PF('userinput_dialog').show();
 			}
 		}
+		saveTranscriptLog([{name:'word', value:sel_str},{name:'user_annotation', value:''},{ name:'action',value:'selection'}]);
 		//setSynonymsForWord([{name:'word', value:sel_str}]);
 	}
 }
@@ -243,6 +332,9 @@ function getUserText(buttonClicked){
 			selectedNode.tooltipster('content',selectedNode.data('title') + '<hr/>' + selectedNode.data('content').replace(new RegExp('&lt;br/&gt;','g'),'<br/>'));
 		}
 		selectedNode.trigger("mouseenter");
+		tags[selectedNodeId] = usertext;
+		updateTagList();
+		saveTranscriptLog([{name:'word', value:selectedNode.text()},{name:'user_annotation', value:usertext},{ name:'action',value:'add annotation'}]);
 	}
 	//Tooltip creation
 	/*if(synonyms && usertext == "")

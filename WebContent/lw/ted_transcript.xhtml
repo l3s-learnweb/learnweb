@@ -37,7 +37,7 @@
 		<div class="embedded" id="ted_embedded" >		
 			<!-- ${tedTranscriptBean.tedResource.embedded} -->	
 		</div>		
-		
+
 		<h:panelGroup layout="block" id="transcript_column" class="right_bar">
 			<p:outputPanel>
 				<div class="center-header noselect">
@@ -49,6 +49,15 @@
 				           <p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript"/>
 				        </h:selectOneMenu>
 						<p:commandButton styleClass="button_position greenbutton" value="#{msg.save}" onclick="saveEditing();" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}"/>
+						<p:commandButton styleClass="button_position greenbutton" value="Submit" onclick=""/>
+						<p:commandButton styleClass="button_position greenbutton" value="Show Tags" onclick="openTagsDiv()"/>
+						
+						<!-- <p:menuButton value="#{msg.options}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton">
+				        <p:menuitem value="#{msg.save}" icon="ui-icon-disk" onclick="saveEditing();" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}">
+				        </p:menuitem>
+				        <p:menuitem value="Show Tags" icon="ui-icon-circle-triangle-w" onclick="openNav()">
+				        </p:menuitem>
+				   	 </p:menuButton> -->
 					</h:form>
 				</div>
 				<div class="transcript_note noselect">
@@ -65,8 +74,17 @@
 				</h:panelGroup>
 			</h:panelGroup>
 		</h:panelGroup>
+		
+		<!-- User Annotation Div-->
+		<div id="myNav" class="overlay">
+		  <a href="javascript:void(0)" class="closebtn" onclick="closeTagsDiv()"></a>
+		  <div class="overlay-content">
+		  	<ol id="selectable">
+		    </ol>
+		  </div>
 		</div>
-
+		</div>
+		
 		<p:dialog widgetVar="userinput_dialog" modal="true" header="#{msg.userAnnotation}" minWidth="600" resizable="false" closable="false" appendTo="@(body)">
 			<h:form id="userinput_form" prependId="false">
 				<h:outputLabel value="#{msg.justify_selection}:" for="text"/>

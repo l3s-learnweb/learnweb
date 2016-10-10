@@ -39,148 +39,150 @@ public class CheckUpdatedTedVideos extends BaseTedApiCrawler implements Runnable
 
 	    // get an array from the JSON object talks
 	    JSONArray talks = (JSONArray) jsonTalksObject.get("talks");
-
-	    Iterator i = talks.iterator();
-
-	    JSONObject jsonTempObj, jsonTalkObj;
-	    String talkUpdatedAt, langCode, prepareStmt, slug, title, description, slugFromDb;
-	    int tedId, lwResourceId, viewedCount, dbReturnVal;
-	    boolean updateTranscripts;
-	    PreparedStatement pStmt = null;
-
-	    ArrayList<String> langCodesFromDb = new ArrayList<String>();
-	    // take each value from the json array separately
-	    while(i.hasNext())
+	    if(talks != null)
 	    {
-		updateTranscripts = true;
-		langCodesFromDb.clear();
-		jsonTempObj = (JSONObject) i.next();
-		jsonTalkObj = (JSONObject) jsonTempObj.get("talk");
+		Iterator i = talks.iterator();
 
-		tedId = Integer.parseInt(jsonTalkObj.get("id").toString());
-		viewedCount = Integer.parseInt(jsonTalkObj.get("viewed_count").toString());
-		talkUpdatedAt = jsonTalkObj.get("updated_at").toString();
+		JSONObject jsonTempObj, jsonTalkObj;
+		String talkUpdatedAt, langCode, prepareStmt, slug, title, description, slugFromDb;
+		int tedId, lwResourceId, viewedCount, dbReturnVal;
+		boolean updateTranscripts;
+		PreparedStatement pStmt = null;
 
-		prepareStmt = "select viewed_count, DATE_FORMAT(talk_updated_at,'%Y-%m-%d %H:%i:%s') as talk_updated_at from ted_video where ted_id=?";
-		pStmt = Learnweb.getInstance().getConnection().prepareStatement(prepareStmt);
-		pStmt.setInt(1, tedId);
-		pStmt.executeQuery();
-		java.sql.ResultSet rs = pStmt.getResultSet();
-
-		if(rs.next())
+		ArrayList<String> langCodesFromDb = new ArrayList<String>();
+		// take each value from the json array separately
+		while(i.hasNext())
 		{
-		    String updatedAt = rs.getString("talk_updated_at");
-		    int viewedCountFromDb = rs.getInt("viewed_count");
+		    updateTranscripts = true;
+		    langCodesFromDb.clear();
+		    jsonTempObj = (JSONObject) i.next();
+		    jsonTalkObj = (JSONObject) jsonTempObj.get("talk");
 
-		    if(viewedCount != viewedCountFromDb)
-		    {
-			prepareStmt = "UPDATE `ted_video` SET `viewed_count`=? WHERE `ted_id`=?";
-			pStmt = Learnweb.getInstance().getConnection().prepareStatement(prepareStmt);
-			pStmt.setInt(1, viewedCount);
-			pStmt.setInt(2, tedId);
-			dbReturnVal = pStmt.executeUpdate();
-			//if(dbReturnVal == 1)
-			//log.info("Changed updated viewed count from " + viewedCountFromDb + "to " + viewedCount);
-		    }
+		    tedId = Integer.parseInt(jsonTalkObj.get("id").toString());
+		    viewedCount = Integer.parseInt(jsonTalkObj.get("viewed_count").toString());
+		    talkUpdatedAt = jsonTalkObj.get("updated_at").toString();
 
-		    if(!talkUpdatedAt.equals(updatedAt))
+		    prepareStmt = "select viewed_count, DATE_FORMAT(talk_updated_at,'%Y-%m-%d %H:%i:%s') as talk_updated_at from ted_video where ted_id=?";
+		    pStmt = Learnweb.getInstance().getConnection().prepareStatement(prepareStmt);
+		    pStmt.setInt(1, tedId);
+		    pStmt.executeQuery();
+		    java.sql.ResultSet rs = pStmt.getResultSet();
+
+		    if(rs.next())
 		    {
-			prepareStmt = "SELECT resource_id, slug FROM ted_video WHERE ted_id = ?";
-			pStmt = Learnweb.getInstance().getConnection().prepareStatement(prepareStmt);
-			pStmt.setInt(1, tedId);
-			ResultSet rsResourceId = pStmt.executeQuery();
-			if(rsResourceId.next())
+			String updatedAt = rs.getString("talk_updated_at");
+			int viewedCountFromDb = rs.getInt("viewed_count");
+
+			if(viewedCount != viewedCountFromDb)
 			{
-			    lwResourceId = rsResourceId.getInt(1);
-			    slugFromDb = rsResourceId.getString(2);
-
-			    prepareStmt = "SELECT language_code FROM ted_transcripts WHERE `resource_id`=?";
+			    prepareStmt = "UPDATE `ted_video` SET `viewed_count`=? WHERE `ted_id`=?";
 			    pStmt = Learnweb.getInstance().getConnection().prepareStatement(prepareStmt);
-			    pStmt.setInt(1, lwResourceId);
-			    ResultSet rsLangCode = pStmt.executeQuery();
-			    while(rsLangCode.next())
-			    {
-				langCodesFromDb.add(rsLangCode.getString("language_code"));
-			    }
+			    pStmt.setInt(1, viewedCount);
+			    pStmt.setInt(2, tedId);
+			    dbReturnVal = pStmt.executeUpdate();
+			    //if(dbReturnVal == 1)
+			    //log.info("Changed updated viewed count from " + viewedCountFromDb + "to " + viewedCount);
+			}
 
-			    JSONArray languages = (JSONArray) jsonTalkObj.get("languages");
-			    Iterator langs = languages.iterator();
-
-			    while(langs.hasNext())
+			if(!talkUpdatedAt.equals(updatedAt))
+			{
+			    prepareStmt = "SELECT resource_id, slug FROM ted_video WHERE ted_id = ?";
+			    pStmt = Learnweb.getInstance().getConnection().prepareStatement(prepareStmt);
+			    pStmt.setInt(1, tedId);
+			    ResultSet rsResourceId = pStmt.executeQuery();
+			    if(rsResourceId.next())
 			    {
-				JSONObject innerlangs = (JSONObject) langs.next();
-				JSONObject lang = (JSONObject) innerlangs.get("language");
-				langCode = lang.get("language_code").toString();
-				if(!langCodesFromDb.contains(langCode))
+				lwResourceId = rsResourceId.getInt(1);
+				slugFromDb = rsResourceId.getString(2);
+
+				prepareStmt = "SELECT language_code FROM ted_transcripts WHERE `resource_id`=?";
+				pStmt = Learnweb.getInstance().getConnection().prepareStatement(prepareStmt);
+				pStmt.setInt(1, lwResourceId);
+				ResultSet rsLangCode = pStmt.executeQuery();
+				while(rsLangCode.next())
 				{
-				    pushTranscriptToDb(tedId, lwResourceId, langCode, lang.get("name").toString(), "INSERT IGNORE INTO");
-				    updateTranscripts = false;
-				    log.info("Inserted ted transcript for " + langCode);
+				    langCodesFromDb.add(rsLangCode.getString("language_code"));
 				}
 
-			    }
+				JSONArray languages = (JSONArray) jsonTalkObj.get("languages");
+				Iterator langs = languages.iterator();
 
-			    if(updateTranscripts)
-			    {
-				langs = languages.iterator();
 				while(langs.hasNext())
 				{
 				    JSONObject innerlangs = (JSONObject) langs.next();
 				    JSONObject lang = (JSONObject) innerlangs.get("language");
 				    langCode = lang.get("language_code").toString();
-				    if(langCodesFromDb.contains(langCode))
+				    if(!langCodesFromDb.contains(langCode))
 				    {
-					pushTranscriptToDb(tedId, lwResourceId, langCode, lang.get("name").toString(), "REPLACE INTO");
-					log.info("Updated ted transcript for ted video: " + tedId + " and language: " + langCode);
+					pushTranscriptToDb(tedId, lwResourceId, langCode, lang.get("name").toString(), "INSERT IGNORE INTO");
+					updateTranscripts = false;
+					log.info("Inserted ted transcript for " + langCode);
+				    }
+
+				}
+
+				if(updateTranscripts)
+				{
+				    langs = languages.iterator();
+				    while(langs.hasNext())
+				    {
+					JSONObject innerlangs = (JSONObject) langs.next();
+					JSONObject lang = (JSONObject) innerlangs.get("language");
+					langCode = lang.get("language_code").toString();
+					if(langCodesFromDb.contains(langCode))
+					{
+					    pushTranscriptToDb(tedId, lwResourceId, langCode, lang.get("name").toString(), "REPLACE INTO");
+					    log.info("Updated ted transcript for ted video: " + tedId + " and language: " + langCode);
+					}
 				    }
 				}
-			    }
 
-			    slug = jsonTalkObj.get("slug").toString();
+				slug = jsonTalkObj.get("slug").toString();
 
-			    if(!slug.equalsIgnoreCase(slugFromDb))
-			    {
-				Resource r = Learnweb.getInstance().getResourceManager().getResource(lwResourceId);
-				title = jsonTalkObj.get("name").toString();
-				description = jsonTalkObj.get("description").toString();
-				r.setTitle(title);
-				r.setDescription(description);
-				r.setUrl("http://www.ted.com/talks/" + slug);
-				r.save();
-				prepareStmt = "UPDATE `ted_video` SET `title`=?, description=?, slug=? WHERE `ted_id`=?";
+				if(!slug.equalsIgnoreCase(slugFromDb))
+				{
+				    Resource r = Learnweb.getInstance().getResourceManager().getResource(lwResourceId);
+				    title = jsonTalkObj.get("name").toString();
+				    description = jsonTalkObj.get("description").toString();
+				    r.setTitle(title);
+				    r.setDescription(description);
+				    r.setUrl("http://www.ted.com/talks/" + slug);
+				    r.save();
+				    prepareStmt = "UPDATE `ted_video` SET `title`=?, description=?, slug=? WHERE `ted_id`=?";
+				    pStmt = Learnweb.getInstance().getConnection().prepareStatement(prepareStmt);
+				    pStmt.setString(1, title);
+				    pStmt.setString(2, description);
+				    pStmt.setString(3, slug);
+				    pStmt.setInt(4, tedId);
+				    dbReturnVal = pStmt.executeUpdate();
+				    if(dbReturnVal == 1)
+					log.info("Changed slug from " + slugFromDb + "to " + slug);
+
+				}
+
+				prepareStmt = "UPDATE `ted_video` SET `talk_updated_at`=? WHERE `ted_id`=?";
 				pStmt = Learnweb.getInstance().getConnection().prepareStatement(prepareStmt);
-				pStmt.setString(1, title);
-				pStmt.setString(2, description);
-				pStmt.setString(3, slug);
-				pStmt.setInt(4, tedId);
+				pStmt.setString(1, talkUpdatedAt);
+				pStmt.setInt(2, tedId);
 				dbReturnVal = pStmt.executeUpdate();
 				if(dbReturnVal == 1)
-				    log.info("Changed slug from " + slugFromDb + "to " + slug);
+				    log.info("Changed updated at from " + updatedAt + "to " + talkUpdatedAt);
 
 			    }
-
-			    prepareStmt = "UPDATE `ted_video` SET `talk_updated_at`=? WHERE `ted_id`=?";
-			    pStmt = Learnweb.getInstance().getConnection().prepareStatement(prepareStmt);
-			    pStmt.setString(1, talkUpdatedAt);
-			    pStmt.setInt(2, tedId);
-			    dbReturnVal = pStmt.executeUpdate();
-			    if(dbReturnVal == 1)
-				log.info("Changed updated at from " + updatedAt + "to " + talkUpdatedAt);
-
-			}
-			else
-			{
-			    log.error("database error: no resource_id for for TED video ID:" + tedId + ", So couldn't update the video.");
+			    else
+			    {
+				log.error("database error: no resource_id for for TED video ID:" + tedId + ", So couldn't update the video.");
+			    }
 			}
 		    }
-		}
-		else
-		{
-		    log.info("Ted Video " + tedId + "Not yet added to the database");
-		}
+		    else
+		    {
+			log.info("Ted Video " + tedId + "Not yet added to the database");
+		    }
 
+		}
+		pStmt.close();
 	    }
-	    pStmt.close();
 	}
 	catch(ParseException ex)
 	{
