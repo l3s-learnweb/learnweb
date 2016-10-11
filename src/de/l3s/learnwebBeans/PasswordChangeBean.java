@@ -83,8 +83,7 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
 	}
 	catch(SQLException e)
 	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
 	}
     }
 

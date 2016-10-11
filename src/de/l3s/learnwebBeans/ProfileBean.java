@@ -195,8 +195,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
 	}
 	catch(SQLException e)
 	{
-	    log.error("Can't change password", e);
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
 	}
     }
 

@@ -11,6 +11,7 @@ import javax.validation.constraints.Size;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.ResourceMetadataField.MetadataType;
+import de.l3s.learnweb.SearchFilters.SERVICE;
 
 public class Organisation implements Serializable, Comparable<Organisation>
 {
@@ -32,9 +33,9 @@ public class Organisation implements Serializable, Comparable<Organisation>
     private String logo;
     private String welcomeMessage;
     private String welcomePage;
-    private SearchFilters.SERVICE defaultSearchServiceText;
-    private SearchFilters.SERVICE defaultSearchServiceImage;
-    private SearchFilters.SERVICE defaultSearchServiceVideo;
+    private SearchFilters.SERVICE defaultSearchServiceText = SERVICE.bing;
+    private SearchFilters.SERVICE defaultSearchServiceImage = SERVICE.flickr;
+    private SearchFilters.SERVICE defaultSearchServiceVideo = SERVICE.youtube;
     private long[] options = new long[1];
     private List<ResourceMetadataField> metadataFields = new LinkedList<ResourceMetadataField>();
 

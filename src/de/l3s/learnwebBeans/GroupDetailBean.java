@@ -558,8 +558,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
 	catch(Exception e)
 	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
 	}
 	return getTemplateDir() + "/group/overview.xhtml?faces-redirect=true&includeViewParams=true";
     }
@@ -575,8 +574,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
 	catch(NumberFormatException | SQLException e)
 	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
 
 	}
     }
@@ -590,8 +588,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
 	catch(SQLException e)
 	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
 	}
     }
 
@@ -638,8 +635,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	}
 	catch(NumberFormatException | SQLException e)
 	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
 	}
     }
 
@@ -1391,56 +1387,4 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
 	this.resourceDetailBean = resourceDetailBean;
     }
-
-    /*
-    
-    sub group stuff:
-    
-    
-    private Group newGroup;
-    public Group getNewGroup()
-    {
-    return newGroup;
-    }
-    
-    public void onCreateGroup()
-    {
-    if(null == getUser())
-        return;
-    
-    try
-    {
-        newGroup.setLeader(getUser());
-        newGroup.setCourseId(group.getCourseId());
-        group.addSubgroup(newGroup);
-        getUser().joinGroup(newGroup);
-        getLearnweb().getGroupManager().resetCache();//causes a bug in the menu otherwise
-    
-    }
-    catch(Exception e)
-    {
-        e.printStackTrace();
-        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-        return;
-    }
-    
-    // log and show notification
-    log(Action.group_creating, group.getId());
-    addMessage(FacesMessage.SEVERITY_INFO, "groupCreated", newGroup.getTitle());
-    
-    // reset new group var
-    newGroup = new Group();
-    }
-    
-    
-    public void validateGroupTitle(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
-    {
-    String title = (String) value;
-    
-    if(getLearnweb().getGroupManager().getGroupByTitleFilteredByOrganisation(title, getUser().getOrganisationId()) != null)
-    {
-        throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "title_already_taken"));
-    }
-    }
-     */
 }

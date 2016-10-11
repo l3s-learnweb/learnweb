@@ -51,7 +51,7 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
     private int format;
     private Presentation presentation;
 
-    public void preRenderView(ComponentSystemEvent e)
+    public void preRenderView(ComponentSystemEvent event)
     {
 	load();
 
@@ -64,11 +64,9 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
 
 		group.setLastVisit(user);
 	    }
-	    catch(Exception e1)
+	    catch(Exception e)
 	    {
-		e1.printStackTrace();
-
-		addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+		addFatalMessage(e);
 	    }
 	}
     }
@@ -220,8 +218,7 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
 	}
 	catch(Exception e)
 	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
 	}
     }
 

@@ -51,7 +51,7 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
     private String prevTitle;
     private int format;
 
-    public void preRenderView(ComponentSystemEvent e)
+    public void preRenderView(ComponentSystemEvent event)
     {
 	load();
 
@@ -64,11 +64,9 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
 
 		group.setLastVisit(user);
 	    }
-	    catch(Exception e1)
+	    catch(Exception e)
 	    {
-		e1.printStackTrace();
-
-		addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+		addFatalMessage(e);
 	    }
 	}
     }
@@ -197,8 +195,7 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
 	}
 	catch(Exception e)
 	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
 	}
     }
 

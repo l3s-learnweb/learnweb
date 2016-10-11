@@ -54,7 +54,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 	clickedResource = new Resource();
     }
 
-    public void preRenderView(ComponentSystemEvent e)
+    public void preRenderView(ComponentSystemEvent event)
     {
 	if(isAjaxRequest())
 	{
@@ -69,10 +69,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
 		log(Action.opening_resource, clickedResource.getGroupId(), clickedResource.getId(), "");
 	    }
-	    catch(SQLException e1)
+	    catch(SQLException e)
 	    {
-		log.error("Can't view resource: " + resourceId, e1);
-		addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+		addFatalMessage(e);
 	    }
 	}
     }
@@ -207,7 +206,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public String addTag()
     {
-
 
 	//Limit of no. of spaces in a tag = 3
 

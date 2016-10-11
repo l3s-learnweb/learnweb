@@ -30,8 +30,7 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
 	}
 	catch(SQLException e)
 	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+	    addFatalMessage(e);
 	}
     }
 
