@@ -298,11 +298,12 @@
  
  		<h:panelGroup id="nothing"></h:panelGroup>
  		
-		<p:dialog header="#{msg.options}" widgetVar="resource_dialog" modal="false" minWidth="600" resizable="false" style="z-index:1500;">			
+		<p:dialog header="#{msg.options}" widgetVar="resource_dialog" modal="false" minWidth="600" resizable="true" style="z-index:1500;">			
 			<h:form id="resource_form">
 				<h:panelGrid columns="2" rendered="#{userBean.loggedIn}" style="width:100%;">
 					<h:outputText value="#{msg.add_to}:" escape="false" />
-					<p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{searchBean.selectedNode}" style="max-height:28rem; overflow:auto;">				        						     						        
+					<p:tree id="folders_tree" value="#{userBean.writeAbleGroupsTree}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{searchBean.selectedNode}" 
+						style="max-height:28rem; width:100%; min-width:60rem; overflow:auto; box-sizing: border-box;">				        						     						        
 				        <p:ajax event="select" listener="#{searchBean.onNodeSelect}"/>
 				        
 				        <p:treeNode type="group">
@@ -319,7 +320,7 @@
 					<p:inputText value="#{searchBean.selectedResource.title}" id="title" style="width:100%; box-sizing:border-box;"/>					
 					
 					<h:outputLabel value="#{msg.description}:" for="description"/>
-					<p:inputTextarea  value="#{searchBean.selectedResource.description}" id="description" autoResize="true" style="width:100%; box-sizing:border-box;"/>
+					<h:inputTextarea  value="#{searchBean.selectedResource.description}" id="description" style="width:100%; min-height: 10.8rem; box-sizing:border-box;" />
 					
 					<h:outputText value="Url:" for="url"/>
 					<h:outputText value="#{searchBean.selectedResource.url}" style="padding:4px;" />
@@ -337,7 +338,10 @@
 					<h:panelGroup class="wayback_span" rendered="${searchBean.selectedResource.archived and empty searchBean.selectedResource.getMetadataValue('first_timestamp')}"><a href="${searchBean.selectedResource.firstArchivedObject.archiveUrl}" target="_blank"><h:outputText value="${searchBean.selectedResource.firstArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short" /></h:outputText></a> #{msg['Archive.captured_between_and']} <a href="${searchBean.selectedResource.lastArchivedObject.archiveUrl}" target="_blank"><h:outputText value="${searchBean.selectedResource.lastArchivedObject.timestamp}"><f:convertDateTime type="date" dateStyle="short" /></h:outputText></a></h:panelGroup>
 					  
 					<h:outputText value="" />
-					<p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" process="@form" update=":backtogroup :growl" oncomplete="PF('resource_dialog').hide()" async="true" onclick="PF('add_button').disable()" widgetVar="add_button"/>
+					<h:panelGroup>
+						<p:commandButton value="#{msg.save}" action="#{searchBean.addSelectedResource}" process="@form" update=":backtogroup :growl" oncomplete="PF('resource_dialog').hide()" async="true" onclick="PF('add_button').disable()" widgetVar="add_button"/>
+						<p:commandButton value="#{msg.cancel}" onclick="PF('resource_dialog').hide()" style="margin-left:0.5rem;" />
+					</h:panelGroup>
 				</h:panelGrid>		
 			</h:form> 			
 		</p:dialog>

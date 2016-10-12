@@ -766,7 +766,7 @@ h3 {
 }
 
 .ui-icon {
-    background-image: url("/Learnweb-Tomcat/javax.faces.resource/images/ui-icons_616161_256x240.png.jsf?ln=primefaces-aristo") !important;
+    background-image:url(img/ui-icons.png) !important;
 }
 
 .greenbutton > button,
