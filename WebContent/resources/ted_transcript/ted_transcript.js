@@ -365,3 +365,7 @@ function saveEditing(){
 	saveTedResource([{name:'transcript',value:update}]);
 }
 
+function submitTranscript(){
+	var update = document.getElementById("ted_transcript").innerHTML;
+	submitTedResource([{name:'transcript',value:update}]);
+}

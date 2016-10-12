@@ -290,7 +290,8 @@ function lightbox_close()
 	openPreview.hide();	
 	
 	$('#lightbox').hide();
-	logEndTime([{name:'resource_id', value:lightboxActiveResource.attr('id').substring(9)}]); //To record end of the viewing time
+	if(lightboxActiveResource != null)
+		logEndTime([{name:'resource_id', value:lightboxActiveResource.attr('id').substring(9)}]); //To record end of the viewing time
 	$('#lightbox_content .embedded').remove();	
 
 	lightboxActiveResource = null;

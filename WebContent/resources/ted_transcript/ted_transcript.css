@@ -135,11 +135,11 @@
 	border: 1px solid #A4A4A4;
 }
 
-::selection{
+#ted_transcript::selection{
 	background: yellow;
 }
 
-::-moz-selection{
+#ted_transcript::-moz-selection{
 	background: yellow;
 }
 

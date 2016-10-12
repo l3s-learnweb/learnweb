@@ -86,6 +86,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
     private Date creationDate = new Date();
     private HashMap<String, String> metadata = new HashMap<String, String>(); // userId : hasRated
     private boolean deleted = false; // indicates whether this resource has been deleted
+    private boolean readOnly = false; //indicates resource is read only for TED videos
 
     private int views;
     private int thumbUp;
@@ -603,6 +604,7 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	r.setCreationDate(creationDate);
 	r.setArchiveUrls(getArchiveUrls());
 	r.setDeleted(deleted);
+	r.setReadOnly(readOnly);
 	// sets the originalResourceId to the id of the source resource
 	if(originalResourceId == 0)
 	    r.setOriginalResourceId(id);
@@ -1506,6 +1508,16 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	this.deleted = deleted;
     }
 
+    public boolean isReadOnly()
+    {
+	return readOnly;
+    }
+
+    public void setReadOnly(boolean readOnly)
+    {
+	this.readOnly = readOnly;
+    }
+
     public Resource moveTo(int newGroupId, int newFolderId) throws SQLException
     {
 	return Learnweb.getInstance().getGroupManager().moveResource(this, newGroupId, newFolderId);
@@ -1550,4 +1562,5 @@ public class Resource implements HasId, Serializable // AbstractResultItem,
 	path = null;
 	prettyPath = null;
     }
+
 }

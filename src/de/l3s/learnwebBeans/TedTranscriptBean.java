@@ -172,6 +172,27 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
+    public void processActionSubmitResource()
+    {
+	String transcript = getParameter("transcript");
+	tedResource.setTranscript(transcript);
+	tedResource.setReadOnly(true);
+	try
+	{
+	    Date actionTimestamp = new Date();
+	    tedResource.save();
+	    TranscriptLog transcriptLog = new TranscriptLog(UtilBean.getUserBean().getActiveCourse().getId(), getUser().getId(), tedResource.getId(), "", "", "submit transcript", actionTimestamp);
+	    getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
+	}
+	catch(Exception e)
+	{
+	    addFatalMessage(e);
+	    log.fatal(e);
+	}
+	getUser().clearCaches();
+	addGrowl(FacesMessage.SEVERITY_INFO, "Transcript Submitted");
+    }
+
     public void processActionSaveLog()
     {
 	try

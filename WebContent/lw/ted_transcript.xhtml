@@ -22,6 +22,7 @@
 		<h:form class="display-none" id="command_form">
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSetSynonyms()}" name="setSynonymsForWord" process="@this" oncomplete="setSynonyms(xhr,status,args);" async="false"/>
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveResource()}" name="saveTedResource" process="@this" update=":growl" />
+			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSubmitResource()}" name="submitTedResource" process="@this" update=":growl :transcript :transcript_options" />
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveLog()}" name="saveTranscriptLog" process="@this" update="@none" />
 		</h:form>	
 		<h:outputStylesheet library="ted_transcript" name="jquery.contextMenu.css"  />
@@ -39,7 +40,7 @@
 		</div>		
 
 		<h:panelGroup layout="block" id="transcript_column" class="right_bar">
-			<p:outputPanel>
+			<p:outputPanel id="transcript_options">
 				<div class="center-header noselect">
 					<h:form>
 						<p:outputLabel for="select_lang" value="#{msg.select_transcript_lang}:" />
@@ -48,8 +49,8 @@
 				           <f:selectItems value="#{tedTranscriptBean.getLanguageList()}"/>
 				           <p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript"/>
 				        </h:selectOneMenu>
-						<p:commandButton styleClass="button_position greenbutton" value="#{msg.save}" onclick="saveEditing();" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}"/>
-						<p:commandButton styleClass="button_position greenbutton" value="Submit" onclick=""/>
+						<p:commandButton styleClass="button_position greenbutton" value="#{msg.save}" onclick="saveEditing();" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}" disabled="#{tedTranscriptBean.tedResource.readOnly}"/>
+						<p:commandButton styleClass="button_position greenbutton" value="Submit" onclick="submitTranscript();" disabled="#{tedTranscriptBean.tedResource.readOnly}"/>
 						<p:commandButton styleClass="button_position greenbutton" value="Show Tags" onclick="openTagsDiv()"/>
 						
 						<!-- <p:menuButton value="#{msg.options}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton">
@@ -66,10 +67,10 @@
 				</div>
 			</p:outputPanel>
 			<h:panelGroup layout="block" id="transcript">
-				<h:panelGroup layout="block" onmouseup="noteSelectedText()" id="ted_transcript" class="tedTranscript" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}">
+				<h:panelGroup layout="block" onmouseup="noteSelectedText()" id="ted_transcript" class="tedTranscript" rendered="#{!tedTranscriptBean.tedResource.group.readOnly and !tedTranscriptBean.tedResource.readOnly}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 				</h:panelGroup>
-				<h:panelGroup layout="block" class="tedTranscript" rendered="#{tedTranscriptBean.tedResource.group.readOnly}">
+				<h:panelGroup layout="block" class="tedTranscript" rendered="#{tedTranscriptBean.tedResource.group.readOnly || tedTranscriptBean.tedResource.readOnly}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 				</h:panelGroup>
 			</h:panelGroup>
