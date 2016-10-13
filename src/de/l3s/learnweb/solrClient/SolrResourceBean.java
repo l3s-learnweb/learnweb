@@ -2,8 +2,11 @@ package de.l3s.learnweb.solrClient;
 
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.solr.client.solrj.beans.Field;
 
@@ -103,17 +106,22 @@ public class SolrResourceBean
     private String url;
 
     // dynamic fields
+    /*
     @Field("collector_s")
     private String collector;
-
+    
     @Field("coverage_s")
     private String coverage;
-
+    
     @Field("publisher_s")
     private String publisher;
-
+    
     @Field("path_s")
     private String path;
+    */
+
+    @Field("*_s")
+    public Map<String, String> dynamicFieldsStrings;
 
     public SolrResourceBean() // empty constructor necessary for SolrSearch
     {
@@ -186,10 +194,19 @@ public class SolrResourceBean
 	    this.thumnailWidth4Temp = resource.getThumbnail4().getWidth();
 	}
 
+	// copy metadata to dynamic fields
+	dynamicFieldsStrings = new HashMap<String, String>(resource.getMetadata().size());
+
+	for(Entry<String, String> entry : resource.getMetadata().entrySet())
+	{
+	    dynamicFieldsStrings.put(entry.getKey() + "_s", entry.getValue());
+	}
+	/*
 	this.collector = resource.getMetadataValue("collector");
 	this.coverage = resource.getMetadataValue("coverage");
 	this.publisher = resource.getMetadataValue("publisher");
 	this.path = resource.getPath();
+	*/
     }
 
     public String getAuthor()
@@ -462,46 +479,47 @@ public class SolrResourceBean
 	this.url = url;
     }
 
+    /*
     public String getCollector()
     {
-	return collector;
+    return collector;
     }
-
+    
     public void setCollector(String collector)
     {
-	this.collector = collector;
+    this.collector = collector;
     }
-
+    
     public String getCoverage()
     {
-	return coverage;
+    return coverage;
     }
-
+    
     public void setCoverage(String coverage)
     {
-	this.coverage = coverage;
+    this.coverage = coverage;
     }
-
+    
     public String getPublisher()
     {
-	return publisher;
+    return publisher;
     }
-
+    
     public void setPublisher(String publisher)
     {
-	this.publisher = publisher;
+    this.publisher = publisher;
     }
-
+    
     public String getPath()
     {
-	return path;
+    return path;
     }
-
+    
     public void setPath(String path)
     {
-	this.path = path;
+    this.path = path;
     }
-
+    */
     public List<String> getTagsTemp()
     {
 	return tagsTemp;

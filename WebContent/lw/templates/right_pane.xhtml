@@ -597,7 +597,7 @@
 						</ui:fragment>
 					</div>
 					<!-- 
-					TODO remove all style="width:100%; box-sizing: border-box;" attributes
+					TODO remove all  attributes
 					 -->
 					 
 		<h:outputStylesheet name="main-template/tooltipster.min.css" />
@@ -633,15 +633,14 @@
 						
 						<tr>
 							<td>#{msg.title}:</td>
-							<td><p:inputText style="width:100%; box-sizing: border-box;" class="border-box-100" value="#{bean.clickedResource.title}" /></td>
+							<td><p:inputText  class="border-box-100" value="#{bean.clickedResource.title}" /></td>
 						</tr>
 						<tr>
 							<td>#{msg.author}:</td>
 							<td>
-								<p:inputText style="width:100%; box-sizing: border-box;" class="border-box-100" value="#{bean.clickedResource.author}" id="author" title="please, carefully acknowledge authors of resources. In case the author is not clear, use all the details you have: URL, book reference, etc"/>
-								<p:tooltip for="author" showEvent="focus" hideEvent="blur" position="left">
+								<p:inputText  class="border-box-100" value="#{bean.clickedResource.author}" id="author" title="please, carefully acknowledge authors of resources. In case the author is not clear, use all the details you have: URL, book reference, etc"/>
+								<p:tooltip for="author" showEvent="focus" hideEvent="blur" position="left" />
 								
-								</p:tooltip>
 							</td>
 						</tr>
 
@@ -655,13 +654,18 @@
 										<h:outputText value="#{bean.clickedResource.metadata[field.name]}" />
 									</ui:fragment> <ui:fragment rendered="#{not field.moderatorOnly or userBean.moderator}">
 
-										<p:inputText required="#{field.required}" style="width:100%; box-sizing: border-box;" class="border-box-100" value="#{bean.clickedResource.metadata[field.name]}"
-											rendered="#{field.type eq 'INPUT_TEXT'}" />
+										<ui:fragment rendered="#{field.type eq 'INPUT_TEXT'}">
+											<p:inputText id="input_#{field.name}" required="#{field.required}" class="border-box-100" value="#{bean.clickedResource.metadata[field.name]}" title="#{field.info}" />
+											<p:tooltip for="input_#{field.name}" showEvent="focus" hideEvent="blur" position="left" />
+										</ui:fragment>
 
-										<p:selectOneMenu value="#{bean.clickedResource.metadata[field.name]}" rendered="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}"
-											editable="#{field.type eq 'ONE_MENU_EDITABLE'}" required="#{field.required}" style="width:100%; box-sizing: border-box;" class="border-box-100">
-											<f:selectItems value="#{field.options}" var="option" itemLabel="#{option}" itemValue="#{option}" />
-										</p:selectOneMenu>
+										<ui:fragment rendered="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
+											<p:selectOneMenu value="#{bean.clickedResource.metadata[field.name]}" editable="#{field.type eq 'ONE_MENU_EDITABLE'}" required="#{field.required}"
+												class="border-box-100" title="#{field.info}">
+												<f:selectItems value="#{field.options}" var="option" itemLabel="#{option}" itemValue="#{option}" />
+											</p:selectOneMenu>
+											<p:tooltip for="input_#{field.name}" showEvent="focus" hideEvent="blur" position="left" />
+										</ui:fragment>
 
 										<!-- 
 										<h:outputText value="#{field.type}" rendered="#{field.type != 'INPUT_TEXT'}" /> 

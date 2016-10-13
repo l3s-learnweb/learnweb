@@ -85,15 +85,19 @@ public class Organisation implements Serializable, Comparable<Organisation>
 	    metadataFields.add(metadata);
 	    */
 
-	    metadataFields.add(new ResourceMetadataField("language_level", "Language level (CEFR)", MetadataType.INPUT_TEXT));
+	    ResourceMetadataField metadata = new ResourceMetadataField("language_level", "Language level (CEFR)", MetadataType.INPUT_TEXT);
+	    metadata.setInfo("");
+	    metadataFields.add(metadata);
 
-	    ResourceMetadataField metadata = new ResourceMetadataField("language", "Language(s)", MetadataType.ONE_MENU);
+	    metadata = new ResourceMetadataField("language", "Language(s)", MetadataType.ONE_MENU);
+	    metadata.getOptions().add("");
 	    metadata.getOptions().add("C2");
 	    metadata.getOptions().add("C1");
 	    metadata.getOptions().add("B2");
 	    metadata.getOptions().add("B1");
 	    metadata.getOptions().add("A2");
 	    metadata.getOptions().add("A1");
+	    metadata.setInfo("");
 	    metadataFields.add(metadata);
 
 	    metadata = new ResourceMetadataField("yell_target_users", "Target users of resource", MetadataType.ONE_MENU_EDITABLE);
@@ -102,10 +106,16 @@ public class Organisation implements Serializable, Comparable<Organisation>
 	    metadata.getOptions().add("secondary school students");
 	    metadata.getOptions().add("primary school children");
 	    metadata.getOptions().add("pre-school children");
+	    metadata.setInfo("");
 	    metadataFields.add(metadata);
 
-	    metadataFields.add(new ResourceMetadataField("resource_topic", "Topic of resource", MetadataType.INPUT_TEXT));
-	    metadataFields.add(new ResourceMetadataField("yell_resource_teaching_type", "Type of teaching/learning resource", MetadataType.INPUT_TEXT));
+	    metadata = new ResourceMetadataField("resource_topic", "Topic of resource", MetadataType.INPUT_TEXT);
+	    metadata.setInfo("");
+	    metadataFields.add(metadata);
+
+	    metadata = new ResourceMetadataField("yell_resource_teaching_type", "Type of teaching/learning resource", MetadataType.INPUT_TEXT);
+	    metadata.setInfo("");
+	    metadataFields.add(metadata);
 
 	    metadata = new ResourceMetadataField("yell_keywords", "Keywords", MetadataType.INPUT_TEXT);
 	    metadata.setRequired(true);
