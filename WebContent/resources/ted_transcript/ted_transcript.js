@@ -15,13 +15,12 @@ function closeTagsDiv() {
 	$('.overlay').width("0px");	
     $('.embedded').width($('.embedded').width() + 256);
     $('.right_bar').css("margin-right","0px");
-    //$('.note').tooltipster('hide');
     $('.note').removeClass('hover');
     $('.ui-selected').removeClass("ui-selected");
 }
 
 $(document).ready(function(){
-	
+	//To include embedded TED video
 	$(".embedded").contents().each(function(index, node) {
 		if (node.nodeType == 8) {
 		// node is a comment
@@ -29,25 +28,10 @@ $(document).ready(function(){
 		}
 	});
     
-	$('.note').tooltipster({
-		functionInit: function(origin, content) {
-	        if($(this).data('title') && $(this).data('content'))
-	        	return $(this).data('title') + '<hr/>' + $(this).data('content').replace(new RegExp('&lt;br/&gt;','g'),'<br/>');
-	        else if($(this).data('content'))
-	        	return $(this).data('content').replace(new RegExp('&lt;br/&gt;','g'),'<br/>');
-	        else if($(this).data('title'))
-	        	return $(this).data('title');
-	    },
-    	contentAsHTML: true,
-    	maxWidth: 300,
-    	position:'left',
-    	theme:'tooltipster-custom-theme'
-    });
-	
-	var selected_words = document.getElementsByClassName("note");
-	for(var i=0; i<selected_words.length; i++){
-		var selected_word = selected_words[i];
-		selected_word.onclick = function(){
+	var selected_elements = document.getElementsByClassName("note");
+	for(var i=0; i<selected_elements.length; i++){
+		var selected_element = selected_elements[i];
+		selected_element.onclick = function(){
 	        if (window.confirm("Delete this selection (" + $(this).text() + ")?")) {
 	        	saveTranscriptLog([{name:'word', value:$(this).text()},{name:'user_annotation', value:$(this).attr("data-title")},{ name:'action',value:'deselection'}]);
 	        	delete tags[$(this).attr('id')];
@@ -56,10 +40,31 @@ $(document).ready(function(){
             }
 		};
 		
-		if(selected_word.getAttribute("data-title") != undefined)
-			tags[selected_word.id] = selected_word.getAttribute("data-title");
+		//Initializing tags list with already existing tags in the transcript
+		if(selected_element.getAttribute("data-title") != undefined)
+			tags[selected_element.id] = selected_element.getAttribute("data-title");
+		
+		//Initializing Tooltipster only on the elements which has a data-title or data-content
+		if($(selected_element).data('title') || $(selected_element).data('content'))
+		{
+			$(selected_element).tooltipster({
+				functionInit: function(origin, content) {
+			        if($(this).data('title') && $(this).data('content'))
+			        	return $(this).data('title') + '<hr/>' + $(this).data('content').replace(new RegExp('&lt;br/&gt;','g'),'<br/>');
+			        else if($(this).data('content'))
+			        	return $(this).data('content').replace(new RegExp('&lt;br/&gt;','g'),'<br/>');
+			        else if($(this).data('title'))
+			        	return $(this).data('title');
+			    },
+		    	contentAsHTML: true,
+		    	maxWidth: 300,
+		    	position:'left',
+		    	theme:'tooltipster-custom-theme'
+		    });	
+		}
+		
 	}
-
+ 
 	$('#text').keypress(function(event){
 		var keycode = (event.keyCode ? event.keyCode : event.which);
 		if(keycode == '13')
@@ -83,21 +88,21 @@ $(document).ready(function(){
 		deleteSelection();
 	});
 
-	initializeJQueryContextMenu();
+	if(!readOnly)
+		initializeJQueryContextMenu();
+	
 	initializeResizableDiv();
+	
 	$( "#selectable" ).selectable({
 	      stop: function() {
-
 	        $( ".ui-selected", this ).each(function() {
 	          var text = $(this).text();
-	          //$('[data-title=' + text + ']').tooltipster('show');
-	          $('[data-title=' + text + ']').addClass("hover");
+	          $('[data-title="' + text + '"]').addClass("hover");
 	        });
 	      },
 	      unselected: function(event,ui){
 				var text = $(ui.unselected).text();
-				//$('[data-title=' + text + ']').tooltipster('hide');
-				$('[data-title=' + text + ']').removeClass("hover");
+				$('[data-title="' + text + '"]').removeClass("hover");
 			}
 	});
 	
@@ -108,6 +113,13 @@ $(document).ready(function(){
 	});*/
 });
 
+//To reset tags list on selecting a new transcript language
+function clearTagList(){
+	tags = {};
+	updateTagList();
+}
+
+//To dynamically create/update the tags list in the 'Show Tags' pane
 function updateTagList(){
 	  //clear the existing list
 	  $('#selectable li').remove();
@@ -118,10 +130,9 @@ function updateTagList(){
 	  
 	  tagSet.forEach(function(value){
 		  $('#selectable').append('<li class="ui-widget-content">'+value+'</li>');
-	  });
-		  
+	  });	  
 }
-	
+
 function initializeResizableDiv(){
 	$(".embedded").resizable({
 		  handles: "e"
@@ -132,18 +143,16 @@ function initializeResizableDiv(){
 	});	
 	
 	$(window).resize(function(){
-		
 		if($('.overlay').width() > 0)
 		   $('.right_bar').width($("#ted_content").width()-$(".embedded").width() - 30 - 256);
 		else
 		   $('.right_bar').width($("#ted_content").width()-$(".embedded").width() - 30);
 		
 		$('.right_bar').height($("#ted_content").height()); 
-		});
+	});
 }
 
 function initializeJQueryContextMenu(){
-	//Initializing JQuery contextmenu
 	$.contextMenu({
         selector: '.note', 
         items: {
@@ -171,10 +180,22 @@ function initializeJQueryContextMenu(){
                     return this.data('definitionDisabled'); 
                 }
             },
+            "delete_selection": {
+            	name: "Delete Selection",
+            	callback:function(key, options){
+            		$(this).click();
+            		return true;
+            	}
+            }
         }
     });
-	
 }
+
+function disableJQueryContextMenu()
+{
+	$('.note').contextMenu(false);
+}
+
 var usertext = "";
 //var synonyms = "";
 var sel_str ="";
@@ -366,6 +387,7 @@ function saveEditing(){
 }
 
 function submitTranscript(){
+	disableJQueryContextMenu();
 	var update = document.getElementById("ted_transcript").innerHTML;
 	submitTedResource([{name:'transcript',value:update}]);
 }

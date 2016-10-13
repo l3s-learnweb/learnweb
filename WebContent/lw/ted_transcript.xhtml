@@ -32,6 +32,7 @@
 	    
   		<script type="text/javascript">
   			var noteid = #{tedTranscriptBean.noteId};
+  			var readOnly = #{tedTranscriptBean.tedResource.readOnly};
   		</script>		
 
 		<div id="ted_content">
@@ -47,11 +48,11 @@
 				        <h:selectOneMenu id="select_lang" value="#{tedTranscriptBean.transcriptLanguage}" >
 				           <f:selectItem itemValue="----------------------------"/>
 				           <f:selectItems value="#{tedTranscriptBean.getLanguageList()}"/>
-				           <p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript"/>
+				           <p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript" oncomplete="clearTagList();"/>
 				        </h:selectOneMenu>
 						<p:commandButton styleClass="button_position greenbutton" value="#{msg.save}" onclick="saveEditing();" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}" disabled="#{tedTranscriptBean.tedResource.readOnly}"/>
 						<p:commandButton styleClass="button_position greenbutton" value="Submit" onclick="submitTranscript();" disabled="#{tedTranscriptBean.tedResource.readOnly}"/>
-						<p:commandButton styleClass="button_position greenbutton" value="Show Tags" onclick="openTagsDiv()"/>
+						<p:commandButton styleClass="button_position greenbutton" value="Show Tags" onclick="openTagsDiv();"/>
 						
 						<!-- <p:menuButton value="#{msg.options}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton">
 				        <p:menuitem value="#{msg.save}" icon="ui-icon-disk" onclick="saveEditing();" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}">
