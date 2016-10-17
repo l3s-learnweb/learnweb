@@ -46,14 +46,14 @@ public class CheckUpdatedTedVideos extends BaseTedApiCrawler implements Runnable
 		JSONObject jsonTempObj, jsonTalkObj;
 		String talkUpdatedAt, langCode, prepareStmt, slug, title, description, slugFromDb;
 		int tedId, lwResourceId, viewedCount, dbReturnVal;
-		boolean updateTranscripts;
+		//boolean updateTranscripts;
 		PreparedStatement pStmt = null;
 
 		ArrayList<String> langCodesFromDb = new ArrayList<String>();
 		// take each value from the json array separately
 		while(i.hasNext())
 		{
-		    updateTranscripts = true;
+		    //updateTranscripts = true;
 		    langCodesFromDb.clear();
 		    jsonTempObj = (JSONObject) i.next();
 		    jsonTalkObj = (JSONObject) jsonTempObj.get("talk");
@@ -115,13 +115,13 @@ public class CheckUpdatedTedVideos extends BaseTedApiCrawler implements Runnable
 				    if(!langCodesFromDb.contains(langCode))
 				    {
 					pushTranscriptToDb(tedId, lwResourceId, langCode, lang.get("name").toString(), "INSERT IGNORE INTO");
-					updateTranscripts = false;
+					//updateTranscripts = false;
 					log.info("Inserted ted transcript for " + langCode);
 				    }
 
 				}
 
-				if(updateTranscripts)
+				/*if(updateTranscripts)
 				{
 				    langs = languages.iterator();
 				    while(langs.hasNext())
@@ -135,7 +135,7 @@ public class CheckUpdatedTedVideos extends BaseTedApiCrawler implements Runnable
 					    log.info("Updated ted transcript for ted video: " + tedId + " and language: " + langCode);
 					}
 				    }
-				}
+				}*/
 
 				slug = jsonTalkObj.get("slug").toString();
 

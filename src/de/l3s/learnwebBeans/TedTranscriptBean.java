@@ -183,6 +183,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	    tedResource.save();
 	    TranscriptLog transcriptLog = new TranscriptLog(UtilBean.getUserBean().getActiveCourse().getId(), getUser().getId(), tedResource.getId(), "", "", "submit transcript", actionTimestamp);
 	    getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
+	    getLearnweb().getTedManager().saveTranscriptSelection(transcript, tedResource.getId());
 	}
 	catch(Exception e)
 	{

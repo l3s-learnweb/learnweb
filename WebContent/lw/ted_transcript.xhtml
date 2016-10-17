@@ -51,8 +51,8 @@
 				           <p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript" oncomplete="clearTagList();"/>
 				        </h:selectOneMenu>
 						<p:commandButton styleClass="button_position greenbutton" value="#{msg.save}" onclick="saveEditing();" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}" disabled="#{tedTranscriptBean.tedResource.readOnly}"/>
-						<p:commandButton styleClass="button_position greenbutton" value="Submit" onclick="submitTranscript();" disabled="#{tedTranscriptBean.tedResource.readOnly}"/>
-						<p:commandButton styleClass="button_position greenbutton" value="Show Tags" onclick="openTagsDiv();"/>
+						<p:commandButton styleClass="button_position greenbutton" value="#{msg.submit}" onclick="submitTranscript();" disabled="#{tedTranscriptBean.tedResource.readOnly}" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}"/>
+						<p:commandButton styleClass="button_position greenbutton" value="#{msg.show_tags}" onclick="openTagsDiv();"/>
 						
 						<!-- <p:menuButton value="#{msg.options}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton">
 				        <p:menuitem value="#{msg.save}" icon="ui-icon-disk" onclick="saveEditing();" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}">
@@ -64,7 +64,8 @@
 				</div>
 				<div class="transcript_note noselect">
 					<b>#{msg.note}:</b><h:outputText value = " #{msg.transcript_warning}" rendered="#{tedTranscriptBean.tedResource.group.readOnly}"/>
-					<h:outputText value = " #{msg.transcript_note}" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}"/>
+					<h:outputText value = " #{msg.transcript_submit_message}" rendered="#{tedTranscriptBean.tedResource.readOnly}" style="color:red"/>
+					<h:outputText value = " #{msg.transcript_note}" rendered="#{!tedTranscriptBean.tedResource.group.readOnly and !tedTranscriptBean.tedResource.readOnly}"/>
 				</div>
 			</p:outputPanel>
 			<h:panelGroup layout="block" id="transcript">

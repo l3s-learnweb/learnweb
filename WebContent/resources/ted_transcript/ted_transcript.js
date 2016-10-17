@@ -1,4 +1,5 @@
 var escape_key_flag = false;
+var isEditAnnotation = false;
 var selectedNodeId;
 var tags = {}; 
 
@@ -168,6 +169,19 @@ function initializeJQueryContextMenu(){
                     return this.data('annotationDisabled'); 
                 }
             },
+            "edit_annotation": {
+            	name: "Edit Annotation",
+            	callback:function(key, options){
+            		selectedNodeId = this.attr("id");
+            		$("#text").val($(this).attr('data-title'));
+            		isEditAnnotation = true;
+            		PF('userinput_dialog').show();
+            		return true;
+            	},
+            	disabled: function(key, opt) { 
+                    return !this.data('annotationDisabled'); 
+                }
+            },
             "display_def": {
             	name: "Add Definition",
             	callback:function(key, options){
@@ -279,24 +293,45 @@ function noteSelectedText() {
 			if (window.confirm("Delete this selection (" + $(this).text() + ")?")) {
 				saveTranscriptLog([{name:'word', value:$(this).text()},{name:'user_annotation', value:$(this).attr("data-title")},{ name:'action',value:'deselection'}]);
 				delete tags[$(this).attr('id')];
-				update_tags();
+				updateTagList();
 				$(this).contents().unwrap();
 				$(this).remove();
 			}
 		});
+		
 		var sel = window.getSelection && window.getSelection();
+		var transcriptElement = document.getElementById("ted_transcript");
+		
 		if(document.selection && !sel)
 		{
 			var range = document.selection.createRange();
+			var preCaretTextRange = document.body.createTextRange();
+	        preCaretTextRange.moveToElementText(transcriptElement);
+	        preCaretTextRange.setEndPoint("EndToStart", range);
+	        end = preCaretTextRange.text.length;
+	        preCaretTextRange.setEndPoint("EndToEnd", range);
+	        end = preCaretTextRange.text.length;
+			console.log("start at:" + start + ", ends at:" + end);
+			span.setAttribute("data-start", start);
+			span.setAttribute("data-end", end);
 			span.appendChild(range.htmlText);
 			range.pasteHTML(span.outerHTML);
-			//PF('userinput_dialog').show();
+			//PF('userinput_dialog').show();	
 		}
 		else
 		{
 			if(sel.rangeCount > 0)
 			{
-				var range = sel.getRangeAt(0);    
+				var range = sel.getRangeAt(0);
+				var preCaretRange = range.cloneRange();
+	            preCaretRange.selectNodeContents(transcriptElement);
+	            preCaretRange.setEnd(range.startContainer, range.startOffset);
+	            start = preCaretRange.toString().length;
+	            preCaretRange.setEnd(range.endContainer, range.endOffset);
+	            end = preCaretRange.toString().length;
+				console.log("starts at:" + start + ", ends at:" + end);
+				span.setAttribute("data-start", start);
+				span.setAttribute("data-end", end);
 				span.appendChild(range.extractContents());
 				range.insertNode(span);
 				//PF('userinput_dialog').show();
@@ -348,14 +383,22 @@ function getUserText(buttonClicked){
 		    	theme:'tooltipster-custom-theme'
 		    });
 		}
-		else
+		else if(selectedNode.data('content'))
 		{
-			selectedNode.tooltipster('content',selectedNode.data('title') + '<hr/>' + selectedNode.data('content').replace(new RegExp('&lt;br/&gt;','g'),'<br/>'));
+			selectedNode.tooltipster('content',selectedNode.attr('data-title') + '<hr/>' + selectedNode.attr('data-content').replace(new RegExp('&lt;br/&gt;','g'),'<br/>'));
 		}
+		else
+			selectedNode.tooltipster('content', selectedNode.attr('data-title'));
+		
 		selectedNode.trigger("mouseenter");
 		tags[selectedNodeId] = usertext;
 		updateTagList();
-		saveTranscriptLog([{name:'word', value:selectedNode.text()},{name:'user_annotation', value:usertext},{ name:'action',value:'add annotation'}]);
+		if(!isEditAnnotation)
+			saveTranscriptLog([{name:'word', value:selectedNode.text()},{name:'user_annotation', value:usertext},{ name:'action',value:'add annotation'}]);
+		else
+			saveTranscriptLog([{name:'word', value:selectedNode.text()},{name:'user_annotation', value:usertext},{ name:'action',value:'edit annotation'}]);
+		
+		isEditAnnotation = false;
 	}
 	//Tooltip creation
 	/*if(synonyms && usertext == "")

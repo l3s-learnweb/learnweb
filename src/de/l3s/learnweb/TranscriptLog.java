@@ -27,7 +27,6 @@ public class TranscriptLog implements Serializable
 
     public TranscriptLog(int courseId, int userId, int resourceId, String wordsSelected, String userAnnotation, String action, Date timestamp)
     {
-
 	this.courseId = courseId;
 	this.userId = userId;
 	this.resourceId = resourceId;

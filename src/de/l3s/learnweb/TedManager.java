@@ -19,6 +19,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
@@ -37,6 +41,7 @@ public class TedManager
     private final static Logger log = Logger.getLogger(TedManager.class);
 
     private final static String TRANSCRIPT_COLUMNS = "`course_id`,`user_id`,`resource_id`,`words_selected`,`user_annotation`,`action`,`timestamp`";
+    private final static String TRANSCRIPT_SELECTION_COLUMNS = "`resource_id`,`words_selected`,`user_annotation`,`start_offset`,`end_offset`";
     //private final static String RESOURCE_COLUMNS = "r.resource_id, r.title, r.description, r.url, r.storage_type, r.rights, r.source, r.type, r.format, r.owner_user_id, r.rating, r.rate_number, r.embedded_size1, r.embedded_size2, r.embedded_size3, r.embedded_size4, r.filename, r.max_image_url, r.query, r.original_resource_id, r.author, r.access, r.thumbnail0_url, r.thumbnail0_file_id, r.thumbnail0_width, r.thumbnail0_height, r.thumbnail1_url, r.thumbnail1_file_id, r.thumbnail1_width, r.thumbnail1_height, r.thumbnail2_url, r.thumbnail2_file_id, r.thumbnail2_width, r.thumbnail2_height, r.thumbnail3_url, r.thumbnail3_file_id, r.thumbnail3_width, r.thumbnail3_height, r.thumbnail4_url, r.thumbnail4_file_id, r.thumbnail4_width, r.thumbnail4_height, r.embeddedRaw, r.transcript, r.online_status";
 
     private final Learnweb learnweb;
@@ -60,6 +65,27 @@ public class TedManager
 	saveTranscript.executeUpdate();
 	saveTranscript.close();
 
+    }
+
+    public void saveTranscriptSelection(String transcript, int resourceId) throws SQLException
+    {
+	PreparedStatement pStmt = learnweb.getConnection().prepareStatement("INSERT into lw_transcript_selections(" + TRANSCRIPT_SELECTION_COLUMNS + ") VALUES (?,?,?,?,?)");
+	if(transcript != null && transcript != "")
+	{
+	    Document doc = Jsoup.parse(transcript);
+	    Elements elements = doc.select("span");
+	    for(Element element : elements)
+	    {
+		pStmt.setInt(1, resourceId);
+		pStmt.setString(2, element.text());
+		pStmt.setString(3, element.attr("data-title"));
+		pStmt.setInt(4, Integer.parseInt(element.attr("data-start")));
+		pStmt.setInt(5, Integer.parseInt(element.attr("data-end")));
+		pStmt.addBatch();
+	    }
+	}
+	pStmt.executeBatch();
+	pStmt.close();
     }
 
     public List<Transcript> getTransscripts(int resourceId) throws SQLException
@@ -512,10 +538,9 @@ public class TedManager
 	return resp;
     }
 
-    public static void main(String[] args) throws Exception
+    public static void main(String[] args) throws IOException, IllegalResponseException, SQLException
     {
-
 	TedManager tm = Learnweb.getInstance().getTedManager();
-	tm.fetchTedX(); //saveTedResource(); 
+	tm.fetchTedX(); //saveTedResource();
     }
 }
