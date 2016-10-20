@@ -96,6 +96,17 @@
     background-color: yellow;
  }
 
+ .colorpicker {
+ 	background:yellow;
+ 	display: inline-block;
+ 	width: 15px;
+ 	height: 15px;
+ 	margin:auto;
+ 	border: 1px solid gray;
+ 	vertical-align: middle;
+ 	border-radius: 2px;
+ }
+ 
  .note {
     background-color: yellow;
  }
