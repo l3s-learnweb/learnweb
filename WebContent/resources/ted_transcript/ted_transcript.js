@@ -131,10 +131,14 @@ $(document).ready(function(){
 	        $('#'+selectedNodeId).css("background-color",color.toHexString());
 	        $('.colorpicker').css("background",color.toHexString());
 	    }
-	});*/
+	});
 	    
-	/*$(window).bind('beforeunload',function(){
+	$(window).bind('beforeunload',function(){
 		saveEditing();
+	});
+	
+	$('#ted_transcript').mouseup(function(){
+		noteSelectedText();
 	});*/
 });
 
@@ -192,6 +196,18 @@ function initializeJQueryContextMenu(){
     
     $.contextMenu({
     	selector: '.note',
+    	events: {
+    		show: function() {
+    			//$('.colorpicker').css('background-color','rgb(255,255,0)');
+    			//$(".basic").spectrum("set", 'rgb(255,255,0)');
+    			//$(this).trigger("mouseout");
+    			//console.log($(this).css("background-color"));
+    			/*if($(this).css("background-color") == 'rgb(196, 252, 255)')
+    			    $('.colorpicker').css('background-color','rgb(255,255,0)');
+    			else
+    				$('.colorpicker').css('background-color',$(this).css("background-color"));*/
+    		}
+    	},
     	items: {
     		"add_annotation": {
     			name: "Add Annotation",
@@ -259,7 +275,7 @@ function initializeJQueryContextMenu(){
     				return true;
     			}
     		},
-    		/*label: {type: "label", customName: "Label"}*/
+    		//label: {type: "label", customName: "Label"}
     		
     	}
     });
@@ -334,10 +350,11 @@ function setSynonyms(xhr,status,args){
 	
 }
 
-function noteSelectedText(event) {
+//Event handler to highlight selected text in transcript
+function noteSelectedText() {
 	usertext = "";
 	//escape_key_flag = true;
-
+	
 	if(window.getSelection)
 		sel_str = window.getSelection().toString();
 	else if(document.selection && document.selection.type != "Control") //support IE browsers
@@ -403,7 +420,7 @@ function noteSelectedText(event) {
 		saveTranscriptLog([{name:'word', value:sel_str},{name:'user_annotation', value:''},{ name:'action',value:'selection'}]);
 		//setSynonymsForWord([{name:'word', value:sel_str}]);
 	}
-	event.stopPropagation();
+	deleteSelection();
 }
 
 function deleteSelection() {

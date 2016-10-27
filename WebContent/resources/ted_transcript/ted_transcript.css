@@ -112,11 +112,11 @@
  }
  
  .note:hover{
- 	background-color:#c4fcff;
+ 	background-color:#c4fcff !important;
  }
  
  .hover{
- 	background-color:#c4fcff;
+ 	background-color:#c4fcff !important;
  }
  
  .ui-corner-all{
