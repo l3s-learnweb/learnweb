@@ -27,9 +27,9 @@
 		</h:form>	
 		<h:outputStylesheet library="ted_transcript" name="jquery.contextMenu.css"  />
 		<h:outputScript library="ted_transcript" name="jquery.contextMenu.js"/>
-		<!-- <h:outputScript library="ted_transcript" name="spectrum.js"/> -->
+		<h:outputScript library="ted_transcript" name="spectrum.js"/>
 		<h:outputStylesheet library="ted_transcript" name="ted_transcript.css"  />
-		<!-- <h:outputStylesheet library="ted_transcript" name="spectrum.css"  /> -->
+		<h:outputStylesheet library="ted_transcript" name="spectrum.css"  />
 		<h:outputScript library="ted_transcript" name="ted_transcript.js" target="head"/>		
 	    
   		<script type="text/javascript">
@@ -71,7 +71,7 @@
 				</div>
 			</p:outputPanel>
 			<h:panelGroup layout="block" id="transcript">
-				<h:panelGroup layout="block" onmouseup="noteSelectedText(event);" id="ted_transcript" class="tedTranscript" rendered="#{!tedTranscriptBean.tedResource.group.readOnly and !tedTranscriptBean.tedResource.readOnly}">
+				<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" class="tedTranscript" rendered="#{!tedTranscriptBean.tedResource.group.readOnly and !tedTranscriptBean.tedResource.readOnly}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 				</h:panelGroup>
 				<h:panelGroup layout="block" class="tedTranscript" rendered="#{tedTranscriptBean.tedResource.group.readOnly || tedTranscriptBean.tedResource.readOnly}">

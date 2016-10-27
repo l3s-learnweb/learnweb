@@ -65,6 +65,12 @@ $(document).ready(function(){
 		    });	
 		}
 		
+		$(selected_element).on('mouseenter',function(){
+			$(this).addClass('hover');
+		});
+		$(selected_element).on('mouseleave',function(){
+			$(this).removeClass('hover');
+		});	
 	}
  
 	$('#text').keypress(function(event){
@@ -110,7 +116,7 @@ $(document).ready(function(){
 	
 	updateTagList();
 	
-	/*$(".basic").spectrum({
+	$(".basic").spectrum({
 	    showPaletteOnly: true,
 	    togglePaletteOnly: true,
 	    togglePaletteMoreText: 'more',
@@ -133,13 +139,10 @@ $(document).ready(function(){
 	    }
 	});
 	    
-	$(window).bind('beforeunload',function(){
+	/*$(window).bind('beforeunload',function(){
 		saveEditing();
-	});
-	
-	$('#ted_transcript').mouseup(function(){
-		noteSelectedText();
 	});*/
+	
 });
 
 //To reset tags list on selecting a new transcript language
@@ -182,30 +185,23 @@ function initializeResizableDiv(){
 }
 
 function initializeJQueryContextMenu(){
-    /*$.contextMenu.types.label = function(item, opt, root) {
-    	
-    	$('<div class="basic">Color: <span class="colorpicker"></span></div>'
-            ).appendTo(this)
-            .on('click', function() {
-                // hide the menu
+    $.contextMenu.types.label = function(item, opt, root) {
+    	$('<div class="basic">Color: <span class="colorpicker"></span></div>')
+    	.appendTo(this)
+        .on('click', function() {
                 //root.$menu.trigger('contextmenu:hide');
             	selectedNodeId = root.$trigger.attr("id");
-            	
             });
-    };*/
+    };
     
     $.contextMenu({
     	selector: '.note',
     	events: {
     		show: function() {
-    			//$('.colorpicker').css('background-color','rgb(255,255,0)');
-    			//$(".basic").spectrum("set", 'rgb(255,255,0)');
-    			//$(this).trigger("mouseout");
+    			$(this).trigger("mouseleave");
+    			$('.colorpicker').css('background-color',$(this).css("background-color"));
+    			$(".basic").spectrum("set", $(this).css("background-color"));    			
     			//console.log($(this).css("background-color"));
-    			/*if($(this).css("background-color") == 'rgb(196, 252, 255)')
-    			    $('.colorpicker').css('background-color','rgb(255,255,0)');
-    			else
-    				$('.colorpicker').css('background-color',$(this).css("background-color"));*/
     		}
     	},
     	items: {
@@ -275,8 +271,7 @@ function initializeJQueryContextMenu(){
     				return true;
     			}
     		},
-    		//label: {type: "label", customName: "Label"}
-    		
+    		label: {type: "label", customName: "Label"}
     	}
     });
 }
@@ -376,7 +371,12 @@ function noteSelectedText() {
 				$(this).remove();
 			}
 		});
-		
+		$(span).on('mouseenter',function(){
+			$(this).addClass('hover');
+		});
+		$(span).on('mouseleave',function(){
+			$(this).removeClass('hover');
+		});
 		var sel = window.getSelection && window.getSelection();
 		var transcriptElement = document.getElementById("ted_transcript");
 		
