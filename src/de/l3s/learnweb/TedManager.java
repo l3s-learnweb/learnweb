@@ -76,11 +76,17 @@ public class TedManager
 	    Elements elements = doc.select("span");
 	    for(Element element : elements)
 	    {
+		int start = 0, end = 0;
+		if(!element.attr("data-start").equals(""))
+		    start = Integer.parseInt(element.attr("data-start"));
+		if(!element.attr("data-end").equals(""))
+		    end = Integer.parseInt(element.attr("data-end"));
+
 		pStmt.setInt(1, resourceId);
 		pStmt.setString(2, element.text());
 		pStmt.setString(3, element.attr("data-title"));
-		pStmt.setInt(4, Integer.parseInt(element.attr("data-start")));
-		pStmt.setInt(5, Integer.parseInt(element.attr("data-end")));
+		pStmt.setInt(4, start);
+		pStmt.setInt(5, end);
 		pStmt.addBatch();
 	    }
 	}
