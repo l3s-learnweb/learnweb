@@ -84,13 +84,15 @@ public class Organisation implements Serializable, Comparable<Organisation>
 	    metadata.setModeratorOnly(true);
 	    metadataFields.add(metadata);
 	    */
+	    /*
+	    ResourceMetadataField authorFieldMetadata = new ResourceMetadataField("author", "Author", MetadataType.INPUT_TEXT);
+	    authorFieldMetadata.setInfo("");*/
 
 	    ResourceMetadataField metadata = new ResourceMetadataField("language_level", "Language level (CEFR)", MetadataType.INPUT_TEXT);
 	    metadata.setInfo("");
 	    metadataFields.add(metadata);
 
 	    metadata = new ResourceMetadataField("language", "Language(s)", MetadataType.ONE_MENU);
-	    metadata.getOptions().add("");
 	    metadata.getOptions().add("C2");
 	    metadata.getOptions().add("C1");
 	    metadata.getOptions().add("B2");
@@ -101,23 +103,24 @@ public class Organisation implements Serializable, Comparable<Organisation>
 	    metadataFields.add(metadata);
 
 	    metadata = new ResourceMetadataField("yell_target_users", "Target users of resource", MetadataType.ONE_MENU_EDITABLE);
+	    metadata.getOptions().add("");
 	    metadata.getOptions().add("teachers");
 	    metadata.getOptions().add("university students");
 	    metadata.getOptions().add("secondary school students");
 	    metadata.getOptions().add("primary school children");
 	    metadata.getOptions().add("pre-school children");
-	    metadata.setInfo("");
 	    metadataFields.add(metadata);
 
 	    metadata = new ResourceMetadataField("resource_topic", "Topic of resource", MetadataType.INPUT_TEXT);
-	    metadata.setInfo("");
+	    metadata.setInfo("Main topic the resource deals with. Examples: water, food, ecology, human rights, etc.");
 	    metadataFields.add(metadata);
 
 	    metadata = new ResourceMetadataField("yell_resource_teaching_type", "Type of teaching/learning resource", MetadataType.INPUT_TEXT);
-	    metadata.setInfo("");
+	    metadata.setInfo("Examples: ready-to-use activities, lesson plans, teacher education materials, learning strategies, language skills (speaking, listening, reading, writing), CLIL, plurilingualism, inclusive classrooms, videos, songs, game, etc.");
 	    metadataFields.add(metadata);
 
 	    metadata = new ResourceMetadataField("yell_keywords", "Keywords", MetadataType.INPUT_TEXT);
+	    metadata.setInfo("Please, write representative words or expressions for the resource. Examples: plurilingual education, crosswords, documentary, learning styles, etc.");
 	    metadata.setRequired(true);
 	    metadataFields.add(metadata);
 

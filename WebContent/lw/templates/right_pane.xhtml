@@ -2,6 +2,7 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 
 	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" 
@@ -596,34 +597,6 @@
 							</div>
 						</ui:fragment>
 					</div>
-					<!-- 
-					TODO remove all  attributes
-					 -->
-					 
-		<h:outputStylesheet name="main-template/tooltipster.min.css" />
-
-	    <script type="text/javascript" src="#{request.contextPath}/resources/js/jquery.tooltipster.min.js" />
-	    
-	    <script type="text/javascript">
-	    	function applyTooltip()
-	    	{
-	    		$('.tooltip').tooltipster({
-	            	 
-	                contentAsHTML:true,
-	                //maxWidth: 400,
-	                position:'top',
-	                //hideOnClick: true;,
-	                interactive:true,
-	                interactiveTolerance:150, // increase to debug
-	                //theme:'tooltipster-custom-theme'	
-	                //theme:'tooltipster-custom-b'
-	            });
-	    	}
-	        $(document).ready(function() {
-	        	applyTooltip();
-	        	
-	        });
-	    </script>	
 	    
 					<table id="edit_table" class="full-width">
 						<colgroup>
@@ -644,40 +617,37 @@
 							</td>
 						</tr>
 
-						<ui:repeat var="field" value="#{userBean.user.organisation.metadataFields}">
+						<c:forEach var="field" items="#{userBean.user.organisation.metadataFields}">
 							<tr>
 								<td><span class="resource_field">
 										<h:outputText value="${utilBean.getLocaleMessage(field.label, null)}" />
 										:
 									</span></td>
-								<td><ui:fragment rendered="#{field.moderatorOnly and not userBean.moderator}">
+								<td>
+									<ui:fragment rendered="#{field.moderatorOnly and not userBean.moderator}">
 										<h:outputText value="#{bean.clickedResource.metadata[field.name]}" />
-									</ui:fragment> <ui:fragment rendered="#{not field.moderatorOnly or userBean.moderator}">
+									</ui:fragment> 
+									
+									<ui:fragment rendered="#{not field.moderatorOnly or userBean.moderator}">
 
 										<ui:fragment rendered="#{field.type eq 'INPUT_TEXT'}">
-											<p:inputText id="input_#{field.name}" required="#{field.required}" class="border-box-100" value="#{bean.clickedResource.metadata[field.name]}" title="#{field.info}" />
-											<p:tooltip for="input_#{field.name}" showEvent="focus" hideEvent="blur" position="left" />
+										
+											<p:inputText id="input_#{field.name}" required="#{field.required}" class="border-box-100" value="#{bean.clickedResource.metadata[field.name]}" title="#{field.info}"  />
+											<p:tooltip for="input_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}" /> 
 										</ui:fragment>
 
 										<ui:fragment rendered="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
-											<p:selectOneMenu value="#{bean.clickedResource.metadata[field.name]}" editable="#{field.type eq 'ONE_MENU_EDITABLE'}" required="#{field.required}"
+											<p:selectOneMenu id="input_selectone_#{field.name}" value="#{bean.clickedResource.metadata[field.name]}" editable="#{field.type eq 'ONE_MENU_EDITABLE'}" required="#{field.required}"
 												class="border-box-100" title="#{field.info}">
 												<f:selectItems value="#{field.options}" var="option" itemLabel="#{option}" itemValue="#{option}" />
 											</p:selectOneMenu>
-											<p:tooltip for="input_#{field.name}" showEvent="focus" hideEvent="blur" position="left" />
-										</ui:fragment>
+											<p:tooltip for=":input_selectone_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}" /> 
+										</ui:fragment>							
 
-										<!-- 
-										<h:outputText value="#{field.type}" rendered="#{field.type != 'INPUT_TEXT'}" /> 
-										
-										<h:outputText value="ein menu" rendered="#{field.type == 'ONE_MENU'}" /> 
-	 -->
-
-									</ui:fragment></td>
-
-
+									</ui:fragment>
+								</td>
 							</tr>
-						</ui:repeat>
+						</c:forEach>
 
 						<tr>
 							<td>#{msg.description}:</td>
