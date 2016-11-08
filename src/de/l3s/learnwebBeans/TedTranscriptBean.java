@@ -322,19 +322,19 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
     public void submitShortSummary()
     {
-	System.out.println(summaryText);
+	//System.out.println(summaryText);
 
     }
 
     public void submitLongSummary()
     {
-	System.out.println(summaryText);
+	//System.out.println(summaryText);
 
     }
 
     public void submitDetailedSummary()
     {
-	System.out.println(summaryText);
+	//System.out.println(summaryText);
 
     }
 

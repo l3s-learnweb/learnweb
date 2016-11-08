@@ -491,6 +491,16 @@ function noteSelectedText() {
 				console.log("starts at:" + start + ", ends at:" + end);
 				
 				var nodesInRange = getNodesInRange(range);
+				if(nodesInRange.length>0)
+				{
+					for(var i =0; i< nodesInRange.length; i++)
+					{
+						var nodeStart = parseInt($(nodesInRange[i]).attr("data-start"));
+						var nodeEnd = parseInt($(nodesInRange[i]).attr("data-end"));
+						if(start < nodeStart && nodeEnd < end)
+							$(nodesInRange[i]).contents().unwrap();
+					}
+				}
 				//console.log(getNodesInRange(range));
 				//console.log(sel.anchorNode.parentNode);
 				var backward = getWindowSelectionDirection(sel);
