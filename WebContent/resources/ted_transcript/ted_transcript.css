@@ -13,10 +13,11 @@
 
 .overlay-content {
     position: relative;
-    top: 7%; 
+    top: 10%; 
     width: 100%; 
     text-align: center; 
     margin-top: 30px;
+    color:#ffffff;
 }
 
 #selectable .ui-selecting { background: #50c09c; }
@@ -34,9 +35,9 @@
 	background:url("../resources/search/icon/cancel-inv.png") center no-repeat;
 }
 
-/* When the height of the screen is less than 450 pixels, change the font-size of the links and position the close button again, so they don't overlap */
+/* When the height of the screen is less than 450 pixels, change the position the close button again*/
 @media screen and (max-height: 450px) {
-    .overlay {font-size: 20px}
+
     .overlay .closebtn {
         font-size: 40px;
         top: 45px;
@@ -44,6 +45,67 @@
     }
 }
 
+ul.tab {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    position:absolute;
+    border-radius: 2px;
+    top:48px;
+    right: 50px;
+}
+
+ul.tab li {float: left;}
+
+/* Style the tablinks inside the list items */
+ul.tab li a {
+    display: inline-block;
+    background-color: black;
+    color:white;
+    text-align: center;
+    padding: 6px 8px;
+    text-decoration: none;
+    transition: 0.3s;
+    font-size: 1.6rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+ul.tab li a:hover {
+    background-color: #ddd;
+    color:#000000;
+}
+
+ul.tab li a:focus, .active {
+    background-color: #ffffff !important;
+    color:#000000 !important;
+}
+
+#textarea_s {
+	height:60px;
+	width:90%;
+}
+
+#textarea_m {
+	height:100px;
+	width:90%;
+}
+
+#textarea_l {
+	height:180px;
+	width:90%;
+}
+
+.options_button {
+	float: right;
+    position: relative;
+    top: -5px;
+    right: 2px;
+}
+
+.options_button > button {
+	padding: 6px 26px 6px 12px !important;
+}
 .right_bar
 {	
 	/*	

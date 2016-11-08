@@ -41,6 +41,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     private Resource tedResource;
     private String transcriptLanguage;
     private int noteId;
+    private String summaryText;
 
     /* To get the resource id from ted_video table since id_at_service may or may not be null in lw_resource for TED and
      * To get the resource id from lw_resource table corresponding to the video added by the admin for TEDx
@@ -319,6 +320,24 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	    context.addCallbackParam("synonyms", "multiple");
     }
 
+    public void submitShortSummary()
+    {
+	System.out.println(summaryText);
+
+    }
+
+    public void submitLongSummary()
+    {
+	System.out.println(summaryText);
+
+    }
+
+    public void submitDetailedSummary()
+    {
+	System.out.println(summaryText);
+
+    }
+
     public String getTranscriptLanguage()
     {
 	return transcriptLanguage;
@@ -443,6 +462,16 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     {
 	simpleTranscriptLogs = null;
 	detailedTranscriptLogs = null;
+    }
+
+    public String getSummaryText()
+    {
+	return summaryText;
+    }
+
+    public void setSummaryText(String summaryText)
+    {
+	this.summaryText = summaryText;
     }
 
 }

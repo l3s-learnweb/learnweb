@@ -3,6 +3,35 @@ var isEditAnnotation = false;
 var selectedNodeId;
 var tags = {}; 
 
+function openTab(evt, divName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("overlay-content");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(divName).style.display = "block";
+    $(evt.currentTarget).addClass("active");
+    
+}
+
+function selectTab(divName) {
+	var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("overlay-content");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(divName).style.display = "block";
+    $('#' + divName + "_button").addClass("active");
+}
+
 function openTagsDiv() {
 	if($('.overlay').width() == 0)
     {
@@ -91,6 +120,7 @@ $(document).ready(function(){
 		}
 	});
 	
+	//To prevent selection when the mouse leaves the transcript HTML element
 	$('.embedded').mousedown(function() {return false;}); 
 	$('.tedTranscript').mouseleave(function(){
 		deleteSelection();
@@ -116,6 +146,7 @@ $(document).ready(function(){
 	
 	updateTagList();
 	
+	//colorpicker initialization
 	$(".basic").spectrum({
 	    showPaletteOnly: true,
 	    togglePaletteOnly: true,
@@ -153,7 +184,6 @@ function clearTagList(){
 
 //To dynamically create/update the tags list in the 'Show Tags' pane
 function updateTagList(){
-
 	  $('#selectable li').remove();
 	  $('.note').removeClass('hover');
 	  var tagSet = new Set();
@@ -189,7 +219,6 @@ function initializeJQueryContextMenu(){
     	$('<div class="basic">Color: <span class="colorpicker"></span></div>')
     	.appendTo(this)
         .on('click', function() {
-                //root.$menu.trigger('contextmenu:hide');
             	selectedNodeId = root.$trigger.attr("id");
             });
     };
@@ -200,8 +229,7 @@ function initializeJQueryContextMenu(){
     		show: function() {
     			$(this).trigger("mouseleave");
     			$('.colorpicker').css('background-color',$(this).css("background-color"));
-    			$(".basic").spectrum("set", $(this).css("background-color"));    			
-    			//console.log($(this).css("background-color"));
+    			$(".basic").spectrum("set", $(this).css("background-color"));
     		}
     	},
     	items: {
@@ -345,6 +373,58 @@ function setSynonyms(xhr,status,args){
 	
 }
 
+function getNextNode(node)
+{
+    if (node.firstChild)
+        return node.firstChild;
+    while (node)
+    {
+        if (node.nextSibling)
+            return node.nextSibling;
+        node = node.parentNode;
+    }
+}
+
+function getNodesInRange(range)
+{
+    var start = range.startContainer;
+    var end = range.endContainer;
+    var commonAncestor = range.commonAncestorContainer;
+    var nodes = [];
+    var node;
+
+    // walk parent nodes from start to common ancestor
+    for (node = start; node; node = node.parentNode)
+    {
+    	if(node.nodeType == 1 && node.tagName.toLowerCase() == 'span')
+    		nodes.push(node);
+        if (node == commonAncestor)
+            break;
+    }
+    nodes.reverse();
+
+    // walk children and siblings from start until end is found
+    for (node = start; node; node = getNextNode(node))
+    {
+    	if(node.nodeType == 1 && node.tagName.toLowerCase() == 'span')
+    		nodes.push(node);
+        if (node == end)
+            break;
+    }
+
+    return nodes;
+}
+
+function getWindowSelectionDirection(sel){
+	var position = sel.anchorNode.compareDocumentPosition(sel.focusNode);
+	var backward = false;
+	// position == 0 if nodes are the same
+	if (!position && sel.anchorOffset > sel.focusOffset || 
+	  position === Node.DOCUMENT_POSITION_PRECEDING)
+	  backward = true; 
+	return backward;
+}
+
 //Event handler to highlight selected text in transcript
 function noteSelectedText() {
 	usertext = "";
@@ -402,7 +482,6 @@ function noteSelectedText() {
 			if(sel.rangeCount > 0)
 			{
 				var range = sel.getRangeAt(0);
-				
 				var preCaretRange = range.cloneRange();
 	            preCaretRange.selectNodeContents(transcriptElement);
 	            preCaretRange.setEnd(range.startContainer, range.startOffset);
@@ -410,10 +489,54 @@ function noteSelectedText() {
 	            preCaretRange.setEnd(range.endContainer, range.endOffset);
 	            end = preCaretRange.toString().length;
 				console.log("starts at:" + start + ", ends at:" + end);
+				
+				var nodesInRange = getNodesInRange(range);
+				//console.log(getNodesInRange(range));
+				//console.log(sel.anchorNode.parentNode);
+				var backward = getWindowSelectionDirection(sel);
+				if($(sel.anchorNode.parentNode).attr("id") != 'ted_transcript')
+				{
+					if(!backward)
+					{
+						start = $(sel.anchorNode.parentNode).attr("data-start");
+						$(sel.anchorNode.parentNode).contents().unwrap();
+					}
+					else
+						$(sel.anchorNode.parentNode).contents().unwrap();
+				}
+
+				if(!($(sel.focusNode.parentNode).attr("id") == 'ted_transcript'||$(sel.focusNode.parentNode).attr("id") == 'transcript'))
+				{
+					if(backward)
+					{
+						start = $(sel.focusNode.parentNode).attr("data-start");
+						$(sel.focusNode.parentNode).contents().unwrap();
+					}
+					else
+						$(sel.focusNode.parentNode).contents().unwrap();
+					
+				}
+				//console.log(sel.focusNode.parentNode);
+				
 				span.setAttribute("data-start", start);
 				span.setAttribute("data-end", end);
+
+				//range.surroundContents(span);
+				//var selectedTextNode = document.createTextNode(range.toString());
+				//span.appendChild(selectedTextNode);
+				//range.deleteContents();
 				span.appendChild(range.extractContents());
+				for(var i =0; i< nodesInRange.length; i++)
+				{
+					if(!$(nodesInRange[i]).text().trim().length)
+						$(nodesInRange[i]).remove();
+				}
+				
 				range.insertNode(span);
+				range.selectNode(span);
+				sel.removeAllRanges();
+				sel.addRange(range);
+				
 				//PF('userinput_dialog').show();
 			}
 		}
@@ -440,7 +563,7 @@ function getUserText(buttonClicked){
 	if(buttonClicked == 'ok')
 		usertext = $("#text").val();
 	else
-		selectedNode.data('annotationDisabled',!selectedNode.data('annotationDisabled'));
+		selectedNode.attr('data-annotationdisabled',!(selectedNode.attr('data-annotationdisabled') == 'true'));
 	
 	PF('userinput_dialog').hide();	
 	$("#text").val('');

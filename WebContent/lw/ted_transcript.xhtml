@@ -52,19 +52,21 @@
 				           <f:selectItems value="#{tedTranscriptBean.getLanguageList()}"/>
 				           <p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript" oncomplete="clearTagList();"/>
 				        </h:selectOneMenu>
-						<p:commandButton styleClass="button_position greenbutton" value="#{msg.save}" onclick="saveEditing();" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}" disabled="#{tedTranscriptBean.tedResource.readOnly}"/>
-						<p:commandButton styleClass="button_position greenbutton" value="#{msg.submit}" onclick="submitTranscript();" disabled="#{tedTranscriptBean.tedResource.readOnly}" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}"/>
-						<p:commandButton styleClass="button_position greenbutton" value="#{msg.show_tags}" onclick="openTagsDiv();"/>
+						<p:commandButton id="save" styleClass="button_position greenbutton" value="#{msg.save}" onclick="saveEditing();" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}" disabled="#{tedTranscriptBean.tedResource.readOnly}"/>
+						<p:tooltip id="toolTipSave" for="save" value="#{msg.save_tooltip}" position="left"/>
+						<p:commandButton id="submit" styleClass="button_position greenbutton" value="#{msg.submit}" onclick="submitTranscript();" disabled="#{tedTranscriptBean.tedResource.readOnly}" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}"/>
+						<p:tooltip id="toolTipSubmit" for="submit" value="#{msg.submit_tooltip}" position="left"/>
+						<!-- <p:commandButton styleClass="button_position greenbutton" value="#{msg.show_tags}" onclick="openTagsDiv();"/> -->
 						
-						<!-- <p:menuButton value="#{msg.options}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton">
-				        <p:menuitem value="#{msg.save}" icon="ui-icon-disk" onclick="saveEditing();" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}">
-				        </p:menuitem>
-				        <p:menuitem value="Show Tags" icon="ui-icon-circle-triangle-w" onclick="openNav()">
-				        </p:menuitem>
-				   	 </p:menuButton> -->
+						<p:menuButton value="#{msg.options}" iconPos="right" styleClass="greenbutton options_button">
+					        
+					        <p:menuitem value="#{msg.show_tags}" icon="ui-icon-circle-triangle-w" onclick="openTagsDiv();selectTab('tags');">
+					        </p:menuitem>
+				   	 	</p:menuButton>
 					</h:form>
 				</div>
 				<div class="transcript_note noselect">
+					
 					<b>#{msg.note}:</b><h:outputText value = " #{msg.transcript_warning}" rendered="#{tedTranscriptBean.tedResource.group.readOnly}"/>
 					<h:outputText value = " #{msg.transcript_submit_message}" rendered="#{tedTranscriptBean.tedResource.readOnly}" style="color:red"/>
 					<h:outputText value = " #{msg.transcript_note}" rendered="#{!tedTranscriptBean.tedResource.group.readOnly and !tedTranscriptBean.tedResource.readOnly}"/>
@@ -83,10 +85,36 @@
 		<!-- User Annotation Div-->
 		<div id="myNav" class="overlay">
 		  <a href="javascript:void(0)" class="closebtn" onclick="closeTagsDiv()"></a>
-		  <div class="overlay-content">
+		  <ul class="tab">
+			  <li><a href="javascript:void(0)" id="tags_button" class="tablinks" onclick="openTab(event, 'tags')"><h:outputText value="#{msg.tags}"/></a></li>
+			  <!-- <li><a href="javascript:void(0)" id="summary_button" class="tablinks" onclick="openTab(event, 'summary')"><h:outputText value="#{msg.summary}"/></a></li> -->
+		  </ul>
+		  <div id="tags" class="overlay-content">
 		  	<ol id="selectable">
 		    </ol>
 		  </div>
+		  <!-- <div id="summary" class="overlay-content" style="display:none">
+			<h:form prependId="false">               
+    			<h:outputText value="#{msg.brief_summary}"/>
+    			<p:inputTextarea id="textarea_s" counter="char_s" maxlength="600" counterTemplate="{0} characters remaining" autoResize="false" value="#{tedTranscriptBean.summaryText}" /><br/>
+    			<h:outputText id="char_s" /><br/>
+    			<p:commandButton value="#{msg.submit}" action="#{tedTranscriptBean.submitShortSummary()}"/>
+			</h:form>
+		  	<br/><br/>
+		  	<h:form prependId="false">               
+    			<h:outputText value="#{msg.long_summary}"/>
+    			<p:inputTextarea id="textarea_m" counter="char_m" maxlength="1500" counterTemplate="{0} characters remaining" autoResize="false" value="#{tedTranscriptBean.summaryText}"/><br/>
+    			<h:outputText id="char_m" /><br/>
+    			<p:commandButton value="#{msg.submit}" action="#{tedTranscriptBean.submitLongSummary()}"/>
+			</h:form>
+		  	<br/><br/>
+		  	<h:form prependId="false">               
+    			<h:outputText value="#{msg.detailed_summary}"/>
+    			<p:inputTextarea id="textarea_l" counter="char_l" maxlength="2500" counterTemplate="{0} characters remaining" autoResize="false" value="#{tedTranscriptBean.summaryText}"/><br/>
+    			<h:outputText id="char_l" /><br/>
+    			<p:commandButton value="#{msg.submit}" action="#{tedTranscriptBean.submitDetailedSummary()}"/>
+			</h:form>
+		  </div> -->
 		</div>
 		</div>
 		
