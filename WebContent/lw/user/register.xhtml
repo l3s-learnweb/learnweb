@@ -69,7 +69,8 @@
 					<p:commandButton action="#{registrationBean.register}" value="#{msg.registerLabel}" ajax="false"/>
 					<h:outputText value="" />
 				</h:panelGrid>
-				<h:outputText value="* #{msg.mandatory_field}" />
+				<h:outputText value="* #{msg.mandatory_field}" /><br/>
+				<h:outputLink value="#{request.contextPath}/lw/user/login.jsf" style="text-decoration:underline">Already have an account? <b>Sign In</b></h:outputLink>
 			</h:form>
 		</p:panel>
 	</ui:define>

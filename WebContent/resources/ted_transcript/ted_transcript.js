@@ -498,7 +498,11 @@ function noteSelectedText() {
 						var nodeStart = parseInt($(nodesInRange[i]).attr("data-start"));
 						var nodeEnd = parseInt($(nodesInRange[i]).attr("data-end"));
 						if(start < nodeStart && nodeEnd < end)
+						{
+							delete tags[$(nodesInRange[i]).attr('id')];
+							updateTagList();
 							$(nodesInRange[i]).contents().unwrap();
+						}
 					}
 				}
 				//console.log(getNodesInRange(range));
