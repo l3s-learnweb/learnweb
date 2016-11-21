@@ -25,6 +25,7 @@ import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.SimpleTranscriptLog;
+import de.l3s.learnweb.TedManager.SummaryType;
 import de.l3s.learnweb.TranscriptLog;
 import de.l3s.learnweb.beans.UtilBean;
 import rita.wordnet.RiWordnet;
@@ -322,20 +323,51 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
     public void submitShortSummary()
     {
-	//System.out.println(summaryText);
+	if(summaryText != null && summaryText.length() > 0)
+	{
+	    try
+	    {
+		getLearnweb().getTedManager().saveSummaryText(getUser().getId(), resourceId, summaryText, SummaryType.SHORT);
+	    }
+	    catch(SQLException e)
+	    {
+		addFatalMessage(e);
+		log.fatal(e);
+	    }
+	}
 
     }
 
     public void submitLongSummary()
     {
-	//System.out.println(summaryText);
-
+	if(summaryText != null && summaryText.length() > 0)
+	{
+	    try
+	    {
+		getLearnweb().getTedManager().saveSummaryText(getUser().getId(), resourceId, summaryText, SummaryType.LONG);
+	    }
+	    catch(SQLException e)
+	    {
+		addFatalMessage(e);
+		log.fatal(e);
+	    }
+	}
     }
 
     public void submitDetailedSummary()
     {
-	//System.out.println(summaryText);
-
+	if(summaryText != null && summaryText.length() > 0)
+	{
+	    try
+	    {
+		getLearnweb().getTedManager().saveSummaryText(getUser().getId(), resourceId, summaryText, SummaryType.DETAILED);
+	    }
+	    catch(SQLException e)
+	    {
+		addFatalMessage(e);
+		log.fatal(e);
+	    }
+	}
     }
 
     public String getTranscriptLanguage()

@@ -62,14 +62,17 @@ $(document).ready(function(){
 	for(var i=0; i<selected_elements.length; i++) 
 	{
 		var selected_element = selected_elements[i];
-		selected_element.onclick = function(){
+		if(!readOnly)
+		{
+			selected_element.onclick = function(){
 	        if (window.confirm("Delete this selection (" + $(this).text() + ")?")) {
 	        	saveTranscriptLog([{name:'word', value:$(this).text()},{name:'user_annotation', value:$(this).attr("data-title")},{ name:'action',value:'deselection'}]);
 	        	delete tags[$(this).attr('id')];
 	        	updateTagList();
 	        	$(this).contents().unwrap();
             }
-		};
+			};
+		}
 		
 		//Initializing tags list with already existing tags in the transcript
 		if(selected_element.getAttribute("data-title") != undefined)

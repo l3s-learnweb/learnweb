@@ -43,6 +43,7 @@
 		</div>		
 
 		<h:panelGroup layout="block" id="transcript_column" class="right_bar">
+			<h:outputText value="Username: #{tedTranscriptBean.tedResource.ownerUser.username}"/>
 			<p:outputPanel id="transcript_options">
 				<div class="center-header noselect">
 					<h:form>
@@ -59,7 +60,8 @@
 						<!-- <p:commandButton styleClass="button_position greenbutton" value="#{msg.show_tags}" onclick="openTagsDiv();"/> -->
 						
 						<p:menuButton value="#{msg.options}" iconPos="right" styleClass="greenbutton options_button">
-					        
+					        <p:menuitem value="#{msg.show_summary}" icon="ui-icon-circle-triangle-w" onclick="openTagsDiv();selectTab('summary');">
+					        </p:menuitem>
 					        <p:menuitem value="#{msg.show_tags}" icon="ui-icon-circle-triangle-w" onclick="openTagsDiv();selectTab('tags');">
 					        </p:menuitem>
 				   	 	</p:menuButton>
@@ -87,13 +89,13 @@
 		  <a href="javascript:void(0)" class="closebtn" onclick="closeTagsDiv()"></a>
 		  <ul class="tab">
 			  <li><a href="javascript:void(0)" id="tags_button" class="tablinks" onclick="openTab(event, 'tags')"><h:outputText value="#{msg.tags}"/></a></li>
-			  <!-- <li><a href="javascript:void(0)" id="summary_button" class="tablinks" onclick="openTab(event, 'summary')"><h:outputText value="#{msg.summary}"/></a></li> -->
+			  <li><a href="javascript:void(0)" id="summary_button" class="tablinks" onclick="openTab(event, 'summary')"><h:outputText value="#{msg.summary}"/></a></li>
 		  </ul>
 		  <div id="tags" class="overlay-content">
 		  	<ol id="selectable">
 		    </ol>
 		  </div>
-		  <!-- <div id="summary" class="overlay-content" style="display:none">
+		  <div id="summary" class="overlay-content" style="display:none">
 			<h:form prependId="false">               
     			<h:outputText value="#{msg.brief_summary}"/>
     			<p:inputTextarea id="textarea_s" counter="char_s" maxlength="600" counterTemplate="{0} characters remaining" autoResize="false" value="#{tedTranscriptBean.summaryText}" /><br/>
@@ -114,7 +116,7 @@
     			<h:outputText id="char_l" /><br/>
     			<p:commandButton value="#{msg.submit}" action="#{tedTranscriptBean.submitDetailedSummary()}"/>
 			</h:form>
-		  </div> -->
+		  </div>
 		</div>
 		</div>
 		

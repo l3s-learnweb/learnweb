@@ -46,9 +46,27 @@ public class TedManager
 
     private final Learnweb learnweb;
 
+    public enum SummaryType
+    {
+	SHORT,
+	LONG,
+	DETAILED
+    }
+
     protected TedManager(Learnweb learnweb)
     {
 	this.learnweb = learnweb;
+    }
+
+    public void saveSummaryText(int userId, int resourceId, String summaryText, SummaryType summaryType) throws SQLException
+    {
+	PreparedStatement pStmt = learnweb.getConnection().prepareStatement("REPLACE INTO lw_transcript_summary(user_id,resource_id,summary_type,summary_text) VALUES (?,?,?,?)");
+	pStmt.setInt(1, userId);
+	pStmt.setInt(2, resourceId);
+	pStmt.setString(3, summaryType.name());
+	pStmt.setString(4, summaryText);
+	pStmt.executeUpdate();
+	pStmt.close();
     }
 
     public void saveTranscriptLog(TranscriptLog transcriptLog) throws SQLException

@@ -55,10 +55,7 @@
 				</p:column>
 
 				<p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}">
-					<h:outputLink value="#{request.contextPath}/lw/ted_transcript.jsf" target="_blank" style="text-decoration:underline">
-						<h:outputText value="#{log.resource.title}" />
-						<f:param name="resource_id" value="#{log.resource.id}"/>
-					</h:outputLink>
+					<h:outputText value="#{log.resource.title}" />
 				</p:column>
 	
 				<p:column headerText="#{msg.selection_count}" sortBy="#{log.selectionCount}">
@@ -71,6 +68,13 @@
 	
 				<p:column headerText="#{msg.user_annotation_count}" sortBy="#{log.userAnnotationCount}">
 					<h:outputText value="#{log.userAnnotationCount}" />
+				</p:column>
+				
+				<p:column headerText="Link" style="width:30px;">
+					<h:outputLink value="#{request.contextPath}/lw/ted_transcript.jsf" target="_blank" style="text-decoration:underline">
+						<h:outputText value="link"/>
+						<f:param name="resource_id" value="#{log.resource.id}"/>
+					</h:outputLink>
 				</p:column>
 			</p:dataTable>
 		</h:form>
