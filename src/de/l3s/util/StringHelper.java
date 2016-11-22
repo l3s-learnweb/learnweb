@@ -44,20 +44,23 @@ public class StringHelper
     /**
      * Uses Integer.parseInt but instead of an exception it returns -1 if the input can not be parsed
      * 
-     * @param number
-     * @return
+     * @param number string input
+     * @return int value or -1 if can't be parsed
      */
-    public static int parseInt(String number)
+	public static int parseInt(String number)
     {
-	try
-	{
-	    return Integer.parseInt(number);
-	}
-	catch(NumberFormatException e)
-	{
-	    // ignore
-	}
-	return -1;
+		return parseInt(number, -1);
+    }
+
+    public static int parseInt(String number, int defaultValue)
+    {
+		try {
+			return Integer.parseInt(number);
+		} catch(NumberFormatException e) {
+			// ignore
+		}
+
+		return defaultValue;
     }
 
     public static String getDomainName(String url)

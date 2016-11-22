@@ -1197,9 +1197,15 @@ button{
 	margin-left:0px;
 }
 
+.datagrid {
+	padding: 12px 8px;
+	margin: -8px;
+}
+
 .datagrid > div{
-	border:0px;
+	border:0;
 	width:100%;
+	width: calc(100% + 16px);
 	clear: both;
 }
 
@@ -1410,24 +1416,42 @@ div#presentation_preview {
 .ui-treenode.ui-draggable-helper {
     width: 180px;
     padding: 10px;
-    background: #4285f4;
+    background: #489a83;
     height: 20px;
     line-height: 20px;
-	box-shadow: 0 10px 16px 0 rgba(0,0,0,0.2),0 6px 20px 0 rgba(0,0,0,0.19);
+	box-shadow: 0 2px 8px 0 rgba(0,0,0,.25);
 	border: 0;
 	list-style: none;
 }
 
 .ui-treenode.ui-draggable-helper .ui-treenode-icon {
     position: absolute;
-    left: 8px;
-    top: 11px;
+	left: 0;
+	top: 0;
+
+	background: url(./img/folder.png) no-repeat left center !important;
+	display: block;
+	margin: 8px 10px;
+	height: 24px;
+	width: 24px;
+}
+
+.ui-treenode.ui-draggable-helper .ui-treenode-content {
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	font-size: 13px;
+	overflow: hidden;
 }
 
 .ui-treenode.ui-draggable-helper .ui-treenode-label {
-    padding-left: 18px;
     color: #fff;
     font-weight: normal;
+
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	padding-left: 45px;
+	padding-right: 13px;
 }
 
 .ui-treenode.ui-draggable-helper .ui-treenode-children,

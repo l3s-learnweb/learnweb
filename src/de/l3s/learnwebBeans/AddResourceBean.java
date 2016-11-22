@@ -38,7 +38,7 @@ import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 
 @ViewScoped
-@ManagedBean
+@ManagedBean(name = "addResourceBean")
 public class AddResourceBean extends ApplicationBean implements Serializable
 {
     private final static Logger log = Logger.getLogger(AddResourceBean.class);
