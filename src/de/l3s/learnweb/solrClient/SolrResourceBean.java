@@ -115,10 +115,10 @@ public class SolrResourceBean
     
     @Field("publisher_s")
     private String publisher;
-    
+    */
+
     @Field("path_s")
     private String path;
-    */
 
     @Field("*_s")
     public Map<String, String> dynamicFieldsStrings;
@@ -205,8 +205,8 @@ public class SolrResourceBean
 	this.collector = resource.getMetadataValue("collector");
 	this.coverage = resource.getMetadataValue("coverage");
 	this.publisher = resource.getMetadataValue("publisher");
-	this.path = resource.getPath();
 	*/
+	this.path = resource.getPath();
     }
 
     public String getAuthor()
@@ -509,7 +509,7 @@ public class SolrResourceBean
     {
     this.publisher = publisher;
     }
-    
+    */
     public String getPath()
     {
     return path;
@@ -519,7 +519,7 @@ public class SolrResourceBean
     {
     this.path = path;
     }
-    */
+
     public List<String> getTagsTemp()
     {
 	return tagsTemp;
