@@ -43,7 +43,6 @@
 		</div>		
 
 		<h:panelGroup layout="block" id="transcript_column" class="right_bar">
-			<h:outputText value="Username: #{tedTranscriptBean.tedResource.ownerUser.username}"/>
 			<p:outputPanel id="transcript_options">
 				<div class="center-header noselect">
 					<h:form>
@@ -68,7 +67,7 @@
 					</h:form>
 				</div>
 				<div class="transcript_note noselect">
-					
+					<b>Owner of transcript: </b><h:outputText value="#{tedTranscriptBean.tedResource.ownerUser.username}"/><br/>
 					<b>#{msg.note}:</b><h:outputText value = " #{msg.transcript_warning}" rendered="#{tedTranscriptBean.tedResource.group.readOnly}"/>
 					<h:outputText value = " #{msg.transcript_submit_message}" rendered="#{tedTranscriptBean.tedResource.readOnly}" style="color:red"/>
 					<h:outputText value = " #{msg.transcript_note}" rendered="#{!tedTranscriptBean.tedResource.group.readOnly and !tedTranscriptBean.tedResource.readOnly}"/>

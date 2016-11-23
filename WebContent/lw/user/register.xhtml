@@ -69,8 +69,17 @@
 					<p:commandButton action="#{registrationBean.register}" value="#{msg.registerLabel}" ajax="false"/>
 					<h:outputText value="" />
 				</h:panelGrid>
-				<h:outputText value="* #{msg.mandatory_field}" /><br/>
-				<h:outputLink value="#{request.contextPath}/lw/user/login.jsf" style="text-decoration:underline">Already have an account? <b>Sign In</b></h:outputLink>
+				<h:outputText value="* #{msg.mandatory_field}" />
+				<br/>
+				<br/><br/>
+				<h:panelGroup layout="block" rendered="#{not empty registrationBean.wizard}">
+					<h:outputText value="#{msg.instructions}" style="font-weight:bold; text-decoration:underline;"/>
+					<ul style="padding:15px;">
+						<li>#{msg.register_first_time_access}</li>
+						<li>#{msg.register_account_already_wizard} [<h:outputLink value="#{request.contextPath}/lw/user/login.jsf" style="font-weight:bold;text-decoration:underline;cursor:pointer;">link</h:outputLink>]</li>
+						<li><h:outputText value="${registrationBean.getLocaleMessage('register_lw_account_wizard',registrationBean.wizard)}" escape="false"/></li>
+					</ul>
+				</h:panelGroup>
 			</h:form>
 		</p:panel>
 	</ui:define>
