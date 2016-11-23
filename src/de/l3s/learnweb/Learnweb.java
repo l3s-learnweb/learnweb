@@ -154,7 +154,7 @@ public class Learnweb
     private Learnweb() throws ClassNotFoundException, SQLException
     {
 	learnwebIsLoading = true;
-	contextUrl = "http://learnweb.l3s.uni-hannover.de";
+	contextUrl = null; //"http://learnweb.l3s.uni-hannover.de";
 	//learnweb = this;
 
 	try
@@ -592,6 +592,9 @@ public class Learnweb
      */
     public String getContextUrl()
     {
+	if(contextUrl == null)
+	    throw new IllegalStateException("The context URL has not been set. LearnwebBean wasn't initialized yet");
+
 	return contextUrl; // because we don't use httpS we can cache the url, change it if you want to use httpS too
     }
 

@@ -1,9 +1,6 @@
 package de.l3s.archiveSearch;
 
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -21,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
@@ -36,8 +32,6 @@ import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourcePreviewMaker;
-import de.l3s.util.Image;
-import de.l3s.util.StringHelper;
 
 public class ArchiveItShingle
 {
@@ -70,21 +64,26 @@ public class ArchiveItShingle
 	return (float) intersect.size() / union.size();
     }
 
+    /*
+     * never used 
+     * 
+     * 
     public void processWebsite(String url, String timestamp) throws IOException
     {
-	URL thumbnailUrl = new URL("http://prometheus.kbs.uni-hannover.de/thumbnail/thumb_wb.php?url=" + StringHelper.urlEncode(url));
-	Image img = new Image(thumbnailUrl.openStream());
-	java.io.File actualFile = new java.io.File("F://DevTools//Work stuff//Crawler//Thumbnails//", timestamp + ".png");
-	OutputStream outputStream = new FileOutputStream(actualFile);
-	IOUtils.copy(img.getInputStream(), outputStream);
-	outputStream.close();
+    URL thumbnailUrl = new URL("http://prometheus.kbs.uni-hannover.de/thumbnail/thumb_wb.php?url=" + StringHelper.urlEncode(url));
+    Image img = new Image(thumbnailUrl.openStream());
+    java.io.File actualFile = new java.io.File("F://DevTools//Work stuff//Crawler//Thumbnails//", timestamp + ".png");
+    OutputStream outputStream = new FileOutputStream(actualFile);
+    IOUtils.copy(img.getInputStream(), outputStream);
+    outputStream.close();
     }
-
+    
     public void processThumbnails(Set<String> set, String type) throws IOException
     {
-	for(String str : set)
-	    processWebsite(str, type + "-" + str.substring(34, 45));
+    for(String str : set)
+        processWebsite(str, type + "-" + str.substring(34, 45));
     }
+    */
 
     /**
      * traverse HTML DOM structure
