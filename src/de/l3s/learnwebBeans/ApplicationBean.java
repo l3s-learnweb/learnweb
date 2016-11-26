@@ -309,7 +309,7 @@ public class ApplicationBean
 	    FacesContext facesContext = FacesContext.getCurrentInstance();
 	    ExternalContext ext = facesContext.getExternalContext();
 	    HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();
-	    queryString = servletRequest.getRequestURI();
+	    queryString = servletRequest.getRequestURL().toString();
 	    referrer = servletRequest.getHeader("referer");
 	    ip = servletRequest.getRemoteAddr();
 	    userAgent = servletRequest.getHeader("User-Agent");
