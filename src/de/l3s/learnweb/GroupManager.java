@@ -440,6 +440,34 @@ public class GroupManager
     }
 
     /**
+     *
+     * @param groupId
+     * @param parentFolderId
+     * @throws SQLException
+     */
+    public List<Folder> getFolders(int groupId, int parentFolderId, int userId) throws SQLException
+    {
+	List<Folder> folders = new ArrayList<Folder>();
+	if(parentFolderId < 0)
+	{
+	    parentFolderId = 0;
+	}
+
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, user_id FROM `lw_group_folder` WHERE `group_id` = ? AND `parent_folder_id` = ? AND `user_id` = ?");
+	select.setInt(1, groupId);
+	select.setInt(2, parentFolderId);
+	select.setInt(3, userId);
+	ResultSet rs = select.executeQuery();
+	while(rs.next())
+	{
+	    folders.add(createFolder(rs));
+	}
+	select.close();
+
+	return folders;
+    }
+
+    /**
      * 
      * @param userId
      * @return

@@ -341,7 +341,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 	else if(groupId > 0)
 	    return Learnweb.getInstance().getGroupManager().getFolders(groupId, getSelectedFolderId());
 	else
-	    return Learnweb.getInstance().getGroupManager().getFolders(getClickedFolder().getGroupId(), getSelectedFolderId());
+	    return Learnweb.getInstance().getGroupManager().getFolders(getClickedFolder().getGroupId(), getSelectedFolderId(), getUser().getId());
     }
 
     public Folder getSelectedFolder()
