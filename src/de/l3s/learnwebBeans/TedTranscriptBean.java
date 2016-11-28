@@ -27,6 +27,7 @@ import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.SimpleTranscriptLog;
 import de.l3s.learnweb.TedManager.SummaryType;
 import de.l3s.learnweb.TranscriptLog;
+import de.l3s.learnweb.TranscriptSummary;
 import de.l3s.learnweb.beans.UtilBean;
 import rita.wordnet.RiWordnet;
 
@@ -55,6 +56,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
     private List<SimpleTranscriptLog> simpleTranscriptLogs;
     private List<TranscriptLog> detailedTranscriptLogs;
+    private List<TranscriptSummary> transcriptSummaries;
     private boolean showDeletedResources = false;
     private int selectedCourseId;
 
@@ -327,7 +329,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	{
 	    try
 	    {
-		getLearnweb().getTedManager().saveSummaryText(getUser().getId(), resourceId, summaryText, SummaryType.SHORT);
+		getLearnweb().getTedManager().saveSummaryText(getUser().getActiveCourseId(), getUser().getId(), resourceId, summaryText, SummaryType.SHORT);
 	    }
 	    catch(SQLException e)
 	    {
@@ -344,7 +346,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	{
 	    try
 	    {
-		getLearnweb().getTedManager().saveSummaryText(getUser().getId(), resourceId, summaryText, SummaryType.LONG);
+		getLearnweb().getTedManager().saveSummaryText(getUser().getActiveCourseId(), getUser().getId(), resourceId, summaryText, SummaryType.LONG);
 	    }
 	    catch(SQLException e)
 	    {
@@ -360,7 +362,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	{
 	    try
 	    {
-		getLearnweb().getTedManager().saveSummaryText(getUser().getId(), resourceId, summaryText, SummaryType.DETAILED);
+		getLearnweb().getTedManager().saveSummaryText(getUser().getActiveCourseId(), getUser().getId(), resourceId, summaryText, SummaryType.DETAILED);
 	    }
 	    catch(SQLException e)
 	    {
@@ -442,6 +444,13 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	return simpleTranscriptLogs;
     }
 
+    public List<TranscriptSummary> getTranscriptSummaries() throws SQLException
+    {
+	if(transcriptSummaries == null)
+	    transcriptSummaries = getLearnweb().getTedManager().getTranscriptSummaries(selectedCourseId);
+	return transcriptSummaries;
+    }
+
     public int getResourceId()
     {
 	return resourceId;
@@ -494,6 +503,11 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     {
 	simpleTranscriptLogs = null;
 	detailedTranscriptLogs = null;
+    }
+
+    public void resetTranscriptSummaries()
+    {
+	transcriptSummaries = null;
     }
 
     public String getSummaryText()

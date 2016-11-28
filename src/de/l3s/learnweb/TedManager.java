@@ -58,13 +58,14 @@ public class TedManager
 	this.learnweb = learnweb;
     }
 
-    public void saveSummaryText(int userId, int resourceId, String summaryText, SummaryType summaryType) throws SQLException
+    public void saveSummaryText(int courseId, int userId, int resourceId, String summaryText, SummaryType summaryType) throws SQLException
     {
-	PreparedStatement pStmt = learnweb.getConnection().prepareStatement("REPLACE INTO lw_transcript_summary(user_id,resource_id,summary_type,summary_text) VALUES (?,?,?,?)");
-	pStmt.setInt(1, userId);
-	pStmt.setInt(2, resourceId);
-	pStmt.setString(3, summaryType.name());
-	pStmt.setString(4, summaryText);
+	PreparedStatement pStmt = learnweb.getConnection().prepareStatement("REPLACE INTO lw_transcript_summary(course_id, user_id,resource_id,summary_type,summary_text) VALUES (?,?,?,?,?)");
+	pStmt.setInt(1, courseId);
+	pStmt.setInt(2, userId);
+	pStmt.setInt(3, resourceId);
+	pStmt.setString(4, summaryType.name());
+	pStmt.setString(5, summaryText);
 	pStmt.executeUpdate();
 	pStmt.close();
     }
@@ -220,12 +221,30 @@ public class TedManager
 	return transcript;
     }
 
+    public List<TranscriptSummary> getTranscriptSummaries(int courseId) throws SQLException
+    {
+	List<TranscriptSummary> transcriptSummaries = new ArrayList<TranscriptSummary>();
+	PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM lw_transcript_summary WHERE course_id = ? ORDER BY user_id");
+	pStmt.setInt(1, courseId);
+	pStmt.executeQuery();
+
+	ResultSet rs = pStmt.getResultSet();
+	while(rs.next())
+	{
+	    TranscriptSummary transcriptSummary = new TranscriptSummary(rs.getInt("user_id"), rs.getInt("resource_id"), rs.getString("summary_type"), rs.getString("summary_text"));
+	    transcriptSummaries.add(transcriptSummary);
+	}
+	pStmt.close();
+
+	return transcriptSummaries;
+    }
+
     public List<TranscriptLog> getTranscriptLogs(int courseId, boolean showDeleted) throws SQLException
     {
 	List<TranscriptLog> transcriptLogs = new ArrayList<TranscriptLog>();
 	String pStmtString;
 	if(showDeleted)
-	    pStmtString = "SELECT " + TRANSCRIPT_COLUMNS + " FROM lw_transcript_actions JOIN lw_resource USING(resource_id) WHERE course_id = ? ORDER BY user_id, timestamp DESC";
+	    pStmtString = "SELECT " + TRANSCRIPT_COLUMNS + " FROM lw_transcript_actions WHERE course_id = ? ORDER BY user_id, timestamp DESC";
 	else
 	    pStmtString = "SELECT " + TRANSCRIPT_COLUMNS + " FROM lw_transcript_actions JOIN lw_resource USING(resource_id) WHERE course_id = ? and deleted = 0 ORDER BY user_id, timestamp DESC";
 	PreparedStatement pStmt = learnweb.getConnection().prepareStatement(pStmtString);

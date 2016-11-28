@@ -1,0 +1,69 @@
+<ui:composition template="/templates/main/main.xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	lang="#{userBean.localeCode}">
+	
+	<ui:param name="pageTitle" value="#{msg.transcript_summaries}" />
+	<ui:param name="loginRequired" value="true"/>
+
+	<ui:define name="center_layout">
+	
+		<style type="text/css">
+			.ui-state-hover, .ui-state-focus, .ui-state-active{
+				box-shadow:0 0 0px 0px #fff !important;
+				background-color:#d1d1d1 !important;
+				background-image:none !important;
+				border:1px solid #a8a8a8 !important;
+			}
+		</style>
+		
+		<div class="page_header" style="margin:5px;">
+			<span>
+				#{msg.transcript_summaries}
+			</span>
+			<h:form style="display:inline-block" prependId="false">
+				<h:outputLabel for="course_options" value="#{msg.choose_course}: " />
+				<h:selectOneMenu id="course_options" value="#{tedTranscriptBean.selectedCourseId}"
+					style="width:125px">
+					<f:selectItems value="#{tedTranscriptBean.courses}" var="course" itemLabel="#{course.title}" itemValue="#{course.id}" />
+					<p:ajax listener="#{tedTranscriptBean.resetTranscriptSummaries}" update=":transcript_table"/>
+				</h:selectOneMenu>
+
+			</h:form>
+		</div>
+	
+		<h:form style="padding:5px" prependId="false">
+			<p:dataTable id = "transcript_table" var="log" value="#{tedTranscriptBean.transcriptSummaries}" rows="30" paginator="true"
+				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"
+				rowsPerPageTemplate="20,25,30">
+				 
+				 <f:facet name="{Exporters}">
+            		<h:commandLink>
+                		<p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24"/>
+               	 		<p:dataExporter type="xls" target="transcript_table" fileName="transcript_summaries"/>
+           	 		</h:commandLink>
+        		</f:facet>
+				
+				<p:column headerText="#{msg.username}" filterBy="#{log.user.username}" sortBy="#{log.user.username}">
+					<h:outputText value="#{log.user.username}" />
+				</p:column>
+
+				<p:column headerText="#{msg.tedTalk}" filterBy="#{log.resource.title}">
+					<h:outputText value="#{log.resource.title}" />
+				</p:column>
+	
+				<p:column headerText="#{msg.summary_type}" filterBy="#{log.summaryType}">
+					<h:outputText value="#{log.summaryType}" />
+				</p:column>
+					
+				<p:column headerText="#{msg.summary}">
+					<h:outputText value="#{log.summaryText}" />
+				</p:column>
+				
+			</p:dataTable>
+		</h:form>
+		
+	</ui:define>
+</ui:composition>
