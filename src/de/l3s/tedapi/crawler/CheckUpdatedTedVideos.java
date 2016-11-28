@@ -95,7 +95,7 @@ public class CheckUpdatedTedVideos extends BaseTedApiCrawler implements Runnable
 				lwResourceId = rsResourceId.getInt(1);
 				slugFromDb = rsResourceId.getString(2);
 
-				prepareStmt = "SELECT language_code FROM ted_transcripts WHERE `resource_id`=?";
+				prepareStmt = "SELECT DISTINCT(language) as language_code FROM ted_transcripts_paragraphs WHERE `resource_id`=?";
 				pStmt = Learnweb.getInstance().getConnection().prepareStatement(prepareStmt);
 				pStmt.setInt(1, lwResourceId);
 				ResultSet rsLangCode = pStmt.executeQuery();

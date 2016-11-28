@@ -115,7 +115,7 @@ public class TedManager
     public List<Transcript> getTransscripts(int resourceId) throws SQLException
     {
 	List<Transcript> transcripts = new LinkedList<Transcript>();
-	String selectTranscripts = "SELECT language_code FROM ted_transcripts WHERE resource_id = ?";
+	String selectTranscripts = "SELECT DISTINCT(language) as language_code FROM ted_transcripts_paragraphs WHERE resource_id = ?";
 	String selectTranscriptParagraphs = "SELECT starttime, paragraph FROM ted_transcripts_paragraphs WHERE resource_id = ? AND language = ?";
 
 	PreparedStatement ipStmt = Learnweb.getInstance().getConnection().prepareStatement(selectTranscriptParagraphs);
@@ -136,8 +136,6 @@ public class TedManager
 	    rsParagraphs = ipStmt.getResultSet();
 	    while(rsParagraphs.next())
 	    {
-		// this is just a little bit ugly:
-		//transcript.getParagraphs().add(transcript.new Paragraph(rsParagraphs.getInt("starttime"), rsParagraphs.getString("paragraph")));
 		transcript.addParagraph(rsParagraphs.getInt("starttime"), rsParagraphs.getString("paragraph"));
 	    }
 
@@ -183,7 +181,7 @@ public class TedManager
     {
 	String langFromPropFile;
 	Map<String, String> langList = new HashMap<String, String>();
-	PreparedStatement getLangList = learnweb.getConnection().prepareStatement("SELECT language_code, language FROM ted_transcripts WHERE resource_id=?");
+	PreparedStatement getLangList = learnweb.getConnection().prepareStatement("SELECT DISTINCT(t1.language) as language_code, t2.language FROM `ted_transcripts_paragraphs` t1 JOIN ted_transcripts_lang_mapping t2 ON t1.language=t2.language_code WHERE resource_id=?");
 	getLangList.setInt(1, resourceId);
 	ResultSet rs = getLangList.executeQuery();
 
@@ -301,8 +299,6 @@ public class TedManager
 
 	    {
 		rpm.processImage(tedVideo, FileInspector.openStream(tedVideo.getMaxImageUrl()));
-
-		//tedVideo.save(); TODO test if this caused problems
 
 		update.setInt(1, tedVideo.getId());
 		update.setInt(2, tedId);
@@ -462,7 +458,7 @@ public class TedManager
 	String langCode = transcriptItem.getString("lang_code");
 	String langName = transcriptItem.getString("lang_translated");
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM `ted_transcripts` WHERE `resource_id` = ? AND `language_code` = ?");
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM `ted_transcripts_paragraphs` WHERE `resource_id` = ? AND `language` = ?");
 	select.setInt(1, resourceId);
 	select.setString(2, langCode);
 	ResultSet rs = select.executeQuery();
@@ -481,12 +477,19 @@ public class TedManager
 
 	JSONObject transcriptJSON = XML.toJSONObject(resp.getEntity(String.class));
 
-	String dbStmt = "REPLACE INTO `ted_transcripts`(`resource_id`, `language_code`, `language`, `json`) VALUES (?,?,?,?)";
+	//TODO:To remove once ted_transcripts table is deleted
+	/*String dbStmt = "REPLACE INTO `ted_transcripts`(`resource_id`, `language_code`, `language`, `json`) VALUES (?,?,?,?)";
 	PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement(dbStmt);
 	pStmt2.setInt(1, resourceId);
 	pStmt2.setString(2, langCode);
 	pStmt2.setString(3, langName);
 	pStmt2.setString(4, transcriptJSON.toString());
+	pStmt2.executeUpdate();
+	pStmt2.close();*/
+	String dbStmt = "REPLACE INTO `ted_transcripts_lang_mapping`(`language_code`,`language`) VALUES (?,?)";
+	PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement(dbStmt);
+	pStmt2.setString(1, langCode);
+	pStmt2.setString(2, langName);
 	pStmt2.executeUpdate();
 	pStmt2.close();
 

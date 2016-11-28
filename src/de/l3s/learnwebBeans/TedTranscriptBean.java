@@ -162,7 +162,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	{
 	    Date actionTimestamp = new Date();
 	    tedResource.save();
-	    TranscriptLog transcriptLog = new TranscriptLog(UtilBean.getUserBean().getActiveCourse().getId(), getUser().getId(), tedResource.getId(), "", "", "save transcript", actionTimestamp);
+	    TranscriptLog transcriptLog = new TranscriptLog(UtilBean.getUserBean().getActiveCourseId(), getUser().getId(), tedResource.getId(), "", "", "save transcript", actionTimestamp);
 	    getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
 	}
 	catch(Exception e)
@@ -183,7 +183,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	{
 	    Date actionTimestamp = new Date();
 	    tedResource.save();
-	    TranscriptLog transcriptLog = new TranscriptLog(UtilBean.getUserBean().getActiveCourse().getId(), getUser().getId(), tedResource.getId(), "", "", "submit transcript", actionTimestamp);
+	    TranscriptLog transcriptLog = new TranscriptLog(UtilBean.getUserBean().getActiveCourseId(), getUser().getId(), tedResource.getId(), "", "", "submit transcript", actionTimestamp);
 	    getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
 	    getLearnweb().getTedManager().saveTranscriptSelection(transcript, tedResource.getId());
 	}
@@ -206,7 +206,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	    String userAnnotation = getParameter("user_annotation");
 	    String action = getParameter("action");
 
-	    TranscriptLog transcriptLog = new TranscriptLog(UtilBean.getUserBean().getActiveCourse().getId(), getUser().getId(), tedResource.getId(), word, userAnnotation, action, actionTimestamp);
+	    TranscriptLog transcriptLog = new TranscriptLog(UtilBean.getUserBean().getActiveCourseId(), getUser().getId(), tedResource.getId(), word, userAnnotation, action, actionTimestamp);
 	    getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
 	}
 	catch(Exception e)

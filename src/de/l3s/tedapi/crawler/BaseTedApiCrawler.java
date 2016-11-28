@@ -1,14 +1,17 @@
 package de.l3s.tedapi.crawler;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Iterator;
 import java.util.Properties;
 
 import javax.ws.rs.core.MultivaluedMap;
 
 import org.apache.log4j.Logger;
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -19,6 +22,8 @@ import com.sun.jersey.api.client.WebResource;
 import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.Resource;
+import de.l3s.learnwebBeans.AddResourceBean;
 
 public class BaseTedApiCrawler
 {
@@ -69,22 +74,30 @@ public class BaseTedApiCrawler
 
 	try
 	{
-	    String dbStmt = dbAction + " `ted_transcripts`(`resource_id`, `language_code`, `language`, `json`) VALUES (?,?,?,?)";
+	    //TODO: Remove this section once ted_transcripts table is removed
+	    /*String dbStmt = dbAction + " `ted_transcripts`(`resource_id`, `language_code`, `language`, `json`) VALUES (?,?,?,?)";
 	    PreparedStatement pStmt2 = Learnweb.getInstance().getConnection().prepareStatement(dbStmt);
-
+	    
 	    pStmt2.setInt(1, lwResourceId);
 	    pStmt2.setString(2, langCode);
 	    pStmt2.setString(3, langName);
 	    pStmt2.setString(4, jsonSubtitle);
-
+	    
 	    int dbReturnValue = pStmt2.executeUpdate();
 	    pStmt2.close();
 	    if(dbReturnValue == 1)
 	    {
-		log.info(tedId + " ted_transcript " + langName + " json inserted successfully");
+	    log.info(tedId + " ted_transcript " + langName + " json inserted successfully");
 	    }
 	    else
-		log.info(tedId + " ted_transcript " + langName + "  json already inserted");
+	    log.info(tedId + " ted_transcript " + langName + "  json already inserted");*/
+
+	    //Storing languge code to language mapping 
+	    String dbStmt = "REPLACE INTO ted_transcripts_lang_mapping(`language_code`,`language`) VALUES (?,?)";
+	    PreparedStatement pStmt2 = Learnweb.getInstance().getConnection().prepareStatement(dbStmt);
+	    pStmt2.setString(1, langCode);
+	    pStmt2.setString(2, langName);
+	    pStmt2.executeUpdate();
 
 	    JSONParser parser = new JSONParser();
 	    JSONObject jsonSubtitleObject;
@@ -132,11 +145,6 @@ public class BaseTedApiCrawler
 			pStmt3.setInt(3, startTime);
 			isStartTimeSet = true;
 
-			//startTime = (preRollOffset + startTime)/1000;
-
-			//long second = TimeUnit.SECONDS.toSeconds(startTime) - TimeUnit.SECONDS.toMinutes(startTime)*60;
-			//long minute = TimeUnit.SECONDS.toMinutes(startTime) - TimeUnit.SECONDS.toHours(startTime)*60;
-			//transcript += String.format("%d:%02d",minute,second) + "\t";
 		    }
 		    if(captionId == 0 && !isStartTimeSet)
 		    {
@@ -228,49 +236,86 @@ public class BaseTedApiCrawler
 	return resp;
     }
 
-    public static void main(String[] args) throws SQLException
+    public static void main(String[] args) throws SQLException, MalformedURLException, IOException, ParseException
     {
 	BaseTedApiCrawler tedApiCrawler = new BaseTedApiCrawler();
-
-	String fields = "updated_at,media";
-
-	String dbStmt = "SELECT * FROM `ted_video` WHERE duration=0";
-	String dbStmt2 = "UPDATE lw_resource SET embeddedRaw=? WHERE resource_id = ?";
-	PreparedStatement pStmt2 = Learnweb.getInstance().getConnection().prepareStatement(dbStmt);
-	ResultSet rs = pStmt2.executeQuery();
-	JSONParser parser = new JSONParser();
-	JSONObject jsonSubtitleObject;
-	String jsonSubtitle;
+	//new CheckUpdatedTedVideos().run();
+	PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("Select slug from ted_video WHERE ted_id < 200 ORDER BY resource_id DESC");
+	ResultSet rs = pStmt.executeQuery();
+	String prepareStmt = "UPDATE `ted_video` SET `title`=?, description=?, slug=? WHERE `ted_id`=?";
+	PreparedStatement pStmt2 = Learnweb.getInstance().getConnection().prepareStatement(prepareStmt);
+	PreparedStatement pStmt3 = Learnweb.getInstance().getConnection().prepareStatement("SELECT resource_id FROM ted_video WHERE ted_id = ?");
 
 	while(rs.next())
 	{
-	    try
+	    String url = "http://www.ted.com/talks/" + rs.getString(1);
+	    //Document doc = Jsoup.parse(new URL(url), 10000);
+	    String changedurl = AddResourceBean.checkUrl(url);
+	    if(changedurl != null && !changedurl.equals(url))
 	    {
-		String tedTranscriptsURL = "https://api.ted.com/v1/talks/" + rs.getInt("ted_id") + ".json";
-		String apiKey = tedApiCrawler.properties.getProperty("ted_apikey_1");
-		MultivaluedMap<String, String> transcriptParams = new MultivaluedMapImpl();
-		transcriptParams.add("api-key", apiKey);
-		transcriptParams.add("fields", fields);
+		System.out.println(url);
+		System.out.println(changedurl);
+		String apiKey = tedApiCrawler.properties.getProperty("ted_apikey_2");
+		MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+		params.add("api-key", apiKey);
+		params.add("filter", "slug:" + changedurl.split("talks/")[1]);
+		String jsonTalks = tedApiCrawler.getJsonData(tedTalksURL, params);
+		JSONParser jsonParser = new JSONParser();
+		JSONObject jsonTalksObject = (JSONObject) jsonParser.parse(jsonTalks);
 
-		jsonSubtitle = tedApiCrawler.getJsonData(tedTranscriptsURL, transcriptParams);
+		// get an array from the JSON object talks
+		JSONArray talks = (JSONArray) jsonTalksObject.get("talks");
+		JSONObject jsonTempObj, jsonTalkObj;
+		if(talks != null)
+		{
+		    Iterator i = talks.iterator();
 
-		jsonSubtitleObject = (JSONObject) parser.parse(jsonSubtitle);
-		JSONObject talk = (JSONObject) jsonSubtitleObject.get("talk");
-		JSONObject media = (JSONObject) talk.get("media");
-		JSONObject external = (JSONObject) media.get("external");
-		PreparedStatement pStmt3 = Learnweb.getInstance().getConnection().prepareStatement(dbStmt2);
-		pStmt3.setString(1, "<iframe src=\"https://www.youtube.com/embed/" + external.get("code") + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>");
-		pStmt3.setInt(2, rs.getInt("resource_id"));
-		pStmt3.executeUpdate();
-		log.debug(external.get("code"));
+		    while(i.hasNext())
+		    {
+
+			jsonTempObj = (JSONObject) i.next();
+			jsonTalkObj = (JSONObject) jsonTempObj.get("talk");
+
+			//talkJson = jsonTalkObj.toString();
+			int tedId = Integer.parseInt(jsonTalkObj.get("id").toString());
+			String title = jsonTalkObj.get("name").toString();
+			String description = jsonTalkObj.get("description").toString();
+			String slug = jsonTalkObj.get("slug").toString();
+			System.out.println("title: " + title);
+			System.out.println("description: " + description);
+			System.out.println("slug: " + slug);
+			pStmt2.setString(1, title);
+			pStmt2.setString(2, description);
+			pStmt2.setString(3, slug);
+			pStmt2.setInt(4, tedId);
+			int dbReturnVal = pStmt2.executeUpdate();
+			if(dbReturnVal == 1)
+			{
+			    log.info("updated video " + tedId);
+			    pStmt3.setInt(1, tedId);
+			    ResultSet rsResourceId = pStmt3.executeQuery();
+			    if(rsResourceId.next())
+			    {
+				int lwResourceId = rsResourceId.getInt(1);
+				Resource r = Learnweb.getInstance().getResourceManager().getResource(lwResourceId);
+				r.setTitle(title);
+				r.setDescription(description);
+				r.setUrl(changedurl);
+				r.save();
+			    }
+			}
+
+		    }
+		}
+
 	    }
-	    catch(ParseException | NullPointerException e)
-	    {
-		log.error(e);
-	    }
-
+	    System.out.println("url :" + url);
 	}
+	pStmt.close();
+	pStmt2.close();
+	pStmt3.close();
 
+	System.exit(0);
     }
 
 }

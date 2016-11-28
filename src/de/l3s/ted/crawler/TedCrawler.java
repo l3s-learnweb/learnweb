@@ -172,7 +172,8 @@ public class TedCrawler extends WebCrawler
 	    try
 	    {
 		// check the database to identify if the video has already been crawled or if any new transcripts are added to the video
-		PreparedStatement pStmnt = Learnweb.getInstance().getConnection().prepareStatement("SELECT  resource_id, language_code FROM ted_video LEFT JOIN ted_transcripts USING(resource_id) WHERE slug=" + "\"" + slug + "\"");
+		PreparedStatement pStmnt = Learnweb.getInstance().getConnection().prepareStatement("SELECT DISTINCT resource_id, language FROM ted_video JOIN ted_transcripts_paragraphs USING(resource_id) WHERE slug=?");
+		pStmnt.setString(1, slug);
 		ResultSet rs = pStmnt.executeQuery();
 
 		while(rs.next())
