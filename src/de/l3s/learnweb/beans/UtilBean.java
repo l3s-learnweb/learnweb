@@ -26,11 +26,6 @@ public class UtilBean implements Serializable
     private final static long serialVersionUID = 6252597111468136574L;
     //    private final static Logger log = Logger.getLogger(UtilBean.class);
 
-    public int toInt(double number)
-    {
-	return (int) Math.ceil(number);
-    }
-
     @Deprecated
     public boolean isSearchPage()
     {

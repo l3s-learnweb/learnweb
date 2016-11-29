@@ -299,20 +299,21 @@ public class ApplicationBean
 	addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
 	addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
 
-	String queryString = null;
+	String url = null;
 	Integer userId = -1;
 	String referrer = null;
-	String ip = null;
 	String userAgent = null;
 	try
 	{
 	    FacesContext facesContext = FacesContext.getCurrentInstance();
 	    ExternalContext ext = facesContext.getExternalContext();
 	    HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();
-	    queryString = servletRequest.getRequestURL().toString();
+
 	    referrer = servletRequest.getHeader("referer");
-	    ip = servletRequest.getRemoteAddr();
 	    userAgent = servletRequest.getHeader("User-Agent");
+	    url = servletRequest.getRequestURL().toString();
+	    if(servletRequest.getQueryString() != null)
+		url += '?' + servletRequest.getQueryString();
 
 	    HttpSession session = servletRequest.getSession(false);
 	    if(session != null)
@@ -323,6 +324,6 @@ public class ApplicationBean
 	{
 	    // ignore
 	}
-	Logger.getLogger(ApplicationBean.class).fatal("Fatal unhandled error on: " + queryString + "; userId: " + userId + "; ip: " + ip + "; referrer: " + referrer + "; userAgent: " + userAgent, exception);
+	Logger.getLogger(ApplicationBean.class).fatal("Fatal unhandled error on: " + url + "; userId: " + userId + "; referrer: " + referrer + "; userAgent: " + userAgent, exception);
     }
 }

@@ -12,8 +12,11 @@
      
 	<ui:repeat var="res" value="#{resources}">
 		
-		<h:panelGroup layout="block" styleClass="page_counter" rendered="#{res.tempId gt 1 and res.tempId % 8 eq 1}">
-			<h:outputText value="#{msg.page}  #{utilBean.toInt(res.tempId / 8)}" />
+		<h:panelGroup layout="block" styleClass="page_counter" rendered="#{res.tempId gt 1 and res.tempId % 10 eq 1}">
+			<h:outputText value="#{msg.page} " />
+			<h:outputText value="#{(res.tempId+9) / 10}" >
+				<f:convertNumber maxFractionDigits="0" />
+			</h:outputText>			
 		</h:panelGroup>	
 			
 		<div class="resource" id="resource_${res.tempId}">		
