@@ -20,9 +20,10 @@ public class Course implements Serializable, Comparable<Course>
 	Groups_Detailed_logs_enabled,
 	Course_Forum_enabled,
 	Services_Allow_user_to_logout_from_interweb,
-	Groups_Hide_newest_resource,
+	Users_Require_mail_address,
 	Search_History_log_enabled, // this should be a organization option
 	Course_Google_Docs_Sign_In_enabled // this should be a organization option	
+
     }
 
     private int id;
@@ -304,6 +305,7 @@ public class Course implements Serializable, Comparable<Course>
     public void setBannerImageFileId(int bannerImageFileId)
     {
 	this.bannerImageFileId = bannerImageFileId;
+	this.bannerImage = null; // clear cache
     }
 
     public String getBannerColor()

@@ -244,7 +244,14 @@ public class FileManager
 
 	cache.remove(file.getId());
 
-	//file.getActualFile().delete();
+	try
+	{
+	    file.getActualFile().delete();
+	}
+	catch(Throwable e)
+	{
+	    log.error("Could not delete file: " + file.getId(), e);
+	}
     }
 
     private File createFile(ResultSet rs) throws SQLException

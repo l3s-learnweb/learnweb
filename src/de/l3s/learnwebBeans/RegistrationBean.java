@@ -41,6 +41,8 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 
     private String wizardTitle;
 
+    private boolean mailRequired = false;
+
     public String getUsername()
     {
 	return username;
@@ -187,9 +189,17 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 		    addMessage(FacesMessage.SEVERITY_INFO, "register_for_community", course.getTitle());
 		else
 		    addMessage(FacesMessage.SEVERITY_INFO, "register_for_course", course.getTitle());
+
+		mailRequired = course.getOption(Course.Option.Users_Require_mail_address);
 	    }
 	}
 	else
 	    addMessage(FacesMessage.SEVERITY_WARN, "register_without_wizard_warning");
     }
+
+    public boolean isMailRequired()
+    {
+	return mailRequired;
+    }
+
 }

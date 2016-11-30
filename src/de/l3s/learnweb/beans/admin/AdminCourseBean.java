@@ -12,12 +12,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.event.ActionEvent;
 
+import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Course.Option;
 import de.l3s.learnweb.File;
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.ResourcePreviewMaker;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
@@ -27,8 +29,9 @@ import de.l3s.learnwebBeans.ApplicationBean;
 @SessionScoped
 public class AdminCourseBean extends ApplicationBean implements Serializable
 {
-
     private static final long serialVersionUID = -1276599881084055950L;
+    private static final Logger log = Logger.getLogger(AdminCourseBean.class);
+
     private Course course = null;
     private List<OptionWrapperGroup> optionGroups;
     private int courseId;
@@ -155,7 +158,6 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
 
     public void handleFileUpload(FileUploadEvent event)
     {
-
 	UploadedFile uploadedFile = event.getFile();
 
 	ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
@@ -172,12 +174,17 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
 
 	    file = getLearnweb().getFileManager().save(file, uploadedFile.getInputstream());
 
+	    if(course.getBannerImageFileId() > 0) // delete old image first
+	    {
+		Learnweb.getInstance().getFileManager().delete(course.getBannerImageFileId());
+	    }
+
 	    course.setBannerImageFileId(file.getId());
 
 	}
 	catch(Exception e)
 	{
-	    e.printStackTrace();
+	    log.error("Could not handle uploaded banner image", e);
 	    addGrowl(FacesMessage.SEVERITY_FATAL, "Could not store file");
 	}
     }
