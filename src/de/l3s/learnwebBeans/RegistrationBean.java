@@ -95,7 +95,6 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 
     public String register() throws Exception
     {
-
 	Course course = null;
 	Learnweb learnweb = getLearnweb();
 
@@ -116,37 +115,13 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 
 	// log the user in
 	UtilBean.getUserBean().setUser(user);
-	addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
 
 	//logging
 	log(Action.register, 0, 0);
 	if(null != course && course.getDefaultGroupId() != 0)
 	    log(Action.group_joining, course.getDefaultGroupId(), course.getDefaultGroupId());
 
-	log(Action.login, 0, 0);
-
-	/* disabled because interweb isn't used
-	Runnable preFetch = new Runnable() {
-		
-		@Override
-		public void run() {
-			InterWeb interweb = user.getInterweb();
-			try {
-				interweb.getAuthorizationInformation(true);				
-				interweb.getUsername();	
-			} 
-			catch (Exception e) {
-				e.printStackTrace();
-			} 
-		}
-	};
-	new Thread(preFetch).start();
-	*/
-
-	return getTemplateDir() + "/" + user.getOrganisation().getWelcomePage() + "?faces-redirect=true";
-
-	//return getTemplateDir()+ "/myhome/resources.xhtml";		
-	//return getTemplateDir()+"/user/login.xhtml";
+	return LoginBean.loginUser(this, user);
     }
 
     public void validatePassword(FacesContext context, UIComponent component, Object value) throws ValidatorException

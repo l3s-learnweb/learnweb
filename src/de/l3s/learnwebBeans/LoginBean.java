@@ -8,11 +8,10 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
-import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 
-import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
 
@@ -20,7 +19,7 @@ import de.l3s.learnweb.beans.UtilBean;
 @RequestScoped
 public class LoginBean extends ApplicationBean implements Serializable
 {
-    private static final Logger log = Logger.getLogger(LoginBean.class);
+    // private static final Logger log = Logger.getLogger(LoginBean.class);
 
     private static final long serialVersionUID = 7980062591522267111L;
     @NotEmpty
@@ -58,15 +57,19 @@ public class LoginBean extends ApplicationBean implements Serializable
 	    return null;
 	}
 
+	return loginUser(this, user);
+    }
+
+    public static String loginUser(ApplicationBean bean, User user) throws SQLException
+    {
 	UtilBean.getUserBean().setUser(user); // logs the user in
 	//addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
 	user.setCurrentLoginDate(new Date());
 
-	log(Action.login, 0, 0);
-
-	log.debug("Login time; current: " + user.getCurrentLoginDate() + ", last: " + user.getLastLoginDate());
+	bean.log(Action.login, 0, 0);
 
 	// uncommented until interwebJ works correct
+	/*
 	Runnable preFetch = new Runnable()
 	{
 	    @Override
@@ -84,26 +87,32 @@ public class LoginBean extends ApplicationBean implements Serializable
 	    }
 	};
 	new Thread(preFetch).start();
+	*/
 
-	// if the user logs in from the start or the login page, redirect him to the welcome page
-	String viewId = getFacesContext().getViewRoot().getViewId();
-	if(viewId.endsWith("/user/login.xhtml") || viewId.endsWith("index.xhtml") || viewId.endsWith("error.xhtml") || viewId.endsWith("expired.xhtml"))
+	Organisation userOrganisation = user.getOrganisation();
+
+	if(userOrganisation.getDefaultLanguage() != null)
 	{
-	    return "/lw/" + user.getOrganisation().getWelcomePage() + "?faces-redirect=true";
+	    UtilBean.getUserBean().setLocaleCode(userOrganisation.getDefaultLanguage());
 	}
 
 	// set default search service if not already selected
-	if(getPreference("SEARCH_SERVICE_TEXT") == null || getPreference("SEARCH_SERVICE_IMAGE") == null || getPreference("SEARCH_SERVICE_VIDEO") == null)
+	if(bean.getPreference("SEARCH_SERVICE_TEXT") == null || bean.getPreference("SEARCH_SERVICE_IMAGE") == null || bean.getPreference("SEARCH_SERVICE_VIDEO") == null)
 	{
-	    log.debug("set default search service for user: " + user.getUsername());
-	    setPreference("SEARCH_SERVICE_TEXT", user.getOrganisation().getDefaultSearchServiceText().name());
-	    setPreference("SEARCH_SERVICE_IMAGE", user.getOrganisation().getDefaultSearchServiceImage().name());
-	    setPreference("SEARCH_SERVICE_VIDEO", user.getOrganisation().getDefaultSearchServiceVideo().name());
+	    bean.setPreference("SEARCH_SERVICE_TEXT", userOrganisation.getDefaultSearchServiceText().name());
+	    bean.setPreference("SEARCH_SERVICE_IMAGE", userOrganisation.getDefaultSearchServiceImage().name());
+	    bean.setPreference("SEARCH_SERVICE_VIDEO", userOrganisation.getDefaultSearchServiceVideo().name());
+	}
+
+	// if the user logs in from the start or the login page, redirect him to the welcome page
+	String viewId = getFacesContext().getViewRoot().getViewId();
+	if(viewId.endsWith("/user/login.xhtml") || viewId.endsWith("index.xhtml") || viewId.endsWith("error.xhtml") || viewId.endsWith("expired.xhtml") || viewId.endsWith("register.xhtml"))
+	{
+	    return "/lw/" + userOrganisation.getWelcomePage() + "?faces-redirect=true";
 	}
 
 	// otherwise reload his last page
 	return viewId + "?faces-redirect=true&includeViewParams=true";
-
     }
 
     public String logout()

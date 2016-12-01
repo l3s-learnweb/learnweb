@@ -36,6 +36,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
     private SearchFilters.SERVICE defaultSearchServiceText = SERVICE.bing;
     private SearchFilters.SERVICE defaultSearchServiceImage = SERVICE.flickr;
     private SearchFilters.SERVICE defaultSearchServiceVideo = SERVICE.youtube;
+    private String defaultLanguage = null; // the language which is used after the user logged in
     private long[] options = new long[1];
     private List<ResourceMetadataField> metadataFields = new LinkedList<ResourceMetadataField>();
 
@@ -61,6 +62,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
 	this.logo = rs.getString("logo");
 	this.welcomePage = rs.getString("welcome_page");
 	this.welcomeMessage = rs.getString("welcome_message");
+	this.defaultLanguage = rs.getString("default_language");
 
 	setDefaultSearchServiceText(rs.getString("default_search_text"));
 	setDefaultSearchServiceImage(rs.getString("default_search_image"));
@@ -131,6 +133,23 @@ public class Organisation implements Serializable, Comparable<Organisation>
 	    metadataFields.add(new ResourceMetadataField("coverage", MetadataType.INPUT_TEXT, true));
 	    metadataFields.add(new ResourceMetadataField("publisher", MetadataType.INPUT_TEXT, true));
 	}
+    }
+
+    public String getDefaultLanguage()
+    {
+	return defaultLanguage;
+    }
+
+    /**
+     * 
+     * @param defaultLanguage Expect NULL or two letter language code
+     */
+    public void setDefaultLanguage(String defaultLanguage)
+    {
+	if(defaultLanguage != null && defaultLanguage.length() != 2)
+	    throw new IllegalArgumentException("Expect NULL or two letter language code");
+
+	this.defaultLanguage = defaultLanguage;
     }
 
     public List<ResourceMetadataField> getMetadataFields()

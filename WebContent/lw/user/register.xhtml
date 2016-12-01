@@ -31,11 +31,7 @@
 			</span>
 		</div>
 		
-		
-		<p:panel >
-		
-		
-		
+		<p:panel >	
 			<h:form id="registerform">
 
 				<h:panelGrid columns="3">					
@@ -61,8 +57,8 @@
 					</p:password>
 					<p:message id="confirmPasswordMessage" showSummary="true" showDetail="false" styleClass="error" for="confirm_password" />
 
-					<h:outputLabel for="email" value="#{msg.email_address}:" />
-					<p:inputText id="email" value="#{registrationBean.email}" label="#{msg.email_address}"/>
+					<h:outputLabel for="email">#{msg.email_address}:<h:outputText value=" *" rendered="#{registrationBean.mailRequired}"/></h:outputLabel>
+					<p:inputText id="email" value="#{registrationBean.email}" label="#{msg.email_address}" required="#{registrationBean.mailRequired}" />
 					<p:message id="emailMessage" showSummary="true" showDetail="false" styleClass="error" for="email" />
 
 					<h:outputText value="" />			
@@ -74,9 +70,13 @@
 				<br/><br/>
 				<h:panelGroup layout="block" rendered="#{not empty registrationBean.wizard}">
 					<h:outputText value="#{msg.instructions}" style="font-weight:bold; text-decoration:underline;"/>
-					<ul style="padding:15px;">
+					<style type="text/css">
+						.registration-instructions a {font-weight:bold;text-decoration:underline;}
+						.registration-instructions a:hover {text-decoration:none;}
+					</style>
+					<ul style="padding:15px;" class="registration-instructions">
 						<li>#{msg.register_first_time_access}</li>
-						<li>#{msg.register_account_already_wizard} [<h:outputLink value="#{request.contextPath}/lw/user/login.jsf" style="font-weight:bold;text-decoration:underline;cursor:pointer;">link</h:outputLink>]</li>
+						<li><h:outputText value="${registrationBean.getLocaleMessage('register_account_already_wizard','user/login.jsf')}" escape="false"/></li>
 						<li><h:outputText value="${registrationBean.getLocaleMessage('register_lw_account_wizard',registrationBean.wizard)}" escape="false"/></li>
 					</ul>
 				</h:panelGroup>
