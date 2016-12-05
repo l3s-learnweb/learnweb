@@ -48,14 +48,14 @@
 							</h:selectOneMenu>
 							<h:outputText value="" />
 											
-							<h:outputText value="#{msg.category}*:" rendered="#{not empty userBean.activeCourse.groupCategories and userBean.activeCourse.id != 891}" />
-							<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{not empty userBean.activeCourse.groupCategories and userBean.activeCourse.id != 891}">
+							<h:outputText value="#{msg.category}*:" rendered="#{not empty userBean.user.activeCourse.groupCategories and userBean.user.activeCourse.id != 891}" />
+							<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{not empty userBean.user.activeCourse.groupCategories and userBean.user.activeCourse.id != 891}">
 								<f:selectItem itemValue="0" itemLabel="#{msg.no_category}" />
 								<f:selectItem itemValue="-1" itemLabel="---------------" itemDisabled="true" />	
-								<f:selectItems value="#{userBean.activeCourse.groupCategories}" var="cat" itemValue="#{cat.id}" 
+								<f:selectItems value="#{userBean.user.activeCourse.groupCategories}" var="cat" itemValue="#{cat.id}" 
 									itemLabel="#{cat.title} [#{cat.abbreviation}]" />
 							</h:selectOneMenu>
-							<h:outputText value="" rendered="#{not empty userBean.activeCourse.groupCategories and userBean.activeCourse.id != 891}" />						
+							<h:outputText value="" rendered="#{not empty userBean.user.activeCourse.groupCategories and userBean.user.activeCourse.id != 891}" />						
 															
 							<h:outputText value="#{msg.description}:" />					
 							<p:editor id="new_description" widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" 

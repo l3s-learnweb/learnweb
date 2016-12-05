@@ -152,10 +152,6 @@ public class ResourceManager
 	update.close();
     }
 
-    /**
-     * @see de.l3s.learnweb.ResourceManager#thumbRateResource(int, int, int)
-     */
-
     protected void thumbRateResource(int resourceId, int userId, int direction) throws SQLException
     {
 	if(direction != 1 && direction != -1)
@@ -167,6 +163,23 @@ public class ResourceManager
 	insert.setInt(3, direction);
 	insert.executeUpdate();
 	insert.close();
+    }
+
+    protected void loadThumbRatings(Resource resource) throws SQLException
+    {
+	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT SUM(IF(direction=1,1,0)) as positive, SUM(IF(direction=-1,1,0)) as negative FROM `lw_thumb` WHERE `resource_id` = ?");
+	select.setInt(1, resource.getId());
+	ResultSet rs = select.executeQuery();
+
+	if(rs.next())
+	{
+	    resource.setThumbUp(rs.getInt(1));
+	    resource.setThumbDown(rs.getInt(2));
+	}
+	else
+	    log.warn("no results for id: " + resource.getId());
+
+	select.close();
     }
 
     /**

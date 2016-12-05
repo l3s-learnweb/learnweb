@@ -30,7 +30,7 @@ public class FrontpageServlet extends HttpServlet
     {
 	String serverName = request.getServerName();
 
-	return serverName.equals("archiveweb.l3s.uni-hannover.de") || request.getServerName().equals("learnweb.dev");
+	return serverName.equals("archiveweb.l3s.uni-hannover.de") || request.getServerName().equals("archiveweb.dev");
     }
 
     @Override

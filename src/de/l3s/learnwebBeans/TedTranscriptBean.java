@@ -84,7 +84,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	String logPreference = getPreference("transcript_show_del_res");
 	if(logPreference != null)
 	    showDeletedResources = Boolean.parseBoolean(logPreference);
-	selectedCourseId = UtilBean.getUserBean().getActiveCourseId();
+	selectedCourseId = getUser().getActiveCourseId();
 
     }
 
@@ -107,7 +107,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	catch(SQLException e)
 	{
 	    addFatalMessage(e);
-	    log.fatal(e);
 	}
 
 	if(tedResource.getSource().equalsIgnoreCase("TEDx"))
@@ -144,15 +143,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	    Document doc = Jsoup.parse(transcript);
 	    tedResource.setTranscript(doc.getElementsByTag("body").html());
 	}
-	catch(RuntimeException e)
+	catch(SQLException | RuntimeException e)
 	{
 	    addFatalMessage(e);
-	    log.fatal(e);
-	}
-	catch(SQLException e)
-	{
-	    addFatalMessage(e);
-	    log.fatal(e);
 	}
     }
 
@@ -164,13 +157,12 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	{
 	    Date actionTimestamp = new Date();
 	    tedResource.save();
-	    TranscriptLog transcriptLog = new TranscriptLog(UtilBean.getUserBean().getActiveCourseId(), getUser().getId(), tedResource.getId(), "", "", "save transcript", actionTimestamp);
+	    TranscriptLog transcriptLog = new TranscriptLog(getUser().getActiveCourseId(), getUser().getId(), tedResource.getId(), "", "", "save transcript", actionTimestamp);
 	    getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
 	}
 	catch(Exception e)
 	{
 	    addFatalMessage(e);
-	    log.fatal(e);
 	}
 	getUser().clearCaches();
 	addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
@@ -185,14 +177,13 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	{
 	    Date actionTimestamp = new Date();
 	    tedResource.save();
-	    TranscriptLog transcriptLog = new TranscriptLog(UtilBean.getUserBean().getActiveCourseId(), getUser().getId(), tedResource.getId(), "", "", "submit transcript", actionTimestamp);
+	    TranscriptLog transcriptLog = new TranscriptLog(getUser().getActiveCourseId(), getUser().getId(), tedResource.getId(), "", "", "submit transcript", actionTimestamp);
 	    getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
 	    getLearnweb().getTedManager().saveTranscriptSelection(transcript, tedResource.getId());
 	}
 	catch(Exception e)
 	{
 	    addFatalMessage(e);
-	    log.fatal(e);
 	}
 	getUser().clearCaches();
 	addGrowl(FacesMessage.SEVERITY_INFO, "Transcript Submitted");
@@ -208,13 +199,12 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	    String userAnnotation = getParameter("user_annotation");
 	    String action = getParameter("action");
 
-	    TranscriptLog transcriptLog = new TranscriptLog(UtilBean.getUserBean().getActiveCourseId(), getUser().getId(), tedResource.getId(), word, userAnnotation, action, actionTimestamp);
+	    TranscriptLog transcriptLog = new TranscriptLog(getUser().getActiveCourseId(), getUser().getId(), tedResource.getId(), word, userAnnotation, action, actionTimestamp);
 	    getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
 	}
 	catch(Exception e)
 	{
 	    addFatalMessage(e);
-	    log.fatal(e);
 	}
     }
 
@@ -334,7 +324,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	    catch(SQLException e)
 	    {
 		addFatalMessage(e);
-		log.fatal(e);
 	    }
 	}
 
@@ -351,7 +340,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	    catch(SQLException e)
 	    {
 		addFatalMessage(e);
-		log.fatal(e);
 	    }
 	}
     }
@@ -367,7 +355,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	    catch(SQLException e)
 	    {
 		addFatalMessage(e);
-		log.fatal(e);
 	    }
 	}
     }
@@ -412,15 +399,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	    }
 
 	}
-	catch(RuntimeException e)
+	catch(SQLException | RuntimeException e)
 	{
 	    addFatalMessage(e);
-	    log.fatal(e);
-	}
-	catch(SQLException e)
-	{
-	    addFatalMessage(e);
-	    log.fatal(e);
 	}
 	return languageList;
     }

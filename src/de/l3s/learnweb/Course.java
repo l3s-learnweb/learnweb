@@ -16,14 +16,13 @@ public class Course implements Serializable, Comparable<Course>
     // if you add 64 options you have to add one options_field{x} column in lw_course 
     public static enum Option implements Comparable<Option>
     {
-	Groups_Forum_enabled,
-	Groups_Detailed_logs_enabled,
-	Course_Forum_enabled,
+	Resources_Enable_Star_rating,
+	Resources_Enable_Thumb_rating,
+	Users_Hide_language_switch,
 	Services_Allow_user_to_logout_from_interweb,
 	Users_Require_mail_address,
 	Search_History_log_enabled, // this should be a organization option
-	Course_Google_Docs_Sign_In_enabled // this should be a organization option	
-
+	Course_Google_Docs_Sign_In_enabled // this should be a organization option		
     }
 
     private int id;
@@ -252,6 +251,20 @@ public class Course implements Serializable, Comparable<Course>
 	    memberCount++;
 	Learnweb.getInstance().getCourseManager().addUser(this, user);
 	user.clearCaches();
+    }
+
+    /**
+     * 
+     * @param user
+     * @return True if the given user is a moderator of this course
+     * @throws SQLException
+     */
+    public boolean isModerator(User user) throws SQLException
+    {
+	if(!user.isModerator())
+	    return false;
+
+	return user.getCourses().contains(this); // moderators can only moderator her own courses
     }
 
     public String getDefaultInterwebUsername()

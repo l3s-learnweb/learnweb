@@ -1,7 +1,6 @@
 package de.l3s.learnwebBeans;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -9,7 +8,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.event.ComponentSystemEvent;
 
 import org.apache.log4j.Logger;
-import org.primefaces.event.RateEvent;
 
 import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.LogEntry.Action;
@@ -26,9 +24,6 @@ public class ResourceBean extends ApplicationBean implements Serializable
     private String tagName;
     private String commentText;
     private int resourceTargetGroupId;
-
-    private boolean isStarRatingHidden = false;
-    private boolean isThumbRatingHidden = false;
 
     public void loadResource()
     {
@@ -68,9 +63,6 @@ public class ResourceBean extends ApplicationBean implements Serializable
 	    	    isThumbRatingHidden = org.getOption(Option.Resource_Hide_Thumb_rating);
 	    	    */
 
-	    isStarRatingHidden = false;
-	    isThumbRatingHidden = true;
-
 	}
 	catch(Exception e)
 	{
@@ -83,80 +75,6 @@ public class ResourceBean extends ApplicationBean implements Serializable
     {
 	loadResource();
 
-    }
-
-    public void handleRate(RateEvent rateEvent)
-    {
-	if(null == getUser())
-	{
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
-	    return;
-	}
-
-	loadResource();
-
-	try
-	{
-	    if(isRatedByUser())
-	    {
-		addGrowl(FacesMessage.SEVERITY_FATAL, "You have already rated this resource");
-		return;
-	    }
-
-	    resource.rate((Integer) rateEvent.getRating(), getUser());
-	}
-	catch(Exception e)
-	{
-	    addGrowl(FacesMessage.SEVERITY_FATAL, "error while rating");
-	    e.printStackTrace();
-	    return;
-	}
-
-	log(Action.rating_resource, resource.getGroupId(), resource.getId());
-
-	addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
-    }
-
-    private void handleThumbRating(int direction)
-    {
-	loadResource();
-
-	if(null == getUser())
-	{
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
-	    return;
-	}
-
-	try
-	{
-	    if(isThumbRatedByUser())
-	    {
-		addGrowl(FacesMessage.SEVERITY_FATAL, "You have already rated this resource");
-		return;
-	    }
-
-	    resource.thumbRate(getUser(), direction);
-	}
-	catch(Exception e)
-	{
-	    addGrowl(FacesMessage.SEVERITY_FATAL, "error while rating");
-	    e.printStackTrace();
-	    return;
-	}
-
-	log(Action.thumb_rating_resource, resource.getGroupId(), resource.getId());
-
-	addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
-    }
-
-    public void onThumbUp()
-    {
-	handleThumbRating(1);
-    }
-
-    public void onThumbDown()
-    {
-	handleThumbRating(-1);
     }
 
     public String addTag()
@@ -212,22 +130,6 @@ public class ResourceBean extends ApplicationBean implements Serializable
 	    e.printStackTrace();
 	    addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
 	}
-    }
-
-    public boolean isRatedByUser() throws Exception
-    {
-	if(getUser() == null || null == resource)
-	    return false;
-
-	return resource.isRatedByUser(getUser().getId());
-    }
-
-    public boolean isThumbRatedByUser() throws SQLException
-    {
-	if(getUser() == null || null == resource)
-	    return false;
-
-	return resource.isThumbRatedByUser(getUser().getId());
     }
 
     public String getTagName()
@@ -309,15 +211,4 @@ public class ResourceBean extends ApplicationBean implements Serializable
     {
 	this.resourceTargetGroupId = resourceTargetGroupId;
     }
-
-    public boolean isStarRatingHidden()
-    {
-	return isStarRatingHidden;
-    }
-
-    public boolean isThumbRatingHidden()
-    {
-	return isThumbRatingHidden;
-    }
-
 }

@@ -44,14 +44,16 @@ public class UserBean implements Serializable
     private int userId = 0;
     private transient User userCache = null; // to avoid inconsistencies with the user cache the UserBean does not store the user itself
     private transient long userCacheTime = 0L; // stores when the userCache was refreshed the last time
+    private transient User moderatorUser; // in this field we store a moderator account while the moderator is logged in in an other account
 
     private Locale locale;
     private transient PrettyTime localePrettyTime;
 
     private int activeCourseId = 0;
+    /*
     private transient Course activeCourseCache = null;
     private transient long activeCourseCacheTime = 0L;
-
+    */
     private transient List<Group> newGroups = null;
 
     private boolean cacheShowMessageJoinGroup = true;
@@ -60,6 +62,8 @@ public class UserBean implements Serializable
     private long groupsTreeCacheTime = 0L;
     private DefaultTreeNode groupsTree;
     private HashMap<String, String> anonymousPreferences = new HashMap<String, String>(); // preferences for users who are not logged in
+
+    private String domain = "learnweb"; // variable is used to change the logo
 
     public UserBean()
     {
@@ -71,7 +75,8 @@ public class UserBean implements Serializable
 
 	if(FrontpageServlet.isArchiveWebRequest(httpRequest))
 	{
-	    setActiveCourseId(891); // enabled archive course when archiveweb.l3s.uni-hannover.de is used
+	    domain = "archiveweb";
+	    //setActiveCourseId(891); // enabled archive course when archiveweb.l3s.uni-hannover.de is used
 	}
     }
 
@@ -154,7 +159,6 @@ public class UserBean implements Serializable
 	userId = 0;
 	userCache = null;
 	activeCourseId = 0;
-	activeCourseCache = null;
 	cacheShowMessageJoinGroup = true;
 	cacheShowMessageAddResource = true;
 
@@ -164,33 +168,19 @@ public class UserBean implements Serializable
 
 	    storeMetadataInSession(user);
 
-	    try
+	    if(user.getId() == 2969) // paviamod set to dentists2015 // TODO this is only a quick fix
+		activeCourseId = 884; // activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(884);
+	    else if(user.getId() == 5143) // yell set to yell // TODO this is only a quick fix
+		activeCourseId = 505; //activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(505);
+	    else if(user.getId() == 8963) // LAbInt set active course to LabInt 2016
+		activeCourseId = 1225; //activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(505);
+	    else
 	    {
-		if(user.getId() == 2969) // paviamod set to dentists2015 // TODO this is only a quick fix
-		    activeCourseId = 884; // activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(884);
-		else if(user.getId() == 5143) // yell set to yell // TODO this is only a quick fix
-		    activeCourseId = 505; //activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(505);
-		else if(user.getId() == 8963) // LAbInt set active course to LabInt 2016
-		    activeCourseId = 1225; //activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(505);
-		else
-		{
-		    String lastActiveCourse = getPreference("active_course");
-		    if(lastActiveCourse != null)
-		    {
-			activeCourseId = Integer.parseInt(lastActiveCourse);
-			log.debug("load course from preferences");
-		    }
-		    else
-		    {
-			activeCourseId = user.getCourses().get(0).getId();
-			log.debug("use public course");
-		    }
-		}
+
+		activeCourseId = user.getActiveCourseId();
 	    }
-	    catch(SQLException e)
-	    {
-		log.error("Couldn't login user " + user.getId(), e);
-	    }
+
+	    user.setActiveCourseId(activeCourseId);
 
 	}
 	else
@@ -369,38 +359,52 @@ public class UserBean implements Serializable
 	return user.getTimeZone();
     }
 
-    @Deprecated
     /**
-     * Don't use this currently. Users don't have an option to change the active course
+     * Helper method to catch exceptions
      * 
      * @return
      */
-    public Course getActiveCourse()
+    private Course getActiveCourse()
     {
-	if(activeCourseCacheTime + 6000000 < System.currentTimeMillis() || activeCourseCache == null)
+	if(isLoggedIn())
 	{
-	    if(activeCourseId == 0)
+	    try
 	    {
-		activeCourseId = 485; // set to public course
+		return getUser().getActiveCourse();
 	    }
+	    catch(SQLException e)
+	    {
+		log.error("can't get active course of user: " + getUser().toString(), e);
+	    }
+	}
+
+	// in case of errors load public course
+	return Learnweb.getInstance().getCourseManager().getCourseById(485);
+
+	/*
+	if(activeCourseCacheTime + 60000 < System.currentTimeMillis() || activeCourseCache == null)
+	{
+	    if(specialDomain.equals("archiveweb"))
+		activeCourseId = 891;
+	    else if(activeCourseId == 0)
+		activeCourseId = 485; // set to public course
+	
 	    this.activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(activeCourseId);
 	    this.activeCourseCacheTime = System.currentTimeMillis();
 	}
 	return activeCourseCache;
+	*/
     }
-
+    /*
     public void setActiveCourseId(int activeCourseId)
     {
-	this.activeCourseCache = null;
-	this.activeCourseId = activeCourseId;
-
-	setPreference("active_course", Integer.toString(activeCourseId));
+    	this.activeCourseCache = null;
+    	this.activeCourseId = activeCourseId;
+    
+    	if(isLoggedIn())
+    	    getUser().setActiveCourseId(activeCourseId);
     }
-
-    public int getActiveCourseId()
-    {
-	return activeCourseId;
-    }
+    */
 
     @Override
     public String toString()
@@ -443,6 +447,10 @@ public class UserBean implements Serializable
     public String getBannerImage() throws SQLException
     {
 	Course selectCourse = getActiveCourse();
+
+	if(domain.equals("archiveweb"))
+	    selectCourse = Learnweb.getInstance().getCourseManager().getCourseById(891);
+
 	if(selectCourse != null && selectCourse.getBannerImage() != null)
 	    return "background-image: url(" + selectCourse.getBannerImage() + ");";
 
@@ -505,18 +513,17 @@ public class UserBean implements Serializable
 
     public boolean isSearchHistoryEnabled()
     {
-	if(!isLoggedIn())
-	    return false;
-
 	return getActiveCourse().getOption(Course.Option.Search_History_log_enabled);
     }
 
     public boolean isGoogleDocsSignInEnabled()
     {
-	if(!isLoggedIn())
-	    return false;
-
 	return getActiveCourse().getOption(Course.Option.Course_Google_Docs_Sign_In_enabled);
+    }
+
+    public boolean isLanguageSwitchEnabled()
+    {
+	return !getActiveCourse().getOption(Course.Option.Users_Hide_language_switch);
     }
 
     /**
@@ -666,4 +673,15 @@ public class UserBean implements Serializable
 
 	return localePrettyTime.format(date);
     }
+
+    public User getModeratorUser()
+    {
+	return moderatorUser;
+    }
+
+    public void setModeratorUser(User moderatorUser)
+    {
+	this.moderatorUser = moderatorUser;
+    }
+
 }

@@ -75,9 +75,9 @@
 						.registration-instructions a:hover {text-decoration:none;}
 					</style>
 					<ul style="padding:15px;" class="registration-instructions">
-						<li>#{msg.register_first_time_access}</li>
-						<li><h:outputText value="${registrationBean.getLocaleMessage('register_account_already_wizard','user/login.jsf')}" escape="false"/></li>
-						<li><h:outputText value="${registrationBean.getLocaleMessage('register_lw_account_wizard',registrationBean.wizard)}" escape="false"/></li>
+						<li>#{msg.register_first_time_access}</li>					
+						<li><h:outputFormat value="#{msg.register_account_already_wizard}" escape="false"><f:param value="user/login.jsf" /></h:outputFormat></li>
+						<li><h:outputFormat value="#{msg.register_lw_account_wizard}" escape="false"><f:param value="#{registrationBean.wizard}" /></h:outputFormat></li>
 					</ul>
 				</h:panelGroup>
 			</h:form>

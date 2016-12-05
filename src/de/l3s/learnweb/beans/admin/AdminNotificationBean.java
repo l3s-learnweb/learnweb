@@ -27,12 +27,14 @@ public class AdminNotificationBean extends ApplicationBean
     private String text;
     @NotEmpty
     private String title;
+    private boolean sendEmail = false; // send the message also per mail
+
     //Alana
     private String[] listStudents;
 
     public void send() throws SQLException
     {
-	// get selected users, necessary because jsf sucks
+	// get selected users, complicated because jsf sucks
 	HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
 	String[] tempSelectedUsers = request.getParameterValues("selected_users");
 
@@ -49,10 +51,8 @@ public class AdminNotificationBean extends ApplicationBean
 	    selectedUsers.add(Integer.parseInt(userId));
 	}
 
-	User fromUser = getUser();
-
 	Message message = new Message();
-	message.setFromUser(fromUser);
+	message.setFromUser(getUser());
 	message.setTitle(this.title);
 	message.setText(this.text);
 	message.setTime(new Date());
@@ -62,8 +62,14 @@ public class AdminNotificationBean extends ApplicationBean
 
 	for(int userId : selectedUsers)
 	{
-	    message.setToUser(um.getUser(userId));
-	    message.save();
+	    User user = um.getUser(userId);
+	    message.setToUser(user);
+	    // message.save();
+
+	    if(sendEmail)
+	    {
+		log.debug("mail " + user.getEmail());
+	    }
 	    counter++;
 	}
 	addMessage(FacesMessage.SEVERITY_INFO, counter + " Notifications send");
@@ -73,7 +79,6 @@ public class AdminNotificationBean extends ApplicationBean
     public void send2() throws SQLException
     {
 	log.debug("Send2");
-	log.debug("lista no admin:" + this.listStudents[0]);
 	if(null == this.listStudents || this.listStudents.length == 0)
 	{
 	    addMessage(FacesMessage.SEVERITY_ERROR, "Please select the users you want to send a message.");
@@ -99,8 +104,10 @@ public class AdminNotificationBean extends ApplicationBean
 
 	for(int userId : selectedUsers)
 	{
-	    message.setToUser(um.getUser(userId));
+	    User user = um.getUser(userId);
+	    message.setToUser(user);
 	    message.save();
+
 	    counter++;
 	}
 	addMessage(FacesMessage.SEVERITY_INFO, counter + " Notifications send");
@@ -124,6 +131,16 @@ public class AdminNotificationBean extends ApplicationBean
     public void setTitle(String title)
     {
 	this.title = title;
+    }
+
+    public boolean isSendEmail()
+    {
+	return sendEmail;
+    }
+
+    public void setSendEmail(boolean sendEmail)
+    {
+	this.sendEmail = sendEmail;
     }
 
     //Alana

@@ -127,11 +127,6 @@
 										</a>
 									</li>
 									<li>
-										<a href="#{request.contextPath}/lw/admin/users.jsf">
-											<h:outputText value="#{msg.users}" />
-										</a>
-									</li>
-									<li>
 										<a href="#{request.contextPath}/lw/admin/adminmsg.jsf">
 											<h:outputText value="#{msg.admin_messages_Title}" />
 										</a>
@@ -152,7 +147,7 @@
 										</a>
 									</li>
 									<li>
-										<a href="#{request.contextPath}/lw/admin/users_moderator.jsf">
+										<a href="#{request.contextPath}/lw/admin/users.jsf">
 											<h:outputText value="#{msg.users}" />
 										</a>
 									</li>
@@ -198,41 +193,43 @@
 				</div>				
 			</ui:fragment>
 			
-			<div id="language_selector" class="hover-white" tabindex="0">
-				<img alt="#{userBean.localeCode}" src="#{request.contextPath}/resources/main-template/img/flag_#{userBean.localeCode}.png" />
-
-				<h:form>
-					<ul>
-						<li>
-							<h:commandLink action="#{userBean.setLocaleCode('de')}" styleClass="language_de">
-								Deutsch
-							</h:commandLink>
-						</li>
-						<li>
-							<h:commandLink action="#{userBean.setLocaleCode('en')}" styleClass="language_en">
-								English
-							</h:commandLink>
-						</li>
-						<li>
-							<h:commandLink action="#{userBean.setLocaleCode('it')}" styleClass="language_it">
-								Italiano
-							</h:commandLink>
-						</li>
-						<li>
-							<h:commandLink action="#{userBean.setLocaleCode('pt')}" styleClass="language_pt">
-								Português
-							</h:commandLink>
-						</li>
-						<ui:fragment rendered="#{userBean.admin}">
-						<li>
-							<h:commandLink action="#{userBean.setLocaleCode('xx')}">
-								Developer
-							</h:commandLink>
-						</li>
-						</ui:fragment>
-					</ul>
-				</h:form>
-			</div>
+			<ui:fragment rendered="#{userBean.languageSwitchEnabled}">
+				<div id="language_selector" class="hover-white" tabindex="0">
+					<img alt="#{userBean.localeCode}" src="#{request.contextPath}/resources/main-template/img/flag_#{userBean.localeCode}.png" />
+	
+					<h:form>
+						<ul>
+							<li>
+								<h:commandLink action="#{userBean.setLocaleCode('de')}" styleClass="language_de">
+									Deutsch
+								</h:commandLink>
+							</li>
+							<li>
+								<h:commandLink action="#{userBean.setLocaleCode('en')}" styleClass="language_en">
+									English
+								</h:commandLink>
+							</li>
+							<li>
+								<h:commandLink action="#{userBean.setLocaleCode('it')}" styleClass="language_it">
+									Italiano
+								</h:commandLink>
+							</li>
+							<li>
+								<h:commandLink action="#{userBean.setLocaleCode('pt')}" styleClass="language_pt">
+									Português
+								</h:commandLink>
+							</li>
+							<ui:fragment rendered="#{userBean.admin}">
+							<li>
+								<h:commandLink action="#{userBean.setLocaleCode('xx')}">
+									Developer
+								</h:commandLink>
+							</li>
+							</ui:fragment>
+						</ul>
+					</h:form>
+				</div>
+			</ui:fragment>
 									
 			<p:graphicImage value="/resources/main-template/img/question.png" alt="#{msg.help}" onclick="footerToggle();" 
 				rendered="#{not empty helpText}" id="informationonscreen" />
@@ -267,7 +264,7 @@
 	<h:form>
 		<p:ajaxExceptionHandler type="javax.faces.application.ViewExpiredException" onexception="PF('expiredExceptionDialog').show();" />
 
-		<p:ajaxExceptionHandler type="java.lang.Exception" update="exceptionDialog" onexception="PF('exceptionDialoge').show();" />
+		<p:ajaxExceptionHandler type="java.lang.Exception" update="exceptionDialog" onexception="PF('exceptionDialog').show();" />
 
 		<p:dialog id="exceptionDialog" header="Exception '#{pfExceptionHandler.type}' occured!" widgetVar="exceptionDialog" height="500px">
 	        #{msg.message}: #{pfExceptionHandler.message} 

@@ -474,6 +474,7 @@ iframe { border:none }
 	display:block;
 	padding:0.5em;
 	margin-left:2.2em;
+	text-decoration:none;
 }
 .group-menu li{
 	padding-left:0.3em;
@@ -718,7 +719,14 @@ h3.group_link {
 /* general settings */
 
 a { text-decoration:none; }
-a:hover{ text-decoration:underline; }
+a:hover{ text-decoration:none; }
+
+td[role=gridcell] a,
+a.underline { text-decoration: underline }
+
+td[role=gridcell] a:hover,
+a.underline:hover { text-decoration: none; }
+
 a img { border: none; }
 
 h1, h2, h3 {
@@ -979,7 +987,7 @@ hr {
 	background-color:#fff !important;
 }
 .ui-widget {font-size:1.2rem;}
-.ui-widget-content a{text-decoration:none;}
+/*.ui-widget-content a{text-decoration:none;}*/
 .ui-corner-all{border-radius:0px;}
 
 /* for the new auto completion */

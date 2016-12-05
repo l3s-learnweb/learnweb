@@ -39,7 +39,7 @@
 				</p:column>	
 					
 				<p:column headerText="#{msg.members}" sortBy="#{course.memberCount}">
-					<h:outputText value="#{course.memberCount}" />									
+					<h:outputLink value="admin/users.jsf?course_id=#{course.id}">#{course.memberCount}</h:outputLink>								
 				</p:column>
 						
 				<p:column headerText="#{msg.options}">

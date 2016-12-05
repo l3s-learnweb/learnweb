@@ -43,7 +43,12 @@
 				</h:panelGrid>
 					
 				<ui:include src="/lw/templates/user_select_form.xhtml" />	
-									
+				
+				<h:panelGrid columns="2" style="margin-top:10px">	
+					<p:selectBooleanCheckbox value="#{adminNotificationBean.sendEmail}" id="send_notification_also_per_mail"  />					
+					<p:outputLabel for="send_notification_also_per_mail">#{msg.send_notification_also_per_mail}</p:outputLabel>
+				</h:panelGrid>
+				
 				<h:panelGrid columns="2" style="margin-top:10px">
 					<p:commandButton value="#{msg.send}" action="#{adminNotificationBean.send}" ajax="false"/>
 					<p:commandButton type="button" value="#{msg.clear}" onclick="editor.clear()" image="ui-icon ui-icon-close" />

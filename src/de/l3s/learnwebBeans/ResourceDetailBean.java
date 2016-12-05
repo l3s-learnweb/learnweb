@@ -23,9 +23,11 @@ import org.apache.log4j.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.primefaces.context.RequestContext;
+import org.primefaces.event.RateEvent;
 
 import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.Comment;
+import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
@@ -49,17 +51,12 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     private Comment clickedComment;
     private String newComment;
 
-    public ResourceDetailBean()
+    private boolean isStarRatingEnabled = false;
+    private boolean isThumbRatingEnabled = false;
+
+    public ResourceDetailBean() throws SQLException
     {
 	clickedResource = new Resource();
-    }
-
-    public void preRenderView(ComponentSystemEvent event)
-    {
-	if(isAjaxRequest())
-	{
-	    return;
-	}
 
 	if(resourceId > 0)
 	{
@@ -74,6 +71,34 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 		addFatalMessage(e);
 	    }
 	}
+
+	User user = getUser();
+	if(user != null)
+	{
+	    Course course = user.getActiveCourse();
+
+	    if(course != null)
+	    {
+		isThumbRatingEnabled = course.getOption(Course.Option.Resources_Enable_Thumb_rating);
+		isStarRatingEnabled = course.getOption(Course.Option.Resources_Enable_Star_rating);
+	    }
+	}
+    }
+
+    public int getStarRatingRounded()
+    {
+
+	return clickedResource.getRatingSum() == 0 ? 0 : clickedResource.getRatingSum() / clickedResource.getRateNumber();
+    }
+
+    public void setStarRatingRounded(int value)
+    {
+	// dummy method, is required by p:rating
+    }
+
+    public void preRenderView(ComponentSystemEvent event)
+    {
+
     }
 
     public String getArchiveTimelineJsonData()
@@ -439,5 +464,101 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     public void setNewComment(String newComment)
     {
 	this.newComment = newComment;
+    }
+
+    public boolean isStarRatedByUser() throws Exception
+    {
+	if(getUser() == null || null == clickedResource)
+	    return false;
+
+	return clickedResource.isRatedByUser(getUser().getId());
+    }
+
+    public boolean isThumbRatedByUser() throws SQLException
+    {
+	if(getUser() == null || null == clickedResource)
+	    return false;
+
+	return clickedResource.isThumbRatedByUser(getUser().getId());
+    }
+
+    public void handleRate(RateEvent rateEvent)
+    {
+	if(null == getUser())
+	{
+	    addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
+	    return;
+	}
+
+	try
+	{
+	    if(isStarRatedByUser())
+	    {
+		addGrowl(FacesMessage.SEVERITY_FATAL, "resource_already_rated");
+		return;
+	    }
+
+	    clickedResource.rate((Integer) rateEvent.getRating(), getUser());
+	}
+	catch(Exception e)
+	{
+	    addGrowl(FacesMessage.SEVERITY_FATAL, "error while rating");
+	    log.error("error while rating", e);
+	    return;
+	}
+
+	log(Action.rating_resource, clickedResource.getGroupId(), clickedResource.getId());
+
+	addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
+    }
+
+    private void handleThumbRating(int direction)
+    {
+	if(null == getUser())
+	{
+	    addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
+	    return;
+	}
+
+	try
+	{
+	    if(isThumbRatedByUser())
+	    {
+		addGrowl(FacesMessage.SEVERITY_FATAL, "resource_already_rated");
+		return;
+	    }
+
+	    clickedResource.thumbRate(getUser(), direction);
+	}
+	catch(Exception e)
+	{
+	    addGrowl(FacesMessage.SEVERITY_FATAL, "error while rating");
+	    log.error("error while rating", e);
+	    return;
+	}
+
+	log(Action.thumb_rating_resource, clickedResource.getGroupId(), clickedResource.getId());
+
+	addGrowl(FacesMessage.SEVERITY_INFO, "resource_rated");
+    }
+
+    public void onThumbUp()
+    {
+	handleThumbRating(1);
+    }
+
+    public void onThumbDown()
+    {
+	handleThumbRating(-1);
+    }
+
+    public boolean isStarRatingEnabled()
+    {
+	return isStarRatingEnabled;
+    }
+
+    public boolean isThumbRatingEnabled()
+    {
+	return isThumbRatingEnabled;
     }
 }

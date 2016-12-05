@@ -303,11 +303,18 @@ public class ApplicationBean
 	Integer userId = -1;
 	String referrer = null;
 	String userAgent = null;
+	String ip = null;
 	try
 	{
 	    FacesContext facesContext = FacesContext.getCurrentInstance();
 	    ExternalContext ext = facesContext.getExternalContext();
 	    HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();
+
+	    ip = servletRequest.getHeader("X-FORWARDED-FOR");
+	    if(ip == null)
+	    {
+		ip = servletRequest.getRemoteAddr();
+	    }
 
 	    referrer = servletRequest.getHeader("referer");
 	    userAgent = servletRequest.getHeader("User-Agent");
@@ -324,6 +331,6 @@ public class ApplicationBean
 	{
 	    // ignore
 	}
-	Logger.getLogger(ApplicationBean.class).fatal("Fatal unhandled error on: " + url + "; userId: " + userId + "; referrer: " + referrer + "; userAgent: " + userAgent, exception);
+	Logger.getLogger(ApplicationBean.class).fatal("Fatal unhandled error on: " + url + "; userId: " + userId + "; referrer: " + referrer + "; userAgent: " + userAgent + "; ip: " + ip, exception);
     }
 }

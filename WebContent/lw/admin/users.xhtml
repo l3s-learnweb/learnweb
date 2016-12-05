@@ -39,6 +39,10 @@
 					</f:facet>
 					<h:outputText value="#{user.organisation.title}" />			
 				</p:column>
+				
+				<p:column headerText="Moderator" sortBy="#{user.moderator}" style="width: 8%;">
+					<p:selectBooleanCheckbox value="#{user.moderator}" disabled="true" />
+				</p:column>
 						
 				<p:column>
 					<f:facet name="header">

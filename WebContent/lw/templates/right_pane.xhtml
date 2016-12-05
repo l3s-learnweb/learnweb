@@ -267,20 +267,54 @@
 					</style>
 					
 					<table id="resources_informations_table" class="full-width">
-						<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.fileName and not resourceDetailBean.clickedResource.source.equals('LORO')}">
+						<ui:fragment rendered="#{resourceDetailBean.starRatingEnabled}">
 							<tr>
 								<td>
 									<span class="resource_field">
-										#{msg.file}: 
+										#{msg.relevance}: 
 									</span>
 								</td>
 								<td>
-									<a href="#{resourceDetailBean.clickedResource.getUrl()}">
-										<span style="float:left;text-decoration:underline;">#{resourceDetailBean.clickedResource.fileName}</span><span class="ui-icon ui-icon-arrowthickstop-1-s" style="float:left;"></span>
-									</a>
+									<h:form id="rate_form">
+										<p:rating value="#{resourceDetailBean.starRatingRounded}" disabled="#{resourceDetailBean.starRatedByUser}" cancel="false" style="vertical-align: bottom; margin-right:10px; display:inline-block;">
+											<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}" update="rate_form :growl" />			
+										</p:rating>
+										 
+										<h:outputText value="#{resourceDetailBean.clickedResource.starRating}">
+											<f:convertNumber maxFractionDigits="1" minFractionDigits="1" />
+										</h:outputText>	
+										(<h:outputFormat value="#{msg.votes}"><f:param value="#{resourceDetailBean.clickedResource.rateNumber}" /></h:outputFormat>)
+									</h:form>
 								</td>
 							</tr>
 						</ui:fragment>
+											
+						<ui:fragment rendered="#{resourceDetailBean.thumbRatingEnabled}">
+							<tr>
+								<td>
+									<span class="resource_field">
+										#{msg.reliability}: 
+									</span>
+								</td>
+								<td>
+									<h:form id="thumbrating">
+										<h:panelGrid columns="4" >
+											<h:outputText value="+#{resourceDetailBean.clickedResource.thumbUp}" />
+											<p:commandLink actionListener="#{resourceDetailBean.onThumbUp}" update="thumbrating :growl">
+												<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
+												<h:graphicImage value="/resources/icon/thumb_up.png" width="16" height="16" alt="Rate thump up"/>
+											</p:commandLink>
+			
+											<p:commandLink actionListener="#{resourceDetailBean.onThumbDown}" update="thumbrating :growl">
+												<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
+												<h:graphicImage value="/resources/icon/thumb_dw.png" width="16" height="16" alt="Rate thump down" />
+											</p:commandLink>
+											<h:outputText value="-#{resourceDetailBean.clickedResource.thumbDown}" />
+										</h:panelGrid>
+									</h:form>
+								</td>
+							</tr>
+						</ui:fragment>				
 
 						<ui:fragment rendered="${empty resourceDetailBean.clickedResource.fileName and resourceDetailBean.clickedResource.type.toLowerCase() != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type.toLowerCase() != 'video' and resourceDetailBean.clickedResource.type.toLowerCase() != 'image'}">
 							<tr>
@@ -315,10 +349,10 @@
 									#{msg.source}: 
 								</span>
 							</td>
-							<td>
+							<td style="overflow:hidden;">
 								<a href="#{resourceDetailBean.clickedResource.getUrl()}">
 									<h:outputText value="#{resourceDetailBean.clickedResource.source}" />
-								</a>
+								</a><span style="display:inline-block; width:300px;"> </span>
 							</td>
 						</tr>
 						

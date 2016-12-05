@@ -170,13 +170,13 @@ public class GroupManager
 
 	String coursesIn = sb.substring(1);
 
-	log.debug(coursesIn);
+	//	log.debug(coursesIn);
 
 	sb = new StringBuilder(",-1"); // make sure that the string is not empty
 	for(Group group : user.getGroups())
 	    sb.append("," + group.getId());
 	String groupsIn = sb.substring(1);
-
+	// TODO implement not join able groups
 	String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.course_id IN(" + coursesIn + ") AND g.deleted = 0 AND g.group_id NOT IN(" + groupsIn + ") ORDER BY title";
 	return getGroups(query);
     }
@@ -494,7 +494,6 @@ public class GroupManager
     }
 
     /**
-     * TODO: do request recursively
      * 
      * @param groupId
      * @param parentFolderId

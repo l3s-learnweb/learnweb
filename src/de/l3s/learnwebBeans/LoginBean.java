@@ -62,11 +62,25 @@ public class LoginBean extends ApplicationBean implements Serializable
 
     public static String loginUser(ApplicationBean bean, User user) throws SQLException
     {
+	return loginUser(bean, user, false);
+    }
+
+    /**
+     * 
+     * @param bean
+     * @param user
+     * @param disableLog Only useful when a moderator logs into a user account
+     * @return
+     * @throws SQLException
+     */
+    public static String loginUser(ApplicationBean bean, User user, boolean disableLog) throws SQLException
+    {
 	UtilBean.getUserBean().setUser(user); // logs the user in
 	//addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
 	user.setCurrentLoginDate(new Date());
 
-	bean.log(Action.login, 0, 0);
+	if(!disableLog)
+	    bean.log(Action.login, 0, 0);
 
 	// uncommented until interwebJ works correct
 	/*
@@ -106,7 +120,7 @@ public class LoginBean extends ApplicationBean implements Serializable
 
 	// if the user logs in from the start or the login page, redirect him to the welcome page
 	String viewId = getFacesContext().getViewRoot().getViewId();
-	if(viewId.endsWith("/user/login.xhtml") || viewId.endsWith("index.xhtml") || viewId.endsWith("error.xhtml") || viewId.endsWith("expired.xhtml") || viewId.endsWith("register.xhtml"))
+	if(viewId.endsWith("/user/login.xhtml") || viewId.endsWith("index.xhtml") || viewId.endsWith("error.xhtml") || viewId.endsWith("expired.xhtml") || viewId.endsWith("register.xhtml") || viewId.endsWith("admin/users.xhtml"))
 	{
 	    return "/lw/" + userOrganisation.getWelcomePage() + "?faces-redirect=true";
 	}
@@ -118,17 +132,20 @@ public class LoginBean extends ApplicationBean implements Serializable
     public String logout()
     {
 	UserBean userBean = UtilBean.getUserBean();
-	int activeCourse = userBean.getActiveCourseId();
+	int activeCourse = userBean.getUser().getActiveCourseId();
+
+	if(userBean.getModeratorUser() != null) // a moderator logs out from a user account
+	{
+	    userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator 
+	    return "/lw/admin/users.xhtml?faces-redirect=true";
+	}
 
 	log(Action.logout, 0, 0);
 	userBean.setUser(null);
 
-	//addMessage(FacesMessage.SEVERITY_INFO, "logout_success");
-	//FacesContext.getCurrentInstance().getExternalContext().invalidateSession();
-
 	if(activeCourse == 891) // is archive web course
 	{
-	    userBean.setActiveCourseId(891);
+	    //userBean.setActiveCourseId(891);
 
 	    return "/aw/index.xhtml?faces-redirect=true";
 	}
