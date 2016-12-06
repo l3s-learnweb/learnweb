@@ -28,6 +28,7 @@ import de.l3s.learnweb.SimpleTranscriptLog;
 import de.l3s.learnweb.TedManager.SummaryType;
 import de.l3s.learnweb.TranscriptLog;
 import de.l3s.learnweb.TranscriptSummary;
+import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
 import rita.wordnet.RiWordnet;
 
@@ -74,6 +75,10 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
     public TedTranscriptBean()
     {
+	User user = getUser();
+	if(user == null) // not logged in
+	    return;
+
 	//Setting the Relatedness Calculator to calculate the semantic similarity algorithms based on POS
 	//rcs.put("n", new LeacockChodorow(db));
 	//rcs.put("v", new LeacockChodorow(db));
