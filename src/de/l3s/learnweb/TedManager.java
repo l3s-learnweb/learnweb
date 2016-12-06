@@ -239,6 +239,24 @@ public class TedManager
 	return transcriptSummaries;
     }
 
+    public HashMap<SummaryType, String> getTranscriptSummariesForResource(int resourceId) throws SQLException
+    {
+	HashMap<SummaryType, String> transcriptSummaries = new HashMap<SummaryType, String>();
+	PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT summary_type, summary_text FROM lw_transcript_summary WHERE resource_id = ?");
+	pStmt.setInt(1, resourceId);
+	pStmt.executeQuery();
+
+	ResultSet rs = pStmt.getResultSet();
+	while(rs.next())
+	{
+	    transcriptSummaries.put(SummaryType.valueOf(rs.getString(1)), rs.getString(2));
+	}
+	pStmt.close();
+
+	return transcriptSummaries;
+
+    }
+
     public List<TranscriptLog> getTranscriptLogs(int courseId, boolean showDeleted) throws SQLException
     {
 	List<TranscriptLog> transcriptLogs = new ArrayList<TranscriptLog>();

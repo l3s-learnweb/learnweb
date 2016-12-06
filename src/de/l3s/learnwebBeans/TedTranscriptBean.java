@@ -5,9 +5,11 @@ import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -44,7 +46,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     private Resource tedResource;
     private String transcriptLanguage;
     private int noteId;
-    private String summaryText;
+    private String summaryTextS;
+    private String summaryTextM;
+    private String summaryTextL;
 
     /* To get the resource id from ted_video table since id_at_service may or may not be null in lw_resource for TED and
      * To get the resource id from lw_resource table corresponding to the video added by the admin for TEDx
@@ -112,6 +116,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	catch(SQLException e)
 	{
 	    addFatalMessage(e);
+	    log.error(e);
 	}
 
 	if(tedResource.getSource().equalsIgnoreCase("TEDx"))
@@ -136,6 +141,24 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	    setTranscript();
 	}
 
+	try
+	{
+	    HashMap<SummaryType, String> summaries = Learnweb.getInstance().getTedManager().getTranscriptSummariesForResource(resourceId);
+	    for(Entry<SummaryType, String> e : summaries.entrySet())
+	    {
+		if(e.getKey().equals(SummaryType.SHORT))
+		    summaryTextS = e.getValue();
+		else if(e.getKey().equals(SummaryType.LONG))
+		    summaryTextM = e.getValue();
+		else if(e.getKey().equals(SummaryType.DETAILED))
+		    summaryTextL = e.getValue();
+	    }
+	}
+	catch(SQLException e)
+	{
+	    addFatalMessage(e);
+	    log.error(e);
+	}
     }
 
     public void setTranscript()
@@ -320,11 +343,11 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
     public void submitShortSummary()
     {
-	if(summaryText != null && summaryText.length() > 0)
+	if(summaryTextS != null && summaryTextS.length() > 0)
 	{
 	    try
 	    {
-		getLearnweb().getTedManager().saveSummaryText(getUser().getActiveCourseId(), getUser().getId(), resourceId, summaryText, SummaryType.SHORT);
+		getLearnweb().getTedManager().saveSummaryText(getUser().getActiveCourseId(), getUser().getId(), resourceId, summaryTextS, SummaryType.SHORT);
 	    }
 	    catch(SQLException e)
 	    {
@@ -336,11 +359,11 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
     public void submitLongSummary()
     {
-	if(summaryText != null && summaryText.length() > 0)
+	if(summaryTextM != null && summaryTextM.length() > 0)
 	{
 	    try
 	    {
-		getLearnweb().getTedManager().saveSummaryText(getUser().getActiveCourseId(), getUser().getId(), resourceId, summaryText, SummaryType.LONG);
+		getLearnweb().getTedManager().saveSummaryText(getUser().getActiveCourseId(), getUser().getId(), resourceId, summaryTextM, SummaryType.LONG);
 	    }
 	    catch(SQLException e)
 	    {
@@ -351,11 +374,11 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 
     public void submitDetailedSummary()
     {
-	if(summaryText != null && summaryText.length() > 0)
+	if(summaryTextL != null && summaryTextL.length() > 0)
 	{
 	    try
 	    {
-		getLearnweb().getTedManager().saveSummaryText(getUser().getActiveCourseId(), getUser().getId(), resourceId, summaryText, SummaryType.DETAILED);
+		getLearnweb().getTedManager().saveSummaryText(getUser().getActiveCourseId(), getUser().getId(), resourceId, summaryTextL, SummaryType.DETAILED);
 	    }
 	    catch(SQLException e)
 	    {
@@ -496,14 +519,34 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
 	transcriptSummaries = null;
     }
 
-    public String getSummaryText()
+    public String getSummaryTextS()
     {
-	return summaryText;
+	return summaryTextS;
     }
 
-    public void setSummaryText(String summaryText)
+    public void setSummaryTextS(String summaryTextS)
     {
-	this.summaryText = summaryText;
+	this.summaryTextS = summaryTextS;
+    }
+
+    public String getSummaryTextM()
+    {
+	return summaryTextM;
+    }
+
+    public void setSummaryTextM(String summaryTextM)
+    {
+	this.summaryTextM = summaryTextM;
+    }
+
+    public String getSummaryTextL()
+    {
+	return summaryTextL;
+    }
+
+    public void setSummaryTextL(String summaryTextL)
+    {
+	this.summaryTextL = summaryTextL;
     }
 
 }
