@@ -27,8 +27,12 @@
 
 
         <h:body id="body" style="padding: 5px 4px;">
-			
-            <p:layout fullPage="true" >
+
+			<h:panelGroup layout="block" styleClass="#{!userBean.loggedIn}">
+				<ui:include src="/templates/user/login.xhtml" />	
+			</h:panelGroup>
+							
+            <p:layout fullPage="true" rendered="#{userBean.loggedIn and not empty editPresentationBean.group}">
 				
                 <p:layoutUnit id="top" position="north" size="50" style="border:0px; padding:0px; margin:0px">
 					<h:form id="toolbar" onsubmit="return test()">
@@ -149,12 +153,19 @@
                 		{
                 			if(isNaN(resource))
                 				break;
-                			console.log(resource, $($("input","#form1\\:resource_list")[resource]).prop("checked"));
                 			
                 			if($($("input","#form1\\:resource_list")[resource]).prop("checked"))
                 			{
                 				
                 				id = $($("div","#form1\\:resource_list")[resource]).prop("id");
+                				
+                				console.log('resource', resource, 'id', id);
+                				
+                				if(!id)
+               					{
+                					console.error('slide has no id');
+                					continue;
+               					}
                 				
                 				if(#{editPresentationBean.format == 2})
                 				{
@@ -166,8 +177,8 @@
                 					}
                 				}
                 				
-                				$("#resource_slide_"+id).attr("data-x",offset);
-                				code=code+$("#resource_slide_"+id)[0].outerHTML;
+                				$("#resource_slide_"+id).attr("data-x",offset);                				
+	                			code=code+$("#resource_slide_"+id)[0].outerHTML;	                		
                 				offset=offset+1000;
                 			}
                 		}

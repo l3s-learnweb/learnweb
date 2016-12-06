@@ -151,12 +151,15 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
 
 	if(0 == groupId)
 	{
-	    String temp = getFacesContext().getExternalContext().getRequestParameterMap().get("group_id");
-	    if(temp != null && temp.length() != 0)
-		groupId = Integer.parseInt(temp);
+	    Integer temp = getParameterInt("group_id");
+	    if(temp != null)
+		groupId = temp.intValue();
 
 	    if(0 == groupId)
+	    {
+		addMessage(FacesMessage.SEVERITY_ERROR, "Invalid group parameter");
 		return;
+	    }
 	}
 	try
 	{
