@@ -175,8 +175,8 @@ public class CourseManager
 	else
 	    replace.setInt(1, course.getId());
 	replace.setString(2, course.getTitle());
-	replace.setInt(3, course.getForumId());
-	replace.setInt(4, course.getForumCategoryId());
+	replace.setInt(3, 0); // not used any more
+	replace.setInt(4, 0); // not used any more
 	replace.setInt(5, course.getOrganisationId());
 	replace.setInt(6, course.getDefaultGroupId());
 	replace.setString(7, course.getWizardParam());

@@ -17,8 +17,9 @@ import de.l3s.archiveSearch.CDXClient;
 
 public class WaybackCapturesLogger
 {
-    private static final Logger log = Logger.getLogger(SuggestionLogger.class);
+    private static final Logger log = Logger.getLogger(WaybackCapturesLogger.class);
 
+    private final static Container LAST_ENTRY = new Container("", 0L, 0L); // this element indicates that the consumer thread should stop
     private final Learnweb learnweb;
     private final LinkedBlockingQueue<Container> queue;
     private final Thread consumerThread;
@@ -49,6 +50,9 @@ public class WaybackCapturesLogger
 
     public void logWaybackCaptures(Resource resource)
     {
+	if(resource == null)
+	    throw new NullPointerException();
+
 	cdxExecutorService.submit(new CDXWorker(resource));
     }
 
@@ -56,10 +60,14 @@ public class WaybackCapturesLogger
     {
 	try
 	{
-	    queue.put(null);
+	    queue.put(LAST_ENTRY);
+
+	    cdxExecutorService.shutdown();
 	    //Wait for a while for currently executing tasks to terminate
-	    if(!cdxExecutorService.awaitTermination(1, TimeUnit.MINUTES))
+	    if(!cdxExecutorService.awaitTermination(50, TimeUnit.SECONDS))
 		cdxExecutorService.shutdownNow(); //cancelling currently executing tasks
+
+	    log.debug("Wayback captures executor service was stopped");
 	}
 	catch(InterruptedException e)
 	{
@@ -84,7 +92,7 @@ public class WaybackCapturesLogger
 
 		    container = queue.take();
 
-		    if(container == null) // stop method was called
+		    if(container == LAST_ENTRY) // stop method was called
 			break;
 
 		    try
@@ -103,7 +111,7 @@ public class WaybackCapturesLogger
 		    }
 		}
 
-		log.debug("Wayback Captures logger was stopped");
+		log.debug("Wayback Captures logger thread was stopped");
 	    }
 	    catch(InterruptedException e)
 	    {
@@ -112,7 +120,7 @@ public class WaybackCapturesLogger
 	}
     }
 
-    private class Container
+    private static class Container
     {
 	String url;
 	long firstCapture;
@@ -146,7 +154,6 @@ public class WaybackCapturesLogger
 	@Override
 	public String call() throws NumberFormatException, SQLException
 	{
-
 	    CDXClient cdxClient = new CDXClient();
 	    List<Long> timestamps = cdxClient.getCaptures(resource.getUrl());
 	    PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT url_id FROM wb_url WHERE url = ?");

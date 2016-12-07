@@ -28,6 +28,7 @@ public class SuggestionLogger
 {
     private static final Logger log = Logger.getLogger(SuggestionLogger.class);
 
+    private final static Container LAST_ENTRY = new Container("", "", "", "", null); // this element indicates that the consumer thread should stop
     private final Learnweb learnweb;
     private final LinkedBlockingQueue<Container> queue;
     private final Thread consumerThread;
@@ -57,9 +58,9 @@ public class SuggestionLogger
     {
 	try
 	{
-	    queue.put(null);
+	    queue.put(LAST_ENTRY);
 	}
-	catch(InterruptedException e)
+	catch(Exception e)
 	{
 	    log.fatal("Couldn't stop suggestion logger", e);
 	}
@@ -76,7 +77,7 @@ public class SuggestionLogger
 		{
 		    Container container = queue.take();
 
-		    if(container == null) // stop method was called
+		    if(container == LAST_ENTRY) // stop method was called
 			break;
 
 		    String suggestionsGoogle = null;
@@ -177,7 +178,7 @@ public class SuggestionLogger
 	}
     }
 
-    private class Container
+    private static class Container
     {
 	private String query;
 	private String market;

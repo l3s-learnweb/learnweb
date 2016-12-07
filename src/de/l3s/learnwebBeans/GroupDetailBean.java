@@ -764,11 +764,14 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return links;
     }
 
-    public boolean canDeleteResourceCompletely(Object obj)
+    public boolean canDeleteResourceCompletely(Object obj) throws SQLException
     {
 	User user = getUser();
 
-	if(user.isModerator())
+	if(user == null)
+	    return false;
+
+	if(user.isAdmin() || group.getCourse().isModerator(user))
 	    return true;
 
 	Resource resource = null;
@@ -786,14 +789,20 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	return false;
     }
 
-    public boolean canDeleteResourceFromGroup(Object resource) throws SQLException
+    public boolean canDeleteResourceFromGroup(Object obj) throws SQLException
     {
-	if(canDeleteResourceCompletely(resource))
+	User user = getUser();
+
+	if(user == null)
+	    return false;
+
+	if(user.isAdmin() || getGroup().isLeader(user) || group.getCourse().isModerator(user))
 	    return true;
 
-	ResourceDecorator decoratedResource = (ResourceDecorator) resource;
+	if(group.isReadOnly())
+	    return false;
 
-	if(getUser().equals(decoratedResource.getAddedToGroupBy()) || getUser().getId() == getGroup().getLeaderUserId())
+	if(getGroup().isMember(user))
 	    return true;
 
 	return false;
@@ -801,18 +810,24 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public boolean canMoveResourcesInGroup() throws SQLException
     {
+	return canDeleteResourceFromGroup(null);
+	/*
 	if((!getGroup().isReadOnly() && (!getGroup().isRestrictionOnlyLeaderCanAddResources() || getUser().getId() == getGroup().getLeaderUserId())) || getUser().isModerator())
 	    return true;
-
+	
 	return false;
+	*/
     }
 
     public boolean canEditFoldersInGroup() throws SQLException
     {
+	return canDeleteResourceFromGroup(null);
+	/*
 	if((!getGroup().isReadOnly() && (!getGroup().isRestrictionOnlyLeaderCanAddResources() || getUser().getId() == getGroup().getLeaderUserId())) || getUser().isModerator())
 	    return true;
-
+	
 	return false;
+	*/
     }
 
     public List<Presentation> getPresentations() throws SQLException
@@ -1157,7 +1172,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 	    this.rightPanelAction = RPAction.none;
 
 	    updateResourcesFromSolr();
-	    // TODO: inject bean into current
 	    UtilBean.getAddResourceBean().setResourceTargetFolderId(getSelectedFolderId());
 	}
     }

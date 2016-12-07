@@ -14,7 +14,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.learnweb.Link.LinkType;
 import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.ResourceManager.Order;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.util.HasId;
 
@@ -203,12 +202,13 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
 	return folders;
     }
-
+    /* not used
     public AbstractPaginator getResources(Order order) throws SQLException
     {
-	ResourceManager rm = Learnweb.getInstance().getResourceManager();
-	return rm.getResourcesByGroupId(id, order);
+    	ResourceManager rm = Learnweb.getInstance().getResourceManager();
+    	return rm.getResourcesByGroupId(id, order);
     }
+    */
 
     //Copy resource from this group to another group referred to by groupId, and by which user
     public void copyResourcesToGroupById(int groupId, User user) throws SQLException

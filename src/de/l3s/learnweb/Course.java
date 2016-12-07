@@ -28,8 +28,6 @@ public class Course implements Serializable, Comparable<Course>
     private int id;
     @Size(min = 1, max = 50)
     private String title;
-    private int forumId;
-    private int forumCategoryId;
     private int organisationId;
     private int defaultGroupId; // all users who join this course, automatically join this group
     @Size(min = 1, max = 100)
@@ -57,7 +55,7 @@ public class Course implements Serializable, Comparable<Course>
     public Course()
     {
 	this.id = -1;
-	this.options[0] = 5L; // forum enabled
+	this.options[0] = 1L; // forum enabled
 	this.wizardEnabled = true;
     }
 
@@ -65,8 +63,6 @@ public class Course implements Serializable, Comparable<Course>
     {
 	this.id = rs.getInt("course_id");
 	this.title = rs.getString("title");
-	this.forumId = rs.getInt("forum_id");
-	this.forumCategoryId = rs.getInt("forum_category_id");
 	this.organisationId = rs.getInt("organisation_id");
 	this.defaultGroupId = rs.getInt("default_group_id");
 	this.wizardParam = rs.getString("wizard_param");
@@ -151,26 +147,6 @@ public class Course implements Serializable, Comparable<Course>
     public long[] getOptions()
     {
 	return options;
-    }
-
-    public int getForumId()
-    {
-	return forumId;
-    }
-
-    public void setForumId(int forumId)
-    {
-	this.forumId = forumId;
-    }
-
-    public int getForumCategoryId()
-    {
-	return forumCategoryId;
-    }
-
-    public void setForumCategoryId(int forumCategoryId)
-    {
-	this.forumCategoryId = forumCategoryId;
     }
 
     public int getOrganisationId()
@@ -334,8 +310,8 @@ public class Course implements Serializable, Comparable<Course>
     @Override
     public String toString()
     {
-	return "Course [id=" + id + ", title=" + title + ", options=" + Arrays.toString(options) + ", forumId=" + forumId + ", forumCategoryId=" + forumCategoryId + ", organisationId=" + organisationId + ", defaultGroupId=" + defaultGroupId + ", wizardParam=" + wizardParam
-		+ ", wizardEnabled=" + wizardEnabled + ", nextXUsersBecomeModerator=" + nextXUsersBecomeModerator + ", defaultInterwebUsername=" + defaultInterwebUsername + ", defaultInterwebPassword=" + defaultInterwebPassword + ", memberCount=" + memberCount + "]";
+	return "Course [id=" + id + ", title=" + title + ", options=" + Arrays.toString(options) + ", organisationId=" + organisationId + ", defaultGroupId=" + defaultGroupId + ", wizardParam=" + wizardParam + ", wizardEnabled=" + wizardEnabled + ", nextXUsersBecomeModerator="
+		+ nextXUsersBecomeModerator + ", defaultInterwebUsername=" + defaultInterwebUsername + ", defaultInterwebPassword=" + defaultInterwebPassword + ", memberCount=" + memberCount + "]";
     }
 
     @Override

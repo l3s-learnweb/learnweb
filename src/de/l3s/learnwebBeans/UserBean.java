@@ -133,7 +133,6 @@ public class UserBean implements Serializable
 
 	if(userCache == null || userCacheTime + 60000L < System.currentTimeMillis())
 	{
-	    log.debug("Load user: " + userId);
 	    try
 	    {
 		userCache = Learnweb.getInstance().getUserManager().getUser(userId);

@@ -318,6 +318,7 @@ public class Learnweb
 	jobScheduler.stopAllJobs();
 	archiveUrlManager.onDestroy();
 	suggestionLogger.stop();
+	waybackCapturesLogger.stop();
 
 	try
 	{

@@ -16,7 +16,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.interwebj.jaxb.SearchResultEntity;
 import de.l3s.interwebj.jaxb.ThumbnailEntity;
@@ -724,33 +723,36 @@ public class ResourceManager
 	}
     }
 
+    /* 
+     * not used
+     * 
     public AbstractPaginator getResourcesByGroupId(int groupId, Order order) throws SQLException
     {
-	int results = getCountResourceByGroupId(groupId);
-
-	return new GroupPaginator(results, groupId, order);
+    	int results = getCountResourceByGroupId(groupId);
+    
+    	return new GroupPaginator(results, groupId, order);
     }
-
+    
     private static class GroupPaginator extends AbstractPaginator
     {
-	private static final long serialVersionUID = 399863025926697377L;
-	private final int groupId;
-	private final Order order;
-
-	public GroupPaginator(int totalResults, int groupId, Order order)
-	{
-	    super(totalResults);
-	    this.groupId = groupId;
-	    this.order = order;
-	}
-
-	@Override
-	public List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException
-	{
-	    return Learnweb.getInstance().getResourceManager().getResourcesByGroupId(groupId, getPageIndex(), PAGE_SIZE, order);
-	}
+    private static final long serialVersionUID = 399863025926697377L;
+    private final int groupId;
+    private final Order order;
+    
+    public GroupPaginator(int totalResults, int groupId, Order order)
+    {
+        super(totalResults);
+        this.groupId = groupId;
+        this.order = order;
     }
-
+    
+    @Override
+    public List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException
+    {
+        return Learnweb.getInstance().getResourceManager().getResourcesByGroupId(groupId, getPageIndex(), PAGE_SIZE, order);
+    }
+    }
+    */
     public List<Resource> getResourcesByGroupId(int groupId) throws SQLException
     {
 	List<Resource> resources = new LinkedList<>();
@@ -808,9 +810,6 @@ public class ResourceManager
 	    Resource resource = createResource(rs);
 
 	    ResourceDecorator decoratedResource = new ResourceDecorator(resource);
-	    decoratedResource.setAddedToGroupBy(resource.getOwnerUser());
-	    decoratedResource.setAddedToGroupOn(resource.getCreationDate());
-
 	    resources.add(decoratedResource);
 	    /*
 	    if(null != resource)
