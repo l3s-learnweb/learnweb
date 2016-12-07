@@ -48,7 +48,7 @@
 					<f:facet name="header">
 						#{msg.options}
 					</f:facet>
-					<h:commandLink action="${adminUserBean.login(user)}">
+					<h:commandLink action="${adminUserBean.login(user)}" rendered="${adminUserBean.canLoginToAccount(user)}">
 						#{msg.loginLabel}
 					</h:commandLink>
 				</p:column>

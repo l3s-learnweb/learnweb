@@ -22,7 +22,7 @@
 			</h2> 
 				 #{msg.created_by} #{groupDetailBean.group.leader.username} (#{groupDetailBean.group.resourcesCount} #{msg.resources})
 			<h:form id="center_header_form">
-				<p:menuButton value="#{msg.upload_resource}" rendered="#{groupDetailBean.member and !groupDetailBean.group.restrictionOnlyLeaderCanAddResources}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton">
+				<p:menuButton value="#{msg.upload_resource}" rendered="#{groupDetailBean.member and (!groupDetailBean.group.restrictionOnlyLeaderCanAddResources or groupDetailBean.group.isLeader(userBean.user))}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton">
 			        <p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" update=":add_resource_panel" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
 			        	<f:setPropertyActionListener target="#{addResourceBean.resourceTargetGroupId}" value="#{groupDetailBean.groupId}"/>
 						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="1"/>
