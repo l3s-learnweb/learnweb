@@ -10,7 +10,7 @@ import java.util.List;
 public class Folder implements Serializable, HasId, GroupItem
 {
     private static final long serialVersionUID = 2147007718176177138L;
-    private static Logger log = Logger.getLogger(Folder.class);
+    private static final Logger log = Logger.getLogger(Folder.class);
 
     private int folderId = -1;
     private int groupId = -1;
@@ -46,51 +46,43 @@ public class Folder implements Serializable, HasId, GroupItem
     @Override
     public int getId()
     {
-        return getFolderId();
+        return folderId;
     }
 
     @Override
     public void setId(int id)
     {
-        setFolderId(id);
+        this.folderId = id;
     }
 
+    @Deprecated
     public int getFolderId()
     {
-        return folderId;
+        return this.getId();
     }
 
+    @Deprecated
     public void setFolderId(int folderId)
     {
-        this.folderId = folderId;
+        this.setId(folderId);
     }
 
-    public Group getGroup() throws SQLException
-    {
-        return Learnweb.getInstance().getGroupManager().getGroupById(groupId);
-    }
-
-    public List<Resource> getResources() throws SQLException
-    {
-        ResourceManager rm = Learnweb.getInstance().getResourceManager();
-        return rm.getResourcesByFolderId(folderId);
-
-    }
-
-    public List<Resource> getResourcesSubset() throws SQLException
-    {
-        int subsetSize = 4;
-        return Learnweb.getInstance().getResourceManager().getFolderResourcesByUserId(groupId, parentFolderId, userId, subsetSize);
-    }
-
+    @Override
     public int getGroupId()
     {
         return groupId;
     }
 
+    @Override
     public void setGroupId(int groupId)
     {
         this.groupId = groupId;
+    }
+
+    @Override
+    public Group getGroup() throws SQLException
+    {
+        return Learnweb.getInstance().getGroupManager().getGroupById(groupId);
     }
 
     public int getParentFolderId()
@@ -103,22 +95,78 @@ public class Folder implements Serializable, HasId, GroupItem
         this.parentFolderId = parentFolderId;
     }
 
-    public String getName()
+    public Folder getParentFolder() throws SQLException
+    {
+        if (parentFolderId == 0)
+            return null;
+
+        return Learnweb.getInstance().getGroupManager().getFolder(parentFolderId);
+    }
+
+    @Override
+    public String getTitle()
     {
         return name;
     }
 
+    @Override
+    public void setTitle(String title)
+    {
+        this.name = title;
+    }
+
+    @Deprecated
+    public String getName()
+    {
+        return this.getTitle();
+    }
+
+    @Deprecated
     public void setName(String name)
     {
-        this.name = name;
+        this.setTitle(name);
+    }
+
+    @Override
+    public int getUserId()
+    {
+        return userId;
+    }
+
+    @Override
+    public void setUserId(int userId)
+    {
+        this.userId = userId;
+    }
+
+    @Override
+    public User getUser() throws SQLException
+    {
+        if (userId < 0)
+            return null;
+        return Learnweb.getInstance().getUserManager().getUser(userId);
+    }
+
+    @Override
+    public void setUser(User user)
+    {
+        this.userId = user.getId();
+    }
+
+    public List<Resource> getResources() throws SQLException
+    {
+        return Learnweb.getInstance().getResourceManager().getResourcesByFolderId(folderId);
+    }
+
+    public List<Resource> getResourcesSubset() throws SQLException
+    {
+        return Learnweb.getInstance().getResourceManager().getFolderResourcesByUserId(groupId, parentFolderId, userId, 4);
     }
 
     /**
-     * returns a string representation of the resources path
-     *
-     * @return
-     * @throws SQLException
+     * @return a string representation of the resources path
      */
+    @Override
     public String getPath() throws SQLException
     {
         if (null == path)
@@ -142,11 +190,9 @@ public class Folder implements Serializable, HasId, GroupItem
     }
 
     /**
-     * returns a string representation of the resources path for views
-     *
-     * @return
-     * @throws SQLException
+     * @return a string representation of the resources path for views
      */
+    @Override
     public String getPrettyPath() throws SQLException
     {
         if (null == prettyPath)
@@ -160,7 +206,7 @@ public class Folder implements Serializable, HasId, GroupItem
                 folder = folder.getParentFolder();
             }
 
-            sb.append(" > " + this.getName());
+            sb.append(" > ").append(this.getName());
             prettyPath = getGroup().getTitle() + sb.toString();
         }
         return prettyPath;
@@ -176,36 +222,7 @@ public class Folder implements Serializable, HasId, GroupItem
         return subfolders;
     }
 
-    public Folder getParentFolder() throws SQLException
-    {
-        if (parentFolderId == 0)
-            return null;
-
-        return Learnweb.getInstance().getGroupManager().getFolder(parentFolderId);
-    }
-
-    public User getUser() throws SQLException
-    {
-        if (userId < 0)
-            return null;
-        return Learnweb.getInstance().getUserManager().getUser(userId);
-    }
-
-    public void setUser(User user)
-    {
-        this.userId = user.getId();
-    }
-
-    public int getUserId()
-    {
-        return userId;
-    }
-
-    public void setUserId(int userId)
-    {
-        this.userId = userId;
-    }
-
+    @Override
     public Folder save() throws SQLException
     {
         return Learnweb.getInstance().getGroupManager().saveFolder(this);
@@ -216,6 +233,7 @@ public class Folder implements Serializable, HasId, GroupItem
         return Learnweb.getInstance().getGroupManager().moveFolder(this, newParentFolderId, newGroupId);
     }
 
+    @Override
     public void delete() throws SQLException
     {
         Learnweb.getInstance().getGroupManager().deleteFolder(this);

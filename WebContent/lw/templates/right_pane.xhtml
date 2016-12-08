@@ -12,10 +12,6 @@
 		<h:outputStylesheet library="resource-pane-template" name="resource-pane.css"/>
 		<h:outputStylesheet library="lightbox" name="lightbox.css"/>
 
-		<h:form id="remote_form">
-			<p:remoteCommand name="update_datagrid" update=":datagrid :add_resource_panel" oncomplete="update_header()"/>
-		</h:form>
-
 		<div id="right_pane_wrapper" class="right-panel">
 			<h:panelGroup layout="block" id="add_resource_panel">
 				<script type="text/javascript">
@@ -74,7 +70,7 @@
 										<h:outputText value="#{addResourceBean.resource.getStringStorageType()}"/>
 									</p:column>
 								</p:row>
-								
+
 								<p:row>
 									<p:column>
 										<h:outputText value="#{msg.location}:" />
@@ -83,7 +79,7 @@
 										<h:outputText value="#{addResourceBean.currentPath}"/>
 									</p:column>
 								</p:row>
-								
+
 								<p:row rendered="#{addResourceBean.resource.storageType == 1}">
 									<p:column>
 										<h:outputText value="#{msg.file}:" />
@@ -168,7 +164,7 @@
 						</p:fieldset>
 						
 						<p:commandButton value="#{msg.addResource}" styleClass="greenbutton float-right" update=":growl :add_resource_panel :datagrid" 
-							action="#{addResourceBean.addResource}" ajax="true" oncomplete="update_datagrid();resourceDND();" rendered="#{addResourceBean.formStep > 1}">
+							action="#{addResourceBean.addResource}" ajax="true" oncomplete="update_header();resourceDND();" rendered="#{addResourceBean.formStep > 1}">
 							<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>
 							<f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"/>
 							<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{addResourceBean.resource}"/>
@@ -184,7 +180,7 @@
 					</h:form>
 				</h:panelGroup>
 				
-				<h:panelGroup rendered="#{bean.rightPanelAction == 'viewResource' and resourceDetailBean.clickedResource.id != -1}" layout="block">						
+				<h:panelGroup rendered="#{bean.rightPanelAction == 'viewResource' and resourceDetailBean.clickedResource.id != -1}" layout="block">
 					<ui:fragment rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'video' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'image'}">
 						<div class="align-center" style="margin-top: 5px;">
 
@@ -199,18 +195,18 @@
 									<div id="lightbox_content">
 										<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text'}">
 										    <div style="overflow:auto; height:100%; width:100%; text-align:center;">
-										    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}" 
+										    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
 										    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
 										    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}" />
 										    </div>	
 									    </ui:fragment>
 									    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'pdf'}">
-										   	<iframe src="#{resourceDetailBean.clickedResource.url}" style="width:100%; height:100%; "/>									    	
+										   	<iframe src="#{resourceDetailBean.clickedResource.url}" style="width:100%; height:100%; "/>
 									    </ui:fragment>
 									    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'Image'}">
-										    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}" 
-										    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}" 
-										    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}" 
+										    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
+										    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
+										    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}"
 										    		style="height:auto; width:auto; max-height:100%; max-width:100%; display:block; margin:0 auto; position: relative; 
 										    		top: 50%; transform: translateY(-50%);-moz-transform:translateY(-50%);-webkit-transform:translateY(-50%);
 										    		-o-transform:translateY(-50%);-ms-transform:translateY(-50%);"/>	
@@ -227,14 +223,14 @@
 							</ui:fragment>								
 							<ui:fragment rendered="#{resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'Video' and resourceDetailBean.clickedResource.type != 'Image'}">
 								<div class="preview_box">
-									<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' 
+									<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}'
 										escape="false"/>
 								</div>
 							</ui:fragment>
 							<ui:fragment rendered="#{(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'Image') and not empty resourceDetailBean.clickedResource.thumbnail3 or resourceDetailBean.clickedResource.type eq 'pdf'}">
-									<img class="preview_box" src="#{resourceDetailBean.clickedResource.thumbnail3.url}" 
-										height="#{resourceDetailBean.clickedResource.thumbnail3.height}" onmouseup="lightbox_open();" 
-										width="#{resourceDetailBean.clickedResource.thumbnail3.width}" 
+									<img class="preview_box" src="#{resourceDetailBean.clickedResource.thumbnail3.url}"
+										height="#{resourceDetailBean.clickedResource.thumbnail3.height}" onmouseup="lightbox_open();"
+										width="#{resourceDetailBean.clickedResource.thumbnail3.width}"
 										style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"/>	
 							</ui:fragment>
 							<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text'  and empty resourceDetailBean.clickedResource.thumbnail3}">
@@ -254,7 +250,7 @@
 						<div class="align-center" style="padding-top: 10px">
 							<a class="hyperlink" href="#{resourceDetailBean.clickedResource.url}" target="_blank">
 								<h:outputText styleClass="hyperlink" 
-									rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf'}" 
+									rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf'}"
 									value="#{resourceDetailBean.clickedResource.url}"/>
 							</a>
 						</div>
@@ -465,7 +461,7 @@
 							<div class="resource_field" style="padding-top: 10px">
 								#{msg.description}
 							</div>
-							<h:outputText id="resource_description" value="#{resourceDetailBean.clickedResource.descriptionHTML}" 
+							<h:outputText id="resource_description" value="#{resourceDetailBean.clickedResource.descriptionHTML}"
 								escape="false" />
 					</h:panelGroup>
 							
@@ -581,7 +577,7 @@
 					</h:form>
 					<br class="clear" />
 					<h:form id="comment_form" styleClass="clear" prependId="false" style="margin-bottom:40px;">
-						<h:panelGroup layout="block" rendered="#{not empty resourceDetailBean.clickedResource.comments}" 
+						<h:panelGroup layout="block" rendered="#{not empty resourceDetailBean.clickedResource.comments}"
 							styleClass="comments">
 							<h:panelGroup layout="block" class="resource_field" style="padding-top: 10px" rendered="#{groupDetailBean.group.readOnly}">
 								#{msg.comments}
@@ -627,7 +623,7 @@
 				   		prepareCommentButton();
 				   </script>	
 				</h:panelGroup>
-				
+
 				<h:form rendered="#{bean.rightPanelAction == 'editResource' and resourceDetailBean.clickedResource.id != -1}" id="edit_form">
 					<div class="align-center">
 						<ui:fragment rendered="#{bean.clickedResource.type == 'Video'}">
@@ -709,12 +705,15 @@
 						</tr>
 
 						<tr>
-							<td colspan="2"><p:commandButton styleClass="greenbutton float-right" value="#{msg.save}" actionListener="#{bean.editClickedResource}"
+							<td colspan="2">
+								<p:commandButton styleClass="greenbutton float-right" value="#{msg.save}" actionListener="#{bean.editClickedResource}"
 									update=":datagrid :add_resource_panel" oncomplete="update_header();resourceDND();" style="margin-right:0;">
 									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewResource" />
-								</p:commandButton> <p:commandButton styleClass="greenbutton float-right" value="#{msg.cancel}" update=":add_resource_panel" style="margin-right:0.5em" immediate="true">
+								</p:commandButton>
+								<p:commandButton styleClass="greenbutton float-right" value="#{msg.cancel}" update=":add_resource_panel" style="margin-right:0.5em" immediate="true">
 									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewResource" />
-								</p:commandButton></td>
+								</p:commandButton>
+							</td>
 						</tr>
 					</table>
 				</h:form>
@@ -722,7 +721,7 @@
 				<h:panelGroup rendered="#{bean.rightPanelAction == 'newFolder'}" styleClass="create-block new-folder" layout="block">
 				
 					<h:form id="add_folder_form">
-					
+
 						<p:fieldset style="margin-bottom:20px">
 							<p:panelGrid id="add_folder_table" styleClass="full-width">
 								<p:row>
@@ -733,40 +732,30 @@
 										<h:outputText value="#{bean.group.title}"/>
 									</p:column>
 								</p:row>
-								
-								<p:row rendered="#{bean.clickedFolder != null and bean.clickedFolder.folderId > 0}">
+
+								<p:row rendered="#{bean.selectedFolder != null and bean.selectedFolder.id > 0}">
 									<p:column>
 										<h:outputText value="#{msg.path}:" />
 									</p:column>
 									<p:column>
-										<h:outputText value="#{bean.clickedFolder.prettyPath}"/>
+										<h:outputText value="#{bean.selectedFolder.prettyPath}"/>
 									</p:column>
 								</p:row>
-								
+
 								<p:row>
 									<p:column>
 										<h:outputText value="#{msg.title}*:" />
 									</p:column>
 									<p:column>
-										<p:inputText value="#{bean.newFolderName}" styleClass="add_field" required="true" 
-											requiredmessage="#{msg.mandatory_field}" id="title_input" />
-									</p:column>
-								</p:row>
-								
-								<p:row rendered="#{addResourceBean.resource.storageType == 2}">
-									<p:column>
-										<h:outputText value="URL:" />
-									</p:column>
-									<p:column>
-										<p:inputText value="#{addResourceBean.resource.url}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="url_input" />
+										<p:inputText value="#{bean.newFolderName}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="folder_title_input" />
 									</p:column>
 								</p:row>
 							</p:panelGrid>
-							
+
 							* #{msg.mandatory_field}
 						</p:fieldset>
 						
-						<p:commandButton value="#{msg.create_folder}" styleClass="greenbutton float-right" update=":group_menu_tree :folderGrid :growl :add_resource_panel" action="#{bean.addFolder}" ajax="true" oncomplete="update_header();update_datagrid();resourceDND();">
+						<p:commandButton value="#{msg.create_folder}" styleClass="greenbutton float-right" update=":group_menu_tree :folderGrid :growl :add_resource_panel" action="#{bean.addFolder}" ajax="true" oncomplete="update_header();resourceDND();">
 							<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none"/>
 						</p:commandButton>	
 						
@@ -775,8 +764,8 @@
 						</p:commandButton>												
 					</h:form>
 				</h:panelGroup>
-				
-				<h:panelGroup rendered="#{bean.rightPanelAction == 'viewFolder' and groupDetailBean.clickedFolder.folderId != -1}" layout="block">						
+
+				<h:panelGroup rendered="#{bean.rightPanelAction == 'viewFolder' and groupDetailBean.clickedGroupItem.id != -1}" layout="block">
 					<table id="view_folder_table" class="full-width">
 						<tr>
 							<td>
@@ -838,12 +827,12 @@
 						<tr>
 							<td colspan="2" class="align-right">
 								<p:commandButton styleClass="graybutton" value="#{msg.cancel}" 
-									update=":add_resource_panel" oncomplete="update_header();" style="margin-right:0.5em;">
+									update=":add_resource_panel" oncomplete="update_header();" style="margin-right:0.5em;" immediate="true">
 									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewFolder"/>
 								</p:commandButton>
 								<p:commandButton styleClass="greenbutton" value="#{msg.save}" 
 									actionListener="#{bean.editFolder}" update=":group_menu_tree :folderGrid :add_resource_panel :growl" 
-									oncomplete="update_header();resourceDND();" style="margin-right:0.5em;" immediate="true">
+									oncomplete="update_header();resourceDND();" style="margin-right:0.5em;">
 									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewFolder"/>
 								</p:commandButton>
 							</td>

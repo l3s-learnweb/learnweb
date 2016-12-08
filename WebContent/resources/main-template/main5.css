@@ -1410,13 +1410,13 @@ div#presentation_preview {
     color: #489a83;
 }
 
-.folder-tree .ui-tree .ui-treenode.ui-draggable-grayscale {
+.folder-tree .ui-tree .ui-treenode.ui-draggable-greyscale {
 	opacity: 0.3;
 }
 
-.folder-tree .ui-tree .ui-treenode.ui-draggable-grayscale .ui-treenode-icon,
-.folder-tree .ui-tree .ui-treenode.ui-draggable-grayscale .ui-tree-toggler,
-.folder-tree .ui-tree .ui-treenode.ui-draggable-grayscale .ui-treenode-label {
+.folder-tree .ui-tree .ui-treenode.ui-draggable-greyscale .ui-treenode-icon,
+.folder-tree .ui-tree .ui-treenode.ui-draggable-greyscale .ui-tree-toggler,
+.folder-tree .ui-tree .ui-treenode.ui-draggable-greyscale .ui-treenode-label {
 	font-weight: normal !important;
 	cursor: default !important;
 }
@@ -1577,13 +1577,13 @@ div#presentation_preview {
 	padding: 0 0 0 24px;
 }
 
-.resource_panel.ui-draggable-grayscale {
+.resource_panel.ui-draggable-greyscale {
 	opacity: 0.3;
 	border-color: #ccc !important;
 	cursor: default !important;
 }
 
-.resource_panel.resource_folder.ui-draggable-grayscale {
+.resource_panel.resource_folder.ui-draggable-greyscale {
 	background: #F3F3F3 !important;
 }
 

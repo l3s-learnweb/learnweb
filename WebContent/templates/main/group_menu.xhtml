@@ -47,34 +47,18 @@
 						<div id="folders_tree_wrap">
 							<h:form id="folders_tree_form">								
 							    <p:tree id="folders_tree" value="#{groupDetailBean.getFoldersTree(group.id)}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{groupDetailBean.selectedNode}" datakey="#{node.folderId}">				        						     						        
-							        <p:ajax event="select" update=":folderGrid :resourceGrid :paginator :filters :add_resource_panel" listener="#{groupDetailBean.onNodeSelect}" oncomplete="updateCarousel();update_url(0,0);resourceDND();update_header();"/>
+							        <p:ajax event="select" update=":breadcrumbs :filters :datagrid :paginator :add_resource_panel" listener="#{groupDetailBean.onNodeSelect}" oncomplete="updateCarousel();update_url(0,$('#folders_tree_wrap .ui-treenode-label.ui-state-highlight').parents('.ui-treenode')[0].getAttribute('data-datakey'));resourceDND();update_header();"/>
 							        <p:ajax event="expand" oncomplete="resourceDND();"/>
         							<p:ajax event="collapse" oncomplete="resourceDND();"/>
-							        
+
 							        <p:treeNode type="root">
 							        	<h:outputText id="root" value="#{node.name}"/>
 							        </p:treeNode>
-							        
+
 							        <p:treeNode type="folder" expandedIcon="ui-icon-folder-open" collapsedIcon="ui-icon-folder-collapsed">
 								        <h:outputText value="#{node.name}"/>
 							        </p:treeNode>
 							    </p:tree>
-							    							    
-							    <p:contextMenu for="folders_tree" nodeType="root" rendered="${groupDetailBean.canEditFoldersInGroup()}">
-							    	<p:menuitem value="#{msg.create_subfolder}" update=":add_resource_panel" oncomplete="update_header();" icon="ui-icon-plus">
-										<f:setPropertyActionListener target="#{groupDetailBean.rightPanelAction}" value="newFolder"/>
-									</p:menuitem>
-								</p:contextMenu>
-							    
-							    <p:contextMenu for="folders_tree" nodeType="folder" rendered="${groupDetailBean.canEditFoldersInGroup()}">
-							    	<p:menuitem value="#{msg.edit}" update=":add_resource_panel" oncomplete="update_header();" icon="ui-icon-plus">
-										<f:setPropertyActionListener target="#{groupDetailBean.rightPanelAction}" value="editFolder"/>
-							    	</p:menuitem>
-									<p:menuitem value="#{msg.create_subfolder}" update=":add_resource_panel" oncomplete="update_header();" icon="ui-icon-plus">
-										<f:setPropertyActionListener target="#{groupDetailBean.rightPanelAction}" value="newFolder"/>
-									</p:menuitem>
-									<p:menuitem value="#{msg.delete}" update=":confirm_folder_dialog_form" oncomplete="PF('confirmationFolder').show();" icon="ui-icon-close"/>
-								</p:contextMenu>
 							</h:form>
 						</div>				
 					</div>

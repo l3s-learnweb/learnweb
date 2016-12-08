@@ -1,5 +1,33 @@
 package de.l3s.learnwebBeans;
 
+import de.l3s.learnweb.*;
+import de.l3s.learnweb.Link.LinkType;
+import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.ResourceManager.Order;
+import de.l3s.learnweb.SearchFilters.Filter;
+import de.l3s.learnweb.SearchFilters.MODE;
+import de.l3s.learnweb.solrClient.SolrSearch;
+import de.l3s.learnweb.solrClient.SolrSearch.SearchPaginator;
+import de.l3s.util.StringHelper;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
+import org.hibernate.validator.constraints.NotEmpty;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.primefaces.context.RequestContext;
+import org.primefaces.event.NodeSelectEvent;
+import org.primefaces.model.TreeNode;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ComponentSystemEvent;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -11,48 +39,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ComponentSystemEvent;
-import javax.faces.event.ValueChangeEvent;
-import javax.faces.model.SelectItem;
-
-import org.apache.commons.lang3.StringUtils;
-import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.hibernate.validator.constraints.NotEmpty;
-import org.json.JSONObject;
-import org.primefaces.context.RequestContext;
-import org.primefaces.event.NodeSelectEvent;
-import org.primefaces.model.TreeNode;
-
-import de.l3s.learnweb.AbstractPaginator;
-import de.l3s.learnweb.Folder;
-import de.l3s.learnweb.GoogleDriveManager;
-import de.l3s.learnweb.Group;
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.Link;
-import de.l3s.learnweb.Link.LinkType;
-import de.l3s.learnweb.LogEntry;
-import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.NewsEntry;
-import de.l3s.learnweb.Presentation;
-import de.l3s.learnweb.PresentationManager;
-import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.ResourceDecorator;
-import de.l3s.learnweb.ResourceManager;
-import de.l3s.learnweb.ResourceManager.Order;
-import de.l3s.learnweb.SearchFilters;
-import de.l3s.learnweb.SearchFilters.Filter;
-import de.l3s.learnweb.SearchFilters.MODE;
-import de.l3s.learnweb.User;
-import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.learnweb.solrClient.SolrSearch;
-import de.l3s.learnweb.solrClient.SolrSearch.SearchPaginator;
-
 @ManagedBean(name = "groupDetailBean")
 @ViewScoped
 public class GroupDetailBean extends ApplicationBean implements Serializable
@@ -61,47 +47,36 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private static final Logger log = Logger.getLogger(GroupDetailBean.class);
     private static final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
-    private int groupId;
-    private Group group;
+    // Group base attributes
+    private int groupId; // Current group id
+    private Group group; // Current group
+    private Folder selectedFolder; // Current opened folder
+    private TreeNode selectedNode; // Current folder in left panel
+    private List<Folder> breadcrumbs;
+
+    private List<User> members;
+    private List<Presentation> presentations;
+    private List<LogEntry> logMessages;
+    private ArrayList<NewsEntry> newslist;
+
+    // Group edit fields (Required for editing group)
     private String editedGroupDescription;
     private String editedGroupTitle;
     private int editedGroupLeaderId;
 
-    private List<User> members;
-
-    private List<Presentation> presentations;
-
-    private List<LogEntry> logMessages;
-    private ArrayList<NewsEntry> newslist;
-
-    public enum RPAction
-    {
-	none,
-	newResource,
-	viewResource,
-	editResource,
-	newFolder,
-	editFolder,
-	viewFolder
-    }
-
-    private RPAction rightPanelAction = RPAction.none;
-
-    private Resource selectedResource;
-    public Resource clickedResource;
-
-    private Folder selectedFolder;
-    private Folder clickedFolder;
-    private String newFolderName;
-    private TreeNode selectedNode;
-
-    public Presentation clickedPresentation;
-
     private User clickedUser;
+    private Presentation clickedPresentation;
+    private GroupItem clickedGroupItem; // Preview of resource/folder
+    private RPAction rightPanelAction = RPAction.none;
 
     private boolean allLogs = false;
     private boolean reloadLogs = false;
+    private boolean isNewestResourceHidden = false;
 
+    // New folder form
+    private String newFolderName;
+
+    // New link form
     @NotEmpty
     private String newLinkUrl;
     @NotEmpty
@@ -116,12 +91,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private String resourceSorting = "title";
     private Order order = Order.TITLE;
 
-    private boolean isNewestResourceHidden = false;
-
+    // Folders tree
     private TreeNode selectedTargetNode;
     private int selectedResourceTargetGroupId;
     private int selectedResourceTargetFolderId;
 
+    // In group search/filters
     private String query;
     private SearchFilters searchFilters;
     private AbstractPaginator paginator;
@@ -129,1276 +104,1586 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     @ManagedProperty(value = "#{resourceDetailBean}")
     private ResourceDetailBean resourceDetailBean;
 
+    @ManagedProperty(value = "#{addResourceBean}")
+    private AddResourceBean addResourceBean;
+
+    public enum RPAction
+    {
+        none, newResource, viewResource, editResource, newFolder, editFolder, viewFolder
+    }
+
     public GroupDetailBean() throws SQLException
     {
-	loadGroup();
+        loadGroup();
 
-	if(null == group)
-	{
-	    return;
-	}
+        if (null == group)
+        {
+            return;
+        }
 
-	if(getParameterInt("resource_id") != null)
-	    setRightPanelAction("viewResource");
+        if (getParameterInt("resource_id") != null)
+            setRightPanelAction("viewResource");
 
-	updateLinksList();
+        updateLinksList();
 
-	clickedResource = new Resource();
-	clickedUser = new User(); // TODO initialize with null
-	clickedPresentation = new Presentation();// TODO initialize with null
+        clickedUser = new User(); // TODO initialize with null
+        clickedPresentation = new Presentation();// TODO initialize with null
 
-	searchFilters = new SearchFilters();
-	searchFilters.setMode(MODE.group);
+        searchFilters = new SearchFilters();
+        searchFilters.setMode(MODE.group);
 
-	//updateResourcesFromSolr(); //not necessary on most pages
+        //updateResourcesFromSolr(); //not necessary on most pages
     }
 
     public void preRenderView(ComponentSystemEvent e)
     {
-	User user = getUser();
-	if(null != user && null != group)
-	{
-	    try
-	    {
-		user.setActiveGroup(group);
+        User user = getUser();
+        if (null != user && null != group)
+        {
+            try
+            {
+                user.setActiveGroup(group);
 
-		group.setLastVisit(user);
-	    }
-	    catch(Exception e1)
-	    {
-		addFatalMessage(e1);
-	    }
-	}
+                group.setLastVisit(user);
+            }
+            catch (Exception e1)
+            {
+                addFatalMessage(e1);
+            }
+        }
     }
 
     /**
      * die funktion ist totale scheisse. ersetzen sobald es geht
-     * 
+     *
      * @throws SQLException
      */
     private void convert() throws SQLException
     {
-	/*
-	HashSet<Integer> deletedResources = new HashSet<Integer>();
-	Action[] filter = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
+        /*
+        HashSet<Integer> deletedResources = new HashSet<Integer>();
+		Action[] filter = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
 		Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource,
 		Action.group_removing_resource };
 		*/
-	List<LogEntry> feed = logMessages;
+        List<LogEntry> feed = logMessages;
 
-	if(feed != null)
-	{
-	    ResourceManager resourceManager = getLearnweb().getResourceManager();
+        if (feed != null)
+        {
+            ResourceManager resourceManager = getLearnweb().getResourceManager();
 
-	    newslist = new ArrayList<NewsEntry>();
-	    for(LogEntry l : feed)
-	    {
-		newslist.add(new NewsEntry(l));
+            newslist = new ArrayList<NewsEntry>();
+            for (LogEntry l : feed)
+            {
+                newslist.add(new NewsEntry(l));
 
-	    }
+            }
 
-	}
+        }
 
     }
 
     public ArrayList<NewsEntry> getNewslist()
     {
-	if(null == newslist || reloadLogs)
-	{
-	    loadLogs(25);
+        if (null == newslist || reloadLogs)
+        {
+            loadLogs(25);
 
-	    if(newslist.size() < 25)
-		allLogs = true;
-	}
+            if (newslist.size() < 25)
+                allLogs = true;
+        }
 
-	return newslist;
+        return newslist;
 
     }
 
     public String present()
     {
-	return "presentation?id=" + clickedPresentation.getPresentationId() + "&faces-redirect=true";
+        return "presentation?id=" + clickedPresentation.getPresentationId() + "&faces-redirect=true";
     }
 
     public String editPresentation(String format)
     {
-	return "../lw/myhome/reedit_presentation.jsf?group_id=" + groupId + "&presentation_id=" + clickedPresentation.getPresentationId() + "&format=" + format;
+        return "../lw/myhome/reedit_presentation.jsf?group_id=" + groupId + "&presentation_id=" + clickedPresentation.getPresentationId() + "&format=" + format;
     }
 
     public String edit(String format)
     {
-	return "../lw/myhome/edit_presentation.jsf?group_id=" + groupId + "&format=" + format;
+        return "../lw/myhome/edit_presentation.jsf?group_id=" + groupId + "&format=" + format;
     }
 
     private void loadGroup() throws SQLException
     {
-	if(null == group)
-	{
-	    Integer id = getParameterInt("group_id");
+        if (null == group)
+        {
+            Integer id = getParameterInt("group_id");
 
-	    if(null == id)
-		return;
+            if (null == id)
+                return;
 
-	    groupId = id.intValue();
-	}
+            groupId = id.intValue();
+        }
 
-	group = getLearnweb().getGroupManager().getGroupById(groupId);
-	if(group != null)
-	{
-	    editedGroupDescription = group.getDescription();
-	    editedGroupLeaderId = group.getLeader().getId();
-	    editedGroupTitle = group.getTitle();
+        group = getLearnweb().getGroupManager().getGroupById(groupId);
+        if (group != null)
+        {
+            editedGroupDescription = group.getDescription();
+            editedGroupLeaderId = group.getLeader().getId();
+            editedGroupTitle = group.getTitle();
 
-	    if(null == selectedFolder)
-	    {
-		Integer id = getParameterInt("folder_id");
+            if (null == selectedFolder)
+            {
+                Integer id = getParameterInt("folder_id");
 
-		if(null == id)
-		{
-		    selectedFolder = new Folder(0, groupId, group.getTitle());
-		}
-		else
-		{
-		    selectedFolder = getLearnweb().getGroupManager().getFolder(id.intValue());
-		    clickedFolder = selectedFolder;
-		}
-	    }
-	}
+                if (null == id)
+                {
+                    selectedFolder = new Folder(0, groupId, group.getTitle());
+                }
+                else
+                {
+                    selectedFolder = getLearnweb().getGroupManager().getFolder(id.intValue());
+                    buildBreadcrumbsForFolder(selectedFolder);
+                }
+            }
+        }
     }
 
     private void loadLogs(Integer limit)
     {
-	try
-	{
-	    if(limit != null)
-		logMessages = getLearnweb().getLogsByGroup(groupId, null, limit);
-	    else
-		logMessages = getLearnweb().getLogsByGroup(groupId, null);
+        try
+        {
+            if (limit != null)
+                logMessages = getLearnweb().getLogsByGroup(groupId, null, limit);
+            else
+                logMessages = getLearnweb().getLogsByGroup(groupId, null);
 
-	    convert();
-	}
-	catch(SQLException e)
-	{
-	    addFatalMessage(e);
-	}
+            convert();
+        }
+        catch (SQLException e)
+        {
+            addFatalMessage(e);
+        }
     }
 
     private void updateLinksList() throws SQLException
     {
-	documentLinks = group.getDocumentLinks();
-	links = new LinkedList<Link>(group.getLinks());
+        documentLinks = group.getDocumentLinks();
+        links = new LinkedList<Link>(group.getLinks());
     }
 
     public List<User> getMembers() throws SQLException
     {
-	if(null == members)
-	{
-	    loadGroup();
+        if (null == members)
+        {
+            loadGroup();
 
-	    if(null == group)
-	    {
-		addMessage(FacesMessage.SEVERITY_ERROR, "Missing or wrong parameter: group_id");
-		return null;
-	    }
-	    members = group.getMembers();
-	}
-	return members;
+            if (null == group)
+            {
+                addMessage(FacesMessage.SEVERITY_ERROR, "Missing or wrong parameter: group_id");
+                return null;
+            }
+            members = group.getMembers();
+        }
+        return members;
     }
 
     public Group getGroup() throws SQLException
     {
-	return group;
+        return group;
     }
 
     public int getGroupId()
     {
-	return groupId;
+        return groupId;
     }
 
     public void setGroupId(int groupId)
     {
-	this.groupId = groupId;
+        this.groupId = groupId;
     }
 
     public int getSelectedFolderId()
     {
-	return selectedFolder == null || selectedFolder.getFolderId() <= 0 ? 0 : selectedFolder.getFolderId();
+        return selectedFolder == null || selectedFolder.getId() <= 0 ? 0 : selectedFolder.getId();
     }
 
     public void setSelectedFolderId(int folderId) throws SQLException
     {
-	if(folderId > 0)
-	{
-	    selectedFolder = getLearnweb().getGroupManager().getFolder(folderId);
-	}
+        if (folderId > 0)
+        {
+            selectedFolder = getLearnweb().getGroupManager().getFolder(folderId);
+        }
     }
 
     public List<LogEntry> getLogMessages() throws SQLException
     {
-	if(null == logMessages)
-	{
-	    logMessages = getLearnweb().getLogsByGroup(groupId, null);
-	    convert();
-	}
-	return logMessages;
+        if (null == logMessages)
+        {
+            logMessages = getLearnweb().getLogsByGroup(groupId, null);
+            convert();
+        }
+        return logMessages;
     }
 
     public void fetchAllLogs()
     {
-	setAllLogs(true);
-	loadLogs(null);
-    }
-
-    public Resource getSelectedResource()
-    {
-	return selectedResource;
-    }
-
-    public void setSelectedResource(Resource selectedResource)
-    {
-	this.selectedResource = selectedResource;
+        setAllLogs(true);
+        loadLogs(null);
     }
 
     public String getNewLinkUrl()
     {
-	return newLinkUrl;
+        return newLinkUrl;
     }
 
     public void setNewLinkUrl(String newLinkUrl)
     {
-	this.newLinkUrl = newLinkUrl;
+        this.newLinkUrl = newLinkUrl;
     }
 
     public String getNewLinkTitle()
     {
-	return newLinkTitle;
+        return newLinkTitle;
     }
 
     public void setNewLinkTitle(String newLinkTitle)
     {
-	this.newLinkTitle = newLinkTitle;
+        this.newLinkTitle = newLinkTitle;
     }
 
     public String getNewLinkType()
     {
-	return newLinkType;
+        return newLinkType;
     }
 
     public void setNewLinkType(String newLinkType)
     {
-	this.newLinkType = newLinkType;
+        this.newLinkType = newLinkType;
     }
 
     public List<Link> getDocumentLinks() throws SQLException
     {
-	if(null == documentLinks)
-	    updateLinksList();
+        if (null == documentLinks)
+            updateLinksList();
 
-	return documentLinks;
+        return documentLinks;
     }
 
     public Link getSelectedLink()
     {
-	return selectedLink;
+        return selectedLink;
     }
 
     public void setSelectedLink(Link selectedLink)
     {
-	this.selectedLink = selectedLink;
+        this.selectedLink = selectedLink;
     }
 
     public Link getEditLink()
     {
-	return editLink;
+        return editLink;
     }
 
     public void setEditLink(Link editLink)
     {
-	this.editLink = editLink;
-    }
-
-    public void removeResourceFromGroup()
-    {
-	try
-	{
-	    int oldGroup = clickedResource.getGroupId();
-	    clickedResource.setGroupId(0);
-	    clickedResource.save();
-
-	    addMessage(FacesMessage.SEVERITY_INFO, "resource_removed_from_group");
-	    getUser().setActiveGroup(group);
-	    log(Action.group_removing_resource, oldGroup, clickedResource.getId(), clickedResource.getTitle());
-
-	    clickedResource = new Resource();
-	    updateResourcesFromSolr();
-	}
-	catch(Exception e)
-	{
-	    addFatalMessage(e);
-	}
-    }
-
-    public void deleteResource() throws SQLException
-    {
-	clickedResource.setGroupId(0);
-	clickedResource.setFolderId(0);
-	clickedResource.save();
-
-	addGrowl(FacesMessage.SEVERITY_INFO, "resource_deleted");
-	log(Action.deleting_resource, clickedResource.getGroupId(), clickedResource.getId(), clickedResource.getTitle());
-
-	clickedResource = new Resource();
-	updateResourcesFromSolr();
+        this.editLink = editLink;
     }
 
     public void removePresentationFromGroup()
     {
-	try
-	{
-	    Connection dbCon = getLearnweb().getConnection();
-	    PreparedStatement ps = dbCon.prepareStatement("UPDATE `lw_presentation` SET deleted=1 WHERE `presentation_id`=?");
-	    ps.setInt(1, clickedPresentation.getPresentationId());
-	    ps.execute();
+        try
+        {
+            Connection dbCon = getLearnweb().getConnection();
+            PreparedStatement ps = dbCon.prepareStatement("UPDATE `lw_presentation` SET deleted=1 WHERE `presentation_id`=?");
+            ps.setInt(1, clickedPresentation.getPresentationId());
+            ps.execute();
 
-	    presentations = getLearnweb().getPresentationManager().getPresentationsByGroupId(groupId);
-	    clickedPresentation = new Presentation();
-	}
-	catch(SQLException e)
-	{
-	    e.printStackTrace();
-	}
+            presentations = getLearnweb().getPresentationManager().getPresentationsByGroupId(groupId);
+            clickedPresentation = new Presentation();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void onDeleteLinkFromGroup(int linkId)
     {
-	try
-	{
+        try
+        {
 
-	    group.deleteLink(linkId);
+            group.deleteLink(linkId);
 
-	    addMessage(FacesMessage.SEVERITY_INFO, "link_deleted");
-	    updateLinksList();
-	}
-	catch(SQLException e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_INFO, "sorry an error occurred");
-	}
+            addMessage(FacesMessage.SEVERITY_INFO, "link_deleted");
+            updateLinksList();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            addMessage(FacesMessage.SEVERITY_INFO, "sorry an error occurred");
+        }
     }
 
     public boolean isMember() throws SQLException
     {
-	User user = getUser();
+        User user = getUser();
 
-	if(null == user)
-	    return false;
+        if (null == user)
+            return false;
 
-	if(null == group)
-	    return false;
+        if (null == group)
+            return false;
 
-	return group.isMember(user);
+        return group.isMember(user);
     }
 
     public void onAddLink()
     {
-	try
-	{
-	    if(!group.isMember(getUser()))
-	    {
-		addMessage(FacesMessage.SEVERITY_ERROR, "You are not a member of this group");
-		return;
-	    }
+        try
+        {
+            if (!group.isMember(getUser()))
+            {
+                addMessage(FacesMessage.SEVERITY_ERROR, "You are not a member of this group");
+                return;
+            }
 
-	    LinkType type;
+            LinkType type;
 
-	    if(!newLinkType.equals("url")) // newLinkType == google document
-	    {
-		newLinkUrl = new GoogleDriveManager().createEmptyDocument(group.getTitle() + " - " + newLinkTitle, newLinkType).getAlternateLink();
-		type = LinkType.DOCUMENT;
-		log(Action.group_adding_document, group.getId(), group.getId(), newLinkTitle);
-	    }
-	    else
-	    {
-		type = LinkType.LINK;
-		log(Action.group_adding_link, group.getId(), group.getId(), newLinkTitle);
-	    }
+            if (!newLinkType.equals("url")) // newLinkType == google document
+            {
+                newLinkUrl = new GoogleDriveManager().createEmptyDocument(group.getTitle() + " - " + newLinkTitle, newLinkType).getAlternateLink();
+                type = LinkType.DOCUMENT;
+                log(Action.group_adding_document, group.getId(), group.getId(), newLinkTitle);
+            }
+            else
+            {
+                type = LinkType.LINK;
+                log(Action.group_adding_link, group.getId(), group.getId(), newLinkTitle);
+            }
 
-	    group.addLink(newLinkTitle, newLinkUrl, type);
+            group.addLink(newLinkTitle, newLinkUrl, type);
 
-	    addMessage(FacesMessage.SEVERITY_INFO, "link_added");
+            addMessage(FacesMessage.SEVERITY_INFO, "link_added");
 
-	    newLinkUrl = null;
-	    newLinkTitle = null;
-	    updateLinksList();
-	}
-	catch(Throwable t)
-	{
-	    addFatalMessage(t);
-	}
+            newLinkUrl = null;
+            newLinkTitle = null;
+            updateLinksList();
+        }
+        catch (Throwable t)
+        {
+            addFatalMessage(t);
+        }
     }
 
     public String onEditLink()
     {
-	try
-	{
-	    if(!group.isMember(getUser()))
-	    {
-		addMessage(FacesMessage.SEVERITY_ERROR, "You are not a member of this group");
-	    }
-	    else
-	    {
-		getLearnweb().getLinkManager().save(selectedLink);
-		/*
-		group.clearLinksCache();
-		documentLinks = group.getLinks();
-		*/
-		updateLinksList();
-		addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-	    }
-	}
-	catch(Exception e)
-	{
-	    addFatalMessage(e);
-	}
-	return getTemplateDir() + "/group/overview.xhtml?faces-redirect=true&includeViewParams=true";
-    }
-
-    public void onSelect()
-    {
-	ResourceManager rm = getLearnweb().getResourceManager();
-	Resource temp;
-	try
-	{
-	    temp = rm.getResource(Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id")));
-	    setClickedResource(temp);
-	}
-	catch(NumberFormatException | SQLException e)
-	{
-	    addFatalMessage(e);
-
-	}
+        try
+        {
+            if (!group.isMember(getUser()))
+            {
+                addMessage(FacesMessage.SEVERITY_ERROR, "You are not a member of this group");
+            }
+            else
+            {
+                getLearnweb().getLinkManager().save(selectedLink);
+                /*
+                group.clearLinksCache();
+                documentLinks = group.getLinks();
+                */
+                updateLinksList();
+                addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+            }
+        }
+        catch (Exception e)
+        {
+            addFatalMessage(e);
+        }
+        return getTemplateDir() + "/group/overview.xhtml?faces-redirect=true&includeViewParams=true";
     }
 
     public void editClickedResource()
     {
-	log(Action.edit_resource, clickedResource.getGroupId(), clickedResource.getId(), null);
-	try
-	{
-	    clickedResource.save();
-	}
-	catch(SQLException e)
-	{
-	    addFatalMessage(e);
-	}
-    }
-
-    public void addSelectedResource()
-    {
-	try
-	{
-	    Resource newResource;
-
-	    if(clickedResource.getId() == -1) // resource is not yet stored at fedora
-		newResource = clickedResource;
-	    else
-		newResource = clickedResource.clone(); // create a copy
-
-	    Group targetGroup = getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId);
-
-	    newResource.setGroupId(selectedResourceTargetGroupId);
-	    newResource.setFolderId(selectedResourceTargetFolderId);
-	    Resource res = getUser().addResource(newResource);
-
-	    if(selectedResourceTargetGroupId != 0)
-	    {
-		addGrowl(FacesMessage.SEVERITY_INFO, "addedResourceToGroup", clickedResource.getTitle(), targetGroup.getTitle());
-	    }
-	    else
-		addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", clickedResource.getTitle());
-
-	    log(Action.adding_resource, selectedResourceTargetGroupId, res.getId(), "");
-	}
-	catch(SQLException e)
-	{
-	    addFatalMessage(e);
-	}
+        log(Action.edit_resource, clickedGroupItem.getGroupId(), clickedGroupItem.getId(), null);
+        try
+        {
+            clickedGroupItem.save();
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
     }
 
     public void onSelectPresentation()
     {
-	PresentationManager pm = getLearnweb().getPresentationManager();
-	Presentation temp;
-	try
-	{
-	    temp = pm.getPresentationsById(Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id")));
-	    setClickedPresentation(temp);
-	}
-	catch(NumberFormatException | SQLException e)
-	{
-	    addFatalMessage(e);
-	}
+        PresentationManager pm = getLearnweb().getPresentationManager();
+        Presentation temp;
+        try
+        {
+            temp = pm.getPresentationsById(Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id")));
+            setClickedPresentation(temp);
+        }
+        catch (NumberFormatException | SQLException e)
+        {
+            addFatalMessage(e);
+        }
     }
 
     public boolean hasViewPermission(User user) throws SQLException
     {
-	if(null == group)
-	    return false;
+        if (null == group)
+            return false;
 
-	return group.getMembers().contains(user);
+        return group.getMembers().contains(user);
     }
 
     public void onSortingChanged(ValueChangeEvent e)
     {
-	// TODO implement
-	order = Order.TYPE;
+        // TODO implement
+        order = Order.TYPE;
     }
 
     public String getResourceSorting()
     {
-	return resourceSorting;
+        return resourceSorting;
     }
 
     public void setResourceSorting(String resourceSorting)
     {
-	this.resourceSorting = resourceSorting;
+        this.resourceSorting = resourceSorting;
     }
 
     public boolean isNewestResourceHidden()
     {
-	return isNewestResourceHidden;
+        return isNewestResourceHidden;
     }
 
     public int getSelectedResourceTargetGroupId()
     {
-	return selectedResourceTargetGroupId;
+        return selectedResourceTargetGroupId;
     }
 
     public void setSelectedResourceTargetGroupId(int selectedResourceTargetGroupId)
     {
-	this.selectedResourceTargetGroupId = selectedResourceTargetGroupId;
+        this.selectedResourceTargetGroupId = selectedResourceTargetGroupId;
     }
 
     public int getSelectedResourceTargetFolderId()
     {
-	return selectedResourceTargetFolderId;
+        return selectedResourceTargetFolderId;
     }
 
     public void setSelectedResourceTargetFolderId(int selectedResourceTargetFolderId)
     {
-	this.selectedResourceTargetFolderId = selectedResourceTargetFolderId;
+        this.selectedResourceTargetFolderId = selectedResourceTargetFolderId;
     }
 
     public TreeNode getSelectedTargetNode()
     {
-	return selectedTargetNode;
+        return selectedTargetNode;
     }
 
     public void setSelectedTargetNode(TreeNode selectedTargetNode)
     {
-	this.selectedTargetNode = selectedTargetNode;
+        this.selectedTargetNode = selectedTargetNode;
     }
 
     public void onTargetNodeSelect(NodeSelectEvent event)
     {
-	String type = event.getTreeNode().getType();
+        String type = event.getTreeNode().getType();
 
-	if(type.equals("group"))
-	{
-	    Group group = (Group) event.getTreeNode().getData();
-	    if(group != null)
-	    {
-		selectedResourceTargetGroupId = group.getId();
-		selectedResourceTargetFolderId = 0;
-	    }
-	}
-	else if(type.equals("folder"))
-	{
-	    Folder folder = (Folder) event.getTreeNode().getData();
-	    if(folder != null)
-	    {
-		selectedResourceTargetGroupId = folder.getGroupId();
-		selectedResourceTargetFolderId = folder.getFolderId();
-	    }
-	}
-    }
-
-    public void onMoveSelectedResource()
-    {
-	User user = getUser();
-	if(null == user)
-	{
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
-	    return;
-	}
-
-	if(selectedResourceTargetGroupId != 0)
-	{
-	    try
-	    {
-		int oldGroup = selectedResource.getGroupId();
-
-		Group targetGroup = getLearnweb().getGroupManager().getGroupById(selectedResourceTargetGroupId);
-		selectedResource.setGroup(targetGroup);
-		selectedResource.save();
-
-		user.setActiveGroup(selectedResourceTargetGroupId);
-
-		log(Action.group_removing_resource, oldGroup, selectedResource.getId(), selectedResource.getTitle());
-		log(Action.adding_resource, selectedResourceTargetGroupId, selectedResource.getId(), "");
-
-		addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", selectedResource.getTitle());
-	    }
-	    catch(Exception e)
-	    {
-		e.printStackTrace();
-		addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	    }
-	}
+        if (type.equals("group"))
+        {
+            Group group = (Group) event.getTreeNode().getData();
+            if (group != null)
+            {
+                selectedResourceTargetGroupId = group.getId();
+                selectedResourceTargetFolderId = 0;
+            }
+        }
+        else if (type.equals("folder"))
+        {
+            Folder folder = (Folder) event.getTreeNode().getData();
+            if (folder != null)
+            {
+                selectedResourceTargetGroupId = folder.getGroupId();
+                selectedResourceTargetFolderId = folder.getId();
+            }
+        }
     }
 
     public List<Link> getLinks() throws SQLException
     {
-	if(null == links)
-	    updateLinksList();
+        if (null == links)
+            updateLinksList();
 
-	return links;
+        return links;
     }
 
-    public boolean canDeleteResourceCompletely(Object obj) throws SQLException
+    public boolean canDeleteTheResourceCompletely(Object obj) throws SQLException
     {
-	User user = getUser();
+        User user = getUser();
 
-	if(user == null)
-	    return false;
+        if(user == null)
+            return false;
 
-	if(user.isAdmin() || group.getCourse().isModerator(user))
-	    return true;
+        if(user.isAdmin() || group.getCourse().isModerator(user))
+        {
+            return true;
+        }
 
-	Resource resource = null;
+        GroupItem resource;
+        if (obj instanceof ResourceDecorator)
+            resource = ((ResourceDecorator) obj).getResource();
+        else if (obj instanceof Resource)
+            resource = (Resource) obj;
+        else if (obj instanceof Folder)
+            resource = (Folder) obj;
+        else
+            throw new IllegalArgumentException("Method called with an unexpected class type: " + obj.getClass());
 
-	if(obj instanceof ResourceDecorator)
-	    resource = ((ResourceDecorator) obj).getResource();
-	else if(obj instanceof Resource)
-	    resource = (Resource) obj;
-	else
-	    throw new IllegalArgumentException("Method called with an unexpected class type: " + obj.getClass());
-
-	if(user.getId() == resource.getOwnerUserId())
-	    return true;
-
-	return false;
+        return user.getId() == resource.getUserId();
     }
 
-    public boolean canDeleteResourceFromGroup(Object obj) throws SQLException
+    public boolean canDeleteResourceFromGroup(GroupItem obj) throws SQLException
     {
-	User user = getUser();
-
-	if(user == null)
-	    return false;
-
-	if(user.isAdmin() || getGroup().isLeader(user) || group.getCourse().isModerator(user))
-	    return true;
-
-	if(group.isReadOnly())
-	    return false;
-
-	if(getGroup().isMember(user))
-	    return true;
-
-	return false;
+        return canDeleteResourcesInGroup(obj.getGroup());
     }
 
-    public boolean canMoveResourcesInGroup() throws SQLException
+    public boolean canDeleteResourcesInGroup(Group targetGroup) throws SQLException
     {
-	return canDeleteResourceFromGroup(null);
-	/*
-	if((!getGroup().isReadOnly() && (!getGroup().isRestrictionOnlyLeaderCanAddResources() || getUser().getId() == getGroup().getLeaderUserId())) || getUser().isModerator())
-	    return true;
-	
-	return false;
-	*/
+        User user = getUser();
+
+        if(user == null)
+            return false;
+
+        if(user.isAdmin() || getGroup().isLeader(user) || targetGroup.getCourse().isModerator(user))
+            return true;
+
+        if(targetGroup.isReadOnly())
+            return false;
+
+        if(getGroup().isMember(user))
+            return true;
+
+        return false;
     }
 
-    public boolean canEditFoldersInGroup() throws SQLException
+    public boolean canDeleteResourcesInTheGroup() throws SQLException
     {
-	return canDeleteResourceFromGroup(null);
-	/*
-	if((!getGroup().isReadOnly() && (!getGroup().isRestrictionOnlyLeaderCanAddResources() || getUser().getId() == getGroup().getLeaderUserId())) || getUser().isModerator())
-	    return true;
-	
-	return false;
-	*/
+        return canEditResourcesInGroup(getGroup());
+    }
+
+    public boolean canEditResourcesInGroup(Group targetGroup) throws SQLException
+    {
+        return canDeleteResourcesInGroup(targetGroup);
+    }
+
+    public boolean canEditResourcesInTheGroup() throws SQLException
+    {
+        return canEditResourcesInGroup(getGroup());
     }
 
     public List<Presentation> getPresentations() throws SQLException
     {
-	presentations = getLearnweb().getPresentationManager().getPresentationsByGroupId(groupId);
-	return presentations;
+        presentations = getLearnweb().getPresentationManager().getPresentationsByGroupId(groupId);
+        return presentations;
     }
 
     public void setPresentations(List<Presentation> presentations)
     {
-	this.presentations = presentations;
+        this.presentations = presentations;
     }
 
     public RPAction getRightPanelAction()
     {
-	return rightPanelAction;
+        return rightPanelAction;
     }
 
     public void setRightPanelAction(RPAction rightPanelAction)
     {
-	this.rightPanelAction = rightPanelAction;
+        this.rightPanelAction = rightPanelAction;
     }
 
     public void setRightPanelAction(String value)
     {
-	try
-	{
-	    this.rightPanelAction = RPAction.valueOf(value);
-	}
-	catch(Exception e)
-	{
-	    this.rightPanelAction = null;
-	}
+        try
+        {
+            this.rightPanelAction = RPAction.valueOf(value);
+        }
+        catch (Exception e)
+        {
+            this.rightPanelAction = null;
+        }
     }
 
     public User getClickedUser()
     {
-	return clickedUser;
+        return clickedUser;
     }
 
     public void setClickedUser(User clickedUser)
     {
-	this.clickedUser = clickedUser;
+        this.clickedUser = clickedUser;
     }
 
     public boolean isAllLogs()
     {
-	return allLogs;
+        return allLogs;
     }
 
     public void setAllLogs(boolean allLogs)
     {
-	this.allLogs = allLogs;
+        this.allLogs = allLogs;
     }
 
     public boolean isReloadLogs()
     {
-	return reloadLogs;
+        return reloadLogs;
     }
 
     public void setReloadLogs(boolean reloadLogs)
     {
-	this.reloadLogs = reloadLogs;
+        this.reloadLogs = reloadLogs;
     }
 
     public Presentation getClickedPresentation()
     {
-	return clickedPresentation;
+        return clickedPresentation;
     }
 
     public void setClickedPresentation(Presentation clickedPresentation)
     {
-	this.clickedPresentation = clickedPresentation;
-    }
-
-    public Resource getClickedResource()
-    {
-	return clickedResource;
-    }
-
-    public void setClickedResource(Resource clickedResource)
-    {
-	if(this.rightPanelAction != RPAction.editResource || this.clickedResource != clickedResource)
-	{
-	    this.clickedResource = clickedResource;
-	    this.rightPanelAction = RPAction.viewResource;
-	}
+        this.clickedPresentation = clickedPresentation;
     }
 
     public AbstractPaginator getPaginator()
     {
-	if(null == paginator)
-	    updateResourcesFromSolr();
+        if (null == paginator)
+            updateResourcesFromSolr();
 
-	return paginator;
+        return paginator;
     }
 
     public String changeFilters(String queryFilters)
     {
-	searchFilters.setFiltersFromString(queryFilters);
-	updateResourcesFromSolr();
-	return queryFilters;
+        searchFilters.setFiltersFromString(queryFilters);
+        updateResourcesFromSolr();
+        return queryFilters;
     }
 
     public void onQueryFiltersChange() throws SQLException
     {
-	updateResourcesFromSolr();
+        updateResourcesFromSolr();
     }
 
     public String getQuery()
     {
-	return query;
+        return query;
     }
 
     public void setQuery(String query)
     {
-	this.query = query;
+        this.query = query;
     }
 
     public void onQueryChange() throws SQLException
     {
-	updateResourcesFromSolr();
-	log(Action.group_resource_search, groupId, 0, query);
+        updateResourcesFromSolr();
+        log(Action.group_resource_search, groupId, 0, query);
     }
 
     public void saveGmailId()
     {
-	String gmailId = getParameter("gmail_id");
-	try
-	{
-	    Learnweb.getInstance().getUserManager().saveGmailId(gmailId, getUser().getId());
-	}
-	catch(SQLException e)
-	{
-	    log.error("Error while inserting gmail id" + e);
-	}
+        String gmailId = getParameter("gmail_id");
+        try
+        {
+            getLearnweb().getUserManager().saveGmailId(gmailId, getUser().getId());
+        }
+        catch (SQLException e)
+        {
+            log.error("Error while inserting gmail id" + e);
+        }
     }
 
     public List<Filter> getAvailableFilters()
     {
-	getPaginator();
-	if(searchFilters == null) // should only happen for private resources
-	    return null;
+        getPaginator();
+        if (searchFilters == null) // should only happen for private resources
+            return null;
 
-	return searchFilters.getAvailableFilters();
+        return searchFilters.getAvailableFilters();
     }
 
     public String getSearchFilters()
     {
-	return searchFilters.getFiltersString();
+        return searchFilters != null ? searchFilters.getFiltersString() : null;
     }
 
     public void updateResourcesFromSolr()
     {
-	if(this.searchFilters == null)
-	{
-	    return;
-	}
+        if (this.searchFilters == null)
+        {
+            return;
+        }
 
-	int folderId = (selectedFolder != null && selectedFolder.getFolderId() > 0) ? selectedFolder.getFolderId() : 0;
-	try
-	{
-	    paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
-	    RequestContext.getCurrentInstance().update(":filters");
-	}
-	catch(SQLException | SolrServerException e)
-	{
-	    addFatalMessage(e);
-	}
+        int folderId = (selectedFolder != null && selectedFolder.getId() > 0) ? selectedFolder.getId() : 0;
+        try
+        {
+            paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
+            //TODO: remove it
+            RequestContext.getCurrentInstance().update(":filters");
+        }
+        catch (SQLException | SolrServerException e)
+        {
+            addFatalMessage(e);
+        }
     }
 
     private SearchPaginator getResourcesFromSolr(int groupId, int folderId, String query, User user) throws SQLException, SolrServerException
     {
-	SolrSearch solrSearch = new SolrSearch(StringUtils.isEmpty(query) ? "*" : query, user);
-	solrSearch.setFilterGroups(groupId);
-	solrSearch.setFilterFolder(folderId, !StringUtils.isEmpty(query));
-	solrSearch.setResultsPerPage(AbstractPaginator.PAGE_SIZE);
-	solrSearch.setSkipResourcesWithoutThumbnails(false);
-	solrSearch.setFacetFields(searchFilters.getFacetFields());
-	solrSearch.setFacetQueries(searchFilters.getFacetQueries());
-	solrSearch.setSort("timestamp DESC");
+        SolrSearch solrSearch = new SolrSearch(StringUtils.isEmpty(query) ? "*" : query, user);
+        solrSearch.setFilterGroups(groupId);
+        solrSearch.setFilterFolder(folderId, !StringUtils.isEmpty(query));
+        solrSearch.setResultsPerPage(AbstractPaginator.PAGE_SIZE);
+        solrSearch.setSkipResourcesWithoutThumbnails(false);
+        solrSearch.setFacetFields(searchFilters.getFacetFields());
+        solrSearch.setFacetQueries(searchFilters.getFacetQueries());
+        solrSearch.setSort("timestamp DESC");
 
-	if(searchFilters.getServiceFilter() != null)
-	    solrSearch.setFilterLocation(searchFilters.getServiceFilter());
-	if(searchFilters.getTypeFilter() != null)
-	    solrSearch.setFilterType(searchFilters.getTypeFilter());
-	if(searchFilters.getDateFromFilterAsString() != null)
-	    solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getDateFromFilter()));
-	if(searchFilters.getDateToFilterAsString() != null)
-	    solrSearch.setFilterDateTo(SOLR_DATE_FORMAT.format(searchFilters.getDateToFilter()));
-	if(searchFilters.getCollectorFilter() != null)
-	    solrSearch.setFilterCollector(searchFilters.getCollectorFilter());
-	if(searchFilters.getAuthorFilter() != null)
-	    solrSearch.setFilterAuthor(searchFilters.getAuthorFilter());
-	if(searchFilters.getCoverageFilter() != null)
-	    solrSearch.setFilterCoverage(searchFilters.getCoverageFilter());
-	if(searchFilters.getPublisherFilter() != null)
-	    solrSearch.setFilterPublisher(searchFilters.getPublisherFilter());
-	if(searchFilters.getTagsFilter() != null)
-	    solrSearch.setFilterTags(searchFilters.getTagsFilter());
+        if (searchFilters.getServiceFilter() != null)
+            solrSearch.setFilterLocation(searchFilters.getServiceFilter());
+        if (searchFilters.getTypeFilter() != null)
+            solrSearch.setFilterType(searchFilters.getTypeFilter());
+        if (searchFilters.getDateFromFilterAsString() != null)
+            solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getDateFromFilter()));
+        if (searchFilters.getDateToFilterAsString() != null)
+            solrSearch.setFilterDateTo(SOLR_DATE_FORMAT.format(searchFilters.getDateToFilter()));
+        if (searchFilters.getCollectorFilter() != null)
+            solrSearch.setFilterCollector(searchFilters.getCollectorFilter());
+        if (searchFilters.getAuthorFilter() != null)
+            solrSearch.setFilterAuthor(searchFilters.getAuthorFilter());
+        if (searchFilters.getCoverageFilter() != null)
+            solrSearch.setFilterCoverage(searchFilters.getCoverageFilter());
+        if (searchFilters.getPublisherFilter() != null)
+            solrSearch.setFilterPublisher(searchFilters.getPublisherFilter());
+        if (searchFilters.getTagsFilter() != null)
+            solrSearch.setFilterTags(searchFilters.getTagsFilter());
 
-	SearchPaginator sp = new SolrSearch.SearchPaginator(solrSearch);
-	searchFilters.putResourceCounter(sp.getFacetFields());
-	searchFilters.putResourceCounter(sp.getFacetQueries());
-	return sp;
+        SearchPaginator sp = new SolrSearch.SearchPaginator(solrSearch);
+        searchFilters.putResourceCounter(sp.getFacetFields());
+        searchFilters.putResourceCounter(sp.getFacetQueries());
+        return sp;
     }
 
     public List<Folder> getSubfolders() throws SQLException
     {
-	return Learnweb.getInstance().getGroupManager().getFolders(groupId, getSelectedFolderId());
+        return getLearnweb().getGroupManager().getFolders(groupId, getSelectedFolderId());
     }
 
     public String getCurrentPath() throws SQLException
     {
-	if(this.group != null)
-	{
-	    return this.selectedFolder == null ? this.group.getTitle() : selectedFolder.getPrettyPath();
-	}
+        if (this.group != null)
+        {
+            return this.selectedFolder == null ? this.group.getTitle() : selectedFolder.getPrettyPath();
+        }
 
-	return null;
+        return null;
     }
 
     public TreeNode getFoldersTree(int groupId) throws SQLException
     {
-	return Learnweb.getInstance().getGroupManager().getFoldersTree(groupId, getSelectedFolderId());
+        return getLearnweb().getGroupManager().getFoldersTree(groupId, getSelectedFolderId());
     }
 
-    public void moveToFolder()
-    {
-	Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-	String strDestFolderId = params.get("destFolderId");
-	String objectsToMoveJSON = params.get("objectsToMove");
-
-	try
-	{
-	    boolean isUpdateSolr = false;
-	    int destFolderId = Integer.parseInt(strDestFolderId);
-	    JSONObject objectsToMove = new JSONObject(objectsToMoveJSON);
-
-	    for(Integer i = 0, len = objectsToMove.getInt("length"); i < len; ++i)
-	    {
-		JSONObject object = objectsToMove.getJSONObject(i.toString());
-
-		String type = object.getString("type");
-		String objectId = object.getString("resourceId");
-
-		if(type.equals("folder"))
-		{
-		    Folder folder = Learnweb.getInstance().getGroupManager().getFolder(Integer.parseInt(objectId));
-		    folder.moveTo(groupId, destFolderId);
-		}
-		else if(type.equals("resource"))
-		{
-		    Resource res = Learnweb.getInstance().getResourceManager().getResource(Integer.parseInt(objectId));
-		    res.moveTo(groupId, destFolderId);
-		    isUpdateSolr = true;
-		}
-		else
-		{
-		    throw new Exception("wrong type");
-		}
-	    }
-
-	    if(isUpdateSolr)
-	    {
-		updateResourcesFromSolr();
-	    }
-	}
-	catch(Exception e)
-	{
-	    log.error(e.getMessage());
-	    e.printStackTrace();
-	}
-    }
-
+    /**
+     * Action used to create new folder
+     */
     public void addFolder() throws SQLException
     {
-	if(canEditFoldersInGroup() && newFolderName != null && !newFolderName.isEmpty() && selectedFolder != null)
-	{
-	    Folder newFolder = new Folder(groupId, newFolderName);
-	    newFolder.setParentFolderId(getSelectedFolderId());
-	    newFolder.setUser(getUser());
-	    newFolder.save();
+        if (canEditResourcesInTheGroup() && newFolderName != null && !newFolderName.isEmpty())
+        {
+            Folder newFolder = new Folder(groupId, newFolderName);
+            newFolder.setParentFolderId(getSelectedFolderId());
+            newFolder.setUser(getUser());
+            newFolder.save();
 
-	    log(Action.add_folder, newFolder.getGroupId(), newFolder.getFolderId(), newFolder.getName());
+            log(Action.add_folder, newFolder.getGroupId(), newFolder.getId(), newFolder.getTitle());
 
-	    addMessage(FacesMessage.SEVERITY_INFO, "folderCreated", newFolder.getName());
-	}
+            addMessage(FacesMessage.SEVERITY_INFO, "folderCreated", newFolder.getTitle());
+        }
 
-	newFolderName = null;
+        newFolderName = null;
     }
 
+    /**
+     * Action used to create edit folder
+     */
     public void editFolder() throws SQLException
     {
-	if(canEditFoldersInGroup() && clickedFolder != null && clickedFolder.getFolderId() > 0)
-	{
-	    log(Action.edit_folder, clickedFolder.getGroupId(), clickedFolder.getFolderId(), clickedFolder.getName());
+        if (canEditResourcesInTheGroup() && clickedGroupItem != null && clickedGroupItem.getId() > 0)
+        {
+            log(Action.edit_folder, groupId, clickedGroupItem.getId(), clickedGroupItem.getTitle());
 
-	    try
-	    {
-		clickedFolder.save();
-		addMessage(FacesMessage.SEVERITY_INFO, "folderUpdated", clickedFolder.getName());
-	    }
-	    catch(SQLException e)
-	    {
-		addFatalMessage(e);
-	    }
-	}
+            try
+            {
+                clickedGroupItem.save();
+                addMessage(FacesMessage.SEVERITY_INFO, "folderUpdated", clickedGroupItem.getTitle());
+            }
+            catch (SQLException e)
+            {
+                addFatalMessage(e);
+            }
+        }
     }
 
-    public void deleteFolder() throws SQLException
+    public GroupItem getClickedGroupItem()
     {
-	if(canEditFoldersInGroup() && clickedFolder != null)
-	{
-	    String folderName = clickedFolder.getName();
+        return clickedGroupItem;
+    }
 
-	    if(selectedFolder == clickedFolder)
-	    {
-		selectedFolder = selectedFolder.getParentFolder() == null ? null : selectedFolder.getParentFolder();
-	    }
+    public void setClickedGroupItem(GroupItem clickedGroupItem)
+    {
+        this.clickedGroupItem = clickedGroupItem;
+        if (clickedGroupItem instanceof Resource) {
+            this.rightPanelAction = RPAction.viewResource;
+        } else {
+            this.rightPanelAction = RPAction.viewFolder;
+        }
+    }
 
-	    clickedFolder.delete();
-	    clickedFolder = null;
+    @Deprecated
+    public Resource getClickedResource()
+    {
+        if (clickedGroupItem instanceof Resource) {
+            return (Resource) getClickedGroupItem();
+        }
 
-	    log(Action.deleting_folder, clickedFolder.getGroupId(), clickedFolder.getFolderId(), clickedFolder.getName());
+        return null;
+    }
 
-	    addMessage(FacesMessage.SEVERITY_INFO, "folderDeleted", folderName);
-	}
+    @Deprecated
+    public void setClickedResource(Resource clickedResource)
+    {
+        setClickedGroupItem(clickedResource);
+    }
+
+    @Deprecated
+    public Folder getClickedFolder()
+    {
+        if (clickedGroupItem instanceof Folder) {
+            return (Folder) getClickedGroupItem();
+        }
+
+        return null;
+    }
+
+    @Deprecated
+    public void setClickedFolder(Folder clickedFolder)
+    {
+        setClickedGroupItem(clickedFolder);
     }
 
     public Folder getSelectedFolder()
     {
-	return selectedFolder;
+        return selectedFolder;
     }
 
     public void setSelectedFolder(Folder folder)
     {
-	if(folder != null)
-	{
-	    this.selectedFolder = folder;
-	    this.clickedFolder = null;
-	    this.rightPanelAction = RPAction.none;
+        this.selectedFolder = folder;
+        updateResourcesFromSolr();
+        buildBreadcrumbsForFolder(folder);
 
-	    updateResourcesFromSolr();
-	    UtilBean.getAddResourceBean().setResourceTargetFolderId(getSelectedFolderId());
-	}
-    }
-
-    public Folder getClickedFolder()
-    {
-	return clickedFolder;
-    }
-
-    public void setClickedFolder(Folder clickedFolder)
-    {
-	if(this.rightPanelAction != RPAction.editFolder || this.clickedFolder != clickedFolder)
-	{
-	    this.rightPanelAction = RPAction.viewFolder;
-	    this.clickedFolder = clickedFolder;
-	}
+        this.clickedGroupItem = null;
+        this.rightPanelAction = RPAction.none;
+        this.getAddResourceBean().setResourceTargetFolderId(getSelectedFolderId());
     }
 
     public TreeNode getSelectedNode()
     {
-	return selectedNode;
+        return selectedNode;
     }
 
     public void setSelectedNode(TreeNode selectedNode)
     {
-	this.selectedNode = selectedNode;
+        this.selectedNode = selectedNode;
     }
 
     public void onNodeSelect(NodeSelectEvent event)
     {
-	Folder selectedFolder = (Folder) selectedNode.getData();
-	setSelectedFolder(selectedFolder);
+        Folder selectedFolder = (Folder) selectedNode.getData();
+        setSelectedFolder(selectedFolder);
     }
 
     public String getNewFolderName()
     {
-	return newFolderName;
+        return newFolderName;
     }
 
     public void setNewFolderName(String newFolderName)
     {
-	this.newFolderName = newFolderName;
+        this.newFolderName = newFolderName;
     }
 
     public void setGroup(Group group)
     {
-	this.group = group;
+        this.group = group;
     }
 
     public List<SelectItem> getMembersSelectItemList() throws SQLException
     {
-	if(null == group)
-	    return new ArrayList<SelectItem>();
+        if (null == group)
+            return new ArrayList<SelectItem>();
 
-	List<SelectItem> yourList;
-	yourList = new ArrayList<SelectItem>();
+        List<SelectItem> yourList;
+        yourList = new ArrayList<SelectItem>();
 
-	for(User member : group.getMembers())
-	    yourList.add(new SelectItem(member.getId(), member.getUsername()));
+        for (User member : group.getMembers())
+            yourList.add(new SelectItem(member.getId(), member.getUsername()));
 
-	return yourList;
+        return yourList;
     }
 
     public String getEditedGroupDescription()
     {
-	return editedGroupDescription;
+        return editedGroupDescription;
     }
 
     public void setEditedGroupDescription(String editedGroupDescription)
     {
-	this.editedGroupDescription = editedGroupDescription;
+        this.editedGroupDescription = editedGroupDescription;
     }
 
     public String getEditedGroupTitle()
     {
-	return editedGroupTitle;
+        return editedGroupTitle;
     }
 
     public void setEditedGroupTitle(String editedGroupTitle)
     {
-	this.editedGroupTitle = editedGroupTitle;
+        this.editedGroupTitle = editedGroupTitle;
     }
 
     public int getEditedGroupLeaderId()
     {
-	return editedGroupLeaderId;
+        return editedGroupLeaderId;
     }
 
     public void setEditedGroupLeaderId(int editedGroupLeaderId)
     {
-	this.editedGroupLeaderId = editedGroupLeaderId;
+        this.editedGroupLeaderId = editedGroupLeaderId;
     }
 
-    public void selectResource()
+    public static long getSerialVersionUID()
     {
-	Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-	String resourceType = params.get("type");
-	String resourceId = params.get("resourceId");
-
-	try
-	{
-	    if(resourceType.equals("folder"))
-	    {
-		Folder folder = Learnweb.getInstance().getGroupManager().getFolder(Integer.parseInt(resourceId));
-
-		this.setClickedFolder(folder);
-	    }
-	    else if(resourceType.equals("resource"))
-	    {
-		Resource res = Learnweb.getInstance().getResourceManager().getResource(Integer.parseInt(resourceId));
-
-		this.setClickedResource(res);
-		this.getResourceDetailBean().setClickedResource(res);
-	    }
-	    else
-	    {
-		throw new RuntimeException("Wrong element type");
-	    }
-	}
-	catch(Exception e)
-	{
-
-	}
+        return serialVersionUID;
     }
 
-    public void selectFolder()
+    public static Logger getLog()
     {
-	Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-	String resourceId = params.get("resourceId");
-
-	try
-	{
-	    Folder folder = Learnweb.getInstance().getGroupManager().getFolder(Integer.parseInt(resourceId));
-
-	    this.setSelectedFolder(folder);
-	}
-	catch(Exception e)
-	{
-
-	}
+        return log;
     }
 
-    public void onMoveResource()
+    public static DateFormat getSolrDateFormat()
     {
+        return SOLR_DATE_FORMAT;
+    }
 
-	//clickedResource.setTitle("sldfjsdif");
-	//clickedResource.save();
+    public void setMembers(List<User> members)
+    {
+        this.members = members;
+    }
 
-	//getLearnweb().getSolrClient().reIndexResource(resource);
+    public void setLogMessages(List<LogEntry> logMessages)
+    {
+        this.logMessages = logMessages;
+    }
+
+    public void setNewslist(ArrayList<NewsEntry> newslist)
+    {
+        this.newslist = newslist;
+    }
+
+    public void setNewestResourceHidden(boolean newestResourceHidden)
+    {
+        isNewestResourceHidden = newestResourceHidden;
+    }
+
+    public void setLinks(List<Link> links)
+    {
+        this.links = links;
+    }
+
+    public void setDocumentLinks(List<Link> documentLinks)
+    {
+        this.documentLinks = documentLinks;
+    }
+
+    public Order getOrder()
+    {
+        return order;
+    }
+
+    public void setOrder(Order order)
+    {
+        this.order = order;
+    }
+
+    public void setSearchFilters(SearchFilters searchFilters)
+    {
+        this.searchFilters = searchFilters;
+    }
+
+    public void setPaginator(AbstractPaginator paginator)
+    {
+        this.paginator = paginator;
+    }
+
+    public List<Folder> getBreadcrumbs()
+    {
+        return breadcrumbs;
+    }
+
+    public void setBreadcrumbs(List<Folder> breadcrumbs)
+    {
+        this.breadcrumbs = breadcrumbs;
+    }
+
+    private void buildBreadcrumbsForFolder(Folder folder)
+    {
+        breadcrumbs = new ArrayList<>();
+
+        try
+        {
+            addFolderToBreadcrumbs(folder);
+        }
+        catch (SQLException e)
+        {
+            log.warn("Can not get parent folder.");
+        }
+    }
+
+    private void addFolderToBreadcrumbs(Folder folder) throws SQLException
+    {
+        if (folder != null)
+        {
+            breadcrumbs.add(0, folder);
+            addFolderToBreadcrumbs(folder.getParentFolder());
+        }
     }
 
     public void onGroupEdit()
     {
-	if(null == group)
-	{
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
-	    return;
-	}
+        if (null == group)
+        {
+            addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
+            return;
+        }
 
-	try
-	{
-	    getUser().setActiveGroup(group);
+        try
+        {
+            getUser().setActiveGroup(group);
 
-	    if(!editedGroupDescription.equals(group.getDescription()))
-	    {
-		group.setDescription(editedGroupDescription);
-		log(Action.group_changing_description, group.getId(), group.getId());
-	    }
-	    if(!editedGroupTitle.equals(group.getTitle()))
-	    {
-		log(Action.group_changing_title, group.getId(), group.getId(), group.getTitle());
-		group.setTitle(editedGroupTitle);
-	    }
-	    if(editedGroupLeaderId != group.getLeaderUserId())
-	    {
-		group.setLeaderUserId(editedGroupLeaderId);
-		log(Action.group_changing_leader, group.getId(), group.getId());
-	    }
-	    getLearnweb().getGroupManager().save(group);
-	    //getLearnweb().getGroupManager().resetCache();
-	    getUser().clearCaches();
+            if (!editedGroupDescription.equals(group.getDescription()))
+            {
+                group.setDescription(editedGroupDescription);
+                log(Action.group_changing_description, group.getId(), group.getId());
+            }
+            if (!editedGroupTitle.equals(group.getTitle()))
+            {
+                log(Action.group_changing_title, group.getId(), group.getId(), group.getTitle());
+                group.setTitle(editedGroupTitle);
+            }
+            if (editedGroupLeaderId != group.getLeaderUserId())
+            {
+                group.setLeaderUserId(editedGroupLeaderId);
+                log(Action.group_changing_leader, group.getId(), group.getId());
+            }
+            getLearnweb().getGroupManager().save(group);
+            //getLearnweb().getGroupManager().resetCache();
+            getUser().clearCaches();
 
-	}
-	catch(SQLException e)
-	{
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
-	    e.printStackTrace();
-	}
+        }
+        catch (SQLException e)
+        {
+            addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
+            e.printStackTrace();
+        }
 
-	addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
     public void copyGroup()
     {
 
-	if(null == group)
-	{
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
-	    return;
-	}
+        if (null == group)
+        {
+            addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
+            return;
+        }
 
-	try
-	{
-	    group.copyResourcesToGroupById(selectedResourceTargetGroupId, getUser());
-	}
-	catch(SQLException e)
-	{
-	    addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
-	    e.printStackTrace();
-	}
-	addGrowl(FacesMessage.SEVERITY_INFO, "Copied Resources");
+        try
+        {
+            group.copyResourcesToGroupById(selectedResourceTargetGroupId, getUser());
+        }
+        catch (SQLException e)
+        {
+            addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
+            e.printStackTrace();
+        }
+        addGrowl(FacesMessage.SEVERITY_INFO, "Copied Resources");
     }
 
     public List<Group> getUserCopyableGroups() throws SQLException
     {
-	List<Group> copyableGroups = getUser().getWriteAbleGroups();
-	copyableGroups.remove(group);
-	return copyableGroups;
+        List<Group> copyableGroups = getUser().getWriteAbleGroups();
+        copyableGroups.remove(group);
+        return copyableGroups;
     }
 
     public ResourceDetailBean getResourceDetailBean()
     {
-	return resourceDetailBean;
+        return resourceDetailBean;
     }
 
     public void setResourceDetailBean(ResourceDetailBean resourceDetailBean)
     {
-	this.resourceDetailBean = resourceDetailBean;
+        this.resourceDetailBean = resourceDetailBean;
+    }
+
+    public AddResourceBean getAddResourceBean()
+    {
+        return addResourceBean;
+    }
+
+    public void setAddResourceBean(AddResourceBean addResourceBean)
+    {
+        this.addResourceBean = addResourceBean;
+    }
+
+    public void actionOpenFolder()
+    {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+
+        try
+        {
+            String folderId = params.get("itemId");
+            if (folderId == null || folderId.equals("0"))
+            {
+                this.setSelectedFolder(null);
+            }
+            else
+            {
+                Folder folder = getLearnweb().getGroupManager().getFolder(Integer.parseInt(folderId));
+                if (folder != null)
+                    this.setSelectedFolder(folder);
+                else
+                    log.warn("Target folder does not exists on actionOpenFolder");
+            }
+        }
+        catch (NullPointerException | NumberFormatException | SQLException e)
+        {
+            log.warn("Can not parse data on actionOpenFolder.", e);
+        }
+    }
+
+    public void actionSelectGroupItem()
+    {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+
+        try
+        {
+            String itemType = params.get("itemType");
+            String itemId = params.get("itemId");
+
+            if (itemType != null && itemType.equals("folder"))
+            {
+                Folder folder = getLearnweb().getGroupManager().getFolder(Integer.parseInt(itemId));
+                if (folder != null)
+                {
+                    this.setClickedGroupItem(folder);
+                }
+                else
+                    log.warn("Target folder does not exists on actionSelectGroupItem");
+            }
+            else if (itemType != null && itemType.equals("resource"))
+            {
+                Resource resource = getLearnweb().getResourceManager().getResource(Integer.parseInt(itemId));
+                if (resource != null)
+                {
+                    this.setClickedGroupItem(resource);
+                    this.getResourceDetailBean().setClickedResource(resource);
+                }
+                else
+                    log.warn("Target resource does not exists on actionSelectGroupItem");
+            }
+            else
+                throw new NullPointerException("Unsupported element type");
+        }
+        catch (NullPointerException e)
+        {
+            log.warn("Can not parse itemType on selectGroupItem.", e);
+        }
+        catch (NumberFormatException | SQLException e)
+        {
+            log.warn("Can not parse itemId on selectGroupItem.", e);
+        }
+    }
+
+    public void actionEditGroupItem()
+    {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        try
+        {
+            String itemType = params.get("itemType");
+            String itemId = params.get("itemId");
+
+            if (itemType != null && itemType.equals("folder"))
+            {
+                Folder folder = getLearnweb().getGroupManager().getFolder(Integer.parseInt(itemId));
+                if (folder != null)
+                {
+                    this.setClickedGroupItem(folder);
+                    this.setRightPanelAction(RPAction.editFolder);
+                }
+                else
+                    log.warn("Target folder does not exists on actionEditGroupItem");
+            }
+            else if (itemType != null && itemType.equals("resource"))
+            {
+                Resource resource = getLearnweb().getResourceManager().getResource(Integer.parseInt(itemId));
+                if (resource != null)
+                {
+                    this.setClickedGroupItem(resource);
+                    this.getResourceDetailBean().setClickedResource(resource);
+                    this.setRightPanelAction(RPAction.editResource);
+                }
+                else
+                    log.warn("Target resource does not exists on actionEditGroupItem");
+            }
+            else
+                throw new NullPointerException("Unsupported itemType");
+        }
+        catch (NullPointerException e)
+        {
+            log.warn("Can not parse itemType on selectGroupItem.", e);
+        }
+        catch (NumberFormatException | SQLException e)
+        {
+            log.warn("Can not parse itemId on selectGroupItem.", e);
+        }
+    }
+
+    public void actionCreateGroupItem()
+    {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String type = params.get("type");
+
+        switch (type)
+        {
+            case "folder":
+                this.setRightPanelAction(RPAction.newFolder);
+                break;
+            case "file":
+                this.setRightPanelAction(RPAction.newResource);
+                this.getAddResourceBean().clearForm();
+                this.getAddResourceBean().getResource().setStorageType(1);
+                break;
+            case "url":
+                this.setRightPanelAction(RPAction.newResource);
+                this.getAddResourceBean().clearForm();
+                this.getAddResourceBean().getResource().setStorageType(2);
+                break;
+            default:
+                log.warn("Unsupported item type: " + type);
+                break;
+        }
+
+        this.getAddResourceBean().setResourceTargetGroupId(this.groupId);
+        this.getAddResourceBean().setResourceTargetFolderId(this.getSelectedFolderId());
+    }
+
+    public void actionUpdateGroupItems()
+    {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String action = params.get("action");
+
+        try
+        {
+            JSONArray items = new JSONArray(params.get("items"));
+
+            switch (action)
+            {
+                case "copy":
+                    this.actionCopyGroupItems(items);
+                    break;
+                case "move":
+                    JSONObject dest = params.containsKey("destination") ? new JSONObject(params.get("destination")) : null;
+                    this.moveGroupItems(items, dest);
+                    break;
+                case "delete":
+                    this.deleteGroupItems(items);
+                    break;
+                case "add-tag":
+                    String tag = params.get("tag");
+                    this.addTagToGroupItems(items, tag);
+                    break;
+                default:
+                    log.warn("Unsupported action: " + action);
+                    break;
+            }
+        }
+        catch (JSONException e)
+        {
+            log.warn("Target resource does not exists on actionCopyGroupItems");
+        }
+    }
+
+    private void actionCopyGroupItems(JSONArray objects)
+    {
+        try
+        {
+            int numFolders = 0, numResources = 0,
+                targetGroupId = selectedResourceTargetGroupId,
+                targetFolderId = selectedResourceTargetFolderId;
+
+            Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
+            if (targetGroupId != 0 && !canEditResourcesInGroup(targetGroup)) {
+                log.warn("The use don't have permissions to edit resources in target group.");
+                return;
+            }
+
+            if (canEditResourcesInTheGroup())
+            for (int i = 0, len = objects.length(); i < len; ++i)
+            {
+                JSONObject item = objects.getJSONObject(i);
+                String itemType = item.getString("itemType");
+                int itemId = StringHelper.parseInt(item.getString("itemId"));
+                if (itemType != null && itemType.equals("resource") && itemId > 0)
+                {
+                    Resource resource = getLearnweb().getResourceManager().getResource(itemId);
+                    if (resource != null)
+                    {
+                        Resource newResource = resource.clone();
+                        newResource.setGroupId(targetGroupId);
+                        newResource.setFolderId(targetFolderId);
+                        resource = getUser().addResource(newResource);
+                        numResources++;
+                        log(Action.adding_resource, targetGroupId, resource.getId(), "");
+                    }
+                    else
+                        log.warn("Target resource does not exists on actionCopyGroupItems");
+                }
+                else
+                    log.warn("Unsupported itemType");
+            }
+
+            addGrowl(FacesMessage.SEVERITY_INFO, "resourcesCopiedSuccessfully", numFolders + numResources);
+        }
+        catch (NullPointerException e)
+        {
+            log.warn("Can not parse itemType on actionCopyGroupItems.", e);
+        }
+        catch (JSONException | NumberFormatException | SQLException e)
+        {
+            log.warn("Can not parse data on actionCopyGroupItems.", e);
+        }
+    }
+
+    private void moveGroupItems(JSONArray objects, JSONObject dest)
+    {
+        try
+        {
+            int numFolders = 0, numResources = 0,
+                targetGroupId = selectedResourceTargetGroupId,
+                targetFolderId = selectedResourceTargetFolderId;
+
+            if (dest != null)
+            {
+                targetGroupId = StringHelper.parseInt(dest.getString("groupId"), groupId);
+                targetFolderId = StringHelper.parseInt(dest.getString("folderId"), 0);
+            }
+
+            Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
+            if (targetGroupId != 0 && !canEditResourcesInGroup(targetGroup)) {
+                log.warn("The use don't have permissions to edit resources in target group.");
+                return;
+            }
+
+            for (int i = 0, len = objects.length(); i < len; ++i)
+            {
+                JSONObject item = objects.getJSONObject(i);
+                String itemType = item.getString("itemType");
+                int itemId = StringHelper.parseInt(item.getString("itemId"));
+                if (itemType != null && itemType.equals("folder") && itemId > 0)
+                {
+                    Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
+                    if (folder != null)
+                    {
+                        if (!canDeleteResourceFromGroup(folder)) {
+                            log.warn("The use don't have permissions to delete folder in target group.");
+                            continue;
+                        }
+
+                        folder.moveTo(targetGroupId, targetFolderId);
+                        numFolders++;
+                    }
+                    else
+                        log.warn("Target folder does not exists on actionMoveGroupItems");
+                }
+                else if (itemType != null && itemType.equals("resource") && itemId > 0)
+                {
+                    Resource resource = getLearnweb().getResourceManager().getResource(itemId);
+                    if (resource != null)
+                    {
+                        if (!canDeleteResourceFromGroup(resource)) {
+                            log.warn("The use don't have permissions to delete resource in target group.");
+                            continue;
+                        }
+
+                        resource.moveTo(targetGroupId, targetFolderId);
+                        numResources++;
+                    }
+                    else
+                        log.warn("Target folder does not exists on actionMoveGroupItems");
+                }
+                else
+                    log.warn("Unsupported itemType");
+            }
+
+            addGrowl(FacesMessage.SEVERITY_INFO, "resourcesMovedSuccessfully", numFolders + numResources);
+            if (numResources > 0)
+                this.updateResourcesFromSolr();
+        }
+        catch (NullPointerException e)
+        {
+            log.warn("Can not parse itemType on actionMoveGroupItems.", e);
+        }
+        catch (JSONException | NumberFormatException | SQLException e)
+        {
+            log.warn("Can not parse data on actionMoveGroupItems.", e);
+        }
+    }
+
+    private void deleteGroupItems(JSONArray objects)
+    {
+        try
+        {
+            int numFolders = 0, numResources = 0;
+
+            for (int i = 0, len = objects.length(); i < len; ++i)
+            {
+                JSONObject item = objects.getJSONObject(i);
+
+                String itemType = item.getString("itemType");
+                int itemId = StringHelper.parseInt(item.getString("itemId"));
+
+                if (itemType != null && itemType.equals("folder") && itemId > 0)
+                {
+                    Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
+                    if (folder != null)
+                    {
+                        if (!canDeleteResourceFromGroup(folder)) {
+                            log.warn("The use don't have permissions to delete folder in target group.");
+                            continue;
+                        }
+
+                        int folderGroupId = folder.getGroupId();
+                        String folderName = folder.getTitle();
+                        folder.delete();
+                        numFolders++;
+
+                        log(Action.deleting_folder, folderGroupId, itemId, folderName);
+
+                        if (clickedGroupItem != null && clickedGroupItem instanceof Folder && clickedGroupItem.getId() == itemId)
+                            clickedGroupItem = null;
+                    }
+                    else
+                        log.warn("Target folder does not exists on actionDeleteGroupItems");
+                }
+                else if (itemType != null && itemType.equals("resource") && itemId > 0)
+                {
+                    Resource resource = getLearnweb().getResourceManager().getResource(itemId);
+                    if (resource != null)
+                    {
+                        if (!canDeleteResourceFromGroup(resource)) {
+                            log.warn("The use don't have permissions to delete resource in target group.");
+                            continue;
+                        }
+
+                        int resourceGroupId = resource.getGroupId();
+                        String resourceTitle = resource.getTitle();
+                        resource.delete();
+                        numResources++;
+                        log(Action.deleting_resource, resourceGroupId, itemId, resourceTitle);
+
+                        if (clickedGroupItem != null && clickedGroupItem instanceof Resource && clickedGroupItem.getId() == itemId)
+                            clickedGroupItem = null;
+                    }
+                    else
+                        log.warn("Target resource does not exists on actionDeleteGroupItems");
+                }
+                else
+                    throw new NullPointerException("Unsupported itemType");
+            }
+
+            addGrowl(FacesMessage.SEVERITY_INFO, "resourcesDeletedSuccessfully", numFolders + numResources);
+            if (numResources > 0)
+                this.updateResourcesFromSolr();
+        }
+        catch (NullPointerException e)
+        {
+            log.warn("Can not parse itemType on actionDeleteGroupItems.", e);
+        }
+        catch (JSONException | NumberFormatException | SQLException e)
+        {
+            log.warn("Can not parse data on actionDeleteGroupItems.", e);
+        }
+    }
+
+    private void addTagToGroupItems(JSONArray objects, String tag)
+    {
+        try
+        {
+            int numResources = 0;
+            if (!canEditResourcesInTheGroup()) {
+                log.warn("The use don't have permissions to edit resources in the group.");
+                return;
+            }
+
+            for (int i = 0, len = objects.length(); i < len; ++i)
+            {
+                JSONObject item = objects.getJSONObject(i);
+
+                String itemType = item.getString("itemType");
+                String itemId = item.getString("itemId");
+
+                if (itemType != null && itemType.equals("resource"))
+                {
+                    Resource resource = getLearnweb().getResourceManager().getResource(Integer.parseInt(itemId));
+                    if (resource != null)
+                    {
+                        resource.addTag(tag, getUser());
+                        numResources++;
+                        log(Action.tagging_resource, resource.getGroupId(), resource.getId(), tag);
+                    }
+                    else
+                        log.warn("Target resource does not exists on actionAddTagToGroupItems");
+                }
+                else
+                    throw new NullPointerException("Unsupported itemType");
+            }
+
+            addGrowl(FacesMessage.SEVERITY_INFO, "tagAddedToResources", numResources);
+        }
+        catch (NullPointerException e)
+        {
+            log.warn("Can not parse itemType on actionDeleteGroupItems.", e);
+        }
+        catch (JSONException | NumberFormatException | SQLException e)
+        {
+            log.warn("Can not parse data on actionDeleteGroupItems.", e);
+        }
     }
 }
