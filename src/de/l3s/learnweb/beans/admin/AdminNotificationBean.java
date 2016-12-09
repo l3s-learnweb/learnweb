@@ -1,6 +1,7 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.TreeSet;
 
@@ -8,15 +9,20 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
+import javax.mail.internet.InternetAddress;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
+import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 
 import de.l3s.learnweb.Message;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.UserManager;
 import de.l3s.learnwebBeans.ApplicationBean;
+import de.l3s.util.Mail;
+import de.l3s.util.StringHelper;
 
 @ManagedBean
 @RequestScoped
@@ -27,10 +33,22 @@ public class AdminNotificationBean extends ApplicationBean
     private String text;
     @NotEmpty
     private String title;
-    private boolean sendEmail = false; // send the message also per mail
-
+    private boolean sendEmail = false; // send the message also per mail    
+    private boolean moderatorCanSendMail = false;
     //Alana
     private String[] listStudents;
+    private User user;
+    private EmailValidator validator = new EmailValidator();
+
+    public AdminNotificationBean()
+    {
+	user = getUser();
+	if(user == null || !user.isModerator())
+	    return;
+
+	if(StringUtils.isNotBlank(user.getEmail()))
+	    moderatorCanSendMail = validator.isValid(user.getEmail(), null);
+    }
 
     public void send() throws SQLException
     {
@@ -60,19 +78,70 @@ public class AdminNotificationBean extends ApplicationBean
 	UserManager um = getLearnweb().getUserManager();
 	int counter = 0;
 
+	ArrayList<String> reciepients = new ArrayList<>(selectedUsers.size());
+	ArrayList<String> usersWithoutMail = new ArrayList<>();
+
 	for(int userId : selectedUsers)
 	{
 	    User user = um.getUser(userId);
 	    message.setToUser(user);
-	    // message.save();
+	    message.save();
 
 	    if(sendEmail)
 	    {
-		log.debug("mail " + user.getEmail());
+		log.debug("try send mail to: " + user.getEmail());
+
+		if(StringUtils.isEmpty(user.getEmail()) || !validator.isValid(user.getEmail(), null))
+		    usersWithoutMail.add(user.getUsername());
+		else
+		    reciepients.add(user.getEmail());
 	    }
 	    counter++;
 	}
-	addMessage(FacesMessage.SEVERITY_INFO, counter + " Notifications send");
+
+	addMessage(FacesMessage.SEVERITY_INFO, counter + " internal Learnweb notifications sent");
+
+	if(sendEmail && moderatorCanSendMail)
+	{
+	    Mail mail = null;
+	    try
+	    {
+		// copy addresses to array
+		int i = 0;
+		InternetAddress[] reciepientsArr = new InternetAddress[reciepients.size()];
+
+		for(String address : reciepients)
+		{
+		    reciepientsArr[i++] = new InternetAddress(address);
+		    log.debug("send mail to: " + address);
+		}
+
+		mail = new Mail();
+		mail.setRecipients(javax.mail.Message.RecipientType.BCC, reciepientsArr);
+		mail.setReplyTo(new InternetAddress(user.getEmail()));
+		mail.setRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(user.getEmail()));
+		mail.setHTML(text + "<br/>\n<br/>\n___________________________<br/>\n" + getLocaleMessage("mail_notification_footer", user.getUsername()));
+		mail.setSubject("Learnweb: " + title);
+		mail.sendMail();
+
+		addMessage(FacesMessage.SEVERITY_INFO, reciepientsArr.length + " emails send");
+
+		if(usersWithoutMail.size() > 0)
+		    addMessage(FacesMessage.SEVERITY_WARN, "Some users haven't defined a valid mail address: <b>" + StringHelper.implode(usersWithoutMail, ", ") + "</b>");
+	    }
+	    catch(Exception e)
+	    {
+		log.error("Could not send notification mail: " + mail, e);
+		addMessage(FacesMessage.SEVERITY_ERROR, "Email could not be sent");
+	    }
+
+	}
+
+    }
+
+    public boolean isModeratorCanSendMail()
+    {
+	return moderatorCanSendMail;
     }
 
     //Alana

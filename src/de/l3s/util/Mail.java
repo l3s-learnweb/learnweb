@@ -60,6 +60,12 @@ public class Mail
 	}
     }
 
+    public void setReplyTo(InternetAddress internetAddress) throws MessagingException
+    {
+	InternetAddress[] addresses = { internetAddress };
+	message.setReplyTo(addresses);
+    }
+
     public void setFrom(InternetAddress internetAddress) throws MessagingException
     {
 	message.setFrom(internetAddress);
@@ -83,5 +89,10 @@ public class Mail
     public void setText(String text) throws MessagingException
     {
 	message.setText(text);
+    }
+
+    public void setHTML(String text) throws MessagingException
+    {
+	message.setText(text, "utf-8", "html");
     }
 }

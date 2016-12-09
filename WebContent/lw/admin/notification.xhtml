@@ -44,14 +44,18 @@
 					
 				<ui:include src="/lw/templates/user_select_form.xhtml" />	
 				
-				<h:panelGrid columns="2" style="margin-top:10px">	
+				<h:panelGrid columns="2" style="margin-top:10px" rendered="#{adminNotificationBean.moderatorCanSendMail}">	
 					<p:selectBooleanCheckbox value="#{adminNotificationBean.sendEmail}" id="send_notification_also_per_mail"  />					
 					<p:outputLabel for="send_notification_also_per_mail">#{msg.send_notification_also_per_mail}</p:outputLabel>
 				</h:panelGrid>
 				
+				<ui:fragment rendered="#{not adminNotificationBean.moderatorCanSendMail}">
+					<h4>You have to <a href="myhome/profile.jsf" class="underline">set up</a> a valid email address to send mails to your users.</h4>
+				</ui:fragment>
+				
 				<h:panelGrid columns="2" style="margin-top:10px">
 					<p:commandButton value="#{msg.send}" action="#{adminNotificationBean.send}" ajax="false"/>
-					<p:commandButton type="button" value="#{msg.clear}" onclick="editor.clear()" image="ui-icon ui-icon-close" />
+					<p:commandButton type="button" value="#{msg.clear}" onclick="editor.clear()" icon="ui-icon ui-icon-close" />
 				</h:panelGrid>
 				
 			</h:form>
