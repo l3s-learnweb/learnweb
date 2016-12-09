@@ -125,6 +125,7 @@ function resourceDND() {
 
     $dataGrid.selectable({
         filter: 'div.group-resources-item',
+        cancel: 'div.group-resources-item',
         start: function (e) {
             if (!(e.ctrlKey||e.metaKey)) {
                 selected.clear();
