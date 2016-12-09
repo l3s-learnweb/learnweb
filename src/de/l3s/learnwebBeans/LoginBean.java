@@ -134,7 +134,7 @@ public class LoginBean extends ApplicationBean implements Serializable
 	UserBean userBean = UtilBean.getUserBean();
 	int activeCourse = userBean.getUser().getActiveCourseId();
 
-	if(userBean.getModeratorUser() != null) // a moderator logs out from a user account
+	if(userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(userBean.getUser())) // a moderator logs out from a user account
 	{
 	    userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator 
 	    return "/lw/admin/users.xhtml?faces-redirect=true";
