@@ -1,14 +1,25 @@
 package de.l3s.learnwebBeans;
 
-import de.l3s.learnweb.*;
-import de.l3s.learnweb.Link.LinkType;
-import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.ResourceManager.Order;
-import de.l3s.learnweb.SearchFilters.Filter;
-import de.l3s.learnweb.SearchFilters.MODE;
-import de.l3s.learnweb.solrClient.SolrSearch;
-import de.l3s.learnweb.solrClient.SolrSearch.SearchPaginator;
-import de.l3s.util.StringHelper;
+import java.io.Serializable;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import javax.faces.application.FacesMessage;
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
+import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.faces.event.ComponentSystemEvent;
+import javax.faces.event.ValueChangeEvent;
+import javax.faces.model.SelectItem;
+
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
@@ -20,24 +31,30 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ManagedProperty;
-import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.faces.event.ComponentSystemEvent;
-import javax.faces.event.ValueChangeEvent;
-import javax.faces.model.SelectItem;
-import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import de.l3s.learnweb.AbstractPaginator;
+import de.l3s.learnweb.Folder;
+import de.l3s.learnweb.GoogleDriveManager;
+import de.l3s.learnweb.Group;
+import de.l3s.learnweb.GroupItem;
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.Link;
+import de.l3s.learnweb.Link.LinkType;
+import de.l3s.learnweb.LogEntry;
+import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.NewsEntry;
+import de.l3s.learnweb.Presentation;
+import de.l3s.learnweb.PresentationManager;
+import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.ResourceDecorator;
+import de.l3s.learnweb.ResourceManager;
+import de.l3s.learnweb.ResourceManager.Order;
+import de.l3s.learnweb.SearchFilters;
+import de.l3s.learnweb.SearchFilters.Filter;
+import de.l3s.learnweb.SearchFilters.MODE;
+import de.l3s.learnweb.User;
+import de.l3s.learnweb.solrClient.SolrSearch;
+import de.l3s.learnweb.solrClient.SolrSearch.SearchPaginator;
+import de.l3s.util.StringHelper;
 
 @ManagedBean(name = "groupDetailBean")
 @ViewScoped
@@ -109,19 +126,25 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public enum RPAction
     {
-        none, newResource, viewResource, editResource, newFolder, editFolder, viewFolder
+        none,
+        newResource,
+        viewResource,
+        editResource,
+        newFolder,
+        editFolder,
+        viewFolder
     }
 
     public GroupDetailBean() throws SQLException
     {
         loadGroup();
 
-        if (null == group)
+        if(null == group)
         {
             return;
         }
 
-        if (getParameterInt("resource_id") != null)
+        if(getParameterInt("resource_id") != null)
             setRightPanelAction("viewResource");
 
         updateLinksList();
@@ -138,7 +161,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void preRenderView(ComponentSystemEvent e)
     {
         User user = getUser();
-        if (null != user && null != group)
+        if(null != user && null != group)
         {
             try
             {
@@ -146,7 +169,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
                 group.setLastVisit(user);
             }
-            catch (Exception e1)
+            catch(Exception e1)
             {
                 addFatalMessage(e1);
             }
@@ -162,18 +185,18 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
         /*
         HashSet<Integer> deletedResources = new HashSet<Integer>();
-		Action[] filter = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
-		Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource,
-		Action.group_removing_resource };
-		*/
+        	Action[] filter = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
+        	Action.group_changing_restriction, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource,
+        	Action.group_removing_resource };
+        	*/
         List<LogEntry> feed = logMessages;
 
-        if (feed != null)
+        if(feed != null)
         {
             ResourceManager resourceManager = getLearnweb().getResourceManager();
 
             newslist = new ArrayList<NewsEntry>();
-            for (LogEntry l : feed)
+            for(LogEntry l : feed)
             {
                 newslist.add(new NewsEntry(l));
 
@@ -185,11 +208,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public ArrayList<NewsEntry> getNewslist()
     {
-        if (null == newslist || reloadLogs)
+        if(null == newslist || reloadLogs)
         {
             loadLogs(25);
 
-            if (newslist.size() < 25)
+            if(newslist.size() < 25)
                 allLogs = true;
         }
 
@@ -214,28 +237,28 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     private void loadGroup() throws SQLException
     {
-        if (null == group)
+        if(null == group)
         {
             Integer id = getParameterInt("group_id");
 
-            if (null == id)
+            if(null == id)
                 return;
 
             groupId = id.intValue();
         }
 
         group = getLearnweb().getGroupManager().getGroupById(groupId);
-        if (group != null)
+        if(group != null)
         {
             editedGroupDescription = group.getDescription();
             editedGroupLeaderId = group.getLeader().getId();
             editedGroupTitle = group.getTitle();
 
-            if (null == selectedFolder)
+            if(null == selectedFolder)
             {
                 Integer id = getParameterInt("folder_id");
 
-                if (null == id)
+                if(null == id)
                 {
                     selectedFolder = new Folder(0, groupId, group.getTitle());
                 }
@@ -252,14 +275,14 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
         try
         {
-            if (limit != null)
+            if(limit != null)
                 logMessages = getLearnweb().getLogsByGroup(groupId, null, limit);
             else
                 logMessages = getLearnweb().getLogsByGroup(groupId, null);
 
             convert();
         }
-        catch (SQLException e)
+        catch(SQLException e)
         {
             addFatalMessage(e);
         }
@@ -273,11 +296,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public List<User> getMembers() throws SQLException
     {
-        if (null == members)
+        if(null == members)
         {
             loadGroup();
 
-            if (null == group)
+            if(null == group)
             {
                 addMessage(FacesMessage.SEVERITY_ERROR, "Missing or wrong parameter: group_id");
                 return null;
@@ -309,7 +332,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void setSelectedFolderId(int folderId) throws SQLException
     {
-        if (folderId > 0)
+        if(folderId > 0)
         {
             selectedFolder = getLearnweb().getGroupManager().getFolder(folderId);
         }
@@ -317,7 +340,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public List<LogEntry> getLogMessages() throws SQLException
     {
-        if (null == logMessages)
+        if(null == logMessages)
         {
             logMessages = getLearnweb().getLogsByGroup(groupId, null);
             convert();
@@ -363,7 +386,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public List<Link> getDocumentLinks() throws SQLException
     {
-        if (null == documentLinks)
+        if(null == documentLinks)
             updateLinksList();
 
         return documentLinks;
@@ -401,7 +424,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             presentations = getLearnweb().getPresentationManager().getPresentationsByGroupId(groupId);
             clickedPresentation = new Presentation();
         }
-        catch (SQLException e)
+        catch(SQLException e)
         {
             e.printStackTrace();
         }
@@ -417,7 +440,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             addMessage(FacesMessage.SEVERITY_INFO, "link_deleted");
             updateLinksList();
         }
-        catch (SQLException e)
+        catch(SQLException e)
         {
             e.printStackTrace();
             addMessage(FacesMessage.SEVERITY_INFO, "sorry an error occurred");
@@ -428,10 +451,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
         User user = getUser();
 
-        if (null == user)
+        if(null == user)
             return false;
 
-        if (null == group)
+        if(null == group)
             return false;
 
         return group.isMember(user);
@@ -441,7 +464,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
         try
         {
-            if (!group.isMember(getUser()))
+            if(!group.isMember(getUser()))
             {
                 addMessage(FacesMessage.SEVERITY_ERROR, "You are not a member of this group");
                 return;
@@ -449,7 +472,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
             LinkType type;
 
-            if (!newLinkType.equals("url")) // newLinkType == google document
+            if(!newLinkType.equals("url")) // newLinkType == google document
             {
                 newLinkUrl = new GoogleDriveManager().createEmptyDocument(group.getTitle() + " - " + newLinkTitle, newLinkType).getAlternateLink();
                 type = LinkType.DOCUMENT;
@@ -469,7 +492,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             newLinkTitle = null;
             updateLinksList();
         }
-        catch (Throwable t)
+        catch(Throwable t)
         {
             addFatalMessage(t);
         }
@@ -479,7 +502,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
         try
         {
-            if (!group.isMember(getUser()))
+            if(!group.isMember(getUser()))
             {
                 addMessage(FacesMessage.SEVERITY_ERROR, "You are not a member of this group");
             }
@@ -494,7 +517,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
             }
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             addFatalMessage(e);
         }
@@ -523,7 +546,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             temp = pm.getPresentationsById(Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id")));
             setClickedPresentation(temp);
         }
-        catch (NumberFormatException | SQLException e)
+        catch(NumberFormatException | SQLException e)
         {
             addFatalMessage(e);
         }
@@ -531,7 +554,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public boolean hasViewPermission(User user) throws SQLException
     {
-        if (null == group)
+        if(null == group)
             return false;
 
         return group.getMembers().contains(user);
@@ -592,19 +615,19 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
         String type = event.getTreeNode().getType();
 
-        if (type.equals("group"))
+        if(type.equals("group"))
         {
             Group group = (Group) event.getTreeNode().getData();
-            if (group != null)
+            if(group != null)
             {
                 selectedResourceTargetGroupId = group.getId();
                 selectedResourceTargetFolderId = 0;
             }
         }
-        else if (type.equals("folder"))
+        else if(type.equals("folder"))
         {
             Folder folder = (Folder) event.getTreeNode().getData();
-            if (folder != null)
+            if(folder != null)
             {
                 selectedResourceTargetGroupId = folder.getGroupId();
                 selectedResourceTargetFolderId = folder.getId();
@@ -614,7 +637,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public List<Link> getLinks() throws SQLException
     {
-        if (null == links)
+        if(null == links)
             updateLinksList();
 
         return links;
@@ -633,11 +656,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         }
 
         GroupItem resource;
-        if (obj instanceof ResourceDecorator)
+        if(obj instanceof ResourceDecorator)
             resource = ((ResourceDecorator) obj).getResource();
-        else if (obj instanceof Resource)
+        else if(obj instanceof Resource)
             resource = (Resource) obj;
-        else if (obj instanceof Folder)
+        else if(obj instanceof Folder)
             resource = (Folder) obj;
         else
             throw new IllegalArgumentException("Method called with an unexpected class type: " + obj.getClass());
@@ -654,16 +677,16 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
         User user = getUser();
 
-        if(user == null)
+        if(user == null) // not logged in
             return false;
 
-        if(user.isAdmin() || getGroup().isLeader(user) || targetGroup.getCourse().isModerator(user))
+        if(user.isAdmin() || targetGroup.isLeader(user) || targetGroup.getCourse().isModerator(user))
             return true;
 
         if(targetGroup.isReadOnly())
             return false;
 
-        if(getGroup().isMember(user))
+        if(targetGroup.isMember(user))
             return true;
 
         return false;
@@ -682,6 +705,16 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public boolean canEditResourcesInTheGroup() throws SQLException
     {
         return canEditResourcesInGroup(getGroup());
+    }
+
+    public boolean canCopyResourcesFromGroup() throws SQLException
+    {
+        return canSeeResourcesInGroup();
+    }
+
+    public boolean canSeeResourcesInGroup() throws SQLException
+    {
+        return true;
     }
 
     public List<Presentation> getPresentations() throws SQLException
@@ -711,7 +744,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         {
             this.rightPanelAction = RPAction.valueOf(value);
         }
-        catch (Exception e)
+        catch(Exception e)
         {
             this.rightPanelAction = null;
         }
@@ -759,7 +792,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public AbstractPaginator getPaginator()
     {
-        if (null == paginator)
+        if(null == paginator)
             updateResourcesFromSolr();
 
         return paginator;
@@ -800,7 +833,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         {
             getLearnweb().getUserManager().saveGmailId(gmailId, getUser().getId());
         }
-        catch (SQLException e)
+        catch(SQLException e)
         {
             log.error("Error while inserting gmail id" + e);
         }
@@ -809,7 +842,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public List<Filter> getAvailableFilters()
     {
         getPaginator();
-        if (searchFilters == null) // should only happen for private resources
+        if(searchFilters == null) // should only happen for private resources
             return null;
 
         return searchFilters.getAvailableFilters();
@@ -822,7 +855,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void updateResourcesFromSolr()
     {
-        if (this.searchFilters == null)
+        if(this.searchFilters == null)
         {
             return;
         }
@@ -834,7 +867,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             //TODO: remove it
             RequestContext.getCurrentInstance().update(":filters");
         }
-        catch (SQLException | SolrServerException e)
+        catch(SQLException | SolrServerException e)
         {
             addFatalMessage(e);
         }
@@ -851,23 +884,23 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         solrSearch.setFacetQueries(searchFilters.getFacetQueries());
         solrSearch.setSort("timestamp DESC");
 
-        if (searchFilters.getServiceFilter() != null)
+        if(searchFilters.getServiceFilter() != null)
             solrSearch.setFilterLocation(searchFilters.getServiceFilter());
-        if (searchFilters.getTypeFilter() != null)
+        if(searchFilters.getTypeFilter() != null)
             solrSearch.setFilterType(searchFilters.getTypeFilter());
-        if (searchFilters.getDateFromFilterAsString() != null)
+        if(searchFilters.getDateFromFilterAsString() != null)
             solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getDateFromFilter()));
-        if (searchFilters.getDateToFilterAsString() != null)
+        if(searchFilters.getDateToFilterAsString() != null)
             solrSearch.setFilterDateTo(SOLR_DATE_FORMAT.format(searchFilters.getDateToFilter()));
-        if (searchFilters.getCollectorFilter() != null)
+        if(searchFilters.getCollectorFilter() != null)
             solrSearch.setFilterCollector(searchFilters.getCollectorFilter());
-        if (searchFilters.getAuthorFilter() != null)
+        if(searchFilters.getAuthorFilter() != null)
             solrSearch.setFilterAuthor(searchFilters.getAuthorFilter());
-        if (searchFilters.getCoverageFilter() != null)
+        if(searchFilters.getCoverageFilter() != null)
             solrSearch.setFilterCoverage(searchFilters.getCoverageFilter());
-        if (searchFilters.getPublisherFilter() != null)
+        if(searchFilters.getPublisherFilter() != null)
             solrSearch.setFilterPublisher(searchFilters.getPublisherFilter());
-        if (searchFilters.getTagsFilter() != null)
+        if(searchFilters.getTagsFilter() != null)
             solrSearch.setFilterTags(searchFilters.getTagsFilter());
 
         SearchPaginator sp = new SolrSearch.SearchPaginator(solrSearch);
@@ -883,7 +916,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public String getCurrentPath() throws SQLException
     {
-        if (this.group != null)
+        if(this.group != null)
         {
             return this.selectedFolder == null ? this.group.getTitle() : selectedFolder.getPrettyPath();
         }
@@ -901,7 +934,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
      */
     public void addFolder() throws SQLException
     {
-        if (canEditResourcesInTheGroup() && newFolderName != null && !newFolderName.isEmpty())
+        if(canEditResourcesInTheGroup() && newFolderName != null && !newFolderName.isEmpty())
         {
             Folder newFolder = new Folder(groupId, newFolderName);
             newFolder.setParentFolderId(getSelectedFolderId());
@@ -921,7 +954,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
      */
     public void editFolder() throws SQLException
     {
-        if (canEditResourcesInTheGroup() && clickedGroupItem != null && clickedGroupItem.getId() > 0)
+        if(canEditResourcesInTheGroup() && clickedGroupItem != null && clickedGroupItem.getId() > 0)
         {
             log(Action.edit_folder, groupId, clickedGroupItem.getId(), clickedGroupItem.getTitle());
 
@@ -930,7 +963,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 clickedGroupItem.save();
                 addMessage(FacesMessage.SEVERITY_INFO, "folderUpdated", clickedGroupItem.getTitle());
             }
-            catch (SQLException e)
+            catch(SQLException e)
             {
                 addFatalMessage(e);
             }
@@ -945,9 +978,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void setClickedGroupItem(GroupItem clickedGroupItem)
     {
         this.clickedGroupItem = clickedGroupItem;
-        if (clickedGroupItem instanceof Resource) {
+        if(clickedGroupItem instanceof Resource)
+        {
             this.rightPanelAction = RPAction.viewResource;
-        } else {
+        }
+        else
+        {
             this.rightPanelAction = RPAction.viewFolder;
         }
     }
@@ -955,7 +991,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     @Deprecated
     public Resource getClickedResource()
     {
-        if (clickedGroupItem instanceof Resource) {
+        if(clickedGroupItem instanceof Resource)
+        {
             return (Resource) getClickedGroupItem();
         }
 
@@ -971,7 +1008,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     @Deprecated
     public Folder getClickedFolder()
     {
-        if (clickedGroupItem instanceof Folder) {
+        if(clickedGroupItem instanceof Folder)
+        {
             return (Folder) getClickedGroupItem();
         }
 
@@ -1033,13 +1071,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public List<SelectItem> getMembersSelectItemList() throws SQLException
     {
-        if (null == group)
+        if(null == group)
             return new ArrayList<SelectItem>();
 
         List<SelectItem> yourList;
         yourList = new ArrayList<SelectItem>();
 
-        for (User member : group.getMembers())
+        for(User member : group.getMembers())
             yourList.add(new SelectItem(member.getId(), member.getUsername()));
 
         return yourList;
@@ -1158,7 +1196,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         {
             addFolderToBreadcrumbs(folder);
         }
-        catch (SQLException e)
+        catch(SQLException e)
         {
             log.warn("Can not get parent folder.");
         }
@@ -1166,7 +1204,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     private void addFolderToBreadcrumbs(Folder folder) throws SQLException
     {
-        if (folder != null)
+        if(folder != null)
         {
             breadcrumbs.add(0, folder);
             addFolderToBreadcrumbs(folder.getParentFolder());
@@ -1175,7 +1213,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void onGroupEdit()
     {
-        if (null == group)
+        if(null == group)
         {
             addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
             return;
@@ -1185,17 +1223,17 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         {
             getUser().setActiveGroup(group);
 
-            if (!editedGroupDescription.equals(group.getDescription()))
+            if(!editedGroupDescription.equals(group.getDescription()))
             {
                 group.setDescription(editedGroupDescription);
                 log(Action.group_changing_description, group.getId(), group.getId());
             }
-            if (!editedGroupTitle.equals(group.getTitle()))
+            if(!editedGroupTitle.equals(group.getTitle()))
             {
                 log(Action.group_changing_title, group.getId(), group.getId(), group.getTitle());
                 group.setTitle(editedGroupTitle);
             }
-            if (editedGroupLeaderId != group.getLeaderUserId())
+            if(editedGroupLeaderId != group.getLeaderUserId())
             {
                 group.setLeaderUserId(editedGroupLeaderId);
                 log(Action.group_changing_leader, group.getId(), group.getId());
@@ -1205,7 +1243,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             getUser().clearCaches();
 
         }
-        catch (SQLException e)
+        catch(SQLException e)
         {
             addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
             e.printStackTrace();
@@ -1217,7 +1255,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void copyGroup()
     {
 
-        if (null == group)
+        if(null == group)
         {
             addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
             return;
@@ -1227,7 +1265,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         {
             group.copyResourcesToGroupById(selectedResourceTargetGroupId, getUser());
         }
-        catch (SQLException e)
+        catch(SQLException e)
         {
             addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
             e.printStackTrace();
@@ -1269,20 +1307,20 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         try
         {
             String folderId = params.get("itemId");
-            if (folderId == null || folderId.equals("0"))
+            if(folderId == null || folderId.equals("0"))
             {
                 this.setSelectedFolder(null);
             }
             else
             {
                 Folder folder = getLearnweb().getGroupManager().getFolder(Integer.parseInt(folderId));
-                if (folder != null)
+                if(folder != null)
                     this.setSelectedFolder(folder);
                 else
                     log.warn("Target folder does not exists on actionOpenFolder");
             }
         }
-        catch (NullPointerException | NumberFormatException | SQLException e)
+        catch(NullPointerException | NumberFormatException | SQLException e)
         {
             log.warn("Can not parse data on actionOpenFolder.", e);
         }
@@ -1297,20 +1335,20 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             String itemType = params.get("itemType");
             String itemId = params.get("itemId");
 
-            if (itemType != null && itemType.equals("folder"))
+            if(itemType != null && itemType.equals("folder"))
             {
                 Folder folder = getLearnweb().getGroupManager().getFolder(Integer.parseInt(itemId));
-                if (folder != null)
+                if(folder != null)
                 {
                     this.setClickedGroupItem(folder);
                 }
                 else
                     log.warn("Target folder does not exists on actionSelectGroupItem");
             }
-            else if (itemType != null && itemType.equals("resource"))
+            else if(itemType != null && itemType.equals("resource"))
             {
                 Resource resource = getLearnweb().getResourceManager().getResource(Integer.parseInt(itemId));
-                if (resource != null)
+                if(resource != null)
                 {
                     this.setClickedGroupItem(resource);
                     this.getResourceDetailBean().setClickedResource(resource);
@@ -1321,11 +1359,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             else
                 throw new NullPointerException("Unsupported element type");
         }
-        catch (NullPointerException e)
+        catch(NullPointerException e)
         {
             log.warn("Can not parse itemType on selectGroupItem.", e);
         }
-        catch (NumberFormatException | SQLException e)
+        catch(NumberFormatException | SQLException e)
         {
             log.warn("Can not parse itemId on selectGroupItem.", e);
         }
@@ -1339,10 +1377,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             String itemType = params.get("itemType");
             String itemId = params.get("itemId");
 
-            if (itemType != null && itemType.equals("folder"))
+            if(itemType != null && itemType.equals("folder"))
             {
                 Folder folder = getLearnweb().getGroupManager().getFolder(Integer.parseInt(itemId));
-                if (folder != null)
+                if(folder != null)
                 {
                     this.setClickedGroupItem(folder);
                     this.setRightPanelAction(RPAction.editFolder);
@@ -1350,10 +1388,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 else
                     log.warn("Target folder does not exists on actionEditGroupItem");
             }
-            else if (itemType != null && itemType.equals("resource"))
+            else if(itemType != null && itemType.equals("resource"))
             {
                 Resource resource = getLearnweb().getResourceManager().getResource(Integer.parseInt(itemId));
-                if (resource != null)
+                if(resource != null)
                 {
                     this.setClickedGroupItem(resource);
                     this.getResourceDetailBean().setClickedResource(resource);
@@ -1365,11 +1403,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             else
                 throw new NullPointerException("Unsupported itemType");
         }
-        catch (NullPointerException e)
+        catch(NullPointerException e)
         {
             log.warn("Can not parse itemType on selectGroupItem.", e);
         }
-        catch (NumberFormatException | SQLException e)
+        catch(NumberFormatException | SQLException e)
         {
             log.warn("Can not parse itemId on selectGroupItem.", e);
         }
@@ -1380,24 +1418,24 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String type = params.get("type");
 
-        switch (type)
+        switch(type)
         {
-            case "folder":
-                this.setRightPanelAction(RPAction.newFolder);
-                break;
-            case "file":
-                this.setRightPanelAction(RPAction.newResource);
-                this.getAddResourceBean().clearForm();
-                this.getAddResourceBean().getResource().setStorageType(1);
-                break;
-            case "url":
-                this.setRightPanelAction(RPAction.newResource);
-                this.getAddResourceBean().clearForm();
-                this.getAddResourceBean().getResource().setStorageType(2);
-                break;
-            default:
-                log.warn("Unsupported item type: " + type);
-                break;
+        case "folder":
+            this.setRightPanelAction(RPAction.newFolder);
+            break;
+        case "file":
+            this.setRightPanelAction(RPAction.newResource);
+            this.getAddResourceBean().clearForm();
+            this.getAddResourceBean().getResource().setStorageType(1);
+            break;
+        case "url":
+            this.setRightPanelAction(RPAction.newResource);
+            this.getAddResourceBean().clearForm();
+            this.getAddResourceBean().getResource().setStorageType(2);
+            break;
+        default:
+            log.warn("Unsupported item type: " + type);
+            break;
         }
 
         this.getAddResourceBean().setResourceTargetGroupId(this.groupId);
@@ -1413,28 +1451,28 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         {
             JSONArray items = new JSONArray(params.get("items"));
 
-            switch (action)
+            switch(action)
             {
-                case "copy":
-                    this.actionCopyGroupItems(items);
-                    break;
-                case "move":
-                    JSONObject dest = params.containsKey("destination") ? new JSONObject(params.get("destination")) : null;
-                    this.moveGroupItems(items, dest);
-                    break;
-                case "delete":
-                    this.deleteGroupItems(items);
-                    break;
-                case "add-tag":
-                    String tag = params.get("tag");
-                    this.addTagToGroupItems(items, tag);
-                    break;
-                default:
-                    log.warn("Unsupported action: " + action);
-                    break;
+            case "copy":
+                this.actionCopyGroupItems(items);
+                break;
+            case "move":
+                JSONObject dest = params.containsKey("destination") ? new JSONObject(params.get("destination")) : null;
+                this.moveGroupItems(items, dest);
+                break;
+            case "delete":
+                this.deleteGroupItems(items);
+                break;
+            case "add-tag":
+                String tag = params.get("tag");
+                this.addTagToGroupItems(items, tag);
+                break;
+            default:
+                log.warn("Unsupported action: " + action);
+                break;
             }
         }
-        catch (JSONException e)
+        catch(JSONException e)
         {
             log.warn("Target resource does not exists on actionCopyGroupItems");
         }
@@ -1444,48 +1482,50 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
         try
         {
-            int numFolders = 0, numResources = 0,
-                targetGroupId = selectedResourceTargetGroupId,
-                targetFolderId = selectedResourceTargetFolderId;
+            int numFolders = 0, numResources = 0, targetGroupId = selectedResourceTargetGroupId, targetFolderId = selectedResourceTargetFolderId;
 
             Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
-            if (targetGroupId != 0 && !canEditResourcesInGroup(targetGroup)) {
+            if(targetGroupId != 0 && !canEditResourcesInGroup(targetGroup))
+            {
                 log.warn("The use don't have permissions to edit resources in target group.");
                 return;
             }
 
-            if (canEditResourcesInTheGroup())
-            for (int i = 0, len = objects.length(); i < len; ++i)
+            if(canCopyResourcesFromGroup())
             {
-                JSONObject item = objects.getJSONObject(i);
-                String itemType = item.getString("itemType");
-                int itemId = StringHelper.parseInt(item.getString("itemId"));
-                if (itemType != null && itemType.equals("resource") && itemId > 0)
+                for(int i = 0, len = objects.length(); i < len; ++i)
                 {
-                    Resource resource = getLearnweb().getResourceManager().getResource(itemId);
-                    if (resource != null)
+                    JSONObject item = objects.getJSONObject(i);
+                    String itemType = item.getString("itemType");
+                    int itemId = StringHelper.parseInt(item.getString("itemId"));
+                    if(itemType != null && itemType.equals("resource") && itemId > 0)
                     {
-                        Resource newResource = resource.clone();
-                        newResource.setGroupId(targetGroupId);
-                        newResource.setFolderId(targetFolderId);
-                        resource = getUser().addResource(newResource);
-                        numResources++;
-                        log(Action.adding_resource, targetGroupId, resource.getId(), "");
+                        Resource resource = getLearnweb().getResourceManager().getResource(itemId);
+                        if(resource != null)
+                        {
+                            Resource newResource = resource.clone();
+                            newResource.setGroupId(targetGroupId);
+                            newResource.setFolderId(targetFolderId);
+                            resource = getUser().addResource(newResource);
+                            numResources++;
+                            log(Action.adding_resource, targetGroupId, resource.getId(), "");
+                        }
+                        else
+                            log.warn("Target resource does not exists on actionCopyGroupItems");
                     }
                     else
-                        log.warn("Target resource does not exists on actionCopyGroupItems");
+                        log.warn("Unsupported itemType");
                 }
-                else
-                    log.warn("Unsupported itemType");
+                addGrowl(FacesMessage.SEVERITY_INFO, "resourcesCopiedSuccessfully", numFolders + numResources);
             }
-
-            addGrowl(FacesMessage.SEVERITY_INFO, "resourcesCopiedSuccessfully", numFolders + numResources);
+            else
+                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to copy this resource");
         }
-        catch (NullPointerException e)
+        catch(NullPointerException e)
         {
             log.warn("Can not parse itemType on actionCopyGroupItems.", e);
         }
-        catch (JSONException | NumberFormatException | SQLException e)
+        catch(JSONException | NumberFormatException | SQLException e)
         {
             log.warn("Can not parse data on actionCopyGroupItems.", e);
         }
@@ -1495,33 +1535,33 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
         try
         {
-            int numFolders = 0, numResources = 0,
-                targetGroupId = selectedResourceTargetGroupId,
-                targetFolderId = selectedResourceTargetFolderId;
+            int numFolders = 0, numResources = 0, targetGroupId = selectedResourceTargetGroupId, targetFolderId = selectedResourceTargetFolderId;
 
-            if (dest != null)
+            if(dest != null)
             {
                 targetGroupId = StringHelper.parseInt(dest.getString("groupId"), groupId);
                 targetFolderId = StringHelper.parseInt(dest.getString("folderId"), 0);
             }
 
             Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
-            if (targetGroupId != 0 && !canEditResourcesInGroup(targetGroup)) {
+            if(targetGroupId != 0 && !canEditResourcesInGroup(targetGroup))
+            {
                 log.warn("The use don't have permissions to edit resources in target group.");
                 return;
             }
 
-            for (int i = 0, len = objects.length(); i < len; ++i)
+            for(int i = 0, len = objects.length(); i < len; ++i)
             {
                 JSONObject item = objects.getJSONObject(i);
                 String itemType = item.getString("itemType");
                 int itemId = StringHelper.parseInt(item.getString("itemId"));
-                if (itemType != null && itemType.equals("folder") && itemId > 0)
+                if(itemType != null && itemType.equals("folder") && itemId > 0)
                 {
                     Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
-                    if (folder != null)
+                    if(folder != null)
                     {
-                        if (!canDeleteResourceFromGroup(folder)) {
+                        if(!canDeleteResourceFromGroup(folder))
+                        {
                             log.warn("The use don't have permissions to delete folder in target group.");
                             continue;
                         }
@@ -1532,12 +1572,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                     else
                         log.warn("Target folder does not exists on actionMoveGroupItems");
                 }
-                else if (itemType != null && itemType.equals("resource") && itemId > 0)
+                else if(itemType != null && itemType.equals("resource") && itemId > 0)
                 {
                     Resource resource = getLearnweb().getResourceManager().getResource(itemId);
-                    if (resource != null)
+                    if(resource != null)
                     {
-                        if (!canDeleteResourceFromGroup(resource)) {
+                        if(!canDeleteResourceFromGroup(resource))
+                        {
                             log.warn("The use don't have permissions to delete resource in target group.");
                             continue;
                         }
@@ -1553,14 +1594,14 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             }
 
             addGrowl(FacesMessage.SEVERITY_INFO, "resourcesMovedSuccessfully", numFolders + numResources);
-            if (numResources > 0)
+            if(numResources > 0)
                 this.updateResourcesFromSolr();
         }
-        catch (NullPointerException e)
+        catch(NullPointerException e)
         {
             log.warn("Can not parse itemType on actionMoveGroupItems.", e);
         }
-        catch (JSONException | NumberFormatException | SQLException e)
+        catch(JSONException | NumberFormatException | SQLException e)
         {
             log.warn("Can not parse data on actionMoveGroupItems.", e);
         }
@@ -1572,19 +1613,20 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         {
             int numFolders = 0, numResources = 0;
 
-            for (int i = 0, len = objects.length(); i < len; ++i)
+            for(int i = 0, len = objects.length(); i < len; ++i)
             {
                 JSONObject item = objects.getJSONObject(i);
 
                 String itemType = item.getString("itemType");
                 int itemId = StringHelper.parseInt(item.getString("itemId"));
 
-                if (itemType != null && itemType.equals("folder") && itemId > 0)
+                if(itemType != null && itemType.equals("folder") && itemId > 0)
                 {
                     Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
-                    if (folder != null)
+                    if(folder != null)
                     {
-                        if (!canDeleteResourceFromGroup(folder)) {
+                        if(!canDeleteResourceFromGroup(folder))
+                        {
                             log.warn("The use don't have permissions to delete folder in target group.");
                             continue;
                         }
@@ -1596,18 +1638,19 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
                         log(Action.deleting_folder, folderGroupId, itemId, folderName);
 
-                        if (clickedGroupItem != null && clickedGroupItem instanceof Folder && clickedGroupItem.getId() == itemId)
+                        if(clickedGroupItem != null && clickedGroupItem instanceof Folder && clickedGroupItem.getId() == itemId)
                             clickedGroupItem = null;
                     }
                     else
                         log.warn("Target folder does not exists on actionDeleteGroupItems");
                 }
-                else if (itemType != null && itemType.equals("resource") && itemId > 0)
+                else if(itemType != null && itemType.equals("resource") && itemId > 0)
                 {
                     Resource resource = getLearnweb().getResourceManager().getResource(itemId);
-                    if (resource != null)
+                    if(resource != null)
                     {
-                        if (!canDeleteResourceFromGroup(resource)) {
+                        if(!canDeleteResourceFromGroup(resource))
+                        {
                             log.warn("The use don't have permissions to delete resource in target group.");
                             continue;
                         }
@@ -1618,7 +1661,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                         numResources++;
                         log(Action.deleting_resource, resourceGroupId, itemId, resourceTitle);
 
-                        if (clickedGroupItem != null && clickedGroupItem instanceof Resource && clickedGroupItem.getId() == itemId)
+                        if(clickedGroupItem != null && clickedGroupItem instanceof Resource && clickedGroupItem.getId() == itemId)
                             clickedGroupItem = null;
                     }
                     else
@@ -1629,14 +1672,14 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             }
 
             addGrowl(FacesMessage.SEVERITY_INFO, "resourcesDeletedSuccessfully", numFolders + numResources);
-            if (numResources > 0)
+            if(numResources > 0)
                 this.updateResourcesFromSolr();
         }
-        catch (NullPointerException e)
+        catch(NullPointerException e)
         {
             log.warn("Can not parse itemType on actionDeleteGroupItems.", e);
         }
-        catch (JSONException | NumberFormatException | SQLException e)
+        catch(JSONException | NumberFormatException | SQLException e)
         {
             log.warn("Can not parse data on actionDeleteGroupItems.", e);
         }
@@ -1647,22 +1690,23 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         try
         {
             int numResources = 0;
-            if (!canEditResourcesInTheGroup()) {
+            if(!canEditResourcesInTheGroup())
+            {
                 log.warn("The use don't have permissions to edit resources in the group.");
                 return;
             }
 
-            for (int i = 0, len = objects.length(); i < len; ++i)
+            for(int i = 0, len = objects.length(); i < len; ++i)
             {
                 JSONObject item = objects.getJSONObject(i);
 
                 String itemType = item.getString("itemType");
                 String itemId = item.getString("itemId");
 
-                if (itemType != null && itemType.equals("resource"))
+                if(itemType != null && itemType.equals("resource"))
                 {
                     Resource resource = getLearnweb().getResourceManager().getResource(Integer.parseInt(itemId));
-                    if (resource != null)
+                    if(resource != null)
                     {
                         resource.addTag(tag, getUser());
                         numResources++;
@@ -1677,11 +1721,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
             addGrowl(FacesMessage.SEVERITY_INFO, "tagAddedToResources", numResources);
         }
-        catch (NullPointerException e)
+        catch(NullPointerException e)
         {
             log.warn("Can not parse itemType on actionDeleteGroupItems.", e);
         }
-        catch (JSONException | NumberFormatException | SQLException e)
+        catch(JSONException | NumberFormatException | SQLException e)
         {
             log.warn("Can not parse data on actionDeleteGroupItems.", e);
         }
