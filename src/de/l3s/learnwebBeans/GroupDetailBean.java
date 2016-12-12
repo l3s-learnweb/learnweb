@@ -668,7 +668,15 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         return user.getId() == resource.getUserId();
     }
 
-    public boolean canDeleteResourceFromGroup(GroupItem obj) throws SQLException
+    public boolean canEditTheResource(GroupItem obj) throws SQLException
+    {
+        if(obj.getGroupId() == 0 && obj.getUserId() == getUser().getId())
+            return true;
+
+        return canEditResourcesInGroup(obj.getGroup());
+    }
+
+    public boolean canDeleteTheResource(GroupItem obj) throws SQLException
     {
         return canDeleteResourcesInGroup(obj.getGroup());
     }
@@ -678,6 +686,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         User user = getUser();
 
         if(user == null) // not logged in
+            return false;
+
+        if(targetGroup == null)
             return false;
 
         if(user.isAdmin() || targetGroup.isLeader(user) || targetGroup.getCourse().isModerator(user))
@@ -707,12 +718,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         return canEditResourcesInGroup(getGroup());
     }
 
-    public boolean canCopyResourcesFromGroup() throws SQLException
+    public boolean canCopyResourcesFromTheGroup() throws SQLException
     {
-        return canSeeResourcesInGroup();
+        return canSeeResourcesInTheGroup();
     }
 
-    public boolean canSeeResourcesInGroup() throws SQLException
+    public boolean canSeeResourcesInTheGroup() throws SQLException
     {
         return true;
     }
@@ -980,6 +991,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         this.clickedGroupItem = clickedGroupItem;
         if(clickedGroupItem instanceof Resource)
         {
+            this.getResourceDetailBean().setClickedResource((Resource) clickedGroupItem);
             this.rightPanelAction = RPAction.viewResource;
         }
         else
@@ -1306,23 +1318,23 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
         try
         {
-            String folderId = params.get("itemId");
-            if(folderId == null || folderId.equals("0"))
+            int folderId = StringHelper.parseInt(params.get("itemId"));
+            if(folderId > 0)
             {
-                this.setSelectedFolder(null);
-            }
-            else
-            {
-                Folder folder = getLearnweb().getGroupManager().getFolder(Integer.parseInt(folderId));
+                Folder folder = getLearnweb().getGroupManager().getFolder(folderId);
                 if(folder != null)
                     this.setSelectedFolder(folder);
                 else
-                    log.warn("Target folder does not exists on actionOpenFolder");
+                    throw new NullPointerException("Target folder does not exists");
+            }
+            else
+            {
+                this.setSelectedFolder(null);
             }
         }
-        catch(NullPointerException | NumberFormatException | SQLException e)
+        catch(NullPointerException | SQLException e)
         {
-            log.warn("Can not parse data on actionOpenFolder.", e);
+            addFatalMessage(e);
         }
     }
 
@@ -1333,39 +1345,32 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         try
         {
             String itemType = params.get("itemType");
-            String itemId = params.get("itemId");
+            int itemId = StringHelper.parseInt(params.get("itemId"), -1);
 
-            if(itemType != null && itemType.equals("folder"))
+            if(itemType != null && itemType.equals("folder") && itemId > 0)
             {
-                Folder folder = getLearnweb().getGroupManager().getFolder(Integer.parseInt(itemId));
+                Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
                 if(folder != null)
-                {
                     this.setClickedGroupItem(folder);
-                }
                 else
-                    log.warn("Target folder does not exists on actionSelectGroupItem");
+                    throw new NullPointerException("Target folder does not exists");
             }
-            else if(itemType != null && itemType.equals("resource"))
+            else if(itemType != null && itemType.equals("resource") && itemId > 0)
             {
-                Resource resource = getLearnweb().getResourceManager().getResource(Integer.parseInt(itemId));
+                Resource resource = getLearnweb().getResourceManager().getResource(itemId);
                 if(resource != null)
-                {
                     this.setClickedGroupItem(resource);
-                    this.getResourceDetailBean().setClickedResource(resource);
-                }
                 else
-                    log.warn("Target resource does not exists on actionSelectGroupItem");
+                    throw new NullPointerException("Target resource does not exists");
             }
             else
+            {
                 throw new NullPointerException("Unsupported element type");
+            }
         }
-        catch(NullPointerException e)
+        catch(NullPointerException | SQLException e)
         {
-            log.warn("Can not parse itemType on selectGroupItem.", e);
-        }
-        catch(NumberFormatException | SQLException e)
-        {
-            log.warn("Can not parse itemId on selectGroupItem.", e);
+            addFatalMessage(e);
         }
     }
 
@@ -1375,41 +1380,43 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         try
         {
             String itemType = params.get("itemType");
-            String itemId = params.get("itemId");
+            int itemId = StringHelper.parseInt(params.get("itemId"), -1);
 
-            if(itemType != null && itemType.equals("folder"))
+            if(itemType != null && itemType.equals("folder") && itemId > 0)
             {
-                Folder folder = getLearnweb().getGroupManager().getFolder(Integer.parseInt(itemId));
-                if(folder != null)
+                Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
+                if(folder != null && canEditTheResource(folder))
                 {
                     this.setClickedGroupItem(folder);
                     this.setRightPanelAction(RPAction.editFolder);
                 }
                 else
-                    log.warn("Target folder does not exists on actionEditGroupItem");
+                {
+                    addGrowl(FacesMessage.SEVERITY_ERROR, "Target folder doesn't exists or you don't have permission to edit it");
+                }
             }
-            else if(itemType != null && itemType.equals("resource"))
+            else if(itemType != null && itemType.equals("resource") && itemId > 0)
             {
-                Resource resource = getLearnweb().getResourceManager().getResource(Integer.parseInt(itemId));
-                if(resource != null)
+                Resource resource = getLearnweb().getResourceManager().getResource(itemId);
+                if(resource != null && canEditTheResource(resource))
                 {
                     this.setClickedGroupItem(resource);
-                    this.getResourceDetailBean().setClickedResource(resource);
                     this.setRightPanelAction(RPAction.editResource);
                 }
                 else
-                    log.warn("Target resource does not exists on actionEditGroupItem");
+                {
+                    addGrowl(FacesMessage.SEVERITY_ERROR, "Target resource doesn't exists or you don't have permission to edit it");
+                }
             }
             else
+            {
                 throw new NullPointerException("Unsupported itemType");
+
+            }
         }
-        catch(NullPointerException e)
+        catch(NullPointerException | SQLException e)
         {
-            log.warn("Can not parse itemType on selectGroupItem.", e);
-        }
-        catch(NumberFormatException | SQLException e)
-        {
-            log.warn("Can not parse itemId on selectGroupItem.", e);
+            addFatalMessage(e);
         }
     }
 
@@ -1474,7 +1481,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         }
         catch(JSONException e)
         {
-            log.warn("Target resource does not exists on actionCopyGroupItems");
+            addFatalMessage(e);
         }
     }
 
@@ -1482,52 +1489,64 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
         try
         {
-            int numFolders = 0, numResources = 0, targetGroupId = selectedResourceTargetGroupId, targetFolderId = selectedResourceTargetFolderId;
+            int numFolders = 0, numResources = 0, numSkipped = 0, targetGroupId = selectedResourceTargetGroupId, targetFolderId = selectedResourceTargetFolderId;
 
             Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
-            if(targetGroupId != 0 && !canEditResourcesInGroup(targetGroup))
+            if(!canCopyResourcesFromTheGroup())
             {
-                log.warn("The use don't have permissions to edit resources in target group.");
+                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to copy this resource");
                 return;
             }
 
-            if(canCopyResourcesFromGroup())
+            if(targetGroupId != 0 && !canEditResourcesInGroup(targetGroup))
             {
-                for(int i = 0, len = objects.length(); i < len; ++i)
+                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to add new resources in target group");
+                return;
+            }
+
+            for(int i = 0, len = objects.length(); i < len; ++i)
+            {
+                JSONObject item = objects.getJSONObject(i);
+                String itemType = item.getString("itemType");
+                int itemId = StringHelper.parseInt(item.getString("itemId"), -1);
+                if(itemType != null && itemType.equals("resource") && itemId > 0)
                 {
-                    JSONObject item = objects.getJSONObject(i);
-                    String itemType = item.getString("itemType");
-                    int itemId = StringHelper.parseInt(item.getString("itemId"));
-                    if(itemType != null && itemType.equals("resource") && itemId > 0)
+                    Resource resource = getLearnweb().getResourceManager().getResource(itemId);
+                    if(resource != null)
                     {
-                        Resource resource = getLearnweb().getResourceManager().getResource(itemId);
-                        if(resource != null)
-                        {
-                            Resource newResource = resource.clone();
-                            newResource.setGroupId(targetGroupId);
-                            newResource.setFolderId(targetFolderId);
-                            resource = getUser().addResource(newResource);
-                            numResources++;
-                            log(Action.adding_resource, targetGroupId, resource.getId(), "");
-                        }
-                        else
-                            log.warn("Target resource does not exists on actionCopyGroupItems");
+                        Resource newResource = resource.clone();
+                        newResource.setGroupId(targetGroupId);
+                        newResource.setFolderId(targetFolderId);
+                        resource = getUser().addResource(newResource);
+                        numResources++;
+                        log(Action.adding_resource, targetGroupId, resource.getId(), "");
                     }
                     else
-                        log.warn("Unsupported itemType");
+                    {
+                        numSkipped++;
+                        log.warn("Target resource does not exists on actionCopyGroupItems");
+                    }
                 }
+                else
+                {
+                    numSkipped++;
+                    log.warn("Unsupported itemType");
+                }
+            }
+
+            if(numFolders + numResources > 0)
+            {
                 addGrowl(FacesMessage.SEVERITY_INFO, "resourcesCopiedSuccessfully", numFolders + numResources);
             }
-            else
-                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to copy this resource");
+
+            if (numSkipped > 0)
+            {
+                addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
+            }
         }
-        catch(NullPointerException e)
+        catch(NullPointerException | JSONException | SQLException e)
         {
-            log.warn("Can not parse itemType on actionCopyGroupItems.", e);
-        }
-        catch(JSONException | NumberFormatException | SQLException e)
-        {
-            log.warn("Can not parse data on actionCopyGroupItems.", e);
+            addFatalMessage(e);
         }
     }
 
@@ -1535,7 +1554,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
         try
         {
-            int numFolders = 0, numResources = 0, targetGroupId = selectedResourceTargetGroupId, targetFolderId = selectedResourceTargetFolderId;
+            int numFolders = 0, numResources = 0, numSkipped = 0, targetGroupId = selectedResourceTargetGroupId, targetFolderId = selectedResourceTargetFolderId;
 
             if(dest != null)
             {
@@ -1544,9 +1563,15 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             }
 
             Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
+            if(!canEditResourcesInTheGroup())
+            {
+                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to move this resource");
+                return;
+            }
+
             if(targetGroupId != 0 && !canEditResourcesInGroup(targetGroup))
             {
-                log.warn("The use don't have permissions to edit resources in target group.");
+                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to add new resources in target group");
                 return;
             }
 
@@ -1560,8 +1585,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                     Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
                     if(folder != null)
                     {
-                        if(!canDeleteResourceFromGroup(folder))
+                        if(!canDeleteTheResource(folder))
                         {
+                            numSkipped++;
                             log.warn("The use don't have permissions to delete folder in target group.");
                             continue;
                         }
@@ -1570,15 +1596,19 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                         numFolders++;
                     }
                     else
+                    {
+                        numSkipped++;
                         log.warn("Target folder does not exists on actionMoveGroupItems");
+                    }
                 }
                 else if(itemType != null && itemType.equals("resource") && itemId > 0)
                 {
                     Resource resource = getLearnweb().getResourceManager().getResource(itemId);
                     if(resource != null)
                     {
-                        if(!canDeleteResourceFromGroup(resource))
+                        if(!canDeleteTheResource(resource))
                         {
+                            numSkipped++;
                             log.warn("The use don't have permissions to delete resource in target group.");
                             continue;
                         }
@@ -1587,23 +1617,33 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                         numResources++;
                     }
                     else
+                    {
+                        numSkipped++;
                         log.warn("Target folder does not exists on actionMoveGroupItems");
+                    }
                 }
                 else
+                {
+                    numSkipped++;
                     log.warn("Unsupported itemType");
+                }
             }
 
-            addGrowl(FacesMessage.SEVERITY_INFO, "resourcesMovedSuccessfully", numFolders + numResources);
-            if(numResources > 0)
-                this.updateResourcesFromSolr();
+            if(numFolders + numResources > 0)
+            {
+                addGrowl(FacesMessage.SEVERITY_INFO, "resourcesMovedSuccessfully", numFolders + numResources);
+                if(numResources > 0)
+                    this.updateResourcesFromSolr();
+            }
+
+            if (numSkipped > 0)
+            {
+                addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
+            }
         }
-        catch(NullPointerException e)
+        catch(NullPointerException | JSONException | SQLException e)
         {
-            log.warn("Can not parse itemType on actionMoveGroupItems.", e);
-        }
-        catch(JSONException | NumberFormatException | SQLException e)
-        {
-            log.warn("Can not parse data on actionMoveGroupItems.", e);
+            addFatalMessage(e);
         }
     }
 
@@ -1611,7 +1651,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
         try
         {
-            int numFolders = 0, numResources = 0;
+            int numFolders = 0, numResources = 0, numSkipped = 0;
 
             for(int i = 0, len = objects.length(); i < len; ++i)
             {
@@ -1625,63 +1665,82 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                     Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
                     if(folder != null)
                     {
-                        if(!canDeleteResourceFromGroup(folder))
+                        if(!canDeleteTheResource(folder))
                         {
+                            numSkipped++;
                             log.warn("The use don't have permissions to delete folder in target group.");
                             continue;
                         }
 
                         int folderGroupId = folder.getGroupId();
                         String folderName = folder.getTitle();
+                        if(clickedGroupItem != null && clickedGroupItem.equals(folder))
+                            clickedGroupItem = null;
+
+                        if(selectedFolder != null && selectedFolder.equals(folder))
+                            selectedFolder = null;
+
                         folder.delete();
                         numFolders++;
 
                         log(Action.deleting_folder, folderGroupId, itemId, folderName);
-
-                        if(clickedGroupItem != null && clickedGroupItem instanceof Folder && clickedGroupItem.getId() == itemId)
-                            clickedGroupItem = null;
                     }
                     else
+                    {
+                        numSkipped++;
                         log.warn("Target folder does not exists on actionDeleteGroupItems");
+                    }
                 }
                 else if(itemType != null && itemType.equals("resource") && itemId > 0)
                 {
                     Resource resource = getLearnweb().getResourceManager().getResource(itemId);
                     if(resource != null)
                     {
-                        if(!canDeleteResourceFromGroup(resource))
+                        if(!canDeleteTheResource(resource))
                         {
+                            numSkipped++;
                             log.warn("The use don't have permissions to delete resource in target group.");
                             continue;
                         }
 
                         int resourceGroupId = resource.getGroupId();
                         String resourceTitle = resource.getTitle();
+                        if(clickedGroupItem != null && clickedGroupItem.equals(resource))
+                            clickedGroupItem = null;
+
                         resource.delete();
                         numResources++;
-                        log(Action.deleting_resource, resourceGroupId, itemId, resourceTitle);
 
-                        if(clickedGroupItem != null && clickedGroupItem instanceof Resource && clickedGroupItem.getId() == itemId)
-                            clickedGroupItem = null;
+                        log(Action.deleting_resource, resourceGroupId, itemId, resourceTitle);
                     }
                     else
+                    {
+                        numSkipped++;
                         log.warn("Target resource does not exists on actionDeleteGroupItems");
+                    }
                 }
                 else
-                    throw new NullPointerException("Unsupported itemType");
+                {
+                    numSkipped++;
+                    log.warn("Unsupported itemType");
+                }
             }
 
-            addGrowl(FacesMessage.SEVERITY_INFO, "resourcesDeletedSuccessfully", numFolders + numResources);
-            if(numResources > 0)
-                this.updateResourcesFromSolr();
+            if(numFolders + numResources > 0)
+            {
+                addGrowl(FacesMessage.SEVERITY_INFO, "resourcesDeletedSuccessfully", numFolders + numResources);
+                if(numResources > 0)
+                    this.updateResourcesFromSolr();
+            }
+
+            if (numSkipped > 0)
+            {
+                addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
+            }
         }
-        catch(NullPointerException e)
+        catch(NullPointerException | JSONException | SQLException e)
         {
-            log.warn("Can not parse itemType on actionDeleteGroupItems.", e);
-        }
-        catch(JSONException | NumberFormatException | SQLException e)
-        {
-            log.warn("Can not parse data on actionDeleteGroupItems.", e);
+            addFatalMessage(e);
         }
     }
 
@@ -1689,10 +1748,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
         try
         {
-            int numResources = 0;
+            int numResources = 0, numSkipped = 0;
             if(!canEditResourcesInTheGroup())
             {
-                log.warn("The use don't have permissions to edit resources in the group.");
+                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to edit this resource");
                 return;
             }
 
@@ -1701,11 +1760,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 JSONObject item = objects.getJSONObject(i);
 
                 String itemType = item.getString("itemType");
-                String itemId = item.getString("itemId");
+                int itemId = StringHelper.parseInt(item.getString("itemId"), -1);
 
-                if(itemType != null && itemType.equals("resource"))
+                if(itemType != null && itemType.equals("resource") && itemId > 0)
                 {
-                    Resource resource = getLearnweb().getResourceManager().getResource(Integer.parseInt(itemId));
+                    Resource resource = getLearnweb().getResourceManager().getResource(itemId);
                     if(resource != null)
                     {
                         resource.addTag(tag, getUser());
@@ -1713,21 +1772,31 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                         log(Action.tagging_resource, resource.getGroupId(), resource.getId(), tag);
                     }
                     else
+                    {
+                        numSkipped++;
                         log.warn("Target resource does not exists on actionAddTagToGroupItems");
+                    }
                 }
                 else
-                    throw new NullPointerException("Unsupported itemType");
+                {
+                    numSkipped++;
+                    log.warn("Unsupported itemType");
+                }
             }
 
-            addGrowl(FacesMessage.SEVERITY_INFO, "tagAddedToResources", numResources);
+            if(numResources > 0)
+            {
+                addGrowl(FacesMessage.SEVERITY_INFO, "tagAddedToResources", numResources);
+            }
+
+            if (numSkipped > 0)
+            {
+                addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
+            }
         }
-        catch(NullPointerException e)
+        catch(NullPointerException | JSONException | SQLException e)
         {
-            log.warn("Can not parse itemType on actionDeleteGroupItems.", e);
-        }
-        catch(JSONException | NumberFormatException | SQLException e)
-        {
-            log.warn("Can not parse data on actionDeleteGroupItems.", e);
+            addFatalMessage(e);
         }
     }
 }
