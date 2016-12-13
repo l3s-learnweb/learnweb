@@ -267,6 +267,14 @@ function doAction(action, extraAttr1, extraAttr2) {
         case 'add-website':
             createGroupItemCommand([{name: 'type', value: 'url'}]);
             break;
+        case 'open-folder':
+            var last = selected.getItem(selected.getSize() - 1);
+            if (selected.getSize() > 0 && last.type == "folder") {
+                openFolder(last.id);
+            } else {
+                console.error("No folder selected.");
+            }
+            break;
         case 'add-tag':
             if (selected.getSize() > 0) {
                 dialog.confirm('addTag', function () {

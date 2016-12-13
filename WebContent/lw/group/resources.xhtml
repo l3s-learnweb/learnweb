@@ -313,6 +313,12 @@
 
 		<div class="context-menu resource-context-menu" role="menu">
 			<ui:fragment rendered="#{groupDetailBean.canEditResourcesInTheGroup()}">
+				<div class="context-menu-item action-open-folder" role="menuitem">
+					<div class="context-menu-item-wrapper">
+						<span class="context-menu-item-icon" />
+						<span class="context-menu-item-content">#{msg.open}</span>
+					</div>
+				</div>
 				<div class="context-menu-item action-create-folder" role="menuitem">
 					<div class="context-menu-item-wrapper">
 						<span class="context-menu-item-icon" />

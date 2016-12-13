@@ -639,6 +639,7 @@
 
 }
 
+.context-menu.single-folder-cntx .action-open-folder,
 .context-menu.single-folder-cntx .action-edit,
 .context-menu.single-folder-cntx .action-delete,
 .context-menu.single-resource-cntx .action-add-tag,
