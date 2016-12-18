@@ -1,6 +1,7 @@
 package de.l3s.learnweb;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -12,6 +13,8 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
+import org.apache.poi.POIXMLProperties;
+import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import com.sun.pdfview.PDFFile;
 import com.sun.pdfview.PDFPage;
@@ -298,6 +301,49 @@ public class ResourcePreviewMaker
 	{
 	    thumbnail.dispose();
 	    img.dispose();
+	}
+    }
+
+    public void processWOrd(Resource resource, InputStream ip)
+    {
+	XWPFDocument wordDocument = null;
+	try
+	{
+	    wordDocument = new XWPFDocument(ip);
+	}
+	catch(IOException e)
+	{
+	    // TODO Auto-generated catch block
+	    e.printStackTrace();
+	}
+	POIXMLProperties props = wordDocument.getProperties();
+
+	String thumbnail = props.getThumbnailFilename();
+	if(thumbnail == null)
+	{
+	    // No thumbnail
+	}
+	else
+	{
+	    FileOutputStream fos = null;
+	    try
+	    {
+		fos = new FileOutputStream("c:\\temp\\" + thumbnail);
+	    }
+	    catch(FileNotFoundException e)
+	    {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
+	    try
+	    {
+		IOUtils.copy(props.getThumbnailImage(), fos);
+	    }
+	    catch(IOException e)
+	    {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	    }
 	}
     }
 
