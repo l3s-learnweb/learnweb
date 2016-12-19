@@ -28,6 +28,7 @@
 		<h:outputStylesheet library="ted_transcript" name="jquery.contextMenu.css"  />
 		<h:outputScript library="ted_transcript" name="jquery.contextMenu.js"/>
 		<h:outputScript library="ted_transcript" name="spectrum.js"/>
+		<h:outputScript library="ted_transcript" name="ntc.js"/>
 		<h:outputStylesheet library="ted_transcript" name="ted_transcript.css"  />
 		<h:outputStylesheet library="ted_transcript" name="spectrum.css"  />
 		<h:outputScript library="ted_transcript" name="ted_transcript.js" target="head"/>		
@@ -62,6 +63,12 @@
 					        <p:menuitem value="#{msg.show_summary}" icon="ui-icon-circle-triangle-w" onclick="openTagsDiv();selectTab('summary');">
 					        </p:menuitem>
 					        <p:menuitem value="#{msg.show_tags}" icon="ui-icon-circle-triangle-w" onclick="openTagsDiv();selectTab('tags');">
+					        </p:menuitem>
+					        <p:menuitem value="Disable Editing" icon="ui-icon-pencil" rendered="#{!tedTranscriptBean.tedResource.readOnly and userBean.moderator}" update=":transcript :transcript_options">
+					        	<f:setPropertyActionListener value="true" target="#{tedTranscriptBean.tedResource.readOnly}"/>
+					        </p:menuitem>
+					        <p:menuitem value="Enable Editing" icon="ui-icon-pencil" rendered="#{tedTranscriptBean.tedResource.readOnly and userBean.moderator}" update=":transcript :transcript_options">
+					       		<f:setPropertyActionListener value="false" target="#{tedTranscriptBean.tedResource.readOnly}"/>
 					        </p:menuitem>
 				   	 	</p:menuButton>
 					</h:form>

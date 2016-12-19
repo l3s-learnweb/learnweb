@@ -56,7 +56,11 @@ a.more_resources_link:hover { text-decoration: none; }
     margin-right: 0.5em;
 }
 
-.myresource-listview .resource_panel { display:none; }
+.breadcrumb li:last-child {
+	pointer-events:none;
+}
+
+.myresource-listview .resource-item { display:none; }
 
 .myresource-listview  {
 	padding-right: 7px;
@@ -68,22 +72,26 @@ a.more_resources_link:hover { text-decoration: none; }
 }
 
 @media screen  and (max-width:1050px) {
-	.myresource-listview .resource_panel:nth-child(1)  { display: block; }
+	.myresource-listview .resource-item:nth-child(1),
+	.myresource-listview .resource-item:nth-child(2) { display: inline-block; }
 }
 
-@media screen and (min-width:1050px) and (max-width:1360px) {
-	.myresource-listview .resource_panel:nth-child(1),
-	.myresource-listview .resource_panel:nth-child(2)  { display: block; }
+@media screen and (min-width:1051px) and (max-width:1360px) {
+	.myresource-listview .resource-item:nth-child(1),
+	.myresource-listview .resource-item:nth-child(2),  
+	.myresource-listview .resource-item:nth-child(3) { display: inline-block; }
 }
 
 @media screen and (min-width:1360px) and (max-width:1700px){
-	.myresource-listview .resource_panel:nth-child(1),
-	.myresource-listview .resource_panel:nth-child(2),
-	.myresource-listview .resource_panel:nth-child(3) { display: block; }
+	.myresource-listview .resource-item:nth-child(1),
+	.myresource-listview .resource-item:nth-child(2),
+	.myresource-listview .resource-item:nth-child(3),
+	.myresource-listview .resource-item:nth-child(4) { display: inline-block; }
 }
 @media screen and (min-width:1700px) {
-	.myresource-listview .resource_panel:nth-child(1),
-	.myresource-listview .resource_panel:nth-child(2),
-	.myresource-listview .resource_panel:nth-child(3),
-	.myresource-listview .resource_panel:nth-child(4) { display: block; }
+	.myresource-listview .resource-item:nth-child(1),
+	.myresource-listview .resource-item:nth-child(2),
+	.myresource-listview .resource-item:nth-child(3),
+	.myresource-listview .resource-item:nth-child(4),
+	.myresource-listview .resource-item:nth-child(5) { display: inline-block; }
 }

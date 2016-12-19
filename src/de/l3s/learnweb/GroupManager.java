@@ -60,12 +60,12 @@ public class GroupManager
         PreparedStatement select = learnweb.getConnection().prepareStatement(query);
 
         int i = 1;
-        for (int param : params)
+        for(int param : params)
             select.setInt(i++, param);
 
         ResultSet rs = select.executeQuery();
 
-        while (rs.next())
+        while(rs.next())
         {
             groups.add(createGroup(rs));
         }
@@ -129,7 +129,7 @@ public class GroupManager
         pstmtGetGroup.setInt(2, organisationId);
         ResultSet rs = pstmtGetGroup.executeQuery();
 
-        if (!rs.next())
+        if(!rs.next())
             return null;
 
         Group group = createGroup(rs);
@@ -142,7 +142,7 @@ public class GroupManager
     private Group createGroup(ResultSet rs) throws SQLException
     {
         Group group = groupCache.get(rs.getInt("group_id"));
-        if (null == group)
+        if(null == group)
         {
             group = new Group(rs);
             group = groupCache.put(group);
@@ -161,10 +161,10 @@ public class GroupManager
     public List<Group> getJoinAbleGroups(User user) throws SQLException
     {
         StringBuilder sb = new StringBuilder();
-        for (Course course : user.getCourses())
+        for(Course course : user.getCourses())
             sb.append("," + course.getId());
 
-        if (!user.getOrganisation().getOption(Option.Groups_Hide_public_groups))
+        if(!user.getOrganisation().getOption(Option.Groups_Hide_public_groups))
             sb.append(",0");
 
         String coursesIn = sb.substring(1);
@@ -172,7 +172,7 @@ public class GroupManager
         // log.debug(coursesIn);
 
         sb = new StringBuilder(",-1"); // make sure that the string is not empty
-        for (Group group : user.getGroups())
+        for(Group group : user.getGroups())
             sb.append("," + group.getId());
         String groupsIn = sb.substring(1);
         // TODO implement not join able groups
@@ -196,20 +196,20 @@ public class GroupManager
     {
         Group group = useCache ? groupCache.get(id) : null;
 
-        if (null != group)
+        if(null != group)
             return group;
 
         PreparedStatement pstmtGetGroup = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE group_id = ?");
         pstmtGetGroup.setInt(1, id);
         ResultSet rs = pstmtGetGroup.executeQuery();
 
-        if (!rs.next())
+        if(!rs.next())
             return null;
 
         group = new Group(rs);
         pstmtGetGroup.close();
 
-        if (useCache)
+        if(useCache)
             group = groupCache.put(group);
 
         return group;
@@ -225,13 +225,15 @@ public class GroupManager
      */
     public synchronized Group save(Group group) throws SQLException
     {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, university, course, location, language, course_id, group_category_id, restriction_only_leader_can_add_resources, read_only, restriction_forum_category_required) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement replace = learnweb.getConnection().prepareStatement(
+                "REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, university, course, location, language, course_id, group_category_id, restriction_only_leader_can_add_resources, read_only, restriction_forum_category_required) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                Statement.RETURN_GENERATED_KEYS);
 
-        if (group.getId() < 0) // the Group is not yet stored at the database
+        if(group.getId() < 0) // the Group is not yet stored at the database
         {
             replace.setNull(1, java.sql.Types.INTEGER);
 
-            if (group.getCategoryId() != 0)
+            if(group.getCategoryId() != 0)
             {
                 GroupCategory category = getGroupCategoryById(group.getCategoryId());
                 group.setCategoryAbbreviation(category.getAbbreviation());
@@ -254,15 +256,15 @@ public class GroupManager
         replace.setInt(13, group.isRestrictionForumCategoryRequired() ? 1 : 0);
         replace.executeUpdate();
 
-        if (group.getId() < 0) // get the assigned id
+        if(group.getId() < 0) // get the assigned id
         {
             ResultSet rs = replace.getGeneratedKeys();
-            if (!rs.next())
+            if(!rs.next())
                 throw new SQLException("database error: no id generated");
             group.setId(rs.getInt(1));
             group = groupCache.put(group); // add the new Group to the cache
         }
-        else if (groupCache.get(group.getId()) != null) //remove old group and add the new one
+        else if(groupCache.get(group.getId()) != null) //remove old group and add the new one
         {
             groupCache.remove(group.getId());
             group = groupCache.put(group);
@@ -271,7 +273,7 @@ public class GroupManager
 
         int groupId = group.getId();
 
-        if (groupId != group.getId())
+        if(groupId != group.getId())
             throw new RuntimeException("fedora error");
 
         return group;
@@ -291,7 +293,7 @@ public class GroupManager
     /**
      * Adds a subgroup to a group
      *
-     * @param group    Must have been stored before
+     * @param group Must have been stored before
      * @param subgroup May NOT have been stored before.
      * @throws SQLException
      */
@@ -309,7 +311,7 @@ public class GroupManager
         boolean userIsAlreadyMember = rs.next();
         select.close();
 
-        if (userIsAlreadyMember)
+        if(userIsAlreadyMember)
             return;
 
         PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `lw_group_user` (`group_id`,`user_id`) VALUES (?,?)");
@@ -330,7 +332,7 @@ public class GroupManager
 
     public void deleteGroup(Group group) throws SQLException
     {
-        for (Resource resource : group.getResources())
+        for(Resource resource : group.getResources())
         {
             resource.setGroupId(0);
             resource.save();
@@ -354,13 +356,13 @@ public class GroupManager
         int folderId = rs.getInt("folder_id");
 
         Folder folder = folderCache.get(folderId);
-        if (null == folder)
+        if(null == folder)
         {
             folder = new Folder();
-            folder.setFolderId(folderId);
+            folder.setId(folderId);
             folder.setGroupId(rs.getInt("group_id"));
             folder.setParentFolderId(rs.getInt("parent_folder_id"));
-            folder.setName(rs.getString("name"));
+            folder.setTitle(rs.getString("name"));
             folder.setUserId(rs.getInt("user_id"));
 
             folder = folderCache.put(folder);
@@ -372,13 +374,13 @@ public class GroupManager
     {
         Folder folder = folderCache.get(folderId);
 
-        if (folder == null)
+        if(folder == null)
         {
             PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, user_id FROM `lw_group_folder` WHERE `folder_id` = ?");
             select.setInt(1, folderId);
             ResultSet rs = select.executeQuery();
 
-            if (!rs.next())
+            if(!rs.next())
                 return null;
 
             folder = createFolder(rs);
@@ -398,7 +400,7 @@ public class GroupManager
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, user_id FROM `lw_group_folder` WHERE `group_id` = ?");
         select.setInt(1, groupId);
         ResultSet rs = select.executeQuery();
-        while (rs.next())
+        while(rs.next())
         {
             folders.add(createFolder(rs));
         }
@@ -415,7 +417,7 @@ public class GroupManager
     public List<Folder> getFolders(int groupId, int parentFolderId) throws SQLException
     {
         List<Folder> folders = new ArrayList<Folder>();
-        if (parentFolderId < 0)
+        if(parentFolderId < 0)
         {
             parentFolderId = 0;
         }
@@ -424,7 +426,7 @@ public class GroupManager
         select.setInt(1, groupId);
         select.setInt(2, parentFolderId);
         ResultSet rs = select.executeQuery();
-        while (rs.next())
+        while(rs.next())
         {
             folders.add(createFolder(rs));
         }
@@ -441,7 +443,7 @@ public class GroupManager
     public List<Folder> getFolders(int groupId, int parentFolderId, int userId) throws SQLException
     {
         List<Folder> folders = new ArrayList<Folder>();
-        if (parentFolderId < 0)
+        if(parentFolderId < 0)
         {
             parentFolderId = 0;
         }
@@ -451,7 +453,7 @@ public class GroupManager
         select.setInt(2, parentFolderId);
         select.setInt(3, userId);
         ResultSet rs = select.executeQuery();
-        while (rs.next())
+        while(rs.next())
         {
             folders.add(createFolder(rs));
         }
@@ -471,13 +473,13 @@ public class GroupManager
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT DISTINCT(group_id), lw_group.title FROM `lw_resource` JOIN lw_group USING(group_id) WHERE `owner_user_id` = ? AND lw_resource.deleted = 0");
         select.setInt(1, userId);
         ResultSet rs = select.executeQuery();
-        while (rs.next())
+        while(rs.next())
         {
             Folder folder = new Folder();
-            folder.setFolderId(0);
+            folder.setId(0);
             folder.setGroupId(rs.getInt("group_id"));
             folder.setParentFolderId(0);
-            folder.setName(rs.getString("title"));
+            folder.setTitle(rs.getString("title"));
             folder.setUserId(userId);
             folders.add(folder);
         }
@@ -492,7 +494,7 @@ public class GroupManager
      */
     public int getCountFolders(int groupId, int parentFolderId) throws SQLException
     {
-        if (parentFolderId < 0)
+        if(parentFolderId < 0)
         {
             parentFolderId = 0;
         }
@@ -502,7 +504,7 @@ public class GroupManager
         select.setInt(1, groupId);
         select.setInt(2, parentFolderId);
         ResultSet rs = select.executeQuery();
-        if (rs.next())
+        if(rs.next())
         {
             numberOfRows = rs.getInt(1);
         }
@@ -528,7 +530,7 @@ public class GroupManager
             solrSearch.getResourcesByPage(1);
             numberOfRows = (int) solrSearch.getTotalResultCount();
         }
-        catch (SolrServerException e)
+        catch(SolrServerException e)
         {
             log.fatal("Couldn't get resource counter in group", e);
         }
@@ -538,7 +540,7 @@ public class GroupManager
 
     public Folder moveFolder(Folder original, int newParentFolderId, int newGroupId) throws SQLException
     {
-        if (original.getFolderId() == newParentFolderId)
+        if(original.getId() == newParentFolderId)
         {
             return original;
         }
@@ -550,23 +552,23 @@ public class GroupManager
         original.setParentFolderId(newParentFolderId);
         original.save();
 
-        for (Folder subfolder : subfolders)
+        for(Folder subfolder : subfolders)
         {
-            this.moveFolder(subfolder, original.getFolderId(), newGroupId);
+            this.moveFolder(subfolder, original.getId(), newGroupId);
         }
 
-        for (Resource res : original.getResources())
+        for(Resource res : original.getResources())
         {
             res.setGroupId(newGroupId);
             res.save();
         }
 
-        if (newParentFolderId > 0)
+        if(newParentFolderId > 0)
         {
             getFolder(newParentFolderId).clearCaches();
         }
 
-        if (parentFolderId > 0)
+        if(parentFolderId > 0)
         {
             getFolder(parentFolderId).clearCaches();
         }
@@ -576,7 +578,7 @@ public class GroupManager
 
     public Resource moveResource(Resource original, int newGroupId, int newFolderId) throws SQLException
     {
-        if (original.getGroupId() == newGroupId && original.getFolderId() == newFolderId)
+        if(original.getGroupId() == newGroupId && original.getFolderId() == newFolderId)
         {
             return original;
         }
@@ -591,28 +593,28 @@ public class GroupManager
     {
         PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group_folder` (folder_id, group_id, parent_folder_id, name, user_id) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
-        if (folder.getFolderId() < 0) // the folder is not yet stored at the database
+        if(folder.getId() < 0) // the folder is not yet stored at the database
             replace.setNull(1, java.sql.Types.INTEGER);
         else
-            replace.setInt(1, folder.getFolderId());
+            replace.setInt(1, folder.getId());
         replace.setInt(2, folder.getGroupId());
         replace.setInt(3, folder.getParentFolderId());
-        replace.setString(4, folder.getName());
+        replace.setString(4, folder.getTitle());
         replace.setInt(5, folder.getUserId());
         replace.executeUpdate();
 
-        if (folder.getFolderId() < 0) // get the assigned id
+        if(folder.getId() < 0) // get the assigned id
         {
             ResultSet rs = replace.getGeneratedKeys();
-            if (!rs.next())
+            if(!rs.next())
                 throw new SQLException("database error: no id generated");
-            folder.setFolderId(rs.getInt(1));
+            folder.setId(rs.getInt(1));
             folder = folderCache.put(folder);
         }
         else
         {
             folder.clearCaches();
-            folderCache.remove(folder.getFolderId());
+            folderCache.remove(folder.getId());
             folder = folderCache.put(folder);
         }
 
@@ -640,15 +642,15 @@ public class GroupManager
     {
         List<Folder> subfolders = folder.getSubfolders();
 
-        if (!subfolders.isEmpty())
+        if(!subfolders.isEmpty())
         {
-            for (Folder subFolder : subfolders)
+            for(Folder subFolder : subfolders)
             {
                 this.deleteFolder(subFolder);
             }
         }
 
-        for (Resource resource : folder.getResources())
+        for(Resource resource : folder.getResources())
         {
             resource.setGroupId(0);
             resource.setFolderId(0);
@@ -658,13 +660,13 @@ public class GroupManager
         Folder parentFolder = folder.getParentFolder();
 
         PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_group_folder` WHERE `folder_id` = ?");
-        delete.setInt(1, folder.getFolderId());
+        delete.setInt(1, folder.getId());
         delete.execute();
         delete.close();
 
-        folderCache.remove(folder.getFolderId());
+        folderCache.remove(folder.getId());
 
-        if (parentFolder != null)
+        if(parentFolder != null)
         {
             parentFolder.clearCaches();
         }
@@ -700,7 +702,7 @@ public class GroupManager
         select.setInt(1, group.getId());
         select.setInt(2, user.getId());
         ResultSet rs = select.executeQuery();
-        if (!rs.next())
+        if(!rs.next())
             return -1;
 
         int time = rs.getInt(1);
@@ -715,7 +717,7 @@ public class GroupManager
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT group_category_id, category_title, category_abbreviation FROM `lw_group_category` WHERE category_course_id = ? ORDER BY category_title");
         select.setInt(1, courseId);
         ResultSet rs = select.executeQuery();
-        while (rs.next())
+        while(rs.next())
         {
             categories.add(new GroupCategory(rs.getInt(1), courseId, rs.getString(2), rs.getString(3)));
         }
@@ -731,7 +733,7 @@ public class GroupManager
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT group_category_id, category_course_id, category_title, category_abbreviation FROM `lw_group_category` WHERE group_category_id = ?");
         select.setInt(1, categoryId);
         ResultSet rs = select.executeQuery();
-        if (rs.next())
+        if(rs.next())
             cat = new GroupCategory(rs.getInt(1), rs.getInt(2), rs.getString(3), rs.getString(4));
 
         select.close();
@@ -742,7 +744,7 @@ public class GroupManager
     {
         PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group_category` (group_category_id, course_id, category_title, category_abbreviation) VALUES (?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
-        if (category.getId() < 0) // the Group is not yet stored at the database
+        if(category.getId() < 0) // the Group is not yet stored at the database
             replace.setNull(1, java.sql.Types.INTEGER);
         else
             replace.setInt(1, category.getId());
@@ -751,10 +753,10 @@ public class GroupManager
         replace.setString(3, category.getAbbreviation());
         replace.executeUpdate();
 
-        if (category.getId() < 0) // get the assigned id
+        if(category.getId() < 0) // get the assigned id
         {
             ResultSet rs = replace.getGeneratedKeys();
-            if (!rs.next())
+            if(!rs.next())
                 throw new SQLException("database error: no id generated");
             category.setId(rs.getInt(1));
 
@@ -768,7 +770,7 @@ public class GroupManager
 
     public TreeNode getFoldersTree(int groupId, int selectedFolderId) throws SQLException
     {
-        if (groupId < 1)
+        if(groupId < 1)
         {
             return null;
         }
@@ -776,7 +778,7 @@ public class GroupManager
         Group group = getGroupById(groupId);
         TreeNode root = new DefaultTreeNode("GroupFolders");
         TreeNode rootFolder = new DefaultTreeNode("root", new Folder(0, group.getId(), group.getTitle()), root);
-        if (selectedFolderId == 0)
+        if(selectedFolderId == 0)
         {
             rootFolder.setSelected(true);
             rootFolder.setExpanded(true);
@@ -787,21 +789,21 @@ public class GroupManager
 
     public void getChildNodesRecursively(int groupId, int parentFolderId, TreeNode parent, int selectedFolderId) throws SQLException
     {
-        for (Folder folder : this.getFolders(groupId, parentFolderId))
+        for(Folder folder : this.getFolders(groupId, parentFolderId))
         {
             TreeNode folderNode = new DefaultTreeNode("folder", folder, parent);
-            if (folder.getFolderId() == selectedFolderId)
+            if(folder.getId() == selectedFolderId)
             {
                 folderNode.setSelected(true);
                 expand(folderNode);
             }
-            getChildNodesRecursively(groupId, folder.getFolderId(), folderNode, selectedFolderId);
+            getChildNodesRecursively(groupId, folder.getId(), folderNode, selectedFolderId);
         }
     }
 
     protected void expand(TreeNode treeNode)
     {
-        if (treeNode.getParent() != null)
+        if(treeNode.getParent() != null)
         {
             treeNode.getParent().setExpanded(true);
             expand(treeNode.getParent());
@@ -814,7 +816,7 @@ public class GroupManager
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM lw_group_user WHERE group_id = ?");
         select.setInt(1, groupId);
         ResultSet rs = select.executeQuery();
-        if (rs.next())
+        if(rs.next())
             count = rs.getInt(1);
         else
             throw new IllegalStateException("SQL query returned no result");

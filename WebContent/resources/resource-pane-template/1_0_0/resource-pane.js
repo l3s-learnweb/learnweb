@@ -256,6 +256,13 @@ function openFolder(folderId) {
     ]);
 }
 
+function openGroup(folderId) {
+	update_url(0, 0, folderId);
+	openFolderCommand([
+	    {name: 'itemId', value: folderId}
+	]);
+}
+
 function doAction(action, extraAttr1, extraAttr2) {
     switch (action) {
         case 'create-folder':
@@ -271,7 +278,11 @@ function doAction(action, extraAttr1, extraAttr2) {
             var last = selected.getItem(selected.getSize() - 1);
             if (selected.getSize() > 0 && last.type == "folder") {
                 openFolder(last.id);
-            } else {
+            }
+            else if(selected.getSize() > 0 && last.type == "group") {
+            	openGroup(last.id);
+            }
+            else {
                 console.error("No folder selected.");
             }
             break;
@@ -401,9 +412,13 @@ $(document).ready(function () {
     });
 
     $(document).on('dblclick', '.group-resources-item.folder-item', function () {
-        var resourceId = $(this).attr("data-itemId");
-        if (resourceId) {
-            openFolder(resourceId);
+        var folderId = $(this).attr("data-itemId");
+        var folderType = $(this).attr("data-itemType");
+        if(folderId && folderType == "folder") {
+            openFolder(folderId);
+        }
+        else if(folderId && folderType == "group") {
+        	openGroup(folderId);
         }
     });
 
@@ -562,7 +577,7 @@ function SelectedItems() {
 
         if (type == "folder") {
             //update_url(0, id);
-        } else {
+        } else if(type == "resource"){
             update_url(id);
         }
     };
