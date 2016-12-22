@@ -2,6 +2,7 @@ package de.l3s.learnweb.beans;
 
 import java.util.Iterator;
 
+import javax.el.ELException;
 import javax.faces.FacesException;
 import javax.faces.application.ViewExpiredException;
 import javax.faces.context.ExceptionHandler;
@@ -26,59 +27,118 @@ public class LearnwebExceptionHandler extends PrimeExceptionHandler
 
     public LearnwebExceptionHandler(ExceptionHandler exception)
     {
-	super(exception);
+        super(exception);
     }
 
     @Override
     public void handle() throws FacesException
     {
-	Iterator<ExceptionQueuedEvent> unhandledExceptionQueuedEvents = getUnhandledExceptionQueuedEvents().iterator();
-	if(unhandledExceptionQueuedEvents.hasNext())
-	{
-	    Throwable exception = unhandledExceptionQueuedEvents.next().getContext().getException();
-	    if(exception instanceof ViewExpiredException)
-		log.info("View expired exception");
-	    else if(exception instanceof IllegalStateException && exception.getMessage().startsWith("Cannot create a session"))
-	    {
-		log.info(exception.getMessage() + "; Happens mostly because of error 404");
-		return;
-	    }
-	    else
-	    {
-		String url = null;
-		Integer userId = -1;
-		String referrer = null;
-		String ip = null;
-		String userAgent = null;
-		try
-		{
-		    FacesContext facesContext = FacesContext.getCurrentInstance();
-		    ExternalContext ext = facesContext.getExternalContext();
-		    HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();
-		    referrer = servletRequest.getHeader("referer");
-		    ip = servletRequest.getHeader("X-FORWARDED-FOR");
-		    if(ip == null)
-		    {
-			ip = servletRequest.getRemoteAddr();
-		    }
+        Iterator<ExceptionQueuedEvent> unhandledExceptionQueuedEvents = getUnhandledExceptionQueuedEvents().iterator();
+        if(unhandledExceptionQueuedEvents.hasNext())
+        {
+            Throwable exception = unhandledExceptionQueuedEvents.next().getContext().getException();
 
-		    userAgent = servletRequest.getHeader("User-Agent");
-		    url = servletRequest.getRequestURL().toString();
-		    if(servletRequest.getQueryString() != null)
-			url += '?' + servletRequest.getQueryString();
+            while((exception instanceof FacesException || exception instanceof ELException) && exception.getCause() != null)
+            {
+                exception = exception.getCause();
+            }
 
-		    HttpSession session = servletRequest.getSession(false);
-		    if(session != null)
-			userId = (Integer) session.getAttribute("learnweb_user_id");
-		}
-		catch(Throwable t)
-		{
-		    // ignore
-		}
-		log.fatal("Fatal unhandled error on: " + url + "; userId: " + userId + "; ip: " + ip + "; referrer: " + referrer + "; userAgent: " + userAgent, exception);
-	    }
+            if(exception instanceof ViewExpiredException)
+                log.info("View expired exception");
+            else if(exception instanceof IllegalStateException && exception.getMessage().startsWith("Cannot create a session"))
+            {
+                log.info(exception.getMessage() + "; Happens mostly because of error 404");
+                return;
+            }
+            else
+            {
+                String url = null;
+                Integer userId = -1;
+                String referrer = null;
+                String ip = null;
+                String userAgent = null;
+                try
+                {
+                    FacesContext facesContext = FacesContext.getCurrentInstance();
+                    ExternalContext ext = facesContext.getExternalContext();
+                    HttpServletRequest request = (HttpServletRequest) ext.getRequest();
+                    referrer = request.getHeader("referer");
+                    ip = request.getHeader("X-FORWARDED-FOR");
+                    if(ip == null)
+                    {
+                        ip = request.getRemoteAddr();
+                    }
 
-	}
-	super.handle();
+                    userAgent = request.getHeader("User-Agent");
+                    url = request.getRequestURL().toString();
+                    if(request.getQueryString() != null)
+                        url += '?' + request.getQueryString();
+
+                    HttpSession session = request.getSession(false);
+                    if(session != null)
+                        userId = (Integer) session.getAttribute("learnweb_user_id");
+                }
+                catch(Throwable t)
+                {
+                    // ignore
+                }
+                log.fatal("Fatal unhandled error on: " + url + "; userId: " + userId + "; ip: " + ip + "; referrer: " + referrer + "; userAgent: " + userAgent, exception);
+            }
+
+        }
+        super.handle();
+    }
+
+    /**
+     * 
+     * @return some attributes of the current http request like url, referrer, ip etc.
+     */
+    public static String getRequestSummary()
+    {
+        return getRequestSummary(null);
+    }
+
+    /**
+     * 
+     * @param request
+     * @return some attributes of a request like url, referrer, ip etc.
+     */
+    public static String getRequestSummary(HttpServletRequest request)
+    {
+        String url = null;
+        String referrer = null;
+        String ip = null;
+        String userAgent = null;
+        Integer userId = null;
+
+        try
+        {
+            if(request == null)
+            {
+                ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
+                request = (HttpServletRequest) ext.getRequest();
+            }
+
+            referrer = request.getHeader("referer");
+            ip = request.getHeader("X-FORWARDED-FOR");
+            if(ip == null)
+            {
+                ip = request.getRemoteAddr();
+            }
+
+            userAgent = request.getHeader("User-Agent");
+            url = request.getRequestURL().toString();
+            if(request.getQueryString() != null)
+                url += '?' + request.getQueryString();
+
+            HttpSession session = request.getSession(false);
+            if(session != null)
+                userId = (Integer) session.getAttribute("learnweb_user_id");
+        }
+        catch(Throwable t)
+        {
+            // ignore
+        }
+        return "page: " + url + "; userId: " + userId + "; ip: " + ip + "; referrer: " + referrer + "; userAgent: " + userAgent;
     }
 }
