@@ -14,6 +14,7 @@ import java.io.OutputStream;
 
 import javax.imageio.ImageIO;
 
+import org.apache.log4j.Logger;
 import org.apache.tomcat.util.http.fileupload.ByteArrayOutputStream;
 
 import com.mortennobel.imagescaling.AdvancedResizeOp;
@@ -28,6 +29,8 @@ import com.mortennobel.imagescaling.MultiStepRescaleOp;
  */
 public class Image
 {
+    private static final Logger log = Logger.getLogger(Image.class);
+
     BufferedImage img;
 
     /**
@@ -38,11 +41,11 @@ public class Image
      */
     public Image(InputStream input) throws IOException
     {
-	img = ImageIO.read(input);
-	input.close();
+        img = ImageIO.read(input);
+        input.close();
 
-	if(img == null)
-	    throw new IllegalArgumentException("Can't create image from this stream");
+        if(img == null)
+            throw new IllegalArgumentException("Can't create image from this stream");
     }
 
     /**
@@ -52,14 +55,14 @@ public class Image
      */
     public Image(BufferedImage img)
     {
-	this.img = img;
+        this.img = img;
     }
 
     public Image(java.awt.Image image)
     {
-	this.img = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
-	Graphics2D g = img.createGraphics();
-	g.drawImage(image, null, null);
+        this.img = new BufferedImage(image.getWidth(null), image.getHeight(null), BufferedImage.TYPE_INT_RGB);
+        Graphics2D g = img.createGraphics();
+        g.drawImage(image, null, null);
     }
 
     /**
@@ -67,7 +70,7 @@ public class Image
      */
     public int getWidth()
     {
-	return img.getWidth();
+        return img.getWidth();
     }
 
     /**
@@ -75,7 +78,7 @@ public class Image
      */
     public int getHeight()
     {
-	return img.getHeight();
+        return img.getHeight();
     }
 
     /**
@@ -83,7 +86,7 @@ public class Image
      */
     public double getAspectRatio()
     {
-	return (double) getWidth() / (double) getHeight();
+        return (double) getWidth() / (double) getHeight();
     }
 
     /**
@@ -95,14 +98,18 @@ public class Image
      */
     public Image getResizedToWidth(int width)
     {
-	if(width > getWidth())
-	    throw new IllegalArgumentException("Width " + width + " exceeds width of image, which is " + getWidth());
-	int nHeight = width * img.getHeight() / img.getWidth();
-	MultiStepRescaleOp rescale = new MultiStepRescaleOp(width, nHeight);
-	rescale.setUnsharpenMask(AdvancedResizeOp.UnsharpenMask.Soft);
-	BufferedImage resizedImage = rescale.filter(img, null);
+        if(width > getWidth())
+        {
+            //throw new IllegalArgumentException("Width " + width + " exceeds width of image, which is " + getWidth());
+            log.warn("Width " + width + " exceeds width of image, which is " + getWidth());
+            return this;
+        }
+        int nHeight = width * img.getHeight() / img.getWidth();
+        MultiStepRescaleOp rescale = new MultiStepRescaleOp(width, nHeight);
+        rescale.setUnsharpenMask(AdvancedResizeOp.UnsharpenMask.Soft);
+        BufferedImage resizedImage = rescale.filter(img, null);
 
-	return new Image(resizedImage);
+        return new Image(resizedImage);
     }
 
     /**
@@ -114,91 +121,91 @@ public class Image
      */
     public Image getCroppedAndResized(int maxWidth, int maxHeight)
     {
-	if(maxWidth > getWidth() && maxHeight > getHeight())
-	    return new Image(img);
+        if(maxWidth > getWidth() && maxHeight > getHeight())
+            return new Image(img);
 
-	double ratio = (double) maxWidth / (double) maxHeight;
+        double ratio = (double) maxWidth / (double) maxHeight;
 
-	int newWidth = Math.min(getWidth(), 1050);
-	int newHeight = (int) Math.round(newWidth / ratio);
+        int newWidth = Math.min(getWidth(), 1050);
+        int newHeight = (int) Math.round(newWidth / ratio);
 
-	if(newHeight > getHeight()) // the website is not very long
-	{
-	    newHeight = getHeight();
-	}
+        if(newHeight > getHeight()) // the website is not very long
+        {
+            newHeight = getHeight();
+        }
 
-	int cutOff = (getWidth() - newWidth) / 2;
+        int cutOff = (getWidth() - newWidth) / 2;
 
-	return crop(cutOff, 0, newWidth + cutOff, newHeight).getResized(maxWidth, maxHeight);
+        return crop(cutOff, 0, newWidth + cutOff, newHeight).getResized(maxWidth, maxHeight);
     }
 
     public Image getResized(int maxWidth, int maxHeight, boolean croppedToAspectRatio)
     {
-	if(croppedToAspectRatio)
-	    return getCroppedAndResized(maxWidth, maxHeight);
-	else
-	    return getResized(maxWidth, maxHeight);
+        if(croppedToAspectRatio)
+            return getCroppedAndResized(maxWidth, maxHeight);
+        else
+            return getResized(maxWidth, maxHeight);
     }
 
     public Image getResized(int maxWidth, int maxHeight)
     {
-	if(maxWidth > getWidth() && maxHeight > getHeight())
-	    return new Image(img);
+        if(maxWidth > getWidth() && maxHeight > getHeight())
+            return new Image(img);
 
-	int newHeight = getHeight(), newWidth = getWidth();
+        int newHeight = getHeight(), newWidth = getWidth();
 
-	if(newWidth > maxWidth)
-	{
-	    double ratio = (double) maxWidth / (double) newWidth;
-	    newHeight = (int) Math.round(newHeight * ratio);
-	    newWidth = maxWidth;
-	}
-	if(newHeight > maxHeight)
-	{
-	    double ratio = (double) maxHeight / (double) newHeight;
-	    newWidth = (int) Math.round(newWidth * ratio);
-	    newHeight = maxHeight;
-	}
+        if(newWidth > maxWidth)
+        {
+            double ratio = (double) maxWidth / (double) newWidth;
+            newHeight = (int) Math.round(newHeight * ratio);
+            newWidth = maxWidth;
+        }
+        if(newHeight > maxHeight)
+        {
+            double ratio = (double) maxHeight / (double) newHeight;
+            newWidth = (int) Math.round(newWidth * ratio);
+            newHeight = maxHeight;
+        }
 
-	MultiStepRescaleOp rescale = new MultiStepRescaleOp(newWidth, newHeight);
-	rescale.setUnsharpenMask(AdvancedResizeOp.UnsharpenMask.Soft);
-	BufferedImage resizedImage = rescale.filter(img, null);
+        MultiStepRescaleOp rescale = new MultiStepRescaleOp(newWidth, newHeight);
+        rescale.setUnsharpenMask(AdvancedResizeOp.UnsharpenMask.Soft);
+        BufferedImage resizedImage = rescale.filter(img, null);
 
-	return new Image(resizedImage);
+        return new Image(resizedImage);
     }
 
     public Image getResized(int maxWidth, int maxHeight, int cropPixels)
     {
-	int x1 = 0;
-	int y1 = 0;
-	int x2 = getWidth();
-	int y2 = getHeight();
+        int x1 = 0;
+        int y1 = 0;
+        int x2 = getWidth();
+        int y2 = getHeight();
 
-	int cropPixelsX = cropPixels;
-	int cropPixelsY = cropPixels;
+        int cropPixelsX = cropPixels;
+        int cropPixelsY = cropPixels;
 
-	if(getWidth() > getHeight())
-	    cropPixelsX = cropPixels * 2;
-	else
-	    cropPixelsY = cropPixels * 2;
+        if(getWidth() > getHeight())
+            cropPixelsX = cropPixels * 2;
+        else
+            cropPixelsY = cropPixels * 2;
 
-	//should there be any edge cropping?
-	if(cropPixels != 0)
-	{
-	    x1 += cropPixelsX;
-	    x2 -= cropPixelsX;
-	    y1 += cropPixelsY;
-	    y2 -= cropPixelsY;
-	}
+        //should there be any edge cropping?
+        if(cropPixels != 0)
+        {
+            x1 += cropPixelsX;
+            x2 -= cropPixelsX;
+            y1 += cropPixelsY;
+            y2 -= cropPixelsY;
+        }
 
-	// generate the image cropped to a square
-	Image cropped = crop(x1, y1, x2, y2);
+        // generate the image cropped to a square
+        Image cropped = crop(x1, y1, x2, y2);
 
-	// now resize. we do crop first then resize to preserve detail
-	Image resized = cropped.getResized(maxWidth, maxHeight);
-	cropped.dispose();
+        // now resize. we do crop first then resize to preserve detail
+        Image resized = cropped.getResized(maxWidth, maxHeight);
+        cropped.dispose();
 
-	return resized;
+        return resized;
     }
 
     /**
@@ -212,22 +219,22 @@ public class Image
      */
     public Image crop(int x1, int y1, int x2, int y2)
     {
-	if(x1 < 0 || x2 <= x1 || y1 < 0 || y2 <= y1 || x2 > getWidth() || y2 > getHeight())
-	    throw new IllegalArgumentException("invalid crop coordinates");
+        if(x1 < 0 || x2 <= x1 || y1 < 0 || y2 <= y1 || x2 > getWidth() || y2 > getHeight())
+            throw new IllegalArgumentException("invalid crop coordinates");
 
-	int type = img.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : img.getType();
-	int nNewWidth = x2 - x1;
-	int nNewHeight = y2 - y1;
-	BufferedImage cropped = new BufferedImage(nNewWidth, nNewHeight, type);
-	Graphics2D g = cropped.createGraphics();
+        int type = img.getType() == 0 ? BufferedImage.TYPE_INT_ARGB : img.getType();
+        int nNewWidth = x2 - x1;
+        int nNewHeight = y2 - y1;
+        BufferedImage cropped = new BufferedImage(nNewWidth, nNewHeight, type);
+        Graphics2D g = cropped.createGraphics();
 
-	g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
-	g.setComposite(AlphaComposite.Src);
+        g.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
+        g.setComposite(AlphaComposite.Src);
 
-	g.drawImage(img, 0, 0, nNewWidth, nNewHeight, x1, y1, x2, y2, null);
-	g.dispose();
+        g.drawImage(img, 0, 0, nNewWidth, nNewHeight, x1, y1, x2, y2, null);
+        g.dispose();
 
-	return new Image(cropped);
+        return new Image(cropped);
     }
 
     /**
@@ -245,49 +252,49 @@ public class Image
      */
     public Image getResizedToSquare(int width, double cropEdgesPct)
     {
-	if(cropEdgesPct < 0 || cropEdgesPct > 0.5)
-	    throw new IllegalArgumentException("Crop edges pct must be between 0 and 0.5. " + cropEdgesPct + " was supplied.");
-	if(width > getWidth())
-	    throw new IllegalArgumentException("Width " + width + " exceeds width of image, which is " + getWidth());
-	//crop to square first. determine the coordinates.
-	int cropMargin = (int) Math.abs(Math.round(((img.getWidth() - img.getHeight()) / 2.0)));
-	int x1 = 0;
-	int y1 = 0;
-	int x2 = getWidth();
-	int y2 = getHeight();
-	if(getWidth() > getHeight())
-	{
-	    x1 = cropMargin;
-	    x2 = x1 + y2;
-	}
-	else
-	{
-	    y1 = cropMargin;
-	    y2 = y1 + x2;
-	}
+        if(cropEdgesPct < 0 || cropEdgesPct > 0.5)
+            throw new IllegalArgumentException("Crop edges pct must be between 0 and 0.5. " + cropEdgesPct + " was supplied.");
+        if(width > getWidth())
+            throw new IllegalArgumentException("Width " + width + " exceeds width of image, which is " + getWidth());
+        //crop to square first. determine the coordinates.
+        int cropMargin = (int) Math.abs(Math.round(((img.getWidth() - img.getHeight()) / 2.0)));
+        int x1 = 0;
+        int y1 = 0;
+        int x2 = getWidth();
+        int y2 = getHeight();
+        if(getWidth() > getHeight())
+        {
+            x1 = cropMargin;
+            x2 = x1 + y2;
+        }
+        else
+        {
+            y1 = cropMargin;
+            y2 = y1 + x2;
+        }
 
-	//should there be any edge cropping?
-	if(cropEdgesPct != 0)
-	{
-	    int cropEdgeAmt = (int) ((x2 - x1) * cropEdgesPct);
-	    x1 += cropEdgeAmt;
-	    x2 -= cropEdgeAmt;
-	    y1 += cropEdgeAmt;
-	    y2 -= cropEdgeAmt;
-	}
+        //should there be any edge cropping?
+        if(cropEdgesPct != 0)
+        {
+            int cropEdgeAmt = (int) ((x2 - x1) * cropEdgesPct);
+            x1 += cropEdgeAmt;
+            x2 -= cropEdgeAmt;
+            y1 += cropEdgeAmt;
+            y2 -= cropEdgeAmt;
+        }
 
-	// generate the image cropped to a square
-	Image cropped = crop(x1, y1, x2, y2);
+        // generate the image cropped to a square
+        Image cropped = crop(x1, y1, x2, y2);
 
-	// now resize. we do crop first then resize to preserve detail
-	Image resized = cropped.getResizedToWidth(width);
-	cropped.dispose();
+        // now resize. we do crop first then resize to preserve detail
+        Image resized = cropped.getResizedToWidth(width);
+        cropped.dispose();
 
-	return resized;
+        return resized;
     }
 
     /**
-     * error tolerat version
+     * error tolerant version
      * returns the same image if image is smaller than width parameter
      * 
      * @param width
@@ -296,46 +303,46 @@ public class Image
      */
     public Image getResizedToSquare2(int width, double cropEdgesPct)
     {
-	if(cropEdgesPct < 0 || cropEdgesPct > 0.5)
-	    throw new IllegalArgumentException("Crop edges pct must be between 0 and 0.5. " + cropEdgesPct + " was supplied.");
-	if(width > getWidth())
-	    return new Image(img);
+        if(cropEdgesPct < 0 || cropEdgesPct > 0.5)
+            throw new IllegalArgumentException("Crop edges pct must be between 0 and 0.5. " + cropEdgesPct + " was supplied.");
+        if(width > getWidth())
+            return new Image(img);
 
-	//crop to square first. determine the coordinates.
-	int cropMargin = (int) Math.abs(Math.round(((img.getWidth() - img.getHeight()) / 2.0)));
-	int x1 = 0;
-	int y1 = 0;
-	int x2 = getWidth();
-	int y2 = getHeight();
-	if(getWidth() > getHeight())
-	{
-	    x1 = cropMargin;
-	    x2 = x1 + y2;
-	}
-	else
-	{
-	    y1 = cropMargin;
-	    y2 = y1 + x2;
-	}
+        //crop to square first. determine the coordinates.
+        int cropMargin = (int) Math.abs(Math.round(((img.getWidth() - img.getHeight()) / 2.0)));
+        int x1 = 0;
+        int y1 = 0;
+        int x2 = getWidth();
+        int y2 = getHeight();
+        if(getWidth() > getHeight())
+        {
+            x1 = cropMargin;
+            x2 = x1 + y2;
+        }
+        else
+        {
+            y1 = cropMargin;
+            y2 = y1 + x2;
+        }
 
-	//should there be any edge cropping?
-	if(cropEdgesPct != 0)
-	{
-	    int cropEdgeAmt = (int) ((x2 - x1) * cropEdgesPct);
-	    x1 += cropEdgeAmt;
-	    x2 -= cropEdgeAmt;
-	    y1 += cropEdgeAmt;
-	    y2 -= cropEdgeAmt;
-	}
+        //should there be any edge cropping?
+        if(cropEdgesPct != 0)
+        {
+            int cropEdgeAmt = (int) ((x2 - x1) * cropEdgesPct);
+            x1 += cropEdgeAmt;
+            x2 -= cropEdgeAmt;
+            y1 += cropEdgeAmt;
+            y2 -= cropEdgeAmt;
+        }
 
-	// generate the image cropped to a square
-	Image cropped = crop(x1, y1, x2, y2);
+        // generate the image cropped to a square
+        Image cropped = crop(x1, y1, x2, y2);
 
-	// now resize. we do crop first then resize to preserve detail
-	Image resized = cropped.getResizedToWidth(width);
-	cropped.dispose();
+        // now resize. we do crop first then resize to preserve detail
+        Image resized = cropped.getResizedToWidth(width);
+        cropped.dispose();
 
-	return resized;
+        return resized;
     }
 
     /**
@@ -347,15 +354,15 @@ public class Image
      */
     public Image soften(float softenFactor)
     {
-	if(softenFactor == 0f)
-	    return this;
-	else
-	{
-	    float[] softenArray = { 0, softenFactor, 0, softenFactor, 1 - (softenFactor * 4), softenFactor, 0, softenFactor, 0 };
-	    Kernel kernel = new Kernel(3, 3, softenArray);
-	    ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
-	    return new Image(cOp.filter(img, null));
-	}
+        if(softenFactor == 0f)
+            return this;
+        else
+        {
+            float[] softenArray = { 0, softenFactor, 0, softenFactor, 1 - (softenFactor * 4), softenFactor, 0, softenFactor, 0 };
+            Kernel kernel = new Kernel(3, 3, softenArray);
+            ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+            return new Image(cOp.filter(img, null));
+        }
     }
 
     /**
@@ -369,9 +376,9 @@ public class Image
      */
     public void writeToFile(File file, String type) throws IOException
     {
-	if(file == null)
-	    throw new IllegalArgumentException("File argument was null");
-	ImageIO.write(img, type, file);
+        if(file == null)
+            throw new IllegalArgumentException("File argument was null");
+        ImageIO.write(img, type, file);
     }
 
     /**
@@ -383,16 +390,16 @@ public class Image
      */
     public void writeToFile(OutputStream os, String type) throws IOException
     {
-	ImageIO.write(img, type, os);
-	os.close();
+        ImageIO.write(img, type, os);
+        os.close();
     }
 
     public InputStream getInputStream() throws IOException
     {
-	ByteArrayOutputStream os = new ByteArrayOutputStream();
-	ImageIO.write(img, "png", os);
-	os.close();
-	return new ByteArrayInputStream(os.toByteArray());
+        ByteArrayOutputStream os = new ByteArrayOutputStream();
+        ImageIO.write(img, "png", os);
+        os.close();
+        return new ByteArrayInputStream(os.toByteArray());
     }
 
     /**
@@ -400,6 +407,6 @@ public class Image
      */
     public void dispose()
     {
-	img.flush();
+        img.flush();
     }
 }
