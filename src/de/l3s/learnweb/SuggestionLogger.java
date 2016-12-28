@@ -35,174 +35,182 @@ public class SuggestionLogger
 
     public SuggestionLogger(Learnweb learnweb)
     {
-	super();
-	this.learnweb = learnweb;
-	this.queue = new LinkedBlockingQueue<Container>();
-	this.consumerThread = new Thread(new Consumer());
-	this.consumerThread.start();
+        super();
+        this.learnweb = learnweb;
+        this.queue = new LinkedBlockingQueue<Container>();
+        this.consumerThread = new Thread(new Consumer());
+        this.consumerThread.start();
     }
 
     public void log(String query, String market, String suggestionBing, String sessionId, User user)
     {
-	try
-	{
-	    queue.put(new Container(query, market, suggestionBing, sessionId, user));
-	}
-	catch(InterruptedException e)
-	{
-	    log.fatal("Couldn't log suggestion", e);
-	}
+        try
+        {
+            queue.put(new Container(query, market, suggestionBing, sessionId, user));
+        }
+        catch(InterruptedException e)
+        {
+            log.fatal("Couldn't log suggestion", e);
+        }
     }
 
     public void stop()
     {
-	try
-	{
-	    queue.put(LAST_ENTRY);
-	}
-	catch(Exception e)
-	{
-	    log.fatal("Couldn't stop suggestion logger", e);
-	}
+        try
+        {
+            queue.put(LAST_ENTRY);
+        }
+        catch(Exception e)
+        {
+            log.fatal("Couldn't stop suggestion logger", e);
+        }
     }
 
     private class Consumer implements Runnable
     {
-	@Override
-	public void run()
-	{
-	    try
-	    {
-		while(true)
-		{
-		    Container container = queue.take();
+        @Override
+        public void run()
+        {
+            try
+            {
+                while(true)
+                {
+                    Container container = queue.take();
 
-		    if(container == LAST_ENTRY) // stop method was called
-			break;
+                    if(container == LAST_ENTRY) // stop method was called
+                        break;
 
-		    String suggestionsGoogle = null;
-		    try
-		    {
-			suggestionsGoogle = googleSuggestion(container.market, container.query);
-		    }
-		    catch(Exception e)
-		    {
-			log.fatal("Couldn't get google suggestion for: " + container, e);
-		    }
+                    String suggestionsGoogle = null;
+                    try
+                    {
+                        suggestionsGoogle = googleSuggestion(container.market, container.query);
+                    }
+                    catch(Exception e)
+                    {
+                        log.fatal("Couldn't get google suggestion for: " + container.query, e);
+                    }
 
-		    try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO `lw_log_suggestions` (`query`, `market`, `timestamp`, `suggestions_bing`, `suggestions_google`, session_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)");)
-		    {
-			insert.setString(1, container.query);
-			insert.setString(2, container.market);
-			insert.setTimestamp(3, new Timestamp(container.timestamp));
-			insert.setString(4, container.suggestionBing);
-			insert.setString(5, suggestionsGoogle);
-			insert.setString(6, container.sessionId);
-			insert.setInt(7, container.userId);
-			insert.executeUpdate();
-		    }
-		    catch(SQLException e)
-		    {
-			log.fatal("Couldn't log suggestion: " + container, e);
-		    }
-		}
+                    try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO `lw_log_suggestions` (`query`, `market`, `timestamp`, `suggestions_bing`, `suggestions_google`, session_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)");)
+                    {
+                        insert.setString(1, container.query);
+                        insert.setString(2, container.market);
+                        insert.setTimestamp(3, new Timestamp(container.timestamp));
+                        insert.setString(4, container.suggestionBing);
+                        insert.setString(5, suggestionsGoogle);
+                        insert.setString(6, container.sessionId);
+                        insert.setInt(7, container.userId);
+                        insert.executeUpdate();
+                    }
+                    catch(SQLException e)
+                    {
+                        log.fatal("Couldn't log suggestion: " + container, e);
+                    }
+                }
 
-		log.debug("Suggestion logger was stopped");
-	    }
-	    catch(InterruptedException e)
-	    {
-		log.fatal("Suggestion logger crashed", e);
-	    }
-	}
+                log.debug("Suggestion logger was stopped");
+            }
+            catch(InterruptedException e)
+            {
+                log.fatal("Suggestion logger crashed", e);
+            }
+        }
 
-	private String googleSuggestion(String market, String query)
-	{
-	    String suggestion = "";
-	    if(market.length() > 2)
-	    {
-		market = market.substring(0, 2);
-	    }
-	    String suggestorUrl = "http://suggestqueries.google.com/complete/search?output=toolbar&hl=" + market + "&q=" + StringHelper.urlEncode(query);
-	    try
-	    {
-		Client client = Client.create();
-		WebResource webResource = client.resource(suggestorUrl);
-		ClientResponse response = webResource.get(ClientResponse.class);
-		String xml = response.getEntity(String.class);
+        private String googleSuggestion(String market, String query)
+        {
+            String suggestion = "";
+            if(market.length() > 2)
+            {
+                market = market.substring(0, 2);
+            }
+            String suggestorUrl = "http://suggestqueries.google.com/complete/search?output=toolbar&hl=" + market + "&q=" + StringHelper.urlEncode(query);
+            try
+            {
+                Client client = Client.create();
+                WebResource webResource = client.resource(suggestorUrl);
+                ClientResponse response = webResource.get(ClientResponse.class);
+                String xml = response.getEntity(String.class);
 
-		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-		DocumentBuilder db = null;
-		try
-		{
-		    db = dbf.newDocumentBuilder();
-		}
-		catch(ParserConfigurationException e)
-		{
-		    log.error(e);
-		    return "";
-		}
-		Document doc = null;
-		try
-		{
-		    try
-		    {
-			doc = db.parse(new InputSource(new StringReader(xml)));
-		    }
-		    catch(IOException e)
-		    {
-			log.error(e);
-		    }
-		}
-		catch(SAXException e)
-		{
-		    log.error("Exception in parsing xml doc of google suggestion", e);
-		}
-		NodeList getData = doc.getElementsByTagName("suggestion");
-		for(int i = 0; i < getData.getLength(); i++)
-		{
-		    Node currentSuggestion = getData.item(i);
+                DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+                DocumentBuilder db = null;
+                try
+                {
+                    db = dbf.newDocumentBuilder();
+                }
+                catch(ParserConfigurationException e)
+                {
+                    log.error(e);
+                    return "";
+                }
+                Document doc = null;
+                try
+                {
+                    try
+                    {
+                        doc = db.parse(new InputSource(new StringReader(xml)));
+                    }
+                    catch(IOException e)
+                    {
+                        log.error(e);
+                    }
+                }
+                catch(SAXException e)
+                {
+                    log.error("Exception in parsing xml doc of google suggestion with query: " + query, e);
+                }
+                NodeList getData = null;
+                try
+                {
+                    getData = doc.getElementsByTagName("suggestion");
+                }
+                catch(NullPointerException e)
+                {
+                    log.error("Can not retrieve suggestions for query: " + query, e);
+                }
+                for(int i = 0; i < getData.getLength(); i++)
+                {
+                    Node currentSuggestion = getData.item(i);
 
-		    suggestion += currentSuggestion.getAttributes().getNamedItem("data").getNodeValue();
-		    suggestion += ", ";
-		}
-		if(suggestion.lastIndexOf(",") != -1)
-		    suggestion = suggestion.substring(0, suggestion.lastIndexOf(","));
-	    }
-	    catch(NullPointerException e)
-	    {
-		log.error("Google suggestions not retrieved", e);
-		return "";
-	    }
+                    suggestion += currentSuggestion.getAttributes().getNamedItem("data").getNodeValue();
+                    suggestion += ", ";
+                }
+                if(suggestion.lastIndexOf(",") != -1)
+                    suggestion = suggestion.substring(0, suggestion.lastIndexOf(","));
+            }
+            catch(NullPointerException e)
+            {
+                log.error("Google suggestions not retrieved for query: " + query, e);
+                return "";
+            }
 
-	    return suggestion;
-	}
+            return suggestion;
+        }
     }
 
     private static class Container
     {
-	private String query;
-	private String market;
-	private String suggestionBing;
-	private long timestamp;
-	private String sessionId;
-	private int userId;
+        private String query;
+        private String market;
+        private String suggestionBing;
+        private long timestamp;
+        private String sessionId;
+        private int userId;
 
-	public Container(String query, String market, String suggestionBing, String sessionId, User user)
-	{
-	    super();
-	    this.query = query;
-	    this.market = market;
-	    this.suggestionBing = suggestionBing;
-	    this.timestamp = System.currentTimeMillis();
-	    this.sessionId = sessionId;
-	    this.userId = user == null ? 0 : user.getId();
-	}
+        public Container(String query, String market, String suggestionBing, String sessionId, User user)
+        {
+            super();
+            this.query = query;
+            this.market = market;
+            this.suggestionBing = suggestionBing;
+            this.timestamp = System.currentTimeMillis();
+            this.sessionId = sessionId;
+            this.userId = user == null ? 0 : user.getId();
+        }
 
-	@Override
-	public String toString()
-	{
-	    return "Container [query=" + query + ", market=" + market + ", suggestionBing=" + suggestionBing + ", timestamp=" + timestamp + "]";
-	}
+        @Override
+        public String toString()
+        {
+            return "Container [query=" + query + ", market=" + market + ", suggestionBing=" + suggestionBing + ", timestamp=" + timestamp + "]";
+        }
 
     }
 
