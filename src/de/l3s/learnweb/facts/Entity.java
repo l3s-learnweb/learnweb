@@ -20,92 +20,92 @@ public class Entity implements Serializable
 
     public String getWikiId()
     {
-	return wikiId;
+        return wikiId;
     }
 
     public void setWikiId(String wikiId)
     {
-	this.wikiId = wikiId;
+        this.wikiId = wikiId;
     }
 
     public String getLabel()
     {
-	return label;
+        return label;
     }
 
     public void setLabel(String label)
     {
-	this.label = label;
+        this.label = label;
     }
 
     public String getDescription()
     {
-	return description;
+        return description;
     }
 
     public void setDescription(String description)
     {
-	this.description = description;
+        this.description = description;
     }
 
     public List<String> getImageUrl()
     {
-	return imageUrl;
+        return imageUrl;
     }
 
     public void setImageUrl(List<String> imageUrl)
     {
-	this.imageUrl = imageUrl;
+        this.imageUrl = imageUrl;
     }
 
     public Map<String, List<String>> getWikiStats()
     {
-	return wikiStats;
+        return wikiStats;
     }
 
     public void setWikiStats(Map<String, List<String>> wikiStats)
     {
-	this.wikiStats = wikiStats;
+        this.wikiStats = wikiStats;
     }
 
     public Map<String, String> getPropList()
     {
-	return propList;
+        return propList;
     }
 
     public void setPropList(Map<String, String> propList)
     {
-	this.propList = propList;
+        this.propList = propList;
     }
 
     public List<FactSheetEntry> getFacts()
     {
-	return facts;
+        return facts;
     }
 
     public void setFacts(List<FactSheetEntry> facts)
     {
-	this.facts = facts;
+        this.facts = facts;
     }
 
     public String getTitle()
     {
-	return title;
+        return title;
     }
 
     public void setTitle(String title)
     {
-	this.title = title;
+        this.title = title;
     }
 
     public List<String> getInstance()
     {
-	return instance;
+        return instance;
     }
 
     public void setInstance(List<String> instance)
     {
-	this.instance = instance;
+        this.instance = instance;
     }
 
 }

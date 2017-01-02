@@ -21,32 +21,32 @@ public class AdminChangeLogBean extends ApplicationBean
 
     public void update() throws SQLException
     {
-	java.sql.PreparedStatement pstmt = getLearnweb().getConnection().prepareStatement("INSERT INTO admin_change_log (message)	VALUES (?)");
-	pstmt.setString(1, message);
-	pstmt.executeUpdate();
-	/*getLearnweb().setAdminMessage(message);*/
+        java.sql.PreparedStatement pstmt = getLearnweb().getConnection().prepareStatement("INSERT INTO admin_change_log (message)	VALUES (?)");
+        pstmt.setString(1, message);
+        pstmt.executeUpdate();
+        /*getLearnweb().setAdminMessage(message);*/
 
     }
 
     public String getMessage()
     {
-	return message;
+        return message;
     }
 
     public void setMessage(String message)
     {
-	this.message = message;
+        this.message = message;
     }
 
     public void setChangelogmessages(LinkedList<String> changelogmessages)
     {
-	this.changelogmessages = changelogmessages;
+        this.changelogmessages = changelogmessages;
     }
 
     public List<String> getChangelogmessages() throws SQLException
     {
-	changelogmessages = getLearnweb().getChangeLog();
-	return changelogmessages;
+        changelogmessages = getLearnweb().getChangeLog();
+        return changelogmessages;
     }
 
 }

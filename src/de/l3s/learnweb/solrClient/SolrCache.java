@@ -22,18 +22,18 @@ public class SolrCache
 
     private SolrCache()
     {
-	solrClient = Learnweb.getInstance().getSolrClient();
-	cacheQueue = new LinkedBlockingQueue<ResourceDecorator>();
-	service = Executors.newSingleThreadExecutor();
-	service.submit(new Indexer(cacheQueue, solrClient));
+        solrClient = Learnweb.getInstance().getSolrClient();
+        cacheQueue = new LinkedBlockingQueue<ResourceDecorator>();
+        service = Executors.newSingleThreadExecutor();
+        service.submit(new Indexer(cacheQueue, solrClient));
     }
 
     public static SolrCache getInstance()
     {
-	if(null == instance)
-	    instance = new SolrCache();
+        if(null == instance)
+            instance = new SolrCache();
 
-	return instance;
+        return instance;
     }
 
     /**
@@ -44,60 +44,60 @@ public class SolrCache
      */
     public void cacheResources(List<ResourceDecorator> resources)
     {
-	if(resources.size() == 0)
-	    return;
+        if(resources.size() == 0)
+            return;
 
-	log.debug("Added " + resources.size() + " to cache queue");
+        log.debug("Added " + resources.size() + " to cache queue");
 
-	for(ResourceDecorator decoratedResource : resources)
-	{
-	    try
-	    {
-		cacheQueue.put(decoratedResource);
+        for(ResourceDecorator decoratedResource : resources)
+        {
+            try
+            {
+                cacheQueue.put(decoratedResource);
 
-		//log.debug("Debug: add Resource to cache Queue: " + decoratedResource.getTitle());
-	    }
-	    catch(InterruptedException e)
-	    {
-		e.printStackTrace();
-		Thread.currentThread().interrupt();
-	    }
-	}
+                //log.debug("Debug: add Resource to cache Queue: " + decoratedResource.getTitle());
+            }
+            catch(InterruptedException e)
+            {
+                e.printStackTrace();
+                Thread.currentThread().interrupt();
+            }
+        }
     }
 
     private static class Indexer implements Runnable
     {
-	private final BlockingQueue<ResourceDecorator> workQueue;
-	private SolrClient client;
-	private final int maxResourcesIndexedOneTime = 1000;
+        private final BlockingQueue<ResourceDecorator> workQueue;
+        private SolrClient client;
+        private final int maxResourcesIndexedOneTime = 1000;
 
-	public Indexer(BlockingQueue<ResourceDecorator> workQueue, SolrClient solrClient)
-	{
-	    this.workQueue = workQueue;
-	    this.client = solrClient;
-	}
+        public Indexer(BlockingQueue<ResourceDecorator> workQueue, SolrClient solrClient)
+        {
+            this.workQueue = workQueue;
+            this.client = solrClient;
+        }
 
-	@Override
-	public void run()
-	{
-	    while(!Thread.currentThread().isInterrupted())
-	    {
-		try
-		{
-		    log.debug("wait");
-		    List<ResourceDecorator> workList = new LinkedList<ResourceDecorator>();
-		    workList.add(workQueue.take());
-		    workQueue.drainTo(workList, maxResourcesIndexedOneTime - 1);
-		    client.indexDecoratedResources(workList);
-		}
-		catch(InterruptedException ex)
-		{
-		    ex.printStackTrace();
+        @Override
+        public void run()
+        {
+            while(!Thread.currentThread().isInterrupted())
+            {
+                try
+                {
+                    log.debug("wait");
+                    List<ResourceDecorator> workList = new LinkedList<ResourceDecorator>();
+                    workList.add(workQueue.take());
+                    workQueue.drainTo(workList, maxResourcesIndexedOneTime - 1);
+                    client.indexDecoratedResources(workList);
+                }
+                catch(InterruptedException ex)
+                {
+                    ex.printStackTrace();
 
-		    Thread.currentThread().interrupt();
-		    break;
-		}
-	    }
-	}
+                    Thread.currentThread().interrupt();
+                    break;
+                }
+            }
+        }
     }
 }

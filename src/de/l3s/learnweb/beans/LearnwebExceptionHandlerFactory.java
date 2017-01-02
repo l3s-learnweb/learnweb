@@ -18,17 +18,17 @@ public class LearnwebExceptionHandlerFactory extends PrimeExceptionHandlerFactor
     // this injection handles jsf
     public LearnwebExceptionHandlerFactory(ExceptionHandlerFactory parent)
     {
-	super(parent);
-	this.parent = parent;
+        super(parent);
+        this.parent = parent;
     }
 
     @Override
     public ExceptionHandler getExceptionHandler()
     {
 
-	ExceptionHandler handler = new LearnwebExceptionHandler(parent.getExceptionHandler());
+        ExceptionHandler handler = new LearnwebExceptionHandler(parent.getExceptionHandler());
 
-	return handler;
+        return handler;
     }
 
 }

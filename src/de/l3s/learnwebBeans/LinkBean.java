@@ -30,32 +30,32 @@ public class LinkBean extends ApplicationBean
 
     public String getUrl()
     {
-	FacesContext facesContext = getFacesContext();
-	ExternalContext ext = facesContext.getExternalContext();
-	HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();
-	HttpServletResponse servletResponse = (HttpServletResponse) ext.getResponse();
+        FacesContext facesContext = getFacesContext();
+        ExternalContext ext = facesContext.getExternalContext();
+        HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();
+        HttpServletResponse servletResponse = (HttpServletResponse) ext.getResponse();
 
-	url = servletRequest.getParameter("link");
+        url = servletRequest.getParameter("link");
 
-	if(url != null && url != "")
-	{
-	    try
-	    {
-		servletResponse.sendRedirect(url);
-		log(Action.open_link, 0, 0, url);
+        if(url != null && url != "")
+        {
+            try
+            {
+                servletResponse.sendRedirect(url);
+                log(Action.open_link, 0, 0, url);
 
-	    }
-	    catch(IOException e)
-	    {
-		e.printStackTrace();
-	    }
-	}
-	return url;
+            }
+            catch(IOException e)
+            {
+                e.printStackTrace();
+            }
+        }
+        return url;
     }
 
     public void setUrl(String url)
     {
-	this.url = url;
+        this.url = url;
     }
 
 }

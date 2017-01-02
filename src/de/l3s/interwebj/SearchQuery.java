@@ -37,7 +37,7 @@ public class SearchQuery implements Serializable
 
     public SearchQuery(InputStream inputStream) throws IllegalResponseException
     {
-	parse(inputStream);
+        parse(inputStream);
     }
 
     /**
@@ -51,96 +51,96 @@ public class SearchQuery implements Serializable
      */
     private void parse(InputStream inputStream) throws IllegalResponseException
     {
-	try
-	{
-	    FacetField ff = new FacetField("location");
-	    int counter = 0;
-	    results = new LinkedList<ResourceDecorator>();
-	    totalResults = 0;
+        try
+        {
+            FacetField ff = new FacetField("location");
+            int counter = 0;
+            results = new LinkedList<ResourceDecorator>();
+            totalResults = 0;
 
-	    JAXBContext jaxbContext = JAXBContext.newInstance(SearchResponse.class);
-	    Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
-	    SearchResponse response = (SearchResponse) jaxbUnmarshaller.unmarshal(inputStream);
+            JAXBContext jaxbContext = JAXBContext.newInstance(SearchResponse.class);
+            Unmarshaller jaxbUnmarshaller = jaxbContext.createUnmarshaller();
+            SearchResponse response = (SearchResponse) jaxbUnmarshaller.unmarshal(inputStream);
 
-	    if(response == null)
-	    {
-		log.fatal("response is null");
-		return;
-	    }
-	    if(response.getQuery() == null)
-	    {
-		log.fatal("response query is null");
-		return;
-	    }
+            if(response == null)
+            {
+                log.fatal("response is null");
+                return;
+            }
+            if(response.getQuery() == null)
+            {
+                log.fatal("response query is null");
+                return;
+            }
 
-	    List<SearchResultEntity> searchResults = response.getQuery().getResults();
+            List<SearchResultEntity> searchResults = response.getQuery().getResults();
 
-	    for(SearchResultEntity searchResult : searchResults)
-	    {
-		Resource currentResource = ResourceManager.getResourceFromInterwebResult(searchResult);
+            for(SearchResultEntity searchResult : searchResults)
+            {
+                Resource currentResource = ResourceManager.getResourceFromInterwebResult(searchResult);
 
-		if(!currentResource.getType().equalsIgnoreCase("text") && null == currentResource.getThumbnail4()) // no thumbnail set
-		{
-		    log.error("Found no thumbnail:" + searchResult);
+                if(!currentResource.getType().equalsIgnoreCase("text") && null == currentResource.getThumbnail4()) // no thumbnail set
+                {
+                    log.error("Found no thumbnail:" + searchResult);
 
-		    counter++;
+                    counter++;
 
-		    if(counter > 5)
-		    {
-			log.error("To many missing thumbnails", new Exception());
-			return;
-		    }
-		    continue;
-		}
+                    if(counter > 5)
+                    {
+                        log.error("To many missing thumbnails", new Exception());
+                        return;
+                    }
+                    continue;
+                }
 
-		ResourceDecorator decoratedResource = new ResourceDecorator(currentResource);
-		decoratedResource.setSnippet(searchResult.getSnippet());
-		decoratedResource.setRankAtService(searchResult.getRankAtService());
-		decoratedResource.setTitle(searchResult.getTitle());
+                ResourceDecorator decoratedResource = new ResourceDecorator(currentResource);
+                decoratedResource.setSnippet(searchResult.getSnippet());
+                decoratedResource.setRankAtService(searchResult.getRankAtService());
+                decoratedResource.setTitle(searchResult.getTitle());
 
-		// bing description contains snippet with term highlighting
-		if(currentResource.getSource().equalsIgnoreCase("bing") && decoratedResource.getSnippet() == null)
-		{
-		    // add snippet
-		    decoratedResource.setSnippet(currentResource.getDescription());
-		    // remove search term highlighting from description
-		    currentResource.setDescription(Jsoup.clean(currentResource.getDescription(), Whitelist.none()));
-		}
+                // bing description contains snippet with term highlighting
+                if(currentResource.getSource().equalsIgnoreCase("bing") && decoratedResource.getSnippet() == null)
+                {
+                    // add snippet
+                    decoratedResource.setSnippet(currentResource.getDescription());
+                    // remove search term highlighting from description
+                    currentResource.setDescription(Jsoup.clean(currentResource.getDescription(), Whitelist.none()));
+                }
 
-		if(decoratedResource.getSnippet() == null)
-		{
-		    decoratedResource.setSnippet(currentResource.getShortDescription());
-		}
-		results.add(decoratedResource);
+                if(decoratedResource.getSnippet() == null)
+                {
+                    decoratedResource.setSnippet(currentResource.getShortDescription());
+                }
+                results.add(decoratedResource);
 
-		if(!serviceCountSaver.contains(searchResult.getService()))
-		{
-		    serviceCountSaver.add(searchResult.getService());
-		    totalResults += searchResult.getTotalResultsAtService();
-		    serviceCount.add(new Count(ff, searchResult.getService(), searchResult.getTotalResultsAtService()));
-		}
-	    }
+                if(!serviceCountSaver.contains(searchResult.getService()))
+                {
+                    serviceCountSaver.add(searchResult.getService());
+                    totalResults += searchResult.getTotalResultsAtService();
+                    serviceCount.add(new Count(ff, searchResult.getService(), searchResult.getTotalResultsAtService()));
+                }
+            }
 
-	}
-	catch(JAXBException e)
-	{
-	    throw new IllegalResponseException(e);
-	}
+        }
+        catch(JAXBException e)
+        {
+            throw new IllegalResponseException(e);
+        }
     }
 
     public List<ResourceDecorator> getResults()
     {
-	return results;
+        return results;
     }
 
     public long getTotalResultCount()
     {
 
-	return totalResults;
+        return totalResults;
     }
 
     public List<Count> getResultCountPerService()
     {
-	return serviceCount;
+        return serviceCount;
     }
 }

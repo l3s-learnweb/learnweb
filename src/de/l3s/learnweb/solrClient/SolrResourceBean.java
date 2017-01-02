@@ -130,353 +130,353 @@ public class SolrResourceBean
 
     public SolrResourceBean(ResourceDecorator decoratedResource) throws SQLException
     {
-	this(decoratedResource.getResource());
+        this(decoratedResource.getResource());
 
-	setOldRank(decoratedResource.getRankAtService());
-	//setEmbeddedCode(decoratedResource.getResource().getEmbeddedRaw());
-	setId(decoratedResource.getResource().getUrl());
+        setOldRank(decoratedResource.getRankAtService());
+        //setEmbeddedCode(decoratedResource.getResource().getEmbeddedRaw());
+        setId(decoratedResource.getResource().getUrl());
 
-	if(null != decoratedResource.getResource().getThumbnail4())
-	{
-	    setThumbnailUrl2(decoratedResource.getResource().getThumbnail2().getUrl());
-	    setThumbnailHeight2(decoratedResource.getResource().getThumbnail2().getHeight());
-	    setThumnailWidth2(decoratedResource.getResource().getThumbnail2().getWidth());
-	    setThumbnailUrl3(decoratedResource.getResource().getThumbnail3().getUrl());
-	    setThumbnailHeight3(decoratedResource.getResource().getThumbnail3().getHeight());
-	    setThumnailWidth3(decoratedResource.getResource().getThumbnail3().getWidth());
-	    setThumbnailUrl4(decoratedResource.getResource().getThumbnail4().getUrl());
-	    setThumbnailHeight4(decoratedResource.getResource().getThumbnail4().getHeight());
-	    setThumnailWidth4(decoratedResource.getResource().getThumbnail4().getWidth());
-	}
+        if(null != decoratedResource.getResource().getThumbnail4())
+        {
+            setThumbnailUrl2(decoratedResource.getResource().getThumbnail2().getUrl());
+            setThumbnailHeight2(decoratedResource.getResource().getThumbnail2().getHeight());
+            setThumnailWidth2(decoratedResource.getResource().getThumbnail2().getWidth());
+            setThumbnailUrl3(decoratedResource.getResource().getThumbnail3().getUrl());
+            setThumbnailHeight3(decoratedResource.getResource().getThumbnail3().getHeight());
+            setThumnailWidth3(decoratedResource.getResource().getThumbnail3().getWidth());
+            setThumbnailUrl4(decoratedResource.getResource().getThumbnail4().getUrl());
+            setThumbnailHeight4(decoratedResource.getResource().getThumbnail4().getHeight());
+            setThumnailWidth4(decoratedResource.getResource().getThumbnail4().getWidth());
+        }
     }
 
     public SolrResourceBean(Resource resource) throws SQLException
     {
-	this.id = "r_" + resource.getId();
-	this.title = resource.getTitle();
-	this.description = resource.getDescription();
-	this.source = resource.getSource().equals("Archive-It") ? "ArchiveIt" : resource.getSource();
-	this.location = resource.getLocation().equals("Archive-It") ? "ArchiveIt" : resource.getLocation();
-	this.type = resource.getType();
-	this.format = resource.getFormat();
-	this.language = resource.getLanguage();
-	this.author = resource.getAuthor();
-	this.ownerUserId = resource.getOwnerUserId();
-	this.url = resource.getUrl();
+        this.id = "r_" + resource.getId();
+        this.title = resource.getTitle();
+        this.description = resource.getDescription();
+        this.source = resource.getSource().equals("Archive-It") ? "ArchiveIt" : resource.getSource();
+        this.location = resource.getLocation().equals("Archive-It") ? "ArchiveIt" : resource.getLocation();
+        this.type = resource.getType();
+        this.format = resource.getFormat();
+        this.language = resource.getLanguage();
+        this.author = resource.getAuthor();
+        this.ownerUserId = resource.getOwnerUserId();
+        this.url = resource.getUrl();
 
-	if(null != resource.getTags())
-	{
-	    this.tags = new LinkedList<String>();
-	    this.tagsTemp = new LinkedList<String>();
-	    for(Tag tag : resource.getTags())
-	    {
-		tags.add(tag.getName());
-		tagsTemp.add(tag.getName());
-	    }
-	}
-	if(null != resource.getComments())
-	{
-	    this.comments = new LinkedList<String>();
-	    for(Comment comment : resource.getComments())
-		comments.add(comment.getText());
-	}
-	if(null != resource.getGroup())
-	{
-	    this.groups = new LinkedList<Integer>(Arrays.asList(resource.getGroupId()));
-	}
+        if(null != resource.getTags())
+        {
+            this.tags = new LinkedList<String>();
+            this.tagsTemp = new LinkedList<String>();
+            for(Tag tag : resource.getTags())
+            {
+                tags.add(tag.getName());
+                tagsTemp.add(tag.getName());
+            }
+        }
+        if(null != resource.getComments())
+        {
+            this.comments = new LinkedList<String>();
+            for(Comment comment : resource.getComments())
+                comments.add(comment.getText());
+        }
+        if(null != resource.getGroup())
+        {
+            this.groups = new LinkedList<Integer>(Arrays.asList(resource.getGroupId()));
+        }
 
-	if(null != resource.getThumbnail4())
-	{
-	    setThumbnailHeight4(resource.getThumbnail4().getHeight());
-	    setThumnailWidth4(resource.getThumbnail4().getWidth());
+        if(null != resource.getThumbnail4())
+        {
+            setThumbnailHeight4(resource.getThumbnail4().getHeight());
+            setThumnailWidth4(resource.getThumbnail4().getWidth());
 
-	    this.thumbnailHeight4Temp = resource.getThumbnail4().getHeight();
-	    this.thumnailWidth4Temp = resource.getThumbnail4().getWidth();
-	}
+            this.thumbnailHeight4Temp = resource.getThumbnail4().getHeight();
+            this.thumnailWidth4Temp = resource.getThumbnail4().getWidth();
+        }
 
-	// copy metadata to dynamic fields
-	dynamicFieldsStrings = new HashMap<String, String>(resource.getMetadata().size());
+        // copy metadata to dynamic fields
+        dynamicFieldsStrings = new HashMap<String, String>(resource.getMetadata().size());
 
-	for(Entry<String, String> entry : resource.getMetadata().entrySet())
-	{
-	    dynamicFieldsStrings.put(entry.getKey() + "_s", entry.getValue());
-	}
-	/*
-	this.collector = resource.getMetadataValue("collector");
-	this.coverage = resource.getMetadataValue("coverage");
-	this.publisher = resource.getMetadataValue("publisher");
-	*/
-	this.path = resource.getPath();
+        for(Entry<String, String> entry : resource.getMetadata().entrySet())
+        {
+            dynamicFieldsStrings.put(entry.getKey() + "_s", entry.getValue());
+        }
+        /*
+        this.collector = resource.getMetadataValue("collector");
+        this.coverage = resource.getMetadataValue("coverage");
+        this.publisher = resource.getMetadataValue("publisher");
+        */
+        this.path = resource.getPath();
     }
 
     public String getAuthor()
     {
-	return author;
+        return author;
     }
 
     public void setAuthor(String author)
     {
-	this.author = author;
+        this.author = author;
     }
 
     public Integer getOldRank()
     {
-	return oldRank;
+        return oldRank;
     }
 
     public void setOldRank(Integer oldRank)
     {
-	this.oldRank = oldRank;
+        this.oldRank = oldRank;
     }
 
     public String getMachineDescription()
     {
-	return machineDescription;
+        return machineDescription;
     }
 
     public void setMachineDescription(String machineDescription)
     {
-	this.machineDescription = machineDescription;
+        this.machineDescription = machineDescription;
     }
 
     public String getId()
     {
-	return id;
+        return id;
     }
 
     public void setId(String id)
     {
-	this.id = id;
+        this.id = id;
     }
 
     public String getTitle()
     {
-	return title;
+        return title;
     }
 
     public void setTitle(String title)
     {
-	this.title = title;
+        this.title = title;
     }
 
     public String getSource()
     {
-	return source;
+        return source;
     }
 
     public void setSource(String source)
     {
-	this.source = source;
+        this.source = source;
     }
 
     public String getDescription()
     {
-	return description;
+        return description;
     }
 
     public void setDescription(String description)
     {
-	this.description = description;
+        this.description = description;
     }
 
     public String getLocation()
     {
-	return location;
+        return location;
     }
 
     public void setLocation(String location)
     {
-	this.location = location;
+        this.location = location;
     }
 
     public String getType()
     {
-	return type;
+        return type;
     }
 
     public void setType(String type)
     {
-	this.type = type;
+        this.type = type;
     }
 
     public String getFormat()
     {
-	return format;
+        return format;
     }
 
     public void setFormat(String format)
     {
-	this.format = format;
+        this.format = format;
     }
 
     public String getLanguage()
     {
-	return language;
+        return language;
     }
 
     public void setLanguage(String language)
     {
-	this.language = language;
+        this.language = language;
     }
 
     public List<String> getTags()
     {
-	return tags;
+        return tags;
     }
 
     public void setTags(List<String> tags)
     {
-	this.tags = tags;
+        this.tags = tags;
     }
 
     public void addTag(String tag)
     {
-	this.tags.add(tag);
+        this.tags.add(tag);
     }
 
     public List<Integer> getGroups()
     {
-	return groups;
+        return groups;
     }
 
     public void setGroups(List<Integer> groups)
     {
-	this.groups = groups;
+        this.groups = groups;
     }
 
     public List<String> getComments()
     {
-	return comments;
+        return comments;
     }
 
     public void setComments(List<String> comments)
     {
-	this.comments = comments;
+        this.comments = comments;
     }
 
     public String getEmbeddedCode()
     {
-	return embeddedCode;
+        return embeddedCode;
     }
 
     public void setEmbeddedCode(String embeddedCode)
     {
-	this.embeddedCode = embeddedCode;
+        this.embeddedCode = embeddedCode;
     }
 
     public String getThumbnailUrl2()
     {
-	return thumbnailUrl2;
+        return thumbnailUrl2;
     }
 
     public void setThumbnailUrl2(String thumbnailUrl2)
     {
-	this.thumbnailUrl2 = thumbnailUrl2;
+        this.thumbnailUrl2 = thumbnailUrl2;
     }
 
     public int getThumbnailHeight2()
     {
-	return thumbnailHeight2;
+        return thumbnailHeight2;
     }
 
     public void setThumbnailHeight2(int thumbnailHeight2)
     {
-	this.thumbnailHeight2 = thumbnailHeight2;
+        this.thumbnailHeight2 = thumbnailHeight2;
     }
 
     public int getThumnailWidth2()
     {
-	return thumnailWidth2;
+        return thumnailWidth2;
     }
 
     public void setThumnailWidth2(int thumnailWidth2)
     {
-	this.thumnailWidth2 = thumnailWidth2;
+        this.thumnailWidth2 = thumnailWidth2;
     }
 
     public String getThumbnailUrl3()
     {
-	return thumbnailUrl3;
+        return thumbnailUrl3;
     }
 
     public void setThumbnailUrl3(String thumbnailUrl3)
     {
-	this.thumbnailUrl3 = thumbnailUrl3;
+        this.thumbnailUrl3 = thumbnailUrl3;
     }
 
     public int getThumbnailHeight3()
     {
-	return thumbnailHeight3;
+        return thumbnailHeight3;
     }
 
     public void setThumbnailHeight3(int thumbnailHeight3)
     {
-	this.thumbnailHeight3 = thumbnailHeight3;
+        this.thumbnailHeight3 = thumbnailHeight3;
     }
 
     public int getThumnailWidth3()
     {
-	return thumnailWidth3;
+        return thumnailWidth3;
     }
 
     public void setThumnailWidth3(int thumnailWidth3)
     {
-	this.thumnailWidth3 = thumnailWidth3;
+        this.thumnailWidth3 = thumnailWidth3;
     }
 
     public String getThumbnailUrl4()
     {
-	return thumbnailUrl4;
+        return thumbnailUrl4;
     }
 
     public void setThumbnailUrl4(String thumbnailUrl4)
     {
-	this.thumbnailUrl4 = thumbnailUrl4;
+        this.thumbnailUrl4 = thumbnailUrl4;
     }
 
     public int getThumbnailHeight4()
     {
-	return thumbnailHeight4;
+        return thumbnailHeight4;
     }
 
     public void setThumbnailHeight4(int thumbnailHeight4)
     {
-	this.thumbnailHeight4 = thumbnailHeight4;
+        this.thumbnailHeight4 = thumbnailHeight4;
     }
 
     public int getThumnailWidth4()
     {
-	return thumnailWidth4;
+        return thumnailWidth4;
     }
 
     public void setThumnailWidth4(int thumnailWidth4)
     {
-	this.thumnailWidth4 = thumnailWidth4;
+        this.thumnailWidth4 = thumnailWidth4;
     }
 
     public void setOldRank(int oldRank)
     {
-	this.oldRank = oldRank;
+        this.oldRank = oldRank;
     }
 
     public int getOwnerUserId()
     {
-	return ownerUserId;
+        return ownerUserId;
     }
 
     public void setOwnerUserId(int ownerUserId)
     {
-	this.ownerUserId = ownerUserId;
+        this.ownerUserId = ownerUserId;
     }
 
     public String getUrl()
     {
-	return url;
+        return url;
     }
 
     public void setUrl(String url)
     {
-	this.url = url;
+        this.url = url;
     }
 
     /*
@@ -512,42 +512,42 @@ public class SolrResourceBean
     */
     public String getPath()
     {
-    return path;
+        return path;
     }
-    
+
     public void setPath(String path)
     {
-    this.path = path;
+        this.path = path;
     }
 
     public List<String> getTagsTemp()
     {
-	return tagsTemp;
+        return tagsTemp;
     }
 
     public void setTagsTemp(List<String> tagsTemp)
     {
-	this.tagsTemp = tagsTemp;
+        this.tagsTemp = tagsTemp;
     }
 
     public int getThumbnailHeight4Temp()
     {
-	return thumbnailHeight4Temp;
+        return thumbnailHeight4Temp;
     }
 
     public void setThumbnailHeight4Temp(int thumbnailHeight4Temp)
     {
-	this.thumbnailHeight4Temp = thumbnailHeight4Temp;
+        this.thumbnailHeight4Temp = thumbnailHeight4Temp;
     }
 
     public int getThumnailWidth4Temp()
     {
-	return thumnailWidth4Temp;
+        return thumnailWidth4Temp;
     }
 
     public void setThumnailWidth4Temp(int thumnailWidth4Temp)
     {
-	this.thumnailWidth4Temp = thumnailWidth4Temp;
+        this.thumnailWidth4Temp = thumnailWidth4Temp;
     }
 
 }

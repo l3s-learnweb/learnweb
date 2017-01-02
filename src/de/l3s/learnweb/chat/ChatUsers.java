@@ -18,26 +18,26 @@ public class ChatUsers implements Serializable
     @PostConstruct
     public void init()
     {
-	users = new ArrayList<String>();
+        users = new ArrayList<String>();
     }
 
     public List<String> getUsers()
     {
-	return users;
+        return users;
     }
 
     public void remove(String user)
     {
-	this.users.remove(user);
+        this.users.remove(user);
     }
 
     public void add(String user)
     {
-	this.users.add(user);
+        this.users.add(user);
     }
 
     public boolean contains(String user)
     {
-	return this.users.contains(user);
+        return this.users.contains(user);
     }
 }

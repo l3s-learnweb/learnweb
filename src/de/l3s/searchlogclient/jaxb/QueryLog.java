@@ -23,100 +23,100 @@ public class QueryLog
     //Parameterized Constructor1
     public QueryLog(String query, String searchType, int userId, int groupId, String sessionId, String timestamp)
     {
-	this.query = query;
-	this.searchType = searchType;
-	this.userId = userId;
-	this.groupId = groupId;
-	this.sessionId = sessionId;
-	this.timestamp = timestamp;
+        this.query = query;
+        this.searchType = searchType;
+        this.userId = userId;
+        this.groupId = groupId;
+        this.sessionId = sessionId;
+        this.timestamp = timestamp;
     }
 
     //Parameterized Constructor2
     public QueryLog(String query, String searchType, int userId, int groupId, String sessionId, String timestamp, int resultsetId)
     {
-	this.query = query;
-	this.searchType = searchType;
-	this.userId = userId;
-	this.groupId = groupId;
-	this.sessionId = sessionId;
-	this.timestamp = timestamp;
-	this.resultsetId = resultsetId;
+        this.query = query;
+        this.searchType = searchType;
+        this.userId = userId;
+        this.groupId = groupId;
+        this.sessionId = sessionId;
+        this.timestamp = timestamp;
+        this.resultsetId = resultsetId;
     }
 
     @XmlElement
     public String getQuery()
     {
-	return query;
+        return query;
     }
 
     public void setQuery(String query)
     {
-	this.query = query;
+        this.query = query;
     }
 
     @XmlElement
     public int getUserId()
     {
-	return userId;
+        return userId;
     }
 
     public void setUserId(int userId)
     {
-	this.userId = userId;
+        this.userId = userId;
     }
 
     @XmlElement
     public int getGroupId()
     {
-	return groupId;
+        return groupId;
     }
 
     public void setGroupId(int groupId)
     {
-	this.groupId = groupId;
+        this.groupId = groupId;
     }
 
     @XmlElement
     public String getTimestamp()
     {
-	return timestamp;
+        return timestamp;
     }
 
     public void setTimestamp(String timestamp)
     {
-	this.timestamp = timestamp;
+        this.timestamp = timestamp;
     }
 
     @XmlElement
     public String getSessionId()
     {
-	return sessionId;
+        return sessionId;
     }
 
     public void setSessionId(String sessionId)
     {
-	this.sessionId = sessionId;
+        this.sessionId = sessionId;
     }
 
     @XmlElement
     public String getSearchType()
     {
-	return searchType;
+        return searchType;
     }
 
     public void setSearchType(String searchType)
     {
-	this.searchType = searchType;
+        this.searchType = searchType;
     }
 
     @XmlElement
     public int getResultsetId()
     {
-	return resultsetId;
+        return resultsetId;
     }
 
     public void setResultsetId(int resultsetId)
     {
-	this.resultsetId = resultsetId;
+        this.resultsetId = resultsetId;
     }
 }

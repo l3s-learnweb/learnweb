@@ -24,52 +24,52 @@ public class PasswordBean extends ApplicationBean implements Serializable
 
     public void onGetPassword()
     {
-	try
-	{
-	    List<User> users = getLearnweb().getUserManager().getUser(email);
+        try
+        {
+            List<User> users = getLearnweb().getUserManager().getUser(email);
 
-	    if(users.size() == 0)
-	    {
-		addMessage(FacesMessage.SEVERITY_ERROR, "unknown_email");
-		return;
-	    }
+            if(users.size() == 0)
+            {
+                addMessage(FacesMessage.SEVERITY_ERROR, "unknown_email");
+                return;
+            }
 
-	    Mail message = new Mail();
-	    message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
+            Mail message = new Mail();
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(email));
 
-	    String url = getLearnweb().getContextUrl() + "/lw/user/change_password.jsf?u=";
+            String url = getLearnweb().getContextUrl() + "/lw/user/change_password.jsf?u=";
 
-	    for(User user : users)
-	    {
-		String link = url + user.getId() + "_" + createHash(user);
-		String text = "Hi " + user.getUsername() + ",\n\nyou can change the password of your learnweb account '" + user.getUsername() + "' by clicking on this link:\n" + link + "\n\nOr just ignore this email, if you haven't requested it.\n\nBest regards\nLearnweb Team";
+            for(User user : users)
+            {
+                String link = url + user.getId() + "_" + createHash(user);
+                String text = "Hi " + user.getUsername() + ",\n\nyou can change the password of your learnweb account '" + user.getUsername() + "' by clicking on this link:\n" + link + "\n\nOr just ignore this email, if you haven't requested it.\n\nBest regards\nLearnweb Team";
 
-		message.setText(text);
-		message.setSubject("Retrieve learnweb password: " + user.getUsername());
-		message.sendMail();
-	    }
-	    //sendMail(user);
+                message.setText(text);
+                message.setSubject("Retrieve learnweb password: " + user.getUsername());
+                message.sendMail();
+            }
+            //sendMail(user);
 
-	    addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_send");
-	}
-	catch(Exception e)
-	{
-	    addFatalMessage(e);
-	}
+            addMessage(FacesMessage.SEVERITY_INFO, "email_has_been_send");
+        }
+        catch(Exception e)
+        {
+            addFatalMessage(e);
+        }
     }
 
     public static String createHash(User user)
     {
-	return MD5.hash(Learnweb.salt1 + user.getId() + user.getPassword() + Learnweb.salt2);
+        return MD5.hash(Learnweb.salt1 + user.getId() + user.getPassword() + Learnweb.salt2);
     }
 
     public String getEmail()
     {
-	return email;
+        return email;
     }
 
     public void setEmail(String email)
     {
-	this.email = email;
+        this.email = email;
     }
 }

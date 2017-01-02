@@ -30,23 +30,23 @@ public class SolrClient
 
     private SolrClient(Learnweb learnweb)
     {
-	instance = this;
-	serverUrl = learnweb.getProperties().getProperty("SOLR_SERVER_URL"); // see /Learnweb/Resources/de/l3s/learnweb/config/learnweb.properties
-	server = new HttpSolrServer(serverUrl);
-	//server = new HttpSolrServer("http://prometheus.kbs.uni-hannover.de:8983/solr");
+        instance = this;
+        serverUrl = learnweb.getProperties().getProperty("SOLR_SERVER_URL"); // see /Learnweb/Resources/de/l3s/learnweb/config/learnweb.properties
+        server = new HttpSolrServer(serverUrl);
+        //server = new HttpSolrServer("http://prometheus.kbs.uni-hannover.de:8983/solr");
     }
 
     public static SolrClient getInstance(Learnweb learnweb)
     {
-	if(null == instance)
-	    return new SolrClient(learnweb);
+        if(null == instance)
+            return new SolrClient(learnweb);
 
-	return instance;
+        return instance;
     }
 
     public SolrServer getSolrServer()
     {
-	return server;
+        return server;
     }
 
     /**
@@ -60,50 +60,50 @@ public class SolrClient
     public void indexResource(Resource resource) throws SQLException, IOException, SolrServerException
     {
 
-	if(resource.getUrl().indexOf("localhost") != -1)
-	{
-	    log.warn("Skip local resource with ID : " + resource.getId());
-	    return;
-	}
-	SolrResourceBean solrResource = new SolrResourceBean(resource);
+        if(resource.getUrl().indexOf("localhost") != -1)
+        {
+            log.warn("Skip local resource with ID : " + resource.getId());
+            return;
+        }
+        SolrResourceBean solrResource = new SolrResourceBean(resource);
 
-	log.debug("index resource: " + resource.getId() + " " + solrResource.getDescription());
+        log.debug("index resource: " + resource.getId() + " " + solrResource.getDescription());
 
-	server.addBean(solrResource);
-	server.commit();
+        server.addBean(solrResource);
+        server.commit();
     }
 
     public void indexDecoratedResource(ResourceDecorator decoratedResource) throws SQLException, SolrServerException, IOException
     {
-	server.addBean(new SolrResourceBean(decoratedResource));
-	server.commit();
+        server.addBean(new SolrResourceBean(decoratedResource));
+        server.commit();
     }
 
     public void indexDecoratedResources(List<ResourceDecorator> decoratedResources)
     {
-	try
-	{
-	    List<SolrResourceBean> solrResources = new LinkedList<SolrResourceBean>();
-	    for(ResourceDecorator decoratedResource : decoratedResources)
-	    {
-		Resource resource = decoratedResource.getResource();
+        try
+        {
+            List<SolrResourceBean> solrResources = new LinkedList<SolrResourceBean>();
+            for(ResourceDecorator decoratedResource : decoratedResources)
+            {
+                Resource resource = decoratedResource.getResource();
 
-		if((resource.getType().equals("Image") || resource.getType().equals("Video")) && resource.getThumbnail2() == null)
-		{
-		    log.error("will not index a video/image resource without thumbnail: " + resource.toString());
-		}
+                if((resource.getType().equals("Image") || resource.getType().equals("Video")) && resource.getThumbnail2() == null)
+                {
+                    log.error("will not index a video/image resource without thumbnail: " + resource.toString());
+                }
 
-		solrResources.add(new SolrResourceBean(decoratedResource));
-	    }
-	    server.addBeans(solrResources);
-	    server.commit();
+                solrResources.add(new SolrResourceBean(decoratedResource));
+            }
+            server.addBeans(solrResources);
+            server.commit();
 
-	    log.debug("Indexed " + decoratedResources.size() + " resources for caching");
-	}
-	catch(Throwable t)
-	{
-	    log.fatal("error during indexing cache resource", t);
-	}
+            log.debug("Indexed " + decoratedResources.size() + " resources for caching");
+        }
+        catch(Throwable t)
+        {
+            log.fatal("error during indexing cache resource", t);
+        }
 
     }
 
@@ -117,20 +117,20 @@ public class SolrClient
      */
     public void reIndexResource(Resource resource)
     {
-	try
-	{
-	    indexResource(resource);
-	}
-	catch(Throwable t)
-	{
-	    log.fatal("Couldn't reindex resource", t);
-	}
+        try
+        {
+            indexResource(resource);
+        }
+        catch(Throwable t)
+        {
+            log.fatal("Couldn't reindex resource", t);
+        }
     }
 
     public void deleteFromIndex(int resourceId) throws SolrServerException, IOException
     {
-	server.deleteById("r_" + resourceId);
-	server.commit();
+        server.deleteById("r_" + resourceId);
+        server.commit();
     }
 
     /**
@@ -141,26 +141,26 @@ public class SolrClient
      */
     public void deleteAllFromIndex() throws SolrServerException, IOException
     {
-	server.deleteByQuery("id:r_*");
-	server.commit();
+        server.deleteByQuery("id:r_*");
+        server.commit();
     }
 
     public void deleteOldCachedResource() throws SolrServerException, IOException
     {
-	//delete cached resources which are indexed before the start of yesterday
+        //delete cached resources which are indexed before the start of yesterday
 
-	/* " * TO NOW-1DAY/DAY " means time before the start of yesterday
-	 * " * TO NOW-1MONTH/DAY " means time before the start of one month ago
-	 * /HOUR : Round to the start of the current hour
-	 * /DAY : Round to the start of the current day
-	 * -1DAY : Exactly 1 day prior to now
-	 * -1MONTH : Exactly 1 month prior to now
-	 * +2YEARS : Exactly two years in the future from now
-	 */
+        /* " * TO NOW-1DAY/DAY " means time before the start of yesterday
+         * " * TO NOW-1MONTH/DAY " means time before the start of one month ago
+         * /HOUR : Round to the start of the current hour
+         * /DAY : Round to the start of the current day
+         * -1DAY : Exactly 1 day prior to now
+         * -1MONTH : Exactly 1 month prior to now
+         * +2YEARS : Exactly two years in the future from now
+         */
 
-	//server.deleteByQuery("timestamp : [ * TO NOW-1DAY/DAY] AND -id:r_*");
-	server.deleteByQuery("-id:r_*");
-	server.commit();
+        //server.deleteByQuery("timestamp : [ * TO NOW-1DAY/DAY] AND -id:r_*");
+        server.deleteByQuery("-id:r_*");
+        server.commit();
     }
 
     /**
@@ -173,8 +173,8 @@ public class SolrClient
      */
     public void indexComment(Comment comment) throws SQLException
     {
-	Resource resource = comment.getResource(); // the resource to which the comment was added
-	reIndexResource(resource);
+        Resource resource = comment.getResource(); // the resource to which the comment was added
+        reIndexResource(resource);
     }
 
     /**
@@ -189,7 +189,7 @@ public class SolrClient
      */
     public void indexTag(Tag tag, Resource resource)
     {
-	reIndexResource(resource);
+        reIndexResource(resource);
     }
 
     /**
@@ -201,7 +201,7 @@ public class SolrClient
      */
     public void deleteFromIndex(Tag tag, Resource resource)
     {
-	reIndexResource(resource);
+        reIndexResource(resource);
     }
 
     /**
@@ -212,79 +212,79 @@ public class SolrClient
      */
     public void deleteFromIndex(Comment comment) throws Exception
     {
-	Resource resource = comment.getResource();
+        Resource resource = comment.getResource();
 
-	reIndexResource(resource);
+        reIndexResource(resource);
     }
 
     public List<Integer> findResourcesByUrl(String url) throws SolrServerException
     {
-	List<Integer> ids = new LinkedList<Integer>();
-	SolrQuery solrQuery = new SolrQuery();
-	solrQuery.setQuery("url:\"" + url + "\"");
-	solrQuery.addFilterQuery("id:r_*");
-	solrQuery.setStart(0);
-	solrQuery.setRows(Integer.MAX_VALUE);
-	solrQuery.setFields("id");
-	QueryResponse result = server.query(solrQuery);
-	if(null != result)
-	{
-	    for(SolrDocument doc : result.getResults())
-		ids.add(extractId((String) doc.getFieldValue("id")));
-	    return ids;
-	}
-	else
-	    return null;
+        List<Integer> ids = new LinkedList<Integer>();
+        SolrQuery solrQuery = new SolrQuery();
+        solrQuery.setQuery("url:\"" + url + "\"");
+        solrQuery.addFilterQuery("id:r_*");
+        solrQuery.setStart(0);
+        solrQuery.setRows(Integer.MAX_VALUE);
+        solrQuery.setFields("id");
+        QueryResponse result = server.query(solrQuery);
+        if(null != result)
+        {
+            for(SolrDocument doc : result.getResults())
+                ids.add(extractId((String) doc.getFieldValue("id")));
+            return ids;
+        }
+        else
+            return null;
     }
 
     private int extractId(String id)
     {
-	try
-	{
-	    return Integer.parseInt(id.substring(2));
-	}
-	catch(NumberFormatException e)
-	{
-	    log.error("SolrSearch, NumberFormatException: " + e.getMessage());
-	    return -1;
-	}
+        try
+        {
+            return Integer.parseInt(id.substring(2));
+        }
+        catch(NumberFormatException e)
+        {
+            log.error("SolrSearch, NumberFormatException: " + e.getMessage());
+            return -1;
+        }
     }
 
     public static void main(String[] args) throws SQLException, IOException, SolrServerException
     {
 
-	//indexOneResource(67069);
-	//indexOneResource(72364);
-	//deleteOneResource(72364);
-	//deleteOneResource(67069);
+        //indexOneResource(67069);
+        //indexOneResource(72364);
+        //deleteOneResource(72364);
+        //deleteOneResource(67069);
 
-	//deleteAllResource();
-	//indexAllResources();
+        //deleteAllResource();
+        //indexAllResources();
 
-	/*
-	Learnweb learnweb = Learnweb.getInstance();
-	SolrClient indexer = new SolrClient(learnweb);
-	
-	indexer.server.deleteByQuery("*:*");
-	indexer.server.commit();*
-	*/
-	SolrClient.indexAllResources();
-	//SolrClient.deleteInvalidEntries();
+        /*
+        Learnweb learnweb = Learnweb.getInstance();
+        SolrClient indexer = new SolrClient(learnweb);
+        
+        indexer.server.deleteByQuery("*:*");
+        indexer.server.commit();*
+        */
+        SolrClient.indexAllResources();
+        //SolrClient.deleteInvalidEntries();
 
     }
 
     public static void deleteInvalidEntries() throws SQLException, SolrServerException, IOException
     {
-	Learnweb learnweb = Learnweb.getInstance();
-	SolrClient indexer = learnweb.getSolrClient();
+        Learnweb learnweb = Learnweb.getInstance();
+        SolrClient indexer = learnweb.getSolrClient();
 
-	List<Integer> invalidIds = learnweb.getResourceManager().getInvalidResourceIds();
+        List<Integer> invalidIds = learnweb.getResourceManager().getInvalidResourceIds();
 
-	for(int id : invalidIds)
-	{
-	    log.debug("delete: " + id);
-	    indexer.deleteFromIndex(id);
-	}
+        for(int id : invalidIds)
+        {
+            log.debug("delete: " + id);
+            indexer.deleteFromIndex(id);
+        }
     }
 
     /**
@@ -297,46 +297,46 @@ public class SolrClient
      */
     public static void indexAllResources() throws SQLException, IOException, SolrServerException
     {
-	Learnweb learnweb = Learnweb.getInstance();
-	SolrClient indexer = learnweb.getSolrClient();
+        Learnweb learnweb = Learnweb.getInstance();
+        SolrClient indexer = learnweb.getSolrClient();
 
-	for(int i = 0; i < 1; i++)
-	{
+        for(int i = 0; i < 1; i++)
+        {
 
-	    //List<Resource> resources = learnweb.getResourceManager().getResourcesAll(i, 1000); // loads all resources (very slow)
+            //List<Resource> resources = learnweb.getResourceManager().getResourcesAll(i, 1000); // loads all resources (very slow)
 
-	    List<Resource> resources = learnweb.getGroupManager().getGroupById(118).getResources();
+            List<Resource> resources = learnweb.getGroupManager().getGroupById(118).getResources();
 
-	    log.debug("page: " + i);
+            log.debug("page: " + i);
 
-	    for(Resource resource : resources)
-	    {
+            for(Resource resource : resources)
+            {
 
-		/*
-		File file = resource.getFile(4);
-		
-		if(file != null && file.getUrl().startsWith("http://learnweb.l3s.uni-hannover.de")) // resource has an attached file
-		{
-		
-		FileInspector inspector = new FileInspector();
-		FileInfo info = inspector.inspect((new URL(file.getUrl())).openStream(), file.getName());
-		
-		log.debug(info);
-		
-		if(info.getTextContent() != null)
-		{
-		resource.setMachineDescription(info.getTextContent());
-		resource.save();
-		
-		log.debug("saved description ");
-		}
-		
-		}*/
-		log.debug("Process resource: " + resource.getId());
+                /*
+                File file = resource.getFile(4);
+                
+                if(file != null && file.getUrl().startsWith("http://learnweb.l3s.uni-hannover.de")) // resource has an attached file
+                {
+                
+                FileInspector inspector = new FileInspector();
+                FileInfo info = inspector.inspect((new URL(file.getUrl())).openStream(), file.getName());
+                
+                log.debug(info);
+                
+                if(info.getTextContent() != null)
+                {
+                resource.setMachineDescription(info.getTextContent());
+                resource.save();
+                
+                log.debug("saved description ");
+                }
+                
+                }*/
+                log.debug("Process resource: " + resource.getId());
 
-		indexer.reIndexResource(resource);
-	    }
-	}
+                indexer.reIndexResource(resource);
+            }
+        }
 
     }
 

@@ -30,18 +30,18 @@ public class ApplicationDebuggingBean implements Serializable
     public ApplicationDebuggingBean()
     {
 
-	startTime = System.currentTimeMillis();
+        startTime = System.currentTimeMillis();
     }
 
     public String getSessionId()
     {
 
-	return "---";
+        return "---";
     }
 
     protected FacesContext getFacesContext()
     {
-	return null;
+        return null;
     }
 
     /**
@@ -51,13 +51,13 @@ public class ApplicationDebuggingBean implements Serializable
      */
     protected User getUser()
     {
-	return null;
+        return null;
     }
 
     protected Learnweb getLearnweb()
     {
 
-	return Learnweb.getInstance();
+        return Learnweb.getInstance();
 
     }
 
@@ -71,28 +71,28 @@ public class ApplicationDebuggingBean implements Serializable
     protected String getLocaleMessage(String msgKey, Object... args)
     {
 
-	ResourceBundle bundle = ResourceBundle.getBundle("de.l3s.learnweb.lang.messages", Locale.US);
+        ResourceBundle bundle = ResourceBundle.getBundle("de.l3s.learnweb.lang.messages", Locale.US);
 
-	String msg;
-	try
-	{
-	    msg = bundle.getString(msgKey);
-	    if(args != null)
-	    {
-		MessageFormat format = new MessageFormat(msg);
-		msg = format.format(args);
-	    }
-	}
-	catch(MissingResourceException e)
-	{
-	    msg = msgKey;
-	}
-	return msg;
+        String msg;
+        try
+        {
+            msg = bundle.getString(msgKey);
+            if(args != null)
+            {
+                MessageFormat format = new MessageFormat(msg);
+                msg = format.format(args);
+            }
+        }
+        catch(MissingResourceException e)
+        {
+            msg = msgKey;
+        }
+        return msg;
     }
 
     protected FacesMessage getFacesMessage(FacesMessage.Severity severity, String msgKey, Object... args)
     {
-	return new FacesMessage(severity, getLocaleMessage(msgKey, args), null);
+        return new FacesMessage(severity, getLocaleMessage(msgKey, args), null);
     }
 
     /**
@@ -125,7 +125,7 @@ public class ApplicationDebuggingBean implements Serializable
     protected String getTemplateDir()
     {
 
-	return "/lw";
+        return "/lw";
     }
 
     /**
@@ -136,7 +136,7 @@ public class ApplicationDebuggingBean implements Serializable
      */
     public Object getPreference(String key)
     {
-	return null;
+        return null;
     }
 
     /**
@@ -148,8 +148,8 @@ public class ApplicationDebuggingBean implements Serializable
      */
     public Object getPreference(String key, Object defaultValue)
     {
-	Object obj = getPreference(key);
-	return obj == null ? defaultValue : obj;
+        Object obj = getPreference(key);
+        return obj == null ? defaultValue : obj;
     }
 
     /**

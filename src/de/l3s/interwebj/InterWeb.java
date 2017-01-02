@@ -56,123 +56,123 @@ public class InterWeb implements Serializable
 
     public InterWeb(String interwebApiURL, String consumerKey, String consumerSecret)
     {
-	this.consumerKey = consumerKey;
-	this.consumerSecret = consumerSecret;
-	this.interwebApiURL = interwebApiURL;
+        this.consumerKey = consumerKey;
+        this.consumerSecret = consumerSecret;
+        this.interwebApiURL = interwebApiURL;
     }
 
     public String getConsumerKey()
     {
-	return consumerKey;
+        return consumerKey;
     }
 
     public String getConsumerSecret()
     {
-	return consumerSecret;
+        return consumerSecret;
     }
 
     public String getInterwebApiURL()
     {
-	return interwebApiURL;
+        return interwebApiURL;
     }
 
     public AuthCredentials getIWToken()
     {
-	return iwToken;
+        return iwToken;
     }
 
     private void resetAuthorizationCache()
     {
-	authorizationInformationLastCacheTime = 0;
+        authorizationInformationLastCacheTime = 0;
     }
 
     private void resetUsernameCache()
     {
-	usernameLastCacheTime = 0;
+        usernameLastCacheTime = 0;
     }
 
     public void setIWToken(AuthCredentials iwToken)
     {
-	this.iwToken = iwToken;
-	// force to reload
-	resetAuthorizationCache();
-	resetUsernameCache();
+        this.iwToken = iwToken;
+        // force to reload
+        resetAuthorizationCache();
+        resetUsernameCache();
     }
 
     private WebResource createWebResource(String apiPath, AuthCredentials userAuthCredentials)
     {
-	String apiUrl = getInterwebApiURL() + apiPath;
-	AuthCredentials consumerAuthCredentials = new AuthCredentials(getConsumerKey(), getConsumerSecret());
+        String apiUrl = getInterwebApiURL() + apiPath;
+        AuthCredentials consumerAuthCredentials = new AuthCredentials(getConsumerKey(), getConsumerSecret());
 
-	Client client = Client.create();
-	WebResource resource = client.resource(apiUrl);
-	OAuthParameters oauthParams = new OAuthParameters();
-	oauthParams.consumerKey(consumerAuthCredentials.getKey());
-	if(userAuthCredentials != null)
-	{
-	    oauthParams.token(userAuthCredentials.getKey());
-	}
-	oauthParams.signatureMethod(HMAC_SHA1.NAME);
-	oauthParams.timestamp();
-	oauthParams.nonce();
-	oauthParams.version();
-	OAuthSecrets oauthSecrets = new OAuthSecrets();
-	oauthSecrets.consumerSecret(consumerAuthCredentials.getSecret());
-	if(userAuthCredentials != null && userAuthCredentials.getSecret() != null)
-	{
-	    oauthSecrets.tokenSecret(userAuthCredentials.getSecret());
-	}
-	OAuthClientFilter filter = new OAuthClientFilter(client.getProviders(), oauthParams, oauthSecrets);
-	resource.addFilter(filter);
+        Client client = Client.create();
+        WebResource resource = client.resource(apiUrl);
+        OAuthParameters oauthParams = new OAuthParameters();
+        oauthParams.consumerKey(consumerAuthCredentials.getKey());
+        if(userAuthCredentials != null)
+        {
+            oauthParams.token(userAuthCredentials.getKey());
+        }
+        oauthParams.signatureMethod(HMAC_SHA1.NAME);
+        oauthParams.timestamp();
+        oauthParams.nonce();
+        oauthParams.version();
+        OAuthSecrets oauthSecrets = new OAuthSecrets();
+        oauthSecrets.consumerSecret(consumerAuthCredentials.getSecret());
+        if(userAuthCredentials != null && userAuthCredentials.getSecret() != null)
+        {
+            oauthSecrets.tokenSecret(userAuthCredentials.getSecret());
+        }
+        OAuthClientFilter filter = new OAuthClientFilter(client.getProviders(), oauthParams, oauthSecrets);
+        resource.addFilter(filter);
 
-	return resource;
+        return resource;
     }
 
     private WebResource createPublicWebResource(String apiPath)
     {
-	return createWebResource(apiPath, null);
+        return createWebResource(apiPath, null);
     }
 
     public synchronized List<ServiceInformation> getServiceInformation(boolean useCache) throws IllegalResponseException
     {
 
-	if(serviceInformationListCacheTime < UtilBean.time() - 86500)
-	{
-	    WebResource resource = createPublicWebResource("services");
+        if(serviceInformationListCacheTime < UtilBean.time() - 86500)
+        {
+            WebResource resource = createPublicWebResource("services");
 
-	    ClientResponse response = resource.get(ClientResponse.class);
-	    AuthorizationInformation temp = new AuthorizationInformation(response.getEntityInputStream());
+            ClientResponse response = resource.get(ClientResponse.class);
+            AuthorizationInformation temp = new AuthorizationInformation(response.getEntityInputStream());
 
-	    serviceInformationListCache = temp.getServices();
-	    serviceInformationListCacheTime = UtilBean.time();
-	}
-	return serviceInformationListCache;
+            serviceInformationListCache = temp.getServices();
+            serviceInformationListCacheTime = UtilBean.time();
+        }
+        return serviceInformationListCache;
     }
 
     //------------------------------------------------------------------------------------
 
     public void authorizeService(ServiceInformation service, String callback) throws IllegalResponseException
     {
-	resetAuthorizationCache();
+        resetAuthorizationCache();
 
-	WebResource resource = createWebResource("users/default/services/" + service.getId() + "/auth", getIWToken());
-	resource = resource.queryParam("callback", callback);
-	MultivaluedMap<String, String> params = new MultivaluedMapImpl();
-	if(service.getKey() != null && service.getSecret() != null)
-	{
-	    params.add("username", service.getKey());
-	    params.add("password", service.getSecret());
-	}
-	ClientResponse response = resource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class, params);
-	//CoreUtils.printClientResponse(response);
-	Element root = asXML(response);
-	if(!root.attribute("stat").getValue().equals("ok"))
-	{
-	    throw new IllegalResponseException(root.asXML());
-	}
-	String link = root.element("link").getStringValue();
+        WebResource resource = createWebResource("users/default/services/" + service.getId() + "/auth", getIWToken());
+        resource = resource.queryParam("callback", callback);
+        MultivaluedMap<String, String> params = new MultivaluedMapImpl();
+        if(service.getKey() != null && service.getSecret() != null)
+        {
+            params.add("username", service.getKey());
+            params.add("password", service.getSecret());
+        }
+        ClientResponse response = resource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class, params);
+        //CoreUtils.printClientResponse(response);
+        Element root = asXML(response);
+        if(!root.attribute("stat").getValue().equals("ok"))
+        {
+            throw new IllegalResponseException(root.asXML());
+        }
+        String link = root.element("link").getStringValue();
 
-	UtilBean.redirect(link);
+        UtilBean.redirect(link);
     }
 
     /**
@@ -181,93 +181,93 @@ public class InterWeb implements Serializable
     @Override
     public InterWeb clone()
     {
-	return new InterWeb(getInterwebApiURL(), getConsumerKey(), getConsumerSecret());
+        return new InterWeb(getInterwebApiURL(), getConsumerKey(), getConsumerSecret());
     }
 
     public void deleteToken()
     {
-	setIWToken(null);
+        setIWToken(null);
     }
 
     public AuthCredentials getAccessToken(AuthCredentials authCredentials) throws IllegalResponseException
     {
-	WebResource resource = createWebResource("oauth/OAuthGetAccessToken", authCredentials);
-	ClientResponse response = resource.get(ClientResponse.class);
-	Element root = asXML(response);
-	if(!root.attribute("stat").getValue().equals("ok"))
-	{
-	    throw new IllegalResponseException(root.asXML());
-	}
-	Element element = root.element("access_token");
-	String token = element.element("oauth_token").getStringValue();
-	String tokenSecret = element.element("oauth_token_secret").getStringValue();
-	return new AuthCredentials(token, tokenSecret);
+        WebResource resource = createWebResource("oauth/OAuthGetAccessToken", authCredentials);
+        ClientResponse response = resource.get(ClientResponse.class);
+        Element root = asXML(response);
+        if(!root.attribute("stat").getValue().equals("ok"))
+        {
+            throw new IllegalResponseException(root.asXML());
+        }
+        Element element = root.element("access_token");
+        String token = element.element("oauth_token").getStringValue();
+        String tokenSecret = element.element("oauth_token_secret").getStringValue();
+        return new AuthCredentials(token, tokenSecret);
     }
 
     public synchronized AuthorizationInformation getAuthorizationInformation(boolean useCache) throws IOException, IllegalResponseException
     {
-	if(null == getIWToken())
-	    return null;
+        if(null == getIWToken())
+            return null;
 
-	if(!useCache || authorizationInformationLastCacheTime < UtilBean.time() - 6000)
-	{
-	    WebResource resource = createWebResource("users/default/services", getIWToken());
-	    ClientResponse response = resource.get(ClientResponse.class);
+        if(!useCache || authorizationInformationLastCacheTime < UtilBean.time() - 6000)
+        {
+            WebResource resource = createWebResource("users/default/services", getIWToken());
+            ClientResponse response = resource.get(ClientResponse.class);
 
-	    authorizationInformation = new AuthorizationInformation(response.getEntityInputStream());
-	    authorizationInformationLastCacheTime = UtilBean.time();
-	}
-	return authorizationInformation;
+            authorizationInformation = new AuthorizationInformation(response.getEntityInputStream());
+            authorizationInformationLastCacheTime = UtilBean.time();
+        }
+        return authorizationInformation;
     }
 
     public String getAuthorizeUrl(String callback) throws IllegalResponseException
     {
-	WebResource resource = createPublicWebResource("oauth/OAuthGetRequestToken");
-	ClientResponse response = resource.get(ClientResponse.class);
-	Element root = asXML(response);
-	if(!root.attribute("stat").getValue().equals("ok"))
-	{
-	    throw new IllegalResponseException(root.asXML());
-	}
-	String iw_token = root.element("request_token").element("oauth_token").getStringValue();
-	return getInterwebApiURL() + "oauth/OAuthAuthorizeToken" + "?oauth_token=" + iw_token + "&oauth_callback=" + callback;
+        WebResource resource = createPublicWebResource("oauth/OAuthGetRequestToken");
+        ClientResponse response = resource.get(ClientResponse.class);
+        Element root = asXML(response);
+        if(!root.attribute("stat").getValue().equals("ok"))
+        {
+            throw new IllegalResponseException(root.asXML());
+        }
+        String iw_token = root.element("request_token").element("oauth_token").getStringValue();
+        return getInterwebApiURL() + "oauth/OAuthAuthorizeToken" + "?oauth_token=" + iw_token + "&oauth_callback=" + callback;
     }
 
     public synchronized String getUsername() throws IllegalResponseException
     {
-	if(null == getIWToken())
-	    return null;
+        if(null == getIWToken())
+            return null;
 
-	if(usernameLastCacheTime < UtilBean.time() - 6000) // cached value older then 100 minutes
-	{
-	    WebResource resource = createWebResource("users/default", getIWToken());
-	    ClientResponse response = resource.get(ClientResponse.class);
+        if(usernameLastCacheTime < UtilBean.time() - 6000) // cached value older then 100 minutes
+        {
+            WebResource resource = createWebResource("users/default", getIWToken());
+            ClientResponse response = resource.get(ClientResponse.class);
 
-	    try
-	    {
-		username = getClientResponseContent(response);
-		usernameLastCacheTime = UtilBean.time();
-	    }
-	    catch(IOException e)
-	    {
-		throw new IllegalResponseException(e);
-	    }
-	}
-	return username;
+            try
+            {
+                username = getClientResponseContent(response);
+                usernameLastCacheTime = UtilBean.time();
+            }
+            catch(IOException e)
+            {
+                throw new IllegalResponseException(e);
+            }
+        }
+        return username;
     }
 
     public static String getClientResponseContent(ClientResponse response) throws IOException
     {
-	StringBuilder sb = new StringBuilder();
-	InputStream is = response.getEntityInputStream();
-	BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-	int c;
-	while((c = br.read()) != -1)
-	{
-	    sb.append((char) c);
-	}
-	br.close();
-	return sb.toString();
+        StringBuilder sb = new StringBuilder();
+        InputStream is = response.getEntityInputStream();
+        BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+        int c;
+        while((c = br.read()) != -1)
+        {
+            sb.append((char) c);
+        }
+        br.close();
+        return sb.toString();
     }
 
     /**
@@ -281,65 +281,65 @@ public class InterWeb implements Serializable
      */
     public AuthCredentials registerUser(String username, String password, String defaultUserName, String defaultPassword) throws IllegalResponseException
     {
-	MultivaluedMapImpl params = new MultivaluedMapImpl();
-	params.add("username", username);
-	params.add("password", password);
-	if(StringUtils.isNotEmpty(defaultUserName))
-	{
-	    params.add("mediator_username", defaultUserName);
-	}
-	if(StringUtils.isNotEmpty(defaultPassword))
-	{
-	    params.add("mediator_password", defaultPassword);
-	}
-	WebResource resource = createPublicWebResource("oauth/register");
-	ClientResponse response = resource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class, params);
-	Element root;
-	try
-	{
-	    root = asXML(response);
+        MultivaluedMapImpl params = new MultivaluedMapImpl();
+        params.add("username", username);
+        params.add("password", password);
+        if(StringUtils.isNotEmpty(defaultUserName))
+        {
+            params.add("mediator_username", defaultUserName);
+        }
+        if(StringUtils.isNotEmpty(defaultPassword))
+        {
+            params.add("mediator_password", defaultPassword);
+        }
+        WebResource resource = createPublicWebResource("oauth/register");
+        ClientResponse response = resource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class, params);
+        Element root;
+        try
+        {
+            root = asXML(response);
 
-	    Element element = root.element("access_token");
-	    String token = element.element("oauth_token").getStringValue();
-	    String tokenSecret = element.element("oauth_token_secret").getStringValue();
-	    return new AuthCredentials(token, tokenSecret);
-	}
-	catch(IllegalResponseException e)
-	{
-	    if(e.getMessage().contains("User already exists"))
-		return null;
-	    throw e;
-	}
+            Element element = root.element("access_token");
+            String token = element.element("oauth_token").getStringValue();
+            String tokenSecret = element.element("oauth_token_secret").getStringValue();
+            return new AuthCredentials(token, tokenSecret);
+        }
+        catch(IllegalResponseException e)
+        {
+            if(e.getMessage().contains("User already exists"))
+                return null;
+            throw e;
+        }
     }
 
     public void revokeAuthorizationOnService(String serviceId) throws IOException, IllegalResponseException
     {
-	WebResource resource = createWebResource("users/default/services/" + serviceId + "/auth", getIWToken());
-	//ClientResponse response = 
-	resource.delete(ClientResponse.class);
-	//	Element root = asXML(response);
+        WebResource resource = createWebResource("users/default/services/" + serviceId + "/auth", getIWToken());
+        //ClientResponse response = 
+        resource.delete(ClientResponse.class);
+        //	Element root = asXML(response);
 
-	//force reload
-	resetAuthorizationCache();
+        //force reload
+        resetAuthorizationCache();
     }
 
     private Element asXML(ClientResponse response) throws IllegalResponseException
     {
-	Document doc;
-	try
-	{
-	    doc = new SAXReader().read(response.getEntityInputStream());
-	}
-	catch(Exception e)
-	{
-	    throw new IllegalResponseException(e.getMessage());
-	}
-	Element root = doc.getRootElement();
-	if(!root.attributeValue("stat").equals("ok"))
-	{
-	    throw new IllegalResponseException(root.asXML());
-	}
-	return root;
+        Document doc;
+        try
+        {
+            doc = new SAXReader().read(response.getEntityInputStream());
+        }
+        catch(Exception e)
+        {
+            throw new IllegalResponseException(e.getMessage());
+        }
+        Element root = doc.getRootElement();
+        if(!root.attributeValue("stat").equals("ok"))
+        {
+            throw new IllegalResponseException(root.asXML());
+        }
+        return root;
     }
 
     /*
@@ -384,8 +384,8 @@ public class InterWeb implements Serializable
 
     public String buildSignature(String string, TreeMap<String, String> params)
     {
-	log.fatal("Interweb.buildSignature hat olex nicht implementiert");
-	return null;
+        log.fatal("Interweb.buildSignature hat olex nicht implementiert");
+        return null;
     }
 
     // Überarbeitet:
@@ -400,49 +400,49 @@ public class InterWeb implements Serializable
      */
     public SearchQuery search(String query, TreeMap<String, String> params) throws IOException, IllegalResponseException
     {
-	if(null == query || query.length() == 0)
-	{
-	    throw new IllegalArgumentException("empty query");
-	}
+        if(null == query || query.length() == 0)
+        {
+            throw new IllegalArgumentException("empty query");
+        }
 
-	WebResource resource = createWebResource("search", getIWToken());
-	resource = resource.queryParam("q", query);
-	for(String key : params.keySet())
-	{
-	    String value = params.get(key);
-	    resource = resource.queryParam(key, value);
-	}
+        WebResource resource = createWebResource("search", getIWToken());
+        resource = resource.queryParam("q", query);
+        for(String key : params.keySet())
+        {
+            String value = params.get(key);
+            resource = resource.queryParam(key, value);
+        }
 
-	ClientResponse response = resource.get(ClientResponse.class);
+        ClientResponse response = resource.get(ClientResponse.class);
 
-	if(response.getStatus() != 200)
-	{
-	    StringWriter writer = new StringWriter();
-	    IOUtils.copy(response.getEntityInputStream(), writer, "UTF-8");
-	    String content = writer.toString();
+        if(response.getStatus() != 200)
+        {
+            StringWriter writer = new StringWriter();
+            IOUtils.copy(response.getEntityInputStream(), writer, "UTF-8");
+            String content = writer.toString();
 
-	    log.fatal("Interweb request failes; Error code : " + response.getStatus() + "; for query:" + query + " | " + params + "; response: " + content);
-	    throw new RuntimeException("Interweb request failed : HTTP error code : " + response.getStatus());
-	}
+            log.fatal("Interweb request failes; Error code : " + response.getStatus() + "; for query:" + query + " | " + params + "; response: " + content);
+            throw new RuntimeException("Interweb request failed : HTTP error code : " + response.getStatus());
+        }
 
-	//SearchResponse r = response.getEntity(SearchResponse.class);
+        //SearchResponse r = response.getEntity(SearchResponse.class);
 
-	return new SearchQuery(response.getEntityInputStream()); //.getResults();
+        return new SearchQuery(response.getEntityInputStream()); //.getResults();
     }
 
     public static void main(String[] args) throws Exception
     {
-	TreeMap<String, String> params = new TreeMap<String, String>();
+        TreeMap<String, String> params = new TreeMap<String, String>();
 
-	params.put("media_types", "video");
-	//params.put("services", "YouTube,Vimeo");
-	params.put("number_of_results", "8");
-	params.put("page", "1");
+        params.put("media_types", "video");
+        //params.put("services", "YouTube,Vimeo");
+        params.put("number_of_results", "8");
+        params.put("page", "1");
 
-	InterWeb iw = new InterWeb("http://learnweb.l3s.uni-hannover.de/interweb/api/", "***REMOVED***", "***REMOVED***");
+        InterWeb iw = new InterWeb("http://learnweb.l3s.uni-hannover.de/interweb/api/", "***REMOVED***", "***REMOVED***");
 
-	SearchQuery interwebResponse = iw.search("london", params);
-	interwebResponse.getResults();
+        SearchQuery interwebResponse = iw.search("london", params);
+        interwebResponse.getResults();
 
     }
 
@@ -456,40 +456,40 @@ public class InterWeb implements Serializable
     public Resource upload(Resource resource, List<String> selectedUploadServices) throws IllegalResponseException
     {
 
-	@SuppressWarnings("resource")
-	MultiPart multiPart = new MultiPart();
-	multiPart = multiPart.bodyPart(new FormDataBodyPart("title", resource.getTitle()));
-	multiPart = multiPart.bodyPart(new FormDataBodyPart("description", resource.getDescription()));
-	multiPart = multiPart.bodyPart(new FormDataBodyPart("content_type", resource.getType().toLowerCase()));
-	multiPart = multiPart.bodyPart(new FileDataBodyPart("data", resource.getFile(4).getActualFile(), MediaType.MULTIPART_FORM_DATA_TYPE));
-	multiPart = multiPart.bodyPart(new FormDataBodyPart("data", "the data"));
+        @SuppressWarnings("resource")
+        MultiPart multiPart = new MultiPart();
+        multiPart = multiPart.bodyPart(new FormDataBodyPart("title", resource.getTitle()));
+        multiPart = multiPart.bodyPart(new FormDataBodyPart("description", resource.getDescription()));
+        multiPart = multiPart.bodyPart(new FormDataBodyPart("content_type", resource.getType().toLowerCase()));
+        multiPart = multiPart.bodyPart(new FileDataBodyPart("data", resource.getFile(4).getActualFile(), MediaType.MULTIPART_FORM_DATA_TYPE));
+        multiPart = multiPart.bodyPart(new FormDataBodyPart("data", "the data"));
 
-	WebResource webResource = createWebResource("users/default/uploads", getIWToken());
-	WebResource.Builder builder = webResource.type(MediaType.MULTIPART_FORM_DATA);
-	builder = builder.accept(MediaType.APPLICATION_XML);
+        WebResource webResource = createWebResource("users/default/uploads", getIWToken());
+        WebResource.Builder builder = webResource.type(MediaType.MULTIPART_FORM_DATA);
+        builder = builder.accept(MediaType.APPLICATION_XML);
 
-	ClientResponse response = builder.post(ClientResponse.class, multiPart);
+        ClientResponse response = builder.post(ClientResponse.class, multiPart);
 
-	try
-	{
-	    multiPart.close();
-	}
-	catch(IOException e)
-	{
-	}
-	/*
-	try
-	{
-		CoreUtils.printClientResponse(response);
-		log.debug(CoreUtils.getClientResponseContent(response));
-	}
-	catch (IOException e)
-	{
-		e.printStackTrace();
-	}*/
+        try
+        {
+            multiPart.close();
+        }
+        catch(IOException e)
+        {
+        }
+        /*
+        try
+        {
+        	CoreUtils.printClientResponse(response);
+        	log.debug(CoreUtils.getClientResponseContent(response));
+        }
+        catch (IOException e)
+        {
+        	e.printStackTrace();
+        }*/
 
-	UploadResponse uploadResponse = new UploadResponse(response.getEntityInputStream());
-	return uploadResponse.getResult();
+        UploadResponse uploadResponse = new UploadResponse(response.getEntityInputStream());
+        return uploadResponse.getResult();
 
     }
 }

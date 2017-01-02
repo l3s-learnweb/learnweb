@@ -22,23 +22,23 @@ public class MyHttpSessionListener implements HttpSessionListener
     @Override
     public void sessionDestroyed(HttpSessionEvent se)
     {
-	SearchLogClient searchLogClient = Learnweb.getInstance().getSearchlogClient();
-	try
-	{
-	    searchLogClient.pushBatchResultsetList();
-	    searchLogClient.postResourceLog();
-	    searchLogClient.passUpdateResultset();
-	    searchLogClient.pushTagList();
-	}
-	catch(ClientHandlerException e)
-	{
-	    log.debug("Search Tracker service is down");
-	}
-	catch(RuntimeException e)
-	{
-	    log.debug(e.getMessage());
-	}
-	HttpSession session = se.getSession();
-	log.debug("Ssession Destroyed:ID=" + session.getId());
+        SearchLogClient searchLogClient = Learnweb.getInstance().getSearchlogClient();
+        try
+        {
+            searchLogClient.pushBatchResultsetList();
+            searchLogClient.postResourceLog();
+            searchLogClient.passUpdateResultset();
+            searchLogClient.pushTagList();
+        }
+        catch(ClientHandlerException e)
+        {
+            log.debug("Search Tracker service is down");
+        }
+        catch(RuntimeException e)
+        {
+            log.debug(e.getMessage());
+        }
+        HttpSession session = se.getSession();
+        log.debug("Ssession Destroyed:ID=" + session.getId());
     }
 }

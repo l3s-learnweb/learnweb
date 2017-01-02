@@ -12,61 +12,61 @@ public class Cluster
     //Creates a new Cluster
     public Cluster(int id)
     {
-	this.id = id;
-	this.points = new ArrayList<Point>();
-	this.centroid = null;
+        this.id = id;
+        this.points = new ArrayList<Point>();
+        this.centroid = null;
     }
 
     public List<Point> getPoints()
     {
-	return points;
+        return points;
     }
 
     public void addPoint(Point point)
     {
-	points.add(point);
+        points.add(point);
     }
 
     public void setPoints(List<Point> points)
     {
-	this.points = points;
+        this.points = points;
     }
 
     public Point getCentroid()
     {
-	return centroid;
+        return centroid;
     }
 
     public void setCentroid(Point centroid)
     {
-	this.centroid = centroid;
+        this.centroid = centroid;
     }
 
     public int getId()
     {
-	return id;
+        return id;
     }
 
     public void clear()
     {
-	points.clear();
+        points.clear();
     }
 
     public void plotCluster()
     {
-	// TODO
-	/* use the logger instead of println
-	  
-	 
-	log.debug("[Cluster: " + id + "]");
-	log.debug("[Centroid: " + centroid + "]");
-	log.debug("[Points: \n");
-	for(Point p : points)
-	{
-	    log.debug(p);
-	}
-	log.debug("]");
-	*/
+        // TODO
+        /* use the logger instead of println
+          
+         
+        log.debug("[Cluster: " + id + "]");
+        log.debug("[Centroid: " + centroid + "]");
+        log.debug("[Points: \n");
+        for(Point p : points)
+        {
+            log.debug(p);
+        }
+        log.debug("]");
+        */
     }
 
 }

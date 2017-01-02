@@ -29,40 +29,40 @@ public class LoginBean extends ApplicationBean implements Serializable
 
     public String getUsername()
     {
-	return username;
+        return username;
     }
 
     public void setUsername(String name)
     {
-	this.username = name;
+        this.username = name;
     }
 
     public String getPassword()
     {
-	return password;
+        return password;
     }
 
     public void setPassword(String password)
     {
-	this.password = password;
+        this.password = password;
     }
 
     public String login() throws SQLException
     {
-	final User user = getLearnweb().getUserManager().getUser(username, password);
+        final User user = getLearnweb().getUserManager().getUser(username, password);
 
-	if(null == user)
-	{
-	    addMessage(FacesMessage.SEVERITY_ERROR, "wrong_username_or_password");
-	    return null;
-	}
+        if(null == user)
+        {
+            addMessage(FacesMessage.SEVERITY_ERROR, "wrong_username_or_password");
+            return null;
+        }
 
-	return loginUser(this, user);
+        return loginUser(this, user);
     }
 
     public static String loginUser(ApplicationBean bean, User user) throws SQLException
     {
-	return loginUser(bean, user, false);
+        return loginUser(bean, user, false);
     }
 
     /**
@@ -75,81 +75,81 @@ public class LoginBean extends ApplicationBean implements Serializable
      */
     public static String loginUser(ApplicationBean bean, User user, boolean disableLog) throws SQLException
     {
-	UtilBean.getUserBean().setUser(user); // logs the user in
-	//addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
-	user.setCurrentLoginDate(new Date());
+        UtilBean.getUserBean().setUser(user); // logs the user in
+        //addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
+        user.setCurrentLoginDate(new Date());
 
-	if(!disableLog)
-	    bean.log(Action.login, 0, 0);
+        if(!disableLog)
+            bean.log(Action.login, 0, 0);
 
-	// uncommented until interwebJ works correct
-	/*
-	Runnable preFetch = new Runnable()
-	{
-	    @Override
-	    public void run()
-	    {
-		InterWeb interweb = user.getInterweb();
-		try
-		{
-		    interweb.getAuthorizationInformation(false);
-		}
-		catch(Exception e)
-		{
-		    log.error("Interweb error", e);
-		}
-	    }
-	};
-	new Thread(preFetch).start();
-	*/
+        // uncommented until interwebJ works correct
+        /*
+        Runnable preFetch = new Runnable()
+        {
+            @Override
+            public void run()
+            {
+        	InterWeb interweb = user.getInterweb();
+        	try
+        	{
+        	    interweb.getAuthorizationInformation(false);
+        	}
+        	catch(Exception e)
+        	{
+        	    log.error("Interweb error", e);
+        	}
+            }
+        };
+        new Thread(preFetch).start();
+        */
 
-	Organisation userOrganisation = user.getOrganisation();
+        Organisation userOrganisation = user.getOrganisation();
 
-	if(userOrganisation.getDefaultLanguage() != null)
-	{
-	    UtilBean.getUserBean().setLocaleCode(userOrganisation.getDefaultLanguage());
-	}
+        if(userOrganisation.getDefaultLanguage() != null)
+        {
+            UtilBean.getUserBean().setLocaleCode(userOrganisation.getDefaultLanguage());
+        }
 
-	// set default search service if not already selected
-	if(bean.getPreference("SEARCH_SERVICE_TEXT") == null || bean.getPreference("SEARCH_SERVICE_IMAGE") == null || bean.getPreference("SEARCH_SERVICE_VIDEO") == null)
-	{
-	    bean.setPreference("SEARCH_SERVICE_TEXT", userOrganisation.getDefaultSearchServiceText().name());
-	    bean.setPreference("SEARCH_SERVICE_IMAGE", userOrganisation.getDefaultSearchServiceImage().name());
-	    bean.setPreference("SEARCH_SERVICE_VIDEO", userOrganisation.getDefaultSearchServiceVideo().name());
-	}
+        // set default search service if not already selected
+        if(bean.getPreference("SEARCH_SERVICE_TEXT") == null || bean.getPreference("SEARCH_SERVICE_IMAGE") == null || bean.getPreference("SEARCH_SERVICE_VIDEO") == null)
+        {
+            bean.setPreference("SEARCH_SERVICE_TEXT", userOrganisation.getDefaultSearchServiceText().name());
+            bean.setPreference("SEARCH_SERVICE_IMAGE", userOrganisation.getDefaultSearchServiceImage().name());
+            bean.setPreference("SEARCH_SERVICE_VIDEO", userOrganisation.getDefaultSearchServiceVideo().name());
+        }
 
-	// if the user logs in from the start or the login page, redirect him to the welcome page
-	String viewId = getFacesContext().getViewRoot().getViewId();
-	if(viewId.endsWith("/user/login.xhtml") || viewId.endsWith("index.xhtml") || viewId.endsWith("error.xhtml") || viewId.endsWith("expired.xhtml") || viewId.endsWith("register.xhtml") || viewId.endsWith("admin/users.xhtml"))
-	{
-	    return "/lw/" + userOrganisation.getWelcomePage() + "?faces-redirect=true";
-	}
+        // if the user logs in from the start or the login page, redirect him to the welcome page
+        String viewId = getFacesContext().getViewRoot().getViewId();
+        if(viewId.endsWith("/user/login.xhtml") || viewId.endsWith("index.xhtml") || viewId.endsWith("error.xhtml") || viewId.endsWith("expired.xhtml") || viewId.endsWith("register.xhtml") || viewId.endsWith("admin/users.xhtml"))
+        {
+            return "/lw/" + userOrganisation.getWelcomePage() + "?faces-redirect=true";
+        }
 
-	// otherwise reload his last page
-	return viewId + "?faces-redirect=true&includeViewParams=true";
+        // otherwise reload his last page
+        return viewId + "?faces-redirect=true&includeViewParams=true";
     }
 
     public String logout()
     {
-	UserBean userBean = UtilBean.getUserBean();
-	int activeCourse = userBean.getUser().getActiveCourseId();
+        UserBean userBean = UtilBean.getUserBean();
+        int activeCourse = userBean.getUser().getActiveCourseId();
 
-	if(userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(userBean.getUser())) // a moderator logs out from a user account
-	{
-	    userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator 
-	    return "/lw/admin/users.xhtml?faces-redirect=true";
-	}
+        if(userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(userBean.getUser())) // a moderator logs out from a user account
+        {
+            userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator 
+            return "/lw/admin/users.xhtml?faces-redirect=true";
+        }
 
-	log(Action.logout, 0, 0);
-	userBean.setUser(null);
+        log(Action.logout, 0, 0);
+        userBean.setUser(null);
 
-	if(activeCourse == 891) // is archive web course
-	{
-	    //userBean.setActiveCourseId(891);
+        if(activeCourse == 891) // is archive web course
+        {
+            //userBean.setActiveCourseId(891);
 
-	    return "/aw/index.xhtml?faces-redirect=true";
-	}
-	else
-	    return "/lw/index.xhtml?faces-redirect=true";
+            return "/aw/index.xhtml?faces-redirect=true";
+        }
+        else
+            return "/lw/index.xhtml?faces-redirect=true";
     }
 }

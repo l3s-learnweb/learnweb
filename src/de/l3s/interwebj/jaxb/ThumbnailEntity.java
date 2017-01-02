@@ -24,45 +24,45 @@ public class ThumbnailEntity
 
     public ThumbnailEntity(String url, int width, int height)
     {
-	this.url = url;
-	this.width = width;
-	this.height = height;
+        this.url = url;
+        this.width = width;
+        this.height = height;
     }
 
     public int getHeight()
     {
-	return height;
+        return height;
     }
 
     public String getUrl()
     {
-	return url;
+        return url;
     }
 
     public int getWidth()
     {
-	return width;
+        return width;
     }
 
     public void setHeight(int height)
     {
-	this.height = height;
+        this.height = height;
     }
 
     public void setUrl(String url)
     {
-	this.url = url;
+        this.url = url;
     }
 
     public void setWidth(int width)
     {
-	this.width = width;
+        this.width = width;
     }
 
     @Override
     public String toString()
     {
-	return "ThumbnailEntity [width=" + width + ", height=" + height + ", url=" + url + "]";
+        return "ThumbnailEntity [width=" + width + ", height=" + height + ", url=" + url + "]";
     }
 
 }

@@ -29,225 +29,225 @@ public class QueryHistory
 
     public QueryHistory()
     {
-	this.query = "";
-	this.searchType = "";
-	this.userId = 0;
-	this.queryDate = "";
-	this.queryTime = "";
-	this.queryTimestamp = "";
-	this.resultsetid = 0;
-	this.queryselected = false;
-	resourcesclicked = new ResourceLogHashMap();
-	resourcesSaved = new ResourceLogHashMap();
-	resClickAndSaved = new ResourceLogHashMap();
-	resourceClickList = new ResourceLogList();
-	resourceSavedList = new ResourceLogList();
-	resClickAndSavedList = new ResourceLogList();
-	timelines = new ArrayList<Timeline>();
+        this.query = "";
+        this.searchType = "";
+        this.userId = 0;
+        this.queryDate = "";
+        this.queryTime = "";
+        this.queryTimestamp = "";
+        this.resultsetid = 0;
+        this.queryselected = false;
+        resourcesclicked = new ResourceLogHashMap();
+        resourcesSaved = new ResourceLogHashMap();
+        resClickAndSaved = new ResourceLogHashMap();
+        resourceClickList = new ResourceLogList();
+        resourceSavedList = new ResourceLogList();
+        resClickAndSavedList = new ResourceLogList();
+        timelines = new ArrayList<Timeline>();
     }
 
     public QueryHistory(String query, String searchType, int userId, String queryDate, String queryTime, String queryTimestamp, int resultsetid)
     {
-	this.query = query;
-	this.searchType = searchType;
-	this.userId = userId;
-	this.queryDate = queryDate;
-	this.queryTime = queryTime;
-	this.queryTimestamp = queryTimestamp;
-	this.queryselected = false;
-	this.resultsetid = resultsetid;
+        this.query = query;
+        this.searchType = searchType;
+        this.userId = userId;
+        this.queryDate = queryDate;
+        this.queryTime = queryTime;
+        this.queryTimestamp = queryTimestamp;
+        this.queryselected = false;
+        this.resultsetid = resultsetid;
     }
 
     @XmlElement
     public String getQuery()
     {
-	return query;
+        return query;
     }
 
     public void setQuery(String query)
     {
-	this.query = query;
+        this.query = query;
     }
 
     @XmlElement
     public String getSearchType()
     {
-	return searchType;
+        return searchType;
     }
 
     public void setSearchType(String searchType)
     {
-	this.searchType = searchType;
+        this.searchType = searchType;
     }
 
     @XmlElement
     public String getQueryTime()
     {
-	return queryTime;
+        return queryTime;
     }
 
     public void setQueryTime(String queryTime)
     {
-	this.queryTime = queryTime;
+        this.queryTime = queryTime;
     }
 
     @XmlElement
     public int getUserId()
     {
-	return userId;
+        return userId;
     }
 
     public void setUserId(int userId)
     {
-	this.userId = userId;
+        this.userId = userId;
     }
 
     @XmlElement
     public ResourceLogHashMap getResourcesclicked()
     {
-	return resourcesclicked;
+        return resourcesclicked;
     }
 
     public void setResourcesclicked(ResourceLogHashMap resourcesclicked)
     {
-	this.resourcesclicked = resourcesclicked;
+        this.resourcesclicked = resourcesclicked;
     }
 
     @XmlElement
     public ResourceLogHashMap getResourcesSaved()
     {
-	return resourcesSaved;
+        return resourcesSaved;
     }
 
     public void setResourcesSaved(ResourceLogHashMap resourcesSaved)
     {
-	this.resourcesSaved = resourcesSaved;
+        this.resourcesSaved = resourcesSaved;
     }
 
     @XmlElement
     public int getResultsetid()
     {
-	return resultsetid;
+        return resultsetid;
     }
 
     public void setResultsetid(int resultsetid)
     {
-	this.resultsetid = resultsetid;
+        this.resultsetid = resultsetid;
     }
 
     @XmlElement
     public String getQueryDate()
     {
-	return queryDate;
+        return queryDate;
     }
 
     public void setQueryDate(String queryDate)
     {
-	this.queryDate = queryDate;
+        this.queryDate = queryDate;
     }
 
     @XmlElement
     public String getQueryTimestamp()
     {
-	return queryTimestamp;
+        return queryTimestamp;
     }
 
     public void setQueryTimestamp(String queryTimestamp)
     {
-	this.queryTimestamp = queryTimestamp;
+        this.queryTimestamp = queryTimestamp;
     }
 
     @XmlElement
     public boolean isQueryselected()
     {
-	return queryselected;
+        return queryselected;
     }
 
     public void setQueryselected(boolean queryselected)
     {
-	this.queryselected = queryselected;
+        this.queryselected = queryselected;
     }
 
     @XmlElement
     public ResourceLogList getResourceClickList()
     {
-	return resourceClickList;
+        return resourceClickList;
     }
 
     public void setResourceClickList(ResourceLogList resourceClickList)
     {
-	this.resourceClickList = resourceClickList;
+        this.resourceClickList = resourceClickList;
     }
 
     @XmlElement
     public ResourceLogList getResourceSavedList()
     {
-	return resourceSavedList;
+        return resourceSavedList;
     }
 
     public void setResourceSavedList(ResourceLogList resourceSavedList)
     {
-	this.resourceSavedList = resourceSavedList;
+        this.resourceSavedList = resourceSavedList;
     }
 
     @XmlElement
     public ResourceLogList getResClickAndSavedList()
     {
-	return resClickAndSavedList;
+        return resClickAndSavedList;
     }
 
     public void setResClickAndSavedList(ResourceLogList resClickAndSavedList)
     {
-	this.resClickAndSavedList = resClickAndSavedList;
+        this.resClickAndSavedList = resClickAndSavedList;
     }
 
     public ArrayList<Timeline> getTimelines()
     {
-	return timelines;
+        return timelines;
     }
 
     public void setTimelines(ArrayList<Timeline> timelines)
     {
-	this.timelines = timelines;
+        this.timelines = timelines;
     }
 
     public ResourceLogHashMap getResClickAndSaved()
     {
-	return resClickAndSaved;
+        return resClickAndSaved;
     }
 
     public void setResClickAndSaved(ResourceLogHashMap resClickAndSaved)
     {
-	this.resClickAndSaved = resClickAndSaved;
+        this.resClickAndSaved = resClickAndSaved;
     }
 
     public boolean isResourceClicked(String timestamp)
     {
-	return resourcesclicked.getResourceLogHashMap().containsKey(timestamp);
+        return resourcesclicked.getResourceLogHashMap().containsKey(timestamp);
     }
 
     public ResourceLog getResourceClicked(String timestamp)
     {
-	return resourcesclicked.getResourceLogHashMap().get(timestamp);
+        return resourcesclicked.getResourceLogHashMap().get(timestamp);
     }
 
     public boolean isResourceSaved(String timestamp)
     {
-	return resourcesSaved.getResourceLogHashMap().containsKey(timestamp);
+        return resourcesSaved.getResourceLogHashMap().containsKey(timestamp);
     }
 
     public ResourceLog getResourceSaved(String timestamp)
     {
-	return resourcesSaved.getResourceLogHashMap().get(timestamp);
+        return resourcesSaved.getResourceLogHashMap().get(timestamp);
     }
 
     public boolean isResourceClickedAndSaved(String timestamp)
     {
-	return resClickAndSaved.getResourceLogHashMap().containsKey(timestamp);
+        return resClickAndSaved.getResourceLogHashMap().containsKey(timestamp);
     }
 
     public ResourceLog getResourceClickedAndSaved(String timestamp)
     {
-	return resClickAndSaved.getResourceLogHashMap().get(timestamp);
+        return resClickAndSaved.getResourceLogHashMap().get(timestamp);
     }
 }

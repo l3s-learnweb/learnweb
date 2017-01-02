@@ -14,42 +14,42 @@ public class FactSheetEntry implements Serializable
 
     public String getLabel()
     {
-	return label;
+        return label;
     }
 
     public void setLabel(String label)
     {
-	this.label = label;
+        this.label = label;
     }
 
     public List<Object> getData()
     {
-	return data;
+        return data;
     }
 
     public void setData(List<Object> data)
     {
-	this.data = data;
+        this.data = data;
     }
 
     public String getTemplate()
     {
-	return template;
+        return template;
     }
 
     public void setTemplate(String template)
     {
-	this.template = template;
+        this.template = template;
     }
 
     public String getLabelKey()
     {
-	return labelKey;
+        return labelKey;
     }
 
     public void setLabelKey(String labelKey)
     {
-	this.labelKey = labelKey;
+        this.labelKey = labelKey;
     }
 
 }

@@ -4,17 +4,20 @@ import java.util.LinkedList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="QuerylogList")
-public class QueryLogList {
+@XmlRootElement(name = "QuerylogList")
+public class QueryLogList
+{
 
-		LinkedList<QueryLog> queryLogList;
+    LinkedList<QueryLog> queryLogList;
 
-		public LinkedList<QueryLog> getQueryLogList() {
-			return queryLogList;
-		}
+    public LinkedList<QueryLog> getQueryLogList()
+    {
+        return queryLogList;
+    }
 
-		public void setQueryLogList(LinkedList<QueryLog> queryLogList) {
-			this.queryLogList = queryLogList;
-		}
+    public void setQueryLogList(LinkedList<QueryLog> queryLogList)
+    {
+        this.queryLogList = queryLogList;
+    }
 
 }

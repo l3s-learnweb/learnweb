@@ -6,21 +6,25 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class TagList {
+public class TagList
+{
 
-	private ArrayList<Tag> tags;
+    private ArrayList<Tag> tags;
 
-	public TagList(){
-		tags = new ArrayList<Tag>();
-	}
-	
-	@XmlElement(name="tag")
-	public ArrayList<Tag> getTags() {
-		return tags;
-	}
+    public TagList()
+    {
+        tags = new ArrayList<Tag>();
+    }
 
-	public void setTags(ArrayList<Tag> tags) {
-		this.tags = tags;
-	}
-	
+    @XmlElement(name = "tag")
+    public ArrayList<Tag> getTags()
+    {
+        return tags;
+    }
+
+    public void setTags(ArrayList<Tag> tags)
+    {
+        this.tags = tags;
+    }
+
 }

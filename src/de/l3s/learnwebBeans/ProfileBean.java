@@ -86,325 +86,325 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
     public List<LogEntry> getLogMessages()
     {
-	return logMessages;
+        return logMessages;
     }
 
     public ProfileBean() throws SQLException
     {
-	Integer userId = getParameterInt("user_id");
+        Integer userId = getParameterInt("user_id");
 
-	if(userId != null) // moderator edits the defined user
-	{
-	    log.debug("Edit profile of user: " + userId);
+        if(userId != null) // moderator edits the defined user
+        {
+            log.debug("Edit profile of user: " + userId);
 
-	    user = getLearnweb().getUserManager().getUser(userId);
+            user = getLearnweb().getUserManager().getUser(userId);
 
-	    if(!UtilBean.getUserBean().canModerateCourses(user.getCourses()))
-	    {
-		user = null;
-		addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to edit this user");
-		return;
-	    }
-	    else
-		moderatorAccess = true;
-	}
-	else // edit own profile
-	    user = getUser();
+            if(!UtilBean.getUserBean().canModerateCourses(user.getCourses()))
+            {
+                user = null;
+                addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to edit this user");
+                return;
+            }
+            else
+                moderatorAccess = true;
+        }
+        else // edit own profile
+            user = getUser();
 
-	if(user == null)
-	    return;
+        if(user == null)
+            return;
 
-	username = user.getUsername();
-	email = user.getEmail();
-	phone = user.getPhone();
-	gender = user.getGender();
-	dateofbirth = user.getDateofbirth();
-	additionalInformation = user.getAdditionalInformation();
-	interest = user.getInterest();
-	address = user.getAddress();
-	profession = user.getProfession();
-	fullName = user.getFullName();
-	affiliation = user.getAffiliation();
-	credits = user.getCredits();
+        username = user.getUsername();
+        email = user.getEmail();
+        phone = user.getPhone();
+        gender = user.getGender();
+        dateofbirth = user.getDateofbirth();
+        additionalInformation = user.getAdditionalInformation();
+        interest = user.getInterest();
+        address = user.getAddress();
+        profession = user.getProfession();
+        fullName = user.getFullName();
+        affiliation = user.getAffiliation();
+        credits = user.getCredits();
     }
 
     public String getUrlBase()
     {
-	return FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/avatars");
+        return FacesContext.getCurrentInstance().getExternalContext().getRealPath("resources/avatars");
     }
 
     public void handleFileUpload(FileUploadEvent event)
     {
-	try
-	{
-	    getUser().setImage(event.getFile().getInputstream());
-	}
-	catch(IllegalArgumentException e) // image is smaller than 100px
-	{
+        try
+        {
+            getUser().setImage(event.getFile().getInputstream());
+        }
+        catch(IllegalArgumentException e) // image is smaller than 100px
+        {
 
-	    e.printStackTrace();
+            e.printStackTrace();
 
-	    if(e.getMessage().startsWith("Width 100 exceeds"))
-		addMessage(FacesMessage.SEVERITY_ERROR, "Your image is to small.");
-	    else
-		throw e;
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    addMessage(FacesMessage.SEVERITY_FATAL, "Fatal error while processing your image.");
-	}
+            if(e.getMessage().startsWith("Width 100 exceeds"))
+                addMessage(FacesMessage.SEVERITY_ERROR, "Your image is to small.");
+            else
+                throw e;
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            addMessage(FacesMessage.SEVERITY_FATAL, "Fatal error while processing your image.");
+        }
     }
 
     public void saveProfile() throws SQLException
     {
-	user.setAdditionalinformation(additionalInformation);
-	user.setAddress(address);
-	user.setDateofbirth(dateofbirth);
-	user.setEmail(email);
-	user.setGender(gender);
-	user.setInterest(interest);
-	user.setPhone(phone);
-	user.setProfession(profession);
-	user.setUsername(username);
-	user.setAffiliation(affiliation);
-	user.setFullName(fullName);
+        user.setAdditionalinformation(additionalInformation);
+        user.setAddress(address);
+        user.setDateofbirth(dateofbirth);
+        user.setEmail(email);
+        user.setGender(gender);
+        user.setInterest(interest);
+        user.setPhone(phone);
+        user.setProfession(profession);
+        user.setUsername(username);
+        user.setAffiliation(affiliation);
+        user.setFullName(fullName);
 
-	if(isModeratorAccess())
-	    user.setCredits(credits);
+        if(isModeratorAccess())
+            user.setCredits(credits);
 
-	getLearnweb().getUserManager().save(user);
+        getLearnweb().getUserManager().save(user);
 
-	log(Action.changing_profile, 0, user.getId());
-	addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        log(Action.changing_profile, 0, user.getId());
+        addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
     public void onChangePassword()
     {
-	UserManager um = getLearnweb().getUserManager();
-	try
-	{
-	    getSelectedUser().setPassword(password, false);
-	    um.save(getSelectedUser());
+        UserManager um = getLearnweb().getUserManager();
+        try
+        {
+            getSelectedUser().setPassword(password, false);
+            um.save(getSelectedUser());
 
-	    addMessage(FacesMessage.SEVERITY_INFO, "password_changed");
+            addMessage(FacesMessage.SEVERITY_INFO, "password_changed");
 
-	    password = "";
-	    confirmPassword = "";
-	    currentPassword = "";
-	}
-	catch(SQLException e)
-	{
-	    addFatalMessage(e);
-	}
+            password = "";
+            confirmPassword = "";
+            currentPassword = "";
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
     }
 
     public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
     {
-	if(getSelectedUser().getUsername().equals(value))
-	{ // username not changed
-	    return;
-	}
+        if(getSelectedUser().getUsername().equals(value))
+        { // username not changed
+            return;
+        }
 
-	if(getLearnweb().getUserManager().isUsernameAlreadyTaken((String) value))
-	{
-	    throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_already_taken"));
-	}
+        if(getLearnweb().getUserManager().isUsernameAlreadyTaken((String) value))
+        {
+            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_already_taken"));
+        }
     }
 
     public Date getMaxBirthday()
     {
-	return new Date();
+        return new Date();
     }
 
     public String getAddress()
     {
-	return address;
+        return address;
     }
 
     public void setAddress(String address)
     {
-	this.address = address;
+        this.address = address;
     }
 
     public Date getDateofbirth()
     {
-	return dateofbirth;
+        return dateofbirth;
     }
 
     public void setDateofbirth(Date dateofbirth)
     {
-	this.dateofbirth = dateofbirth;
+        this.dateofbirth = dateofbirth;
     }
 
     public String getEmail()
     {
-	return email;
+        return email;
     }
 
     public void setEmail(String email)
     {
-	this.email = email;
+        this.email = email;
     }
 
     public int getGender()
     {
-	return gender;
+        return gender;
     }
 
     public void setGender(int gender)
     {
-	this.gender = gender;
+        this.gender = gender;
     }
 
     public String getInterest()
     {
-	return interest;
+        return interest;
     }
 
     public void setInterest(String interest)
     {
-	this.interest = interest;
+        this.interest = interest;
     }
 
     public String getUsername()
     {
-	return username;
+        return username;
     }
 
     public void setUsername(String username)
     {
-	this.username = username;
+        this.username = username;
     }
 
     public String getPhone()
     {
-	return phone;
+        return phone;
     }
 
     public void setPhone(String phone)
     {
-	this.phone = phone;
+        this.phone = phone;
     }
 
     public String getProfession()
     {
-	return profession;
+        return profession;
     }
 
     public boolean isModeratorAccess()
     {
-	return moderatorAccess;
+        return moderatorAccess;
     }
 
     public void setProfession(String profession)
     {
-	this.profession = profession;
+        this.profession = profession;
     }
 
     public String getAdditionalInformation()
     {
-	return additionalInformation;
+        return additionalInformation;
     }
 
     public void setAdditionalInformation(String additionalInformation)
     {
-	this.additionalInformation = additionalInformation;
+        this.additionalInformation = additionalInformation;
     }
 
     public String getPassword()
     {
-	return password;
+        return password;
     }
 
     public void setPassword(String password)
     {
-	this.password = password;
+        this.password = password;
     }
 
     public String getConfirmPassword()
     {
-	return confirmPassword;
+        return confirmPassword;
     }
 
     public void setConfirmPassword(String confirmPassword)
     {
-	this.confirmPassword = confirmPassword;
+        this.confirmPassword = confirmPassword;
     }
 
     public String getCurrentPassword()
     {
-	return currentPassword;
+        return currentPassword;
     }
 
     public void setCurrentPassword(String currentPassword)
     {
-	this.currentPassword = currentPassword;
+        this.currentPassword = currentPassword;
     }
 
     public String getFullName()
     {
-	return fullName;
+        return fullName;
     }
 
     public void setFullName(String fullName)
     {
-	this.fullName = fullName;
+        this.fullName = fullName;
     }
 
     public String getAffiliation()
     {
-	return affiliation;
+        return affiliation;
     }
 
     public void setAffiliation(String affiliation)
     {
-	this.affiliation = affiliation;
+        this.affiliation = affiliation;
     }
 
     public String getCredits()
     {
-	return credits;
+        return credits;
     }
 
     public void setCredits(String credits)
     {
-	this.credits = credits;
+        this.credits = credits;
     }
 
     public User getSelectedUser()
     {
-	return user;
+        return user;
     }
 
     public void validateCurrentPassword(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
     {
-	UserManager um = getLearnweb().getUserManager();
-	User user = getSelectedUser(); // the current user
+        UserManager um = getLearnweb().getUserManager();
+        User user = getSelectedUser(); // the current user
 
-	String password = (String) value;
+        String password = (String) value;
 
-	// returns the same user, if the password is correct
-	User checkUser = um.getUser(user.getUsername(), password);
+        // returns the same user, if the password is correct
+        User checkUser = um.getUser(user.getUsername(), password);
 
-	if(!user.equals(checkUser))
-	{
-	    throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "password_incorrect"));
-	}
+        if(!user.equals(checkUser))
+        {
+            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "password_incorrect"));
+        }
     }
 
     public void validatePassword(FacesContext context, UIComponent component, Object value) throws ValidatorException
     {
-	// Find the actual JSF component for the first password field.
-	UIInput passwordInput = (UIInput) context.getViewRoot().findComponent("passwordform:password");
+        // Find the actual JSF component for the first password field.
+        UIInput passwordInput = (UIInput) context.getViewRoot().findComponent("passwordform:password");
 
-	// Get its value, the entered password of the first field.
-	String password = (String) passwordInput.getValue();
+        // Get its value, the entered password of the first field.
+        String password = (String) passwordInput.getValue();
 
-	if(null != password && !password.equals(value))
-	{
-	    throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "passwords_do_not_match"));
-	}
+        if(null != password && !password.equals(value))
+        {
+            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "passwords_do_not_match"));
+        }
     }
 
 }

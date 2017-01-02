@@ -68,12 +68,12 @@ public class SearchResultEntity
 
     public String getDate()
     {
-	return date;
+        return date;
     }
 
     public String getDescription()
     {
-	return description;
+        return description;
     }
 
     //	public String getEmbedded()
@@ -83,72 +83,72 @@ public class SearchResultEntity
 
     public String getIdAtService()
     {
-	return idAtService;
+        return idAtService;
     }
 
     public String getImage()
     {
-	return image;
+        return image;
     }
 
     public int getNumberOfComments()
     {
-	return numberOfComments;
+        return numberOfComments;
     }
 
     public int getNumberOfViews()
     {
-	return numberOfViews;
+        return numberOfViews;
     }
 
     public int getRankAtService()
     {
-	return rankAtService;
+        return rankAtService;
     }
 
     public String getService()
     {
-	return service;
+        return service;
     }
 
     public String getTags()
     {
-	return tags;
+        return tags;
     }
 
     public List<ThumbnailEntity> getThumbnailEntities()
     {
-	return thumbnailEntities;
+        return thumbnailEntities;
     }
 
     public String getTitle()
     {
-	return title;
+        return title;
     }
 
     public long getTotalResultsAtService()
     {
-	return totalResultsAtService;
+        return totalResultsAtService;
     }
 
     public String getType()
     {
-	return type;
+        return type;
     }
 
     public String getUrl()
     {
-	return url;
+        return url;
     }
 
     public void setDate(String date)
     {
-	this.date = date;
+        this.date = date;
     }
 
     public void setDescription(String description)
     {
-	this.description = description;
+        this.description = description;
     }
 
     //	public void setEmbedded(String embedded)
@@ -158,67 +158,67 @@ public class SearchResultEntity
 
     public void setIdAtService(String idAtService)
     {
-	this.idAtService = idAtService;
+        this.idAtService = idAtService;
     }
 
     public void setImage(String image)
     {
-	this.image = image;
+        this.image = image;
     }
 
     public void setNumberOfComments(int numberOfComments)
     {
-	this.numberOfComments = numberOfComments;
+        this.numberOfComments = numberOfComments;
     }
 
     public void setNumberOfViews(int numberOfViews)
     {
-	this.numberOfViews = numberOfViews;
+        this.numberOfViews = numberOfViews;
     }
 
     public void setRankAtService(int rankAtService)
     {
-	this.rankAtService = rankAtService;
+        this.rankAtService = rankAtService;
     }
 
     public void setService(String service)
     {
-	this.service = service;
+        this.service = service;
     }
 
     public void setTags(String tags)
     {
-	this.tags = tags;
+        this.tags = tags;
     }
 
     public void setThumbnailEntities(List<ThumbnailEntity> thumbnailEntities)
     {
-	this.thumbnailEntities = thumbnailEntities;
+        this.thumbnailEntities = thumbnailEntities;
     }
 
     public void setTitle(String title)
     {
-	this.title = title;
+        this.title = title;
     }
 
     public void setTotalResultsAtService(long totalResultsAtService)
     {
-	this.totalResultsAtService = totalResultsAtService;
+        this.totalResultsAtService = totalResultsAtService;
     }
 
     public void setType(String type)
     {
-	this.type = type;
+        this.type = type;
     }
 
     public void setUrl(String url)
     {
-	this.url = url;
+        this.url = url;
     }
 
     public void setViews(int numberOfViews)
     {
-	this.numberOfViews = numberOfViews;
+        this.numberOfViews = numberOfViews;
     }
 
     /**
@@ -229,7 +229,7 @@ public class SearchResultEntity
      */
     public void setEmbeddedSize3(String embedded)
     {
-	this.embeddedSize3 = embedded;
+        this.embeddedSize3 = embedded;
     }
 
     /**
@@ -240,7 +240,7 @@ public class SearchResultEntity
      */
     public String getEmbeddedSize3()
     {
-	return embeddedSize3;
+        return embeddedSize3;
     }
 
     /**
@@ -251,7 +251,7 @@ public class SearchResultEntity
      */
     public String getEmbeddedSize1()
     {
-	return embeddedSize1;
+        return embeddedSize1;
     }
 
     /**
@@ -260,7 +260,7 @@ public class SearchResultEntity
      */
     public void setEmbeddedSize1(String embeddedSize1)
     {
-	this.embeddedSize1 = embeddedSize1;
+        this.embeddedSize1 = embeddedSize1;
     }
 
     /**
@@ -269,7 +269,7 @@ public class SearchResultEntity
      */
     public String getEmbeddedSize2()
     {
-	return embeddedSize2;
+        return embeddedSize2;
     }
 
     /**
@@ -278,7 +278,7 @@ public class SearchResultEntity
      */
     public void setEmbeddedSize2(String embeddedSize2)
     {
-	this.embeddedSize2 = embeddedSize2;
+        this.embeddedSize2 = embeddedSize2;
     }
 
     /**
@@ -287,7 +287,7 @@ public class SearchResultEntity
      */
     public String getEmbeddedSize4()
     {
-	return embeddedSize4;
+        return embeddedSize4;
     }
 
     /**
@@ -296,7 +296,7 @@ public class SearchResultEntity
      */
     public void setEmbeddedSize4(String embeddedSize4)
     {
-	this.embeddedSize4 = embeddedSize4;
+        this.embeddedSize4 = embeddedSize4;
     }
 
     /**
@@ -306,7 +306,7 @@ public class SearchResultEntity
      */
     public String getImageUrl()
     {
-	return imageUrl;
+        return imageUrl;
     }
 
     /**
@@ -316,30 +316,30 @@ public class SearchResultEntity
      */
     public void setImageUrl(String imageUrl)
     {
-	this.imageUrl = imageUrl;
+        this.imageUrl = imageUrl;
     }
 
     public String getSnippet()
     {
-	return snippet;
+        return snippet;
     }
 
     public int getDuration()
     {
-	return duration;
+        return duration;
     }
 
     public void setDuration(int duration)
     {
-	this.duration = duration;
+        this.duration = duration;
     }
 
     @Override
     public String toString()
     {
-	return "SearchResultEntity [service=" + service + ", idAtService=" + idAtService + ", type=" + type + ", title=" + title + ", description=" + description + ", url=" + url + ", image=" + image + ", thumbnailEntities=" + thumbnailEntities + ", date=" + date + ", tags="
-		+ tags + ", rankAtService=" + rankAtService + ", totalResultsAtService=" + totalResultsAtService + ", numberOfViews=" + numberOfViews + ", numberOfComments=" + numberOfComments + ", privacy=" + privacy + ", privacyConfidence=" + privacyConfidence
-		+ ", embeddedSize1=" + embeddedSize1 + ", embeddedSize2=" + embeddedSize2 + ", embeddedSize3=" + embeddedSize3 + ", embeddedSize4=" + embeddedSize4 + ", imageUrl=" + imageUrl + ", duration=" + duration + ", snippet=" + snippet + "]";
+        return "SearchResultEntity [service=" + service + ", idAtService=" + idAtService + ", type=" + type + ", title=" + title + ", description=" + description + ", url=" + url + ", image=" + image + ", thumbnailEntities=" + thumbnailEntities + ", date=" + date + ", tags="
+                + tags + ", rankAtService=" + rankAtService + ", totalResultsAtService=" + totalResultsAtService + ", numberOfViews=" + numberOfViews + ", numberOfComments=" + numberOfComments + ", privacy=" + privacy + ", privacyConfidence=" + privacyConfidence
+                + ", embeddedSize1=" + embeddedSize1 + ", embeddedSize2=" + embeddedSize2 + ", embeddedSize3=" + embeddedSize3 + ", embeddedSize4=" + embeddedSize4 + ", imageUrl=" + imageUrl + ", duration=" + duration + ", snippet=" + snippet + "]";
     }
 
 }

@@ -5,21 +5,25 @@ import java.util.ArrayList;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="ResultsetIdList")
-public class ResultSetIdList {
+@XmlRootElement(name = "ResultsetIdList")
+public class ResultSetIdList
+{
 
-	ArrayList<Integer> resultsetId;
-	
-	public ResultSetIdList(){
-		resultsetId = new ArrayList<Integer>();
-	}
+    ArrayList<Integer> resultsetId;
 
-	@XmlElement
-	public ArrayList<Integer> getResultsetId() {
-		return resultsetId;
-	}
+    public ResultSetIdList()
+    {
+        resultsetId = new ArrayList<Integer>();
+    }
 
-	public void setResultsetId(ArrayList<Integer> resultsetId) {
-		this.resultsetId = resultsetId;
-	}
+    @XmlElement
+    public ArrayList<Integer> getResultsetId()
+    {
+        return resultsetId;
+    }
+
+    public void setResultsetId(ArrayList<Integer> resultsetId)
+    {
+        this.resultsetId = resultsetId;
+    }
 }

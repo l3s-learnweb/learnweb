@@ -13,51 +13,51 @@ public class Message
 
     public Message(String text)
     {
-	this.text = text;
+        this.text = text;
     }
 
     public Message(String text, boolean updateList)
     {
-	this.text = text;
-	this.updateList = updateList;
+        this.text = text;
+        this.updateList = updateList;
     }
 
     public Message(String user, String text, boolean updateList)
     {
-	this.text = text;
-	this.user = user;
-	this.updateList = updateList;
+        this.text = text;
+        this.user = user;
+        this.updateList = updateList;
     }
 
     public String getText()
     {
-	return text;
+        return text;
     }
 
     public Message setText(String text)
     {
-	this.text = text;
-	return this;
+        this.text = text;
+        return this;
     }
 
     public String getUser()
     {
-	return user;
+        return user;
     }
 
     public Message setUser(String user)
     {
-	this.user = user;
-	return this;
+        this.user = user;
+        return this;
     }
 
     public boolean isUpdateList()
     {
-	return updateList;
+        return updateList;
     }
 
     public void setUpdateList(boolean updateList)
     {
-	this.updateList = updateList;
+        this.updateList = updateList;
     }
 }

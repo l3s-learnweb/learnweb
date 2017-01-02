@@ -45,141 +45,141 @@ public class SearchQueryEntity
 
     public SearchQueryEntity()
     {
-	results = new ArrayList<SearchResultEntity>();
+        results = new ArrayList<SearchResultEntity>();
     }
 
     public void addResult(SearchResultEntity result)
     {
-	results.add(result);
+        results.add(result);
     }
 
     public String getDateFrom()
     {
-	return dateFrom;
+        return dateFrom;
     }
 
     public String getDateTill()
     {
-	return dateTill;
+        return dateTill;
     }
 
     public String getElapsedTime()
     {
-	return elapsedTime;
+        return elapsedTime;
     }
 
     public String getId()
     {
-	return id;
+        return id;
     }
 
     public String getLink()
     {
-	return link;
+        return link;
     }
 
     public String getMediaTypes()
     {
-	return mediaTypes;
+        return mediaTypes;
     }
 
     public int getNumberOfResults()
     {
-	return numberOfResults;
+        return numberOfResults;
     }
 
     public String getQueryString()
     {
-	return queryString;
+        return queryString;
     }
 
     public String getRanking()
     {
-	return ranking;
+        return ranking;
     }
 
     public List<SearchResultEntity> getResults()
     {
-	return results;
+        return results;
     }
 
     public String getSearchIn()
     {
-	return searchIn;
+        return searchIn;
     }
 
     public String getUpdated()
     {
-	return updated;
+        return updated;
     }
 
     public String getUser()
     {
-	return user;
+        return user;
     }
 
     public void setDateFrom(String dateFrom)
     {
-	this.dateFrom = dateFrom;
+        this.dateFrom = dateFrom;
     }
 
     public void setDateTill(String dateTill)
     {
-	this.dateTill = dateTill;
+        this.dateTill = dateTill;
     }
 
     public void setElapsedTime(String elapsedTime)
     {
-	this.elapsedTime = elapsedTime;
+        this.elapsedTime = elapsedTime;
     }
 
     public void setId(String id)
     {
-	this.id = id;
+        this.id = id;
     }
 
     public void setLink(String link)
     {
-	this.link = link;
+        this.link = link;
     }
 
     public void setMediaTypes(String mediaTypes)
     {
-	this.mediaTypes = mediaTypes;
+        this.mediaTypes = mediaTypes;
     }
 
     public void setNumberOfResults(int numberOfResults)
     {
-	this.numberOfResults = numberOfResults;
+        this.numberOfResults = numberOfResults;
     }
 
     public void setQueryString(String queryString)
     {
-	this.queryString = queryString;
+        this.queryString = queryString;
     }
 
     public void setRanking(String ranking)
     {
-	this.ranking = ranking;
+        this.ranking = ranking;
     }
 
     public void setResults(List<SearchResultEntity> results)
     {
-	this.results = results;
+        this.results = results;
     }
 
     public void setSearchIn(String searchIn)
     {
-	this.searchIn = searchIn;
+        this.searchIn = searchIn;
     }
 
     public void setUpdated(String updated)
     {
-	this.updated = updated;
+        this.updated = updated;
     }
 
     public void setUser(String user)
     {
-	this.user = user;
+        this.user = user;
     }
 }

@@ -1539,7 +1539,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 addGrowl(FacesMessage.SEVERITY_INFO, "resourcesCopiedSuccessfully", numFolders + numResources);
             }
 
-            if (numSkipped > 0)
+            if(numSkipped > 0)
             {
                 addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
             }
@@ -1636,7 +1636,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                     this.updateResourcesFromSolr();
             }
 
-            if (numSkipped > 0)
+            if(numSkipped > 0)
             {
                 addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
             }
@@ -1733,7 +1733,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                     this.updateResourcesFromSolr();
             }
 
-            if (numSkipped > 0)
+            if(numSkipped > 0)
             {
                 addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
             }
@@ -1789,7 +1789,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 addGrowl(FacesMessage.SEVERITY_INFO, "tagAddedToResources", numResources);
             }
 
-            if (numSkipped > 0)
+            if(numSkipped > 0)
             {
                 addGrowl(FacesMessage.SEVERITY_WARN, "resourcesCanNotBeChanged", numSkipped);
             }

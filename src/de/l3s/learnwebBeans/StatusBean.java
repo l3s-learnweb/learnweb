@@ -20,92 +20,92 @@ public class StatusBean extends ApplicationBean
 
     public StatusBean()
     {
-	services.add(new Service("Learnweb Tomcat", "ok", "", "offensichtlich ok, sonst wäre diese Seite nicht erreichbar"));
+        services.add(new Service("Learnweb Tomcat", "ok", "", "offensichtlich ok, sonst wäre diese Seite nicht erreichbar"));
 
-	Learnweb learnweb = getLearnweb();
+        Learnweb learnweb = getLearnweb();
 
-	// test learnweb database
-	String status = "ok";
-	String comment = "";
-	try
-	{
-	    Statement stmt = learnweb.getConnection().createStatement();
-	    ResultSet rs = stmt.executeQuery("SELECT count(*) FROM lw_user");
+        // test learnweb database
+        String status = "ok";
+        String comment = "";
+        try
+        {
+            Statement stmt = learnweb.getConnection().createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT count(*) FROM lw_user");
 
-	    if(!rs.next() || rs.getInt(1) < 400)
-	    {
-		status = "error";
-		comment = "unexpected result from database";
-	    }
-	}
-	catch(SQLException e)
-	{
-	    status = "error";
-	    comment = e.getMessage();
-	}
-	services.add(new Service("Learnweb Database", status, learnweb.getProperties().getProperty("mysql_url"), comment));
+            if(!rs.next() || rs.getInt(1) < 400)
+            {
+                status = "error";
+                comment = "unexpected result from database";
+            }
+        }
+        catch(SQLException e)
+        {
+            status = "error";
+            comment = e.getMessage();
+        }
+        services.add(new Service("Learnweb Database", status, learnweb.getProperties().getProperty("mysql_url"), comment));
 
-	// test fedora 
-	status = "ok";
-	comment = "";
+        // test fedora 
+        status = "ok";
+        comment = "";
 
-	try
-	{
-	    if(!learnweb.getResourceManager().isResourceRatedByUser(2811, 1684))
-	    {
-		status = "warning";
-		comment = "unexpected result from fedora";
-	    }
-	}
-	catch(Exception e)
-	{
-	    status = "error";
-	    comment = e.getMessage();
-	}
-	services.add(new Service("Fedora", status, learnweb.getProperties().getProperty("FEDORA_SERVER_URL"), comment));
+        try
+        {
+            if(!learnweb.getResourceManager().isResourceRatedByUser(2811, 1684))
+            {
+                status = "warning";
+                comment = "unexpected result from fedora";
+            }
+        }
+        catch(Exception e)
+        {
+            status = "error";
+            comment = e.getMessage();
+        }
+        services.add(new Service("Fedora", status, learnweb.getProperties().getProperty("FEDORA_SERVER_URL"), comment));
 
     }
 
     public List<Service> getServices()
     {
-	return services;
+        return services;
     }
 
     public class Service
     {
-	private String name;
-	private String status;
-	private String url;
-	private String comment;
+        private String name;
+        private String status;
+        private String url;
+        private String comment;
 
-	public Service(String name, String status, String url, String comment)
-	{
-	    super();
-	    this.name = name;
-	    this.status = new String(status);
-	    this.url = url;
-	    this.comment = new String(comment);
-	}
+        public Service(String name, String status, String url, String comment)
+        {
+            super();
+            this.name = name;
+            this.status = new String(status);
+            this.url = url;
+            this.comment = new String(comment);
+        }
 
-	public String getName()
-	{
-	    return name;
-	}
+        public String getName()
+        {
+            return name;
+        }
 
-	public String getStatus()
-	{
-	    return status;
-	}
+        public String getStatus()
+        {
+            return status;
+        }
 
-	public String getComment()
-	{
-	    return comment;
-	}
+        public String getComment()
+        {
+            return comment;
+        }
 
-	public String getUrl()
-	{
-	    return url;
-	}
+        public String getUrl()
+        {
+            return url;
+        }
 
     }
 }

@@ -22,44 +22,44 @@ public class FactSheetBean extends ApplicationBean
 
     public String getSearch()
     {
-	return search;
+        return search;
     }
 
     public void setSearch(String search)
     {
-	this.search = search;
+        this.search = search;
     }
 
     public String getRandom()
     {
-	String back;
-	Random randomGenerator = new Random();
-	int random = randomGenerator.nextInt(1000);
-	back = "Q" + random;
-	System.out.println(back);
-	return back;
+        String back;
+        Random randomGenerator = new Random();
+        int random = randomGenerator.nextInt(1000);
+        back = "Q" + random;
+        System.out.println(back);
+        return back;
     }
 
     public void onClick() throws ParseException
     {
-	// todo translate query to id
+        // todo translate query to id
 
-	String language = UtilBean.getUserBean().getLocaleAsString().substring(0, 2);
+        String language = UtilBean.getUserBean().getLocaleAsString().substring(0, 2);
 
-	Logger.getLogger(FactSheetBean.class).debug(language + " query " + search);
+        Logger.getLogger(FactSheetBean.class).debug(language + " query " + search);
 
-	entity = Search.searchRdfWikidata(search, language);
+        entity = Search.searchRdfWikidata(search, language);
 
-	for(FactSheetEntry fact : entity.getFacts())
-	{
-	    // replace strange label 
-	    if(fact.getLabel().equals("mass"))
-		fact.setLabel(getLocaleMessage("weight"));
-	}
+        for(FactSheetEntry fact : entity.getFacts())
+        {
+            // replace strange label 
+            if(fact.getLabel().equals("mass"))
+                fact.setLabel(getLocaleMessage("weight"));
+        }
     }
 
     public Entity getEntity()
     {
-	return entity;
+        return entity;
     }
 }

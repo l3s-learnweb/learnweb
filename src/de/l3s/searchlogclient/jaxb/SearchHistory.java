@@ -8,148 +8,175 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement(name = "SearchHistory")
-public class SearchHistory {
+public class SearchHistory
+{
 
-	private int resultsetId;
-	private int resourceRank;
-	private int userId;
-	private String query;
-	private String searchType;
-	private Date queryTimestamp;
-	private String URL;
-	private String filename;
-	private String source;
-	private String action;
-	private Date actionTimestamp;
-	
-	public SearchHistory(){
-		
-	}
-	
-	public SearchHistory(int resultsetId,int resourceRank,int userId,String query,String searchType,String queryTimestamp,String URL,String filename,
-				  String source,String action,String actionTimestamp){
-		
-		//For converting timestamp in String to Date object
-		SimpleDateFormat stringtodatef = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		
-		this.resultsetId = resultsetId;
-		this.resourceRank = resourceRank;
-		this.userId = userId;
-		this.query = query;
-		this.searchType = searchType;
-		this.URL = URL;
-		this.filename = filename;
-		this.source = source;
-		this.action = action;
-		try {
-			this.queryTimestamp = stringtodatef.parse(queryTimestamp);
-			if((actionTimestamp!=null)&&(!actionTimestamp.equals("")))
-				this.actionTimestamp = stringtodatef.parse(actionTimestamp);
-			else
-				this.actionTimestamp = null;
-		} catch (ParseException e) {
-			e.printStackTrace();
-		}
-			
-	}
+    private int resultsetId;
+    private int resourceRank;
+    private int userId;
+    private String query;
+    private String searchType;
+    private Date queryTimestamp;
+    private String URL;
+    private String filename;
+    private String source;
+    private String action;
+    private Date actionTimestamp;
 
-	@XmlElement
-	public int getResultsetId() {
-		return resultsetId;
-	}
+    public SearchHistory()
+    {
 
-	public void setResultsetId(int resultsetId) {
-		this.resultsetId = resultsetId;
-	}
+    }
 
-	@XmlElement
-	public int getResourceRank() {
-		return resourceRank;
-	}
+    public SearchHistory(int resultsetId, int resourceRank, int userId, String query, String searchType, String queryTimestamp, String URL, String filename, String source, String action, String actionTimestamp)
+    {
 
-	public void setResourceRank(int resourceRank) {
-		this.resourceRank = resourceRank;
-	}
+        //For converting timestamp in String to Date object
+        SimpleDateFormat stringtodatef = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-	@XmlElement
-	public int getUserId() {
-		return userId;
-	}
+        this.resultsetId = resultsetId;
+        this.resourceRank = resourceRank;
+        this.userId = userId;
+        this.query = query;
+        this.searchType = searchType;
+        this.URL = URL;
+        this.filename = filename;
+        this.source = source;
+        this.action = action;
+        try
+        {
+            this.queryTimestamp = stringtodatef.parse(queryTimestamp);
+            if((actionTimestamp != null) && (!actionTimestamp.equals("")))
+                this.actionTimestamp = stringtodatef.parse(actionTimestamp);
+            else
+                this.actionTimestamp = null;
+        }
+        catch(ParseException e)
+        {
+            e.printStackTrace();
+        }
 
-	public void setUserId(int userId) {
-		this.userId = userId;
-	}
+    }
 
-	@XmlElement
-	public String getQuery() {
-		return query;
-	}
+    @XmlElement
+    public int getResultsetId()
+    {
+        return resultsetId;
+    }
 
-	public void setQuery(String query) {
-		this.query = query;
-	}
+    public void setResultsetId(int resultsetId)
+    {
+        this.resultsetId = resultsetId;
+    }
 
-	@XmlElement
-	public String getSearchType() {
-		return searchType;
-	}
+    @XmlElement
+    public int getResourceRank()
+    {
+        return resourceRank;
+    }
 
-	public void setSearchType(String searchType) {
-		this.searchType = searchType;
-	}
+    public void setResourceRank(int resourceRank)
+    {
+        this.resourceRank = resourceRank;
+    }
 
-	@XmlElement
-	public Date getQueryTimestamp() {
-		return queryTimestamp;
-	}
+    @XmlElement
+    public int getUserId()
+    {
+        return userId;
+    }
 
-	public void setQueryTimestamp(Date queryTimestamp) {
-		this.queryTimestamp = queryTimestamp;
-	}
+    public void setUserId(int userId)
+    {
+        this.userId = userId;
+    }
 
-	@XmlElement
-	public String getURL() {
-		return URL;
-	}
+    @XmlElement
+    public String getQuery()
+    {
+        return query;
+    }
 
-	public void setURL(String uRL) {
-		URL = uRL;
-	}
+    public void setQuery(String query)
+    {
+        this.query = query;
+    }
 
-	@XmlElement
-	public String getFilename() {
-		return filename;
-	}
+    @XmlElement
+    public String getSearchType()
+    {
+        return searchType;
+    }
 
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
+    public void setSearchType(String searchType)
+    {
+        this.searchType = searchType;
+    }
 
-	@XmlElement
-	public String getAction() {
-		return action;
-	}
+    @XmlElement
+    public Date getQueryTimestamp()
+    {
+        return queryTimestamp;
+    }
 
-	public void setAction(String action) {
-		this.action = action;
-	}
+    public void setQueryTimestamp(Date queryTimestamp)
+    {
+        this.queryTimestamp = queryTimestamp;
+    }
 
-	@XmlElement
-	public Date getActionTimestamp() {
-		return actionTimestamp;
-	}
+    @XmlElement
+    public String getURL()
+    {
+        return URL;
+    }
 
-	public void setActionTimestamp(Date actionTimestamp) {
-		this.actionTimestamp = actionTimestamp;
-	}
+    public void setURL(String uRL)
+    {
+        URL = uRL;
+    }
 
-	@XmlElement
-	public String getSource() {
-		return source;
-	}
+    @XmlElement
+    public String getFilename()
+    {
+        return filename;
+    }
 
-	public void setSource(String source) {
-		this.source = source;
-	}
-	
+    public void setFilename(String filename)
+    {
+        this.filename = filename;
+    }
+
+    @XmlElement
+    public String getAction()
+    {
+        return action;
+    }
+
+    public void setAction(String action)
+    {
+        this.action = action;
+    }
+
+    @XmlElement
+    public Date getActionTimestamp()
+    {
+        return actionTimestamp;
+    }
+
+    public void setActionTimestamp(Date actionTimestamp)
+    {
+        this.actionTimestamp = actionTimestamp;
+    }
+
+    @XmlElement
+    public String getSource()
+    {
+        return source;
+    }
+
+    public void setSource(String source)
+    {
+        this.source = source;
+    }
+
 }

@@ -42,184 +42,184 @@ public class AdminNotificationBean extends ApplicationBean
 
     public AdminNotificationBean()
     {
-	user = getUser();
-	if(user == null || !user.isModerator())
-	    return;
+        user = getUser();
+        if(user == null || !user.isModerator())
+            return;
 
-	if(StringUtils.isNotBlank(user.getEmail()))
-	    moderatorCanSendMail = validator.isValid(user.getEmail(), null);
+        if(StringUtils.isNotBlank(user.getEmail()))
+            moderatorCanSendMail = validator.isValid(user.getEmail(), null);
     }
 
     public void send() throws SQLException
     {
-	// get selected users, complicated because jsf sucks
-	HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
-	String[] tempSelectedUsers = request.getParameterValues("selected_users");
+        // get selected users, complicated because jsf sucks
+        HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
+        String[] tempSelectedUsers = request.getParameterValues("selected_users");
 
-	if(null == tempSelectedUsers || tempSelectedUsers.length == 0)
-	{
-	    addMessage(FacesMessage.SEVERITY_ERROR, "Please select the users you want to send a message.");
-	    return;
-	}
+        if(null == tempSelectedUsers || tempSelectedUsers.length == 0)
+        {
+            addMessage(FacesMessage.SEVERITY_ERROR, "Please select the users you want to send a message.");
+            return;
+        }
 
-	// Set is used to make sure that every user gets the message only once
-	TreeSet<Integer> selectedUsers = new TreeSet<Integer>();
-	for(String userId : tempSelectedUsers)
-	{
-	    selectedUsers.add(Integer.parseInt(userId));
-	}
+        // Set is used to make sure that every user gets the message only once
+        TreeSet<Integer> selectedUsers = new TreeSet<Integer>();
+        for(String userId : tempSelectedUsers)
+        {
+            selectedUsers.add(Integer.parseInt(userId));
+        }
 
-	Message message = new Message();
-	message.setFromUser(getUser());
-	message.setTitle(this.title);
-	message.setText(this.text);
-	message.setTime(new Date());
+        Message message = new Message();
+        message.setFromUser(getUser());
+        message.setTitle(this.title);
+        message.setText(this.text);
+        message.setTime(new Date());
 
-	UserManager um = getLearnweb().getUserManager();
-	int counter = 0;
+        UserManager um = getLearnweb().getUserManager();
+        int counter = 0;
 
-	ArrayList<String> reciepients = new ArrayList<>(selectedUsers.size());
-	ArrayList<String> usersWithoutMail = new ArrayList<>();
+        ArrayList<String> reciepients = new ArrayList<>(selectedUsers.size());
+        ArrayList<String> usersWithoutMail = new ArrayList<>();
 
-	for(int userId : selectedUsers)
-	{
-	    User user = um.getUser(userId);
-	    message.setToUser(user);
-	    message.save();
+        for(int userId : selectedUsers)
+        {
+            User user = um.getUser(userId);
+            message.setToUser(user);
+            message.save();
 
-	    if(sendEmail)
-	    {
-		log.debug("try send mail to: " + user.getEmail());
+            if(sendEmail)
+            {
+                log.debug("try send mail to: " + user.getEmail());
 
-		if(StringUtils.isEmpty(user.getEmail()) || !validator.isValid(user.getEmail(), null))
-		    usersWithoutMail.add(user.getUsername());
-		else
-		    reciepients.add(user.getEmail());
-	    }
-	    counter++;
-	}
+                if(StringUtils.isEmpty(user.getEmail()) || !validator.isValid(user.getEmail(), null))
+                    usersWithoutMail.add(user.getUsername());
+                else
+                    reciepients.add(user.getEmail());
+            }
+            counter++;
+        }
 
-	addMessage(FacesMessage.SEVERITY_INFO, counter + " internal Learnweb notifications sent");
+        addMessage(FacesMessage.SEVERITY_INFO, counter + " internal Learnweb notifications sent");
 
-	if(sendEmail && moderatorCanSendMail)
-	{
-	    Mail mail = null;
-	    try
-	    {
-		// copy addresses to array
-		int i = 0;
-		InternetAddress[] reciepientsArr = new InternetAddress[reciepients.size()];
+        if(sendEmail && moderatorCanSendMail)
+        {
+            Mail mail = null;
+            try
+            {
+                // copy addresses to array
+                int i = 0;
+                InternetAddress[] reciepientsArr = new InternetAddress[reciepients.size()];
 
-		for(String address : reciepients)
-		{
-		    reciepientsArr[i++] = new InternetAddress(address);
-		    log.debug("send mail to: " + address);
-		}
+                for(String address : reciepients)
+                {
+                    reciepientsArr[i++] = new InternetAddress(address);
+                    log.debug("send mail to: " + address);
+                }
 
-		mail = new Mail();
-		mail.setRecipients(javax.mail.Message.RecipientType.BCC, reciepientsArr);
-		mail.setReplyTo(new InternetAddress(user.getEmail()));
-		mail.setRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(user.getEmail()));
-		mail.setHTML(text + "<br/>\n<br/>\n___________________________<br/>\n" + getLocaleMessage("mail_notification_footer", user.getUsername()));
-		mail.setSubject("Learnweb: " + title);
-		mail.sendMail();
+                mail = new Mail();
+                mail.setRecipients(javax.mail.Message.RecipientType.BCC, reciepientsArr);
+                mail.setReplyTo(new InternetAddress(user.getEmail()));
+                mail.setRecipient(javax.mail.Message.RecipientType.TO, new InternetAddress(user.getEmail()));
+                mail.setHTML(text + "<br/>\n<br/>\n___________________________<br/>\n" + getLocaleMessage("mail_notification_footer", user.getUsername()));
+                mail.setSubject("Learnweb: " + title);
+                mail.sendMail();
 
-		addMessage(FacesMessage.SEVERITY_INFO, reciepientsArr.length + " emails send");
+                addMessage(FacesMessage.SEVERITY_INFO, reciepientsArr.length + " emails send");
 
-		if(usersWithoutMail.size() > 0)
-		    addMessage(FacesMessage.SEVERITY_WARN, "Some users haven't defined a valid mail address: <b>" + StringHelper.implode(usersWithoutMail, ", ") + "</b>");
-	    }
-	    catch(Exception e)
-	    {
-		log.error("Could not send notification mail: " + mail, e);
-		addMessage(FacesMessage.SEVERITY_ERROR, "Email could not be sent");
-	    }
+                if(usersWithoutMail.size() > 0)
+                    addMessage(FacesMessage.SEVERITY_WARN, "Some users haven't defined a valid mail address: <b>" + StringHelper.implode(usersWithoutMail, ", ") + "</b>");
+            }
+            catch(Exception e)
+            {
+                log.error("Could not send notification mail: " + mail, e);
+                addMessage(FacesMessage.SEVERITY_ERROR, "Email could not be sent");
+            }
 
-	}
+        }
 
     }
 
     public boolean isModeratorCanSendMail()
     {
-	return moderatorCanSendMail;
+        return moderatorCanSendMail;
     }
 
     //Alana
     public void send2() throws SQLException
     {
-	log.debug("Send2");
-	if(null == this.listStudents || this.listStudents.length == 0)
-	{
-	    addMessage(FacesMessage.SEVERITY_ERROR, "Please select the users you want to send a message.");
-	    return;
-	}
+        log.debug("Send2");
+        if(null == this.listStudents || this.listStudents.length == 0)
+        {
+            addMessage(FacesMessage.SEVERITY_ERROR, "Please select the users you want to send a message.");
+            return;
+        }
 
-	TreeSet<Integer> selectedUsers = new TreeSet<Integer>();
-	for(String userId : this.listStudents)
-	{
-	    selectedUsers.add(Integer.parseInt(userId));
-	}
+        TreeSet<Integer> selectedUsers = new TreeSet<Integer>();
+        for(String userId : this.listStudents)
+        {
+            selectedUsers.add(Integer.parseInt(userId));
+        }
 
-	User fromUser = getUser();
+        User fromUser = getUser();
 
-	Message message = new Message();
-	message.setFromUser(fromUser);
-	message.setTitle(this.title);
-	message.setText(this.text);
-	message.setTime(new Date());
+        Message message = new Message();
+        message.setFromUser(fromUser);
+        message.setTitle(this.title);
+        message.setText(this.text);
+        message.setTime(new Date());
 
-	UserManager um = getLearnweb().getUserManager();
-	int counter = 0;
+        UserManager um = getLearnweb().getUserManager();
+        int counter = 0;
 
-	for(int userId : selectedUsers)
-	{
-	    User user = um.getUser(userId);
-	    message.setToUser(user);
-	    message.save();
+        for(int userId : selectedUsers)
+        {
+            User user = um.getUser(userId);
+            message.setToUser(user);
+            message.save();
 
-	    counter++;
-	}
-	addMessage(FacesMessage.SEVERITY_INFO, counter + " Notifications send");
+            counter++;
+        }
+        addMessage(FacesMessage.SEVERITY_INFO, counter + " Notifications send");
     }
 
     public String getText()
     {
-	return text;
+        return text;
     }
 
     public void setText(String text)
     {
-	this.text = text;
+        this.text = text;
     }
 
     public String getTitle()
     {
-	return title;
+        return title;
     }
 
     public void setTitle(String title)
     {
-	this.title = title;
+        this.title = title;
     }
 
     public boolean isSendEmail()
     {
-	return sendEmail;
+        return sendEmail;
     }
 
     public void setSendEmail(boolean sendEmail)
     {
-	this.sendEmail = sendEmail;
+        this.sendEmail = sendEmail;
     }
 
     //Alana
     public String[] getListStudents()
     {
-	return listStudents;
+        return listStudents;
     }
 
     public void setListStudents(String[] listStudents)
     {
-	this.listStudents = listStudents;
+        this.listStudents = listStudents;
     }
 }

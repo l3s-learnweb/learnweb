@@ -12,6 +12,6 @@ public final class MessageEncoder implements Encoder<Message, String>
     //@Override
     public String encode(Message message)
     {
-	return new JSONObject(message).toString();
+        return new JSONObject(message).toString();
     }
 }

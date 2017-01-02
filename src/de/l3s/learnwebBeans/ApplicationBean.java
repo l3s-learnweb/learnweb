@@ -21,58 +21,58 @@ public class ApplicationBean
 
     public ApplicationBean()
     {
-	/*
-	if(isAjaxRequest())
-		return;
-	
-	FacesContext facesContext = getFacesContext();
-	ExternalContext ext = facesContext.getExternalContext();
-	HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();		
-	UIViewRoot viewRoot = facesContext.getViewRoot();
-	
-	if(null == viewRoot)
-		log.error("ApplicationBean::viewRoot is null");
-	else
-	{
-		String request = viewRoot.getViewId();		
-		String ip = servletRequest.getRemoteAddr();			
-	
-		log.debug(request +" - "+ ip);
-	}
-	*/
-	startTime = System.currentTimeMillis();
+        /*
+        if(isAjaxRequest())
+        	return;
+        
+        FacesContext facesContext = getFacesContext();
+        ExternalContext ext = facesContext.getExternalContext();
+        HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();		
+        UIViewRoot viewRoot = facesContext.getViewRoot();
+        
+        if(null == viewRoot)
+        	log.error("ApplicationBean::viewRoot is null");
+        else
+        {
+        	String request = viewRoot.getViewId();		
+        	String ip = servletRequest.getRemoteAddr();			
+        
+        	log.debug(request +" - "+ ip);
+        }
+        */
+        startTime = System.currentTimeMillis();
 
-	//getSessionId(); // hopefully prevents java.lang.IllegalStateException: Cannot create a session after the response has been committed 
+        //getSessionId(); // hopefully prevents java.lang.IllegalStateException: Cannot create a session after the response has been committed 
     }
 
     public String getSessionId()
     {
-	if(null == sessionId)
-	{
-	    HttpSession session;
-	    FacesContext facesContect = getFacesContext();
-	    if(facesContect == null)
-		sessionId = null;
-	    else if((session = (HttpSession) facesContect.getExternalContext().getSession(true)) != null)
-		sessionId = session.getId();
+        if(null == sessionId)
+        {
+            HttpSession session;
+            FacesContext facesContect = getFacesContext();
+            if(facesContect == null)
+                sessionId = null;
+            else if((session = (HttpSession) facesContect.getExternalContext().getSession(true)) != null)
+                sessionId = session.getId();
 
-	    if(sessionId == null)
-		Logger.getLogger(ApplicationBean.class).warn("Couldn't create session");
-	}
-	return sessionId;
+            if(sessionId == null)
+                Logger.getLogger(ApplicationBean.class).warn("Couldn't create session");
+        }
+        return sessionId;
     }
 
     protected boolean isAjaxRequest()
     {
-	if(null == FacesContext.getCurrentInstance())
-	    return false;
+        if(null == FacesContext.getCurrentInstance())
+            return false;
 
-	return FacesContext.getCurrentInstance().isPostback();
+        return FacesContext.getCurrentInstance().isPostback();
     }
 
     protected static FacesContext getFacesContext()
     {
-	return FacesContext.getCurrentInstance();
+        return FacesContext.getCurrentInstance();
     }
 
     /**
@@ -83,24 +83,24 @@ public class ApplicationBean
      */
     protected static String getParameter(String param)
     {
-	String value = getFacesContext().getExternalContext().getRequestParameterMap().get(param);
+        String value = getFacesContext().getExternalContext().getRequestParameterMap().get(param);
 
-	/* utf 8 issue ...
-	if(null == value)
-	    return null;
-	    	
-	byte ptext[] = value.getBytes();
-	String v2 = "fehler";
-	try {
-		v2 = new String(ptext, "UTF-8");// +" Kra Ðong";
-	} 
-	catch (UnsupportedEncodingException e) {
-		e.printStackTrace();
-	}
-	
-	log.debug(param +": "+ value +" oder "+ v2);
-	*/
-	return value;
+        /* utf 8 issue ...
+        if(null == value)
+            return null;
+            	
+        byte ptext[] = value.getBytes();
+        String v2 = "fehler";
+        try {
+        	v2 = new String(ptext, "UTF-8");// +" Kra Ðong";
+        } 
+        catch (UnsupportedEncodingException e) {
+        	e.printStackTrace();
+        }
+        
+        log.debug(param +": "+ value +" oder "+ v2);
+        */
+        return value;
     }
 
     /**
@@ -112,19 +112,19 @@ public class ApplicationBean
      */
     protected static Integer getParameterInt(String param)
     {
-	String value = getFacesContext().getExternalContext().getRequestParameterMap().get(param);
+        String value = getFacesContext().getExternalContext().getRequestParameterMap().get(param);
 
-	if(null == value)
-	    return null;
+        if(null == value)
+            return null;
 
-	try
-	{
-	    return Integer.parseInt(value);
-	}
-	catch(NumberFormatException e)
-	{
-	    return null;
-	}
+        try
+        {
+            return Integer.parseInt(value);
+        }
+        catch(NumberFormatException e)
+        {
+            return null;
+        }
     }
 
     /**
@@ -134,17 +134,17 @@ public class ApplicationBean
      */
     protected User getUser()
     {
-	/*
-	 * This value should not be cached. The value would not be updated if the users logs out.
-	 */
-	return UtilBean.getUserBean().getUser();
+        /*
+         * This value should not be cached. The value would not be updated if the users logs out.
+         */
+        return UtilBean.getUserBean().getUser();
     }
 
     protected Learnweb getLearnweb()
     {
-	if(null == learnweb)
-	    learnweb = Learnweb.getInstance();
-	return learnweb;
+        if(null == learnweb)
+            learnweb = Learnweb.getInstance();
+        return learnweb;
     }
 
     /**
@@ -156,12 +156,12 @@ public class ApplicationBean
      */
     public String getLocaleMessage(String msgKey, Object... args)
     {
-	return UtilBean.getLocaleMessage(msgKey, args);
+        return UtilBean.getLocaleMessage(msgKey, args);
     }
 
     protected FacesMessage getFacesMessage(FacesMessage.Severity severity, String msgKey, Object... args)
     {
-	return new FacesMessage(severity, getLocaleMessage(msgKey, args), null);
+        return new FacesMessage(severity, getLocaleMessage(msgKey, args), null);
     }
 
     /**
@@ -171,7 +171,7 @@ public class ApplicationBean
      */
     public void setKeepMessages()
     {
-	getFacesContext().getExternalContext().getFlash().setKeepMessages(true);
+        getFacesContext().getExternalContext().getFlash().setKeepMessages(true);
     }
 
     /**
@@ -183,7 +183,7 @@ public class ApplicationBean
      */
     protected void addMessage(FacesMessage.Severity severity, String msgKey, Object... args)
     {
-	getFacesContext().addMessage("message", new FacesMessage(severity, getLocaleMessage(msgKey, args), null));
+        getFacesContext().addMessage("message", new FacesMessage(severity, getLocaleMessage(msgKey, args), null));
     }
 
     /**
@@ -195,7 +195,7 @@ public class ApplicationBean
      */
     protected void addGrowl(FacesMessage.Severity severity, String msgKey, Object... args)
     {
-	getFacesContext().addMessage(null, new FacesMessage(severity, getLocaleMessage(msgKey, args), null));
+        getFacesContext().addMessage(null, new FacesMessage(severity, getLocaleMessage(msgKey, args), null));
     }
 
     /**
@@ -205,12 +205,12 @@ public class ApplicationBean
      */
     protected static String getTemplateDir()
     {
-	String path = getFacesContext().getExternalContext().getRequestServletPath();
-	int index = path.indexOf("/", 1);
+        String path = getFacesContext().getExternalContext().getRequestServletPath();
+        int index = path.indexOf("/", 1);
 
-	if(index == -1)
-	    return "";
-	return path.substring(0, index);
+        if(index == -1)
+            return "";
+        return path.substring(0, index);
     }
 
     /**
@@ -221,7 +221,7 @@ public class ApplicationBean
      */
     public String getPreference(String key)
     {
-	return UtilBean.getUserBean().getPreference(key);
+        return UtilBean.getUserBean().getPreference(key);
     }
 
     /**
@@ -233,8 +233,8 @@ public class ApplicationBean
      */
     public String getPreference(String key, String defaultValue)
     {
-	String obj = getPreference(key);
-	return obj == null ? defaultValue : obj;
+        String obj = getPreference(key);
+        return obj == null ? defaultValue : obj;
     }
 
     /**
@@ -245,7 +245,7 @@ public class ApplicationBean
      */
     public void setPreference(String key, String value)
     {
-	UtilBean.getUserBean().setPreference(key, value);
+        UtilBean.getUserBean().setPreference(key, value);
     }
 
     /**
@@ -259,8 +259,8 @@ public class ApplicationBean
      */
     protected void log(LogEntry.Action action, int targetId, String params)
     {
-	int executionTime = (int) (System.currentTimeMillis() - startTime);
-	getLearnweb().log(getUser(), action, targetId, params, getSessionId(), executionTime);
+        int executionTime = (int) (System.currentTimeMillis() - startTime);
+        getLearnweb().log(getUser(), action, targetId, params, getSessionId(), executionTime);
     }
 
     /**
@@ -275,8 +275,8 @@ public class ApplicationBean
      */
     protected void log(LogEntry.Action action, int groupId, int targetId, String params)
     {
-	int executionTime = (int) (System.currentTimeMillis() - startTime);
-	getLearnweb().log(getUser(), action, groupId, targetId, params, getSessionId(), executionTime);
+        int executionTime = (int) (System.currentTimeMillis() - startTime);
+        getLearnweb().log(getUser(), action, groupId, targetId, params, getSessionId(), executionTime);
     }
 
     /**
@@ -290,47 +290,47 @@ public class ApplicationBean
      */
     protected void log(LogEntry.Action action, int groupId, int targetId)
     {
-	int executionTime = (int) (System.currentTimeMillis() - startTime);
-	getLearnweb().log(getUser(), action, groupId, targetId, null, getSessionId(), executionTime);
+        int executionTime = (int) (System.currentTimeMillis() - startTime);
+        getLearnweb().log(getUser(), action, groupId, targetId, null, getSessionId(), executionTime);
     }
 
     protected void addFatalMessage(Throwable exception)
     {
-	addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-	addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
+        addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
+        addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
 
-	String url = null;
-	Integer userId = -1;
-	String referrer = null;
-	String userAgent = null;
-	String ip = null;
-	try
-	{
-	    FacesContext facesContext = FacesContext.getCurrentInstance();
-	    ExternalContext ext = facesContext.getExternalContext();
-	    HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();
+        String url = null;
+        Integer userId = -1;
+        String referrer = null;
+        String userAgent = null;
+        String ip = null;
+        try
+        {
+            FacesContext facesContext = FacesContext.getCurrentInstance();
+            ExternalContext ext = facesContext.getExternalContext();
+            HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();
 
-	    ip = servletRequest.getHeader("X-FORWARDED-FOR");
-	    if(ip == null)
-	    {
-		ip = servletRequest.getRemoteAddr();
-	    }
+            ip = servletRequest.getHeader("X-FORWARDED-FOR");
+            if(ip == null)
+            {
+                ip = servletRequest.getRemoteAddr();
+            }
 
-	    referrer = servletRequest.getHeader("referer");
-	    userAgent = servletRequest.getHeader("User-Agent");
-	    url = servletRequest.getRequestURL().toString();
-	    if(servletRequest.getQueryString() != null)
-		url += '?' + servletRequest.getQueryString();
+            referrer = servletRequest.getHeader("referer");
+            userAgent = servletRequest.getHeader("User-Agent");
+            url = servletRequest.getRequestURL().toString();
+            if(servletRequest.getQueryString() != null)
+                url += '?' + servletRequest.getQueryString();
 
-	    HttpSession session = servletRequest.getSession(false);
-	    if(session != null)
-		userId = (Integer) session.getAttribute("learnweb_user_id");
+            HttpSession session = servletRequest.getSession(false);
+            if(session != null)
+                userId = (Integer) session.getAttribute("learnweb_user_id");
 
-	}
-	catch(Throwable t)
-	{
-	    // ignore
-	}
-	Logger.getLogger(ApplicationBean.class).fatal("Fatal unhandled error on: " + url + "; userId: " + userId + "; referrer: " + referrer + "; userAgent: " + userAgent + "; ip: " + ip, exception);
+        }
+        catch(Throwable t)
+        {
+            // ignore
+        }
+        Logger.getLogger(ApplicationBean.class).fatal("Fatal unhandled error on: " + url + "; userId: " + userId + "; referrer: " + referrer + "; userAgent: " + userAgent + "; ip: " + ip, exception);
     }
 }

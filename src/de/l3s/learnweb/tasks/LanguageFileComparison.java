@@ -20,47 +20,47 @@ public class LanguageFileComparison
 
     public static void main(String[] args) throws Exception
     {
-	Properties languageProperties = new Properties();
-	languageProperties.load(new LanguageFileComparison().getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/lang/messages.properties"));
+        Properties languageProperties = new Properties();
+        languageProperties.load(new LanguageFileComparison().getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/lang/messages.properties"));
 
-	String csvFile = "test.csv";
+        String csvFile = "test.csv";
 
-	BufferedReader buffer = new BufferedReader(new FileReader(csvFile));
-	String line;
-	while((line = buffer.readLine()) != null)
-	{
+        BufferedReader buffer = new BufferedReader(new FileReader(csvFile));
+        String line;
+        while((line = buffer.readLine()) != null)
+        {
 
-	    if(!line.startsWith("#") && line.endsWith("#"))
-	    {
-		log.error("Corrupted file at line: " + line);
-		continue;
-	    }
+            if(!line.startsWith("#") && line.endsWith("#"))
+            {
+                log.error("Corrupted file at line: " + line);
+                continue;
+            }
 
-	    line = line.substring(1, line.length() - 1); // remove "#"
+            line = line.substring(1, line.length() - 1); // remove "#"
 
-	    String translation = languageProperties.getProperty(line);
+            String translation = languageProperties.getProperty(line);
 
-	    log.debug(line);
+            log.debug(line);
 
-	    if(translation == null)
-	    {
-		log.error("Illegal key: " + line);
-		continue;
-	    }
+            if(translation == null)
+            {
+                log.error("Illegal key: " + line);
+                continue;
+            }
 
-	    languageProperties.remove(line);
-	}
+            languageProperties.remove(line);
+        }
 
-	log.debug("unchecked keys:");
-	for(Object key : languageProperties.keySet())
-	{
-	    String keyStr = (String) key;
-	    if(keyStr.startsWith("ArchiveSearch.") || keyStr.startsWith("language_"))
-		continue;
+        log.debug("unchecked keys:");
+        for(Object key : languageProperties.keySet())
+        {
+            String keyStr = (String) key;
+            if(keyStr.startsWith("ArchiveSearch.") || keyStr.startsWith("language_"))
+                continue;
 
-	    log.debug(key);
-	}
+            log.debug(key);
+        }
 
-	buffer.close();
+        buffer.close();
     }
 }

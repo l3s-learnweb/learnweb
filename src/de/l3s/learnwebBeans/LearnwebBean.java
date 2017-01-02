@@ -29,24 +29,24 @@ public class LearnwebBean implements Serializable
 
     public LearnwebBean() throws IOException, ClassNotFoundException, SQLException
     {
-	ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
+        ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
 
-	if(ext.getRequestServerPort() == 80 || ext.getRequestServerPort() == 443)
-	    contextUrl = ext.getRequestScheme() + "://" + ext.getRequestServerName() + ext.getRequestContextPath();
-	else
-	    contextUrl = ext.getRequestScheme() + "://" + ext.getRequestServerName() + ":" + ext.getRequestServerPort() + ext.getRequestContextPath();
+        if(ext.getRequestServerPort() == 80 || ext.getRequestServerPort() == 443)
+            contextUrl = ext.getRequestScheme() + "://" + ext.getRequestServerName() + ext.getRequestContextPath();
+        else
+            contextUrl = ext.getRequestScheme() + "://" + ext.getRequestServerName() + ":" + ext.getRequestServerPort() + ext.getRequestContextPath();
 
-	learnweb = Learnweb.getInstanceRaw();
-	learnweb.setContextUrl(contextUrl);
+        learnweb = Learnweb.getInstanceRaw();
+        learnweb.setContextUrl(contextUrl);
 
-	log.debug("created LearnwebBean: contextUrl=" + contextUrl);
+        log.debug("created LearnwebBean: contextUrl=" + contextUrl);
     }
 
     @PostConstruct
     public void init()
     {
-	// initialize stuff which is not required by console tasks
-	learnweb.initLearnwebServer();
+        // initialize stuff which is not required by console tasks
+        learnweb.initLearnwebServer();
     }
 
     /**
@@ -55,7 +55,7 @@ public class LearnwebBean implements Serializable
      */
     public String getContextUrl()
     {
-	return contextUrl; // because we don't use httpS we can cache the url, change it if you want to use httpS too
+        return contextUrl; // because we don't use httpS we can cache the url, change it if you want to use httpS too
     }
 
     /**
@@ -64,28 +64,28 @@ public class LearnwebBean implements Serializable
      */
     public String getBaseUrl()
     {
-	ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
+        ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
 
-	String path = ext.getRequestServletPath();
-	path = path.substring(0, path.indexOf("/", 1) + 1);
+        String path = ext.getRequestServletPath();
+        path = path.substring(0, path.indexOf("/", 1) + 1);
 
-	return contextUrl + path;
+        return contextUrl + path;
     }
 
     public Learnweb getLearnweb()
     {
-	if(null == learnweb)
-	{
-	    log.error("LearnwebBean: learnweb is null -> redirect");
-	    UtilBean.redirect("/lw/error.jsf");
-	}
-	return learnweb;
+        if(null == learnweb)
+        {
+            log.error("LearnwebBean: learnweb is null -> redirect");
+            UtilBean.redirect("/lw/error.jsf");
+        }
+        return learnweb;
     }
 
     @PreDestroy
     public void onDestroy()
     {
-	learnweb.onDestroy();
+        learnweb.onDestroy();
     }
 
     /**
@@ -97,14 +97,14 @@ public class LearnwebBean implements Serializable
      */
     public String getProfileImage(User user) throws SQLException
     {
-	if(user != null)
-	{
-	    String url = user.getImage();
+        if(user != null)
+        {
+            String url = user.getImage();
 
-	    if(null != url)
-		return url;
-	}
-	return getContextUrl() + "/resources/image/no_profile.jpg";
+            if(null != url)
+                return url;
+        }
+        return getContextUrl() + "/resources/image/no_profile.jpg";
     }
 
     /**
@@ -116,11 +116,11 @@ public class LearnwebBean implements Serializable
      */
     public String getLocaleMessage(String msgKey, Object... args)
     {
-	return UtilBean.getLocaleMessage(msgKey, args);
+        return UtilBean.getLocaleMessage(msgKey, args);
     }
 
     public String getLocaleMessage(String msgKey)
     {
-	return UtilBean.getLocaleMessage(msgKey);
+        return UtilBean.getLocaleMessage(msgKey);
     }
 }

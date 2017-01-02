@@ -6,20 +6,25 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @XmlRootElement
-public class SearchCommentsList {
+public class SearchCommentsList
+{
 
-	ArrayList<CommentonSearch> comments;
+    ArrayList<CommentonSearch> comments;
 
-	public SearchCommentsList(){
-		comments = new ArrayList<CommentonSearch>();
-	}
-	@XmlElement(name="SearchComment")
-	public ArrayList<CommentonSearch> getComments() {
-		return comments;
-	}
+    public SearchCommentsList()
+    {
+        comments = new ArrayList<CommentonSearch>();
+    }
 
-	public void setComments(ArrayList<CommentonSearch> comments) {
-		this.comments = comments;
-	}
-	
+    @XmlElement(name = "SearchComment")
+    public ArrayList<CommentonSearch> getComments()
+    {
+        return comments;
+    }
+
+    public void setComments(ArrayList<CommentonSearch> comments)
+    {
+        this.comments = comments;
+    }
+
 }

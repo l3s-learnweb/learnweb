@@ -16,19 +16,19 @@ public class SolrContext
     InputStream input = null;
     static
     {
-	try
-	{
-	    server = new HttpSolrServer(URL);
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	}
+        try
+        {
+            server = new HttpSolrServer(URL);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public static SolrServer getServer()
     {
-	return server;
+        return server;
     }
 
 }

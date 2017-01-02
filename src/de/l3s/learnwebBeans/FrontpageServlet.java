@@ -23,35 +23,35 @@ public class FrontpageServlet extends HttpServlet
     @Override
     public void init(ServletConfig config) throws ServletException
     {
-	super.init(config);
+        super.init(config);
     }
 
     public static boolean isArchiveWebRequest(HttpServletRequest request)
     {
-	String serverName = request.getServerName();
+        String serverName = request.getServerName();
 
-	return serverName.equals("archiveweb.l3s.uni-hannover.de") || request.getServerName().equals("archiveweb.dev");
+        return serverName.equals("archiveweb.l3s.uni-hannover.de") || request.getServerName().equals("archiveweb.dev");
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-	try
-	{
-	    String url = request.getContextPath();
+        try
+        {
+            String url = request.getContextPath();
 
-	    if(isArchiveWebRequest(request))
-		url += "/aw/";
-	    else
-		url += "/lw/";
+            if(isArchiveWebRequest(request))
+                url += "/aw/";
+            else
+                url += "/lw/";
 
-	    response.sendRedirect(url);
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	    response.setStatus(500);
-	}
+            response.sendRedirect(url);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+            response.setStatus(500);
+        }
     }
 
 }

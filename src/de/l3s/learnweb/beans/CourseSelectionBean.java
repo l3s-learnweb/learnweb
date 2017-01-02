@@ -25,49 +25,49 @@ public class CourseSelectionBean extends ApplicationBean implements Serializable
 
     public CourseSelectionBean() throws SQLException
     {
-	if(getUser() == null)
-	    return;
+        if(getUser() == null)
+            return;
 
-	activeCourse = getUser().getActiveCourse();
-	System.out.println("active course" + activeCourse);
-	inactiveCourses = getUser().getCourses();
+        activeCourse = getUser().getActiveCourse();
+        System.out.println("active course" + activeCourse);
+        inactiveCourses = getUser().getCourses();
 
-	// remove active course from course list
-	Iterator<Course> iterator = inactiveCourses.iterator();
-	System.out.println(inactiveCourses.size());
-	while(iterator.hasNext())
-	{
-	    Course course = iterator.next();
+        // remove active course from course list
+        Iterator<Course> iterator = inactiveCourses.iterator();
+        System.out.println(inactiveCourses.size());
+        while(iterator.hasNext())
+        {
+            Course course = iterator.next();
 
-	    if(course.equals(activeCourse))
-	    {
-		iterator.remove();
-		return;
-	    }
-	}
-	log.warn("Active course not found among all courses");
+            if(course.equals(activeCourse))
+            {
+                iterator.remove();
+                return;
+            }
+        }
+        log.warn("Active course not found among all courses");
     }
 
     public Course getActiveCourse()
     {
-	return activeCourse;
+        return activeCourse;
     }
 
     public List<Course> getInactiveCourses()
     {
-	System.out.println(inactiveCourses.size());
-	return inactiveCourses;
+        System.out.println(inactiveCourses.size());
+        return inactiveCourses;
     }
 
     public String onChangeActiveCourse(int courseId) throws SQLException
     {
-	if(courseId != activeCourse.getId())
-	{
-	    getUser().setActiveCourseId(courseId);
-	    getUser().save();
-	    log.debug(getUser().toString() + " has set active course to:" + courseId);
-	}
-	return ApplicationBean.getTemplateDir() + "/" + getUser().getOrganisation().getWelcomePage() + "?faces-redirect=true";
+        if(courseId != activeCourse.getId())
+        {
+            getUser().setActiveCourseId(courseId);
+            getUser().save();
+            log.debug(getUser().toString() + " has set active course to:" + courseId);
+        }
+        return ApplicationBean.getTemplateDir() + "/" + getUser().getOrganisation().getWelcomePage() + "?faces-redirect=true";
     }
 
 }

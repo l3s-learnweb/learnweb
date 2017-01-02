@@ -33,27 +33,27 @@ public class ChatResource
     @OnOpen
     public void onOpen(RemoteEndpoint r, EventBus eventBus)
     {
-	logger.info("OnOpen {}", r);
+        logger.info("OnOpen {}", r);
 
-	if(eventBus == null)
-	    System.err.println("eventBus null");
+        if(eventBus == null)
+            System.err.println("eventBus null");
 
-	eventBus.publish(room + "/*", new Message(String.format("%s has entered the room '%s'", username, room), true));
+        eventBus.publish(room + "/*", new Message(String.format("%s has entered the room '%s'", username, room), true));
     }
 
     @OnClose
     public void onClose(RemoteEndpoint r, EventBus eventBus)
     {
-	ChatUsers users = (ChatUsers) ctx.getAttribute("chatUsers");
-	users.remove(username);
+        ChatUsers users = (ChatUsers) ctx.getAttribute("chatUsers");
+        users.remove(username);
 
-	eventBus.publish(room + "/*", new Message(String.format("%s has left the room", username), true));
+        eventBus.publish(room + "/*", new Message(String.format("%s has left the room", username), true));
     }
 
     @OnMessage(decoders = { MessageDecoder.class }, encoders = { MessageEncoder.class })
     public Message onMessage(Message message)
     {
-	return message;
+        return message;
     }
 
 }

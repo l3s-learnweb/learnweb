@@ -20,36 +20,36 @@ public class AdminOrganisationBean extends ApplicationBean implements Serializab
 
     public AdminOrganisationBean()
     {
-	User user = getUser();
-	if(null == user)
-	    return;
+        User user = getUser();
+        if(null == user)
+            return;
 
-	try
-	{
-	    organisation = user.getOrganisation();
-	}
-	catch(SQLException e)
-	{
-	    addFatalMessage(e);
-	}
+        try
+        {
+            organisation = user.getOrganisation();
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
     }
 
     public void onSave()
     {
-	try
-	{
-	    getLearnweb().getOrganisationManager().save(organisation);
-	    addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
-	}
-	catch(SQLException e)
-	{
-	    addFatalMessage(e);
-	}
+        try
+        {
+            getLearnweb().getOrganisationManager().save(organisation);
+            addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
 
     }
 
     public Organisation getOrganisation()
     {
-	return organisation;
+        return organisation;
     }
 }

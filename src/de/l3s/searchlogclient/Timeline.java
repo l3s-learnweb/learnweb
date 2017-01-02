@@ -2,30 +2,36 @@ package de.l3s.searchlogclient;
 
 import java.util.ArrayList;
 
-public class Timeline {
+public class Timeline
+{
 
-	private String date;
-	private ArrayList<String> timestamps;
-	
-	public Timeline(){
-		date = "";
-		timestamps = new ArrayList<String>();
-	}
+    private String date;
+    private ArrayList<String> timestamps;
 
-	public String getDate() {
-		return date;
-	}
+    public Timeline()
+    {
+        date = "";
+        timestamps = new ArrayList<String>();
+    }
 
-	public void setDate(String date) {
-		this.date = date;
-	}
+    public String getDate()
+    {
+        return date;
+    }
 
-	public ArrayList<String> getTimestamps() {
-		return timestamps;
-	}
+    public void setDate(String date)
+    {
+        this.date = date;
+    }
 
-	public void setTimestamps(ArrayList<String> timestamps) {
-		this.timestamps = timestamps;
-	}
-	
+    public ArrayList<String> getTimestamps()
+    {
+        return timestamps;
+    }
+
+    public void setTimestamps(ArrayList<String> timestamps)
+    {
+        this.timestamps = timestamps;
+    }
+
 }

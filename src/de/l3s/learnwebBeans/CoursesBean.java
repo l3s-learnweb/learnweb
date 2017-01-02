@@ -12,23 +12,26 @@ import de.l3s.learnweb.Course;
 
 @ManagedBean
 @SessionScoped
-public class CoursesBean extends ApplicationBean implements Serializable {
+public class CoursesBean extends ApplicationBean implements Serializable
+{
 
-	private static final long serialVersionUID = -7002093731953644113L;
-	
-	private List<Course> courses = new LinkedList<Course>();
-	
-	public CoursesBean() throws SQLException 
-	{
-		
-	}
+    private static final long serialVersionUID = -7002093731953644113L;
 
-	public List<Course> getCourses() {
-		return courses;
-	}
+    private List<Course> courses = new LinkedList<Course>();
 
-	public void setCourses(List<Course> courses) {
-		this.courses = courses;
-	}
+    public CoursesBean() throws SQLException
+    {
+
+    }
+
+    public List<Course> getCourses()
+    {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses)
+    {
+        this.courses = courses;
+    }
 
 }

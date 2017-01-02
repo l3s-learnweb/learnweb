@@ -29,158 +29,158 @@ public class ResourceLog implements Serializable
 
     public ResourceLog(int userId, int resultsetId, String action, String timestamp, String url)
     {
-	this.userId = userId;
-	this.resultsetId = resultsetId;
-	this.action = action;
-	this.timestamp = timestamp;
-	this.url = url;
+        this.userId = userId;
+        this.resultsetId = resultsetId;
+        this.action = action;
+        this.timestamp = timestamp;
+        this.url = url;
 
     }
 
     public ResourceLog(int userId, int resultsetId, int resourceRank, String action, String timestamp, String url)
     {
-	this.userId = userId;
-	this.resultsetId = resultsetId;
-	this.resourceRank = resourceRank;
-	this.action = action;
-	this.timestamp = timestamp;
-	this.url = url;
+        this.userId = userId;
+        this.resultsetId = resultsetId;
+        this.resourceRank = resourceRank;
+        this.action = action;
+        this.timestamp = timestamp;
+        this.url = url;
 
     }
 
     public ResourceLog(int userId, int resultsetId, int resourceRank, String action, String actionTimestamp, String url, String filename, String source)
     {
-	this.userId = userId;
-	this.resultsetId = resultsetId;
-	this.resourceRank = resourceRank;
-	this.action = action;
-	this.timestamp = actionTimestamp;
-	this.url = url;
-	this.filename = filename;
-	this.source = source;
+        this.userId = userId;
+        this.resultsetId = resultsetId;
+        this.resourceRank = resourceRank;
+        this.action = action;
+        this.timestamp = actionTimestamp;
+        this.url = url;
+        this.filename = filename;
+        this.source = source;
     }
 
     public ResourceLog(int userId, int resultsetId, int resourceRank, String action, String actionTimestamp, String actionTime, String url, String filename, String source)
     {
-	this.userId = userId;
-	this.resultsetId = resultsetId;
-	this.resourceRank = resourceRank;
-	this.action = action;
-	this.timestamp = actionTimestamp;
-	this.actionTime = actionTime;
-	this.url = url;
-	this.filename = filename;
-	this.source = source;
+        this.userId = userId;
+        this.resultsetId = resultsetId;
+        this.resourceRank = resourceRank;
+        this.action = action;
+        this.timestamp = actionTimestamp;
+        this.actionTime = actionTime;
+        this.url = url;
+        this.filename = filename;
+        this.source = source;
     }
 
     @XmlElement
     public int getUserId()
     {
-	return userId;
+        return userId;
     }
 
     public void setUserId(int userId)
     {
-	this.userId = userId;
+        this.userId = userId;
     }
 
     @XmlElement
     public int getResultsetId()
     {
-	return resultsetId;
+        return resultsetId;
     }
 
     public void setResultsetId(int resultsetId)
     {
-	this.resultsetId = resultsetId;
+        this.resultsetId = resultsetId;
     }
 
     @XmlElement
     public String getAction()
     {
-	return action;
+        return action;
     }
 
     public void setAction(String action)
     {
-	this.action = action;
+        this.action = action;
     }
 
     @XmlElement
     public String getTimestamp()
     {
-	return timestamp;
+        return timestamp;
     }
 
     public void setTimestamp(String timestamp)
     {
-	this.timestamp = timestamp;
+        this.timestamp = timestamp;
     }
 
     @XmlElement
     public String getUrl()
     {
-	return url;
+        return url;
     }
 
     public void setUrl(String url)
     {
-	this.url = url;
+        this.url = url;
     }
 
     @XmlElement
     public int getResourceRank()
     {
-	return resourceRank;
+        return resourceRank;
     }
 
     @XmlElement
     public String getFilename()
     {
-	return filename;
+        return filename;
     }
 
     public void setResourceRank(int resourceRank)
     {
-	this.resourceRank = resourceRank;
+        this.resourceRank = resourceRank;
     }
 
     public void setFilename(String filename)
     {
-	this.filename = filename;
+        this.filename = filename;
     }
 
     @XmlElement
     public String getSource()
     {
-	return source;
+        return source;
     }
 
     public void setSource(String source)
     {
-	this.source = source;
+        this.source = source;
     }
 
     @XmlElement
     public long getViewTime()
     {
-	return viewTime;
+        return viewTime;
     }
 
     public void setViewTime(long viewTime)
     {
-	this.viewTime = viewTime;
+        this.viewTime = viewTime;
     }
 
     @XmlElement
     public String getActionTime()
     {
-	return actionTime;
+        return actionTime;
     }
 
     public void setActionTime(String actionTime)
     {
-	this.actionTime = actionTime;
+        this.actionTime = actionTime;
     }
 
 }

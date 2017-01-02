@@ -45,121 +45,121 @@ public class DownloadServlet extends HttpServlet
 
     public DownloadServlet() throws ClassNotFoundException, SQLException
     {
-	this.learnweb = Learnweb.getInstanceRaw();
-	this.urlPattern = learnweb.getProperties().getProperty("FILE_MANAGER_URL_PATTERN");
-	this.fileManager = learnweb.getFileManager();
+        this.learnweb = Learnweb.getInstanceRaw();
+        this.urlPattern = learnweb.getProperties().getProperty("FILE_MANAGER_URL_PATTERN");
+        this.fileManager = learnweb.getFileManager();
     }
 
     @Override
     public void init(ServletConfig config) throws ServletException
     {
-	super.init(config);
+        super.init(config);
     }
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-	long startTime = System.currentTimeMillis();
+        long startTime = System.currentTimeMillis();
 
-	// extract the file id from the request string
-	String requestString = request.getRequestURI();
-	int index = requestString.indexOf(urlPattern);
-	if(index == -1)
-	{
-	    log.warn("Invalid download URL: " + requestString);
-	    response.setStatus(404);
-	    return;
-	}
-	requestString = requestString.substring(index + urlPattern.length());
-	requestString = requestString.substring(0, requestString.indexOf("/"));
-	int fileId = Integer.parseInt(requestString);
+        // extract the file id from the request string
+        String requestString = request.getRequestURI();
+        int index = requestString.indexOf(urlPattern);
+        if(index == -1)
+        {
+            log.warn("Invalid download URL: " + requestString);
+            response.setStatus(404);
+            return;
+        }
+        requestString = requestString.substring(index + urlPattern.length());
+        requestString = requestString.substring(0, requestString.indexOf("/"));
+        int fileId = Integer.parseInt(requestString);
 
-	try
-	{
-	    File file = fileManager.getFileById(fileId);
-	    if(null == file)
-	    {
-		log.warn("Requested file " + fileId + " does not exist or was deleted");
-		response.setStatus(404);
-		return;
-	    }
+        try
+        {
+            File file = fileManager.getFileById(fileId);
+            if(null == file)
+            {
+                log.warn("Requested file " + fileId + " does not exist or was deleted");
+                response.setStatus(404);
+                return;
+            }
 
-	    if(!file.exists()) // show error image
-	    {
-		response.setStatus(404);
-	    }
+            if(!file.exists()) // show error image
+            {
+                response.setStatus(404);
+            }
 
-	    long ifModifiedSince = request.getDateHeader("If-Modified-Since");
+            long ifModifiedSince = request.getDateHeader("If-Modified-Since");
 
-	    if(ifModifiedSince != -1)
-	    {
-		response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-		response.setDateHeader("Expires", System.currentTimeMillis() + CACHE_DURATION_IN_MS);
-		return;
-	    }
+            if(ifModifiedSince != -1)
+            {
+                response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                response.setDateHeader("Expires", System.currentTimeMillis() + CACHE_DURATION_IN_MS);
+                return;
+            }
 
-	    if(file.isDownloadLogActivated())
-	    {
-		HttpSession session = request.getSession(true);
-		User user = null;
-		Integer userId = (Integer) session.getAttribute("learnweb_user_id");
+            if(file.isDownloadLogActivated())
+            {
+                HttpSession session = request.getSession(true);
+                User user = null;
+                Integer userId = (Integer) session.getAttribute("learnweb_user_id");
 
-		if(userId != null)
-		    user = learnweb.getUserManager().getUser(userId);
+                if(userId != null)
+                    user = learnweb.getUserManager().getUser(userId);
 
-		if(null != user)
-		    Learnweb.getInstance().log(user, Action.downloading, 0, file.getResourceId(), Integer.toString(file.getId()), session.getId(), (int) (System.currentTimeMillis() - startTime));
-	    }
-	    /*
-	        if (ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified) {
-	            response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-	            response.setHeader("ETag", eTag); // Required in 304.
-	            response.setDateHeader("Expires", expires); // Postpone cache with 1 week.
-	            return;
-	        }
-	    */
-	    prepareResponseFor(response, file);
-	    streamFileTo(response, file);
-	}
-	catch(ClientAbortException e)
-	{
-	    log.debug("Download interrupted. File: " + fileId);
-	}
-	catch(Exception e)
-	{
-	    log.error("Error while downloading file: " + fileId, e);
-	    response.setStatus(500);
-	}
+                if(null != user)
+                    Learnweb.getInstance().log(user, Action.downloading, 0, file.getResourceId(), Integer.toString(file.getId()), session.getId(), (int) (System.currentTimeMillis() - startTime));
+            }
+            /*
+                if (ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified) {
+                    response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                    response.setHeader("ETag", eTag); // Required in 304.
+                    response.setDateHeader("Expires", expires); // Postpone cache with 1 week.
+                    return;
+                }
+            */
+            prepareResponseFor(response, file);
+            streamFileTo(response, file);
+        }
+        catch(ClientAbortException e)
+        {
+            log.debug("Download interrupted. File: " + fileId);
+        }
+        catch(Exception e)
+        {
+            log.error("Error while downloading file: " + fileId, e);
+            response.setStatus(500);
+        }
     }
 
     private void streamFileTo(HttpServletResponse response, File file) throws IOException
     {
-	OutputStream os = response.getOutputStream();
-	InputStream fis = file.getInputStream();
-	byte[] buffer = new byte[BUFFER_SIZE];
-	int bytesRead = 0;
-	while((bytesRead = fis.read(buffer)) > 0)
-	{
-	    os.write(buffer, 0, bytesRead);
-	}
-	os.flush();
-	fis.close();
+        OutputStream os = response.getOutputStream();
+        InputStream fis = file.getInputStream();
+        byte[] buffer = new byte[BUFFER_SIZE];
+        int bytesRead = 0;
+        while((bytesRead = fis.read(buffer)) > 0)
+        {
+            os.write(buffer, 0, bytesRead);
+        }
+        os.flush();
+        fis.close();
     }
 
     private void prepareResponseFor(HttpServletResponse response, File file)
     {
-	response.setContentLength((int) file.getLength());
-	response.setContentType(file.getMimeType());
-	//response.setDateHeader("Expires", System.currentTimeMillis() + 15552000000L); // expires in 6 month
-	//response.setHeader("Cache-Control", "max-age=2419200");
+        response.setContentLength((int) file.getLength());
+        response.setContentType(file.getMimeType());
+        //response.setDateHeader("Expires", System.currentTimeMillis() + 15552000000L); // expires in 6 month
+        //response.setHeader("Cache-Control", "max-age=2419200");
 
-	long now = System.currentTimeMillis();
-	response.addHeader("Cache-Control", "max-age=" + CACHE_DURATION_IN_SECOND);
-	//response.addHeader("Cache-Control", "must-revalidate");//optional
-	response.setDateHeader("Last-Modified", file.getLastModified().getTime());
-	response.setDateHeader("Expires", now + CACHE_DURATION_IN_MS);
+        long now = System.currentTimeMillis();
+        response.addHeader("Cache-Control", "max-age=" + CACHE_DURATION_IN_SECOND);
+        //response.addHeader("Cache-Control", "must-revalidate");//optional
+        response.setDateHeader("Last-Modified", file.getLastModified().getTime());
+        response.setDateHeader("Expires", now + CACHE_DURATION_IN_MS);
 
-	if(file.getMimeType().contains("octet-stream"))
-	    response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
+        if(file.getMimeType().contains("octet-stream"))
+            response.setHeader("Content-Disposition", "attachment; filename=" + file.getName());
     }
 }

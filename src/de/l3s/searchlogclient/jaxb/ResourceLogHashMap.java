@@ -4,21 +4,25 @@ import java.util.HashMap;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="ResourceLogHashMap")
-public class ResourceLogHashMap {
+@XmlRootElement(name = "ResourceLogHashMap")
+public class ResourceLogHashMap
+{
 
-	HashMap<String, ResourceLog> resourceLogHashMap;
-	
-	public ResourceLogHashMap(){
-		resourceLogHashMap = new HashMap<String, ResourceLog>();
-	}
+    HashMap<String, ResourceLog> resourceLogHashMap;
 
-	public HashMap<String, ResourceLog> getResourceLogHashMap() {
-		return resourceLogHashMap;
-	}
+    public ResourceLogHashMap()
+    {
+        resourceLogHashMap = new HashMap<String, ResourceLog>();
+    }
 
-	public void setResourceLogHashMap(HashMap<String, ResourceLog> resourceLogHashMap) {
-		this.resourceLogHashMap = resourceLogHashMap;
-	}
+    public HashMap<String, ResourceLog> getResourceLogHashMap()
+    {
+        return resourceLogHashMap;
+    }
+
+    public void setResourceLogHashMap(HashMap<String, ResourceLog> resourceLogHashMap)
+    {
+        this.resourceLogHashMap = resourceLogHashMap;
+    }
 
 }

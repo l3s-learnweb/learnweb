@@ -19,11 +19,11 @@ public class SearchResponse extends XMLResponse
 
     public SearchQueryEntity getQuery()
     {
-	return query;
+        return query;
     }
 
     public void setQuery(SearchQueryEntity query)
     {
-	this.query = query;
+        this.query = query;
     }
 }

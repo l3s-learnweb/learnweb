@@ -22,36 +22,36 @@ public class AdminUserBean extends ApplicationBean implements Serializable
 
     public AdminUserBean() throws SQLException
     {
-	User user = getUser();
+        User user = getUser();
 
-	if(null == user) // not logged in
-	    return;
+        if(null == user) // not logged in
+            return;
 
-	Integer courseId = getParameterInt("course_id");
+        Integer courseId = getParameterInt("course_id");
 
-	if(courseId != null)
-	    users = getLearnweb().getCourseManager().getCourseById(courseId).getMembers();
-	else if(user.isAdmin())
-	    users = getLearnweb().getUserManager().getUsers();
-	else if(user.isModerator())
-	    users = getLearnweb().getUserManager().getUsersByOrganisationId(user.getOrganisationId());
+        if(courseId != null)
+            users = getLearnweb().getCourseManager().getCourseById(courseId).getMembers();
+        else if(user.isAdmin())
+            users = getLearnweb().getUserManager().getUsers();
+        else if(user.isModerator())
+            users = getLearnweb().getUserManager().getUsersByOrganisationId(user.getOrganisationId());
     }
 
     public String login(User user) throws SQLException
     {
-	if(!canLoginToAccount(user))
-	{
-	    addFatalMessage(new IllegalAccessError(getUser() + " tried to highjack account"));
-	    return "";
-	}
-	UtilBean.getUserBean().setModeratorUser(getUser()); // store moderator account while logged in as user 
+        if(!canLoginToAccount(user))
+        {
+            addFatalMessage(new IllegalAccessError(getUser() + " tried to highjack account"));
+            return "";
+        }
+        UtilBean.getUserBean().setModeratorUser(getUser()); // store moderator account while logged in as user 
 
-	return LoginBean.loginUser(this, user, true);
+        return LoginBean.loginUser(this, user, true);
     }
 
     public List<User> getUsers()
     {
-	return users;
+        return users;
     }
 
     /**
@@ -62,16 +62,16 @@ public class AdminUserBean extends ApplicationBean implements Serializable
      */
     public boolean canLoginToAccount(User targetUser)
     {
-	User user = getUser();
-	if(user.isAdmin())
-	    return true;
+        User user = getUser();
+        if(user.isAdmin())
+            return true;
 
-	if(targetUser.isModerator())
-	    return false;
+        if(targetUser.isModerator())
+            return false;
 
-	if(user.isModerator())
-	    return true;
+        if(user.isModerator())
+            return true;
 
-	return false;
+        return false;
     }
 }

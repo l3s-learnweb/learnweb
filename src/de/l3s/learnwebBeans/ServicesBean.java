@@ -35,162 +35,162 @@ public class ServicesBean extends ApplicationBean implements Serializable
 
     public ServicesBean() throws SQLException, IllegalResponseException, IOException
     {
-	log.debug("ServicesBean()");
-	user = getUser();
+        log.debug("ServicesBean()");
+        user = getUser();
     }
 
     public String getAuthorizeUrl() throws IllegalResponseException
     {
-	return user.getInterweb().getAuthorizeUrl(UtilBean.getLearnwebBean().getBaseUrl() + "myhome/services.jsf?action=auth");
+        return user.getInterweb().getAuthorizeUrl(UtilBean.getLearnwebBean().getBaseUrl() + "myhome/services.jsf?action=auth");
     }
 
     // viewParam: action
     public void setAction(String action)
     {
-	this.action = action;
+        this.action = action;
     }
 
     public String getAction()
     {
-	return action;
+        return action;
     }
 
     // viewParam: iw_token
     public void setIwToken(String iwToken)
     {
-	this.iwToken = iwToken;
+        this.iwToken = iwToken;
     }
 
     // viewParam: iw_secret
     public void setIwSecret(String iwSecret)
     {
-	this.iwSecret = iwSecret;
+        this.iwSecret = iwSecret;
     }
 
     public String getIwToken()
     {
-	return iwToken;
+        return iwToken;
     }
 
     public String getIwSecret()
     {
-	return iwSecret;
+        return iwSecret;
     }
 
     public List<ServiceInformation> getServices()
     {
-	return services;
+        return services;
     }
 
     public void preRenderView(ComponentSystemEvent ev) throws IOException, SQLException
     {
-	log.debug("preRenderView");
-	UserBean userBean = UtilBean.getUserBean();
-	if(!userBean.isLoggedIn())
-	{
-	    return;
-	}
+        log.debug("preRenderView");
+        UserBean userBean = UtilBean.getUserBean();
+        if(!userBean.isLoggedIn())
+        {
+            return;
+        }
 
-	if(action != null && action.equals("auth") && iwToken != null)
-	{
-	    AuthCredentials authCredentials = new AuthCredentials(iwToken, iwSecret);
-	    user.setInterwebToken(authCredentials);
-	    getLearnweb().getUserManager().save(user);
-	}
-	/*
-	else if(user.isLoggedInInterweb())
-	{
-		String referer = getFacesContext().getExternalContext().getRequestHeaderMap().get("referer");
-		
-		if(referer != null && !referer.startsWith(Util.getLearnwebBean().getBaseUrl()))
-		{
-			log.debug("reload getAuthorizationInformation");
-			user.getInterweb().getAuthorizationInformation(false);
-		}
-	}*/
+        if(action != null && action.equals("auth") && iwToken != null)
+        {
+            AuthCredentials authCredentials = new AuthCredentials(iwToken, iwSecret);
+            user.setInterwebToken(authCredentials);
+            getLearnweb().getUserManager().save(user);
+        }
+        /*
+        else if(user.isLoggedInInterweb())
+        {
+        	String referer = getFacesContext().getExternalContext().getRequestHeaderMap().get("referer");
+        	
+        	if(referer != null && !referer.startsWith(Util.getLearnwebBean().getBaseUrl()))
+        	{
+        		log.debug("reload getAuthorizationInformation");
+        		user.getInterweb().getAuthorizationInformation(false);
+        	}
+        }*/
 
-	if(user.isLoggedInInterweb())
-	{
-	    //Course role = user.getCourse();		
+        if(user.isLoggedInInterweb())
+        {
+            //Course role = user.getCourse();		
 
-	    List<ServiceInformation> services;
-	    try
-	    {
-		services = user.getInterweb().getAuthorizationInformation(true).getServices();
-	    }
-	    catch(IOException e)
-	    {
-		addMessage(FacesMessage.SEVERITY_FATAL, "Interweb timeout");
-		e.printStackTrace();
-		return;
-	    }
-	    catch(IllegalResponseException e)
-	    {
-		addMessage(FacesMessage.SEVERITY_FATAL, "Interweb error");
-		e.printStackTrace();
-		this.services.clear();
-		return;
-	    }
+            List<ServiceInformation> services;
+            try
+            {
+                services = user.getInterweb().getAuthorizationInformation(true).getServices();
+            }
+            catch(IOException e)
+            {
+                addMessage(FacesMessage.SEVERITY_FATAL, "Interweb timeout");
+                e.printStackTrace();
+                return;
+            }
+            catch(IllegalResponseException e)
+            {
+                addMessage(FacesMessage.SEVERITY_FATAL, "Interweb error");
+                e.printStackTrace();
+                this.services.clear();
+                return;
+            }
 
-	    this.services.clear();
-	    for(ServiceInformation service : services)
-	    {
-		String id = service.getId();
+            this.services.clear();
+            for(ServiceInformation service : services)
+            {
+                String id = service.getId();
 
-		if(id.equals("Bing") || id.equals("Google") || id.equals("TED")
-		/*id.equals("Blogger") && role.getOption(Option.Services_Hide_Blogger) ||
-		id.equals("Delicious") && role.getOption(Option.Services_Hide_Delicious) ||
-		id.equals("Facebook") && role.getOption(Option.Services_Hide_Facebook) ||
-		id.equals("Flickr") && role.getOption(Option.Services_Hide_Flickr) ||
-		id.equals("GroupMe") && role.getOption(Option.Services_Hide_GroupMe) ||
-		id.equals("Ipernity") && role.getOption(Option.Services_Hide_Ipernity) ||
-		id.equals("LastFm") && role.getOption(Option.Services_Hide_lastfm) ||
-		id.equals("SlideShare") && role.getOption(Option.Services_Hide_SlideShare) ||
-		id.equals("Vimeo") && role.getOption(Option.Services_Hide_Vimeo) ||
-		id.equals("YouTube") && role.getOption(Option.Services_Hide_YouTube)*/)
-		    continue;
+                if(id.equals("Bing") || id.equals("Google") || id.equals("TED")
+                /*id.equals("Blogger") && role.getOption(Option.Services_Hide_Blogger) ||
+                id.equals("Delicious") && role.getOption(Option.Services_Hide_Delicious) ||
+                id.equals("Facebook") && role.getOption(Option.Services_Hide_Facebook) ||
+                id.equals("Flickr") && role.getOption(Option.Services_Hide_Flickr) ||
+                id.equals("GroupMe") && role.getOption(Option.Services_Hide_GroupMe) ||
+                id.equals("Ipernity") && role.getOption(Option.Services_Hide_Ipernity) ||
+                id.equals("LastFm") && role.getOption(Option.Services_Hide_lastfm) ||
+                id.equals("SlideShare") && role.getOption(Option.Services_Hide_SlideShare) ||
+                id.equals("Vimeo") && role.getOption(Option.Services_Hide_Vimeo) ||
+                id.equals("YouTube") && role.getOption(Option.Services_Hide_YouTube)*/)
+                    continue;
 
-		this.services.add(service);
-	    }
-	}
+                this.services.add(service);
+            }
+        }
     }
 
     public String signOutFromService(String serviceId) throws IOException, IllegalResponseException
     {
-	log.debug("signOutFromService");
-	user.getInterweb().revokeAuthorizationOnService(serviceId);
-	return null;
+        log.debug("signOutFromService");
+        user.getInterweb().revokeAuthorizationOnService(serviceId);
+        return null;
     }
 
     public String signInOnService(ServiceInformation service) throws IOException, IllegalResponseException
     {
-	log.debug("signing in on service " + service.getId());
-	InterWeb interWeb = user.getInterweb();
-	String callback = UtilBean.getLearnwebBean().getBaseUrl() + "/myhome/services.jsf";
-	interWeb.authorizeService(service, callback);
-	return null;
+        log.debug("signing in on service " + service.getId());
+        InterWeb interWeb = user.getInterweb();
+        String callback = UtilBean.getLearnwebBean().getBaseUrl() + "/myhome/services.jsf";
+        interWeb.authorizeService(service, callback);
+        return null;
     }
 
     public String signOutFromInterweb()
     {
-	log.debug("sign out from interweb");
-	user.setInterwebToken(null);
-	return null;
+        log.debug("sign out from interweb");
+        user.setInterwebToken(null);
+        return null;
     }
 
     public String getInterwebUsername() throws IllegalResponseException
     {
-	return user.getInterweb().getUsername();
+        return user.getInterweb().getUsername();
     }
 
     public boolean isUserAllowedToLogoutFromInterweb() throws SQLException
     {
-	return false; //user.getCourse().getOption(Option.Services_Allow_user_to_logout_from_interweb);
+        return false; //user.getCourse().getOption(Option.Services_Allow_user_to_logout_from_interweb);
     }
 
     public boolean isLoginBasedService(Object obj)
     {
-	ServiceInformation service = (ServiceInformation) obj;
-	return service.getAuthorizationType().equals("login");
+        ServiceInformation service = (ServiceInformation) obj;
+        return service.getAuthorizationType().equals("login");
     }
 }

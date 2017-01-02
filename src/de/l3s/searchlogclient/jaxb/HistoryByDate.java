@@ -15,29 +15,29 @@ public class HistoryByDate implements Serializable
 
     public HistoryByDate()
     {
-	date = "";
-	queryHistory = new ArrayList<QueryHistory>();
+        date = "";
+        queryHistory = new ArrayList<QueryHistory>();
     }
 
     @XmlElement
     public String getDate()
     {
-	return date;
+        return date;
     }
 
     public void setDate(String date)
     {
-	this.date = date;
+        this.date = date;
     }
 
     public ArrayList<QueryHistory> getQueryHistory()
     {
-	return queryHistory;
+        return queryHistory;
     }
 
     public void setQueryHistory(ArrayList<QueryHistory> queryHistory)
     {
-	this.queryHistory = queryHistory;
+        this.queryHistory = queryHistory;
     }
 
 }

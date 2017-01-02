@@ -1,112 +1,135 @@
 package de.l3s.searchlogclient;
 
-public class Resultset {
-	public int resultsetid;
-	public int resourceid;
-	public String url;
-	public String type;
-	public String source;
-	public String filename;
-	public String shortdescrp;
-	public String system;
-	public int systemid;
-	public String selected;
+public class Resultset
+{
+    public int resultsetid;
+    public int resourceid;
+    public String url;
+    public String type;
+    public String source;
+    public String filename;
+    public String shortdescrp;
+    public String system;
+    public int systemid;
+    public String selected;
 
-	public Resultset() {
-		// TODO Auto-generated constructor stub
-	}
-	
-	public Resultset(int resultsetid,int resourceid,String url, String type, String source, String filename, String shortdescrp, String system,int systemid,String selected){
-		this.resultsetid = resultsetid;
-		this.resourceid= resourceid;
-		this.url=url;
-		this.type = type;
-		this.source = source;
-		this.filename = filename;
-		this.shortdescrp = shortdescrp;
-		this.system = system;
-		this.systemid = systemid;
-		this.selected = selected;
-	}
+    public Resultset()
+    {
+        // TODO Auto-generated constructor stub
+    }
 
-	public int getResourceid() {
-		return resourceid;
-	}
+    public Resultset(int resultsetid, int resourceid, String url, String type, String source, String filename, String shortdescrp, String system, int systemid, String selected)
+    {
+        this.resultsetid = resultsetid;
+        this.resourceid = resourceid;
+        this.url = url;
+        this.type = type;
+        this.source = source;
+        this.filename = filename;
+        this.shortdescrp = shortdescrp;
+        this.system = system;
+        this.systemid = systemid;
+        this.selected = selected;
+    }
 
-	public void setResourceid(int resourceid) {
-		this.resourceid = resourceid;
-	}
+    public int getResourceid()
+    {
+        return resourceid;
+    }
 
-	public String getUrl() {
-		return url;
-	}
+    public void setResourceid(int resourceid)
+    {
+        this.resourceid = resourceid;
+    }
 
-	public void setUrl(String url) {
-		this.url = url;
-	}
+    public String getUrl()
+    {
+        return url;
+    }
 
-	public String getType() {
-		return type;
-	}
+    public void setUrl(String url)
+    {
+        this.url = url;
+    }
 
-	public void setType(String type) {
-		this.type = type;
-	}
+    public String getType()
+    {
+        return type;
+    }
 
-	public String getSource() {
-		return source;
-	}
+    public void setType(String type)
+    {
+        this.type = type;
+    }
 
-	public void setSource(String source) {
-		this.source = source;
-	}
+    public String getSource()
+    {
+        return source;
+    }
 
-	public String getFilename() {
-		return filename;
-	}
+    public void setSource(String source)
+    {
+        this.source = source;
+    }
 
-	public void setFilename(String filename) {
-		this.filename = filename;
-	}
+    public String getFilename()
+    {
+        return filename;
+    }
 
-	public String getShortdescrp() {
-		return shortdescrp;
-	}
+    public void setFilename(String filename)
+    {
+        this.filename = filename;
+    }
 
-	public void setShortdescrp(String shortdescrp) {
-		this.shortdescrp = shortdescrp;
-	}
+    public String getShortdescrp()
+    {
+        return shortdescrp;
+    }
 
-	public String getSystem() {
-		return system;
-	}
+    public void setShortdescrp(String shortdescrp)
+    {
+        this.shortdescrp = shortdescrp;
+    }
 
-	public void setSystem(String system) {
-		this.system = system;
-	}
+    public String getSystem()
+    {
+        return system;
+    }
 
-	public int getSystemid() {
-		return systemid;
-	}
+    public void setSystem(String system)
+    {
+        this.system = system;
+    }
 
-	public void setSystemid(int systemid) {
-		this.systemid = systemid;
-	}
+    public int getSystemid()
+    {
+        return systemid;
+    }
 
-	public String getSelected() {
-		return selected;
-	}
+    public void setSystemid(int systemid)
+    {
+        this.systemid = systemid;
+    }
 
-	public void setSelected(String selected) {
-		this.selected = selected;
-	}
+    public String getSelected()
+    {
+        return selected;
+    }
 
-	public int getResultsetid() {
-		return resultsetid;
-	}
+    public void setSelected(String selected)
+    {
+        this.selected = selected;
+    }
 
-	public void setResultsetid(int resultsetid) {
-		this.resultsetid = resultsetid;
-	}
+    public int getResultsetid()
+    {
+        return resultsetid;
+    }
+
+    public void setResultsetid(int resultsetid)
+    {
+        this.resultsetid = resultsetid;
+    }
 
 }

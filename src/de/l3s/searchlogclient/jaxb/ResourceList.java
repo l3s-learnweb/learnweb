@@ -4,17 +4,20 @@ import java.util.LinkedList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="ResourceList")
-public class ResourceList {
+@XmlRootElement(name = "ResourceList")
+public class ResourceList
+{
 
-	LinkedList<Resource> resources;
-	
-	public LinkedList<Resource> getResources() {
-		return resources;
-	}
+    LinkedList<Resource> resources;
 
-	public void setResources(LinkedList<Resource> resources) {
-		this.resources = resources;
-	}
-	
+    public LinkedList<Resource> getResources()
+    {
+        return resources;
+    }
+
+    public void setResources(LinkedList<Resource> resources)
+    {
+        this.resources = resources;
+    }
+
 }

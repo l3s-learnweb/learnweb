@@ -33,33 +33,33 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
 
     public PasswordChangeBean() throws SQLException
     {
-	if(parameter == null || parameter.equals(""))
-	    parameter = getFacesContext().getExternalContext().getRequestParameterMap().get("u");
+        if(parameter == null || parameter.equals(""))
+            parameter = getFacesContext().getExternalContext().getRequestParameterMap().get("u");
 
-	if(parameter == null)
-	{
-	    addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
-	    return;
-	}
+        if(parameter == null)
+        {
+            addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
+            return;
+        }
 
-	String[] splits = parameter.split("_");
-	if(splits.length != 2)
-	{
-	    addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
-	    return;
-	}
-	int userId = Integer.parseInt(splits[0]);
-	String hash = splits[1];
+        String[] splits = parameter.split("_");
+        if(splits.length != 2)
+        {
+            addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
+            return;
+        }
+        int userId = Integer.parseInt(splits[0]);
+        String hash = splits[1];
 
-	user = getLearnweb().getUserManager().getUser(userId);
-	log.debug(hash + " - " + PasswordBean.createHash(user));
+        user = getLearnweb().getUserManager().getUser(userId);
+        log.debug(hash + " - " + PasswordBean.createHash(user));
 
-	if(null == user || !hash.equals(PasswordBean.createHash(user)))
-	{
-	    addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
-	    user = null;
-	    return;
-	}
+        if(null == user || !hash.equals(PasswordBean.createHash(user)))
+        {
+            addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
+            user = null;
+            return;
+        }
     }
 
     public void checkParameter() throws SQLException
@@ -69,52 +69,52 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
 
     public void onChangePassword()
     {
-	log.debug("onChangePassword");
-	UserManager um = getLearnweb().getUserManager();
-	try
-	{
-	    user.setPassword(password, false);
-	    um.save(user);
-	    //um.setPassword(getUser().getId(), password);
-	    addMessage(FacesMessage.SEVERITY_INFO, "password_changed");
+        log.debug("onChangePassword");
+        UserManager um = getLearnweb().getUserManager();
+        try
+        {
+            user.setPassword(password, false);
+            um.save(user);
+            //um.setPassword(getUser().getId(), password);
+            addMessage(FacesMessage.SEVERITY_INFO, "password_changed");
 
-	    password = "";
-	    confirmPassword = "";
-	}
-	catch(SQLException e)
-	{
-	    addFatalMessage(e);
-	}
+            password = "";
+            confirmPassword = "";
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
     }
 
     public String getPassword()
     {
-	return password;
+        return password;
     }
 
     public void setPassword(String password)
     {
-	this.password = password;
+        this.password = password;
     }
 
     public String getConfirmPassword()
     {
-	return confirmPassword;
+        return confirmPassword;
     }
 
     public void setConfirmPassword(String confirmPassword)
     {
-	this.confirmPassword = confirmPassword;
+        this.confirmPassword = confirmPassword;
     }
 
     public String getParameter()
     {
-	return parameter;
+        return parameter;
     }
 
     public void setParameter(String parameter)
     {
-	this.parameter = parameter;
+        this.parameter = parameter;
     }
 
     /*
@@ -156,21 +156,21 @@ public class PasswordChangeBean extends ApplicationBean implements Serializable
     @Override
     public User getUser()
     {
-	return user;
+        return user;
     }
 
     public void validatePassword(FacesContext context, UIComponent component, Object value) throws ValidatorException
     {
-	// Find the actual JSF component for the first password field.
-	UIInput passwordInput = (UIInput) context.getViewRoot().findComponent("passwordform:password");
+        // Find the actual JSF component for the first password field.
+        UIInput passwordInput = (UIInput) context.getViewRoot().findComponent("passwordform:password");
 
-	// Get its value, the entered password of the first field.
-	String password = (String) passwordInput.getValue();
+        // Get its value, the entered password of the first field.
+        String password = (String) passwordInput.getValue();
 
-	if(null != password && !password.equals(value))
-	{
-	    throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "passwords_do_not_match"));
-	}
+        if(null != password && !password.equals(value))
+        {
+            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "passwords_do_not_match"));
+        }
     }
 
     public void setDummy(String dummy)

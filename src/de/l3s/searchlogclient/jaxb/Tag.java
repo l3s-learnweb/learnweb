@@ -18,61 +18,61 @@ public class Tag
 
     public Tag(int userId, int resultsetId, String name)
     {
-	this.userId = userId;
-	this.resultsetId = resultsetId;
-	this.name = name;
+        this.userId = userId;
+        this.resultsetId = resultsetId;
+        this.name = name;
     }
 
     public Tag(int userId, int resultsetId, int tagId, String name)
     {
-	this.userId = userId;
-	this.resultsetId = resultsetId;
-	this.tagId = tagId;
-	this.name = name;
+        this.userId = userId;
+        this.resultsetId = resultsetId;
+        this.tagId = tagId;
+        this.name = name;
     }
 
     @XmlElement
     public int getTagId()
     {
-	return tagId;
+        return tagId;
     }
 
     public void setTagId(int tagId)
     {
-	this.tagId = tagId;
+        this.tagId = tagId;
     }
 
     @XmlElement
     public String getName()
     {
-	return name;
+        return name;
     }
 
     public void setName(String name)
     {
-	this.name = name;
+        this.name = name;
     }
 
     @XmlElement
     public int getUserId()
     {
-	return userId;
+        return userId;
     }
 
     public void setUserId(int userId)
     {
-	this.userId = userId;
+        this.userId = userId;
     }
 
     @XmlElement
     public int getResultsetId()
     {
-	return resultsetId;
+        return resultsetId;
     }
 
     public void setResultsetId(int resultsetId)
     {
-	this.resultsetId = resultsetId;
+        this.resultsetId = resultsetId;
     }
 
 }

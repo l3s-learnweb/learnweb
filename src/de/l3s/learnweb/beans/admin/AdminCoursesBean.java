@@ -33,94 +33,94 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
 
     public AdminCoursesBean() throws SQLException
     {
-	load();
+        load();
     }
 
     private void load() throws SQLException
     {
-	if(getUser().isAdmin())
-	    courses = new ArrayList<Course>(getLearnweb().getCourseManager().getCoursesAll());
-	else if(getUser().isModerator())
-	    courses = new ArrayList<Course>(getUser().getOrganisation().getCourses());
+        if(getUser().isAdmin())
+            courses = new ArrayList<Course>(getLearnweb().getCourseManager().getCoursesAll());
+        else if(getUser().isModerator())
+            courses = new ArrayList<Course>(getUser().getOrganisation().getCourses());
 
-	Collections.sort(courses);
+        Collections.sort(courses);
     }
 
     public void onCreateCourse()
     {
-	try
-	{
-	    Course course = new Course();
-	    course.setTitle(newCourseTitle);
-	    getLearnweb().getCourseManager().save(course);
-	    addMessage(FacesMessage.SEVERITY_INFO, "A new course has been created. You should edit it now.");
-	    load(); // update course list
-	}
-	catch(Exception e)
-	{
-	    addFatalMessage(e);
-	}
+        try
+        {
+            Course course = new Course();
+            course.setTitle(newCourseTitle);
+            getLearnweb().getCourseManager().save(course);
+            addMessage(FacesMessage.SEVERITY_INFO, "A new course has been created. You should edit it now.");
+            load(); // update course list
+        }
+        catch(Exception e)
+        {
+            addFatalMessage(e);
+        }
     }
 
     public void onDeleteCourse(Course course)
     {
-	try
-	{
-	    getLearnweb().getCourseManager().delete(course.getId());
-	    addMessage(FacesMessage.SEVERITY_INFO, "The course '" + course.getTitle() + "' has been deleted.");
-	    load(); // update course list
-	}
-	catch(Exception e)
-	{
-	    addFatalMessage(e);
-	}
+        try
+        {
+            getLearnweb().getCourseManager().delete(course.getId());
+            addMessage(FacesMessage.SEVERITY_INFO, "The course '" + course.getTitle() + "' has been deleted.");
+            load(); // update course list
+        }
+        catch(Exception e)
+        {
+            addFatalMessage(e);
+        }
     }
 
     public void onCreateOrganisation()
     {
-	try
-	{
-	    OrganisationManager om = getLearnweb().getOrganisationManager();
+        try
+        {
+            OrganisationManager om = getLearnweb().getOrganisationManager();
 
-	    if(om.getOrganisationByTitle(newOrganisationTitle) != null)
-	    {
-		addMessage(FacesMessage.SEVERITY_ERROR, "The title is already already take by an other organisation.");
-		return;
-	    }
-	    Organisation org = new Organisation();
-	    org.setTitle(newOrganisationTitle);
-	    om.save(org);
-	    addMessage(FacesMessage.SEVERITY_INFO, "A new organisation has been created. Now you can assign courses to it.");
-	    load(); // update course list
-	}
-	catch(Exception e)
-	{
-	    addFatalMessage(e);
-	}
+            if(om.getOrganisationByTitle(newOrganisationTitle) != null)
+            {
+                addMessage(FacesMessage.SEVERITY_ERROR, "The title is already already take by an other organisation.");
+                return;
+            }
+            Organisation org = new Organisation();
+            org.setTitle(newOrganisationTitle);
+            om.save(org);
+            addMessage(FacesMessage.SEVERITY_INFO, "A new organisation has been created. Now you can assign courses to it.");
+            load(); // update course list
+        }
+        catch(Exception e)
+        {
+            addFatalMessage(e);
+        }
     }
 
     public List<Course> getCourses()
     {
-	return courses;
+        return courses;
     }
 
     public String getNewCourseTitle()
     {
-	return newCourseTitle;
+        return newCourseTitle;
     }
 
     public void setNewCourseTitle(String newCourseTitle)
     {
-	this.newCourseTitle = newCourseTitle;
+        this.newCourseTitle = newCourseTitle;
     }
 
     public String getNewOrganisationTitle()
     {
-	return newOrganisationTitle;
+        return newOrganisationTitle;
     }
 
     public void setNewOrganisationTitle(String newOrganisationTitle)
     {
-	this.newOrganisationTitle = newOrganisationTitle;
+        this.newOrganisationTitle = newOrganisationTitle;
     }
 }

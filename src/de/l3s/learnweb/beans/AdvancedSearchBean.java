@@ -46,26 +46,26 @@ public class AdvancedSearchBean
     @PostConstruct
     public void init()
     {
-	languages = new HashMap<String, String>();
-	languages.put("German", "German");
-	languages.put("English", "English");
-	languages.put("Italian", "Italian");
+        languages = new HashMap<String, String>();
+        languages.put("German", "German");
+        languages.put("English", "English");
+        languages.put("Italian", "Italian");
 
-	countries = new HashMap<String, String>();
-	countries.put("USA", "USA");
-	countries.put("Germany", "Germany");
+        countries = new HashMap<String, String>();
+        countries.put("USA", "USA");
+        countries.put("Germany", "Germany");
 
-	Map<String, String> map = new HashMap<String, String>();
-	map.put("New York", "New York");
-	map.put("San Francisco", "San Francisco");
-	map.put("Denver", "Denver");
-	data.put("USA", map);
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("New York", "New York");
+        map.put("San Francisco", "San Francisco");
+        map.put("Denver", "Denver");
+        data.put("USA", map);
 
-	map = new HashMap<String, String>();
-	map.put("Berlin", "Berlin");
-	map.put("Munich", "Munich");
-	map.put("Frankfurt", "Frankfurt");
-	data.put("Germany", map);
+        map = new HashMap<String, String>();
+        map.put("Berlin", "Berlin");
+        map.put("Munich", "Munich");
+        map.put("Frankfurt", "Frankfurt");
+        data.put("Germany", map);
     }
 
     public AdvancedSearchBean()
@@ -75,225 +75,225 @@ public class AdvancedSearchBean
 
     public AdvancedSearchBean(String query, String region, String extractWord, String anyWord, String noneWord)
     {
-	this.query = query;
+        this.query = query;
 
-	if(extractWord != "")
-	{
-	    this.extractWord = extractWord;
+        if(extractWord != "")
+        {
+            this.extractWord = extractWord;
 
-	}
-	if(anyWord != "")
-	{
-	    this.anyWords = anyWord;
-	}
+        }
+        if(anyWord != "")
+        {
+            this.anyWords = anyWord;
+        }
 
-	if(noneWord != "")
-	{
-	    this.noneWords = noneWord;
-	}
-	String newquery = removeMyGroupQuery(query);
-	if(!query.equals(newquery))
-	{
-	    this.query = newquery;
-	}
+        if(noneWord != "")
+        {
+            this.noneWords = noneWord;
+        }
+        String newquery = removeMyGroupQuery(query);
+        if(!query.equals(newquery))
+        {
+            this.query = newquery;
+        }
     }
 
     public String getExtractWord()
     {
-	return extractWord;
+        return extractWord;
     }
 
     public void setExtractWord(String extractWord)
     {
-	this.extractWord = extractWord;
+        this.extractWord = extractWord;
     }
 
     public String getQuery()
     {
-	return query;
+        return query;
     }
 
     public void setQuery(String query)
     {
-	this.query = query;
+        this.query = query;
     }
 
     public String getAnyWords()
     {
-	return anyWords;
+        return anyWords;
     }
 
     public void setAnyWords(String anyWords)
     {
-	this.anyWords = anyWords;
+        this.anyWords = anyWords;
     }
 
     public String getNoneWords()
     {
-	return noneWords;
+        return noneWords;
     }
 
     public void setNoneWords(String noneWords)
     {
-	this.noneWords = noneWords;
+        this.noneWords = noneWords;
     }
 
     public String getLanguage()
     {
-	return language;
+        return language;
     }
 
     public void setLanguage(String language)
     {
-	this.language = language;
+        this.language = language;
     }
 
     public Map<String, String> getLanguages()
     {
-	return languages;
+        return languages;
     }
 
     public void setLanguages(Map<String, String> languages)
     {
-	this.languages = languages;
+        this.languages = languages;
     }
 
     public String getCountry()
     {
-	return country;
+        return country;
     }
 
     public void setCountry(String country)
     {
-	this.country = country;
+        this.country = country;
     }
 
     public String getCity()
     {
-	return city;
+        return city;
     }
 
     public void setCity(String city)
     {
-	this.city = city;
+        this.city = city;
     }
 
     public Map<String, String> getCountries()
     {
-	return countries;
+        return countries;
     }
 
     public void setCountries(Map<String, String> countries)
     {
-	this.countries = countries;
+        this.countries = countries;
     }
 
     public Map<String, String> getCities()
     {
-	return cities;
+        return cities;
     }
 
     public void setCities(Map<String, String> cities)
     {
-	this.cities = cities;
+        this.cities = cities;
     }
 
     public QueryResponse getResult()
     {
-	return result;
+        return result;
     }
 
     public void setResult(QueryResponse result)
     {
-	this.result = result;
+        this.result = result;
     }
 
     private String removeMyGroupQuery(String query)
     {
-	String newquery = "";
-	Pattern pattern = Pattern.compile("groups\\s*:\\s*my\\s*");
-	Matcher matcher = pattern.matcher(query.toLowerCase());
-	if(matcher.find())
-	{
-	    int start = matcher.start();
-	    int end = matcher.end();
-	    if(start != 0)
-		newquery = query.substring(0, start);
-	    newquery = newquery.concat(query.substring(end, query.length()));
-	    return newquery;
-	}
-	else
-	    return query;
+        String newquery = "";
+        Pattern pattern = Pattern.compile("groups\\s*:\\s*my\\s*");
+        Matcher matcher = pattern.matcher(query.toLowerCase());
+        if(matcher.find())
+        {
+            int start = matcher.start();
+            int end = matcher.end();
+            if(start != 0)
+                newquery = query.substring(0, start);
+            newquery = newquery.concat(query.substring(end, query.length()));
+            return newquery;
+        }
+        else
+            return query;
     }
 
     public String advancedSearch()
     {
 
-	int pageOffset;
-	int pageSize;
-	SolrServer server = Learnweb.getInstance().getSolrClient().getSolrServer();
-	//SolrInputDocument doc = new SolrInputDocument();
-	solrQuery = new SolrQuery(query);
-	solrQuery.setQuery(query);
+        int pageOffset;
+        int pageSize;
+        SolrServer server = Learnweb.getInstance().getSolrClient().getSolrServer();
+        //SolrInputDocument doc = new SolrInputDocument();
+        solrQuery = new SolrQuery(query);
+        solrQuery.setQuery(query);
 
-	if(query.length() != 0)
-	    solrQuery.addField(query);
+        if(query.length() != 0)
+            solrQuery.addField(query);
 
-	if(language.length() != 0)
-	    solrQuery.addFilterQuery("language : " + language);
+        if(language.length() != 0)
+            solrQuery.addFilterQuery("language : " + language);
 
-	if(0 != country.length())
-	    solrQuery.addFilterQuery("location : " + country);
+        if(0 != country.length())
+            solrQuery.addFilterQuery("location : " + country);
 
-	solrQuery.setHighlight(true);
-	solrQuery.addHighlightField("title");
-	solrQuery.addHighlightField("description");
+        solrQuery.setHighlight(true);
+        solrQuery.addHighlightField("title");
+        solrQuery.addHighlightField("description");
 
-	solrQuery.set("facet", "true");
-	if(facetFields != null)
-	{
-	    solrQuery.addFacetField(facetFields);
-	}
-	if(facetQueries != null && facetQueries.length > 0)
-	{
-	    for(String query : facetQueries)
-	    {
-		solrQuery.addFacetQuery(query);
-	    }
-	}
-	solrQuery.setFacetLimit(20); // TODO set to -1 to show all facets (implement "more" button on frontend)
-	solrQuery.setFacetSort("count");
-	solrQuery.setFacetMinCount(1);
+        solrQuery.set("facet", "true");
+        if(facetFields != null)
+        {
+            solrQuery.addFacetField(facetFields);
+        }
+        if(facetQueries != null && facetQueries.length > 0)
+        {
+            for(String query : facetQueries)
+            {
+                solrQuery.addFacetQuery(query);
+            }
+        }
+        solrQuery.setFacetLimit(20); // TODO set to -1 to show all facets (implement "more" button on frontend)
+        solrQuery.setFacetSort("count");
+        solrQuery.setFacetMinCount(1);
 
-	log.debug("solr query: " + solrQuery);
+        log.debug("solr query: " + solrQuery);
 
-	//get solrServer
-	server = Learnweb.getInstance().getSolrClient().getSolrServer();
+        //get solrServer
+        server = Learnweb.getInstance().getSolrClient().getSolrServer();
 
-	//solrQuery.setHighlight(true).setHighlightSimplePre("<span class='highlighter'").setHighlightSimplePost("</span>").setStart(pageOffset).setRows(pageSize);
-	SolrDocumentList sdl;
-	try
-	{
-	    sdl = SolrContext.getServer().query(solrQuery).getResults();
-	    for(SolrDocument sd : sdl)
-	    {
-		String id = (String) sd.getFieldValue("id");
-	    }
-	}
-	catch(SolrServerException e)
-	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
+        //solrQuery.setHighlight(true).setHighlightSimplePre("<span class='highlighter'").setHighlightSimplePost("</span>").setStart(pageOffset).setRows(pageSize);
+        SolrDocumentList sdl;
+        try
+        {
+            sdl = SolrContext.getServer().query(solrQuery).getResults();
+            for(SolrDocument sd : sdl)
+            {
+                String id = (String) sd.getFieldValue("id");
+            }
+        }
+        catch(SolrServerException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-	return "/lw/advancedSearch/search_result.xhtml?faces-redirect=true";
+        return "/lw/advancedSearch/search_result.xhtml?faces-redirect=true";
     }
 
     public void onCountryChange()
     {
-	if(country != null && !country.equals(""))
-	    cities = data.get(country);
-	else
-	    cities = new HashMap<String, String>();
+        if(country != null && !country.equals(""))
+            cities = data.get(country);
+        else
+            cities = new HashMap<String, String>();
     }
 }

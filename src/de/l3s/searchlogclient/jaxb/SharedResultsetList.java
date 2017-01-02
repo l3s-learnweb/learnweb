@@ -4,20 +4,24 @@ import java.util.ArrayList;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
-@XmlRootElement(name="SharedResultsets")
-public class SharedResultsetList {
-	
-	ArrayList<SharedResultset> sharedResultsets;
+@XmlRootElement(name = "SharedResultsets")
+public class SharedResultsetList
+{
 
-	public SharedResultsetList(){
-		sharedResultsets = new ArrayList<SharedResultset>();
-	}
-	
-	public ArrayList<SharedResultset> getSharedResultsets() {
-		return sharedResultsets;
-	}
+    ArrayList<SharedResultset> sharedResultsets;
 
-	public void setSharedResultsets(ArrayList<SharedResultset> sharedResultsets) {
-		this.sharedResultsets = sharedResultsets;
-	}
+    public SharedResultsetList()
+    {
+        sharedResultsets = new ArrayList<SharedResultset>();
+    }
+
+    public ArrayList<SharedResultset> getSharedResultsets()
+    {
+        return sharedResultsets;
+    }
+
+    public void setSharedResultsets(ArrayList<SharedResultset> sharedResultsets)
+    {
+        this.sharedResultsets = sharedResultsets;
+    }
 }

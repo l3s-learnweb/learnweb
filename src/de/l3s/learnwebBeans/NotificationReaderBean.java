@@ -20,16 +20,16 @@ public class NotificationReaderBean extends ApplicationBean
 
     public NotificationReaderBean()
     {
-	User user = UtilBean.getUserBean().getUser();
-	Message message = new Message();
-	try
-	{
-	    receivedMessages = message.getAllMessagesToUser(user);
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	}
+        User user = UtilBean.getUserBean().getUser();
+        Message message = new Message();
+        try
+        {
+            receivedMessages = message.getAllMessagesToUser(user);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
 
     }
     /*	
@@ -67,9 +67,9 @@ public class NotificationReaderBean extends ApplicationBean
     public ArrayList<Message> getReceivedMessages() throws SQLException
     {
 
-	Message.setAllMessagesSeen(getUser().getId());
+        Message.setAllMessagesSeen(getUser().getId());
 
-	return receivedMessages;
+        return receivedMessages;
     }
 
     /*
@@ -89,14 +89,14 @@ public class NotificationReaderBean extends ApplicationBean
     */
     public String getHowManyNewMessages() throws SQLException
     {
-	int i = Message.howManyNotSeenMessages(getUser());
+        int i = Message.howManyNotSeenMessages(getUser());
 
-	if(i == 0)
-	    howManyNewMessages = "0";
-	else
-	    howManyNewMessages = "" + i;
+        if(i == 0)
+            howManyNewMessages = "0";
+        else
+            howManyNewMessages = "" + i;
 
-	return howManyNewMessages;
+        return howManyNewMessages;
     }
 
 }

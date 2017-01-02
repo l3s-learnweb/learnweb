@@ -31,29 +31,29 @@ public class AdminEvaluationBean extends ApplicationBean
 
     public AdminEvaluationBean() throws SQLException
     {
-	User user = getUser();
+        User user = getUser();
 
-	if(null == user) // not logged in
-	{
-	    log.debug("User is not logged in");
-	}
-	else
-	{
-	    users = getLearnweb().getUserManager().getUsersByOrganisationId(user.getOrganisationId());
+        if(null == user) // not logged in
+        {
+            log.debug("User is not logged in");
+        }
+        else
+        {
+            users = getLearnweb().getUserManager().getUsersByOrganisationId(user.getOrganisationId());
 
-	    if(user.isAdmin() || user.isModerator())
-		log.info("User has special rights");
-	}
+            if(user.isAdmin() || user.isModerator())
+                log.info("User has special rights");
+        }
 
     }
 
     public List<User> getUsers()
     {
-	return users;
+        return users;
     }
 
     public void onClick()
     {
-	addMessage(FacesMessage.SEVERITY_INFO, "a message");
+        addMessage(FacesMessage.SEVERITY_INFO, "a message");
     }
 }

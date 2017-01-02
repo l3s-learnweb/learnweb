@@ -45,136 +45,136 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 
     public String getUsername()
     {
-	return username;
+        return username;
     }
 
     public void setUsername(String username)
     {
-	this.username = username;
+        this.username = username;
     }
 
     public String getPassword()
     {
-	return password;
+        return password;
     }
 
     public void setPassword(String password)
     {
-	this.password = password;
+        this.password = password;
     }
 
     public String getConfirmPassword()
     {
-	return confirmPassword;
+        return confirmPassword;
     }
 
     public void setConfirmPassword(String confirmPassword)
     {
-	this.confirmPassword = confirmPassword;
+        this.confirmPassword = confirmPassword;
     }
 
     public String getEmail()
     {
-	return email;
+        return email;
     }
 
     public void setEmail(String email)
     {
-	this.email = email;
+        this.email = email;
     }
 
     public String getWizard()
     {
-	return wizardTitle;
+        return wizardTitle;
     }
 
     public void setWizard(String wizard)
     {
-	this.wizardTitle = wizard;
+        this.wizardTitle = wizard;
     }
 
     public String register() throws Exception
     {
-	Course course = null;
-	Learnweb learnweb = getLearnweb();
+        Course course = null;
+        Learnweb learnweb = getLearnweb();
 
-	if(null != wizardTitle && wizardTitle.length() != 0)
-	{
-	    course = learnweb.getCourseManager().getCourseByWizard(wizardTitle);
+        if(null != wizardTitle && wizardTitle.length() != 0)
+        {
+            course = learnweb.getCourseManager().getCourseByWizard(wizardTitle);
 
-	    if(null == course)
-	    {
-		addMessage(FacesMessage.SEVERITY_FATAL, "invalid wizard parameter");
-		return null;
-	    }
-	}
+            if(null == course)
+            {
+                addMessage(FacesMessage.SEVERITY_FATAL, "invalid wizard parameter");
+                return null;
+            }
+        }
 
-	final User user = learnweb.getUserManager().registerUser(username, password, email, wizardTitle);
+        final User user = learnweb.getUserManager().registerUser(username, password, email, wizardTitle);
 
-	//addMessage(FacesMessage.SEVERITY_INFO, "register_success");
+        //addMessage(FacesMessage.SEVERITY_INFO, "register_success");
 
-	// log the user in
-	UtilBean.getUserBean().setUser(user);
+        // log the user in
+        UtilBean.getUserBean().setUser(user);
 
-	//logging
-	log(Action.register, 0, 0);
-	if(null != course && course.getDefaultGroupId() != 0)
-	    log(Action.group_joining, course.getDefaultGroupId(), course.getDefaultGroupId());
+        //logging
+        log(Action.register, 0, 0);
+        if(null != course && course.getDefaultGroupId() != 0)
+            log(Action.group_joining, course.getDefaultGroupId(), course.getDefaultGroupId());
 
-	return LoginBean.loginUser(this, user);
+        return LoginBean.loginUser(this, user);
     }
 
     public void validatePassword(FacesContext context, UIComponent component, Object value) throws ValidatorException
     {
-	// Find the actual JSF component for the first password field.
-	UIInput passwordInput = (UIInput) context.getViewRoot().findComponent("registerform:password");
+        // Find the actual JSF component for the first password field.
+        UIInput passwordInput = (UIInput) context.getViewRoot().findComponent("registerform:password");
 
-	// Get its value, the entered password of the first field.
-	String password = (String) passwordInput.getValue();
+        // Get its value, the entered password of the first field.
+        String password = (String) passwordInput.getValue();
 
-	if(null != password && !password.equals(value))
-	{
-	    throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "passwords_do_not_match"));
-	}
+        if(null != password && !password.equals(value))
+        {
+            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "passwords_do_not_match"));
+        }
     }
 
     public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
     {
-	if(getLearnweb().getUserManager().isUsernameAlreadyTaken((String) value))
-	{
-	    throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_already_taken"));
-	}
+        if(getLearnweb().getUserManager().isUsernameAlreadyTaken((String) value))
+        {
+            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_already_taken"));
+        }
     }
 
     public void preRenderView() throws ValidatorException, SQLException
     {
-	if(wizardTitle == null)
-	    wizardTitle = getFacesContext().getExternalContext().getRequestParameterMap().get("wizard");
+        if(wizardTitle == null)
+            wizardTitle = getFacesContext().getExternalContext().getRequestParameterMap().get("wizard");
 
-	if(null != getWizard() && getWizard().length() != 0)
-	{
-	    Course course = getLearnweb().getCourseManager().getCourseByWizard(getWizard());
-	    if(null == course)
-	    {
-		addMessage(FacesMessage.SEVERITY_FATAL, "Invalid wizard parameter");
-	    }
-	    else
-	    {
-		if(course.getId() == 505) // extrawurst für yell
-		    addMessage(FacesMessage.SEVERITY_INFO, "register_for_community", course.getTitle());
-		else
-		    addMessage(FacesMessage.SEVERITY_INFO, "register_for_course", course.getTitle());
+        if(null != getWizard() && getWizard().length() != 0)
+        {
+            Course course = getLearnweb().getCourseManager().getCourseByWizard(getWizard());
+            if(null == course)
+            {
+                addMessage(FacesMessage.SEVERITY_FATAL, "Invalid wizard parameter");
+            }
+            else
+            {
+                if(course.getId() == 505) // extrawurst für yell
+                    addMessage(FacesMessage.SEVERITY_INFO, "register_for_community", course.getTitle());
+                else
+                    addMessage(FacesMessage.SEVERITY_INFO, "register_for_course", course.getTitle());
 
-		mailRequired = course.getOption(Course.Option.Users_Require_mail_address);
-	    }
-	}
-	else
-	    addMessage(FacesMessage.SEVERITY_WARN, "register_without_wizard_warning");
+                mailRequired = course.getOption(Course.Option.Users_Require_mail_address);
+            }
+        }
+        else
+            addMessage(FacesMessage.SEVERITY_WARN, "register_without_wizard_warning");
     }
 
     public boolean isMailRequired()
     {
-	return mailRequired;
+        return mailRequired;
     }
 
 }

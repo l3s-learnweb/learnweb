@@ -101,21 +101,21 @@ public class SearchLogClient
     public SearchLogClient(Learnweb learnweb)
     {
 
-	client = Client.create();
+        client = Client.create();
 
-	baseURL = learnweb.getProperties().getProperty("SEARCH_TRACKER_URL");
-	resourceRank = 0;
-	resultsetId = 0;
-	viewingTimeList = new LinkedList<ViewingTime>();
-	resourcesList = new HashMap<String, LinkedList<Resource>>();
-	resourcesResultset = new HashMap<String, Resource>();
-	resourceLogList = new ArrayList<ResourceLog>();
-	savedResourceList = new LinkedList<Resource>();
-	resourceClickList = new LinkedList<ResourceLog>();
-	resourceSavedList = new LinkedList<ResourceLog>();
-	searchCommentsList = new LinkedList<CommentonSearch>();
-	tagNamesList = new ArrayList<Tag>();
-	sessionId = "";
+        baseURL = learnweb.getProperties().getProperty("SEARCH_TRACKER_URL");
+        resourceRank = 0;
+        resultsetId = 0;
+        viewingTimeList = new LinkedList<ViewingTime>();
+        resourcesList = new HashMap<String, LinkedList<Resource>>();
+        resourcesResultset = new HashMap<String, Resource>();
+        resourceLogList = new ArrayList<ResourceLog>();
+        savedResourceList = new LinkedList<Resource>();
+        resourceClickList = new LinkedList<ResourceLog>();
+        resourceSavedList = new LinkedList<ResourceLog>();
+        searchCommentsList = new LinkedList<CommentonSearch>();
+        tagNamesList = new ArrayList<Tag>();
+        sessionId = "";
     }
 
     /**
@@ -132,20 +132,20 @@ public class SearchLogClient
     public void passUserQuery(String query, String searchType, int userId, int groupId, String sessionId, String timestamp)
     {
 
-	QueryLog queryLog = new QueryLog(query, searchType, userId, groupId, sessionId, timestamp);
+        QueryLog queryLog = new QueryLog(query, searchType, userId, groupId, sessionId, timestamp);
 
-	WebResource web = client.resource(baseURL + queryLogURL);
+        WebResource web = client.resource(baseURL + queryLogURL);
 
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, queryLog);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, queryLog);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("searchlog client SearchLogClient Failed : HTTP error code : " + resp.getStatus(), new Exception());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("searchlog client SearchLogClient Failed : HTTP error code : " + resp.getStatus(), new Exception());
+        }
 
-	ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	resultsetId = serviceresp.getReturnid();
-	flushLists();
+        ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
+        resultsetId = serviceresp.getReturnid();
+        flushLists();
     }
 
     /**
@@ -160,23 +160,23 @@ public class SearchLogClient
      */
     public void passSearchComment(String comment, int userId, String timestamp, String username, String time)
     {
-	int commentId = 0;
-	CommentonSearch searchComment = new CommentonSearch(comment, userId, resultsetId, timestamp, username);
-	WebResource web = client.resource(baseURL + searchCommentURL);
+        int commentId = 0;
+        CommentonSearch searchComment = new CommentonSearch(comment, userId, resultsetId, timestamp, username);
+        WebResource web = client.resource(baseURL + searchCommentURL);
 
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, searchComment);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, searchComment);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
+        ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
 
-	commentId = serviceresp.getReturnid();
-	searchComment.setCommentId(commentId);
-	searchComment.setTimestamp(time);
-	searchCommentsList.add(searchComment);
+        commentId = serviceresp.getReturnid();
+        searchComment.setCommentId(commentId);
+        searchComment.setTimestamp(time);
+        searchCommentsList.add(searchComment);
     }
 
     /**
@@ -188,14 +188,14 @@ public class SearchLogClient
      */
     public void addToTagList(String tagName, int userId, String tagList)
     {
-	Tag tag = new Tag(userId, resultsetId, tagName);
-	if(tagList.equals("tagNamesList"))
-	    tagNamesList.add(tag);
-	else if(tagList.equals("resultsetTags"))
-	{
-	    saveTag(tag);
-	    resultsetTags.add(tag);
-	}
+        Tag tag = new Tag(userId, resultsetId, tagName);
+        if(tagList.equals("tagNamesList"))
+            tagNamesList.add(tag);
+        else if(tagList.equals("resultsetTags"))
+        {
+            saveTag(tag);
+            resultsetTags.add(tag);
+        }
     }
 
     /**
@@ -206,17 +206,17 @@ public class SearchLogClient
      */
     public void removeFromTagList(Tag tag, String tagList)
     {
-	if(tagList.equals("tagNamesList"))
-	{
-	    if(tagNamesList.contains(tag))
-		tagNamesList.remove(tag);
-	}
-	else if(tagList.equals("resultsetTags"))
-	{
-	    deleteTag(tag.getTagId());
-	    if(resultsetTags.contains(tag))
-		resultsetTags.remove(tag);
-	}
+        if(tagList.equals("tagNamesList"))
+        {
+            if(tagNamesList.contains(tag))
+                tagNamesList.remove(tag);
+        }
+        else if(tagList.equals("resultsetTags"))
+        {
+            deleteTag(tag.getTagId());
+            if(resultsetTags.contains(tag))
+                resultsetTags.remove(tag);
+        }
     }
 
     /**
@@ -225,11 +225,11 @@ public class SearchLogClient
      */
     public void changeTagNamesListResultsetIds()
     {
-	for(int i = 0; i < tagNamesList.size(); i++)
-	{
-	    tagNamesList.get(i).setResultsetId(resultsetId);
-	    tagNamesList.get(i).setTagId(0);
-	}
+        for(int i = 0; i < tagNamesList.size(); i++)
+        {
+            tagNamesList.get(i).setResultsetId(resultsetId);
+            tagNamesList.get(i).setTagId(0);
+        }
     }
 
     /**
@@ -237,22 +237,22 @@ public class SearchLogClient
      */
     public void pushTagList()
     {
-	if(tagNamesList.size() > 0)
-	{
-	    TagList tagList = new TagList();
-	    tagList.setTags(tagNamesList);
+        if(tagNamesList.size() > 0)
+        {
+            TagList tagList = new TagList();
+            tagList.setTags(tagNamesList);
 
-	    WebResource web = client.resource(baseURL + posttagListURL);
-	    ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, tagList);
+            WebResource web = client.resource(baseURL + posttagListURL);
+            ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, tagList);
 
-	    if(resp.getStatus() != 200)
-	    {
-		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	    }
+            if(resp.getStatus() != 200)
+            {
+                throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+            }
 
-	    tagList = resp.getEntity(TagList.class);
-	    tagNamesList = tagList.getTags();
-	}
+            tagList = resp.getEntity(TagList.class);
+            tagNamesList = tagList.getTags();
+        }
     }
 
     /**
@@ -263,18 +263,18 @@ public class SearchLogClient
      */
     public Tag saveTag(Tag tag)
     {
-	WebResource web = client.resource(baseURL + addtagURL);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, tag);
+        WebResource web = client.resource(baseURL + addtagURL);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, tag);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
-	ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	tag.setTagId(serviceresp.getReturnid());
-	//log.debug(serviceresp.getMessage() + Integer.toString(serviceresp.getReturnid()));
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
+        ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
+        tag.setTagId(serviceresp.getReturnid());
+        //log.debug(serviceresp.getMessage() + Integer.toString(serviceresp.getReturnid()));
 
-	return tag;
+        return tag;
     }
 
     /**
@@ -284,15 +284,15 @@ public class SearchLogClient
      */
     public void deleteTag(int tagId)
     {
-	WebResource web = client.resource(baseURL + deletetagURL + tagId);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).delete(ClientResponse.class);
+        WebResource web = client.resource(baseURL + deletetagURL + tagId);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).delete(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
-	//ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	//log.debug(serviceresp.getMessage() + Integer.toString(serviceresp.getReturnid()));
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
+        //ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
+        //log.debug(serviceresp.getMessage() + Integer.toString(serviceresp.getReturnid()));
     }
 
     /**
@@ -304,16 +304,16 @@ public class SearchLogClient
     public ArrayList<Tag> getTagsByUserId(int userId)
     {
 
-	WebResource web = client.resource(baseURL + tagsByUserIdURL + userId);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + tagsByUserIdURL + userId);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	TagList tagList = resp.getEntity(TagList.class);
-	return tagList.getTags();
+        TagList tagList = resp.getEntity(TagList.class);
+        return tagList.getTags();
     }
 
     /**
@@ -324,16 +324,16 @@ public class SearchLogClient
      */
     public ArrayList<Tag> getTagsByResulsetId(int resultsetId)
     {
-	WebResource web = client.resource(baseURL + tagsByResultsetIdURL + resultsetId);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + tagsByResultsetIdURL + resultsetId);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	TagList tagList = resp.getEntity(TagList.class);
-	return tagList.getTags();
+        TagList tagList = resp.getEntity(TagList.class);
+        return tagList.getTags();
     }
 
     /**
@@ -344,15 +344,15 @@ public class SearchLogClient
      */
     public void postShareResultset(int userId, int userIdToShareWith)
     {
-	WebResource web = client.resource(baseURL + shareResultsetURL + userId + "/" + userIdToShareWith + "/" + resultsetId);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class);
+        WebResource web = client.resource(baseURL + shareResultsetURL + userId + "/" + userIdToShareWith + "/" + resultsetId);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
-	//ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	//log.debug(serviceresp.getMessage() + Integer.toString(serviceresp.getReturnid()));
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
+        //ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
+        //log.debug(serviceresp.getMessage() + Integer.toString(serviceresp.getReturnid()));
     }
 
     /**
@@ -364,16 +364,16 @@ public class SearchLogClient
     public ArrayList<SharedResultset> getSharedResultsetsByUserId(int userId)
     {
 
-	WebResource web = client.resource(baseURL + sharedResultsetsByUserIdURL + userId);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + sharedResultsetsByUserIdURL + userId);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	SharedResultsetList sharedResultsetList = resp.getEntity(SharedResultsetList.class);
-	return sharedResultsetList.getSharedResultsets();
+        SharedResultsetList sharedResultsetList = resp.getEntity(SharedResultsetList.class);
+        return sharedResultsetList.getSharedResultsets();
     }
 
     /**
@@ -385,17 +385,17 @@ public class SearchLogClient
     public QueryLog getResultsetIdFromMd5Value(String resultSetIdMd5)
     {
 
-	WebResource web = client.resource(baseURL + resultsetIdFromMd5URL + resultSetIdMd5);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + resultsetIdFromMd5URL + resultSetIdMd5);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	QueryLog resultsetInfo = resp.getEntity(QueryLog.class);
+        QueryLog resultsetInfo = resp.getEntity(QueryLog.class);
 
-	return resultsetInfo;
+        return resultsetInfo;
     }
 
     /**
@@ -407,32 +407,32 @@ public class SearchLogClient
     public void passResultset(LinkedList<ResourceDecorator> resources, MODE mode) throws IOException
     {
 
-	for(ResourceDecorator resource : resources)
-	{
-	    resourceRank++;
+        for(ResourceDecorator resource : resources)
+        {
+            resourceRank++;
 
-	    //creating a connection to the search log web service
-	    WebResource web = client.resource(baseURL + resultsetLogURL);
-	    Resource resourceSend;
-	    //creating a new resource type for the web service
-	    if(mode != MODE.text)
-		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
-			resource.getThumbnail2().getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(),
-			resource.getResource().getThumbnail4().getUrl(), resultsetId, resource.getTempId());
-	    else
-		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
-			resource.getTempId());
+            //creating a connection to the search log web service
+            WebResource web = client.resource(baseURL + resultsetLogURL);
+            Resource resourceSend;
+            //creating a new resource type for the web service
+            if(mode != MODE.text)
+                resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
+                        resource.getThumbnail2().getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(),
+                        resource.getResource().getThumbnail4().getUrl(), resultsetId, resource.getTempId());
+            else
+                resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
+                        resource.getTempId());
 
-	    //posting the resource to the web service
-	    ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, resourceSend);
+            //posting the resource to the web service
+            ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, resourceSend);
 
-	    if(resp.getStatus() != 200)
-	    {
-		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	    }
-	}
+            if(resp.getStatus() != 200)
+            {
+                throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+            }
+        }
 
-	//log.debug("Successfully stored all the resources");
+        //log.debug("Successfully stored all the resources");
     }
 
     /**
@@ -443,37 +443,37 @@ public class SearchLogClient
     public void passBatchResultset(LinkedList<ResourceDecorator> resources, MODE mode)
     {
 
-	LinkedList<Resource> resourcelist = new LinkedList<Resource>();
+        LinkedList<Resource> resourcelist = new LinkedList<Resource>();
 
-	for(ResourceDecorator resource : resources)
-	{
-	    resourceRank++;
-	    Resource resourceSend;
-	    //creating a new resource type for the web service
-	    if(mode != MODE.text)
-		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
-			resource.getThumbnail2().getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(),
-			resource.getResource().getThumbnail4().getUrl(), resultsetId, resource.getTempId());
-	    else
-		resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
-			resource.getTempId());
-	    resourcelist.add(resourceSend);
-	}
+        for(ResourceDecorator resource : resources)
+        {
+            resourceRank++;
+            Resource resourceSend;
+            //creating a new resource type for the web service
+            if(mode != MODE.text)
+                resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
+                        resource.getThumbnail2().getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(),
+                        resource.getResource().getThumbnail4().getUrl(), resultsetId, resource.getTempId());
+            else
+                resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
+                        resource.getTempId());
+            resourcelist.add(resourceSend);
+        }
 
-	ResourceList rs_list = new ResourceList();
-	rs_list.setResources(resourcelist);
+        ResourceList rs_list = new ResourceList();
+        rs_list.setResources(resourcelist);
 
-	//creating a connection to the search log web service
-	WebResource web = client.resource(baseURL + batchResultsetLogURL);
-	//posting the resource to the web service
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, rs_list);
+        //creating a connection to the search log web service
+        WebResource web = client.resource(baseURL + batchResultsetLogURL);
+        //posting the resource to the web service
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, rs_list);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	//log.debug(resp.getEntity(ServiceResponse.class).getMessage() + Integer.toString(resp.getStatus()));
+        //log.debug(resp.getEntity(ServiceResponse.class).getMessage() + Integer.toString(resp.getStatus()));
     }
 
     /**
@@ -487,29 +487,29 @@ public class SearchLogClient
      */
     public void saveSERP(int page, MODE mode, LinkedList<ResourceDecorator> serp)
     {
-	LinkedList<Resource> resources = new LinkedList<Resource>();
-	String pageKey = Integer.toString(mode.ordinal()) + Integer.toString(page);
+        LinkedList<Resource> resources = new LinkedList<Resource>();
+        String pageKey = Integer.toString(mode.ordinal()) + Integer.toString(page);
 
-	if(!resourcesList.containsKey(pageKey) && serp.size() > 0)
-	{
-	    for(ResourceDecorator resource : serp)
-	    {
-		resourceRank++;
-		//creating a new resource type for the web service
-		Resource resourceSend;
-		if(mode != MODE.text)
-		    resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
-			    resource.getThumbnail2().getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(),
-			    resource.getResource().getThumbnail4().getUrl(), resultsetId, resource.getTempId());
-		else
-		    resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
-			    resource.getTempId());
+        if(!resourcesList.containsKey(pageKey) && serp.size() > 0)
+        {
+            for(ResourceDecorator resource : serp)
+            {
+                resourceRank++;
+                //creating a new resource type for the web service
+                Resource resourceSend;
+                if(mode != MODE.text)
+                    resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
+                            resource.getThumbnail2().getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(),
+                            resource.getResource().getThumbnail4().getUrl(), resultsetId, resource.getTempId());
+                else
+                    resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
+                            resource.getTempId());
 
-		resources.add(resourceSend);
-		resourcesResultset.put(resource.getUrl(), resourceSend);
-	    }
-	    resourcesList.put(pageKey, resources);
-	}
+                resources.add(resourceSend);
+                resourcesResultset.put(resource.getUrl(), resourceSend);
+            }
+            resourcesList.put(pageKey, resources);
+        }
     }
 
     /**
@@ -517,35 +517,35 @@ public class SearchLogClient
      */
     public void pushBatchResultsetList()
     {
-	LinkedList<Resource> resourcesBatch = new LinkedList<Resource>();
+        LinkedList<Resource> resourcesBatch = new LinkedList<Resource>();
 
-	if(resourcesList.size() > 0)
-	{
-	    Iterator<String> iter = resourcesList.keySet().iterator();
+        if(resourcesList.size() > 0)
+        {
+            Iterator<String> iter = resourcesList.keySet().iterator();
 
-	    while(iter.hasNext())
-	    {
-		String pageKey = iter.next();
-		resourcesBatch.addAll(resourcesList.get(pageKey));
-	    }
+            while(iter.hasNext())
+            {
+                String pageKey = iter.next();
+                resourcesBatch.addAll(resourcesList.get(pageKey));
+            }
 
-	    ResourceList rsList = new ResourceList();
-	    rsList.setResources(resourcesBatch);
+            ResourceList rsList = new ResourceList();
+            rsList.setResources(resourcesBatch);
 
-	    resourcesList.clear();
+            resourcesList.clear();
 
-	    //creating a connection to the search log web service
-	    WebResource web = client.resource(baseURL + batchResultsetLogURL);
-	    //posting the resource to the web service
-	    ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, rsList);
+            //creating a connection to the search log web service
+            WebResource web = client.resource(baseURL + batchResultsetLogURL);
+            //posting the resource to the web service
+            ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, rsList);
 
-	    if(resp.getStatus() != 200)
-	    {
-		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	    }
+            if(resp.getStatus() != 200)
+            {
+                throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+            }
 
-	    //log.debug(resp.getEntity(ServiceResponse.class).getMessage() + Integer.toString(resp.getStatus()));
-	}
+            //log.debug(resp.getEntity(ServiceResponse.class).getMessage() + Integer.toString(resp.getStatus()));
+        }
     }
 
     /**
@@ -562,21 +562,21 @@ public class SearchLogClient
     public void saveResourceLog(int userId, Date date, ACTION action, String url, int resourceRank, String filename, String source)
     {
 
-	ResourceLog resourceLog = new ResourceLog(userId, resultsetId, resourceRank, action.name(), new Timestamp(date.getTime()).toString(), url);
-	resourceLogList.add(resourceLog);
+        ResourceLog resourceLog = new ResourceLog(userId, resultsetId, resourceRank, action.name(), new Timestamp(date.getTime()).toString(), url);
+        resourceLogList.add(resourceLog);
 
-	SimpleDateFormat actionDateToTime = new SimpleDateFormat("HH:mm:ss");
-	String action_time = actionDateToTime.format(date);
-	resourceLog = new ResourceLog(userId, resultsetId, resourceRank, action.name(), action_time, url, filename, source);
+        SimpleDateFormat actionDateToTime = new SimpleDateFormat("HH:mm:ss");
+        String action_time = actionDateToTime.format(date);
+        resourceLog = new ResourceLog(userId, resultsetId, resourceRank, action.name(), action_time, url, filename, source);
 
-	if(action == ACTION.resource_click)
-	{
-	    resourceClickList.add(resourceLog);
-	}
-	else if(action == ACTION.resource_saved)
-	{
-	    resourceSavedList.add(resourceLog);
-	}
+        if(action == ACTION.resource_click)
+        {
+            resourceClickList.add(resourceLog);
+        }
+        else if(action == ACTION.resource_saved)
+        {
+            resourceSavedList.add(resourceLog);
+        }
     }
 
     /**
@@ -585,23 +585,23 @@ public class SearchLogClient
     public void postResourceLog()
     {
 
-	if(resourceLogList.size() > 0)
-	{
-	    ResourceLogList batchResourceLog = new ResourceLogList();
-	    batchResourceLog.setResourceLog(resourceLogList);
+        if(resourceLogList.size() > 0)
+        {
+            ResourceLogList batchResourceLog = new ResourceLogList();
+            batchResourceLog.setResourceLog(resourceLogList);
 
-	    WebResource web = client.resource(baseURL + resourceLogURL);
-	    ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, batchResourceLog);
+            WebResource web = client.resource(baseURL + resourceLogURL);
+            ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, batchResourceLog);
 
-	    if(resp.getStatus() != 200)
-	    {
-		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	    }
+            if(resp.getStatus() != 200)
+            {
+                throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+            }
 
-	    resourceLogList.clear();
-	    //ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	    //log.debug(serviceresp.getMessage() + "successfully captured : " + serviceresp.getReturnid());
-	}
+            resourceLogList.clear();
+            //ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
+            //log.debug(serviceresp.getMessage() + "successfully captured : " + serviceresp.getReturnid());
+        }
     }
 
     /**
@@ -613,8 +613,8 @@ public class SearchLogClient
      */
     public void addResourceSavedList(int resourceRank, int systemId)
     {
-	Resource resource_saved = new Resource(resourceRank, resultsetId, systemId);
-	savedResourceList.add(resource_saved);
+        Resource resource_saved = new Resource(resourceRank, resultsetId, systemId);
+        savedResourceList.add(resource_saved);
     }
 
     /**
@@ -624,24 +624,24 @@ public class SearchLogClient
     public void passUpdateResultset()
     {
 
-	if(savedResourceList.size() > 0)
-	{
-	    ResourceList tempSavedResourceList = new ResourceList();
-	    tempSavedResourceList.setResources(savedResourceList);
+        if(savedResourceList.size() > 0)
+        {
+            ResourceList tempSavedResourceList = new ResourceList();
+            tempSavedResourceList.setResources(savedResourceList);
 
-	    WebResource web = client.resource(baseURL + updateResultsetURL);
+            WebResource web = client.resource(baseURL + updateResultsetURL);
 
-	    ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, tempSavedResourceList);
+            ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, tempSavedResourceList);
 
-	    if(resp.getStatus() != 200)
-	    {
-		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	    }
+            if(resp.getStatus() != 200)
+            {
+                throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+            }
 
-	    savedResourceList.clear();
-	    //ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	    //log.debug("Successfully updated the resultset table: " + serviceresp.getReturnid());
-	}
+            savedResourceList.clear();
+            //ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
+            //log.debug("Successfully updated the resultset table: " + serviceresp.getReturnid());
+        }
 
     }
 
@@ -655,19 +655,19 @@ public class SearchLogClient
     public void passViewingTime(int resourceRank, Date startTime, Date endTime)
     {
 
-	ViewingTime viewingTime = new ViewingTime(resultsetId, resourceRank, startTime, endTime);
-	viewingTimeList.add(viewingTime);
+        ViewingTime viewingTime = new ViewingTime(resultsetId, resourceRank, startTime, endTime);
+        viewingTimeList.add(viewingTime);
 
-	WebResource web = client.resource(baseURL + viewingTimeURL);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, viewingTime);
+        WebResource web = client.resource(baseURL + viewingTimeURL);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, viewingTime);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	//ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	//log.debug("Successfully updated the viewing time table: " + serviceresp.getReturnid());
+        //ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
+        //log.debug("Successfully updated the viewing time table: " + serviceresp.getReturnid());
 
     }
 
@@ -684,28 +684,28 @@ public class SearchLogClient
     public void passBatchViewingTime(int resourceRank, Date startTime, Date endTime, String sessionId)
     {
 
-	ViewingTime viewingTime = new ViewingTime(resultsetId, resourceRank, startTime, endTime);
-	viewingTimeList.add(viewingTime);
+        ViewingTime viewingTime = new ViewingTime(resultsetId, resourceRank, startTime, endTime);
+        viewingTimeList.add(viewingTime);
 
-	if((!this.sessionId.equals(sessionId)) || (viewingTimeList.size() > 100))
-	{
-	    setSessionId(sessionId);
-	    ViewingTimeList vt_list = new ViewingTimeList();
-	    vt_list.setViewingTimeList(viewingTimeList);
+        if((!this.sessionId.equals(sessionId)) || (viewingTimeList.size() > 100))
+        {
+            setSessionId(sessionId);
+            ViewingTimeList vt_list = new ViewingTimeList();
+            vt_list.setViewingTimeList(viewingTimeList);
 
-	    WebResource web = client.resource(baseURL + batchViewingTimeURL);
+            WebResource web = client.resource(baseURL + batchViewingTimeURL);
 
-	    ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, vt_list);
+            ClientResponse resp = web.accept(MediaType.APPLICATION_XML).post(ClientResponse.class, vt_list);
 
-	    if(resp.getStatus() != 200)
-	    {
-		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	    }
+            if(resp.getStatus() != 200)
+            {
+                throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+            }
 
-	    viewingTimeList.clear();
-	    //ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	    //log.debug("Successfully updated the viewing time table: " + serviceresp.getReturnid());
-	}
+            viewingTimeList.clear();
+            //ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
+            //log.debug("Successfully updated the viewing time table: " + serviceresp.getReturnid());
+        }
 
     }
 
@@ -714,17 +714,17 @@ public class SearchLogClient
      */
     public void truncateTables()
     {
-	WebResource web = client.resource(baseURL + truncateTablesURL);
+        WebResource web = client.resource(baseURL + truncateTablesURL);
 
-	ClientResponse resp = web.delete(ClientResponse.class);
+        ClientResponse resp = web.delete(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	//ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	//log.debug(serviceresp.getMessage() + serviceresp.getReturnid());
+        //ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
+        //log.debug(serviceresp.getMessage() + serviceresp.getReturnid());
     }
 
     /**
@@ -736,17 +736,17 @@ public class SearchLogClient
     public void removeUserQueries(int userId)
     {
 
-	WebResource web = client.resource(baseURL + removeUserURL + userId);
+        WebResource web = client.resource(baseURL + removeUserURL + userId);
 
-	ClientResponse resp = web.delete(ClientResponse.class);
+        ClientResponse resp = web.delete(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	//ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
-	//log.debug(serviceresp.getMessage() + serviceresp.getReturnid());
+        //ServiceResponse serviceresp = resp.getEntity(ServiceResponse.class);
+        //log.debug(serviceresp.getMessage() + serviceresp.getReturnid());
     }
 
     /**
@@ -759,23 +759,23 @@ public class SearchLogClient
     public void deleteUserQueries(ArrayList<Integer> resultsetIds)
     {
 
-	if(resultsetIds.size() > 0)
-	{
-	    ResultSetIdList resultSetIdList = new ResultSetIdList();
-	    resultSetIdList.getResultsetId().addAll(resultsetIds);
+        if(resultsetIds.size() > 0)
+        {
+            ResultSetIdList resultSetIdList = new ResultSetIdList();
+            resultSetIdList.getResultsetId().addAll(resultsetIds);
 
-	    //creating a connection to the search log web service
-	    WebResource web = client.resource(baseURL + deleteUserQueriesURL);
+            //creating a connection to the search log web service
+            WebResource web = client.resource(baseURL + deleteUserQueriesURL);
 
-	    ClientResponse resp = web.accept(MediaType.APPLICATION_XML).header("X-HTTP-Method-Override", "DELETE").post(ClientResponse.class, resultSetIdList);
+            ClientResponse resp = web.accept(MediaType.APPLICATION_XML).header("X-HTTP-Method-Override", "DELETE").post(ClientResponse.class, resultSetIdList);
 
-	    if(resp.getStatus() != 200)
-	    {
-		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	    }
+            if(resp.getStatus() != 200)
+            {
+                throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+            }
 
-	    //log.debug(resp.getEntity(ServiceResponse.class).getMessage() + Integer.toString(resp.getStatus()));
-	}
+            //log.debug(resp.getEntity(ServiceResponse.class).getMessage() + Integer.toString(resp.getStatus()));
+        }
     }
 
     /**
@@ -787,24 +787,24 @@ public class SearchLogClient
     public ArrayList<HistoryByDate> getSearchHistoryByDate(int userId)
     {
 
-	ArrayList<HistoryByDate> historyByDates = new ArrayList<HistoryByDate>();
+        ArrayList<HistoryByDate> historyByDates = new ArrayList<HistoryByDate>();
 
-	if(userId != -1)
-	{
-	    WebResource web = client.resource(baseURL + searchHistoryByDateURL + userId);
+        if(userId != -1)
+        {
+            WebResource web = client.resource(baseURL + searchHistoryByDateURL + userId);
 
-	    ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+            ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	    if(resp.getStatus() != 200)
-	    {
-		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	    }
+            if(resp.getStatus() != 200)
+            {
+                throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+            }
 
-	    HistoryByDateList historyByDateList = resp.getEntity(HistoryByDateList.class);
-	    historyByDates.addAll(historyByDateList.getHistoryByDates());
-	}
+            HistoryByDateList historyByDateList = resp.getEntity(HistoryByDateList.class);
+            historyByDates.addAll(historyByDateList.getHistoryByDates());
+        }
 
-	return historyByDates;
+        return historyByDates;
     }
 
     /**
@@ -818,24 +818,24 @@ public class SearchLogClient
     public ArrayList<HistoryByDate> getSearchHistoryByPages(int userId, int offset, int limit)
     {
 
-	ArrayList<HistoryByDate> historyByDates = new ArrayList<HistoryByDate>();
+        ArrayList<HistoryByDate> historyByDates = new ArrayList<HistoryByDate>();
 
-	if(userId != -1)
-	{
-	    WebResource web = client.resource(baseURL + searchHistoryByPagesURL + userId + "/" + offset + "/" + limit);
+        if(userId != -1)
+        {
+            WebResource web = client.resource(baseURL + searchHistoryByPagesURL + userId + "/" + offset + "/" + limit);
 
-	    ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+            ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	    if(resp.getStatus() != 200)
-	    {
-		throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	    }
+            if(resp.getStatus() != 200)
+            {
+                throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+            }
 
-	    HistoryByDateList historyByDateList = resp.getEntity(HistoryByDateList.class);
-	    historyByDates.addAll(historyByDateList.getHistoryByDates());
-	}
+            HistoryByDateList historyByDateList = resp.getEntity(HistoryByDateList.class);
+            historyByDates.addAll(historyByDateList.getHistoryByDates());
+        }
 
-	return historyByDates;
+        return historyByDates;
     }
 
     /**
@@ -848,29 +848,29 @@ public class SearchLogClient
     public ArrayList<HistoryByDate> getQueryHistory(int userId, String query)
     {
 
-	try
-	{
-	    query = java.net.URLEncoder.encode(query, "UTF-8").replace("+", "%20");
-	}
-	catch(UnsupportedEncodingException e)
-	{
-	    e.printStackTrace();
-	}
+        try
+        {
+            query = java.net.URLEncoder.encode(query, "UTF-8").replace("+", "%20");
+        }
+        catch(UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
 
-	ArrayList<HistoryByDate> queryHistoryByDate = new ArrayList<HistoryByDate>();
+        ArrayList<HistoryByDate> queryHistoryByDate = new ArrayList<HistoryByDate>();
 
-	WebResource web = client.resource(baseURL + searchHistoryByQueryURL + userId + "/" + query);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + searchHistoryByQueryURL + userId + "/" + query);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	HistoryByDateList historyByDateList = resp.getEntity(HistoryByDateList.class);
-	queryHistoryByDate.addAll(historyByDateList.getHistoryByDates());
+        HistoryByDateList historyByDateList = resp.getEntity(HistoryByDateList.class);
+        queryHistoryByDate.addAll(historyByDateList.getHistoryByDates());
 
-	return queryHistoryByDate;
+        return queryHistoryByDate;
     }
 
     /**
@@ -883,30 +883,30 @@ public class SearchLogClient
     public ArrayList<HistoryByDate> filterQueryHistoryByDates(String startTimestamp, String endTimestamp)
     {
 
-	try
-	{
-	    startTimestamp = java.net.URLEncoder.encode(startTimestamp, "UTF-8").replace("+", "%20");
-	    endTimestamp = java.net.URLEncoder.encode(endTimestamp, "UTF-8").replace("+", "%20");
-	}
-	catch(UnsupportedEncodingException e)
-	{
-	    e.printStackTrace();
-	}
+        try
+        {
+            startTimestamp = java.net.URLEncoder.encode(startTimestamp, "UTF-8").replace("+", "%20");
+            endTimestamp = java.net.URLEncoder.encode(endTimestamp, "UTF-8").replace("+", "%20");
+        }
+        catch(UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
 
-	ArrayList<HistoryByDate> queryHistoryByDate = new ArrayList<HistoryByDate>();
+        ArrayList<HistoryByDate> queryHistoryByDate = new ArrayList<HistoryByDate>();
 
-	WebResource web = client.resource(baseURL + filterQueriesByTimeURL + startTimestamp + "/" + endTimestamp);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + filterQueriesByTimeURL + startTimestamp + "/" + endTimestamp);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	HistoryByDateList historyByDateList = resp.getEntity(HistoryByDateList.class);
-	queryHistoryByDate.addAll(historyByDateList.getHistoryByDates());
+        HistoryByDateList historyByDateList = resp.getEntity(HistoryByDateList.class);
+        queryHistoryByDate.addAll(historyByDateList.getHistoryByDates());
 
-	return queryHistoryByDate;
+        return queryHistoryByDate;
     }
 
     /**
@@ -920,30 +920,30 @@ public class SearchLogClient
     public ArrayList<HistoryByDate> filterSearchHistoryByDates(int userId, String startTimestamp, String endTimestamp)
     {
 
-	try
-	{
-	    startTimestamp = java.net.URLEncoder.encode(startTimestamp, "UTF-8").replace("+", "%20");
-	    endTimestamp = java.net.URLEncoder.encode(endTimestamp, "UTF-8").replace("+", "%20");
-	}
-	catch(UnsupportedEncodingException e)
-	{
-	    e.printStackTrace();
-	}
+        try
+        {
+            startTimestamp = java.net.URLEncoder.encode(startTimestamp, "UTF-8").replace("+", "%20");
+            endTimestamp = java.net.URLEncoder.encode(endTimestamp, "UTF-8").replace("+", "%20");
+        }
+        catch(UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
 
-	ArrayList<HistoryByDate> searchHistoryByDates = new ArrayList<HistoryByDate>();
+        ArrayList<HistoryByDate> searchHistoryByDates = new ArrayList<HistoryByDate>();
 
-	WebResource web = client.resource(baseURL + filterSearchHistoryByTimeURL + userId + "/" + startTimestamp + "/" + endTimestamp);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + filterSearchHistoryByTimeURL + userId + "/" + startTimestamp + "/" + endTimestamp);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	HistoryByDateList historyByDateList = resp.getEntity(HistoryByDateList.class);
-	searchHistoryByDates.addAll(historyByDateList.getHistoryByDates());
+        HistoryByDateList historyByDateList = resp.getEntity(HistoryByDateList.class);
+        searchHistoryByDates.addAll(historyByDateList.getHistoryByDates());
 
-	return searchHistoryByDates;
+        return searchHistoryByDates;
     }
 
     /**
@@ -954,29 +954,29 @@ public class SearchLogClient
      */
     public ArrayList<String> getResourcesByQuery(String query)
     {
-	try
-	{
-	    query = java.net.URLEncoder.encode(query, "UTF-8").replace("+", "%20");
-	}
-	catch(UnsupportedEncodingException e)
-	{
-	    e.printStackTrace();
-	}
+        try
+        {
+            query = java.net.URLEncoder.encode(query, "UTF-8").replace("+", "%20");
+        }
+        catch(UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
 
-	ArrayList<String> resourcesUrlList = new ArrayList<String>();
+        ArrayList<String> resourcesUrlList = new ArrayList<String>();
 
-	WebResource web = client.resource(baseURL + resourcesByQueryURL + query);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + resourcesByQueryURL + query);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	UrlList urlList = resp.getEntity(UrlList.class);
-	resourcesUrlList.addAll(urlList.getResources_urls());
+        UrlList urlList = resp.getEntity(UrlList.class);
+        resourcesUrlList.addAll(urlList.getResources_urls());
 
-	return resourcesUrlList;
+        return resourcesUrlList;
     }
 
     /**
@@ -988,20 +988,20 @@ public class SearchLogClient
     public ArrayList<String> getResourceUrlsByResultsetId(int resultsetId)
     {
 
-	ArrayList<String> resourcesUrlList = new ArrayList<String>();
+        ArrayList<String> resourcesUrlList = new ArrayList<String>();
 
-	WebResource web = client.resource(baseURL + resourceUrlsByResultsetIdURL + resultsetId);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + resourceUrlsByResultsetIdURL + resultsetId);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	UrlList urlList = resp.getEntity(UrlList.class);
-	resourcesUrlList.addAll(urlList.getResources_urls());
+        UrlList urlList = resp.getEntity(UrlList.class);
+        resourcesUrlList.addAll(urlList.getResources_urls());
 
-	return resourcesUrlList;
+        return resourcesUrlList;
     }
 
     /**
@@ -1013,39 +1013,39 @@ public class SearchLogClient
      */
     public LinkedList<ResourceDecorator> getResourcesByQueryAndTimestamp(String query, String timestamp)
     {
-	try
-	{
-	    query = java.net.URLEncoder.encode(query, "UTF-8").replace("+", "%20");
-	    timestamp = java.net.URLEncoder.encode(timestamp, "UTF-8").replace("+", "%20");
+        try
+        {
+            query = java.net.URLEncoder.encode(query, "UTF-8").replace("+", "%20");
+            timestamp = java.net.URLEncoder.encode(timestamp, "UTF-8").replace("+", "%20");
 
-	}
-	catch(UnsupportedEncodingException e)
-	{
-	    e.printStackTrace();
-	}
+        }
+        catch(UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
 
-	WebResource web = client.resource(baseURL + resourcesByQueryAndTimestampURL + query + "/" + timestamp);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + resourcesByQueryAndTimestampURL + query + "/" + timestamp);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
-	ResourceList resourcesList = resp.getEntity(ResourceList.class);
-	if(resourcesList.getResources() != null)
-	{
-	    for(Resource resource : resourcesList.getResources())
-	    {
-		de.l3s.learnweb.Resource tempResource = new de.l3s.learnweb.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
-			resource.getThumbnail4_height(), resource.getThumbnail4_width(), resource.getThumbnail4_url(), resource.getUrl(), resource.getType());
-		ResourceDecorator decoratedResource = new ResourceDecorator(tempResource);
-		decoratedResource.setTempId(resource.getResource_rank());
-		resources.add(decoratedResource);
-	    }
-	}
-	return resources;
+        LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
+        ResourceList resourcesList = resp.getEntity(ResourceList.class);
+        if(resourcesList.getResources() != null)
+        {
+            for(Resource resource : resourcesList.getResources())
+            {
+                de.l3s.learnweb.Resource tempResource = new de.l3s.learnweb.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
+                        resource.getThumbnail4_height(), resource.getThumbnail4_width(), resource.getThumbnail4_url(), resource.getUrl(), resource.getType());
+                ResourceDecorator decoratedResource = new ResourceDecorator(tempResource);
+                decoratedResource.setTempId(resource.getResource_rank());
+                resources.add(decoratedResource);
+            }
+        }
+        return resources;
     }
 
     /**
@@ -1057,30 +1057,30 @@ public class SearchLogClient
     public LinkedList<ResourceDecorator> getResourcesByResultSetId(int resultSetId)
     {
 
-	WebResource web = client.resource(baseURL + resourcesByResultSetIdURL + resultSetId);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + resourcesByResultSetIdURL + resultSetId);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new IllegalStateException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new IllegalStateException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
-	ResourceList resourcesList = resp.getEntity(ResourceList.class);
-	if(resourcesList.getResources() != null)
-	{
-	    for(Resource resource : resourcesList.getResources())
-	    {
-		resourcesResultset.put(resource.getUrl(), resource);
-		de.l3s.learnweb.Resource tempResource = new de.l3s.learnweb.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
-			resource.getThumbnail4_height(), resource.getThumbnail4_width(), resource.getThumbnail4_url(), resource.getUrl(), resource.getType());
-		tempResource.setLocation(tempResource.getSource());
-		ResourceDecorator decoratedResource = new ResourceDecorator(tempResource);
-		decoratedResource.setTempId(resource.getResource_rank());
-		resources.add(decoratedResource);
-	    }
-	}
-	return resources;
+        LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
+        ResourceList resourcesList = resp.getEntity(ResourceList.class);
+        if(resourcesList.getResources() != null)
+        {
+            for(Resource resource : resourcesList.getResources())
+            {
+                resourcesResultset.put(resource.getUrl(), resource);
+                de.l3s.learnweb.Resource tempResource = new de.l3s.learnweb.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
+                        resource.getThumbnail4_height(), resource.getThumbnail4_width(), resource.getThumbnail4_url(), resource.getUrl(), resource.getType());
+                tempResource.setLocation(tempResource.getSource());
+                ResourceDecorator decoratedResource = new ResourceDecorator(tempResource);
+                decoratedResource.setTempId(resource.getResource_rank());
+                resources.add(decoratedResource);
+            }
+        }
+        return resources;
     }
 
     /**
@@ -1093,39 +1093,39 @@ public class SearchLogClient
      */
     public LinkedList<ResourceDecorator> getResourcesByQueryAndTimestampAndAction(String query, String timestamp, String action)
     {
-	try
-	{
-	    query = java.net.URLEncoder.encode(query, "UTF-8").replace("+", "%20");
-	    timestamp = java.net.URLEncoder.encode(timestamp, "UTF-8").replace("+", "%20");
+        try
+        {
+            query = java.net.URLEncoder.encode(query, "UTF-8").replace("+", "%20");
+            timestamp = java.net.URLEncoder.encode(timestamp, "UTF-8").replace("+", "%20");
 
-	}
-	catch(UnsupportedEncodingException e)
-	{
-	    e.printStackTrace();
-	}
+        }
+        catch(UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
 
-	WebResource web = client.resource(baseURL + resourcesByQueryAndTimeAndActionURL + query + "/" + timestamp + "/" + action);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + resourcesByQueryAndTimeAndActionURL + query + "/" + timestamp + "/" + action);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
-	ResourceList resourcesList = resp.getEntity(ResourceList.class);
-	if(resourcesList.getResources() != null)
-	{
-	    for(Resource resource : resourcesList.getResources())
-	    {
-		de.l3s.learnweb.Resource tempResource = new de.l3s.learnweb.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
-			resource.getThumbnail4_height(), resource.getThumbnail4_width(), resource.getThumbnail4_url(), resource.getUrl(), resource.getType());
-		ResourceDecorator decoratedResource = new ResourceDecorator(tempResource);
-		decoratedResource.setTempId(resource.getResource_rank());
-		resources.add(decoratedResource);
-	    }
-	}
-	return resources;
+        LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
+        ResourceList resourcesList = resp.getEntity(ResourceList.class);
+        if(resourcesList.getResources() != null)
+        {
+            for(Resource resource : resourcesList.getResources())
+            {
+                de.l3s.learnweb.Resource tempResource = new de.l3s.learnweb.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
+                        resource.getThumbnail4_height(), resource.getThumbnail4_width(), resource.getThumbnail4_url(), resource.getUrl(), resource.getType());
+                ResourceDecorator decoratedResource = new ResourceDecorator(tempResource);
+                decoratedResource.setTempId(resource.getResource_rank());
+                resources.add(decoratedResource);
+            }
+        }
+        return resources;
     }
 
     /**
@@ -1138,28 +1138,28 @@ public class SearchLogClient
     public LinkedList<ResourceDecorator> getResourcesByResultSetIdAndAction(int resultSetId, String action)
     {
 
-	WebResource web = client.resource(baseURL + resourcesByResultSetIdAndActionURL + resultSetId + "/" + action);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + resourcesByResultSetIdAndActionURL + resultSetId + "/" + action);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
-	ResourceList resourcesList = resp.getEntity(ResourceList.class);
-	if(resourcesList.getResources() != null)
-	{
-	    for(Resource resource : resourcesList.getResources())
-	    {
-		de.l3s.learnweb.Resource tempResource = new de.l3s.learnweb.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
-			resource.getThumbnail4_height(), resource.getThumbnail4_width(), resource.getThumbnail4_url(), resource.getUrl(), resource.getType());
-		ResourceDecorator decoratedResource = new ResourceDecorator(tempResource);
-		decoratedResource.setTempId(resource.getResource_rank());
-		resources.add(decoratedResource);
-	    }
-	}
-	return resources;
+        LinkedList<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
+        ResourceList resourcesList = resp.getEntity(ResourceList.class);
+        if(resourcesList.getResources() != null)
+        {
+            for(Resource resource : resourcesList.getResources())
+            {
+                de.l3s.learnweb.Resource tempResource = new de.l3s.learnweb.Resource(resource.getResourceId(), resource.getShortdescrp(), resource.getFilename(), resource.getSource(), resource.getThumbnail_height(), resource.getThumbnail_width(), resource.getThumbnail_url(),
+                        resource.getThumbnail4_height(), resource.getThumbnail4_width(), resource.getThumbnail4_url(), resource.getUrl(), resource.getType());
+                ResourceDecorator decoratedResource = new ResourceDecorator(tempResource);
+                decoratedResource.setTempId(resource.getResource_rank());
+                resources.add(decoratedResource);
+            }
+        }
+        return resources;
     }
 
     /**
@@ -1172,28 +1172,28 @@ public class SearchLogClient
      */
     public ArrayList<ResourceLog> getResourcesLogByResultsetAndAction(String query, String timestamp, String action)
     {
-	try
-	{
-	    query = java.net.URLEncoder.encode(query, "UTF-8").replace("+", "%20");
-	    timestamp = java.net.URLEncoder.encode(timestamp, "UTF-8").replace("+", "%20");
+        try
+        {
+            query = java.net.URLEncoder.encode(query, "UTF-8").replace("+", "%20");
+            timestamp = java.net.URLEncoder.encode(timestamp, "UTF-8").replace("+", "%20");
 
-	}
-	catch(UnsupportedEncodingException e)
-	{
-	    e.printStackTrace();
-	}
+        }
+        catch(UnsupportedEncodingException e)
+        {
+            e.printStackTrace();
+        }
 
-	WebResource web = client.resource(baseURL + resourcesLogByResultsetAndActionURL + query + "/" + timestamp + "/" + action);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + resourcesLogByResultsetAndActionURL + query + "/" + timestamp + "/" + action);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	ResourceLogList resourcesLog = resp.getEntity(ResourceLogList.class);
+        ResourceLogList resourcesLog = resp.getEntity(ResourceLogList.class);
 
-	return resourcesLog.getResourceLog();
+        return resourcesLog.getResourceLog();
     }
 
     /**
@@ -1206,17 +1206,17 @@ public class SearchLogClient
     public ArrayList<ResourceLog> getResourcesLogByResultsetIdAndAction(int resultSetId, String action)
     {
 
-	WebResource web = client.resource(baseURL + resourcesLogByResultsetIdAndActionURL + resultSetId + "/" + action);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + resourcesLogByResultsetIdAndActionURL + resultSetId + "/" + action);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	ResourceLogList resourcesLog = resp.getEntity(ResourceLogList.class);
+        ResourceLogList resourcesLog = resp.getEntity(ResourceLogList.class);
 
-	return resourcesLog.getResourceLog();
+        return resourcesLog.getResourceLog();
     }
 
     /**
@@ -1228,17 +1228,17 @@ public class SearchLogClient
     public ArrayList<CommentonSearch> getSearchCommentsByResultsetId(int resultSetId)
     {
 
-	WebResource web = client.resource(baseURL + commentsByResultsetIdURL + resultSetId);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + commentsByResultsetIdURL + resultSetId);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	SearchCommentsList searchComments = resp.getEntity(SearchCommentsList.class);
+        SearchCommentsList searchComments = resp.getEntity(SearchCommentsList.class);
 
-	return searchComments.getComments();
+        return searchComments.getComments();
     }
 
     /**
@@ -1249,16 +1249,16 @@ public class SearchLogClient
     public QueryLog getRecentQuery(int userId)
     {
 
-	WebResource web = client.resource(baseURL + recentQueryURL + userId);
-	ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
+        WebResource web = client.resource(baseURL + recentQueryURL + userId);
+        ClientResponse resp = web.accept(MediaType.APPLICATION_XML).get(ClientResponse.class);
 
-	if(resp.getStatus() != 200)
-	{
-	    throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
-	}
+        if(resp.getStatus() != 200)
+        {
+            throw new RuntimeException("SearchLogClient Failed : HTTP error code : " + resp.getStatus());
+        }
 
-	QueryLog recentQuery = resp.getEntity(QueryLog.class);
-	return recentQuery;
+        QueryLog recentQuery = resp.getEntity(QueryLog.class);
+        return recentQuery;
     }
 
     /**
@@ -1266,12 +1266,12 @@ public class SearchLogClient
      */
     public void flushLists()
     {
-	resourceRank = 0;
-	resourcesResultset.clear();
-	resourceClickList.clear();
-	resourceSavedList.clear();
-	searchCommentsList.clear();
-	viewingTimeList.clear();
+        resourceRank = 0;
+        resourcesResultset.clear();
+        resourceClickList.clear();
+        resourceSavedList.clear();
+        searchCommentsList.clear();
+        viewingTimeList.clear();
     }
 
     /**
@@ -1282,76 +1282,76 @@ public class SearchLogClient
      */
     public int getResourceIdByUrl(String Url)
     {
-	return resourcesResultset.get(Url).getResource_rank();
+        return resourcesResultset.get(Url).getResource_rank();
     }
 
     public int getResourceRank()
     {
-	return resourceRank;
+        return resourceRank;
     }
 
     public void setResourceRank(int resourceRank)
     {
-	this.resourceRank = resourceRank;
+        this.resourceRank = resourceRank;
     }
 
     public int getResultsetid()
     {
-	return resultsetId;
+        return resultsetId;
     }
 
     public void setResultsetid(int resultsetid)
     {
-	this.resultsetId = resultsetid;
+        this.resultsetId = resultsetid;
     }
 
     public String getSessionId()
     {
-	return sessionId;
+        return sessionId;
     }
 
     public void setSessionId(String sessionId)
     {
-	this.sessionId = sessionId;
+        this.sessionId = sessionId;
     }
 
     public LinkedList<ResourceLog> getResourceClickList()
     {
-	return resourceClickList;
+        return resourceClickList;
     }
 
     public LinkedList<ResourceLog> getResourceSavedList()
     {
-	return resourceSavedList;
+        return resourceSavedList;
     }
 
     public LinkedList<ViewingTime> getViewingTimeList()
     {
-	return viewingTimeList;
+        return viewingTimeList;
     }
 
     public LinkedList<CommentonSearch> getSearchCommentsList()
     {
-	return searchCommentsList;
+        return searchCommentsList;
     }
 
     public ArrayList<Tag> getTagNamesList()
     {
-	return tagNamesList;
+        return tagNamesList;
     }
 
     public ArrayList<Tag> getResultsetTags()
     {
-	if(resultsetTags == null)
-	{
-	    resultsetTags = new ArrayList<Tag>();
-	    resultsetTags.addAll(getTagsByResulsetId(resultsetId));
-	}
-	return resultsetTags;
+        if(resultsetTags == null)
+        {
+            resultsetTags = new ArrayList<Tag>();
+            resultsetTags.addAll(getTagsByResulsetId(resultsetId));
+        }
+        return resultsetTags;
     }
 
     public void setResultsetTags(ArrayList<Tag> resultsetTags)
     {
-	this.resultsetTags = resultsetTags;
+        this.resultsetTags = resultsetTags;
     }
 }
