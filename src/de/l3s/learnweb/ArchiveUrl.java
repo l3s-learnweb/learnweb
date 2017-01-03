@@ -14,63 +14,63 @@ public class ArchiveUrl implements Serializable
 
     public String getFileUrl()
     {
-	return fileUrl;
+        return fileUrl;
     }
 
     public void setFileUrl(String fileUrl)
     {
-	this.fileUrl = fileUrl;
+        this.fileUrl = fileUrl;
     }
 
     public ArchiveUrl(String archiveUrl, Date timestamp)
     {
-	this.archiveUrl = archiveUrl;
-	this.timestamp = timestamp;
+        this.archiveUrl = archiveUrl;
+        this.timestamp = timestamp;
     }
 
     public ArchiveUrl(String archiveUrl, String fileUrl, Date timestamp)
     {
-	this.archiveUrl = archiveUrl;
-	this.fileUrl = fileUrl;
-	this.timestamp = timestamp;
+        this.archiveUrl = archiveUrl;
+        this.fileUrl = fileUrl;
+        this.timestamp = timestamp;
     }
 
     public String getArchiveUrl()
     {
-	return archiveUrl;
+        return archiveUrl;
     }
 
     public int getfileId()
     {
-	return fileId;
+        return fileId;
     }
 
     public void setArchiveUrl(String archiveUrl)
     {
-	this.archiveUrl = archiveUrl;
+        this.archiveUrl = archiveUrl;
     }
 
     public Date getTimestamp()
     {
-	return timestamp;
+        return timestamp;
     }
 
     public void setTimestamp(Date timestamp)
     {
-	this.timestamp = timestamp;
+        this.timestamp = timestamp;
     }
 
     @Override
     public boolean equals(Object o)
     {
-	if(o == null || !(o instanceof ArchiveUrl))
-	    return false;
+        if(o == null || !(o instanceof ArchiveUrl))
+            return false;
 
-	ArchiveUrl other = (ArchiveUrl) o;
-	if(!this.archiveUrl.equalsIgnoreCase(other.archiveUrl) || !this.timestamp.equals(other.timestamp))
-	    return false;
+        ArchiveUrl other = (ArchiveUrl) o;
+        if(!this.archiveUrl.equalsIgnoreCase(other.archiveUrl) || !this.timestamp.equals(other.timestamp))
+            return false;
 
-	return true;
+        return true;
     }
 
 }

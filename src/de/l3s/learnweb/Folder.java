@@ -97,7 +97,7 @@ public class Folder implements Serializable, HasId, GroupItem
 
     public Folder getParentFolder() throws SQLException
     {
-        if (parentFolderId == 0)
+        if(parentFolderId == 0)
             return null;
 
         return Learnweb.getInstance().getGroupManager().getFolder(parentFolderId);
@@ -142,7 +142,7 @@ public class Folder implements Serializable, HasId, GroupItem
     @Override
     public User getUser() throws SQLException
     {
-        if (userId < 0)
+        if(userId < 0)
             return null;
         return Learnweb.getInstance().getUserManager().getUser(userId);
     }
@@ -169,12 +169,12 @@ public class Folder implements Serializable, HasId, GroupItem
     @Override
     public String getPath() throws SQLException
     {
-        if (null == path)
+        if(null == path)
         {
             StringBuilder sb = new StringBuilder();
 
             Folder folder = getParentFolder();
-            while (folder != null)
+            while(folder != null)
             {
                 sb.insert(0, "/");
                 sb.insert(0, folder.getFolderId());
@@ -195,12 +195,12 @@ public class Folder implements Serializable, HasId, GroupItem
     @Override
     public String getPrettyPath() throws SQLException
     {
-        if (null == prettyPath)
+        if(null == prettyPath)
         {
             StringBuilder sb = new StringBuilder();
 
             Folder folder = getParentFolder();
-            while (folder != null)
+            while(folder != null)
             {
                 sb.insert(0, " > " + folder.getName());
                 folder = folder.getParentFolder();
@@ -214,7 +214,7 @@ public class Folder implements Serializable, HasId, GroupItem
 
     public List<Folder> getSubfolders() throws SQLException
     {
-        if (subfolders == null)
+        if(subfolders == null)
         {
             subfolders = Learnweb.getInstance().getGroupManager().getFolders(groupId, folderId);
         }
@@ -261,11 +261,11 @@ public class Folder implements Serializable, HasId, GroupItem
 
         try
         {
-            if (getSubfolders() != null)
+            if(getSubfolders() != null)
             {
-                if (isClearSubRecurs)
+                if(isClearSubRecurs)
                 {
-                    for (Folder folder : getSubfolders())
+                    for(Folder folder : getSubfolders())
                     {
                         folder.clearCaches(false, true);
                     }
@@ -274,13 +274,13 @@ public class Folder implements Serializable, HasId, GroupItem
                 subfolders = null;
             }
 
-            if (isClearParent && this.getParentFolderId() > 0)
+            if(isClearParent && this.getParentFolderId() > 0)
             {
                 getParentFolder().clearCaches(false, false);
             }
 
         }
-        catch (SQLException e)
+        catch(SQLException e)
         {
             log.fatal("Couldn't clear folder cache", e);
         }

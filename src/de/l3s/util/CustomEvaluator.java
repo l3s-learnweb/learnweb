@@ -16,42 +16,42 @@ public class CustomEvaluator implements TriggeringEventEvaluator
     @Override
     public boolean isTriggeringEvent(LoggingEvent event)
     {
-	if(isRunningOnLocalhost())
-	    return false;
+        if(isRunningOnLocalhost())
+            return false;
 
-	long now = System.currentTimeMillis();
-	if(now - lastCheck < cycleSeconds)
-	{
-	    return false;
-	}
-	else
-	{
-	    lastCheck = now;
-	    return true;
-	}
+        long now = System.currentTimeMillis();
+        if(now - lastCheck < cycleSeconds)
+        {
+            return false;
+        }
+        else
+        {
+            lastCheck = now;
+            return true;
+        }
     }
 
     private boolean isRunningOnLocalhost()
     {
-	if(isRunningOnLocalhost == null) // called the first time
-	{
-	    lastCheck = System.currentTimeMillis();
-	    try
-	    {
-		isRunningOnLocalhost = (Learnweb.getPropteriesFileName() != "learnweb");
+        if(isRunningOnLocalhost == null) // called the first time
+        {
+            lastCheck = System.currentTimeMillis();
+            try
+            {
+                isRunningOnLocalhost = (Learnweb.getPropteriesFileName() != "learnweb");
 
-		if(isRunningOnLocalhost)
-		    Logger.getLogger(CustomEvaluator.class).info("Learnweb is running on Localhost, email logger disabled");
+                if(isRunningOnLocalhost)
+                    Logger.getLogger(CustomEvaluator.class).info("Learnweb is running on Localhost, email logger disabled");
 
-		return true; // true, to skip first error message
-	    }
-	    catch(Exception e)
-	    {
-		isRunningOnLocalhost = true;
-	    }
-	}
+                return true; // true, to skip first error message
+            }
+            catch(Exception e)
+            {
+                isRunningOnLocalhost = true;
+            }
+        }
 
-	return isRunningOnLocalhost;
+        return isRunningOnLocalhost;
     }
 
 }

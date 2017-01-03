@@ -24,7 +24,7 @@ public abstract class AbstractPaginator implements Serializable
 
     public AbstractPaginator(int totalResults)
     {
-	setTotalResults(totalResults);
+        setTotalResults(totalResults);
     }
 
     /**
@@ -32,18 +32,18 @@ public abstract class AbstractPaginator implements Serializable
      */
     public AbstractPaginator()
     {
-	setTotalResults(totalResults);
+        setTotalResults(totalResults);
     }
 
     public int getTotalResults()
     {
-	return totalResults;
+        return totalResults;
     }
 
     protected void setTotalResults(int totalResults)
     {
-	this.totalResults = totalResults;
-	this.totalPages = (totalResults + PAGE_SIZE - 1) / PAGE_SIZE;
+        this.totalResults = totalResults;
+        this.totalPages = (totalResults + PAGE_SIZE - 1) / PAGE_SIZE;
     }
 
     /**
@@ -53,108 +53,108 @@ public abstract class AbstractPaginator implements Serializable
      */
     public int getPageIndex()
     {
-	return pageIndex;
+        return pageIndex;
     }
 
     public void setPageIndex(int pageIndex)
     {
-	this.pageIndex = pageIndex;
+        this.pageIndex = pageIndex;
 
-	setCurrentPageCache(null); // invalidate cache
+        setCurrentPageCache(null); // invalidate cache
     }
 
     public int getTotalPages()
     {
-	return totalPages;
+        return totalPages;
     }
 
     public void setTotalPages(int totalPages)
     {
-	this.totalPages = totalPages;
+        this.totalPages = totalPages;
     }
 
     protected List<ResourceDecorator> getCurrentPageCache()
     {
-	return currentPageCache;
+        return currentPageCache;
     }
 
     protected void setCurrentPageCache(List<ResourceDecorator> currentPageCache)
     {
-	this.currentPageCache = currentPageCache;
+        this.currentPageCache = currentPageCache;
     }
 
     public List<Integer> listPages()
     {
-	List<Integer> pages = new LinkedList<Integer>();
-	int fromIndex = 0, endIndex = 0;
-	if(pageIndex == 0)
-	{
-	    fromIndex = pageIndex + 1;
-	    endIndex = fromIndex + 3;
-	}
-	else if(pageIndex >= 1 && pageIndex < 3)
-	{
-	    fromIndex = 1;
-	    endIndex = pageIndex + 4;
-	}
-	else if(pageIndex >= 3 && pageIndex < 4)
-	{
-	    fromIndex = 1;
-	    endIndex = pageIndex + 3;
-	}
-	else if(pageIndex >= 4 && pageIndex < totalPages - 3)
-	{
-	    fromIndex = pageIndex - 1;
-	    endIndex = fromIndex + 4;
-	}
-	else if(pageIndex == totalPages - 3)
-	{
-	    fromIndex = pageIndex - 1;
-	    endIndex = totalPages;
-	}
-	else if(pageIndex >= totalPages - 2 && pageIndex < totalPages)
-	{
-	    fromIndex = totalPages - 3;
-	    endIndex = totalPages;
-	}
-	else if(pageIndex == totalPages)
-	{
-	    fromIndex = pageIndex - 3;
-	    endIndex = totalPages;
-	}
+        List<Integer> pages = new LinkedList<Integer>();
+        int fromIndex = 0, endIndex = 0;
+        if(pageIndex == 0)
+        {
+            fromIndex = pageIndex + 1;
+            endIndex = fromIndex + 3;
+        }
+        else if(pageIndex >= 1 && pageIndex < 3)
+        {
+            fromIndex = 1;
+            endIndex = pageIndex + 4;
+        }
+        else if(pageIndex >= 3 && pageIndex < 4)
+        {
+            fromIndex = 1;
+            endIndex = pageIndex + 3;
+        }
+        else if(pageIndex >= 4 && pageIndex < totalPages - 3)
+        {
+            fromIndex = pageIndex - 1;
+            endIndex = fromIndex + 4;
+        }
+        else if(pageIndex == totalPages - 3)
+        {
+            fromIndex = pageIndex - 1;
+            endIndex = totalPages;
+        }
+        else if(pageIndex >= totalPages - 2 && pageIndex < totalPages)
+        {
+            fromIndex = totalPages - 3;
+            endIndex = totalPages;
+        }
+        else if(pageIndex == totalPages)
+        {
+            fromIndex = pageIndex - 3;
+            endIndex = totalPages;
+        }
 
-	if(totalPages <= 5)
-	    for(int i = 0; i < totalPages; i++)
-		pages.add(i + 1);
-	else
-	    for(int i = fromIndex; i < endIndex - 1; i++)
-		pages.add(i + 1);
+        if(totalPages <= 5)
+            for(int i = 0; i < totalPages; i++)
+                pages.add(i + 1);
+        else
+            for(int i = fromIndex; i < endIndex - 1; i++)
+                pages.add(i + 1);
 
-	return pages;
+        return pages;
     }
 
     public boolean isLessThanNPages()
     {
-	if(totalPages <= DEFAULT_N_PAGE_LIMIT)
-	    return true;
-	else
-	    return false;
+        if(totalPages <= DEFAULT_N_PAGE_LIMIT)
+            return true;
+        else
+            return false;
     }
 
     public boolean isLessThanNPagesFromLast()
     {
-	if(pageIndex < totalPages - 3)
-	    return true;
-	else
-	    return false;
+        if(pageIndex < totalPages - 3)
+            return true;
+        else
+            return false;
     }
 
     public boolean isEmpty()
     {
-	if(totalResults == Integer.MIN_VALUE)
-	    throw new IllegalStateException("Call getPageIndex() first");
-	if(totalResults == 0)
-	    return true;
-	return false;
+        if(totalResults == Integer.MIN_VALUE)
+            throw new IllegalStateException("Call getPageIndex() first");
+        if(totalResults == 0)
+            return true;
+        return false;
     }
 }

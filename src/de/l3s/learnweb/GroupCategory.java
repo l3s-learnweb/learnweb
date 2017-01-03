@@ -14,58 +14,58 @@ public class GroupCategory implements Serializable
 
     public GroupCategory(int id, int courseId, String title, String abbreviation)
     {
-	super();
-	this.id = id;
-	this.courseId = courseId;
-	this.title = title;
-	this.abbreviation = abbreviation;
+        super();
+        this.id = id;
+        this.courseId = courseId;
+        this.title = title;
+        this.abbreviation = abbreviation;
     }
 
     public int getId()
     {
-	return id;
+        return id;
     }
 
     public void setId(int id)
     {
-	this.id = id;
+        this.id = id;
     }
 
     public int getCourseId()
     {
-	return courseId;
+        return courseId;
     }
 
     public void setCourseId(int courseId)
     {
-	this.courseId = courseId;
+        this.courseId = courseId;
     }
 
     public String getTitle()
     {
-	return title;
+        return title;
     }
 
     public void setTitle(String title)
     {
-	this.title = title;
+        this.title = title;
     }
 
     public String getAbbreviation()
     {
-	return abbreviation;
+        return abbreviation;
     }
 
     public void setAbbreviation(String abbreviation)
     {
-	this.abbreviation = abbreviation;
+        this.abbreviation = abbreviation;
     }
 
     public void save() throws SQLException
     {
-	if(id < 1)
-	    throw new IllegalStateException("Add the category first to a course");
+        if(id < 1)
+            throw new IllegalStateException("Add the category first to a course");
 
-	Learnweb.getInstance().getGroupManager().save(this);
+        Learnweb.getInstance().getGroupManager().save(this);
     }
 }

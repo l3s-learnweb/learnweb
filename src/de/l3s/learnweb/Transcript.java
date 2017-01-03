@@ -12,12 +12,12 @@ public class Transcript
 
     public String getLanguageCode()
     {
-	return languageCode;
+        return languageCode;
     }
 
     public void setLanguageCode(String languageCode)
     {
-	this.languageCode = languageCode;
+        this.languageCode = languageCode;
     }
 
     /**
@@ -26,46 +26,46 @@ public class Transcript
      */
     public List<Paragraph> getParagraphs()
     {
-	return paragraphs;
+        return paragraphs;
     }
 
     public void setParagraphs(List<Paragraph> paragraphs)
     {
-	this.paragraphs = paragraphs;
+        this.paragraphs = paragraphs;
     }
 
     public void addParagraph(int startTime, String text)
     {
-	getParagraphs().add(new Paragraph(startTime, text));
+        getParagraphs().add(new Paragraph(startTime, text));
     }
 
     public class Paragraph
     {
-	private int startTime;
-	private String text;
+        private int startTime;
+        private String text;
 
-	public Paragraph(int startTime, String text)
-	{
-	    super();
-	    this.startTime = startTime;
-	    this.text = text;
-	}
+        public Paragraph(int startTime, String text)
+        {
+            super();
+            this.startTime = startTime;
+            this.text = text;
+        }
 
-	public int getStartTime()
-	{
-	    return startTime;
-	}
+        public int getStartTime()
+        {
+            return startTime;
+        }
 
-	public String getStartTimeInMinutes()
-	{
-	    int seconds = startTime / 1000;
-	    return StringHelper.getDurationInMinutes(seconds);
-	}
+        public String getStartTimeInMinutes()
+        {
+            int seconds = startTime / 1000;
+            return StringHelper.getDurationInMinutes(seconds);
+        }
 
-	public String getText()
-	{
-	    return text;
-	}
+        public String getText()
+        {
+            return text;
+        }
     }
 
 }

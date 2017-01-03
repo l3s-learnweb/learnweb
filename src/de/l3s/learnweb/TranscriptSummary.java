@@ -18,43 +18,43 @@ public class TranscriptSummary implements Serializable
 
     public TranscriptSummary(int userId, int resourceId, String summaryType, String summaryText)
     {
-	this.userId = userId;
-	this.resourceId = resourceId;
-	this.summaryType = summaryType;
-	this.summaryText = summaryText;
+        this.userId = userId;
+        this.resourceId = resourceId;
+        this.summaryType = summaryType;
+        this.summaryText = summaryText;
     }
 
     public User getUser() throws SQLException
     {
-	if(null == user)
-	    user = Learnweb.getInstance().getUserManager().getUser(userId);
-	return user;
+        if(null == user)
+            user = Learnweb.getInstance().getUserManager().getUser(userId);
+        return user;
     }
 
     public Resource getResource() throws SQLException
     {
-	if(null == resource)
-	    resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-	return resource;
+        if(null == resource)
+            resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+        return resource;
     }
 
     public String getSummaryType()
     {
-	return summaryType;
+        return summaryType;
     }
 
     public void setSummaryType(String summaryType)
     {
-	this.summaryType = summaryType;
+        this.summaryType = summaryType;
     }
 
     public String getSummaryText()
     {
-	return summaryText;
+        return summaryText;
     }
 
     public void setSummaryText(String summaryText)
     {
-	this.summaryText = summaryText;
+        this.summaryText = summaryText;
     }
 }

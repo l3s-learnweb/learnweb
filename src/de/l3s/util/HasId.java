@@ -6,7 +6,8 @@ package de.l3s.util;
  * @author Philipp
  *
  */
-public interface HasId {
+public interface HasId
+{
 
-	public int getId();
+    public int getId();
 }

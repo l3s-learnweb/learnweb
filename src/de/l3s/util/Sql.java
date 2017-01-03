@@ -18,33 +18,33 @@ public class Sql
 
     public static Object getSingleResult(String query) throws SQLException
     {
-	Connection connection = Learnweb.getInstance().getConnection();
-	ResultSet rs = connection.createStatement().executeQuery(query);
-	if(!rs.next())
-	    throw new IllegalArgumentException("Query doesn't return a result");
-	return rs.getObject(1);
+        Connection connection = Learnweb.getInstance().getConnection();
+        ResultSet rs = connection.createStatement().executeQuery(query);
+        if(!rs.next())
+            throw new IllegalArgumentException("Query doesn't return a result");
+        return rs.getObject(1);
     }
 
     public static void serializeObjectAndSet(PreparedStatement stmt, int parameterIndex, Object obj) throws SQLException
     {
-	ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-	try
-	{
-	    ObjectOutputStream oos = new ObjectOutputStream(baos);
-	    oos.writeObject(obj);
+        try
+        {
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(obj);
 
-	    byte[] employeeAsBytes = baos.toByteArray();
+            byte[] employeeAsBytes = baos.toByteArray();
 
-	    stmt.setBinaryStream(parameterIndex, new ByteArrayInputStream(employeeAsBytes), employeeAsBytes.length);
+            stmt.setBinaryStream(parameterIndex, new ByteArrayInputStream(employeeAsBytes), employeeAsBytes.length);
 
-	    return;
-	}
-	catch(Exception e)
-	{
-	    log.error("Couldn't serialize preferences: " + obj.toString(), e);
-	}
+            return;
+        }
+        catch(Exception e)
+        {
+            log.error("Couldn't serialize preferences: " + obj.toString(), e);
+        }
 
-	stmt.setNull(parameterIndex, java.sql.Types.BLOB);
+        stmt.setNull(parameterIndex, java.sql.Types.BLOB);
     }
 }

@@ -26,32 +26,32 @@ public class OwnerList<E, O> extends LinkedList<E>
      */
     public OwnerList(OwnerList<E, O> ol)
     {
-	super(ol);
-	elementOwner = ol.elementOwner;
-	elementTimestamp = ol.elementTimestamp;
+        super(ol);
+        elementOwner = ol.elementOwner;
+        elementTimestamp = ol.elementTimestamp;
     }
 
     public OwnerList()
     {
-	super();
+        super();
     }
 
     public boolean add(E e, O owner, Date date)
     {
-	elementOwner.put(e, owner);
-	elementTimestamp.put(e, date);
-	return add(e);
+        elementOwner.put(e, owner);
+        elementTimestamp.put(e, date);
+        return add(e);
     }
 
     public O getElementOwner(E e)
     {
-	return elementOwner.get(e);
+        return elementOwner.get(e);
     }
 
     @Override
     public boolean remove(Object o)
     {
-	elementOwner.remove(o);
-	return super.remove(o);
+        elementOwner.remove(o);
+        return super.remove(o);
     }
 }

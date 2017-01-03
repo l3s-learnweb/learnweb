@@ -134,45 +134,45 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         /*if(isRestricted())
         {
             embeddedSize1 = "<img src=\"../resources/resources/img/RestrictedAccess.jpg\" width=\"300\" height=\"214\" />";
-
+        
             // TODO find a better solution
             dummyImage = new Thumbnail("../resources/resources/img/RestrictedAccess.jpg", 300, 214);
-
+        
         }
         else if(getOnlineStatus().equals(OnlineStatus.OFFLINE))
         {
             embeddedSize1 = "<img src=\"../resources/resources/img/page_no_longer_available.jpg\" width=\"300\" height=\"300\" />";
-
+        
             // TODO find a better solution
             dummyImage = new Thumbnail("../resources/resources/img/page_no_longer_available.jpg", 300, 300);
         }
         else*/
-        if (null == embeddedSize1 || null == embeddedSize3)
+        if(null == embeddedSize1 || null == embeddedSize3)
         {
 
-            if (source.equalsIgnoreCase("YouTube"))
+            if(source.equalsIgnoreCase("YouTube"))
             {
                 Pattern pattern = Pattern.compile("v[/=]([^&]+)");
                 Matcher matcher = pattern.matcher(url);
 
-                if (matcher.find())
+                if(matcher.find())
                 {
                     String videoId = matcher.group(1);
-                    if (null == embeddedSize1)
+                    if(null == embeddedSize1)
                         this.embeddedSize1 = "<img src=\"http://img.youtube.com/vi/" + videoId + "/default.jpg\" width=\"100\" height=\"75\" />";
-                    if (null == embeddedSize3)
+                    if(null == embeddedSize3)
                         this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
                     this.format = "application/x-shockwave-flash";
 
                     dummyImage = new Thumbnail("http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg", 320, 180);
                 }
             }
-            else if (source.equals("Google") && type.equals("Video"))
+            else if(source.equals("Google") && type.equals("Video"))
             {
                 Pattern pattern = Pattern.compile("youtube.com/watch%3Fv%3D([^&]+)");
                 Matcher matcher = pattern.matcher(url);
 
-                if (matcher.find())
+                if(matcher.find())
                 {
                     String videoId = matcher.group(1);
                     this.embeddedSize1 = "<img src=\"http://img.youtube.com/vi/" + videoId + "/default.jpg\" width=\"100\" height=\"75\" />";
@@ -186,107 +186,109 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
                 }
             }
-            else if (source.equalsIgnoreCase("Vimeo"))
+            else if(source.equalsIgnoreCase("Vimeo"))
             {
                 Pattern pattern = Pattern.compile("vimeo\\.com/([^&]+)");
                 Matcher matcher = pattern.matcher(url);
 
-                if (matcher.find())
+                if(matcher.find())
                 {
                     String videoId = matcher.group(1);
-                    this.embeddedSize3 = "<object width=\"500\" height=\"375\"><param name=\"allowfullscreen\" value=\"true\" /><param name=\"allowscriptaccess\" value=\"always\" />" + "<param name=\"movie\" value=\"http://vimeo.com/moogaloop.swf?clip_id=" + videoId + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" /><embed src=\"http://vimeo.com/moogaloop.swf?clip_id=" + videoId + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"500\" height=\"375\"></embed></object>";
+                    this.embeddedSize3 = "<object width=\"500\" height=\"375\"><param name=\"allowfullscreen\" value=\"true\" /><param name=\"allowscriptaccess\" value=\"always\" />" + "<param name=\"movie\" value=\"http://vimeo.com/moogaloop.swf?clip_id=" + videoId
+                            + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" /><embed src=\"http://vimeo.com/moogaloop.swf?clip_id=" + videoId
+                            + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"500\" height=\"375\"></embed></object>";
                     this.format = "application/x-shockwave-flash";
 
                 }
 
             }
-            else if (source.equals("Ipernity") && embeddedSize1 != null)
+            else if(source.equals("Ipernity") && embeddedSize1 != null)
             {
-                if (type.equals("Image"))
+                if(type.equals("Image"))
                     embeddedSize3 = embeddedSize1.replace(".100.", ".500.");
                 else
                     embeddedSize3 = "<a href=\"" + url + "\">" + url + "</a>";
             }
-            else if (source.equals("Flickr") && type.equals("Image") && embeddedSize1 != null)
+            else if(source.equals("Flickr") && type.equals("Image") && embeddedSize1 != null)
             {
-                if (null == embeddedSize3)
+                if(null == embeddedSize3)
                     embeddedSize3 = embeddedSize1.replace("_t.", ".");
             }
         }
         else
         {
-            for (File file : files.values())
+            for(File file : files.values())
             {
                 embeddedSize1 = replacePlaceholder(embeddedSize1, file);
                 embeddedSize3 = replacePlaceholder(embeddedSize3, file);
             }
         }
 
-	/*
-    if(dummyImage == null && (thumbnail1 == null || thumbnail2 == null))
-	{
-	    String imageUrl = ResourcePreviewMaker.getBestImage(this);
-	
-	    if(imageUrl != null)
-		dummyImage = new Thumbnail(imageUrl, 300, 220);
-	    else if(type.equalsIgnoreCase("audio"))
-		dummyImage = new Thumbnail("../resources/resources/picol/document_music.svg", 200, 200);
-	    else if(type.equalsIgnoreCase("image"))
-		dummyImage = new Thumbnail("../resources/resources/picol/document_image.svg", 200, 200);
-	    else if(format.startsWith("application/vnd.") || format.startsWith("application/ms"))
-		dummyImage = new Thumbnail("../resources/resources/picol/document_text.svg", 200, 200);
-	    else if(format.startsWith("text/"))
-		dummyImage = new Thumbnail("../resources/resources/picol/document_text.svg", 200, 200);
-	    else if(isRestricted())
-		dummyImage = new Thumbnail("../resources/resources/picol/badge_security.svg", 200, 200);
-	    else if(type.equalsIgnoreCase("video"))
-		dummyImage = new Thumbnail("../resources/resources/picol/video.svg", 200, 200);
-	    else
-		dummyImage = new Thumbnail("../resources/resources/picol/website.svg", 200, 200);
-	
-	}*/
-
-        if (dummyImage != null)
+        /*
+        if(dummyImage == null && (thumbnail1 == null || thumbnail2 == null))
         {
-            if (null == thumbnail0)
+            String imageUrl = ResourcePreviewMaker.getBestImage(this);
+        
+            if(imageUrl != null)
+        	dummyImage = new Thumbnail(imageUrl, 300, 220);
+            else if(type.equalsIgnoreCase("audio"))
+        	dummyImage = new Thumbnail("../resources/resources/picol/document_music.svg", 200, 200);
+            else if(type.equalsIgnoreCase("image"))
+        	dummyImage = new Thumbnail("../resources/resources/picol/document_image.svg", 200, 200);
+            else if(format.startsWith("application/vnd.") || format.startsWith("application/ms"))
+        	dummyImage = new Thumbnail("../resources/resources/picol/document_text.svg", 200, 200);
+            else if(format.startsWith("text/"))
+        	dummyImage = new Thumbnail("../resources/resources/picol/document_text.svg", 200, 200);
+            else if(isRestricted())
+        	dummyImage = new Thumbnail("../resources/resources/picol/badge_security.svg", 200, 200);
+            else if(type.equalsIgnoreCase("video"))
+        	dummyImage = new Thumbnail("../resources/resources/picol/video.svg", 200, 200);
+            else
+        	dummyImage = new Thumbnail("../resources/resources/picol/website.svg", 200, 200);
+        
+        }*/
+
+        if(dummyImage != null)
+        {
+            if(null == thumbnail0)
                 setThumbnail0(dummyImage.resize(150, 120));
-            if (null == thumbnail1)
+            if(null == thumbnail1)
                 setThumbnail1(dummyImage.resize(150, 150));
-            if (null == thumbnail2)
+            if(null == thumbnail2)
                 setThumbnail2(dummyImage);
-            if (null == thumbnail3)
+            if(null == thumbnail3)
                 setThumbnail3(dummyImage);
-            if (null == thumbnail4)
+            if(null == thumbnail4)
                 setThumbnail4(dummyImage);
         }
 
-        if (embeddedSize1 == null || embeddedSize1.length() < 3)
+        if(embeddedSize1 == null || embeddedSize1.length() < 3)
         {
-            if (type.equalsIgnoreCase("audio"))
+            if(type.equalsIgnoreCase("audio"))
                 embeddedSize1 = "<img src=\"../resources/resources/img/audio.png\" width=\"100\" height=\"100\" />";
-            else if (format.startsWith("application/vnd.") || format.startsWith("application/ms"))
+            else if(format.startsWith("application/vnd.") || format.startsWith("application/ms"))
                 embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
-            else if (storageType == WEB_RESOURCE)
+            else if(storageType == WEB_RESOURCE)
                 embeddedSize1 = "<img src=\"../resources/resources/img/website-140.png\" width=\"100\" height=\"100\" />";
-            else if (format.startsWith("text/"))
+            else if(format.startsWith("text/"))
                 embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
         }
     }
 
     public void addTag(String tagName, User user) throws SQLException
     {
-        if (tagName.length() > 250)
+        if(tagName.length() > 250)
             throw new IllegalArgumentException("tag is to long");
 
         ResourceManager rsm = Learnweb.getInstance().getResourceManager();
         Tag tag = rsm.getTag(tagName);
 
-        if (tag == null)
+        if(tag == null)
             tag = rsm.addTag(tagName);
 
         rsm.tagResource(this, tag, user);
 
-        if (null != tags)
+        if(null != tags)
         {
             tags.add(tag, user, new Date());
             Collections.sort(tags);
@@ -313,7 +315,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public List<Comment> getComments() throws SQLException
     {
-        if (id != -1 && comments == null)
+        if(id != -1 && comments == null)
         {
             comments = Learnweb.getInstance().getResourceManager().getCommentsByResourceId(id);
             //Collections.sort(comments);
@@ -352,7 +354,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public Group getGroup() throws SQLException
     {
-        if (groupId == 0)
+        if(groupId == 0)
             return null;
 
         return Learnweb.getInstance().getGroupManager().getGroupById(groupId);
@@ -374,7 +376,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     @Override
     public User getUser() throws SQLException
     {
-        if (null == owner && -1 != ownerUserId)
+        if(null == owner && -1 != ownerUserId)
             owner = Learnweb.getInstance().getUserManager().getUser(ownerUserId);
         return owner;
     }
@@ -412,7 +414,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public Group getOriginalGroup() throws SQLException
     {
-        if (originalResourceId == 0)
+        if(originalResourceId == 0)
             return null;
 
         Resource originalResource = Learnweb.getInstance().getResourceManager().getResource(originalResourceId);
@@ -436,7 +438,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public Folder getFolder() throws SQLException
     {
-        if (folderId == 0)
+        if(folderId == 0)
             return null;
 
         return Learnweb.getInstance().getGroupManager().getFolder(folderId);
@@ -469,9 +471,9 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public String getStringStorageType()
     {
-        if (storageType == Resource.FILE_RESOURCE)
+        if(storageType == Resource.FILE_RESOURCE)
             return UtilBean.getLocaleMessage("file");
-        else if (storageType == Resource.WEB_RESOURCE)
+        else if(storageType == Resource.WEB_RESOURCE)
             return UtilBean.getLocaleMessage("web");
         else
             throw new RuntimeException();
@@ -479,7 +481,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public void setStorageType(int type)
     {
-        if (type != FILE_RESOURCE && type != WEB_RESOURCE)
+        if(type != FILE_RESOURCE && type != WEB_RESOURCE)
             throw new IllegalArgumentException();
         this.storageType = type;
     }
@@ -552,9 +554,9 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         tags = getTags();
 
         StringBuilder out = new StringBuilder();
-        for (Tag tag : tags)
+        for(Tag tag : tags)
         {
-            if (out.length() != 0)
+            if(out.length() != 0)
                 out.append(delim);
             out.append(tag.getName());
         }
@@ -563,7 +565,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public OwnerList<Tag, User> getTags() throws SQLException
     {
-        if (null == tags || id != -1)
+        if(null == tags || id != -1)
             tags = Learnweb.getInstance().getResourceManager().getTagsByResource(id);
         return tags;
     }
@@ -631,7 +633,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         r.setDeleted(deleted);
         r.setReadOnly(readOnly);
         // sets the originalResourceId to the id of the source resource
-        if (originalResourceId == 0)
+        if(originalResourceId == 0)
             r.setOriginalResourceId(id);
         else
             r.setOriginalResourceId(originalResourceId);
@@ -643,7 +645,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
      * rate this resource
      *
      * @param value the rating 1-5
-     * @param user  the user who rates
+     * @param user the user who rates
      */
     public void rate(int value, User user) throws Exception
     {
@@ -658,7 +660,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     public boolean isRatedByUser(int userId) throws Exception
     {
         Boolean value = isRatedByUser.get(userId);
-        if (null != value) // the answer is cached
+        if(null != value) // the answer is cached
             return value;
 
         // the answer isn't cached we have to ask fedora
@@ -705,15 +707,15 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public void setType(String type)
     {
-    /*
-    if(null == type || type.length() == 0)
-	    log.info("Resource: " + id + "; type set to null", new Exception());
-	*/
-        if (type.equalsIgnoreCase("videos") || type.equalsIgnoreCase("video"))
+        /*
+        if(null == type || type.length() == 0)
+            log.info("Resource: " + id + "; type set to null", new Exception());
+        */
+        if(type.equalsIgnoreCase("videos") || type.equalsIgnoreCase("video"))
             this.type = "Video";
-        else if (type.equalsIgnoreCase("photos") || type.equalsIgnoreCase("image"))
+        else if(type.equalsIgnoreCase("photos") || type.equalsIgnoreCase("image"))
             this.type = "Image";
-        else if (null == type || type.length() == 0)
+        else if(null == type || type.length() == 0)
             this.type = "Unknown";
         else
             this.type = type;
@@ -759,13 +761,13 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public void thumbRate(User user, int direction) throws IllegalAccessError, SQLException
     {
-        if (direction != 1 && direction != -1)
+        if(direction != 1 && direction != -1)
             throw new IllegalArgumentException("Illegal value [" + direction + "] for direction. Valid values are 1 and -1");
 
-        if (isThumbRatedByUser(user.getId()))
+        if(isThumbRatedByUser(user.getId()))
             throw new IllegalAccessError("You have already rated this resource");
 
-        if (direction == 1)
+        if(direction == 1)
             thumbUp++;
         else
             thumbDown++;
@@ -778,7 +780,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     public boolean isThumbRatedByUser(int userId) throws SQLException
     {
         Boolean value = isThumbRatedByUser.get(userId);
-        if (null != value) // the answer is cached
+        if(null != value) // the answer is cached
             return value;
 
         // the answer isn't cached we have to ask fedora
@@ -793,7 +795,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public String getLearnwebUrl() throws SQLException
     {
-        if (getId() != -1 && getGroupId() != 0)
+        if(getId() != -1 && getGroupId() != 0)
             return "group/resources.jsf?group_id=" + getGroup().getId() + "&resource_id=" + getId();
 
         return getUrl();
@@ -801,11 +803,11 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public String getServiceIcon()
     {
-        if (getId() != -1) // is stored at fedora
+        if(getId() != -1) // is stored at fedora
             return "/resources/icon/services/learnweb.gif";
 
         String format = ".gif";
-        if (getLocation().equalsIgnoreCase("youtube") || getLocation().equalsIgnoreCase("flickr") || getLocation().equalsIgnoreCase("ipernity"))
+        if(getLocation().equalsIgnoreCase("youtube") || getLocation().equalsIgnoreCase("flickr") || getLocation().equalsIgnoreCase("ipernity"))
             format = ".png";
 
         return "/resources/icon/services/" + getLocation().toLowerCase() + format;
@@ -830,7 +832,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             @Override
             public int compare(Resource o1, Resource o2)
             {
-                if (null == o1 || null == o2)
+                if(null == o1 || null == o2)
                     return 0;
                 return o1.getTitle().compareTo(o2.getTitle());
             }
@@ -868,15 +870,15 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     @Deprecated
     public String getEmbeddedSize1()
     {
-    /*
-    if(embeddedSize1 != null)
-	    return embeddedSize1;
-	*/
-        if (getThumbnail1() != null)
+        /*
+        if(embeddedSize1 != null)
+            return embeddedSize1;
+        */
+        if(getThumbnail1() != null)
             return getThumbnail1().toHTML();
-        if (getThumbnail2() != null)
+        if(getThumbnail2() != null)
             return getThumbnail2().resize(150, 150).toHTML();
-        if (getThumbnail3() != null)
+        if(getThumbnail3() != null)
             return getThumbnail3().resize(150, 150).toHTML();
 
         return "<img src=\"../resources/resources/img/website-140.png\" width=\"100\" height=\"100\" />";
@@ -912,10 +914,10 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     @Deprecated
     public String getEmbeddedSize3()
     {
-	/*
-	if(getThumbnail3() != null)
-	    return getThumbnail3().toHTML();
-	*/
+        /*
+        if(getThumbnail3() != null)
+            return getThumbnail3().toHTML();
+        */
         return embeddedSize3;
     }
 
@@ -1005,7 +1007,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
      */
     public void setFileName(String fileName)
     {
-        if (fileName != null && fileName.length() > 200)
+        if(fileName != null && fileName.length() > 200)
             throw new IllegalArgumentException("file name is too long: " + fileName.length() + "; " + fileName);
 
         this.fileName = fileName;
@@ -1021,7 +1023,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
      */
     public String getQuery()
     {
-        if (query == null)
+        if(query == null)
             return "none";
         return query;
     }
@@ -1072,10 +1074,10 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public void setSource(String source)
     {
-	/*
-	if(null == source || source.length() == 0)
-	    log.info("Resource: " + id + "; source set to null");
-	*/
+        /*
+        if(null == source || source.length() == 0)
+            log.info("Resource: " + id + "; source set to null");
+        */
         this.source = source;
     }
 
@@ -1093,7 +1095,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     {
         files.put(file.getResourceFileNumber(), file);
 
-        if (id > 0) // the resource is already stored
+        if(id > 0) // the resource is already stored
         {
             FileManager fm = Learnweb.getInstance().getFileManager();
             fm.addFileToResource(file, this);
@@ -1179,7 +1181,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
      */
     public Thumbnail getThumbnail3()
     {
-        if (null == thumbnail3)
+        if(null == thumbnail3)
             return getThumbnail2();
 
         return thumbnail3;
@@ -1190,7 +1192,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
      */
     public Thumbnail getThumbnail4()
     {
-        if (null == thumbnail4)
+        if(null == thumbnail4)
             return getThumbnail3();
 
         return thumbnail4;
@@ -1209,7 +1211,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     protected void setThumbnail2(Thumbnail thumbnail2)
     {
         this.thumbnail2 = thumbnail2;
-        if (thumbnail2 != null)
+        if(thumbnail2 != null)
         {
             this.thumbnail2b = thumbnail2.resize(240, 128);
             this.thumbnail2c = thumbnail2.resize(171, 128);
@@ -1230,13 +1232,13 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     {
         Thumbnail large = getThumbnail4();
 
-        if (getType().equalsIgnoreCase("image"))
+        if(getType().equalsIgnoreCase("image"))
             return "<img src=\"" + getThumbnail2().getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\" original-src=\"" + large.getUrl() + "\"/>";
-        else if (getType().equalsIgnoreCase("text"))
+        else if(getType().equalsIgnoreCase("text"))
             return "<iframe src=\"" + getUrl() + "\" />";
-        else if (getType().equalsIgnoreCase("video"))
+        else if(getType().equalsIgnoreCase("video"))
         {
-            if (getSource().equalsIgnoreCase("loro") || getSource().equalsIgnoreCase("desktop"))
+            if(getSource().equalsIgnoreCase("loro") || getSource().equalsIgnoreCase("desktop"))
             {
                 return "<iframe src=\"video.jsf?resource_id=" + id + "\" width=\"100%\" height=\"100%\" />";
                 //log.debug("" + getFileUrl());
@@ -1245,10 +1247,10 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
             }
         }
-        if (getEmbeddedRaw() != null)
+        if(getEmbeddedRaw() != null)
             return getEmbeddedRaw();
 
-        if (getEmbeddedSize4() != null)
+        if(getEmbeddedSize4() != null)
             return getEmbeddedSize4();
 
         return getEmbeddedSize3();
@@ -1332,7 +1334,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public LinkedList<ArchiveUrl> getArchiveUrls()
     {
-        if (id != -1 && archiveUrls == null)
+        if(id != -1 && archiveUrls == null)
         {
             ResourceManager rm = Learnweb.getInstance().getResourceManager();
             try
@@ -1340,7 +1342,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
                 archiveUrls = rm.getArchiveUrlsByResourceId(id);
                 archiveUrls.addAll(rm.getArchiveUrlsByResourceUrl(url));
             }
-            catch (SQLException e)
+            catch(SQLException e)
             {
                 log.error("Error while retrieving archive urls for resource: ", e);
             }
@@ -1387,7 +1389,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public void setFileUrl(String fileUrl)
     {
-        if (fileUrl != null && fileUrl.length() > 500)
+        if(fileUrl != null && fileUrl.length() > 500)
             throw new IllegalArgumentException("url is too long: " + fileUrl.length() + "; " + fileUrl);
 
         this.fileUrl = fileUrl;
@@ -1414,9 +1416,9 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
      */
     public void setLanguage(String language)
     {
-        if (null == language)
+        if(null == language)
             language = "";
-        else if (language.length() != 0 && language.length() != 2)
+        else if(language.length() != 0 && language.length() != 2)
             throw new IllegalArgumentException("expected 2-letter language code");
         else
             this.language = language.toLowerCase();
@@ -1434,12 +1436,12 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     /**
      * @return the previous value associated with key, or null if there was no mapping for key. (A null return can also indicate that the map
-     * previously associated null with key.)
+     *         previously associated null with key.)
      */
     public String setMetadataValue(String key, String value)
     {
         key = key.toLowerCase();
-        if (key.equals("author"))
+        if(key.equals("author"))
             throw new IllegalArgumentException(key + " is a reserved name");
 
         return metadata.put(key, value);
@@ -1513,10 +1515,10 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     @Deprecated
     public String getPath() throws SQLException
     {
-        if (null == path)
+        if(null == path)
         {
             Folder folder = getFolder();
-            if (folder != null)
+            if(folder != null)
                 path = folder.getPath();
         }
         return path;
@@ -1528,10 +1530,10 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     @Deprecated
     public String getPrettyPath() throws SQLException
     {
-        if (null == prettyPath)
+        if(null == prettyPath)
         {
             Folder folder = getFolder();
-            if (folder != null)
+            if(folder != null)
                 prettyPath = folder.getPrettyPath();
         }
         return prettyPath;

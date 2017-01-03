@@ -34,73 +34,73 @@ public class File implements Serializable, HasId
 
     public String getName()
     {
-	return name;
+        return name;
     }
 
     public void setName(String name)
     {
-	this.name = name;
+        this.name = name;
     }
 
     public String getMimeType()
     {
-	return mimeType;
+        return mimeType;
     }
 
     public void setMimeType(String mimeType)
     {
-	this.mimeType = mimeType;
+        this.mimeType = mimeType;
     }
 
     public int getResourceId()
     {
-	return resourceId;
+        return resourceId;
     }
 
     public void setResourceId(int resourceId)
     {
-	this.resourceId = resourceId;
+        this.resourceId = resourceId;
     }
 
     public int getResourceFileNumber()
     {
-	return resourceFileNumber;
+        return resourceFileNumber;
     }
 
     public void setResourceFileNumber(int resourceFileNumber)
     {
-	this.resourceFileNumber = resourceFileNumber;
+        this.resourceFileNumber = resourceFileNumber;
     }
 
     @Override
     public int getId()
     {
-	return fileId;
+        return fileId;
     }
 
     protected void setId(int fileId)
     {
-	this.fileId = fileId;
+        this.fileId = fileId;
     }
 
     public String getUrl()
     {
-	return url;
+        return url;
     }
 
     public void setUrl(String url)
     {
-	this.url = url;
+        this.url = url;
     }
 
     public boolean isDownloadLogActivated()
     {
-	return downloadLogActivated;
+        return downloadLogActivated;
     }
 
     public void setDownloadLogActivated(boolean downloadLogActivated)
     {
-	this.downloadLogActivated = downloadLogActivated;
+        this.downloadLogActivated = downloadLogActivated;
     }
 
     /**
@@ -109,71 +109,71 @@ public class File implements Serializable, HasId
      */
     public java.io.File getActualFile()
     {
-	if(null == actualFile)
-	{
-	    throw new IllegalStateException("The file should be saved first: FileManager.save()");
-	}
-	return actualFile;
+        if(null == actualFile)
+        {
+            throw new IllegalStateException("The file should be saved first: FileManager.save()");
+        }
+        return actualFile;
     }
 
     protected void setActualFile(java.io.File actualFile)
     {
-	this.actualFile = actualFile;
+        this.actualFile = actualFile;
     }
 
     public boolean exists()
     {
-	return actualFileExists;
+        return actualFileExists;
     }
 
     public void setExists(boolean actualFileExists)
     {
-	this.actualFileExists = actualFileExists;
+        this.actualFileExists = actualFileExists;
     }
 
     public OutputStream getOutputStream()
     {
-	try
-	{
-	    return new FileOutputStream(getActualFile());
-	}
-	catch(FileNotFoundException e) // the FileManager has to take care that this exception never occurs
-	{
-	    throw new RuntimeException(e);
-	}
+        try
+        {
+            return new FileOutputStream(getActualFile());
+        }
+        catch(FileNotFoundException e) // the FileManager has to take care that this exception never occurs
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     public InputStream getInputStream()
     {
-	try
-	{
-	    return new FileInputStream(getActualFile());
-	}
-	catch(FileNotFoundException e) // the FileManager has to take care that is exception never occurs
-	{
-	    throw new RuntimeException(e);
-	}
+        try
+        {
+            return new FileInputStream(getActualFile());
+        }
+        catch(FileNotFoundException e) // the FileManager has to take care that is exception never occurs
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     public long getLength()
     {
-	return getActualFile().length();
+        return getActualFile().length();
     }
 
     public Date getLastModified()
     {
-	return lastModified;
+        return lastModified;
     }
 
     public void setLastModified(Date lastModified)
     {
-	this.lastModified = lastModified;
+        this.lastModified = lastModified;
     }
 
     @Override
     public String toString()
     {
-	return "File [fileId=" + fileId + ", name=" + name + ", mimeType=" + mimeType + ", resourceId=" + resourceId + ", resourceFileNumber=" + resourceFileNumber + ", url=" + url + ", lastModified=" + lastModified + "]";
+        return "File [fileId=" + fileId + ", name=" + name + ", mimeType=" + mimeType + ", resourceId=" + resourceId + ", resourceFileNumber=" + resourceFileNumber + ", url=" + url + ", lastModified=" + lastModified + "]";
     }
 
 }

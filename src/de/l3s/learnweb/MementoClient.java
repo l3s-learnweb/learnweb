@@ -27,62 +27,62 @@ public class MementoClient
 
     public MementoClient(Learnweb learnweb)
     {
-	mementoArchiveURL = "http://wayback.archive-it.org/";//learnweb.getProperties().getProperty("MEMENTO_ARCHIVE_URL");
+        mementoArchiveURL = "http://wayback.archive-it.org/";//learnweb.getProperties().getProperty("MEMENTO_ARCHIVE_URL");
     }
 
     public List<ArchiveUrl> getArchiveItVersions(int collectionId, String resourceURI)
     {
 
-	try
-	{
-	    mementoArchiveUrlObj = new URL(mementoArchiveURL + collectionId + "/timemap/link/" + resourceURI);
-	}
-	catch(MalformedURLException e)
-	{
-	    log.error("The requested resource URI is malformed:", e);
-	}
+        try
+        {
+            mementoArchiveUrlObj = new URL(mementoArchiveURL + collectionId + "/timemap/link/" + resourceURI);
+        }
+        catch(MalformedURLException e)
+        {
+            log.error("The requested resource URI is malformed:", e);
+        }
 
-	List<ArchiveUrl> archiveVersions = new LinkedList<ArchiveUrl>();
+        List<ArchiveUrl> archiveVersions = new LinkedList<ArchiveUrl>();
 
-	try
-	{
-	    HttpURLConnection con = (HttpURLConnection) mementoArchiveUrlObj.openConnection();
+        try
+        {
+            HttpURLConnection con = (HttpURLConnection) mementoArchiveUrlObj.openConnection();
 
-	    con.setRequestMethod("GET");
-	    con.setDoOutput(true);
+            con.setRequestMethod("GET");
+            con.setDoOutput(true);
 
-	    if(con.getResponseCode() == 404)
-	    {
-		log.info("Not found in archive");
-	    }
-	    else
-	    {
-		BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-		String inputLine;
-		StringBuffer response = new StringBuffer();
+            if(con.getResponseCode() == 404)
+            {
+                log.info("Not found in archive");
+            }
+            else
+            {
+                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+                String inputLine;
+                StringBuffer response = new StringBuffer();
 
-		while((inputLine = in.readLine()) != null)
-		{
-		    response.append(inputLine);
-		}
+                while((inputLine = in.readLine()) != null)
+                {
+                    response.append(inputLine);
+                }
 
-		Pattern p = Pattern.compile("(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])(>; rel=\"[^\"]+\"; )(datetime=)(\"[^\"]+\")");
-		Matcher m = p.matcher(response.toString());
-		while(m.find())
-		{
-		    archiveVersions.add(new ArchiveUrl(m.group(1), dateTimeFormat.parse(m.group(4).replaceAll("\"", ""))));
-		}
-		in.close();
-	    }
-	}
-	catch(IOException e)
-	{
-	    log.error("HTTP URL connection to the memento archive url causing error:", e);
-	}
-	catch(ParseException e)
-	{
-	    log.error("Error while trying to parse the datetime from the response", e);
-	}
-	return archiveVersions;
+                Pattern p = Pattern.compile("(https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|])(>; rel=\"[^\"]+\"; )(datetime=)(\"[^\"]+\")");
+                Matcher m = p.matcher(response.toString());
+                while(m.find())
+                {
+                    archiveVersions.add(new ArchiveUrl(m.group(1), dateTimeFormat.parse(m.group(4).replaceAll("\"", ""))));
+                }
+                in.close();
+            }
+        }
+        catch(IOException e)
+        {
+            log.error("HTTP URL connection to the memento archive url causing error:", e);
+        }
+        catch(ParseException e)
+        {
+            log.error("Error while trying to parse the datetime from the response", e);
+        }
+        return archiveVersions;
     }
 }

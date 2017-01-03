@@ -30,117 +30,117 @@ public class FactSheet implements Serializable
 
     public FactSheet()
     {
-	query = "";
-	setEntities(null);
+        query = "";
+        setEntities(null);
     }
 
     public FactSheet(String query)
     {
-	this.query = query;
-	setEntities(lookup(query));
+        this.query = query;
+        setEntities(lookup(query));
     }
 
     private ArrayList<Entity> lookup(String query)
     {
-	ArrayList<Entity> e = new ArrayList<Entity>();
-	Client client = Client.create();
-	WebResource resource = client.resource("http://prometheus.kbs.uni-hannover.de:1112/api/search/KeywordSearch?QueryString=" + StringHelper.urlEncode(query));
+        ArrayList<Entity> e = new ArrayList<Entity>();
+        Client client = Client.create();
+        WebResource resource = client.resource("http://prometheus.kbs.uni-hannover.de:1112/api/search/KeywordSearch?QueryString=" + StringHelper.urlEncode(query));
 
-	//WebResource resource = client.resource("http://lookup.dbpedia.org/api/search.asmx/KeywordSearch?QueryString="+query);
-	ClientResponse response;
-	try
-	{
-	    response = resource.accept("application/xml").get(ClientResponse.class);
-	}
-	catch(ClientHandlerException ex)
-	{
-	    log.fatal("No connection to DBpedia: " + ex.getMessage());
-	    return e;
-	}
+        //WebResource resource = client.resource("http://lookup.dbpedia.org/api/search.asmx/KeywordSearch?QueryString="+query);
+        ClientResponse response;
+        try
+        {
+            response = resource.accept("application/xml").get(ClientResponse.class);
+        }
+        catch(ClientHandlerException ex)
+        {
+            log.fatal("No connection to DBpedia: " + ex.getMessage());
+            return e;
+        }
 
-	if(response.getClientResponseStatus().getFamily() == Family.SUCCESSFUL)
-	{
-	    e = parseXML(response.getEntity(String.class));
-	}
-	for(Entity entity : e)
-	{
-	    if(entity.getSupported())
-	    {
-		e.remove(entity);
-		e.add(0, entity);
-		break;
-	    }
-	}
-	if(e.size() > 0 && e.get(0).getSupported())
-	{
-	    setSupported(true);
-	    e.get(0).extractInfo();
-	}
-	else
-	{
-	    for(Entity entity : e)
-	    {
-		entity.extractInfo();
+        if(response.getClientResponseStatus().getFamily() == Family.SUCCESSFUL)
+        {
+            e = parseXML(response.getEntity(String.class));
+        }
+        for(Entity entity : e)
+        {
+            if(entity.getSupported())
+            {
+                e.remove(entity);
+                e.add(0, entity);
+                break;
+            }
+        }
+        if(e.size() > 0 && e.get(0).getSupported())
+        {
+            setSupported(true);
+            e.get(0).extractInfo();
+        }
+        else
+        {
+            for(Entity entity : e)
+            {
+                entity.extractInfo();
 
-	    }
+            }
 
-	    e.clear();
-	}
-	return e;
+            e.clear();
+        }
+        return e;
     }
 
     public ArrayList<Entity> parseXML(String response)
     {
-	ArrayList<Entity> e = new ArrayList<Entity>();
-	Document doc = Jsoup.parse(response, "", Parser.xmlParser());
-	for(Element el : doc.select("Result"))
-	{
-	    Entity newEntity = new Entity();
-	    for(Element label : el.getElementsByTag("Label"))
-	    {
-		String type = label.text();
-		if(type.equals("person") || type.equals("place") || type.equals("organization"))
-		{
-		    newEntity.setType(type);
-		    newEntity.setSupported(true);
-		}
-	    }
-	    newEntity.setLabel(el.getElementsByTag("Label").get(0).text());
-	    newEntity.setUrl(el.getElementsByTag("URI").get(0).text());
-	    newEntity.setDescription(el.getElementsByTag("Description").get(0).text());
-	    e.add(newEntity);
-	}
-	return e;
+        ArrayList<Entity> e = new ArrayList<Entity>();
+        Document doc = Jsoup.parse(response, "", Parser.xmlParser());
+        for(Element el : doc.select("Result"))
+        {
+            Entity newEntity = new Entity();
+            for(Element label : el.getElementsByTag("Label"))
+            {
+                String type = label.text();
+                if(type.equals("person") || type.equals("place") || type.equals("organization"))
+                {
+                    newEntity.setType(type);
+                    newEntity.setSupported(true);
+                }
+            }
+            newEntity.setLabel(el.getElementsByTag("Label").get(0).text());
+            newEntity.setUrl(el.getElementsByTag("URI").get(0).text());
+            newEntity.setDescription(el.getElementsByTag("Description").get(0).text());
+            e.add(newEntity);
+        }
+        return e;
     }
 
     public String getQuery()
     {
-	return query;
+        return query;
     }
 
     public void setQuery(String query)
     {
-	this.query = query;
+        this.query = query;
     }
 
     public List<Entity> getEntities()
     {
-	return entities;
+        return entities;
     }
 
     public void setEntities(List<Entity> entities)
     {
-	this.entities = entities;
+        this.entities = entities;
     }
 
     public Boolean getSupported()
     {
-	return supported;
+        return supported;
     }
 
     public void setSupported(Boolean supported)
     {
-	this.supported = supported;
+        this.supported = supported;
     }
 
     /* test

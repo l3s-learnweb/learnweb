@@ -62,72 +62,72 @@ public class Search implements Serializable
 
     public Search(InterWeb interweb, String query, SearchFilters sf, User user)
     {
-	this.interweb = interweb;
-	this.query = query;
-	this.searchFilters = sf;
-	this.userId = (null == user) ? -1 : user.getId();
-	this.solrSearch = new SolrSearch(query, user);
+        this.interweb = interweb;
+        this.query = query;
+        this.searchFilters = sf;
+        this.userId = (null == user) ? -1 : user.getId();
+        this.solrSearch = new SolrSearch(query, user);
 
-	if(query.startsWith("source:") || query.startsWith("location:") || query.startsWith("groups:") || query.startsWith("title:"))
-	{
-	    hasMoreInterwebResults = false;
-	}
+        if(query.startsWith("source:") || query.startsWith("location:") || query.startsWith("groups:") || query.startsWith("title:"))
+        {
+            hasMoreInterwebResults = false;
+        }
     }
 
     private LinkedList<ResourceDecorator> doSearch(int page)
     {
 
-	LinkedList<ResourceDecorator> newResources = new LinkedList<ResourceDecorator>();
+        LinkedList<ResourceDecorator> newResources = new LinkedList<ResourceDecorator>();
 
-	log.debug("Search page " + page + " for: " + query);
+        log.debug("Search page " + page + " for: " + query);
 
-	try
-	{
-	    if(hasMoreResults && !stopped)
-	    {
-		if(hasMoreLearnwebResults && !searchFilters.isLearnwebSearchEnabled())
-		{
-		    hasMoreLearnwebResults = false;
-		}
+        try
+        {
+            if(hasMoreResults && !stopped)
+            {
+                if(hasMoreLearnwebResults && !searchFilters.isLearnwebSearchEnabled())
+                {
+                    hasMoreLearnwebResults = false;
+                }
 
-		if(hasMoreInterwebResults && !searchFilters.isInterwebSearchEnabled())
-		{
-		    hasMoreInterwebResults = false;
-		}
+                if(hasMoreInterwebResults && !searchFilters.isInterwebSearchEnabled())
+                {
+                    hasMoreInterwebResults = false;
+                }
 
-		// get results from LearnWeb
-		if(hasMoreLearnwebResults)
-		{
-		    newResources.addAll(getLearnwebResults(page));
-		}
+                // get results from LearnWeb
+                if(hasMoreLearnwebResults)
+                {
+                    newResources.addAll(getLearnwebResults(page));
+                }
 
-		// get results from InterWeb
-		if(hasMoreInterwebResults)
-		{
-		    // on the first page get results from Interweb, only when Learnweb does not return results
-		    if(page == 1 && hasMoreLearnwebResults)
-			interwebPageOffset = -1; // no interweb results were requested. so we have to request page 1 when Learnweb shows the next page
-		    else
-			newResources.addAll(getInterwebResults(page + interwebPageOffset));
-		}
+                // get results from InterWeb
+                if(hasMoreInterwebResults)
+                {
+                    // on the first page get results from Interweb, only when Learnweb does not return results
+                    if(page == 1 && hasMoreLearnwebResults)
+                        interwebPageOffset = -1; // no interweb results were requested. so we have to request page 1 when Learnweb shows the next page
+                    else
+                        newResources.addAll(getInterwebResults(page + interwebPageOffset));
+                }
 
-		if(!hasMoreInterwebResults && !hasMoreLearnwebResults)
-		    hasMoreResults = false;
+                if(!hasMoreInterwebResults && !hasMoreLearnwebResults)
+                    hasMoreResults = false;
 
-		resources.addAll(newResources);
-		pages.put(page, newResources);
-	    }
-	    else if(stopped)
-	    {
-		hasMoreResults = false;
-	    }
-	}
-	catch(Exception e)
-	{
-	    log.fatal("error during search", e);
-	}
+                resources.addAll(newResources);
+                pages.put(page, newResources);
+            }
+            else if(stopped)
+            {
+                hasMoreResults = false;
+            }
+        }
+        catch(Exception e)
+        {
+            log.fatal("error during search", e);
+        }
 
-	return newResources;
+        return newResources;
     }
 
     /**
@@ -140,269 +140,269 @@ public class Search implements Serializable
      */
     private LinkedList<ResourceDecorator> getLearnwebResults(int page) throws SQLException, SolrServerException
     {
-	long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
 
-	// Setup filters
-	if(page == 1)
-	{
-	    this.solrSearch.setFacetFields(searchFilters.getFacetFields());
-	    if(!searchFilters.isInterwebSearchEnabled())
-		this.solrSearch.setFacetQueries(searchFilters.getFacetQueries());
-	}
+        // Setup filters
+        if(page == 1)
+        {
+            this.solrSearch.setFacetFields(searchFilters.getFacetFields());
+            if(!searchFilters.isInterwebSearchEnabled())
+                this.solrSearch.setFacetQueries(searchFilters.getFacetQueries());
+        }
 
-	this.solrSearch.setFilterType(configMode == MODE.text ? "web" : configMode.name());
-	if(searchFilters.getServiceFilter() != null)
-	{
-	    this.solrSearch.setFilterLocation(searchFilters.getServiceFilter());
-	    this.solrSearch.setResultsPerPage(configResultsPerService * 4);
-	}
-	else
-	{
-	    this.solrSearch.setResultsPerPage(configResultsPerService);
-	}
+        this.solrSearch.setFilterType(configMode == MODE.text ? "web" : configMode.name());
+        if(searchFilters.getServiceFilter() != null)
+        {
+            this.solrSearch.setFilterLocation(searchFilters.getServiceFilter());
+            this.solrSearch.setResultsPerPage(configResultsPerService * 4);
+        }
+        else
+        {
+            this.solrSearch.setResultsPerPage(configResultsPerService);
+        }
 
-	if(this.configGroupResultsByField != null)
-	{
-	    this.solrSearch.setGroupField(this.configGroupResultsByField);
-	    this.solrSearch.setResultsPerGroup(this.configResultsPerGroup);
-	}
+        if(this.configGroupResultsByField != null)
+        {
+            this.solrSearch.setGroupField(this.configGroupResultsByField);
+            this.solrSearch.setResultsPerGroup(this.configResultsPerGroup);
+        }
 
-	if(searchFilters.getDateFromFilterAsString() != null)
-	    this.solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getDateFromFilter()));
-	if(searchFilters.getDateToFilterAsString() != null)
-	    this.solrSearch.setFilterDateTo(SOLR_DATE_FORMAT.format(searchFilters.getDateToFilter()));
-	if(searchFilters.getGroupFilter() != null)
-	    this.solrSearch.setFilterGroups(Integer.parseInt(searchFilters.getGroupFilter()));
-	if(searchFilters.getCollectorFilter() != null)
-	    this.solrSearch.setFilterCollector(searchFilters.getCollectorFilter());
-	if(searchFilters.getAuthorFilter() != null)
-	    this.solrSearch.setFilterAuthor(searchFilters.getAuthorFilter());
-	if(searchFilters.getCoverageFilter() != null)
-	    this.solrSearch.setFilterCoverage(searchFilters.getCoverageFilter());
-	if(searchFilters.getPublisherFilter() != null)
-	    this.solrSearch.setFilterPublisher(searchFilters.getPublisherFilter());
-	if(searchFilters.getTagsFilter() != null)
-	    this.solrSearch.setFilterTags(searchFilters.getTagsFilter());
+        if(searchFilters.getDateFromFilterAsString() != null)
+            this.solrSearch.setFilterDateFrom(SOLR_DATE_FORMAT.format(searchFilters.getDateFromFilter()));
+        if(searchFilters.getDateToFilterAsString() != null)
+            this.solrSearch.setFilterDateTo(SOLR_DATE_FORMAT.format(searchFilters.getDateToFilter()));
+        if(searchFilters.getGroupFilter() != null)
+            this.solrSearch.setFilterGroups(Integer.parseInt(searchFilters.getGroupFilter()));
+        if(searchFilters.getCollectorFilter() != null)
+            this.solrSearch.setFilterCollector(searchFilters.getCollectorFilter());
+        if(searchFilters.getAuthorFilter() != null)
+            this.solrSearch.setFilterAuthor(searchFilters.getAuthorFilter());
+        if(searchFilters.getCoverageFilter() != null)
+            this.solrSearch.setFilterCoverage(searchFilters.getCoverageFilter());
+        if(searchFilters.getPublisherFilter() != null)
+            this.solrSearch.setFilterPublisher(searchFilters.getPublisherFilter());
+        if(searchFilters.getTagsFilter() != null)
+            this.solrSearch.setFilterTags(searchFilters.getTagsFilter());
 
-	List<ResourceDecorator> learnwebResources = solrSearch.getResourcesByPage(page);
-	log.debug("Solr returned " + learnwebResources.size() + " results in " + (System.currentTimeMillis() - start) + " ms");
+        List<ResourceDecorator> learnwebResources = solrSearch.getResourcesByPage(page);
+        log.debug("Solr returned " + learnwebResources.size() + " results in " + (System.currentTimeMillis() - start) + " ms");
 
-	if(stopped)
-	    return null;
+        if(stopped)
+            return null;
 
-	if(page == 1)
-	{
-	    searchFilters.putResourceCounter(solrSearch.getFacetFields());
-	    if(!searchFilters.isInterwebSearchEnabled())
-	    {
-		searchFilters.putResourceCounter(solrSearch.getFacetQueries());
-	    }
+        if(page == 1)
+        {
+            searchFilters.putResourceCounter(solrSearch.getFacetFields());
+            if(!searchFilters.isInterwebSearchEnabled())
+            {
+                searchFilters.putResourceCounter(solrSearch.getFacetQueries());
+            }
 
-	    searchFilters.setTotalResultsLearnweb(solrSearch.getTotalResultCount());
-	}
+            searchFilters.setTotalResultsLearnweb(solrSearch.getTotalResultCount());
+        }
 
-	if(learnwebResources.size() == 0)
-	    hasMoreLearnwebResults = false;
+        if(learnwebResources.size() == 0)
+            hasMoreLearnwebResults = false;
 
-	int privateResourceCount = 0; // number of resources that match the query but will not be displayed to the user
-	int duplicatedUrlCount = 0; // number of resources that already displayed to the user
-	int notSatisfyFiltersCount = 0; // number of resources that not satisfy filters like video duration or image size
+        int privateResourceCount = 0; // number of resources that match the query but will not be displayed to the user
+        int duplicatedUrlCount = 0; // number of resources that already displayed to the user
+        int notSatisfyFiltersCount = 0; // number of resources that not satisfy filters like video duration or image size
 
-	LinkedList<ResourceDecorator> newResources = new LinkedList<ResourceDecorator>();
+        LinkedList<ResourceDecorator> newResources = new LinkedList<ResourceDecorator>();
 
-	for(ResourceDecorator decoratedResource : learnwebResources)
-	{
-	    Resource resource = decoratedResource.getResource();
+        for(ResourceDecorator decoratedResource : learnwebResources)
+        {
+            Resource resource = decoratedResource.getResource();
 
-	    if(resource.getId() > 0 && resource.getGroupId() == 0 && resource.getOwnerUserId() != userId)
-	    {
-		// the resource is stored in learnweb, belongs to no group and the current user is not the owner 
-		// of the resource. So he is not allowed to view the resource
-		privateResourceCount++;
-		continue;
-	    }
+            if(resource.getId() > 0 && resource.getGroupId() == 0 && resource.getOwnerUserId() != userId)
+            {
+                // the resource is stored in learnweb, belongs to no group and the current user is not the owner 
+                // of the resource. So he is not allowed to view the resource
+                privateResourceCount++;
+                continue;
+            }
 
-	    // check if an other resource with the same url exists
-	    // Yovisto urls are not unique in this case we use the file url
-	    if(!urlHashMap.add(!StringHelper.empty(resource.getFileUrl()) ? resource.getFileUrl() : resource.getUrl()))
-	    {
-		duplicatedUrlCount++;
-		continue;
-	    }
+            // check if an other resource with the same url exists
+            // Yovisto urls are not unique in this case we use the file url
+            if(!urlHashMap.add(!StringHelper.empty(resource.getFileUrl()) ? resource.getFileUrl() : resource.getUrl()))
+            {
+                duplicatedUrlCount++;
+                continue;
+            }
 
-	    if(!searchFilters.checkAfterLoadFilters(decoratedResource))
-	    {
-		notSatisfyFiltersCount++;
-		continue;
-	    }
+            if(!searchFilters.checkAfterLoadFilters(decoratedResource))
+            {
+                notSatisfyFiltersCount++;
+                continue;
+            }
 
-	    decoratedResource.setTempId(temporaryId);
+            decoratedResource.setTempId(temporaryId);
 
-	    tempIdIndex.put(temporaryId, decoratedResource.getResource());
-	    temporaryId++;
-	    //Learnweb.getInstance().getArchiveUrlManager().checkWaybackCaptures(decoratedResource);
-	    newResources.add(decoratedResource);
-	}
+            tempIdIndex.put(temporaryId, decoratedResource.getResource());
+            temporaryId++;
+            //Learnweb.getInstance().getArchiveUrlManager().checkWaybackCaptures(decoratedResource);
+            newResources.add(decoratedResource);
+        }
 
-	if(notSatisfyFiltersCount > 0 || privateResourceCount > 0 || duplicatedUrlCount > 0)
-	{
-	    this.removedResourceCount += duplicatedUrlCount + privateResourceCount + notSatisfyFiltersCount;
-	    log.debug("Filtered " + notSatisfyFiltersCount + " resources and skipped " + privateResourceCount + " private resources, " + duplicatedUrlCount + " dublicated resources");
-	}
+        if(notSatisfyFiltersCount > 0 || privateResourceCount > 0 || duplicatedUrlCount > 0)
+        {
+            this.removedResourceCount += duplicatedUrlCount + privateResourceCount + notSatisfyFiltersCount;
+            log.debug("Filtered " + notSatisfyFiltersCount + " resources and skipped " + privateResourceCount + " private resources, " + duplicatedUrlCount + " dublicated resources");
+        }
 
-	return newResources;
+        return newResources;
     }
 
     private LinkedList<ResourceDecorator> getInterwebResults(int page) throws IOException, IllegalResponseException
     {
-	long start = System.currentTimeMillis();
+        long start = System.currentTimeMillis();
 
-	// Setup filters
-	TreeMap<String, String> params = new TreeMap<String, String>();
-	params.put("media_types", configMode.name());
-	params.put("page", Integer.toString(page));
-	params.put("timeout", "50");
+        // Setup filters
+        TreeMap<String, String> params = new TreeMap<String, String>();
+        params.put("media_types", configMode.name());
+        params.put("page", Integer.toString(page));
+        params.put("timeout", "50");
 
-	if(searchFilters.getServiceFilter() != null)
-	{
-	    params.put("services", searchFilters.getServiceFilter());
-	    params.put("number_of_results", String.valueOf(configResultsPerService * 4));
-	}
-	else
-	{
-	    if(configMode == MODE.text)
-	    {
-		params.put("services", "Bing");
-	    }
-	    else if(configMode == MODE.image)
-	    {
-		params.put("services", "Flickr,Bing,Ipernity");
-	    }
-	    else if(configMode == MODE.video)
-	    {
-		params.put("services", "YouTube,Vimeo");
-	    }
-	    params.put("number_of_results", configResultsPerService.toString());
-	}
+        if(searchFilters.getServiceFilter() != null)
+        {
+            params.put("services", searchFilters.getServiceFilter());
+            params.put("number_of_results", String.valueOf(configResultsPerService * 4));
+        }
+        else
+        {
+            if(configMode == MODE.text)
+            {
+                params.put("services", "Bing");
+            }
+            else if(configMode == MODE.image)
+            {
+                params.put("services", "Flickr,Bing,Ipernity");
+            }
+            else if(configMode == MODE.video)
+            {
+                params.put("services", "YouTube,Vimeo");
+            }
+            params.put("number_of_results", configResultsPerService.toString());
+        }
 
-	if(searchFilters.getDateFromFilterAsString() != null)
-	    params.put("date_from", DEFAULT_DATE_FORMAT.format(searchFilters.getDateFromFilter()));
+        if(searchFilters.getDateFromFilterAsString() != null)
+            params.put("date_from", DEFAULT_DATE_FORMAT.format(searchFilters.getDateFromFilter()));
 
-	if(searchFilters.getDateToFilterAsString() != null)
-	    params.put("date_to", DEFAULT_DATE_FORMAT.format(searchFilters.getDateToFilter()));
+        if(searchFilters.getDateToFilterAsString() != null)
+            params.put("date_to", DEFAULT_DATE_FORMAT.format(searchFilters.getDateToFilter()));
 
-	if(searchFilters.getLanguageFilter() != null)
-	    params.put("language", searchFilters.getLanguageFilter());
+        if(searchFilters.getLanguageFilter() != null)
+            params.put("language", searchFilters.getLanguageFilter());
 
-	SearchQuery interwebResponse = interweb.search(query, params);
-	List<ResourceDecorator> interwebResults = interwebResponse.getResults();
-	log.debug("Interweb returned " + interwebResults.size() + " results in " + (System.currentTimeMillis() - start) + " ms");
+        SearchQuery interwebResponse = interweb.search(query, params);
+        List<ResourceDecorator> interwebResults = interwebResponse.getResults();
+        log.debug("Interweb returned " + interwebResults.size() + " results in " + (System.currentTimeMillis() - start) + " ms");
 
-	if(stopped)
-	    return null;
+        if(stopped)
+            return null;
 
-	if(page == 1)
-	{
-	    searchFilters.putResourceCounter(FILTERS.service, interwebResponse.getResultCountPerService(), true);
-	    searchFilters.setTotalResultsInterweb(interwebResponse.getTotalResultCount());
-	}
+        if(page == 1)
+        {
+            searchFilters.putResourceCounter(FILTERS.service, interwebResponse.getResultCountPerService(), true);
+            searchFilters.setTotalResultsInterweb(interwebResponse.getTotalResultCount());
+        }
 
-	if(interwebResults.size() == 0)
-	    hasMoreInterwebResults = false;
+        if(interwebResults.size() == 0)
+            hasMoreInterwebResults = false;
 
-	int duplicatedUrlCount = 0; // number of resources that already displayed to the user
-	int notSatisfyFiltersCount = 0; // number of resources that not satisfy filters like video duration or image size
+        int duplicatedUrlCount = 0; // number of resources that already displayed to the user
+        int notSatisfyFiltersCount = 0; // number of resources that not satisfy filters like video duration or image size
 
-	LinkedList<ResourceDecorator> newResources = new LinkedList<ResourceDecorator>();
+        LinkedList<ResourceDecorator> newResources = new LinkedList<ResourceDecorator>();
 
-	for(ResourceDecorator decoratedResource : interwebResults)
-	{
-	    if(null == decoratedResource.getUrl())
-	    {
-		log.warn("url is null: " + decoratedResource.toString());
-		continue;
-	    }
-	    // check if an other resource with the same url exists
-	    if(!urlHashMap.add(decoratedResource.getUrl()))
-	    {
-		duplicatedUrlCount++;
-		continue;
-	    }
+        for(ResourceDecorator decoratedResource : interwebResults)
+        {
+            if(null == decoratedResource.getUrl())
+            {
+                log.warn("url is null: " + decoratedResource.toString());
+                continue;
+            }
+            // check if an other resource with the same url exists
+            if(!urlHashMap.add(decoratedResource.getUrl()))
+            {
+                duplicatedUrlCount++;
+                continue;
+            }
 
-	    if(!searchFilters.checkAfterLoadFilters(decoratedResource))
-	    {
-		notSatisfyFiltersCount++;
-		continue;
-	    }
+            if(!searchFilters.checkAfterLoadFilters(decoratedResource))
+            {
+                notSatisfyFiltersCount++;
+                continue;
+            }
 
-	    decoratedResource.setTempId(temporaryId);
+            decoratedResource.setTempId(temporaryId);
 
-	    tempIdIndex.put(temporaryId, decoratedResource.getResource());
-	    temporaryId++;
+            tempIdIndex.put(temporaryId, decoratedResource.getResource());
+            temporaryId++;
 
-	    if(configMode == MODE.text)
-		Learnweb.getInstance().getArchiveUrlManager().checkWaybackCaptures(decoratedResource);
-	    newResources.add(decoratedResource);
-	}
+            if(configMode == MODE.text)
+                Learnweb.getInstance().getArchiveUrlManager().checkWaybackCaptures(decoratedResource);
+            newResources.add(decoratedResource);
+        }
 
-	if(notSatisfyFiltersCount > 0 || duplicatedUrlCount > 0)
-	{
-	    this.removedResourceCount += duplicatedUrlCount + notSatisfyFiltersCount;
-	    log.debug("Filtered " + notSatisfyFiltersCount + " resources and skipped " + duplicatedUrlCount + " dublicated resources");
-	}
+        if(notSatisfyFiltersCount > 0 || duplicatedUrlCount > 0)
+        {
+            this.removedResourceCount += duplicatedUrlCount + notSatisfyFiltersCount;
+            log.debug("Filtered " + notSatisfyFiltersCount + " resources and skipped " + duplicatedUrlCount + " dublicated resources");
+        }
 
-	return newResources;
+        return newResources;
     }
 
     public String getQuery()
     {
-	return query;
+        return query;
     }
 
     public void setMode(MODE searchMode)
     {
-	this.configMode = searchMode;
-	searchFilters.setMode(searchMode);
+        this.configMode = searchMode;
+        searchFilters.setMode(searchMode);
     }
 
     public MODE getMode()
     {
-	return configMode;
+        return configMode;
     }
 
     public void setResultsPerService(Integer configResultsPerService)
     {
-	this.configResultsPerService = configResultsPerService;
+        this.configResultsPerService = configResultsPerService;
     }
 
     public Integer getResultsPerService()
     {
-	return this.configResultsPerService;
+        return this.configResultsPerService;
     }
 
     public String getConfigGroupResultsByField()
     {
-	return configGroupResultsByField;
+        return configGroupResultsByField;
     }
 
     public void setConfigGroupResultsByField(String configGroupResultsByField)
     {
-	this.configGroupResultsByField = configGroupResultsByField;
+        this.configGroupResultsByField = configGroupResultsByField;
     }
 
     public Integer getConfigResultsPerGroup()
     {
-	return configResultsPerGroup;
+        return configResultsPerGroup;
     }
 
     public void setConfigResultsPerGroup(Integer configResultsPerGroup)
     {
-	this.configResultsPerGroup = configResultsPerGroup;
+        this.configResultsPerGroup = configResultsPerGroup;
     }
 
     public int getRemovedResourceCount()
     {
-	return this.removedResourceCount;
+        return this.removedResourceCount;
     }
 
     /**
@@ -411,7 +411,7 @@ public class Search implements Serializable
      */
     public LinkedList<ResourceDecorator> getResources()
     {
-	return resources;
+        return resources;
     }
 
     /**
@@ -419,30 +419,30 @@ public class Search implements Serializable
      */
     public List<GroupedResources> getResourcesGroupedBySource(Integer limit)
     {
-	List<GroupedResources> groupedResources = new ArrayList<GroupedResources>();
+        List<GroupedResources> groupedResources = new ArrayList<GroupedResources>();
 
-	for(ResourceDecorator res : resources)
-	{
-	    GroupedResources gr = new GroupedResources();
-	    gr.setGroupName(res.getLocation());
+        for(ResourceDecorator res : resources)
+        {
+            GroupedResources gr = new GroupedResources();
+            gr.setGroupName(res.getLocation());
 
-	    if(groupedResources.contains(gr))
-	    {
-		gr = groupedResources.get(groupedResources.indexOf(gr));
-		if(gr.getResources().size() < limit)
-		{
-		    gr.addResource(res);
-		}
-	    }
-	    else
-	    {
-		gr.setTotalResources(searchFilters.getTotalResources(FILTERS.service, gr.getGroupAlias()).intValue());
-		gr.addResource(res);
-		groupedResources.add(gr);
-	    }
-	}
+            if(groupedResources.contains(gr))
+            {
+                gr = groupedResources.get(groupedResources.indexOf(gr));
+                if(gr.getResources().size() < limit)
+                {
+                    gr.addResource(res);
+                }
+            }
+            else
+            {
+                gr.setTotalResources(searchFilters.getTotalResources(FILTERS.service, gr.getGroupAlias()).intValue());
+                gr.addResource(res);
+                groupedResources.add(gr);
+            }
+        }
 
-	return groupedResources;
+        return groupedResources;
     }
 
     /**
@@ -453,125 +453,125 @@ public class Search implements Serializable
      */
     public synchronized LinkedList<ResourceDecorator> getResourcesByPage(int page)
     {
-	if(page == 2)
-	    getResourcesByPage(1);
+        if(page == 2)
+            getResourcesByPage(1);
 
-	if(page > 50)
-	{
-	    log.fatal("Requested more than 50 pages", new Exception());
-	    return null;
-	}
+        if(page > 50)
+        {
+            log.fatal("Requested more than 50 pages", new Exception());
+            return null;
+        }
 
-	//	log.debug("called doSearch for page: " + page);
-	LinkedList<ResourceDecorator> res = pages.get(page);
+        //	log.debug("called doSearch for page: " + page);
+        LinkedList<ResourceDecorator> res = pages.get(page);
 
-	if(null == res)
-	    return doSearch(page);
+        if(null == res)
+            return doSearch(page);
 
-	return res;
+        return res;
     }
 
     public boolean isHasMoreResults()
     {
-	return hasMoreResults;
+        return hasMoreResults;
     }
 
     public Resource getResourceByTempId(int tempId)
     {
-	return tempIdIndex.get(tempId);
+        return tempIdIndex.get(tempId);
     }
 
     public void stop()
     {
-	this.stopped = true;
+        this.stopped = true;
     }
 
     public class GroupedResources implements Serializable, Comparable<GroupedResources>
     {
-	private static final long serialVersionUID = -1060339894351517966L;
+        private static final long serialVersionUID = -1060339894351517966L;
 
-	String groupName;
-	String groupAlias;
-	Integer totalResources;
-	LinkedList<ResourceDecorator> resources;
+        String groupName;
+        String groupAlias;
+        Integer totalResources;
+        LinkedList<ResourceDecorator> resources;
 
-	@Override
-	public boolean equals(Object o)
-	{
-	    if(o == null)
-		return false;
-	    if(o == this)
-		return true;
+        @Override
+        public boolean equals(Object o)
+        {
+            if(o == null)
+                return false;
+            if(o == this)
+                return true;
 
-	    return this.groupAlias.equals(((GroupedResources) o).groupAlias);
-	}
+            return this.groupAlias.equals(((GroupedResources) o).groupAlias);
+        }
 
-	@Override
-	public int compareTo(GroupedResources another)
-	{
-	    if(this.getTotalResources() > another.getTotalResources())
-	    {
-		return -1;
-	    }
-	    else
-	    {
-		return 1;
-	    }
-	}
+        @Override
+        public int compareTo(GroupedResources another)
+        {
+            if(this.getTotalResources() > another.getTotalResources())
+            {
+                return -1;
+            }
+            else
+            {
+                return 1;
+            }
+        }
 
-	public String getGroupName()
-	{
-	    return groupName;
-	}
+        public String getGroupName()
+        {
+            return groupName;
+        }
 
-	public void setGroupName(String groupName)
-	{
-	    try
-	    {
-		SERVICE src = SearchFilters.getServiceByName(groupName);
-		this.groupAlias = src.name();
-		this.groupName = src.toString();
-	    }
-	    catch(IllegalArgumentException e)
-	    {
-		this.groupAlias = groupName.toLowerCase();
-		this.groupName = groupName;
-	    }
-	}
+        public void setGroupName(String groupName)
+        {
+            try
+            {
+                SERVICE src = SearchFilters.getServiceByName(groupName);
+                this.groupAlias = src.name();
+                this.groupName = src.toString();
+            }
+            catch(IllegalArgumentException e)
+            {
+                this.groupAlias = groupName.toLowerCase();
+                this.groupName = groupName;
+            }
+        }
 
-	public String getGroupAlias()
-	{
-	    return groupAlias;
-	}
+        public String getGroupAlias()
+        {
+            return groupAlias;
+        }
 
-	public Integer getTotalResources()
-	{
-	    return totalResources;
-	}
+        public Integer getTotalResources()
+        {
+            return totalResources;
+        }
 
-	public void setTotalResources(Integer totalResources)
-	{
-	    this.totalResources = totalResources;
-	}
+        public void setTotalResources(Integer totalResources)
+        {
+            this.totalResources = totalResources;
+        }
 
-	public LinkedList<ResourceDecorator> getResources()
-	{
-	    return resources;
-	}
+        public LinkedList<ResourceDecorator> getResources()
+        {
+            return resources;
+        }
 
-	public void setResources(LinkedList<ResourceDecorator> resources)
-	{
-	    this.resources = resources;
-	}
+        public void setResources(LinkedList<ResourceDecorator> resources)
+        {
+            this.resources = resources;
+        }
 
-	public void addResource(ResourceDecorator resources)
-	{
-	    if(this.resources == null)
-	    {
-		this.resources = new LinkedList<ResourceDecorator>();
-	    }
+        public void addResource(ResourceDecorator resources)
+        {
+            if(this.resources == null)
+            {
+                this.resources = new LinkedList<ResourceDecorator>();
+            }
 
-	    this.resources.add(resources);
-	}
+            this.resources.add(resources);
+        }
     }
 }

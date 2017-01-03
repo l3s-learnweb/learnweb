@@ -18,99 +18,99 @@ public class PresentationManager
 
     protected PresentationManager(Learnweb learnweb) throws SQLException
     {
-	this.learnweb = learnweb;
+        this.learnweb = learnweb;
     }
 
     private Presentation createPresentation(ResultSet rs) throws SQLException
     {
-	Presentation p = new Presentation();
-	try
-	{
-	    p.setGroupId(rs.getInt("group_id"));
-	    p.setOwnerId(rs.getInt("user_id"));
-	    p.setPresentationId(rs.getInt("presentation_id"));
-	    p.setPresentationName(rs.getString("presentation_name"));
-	    p.setCode(rs.getString("code"));
-	    Document doc = Jsoup.parse(rs.getString("code"));
-	    String title;
-	    try
-	    {
-		title = doc.getElementById("presentation_title").html();
-	    }
-	    catch(NullPointerException e)
-	    {
-		title = "Title Not Available";
-	    }
-	    p.setPresentationTitle(title);
-	    p.setDate(new Date(rs.getTimestamp("timestamp").getTime()));
-	    /*
-	    SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
-	    Date date = new Date(rs.getTimestamp("timestamp").getTime());
-	    String time = sdf.format(date);
-	    p.setDate(time);
-	    */
-	}
-	catch(Exception e)
-	{
-	    log.error("presenation error", e);
-	}
-	return p;
+        Presentation p = new Presentation();
+        try
+        {
+            p.setGroupId(rs.getInt("group_id"));
+            p.setOwnerId(rs.getInt("user_id"));
+            p.setPresentationId(rs.getInt("presentation_id"));
+            p.setPresentationName(rs.getString("presentation_name"));
+            p.setCode(rs.getString("code"));
+            Document doc = Jsoup.parse(rs.getString("code"));
+            String title;
+            try
+            {
+                title = doc.getElementById("presentation_title").html();
+            }
+            catch(NullPointerException e)
+            {
+                title = "Title Not Available";
+            }
+            p.setPresentationTitle(title);
+            p.setDate(new Date(rs.getTimestamp("timestamp").getTime()));
+            /*
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+            Date date = new Date(rs.getTimestamp("timestamp").getTime());
+            String time = sdf.format(date);
+            p.setDate(time);
+            */
+        }
+        catch(Exception e)
+        {
+            log.error("presenation error", e);
+        }
+        return p;
     }
 
     private List<Presentation> getPresentations(String query, String param1, int... params) throws SQLException
     {
-	List<Presentation> presentations = new LinkedList<Presentation>();
-	PreparedStatement select = learnweb.getConnection().prepareStatement(query);
+        List<Presentation> presentations = new LinkedList<Presentation>();
+        PreparedStatement select = learnweb.getConnection().prepareStatement(query);
 
-	int i = 1;
-	if(null != param1)
-	    select.setString(i++, param1);
+        int i = 1;
+        if(null != param1)
+            select.setString(i++, param1);
 
-	for(int param : params)
-	    select.setInt(i++, param);
+        for(int param : params)
+            select.setInt(i++, param);
 
-	ResultSet rs = select.executeQuery();
-	while(rs.next())
-	{
-	    presentations.add(createPresentation(rs));
-	}
-	select.close();
+        ResultSet rs = select.executeQuery();
+        while(rs.next())
+        {
+            presentations.add(createPresentation(rs));
+        }
+        select.close();
 
-	return presentations;
+        return presentations;
     }
 
     public List<Presentation> getPresentationsByGroupId(int groupId) throws SQLException
     {
 
-	return getPresentations("SELECT * FROM lw_presentation WHERE group_id = ? AND deleted=0", null, groupId);
+        return getPresentations("SELECT * FROM lw_presentation WHERE group_id = ? AND deleted=0", null, groupId);
     }
 
     public List<Presentation> getPresentationsByUserId(int userId) throws SQLException
     {
-	return getPresentations("SELECT * FROM lw_presentation WHERE user_id = ? AND deleted=0", null, userId);
+        return getPresentations("SELECT * FROM lw_presentation WHERE user_id = ? AND deleted=0", null, userId);
     }
 
     public Presentation getPresentationsById(int presentationId) throws SQLException
     {
-	List<Presentation> p = new LinkedList<Presentation>();
-	p = getPresentations("SELECT * FROM lw_presentation WHERE presentation_id = ? AND deleted=0", null, presentationId);
-	return p.get(0);
+        List<Presentation> p = new LinkedList<Presentation>();
+        p = getPresentations("SELECT * FROM lw_presentation WHERE presentation_id = ? AND deleted=0", null, presentationId);
+        return p.get(0);
     }
 
     public Learnweb getLearnweb()
     {
-	return learnweb;
+        return learnweb;
     }
 
     public void deletePresentation(int presentationId) throws SQLException
     {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 
     public void addPresentation(Presentation presentation) throws SQLException
     {
-	// TODO Auto-generated method stub
+        // TODO Auto-generated method stub
 
     }
 

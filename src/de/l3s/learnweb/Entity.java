@@ -65,549 +65,549 @@ public class Entity implements Serializable
 
     public static void main(String[] args)
     {
-	Entity ent = new Entity();
-	ent.setUrl("http://dbpedia.org/resource/Barack_Obama");
-	ent.setType("person");
-	ent.extractInfo();
+        Entity ent = new Entity();
+        ent.setUrl("http://dbpedia.org/resource/Barack_Obama");
+        ent.setType("person");
+        ent.extractInfo();
 
     }
 
     public void extractInfo()
     {
-	Client client = Client.create();
-	//WebResource resource = client.resource("http://prometheus.kbs.uni-hannover.de:8890/sparql?default-graph-uri=http%3A%2F%2F"+ SERVER +"&query=DESCRIBE+%3C" + url + "%3E&output=application%2Fmicrodata%2Bjson");
-	url = url.replaceFirst("dbpedia.org", SERVER);
-	WebResource resource = client.resource(url.replaceFirst("resource", "data") + ".json?timeout=5000");
+        Client client = Client.create();
+        //WebResource resource = client.resource("http://prometheus.kbs.uni-hannover.de:8890/sparql?default-graph-uri=http%3A%2F%2F"+ SERVER +"&query=DESCRIBE+%3C" + url + "%3E&output=application%2Fmicrodata%2Bjson");
+        url = url.replaceFirst("dbpedia.org", SERVER);
+        WebResource resource = client.resource(url.replaceFirst("resource", "data") + ".json?timeout=5000");
 
-	ClientResponse response = resource.get(ClientResponse.class);
-	if(response.getClientResponseStatus().getFamily() == Family.SUCCESSFUL)
-	{
-	    try
-	    {
-		String strangeDBurl = url.substring(url.lastIndexOf('/') + 1);
+        ClientResponse response = resource.get(ClientResponse.class);
+        if(response.getClientResponseStatus().getFamily() == Family.SUCCESSFUL)
+        {
+            try
+            {
+                String strangeDBurl = url.substring(url.lastIndexOf('/') + 1);
 
-		// only the last part of the url has to be url encoded
-		strangeDBurl = "http://" + SERVER + "/resource/" + StringHelper.urlEncode(url.substring(url.lastIndexOf('/') + 1));
+                // only the last part of the url has to be url encoded
+                strangeDBurl = "http://" + SERVER + "/resource/" + StringHelper.urlEncode(url.substring(url.lastIndexOf('/') + 1));
 
-		json = new JSONObject(response.getEntity(String.class));
-		json = json.getJSONObject(strangeDBurl);
+                json = new JSONObject(response.getEntity(String.class));
+                json = json.getJSONObject(strangeDBurl);
 
-		if(null == type)
-		    return;
+                if(null == type)
+                    return;
 
-		if(type.equals("person"))
-		{
-		    thumbnail = (String) getValue("http://" + SERVER + "/ontology/thumbnail");
-		    birthDate = getValue("http://" + SERVER + "/ontology/birthDate");
-		    birthPlace = (String) getValue("http://" + SERVER + "/property/placeOfBirth");
-		    children = (String) getValue("http://" + SERVER + "/property/children");
-		    fullName = (String) getValue("http://" + SERVER + "/property/fullname");
-		    alternativeNames = (String) getValue("http://" + SERVER + "/property/alternativeNames");
-		    birthName = (String) getValue("http://" + SERVER + "/property/birthName");
-		    deathDate = getValue("http://" + SERVER + "/ontology/deathDate");
-		    deathPlace = (String) getValue("http://" + SERVER + "/property/placeOfDeath");
-		    spouse = (String) getValue("http://" + SERVER + "/property/spouse");
-		}
-		if(type.equals("organization"))
-		{
-		    thumbnail = (String) getValue("http://" + SERVER + "/ontology/thumbnail");
-		    homepage = (String) getValue("http://" + SERVER + "/property/homepage");
-		    if(homepage.equals(""))
-			homepage = (String) getValue("http://xmlns.com/foaf/0.1/homepage");
-		    foundedBy = (String) getValue("http://" + SERVER + "/ontology/foundedBy");
-		    foundingDate = (String) getValue("http://" + SERVER + "/ontology/foundingDate");
-		    if(foundingDate.equals(""))
-			foundingYear = (String) getValue("http://" + SERVER + "/ontology/foundingYear");
-		    launchDate = getValue("http://" + SERVER + "/ontology/launchDate");
-		    industry = (String) getValue("http://" + SERVER + "/ontology/industry");
-		    companyType = (String) getValue("http://" + SERVER + "/property/companyType");
-		    areaServed = (String) getValue("http://" + SERVER + "/property/areaServed");
-		    numberOfEmployees = (String) getValue("http://" + SERVER + "/ontology/numberOfEmployees");
-		}
-		if(type.equals("place"))
-		{
-		    thumbnail = (String) getValue("http://" + SERVER + "/ontology/thumbnail");
-		    capital = (String) getValue("http://" + SERVER + "/property/capital");
-		    dialingCode = (String) getValue("http://" + SERVER + "/property/callingCode");
-		    population = (String) getValue("http://" + SERVER + "/property/populationTotal");
-		    populationAsOf = (String) getValue("http://" + SERVER + "/property/populationAsOf");
-		    languages = (String) getValue("http://" + SERVER + "/property/languages");
-		    governmentType = (String) getValue("http://" + SERVER + "/property/governmentType");
-		    nationalAnthem = (String) getValue("http://" + SERVER + "/property/nationalAnthem");
-		    currencies = (String) getValue("http://" + SERVER + "/property/currency");
-		    country = (String) getValue("http://" + SERVER + "/ontology/country");
-		    area = (String) getValue("http://" + SERVER + "/property/areaTotalKm");
-		    governor = (String) getValue("http://" + SERVER + "/property/governor");
-		    senators = (String) getValue("http://" + SERVER + "/property/senators");
-		    state = (String) getValue("http://" + SERVER + "/ontology/isPartOf");
-		    timeZone = (String) getValue("http://" + SERVER + "/ontology/timeZone");
-		}
-	    }
-	    catch(Exception e)
-	    {
-		e.printStackTrace();
-	    }
-	}
-	else
-	{
-	    log.error("unpexted status: " + response.getClientResponseStatus());
-	}
+                if(type.equals("person"))
+                {
+                    thumbnail = (String) getValue("http://" + SERVER + "/ontology/thumbnail");
+                    birthDate = getValue("http://" + SERVER + "/ontology/birthDate");
+                    birthPlace = (String) getValue("http://" + SERVER + "/property/placeOfBirth");
+                    children = (String) getValue("http://" + SERVER + "/property/children");
+                    fullName = (String) getValue("http://" + SERVER + "/property/fullname");
+                    alternativeNames = (String) getValue("http://" + SERVER + "/property/alternativeNames");
+                    birthName = (String) getValue("http://" + SERVER + "/property/birthName");
+                    deathDate = getValue("http://" + SERVER + "/ontology/deathDate");
+                    deathPlace = (String) getValue("http://" + SERVER + "/property/placeOfDeath");
+                    spouse = (String) getValue("http://" + SERVER + "/property/spouse");
+                }
+                if(type.equals("organization"))
+                {
+                    thumbnail = (String) getValue("http://" + SERVER + "/ontology/thumbnail");
+                    homepage = (String) getValue("http://" + SERVER + "/property/homepage");
+                    if(homepage.equals(""))
+                        homepage = (String) getValue("http://xmlns.com/foaf/0.1/homepage");
+                    foundedBy = (String) getValue("http://" + SERVER + "/ontology/foundedBy");
+                    foundingDate = (String) getValue("http://" + SERVER + "/ontology/foundingDate");
+                    if(foundingDate.equals(""))
+                        foundingYear = (String) getValue("http://" + SERVER + "/ontology/foundingYear");
+                    launchDate = getValue("http://" + SERVER + "/ontology/launchDate");
+                    industry = (String) getValue("http://" + SERVER + "/ontology/industry");
+                    companyType = (String) getValue("http://" + SERVER + "/property/companyType");
+                    areaServed = (String) getValue("http://" + SERVER + "/property/areaServed");
+                    numberOfEmployees = (String) getValue("http://" + SERVER + "/ontology/numberOfEmployees");
+                }
+                if(type.equals("place"))
+                {
+                    thumbnail = (String) getValue("http://" + SERVER + "/ontology/thumbnail");
+                    capital = (String) getValue("http://" + SERVER + "/property/capital");
+                    dialingCode = (String) getValue("http://" + SERVER + "/property/callingCode");
+                    population = (String) getValue("http://" + SERVER + "/property/populationTotal");
+                    populationAsOf = (String) getValue("http://" + SERVER + "/property/populationAsOf");
+                    languages = (String) getValue("http://" + SERVER + "/property/languages");
+                    governmentType = (String) getValue("http://" + SERVER + "/property/governmentType");
+                    nationalAnthem = (String) getValue("http://" + SERVER + "/property/nationalAnthem");
+                    currencies = (String) getValue("http://" + SERVER + "/property/currency");
+                    country = (String) getValue("http://" + SERVER + "/ontology/country");
+                    area = (String) getValue("http://" + SERVER + "/property/areaTotalKm");
+                    governor = (String) getValue("http://" + SERVER + "/property/governor");
+                    senators = (String) getValue("http://" + SERVER + "/property/senators");
+                    state = (String) getValue("http://" + SERVER + "/ontology/isPartOf");
+                    timeZone = (String) getValue("http://" + SERVER + "/ontology/timeZone");
+                }
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
+        }
+        else
+        {
+            log.error("unpexted status: " + response.getClientResponseStatus());
+        }
     }
 
     public Object getValue(String field)
     {
 
-	String value = "";
-	try
-	{
-	    String fieldValue = json.get(field).toString();
+        String value = "";
+        try
+        {
+            String fieldValue = json.get(field).toString();
 
-	    JSONArray jarray = new JSONArray(fieldValue);
-	    for(int i = 0; i < jarray.length(); i++)
-	    {
-		JSONObject jo = jarray.getJSONObject(i);
-		if(jo.getString("type").equals("uri") && !field.equals("http://" + SERVER + "/ontology/thumbnail"))
-		{
-		    if(field.equals("http://" + SERVER + "/property/children"))
-			continue;
+            JSONArray jarray = new JSONArray(fieldValue);
+            for(int i = 0; i < jarray.length(); i++)
+            {
+                JSONObject jo = jarray.getJSONObject(i);
+                if(jo.getString("type").equals("uri") && !field.equals("http://" + SERVER + "/ontology/thumbnail"))
+                {
+                    if(field.equals("http://" + SERVER + "/property/children"))
+                        continue;
 
-		    value = value + jo.getString("value").substring(jo.getString("value").lastIndexOf("/") + 1).replace("_", " ") + ", ";
-		}
-		else
-		{
-		    try
-		    {
-			String datatype = jo.getString("datatype");
+                    value = value + jo.getString("value").substring(jo.getString("value").lastIndexOf("/") + 1).replace("_", " ") + ", ";
+                }
+                else
+                {
+                    try
+                    {
+                        String datatype = jo.getString("datatype");
 
-			if(datatype.contains("date"))
-			{
-			    Date date = new SimpleDateFormat("yyyy-MM-dd").parse(jo.getString("value"));
+                        if(datatype.contains("date"))
+                        {
+                            Date date = new SimpleDateFormat("yyyy-MM-dd").parse(jo.getString("value"));
 
-			    if(date != null)
-				return date;
-			    value = jo.getString("value");
-			    //value = new SimpleDateFormat("MMMM dd, yyyy").format(date) + ", ";
-			}
-			else if(datatype.contains("gYear"))
-			{
-			    value = jo.getString("value").substring(0, 6);
-			}
-			else
-			{
-			    throw new JSONException("Not Date format");
-			}
-		    }
-		    catch(JSONException e)
-		    {
-			value = value + jo.getString("value") + ", ";
-		    }
-		    catch(Exception e)
-		    {
-			e.printStackTrace();
-		    }
-		}
-	    }
-	    value = value.substring(0, value.length() - 2);
-	}
-	catch(JSONException e)
-	{
-	    value = "";
-	}
+                            if(date != null)
+                                return date;
+                            value = jo.getString("value");
+                            //value = new SimpleDateFormat("MMMM dd, yyyy").format(date) + ", ";
+                        }
+                        else if(datatype.contains("gYear"))
+                        {
+                            value = jo.getString("value").substring(0, 6);
+                        }
+                        else
+                        {
+                            throw new JSONException("Not Date format");
+                        }
+                    }
+                    catch(JSONException e)
+                    {
+                        value = value + jo.getString("value") + ", ";
+                    }
+                    catch(Exception e)
+                    {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            value = value.substring(0, value.length() - 2);
+        }
+        catch(JSONException e)
+        {
+            value = "";
+        }
 
-	if(value.trim().length() < 3)
-	    return "";
+        if(value.trim().length() < 3)
+            return "";
 
-	return value;
+        return value;
     }
 
     public String getLabel()
     {
-	return label;
+        return label;
     }
 
     public void setLabel(String label)
     {
-	this.label = label;
+        this.label = label;
     }
 
     public String getUrl()
     {
-	return url;
+        return url;
     }
 
     public void setUrl(String url)
     {
-	this.url = url;
+        this.url = url;
     }
 
     public String getDescription()
     {
-	return description;
+        return description;
     }
 
     public void setDescription(String description)
     {
-	this.description = description;
+        this.description = description;
     }
 
     public String getType()
     {
-	return type;
+        return type;
     }
 
     public void setType(String type)
     {
-	this.type = type;
+        this.type = type;
     }
 
     public String getThumbnail()
     {
-	return thumbnail;
+        return thumbnail;
     }
 
     public void setThumbnail(String thumbnail)
     {
-	this.thumbnail = thumbnail;
+        this.thumbnail = thumbnail;
     }
 
     public Boolean getSupported()
     {
-	return supported;
+        return supported;
     }
 
     public void setSupported(Boolean supported)
     {
-	this.supported = supported;
+        this.supported = supported;
     }
 
     public Object getBirthDate()
     {
-	return birthDate;
+        return birthDate;
     }
 
     public void setBirthDate(String birthDate)
     {
-	this.birthDate = birthDate;
+        this.birthDate = birthDate;
     }
 
     public String getBirthPlace()
     {
-	return birthPlace;
+        return birthPlace;
     }
 
     public void setBirthPlace(String birthPlace)
     {
-	this.birthPlace = birthPlace;
+        this.birthPlace = birthPlace;
     }
 
     public String getChildren()
     {
-	return children;
+        return children;
     }
 
     public void setChildren(String children)
     {
-	this.children = children;
+        this.children = children;
     }
 
     public String getFullName()
     {
-	return fullName;
+        return fullName;
     }
 
     public void setFullName(String fullName)
     {
-	this.fullName = fullName;
+        this.fullName = fullName;
     }
 
     public String getAlternativeNames()
     {
-	return alternativeNames;
+        return alternativeNames;
     }
 
     public void setAlternativeNames(String alternativeNames)
     {
-	this.alternativeNames = alternativeNames;
+        this.alternativeNames = alternativeNames;
     }
 
     public String getBirthName()
     {
-	return birthName;
+        return birthName;
     }
 
     public void setBirthName(String birthName)
     {
-	this.birthName = birthName;
+        this.birthName = birthName;
     }
 
     public Object getDeathDate()
     {
-	return deathDate;
+        return deathDate;
     }
 
     public void setDeathDate(String deathDate)
     {
-	this.deathDate = deathDate;
+        this.deathDate = deathDate;
     }
 
     public String getDeathPlace()
     {
-	return deathPlace;
+        return deathPlace;
     }
 
     public void setDeathPlace(String deathPlace)
     {
-	this.deathPlace = deathPlace;
+        this.deathPlace = deathPlace;
     }
 
     public String getSpouse()
     {
-	return spouse;
+        return spouse;
     }
 
     public void setSpouse(String spouse)
     {
-	this.spouse = spouse;
+        this.spouse = spouse;
     }
 
     public String getHomepage()
     {
-	return homepage;
+        return homepage;
     }
 
     public void setHomepage(String homepage)
     {
-	this.homepage = homepage;
+        this.homepage = homepage;
     }
 
     public String getFoundedBy()
     {
-	return foundedBy;
+        return foundedBy;
     }
 
     public void setFoundedBy(String foundedBy)
     {
-	this.foundedBy = foundedBy;
+        this.foundedBy = foundedBy;
     }
 
     public String getFoundingDate()
     {
-	return foundingDate;
+        return foundingDate;
     }
 
     public void setFoundingDate(String foundingDate)
     {
-	this.foundingDate = foundingDate;
+        this.foundingDate = foundingDate;
     }
 
     public String getFoundingYear()
     {
-	return foundingYear;
+        return foundingYear;
     }
 
     public void setFoundingYear(String foundingYear)
     {
-	this.foundingYear = foundingYear;
+        this.foundingYear = foundingYear;
     }
 
     public Object getLaunchDate()
     {
-	return launchDate;
+        return launchDate;
     }
 
     public void setLaunchDate(String launchDate)
     {
-	this.launchDate = launchDate;
+        this.launchDate = launchDate;
     }
 
     public String getIndustry()
     {
-	return industry;
+        return industry;
     }
 
     public void setIndustry(String industry)
     {
-	this.industry = industry;
+        this.industry = industry;
     }
 
     public String getCompanyType()
     {
-	return companyType;
+        return companyType;
     }
 
     public void setCompanyType(String companyType)
     {
-	this.companyType = companyType;
+        this.companyType = companyType;
     }
 
     public String getAreaServed()
     {
-	return areaServed;
+        return areaServed;
     }
 
     public void setAreaServed(String areaServed)
     {
-	this.areaServed = areaServed;
+        this.areaServed = areaServed;
     }
 
     public String getNumberOfEmployees()
     {
-	return numberOfEmployees;
+        return numberOfEmployees;
     }
 
     public void setNumberOfEmployees(String numberOfEmployees)
     {
-	this.numberOfEmployees = numberOfEmployees;
+        this.numberOfEmployees = numberOfEmployees;
     }
 
     public JSONObject getJson()
     {
-	return json;
+        return json;
     }
 
     public void setJson(JSONObject json)
     {
-	this.json = json;
+        this.json = json;
     }
 
     public String getCapital()
     {
-	return capital;
+        return capital;
     }
 
     public void setCapital(String capital)
     {
-	this.capital = capital;
+        this.capital = capital;
     }
 
     public String getDialingCode()
     {
-	return dialingCode;
+        return dialingCode;
     }
 
     public void setDialingCode(String dialingCode)
     {
-	this.dialingCode = dialingCode;
+        this.dialingCode = dialingCode;
     }
 
     public String getPopulation()
     {
-	return population;
+        return population;
     }
 
     public void setPopulation(String population)
     {
-	this.population = population;
+        this.population = population;
     }
 
     public String getLanguages()
     {
-	return languages;
+        return languages;
     }
 
     public void setLanguages(String languages)
     {
-	this.languages = languages;
+        this.languages = languages;
     }
 
     public String getGovernmentType()
     {
-	return governmentType;
+        return governmentType;
     }
 
     public void setGovernmentType(String governmentType)
     {
-	this.governmentType = governmentType;
+        this.governmentType = governmentType;
     }
 
     public String getNationalAnthem()
     {
-	return nationalAnthem;
+        return nationalAnthem;
     }
 
     public void setNationalAnthem(String nationalAnthem)
     {
-	this.nationalAnthem = nationalAnthem;
+        this.nationalAnthem = nationalAnthem;
     }
 
     public String getCurrencies()
     {
-	return currencies;
+        return currencies;
     }
 
     public void setCurrencies(String currencies)
     {
-	this.currencies = currencies;
+        this.currencies = currencies;
     }
 
     public String getCountry()
     {
-	return country;
+        return country;
     }
 
     public void setCountry(String country)
     {
-	this.country = country;
+        this.country = country;
     }
 
     public String getArea()
     {
-	return area;
+        return area;
     }
 
     public void setArea(String area)
     {
-	this.area = area;
+        this.area = area;
     }
 
     public String getGovernor()
     {
-	return governor;
+        return governor;
     }
 
     public void setGovernor(String governor)
     {
-	this.governor = governor;
+        this.governor = governor;
     }
 
     public String getSenators()
     {
-	return senators;
+        return senators;
     }
 
     public void setSenators(String senators)
     {
-	this.senators = senators;
+        this.senators = senators;
     }
 
     public String getState()
     {
-	return state;
+        return state;
     }
 
     public void setState(String state)
     {
-	this.state = state;
+        this.state = state;
     }
 
     public String getTimeZone()
     {
-	return timeZone;
+        return timeZone;
     }
 
     public void setTimeZone(String timeZone)
     {
-	this.timeZone = timeZone;
+        this.timeZone = timeZone;
     }
 
     public String getPopulationAsOf()
     {
-	return populationAsOf;
+        return populationAsOf;
     }
 
     public void setPopulationAsOf(String populationAsOf)
     {
-	this.populationAsOf = populationAsOf;
+        this.populationAsOf = populationAsOf;
     }
 
 }

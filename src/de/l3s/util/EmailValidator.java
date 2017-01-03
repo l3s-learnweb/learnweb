@@ -13,7 +13,7 @@ public class EmailValidator
 
     public EmailValidator()
     {
-	pattern = Pattern.compile(EMAIL_PATTERN);
+        pattern = Pattern.compile(EMAIL_PATTERN);
     }
 
     /**
@@ -26,8 +26,8 @@ public class EmailValidator
     public boolean validate(final String hex)
     {
 
-	matcher = pattern.matcher(hex);
-	return matcher.matches();
+        matcher = pattern.matcher(hex);
+        return matcher.matches();
 
     }
 }

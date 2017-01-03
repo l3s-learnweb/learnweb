@@ -31,11 +31,11 @@ public class CourseManager
 
     static
     {
-	StringBuilder qry = new StringBuilder(
-		"course_id, title, forum_id, forum_category_id, organisation_id, default_group_id, wizard_param, wizard_enabled, next_x_users_become_moderator, default_interweb_username, default_interweb_password, welcome_message, banner_color, banner_image_file_id, options_field1");
-	for(int i = 2; i <= FIELDS; i++)
-	    qry.append(", options_field").append(i);
-	COLUMNS = qry.toString();
+        StringBuilder qry = new StringBuilder(
+                "course_id, title, forum_id, forum_category_id, organisation_id, default_group_id, wizard_param, wizard_enabled, next_x_users_become_moderator, default_interweb_username, default_interweb_password, welcome_message, banner_color, banner_image_file_id, options_field1");
+        for(int i = 2; i <= FIELDS; i++)
+            qry.append(", options_field").append(i);
+        COLUMNS = qry.toString();
     }
 
     private Learnweb learnweb;
@@ -43,22 +43,22 @@ public class CourseManager
 
     protected CourseManager(Learnweb learnweb) throws SQLException
     {
-	super();
-	this.learnweb = learnweb;
-	this.cache = Collections.synchronizedMap(new LinkedHashMap<Integer, Course>(70));
-	this.resetCache();
+        super();
+        this.learnweb = learnweb;
+        this.cache = Collections.synchronizedMap(new LinkedHashMap<Integer, Course>(70));
+        this.resetCache();
     }
 
     public synchronized void resetCache() throws SQLException
     {
-	cache.clear();
+        cache.clear();
 
-	// load all courses into cache
-	Statement select = learnweb.getConnection().createStatement();
-	ResultSet rs = select.executeQuery("SELECT " + COLUMNS + " FROM lw_course LEFT JOIN lw_user_course USING(course_id) ORDER BY title");
-	while(rs.next())
-	    cache.put(rs.getInt("course_id"), new Course(rs));
-	select.close();
+        // load all courses into cache
+        Statement select = learnweb.getConnection().createStatement();
+        ResultSet rs = select.executeQuery("SELECT " + COLUMNS + " FROM lw_course LEFT JOIN lw_user_course USING(course_id) ORDER BY title");
+        while(rs.next())
+            cache.put(rs.getInt("course_id"), new Course(rs));
+        select.close();
     }
 
     /**
@@ -67,7 +67,7 @@ public class CourseManager
      */
     public int getCacheSize()
     {
-	return cache.size();
+        return cache.size();
     }
 
     /**
@@ -78,7 +78,7 @@ public class CourseManager
      */
     public Course getCourseById(int id)
     {
-	return cache.get(id);
+        return cache.get(id);
     }
 
     /**
@@ -89,12 +89,12 @@ public class CourseManager
      */
     public Course getCourseByWizard(String wizardParam)
     {
-	for(Course course : cache.values()) // it's ok to iterate over the courses because we have only a few
-	{
-	    if(null != course.getWizardParam() && course.getWizardParam().equalsIgnoreCase(wizardParam))
-		return course;
-	}
-	return null;
+        for(Course course : cache.values()) // it's ok to iterate over the courses because we have only a few
+        {
+            if(null != course.getWizardParam() && course.getWizardParam().equalsIgnoreCase(wizardParam))
+                return course;
+        }
+        return null;
     }
 
     /**
@@ -104,7 +104,7 @@ public class CourseManager
      */
     public Collection<Course> getCoursesAll()
     {
-	return Collections.unmodifiableCollection(cache.values());
+        return Collections.unmodifiableCollection(cache.values());
     }
 
     /**
@@ -114,15 +114,15 @@ public class CourseManager
      */
     public List<Course> getCoursesByOrganisationId(int organisationId)
     {
-	List<Course> courses = new LinkedList<Course>();
+        List<Course> courses = new LinkedList<Course>();
 
-	for(Course course : cache.values()) // it's ok to iterate over the courses because we have only a few
-	{
-	    if(course.getOrganisationId() == organisationId)
-		courses.add(course);
-	}
+        for(Course course : cache.values()) // it's ok to iterate over the courses because we have only a few
+        {
+            if(course.getOrganisationId() == organisationId)
+                courses.add(course);
+        }
 
-	return courses;
+        return courses;
     }
 
     /**
@@ -133,16 +133,16 @@ public class CourseManager
      */
     public List<Course> getCoursesByUserId(int userId) throws SQLException
     {
-	List<Course> courses = new LinkedList<Course>();
+        List<Course> courses = new LinkedList<Course>();
 
-	PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT course_id FROM lw_user_course WHERE user_id = ?");
-	select.setInt(1, userId);
-	ResultSet rs = select.executeQuery();
-	while(rs.next())
-	    courses.add(getCourseById(rs.getInt(1)));
-	select.close();
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT course_id FROM lw_user_course WHERE user_id = ?");
+        select.setInt(1, userId);
+        ResultSet rs = select.executeQuery();
+        while(rs.next())
+            courses.add(getCourseById(rs.getInt(1)));
+        select.close();
 
-	return courses;
+        return courses;
     }
 
     /**
@@ -155,76 +155,76 @@ public class CourseManager
      */
     public synchronized Course save(Course course) throws SQLException
     {
-	if(course.getId() < 0) // the course is not yet stored at the database 
-	{ // we have to get a new id from the group manager
-	    Group group = new Group();
-	    group.setTitle(course.getTitle());
-	    group.setDescription("Course");
+        if(course.getId() < 0) // the course is not yet stored at the database 
+        { // we have to get a new id from the group manager
+            Group group = new Group();
+            group.setTitle(course.getTitle());
+            group.setDescription("Course");
 
-	    learnweb.getGroupManager().save(group);
-	    learnweb.getGroupManager().deleteGroup(group);
-	    course.setId(group.getId());
+            learnweb.getGroupManager().save(group);
+            learnweb.getGroupManager().deleteGroup(group);
+            course.setId(group.getId());
 
-	    cache.put(course.getId(), course);
-	}
+            cache.put(course.getId(), course);
+        }
 
-	PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_course` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_course` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
-	if(course.getId() < 0) // the course is not yet stored at the database 			
-	    replace.setNull(1, java.sql.Types.INTEGER);
-	else
-	    replace.setInt(1, course.getId());
-	replace.setString(2, course.getTitle());
-	replace.setInt(3, 0); // not used any more
-	replace.setInt(4, 0); // not used any more
-	replace.setInt(5, course.getOrganisationId());
-	replace.setInt(6, course.getDefaultGroupId());
-	replace.setString(7, course.getWizardParam());
-	replace.setInt(8, course.isWizardEnabled() ? 1 : 0);
-	replace.setInt(9, course.getNextXUsersBecomeModerator());
-	replace.setString(10, course.getDefaultInterwebUsername());
-	replace.setString(11, course.getDefaultInterwebPassword());
-	replace.setString(12, course.getWelcomeMessage());
-	replace.setString(13, course.getBannerColor());
-	replace.setInt(14, course.getBannerImageFileId());
-	replace.setLong(15, course.getOptions()[0]);
-	replace.executeUpdate();
+        if(course.getId() < 0) // the course is not yet stored at the database 			
+            replace.setNull(1, java.sql.Types.INTEGER);
+        else
+            replace.setInt(1, course.getId());
+        replace.setString(2, course.getTitle());
+        replace.setInt(3, 0); // not used any more
+        replace.setInt(4, 0); // not used any more
+        replace.setInt(5, course.getOrganisationId());
+        replace.setInt(6, course.getDefaultGroupId());
+        replace.setString(7, course.getWizardParam());
+        replace.setInt(8, course.isWizardEnabled() ? 1 : 0);
+        replace.setInt(9, course.getNextXUsersBecomeModerator());
+        replace.setString(10, course.getDefaultInterwebUsername());
+        replace.setString(11, course.getDefaultInterwebPassword());
+        replace.setString(12, course.getWelcomeMessage());
+        replace.setString(13, course.getBannerColor());
+        replace.setInt(14, course.getBannerImageFileId());
+        replace.setLong(15, course.getOptions()[0]);
+        replace.executeUpdate();
 
-	if(course.getId() < 0) // it's a new course -> get the assigned id
-	{
-	    ResultSet rs = replace.getGeneratedKeys();
-	    if(!rs.next())
-		throw new SQLException("database error: no id generated");
-	    course.setId(rs.getInt(1));
+        if(course.getId() < 0) // it's a new course -> get the assigned id
+        {
+            ResultSet rs = replace.getGeneratedKeys();
+            if(!rs.next())
+                throw new SQLException("database error: no id generated");
+            course.setId(rs.getInt(1));
 
-	    cache.put(course.getId(), course); // add the new organisation to the cache
-	}
-	replace.close();
+            cache.put(course.getId(), course); // add the new organisation to the cache
+        }
+        replace.close();
 
-	return course;
+        return course;
     }
 
     public void delete(int courseId) throws SQLException
     {
-	delete(getCourseById(courseId));
+        delete(getCourseById(courseId));
     }
 
     public void delete(Course course) throws SQLException
     {
-	if(course.getMemberCount() > 0)
-	    throw new IllegalArgumentException("course can't be deleted, remove all members first");
+        if(course.getMemberCount() > 0)
+            throw new IllegalArgumentException("course can't be deleted, remove all members first");
 
-	PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_course` WHERE course_id = ?");
-	delete.setInt(1, course.getId());
-	delete.executeUpdate();
-	delete.close();
+        PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_course` WHERE course_id = ?");
+        delete.setInt(1, course.getId());
+        delete.executeUpdate();
+        delete.close();
 
-	delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_user_course` WHERE course_id = ?");
-	delete.setInt(1, course.getId());
-	delete.executeUpdate();
-	delete.close();
+        delete = learnweb.getConnection().prepareStatement("DELETE FROM `lw_user_course` WHERE course_id = ?");
+        delete.setInt(1, course.getId());
+        delete.executeUpdate();
+        delete.close();
 
-	cache.remove(course.getId());
+        cache.remove(course.getId());
     }
 
     /**
@@ -236,11 +236,11 @@ public class CourseManager
      */
     public void addUser(Course course, User user) throws SQLException
     {
-	PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `lw_user_course` (`user_id` ,`course_id`) VALUES (?, ?)");
-	insert.setInt(1, user.getId());
-	insert.setInt(2, course.getId());
-	insert.executeUpdate();
-	insert.close();
+        PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `lw_user_course` (`user_id` ,`course_id`) VALUES (?, ?)");
+        insert.setInt(1, user.getId());
+        insert.setInt(2, course.getId());
+        insert.executeUpdate();
+        insert.close();
     }
 
     /*

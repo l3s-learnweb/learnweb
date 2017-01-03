@@ -20,79 +20,79 @@ public class Mail
 
     public Mail() throws AddressException, MessagingException
     {
-	System.setProperty("mail.mime.charset", "UTF-8");
-	Properties props = new Properties();
-	props.put("mail.smtp.host", "mail.kbs.uni-hannover.de");
-	props.put("mail.smtp.socketFactory.port", "465");
-	props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
-	props.put("mail.smtp.auth", "true");
-	props.put("mail.smtp.port", "465");
-	//props.put("mail.debug", "true");
+        System.setProperty("mail.mime.charset", "UTF-8");
+        Properties props = new Properties();
+        props.put("mail.smtp.host", "mail.kbs.uni-hannover.de");
+        props.put("mail.smtp.socketFactory.port", "465");
+        props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+        props.put("mail.smtp.auth", "true");
+        props.put("mail.smtp.port", "465");
+        //props.put("mail.debug", "true");
 
-	session = Session.getDefaultInstance(props, authenticator);
+        session = Session.getDefaultInstance(props, authenticator);
 
-	message = new MimeMessage(session);
-	message.setFrom(new InternetAddress("learnweb@kbs.uni-hannover.de"));
+        message = new MimeMessage(session);
+        message.setFrom(new InternetAddress("learnweb@kbs.uni-hannover.de"));
     }
 
     public void sendMail() throws MessagingException
     {
-	message.saveChanges();
-	Transport.send(message);
+        message.saveChanges();
+        Transport.send(message);
     }
 
     private static class PasswordAuthenticator extends Authenticator
     {
-	String user;
-	String pw;
+        String user;
+        String pw;
 
-	public PasswordAuthenticator(String username, String password)
-	{
-	    super();
-	    this.user = username;
-	    this.pw = password;
-	}
+        public PasswordAuthenticator(String username, String password)
+        {
+            super();
+            this.user = username;
+            this.pw = password;
+        }
 
-	@Override
-	public PasswordAuthentication getPasswordAuthentication()
-	{
-	    return new PasswordAuthentication(user, pw);
-	}
+        @Override
+        public PasswordAuthentication getPasswordAuthentication()
+        {
+            return new PasswordAuthentication(user, pw);
+        }
     }
 
     public void setReplyTo(InternetAddress internetAddress) throws MessagingException
     {
-	InternetAddress[] addresses = { internetAddress };
-	message.setReplyTo(addresses);
+        InternetAddress[] addresses = { internetAddress };
+        message.setReplyTo(addresses);
     }
 
     public void setFrom(InternetAddress internetAddress) throws MessagingException
     {
-	message.setFrom(internetAddress);
+        message.setFrom(internetAddress);
     }
 
     public void setRecipient(RecipientType type, InternetAddress adress) throws MessagingException
     {
-	message.setRecipient(type, adress);
+        message.setRecipient(type, adress);
     }
 
     public void setRecipients(RecipientType type, InternetAddress[] adresses) throws MessagingException
     {
-	message.setRecipients(type, adresses);
+        message.setRecipients(type, adresses);
     }
 
     public void setSubject(String subject) throws MessagingException
     {
-	message.setSubject(subject);
+        message.setSubject(subject);
     }
 
     public void setText(String text) throws MessagingException
     {
-	message.setText(text);
+        message.setText(text);
     }
 
     public void setHTML(String text) throws MessagingException
     {
-	message.setText(text, "utf-8", "html");
+        message.setText(text, "utf-8", "html");
     }
 }

@@ -10,7 +10,6 @@ import java.util.HashMap;
  */
 public class MimeTypes
 {
-
     public static final String MIME_APPLICATION_ANDREW_INSET = "application/andrew-inset";
     public static final String MIME_APPLICATION_JSON = "application/json";
     public static final String MIME_APPLICATION_ZIP = "application/zip";

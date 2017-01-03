@@ -83,82 +83,82 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public void clearCaches()
     {
-	courses = null;
-	resources = null;
-	groups = null;
-	writeAbleGroups = null;
+        courses = null;
+        resources = null;
+        groups = null;
+        writeAbleGroups = null;
     }
 
     public void onDestroy()
     {
-	if(destroyed)
-	    return;
-	destroyed = true;
+        if(destroyed)
+            return;
+        destroyed = true;
 
-	try
-	{
-	    this.save();
-	}
-	catch(SQLException e)
-	{
-	    Logger.getLogger(User.class).error("Couldn't save user onDestroy", e);
-	}
+        try
+        {
+            this.save();
+        }
+        catch(SQLException e)
+        {
+            Logger.getLogger(User.class).error("Couldn't save user onDestroy", e);
+        }
     }
 
     public void save() throws SQLException
     {
-	Learnweb.getInstance().getUserManager().save(this);
+        Learnweb.getInstance().getUserManager().save(this);
     }
 
     public boolean isLoggedInInterweb()
     {
-	return !(getInterweb().getIWToken() == null);
+        return !(getInterweb().getIWToken() == null);
     }
 
     public List<Course> getCourses() throws SQLException
     {
-	if(courses != null)
-	    return courses;
+        if(courses != null)
+            return courses;
 
-	courses = Learnweb.getInstance().getCourseManager().getCoursesByUserId(id);
+        courses = Learnweb.getInstance().getCourseManager().getCoursesByUserId(id);
 
-	if(courses.size() > 1)
-	{
-	    Collections.sort(courses);
-	}
+        if(courses.size() > 1)
+        {
+            Collections.sort(courses);
+        }
 
-	return courses;
+        return courses;
     }
 
     public String getAdditionalInformation()
     {
-	return additionalInformation;
+        return additionalInformation;
     }
 
     public String getAddress()
     {
-	return address;
+        return address;
     }
 
     public List<Comment> getComments() throws SQLException
     {
-	return Learnweb.getInstance().getResourceManager().getCommentsByUserId(this.getId());
+        return Learnweb.getInstance().getResourceManager().getCommentsByUserId(this.getId());
     }
 
     public Date getDateofbirth()
     {
-	return dateofbirth;
+        return dateofbirth;
     }
 
     public String getEmail()
     {
-	return email;
+        return email;
     }
 
     @Override
     public int getId()
     {
-	return id;
+        return id;
     }
 
     /**
@@ -168,157 +168,157 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public int getGender()
     {
-	return gender;
+        return gender;
     }
 
     public String getInterest()
     {
-	return interest;
+        return interest;
     }
 
     public InterWeb getInterweb()
     {
-	if(null == interweb)
-	{
-	    interweb = Learnweb.getInstance().getInterweb().clone();
+        if(null == interweb)
+        {
+            interweb = Learnweb.getInstance().getInterweb().clone();
 
-	    if(iwKey != null && iwSecret != null)
-	    {
-		this.interweb.setIWToken(new AuthCredentials(iwKey, iwSecret));
-	    }
-	}
-	return interweb;
+            if(iwKey != null && iwSecret != null)
+            {
+                this.interweb.setIWToken(new AuthCredentials(iwKey, iwSecret));
+            }
+        }
+        return interweb;
     }
 
     public String getPhone()
     {
-	return phone;
+        return phone;
     }
 
     public String getProfession()
     {
-	return profession;
+        return profession;
     }
 
     public Resource addResource(Resource resource) throws SQLException
     {
-	Learnweb learnweb = Learnweb.getInstance();
-	resource = learnweb.getResourceManager().addResource(resource, this);
+        Learnweb learnweb = Learnweb.getInstance();
+        resource = learnweb.getResourceManager().addResource(resource, this);
 
-	//learnweb.getArchiveUrlManager().addResourceToArchive(resource);
+        //learnweb.getArchiveUrlManager().addResourceToArchive(resource);
 
-	if(null != resources)
-	    resources.add(resource);
+        if(null != resources)
+            resources.add(resource);
 
-	return resource;
+        return resource;
     }
 
     public void deleteResource(Resource resource) throws SQLException
     {
-	if(null != resources)
-	    resources.remove(resource);
+        if(null != resources)
+            resources.remove(resource);
 
-	Learnweb.getInstance().getResourceManager().deleteResource(resource);
+        Learnweb.getInstance().getResourceManager().deleteResource(resource);
     }
 
     public List<Resource> getResources() throws SQLException
     {
-	//if(null == resources)
-	resources = Learnweb.getInstance().getResourceManager().getResourcesByUserId(this.getId());
+        //if(null == resources)
+        resources = Learnweb.getInstance().getResourceManager().getResourcesByUserId(this.getId());
 
-	return resources;
+        return resources;
     }
 
     public int getResourceCount() throws SQLException
     {
-	return Learnweb.getInstance().getResourceManager().getResourceCountByUserId(this.getId());
+        return Learnweb.getInstance().getResourceManager().getResourceCountByUserId(this.getId());
     }
 
     public List<Resource> getRatedResources() throws SQLException
     {
-	return Learnweb.getInstance().getResourceManager().getRatedResourcesByUserId(this.getId());
+        return Learnweb.getInstance().getResourceManager().getRatedResourcesByUserId(this.getId());
     }
 
     public List<Tag> getTags() throws Exception
     {
-	return Learnweb.getInstance().getResourceManager().getTagsByUserId(this.getId());
+        return Learnweb.getInstance().getResourceManager().getTagsByUserId(this.getId());
     }
 
     public String getUsername()
     {
-	return username;
+        return username;
     }
 
     public void setAdditionalinformation(String additionalinformation)
     {
-	this.additionalInformation = additionalinformation;
+        this.additionalInformation = additionalinformation;
     }
 
     public void setAddress(String address)
     {
-	this.address = address;
+        this.address = address;
     }
 
     public void setDateofbirth(Date dateofbirth)
     {
-	this.dateofbirth = dateofbirth;
+        this.dateofbirth = dateofbirth;
     }
 
     public void setEmail(String email)
     {
-	this.email = email;
+        this.email = email;
     }
 
     public void setGender(int gender)
     {
-	this.gender = gender;
+        this.gender = gender;
     }
 
     public void setInterest(String interest)
     {
-	this.interest = interest;
+        this.interest = interest;
     }
 
     public void setPhone(String phone)
     {
-	this.phone = phone;
+        this.phone = phone;
     }
 
     public void setProfession(String profession)
     {
-	this.profession = profession;
+        this.profession = profession;
     }
 
     public void setUsername(String username)
     {
-	this.username = username;
+        this.username = username;
     }
 
     public void setOrganisationId(int organisationId)
     {
-	this.organisationId = organisationId;
+        this.organisationId = organisationId;
     }
 
     public int getOrganisationId()
     {
-	return organisationId;
+        return organisationId;
     }
 
     public Organisation getOrganisation() throws SQLException
     {
-	return Learnweb.getInstance().getOrganisationManager().getOrganisationById(organisationId);
+        return Learnweb.getInstance().getOrganisationManager().getOrganisationById(organisationId);
     }
 
     @Override
     public boolean equals(Object obj)
     {
-	if(null == obj)
-	    return false;
+        if(null == obj)
+            return false;
 
-	if(obj.getClass() != this.getClass())
-	    return false;
+        if(obj.getClass() != this.getClass())
+            return false;
 
-	return ((User) obj).getId() == this.getId();
+        return ((User) obj).getId() == this.getId();
     }
 
     private long groupsCacheTime = 0L;
@@ -333,12 +333,12 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public List<Group> getGroups() throws SQLException
     {
-	if(null == groups || groupsCacheTime + 3000L < System.currentTimeMillis())
-	{
-	    groups = Learnweb.getInstance().getGroupManager().getGroupsByUserId(id);
-	    groupsCacheTime = System.currentTimeMillis();
-	}
-	return groups;
+        if(null == groups || groupsCacheTime + 3000L < System.currentTimeMillis())
+        {
+            groups = Learnweb.getInstance().getGroupManager().getGroupsByUserId(id);
+            groupsCacheTime = System.currentTimeMillis();
+        }
+        return groups;
     }
 
     /**
@@ -348,7 +348,7 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public int getGroupCount() throws SQLException
     {
-	return Learnweb.getInstance().getGroupManager().getGroupCountByUserId(id);
+        return Learnweb.getInstance().getGroupManager().getGroupCountByUserId(id);
     }
 
     /**
@@ -359,64 +359,64 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public List<Group> getWriteAbleGroups() throws SQLException
     {
-	//if(null == writeAbleGroups)
-	//{
-	writeAbleGroups = new LinkedList<Group>();
-	List<Group> groups = getGroups();
-	for(Group group : groups)
-	{
-	    if(!group.isRestrictionOnlyLeaderCanAddResources() || group.isLeader(this))
-		writeAbleGroups.add(group);
-	}
-	//}
-	return writeAbleGroups;
+        //if(null == writeAbleGroups)
+        //{
+        writeAbleGroups = new LinkedList<Group>();
+        List<Group> groups = getGroups();
+        for(Group group : groups)
+        {
+            if(!group.isRestrictionOnlyLeaderCanAddResources() || group.isLeader(this))
+                writeAbleGroups.add(group);
+        }
+        //}
+        return writeAbleGroups;
     }
 
     public void joinGroup(int groupId) throws Exception
     {
-	joinGroup(Learnweb.getInstance().getGroupManager().getGroupById(groupId));
+        joinGroup(Learnweb.getInstance().getGroupManager().getGroupById(groupId));
     }
 
     public void joinGroup(Group group) throws Exception
     {
-	Learnweb.getInstance().getGroupManager().addUserToGroup(this, group);
+        Learnweb.getInstance().getGroupManager().addUserToGroup(this, group);
 
-	groups = null; // force reload
-	writeAbleGroups = null; // force reload
+        groups = null; // force reload
+        writeAbleGroups = null; // force reload
 
-	group.clearCaches();
+        group.clearCaches();
 
-	setActiveGroup(group);
+        setActiveGroup(group);
     }
 
     public void leaveGroup(Group group) throws Exception
     {
-	Learnweb.getInstance().getGroupManager().removeUserFromGroup(this, group);
+        Learnweb.getInstance().getGroupManager().removeUserFromGroup(this, group);
 
-	groups = null; // force reload
-	writeAbleGroups = null;
+        groups = null; // force reload
+        writeAbleGroups = null;
 
-	group.clearCaches(); // removeMember(this);
+        group.clearCaches(); // removeMember(this);
 
-	if(activeGroup == group)
-	    setActiveGroup(null);
+        if(activeGroup == group)
+            setActiveGroup(null);
     }
 
     public void deleteGroup(Group group) throws Exception
     {
-	Learnweb.getInstance().getGroupManager().deleteGroup(group);
+        Learnweb.getInstance().getGroupManager().deleteGroup(group);
 
-	if(null != groups)
-	    groups.remove(group);
+        if(null != groups)
+            groups.remove(group);
 
-	if(activeGroup == group)
-	    setActiveGroup(null);
+        if(activeGroup == group)
+            setActiveGroup(null);
     }
 
     @Override
     public int compareTo(User o)
     {
-	return getUsername().compareTo(o.getUsername());
+        return getUsername().compareTo(o.getUsername());
     }
 
     /**
@@ -427,9 +427,9 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public void setActiveGroup(Group group) throws SQLException
     {
-	setActiveGroup(null == group ? 0 : group.getId());
+        setActiveGroup(null == group ? 0 : group.getId());
 
-	this.activeGroup = group;
+        this.activeGroup = group;
     }
 
     /**
@@ -440,8 +440,8 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public void setActiveGroup(int groupId) throws SQLException
     {
-	this.activeGroup = null; // force to reload group
-	this.activeGroupId = groupId;
+        this.activeGroup = null; // force to reload group
+        this.activeGroupId = groupId;
     }
 
     /**
@@ -452,9 +452,9 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public Group getActiveGroup() throws SQLException
     {
-	if(null == activeGroup && activeGroupId != 0)
-	    activeGroup = Learnweb.getInstance().getGroupManager().getGroupById(activeGroupId);
-	return activeGroup;
+        if(null == activeGroup && activeGroupId != 0)
+            activeGroup = Learnweb.getInstance().getGroupManager().getGroupById(activeGroupId);
+        return activeGroup;
     }
 
     /**
@@ -465,49 +465,49 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public int getActiveGroupId()
     {
-	return activeGroupId;
+        return activeGroupId;
     }
 
     public void setImage(InputStream inputStream) throws SQLException, IOException, IllegalArgumentException
     {
-	FileManager fileManager = Learnweb.getInstance().getFileManager();
+        FileManager fileManager = Learnweb.getInstance().getFileManager();
 
-	// process image
-	Image img = new Image(inputStream);
-	Image thumbnail = img.getResizedToSquare(100, 0.05);
+        // process image
+        Image img = new Image(inputStream);
+        Image thumbnail = img.getResizedToSquare(100, 0.05);
 
-	// save image file
-	File file = new File();
-	file.setName("user_icon.png");
-	file.setMimeType("image/png");
-	file = fileManager.save(file, thumbnail.getInputStream());
-	thumbnail.dispose();
-	inputStream.close();
+        // save image file
+        File file = new File();
+        file.setName("user_icon.png");
+        file.setMimeType("image/png");
+        file = fileManager.save(file, thumbnail.getInputStream());
+        thumbnail.dispose();
+        inputStream.close();
 
-	imageFileId = file.getId();
-	imageUrl = file.getUrl();
+        imageFileId = file.getId();
+        imageUrl = file.getUrl();
 
-	this.save();
+        this.save();
     }
 
     public boolean isAdmin()
     {
-	return admin;
+        return admin;
     }
 
     public void setAdmin(boolean admin)
     {
-	this.admin = admin;
+        this.admin = admin;
     }
 
     public boolean isModerator()
     {
-	return moderator || admin;
+        return moderator || admin;
     }
 
     public void setModerator(boolean moderator)
     {
-	this.moderator = moderator;
+        this.moderator = moderator;
     }
 
     /**
@@ -519,20 +519,20 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public String getImage() throws SQLException
     {
-	if(imageUrl == null)
-	{
-	    /*
-	    File file = Learnweb.getInstance().getFileManager().getFileById(imageFileId);
-	    
-	    if(null == file)
-	    imageUrl = UtilBean.getLearnwebBean().getContextUrl() + "/resources/image/no_profile.jpg";
-	    else
-	    imageUrl = file.getUrl();
-	    */
-	    imageUrl = getImage(imageFileId);
-	}
+        if(imageUrl == null)
+        {
+            /*
+            File file = Learnweb.getInstance().getFileManager().getFileById(imageFileId);
+            
+            if(null == file)
+            imageUrl = UtilBean.getLearnwebBean().getContextUrl() + "/resources/image/no_profile.jpg";
+            else
+            imageUrl = file.getUrl();
+            */
+            imageUrl = getImage(imageFileId);
+        }
 
-	return imageUrl;
+        return imageUrl;
     }
 
     /**
@@ -543,15 +543,15 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public static String getImage(int fileId)
     {
-	if(fileId > 0)
-	    return Learnweb.getInstance().getFileManager().createUrl(fileId, "profile.png");
+        if(fileId > 0)
+            return Learnweb.getInstance().getFileManager().createUrl(fileId, "profile.png");
 
-	return Learnweb.getInstance().getContextUrl() + "/resources/image/no_profile.jpg";
+        return Learnweb.getInstance().getContextUrl() + "/resources/image/no_profile.jpg";
     }
 
     public void setId(int id)
     {
-	this.id = id;
+        this.id = id;
     }
 
     /**
@@ -561,7 +561,7 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public String getInterwebKey()
     {
-	return iwKey;
+        return iwKey;
     }
 
     /**
@@ -571,8 +571,8 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public void setInterwebKey(String iwKey)
     {
-	this.iwKey = iwKey;
-	this.interweb = null; // force reload
+        this.iwKey = iwKey;
+        this.interweb = null; // force reload
     }
 
     /**
@@ -582,7 +582,7 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public String getInterwebSecret()
     {
-	return iwSecret;
+        return iwSecret;
     }
 
     /**
@@ -592,60 +592,60 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public void setInterwebSecret(String iwSecret)
     {
-	this.iwSecret = iwSecret;
-	this.interweb = null; // force reload
+        this.iwSecret = iwSecret;
+        this.interweb = null; // force reload
     }
 
     public void setInterwebToken(AuthCredentials auth)
     {
-	getInterweb(); // make sure interweb is loaded
+        getInterweb(); // make sure interweb is loaded
 
-	this.interweb.setIWToken(auth);
-	if(null == auth)
-	{
-	    this.iwKey = null;
-	    this.iwSecret = null;
-	}
-	else
-	{
-	    this.iwKey = auth.getKey();
-	    this.iwSecret = auth.getSecret();
-	}
+        this.interweb.setIWToken(auth);
+        if(null == auth)
+        {
+            this.iwKey = null;
+            this.iwSecret = null;
+        }
+        else
+        {
+            this.iwKey = auth.getKey();
+            this.iwSecret = auth.getSecret();
+        }
     }
 
     public int getImageFileId()
     {
-	return imageFileId;
+        return imageFileId;
     }
 
     public void setImageFileId(int imageFileId)
     {
-	this.imageFileId = imageFileId;
+        this.imageFileId = imageFileId;
     }
 
     public Date getRegistrationDate()
     {
-	return registrationDate;
+        return registrationDate;
     }
 
     public void setRegistrationDate(Date registrationDate)
     {
-	this.registrationDate = registrationDate;
+        this.registrationDate = registrationDate;
     }
 
     public String getPassword()
     {
-	return password;
+        return password;
     }
 
     public HashMap<String, String> getPreferences()
     {
-	return preferences;
+        return preferences;
     }
 
     public void setPreferences(HashMap<String, String> preferences)
     {
-	this.preferences = preferences;
+        this.preferences = preferences;
     }
 
     /**
@@ -656,142 +656,142 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public void setPassword(String password, boolean isEncrypted)
     {
-	if(!isEncrypted)
-	    password = MD5.hash(password);
-	this.password = password;
+        if(!isEncrypted)
+            password = MD5.hash(password);
+        this.password = password;
     }
 
     public TimeZone getTimeZone()
     {
-	return timeZone;
+        return timeZone;
     }
 
     public void setTimeZone(TimeZone timeZone)
     {
-	this.timeZone = timeZone;
+        this.timeZone = timeZone;
     }
 
     public Date getLastLoginDate() throws SQLException
     {
-	if(null == lastLoginDate)
-	{
-	    lastLoginDate = Learnweb.getInstance().getUserManager().getLastLoginDate(id);
-	}
-	return lastLoginDate;
+        if(null == lastLoginDate)
+        {
+            lastLoginDate = Learnweb.getInstance().getUserManager().getLastLoginDate(id);
+        }
+        return lastLoginDate;
     }
 
     public Date getCurrentLoginDate()
     {
-	return currentLoginDate;
+        return currentLoginDate;
     }
 
     public void setCurrentLoginDate(Date currentLoginDate) throws SQLException
     {
-	if(this.currentLoginDate != null)
-	    lastLoginDate = this.currentLoginDate;
-	else
-	    lastLoginDate = Learnweb.getInstance().getUserManager().getLastLoginDate(id);
+        if(this.currentLoginDate != null)
+            lastLoginDate = this.currentLoginDate;
+        else
+            lastLoginDate = Learnweb.getInstance().getUserManager().getLastLoginDate(id);
 
-	this.currentLoginDate = currentLoginDate;
+        this.currentLoginDate = currentLoginDate;
     }
 
     @Override
     public String toString()
     {
-	return "[userId: " + getId() + " name: " + getUsername() + "]";
+        return "[userId: " + getId() + " name: " + getUsername() + "]";
     }
 
     public int getForumPostCount() throws SQLException
     {
-	if(forumPostCount == -1)
-	{
-	    forumPostCount = Learnweb.getInstance().getForumManager().getPostCountByUser(id);
-	}
-	return forumPostCount;
+        if(forumPostCount == -1)
+        {
+            forumPostCount = Learnweb.getInstance().getForumManager().getPostCountByUser(id);
+        }
+        return forumPostCount;
     }
 
     public void incForumPostCount()
     {
-	if(forumPostCount != -1)
-	    forumPostCount++;
+        if(forumPostCount != -1)
+            forumPostCount++;
     }
 
     public String getCredits()
     {
-	return credits;
+        return credits;
     }
 
     public void setCredits(String credits)
     {
-	if(credits != null)
-	{
-	    if(credits.startsWith("<br>"))
-		credits = credits.substring(4);
+        if(credits != null)
+        {
+            if(credits.startsWith("<br>"))
+                credits = credits.substring(4);
 
-	    credits = Jsoup.clean(credits, Whitelist.basic());
-	}
-	this.credits = credits;
+            credits = Jsoup.clean(credits, Whitelist.basic());
+        }
+        this.credits = credits;
     }
 
     public String getFullName()
     {
-	return fullName;
+        return fullName;
     }
 
     public void setFullName(String fullName)
     {
-	this.fullName = fullName;
+        this.fullName = fullName;
     }
 
     public String getAffiliation()
     {
-	return affiliation;
+        return affiliation;
     }
 
     public void setAffiliation(String affiliation)
     {
-	this.affiliation = affiliation;
+        this.affiliation = affiliation;
     }
 
     public String getPreference(String key)
     {
-	return preferences.get(key);
+        return preferences.get(key);
     }
 
     public void setPreference(String key, String value)
     {
-	preferences.put(key, value);
+        preferences.put(key, value);
     }
 
     public int getActiveCourseId()
     {
-	try
-	{
-	    if(activeCourseId == 0 && getCourses().size() > 0) // the course id wasn't set yet ; size can be 0 when the user has just been registered
-	    {
-		activeCourseId = getCourses().get(0).getId();
-	    }
-	}
-	catch(SQLException e)
-	{
-	    log.error("Can't load courses of user: " + getId(), e);
-	}
+        try
+        {
+            if(activeCourseId == 0 && getCourses().size() > 0) // the course id wasn't set yet ; size can be 0 when the user has just been registered
+            {
+                activeCourseId = getCourses().get(0).getId();
+            }
+        }
+        catch(SQLException e)
+        {
+            log.error("Can't load courses of user: " + getId(), e);
+        }
 
-	return activeCourseId;
+        return activeCourseId;
     }
 
     public Course getActiveCourse() throws SQLException
     {
-	if(null == activeCourse)
-	    activeCourse = Learnweb.getInstance().getCourseManager().getCourseById(getActiveCourseId());
+        if(null == activeCourse)
+            activeCourse = Learnweb.getInstance().getCourseManager().getCourseById(getActiveCourseId());
 
-	return activeCourse;
+        return activeCourse;
     }
 
     public void setActiveCourseId(int activeCourseId)
     {
-	this.activeCourseId = activeCourseId;
-	this.activeCourse = null; // clear cache;
+        this.activeCourseId = activeCourseId;
+        this.activeCourse = null; // clear cache;
     }
 
 }

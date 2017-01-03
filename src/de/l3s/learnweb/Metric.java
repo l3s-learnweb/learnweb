@@ -17,89 +17,89 @@ public class Metric
 
     public Metric(String nameP, String nameA, String nameE, Double valueD)
     {
-	super();
-	this.nameP = nameP;
-	this.nameA = nameA;
-	this.nameE = nameE;
-	this.valueD = valueD;
+        super();
+        this.nameP = nameP;
+        this.nameA = nameA;
+        this.nameE = nameE;
+        this.valueD = valueD;
     }
 
     public Metric(String nameP, String nameA, String nameE, Long valueL)
     {
-	super();
-	this.nameP = nameP;
-	this.nameA = nameA;
-	this.nameE = nameE;
-	this.valueL = valueL;
+        super();
+        this.nameP = nameP;
+        this.nameA = nameA;
+        this.nameE = nameE;
+        this.valueL = valueL;
     }
 
     public Metric(String nameP, String nameA, String nameE, String valueS)
     {
-	super();
-	this.nameP = nameP;
-	this.nameA = nameA;
-	this.nameE = nameE;
-	this.valueS = valueS;
+        super();
+        this.nameP = nameP;
+        this.nameA = nameA;
+        this.nameE = nameE;
+        this.valueS = valueS;
     }
 
     public String getNameP()
     {
-	return nameP;
+        return nameP;
     }
 
     public void setNameP(String nameP)
     {
-	this.nameP = nameP;
+        this.nameP = nameP;
     }
 
     public String getNameA()
     {
-	return nameA;
+        return nameA;
     }
 
     public void setNameA(String nameA)
     {
-	this.nameA = nameA;
+        this.nameA = nameA;
     }
 
     public String getNameE()
     {
-	return nameE;
+        return nameE;
     }
 
     public void setNameE(String nameE)
     {
-	this.nameE = nameE;
+        this.nameE = nameE;
     }
 
     public Double getValueD()
     {
-	return valueD;
+        return valueD;
     }
 
     public void setValueD(Double valueD)
     {
-	this.valueD = valueD;
+        this.valueD = valueD;
     }
 
     public Long getValueL()
     {
-	return valueL;
+        return valueL;
     }
 
     public void setValueL(Long valueL)
     {
-	this.valueL = valueL;
+        this.valueL = valueL;
     }
 
     public String getValueS()
     {
-	return valueS;
+        return valueS;
     }
 
     public void setValueS(String valueS)
     {
-	this.valueS = valueS;
+        this.valueS = valueS;
     }
 
 }

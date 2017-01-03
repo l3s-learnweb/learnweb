@@ -28,18 +28,18 @@ public class Cache<E> implements ICache<E>
      */
     public Cache(int capacity2)
     {
-	this.capacity = capacity2;
+        this.capacity = capacity2;
 
-	values = new LinkedHashMap<Integer, E>(capacity + 1, .75F, true)
-	{
-	    private static final long serialVersionUID = -7231532816950321903L;
+        values = new LinkedHashMap<Integer, E>(capacity + 1, .75F, true)
+        {
+            private static final long serialVersionUID = -7231532816950321903L;
 
-	    @Override
-	    public boolean removeEldestEntry(Map.Entry<Integer, E> eldest)
-	    {
-		return size() > capacity;
-	    }
-	};
+            @Override
+            public boolean removeEldestEntry(Map.Entry<Integer, E> eldest)
+            {
+                return size() > capacity;
+            }
+        };
     }
 
     /* (non-Javadoc)
@@ -48,33 +48,33 @@ public class Cache<E> implements ICache<E>
     @Override
     public E get(int id)
     {
-	readLock.lock();
-	try
-	{
-	    return values.get(id);
-	}
-	finally
-	{
-	    readLock.unlock();
-	}
+        readLock.lock();
+        try
+        {
+            return values.get(id);
+        }
+        finally
+        {
+            readLock.unlock();
+        }
     }
 
     public E put(int id, E resource)
     {
-	writeLock.lock();
-	try
-	{
-	    E old = values.get(id);
-	    if(null != old)
-		return old;
+        writeLock.lock();
+        try
+        {
+            E old = values.get(id);
+            if(null != old)
+                return old;
 
-	    values.put(id, resource);
-	    return resource;
-	}
-	finally
-	{
-	    writeLock.unlock();
-	}
+            values.put(id, resource);
+            return resource;
+        }
+        finally
+        {
+            writeLock.unlock();
+        }
     }
 
     /* (non-Javadoc)
@@ -83,8 +83,8 @@ public class Cache<E> implements ICache<E>
     @Override
     public E put(E resource)
     {
-	int id = ((HasId) resource).getId();
-	return put(id, resource);
+        int id = ((HasId) resource).getId();
+        return put(id, resource);
     }
 
     /* (non-Javadoc)
@@ -93,15 +93,15 @@ public class Cache<E> implements ICache<E>
     @Override
     public void remove(int resourceId)
     {
-	writeLock.lock();
-	try
-	{
-	    values.remove(resourceId);
-	}
-	finally
-	{
-	    writeLock.unlock();
-	}
+        writeLock.lock();
+        try
+        {
+            values.remove(resourceId);
+        }
+        finally
+        {
+            writeLock.unlock();
+        }
     }
 
     /* (non-Javadoc)
@@ -110,20 +110,20 @@ public class Cache<E> implements ICache<E>
     @Override
     public void clear()
     {
-	writeLock.lock();
-	try
-	{
-	    values.clear();
-	}
-	finally
-	{
-	    writeLock.unlock();
-	}
+        writeLock.lock();
+        try
+        {
+            values.clear();
+        }
+        finally
+        {
+            writeLock.unlock();
+        }
     }
 
     @Override
     public int size()
     {
-	return values.size();
+        return values.size();
     }
 }

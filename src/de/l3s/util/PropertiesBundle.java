@@ -13,22 +13,22 @@ public class PropertiesBundle extends Properties
      */
     public PropertiesBundle(Properties fallback)
     {
-	this.fallback = fallback;
+        this.fallback = fallback;
     }
 
     @Override
     public String getProperty(String key)
     {
-	String value = super.getProperty(key);
+        String value = super.getProperty(key);
 
-	if(value != null)
-	    return value;
+        if(value != null)
+            return value;
 
-	return fallback.getProperty(key);
+        return fallback.getProperty(key);
     }
 
     public int getPropertyIntValue(String key)
     {
-	return Integer.parseInt(getProperty(key));
+        return Integer.parseInt(getProperty(key));
     }
 }

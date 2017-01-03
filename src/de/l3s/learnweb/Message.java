@@ -22,219 +22,219 @@ public class Message implements Comparable<Message>
 
     public static int howManyNotSeenMessages(User user) throws SQLException
     {
-	int count = 0;
-	PreparedStatement pstmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT count(*) as xCount FROM `message` WHERE to_user = ? and m_seen = 0");
+        int count = 0;
+        PreparedStatement pstmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT count(*) as xCount FROM `message` WHERE to_user = ? and m_seen = 0");
 
-	pstmtGetUsers.setInt(1, user.getId());
-	ResultSet rs = pstmtGetUsers.executeQuery();
+        pstmtGetUsers.setInt(1, user.getId());
+        ResultSet rs = pstmtGetUsers.executeQuery();
 
-	if(rs.next())
-	{
-	    count = rs.getInt("xCount");
-	}
-	return count;
+        if(rs.next())
+        {
+            count = rs.getInt("xCount");
+        }
+        return count;
     }
 
     public ArrayList<Message> getAllMessagesToUser(User user) throws SQLException
     {
-	ArrayList<Message> messageList = new ArrayList<Message>();
-	if(user == null)
-	    return messageList;
+        ArrayList<Message> messageList = new ArrayList<Message>();
+        if(user == null)
+            return messageList;
 
-	PreparedStatement pstmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `message` WHERE to_user = ? order by m_time desc");
+        PreparedStatement pstmtGetUsers = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `message` WHERE to_user = ? order by m_time desc");
 
-	pstmtGetUsers.setInt(1, user.getId());
-	ResultSet rs = pstmtGetUsers.executeQuery();
-	Message message = null;
+        pstmtGetUsers.setInt(1, user.getId());
+        ResultSet rs = pstmtGetUsers.executeQuery();
+        Message message = null;
 
-	User toUser = null;
-	while(rs.next())
-	{
-	    message = new Message();
-	    message.setId(rs.getInt("message_id"));
-	    UserManager um = Learnweb.getInstance().getUserManager();
-	    User fromUser = um.getUser(rs.getInt("from_user"));
-	    message.setFromUser(fromUser);
-	    if(toUser == null)
-	    {
-		toUser = um.getUser(rs.getInt("to_user"));
-	    }
-	    message.setToUser(toUser);
-	    message.setTitle(rs.getString("m_title"));
-	    message.setText(rs.getString("m_text"));
-	    message.setSeen(rs.getBoolean("m_seen"));
-	    message.setRead(rs.getBoolean("m_read"));
-	    message.setTime(rs.getTimestamp("m_time"));
+        User toUser = null;
+        while(rs.next())
+        {
+            message = new Message();
+            message.setId(rs.getInt("message_id"));
+            UserManager um = Learnweb.getInstance().getUserManager();
+            User fromUser = um.getUser(rs.getInt("from_user"));
+            message.setFromUser(fromUser);
+            if(toUser == null)
+            {
+                toUser = um.getUser(rs.getInt("to_user"));
+            }
+            message.setToUser(toUser);
+            message.setTitle(rs.getString("m_title"));
+            message.setText(rs.getString("m_text"));
+            message.setSeen(rs.getBoolean("m_seen"));
+            message.setRead(rs.getBoolean("m_read"));
+            message.setTime(rs.getTimestamp("m_time"));
 
-	    messageList.add(message);
-	}
-	pstmtGetUsers.close();
+            messageList.add(message);
+        }
+        pstmtGetUsers.close();
 
-	return messageList;
+        return messageList;
     }
 
     public void save() throws SQLException
     {
-	DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-	PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("INSERT INTO message (from_user, to_user, m_title, m_text, m_seen, m_read, m_time) " + "VALUES (?,?,?,?,?,?,?)");
-	stmt.setInt(1, fromUser.getId());
-	stmt.setInt(2, toUser.getId());
-	stmt.setString(3, title);
+        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("INSERT INTO message (from_user, to_user, m_title, m_text, m_seen, m_read, m_time) " + "VALUES (?,?,?,?,?,?,?)");
+        stmt.setInt(1, fromUser.getId());
+        stmt.setInt(2, toUser.getId());
+        stmt.setString(3, title);
 
-	String convertedText = convertText(text);
-	stmt.setString(4, convertedText);
-	stmt.setBoolean(5, seen);
-	stmt.setBoolean(6, read);
-	stmt.setString(7, format.format(time.getTime()));
-	stmt.executeUpdate();
-	stmt.close();
+        String convertedText = convertText(text);
+        stmt.setString(4, convertedText);
+        stmt.setBoolean(5, seen);
+        stmt.setBoolean(6, read);
+        stmt.setString(7, format.format(time.getTime()));
+        stmt.executeUpdate();
+        stmt.close();
     }
 
     public void seen() throws SQLException
     {
-	PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_seen=1 where message_id = ?");
-	stmt.setInt(1, this.id);
+        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_seen=1 where message_id = ?");
+        stmt.setInt(1, this.id);
 
-	stmt.executeUpdate();
-	stmt.close();
+        stmt.executeUpdate();
+        stmt.close();
     }
 
     public void meesageRead() throws SQLException
     {
-	PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_read=1 where message_id = ?");
-	stmt.setInt(1, this.id);
+        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_read=1 where message_id = ?");
+        stmt.setInt(1, this.id);
 
-	stmt.executeUpdate();
-	stmt.close();
+        stmt.executeUpdate();
+        stmt.close();
     }
 
     public static void setAllMessagesSeen(int userId) throws SQLException
     {
-	PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_seen=1 where to_user = ?");
-	stmt.setInt(1, userId);
+        PreparedStatement stmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE message SET m_seen=1 where to_user = ?");
+        stmt.setInt(1, userId);
 
-	stmt.executeUpdate();
-	stmt.close();
+        stmt.executeUpdate();
+        stmt.close();
     }
 
     private String convertText(String text)
     {
-	String convertedText = text;
-	String replacement = "<a target=\"_blank\" href=\"../lw/link/link.jsf?link=";
-	convertedText = text.replaceAll("<a href=\"", replacement);
+        String convertedText = text;
+        String replacement = "<a target=\"_blank\" href=\"../lw/link/link.jsf?link=";
+        convertedText = text.replaceAll("<a href=\"", replacement);
 
-	return convertedText;
+        return convertedText;
     }
 
     @Override
     public int compareTo(Message g)
     {
-	return (this.toString()).compareTo(g.toString());
+        return (this.toString()).compareTo(g.toString());
     }
 
     @Override
     public String toString()
     {
-	String s = fromUser.getUsername() + " -> " + toUser.getUsername() + "\n" + time + ": " + "\n" + title;
+        String s = fromUser.getUsername() + " -> " + toUser.getUsername() + "\n" + time + ": " + "\n" + title;
 
-	return s;
+        return s;
     }
 
     public int getId()
     {
-	return id;
+        return id;
     }
 
     public void setId(int id)
     {
-	this.id = id;
+        this.id = id;
     }
 
     public User getFromUser()
     {
-	return fromUser;
+        return fromUser;
     }
 
     public void setFromUser(User fromUser)
     {
-	this.fromUser = fromUser;
+        this.fromUser = fromUser;
     }
 
     public User getToUser()
     {
-	return toUser;
+        return toUser;
     }
 
     public void setToUser(User toUser)
     {
-	this.toUser = toUser;
+        this.toUser = toUser;
     }
 
     public String getTitle()
     {
-	return title;
+        return title;
     }
 
     public void setTitle(String title)
     {
-	this.title = title;
+        this.title = title;
     }
 
     public String getText()
     {
-	return text;
+        return text;
     }
 
     public void setText(String text)
     {
-	this.text = text;
+        this.text = text;
     }
 
     public boolean isSeen()
     {
-	return seen;
+        return seen;
     }
 
     public void setSeen(boolean seen)
     {
-	this.seen = seen;
+        this.seen = seen;
     }
 
     public boolean isRead()
     {
-	try
-	{
-	    this.meesageRead();
-	}
-	catch(SQLException e)
-	{
-	    // TODO Auto-generated catch block
-	    e.printStackTrace();
-	}
-	return read;
+        try
+        {
+            this.meesageRead();
+        }
+        catch(SQLException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return read;
     }
 
     public void setRead(boolean read)
     {
-	this.read = read;
+        this.read = read;
     }
 
     public Date getTime()
     {
-	return time;
+        return time;
     }
 
     public void setTime(Date time)
     {
-	this.time = time;
+        this.time = time;
     }
 
     public String getFormatedTime()
     {
-	DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-	String s = format.format(getTime());
-	return s;
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        String s = format.format(getTime());
+        return s;
     }
 
 }

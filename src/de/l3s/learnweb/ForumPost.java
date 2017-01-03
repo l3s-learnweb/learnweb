@@ -28,117 +28,117 @@ public class ForumPost implements Serializable
 
     public int getId()
     {
-	return id;
+        return id;
     }
 
     public void setId(int postId)
     {
-	this.id = postId;
+        this.id = postId;
     }
 
     public int getUserId()
     {
-	return userId;
+        return userId;
     }
 
     public void setUserId(int userId)
     {
-	this.userId = userId;
+        this.userId = userId;
     }
 
     public int getTopicId()
     {
-	return topicId;
+        return topicId;
     }
 
     public void setTopicId(int topicId)
     {
-	this.topicId = topicId;
+        this.topicId = topicId;
     }
 
     public String getText()
     {
-	return text;
+        return text;
     }
 
     public void setText(String text)
     {
-	this.text = text;
+        this.text = text;
     }
 
     public Date getDate()
     {
-	return date;
+        return date;
     }
 
     public void setDate(Date date)
     {
-	this.date = date;
-	if(lastEditDate == null)
-	    this.lastEditDate = date;
+        this.date = date;
+        if(lastEditDate == null)
+            this.lastEditDate = date;
     }
 
     public int getEditCount()
     {
-	return editCount;
+        return editCount;
     }
 
     public void setEditCount(int editCount)
     {
-	this.editCount = editCount;
+        this.editCount = editCount;
     }
 
     public Date getLastEditDate()
     {
-	return lastEditDate;
+        return lastEditDate;
     }
 
     public void setLastEditDate(Date lastEditDate)
     {
-	this.lastEditDate = lastEditDate;
+        this.lastEditDate = lastEditDate;
     }
 
     public int getEditUserId()
     {
-	return editUserId;
+        return editUserId;
     }
 
     public void setEditUserId(int editUserId)
     {
-	this.editUserId = editUserId;
+        this.editUserId = editUserId;
     }
 
     public User getUser() throws SQLException
     {
-	if(user == null)
-	{
-	    user = Learnweb.getInstance().getUserManager().getUser(userId);
-	}
-	return user;
+        if(user == null)
+        {
+            user = Learnweb.getInstance().getUserManager().getUser(userId);
+        }
+        return user;
     }
 
     public User getEditUser() throws SQLException
     {
-	if(editUser == null)
-	{
-	    editUser = Learnweb.getInstance().getUserManager().getUser(editUserId);
-	}
-	return editUser;
+        if(editUser == null)
+        {
+            editUser = Learnweb.getInstance().getUserManager().getUser(editUserId);
+        }
+        return editUser;
     }
 
     public String getCategory()
     {
-	return category;
+        return category;
     }
 
     public void setCategory(String category)
     {
-	this.category = category;
+        this.category = category;
     }
 
     @Override
     public String toString()
     {
-	return "ForumPost [id=" + id + ", userId=" + userId + ", topicId=" + topicId + ", text=" + text + ", date=" + date + ", editCount=" + editCount + ", lastEditDate=" + lastEditDate + ", editUserId=" + editUserId + "]";
+        return "ForumPost [id=" + id + ", userId=" + userId + ", topicId=" + topicId + ", text=" + text + ", date=" + date + ", editCount=" + editCount + ", lastEditDate=" + lastEditDate + ", editUserId=" + editUserId + "]";
     }
 }

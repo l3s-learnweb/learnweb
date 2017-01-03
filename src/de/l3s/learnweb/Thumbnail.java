@@ -13,18 +13,18 @@ public class Thumbnail implements Comparable<Thumbnail>, Serializable
 
     public Thumbnail(String url, int width, int height, int fileId)
     {
-	this.url = url;
-	this.width = width;
-	this.height = height;
-	this.fileId = fileId;
+        this.url = url;
+        this.width = width;
+        this.height = height;
+        this.fileId = fileId;
     }
 
     public Thumbnail(String url, int width, int height)
     {
-	this.url = url;
-	this.width = width;
-	this.height = height;
-	this.fileId = 0;
+        this.url = url;
+        this.width = width;
+        this.height = height;
+        this.fileId = 0;
     }
 
     /**
@@ -35,63 +35,63 @@ public class Thumbnail implements Comparable<Thumbnail>, Serializable
      */
     public Thumbnail resize(int maxWidth, int maxHeight)
     {
-	Thumbnail tn = this.clone();
+        Thumbnail tn = this.clone();
 
-	if(maxWidth < 2 || maxHeight < 2)
-	    throw new IllegalArgumentException();
+        if(maxWidth < 2 || maxHeight < 2)
+            throw new IllegalArgumentException();
 
-	if(tn.width > maxWidth)
-	{
-	    double ratio = (double) maxWidth / (double) tn.width;
-	    tn.height = (int) Math.ceil(tn.height * ratio);
-	    tn.width = maxWidth;
-	}
+        if(tn.width > maxWidth)
+        {
+            double ratio = (double) maxWidth / (double) tn.width;
+            tn.height = (int) Math.ceil(tn.height * ratio);
+            tn.width = maxWidth;
+        }
 
-	if(tn.height > maxHeight)
-	{
-	    double ratio = (double) maxHeight / (double) tn.height;
-	    tn.width = (int) Math.ceil(tn.width * ratio);
-	    tn.height = maxHeight;
-	}
+        if(tn.height > maxHeight)
+        {
+            double ratio = (double) maxHeight / (double) tn.height;
+            tn.width = (int) Math.ceil(tn.width * ratio);
+            tn.height = maxHeight;
+        }
 
-	return tn;
+        return tn;
     }
 
     @Override
     public int compareTo(Thumbnail t)
     {
-	if(width < t.width)
-	{
-	    return -1;
-	}
-	if(width > t.width)
-	{
-	    return 1;
-	}
-	if(height < t.height)
-	{
-	    return -1;
-	}
-	if(height > t.height)
-	{
-	    return 1;
-	}
-	return url.compareTo(t.url);
+        if(width < t.width)
+        {
+            return -1;
+        }
+        if(width > t.width)
+        {
+            return 1;
+        }
+        if(height < t.height)
+        {
+            return -1;
+        }
+        if(height > t.height)
+        {
+            return 1;
+        }
+        return url.compareTo(t.url);
     }
 
     public int getHeight()
     {
-	return height;
+        return height;
     }
 
     public String getUrl()
     {
-	return url;
+        return url;
     }
 
     public int getWidth()
     {
-	return width;
+        return width;
     }
 
     /**
@@ -101,23 +101,23 @@ public class Thumbnail implements Comparable<Thumbnail>, Serializable
      */
     public int getFileId()
     {
-	return fileId;
+        return fileId;
     }
 
     @Override
     public String toString()
     {
-	return "Thumbnail [width=" + width + ", height=" + height + ", url=" + url + ", fileId=" + fileId + "]";
+        return "Thumbnail [width=" + width + ", height=" + height + ", url=" + url + ", fileId=" + fileId + "]";
     }
 
     @Override
     public Thumbnail clone()
     {
-	return new Thumbnail(url, width, height, fileId);
+        return new Thumbnail(url, width, height, fileId);
     }
 
     public String toHTML()
     {
-	return "<img src=\"" + url + "\" width=\"" + width + "\" height=\"" + height + "\" />";
+        return "<img src=\"" + url + "\" width=\"" + width + "\" height=\"" + height + "\" />";
     }
 }

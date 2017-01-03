@@ -32,50 +32,50 @@ public class ResourceDecorator implements Serializable
 
     public ResourceDecorator(Resource resource)
     {
-	this.resource = resource;
-	newResource = false;
+        this.resource = resource;
+        newResource = false;
     }
 
     public int getTempId()
     {
-	return tempId;
+        return tempId;
     }
 
     public void setTempId(int tempId)
     {
-	this.tempId = tempId;
+        this.tempId = tempId;
     }
 
     public String getSnippet()
     {
-	return snippet;
+        return snippet;
     }
 
     public String getShortSnippet()
     {
-	return Jsoup.clean(StringHelper.shortnString(getSnippet(), 80), Whitelist.none());
+        return Jsoup.clean(StringHelper.shortnString(getSnippet(), 80), Whitelist.none());
     }
 
     public void setSnippet(String snippet)
     {
-	this.snippet = snippet;
+        this.snippet = snippet;
     }
 
     public Resource getResource()
     {
-	return resource;
+        return resource;
     }
 
     // Convenience methods which call the underlying resource
 
     public String getServiceIcon()
     {
-	return resource.getServiceIcon();
+        return resource.getServiceIcon();
     }
 
     public String getLearnwebUrl() throws SQLException
     {
-	return resource.getLearnwebUrl();
+        return resource.getLearnwebUrl();
     }
 
     /**
@@ -85,105 +85,105 @@ public class ResourceDecorator implements Serializable
      */
     public String getTitle()
     {
-	if(title != null)
-	    return title;
+        if(title != null)
+            return title;
 
-	return resource.getTitle();
+        return resource.getTitle();
     }
 
     public String getMetadataValue(String key)
     {
-	return resource.getMetadataValue(key);
+        return resource.getMetadataValue(key);
     }
 
     public void setTitle(String title)
     {
-	this.title = title;
+        this.title = title;
     }
 
     public Thumbnail getThumbnail0()
     {
-	return resource.getThumbnail0();
+        return resource.getThumbnail0();
     }
 
     public Thumbnail getThumbnail1()
     {
-	return resource.getThumbnail1();
+        return resource.getThumbnail1();
     }
 
     public Thumbnail getThumbnail2()
     {
-	return resource.getThumbnail2();
+        return resource.getThumbnail2();
     }
 
     public Thumbnail getThumbnail2b()
     {
-	return resource.getThumbnail2b();
+        return resource.getThumbnail2b();
     }
 
     public Thumbnail getThumbnail2c()
     {
-	return resource.getThumbnail2c();
+        return resource.getThumbnail2c();
     }
 
     public Thumbnail getThumbnail3()
     {
-	return resource.getThumbnail3();
+        return resource.getThumbnail3();
     }
 
     public Thumbnail getThumbnail4()
     {
-	return resource.getThumbnail4();
+        return resource.getThumbnail4();
     }
 
     public String getLocation()
     {
-	return resource.getLocation();
+        return resource.getLocation();
     }
 
     public String getSource()
     {
-	return resource.getSource();
+        return resource.getSource();
     }
 
     public String getDescription()
     {
-	return resource.getDescription();
+        return resource.getDescription();
     }
 
     public String getDescriptionHTML()
     {
-	return resource.getDescriptionHTML();
+        return resource.getDescriptionHTML();
     }
 
     public String getEmbedded()
     {
-	return resource.getEmbedded();
+        return resource.getEmbedded();
     }
 
     public String getUrl()
     {
-	return resource.getUrl();
+        return resource.getUrl();
     }
 
     public String getDurationInMinutes()
     {
-	return resource.getDurationInMinutes();
+        return resource.getDurationInMinutes();
     }
 
     public Group getGroup() throws SQLException
     {
-	return resource.getGroup();
+        return resource.getGroup();
     }
 
     public boolean isNewResource()
     {
-	return newResource;
+        return newResource;
     }
 
     public void setNewResource(boolean newResource)
     {
-	this.newResource = newResource;
+        this.newResource = newResource;
     }
 
     /**
@@ -193,50 +193,50 @@ public class ResourceDecorator implements Serializable
      */
     public int getRankAtService()
     {
-	return rankAtService;
+        return rankAtService;
     }
 
     public void setRankAtService(int rankAtService)
     {
-	this.rankAtService = rankAtService;
+        this.rankAtService = rankAtService;
     }
 
     public int getId()
     {
-	return resource.getId();
+        return resource.getId();
     }
 
     public String getType()
     {
-	return resource.getType();
+        return resource.getType();
     }
 
     public boolean isArchived()
     {
-	return resource.isArchived();
+        return resource.isArchived();
     }
 
     public ArchiveUrl getFirstArchivedObject()
     {
-	return resource.getFirstArchivedObject();
+        return resource.getFirstArchivedObject();
     }
 
     public ArchiveUrl getLastArchivedObject()
     {
-	return resource.getLastArchivedObject();
+        return resource.getLastArchivedObject();
     }
 
     public User getOwnerUser() throws SQLException
     {
-	if(resource.getOwnerUserId() == 7727)
-	    return null;
-	return resource.getOwnerUser();
+        if(resource.getOwnerUserId() == 7727)
+            return null;
+        return resource.getOwnerUser();
     }
 
     @Override
     public String toString()
     {
-	return "ResourceDecorator [resource=" + resource + ", tempId=" + tempId + ", snippet=" + snippet + ", rankAtService=" + rankAtService + ", title=" + title + ", addedToGroupBy=" + addedToGroupBy + ", addedToGroupOn=" + addedToGroupOn + "]";
+        return "ResourceDecorator [resource=" + resource + ", tempId=" + tempId + ", snippet=" + snippet + ", rankAtService=" + rankAtService + ", title=" + title + ", addedToGroupBy=" + addedToGroupBy + ", addedToGroupOn=" + addedToGroupOn + "]";
     }
 
 }

@@ -10,9 +10,9 @@ public class ResourceMetadataField implements Serializable
 
     public enum MetadataType
     { // represents primeface input types
-	INPUT_TEXT,
-	ONE_MENU,
-	ONE_MENU_EDITABLE
+        INPUT_TEXT,
+        ONE_MENU,
+        ONE_MENU_EDITABLE
     }
 
     private String name; // the name of this field, will be used as SOLR column name  
@@ -25,89 +25,89 @@ public class ResourceMetadataField implements Serializable
 
     public ResourceMetadataField(String name, String label, MetadataType type)
     {
-	super();
-	this.name = name;
-	this.label = label;
-	this.type = type;
+        super();
+        this.name = name;
+        this.label = label;
+        this.type = type;
     }
 
     public ResourceMetadataField(String name, MetadataType type, boolean moderatorOnly)
     {
-	super();
-	this.name = name;
-	this.label = name;
-	this.type = type;
-	this.moderatorOnly = moderatorOnly;
+        super();
+        this.name = name;
+        this.label = name;
+        this.type = type;
+        this.moderatorOnly = moderatorOnly;
     }
 
     public String getName()
     {
-	return name;
+        return name;
     }
 
     public void setName(String name)
     {
-	this.name = name;
+        this.name = name;
     }
 
     public MetadataType getType()
     {
-	return type;
+        return type;
     }
 
     public void setType(MetadataType type)
     {
-	this.type = type;
+        this.type = type;
     }
 
     public List<String> getOptions()
     {
-	return options;
+        return options;
     }
 
     public void setOptions(List<String> options)
     {
-	this.options = options;
+        this.options = options;
     }
 
     public boolean isModeratorOnly()
     {
-	return moderatorOnly;
+        return moderatorOnly;
     }
 
     public void setModeratorOnly(boolean moderatorOnly)
     {
-	this.moderatorOnly = moderatorOnly;
+        this.moderatorOnly = moderatorOnly;
     }
 
     public String getLabel()
     {
-	return label;
+        return label;
     }
 
     public void setLabel(String label)
     {
-	this.label = label;
+        this.label = label;
     }
 
     public String getInfo()
     {
-	return info;
+        return info;
     }
 
     public void setInfo(String info)
     {
-	this.info = info;
+        this.info = info;
     }
 
     public boolean isRequired()
     {
-	return required;
+        return required;
     }
 
     public void setRequired(boolean required)
     {
-	this.required = required;
+        this.required = required;
     }
 
 }

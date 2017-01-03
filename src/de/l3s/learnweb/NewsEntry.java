@@ -32,99 +32,99 @@ public class NewsEntry implements Comparable<NewsEntry>, Serializable
 
     public NewsEntry(LogEntry news, User user, Resource resource, Integer comments, Integer tags, String text, Boolean resourceAction, Date date)
     {
-	super();
-	this.user = user;
-	this.resource = resource;
-	this.comments = comments;
-	this.tags = tags;
-	this.text = text;
-	this.resourceAction = resourceAction;
-	this.date = date;
-	this.newsAction = news.getAction();
+        super();
+        this.user = user;
+        this.resource = resource;
+        this.comments = comments;
+        this.tags = tags;
+        this.text = text;
+        this.resourceAction = resourceAction;
+        this.date = date;
+        this.newsAction = news.getAction();
 
-	this.logEntry = news;
+        this.logEntry = news;
     }
 
     public NewsEntry(LogEntry l) throws SQLException
     {
-	Resource r = l.getResource();
+        Resource r = l.getResource();
 
-	int commentcount = 0;
-	int tagcount = 0;
-	String text = l.getDescription();
+        int commentcount = 0;
+        int tagcount = 0;
+        String text = l.getDescription();
 
-	if(r != null)
-	{
-	    if(r.getComments() != null)
-		commentcount = r.getComments().size();
+        if(r != null)
+        {
+            if(r.getComments() != null)
+                commentcount = r.getComments().size();
 
-	    if(r.getTags() != null)
-		tagcount = r.getTags().size();
+            if(r.getTags() != null)
+                tagcount = r.getTags().size();
 
-	}
+        }
 
-	this.resource = r;
-	this.comments = commentcount;
-	this.tags = tagcount;
-	this.text = text;
-	this.resourceAction = r != null;
-	this.date = l.getDate();
-	this.newsAction = l.getAction();
+        this.resource = r;
+        this.comments = commentcount;
+        this.tags = tagcount;
+        this.text = text;
+        this.resourceAction = r != null;
+        this.date = l.getDate();
+        this.newsAction = l.getAction();
 
-	this.logEntry = l;
+        this.logEntry = l;
     }
 
     public User getUser()
     {
-	return user;
+        return user;
     }
 
     public Resource getResource()
     {
-	return resource;
+        return resource;
     }
 
     public Integer getComments()
     {
-	return comments;
+        return comments;
     }
 
     public Integer getTags()
     {
-	return tags;
+        return tags;
     }
 
     public String getText()
     {
-	return text;
+        return text;
     }
 
     public Boolean getResourceAction()
     {
-	return resourceAction;
+        return resourceAction;
     }
 
     public boolean isQueryNeeded()
     {
-	if(newsAction == Action.adding_resource && resource != null && !resource.getQuery().equalsIgnoreCase("none"))
-	    return true;
-	return false;
+        if(newsAction == Action.adding_resource && resource != null && !resource.getQuery().equalsIgnoreCase("none"))
+            return true;
+        return false;
     }
 
     public Date getDate()
     {
-	return date;
+        return date;
     }
 
     @Override
     public int compareTo(NewsEntry o)
     {
-	return -getDate().compareTo(o.getDate());
+        return -getDate().compareTo(o.getDate());
     }
 
     public LogEntry getLogEntry()
     {
-	return logEntry;
+        return logEntry;
     }
 
 }

@@ -23,50 +23,50 @@ public class SimpleTranscriptLog implements Serializable
 
     public SimpleTranscriptLog(int userId, int resourceId, int selectionCount, int deselectionCount, int userAnnotationCount)
     {
-	this.userId = userId;
-	this.resourceId = resourceId;
-	this.selectionCount = selectionCount;
-	this.deselectionCount = deselectionCount;
-	this.userAnnotationCount = userAnnotationCount;
+        this.userId = userId;
+        this.resourceId = resourceId;
+        this.selectionCount = selectionCount;
+        this.deselectionCount = deselectionCount;
+        this.userAnnotationCount = userAnnotationCount;
     }
 
     public User getUser() throws SQLException
     {
-	if(null == user)
-	    user = Learnweb.getInstance().getUserManager().getUser(getUserId());
-	return user;
+        if(null == user)
+            user = Learnweb.getInstance().getUserManager().getUser(getUserId());
+        return user;
     }
 
     public Resource getResource() throws SQLException
     {
-	if(null == resource)
-	    resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-	return resource;
+        if(null == resource)
+            resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+        return resource;
     }
 
     public int getUserId()
     {
-	return userId;
+        return userId;
     }
 
     public void setUserId(int userId)
     {
-	this.userId = userId;
+        this.userId = userId;
     }
 
     public int getSelectionCount()
     {
-	return selectionCount;
+        return selectionCount;
     }
 
     public int getDeselectionCount()
     {
-	return deselectionCount;
+        return deselectionCount;
     }
 
     public int getUserAnnotationCount()
     {
-	return userAnnotationCount;
+        return userAnnotationCount;
     }
 
 }

@@ -71,14 +71,14 @@ public class Learnweb
      */
     public static Learnweb getInstance()
     {
-	try
-	{
-	    return getInstanceRaw();
-	}
-	catch(Exception e)
-	{
-	    throw new RuntimeException(e);
-	}
+        try
+        {
+            return getInstanceRaw();
+        }
+        catch(Exception e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -90,28 +90,28 @@ public class Learnweb
      */
     public static Learnweb getInstanceRaw() throws ClassNotFoundException, SQLException
     {
-	try
-	{
-	    if(learnweb == null)
-	    {
-		if(learnwebIsLoading)
-		{
-		    log.warn("Learnweb instance requested while it was still loading. Happens mostly because of connection or config problems");
+        try
+        {
+            if(learnweb == null)
+            {
+                if(learnwebIsLoading)
+                {
+                    log.warn("Learnweb instance requested while it was still loading. Happens mostly because of connection or config problems");
 
-		    return null; // to avoid infinite loop 
-		}
+                    return null; // to avoid infinite loop 
+                }
 
-		learnweb = new Learnweb();
-	    }
-	    return learnweb;
-	}
-	catch(Exception e)
-	{
-	    learnwebIsLoading = false;
-	    //learnweb = null;
-	    log.fatal(e);
-	    throw e;
-	}
+                learnweb = new Learnweb();
+            }
+            return learnweb;
+        }
+        catch(Exception e)
+        {
+            learnwebIsLoading = false;
+            //learnweb = null;
+            log.fatal(e);
+            throw e;
+        }
     }
 
     /**
@@ -121,27 +121,27 @@ public class Learnweb
      */
     public static String getPropteriesFileName()
     {
-	String propteriesFileName = "lw_local_other";
+        String propteriesFileName = "lw_local_other";
 
-	// if you need to override values in learnweb.properties file for local testing, do it in a separate properties file and add it here:
-	if((new File("/home/learnweb_user")).exists())
-	    propteriesFileName = "learnweb";
-	else if((new File("C:\\programmieren\\philipp.txt")).exists())
-	    propteriesFileName = "lw_local_philipp";
-	else if((new File("C:\\programmieren\\philipp_uni.txt")).exists())
-	    propteriesFileName = "lw_local_philipp_uni";
-	else if((new File("/home/fernando/trevor.txt").exists()))
-	    propteriesFileName = "lw_local_trevor_uni";
-	else if((new File("/Users/trevor").exists()))
-	    propteriesFileName = "lw_local_trevor";
-	else if((new File("/home/kalyani").exists()))
-	    propteriesFileName = "lw_local_rishita";
-	else if(new File("/Users/Rishita/").exists())
-	    propteriesFileName = "lw_local_rishita";
-	else if((new File("/home/astappev").exists()))
-	    propteriesFileName = "lw_local_oleh";
+        // if you need to override values in learnweb.properties file for local testing, do it in a separate properties file and add it here:
+        if((new File("/home/learnweb_user")).exists())
+            propteriesFileName = "learnweb";
+        else if((new File("C:\\programmieren\\philipp.txt")).exists())
+            propteriesFileName = "lw_local_philipp";
+        else if((new File("C:\\programmieren\\philipp_uni.txt")).exists())
+            propteriesFileName = "lw_local_philipp_uni";
+        else if((new File("/home/fernando/trevor.txt").exists()))
+            propteriesFileName = "lw_local_trevor_uni";
+        else if((new File("/Users/trevor").exists()))
+            propteriesFileName = "lw_local_trevor";
+        else if((new File("/home/kalyani").exists()))
+            propteriesFileName = "lw_local_rishita";
+        else if(new File("/Users/Rishita/").exists())
+            propteriesFileName = "lw_local_rishita";
+        else if((new File("/home/astappev").exists()))
+            propteriesFileName = "lw_local_oleh";
 
-	return propteriesFileName;
+        return propteriesFileName;
     }
 
     /**
@@ -153,56 +153,56 @@ public class Learnweb
      */
     private Learnweb() throws ClassNotFoundException, SQLException
     {
-	learnwebIsLoading = true;
-	contextUrl = "http://localhost:8080"; //"http://learnweb.l3s.uni-hannover.de";
-	//learnweb = this;
+        learnwebIsLoading = true;
+        contextUrl = "http://localhost:8080"; //"http://learnweb.l3s.uni-hannover.de";
+        //learnweb = this;
 
-	try
-	{
-	    Properties fallbackProperties = new Properties();
-	    fallbackProperties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb.properties"));
+        try
+        {
+            Properties fallbackProperties = new Properties();
+            fallbackProperties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/learnweb.properties"));
 
-	    this.properties = new PropertiesBundle(fallbackProperties);
+            this.properties = new PropertiesBundle(fallbackProperties);
 
-	    String propteriesFileName = getPropteriesFileName();
-	    log.debug("Load config file: " + propteriesFileName);
+            String propteriesFileName = getPropteriesFileName();
+            log.debug("Load config file: " + propteriesFileName);
 
-	    properties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propteriesFileName + ".properties"));
-	}
-	catch(IOException e)
-	{
-	    log.error("Property error", e);
-	}
+            properties.load(getClass().getClassLoader().getResourceAsStream("de/l3s/learnweb/config/" + propteriesFileName + ".properties"));
+        }
+        catch(IOException e)
+        {
+            log.error("Property error", e);
+        }
 
-	Class.forName("org.mariadb.jdbc.Driver");
-	connect();
+        Class.forName("org.mariadb.jdbc.Driver");
+        connect();
 
-	interweb = new InterWeb(properties.getProperty("INTERWEBJ_API_URL"), properties.getProperty("INTERWEBJ_API_KEY"), properties.getProperty("INTERWEBJ_API_SECRET"));
+        interweb = new InterWeb(properties.getProperty("INTERWEBJ_API_URL"), properties.getProperty("INTERWEBJ_API_KEY"), properties.getProperty("INTERWEBJ_API_SECRET"));
 
-	resourceManager = new ResourceManager(this);
-	presentationManager = new PresentationManager(this);
-	forumManager = new ForumManager(this);
-	organisationManager = new OrganisationManager(this);
-	courseManager = new CourseManager(this);
-	groupManager = new GroupManager(this);
-	userManager = new UserManager(this);
-	linkManager = new LinkManager(this);
-	fileManager = new FileManager(this);
-	solrClient = SolrClient.getInstance(this);
-	resourcePreviewMaker = new ResourcePreviewMaker(this);
-	searchlogClient = new SearchLogClient(this);
-	tedManager = new TedManager(this);
-	archiveUrlManager = ArchiveUrlManager.getInstance(this);
-	timelineManager = new TimelineManager(this);
-	mementoClient = new MementoClient(this);
-	loroManager = new LoroManager(this);
-	jobScheduler = new JobScheduler(this);
-	yovistoManager = new YovistoManager(this);
-	glossaryManager = new GlossaryManager(this);
-	suggestionLogger = new SuggestionLogger(this);
-	waybackCapturesLogger = new WaybackCapturesLogger(this);
+        resourceManager = new ResourceManager(this);
+        presentationManager = new PresentationManager(this);
+        forumManager = new ForumManager(this);
+        organisationManager = new OrganisationManager(this);
+        courseManager = new CourseManager(this);
+        groupManager = new GroupManager(this);
+        userManager = new UserManager(this);
+        linkManager = new LinkManager(this);
+        fileManager = new FileManager(this);
+        solrClient = SolrClient.getInstance(this);
+        resourcePreviewMaker = new ResourcePreviewMaker(this);
+        searchlogClient = new SearchLogClient(this);
+        tedManager = new TedManager(this);
+        archiveUrlManager = ArchiveUrlManager.getInstance(this);
+        timelineManager = new TimelineManager(this);
+        mementoClient = new MementoClient(this);
+        loroManager = new LoroManager(this);
+        jobScheduler = new JobScheduler(this);
+        yovistoManager = new YovistoManager(this);
+        glossaryManager = new GlossaryManager(this);
+        suggestionLogger = new SuggestionLogger(this);
+        waybackCapturesLogger = new WaybackCapturesLogger(this);
 
-	learnwebIsLoading = false;
+        learnwebIsLoading = false;
     }
 
     /**
@@ -210,87 +210,87 @@ public class Learnweb
      */
     public void initLearnwebServer()
     {
-	log.debug("Init LearnwebServer");
+        log.debug("Init LearnwebServer");
 
-	if(getContextUrl().equalsIgnoreCase("http://learnweb.l3s.uni-hannover.de"))
-	    jobScheduler.startAllJobs();
-	else
-	    log.debug("JobScheduler not started for context: " + getContextUrl());
+        if(getContextUrl().equalsIgnoreCase("http://learnweb.l3s.uni-hannover.de"))
+            jobScheduler.startAllJobs();
+        else
+            log.debug("JobScheduler not started for context: " + getContextUrl());
     }
 
     public FileManager getFileManager()
     {
-	return fileManager;
+        return fileManager;
     }
 
     public ResourceManager getResourceManager()
     {
-	return resourceManager;
+        return resourceManager;
     }
 
     public OrganisationManager getOrganisationManager()
     {
-	return organisationManager;
+        return organisationManager;
     }
 
     public CourseManager getCourseManager()
     {
-	return courseManager;
+        return courseManager;
     }
 
     public GroupManager getGroupManager()
     {
-	return groupManager;
+        return groupManager;
     }
 
     public UserManager getUserManager()
     {
-	return userManager;
+        return userManager;
     }
 
     public LinkManager getLinkManager()
     {
-	return linkManager;
+        return linkManager;
     }
 
     public ResourcePreviewMaker getResourcePreviewMaker()
     {
-	return resourcePreviewMaker;
+        return resourcePreviewMaker;
     }
 
     private void connect() throws SQLException
     {
-	dbConnection = DriverManager.getConnection(properties.getProperty("mysql_url"), properties.getProperty("mysql_user"), properties.getProperty("mysql_password"));
+        dbConnection = DriverManager.getConnection(properties.getProperty("mysql_url"), properties.getProperty("mysql_user"), properties.getProperty("mysql_password"));
 
-	dbConnection.createStatement().execute("SET @@SQL_MODE = REPLACE(@@SQL_MODE, 'ONLY_FULL_GROUP_BY', '')");
-	pstmtLog = dbConnection.prepareStatement("INSERT DELAYED INTO `lw_user_log` (`user_id`, `session_id`, `action`, `target_id`, `params`, `group_id`, timestamp, execution_time, client_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 2)");
-	pstmtGetChangeLog = dbConnection.prepareStatement("SELECT * FROM  `admin_change_log` ORDER BY  `admin_change_log`.`log_entry_num` DESC LIMIT 0 , 30");
+        dbConnection.createStatement().execute("SET @@SQL_MODE = REPLACE(@@SQL_MODE, 'ONLY_FULL_GROUP_BY', '')");
+        pstmtLog = dbConnection.prepareStatement("INSERT DELAYED INTO `lw_user_log` (`user_id`, `session_id`, `action`, `target_id`, `params`, `group_id`, timestamp, execution_time, client_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 2)");
+        pstmtGetChangeLog = dbConnection.prepareStatement("SELECT * FROM  `admin_change_log` ORDER BY  `admin_change_log`.`log_entry_num` DESC LIMIT 0 , 30");
     }
 
     private long lastCheck = 0L;
 
     private void checkConnection() throws SQLException
     {
-	// exit if last check was two or less seconds ago
-	if(lastCheck > System.currentTimeMillis() - 2000)
-	    return;
+        // exit if last check was two or less seconds ago
+        if(lastCheck > System.currentTimeMillis() - 2000)
+            return;
 
-	if(!dbConnection.isValid(1))
-	{
-	    log.warn("Database connection invalid try to reconnect");
+        if(!dbConnection.isValid(1))
+        {
+            log.warn("Database connection invalid try to reconnect");
 
-	    try
-	    {
-		dbConnection.close();
-	    }
-	    catch(SQLException e)
-	    {
-	    }
+            try
+            {
+                dbConnection.close();
+            }
+            catch(SQLException e)
+            {
+            }
 
-	    connect();
-	}
+            connect();
+        }
 
-	lastCheck = System.currentTimeMillis();
+        lastCheck = System.currentTimeMillis();
     }
 
     /**
@@ -300,12 +300,12 @@ public class Learnweb
      */
     public InterWeb getInterweb()
     {
-	return interweb;
+        return interweb;
     }
 
     public PropertiesBundle getProperties()
     {
-	return properties;
+        return properties;
     }
 
     /**
@@ -313,36 +313,36 @@ public class Learnweb
      */
     public void onDestroy()
     {
-	log.info("Shutting down Learnweb");
+        log.info("Shutting down Learnweb");
 
-	jobScheduler.stopAllJobs();
-	archiveUrlManager.onDestroy();
-	suggestionLogger.stop();
-	waybackCapturesLogger.stop();
+        jobScheduler.stopAllJobs();
+        archiveUrlManager.onDestroy();
+        suggestionLogger.stop();
+        waybackCapturesLogger.stop();
 
-	try
-	{
-	    if(logBatchSize > 0)
-	    {
-		pstmtLog.executeBatch();
-		logBatchSize = 0;
-	    }
-	}
-	catch(Exception e)
-	{
-	    e.printStackTrace();
-	}
+        try
+        {
+            if(logBatchSize > 0)
+            {
+                pstmtLog.executeBatch();
+                logBatchSize = 0;
+            }
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
 
-	try
-	{
-	    dbConnection.close();
-	    //querydbConnection.close();
-	}
-	catch(SQLException e)
-	{
-	} // ignore	
+        try
+        {
+            dbConnection.close();
+            //querydbConnection.close();
+        }
+        catch(SQLException e)
+        {
+        } // ignore	
 
-	log.info("Shutdown Learnweb completed");
+        log.info("Shutdown Learnweb completed");
     }
 
     /**
@@ -353,18 +353,18 @@ public class Learnweb
      */
     public static Connection getConnectionStatic() throws SQLException
     {
-	Learnweb lw = getInstance();
-	lw.checkConnection();
+        Learnweb lw = getInstance();
+        lw.checkConnection();
 
-	return lw.dbConnection;
+        return lw.dbConnection;
     }
 
     //should be used instead of the static method
     public Connection getConnection() throws SQLException
     {
-	checkConnection();
+        checkConnection();
 
-	return dbConnection;
+        return dbConnection;
     }
 
     private int logBatchSize = 0;
@@ -384,56 +384,56 @@ public class Learnweb
      */
     public void log(User user, LogEntry.Action action, int targetId, String params, String sessionId, int executionTime)
     {
-	log(user, action, -1, targetId, params, sessionId, executionTime);
+        log(user, action, -1, targetId, params, sessionId, executionTime);
     }
 
     public void log(User user, LogEntry.Action action, int groupId, int targetId, String params, String sessionId, int executionTime)
     {
-	if(null == action)
-	    throw new IllegalArgumentException();
+        if(null == action)
+            throw new IllegalArgumentException();
 
-	params = StringHelper.shortnString(params, 250);
+        params = StringHelper.shortnString(params, 250);
 
-	int userId = (null == user) ? 0 : user.getId();
+        int userId = (null == user) ? 0 : user.getId();
 
-	if(groupId == -1)
-	    groupId = (null == user) ? 0 : user.getActiveGroupId();
+        if(groupId == -1)
+            groupId = (null == user) ? 0 : user.getActiveGroupId();
 
-	synchronized(pstmtLog)
-	{
-	    try
-	    {
-		checkConnection();
+        synchronized(pstmtLog)
+        {
+            try
+            {
+                checkConnection();
 
-		pstmtLog.setInt(1, userId);
-		pstmtLog.setString(2, sessionId);
-		pstmtLog.setInt(3, action.ordinal());
-		pstmtLog.setInt(4, targetId);
-		pstmtLog.setString(5, params);
-		pstmtLog.setInt(6, groupId);
-		pstmtLog.setTimestamp(7, new Timestamp(new Date().getTime()));
-		pstmtLog.setInt(8, executionTime);
-		pstmtLog.addBatch();
+                pstmtLog.setInt(1, userId);
+                pstmtLog.setString(2, sessionId);
+                pstmtLog.setInt(3, action.ordinal());
+                pstmtLog.setInt(4, targetId);
+                pstmtLog.setString(5, params);
+                pstmtLog.setInt(6, groupId);
+                pstmtLog.setTimestamp(7, new Timestamp(new Date().getTime()));
+                pstmtLog.setInt(8, executionTime);
+                pstmtLog.addBatch();
 
-		logBatchSize++;
+                logBatchSize++;
 
-		if(logBatchSize > 0)
-		{
-		    pstmtLog.executeBatch();
-		    logBatchSize = 0;
-		}
-	    }
-	    catch(SQLException e)
-	    {
-		log.error("Can't store log entry: " + action + "; Target: " + targetId + "; User: " + userId, e);
-	    }
-	}
+                if(logBatchSize > 0)
+                {
+                    pstmtLog.executeBatch();
+                    logBatchSize = 0;
+                }
+            }
+            catch(SQLException e)
+            {
+                log.error("Can't store log entry: " + action + "; Target: " + targetId + "; User: " + userId, e);
+            }
+        }
     }
 
     private final static String LOG_SELECT = "SELECT user_id, u.username, action, target_id, params, timestamp, ul.group_id, r.title AS resource_title, g.title AS group_title, u.image_file_id FROM lw_user_log ul JOIN lw_user u USING(user_id) LEFT JOIN lw_resource r ON action IN(0,1,2,3,15,19,21,32) AND target_id = r.resource_id LEFT JOIN lw_group g ON ul.group_id = g.group_id";
     private final static Action[] LOG_DEFAULT_FILTER = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.deleting_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description,
-	    Action.group_changing_leader, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.group_removing_resource,
-	    Action.group_deleting_link };
+            Action.group_changing_leader, Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.group_joining, Action.group_leaving, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.group_removing_resource,
+            Action.group_deleting_link };
 
     /**
      * 
@@ -446,30 +446,30 @@ public class Learnweb
      */
     public List<LogEntry> getLogsByUser(int userId, Action[] actions, int limit) throws SQLException
     {
-	LinkedList<LogEntry> log = new LinkedList<LogEntry>();
+        LinkedList<LogEntry> log = new LinkedList<LogEntry>();
 
-	checkConnection();
+        checkConnection();
 
-	if(null == actions)
-	    actions = LOG_DEFAULT_FILTER;
+        if(null == actions)
+            actions = LOG_DEFAULT_FILTER;
 
-	StringBuilder sb = new StringBuilder();
-	for(Action action : actions)
-	{
-	    sb.append(",");
-	    sb.append(action.ordinal());
-	}
-	PreparedStatement select = dbConnection.prepareStatement(LOG_SELECT + " WHERE user_id = ? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC LIMIT " + limit);
-	select.setInt(1, userId);
+        StringBuilder sb = new StringBuilder();
+        for(Action action : actions)
+        {
+            sb.append(",");
+            sb.append(action.ordinal());
+        }
+        PreparedStatement select = dbConnection.prepareStatement(LOG_SELECT + " WHERE user_id = ? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC LIMIT " + limit);
+        select.setInt(1, userId);
 
-	ResultSet rs = select.executeQuery();
-	while(rs.next())
-	{
-	    log.add(new LogEntry(rs));
-	}
-	select.close();
+        ResultSet rs = select.executeQuery();
+        while(rs.next())
+        {
+            log.add(new LogEntry(rs));
+        }
+        select.close();
 
-	return log;
+        return log;
     }
 
     /**
@@ -481,7 +481,7 @@ public class Learnweb
      */
     public List<LogEntry> getLogsByGroup(int groupId, LogEntry.Action[] actions) throws SQLException
     {
-	return getLogsByGroup(groupId, actions, -1);
+        return getLogsByGroup(groupId, actions, -1);
     }
 
     /**
@@ -494,97 +494,97 @@ public class Learnweb
      */
     public List<LogEntry> getLogsByGroup(int groupId, LogEntry.Action[] actions, int limit) throws SQLException
     {
-	LinkedList<LogEntry> log = new LinkedList<LogEntry>();
+        LinkedList<LogEntry> log = new LinkedList<LogEntry>();
 
-	checkConnection();
+        checkConnection();
 
-	if(null == actions)
-	    actions = LOG_DEFAULT_FILTER;
+        if(null == actions)
+            actions = LOG_DEFAULT_FILTER;
 
-	StringBuilder sb = new StringBuilder();
-	for(Action action : actions)
-	{
-	    sb.append(",");
-	    sb.append(action.ordinal());
-	}
+        StringBuilder sb = new StringBuilder();
+        for(Action action : actions)
+        {
+            sb.append(",");
+            sb.append(action.ordinal());
+        }
 
-	String limitStr = "";
-	if(limit > 0)
-	    limitStr = "LIMIT " + limit;
+        String limitStr = "";
+        if(limit > 0)
+            limitStr = "LIMIT " + limit;
 
-	PreparedStatement select = dbConnection.prepareStatement(LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
-	select.setInt(1, groupId);
+        PreparedStatement select = dbConnection.prepareStatement(LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
+        select.setInt(1, groupId);
 
-	ResultSet rs = select.executeQuery();
-	while(rs.next())
-	{
-	    log.add(new LogEntry(rs));
-	}
-	select.close();
+        ResultSet rs = select.executeQuery();
+        while(rs.next())
+        {
+            log.add(new LogEntry(rs));
+        }
+        select.close();
 
-	return log;
+        return log;
     }
 
     public List<LogEntry> getActivityLogOfUserGroups(int userId, LogEntry.Action[] actions, int limit) throws SQLException
     {
-	LinkedList<LogEntry> log = new LinkedList<LogEntry>();
+        LinkedList<LogEntry> log = new LinkedList<LogEntry>();
 
-	checkConnection();
+        checkConnection();
 
-	if(null == actions)
-	    actions = LOG_DEFAULT_FILTER;
+        if(null == actions)
+            actions = LOG_DEFAULT_FILTER;
 
-	StringBuilder sb = new StringBuilder();
-	for(Action action : actions)
-	{
-	    sb.append(",");
-	    sb.append(action.ordinal());
-	}
+        StringBuilder sb = new StringBuilder();
+        for(Action action : actions)
+        {
+            sb.append(",");
+            sb.append(action.ordinal());
+        }
 
-	String limitStr = "";
-	if(limit > 0)
-	    limitStr = "LIMIT " + limit;
+        String limitStr = "";
+        if(limit > 0)
+            limitStr = "LIMIT " + limit;
 
-	PreparedStatement select = dbConnection.prepareStatement(LOG_SELECT + " WHERE ul.group_id IN(SELECT group_id FROM lw_group_user WHERE user_id=?) AND user_id != 0 AND user_id!=? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
-	select.setInt(1, userId);
-	select.setInt(2, userId);
+        PreparedStatement select = dbConnection.prepareStatement(LOG_SELECT + " WHERE ul.group_id IN(SELECT group_id FROM lw_group_user WHERE user_id=?) AND user_id != 0 AND user_id!=? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
+        select.setInt(1, userId);
+        select.setInt(2, userId);
 
-	ResultSet rs = select.executeQuery();
-	while(rs.next())
-	{
-	    log.add(new LogEntry(rs));
-	}
-	select.close();
+        ResultSet rs = select.executeQuery();
+        while(rs.next())
+        {
+            log.add(new LogEntry(rs));
+        }
+        select.close();
 
-	return log;
+        return log;
     }
 
     private String adminMessage;
 
     public String getAdminMessage() throws SQLException
     {
-	return adminMessage;
+        return adminMessage;
     }
 
     public void setAdminMessage(String adminMessage)
     {
-	this.adminMessage = adminMessage;
+        this.adminMessage = adminMessage;
     }
 
     public List<String> getChangeLog() throws SQLException
     {
-	checkConnection();
-	List<String> messages = new LinkedList<String>();
-	ResultSet rs = pstmtGetChangeLog.executeQuery();
-	String msg = null;
-	while(rs.next())
-	{
-	    java.sql.Timestamp ts = rs.getTimestamp(3);
-	    msg = rs.getString(2);
-	    msg = ts.toString() + " : " + msg;
-	    messages.add(msg);
-	}
-	return messages;
+        checkConnection();
+        List<String> messages = new LinkedList<String>();
+        ResultSet rs = pstmtGetChangeLog.executeQuery();
+        String msg = null;
+        while(rs.next())
+        {
+            java.sql.Timestamp ts = rs.getTimestamp(3);
+            msg = rs.getString(2);
+            msg = ts.toString() + " : " + msg;
+            messages.add(msg);
+        }
+        return messages;
     }
 
     /**
@@ -593,7 +593,7 @@ public class Learnweb
      */
     public String getContextUrl()
     {
-	return contextUrl; // because we don't use httpS we can cache the url, change it if you want to use httpS too
+        return contextUrl; // because we don't use httpS we can cache the url, change it if you want to use httpS too
     }
 
     /**
@@ -605,57 +605,57 @@ public class Learnweb
      */
     public void setContextUrl(String contextUrl)
     {
-	if(null == contextUrl)
-	    throw new IllegalArgumentException("contextUrl must no be null");
+        if(null == contextUrl)
+            throw new IllegalArgumentException("contextUrl must no be null");
 
-	fileManager.setContextUrl(contextUrl);
+        fileManager.setContextUrl(contextUrl);
 
-	this.contextUrl = contextUrl;
+        this.contextUrl = contextUrl;
     }
 
     public PresentationManager getPresentationManager()
     {
-	return presentationManager;
+        return presentationManager;
     }
 
     public SearchLogClient getSearchlogClient()
     {
-	return searchlogClient;
+        return searchlogClient;
     }
 
     public SolrClient getSolrClient()
     {
-	return solrClient;
+        return solrClient;
     }
 
     public TedManager getTedManager()
     {
-	return tedManager;
+        return tedManager;
     }
 
     public LoroManager getLoroManager()
     {
-	return loroManager;
+        return loroManager;
     }
 
     public ArchiveUrlManager getArchiveUrlManager()
     {
-	return archiveUrlManager;
+        return archiveUrlManager;
     }
 
     public MementoClient getMementoClient()
     {
-	return mementoClient;
+        return mementoClient;
     }
 
     public TimelineManager getTimelineManager()
     {
-	return timelineManager;
+        return timelineManager;
     }
 
     public ForumManager getForumManager()
     {
-	return forumManager;
+        return forumManager;
     }
 
     /**
@@ -665,35 +665,35 @@ public class Learnweb
      */
     public void resetCaches() throws SQLException
     {
-	organisationManager.resetCache();
-	userManager.resetCache();
-	resourceManager.resetCache();
-	groupManager.resetCache();
-	courseManager.resetCache();
+        organisationManager.resetCache();
+        userManager.resetCache();
+        resourceManager.resetCache();
+        groupManager.resetCache();
+        courseManager.resetCache();
     }
 
     public YovistoManager getYovistoManager()
     {
-	return yovistoManager;
+        return yovistoManager;
     }
 
     public GlossaryManager getGlossaryManager()
     {
-	return glossaryManager;
+        return glossaryManager;
     }
 
     public SuggestionLogger getSuggestionLogger()
     {
-	return suggestionLogger;
+        return suggestionLogger;
     }
 
     public WaybackCapturesLogger getWaybackCapturesLogger()
     {
-	return waybackCapturesLogger;
+        return waybackCapturesLogger;
     }
 
     public static void main(String[] args)
     {
-	Learnweb.getInstance();
+        Learnweb.getInstance();
     }
 }

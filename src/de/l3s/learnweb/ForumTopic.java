@@ -24,126 +24,126 @@ public class ForumTopic implements Serializable
 
     public int getUserId()
     {
-	return userId;
+        return userId;
     }
 
     public void setUserId(int userId)
     {
-	this.userId = userId;
+        this.userId = userId;
     }
 
     public User getUser() throws SQLException
     {
-	if(user == null)
-	{
-	    user = Learnweb.getInstance().getUserManager().getUser(userId);
-	}
-	return user;
+        if(user == null)
+        {
+            user = Learnweb.getInstance().getUserManager().getUser(userId);
+        }
+        return user;
     }
 
     public User getLastPostUser() throws SQLException
     {
-	if(lastPostUser == null)
-	{
-	    lastPostUser = Learnweb.getInstance().getUserManager().getUser(lastPostUserId);
-	}
-	return lastPostUser;
+        if(lastPostUser == null)
+        {
+            lastPostUser = Learnweb.getInstance().getUserManager().getUser(lastPostUserId);
+        }
+        return lastPostUser;
     }
 
     public int getLastPostUserId()
     {
-	return lastPostUserId;
+        return lastPostUserId;
     }
 
     public void setLastPostUserId(int lastPostUserId)
     {
-	this.lastPostUserId = lastPostUserId;
+        this.lastPostUserId = lastPostUserId;
     }
 
     public int getGroupId()
     {
-	return groupId;
+        return groupId;
     }
 
     public void setGroupId(int groupId)
     {
-	this.groupId = groupId;
+        this.groupId = groupId;
     }
 
     public Date getDate()
     {
-	return date;
+        return date;
     }
 
     public void setDate(Date date)
     {
-	this.date = date;
+        this.date = date;
     }
 
     public int getId()
     {
-	return id;
+        return id;
     }
 
     public String getTitle()
     {
-	return title;
+        return title;
     }
 
     public int getViews()
     {
-	return views;
+        return views;
     }
 
     public int getReplies()
     {
-	return replies;
+        return replies;
     }
 
     public int getLastPostId()
     {
-	return lastPostId;
+        return lastPostId;
     }
 
     public void setId(int id)
     {
-	this.id = id;
+        this.id = id;
     }
 
     public void setTitle(String title)
     {
-	this.title = title;
+        this.title = title;
     }
 
     public void setViews(int views)
     {
-	this.views = views;
+        this.views = views;
     }
 
     public void setReplies(int replies)
     {
-	this.replies = replies;
+        this.replies = replies;
     }
 
     public void setLastPostId(int lastPostId)
     {
-	this.lastPostId = lastPostId;
+        this.lastPostId = lastPostId;
     }
 
     public Date getLastPostDate()
     {
-	return lastPostDate;
+        return lastPostDate;
     }
 
     public void setLastPostDate(Date lastPostDate)
     {
-	this.lastPostDate = lastPostDate;
+        this.lastPostDate = lastPostDate;
     }
 
     @Override
     public String toString()
     {
-	return "ForumTopic [id=" + id + ", userId=" + userId + ", groupId=" + groupId + ", title=" + title + ", date=" + date + ", views=" + views + ", replies=" + replies + ", lastPostId=" + lastPostId + ", lastPostDate=" + lastPostDate + "]";
+        return "ForumTopic [id=" + id + ", userId=" + userId + ", groupId=" + groupId + ", title=" + title + ", date=" + date + ", views=" + views + ", replies=" + replies + ", lastPostId=" + lastPostId + ", lastPostDate=" + lastPostDate + "]";
     }
 
 }

@@ -10,27 +10,27 @@ public class TimelineData
 
     public TimelineData(Date timestamp, int numberOfVersions)
     {
-	this.timestamp = timestamp;
-	this.numberOfVersions = numberOfVersions;
+        this.timestamp = timestamp;
+        this.numberOfVersions = numberOfVersions;
     }
 
     public Date getTimestamp()
     {
-	return timestamp;
+        return timestamp;
     }
 
     public void setTimestamp(Date timestamp)
     {
-	this.timestamp = timestamp;
+        this.timestamp = timestamp;
     }
 
     public int getNumberOfVersions()
     {
-	return numberOfVersions;
+        return numberOfVersions;
     }
 
     public void setNumberOfVersions(int numberOfVersions)
     {
-	this.numberOfVersions = numberOfVersions;
+        this.numberOfVersions = numberOfVersions;
     }
 }

@@ -42,123 +42,123 @@ public class GoogleDriveManager
 
     static
     {
-	try
-	{
-	    HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-	}
-	catch(Throwable e)
-	{
-	    log.error("Can not init HTTP transport");
-	    e.printStackTrace();
-	}
+        try
+        {
+            HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
+        }
+        catch(Throwable e)
+        {
+            log.error("Can not init HTTP transport");
+            e.printStackTrace();
+        }
     }
 
     public File createEmptyDocument(String title, String type)
     {
-	return createEmptyDocument(title, type, defaultParentFolder);
+        return createEmptyDocument(title, type, defaultParentFolder);
     }
 
     public File createEmptyDocument(String title, String type, String parent)
     {
-	File fileMetadata = new File(), uploadedFile = null;
-	fileMetadata.setTitle(title);
+        File fileMetadata = new File(), uploadedFile = null;
+        fileMetadata.setTitle(title);
 
-	if(type.equals("document"))
-	    fileMetadata.setMimeType("application/vnd.google-apps.document");
-	else if(type.equals("presentation"))
-	    fileMetadata.setMimeType("application/vnd.google-apps.presentation");
-	else if(type.equals("spreadsheet"))
-	    fileMetadata.setMimeType("application/vnd.google-apps.spreadsheet");
-	else if(type.equals("drawing"))
-	    fileMetadata.setMimeType("application/vnd.google-apps.drawing");
-	else
-	    throw new IllegalArgumentException("type should be: document, presentation, spreadsheet or drawing");
+        if(type.equals("document"))
+            fileMetadata.setMimeType("application/vnd.google-apps.document");
+        else if(type.equals("presentation"))
+            fileMetadata.setMimeType("application/vnd.google-apps.presentation");
+        else if(type.equals("spreadsheet"))
+            fileMetadata.setMimeType("application/vnd.google-apps.spreadsheet");
+        else if(type.equals("drawing"))
+            fileMetadata.setMimeType("application/vnd.google-apps.drawing");
+        else
+            throw new IllegalArgumentException("type should be: document, presentation, spreadsheet or drawing");
 
-	if(parent != null && !parent.isEmpty())
-	{
-	    fileMetadata.setParents(Arrays.asList(new ParentReference().setId(parent)));
-	}
+        if(parent != null && !parent.isEmpty())
+        {
+            fileMetadata.setParents(Arrays.asList(new ParentReference().setId(parent)));
+        }
 
-	Drive.Files.Insert insert;
-	try
-	{
-	    insert = getDrive().files().insert(fileMetadata);
-	    uploadedFile = insert.execute();
-	    log.debug("Created new Google Document: " + uploadedFile.getAlternateLink());
-	}
-	catch(IOException e)
-	{
-	    log.error("Can not create document");
-	    e.printStackTrace();
-	}
+        Drive.Files.Insert insert;
+        try
+        {
+            insert = getDrive().files().insert(fileMetadata);
+            uploadedFile = insert.execute();
+            log.debug("Created new Google Document: " + uploadedFile.getAlternateLink());
+        }
+        catch(IOException e)
+        {
+            log.error("Can not create document");
+            e.printStackTrace();
+        }
 
-	return uploadedFile;
+        return uploadedFile;
     }
 
     public File getDocument(String docId)
     {
-	File file = null;
-	try
-	{
-	    file = getDrive().files().get(docId).execute();
-	}
-	catch(IOException e)
-	{
-	    log.error("Can not get file");
-	    e.printStackTrace();
-	}
+        File file = null;
+        try
+        {
+            file = getDrive().files().get(docId).execute();
+        }
+        catch(IOException e)
+        {
+            log.error("Can not get file");
+            e.printStackTrace();
+        }
 
-	return file;
+        return file;
     }
 
     public String getDocumentThumbnail(String docId)
     {
-	return getDocumentThumbnail(docId, null);
+        return getDocumentThumbnail(docId, null);
     }
 
     public String getDocumentThumbnail(String docId, Date modifyedAfter)
     {
-	File file = getDocument(docId);
-	if(modifyedAfter != null && (file.getModifiedDate().getValue() > modifyedAfter.getTime()))
-	{
-	    return null;
-	}
+        File file = getDocument(docId);
+        if(modifyedAfter != null && (file.getModifiedDate().getValue() > modifyedAfter.getTime()))
+        {
+            return null;
+        }
 
-	return file.getThumbnailLink();
+        return file.getThumbnailLink();
     }
 
     private Drive getDrive()
     {
-	if(drive == null)
-	{
-	    GoogleCredential credential = null;
-	    try
-	    {
-		java.io.File p12 = new java.io.File(GoogleDriveManager.class.getClassLoader().getResource("Learnweb-55153726550a.p12").toURI());
-		String accountId = "181029990744-vegd7p8ugh5amn1ilgunba03d1pai4sb@developer.gserviceaccount.com";
+        if(drive == null)
+        {
+            GoogleCredential credential = null;
+            try
+            {
+                java.io.File p12 = new java.io.File(GoogleDriveManager.class.getClassLoader().getResource("Learnweb-55153726550a.p12").toURI());
+                String accountId = "181029990744-vegd7p8ugh5amn1ilgunba03d1pai4sb@developer.gserviceaccount.com";
 
-		credential = new GoogleCredential.Builder().setTransport(HTTP_TRANSPORT).setJsonFactory(JSON_FACTORY).setServiceAccountId(accountId).setServiceAccountScopes(SCOPES).setServiceAccountPrivateKeyFromP12File(p12).build();
-		credential.refreshToken();
-	    }
-	    catch(GeneralSecurityException e)
-	    {
-		log.error("Can not access to Google API");
-		e.printStackTrace();
-	    }
-	    catch(URISyntaxException e)
-	    {
-		log.error("Can not load P12File for Google API");
-		e.printStackTrace();
-	    }
-	    catch(IOException e)
-	    {
-		log.error("Can not get GoogleDrive credential");
-		e.printStackTrace();
-	    }
+                credential = new GoogleCredential.Builder().setTransport(HTTP_TRANSPORT).setJsonFactory(JSON_FACTORY).setServiceAccountId(accountId).setServiceAccountScopes(SCOPES).setServiceAccountPrivateKeyFromP12File(p12).build();
+                credential.refreshToken();
+            }
+            catch(GeneralSecurityException e)
+            {
+                log.error("Can not access to Google API");
+                e.printStackTrace();
+            }
+            catch(URISyntaxException e)
+            {
+                log.error("Can not load P12File for Google API");
+                e.printStackTrace();
+            }
+            catch(IOException e)
+            {
+                log.error("Can not get GoogleDrive credential");
+                e.printStackTrace();
+            }
 
-	    drive = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
-	}
+            drive = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();
+        }
 
-	return drive;
+        return drive;
     }
 }
