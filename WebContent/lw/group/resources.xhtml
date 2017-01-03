@@ -83,7 +83,7 @@
 						<h:outputText value="#{msg.forum}" />
 					</a>
 				</li>
-				<ui:fragment rendered="${userBean.admin || groupDetailBean.group.course.isModerator(userBean.user) || groupDetailBean.group.isLeader(userBean.user)}">
+				<ui:fragment rendered="${groupDetailBean.group.course.isModerator(userBean.user) || groupDetailBean.group.isLeader(userBean.user)}">
 					<li>
 						<a href="./group/options.jsf?group_id=#{groupDetailBean.group.id}">
 							<h:outputText value="#{msg.options}" />

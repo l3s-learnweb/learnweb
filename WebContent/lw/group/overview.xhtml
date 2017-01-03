@@ -73,7 +73,7 @@
 						<h:outputText value="#{msg.forum}" />
 					</a>
 				</li>
-				<ui:fragment rendered="${userBean.moderator || groupDetailBean.group.isLeader(userBean.user)}">							
+				<ui:fragment rendered="${groupDetailBean.group.course.isModerator(userBean.user) || groupDetailBean.group.isLeader(userBean.user)}">							
 				<li>
 					<a href="./group/options.jsf?group_id=#{groupDetailBean.group.id}">
 						<h:outputText value="#{msg.options}" />
@@ -167,6 +167,7 @@
 			</h:form>
 		</p:dialog>
 	
+		<h:panelGroup id="filters"><!-- dummy element --></h:panelGroup>
 	</ui:define>
 	
 	<ui:define name="right_layout">

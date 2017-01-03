@@ -1,9 +1,7 @@
 package de.l3s.learnwebBeans;
 
 import javax.faces.application.FacesMessage;
-import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
@@ -11,6 +9,7 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.beans.LearnwebExceptionHandler;
 import de.l3s.learnweb.beans.UtilBean;
 
 public class ApplicationBean
@@ -299,38 +298,6 @@ public class ApplicationBean
         addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
         addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
 
-        String url = null;
-        Integer userId = -1;
-        String referrer = null;
-        String userAgent = null;
-        String ip = null;
-        try
-        {
-            FacesContext facesContext = FacesContext.getCurrentInstance();
-            ExternalContext ext = facesContext.getExternalContext();
-            HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();
-
-            ip = servletRequest.getHeader("X-FORWARDED-FOR");
-            if(ip == null)
-            {
-                ip = servletRequest.getRemoteAddr();
-            }
-
-            referrer = servletRequest.getHeader("referer");
-            userAgent = servletRequest.getHeader("User-Agent");
-            url = servletRequest.getRequestURL().toString();
-            if(servletRequest.getQueryString() != null)
-                url += '?' + servletRequest.getQueryString();
-
-            HttpSession session = servletRequest.getSession(false);
-            if(session != null)
-                userId = (Integer) session.getAttribute("learnweb_user_id");
-
-        }
-        catch(Throwable t)
-        {
-            // ignore
-        }
-        Logger.getLogger(ApplicationBean.class).fatal("Fatal unhandled error on: " + url + "; userId: " + userId + "; referrer: " + referrer + "; userAgent: " + userAgent + "; ip: " + ip, exception);
+        Logger.getLogger(ApplicationBean.class).fatal("Fatal unhandled error on " + LearnwebExceptionHandler.getRequestSummary(), exception);
     }
 }

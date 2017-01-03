@@ -79,6 +79,9 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
     public void preRenderView(ComponentSystemEvent e) throws SQLException
     {
+        if(getUser() == null) // not logged in
+            return;
+
         if(isAjaxRequest())
         {
             return;
@@ -106,7 +109,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
         if(getParameterInt("resource_id") != null)
             setRightPanelAction("viewResource");
-
     }
 
     public void updateBreadcrumb() throws SQLException

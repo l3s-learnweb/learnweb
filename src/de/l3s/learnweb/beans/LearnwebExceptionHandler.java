@@ -15,6 +15,8 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.primefaces.application.exceptionhandler.PrimeExceptionHandler;
 
+import de.l3s.learnweb.Learnweb;
+
 /**
  * Used to log errors which are redirect to /lw/error.jsf
  * 
@@ -43,46 +45,20 @@ public class LearnwebExceptionHandler extends PrimeExceptionHandler
                 exception = exception.getCause();
             }
 
+            String description = getRequestSummary();
+
             if(exception instanceof ViewExpiredException)
                 log.info("View expired exception");
             else if(exception instanceof IllegalStateException && exception.getMessage().startsWith("Cannot create a session"))
             {
-                log.info(exception.getMessage() + "; Happens mostly because of error 404");
+                log.error(exception.getMessage() + "; Happens mostly because of error 404; On " + description);
+
                 return;
             }
             else
             {
-                String url = null;
-                Integer userId = -1;
-                String referrer = null;
-                String ip = null;
-                String userAgent = null;
-                try
-                {
-                    FacesContext facesContext = FacesContext.getCurrentInstance();
-                    ExternalContext ext = facesContext.getExternalContext();
-                    HttpServletRequest request = (HttpServletRequest) ext.getRequest();
-                    referrer = request.getHeader("referer");
-                    ip = request.getHeader("X-FORWARDED-FOR");
-                    if(ip == null)
-                    {
-                        ip = request.getRemoteAddr();
-                    }
 
-                    userAgent = request.getHeader("User-Agent");
-                    url = request.getRequestURL().toString();
-                    if(request.getQueryString() != null)
-                        url += '?' + request.getQueryString();
-
-                    HttpSession session = request.getSession(false);
-                    if(session != null)
-                        userId = (Integer) session.getAttribute("learnweb_user_id");
-                }
-                catch(Throwable t)
-                {
-                    // ignore
-                }
-                log.fatal("Fatal unhandled error on: " + url + "; userId: " + userId + "; ip: " + ip + "; referrer: " + referrer + "; userAgent: " + userAgent, exception);
+                log.fatal("Fatal unhandled error on " + description, exception);
             }
 
         }
@@ -110,6 +86,7 @@ public class LearnwebExceptionHandler extends PrimeExceptionHandler
         String ip = null;
         String userAgent = null;
         Integer userId = null;
+        String user = null;
 
         try
         {
@@ -134,11 +111,21 @@ public class LearnwebExceptionHandler extends PrimeExceptionHandler
             HttpSession session = request.getSession(false);
             if(session != null)
                 userId = (Integer) session.getAttribute("learnweb_user_id");
+
+            if(userId == null)
+                user = "not logged in";
+            else
+            {
+                Learnweb learnweb = Learnweb.getInstance();
+                if(learnweb != null)
+                    user = learnweb.getUserManager().getUser(userId).toString();
+            }
         }
         catch(Throwable t)
         {
             // ignore
         }
-        return "page: " + url + "; userId: " + userId + "; ip: " + ip + "; referrer: " + referrer + "; userAgent: " + userAgent;
+        return "page: " + url + "; user: " + user + "; ip: " + ip + "; referrer: " + referrer + "; userAgent: " + userAgent;
     }
+
 }

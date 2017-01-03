@@ -28,7 +28,6 @@ import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
 import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.Group;
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceMetadataExtractor;
@@ -36,6 +35,7 @@ import de.l3s.learnweb.ResourcePreviewMaker;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
+import de.l3s.util.StringHelper;
 
 @ViewScoped
 @ManagedBean(name = "addResourceBean")
@@ -504,35 +504,40 @@ public class AddResourceBean extends ApplicationBean implements Serializable
      * When the url leads to a redirect the function will return the target of the redirect.
      * Returns null if the url is invalid or not reachable.
      * 
-     * @param url
+     * @param urlStr
      * @return
      */
-    public static String checkUrl(String url)
+    public static String checkUrl(String urlStr)
     {
-        if(url == null)
+        if(urlStr == null)
             return null;
 
-        if(!url.startsWith("http"))
-            url = "http://" + url;
+        if(!urlStr.startsWith("http"))
+            urlStr = "http://" + urlStr;
 
-        HttpURLConnection con;
+        HttpURLConnection connection;
         try
         {
-            con = (HttpURLConnection) new URL(url).openConnection();
-            con.setInstanceFollowRedirects(false);
-            con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0");
+            urlStr = StringHelper.convertUnicodeURLToAscii(urlStr);
 
-            int responseCode = con.getResponseCode();
+            URL url = new URL(urlStr);
+
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setInstanceFollowRedirects(false);
+            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 Safari/537.36");
+
+            int responseCode = connection.getResponseCode();
             if(responseCode / 100 == 2)
             {
-                return url;
+                return urlStr;
             }
             else if(responseCode / 100 == 3)
             {
-                String location = con.getHeaderField("Location");
+                String location = connection.getHeaderField("Location");
                 if(location.startsWith("/"))
                 {
-                    String domain = url.substring(0, url.indexOf("/", url.indexOf("//") + 2));
+                    int index = urlStr.indexOf("/", urlStr.indexOf("//") + 2);
+                    String domain = index > 0 ? urlStr.substring(0, index) : urlStr;
                     return domain + location;
                 }
                 else
@@ -543,24 +548,26 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
         catch(UnknownHostException e)
         {
-            log.info(e.getMessage());
+            log.warn("unknown host: " + urlStr, e);
             return null;
         }
         catch(Throwable t)
         {
-            log.error("invalid url", t);
+            log.error("invalid url: " + urlStr, t);
             return null;
         }
     }
 
     public static void main(String[] args) throws SQLException, InterruptedException
     {
+        /*
         Resource resource = Learnweb.getInstance().getResourceManager().getResource(190236);
         log.debug(resource);
-
+        
         new CreateThumbnailThread(resource).start();
-
+        
         Thread.sleep(99999999);
+        */
     }
 
     public static class CreateThumbnailThread extends Thread
