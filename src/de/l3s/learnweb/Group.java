@@ -35,17 +35,78 @@ public class Group implements Comparable<Group>, HasId, Serializable
     private String location;
     @Size(max = 50)
     private String language;
-    private Course course;
-    /*
-    private int parentGroupId;
-    private transient Group parentGroup;
-    private String subgroupsLabel;
-    */
+    private int categoryId;
+
+    // restrictions / access policy
+
+    /**
+     * Who can join this group? *
+     */
+    public enum POLICY_JOIN
+    {
+        ALL_LEARNWEB_USERS,
+        COURSE_MEMBERS,
+        NOBODY
+    }
+
+    /**
+     * Who can add resources and folders to this group? *
+     */
+    public enum POLICY_ADD
+    {
+        GROUP_MEMBERS,
+        GROUP_LEADER
+    }
+
+    /**
+     * Who can delete or edit resources and folders of this group?
+     */
+    public enum POLICY_EDIT
+    {
+        GROUP_MEMBERS,
+        GROUP_LEADER
+    }
+
+    /**
+     * Who can view resources of this group?
+     */
+    public enum POLICY_VIEW
+    {
+        ALL_LEARNWEB_USERS,
+        GROUP_MEMBERS
+    }
+
+    /**
+     * Who can tag or comment resources of this group?
+     */
+    public enum POLICY_ANNOTATE
+    {
+        ALL_LEARNWEB_USERS,
+        COURSE_MEMBERS,
+        GROUP_MEMBERS
+    }
+
+    public POLICY_JOIN[] getPolicyJoinOptions()
+    {
+        return POLICY_JOIN.values();
+    }
+
+    private POLICY_JOIN policyJoin;
+
+    public POLICY_JOIN getPolicyJoin()
+    {
+        return policyJoin;
+    }
+
+    public void setPolicyJoin(POLICY_JOIN policyJoin)
+    {
+        this.policyJoin = policyJoin;
+    }
+
     private boolean restrictionOnlyLeaderCanAddResources;
     private boolean restrictionForumCategoryRequired = false;
     private boolean readOnly = false;
 
-    private int categoryId;
     // caches
     private String categoryTitle;
     private String categoryAbbreviation;
@@ -54,6 +115,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     private transient List<User> members;
     private transient List<Link> links;
     private transient List<Folder> folders;
+    private transient Course course;
     private long cacheTime = 0L;
     private int resourceCount = -1;
     private int memberCount = -1;
@@ -210,7 +272,9 @@ public class Group implements Comparable<Group>, HasId, Serializable
     }
     */
 
-    //Copy resource from this group to another group referred to by groupId, and by which user
+    /**
+     * Copy resource from this group to another group referred to by groupId, and by which user
+     */
     public void copyResourcesToGroupById(int groupId, User user) throws SQLException
     {
         for(Resource resource : getResources())
@@ -391,76 +455,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
         documentLinks = null;
     }
 
-    /*
-    public int getForumId()
-    {
-    	return forumId;
-    }
-    
-    
-    public void setForumId(int forumId) throws SQLException
-    {
-    	this.forumId = forumId;
-    }
-    public String getForumUrl(User user) throws SQLException
-    {
-    	return Learnweb.getInstance().getJForumManager().getForumUrl(user, forumId);
-    }
-    
-    public int getParentGroupId()
-    {
-    	return parentGroupId;
-    }
-    
-    public void setParentGroupId(int parentGroupId)
-    {
-    	this.parentGroupId = parentGroupId;
-    	this.parentGroup = null; // force reload
-    }
-    
-    public Group getParentGroup() throws IllegalArgumentException, SQLException
-    {
-    	if(parentGroupId != 0 && null == parentGroup)
-    	    parentGroup = Learnweb.getInstance().getGroupManager().getGroupById(parentGroupId);
-    	return parentGroup;
-    }
-    
-    public void setParentGroup(Group parentGroup)
-    {
-    	this.parentGroupId = parentGroup.getId();
-    	this.parentGroup = parentGroup;
-    }
-    
-    public String getSubgroupsLabel()
-    {
-    	return subgroupsLabel;
-    }
-    
-    public void setSubgroupLabel(String subgroupLabel)
-    {
-    	this.subgroupsLabel = subgroupLabel;
-    }
-    
-    public List<Group> getSubgroups() throws SQLException
-    {
-    	if(null == subgroups)
-    	{
-    	    subgroups = Learnweb.getInstance().getGroupManager().getSubgroups(this);
-    	}
-    	return subgroups;
-    }
-    
-    public void addSubgroup(Group subgroup) throws SQLException
-    {
-    	subgroup.setParentGroup(this);
-    	Learnweb.getInstance().getGroupManager().addSubgroup(this, subgroup);
-    
-    	// update cache
-    	if(subgroups == null)
-    	    subgroups = new ArrayList<Group>();
-    	subgroups.add(subgroup);
-    }
-    */
     public void setLastVisit(User user) throws Exception
     {
         int time = UtilBean.time();

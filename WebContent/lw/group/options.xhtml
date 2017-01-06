@@ -4,14 +4,14 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="helpText" value="#{msg.groupOptionsHelp}"/>
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
 			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}" /> 
 		</f:metadata>
-	</ui:define>			
-
+	</ui:define>
+				
+	<ui:param name="helpText" value="#{msg.groupOptionsHelp}"/>	
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="#{groupDetailBean.group.title}" />
 	<ui:param name="disableGrowl" value="true" />
@@ -119,7 +119,7 @@
 						
 					<h:outputText value="#{msg.options}:" />
 					
-					<h:panelGrid columns="2" rendered="false">
+					<h:panelGrid columns="2" rendered="true">
 						<p:selectBooleanCheckbox value="#{groupDetailBean.group.restrictionForumCategoryRequired}" id="restriction_mandatory_forum_category"/>	
 						<h:outputLabel value="Users have to enter a forum category" for="restriction_mandatory_forum_category"/>
 						
@@ -141,7 +141,7 @@
 				}
 			</style>
 			
-			<ui:remove>
+		
 			<div class="page_header" style="margin-top:0.5rem">
 				<span>
 					Privacy settings
@@ -149,47 +149,52 @@
 			</div>
 			
 			<h:form id="group_security_form" style="padding-left:0.2rem; margin-top:-1rem">
-				
+	
+				<h2>#{msg['policy.title.join']}</h2>
+				<p:selectOneRadio value="#{groupDetailBean.group.policyJoin}" layout="grid" columns="1">							
+		            <f:selectItems value="#{groupDetailBean.group.policyJoinOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"  />
+		        </p:selectOneRadio>
+		        			
 					
-						<h2>Who can join this group?</h2>
-						<p:selectOneRadio value="#{groupDetailBean.editedGroupTitle}" layout="grid" columns="1">
-				            <f:selectItem itemLabel="Only invided people" itemValue="Only invided people" />
-				            <f:selectItem itemLabel="All members of course 'YELL'" itemValue="All members of course 'YELL'" />
-				            <f:selectItem itemLabel="All Learnweb users" itemValue="All learnweb users" />
-				        </p:selectOneRadio>	
+				<h2>Who can join this group?</h2>
+				<p:selectOneRadio value="#{groupDetailBean.editedGroupTitle}" layout="grid" columns="1">							
+		            <f:selectItem itemLabel="All Learnweb users" itemValue="All learnweb users" />
+		            <f:selectItem itemLabel="All members of course 'YELL'" itemValue="Only invided people" />
+		            <f:selectItem itemLabel="Nobody" itemValue="All members of course 'YELL'" />
+		        </p:selectOneRadio>	
+		        
+				<h2>Who can add resources and folders to this group?</h2>
+				<p:selectOneRadio value="#{groupDetailBean.editedGroupTitle}" layout="grid" columns="1">
+					<f:selectItem itemLabel="Only me, the group leader" itemValue="Only invided people" />
+					<f:selectItem itemLabel="All group members" itemValue="All members of course 'YELL'" />
+		        </p:selectOneRadio>	
+		        	
+				<h2>Who can delete or edit resources and folders of this group?</h2>
+				<p:selectOneRadio value="#{groupDetailBean.editedGroupTitle}" layout="grid" columns="1">
+					<f:selectItem itemLabel="Only me, the group leader" itemValue="Only invided people" />
+					<f:selectItem itemLabel="All group members" itemValue="All members of course 'YELL'" />
+		        </p:selectOneRadio>	
+		        
+				<h2>Who can tag or comment resources of this group?</h2>
+				<p:selectOneRadio value="#{groupDetailBean.editedGroupTitle}" layout="grid" columns="1">
+		            <f:selectItem itemLabel="Only me, the group leader" itemValue="Only invided people" />
+		            <f:selectItem itemLabel="All group members" itemValue="All members of course 'YELL'" />
+		            <f:selectItem itemLabel="All Learnweb users" itemValue="All learnweb users" />				      
+		        </p:selectOneRadio>	
+		        
+		        <h2>Who can view resources of this group?</h2>
+				<p:selectOneRadio value="#{groupDetailBean.editedGroupTitle}" layout="grid" columns="1">
+		            <f:selectItem itemLabel="Only group members" itemValue="All members of course 'YELL'" />
+		            <f:selectItem itemLabel="All Learnweb users" itemValue="Only invided people" />
+		        </p:selectOneRadio>	
 				        
-						<h2>Who can add resources and folders to this group?</h2>
-						<p:selectOneRadio value="#{groupDetailBean.editedGroupTitle}" layout="grid" columns="1">
-							<f:selectItem itemLabel="Only me, the group leader" itemValue="Only invided people" />
-							<f:selectItem itemLabel="All group members" itemValue="All members of course 'YELL'" />
-				        </p:selectOneRadio>	
-				        	
-						<h2>Who can delete or edit resources and folders of this group?</h2>
-						<p:selectOneRadio value="#{groupDetailBean.editedGroupTitle}" layout="grid" columns="1">
-							<f:selectItem itemLabel="Only me, the group leader" itemValue="Only invided people" />
-							<f:selectItem itemLabel="All group members" itemValue="All members of course 'YELL'" />
-				        </p:selectOneRadio>	
-				        
-						<h2>Who can tag or comment resources of this group?</h2>
-						<p:selectOneRadio value="#{groupDetailBean.editedGroupTitle}" layout="grid" columns="1">
-				            <f:selectItem itemLabel="Only me, the group leader" itemValue="Only invided people" />
-				            <f:selectItem itemLabel="All group members" itemValue="All members of course 'YELL'" />
-				            <f:selectItem itemLabel="All Learnweb users" itemValue="All learnweb users" />				      
-				        </p:selectOneRadio>	
-				        
-				        <h2>Who can view resources of this group?</h2>
-						<p:selectOneRadio value="#{groupDetailBean.editedGroupTitle}" layout="grid" columns="1">
-				            <f:selectItem itemLabel="Only group members" itemValue="All members of course 'YELL'" />
-				            <f:selectItem itemLabel="All Learnweb users" itemValue="Only invided people" />
-				        </p:selectOneRadio>	
-				        
-					<br/>
-					<p:commandButton value="#{msg.save}" ajax="false" action="#{groupDetailBean.onGroupEdit}" 
-						update=":growl :group_menu"	style="border-radius:0px;">
-					</p:commandButton>
+				<br/>
+				<p:commandButton value="#{msg.save}" ajax="false" action="#{groupDetailBean.onGroupEdit}" 
+					update=":growl :group_menu"	style="border-radius:0px;">
+				</p:commandButton>
 				
 			</h:form>
-			</ui:remove>
+		
 			<br/>
 			<div class="page_header">
 				<span>
