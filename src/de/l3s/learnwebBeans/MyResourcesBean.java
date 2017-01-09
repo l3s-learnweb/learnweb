@@ -495,37 +495,21 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         }
     }
 
-    public boolean canDeleteResourcesInGroup(Group targetGroup) throws SQLException
+    public boolean canDeleteResourcesInGroup(Group group) throws SQLException
     {
-        User user = getUser();
-
-        if(user == null) // not logged in
-            return false;
-
-        if(targetGroup == null)
-            return false;
-
-        if(user.isAdmin() || targetGroup.isLeader(user) || targetGroup.getCourse().isModerator(user))
-            return true;
-
-        if(targetGroup.isReadOnly())
-            return false;
-
-        if(targetGroup.isMember(user))
-            return true;
-
-        return false;
+        return group.canDeleteResources(getUser());
     }
 
-    public boolean canEditResourcesInGroup(Group targetGroup) throws SQLException
+    public boolean canEditResourcesInGroup(Group group) throws SQLException
     {
-        return canDeleteResourcesInGroup(targetGroup);
+        return group.canEditResources(getUser());
     }
 
+    @Deprecated
     public boolean canDeleteResources() throws SQLException
     {
         if(getCurrentFolder() != null)
-            return getCurrentFolder().getTitle().equalsIgnoreCase("my private resources");
+            return getCurrentFolder().getTitle().equalsIgnoreCase("my private resources"); // TODO this should be removed
         return false;
     }
 

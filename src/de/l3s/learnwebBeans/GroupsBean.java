@@ -19,7 +19,6 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.User;
-import de.l3s.learnweb.beans.UtilBean;
 
 @ManagedBean
 @ViewScoped
@@ -99,18 +98,10 @@ public class GroupsBean extends ApplicationBean implements Serializable
 
     public boolean canDeleteGroup(Group group) throws SQLException
     {
-        User user = getUser();
-
-        if(null == getUser() || null == group || group.isReadOnly())
+        if(null == group)
             return false;
 
-        if(group.isLeader(user))
-            return true;
-
-        if(UtilBean.getUserBean().canModerateCourse(group.getCourse()))
-            return true;
-
-        return false;
+        return group.canDeleteGroup(getUser());
     }
 
     public String onCreateGroup() throws Exception

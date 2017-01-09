@@ -311,9 +311,16 @@ public class UserBean implements Serializable
         return user.isModerator();
     }
 
+    /**
+     * returns true when the currently logged in user is allowed to moderate the given courses
+     * 
+     * @param course
+     * @return
+     * @throws SQLException
+     */
     public boolean canModerateCourse(Course course) throws SQLException
     {
-        LinkedList<Course> courses = new LinkedList<Course>();
+        LinkedList<Course> courses = new LinkedList<Course>(); // create dummy list with single entry
         courses.add(course);
 
         return canModerateCourses(courses);

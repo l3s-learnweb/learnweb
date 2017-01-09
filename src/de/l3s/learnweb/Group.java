@@ -44,7 +44,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
      */
     public enum POLICY_JOIN
     {
-        ALL_LEARNWEB_USERS,
+        //ALL_LEARNWEB_USERS,
         COURSE_MEMBERS,
         NOBODY
     }
@@ -73,7 +73,9 @@ public class Group implements Comparable<Group>, HasId, Serializable
     public enum POLICY_VIEW
     {
         ALL_LEARNWEB_USERS,
-        GROUP_MEMBERS
+        COURSE_MEMBERS,
+        GROUP_MEMBERS,
+        GROUP_LEADER
     }
 
     /**
@@ -83,25 +85,15 @@ public class Group implements Comparable<Group>, HasId, Serializable
     {
         ALL_LEARNWEB_USERS,
         COURSE_MEMBERS,
-        GROUP_MEMBERS
+        GROUP_MEMBERS,
+        GROUP_LEADER
     }
 
-    public POLICY_JOIN[] getPolicyJoinOptions()
-    {
-        return POLICY_JOIN.values();
-    }
-
-    private POLICY_JOIN policyJoin;
-
-    public POLICY_JOIN getPolicyJoin()
-    {
-        return policyJoin;
-    }
-
-    public void setPolicyJoin(POLICY_JOIN policyJoin)
-    {
-        this.policyJoin = policyJoin;
-    }
+    private POLICY_JOIN policyJoin = POLICY_JOIN.COURSE_MEMBERS;
+    private POLICY_ADD policyAdd = POLICY_ADD.GROUP_MEMBERS;
+    private POLICY_EDIT policyEdit = POLICY_EDIT.GROUP_MEMBERS;
+    private POLICY_VIEW policyView = POLICY_VIEW.ALL_LEARNWEB_USERS;
+    private POLICY_ANNOTATE policyAnnotate = POLICY_ANNOTATE.ALL_LEARNWEB_USERS;
 
     private boolean restrictionOnlyLeaderCanAddResources;
     private boolean restrictionForumCategoryRequired = false;
@@ -145,17 +137,18 @@ public class Group implements Comparable<Group>, HasId, Serializable
         this.location = rs.getString("location");
         this.language = rs.getString("language");
         this.courseId = rs.getInt("course_id");
-        /*
-        this.forumId = rs.getInt("forum_id");
-        this.parentGroupId = rs.getInt("parent_group_id");
-        this.subgroupsLabel = rs.getString("subgroup_label");
-        */
         this.categoryId = rs.getInt("group_category_id");
         this.categoryTitle = rs.getString("category_title");
         this.categoryAbbreviation = rs.getString("category_abbreviation");
         this.restrictionOnlyLeaderCanAddResources = rs.getInt("restriction_only_leader_can_add_resources") == 1;
         this.readOnly = rs.getInt("read_only") == 1;
         this.restrictionForumCategoryRequired = rs.getInt("restriction_forum_category_required") == 1;
+
+        this.policyAdd = POLICY_ADD.valueOf(rs.getString("policy_add"));
+        this.policyAnnotate = POLICY_ANNOTATE.valueOf(rs.getString("policy_annotate"));
+        this.policyEdit = POLICY_EDIT.valueOf(rs.getString("policy_edit"));
+        this.policyJoin = POLICY_JOIN.valueOf(rs.getString("policy_join"));
+        this.policyView = POLICY_VIEW.valueOf(rs.getString("policy_view"));
     }
 
     @Override
@@ -408,11 +401,13 @@ public class Group implements Comparable<Group>, HasId, Serializable
         this.leader = null; // force reload
     }
 
+    @Deprecated
     public boolean isRestrictionOnlyLeaderCanAddResources()
     {
         return restrictionOnlyLeaderCanAddResources;
     }
 
+    @Deprecated
     public void setRestrictionOnlyLeaderCanAddResources(boolean restrictionOnlyLeaderCanAddResources) throws SQLException
     {
         this.restrictionOnlyLeaderCanAddResources = restrictionOnlyLeaderCanAddResources;
@@ -598,5 +593,193 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
         tooltip += "</ul>";
         return tooltip;
+    }
+
+    public POLICY_JOIN getPolicyJoin()
+    {
+        return policyJoin;
+    }
+
+    public void setPolicyJoin(POLICY_JOIN policyJoin)
+    {
+        this.policyJoin = policyJoin;
+    }
+
+    public POLICY_ADD getPolicyAdd()
+    {
+        return policyAdd;
+    }
+
+    public void setPolicyAdd(POLICY_ADD policyAdd)
+    {
+        this.policyAdd = policyAdd;
+    }
+
+    public POLICY_EDIT getPolicyEdit()
+    {
+        return policyEdit;
+    }
+
+    public void setPolicyEdit(POLICY_EDIT policyEdit)
+    {
+        this.policyEdit = policyEdit;
+    }
+
+    public POLICY_VIEW getPolicyView()
+    {
+        return policyView;
+    }
+
+    public void setPolicyView(POLICY_VIEW policyView)
+    {
+        this.policyView = policyView;
+    }
+
+    public POLICY_ANNOTATE getPolicyAnnotate()
+    {
+        return policyAnnotate;
+    }
+
+    public void setPolicyAnnotate(POLICY_ANNOTATE policyAnnotate)
+    {
+        this.policyAnnotate = policyAnnotate;
+    }
+
+    public POLICY_JOIN[] getPolicyJoinOptions()
+    {
+        return POLICY_JOIN.values();
+    }
+
+    public POLICY_ADD[] getPolicyAddOptions()
+    {
+        return POLICY_ADD.values();
+    }
+
+    public POLICY_EDIT[] getPolicyEditOptions()
+    {
+        return POLICY_EDIT.values();
+    }
+
+    public POLICY_VIEW[] getPolicyViewOptions()
+    {
+        return POLICY_VIEW.values();
+    }
+
+    public POLICY_ANNOTATE[] getPolicyAnnotateOptions()
+    {
+        return POLICY_ANNOTATE.values();
+    }
+
+    public boolean canAddResources(User user) throws SQLException
+    {
+        if(user == null) // not logged in
+            return false;
+
+        if(user.isAdmin() || isLeader(user) || getCourse().isModerator(user))
+            return true;
+
+        if(policyAdd == POLICY_ADD.GROUP_MEMBERS && isMember(user))
+            return true;
+
+        return false;
+    }
+
+    public boolean canDeleteResources(User user) throws SQLException
+    {
+        return canEditResources(user); // currently they share the same policy
+    }
+
+    public boolean canEditResources(User user) throws SQLException
+    {
+        if(user == null) // not logged in
+            return false;
+
+        if(user.isAdmin() || isLeader(user) || getCourse().isModerator(user))
+            return true;
+
+        if(policyEdit == POLICY_EDIT.GROUP_MEMBERS && isMember(user))
+            return true;
+
+        return false;
+    }
+
+    public boolean canDeleteGroup(User user) throws SQLException
+    {
+        if(user == null)
+            return false;
+
+        if(user.isAdmin() || getCourse().isModerator(user) || isLeader(user))
+            return true;
+
+        return false;
+    }
+
+    public boolean canJoinGroup(User user) throws SQLException
+    {
+        if(user == null || isMember(user))
+            return false;
+
+        if(user.isAdmin() || getCourse().isModerator(user))
+            return true;
+
+        switch(policyJoin)
+        {
+        /*
+        case ALL_LEARNWEB_USERS:
+            return true;
+            */
+        case COURSE_MEMBERS:
+            return getCourse().isMember(user);
+        case NOBODY:
+            return false;
+        }
+
+        return false;
+    }
+
+    public boolean canViewResources(User user) throws SQLException
+    {
+        if(user == null)
+            return false;
+
+        if(user.isAdmin() || getCourse().isModerator(user))
+            return true;
+
+        switch(policyView)
+        {
+        case ALL_LEARNWEB_USERS:
+            return true;
+        case COURSE_MEMBERS:
+            return getCourse().isMember(user);
+        case GROUP_MEMBERS:
+            return isMember(user);
+        case GROUP_LEADER:
+            return isLeader(user);
+        }
+
+        return false;
+    }
+
+    public boolean canAnnotateResources(User user) throws SQLException
+    {
+        if(user == null)
+            return false;
+
+        if(user.isAdmin() || getCourse().isModerator(user))
+            return true;
+
+        switch(policyAnnotate)
+        {
+        case ALL_LEARNWEB_USERS:
+            return true;
+        case COURSE_MEMBERS:
+            return getCourse().isMember(user);
+        case GROUP_MEMBERS:
+            return isMember(user);
+        case GROUP_LEADER:
+            return isLeader(user);
+        }
+
+        return false;
     }
 }

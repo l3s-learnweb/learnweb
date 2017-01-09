@@ -230,6 +230,7 @@ public class Course implements Serializable, Comparable<Course>
     }
 
     /**
+     * True if the given user is a moderator if this course
      * 
      * @param user
      * @return True if the given user is a moderator of this course
@@ -243,6 +244,11 @@ public class Course implements Serializable, Comparable<Course>
         if(!user.isModerator())
             return false;
 
+        return isMember(user); // moderators can only moderator her own courses
+    }
+
+    public boolean isMember(User user) throws SQLException
+    {
         return user.getCourses().contains(this); // moderators can only moderator her own courses
     }
 

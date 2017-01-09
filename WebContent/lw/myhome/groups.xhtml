@@ -74,16 +74,6 @@
 							* #{msg.mandatory_field}
 						</span> 
 					</div> 
-				
-					<p:fieldset legend="Group protection" rendered="false">
-						<h:panelGrid columns="3" columnClasses="medium-width">	
-						
-							<h:outputText value="" />
-							<h:selectBooleanCheckbox value="#{groupsBean.newGroup.restrictionOnlyLeaderCanAddResources}" />
-							<h:outputText value="#{msg.add_resource_group_leader}" />
-					
-						</h:panelGrid>
-					 </p:fieldset>
 					<br/>
 						
 					<p:commandButton id="create_group_button" ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" 

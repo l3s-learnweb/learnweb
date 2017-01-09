@@ -31,7 +31,7 @@ public class GroupManager
 {
 
     // if you change this, you have to change the constructor of Group too
-    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.course, g.location, g.language, g.restriction_only_leader_can_add_resources, g.read_only, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation, g.restriction_forum_category_required";
+    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.course, g.location, g.language, g.restriction_only_leader_can_add_resources, g.read_only, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation, g.restriction_forum_category_required, g.policy_add, g.policy_annotate, g.policy_edit, g.policy_join, g.policy_view";
     private static Logger log = Logger.getLogger(GroupManager.class);
 
     private Learnweb learnweb;
@@ -226,7 +226,7 @@ public class GroupManager
     public synchronized Group save(Group group) throws SQLException
     {
         PreparedStatement replace = learnweb.getConnection().prepareStatement(
-                "REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, university, course, location, language, course_id, group_category_id, restriction_only_leader_can_add_resources, read_only, restriction_forum_category_required) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                "REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, university, course, location, language, course_id, group_category_id, restriction_only_leader_can_add_resources, read_only, restriction_forum_category_required, policy_add, policy_annotate, policy_edit, policy_join, policy_view) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 Statement.RETURN_GENERATED_KEYS);
 
         if(group.getId() < 0) // the Group is not yet stored at the database
@@ -254,6 +254,11 @@ public class GroupManager
         replace.setInt(11, group.isRestrictionOnlyLeaderCanAddResources() ? 1 : 0);
         replace.setInt(12, group.isReadOnly() ? 1 : 0);
         replace.setInt(13, group.isRestrictionForumCategoryRequired() ? 1 : 0);
+        replace.setString(14, group.getPolicyAdd().name());
+        replace.setString(15, group.getPolicyAnnotate().name());
+        replace.setString(16, group.getPolicyEdit().name());
+        replace.setString(17, group.getPolicyJoin().name());
+        replace.setString(18, group.getPolicyView().name());
         replace.executeUpdate();
 
         if(group.getId() < 0) // get the assigned id
@@ -277,29 +282,6 @@ public class GroupManager
             throw new RuntimeException("fedora error");
 
         return group;
-    }
-
-    /**
-     * @param group
-     * @return The subgroups of a group (only next level not subgroups of subgroups)
-     * @throws SQLException
-     */
-    public List<Group> getSubgroups(Group group) throws SQLException
-    {
-        String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.parent_group_id = ? AND g.deleted = 0 ORDER BY title";
-        return getGroups(query, group.getId());
-    }
-
-    /**
-     * Adds a subgroup to a group
-     *
-     * @param group Must have been stored before
-     * @param subgroup May NOT have been stored before.
-     * @throws SQLException
-     */
-    public void addSubgroup(Group group, Group subgroup) throws SQLException
-    {
-        save(subgroup);
     }
 
     public void addUserToGroup(User user, Group group) throws SQLException

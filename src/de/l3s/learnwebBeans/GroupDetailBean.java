@@ -19,6 +19,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.faces.event.ValueChangeEvent;
 import javax.faces.model.SelectItem;
+import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -78,6 +79,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     // Group edit fields (Required for editing group)
     private String editedGroupDescription;
+    @NotEmpty
+    @Size(min = 3, max = 60)
     private String editedGroupTitle;
     private int editedGroupLeaderId;
 
@@ -681,36 +684,19 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         return canDeleteResourcesInGroup(obj.getGroup());
     }
 
-    public boolean canDeleteResourcesInGroup(Group targetGroup) throws SQLException
+    public boolean canDeleteResourcesInGroup(Group group) throws SQLException
     {
-        User user = getUser();
-
-        if(user == null) // not logged in
-            return false;
-
-        if(targetGroup == null)
-            return false;
-
-        if(user.isAdmin() || targetGroup.isLeader(user) || targetGroup.getCourse().isModerator(user))
-            return true;
-
-        if(targetGroup.isReadOnly())
-            return false;
-
-        if(targetGroup.isMember(user))
-            return true;
-
-        return false;
+        return group.canDeleteResources(getUser());
     }
 
     public boolean canDeleteResourcesInTheGroup() throws SQLException
     {
-        return canEditResourcesInGroup(getGroup());
+        return canDeleteResourcesInGroup(getGroup());
     }
 
-    public boolean canEditResourcesInGroup(Group targetGroup) throws SQLException
+    public boolean canEditResourcesInGroup(Group group) throws SQLException
     {
-        return canDeleteResourcesInGroup(targetGroup);
+        return group.canEditResources(getUser());
     }
 
     public boolean canEditResourcesInTheGroup() throws SQLException
@@ -725,7 +711,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public boolean canSeeResourcesInTheGroup() throws SQLException
     {
-        return true;
+        return getGroup().canViewResources(getUser());
     }
 
     public List<Presentation> getPresentations() throws SQLException

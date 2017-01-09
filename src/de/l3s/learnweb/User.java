@@ -365,7 +365,7 @@ public class User implements Comparable<User>, Serializable, HasId
         List<Group> groups = getGroups();
         for(Group group : groups)
         {
-            if(!group.isRestrictionOnlyLeaderCanAddResources() || group.isLeader(this))
+            if(group.canAddResources(this))
                 writeAbleGroups.add(group);
         }
         //}

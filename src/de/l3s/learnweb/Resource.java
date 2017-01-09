@@ -342,16 +342,19 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         return id;
     }
 
+    @Override
     public int getGroupId()
     {
         return groupId;
     }
 
+    @Override
     public void setGroupId(int groupId)
     {
         this.groupId = groupId;
     }
 
+    @Override
     public Group getGroup() throws SQLException
     {
         if(groupId == 0)
@@ -444,6 +447,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         return Learnweb.getInstance().getGroupManager().getFolder(folderId);
     }
 
+    @Override
     public String getTitle()
     {
         return title;
@@ -580,6 +584,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         this.comments = comments;
     }
 
+    @Override
     public void setId(int id)
     {
         this.id = id;
@@ -674,11 +679,13 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     /**
      * Stores all made changes at fedora
      */
+    @Override
     public Resource save() throws SQLException
     {
         return Learnweb.getInstance().getResourceManager().saveResource(this);
     }
 
+    @Override
     public void setTitle(String title)
     {
 
@@ -1502,6 +1509,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         return Learnweb.getInstance().getGroupManager().moveResource(this, newGroupId, newFolderId);
     }
 
+    @Override
     public void delete() throws SQLException
     {
         this.setGroupId(0);
@@ -1512,6 +1520,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     /**
      * returns a string representation of the resources path
      */
+    @Override
     @Deprecated
     public String getPath() throws SQLException
     {
@@ -1527,6 +1536,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     /**
      * returns a string representation of the resources path
      */
+    @Override
     @Deprecated
     public String getPrettyPath() throws SQLException
     {
@@ -1543,6 +1553,70 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     {
         path = null;
         prettyPath = null;
+    }
+
+    public boolean canEditResource(User user) throws SQLException
+    {
+        if(user == null) // not logged in
+            return false;
+
+        Group group = getGroup();
+
+        if(group != null)
+            return group.canEditResources(user);
+
+        if(user.isAdmin() || ownerUserId == user.getId())
+            return true;
+
+        return false;
+    }
+
+    public boolean canDeleteResource(User user) throws SQLException
+    {
+        if(user == null) // not logged in
+            return false;
+
+        Group group = getGroup();
+
+        if(group != null)
+            return group.canDeleteResources(user);
+
+        if(user.isAdmin() || ownerUserId == user.getId())
+            return true;
+
+        return false;
+    }
+
+    public boolean canViewResource(User user) throws SQLException
+    {
+        if(user == null) // not logged in
+            return false;
+
+        Group group = getGroup();
+
+        if(group != null)
+            return group.canViewResources(user);
+
+        if(user.isAdmin() || ownerUserId == user.getId())
+            return true;
+
+        return false;
+    }
+
+    public boolean canAnnotateResource(User user) throws SQLException
+    {
+        if(user == null) // not logged in
+            return false;
+
+        Group group = getGroup();
+
+        if(group != null)
+            return group.canAnnotateResources(user);
+
+        if(user.isAdmin() || ownerUserId == user.getId())
+            return true;
+
+        return false;
     }
 
 }

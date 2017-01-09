@@ -39,14 +39,14 @@
 				</span>
 			<h:form id="center_header_form">
 
-				<p:menuButton value="#{msg.upload_resource}" rendered="#{groupDetailBean.member and (!groupDetailBean.group.restrictionOnlyLeaderCanAddResources or groupDetailBean.group.isLeader(userBean.user))}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton">
+				<p:menuButton value="#{msg.upload_resource}" rendered="#{groupDetailBean.group.canAddResources(userBean.user)}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton">
 					<p:menuitem value="#{msg.create_folder}" icon="ui-icon-folder-collapsed" onclick="doAction('create-folder'); return false;" />
 					<p:separator />
 					<p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" onclick="doAction('upload-file'); return false;" />
 					<p:menuitem value="#{msg.upload_url}" icon="ui-icon-link" onclick="doAction('add-website'); return false;" />
 				</p:menuButton>
 
-				<p:commandLink rendered="#{not groupDetailBean.member}" value="#{msg.join_group}" action="#{groupsBean.joinGroup}"
+				<p:commandLink rendered="#{groupDetailBean.group.canJoinGroup(userBean.user)}" value="#{msg.join_group}" action="#{groupsBean.joinGroup}"
 							   styleClass="resource_button greenbutton" update=":growl :group_menu @form" partialSubmit="true" process="@this" >
 					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
 				</p:commandLink>
