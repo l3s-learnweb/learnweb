@@ -290,7 +290,6 @@ public class SolrClient
     /**
      * Index all resources
      * 
-     * @param args
      * @throws SQLException
      * @throws SolrServerException
      * @throws IOException
@@ -300,12 +299,15 @@ public class SolrClient
         Learnweb learnweb = Learnweb.getInstance();
         SolrClient indexer = learnweb.getSolrClient();
 
-        for(int i = 0; i < 1; i++)
+        for(int i = 0;; i++)
         {
 
-            //List<Resource> resources = learnweb.getResourceManager().getResourcesAll(i, 1000); // loads all resources (very slow)
+            List<Resource> resources = learnweb.getResourceManager().getResourcesAll(i, 1000); // loads all resources (very slow)
 
-            List<Resource> resources = learnweb.getGroupManager().getGroupById(118).getResources();
+            // List<Resource> resources = learnweb.getGroupManager().getGroupById(118).getResources();
+
+            if (resources.size() == 0)
+                break;
 
             log.debug("page: " + i);
 
