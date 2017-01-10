@@ -47,7 +47,7 @@
 						<div id="folders_tree_wrap">
 							<h:form id="folders_tree_form">								
 							    <p:tree id="folders_tree" value="#{groupDetailBean.getFoldersTree(group.id)}" var="node" animate="true" dynamic="true" selectionMode="single" selection="#{groupDetailBean.selectedNode}" datakey="#{node.folderId}">				        						     						        
-							        <p:ajax event="select" update=":breadcrumbs :filters :datagrid :paginator :add_resource_panel" listener="#{groupDetailBean.onNodeSelect}" oncomplete="updateCarousel();update_url(0,$('#folders_tree_wrap .ui-treenode-label.ui-state-highlight').parents('.ui-treenode')[0].getAttribute('data-datakey'));resourceDND();update_header();"/>
+							        <p:ajax event="select" update=":breadcrumbs :filters :datagrid :paginator :add_resource_panel" listener="#{groupDetailBean.onNodeSelect}" oncomplete="updateCarousel();scroller();update_url(0,$('#folders_tree_wrap .ui-treenode-label.ui-state-highlight').parents('.ui-treenode')[0].getAttribute('data-datakey'));resourceDND();update_header();"/>
 							        <p:ajax event="expand" oncomplete="resourceDND();"/>
         							<p:ajax event="collapse" oncomplete="resourceDND();"/>
 
