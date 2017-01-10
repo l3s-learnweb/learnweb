@@ -180,7 +180,7 @@
 			
 			<h:form id="group_copy_form" style="margin-bottom:4rem;">
 				<h:panelGrid columns="3">
-					<h:outputText value="Copy all resources of this group to:"/>
+					<h:outputText value="#{msg.copy_all_resources}"/>
 					<h:selectOneMenu value="#{groupDetailBean.selectedResourceTargetGroupId}">
 						<f:selectItems var="group" value="#{groupDetailBean.userCopyableGroups}" itemLabel="#{group.title}" 
 							itemValue="#{group.id}"/>

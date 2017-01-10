@@ -47,11 +47,12 @@ public class GroupsBean extends ApplicationBean implements Serializable
 
     public void joinGroup() throws Exception
     {
-        log.debug("joinGroup" + selectedGroup);
-        if(null == getUser() || null == selectedGroup)
+        User user = getUser();
+
+        if(null == user || null == selectedGroup)
             return;
 
-        getUser().joinGroup(selectedGroup);
+        user.joinGroup(selectedGroup);
         myGroups = getUser().getGroups();
         joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
         log(Action.group_joining, selectedGroup.getId(), selectedGroup.getId());

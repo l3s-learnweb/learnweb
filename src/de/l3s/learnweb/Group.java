@@ -44,7 +44,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
      */
     public enum POLICY_JOIN
     {
-        //ALL_LEARNWEB_USERS,
+        ALL_LEARNWEB_USERS,
         COURSE_MEMBERS,
         NOBODY
     }
@@ -521,11 +521,13 @@ public class Group implements Comparable<Group>, HasId, Serializable
         this.categoryAbbreviation = categoryAbbreviation;
     }
 
+    @Deprecated
     public boolean isReadOnly()
     {
         return readOnly;
     }
 
+    @Deprecated
     public void setReadOnly(boolean readOnly)
     {
         this.readOnly = readOnly;

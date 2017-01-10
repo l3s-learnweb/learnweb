@@ -164,19 +164,25 @@ public class GroupManager
         for(Course course : user.getCourses())
             sb.append("," + course.getId());
 
+        String publicCourseClause = "";
         if(!user.getOrganisation().getOption(Option.Groups_Hide_public_groups))
+        {
             sb.append(",0");
+            publicCourseClause = " OR policy_join = 'ALL_LEARNWEB_USERS'";
+        }
 
         String coursesIn = sb.substring(1);
-
-        // log.debug(coursesIn);
 
         sb = new StringBuilder(",-1"); // make sure that the string is not empty
         for(Group group : user.getGroups())
             sb.append("," + group.getId());
         String groupsIn = sb.substring(1);
-        // TODO implement not join able groups
-        String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.course_id IN(" + coursesIn + ") AND g.deleted = 0 AND g.group_id NOT IN(" + groupsIn + ") ORDER BY title";
+
+        String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.deleted = 0 AND g.group_id NOT IN(" + groupsIn + ") AND (g.policy_join = 'COURSE_MEMBERS' AND g.course_id IN(" + coursesIn + ") " + publicCourseClause
+                + ") ORDER BY title";
+
+        log.debug("getJoinAbleGroups query:" + query);
+
         return getGroups(query);
     }
 
