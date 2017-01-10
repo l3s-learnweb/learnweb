@@ -551,6 +551,12 @@
     }
 }
 
+@media screen and (min-width: 2100px) {
+    .resource-item, .folder-item {
+        width: calc(16.66667% - 16px); /* six columns */
+    }
+}
+
 .context-menu {
     -webkit-border-radius: 0;
     border-radius: 0;
