@@ -1202,7 +1202,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     private void addFolderToBreadcrumbs(Folder folder) throws SQLException
     {
-        if(folder != null)
+        if(folder != null && folder.getId() != 0)
         {
             breadcrumbs.add(0, folder);
             addFolderToBreadcrumbs(folder.getParentFolder());
