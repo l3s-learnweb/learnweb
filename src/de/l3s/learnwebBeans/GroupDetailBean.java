@@ -1682,7 +1682,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                     Resource resource = getLearnweb().getResourceManager().getResource(itemId);
                     if(resource != null)
                     {
-                        if(!canDeleteTheResource(resource))
+                        if(!resource.canDeleteResource(getUser()))
                         {
                             numSkipped++;
                             log.warn("The use don't have permissions to delete resource in target group.");

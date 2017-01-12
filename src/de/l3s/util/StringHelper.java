@@ -16,8 +16,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.safety.Whitelist;
 
-import com.google.common.base.CharMatcher;
-
 public class StringHelper
 {
     private static final Logger log = Logger.getLogger(StringHelper.class);
@@ -171,23 +169,45 @@ public class StringHelper
         }
     }
 
+    /**
+     * Returns true if the given string contains only ASCII characters
+     * 
+     * @param sequence
+     * @return
+     */
+    public static boolean isASCII(CharSequence sequence)
+    {
+        for(int i = sequence.length() - 1; i >= 0; i--)
+        {
+            if(!(sequence.charAt(i) <= '\u007f'))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Encodes the domain using punycode and the query using percent-encoding
+     * 
+     * @param url
+     * @return
+     * @throws URISyntaxException
+     */
     public static String convertUnicodeURLToAscii(String url) throws URISyntaxException
     {
         if(url != null)
         {
             url = url.trim();
             // Handle international domains by detecting non-ascii and converting them to punycode
-            boolean isAscii = CharMatcher.ASCII.matchesAllOf(url);
-            if(!isAscii)
+            if(!isASCII(url))
             {
                 URI uri = new URI(url);
-                boolean includeScheme = true;
 
                 // URI needs a scheme to work properly with authority parsing
                 if(uri.getScheme() == null)
                 {
                     uri = new URI("http://" + url);
-                    //includeScheme = false; outcomment to preserve missing scheme
                 }
 
                 String scheme = uri.getScheme() != null ? uri.getScheme() + "://" : null;
@@ -196,7 +216,7 @@ public class StringHelper
                 String queryString = uri.getRawQuery() != null ? "?" + uri.getRawQuery() : "";
 
                 // Must convert domain to punycode separately from the path
-                url = (includeScheme ? scheme : "") + IDN.toASCII(authority) + path + queryString;
+                url = scheme + IDN.toASCII(authority) + path + queryString;
 
                 // Convert path from unicode to ascii encoding
                 url = new URI(url).toASCIIString();

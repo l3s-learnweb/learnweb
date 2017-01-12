@@ -59,15 +59,16 @@ public class SolrClient
      */
     public void indexResource(Resource resource) throws SQLException, IOException, SolrServerException
     {
-
+        /*
         if(resource.getUrl().indexOf("localhost") != -1)
         {
             log.warn("Skip local resource with ID : " + resource.getId());
             return;
         }
+        */
         SolrResourceBean solrResource = new SolrResourceBean(resource);
 
-        log.debug("index resource: " + resource.getId() + " " + solrResource.getDescription());
+        log.debug("index resource: " + resource.getId());
 
         server.addBean(solrResource);
         server.commit();
@@ -123,7 +124,7 @@ public class SolrClient
         }
         catch(Throwable t)
         {
-            log.fatal("Couldn't reindex resource", t);
+            log.fatal("Couldn't reindex resource " + resource.toString(), t);
         }
     }
 
@@ -306,7 +307,7 @@ public class SolrClient
 
             // List<Resource> resources = learnweb.getGroupManager().getGroupById(118).getResources();
 
-            if (resources.size() == 0)
+            if(resources.size() == 0)
                 break;
 
             log.debug("page: " + i);

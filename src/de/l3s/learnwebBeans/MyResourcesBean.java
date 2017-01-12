@@ -28,7 +28,6 @@ import de.l3s.learnweb.GroupItem;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.Tag;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnwebBeans.GroupDetailBean.RPAction;
@@ -84,6 +83,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
         if(isAjaxRequest())
         {
+            log.debug("Skip ajax request");
             return;
         }
 
@@ -121,24 +121,25 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         }
     }
 
+    /*
     public boolean canDeleteTag(Object tagO) throws SQLException
     {
         if(!(tagO instanceof Tag))
             return false;
-
+    
         User user = getUser();
         if(null == user)
             return false;
         if(user.isAdmin() || user.isModerator())
             return true;
-
+    
         Tag tag = (Tag) tagO;
         User owner = clickedResource.getTags().getElementOwner(tag);
         if(user.equals(owner))
             return true;
         return false;
     }
-
+    */
     public void addSelectedResourceToGroup() throws SQLException
     {
         User user = getUser();
@@ -494,17 +495,18 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             addFatalMessage(e);
         }
     }
-
+    /*
     public boolean canDeleteResourcesInGroup(Group group) throws SQLException
     {
         return group.canDeleteResources(getUser());
     }
-
+    
     public boolean canEditResourcesInGroup(Group group) throws SQLException
     {
         return group.canEditResources(getUser());
     }
-
+    
+    
     @Deprecated
     public boolean canDeleteResources() throws SQLException
     {
@@ -512,6 +514,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             return getCurrentFolder().getTitle().equalsIgnoreCase("my private resources"); // TODO this should be removed
         return false;
     }
+    */
 
     private void actionCopyGroupItems(JSONArray objects)
     {
@@ -521,7 +524,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
             Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
 
-            if(targetGroupId != 0 && !canEditResourcesInGroup(targetGroup))
+            if(targetGroupId != 0 && !targetGroup.canAddResources(getUser()))
             {
                 addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to add new resources in target group");
                 return;
