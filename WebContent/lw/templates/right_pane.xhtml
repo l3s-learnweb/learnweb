@@ -11,53 +11,50 @@
 		<h:outputScript library="resource-pane-template" name="resource-pane.js" target="head"/>
 		<h:outputStylesheet library="resource-pane-template" name="resource-pane.css"/>
 		<h:outputStylesheet library="lightbox" name="lightbox.css"/>
-				
-		<script type="text/javascript">
-			function update_header()
-			{
-				var resourceTitle = "#{utilBean.addSlashes(resourceDetailBean.clickedResource.title)}";
-				var folderTitle = "#{utilBean.addSlashes(bean.clickedFolder.name)}";
-				
-				if(#{bean.rightPanelAction == 'newResource'})
-				{
-					$(".ui-layout-unit-header","#right_pane").html("#{msg.upload_resource}");
-				}
-				else if(#{bean.rightPanelAction == 'editResource'})
-				{
-					$(".ui-layout-unit-header","#right_pane").html("#{msg.edit_resource} - "+ resourceTitle);
-				}
-				else if(#{bean.rightPanelAction == 'viewResource'})
-				{
-					$(".ui-layout-unit-header","#right_pane").html(resourceTitle);
-				}
-				else if(#{bean.rightPanelAction == 'newFolder'})
-				{
-					$(".ui-layout-unit-header","#right_pane").html("#{msg.create_folder}");
-				}
-				else if(#{bean.rightPanelAction == 'editFolder'})
-				{
-					$(".ui-layout-unit-header","#right_pane").html("#{msg.edit_folder} - "+ folderTitle);
-				}
-				else if(#{bean.rightPanelAction == 'viewFolder'})
-				{
-					$(".ui-layout-unit-header","#right_pane").html("#{msg.folder} - "+ folderTitle);
-				}
-				else
-				{
-					$(".ui-layout-unit-header","#right_pane").html("#{msg.click_to_view_details}");
-				}
-				
-				$('#right_pane .content').scrollTop(0);
-				
-				scroller();
-				lightbox_load();
-			}
-		</script>	
-					
 
-		<div id="right_pane_wrapper" class="right-panel">
-			<h:panelGroup layout="block" id="add_resource_panel">
-
+		<div id="right_pane_wrapper" class="right-panel">	
+			<h:panelGroup layout="block" id="add_resource_panel">					
+				<script type="text/javascript">
+					function update_header()
+					{
+						var resourceTitle = "#{utilBean.addSlashes(resourceDetailBean.clickedResource.title)}";
+						var folderTitle = "#{utilBean.addSlashes(bean.clickedFolder.name)}";
+						
+						if(#{bean.rightPanelAction == 'newResource'})
+						{
+							$(".ui-layout-unit-header","#right_pane").html("#{msg.upload_resource}");
+						}
+						else if(#{bean.rightPanelAction == 'editResource'})
+						{
+							$(".ui-layout-unit-header","#right_pane").html("#{msg.edit_resource} - "+ resourceTitle);
+						}
+						else if(#{bean.rightPanelAction == 'viewResource'})
+						{
+							$(".ui-layout-unit-header","#right_pane").html(resourceTitle);
+						}
+						else if(#{bean.rightPanelAction == 'newFolder'})
+						{
+							$(".ui-layout-unit-header","#right_pane").html("#{msg.create_folder}");
+						}
+						else if(#{bean.rightPanelAction == 'editFolder'})
+						{
+							$(".ui-layout-unit-header","#right_pane").html("#{msg.edit_folder} - "+ folderTitle);
+						}
+						else if(#{bean.rightPanelAction == 'viewFolder'})
+						{
+							$(".ui-layout-unit-header","#right_pane").html("#{msg.folder} - "+ folderTitle);
+						}
+						else
+						{
+							$(".ui-layout-unit-header","#right_pane").html("#{msg.click_to_view_details}");
+						}
+						
+						$('#right_pane .content').scrollTop(0);
+						
+						scroller();
+						lightbox_load();
+					}
+				</script>		
 				
 				<h:panelGroup id="add_resource_section" rendered="#{bean.rightPanelAction == 'newResource'}" styleClass="create-block new-resource" layout="block">
 				
