@@ -382,8 +382,7 @@ public class ResourceMetadataExtractor
         }
         catch(IOException | SQLException e)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error("error while creating thumbnails for resource: " + resource, e);
         }
     }
 

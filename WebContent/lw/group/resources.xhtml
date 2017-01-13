@@ -213,165 +213,174 @@
 			</h:form>
 		</p:dialog>
 
-		<h:panelGroup id="datagrid" styleClass="datagrid" layout="block" pt:data-isEnabledMoving="#{groupDetailBean.canDeleteResourcesInTheGroup()}">
-			<h:panelGroup id="folderGrid" styleClass="folder-grid" layout="block">
-				<ui:repeat value="#{groupDetailBean.subfolders}" var="folder">
-					<h:panelGroup styleClass="folder-item group-resources-item" pt:data-itemType="folder" pt:data-itemId="#{folder.folderId}" layout="block">
-						<div class="folder-block">
-
-							<div class="folder-icon">
-								<div class="folder-icon-wrapper">
-									<span class="icon icon-folder" />
-								</div>
-							</div>
-
-							<div class="folder-title">
-								<div class="folder-title-wrapper">
-									<h:outputText value="#{folder.name}" escape="false" styleClass="folder-title-name" title="#{folder.name}" />
-								</div>
-
-								<h:panelGroup class="resource-controls" layout="block" rendered="${groupDetailBean.canDeleteResourcesInTheGroup()}">
-									<h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit">
-										<h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
-									</h:outputLink>
-
-									<h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete">
-										<h:graphicImage alt="Remove" value="../resources/icon/Remove.png"/>
-									</h:outputLink>
-								</h:panelGroup>
-							</div>
-
-						</div>
-					</h:panelGroup>
-				</ui:repeat>
-			</h:panelGroup>
-
-			<h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block">
-				<ui:repeat value="#{groupDetailBean.paginator.currentPage}" var="res">
-					<h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.resource.id}" layout="block">
-						<div class="resource-block">
-
-							<div class="resource-preview">
-								<div class="resource-preview-wrapper">
-									<div class="resource-preview-wrapper2">
-										<div class="resource-preview-block"></div>
-										<div class="resource-preview-block2"></div>
-										<h:graphicImage styleClass="resource-preview-image" value="#{res.thumbnail1.url}" rendered="#{not empty res.thumbnail1}" alt="#{res.title}" />
-										<h:outputText styleClass="resource-preview-empty" escape="false" value='#{res.resource.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' rendered="#{empty res.thumbnail1}"/>
+		<ui:fragment rendered="${not groupDetailBean.group.canViewResources(userBean.user)}">
+			<h3 class="error">
+				#{msg.group_resources_access_denied}				
+				<h:outputText rendered="${groupDetailBean.group.policyView != 'GROUP_LEADER' and groupDetailBean.group.canJoinGroup(userBean.user)}" value="#{msg.group_resources_access_denied_join_first}"/>
+			</h3>
+		</ui:fragment>
+		
+		<ui:fragment rendered="#{groupDetailBean.group.canViewResources(userBean.user)}">
+			<h:panelGroup id="datagrid" styleClass="datagrid" layout="block" pt:data-isEnabledMoving="#{groupDetailBean.canDeleteResourcesInTheGroup()}">
+				<h:panelGroup id="folderGrid" styleClass="folder-grid" layout="block">
+					<ui:repeat value="#{groupDetailBean.subfolders}" var="folder">
+						<h:panelGroup styleClass="folder-item group-resources-item" pt:data-itemType="folder" pt:data-itemId="#{folder.folderId}" layout="block">
+							<div class="folder-block">
+	
+								<div class="folder-icon">
+									<div class="folder-icon-wrapper">
+										<span class="icon icon-folder" />
 									</div>
 								</div>
-
-								<h:panelGroup class="resource-controls" layout="block">
-									<h:outputLink value="#" title="#{msg.copy}" styleClass="action-copy">
-										<h:graphicImage alt="Copy" value="/resources/icon/Add.png"/>
-									</h:outputLink>
-
-									<ui:fragment rendered="${groupDetailBean.canDeleteResourcesInTheGroup()}">
-										<h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit" >
+	
+								<div class="folder-title">
+									<div class="folder-title-wrapper">
+										<h:outputText value="#{folder.name}" escape="false" styleClass="folder-title-name" title="#{folder.name}" />
+									</div>
+	
+									<h:panelGroup class="resource-controls" layout="block" rendered="${groupDetailBean.canDeleteResourcesInTheGroup()}">
+										<h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit">
 											<h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
 										</h:outputLink>
-
+	
 										<h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete">
-											<h:graphicImage alt="Delete" value="../resources/icon/Remove.png"/>
+											<h:graphicImage alt="Remove" value="../resources/icon/Remove.png"/>
 										</h:outputLink>
-									</ui:fragment>
-								</h:panelGroup>
+									</h:panelGroup>
+								</div>
+	
 							</div>
-
-							<div class="resource-title">
-								<div class="resource-title-wrapper">
-									<!--<div class="resource-title-icon">
-										<div class="resource-title-icon-wrapper">
-											<img src="img.png" alt="Title" />
+						</h:panelGroup>
+					</ui:repeat>
+				</h:panelGroup>
+	
+				<h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block">
+					<ui:repeat value="#{groupDetailBean.paginator.currentPage}" var="res">
+						<h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.resource.id}" layout="block">
+							<div class="resource-block">
+	
+								<div class="resource-preview">
+									<div class="resource-preview-wrapper">
+										<div class="resource-preview-wrapper2">
+											<div class="resource-preview-block"></div>
+											<div class="resource-preview-block2"></div>
+											<h:graphicImage styleClass="resource-preview-image" value="#{res.thumbnail1.url}" rendered="#{not empty res.thumbnail1}" alt="#{res.title}" />
+											<h:outputText styleClass="resource-preview-empty" escape="false" value='#{res.resource.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' rendered="#{empty res.thumbnail1}"/>
 										</div>
-									</div>-->
-									<div class="resource-title-text">
-										<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
-										<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.ownerUser.username}</span></span>
+									</div>
+	
+									<h:panelGroup class="resource-controls" layout="block">
+										<h:outputLink value="#" title="#{msg.copy}" styleClass="action-copy">
+											<h:graphicImage alt="Copy" value="/resources/icon/Add.png"/>
+										</h:outputLink>
+	
+										<ui:fragment rendered="${groupDetailBean.canDeleteResourcesInTheGroup()}">
+											<h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit" >
+												<h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
+											</h:outputLink>
+	
+											<h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete">
+												<h:graphicImage alt="Delete" value="../resources/icon/Remove.png"/>
+											</h:outputLink>
+										</ui:fragment>
+									</h:panelGroup>
+								</div>
+	
+								<div class="resource-title">
+									<div class="resource-title-wrapper">
+										<!--<div class="resource-title-icon">
+											<div class="resource-title-icon-wrapper">
+												<img src="img.png" alt="Title" />
+											</div>
+										</div>-->
+										<div class="resource-title-text">
+											<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
+											<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.ownerUser.username}</span></span>
+										</div>
 									</div>
 								</div>
+	
 							</div>
-
-						</div>
-					</h:panelGroup>
-				</ui:repeat>
+						</h:panelGroup>
+					</ui:repeat>
+				</h:panelGroup>
+	
+				<h:outputText value="${msg.no_resources_found}" class="nothing_found"
+							  rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}"/>
+	
+				<h:outputText value="#{msg.no_results_found}" class="nothing_found"
+							  rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}"/>
+	
 			</h:panelGroup>
-
-			<h:outputText value="${msg.no_resources_found}" class="nothing_found"
-						  rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}"/>
-
-			<h:outputText value="#{msg.no_results_found}" class="nothing_found"
-						  rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}"/>
-
-		</h:panelGroup>
-
-		<h:panelGroup id="paginator" layout="block">
-			<ui:decorate template="/lw/templates/paging.xhtml">
-				<ui:param name="paginator" value="${groupDetailBean.paginator}" />
-			</ui:decorate>
-		</h:panelGroup>
-
-		<div class="context-menu resource-context-menu" role="menu">
-			<ui:fragment rendered="#{groupDetailBean.canEditResourcesInTheGroup()}">
-				<div class="context-menu-item action-open-folder" role="menuitem">
+	
+			<h:panelGroup id="paginator" layout="block">
+				<ui:decorate template="/lw/templates/paging.xhtml">
+					<ui:param name="paginator" value="${groupDetailBean.paginator}" />
+				</ui:decorate>
+			</h:panelGroup>
+	
+			<div class="context-menu resource-context-menu" role="menu">
+				<ui:fragment rendered="#{groupDetailBean.canEditResourcesInTheGroup()}">
+					<div class="context-menu-item action-open-folder" role="menuitem">
+						<div class="context-menu-item-wrapper">
+							<span class="context-menu-item-icon" />
+							<span class="context-menu-item-content">#{msg.open}</span>
+						</div>
+					</div>
+					<div class="context-menu-item action-create-folder" role="menuitem">
+						<div class="context-menu-item-wrapper">
+							<span class="context-menu-item-icon" />
+							<span class="context-menu-item-content">#{msg.create_folder}</span>
+						</div>
+					</div>
+					<div class="context-menu-item divider action-upload-file" role="menuitem">
+						<div class="context-menu-item-wrapper">
+							<span class="context-menu-item-icon" />
+							<span class="context-menu-item-content">#{msg.upload_file}</span>
+						</div>
+					</div>
+					<div class="context-menu-item action-add-website" role="menuitem">
+						<div class="context-menu-item-wrapper">
+							<span class="context-menu-item-icon" />
+							<span class="context-menu-item-content">#{msg.upload_url}</span>
+						</div>
+					</div>
+					<div class="context-menu-item action-add-tag" role="menuitem">
+						<div class="context-menu-item-wrapper">
+							<span class="context-menu-item-icon" />
+							<span class="context-menu-item-content">#{msg.addTag}</span>
+						</div>
+					</div>
+					<div class="context-menu-item action-edit" role="menuitem">
+						<div class="context-menu-item-wrapper">
+							<span class="context-menu-item-icon" />
+							<span class="context-menu-item-content">#{msg.edit}</span>
+						</div>
+					</div>
+				</ui:fragment>
+				<div class="context-menu-item action-copy" role="menuitem">
 					<div class="context-menu-item-wrapper">
 						<span class="context-menu-item-icon" />
-						<span class="context-menu-item-content">#{msg.open}</span>
+						<span class="context-menu-item-content">#{msg.copy}</span>
 					</div>
 				</div>
-				<div class="context-menu-item action-create-folder" role="menuitem">
-					<div class="context-menu-item-wrapper">
-						<span class="context-menu-item-icon" />
-						<span class="context-menu-item-content">#{msg.create_folder}</span>
+				<ui:fragment rendered="#{groupDetailBean.canDeleteResourcesInTheGroup()}">
+					<div class="context-menu-item action-move" role="menuitem">
+						<div class="context-menu-item-wrapper">
+							<span class="context-menu-item-icon" />
+							<span class="context-menu-item-content">#{msg.move}</span>
+						</div>
 					</div>
-				</div>
-				<div class="context-menu-item divider action-upload-file" role="menuitem">
-					<div class="context-menu-item-wrapper">
-						<span class="context-menu-item-icon" />
-						<span class="context-menu-item-content">#{msg.upload_file}</span>
+					<div class="context-menu-item action-delete" role="menuitem">
+						<div class="context-menu-item-wrapper">
+							<span class="context-menu-item-icon" />
+							<span class="context-menu-item-content">#{msg.removeFromGroup}</span>
+						</div>
 					</div>
-				</div>
-				<div class="context-menu-item action-add-website" role="menuitem">
-					<div class="context-menu-item-wrapper">
-						<span class="context-menu-item-icon" />
-						<span class="context-menu-item-content">#{msg.upload_url}</span>
-					</div>
-				</div>
-				<div class="context-menu-item action-add-tag" role="menuitem">
-					<div class="context-menu-item-wrapper">
-						<span class="context-menu-item-icon" />
-						<span class="context-menu-item-content">#{msg.addTag}</span>
-					</div>
-				</div>
-				<div class="context-menu-item action-edit" role="menuitem">
-					<div class="context-menu-item-wrapper">
-						<span class="context-menu-item-icon" />
-						<span class="context-menu-item-content">#{msg.edit}</span>
-					</div>
-				</div>
-			</ui:fragment>
-			<div class="context-menu-item action-copy" role="menuitem">
-				<div class="context-menu-item-wrapper">
-					<span class="context-menu-item-icon" />
-					<span class="context-menu-item-content">#{msg.copy}</span>
-				</div>
+				</ui:fragment>
 			</div>
-			<ui:fragment rendered="#{groupDetailBean.canDeleteResourcesInTheGroup()}">
-				<div class="context-menu-item action-move" role="menuitem">
-					<div class="context-menu-item-wrapper">
-						<span class="context-menu-item-icon" />
-						<span class="context-menu-item-content">#{msg.move}</span>
-					</div>
-				</div>
-				<div class="context-menu-item action-delete" role="menuitem">
-					<div class="context-menu-item-wrapper">
-						<span class="context-menu-item-icon" />
-						<span class="context-menu-item-content">#{msg.removeFromGroup}</span>
-					</div>
-				</div>
-			</ui:fragment>
-		</div>
-
+		</ui:fragment>
+		
 		<script type="text/javascript">
 			$("#header_query_form").css("display","none");
 
@@ -390,6 +399,6 @@
 	<ui:define name="right_layout">
 		<ui:decorate  template="/lw/templates/right_pane.xhtml">
 			<ui:param name="bean" value="#{groupDetailBean}" />
-		</ui:decorate >
+		</ui:decorate>
 	</ui:define>
 </ui:composition>

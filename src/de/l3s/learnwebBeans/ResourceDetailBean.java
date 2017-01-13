@@ -6,6 +6,7 @@ import java.text.DateFormat;
 import java.text.DateFormatSymbols;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -28,9 +29,12 @@ import org.primefaces.event.RateEvent;
 import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.Course;
+import de.l3s.learnweb.File;
+import de.l3s.learnweb.FileManager;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.ResourceMetadataExtractor;
 import de.l3s.learnweb.Tag;
 import de.l3s.learnweb.TimelineData;
 import de.l3s.learnweb.User;
@@ -265,6 +269,32 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             addFatalMessage(e);
         }
         return null;
+    }
+
+    /**
+     * Recreates the thumbnails of the selected resource
+     * 
+     * @throws SQLException
+     */
+    public void onUpdateThumbnail() throws SQLException
+    {
+        User user = getUser();
+        if(user == null || !user.isAdmin())
+            return;
+
+        // first delete old thumbnails
+        FileManager fileManager = getLearnweb().getFileManager();
+        Collection<File> files = clickedResource.getFiles().values();
+        for(File file : files)
+        {
+            if(file.getResourceFileNumber() <= 6 && file.getResourceFileNumber() != 4) // number 4 is reserved for the source file
+            {
+                log.debug("Delete " + file.getName());
+                fileManager.delete(file);
+            }
+        }
+        ResourceMetadataExtractor extractor = new ResourceMetadataExtractor(clickedResource);
+        extractor.makePreview();
     }
 
     private void showTagWarningMessage()

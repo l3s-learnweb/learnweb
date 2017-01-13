@@ -726,10 +726,8 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
         switch(policyJoin)
         {
-        /*
         case ALL_LEARNWEB_USERS:
             return true;
-            */
         case COURSE_MEMBERS:
             return getCourse().isMember(user);
         case NOBODY:
@@ -752,7 +750,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
         case ALL_LEARNWEB_USERS:
             return true;
         case COURSE_MEMBERS:
-            return getCourse().isMember(user);
+            return getCourse().isMember(user) || isMember(user);
         case GROUP_MEMBERS:
             return isMember(user);
         case GROUP_LEADER:
@@ -775,7 +773,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
         case ALL_LEARNWEB_USERS:
             return true;
         case COURSE_MEMBERS:
-            return getCourse().isMember(user);
+            return getCourse().isMember(user) || isMember(user);
         case GROUP_MEMBERS:
             return isMember(user);
         case GROUP_LEADER:

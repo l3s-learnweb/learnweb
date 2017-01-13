@@ -244,13 +244,16 @@ public class FileManager
 
         cache.remove(file.getId());
 
-        try
+        if(file.exists())
         {
-            file.getActualFile().delete();
-        }
-        catch(Throwable e)
-        {
-            log.error("Could not delete file: " + file.getId(), e);
+            try
+            {
+                file.getActualFile().delete();
+            }
+            catch(Throwable e)
+            {
+                log.error("Could not delete file: " + file.getId(), e);
+            }
         }
     }
 

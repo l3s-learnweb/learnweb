@@ -93,7 +93,7 @@
 				</span>
 			</div>
 			<h:form id="group_moderator_form">
-				<h:panelGrid columns="2">	
+				<h:panelGrid columns="2" style="margin-left:1rem;">	
 					<h:outputLabel value="#{msg.title}:" for="edit_group_title"/>
 					<p:inputText value="#{groupDetailBean.editedGroupTitle}" id="edit_group_title" style="width:29rem;"/>
 						
@@ -115,60 +115,60 @@
 						update=":growl :group_menu"	style="border-radius:0px;">
 					</p:commandButton>
 				</h:panelGrid>					
-			</h:form>
 			
-			<style type="text/css">
-				#group_security_form h2 {
-					margin: 2rem 0 0 0;
-					font-size: 1.5rem;
-				}
-			</style>
 			
-		
-			<div class="page_header" style="margin-top:0.5rem">
-				<span>
-					#{msg.options}
-				</span>
-			</div>
-			
-			<h:form id="group_security_form" style="padding-left:0.2rem; margin-top:-1rem">
-	
-				<h2>#{msg['policy.title.join']}</h2>
-				<p:selectOneRadio value="#{groupDetailBean.group.policyJoin}" layout="grid" columns="1">							
-		            <f:selectItems value="#{groupDetailBean.group.policyJoinOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"  />
-		        </p:selectOneRadio>		        			
-	
-				<h2>#{msg['policy.title.add']}</h2>
-				<p:selectOneRadio value="#{groupDetailBean.group.policyAdd}" layout="grid" columns="1">							
-		            <f:selectItems value="#{groupDetailBean.group.policyAddOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"  />
-		        </p:selectOneRadio>	        			
-	
-				<h2>#{msg['policy.title.edit']}</h2>
-				<p:selectOneRadio value="#{groupDetailBean.group.policyEdit}" layout="grid" columns="1">							
-		            <f:selectItems value="#{groupDetailBean.group.policyEditOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"  />
-		        </p:selectOneRadio>	        			
-	
-				<h2>#{msg['policy.title.view']}</h2>
-				<p:selectOneRadio value="#{groupDetailBean.group.policyView}" layout="grid" columns="1">							
-		            <f:selectItems value="#{groupDetailBean.group.policyViewOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"  />
-		        </p:selectOneRadio>	        			
-	
-				<h2>#{msg['policy.title.annotate']}</h2>
-				<p:selectOneRadio value="#{groupDetailBean.group.policyAnnotate}" layout="grid" columns="1">							
-		            <f:selectItems value="#{groupDetailBean.group.policyAnnotateOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"  />
-		        </p:selectOneRadio>		
-		        
-		        <h2>#{msg['Miscellaneous']}</h2>	
-		        <h:panelGrid columns="2">			
-			        <p:selectBooleanCheckbox value="#{groupDetailBean.group.restrictionForumCategoryRequired}" id="restriction_mandatory_forum_category"/>	
-					<p:outputLabel value="#{msg['policy.forum_category']}" for="restriction_mandatory_forum_category"/>
-				</h:panelGrid>   
-				        
-				<br/>
-				<p:commandButton value="#{msg.save}" ajax="false" action="#{groupDetailBean.onGroupEdit}" 
-					update=":growl :group_menu"	style="border-radius:0px;">
-				</p:commandButton>
+				<style type="text/css">
+					#group_security h2 {
+						margin: 2rem 0 0 0;
+						font-size: 1.5rem;
+					}
+				</style>
 				
+			
+				<div class="page_header" style="margin-top:0.5rem">
+					<span>
+						#{msg.options}
+					</span>
+				</div>
+			
+				<div id="group_security" style="padding-left:1.2rem; margin-top:-1rem">
+		
+					<h2>#{msg['policy.title.join']}</h2>
+					<p:selectOneRadio value="#{groupDetailBean.group.policyJoin}" layout="grid" columns="1">							
+			            <f:selectItems value="#{groupDetailBean.group.policyJoinOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"  />
+			        </p:selectOneRadio>		        			
+		
+					<h2>#{msg['policy.title.add']}</h2>
+					<p:selectOneRadio value="#{groupDetailBean.group.policyAdd}" layout="grid" columns="1">							
+			            <f:selectItems value="#{groupDetailBean.group.policyAddOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"  />
+			        </p:selectOneRadio>	        			
+		
+					<h2>#{msg['policy.title.edit']}</h2>
+					<p:selectOneRadio value="#{groupDetailBean.group.policyEdit}" layout="grid" columns="1">							
+			            <f:selectItems value="#{groupDetailBean.group.policyEditOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"  />
+			        </p:selectOneRadio>	        			
+		
+					<h2>#{msg['policy.title.view']}</h2>
+					<p:selectOneRadio value="#{groupDetailBean.group.policyView}" layout="grid" columns="1">							
+			            <f:selectItems value="#{groupDetailBean.group.policyViewOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"  />
+			        </p:selectOneRadio>	        			
+		
+					<h2>#{msg['policy.title.annotate']}</h2>
+					<p:selectOneRadio value="#{groupDetailBean.group.policyAnnotate}" layout="grid" columns="1">							
+			            <f:selectItems value="#{groupDetailBean.group.policyAnnotateOptions}" var="option" itemValue="#{option}" itemLabel="#{msg['policy.option.' += option]}"  />
+			        </p:selectOneRadio>		
+			        
+			        <h2>#{msg['Miscellaneous']}</h2>	
+			        <h:panelGrid columns="2">			
+				        <p:selectBooleanCheckbox value="#{groupDetailBean.group.restrictionForumCategoryRequired}" id="restriction_mandatory_forum_category"/>	
+						<p:outputLabel value="#{msg['policy.forum_category']}" for="restriction_mandatory_forum_category"/>
+					</h:panelGrid>   
+					        
+					<br/>
+					<p:commandButton value="#{msg.save}" ajax="false" action="#{groupDetailBean.onGroupEdit}" 
+						update=":growl :group_menu"	style="border-radius:0px;">
+					</p:commandButton>
+				</div>
 			</h:form>
 		
 			<br/>
@@ -178,7 +178,7 @@
 				</span>
 			</div>
 			
-			<h:form id="group_copy_form" style="margin-bottom:4rem;">
+			<h:form id="group_copy_form" style="margin:0 0 4rem 1rem;">
 				<h:panelGrid columns="3">
 					<h:outputText value="#{msg.copy_all_resources}"/>
 					<h:selectOneMenu value="#{groupDetailBean.selectedResourceTargetGroupId}">

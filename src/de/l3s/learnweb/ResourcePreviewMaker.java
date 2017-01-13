@@ -368,7 +368,7 @@ public class ResourcePreviewMaker
             }
             catch(Exception e)
             { // some pdfs with special graphics cause errors
-                e.printStackTrace();
+                log.debug("Skip PDF page with errors; page: " + page + "; resource: " + resource);
                 return;
             }
 

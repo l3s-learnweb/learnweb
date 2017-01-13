@@ -724,6 +724,8 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             this.type = "Image";
         else if(null == type || type.length() == 0)
             this.type = "Unknown";
+        else if(type.equals("vnd.openxmlformats-officedocument.wordprocessingml.document"))
+            this.type = "Text";
         else
             this.type = type;
     }
