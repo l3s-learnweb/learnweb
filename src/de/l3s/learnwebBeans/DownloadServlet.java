@@ -84,10 +84,12 @@ public class DownloadServlet extends HttpServlet
                 return;
             }
 
+            /* This causes a redirect to the web.xml error page
             if(!file.exists()) // show error image
             {
-                response.setStatus(404);
+                response.setStatus(404); 
             }
+            */
 
             long ifModifiedSince = request.getDateHeader("If-Modified-Since");
 

@@ -181,8 +181,6 @@ public class GroupManager
         String query = "SELECT " + COLUMNS + " FROM `lw_group` g LEFT JOIN lw_group_category USING(group_category_id) WHERE g.deleted = 0 AND g.group_id NOT IN(" + groupsIn + ") AND (g.policy_join = 'COURSE_MEMBERS' AND g.course_id IN(" + coursesIn + ") " + publicCourseClause
                 + ") ORDER BY title";
 
-        log.debug("getJoinAbleGroups query:" + query);
-
         return getGroups(query);
     }
 
