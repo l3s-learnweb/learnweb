@@ -541,6 +541,14 @@ public class ArchiveUrlManager
         return resource;
     }
 
+    /**
+     * copied method to avoid reindexing at SOLR
+     * 
+     * @param resource
+     * @param tagName
+     * @param user
+     * @throws Exception
+     */
     private void addTagToResource(Resource resource, String tagName, User user) throws Exception
     {
         ResourceManager rsm = Learnweb.getInstance().getResourceManager();
