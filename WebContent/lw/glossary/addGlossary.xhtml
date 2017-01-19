@@ -1,0 +1,163 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui" 
+	lang="#{userBean.localeCode}">
+
+	
+	<ui:composition template="/templates/main/main.xhtml">
+		<ui:param name="pageTitle" value="#{msg['Glossary.glossary']}" />
+		<ui:param name="loginRequired" value="true" />
+		
+		<ui:define name="center_layout">
+		<h:outputStylesheet library="glossary" name="glossary.css"/>
+	
+	<br/>
+	<br/>
+	<div id="glossform">
+	<h:form styleClass="grey_border" prependId="false" enctype="multipart/form-data">
+	<h:panelGrid id="grid" styleClass="centered-form" columns="3">
+		
+		<h:outputLabel for="topic_1" value="Topic 1* "></h:outputLabel>
+		<h:selectOneMenu id="topic_1" value="#{glossaryBean.selectedTopicOne}" required="true" requiredMessage="Topic 1 cannot be empty">
+   		 	<f:selectItem itemValue="#{null}" itemLabel="-- select --" />
+    		<f:selectItems value="#{glossaryBean.availableTopicOnes}" />
+    		<f:ajax listener="#{glossaryBean.changeTopicOne}" render="topic_2 topic_3" />
+		</h:selectOneMenu>
+		<p:message for="topic_1"/>
+		
+		<h:outputLabel for="topic_2" value="Topic 2* "></h:outputLabel>
+		<h:selectOneMenu id="topic_2" value="#{glossaryBean.selectedTopicTwo}" required="true" requiredMessage="Topic 2 cannot be empty">
+    		<f:selectItem itemValue="#{null}" itemLabel="-- select --" />
+    		<f:selectItems value="#{glossaryBean.availableTopicTwos}" />
+    		<f:ajax listener="#{glossaryBean.changeTopicTwo}" render="topic_3" />
+		</h:selectOneMenu>
+		<p:message for="topic_2"/>
+		
+		<h:outputLabel for="topic_3" value="Topic 3 "></h:outputLabel>
+		<h:selectOneMenu id="topic_3" value="#{glossaryBean.selectedTopicThree}">
+    		<f:selectItem itemValue="#{null}" itemLabel="-- select --" />
+    		<f:selectItems value="#{glossaryBean.availableTopicThrees}" />
+		</h:selectOneMenu>
+		<h:outputText value="" />
+		
+		<h:outputLabel value="Description* " for="description" ></h:outputLabel>
+		<h:inputText id="description" value="#{glossaryBean.description}" styleClass="inputfield" required="true" requiredMessage="Description can not be empty"/>
+		<p:message for="description"/>
+		
+		<h:outputLabel for="multi" value="Add Multimedia" />
+		<p:fileUpload id="multi" value="#{glossaryBean.multimediaFile}" mode="simple" skinSimple="true" styleClass="panel" oncomplete=""/>
+		
+	</h:panelGrid>
+		
+		<h:dataTable value="#{glossaryBean.italianItems}" var="item" id="italian_terms">
+		<f:facet name="header">
+		<h:outputText value="Italian Terms" styleClass="termsHeading"></h:outputText>
+		</f:facet>
+		
+				<h:column>
+					<h:outputLabel for="termIt" value='Term It' />
+				<h:inputText id="termIt" value='#{item.value}' />
+				</h:column>
+				<h:column>
+					
+					<p:selectCheckboxMenu id="use" value="#{item.selectedUses}" styleClass="panel" label="Uses" filter="true" filterMatchMode="startsWith" >
+           		 <f:selectItems value="#{glossaryBean.uses}" />
+        </p:selectCheckboxMenu>
+				
+				</h:column>
+				<h:column>
+				<h:outputLabel for="pron" value="Pronounciation" />
+				<h:inputText id="pron" value='#{item.pronounciation}' />
+				</h:column>
+				<h:column>
+				<h:outputLabel for="acro" value="Acronym" />
+				<h:inputText id="acro" value='#{item.acronym}' />
+				</h:column>
+				<h:column>
+				<h:outputLabel for="ref" value="References"></h:outputLabel>
+				<h:selectOneMenu id="ref" value="#{item.references}">
+				<f:selectItem itemValue="#{null}" itemLabel="--select--" />
+				<f:selectItem itemValue="Wikipedia" itemLabel="Wikipedia"></f:selectItem>
+				<f:selectItem itemValue="Encyclopaedia" itemLabel="other encyclopaedia"></f:selectItem>
+				<f:selectItem itemValue="monolingual dictionary" itemLabel="monoligual dictionary"></f:selectItem>
+				<f:selectItem itemValue="bilingual dictionary" itemLabel="bilingual dictionary"></f:selectItem>
+				<f:selectItem itemValue="scientific/academic publication" itemLabel="scientific/academic publication"></f:selectItem>
+				<f:selectItem itemValue="institutional website" itemLabel="institutional website"></f:selectItem>
+				<f:selectItem itemValue="glossary" itemLabel="glossary"></f:selectItem>
+				<f:selectItem itemValue="linguee e reverso" itemLabel="linguee e reverso"></f:selectItem>
+				<f:selectItem itemValue="patient's websites and blogs" itemLabel="patient's websites and blogs"></f:selectItem>
+				<f:selectItem itemValue="other" itemLabel="other"></f:selectItem>
+				</h:selectOneMenu>
+				</h:column>
+				<h:column>
+				<h:outputLabel for="phras" value="Phraseology" />
+				<h:inputText id="phras" value="#{item.phraseology}" />
+			
+			</h:column>
+				
+		</h:dataTable>
+		<p:commandButton value="Add Synonym" action="#{glossaryBean.addIt}" styleClass="greenbutton" update="grid :italian_terms"/>
+		<p:commandButton value="Remove" action="#{glossaryBean.removeIt(item)}" update="grid :italian_terms" styleClass="greenbutton"></p:commandButton>
+		<br/><br/>
+		
+		
+		<h:dataTable value="#{glossaryBean.ukItems}" var="item" id="uk_terms">
+		<f:facet name="header">
+		<h:outputLabel value="English Terms" styleClass="termsHeading"></h:outputLabel>
+		</f:facet>
+		
+		<h:column>
+				
+				<h:outputLabel for="termuk" value="Term UK" />
+				<h:inputText id="termuk" value='#{item.value}' />
+				</h:column>
+				<h:column>
+					<p:selectCheckboxMenu id="use" value="#{item.selectedUses}" styleClass="panel" label="Uses" filter="true" filterMatchMode="startsWith" >
+           		 <f:selectItems value="#{glossaryBean.uses}" />
+           		  </p:selectCheckboxMenu>
+				</h:column>
+				<h:column>
+				<h:outputLabel for="pron_uk" value="Pronounciation" />
+				<h:inputText id="pron_uk" value='#{item.pronounciation}' />
+				</h:column>
+				<h:column>
+				<h:outputLabel for="acro_uk" value="Acronym" />
+				<h:inputText id="acro_uk" value='#{item.acronym}' />
+				</h:column>
+				<h:column>
+				<h:outputLabel for="ref_uk" value="References"></h:outputLabel>
+				<h:selectOneMenu id="ref_uk" value="#{item.references}">
+				<f:selectItem itemValue="#{null}" itemLabel="--select--" />
+				<f:selectItem itemValue="Wikipedia" itemLabel="Wikipedia"></f:selectItem>
+				<f:selectItem itemValue="Encyclopaedia" itemLabel="other encyclopaedia"></f:selectItem>
+				<f:selectItem itemValue="monolingual dictionary" itemLabel="monoligual dictionary"></f:selectItem>
+				<f:selectItem itemValue="bilingual dictionary" itemLabel="bilingual dictionary"></f:selectItem>
+				<f:selectItem itemValue="scientific/academic publication" itemLabel="scientific/academic publication"></f:selectItem>
+				<f:selectItem itemValue="institutional website" itemLabel="institutional website"></f:selectItem>
+				<f:selectItem itemValue="glossary" itemLabel="glossary"></f:selectItem>
+				<f:selectItem itemValue="linguee e reverso" itemLabel="linguee e reverso"></f:selectItem>
+				<f:selectItem itemValue="patient's websites and blogs" itemLabel="patient's websites and blogs"></f:selectItem>
+				<f:selectItem itemValue="other" itemLabel="other"></f:selectItem>
+				</h:selectOneMenu>
+				</h:column>
+				<h:column>
+				<h:outputLabel for="phrase_uk" value="Phraseology" />
+				<h:inputText id="phrase_uk" value="#{item.phraseology}" />
+			</h:column>
+			
+			
+		</h:dataTable>
+		<p:commandButton value="Add synonym" action="#{glossaryBean.addUk}" styleClass="greenbutton" update=":uk_terms"/>
+		<p:commandButton value="Remove" action="#{glossaryBean.removeUk(item)}" update=":uk_terms" styleClass="greenbutton"></p:commandButton><br/><br/>
+		
+    <p:commandButton value="Submit" ajax="false" actionListener="#{glossaryBean.upload}" styleClass="greenbutton resource_button" disabled="true" /><br/><br/>
+	</h:form>
+	</div>
+	
+
+</ui:define>
+</ui:composition>
+</html>

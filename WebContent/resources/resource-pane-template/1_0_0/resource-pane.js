@@ -233,7 +233,10 @@ function resourceDND() {
         }
     });
 }
-
+function check_tag(tagName){
+	
+	
+}
 /* Context menu */
 function showContextMenu(className, e) {
     $(".resource-context-menu").addClass(className + "-cntx").finish().toggle().css({

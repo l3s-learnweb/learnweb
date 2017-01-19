@@ -9,6 +9,10 @@
 	width:auto !important;
 	min-width:100%;
 }
+
+#glossform{
+	margin: 0 auto;
+}
 .glossary td {
 	overflow:show !important;
 }
@@ -32,6 +36,7 @@
 	width:15em !important;
 	outline:none;
 }
+
 .datatype{
 	font-size:1.5rem;
 	margin-left:1rem;
@@ -49,6 +54,19 @@ hr{
 	margin-bottom:5rem;
 }
 
+.dataDescription{
+	font-size:1.5rem;
+	color:red;
+	text-align: right;
+}
+.italian{
+	text-align: right;
+}
+.termsHeading{
+	font-size:1.5rem;
+	font-weight: bold;
+	float:left;
+}
 /*both pages*/
 #group_header{
 	margin:1rem 5px 0px 5px;
@@ -56,10 +74,20 @@ hr{
 #searchbutton{
 	margin-left:0;
 }
+#formbutton{
+	margin-left:0;
+	border: 5px solid #fff;
+}
 .grey_border{
 	margin:0px 5px;
+	text-align:center;
 }
-
+.panel{
+	 background-color:transparent;
+}
+.centered-form {
+    margin : 0 auto;
+}
 /*change primefaces ui*/
 .ui-state-hover, .ui-state-focus, .ui-state-active{
 	box-shadow:0 0 0px 0px #fff !important;
