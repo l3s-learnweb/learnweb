@@ -1,7 +1,7 @@
 package de.l3s.learnweb;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,8 +13,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
-import org.apache.poi.POIXMLProperties;
-import org.apache.poi.xwpf.usermodel.XWPFDocument;
 
 import com.sun.pdfview.PDFFile;
 import com.sun.pdfview.PDFPage;
@@ -83,6 +81,7 @@ public class ResourcePreviewMaker
      */
     public void processFile(Resource resource, InputStream inputStream, FileInfo info) throws IOException, SQLException
     {
+        ProcessOffice po = new ProcessOffice();
         String type = info.getMimeType().substring(0, info.getMimeType().indexOf("/"));
         if(type.equals("application"))
             type = info.getMimeType().substring(info.getMimeType().indexOf("/") + 1);
@@ -118,6 +117,24 @@ public class ResourcePreviewMaker
         else if(type.equalsIgnoreCase("video"))
         {
             processVideo(resource);
+        }
+        else if(type.equalsIgnoreCase("msword") || type.equalsIgnoreCase("doc") || file.getMimeType().toLowerCase().contains("ms-word") || file.getMimeType().toLowerCase().contains("vnd.oasis.opendocument.text"))
+        {
+
+            InputStream wordPdf = po.processWord(resource, inputStream);
+            processPdf(resource, wordPdf);
+
+        }
+        else if(info.getMimeType().toLowerCase().contains("powerpoint") || info.getMimeType().toLowerCase().contains("presentation"))
+        {
+            BufferedImage img = po.processPPT(inputStream, resource);
+            Image pptImg = new Image(img);
+            createThumbnails(resource, pptImg, false);
+        }
+        else if(info.getMimeType().toLowerCase().contains("excel") || info.getMimeType().toLowerCase().contains("spreadsheet"))
+        {
+            InputStream xlPdf = po.processXls(inputStream, resource);
+            processPdf(resource, xlPdf);
         }
         inputStream.close();
     }
@@ -304,7 +321,7 @@ public class ResourcePreviewMaker
         }
     }
 
-    public void processWOrd(Resource resource, InputStream ip)
+    /* public void processWOrd(Resource resource, InputStream ip)
     {
         XWPFDocument wordDocument = null;
         try
@@ -317,7 +334,7 @@ public class ResourcePreviewMaker
             e.printStackTrace();
         }
         POIXMLProperties props = wordDocument.getProperties();
-
+    
         String thumbnail = props.getThumbnailFilename();
         if(thumbnail == null)
         {
@@ -345,7 +362,7 @@ public class ResourcePreviewMaker
                 e.printStackTrace();
             }
         }
-    }
+    }*/
 
     public void processPdf(Resource resource, InputStream inputStream) throws IOException, SQLException
     {

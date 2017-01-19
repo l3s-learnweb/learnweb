@@ -1,21 +1,35 @@
 package de.l3s.learnweb;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+
+import org.apache.log4j.Logger;
+
 import de.l3s.interwebj.jaxb.SearchResultEntity;
 import de.l3s.interwebj.jaxb.ThumbnailEntity;
 import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 import de.l3s.learnwebBeans.AddResourceBean;
-import de.l3s.util.*;
-import org.apache.log4j.Logger;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.sql.*;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.Date;
+import de.l3s.util.Cache;
+import de.l3s.util.DummyCache;
+import de.l3s.util.ICache;
+import de.l3s.util.Image;
+import de.l3s.util.PropertiesBundle;
+import de.l3s.util.Sql;
+import de.l3s.util.StringHelper;
 
 public class ResourceManager
 {
@@ -1220,6 +1234,14 @@ public class ResourceManager
                     rpm.processImage(resource, FileInspector.openStream(url));
                     resource.setFormat(info.getMimeType());
                     resource.setType("Image");
+                    resource.save();
+                }
+                else if(info.getMimeType().contains("application/"))
+                {
+                    log.debug("process " + info.getMimeType());
+                    resource.setMachineDescription(info.getTextContent());
+
+                    rpm.processFile(resource, FileInspector.openStream(url), info);
                     resource.save();
                 }
                 else
