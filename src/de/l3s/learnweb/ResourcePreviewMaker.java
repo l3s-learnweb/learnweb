@@ -118,7 +118,8 @@ public class ResourcePreviewMaker
         {
             processVideo(resource);
         }
-        else if(type.equalsIgnoreCase("msword") || type.equalsIgnoreCase("doc") || file.getMimeType().toLowerCase().contains("ms-word") || file.getMimeType().toLowerCase().contains("vnd.oasis.opendocument.text"))
+        else if(type.equalsIgnoreCase("msword") || type.equalsIgnoreCase("doc") || file.getMimeType().toLowerCase().contains("ms-word") || file.getMimeType().toLowerCase().contains("vnd.oasis.opendocument.text")
+                || file.getMimeType().toLowerCase().contains("officedocument.wordprocessingml.document"))
         {
 
             InputStream wordPdf = po.processWord(resource, inputStream);
