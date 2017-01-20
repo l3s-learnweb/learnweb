@@ -98,7 +98,7 @@ public class ResourceManager
      */
     public List<Resource> getResourcesAll(int page, int pageSize) throws SQLException
     {
-        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `deleted` = 1 ORDER BY resource_id LIMIT " + (page * pageSize) + "," + pageSize + "", null);
+        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `deleted` = 0 ORDER BY resource_id LIMIT " + (page * pageSize) + "," + pageSize + "", null);
     }
 
     public List<Integer> getInvalidResourceIds() throws SQLException

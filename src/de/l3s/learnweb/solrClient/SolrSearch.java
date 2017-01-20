@@ -1,6 +1,5 @@
 package de.l3s.learnweb.solrClient;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -643,28 +642,6 @@ public class SolrSearch implements Serializable
         }
         else
             return query;
-    }
-
-    public static void main(String[] args) throws SQLException, SolrServerException, IOException
-    {
-        Learnweb.getInstance().getSolrClient().deleteOldCachedResource();
-        /*
-        User user = new User();
-        user.setId(2376);
-        log.debug(user.getGroups());
-        SolrSearch search = new SolrSearch("groups:my bike", user);
-        //search.setFilterType("web");
-        //search.setFilterGroups(128, 151);
-        // location, source and language are not set. this means they do not matter for this search
-        
-        // get the first 8 (resultsPerPage) search results 
-        List<ResourceDecorator> page1 = search.getResourcesByPage(1);
-        
-        // get the next 8 search results 
-        //List<ResourceDecorator> page2 = search.getResourcesByPage(2);
-        
-        // this is only an example it. This search will not necessarily return results
-        */
     }
 
     public static class SearchPaginator extends AbstractPaginator

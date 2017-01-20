@@ -16,7 +16,6 @@ import org.apache.solr.common.SolrDocument;
 import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.Tag;
 
 public class SolrClient
@@ -59,53 +58,12 @@ public class SolrClient
      */
     public void indexResource(Resource resource) throws SQLException, IOException, SolrServerException
     {
-        /*
-        if(resource.getUrl().indexOf("localhost") != -1)
-        {
-            log.warn("Skip local resource with ID : " + resource.getId());
-            return;
-        }
-        */
         SolrResourceBean solrResource = new SolrResourceBean(resource);
 
         log.debug("index resource: " + resource.getId());
 
         server.addBean(solrResource);
         server.commit();
-    }
-
-    public void indexDecoratedResource(ResourceDecorator decoratedResource) throws SQLException, SolrServerException, IOException
-    {
-        server.addBean(new SolrResourceBean(decoratedResource));
-        server.commit();
-    }
-
-    public void indexDecoratedResources(List<ResourceDecorator> decoratedResources)
-    {
-        try
-        {
-            List<SolrResourceBean> solrResources = new LinkedList<SolrResourceBean>();
-            for(ResourceDecorator decoratedResource : decoratedResources)
-            {
-                Resource resource = decoratedResource.getResource();
-
-                if((resource.getType().equals("Image") || resource.getType().equals("Video")) && resource.getThumbnail2() == null)
-                {
-                    log.error("will not index a video/image resource without thumbnail: " + resource.toString());
-                }
-
-                solrResources.add(new SolrResourceBean(decoratedResource));
-            }
-            server.addBeans(solrResources);
-            server.commit();
-
-            log.debug("Indexed " + decoratedResources.size() + " resources for caching");
-        }
-        catch(Throwable t)
-        {
-            log.fatal("error during indexing cache resource", t);
-        }
-
     }
 
     /**
@@ -143,24 +101,6 @@ public class SolrClient
     public void deleteAllFromIndex() throws SolrServerException, IOException
     {
         server.deleteByQuery("id:r_*");
-        server.commit();
-    }
-
-    public void deleteOldCachedResource() throws SolrServerException, IOException
-    {
-        //delete cached resources which are indexed before the start of yesterday
-
-        /* " * TO NOW-1DAY/DAY " means time before the start of yesterday
-         * " * TO NOW-1MONTH/DAY " means time before the start of one month ago
-         * /HOUR : Round to the start of the current hour
-         * /DAY : Round to the start of the current day
-         * -1DAY : Exactly 1 day prior to now
-         * -1MONTH : Exactly 1 month prior to now
-         * +2YEARS : Exactly two years in the future from now
-         */
-
-        //server.deleteByQuery("timestamp : [ * TO NOW-1DAY/DAY] AND -id:r_*");
-        server.deleteByQuery("-id:r_*");
         server.commit();
     }
 
