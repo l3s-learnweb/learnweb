@@ -123,19 +123,24 @@ public class ResourcePreviewMaker
         {
 
             InputStream wordPdf = po.processWord(resource, inputStream);
-            processPdf(resource, wordPdf);
+            if(wordPdf != null)
+                processPdf(resource, wordPdf);
 
         }
         else if(info.getMimeType().toLowerCase().contains("powerpoint") || info.getMimeType().toLowerCase().contains("presentation"))
         {
             BufferedImage img = po.processPPT(inputStream, resource);
-            Image pptImg = new Image(img);
-            createThumbnails(resource, pptImg, false);
+            if(!img.equals(null))
+            {
+                Image pptImg = new Image(img);
+                createThumbnails(resource, pptImg, false);
+            }
         }
         else if(info.getMimeType().toLowerCase().contains("excel") || info.getMimeType().toLowerCase().contains("spreadsheet"))
         {
             InputStream xlPdf = po.processXls(inputStream, resource);
-            processPdf(resource, xlPdf);
+            if(xlPdf != null)
+                processPdf(resource, xlPdf);
         }
         inputStream.close();
     }
