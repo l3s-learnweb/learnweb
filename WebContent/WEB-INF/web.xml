@@ -173,4 +173,16 @@
     <auth-constraint/>
   </security-constraint>
 
+	<filter>
+		<filter-name>Remote Address Filter</filter-name>
+		<filter-class>org.apache.catalina.filters.RemoteAddrFilter</filter-class>
+		<init-param>
+			<param-name>deny</param-name>
+			<param-value>130\.75\.152\.\d+|109\.86\.72\.\d+</param-value>
+		</init-param>
+	</filter>
+	<filter-mapping>
+		<filter-name>Remote Address Filter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
 </web-app>

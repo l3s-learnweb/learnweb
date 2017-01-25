@@ -319,13 +319,13 @@
 			</h:panelGroup>
 	
 			<div class="context-menu resource-context-menu" role="menu">
-				<ui:fragment rendered="#{groupDetailBean.canEditResourcesInTheGroup()}">
-					<div class="context-menu-item action-open-folder" role="menuitem">
-						<div class="context-menu-item-wrapper">
-							<span class="context-menu-item-icon" />
-							<span class="context-menu-item-content">#{msg.open}</span>
-						</div>
+				<div class="context-menu-item action-open-folder" role="menuitem">
+					<div class="context-menu-item-wrapper">
+						<span class="context-menu-item-icon" />
+						<span class="context-menu-item-content">#{msg.open}</span>
 					</div>
+				</div>
+				<ui:fragment rendered="#{groupDetailBean.group.canAddResources(userBean.user)}">
 					<div class="context-menu-item action-create-folder" role="menuitem">
 						<div class="context-menu-item-wrapper">
 							<span class="context-menu-item-icon" />
@@ -344,12 +344,16 @@
 							<span class="context-menu-item-content">#{msg.upload_url}</span>
 						</div>
 					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{groupDetailBean.group.canAnnotateResources(userBean.user)}">				
 					<div class="context-menu-item action-add-tag" role="menuitem">
 						<div class="context-menu-item-wrapper">
 							<span class="context-menu-item-icon" />
 							<span class="context-menu-item-content">#{msg.addTag}</span>
 						</div>
 					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{groupDetailBean.group.canEditResources(userBean.user)}">				
 					<div class="context-menu-item action-edit" role="menuitem">
 						<div class="context-menu-item-wrapper">
 							<span class="context-menu-item-icon" />

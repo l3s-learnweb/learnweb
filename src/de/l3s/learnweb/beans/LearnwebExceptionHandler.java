@@ -51,7 +51,7 @@ public class LearnwebExceptionHandler extends PrimeExceptionHandler
                 log.info("View expired exception");
             else if(exception instanceof IllegalStateException && exception.getMessage().startsWith("Cannot create a session"))
             {
-                log.error(exception.getMessage() + "; Happens mostly because of error 404; On " + description);
+                log.warn(exception.getMessage() + "; Happens mostly because of error 404; On " + description);
 
                 return;
             }

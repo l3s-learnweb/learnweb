@@ -19,6 +19,7 @@ public class UploadResponse implements Serializable
         parse(inputStream);
     }
 
+    @SuppressWarnings("deprecation")
     private void parse(InputStream inputStream) throws IllegalResponseException
     {
         try

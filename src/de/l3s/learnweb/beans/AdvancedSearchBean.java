@@ -19,7 +19,6 @@ import org.apache.solr.common.SolrDocumentList;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.solrClient.SolrSearch;
-import solrAdvancedSearch.SolrContext;
 
 @ManagedBean(name = "advancedSearchBean")
 @SessionScoped
@@ -274,7 +273,7 @@ public class AdvancedSearchBean
         SolrDocumentList sdl;
         try
         {
-            sdl = SolrContext.getServer().query(solrQuery).getResults();
+            sdl = server.query(solrQuery).getResults();
             for(SolrDocument sd : sdl)
             {
                 String id = (String) sd.getFieldValue("id");
