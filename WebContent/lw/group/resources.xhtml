@@ -5,7 +5,9 @@
 				xmlns:p="http://primefaces.org/ui"
 				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
+	<ui:param name="loginRequired" value="true" />
 	<ui:param name="helpText" value="#{msg.groupResourceHelp}"/>
+	<ui:param name="pageTitle" value="#{msg.group} - #{msg.resources}" />
 
 	<ui:define name="metadata">
 		<f:metadata>
@@ -16,9 +18,6 @@
 			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{resourceDetailBean.preRenderView}" />
 		</f:metadata>
 	</ui:define>
-
-	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="#{msg.group} - #{msg.resources}" />
 
 	<ui:define name="center_layout">
 
@@ -98,14 +97,14 @@
 						<h:inputText value="#{groupDetailBean.query}" id="input_query_form" />
 
 						<p:commandButton actionListener="${groupDetailBean.onQueryChange()}" partialSubmit="true"
-										 oncomplete="$('#center_pane .content').scrollTop(0);" process="@form"
+										 oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();scroller();" process="@form"
 										 update=":datagrid :paginator" value="" id="group_resource_searchbutton"/>
 					</h:form>
 				</li>
 			</ul>
 
             <h:panelGroup id="breadcrumbs" styleClass="breadcrumbs" layout="block">
-                <ui:fragment rendered="#{groupDetailBean.breadcrumbs.size() > 0}">
+                <ui:fragment rendered="#{not empty groupDetailBean.breadcrumbs}">
                     <ul>
                         <li data-folderId="0">
                             <h:outputLink value="#" onclick="openFolder(0); return false;">#{groupDetailBean.group.title}</h:outputLink>
