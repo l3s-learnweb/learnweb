@@ -8,8 +8,6 @@ import java.io.InputStream;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.sql.SQLException;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
@@ -19,7 +17,6 @@ import com.sun.pdfview.PDFPage;
 
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
-import de.l3s.learnwebBeans.AddResourceBean;
 import de.l3s.util.Image;
 import de.l3s.util.StringHelper;
 
@@ -471,7 +468,7 @@ public class ResourcePreviewMaker
         
         */
     }
-
+    /*
     private static String getBetterSize(String imageUrl, int start, int end)
     {
         int size[] = { 1024, 800, 640, 500, 320, 240, 150, 100, 75 };
@@ -487,19 +484,21 @@ public class ResourcePreviewMaker
         }
         return imageUrl;
     }
-
+    
+    
     public static String getBestImage(Resource resource)
     {
         String url = resource.getUrl();
         String imageUrl = null;
-        Pattern pattern = Pattern.compile("<.+src=\"([^\"<>]+)\".*/>");
+       // Pattern pattern = Pattern.compile("<.+src=\"([^\"<>]+)\".*
+         />");
         if(null != resource.getEmbeddedSize1())
         {
             Matcher matcher = pattern.matcher(resource.getEmbeddedSize1());
             if(matcher.matches())
                 imageUrl = matcher.group(1);
         }
-
+    
         if(resource.getSource().equalsIgnoreCase("YouTube"))
         {
             url = AddResourceBean.checkUrl(url);
@@ -581,7 +580,7 @@ public class ResourcePreviewMaker
                                 newUrl = imageUrl.substring(0, end) + "_" + size[i] + imageUrl.substring(end, imageUrl.length());
                             else
                                 newUrl = imageUrl.substring(0, end - 2) + "_" + size[i] + imageUrl.substring(end, imageUrl.length());
-
+    
                             newUrl = AddResourceBean.checkUrl(newUrl);
                             if(newUrl != null && !newUrl.contains("unavailable"))
                             {
@@ -591,7 +590,7 @@ public class ResourcePreviewMaker
                         }
                         i++;
                     }
-
+    
                     if(size[i] == 'z')
                         imageUrl += "?zz=1";
                 }
@@ -617,31 +616,21 @@ public class ResourcePreviewMaker
             // that's ok. This seem to be mostly web sites
             log.debug("unhandled resource " + resource);
             return null;
-
+    
         }
-
+    
         if(imageUrl == null) // why can't we get an images for this resource...
         {
             log.error("can't get image for " + resource);
         }
-
+    
         if(url != null && url.startsWith("http://immediatenet.com"))
             return null;
-
+    
         //log.debug(imageUrl);
-
+    
         return imageUrl;
-
-        /*
-        if(imageUrl == null || AddResourceBean.checkUrl(imageUrl) == null)
-        {
-            resource.setMaxImageUrl("-1");
-        }
-        else
-            resource.setMaxImageUrl(imageUrl);
-        
-        resource.save();
-        */
-    }
+    
+    }*/
 
 }

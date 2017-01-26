@@ -141,7 +141,7 @@
 					           	</div>
 					     	</ui:fragment>
 				     	
-					    	<h:commandLink value="#{msg.clear}" rendered="#{forumPostBean.canDeletePost(post)}" actionListener="#{forumPostBean.deletePost(post)}" styleClass="greenbutton float-right"/>
+					    	<h:commandLink value="#{msg.delete}" rendered="#{forumPostBean.canDeletePost(post)}" actionListener="#{forumPostBean.deletePost(post)}" styleClass="greenbutton float-right"/>
 					    	<h:outputLink value="group/forum_post_edit.jsf" rendered="#{forumPostBean.canEditPost(post)}" styleClass="greenbutton float-right">
 						    	<f:param name="post_id" value="#{post.id}" />
 						    	#{msg.edit}

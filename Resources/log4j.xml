@@ -31,7 +31,7 @@
         <param name="evaluatorClass" value="de.l3s.util.CustomEvaluator" />
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern"
-              value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n" />
+              value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{9}:%L - %m%n" />
         </layout>
         <filter class="org.apache.log4j.varia.LevelRangeFilter">
             <param name="LevelMin" value="ERROR"/>
@@ -40,13 +40,13 @@
     </appender>
      
     <logger name="org.apache">
-    	<level value="WARN" />    	
+    	<level value="FATAL" />    	
     </logger>
     <logger name="org.hibernate.validator">
     	<level value="FATAL" />    	
     </logger> 
     <logger name="solr.client">
-    	<level value="WARN" />    	
+    	<level value="FATAL" />    	
     </logger>
     
  
