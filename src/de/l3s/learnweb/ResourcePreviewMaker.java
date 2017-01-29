@@ -118,26 +118,52 @@ public class ResourcePreviewMaker
         else if(type.equalsIgnoreCase("msword") || type.equalsIgnoreCase("doc") || file.getMimeType().toLowerCase().contains("ms-word") || file.getMimeType().toLowerCase().contains("vnd.oasis.opendocument.text")
                 || file.getMimeType().toLowerCase().contains("officedocument.wordprocessingml.document"))
         {
-
-            InputStream wordPdf = po.processWord(resource, inputStream);
-            if(wordPdf != null)
-                processPdf(resource, wordPdf);
+            try
+            {
+                InputStream wordPdf = null;
+                if(inputStream != null)
+                    wordPdf = po.processWord(resource, inputStream);
+                if(wordPdf != null)
+                    processPdf(resource, wordPdf);
+            }
+            catch(Exception e)
+            {
+                log.error("Error in creating thumbnails from Word " + resource.getFormat() + " for resource: " + resource.getId());
+            }
 
         }
         else if(info.getMimeType().toLowerCase().contains("powerpoint") || info.getMimeType().toLowerCase().contains("presentation"))
         {
-            BufferedImage img = po.processPPT(inputStream, resource);
-            if(!img.equals(null))
+            try
             {
-                Image pptImg = new Image(img);
-                createThumbnails(resource, pptImg, false);
+                BufferedImage img = null;
+                if(inputStream != null)
+                    img = po.processPPT(inputStream, resource);
+                if(!img.equals(null))
+                {
+                    Image pptImg = new Image(img);
+                    createThumbnails(resource, pptImg, false);
+                }
+            }
+            catch(Exception e)
+            {
+                log.error("Error in creating thumbnails from ppt " + resource.getFormat() + " for resource: " + resource.getId());
             }
         }
         else if(info.getMimeType().toLowerCase().contains("excel") || info.getMimeType().toLowerCase().contains("spreadsheet"))
         {
-            InputStream xlPdf = po.processXls(inputStream, resource);
-            if(xlPdf != null)
-                processPdf(resource, xlPdf);
+            try
+            {
+                InputStream xlPdf = null;
+                if(inputStream != null)
+                    xlPdf = po.processXls(inputStream, resource);
+                if(xlPdf != null)
+                    processPdf(resource, xlPdf);
+            }
+            catch(Exception e)
+            {
+                log.error("Error in creating thumbnails from xls " + resource.getFormat() + " for resource: " + resource.getId());
+            }
         }
         inputStream.close();
     }
