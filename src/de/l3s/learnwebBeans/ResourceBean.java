@@ -32,14 +32,16 @@ public class ResourceBean extends ApplicationBean implements Serializable
 
         if(id == 0) // no or invalid resource_id
         {
+            // safeId is created to avoid NullPointException
+            Integer safeId = getParameterInt("resource_id");
 
-            id = getParameterInt("resource_id");
-
-            if(id == 0)
+            if(safeId == null || safeId == 0)
             {
                 addMessage(FacesMessage.SEVERITY_FATAL, "invalid or no resource_id parameter");
                 return;
             }
+
+            id = safeId;
         }
 
         try
