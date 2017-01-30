@@ -141,7 +141,9 @@ public class FileInspector
 
         public String getMimeType()
         {
-            return mimeType;
+            if(null == mimeType)
+                return null;
+            return mimeType.toLowerCase();
         }
 
         public String getTitle()

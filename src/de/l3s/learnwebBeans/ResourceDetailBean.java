@@ -35,10 +35,13 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceMetadataExtractor;
+import de.l3s.learnweb.ResourcePreviewMaker;
 import de.l3s.learnweb.Tag;
 import de.l3s.learnweb.TimelineData;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.solrClient.FileInspector;
+import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 
 @SuppressWarnings("unchecked")
 @ManagedBean(name = "resourceDetailBean")
@@ -278,23 +281,45 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
      */
     public void onUpdateThumbnail() throws SQLException
     {
-        User user = getUser();
-        if(user == null || !user.isAdmin())
-            return;
-
-        // first delete old thumbnails
-        FileManager fileManager = getLearnweb().getFileManager();
-        Collection<File> files = clickedResource.getFiles().values();
-        for(File file : files)
+        try
         {
-            if(file.getResourceFileNumber() <= 6 && file.getResourceFileNumber() != 4) // number 4 is reserved for the source file
+            User user = getUser();
+            if(user == null || !user.isAdmin())
+                return;
+
+            // first delete old thumbnails
+            FileManager fileManager = getLearnweb().getFileManager();
+            Collection<File> files = clickedResource.getFiles().values();
+            for(File file : files)
             {
-                log.debug("Delete " + file.getName());
-                fileManager.delete(file);
+                if(file.getResourceFileNumber() <= 6 && file.getResourceFileNumber() != File.ORIGINAL_FILE) // number 4 is reserved for the source file
+                {
+                    log.debug("Delete " + file.getName());
+                    fileManager.delete(file);
+                }
             }
+
+            if(clickedResource.getStorageType() == Resource.FILE_RESOURCE)
+            {
+                ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
+                log.debug("Get the mime type and extract text if possible");
+                FileInfo info = rpm.getFileInfo(FileInspector.openStream(clickedResource.getUrl()), clickedResource.getFileName());
+
+                log.debug("Create thumbnails");
+                rpm.processFile(clickedResource, FileInspector.openStream(clickedResource.getUrl()), info);
+            }
+            else
+            {
+                ResourceMetadataExtractor extractor = new ResourceMetadataExtractor(clickedResource);
+                extractor.makePreview();
+            }
+            clickedResource.save();
         }
-        ResourceMetadataExtractor extractor = new ResourceMetadataExtractor(clickedResource);
-        extractor.makePreview();
+        catch(Exception e)
+        {
+            addFatalMessage(e);
+        }
+
     }
 
     private void showTagWarningMessage()

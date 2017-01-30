@@ -90,7 +90,7 @@ public class FileManager
     {
         List<File> files = new LinkedList<File>();
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_file WHERE resource_id = ? AND deleted = 0 and resource_file_number < 6 ORDER by resource_file_number, timestamp");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_file WHERE resource_id = ? AND deleted = 0 ORDER by resource_file_number, timestamp");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
         while(rs.next())

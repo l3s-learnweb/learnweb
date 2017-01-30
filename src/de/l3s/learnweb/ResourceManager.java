@@ -384,7 +384,7 @@ public class ResourceManager
         replace.setInt(49, resource.isRestricted() ? 1 : 0);
         replace.setString(50, resource.getLanguage());
         replace.setTimestamp(51, resource.getCreationDate() == null ? null : new java.sql.Timestamp(resource.getCreationDate().getTime()));
-        Sql.serializeObjectAndSet(replace, 52, resource.getMetadata());
+        Sql.setSerializedObject(replace, 52, resource.getMetadata());
         replace.setInt(53, resource.getGroupId());
         replace.setInt(54, resource.getFolderId());
         replace.setInt(55, resource.isDeleted() ? 1 : 0);

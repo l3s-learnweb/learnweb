@@ -25,7 +25,7 @@ public class Sql
         return rs.getObject(1);
     }
 
-    public static void serializeObjectAndSet(PreparedStatement stmt, int parameterIndex, Object obj) throws SQLException
+    public static void setSerializedObject(PreparedStatement stmt, int parameterIndex, Object obj) throws SQLException
     {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
 

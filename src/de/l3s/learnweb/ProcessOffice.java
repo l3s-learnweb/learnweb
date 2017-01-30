@@ -44,7 +44,7 @@ public class ProcessOffice
 
     }
 
-    public InputStream processXls(InputStream in, Resource resource)
+    public static InputStream processXls(InputStream in, Resource resource)
     {
         try
         {
@@ -104,13 +104,13 @@ public class ProcessOffice
         }
         catch(Exception e)
         {
-            logger.error("Error in creating thumbnails from xls " + resource.getFormat() + " for resource: " + resource.getId());
+            logger.error("Error in creating thumbnails from xls " + resource.getFormat() + " for resource: " + resource.getId(), e);
         }
         return null;
 
     }
 
-    public InputStream processWord(Resource resource, InputStream in)
+    public static InputStream processWord(Resource resource, InputStream in)
     {
         try
         {
@@ -141,7 +141,7 @@ public class ProcessOffice
         }
         catch(Exception e)
         {
-            logger.error("Error in creating thumbnails from Word " + resource.getFormat() + " for resource: " + resource.getId());
+            logger.error("Error in creating thumbnails from Word " + resource.getFormat() + " for resource: " + resource.getId(), e);
         }
         return null;
 
@@ -158,6 +158,7 @@ public class ProcessOffice
             //getting the dimensions and size of the slide 
             Dimension pgsize = ppt.getPageSize();
             List<XSLFSlide> slide = ppt.getSlides();
+            ppt.close();
 
             int i = 0;
 
@@ -175,7 +176,7 @@ public class ProcessOffice
         }
         catch(Exception e)
         {
-            logger.error("Error in creating thumbnails from PPT " + resource.getFormat() + " for resource: " + resource.getId());
+            logger.error("Error in creating thumbnails from PPT " + resource.getFormat() + " for resource: " + resource.getId(), e);
         }
         return null;
     }

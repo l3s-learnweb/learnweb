@@ -78,30 +78,33 @@ public class ResourcePreviewMaker
      */
     public void processFile(Resource resource, InputStream inputStream, FileInfo info) throws IOException, SQLException
     {
-        ProcessOffice po = new ProcessOffice();
         String type = info.getMimeType().substring(0, info.getMimeType().indexOf("/"));
         if(type.equals("application"))
             type = info.getMimeType().substring(info.getMimeType().indexOf("/") + 1);
 
-        File file = new File();
-        file.setResourceFileNumber(File.ORIGINAL_FILE); // number 4 is reserved for the original file
-        file.setName(info.getFileName());
-        file.setMimeType(info.getMimeType());
-        file.setDownloadLogActivated(true);
-        fileManager.save(file, inputStream);
-        inputStream = file.getInputStream();
+        // if this is a new file add it to the resource
+        if(resource.getFile(File.ORIGINAL_FILE) == null)
+        {
+            File file = new File();
+            file.setResourceFileNumber(File.ORIGINAL_FILE); // number 4 is reserved for the original file
+            file.setName(info.getFileName());
+            file.setMimeType(info.getMimeType());
+            file.setDownloadLogActivated(true);
+            fileManager.save(file, inputStream);
+            inputStream = file.getInputStream();
 
-        if(resource.getTitle() == null || resource.getTitle().length() == 0)
-            resource.setTitle(info.getTitle());
+            if(resource.getTitle() == null || resource.getTitle().length() == 0)
+                resource.setTitle(info.getTitle());
 
-        resource.addFile(file);
-        resource.setUrl(file.getUrl());
-        resource.setFileUrl(file.getUrl()); // for Loro resources the file url is different from the url
-        resource.setFileName(info.getFileName());
-        resource.setFormat(info.getMimeType());
-        resource.setType(type);
-        resource.setDescription(StringHelper.shortnString(info.getTextContent(), 1400));
-        resource.setMachineDescription(info.getTextContent());
+            resource.addFile(file);
+            resource.setUrl(file.getUrl());
+            resource.setFileUrl(file.getUrl()); // for Loro resources the file url is different from the url
+            resource.setFileName(info.getFileName());
+            resource.setFormat(info.getMimeType());
+            resource.setType(type);
+            resource.setDescription(StringHelper.shortnString(info.getTextContent(), 1400));
+            resource.setMachineDescription(info.getTextContent());
+        }
 
         if(type.equalsIgnoreCase("pdf"))
         {
@@ -115,14 +118,13 @@ public class ResourcePreviewMaker
         {
             processVideo(resource);
         }
-        else if(type.equalsIgnoreCase("msword") || type.equalsIgnoreCase("doc") || file.getMimeType().toLowerCase().contains("ms-word") || file.getMimeType().toLowerCase().contains("vnd.oasis.opendocument.text")
-                || file.getMimeType().toLowerCase().contains("officedocument.wordprocessingml.document"))
+        else if(type.equalsIgnoreCase("msword") || type.equalsIgnoreCase("doc") || info.getMimeType().contains("ms-word") || info.getMimeType().contains("vnd.oasis.opendocument.text") || info.getMimeType().contains("officedocument.wordprocessingml.document"))
         {
             try
             {
                 InputStream wordPdf = null;
                 if(inputStream != null)
-                    wordPdf = po.processWord(resource, inputStream);
+                    wordPdf = ProcessOffice.processWord(resource, inputStream);
                 if(wordPdf != null)
                     processPdf(resource, wordPdf);
             }
@@ -130,15 +132,14 @@ public class ResourcePreviewMaker
             {
                 log.error("Error in creating thumbnails from Word " + resource.getFormat() + " for resource: " + resource.getId());
             }
-
         }
-        else if(info.getMimeType().toLowerCase().contains("powerpoint") || info.getMimeType().toLowerCase().contains("presentation"))
+        else if(info.getMimeType().contains("powerpoint") || info.getMimeType().contains("presentation"))
         {
             try
             {
                 BufferedImage img = null;
                 if(inputStream != null)
-                    img = po.processPPT(inputStream, resource);
+                    img = ProcessOffice.processPPT(inputStream, resource);
                 if(!img.equals(null))
                 {
                     Image pptImg = new Image(img);
@@ -150,13 +151,13 @@ public class ResourcePreviewMaker
                 log.error("Error in creating thumbnails from ppt " + resource.getFormat() + " for resource: " + resource.getId());
             }
         }
-        else if(info.getMimeType().toLowerCase().contains("excel") || info.getMimeType().toLowerCase().contains("spreadsheet"))
+        else if(info.getMimeType().contains("excel") || info.getMimeType().contains("spreadsheet"))
         {
             try
             {
                 InputStream xlPdf = null;
                 if(inputStream != null)
-                    xlPdf = po.processXls(inputStream, resource);
+                    xlPdf = ProcessOffice.processXls(inputStream, resource);
                 if(xlPdf != null)
                     processPdf(resource, xlPdf);
             }
