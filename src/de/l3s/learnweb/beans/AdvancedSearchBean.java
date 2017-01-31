@@ -1,5 +1,6 @@
 package de.l3s.learnweb.beans;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -11,8 +12,8 @@ import javax.faces.bean.SessionScoped;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 import org.apache.solr.common.SolrDocumentList;
@@ -230,7 +231,7 @@ public class AdvancedSearchBean
 
         int pageOffset;
         int pageSize;
-        SolrServer server = Learnweb.getInstance().getSolrClient().getSolrServer();
+        HttpSolrClient server = Learnweb.getInstance().getSolrClient().getSolrServer();
         //SolrInputDocument doc = new SolrInputDocument();
         solrQuery = new SolrQuery(query);
         solrQuery.setQuery(query);
@@ -279,7 +280,7 @@ public class AdvancedSearchBean
                 String id = (String) sd.getFieldValue("id");
             }
         }
-        catch(SolrServerException e)
+        catch(IOException | SolrServerException e)
         {
             // TODO Auto-generated catch block
             e.printStackTrace();

@@ -397,7 +397,7 @@ public class SearchFilters implements Serializable
 
     public String[] getFacetFields()
     {
-        return new String[] { "location", "type", "groups", "collector_s", "author_s", "coverage_s", "publisher_s", "tags_ss" };
+        return new String[] { "location", "type", "groupId", "collector_s", "author_s", "coverage_s", "publisher_s", "tags_ss" };
     }
 
     public String[] getFacetQueries()
@@ -437,7 +437,7 @@ public class SearchFilters implements Serializable
             {
                 putResourceCounter(FILTERS.type, ff.getValues(), false);
             }
-            else if(ff.getName().equals("groups"))
+            else if(ff.getName().equals("groupId"))
             {
                 putResourceCounter(FILTERS.group, ff.getValues(), false);
             }

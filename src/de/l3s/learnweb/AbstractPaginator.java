@@ -1,5 +1,6 @@
 package de.l3s.learnweb;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -20,7 +21,7 @@ public abstract class AbstractPaginator implements Serializable
 
     private transient List<ResourceDecorator> currentPageCache = null;
 
-    public abstract List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException;
+    public abstract List<ResourceDecorator> getCurrentPage() throws SQLException, IOException, SolrServerException;
 
     public AbstractPaginator(int totalResults)
     {

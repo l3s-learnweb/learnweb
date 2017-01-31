@@ -138,7 +138,7 @@ public class Search implements Serializable
      * @throws SQLException
      * @throws SolrServerException
      */
-    private LinkedList<ResourceDecorator> getLearnwebResults(int page) throws SQLException, SolrServerException
+    private LinkedList<ResourceDecorator> getLearnwebResults(int page) throws SQLException, IOException, SolrServerException
     {
         long start = System.currentTimeMillis();
 

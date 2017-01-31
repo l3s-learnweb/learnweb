@@ -1,5 +1,6 @@
 package de.l3s.learnweb.solrClient;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.LinkedList;
@@ -11,8 +12,8 @@ import java.util.regex.Pattern;
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrQuery.ORDER;
-import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.jsoup.Jsoup;
@@ -225,18 +226,18 @@ public class SolrSearch implements Serializable
                 else
                 {
                     // Where field not exists or equal to "/"
-                    this.filterPath = "(*:* NOT path_s:*) || path_s: \"/\"";
+                    this.filterPath = "(*:* NOT path:*) || path: \"/\"";
                 }
             }
             else
             {
                 if(isIncludeChild)
                 {
-                    this.filterPath = "path_s : (*/" + folder + "/* OR */" + folder + ")";
+                    this.filterPath = "path : (*/" + folder + "/* OR */" + folder + ")";
                 }
                 else
                 {
-                    this.filterPath = "path_s : */" + folder;
+                    this.filterPath = "path : */" + folder;
                 }
 
             }
@@ -310,7 +311,7 @@ public class SolrSearch implements Serializable
         this.skipResourcesWithoutThumbnails = skipResourcesWithoutThumbnails;
     }
 
-    private QueryResponse getSolrResourcesByPage(int page) throws SQLException, SolrServerException
+    private QueryResponse getSolrResourcesByPage(int page) throws SQLException, SolrServerException, IOException
     {
 
         //set SolrQuery
@@ -391,9 +392,9 @@ public class SolrSearch implements Serializable
             for(Integer groupId : filterGroupIds)
             {
                 if(0 == filterGroupStr.length())
-                    filterGroupStr = "groups : " + groupId.toString();
+                    filterGroupStr = "groupId : " + groupId.toString();
                 else
-                    filterGroupStr += " OR groups : " + groupId.toString();
+                    filterGroupStr += " OR groupId : " + groupId.toString();
             }
             solrQuery.addFilterQuery(filterGroupStr);
         }
@@ -408,9 +409,9 @@ public class SolrSearch implements Serializable
 
         if(null != sorting) // TODO implement 
         {
-            solrQuery.addSortField("timestamp", ORDER.desc);
+            solrQuery.addSort("timestamp", ORDER.desc);
         }
-        solrQuery.addFilterQuery("-(id:r_* AND -(groups:* OR ownerUserId:" + userId + "))"); // hide private resources
+        solrQuery.addFilterQuery("-(id:r_* AND -(groupId:* OR ownerUserId:" + userId + "))"); // hide private resources
         solrQuery.setStart((page - 1) * resultsPerPage);
         solrQuery.setRows(resultsPerPage);
 
@@ -445,7 +446,7 @@ public class SolrSearch implements Serializable
         log.debug("solr query: " + solrQuery);
 
         //get solrServer
-        SolrServer server = Learnweb.getInstance().getSolrClient().getSolrServer();
+        HttpSolrClient server = Learnweb.getInstance().getSolrClient().getSolrServer();
 
         //get response
         return server.query(solrQuery);
@@ -469,7 +470,7 @@ public class SolrSearch implements Serializable
                 facetQueriesResult = response.getFacetQuery();
             }
         }
-        catch(SQLException | SolrServerException e)
+        catch(SQLException | IOException | SolrServerException e)
         {
             log.fatal("Couldn't read faced fields from Solr", e);
         }
@@ -483,7 +484,7 @@ public class SolrSearch implements Serializable
      * @throws SolrServerException
      * @throws SQLException
      */
-    public List<ResourceDecorator> getResourcesByPage(int page) throws SQLException, SolrServerException
+    public List<ResourceDecorator> getResourcesByPage(int page) throws SQLException, IOException, SolrServerException
     {
         List<ResourceDecorator> resources = new LinkedList<ResourceDecorator>();
 
@@ -659,7 +660,7 @@ public class SolrSearch implements Serializable
         }
 
         @Override
-        public synchronized List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException
+        public synchronized List<ResourceDecorator> getCurrentPage() throws SQLException, IOException, SolrServerException
         {
             if(getCurrentPageCache() != null)
                 return getCurrentPageCache();
@@ -674,7 +675,7 @@ public class SolrSearch implements Serializable
             return results;
         }
 
-        public List<FacetField> getFacetFields() throws SQLException, SolrServerException
+        public List<FacetField> getFacetFields() throws SQLException, IOException, SolrServerException
         {
             if(facetFieldsResult == null)
             {
@@ -684,7 +685,7 @@ public class SolrSearch implements Serializable
             return facetFieldsResult;
         }
 
-        public Map<String, Integer> getFacetQueries() throws SQLException, SolrServerException
+        public Map<String, Integer> getFacetQueries() throws SQLException, IOException, SolrServerException
         {
             if(facetQueriesResult == null)
             {

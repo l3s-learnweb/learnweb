@@ -10,11 +10,10 @@ import java.net.URL;
 import java.util.List;
 
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.request.ContentStreamUpdateRequest;
 import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.NamedList;
-import org.apache.solr.handler.extraction.ExtractingParams;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.util.MimeTypes;
@@ -52,12 +51,12 @@ public class FileInspector
         if(info.mimeType.startsWith("video/")) // solr/tika doesn't work good with videos
             return info;
 
-        SolrServer server = solrClient.getSolrServer();
+        HttpSolrClient server = solrClient.getSolrServer();
 
         ContentStreamUpdateRequest up = new ContentStreamUpdateRequest("/update/extract");
         up.addContentStream(new MyContentStream(info.fileName, info.mimeType, inputStream));
-        up.setParam(ExtractingParams.EXTRACT_ONLY, "true");
-        up.setParam(ExtractingParams.EXTRACT_FORMAT, "text"); // default : xml(with xml tags)
+        up.setParam("extractOnly", "true");
+        up.setParam("extractFormat", "text"); // default : xml(with xml tags)
 
         NamedList<Object> result;
         try

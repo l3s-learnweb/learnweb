@@ -1,5 +1,6 @@
 package de.l3s.learnwebBeans;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -864,13 +865,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             //TODO: remove it
             RequestContext.getCurrentInstance().update(":filters");
         }
-        catch(SQLException | SolrServerException e)
+        catch(SQLException | IOException| SolrServerException e)
         {
             addFatalMessage(e);
         }
     }
 
-    private SearchPaginator getResourcesFromSolr(int groupId, int folderId, String query, User user) throws SQLException, SolrServerException
+    private SearchPaginator getResourcesFromSolr(int groupId, int folderId, String query, User user) throws SQLException, IOException, SolrServerException
     {
         SolrSearch solrSearch = new SolrSearch(StringUtils.isEmpty(query) ? "*" : query, user);
         solrSearch.setFilterGroups(groupId);

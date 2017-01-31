@@ -83,6 +83,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private String transcript; //To store the English transcripts for TED videos
     private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
     private boolean restricted = false;
+    private Date resourceTimestamp = null;
     private Date creationDate = new Date();
     private HashMap<String, String> metadata = new HashMap<>(); // userId : hasRated
     private boolean deleted = false; // indicates whether this resource has been deleted
@@ -633,6 +634,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         r.setOnlineStatus(onlineStatus);
         r.setIdAtService(idAtService);
         r.setRestricted(restricted);
+        r.setResourceTimestamp(resourceTimestamp);
         r.setCreationDate(creationDate);
         r.setArchiveUrls(getArchiveUrls());
         r.setDeleted(deleted);
@@ -1433,6 +1435,14 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             this.language = language.toLowerCase();
     }
 
+    public Date getResourceTimestamp() {
+        return resourceTimestamp;
+    }
+
+    public void setResourceTimestamp(Date resourceTimestamp) {
+        this.resourceTimestamp = resourceTimestamp;
+    }
+
     public Date getCreationDate()
     {
         return creationDate;
@@ -1523,7 +1533,6 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
      * returns a string representation of the resources path
      */
     @Override
-    @Deprecated
     public String getPath() throws SQLException
     {
         if(null == path)
@@ -1539,7 +1548,6 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
      * returns a string representation of the resources path
      */
     @Override
-    @Deprecated
     public String getPrettyPath() throws SQLException
     {
         if(null == prettyPath)

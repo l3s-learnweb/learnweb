@@ -7,9 +7,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
-import org.apache.solr.client.solrj.SolrServer;
 import org.apache.solr.client.solrj.SolrServerException;
-import org.apache.solr.client.solrj.impl.HttpSolrServer;
+import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 
@@ -25,14 +24,14 @@ public class SolrClient
     private static SolrClient instance = null;
 
     private final String serverUrl;
-    private final SolrServer server;
+    private final HttpSolrClient server;
 
     private SolrClient(Learnweb learnweb)
     {
         instance = this;
-        serverUrl = learnweb.getProperties().getProperty("SOLR_SERVER_URL"); // see /Learnweb/Resources/de/l3s/learnweb/config/learnweb.properties
-        server = new HttpSolrServer(serverUrl);
-        //server = new HttpSolrServer("http://prometheus.kbs.uni-hannover.de:8983/solr");
+        // see /Learnweb/Resources/de/l3s/learnweb/config/learnweb.properties
+        serverUrl = learnweb.getProperties().getProperty("SOLR_SERVER_URL");
+        server = new HttpSolrClient.Builder(serverUrl).build();
     }
 
     public static SolrClient getInstance(Learnweb learnweb)
@@ -43,7 +42,7 @@ public class SolrClient
         return instance;
     }
 
-    public SolrServer getSolrServer()
+    public HttpSolrClient getSolrServer()
     {
         return server;
     }
@@ -158,7 +157,7 @@ public class SolrClient
         reIndexResource(resource);
     }
 
-    public List<Integer> findResourcesByUrl(String url) throws SolrServerException
+    public List<Integer> findResourcesByUrl(String url) throws SolrServerException, IOException
     {
         List<Integer> ids = new LinkedList<Integer>();
         SolrQuery solrQuery = new SolrQuery();
@@ -194,22 +193,18 @@ public class SolrClient
     public static void main(String[] args) throws SQLException, IOException, SolrServerException
     {
 
-        //indexOneResource(67069);
-        //indexOneResource(72364);
+        //SolrClient.indexOneResource(67069);
+        //SolrClient.indexOneResource(72364);
         //deleteOneResource(72364);
         //deleteOneResource(67069);
 
-        //deleteAllResource();
-        //indexAllResources();
-
-        /*
-        Learnweb learnweb = Learnweb.getInstance();
-        SolrClient indexer = new SolrClient(learnweb);
-        
-        indexer.server.deleteByQuery("*:*");
-        indexer.server.commit();*
-        */
+        //SolrClient.deleteAllResource();
         SolrClient.indexAllResources();
+        //SolrClient.indexOneResource(192248);
+        //SolrClient.indexOneResource(67571);
+
+        log.debug("All tasks completed.");
+        System.exit(0);
         //SolrClient.deleteInvalidEntries();
 
     }
@@ -226,6 +221,22 @@ public class SolrClient
             log.debug("delete: " + id);
             indexer.deleteFromIndex(id);
         }
+    }
+
+    /**
+     * Drop index
+     *
+     * @throws SQLException
+     * @throws SolrServerException
+     * @throws IOException
+     */
+    public static void deleteAllResource() throws SQLException, IOException, SolrServerException
+    {
+        Learnweb learnweb = Learnweb.getInstance();
+        SolrClient indexer = learnweb.getSolrClient();
+
+        indexer.server.deleteByQuery("*:*");
+        indexer.server.commit();
     }
 
     /**
@@ -247,8 +258,10 @@ public class SolrClient
 
             // List<Resource> resources = learnweb.getGroupManager().getGroupById(118).getResources();
 
-            if(resources.size() == 0)
+            if(resources.size() == 0) {
+                log.debug("finished: zero size");
                 break;
+            }
 
             log.debug("page: " + i);
 
@@ -280,7 +293,24 @@ public class SolrClient
                 indexer.reIndexResource(resource);
             }
         }
+    }
 
+    /**
+     * Index one resource
+     *
+     * @throws SQLException
+     * @throws SolrServerException
+     * @throws IOException
+     */
+    public static void indexOneResource(int resourceId) throws SQLException, IOException, SolrServerException
+    {
+        Learnweb learnweb = Learnweb.getInstance();
+        SolrClient indexer = learnweb.getSolrClient();
+
+        Resource resource = learnweb.getResourceManager().getResource(resourceId);
+
+        log.debug("Process resource: " + resource.getId());
+        indexer.reIndexResource(resource);
     }
 
 }

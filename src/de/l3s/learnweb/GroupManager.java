@@ -1,5 +1,6 @@
 package de.l3s.learnweb;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -516,7 +517,7 @@ public class GroupManager
             solrSearch.getResourcesByPage(1);
             numberOfRows = (int) solrSearch.getTotalResultCount();
         }
-        catch(SolrServerException e)
+        catch(IOException | SolrServerException e)
         {
             log.fatal("Couldn't get resource counter in group", e);
         }

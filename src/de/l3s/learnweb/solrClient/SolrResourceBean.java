@@ -1,11 +1,7 @@
 package de.l3s.learnweb.solrClient;
 
 import java.sql.SQLException;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
 
 import org.apache.solr.client.solrj.beans.Field;
@@ -22,14 +18,20 @@ public class SolrResourceBean
     @Field("title")
     private String title;
 
-    @Field("source")
-    private String source;
-
     @Field("description")
     private String description;
 
-    @Field("location")
-    private String location;
+    @Field("machineDescription")
+    private String machineDescription;
+
+    @Field("url")
+    private String url;
+
+    @Field("language")
+    private String language;
+
+    @Field("source")
+    private String source;
 
     @Field("type")
     private String type;
@@ -37,37 +39,37 @@ public class SolrResourceBean
     @Field("format")
     private String format;
 
-    @Field("language")
-    private String language;
+    @Field("thumbnailWidth")
+    private int thumbnailWidth;
+
+    @Field("thumbnailHeight")
+    private int thumbnailHeight;
 
     @Field("author")
     private String author;
 
     @Field("tags")
-    private List<String> tags; // the facets of this field are splitted on every white space; the field type has to be change from text_general to string or better use a copy method
-
-    @Field("tags_ss")
-    private List<String> tagsTemp;
-
-    @Field("groups")
-    private List<Integer> groups;
+    private List<String> tags;
 
     @Field("comments")
     private List<String> comments;
 
-    @Field("machineDescription")
-    private String machineDescription;
+    @Field("location")
+    private String location;
+
+    @Field("groupId")
+    private Integer groupId;
+
+    @Field("path")
+    private String path;
 
     @Field("ownerUserId")
     private int ownerUserId;
 
-    @Field("url")
-    private String url;
+    @Field("timestamp")
+    private Date timestamp;
 
     // dynamic fields
-    @Field("path_s")
-    private String path;
-
     @Field("*_s")
     public Map<String, String> dynamicFieldsStrings;
 
@@ -81,69 +83,44 @@ public class SolrResourceBean
         this.id = "r_" + resource.getId();
         this.title = resource.getTitle();
         this.description = resource.getDescription();
-        this.source = resource.getSource().equals("Archive-It") ? "ArchiveIt" : resource.getSource();
-        this.location = resource.getLocation().equals("Archive-It") ? "ArchiveIt" : resource.getLocation();
-        this.type = resource.getType();
-        this.format = resource.getFormat();
-        this.language = resource.getLanguage();
-        this.author = resource.getAuthor();
-        this.ownerUserId = resource.getOwnerUserId();
+        this.machineDescription = resource.getMachineDescription();
         this.url = resource.getUrl();
+        this.language = resource.getLanguage().toLowerCase();
+        this.source = resource.getSource().toLowerCase();
+        this.type = resource.getType().toLowerCase();
+        this.format = resource.getFormat().toLowerCase();
+        this.author = resource.getAuthor();
+        this.location = resource.getLocation().toLowerCase();
+        this.groupId = resource.getGroupId();
+        this.path = resource.getPath();
+        this.ownerUserId = resource.getUserId();
+        this.timestamp = resource.getCreationDate() != null ? resource.getCreationDate() : resource.getResourceTimestamp();
 
         if(null != resource.getTags())
         {
-            this.tags = new LinkedList<String>();
-            this.tagsTemp = new LinkedList<String>();
+            this.tags = new LinkedList<>();
             for(Tag tag : resource.getTags())
-            {
                 tags.add(tag.getName());
-                tagsTemp.add(tag.getName());
-            }
         }
+
         if(null != resource.getComments())
         {
-            this.comments = new LinkedList<String>();
+            this.comments = new LinkedList<>();
             for(Comment comment : resource.getComments())
                 comments.add(comment.getText());
         }
-        if(null != resource.getGroup())
-        {
-            this.groups = new LinkedList<Integer>(Arrays.asList(resource.getGroupId()));
+
+        if (null != resource.getThumbnail4()) {
+            this.thumbnailHeight = resource.getThumbnail4().getHeight();
+            this.thumbnailWidth = resource.getThumbnail4().getWidth();
         }
 
         // copy metadata to dynamic fields
-        dynamicFieldsStrings = new HashMap<String, String>(resource.getMetadata().size());
-
+        dynamicFieldsStrings = new HashMap<>(resource.getMetadata().size());
         for(Entry<String, String> entry : resource.getMetadata().entrySet())
         {
             dynamicFieldsStrings.put(entry.getKey() + "_s", entry.getValue());
         }
-        /*
-        this.collector = resource.getMetadataValue("collector");
-        this.coverage = resource.getMetadataValue("coverage");
-        this.publisher = resource.getMetadataValue("publisher");
-        */
-        this.path = resource.getPath();
-    }
-
-    public String getAuthor()
-    {
-        return author;
-    }
-
-    public void setAuthor(String author)
-    {
-        this.author = author;
-    }
-
-    public String getMachineDescription()
-    {
-        return machineDescription;
-    }
-
-    public void setMachineDescription(String machineDescription)
-    {
-        this.machineDescription = machineDescription;
     }
 
     public String getId()
@@ -166,16 +143,6 @@ public class SolrResourceBean
         this.title = title;
     }
 
-    public String getSource()
-    {
-        return source;
-    }
-
-    public void setSource(String source)
-    {
-        this.source = source;
-    }
-
     public String getDescription()
     {
         return description;
@@ -186,14 +153,44 @@ public class SolrResourceBean
         this.description = description;
     }
 
-    public String getLocation()
+    public String getMachineDescription()
     {
-        return location;
+        return machineDescription;
     }
 
-    public void setLocation(String location)
+    public void setMachineDescription(String machineDescription)
     {
-        this.location = location;
+        this.machineDescription = machineDescription;
+    }
+
+    public String getUrl()
+    {
+        return url;
+    }
+
+    public void setUrl(String url)
+    {
+        this.url = url;
+    }
+
+    public String getLanguage()
+    {
+        return language;
+    }
+
+    public void setLanguage(String language)
+    {
+        this.language = language;
+    }
+
+    public String getSource()
+    {
+        return source;
+    }
+
+    public void setSource(String source)
+    {
+        this.source = source;
     }
 
     public String getType()
@@ -216,14 +213,34 @@ public class SolrResourceBean
         this.format = format;
     }
 
-    public String getLanguage()
+    public int getThumbnailWidth()
     {
-        return language;
+        return thumbnailWidth;
     }
 
-    public void setLanguage(String language)
+    public void setThumbnailWidth(int thumbnailWidth)
     {
-        this.language = language;
+        this.thumbnailWidth = thumbnailWidth;
+    }
+
+    public int getThumbnailHeight()
+    {
+        return thumbnailHeight;
+    }
+
+    public void setThumbnailHeight(int thumbnailHeight)
+    {
+        this.thumbnailHeight = thumbnailHeight;
+    }
+
+    public String getAuthor()
+    {
+        return author;
+    }
+
+    public void setAuthor(String author)
+    {
+        this.author = author;
     }
 
     public List<String> getTags()
@@ -236,21 +253,6 @@ public class SolrResourceBean
         this.tags = tags;
     }
 
-    public void addTag(String tag)
-    {
-        this.tags.add(tag);
-    }
-
-    public List<Integer> getGroups()
-    {
-        return groups;
-    }
-
-    public void setGroups(List<Integer> groups)
-    {
-        this.groups = groups;
-    }
-
     public List<String> getComments()
     {
         return comments;
@@ -261,24 +263,24 @@ public class SolrResourceBean
         this.comments = comments;
     }
 
-    public int getOwnerUserId()
+    public String getLocation()
     {
-        return ownerUserId;
+        return location;
     }
 
-    public void setOwnerUserId(int ownerUserId)
+    public void setLocation(String location)
     {
-        this.ownerUserId = ownerUserId;
+        this.location = location;
     }
 
-    public String getUrl()
+    public Integer getGroupId()
     {
-        return url;
+        return groupId;
     }
 
-    public void setUrl(String url)
+    public void setGroupId(Integer groupId)
     {
-        this.url = url;
+        this.groupId = groupId;
     }
 
     public String getPath()
@@ -291,13 +293,23 @@ public class SolrResourceBean
         this.path = path;
     }
 
-    public List<String> getTagsTemp()
+    public int getOwnerUserId()
     {
-        return tagsTemp;
+        return ownerUserId;
     }
 
-    public void setTagsTemp(List<String> tagsTemp)
+    public void setOwnerUserId(int ownerUserId)
     {
-        this.tagsTemp = tagsTemp;
+        this.ownerUserId = ownerUserId;
+    }
+
+    public Date getTimestamp()
+    {
+        return timestamp;
+    }
+
+    public void setTimestamp(Date timestamp)
+    {
+        this.timestamp = timestamp;
     }
 }

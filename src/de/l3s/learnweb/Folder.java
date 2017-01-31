@@ -100,6 +100,11 @@ public class Folder implements Serializable, HasId, GroupItem
         if(parentFolderId == 0)
             return null;
 
+        if(parentFolderId == folderId) {
+            log.warn("Folder " + folderId + " has itself as parent folder.");
+            return null;
+        }
+
         return Learnweb.getInstance().getGroupManager().getFolder(parentFolderId);
     }
 
@@ -177,13 +182,13 @@ public class Folder implements Serializable, HasId, GroupItem
             while(folder != null)
             {
                 sb.insert(0, "/");
-                sb.insert(0, folder.getFolderId());
+                sb.insert(0, folder.getId());
                 folder = folder.getParentFolder();
             }
 
             sb.insert(0, "/");
 
-            sb.append(this.getFolderId());
+            sb.append(this.getId());
             path = sb.toString();
         }
         return path;
