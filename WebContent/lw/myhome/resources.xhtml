@@ -134,6 +134,7 @@
 			<h:panelGroup id="folderGrid" layout="block" styleClass="folder-grid">
 				<h:panelGroup rendered="#{!myResourcesBean.folderView or !myResourcesBean.rootFolder}">
 					<ui:repeat var="folder" value="#{myResourcesBean.folders}">
+					<h:panelGroup layout="block" rendered="#{myResourcesBean.rootFolder and folder.groupId == 0}">
 						<h:panelGroup styleClass="folder-item group-resources-item" pt:data-itemType="#{myResourcesBean.rootFolder ? 'group':'folder'}" pt:data-itemId="#{myResourcesBean.rootFolder ? folder.groupId : folder.id}" layout="block">
 							<div class="folder-block">
 
@@ -151,7 +152,29 @@
 
 							</div>
 						</h:panelGroup>
+						<hr style="margin-top:10px;width:97%"/>
+						<h3>#{msg.myhomeVirtualFolders}</h3>
+						<br/>
+					</h:panelGroup>
+					<h:panelGroup layout="block" rendered="#{folder.groupId != 0}">
+						<h:panelGroup styleClass="folder-item group-resources-item" pt:data-itemType="#{myResourcesBean.rootFolder ? 'group':'folder'}" pt:data-itemId="#{myResourcesBean.rootFolder ? folder.groupId : folder.id}" layout="block">
+							<div class="folder-block">
 
+								<div class="folder-icon">
+									<div class="folder-icon-wrapper">
+										<span class="icon icon-folder" />
+									</div>
+								</div>
+
+								<div class="folder-title">
+									<div class="folder-title-wrapper">
+										<h:outputText value="#{folder.name}" escape="false" styleClass="folder-title-name" title="#{folder.name}" />
+									</div>
+								</div>
+
+							</div>
+						</h:panelGroup>
+					</h:panelGroup>
 					</ui:repeat>
 				</h:panelGroup>
 				<h:panelGroup rendered="#{myResourcesBean.rootFolder and myResourcesBean.folderView}" styleClass="myresource-listview">
