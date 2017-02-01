@@ -200,7 +200,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     {
         String transcript = getParameter("transcript");
         tedResource.setTranscript(transcript);
-        tedResource.setReadOnly(true);
+        tedResource.setReadOnlyTranscript(true);
         try
         {
             Date actionTimestamp = new Date();

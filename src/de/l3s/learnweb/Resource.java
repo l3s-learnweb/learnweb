@@ -87,7 +87,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private Date creationDate = new Date();
     private HashMap<String, String> metadata = new HashMap<>(); // userId : hasRated
     private boolean deleted = false; // indicates whether this resource has been deleted
-    private boolean readOnly = false; //indicates resource is read only for TED videos
+    private boolean readOnlyTranscript = false; //indicates resource transcript is read only for TED videos
 
     private int views;
     private int thumbUp = -1;
@@ -638,7 +638,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         r.setCreationDate(creationDate);
         r.setArchiveUrls(getArchiveUrls());
         r.setDeleted(deleted);
-        r.setReadOnly(readOnly);
+        r.setReadOnlyTranscript(readOnlyTranscript);
         // sets the originalResourceId to the id of the source resource
         if(originalResourceId == 0)
             r.setOriginalResourceId(id);
@@ -1506,14 +1506,14 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         this.deleted = deleted;
     }
 
-    public boolean isReadOnly()
+    public boolean isReadOnlyTranscript()
     {
-        return readOnly;
+        return readOnlyTranscript;
     }
 
-    public void setReadOnly(boolean readOnly)
+    public void setReadOnlyTranscript(boolean readOnlyTranscript)
     {
-        this.readOnly = readOnly;
+        this.readOnlyTranscript = readOnlyTranscript;
     }
 
     public Resource moveTo(int newGroupId, int newFolderId) throws SQLException

@@ -35,7 +35,7 @@
 	    
   		<script type="text/javascript">
   			var noteid = #{tedTranscriptBean.noteId};
-  			var readOnly = #{tedTranscriptBean.tedResource.readOnly};
+  			var readOnly = #{tedTranscriptBean.tedResource.readOnlyTranscript};
   		</script>		
 
 		<div id="ted_content">
@@ -53,38 +53,38 @@
 				           <f:selectItems value="#{tedTranscriptBean.getLanguageList()}"/>
 				           <p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript" oncomplete="clearTagList();"/>
 				        </h:selectOneMenu>
-						<p:commandButton id="save" styleClass="button_position greenbutton" value="#{msg.save}" onclick="saveEditing();" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}" disabled="#{tedTranscriptBean.tedResource.readOnly}"/>
+						<p:commandButton id="save" styleClass="button_position greenbutton" value="#{msg.save}" onclick="saveEditing();" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>
 						<p:tooltip id="toolTipSave" for="save" value="#{msg.save_tooltip}" position="left"/>
-						<p:commandButton id="submit" styleClass="button_position greenbutton" value="#{msg.submit}" onclick="submitTranscript();" disabled="#{tedTranscriptBean.tedResource.readOnly}" rendered="#{!tedTranscriptBean.tedResource.group.readOnly}"/>
+						<p:commandButton id="submit" styleClass="button_position greenbutton" value="#{msg.submit}" onclick="submitTranscript();" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
 						<p:tooltip id="toolTipSubmit" for="submit" value="#{msg.submit_tooltip}" position="left"/>
 						<!-- <p:commandButton styleClass="button_position greenbutton" value="#{msg.show_tags}" onclick="openTagsDiv();"/> -->
 						
-						<p:menuButton value="#{msg.options}" iconPos="right" styleClass="greenbutton options_button">
+						<p:menuButton value="#{msg.options}" iconPos="right" styleClass="greenbutton options_button" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}">
 					        <p:menuitem value="#{msg.show_summary}" icon="ui-icon-circle-triangle-w" onclick="openTagsDiv();selectTab('summary');">
 					        </p:menuitem>
 					        <p:menuitem value="#{msg.show_tags}" icon="ui-icon-circle-triangle-w" onclick="openTagsDiv();selectTab('tags');">
 					        </p:menuitem>
-					        <p:menuitem value="Disable Editing" icon="ui-icon-pencil" rendered="#{!tedTranscriptBean.tedResource.readOnly and userBean.moderator}" update=":transcript :transcript_options">
-					        	<f:setPropertyActionListener value="true" target="#{tedTranscriptBean.tedResource.readOnly}"/>
+					        <p:menuitem value="Disable Editing" icon="ui-icon-pencil" rendered="#{!tedTranscriptBean.tedResource.readOnlyTranscript and userBean.moderator}" update=":transcript :transcript_options">
+					        	<f:setPropertyActionListener value="true" target="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>
 					        </p:menuitem>
-					        <p:menuitem value="Enable Editing" icon="ui-icon-pencil" rendered="#{tedTranscriptBean.tedResource.readOnly and userBean.moderator}" update=":transcript :transcript_options">
-					       		<f:setPropertyActionListener value="false" target="#{tedTranscriptBean.tedResource.readOnly}"/>
+					        <p:menuitem value="Enable Editing" icon="ui-icon-pencil" rendered="#{tedTranscriptBean.tedResource.readOnlyTranscript and userBean.moderator}" update=":transcript :transcript_options">
+					       		<f:setPropertyActionListener value="false" target="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>
 					        </p:menuitem>
 				   	 	</p:menuButton>
 					</h:form>
 				</div>
 				<div class="transcript_note noselect">
 					<b>Owner of transcript: </b><h:outputText value="#{tedTranscriptBean.tedResource.ownerUser.username}"/><br/>
-					<b>#{msg.note}:</b><h:outputText value = " #{msg.transcript_warning}" rendered="#{tedTranscriptBean.tedResource.group.readOnly}"/>
-					<h:outputText value = " #{msg.transcript_submit_message}" rendered="#{tedTranscriptBean.tedResource.readOnly}" style="color:red"/>
-					<h:outputText value = " #{msg.transcript_note}" rendered="#{!tedTranscriptBean.tedResource.group.readOnly and !tedTranscriptBean.tedResource.readOnly}"/>
+					<b>#{msg.note}:</b><h:outputText value = " #{msg.transcript_warning}" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
+					<h:outputText value = " #{msg.transcript_submit_message}" rendered="#{tedTranscriptBean.tedResource.readOnlyTranscript}" style="color:red"/>
+					<h:outputText value = " #{msg.transcript_note}" rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}"/>
 				</div>
 			</p:outputPanel>
 			<h:panelGroup layout="block" id="transcript">
-				<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" class="tedTranscript" rendered="#{!tedTranscriptBean.tedResource.group.readOnly and !tedTranscriptBean.tedResource.readOnly}">
+				<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" class="tedTranscript" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 				</h:panelGroup>
-				<h:panelGroup layout="block" class="tedTranscript" rendered="#{tedTranscriptBean.tedResource.group.readOnly || tedTranscriptBean.tedResource.readOnly}">
+				<h:panelGroup layout="block" class="tedTranscript" rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) || tedTranscriptBean.tedResource.readOnlyTranscript}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 				</h:panelGroup>
 			</h:panelGroup>
