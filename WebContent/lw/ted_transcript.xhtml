@@ -81,10 +81,10 @@
 				</div>
 			</p:outputPanel>
 			<h:panelGroup layout="block" id="transcript">
-				<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" class="tedTranscript" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}">
+				<h:panelGroup layout="block" onmouseup="noteSelectedText();" id="ted_transcript" class="tedTranscript" rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) and !tedTranscriptBean.tedResource.readOnlyTranscript}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 				</h:panelGroup>
-				<h:panelGroup layout="block" class="tedTranscript" rendered="${tedTranscriptBean.tedResource.canEditResource(userBean.user) || tedTranscriptBean.tedResource.readOnlyTranscript}">
+				<h:panelGroup layout="block" class="tedTranscript" rendered="${!tedTranscriptBean.tedResource.canEditResource(userBean.user) or tedTranscriptBean.tedResource.readOnlyTranscript}">
 						<h:outputText value="#{tedTranscriptBean.tedResource.transcript}" escape="false"/>
 				</h:panelGroup>
 			</h:panelGroup>
