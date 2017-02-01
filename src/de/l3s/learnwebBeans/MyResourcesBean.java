@@ -678,7 +678,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         if(rootFolder)
         {
             LinkedList<Folder> folders = new LinkedList<Folder>();
-            Folder myPrivateFolder = new Folder(0, 0, UtilBean.getLocaleMessage("myResourcesTitle"));
+            Folder myPrivateFolder = new Folder(0, 0, UtilBean.getLocaleMessage("myPrivateResources"));
             myPrivateFolder.setUserId(getUser().getId());
             folders.add(myPrivateFolder);
             folders.addAll(Learnweb.getInstance().getGroupManager().getGroupsForMyResources(getUser().getId()));

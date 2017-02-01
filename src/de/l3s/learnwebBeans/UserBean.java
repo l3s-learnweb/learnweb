@@ -591,7 +591,7 @@ public class UserBean implements Serializable
             GroupManager gm = Learnweb.getInstance().getGroupManager();
             Group myResources = new Group();
             myResources.setId(0);
-            myResources.setTitle(UtilBean.getLocaleMessage("myResourcesTitle"));
+            myResources.setTitle(UtilBean.getLocaleMessage("myPrivateResources"));
             TreeNode myResourcesNode = new DefaultTreeNode("group", myResources, groupsTree);
             myResourcesNode.setSelected(true);
 
