@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+<h:head></h:head>
+<h:body>
+<!-- 
+<h3 class="first">Header Row</h3>
+<h:form>
+    <p:dataTable var="car" value="#{dtRowGroupView.cars}" sortBy="#{car.brand}" expandableRowGroups="true">
+        <p:headerRow>
+            <p:column colspan="3">
+                <h:outputText value="#{car.brand}" />
+            </p:column>
+        </p:headerRow>
+        <p:column headerText="Year">
+            <h:outputText value="#{car.year}" />
+        </p:column>
+        <p:column headerText="Color">
+            <h:outputText value="#{car.color}" />
+        </p:column>
+        <p:column headerText="Id">
+            <h:outputText value="#{car.id}" />
+        </p:column>
+        <p:summaryRow>
+            <p:column colspan="2" style="text-align:right">
+                <h:outputText value="Total:" />
+            </p:column>
+            <p:column>
+                <h:outputText value="#{dtRowGroupView.randomPrice}">
+                    <f:convertNumber type="currency" currencySymbol="$" />
+                </h:outputText>
+            </p:column>
+        </p:summaryRow>
+    </p:dataTable>
+</h:form>
+  -->
+  ladida
+<h3>Rowspan</h3>
+<h:form prependId="false">
+    <p:dataTable id="my_table" var="car" value="#{dtRowGroupView.cars}" sortBy="#{car.brand}">
+        <p:column headerText="Brand" groupRow="true">
+            <h:outputText value="#{car.brand}" />
+        </p:column>
+        <p:column headerText="Year">
+            <h:outputText value="#{car.year}" />
+        </p:column>
+        <p:column headerText="Color">
+            <h:outputText value="#{car.color}" />
+        </p:column>
+        <p:column headerText="Id">
+            <h:outputText value="#{car.id}" />
+        </p:column>
+    </p:dataTable>
+</h:form>	
+<script type="text/javascript" >
+//<![CDATA[
+var groupRow = function(colIndex) {
+    var rows = $('#my_table').find('tr');
+    var groupStartIndex = null, rowGroupCellData = null, rowGroupCount = null;
+    
+    for(var i = 0; i < rows.length; i++) {
+        var row = rows.eq(i);
+        var column = row.children('td').eq(colIndex);
+        var columnData = column.text();
+        console.log(columnData);
+        if(rowGroupCellData != columnData) {                    
+            groupStartIndex = i;
+            rowGroupCellData = columnData;
+            rowGroupCount = 1;
+        }
+        else {
+            column.remove();
+            rowGroupCount++;
+        }
+        
+        if(groupStartIndex != null && rowGroupCount > 1) {
+            rows.eq(groupStartIndex).children('td').eq(colIndex).attr('rowspan', rowGroupCount);
+        }
+    }
+};
+
+$(document).ready(function() {
+	groupRow(0);
+});
+//]]>
+</script>					
+</h:body>
+</html>
