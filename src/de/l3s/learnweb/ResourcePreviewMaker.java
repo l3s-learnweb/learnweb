@@ -118,7 +118,7 @@ public class ResourcePreviewMaker
         {
             processVideo(resource);
         }
-        else if(type.equalsIgnoreCase("msword") || type.equalsIgnoreCase("doc") || info.getMimeType().contains("ms-word") || info.getMimeType().contains("vnd.oasis.opendocument.text") || info.getMimeType().contains("officedocument.wordprocessingml.document"))
+        else if(type.equalsIgnoreCase("msword") || type.equalsIgnoreCase("doc") || info.getMimeType().contains("ms-word") || info.getMimeType().contains("officedocument.wordprocessingml.document"))
         {
             try
             {
