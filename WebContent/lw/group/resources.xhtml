@@ -27,6 +27,7 @@
 			<p:remoteCommand name="createGroupItemCommand" actionListener="#{groupDetailBean.actionCreateGroupItem}" update=":add_resource_panel :growl" oncomplete="update_header()"/>
 			<p:remoteCommand name="openFolderCommand" actionListener="#{groupDetailBean.actionOpenFolder}" update=":group_menu_tree :breadcrumbs :datagrid :paginator :add_resource_panel :growl" oncomplete="update_header();resourceDND();scroller();"/>
 			<p:remoteCommand name="updateGroupItemsCommand" actionListener="#{groupDetailBean.actionUpdateGroupItems}" update=":group_menu_tree :datagrid :paginator :add_resource_panel :growl" oncomplete="resourceDND()"/>
+			<p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{groupDetailBean.updateTargetForAddResourceBean}" update=":add_resource_panel :growl" oncomplete="update_header()"/>
 		</h:form>
 
 		<div class="center-header" id="group_header">

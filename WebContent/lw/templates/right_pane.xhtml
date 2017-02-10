@@ -75,7 +75,12 @@
 									<p:column>
 										<h:outputText value="#{msg.location}:" />
 									</p:column>
-									<p:column>
+									<p:column rendered="#{addResourceBean.formStep == 1}">
+										<p:commandLink onstart="selectNewResourceLocation();">
+											<h:outputText value="#{addResourceBean.currentPath}"/>
+										</p:commandLink>
+									</p:column>
+									<p:column rendered="#{addResourceBean.formStep > 1}">
 										<h:outputText value="#{addResourceBean.currentPath}"/>
 									</p:column>
 								</p:row>

@@ -639,6 +639,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         }
     }
 
+    public void updateTargetForAddResourceBean()
+    {
+        this.getAddResourceBean().setResourceTargetGroupId(selectedResourceTargetGroupId);
+        this.getAddResourceBean().setResourceTargetFolderId(selectedResourceTargetFolderId);
+    }
+
     public List<Link> getLinks() throws SQLException
     {
         if(null == links)

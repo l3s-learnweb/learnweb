@@ -64,6 +64,9 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     @ManagedProperty(value = "#{resourceDetailBean}")
     private ResourceDetailBean resourceDetailBean;
 
+    @ManagedProperty(value = "#{addResourceBean}")
+    private AddResourceBean addResourceBean;
+
     public MyResourcesBean() throws SQLException
     {
         if(getUser() == null) // not logged in
@@ -719,6 +722,25 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         }
     }
 
+    public String getUrlToSave()
+    {
+        if (this.getAddResourceBean() != null && this.getAddResourceBean().getResource() != null) {
+            return this.getAddResourceBean().getResource().getUrl();
+        }
+
+        return null;
+    }
+
+    public void setUrlToSave(String url) throws SQLException
+    {
+        if(url != null && !url.isEmpty())
+        {
+            this.rightPanelAction = RPAction.newResource;
+            this.addResourceBean.getResource().setStorageType(2);
+            this.addResourceBean.getResource().setUrl(url);
+        }
+    }
+
     public List<Folder> getBreadcrumb()
     {
         return breadcrumb;
@@ -778,6 +800,12 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         }
     }
 
+    public void updateTargetForAddResourceBean()
+    {
+        this.getAddResourceBean().setResourceTargetGroupId(selectedResourceTargetGroupId);
+        this.getAddResourceBean().setResourceTargetFolderId(selectedResourceTargetFolderId);
+    }
+
     public int getSelectedResourceTargetGroupId()
     {
         return selectedResourceTargetGroupId;
@@ -816,5 +844,13 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     public void setResourceDetailBean(ResourceDetailBean resourceDetailBean)
     {
         this.resourceDetailBean = resourceDetailBean;
+    }
+
+    public AddResourceBean getAddResourceBean() {
+        return addResourceBean;
+    }
+
+    public void setAddResourceBean(AddResourceBean addResourceBean) {
+        this.addResourceBean = addResourceBean;
     }
 }

@@ -3,6 +3,7 @@
 /** @external editGroupItemCommand */
 /** @external createGroupItemCommand */
 /** @external updateGroupItemsCommand */
+/** @external updateAddResourcePaneCommand */
 
 function scrollToElement(element) {
     //$('#right_pane .content').animate({ scrollTop: (element.offset().top + element.height() + 5 - $('#center_pane .content').height())}, 'slow');
@@ -76,6 +77,12 @@ function prepareCommentButton() {
     });
     $('#comment_form').focusout(function () {
         $('#comment_button').slideUp(1000);
+    });
+}
+
+function selectNewResourceLocation() {
+    dialog.confirm('selectDestination', function () {
+        updateAddResourcePaneCommand();
     });
 }
 
