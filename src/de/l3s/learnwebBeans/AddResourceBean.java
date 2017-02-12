@@ -28,6 +28,7 @@ import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
 import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.Group;
+import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceMetadataExtractor;
@@ -163,6 +164,66 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         rme.process();
 
         nextStep();
+    }
+
+    public void addGlossary() throws IOException
+    {
+
+        try
+        {
+            resource.setDeleted(false);
+            resource.setSource("Glossary");
+            resource.setType("Image");
+            resource.setUrl("");
+
+            // add resource to a group if selected
+            if(resourceTargetGroupId != 0)
+            {
+                resource.setGroupId(resourceTargetGroupId);
+                getUser().setActiveGroup(resourceTargetGroupId);
+            }
+
+            if(resourceTargetFolderId != 0)
+            {
+                resource.setFolderId(resourceTargetFolderId);
+            }
+
+            if(resource.getId() == -1)
+                resource = getUser().addResource(resource);
+            else
+                resource.save();
+
+            //Resource glossaryIconResource = Learnweb.getInstance().getResourceManager().getResource(199691);
+            //            Image img = new Image(new FileInputStream(new File("/Users/Rishita/Documents/workspace/Learnweb_ver2/WebContent/resources/glossary/glossary_icon_23.png")));
+            Resource iconResource = Learnweb.getInstance().getResourceManager().getResource(199691);
+
+            resource.setThumbnail0(iconResource.getThumbnail0());
+            resource.setThumbnail1(iconResource.getThumbnail1());
+            resource.setThumbnail2(iconResource.getThumbnail2());
+            resource.setThumbnail3(iconResource.getThumbnail3());
+            resource.setThumbnail4(iconResource.getThumbnail4());
+            resource.setEmbeddedSize1Raw(iconResource.getEmbeddedSize1());
+            resource.setEmbeddedSize3Raw(iconResource.getEmbeddedSize3());
+            resource.setEmbeddedSize4Raw(iconResource.getEmbeddedSize4());
+
+            resource.save();
+            log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
+            addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
+
+            UtilBean.getGroupDetailBean().updateResourcesFromSolr();
+
+            resource = new Resource();
+            resource.setSource("Internet");
+            resource.setLocation("Learnweb");
+            resource.setStorageType(Resource.FILE_RESOURCE);
+            resource.setDeleted(true);
+            //resource.setUrl("");
+        }
+        catch(SQLException e)
+        {
+            e.printStackTrace();
+        }
+        //return redirectUrl;
     }
 
     public Resource getResource()

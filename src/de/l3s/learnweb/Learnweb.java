@@ -58,7 +58,8 @@ public class Learnweb
     private final ResourcePreviewMaker resourcePreviewMaker;
     private final YovistoManager yovistoManager;
     private final JobScheduler jobScheduler;
-    private final GlossaryManager glossaryManager;
+
+    private final GlossariesManager glossariesManager;
     private final SuggestionLogger suggestionLogger;
     private final WaybackCapturesLogger waybackCapturesLogger;
 
@@ -199,10 +200,10 @@ public class Learnweb
         loroManager = new LoroManager(this);
         jobScheduler = new JobScheduler(this);
         yovistoManager = new YovistoManager(this);
-        glossaryManager = new GlossaryManager(this);
+
         suggestionLogger = new SuggestionLogger(this);
         waybackCapturesLogger = new WaybackCapturesLogger(this);
-
+        glossariesManager = new GlossariesManager(this);
         learnwebIsLoading = false;
     }
 
@@ -212,11 +213,11 @@ public class Learnweb
     public void initLearnwebServer()
     {
         log.debug("Init LearnwebServer");
-
-        if(getContextUrl().equalsIgnoreCase("http://learnweb.l3s.uni-hannover.de"))
+        //TODO: REMOVE THIS
+        /* if(getContextUrl().equalsIgnoreCase("http://learnweb.l3s.uni-hannover.de"))
             jobScheduler.startAllJobs();
         else
-            log.debug("JobScheduler not started for context: " + getContextUrl());
+            log.debug("JobScheduler not started for context: " + getContextUrl());*/
     }
 
     public FileManager getFileManager()
@@ -680,11 +681,6 @@ public class Learnweb
         return yovistoManager;
     }
 
-    public GlossaryManager getGlossaryManager()
-    {
-        return glossaryManager;
-    }
-
     public SuggestionLogger getSuggestionLogger()
     {
         return suggestionLogger;
@@ -698,5 +694,10 @@ public class Learnweb
     public static void main(String[] args)
     {
         Learnweb.getInstance();
+    }
+
+    public GlossariesManager getGlossariesManager()
+    {
+        return glossariesManager;
     }
 }

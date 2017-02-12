@@ -1,8 +1,6 @@
 package de.l3s.glossary;
 
-import java.util.List;
-
-public class ItalianItem
+public class LanguageItems
 {
 
     private String value;
@@ -11,7 +9,8 @@ public class ItalianItem
     private String acronym;
     private String references;
     private String phraseology;
-    private List<String> selectedUses;
+    private String selectedUses;
+    private String language;
     private int termId;
 
     public String getValue()
@@ -85,17 +84,27 @@ public class ItalianItem
             this.phraseology = "";
     }
 
-    public List<String> getSelectedUses()
+    public String getSelectedUses()
     {
         return selectedUses;
     }
 
-    public void setSelectedUses(List<String> selectedUses)
+    public void setSelectedUses(String string)
     {
-        if(selectedUses != null)
-            this.selectedUses = selectedUses;
+        if(string != null)
+            this.selectedUses = string;
         else
-            this.selectedUses.add("");
+            this.selectedUses = "";
+    }
+
+    public String getLanguage()
+    {
+        return language;
+    }
+
+    public void setLanguage(String language)
+    {
+        this.language = language;
     }
 
     public int getTermId()

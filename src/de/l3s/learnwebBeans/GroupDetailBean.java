@@ -871,7 +871,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             //TODO: remove it
             RequestContext.getCurrentInstance().update(":filters");
         }
-        catch(SQLException | IOException| SolrServerException e)
+        catch(SQLException | IOException | SolrServerException e)
         {
             addFatalMessage(e);
         }
@@ -1432,6 +1432,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             this.setRightPanelAction(RPAction.newResource);
             this.getAddResourceBean().clearForm();
             this.getAddResourceBean().getResource().setStorageType(2);
+            break;
+        case "glossary":
+            this.setRightPanelAction(RPAction.newResource);
+            this.getAddResourceBean().clearForm();
+            this.getAddResourceBean().getResource().setStorageType(3);
             break;
         default:
             log.warn("Unsupported item type: " + type);

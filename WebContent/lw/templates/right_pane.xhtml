@@ -109,6 +109,15 @@
 									</p:column>
 								</p:row>
 								
+								<p:row rendered="#{addResourceBean.resource.storageType == 3}">
+									<p:column>
+										<h:outputText value="Glossary Title:" />
+									</p:column>
+									<p:column rendered="#{addResourceBean.formStep == 1}">
+										<p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="title_input"/>
+									</p:column>
+								</p:row>
+								
 								<p:row rendered="#{addResourceBean.formStep > 1 and addResourceBean.resource.embeddedSize1 != null}">
 									<p:column>
 										<h:outputText value="#{msg.preview}:" />
@@ -121,7 +130,15 @@
 						</p:fieldset>
 						
 						<p:commandButton id="next_button" value="#{msg.nextStep}" styleClass="greenbutton float-right" update=":growl :add_resource_section" 
-							action="#{addResourceBean.handleUrlInput}" ajax="true" rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.storageType != 1}">
+							action="#{addResourceBean.handleUrlInput}" ajax="true" rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.storageType == 2}">
+						</p:commandButton>
+						
+						
+						<p:commandButton id="create_glossary_button" value="Create Glossary" styleClass="greenbutton float-right" update=":growl :add_resource_panel :datagrid" 
+							action="#{addResourceBean.addGlossary}" ajax="true" oncomplete="update_header();resourceDND();" rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.storageType == 3}">
+							<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>
+							<f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"/>
+							<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{addResourceBean.resource}"/>
 						</p:commandButton>
 						
 						<p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right" immediate="true" 
@@ -433,6 +450,36 @@
 									</h:outputLink>
 								</td>
 							</tr>
+						</ui:fragment>	
+						<ui:fragment rendered="#{resourceDetailBean.clickedResource.source == 'Glossary' }">
+							<tr>
+								<td>
+									<span class="resource_field">
+										Glossary: 
+									</span>
+								</td>
+
+								<td>
+									<h:outputLink value="showGlossary.jsf" style="text-decoration:underline;">
+										<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
+										Link to Glossary
+									</h:outputLink>
+								</td>
+							</tr>
+							<!-- <tr>
+								<td>
+									<span class="resource_field">
+										Glossary: 
+									</span>
+								</td>
+
+								<td>
+									<h:outputLink value="glossary/addGlossary.jsf" style="text-decoration:underline;">
+										<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
+										Add Glossary entry
+									</h:outputLink>
+								</td>
+							</tr> -->
 						</ui:fragment>						
 						<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.creationDate}">
 							<tr>

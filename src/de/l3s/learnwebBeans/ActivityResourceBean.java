@@ -1,15 +1,22 @@
 package de.l3s.learnwebBeans;
 
-import de.l3s.learnweb.*;
-import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnwebBeans.GroupDetailBean.RPAction;
-
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
+import de.l3s.learnweb.Folder;
+import de.l3s.learnweb.GroupItem;
+import de.l3s.learnweb.LogEntry;
+import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.NewsEntry;
+import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.Tag;
+import de.l3s.learnweb.User;
+import de.l3s.learnwebBeans.GroupDetailBean.RPAction;
 
 @ManagedBean
 @ViewScoped

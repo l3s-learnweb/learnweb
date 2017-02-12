@@ -79,7 +79,7 @@ hr{
 	border: 5px solid #fff;
 }
 .grey_border{
-	margin:0px 5px;
+	margin:0px auto;
 	text-align:center;
 }
 .panel{
@@ -88,6 +88,7 @@ hr{
 .centered-form {
     margin : 0 auto;
 }
+
 /*change primefaces ui*/
 .ui-state-hover, .ui-state-focus, .ui-state-active{
 	box-shadow:0 0 0px 0px #fff !important;

@@ -40,6 +40,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public static final int FILE_RESOURCE = 1;
     public static final int WEB_RESOURCE = 2;
+    public static final int GLOSSARY_RESOURCE = 3;
 
     private int id = -1; // default id, that indicates that this resource is not stored at fedora
     private int groupId;
@@ -480,13 +481,15 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             return UtilBean.getLocaleMessage("file");
         else if(storageType == Resource.WEB_RESOURCE)
             return UtilBean.getLocaleMessage("web");
+        else if(storageType == Resource.GLOSSARY_RESOURCE)
+            return "Glossary";
         else
             throw new RuntimeException();
     }
 
     public void setStorageType(int type)
     {
-        if(type != FILE_RESOURCE && type != WEB_RESOURCE)
+        if(type != FILE_RESOURCE && type != WEB_RESOURCE && type != GLOSSARY_RESOURCE)
             throw new IllegalArgumentException();
         this.storageType = type;
     }
@@ -1209,17 +1212,17 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         return thumbnail4;
     }
 
-    protected void setThumbnail0(Thumbnail thumbnail0)
+    public void setThumbnail0(Thumbnail thumbnail0)
     {
         this.thumbnail0 = thumbnail0;
     }
 
-    protected void setThumbnail1(Thumbnail thumbnail1)
+    public void setThumbnail1(Thumbnail thumbnail1)
     {
         this.thumbnail1 = thumbnail1;
     }
 
-    protected void setThumbnail2(Thumbnail thumbnail2)
+    public void setThumbnail2(Thumbnail thumbnail2)
     {
         this.thumbnail2 = thumbnail2;
         if(thumbnail2 != null)
@@ -1229,12 +1232,12 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         }
     }
 
-    protected void setThumbnail3(Thumbnail thumbnail3)
+    public void setThumbnail3(Thumbnail thumbnail3)
     {
         this.thumbnail3 = thumbnail3;
     }
 
-    protected void setThumbnail4(Thumbnail thumbnail4)
+    public void setThumbnail4(Thumbnail thumbnail4)
     {
         this.thumbnail4 = thumbnail4;
     }
@@ -1435,11 +1438,13 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             this.language = language.toLowerCase();
     }
 
-    public Date getResourceTimestamp() {
+    public Date getResourceTimestamp()
+    {
         return resourceTimestamp;
     }
 
-    public void setResourceTimestamp(Date resourceTimestamp) {
+    public void setResourceTimestamp(Date resourceTimestamp)
+    {
         this.resourceTimestamp = resourceTimestamp;
     }
 
