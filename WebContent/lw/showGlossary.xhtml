@@ -114,6 +114,7 @@
 
 			<div id="glossform" style="display: none">
 				<h:form id="glossary_add" styleClass="grey_border" prependId="false">
+				<p:growl id="glossgrowl" autoUpdate="true" globalOnly="true" showDetail="true"></p:growl>
 				<p:panelGrid id="grid" styleClass="centered-form" columns="3"  style="border-style: none !important">
 					
 					<p:outputLabel for="topic_1" value="Topic 1 "></p:outputLabel>
@@ -192,7 +193,7 @@
 						<p:inputText id="phras" value="#{item.phraseology}" />
 					</p:column>
 					<p:column width="10">
-			<p:commandLink id="deleteIt"  actionListener="#{glossaryBean.removeIt(item)}" update=":italian_terms" >
+			<p:commandLink id="deleteIt"  actionListener="#{glossaryBean.removeIt(item)}" update=" :glossgrowl :italian_terms" >
 			<f:ajax execute="italian_terms"/>
 			<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/>
 		</p:commandLink>
@@ -265,7 +266,7 @@
 				</p:commandButton>
 				
 				<br/><br/>	
-			    <p:commandButton id="save" value="Save Entry" action="#{glossaryBean.upload}" styleClass="greenbutton resource_button" update=":glossary_add :growl">
+			    <p:commandButton id="save" value="Save Entry" action="#{glossaryBean.upload}" styleClass="greenbutton resource_button" update=":glossary_add :glossgrowl">
 			    	 <f:ajax execute="@form" />
 			    	 
 			    </p:commandButton>

@@ -202,7 +202,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             FacesContext context = FacesContext.getCurrentInstance();
 
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Please enter atleast one Entry for both Italian and UK items"));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Please enter atleast one valid entry for both Italian and UK items"));
 
             return null;
         }
@@ -214,7 +214,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Glossary item added"));
     }
 
-    public String update()
+    /* public String update()
     {
         User u = getUser();
         gl = getLearnweb().getGlossariesManager();
@@ -232,8 +232,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         gl.addToDatabase(getGlossaryId());
         createEntry();
         return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
-
-    }
+    
+    }*/
 
     public String delete(GlossaryItems item)
     {
@@ -258,6 +258,13 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         if(ItalianItems.size() > 1)
             ItalianItems.remove(item);
+        else
+        {
+            FacesContext context1 = FacesContext.getCurrentInstance();
+
+            context1.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "You need atleast one entry of Italian Items"));
+
+        }
     }
 
     public void removeUk(UkItem item)
