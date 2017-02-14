@@ -36,6 +36,12 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
     @Email
     private String email;
 
+    @NotEmpty
+    private String affiliation;
+
+    @NotEmpty
+    private String description;
+
     public ArchiveWebRegistrationBean()
     {
         // set default search options for anonymous archiv it users
@@ -83,7 +89,7 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
             //message.setFrom(new InternetAddress("interweb9@googlemail.com"));
             message.setRecipient(Message.RecipientType.TO, new InternetAddress(to));
             message.setSubject("ArchiveWeb Registration");
-            message.setText("username: " + username + "\npassword: " + password + "\nemail:" + email);
+            message.setText("username: " + username + "\npassword: " + password + "\nemail: " + email + "\naffiliation: " + affiliation + "\ndescription: " + description);
             message.sendMail();
             //Transport.send(message);
         }
@@ -100,6 +106,8 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
         username = null;
         password = null;
         email = null;
+        affiliation = null;
+        description = null;
     }
 
     public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
@@ -108,5 +116,25 @@ public class ArchiveWebRegistrationBean extends ApplicationBean implements Seria
         {
             throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "username_already_taken"));
         }
+    }
+
+    public String getAffiliation()
+    {
+        return affiliation;
+    }
+
+    public void setAffiliation(String affiliation)
+    {
+        this.affiliation = affiliation;
+    }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
     }
 }

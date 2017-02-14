@@ -89,11 +89,24 @@
 								<p:message id="emailMessage" showSummary="true"
 									showDetail="false" styleClass="error" for="email" />
 
+								<h:outputLabel for="affiliation" value="#{msg.affiliation}: *" />
+								<p:inputText id="affiliation" value="#{archiveWebRegistrationBean.affiliation}"
+									label="#{msg.affiliation}" />
+								<p:message id="affiliationMessage" showSummary="true"
+									showDetail="false" styleClass="error" for="affiliation" />
+								
+								<h:outputLabel for="description" value="#{msg.description}: *" />
+								<p:inputTextarea id="description" value="#{archiveWebRegistrationBean.description}"
+									label="#{msg.description}" placeholder="#{msg['ArchiveWeb.short_description']}" rows="5" cols="50"/>
+								<p:message id="descriptionMessage" showSummary="true"
+									showDetail="false" styleClass="error" for="description" />
+									
 								<h:outputText value="" />
 								<p:commandButton action="#{archiveWebRegistrationBean.sendMail}"
 									value="#{msg['ArchiveWeb.send_request']}" ajax="false"/>
 								<h:outputText value="" />
 							</h:panelGrid>
+							<br/>
 							<h:outputText value="* #{msg.mandatory_field}" />
 						</h:form>
 					</div>
