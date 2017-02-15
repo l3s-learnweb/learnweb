@@ -1,7 +1,11 @@
 package de.l3s.learnweb.beans;
 
-public class Car
+import java.io.Serializable;
+
+public class Car implements Serializable
 {
+    private static final long serialVersionUID = 6054761057129544944L;
+
     String id;
     String brand;
     int year;
@@ -18,6 +22,10 @@ public class Car
         this.color = color;
         this.price = price;
         this.soldState = soldState;
+    }
+
+    public Car()
+    {
     }
 
     public String getId()
