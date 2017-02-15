@@ -90,7 +90,7 @@ public class SolrResourceBean
         this.type = resource.getType().toLowerCase();
         this.format = resource.getFormat().toLowerCase();
         this.author = resource.getAuthor();
-        this.location = resource.getLocation().toLowerCase();
+        this.location = resource.getLocation().toLowerCase().replace("-", "");
         this.groupId = resource.getGroupId();
         this.path = resource.getPath();
         this.ownerUserId = resource.getUserId();
