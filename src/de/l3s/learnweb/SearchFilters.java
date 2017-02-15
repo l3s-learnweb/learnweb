@@ -491,7 +491,7 @@ public class SearchFilters implements Serializable
     {
         if(lastFilter == null || lastFilter != f)
         {
-            if(counts.size() <= 0 && availableResources.containsKey(f))
+            if(counts.size() <= 0 && availableResources.containsKey(f) && !merge)
             {
                 availableResources.remove(f);
             }

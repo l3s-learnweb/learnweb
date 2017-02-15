@@ -427,7 +427,7 @@ public class SolrSearch implements Serializable
         solrQuery.setHighlightSimplePre("<strong>");
         solrQuery.setHighlightSimplePost("</strong>");
 
-        solrQuery.set("facet", "true");
+        solrQuery.setFacet(true);
         if(facetFields != null)
         {
             solrQuery.addFacetField(facetFields);
