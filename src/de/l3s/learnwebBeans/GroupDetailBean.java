@@ -96,6 +96,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     // New folder form
     private String newFolderName;
+    private String newFolderDescription;
 
     // New link form
     @NotEmpty
@@ -940,7 +941,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     {
         if(canEditResourcesInTheGroup() && newFolderName != null && !newFolderName.isEmpty())
         {
-            Folder newFolder = new Folder(groupId, newFolderName);
+            Folder newFolder = new Folder(groupId, newFolderName, newFolderDescription);
             newFolder.setParentFolderId(getSelectedFolderId());
             newFolder.setUser(getUser());
             newFolder.save();
@@ -951,6 +952,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         }
 
         newFolderName = null;
+        newFolderDescription = null;
     }
 
     /**
@@ -1067,6 +1069,14 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void setNewFolderName(String newFolderName)
     {
         this.newFolderName = newFolderName;
+    }
+
+    public String getNewFolderDescription() {
+        return newFolderDescription;
+    }
+
+    public void setNewFolderDescription(String newFolderDescription) {
+        this.newFolderDescription = newFolderDescription;
     }
 
     public void setGroup(Group group)

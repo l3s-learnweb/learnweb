@@ -350,6 +350,7 @@ public class GroupManager
             folder.setGroupId(rs.getInt("group_id"));
             folder.setParentFolderId(rs.getInt("parent_folder_id"));
             folder.setTitle(rs.getString("name"));
+            folder.setDescription(rs.getString("description"));
             folder.setUserId(rs.getInt("user_id"));
 
             folder = folderCache.put(folder);
@@ -363,7 +364,7 @@ public class GroupManager
 
         if(folder == null)
         {
-            PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, user_id FROM `lw_group_folder` WHERE `folder_id` = ?");
+            PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, description, user_id FROM `lw_group_folder` WHERE `folder_id` = ?");
             select.setInt(1, folderId);
             ResultSet rs = select.executeQuery();
 
@@ -384,7 +385,7 @@ public class GroupManager
     {
         List<Folder> folders = new ArrayList<Folder>();
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, user_id FROM `lw_group_folder` WHERE `group_id` = ?");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, description, user_id FROM `lw_group_folder` WHERE `group_id` = ?");
         select.setInt(1, groupId);
         ResultSet rs = select.executeQuery();
         while(rs.next())
@@ -409,7 +410,7 @@ public class GroupManager
             parentFolderId = 0;
         }
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, user_id FROM `lw_group_folder` WHERE `group_id` = ? AND `parent_folder_id` = ?");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, description, user_id FROM `lw_group_folder` WHERE `group_id` = ? AND `parent_folder_id` = ?");
         select.setInt(1, groupId);
         select.setInt(2, parentFolderId);
         ResultSet rs = select.executeQuery();
@@ -435,7 +436,7 @@ public class GroupManager
             parentFolderId = 0;
         }
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, user_id FROM `lw_group_folder` WHERE `group_id` = ? AND `parent_folder_id` = ? AND `user_id` = ?");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT folder_id, group_id, parent_folder_id, name, description, user_id FROM `lw_group_folder` WHERE `group_id` = ? AND `parent_folder_id` = ? AND `user_id` = ?");
         select.setInt(1, groupId);
         select.setInt(2, parentFolderId);
         select.setInt(3, userId);
@@ -578,7 +579,7 @@ public class GroupManager
 
     public Folder saveFolder(Folder folder) throws SQLException
     {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group_folder` (folder_id, group_id, parent_folder_id, name, user_id) VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_group_folder` (folder_id, group_id, parent_folder_id, name, description, user_id) VALUES (?, ?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
 
         if(folder.getId() < 0) // the folder is not yet stored at the database
             replace.setNull(1, java.sql.Types.INTEGER);
@@ -587,7 +588,8 @@ public class GroupManager
         replace.setInt(2, folder.getGroupId());
         replace.setInt(3, folder.getParentFolderId());
         replace.setString(4, folder.getTitle());
-        replace.setInt(5, folder.getUserId());
+        replace.setString(5, folder.getDescription());
+        replace.setInt(6, folder.getUserId());
         replace.executeUpdate();
 
         if(folder.getId() < 0) // get the assigned id

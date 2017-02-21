@@ -16,6 +16,7 @@ public class Folder implements Serializable, HasId, GroupItem
     private int groupId = -1;
     private int parentFolderId;
     private String name;
+    private String description;
     private int userId = -1;
 
     // cache
@@ -30,17 +31,26 @@ public class Folder implements Serializable, HasId, GroupItem
 
     public Folder(int groupId, String name)
     {
-        super();
-        this.groupId = groupId;
-        this.name = name;
+        this(-1, groupId, name, null);
+    }
+
+    public Folder(int groupId, String name, String description)
+    {
+        this(-1, groupId, name, description);
     }
 
     public Folder(int folderId, int groupId, String name)
+    {
+        this(folderId, groupId, name, null);
+    }
+
+    public Folder(int folderId, int groupId, String name, String description)
     {
         super();
         this.folderId = folderId;
         this.groupId = groupId;
         this.name = name;
+        this.description = description;
     }
 
     @Override
@@ -130,6 +140,14 @@ public class Folder implements Serializable, HasId, GroupItem
     public void setName(String name)
     {
         this.setTitle(name);
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     @Override

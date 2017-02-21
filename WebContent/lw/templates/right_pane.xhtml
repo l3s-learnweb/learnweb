@@ -805,6 +805,15 @@
 										<p:inputText value="#{bean.newFolderName}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="folder_title_input" />
 									</p:column>
 								</p:row>
+
+								<p:row>
+									<p:column>
+										<h:outputText value="#{msg.description}*:" />
+									</p:column>
+									<p:column>
+										<p:inputTextarea id="folderDescription" value="#{bean.newFolderDescription}" autoResize="true" styleClass="add_field" style="min-height:100px;"/>
+									</p:column>
+								</p:row>
 							</p:panelGrid>
 
 							* #{msg.mandatory_field}
@@ -848,6 +857,16 @@
 								<h:outputText style="width: 96%" value="#{bean.clickedFolder.name}"/>
 							</td>
 						</tr>
+						<ui:fragment rendered="#{not empty bean.clickedFolder.description}">
+							<tr>
+								<td>
+									#{msg.description}:
+								</td>
+								<td>
+									<h:outputText style="width: 96%" value="#{bean.clickedFolder.description}" escape="false"/>
+								</td>
+							</tr>
+						</ui:fragment>
 					</table>
 				</h:panelGroup>
 				
@@ -877,6 +896,14 @@
 							</td>
 							<td>
 								<p:inputText style="width: 96%" value="#{bean.clickedFolder.name}"/>
+							</td>
+						</tr>
+						<tr>
+							<td>
+								#{msg.description}:
+							</td>
+							<td>
+								<p:inputTextarea style="width: 96%" value="#{bean.clickedFolder.description}" autoResize="true"/>
 							</td>
 						</tr>
 						<tr>
