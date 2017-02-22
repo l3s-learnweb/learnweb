@@ -10,6 +10,10 @@
 	min-width:100%;
 }
 
+.myTable thead th { 
+    border: none !important; 
+    background: none !important;
+
 #glossform{
 	margin: 0 auto;
 }
@@ -78,12 +82,18 @@ hr{
 	margin-left:0;
 	border: 5px solid #fff;
 }
+
 .grey_border{
 	margin:0px auto;
 	text-align:center;
 }
 .panel{
 	 background-color:transparent;
+
+}
+
+.pencil-icon{
+	 background: url("/resources/icon/silk/pencil.png") no-repeat
 }
 .centered-form {
     margin : 0 auto;

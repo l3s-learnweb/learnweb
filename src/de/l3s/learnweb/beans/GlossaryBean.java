@@ -50,6 +50,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private int resourceId;
     private int glossaryId;
 
+    private GlossaryItems selectedGlossaryItem;
+
     // cached values
     private transient User user;
 
@@ -68,24 +70,30 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public void init()
     {
         System.out.println("Inside init() of GlossaryBean which is called on PostConstruct");
+
         createEntry();
 
     }
 
     public void createEntry()
     {
+        System.out.println("Inside createEntry");
         Uses = new ArrayList<String>();
         Uses.add("technical");
         Uses.add("popular");
         Uses.add("informal");
+        setDescription("");
+        setSelectedTopicOne("");
         availableTopicOnes = new ArrayList<SelectItem>();
         availableTopicTwos = new ArrayList<SelectItem>();
         availableTopicThrees = new ArrayList<SelectItem>();
+
         availableTopicOnes.add(new SelectItem("MEDICINE"));
         ItalianItems = new ArrayList<ItalianItem>();
         ItalianItems.add(new ItalianItem());
         UkItems = new ArrayList<UkItem>();
         UkItems.add(new UkItem());
+
     }
 
     public void setForm(GlossaryItems gloss)
@@ -237,6 +245,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public String delete(GlossaryItems item)
     {
+
         gl = getLearnweb().getGlossariesManager();
         String deleteTerms = "DELETE FROM `lw_resource_glossary_terms` WHERE glossary_id = " + Integer.toString(item.getGlossId());
         String deleteGlossItem = "DELETE FROM `lw_resource_glossary` WHERE glossary_id = " + Integer.toString(item.getGlossId());
@@ -252,12 +261,22 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         ItalianItems.add(new ItalianItem());
         count++;
         valueHeaderIt = "Term It" + Integer.toString(count);
+
     }
 
     public void removeIt(ItalianItem item)
     {
-        if(ItalianItems.size() > 1)
+        List<ItalianItem> iItems = new ArrayList<ItalianItem>(getItalianItems());
+        boolean remove = false;
+        for(ItalianItem i : iItems)
+        {
+            if(!i.getValue().isEmpty())
+                if(iItems.size() > 1)
+                    remove = true;
+        }
+        if(remove)
             ItalianItems.remove(item);
+
         else
         {
             FacesContext context1 = FacesContext.getCurrentInstance();
@@ -269,8 +288,24 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public void removeUk(UkItem item)
     {
-        if(UkItems.size() > 1)
+        List<UkItem> uItems = new ArrayList<UkItem>(getUkItems());
+        boolean remove = false;
+        for(UkItem u : uItems)
+        {
+            if(!u.getValue().isEmpty())
+                if(uItems.size() > 1)
+                    remove = true;
+        }
+        if(remove)
             UkItems.remove(item);
+        else
+        {
+
+            FacesContext context1 = FacesContext.getCurrentInstance();
+
+            context1.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "You need atleast one entry of UK Items"));
+
+        }
     }
 
     public void addUk()
@@ -284,8 +319,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         availableTopicTwos.add(new SelectItem("Diseases and disorders"));
         availableTopicTwos.add(new SelectItem("Anatomy"));
         availableTopicTwos.add(new SelectItem("Medical branches"));
-        availableTopicTwos.add(new SelectItem("Instituion"));
-        availableTopicTwos.add(new SelectItem("Profession"));
+        availableTopicTwos.add(new SelectItem("Institusions"));
+        availableTopicTwos.add(new SelectItem("Professions"));
     }
 
     public void changeTopicOne(AjaxBehaviorEvent event)
@@ -502,6 +537,18 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public void setGlossaryId(int glossaryId)
     {
         this.glossaryId = glossaryId;
+    }
+
+    public GlossaryItems getSelectedGlossaryItem()
+    {
+        return selectedGlossaryItem;
+    }
+
+    public void setSelectedGlossaryItem(GlossaryItems selectedGlossaryItem)
+    {
+        System.out.println("Inside selected Itme function");
+        System.out.println(selectedGlossaryItem);
+        this.selectedGlossaryItem = selectedGlossaryItem;
     }
 
     /*private Glossary selectedEntry = new Glossary();

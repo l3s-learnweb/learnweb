@@ -2,7 +2,8 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:h="http://java.sun.com/jsf/html" 
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui" 
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough" 
 	lang="#{userBean.localeCode}">
 
 		<ui:param name="pageTitle" value="#{msg['Glossary.glossary']}" />
@@ -18,104 +19,79 @@
 	
 		 <h:outputStylesheet library="glossary" name="glossary.css"/> 
 		<h:panelGroup id="main_component" layout="block">
-			<h:form>
-			<p:panelGrid id="main_table"  >
-				<f:facet name="header">
-					<p:row>
-					
-					<p:column></p:column>
-					<p:column>Topic 1</p:column>
-					<p:column>Topic 2</p:column>
-					<p:column>Topic 3</p:column>
-					<p:column>Description</p:column>
-					
-					<p:column>Term</p:column>
-					<p:column>Language</p:column>
-					<p:column>Pronounciation</p:column>
-					<p:column>Acronyms</p:column>
-					<p:column>References</p:column>
-					<p:column>Phraseology</p:column>
-					<p:column>Uses</p:column>
-					
-					
-					</p:row>
-				</f:facet>
-
-			<ui:repeat var="item" value="#{viewGlossaryBean.items}" >
-				<p:row>
-				<p:column rowspan="#{item.rowspan}">
-						<p:commandLink action="#{glossaryBean.delete(item)}" process="@this">
+			<h:form prependId="false">
+	<p:dataTable id="my_gloss_table" var="item" value="#{viewGlossaryBean.items}" sortBy="#{item.topic_1}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="true" rows="20" filteredValue="#{viewGlossaryBean.fileteredItems}">
+        <p:ajax event="filter" oncomplete="groupRow(1)"/>
+        <p:ajax event="page" oncomplete="groupRow(1)"></p:ajax>
+        
+        <f:facet name="header">
+            <p:outputPanel autoUpdate="true">
+                <h:outputText value="Search all fields: " />
+                <p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" style="width:150px" placeholder="Enter keyword"/>
+            </p:outputPanel>
+        </f:facet>
+         <p:column style=" width:20px;">
+						<p:commandLink action="#{glossaryBean.delete(item)}" process="@this" >
 						<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/>
 						</p:commandLink>
 					
 					
-						<p:commandLink actionListener="#{glossaryBean.setForm(item)}" process="@this" oncomplete="$('#glossform').css('display', 'block')" update=":glossary_add">
+						<p:commandLink action="#{glossaryBean.setForm(item)}" process="@this" oncomplete="$('#glossform').css('display', 'block')" update=":glossary_add">
 						<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
 						</p:commandLink>
 					</p:column>
-					<p:column rowspan="#{item.rowspan}">
-						<h:outputText value="#{item.topic_1}"></h:outputText>
-					</p:column>
-					<p:column rowspan="#{item.rowspan}">
-						<h:outputText value="#{item.topic_2}"></h:outputText>
-					</p:column>
-					<p:column rowspan="#{item.rowspan}">
-						<h:outputText value="#{item.topic_3}"></h:outputText>
-					</p:column>
-					<p:column rowspan="#{item.rowspan}">
-						<h:outputText value="#{item.description}"></h:outputText>
-					</p:column>
+        	
+        <p:column headerText="Topic 1"  filterable="true" filterBy="#{item.topic_1}" filterMatchMode="contains" filterStyle="width: 90%;">        	
+            <h:outputText value="#{item.topic_1}" pt:data-itemId="#{item.glossId}" id="cell1"/>
+        </p:column>
+        <p:column  headerText="Topic 2"  filterable="true" filterBy="#{item.topic_2}" filterMatchMode="contains" filterStyle="width: 90%;">
+            <h:outputText value="#{item.topic_2}" pt:data-itemId="#{item.glossId}" id="cell2"/>
+        </p:column>
+        <p:column  headerText="Topic 3"  filterable="true" filterBy="#{item.topic_3}" filterMatchMode="contains" filterStyle="width: 90%;">
+            <h:outputText value="#{item.topic_3}" pt:data-itemId="#{item.glossId}" id="cell3"/>
+        </p:column>
+        <p:column headerText="Description" filterBy="#{item.description}" filterable="true" filterMatchMode="contains" filterStyle="width: 90%;">
+            <h:outputText value="#{item.description}" pt:data-itemId="#{item.glossId}" id="cell4"/>
+        </p:column>
+        
+        <p:column  headerText="Term" filterable="true" filterMatchMode="contains" filterBy="#{item.value}" filterStyle="width: 90%;">
+       		<h:outputText value="#{item.value}" /><br/>
+         </p:column>
+         <p:column  headerText="Language"  filterBy="#{item.language}" filterStyle="display:none">
+       		<h:outputText value="#{item.language}" /><br/>
+         </p:column>
+         <p:column  headerText="Pronounciation" filterBy="#{item.pronounciation}" filterStyle="display:none">
+       		<h:outputText value="#{item.pronounciation}" /><br/>
+         </p:column>
+         <p:column  headerText="Acronym" filterBy="#{item.acronym}" filterStyle="display:none">
+       		<h:outputText value="#{item.acronym}" /><br/>
+         </p:column>
+         <p:column  headerText="References" filterBy="#{item.references}" filterStyle="display:none">
+       		<h:outputText value="#{item.references}" /><br/>
+         </p:column>
+         <p:column  headerText="Phraseology" filterBy="#{item.phraseology}" filterStyle="display:none" >
+       		<h:outputText value="#{item.phraseology}" /><br/>
+         </p:column>
+         <p:column  headerText="Uses" filterBy="#{item.selectedUses}" filterStyle="display:none">
+       		<h:outputText value="#{item.selectedUses}" /><br/>
+         </p:column>
+       
+       
+       
+        
+    </p:dataTable>
 				
-				</p:row>
-				<ui:repeat var="term" value="#{item.finalItems}">
-					<p:row>
-					<p:column>
-						<h:outputText value="#{term.value}"></h:outputText>
-					</p:column>
-					<p:column rowspan="1">
-						<h:outputText value="#{term.language}"></h:outputText>
-					</p:column>
-					<p:column rowspan="1">
-						<h:outputText value="#{term.pronounciation}"></h:outputText>
-					</p:column>
-					<p:column rowspan="1">
-						<h:outputText value="#{term.acronym}"></h:outputText>
-					</p:column>
-					<p:column filterBy="#{term.references}">
-						<h:outputText value="#{term.references}"></h:outputText>
-					</p:column>
-					<p:column rowspan="1">
-						<h:outputText value="#{term.phraseology}"></h:outputText>
-					</p:column>
-					<p:column rowspan="1">
-						<h:outputText value="#{term.selectedUses}"></h:outputText>
-					</p:column>
-					
-					
-				
-				</p:row>
-					
-				</ui:repeat>
-				
-				
-				
-				
-			
-				
-			</ui:repeat>
-			</p:panelGrid>
-			
 			<br/><br/><br/>
 			</h:form>
 			
-			<button type="button" onclick="$('#glossform').css('display', 'block')" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton" >
+			<button type="button"  onclick="$('#glossform').css('display', 'block')" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton" >
 			 Add Entries 
 			</button>
 
 			<div id="glossform" style="display: none">
-				<h:form id="glossary_add" styleClass="grey_border" prependId="false">
+				<h:form id="glossary_add" styleClass="grey_border" prependId="false" >
 				<p:growl id="glossgrowl" autoUpdate="true" globalOnly="true" showDetail="true"></p:growl>
-				<p:panelGrid id="grid" styleClass="centered-form" columns="3"  style="border-style: none !important">
+				<p:panelGrid id="grid" styleClass="centered-form" columns="3"  style="border-style: none !important; margin: 0 auto;">
 					
 					<p:outputLabel for="topic_1" value="Topic 1 "></p:outputLabel>
 					<p:selectOneMenu id="topic_1" value="#{glossaryBean.selectedTopicOne}" required="true" requiredMessage="Topic 1 cannot be empty">
@@ -155,13 +131,14 @@
 
 					<p:column headerText="Term IT">
 						
-						<p:inputText id="termIt" value='#{item.value}' style="width: 90%"/>
+						<p:inputText id="termIt" value='#{item.value}' style="width: 90%" />
 					</p:column>
-					<p:column headerText="Uses">
-						<p:selectCheckboxMenu id="use" value="#{item.selectedUses}"
-							styleClass="panel" label="Uses" filter="true"
-							filterMatchMode="startsWith">
+					<p:column headerText="Uses" style="text-align: center">
+						<p:selectCheckboxMenu widgetVar="itUseVar" id="useIt" value="#{item.selectedUses}"
+							styleClass="panel" label="#{item.useLabelIt}">
 							<f:selectItems value="#{glossaryBean.uses}" />
+							<p:ajax oncomplete="PF('itUseVar').show()"  listener="#{item.updateUseLabel}" update="useIt" ></p:ajax>
+							<p:ajax event="toggleSelect" oncomplete="PF('itUseVar').show()" listener="#{item.updateUseLabel}" update="useIt"/>
 						</p:selectCheckboxMenu>
 					</p:column>
 					<p:column headerText="Pronounciation">
@@ -172,28 +149,28 @@
 						
 						<p:inputText id="acro" value='#{item.acronym}' style="width: 90%"/>
 					</p:column>
-					<p:column headerText="References">
+					<p:column headerText="Source">
 						
-						<p:selectOneMenu id="ref" value="#{item.references}" style="width: 80%">
+						<p:selectOneMenu id="ref" value="#{item.references}" style="width: 80% !important" autoWidth="false">
 							<f:selectItem itemValue="#{null}" itemLabel="--select--" />
 							<f:selectItem itemValue="Wikipedia" itemLabel="Wikipedia"></f:selectItem>
-							<f:selectItem itemValue="Encyclopaedia" itemLabel="other encyclopaedia"></f:selectItem>
+							<f:selectItem itemValue="encyclopaedia" itemLabel="encyclopaedia"></f:selectItem>
 							<f:selectItem itemValue="monolingual dictionary" itemLabel="monoligual dictionary"></f:selectItem>
 							<f:selectItem itemValue="bilingual dictionary" itemLabel="bilingual dictionary"></f:selectItem>
 							<f:selectItem itemValue="scientific/academic publication" itemLabel="scientific/academic publication"></f:selectItem>
 							<f:selectItem itemValue="institutional website"	itemLabel="institutional website"></f:selectItem>
 							<f:selectItem itemValue="glossary" itemLabel="glossary"></f:selectItem>
-							<f:selectItem itemValue="linguee e reverso" itemLabel="linguee e reverso"></f:selectItem>
-							<f:selectItem itemValue="patient's websites and blogs" itemLabel="patient's websites and blogs"></f:selectItem>
+							<f:selectItem itemValue="Ringuee or Reverso" itemLabel="Ringuee or Reverso"></f:selectItem>
+							<f:selectItem itemValue="patients' websites and blogs" itemLabel="patients' websites and blogs"></f:selectItem>
 							<f:selectItem itemValue="other" itemLabel="other"></f:selectItem>
 						</p:selectOneMenu>
 					</p:column>
 					<p:column headerText="Phraseology">
 						
-						<p:inputText id="phras" value="#{item.phraseology}" />
+						<p:inputTextarea id="phras" value="#{item.phraseology}" autoResize="false" />
 					</p:column>
 					<p:column width="10">
-			<p:commandLink id="deleteIt"  actionListener="#{glossaryBean.removeIt(item)}" update=" :glossgrowl :italian_terms" >
+			<p:commandLink id="deleteIt"  actionListener="#{glossaryBean.removeIt(item)}" update=":glossgrowl :italian_terms" >
 			<f:ajax execute="italian_terms"/>
 			<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/>
 		</p:commandLink>
@@ -201,7 +178,7 @@
 		</p:column>
 				</p:dataTable>
 				<br/>
-				<p:commandButton value="Add Synonym" actionListener="#{glossaryBean.addIt}" styleClass="greenbutton" update=":glossary_add :italian_terms">
+				<p:commandButton value="Add Synonym" actionListener="#{glossaryBean.addIt}" styleClass="greenbutton " style="margin: 0 auto;" update=":glossary_add :italian_terms">
 					<f:ajax execute="@this italian_terms"/>
 				</p:commandButton>
 				
@@ -219,9 +196,11 @@
 						<!-- <f:validator validatorId="termCountValidation"></f:validator>
 						<f:attribute name="confirmCount" value=#{confirmCount}></f:attribute> -->
 					</p:column>
-					<p:column headerText="Uses">
-						<p:selectCheckboxMenu id="use" value="#{item.selectedUses}" styleClass="panel" label="Uses" filter="true" filterMatchMode="startsWith" >
+					<p:column headerText="Uses" style="text-align: center">
+						<p:selectCheckboxMenu widgetVar="useVar" id="use" value="#{item.selectedUses}" styleClass="panel" label="#{item.useLabelUk}"  >
 			           		<f:selectItems value="#{glossaryBean.uses}" />
+			           		<p:ajax oncomplete="PF('useVar').show()"  listener="#{item.updateUseLabel}" update="use" ></p:ajax>
+			           		<p:ajax event="toggleSelect" oncomplete="PF('useVar').show()" listener="#{item.updateUseLabel}" update="use"/>
 			           	</p:selectCheckboxMenu>
 					</p:column>
 					<p:column headerText="Pronounciation">
@@ -232,28 +211,28 @@
 						
 						<p:inputText id="acro_uk" value='#{item.acronym}' style="width: 90%"/>
 					</p:column>
-					<p:column headerText="References">
+					<p:column headerText="Source">
 						
-						<p:selectOneMenu id="ref_uk" value="#{item.references}" style="width: 80%">
+						<p:selectOneMenu id="ref_uk" value="#{item.references}" style="width: 80% !important" autoWidth="false">
 							<f:selectItem itemValue="#{null}" itemLabel="--select--" />
 							<f:selectItem itemValue="Wikipedia" itemLabel="Wikipedia"></f:selectItem>
-							<f:selectItem itemValue="Encyclopaedia" itemLabel="Encyclopaedia"></f:selectItem>
+							<f:selectItem itemValue="encyclopaedia" itemLabel="encyclopaedia"></f:selectItem>
 							<f:selectItem itemValue="monolingual dictionary" itemLabel="monoligual dictionary"></f:selectItem>
 							<f:selectItem itemValue="bilingual dictionary" itemLabel="bilingual dictionary"></f:selectItem>
 							<f:selectItem itemValue="scientific/academic publication" itemLabel="scientific/academic publication"></f:selectItem>
 							<f:selectItem itemValue="institutional website" itemLabel="institutional website"></f:selectItem>
 							<f:selectItem itemValue="glossary" itemLabel="glossary"></f:selectItem>
-							<f:selectItem itemValue="linguee e reverso" itemLabel="linguee e reverso"></f:selectItem>
-							<f:selectItem itemValue="patient's websites and blogs" itemLabel="patient's websites and blogs"></f:selectItem>
+							<f:selectItem itemValue="Ringuee or Reverso" itemLabel="Ringuee or Reverso"></f:selectItem>
+							<f:selectItem itemValue="patients' websites and blogs" itemLabel="patients' websites and blogs"></f:selectItem>
 							<f:selectItem itemValue="other" itemLabel="other"></f:selectItem>
 						</p:selectOneMenu>
 					</p:column>
 					<p:column headerText="Phraseology">
 						
-						<p:inputText id="phrase_uk" value="#{item.phraseology}" style="width: 90%"/>
+						<p:inputTextarea id="phras_uk" value="#{item.phraseology}" autoResize="false" />
 					</p:column>
 					<p:column width="10">
-			<p:commandLink id="deleteUk"  actionListener="#{glossaryBean.removeUk(item)}" update=":uk_terms" >
+			<p:commandLink id="deleteUk"  actionListener="#{glossaryBean.removeUk(item)}" update=":glossgrowl :uk_terms" >
 			<f:ajax execute="uk_terms"/>
 			<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/>
 		</p:commandLink>
@@ -266,17 +245,64 @@
 				</p:commandButton>
 				
 				<br/><br/>	
-			    <p:commandButton id="save" value="Save Entry" action="#{glossaryBean.upload}" styleClass="greenbutton resource_button" update=":glossary_add :glossgrowl">
+			    <p:commandButton id="save" value="Save Entry" action="#{glossaryBean.upload()}" styleClass="greenbutton resource_button" update=":glossary_add :glossgrowl">
 			    	 <f:ajax execute="@form" />
 			    	 
 			    </p:commandButton>
-			    <p:commandButton value="Cancel" actionListener="#{glossaryBean.createEntry()}" styleClass="greenbutton resource_button" update=":glossary_add" onclick="$('#glossform').css('display', 'none')" oncomplete="#{glossaryBean.showMessage()}">
-			    	 
+			    <p:commandButton value="Cancel" actionListener="#{glossaryBean.createEntry()}" styleClass="greenbutton resource_button" update="@form :glossary_add" onclick="$('#glossform').css('display', 'none')" process="@this" resetValues="true">
+			    
 			    </p:commandButton>
 			    <br/><br/>
 				</h:form>
 			</div>
 			</h:panelGroup>
-			
+<script type="text/javascript" >
+//<![CDATA[
+var groupRow = function(colIndex) {
+
+    var rows = $('#my_gloss_table').find('tr');
+    var groupStartIndex = null, rowGroupCellData = null, rowGroupCount = 1, columnData=null;
+	
+    for(var i = 0; i < rows.length; i++) {
+        var row = rows.eq(i);
+        var columns = [];
+        var column = row.children('td').eq(colIndex);
+        
+        for(var j=0; j<5;j++)
+        	columns.push(row.children('td').eq(j));
+        
+        var columnData = column.find("span").first().data("itemid");
+
+        console.log($(column).find("span").first().data('itemid'));
+        if(rowGroupCellData != columnData) {                    
+            groupStartIndex = i;
+            rowGroupCellData = columnData;
+            rowGroupCount = 1;
+        }
+        else {
+        	for(var j=0; j<columns.length;j++)
+            	columns[j].remove();
+        	
+            //column.remove();
+            rowGroupCount++;
+        }
+        
+        if(groupStartIndex != null && rowGroupCount > 1) {
+        	for(var j=0; j<columns.length;j++)
+            	
+        	rows.eq(groupStartIndex).children('td').eq(j).attr('rowspan', rowGroupCount);
+            
+        }
+        
+    }
+};
+
+$(document).ready(function() {
+	groupRow(1);
+	//groupRow(1); 
+});
+//]]>
+</script>	
 		</ui:define>
 	</ui:composition>
+	

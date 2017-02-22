@@ -1,5 +1,6 @@
 package de.l3s.glossary;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ItalianItem
@@ -13,6 +14,26 @@ public class ItalianItem
     private String phraseology;
     private List<String> selectedUses;
     private int termId;
+    private String useLabelIt = "Use";
+
+    public void updateUseLabel()
+    {
+        String label = "";
+        List<String> useLabel = new ArrayList<String>(getSelectedUses());
+        for(String u : useLabel)
+        {
+            label = label + u + ", ";
+        }
+        if(label.contains(","))
+        {
+            label = label.trim().substring(0, label.lastIndexOf(","));
+            setUseLabelIt(label);
+        }
+        else
+        {
+            setUseLabelIt("Use");
+        }
+    }
 
     public String getValue()
     {
@@ -106,6 +127,16 @@ public class ItalianItem
     public void setTermId(int termId)
     {
         this.termId = termId;
+    }
+
+    public String getUseLabelIt()
+    {
+        return useLabelIt;
+    }
+
+    public void setUseLabelIt(String useLabelIt)
+    {
+        this.useLabelIt = useLabelIt;
     }
 
 }

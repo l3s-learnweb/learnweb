@@ -1,5 +1,6 @@
 package de.l3s.glossary;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GlossaryItems
@@ -13,6 +14,15 @@ public class GlossaryItems
     private List<ItalianItem> itItems;
     private List<UkItem> ukItems;
     private List<LanguageItems> finalItems;
+    private String value;
+    private String glossIdString;
+    private String pronounciation;
+    private String acronym;
+    private String references;
+    private String phraseology;
+    private String selectedUses;
+    private String language;
+    private int termId;
 
     public String getTopic_1()
     {
@@ -84,13 +94,12 @@ public class GlossaryItems
         this.rowspan = rowspan;
     }
 
-    @SuppressWarnings("null")
     public void createFinalList()
     {
-        List<LanguageItems> l = null;
+        List<LanguageItems> l = new ArrayList<LanguageItems>();
         for(UkItem i : ukItems)
         {
-            LanguageItems temp = null;
+            LanguageItems temp = new LanguageItems();
             temp.setValue(i.getValue());
             temp.setAcronym(i.getAcronym());
             temp.setPhraseology(i.getPhraseology());
@@ -103,7 +112,7 @@ public class GlossaryItems
         }
         for(ItalianItem i : itItems)
         {
-            LanguageItems temp = null;
+            LanguageItems temp = new LanguageItems();
             temp.setValue(i.getValue());
             temp.setAcronym(i.getAcronym());
             temp.setPhraseology(i.getPhraseology());
@@ -136,5 +145,95 @@ public class GlossaryItems
     public void setGlossId(int glossId)
     {
         this.glossId = glossId;
+    }
+
+    public String getValue()
+    {
+        return value;
+    }
+
+    public void setValue(String value)
+    {
+        this.value = value;
+    }
+
+    public String getPronounciation()
+    {
+        return pronounciation;
+    }
+
+    public void setPronounciation(String pronounciation)
+    {
+        this.pronounciation = pronounciation;
+    }
+
+    public String getAcronym()
+    {
+        return acronym;
+    }
+
+    public void setAcronym(String acronym)
+    {
+        this.acronym = acronym;
+    }
+
+    public String getReferences()
+    {
+        return references;
+    }
+
+    public void setReferences(String references)
+    {
+        this.references = references;
+    }
+
+    public String getPhraseology()
+    {
+        return phraseology;
+    }
+
+    public void setPhraseology(String phraseology)
+    {
+        this.phraseology = phraseology;
+    }
+
+    public String getSelectedUses()
+    {
+        return selectedUses;
+    }
+
+    public void setSelectedUses(String selectedUses)
+    {
+        this.selectedUses = selectedUses;
+    }
+
+    public String getLanguage()
+    {
+        return language;
+    }
+
+    public void setLanguage(String language)
+    {
+        this.language = language;
+    }
+
+    public int getTermId()
+    {
+        return termId;
+    }
+
+    public void setTermId(int termId)
+    {
+        this.termId = termId;
+    }
+
+    public String getGlossIdString()
+    {
+        return glossIdString;
+    }
+
+    public void setGlossIdString(String glossIdString)
+    {
+        this.glossIdString = glossIdString;
     }
 }

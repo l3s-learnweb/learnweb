@@ -25,6 +25,7 @@ public class ViewGlossaryBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = -3927594222612462194L;
     private int resourceId;
     private List<GlossaryItems> items = new ArrayList<GlossaryItems>();
+    private List<GlossaryItems> fileteredItems = new ArrayList<GlossaryItems>();
 
     private int italianRows;
     private int ukRows;
@@ -62,6 +63,8 @@ public class ViewGlossaryBean extends ApplicationBean implements Serializable
         if(resourceId > 0)
         {
             getGlossaryItems(resourceId);
+            setFileteredItems(getItems());
+
         }
     }
 
@@ -81,19 +84,37 @@ public class ViewGlossaryBean extends ApplicationBean implements Serializable
             while(result.next())
             {
                 List<LanguageItems> finalList = new ArrayList<LanguageItems>();
-                GlossaryItems gloss = new GlossaryItems();
-                gloss.setGlossId(result.getInt("glossary_id"));
-                System.out.println(result.getInt("glossary_id"));
-                gloss.setTopic_1(result.getString("topic_1"));
-                gloss.setTopic_2(result.getString("topic_2"));
-                gloss.setTopic_3(result.getString("topic_3"));
-                gloss.setDescription(result.getString("description"));
+
                 int glossaryId = result.getInt("glossary_id");
                 PreparedStatement ps = Learnweb.getInstance().getConnection().prepareStatement(termDetails);
                 ps.setInt(1, glossaryId);
                 ResultSet termResults = ps.executeQuery();
+                int getSpan = getRowCount(termResults);
                 while(termResults.next())
                 {
+
+                    GlossaryItems gloss = new GlossaryItems();
+                    gloss.setGlossId(result.getInt("glossary_id"));
+                    gloss.setGlossIdString("_" + Integer.toString(result.getInt("glossary_id")));
+                    System.out.println(gloss.getGlossIdString());
+                    System.out.println(result.getInt("glossary_id"));
+                    gloss.setTopic_1(result.getString("topic_1"));
+                    gloss.setTopic_2(result.getString("topic_2"));
+                    gloss.setTopic_3(result.getString("topic_3"));
+                    gloss.setDescription(result.getString("description"));
+                    gloss.setAcronym(termResults.getString("acronym"));
+                    gloss.setValue(termResults.getString("term"));
+                    gloss.setPhraseology(termResults.getString("phraseology"));
+                    gloss.setPronounciation(termResults.getString("pronounciation"));
+                    gloss.setReferences(termResults.getString("references"));
+                    gloss.setTermId(termResults.getInt("glossary_term_id"));
+                    gloss.setSelectedUses(termResults.getString("use"));
+                    gloss.setRowspan(getSpan);
+                    if(termResults.getString("language").contains("uk"))
+                        gloss.setLanguage("English");
+                    else
+                        gloss.setLanguage("Italian");
+                    items.add(gloss);
 
                     LanguageItems uk = new LanguageItems();
                     uk.setAcronym(termResults.getString("acronym"));
@@ -108,14 +129,15 @@ public class ViewGlossaryBean extends ApplicationBean implements Serializable
                     else
                         uk.setLanguage("Italian");
                     finalList.add(uk);
+                    gloss.setFinalItems(finalList);
 
                 }
                 //    setItalianRows(i.size());
                 //   setUkRows(u.size());
                 // gloss.setRowspan(ukRows > italianRows ? ukRows : italianRows);
-                gloss.setRowspan(finalList.size() + 1);
-                gloss.setFinalItems(finalList);
-                items.add(gloss);
+                //gloss.setRowspan(finalList.size() + 1);
+                //  gloss.setFinalItems(finalList);
+                // items.add(gloss);
 
             }
 
@@ -126,6 +148,22 @@ public class ViewGlossaryBean extends ApplicationBean implements Serializable
             e.printStackTrace();
         }
 
+    }
+
+    private int getRowCount(ResultSet termResults)
+    {
+        int totalRows = 0;
+        try
+        {
+            termResults.last();
+            totalRows = termResults.getRow();
+            termResults.beforeFirst();
+        }
+        catch(Exception ex)
+        {
+            return 0;
+        }
+        return totalRows;
     }
 
     public int getResourceId()
@@ -166,5 +204,15 @@ public class ViewGlossaryBean extends ApplicationBean implements Serializable
     public void setUkRows(int ukRows)
     {
         this.ukRows = ukRows;
+    }
+
+    public List<GlossaryItems> getFileteredItems()
+    {
+        return fileteredItems;
+    }
+
+    public void setFileteredItems(List<GlossaryItems> fileteredItems)
+    {
+        this.fileteredItems = fileteredItems;
     }
 }
