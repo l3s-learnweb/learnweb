@@ -20,16 +20,26 @@
 		 <h:outputStylesheet library="glossary" name="glossary.css"/> 
 		<h:panelGroup id="main_component" layout="block">
 			<h:form prependId="false">
-	<p:dataTable id="my_gloss_table" var="item" value="#{viewGlossaryBean.items}" sortBy="#{item.topic_1}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="true" rows="20" filteredValue="#{viewGlossaryBean.fileteredItems}">
-        <p:ajax event="filter" oncomplete="groupRow(1)"/>
-        <p:ajax event="page" oncomplete="groupRow(1)"></p:ajax>
+	<p:dataTable id="my_gloss_table" var="item" value="#{viewGlossaryBean.items}" sortBy="#{item.topic_1}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="true" rows="20" filteredValue="#{viewGlossaryBean.fileteredItems}"  
+	paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
+        <p:ajax event="filter" oncomplete="groupRow(2)"/>
+        <p:ajax event="page" oncomplete="groupRow(2)"></p:ajax>
         
         <f:facet name="header">
             <p:outputPanel autoUpdate="true">
-                <h:outputText value="Search all fields: " />
+                <h:outputText value="Search all fields " />
                 <p:inputText id="globalFilter" onkeyup="PF('glossTable').filter()" style="width:150px" placeholder="Enter keyword"/>
             </p:outputPanel>
         </f:facet>
+        <f:facet name="{Exporters}">
+            <h:commandLink >
+                <p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24"/>
+                <p:dataExporter type="xls" target="my_gloss_table" fileName="glossary" />
+            </h:commandLink>
+            </f:facet>
+            <p:column headerText="glossary ID" style="display:none">
+            <h:outputText value="#{item.glossId}"></h:outputText>
+            </p:column>
          <p:column style=" width:20px;">
 						<p:commandLink action="#{glossaryBean.delete(item)}" process="@this" >
 						<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/>
@@ -54,26 +64,26 @@
             <h:outputText value="#{item.description}" pt:data-itemId="#{item.glossId}" id="cell4"/>
         </p:column>
         
-        <p:column  headerText="Term" filterable="true" filterMatchMode="contains" filterBy="#{item.value}" filterStyle="width: 90%;">
-       		<h:outputText value="#{item.value}" /><br/>
+        <p:column  headerText="Term" filterable="true" filterMatchMode="contains" filterBy="#{item.value}" filterStyle="width: 90%;" >
+       		<h:outputText value="#{item.value}" />
          </p:column>
-         <p:column  headerText="Language"  filterBy="#{item.language}" filterStyle="display:none">
-       		<h:outputText value="#{item.language}" /><br/>
+         <p:column  headerText="Language"  filterBy="#{item.language}" filterStyle="display:none" >
+       		<h:outputText value="#{item.language}" />
          </p:column>
          <p:column  headerText="Pronounciation" filterBy="#{item.pronounciation}" filterStyle="display:none">
-       		<h:outputText value="#{item.pronounciation}" /><br/>
+       		<h:outputText value="#{item.pronounciation}" />
          </p:column>
          <p:column  headerText="Acronym" filterBy="#{item.acronym}" filterStyle="display:none">
-       		<h:outputText value="#{item.acronym}" /><br/>
+       		<h:outputText value="#{item.acronym}" />
          </p:column>
          <p:column  headerText="References" filterBy="#{item.references}" filterStyle="display:none">
-       		<h:outputText value="#{item.references}" /><br/>
+       		<h:outputText value="#{item.references}" />
          </p:column>
          <p:column  headerText="Phraseology" filterBy="#{item.phraseology}" filterStyle="display:none" >
-       		<h:outputText value="#{item.phraseology}" /><br/>
+       		<h:outputText value="#{item.phraseology}" />
          </p:column>
          <p:column  headerText="Uses" filterBy="#{item.selectedUses}" filterStyle="display:none">
-       		<h:outputText value="#{item.selectedUses}" /><br/>
+       		<h:outputText value="#{item.selectedUses}" />
          </p:column>
        
        
@@ -135,7 +145,7 @@
 					</p:column>
 					<p:column headerText="Uses" style="text-align: center">
 						<p:selectCheckboxMenu widgetVar="itUseVar" id="useIt" value="#{item.selectedUses}"
-							styleClass="panel" label="#{item.useLabelIt}">
+							styleClass="test-use-checkbox" label="#{item.useLabelIt}">
 							<f:selectItems value="#{glossaryBean.uses}" />
 							<p:ajax oncomplete="PF('itUseVar').show()"  listener="#{item.updateUseLabel}" update="useIt" ></p:ajax>
 							<p:ajax event="toggleSelect" oncomplete="PF('itUseVar').show()" listener="#{item.updateUseLabel}" update="useIt"/>
@@ -197,7 +207,7 @@
 						<f:attribute name="confirmCount" value=#{confirmCount}></f:attribute> -->
 					</p:column>
 					<p:column headerText="Uses" style="text-align: center">
-						<p:selectCheckboxMenu widgetVar="useVar" id="use" value="#{item.selectedUses}" styleClass="panel" label="#{item.useLabelUk}"  >
+						<p:selectCheckboxMenu widgetVar="useVar" id="use" value="#{item.selectedUses}" label="#{item.useLabelUk}" >
 			           		<f:selectItems value="#{glossaryBean.uses}" />
 			           		<p:ajax oncomplete="PF('useVar').show()"  listener="#{item.updateUseLabel}" update="use" ></p:ajax>
 			           		<p:ajax event="toggleSelect" oncomplete="PF('useVar').show()" listener="#{item.updateUseLabel}" update="use"/>
@@ -268,7 +278,7 @@ var groupRow = function(colIndex) {
         var columns = [];
         var column = row.children('td').eq(colIndex);
         
-        for(var j=0; j<5;j++)
+        for(var j=0; j<6;j++)
         	columns.push(row.children('td').eq(j));
         
         var columnData = column.find("span").first().data("itemid");
@@ -298,8 +308,8 @@ var groupRow = function(colIndex) {
 };
 
 $(document).ready(function() {
-	groupRow(1);
-	//groupRow(1); 
+	groupRow(2);
+	
 });
 //]]>
 </script>	
