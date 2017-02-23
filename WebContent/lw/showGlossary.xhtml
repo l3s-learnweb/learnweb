@@ -160,7 +160,7 @@
 							<f:selectItem itemValue="scientific/academic publication" itemLabel="scientific/academic publication"></f:selectItem>
 							<f:selectItem itemValue="institutional website"	itemLabel="institutional website"></f:selectItem>
 							<f:selectItem itemValue="glossary" itemLabel="glossary"></f:selectItem>
-							<f:selectItem itemValue="Ringuee or Reverso" itemLabel="Ringuee or Reverso"></f:selectItem>
+							<f:selectItem itemValue="Linguee or Reverso" itemLabel="Ringuee or Reverso"></f:selectItem>
 							<f:selectItem itemValue="patients' websites and blogs" itemLabel="patients' websites and blogs"></f:selectItem>
 							<f:selectItem itemValue="other" itemLabel="other"></f:selectItem>
 						</p:selectOneMenu>
@@ -222,7 +222,7 @@
 							<f:selectItem itemValue="scientific/academic publication" itemLabel="scientific/academic publication"></f:selectItem>
 							<f:selectItem itemValue="institutional website" itemLabel="institutional website"></f:selectItem>
 							<f:selectItem itemValue="glossary" itemLabel="glossary"></f:selectItem>
-							<f:selectItem itemValue="Ringuee or Reverso" itemLabel="Ringuee or Reverso"></f:selectItem>
+							<f:selectItem itemValue="Linguee or Reverso" itemLabel="Ringuee or Reverso"></f:selectItem>
 							<f:selectItem itemValue="patients' websites and blogs" itemLabel="patients' websites and blogs"></f:selectItem>
 							<f:selectItem itemValue="other" itemLabel="other"></f:selectItem>
 						</p:selectOneMenu>
@@ -245,7 +245,7 @@
 				</p:commandButton>
 				
 				<br/><br/>	
-			    <p:commandButton id="save" value="Save Entry" action="#{glossaryBean.upload()}" styleClass="greenbutton resource_button" update=":glossary_add :glossgrowl">
+			    <p:commandButton id="save" value="Save Entry" action="#{glossaryBean.upload()}" styleClass="greenbutton resource_button" update=":glossgrowl :glossary_add">
 			    	 <f:ajax execute="@form" />
 			    	 
 			    </p:commandButton>

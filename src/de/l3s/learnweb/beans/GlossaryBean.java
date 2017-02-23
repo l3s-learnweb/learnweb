@@ -319,7 +319,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         availableTopicTwos.add(new SelectItem("Diseases and disorders"));
         availableTopicTwos.add(new SelectItem("Anatomy"));
         availableTopicTwos.add(new SelectItem("Medical branches"));
-        availableTopicTwos.add(new SelectItem("Institusions"));
+        availableTopicTwos.add(new SelectItem("Institutions"));
         availableTopicTwos.add(new SelectItem("Professions"));
     }
 
