@@ -58,12 +58,12 @@ public class CDXClient
         
         if(crawlTime < minCrawlTime) //&& waybackAPIerrors < MAX_API_ERRORS)
         {*/
-        log.debug("Execute Wayback query for: " + resource.getUrl());
+        log.debug("Execute Wayback query for: " + resource.getUrlReal());
         //	log.debug("Getting first and last capture info for: " + resource.getUrl());
         int captures = 0;
         waybackAPIrequests++;
         //int oldwaybackAPIerrors = waybackAPIerrors;
-        String url = resource.getUrl().substring(resource.getUrl().indexOf("//") + 2); // remove leading http(s)://
+        String url = resource.getUrlReal().substring(resource.getUrlReal().indexOf("//") + 2); // remove leading http(s)://
 
         Date lastCapture = null, firstCapture = getFirstCaptureDate(url);
 
@@ -76,7 +76,7 @@ public class CDXClient
                 resource.getResource().setMetadataValue("first_timestamp", waybackDateFormat.format(firstCapture));
                 resource.getResource().setMetadataValue("last_timestamp", waybackDateFormat.format(lastCapture));
                 captures = 1; // one capture date -> at least one capture
-                Learnweb.getInstance().getWaybackCapturesLogger().logWaybackUrl(resource.getUrl(), firstCapture.getTime(), lastCapture.getTime());
+                Learnweb.getInstance().getWaybackCapturesLogger().logWaybackUrl(resource.getUrlReal(), firstCapture.getTime(), lastCapture.getTime());
                 //		log.debug("URL:" + url + "; First Capture:" + firstCapture + "; Last Capture:" + lastCapture);
             }
         }

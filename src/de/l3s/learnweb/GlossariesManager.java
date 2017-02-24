@@ -142,7 +142,7 @@ public class GlossariesManager
                 // glossItem.setDescription("");
                 //glossItem.setType("Glossary");
                 // glossItem.setIdAtService(Integer.toString(glossaryId));
-                if(glossItem.getUrl().isEmpty())
+                if(glossItem.getUrlReal().isEmpty())
                     glossItem.setUrl("/lw/glossary/showGlossary.jsf?resource_id=" + Integer.toString(glossItem.getId()));
                 solr.indexResource(glossItem);
                 glossItem.save();

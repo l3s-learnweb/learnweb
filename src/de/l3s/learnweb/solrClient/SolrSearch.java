@@ -547,7 +547,7 @@ public class SolrSearch implements Serializable
                 */
             }
 
-            if(resource.getType() == null || resource.getTitle() == null || resource.getUrl() == null)
+            if(resource.getType() == null || resource.getTitle() == null || resource.getUrlReal() == null)
             {
                 log.error("missing mandatory field url, title or type " + resource);
                 continue;

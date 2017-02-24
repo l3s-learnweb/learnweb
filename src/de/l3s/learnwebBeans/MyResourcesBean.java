@@ -725,7 +725,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     public String getUrlToSave()
     {
         if (this.getAddResourceBean() != null && this.getAddResourceBean().getResource() != null) {
-            return this.getAddResourceBean().getResource().getUrl();
+            return this.getAddResourceBean().getResource().getUrlReal();
         }
 
         return null;

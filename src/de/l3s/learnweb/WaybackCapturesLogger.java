@@ -155,9 +155,9 @@ public class WaybackCapturesLogger
         public String call() throws NumberFormatException, SQLException
         {
             CDXClient cdxClient = new CDXClient();
-            List<Long> timestamps = cdxClient.getCaptures(resource.getUrl());
+            List<Long> timestamps = cdxClient.getCaptures(resource.getUrlReal());
             PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT url_id FROM wb_url WHERE url = ?");
-            pStmt.setString(1, resource.getUrl());
+            pStmt.setString(1, resource.getUrlReal());
             ResultSet rs = pStmt.executeQuery();
             if(rs.next())
             {
@@ -176,7 +176,7 @@ public class WaybackCapturesLogger
                 }
                 pStmt3.setInt(1, urlId);
                 pStmt3.executeUpdate();
-                log.debug("Logged the wayback captures in the database for: " + resource.getUrl());
+                log.debug("Logged the wayback captures in the database for: " + resource.getUrlReal());
             }
             resource.addArchiveUrl(null);
             return null;

@@ -465,11 +465,6 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         return description.replace("\n", "<br/>");
     }
 
-    public String getUrl()
-    {
-        return url;
-    }
-
     public int getStorageType()
     {
         return storageType;
@@ -805,7 +800,17 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         return value;
     }
 
-    // the following functions are JLearnweb specific and only for convenience included in this class
+    public String getUrlReal()
+    {
+        return url;
+    }
+
+    public String getUrl()
+    {
+        User user = UtilBean.getUserBean().getUser();
+
+        return "http://proxy.kemkes.net/open?u=" + StringHelper.urlEncode(getUrlReal()) + "&c=2&i=" + (user == null ? 0 : user.getId());
+    }
 
     public String getLearnwebUrl() throws SQLException
     {
@@ -1249,7 +1254,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         if(getType().equalsIgnoreCase("image"))
             return "<img src=\"" + getThumbnail2().getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\" original-src=\"" + large.getUrl() + "\"/>";
         else if(getType().equalsIgnoreCase("text"))
-            return "<iframe src=\"" + getUrl() + "\" />";
+            return "<iframe src=\"" + getUrlReal() + "\" />";
         else if(getType().equalsIgnoreCase("video"))
         {
             if(getSource().equalsIgnoreCase("loro") || getSource().equalsIgnoreCase("desktop"))

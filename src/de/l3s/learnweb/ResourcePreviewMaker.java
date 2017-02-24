@@ -195,7 +195,7 @@ public class ResourcePreviewMaker
         resource.setType("text");
         resource.setFormat("text/html");
 
-        URL thumbnailUrl = new URL(websiteThumbnailService + StringHelper.urlEncode(resource.getUrl()));
+        URL thumbnailUrl = new URL(websiteThumbnailService + StringHelper.urlEncode(resource.getUrlReal()));
 
         // process image
         Image img = new Image(thumbnailUrl.openStream());

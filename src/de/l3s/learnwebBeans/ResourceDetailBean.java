@@ -116,7 +116,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         JSONArray highChartsData = new JSONArray();
         try
         {
-            List<TimelineData> timelineMonthlyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByMonth(clickedResource.getId(), clickedResource.getUrl());
+            List<TimelineData> timelineMonthlyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByMonth(clickedResource.getId(), clickedResource.getUrlReal());
 
             for(TimelineData timelineData : timelineMonthlyData)
             {
@@ -140,13 +140,13 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         try
         {
-            List<TimelineData> timelineDailyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByDay(clickedResource.getId(), clickedResource.getUrl());
+            List<TimelineData> timelineDailyData = getLearnweb().getTimelineManager().getTimelineDataGroupedByDay(clickedResource.getId(), clickedResource.getUrlReal());
             for(TimelineData timelineData : timelineDailyData)
             {
                 JSONObject archiveDay = new JSONObject();
                 archiveDay.put("number", timelineData.getNumberOfVersions());
                 archiveDay.put("badgeClass", "badge-warning");
-                List<ArchiveUrl> archiveUrlsData = getLearnweb().getTimelineManager().getArchiveUrlsByResourceIdAndTimestamp(clickedResource.getId(), timelineData.getTimestamp(), clickedResource.getUrl());
+                List<ArchiveUrl> archiveUrlsData = getLearnweb().getTimelineManager().getArchiveUrlsByResourceIdAndTimestamp(clickedResource.getId(), timelineData.getTimestamp(), clickedResource.getUrlReal());
                 JSONArray archiveVersions = new JSONArray();
                 for(ArchiveUrl archiveUrl : archiveUrlsData)
                 {
@@ -303,10 +303,10 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             {
                 ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
                 log.debug("Get the mime type and extract text if possible");
-                FileInfo info = rpm.getFileInfo(FileInspector.openStream(clickedResource.getUrl()), clickedResource.getFileName());
+                FileInfo info = rpm.getFileInfo(FileInspector.openStream(clickedResource.getUrlReal()), clickedResource.getFileName());
 
                 log.debug("Create thumbnails");
-                rpm.processFile(clickedResource, FileInspector.openStream(clickedResource.getUrl()), info);
+                rpm.processFile(clickedResource, FileInspector.openStream(clickedResource.getUrlReal()), info);
             }
             else
             {

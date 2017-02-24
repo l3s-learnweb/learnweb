@@ -109,9 +109,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         try
         {
             if(tedResource.getSource().equalsIgnoreCase("ted"))
-                this.videoResourceId = Learnweb.getInstance().getTedManager().getTedVideoResourceId(tedResource.getUrl());
+                this.videoResourceId = Learnweb.getInstance().getTedManager().getTedVideoResourceId(tedResource.getUrlReal());
             else if(tedResource.getSource().equalsIgnoreCase("tedx"))
-                this.videoResourceId = Learnweb.getInstance().getTedManager().getTedXVideoResourceId(tedResource.getUrl());
+                this.videoResourceId = Learnweb.getInstance().getTedManager().getTedXVideoResourceId(tedResource.getUrlReal());
         }
         catch(SQLException e)
         {

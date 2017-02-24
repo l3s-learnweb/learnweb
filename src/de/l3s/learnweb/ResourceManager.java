@@ -331,7 +331,7 @@ public class ResourceManager
             replace.setInt(1, resource.getId());
         replace.setString(2, resource.getTitle());
         replace.setString(3, resource.getDescription());
-        replace.setString(4, resource.getUrl());
+        replace.setString(4, resource.getUrlReal());
         replace.setInt(5, resource.getStorageType());
         replace.setInt(6, resource.getRights());
         replace.setString(7, resource.getSource());
@@ -1181,7 +1181,7 @@ public class ResourceManager
                 null);
         for(Resource resource : resources)
         {
-            String url = AddResourceBean.checkUrl(resource.getUrl());
+            String url = AddResourceBean.checkUrl(resource.getUrlReal());
 
             if(null == url)
             {

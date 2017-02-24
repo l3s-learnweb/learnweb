@@ -443,7 +443,7 @@ public class TedManager
                 }
 
                 // check if resources is already stored in Learnweb
-                select.setString(1, resource.getUrl());
+                select.setString(1, resource.getUrlReal());
                 ResultSet rs = select.executeQuery();
 
                 if(rs.next()) // it is already stored

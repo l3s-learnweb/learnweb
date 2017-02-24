@@ -342,8 +342,8 @@ public class ResultSetBean extends ApplicationBean
             if(createNewResource)
                 new AddResourceBean.CreateThumbnailThread(newResource).start();
 
-            int tempresourceId = searchLogClient.getResourceIdByUrl(newResource.getUrl());
-            searchLogClient.saveResourceLog(user.getId(), date, ACTION.resource_saved, newResource.getUrl(), tempresourceId, newResource.getTitle(), newResource.getSource());
+            int tempresourceId = searchLogClient.getResourceIdByUrl(newResource.getUrlReal());
+            searchLogClient.saveResourceLog(user.getId(), date, ACTION.resource_saved, newResource.getUrlReal(), tempresourceId, newResource.getTitle(), newResource.getSource());
             searchLogClient.addResourceSavedList(tempresourceId, newResource.getId());
 
             log(Action.adding_resource, selectedResourceTargetGroupId, newResource.getId(), "");
@@ -375,7 +375,7 @@ public class ResultSetBean extends ApplicationBean
             boolean storedInLearnweb = resource.getId() > 0;
             int userId = getUser() == null ? -1 : getUser().getId(); // search can be anonymous
 
-            searchLogClient.saveResourceLog(userId, startTime, ACTION.resource_click, resource.getUrl(), tempResourceId, resource.getTitle(), resource.getSource());
+            searchLogClient.saveResourceLog(userId, startTime, ACTION.resource_click, resource.getUrlReal(), tempResourceId, resource.getTitle(), resource.getSource());
             log.debug("userId:" + userId + "; tempId:" + tempResourceId + "; realId:" + resource.getId() + " stored in Learnweb:" + storedInLearnweb);
         }
         catch(ClientHandlerException e)
