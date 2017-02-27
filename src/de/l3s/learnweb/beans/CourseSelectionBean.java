@@ -29,12 +29,10 @@ public class CourseSelectionBean extends ApplicationBean implements Serializable
             return;
 
         activeCourse = getUser().getActiveCourse();
-        System.out.println("active course" + activeCourse);
         inactiveCourses = getUser().getCourses();
 
         // remove active course from course list
         Iterator<Course> iterator = inactiveCourses.iterator();
-        System.out.println(inactiveCourses.size());
         while(iterator.hasNext())
         {
             Course course = iterator.next();
@@ -55,7 +53,6 @@ public class CourseSelectionBean extends ApplicationBean implements Serializable
 
     public List<Course> getInactiveCourses()
     {
-        System.out.println(inactiveCourses.size());
         return inactiveCourses;
     }
 

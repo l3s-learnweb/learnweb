@@ -203,7 +203,7 @@ public class ArchiveItShingle
                 setOfNearUniqueArchivesPair.add(values.get(i));
             }
         }
-        System.out.println(resourceId + " Amount of duplicates:" + t + " Total archive versions:" + d + " Percentage dublicates:" + (float) t * 100 / d);
+        // log.debug(resourceId + " Amount of duplicates:" + t + " Total archive versions:" + d + " Percentage dublicates:" + (float) t * 100 / d);
     }
 
     /**

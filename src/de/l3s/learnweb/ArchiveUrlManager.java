@@ -824,7 +824,7 @@ public class ArchiveUrlManager
         MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
         formData.add("url", "http://docs.oracle.com/javase/7/docs/api/java/net/HttpURLConnection.html#setFollowRedirects(boolean)");
         ClientResponse response = webResource.get(ClientResponse.class);
-        System.out.println(response.getEntity(String.class));
+        
         String refreshHeader = null;
         
         if(response.getHeaders().containsKey("Refresh"))

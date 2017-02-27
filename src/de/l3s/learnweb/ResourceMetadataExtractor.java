@@ -457,11 +457,11 @@ public class ResourceMetadataExtractor
         rme.extractWebSource();
         rme.extractMetadata();
 
-        System.out.println(resource.getType());
-        System.out.println(resource.getSource());
-        System.out.println(resource.getIdAtService());
-        System.out.println(resource.getTitle());
-        System.out.println(resource.getDescription());
-        System.out.println(resource.getAuthor());
+        log.debug(resource.getType());
+        log.debug(resource.getSource());
+        log.debug(resource.getIdAtService());
+        log.debug(resource.getTitle());
+        log.debug(resource.getDescription());
+        log.debug(resource.getAuthor());
     }
 }

@@ -36,7 +36,6 @@ public class FactSheetBean extends ApplicationBean
         Random randomGenerator = new Random();
         int random = randomGenerator.nextInt(1000);
         back = "Q" + random;
-        System.out.println(back);
         return back;
     }
 

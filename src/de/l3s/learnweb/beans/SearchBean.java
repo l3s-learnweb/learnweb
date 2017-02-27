@@ -863,7 +863,6 @@ public class SearchBean extends ApplicationBean implements Serializable
             LinkedList<ResourceDecorator> resources = images.getResources();
             
             for(ResourceDecorator resource : resources)
-            System.out.println(resource.getSource());
             //images.getResourcesByPage(2);			
             */
             graphLoaded = true;

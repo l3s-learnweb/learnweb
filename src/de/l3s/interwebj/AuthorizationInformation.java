@@ -36,7 +36,7 @@ public class AuthorizationInformation implements Serializable
             throw new IllegalResponseException(e.getMessage());
         }
         Element root = document.getDocumentElement();
-        System.out.println(root);
+        
         if(!root.getAttribute("stat").equals("ok"))
             throw new IllegalResponseException(root.toString());
         
