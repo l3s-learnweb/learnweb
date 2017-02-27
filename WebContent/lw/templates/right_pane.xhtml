@@ -111,7 +111,7 @@
 								
 								<p:row rendered="#{addResourceBean.resource.storageType == 3}">
 									<p:column>
-										<h:outputText value="Glossary Title:" />
+										<h:outputText value="#{msg.title}:" />
 									</p:column>
 									<p:column rendered="#{addResourceBean.formStep == 1}">
 										<p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="title_input"/>
@@ -275,6 +275,10 @@
 									rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf'}"
 									value="#{resourceDetailBean.clickedResource.url}"/>
 							</a>
+							<h:outputLink value="showGlossary.jsf" style="text-decoration:underline; color: blue;" rendered="#{resourceDetailBean.clickedResource.source eq 'Glossary'}">
+										<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
+										Link to Glossary
+							</h:outputLink>
 						</div>
 					</ui:fragment>
 					
@@ -302,7 +306,7 @@
 							</tr>
 						</ui:fragment>
 						
-						<ui:fragment rendered="${empty resourceDetailBean.clickedResource.fileName and resourceDetailBean.clickedResource.type.toLowerCase() != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type.toLowerCase() != 'video' and resourceDetailBean.clickedResource.type.toLowerCase() != 'image'}">
+						<ui:fragment rendered="${empty resourceDetailBean.clickedResource.fileName and resourceDetailBean.clickedResource.type.toLowerCase() != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type.toLowerCase() != 'video' and resourceDetailBean.clickedResource.type.toLowerCase() != 'image' }">
 							<tr>
 								<td>
 									<span class="resource_field">
@@ -452,7 +456,8 @@
 							</tr>
 						</ui:fragment>	
 						<ui:fragment rendered="#{resourceDetailBean.clickedResource.source == 'Glossary' }">
-							<tr>
+							
+							<!-- <tr>
 								<td>
 									<span class="resource_field">
 										Glossary: 
@@ -465,7 +470,7 @@
 										Link to Glossary
 									</h:outputLink>
 								</td>
-							</tr>
+							</tr> -->
 							<!-- <tr>
 								<td>
 									<span class="resource_field">
@@ -516,7 +521,7 @@
 						<h:outputText id="resource_description" value="#{resourceDetailBean.clickedResource.descriptionHTML}" escape="false" />
 					</h:panelGroup>
 							
-					<h:form id="archive_current_form" rendered="${resourceDetailBean.clickedResource.storageType != 1 and resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
+					<h:form id="archive_current_form" rendered="${resourceDetailBean.clickedResource.storageType == 2 and resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
 						<span class="resource_field">
 							#{msg.current_version}: 
 						</span>

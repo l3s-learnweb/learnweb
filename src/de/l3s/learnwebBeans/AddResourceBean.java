@@ -191,12 +191,15 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             if(resource.getId() == -1)
                 resource = getUser().addResource(resource);
             else
-                resource.save();
+            {
 
+                resource.save();
+            }
             //Resource glossaryIconResource = Learnweb.getInstance().getResourceManager().getResource(199691);
             //            Image img = new Image(new FileInputStream(new File("/Users/Rishita/Documents/workspace/Learnweb_ver2/WebContent/resources/glossary/glossary_icon_23.png")));
-            Resource iconResource = Learnweb.getInstance().getResourceManager().getResource(199691);
-
+            Resource iconResource = Learnweb.getInstance().getResourceManager().getResource(200233);
+            System.out.println(iconResource.getTitle());
+            System.out.println(iconResource.getThumbnail0());
             resource.setThumbnail0(iconResource.getThumbnail0());
             resource.setThumbnail1(iconResource.getThumbnail1());
             resource.setThumbnail2(iconResource.getThumbnail2());
@@ -205,7 +208,8 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.setEmbeddedSize1Raw(iconResource.getEmbeddedSize1());
             resource.setEmbeddedSize3Raw(iconResource.getEmbeddedSize3());
             resource.setEmbeddedSize4Raw(iconResource.getEmbeddedSize4());
-
+            System.out.println(Learnweb.getInstance().getContextUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));
+            resource.setUrl(Learnweb.getInstance().getContextUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));
             resource.save();
             log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
