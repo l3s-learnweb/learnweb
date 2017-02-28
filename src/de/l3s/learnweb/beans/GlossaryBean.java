@@ -21,6 +21,7 @@ import de.l3s.glossary.LanguageItem;
 import de.l3s.learnweb.GlossariesManager;
 import de.l3s.learnweb.GlossaryEntry;
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.User;
 import de.l3s.learnwebBeans.ApplicationBean;
@@ -66,6 +67,16 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             getGlossaryItems(resourceId);
             setFileteredItems(getItems());
+
+            try
+            {
+                Resource resource = getLearnweb().getResourceManager().getResource(resourceId);
+                log(Action.glossary_open, resource.getGroupId(), resourceId);
+            }
+            catch(Exception e)
+            {
+                log.error("Couldn't log glossary action; resource: " + resourceId);
+            }
 
         }
     }
@@ -187,6 +198,16 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             FacesContext context = FacesContext.getCurrentInstance();
 
             context.addMessage(null, new FacesMessage("Successful entry"));
+
+            try
+            {
+                Resource resource = getLearnweb().getResourceManager().getResource(resourceId);
+                log(Action.glossary_edit, resource.getGroupId(), resourceId);
+            }
+            catch(Exception e)
+            {
+                log.error("Couldn't log glossary action; resource: " + resourceId);
+            }
 
             return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
         }
