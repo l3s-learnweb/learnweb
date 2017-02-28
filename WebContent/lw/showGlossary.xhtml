@@ -71,21 +71,22 @@
          <p:column  headerText="Language"  filterBy="#{item.language}" filterStyle="display:none" >
        		<h:outputText value="#{item.language}" />
          </p:column>
+         <p:column  headerText="Uses" filterBy="#{item.selectedUses}" filterStyle="display:none">
+       		<h:outputText value="#{item.selectedUses}" />
+         </p:column>
          <p:column  headerText="Pronounciation" filterBy="#{item.pronounciation}" filterStyle="display:none">
        		<h:outputText value="#{item.pronounciation}" />
          </p:column>
          <p:column  headerText="Acronym" filterBy="#{item.acronym}" filterStyle="display:none">
        		<h:outputText value="#{item.acronym}" />
          </p:column>
-         <p:column  headerText="References" filterBy="#{item.references}" filterStyle="display:none">
+         <p:column  headerText="Source" filterBy="#{item.references}" filterStyle="display:none">
        		<h:outputText value="#{item.references}" />
          </p:column>
          <p:column  headerText="Phraseology" filterBy="#{item.phraseology}" filterStyle="display:none" >
        		<h:outputText value="#{item.phraseology}" />
          </p:column>
-         <p:column  headerText="Uses" filterBy="#{item.selectedUses}" filterStyle="display:none">
-       		<h:outputText value="#{item.selectedUses}" />
-         </p:column>
+         
        
        
        
@@ -166,12 +167,12 @@
 							<f:selectItem itemValue="#{null}" itemLabel="--select--" />
 							<f:selectItem itemValue="Wikipedia" itemLabel="Wikipedia"></f:selectItem>
 							<f:selectItem itemValue="encyclopaedia" itemLabel="encyclopaedia"></f:selectItem>
-							<f:selectItem itemValue="monolingual dictionary" itemLabel="monoligual dictionary"></f:selectItem>
+							<f:selectItem itemValue="monolingual dictionary" itemLabel="monolingual dictionary"></f:selectItem>
 							<f:selectItem itemValue="bilingual dictionary" itemLabel="bilingual dictionary"></f:selectItem>
 							<f:selectItem itemValue="scientific/academic publication" itemLabel="scientific/academic publication"></f:selectItem>
 							<f:selectItem itemValue="institutional website"	itemLabel="institutional website"></f:selectItem>
 							<f:selectItem itemValue="glossary" itemLabel="glossary"></f:selectItem>
-							<f:selectItem itemValue="Linguee or Reverso" itemLabel="Ringuee or Reverso"></f:selectItem>
+							<f:selectItem itemValue="Linguee or Reverso" itemLabel="Linguee or Reverso"></f:selectItem>
 							<f:selectItem itemValue="patients' websites and blogs" itemLabel="patients' websites and blogs"></f:selectItem>
 							<f:selectItem itemValue="other" itemLabel="other"></f:selectItem>
 						</p:selectOneMenu>
@@ -201,7 +202,7 @@
 					English Terms
 					</f:facet>
 					
-					<p:column headerText="Term UK">
+					<p:column headerText="Term EN">
 						
 						<p:inputText id="termuk" value='#{item.value}' style="width: 90%"/>
 						<!-- <f:validator validatorId="termCountValidation"></f:validator>
@@ -228,12 +229,12 @@
 							<f:selectItem itemValue="#{null}" itemLabel="--select--" />
 							<f:selectItem itemValue="Wikipedia" itemLabel="Wikipedia"></f:selectItem>
 							<f:selectItem itemValue="encyclopaedia" itemLabel="encyclopaedia"></f:selectItem>
-							<f:selectItem itemValue="monolingual dictionary" itemLabel="monoligual dictionary"></f:selectItem>
+							<f:selectItem itemValue="monolingual dictionary" itemLabel="monolingual dictionary"></f:selectItem>
 							<f:selectItem itemValue="bilingual dictionary" itemLabel="bilingual dictionary"></f:selectItem>
 							<f:selectItem itemValue="scientific/academic publication" itemLabel="scientific/academic publication"></f:selectItem>
 							<f:selectItem itemValue="institutional website" itemLabel="institutional website"></f:selectItem>
 							<f:selectItem itemValue="glossary" itemLabel="glossary"></f:selectItem>
-							<f:selectItem itemValue="Linguee or Reverso" itemLabel="Ringuee or Reverso"></f:selectItem>
+							<f:selectItem itemValue="Linguee or Reverso" itemLabel="Linguee or Reverso"></f:selectItem>
 							<f:selectItem itemValue="patients' websites and blogs" itemLabel="patients' websites and blogs"></f:selectItem>
 							<f:selectItem itemValue="other" itemLabel="other"></f:selectItem>
 						</p:selectOneMenu>

@@ -1,5 +1,6 @@
 package de.l3s.glossary;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GlossaryItems
@@ -70,6 +71,7 @@ public class GlossaryItems
 
     public void setFinalItems(List<LanguageItem> finalItems)
     {
+        this.finalItems = new ArrayList<LanguageItem>();
         this.finalItems = finalItems;
     }
 

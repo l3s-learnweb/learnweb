@@ -1,7 +1,6 @@
 package de.l3s.learnweb.beans;
 
 import java.io.Serializable;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -164,41 +163,42 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
         if(upload)
         {
-            User u = getUser();
-            GlossaryEntry entry = new GlossaryEntry();
-
-            entry.setDescription(getDescription());
-            //entry.setMultimediaFile(getMultimediaFile());
-            // gl.setFileName(getFileName());
-            entry.setSelectedTopicOne(getSelectedTopicOne());
-            entry.setSelectedTopicTwo(getSelectedTopicTwo());
-            entry.setSelectedTopicThree(getSelectedTopicThree());
-            entry.setUkItems(getUkItems());
-            entry.setUserId(getUserId());
-            entry.setUser(u);
-            entry.setItalianItems(getItalianItems());
-            entry.setResourceId(getResourceId());
-            entry.setGlossaryId(getGlossaryId());
-
-            Resource glossItem = getLearnweb().getGlossariesManager().addToDatabase(entry);
-            if(glossItem != null)
+            try
             {
-                try
-                {
-                    glossItem.save();
-                    // getUser().addResource(glossItem);
+                User u = getUser();
+                GlossaryEntry entry = new GlossaryEntry();
 
-                }
-                catch(SQLException e)
+                entry.setDescription(getDescription());
+                //entry.setMultimediaFile(getMultimediaFile());
+                // gl.setFileName(getFileName());
+                entry.setSelectedTopicOne(getSelectedTopicOne());
+                entry.setSelectedTopicTwo(getSelectedTopicTwo());
+                entry.setSelectedTopicThree(getSelectedTopicThree());
+                entry.setUkItems(getUkItems());
+                entry.setUserId(getUserId());
+                entry.setUser(u);
+                entry.setItalianItems(getItalianItems());
+                entry.setResourceId(getResourceId());
+                entry.setGlossaryId(getGlossaryId());
+
+                boolean result = getLearnweb().getGlossariesManager().addToDatabase(entry);
+                if(result)
                 {
-                    log.error(e);
+                    FacesContext context = FacesContext.getCurrentInstance();
+
+                    context.addMessage(null, new FacesMessage("Successful entry"));
                 }
+
+                if(getGlossaryId() == 0)
+                    log(Action.glossary_entry_add, resourceId, getGlossaryId());
+                else
+                    log(Action.glossary_entry_edit, resourceId, getGlossaryId());
+
             }
-            createEntry();
-
-            FacesContext context = FacesContext.getCurrentInstance();
-
-            context.addMessage(null, new FacesMessage("Successful entry"));
+            catch(Exception e)
+            {
+                log.error("Couldn't log Glossary action; resource: " + resourceId);
+            }
 
             return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
         }
@@ -208,8 +208,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             FacesContext context = FacesContext.getCurrentInstance();
 
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Please enter atleast one valid entry for both Italian and UK items"));
-
-            return null;
+            return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
         }
 
     }
@@ -221,19 +220,37 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public String delete(GlossaryItems item)
     {
+        try
+        {
 
-        getLearnweb().getGlossariesManager().deleteFromDb(item.getGlossId());
-        createEntry();
+            getLearnweb().getGlossariesManager().deleteFromDb(item.getGlossId());
+            createEntry();
+
+            log(Action.glossary_entry_delete, resourceId, item.getGlossId());
+
+        }
+        catch(Exception e)
+        {
+            log.error("Couldn't log Glossary action; resource: " + resourceId);
+        }
         return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
-
     }
 
     public void addIt()
     {
+        try
+        {
 
-        ItalianItems.add(new LanguageItem());
-        count++;
-        valueHeaderIt = "Term It" + Integer.toString(count);
+            ItalianItems.add(new LanguageItem());
+            count++;
+            valueHeaderIt = "Term It" + Integer.toString(count);
+
+            log(Action.glossary_term_add, resourceId, "");
+        }
+        catch(Exception e)
+        {
+            log.error("Couldn't log Glossary action; resource: " + resourceId);
+        }
 
     }
 
@@ -248,7 +265,19 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                     remove = true;
         }
         if(remove)
-            ItalianItems.remove(item);
+        {
+            try
+            {
+                ItalianItems.remove(item);
+
+                log(Action.glossary_term_delete, resourceId, item.getTermId());
+            }
+            catch(Exception e)
+            {
+                log.error("Couldn't log Glossary action; resource: " + resourceId);
+            }
+
+        }
 
         else
         {
@@ -270,7 +299,18 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                     remove = true;
         }
         if(remove)
-            UkItems.remove(item);
+        {
+            try
+            {
+                UkItems.remove(item);
+
+                log(Action.glossary_term_delete, resourceId, item.getTermId());
+            }
+            catch(Exception e)
+            {
+                log.error("Couldn't log Glossary action; resource: " + resourceId);
+            }
+        }
         else
         {
 
@@ -283,7 +323,16 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public void addUk()
     {
-        UkItems.add(new LanguageItem());
+        try
+        {
+            UkItems.add(new LanguageItem());
+
+            log(Action.glossary_term_add, resourceId, "");
+        }
+        catch(Exception e)
+        {
+            log.error("Couldn't log Glossary action; resource: " + resourceId);
+        }
     }
 
     public void createAvailableTopicTwos()

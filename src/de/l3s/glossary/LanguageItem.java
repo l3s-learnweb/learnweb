@@ -119,6 +119,7 @@ public class LanguageItem
 
     public void setSelectedUses(List<String> selectedUses)
     {
+        this.selectedUses = new ArrayList<String>();
         if(!selectedUses.isEmpty())
             this.selectedUses = selectedUses;
 
