@@ -187,6 +187,16 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                 {
                     glossItem.save();
                     // getUser().addResource(glossItem);
+
+                    try
+                    {
+                        Resource resource = getLearnweb().getResourceManager().getResource(resourceId);
+                        log(Action.glossary_edit, resource.getGroupId(), resourceId, entry.getGlossaryId() + "");
+                    }
+                    catch(Exception e)
+                    {
+                        log.error("Couldn't log glossary action; resource: " + resourceId);
+                    }
                 }
                 catch(SQLException e)
                 {
@@ -198,16 +208,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             FacesContext context = FacesContext.getCurrentInstance();
 
             context.addMessage(null, new FacesMessage("Successful entry"));
-
-            try
-            {
-                Resource resource = getLearnweb().getResourceManager().getResource(resourceId);
-                log(Action.glossary_edit, resource.getGroupId(), resourceId);
-            }
-            catch(Exception e)
-            {
-                log.error("Couldn't log glossary action; resource: " + resourceId);
-            }
 
             return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
         }
