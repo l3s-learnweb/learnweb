@@ -21,7 +21,7 @@
 				#{msg.activity_message}
 			</span>	
 				
-			<h:form id="center_header_form">				
+			<h:form id="center_header_form" rendered="false">				
 				<p:menuButton value="#{msg.upload_resource}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton">
 			        <p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" update=":add_resource_panel" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
 						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="1"/>

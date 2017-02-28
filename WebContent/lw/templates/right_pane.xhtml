@@ -54,7 +54,7 @@
 						scroller();
 						lightbox_load();
 					}
-					update_header();
+					//update_header();
 				</script>		
 				
 				<h:panelGroup id="add_resource_section" rendered="#{bean.rightPanelAction == 'newResource'}" styleClass="create-block new-resource" layout="block">
@@ -276,9 +276,9 @@
 									rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf'}"
 									value="#{resourceDetailBean.clickedResource.url}"/>
 							</a>
-							<h:outputLink value="showGlossary.jsf" style="text-decoration:underline; color: blue;" rendered="#{resourceDetailBean.clickedResource.source eq 'Glossary'}">
+							<h:outputLink value="showGlossary.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.source eq 'Glossary'}">
 										<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
-										Link to Glossary
+										Open Glossary
 							</h:outputLink>
 						</div>
 					</ui:fragment>

@@ -247,7 +247,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             {
                 ItalianItems.remove(item);
 
-                log(Action.glossary_term_delete, resourceId, item.getTermId());
+                log(Action.glossary_term_delete, groupId, resourceId, Integer.toString(item.getTermId()));
             }
             else
             {
@@ -278,7 +278,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             {
                 UkItems.remove(item);
 
-                log(Action.glossary_term_delete, resourceId, item.getTermId());
+                log(Action.glossary_term_delete, groupId, resourceId, Integer.toString(item.getTermId()));
             }
             else
             {
