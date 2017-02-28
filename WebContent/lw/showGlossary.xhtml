@@ -68,7 +68,7 @@
         <p:column  headerText="Term" filterable="true" filterMatchMode="contains" filterBy="#{item.value}" filterStyle="width: 90%;" >
        		<h:outputText value="#{item.value}" />
          </p:column>
-         <p:column  headerText="Language"  filterBy="#{item.language}" filterStyle="display:none" >
+         <p:column  headerText="Language" sortBy="#{item.language}" filterBy="#{item.language}" filterStyle="display:none" >
        		<h:outputText value="#{item.language}" />
          </p:column>
          <p:column  headerText="Uses" filterBy="#{item.selectedUses}" filterStyle="display:none">
@@ -135,6 +135,66 @@
 					
 				</p:panelGrid>
 				<br/>
+				<p:dataTable value="#{glossaryBean.ukItems}" var="item" id="uk_terms" tableStyle="width:100%">
+					<f:facet name="header">
+					English Terms
+					</f:facet>
+					
+					<p:column headerText="Term EN">
+						
+						<p:inputText id="termuk" value='#{item.value}' style="width: 90%"/>
+						<!-- <f:validator validatorId="termCountValidation"></f:validator>
+						<f:attribute name="confirmCount" value=#{confirmCount}></f:attribute> -->
+					</p:column>
+					<p:column headerText="Uses" style="text-align: center">
+						<p:selectCheckboxMenu id="use" value="#{item.selectedUses}" label="#{item.useLabel}" >
+			           		<f:selectItems value="#{glossaryBean.uses}" />
+			           		<p:ajax listener="#{item.updateUseLabel}" update="use" ></p:ajax>
+			           		<p:ajax event="toggleSelect" listener="#{item.updateUseLabel}" update="use"/>
+			           	</p:selectCheckboxMenu>
+					</p:column>
+					<p:column headerText="Pronounciation">
+						
+						<p:inputText id="pron_uk" value='#{item.pronounciation}' style="width: 90%"/>
+					</p:column>
+					<p:column headerText="Acronym">
+						
+						<p:inputText id="acro_uk" value='#{item.acronym}' style="width: 90%"/>
+					</p:column>
+					<p:column headerText="Source">
+						
+						<p:selectOneMenu id="ref_uk" value="#{item.references}" style="width: 80% !important" autoWidth="false">
+							<f:selectItem itemValue="#{null}" itemLabel="--select--" />
+							<f:selectItem itemValue="Wikipedia" itemLabel="Wikipedia"></f:selectItem>
+							<f:selectItem itemValue="encyclopaedia" itemLabel="encyclopaedia"></f:selectItem>
+							<f:selectItem itemValue="monolingual dictionary" itemLabel="monolingual dictionary"></f:selectItem>
+							<f:selectItem itemValue="bilingual dictionary" itemLabel="bilingual dictionary"></f:selectItem>
+							<f:selectItem itemValue="scientific/academic publication" itemLabel="scientific/academic publication"></f:selectItem>
+							<f:selectItem itemValue="institutional website" itemLabel="institutional website"></f:selectItem>
+							<f:selectItem itemValue="glossary" itemLabel="glossary"></f:selectItem>
+							<f:selectItem itemValue="Linguee or Reverso" itemLabel="Linguee or Reverso"></f:selectItem>
+							<f:selectItem itemValue="patients' websites and blogs" itemLabel="patients' websites and blogs"></f:selectItem>
+							<f:selectItem itemValue="other" itemLabel="other"></f:selectItem>
+						</p:selectOneMenu>
+					</p:column>
+					<p:column headerText="Phraseology">
+						
+						<p:inputTextarea id="phras_uk" value="#{item.phraseology}" autoResize="false" />
+					</p:column>
+					<p:column width="10">
+			<p:commandLink id="deleteUk"  actionListener="#{glossaryBean.removeUk(item)}" update=":glossgrowl :uk_terms" >
+			<f:ajax execute="uk_terms"/>
+			<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/>
+		</p:commandLink>
+		<p:tooltip  for="deleteUk" value="Remove this row" position="bottom"/>
+		</p:column>
+				</p:dataTable>
+				<br/>
+				<p:commandButton value="Add synonym" actionListener="#{glossaryBean.addUk}" styleClass="greenbutton" update=":glossary_add :uk_terms">
+					<f:ajax execute="@this uk_terms"/>
+				</p:commandButton>
+				
+				<br/><br/>	
 					
 				<p:dataTable value="#{glossaryBean.italianItems}" var="item" id="italian_terms"  tableStyle="width:100%">
 					<f:facet name="header">
@@ -197,66 +257,7 @@
 
 				<br/><br/>
 						
-				<p:dataTable value="#{glossaryBean.ukItems}" var="item" id="uk_terms" tableStyle="width:100%">
-					<f:facet name="header">
-					English Terms
-					</f:facet>
-					
-					<p:column headerText="Term EN">
-						
-						<p:inputText id="termuk" value='#{item.value}' style="width: 90%"/>
-						<!-- <f:validator validatorId="termCountValidation"></f:validator>
-						<f:attribute name="confirmCount" value=#{confirmCount}></f:attribute> -->
-					</p:column>
-					<p:column headerText="Uses" style="text-align: center">
-						<p:selectCheckboxMenu id="use" value="#{item.selectedUses}" label="#{item.useLabel}" >
-			           		<f:selectItems value="#{glossaryBean.uses}" />
-			           		<p:ajax listener="#{item.updateUseLabel}" update="use" ></p:ajax>
-			           		<p:ajax event="toggleSelect" listener="#{item.updateUseLabel}" update="use"/>
-			           	</p:selectCheckboxMenu>
-					</p:column>
-					<p:column headerText="Pronounciation">
-						
-						<p:inputText id="pron_uk" value='#{item.pronounciation}' style="width: 90%"/>
-					</p:column>
-					<p:column headerText="Acronym">
-						
-						<p:inputText id="acro_uk" value='#{item.acronym}' style="width: 90%"/>
-					</p:column>
-					<p:column headerText="Source">
-						
-						<p:selectOneMenu id="ref_uk" value="#{item.references}" style="width: 80% !important" autoWidth="false">
-							<f:selectItem itemValue="#{null}" itemLabel="--select--" />
-							<f:selectItem itemValue="Wikipedia" itemLabel="Wikipedia"></f:selectItem>
-							<f:selectItem itemValue="encyclopaedia" itemLabel="encyclopaedia"></f:selectItem>
-							<f:selectItem itemValue="monolingual dictionary" itemLabel="monolingual dictionary"></f:selectItem>
-							<f:selectItem itemValue="bilingual dictionary" itemLabel="bilingual dictionary"></f:selectItem>
-							<f:selectItem itemValue="scientific/academic publication" itemLabel="scientific/academic publication"></f:selectItem>
-							<f:selectItem itemValue="institutional website" itemLabel="institutional website"></f:selectItem>
-							<f:selectItem itemValue="glossary" itemLabel="glossary"></f:selectItem>
-							<f:selectItem itemValue="Linguee or Reverso" itemLabel="Linguee or Reverso"></f:selectItem>
-							<f:selectItem itemValue="patients' websites and blogs" itemLabel="patients' websites and blogs"></f:selectItem>
-							<f:selectItem itemValue="other" itemLabel="other"></f:selectItem>
-						</p:selectOneMenu>
-					</p:column>
-					<p:column headerText="Phraseology">
-						
-						<p:inputTextarea id="phras_uk" value="#{item.phraseology}" autoResize="false" />
-					</p:column>
-					<p:column width="10">
-			<p:commandLink id="deleteUk"  actionListener="#{glossaryBean.removeUk(item)}" update=":glossgrowl :uk_terms" >
-			<f:ajax execute="uk_terms"/>
-			<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}"/>
-		</p:commandLink>
-		<p:tooltip  for="deleteUk" value="Remove this row" position="bottom"/>
-		</p:column>
-				</p:dataTable>
-				<br/>
-				<p:commandButton value="Add synonym" actionListener="#{glossaryBean.addUk}" styleClass="greenbutton" update=":glossary_add :uk_terms">
-					<f:ajax execute="@this uk_terms"/>
-				</p:commandButton>
 				
-				<br/><br/>	
 			    <p:commandButton id="save" value="Save Entry" action="#{glossaryBean.upload()}" styleClass="greenbutton resource_button" update=":glossgrowl :glossary_add">
 			    	 <f:ajax execute="@form" />
 			    	 
