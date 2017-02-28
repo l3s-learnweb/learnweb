@@ -53,7 +53,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private int resourceId;
     private int glossaryId;
     private List<GlossaryItems> items = new ArrayList<GlossaryItems>();
-    private List<GlossaryItems> fileteredItems = new ArrayList<GlossaryItems>();
+    private List<GlossaryItems> filteredItems = new ArrayList<GlossaryItems>();
 
     private GlossaryItems selectedGlossaryItem;
 
@@ -65,7 +65,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         if(resourceId > 0)
         {
             getGlossaryItems(resourceId);
-            setFileteredItems(getItems());
+            setFilteredItems(getItems());
 
             try
             {
@@ -581,14 +581,14 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         this.items = items;
     }
 
-    public List<GlossaryItems> getFileteredItems()
+    public List<GlossaryItems> getFilteredItems()
     {
-        return fileteredItems;
+        return filteredItems;
     }
 
-    public void setFileteredItems(List<GlossaryItems> fileteredItems)
+    public void setFilteredItems(List<GlossaryItems> filteredItems)
     {
-        this.fileteredItems = fileteredItems;
+        this.filteredItems = filteredItems;
     }
 
 }

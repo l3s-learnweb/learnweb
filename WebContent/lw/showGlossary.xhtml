@@ -21,7 +21,7 @@
 		 <h:outputScript library="glossary" name="glossary.js"/>
 		<h:panelGroup id="main_component" layout="block">
 			<h:form prependId="false">
-	<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBean.items}" sortBy="#{item.topic_1}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="true" rows="12" filteredValue="#{glossaryBean.fileteredItems}"  
+	<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBean.items}" sortBy="#{item.topic_1}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="true" rows="12" filteredValue="#{glossaryBean.filteredItems}"  
 	paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
         <p:ajax event="filter" oncomplete="groupRow(2)"/>
         <p:ajax event="page" oncomplete="groupRow(2)"></p:ajax>
