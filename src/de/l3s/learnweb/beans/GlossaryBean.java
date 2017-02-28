@@ -1,8 +1,8 @@
 package de.l3s.learnweb.beans;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
@@ -13,14 +13,15 @@ import javax.faces.context.FacesContext;
 import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
+import org.apache.log4j.Logger;
 import org.primefaces.model.UploadedFile;
 
 import de.l3s.glossary.GlossaryItems;
-import de.l3s.glossary.ItalianItem;
 import de.l3s.glossary.LanguageItems;
-import de.l3s.glossary.UkItem;
 import de.l3s.learnweb.GlossariesManager;
+import de.l3s.learnweb.GlossaryEntry;
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.User;
 import de.l3s.learnwebBeans.ApplicationBean;
 
@@ -29,9 +30,11 @@ import de.l3s.learnwebBeans.ApplicationBean;
 public class GlossaryBean extends ApplicationBean implements Serializable
 {
 
+    private final static Logger log = Logger.getLogger(GlossaryBean.class);
     private static final long serialVersionUID = -1811030091337893637L;
-    private List<ItalianItem> ItalianItems;
-    private List<UkItem> UkItems;
+    private List<LanguageItems> ItalianItems;
+    private List<LanguageItems> UkItems;
+    private List<LanguageItems> languageItems;
     private List<String> Uses;
     private String fileName;
     private String selectedTopicOne;
@@ -49,27 +52,27 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     GlossariesManager gl;
     private int resourceId;
     private int glossaryId;
+    private List<GlossaryItems> items = new ArrayList<GlossaryItems>();
+    private List<GlossaryItems> fileteredItems = new ArrayList<GlossaryItems>();
 
     private GlossaryItems selectedGlossaryItem;
 
-    // cached values
-    private transient User user;
-
-    public String getDescription()
+    public void preRenderView()
     {
-        return description;
-    }
+        if(isAjaxRequest())
+            return;
 
-    public void setDescription(String description)
-    {
-        this.description = description;
+        if(resourceId > 0)
+        {
+            getGlossaryItems(resourceId);
+            setFileteredItems(getItems());
 
+        }
     }
 
     @PostConstruct
     public void init()
     {
-        System.out.println("Inside init() of GlossaryBean which is called on PostConstruct");
 
         createEntry();
 
@@ -77,7 +80,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public void createEntry()
     {
-        System.out.println("Inside createEntry");
+
         Uses = new ArrayList<String>();
         Uses.add("technical");
         Uses.add("popular");
@@ -89,10 +92,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         availableTopicThrees = new ArrayList<SelectItem>();
 
         availableTopicOnes.add(new SelectItem("MEDICINE"));
-        ItalianItems = new ArrayList<ItalianItem>();
-        ItalianItems.add(new ItalianItem());
-        UkItems = new ArrayList<UkItem>();
-        UkItems.add(new UkItem());
+        ItalianItems = new ArrayList<LanguageItems>();
+        ItalianItems.add(new LanguageItems());
+        UkItems = new ArrayList<LanguageItems>();
+        UkItems.add(new LanguageItems());
 
     }
 
@@ -103,55 +106,25 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         createAvailableTopicTwos();
 
         setSelectedTopicTwo(gloss.getTopic_2());
-        System.out.println(gloss.getTopic_2());
-        System.out.println(gloss.getTopic_3());
+
         createAvailableTopicThree(gloss.getTopic_2());
         setSelectedTopicThree(gloss.getTopic_3());
         setDescription(gloss.getDescription());
-        List<UkItem> ukItemsToSet = new ArrayList<UkItem>();
-        List<ItalianItem> itItemsToSet = new ArrayList<ItalianItem>();
+        List<LanguageItems> ukItemsToSet = new ArrayList<LanguageItems>();
+        List<LanguageItems> itItemsToSet = new ArrayList<LanguageItems>();
         for(LanguageItems l : gloss.getFinalItems())
         {
+
             if(l.getLanguage().equalsIgnoreCase("english"))
             {
-                UkItem u = new UkItem();
-                u.setAcronym(l.getAcronym());
-                u.setPhraseology(l.getPhraseology());
-                u.setPronounciation(l.getPronounciation());
-                u.setReferences(l.getReferences());
-                String uses = l.getSelectedUses();
-                if(uses.contains(","))
-                    u.setSelectedUses(Arrays.asList((l.getSelectedUses().trim().split(", "))));
-                else
-                {
-                    List<String> tempUse = new ArrayList<String>();
-                    tempUse.add(uses.trim());
-                    u.setSelectedUses(tempUse);
-                }
-                u.setValue(l.getValue());
-                u.setTermId(l.getTermId());
-                ukItemsToSet.add(u);
+                l.updateUseLabel();
+                ukItemsToSet.add(l);
 
             }
             else if(l.getLanguage().equalsIgnoreCase("italian"))
             {
-                ItalianItem i = new ItalianItem();
-                i.setAcronym(l.getAcronym());
-                i.setPhraseology(l.getPhraseology());
-                i.setPronounciation(l.getPronounciation());
-                i.setReferences(l.getReferences());
-                String uses = l.getSelectedUses();
-                if(uses.contains(","))
-                    i.setSelectedUses(Arrays.asList((l.getSelectedUses().trim().split(", "))));
-                else
-                {
-                    List<String> tempUse = new ArrayList<String>();
-                    tempUse.add(uses.trim());
-                    i.setSelectedUses(tempUse);
-                }
-                i.setValue(l.getValue());
-                i.setTermId(l.getTermId());
-                itItemsToSet.add(i);
+                l.updateUseLabel();
+                itItemsToSet.add(l);
             }
         }
         setItalianItems(itItemsToSet);
@@ -164,11 +137,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         boolean upload = false;
 
-        for(UkItem uk : getUkItems())
+        for(LanguageItems uk : getUkItems())
         {
             if(!uk.getValue().isEmpty() && !upload)
             {
-                for(ItalianItem it : getItalianItems())
+                for(LanguageItems it : getItalianItems())
                 {
                     if(!it.getValue().isEmpty())
                         upload = true;
@@ -179,25 +152,34 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         if(upload)
         {
             User u = getUser();
-            gl = getLearnweb().getGlossariesManager();
-            gl.setDescription(getDescription());
-            gl.setMultimediaFile(getMultimediaFile());
-            gl.setFileName(getFileName());
-            gl.setSelectedTopicOne(getSelectedTopicOne());
-            gl.setSelectedTopicTwo(getSelectedTopicTwo());
-            gl.setSelectedTopicThree(getSelectedTopicThree());
-            gl.setUkItems(getUkItems());
-            gl.setUserId(getUserId());
-            gl.setUser(u);
-            gl.setItalianItems(getItalianItems());
-            gl.setResourceId(getResourceId());
-            System.out.println("GLossary ID = " + getGlossaryId());
-            if(getGlossaryId() > 0)
+            GlossaryEntry entry = new GlossaryEntry();
+
+            entry.setDescription(getDescription());
+            //entry.setMultimediaFile(getMultimediaFile());
+            // gl.setFileName(getFileName());
+            entry.setSelectedTopicOne(getSelectedTopicOne());
+            entry.setSelectedTopicTwo(getSelectedTopicTwo());
+            entry.setSelectedTopicThree(getSelectedTopicThree());
+            entry.setUkItems(getUkItems());
+            entry.setUserId(getUserId());
+            entry.setUser(u);
+            entry.setItalianItems(getItalianItems());
+            entry.setResourceId(getResourceId());
+            entry.setGlossaryId(getGlossaryId());
+
+            Resource glossItem = getLearnweb().getGlossariesManager().addToDatabase(entry);
+            if(glossItem != null)
             {
-                gl.addToDatabase(getGlossaryId());
+                try
+                {
+                    glossItem.save();
+                    // getUser().addResource(glossItem);
+                }
+                catch(SQLException e)
+                {
+                    log.error(e);
+                }
             }
-            else
-                gl.addToDatabase(0);
             createEntry();
 
             FacesContext context = FacesContext.getCurrentInstance();
@@ -207,6 +189,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
         }
         else
+
         {
             FacesContext context = FacesContext.getCurrentInstance();
 
@@ -222,34 +205,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Glossary item added"));
     }
 
-    /* public String update()
-    {
-        User u = getUser();
-        gl = getLearnweb().getGlossariesManager();
-        gl.setDescription(getDescription());
-        gl.setMultimediaFile(getMultimediaFile());
-        gl.setFileName(getFileName());
-        gl.setSelectedTopicOne(getSelectedTopicOne());
-        gl.setSelectedTopicTwo(getSelectedTopicTwo());
-        gl.setSelectedTopicThree(getSelectedTopicThree());
-        gl.setUkItems(getUkItems());
-        gl.setUserId(getUserId());
-        gl.setUser(u);
-        gl.setItalianItems(getItalianItems());
-        gl.setResourceId(getResourceId());
-        gl.addToDatabase(getGlossaryId());
-        createEntry();
-        return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
-    
-    }*/
-
     public String delete(GlossaryItems item)
     {
 
-        gl = getLearnweb().getGlossariesManager();
-        String deleteTerms = "DELETE FROM `lw_resource_glossary_terms` WHERE glossary_id = " + Integer.toString(item.getGlossId());
-        String deleteGlossItem = "DELETE FROM `lw_resource_glossary` WHERE glossary_id = " + Integer.toString(item.getGlossId());
-        gl.deleteFromDb(deleteTerms, deleteGlossItem);
+        getLearnweb().getGlossariesManager().deleteFromDb(item.getGlossId());
         createEntry();
         return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
 
@@ -257,18 +216,18 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public void addIt()
     {
-        System.out.println("Inside addIt()");
-        ItalianItems.add(new ItalianItem());
+
+        ItalianItems.add(new LanguageItems());
         count++;
         valueHeaderIt = "Term It" + Integer.toString(count);
 
     }
 
-    public void removeIt(ItalianItem item)
+    public void removeIt(LanguageItems item)
     {
-        List<ItalianItem> iItems = new ArrayList<ItalianItem>(getItalianItems());
+        List<LanguageItems> iItems = new ArrayList<LanguageItems>(ItalianItems);
         boolean remove = false;
-        for(ItalianItem i : iItems)
+        for(LanguageItems i : iItems)
         {
             if(!i.getValue().isEmpty())
                 if(iItems.size() > 1)
@@ -286,11 +245,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void removeUk(UkItem item)
+    public void removeUk(LanguageItems item)
     {
-        List<UkItem> uItems = new ArrayList<UkItem>(getUkItems());
+        List<LanguageItems> uItems = new ArrayList<LanguageItems>(UkItems);
         boolean remove = false;
-        for(UkItem u : uItems)
+        for(LanguageItems u : uItems)
         {
             if(!u.getValue().isEmpty())
                 if(uItems.size() > 1)
@@ -310,7 +269,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public void addUk()
     {
-        UkItems.add(new UkItem());
+        UkItems.add(new LanguageItems());
     }
 
     public void createAvailableTopicTwos()
@@ -360,22 +319,35 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         selectedTopicThree = null;
     }
 
-    public List<ItalianItem> getItalianItems()
+    // cached values
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+
+    }
+
+    public List<LanguageItems> getItalianItems()
     {
         return ItalianItems;
     }
 
-    public void setItalianItems(List<ItalianItem> itItems)
+    public void setItalianItems(List<LanguageItems> itItems)
     {
         this.ItalianItems = itItems;
     }
 
-    public List<UkItem> getUkItems()
+    public List<LanguageItems> getUkItems()
     {
         return UkItems;
     }
 
-    public void setUkItems(List<UkItem> ukItems)
+    public void setUkItems(List<LanguageItems> ukItems)
     {
         this.UkItems = ukItems;
     }
@@ -475,39 +447,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         this.multimediaFile = multimediaFile;
     }
 
-    /*@Override
-    public User getUser()
-    {
-        if(user == null)
-        {
-            try
-            {
-                user = Learnweb.getInstance().getUserManager().getUser(userId);
-            }
-            catch(SQLException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-        return user;
-    }
-    
-    public void setUser(User user)
-    {
-        this.user = user;
-        this.userId = user.getId();
-    }
-    */
     public int getUserId()
     {
         return userId;
-    }
-
-    public void setUserId(int userId)
-    {
-        this.userId = userId;
-        this.user = null;
     }
 
     @Override
@@ -525,7 +467,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public void setResourceId(int resourceId)
     {
-        System.out.println("Setting resourceId within GlossaryBean: " + resourceId);
+
         this.resourceId = resourceId;
     }
 
@@ -546,105 +488,44 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public void setSelectedGlossaryItem(GlossaryItems selectedGlossaryItem)
     {
-        System.out.println("Inside selected Itme function");
-        System.out.println(selectedGlossaryItem);
+
         this.selectedGlossaryItem = selectedGlossaryItem;
     }
 
-    /*private Glossary selectedEntry = new Glossary();
-    private Glossary topics = new Glossary();
-    private Glossary newRow = new Glossary();
-    
-    private List<Glossary> entries;
-    private int resourceId = 0;
-    
-    public GlossaryBean() throws SQLException
+    public List<LanguageItems> getLanguageItems()
     {
-    Learnweb lw = getLearnweb();
-    //lw.getGlossaryManager();
-    //GlossaryManager gm = new GlossaryManager(lw);
-    entries = lw.getGlossaryManager().getGlossaryByResourceId(this.resourceId);
+        return languageItems;
     }
-    
-    private List<Italianitems> items;
-    
-    public void add()
+
+    public void setLanguageItems(List<LanguageItems> languageItems)
     {
-    items.add(new Italianitems());
+        this.languageItems = languageItems;
     }
-    
-    public List<Italianitems> getItems()
+
+    private void getGlossaryItems(int id)
     {
-    return items;
+        gl = getLearnweb().getGlossariesManager();
+        items = gl.getGlossaryItems(id);
     }
-    
-    public List<Glossary> getEntries()
+
+    public List<GlossaryItems> getItems()
     {
-    return entries;
+        return items;
     }
-    
-    public String edit(Glossary entry)
+
+    public void setItems(List<GlossaryItems> items)
     {
-    selectedEntry = entry;
-    
-    return "editGlossary.xhtml?faces-redirect=true";
+        this.items = items;
     }
-    
-    public String addNewEntry() throws SQLException
+
+    public List<GlossaryItems> getFileteredItems()
     {
-    selectedEntry.setUser(getUser());
-    selectedEntry.setLastModified(new Date());
-    entries.add(selectedEntry);
-    Learnweb lw = getLearnweb();
-    lw.getGlossaryManager().save(selectedEntry);
-    selectedEntry = new Glossary();
-    
-    return "showGlossary.xhtml";
+        return fileteredItems;
     }
-    
-    public String save() throws SQLException
+
+    public void setFileteredItems(List<GlossaryItems> fileteredItems)
     {
-    selectedEntry.setLastModified(new Date());
-    Learnweb lw = getLearnweb();
-    lw.getGlossaryManager().save(selectedEntry);
-    selectedEntry = new Glossary();
-    
-    return "showGlossary.xhtml?faces-redirect=true";
+        this.fileteredItems = fileteredItems;
     }
-    
-    public String deleteEntry(Glossary entry) throws SQLException
-    {
-    
-    Learnweb lw = getLearnweb();
-    lw.getGlossaryManager().delete(entry.getId());
-    entries.remove(entry);
-    return "showGlossary.xhtml";
-    }
-    
-    public String quit()
-    {
-    selectedEntry = new Glossary();
-    return "showGlossary.xhtml?faces-redirect=true";
-    }
-    
-    public Glossary getSelectedEntry()
-    {
-    return selectedEntry;
-    }
-    
-    public void setSelectedEntry(Glossary selectedEntry)
-    {
-    this.selectedEntry = selectedEntry;
-    }
-    
-    public Glossary getTopics()
-    {
-    return topics;
-    }
-    
-    public void setTopics(Glossary topics)
-    {
-    this.topics = topics;
-    }
-    */
+
 }

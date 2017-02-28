@@ -1,65 +1,35 @@
-package de.l3s.learnweb.beans;
+/*package de.l3s.learnweb.beans;
 
 import java.io.Serializable;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.apache.log4j.Logger;
+
 import de.l3s.glossary.GlossaryItems;
-import de.l3s.glossary.ItalianItem;
-import de.l3s.glossary.LanguageItems;
-import de.l3s.glossary.UkItem;
-import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.GlossariesManager;
 import de.l3s.learnwebBeans.ApplicationBean;
 
 @ManagedBean
 @ViewScoped
 public class ViewGlossaryBean extends ApplicationBean implements Serializable
 {
-
+    private final static Logger log = Logger.getLogger(ViewGlossaryBean.class);
     private static final long serialVersionUID = -3927594222612462194L;
     private int resourceId;
     private List<GlossaryItems> items = new ArrayList<GlossaryItems>();
     private List<GlossaryItems> fileteredItems = new ArrayList<GlossaryItems>();
 
-    private int italianRows;
-    private int ukRows;
-    private int rowSpan;
-
-    public ViewGlossaryBean()
-    {
-        System.out.println("Constructing ViewGlossaryBean");
-    }
-
-    public int getRowSpan()
-    {
-        return rowSpan;
-    }
-
-    public void setRowSpan(int rowSpan)
-    {
-        this.rowSpan = rowSpan;
-    }
-
-    /* @PostConstruct
-    public void init()
-    {
-        System.out.println(resourceId);
-        getGlossaryItems(resourceId);
-    
-    }*/
+    GlossariesManager gl;
 
     public void preRenderView()
     {
         if(isAjaxRequest())
             return;
 
-        System.out.println("Inside PreRenderView of ViewGlossaryBean: ResourceId ->" + resourceId);
         if(resourceId > 0)
         {
             getGlossaryItems(resourceId);
@@ -70,100 +40,8 @@ public class ViewGlossaryBean extends ApplicationBean implements Serializable
 
     private void getGlossaryItems(int id)
     {
-        String mainDetails = "SELECT * FROM `lw_resource_glossary` WHERE `resource_id` = ?";
-        String termDetails = "SELECT * FROM `lw_resource_glossary_terms` WHERE `glossary_id` = ?";
-        PreparedStatement preparedStmnt = null;
-        ResultSet result = null;
-        List<ItalianItem> i = new ArrayList<ItalianItem>();
-        List<UkItem> u = new ArrayList<UkItem>();
-        try
-        {
-            preparedStmnt = Learnweb.getInstance().getConnection().prepareStatement(mainDetails);
-            preparedStmnt.setInt(1, id);
-            result = preparedStmnt.executeQuery();
-            while(result.next())
-            {
-                List<LanguageItems> finalList = new ArrayList<LanguageItems>();
-
-                int glossaryId = result.getInt("glossary_id");
-                PreparedStatement ps = Learnweb.getInstance().getConnection().prepareStatement(termDetails);
-                ps.setInt(1, glossaryId);
-                ResultSet termResults = ps.executeQuery();
-                int getSpan = getRowCount(termResults);
-                while(termResults.next())
-                {
-
-                    GlossaryItems gloss = new GlossaryItems();
-                    gloss.setGlossId(result.getInt("glossary_id"));
-                    gloss.setGlossIdString("_" + Integer.toString(result.getInt("glossary_id")));
-                    System.out.println(gloss.getGlossIdString());
-                    System.out.println(result.getInt("glossary_id"));
-                    gloss.setTopic_1(result.getString("topic_1"));
-                    gloss.setTopic_2(result.getString("topic_2"));
-                    gloss.setTopic_3(result.getString("topic_3"));
-                    gloss.setDescription(result.getString("description"));
-                    gloss.setAcronym(termResults.getString("acronym"));
-                    gloss.setValue(termResults.getString("term"));
-                    gloss.setPhraseology(termResults.getString("phraseology"));
-                    gloss.setPronounciation(termResults.getString("pronounciation"));
-                    gloss.setReferences(termResults.getString("references"));
-                    gloss.setTermId(termResults.getInt("glossary_term_id"));
-                    gloss.setSelectedUses(termResults.getString("use"));
-                    gloss.setRowspan(getSpan);
-                    if(termResults.getString("language").contains("uk"))
-                        gloss.setLanguage("English");
-                    else
-                        gloss.setLanguage("Italian");
-                    items.add(gloss);
-
-                    LanguageItems uk = new LanguageItems();
-                    uk.setAcronym(termResults.getString("acronym"));
-                    uk.setValue(termResults.getString("term"));
-                    uk.setPhraseology(termResults.getString("phraseology"));
-                    uk.setPronounciation(termResults.getString("pronounciation"));
-                    uk.setReferences(termResults.getString("references"));
-                    uk.setTermId(termResults.getInt("glossary_term_id"));
-                    uk.setSelectedUses(termResults.getString("use"));
-                    if(termResults.getString("language").contains("uk"))
-                        uk.setLanguage("English");
-                    else
-                        uk.setLanguage("Italian");
-                    finalList.add(uk);
-                    gloss.setFinalItems(finalList);
-
-                }
-                //    setItalianRows(i.size());
-                //   setUkRows(u.size());
-                // gloss.setRowspan(ukRows > italianRows ? ukRows : italianRows);
-                //gloss.setRowspan(finalList.size() + 1);
-                //  gloss.setFinalItems(finalList);
-                // items.add(gloss);
-
-            }
-
-        }
-        catch(SQLException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-
-    }
-
-    private int getRowCount(ResultSet termResults)
-    {
-        int totalRows = 0;
-        try
-        {
-            termResults.last();
-            totalRows = termResults.getRow();
-            termResults.beforeFirst();
-        }
-        catch(Exception ex)
-        {
-            return 0;
-        }
-        return totalRows;
+        gl = getLearnweb().getGlossariesManager();
+        items = gl.getGlossaryItems(id);
     }
 
     public int getResourceId()
@@ -186,26 +64,6 @@ public class ViewGlossaryBean extends ApplicationBean implements Serializable
         this.items = items;
     }
 
-    public int getItalianRows()
-    {
-        return italianRows;
-    }
-
-    public void setItalianRows(int italianRows)
-    {
-        this.italianRows = italianRows;
-    }
-
-    public int getUkRows()
-    {
-        return ukRows;
-    }
-
-    public void setUkRows(int ukRows)
-    {
-        this.ukRows = ukRows;
-    }
-
     public List<GlossaryItems> getFileteredItems()
     {
         return fileteredItems;
@@ -216,3 +74,4 @@ public class ViewGlossaryBean extends ApplicationBean implements Serializable
         this.fileteredItems = fileteredItems;
     }
 }
+*/

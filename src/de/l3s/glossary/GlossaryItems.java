@@ -9,10 +9,10 @@ public class GlossaryItems
     private String topic_2;
     private String topic_3;
     private String description;
-    private int rowspan;
+
     private int glossId;
-    private List<ItalianItem> itItems;
-    private List<UkItem> ukItems;
+    private List<LanguageItems> itItems;
+    private List<LanguageItems> ukItems;
     private List<LanguageItems> finalItems;
     private String value;
     private String glossIdString;
@@ -64,40 +64,30 @@ public class GlossaryItems
         this.description = description;
     }
 
-    public List<ItalianItem> getItItems()
+    public List<LanguageItems> getItItems()
     {
         return itItems;
     }
 
-    public void setItItems(List<ItalianItem> itItems)
+    public void setItItems(List<LanguageItems> itItems)
     {
         this.itItems = itItems;
     }
 
-    public List<UkItem> getUkItems()
+    public List<LanguageItems> getUkItems()
     {
         return ukItems;
     }
 
-    public void setUkItems(List<UkItem> ukItems)
+    public void setUkItems(List<LanguageItems> ukItems)
     {
         this.ukItems = ukItems;
-    }
-
-    public int getRowspan()
-    {
-        return rowspan;
-    }
-
-    public void setRowspan(int rowspan)
-    {
-        this.rowspan = rowspan;
     }
 
     public void createFinalList()
     {
         List<LanguageItems> l = new ArrayList<LanguageItems>();
-        for(UkItem i : ukItems)
+        for(LanguageItems i : ukItems)
         {
             LanguageItems temp = new LanguageItems();
             temp.setValue(i.getValue());
@@ -105,12 +95,13 @@ public class GlossaryItems
             temp.setPhraseology(i.getPhraseology());
             temp.setPronounciation(i.getPronounciation());
             temp.setReferences(i.getReferences());
-            temp.setSelectedUses(String.join(", ", i.getSelectedUses()));
+            temp.setSelectedUses(i.getSelectedUses());
+
             temp.setLanguage("English");
 
             l.add(temp);
         }
-        for(ItalianItem i : itItems)
+        for(LanguageItems i : itItems)
         {
             LanguageItems temp = new LanguageItems();
             temp.setValue(i.getValue());
@@ -118,7 +109,8 @@ public class GlossaryItems
             temp.setPhraseology(i.getPhraseology());
             temp.setPronounciation(i.getPronounciation());
             temp.setReferences(i.getReferences());
-            temp.setSelectedUses(String.join(", ", i.getSelectedUses()));
+            temp.setSelectedUses(i.getSelectedUses());
+
             temp.setLanguage("Italian");
 
             l.add(temp);

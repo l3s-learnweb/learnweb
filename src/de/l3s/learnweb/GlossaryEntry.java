@@ -1,101 +1,38 @@
 package de.l3s.learnweb;
 
 import java.sql.SQLException;
-import java.util.Date;
+import java.util.List;
 
-import org.hibernate.validator.constraints.NotEmpty;
-import org.hibernate.validator.constraints.URL;
+import org.primefaces.model.UploadedFile;
+
+import de.l3s.glossary.LanguageItems;
 
 public class GlossaryEntry
 {
-    private int id; // auto incremented id
+    private List<LanguageItems> ItalianItems;
+    private List<LanguageItems> UkItems;
+    private String fileName;
+    private String selectedTopicOne;
+    private String selectedTopicTwo;
+    private String selectedTopicThree;
+    public String description;
+    private UploadedFile multimediaFile;
     private int resourceId;
     private int userId;
+    int glossaryId = 0;
 
-    @NotEmpty
-    private String item;
-    private String description;
-    private String topic;
-    private String italian;
-    private String german;
-    private String spanish;
-    private Date lastModified;
+    public int getGlossaryId()
+    {
+        return glossaryId;
+    }
+
+    public void setGlossaryId(int glossaryId)
+    {
+        this.glossaryId = glossaryId;
+    }
 
     // cached values
     private transient User user;
-
-    @URL
-    private String reference;
-
-    public Date getLastModified()
-    {
-        return lastModified;
-    }
-
-    public void setLastModified(Date lastModified)
-    {
-        this.lastModified = lastModified;
-    }
-
-    public String getReference()
-    {
-        return reference;
-    }
-
-    public void setReference(String reference)
-    {
-        this.reference = reference;
-    }
-
-    public String getTopic()
-    {
-        return topic;
-    }
-
-    public void setTopic(String topic)
-    {
-        this.topic = topic;
-    }
-
-    public String getItalian()
-    {
-        return italian;
-    }
-
-    public void setItalian(String italian)
-    {
-        this.italian = italian;
-    }
-
-    public String getGerman()
-    {
-        return german;
-    }
-
-    public void setGerman(String german)
-    {
-        this.german = german;
-    }
-
-    public String getSpanish()
-    {
-        return spanish;
-    }
-
-    public void setSpanish(String spanish)
-    {
-        this.spanish = spanish;
-    }
-
-    public String getItem()
-    {
-        return item;
-    }
-
-    public void setItem(String item)
-    {
-        this.item = item;
-    }
 
     public String getDescription()
     {
@@ -104,14 +41,113 @@ public class GlossaryEntry
 
     public void setDescription(String description)
     {
-        this.description = description;
+        if(description != null)
+            this.description = description;
+        else
+            this.description = "";
+
     }
 
-    public User getUser() throws SQLException
+    public List<LanguageItems> getItalianItems()
+    {
+        return ItalianItems;
+
+    }
+
+    public void setItalianItems(List<LanguageItems> itItems)
+    {
+        this.ItalianItems = itItems;
+
+    }
+
+    public List<LanguageItems> getUkItems()
+    {
+
+        return UkItems;
+
+    }
+
+    public void setUkItems(List<LanguageItems> ukItems)
+    {
+
+        this.UkItems = ukItems;
+
+    }
+
+    public String getSelectedTopicTwo()
+    {
+        return selectedTopicTwo;
+    }
+
+    public void setSelectedTopicTwo(String selectedTopicTwo)
+    {
+        if(selectedTopicTwo != null)
+            this.selectedTopicTwo = selectedTopicTwo;
+        else
+            this.selectedTopicTwo = "";
+    }
+
+    public String getSelectedTopicOne()
+    {
+        return selectedTopicOne;
+    }
+
+    public void setSelectedTopicOne(String selectedTopicOne)
+    {
+        if(selectedTopicOne != null)
+            this.selectedTopicOne = selectedTopicOne;
+        else
+            this.selectedTopicOne = "";
+    }
+
+    public String getSelectedTopicThree()
+    {
+        return selectedTopicThree;
+    }
+
+    public void setSelectedTopicThree(String selectedTopicThree)
+    {
+        if(selectedTopicThree != null)
+            this.selectedTopicThree = selectedTopicThree;
+        else
+            this.selectedTopicThree = "";
+    }
+
+    public String getFileName()
+    {
+        return fileName;
+    }
+
+    public void setFileName(String fileName)
+    {
+        this.fileName = fileName;
+    }
+
+    public UploadedFile getMultimediaFile()
+    {
+
+        return multimediaFile;
+
+    }
+
+    public void setMultimediaFile(UploadedFile multimediaFile)
+    {
+        this.multimediaFile = multimediaFile;
+    }
+
+    public User getUser()
     {
         if(user == null)
         {
-            user = Learnweb.getInstance().getUserManager().getUser(userId);
+            try
+            {
+                user = Learnweb.getInstance().getUserManager().getUser(userId);
+            }
+            catch(SQLException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
         }
         return user;
     }
@@ -119,27 +155,7 @@ public class GlossaryEntry
     public void setUser(User user)
     {
         this.user = user;
-        this.userId = user.getId();
-    }
 
-    public int getId()
-    {
-        return id;
-    }
-
-    public void setId(int id)
-    {
-        this.id = id;
-    }
-
-    public int getResourceId()
-    {
-        return resourceId;
-    }
-
-    public void setResourceId(int resourceId)
-    {
-        this.resourceId = resourceId;
     }
 
     public int getUserId()
@@ -150,7 +166,17 @@ public class GlossaryEntry
     public void setUserId(int userId)
     {
         this.userId = userId;
-        this.user = null;
+
+    }
+
+    public int getResourceId()
+    {
+        return resourceId;
+    }
+
+    public void setResourceId(int resourceId)
+    {
+        this.resourceId = resourceId;
     }
 
 }

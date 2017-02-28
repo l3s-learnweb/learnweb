@@ -1,5 +1,8 @@
 package de.l3s.glossary;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class LanguageItems
 {
 
@@ -9,9 +12,31 @@ public class LanguageItems
     private String acronym;
     private String references;
     private String phraseology;
-    private String selectedUses;
+    private List<String> selectedUses;
     private String language;
     private int termId;
+    private String useLabel = "Use";
+
+    public void updateUseLabel()
+    {
+        String label = "";
+
+        List<String> useLabel = new ArrayList<String>(getSelectedUses());
+        for(String u : useLabel)
+        {
+            label = label + u + ", ";
+        }
+        if(label.contains(","))
+        {
+            label = label.trim().substring(0, label.lastIndexOf(","));
+            setUseLabel(label);
+        }
+        else
+        {
+            setUseLabel("Use");
+        }
+
+    }
 
     public String getValue()
     {
@@ -84,17 +109,16 @@ public class LanguageItems
             this.phraseology = "";
     }
 
-    public String getSelectedUses()
+    public List<String> getSelectedUses()
     {
         return selectedUses;
     }
 
-    public void setSelectedUses(String string)
+    public void setSelectedUses(List<String> selectedUses)
     {
-        if(string != null)
-            this.selectedUses = string;
-        else
-            this.selectedUses = "";
+        if(!selectedUses.isEmpty())
+            this.selectedUses = selectedUses;
+
     }
 
     public String getLanguage()
@@ -115,6 +139,16 @@ public class LanguageItems
     public void setTermId(int termId)
     {
         this.termId = termId;
+    }
+
+    public String getUseLabel()
+    {
+        return useLabel;
+    }
+
+    public void setUseLabel(String useLabel)
+    {
+        this.useLabel = useLabel;
     }
 
 }

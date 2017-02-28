@@ -10,17 +10,18 @@
 		<ui:param name="loginRequired" value="true" />
 		<ui:define name="metadata">
 				<f:metadata>
-					<f:viewParam name="resource_id" value="#{viewGlossaryBean.resourceId}" />
+					<!-- <f:viewParam name="resource_id" value="#{viewGlossaryBean.resourceId}" /> -->
 					<f:viewParam name="resource_id" value="#{glossaryBean.resourceId}"></f:viewParam>
-					<f:event type="preRenderView" listener="#{viewGlossaryBean.preRenderView}"/>
+					<f:event type="preRenderView" listener="#{glossaryBean.preRenderView}"/>
 				</f:metadata>
 			</ui:define>
 		<ui:define name="center_layout">
 	
-		 <h:outputStylesheet library="glossary" name="glossary.css"/> 
+		 <h:outputStylesheet library="glossary" name="glossary.css"/>
+		 <h:outputScript library="glossary" name="glossary.js"/>
 		<h:panelGroup id="main_component" layout="block">
 			<h:form prependId="false">
-	<p:dataTable id="my_gloss_table" var="item" value="#{viewGlossaryBean.items}" sortBy="#{item.topic_1}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="true" rows="20" filteredValue="#{viewGlossaryBean.fileteredItems}"  
+	<p:dataTable id="my_gloss_table" var="item" value="#{glossaryBean.items}" sortBy="#{item.topic_1}" widgetVar="glossTable" tableStyle="table-layout: auto;" paginator="true" rows="12" filteredValue="#{glossaryBean.fileteredItems}"  
 	paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
         <p:ajax event="filter" oncomplete="groupRow(2)"/>
         <p:ajax event="page" oncomplete="groupRow(2)"></p:ajax>
@@ -46,7 +47,7 @@
 						</p:commandLink>
 					
 					
-						<p:commandLink action="#{glossaryBean.setForm(item)}" process="@this" oncomplete="$('#glossform').css('display', 'block')" update=":glossary_add">
+						<p:commandLink action="#{glossaryBean.setForm(item)}" process="@this" oncomplete="openGlossForm();" update=":glossary_add">
 						<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
 						</p:commandLink>
 					</p:column>
@@ -94,7 +95,7 @@
 			<br/><br/><br/>
 			</h:form>
 			
-			<button type="button"  onclick="$('#glossform').css('display', 'block')" class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton" >
+			<button type="button"  onclick="openGlossForm()"  class="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton" >
 			 Add Entries 
 			</button>
 
@@ -144,11 +145,11 @@
 						<p:inputText id="termIt" value='#{item.value}' style="width: 90%" />
 					</p:column>
 					<p:column headerText="Uses" style="text-align: center">
-						<p:selectCheckboxMenu widgetVar="itUseVar" id="useIt" value="#{item.selectedUses}"
-							styleClass="test-use-checkbox" label="#{item.useLabelIt}">
+						<p:selectCheckboxMenu id="useIt" value="#{item.selectedUses}"
+							styleClass="test-use-checkbox" label="#{item.useLabel}">
 							<f:selectItems value="#{glossaryBean.uses}" />
-							<p:ajax oncomplete="PF('itUseVar').show()"  listener="#{item.updateUseLabel}" update="useIt" ></p:ajax>
-							<p:ajax event="toggleSelect" oncomplete="PF('itUseVar').show()" listener="#{item.updateUseLabel}" update="useIt"/>
+							<p:ajax listener="#{item.updateUseLabel}" update="useIt" ></p:ajax>
+							<p:ajax event="toggleSelect" listener="#{item.updateUseLabel}" update="useIt"/>
 						</p:selectCheckboxMenu>
 					</p:column>
 					<p:column headerText="Pronounciation">
@@ -207,10 +208,10 @@
 						<f:attribute name="confirmCount" value=#{confirmCount}></f:attribute> -->
 					</p:column>
 					<p:column headerText="Uses" style="text-align: center">
-						<p:selectCheckboxMenu widgetVar="useVar" id="use" value="#{item.selectedUses}" label="#{item.useLabelUk}" >
+						<p:selectCheckboxMenu id="use" value="#{item.selectedUses}" label="#{item.useLabel}" >
 			           		<f:selectItems value="#{glossaryBean.uses}" />
-			           		<p:ajax oncomplete="PF('useVar').show()"  listener="#{item.updateUseLabel}" update="use" ></p:ajax>
-			           		<p:ajax event="toggleSelect" oncomplete="PF('useVar').show()" listener="#{item.updateUseLabel}" update="use"/>
+			           		<p:ajax listener="#{item.updateUseLabel}" update="use" ></p:ajax>
+			           		<p:ajax event="toggleSelect" listener="#{item.updateUseLabel}" update="use"/>
 			           	</p:selectCheckboxMenu>
 					</p:column>
 					<p:column headerText="Pronounciation">

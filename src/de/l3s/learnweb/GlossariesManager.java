@@ -1,43 +1,30 @@
 package de.l3s.learnweb;
 
-import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import org.apache.solr.client.solrj.SolrServerException;
-import org.primefaces.model.UploadedFile;
+import org.apache.log4j.Logger;
 
-import de.l3s.glossary.ItalianItem;
-import de.l3s.glossary.UkItem;
+import de.l3s.glossary.GlossaryItems;
+import de.l3s.glossary.LanguageItems;
 import de.l3s.learnweb.solrClient.SolrClient;
 
 public class GlossariesManager
 {
-    private List<ItalianItem> ItalianItems;
-    private List<UkItem> UkItems;
-    private String fileName;
-    private String selectedTopicOne;
-    private String selectedTopicTwo;
-    private String selectedTopicThree;
-    public String description;
-    private UploadedFile multimediaFile;
-    private int resourceId;
-    private int userId;
+    private final static Logger log = Logger.getLogger(GlossariesManager.class);
     private Learnweb learnweb;
-
-    // cached values
-    private transient User user;
-    int glossaryId = 0;
 
     public GlossariesManager(Learnweb learnweb)
     {
         this.learnweb = learnweb;
     }
 
-    public void InsertTerms(int idGlossary)
+    //Insert Italian and Uk terms related to Glossary entry
+    public void InsertTerms(GlossaryEntry e)
     {
         String InsertTerms = "INSERT INTO `lw_resource_glossary_terms`(`glossary_id`, `term`, `use`, `pronounciation`, `acronym`, `references`, `phraseology`, `language`) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement preparedStmnt = null;
@@ -45,17 +32,16 @@ public class GlossariesManager
         {
             preparedStmnt = Learnweb.getInstance().getConnection().prepareStatement(InsertTerms);
         }
-        catch(SQLException e)
+        catch(SQLException e1)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e1);
         }
         try
         {
-            for(UkItem t : UkItems)
+            for(LanguageItems t : e.getUkItems())
             {
                 preparedStmnt = Learnweb.getInstance().getConnection().prepareStatement(InsertTerms);
-                preparedStmnt.setInt(1, idGlossary);
+                preparedStmnt.setInt(1, e.getGlossaryId());
                 preparedStmnt.setString(2, t.getValue());
                 preparedStmnt.setString(3, String.join(", ", t.getSelectedUses()));
                 preparedStmnt.setString(4, t.getPronounciation());
@@ -66,10 +52,10 @@ public class GlossariesManager
                 preparedStmnt.executeQuery();
 
             }
-            for(ItalianItem t : ItalianItems)
+            for(LanguageItems t : e.getItalianItems())
             {
                 preparedStmnt = Learnweb.getInstance().getConnection().prepareStatement(InsertTerms);
-                preparedStmnt.setInt(1, idGlossary);
+                preparedStmnt.setInt(1, e.getGlossaryId());
                 preparedStmnt.setString(2, t.getValue());
                 preparedStmnt.setString(3, String.join(", ", t.getSelectedUses()));
                 preparedStmnt.setString(4, t.getPronounciation());
@@ -81,16 +67,16 @@ public class GlossariesManager
 
             }
         }
-        catch(SQLException e)
+        catch(SQLException e1)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e1);
         }
     }
 
-    public void addToDatabase(int i)
+    //Insert main glossary Entry for a resource id
+    public Resource addToDatabase(GlossaryEntry e)
     {
-        if(i == 0)
+        if(e.getGlossaryId() == 0)
         {
             String InsertGlossary = "INSERT INTO `lw_resource_glossary`(`resource_id`, `topic_1`, `topic_2`, `topic_3`, `description`) VALUES ( ?, ?, ?, ?, ?)";
 
@@ -99,107 +85,67 @@ public class GlossariesManager
             try
             {
                 preparedStmnt = Learnweb.getInstance().getConnection().prepareStatement(InsertGlossary, PreparedStatement.RETURN_GENERATED_KEYS);
-            }
-            catch(SQLException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            try
-            {
-                preparedStmnt.setInt(1, resourceId);
-                preparedStmnt.setString(2, selectedTopicOne);
-                preparedStmnt.setString(3, selectedTopicTwo);
-                preparedStmnt.setString(4, selectedTopicThree);
-                preparedStmnt.setString(5, description);
+
+                preparedStmnt.setInt(1, e.getResourceId());
+                preparedStmnt.setString(2, e.getSelectedTopicOne());
+                preparedStmnt.setString(3, e.getSelectedTopicTwo());
+                preparedStmnt.setString(4, e.getSelectedTopicThree());
+                preparedStmnt.setString(5, e.getDescription());
                 preparedStmnt.executeQuery();
                 ResultSet keys = preparedStmnt.getGeneratedKeys();
                 keys.next();
-                glossaryId = keys.getInt(1);
-                InsertTerms(glossaryId);
+                int glossaryId = keys.getInt(1);
+                e.setGlossaryId(glossaryId);
+                InsertTerms(e);
             }
-            catch(SQLException e)
+            catch(SQLException e1)
             {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+
+                log.error("Error in adding glossary entry for resource id: " + e.getResourceId(), e1);
             }
 
             //            ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
             SolrClient solr = learnweb.getSolrClient();
             ResourceManager resourceManager = learnweb.getResourceManager();
             //           int learnwebResourceId = 0;
+            Resource glossItem = new Resource();
             try
             {
-                Resource glossItem = resourceManager.getResource(resourceId);
-                glossItem.setOwner(getUser());
-                //  glossItem.setGroup(Learnweb.getInstance().getGroupManager().);
-                /* 
-                Image im = new Image(ImageIO.read(multimediaFile.getInputstream()));
-                rpm.createThumbnails(glossItem, im, false);*/
-                user.addResource(glossItem);
-                //                learnwebResourceId = glossItem.getId();
-                // glossItem.setType("Glossary");
-                // glossItem.setDescription("");
-                //glossItem.setType("Glossary");
-                // glossItem.setIdAtService(Integer.toString(glossaryId));
-                if(glossItem.getUrlReal().isEmpty())
-                    glossItem.setUrl("/lw/glossary/showGlossary.jsf?resource_id=" + Integer.toString(glossItem.getId()));
-                solr.indexResource(glossItem);
-                glossItem.save();
+                glossItem = resourceManager.getResource(e.getResourceId());
             }
-            catch(SQLException | IOException | SolrServerException e)
+            catch(SQLException e1)
             {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                e1.printStackTrace();
             }
-            /*String update = "UPDATE `lw_resource_glossary` SET `resource_id`= ? WHERE glossary_id = ?";
-            preparedStmnt = null;
-            try
-            {
-            preparedStmnt = Learnweb.getInstance().getConnection().prepareStatement(update);
-            }
-            catch(SQLException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }
-            try
-            {
-            preparedStmnt.setInt(1, learnwebResourceId);
-            preparedStmnt.setInt(2, glossaryId);
-            preparedStmnt.executeUpdate();
-            }
-            catch(SQLException e)
-            {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-            }*/
+
+            return glossItem;
 
         }
-        else if(i > 0)
+        else if(e.getGlossaryId() > 0)
         {
-            int glossIden = i;
+            int glossIden = e.getGlossaryId();
             String updateStmnt = "UPDATE `lw_resource_glossary` SET `topic_1`= ? ,`topic_2`= ?,`topic_3`= ?,`description`= ? WHERE glossary_id = " + Integer.toString(glossIden);
             try
             {
                 PreparedStatement pstmnt = Learnweb.getInstance().getConnection().prepareStatement(updateStmnt);
-                pstmnt.setString(1, getSelectedTopicOne());
-                pstmnt.setString(2, getSelectedTopicTwo());
-                pstmnt.setString(3, getSelectedTopicThree());
-                pstmnt.setString(4, getDescription());
+                pstmnt.setString(1, e.getSelectedTopicOne());
+                pstmnt.setString(2, e.getSelectedTopicTwo());
+                pstmnt.setString(3, e.getSelectedTopicThree());
+                pstmnt.setString(4, e.getDescription());
                 pstmnt.executeQuery();
                 String deleteTerms = "SELECT glossary_term_id FROM lw_resource_glossary_terms WHERE glossary_id = " + Integer.toString(glossIden);
                 String updateTerms = "UPDATE `lw_resource_glossary_terms` SET `term`= ? ,`use`= ? ,`pronounciation`= ? ,`acronym`= ? ,`references`= ? ,`phraseology`= ? ,`language`= ?  WHERE `glossary_term_id` = ?";
-                List<UkItem> newUkItems = new ArrayList<UkItem>(getUkItems());
+                List<LanguageItems> newUkItems = new ArrayList<LanguageItems>(e.getUkItems());
 
-                List<ItalianItem> newItItems = new ArrayList<ItalianItem>(getItalianItems());
+                List<LanguageItems> newItItems = new ArrayList<LanguageItems>(e.getItalianItems());
                 pstmnt = null;
                 pstmnt = Learnweb.getInstance().getConnection().prepareStatement(deleteTerms);
                 ResultSet rs = pstmnt.executeQuery();
                 while(rs.next())
                 {
                     boolean deleteTerm = false;
-                    for(UkItem u : UkItems)
+                    for(LanguageItems u : e.getUkItems())
                     {
                         if(rs.getInt("glossary_term_id") == u.getTermId())
                         {
@@ -209,7 +155,7 @@ public class GlossariesManager
                     }
                     if(deleteTerm == false)
                     {
-                        for(ItalianItem iItems : ItalianItems)
+                        for(LanguageItems iItems : e.getItalianItems())
                         {
                             if(rs.getInt("glossary_term_id") == iItems.getTermId())
                             {
@@ -226,7 +172,7 @@ public class GlossariesManager
                     }
                 }
 
-                for(UkItem u : getUkItems())
+                for(LanguageItems u : e.getUkItems())
                 {
                     PreparedStatement preparedStmnt = null;
                     if(u.getTermId() > 0)
@@ -248,7 +194,7 @@ public class GlossariesManager
 
                     }
                 }
-                for(ItalianItem u : getItalianItems())
+                for(LanguageItems u : e.getItalianItems())
                 {
                     PreparedStatement preparedStmnt = null;
                     if(u.getTermId() > 0)
@@ -269,166 +215,38 @@ public class GlossariesManager
 
                     }
                 }
-                setItalianItems(newItItems);
-                setUkItems(newUkItems);
-                InsertTerms(glossIden);
+                e.setItalianItems(newItItems);
+                e.setUkItems(newUkItems);
+                InsertTerms(e);
             }
-            catch(SQLException e)
+            catch(SQLException e1)
             {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.error(e1);
             }
-        }
-
-    }
-
-    public String getDescription()
-    {
-        return description;
-    }
-
-    public void setDescription(String description)
-    {
-        if(description != null)
-            this.description = description;
-        else
-            this.description = "";
-
-    }
-
-    public List<ItalianItem> getItalianItems()
-    {
-        return ItalianItems;
-
-    }
-
-    public void setItalianItems(List<ItalianItem> itItems)
-    {
-        this.ItalianItems = itItems;
-
-    }
-
-    public List<UkItem> getUkItems()
-    {
-
-        return UkItems;
-
-    }
-
-    public void setUkItems(List<UkItem> ukItems)
-    {
-
-        this.UkItems = ukItems;
-
-    }
-
-    public String getSelectedTopicTwo()
-    {
-        return selectedTopicTwo;
-    }
-
-    public void setSelectedTopicTwo(String selectedTopicTwo)
-    {
-        if(selectedTopicTwo != null)
-            this.selectedTopicTwo = selectedTopicTwo;
-        else
-            this.selectedTopicTwo = "";
-    }
-
-    public String getSelectedTopicOne()
-    {
-        return selectedTopicOne;
-    }
-
-    public void setSelectedTopicOne(String selectedTopicOne)
-    {
-        if(selectedTopicOne != null)
-            this.selectedTopicOne = selectedTopicOne;
-        else
-            this.selectedTopicOne = "";
-    }
-
-    public String getSelectedTopicThree()
-    {
-        return selectedTopicThree;
-    }
-
-    public void setSelectedTopicThree(String selectedTopicThree)
-    {
-        if(selectedTopicThree != null)
-            this.selectedTopicThree = selectedTopicThree;
-        else
-            this.selectedTopicThree = "";
-    }
-
-    public String getFileName()
-    {
-        return fileName;
-    }
-
-    public void setFileName(String fileName)
-    {
-        this.fileName = fileName;
-    }
-
-    public UploadedFile getMultimediaFile()
-    {
-
-        return multimediaFile;
-
-    }
-
-    public void setMultimediaFile(UploadedFile multimediaFile)
-    {
-        this.multimediaFile = multimediaFile;
-    }
-
-    public User getUser()
-    {
-        if(user == null)
-        {
+            SolrClient solr = learnweb.getSolrClient();
+            ResourceManager resourceManager = learnweb.getResourceManager();
+            Resource glossItem = new Resource();
             try
             {
-                user = Learnweb.getInstance().getUserManager().getUser(userId);
+                glossItem = resourceManager.getResource(e.getResourceId());
             }
-            catch(SQLException e)
+            catch(SQLException e1)
             {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                e1.printStackTrace();
             }
+
+            return glossItem;
+
         }
-        return user;
+        return null;
+
     }
 
-    public void setUser(User user)
+    public void deleteFromDb(int glossId)
     {
-        this.user = user;
-        this.userId = user.getId();
-    }
-
-    public int getUserId()
-    {
-        return userId;
-    }
-
-    public void setUserId(int userId)
-    {
-        this.userId = userId;
-        this.user = null;
-    }
-
-    public int getResourceId()
-    {
-        return resourceId;
-    }
-
-    public void setResourceId(int resourceId)
-    {
-        this.resourceId = resourceId;
-    }
-
-    public void deleteFromDb(String deleteTerms, String deleteGlossItem)
-    {
+        String deleteTerms = "DELETE FROM `lw_resource_glossary_terms` WHERE glossary_id = " + Integer.toString(glossId);
+        String deleteGlossItem = "DELETE FROM `lw_resource_glossary` WHERE glossary_id = " + Integer.toString(glossId);
         try
         {
             PreparedStatement Terms = Learnweb.getInstance().getConnection().prepareStatement(deleteTerms);
@@ -444,149 +262,83 @@ public class GlossariesManager
 
     }
 
-    /* private int glossaryId; // auto incremented id
-    private int resourceId;
-    private int userId;
-    
-    @NotEmpty
-    private String item;
-    private String description;
-    private String topic;
-    private String italian;
-    private String german;
-    private String spanish;
-    private Date lastModified;
-    
-    // cached values
-    private transient User user;
-    
-    @URL
-    private String reference;
-    
-    public Date getLastModified()
+    public List<GlossaryItems> getGlossaryItems(int id)
     {
-        return lastModified;
-    }
-    
-    public void setLastModified(Date lastModified)
-    {
-        this.lastModified = lastModified;
-    }
-    
-    public String getReference()
-    {
-        return reference;
-    }
-    
-    public void setReference(String reference)
-    {
-        this.reference = reference;
-    }
-    
-    public String getTopic()
-    {
-        return topic;
-    }
-    
-    public void setTopic(String topic)
-    {
-        this.topic = topic;
-    }
-    
-    public String getItalian()
-    {
-        return italian;
-    }
-    
-    public void setItalian(String italian)
-    {
-        this.italian = italian;
-    }
-    
-    public String getGerman()
-    {
-        return german;
-    }
-    
-    public void setGerman(String german)
-    {
-        this.german = german;
-    }
-    
-    public String getSpanish()
-    {
-        return spanish;
-    }
-    
-    public void setSpanish(String spanish)
-    {
-        this.spanish = spanish;
-    }
-    
-    public String getItem()
-    {
-        return item;
-    }
-    
-    public void setItem(String item)
-    {
-        this.item = item;
-    }
-    
-    public String getDescription()
-    {
-        return description;
-    }
-    
-    public void setDescription(String description)
-    {
-        this.description = description;
-    }
-    
-    public User getUser() throws SQLException
-    {
-        if(user == null)
+        List<GlossaryItems> items = new ArrayList<GlossaryItems>();
+        String mainDetails = "SELECT * FROM `lw_resource_glossary` WHERE `resource_id` = ?";
+        String termDetails = "SELECT * FROM `lw_resource_glossary_terms` WHERE `glossary_id` = ?";
+        PreparedStatement preparedStmnt = null;
+        ResultSet result = null;
+
+        try
         {
-            user = Learnweb.getInstance().getUserManager().getUser(userId);
+            preparedStmnt = Learnweb.getInstance().getConnection().prepareStatement(mainDetails);
+            preparedStmnt.setInt(1, id);
+            result = preparedStmnt.executeQuery();
+            while(result.next())
+            {
+                List<LanguageItems> finalList = new ArrayList<LanguageItems>();
+
+                int glossaryId = result.getInt("glossary_id");
+                PreparedStatement ps = Learnweb.getInstance().getConnection().prepareStatement(termDetails);
+                ps.setInt(1, glossaryId);
+                ResultSet termResults = ps.executeQuery();
+
+                while(termResults.next())
+                {
+
+                    GlossaryItems gloss = new GlossaryItems();
+                    gloss.setGlossId(result.getInt("glossary_id"));
+                    gloss.setGlossIdString("_" + Integer.toString(result.getInt("glossary_id")));
+
+                    gloss.setTopic_1(result.getString("topic_1"));
+                    gloss.setTopic_2(result.getString("topic_2"));
+                    gloss.setTopic_3(result.getString("topic_3"));
+                    gloss.setDescription(result.getString("description"));
+                    gloss.setAcronym(termResults.getString("acronym"));
+                    gloss.setValue(termResults.getString("term"));
+                    gloss.setPhraseology(termResults.getString("phraseology"));
+                    gloss.setPronounciation(termResults.getString("pronounciation"));
+                    gloss.setReferences(termResults.getString("references"));
+                    gloss.setTermId(termResults.getInt("glossary_term_id"));
+                    gloss.setSelectedUses(termResults.getString("use"));
+
+                    if(termResults.getString("language").contains("uk"))
+                        gloss.setLanguage("English");
+                    else
+                        gloss.setLanguage("Italian");
+
+                    LanguageItems uk = new LanguageItems();
+                    uk.setAcronym(termResults.getString("acronym"));
+                    uk.setValue(termResults.getString("term"));
+                    uk.setPhraseology(termResults.getString("phraseology"));
+                    uk.setPronounciation(termResults.getString("pronounciation"));
+                    uk.setReferences(termResults.getString("references"));
+                    uk.setTermId(termResults.getInt("glossary_term_id"));
+                    List<String> setUse = new ArrayList<String>();
+                    if(termResults.getString("use").contains(","))
+                        setUse = Arrays.asList(termResults.getString("use").split(", "));
+                    else
+                        setUse.add(termResults.getString("use").trim());
+                    uk.setSelectedUses(setUse);
+                    if(termResults.getString("language").contains("uk"))
+                        uk.setLanguage("English");
+                    else
+                        uk.setLanguage("Italian");
+                    finalList.add(uk);
+                    gloss.setFinalItems(finalList);
+                    items.add(gloss);
+
+                }
+
+            }
+
         }
-        return user;
+        catch(SQLException e)
+        {
+            log.error(e);
+        }
+        return items;
     }
-    
-    public void setUser(User user)
-    {
-        this.user = user;
-        this.userId = user.getId();
-    }
-    
-    public int getId()
-    {
-        return glossaryId;
-    }
-    
-    public void setId(int glossaryId)
-    {
-        this.glossaryId = glossaryId;
-    }
-    
-    public int getResourceId()
-    {
-        return resourceId;
-    }
-    
-    public void setResourceId(int resourceId)
-    {
-        this.resourceId = resourceId;
-    }
-    
-    public int getUserId()
-    {
-        return userId;
-    }
-    
-    public void setUserId(int userId)
-    {
-        this.userId = userId;
-        this.user = null;
-    }
-    */
+
 }
