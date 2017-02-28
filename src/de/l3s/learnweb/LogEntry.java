@@ -56,6 +56,10 @@ public class LogEntry implements Serializable
         group_resource_search, // param = query
         add_folder, // param = folder name; target_id = folder_id
         edit_folder, // param = folder name; target_id = folder_id
+        glossary_open, // target_id = resource id
+        glossary_create, // target_id = resource id
+        glossary_edit, // target_id = resource id
+        glossary_add, // target_id = resource id
     }
 
     private final static HashSet<Action> resourceActions = Sets.newHashSet(Action.tagging_resource, Action.rating_resource, Action.commenting_resource, Action.opening_resource, Action.adding_resource, Action.deleting_comment, Action.edit_resource, Action.thumb_rating_resource);
