@@ -68,7 +68,7 @@
         <p:column  headerText="Term" filterable="true" filterMatchMode="contains" filterBy="#{item.value}" filterStyle="width: 90%;" >
        		<h:outputText value="#{item.value}" />
          </p:column>
-         <p:column  headerText="Language" sortBy="#{item.language}" filterBy="#{item.language}" filterStyle="display:none" >
+         <p:column  headerText="Language" filterBy="#{item.language}" filterStyle="display:none" >
        		<h:outputText value="#{item.language}" />
          </p:column>
          <p:column  headerText="Uses" filterBy="#{item.selectedUses}" filterStyle="display:none">
