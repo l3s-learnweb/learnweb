@@ -5,12 +5,12 @@ import java.util.List;
 
 import org.primefaces.model.UploadedFile;
 
-import de.l3s.glossary.LanguageItems;
+import de.l3s.glossary.LanguageItem;
 
 public class GlossaryEntry
 {
-    private List<LanguageItems> ItalianItems;
-    private List<LanguageItems> UkItems;
+    private List<LanguageItem> ItalianItems;
+    private List<LanguageItem> UkItems;
     private String fileName;
     private String selectedTopicOne;
     private String selectedTopicTwo;
@@ -48,26 +48,26 @@ public class GlossaryEntry
 
     }
 
-    public List<LanguageItems> getItalianItems()
+    public List<LanguageItem> getItalianItems()
     {
         return ItalianItems;
 
     }
 
-    public void setItalianItems(List<LanguageItems> itItems)
+    public void setItalianItems(List<LanguageItem> itItems)
     {
         this.ItalianItems = itItems;
 
     }
 
-    public List<LanguageItems> getUkItems()
+    public List<LanguageItem> getUkItems()
     {
 
         return UkItems;
 
     }
 
-    public void setUkItems(List<LanguageItems> ukItems)
+    public void setUkItems(List<LanguageItem> ukItems)
     {
 
         this.UkItems = ukItems;

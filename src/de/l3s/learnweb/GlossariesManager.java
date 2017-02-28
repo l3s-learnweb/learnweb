@@ -10,7 +10,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import de.l3s.glossary.GlossaryItems;
-import de.l3s.glossary.LanguageItems;
+import de.l3s.glossary.LanguageItem;
 import de.l3s.learnweb.solrClient.SolrClient;
 
 public class GlossariesManager
@@ -38,7 +38,7 @@ public class GlossariesManager
         }
         try
         {
-            for(LanguageItems t : e.getUkItems())
+            for(LanguageItem t : e.getUkItems())
             {
                 preparedStmnt = Learnweb.getInstance().getConnection().prepareStatement(InsertTerms);
                 preparedStmnt.setInt(1, e.getGlossaryId());
@@ -52,7 +52,7 @@ public class GlossariesManager
                 preparedStmnt.executeQuery();
 
             }
-            for(LanguageItems t : e.getItalianItems())
+            for(LanguageItem t : e.getItalianItems())
             {
                 preparedStmnt = Learnweb.getInstance().getConnection().prepareStatement(InsertTerms);
                 preparedStmnt.setInt(1, e.getGlossaryId());
@@ -136,16 +136,16 @@ public class GlossariesManager
                 pstmnt.executeQuery();
                 String deleteTerms = "SELECT glossary_term_id FROM lw_resource_glossary_terms WHERE glossary_id = " + Integer.toString(glossIden);
                 String updateTerms = "UPDATE `lw_resource_glossary_terms` SET `term`= ? ,`use`= ? ,`pronounciation`= ? ,`acronym`= ? ,`references`= ? ,`phraseology`= ? ,`language`= ?  WHERE `glossary_term_id` = ?";
-                List<LanguageItems> newUkItems = new ArrayList<LanguageItems>(e.getUkItems());
+                List<LanguageItem> newUkItems = new ArrayList<LanguageItem>(e.getUkItems());
 
-                List<LanguageItems> newItItems = new ArrayList<LanguageItems>(e.getItalianItems());
+                List<LanguageItem> newItItems = new ArrayList<LanguageItem>(e.getItalianItems());
                 pstmnt = null;
                 pstmnt = Learnweb.getInstance().getConnection().prepareStatement(deleteTerms);
                 ResultSet rs = pstmnt.executeQuery();
                 while(rs.next())
                 {
                     boolean deleteTerm = false;
-                    for(LanguageItems u : e.getUkItems())
+                    for(LanguageItem u : e.getUkItems())
                     {
                         if(rs.getInt("glossary_term_id") == u.getTermId())
                         {
@@ -155,7 +155,7 @@ public class GlossariesManager
                     }
                     if(deleteTerm == false)
                     {
-                        for(LanguageItems iItems : e.getItalianItems())
+                        for(LanguageItem iItems : e.getItalianItems())
                         {
                             if(rs.getInt("glossary_term_id") == iItems.getTermId())
                             {
@@ -172,7 +172,7 @@ public class GlossariesManager
                     }
                 }
 
-                for(LanguageItems u : e.getUkItems())
+                for(LanguageItem u : e.getUkItems())
                 {
                     PreparedStatement preparedStmnt = null;
                     if(u.getTermId() > 0)
@@ -194,7 +194,7 @@ public class GlossariesManager
 
                     }
                 }
-                for(LanguageItems u : e.getItalianItems())
+                for(LanguageItem u : e.getItalianItems())
                 {
                     PreparedStatement preparedStmnt = null;
                     if(u.getTermId() > 0)
@@ -277,7 +277,7 @@ public class GlossariesManager
             result = preparedStmnt.executeQuery();
             while(result.next())
             {
-                List<LanguageItems> finalList = new ArrayList<LanguageItems>();
+                List<LanguageItem> finalList = new ArrayList<LanguageItem>();
 
                 int glossaryId = result.getInt("glossary_id");
                 PreparedStatement ps = Learnweb.getInstance().getConnection().prepareStatement(termDetails);
@@ -308,7 +308,7 @@ public class GlossariesManager
                     else
                         gloss.setLanguage("Italian");
 
-                    LanguageItems uk = new LanguageItems();
+                    LanguageItem uk = new LanguageItem();
                     uk.setAcronym(termResults.getString("acronym"));
                     uk.setValue(termResults.getString("term"));
                     uk.setPhraseology(termResults.getString("phraseology"));

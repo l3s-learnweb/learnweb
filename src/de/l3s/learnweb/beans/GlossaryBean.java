@@ -17,7 +17,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.model.UploadedFile;
 
 import de.l3s.glossary.GlossaryItems;
-import de.l3s.glossary.LanguageItems;
+import de.l3s.glossary.LanguageItem;
 import de.l3s.learnweb.GlossariesManager;
 import de.l3s.learnweb.GlossaryEntry;
 import de.l3s.learnweb.Learnweb;
@@ -32,9 +32,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     private final static Logger log = Logger.getLogger(GlossaryBean.class);
     private static final long serialVersionUID = -1811030091337893637L;
-    private List<LanguageItems> ItalianItems;
-    private List<LanguageItems> UkItems;
-    private List<LanguageItems> languageItems;
+    private List<LanguageItem> ItalianItems;
+    private List<LanguageItem> UkItems;
+    private List<LanguageItem> languageItems;
     private List<String> Uses;
     private String fileName;
     private String selectedTopicOne;
@@ -92,10 +92,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         availableTopicThrees = new ArrayList<SelectItem>();
 
         availableTopicOnes.add(new SelectItem("MEDICINE"));
-        ItalianItems = new ArrayList<LanguageItems>();
-        ItalianItems.add(new LanguageItems());
-        UkItems = new ArrayList<LanguageItems>();
-        UkItems.add(new LanguageItems());
+        ItalianItems = new ArrayList<LanguageItem>();
+        ItalianItems.add(new LanguageItem());
+        UkItems = new ArrayList<LanguageItem>();
+        UkItems.add(new LanguageItem());
 
     }
 
@@ -110,19 +110,21 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         createAvailableTopicThree(gloss.getTopic_2());
         setSelectedTopicThree(gloss.getTopic_3());
         setDescription(gloss.getDescription());
-        List<LanguageItems> ukItemsToSet = new ArrayList<LanguageItems>();
-        List<LanguageItems> itItemsToSet = new ArrayList<LanguageItems>();
-        for(LanguageItems l : gloss.getFinalItems())
+        List<LanguageItem> ukItemsToSet = new ArrayList<LanguageItem>();
+        List<LanguageItem> itItemsToSet = new ArrayList<LanguageItem>();
+        for(LanguageItem l : gloss.getFinalItems())
         {
 
             if(l.getLanguage().equalsIgnoreCase("english"))
             {
+                l.setUseLabel("Use");
                 l.updateUseLabel();
                 ukItemsToSet.add(l);
 
             }
             else if(l.getLanguage().equalsIgnoreCase("italian"))
             {
+                l.setUseLabel("Use");
                 l.updateUseLabel();
                 itItemsToSet.add(l);
             }
@@ -137,11 +139,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         boolean upload = false;
 
-        for(LanguageItems uk : getUkItems())
+        for(LanguageItem uk : getUkItems())
         {
             if(!uk.getValue().isEmpty() && !upload)
             {
-                for(LanguageItems it : getItalianItems())
+                for(LanguageItem it : getItalianItems())
                 {
                     if(!it.getValue().isEmpty())
                         upload = true;
@@ -217,17 +219,17 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public void addIt()
     {
 
-        ItalianItems.add(new LanguageItems());
+        ItalianItems.add(new LanguageItem());
         count++;
         valueHeaderIt = "Term It" + Integer.toString(count);
 
     }
 
-    public void removeIt(LanguageItems item)
+    public void removeIt(LanguageItem item)
     {
-        List<LanguageItems> iItems = new ArrayList<LanguageItems>(ItalianItems);
+        List<LanguageItem> iItems = new ArrayList<LanguageItem>(ItalianItems);
         boolean remove = false;
-        for(LanguageItems i : iItems)
+        for(LanguageItem i : iItems)
         {
             if(!i.getValue().isEmpty())
                 if(iItems.size() > 1)
@@ -245,11 +247,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void removeUk(LanguageItems item)
+    public void removeUk(LanguageItem item)
     {
-        List<LanguageItems> uItems = new ArrayList<LanguageItems>(UkItems);
+        List<LanguageItem> uItems = new ArrayList<LanguageItem>(UkItems);
         boolean remove = false;
-        for(LanguageItems u : uItems)
+        for(LanguageItem u : uItems)
         {
             if(!u.getValue().isEmpty())
                 if(uItems.size() > 1)
@@ -269,7 +271,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public void addUk()
     {
-        UkItems.add(new LanguageItems());
+        UkItems.add(new LanguageItem());
     }
 
     public void createAvailableTopicTwos()
@@ -332,22 +334,22 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     }
 
-    public List<LanguageItems> getItalianItems()
+    public List<LanguageItem> getItalianItems()
     {
         return ItalianItems;
     }
 
-    public void setItalianItems(List<LanguageItems> itItems)
+    public void setItalianItems(List<LanguageItem> itItems)
     {
         this.ItalianItems = itItems;
     }
 
-    public List<LanguageItems> getUkItems()
+    public List<LanguageItem> getUkItems()
     {
         return UkItems;
     }
 
-    public void setUkItems(List<LanguageItems> ukItems)
+    public void setUkItems(List<LanguageItem> ukItems)
     {
         this.UkItems = ukItems;
     }
@@ -492,12 +494,12 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         this.selectedGlossaryItem = selectedGlossaryItem;
     }
 
-    public List<LanguageItems> getLanguageItems()
+    public List<LanguageItem> getLanguageItems()
     {
         return languageItems;
     }
 
-    public void setLanguageItems(List<LanguageItems> languageItems)
+    public void setLanguageItems(List<LanguageItem> languageItems)
     {
         this.languageItems = languageItems;
     }

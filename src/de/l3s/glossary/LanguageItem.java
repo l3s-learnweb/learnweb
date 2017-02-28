@@ -3,7 +3,7 @@ package de.l3s.glossary;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LanguageItems
+public class LanguageItem
 {
 
     private String value;
@@ -26,14 +26,17 @@ public class LanguageItems
         {
             label = label + u + ", ";
         }
+
         if(label.contains(","))
         {
             label = label.trim().substring(0, label.lastIndexOf(","));
-            setUseLabel(label);
-        }
-        else
-        {
-            setUseLabel("Use");
+            if(!label.trim().isEmpty())
+                setUseLabel(label);
+
+            else
+            {
+                setUseLabel("Use");
+            }
         }
 
     }

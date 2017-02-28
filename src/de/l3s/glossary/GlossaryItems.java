@@ -1,6 +1,5 @@
 package de.l3s.glossary;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GlossaryItems
@@ -11,9 +10,9 @@ public class GlossaryItems
     private String description;
 
     private int glossId;
-    private List<LanguageItems> itItems;
-    private List<LanguageItems> ukItems;
-    private List<LanguageItems> finalItems;
+
+    private List<LanguageItem> finalItems;
+
     private String value;
     private String glossIdString;
     private String pronounciation;
@@ -64,67 +63,12 @@ public class GlossaryItems
         this.description = description;
     }
 
-    public List<LanguageItems> getItItems()
-    {
-        return itItems;
-    }
-
-    public void setItItems(List<LanguageItems> itItems)
-    {
-        this.itItems = itItems;
-    }
-
-    public List<LanguageItems> getUkItems()
-    {
-        return ukItems;
-    }
-
-    public void setUkItems(List<LanguageItems> ukItems)
-    {
-        this.ukItems = ukItems;
-    }
-
-    public void createFinalList()
-    {
-        List<LanguageItems> l = new ArrayList<LanguageItems>();
-        for(LanguageItems i : ukItems)
-        {
-            LanguageItems temp = new LanguageItems();
-            temp.setValue(i.getValue());
-            temp.setAcronym(i.getAcronym());
-            temp.setPhraseology(i.getPhraseology());
-            temp.setPronounciation(i.getPronounciation());
-            temp.setReferences(i.getReferences());
-            temp.setSelectedUses(i.getSelectedUses());
-
-            temp.setLanguage("English");
-
-            l.add(temp);
-        }
-        for(LanguageItems i : itItems)
-        {
-            LanguageItems temp = new LanguageItems();
-            temp.setValue(i.getValue());
-            temp.setAcronym(i.getAcronym());
-            temp.setPhraseology(i.getPhraseology());
-            temp.setPronounciation(i.getPronounciation());
-            temp.setReferences(i.getReferences());
-            temp.setSelectedUses(i.getSelectedUses());
-
-            temp.setLanguage("Italian");
-
-            l.add(temp);
-        }
-        setFinalItems(l);
-
-    }
-
-    public List<LanguageItems> getFinalItems()
+    public List<LanguageItem> getFinalItems()
     {
         return finalItems;
     }
 
-    public void setFinalItems(List<LanguageItems> finalItems)
+    public void setFinalItems(List<LanguageItem> finalItems)
     {
         this.finalItems = finalItems;
     }
@@ -228,4 +172,5 @@ public class GlossaryItems
     {
         this.glossIdString = glossIdString;
     }
+
 }

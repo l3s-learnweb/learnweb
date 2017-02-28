@@ -10,7 +10,7 @@
 		<ui:param name="loginRequired" value="true" />
 		<ui:define name="metadata">
 				<f:metadata>
-					<!-- <f:viewParam name="resource_id" value="#{viewGlossaryBean.resourceId}" /> -->
+					
 					<f:viewParam name="resource_id" value="#{glossaryBean.resourceId}"></f:viewParam>
 					<f:event type="preRenderView" listener="#{glossaryBean.preRenderView}"/>
 				</f:metadata>
@@ -284,7 +284,7 @@ var groupRow = function(colIndex) {
         
         var columnData = column.find("span").first().data("itemid");
 
-        console.log($(column).find("span").first().data('itemid'));
+        
         if(rowGroupCellData != columnData) {                    
             groupStartIndex = i;
             rowGroupCellData = columnData;
