@@ -12,12 +12,12 @@ import org.apache.log4j.Logger;
 import de.l3s.glossary.GlossaryItems;
 import de.l3s.glossary.LanguageItem;
 
-public class GlossariesManager
+public class GlossaryManager
 {
-    private final static Logger log = Logger.getLogger(GlossariesManager.class);
+    private final static Logger log = Logger.getLogger(GlossaryManager.class);
     private Learnweb learnweb;
 
-    public GlossariesManager(Learnweb learnweb)
+    public GlossaryManager(Learnweb learnweb)
     {
         this.learnweb = learnweb;
     }

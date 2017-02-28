@@ -17,9 +17,7 @@ import org.primefaces.model.UploadedFile;
 
 import de.l3s.glossary.GlossaryItems;
 import de.l3s.glossary.LanguageItem;
-import de.l3s.learnweb.GlossariesManager;
 import de.l3s.learnweb.GlossaryEntry;
-import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.User;
@@ -29,9 +27,9 @@ import de.l3s.learnwebBeans.ApplicationBean;
 @ManagedBean
 public class GlossaryBean extends ApplicationBean implements Serializable
 {
-
-    private final static Logger log = Logger.getLogger(GlossaryBean.class);
     private static final long serialVersionUID = -1811030091337893637L;
+    private static final Logger log = Logger.getLogger(GlossaryBean.class);
+
     private List<LanguageItem> ItalianItems;
     private List<LanguageItem> UkItems;
     private List<LanguageItem> languageItems;
@@ -48,9 +46,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private int count;
     private UploadedFile multimediaFile;
     private int userId;
-    private Learnweb learnweb;
-    GlossariesManager gl;
     private int resourceId;
+    private int groupId; // group id of the resource used only for the logger
     private int glossaryId;
     private List<GlossaryItems> items = new ArrayList<GlossaryItems>();
     private List<GlossaryItems> filteredItems = new ArrayList<GlossaryItems>();
@@ -70,7 +67,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             try
             {
                 Resource resource = getLearnweb().getResourceManager().getResource(resourceId);
-                log(Action.glossary_open, resource.getGroupId(), resourceId);
+                groupId = resource.getGroupId();
+                log(Action.glossary_open, groupId, resourceId);
             }
             catch(Exception e)
             {
@@ -163,47 +161,38 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
         if(upload)
         {
-            try
+            User u = getUser();
+            GlossaryEntry entry = new GlossaryEntry();
+
+            entry.setDescription(getDescription());
+            //entry.setMultimediaFile(getMultimediaFile());
+            // gl.setFileName(getFileName());
+            entry.setSelectedTopicOne(getSelectedTopicOne());
+            entry.setSelectedTopicTwo(getSelectedTopicTwo());
+            entry.setSelectedTopicThree(getSelectedTopicThree());
+            entry.setUkItems(getUkItems());
+            entry.setUserId(getUserId());
+            entry.setUser(u);
+            entry.setItalianItems(getItalianItems());
+            entry.setResourceId(getResourceId());
+            entry.setGlossaryId(getGlossaryId());
+
+            boolean result = getLearnweb().getGlossariesManager().addToDatabase(entry);
+            if(result)
             {
-                User u = getUser();
-                GlossaryEntry entry = new GlossaryEntry();
+                FacesContext context = FacesContext.getCurrentInstance();
 
-                entry.setDescription(getDescription());
-                //entry.setMultimediaFile(getMultimediaFile());
-                // gl.setFileName(getFileName());
-                entry.setSelectedTopicOne(getSelectedTopicOne());
-                entry.setSelectedTopicTwo(getSelectedTopicTwo());
-                entry.setSelectedTopicThree(getSelectedTopicThree());
-                entry.setUkItems(getUkItems());
-                entry.setUserId(getUserId());
-                entry.setUser(u);
-                entry.setItalianItems(getItalianItems());
-                entry.setResourceId(getResourceId());
-                entry.setGlossaryId(getGlossaryId());
-
-                boolean result = getLearnweb().getGlossariesManager().addToDatabase(entry);
-                if(result)
-                {
-                    FacesContext context = FacesContext.getCurrentInstance();
-
-                    context.addMessage(null, new FacesMessage("Successful entry"));
-                }
-
-                if(getGlossaryId() == 0)
-                    log(Action.glossary_entry_add, resourceId, getGlossaryId());
-                else
-                    log(Action.glossary_entry_edit, resourceId, getGlossaryId());
-
+                context.addMessage(null, new FacesMessage("Successful entry"));
             }
-            catch(Exception e)
-            {
-                log.error("Couldn't log Glossary action; resource: " + resourceId);
-            }
+
+            if(getGlossaryId() == 0)
+                log(Action.glossary_entry_add, groupId, resourceId, Integer.toString(getGlossaryId()));
+            else
+                log(Action.glossary_entry_edit, groupId, resourceId, Integer.toString(getGlossaryId()));
 
             return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
         }
         else
-
         {
             FacesContext context = FacesContext.getCurrentInstance();
 
@@ -222,102 +211,85 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         try
         {
-
             getLearnweb().getGlossariesManager().deleteFromDb(item.getGlossId());
             createEntry();
-
-            log(Action.glossary_entry_delete, resourceId, item.getGlossId());
-
+            log(Action.glossary_entry_delete, groupId, resourceId, Integer.toString(item.getGlossId()));
         }
         catch(Exception e)
         {
-            log.error("Couldn't log Glossary action; resource: " + resourceId);
+            addFatalMessage(e);
         }
         return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
     }
 
     public void addIt()
     {
-        try
-        {
+        ItalianItems.add(new LanguageItem());
+        count++;
+        valueHeaderIt = "Term It" + Integer.toString(count);
 
-            ItalianItems.add(new LanguageItem());
-            count++;
-            valueHeaderIt = "Term It" + Integer.toString(count);
-
-            log(Action.glossary_term_add, resourceId, "");
-        }
-        catch(Exception e)
-        {
-            log.error("Couldn't log Glossary action; resource: " + resourceId);
-        }
-
+        log(Action.glossary_term_add, groupId, resourceId);
     }
 
     public void removeIt(LanguageItem item)
     {
-        List<LanguageItem> iItems = new ArrayList<LanguageItem>(ItalianItems);
-        boolean remove = false;
-        for(LanguageItem i : iItems)
+        try
         {
-            if(!i.getValue().isEmpty())
-                if(iItems.size() > 1)
-                    remove = true;
-        }
-        if(remove)
-        {
-            try
+            List<LanguageItem> iItems = new ArrayList<LanguageItem>(ItalianItems);
+            boolean remove = false;
+            for(LanguageItem i : iItems)
+            {
+                if(!i.getValue().isEmpty())
+                    if(iItems.size() > 1)
+                        remove = true;
+            }
+            if(remove)
             {
                 ItalianItems.remove(item);
 
                 log(Action.glossary_term_delete, resourceId, item.getTermId());
             }
-            catch(Exception e)
+            else
             {
-                log.error("Couldn't log Glossary action; resource: " + resourceId);
+                FacesContext context1 = FacesContext.getCurrentInstance();
+
+                context1.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "You need atleast one entry of Italian Items"));
             }
-
         }
-
-        else
+        catch(Exception e)
         {
-            FacesContext context1 = FacesContext.getCurrentInstance();
-
-            context1.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "You need atleast one entry of Italian Items"));
-
+            addFatalMessage(e);
         }
     }
 
     public void removeUk(LanguageItem item)
     {
-        List<LanguageItem> uItems = new ArrayList<LanguageItem>(UkItems);
-        boolean remove = false;
-        for(LanguageItem u : uItems)
+        try
         {
-            if(!u.getValue().isEmpty())
-                if(uItems.size() > 1)
-                    remove = true;
-        }
-        if(remove)
-        {
-            try
+            List<LanguageItem> uItems = new ArrayList<LanguageItem>(UkItems);
+            boolean remove = false;
+            for(LanguageItem u : uItems)
+            {
+                if(!u.getValue().isEmpty())
+                    if(uItems.size() > 1)
+                        remove = true;
+            }
+            if(remove)
             {
                 UkItems.remove(item);
 
                 log(Action.glossary_term_delete, resourceId, item.getTermId());
             }
-            catch(Exception e)
+            else
             {
-                log.error("Couldn't log Glossary action; resource: " + resourceId);
+                FacesContext context1 = FacesContext.getCurrentInstance();
+
+                context1.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "You need atleast one entry of UK Items"));
             }
         }
-        else
+        catch(Exception e)
         {
-
-            FacesContext context1 = FacesContext.getCurrentInstance();
-
-            context1.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "You need atleast one entry of UK Items"));
-
+            addFatalMessage(e);
         }
     }
 
@@ -327,17 +299,16 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             UkItems.add(new LanguageItem());
 
-            log(Action.glossary_term_add, resourceId, "");
+            log(Action.glossary_term_add, groupId, resourceId, "");
         }
         catch(Exception e)
         {
-            log.error("Couldn't log Glossary action; resource: " + resourceId);
+            addFatalMessage(e);
         }
     }
 
     public void createAvailableTopicTwos()
     {
-
         availableTopicTwos.add(new SelectItem("Diseases and disorders"));
         availableTopicTwos.add(new SelectItem("Anatomy"));
         availableTopicTwos.add(new SelectItem("Medical branches"));
@@ -373,7 +344,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             availableTopicThrees = null;
         }
-
     }
 
     public void changeTopicTwo(AjaxBehaviorEvent event)
@@ -515,14 +485,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         return userId;
     }
 
-    @Override
-    protected Learnweb getLearnweb()
-    {
-        if(null == learnweb)
-            learnweb = Learnweb.getInstance();
-        return learnweb;
-    }
-
     public int getResourceId()
     {
         return resourceId;
@@ -567,8 +529,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     private void getGlossaryItems(int id)
     {
-        gl = getLearnweb().getGlossariesManager();
-        items = gl.getGlossaryItems(id);
+        items = getLearnweb().getGlossariesManager().getGlossaryItems(id);
     }
 
     public List<GlossaryItems> getItems()

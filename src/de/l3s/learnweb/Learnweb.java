@@ -59,7 +59,7 @@ public class Learnweb
     private final YovistoManager yovistoManager;
     private final JobScheduler jobScheduler;
 
-    private final GlossariesManager glossariesManager;
+    private final GlossaryManager glossariesManager;
     private final SuggestionLogger suggestionLogger;
     private final WaybackCapturesLogger waybackCapturesLogger;
 
@@ -203,7 +203,7 @@ public class Learnweb
 
         suggestionLogger = new SuggestionLogger(this);
         waybackCapturesLogger = new WaybackCapturesLogger(this);
-        glossariesManager = new GlossariesManager(this);
+        glossariesManager = new GlossaryManager(this);
         learnwebIsLoading = false;
     }
 
@@ -385,12 +385,12 @@ public class Learnweb
      * @param sessionId
      * @param executionTime in milliseconds
      * @throws SQLException
+     * 
+     *             public void log(User user, LogEntry.Action action, int targetId, String params, String sessionId, int executionTime)
+     *             {
+     *             log(user, action, -1, targetId, params, sessionId, executionTime);
+     *             }
      */
-    public void log(User user, LogEntry.Action action, int targetId, String params, String sessionId, int executionTime)
-    {
-        log(user, action, -1, targetId, params, sessionId, executionTime);
-    }
-
     public void log(User user, LogEntry.Action action, int groupId, int targetId, String params, String sessionId, int executionTime)
     {
         if(null == action)
@@ -696,7 +696,7 @@ public class Learnweb
         Learnweb.getInstance();
     }
 
-    public GlossariesManager getGlossariesManager()
+    public GlossaryManager getGlossariesManager()
     {
         return glossariesManager;
     }

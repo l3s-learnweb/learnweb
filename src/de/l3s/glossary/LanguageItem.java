@@ -1,13 +1,14 @@
 package de.l3s.glossary;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LanguageItem
+public class LanguageItem implements Serializable
 {
+    private static final long serialVersionUID = 7068970099338006288L;
 
     private String value;
-
     private String pronounciation;
     private String acronym;
     private String references;

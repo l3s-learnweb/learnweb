@@ -1,10 +1,13 @@
 package de.l3s.glossary;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GlossaryItems
+public class GlossaryItems implements Serializable
 {
+    private static final long serialVersionUID = -5692141840144862371L;
+
     private String topic_1;
     private String topic_2;
     private String topic_3;
