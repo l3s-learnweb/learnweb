@@ -30,7 +30,7 @@ public class GlossariesManager
         PreparedStatement preparedStmnt = null;
         try
         {
-            preparedStmnt = Learnweb.getInstance().getConnection().prepareStatement(InsertTerms);
+            preparedStmnt = learnweb.getConnection().prepareStatement(InsertTerms);
         }
         catch(SQLException e1)
         {
@@ -40,7 +40,7 @@ public class GlossariesManager
         {
             for(LanguageItem t : e.getUkItems())
             {
-                preparedStmnt = Learnweb.getInstance().getConnection().prepareStatement(InsertTerms);
+                preparedStmnt = learnweb.getConnection().prepareStatement(InsertTerms);
                 preparedStmnt.setInt(1, e.getGlossaryId());
                 preparedStmnt.setString(2, t.getValue());
                 preparedStmnt.setString(3, String.join(", ", t.getSelectedUses()));
@@ -54,7 +54,7 @@ public class GlossariesManager
             }
             for(LanguageItem t : e.getItalianItems())
             {
-                preparedStmnt = Learnweb.getInstance().getConnection().prepareStatement(InsertTerms);
+                preparedStmnt = learnweb.getConnection().prepareStatement(InsertTerms);
                 preparedStmnt.setInt(1, e.getGlossaryId());
                 preparedStmnt.setString(2, t.getValue());
                 preparedStmnt.setString(3, String.join(", ", t.getSelectedUses()));
@@ -84,7 +84,7 @@ public class GlossariesManager
 
             try
             {
-                preparedStmnt = Learnweb.getInstance().getConnection().prepareStatement(InsertGlossary, PreparedStatement.RETURN_GENERATED_KEYS);
+                preparedStmnt = learnweb.getConnection().prepareStatement(InsertGlossary, PreparedStatement.RETURN_GENERATED_KEYS);
 
                 preparedStmnt.setInt(1, e.getResourceId());
                 preparedStmnt.setString(2, e.getSelectedTopicOne());
@@ -128,7 +128,7 @@ public class GlossariesManager
             String updateStmnt = "UPDATE `lw_resource_glossary` SET `topic_1`= ? ,`topic_2`= ?,`topic_3`= ?,`description`= ? WHERE glossary_id = " + Integer.toString(glossIden);
             try
             {
-                PreparedStatement pstmnt = Learnweb.getInstance().getConnection().prepareStatement(updateStmnt);
+                PreparedStatement pstmnt = learnweb.getConnection().prepareStatement(updateStmnt);
                 pstmnt.setString(1, e.getSelectedTopicOne());
                 pstmnt.setString(2, e.getSelectedTopicTwo());
                 pstmnt.setString(3, e.getSelectedTopicThree());
@@ -140,7 +140,7 @@ public class GlossariesManager
 
                 List<LanguageItem> newItItems = new ArrayList<LanguageItem>(e.getItalianItems());
                 pstmnt = null;
-                pstmnt = Learnweb.getInstance().getConnection().prepareStatement(deleteTerms);
+                pstmnt = learnweb.getConnection().prepareStatement(deleteTerms);
                 ResultSet rs = pstmnt.executeQuery();
                 while(rs.next())
                 {
@@ -167,7 +167,7 @@ public class GlossariesManager
                     if(deleteTerm != true)
                     {
                         String delete = "DELETE FROM `lw_resource_glossary_terms` WHERE glossary_term_id = " + Integer.toString(rs.getInt("glossary_term_id"));
-                        PreparedStatement pd = Learnweb.getInstance().getConnection().prepareStatement(delete);
+                        PreparedStatement pd = learnweb.getConnection().prepareStatement(delete);
                         pd.executeUpdate();
                     }
                 }
@@ -177,7 +177,7 @@ public class GlossariesManager
                     PreparedStatement preparedStmnt = null;
                     if(u.getTermId() > 0)
                     {
-                        preparedStmnt = Learnweb.getInstance().getConnection().prepareStatement(updateTerms);
+                        preparedStmnt = learnweb.getConnection().prepareStatement(updateTerms);
 
                         preparedStmnt.setString(1, u.getValue());
                         String use = String.join(", ", u.getSelectedUses());
@@ -199,7 +199,7 @@ public class GlossariesManager
                     PreparedStatement preparedStmnt = null;
                     if(u.getTermId() > 0)
                     {
-                        preparedStmnt = Learnweb.getInstance().getConnection().prepareStatement(updateTerms);
+                        preparedStmnt = learnweb.getConnection().prepareStatement(updateTerms);
 
                         preparedStmnt.setString(1, u.getValue());
                         String use = String.join(", ", u.getSelectedUses());
@@ -249,9 +249,9 @@ public class GlossariesManager
         String deleteGlossItem = "DELETE FROM `lw_resource_glossary` WHERE glossary_id = " + Integer.toString(glossId);
         try
         {
-            PreparedStatement Terms = Learnweb.getInstance().getConnection().prepareStatement(deleteTerms);
+            PreparedStatement Terms = learnweb.getConnection().prepareStatement(deleteTerms);
             Terms.executeUpdate();
-            PreparedStatement gloss = Learnweb.getInstance().getConnection().prepareStatement(deleteGlossItem);
+            PreparedStatement gloss = learnweb.getConnection().prepareStatement(deleteGlossItem);
             gloss.executeUpdate();
         }
         catch(SQLException e)
@@ -272,7 +272,7 @@ public class GlossariesManager
 
         try
         {
-            preparedStmnt = Learnweb.getInstance().getConnection().prepareStatement(mainDetails);
+            preparedStmnt = learnweb.getConnection().prepareStatement(mainDetails);
             preparedStmnt.setInt(1, id);
             result = preparedStmnt.executeQuery();
             while(result.next())
@@ -280,7 +280,7 @@ public class GlossariesManager
                 List<LanguageItem> finalList = new ArrayList<LanguageItem>();
 
                 int glossaryId = result.getInt("glossary_id");
-                PreparedStatement ps = Learnweb.getInstance().getConnection().prepareStatement(termDetails);
+                PreparedStatement ps = learnweb.getConnection().prepareStatement(termDetails);
                 ps.setInt(1, glossaryId);
                 ResultSet termResults = ps.executeQuery();
 

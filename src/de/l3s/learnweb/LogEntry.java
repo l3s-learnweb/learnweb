@@ -58,8 +58,12 @@ public class LogEntry implements Serializable
         edit_folder, // param = folder name; target_id = folder_id
         glossary_open, // target_id = resource id
         glossary_create, // target_id = resource id
-        glossary_edit, // target_id = resource id
-        glossary_add, // target_id = resource id
+        glossary_entry_edit, // target_id = resource id, target_id = glossary id
+        glossary_entry_add, // target_id = resource id, target_id = glossary id
+        glossary_entry_delete, // target_id = resource id, target_id = glossary id
+        glossary_term_edit, // target_id = resource id, target_id = glossary term id
+        glossary_term_add, // target_id = resource id, target_id = glossary term id
+        glossary_term_delete, // target_id = resource id, target_id = glossary term id     
     }
 
     private final static HashSet<Action> resourceActions = Sets.newHashSet(Action.tagging_resource, Action.rating_resource, Action.commenting_resource, Action.opening_resource, Action.adding_resource, Action.deleting_comment, Action.edit_resource, Action.thumb_rating_resource);
