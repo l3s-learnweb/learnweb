@@ -312,10 +312,10 @@ public class SearchBean extends ApplicationBean implements Serializable
                 }
                 else
                 {
-                    if(!searched.contains(newResource.getUrlReal()))
-                        searched.add(newResource.getUrlReal());
+                    if(!searched.contains(newResource.getUrl()))
+                        searched.add(newResource.getUrl());
 
-                    if(!historyResources.contains(newResource.getUrlReal()))
+                    if(!historyResources.contains(newResource.getUrl()))
                     {
                         newResource.setNewResource(true);
                     }
@@ -398,8 +398,8 @@ public class SearchBean extends ApplicationBean implements Serializable
             {
                 try
                 {
-                    int tempresourceId = searchLogClient.getResourceIdByUrl(newResource.getUrlReal());
-                    searchLogClient.saveResourceLog(user.getId(), date, ACTION.resource_saved, newResource.getUrlReal(), tempresourceId, newResource.getTitle(), newResource.getSource());
+                    int tempresourceId = searchLogClient.getResourceIdByUrl(newResource.getUrl());
+                    searchLogClient.saveResourceLog(user.getId(), date, ACTION.resource_saved, newResource.getUrl(), tempresourceId, newResource.getTitle(), newResource.getSource());
                     searchLogClient.addResourceSavedList(tempresourceId, newResource.getId());
                 }
                 catch(ClientHandlerException e)
@@ -450,7 +450,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
             try
             {
-                searchLogClient.saveResourceLog(userId, startTime, ACTION.resource_click, resource.getUrlReal(), tempResourceId, resource.getTitle(), resource.getSource());
+                searchLogClient.saveResourceLog(userId, startTime, ACTION.resource_click, resource.getUrl(), tempResourceId, resource.getTitle(), resource.getSource());
             }
             catch(ClientHandlerException e)
             {
@@ -684,8 +684,8 @@ public class SearchBean extends ApplicationBean implements Serializable
             try
             {
                 int userId = getUser() == null ? -1 : getUser().getId();
-                int tempResourceId = searchLogClient.getResourceIdByUrl(selectedResource.getUrlReal());
-                searchLogClient.saveResourceLog(userId, timestamp, ACTION.resource_dialog_open, selectedResource.getUrlReal(), tempResourceId, selectedResource.getTitle(), selectedResource.getSource());
+                int tempResourceId = searchLogClient.getResourceIdByUrl(selectedResource.getUrl());
+                searchLogClient.saveResourceLog(userId, timestamp, ACTION.resource_dialog_open, selectedResource.getUrl(), tempResourceId, selectedResource.getTitle(), selectedResource.getSource());
             }
             catch(ClientHandlerException e)
             {

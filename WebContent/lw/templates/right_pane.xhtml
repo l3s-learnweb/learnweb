@@ -54,6 +54,7 @@
 						scroller();
 						lightbox_load();
 					}
+					update_header();
 				</script>		
 				
 				<h:panelGroup id="add_resource_section" rendered="#{bean.rightPanelAction == 'newResource'}" styleClass="create-block new-resource" layout="block">
@@ -258,7 +259,7 @@
 							<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text'  and empty resourceDetailBean.clickedResource.thumbnail3}">
 								<div class="preview_box" style="display: inline-block">
 									<a target="_blank" class="newsfeed_query_link" style="padding: 0px" 
-										href="#{resourceDetailBean.clickedResource.url}">
+										href="#{resourceDetailBean.clickedResource.urlProxied}">
 										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>
 									</a>
 								</div>
@@ -270,7 +271,7 @@
 							</ui:fragment>
 						</div>
 						<div class="align-center" style="padding-top: 10px">
-							<a class="hyperlink" href="#{resourceDetailBean.clickedResource.url}" target="_blank">
+							<a class="hyperlink" href="#{resourceDetailBean.clickedResource.urlProxied}" target="_blank">
 								<h:outputText styleClass="hyperlink" 
 									rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf'}"
 									value="#{resourceDetailBean.clickedResource.url}"/>
@@ -299,7 +300,7 @@
 									</span>
 								</td>
 								<td>
-									<a href="#{resourceDetailBean.clickedResource.getUrl()}">
+									<a href="#{resourceDetailBean.clickedResource.urlProxied}">
 										<span style="float:left;text-decoration:underline;">#{resourceDetailBean.clickedResource.fileName}</span><span class="ui-icon ui-icon-arrowthickstop-1-s" style="float:left;"></span>
 									</a>
 								</td>
@@ -314,7 +315,7 @@
 									</span>
 								</td>
 								<td>
-									<a style="color: #22e" href="#{resourceDetailBean.clickedResource.getUrl()}">
+									<a style="color: #22e" href="#{resourceDetailBean.clickedResource.urlProxied}">
 										#{resourceDetailBean.clickedResource.url}
 									</a>
 								</td>
@@ -389,7 +390,7 @@
 								</span>
 							</td>
 							<td style="overflow:hidden;">
-								<a href="#{resourceDetailBean.clickedResource.getUrl()}">
+								<a href="#{resourceDetailBean.clickedResource.urlProxied}">
 									<h:outputText value="#{resourceDetailBean.clickedResource.source}" />
 								</a><span style="display:inline-block; width:300px;"> </span>
 							</td>
@@ -690,7 +691,7 @@
 						</ui:fragment>
 						<ui:fragment rendered="#{(bean.clickedResource.type eq 'text' or bean.clickedResource.type eq 'pdf' ) and bean.clickedResource.type != 'Video'}">
 							<div class="preview_box" style="display: inline-block">
-								<a target="_blank" class="newsfeed_query_link" style="padding: 0px" href="#{bean.clickedResource.url}">
+								<a target="_blank" class="newsfeed_query_link" style="padding: 0px" href="#{bean.clickedResource.urlProxied}">
 									<h:outputText value='#{bean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>
 								</a>
 							</div>

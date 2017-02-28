@@ -800,16 +800,21 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         return value;
     }
 
-    public String getUrlReal()
+    public String getUrl()
     {
         return url;
     }
 
-    public String getUrl()
+    /**
+     * Returns the url of this resource but proxied through WAPS.io
+     * 
+     * @return
+     */
+    public String getUrlProxied()
     {
         User user = UtilBean.getUserBean().getUser();
 
-        return "http://proxy.kemkes.net/open?u=" + StringHelper.urlEncode(getUrlReal()) + "&c=2&i=" + (user == null ? 0 : user.getId());
+        return "http://waps.io/open?u=" + StringHelper.urlEncode(getUrl()) + "&c=2&i=" + (user == null ? 0 : user.getId());
     }
 
     public String getLearnwebUrl() throws SQLException
@@ -817,7 +822,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         if(getId() != -1 && getGroupId() != 0)
             return "group/resources.jsf?group_id=" + getGroup().getId() + "&resource_id=" + getId();
 
-        return getUrl();
+        return "";//getUrl();
     }
 
     public String getServiceIcon()
@@ -1254,7 +1259,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         if(getType().equalsIgnoreCase("image"))
             return "<img src=\"" + getThumbnail2().getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\" original-src=\"" + large.getUrl() + "\"/>";
         else if(getType().equalsIgnoreCase("text"))
-            return "<iframe src=\"" + getUrlReal() + "\" />";
+            return "<iframe src=\"" + getUrl() + "\" />";
         else if(getType().equalsIgnoreCase("video"))
         {
             if(getSource().equalsIgnoreCase("loro") || getSource().equalsIgnoreCase("desktop"))

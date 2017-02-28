@@ -84,7 +84,7 @@ public class SolrResourceBean
         this.title = resource.getTitle();
         this.description = resource.getDescription();
         this.machineDescription = resource.getMachineDescription();
-        this.url = resource.getUrlReal();
+        this.url = resource.getUrl();
         this.language = resource.getLanguage().toLowerCase();
         this.source = resource.getSource().toLowerCase();
         this.type = resource.getType().toLowerCase();

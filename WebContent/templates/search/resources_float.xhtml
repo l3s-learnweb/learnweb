@@ -20,7 +20,7 @@
 					<h:outputText value="${res.shortSnippet}" escape="false" />
 				</div>
 				<div class="location">
-					<h:outputLink value="${res.url}">
+					<h:outputLink value="${res.urlProxied}">
 						<img src="#{learnwebBean.contextUrl}#{res.serviceIcon}" alt="${res.location}" height="16" width="16"/> <h:outputText value="${res.location}" />
 					</h:outputLink>
 				</div>			

@@ -360,14 +360,14 @@
 													<ui:fragment rendered="#{request.getHeader('User-Agent').toLowerCase().contains('firefox') and (result.type eq 'video' or result.type eq 'Video')}">
 														<div style="display: block; text-align: center">
 															<h:outputLink title="Firefox does not support embedded videos for Presentations. Consider using Chrome if you want to play the video during the Presentation." 
-																target="_new" style="font-size: 20px; color: #3399FF; text-shadow: 0 0 0" value="#{result.url}">
+																target="_new" style="font-size: 20px; color: #3399FF; text-shadow: 0 0 0" value="#{result.urlProxied}">
 																Link to Video
 															</h:outputLink>
 														</div>
 													</ui:fragment>
 													<ui:fragment rendered="#{result.type eq 'pdf'}">
 														<div style="display: block; text-align: center">
-															<h:outputLink target="_new" style="font-size: 20px; color: #3399FF; text-shadow: 0 0 0" value="#{result.url}">
+															<h:outputLink target="_new" style="font-size: 20px; color: #3399FF; text-shadow: 0 0 0" value="#{result.urlProxied}">
 																Link to PDF
 															</h:outputLink>
 														</div>
@@ -407,14 +407,14 @@
 														<ui:fragment rendered="#{request.getHeader('User-Agent').toLowerCase().contains('firefox') and (result.type eq 'video' or result.type eq 'Video')}">
 															<div style="display: block; text-align: center">
 																<h:outputLink title="Firefox does not support embedded videos for Presentations. Consider using Chrome if you want to play the video during the Presentation." 
-																	target="_new" style="font-size: 20px; color: #3399FF; text-shadow: 0 0 0" value="#{result.url}">
+																	target="_new" style="font-size: 20px; color: #3399FF; text-shadow: 0 0 0" value="#{result.urlProxied}">
 																	Link to Video
 																</h:outputLink>
 															</div>
 														</ui:fragment>
 														<ui:fragment rendered="#{result.type eq 'pdf'}">
 															<div style="display: block; text-align: center">
-																<h:outputLink target="_new" style="font-size: 20px; color: #3399FF; text-shadow: 0 0 0" value="#{result.url}">
+																<h:outputLink target="_new" style="font-size: 20px; color: #3399FF; text-shadow: 0 0 0" value="#{result.urlProxied}">
 																	Link to PDF
 																</h:outputLink>
 															</div>

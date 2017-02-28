@@ -158,7 +158,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         log.debug("Handle Url input");
 
         resource.setStorageType(Resource.WEB_RESOURCE);
-        resource.setUrl(checkUrl(resource.getUrlReal()));
+        resource.setUrl(checkUrl(resource.getUrl()));
 
         ResourceMetadataExtractor rme = new ResourceMetadataExtractor(this.resource);
         rme.process();
@@ -248,8 +248,8 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
             if(resource.getStorageType() == Resource.WEB_RESOURCE)
             {
-                if(!resource.getUrlReal().startsWith("http"))
-                    resource.setUrl("http://" + resource.getUrlReal());
+                if(!resource.getUrl().startsWith("http"))
+                    resource.setUrl("http://" + resource.getUrl());
             }
 
             if(null != selectedUploadServices && selectedUploadServices.size() > 0) // the resource has to be uploaded to interweb

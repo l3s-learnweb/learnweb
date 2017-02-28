@@ -157,7 +157,7 @@ public class ArchiveUrlManager
                 if(responseDateGMTString != null)
                     archiveUrlDate = responseDate.parse(responseDateGMTString);*/
                 Client client = Client.create();
-                WebResource webResource = client.resource(archiveSaveURL + resource.getUrlReal());
+                WebResource webResource = client.resource(archiveSaveURL + resource.getUrl());
                 ClientResponse response = webResource.get(ClientResponse.class);
                 if(response.getStatus() == HttpURLConnection.HTTP_OK)
                 {
@@ -233,7 +233,7 @@ public class ArchiveUrlManager
             if(resource.getResource().getMetadataValue("first_timestamp") == null)
             {
                 PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT first_capture, last_capture FROM wb_url WHERE url = ?");
-                pStmt.setString(1, resource.getUrlReal());
+                pStmt.setString(1, resource.getUrl());
                 ResultSet rs = pStmt.executeQuery();
                 if(rs.next())
                 {
@@ -322,7 +322,7 @@ public class ArchiveUrlManager
             catch(Exception e)
             {
                 log.error(e);
-                writer.println("prometheus url: " + archiveResource.getUrlReal());
+                writer.println("prometheus url: " + archiveResource.getUrl());
                 archiveResource.setOnlineStatus(OnlineStatus.OFFLINE); // offline
             }
             return "website thumbnails created";
@@ -361,7 +361,7 @@ public class ArchiveUrlManager
                 {
                     try
                     {
-                        URL url = new URL(archiveResource.getUrlReal());
+                        URL url = new URL(archiveResource.getUrl());
                         URLConnection con = url.openConnection();
                         con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
                         con.setRequestProperty("Accept-Language", "en-US");
@@ -394,7 +394,7 @@ public class ArchiveUrlManager
                         }
                         if(toProcessUrl)
                         {
-                            log.info("Url Still Alive " + httpCon.getResponseCode() + " URL:" + archiveResource.getUrlReal());
+                            log.info("Url Still Alive " + httpCon.getResponseCode() + " URL:" + archiveResource.getUrl());
                             Future<String> processResponse = executorService.submit(new ProcessWebsiteWorker(archiveResource, rpm, writer));
                             try
                             {
@@ -403,19 +403,19 @@ public class ArchiveUrlManager
                             catch(InterruptedException e)
                             {
                                 log.error("Execution of the thread was interrupted", e);
-                                writer.println("interruptexp url: " + archiveResource.getUrlReal());
+                                writer.println("interruptexp url: " + archiveResource.getUrl());
                                 archiveResource.setOnlineStatus(OnlineStatus.OFFLINE);
                             }
                             catch(ExecutionException e)
                             {
                                 log.error("Error while retrieving response from a task that was interrupted by an exception", e);
-                                writer.println("executionexp url: " + archiveResource.getUrlReal());
+                                writer.println("executionexp url: " + archiveResource.getUrl());
                                 archiveResource.setOnlineStatus(OnlineStatus.OFFLINE);
                             }
                             catch(TimeoutException e)
                             {
-                                log.info("Taking too long to create thumbnail for " + archiveResource.getUrlReal());
-                                writer.println("timeout url: " + archiveResource.getUrlReal());
+                                log.info("Taking too long to create thumbnail for " + archiveResource.getUrl());
+                                writer.println("timeout url: " + archiveResource.getUrl());
                                 processResponse.cancel(true);
                                 archiveResource.setOnlineStatus(OnlineStatus.OFFLINE);
                             }
@@ -452,7 +452,7 @@ public class ArchiveUrlManager
                     MementoClient mClient = learnweb.getMementoClient();
                     List<ArchiveUrl> archiveVersions = mClient.getArchiveItVersions(collectionId, archiveitUrl);
                     saveArchiveItVersions(archiveResource.getId(), archiveVersions);
-                    log.debug(archiveResource.getUrlReal() + " " + archiveResource.getTitle() + " " + archiveResource.getOnlineStatus() + " " + archiveResource.getLanguage());
+                    log.debug(archiveResource.getUrl() + " " + archiveResource.getTitle() + " " + archiveResource.getOnlineStatus() + " " + archiveResource.getLanguage());
 
                     /*String[] tags = subject.split(",");
                     HashSet<String> lwTags = new HashSet<String>();

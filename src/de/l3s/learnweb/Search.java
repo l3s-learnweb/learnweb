@@ -224,7 +224,7 @@ public class Search implements Serializable
 
             // check if an other resource with the same url exists
             // Yovisto urls are not unique in this case we use the file url
-            if(!urlHashMap.add(!StringHelper.empty(resource.getFileUrl()) ? resource.getFileUrl() : resource.getUrlReal()))
+            if(!urlHashMap.add(!StringHelper.empty(resource.getFileUrl()) ? resource.getFileUrl() : resource.getUrl()))
             {
                 duplicatedUrlCount++;
                 continue;
@@ -317,13 +317,13 @@ public class Search implements Serializable
 
         for(ResourceDecorator decoratedResource : interwebResults)
         {
-            if(null == decoratedResource.getUrlReal())
+            if(null == decoratedResource.getUrl())
             {
                 log.warn("url is null: " + decoratedResource.toString());
                 continue;
             }
             // check if an other resource with the same url exists
-            if(!urlHashMap.add(decoratedResource.getUrlReal()))
+            if(!urlHashMap.add(decoratedResource.getUrl()))
             {
                 duplicatedUrlCount++;
                 continue;

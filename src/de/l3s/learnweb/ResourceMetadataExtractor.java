@@ -57,7 +57,7 @@ public class ResourceMetadataExtractor
     {
         if(fileinfo == null)
         {
-            fileinfo = new FileInspector(Learnweb.getInstance()).inspect(FileInspector.openStream(resource.getUrlReal()), "unknown");
+            fileinfo = new FileInspector(Learnweb.getInstance()).inspect(FileInspector.openStream(resource.getUrl()), "unknown");
         }
 
         return fileinfo;
@@ -86,9 +86,9 @@ public class ResourceMetadataExtractor
 
     public void processWebResource()
     {
-        if(resource.getUrlReal() != null)
+        if(resource.getUrl() != null)
         {
-            resource.setUrl(resource.getUrlReal());
+            resource.setUrl(resource.getUrl());
             extractWebSource();
             extractMetadata();
 
@@ -365,11 +365,11 @@ public class ResourceMetadataExtractor
             }
             else if(resource.getType().equalsIgnoreCase("image"))
             {
-                rpm.processImage(resource, FileInspector.openStream(resource.getUrlReal()));
+                rpm.processImage(resource, FileInspector.openStream(resource.getUrl()));
             }
             else if(resource.getType().equalsIgnoreCase("pdf"))
             {
-                rpm.processPdf(resource, FileInspector.openStream(resource.getUrlReal()));
+                rpm.processPdf(resource, FileInspector.openStream(resource.getUrl()));
             }
             else if(resource.getStorageType() == Resource.WEB_RESOURCE && resource.getMaxImageUrl() != null && resource.getMaxImageUrl().length() > 4)
             {
@@ -389,16 +389,16 @@ public class ResourceMetadataExtractor
     public void extractWebSource()
     {
         Pattern compYouTubePattern = Pattern.compile(YOUTUBE_PATTERN, Pattern.CASE_INSENSITIVE);
-        Matcher youTubeMatcher = compYouTubePattern.matcher(resource.getUrlReal());
+        Matcher youTubeMatcher = compYouTubePattern.matcher(resource.getUrl());
 
         Pattern compVimeoPattern = Pattern.compile(VIMEO_PATTERN, Pattern.CASE_INSENSITIVE);
-        Matcher vimeoMatcher = compVimeoPattern.matcher(resource.getUrlReal());
+        Matcher vimeoMatcher = compVimeoPattern.matcher(resource.getUrl());
 
         Pattern compFlickrPattern = Pattern.compile(FLICKR_PATTERN, Pattern.CASE_INSENSITIVE);
-        Matcher flickrMatcher = compFlickrPattern.matcher(resource.getUrlReal());
+        Matcher flickrMatcher = compFlickrPattern.matcher(resource.getUrl());
 
         Pattern compIpernityPattern = Pattern.compile(IPERNITY_PATTERN, Pattern.CASE_INSENSITIVE);
-        Matcher ipernityMatcher = compIpernityPattern.matcher(resource.getUrlReal());
+        Matcher ipernityMatcher = compIpernityPattern.matcher(resource.getUrl());
 
         if(youTubeMatcher.find())
         {

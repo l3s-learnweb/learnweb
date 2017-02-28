@@ -166,9 +166,9 @@ public class ResourceDecorator implements Serializable
         return resource.getUrl();
     }
 
-    public String getUrlReal()
+    public String getUrlProxied()
     {
-        return resource.getUrlReal();
+        return resource.getUrlProxied();
     }
 
     public String getDurationInMinutes()
