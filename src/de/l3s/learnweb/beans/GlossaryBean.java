@@ -319,7 +319,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public void changeTopicOne(AjaxBehaviorEvent event)
     {
         createAvailableTopicTwos();
-        selectedTopicTwo = selectedTopicThree = null;
+        selectedTopicTwo = selectedTopicThree = "";
+        availableTopicThrees = new ArrayList<SelectItem>();
         availableTopicThrees.clear();
     }
 
