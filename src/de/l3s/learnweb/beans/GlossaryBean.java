@@ -181,7 +181,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             if(result)
             {
                 FacesContext context = FacesContext.getCurrentInstance();
-
+                context.getExternalContext().getFlash().setKeepMessages(true);
                 context.addMessage(null, new FacesMessage("Successful entry"));
             }
 
@@ -197,7 +197,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             FacesContext context = FacesContext.getCurrentInstance();
 
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Please enter atleast one valid entry for both Italian and UK items"));
-            return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
+            return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId());
         }
 
     }
