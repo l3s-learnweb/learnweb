@@ -1,6 +1,7 @@
 package de.l3s.glossary;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class GlossaryItems implements Serializable
     private String selectedUses;
     private String language;
     private int termId;
+    private Timestamp date;
 
     public String getTopic_1()
     {
@@ -176,6 +178,16 @@ public class GlossaryItems implements Serializable
     public void setGlossIdString(String glossIdString)
     {
         this.glossIdString = glossIdString;
+    }
+
+    public Timestamp getDate()
+    {
+        return date;
+    }
+
+    public void setDate(Timestamp date)
+    {
+        this.date = date;
     }
 
 }

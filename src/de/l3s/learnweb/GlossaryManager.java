@@ -291,6 +291,10 @@ public class GlossaryManager
                     gloss.setReferences(termResults.getString("references"));
                     gloss.setTermId(termResults.getInt("glossary_term_id"));
                     gloss.setSelectedUses(termResults.getString("use"));
+                    if(result.getTimestamp("timestamp").after(termResults.getTimestamp("timestamp")))
+                        gloss.setDate(result.getTimestamp("timestamp"));
+                    else
+                        gloss.setDate(termResults.getTimestamp("timestamp"));
 
                     if(termResults.getString("language").contains("uk"))
                         gloss.setLanguage("English");
