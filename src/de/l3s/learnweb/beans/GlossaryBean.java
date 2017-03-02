@@ -181,8 +181,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             if(result)
             {
                 FacesContext context = FacesContext.getCurrentInstance();
-                context.getExternalContext().getFlash().setKeepMessages(true);
                 context.addMessage(null, new FacesMessage("Successful entry"));
+                context.getExternalContext().getFlash().setKeepMessages(true);
+
             }
 
             if(getGlossaryId() == 0)
@@ -200,11 +201,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId());
         }
 
-    }
-
-    public void showMessage()
-    {
-        FacesContext.getCurrentInstance().addMessage(null, new FacesMessage("Glossary item added"));
     }
 
     public String delete(GlossaryItems item)

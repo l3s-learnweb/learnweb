@@ -106,7 +106,7 @@
 
 			<div id="glossform" style="display: none">
 				<h:form id="glossary_add" styleClass="grey_border" prependId="false" >
-				<p:growl id="glossgrowl" autoUpdate="true" globalOnly="true" showDetail="true"></p:growl>
+				<p:growl id="glossgrowl" autoUpdate="true" redisplay="false" globalOnly="true" showDetail="true"></p:growl>
 				<p:panelGrid id="grid" styleClass="centered-form" columns="3"  style="border-style: none !important; margin: 0 auto;">
 					
 					<p:outputLabel for="topic_1" value="Topic 1 "></p:outputLabel>
@@ -262,13 +262,14 @@
 				<br/><br/>
 						
 				
-			    <p:commandButton id="save" value="Save Entry" action="#{glossaryBean.upload()}" styleClass="greenbutton resource_button" update=":glossgrowl :glossary_add">
+			    <p:commandButton id="save" value="Save Entry" action="#{glossaryBean.upload()}" styleClass="greenbutton resource_button" update=":glossary_add">
 			    	 <f:ajax execute="@form" />
 			    	 
 			    </p:commandButton>
 			    <p:commandButton value="Cancel" actionListener="#{glossaryBean.createEntry()}" styleClass="greenbutton resource_button" update="@form :glossary_add" onclick="$('#glossform').css('display', 'none')" process="@this" resetValues="true">
 			    
 			    </p:commandButton>
+			    
 			    <br/><br/>
 				</h:form>
 			</div>
