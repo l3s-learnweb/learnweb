@@ -181,7 +181,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             if(result)
             {
                 FacesContext context = FacesContext.getCurrentInstance();
-                context.addMessage(null, new FacesMessage("Successful entry"));
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info:", "Successful entry"));
                 context.getExternalContext().getFlash().setKeepMessages(true);
 
             }

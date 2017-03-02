@@ -3,6 +3,7 @@ package de.l3s.learnweb;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -272,6 +273,8 @@ public class GlossaryManager
                 ps.setInt(1, glossaryId);
                 ps.setInt(2, 0);
                 ResultSet termResults = ps.executeQuery();
+                ResultSet termTime = ps.executeQuery();
+                Timestamp latestTimestamp = getLatestTimestamp(glossaryId, result.getTimestamp("timestamp"), termTime);
 
                 while(termResults.next())
                 {
@@ -291,10 +294,8 @@ public class GlossaryManager
                     gloss.setReferences(termResults.getString("references"));
                     gloss.setTermId(termResults.getInt("glossary_term_id"));
                     gloss.setSelectedUses(termResults.getString("use"));
-                    if(result.getTimestamp("timestamp").after(termResults.getTimestamp("timestamp")))
-                        gloss.setDate(result.getTimestamp("timestamp"));
-                    else
-                        gloss.setDate(termResults.getTimestamp("timestamp"));
+
+                    gloss.setDate(latestTimestamp);
 
                     if(termResults.getString("language").contains("uk"))
                         gloss.setLanguage("English");
@@ -332,6 +333,25 @@ public class GlossaryManager
             log.error(e);
         }
         return items;
+    }
+
+    private Timestamp getLatestTimestamp(int glossaryId, Timestamp timestamp, ResultSet termTime)
+    {
+        Timestamp finalTime = timestamp;
+        try
+        {
+            while(termTime.next())
+            {
+                if(finalTime.before(termTime.getTimestamp("timestamp")))
+                    finalTime = termTime.getTimestamp("timestamp");
+            }
+        }
+        catch(SQLException e)
+        {
+            log.error(e);
+        }
+
+        return finalTime;
     }
 
 }
