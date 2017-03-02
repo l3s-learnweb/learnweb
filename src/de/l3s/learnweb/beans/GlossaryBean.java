@@ -13,6 +13,10 @@ import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
+import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFRow;
+import org.apache.poi.hssf.usermodel.HSSFSheet;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.primefaces.model.UploadedFile;
 
 import de.l3s.glossary.GlossaryItems;
@@ -340,6 +344,55 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             availableTopicThrees = null;
         }
+    }
+
+    public void postProcessXls(Object document)
+    {
+        try
+        {
+            log.debug("post processing glossary xls");
+
+            HSSFWorkbook wb = (HSSFWorkbook) document;
+            HSSFSheet sheet = wb.getSheetAt(0);
+            HSSFRow row0 = sheet.getRow(1);
+            HSSFCell cell0 = row0.getCell(0);
+            System.out.println(cell0);
+
+            int i = 2;
+            for(i = 2; i <= sheet.getLastRowNum(); i++)
+            {
+                HSSFRow row = sheet.getRow(i);
+                HSSFCell cell = row.getCell(0);
+
+                if(cell != null)
+                {
+                    if(cell.getStringCellValue().equals(cell0.getStringCellValue()))
+                    {
+
+                        continue;
+
+                    }
+                    else
+                    {
+
+                        int rowIndex = i;
+                        if(sheet.getRow(rowIndex).getCell(0) != null)
+                        {
+                            cell0 = sheet.getRow(rowIndex).getCell(0);
+                            sheet.shiftRows(rowIndex, sheet.getLastRowNum(), 1);
+
+                        }
+
+                    }
+                }
+
+            }
+        }
+        catch(Exception e)
+        {
+            log.error("Error in postprocessing Glossary xls ", e);
+        }
+
     }
 
     public void changeTopicTwo(AjaxBehaviorEvent event)

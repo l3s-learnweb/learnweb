@@ -36,7 +36,7 @@
         <f:facet name="{Exporters}">
             <h:commandLink >
                 <p:graphicImage library="default" value="/resources/icon/excel_icon.jpg" width="24"/>
-                <p:dataExporter type="xls" target="my_gloss_table" fileName="glossary" />
+                <p:dataExporter type="xls" target="my_gloss_table" fileName="glossary" postProcessor="#{glossaryBean.postProcessXls}"/>
             </h:commandLink>
             </f:facet>
             <p:column headerText="glossary ID" style="display:none">
