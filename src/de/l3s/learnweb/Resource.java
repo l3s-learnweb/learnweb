@@ -819,10 +819,10 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public String getLearnwebUrl() throws SQLException
     {
-        if(getId() != -1 && getGroupId() != 0)
-            return "group/resources.jsf?group_id=" + getGroup().getId() + "&resource_id=" + getId();
+        if(getId() != -1) // && getGroupId() != 0)
+            return "group/resources.jsf?group_id=" + getGroupId() + "&resource_id=" + getId();
 
-        return "";//getUrl();
+        return getUrlProxied();
     }
 
     public String getServiceIcon()
