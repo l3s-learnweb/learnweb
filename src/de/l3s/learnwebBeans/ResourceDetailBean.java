@@ -437,6 +437,22 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
     }
 
+    public void setResourceThumbnail()
+    {
+        try
+        {
+            String archiveUrl = getParameter("archive_url");
+            ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
+            rpm.processArchivedVersion(clickedResource, archiveUrl);
+            clickedResource.save();
+            addGrowl(FacesMessage.SEVERITY_INFO, "Successfully updated the thumbnail");
+        }
+        catch(Exception e)
+        {
+            addFatalMessage(e);
+        }
+    }
+
     public void selectResource()
     {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();

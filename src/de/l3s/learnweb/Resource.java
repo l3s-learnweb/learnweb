@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -423,7 +425,10 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             return null;
 
         Resource originalResource = Learnweb.getInstance().getResourceManager().getResource(originalResourceId);
-        return Learnweb.getInstance().getGroupManager().getGroupById(originalResource.getGroupId());
+        if(originalResource != null)
+            return Learnweb.getInstance().getGroupManager().getGroupById(originalResource.getGroupId());
+        else
+            return null;
     }
 
     public void setGroup(Group group)
@@ -1373,6 +1378,24 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         }
 
         return archiveUrls;
+    }
+
+    public HashMap<String, List<ArchiveUrl>> getArchiveUrlsAsYears()
+    {
+        HashMap<String, List<ArchiveUrl>> versions = new LinkedHashMap<String, List<ArchiveUrl>>();
+        SimpleDateFormat df = new SimpleDateFormat("yyyy");
+        for(ArchiveUrl a : archiveUrls)
+        {
+            String year = df.format(a.getTimestamp());
+            if(versions.containsKey(year))
+                versions.get(year).add(a);
+            else
+            {
+                versions.put(year, new ArrayList<ArchiveUrl>());
+                versions.get(year).add(a);
+            }
+        }
+        return versions;
     }
 
     public void addArchiveUrl(ArchiveUrl archiveUrl)

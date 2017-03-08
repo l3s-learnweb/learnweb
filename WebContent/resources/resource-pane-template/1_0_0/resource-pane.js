@@ -4,6 +4,7 @@
 /** @external createGroupItemCommand */
 /** @external updateGroupItemsCommand */
 /** @external updateAddResourcePaneCommand */
+/** @external updateThumbnailCommand */
 
 function scrollToElement(element) {
     //$('#right_pane .content').animate({ scrollTop: (element.offset().top + element.height() + 5 - $('#center_pane .content').height())}, 'slow');
@@ -56,6 +57,7 @@ function lightbox_load() {
     box = $('#lightbox');
 }
 function lightbox_close() {
+	change_lightbox_content(false);
     box.hide();
     box.detach();
 }
@@ -67,6 +69,57 @@ function lightbox_open() {
     box.appendTo(document.body);
     lightbox_resize_container();
     box.show();
+}
+
+function change_lightbox_content(showArchiveUrls){
+	if(showArchiveUrls)
+	{
+		$('#lightbox_content').children().first().hide();
+
+		$('#archive_lightbox_content').show(function(){
+			$(this).find("iframe").prop("src", function(){
+				return $(this).data("src");
+			});
+		});
+	}
+	else
+	{
+		$('#lightbox_content').children().first().show();
+		$('#archive_lightbox_content').hide(function(){
+			$(this).find("iframe").prop("src","");
+		});
+	}
+}
+
+var prevClickedElement;
+function onclick_archive_url(e){
+        e.preventDefault();e.stopPropagation();
+        
+        //reset the background of previously selected archived version
+        $(prevClickedElement).parent().css('background-color','#ffffff');
+        var clickedElement = e.target || e.srcElement;
+        var target_src = $(clickedElement).attr('href');
+        
+        //setting the timestamp text to selected version
+        $('#archive_timestamp').text($(clickedElement).text()); 
+        $(clickedElement).parent().css('background-color','#b5ebdc');
+        document.getElementById('archive_iframe').src = target_src;
+        $('#archive_iframe').data('src', target_src);
+        prevClickedElement = clickedElement;
+}
+
+function updateThumbnail(){
+	var archive_url = $('#archive_iframe').data('src');
+	lightbox_close();
+	updateThumbnailCommand([{name: 'archive_url', value: archive_url}]);
+}
+
+function archiveListInitialize(){
+	$('.years ul').hide();
+    $('.years').click(function() {
+    	$(this).find('span').toggleClass("bold");
+        $(this).find('ul').slideToggle();
+    });
 }
 
 function prepareCommentButton() {
@@ -474,6 +527,8 @@ $(document).ready(function () {
         doAction(action);
         hideContextMenu();
     });
+    
+    archiveListInitialize();
 });
 
 function ConfirmDialog() {
