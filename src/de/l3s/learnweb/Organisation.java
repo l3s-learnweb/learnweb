@@ -72,7 +72,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
             options[i] = rs.getInt("options_field" + (++i));
 
         // define optional resource fields for some courses
-        if(id == 893) // Admin only
+        if(id == 893 || id == 480) // Admin and YELL 
         {
             /*
             ResourceMetadataField metadata = new ResourceMetadataField("language", MetadataType.ONE_MENU);

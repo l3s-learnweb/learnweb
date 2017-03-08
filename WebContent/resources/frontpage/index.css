@@ -39,14 +39,15 @@ h4 { text-decoration:underline;	font-size:1.3rem; margin: 0.8rem 0 0.4rem; }
 	padding-right:1.5rem;
 	box-sizing:border-box;
 	width:33%; 
+	
+	border-right:2px solid #489a83;
 }
 #div_left table { width: 100%; }
 #div_left table td { padding:0; }
 #div_right{
 	float:right; 
 	width:67%; 
-	padding-left:1.5rem; 
-	border-left:2px solid #489a83; 
+	padding-left:1.5rem;  
 	box-sizing:border-box;
 }
 #link a{
@@ -84,7 +85,7 @@ h4 { text-decoration:underline;	font-size:1.3rem; margin: 0.8rem 0 0.4rem; }
 }
 
 .video_guide.grey_border {
-	background:url(../../resources/frontpage/videoguide.jpg) top;
+	background:url(../../resources/frontpage/videoguide.jpg) top no-repeat;
 	width:100%;
 	height:155px;
 	cursor: pointer;
@@ -105,18 +106,7 @@ h4 { text-decoration:underline;	font-size:1.3rem; margin: 0.8rem 0 0.4rem; }
 .changes{
 	font-weight:bold;
 }
-/*
-#index_footer {
-	color:#ffffff;
-	bottom: 0px; 
-	text-align: center;
-	z-index:1500;
-	width:100%;
-	background-color:#489a83;
-	padding:1rem;
-	box-sizing: border-box;
-}
-*/
+
 #index_footer {
     text-align: center;
     color:#4F4F4F;

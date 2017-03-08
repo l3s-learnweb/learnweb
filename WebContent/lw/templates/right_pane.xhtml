@@ -57,7 +57,7 @@
 					//update_header();
 				</script>		
 				
-				<h:panelGroup id="add_resource_section" rendered="#{bean.rightPanelAction == 'newResource'}" styleClass="create-block new-resource" layout="block">
+				<h:panelGroup id="add_resource_section" rendered="#{bean.rightPanelAction == 'newResource'}" styleClass="create-block new-resource" style="padding-bottom:2rem" layout="block">
 				
 					<h:form id="add_resource_upload_form" rendered="#{addResourceBean.formStep > 0}">
 					 
@@ -206,7 +206,6 @@
 				<h:panelGroup rendered="${bean.rightPanelAction == 'viewResource' and resourceDetailBean.clickedResource.id != -1 and resourceDetailBean.clickedResource.canViewResource(userBean.user)}" layout="block">
 					<ui:fragment rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'video' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'image'}">
 						<div class="align-center" style="margin-top: 5px;">
-
 							<div id="lightbox">
 								<div id="lightbox_background" onclick="lightbox_close();"></div>
 								
@@ -227,12 +226,12 @@
 										   	<iframe src="#{resourceDetailBean.clickedResource.url}" style="width:100%; height:100%; "/>
 									    </ui:fragment>
 									    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'Image'}">
-										    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
-										    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
-										    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}"
-										    		style="height:auto; width:auto; max-height:100%; max-width:100%; display:block; margin:0 auto; position: relative; 
-										    		top: 50%; transform: translateY(-50%);-moz-transform:translateY(-50%);-webkit-transform:translateY(-50%);
-										    		-o-transform:translateY(-50%);-ms-transform:translateY(-50%);"/>	
+									    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
+									    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
+									    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}"
+									    		style="height:auto; width:auto; max-height:100%; max-width:100%; display:block; margin:0 auto; position: relative; 
+									    		top: 50%; transform: translateY(-50%);-moz-transform:translateY(-50%);-webkit-transform:translateY(-50%);
+									    		-o-transform:translateY(-50%);-ms-transform:translateY(-50%);"/>	
 									    </ui:fragment>	
 									    <!-- include your visualization template using ui-decorate -->						
 									</div>
