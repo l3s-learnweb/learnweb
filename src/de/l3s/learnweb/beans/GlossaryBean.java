@@ -314,6 +314,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         availableTopicTwos.add(new SelectItem("Medical branches"));
         availableTopicTwos.add(new SelectItem("Institutions"));
         availableTopicTwos.add(new SelectItem("Professions"));
+        availableTopicTwos.add(new SelectItem("Food and nutrition"));
+        availableTopicTwos.add(new SelectItem("other"));
     }
 
     public void changeTopicOne(AjaxBehaviorEvent event)
@@ -343,7 +345,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
         else
         {
-            availableTopicThrees = null;
+            availableTopicThrees = new ArrayList<SelectItem>();
         }
     }
 

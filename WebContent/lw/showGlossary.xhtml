@@ -118,7 +118,7 @@
 					<p:message for="topic_1"/>
 					
 					<p:outputLabel for="topic_2" value="Topic 2 "></p:outputLabel>
-					<p:selectOneMenu id="topic_2" value="#{glossaryBean.selectedTopicTwo}" required="true" requiredMessage="Topic 2 cannot be empty">
+					<p:selectOneMenu id="topic_2" value="#{glossaryBean.selectedTopicTwo}">
 			    		<f:selectItem itemValue="#{null}" itemLabel="-- select --" />
 			    		<f:selectItems value="#{glossaryBean.availableTopicTwos}" />
 			    		<f:ajax listener="#{glossaryBean.changeTopicTwo}" render="topic_3" />
