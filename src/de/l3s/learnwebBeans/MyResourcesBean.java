@@ -75,6 +75,9 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         if(getParameterInt("resource_id") != null)
             setRightPanelAction("viewResource");
 
+        if(getParameter("save_url") != null)
+            setRightPanelAction("newResource");
+
         breadcrumb = new ArrayList<Folder>();
         clickedResource = new Resource();
     }
@@ -112,6 +115,9 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
         if(getParameterInt("resource_id") != null)
             setRightPanelAction("viewResource");
+
+        if(getParameter("save_url") != null)
+            setRightPanelAction("newResource");
     }
 
     public void updateBreadcrumb() throws SQLException
