@@ -247,7 +247,7 @@ public class Search implements Serializable
         if(notSatisfyFiltersCount > 0 || privateResourceCount > 0 || duplicatedUrlCount > 0)
         {
             this.removedResourceCount += duplicatedUrlCount + privateResourceCount + notSatisfyFiltersCount;
-            log.debug("Filtered " + notSatisfyFiltersCount + " resources and skipped " + privateResourceCount + " private resources, " + duplicatedUrlCount + " dublicated resources");
+            log.debug("Filtered " + notSatisfyFiltersCount + " resources and skipped " + privateResourceCount + " private resources, " + duplicatedUrlCount + " duplicated resources");
         }
 
         return newResources;
@@ -348,7 +348,7 @@ public class Search implements Serializable
         if(notSatisfyFiltersCount > 0 || duplicatedUrlCount > 0)
         {
             this.removedResourceCount += duplicatedUrlCount + notSatisfyFiltersCount;
-            log.debug("Filtered " + notSatisfyFiltersCount + " resources and skipped " + duplicatedUrlCount + " dublicated resources");
+            log.debug("Filtered " + notSatisfyFiltersCount + " resources and skipped " + duplicatedUrlCount + " duplicated resources");
         }
 
         return newResources;
