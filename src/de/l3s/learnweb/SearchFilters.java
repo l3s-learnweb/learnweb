@@ -731,7 +731,7 @@ public class SearchFilters implements Serializable
                 {
                     for(Count c : availableResources.get(fs))
                     {
-                        if(c.getName().isEmpty() || c.getName().equals("\n"))
+                        if(c.getName().isEmpty() || c.getName().equals("\n") || c.getName().equals("0"))
                             continue;
                         FilterItem fi = new FilterItem(fs.getItemName(c.getName()), c.getCount(), changeFilterInUrl(fs, c.getName()), containsFilter && configFilters.get(fs).equals(c.getName()));
                         nf.addFilterItem(fi);
