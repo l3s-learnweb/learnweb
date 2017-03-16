@@ -44,13 +44,17 @@
 					<p:selectBooleanCheckbox value="#{user.moderator}" disabled="true" />
 				</p:column>
 						
-				<p:column>
+				<p:column style="width: 7%;">
 					<f:facet name="header">
 						#{msg.options}
 					</f:facet>
 					<h:commandLink action="${adminUserBean.login(user)}" rendered="${adminUserBean.canLoginToAccount(user)}">
 						#{msg.loginLabel}
 					</h:commandLink>
+				</p:column>
+				
+				<p:column headerText="Logs" style="width: 8%;">
+					<h:outputLink value="http://waps.io/tracker/manager?extClientId=1,2&amp;extUserId=#{user.id}" target="_blank">Mouse tracker</h:outputLink>
 				</p:column>
 					
 			</p:dataTable>	
