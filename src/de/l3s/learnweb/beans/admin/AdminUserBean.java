@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -73,5 +74,12 @@ public class AdminUserBean extends ApplicationBean implements Serializable
             return true;
 
         return false;
+    }
+
+    public void updateUser(User targetUser) throws SQLException
+    {
+        //Updating moderator rights for particular user
+        targetUser.save();
+        addGrowl(FacesMessage.SEVERITY_INFO, "Updated moderator settings for '" + targetUser.getUsername() + "'");
     }
 }

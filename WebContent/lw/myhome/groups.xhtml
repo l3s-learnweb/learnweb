@@ -110,7 +110,7 @@
 	        	
 	        });
 	    </script>	
-	
+
 		<div class="page_header">
 			<span>
 				#{msg.myGroups}
@@ -148,7 +148,8 @@
 				
 				<p:column headerText="#{msg.options}" styleClass="nowrap align-center" width="70">					
 					<p:commandLink action="#{groupsBean.leaveGroup}" styleClass="optionIcon" process="@this" 
-						update=":other_groups :growl :group_menu :my_groups"  title="#{msg.leave}">
+						update=":other_groups :growl :group_menu :my_groups"  title="#{msg.leave}"
+						onstart="return confirm('${groupsBean.getLocaleMessage('leave_group_question', group.title)}');">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 						<h:graphicImage value="/resources/icon/silk/group_delete.png" width="16" height="16" alt="#{msg.leave}" />
 					</p:commandLink>					
