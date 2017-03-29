@@ -181,6 +181,22 @@ public class ResourceManager
         select.close();
     }
 
+    public LogEntry loadThumbnailUpdateInfo(int resourceId) throws SQLException
+    {
+        LogEntry e = null;
+        PreparedStatement select = learnweb.getConnection().prepareStatement(
+                "SELECT user_id, u.username, action, target_id, params, timestamp, ul.group_id, r.title AS resource_title, g.title AS group_title, u.image_file_id FROM lw_user_log ul JOIN lw_user u USING(user_id) JOIN lw_resource r ON action=45 AND target_id = r.resource_id JOIN lw_group g ON ul.group_id = g.group_id WHERE r.resource_id = ?");
+        select.setInt(1, resourceId);
+        ResultSet rs = select.executeQuery();
+
+        if(rs.next())
+        {
+            e = new LogEntry(rs);
+        }
+
+        return e;
+    }
+
     /**
      * @see de.l3s.learnweb.ResourceManager#isResourceThumbRatedByUser(int, int)
      */

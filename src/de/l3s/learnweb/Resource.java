@@ -91,6 +91,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private HashMap<String, String> metadata = new HashMap<>(); // userId : hasRated
     private boolean deleted = false; // indicates whether this resource has been deleted
     private boolean readOnlyTranscript = false; //indicates resource transcript is read only for TED videos
+    private LogEntry thumbnailUpdateInfo = null;
 
     private int views;
     private int thumbUp = -1;
@@ -1665,6 +1666,15 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             return true;
 
         return false;
+    }
+
+    public LogEntry getThumbnailUpdateInfo() throws SQLException
+    {
+        if(thumbnailUpdateInfo == null)
+        {
+            thumbnailUpdateInfo = Learnweb.getInstance().getResourceManager().loadThumbnailUpdateInfo(getId());
+        }
+        return thumbnailUpdateInfo;
     }
 
 }

@@ -445,6 +445,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
             rpm.processArchivedVersion(clickedResource, archiveUrl);
             clickedResource.save();
+            log(Action.resource_thumbnail_update, clickedResource.getGroupId(), clickedResource.getId(), "");
             addGrowl(FacesMessage.SEVERITY_INFO, "Successfully updated the thumbnail");
         }
         catch(Exception e)
