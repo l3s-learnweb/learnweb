@@ -10,7 +10,7 @@ import javax.faces.bean.RequestScoped;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.User;
-import de.l3s.learnwebBeans.ApplicationBean;
+import de.l3s.learnweb.beans.ApplicationBean;
 
 /**
  * 

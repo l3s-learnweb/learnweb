@@ -22,7 +22,7 @@ import de.l3s.learnweb.Group;
 import de.l3s.learnweb.GroupManager;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
-import de.l3s.learnwebBeans.ApplicationBean;
+import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.util.StringHelper;
 
 @ManagedBean

@@ -20,7 +20,7 @@ import org.hibernate.validator.internal.constraintvalidators.hv.EmailValidator;
 import de.l3s.learnweb.Message;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.UserManager;
-import de.l3s.learnwebBeans.ApplicationBean;
+import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.util.Mail;
 import de.l3s.util.StringHelper;
 

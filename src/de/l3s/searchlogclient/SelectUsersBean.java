@@ -14,7 +14,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
 import de.l3s.learnweb.User;
-import de.l3s.learnwebBeans.ApplicationBean;
+import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.searchlogclient.jaxb.QueryLog;
 import de.l3s.searchlogclient.jaxb.ResourceLog;
 import de.l3s.searchlogclient.jaxb.ViewingTime;

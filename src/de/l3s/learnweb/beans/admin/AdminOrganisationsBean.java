@@ -12,7 +12,7 @@ import javax.faces.bean.SessionScoped;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Organisation;
-import de.l3s.learnwebBeans.ApplicationBean;
+import de.l3s.learnweb.beans.ApplicationBean;
 
 @ManagedBean
 @SessionScoped

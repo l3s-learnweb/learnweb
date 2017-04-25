@@ -11,7 +11,6 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.facts.Entity;
 import de.l3s.learnweb.facts.FactSheetEntry;
 import de.l3s.learnweb.facts.Search;
-import de.l3s.learnwebBeans.ApplicationBean;
 
 @ManagedBean
 @ViewScoped

@@ -9,9 +9,9 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.beans.LoginBean;
 import de.l3s.learnweb.beans.UtilBean;
-import de.l3s.learnwebBeans.ApplicationBean;
-import de.l3s.learnwebBeans.LoginBean;
 
 @ManagedBean
 @ViewScoped

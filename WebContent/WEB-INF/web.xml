@@ -6,7 +6,7 @@
 	<display-name>Learnweb 2.7.18</display-name>
 	<context-param>
 		<param-name>javax.faces.PROJECT_STAGE</param-name>
-		<param-value>Development</param-value>
+		<param-value>Production</param-value>
 		<!-- Development Production -->
 	</context-param>
 	<context-param>
@@ -139,7 +139,7 @@
 		<description>Simple Servlet for Streaming Files to the Clients Browser</description>
 		<display-name>Simple DownloadServlet</display-name>
 		<servlet-name>downloadServlet</servlet-name>
-		<servlet-class>de.l3s.learnwebBeans.DownloadServlet</servlet-class>
+		<servlet-class>de.l3s.learnweb.beans.DownloadServlet</servlet-class>
 		<load-on-startup>2</load-on-startup>
 	</servlet>
 	<servlet-mapping>
@@ -150,7 +150,7 @@
 		<description>Redirects users to the Learnweb or ArchiveWeb Frontpage</description>
 		<display-name>FrontpageServlet</display-name>
 		<servlet-name>frontpageServlet</servlet-name>
-		<servlet-class>de.l3s.learnwebBeans.FrontpageServlet</servlet-class>
+		<servlet-class>de.l3s.learnweb.beans.FrontpageServlet</servlet-class>
 		<load-on-startup>3</load-on-startup>
 	</servlet>
 	<servlet-mapping>

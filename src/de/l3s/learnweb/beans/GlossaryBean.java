@@ -25,7 +25,6 @@ import de.l3s.learnweb.GlossaryEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.User;
-import de.l3s.learnwebBeans.ApplicationBean;
 
 @ViewScoped
 @ManagedBean

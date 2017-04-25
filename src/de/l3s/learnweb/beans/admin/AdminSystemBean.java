@@ -13,7 +13,7 @@ import javax.faces.bean.RequestScoped;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
-import de.l3s.learnwebBeans.ApplicationBean;
+import de.l3s.learnweb.beans.ApplicationBean;
 
 @ManagedBean
 @RequestScoped

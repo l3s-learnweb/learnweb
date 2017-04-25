@@ -14,9 +14,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import de.l3s.learnweb.Resource.OnlineStatus;
+import de.l3s.learnweb.beans.AddResourceBean;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
-import de.l3s.learnwebBeans.AddResourceBean;
 import de.l3s.util.StringHelper;
 
 /**

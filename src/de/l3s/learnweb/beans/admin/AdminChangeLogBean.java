@@ -8,7 +8,7 @@ import javax.faces.bean.ManagedBean;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
-import de.l3s.learnwebBeans.ApplicationBean;
+import de.l3s.learnweb.beans.ApplicationBean;
 
 @ManagedBean
 

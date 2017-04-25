@@ -15,7 +15,7 @@ import javax.validation.constraints.Size;
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.OrganisationManager;
-import de.l3s.learnwebBeans.ApplicationBean;
+import de.l3s.learnweb.beans.ApplicationBean;
 
 @ManagedBean
 @RequestScoped

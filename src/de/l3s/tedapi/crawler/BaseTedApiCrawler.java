@@ -23,7 +23,7 @@ import com.sun.jersey.core.util.MultivaluedMapImpl;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
-import de.l3s.learnwebBeans.AddResourceBean;
+import de.l3s.learnweb.beans.AddResourceBean;
 
 public class BaseTedApiCrawler
 {

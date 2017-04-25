@@ -11,7 +11,6 @@ import javax.faces.bean.RequestScoped;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Course;
-import de.l3s.learnwebBeans.ApplicationBean;
 
 @ManagedBean
 @RequestScoped

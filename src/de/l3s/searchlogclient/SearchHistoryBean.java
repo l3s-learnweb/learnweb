@@ -16,7 +16,7 @@ import javax.faces.bean.SessionScoped;
 import com.sun.jersey.api.client.ClientHandlerException;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnwebBeans.ApplicationBean;
+import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.searchlogclient.jaxb.CommentonSearch;
 import de.l3s.searchlogclient.jaxb.HistoryByDate;
 import de.l3s.searchlogclient.jaxb.QueryHistory;

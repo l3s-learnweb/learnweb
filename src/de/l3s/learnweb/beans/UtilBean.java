@@ -14,11 +14,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
-import de.l3s.learnwebBeans.AddResourceBean;
-import de.l3s.learnwebBeans.GroupDetailBean;
-import de.l3s.learnwebBeans.LearnwebBean;
-import de.l3s.learnwebBeans.UserBean;
-
 @ApplicationScoped
 @ManagedBean
 public class UtilBean implements Serializable

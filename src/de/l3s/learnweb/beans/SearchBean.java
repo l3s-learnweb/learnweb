@@ -44,8 +44,6 @@ import de.l3s.learnweb.SearchFilters.FilterItem;
 import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.SearchFilters.SERVICE;
 import de.l3s.learnweb.User;
-import de.l3s.learnwebBeans.AddResourceBean;
-import de.l3s.learnwebBeans.ApplicationBean;
 import de.l3s.searchlogclient.Actions.ACTION;
 import de.l3s.searchlogclient.SearchLogClient;
 
