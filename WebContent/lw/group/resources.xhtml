@@ -45,7 +45,7 @@
 					<p:separator />
 					<p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" onclick="doAction('upload-file'); return false;" />
 					<p:menuitem value="#{msg.upload_url}" icon="ui-icon-link" onclick="doAction('add-website'); return false;" />
-					<p:menuitem value="Add Glossary" icon="ui-icon-link" onclick="doAction('add-glossary'); return false;" />
+					<p:menuitem value="#{msg['Glossary.add_glossary']}" icon="ui-icon-link" onclick="doAction('add-glossary'); return false;" />
 				</p:menuButton>
 
 				<p:commandLink rendered="#{groupDetailBean.group.canJoinGroup(userBean.user)}" value="#{msg.join_group}" action="#{groupsBean.joinGroup}"

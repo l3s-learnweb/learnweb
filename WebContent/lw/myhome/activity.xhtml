@@ -31,7 +31,7 @@
 						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="2"/>
 						<f:setPropertyActionListener target="#{activityResourceBean.rightPanelAction}" value="newResource"/>
 			        </p:menuitem>
-			        <p:menuitem value="Add Glossary" icon="ui-icon-link" update=":add_resource_panel" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
+			        <p:menuitem value="#{msg['Glossary.add_glossary']}" icon="ui-icon-link" update=":add_resource_panel" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
 						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="3"/>
 						<f:setPropertyActionListener target="#{activityResourceBean.rightPanelAction}" value="newResource"/>
 			        </p:menuitem>
