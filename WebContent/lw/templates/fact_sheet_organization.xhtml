@@ -40,7 +40,7 @@
 				<div id="fact_sheet_description">#{searchBean.graph.entities[0].description}</div>
 				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].homepage}">
 					<div class="fact_sheet_detail">
-						<span class="fact_sheet_field">Homepage: </span><span class="fact_sheet_value"><a target="_new" href="http://#{searchBean.graph.entities[0].homepage}">#{searchBean.graph.entities[0].homepage}</a></span>
+						<span class="fact_sheet_field">Homepage: </span><span class="fact_sheet_value"><a target="_new" href="//#{searchBean.graph.entities[0].homepage}">#{searchBean.graph.entities[0].homepage}</a></span>
 					</div>
 				</ui:fragment>
 				<ui:fragment rendered="#{not empty searchBean.graph.entities[0].foundedBy}">

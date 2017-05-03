@@ -1,6 +1,5 @@
 package de.l3s.util;
 
-import org.apache.log4j.Logger;
 import org.apache.log4j.spi.LoggingEvent;
 import org.apache.log4j.spi.TriggeringEventEvaluator;
 
@@ -11,12 +10,12 @@ public class CustomEvaluator implements TriggeringEventEvaluator
 
     private long cycleSeconds = 3600000L; // Sending a group of errors if the last check was more than an hour ago
     private long lastCheck = 0L;
-    private Boolean isRunningOnLocalhost = null;
+    //private Boolean isRunningOnLocalhost = null;
 
     @Override
     public boolean isTriggeringEvent(LoggingEvent event)
     {
-        if(isRunningOnLocalhost())
+        if(Learnweb.getInstance().isInDevelopmentMode())
             return false;
 
         long now = System.currentTimeMillis();
@@ -31,6 +30,7 @@ public class CustomEvaluator implements TriggeringEventEvaluator
         }
     }
 
+    /*
     private boolean isRunningOnLocalhost()
     {
         if(isRunningOnLocalhost == null) // called the first time
@@ -39,10 +39,10 @@ public class CustomEvaluator implements TriggeringEventEvaluator
             try
             {
                 isRunningOnLocalhost = (Learnweb.getPropteriesFileName() != "learnweb");
-
+    
                 if(isRunningOnLocalhost)
                     Logger.getLogger(CustomEvaluator.class).info("Learnweb is running on Localhost, email logger disabled");
-
+    
                 return true; // true, to skip first error message
             }
             catch(Exception e)
@@ -50,8 +50,8 @@ public class CustomEvaluator implements TriggeringEventEvaluator
                 isRunningOnLocalhost = true;
             }
         }
-
+    
         return isRunningOnLocalhost;
-    }
+    }*/
 
 }

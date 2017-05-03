@@ -1,10 +1,9 @@
 /*
  * Tipped - <%= pkg.description %> - v<%= pkg.version %>
  * (c) 2012-<%= grunt.template.today("yyyy") %> Nick Stakenburg
+
  *
- * http://www.tippedjs.com
- *
- * License: http://www.tippedjs.com/license
+ * License: www.tippedjs.com/license
  */
 
 .tpd-tooltip {

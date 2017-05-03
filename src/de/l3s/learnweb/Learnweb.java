@@ -65,6 +65,7 @@ public class Learnweb
 
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
+    private boolean developmentMode = true; //  true if run on localhost, disables email logger
 
     /**
      * The Same as getInstanceRaw() but hides all exceptions
@@ -121,7 +122,7 @@ public class Learnweb
      * 
      * @return
      */
-    public static String getPropteriesFileName()
+    private String getPropteriesFileName()
     {
         String propteriesFileName = "lw_local_other";
 
@@ -142,6 +143,8 @@ public class Learnweb
             propteriesFileName = "lw_local_rishita";
         else if((new File("/home/astappev").exists()))
             propteriesFileName = "lw_local_oleh";
+        else
+            developmentMode = false;
 
         return propteriesFileName;
     }
@@ -156,7 +159,7 @@ public class Learnweb
     private Learnweb() throws ClassNotFoundException, SQLException
     {
         learnwebIsLoading = true;
-        contextUrl = "http://localhost:8080"; //"http://learnweb.l3s.uni-hannover.de";
+        contextUrl = "http://learnweb.l3s.uni-hannover.de";
         //learnweb = this;
 
         try
@@ -700,4 +703,10 @@ public class Learnweb
     {
         return glossariesManager;
     }
+
+    public boolean isInDevelopmentMode()
+    {
+        return developmentMode;
+    }
+
 }

@@ -92,7 +92,7 @@ $(document).ready(function()
 	$("#searchfield").autocomplete({
         source: function (request, response) {
             $.ajax({
-                url: "http://api.bing.com/osjson.aspx?Query=" + encodeURIComponent(request.term) + "&Market="+ myMarket +"&JsonType=callback&JsonCallback=?",
+                url: "//api.bing.com/osjson.aspx?Query=" + encodeURIComponent(request.term) + "&Market="+ myMarket +"&JsonType=callback&JsonCallback=?",
                 dataType: "jsonp",
     
                 success: function (data) {
