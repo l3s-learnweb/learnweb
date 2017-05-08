@@ -10,6 +10,7 @@ import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
+import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
 
@@ -24,21 +25,27 @@ public class LearnwebBean implements Serializable
     private static final Logger log = Logger.getLogger(LearnwebBean.class);
 
     private transient Learnweb learnweb;
-    private final String contextUrl;
+    private final String contextPath;
 
     public LearnwebBean() throws IOException, ClassNotFoundException, SQLException
-    {
-        ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
+    {/*
+     ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
+     
+     if(ext.getRequestServerPort() == 80 || ext.getRequestServerPort() == 443)
+      contextUrl = ext.getRequestScheme() + "://" + ext.getRequestServerName() + ext.getRequestContextPath();
+     else
+      contextUrl = ext.getRequestScheme() + "://" + ext.getRequestServerName() + ":" + ext.getRequestServerPort() + ext.getRequestContextPath();
+     */
+        ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
 
-        if(ext.getRequestServerPort() == 80 || ext.getRequestServerPort() == 443)
-            contextUrl = ext.getRequestScheme() + "://" + ext.getRequestServerName() + ext.getRequestContextPath();
-        else
-            contextUrl = ext.getRequestScheme() + "://" + ext.getRequestServerName() + ":" + ext.getRequestServerPort() + ext.getRequestContextPath();
+        contextPath = servletContext.getContextPath();
 
-        learnweb = Learnweb.getInstanceRaw();
-        learnweb.setContextUrl(contextUrl);
+        log.debug("init LearnwebBean: context='" + contextPath + "'");
 
-        log.debug("created LearnwebBean: contextUrl=" + contextUrl);
+        learnweb = Learnweb.createInstance(contextPath);
+        //learnweb.setContextUrl(contextUrl);
+
+        log.debug("created LearnwebBean");
     }
 
     @PostConstruct
@@ -54,7 +61,7 @@ public class LearnwebBean implements Serializable
      */
     public String getContextUrl()
     {
-        return contextUrl; // because we don't use httpS we can cache the url, change it if you want to use httpS too
+        return contextPath; // because we don't use httpS we can cache the url, change it if you want to use httpS too
     }
 
     /**
@@ -68,7 +75,7 @@ public class LearnwebBean implements Serializable
         String path = ext.getRequestServletPath();
         path = path.substring(0, path.indexOf("/", 1) + 1);
 
-        return contextUrl + path;
+        return contextPath + path;
     }
 
     public Learnweb getLearnweb()

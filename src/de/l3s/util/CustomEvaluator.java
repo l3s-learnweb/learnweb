@@ -15,7 +15,7 @@ public class CustomEvaluator implements TriggeringEventEvaluator
     @Override
     public boolean isTriggeringEvent(LoggingEvent event)
     {
-        if(Learnweb.getInstance().isInDevelopmentMode())
+        if(Learnweb.isInDevelopmentMode())
             return false;
 
         long now = System.currentTimeMillis();

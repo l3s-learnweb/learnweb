@@ -26,8 +26,8 @@ public class JobScheduler
         scheduler.schedule("0 1 14,28 * *", loroTask);
 
         //Schedules the task at 1:00 on 13th and 27th of every month
-        UpdateYovistoVideos yovistoTask = new UpdateYovistoVideos();
-        scheduler.schedule("0 1 13,27 * *", yovistoTask);
+        //UpdateYovistoVideos yovistoTask = new UpdateYovistoVideos();
+        //scheduler.schedule("0 1 13,27 * *", yovistoTask);
 
         //Schedules the task, at 1:00 everyday to check for new TED videos
         scheduler.schedule("0 1 * * *", new CheckNewTedVideos());

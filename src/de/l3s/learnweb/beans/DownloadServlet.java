@@ -38,22 +38,33 @@ public class DownloadServlet extends HttpServlet
     private final static long CACHE_DURATION_IN_MS = CACHE_DURATION_IN_SECOND * 1000L;
 
     private static final int BUFFER_SIZE = 16384;
-    private final Learnweb learnweb;
+    private Learnweb learnweb;
 
-    private final String urlPattern; // as defined in web.xml
-    private final FileManager fileManager;
+    private String urlPattern; // as defined in web.xml
+    private FileManager fileManager;
 
     public DownloadServlet() throws ClassNotFoundException, SQLException
     {
-        this.learnweb = Learnweb.getInstanceRaw();
-        this.urlPattern = learnweb.getProperties().getProperty("FILE_MANAGER_URL_PATTERN");
-        this.fileManager = learnweb.getFileManager();
     }
 
     @Override
     public void init(ServletConfig config) throws ServletException
     {
         super.init(config);
+
+        String context = getServletContext().getContextPath();
+        log.debug("Init DownloadServlet; context = '" + context + "'");
+
+        try
+        {
+            this.learnweb = Learnweb.createInstance(context);
+        }
+        catch(Exception e)
+        {
+            log.fatal("fatal error: ", e);
+        }
+        this.urlPattern = learnweb.getProperties().getProperty("FILE_MANAGER_URL_PATTERN");
+        this.fileManager = learnweb.getFileManager();
     }
 
     @Override

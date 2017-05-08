@@ -65,7 +65,7 @@ public class Learnweb
 
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
-    private boolean developmentMode = true; //  true if run on localhost, disables email logger
+    private static boolean developmentMode = true; //  true if run on localhost, disables email logger
 
     /**
      * The Same as getInstanceRaw() but hides all exceptions
@@ -74,24 +74,31 @@ public class Learnweb
      */
     public static Learnweb getInstance()
     {
-        try
+        if(null == learnweb)
         {
-            return getInstanceRaw();
+            log.warn("Learnweb is not initialized yet. You should call createInstance() first", new Exception());
+
+            try
+            {
+                return createInstance("");
+            }
+            catch(Exception e)
+            {
+                throw new RuntimeException(e);
+            }
         }
-        catch(Exception e)
-        {
-            throw new RuntimeException(e);
-        }
+        return learnweb;
     }
 
     /**
-     * In comparison to getInstance() this method throws exceptions
+     * This method should be used to create a Learnweb instance
      * 
+     * @param contextPath The context path without server name for example /Learnweb-Tomcat
      * @return
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public static Learnweb getInstanceRaw() throws ClassNotFoundException, SQLException
+    public static Learnweb createInstance(String contextPath) throws ClassNotFoundException, SQLException
     {
         try
         {
@@ -104,15 +111,14 @@ public class Learnweb
                     return null; // to avoid infinite loop 
                 }
 
-                learnweb = new Learnweb();
+                learnweb = new Learnweb(contextPath);
             }
             return learnweb;
         }
         catch(Exception e)
         {
             learnwebIsLoading = false;
-            //learnweb = null;
-            log.fatal(e);
+            log.fatal("fatal error: ", e);
             throw e;
         }
     }
@@ -122,13 +128,15 @@ public class Learnweb
      * 
      * @return
      */
-    private String getPropteriesFileName()
+    private static String getPropteriesFileName()
     {
         String propteriesFileName = "lw_local_other";
 
         // if you need to override values in learnweb.properties file for local testing, do it in a separate properties file and add it here:
         if((new File("/home/learnweb_user")).exists())
             propteriesFileName = "learnweb";
+        else if((new File("/Users/chloe0502/Documents/workspace/learnweb/war/learnwebFiles")).exists())
+            propteriesFileName = "lw_local_chloe";
         else if((new File("C:\\programmieren\\philipp.txt")).exists())
             propteriesFileName = "lw_local_philipp";
         else if((new File("C:\\programmieren\\philipp_uni.txt")).exists())
@@ -156,10 +164,10 @@ public class Learnweb
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    private Learnweb() throws ClassNotFoundException, SQLException
+    private Learnweb(String contextUrl) throws ClassNotFoundException, SQLException
     {
         learnwebIsLoading = true;
-        contextUrl = "http://learnweb.l3s.uni-hannover.de";
+        this.contextUrl = contextUrl;
         //learnweb = this;
 
         try
@@ -216,11 +224,11 @@ public class Learnweb
     public void initLearnwebServer()
     {
         log.debug("Init LearnwebServer");
-        //TODO: REMOVE THIS
-        /* if(getContextUrl().equalsIgnoreCase("http://learnweb.l3s.uni-hannover.de"))
+
+        if(isInDevelopmentMode())
             jobScheduler.startAllJobs();
         else
-            log.debug("JobScheduler not started for context: " + getContextUrl());*/
+            log.debug("JobScheduler not started for context: " + getContextUrl());
     }
 
     public FileManager getFileManager()
@@ -704,7 +712,7 @@ public class Learnweb
         return glossariesManager;
     }
 
-    public boolean isInDevelopmentMode()
+    public static boolean isInDevelopmentMode()
     {
         return developmentMode;
     }
