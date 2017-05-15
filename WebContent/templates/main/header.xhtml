@@ -263,11 +263,11 @@
 		<script type="text/javascript">
             if (!window.tracker)
             {
-                window.tracker = new Tracker({
+                window.tracker = new L3STracker({
                     apiHost: '//learnweb.l3s.uni-hannover.de/tracker',
                     externalClientId: 1,
                     externalUserId: '#{userBean.getUser().getId()}'
-                }, $);
+                });
             }
 		</script>
 
