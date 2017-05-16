@@ -28,7 +28,7 @@
 				</div>
 				<div class="location">
 					<h:outputLink value="${res.urlProxied}">
-						<img src="#{learnwebBean.contextUrl}#{res.serviceIcon}" alt="${res.location}" height="16" width="16"/> <h:outputText value="${res.location}" />
+						<img src="#{request.contextPath}#{res.serviceIcon}" alt="${res.location}" height="16" width="16"/> <h:outputText value="${res.location}" />
 					</h:outputLink>
 				</div>
 			</div>

@@ -198,14 +198,14 @@ public class SearchBean extends ApplicationBean implements Serializable
             try
             {
                 //Posting the batch of resources stored part of the result set corresponding to the previous query
-                searchLogClient.pushBatchResultsetList();
-                searchLogClient.postResourceLog();
-                searchLogClient.passUpdateResultset();
-                searchLogClient.pushTagList();
+                getSearchLogClient().pushBatchResultsetList();
+                getSearchLogClient().postResourceLog();
+                getSearchLogClient().passUpdateResultset();
+                getSearchLogClient().pushTagList();
 
                 //Logs the query posted by the user along with the time stamp, sessionId, groupId and search type.
-                searchLogClient.passUserQuery(query, searchMode.toString(), userId, getUser().getActiveGroupId(), getSessionId(), onSearchTimestamp);
-                searchLogClient.changeTagNamesListResultsetIds();
+                getSearchLogClient().passUserQuery(query, searchMode.toString(), userId, getUser().getActiveGroupId(), getSessionId(), onSearchTimestamp);
+                getSearchLogClient().changeTagNamesListResultsetIds();
             }
             catch(ClientHandlerException e)
             {
@@ -231,7 +231,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
             try
             {
-                searchLogClient.saveSERP(1, searchMode, res);
+                getSearchLogClient().saveSERP(1, searchMode, res);
             }
             catch(ClientHandlerException e)
             {
@@ -258,7 +258,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             historyResources.clear();
             try
             {
-                historyResources.addAll(searchLogClient.getResourceUrlsByResultsetId(resultsetId));
+                historyResources.addAll(getSearchLogClient().getResourceUrlsByResultsetId(resultsetId));
             }
             catch(ClientHandlerException e)
             {
@@ -396,9 +396,9 @@ public class SearchBean extends ApplicationBean implements Serializable
             {
                 try
                 {
-                    int tempresourceId = searchLogClient.getResourceIdByUrl(newResource.getUrl());
-                    searchLogClient.saveResourceLog(user.getId(), date, ACTION.resource_saved, newResource.getUrl(), tempresourceId, newResource.getTitle(), newResource.getSource());
-                    searchLogClient.addResourceSavedList(tempresourceId, newResource.getId());
+                    int tempresourceId = getSearchLogClient().getResourceIdByUrl(newResource.getUrl());
+                    getSearchLogClient().saveResourceLog(user.getId(), date, ACTION.resource_saved, newResource.getUrl(), tempresourceId, newResource.getTitle(), newResource.getSource());
+                    getSearchLogClient().addResourceSavedList(tempresourceId, newResource.getId());
                 }
                 catch(ClientHandlerException e)
                 {
@@ -448,7 +448,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
             try
             {
-                searchLogClient.saveResourceLog(userId, startTime, ACTION.resource_click, resource.getUrl(), tempResourceId, resource.getTitle(), resource.getSource());
+                getSearchLogClient().saveResourceLog(userId, startTime, ACTION.resource_click, resource.getUrl(), tempResourceId, resource.getTitle(), resource.getSource());
             }
             catch(ClientHandlerException e)
             {
@@ -494,7 +494,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
         try
         {
-            searchLogClient.passViewingTime(Integer.parseInt(tempResourceId), startTime, endTime);
+            getSearchLogClient().passViewingTime(Integer.parseInt(tempResourceId), startTime, endTime);
             //searchlogClient.passBatchViewingTime(Integer.parseInt(tempResourceId), startTime, endTime,getSessionId());
         }
         catch(ClientHandlerException e)
@@ -682,8 +682,8 @@ public class SearchBean extends ApplicationBean implements Serializable
             try
             {
                 int userId = getUser() == null ? -1 : getUser().getId();
-                int tempResourceId = searchLogClient.getResourceIdByUrl(selectedResource.getUrl());
-                searchLogClient.saveResourceLog(userId, timestamp, ACTION.resource_dialog_open, selectedResource.getUrl(), tempResourceId, selectedResource.getTitle(), selectedResource.getSource());
+                int tempResourceId = getSearchLogClient().getResourceIdByUrl(selectedResource.getUrl());
+                getSearchLogClient().saveResourceLog(userId, timestamp, ACTION.resource_dialog_open, selectedResource.getUrl(), tempResourceId, selectedResource.getTitle(), selectedResource.getSource());
             }
             catch(ClientHandlerException e)
             {
@@ -726,7 +726,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             if(folder != null)
             {
                 selectedResourceTargetGroupId = folder.getGroupId();
-                selectedResourceTargetFolderId = folder.getFolderId();
+                selectedResourceTargetFolderId = folder.getId();
             }
         }
     }
@@ -802,14 +802,21 @@ public class SearchBean extends ApplicationBean implements Serializable
         return resultsetViewId;
     }
 
+    private SearchLogClient getSearchLogClient()
+    {
+        if(searchLogClient == null)
+            searchLogClient = getLearnweb().getSearchlogClient();
+        return searchLogClient;
+    }
+
     public void updateSearchResources()
     {
         try
         {
-            searchLogClient.pushBatchResultsetList();
-            searchLogClient.postResourceLog();
-            searchLogClient.passUpdateResultset();
-            searchLogClient.flushLists();
+            getSearchLogClient().pushBatchResultsetList();
+            getSearchLogClient().postResourceLog();
+            getSearchLogClient().passUpdateResultset();
+            getSearchLogClient().flushLists();
             for(ResourceDecorator resource : search.getResources())
             {
                 resource.setNewResource(false);
@@ -828,9 +835,6 @@ public class SearchBean extends ApplicationBean implements Serializable
     private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException
     {
         inputStream.defaultReadObject();
-
-        // restore transient objects
-        searchLogClient = getLearnweb().getSearchlogClient();
     }
 
     public void generateKnowledgeGraph()

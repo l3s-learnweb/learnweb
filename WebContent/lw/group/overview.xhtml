@@ -105,7 +105,7 @@
 			<h:dataTable var="datagrid" value="#{groupDetailBean.newslist}" id="datagrid">				
 				<h:column >
 					<div class="newsfeed_user_image_div">
-				    	<h:graphicImage id="userpic" url="#{datagrid.logEntry.userImage}" alt="profile image" width="30" height="30" styleClass="newsfeed_user_image"/>
+				    	<img id="userpic" src="#{datagrid.logEntry.userImage}" alt="profile image" width="30" height="30" class="newsfeed_user_image"/>
 				    </div>
 					<div class="newsfeed_text">
 						<h:outputText value="#{datagrid.text}" escape="false"  />

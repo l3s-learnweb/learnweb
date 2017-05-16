@@ -56,7 +56,7 @@
 		<h:dataTable var="datagrid" value="#{activityResourceBean.newslist}" id="datagrid" style="width:100%">
 			<h:column>
 				<div class="newsfeed_user_image_div">
-				    <h:graphicImage id="userpic" url="#{datagrid.logEntry.userImage}" width="30" height="30" styleClass="newsfeed_user_image" 
+				    <img id="userpic" src="#{datagrid.logEntry.userImage}" width="30" height="30" class="newsfeed_user_image" 
 				    	alt="Profile foto"/>
 				</div>
 				<div class="newsfeed_text">

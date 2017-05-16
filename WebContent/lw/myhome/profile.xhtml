@@ -44,9 +44,10 @@
 					<h:form id="profile_form" enctype="multipart/form-data" class="grey_border" style="position:relative;">
 						<f:param name="user_id" value="#{profileBean.selectedUser.id}"/>
 						
-						<h:graphicImage height="100" width="100" value="${learnwebBean.getProfileImage(profileBean.selectedUser)}" id="profile_image" 
-								alt="Profile image" style="position:absolute; right:1rem;"/>
-								
+						<h:panelGroup id="profile_image" style="position:absolute; right:1rem;">
+						<img height="100" width="100" src="${learnwebBean.getProfileImage(profileBean.selectedUser)}"  
+								alt="Profile image" />
+						</h:panelGroup>		
 						<h:panelGrid columns="3" style="position:relative; width:100%;" columnClasses="first-column">
 							<h:outputText value="#{msg.username}:" />
 							<p:inputText id="username" value="#{profileBean.username}" validator="#{profileBean.validateUsername}" style="width:16rem" label="#{msg.username}">

@@ -14,10 +14,13 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 
+import javax.servlet.ServletContext;
+
 import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.solrClient.SolrClient;
 import de.l3s.searchlogclient.SearchLogClient;
 import de.l3s.util.PropertiesBundle;
@@ -35,7 +38,7 @@ public class Learnweb
     private PreparedStatement pstmtGetChangeLog;
     private PreparedStatement pstmtLog;
     private PropertiesBundle properties;
-    private String contextUrl;
+    private String contextPath;
 
     // Manager (Data Access Objects):
 
@@ -76,15 +79,17 @@ public class Learnweb
     {
         if(null == learnweb)
         {
-            log.warn("Learnweb is not initialized yet. You should call createInstance() first", new Exception());
+            log.warn("Learnweb is not initialized correctly. You should call createInstance() first", new Exception());
 
             try
             {
-                return createInstance("");
+                ServletContext servletContext = (ServletContext) UtilBean.getExternalContext().getContext();
+
+                return createInstance(servletContext.getContextPath());
             }
             catch(Exception e)
             {
-                throw new RuntimeException(e);
+                throw new RuntimeException("Learnweb is not initialized yet. You should call createInstance() first");
             }
         }
         return learnweb;
@@ -167,7 +172,7 @@ public class Learnweb
     private Learnweb(String contextUrl) throws ClassNotFoundException, SQLException
     {
         learnwebIsLoading = true;
-        this.contextUrl = contextUrl;
+        this.contextPath = contextUrl;
         //learnweb = this;
 
         try
@@ -228,7 +233,7 @@ public class Learnweb
         if(isInDevelopmentMode())
             jobScheduler.startAllJobs();
         else
-            log.debug("JobScheduler not started for context: " + getContextUrl());
+            log.debug("JobScheduler not started for context In development mode");
     }
 
     public FileManager getFileManager()
@@ -606,26 +611,9 @@ public class Learnweb
      * 
      * @return Returns the servername + contextpath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
      */
-    public String getContextUrl()
+    public String getContextPath()
     {
-        return contextUrl; // because we don't use httpS we can cache the url, change it if you want to use httpS too
-    }
-
-    /**
-     * This has to be set as soon as possible.
-     * servername + contextpath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
-     * 
-     * @param contextUrl
-     * @throws SQLException
-     */
-    public void setContextUrl(String contextUrl)
-    {
-        if(null == contextUrl)
-            throw new IllegalArgumentException("contextUrl must no be null");
-
-        fileManager.setContextUrl(contextUrl);
-
-        this.contextUrl = contextUrl;
+        return contextPath; // because we don't use httpS we can cache the url, change it if you want to use httpS too
     }
 
     public PresentationManager getPresentationManager()

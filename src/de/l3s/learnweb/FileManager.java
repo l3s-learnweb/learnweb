@@ -36,11 +36,11 @@ public class FileManager
     // if you change this, remember to change createFile()
     private final static String COLUMNS = "file_id, resource_id, resource_file_number, name, mime_type, log_actived, timestamp";
 
-    private Learnweb learnweb;
-    private ICache<File> cache;
+    private final Learnweb learnweb;
+    private final ICache<File> cache;
     private final java.io.File folder;
     private final String urlPattern;
-    private String baseUrl;
+    private final String basePath;
 
     protected FileManager(Learnweb learnweb) throws SQLException
     {
@@ -50,9 +50,10 @@ public class FileManager
         this.learnweb = learnweb;
         this.urlPattern = properties.getProperty("FILE_MANAGER_URL_PATTERN");
         this.cache = cacheSize == 0 ? new DummyCache<File>() : new Cache<File>(cacheSize);
-        this.folder = new java.io.File(properties.getProperty("FILE_MANAGER_FOLDER"));
+        this.folder = new java.io.File(properties.getProperty("FILE_MANAGER_FOLDER").trim());
+        this.basePath = learnweb.getContextPath() + urlPattern;
 
-        setContextUrl(learnweb.getContextUrl());
+        log.debug("Init FileManager; basePath = " + basePath);
 
         if(!folder.exists())
             throw new RuntimeException("Folder '" + properties.getProperty("FILE_MANAGER_FOLDER") + "' does not exist.");
@@ -63,7 +64,7 @@ public class FileManager
     }
 
     /**
-     * Get a File by his id
+     * Get a File by its id
      * 
      * @param id
      * @return null if not found
@@ -299,7 +300,7 @@ public class FileManager
 
     public String createUrl(int fileId, String fileName)
     {
-        return baseUrl + fileId + "/" + StringHelper.urlEncode(fileName);
+        return basePath + fileId + "/" + StringHelper.urlEncode(fileName);
     }
 
     /**
@@ -311,17 +312,13 @@ public class FileManager
      */
     public String getThumbnailUrl(int fileId)
     {
-        return baseUrl + fileId + "/thumbnail.png";
+        log.debug(basePath + fileId + "/thumbnail.png");
+        return basePath + fileId + "/thumbnail.png";
     }
 
     private java.io.File createActualFile(File file)
     {
         return new java.io.File(folder, file.getId() + ".dat");
-    }
-
-    public void setContextUrl(String contextUrl)
-    {
-        this.baseUrl = contextUrl + urlPattern;
     }
 
     /**

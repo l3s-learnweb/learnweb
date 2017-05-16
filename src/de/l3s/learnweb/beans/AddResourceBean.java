@@ -207,7 +207,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.setEmbeddedSize3Raw(iconResource.getEmbeddedSize3());
             resource.setEmbeddedSize4Raw(iconResource.getEmbeddedSize4());
 
-            resource.setUrl(Learnweb.getInstance().getContextUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));
+            resource.setUrl(Learnweb.getInstance().getContextPath() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));
             resource.save();
             log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());

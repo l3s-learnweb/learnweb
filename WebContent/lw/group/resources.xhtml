@@ -266,7 +266,7 @@
 										<div class="resource-preview-wrapper2">
 											<div class="resource-preview-block"></div>
 											<div class="resource-preview-block2"></div>
-											<h:graphicImage styleClass="resource-preview-image" value="#{res.thumbnail1.url}" rendered="#{not empty res.thumbnail1}" alt="#{res.title}" />
+											<ui:fragment rendered="#{not empty res.thumbnail1}"><img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" /></ui:fragment>											
 											<h:outputText styleClass="resource-preview-empty" escape="false" value='#{res.resource.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' rendered="#{empty res.thumbnail1}"/>
 										</div>
 									</div>

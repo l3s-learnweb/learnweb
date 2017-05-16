@@ -28,24 +28,14 @@ public class LearnwebBean implements Serializable
     private final String contextPath;
 
     public LearnwebBean() throws IOException, ClassNotFoundException, SQLException
-    {/*
-     ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
-     
-     if(ext.getRequestServerPort() == 80 || ext.getRequestServerPort() == 443)
-      contextUrl = ext.getRequestScheme() + "://" + ext.getRequestServerName() + ext.getRequestContextPath();
-     else
-      contextUrl = ext.getRequestScheme() + "://" + ext.getRequestServerName() + ":" + ext.getRequestServerPort() + ext.getRequestContextPath();
-     */
-        ServletContext servletContext = (ServletContext) FacesContext.getCurrentInstance().getExternalContext().getContext();
+    {
+        ServletContext servletContext = (ServletContext) UtilBean.getExternalContext().getContext();
 
         contextPath = servletContext.getContextPath();
 
         log.debug("init LearnwebBean: context='" + contextPath + "'");
 
         learnweb = Learnweb.createInstance(contextPath);
-        //learnweb.setContextUrl(contextUrl);
-
-        log.debug("created LearnwebBean");
     }
 
     @PostConstruct
@@ -59,9 +49,9 @@ public class LearnwebBean implements Serializable
      * 
      * @return Returns the servername + contextpath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
      */
-    public String getContextUrl()
+    public String getContextPath()
     {
-        return contextPath; // because we don't use httpS we can cache the url, change it if you want to use httpS too
+        return contextPath;
     }
 
     /**
@@ -70,12 +60,24 @@ public class LearnwebBean implements Serializable
      */
     public String getBaseUrl()
     {
+        String serverUrl = getServerUrl();
+
         ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
 
         String path = ext.getRequestServletPath();
         path = path.substring(0, path.indexOf("/", 1) + 1);
+        log.debug("server url: " + serverUrl + "; path " + path);
+        return serverUrl + path;
+    }
 
-        return contextPath + path;
+    public static String getServerUrl()
+    {
+        ExternalContext ext = UtilBean.getExternalContext();
+
+        if(ext.getRequestServerPort() == 80 || ext.getRequestServerPort() == 443)
+            return ext.getRequestScheme() + "://" + ext.getRequestServerName() + ext.getRequestContextPath();
+        else
+            return ext.getRequestScheme() + "://" + ext.getRequestServerName() + ":" + ext.getRequestServerPort() + ext.getRequestContextPath();
     }
 
     public Learnweb getLearnweb()
@@ -110,7 +112,7 @@ public class LearnwebBean implements Serializable
             if(null != url)
                 return url;
         }
-        return getContextUrl() + "/resources/image/no_profile.jpg";
+        return getContextPath() + "/resources/image/no_profile.jpg";
     }
 
     /**
