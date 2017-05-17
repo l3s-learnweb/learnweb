@@ -304,7 +304,7 @@ public class User implements Comparable<User>, Serializable, HasId
         return organisationId;
     }
 
-    public Organisation getOrganisation() throws SQLException
+    public Organisation getOrganisation()
     {
         return Learnweb.getInstance().getOrganisationManager().getOrganisationById(organisationId);
     }

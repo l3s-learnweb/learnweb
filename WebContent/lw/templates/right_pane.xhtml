@@ -643,7 +643,7 @@
 						<ui:fragment rendered="#{resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">
 							<br/>
 							<div style="position:relative; padding-left:60px;">
-								<h:graphicImage id="userpic" url="${learnwebBean.getProfileImage(userBean.user)}" width="50" height="50" 
+								<img id="userpic" src="${learnwebBean.getProfileImage(userBean.user)}" width="50" height="50" 
 									style="position:absolute;left:0" alt="Profile picture"/> 
 								
 								<p:inputTextarea id="commentfield" style="width:100%;min-height:50px;box-sizing:border-box;" rows="2" 
@@ -662,7 +662,7 @@
 				
 							<ui:repeat var="comment" value="#{resourceDetailBean.clickedResource.comments}">
 								<div class="comment">
-									<h:graphicImage class="userpic" url="#{comment.getUser().image}" width="30" height="30" alt="Profile picture"/>
+									<img class="userpic" src="#{comment.getUser().image}" width="30" height="30" alt="Profile picture"/>
 									<div class="username_div">
 										<span class="username">
 											<a href="user/detail.jsf?user_id=#{comment.user.id}" class="username_link">

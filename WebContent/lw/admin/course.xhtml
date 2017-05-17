@@ -49,7 +49,9 @@
 					<h:outputText value="Banner image:" />
 					  <p:fileUpload fileUploadListener="#{adminCourseBean.handleFileUpload}" id="imageupload" mode="advanced"  
 			            update="bannerimage" auto="true" sizeLimit="1000000" allowTypes="/(\.|\/)(gif|jpe?g|png)$/"/> 
-					<h:graphicImage value="#{adminCourseBean.course.bannerImage}" id="bannerimage" />
+					<h:panelGroup id="bannerimage">
+						<img src="#{adminCourseBean.course.bannerImage}" />
+					</h:panelGroup>
 
 				</h:panelGrid>
 				<br/>

@@ -33,9 +33,7 @@
 		<h:form id="organisationform">
 			<p:dataTable var="organisation" value="#{adminOrganisationsBean.organisations}" style="margin: 0px 0px 0px 5px;text-align: center; min-width:122rem"  >					
 				<p:column headerText="#{msg.title}" sortBy="#{organisation.title}">
-					<p:link value="#{organisation.title}" outcome="organisation" >
-						<f:param name="id" value="#{organisation.id}" />
-					</p:link>			
+					<h:outputText value="#{organisation.title}" />		
 				</p:column>	
 				
 				<p:column headerText="id" sortable="true" sortBy="#{organisation.id}">
@@ -49,8 +47,7 @@
 				
 				<p:column headerText="#{msg.edit}">	
 					<p:commandButton action="organisation" value="#{msg.edit}">
-						<f:setPropertyActionListener target="#{adminOrganisationsBean.selectedOrganisation}" value="#{organisation}" />
-				
+						<f:setPropertyActionListener target="#{adminOrganisationsBean.selectedOrganisation}" value="#{organisation}" />				
 					</p:commandButton>			
 				</p:column>	
 				

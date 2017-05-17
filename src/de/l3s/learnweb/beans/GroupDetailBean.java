@@ -128,6 +128,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     @ManagedProperty(value = "#{addResourceBean}")
     private AddResourceBean addResourceBean;
+    private final int pageSize;
 
     public enum RPAction
     {
@@ -142,6 +143,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public GroupDetailBean() throws SQLException
     {
+        pageSize = getLearnweb().getProperties().getPropertyIntValue("RESOURCES_PAGE_SIZE");
+
         loadGroup();
 
         if(null == group)
@@ -161,6 +164,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         searchFilters.setMode(MODE.group);
 
         //updateResourcesFromSolr(); //not necessary on most pages
+
     }
 
     public void preRenderView(ComponentSystemEvent e)
@@ -883,7 +887,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         SolrSearch solrSearch = new SolrSearch(StringUtils.isEmpty(query) ? "*" : query, user);
         solrSearch.setFilterGroups(groupId);
         solrSearch.setFilterFolder(folderId, !StringUtils.isEmpty(query));
-        solrSearch.setResultsPerPage(AbstractPaginator.PAGE_SIZE);
+        solrSearch.setResultsPerPage(pageSize);
         solrSearch.setSkipResourcesWithoutThumbnails(false);
         solrSearch.setFacetFields(searchFilters.getFacetFields());
         solrSearch.setFacetQueries(searchFilters.getFacetQueries());

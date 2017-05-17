@@ -13,7 +13,7 @@ public abstract class AbstractPaginator implements Serializable
     private static final long serialVersionUID = 2495539559727294482L;
     private static final int DEFAULT_PAGE_INDEX = 0;
     private static final int DEFAULT_N_PAGE_LIMIT = 5;
-    public static final int PAGE_SIZE = Learnweb.getInstance().getProperties().getPropertyIntValue("RESOURCES_PAGE_SIZE");
+    private static int PAGE_SIZE = -1;
 
     private int pageIndex = DEFAULT_PAGE_INDEX;
     private int totalPages;
@@ -26,6 +26,9 @@ public abstract class AbstractPaginator implements Serializable
     public AbstractPaginator(int totalResults)
     {
         setTotalResults(totalResults);
+
+        if(PAGE_SIZE == -1)
+            PAGE_SIZE = Learnweb.getInstance().getProperties().getPropertyIntValue("RESOURCES_PAGE_SIZE");
     }
 
     /**

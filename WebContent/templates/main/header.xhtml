@@ -13,7 +13,7 @@
 			<p:ajaxStatus onstart="document.getElementById('loadingsymbol').style.visibility='visible';" 
 				onsuccess="document.getElementById('loadingsymbol').style.visibility='hidden';" />			
 		 
-			<form action=" #{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
+			<form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
 				<a href="#{userBean.bannerLink}" id="learnweb_logo">
 					Logo
 				</a>

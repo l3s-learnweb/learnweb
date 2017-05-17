@@ -720,16 +720,16 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public void setType(String type)
     {
-        /*
-        if(null == type || type.length() == 0)
-            log.info("Resource: " + id + "; type set to null", new Exception());
-        */
         if(type.equalsIgnoreCase("videos") || type.equalsIgnoreCase("video"))
             this.type = "Video";
         else if(type.equalsIgnoreCase("photos") || type.equalsIgnoreCase("image"))
             this.type = "Image";
         else if(null == type || type.length() == 0)
+        {
+            log.warn("Resource: " + id + "; type set to null", new Exception());
             this.type = "Unknown";
+
+        }
         else if(type.equals("vnd.openxmlformats-officedocument.wordprocessingml.document"))
             this.type = "Text";
         else
@@ -812,15 +812,13 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     }
 
     /**
-     * Returns the url of this resource but proxied through WAPS.io
+     * Returns the url of this resource but proxied through WAPS.io if enabled
      * 
      * @return
      */
     public String getUrlProxied()
     {
-        User user = UtilBean.getUserBean().getUser();
-
-        return "http://waps.io/open?u=" + StringHelper.urlEncode(getUrl()) + "&c=2&i=" + (user == null ? 0 : user.getId());
+        return UtilBean.getUserBean().getUrlProxied(getUrl());
     }
 
     public String getLearnwebUrl() throws SQLException

@@ -18,11 +18,11 @@ import org.primefaces.model.UploadedFile;
 
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Course.Option;
-import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.File;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.ResourcePreviewMaker;
+import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 
 @ManagedBean

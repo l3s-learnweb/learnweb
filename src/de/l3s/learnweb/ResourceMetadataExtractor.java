@@ -359,7 +359,7 @@ public class ResourceMetadataExtractor
         {
             ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
 
-            if(resource.getType().equalsIgnoreCase("text"))
+            if(resource.getType().equalsIgnoreCase("text") || resource.getType().equalsIgnoreCase("unknown"))
             {
                 rpm.processWebsite(resource);
             }

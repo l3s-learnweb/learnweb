@@ -23,6 +23,7 @@ import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.beans.AddResourceBean;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
+import de.l3s.learnweb.solrClient.SolrClient;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
@@ -439,7 +440,7 @@ public class ResourceManager
 
     protected Resource addResource(Resource resource, User user) throws SQLException
     {
-        resource.setOwner(user);
+        resource.setUser(user);
 
         saveResource(resource);
         //To copy archive versions of a resource if it exists
@@ -1334,8 +1335,34 @@ public class ResourceManager
         }
     }
 
-    public static void main(String[] args) throws SQLException, IOException
+    public static void reindexSelectedResources() throws SQLException, ClassNotFoundException
     {
+        Learnweb lw = Learnweb.createInstance("");
+        ResourceManager rm = lw.getResourceManager();
+        SolrClient sm = lw.getSolrClient();
+
+        List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where  group_id =? AND thumbnail0_file_id =0", "419");
+
+        log.debug("Resources loaded");
+
+        for(Resource resource : resources)
+        {
+            log.debug("Process: " + resource.getId());
+
+            ResourceMetadataExtractor extractor = new ResourceMetadataExtractor(resource);
+            extractor.makePreview();
+
+            resource.save();
+
+            //sm.reIndexResource(resource);
+
+        }
+    }
+
+    public static void main(String[] args) throws SQLException, IOException, ClassNotFoundException
+    {
+        reindexSelectedResources();
+
         //reindexArchiveItResources();
         //createThumbnailsForWebResources();
         /*

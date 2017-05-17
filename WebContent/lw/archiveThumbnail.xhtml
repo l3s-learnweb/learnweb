@@ -38,7 +38,7 @@ xmlns:ui="http://java.sun.com/jsf/facelets"
             	<div class="flow">
                 	<ui:repeat var="image" value="#{archiveThumbnailBean.listOfUrls}">
                       <div class="item">
-                      <h:graphicImage value="#{image.fileUrl}" class="content" alt=""/>
+                      <img src="#{image.fileUrl}" class="content" alt=""/>
                       <div class="caption">#{msg.date}: <a href="#{image.archiveUrl}" target="_blank">${userBean.formatDate(image.timestamp)}</a></div>
                       </div>
                 	</ui:repeat>

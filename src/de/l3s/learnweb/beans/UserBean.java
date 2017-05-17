@@ -30,8 +30,10 @@ import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.GroupManager;
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.Organisation.Option;
 import de.l3s.learnweb.User;
 import de.l3s.searchlogclient.SearchLogClient;
+import de.l3s.util.StringHelper;
 
 @ManagedBean
 @SessionScoped
@@ -687,6 +689,20 @@ public class UserBean implements Serializable
     public void setModeratorUser(User moderatorUser)
     {
         this.moderatorUser = moderatorUser;
+    }
+
+    /**
+     * 
+     * @param url
+     * @return Returns the given url proxied through WAPS.io if enabled for the current organization
+     */
+    public String getUrlProxied(String url)
+    {
+        User user = getUser();
+        if(user == null || !user.getOrganisation().getOption(Option.Misc_Proxy_enabled))
+            return url;
+
+        return "http://waps.io/open?u=" + StringHelper.urlEncode(url) + "&c=2&i=" + user.getId();
     }
 
 }

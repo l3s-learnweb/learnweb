@@ -4,19 +4,14 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui"> 
 
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.organization}"/>
 
 	<ui:define name="center_layout" >	
-		<script type="text/javascript">
-			function enableEdit()
-			{			
-				//$('#welcometext').hide();
-				$('#editwelcomeform').css('display', 'block');				
-			}			
-		</script>
+
 			
 		<style type="text/css">
 			p { margin: 12px 0 6px 0; }
@@ -43,6 +38,25 @@
 					<h:outputText value="#{msg.welcome_message}:" />
 				</p>
 				<p:editor value="#{adminOrganisationsBean.selectedOrganisation.welcomeMessage}" width="600" />
+				
+				<br/>
+				<p:accordionPanel autoHeight="false" id="courseoptions">
+					<c:forEach items="#{adminOrganisationsBean.optionGroups}" var="group" varStatus="status">					
+
+						<p:tab title="#{adminOrganisationsBean.optionGroups[status.index].title}">
+							<h:dataTable value="#{adminOrganisationsBean.optionGroups[status.index].options}" var="option">
+								<h:column>
+									<h:selectBooleanCheckbox value="#{option.value}" id="checkbox"/>
+								</h:column>
+								<h:column>
+									<h:outputLabel value="#{option.name}" for="checkbox" />
+								</h:column>
+							</h:dataTable>
+						</p:tab>
+
+					</c:forEach>
+				</p:accordionPanel>
+				
 				<p>
 					<p:commandButton action="#{adminOrganisationsBean.onSave}" value="#{msg.save}" ajax="false"/>
 					

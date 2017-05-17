@@ -312,7 +312,6 @@ public class FileManager
      */
     public String getThumbnailUrl(int fileId)
     {
-        log.debug(basePath + fileId + "/thumbnail.png");
         return basePath + fileId + "/thumbnail.png";
     }
 
