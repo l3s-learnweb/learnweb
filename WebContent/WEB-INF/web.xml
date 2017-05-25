@@ -69,8 +69,8 @@
 	<session-config>
 		<session-timeout>100</session-timeout>
 	</session-config>
-	<!-- <context-param> <param-name>primefaces.THEME</param-name> <param-value>omega</param-value> 
-		</context-param> -->
+	 <context-param> <param-name>primefaces.THEME</param-name> <param-value>omega</param-value> 
+		</context-param>
 	<context-param>
 		<param-name>com.sun.faces.numberOfViewsInSession</param-name>
 		<param-value>300</param-value>

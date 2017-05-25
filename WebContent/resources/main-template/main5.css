@@ -17,6 +17,43 @@ body {
 }
 iframe { border:none }
 
+/* correct primefaces omega theme */
+
+.ui-datatable th.ui-state-default { background-color: rgb(196, 196, 196); }
+
+.ui-button,.ui-button span,button.ui-button.ui-state-default span,.ui-button.ui-state-default span {
+	font-weight:400 !important;
+}
+.ui-widget,
+.ui-widget-content,
+.ui-widget-content a,
+.ui-widget-content .ui-inputfield {
+	color:rgb(79, 79, 79);
+	font-family:Arial, Verdana ;
+}
+.ui-state-highlight,
+.ui-widget-content .ui-state-highlight,
+.ui-widget-header .ui-state-highlight { background-color: #489a83; }
+.ui-datepicker-current-day a { background:#489a83 !important; }
+
+.ui-dialog .ui-dialog-titlebar { padding-left:0; }
+.ui-selectcheckboxmenu .ui-selectcheckboxmenu-token.ui-state-active, 
+.ui-autocomplete .ui-autocomplete-token.ui-state-active, .ui-chips .ui-chips-token.ui-state-active {
+    background: #489a83;
+    color: #fff;
+    padding-top: 1px;
+    border: 1px solid #3b8b74 ;
+}
+.ui-chkbox-box.ui-state-active, 
+.ui-chkbox-box.ui-state-focus.ui-state-active, 
+.ui-radiobutton-box.ui-state-active, 
+.ui-radiobutton-box.ui-state-focus.ui-state-active
+.ui-progressbar .ui-progressbar-value,
+.state-active {
+    border: 1px solid #3b8b74;
+    background: #489a83;
+}
+
 #header {
 	position:fixed;
 	top:0;
@@ -1101,11 +1138,12 @@ hr {
 /*taken from new_main2.css*/
 
 img {border: none;}
+/* TODO delete
 input, textarea{
 	border-radius:0px !important;
 	border:1px solid #a8a8a8 !important;
 	box-shadow:0 0 0px 0px #fff !important;
-}
+}*/
 input:focus, textarea:focus, select:focus{
 	outline:0 !important;
 }
@@ -1134,10 +1172,15 @@ input:focus, textarea:focus, select:focus{
     outline:none;
 }
 
-
-button{
-	background-color: #dedede !important;
-	border-color: #ccc !important;
+.ui-button.ui-widget.ui-state-default,
+button {
+	background-color: #dedede ;
+	border-color: #ccc ;
+	color: #4a4a4a;
+}
+.ui-button.ui-widget.ui-state-default:hover,
+button:hover {
+	background-color: #e6e6e6;
 }
 .blackbutton{
 	background:rgb(94, 94, 94) !important; 
@@ -1327,9 +1370,6 @@ div#presentation_preview {
 }
 
 .tag_field{
-	border:1px solid #aeaeae !important;
-	border-radius:0px !important;
-	box-shadow:0 0 0px 0px #fff !important;
 	width:100%;
 	box-sizing:border-box;
 }
@@ -1822,3 +1862,5 @@ div#presentation_preview {
 .tooltipster-default a:hover {
 	text-decoration: none;
 }
+
+

@@ -919,6 +919,11 @@ public class SearchFilters implements Serializable
         }
     }
 
+    public MODE getMode()
+    {
+        return configMode;
+    }
+
     public String getLanguageFilter()
     {
         return (String) configFilters.get(FILTERS.language);

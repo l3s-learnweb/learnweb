@@ -11,12 +11,16 @@ public class ResourceMetadataField implements Serializable
     public enum MetadataType
     { // represents primeface input types
         INPUT_TEXT,
+        INPUT_TEXTAREA,
         ONE_MENU,
-        ONE_MENU_EDITABLE
+        ONE_MENU_EDITABLE,
+        MULTIPLE_MENU,
+        FULLWIDTH_HEADER,
+        FULLWIDTH_DESCRIPTION
     }
 
     private String name; // the name of this field, will be used as SOLR column name  
-    private String label; // label on the website 
+    private String label; // label on the website, is replaced by a translated term if available
     private String info; // an explanation, displayed as tooltip
     private MetadataType type;
     private List<String> options = new LinkedList<String>(); // default options for some input types like OneMenu

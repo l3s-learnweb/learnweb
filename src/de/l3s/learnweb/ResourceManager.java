@@ -11,7 +11,6 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -938,8 +937,6 @@ public class ResourceManager
                 log.debug("resource " + resource.getId() + " was requested but is deleted");
 
             // deserialize preferences
-            HashMap<String, String> metadata = null;
-
             byte[] metadataBytes = rs.getBytes("metadata");
 
             if(metadataBytes != null && metadataBytes.length > 0)
@@ -951,7 +948,10 @@ public class ResourceManager
                     ObjectInputStream metadataOIS = new ObjectInputStream(metadataBAIS);
 
                     // re-create the object
-                    metadata = (HashMap<String, String>) metadataOIS.readObject();
+                    Object metadata = metadataOIS.readObject();
+
+                    if(metadata != null)
+                        resource.setMetadata(metadata);
                 }
                 catch(Exception e)
                 {
@@ -959,10 +959,6 @@ public class ResourceManager
                 }
             }
 
-            if(metadata == null)
-                metadata = new HashMap<String, String>();
-
-            resource.setMetadata(metadata);
             resource.prepareEmbeddedCodes();
             resource = cache.put(resource);
         }

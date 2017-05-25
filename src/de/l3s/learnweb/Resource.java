@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -88,7 +89,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private boolean restricted = false;
     private Date resourceTimestamp = null;
     private Date creationDate = new Date();
-    private HashMap<String, String> metadata = new HashMap<>(); // userId : hasRated
+    private HashMap<String, String> metadata = new MetadataMap(); // field_name : field_value
     private boolean deleted = false; // indicates whether this resource has been deleted
     private boolean readOnlyTranscript = false; //indicates resource transcript is read only for TED videos
     private LogEntry thumbnailUpdateInfo = null;
@@ -1518,14 +1519,95 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         return metadata.get(key);
     }
 
-    public HashMap<String, String> getMetadata()
+    public Map<String, String> getMetadata()
     {
         return metadata;
     }
 
-    public void setMetadata(HashMap<String, String> metadata)
+    /**
+     * This class stores the optional resource meta attributes in a HashMap
+     * The hard coded attributes (title, description and author) are mapped to the resource object to simplify the output template code
+     * 
+     * @author Philipp
+     *
+     */
+    private class MetadataMap extends HashMap<String, String>
     {
-        this.metadata = metadata;
+        private static final long serialVersionUID = 8020917626723924034L;
+
+        /**
+         * Copy constructor
+         * 
+         * @param hashMap
+         */
+        public MetadataMap(HashMap<String, String> hashMap)
+        {
+            super(hashMap);
+        }
+
+        public MetadataMap()
+        {
+            super();
+        }
+
+        @Override
+        public String get(Object key)
+        {
+            if(!key.getClass().equals(String.class))
+                throw new IllegalArgumentException("key must be a string");
+
+            String keyString = ((String) key).toLowerCase();
+
+            switch(keyString)
+            {
+            case "title":
+                return getTitle();
+            case "author":
+                return getAuthor();
+            case "description":
+                return getDescription();
+            }
+            return super.get(key);
+        }
+
+        @Override
+        public String put(String key, String value)
+        {
+            log.debug("put " + key + " = " + value);
+
+            switch(key)
+            {
+            case "title":
+                setTitle(value);
+                return value;
+            case "author":
+                setAuthor(value);
+                return value;
+            case "description":
+                setDescription(value);
+                return value;
+            }
+
+            return super.put(key, value);
+        }
+    }
+
+    public void setMetadata(Object metadataObj)
+    {
+        if(metadataObj instanceof MetadataMap)
+        {
+            //      log.debug(getId() + " load MetadataMap");
+            this.metadata = (MetadataMap) metadataObj;
+        }
+        else if(metadataObj instanceof HashMap<?, ?>)
+        {
+            //            log.debug(getId() + " cast to MetadataMap");
+            @SuppressWarnings("unchecked")
+            HashMap<String, String> hashMap = (HashMap<String, String>) metadataObj;
+            this.metadata = new MetadataMap(hashMap);
+        }
+        else
+            throw new IllegalArgumentException("unknown metadata format: " + metadataObj.getClass().getName());
     }
 
     public void setArchiveUrls(LinkedList<ArchiveUrl> archiveUrls)

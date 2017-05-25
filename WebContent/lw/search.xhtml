@@ -283,11 +283,11 @@
 		<h:form class="display-none">	
 			<p:remoteCommand actionListener="${searchBean.loadNextPage()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('loadNextPage')" update=":nextPage" name="ajaxLoadNextPage" oncomplete="displayNextPage(xhr, status, args);" process="@this" partialSubmit="true" />
 
-			<p:remoteCommand actionListener="${searchBean.generateKnowledgeGraph()}"  immediate="true" ignoreAutoUpdate="true" onstart="console.log('generateKnowledgeGraph')" update=":factsheet" name="ajaxLoadFactsheet" async="true" process="@this" partialSubmit="true"/>
+			<p:remoteCommand actionListener="${searchBean.generateKnowledgeGraph()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('generateKnowledgeGraph')" update=":factsheet" name="ajaxLoadFactsheet" async="true" process="@this" partialSubmit="true"/>
 
-			<p:remoteCommand actionListener="${searchBean.setSelectedResource()}" immediate="true"  ignoreAutoUpdate="true" onstart="console.log('setSelectedResource')" name="setSelectedResource" update=":resource_form" process="@this" partialSubmit="true"/>
+			<p:remoteCommand actionListener="${searchBean.setSelectedResource()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('setSelectedResource')" name="setSelectedResource" update=":resource_form" process="@this" partialSubmit="true"/>
 
-			<p:remoteCommand actionListener="${searchHistoryBean.updateSearchHistory()}"  immediate="true" ignoreAutoUpdate="true" onstart="console.log('updateSearchHistory')" update=":tabView:tab3" name="ajaxLoadSearchHistory" process="@this" partialSubmit="true" />
+			<p:remoteCommand actionListener="${searchHistoryBean.updateSearchHistory()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('updateSearchHistory')" update=":tabView:tab3" name="ajaxLoadSearchHistory" process="@this" partialSubmit="true" />
 
 			<p:remoteCommand actionListener="${searchBean.logResourceOpened()}" immediate="true" ignoreAutoUpdate="true"  onstart="console.log('logResourceOpened')" update=":nothing" name="logResourceOpened" async="true" process="@form" partialSubmit="true" />
 

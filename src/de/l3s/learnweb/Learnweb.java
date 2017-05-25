@@ -61,17 +61,17 @@ public class Learnweb
     private final ResourcePreviewMaker resourcePreviewMaker;
     private final YovistoManager yovistoManager;
     private final JobScheduler jobScheduler;
-
     private final GlossaryManager glossariesManager;
     private final SuggestionLogger suggestionLogger;
     private final WaybackCapturesLogger waybackCapturesLogger;
+    private final SearchLogManager searchLogManager;
 
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
-    private static boolean developmentMode = true; //  true if run on localhost, disables email logger
+    private static boolean developmentMode = true; //  true if run on Localhost, disables email logger
 
     /**
-     * The Same as getInstanceRaw() but hides all exceptions
+     * Use createInstance() first
      * 
      * @return
      */
@@ -89,7 +89,7 @@ public class Learnweb
             }
             catch(Exception e)
             {
-                throw new RuntimeException("Learnweb is not initialized yet. You should call createInstance() first");
+                throw new RuntimeException("Learnweb is not initialized correctly. Check log files.");
             }
         }
         return learnweb;
@@ -216,10 +216,10 @@ public class Learnweb
         loroManager = new LoroManager(this);
         jobScheduler = new JobScheduler(this);
         yovistoManager = new YovistoManager(this);
-
         suggestionLogger = new SuggestionLogger(this);
         waybackCapturesLogger = new WaybackCapturesLogger(this);
         glossariesManager = new GlossaryManager(this);
+        searchLogManager = new SearchLogManager(this);
         learnwebIsLoading = false;
     }
 
@@ -703,6 +703,11 @@ public class Learnweb
     public static boolean isInDevelopmentMode()
     {
         return developmentMode;
+    }
+
+    public SearchLogManager getSearchLogManager()
+    {
+        return searchLogManager;
     }
 
 }

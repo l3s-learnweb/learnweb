@@ -281,11 +281,6 @@ public class GroupManager
         }
         replace.close();
 
-        int groupId = group.getId();
-
-        if(groupId != group.getId())
-            throw new RuntimeException("fedora error");
-
         return group;
     }
 

@@ -153,7 +153,7 @@
 						
 					<h:form id="add_resource_meta_form" rendered="#{addResourceBean.formStep > 1}">
 						
-						<p:fieldset legend="Step 2" style="margin-bottom:20px">
+						<p:fieldset legend="#{msg.step} 2" style="margin-bottom:20px">
 							<p:panelGrid styleClass="full-width">
 								<p:row>
 									<p:column>
@@ -203,503 +203,502 @@
 					</h:form>
 				</h:panelGroup>
 				
-				<h:panelGroup rendered="${bean.rightPanelAction == 'viewResource' and resourceDetailBean.clickedResource.id != -1 and resourceDetailBean.clickedResource.canViewResource(userBean.user)}" layout="block">
-					<ui:fragment rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'video' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'image'}">
-						<div class="align-center" style="margin-top: 5px;">
-							<div id="lightbox">
-								<div id="lightbox_background" onclick="lightbox_close();"></div>
-								
-								<div id="lightbox_container">	
-									<div id="lightbox_title">
-										<h:outputText value="#{resourceDetailBean.clickedResource.title}" escape="false" />
-										<a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="close"></a>
-									</div>
-									<div id="lightbox_content">
-										<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text'}">
-										    <div style="overflow:auto; height:100%; width:100%; text-align:center;">
+				<h:panelGroup rendered="#{bean.rightPanelAction == 'viewResource' and resourceDetailBean.clickedResource.id != -1}" layout="block">
+					<c:if test="${not resourceDetailBean.clickedResource.canViewResource(userBean.user) and (resourceDetailBean.clickedResource.deleted or resourceDetailBean.clickedResource.groupId eq 0)}">
+						<h:outputText value="This resource has been removed" />
+					</c:if>
+					<h:outputText value="#{msg.group_resources_access_denied}" rendered="${not resourceDetailBean.clickedResource.canViewResource(userBean.user) and not (resourceDetailBean.clickedResource.deleted or resourceDetailBean.clickedResource.groupId eq 0)}"/>
+					<ui:fragment rendered="#{resourceDetailBean.clickedResource.canViewResource(userBean.user)}">			
+						<ui:fragment rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'video' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'image'}">
+							<div class="align-center" style="margin-top: 5px;">
+								<div id="lightbox">
+									<div id="lightbox_background" onclick="lightbox_close();"></div>
+									
+									<div id="lightbox_container">	
+										<div id="lightbox_title">
+											<h:outputText value="#{resourceDetailBean.clickedResource.title}" escape="false" />
+											<a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="close"></a>
+										</div>
+										<div id="lightbox_content">
+											<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text'}">
+											    <div style="overflow:auto; height:100%; width:100%; text-align:center;">
+											    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
+											    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
+											    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}" />
+											    </div>	
+										    </ui:fragment>
+										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'pdf'}">
+											   	<iframe src="#{resourceDetailBean.clickedResource.url}" style="width:100%; height:100%; "/>
+										    </ui:fragment>
+										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'Image'}">
 										    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
 										    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
-										    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}" />
-										    </div>	
-									    </ui:fragment>
-									    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'pdf'}">
-										   	<iframe src="#{resourceDetailBean.clickedResource.url}" style="width:100%; height:100%; "/>
-									    </ui:fragment>
-									    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'Image'}">
-									    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
-									    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
-									    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}"
-									    		style="height:auto; width:auto; max-height:100%; max-width:100%; display:block; margin:0 auto; position: relative; 
-									    		top: 50%; transform: translateY(-50%);-moz-transform:translateY(-50%);-webkit-transform:translateY(-50%);
-									    		-o-transform:translateY(-50%);-ms-transform:translateY(-50%);"/>	
-									    </ui:fragment>	
-									    <h:panelGroup layout="block" id="archive_lightbox_content" style="display:none;height:97%;" rendered="${not empty resourceDetailBean.clickedResource.archiveUrls and resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
-											<div id="archive_list">
-												<ui:fragment rendered="${resourceDetailBean.clickedResource.archiveUrls.size() le 100}">
-													<ul>
-														<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.archiveUrls}">
-															<li>
-																<a href="#{entry.archiveUrl}" onclick="onclick_archive_url(event);">
-																	<h:outputText value="${userBean.formatDate(entry.timestamp)}"/>
-																</a>
-															</li>
-														</ui:repeat>
-													</ul>
-												</ui:fragment>
-												<ui:fragment rendered="${resourceDetailBean.clickedResource.archiveUrls.size() gt 100}">
-													<script type="text/javascript">
-														archiveListInitialize();
-													</script>
-													<ul>
-														<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.archiveUrlsAsYears.entrySet().toArray()}">
-															<li class="years">
-																<span>#{entry.key}</span>
-																<ul class="archive-versions">
-																	<ui:repeat var="version" value="#{entry.value}">
-																			<li>
-																				<a href="#{version.archiveUrl}" onclick="onclick_archive_url(event);">
-																					<h:outputText value="${userBean.formatDate(version.timestamp)}"/>
-																				</a>
-																			</li>
-																	</ui:repeat>
-																</ul>
-															</li>
-														</ui:repeat>
-													</ul>
-												</ui:fragment>
-											</div>
-											<div id="archive_iframe_div">
-												<iframe id="archive_iframe" data-src="#{resourceDetailBean.clickedResource.lastArchivedObject.archiveUrl}" style="width:100%; height:100%;"/>
-											</div>
-											<div id="archive_timestamp_overlay">
-												<span id="archive_timestamp_overlay_text">
-													#{msg["Archive.show_version"]}:
-													<h:outputText id="archive_timestamp" value="${userBean.formatDate(resourceDetailBean.clickedResource.lastArchivedObject.timestamp)}"/>
-												</span>
-												<button id="set_thumbnail_button" class="greenbutton float-right" style="top:3px;right:3px;position:relative;" onclick="updateThumbnail();">#{msg["Archive.set_thumbnail"]}</button>
-											</div>
-										</h:panelGroup>
-										<h:panelGroup rendered="${not empty resourceDetailBean.clickedResource.thumbnailUpdateInfo}">
-											<div id="lightbox_footer">
-												<span id="archive_timestamp_overlay_text">
-													#{msg["Archive.thumbnail_update_info"]}:
-													<h:outputText value="${userBean.formatDate(resourceDetailBean.clickedResource.thumbnailUpdateInfo.date)}"/>
-													(#{msg.by} ${resourceDetailBean.clickedResource.thumbnailUpdateInfo.username})
-												</span>
-											</div>
-										</h:panelGroup>					
+										    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}"
+										    		style="height:auto; width:auto; max-height:100%; max-width:100%; display:block; margin:0 auto; position: relative; 
+										    		top: 50%; transform: translateY(-50%);-moz-transform:translateY(-50%);-webkit-transform:translateY(-50%);
+										    		-o-transform:translateY(-50%);-ms-transform:translateY(-50%);"/>	
+										    </ui:fragment>	
+										    <h:panelGroup layout="block" id="archive_lightbox_content" style="display:none;height:97%;" rendered="${not empty resourceDetailBean.clickedResource.archiveUrls and resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
+												<div id="archive_list">
+													<ui:fragment rendered="${resourceDetailBean.clickedResource.archiveUrls.size() le 100}">
+														<ul>
+															<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.archiveUrls}">
+																<li>
+																	<a href="#{entry.archiveUrl}" onclick="onclick_archive_url(event);">
+																		<h:outputText value="${userBean.formatDate(entry.timestamp)}"/>
+																	</a>
+																</li>
+															</ui:repeat>
+														</ul>
+													</ui:fragment>
+													<ui:fragment rendered="${resourceDetailBean.clickedResource.archiveUrls.size() gt 100}">
+														<script type="text/javascript">
+															archiveListInitialize();
+														</script>
+														<ul>
+															<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.archiveUrlsAsYears.entrySet().toArray()}">
+																<li class="years">
+																	<span>#{entry.key}</span>
+																	<ul class="archive-versions">
+																		<ui:repeat var="version" value="#{entry.value}">
+																				<li>
+																					<a href="#{version.archiveUrl}" onclick="onclick_archive_url(event);">
+																						<h:outputText value="${userBean.formatDate(version.timestamp)}"/>
+																					</a>
+																				</li>
+																		</ui:repeat>
+																	</ul>
+																</li>
+															</ui:repeat>
+														</ul>
+													</ui:fragment>
+												</div>
+												<div id="archive_iframe_div">
+													<iframe id="archive_iframe" data-src="#{resourceDetailBean.clickedResource.lastArchivedObject.archiveUrl}" style="width:100%; height:100%;"/>
+												</div>
+												<div id="archive_timestamp_overlay">
+													<span id="archive_timestamp_overlay_text">
+														#{msg["Archive.show_version"]}:
+														<h:outputText id="archive_timestamp" value="${userBean.formatDate(resourceDetailBean.clickedResource.lastArchivedObject.timestamp)}"/>
+													</span>
+													<button id="set_thumbnail_button" class="greenbutton float-right" style="top:3px;right:3px;position:relative;" onclick="updateThumbnail();">#{msg["Archive.set_thumbnail"]}</button>
+												</div>
+											</h:panelGroup>
+											<h:panelGroup rendered="${not empty resourceDetailBean.clickedResource.thumbnailUpdateInfo}">
+												<div id="lightbox_footer">
+													<span id="archive_timestamp_overlay_text">
+														#{msg["Archive.thumbnail_update_info"]}:
+														<h:outputText value="${userBean.formatDate(resourceDetailBean.clickedResource.thumbnailUpdateInfo.date)}"/>
+														(#{msg.by} ${resourceDetailBean.clickedResource.thumbnailUpdateInfo.username})
+													</span>
+												</div>
+											</h:panelGroup>					
+										</div>
 									</div>
-								</div>
-							</div>				
-		
-							<ui:fragment rendered="#{resourceDetailBean.clickedResource.type == 'Video'}">
-								<div class="preview_box" style="height:412px; width:100%;">
-									<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
-								</div>
-							</ui:fragment>								
-							<ui:fragment rendered="#{resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'Video' and resourceDetailBean.clickedResource.type != 'Image'}">
-								<div class="preview_box">
-									<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}'
-										escape="false"/>
-								</div>
-							</ui:fragment>
-							<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'Image') and not empty resourceDetailBean.clickedResource.thumbnail3 or resourceDetailBean.clickedResource.type eq 'pdf'}">
-									<img class="preview_box" src="#{resourceDetailBean.clickedResource.thumbnail3.url}"
-										height="#{resourceDetailBean.clickedResource.thumbnail3.height}" onmouseup="lightbox_open();"
-										width="#{resourceDetailBean.clickedResource.thumbnail3.width}"
-										style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"/>	
-							</ui:fragment>
-							<ui:fragment rendered="${resourceDetailBean.clickedResource.type eq 'text'  and empty resourceDetailBean.clickedResource.thumbnail3}">
-								<div class="preview_box" style="display: inline-block">
-									<a target="_blank" class="newsfeed_query_link" style="padding: 0px" 
-										href="#{resourceDetailBean.clickedResource.urlProxied}">
-										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>
-									</a>
-								</div>
-							</ui:fragment>
-							<ui:fragment rendered="${resourceDetailBean.clickedResource.type eq 'Image' and empty resourceDetailBean.clickedResource.thumbnail3}">
-								<div class="preview_box">
-									<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>
-								</div>
-							</ui:fragment>
-						</div>
-						<div class="align-center" style="padding-top: 10px">
-							<a class="hyperlink" href="#{resourceDetailBean.clickedResource.urlProxied}" target="_blank">
-								<h:outputText styleClass="hyperlink" 
-									rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf'}"
-									value="#{resourceDetailBean.clickedResource.url}"/>
-							</a>
-							<a class="hyperlink" onclick="lightbox_open(); change_lightbox_content(true);" style="float:right;" title="#{msg['Archive.change_thumbnail']}?">
-								<h:graphicImage style="cursor:pointer;" value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg['Archive.change_thumbnail']}?" rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}"/>
-							</a>
-							<h:outputLink value="showGlossary.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.source eq 'Glossary'}">
-										<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
-										Open Glossary
-							</h:outputLink>
-						</div>
-					</ui:fragment>
-					
-					<style type="text/css">
-						#resources_informations_table a:hover, #resources_informations_table a:focus{
-							text-decoration:underline; 
-						}
-						.ui-rating { opacity: 1 !important; filter: Alpha(Opacity=100) !important; }
-					</style>
-					
-					<table id="resources_informations_table" class="full-width">
-
-						<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.fileName and not resourceDetailBean.clickedResource.source.equals('LORO')}">
-							<tr>
-								<td>
-									<span class="resource_field">
-										#{msg.file}: 
-									</span>
-								</td>
-								<td>
-									<a href="#{resourceDetailBean.clickedResource.url}">
-										<span style="float:left;text-decoration:underline;">#{resourceDetailBean.clickedResource.fileName}</span><span class="ui-icon ui-icon-arrowthickstop-1-s" style="float:left;"></span>
-									</a>
-								</td>
-							</tr>
-						</ui:fragment>
-						
-						<ui:fragment rendered="${empty resourceDetailBean.clickedResource.fileName and resourceDetailBean.clickedResource.type.toLowerCase() != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type.toLowerCase() != 'video' and resourceDetailBean.clickedResource.type.toLowerCase() != 'image' }">
-							<tr>
-								<td>
-									<span class="resource_field">
-										#{msg.resource}: 
-									</span>
-								</td>
-								<td>
-									<a style="color: #22e" href="#{resourceDetailBean.clickedResource.urlProxied}">
-										#{resourceDetailBean.clickedResource.url}
-									</a>
-								</td>
-							</tr>
-						</ui:fragment>
-											
-						<ui:fragment rendered="#{resourceDetailBean.starRatingEnabled}">
-							<tr>
-								<td>
-									<span class="resource_field">
-										#{msg.relevance}: 
-									</span>
-								</td>
-								<td>
-									<h:form id="rate_form">
-										<p:rating value="#{resourceDetailBean.starRatingRounded}" disabled="${resourceDetailBean.starRatedByUser or not resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}" cancel="false" style="vertical-align: bottom; margin-right:10px; display:inline-block;">
-											<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}" update="rate_form :growl" />			
-										</p:rating>
-										 
-										<h:outputText value="#{resourceDetailBean.clickedResource.starRating}">
-											<f:convertNumber maxFractionDigits="1" minFractionDigits="1" />
-										</h:outputText>	
-										(<h:outputFormat value="#{msg.votes}"><f:param value="#{resourceDetailBean.clickedResource.rateNumber}" /></h:outputFormat>)
-									</h:form>
-								</td>
-							</tr>
-						</ui:fragment>
-											
-						<ui:fragment rendered="#{resourceDetailBean.thumbRatingEnabled}">
-							<tr>
-								<td>
-									<span class="resource_field">
-										#{msg.reliability}: 
-									</span>
-								</td>
-								<td>
-									<h:form id="thumbrating">
-										<h:panelGrid columns="4" >
-											<h:outputText value="+#{resourceDetailBean.clickedResource.thumbUp}" />
-											<p:commandLink actionListener="#{resourceDetailBean.onThumbUp}" update="thumbrating :growl">
-												<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
-												<h:graphicImage value="/resources/icon/thumb_up.png" width="16" height="16" alt="Rate thump up"/>
-											</p:commandLink>
+								</div>				
 			
-											<p:commandLink actionListener="#{resourceDetailBean.onThumbDown}" update="thumbrating :growl">
-												<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
-												<h:graphicImage value="/resources/icon/thumb_dw.png" width="16" height="16" alt="Rate thump down" />
-											</p:commandLink>
-											<h:outputText value="-#{resourceDetailBean.clickedResource.thumbDown}" />
-										</h:panelGrid>
-									</h:form>
-								</td>
-							</tr>
-						</ui:fragment>				
-
-						<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.author}">
-							<tr>
-								<td>
-									<span class="resource_field">
-										#{msg.author}: 
-									</span>
-								</td>
-								<td>
-									<h:outputText value="#{resourceDetailBean.clickedResource.author}"/>
-								</td>
-							</tr>
+								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type == 'Video'}">
+									<div class="preview_box" style="height:412px; width:100%;">
+										<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
+									</div>
+								</ui:fragment>								
+								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'Video' and resourceDetailBean.clickedResource.type != 'Image'}">
+									<div class="preview_box">
+										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}'
+											escape="false"/>
+									</div>
+								</ui:fragment>
+								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'Image') and not empty resourceDetailBean.clickedResource.thumbnail3 or resourceDetailBean.clickedResource.type eq 'pdf'}">
+										<img class="preview_box" src="#{resourceDetailBean.clickedResource.thumbnail3.url}"
+											height="#{resourceDetailBean.clickedResource.thumbnail3.height}" onmouseup="lightbox_open();"
+											width="#{resourceDetailBean.clickedResource.thumbnail3.width}"
+											style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"/>	
+								</ui:fragment>
+								<ui:fragment rendered="${resourceDetailBean.clickedResource.type eq 'text'  and empty resourceDetailBean.clickedResource.thumbnail3}">
+									<div class="preview_box" style="display: inline-block">
+										<a target="_blank" class="newsfeed_query_link" style="padding: 0px" 
+											href="#{resourceDetailBean.clickedResource.urlProxied}">
+											<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>
+										</a>
+									</div>
+								</ui:fragment>
+								<ui:fragment rendered="${resourceDetailBean.clickedResource.type eq 'Image' and empty resourceDetailBean.clickedResource.thumbnail3}">
+									<div class="preview_box">
+										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>
+									</div>
+								</ui:fragment>
+							</div>
+							<div class="align-center" style="padding-top: 10px">
+								<a class="hyperlink" href="#{resourceDetailBean.clickedResource.urlProxied}" target="_blank">
+									<h:outputText styleClass="hyperlink" 
+										rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf'}"
+										value="#{resourceDetailBean.clickedResource.url}"/>
+								</a>
+								<a class="hyperlink" onclick="lightbox_open(); change_lightbox_content(true);" style="float:right;" title="#{msg['Archive.change_thumbnail']}?">
+									<h:graphicImage style="cursor:pointer;" value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg['Archive.change_thumbnail']}?" rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}"/>
+								</a>
+								<h:outputLink value="showGlossary.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.source eq 'Glossary'}">
+											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
+											Open Glossary
+								</h:outputLink>
+							</div>
 						</ui:fragment>
-						<tr>
-							<td>
-								<span class="resource_field">
-									#{msg.source}: 
-								</span>
-							</td>
-							<td style="overflow:hidden;">
-								<a href="#{resourceDetailBean.clickedResource.urlProxied}">
-									<h:outputText value="#{resourceDetailBean.clickedResource.source}" />
-								</a><span style="display:inline-block; width:300px;"> </span>
-							</td>
-						</tr>
+					
+						<style type="text/css">
+
+						</style>
 						
-						<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.metadataEntries}">
-							<ui:fragment rendered="#{not empty entry.value}">
+						<table id="resources_informations_table" class="full-width">
+	
+							<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.fileName and not resourceDetailBean.clickedResource.source.equals('LORO')}">
 								<tr>
 									<td>
 										<span class="resource_field">
-											<h:outputText value="${utilBean.getLocaleMessage(entry.key, null)}" />: 
+											#{msg.file}: 
 										</span>
 									</td>
 									<td>
-										<h:outputText value="#{entry.value}" />									
+										<a href="#{resourceDetailBean.clickedResource.url}">
+											<span style="float:left;text-decoration:underline;">#{resourceDetailBean.clickedResource.fileName}</span><span class="ui-icon ui-icon-arrowthickstop-1-s" style="float:left;"></span>
+										</a>
 									</td>
 								</tr>
 							</ui:fragment>
-						</ui:repeat>
-						
-						<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.group}">
-							<tr>
-								<td>
-									<span class="resource_field">
-										#{msg.group}: 
-									</span>
-								</td>
-								<td>
-									<h:outputLink value="group/overview.jsf" style="display:inline-block; margin-right:1rem;">
-										<f:param name="group_id" value="#{resourceDetailBean.clickedResource.group.id}" />
-										<h:outputText value="#{resourceDetailBean.clickedResource.group.title}" />
-									</h:outputLink>
-								</td>
-							</tr>
-						</ui:fragment>
-						<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.originalGroup}">
-							<tr>
-								<td>
-									<span class="resource_field">
-										#{msg.copied_from}: 
-									</span>
-								</td>
-								<td>
-									<h:outputLink value="group/overview.jsf" style="display:inline-block; margin-right:1rem;">
-										<f:param name="group_id" value="#{resourceDetailBean.clickedResource.originalGroup.id}" />
-										<h:outputText value="#{resourceDetailBean.clickedResource.originalGroup.title}" />
-									</h:outputLink>
-								</td>
-							</tr>
-						</ui:fragment>
-						<ui:fragment rendered="${resourceDetailBean.clickedResource.source == 'TED' or resourceDetailBean.clickedResource.source == 'TEDx'}">
-							<tr>
-								<td>
-									<span class="resource_field">
-										#{msg.transcript}: 
-									</span>
-								</td>
-								<td>
-									<h:outputLink value="ted_transcript.jsf" style="text-decoration:underline;">
-										<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
-										#{msg.link_to_transcript}
-									</h:outputLink>
-								</td>
-							</tr>
-						</ui:fragment>							
-						<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.creationDate}">
-							<tr>
-								<td>
-									<span class="resource_field">
-										#{msg.date}:
-									</span>
-								</td>
-								<td>
-									<h:outputText value="#{resourceDetailBean.clickedResource.creationDate}">
-										<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
-									</h:outputText>
-								</td>
-							</tr>
-						</ui:fragment>
-						<ui:fragment rendered="#{resourceDetailBean.clickedResource.folderId != 0}">
-							<tr>
-								<td>
-									<span class="resource_field">
-										#{msg.path}:
-									</span>
-								</td>
-								<td>
-									<h:outputText value="#{resourceDetailBean.clickedResource.prettyPath}" />
-								</td>
-							</tr>
-						</ui:fragment>
-					</table>
-
-					<h:panelGroup rendered="#{not empty resourceDetailBean.clickedResource.description}">
-						<div class="resource_field" style="padding-top: 10px">
-							#{msg.description}
-						</div>
-						<h:outputText id="resource_description" value="#{resourceDetailBean.clickedResource.descriptionHTML}" escape="false" />
-					</h:panelGroup>
 							
-					<h:form id="archive_current_form" rendered="${resourceDetailBean.clickedResource.storageType == 2 and resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
-						<span class="resource_field">
-							#{msg.current_version}: 
-						</span>
-						<p:commandButton action="#{resourceDetailBean.archiveCurrentVersion}" styleClass="greenbutton" 
-							value="#{msg['Archive.now']}" update=":growl :archive_view :archive_view_options" style="margin-top:10px"/>
-					</h:form>
-							
-					<h:panelGroup id="archive_view_options" layout="block">
-						<h:panelGroup layout="block" style="padding-top: 15px;" 
-							rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
-							<span class="resource_field" style="position:relative;">
-								#{msg['Archive.versions']} (
-								<span id="no_of_archive_versions" style="color:red">
-									#{resourceDetailBean.clickedResource.archiveUrls.size()}
-								</span>
-								): 
-							</span>
-							
-							<p:commandButton id="list_button" styleClass="greenbutton" value="#{msg.list_view}" 
-								onclick="return open_list_view();" />
-							<p:commandButton id="timeline_button" styleClass="greenbutton" value="#{msg.timeline_view}" 
-								onclick="return open_timeline_view();" />
-								<!-- Insert thumbnail link visualization -->
-						</h:panelGroup>
-					</h:panelGroup>
-					<h:panelGroup id="archive_view" layout="block">
-						<h:panelGroup id="archive_list_view" layout="block" 
-							rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
-							<ul>
-								<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.archiveUrls}">
-									<li>
-										<a href="#{entry.archiveUrl}" target="_blank">
-											<h:outputText value="${userBean.formatDate(entry.timestamp)}"/>
-										</a>
-									</li>
-								</ui:repeat>
-							</ul>
-						</h:panelGroup>
-						<h:panelGroup id="timeline_view" layout="block" 
-							rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
-							<ui:decorate template="/lw/templates/archive_timeline_template.xhtml">
-							</ui:decorate>
-						</h:panelGroup>
-						<br class="clear" />
-					</h:panelGroup>					
-
-					<h:form id="tag_form" rendered="${not empty resourceDetailBean.clickedResource.tags or resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
-						<div class="resource_field" style="padding-top: 10px; padding-bottom: 10px">
-							#{msg.tags}
-						</div>
-
-				        <ul style="margin: 0px; padding: 0px">
-					         <ui:repeat var="tag" value="#{resourceDetailBean.clickedResource.tags}">
-					         	<li class="tag_list">
-					         		<h:outputLink styleClass="tag_name ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
-					         			value="search.jsf">
-					         			<span class="ui-button-text">
-					         				#{tag.name}
-					         			</span>
-							         		<f:param name="action" value="image"/>
-							         		<f:param name="query" value="#{tag.name}"/>
-					         		</h:outputLink>
-					         		<p:commandButton styleClass="tag_x float-right" action="#{resourceDetailBean.onDeleteTag}" 
-					         			value="x" update=":add_resource_panel :growl" process="@form" rendered="#{resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
-					         			<f:setPropertyActionListener target="#{resourceDetailBean.selectedTag}" value="#{tag}"/>
-					         		</p:commandButton>
-					         	</li>
-					         </ui:repeat>
-					    </ul>
-					</h:form> 
-					
-					
-					
-					<h:form id="tag_input_form" rendered="#{resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">  
-					   
-					    <p:inputText styleClass="tag_field" value="#{resourceDetailBean.tagName}" id="tag_name"/>
-				    	<p:commandButton actionListener="#{resourceDetailBean.addTag}" styleClass="greenbutton clearfix" 
-				    		value="#{msg.addTag}" update=" :datagrid :tag_form :growl :tag_input_form:tag_name" process="@form" 
-				    		style="margin-right:0;margin-top:4px;float:right" ajaxsingle="true" oncomplete="return false;">				    		
-				    	  	
-				    	  	<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>	
-				        </p:commandButton>
-				        
-				    </h:form>	
-				    				   
-				   
-				    <h:form id="comment_input_form" styleClass="clear" prependId="false">
-				   
-						<h:panelGroup layout="block" class="resource_field" style="padding-top: 10px" rendered="${not empty resourceDetailBean.clickedResource.comments or resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">
-							#{msg.comments}
-						</h:panelGroup>						
-						
-						<ui:fragment rendered="#{resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">
-							<br/>
-							<div style="position:relative; padding-left:60px;">
-								<img id="userpic" src="${learnwebBean.getProfileImage(userBean.user)}" width="50" height="50" 
-									style="position:absolute;left:0" alt="Profile picture"/> 
-								
-								<p:inputTextarea id="commentfield" style="width:100%;min-height:50px;box-sizing:border-box;" rows="2" 
-									value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}" required="true"/>
-								<br/>
-							</div>
-							<p:commandButton id="comment_button" styleClass="greenbutton float-right" value="#{msg.addComment}" 
-								actionListener="#{resourceDetailBean.addComment()}" update=":datagrid :comment_input_form :comment_form :growl">
-								<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>	
-							</p:commandButton>
-						</ui:fragment>
-					</h:form>
-					<br class="clear" />
-					<h:form id="comment_form" styleClass="clear" prependId="false" style="margin-bottom:40px;">
-						<h:panelGroup layout="block" rendered="#{not empty resourceDetailBean.clickedResource.comments}" styleClass="comments">
-				
-							<ui:repeat var="comment" value="#{resourceDetailBean.clickedResource.comments}">
-								<div class="comment">
-									<img class="userpic" src="#{comment.getUser().image}" width="30" height="30" alt="Profile picture"/>
-									<div class="username_div">
-										<span class="username">
-											<a href="user/detail.jsf?user_id=#{comment.user.id}" class="username_link">
-												#{comment.user.username}
-											</a>
+							<ui:fragment rendered="${empty resourceDetailBean.clickedResource.fileName and resourceDetailBean.clickedResource.type.toLowerCase() != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type.toLowerCase() != 'video' and resourceDetailBean.clickedResource.type.toLowerCase() != 'image' }">
+								<tr>
+									<td>
+										<span class="resource_field">
+											#{msg.resource}: 
 										</span>
-										<span title="#{comment.date}" class="comment_date">
-											#{userBean.getPrettyDate(comment.date)}
-										</span>												
-										<div style="margin-top:5px;">
-											#{comment.text}
-										</div>
-
-									</div>
-									<div class="clear"></div>
-									<div style="padding-left: 40px;">
-										<p:commandLink rendered="#{resourceDetailBean.canEditComment(comment)}" 
-											style="margin-right: 5px; font-size: 10px !important; color: green" value="#{msg.edit}" 
-											onstart="PF('comment_dialog').show();" ajax="true" update=":comment_dialog_form">
-											<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
-										</p:commandLink>
-										<p:commandLink rendered="#{resourceDetailBean.canEditComment(comment)}" 
-											action="#{resourceDetailBean.onDeleteComment}"
-											style="margin-right: 5px; font-size: 10px !important; color: red" value="#{msg.delete}" 
-											onstart="return confirm('#{msg.delete_message_comments}');" ajax="true" 
-											update=":add_resource_panel :growl">
-											<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
-										</p:commandLink>
-									</div>
-								</div>
+									</td>
+									<td>
+										<a style="color: #22e" href="#{resourceDetailBean.clickedResource.urlProxied}">
+											#{resourceDetailBean.clickedResource.url}
+										</a>
+									</td>
+								</tr>
+							</ui:fragment>
+												
+							<ui:fragment rendered="#{resourceDetailBean.starRatingEnabled}">
+								<tr>
+									<td>
+										<span class="resource_field">
+											#{msg.relevance}: 
+										</span>
+									</td>
+									<td>
+										<h:form id="rate_form">
+											<p:rating value="#{resourceDetailBean.starRatingRounded}" disabled="${resourceDetailBean.starRatedByUser or not resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}" cancel="false" style="vertical-align: bottom; margin-right:10px; display:inline-block;">
+												<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}" update="rate_form :growl" />			
+											</p:rating>
+											 
+											<h:outputText value="#{resourceDetailBean.clickedResource.starRating}">
+												<f:convertNumber maxFractionDigits="1" minFractionDigits="1" />
+											</h:outputText>	
+											(<h:outputFormat value="#{msg.votes}"><f:param value="#{resourceDetailBean.clickedResource.rateNumber}" /></h:outputFormat>)
+										</h:form>
+									</td>
+								</tr>
+							</ui:fragment>
+												
+							<ui:fragment rendered="#{resourceDetailBean.thumbRatingEnabled}">
+								<tr>
+									<td>
+										<span class="resource_field">
+											#{msg.reliability}: 
+										</span>
+									</td>
+									<td>
+										<h:form id="thumbrating">
+											<h:panelGrid columns="4" >
+												<h:outputText value="+#{resourceDetailBean.clickedResource.thumbUp}" />
+												<p:commandLink actionListener="#{resourceDetailBean.onThumbUp}" update="thumbrating :growl">
+													<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
+													<h:graphicImage value="/resources/icon/thumb_up.png" width="16" height="16" alt="Rate thump up"/>
+												</p:commandLink>
+				
+												<p:commandLink actionListener="#{resourceDetailBean.onThumbDown}" update="thumbrating :growl">
+													<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
+													<h:graphicImage value="/resources/icon/thumb_dw.png" width="16" height="16" alt="Rate thump down" />
+												</p:commandLink>
+												<h:outputText value="-#{resourceDetailBean.clickedResource.thumbDown}" />
+											</h:panelGrid>
+										</h:form>
+									</td>
+								</tr>
+							</ui:fragment>				
+	
+							<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.author}">
+								<tr>
+									<td>
+										<span class="resource_field">
+											#{msg.author}: 
+										</span>
+									</td>
+									<td>
+										<h:outputText value="#{resourceDetailBean.clickedResource.author}"/>
+									</td>
+								</tr>
+							</ui:fragment>
+							<tr>
+								<td>
+									<span class="resource_field">
+										#{msg.source}: 
+									</span>
+								</td>
+								<td style="overflow:hidden;">
+									<a href="#{resourceDetailBean.clickedResource.urlProxied}"><h:outputText value="#{resourceDetailBean.clickedResource.source}" /></a>
+									<span style="display:inline-block; width:300px;"> </span>
+								</td>
+							</tr>
+							
+							<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.metadataEntries}">
+								<ui:fragment rendered="#{not empty entry.value}">
+									<tr>
+										<td>
+											<span class="resource_field">
+												<h:outputText value="${utilBean.getLocaleMessage(entry.key, null)}" />: 
+											</span>
+										</td>
+										<td>
+											<h:outputText value="#{entry.value}" />									
+										</td>
+									</tr>
+								</ui:fragment>
 							</ui:repeat>
-						</h:panelGroup>								
-					</h:form>
+							
+							<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.group}">
+								<tr>
+									<td>
+										<span class="resource_field">
+											#{msg.group}: 
+										</span>
+									</td>
+									<td>
+										<h:outputLink value="group/overview.jsf" style="display:inline-block; margin-right:1rem;">
+											<f:param name="group_id" value="#{resourceDetailBean.clickedResource.group.id}" />
+											<h:outputText value="#{resourceDetailBean.clickedResource.group.title}" />
+										</h:outputLink>
+									</td>
+								</tr>
+							</ui:fragment>
+							<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.originalGroup}">
+								<tr>
+									<td>
+										<span class="resource_field">
+											#{msg.copied_from}: 
+										</span>
+									</td>
+									<td>
+										<h:outputLink value="group/overview.jsf" style="display:inline-block; margin-right:1rem;">
+											<f:param name="group_id" value="#{resourceDetailBean.clickedResource.originalGroup.id}" />
+											<h:outputText value="#{resourceDetailBean.clickedResource.originalGroup.title}" />
+										</h:outputLink>
+									</td>
+								</tr>
+							</ui:fragment>
+							<ui:fragment rendered="${resourceDetailBean.clickedResource.source == 'TED' or resourceDetailBean.clickedResource.source == 'TEDx'}">
+								<tr>
+									<td>
+										<span class="resource_field">
+											#{msg.transcript}: 
+										</span>
+									</td>
+									<td>
+										<h:outputLink value="ted_transcript.jsf" style="text-decoration:underline;">
+											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
+											#{msg.link_to_transcript}
+										</h:outputLink>
+									</td>
+								</tr>
+							</ui:fragment>							
+							<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.creationDate}">
+								<tr>
+									<td>
+										<span class="resource_field">
+											#{msg.date}:
+										</span>
+									</td>
+									<td>
+										<h:outputText value="#{resourceDetailBean.clickedResource.creationDate}">
+											<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+										</h:outputText>
+									</td>
+								</tr>
+							</ui:fragment>
+							<ui:fragment rendered="#{resourceDetailBean.clickedResource.folderId != 0}">
+								<tr>
+									<td>
+										<span class="resource_field">
+											#{msg.path}:
+										</span>
+									</td>
+									<td>
+										<h:outputText value="#{resourceDetailBean.clickedResource.prettyPath}" />
+									</td>
+								</tr>
+							</ui:fragment>
+						</table>
+	
+						<h:panelGroup rendered="#{not empty resourceDetailBean.clickedResource.description}">
+							<div class="resource_field" style="padding-top: 10px">
+								#{msg.description}
+							</div>
+							<h:outputText id="resource_description" value="#{resourceDetailBean.clickedResource.descriptionHTML}" escape="false" />
+						</h:panelGroup>
 								
-					<script type="text/javascript">
-				   		prepareCommentButton();
-				   </script>	
+						<h:form id="archive_current_form" rendered="${resourceDetailBean.clickedResource.storageType == 2 and resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
+							<span class="resource_field">
+								#{msg.current_version}: 
+							</span>
+							<p:commandButton action="#{resourceDetailBean.archiveCurrentVersion}" styleClass="greenbutton" 
+								value="#{msg['Archive.now']}" update=":growl :archive_view :archive_view_options" style="margin-top:10px"/>
+						</h:form>
+								
+						<h:panelGroup id="archive_view_options" layout="block">
+							<h:panelGroup layout="block" style="padding-top: 15px;" 
+								rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
+								<span class="resource_field" style="position:relative;">
+									#{msg['Archive.versions']} (
+									<span id="no_of_archive_versions" style="color:red">
+										#{resourceDetailBean.clickedResource.archiveUrls.size()}
+									</span>
+									): 
+								</span>
+								
+								<p:commandButton id="list_button" styleClass="greenbutton" value="#{msg.list_view}" 
+									onclick="return open_list_view();" />
+								<p:commandButton id="timeline_button" styleClass="greenbutton" value="#{msg.timeline_view}" 
+									onclick="return open_timeline_view();" />
+									<!-- Insert thumbnail link visualization -->
+							</h:panelGroup>
+						</h:panelGroup>
+						<h:panelGroup id="archive_view" layout="block">
+							<h:panelGroup id="archive_list_view" layout="block" 
+								rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
+								<ul>
+									<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.archiveUrls}">
+										<li>
+											<a href="#{entry.archiveUrl}" target="_blank">
+												<h:outputText value="${userBean.formatDate(entry.timestamp)}"/>
+											</a>
+										</li>
+									</ui:repeat>
+								</ul>
+							</h:panelGroup>
+							<h:panelGroup id="timeline_view" layout="block" 
+								rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
+								<ui:decorate template="/lw/templates/archive_timeline_template.xhtml">
+								</ui:decorate>
+							</h:panelGroup>
+							<br class="clear" />
+						</h:panelGroup>					
+	
+						<h:form id="tag_form" rendered="${not empty resourceDetailBean.clickedResource.tags or resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
+							<div class="resource_field" style="padding-top: 10px; padding-bottom: 10px">
+								#{msg.tags}
+							</div>
+	
+					        <ul style="margin: 0px; padding: 0px">
+						         <ui:repeat var="tag" value="#{resourceDetailBean.clickedResource.tags}">
+						         	<li class="tag_list">
+						         		<h:outputLink styleClass="tag_name ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
+						         			value="search.jsf">
+						         			<span class="ui-button-text">
+						         				#{tag.name}
+						         			</span>
+								         		<f:param name="action" value="image"/>
+								         		<f:param name="query" value="#{tag.name}"/>
+						         		</h:outputLink>
+						         		<p:commandButton styleClass="tag_x float-right" action="#{resourceDetailBean.onDeleteTag}" 
+						         			value="x" update=":add_resource_panel :growl" process="@form" rendered="#{resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
+						         			<f:setPropertyActionListener target="#{resourceDetailBean.selectedTag}" value="#{tag}"/>
+						         		</p:commandButton>
+						         	</li>
+						         </ui:repeat>
+						    </ul>
+						</h:form> 
+														
+						<h:form id="tag_input_form" rendered="#{resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">  
+						   
+						    <p:inputText styleClass="tag_field" value="#{resourceDetailBean.tagName}" id="tag_name"/>
+					    	<p:commandButton actionListener="#{resourceDetailBean.addTag}" styleClass="greenbutton clearfix" 
+					    		value="#{msg.addTag}" update=" :datagrid :tag_form :growl :tag_input_form:tag_name" process="@form" 
+					    		style="margin-right:0;margin-top:4px;float:right" ajaxsingle="true" oncomplete="return false;">				    		
+					    	  	
+					    	  	<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>	
+					        </p:commandButton>
+					        
+					    </h:form>	
+					    				   				   
+					    <h:form id="comment_input_form" styleClass="clear" prependId="false">
+					   
+							<h:panelGroup layout="block" class="resource_field" style="padding-top: 10px" rendered="${not empty resourceDetailBean.clickedResource.comments or resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">
+								#{msg.comments}
+							</h:panelGroup>						
+							
+							<ui:fragment rendered="#{resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">
+								<br/>
+								<div style="position:relative; padding-left:60px;">
+									<img id="userpic" src="${learnwebBean.getProfileImage(userBean.user)}" width="50" height="50" 
+										style="position:absolute;left:0" alt="Profile picture"/> 
+									
+									<p:inputTextarea id="commentfield" style="width:100%;min-height:50px;box-sizing:border-box;" rows="2" 
+										value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}" required="true"/>
+									<br/>
+								</div>
+								<p:commandButton id="comment_button" styleClass="greenbutton float-right" value="#{msg.addComment}" 
+									actionListener="#{resourceDetailBean.addComment()}" update=":datagrid :comment_input_form :comment_form :growl">
+									<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>	
+								</p:commandButton>
+							</ui:fragment>
+						</h:form>
+						<br class="clear" />
+						<h:form id="comment_form" styleClass="clear" prependId="false" style="margin-bottom:40px;">
+							<h:panelGroup layout="block" rendered="#{not empty resourceDetailBean.clickedResource.comments}" styleClass="comments">
+					
+								<ui:repeat var="comment" value="#{resourceDetailBean.clickedResource.comments}">
+									<div class="comment">
+										<img class="userpic" src="#{comment.getUser().image}" width="30" height="30" alt="Profile picture"/>
+										<div class="username_div">
+											<span class="username">
+												<a href="user/detail.jsf?user_id=#{comment.user.id}" class="username_link">
+													#{comment.user.username}
+												</a>
+											</span>
+											<span title="#{comment.date}" class="comment_date">
+												#{userBean.getPrettyDate(comment.date)}
+											</span>												
+											<div style="margin-top:5px;">
+												#{comment.text}
+											</div>
+	
+										</div>
+										<div class="clear"></div>
+										<div style="padding-left: 40px;">
+											<p:commandLink rendered="#{resourceDetailBean.canEditComment(comment)}" 
+												style="margin-right: 5px; font-size: 10px !important; color: green" value="#{msg.edit}" 
+												onstart="PF('comment_dialog').show();" ajax="true" update=":comment_dialog_form">
+												<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
+											</p:commandLink>
+											<p:commandLink rendered="#{resourceDetailBean.canEditComment(comment)}" 
+												action="#{resourceDetailBean.onDeleteComment}"
+												style="margin-right: 5px; font-size: 10px !important; color: red" value="#{msg.delete}" 
+												onstart="return confirm('#{msg.delete_message_comments}');" ajax="true" 
+												update=":add_resource_panel :growl">
+												<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
+											</p:commandLink>
+										</div>
+									</div>
+								</ui:repeat>
+							</h:panelGroup>								
+						</h:form>
+									
+						<script type="text/javascript">
+					   		prepareCommentButton();
+					   </script>
+				   </ui:fragment>	
 				</h:panelGroup>
 
 				<h:form rendered="#{bean.rightPanelAction == 'editResource' and resourceDetailBean.clickedResource.id != -1}" id="edit_form">
@@ -724,63 +723,10 @@
 					</div>
 	    
 					<table id="edit_table" class="full-width">
-						<colgroup>
-							<col span="1" style="width: 30%; min-width: 20rem;" />
-							<col span="1" />
-						</colgroup>
-						
-						<tr>
-							<td>#{msg.title}:</td>
-							<td><p:inputText  class="border-box-100" value="#{bean.clickedResource.title}" /></td>
-						</tr>
-						<tr>
-							<td>#{msg.author}:</td>
-							<td>
-								<p:inputText  class="border-box-100" value="#{bean.clickedResource.author}" id="author" title="please, carefully acknowledge authors of resources. In case the author is not clear, use all the details you have: URL, book reference, etc"/>
-								<p:tooltip for="author" showEvent="focus" hideEvent="blur" position="left" />
-								
-							</td>
-						</tr>
-
-						<c:forEach var="field" items="#{userBean.user.organisation.metadataFields}">
-							<tr>
-								<td><span class="resource_field">
-										<h:outputText value="${utilBean.getLocaleMessage(field.label, null)}" />
-										:
-									</span></td>
-								<td>
-									<ui:fragment rendered="#{field.moderatorOnly and not userBean.moderator}">
-										<h:outputText value="#{bean.clickedResource.metadata[field.name]}" />
-									</ui:fragment> 
-									
-									<ui:fragment rendered="#{not field.moderatorOnly or userBean.moderator}">
-
-										<ui:fragment rendered="#{field.type eq 'INPUT_TEXT'}">
-										
-											<p:inputText id="input_#{field.name}" required="#{field.required}" class="border-box-100" value="#{bean.clickedResource.metadata[field.name]}" title="#{field.info}"  />
-											<p:tooltip for="input_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}" /> 
-										</ui:fragment>
-
-										<ui:fragment rendered="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
-											<p:selectOneMenu id="input_selectone_#{field.name}" value="#{bean.clickedResource.metadata[field.name]}" editable="#{field.type eq 'ONE_MENU_EDITABLE'}" required="#{field.required}"
-												class="border-box-100" title="#{field.info}">
-												<f:selectItems value="#{field.options}" var="option" itemLabel="#{option}" itemValue="#{option}" />
-											</p:selectOneMenu>
-											<p:tooltip for=":input_selectone_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}" /> 
-										</ui:fragment>							
-
-									</ui:fragment>
-								</td>
-							</tr>
-						</c:forEach>
-
-						<tr>
-							<td>#{msg.description}:</td>
-						</tr>
-						<tr>
-							<td colspan="2"><p:inputTextarea rows="4" style="overflow-y: scroll; width:100%; box-sizing: border-box;" class="border-box-100" id="resource_description"
-									value="#{bean.clickedResource.description}" /></td>
-						</tr>
+					
+						<ui:decorate template="/templates/resources/edit.xhtml">
+							<ui:param name="res" value="#{bean.clickedResource}" />
+						</ui:decorate>
 
 						<tr>
 							<td colspan="2">
