@@ -5,7 +5,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">	
 	
-	<ui:composition template="/lw/templates/new_main_t.xhtml"> 
+	<ui:composition template="/templates/main/main_old.xhtml"> 
 
 		<ui:param name="loginRequired" value="true"/>
 		<ui:param name="pageTitle" value="#{msg.welcome}"/>	
@@ -17,12 +17,12 @@
 			<p:panel rendered="#{welcomeBean.welcomeMessage.length() > 5}">
 				<f:facet name="header">
 					#{msg.welcome}
-					<h:panelGroup rendered="#{userBean.admin || userBean.moderator}">
+					<ui:fragment rendered="#{userBean.admin || userBean.moderator}">
 						<a href="admin/organisation.jsf"><h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" /></a>
-					</h:panelGroup>
+					</ui:fragment>
 				</f:facet>
 				
-				<h:panelGroup rendered="#{userBean.user.activeCourse.id == 505}">
+				<ui:fragment rendered="#{userBean.user.activeCourse.id == 505}">
 					<div>
 						<p>
 							<span style="margin:2px 2px 5px 2px; display:inline-block;">
@@ -35,7 +35,7 @@
 						</div>
 						<br />
 					</div>
-				</h:panelGroup>
+				</ui:fragment>
 				
 				<h:outputText value="#{welcomeBean.welcomeMessage}" escape="false" id="welcometext" />	
 			</p:panel>

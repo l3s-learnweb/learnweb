@@ -35,7 +35,10 @@ iframe { border:none }
 .ui-widget-content .ui-state-highlight,
 .ui-widget-header .ui-state-highlight { background-color: #489a83; }
 .ui-datepicker-current-day a { background:#489a83 !important; }
-
+.ui-datatable th.ui-state-default,
+.ui-datatable tbody > tr.ui-widget-content {
+    border: 1px solid #a8a8a8;
+}
 .ui-dialog .ui-dialog-titlebar { padding-left:0; }
 .ui-selectcheckboxmenu .ui-selectcheckboxmenu-token.ui-state-active, 
 .ui-autocomplete .ui-autocomplete-token.ui-state-active, .ui-chips .ui-chips-token.ui-state-active {
@@ -49,6 +52,7 @@ iframe { border:none }
 .ui-radiobutton-box.ui-state-active, 
 .ui-radiobutton-box.ui-state-focus.ui-state-active
 .ui-progressbar .ui-progressbar-value,
+.ui-paginator .ui-paginator-page.ui-state-active,
 .state-active {
     border: 1px solid #3b8b74;
     background: #489a83;
@@ -577,21 +581,28 @@ iframe { border:none }
     display:block;
     clear: both;
 }
+.ui-panel-title,
 .center-header > h2, 
 .page_header span{
 	font-size: 2rem;
 	font-weight: 100;
 	color: #489a83;
 	display:inline;
+	margin: 0;
 }
+
+.ui-panel-titlebar,
 .page_header{
 	border:1px solid #ccc;
 	background-color:#eee;
 	margin-bottom:5px;
 	padding:10px !important;
-	/*
-	font-weight:bold; should nowhere be necessary TODO check
-	*/
+}
+.ui-panel { margin-bottom: 1rem; } 
+.ui-panel-content,
+.page_content {
+	border:1px solid #ccc; 
+	padding:0.5em 1rem;
 }
 .header_detail {
 	font-size:1.2rem;
@@ -831,6 +842,7 @@ a.graybutton {
 	font-size:14px !important;
 	border-radius:2px !important;
 	transition: all 0.3s;
+	text-decoration: none !important;
 }
 
 .greenbutton .ui-button-text,

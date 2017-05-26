@@ -99,6 +99,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadataFields.add(metadata);
 
             metadata = new ResourceMetadataField("yell_media_type", "Media Type", MetadataType.MULTIPLE_MENU);
+            metadata.setInfo("Select all that apply");
             metadata.getOptions().add("Text");
             metadata.getOptions().add("Video");
             metadata.getOptions().add("Image");
@@ -118,6 +119,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadataFields.add(new ResourceMetadataField("noname", "Please tell us for what purpose you are using this resource.", MetadataType.FULLWIDTH_DESCRIPTION));
 
             metadata = new ResourceMetadataField("yell_purpose", "Purpose of use", MetadataType.MULTIPLE_MENU);
+            metadata.setInfo("Select all that apply");
             metadata.getOptions().add("speaking skills");
             metadata.getOptions().add("listening skills");
             metadata.getOptions().add("reading skills");
@@ -133,7 +135,8 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadata.getOptions().add("other");
             metadataFields.add(metadata);
 
-            metadata = new ResourceMetadataField("language_level", "Language level", MetadataType.INPUT_TEXT);
+            metadata = new ResourceMetadataField("language_level", "Language level", MetadataType.MULTIPLE_MENU);
+            metadata.setInfo("Select all that apply");
             metadata.getOptions().add("C2");
             metadata.getOptions().add("C1");
             metadata.getOptions().add("B2");

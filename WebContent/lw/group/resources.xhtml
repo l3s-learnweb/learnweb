@@ -1,4 +1,4 @@
-<ui:composition template="/lw/templates/new_main_t.xhtml"
+<ui:composition template="/templates/main/main_old.xhtml"
 				xmlns:ui="http://java.sun.com/jsf/facelets"
 				xmlns:h="http://java.sun.com/jsf/html"
 				xmlns:f="http://java.sun.com/jsf/core"
@@ -317,7 +317,7 @@
 			</h:panelGroup>
 	
 			<h:panelGroup id="paginator" layout="block">
-				<ui:decorate template="/lw/templates/paging.xhtml">
+				<ui:decorate template="/templates/main/paging.xhtml">
 					<ui:param name="paginator" value="${groupDetailBean.paginator}" />
 				</ui:decorate>
 			</h:panelGroup>
@@ -404,7 +404,7 @@
 
 	</ui:define>
 	<ui:define name="right_layout">
-		<ui:decorate  template="/lw/templates/right_pane.xhtml">
+		<ui:decorate  template="/templates/resources/right_pane.xhtml">
 			<ui:param name="bean" value="#{groupDetailBean}" />
 		</ui:decorate>
 	</ui:define>

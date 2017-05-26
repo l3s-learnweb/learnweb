@@ -35,6 +35,7 @@
 .ui-shadow{
 	box-shadow:none;
 }
+/*
 .ui-state-active, .ui-state-highlight{
 	background-image:none !important;
 	background-color:#d1d1d1 !important;
@@ -49,6 +50,7 @@
 	background-image:none !important;
 	color:#4f4f4f !important;
 }
+*/
 .ui-corner-right{
 	border-radius:0;
 	border-right: 1px solid #a8a8a8;

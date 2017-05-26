@@ -5,7 +5,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">	
 	
-<ui:composition template="/lw/templates/new_main_t.xhtml"> 
+<ui:composition template="/templates/main/main_old.xhtml"> 
 	
 	<ui:param name="loginRequired" value="true"/>
 	<ui:param name="pageTitle" value="#{msg.activity_stream}"/>	
@@ -118,7 +118,7 @@
 	</ui:define>
 	
 	<ui:define name="right_layout">
-		<ui:decorate  template="/lw/templates/right_pane.xhtml">
+		<ui:decorate  template="/templates/resources/right_pane.xhtml">
 			<ui:param name="bean" value="#{activityResourceBean}" />
 		</ui:decorate >
 	</ui:define>

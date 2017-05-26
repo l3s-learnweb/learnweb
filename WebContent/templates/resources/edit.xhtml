@@ -57,8 +57,8 @@
 						</c:if>	
 	
 						<c:if test="#{field.type eq 'MULTIPLE_MENU'}">
-							<p:selectCheckboxMenu id="input_selectmultiple_#{field.name}" value="#{res.metadata[field.name]}" label="test" multiple="true"
-		                              required="#{field.required}" filter="true" filterMatchMode="startsWith" panelStyle="width:250px" >
+							<p:selectCheckboxMenu id="input_selectmultiple_#{field.name}" value="#{res.metadataMultiValue[field.name]}" label="" multiple="true"
+		                              required="#{field.required}" filter="#{field.options.size() gt 8}" filterMatchMode="startsWith" panelStyle="width:250px" >
 					            <f:selectItems value="#{field.options}" var="option" itemLabel="#{option}" itemValue="#{option}" />
 					        </p:selectCheckboxMenu>			
 							<p:tooltip for="input_selectmultiple_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}" /> 

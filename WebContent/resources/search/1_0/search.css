@@ -695,10 +695,9 @@ img.smallImage { cursor:pointer; margin:4px; }
 }
 
 .group-menu-bar .group-menu-web h6 span.url {
-	color: #9AEBD4;
+	color: #70D1B5;
 	font-size: 1rem;
     min-width: 60px;
-    /* max-width: 200px; */
     padding: 2px 0 0 3px;
 }
 
