@@ -9,6 +9,7 @@ import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -19,6 +20,7 @@ import java.util.Map;
 import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.jsoup.Connection.Response;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -26,6 +28,9 @@ import org.jsoup.nodes.Element;
 import org.jsoup.nodes.Node;
 import org.jsoup.select.Elements;
 import org.jsoup.select.NodeVisitor;
+
+import com.github.tomtung.jsimhash.SimHashBuilder;
+import com.github.tomtung.jsimhash.Util;
 
 import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.Group;
@@ -35,8 +40,13 @@ import de.l3s.learnweb.ResourcePreviewMaker;
 
 public class ArchiveItShingle
 {
+    private static final Logger log = Logger.getLogger(ArchiveItShingle.class);
 
     private final int w = 25; // the N-gram dimension i.e w words in a shingle
+    private SimHashBuilder simHashBuilder = new SimHashBuilder();
+
+    //Threshold for hamming distance between simhashes of consecutive archived versions
+    private int hammingDistanceThreshold = 4;
 
     public Set<String> computeShingles(List<String> wordList)
     {
@@ -64,30 +74,8 @@ public class ArchiveItShingle
         return (float) intersect.size() / union.size();
     }
 
-    /*
-     * never used 
-     * 
-     * 
-    public void processWebsite(String url, String timestamp) throws IOException
-    {
-    URL thumbnailUrl = new URL("http://prometheus.kbs.uni-hannover.de/thumbnail/thumb_wb.php?url=" + StringHelper.urlEncode(url));
-    Image img = new Image(thumbnailUrl.openStream());
-    java.io.File actualFile = new java.io.File("F://DevTools//Work stuff//Crawler//Thumbnails//", timestamp + ".png");
-    OutputStream outputStream = new FileOutputStream(actualFile);
-    IOUtils.copy(img.getInputStream(), outputStream);
-    outputStream.close();
-    }
-    
-    public void processThumbnails(Set<String> set, String type) throws IOException
-    {
-    for(String str : set)
-        processWebsite(str, type + "-" + str.substring(34, 45));
-    }
-    */
-
     /**
      * traverse HTML DOM structure
-     * 
      */
     private NodeVisitor processNode(final StringBuilder htmlString)
     {
@@ -146,15 +134,15 @@ public class ArchiveItShingle
      */
     public void getDuplicateShingles(int resourceId, int size) throws SQLException
     {
-        List<Integer> duplicateShingleId = new ArrayList<Integer>();
+        LinkedList<Integer> duplicateShingleId = new LinkedList<Integer>();
         Connection conn = Learnweb.getInstance().getConnection();
-        PreparedStatement ps = conn.prepareStatement("SELECT `shingle_id` FROM `lw_resource_archive_shingles` natural join `lw_resource_archiveurl` where `resource_id`=? group by `htmltext`, `htmltags` ORDER BY `lw_resource_archive_shingles`.`shingle_id` ASC");
+        PreparedStatement ps = conn.prepareStatement("SELECT `shingle_id` FROM `lw_resource_archive_shingles` t1 join (SELECT * FROM `lw_resource_archiveurl` WHERE resource_id=?) t2 USING(shingle_id) group by `htmltext`, `htmltags` ORDER BY t1.shingle_id ASC");
         ps.setInt(1, resourceId);
         ResultSet rs = ps.executeQuery();
         while(rs.next())
             duplicateShingleId.add(rs.getInt("shingle_id"));
-        duplicateShingleId.add(duplicateShingleId.get(0) + size - 1);
-        size = duplicateShingleId.get(duplicateShingleId.size() - 1);
+        duplicateShingleId.add(duplicateShingleId.getFirst() + size - 1);
+        size = duplicateShingleId.getLast();
         int j = 0;
         for(int i = duplicateShingleId.get(0); i <= size; i++)
         {
@@ -203,12 +191,11 @@ public class ArchiveItShingle
                 setOfNearUniqueArchivesPair.add(values.get(i));
             }
         }
-        // log.debug(resourceId + " Amount of duplicates:" + t + " Total archive versions:" + d + " Percentage dublicates:" + (float) t * 100 / d);
+        log.debug(resourceId + " Amount of duplicates:" + t + " Total archive versions:" + d + " Percentage dublicates:" + (float) t * 100 / d);
     }
 
     /**
      * Detecting near duplicates based on sequence algorithm
-     * 
      */
     public Set<String> computeUniqueArchivesBySequence(HashMap<String, Set<String>> hashmaptext, HashMap<String, Set<String>> hashmapframe, List<ArchiveUrl> archiveUrls, int resourceId, float frameThreshold, float textThreshold) throws SQLException
     {
@@ -259,123 +246,316 @@ public class ArchiveItShingle
         return uniqueUrls;
     }
 
-    public static void main(String[] args) throws IOException, SQLException
+    /**
+     * Implementation of threshold grouping algorithm referenced in
+     * ECIR14 by AlSum - Thumbnail Summarization Techniques for Web Archives
+     */
+    public LinkedList<ArchiveUrl> computeThresholdGroupingAlgo(LinkedList<ArchiveUrl> archiveUrls)
     {
-        String url = null;
-        final StringBuilder htmlString = new StringBuilder();
+        LinkedList<ArchiveUrl> selectedVersions = new LinkedList<ArchiveUrl>();
 
-        ArchiveItShingle archiveItShingle = new ArchiveItShingle();
+        for(int i = 1; i < archiveUrls.size(); i = i + 2)
+        {
+            long simhash1 = archiveUrls.get(i - 1).getSimhash();
+            long simhash2 = archiveUrls.get(i).getSimhash();
+            int hammingDistance = Util.hammingDistance(simhash1, simhash2);
+            if(hammingDistance < hammingDistanceThreshold)
+                selectedVersions.add(archiveUrls.get(i - 1));
+            else
+            {
+                selectedVersions.add(archiveUrls.get(i - 1));
+                selectedVersions.add(archiveUrls.get(i));
+            }
+        }
 
-        Group group = Learnweb.getInstance().getGroupManager().getGroupById(1132);
-        List<Resource> listOfResources = new LinkedList<Resource>(group.getResources());
+        if(archiveUrls.size() % 2 != 0)
+            selectedVersions.add(archiveUrls.getLast());
 
-        Connection conn = Learnweb.getInstance().getConnection();
-        for(int j = 37; j < 38 && j != 44; j++)
+        if(selectedVersions.size() < archiveUrls.size())
+            return computeThresholdGroupingAlgo(selectedVersions);
+        else
+            return selectedVersions;
+    }
+
+    public Set<String> computeUniqueArchivesByThresholdGrouping(LinkedList<ArchiveUrl> archiveUrls)
+    {
+        List<ArchiveUrl> selectedVersions = computeThresholdGroupingAlgo(archiveUrls);
+        Set<String> selectedArchiveUrls = new LinkedHashSet<String>();
+        for(ArchiveUrl version : selectedVersions)
+            selectedArchiveUrls.add(version.getArchiveUrl());
+
+        return selectedArchiveUrls;
+    }
+
+    public void computeThumbnailSummaryStatistics(int groupId) throws SQLException
+    {
+        Group group = Learnweb.getInstance().getGroupManager().getGroupById(groupId);
+        int groupSize = group.getResources().size();
+
+        float avgSum = 0;
+        int count = 0, nonDupCount = 0, countSum = 0, dupCountSum = 0;//, evCount = 0;
+        float textSim = 0.8f, frameSim = 0.8f;
+        for(Resource r : group.getResources())
         {
 
-            int resource_id = listOfResources.get(j).getId();
-            List<ArchiveUrl> listOfArchives = new LinkedList<ArchiveUrl>();
-
-            listOfArchives = listOfResources.get(j).getArchiveUrls();
-            List<String> wordList = new ArrayList<String>();
-
-            //archiveItShingle.getDublicateShingles(resource_id, listOfArchives.size());
-            //archiveItShingle.generateThumbnails(resource_id);
-
-            Set<String> setOfShingles = new HashSet<String>();
-            Set<String> setOfNearUniqueArchives = new HashSet<String>();
-
-            HashMap<String, Set<String>> hashmapframe = new LinkedHashMap<String, Set<String>>();
-            HashMap<String, Set<String>> hashmaptext = new LinkedHashMap<String, Set<String>>();
-            HashMap<String, String> hashmapstring = new LinkedHashMap<String, String>();
-            hashmapframe.clear();
-            hashmaptext.clear();
-            try
+            PreparedStatement ps = Learnweb.getInstance().getConnection().prepareStatement("SELECT COUNT(*) FROM `lw_resource_archiveurl` JOIN `lw_resource_archive_shingles` USING(shingle_id) WHERE `resource_id`=?");
+            ps.setInt(1, r.getId());
+            ResultSet rs = ps.executeQuery();
+            if(rs.next())
             {
-                for(ArchiveUrl archiveUrl : listOfArchives)
+                count = rs.getInt(1);
+            }
+            ps = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `lw_resource_archiveurl` JOIN `lw_resource_archive_shingles` USING(shingle_id) WHERE `resource_id`=?  group by `shingle_id`");
+            ps.setInt(1, r.getId());
+            rs = ps.executeQuery();
+            if(rs.last())
+            {
+                nonDupCount = rs.getRow();
+                rs.beforeFirst();
+            }
+
+            List<ArchiveUrl> archiveUrls = new LinkedList<ArchiveUrl>();
+            String htmlTags = null, htmlText = null;
+            HashMap<String, Set<String>> hashmapFrame = new LinkedHashMap<String, Set<String>>();
+            HashMap<String, Set<String>> hashmapText = new LinkedHashMap<String, Set<String>>();
+            while(rs.next())
+            {
+                Date timestamp = new Date(rs.getTimestamp("timestamp").getTime());
+                String url = rs.getString("archive_url");
+                archiveUrls.add(new ArchiveUrl(url, timestamp));
+
+                htmlTags = rs.getString("htmltags");
+                String[] words = htmlTags.replaceAll("[!?,.]", "").split(" ");
+                hashmapFrame.put(url, computeShingles(Arrays.asList(words)));
+
+                htmlText = rs.getString("htmltext");
+                words = htmlText.replaceAll("[!?,.]", "").split(" ");
+                hashmapText.put(url, computeShingles(Arrays.asList(words)));
+            }
+
+            if(count > 0)
+            {
+                countSum += count;
+
+                Set<String> uniqueUrls = computeUniqueArchivesBySequence(hashmapText, hashmapFrame, archiveUrls, r.getId(), textSim, frameSim);
+                float avg = (float) uniqueUrls.size() / count;
+                avgSum += avg;
+                dupCountSum += uniqueUrls.size();
+            }
+            else
+                groupSize--;
+
+        }
+        log.info("Average of entire group:" + (avgSum / groupSize));
+
+        log.info("Average number of versions: " + ((float) countSum / groupSize));
+        log.info("Average number of unique versions: " + ((float) dupCountSum / groupSize));
+
+    }
+
+    private long computeStringFingerprint(String s)
+    {
+        simHashBuilder.reset();
+        int shinglingLength = 4; //As specified in AlSummarization Technique ECIR14
+        s = s.replaceAll("[^\\w,]+", " ").toLowerCase();
+        for(int i = 0; i <= s.length() - shinglingLength; i += 1)
+        {
+            simHashBuilder.addStringFeature(s.substring(i, i + shinglingLength));
+        }
+        return simHashBuilder.computeResult();
+    }
+
+    private void removeComments(Node node)
+    {
+        for(int i = 0; i < node.childNodes().size();)
+        {
+            Node child = node.childNode(i);
+            if(child.nodeName().equals("#comment"))
+                child.remove();
+            else
+            {
+                removeComments(child);
+                i++;
+            }
+        }
+    }
+
+    public void computeSimhashForGroup(int groupId) throws SQLException
+    {
+        Group group = Learnweb.getInstance().getGroupManager().getGroupById(groupId);
+        for(Resource r : group.getResources())
+        {
+            long start = System.currentTimeMillis();
+            List<ArchiveUrl> versions = r.getArchiveUrls();
+            PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE `lw_resource_archiveurl` SET `simhash`=? WHERE `resource_id`=? AND `archive_url`=?");
+            for(ArchiveUrl v : versions)
+            {
+                Document document = null;
+                try
                 {
-                    wordList.clear();
-                    setOfShingles.clear();
-                    url = archiveUrl.getArchiveUrl();
-                    Document document = null;
-                    org.jsoup.Connection urlConnection = Jsoup.connect(url).ignoreHttpErrors(true).timeout(900000);
+                    org.jsoup.Connection urlConnection = Jsoup.connect(v.getArchiveUrl()).followRedirects(true).ignoreHttpErrors(true).timeout(10000);
                     Response response = urlConnection.execute();
                     if(response.statusCode() == 200)
-                        document = urlConnection.get();
-                    else
                     {
-                        PreparedStatement ps = conn.prepareStatement("UPDATE `lw_resource_archiveurl` SET `httpstatuscode`=? WHERE `resource_id`=? AND `archive_url`=?");
-                        ps.setInt(1, response.statusCode());
-                        ps.setInt(2, resource_id);
-                        ps.setString(3, url);
-                        ps.execute();
-                        ps.close();
-                        continue;
+                        document = urlConnection.get();
+                        document.select("wb_div#wm-disclaim, script, style, head").remove(); //remove Archive disclaimer from html text
+                        removeComments(document);
+                        long simhash = computeStringFingerprint(document.toString());
+
+                        pStmt.setLong(1, simhash);
+                        pStmt.setInt(2, r.getId());
+                        pStmt.setString(3, v.getArchiveUrl());
+                        pStmt.addBatch();
+                    }
+                }
+                catch(IOException e)
+                {
+                    log.error(r.getId() + " ;" + v.toString(), e);
+                }
+            }
+            pStmt.executeBatch();
+            pStmt.close();
+            log.info("Calculated simhashs for resource Id:" + r.getId() + " ; time taken:" + (System.currentTimeMillis() - start));
+
+        }
+    }
+
+    public void extractingHTML(int resourceId, List<ArchiveUrl> archiveUrls) throws SQLException
+    {
+        for(ArchiveUrl version : archiveUrls)
+        {
+            String archiveUrl = version.getArchiveUrl();
+            Document document = null;
+            StringBuilder htmlString = new StringBuilder();
+            try
+            {
+                org.jsoup.Connection urlConnection = Jsoup.connect(archiveUrl).ignoreHttpErrors(true).timeout(900000);
+                Response response = urlConnection.execute();
+                if(response.statusCode() == 200)
+                    document = urlConnection.get();
+                else
+                {
+                    PreparedStatement ps = Learnweb.getInstance().getConnection().prepareStatement("UPDATE `lw_resource_archiveurl` SET `httpstatuscode`=? WHERE `resource_id`=? AND `archive_url`=?");
+                    ps.setInt(1, response.statusCode());
+                    ps.setInt(2, resourceId);
+                    ps.setString(3, archiveUrl);
+                    ps.executeUpdate();
+                    ps.close();
+                    continue;
+                }
+
+                document.select("wb_div#wm-disclaim, script, style, head").remove(); //remove Archive disclaimer from html text
+                document.traverse(processNode(htmlString));
+
+                Elements element = null;
+                Document[] framesDoc = null;
+                if(document.select("body, BODY") == null || document.select("body, BODY").first() == null || document.select("body").first() == null)
+                {
+                    Elements frames = document.select("frame");
+                    String[] framesSrc = new String[frames.size()];
+                    int i = 0;
+                    for(Element e : frames)
+                    {
+                        if(e.attr("src").startsWith("http"))
+                            framesSrc[i++] = e.attr("src");
+                        else
+                            framesSrc[i++] = archiveUrl + e.attr("src");
                     }
 
-                    document.select("wb_div#wm-disclaim, script, style, head").remove(); //remove Archive disclaimer from html text
-                    document.traverse(archiveItShingle.processNode(htmlString));
-                    String[] words = htmlString.toString().replaceAll("[!?,.]", "").split(" ");
-                    wordList.addAll(Arrays.asList(words));
-                    setOfShingles = archiveItShingle.computeShingles(wordList);
-                    hashmapframe.put(url, new HashSet<>(setOfShingles));
-                    wordList.clear();
-                    setOfShingles.clear();
-                    Elements element;
-                    if(document.select("body, BODY") == null || document.select("body, BODY").first() == null || document.select("body").first() == null)
-                        continue;
-                    else
-                        element = document.select("body, BODY").first().children();
-                    PreparedStatement ps = conn.prepareStatement("INSERT INTO `lw_resource_archive_shingles` VALUES (?,?);", Statement.RETURN_GENERATED_KEYS);
-                    ps.setString(1, htmlString.toString());
-                    ps.setString(2, element.text());
-                    //ps.execute();
-                    ps.close();
-                    ps = conn.prepareStatement("UPDATE `lw_resource_archiveurl` SET `htmltext`=?,`htmltags`=?, `httpstatuscode`=? WHERE `resource_id`=? AND `archive_url`=?;", Statement.RETURN_GENERATED_KEYS);
-                    ps.setString(1, element.text());
-                    ps.setString(2, htmlString.toString());
-                    ps.setInt(3, response.statusCode());
-                    ps.setInt(4, resource_id);
-                    ps.setString(5, url);
-                    //ps.execute();
-                    ps.close();
-                    String[] words1 = element.text().replaceAll("[!?,.]", "").split(" ");
-                    hashmapstring.put(url, element.text());
-                    wordList.addAll(Arrays.asList(words1));
-                    setOfShingles = archiveItShingle.computeShingles(wordList);
-                    hashmaptext.put(url, new HashSet<>(setOfShingles));
-                    htmlString.setLength(0);
-                }
-                int i = 0;
-                float text = 0, frame = 0, d = 0;
-                float par = (float) 0.3;
-                for(i = 0; i < listOfArchives.size() - 1; i++)
-                {
-                    text = archiveItShingle.computeJaccardIndex(hashmaptext.get(listOfArchives.get(i).getArchiveUrl()), hashmaptext.get(listOfArchives.get(i + 1).getArchiveUrl()));
-                    frame = archiveItShingle.computeJaccardIndex(hashmapframe.get(listOfArchives.get(i).getArchiveUrl()), hashmapframe.get(listOfArchives.get(i + 1).getArchiveUrl()));
-                    d = par * text + (1 - par) * frame;
-                    Timestamp sqlDate1 = new Timestamp(listOfArchives.get(i).getTimestamp().getTime());
-                    Timestamp sqlDate2 = new Timestamp(listOfArchives.get(i + 1).getTimestamp().getTime());
-                    PreparedStatement ps = conn.prepareStatement("UPDATE `lw_resource_archive_jaccardindex` SET `jaccard_frame`=? , `jaccard_text`=? WHERE `resource_id`=? AND `timestamp1`=? AND `timestamp2`=?;", Statement.RETURN_GENERATED_KEYS);
-                    ps.setInt(3, resource_id);
-                    ps.setTimestamp(4, sqlDate1);
-                    ps.setTimestamp(5, sqlDate2);
-                    ps.setFloat(1, frame);
-                    ps.setFloat(2, text);
-                    //ps.execute();
-                    if(d <= 0.6)
+                    framesDoc = new Document[frames.size()];
+                    i = 0;
+                    for(String src : framesSrc)
                     {
-                        setOfNearUniqueArchives.add(listOfArchives.get(i).getArchiveUrl());
-                        setOfNearUniqueArchives.add(listOfArchives.get(i + 1).getArchiveUrl());
+                        try
+                        {
+                            framesDoc[i++] = Jsoup.connect(src).get();
+                        }
+                        catch(IllegalArgumentException | IOException e)
+                        {
+                            log.error("Error while fetching frame source: ", e);
+                        }
+                    }
+
+                    if(frames.size() == 0)
+                        continue;
+                }
+                else
+                    element = document.select("body, BODY").first().children();
+
+                String textContent = "";
+                if(element == null)
+                {
+                    for(Document f : framesDoc)
+                    {
+                        if(f != null)
+                        {
+                            f.select("wb_div#wm-disclaim, script, style, head").remove();
+                            if(f.select("body, BODY") != null && f.select("body, BODY").first() != null)
+                            {
+                                f.select("body, BODY").first().children().traverse(processNode(htmlString));
+                                textContent += f.select("body, BODY").first().children().text() + " ";
+                            }
+                        }
                     }
                 }
+                else
+                    textContent = element.text();
+
+                PreparedStatement ps = Learnweb.getInstance().getConnection().prepareStatement("INSERT INTO `lw_resource_archive_shingles`(htmltags,htmltext) VALUES (?,?);", Statement.RETURN_GENERATED_KEYS);
+                ps.setString(1, htmlString.toString());
+                ps.setString(2, textContent);
+                ps.executeUpdate();
+
+                ResultSet generatedKeys = ps.getGeneratedKeys();
+                int shingle_id = 0;
+                if(generatedKeys.next())
+                    shingle_id = generatedKeys.getInt(1);
+
+                ps.close();
+                ps = Learnweb.getInstance().getConnection().prepareStatement("UPDATE `lw_resource_archiveurl` SET shingle_id=?, `httpstatuscode`=? WHERE `resource_id`=? AND `archive_url`=?;");
+                ps.setInt(1, shingle_id);
+                ps.setInt(2, response.statusCode());
+                ps.setInt(3, resourceId);
+                ps.setString(4, archiveUrl);
+                ps.executeUpdate();
+                ps.close();
+
+                log.info(resourceId + " " + archiveUrl + " processed");
             }
-            catch(SQLException ex)
+            catch(IOException e)
             {
-                ex.printStackTrace();
+                log.error("Error while fetching archived version: " + archiveUrl, e);
             }
-            listOfArchives.clear();
         }
+
+    }
+
+    public static void main(String[] args) throws IOException, SQLException
+    {
+        /*ArchiveItShingle archiveItShingle = new ArchiveItShingle();
+        archiveItShingle.computeSimhashForGroup(1132);
+        Group g = Learnweb.getInstance().getGroupManager().getGroupById(1132);
+        for(Resource r : g.getResources())
+        {
+            if(r.getId() > 169897)
+            {
+                archiveItShingle.getDuplicateShingles(r.getId(), r.getArchiveUrls().size());
+                archiveItShingle.generateThumbnails(r.getId());
+            }
+        }*/
+
+        /*LinkedList<ArchiveUrl> archiveUrls = new LinkedList<ArchiveUrl>();
+        PreparedStatement ps = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `lw_resource_archiveurl` WHERE `resource_id`=? ORDER BY timestamp ASC");
+        ps.setInt(1, r.getId());
+        ResultSet rs = ps.executeQuery();
+        while(rs.next())
+        {
+            archiveUrls.add(new ArchiveUrl(rs.getString("archive_url"), rs.getDate("timestamp"), rs.getLong("simhash")));
+        }
+        LinkedList<ArchiveUrl> selectedUrls = archiveItShingle.computeThresholdGroupingAlgo(archiveUrls);
+        System.out.println(archiveUrls.size());
+        System.out.println(selectedUrls.size());*/
+
         System.exit(0);
     }
 }

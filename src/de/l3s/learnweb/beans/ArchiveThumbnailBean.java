@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -17,8 +18,8 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
-import org.primefaces.extensions.model.timeline.TimelineEvent;
-import org.primefaces.extensions.model.timeline.TimelineModel;
+import org.primefaces.model.timeline.TimelineEvent;
+import org.primefaces.model.timeline.TimelineModel;
 
 import de.l3s.archiveSearch.ArchiveItShingle;
 import de.l3s.learnweb.ArchiveUrl;
@@ -39,6 +40,7 @@ public class ArchiveThumbnailBean extends ApplicationBean
 
     private int resourceId;
     private List<ArchiveUrl> archiveUrls;
+    private Set<String> selectedArchiveUrls;
     private HashMap<String, Date> archiveUrlsHashMap;
 
     private ArchiveItShingle archiveItShingle;
@@ -61,6 +63,7 @@ public class ArchiveThumbnailBean extends ApplicationBean
         hashmapText = new LinkedHashMap<String, Set<String>>();
         archiveItShingle = new ArchiveItShingle();
         archiveUrls = new LinkedList<ArchiveUrl>();
+        selectedArchiveUrls = new HashSet<String>();
         archiveUrlsHashMap = new HashMap<String, Date>();
         archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
 
@@ -101,18 +104,19 @@ public class ArchiveThumbnailBean extends ApplicationBean
     {
         List<ArchiveUrl> listOfUrls = new ArrayList<ArchiveUrl>();
         model = new TimelineModel();
-        Set<String> setOfNearUniqueArchives = archiveItShingle.computeUniqueArchivesBySequence(hashmapText, hashmapFrame, archiveUrls, resourceId, frameSim, textSim);
+        //Set<String> setOfNearUniqueArchives = archiveItShingle.computeUniqueArchivesBySequence(hashmapText, hashmapFrame, archiveUrls, resourceId, frameSim, textSim);
 
-        for(String archiveUrl : setOfNearUniqueArchives)
+        for(String archiveUrl : selectedArchiveUrls)
         {
             String fileUrl = archiveUrlManager.getFileUrl(resourceId, archiveUrl);
             Date timestamp = archiveUrlsHashMap.get(archiveUrl);
-            model = getModel(timestamp);
+            //model = getModel(timestamp);
             if(fileUrl == null)
                 log.debug("Thumbnail does not exist");
             else
                 listOfUrls.add(new ArchiveUrl(archiveUrl, fileUrl, timestamp));
         }
+        loadTimelineModel();
         return listOfUrls;
     }
 
@@ -125,8 +129,21 @@ public class ArchiveThumbnailBean extends ApplicationBean
     {
         Calendar cal = Calendar.getInstance();
         cal.setTime(timestamp);
-        model.add(new TimelineEvent("", cal.getTime()));
+        model.add(new TimelineEvent("", cal.getTime(), false, "", "selected"));
         return model;
+    }
+
+    public void loadTimelineModel()
+    {
+        for(ArchiveUrl version : archiveUrls)
+        {
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(version.getTimestamp());
+            if(selectedArchiveUrls.contains(version.getArchiveUrl()))
+                model.add(new TimelineEvent("", cal.getTime(), false, "", "selected"));
+            else
+                model.add(new TimelineEvent("", cal.getTime(), false, ""));
+        }
     }
 
     public Date getMin()
@@ -162,6 +179,16 @@ public class ArchiveThumbnailBean extends ApplicationBean
     addMessage(FacesMessage.SEVERITY_INFO, "Selected event:", timelineEvent.getData().toString());
     }*/
 
+    public void computeSelectedArchivesHtmlBased() throws SQLException
+    {
+        selectedArchiveUrls = archiveItShingle.computeUniqueArchivesBySequence(hashmapText, hashmapFrame, archiveUrls, resourceId, frameSim, textSim);
+    }
+
+    public void computeSelectedArchivesSimhashBased()
+    {
+        selectedArchiveUrls = archiveItShingle.computeUniqueArchivesByThresholdGrouping((LinkedList<ArchiveUrl>) archiveUrls);
+    }
+
     public void init()
     {
         if(getFacesContext().isPostback())
@@ -193,7 +220,8 @@ public class ArchiveThumbnailBean extends ApplicationBean
             {
                 Date timestamp = new Date(rs.getTimestamp("timestamp").getTime());
                 String url = rs.getString("archive_url");
-                archiveUrls.add(new ArchiveUrl(url, timestamp));
+                long simhash = rs.getLong("simhash");
+                archiveUrls.add(new ArchiveUrl(url, timestamp, simhash));
                 archiveUrlsHashMap.put(url, timestamp);
 
                 htmlTags = rs.getString("htmltags");
@@ -204,6 +232,7 @@ public class ArchiveThumbnailBean extends ApplicationBean
                 words = htmlText.replaceAll("[!?,.]", "").split(" ");
                 hashmapText.put(url, archiveItShingle.computeShingles(Arrays.asList(words)));
             }
+            selectedArchiveUrls = archiveItShingle.computeUniqueArchivesBySequence(hashmapText, hashmapFrame, archiveUrls, resourceId, frameSim, textSim);
         }
         catch(SQLException ex)
         {

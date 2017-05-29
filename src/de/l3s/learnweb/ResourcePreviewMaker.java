@@ -236,6 +236,10 @@ public class ResourcePreviewMaker
         createThumbnails(resource, img, true);
     }
 
+    /**
+     * This method is used to process an archived web page to
+     * generate thumbnails specific for the CoverFlow Visualization
+     */
     public void processArchiveWebsite(int resourceId, String url) throws IOException, SQLException
     {
         URL thumbnailUrl = new URL(archiveThumbnailService + StringHelper.urlEncode(url));
@@ -264,6 +268,7 @@ public class ResourcePreviewMaker
         {
             learnweb.getArchiveUrlManager().updateArchiveUrl(file.getId(), resourceId, url);
         }
+
     }
 
     public void processVideo(Resource resource)

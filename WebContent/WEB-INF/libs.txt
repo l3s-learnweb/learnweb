@@ -44,6 +44,7 @@ jena-iri-3.1.0.jar					Wikidata Client (Facts)
 jena-shaded-guava-3.1.0.jar			Wikidata Client (Facts)
 jersey-bundle-1.14.jar				Interweb
 jersey-multipart-1.14.jar			Interweb
+jsimhash-0.1.jar					Archive, computing simhash signatures for archived versions
 json-simple-1.1.1.jar				Archive, generating json data for timeline and calendar representation
 jsonld-java-0.7.0.jar				Wikidata Client (Facts)
 jsoup-1.7.1.jar						Resource, remove Html from String

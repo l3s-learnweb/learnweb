@@ -11,6 +11,7 @@ public class ArchiveUrl implements Serializable
     private String fileUrl;
     private Date timestamp;
     private int fileId;
+    private long simhash;
 
     public String getFileUrl()
     {
@@ -26,6 +27,13 @@ public class ArchiveUrl implements Serializable
     {
         this.archiveUrl = archiveUrl;
         this.timestamp = timestamp;
+    }
+
+    public ArchiveUrl(String archiveUrl, Date timestamp, long simhash)
+    {
+        this.archiveUrl = archiveUrl;
+        this.timestamp = timestamp;
+        this.simhash = simhash;
     }
 
     public ArchiveUrl(String archiveUrl, String fileUrl, Date timestamp)
@@ -60,6 +68,16 @@ public class ArchiveUrl implements Serializable
         this.timestamp = timestamp;
     }
 
+    public long getSimhash()
+    {
+        return simhash;
+    }
+
+    public void setSimhash(long simhash)
+    {
+        this.simhash = simhash;
+    }
+
     @Override
     public boolean equals(Object o)
     {
@@ -71,6 +89,12 @@ public class ArchiveUrl implements Serializable
             return false;
 
         return true;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "[" + this.archiveUrl + ", " + this.timestamp + "]";
     }
 
 }

@@ -86,6 +86,8 @@ public class ArchiveUrlManager
         replace.setString(3, archiveUrl);
         replace.executeUpdate();
         replace.close();
+
+        log.info("Processed archiveUrl: " + archiveUrl);
     }
 
     class ArchiveNowWorker implements Callable<String>
