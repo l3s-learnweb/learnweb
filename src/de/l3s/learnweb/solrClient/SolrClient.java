@@ -2,6 +2,7 @@ package de.l3s.learnweb.solrClient;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -9,6 +10,8 @@ import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrQuery;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.apache.solr.client.solrj.impl.HttpSolrClient;
+import org.apache.solr.client.solrj.response.FacetField;
+import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
 import org.apache.solr.common.SolrDocument;
 
@@ -190,16 +193,44 @@ public class SolrClient
         }
     }
 
-    public static void main(String[] args) throws SQLException, IOException, SolrServerException
+    public List<String> getAutoCompletion(String field, String query) throws SolrServerException, IOException
     {
+        SolrQuery solrQuery = new SolrQuery("*:*");
+        solrQuery.setFacet(true);
+        solrQuery.addFacetField(field);
+        solrQuery.setFacetPrefix(query);
+        solrQuery.setFacetMinCount(1);
+        solrQuery.setFacetLimit(10);
+        solrQuery.setRows(0);
+
+        //get response
+        QueryResponse response = getSolrServer().query(solrQuery);
+        FacetField facetFieldsResult = response.getFacetFields().get(0);
+
+        List<String> suggestions = new ArrayList<>(10);
+
+        for(Count entry : facetFieldsResult.getValues())
+        {
+            suggestions.add(entry.getName());
+        }
+
+        return suggestions;
+    }
+
+    public static void main(String[] args) throws SQLException, IOException, SolrServerException, ClassNotFoundException
+    {
+
+        Learnweb learnweb = Learnweb.createInstance("");
+        SolrClient solr = learnweb.getSolrClient();
+        // solr.getAutoCompletion("author", "bb");
 
         //SolrClient.indexOneResource(67069);
         //SolrClient.indexOneResource(72364);
-        //deleteOneResource(72364);
+        solr.deleteFromIndex(202667);
         //deleteOneResource(67069);
 
         //SolrClient.deleteAllResource();
-        SolrClient.indexAllResources();
+        //SolrClient.indexAllResources();
         //SolrClient.indexOneResource(192248);
         //SolrClient.indexOneResource(67571);
 
@@ -258,7 +289,8 @@ public class SolrClient
 
             // List<Resource> resources = learnweb.getGroupManager().getGroupById(118).getResources();
 
-            if(resources.size() == 0) {
+            if(resources.size() == 0)
+            {
                 log.debug("finished: zero size");
                 break;
             }

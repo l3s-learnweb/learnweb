@@ -353,7 +353,7 @@ public class ResourceManager
         replace.setString(7, resource.getSource());
         replace.setString(8, resource.getType());
         replace.setString(9, resource.getFormat());
-        replace.setInt(10, resource.getOwnerUserId());
+        replace.setInt(10, resource.getUserId());
         replace.setInt(11, resource.getRatingSum());
         replace.setInt(12, resource.getRateNumber());
         replace.setString(13, resource.getQuery());
@@ -876,7 +876,7 @@ public class ResourceManager
             resource.setAuthor(rs.getString("author"));
             resource.setType(rs.getString("type"));
             resource.setFormat(rs.getString("format"));
-            resource.setOwnerUserId(rs.getInt("owner_user_id"));
+            resource.setUserId(rs.getInt("owner_user_id"));
             resource.setRatingSum(rs.getInt("rating"));
             resource.setRateNumber(rs.getInt("rate_number"));
             resource.setEmbeddedSize1Raw(rs.getString("embedded_size1"));
@@ -1153,7 +1153,7 @@ public class ResourceManager
             {
                 if(!file.exists())
                 {
-                    log.error(resource.getId() + " - " + resource.getOwnerUser().getUsername());
+                    log.error(resource.getId() + " - " + resource.getUser().getUsername());
 
                     continue;
                 }

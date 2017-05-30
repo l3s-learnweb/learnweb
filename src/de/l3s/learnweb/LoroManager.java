@@ -239,7 +239,7 @@ public class LoroManager
 
                 int loroId = Integer.parseInt(loroResource.getIdAtService());
 
-                loroResource.setOwner(admin);
+                loroResource.setUser(admin);
 
                 if(learnwebResourceId == 0) // not yet stored in Learnweb
                 {

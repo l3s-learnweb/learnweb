@@ -15,6 +15,7 @@ public class ResourceMetadataField implements Serializable
     { // represents primeface input types
         INPUT_TEXT,
         INPUT_TEXTAREA,
+        AUTOCOMPLETE,
         ONE_MENU,
         ONE_MENU_EDITABLE,
         MULTIPLE_MENU,
@@ -85,6 +86,11 @@ public class ResourceMetadataField implements Serializable
             }
         }
         return optionsList;
+    }
+
+    public List<String> completeText(String query)
+    {
+        return null;
     }
 
     public void setOptions(List<String> options)

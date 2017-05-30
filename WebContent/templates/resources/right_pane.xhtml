@@ -416,15 +416,15 @@
 								</tr>
 							</ui:fragment>
 							
-							<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.language}">
+							<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.language or true}">
 								<tr>
 									<td>
 										<span class="resource_field">
-											#{msg.language}: 
+											#{msg.language}:
 										</span>
 									</td>
 									<td>
-										<ui:repeat var="language" value="#{res.metadataMultiValue['language']}" varStatus="status">
+										<ui:repeat var="language" value="#{resourceDetailBean.clickedResource.metadataMultiValue['language']}" varStatus="status">
 											<h:outputText value="#{msg['language_' += language]}" /><h:outputText value=", " rendered="#{!status.last}" escape="false" />
 										</ui:repeat>	
 									</td>

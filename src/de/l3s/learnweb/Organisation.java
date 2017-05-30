@@ -1,5 +1,6 @@
 package de.l3s.learnweb;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,6 +11,7 @@ import javax.faces.model.SelectItem;
 import javax.validation.constraints.Size;
 
 import org.apache.log4j.Logger;
+import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.learnweb.ResourceMetadataField.MetadataType;
 import de.l3s.learnweb.SearchFilters.SERVICE;
@@ -96,7 +98,25 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadata = new ResourceMetadataField("Source", "Source", MetadataType.INPUT_TEXT);
             metadataFields.add(metadata);
 
-            metadata = new ResourceMetadataField("author", "author", MetadataType.INPUT_TEXT);
+            metadata = new ResourceMetadataField("author", "author", MetadataType.AUTOCOMPLETE)
+            {
+                private static final long serialVersionUID = -2914974737900412242L;
+
+                @Override
+                public List<String> completeText(String query)
+                {
+                    //return ResourceMetaDataBean.completeAuthor(query);
+                    try
+                    {
+                        return Learnweb.getInstance().getSolrClient().getAutoCompletion("author", query);
+                    }
+                    catch(SolrServerException | IOException e)
+                    {
+                        log.error("Couldn't get auto completion for query=" + query, e);
+                    }
+                    return null;
+                }
+            };
             metadata.setInfo("Please, carefully acknowledge authors of resources. In case the author is not clear, use all the details you have: URL, book reference, etc");
             metadataFields.add(metadata);
 
@@ -120,7 +140,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
                     return ResourceMetaDataBean.getLanguageList();
                 }
             };
-            metadata.setInfo("Select the language of the resoruce content");
+            metadata.setInfo("Select the language of the resource content");
             metadataFields.add(metadata);
 
             metadataFields.add(new ResourceMetadataField("noname", "Context", MetadataType.FULLWIDTH_HEADER));

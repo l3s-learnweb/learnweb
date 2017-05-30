@@ -109,5 +109,5 @@ $(document).ready(function()
                 }
             });
         }
-    });
+    }).autocomplete("widget").addClass("searchfield_autocomplete");
 });

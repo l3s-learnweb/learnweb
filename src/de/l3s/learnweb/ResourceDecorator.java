@@ -233,9 +233,9 @@ public class ResourceDecorator implements Serializable
 
     public User getOwnerUser() throws SQLException
     {
-        if(resource.getOwnerUserId() == 7727)
+        if(resource.getUserId() == 7727)
             return null;
-        return resource.getOwnerUser();
+        return resource.getUser();
     }
 
     @Override

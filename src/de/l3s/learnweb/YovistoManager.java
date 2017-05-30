@@ -127,7 +127,7 @@ public class YovistoManager
             Resource yovistoVideo = createResource(result, learnwebResourceId);
             int yovistoId = Integer.parseInt(yovistoVideo.getIdAtService());
 
-            yovistoVideo.setOwner(admin);
+            yovistoVideo.setUser(admin);
 
             if(learnwebResourceId == 0) // not yet stored in LearnWeb
 

@@ -8,30 +8,6 @@
 	<ui:param name="smallPage" value="true"/>
 	
 	<ui:define name="center_layout">
-	
-	 <p:accordionPanel activeIndex="null">
-        <p:tab title="Godfather Part I">
-            <h:panelGrid columns="2" cellpadding="10">
-                <p:graphicImage name="demo/images/godfather/godfather1.jpg" />
-                <h:outputText
-                    value="The story begins as Don Vito Corleone..." />
-            </h:panelGrid>
-        </p:tab>
-        <p:tab title="Godfather Part II">
-            <h:panelGrid columns="2" cellpadding="10">
-                <p:graphicImage name="demo/images/godfather/godfather2.jpg" />
-                <h:outputText value="Francis Ford Coppola's legendary..." />
-            </h:panelGrid>
-        </p:tab>
-        <p:tab title="Godfather Part III">
-            <h:panelGrid columns="2" cellpadding="10">
-                <p:graphicImage name="demo/images/godfather/godfather3.jpg" />
-                <h:outputText value="After a break of more than 15 years..." />
-            </h:panelGrid>
-        </p:tab>
-    </p:accordionPanel>
-    
-    
 		<style type="text/css">
 		 .ui-datatable {margin-bottom:4rem;}
 		</style>
@@ -41,13 +17,16 @@
 			<table role="grid" >
 				<thead>
 					<tr role="row">
-						<th class="ui-state-default" role="columnheader"><div class="ui-dt-c">
+						<th class="ui-state-default" role="columnheader">
+							<div class="ui-dt-c">
 								<span>Description</span>
-							</div></th>
-						<th class="ui-state-default" role="columnheader"><div class="ui-dt-c">
+							</div>
+						</th>
+						<th class="ui-state-default" role="columnheader">
+							<div class="ui-dt-c">
 								<span>Value</span>
-							</div></th>
-			
+							</div>
+						</th>
 					</tr>
 				</thead>
 				<tbody class="ui-datatable-data ui-widget-content">

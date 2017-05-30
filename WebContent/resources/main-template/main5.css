@@ -19,6 +19,8 @@ iframe { border:none }
 
 /* correct primefaces omega theme */
 
+.ui-datatable .ui-datatable-header,
+.ui-datatable .ui-paginator-top,
 .ui-datatable th.ui-state-default { background-color: rgb(196, 196, 196); }
 
 .ui-button,.ui-button span,button.ui-button.ui-state-default span,.ui-button.ui-state-default span {
@@ -35,10 +37,18 @@ iframe { border:none }
 .ui-widget-content .ui-state-highlight,
 .ui-widget-header .ui-state-highlight { background-color: #489a83; }
 .ui-datepicker-current-day a { background:#489a83 !important; }
+
+.ui-datatable .ui-datatable-header,
 .ui-datatable th.ui-state-default,
 .ui-datatable tbody > tr.ui-widget-content {
     border: 1px solid #a8a8a8;
 }
+
+.ui-paginator {
+    border-color: #a8a8a8;
+}
+.ui-datatable .ui-datatable-header { border-bottom:none; }
+
 .ui-dialog .ui-dialog-titlebar { padding-left:0; }
 .ui-selectcheckboxmenu .ui-selectcheckboxmenu-token.ui-state-active, 
 .ui-autocomplete .ui-autocomplete-token.ui-state-active, .ui-chips .ui-chips-token.ui-state-active {
@@ -46,6 +56,10 @@ iframe { border:none }
     color: #fff;
     padding-top: 1px;
     border: 1px solid #3b8b74 ;
+}
+.ui-autocomplete > input {
+	width: 100%;
+	box-sizing: border-box;
 }
 .ui-chkbox-box.ui-state-active, 
 .ui-chkbox-box.ui-state-focus.ui-state-active, 
@@ -1026,7 +1040,6 @@ hr {
 #header_query_form button span{display:inline;}
 #header_query_form{white-space: nowrap;}
 
-/* change primefaces ui */
 .ui-button,
 .ui-inputfield{
 	border:1px solid #a8a8a8;
@@ -1036,11 +1049,9 @@ hr {
 	background-color:#fff !important;
 }
 .ui-widget {font-size:1.2rem;}
-/*.ui-widget-content a{text-decoration:none;}*/
 .ui-corner-all{border-radius:0px;}
 
-/* for the new auto completion */
-.ui-autocomplete {
+.searchfield_autocomplete.ui-autocomplete {
     position: absolute;
     top: 0px;
     left: 0px;
@@ -1053,16 +1064,17 @@ hr {
 	margin: 0px;
 	outline: medium none;
 	z-index: 100;
+	box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
 }
-.ui-autocomplete .ui-state-focus {
-	box-shadow: none !important;
-	border: none !important;
-	background: #ededed none repeat scroll 0 0 !important;
-	margin:0 !important;
-    color: #2b2b2b !important;
-    font-weight: normal !important;
+.searchfield_autocomplete.ui-autocomplete .ui-state-focus {
+	box-shadow: none;
+	border: none;
+	background: #ededed none repeat scroll 0 0;
+	margin:0;
+    color: #2b2b2b;
+    font-weight: normal;
 }
-.ui-autocomplete .ui-menu-item {
+.searchfield_autocomplete.ui-autocomplete .ui-menu-item {
     position: relative;
     margin: 0px;
     padding: 3px 1em 3px 0.4em;
@@ -1070,7 +1082,9 @@ hr {
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow:hidden;
+    font-size:1.5rem;
 }
+
 .ui-datagrid-content{border:0px;}
 .ui-panel{
 	border-radius:0px;
@@ -1779,40 +1793,7 @@ div#presentation_preview {
 
 .northunit{border:none;}
  
-/* for the new auto completion */
-.ui-autocomplete {
-    position: absolute;
-    top: 0px;
-    left: 0px;
-    cursor: default;
-    border: 1px solid #ccc;
-	background: #FFF none repeat scroll 0% 0%;
-	color: #333;
-	list-style: outside none none;
-	padding: 0px;
-	margin: 0px;
-	outline: medium none;
-	z-index: 100;
-	box-shadow: 1px 1px 5px 2px rgba(0, 0, 0, 0.2);
-}
-.ui-autocomplete .ui-state-focus {
-	box-shadow: none;
-	border: none;
-	background: #ededed none repeat scroll 0 0;
-	margin:0;
-    color: #2b2b2b;
-    font-weight: normal;
-}
-.ui-autocomplete .ui-menu-item {
-    position: relative;
-    margin: 0px;
-    padding: 3px 1em 3px 0.4em;
-    cursor: pointer;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow:hidden;
-    font-size:1.5rem;
-}
+
 
 .tooltipster-custom-theme {
 	border: 1px solid #000;

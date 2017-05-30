@@ -56,7 +56,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private int rights = 0;
     private String source = ""; // The place where the resource was found
     private String location = ""; // The location where the resource (metadata) is stored; for example Learnweb, Flickr, Youtube ...
-    private String language = ""; // 2-letter language code
+    private String language; // language code
     private String author = "";
     private String type = ""; // possible types: text, image, video, pdf
     private String format = "";
@@ -90,8 +90,8 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private boolean restricted = false;
     private Date resourceTimestamp = null;
     private Date creationDate = new Date();
-    private HashMap<String, String> metadata = new MetadataMap(); // field_name : field_value
-    private MetadataMultiValueMap metadataMultiValue = new MetadataMultiValueMap();
+    private Map<String, String> metadata = new HashMap<>(); // field_name : field_value
+
     private boolean deleted = false; // indicates whether this resource has been deleted
     private boolean readOnlyTranscript = false; //indicates resource transcript is read only for TED videos
     private LogEntry thumbnailUpdateInfo = null;
@@ -110,6 +110,8 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private transient LinkedList<ArchiveUrl> archiveUrls = null; //To store the archived URLs
     private transient String path = null;
     private transient String prettyPath = null;
+    private transient MetadataMapWrapper metadataWrapper; // includes static fields like title, description, author into the map
+    private transient MetadataMultiValueMapWrapper metadataMultiValue;
 
     /**
      * Do nothing constructor
@@ -404,24 +406,6 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         return getUser();
     }
 
-    @Deprecated
-    public void setOwner(User user)
-    {
-        setUser(user);
-    }
-
-    @Deprecated
-    public int getOwnerUserId()
-    {
-        return getUserId();
-    }
-
-    @Deprecated
-    public void setOwnerUserId(int ownerUserId)
-    {
-        setUserId(ownerUserId);
-    }
-
     public Group getOriginalGroup() throws SQLException
     {
         if(originalResourceId == 0)
@@ -619,7 +603,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         r.setAuthor(author);
         r.setType(type);
         r.setFormat(format);
-        r.setOwnerUserId(ownerUserId);
+        r.setUserId(ownerUserId);
         r.setEmbeddedSize1Raw(embeddedSize1);
         r.setEmbeddedSize3Raw(embeddedSize3);
         r.setEmbeddedSize4Raw(embeddedSize4);
@@ -1487,213 +1471,6 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         this.creationDate = creationDate;
     }
 
-    /**
-     * @return the previous value associated with key, or null if there was no mapping for key. (A null return can also indicate that the map
-     *         previously associated null with key.)
-     */
-    public String setMetadataValue(String key, String value)
-    {
-        return metadata.put(key, value);
-    }
-
-    public Set<String> getMetadataKeys()
-    {
-        return metadata.keySet();
-    }
-
-    public Set<Entry<String, String>> getMetadataEntries()
-    {
-        return metadata.entrySet();
-    }
-
-    public String getMetadataValue(String key)
-    {
-        return metadata.get(key);
-    }
-
-    public Map<String, String> getMetadata()
-    {
-        return metadata;
-    }
-
-    /**
-     * This class stores the optional resource meta attributes in a HashMap
-     * The hard coded attributes (title, description and author) are mapped to the resource object to simplify the output template code
-     * 
-     * @author Philipp
-     *
-     */
-    private class MetadataMap extends HashMap<String, String>
-    {
-        private static final long serialVersionUID = 8020917626723924034L;
-
-        /**
-         * Copy constructor
-         * 
-         * @param hashMap
-         */
-        public MetadataMap(HashMap<String, String> hashMap)
-        {
-            super(hashMap);
-        }
-
-        public MetadataMap()
-        {
-            super();
-        }
-
-        @Override
-        public String get(Object key)
-        {
-            if(!key.getClass().equals(String.class))
-                throw new IllegalArgumentException("key must be a string");
-
-            String keyString = ((String) key).toLowerCase();
-
-            switch(keyString)
-            {
-            case "title":
-                return getTitle();
-            case "author":
-                return getAuthor();
-            case "description":
-                return getDescription();
-            case "language":
-                return getLanguage();
-            }
-            return super.get(key);
-        }
-
-        @Override
-        public String put(String key, String value)
-        {
-            switch(key)
-            {
-            case "title":
-                setTitle(value);
-                return value;
-            case "author":
-                setAuthor(value);
-                return value;
-            case "description":
-                setDescription(value);
-                return value;
-            case "language":
-                setLanguage(value);
-                return value;
-            }
-
-            return super.put(key, value);
-        }
-    }
-
-    /**
-     * A map wrapper to support multi valued input fields
-     * 
-     * @author Kemkes
-     *
-     */
-    private class MetadataMultiValueMap implements Map<String, String[]>, Serializable
-    {
-        private static final long serialVersionUID = -2755546124501807470L;
-        private static final String SPLITTER = ",\t";
-
-        @Override
-        public String[] get(Object key)
-        {
-            String value = metadata.get(key);
-            return value == null || value.length() == 0 ? null : value.split(SPLITTER);
-        }
-
-        @Override
-        public String[] put(String key, String[] value)
-        {
-            metadata.put(key, StringUtils.join(value, SPLITTER));
-
-            return null;
-        }
-
-        @Override
-        public void clear()
-        {
-            metadata.clear();
-        }
-
-        @Override
-        public boolean containsKey(Object key)
-        {
-            return metadata.containsKey(key);
-        }
-
-        @Override
-        public boolean containsValue(Object value)
-        {
-            return false;
-        }
-
-        @Override
-        public Set<java.util.Map.Entry<String, String[]>> entrySet()
-        {
-            return null;
-        }
-
-        @Override
-        public boolean isEmpty()
-        {
-            return false;
-        }
-
-        @Override
-        public Set<String> keySet()
-        {
-            return null;
-        }
-
-        @Override
-        public void putAll(Map<? extends String, ? extends String[]> m)
-        {
-        }
-
-        @Override
-        public String[] remove(Object key)
-        {
-            return null;
-        }
-
-        @Override
-        public int size()
-        {
-            return 0;
-        }
-
-        @Override
-        public Collection<String[]> values()
-        {
-            return null;
-        }
-    }
-
-    public MetadataMultiValueMap getMetadataMultiValue()
-    {
-        return metadataMultiValue;
-    }
-
-    public void setMetadata(Object metadataObj)
-    {
-        if(metadataObj instanceof MetadataMap)
-        {
-            this.metadata = (MetadataMap) metadataObj;
-        }
-        else if(metadataObj instanceof HashMap<?, ?>)
-        {
-            @SuppressWarnings("unchecked")
-            HashMap<String, String> hashMap = (HashMap<String, String>) metadataObj;
-            this.metadata = new MetadataMap(hashMap);
-        }
-        else
-            throw new IllegalArgumentException("unknown metadata format: " + metadataObj.getClass().getName());
-    }
-
     public void setArchiveUrls(LinkedList<ArchiveUrl> archiveUrls)
     {
         this.archiveUrls = archiveUrls;
@@ -1839,6 +1616,367 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             thumbnailUpdateInfo = Learnweb.getInstance().getResourceManager().loadThumbnailUpdateInfo(getId());
         }
         return thumbnailUpdateInfo;
+    }
+
+    /**
+     * @return the previous value associated with key, or null if there was no mapping for key. (A null return can also indicate that the map
+     *         previously associated null with key.)
+     */
+    public String setMetadataValue(String key, String value)
+    {
+        return metadata.put(key, value);
+    }
+
+    public Set<String> getMetadataKeys()
+    {
+        return metadata.keySet();
+    }
+
+    public Set<Entry<String, String>> getMetadataEntries()
+    {
+        return metadata.entrySet();
+    }
+
+    public String getMetadataValue(String key)
+    {
+        return metadata.get(key);
+    }
+
+    public Map<String, String> getMetadata()
+    {
+        return metadata;
+    }
+
+    public MetadataMapWrapper getMetadataWrapper()
+    {
+        if(null == metadataWrapper)
+            metadataWrapper = new MetadataMapWrapper(metadata);
+        return metadataWrapper;
+    }
+
+    public Map<String, String[]> getMetadataMultiValue()
+    {
+        if(null == metadataMultiValue)
+            metadataMultiValue = new MetadataMultiValueMapWrapper(getMetadataWrapper());
+        return metadataMultiValue;
+    }
+
+    public void setMetadata(Object metadataObj)
+    {
+        if(metadataObj instanceof MetadataMap)
+        {
+            log.debug("load old metadata resource " + getId() + " - " + getTitle());
+            // old class needs to be copied to simple hashmap
+            MetadataMap oldMetadata = (MetadataMap) metadataObj;
+            metadata = new HashMap<>(oldMetadata);
+        }
+        else if(metadataObj instanceof HashMap<?, ?>)
+        {
+            log.debug("load new metadata resource " + getId() + " - " + getTitle());
+            @SuppressWarnings("unchecked")
+            HashMap<String, String> hashMap = (HashMap<String, String>) metadataObj;
+            metadata = hashMap;
+        }
+        else
+            throw new IllegalArgumentException("unknown metadata format: " + metadataObj.getClass().getName());
+
+        //clear wrapper
+        metadataWrapper = null;
+        metadataMultiValue = null;
+    }
+
+    /**
+     * This class stores the optional resource meta attributes in a HashMap
+     * The hard coded attributes (title, description and author) are mapped to the resource object to simplify the output template code
+     * 
+     * @author Philipp
+     *
+     */
+    @Deprecated
+    private class MetadataMap extends HashMap<String, String>
+    {
+        private static final long serialVersionUID = 8020917626723924034L;
+
+        /**
+         * Copy constructor
+         * 
+         * @param hashMap
+         */
+        public MetadataMap(HashMap<String, String> hashMap)
+        {
+            super(hashMap);
+        }
+
+        public MetadataMap()
+        {
+            super();
+        }
+
+        @Override
+        public String get(Object key)
+        {
+            if(!key.getClass().equals(String.class))
+                throw new IllegalArgumentException("key must be a string");
+
+            String keyString = ((String) key).toLowerCase();
+
+            switch(keyString)
+            {
+            case "title":
+                return getTitle();
+            case "author":
+                return getAuthor();
+            case "description":
+                return getDescription();
+            case "language":
+                return getLanguage();
+            }
+            return super.get(key);
+        }
+
+        @Override
+        public String put(String key, String value)
+        {
+            switch(key)
+            {
+            case "title":
+                setTitle(value);
+                return value;
+            case "author":
+                setAuthor(value);
+                return value;
+            case "description":
+                setDescription(value);
+                return value;
+            case "language":
+                setLanguage(value);
+                return value;
+            }
+
+            return super.put(key, value);
+        }
+    }
+
+    /**
+     * A map wrapper to support multi valued input fields
+     * 
+     * @author Kemkes
+     *
+     */
+    public class MetadataMapWrapper implements Map<String, String>, Serializable
+    {
+        private static final long serialVersionUID = -7357288281713761896L;
+        private Map<String, String> wrappedMap;
+
+        public MetadataMapWrapper(Map<String, String> wrappedMap)
+        {
+            this.wrappedMap = wrappedMap;
+        }
+
+        public Map<String, String> getWrappedMap()
+        {
+            return wrappedMap;
+        }
+
+        @Override
+        public String get(Object key)
+        {
+            if(!key.getClass().equals(String.class))
+                throw new IllegalArgumentException("key must be a string");
+
+            String keyString = ((String) key).toLowerCase();
+
+            switch(keyString)
+            {
+            case "title":
+                return getTitle();
+            case "author":
+                return getAuthor();
+            case "description":
+                return getDescription();
+            case "language":
+                return getLanguage();
+            }
+            return wrappedMap.get(key);
+        }
+
+        @Override
+        public String put(String key, String value)
+        {
+            switch(key)
+            {
+            case "title":
+                setTitle(value);
+                return value;
+            case "author":
+                setAuthor(value);
+                return value;
+            case "description":
+                setDescription(value);
+                return value;
+            case "language":
+                setLanguage(value);
+                return value;
+            }
+
+            return wrappedMap.put(key, value);
+        }
+
+        @Override
+        public void clear()
+        {
+            wrappedMap.clear();
+        }
+
+        @Override
+        public boolean containsKey(Object key)
+        {
+            return wrappedMap.containsKey(key);
+        }
+
+        @Override
+        public boolean containsValue(Object value)
+        {
+            return false;
+        }
+
+        @Override
+        public Set<java.util.Map.Entry<String, String>> entrySet()
+        {
+            return wrappedMap.entrySet();
+        }
+
+        @Override
+        public boolean isEmpty()
+        {
+            return wrappedMap.isEmpty();
+        }
+
+        @Override
+        public Set<String> keySet()
+        {
+            return wrappedMap.keySet();
+        }
+
+        @Override
+        public void putAll(Map<? extends String, ? extends String> m)
+        {
+            wrappedMap.putAll(m);
+        }
+
+        @Override
+        public String remove(Object key)
+        {
+            return wrappedMap.remove(key);
+        }
+
+        @Override
+        public int size()
+        {
+            return wrappedMap.size();
+        }
+
+        @Override
+        public Collection<String> values()
+        {
+            return wrappedMap.values();
+        }
+    }
+
+    /**
+     * A map wrapper to support multi valued input fields
+     * 
+     * @author Kemkes
+     *
+     */
+    private class MetadataMultiValueMapWrapper implements Map<String, String[]>, Serializable
+    {
+        private static final long serialVersionUID = 1514209886446380743L;
+        private static final String SPLITTER = ",\t";
+        private Map<String, String> wrappedMap;
+
+        public MetadataMultiValueMapWrapper(Map<String, String> wrappedMap)
+        {
+            this.wrappedMap = wrappedMap;
+        }
+
+        @Override
+        public String[] get(Object key)
+        {
+            String value = wrappedMap.get(key);
+            log.debug("get " + key + " value:" + value);
+            String[] result = (value == null || value.length() == 0) ? null : value.split(SPLITTER);
+            log.debug("result: " + result);
+            return result;
+        }
+
+        @Override
+        public String[] put(String key, String[] value)
+        {
+            wrappedMap.put(key, StringUtils.join(value, SPLITTER));
+
+            return null;
+        }
+
+        @Override
+        public void clear()
+        {
+            wrappedMap.clear();
+        }
+
+        @Override
+        public boolean containsKey(Object key)
+        {
+            return wrappedMap.containsKey(key);
+        }
+
+        @Override
+        public boolean containsValue(Object value)
+        {
+            return false;
+        }
+
+        @Override
+        public Set<java.util.Map.Entry<String, String[]>> entrySet()
+        {
+            return null;
+        }
+
+        @Override
+        public boolean isEmpty()
+        {
+            return wrappedMap.isEmpty();
+        }
+
+        @Override
+        public Set<String> keySet()
+        {
+            return wrappedMap.keySet();
+        }
+
+        @Override
+        public void putAll(Map<? extends String, ? extends String[]> m)
+        {
+        }
+
+        @Override
+        public String[] remove(Object key)
+        {
+            wrappedMap.remove(key);
+            return null;
+        }
+
+        @Override
+        public int size()
+        {
+            return wrappedMap.size();
+        }
+
+        @Override
+        public Collection<String[]> values()
+        {
+            return null;
+        }
     }
 
 }
