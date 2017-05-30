@@ -6,12 +6,14 @@ import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.faces.model.SelectItem;
 import javax.validation.constraints.Size;
 
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.ResourceMetadataField.MetadataType;
 import de.l3s.learnweb.SearchFilters.SERVICE;
+import de.l3s.learnweb.beans.ResourceMetaDataBean;
 
 public class Organisation implements Serializable, Comparable<Organisation>
 {
@@ -108,11 +110,17 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadata.setInfo("select all that apply");
             metadataFields.add(metadata);
 
-            metadata = new ResourceMetadataField("language", "language", MetadataType.ONE_MENU_EDITABLE);
-            metadata.getOptions().add("german");
-            metadata.getOptions().add("english");
-            metadata.getOptions().add("french");
-            metadata.getOptions().add("greek");
+            metadata = new ResourceMetadataField("language", "language", MetadataType.MULTIPLE_MENU)
+            {
+                private static final long serialVersionUID = 1934886927426174254L;
+
+                @Override
+                public List<SelectItem> getOptionsList()
+                {
+                    return ResourceMetaDataBean.getLanguageList();
+                }
+            };
+            metadata.setInfo("Select the language of the resoruce content");
             metadataFields.add(metadata);
 
             metadataFields.add(new ResourceMetadataField("noname", "Context", MetadataType.FULLWIDTH_HEADER));

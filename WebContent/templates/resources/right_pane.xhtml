@@ -154,36 +154,12 @@
 					<h:form id="add_resource_meta_form" rendered="#{addResourceBean.formStep > 1}">
 						
 						<p:fieldset legend="#{msg.step} 2" style="margin-bottom:20px">
-							<p:panelGrid styleClass="full-width">
-								<p:row>
-									<p:column>
-										<h:outputText value="#{msg.title}:" />
-									</p:column>
-									<p:column>
-										<p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field" required="true" 
-												requiredmessage="#{msg.mandatory_field}" id="title_input" />
-									</p:column>
-								</p:row>
-										
-								<p:row>
-									<p:column>
-										<h:outputText value="#{msg.author}:" />
-									</p:column>
-									<p:column>
-										<p:inputText value="#{addResourceBean.resource.author}" styleClass="add_field" />
-									</p:column>
-								</p:row>
-								
-								<p:row>
-									<p:column>
-										<h:outputText value="#{msg.description}:" />
-									</p:column>
-									<p:column>
-										<p:inputTextarea id="description" value="#{addResourceBean.resource.description}" autoResize="true" 
-											styleClass="add_field" style="min-height:100px;"/>
-									</p:column>
-								</p:row>
-							</p:panelGrid>
+						
+							<table id="add_attributes_table" class="full-width">							
+								<ui:decorate template="/templates/resources/edit.xhtml">
+									<ui:param name="res" value="#{addResourceBean.resource}" />
+								</ui:decorate>
+							</table>
 						</p:fieldset>
 						
 						<p:commandButton value="#{msg.addResource}" styleClass="greenbutton float-right" update=":growl :add_resource_panel :datagrid" 
@@ -339,14 +315,12 @@
 								</a>
 								<h:outputLink value="showGlossary.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.source eq 'Glossary'}">
 											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
-											Open Glossary
+											#{msg["Glossary.open"]}
 								</h:outputLink>
 							</div>
 						</ui:fragment>
 					
-						<style type="text/css">
-
-						</style>
+						
 						
 						<table id="resources_informations_table" class="full-width">
 	
@@ -441,6 +415,22 @@
 									</td>
 								</tr>
 							</ui:fragment>
+							
+							<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.language}">
+								<tr>
+									<td>
+										<span class="resource_field">
+											#{msg.language}: 
+										</span>
+									</td>
+									<td>
+										<ui:repeat var="language" value="#{res.metadataMultiValue['language']}" varStatus="status">
+											<h:outputText value="#{msg['language_' += language]}" /><h:outputText value=", " rendered="#{!status.last}" escape="false" />
+										</ui:repeat>	
+									</td>
+								</tr>
+							</ui:fragment>
+							
 							<tr>
 								<td>
 									<span class="resource_field">

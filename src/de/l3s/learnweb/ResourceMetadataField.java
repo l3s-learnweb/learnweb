@@ -1,8 +1,11 @@
 package de.l3s.learnweb;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+
+import javax.faces.model.SelectItem;
 
 public class ResourceMetadataField implements Serializable
 {
@@ -26,6 +29,7 @@ public class ResourceMetadataField implements Serializable
     private List<String> options = new LinkedList<String>(); // default options for some input types like OneMenu
     private boolean moderatorOnly = false; // only admins and moderators have write access
     private boolean required = false;
+    private List<SelectItem> optionsList;
 
     public ResourceMetadataField(String name, String label, MetadataType type)
     {
@@ -67,6 +71,20 @@ public class ResourceMetadataField implements Serializable
     public List<String> getOptions()
     {
         return options;
+    }
+
+    public List<SelectItem> getOptionsList()
+    {
+        if(null == optionsList)
+        {
+            optionsList = new ArrayList<SelectItem>(options.size());
+
+            for(String option : options)
+            {
+                optionsList.add(new SelectItem(option, option));
+            }
+        }
+        return optionsList;
     }
 
     public void setOptions(List<String> options)

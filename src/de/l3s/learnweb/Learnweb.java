@@ -365,20 +365,6 @@ public class Learnweb
         log.info("Shutdown Learnweb completed");
     }
 
-    /**
-     * Will be deprecated in the future
-     * 
-     * @return
-     * @throws SQLException
-     */
-    public static Connection getConnectionStatic() throws SQLException
-    {
-        Learnweb lw = getInstance();
-        lw.checkConnection();
-
-        return lw.dbConnection;
-    }
-
     //should be used instead of the static method
     public Connection getConnection() throws SQLException
     {

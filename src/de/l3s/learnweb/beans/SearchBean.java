@@ -11,7 +11,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,8 +24,6 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
-
-import com.sun.jersey.api.client.ClientHandlerException;
 
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.FactSheet;
@@ -43,10 +40,8 @@ import de.l3s.learnweb.SearchFilters.Filter;
 import de.l3s.learnweb.SearchFilters.FilterItem;
 import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.SearchFilters.SERVICE;
-import de.l3s.learnweb.SearchLogManager.SearchLogger;
 import de.l3s.learnweb.User;
 import de.l3s.searchlogclient.Actions.ACTION;
-import de.l3s.searchlogclient.SearchLogClient;
 
 @ManagedBean
 @ViewScoped
@@ -88,10 +83,10 @@ public class SearchBean extends ApplicationBean implements Serializable
     private int minResourcesPerGroup = 2;
 
     /* For logging */
-    private boolean logEnabled; //Only carry out search log functions if user is logged in
-    private Date startTime; //To log when viewing time is started for a resource
-    private Date endTime; //To log when viewing time is ended for a resource
-    private transient SearchLogClient searchLogClient;
+    // private boolean logEnabled; //Only carry out search log functions if user is logged in
+    //private Date startTime; //To log when viewing time is started for a resource
+    // private Date endTime; //To log when viewing time is ended for a resource
+    //private transient SearchLogClient searchLogClient;
     // private long batchrsStartTime; //To keep track of the start time for batch update of resultSet
     // private long batchrsTimeout; //To keep track of timeout for batch update of resultSet
     boolean historyResourcesRetrieved; //To keep track if the previous resultSet resources have already been retrieved 
@@ -101,8 +96,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     private List<GroupedResources> resourcesGroupedBySource = null;
     private List<FilterItem> availableSources = null;
-    private Integer selectedResourceTempId;
-    private SearchLogger searchLogger;
+    private Integer selectedResourceTempId; // temp Id of the selected resource. Necessary because Interweb results have no unique id
 
     public SearchBean()
     {
@@ -115,7 +109,6 @@ public class SearchBean extends ApplicationBean implements Serializable
 
         metaFilters = new SearchFilters();
 
-        logEnabled = false;
         historyResources = new HashSet<String>();
     }
 
@@ -173,8 +166,6 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public String onSearch()
     {
-        searchLogClient = getLearnweb().getSearchlogClient();
-
         // search if a query is given and (it was not searched before or the query or searchmode has been changed)
         if(!isEmpty(query) && (null == search || !query.equals(search.getQuery()) || searchMode != search.getMode() || !queryService.equals(searchService.name()) || !StringUtils.equals(queryFilters, searchFilters.getFiltersString())))
         {
@@ -186,65 +177,20 @@ public class SearchBean extends ApplicationBean implements Serializable
             setPreference("SEARCH_ACTION", searchMode.name());
             setPreference("SEARCH_SERVICE_" + searchMode.name().toUpperCase(), searchService.name());
 
-            /*
-            historyResourcesRetrieved = false;
-            
-            
-            String onSearchTimestamp = DEFAULT_DATE_FORMAT.format(tempDate);
-            Date tempDate = new Date(); //For getting the query timestamp 
-            try
-            {
-                //Posting the batch of resources stored part of the result set corresponding to the previous query
-                getSearchLogClient().pushBatchResultsetList();
-                getSearchLogClient().postResourceLog();
-                getSearchLogClient().passUpdateResultset();
-                getSearchLogClient().pushTagList();
-            
-                //Logs the query posted by the user along with the time stamp, sessionId, groupId and search type.
-                getSearchLogClient().passUserQuery(query, searchMode.toString(), userId, getUser().getActiveGroupId(), getSessionId(), onSearchTimestamp);
-                getSearchLogClient().changeTagNamesListResultsetIds();
-            }
-            catch(ClientHandlerException e)
-            {
-                log.debug("Search Tracker service is down");
-            }
-            catch(RuntimeException e)
-            {
-                log.debug("Search log failed: " + e.getMessage());
-            }
-            */
-
             page = 1;
             search = new Search(interweb, query, searchFilters, getUser());
             search.setMode(searchMode);
             searchFilters.setFiltersFromString(queryFilters);
             searchFilters.setFilter(FILTERS.service, searchService);
+            search.logQuery(query, searchMode, queryFilters, getUser());
+            search.getResourcesByPage(1); // load first page
 
-            LinkedList<ResourceDecorator> resources = search.getResourcesByPage(1);
-
-            searchLogger = getLearnweb().getSearchLogManager().createSearchLogger(query, searchFilters, getUser());
-            searchLogger.logResources(resources);
-
-            log(Action.searching, 0, searchLogger.getSearchId(), query);
+            log(Action.searching, 0, search.getId(), query);
 
             resourcesGroupedBySource = null;
             availableSources = null;
             queryFilters = null;
             graphLoaded = false;
-            /*
-            try
-            {
-                getSearchLogClient().saveSERP(1, searchMode, res);
-            }
-            catch(ClientHandlerException e)
-            {
-                log.debug("Search Tracker service is down");
-            }
-            catch(RuntimeException e)
-            {
-                log.debug(e.getMessage());
-            }*/
-
         }
 
         return "/lw/search.xhtml?faces-redirect=true";
@@ -259,14 +205,10 @@ public class SearchBean extends ApplicationBean implements Serializable
             historyResources.clear();
             try
             {
-                historyResources.addAll(getSearchLogClient().getResourceUrlsByResultsetId(resultsetId));
+
+                //historyResources.addAll(getSearchLogClient().getResourceUrlsByResultsetId(resultsetId));
             }
-            catch(ClientHandlerException e)
-            {
-                log.debug("Search Tracker service is down");
-                return null;
-            }
-            catch(RuntimeException e)
+            catch(Exception e)
             {
                 addMessage(FacesMessage.SEVERITY_INFO, e.getMessage());
                 return null;
@@ -413,7 +355,7 @@ public class SearchBean extends ApplicationBean implements Serializable
                 }
             }*/
             user.setActiveGroup(selectedResourceTargetGroupId);
-            searchLogger.logAction(ACTION.resource_saved, selectedResourceTempId);
+            search.logAction(ACTION.resource_saved, selectedResourceTempId);
             log(Action.adding_resource, selectedResourceTargetGroupId, newResource.getId(), "");
 
             // add query as tag 
@@ -434,7 +376,7 @@ public class SearchBean extends ApplicationBean implements Serializable
      */
     public void logResourceOpened()
     {
-        searchLogger.logAction(ACTION.resource_click, selectedResourceTempId);
+        search.logAction(ACTION.resource_click, selectedResourceTempId);
         /*
         if(!logEnabled)
             return;
@@ -488,29 +430,6 @@ public class SearchBean extends ApplicationBean implements Serializable
      */
     public void logEndTime()
     {
-        if(!logEnabled)
-            return;
-
-        endTime = new Date();
-        String tempResourceId = getParameter("resource_id");
-        Resource resource = search.getResourceByTempId(Integer.parseInt(tempResourceId));
-
-        if(null == resource)
-            throw new InvalidParameterException("unknown resource id:" + tempResourceId);
-
-        try
-        {
-            getSearchLogClient().passViewingTime(Integer.parseInt(tempResourceId), startTime, endTime);
-            //searchlogClient.passBatchViewingTime(Integer.parseInt(tempResourceId), startTime, endTime,getSessionId());
-        }
-        catch(ClientHandlerException e)
-        {
-            log.debug("Search Tracker service is down");
-        }
-        catch(RuntimeException e)
-        {
-            log.debug(e.getMessage());
-        }
     }
 
     // -------------------------------------------------------------------------
@@ -807,33 +726,14 @@ public class SearchBean extends ApplicationBean implements Serializable
         return resultsetViewId;
     }
 
-    private SearchLogClient getSearchLogClient()
-    {
-        if(searchLogClient == null)
-            searchLogClient = getLearnweb().getSearchlogClient();
-        return searchLogClient;
-    }
-
+    /**
+     * Used by old search result history
+     */
     public void updateSearchResources()
     {
-        try
+        for(ResourceDecorator resource : search.getResources())
         {
-            getSearchLogClient().pushBatchResultsetList();
-            getSearchLogClient().postResourceLog();
-            getSearchLogClient().passUpdateResultset();
-            getSearchLogClient().flushLists();
-            for(ResourceDecorator resource : search.getResources())
-            {
-                resource.setNewResource(false);
-            }
-        }
-        catch(ClientHandlerException e)
-        {
-            log.debug("Search Tracker service is down");
-        }
-        catch(RuntimeException e)
-        {
-            log.debug(e.getMessage());
+            resource.setNewResource(false);
         }
     }
 

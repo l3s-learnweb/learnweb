@@ -70,7 +70,7 @@
 }
 
 #add_resource_panel{
-    padding: 0px;
+    padding: 0px 0 2rem 0;
     border: 0px !important;
 }
 
@@ -105,7 +105,7 @@
     margin-top: 10px;
 }
 #edit_table td{padding-top: 5px;}
-#edit_table td:FIRST-CHILD{font-weight: bold;}
+
 .preview_box{
     padding: 5px;
     border: 1px solid #ccc;

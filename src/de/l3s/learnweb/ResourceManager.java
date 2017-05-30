@@ -260,7 +260,7 @@ public class ResourceManager
         }
 
         // flag the resource as deleted
-        PreparedStatement update = Learnweb.getConnectionStatic().prepareStatement("UPDATE `lw_resource` SET deleted = 1 WHERE `resource_id` = ?");
+        PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE `lw_resource` SET deleted = 1 WHERE `resource_id` = ?");
         update.setInt(1, resourceId);
         update.executeUpdate();
         update.close();
@@ -288,7 +288,7 @@ public class ResourceManager
     {
         deleteResource(resourceId);
 
-        Connection connection = Learnweb.getConnectionStatic();
+        Connection connection = learnweb.getConnection();
 
         // delete the resource
         PreparedStatement delete = connection.prepareStatement("DELETE FROM `lw_resource` WHERE `resource_id` = ?");

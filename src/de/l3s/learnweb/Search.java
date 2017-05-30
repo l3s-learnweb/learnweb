@@ -22,12 +22,13 @@ import de.l3s.learnweb.SearchFilters.FILTERS;
 import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.SearchFilters.SERVICE;
 import de.l3s.learnweb.solrClient.SolrSearch;
+import de.l3s.searchlogclient.Actions.ACTION;
 import de.l3s.util.StringHelper;
 
 public class Search implements Serializable
 {
     private static final long serialVersionUID = -2405235188000105509L;
-    final static Logger log = Logger.getLogger(Search.class);
+    private final static Logger log = Logger.getLogger(Search.class);
 
     private static final DateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
     private static final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
@@ -59,6 +60,8 @@ public class Search implements Serializable
     private int removedResourceCount = 0;
     private int interwebPageOffset = 0;
     private boolean stopped;
+    private transient SearchLogManager searchLogger;
+    private int searchId;
 
     public Search(InterWeb interweb, String query, SearchFilters sf, User user)
     {
@@ -127,6 +130,8 @@ public class Search implements Serializable
             log.fatal("error during search", e);
         }
 
+        logResources(resources);
+
         return newResources;
     }
 
@@ -140,7 +145,7 @@ public class Search implements Serializable
      */
     private LinkedList<ResourceDecorator> getLearnwebResults(int page) throws SQLException, IOException, SolrServerException
     {
-        long start = System.currentTimeMillis();
+        //long start = System.currentTimeMillis();
 
         // Setup filters
         if(page == 1)
@@ -185,7 +190,8 @@ public class Search implements Serializable
             this.solrSearch.setFilterTags(searchFilters.getTagsFilter());
 
         List<ResourceDecorator> learnwebResources = solrSearch.getResourcesByPage(page);
-        log.debug("Solr returned " + learnwebResources.size() + " results in " + (System.currentTimeMillis() - start) + " ms");
+
+        //log.debug("Solr returned " + learnwebResources.size() + " results in " + (System.currentTimeMillis() - start) + " ms");
 
         if(stopped)
             return null;
@@ -214,7 +220,7 @@ public class Search implements Serializable
         {
             Resource resource = decoratedResource.getResource();
 
-            if(resource.getId() > 0 && resource.getGroupId() == 0 && resource.getOwnerUserId() != userId)
+            if(resource.getId() > 0 && resource.getGroupId() == 0 && resource.getUserId() != userId)
             {
                 // the resource is stored in learnweb, belongs to no group and the current user is not the owner 
                 // of the resource. So he is not allowed to view the resource
@@ -407,7 +413,7 @@ public class Search implements Serializable
 
     /**
      * 
-     * @return All resources that have been loaded
+     * @return All resources that have been loaded until now. So you have to use get getResourcesByPage first
      */
     public LinkedList<ResourceDecorator> getResources()
     {
@@ -458,7 +464,7 @@ public class Search implements Serializable
 
         if(page > 50)
         {
-            log.fatal("Requested more than 50 pages", new Exception());
+            log.error("Requested more than 50 pages; Stopping", new Exception());
             return null;
         }
 
@@ -573,5 +579,37 @@ public class Search implements Serializable
 
             this.resources.add(resources);
         }
+    }
+
+    /**
+     * 
+     * @return Unique id is generated when the query has been logged by logQuery()
+     */
+    public int getId()
+    {
+        return searchId;
+    }
+
+    public void logQuery(String query, MODE searchMode, String searchFilters, User user)
+    {
+        searchId = getSearchLogger().logQuery(query, searchMode, searchFilters, user);
+    }
+
+    private SearchLogManager getSearchLogger()
+    {
+        if(searchLogger == null)
+            searchLogger = Learnweb.getInstance().getSearchLogManager();
+
+        return searchLogger;
+    }
+
+    private void logResources(List<ResourceDecorator> resources)
+    {
+        getSearchLogger().logResources(searchId, resources);
+    }
+
+    public void logAction(ACTION action, int selectedResourceTempId)
+    {
+        getSearchLogger().logAction(searchId, action, selectedResourceTempId);
     }
 }

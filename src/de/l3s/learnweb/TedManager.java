@@ -119,9 +119,9 @@ public class TedManager
         String selectTranscripts = "SELECT DISTINCT(language) as language_code FROM ted_transcripts_paragraphs WHERE resource_id = ?";
         String selectTranscriptParagraphs = "SELECT starttime, paragraph FROM ted_transcripts_paragraphs WHERE resource_id = ? AND language = ?";
 
-        PreparedStatement ipStmt = Learnweb.getInstance().getConnection().prepareStatement(selectTranscriptParagraphs);
+        PreparedStatement ipStmt = learnweb.getConnection().prepareStatement(selectTranscriptParagraphs);
 
-        PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement(selectTranscripts);
+        PreparedStatement pStmt = learnweb.getConnection().prepareStatement(selectTranscripts);
         pStmt.setInt(1, resourceId);
         ResultSet rs = pStmt.executeQuery(), rsParagraphs;
         while(rs.next())
@@ -153,7 +153,7 @@ public class TedManager
     {
         int tedVideoResourceId = 0;
         String slug = url.substring(url.lastIndexOf("/") + 1, url.length());
-        PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("SELECT resource_id FROM ted_video WHERE slug = ?");
+        PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT resource_id FROM ted_video WHERE slug = ?");
         pStmt.setString(1, slug);
         ResultSet rs = pStmt.executeQuery();
         if(rs.next())
@@ -167,7 +167,7 @@ public class TedManager
     public int getTedXVideoResourceId(String url) throws SQLException
     {
         int tedxVideoResourceId = 0;
-        PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("SELECT resource_id FROM lw_resource WHERE url = ? and owner_user_id = 7727");
+        PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT resource_id FROM lw_resource WHERE url = ? and owner_user_id = 7727");
         pStmt.setString(1, url);
         ResultSet rs = pStmt.executeQuery();
         if(rs.next())
@@ -204,7 +204,7 @@ public class TedManager
         String selectTranscript = "SELECT `starttime`, `paragraph` FROM ted_transcripts_paragraphs where resource_id = ? AND `language` = ?";
         String transcript = "";
 
-        PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement(selectTranscript);
+        PreparedStatement pStmt = learnweb.getConnection().prepareStatement(selectTranscript);
         pStmt.setInt(1, resourceId);
         pStmt.setString(2, language);
         pStmt.executeQuery();
@@ -316,9 +316,9 @@ public class TedManager
         Group tedGroup = learnweb.getGroupManager().getGroupById(862);
         User admin = learnweb.getUserManager().getUser(7727);
 
-        PreparedStatement update = Learnweb.getInstance().getConnection().prepareStatement("UPDATE ted_video SET resource_id = ? WHERE ted_id = ?");
+        PreparedStatement update = learnweb.getConnection().prepareStatement("UPDATE ted_video SET resource_id = ? WHERE ted_id = ?");
 
-        PreparedStatement getTedVideos = Learnweb.getInstance().getConnection().prepareStatement("SELECT ted_id, title, description, slug, photo2_url, duration, resource_id, published_at FROM ted_video");
+        PreparedStatement getTedVideos = learnweb.getConnection().prepareStatement("SELECT ted_id, title, description, slug, photo2_url, duration, resource_id, published_at FROM ted_video");
         getTedVideos.executeQuery();
 
         ResultSet rs = getTedVideos.getResultSet();
@@ -330,10 +330,9 @@ public class TedManager
             int tedId = Integer.parseInt(tedVideo.getIdAtService());
 
             tedVideo.setMachineDescription(concatenateTranscripts(learnwebResourceId));
-            tedVideo.setOwner(admin);
+            tedVideo.setUser(admin);
 
             if(learnwebResourceId == 0) // not yet stored in Learnweb
-
             {
                 rpm.processImage(tedVideo, FileInspector.openStream(tedVideo.getMaxImageUrl()));
 
@@ -347,7 +346,7 @@ public class TedManager
                 solr.indexResource(tedVideo);
 
             }
-            else if(tedVideo.getOwnerUserId() == 0)
+            else if(tedVideo.getUserId() == 0)
             {
                 rpm.processImage(tedVideo, FileInspector.openStream(tedVideo.getMaxImageUrl()));
                 tedVideo.setGroup(tedGroup);
@@ -531,7 +530,7 @@ public class TedManager
         pStmt2.close();
 
         dbStmt = "REPLACE INTO `ted_transcripts_paragraphs`(`resource_id`, `language`, `starttime`, `paragraph`) VALUES (?,?,?,?)";
-        PreparedStatement pStmt3 = Learnweb.getInstance().getConnection().prepareStatement(dbStmt);
+        PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement(dbStmt);
         pStmt3.setInt(1, resourceId);
         pStmt3.setString(2, langCode);
 
@@ -602,9 +601,9 @@ public class TedManager
         return resp;
     }
 
-    public static void main(String[] args) throws IOException, IllegalResponseException, SQLException
+    public static void main(String[] args) throws IOException, IllegalResponseException, SQLException, ClassNotFoundException
     {
-        TedManager tm = Learnweb.getInstance().getTedManager();
+        TedManager tm = Learnweb.createInstance("").getTedManager();
         tm.fetchTedX(); //saveTedResource();
     }
 }

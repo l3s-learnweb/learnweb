@@ -1452,7 +1452,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     }
 
     /**
-     * @return 2-letter language code ISO 639-1
+     * @return comma separated list of language codes
      */
     public String getLanguage()
     {
@@ -1460,16 +1460,11 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     }
 
     /**
-     * @param language 2-letter language code ISO 639-1
+     * @param comma separated list of language codes
      */
     public void setLanguage(String language)
     {
-        if(null == language)
-            language = "";
-        else if(language.length() != 0 && language.length() != 2)
-            throw new IllegalArgumentException("expected 2-letter language code");
-        else
-            this.language = language.toLowerCase();
+        this.language = language;
     }
 
     public Date getResourceTimestamp()
@@ -1498,10 +1493,6 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
      */
     public String setMetadataValue(String key, String value)
     {
-        key = key.toLowerCase();
-        if(key.equals("author"))
-            throw new IllegalArgumentException(key + " is a reserved name");
-
         return metadata.put(key, value);
     }
 
@@ -1567,6 +1558,8 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
                 return getAuthor();
             case "description":
                 return getDescription();
+            case "language":
+                return getLanguage();
             }
             return super.get(key);
         }
@@ -1574,8 +1567,6 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         @Override
         public String put(String key, String value)
         {
-            log.debug("put " + key + " = " + value);
-
             switch(key)
             {
             case "title":
@@ -1586,6 +1577,9 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
                 return value;
             case "description":
                 setDescription(value);
+                return value;
+            case "language":
+                setLanguage(value);
                 return value;
             }
 
@@ -1607,17 +1601,13 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         @Override
         public String[] get(Object key)
         {
-            log.debug("get multi field: " + key);
-
             String value = metadata.get(key);
-            return value == null ? null : value.split(SPLITTER);
+            return value == null || value.length() == 0 ? null : value.split(SPLITTER);
         }
 
         @Override
         public String[] put(String key, String[] value)
         {
-            log.debug("put " + key + " = " + value);
-
             metadata.put(key, StringUtils.join(value, SPLITTER));
 
             return null;
