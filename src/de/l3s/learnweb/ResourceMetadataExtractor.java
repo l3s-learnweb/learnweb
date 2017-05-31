@@ -8,6 +8,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -114,9 +115,12 @@ public class ResourceMetadataExtractor
                 if(items.length() > 0)
                 {
                     JSONObject snippet = items.getJSONObject(0).getJSONObject("snippet");
-                    resource.setTitle(snippet.getString("title"));
-                    resource.setDescription(StringHelper.shortnString(snippet.getString("description"), DESCRIPTION_LIMIT));
-                    resource.setAuthor(snippet.getString("channelTitle"));
+                    if(StringUtils.isEmpty(resource.getTitle()))
+                        resource.setTitle(snippet.getString("title"));
+                    if(StringUtils.isEmpty(resource.getDescription()))
+                        resource.setDescription(StringHelper.shortnString(snippet.getString("description"), DESCRIPTION_LIMIT));
+                    if(StringUtils.isEmpty(resource.getAuthor()))
+                        resource.setAuthor(snippet.getString("channelTitle"));
                     resource.setEmbeddedRaw("<iframe src=\"https://www.youtube.com/embed/" + resource.getIdAtService() + "\" frameborder=\"0\" allowfullscreen></iframe>");
 
                     // TODO: save tags for resource
@@ -172,9 +176,12 @@ public class ResourceMetadataExtractor
                 JSONObject json = readJsonArrayFromUrl(VIMEO_API_REQUEST + resource.getIdAtService() + ".json").getJSONObject(0);
                 if(json != null)
                 {
-                    resource.setTitle(json.getString("title"));
-                    resource.setDescription(StringHelper.shortnString(json.getString("description"), DESCRIPTION_LIMIT));
-                    resource.setAuthor(json.getString("user_name"));
+                    if(resource.getTitle() == null || resource.getTitle().length() == 0)
+                        resource.setTitle(json.getString("title"));
+                    if(StringUtils.isEmpty(resource.getDescription()))
+                        resource.setDescription(StringHelper.shortnString(json.getString("description"), DESCRIPTION_LIMIT));
+                    if(StringUtils.isEmpty(resource.getAuthor()))
+                        resource.setAuthor(json.getString("user_name"));
                     resource.setDuration(json.getInt("duration"));
                     resource.setEmbeddedRaw("<iframe src=\"//player.vimeo.com/video/" + resource.getIdAtService() + "\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>");
 
@@ -219,15 +226,18 @@ public class ResourceMetadataExtractor
                 JSONObject json = readJsonObjectFromUrl(FLICKR_API_REQUEST + resource.getIdAtService()).getJSONObject("photo");
                 if(json != null)
                 {
-                    resource.setTitle(json.getJSONObject("title").getString("_content"));
-                    resource.setDescription(StringHelper.shortnString(json.getJSONObject("description").getString("_content"), DESCRIPTION_LIMIT));
+                    if(StringUtils.isEmpty(resource.getTitle()))
+                        resource.setTitle(json.getJSONObject("title").getString("_content"));
+                    if(StringUtils.isEmpty(resource.getDescription()))
+                        resource.setDescription(StringHelper.shortnString(json.getJSONObject("description").getString("_content"), DESCRIPTION_LIMIT));
                     JSONObject owner = json.getJSONObject("owner");
                     String author = owner.getString("realname");
                     if(author == null || author.isEmpty())
                     {
                         author = owner.getString("username");
                     }
-                    resource.setAuthor(author);
+                    if(StringUtils.isEmpty(resource.getAuthor()))
+                        resource.setAuthor(author);
 
                     String thumbnail = "https://farm" + json.getString("farm") + ".staticflickr.com/" + json.getString("server") + "/" + json.getString("id") + "_" + json.getString("secret") + ".jpg";
                     rpm.processImage(resource, FileInspector.openStream(thumbnail));
@@ -256,9 +266,12 @@ public class ResourceMetadataExtractor
                 JSONObject json = readJsonObjectFromUrl(IPERNITY_API_REQUEST + resource.getIdAtService()).getJSONObject("doc");
                 if(json != null)
                 {
-                    resource.setTitle(json.getString("title"));
-                    resource.setDescription(StringHelper.shortnString(json.getString("description"), DESCRIPTION_LIMIT));
-                    resource.setAuthor(json.getJSONObject("owner").getString("username"));
+                    if(StringUtils.isEmpty(resource.getTitle()))
+                        resource.setTitle(json.getString("title"));
+                    if(StringUtils.isEmpty(resource.getDescription()))
+                        resource.setDescription(StringHelper.shortnString(json.getString("description"), DESCRIPTION_LIMIT));
+                    if(StringUtils.isEmpty(resource.getAuthor()))
+                        resource.setAuthor(json.getJSONObject("owner").getString("username"));
 
                     // TODO: save tags for resource
                     /*
@@ -317,13 +330,16 @@ public class ResourceMetadataExtractor
 
                 String type = info.getMimeType().startsWith("application/") ? info.getMimeType().substring(info.getMimeType().indexOf("/") + 1) : info.getMimeType();
 
-                resource.setTitle(info.getTitle());
+                if(StringUtils.isEmpty(resource.getTitle()))
+                    resource.setTitle(info.getTitle());
 
                 if(type.equals("text/html") || type.equals("text/plain") || type.equals("xhtml+xml") || type.equals("octet-stream") || type.equals("blog-post") || type.equals("x-gzip"))
                 {
                     resource.setType("text");
-                    resource.setAuthor(info.getAuthor());
-                    resource.setDescription(info.getDescription());
+                    if(StringUtils.isEmpty(resource.getAuthor()))
+                        resource.setAuthor(info.getAuthor());
+                    if(StringUtils.isEmpty(resource.getDescription()))
+                        resource.setDescription(info.getDescription());
                     resource.setMachineDescription(info.getTextContent());
                     resource.setOnlineStatus(OnlineStatus.ONLINE);
                     extractWebSource();
@@ -331,7 +347,8 @@ public class ResourceMetadataExtractor
                 else if(type.equals("pdf"))
                 {
                     resource.setType(type);
-                    resource.setDescription(StringHelper.shortnString(info.getTextContent(), 1400));
+                    if(StringUtils.isEmpty(resource.getDescription()))
+                        resource.setDescription(StringHelper.shortnString(info.getTextContent(), 1400));
                     resource.setMachineDescription(info.getTextContent());
                 }
                 else if(type.startsWith("image/"))

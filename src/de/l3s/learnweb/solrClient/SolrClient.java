@@ -222,11 +222,11 @@ public class SolrClient
 
         Learnweb learnweb = Learnweb.createInstance("");
         SolrClient solr = learnweb.getSolrClient();
-        // solr.getAutoCompletion("author", "bb");
+        log.debug(solr.getAutoCompletion("author_s", "phi C"));
 
         //SolrClient.indexOneResource(67069);
         //SolrClient.indexOneResource(72364);
-        solr.deleteFromIndex(202667);
+        //solr.deleteFromIndex(202667);
         //deleteOneResource(67069);
 
         //SolrClient.deleteAllResource();

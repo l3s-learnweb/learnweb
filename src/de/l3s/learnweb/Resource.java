@@ -1904,9 +1904,9 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         public String[] get(Object key)
         {
             String value = wrappedMap.get(key);
-            log.debug("get " + key + " value:" + value);
+            //            log.debug("get " + key + " value:" + value);
             String[] result = (value == null || value.length() == 0) ? null : value.split(SPLITTER);
-            log.debug("result: " + result);
+            //            log.debug("result: " + result);
             return result;
         }
 

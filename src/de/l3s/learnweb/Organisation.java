@@ -105,7 +105,8 @@ public class Organisation implements Serializable, Comparable<Organisation>
                 @Override
                 public List<String> completeText(String query)
                 {
-                    //return ResourceMetaDataBean.completeAuthor(query);
+                    return ResourceMetaDataBean.completeAuthor(query);
+                    /*
                     try
                     {
                         return Learnweb.getInstance().getSolrClient().getAutoCompletion("author", query);
@@ -115,6 +116,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
                         log.error("Couldn't get auto completion for query=" + query, e);
                     }
                     return null;
+                    */
                 }
             };
             metadata.setInfo("Please, carefully acknowledge authors of resources. In case the author is not clear, use all the details you have: URL, book reference, etc");

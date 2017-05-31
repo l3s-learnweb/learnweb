@@ -8,12 +8,6 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition> 
-
-	<colgroup>
-		<col span="1" style="width: 10%; min-width: 10rem;" />
-		<col span="1" />
-	</colgroup>
-
 	<c:forEach var="field" items="#{userBean.user.organisation.metadataFields}">
 		<tr>
 			<c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">	
@@ -50,8 +44,8 @@
 						
 						<c:if test="#{field.type eq 'AUTOCOMPLETE'}">	 				
 							<p:autoComplete id="input_complete_#{field.name}" required="#{field.required}" value="#{res.metadataWrapper[field.name]}" 
-								completeMethod="#{field.completeText}" title="#{field.info}" class="border-box-100" /> 
-							<p:tooltip for="input_complete_#{field.name}" position="left" rendered="#{not empty field.info}" /> 
+								completeMethod="#{field.completeText}" class="border-box-100" /> 
+							<p:tooltip for="input_complete_#{field.name}" showEvent="hover" position="left" rendered="#{true}" value="blaaaaaaa #{field.info}" /> 
 						</c:if>
 	
 						<c:if test="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">

@@ -73,16 +73,18 @@ public class ResourceMetaDataBean
         int organisationId = user.getOrganisation().getId();
 
         List<String> authors = authorLists.get(organisationId);
+
         if(authors == null)
         {
             authors = loadAuthors(organisationId);
             //return null;
         }
 
+        query = query.toLowerCase();
         List<String> suggestions = new LinkedList<>();
         for(String author : authors)
         {
-            if(author.startsWith(query))
+            if(author.toLowerCase().startsWith(query))
                 suggestions.add(author);
         }
         return suggestions;
@@ -90,7 +92,6 @@ public class ResourceMetaDataBean
 
     private static List<String> loadAuthors(int organisationId)
     {
-
         try
         {
             HashSet<String> uniqueAuthors = new HashSet<>();

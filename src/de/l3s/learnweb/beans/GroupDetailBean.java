@@ -47,7 +47,6 @@ import de.l3s.learnweb.NewsEntry;
 import de.l3s.learnweb.Presentation;
 import de.l3s.learnweb.PresentationManager;
 import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.ResourceManager;
 import de.l3s.learnweb.ResourceManager.Order;
 import de.l3s.learnweb.SearchFilters;
@@ -561,14 +560,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         }
     }
 
-    public boolean hasViewPermission(User user) throws SQLException
-    {
-        if(null == group)
-            return false;
-
-        return group.getMembers().contains(user);
-    }
-
     public void onSortingChanged(ValueChangeEvent e)
     {
         // TODO implement
@@ -656,31 +647,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             updateLinksList();
 
         return links;
-    }
-
-    public boolean canDeleteTheResourceCompletely(Object obj) throws SQLException
-    {
-        User user = getUser();
-
-        if(user == null)
-            return false;
-
-        if(user.isAdmin() || group.getCourse().isModerator(user))
-        {
-            return true;
-        }
-
-        GroupItem resource;
-        if(obj instanceof ResourceDecorator)
-            resource = ((ResourceDecorator) obj).getResource();
-        else if(obj instanceof Resource)
-            resource = (Resource) obj;
-        else if(obj instanceof Folder)
-            resource = (Folder) obj;
-        else
-            throw new IllegalArgumentException("Method called with an unexpected class type: " + obj.getClass());
-
-        return user.getId() == resource.getUserId();
     }
 
     public boolean canEditTheResource(GroupItem obj) throws SQLException
