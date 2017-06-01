@@ -22,7 +22,6 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
@@ -74,6 +73,7 @@ public class AdvSearchBean extends ApplicationBean implements Serializable
     private final int pageSize;
 
     private Map<String, String> queries = new HashMap<>();
+    private Map<String, String[]> queriesMultiValued = new HashMap<>();
 
     public enum RPAction
     {
@@ -290,6 +290,16 @@ public class AdvSearchBean extends ApplicationBean implements Serializable
         this.query = query;
     }
 
+    public Map<String, String[]> getQueriesMultiValued()
+    {
+        return queriesMultiValued;
+    }
+
+    public void setQueriesMultiValued(Map<String, String[]> queriesMultiValued)
+    {
+        this.queriesMultiValued = queriesMultiValued;
+    }
+
     public void onQueryChange() throws SQLException
     {
         updateResourcesFromSolr();
@@ -322,13 +332,16 @@ public class AdvSearchBean extends ApplicationBean implements Serializable
         try
         {
             paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
-            //TODO: remove it
-            RequestContext.getCurrentInstance().update(":filters");
         }
         catch(SQLException | IOException | SolrServerException e)
         {
             addFatalMessage(e);
         }
+    }
+
+    public void onSearch()
+    {
+        log.debug(queries);
     }
 
     private SearchPaginator getResourcesFromSolr(int groupId, int folderId, String query, User user) throws SQLException, IOException, SolrServerException

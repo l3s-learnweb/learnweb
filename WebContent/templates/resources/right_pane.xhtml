@@ -367,7 +367,7 @@
 									</td>
 									<td>
 										<h:form id="rate_form">
-											<p:rating value="#{resourceDetailBean.starRatingRounded}" disabled="${resourceDetailBean.starRatedByUser or not resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}" cancel="false" style="vertical-align: bottom; margin-right:10px; display:inline-block;">
+											<p:rating value="#{resourceDetailBean.clickedResource.starRatingRounded}" disabled="${resourceDetailBean.starRatedByUser or not resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}" cancel="false" style="vertical-align: bottom; margin-right:10px; display:inline-block;">
 												<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}" update="rate_form :growl" />			
 											</p:rating>
 											 

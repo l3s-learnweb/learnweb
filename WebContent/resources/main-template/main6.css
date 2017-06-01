@@ -49,7 +49,7 @@ iframe { border:none }
 }
 .ui-datatable .ui-datatable-header { border-bottom:none; }
 
-.ui-dialog .ui-dialog-titlebar { padding-left:0; }
+.ui-dialog .ui-dialog-titlebar { padding-left:0; margin-left: 12px; }
 .ui-selectcheckboxmenu .ui-selectcheckboxmenu-token.ui-state-active, 
 .ui-autocomplete .ui-autocomplete-token.ui-state-active, .ui-chips .ui-chips-token.ui-state-active {
     background: #489a83;

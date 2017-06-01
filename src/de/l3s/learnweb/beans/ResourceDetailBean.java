@@ -77,12 +77,6 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
     }
 
-    public int getStarRatingRounded()
-    {
-
-        return clickedResource.getRatingSum() == 0 ? 0 : clickedResource.getRatingSum() / clickedResource.getRateNumber();
-    }
-
     public void setStarRatingRounded(int value)
     {
         // dummy method, is required by p:rating

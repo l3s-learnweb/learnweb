@@ -516,6 +516,16 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         return ratingSum == 0 ? 0.0 : (double) ratingSum / (double) rateNumber;
     }
 
+    public int getStarRatingRounded()
+    {
+        return ratingSum == 0 ? 0 : getRatingSum() / getRateNumber();
+    }
+
+    public void setStarRatingRounded(int value)
+    {
+        // dummy method, is required by p:rating
+    }
+
     public void setRatingSum(int rating)
     {
         this.ratingSum = rating;
@@ -1254,12 +1264,17 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         {
             if(getSource().equalsIgnoreCase("loro") || getSource().equalsIgnoreCase("desktop"))
             {
-                return "<iframe src=\"video.jsf?resource_id=" + id + "\" style=\"width:100%; height:100%;\"></iframe>";
-                //log.debug("" + getFileUrl());
-                //return "<video class=\"video-js vjs-default-skin vjs-big-play-centered\" controls=\"preload=none\" width=\"100%\" height=\"100%\" data-setup=\"{}\"><source src=\"" + getFileUrl() + "\" /></video>";
-                //+ "<link href=\"http://vjs.zencdn.net/4.12/video-js.css\" rel=\"stylesheet\"/><script src=\"http://vjs.zencdn.net/4.12/video.js\"></script>";
-
+                return "<iframe src=\"video.jsf?resource_id=" + id + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
             }
+            else if(getSource().equalsIgnoreCase("ted"))
+            {
+                return "<iframe src=\"" + getUrl().replace("http://www", "//embed") + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
+            }
+            /* TODO as soon as idAtService is correct
+            else if(getSource().equalsIgnoreCase("vimeo"))
+            {
+                return "<iframe src=\"//player.vimeo.com/video/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
+            }*/
         }
         if(getEmbeddedRaw() != null)
             return getEmbeddedRaw();
@@ -1665,14 +1680,13 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     {
         if(metadataObj instanceof MetadataMap)
         {
-            log.debug("load old metadata resource " + getId() + " - " + getTitle());
+            log.warn("load old metadata resource " + getId() + " - " + getTitle());
             // old class needs to be copied to simple hashmap
             MetadataMap oldMetadata = (MetadataMap) metadataObj;
             metadata = new HashMap<>(oldMetadata);
         }
         else if(metadataObj instanceof HashMap<?, ?>)
         {
-            log.debug("load new metadata resource " + getId() + " - " + getTitle());
             @SuppressWarnings("unchecked")
             HashMap<String, String> hashMap = (HashMap<String, String>) metadataObj;
             metadata = hashMap;

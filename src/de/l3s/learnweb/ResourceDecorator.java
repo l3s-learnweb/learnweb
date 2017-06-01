@@ -236,6 +236,26 @@ public class ResourceDecorator implements Serializable
         return resource.getUser();
     }
 
+    public String getFileName()
+    {
+        return resource.getFileName();
+    }
+
+    public double getStarRating()
+    {
+        return resource.getStarRating();
+    }
+
+    public int getRateNumber()
+    {
+        return resource.getRateNumber();
+    }
+
+    public int getRatingSum()
+    {
+        return resource.getRatingSum();
+    }
+
     @Override
     public String toString()
     {

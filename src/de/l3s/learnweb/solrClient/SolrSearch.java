@@ -412,6 +412,8 @@ public class SolrSearch implements Serializable
             solrQuery.addSort("timestamp", ORDER.desc);
         }
         solrQuery.addFilterQuery("-(id:r_* AND -(groupId:* OR ownerUserId:" + userId + "))"); // hide private resources
+        // better use?  solrQuery.addFilterQuery("groupId:* OR ownerUserId:" + userId + ""); // hide private resources
+
         solrQuery.setStart((page - 1) * resultsPerPage);
         solrQuery.setRows(resultsPerPage);
 
