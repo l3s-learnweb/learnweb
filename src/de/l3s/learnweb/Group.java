@@ -1,7 +1,6 @@
 package de.l3s.learnweb;
 
 import java.io.Serializable;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
 import java.util.HashMap;
@@ -30,9 +29,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     @Size(min = 3, max = 60)
     private String title;
     private String description;
-    private String university;
-    private String metaInfo1;
-    private String location;
+    private String metadata1;
     @Size(max = 50)
     private String language;
     private int categoryId;
@@ -95,9 +92,8 @@ public class Group implements Comparable<Group>, HasId, Serializable
     private POLICY_VIEW policyView = POLICY_VIEW.ALL_LEARNWEB_USERS;
     private POLICY_ANNOTATE policyAnnotate = POLICY_ANNOTATE.ALL_LEARNWEB_USERS;
 
-    private boolean restrictionOnlyLeaderCanAddResources;
     private boolean restrictionForumCategoryRequired = false;
-    private boolean readOnly = false;
+    private boolean restrictionAnonymousResources = false; // the owner of resources is not shown
 
     // caches
     private String categoryTitle;
@@ -126,30 +122,29 @@ public class Group implements Comparable<Group>, HasId, Serializable
         this.id = -1;
     }
 
+    /*
     public Group(ResultSet rs) throws SQLException
     {
-        this.id = rs.getInt("group_id");
-        this.title = rs.getString("title");
-        this.description = rs.getString("description");
-        this.leaderUserId = rs.getInt("leader_id");
-        this.university = rs.getString("university");
-        this.metaInfo1 = rs.getString("course");
-        this.location = rs.getString("location");
-        this.language = rs.getString("language");
-        this.courseId = rs.getInt("course_id");
-        this.categoryId = rs.getInt("group_category_id");
-        this.categoryTitle = rs.getString("category_title");
-        this.categoryAbbreviation = rs.getString("category_abbreviation");
-        this.restrictionOnlyLeaderCanAddResources = rs.getInt("restriction_only_leader_can_add_resources") == 1;
-        this.readOnly = rs.getInt("read_only") == 1;
-        this.restrictionForumCategoryRequired = rs.getInt("restriction_forum_category_required") == 1;
-
-        this.policyAdd = POLICY_ADD.valueOf(rs.getString("policy_add"));
-        this.policyAnnotate = POLICY_ANNOTATE.valueOf(rs.getString("policy_annotate"));
-        this.policyEdit = POLICY_EDIT.valueOf(rs.getString("policy_edit"));
-        this.policyJoin = POLICY_JOIN.valueOf(rs.getString("policy_join"));
-        this.policyView = POLICY_VIEW.valueOf(rs.getString("policy_view"));
+        setId(rs.getInt("group_id"));
+        setTitle(rs.getString("title"));
+        setDescription(rs.getString("description"));
+        setLeaderUserId(rs.getInt("leader_id"));
+        setMetadata1(rs.getString("metadata1"));
+        setLanguage(rs.getString("language"));
+        setCourseId(rs.getInt("course_id"));
+        setCategoryId(rs.getInt("group_category_id"));
+        setCategoryTitle(rs.getString("category_title"));
+        setCategoryAbbreviation(rs.getString("category_abbreviation"));
+        setRestrictionForumCategoryRequired(rs.getInt("restriction_forum_category_required") == 1);
+        setRestrictionAnonymousResources(rs.getInt("restriction_anonymous_resources") == 1);
+    
+        setPolicyAdd(POLICY_ADD.valueOf(rs.getString("policy_add")));
+        setPolicyAnnotate(POLICY_ANNOTATE.valueOf(rs.getString("policy_annotate")));
+        setPolicyEdit(POLICY_EDIT.valueOf(rs.getString("policy_edit")));
+        setPolicyJoin(POLICY_JOIN.valueOf(rs.getString("policy_join")));
+        setPolicyView(POLICY_VIEW.valueOf(rs.getString("policy_view")));
     }
+    */
 
     @Override
     public int getId()
@@ -313,26 +308,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
         this.description = description == null ? null : description.trim();
     }
 
-    public String getUniversity()
-    {
-        return university;
-    }
-
-    public void setUniversity(String university)
-    {
-        this.university = university;
-    }
-
-    public String getLocation()
-    {
-        return location;
-    }
-
-    public void setLocation(String location)
-    {
-        this.location = location;
-    }
-
     public String getLanguage()
     {
         return language;
@@ -343,14 +318,14 @@ public class Group implements Comparable<Group>, HasId, Serializable
         this.language = language;
     }
 
-    public String getMetaInfo1()
+    public String getMetadata1()
     {
-        return metaInfo1;
+        return metadata1;
     }
 
-    public void setMetaInfo1(String course)
+    public void setMetadata1(String metadata)
     {
-        this.metaInfo1 = course;
+        this.metadata1 = metadata;
     }
 
     public void setId(int id)
@@ -399,18 +374,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
     {
         this.leaderUserId = userId;
         this.leader = null; // force reload
-    }
-
-    @Deprecated
-    public boolean isRestrictionOnlyLeaderCanAddResources()
-    {
-        return restrictionOnlyLeaderCanAddResources;
-    }
-
-    @Deprecated
-    public void setRestrictionOnlyLeaderCanAddResources(boolean restrictionOnlyLeaderCanAddResources) throws SQLException
-    {
-        this.restrictionOnlyLeaderCanAddResources = restrictionOnlyLeaderCanAddResources;
     }
 
     public List<Link> getDocumentLinks() throws SQLException
@@ -519,18 +482,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
     public void setCategoryAbbreviation(String categoryAbbreviation)
     {
         this.categoryAbbreviation = categoryAbbreviation;
-    }
-
-    @Deprecated
-    public boolean isReadOnly()
-    {
-        return readOnly;
-    }
-
-    @Deprecated
-    public void setReadOnly(boolean readOnly)
-    {
-        this.readOnly = readOnly;
     }
 
     public boolean isRestrictionForumCategoryRequired()
@@ -782,4 +733,15 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
         return false;
     }
+
+    public boolean isRestrictionAnonymousResources()
+    {
+        return restrictionAnonymousResources;
+    }
+
+    public void setRestrictionAnonymousResources(boolean restrictionAnonymousResources)
+    {
+        this.restrictionAnonymousResources = restrictionAnonymousResources;
+    }
+
 }

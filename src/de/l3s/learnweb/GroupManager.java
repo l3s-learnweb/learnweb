@@ -15,6 +15,11 @@ import org.apache.solr.client.solrj.SolrServerException;
 import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 
+import de.l3s.learnweb.Group.POLICY_ADD;
+import de.l3s.learnweb.Group.POLICY_ANNOTATE;
+import de.l3s.learnweb.Group.POLICY_EDIT;
+import de.l3s.learnweb.Group.POLICY_JOIN;
+import de.l3s.learnweb.Group.POLICY_VIEW;
 import de.l3s.learnweb.Organisation.Option;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.solrClient.SolrSearch;
@@ -32,7 +37,7 @@ public class GroupManager
 {
 
     // if you change this, you have to change the constructor of Group too
-    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.course, g.location, g.language, g.restriction_only_leader_can_add_resources, g.read_only, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation, g.restriction_forum_category_required, g.policy_add, g.policy_annotate, g.policy_edit, g.policy_join, g.policy_view";
+    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.course, g.location, g.language, g.restriction_anonymous_resources, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation, g.restriction_forum_category_required, g.policy_add, g.policy_annotate, g.policy_edit, g.policy_join, g.policy_view";
     private static Logger log = Logger.getLogger(GroupManager.class);
 
     private Learnweb learnweb;
@@ -145,7 +150,26 @@ public class GroupManager
         Group group = groupCache.get(rs.getInt("group_id"));
         if(null == group)
         {
-            group = new Group(rs);
+            group = new Group();
+            group.setId(rs.getInt("group_id"));
+            group.setTitle(rs.getString("title"));
+            group.setDescription(rs.getString("description"));
+            group.setLeaderUserId(rs.getInt("leader_id"));
+            group.setMetadata1(rs.getString("metadata1"));
+            group.setLanguage(rs.getString("language"));
+            group.setCourseId(rs.getInt("course_id"));
+            group.setCategoryId(rs.getInt("group_category_id"));
+            group.setCategoryTitle(rs.getString("category_title"));
+            group.setCategoryAbbreviation(rs.getString("category_abbreviation"));
+            group.setRestrictionForumCategoryRequired(rs.getInt("restriction_forum_category_required") == 1);
+            group.setRestrictionAnonymousResources(rs.getInt("restriction_anonymous_resources") == 1);
+
+            group.setPolicyAdd(POLICY_ADD.valueOf(rs.getString("policy_add")));
+            group.setPolicyAnnotate(POLICY_ANNOTATE.valueOf(rs.getString("policy_annotate")));
+            group.setPolicyEdit(POLICY_EDIT.valueOf(rs.getString("policy_edit")));
+            group.setPolicyJoin(POLICY_JOIN.valueOf(rs.getString("policy_join")));
+            group.setPolicyView(POLICY_VIEW.valueOf(rs.getString("policy_view")));
+
             group = groupCache.put(group);
         }
         return group;
@@ -211,7 +235,7 @@ public class GroupManager
         if(!rs.next())
             return null;
 
-        group = new Group(rs);
+        group = createGroup(rs);
         pstmtGetGroup.close();
 
         if(useCache)
@@ -231,7 +255,8 @@ public class GroupManager
     public synchronized Group save(Group group) throws SQLException
     {
         PreparedStatement replace = learnweb.getConnection().prepareStatement(
-                "REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, university, course, location, language, course_id, group_category_id, restriction_only_leader_can_add_resources, read_only, restriction_forum_category_required, policy_add, policy_annotate, policy_edit, policy_join, policy_view) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                "REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, "
+                        + ", metadata1, language, course_id, group_category_id, restriction_anonymous_resources, restriction_forum_category_required, policy_add, policy_annotate, policy_edit, policy_join, policy_view) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 Statement.RETURN_GENERATED_KEYS);
 
         if(group.getId() < 0) // the Group is not yet stored at the database
@@ -247,23 +272,21 @@ public class GroupManager
         }
         else
             replace.setInt(1, group.getId());
+
         replace.setString(2, group.getTitle());
         replace.setString(3, group.getDescription());
         replace.setInt(4, group.getLeaderUserId());
-        replace.setString(5, group.getUniversity());
-        replace.setString(6, group.getMetaInfo1());
-        replace.setString(7, group.getLocation());
-        replace.setString(8, group.getLanguage());
-        replace.setInt(9, group.getCourseId());
-        replace.setInt(10, group.getCategoryId());
-        replace.setInt(11, group.isRestrictionOnlyLeaderCanAddResources() ? 1 : 0);
-        replace.setInt(12, group.isReadOnly() ? 1 : 0);
-        replace.setInt(13, group.isRestrictionForumCategoryRequired() ? 1 : 0);
-        replace.setString(14, group.getPolicyAdd().name());
-        replace.setString(15, group.getPolicyAnnotate().name());
-        replace.setString(16, group.getPolicyEdit().name());
-        replace.setString(17, group.getPolicyJoin().name());
-        replace.setString(18, group.getPolicyView().name());
+        replace.setString(5, group.getMetadata1());
+        replace.setString(6, group.getLanguage());
+        replace.setInt(7, group.getCourseId());
+        replace.setInt(8, group.getCategoryId());
+        replace.setInt(9, group.isRestrictionAnonymousResources() ? 1 : 0);
+        replace.setInt(10, group.isRestrictionForumCategoryRequired() ? 1 : 0);
+        replace.setString(11, group.getPolicyAdd().name());
+        replace.setString(12, group.getPolicyAnnotate().name());
+        replace.setString(13, group.getPolicyEdit().name());
+        replace.setString(14, group.getPolicyJoin().name());
+        replace.setString(15, group.getPolicyView().name());
         replace.executeUpdate();
 
         if(group.getId() < 0) // get the assigned id

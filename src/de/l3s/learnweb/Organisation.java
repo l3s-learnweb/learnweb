@@ -1,6 +1,5 @@
 package de.l3s.learnweb;
 
-import java.io.IOException;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,7 +10,6 @@ import javax.faces.model.SelectItem;
 import javax.validation.constraints.Size;
 
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
 
 import de.l3s.learnweb.ResourceMetadataField.MetadataType;
 import de.l3s.learnweb.SearchFilters.SERVICE;
