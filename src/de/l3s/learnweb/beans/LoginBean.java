@@ -138,9 +138,12 @@ public class LoginBean extends ApplicationBean implements Serializable
             userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator 
             return "/lw/admin/users.xhtml?faces-redirect=true";
         }
+        else
+            getFacesContext().getExternalContext().invalidateSession(); // end session
 
         log(Action.logout, 0, 0);
-        userBean.setUser(null);
+
+        //userBean.setUser(null);
 
         if(activeCourse == 891) // is archive web course
         {

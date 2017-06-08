@@ -40,8 +40,8 @@ import de.l3s.learnweb.SearchFilters.Filter;
 import de.l3s.learnweb.SearchFilters.FilterItem;
 import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.SearchFilters.SERVICE;
+import de.l3s.learnweb.SearchLogManager.LOGACTION;
 import de.l3s.learnweb.User;
-import de.l3s.searchlogclient.Actions.ACTION;
 
 @ManagedBean
 @ViewScoped
@@ -49,8 +49,6 @@ public class SearchBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 8540469716342051138L;
     private static final Logger log = Logger.getLogger(SearchBean.class);
-
-    private static final DateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     // Values from views stored here
     private String query = "";
@@ -80,7 +78,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     private boolean graphLoaded = false;
     private int counter = 0;
 
-    private int minResourcesPerGroup = 2;
+    private final static int minResourcesPerGroup = 2;
 
     /* For logging */
     // private boolean logEnabled; //Only carry out search log functions if user is logged in
@@ -355,7 +353,7 @@ public class SearchBean extends ApplicationBean implements Serializable
                 }
             }*/
             user.setActiveGroup(selectedResourceTargetGroupId);
-            search.logAction(ACTION.resource_saved, selectedResourceTempId);
+            search.logAction(LOGACTION.resource_saved, selectedResourceTempId);
             log(Action.adding_resource, selectedResourceTargetGroupId, newResource.getId(), "");
 
             // add query as tag 
@@ -376,7 +374,24 @@ public class SearchBean extends ApplicationBean implements Serializable
      */
     public void logResourceOpened()
     {
-        search.logAction(ACTION.resource_click, selectedResourceTempId);
+        /* TODO selectedResourceTempId is null check if selectedresource can be used
+        try
+        {
+            if(search == null)
+            {
+                log.warn("can't log resource opend event");
+                return;
+            }
+            LOGACTION action = LOGACTION.resource_click;
+            System.out.println(action);
+            search.logAction(action, selectedResourceTempId);
+        }
+        catch(Throwable e)
+        {
+            log.error("Can't log resource opened event", e);
+        }
+        */
+
         /*
         if(!logEnabled)
             return;

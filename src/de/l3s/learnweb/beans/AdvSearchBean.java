@@ -88,7 +88,7 @@ public class AdvSearchBean extends ApplicationBean implements Serializable
 
     public AdvSearchBean() throws SQLException, IOException, SolrServerException
     {
-        pageSize = getLearnweb().getProperties().getPropertyIntValue("RESOURCES_PAGE_SIZE");
+        pageSize = 10;
 
         searchFilters = new SearchFilters();
         searchFilters.setMode(MODE.group);

@@ -1328,7 +1328,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     @Override
     public String toString()
     {
-        return "Resource [id=" + id + ", title=" + title + ", url=" + url + ", storageType=" + storageType + ", source=" + source + ", type=" + type + ", format=" + format + "]";
+        return "Resource [id=" + id + ", title=" + title + ", url=" + url + ", storageType=" + storageType + ", source=" + source + ", type=" + type + ", format=" + format + ", date=" + getCreationDate() + "]";
     }
 
     public String getTranscript()
@@ -1455,6 +1455,8 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
      */
     public String getLanguage()
     {
+        if(null == language)
+            return "";
         return language;
     }
 

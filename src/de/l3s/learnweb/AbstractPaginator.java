@@ -13,8 +13,8 @@ public abstract class AbstractPaginator implements Serializable
     private static final long serialVersionUID = 2495539559727294482L;
     private static final int DEFAULT_PAGE_INDEX = 0;
     private static final int DEFAULT_N_PAGE_LIMIT = 5;
-    private static int PAGE_SIZE = -1;
 
+    private final int pageSize;
     private int pageIndex = DEFAULT_PAGE_INDEX;
     private int totalPages;
     private int totalResults = Integer.MIN_VALUE;
@@ -23,20 +23,12 @@ public abstract class AbstractPaginator implements Serializable
 
     public abstract List<ResourceDecorator> getCurrentPage() throws SQLException, IOException, SolrServerException;
 
-    public AbstractPaginator(int totalResults)
-    {
-        setTotalResults(totalResults);
-
-        if(PAGE_SIZE == -1)
-            PAGE_SIZE = Learnweb.getInstance().getProperties().getPropertyIntValue("RESOURCES_PAGE_SIZE");
-    }
-
     /**
      * Classes which use this constructor must call setTotalResults(int totalResults) as soon as possible
      */
-    public AbstractPaginator()
+    public AbstractPaginator(int pageSize)
     {
-        setTotalResults(totalResults);
+        this.pageSize = pageSize;
     }
 
     public int getTotalResults()
@@ -47,7 +39,7 @@ public abstract class AbstractPaginator implements Serializable
     protected void setTotalResults(int totalResults)
     {
         this.totalResults = totalResults;
-        this.totalPages = (totalResults + PAGE_SIZE - 1) / PAGE_SIZE;
+        this.totalPages = (totalResults + pageSize - 1) / pageSize;
     }
 
     /**

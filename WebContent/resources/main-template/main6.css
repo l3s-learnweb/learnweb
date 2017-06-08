@@ -19,13 +19,15 @@ iframe { border:none }
 
 /* correct primefaces omega theme */
 
+
 .ui-datatable .ui-datatable-header,
 .ui-datatable .ui-paginator-top,
 .ui-datatable th.ui-state-default { background-color: rgb(196, 196, 196); }
 
 .ui-button,.ui-button span,button.ui-button.ui-state-default span,.ui-button.ui-state-default span {
-	font-weight:400 !important;
+	font-weight:400; /*  !important   */
 }
+
 .ui-widget,
 .ui-widget-content,
 .ui-widget-content a,
@@ -33,11 +35,13 @@ iframe { border:none }
 	color:rgb(79, 79, 79);
 	font-family:Arial, Verdana ;
 }
+.ui-progressbar .ui-progressbar-value,
 .ui-state-highlight,
 .ui-widget-content .ui-state-highlight,
 .ui-widget-header .ui-state-highlight { background-color: #489a83; }
 .ui-datepicker-current-day a { background:#489a83 !important; }
 
+.ui-progressbar .ui-progressbar-value,
 .ui-datatable .ui-datatable-header,
 .ui-datatable th.ui-state-default,
 .ui-datatable tbody > tr.ui-widget-content {
@@ -975,7 +979,7 @@ a.graybutton:focus {
 	z-index: 10;
 	box-shadow: 1px 1px 1px 0px rgba(0, 0, 0, 0.1), 0px -2px 4px -1px rgba(255, 250, 250, 0.8);
 }
-
+#paginator { font-size: 15px; }
 .pagebutton{
 	border:none !important;
 	background:none !important;
@@ -985,6 +989,8 @@ a.graybutton:focus {
 	color:#489a83 !important;
 	font-size:1.8rem !important;
 }
+.ui-button.ui-widget.ui-button-text-only.pagebutton > span { font-weight:bold; }
+.ui-button.ui-widget.ui-button-text-only.pagebutton:hover > span { color:#489a83 !important; }
 .next_button, .previous_button{
 	background-image:url(img/ui-icons.png) !important;
 	background-repeat:no-repeat !important;

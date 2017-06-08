@@ -24,15 +24,12 @@ import org.primefaces.model.DefaultTreeNode;
 import org.primefaces.model.TreeNode;
 import org.primefaces.model.menu.DefaultSubMenu;
 
-import com.sun.jersey.api.client.ClientHandlerException;
-
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.GroupManager;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Organisation.Option;
 import de.l3s.learnweb.User;
-import de.l3s.searchlogclient.SearchLogClient;
 import de.l3s.util.StringHelper;
 
 @ManagedBean
@@ -198,23 +195,6 @@ public class UserBean implements Serializable
         if(null != user)
         {
             user.onDestroy();
-        }
-
-        SearchLogClient searchLogClient = Learnweb.getInstance().getSearchlogClient();
-        try
-        {
-            searchLogClient.pushBatchResultsetList();
-            searchLogClient.postResourceLog();
-            searchLogClient.passUpdateResultset();
-            searchLogClient.pushTagList();
-        }
-        catch(ClientHandlerException e)
-        {
-            log.warn("Search Tracker service is down");
-        }
-        catch(RuntimeException e)
-        {
-            log.error(e.getMessage());
         }
 
         log.debug("Session Destroyed;");

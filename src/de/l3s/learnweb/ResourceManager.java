@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedList;
@@ -665,6 +666,22 @@ public class ResourceManager
         replace.close();
     }
 
+    /**
+     * Extracts the plain resources from a list of decorated resources
+     * 
+     * @param resources
+     * @return
+     */
+    public static List<Resource> convertDecoratedResources(List<ResourceDecorator> resources)
+    {
+        ArrayList<Resource> output = new ArrayList<>(resources.size());
+
+        for(ResourceDecorator decoratedResource : resources)
+            output.add(decoratedResource.getResource());
+
+        return output;
+    }
+
     public void saveComment(Comment comment) throws SQLException
     {
         PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_comment` (" + COMMENT_COLUMNS + ") VALUES (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
@@ -857,7 +874,6 @@ public class ResourceManager
         return count;
     }
 
-    @SuppressWarnings("unchecked")
     private Resource createResource(ResultSet rs) throws SQLException
     {
         int id = rs.getInt("resource_id");
@@ -1336,6 +1352,24 @@ public class ResourceManager
         Learnweb lw = Learnweb.createInstance("");
         ResourceManager rm = lw.getResourceManager();
         SolrClient sm = lw.getSolrClient();
+
+        List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where  deleted = ? order by resource_id desc limit 1000", "0");
+
+        log.debug("Resources loaded");
+
+        for(Resource resource : resources)
+        {
+            log.debug("Process: " + resource.toString());
+
+            sm.reIndexResource(resource);
+
+        }
+    }
+
+    public static void createMissingThumbnails() throws SQLException, ClassNotFoundException
+    {
+        Learnweb lw = Learnweb.createInstance("");
+        ResourceManager rm = lw.getResourceManager();
 
         List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where  group_id =? AND thumbnail0_file_id =0", "419");
 
