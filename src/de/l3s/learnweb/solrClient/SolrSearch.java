@@ -108,6 +108,11 @@ public class SolrSearch implements Serializable
         this.facetQueries = facetQueries;
     }
 
+    public Integer getResultsPerPage()
+    {
+        return resultsPerPage;
+    }
+
     /**
      * The language resources should be in
      * 
@@ -657,7 +662,7 @@ public class SolrSearch implements Serializable
 
         public SearchPaginator(SolrSearch search)
         {
-            super();
+            super(search.getResultsPerPage());
             this.search = search;
         }
 

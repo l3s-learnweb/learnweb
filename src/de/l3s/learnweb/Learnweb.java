@@ -139,7 +139,10 @@ public class Learnweb
 
         // if you need to override values in learnweb.properties file for local testing, do it in a separate properties file and add it here:
         if((new File("/home/learnweb_user")).exists())
+        {
             propteriesFileName = "learnweb";
+            developmentMode = false;
+        }
         else if((new File("/Users/chloe0502/Documents/workspace/learnweb/learnwebFiles")).exists())
             propteriesFileName = "lw_local_chloe";
         else if((new File("C:\\programmieren\\philipp.txt")).exists())
