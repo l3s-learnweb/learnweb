@@ -21,7 +21,7 @@ import de.l3s.interwebj.SearchQuery;
 import de.l3s.learnweb.SearchFilters.FILTERS;
 import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.SearchFilters.SERVICE;
-import de.l3s.learnweb.SearchLogManager.LOGACTION;
+import de.l3s.learnweb.SearchLogManager.LOG_ACTION;
 import de.l3s.learnweb.solrClient.SolrSearch;
 import de.l3s.util.StringHelper;
 
@@ -593,6 +593,7 @@ public class Search implements Serializable
     public void logQuery(String query, MODE searchMode, String searchFilters, User user)
     {
         searchId = getSearchLogger().logQuery(query, searchMode, searchFilters, user);
+        log.debug("search id = " + searchId);
     }
 
     private SearchLogManager getSearchLogger()
@@ -608,7 +609,7 @@ public class Search implements Serializable
         getSearchLogger().logResources(searchId, resources);
     }
 
-    public void logAction(LOGACTION action, int selectedResourceTempId)
+    public void logAction(LOG_ACTION action, int selectedResourceTempId)
     {
         getSearchLogger().logAction(searchId, action, selectedResourceTempId);
     }

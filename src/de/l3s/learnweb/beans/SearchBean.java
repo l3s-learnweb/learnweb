@@ -40,7 +40,7 @@ import de.l3s.learnweb.SearchFilters.Filter;
 import de.l3s.learnweb.SearchFilters.FilterItem;
 import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.SearchFilters.SERVICE;
-import de.l3s.learnweb.SearchLogManager.LOGACTION;
+import de.l3s.learnweb.SearchLogManager.LOG_ACTION;
 import de.l3s.learnweb.User;
 
 @ManagedBean
@@ -353,11 +353,8 @@ public class SearchBean extends ApplicationBean implements Serializable
                 }
             }*/
             user.setActiveGroup(selectedResourceTargetGroupId);
-            search.logAction(LOGACTION.resource_saved, selectedResourceTempId);
-            log(Action.adding_resource, selectedResourceTargetGroupId, newResource.getId(), "");
-
-            // add query as tag 
-            //newResource.addTag(query, user);
+            search.logAction(LOG_ACTION.resource_saved, selectedResourceTempId);
+            log(Action.adding_resource, selectedResourceTargetGroupId, newResource.getId(), search.getId() + " - " + selectedResourceTempId);
 
             addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
         }
@@ -374,23 +371,16 @@ public class SearchBean extends ApplicationBean implements Serializable
      */
     public void logResourceOpened()
     {
-        /* TODO selectedResourceTempId is null check if selectedresource can be used
         try
         {
-            if(search == null)
-            {
-                log.warn("can't log resource opend event");
-                return;
-            }
-            LOGACTION action = LOGACTION.resource_click;
-            System.out.println(action);
-            search.logAction(action, selectedResourceTempId);
+            int tempResourceId = getParameterInt("resource_id");
+
+            search.logAction(LOG_ACTION.resource_click, tempResourceId);
         }
         catch(Throwable e)
         {
             log.error("Can't log resource opened event", e);
         }
-        */
 
         /*
         if(!logEnabled)
@@ -431,13 +421,18 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     public void logQuerySuggestion()
     {
-        String query = getParameter("query");
-        String suggestions = getParameter("suggestions");
-        String market = getParameter("market");
+        try
+        {
+            String query = getParameter("query");
+            String suggestions = getParameter("suggestions");
+            String market = getParameter("market");
 
-        //log.debug("query: " + query + "; suggestions: " + suggestions + "; market: " + market);
-
-        getLearnweb().getSuggestionLogger().log(query, market, suggestions, getSessionId(), getUser());
+            getLearnweb().getSuggestionLogger().log(query, market, suggestions, getSessionId(), getUser());
+        }
+        catch(Throwable e)
+        {
+            log.error("Can't log query suggestion", e);
+        }
     }
 
     /**
@@ -818,7 +813,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             metaSearch.setConfigGroupResultsByField("location");
             metaSearch.setConfigResultsPerGroup(10);
             metaSearch.getResourcesByPage(2);
-            resourcesGroupedBySource = metaSearch.getResourcesGroupedBySource(this.minResourcesPerGroup);
+            resourcesGroupedBySource = metaSearch.getResourcesGroupedBySource(minResourcesPerGroup);
             Collections.sort(resourcesGroupedBySource);
         }
         return resourcesGroupedBySource;

@@ -85,11 +85,6 @@
 									</a>
 								</li>
 								<li>
-									<a href="#{request.contextPath}/lw/explore.jsf">
-										<h:outputText value="#{msg.search_history}" />
-									</a>
-								</li>
-								<li>
 									<a href="#{request.contextPath}/lw/myhome/notification.jsf">
 										<h:outputText value="#{msg.notification}" />
 									</a>
@@ -107,6 +102,13 @@
 									</h:form>
 								</li>
 								<ui:fragment rendered="#{userBean.admin}">
+								
+									<li>
+										<a href="#{request.contextPath}/lw/explore.jsf">
+											<h:outputText value="#{msg.search_history}" />
+										</a>
+									</li>
+								
 									<li>
 										<a href="#{request.contextPath}/lw/myhome/services.jsf">
 											<h:outputText value="#{msg.web2_0services}" />

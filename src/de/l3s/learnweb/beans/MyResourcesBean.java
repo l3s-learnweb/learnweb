@@ -27,9 +27,9 @@ import de.l3s.learnweb.Group;
 import de.l3s.learnweb.GroupItem;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.beans.GroupDetailBean.RPAction;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.beans.GroupDetailBean.RPAction;
 import de.l3s.util.StringHelper;
 
 @ManagedBean
@@ -88,7 +88,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
         if(isAjaxRequest())
         {
-            log.debug("Skip ajax request");
+            //log.debug("Skip ajax request");
             return;
         }
 
@@ -729,7 +729,8 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
     public String getUrlToSave()
     {
-        if (this.getAddResourceBean() != null && this.getAddResourceBean().getResource() != null) {
+        if(this.getAddResourceBean() != null && this.getAddResourceBean().getResource() != null)
+        {
             return this.getAddResourceBean().getResource().getUrl();
         }
 
@@ -851,11 +852,13 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         this.resourceDetailBean = resourceDetailBean;
     }
 
-    public AddResourceBean getAddResourceBean() {
+    public AddResourceBean getAddResourceBean()
+    {
         return addResourceBean;
     }
 
-    public void setAddResourceBean(AddResourceBean addResourceBean) {
+    public void setAddResourceBean(AddResourceBean addResourceBean)
+    {
         this.addResourceBean = addResourceBean;
     }
 }

@@ -443,9 +443,15 @@ public class ResourceManager
         resource.setUser(user);
 
         saveResource(resource);
-        //To copy archive versions of a resource if it exists
-        saveArchiveUrlsByResourceId(resource.getId(), resource.getArchiveUrls());
-
+        try
+        {
+            //To copy archive versions of a resource if it exists
+            saveArchiveUrlsByResourceId(resource.getId(), resource.getArchiveUrls());
+        }
+        catch(Exception e)
+        {
+            log.error("Can't save archiveUrls", e);
+        }
         resource = cache.put(resource);
 
         // replaces the file placeholders with their urls

@@ -289,7 +289,7 @@
 
 			<p:remoteCommand actionListener="${searchHistoryBean.updateSearchHistory()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('updateSearchHistory')" update=":tabView:tab3" name="ajaxLoadSearchHistory" process="@this" partialSubmit="true" />
 
-			<p:remoteCommand actionListener="${searchBean.logResourceOpened()}" immediate="true" ignoreAutoUpdate="true"  onstart="console.log('logResourceOpened')" update=":nothing" name="logResourceOpened" async="true" process="@form" partialSubmit="true" />
+			<p:remoteCommand actionListener="${searchBean.logResourceOpened()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('logResourceOpened')" update=":nothing" name="logResourceOpened" async="true" process="@form" partialSubmit="true" />
 
 			<p:remoteCommand actionListener="${searchBean.logEndTime()}" immediate="true"  ignoreAutoUpdate="true" onstart="console.log('logEndTime')" update=":tabView:tab2" name="logEndTime" async="true" process="@this" partialSubmit="true"/>
 

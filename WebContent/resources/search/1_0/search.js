@@ -143,7 +143,7 @@ function prepareResources(resources)
 			preview.hide();
 		});			
 
-		// get content for lightbox
+		// get content for Lightbox
 		var metadata = resource.find('.metadata').first();
 		var embedded = metadata.children('.embedded').first();		
 		var description = metadata.children('.description').first();
