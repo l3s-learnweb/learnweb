@@ -22,11 +22,11 @@ import com.sun.jersey.api.client.ClientHandlerException;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.beans.AddResourceBean;
-import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.beans.AddResourceBean;
+import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.searchlogclient.Actions.ACTION;
 import de.l3s.searchlogclient.jaxb.CommentonSearch;
 import de.l3s.searchlogclient.jaxb.QueryLog;
@@ -229,7 +229,7 @@ public class ResultSetBean extends ApplicationBean
             this.resultSetView = "float";
         else if(resultSetView.equals("video"))
             this.resultSetView = "grid";
-        else if(resultSetView.equals("web"))
+        else if(resultSetView.equals("text"))
             this.resultSetView = "list";
     }
 
