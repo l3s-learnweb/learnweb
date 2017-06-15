@@ -520,8 +520,6 @@ public class SearchFilters implements Serializable
 
     public void setFiltersFromString(String filters)
     {
-        log.debug("Filters: " + filters);
-
         if(filters == null || filters.isEmpty())
         {
             cleanAll();

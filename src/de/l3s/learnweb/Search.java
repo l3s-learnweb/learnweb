@@ -590,10 +590,9 @@ public class Search implements Serializable
         return searchId;
     }
 
-    public void logQuery(String query, MODE searchMode, String searchFilters, User user)
+    public void logQuery(String query, MODE searchMode, SERVICE searchService, String language, String queryFilters, User user)
     {
-        searchId = getSearchLogger().logQuery(query, searchMode, searchFilters, user);
-        log.debug("search id = " + searchId);
+        searchId = getSearchLogger().logQuery(query, searchMode, searchService, language, queryFilters, user);
     }
 
     private SearchLogManager getSearchLogger()
@@ -606,7 +605,8 @@ public class Search implements Serializable
 
     private void logResources(List<ResourceDecorator> resources)
     {
-        getSearchLogger().logResources(searchId, resources);
+        if(searchId > 0) // log resources only when the logQuery() was called before; This isn't the case on the group search page
+            getSearchLogger().logResources(searchId, resources);
     }
 
     public void logAction(LOG_ACTION action, int selectedResourceTempId)

@@ -58,7 +58,7 @@ public class CDXClient
         
         if(crawlTime < minCrawlTime) //&& waybackAPIerrors < MAX_API_ERRORS)
         {*/
-        log.debug("Execute Wayback query for: " + resource.getUrl());
+        //log.debug("Execute Wayback query for: " + resource.getUrl());
         //	log.debug("Getting first and last capture info for: " + resource.getUrl());
         int captures = 0;
         waybackAPIrequests++;
@@ -108,7 +108,7 @@ public class CDXClient
 
             if(response.trim().length() == 0)
             {
-                log.debug("No Captures for: " + url);
+                //log.debug("No Captures for: " + url);
                 return null;
             }
 

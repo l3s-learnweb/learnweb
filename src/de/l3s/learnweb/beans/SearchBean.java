@@ -103,7 +103,6 @@ public class SearchBean extends ApplicationBean implements Serializable
         queryMode = getPreference("SEARCH_ACTION", "text");
 
         searchFilters = new SearchFilters();
-        searchFilters.setLanguageFilter(UtilBean.getUserBean().getLocaleCode());
 
         metaFilters = new SearchFilters();
 
@@ -176,11 +175,14 @@ public class SearchBean extends ApplicationBean implements Serializable
             setPreference("SEARCH_SERVICE_" + searchMode.name().toUpperCase(), searchService.name());
 
             page = 1;
+
             search = new Search(interweb, query, searchFilters, getUser());
             search.setMode(searchMode);
             searchFilters.setFiltersFromString(queryFilters);
             searchFilters.setFilter(FILTERS.service, searchService);
-            search.logQuery(query, searchMode, queryFilters, getUser());
+            searchFilters.setLanguageFilter(UtilBean.getUserBean().getLocaleCode());
+
+            search.logQuery(query, searchMode, searchService, searchFilters.getLanguageFilter(), queryFilters, getUser());
             search.getResourcesByPage(1); // load first page
 
             log(Action.searching, 0, search.getId(), query);
@@ -759,6 +761,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             if(query == null || query.length() < 2)
                 return;
 
+            /*
             graph = new FactSheet(query);
             if(graph.getEntities().size() == 0)
             {
@@ -766,23 +769,19 @@ public class SearchBean extends ApplicationBean implements Serializable
                 return;
             }
             String label = graph.getEntities().get(0).getLabel();
-
+            
             SearchFilters filter = new SearchFilters();
             images = new Search(getLearnweb().getInterweb(), label, filter, getUser());
             images.setMode(MODE.image);
             filter.setFilter(FILTERS.service, SERVICE.bing);
-
+            
             //images.setService(SERVICE.Ipernity, SERVICE.Flickr);
             images.setResultsPerService(10);
             images.getResourcesByPage(1);
-
-            /*
-            LinkedList<ResourceDecorator> resources = images.getResources();
             
-            for(ResourceDecorator resource : resources)
-            //images.getResourcesByPage(2);			
-            */
+            
             graphLoaded = true;
+            */
         }
         catch(Exception e)
         {
