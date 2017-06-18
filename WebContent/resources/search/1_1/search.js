@@ -588,11 +588,14 @@ $(document).ready(function()
 	});
 	
 	//To keep track of resource click in the web search or resources_list view
-	$('.resourceWebLink').click(function(){
+	var logResourceClick = function(){
 		var tempResourceId = $(this).closest('div.resource').attr('id').substring(9);
 		logResourceOpened([{name:'resource_id', value:tempResourceId}]);
 		return true;
-	});
+	}
+	
+	$('.resourceWebLink').mouseup(logResourceClick);
+	$('.resource > div a').mouseup(logResourceClick);
 	
 	loadFilterCounts();
 	updateCarousel();

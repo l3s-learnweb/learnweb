@@ -3,10 +3,10 @@
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
 	id="WebApp_ID" version="3.0">
-	<display-name>Learnweb 2.8.6</display-name>
+	<display-name>Learnweb 2.8.7</display-name>
 	<context-param>
 		<param-name>javax.faces.PROJECT_STAGE</param-name>
-		<param-value>Development</param-value>
+		<param-value>Production</param-value>
 		<!-- Development Production -->
 	</context-param>
 	<context-param>
@@ -74,6 +74,11 @@
 		<param-name>primefaces.THEME</param-name>
 		<param-value>omega</param-value>
 	</context-param>
+	<context-param>
+		<param-name>primefaces.FONT_AWESOME</param-name>
+		<param-value>true</param-value>
+	</context-param>	
+	
 	
 	<context-param>
 		<param-name>com.sun.faces.numberOfViewsInSession</param-name>

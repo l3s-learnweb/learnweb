@@ -40,7 +40,6 @@ import de.l3s.learnweb.SearchFilters.Filter;
 import de.l3s.learnweb.SearchFilters.FilterItem;
 import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.SearchFilters.SERVICE;
-import de.l3s.learnweb.SearchLogManager.LOG_ACTION;
 import de.l3s.learnweb.User;
 
 @ManagedBean
@@ -355,7 +354,7 @@ public class SearchBean extends ApplicationBean implements Serializable
                 }
             }*/
             user.setActiveGroup(selectedResourceTargetGroupId);
-            search.logAction(LOG_ACTION.resource_saved, selectedResourceTempId);
+            search.logResourceSaved(selectedResourceTempId, getUser(), newResource.getId());
             log(Action.adding_resource, selectedResourceTargetGroupId, newResource.getId(), search.getId() + " - " + selectedResourceTempId);
 
             addGrowl(FacesMessage.SEVERITY_INFO, "addedToResources", newResource.getTitle());
@@ -377,7 +376,7 @@ public class SearchBean extends ApplicationBean implements Serializable
         {
             int tempResourceId = getParameterInt("resource_id");
 
-            search.logAction(LOG_ACTION.resource_click, tempResourceId);
+            search.logResourceClicked(tempResourceId, getUser());
         }
         catch(Throwable e)
         {

@@ -1,0 +1,21 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core">
+
+<ui:composition template="/lw/admin/dashboard/BasicTemplate.xhtml">
+	<ui:define name="content">
+		<h:panelGrid columns="2">
+			<h:outputText value="Name"></h:outputText>
+			<h:outputText value="#{user.utente.username}"></h:outputText>
+		</h:panelGrid>
+		<h:dataTable value="#{userlog.mappa.entrySet().toArray()}" var="entry">
+			<h:column>#{entry.key}</h:column>
+			<h:column>#{entry.value}</h:column>
+		</h:dataTable>
+	</ui:define>
+</ui:composition>
+</html>

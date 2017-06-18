@@ -184,9 +184,8 @@
 				</h:panelGroup>
 				
 				<h:panelGroup rendered="#{bean.rightPanelAction == 'viewResource' and resourceDetailBean.clickedResource.id != -1}" layout="block">
-					<c:if test="${not resourceDetailBean.clickedResource.canViewResource(userBean.user) and (resourceDetailBean.clickedResource.deleted or resourceDetailBean.clickedResource.groupId eq 0)}">
-						<h:outputText value="This resource has been removed" />
-					</c:if>
+					<h:outputText value="This resource has been removed" rendered="${(not resourceDetailBean.clickedResource.canViewResource(userBean.user)) and (resourceDetailBean.clickedResource.deleted or resourceDetailBean.clickedResource.groupId eq 0)}" />
+						
 					<h:outputText value="#{msg.group_resources_access_denied}" rendered="${not resourceDetailBean.clickedResource.canViewResource(userBean.user) and not (resourceDetailBean.clickedResource.deleted or resourceDetailBean.clickedResource.groupId eq 0)}"/>
 					<ui:fragment rendered="#{resourceDetailBean.clickedResource.canViewResource(userBean.user)}">			
 						<ui:fragment rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'video' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'image'}">

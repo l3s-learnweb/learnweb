@@ -1,5 +1,7 @@
 package de.l3s.searchlogclient;
 
+import org.json.JSONArray;
+
 public class Actions
 {
 
@@ -10,4 +12,5 @@ public class Actions
         resource_saved
     };
 
+    private JSONArray blas;
 }

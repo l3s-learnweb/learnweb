@@ -133,7 +133,11 @@
 								<p:commandLink styleClass="newsfeed_query_link" update=":add_resource_panel" oncomplete="update_header()">
 				        			<f:setPropertyActionListener target="#{groupDetailBean.clickedGroupItem}" value="#{datagrid.resource}"/>
 				        			<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{datagrid.resource}"/>
+				        			<!-- 
 										<h:outputText value="#{datagrid.resource.embeddedSize1}" escape="false" />
+										 -->
+										<ui:fragment rendered="#{not empty datagrid.resource.thumbnail1}"><img src="#{datagrid.resource.thumbnail1.url}" alt="#{datagrid.resource.title}" height="#{datagrid.resource.thumbnail1.height}" width="#{datagrid.resource.thumbnail1.width}"/></ui:fragment>											
+										
 								</p:commandLink>
 							</h:form>
 				
