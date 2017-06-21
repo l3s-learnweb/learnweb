@@ -952,13 +952,16 @@ public class ResourceManager
                 {
                     resource.addFile(file);
                     if(file.getResourceFileNumber() == File.ORIGINAL_FILE)
+                    {
                         resource.setUrl(file.getUrl());
+                        resource.setFileUrl(file.getUrl());
+                    }
                 }
             }
             else
                 log.debug("resource " + resource.getId() + " was requested but is deleted");
 
-            // deserialize preferences
+            // deserialize metadata
             byte[] metadataBytes = rs.getBytes("metadata");
 
             if(metadataBytes != null && metadataBytes.length > 0)

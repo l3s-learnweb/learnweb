@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.SearchFilters.SERVICE;
+import de.l3s.util.StringHelper;
 
 public class SearchLogManager
 {
@@ -103,8 +104,8 @@ public class SearchLogManager
                 {
                     insert.setNull(3, Types.INTEGER);
                     insert.setString(4, decoratedResource.getUrl());
-                    insert.setString(5, decoratedResource.getTitle());
-                    insert.setString(6, decoratedResource.getDescription());
+                    insert.setString(5, StringHelper.shortnString(decoratedResource.getTitle(), 250));
+                    insert.setString(6, StringHelper.shortnString(decoratedResource.getDescription(), 1000));
 
                     Thumbnail thumbnail = decoratedResource.getThumbnail2();
                     if(thumbnail != null)

@@ -127,7 +127,6 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadata.getOptions().add("Image");
             metadata.getOptions().add("Game");
             metadata.getOptions().add("App");
-            metadata.setInfo("select all that apply");
             metadataFields.add(metadata);
 
             metadata = new ResourceMetadataField("language", "language", MetadataType.MULTIPLE_MENU)

@@ -614,7 +614,6 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         r.setType(type);
         r.setFormat(format);
         r.setUserId(ownerUserId);
-        r.setEmbeddedSize1Raw(embeddedSize1);
         r.setEmbeddedSize3Raw(embeddedSize3);
         r.setEmbeddedSize4Raw(embeddedSize4);
         r.setMaxImageUrl(maxImageUrl);
