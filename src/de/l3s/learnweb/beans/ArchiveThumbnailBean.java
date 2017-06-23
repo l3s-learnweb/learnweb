@@ -182,11 +182,13 @@ public class ArchiveThumbnailBean extends ApplicationBean
     public void computeSelectedArchivesHtmlBased() throws SQLException
     {
         selectedArchiveUrls = archiveItShingle.computeUniqueArchivesBySequence(hashmapText, hashmapFrame, archiveUrls, resourceId, frameSim, textSim);
+        //log.debug("frame sim:" + frameSim + "; text sim:" + textSim + "; Timemap size: " + selectedArchiveUrls.size());
     }
 
     public void computeSelectedArchivesSimhashBased()
     {
         selectedArchiveUrls = archiveItShingle.computeUniqueArchivesByThresholdGrouping((LinkedList<ArchiveUrl>) archiveUrls);
+        //log.debug("Archive Urls filtered based on simhashes: " + selectedArchiveUrls.size());
     }
 
     public void init()
@@ -233,6 +235,7 @@ public class ArchiveThumbnailBean extends ApplicationBean
                 hashmapText.put(url, archiveItShingle.computeShingles(Arrays.asList(words)));
             }
             selectedArchiveUrls = archiveItShingle.computeUniqueArchivesBySequence(hashmapText, hashmapFrame, archiveUrls, resourceId, frameSim, textSim);
+            //log.debug("Archive Urls Size after removing duplicates:" + archiveUrls.size());
         }
         catch(SQLException ex)
         {

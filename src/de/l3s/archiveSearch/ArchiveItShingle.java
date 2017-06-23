@@ -259,7 +259,8 @@ public class ArchiveItShingle
             long simhash1 = archiveUrls.get(i - 1).getSimhash();
             long simhash2 = archiveUrls.get(i).getSimhash();
             int hammingDistance = Util.hammingDistance(simhash1, simhash2);
-            if(hammingDistance < hammingDistanceThreshold)
+
+            if(hammingDistance <= hammingDistanceThreshold)
                 selectedVersions.add(archiveUrls.get(i - 1));
             else
             {
@@ -347,7 +348,6 @@ public class ArchiveItShingle
 
         }
         log.info("Average of entire group:" + (avgSum / groupSize));
-
         log.info("Average number of versions: " + ((float) countSum / groupSize));
         log.info("Average number of unique versions: " + ((float) dupCountSum / groupSize));
 
@@ -358,6 +358,7 @@ public class ArchiveItShingle
         simHashBuilder.reset();
         int shinglingLength = 4; //As specified in AlSummarization Technique ECIR14
         s = s.replaceAll("[^\\w,]+", " ").toLowerCase();
+
         for(int i = 0; i <= s.length() - shinglingLength; i += 1)
         {
             simHashBuilder.addStringFeature(s.substring(i, i + shinglingLength));
@@ -380,6 +381,24 @@ public class ArchiveItShingle
         }
     }
 
+    public long computeVersionFingerprint(String archiveUrl) throws IOException
+    {
+        Document document = null;
+        long simhash = 0L;
+
+        org.jsoup.Connection urlConnection = Jsoup.connect(archiveUrl).followRedirects(true).ignoreHttpErrors(true).timeout(10000);
+        Response response = urlConnection.execute();
+        if(response.statusCode() == 200)
+        {
+            document = urlConnection.get();
+            document.select("wb_div#wm-disclaim, script, style, head").remove(); //remove Archive disclaimer from html text
+            removeComments(document);
+            simhash = computeStringFingerprint(document.toString());
+        }
+
+        return simhash;
+    }
+
     public void computeSimhashForGroup(int groupId) throws SQLException
     {
         Group group = Learnweb.getInstance().getGroupManager().getGroupById(groupId);
@@ -390,23 +409,14 @@ public class ArchiveItShingle
             PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE `lw_resource_archiveurl` SET `simhash`=? WHERE `resource_id`=? AND `archive_url`=?");
             for(ArchiveUrl v : versions)
             {
-                Document document = null;
                 try
                 {
-                    org.jsoup.Connection urlConnection = Jsoup.connect(v.getArchiveUrl()).followRedirects(true).ignoreHttpErrors(true).timeout(10000);
-                    Response response = urlConnection.execute();
-                    if(response.statusCode() == 200)
-                    {
-                        document = urlConnection.get();
-                        document.select("wb_div#wm-disclaim, script, style, head").remove(); //remove Archive disclaimer from html text
-                        removeComments(document);
-                        long simhash = computeStringFingerprint(document.toString());
+                    long simhash = computeVersionFingerprint(v.getArchiveUrl());
+                    pStmt.setLong(1, simhash);
+                    pStmt.setInt(2, r.getId());
+                    pStmt.setString(3, v.getArchiveUrl());
+                    pStmt.addBatch();
 
-                        pStmt.setLong(1, simhash);
-                        pStmt.setInt(2, r.getId());
-                        pStmt.setString(3, v.getArchiveUrl());
-                        pStmt.addBatch();
-                    }
                 }
                 catch(IOException e)
                 {
@@ -530,10 +540,63 @@ public class ArchiveItShingle
 
     }
 
-    public static void main(String[] args) throws IOException, SQLException
+    public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException
     {
-        /*ArchiveItShingle archiveItShingle = new ArchiveItShingle();
-        archiveItShingle.computeSimhashForGroup(1132);
+        ArchiveItShingle archiveItShingle = new ArchiveItShingle();
+        Group g = Learnweb.createInstance("").getGroupManager().getGroupById(1132);
+        /*float sumTotalAvgHammingDistances = 0f;
+        int noAvgHammingDistances = 0;
+        for(Resource r : g.getResources())
+        {
+            PreparedStatement ps = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM lw_resource_archiveurl WHERE resource_id=? and httpstatuscode = 200");
+            ps.setInt(1, r.getId());
+            ResultSet rs = ps.executeQuery();
+            List<Long> simhashes = new ArrayList<Long>();
+            float avgHammingDistance = 0f;
+            int sumTotalHammingDistances = 0;
+            int noHammingDistances = 0;
+            int prevShingleId = 0;
+            if(rs.next())
+            {
+                prevShingleId = rs.getInt("shingle_id");
+                simhashes.add(rs.getLong("simhash"));
+            }
+        
+            while(rs.next())
+            {
+                int shingleId = rs.getInt("shingle_id");
+                if(shingleId == prevShingleId)
+                    simhashes.add(rs.getLong("simhash"));
+                else
+                {
+                    //System.out.println("Shingle Id:" + prevShingleId + "; simhashes size: " + simhashes.size());
+                    prevShingleId = shingleId;
+                    for(int i = 0; i < simhashes.size() - 1; i += 2)
+                    {
+                        int hammingDist = Util.hammingDistance(simhashes.get(i), simhashes.get(i + 1));
+                        sumTotalHammingDistances += hammingDist;
+                        noHammingDistances++;
+                        //System.out.println(hammingDist);
+                    }
+                    simhashes.clear();
+                    simhashes.add(rs.getLong("simhash"));
+                }
+            }
+        
+            avgHammingDistance = (float) sumTotalHammingDistances / noHammingDistances;
+            if(!Float.isNaN(avgHammingDistance))
+            {
+                sumTotalAvgHammingDistances += avgHammingDistance;
+                noAvgHammingDistances++;
+        
+                System.out.println("Average Hamming Distance For Exact Duplicates of " + r.getId() + " :" + avgHammingDistance);
+            }
+        }
+        float avgHammingDistanceGroup = sumTotalAvgHammingDistances / noAvgHammingDistances;
+        System.out.println("Average Hamming Distance for Exact Duplicates of Group:" + avgHammingDistanceGroup);
+        */
+
+        /*archiveItShingle.computeSimhashForGroup(1132);
         Group g = Learnweb.getInstance().getGroupManager().getGroupById(1132);
         for(Resource r : g.getResources())
         {
@@ -544,17 +607,88 @@ public class ArchiveItShingle
             }
         }*/
 
-        /*LinkedList<ArchiveUrl> archiveUrls = new LinkedList<ArchiveUrl>();
-        PreparedStatement ps = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `lw_resource_archiveurl` WHERE `resource_id`=? ORDER BY timestamp ASC");
-        ps.setInt(1, r.getId());
-        ResultSet rs = ps.executeQuery();
-        while(rs.next())
+        /*float sumTotalAvgs = 0f;
+        int noAvgs = 0;
+        
+        for(Resource r : g.getResources())
         {
-            archiveUrls.add(new ArchiveUrl(rs.getString("archive_url"), rs.getDate("timestamp"), rs.getLong("simhash")));
+            LinkedList<ArchiveUrl> archiveUrls = new LinkedList<ArchiveUrl>();
+            PreparedStatement ps = Learnweb.createInstance("").getConnection()
+            .prepareStatement("SELECT * FROM `lw_resource_archiveurl` JOIN lw_resource_archive_shingles USING(shingle_id) WHERE `resource_id`=? AND httpstatuscode=200 GROUP BY htmltags, htmltext ORDER BY timestamp ASC");
+            PreparedStatement ps = Learnweb.createInstance("").getConnection().prepareStatement("SELECT * FROM `lw_resource_archiveurl` WHERE `resource_id`=? AND httpstatuscode=200 ORDER BY timestamp ASC");
+            //ps.setInt(1, 169896);
+            ps.setInt(1, r.getId());
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                archiveUrls.add(new ArchiveUrl(rs.getString("archive_url"), rs.getDate("timestamp"), rs.getLong("simhash"), rs.getInt("shingle_id")));
+            }
+            LinkedList<ArchiveUrl> selectedUrls = archiveItShingle.computeThresholdGroupingAlgo(archiveUrls);
+            System.out.println(archiveUrls.size());
+            System.out.println(selectedUrls.size());
+        
+            float avg = (float) selectedUrls.size() / archiveUrls.size();
+            if(!Float.isNaN(avg))
+            {
+                sumTotalAvgs += avg;
+                noAvgs++;
+            }
+            System.out.println(r.getId() + " percentage of timemaps after filtering: " + avg);
         }
-        LinkedList<ArchiveUrl> selectedUrls = archiveItShingle.computeThresholdGroupingAlgo(archiveUrls);
-        System.out.println(archiveUrls.size());
-        System.out.println(selectedUrls.size());*/
+        float groupAvg = sumTotalAvgs / noAvgs;
+        System.out.println(g.getId() + " " + groupAvg);*/
+
+        for(float i = 0.5f; i >= 0.5f; i = i - 0.05f)
+        {
+            float sumTotalAvgs = 0f;
+            int noAvgs = 0;
+            for(Resource r : g.getResources())
+            {
+                String htmlText = null;
+                String htmlTags = null;
+                LinkedList<ArchiveUrl> archiveUrls = new LinkedList<ArchiveUrl>();
+                HashMap<String, Set<String>> hashmapFrame = new HashMap<String, Set<String>>();
+                HashMap<String, Set<String>> hashmapText = new HashMap<String, Set<String>>();
+
+                float frameSim = i;
+                float textSim = i;
+
+                PreparedStatement ps = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `lw_resource_archiveurl` JOIN `lw_resource_archive_shingles` USING(shingle_id) WHERE `resource_id`=? ORDER BY timestamp ASC");
+                ps.setInt(1, r.getId());
+                ResultSet rs = ps.executeQuery();
+
+                while(rs.next())
+                {
+                    Date timestamp = new Date(rs.getTimestamp("timestamp").getTime());
+                    String url = rs.getString("archive_url");
+                    long simhash = rs.getLong("simhash");
+                    archiveUrls.add(new ArchiveUrl(url, timestamp, simhash));
+
+                    htmlTags = rs.getString("htmltags");
+                    String[] words = htmlTags.replaceAll("[!?,.]", "").split(" ");
+                    hashmapFrame.put(url, archiveItShingle.computeShingles(Arrays.asList(words)));
+
+                    htmlText = rs.getString("htmltext");
+                    words = htmlText.replaceAll("[!?,.]", "").split(" ");
+                    hashmapText.put(url, archiveItShingle.computeShingles(Arrays.asList(words)));
+                }
+                if(archiveUrls.size() > 0)
+                {
+                    Set<String> selectedUrls = archiveItShingle.computeUniqueArchivesBySequence(hashmapText, hashmapFrame, archiveUrls, r.getId(), frameSim, textSim);
+                    float avg = (float) selectedUrls.size() / archiveUrls.size();
+                    if(!Float.isNaN(avg))
+                    {
+                        sumTotalAvgs += avg;
+                        noAvgs++;
+                    }
+
+                    System.out.println(r.getId() + "; " + selectedUrls.size() + "; " + archiveUrls.size() + "; " + "; " + avg);
+                }
+            }
+            float groupAvg = sumTotalAvgs / noAvgs;
+            System.out.println(g.getId() + "; " + i + "; " + groupAvg);
+            System.out.println();
+        }
 
         System.exit(0);
     }

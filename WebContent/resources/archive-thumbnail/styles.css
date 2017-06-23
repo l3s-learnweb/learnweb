@@ -93,6 +93,12 @@ body {
 	text-align:justify;
 }
 
+.helptext {
+	color:black;
+	font-size:1.2rem; 
+	margin:2em 0em 2em 1em;
+}
+
 .simhashDiv {
 	margin-top:2.5rem;
 }

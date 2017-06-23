@@ -5,23 +5,28 @@ var resourceCounter = 0;
 var lightboxActiveResource = null;
 var gridItemWidth = 190;
 var tabActiveindex = 0;
+var loadAheadPx = 0;
 
-var startTime = 0;
-var endTime = 0;
+var step = 200;
+var scrolling = false;
 
-// query extension: uncomment function 
+//jquery extension: uncomment function 
 (function($) {
 	$.fn.uncomment = function() {
 		$(this).contents().each(function() {
 			if ( this.nodeType == 8 ) {
+				$(this).replaceWith(this.nodeValue);
+				/*
 				// Need to "evaluate" the HTML content,
 				// otherwise simple text won't replace
 				var e = $('<span>' + this.nodeValue + '</span>');
 				$(this).replaceWith(e.contents());
+				*/
 			}
+			/*
 			else if ( this.hasChildNodes() ) {
 				$(this).uncomment(recurse);
-			} 
+			} */
 		});
 	};
 })(jQuery);
@@ -40,8 +45,7 @@ function prepareResources(resources)
 		
 		var image = resource.find('.smallImage').first();
 		var preview = resource.find('.preview').first();
-		var previewImage = resource.find('.preview img').first();
-		
+		var previewImage = resource.find('.preview img').first();		
 		
 		// open preview delayed on mouseover 
 		image.mouseenter(function (event) 
@@ -51,24 +55,28 @@ function prepareResources(resources)
 		    setTimeout(function()
 		    {	   	
 		    	if(image.hasClass("hasFocus")) // open preview
-		    	{			
+		    	{				
 		    		var offset = image.offset();		    		
 		    		var width = preview.width() + 2*padding;
 		    		var heightDiff = padding + (previewImage.attr('height') - image.height())/2;						
-					var widthDiff = padding + (previewImage.attr('width') - image.width())/2;
+					var widthDiff = padding + (previewImage.attr('width') - image.width())/2;					
+					var headerHeight = $('#header').height() + 5;
+					var scrollTop = $(window).scrollTop();
 					
 					offset.left -= widthDiff;
-					offset.top -= heightDiff;
+					offset.top -= heightDiff + scrollTop;
 					
 					var containerWidth = $('#explore_resultset').outerWidth(true); 
 					var containerHeight = $(window).height();				
 					var previewHeight = preview.height() + mindist + 2*padding;
-				
+					
 					if(offset.left < mindist)
 						offset.left = mindist;					
 					else if(offset.left + width + mindist > containerWidth)
-						offset.left = containerWidth - width - mindist;
-					console.log(offset.top, previewHeight, containerHeight, headerHeight, scrollTop);
+						offset.left = containerWidth - width - mindist;					
+					
+					//console.log(offset.top, previewHeight, containerHeight, headerHeight, scrollTop);
+					
 					if(offset.top < headerHeight)
 						offset.top = headerHeight;						
 					else if(offset.top + previewHeight > containerHeight)
@@ -80,7 +88,7 @@ function prepareResources(resources)
 					openPreview = preview;
 				
 					preview.show();	
-					preview.offset(offset);   
+					preview.offset(offset);      		        	
 		        }
 			}, 320 );
 		});
@@ -93,12 +101,14 @@ function prepareResources(resources)
 			preview.hide();
 		});			
 
-		// get content for lightbox
+		// get content for Lightbox
 		var metadata = resource.find('.metadata').first();
 		var embedded = metadata.children('.embedded').first();		
 		var description = metadata.children('.description').first();
 		var title = metadata.children('.title').first();
 		var options = metadata.children('.options').first();
+		var snippet = metadata.children('.snippet').first();
+		
 		metadata.remove();		
 		
 		var lightbox_open = function()
@@ -107,11 +117,10 @@ function prepareResources(resources)
 			lightboxActiveResource = resource;
 			
 			$('#lightbox').show();
-			//tabActiveindex = tabViewer.getActiveIndex();
-			logResourceOpened([{name:'resource_id', value:tempResourceId}]);
 			$('#lightbox_metadata').empty();
 			$('#lightbox_metadata').append(description);
 			$('#lightbox_metadata').append(options);
+			$('#lightbox_metadata').append(snippet);
 			$('#lightbox_content .embedded').remove();
 			$('#lightbox_content').append(embedded);			
 			$('#lightbox_title').empty();
@@ -146,13 +155,15 @@ function prepareResources(resources)
 			lightbox_resize_container();
 			lightbox_resize_content();
 			
-						
+			if(typeof(tabViewer) !== 'undefined')
+				tabActiveindex = tabViewer.getActiveIndex();
+			
+			//logResourceOpened([{name:'resource_id', value:tempResourceId}]);			
 		};
 		
 		resource.on('openLightbox', lightbox_open);
 		previewImage.mousedown(lightbox_open);
-		image.mousedown(lightbox_open);
-
+		image.mousedown(lightbox_open);	
 	});	
 	
 	

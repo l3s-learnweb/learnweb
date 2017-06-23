@@ -21,7 +21,7 @@
 		</style>	
 		<div id="sub_menu_bar">
 			
-			<h:form class="links" style="vertical-align: middle;">
+			<h:form class="links" style="vertical-align: middle;" prependId="false">
 				<h:outputText value="#{msg.list_view}" styleClass="activeResource" rendered="#{exploreBean.exploreMode == 'list_view'}" />
 				<h:link value="#{msg.list_view}" outcome="/lw/explore" rendered="#{exploreBean.exploreMode != 'list_view'}" >
 					<f:param name="mode" value="list_view" />
@@ -46,7 +46,7 @@
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="lightbox" name="lightbox.css"  />		
 		<h:outputStylesheet library="search" name="search.css"  />		
-		<h:outputScript library="search" name="search.js" target="head"/>
+		<h:outputScript library="js" name="viewresultset.js" target="head"/>
 		
 		<script type="text/javascript">
 			var view = '#{resultSetBean.resultSetView}';

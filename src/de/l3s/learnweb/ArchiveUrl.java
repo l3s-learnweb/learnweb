@@ -1,6 +1,7 @@
 package de.l3s.learnweb;
 
 import java.io.Serializable;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ArchiveUrl implements Serializable
@@ -12,6 +13,8 @@ public class ArchiveUrl implements Serializable
     private Date timestamp;
     private int fileId;
     private long simhash;
+    private int shingleId;
+    private SimpleDateFormat df = new SimpleDateFormat("yyyyMMddHHmmss");
 
     public String getFileUrl()
     {
@@ -43,6 +46,19 @@ public class ArchiveUrl implements Serializable
         this.timestamp = timestamp;
     }
 
+    public ArchiveUrl(String archiveUrl, Date timestamp, long simhash, int shingleId)
+    {
+        this.archiveUrl = archiveUrl;
+        this.timestamp = timestamp;
+        this.simhash = simhash;
+        this.shingleId = shingleId;
+    }
+
+    public int getShingleId()
+    {
+        return shingleId;
+    }
+
     public String getArchiveUrl()
     {
         return archiveUrl;
@@ -66,6 +82,11 @@ public class ArchiveUrl implements Serializable
     public void setTimestamp(Date timestamp)
     {
         this.timestamp = timestamp;
+    }
+
+    public String getTimestampInArchiveFormat()
+    {
+        return df.format(timestamp);
     }
 
     public long getSimhash()
