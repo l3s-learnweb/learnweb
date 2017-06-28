@@ -19,7 +19,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
 import javax.faces.event.ValueChangeEvent;
-import javax.faces.model.SelectItem;
 import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.StringUtils;
@@ -1056,19 +1055,23 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         this.group = group;
     }
 
+    /*
+     * never used
     public List<SelectItem> getMembersSelectItemList() throws SQLException
     {
         if(null == group)
             return new ArrayList<SelectItem>();
-
+    
         List<SelectItem> yourList;
         yourList = new ArrayList<SelectItem>();
-
+    
         for(User member : group.getMembers())
             yourList.add(new SelectItem(member.getId(), member.getUsername()));
-
+    
         return yourList;
     }
+    
+    */
 
     public String getEditedGroupDescription()
     {

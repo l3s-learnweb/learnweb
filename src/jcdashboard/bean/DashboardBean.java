@@ -4,16 +4,18 @@ import java.io.Serializable;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.apache.log4j.Logger;
+
+import de.l3s.learnweb.Course;
+import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
 import jcdashboard.model.DescData;
 import jcdashboard.model.Fields;
@@ -27,6 +29,8 @@ public class DashboardBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6265538951073418345L;
 
+    private static final Logger log = Logger.getLogger(DashboardBean.class);
+
     private Fields graph01 = null;
     private Fields graph02 = null;
     private String graph02color = "";
@@ -39,7 +43,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
     private Integer totalconcepts = 0;
     private Integer totalterms = 0;
 
-    private List<String> userlist;
+    //private List<String> userlist;
 
     private Integer sid = 10410;
 
@@ -50,8 +54,20 @@ public class DashboardBean extends ApplicationBean implements Serializable
     ArrayList<TotalData> summarylist = null;
     ArrayList<DescData> descdatalist = null;
 
+    private Course selectedCourse; // the visualized course
+
+    private UserLogHome ulh;
+
     public DashboardBean()
     {
+        User user = getUser(); // the current user
+        if(user == null || !user.isModerator()) // not logged in or no privileges
+            return;
+
+        // for now just hard coded to use Francesca's course
+        setSelectedCourse(getLearnweb().getCourseManager().getCourseById(1245));
+
+        ulh = new UserLogHome();
 
         /* graph02map.put("EMPTY", "rgba(38, 185, 154, 0.1)");
         graph02map.put("other", "rgb(102,205,170)");
@@ -119,6 +135,9 @@ public class DashboardBean extends ApplicationBean implements Serializable
         this.enddate = enddate;
     }
 
+    /* 
+     * replaced by selectedCourse.members list
+     * 
     public List<String> getUserlist()
     {
         if(userlist == null)
@@ -129,7 +148,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
             userlist.addAll(Arrays.asList(ulist));
         }
         return userlist;
-    }
+    }*/
 
     public Integer getSid()
     {
@@ -140,9 +159,8 @@ public class DashboardBean extends ApplicationBean implements Serializable
     {
         if(graph03 == null)
         {
-            graph03 = new Fields();
-            UserLogHome ulh = new UserLogHome();
-            Map<String, Integer> mappa = ulh.userGlossary(this.startdate, this.enddate);
+            Map<String, Integer> mappa = ulh.getUserGlossaryConceptCountByCourse(selectedCourse, this.startdate, this.enddate);
+
             String graph03label = " [ ";
             String graph03data = " [ ";
             for(String k : mappa.keySet())
@@ -152,6 +170,8 @@ public class DashboardBean extends ApplicationBean implements Serializable
             }
             graph03label += " 		]";
             graph03data += " 		]";
+
+            graph03 = new Fields();
             graph03.setLabel(graph03label);
             graph03.setData(graph03data);
         }
@@ -161,10 +181,6 @@ public class DashboardBean extends ApplicationBean implements Serializable
 
     public ArrayList<UsesTable> getFields()
     {
-
-        // ArrayList<UsesTable> fields=new ArrayList<UsesTable> ();
-        UserLogHome ulh = new UserLogHome();
-        // UsesTable ut=ulh.fields();
         return ulh.fields();
     }
 
@@ -266,7 +282,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
             }
             catch(ParseException e)
             {
-                e.printStackTrace();
+                log.fatal("fatal", e);
             }
             graph01label += " 		]";
 
@@ -472,6 +488,16 @@ public class DashboardBean extends ApplicationBean implements Serializable
             descdatalist.add(d);
         }
         return descdatalist;
+    }
+
+    public Course getSelectedCourse()
+    {
+        return selectedCourse;
+    }
+
+    public void setSelectedCourse(Course selectedCourse)
+    {
+        this.selectedCourse = selectedCourse;
     }
 
 }

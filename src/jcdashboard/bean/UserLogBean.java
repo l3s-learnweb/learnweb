@@ -7,23 +7,27 @@ import javax.faces.bean.ViewScoped;
 
 import jcdashboard.model.dao.UserLogHome;
 
-@ManagedBean(name="userlog")
+@ManagedBean(name = "userlog")
 @ViewScoped
-public class UserLogBean {
-	Map<String, Integer> mappa;
+public class UserLogBean
+{
+    Map<String, Integer> mappa;
 
-	public Map<String, Integer> getMappa() {
-		UserLogHome ulh=new UserLogHome();
-		mappa=ulh.actionPerDay();
-		for (String k : mappa.keySet()){
-			System.out.println(k+"------------"+mappa.get(k));
-		}
-		return mappa;
-	}
+    public Map<String, Integer> getMappa()
+    {
+        UserLogHome ulh = new UserLogHome();
+        mappa = ulh.actionPerDay();
+        for(String k : mappa.keySet())
+        {
+            System.out.println(k + "------------" + mappa.get(k));
+        }
+        return mappa;
+    }
 
-	public void setMappa(Map<String, Integer> mappa) {
-		this.mappa = mappa;
-	}
-	
-	
+    /*
+    public void setMappa(Map<String, Integer> mappa)
+    {
+        this.mappa = mappa;
+    }
+    */
 }

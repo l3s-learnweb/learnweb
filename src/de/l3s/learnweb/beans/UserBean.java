@@ -685,4 +685,36 @@ public class UserBean implements Serializable
         return "http://waps.io/open?u=" + StringHelper.urlEncode(url) + "&c=2&i=" + user.getId();
     }
 
+    /**
+     * Some courses need to anonymize the usernames.
+     * 
+     * @param userId
+     * @param username
+     * @return
+     */
+    public String anonymizeUsername(int userId, String username)
+    {
+        if(getUser().getId() == userId)
+            return username; // every user can always see his own name :)
+
+        if(getUser().getOrganisation().getId() == 10896)
+            return "user " + userId;
+
+        return username;
+    }
+
+    /**
+     * Some courses need to anonymize the usernames.
+     * 
+     * @param user
+     * @return
+     */
+    public String anonymizeUsername(User user)
+    {
+
+        if(null == user)
+            return "";
+
+        return anonymizeUsername(user.getId(), user.getUsername());
+    }
 }

@@ -2,7 +2,6 @@ package de.l3s.learnweb.beans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -10,7 +9,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
-import javax.faces.model.SelectItem;
 import javax.faces.validator.ValidatorException;
 
 import org.apache.commons.lang3.StringUtils;
@@ -162,20 +160,22 @@ public class GroupsBean extends ApplicationBean implements Serializable
     {
         this.selectedGroup = selectedGroup;
     }
-
+    /*
     public List<SelectItem> getMembersOfSelectedGroup() throws SQLException
     {
         if(null == selectedGroup)
             return new ArrayList<SelectItem>();
-
+    
         List<SelectItem> yourList;
         yourList = new ArrayList<SelectItem>();
-
+    
         for(User member : selectedGroup.getMembers())
             yourList.add(new SelectItem(member.getId(), member.getUsername()));
-
+    
         return yourList;
     }
+    never used
+    */
 
     public boolean isOtherGroupsShowLanguage()
     {

@@ -6,7 +6,7 @@
 	<display-name>Learnweb 2.8.7</display-name>
 	<context-param>
 		<param-name>javax.faces.PROJECT_STAGE</param-name>
-		<param-value>Production</param-value>
+		<param-value>Development</param-value>
 		<!-- Development Production -->
 	</context-param>
 	<context-param>
