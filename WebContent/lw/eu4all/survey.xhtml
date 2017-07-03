@@ -1,0 +1,312 @@
+<ui:composition template="/templates/main/main_old.xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	lang="#{userBean.localeCode}">
+
+	<ui:param name="pageTitle" value="#{msg['Glossary.glossary']}" />
+	<ui:param name="loginRequired" value="true" />
+	<ui:define name="metadata">
+		<f:metadata>
+
+			<f:viewParam name="resource_id" value="#{euForAllSurveyBean.resourceId}"></f:viewParam>
+			<f:event type="preRenderView"
+				listener="#{euForAllSurveyBean.preRenderView}" />
+		</f:metadata>
+	</ui:define>
+	<ui:define name="center_layout">
+	<h:outputStylesheet library="eu4all-survey" name="survey.css" />
+		<h:outputScript library="glossary" name="glossary.js" />
+	<h:panelGroup id="main_component" layout="block">
+	<h:form prependId="false">
+	<div class="headings">
+	<br/>
+	<h:outputText value="Academic Year 2017/2018" style="text-align:center; font-weight:bold" ></h:outputText><br/>
+	<h:outputText value="EU-MADE4LL – European Multimodal and Digital Education for Language Learning" ></h:outputText><br/>
+	<br/>
+	</div>
+	<p:panel id="panel" header="Baseline survey" style="margin-bottom:10px;">
+	<h:panelGrid columns="2" cellpadding="5">
+
+	<p:outputLabel for="name" value="Name: " style="font-style: italic;"></p:outputLabel>
+	<p:inputText id="name" styleClass="inputfield" value="#{euForAllSurveyBean.name}" style="font-style: italic;"></p:inputText>
+	<p:outputLabel for="surname" value="Surame: " style="font-style: italic;"></p:outputLabel>
+	<p:inputText id="surname" styleClass="inputfield" value="#{euForAllSurveyBean.surname}" style="font-style: italic;"></p:inputText>
+	<p:outputLabel for="st_id" value="Student ID: " style="font-style: italic;"></p:outputLabel>
+	<p:inputText id="st_id" style="font-style: italic;" value="#{euForAllSurveyBean.studentID}"></p:inputText>
+	</h:panelGrid>
+	<h:outputText value="N.B.: your name, surname and student ID will be kept confidential among the teachers/researchers of the project" style="font-style: italic;"></h:outputText>
+	<br/><br/>
+	<h:outputText value="Section A. Sociodemographics data" style="font-style: italic; font-weight: bold;"></h:outputText>
+	<h:panelGrid columns="2" cellpadding="5">
+	<p:outputLabel for="gender" value="1. Gender: " ></p:outputLabel>
+	<p:inputText id="gender" styleClass="inputfield" value="#{euForAllSurveyBean.gender}" ></p:inputText>
+	<p:outputLabel for="year" value="2. Year of birth: " ></p:outputLabel>
+	<p:inputText id="year" styleClass="inputfield" value="#{euForAllSurveyBean.year}" ></p:inputText>
+	</h:panelGrid>
+	<h:panelGrid columns="1" cellpadding="5">
+	<p:outputLabel for="qualification" value="3. What is your school qualification?"></p:outputLabel>
+	<p:selectOneRadio id="qualification" value="#{euForAllSurveyBean.qualification}">
+            <f:selectItem itemLabel="Diploma (Senior High School)" itemValue="Diploma (Senior High School)" />
+            <f:selectItem itemLabel="Degree" itemValue="Degree" />
+            <f:selectItem itemLabel="Master’s Degree or higher" itemValue="Master’s Degree or higher" />
+        	<f:selectItem itemLabel="None of the above" itemValue="None of the above" />
+        </p:selectOneRadio>
+	<p:outputLabel for="studies" value="4. What is your area of studies?"></p:outputLabel>
+	<p:selectOneRadio id="studies" value="#{euForAllSurveyBean.studies}">
+            <f:selectItem itemLabel="Education" itemValue="Education" />
+            <f:selectItem itemLabel="Foreign languages" itemValue="Foreign languages" />
+            <f:selectItem itemLabel="Film studies" itemValue="Film studies" />
+        	<f:selectItem itemLabel="Business and communication" itemValue="Business and communication" />
+        	<f:selectItem itemLabel="IT and foreign languages" itemValue="IT and foreign languages" />
+        	<f:selectItem itemLabel="Communication and Media" itemValue="Communication and Media" />
+        	<f:selectItem itemLabel="Other" itemValue="Other" />
+        	<f:ajax render="@form" />
+        	
+        </p:selectOneRadio>
+	</h:panelGrid>
+	<h:panelGroup rendered="#{euForAllSurveyBean.studies == 'Other'}">
+	<p:outputLabel for="other" value="please specify: "></p:outputLabel>
+	<p:inputText id="other" styleClass="inputfield" value="#{euForAllSurveyBean.studies}"></p:inputText>
+	</h:panelGroup>
+	<h:panelGrid columns="2" cellpadding="5">
+	<p:outputLabel for="firstLang" value="5. What is your first language?"></p:outputLabel>
+	<p:inputText id="firstLang" styleClass="inputfield" value="#{euForAllSurveyBean.firstLang}"></p:inputText>
+	<p:outputLabel for="otherLang" value="6. What other language(s) do you know?"></p:outputLabel>
+	<p:inputText id="otherLang" styleClass="inputfield" value="#{euForAllSurveyBean.otherLang}"></p:inputText>
+	</h:panelGrid>
+	<h:panelGrid columns="2" cellpadding="5">
+	<p:outputLabel for="level" value="7. What is your level of English (self-assessed)?"></p:outputLabel><br/>
+	<p:selectOneRadio id="level" value="#{euForAllSurveyBean.level}">
+            <f:selectItem itemLabel="Beginner" itemValue="Beginner" />
+            <f:selectItem itemLabel="Intermediate" itemValue="Intermediate" />
+            <f:selectItem itemLabel="Advanced" itemValue="Advanced" />
+        	<f:selectItem itemLabel="Proficient" itemValue="Proficient" />
+        	<f:selectItem itemLabel="Native language" itemValue="Native language" />
+        </p:selectOneRadio><br/>
+	</h:panelGrid>
+	<h:outputText value="Section B. Multimodality" style="font-style: italic; font-weight: bold;"></h:outputText>
+	<h:panelGrid columns="1" cellpadding="5">
+	<p:outputLabel for="multimodality" value="8. Have you ever studied/covered “multimodality” as a subject or as a concept at University/college/elsewhere?"></p:outputLabel>
+	<p:selectOneRadio id="multimodality" value="#{euForAllSurveyBean.multimodality}">
+            <f:selectItem itemLabel="Yes" itemValue="Yes" />
+            <f:selectItem itemLabel="No" itemValue="No" />
+            <f:ajax render="@form" />
+        </p:selectOneRadio>
+	</h:panelGrid>
+	<h:panelGroup rendered="#{euForAllSurveyBean.multimodality == 'Yes'}">
+	<p:outputLabel for="multiYes" value="Please specify: "></p:outputLabel>
+	<p:inputTextarea id="multiYes" cols="40" styleClass="inputfield" value="#{euForAllSurveyBean.multiYes}"></p:inputTextarea>
+	</h:panelGroup>
+	<h:outputText value="Section C. Digital texts" style="font-style: italic; font-weight: bold;"></h:outputText>
+	<h:panelGrid columns="1" cellpadding="5">
+	<p:outputLabel for="level" value="9. Which of the following texts/genres are you more interested in producing better? Rate your interest from 1 (not  interested) to 5 (highest level of interest)."></p:outputLabel>
+	
+	</h:panelGrid>
+	<h:panelGrid columns="2" cellpadding="5">
+	<p:outputLabel for="blogs" value="Blogs: "></p:outputLabel>
+	<p:selectOneRadio id="blogs" value="#{euForAllSurveyBean.blogsProd}">
+            <f:selectItem itemLabel="1" itemValue="1" />
+            <f:selectItem itemLabel="" itemValue="2" />
+            <f:selectItem itemLabel="" itemValue="3" />
+        	<f:selectItem itemLabel="" itemValue="4" />
+        	<f:selectItem itemLabel="5" itemValue="5" />
+        </p:selectOneRadio>
+        <p:outputLabel for="vid" value="Corporate Videos: "></p:outputLabel>
+        <p:selectOneRadio id="vid" value="#{euForAllSurveyBean.videosProd}">
+            <f:selectItem itemLabel="1" itemValue="1" />
+            <f:selectItem itemLabel="" itemValue="2" />
+            <f:selectItem itemLabel="" itemValue="3" />
+        	<f:selectItem itemLabel="" itemValue="4" />
+        	<f:selectItem itemLabel="5" itemValue="5" />
+        </p:selectOneRadio>
+        <p:outputLabel for="fanvid" value="Fanvids/ mash up videos: "></p:outputLabel>
+        <p:selectOneRadio id="fanvid" value="#{euForAllSurveyBean.fanvidProd}">
+            <f:selectItem itemLabel="1" itemValue="1" />
+            <f:selectItem itemLabel="" itemValue="2" />
+            <f:selectItem itemLabel="" itemValue="3" />
+        	<f:selectItem itemLabel="" itemValue="4" />
+        	<f:selectItem itemLabel="5" itemValue="5" />
+        </p:selectOneRadio>
+        <p:outputLabel for="interac" value="Video Interactions: "></p:outputLabel>
+        <p:selectOneRadio id="interac" value="#{euForAllSurveyBean.interacProd}">
+            <f:selectItem itemLabel="1" itemValue="1" />
+            <f:selectItem itemLabel="" itemValue="2" />
+            <f:selectItem itemLabel="" itemValue="3" />
+        	<f:selectItem itemLabel="" itemValue="4" />
+        	<f:selectItem itemLabel="5" itemValue="5" />
+        </p:selectOneRadio>
+         <p:outputLabel for="web" value="Websites: "></p:outputLabel>
+        <p:selectOneRadio id="web" value="#{euForAllSurveyBean.webProd}">
+            <f:selectItem itemLabel="1" itemValue="1" />
+            <f:selectItem itemLabel="" itemValue="2" />
+            <f:selectItem itemLabel="" itemValue="3" />
+        	<f:selectItem itemLabel="" itemValue="4" />
+        	<f:selectItem itemLabel="5" itemValue="5" />
+        </p:selectOneRadio>
+	</h:panelGrid>
+	
+	<h:panelGrid columns="1" cellpadding="5">
+	<p:outputLabel for="level" value="10. Which of the following texts/genres are you more interested in understanding better? Rate your interest from 1 (not  interested) to 5 (highest level of interest)."></p:outputLabel>
+	
+	</h:panelGrid>
+	<h:panelGrid columns="2" cellpadding="5">
+	<p:outputLabel for="blogs1" value="Blogs: "></p:outputLabel>
+	<p:selectOneRadio id="blogs1" value="#{euForAllSurveyBean.blogsUnder}">
+            <f:selectItem itemLabel="1" itemValue="1" />
+            <f:selectItem itemLabel="" itemValue="2" />
+            <f:selectItem itemLabel="" itemValue="3" />
+        	<f:selectItem itemLabel="" itemValue="4" />
+        	<f:selectItem itemLabel="5" itemValue="5" />
+        </p:selectOneRadio>
+        <p:outputLabel for="vid1" value="Corporate Videos: "></p:outputLabel>
+        <p:selectOneRadio id="vid1" value="#{euForAllSurveyBean.videosUnder}">
+            <f:selectItem itemLabel="1" itemValue="1" />
+            <f:selectItem itemLabel="" itemValue="2" />
+            <f:selectItem itemLabel="" itemValue="3" />
+        	<f:selectItem itemLabel="" itemValue="4" />
+        	<f:selectItem itemLabel="5" itemValue="5" />
+        </p:selectOneRadio>
+        <p:outputLabel for="fanvid1" value="Fanvids/ mash up videos: "></p:outputLabel>
+        <p:selectOneRadio id="fanvid1" value="#{euForAllSurveyBean.fanvidUnder}">
+            <f:selectItem itemLabel="1" itemValue="1" />
+            <f:selectItem itemLabel="" itemValue="2" />
+            <f:selectItem itemLabel="" itemValue="3" />
+        	<f:selectItem itemLabel="" itemValue="4" />
+        	<f:selectItem itemLabel="5" itemValue="5" />
+        </p:selectOneRadio>
+        <p:outputLabel for="interac1" value="Video Interactions: "></p:outputLabel>
+        <p:selectOneRadio id="interac1" value="#{euForAllSurveyBean.interacUnder}">
+            <f:selectItem itemLabel="1" itemValue="1" />
+            <f:selectItem itemLabel="" itemValue="2" />
+            <f:selectItem itemLabel="" itemValue="3" />
+        	<f:selectItem itemLabel="" itemValue="4" />
+        	<f:selectItem itemLabel="5" itemValue="5" />
+        </p:selectOneRadio>
+         <p:outputLabel for="web1" value="Websites: "></p:outputLabel>
+        <p:selectOneRadio id="web1" value="#{euForAllSurveyBean.webUnder}">
+            <f:selectItem itemLabel="1" itemValue="1" />
+            <f:selectItem itemLabel="" itemValue="2" />
+            <f:selectItem itemLabel="" itemValue="3" />
+        	<f:selectItem itemLabel="" itemValue="4" />
+        	<f:selectItem itemLabel="5" itemValue="5" />
+        </p:selectOneRadio>
+	</h:panelGrid>
+	
+	<h:panelGrid columns="1" cellpadding="5">
+	<p:outputLabel for="blogCreate" value="11. Have you ever produced a blog or a website?"></p:outputLabel>
+	<p:selectOneRadio id="blogCreate" value="#{euForAllSurveyBean.blogCreate}">
+            <f:selectItem itemLabel="Yes" itemValue="Yes" />
+            <f:selectItem itemLabel="No" itemValue="No" />
+            <f:ajax render="@form" />
+        </p:selectOneRadio>
+	</h:panelGrid>
+	<h:panelGroup rendered="#{euForAllSurveyBean.blogCreate == 'Yes'}">
+	<p:outputLabel for="blogYes" value="Please provide the url address(es): "></p:outputLabel>
+	<p:inputTextarea id="blogYes" cols="40" styleClass="inputfield" value="#{euForAllSurveyBean.blogYes}"></p:inputTextarea>
+	</h:panelGroup>
+	<h:panelGrid columns="1" cellpadding="5">
+	<p:outputLabel for="comm" value="12. How frequently do you use FaceTime, Skype or other types of video-communication?"></p:outputLabel>
+	<p:selectOneRadio id="comm" value="#{euForAllSurveyBean.vidComm}">
+            <f:selectItem itemLabel="every day" itemValue="every day" />
+            <f:selectItem itemLabel="twice a week" itemValue="twice a week" />
+            <f:selectItem itemLabel="every week" itemValue="every week" />
+        	<f:selectItem itemLabel="twice a month" itemValue="twice a month" />
+        	<f:selectItem itemLabel="once a month" itemValue="once a month" />
+        	<f:selectItem itemLabel="never" itemValue="never" />
+        </p:selectOneRadio>
+	</h:panelGrid>
+	<h:panelGrid columns="1" cellpadding="5">
+	<p:outputLabel for="vidUp" value="13. Have you ever produced a video and uploaded or streamed it online?"></p:outputLabel>
+	<p:selectOneRadio id="vidUp" value="#{euForAllSurveyBean.vidUpOnline}">
+            <f:selectItem itemLabel="Yes" itemValue="Yes" />
+            <f:selectItem itemLabel="No" itemValue="No" />
+            <f:ajax render="@form" />
+        </p:selectOneRadio>
+	</h:panelGrid>
+	<h:panelGroup rendered="#{euForAllSurveyBean.vidUpOnline == 'Yes'}">
+	<p:outputLabel for="vidUpYes" value="Please provide the url address(es): "></p:outputLabel>
+	<p:inputTextarea id="vidUpYes" cols="40" styleClass="inputfield" value="#{euForAllSurveyBean.vidUpYes}"></p:inputTextarea>
+	</h:panelGroup>
+	<h:panelGrid columns="1" cellpadding="5">
+	<p:outputLabel for="fanvidUp" value="14. Have you ever produced a fanvid or a mash up video?"></p:outputLabel>
+	<p:selectOneRadio id="fanvidUp" value="#{euForAllSurveyBean.fanvidUpOnline}">
+            <f:selectItem itemLabel="Yes" itemValue="Yes" />
+            <f:selectItem itemLabel="No" itemValue="No" />
+            <f:ajax render="@form" />
+        </p:selectOneRadio>
+	</h:panelGrid>
+	<h:panelGroup rendered="#{euForAllSurveyBean.fanvidUpOnline == 'Yes'}">
+	<p:outputLabel for="fanvidUpYes" value="Please provide the url address(es): "></p:outputLabel>
+	<p:inputTextarea id="fanvidUpYes" cols="40" styleClass="inputfield" value="#{euForAllSurveyBean.fanvidUpYes}"></p:inputTextarea>
+	</h:panelGroup>
+	<h:panelGrid columns="1" cellpadding="5">
+	<p:outputLabel for="levelExpert" value="15. How would you rate your level of expertise in using digital-tools/ online platforms/ search engines? Rate from 0(no expertise) to 5(top expert)."></p:outputLabel>
+	<p:selectOneRadio id="levelExpert" value="#{euForAllSurveyBean.levelExpert}">
+			<f:selectItem itemLabel="0" itemValue="0" />
+            <f:selectItem itemLabel="" itemValue="1" />
+            <f:selectItem itemLabel="" itemValue="2" />
+            <f:selectItem itemLabel="" itemValue="3" />
+        	<f:selectItem itemLabel="" itemValue="4" />
+        	<f:selectItem itemLabel="5" itemValue="5" />
+        </p:selectOneRadio>
+        <p:outputLabel for="usefulness" value="16. How useful do you find e-learning platforms in your study experience? Rate from 0(no expertise) to 5(top expert)."></p:outputLabel>
+	<p:selectOneRadio id="usefulness" value="#{euForAllSurveyBean.usefulness}">
+			<f:selectItem itemLabel="0" itemValue="0" />
+            <f:selectItem itemLabel="" itemValue="1" />
+            <f:selectItem itemLabel="" itemValue="2" />
+            <f:selectItem itemLabel="" itemValue="3" />
+        	<f:selectItem itemLabel="" itemValue="4" />
+        	<f:selectItem itemLabel="5" itemValue="5" />
+        </p:selectOneRadio>
+	</h:panelGrid>
+	<h:outputText value="Section D. Teaching/learning styles and methods" style="font-style: italic; font-weight: bold;"></h:outputText>
+	
+	<h:panelGrid columns="1" cellpadding="5">
+	<p:outputLabel for="act" value="17. What kind of teaching activities and resources do you think you learn more from? (can choose more than one option)"></p:outputLabel>
+	<p:selectManyCheckbox id="act" value="#{euForAllSurveyBean.activities}" layout="grid" columns="1">
+        <f:selectItem itemLabel="lectures" itemValue="lectures" />
+        <f:selectItem itemLabel="group/class discussions" itemValue="group/class discussions" />
+        <f:selectItem itemLabel="tutorials" itemValue="tutorials" />
+        <f:selectItem itemLabel="online/digital materials" itemValue="online/digital materials" />
+        <f:selectItem itemLabel="textbooks/readings" itemValue="textbooks/readings" />
+        <f:selectItem itemLabel="Peer-assessment" itemValue="Peer-assessment" />
+        <f:selectItem itemLabel="feedback from teachers" itemValue="feedback from teachers" />
+    </p:selectManyCheckbox>
+	
+	<p:outputLabel for="actother" value="other (please specify): "></p:outputLabel>
+	<p:inputTextarea id="actother" cols="40" styleClass="inputfield" value="#{euForAllSurveyBean.activities}"></p:inputTextarea>
+	<p:outputLabel for="assess" value="18. Have you ever assessed your colleagues/fellow students?"></p:outputLabel>
+	<p:selectOneRadio id="assess" value="#{euForAllSurveyBean.assess}">
+            <f:selectItem itemLabel="Yes" itemValue="Yes" />
+            <f:selectItem itemLabel="No" itemValue="No" />
+        </p:selectOneRadio>
+	<p:outputLabel for="areas" value="19. In which areas do you think that having assessment/evaluation skills could be useful for you in your future? Tick where appropriate(you can choose more than one box)."></p:outputLabel>
+	<p:selectManyCheckbox id="areas" value="#{euForAllSurveyBean.usefulAreas}" layout="grid" columns="1">
+        <f:selectItem itemLabel="Education" itemValue="Education" />
+        <f:selectItem itemLabel="Human resources" itemValue="Human resources" />
+        <f:selectItem itemLabel="Marketing" itemValue="Marketing" />
+        <f:selectItem itemLabel="Management" itemValue="Management" />
+        <f:selectItem itemLabel="Communication/Media" itemValue="Communication/Media" />
+        <f:selectItem itemLabel="Information technologies" itemValue="Information technologies" />
+        <f:selectItem itemLabel="International Relations" itemValue="International Relations" />
+    	<f:selectItem itemLabel="Creative Arts" itemValue="Creative Arts" />
+    </p:selectManyCheckbox>
+	
+	<p:outputLabel for="areasother" value="other (please specify): "></p:outputLabel>
+	<p:inputTextarea id="areasother" cols="40" styleClass="inputfield" value="#{euForAllSurveyBean.usefulAreas}"></p:inputTextarea>
+	
+	
+	</h:panelGrid>
+	
+	</p:panel>
+	<p:commandButton id="submit" value="Submit" styleClass="greenbutton resource_button" disabled="true" >
+		<f:ajax execute="@form" />
+
+					</p:commandButton>
+	</h:form>
+	</h:panelGroup>
+	</ui:define>
+	</ui:composition>

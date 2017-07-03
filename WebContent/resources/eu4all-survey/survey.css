@@ -1,0 +1,18 @@
+.survey{
+	
+	
+}
+.headings{
+	font-weight:bold;
+	color:#489a83;
+	margin:0px auto;
+	text-align:center;
+}
+.inputfield{
+	font-family:Arial;
+	font-size:1.5rem;
+	font-style: italic;
+	width:15em !important;
+	color:#489a83;
+	outline:none;
+}	
