@@ -678,7 +678,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     }
 
     /**
-     * Stores all made changes at fedora
+     * Stores all made changes in the database and reindexes the resource at solr
      */
     @Override
     public Resource save() throws SQLException
@@ -1117,6 +1117,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     public void addFile(File file) throws SQLException
     {
         files.put(file.getType().ordinal(), file);
+        file.setResourceId(id);
 
         if(id > 0) // the resource is already stored, the new file needs to be added to the database
         {

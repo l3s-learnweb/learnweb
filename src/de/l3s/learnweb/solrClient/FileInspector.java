@@ -72,6 +72,7 @@ public class FileInspector
 
         NamedList<Object> metadata = (NamedList<Object>) result.get("null_metadata");
 
+        /*
         if(metadata.indexOf("title", 0) > -1)
         {
             List<String> titles = (List<String>) metadata.get("title");
@@ -94,10 +95,44 @@ public class FileInspector
             List<String> types = (List<String>) metadata.get("Content-Type");
             if(types.size() > 0 && types.get(0).length() > 0)
                 info.mimeType = types.get(0).split(";")[0];
+        }*/
+        if(metadata.indexOf("title", 0) > -1)
+        {
+            String title = metadata2String(metadata.get("title"));
+            if(title != null)
+                info.title = title;
+        }
+        if(metadata.indexOf("description", 0) > -1)
+        {
+            String description = metadata2String(metadata.get("description"));
+            if(description != null)
+                info.description = description;
+        }
+        if(metadata.indexOf("Author", 0) > -1)
+        {
+            String author = metadata2String(metadata.get("Author"));
+            if(author != null)
+                info.description = author;
+        }
+        if(metadata.indexOf("Content-Type", 0) > -1)
+        {
+            String mimeType = metadata2String(metadata.get("Content-Type"));
+            if(mimeType != null)
+                info.mimeType = mimeType.split(";")[0];
         }
         info.textContent = result.getVal(1).toString().trim().replaceAll("(?m)^[ \t]*\r?\n", "");
 
         return info;
+    }
+
+    @SuppressWarnings("unchecked")
+    private static String metadata2String(Object obj)
+    {
+        List<String> descriptions = (List<String>) obj;
+        if(descriptions.size() > 0 && descriptions.get(0).length() > 0)
+            return descriptions.get(0);
+
+        return null;
     }
 
     public static InputStream openStream(String url) throws IOException

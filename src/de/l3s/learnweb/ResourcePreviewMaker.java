@@ -290,7 +290,7 @@ public class ResourcePreviewMaker
             log.fatal("Can't create thumbnail for video. resource_id=" + resource + "; file=" + resource.getFileUrl(), e);
         }
 
-        // use default image when we can't create one
+        // use default image if we can't create one
         Thumbnail videoImage = new Thumbnail("../resources/resources/img/video.png", 200, 200);
         resource.setThumbnail0(videoImage.resize(150, 120));
         resource.setThumbnail1(videoImage.resize(150, 150));

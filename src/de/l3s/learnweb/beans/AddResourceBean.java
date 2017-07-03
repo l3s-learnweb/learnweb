@@ -669,6 +669,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
                     convertedfile.setName("filename.mp4"); // TODO
                     convertedfile.setMimeType("video/mp4");
                     fileManager.save(convertedfile, inputStream);
+
+                    resource.addFile(convertedfile);
+                    resource.addFile(orginalFile);
                 }
 
                 ResourceMetadataExtractor rme = new ResourceMetadataExtractor(this.resource);
