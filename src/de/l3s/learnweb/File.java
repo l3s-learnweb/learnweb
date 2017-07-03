@@ -14,13 +14,25 @@ public class File implements Serializable, HasId
 {
     private static final long serialVersionUID = 6573841175365679674L;
 
-    public final static int ORIGINAL_FILE = 4;
+    public enum TYPE
+    {
+        UNKNOWN, // 0
+        THUMBNAIL_SQUARD, // 1
+        THUMBNAIL_SMALL, // 2
+        THUMBNAIL_MEDIUM, // 3
+        FILE_MAIN, // 4 the file that can be downloaded/viewed
+        THUMBNAIL_LARGE, // 5
+        THUMBNAIL_VERY_SMALL, // 6
+        FILE_ORIGINAL, // 7 if the file was converted the original file should be moved to this location
+        PROFILE_PICTURE, // 8
+        SYSTEM_FILE // 9 for example course header images
+    }
 
     private int fileId = -1;
     private String name;
     private String mimeType;
     private int resourceId;
-    private int resourceFileNumber;
+    private TYPE type;
     private String url;
     private boolean downloadLogActivated = false;
     private Date lastModified;
@@ -60,16 +72,6 @@ public class File implements Serializable, HasId
     public void setResourceId(int resourceId)
     {
         this.resourceId = resourceId;
-    }
-
-    public int getResourceFileNumber()
-    {
-        return resourceFileNumber;
-    }
-
-    public void setResourceFileNumber(int resourceFileNumber)
-    {
-        this.resourceFileNumber = resourceFileNumber;
     }
 
     @Override
@@ -173,7 +175,17 @@ public class File implements Serializable, HasId
     @Override
     public String toString()
     {
-        return "File [fileId=" + fileId + ", name=" + name + ", mimeType=" + mimeType + ", resourceId=" + resourceId + ", resourceFileNumber=" + resourceFileNumber + ", url=" + url + ", lastModified=" + lastModified + "]";
+        return "File [fileId=" + fileId + ", name=" + name + ", mimeType=" + mimeType + ", resourceId=" + resourceId + ", type=" + type + ", url=" + url + ", lastModified=" + lastModified + "]";
+    }
+
+    public TYPE getType()
+    {
+        return type;
+    }
+
+    public void setType(TYPE type)
+    {
+        this.type = type;
     }
 
 }

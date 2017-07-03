@@ -1,6 +1,7 @@
 package de.l3s.learnweb.beans;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -26,6 +27,9 @@ import org.primefaces.model.UploadedFile;
 
 import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
 import de.l3s.interwebj.IllegalResponseException;
+import de.l3s.learnweb.File;
+import de.l3s.learnweb.File.TYPE;
+import de.l3s.learnweb.FileManager;
 import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
@@ -203,9 +207,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.setThumbnail2(iconResource.getThumbnail2());
             resource.setThumbnail3(iconResource.getThumbnail3());
             resource.setThumbnail4(iconResource.getThumbnail4());
-            resource.setEmbeddedSize1Raw(iconResource.getEmbeddedSize1());
-            resource.setEmbeddedSize3Raw(iconResource.getEmbeddedSize3());
-            resource.setEmbeddedSize4Raw(iconResource.getEmbeddedSize4());
 
             resource.setUrl(Learnweb.getInstance().getContextPath() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));
             resource.save();
@@ -239,7 +240,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         {
             log.debug("addResource; id=" + resource.getId() + "; title=" + resource.getTitle());
 
-            if(resource.getStorageType() == Resource.FILE_RESOURCE && null == resource.getFile(4))
+            if(resource.getStorageType() == Resource.FILE_RESOURCE && null == resource.getFile(TYPE.FILE_MAIN))
             {
                 addGrowl(FacesMessage.SEVERITY_ERROR, "Select a file first");
                 return;
@@ -646,9 +647,30 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         @Override
         public void run()
         {
-
             try
             {
+                // convert videos that are not in mp4 format
+                if(resource.getStorageType() == Resource.FILE_RESOURCE && resource.getType().equals("Video"))
+                {
+                    File orginalFile = resource.getFile(TYPE.FILE_MAIN);
+
+                    InputStream inputStream = orginalFile.getInputStream();
+                    // TODO convert
+
+                    FileManager fileManager = Learnweb.getInstance().getFileManager();
+
+                    // move original file
+                    orginalFile.setType(TYPE.FILE_ORIGINAL);
+                    fileManager.save(orginalFile);
+
+                    // create new file
+                    File convertedfile = new File();
+                    convertedfile.setType(TYPE.FILE_MAIN);
+                    convertedfile.setName("filename.mp4"); // TODO
+                    convertedfile.setMimeType("video/mp4");
+                    fileManager.save(convertedfile, inputStream);
+                }
+
                 ResourceMetadataExtractor rme = new ResourceMetadataExtractor(this.resource);
                 rme.process();
                 rme.getResource().save();

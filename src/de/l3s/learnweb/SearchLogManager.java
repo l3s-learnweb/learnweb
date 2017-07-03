@@ -122,9 +122,9 @@ public class SearchLogManager
                     }
                 }
                 insert.addBatch();
-                insert.executeBatch();
             }
 
+            insert.executeBatch();
             insert.close();
         }
         catch(Exception e)

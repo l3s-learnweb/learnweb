@@ -32,6 +32,7 @@ import com.sun.jersey.oauth.signature.OAuthParameters;
 import com.sun.jersey.oauth.signature.OAuthSecrets;
 
 import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
+import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.beans.UtilBean;
 
@@ -461,8 +462,8 @@ public class InterWeb implements Serializable
         multiPart = multiPart.bodyPart(new FormDataBodyPart("title", resource.getTitle()));
         multiPart = multiPart.bodyPart(new FormDataBodyPart("description", resource.getDescription()));
         multiPart = multiPart.bodyPart(new FormDataBodyPart("content_type", resource.getType().toLowerCase()));
-        multiPart = multiPart.bodyPart(new FileDataBodyPart("data", resource.getFile(4).getActualFile(), MediaType.MULTIPART_FORM_DATA_TYPE));
-        multiPart = multiPart.bodyPart(new FormDataBodyPart("data", "the data"));
+        multiPart = multiPart.bodyPart(new FileDataBodyPart("data", resource.getFile(TYPE.FILE_MAIN).getActualFile(), MediaType.MULTIPART_FORM_DATA_TYPE));
+        //multiPart = multiPart.bodyPart(new FormDataBodyPart("data", "the data"));
 
         WebResource webResource = createWebResource("users/default/uploads", getIWToken());
         WebResource.Builder builder = webResource.type(MediaType.MULTIPART_FORM_DATA);

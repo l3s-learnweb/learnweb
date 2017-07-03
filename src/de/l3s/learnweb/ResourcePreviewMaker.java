@@ -15,6 +15,7 @@ import org.apache.log4j.Logger;
 import com.sun.pdfview.PDFFile;
 import com.sun.pdfview.PDFPage;
 
+import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 import de.l3s.util.Image;
@@ -83,10 +84,10 @@ public class ResourcePreviewMaker
             type = info.getMimeType().substring(info.getMimeType().indexOf("/") + 1);
 
         // if this is a new file add it to the resource
-        if(resource.getFile(File.ORIGINAL_FILE) == null)
+        if(resource.getFile(TYPE.FILE_MAIN) == null)
         {
             File file = new File();
-            file.setResourceFileNumber(File.ORIGINAL_FILE); // number 4 is reserved for the original file
+            file.setType(TYPE.FILE_MAIN);
             file.setName(info.getFileName());
             file.setMimeType(info.getMimeType());
             file.setDownloadLogActivated(true);
@@ -178,7 +179,7 @@ public class ResourcePreviewMaker
         {
             Image thumbnail = img.getResized(SIZE4_MAX_WIDTH, SIZE4_MAX_HEIGHT);
             File file = new File();
-            file.setResourceFileNumber(5); // number 5 is reserved for the large thumbnail
+            file.setType(TYPE.THUMBNAIL_LARGE);
             file.setName("thumbnail4.png");
             file.setMimeType("image/png");
             fileManager.save(file, thumbnail.getInputStream());
@@ -201,7 +202,7 @@ public class ResourcePreviewMaker
         Image img = new Image(thumbnailUrl.openStream());
 
         File file = new File();
-        file.setResourceFileNumber(5);
+        file.setType(TYPE.THUMBNAIL_LARGE);
         file.setName("website.png");
         file.setMimeType("image/png");
         fileManager.save(file, img.getInputStream());
@@ -220,7 +221,7 @@ public class ResourcePreviewMaker
         Image img = new Image(thumbnailUrl.openStream());
 
         File file = new File();
-        file.setResourceFileNumber(5);
+        file.setType(TYPE.THUMBNAIL_LARGE);
         file.setName("wayback_thumbnail.png");
         file.setMimeType("image/png");
         file = fileManager.save(file, img.getInputStream());
@@ -245,22 +246,22 @@ public class ResourcePreviewMaker
         URL thumbnailUrl = new URL(archiveThumbnailService + StringHelper.urlEncode(url));
         Image img = new Image(thumbnailUrl.openStream());
         File file = new File();
+        file.setResourceId(resourceId);
+        file.setMimeType("image/png");
+
         int width = img.getWidth();
         int height = img.getHeight();
         if(width > SIZE3_MAX_WIDTH && height > SIZE3_MAX_HEIGHT)
         {
             img = img.getResized(SIZE3_MAX_WIDTH, SIZE3_MAX_HEIGHT, true);
-            file.setResourceFileNumber(3); // number 3 is reserved for the medium thumbnail
+            file.setType(TYPE.THUMBNAIL_MEDIUM);
             file.setName("wayback_thumbnail3.jpg");
-            file.setMimeType("image/png");
             fileManager.save(file, img.getInputStream());
         }
         else
         {
-            file.setResourceFileNumber(5);
-            file.setResourceId(resourceId);
+            file.setType(TYPE.THUMBNAIL_LARGE);
             file.setName("wayback_thumbnail.jpg");
-            file.setMimeType("image/png");
             file = fileManager.save(file, img.getInputStream());
         }
 
@@ -328,7 +329,7 @@ public class ResourcePreviewMaker
         {
             thumbnail = img.getResized(SIZE0_MAX_WIDTH, SIZE0_MAX_HEIGHT, croppedToAspectRatio);
             File file = new File();
-            file.setResourceFileNumber(6); // number 6 is reserved for the smallest thumbnail
+            file.setType(TYPE.THUMBNAIL_VERY_SMALL);
             file.setName("thumbnail0.png");
             file.setMimeType("image/png");
             fileManager.save(file, thumbnail.getInputStream());
@@ -340,11 +341,10 @@ public class ResourcePreviewMaker
 
             thumbnail = croppedToAspectRatio ? img.getCroppedAndResized(SIZE1_WIDTH, SIZE1_WIDTH) : img.getResizedToSquare2(SIZE1_WIDTH, 0.0);
             file = new File();
-            file.setResourceFileNumber(1); // number 1 is reserved for the squared thumbnail
+            file.setType(TYPE.THUMBNAIL_SQUARD);
             file.setName("thumbnail1.png");
             file.setMimeType("image/png");
             fileManager.save(file, thumbnail.getInputStream());
-            resource.setEmbeddedSize1Raw("<img src=\"" + Resource.createPlaceholder(1) + "\" width=\"" + thumbnail.getWidth() + "\" height=\"" + thumbnail.getHeight() + "\" />");
             resource.addFile(file);
             resource.setThumbnail1(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
 
@@ -353,7 +353,7 @@ public class ResourcePreviewMaker
 
             thumbnail = img.getResized(SIZE2_MAX_WIDTH, SIZE2_MAX_HEIGHT, croppedToAspectRatio);
             file = new File();
-            file.setResourceFileNumber(2); // number 2 is reserved for the small thumbnail
+            file.setType(TYPE.THUMBNAIL_SMALL);
             file.setName("thumbnail2.png");
             file.setMimeType("image/png");
             fileManager.save(file, thumbnail.getInputStream());
@@ -365,11 +365,10 @@ public class ResourcePreviewMaker
 
             thumbnail = img.getResized(SIZE3_MAX_WIDTH, SIZE3_MAX_HEIGHT, croppedToAspectRatio);
             file = new File();
-            file.setResourceFileNumber(3); // number 3 is reserved for the medium thumbnail
+            file.setType(TYPE.THUMBNAIL_MEDIUM);
             file.setName("thumbnail3.png");
             file.setMimeType("image/png");
             fileManager.save(file, thumbnail.getInputStream());
-            resource.setEmbeddedSize3Raw("<img src=\"" + Resource.createPlaceholder(3) + "\" width=\"" + thumbnail.getWidth() + "\" height=\"" + thumbnail.getHeight() + "\" />");
             resource.addFile(file);
             resource.setThumbnail3(new Thumbnail(file.getUrl(), thumbnail.getWidth(), thumbnail.getHeight(), file.getId()));
         }

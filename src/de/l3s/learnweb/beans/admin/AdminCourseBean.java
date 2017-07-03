@@ -19,6 +19,7 @@ import org.primefaces.model.UploadedFile;
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Course.Option;
 import de.l3s.learnweb.File;
+import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.ResourcePreviewMaker;
@@ -169,6 +170,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
             info = rpm.getFileInfo(uploadedFile.getInputstream(), uploadedFile.getFileName());
 
             File file = new File();
+            file.setType(TYPE.SYSTEM_FILE);
             file.setName(info.getFileName());
             file.setMimeType(info.getMimeType());
 

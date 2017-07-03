@@ -29,13 +29,18 @@ public class StringHelper
      */
     public static String shortnString(String str, int maxLength)
     {
+        if(maxLength < 3)
+        {
+            throw new IllegalArgumentException("maxLength must be greater than 3");
+        }
+
         if(null == str)
             return "";
 
         if(str.length() > maxLength)
         {
 
-            int endIdx = maxLength;
+            int endIdx = maxLength - 3;
             while(endIdx > 0 && str.charAt(endIdx) != ' ' && str.charAt(endIdx) != '\n')
                 endIdx--;
 

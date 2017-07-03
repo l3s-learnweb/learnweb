@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.jaxb.SearchResultEntity;
 import de.l3s.interwebj.jaxb.ThumbnailEntity;
+import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.beans.AddResourceBean;
 import de.l3s.learnweb.solrClient.FileInspector;
@@ -951,7 +952,7 @@ public class ResourceManager
                 for(File file : files)
                 {
                     resource.addFile(file);
-                    if(file.getResourceFileNumber() == File.ORIGINAL_FILE)
+                    if(file.getType().equals(TYPE.FILE_MAIN))
                     {
                         resource.setUrl(file.getUrl());
                         resource.setFileUrl(file.getUrl());

@@ -18,6 +18,7 @@ import java.util.Properties;
 import org.apache.commons.io.IOUtils;
 import org.apache.log4j.Logger;
 
+import de.l3s.learnweb.File.TYPE;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
@@ -155,6 +156,23 @@ public class FileManager
     }
     */
 
+    public File save(File file) throws SQLException
+    {
+        if(file.getId() < 0)
+            throw new IllegalArgumentException("This method can only update existing files");
+
+        try
+        {
+
+            return save(file, null);
+        }
+        catch(IOException e)
+        {
+            log.error("this should never happen", e);
+            throw new RuntimeException(e);
+        }
+    }
+
     /**
      * Saves the file to the database.
      * If the file is not yet stored at the database, a new record will be created and the returned file contains the new id.
@@ -177,7 +195,7 @@ public class FileManager
         else
             replace.setInt(1, file.getId());
         replace.setInt(2, file.getResourceId());
-        replace.setInt(3, file.getResourceFileNumber());
+        replace.setInt(3, file.getType().ordinal());
         replace.setString(4, file.getName());
         replace.setString(5, file.getMimeType());
         replace.setInt(6, file.isDownloadLogActivated() ? 1 : 0);
@@ -196,10 +214,13 @@ public class FileManager
         }
         replace.close();
 
-        // copy the data into the file
-        OutputStream outputStream = new FileOutputStream(file.getActualFile());
-        IOUtils.copy(inputStream, outputStream);
-        outputStream.close();
+        if(inputStream != null)
+        {
+            // copy the data into the file
+            OutputStream outputStream = new FileOutputStream(file.getActualFile());
+            IOUtils.copy(inputStream, outputStream);
+            outputStream.close();
+        }
 
         return file;
     }
@@ -269,13 +290,15 @@ public class FileManager
         file = new File();
         file.setId(fileId);
         file.setResourceId(rs.getInt("resource_id"));
-        file.setResourceFileNumber(rs.getInt("resource_file_number"));
+        file.setType(TYPE.values()[rs.getInt("resource_file_number")]);
         file.setName(rs.getString("name"));
         file.setMimeType(rs.getString("mime_type"));
         file.setDownloadLogActivated(rs.getInt("log_actived") == 1);
         file.setActualFile(createActualFile(file));
         file.setUrl(createUrl(file));
         file.setLastModified(new Date(rs.getTimestamp("timestamp").getTime()));
+
+        log.debug(fileId + " " + file.getName() + " - " + file.getType());
 
         if(!file.getActualFile().exists())
         {

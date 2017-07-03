@@ -224,6 +224,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
                     embeddedSize3 = embeddedSize1.replace("_t.", ".");
             }
         }
+        /*
         else
         {
             for(File file : files.values())
@@ -232,8 +233,8 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
                 embeddedSize3 = replacePlaceholder(embeddedSize3, file);
             }
         }
-
-        /*
+        
+        
         if(dummyImage == null && (thumbnail1 == null || thumbnail2 == null))
         {
             String imageUrl = ResourcePreviewMaker.getBestImage(this);
@@ -653,7 +654,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
      * @param value the rating 1-5
      * @param user the user who rates
      */
-    public void rate(int value, User user) throws Exception
+    public void rate(int value, User user) throws SQLException
     {
         Learnweb.getInstance().getResourceManager().rateResource(id, user.getId(), value);
 
@@ -663,14 +664,13 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         isRatedByUser.put(user.getId(), true);
     }
 
-    public boolean isRatedByUser(int userId) throws Exception
+    public boolean isRatedByUser(int userId) throws SQLException
     {
         Boolean value = isRatedByUser.get(userId);
         if(null != value) // the answer is cached
             return value;
 
-        // the answer isn't cached we have to ask fedora
-
+        // the answer isn't cached we have to query the database
         value = Learnweb.getInstance().getResourceManager().isResourceRatedByUser(id, userId);
         isRatedByUser.put(userId, value); // cache answer
 
@@ -937,10 +937,10 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     @Deprecated
     public String getEmbeddedSize3()
     {
-        /*
-        if(getThumbnail3() != null)
+
+        if(getThumbnail3() != null && getType().equals("Image"))
             return getThumbnail3().toHTML();
-        */
+
         return embeddedSize3;
     }
 
@@ -1116,9 +1116,9 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
      */
     public void addFile(File file) throws SQLException
     {
-        files.put(file.getResourceFileNumber(), file);
+        files.put(file.getType().ordinal(), file);
 
-        if(id > 0) // the resource is already stored
+        if(id > 0) // the resource is already stored, the new file needs to be added to the database
         {
             FileManager fm = Learnweb.getInstance().getFileManager();
             fm.addFileToResource(file, this);
@@ -1126,22 +1126,18 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     }
 
-    public File getFile(int fileNumber)
+    public File getFile(File.TYPE fileType)
     {
-        return files.get(fileNumber);
+        return files.get(fileType.ordinal());
     }
 
-    @Deprecated
-    public static String createPlaceholder(int fileNumber)
-    {
-        return "{learnweb_file_" + fileNumber + "}";
-    }
-
+    /*
     @Deprecated
     private static String replacePlaceholder(String embeddedCode, File file)
     {
         return embeddedCode.replace("{learnweb_file_" + file.getResourceFileNumber() + "}", file.getUrl());
     }
+    */
 
     /**
      * @return Text that has been automatically extracted from the source file/url
@@ -1679,97 +1675,21 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public void setMetadata(Object metadataObj)
     {
-        if(metadataObj instanceof MetadataMap)
-        {
-            log.warn("load old metadata resource " + getId() + " - " + getTitle());
-            // old class needs to be copied to simple hashmap
-            MetadataMap oldMetadata = (MetadataMap) metadataObj;
-            metadata = new HashMap<>(oldMetadata);
-        }
-        else if(metadataObj instanceof HashMap<?, ?>)
+        if(metadataObj instanceof HashMap<?, ?>)
         {
             @SuppressWarnings("unchecked")
             HashMap<String, String> hashMap = (HashMap<String, String>) metadataObj;
             metadata = hashMap;
         }
         else
-            throw new IllegalArgumentException("unknown metadata format: " + metadataObj.getClass().getName());
+        {
+            metadata = new HashMap<>();
+            log.error("resource = " + getId() + "unknown metadata format: " + metadataObj.getClass().getName());
+        }
 
         //clear wrapper
         metadataWrapper = null;
         metadataMultiValue = null;
-    }
-
-    /**
-     * This class stores the optional resource meta attributes in a HashMap
-     * The hard coded attributes (title, description and author) are mapped to the resource object to simplify the output template code
-     * 
-     * @author Philipp
-     *
-     */
-    @Deprecated
-    private class MetadataMap extends HashMap<String, String>
-    {
-        private static final long serialVersionUID = 8020917626723924034L;
-
-        /**
-         * Copy constructor
-         * 
-         * @param hashMap
-         */
-        public MetadataMap(HashMap<String, String> hashMap)
-        {
-            super(hashMap);
-        }
-
-        public MetadataMap()
-        {
-            super();
-        }
-
-        @Override
-        public String get(Object key)
-        {
-            if(!key.getClass().equals(String.class))
-                throw new IllegalArgumentException("key must be a string");
-
-            String keyString = ((String) key).toLowerCase();
-
-            switch(keyString)
-            {
-            case "title":
-                return getTitle();
-            case "author":
-                return getAuthor();
-            case "description":
-                return getDescription();
-            case "language":
-                return getLanguage();
-            }
-            return super.get(key);
-        }
-
-        @Override
-        public String put(String key, String value)
-        {
-            switch(key)
-            {
-            case "title":
-                setTitle(value);
-                return value;
-            case "author":
-                setAuthor(value);
-                return value;
-            case "description":
-                setDescription(value);
-                return value;
-            case "language":
-                setLanguage(value);
-                return value;
-            }
-
-            return super.put(key, value);
-        }
     }
 
     /**

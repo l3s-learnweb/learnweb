@@ -19,6 +19,7 @@ import org.jsoup.safety.Whitelist;
 
 import de.l3s.interwebj.AuthCredentials;
 import de.l3s.interwebj.InterWeb;
+import de.l3s.learnweb.File.TYPE;
 import de.l3s.util.HasId;
 import de.l3s.util.Image;
 import de.l3s.util.MD5;
@@ -472,12 +473,18 @@ public class User implements Comparable<User>, Serializable, HasId
     {
         FileManager fileManager = Learnweb.getInstance().getFileManager();
 
+        if(imageFileId != 0) // delete old image
+        {
+            fileManager.delete(imageFileId);
+        }
+
         // process image
         Image img = new Image(inputStream);
         Image thumbnail = img.getResizedToSquare(100, 0.05);
 
         // save image file
         File file = new File();
+        file.setType(TYPE.PROFILE_PICTURE);
         file.setName("user_icon.png");
         file.setMimeType("image/png");
         file = fileManager.save(file, thumbnail.getInputStream());

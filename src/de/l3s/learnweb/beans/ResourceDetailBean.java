@@ -30,6 +30,7 @@ import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.File;
+import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.FileManager;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
@@ -285,7 +286,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             Collection<File> files = clickedResource.getFiles().values();
             for(File file : files)
             {
-                if(file.getResourceFileNumber() <= 6 && file.getResourceFileNumber() != File.ORIGINAL_FILE) // number 4 is reserved for the source file
+                if(file.getType() == TYPE.THUMBNAIL_LARGE || file.getType() == TYPE.THUMBNAIL_MEDIUM || file.getType() == TYPE.THUMBNAIL_SMALL || file.getType() == TYPE.THUMBNAIL_SQUARD || file.getType() == TYPE.THUMBNAIL_VERY_SMALL) // number 4 is reserved for the source file
                 {
                     log.debug("Delete " + file.getName());
                     fileManager.delete(file);

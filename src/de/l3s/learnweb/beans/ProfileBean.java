@@ -150,7 +150,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.error("Fatal error while processing a user image", e);
             addMessage(FacesMessage.SEVERITY_FATAL, "Fatal error while processing your image.");
         }
     }
