@@ -77,7 +77,11 @@ public class Organisation implements Serializable, Comparable<Organisation>
         ResourceMetadataField metadata;
 
         // define optional resource fields for some courses
-        if(id == 893 || id == 480) // Admin and YELL 
+        if(id == 480) // YELL 
+        {
+            // all yell fields are added manually
+        }
+        else if(id == 893 ) // Admin 
         {
             metadataFields.add(new ResourceMetadataField("noname", "Topical", MetadataType.FULLWIDTH_HEADER));
             metadataFields.add(new ResourceMetadataField("noname", "Please tell us about the topic of this resource. Edit if necessary.", MetadataType.FULLWIDTH_DESCRIPTION));

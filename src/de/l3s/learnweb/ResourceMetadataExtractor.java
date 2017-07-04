@@ -14,6 +14,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.beans.AddResourceBean;
 import de.l3s.learnweb.solrClient.FileInspector;
@@ -83,13 +84,33 @@ public class ResourceMetadataExtractor
     public void processFileResource()
     {
         // TODO: move from addResourceBean
+        if(resource.getThumbnail4() == null)
+        {
+
+            ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
+
+            File mainFile = resource.getFile(TYPE.FILE_MAIN);
+            log.debug("Get the mime type and extract text if possible");
+            FileInfo info;
+            try
+            {
+                info = rpm.getFileInfo(mainFile.getInputStream(), resource.getFileName());
+
+                log.debug("Create thumbnails");
+                rpm.processFile(resource, mainFile.getInputStream(), info);
+            }
+            catch(SQLException | IOException e)
+            {
+                log.error("cant create thumbnail for resource " + resource.getId(), e);
+            }
+        }
     }
 
     public void processWebResource()
     {
         if(resource.getUrl() != null)
         {
-            resource.setUrl(resource.getUrl());
+            // resource.setUrl(resource.getUrl()); that makes no sense
             extractWebSource();
             extractMetadata();
 

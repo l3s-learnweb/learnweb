@@ -16,6 +16,7 @@ import com.sun.pdfview.PDFFile;
 import com.sun.pdfview.PDFPage;
 
 import de.l3s.learnweb.File.TYPE;
+import de.l3s.learnweb.beans.LearnwebBean;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 import de.l3s.util.Image;
@@ -276,9 +277,12 @@ public class ResourcePreviewMaker
     {
         try
         {
-            // get website thumbnail
-            URL thumbnailUrl = new URL(videoThumbnailService + StringHelper.urlEncode(resource.getFileUrl()));
+            // create a simple url for the video, the thumbnail service does not support some special chars in urls
+            String url = videoThumbnailService + StringHelper.urlEncode(LearnwebBean.getServerUrl() + learnweb.getFileManager().createUrl(resource.getFile(TYPE.FILE_MAIN).getId(), "video.dat"));
+            log.debug("Create video thumbnail: " + url);
 
+            // get website thumbnail
+            URL thumbnailUrl = new URL(url);
             Image img = new Image(thumbnailUrl.openStream());
 
             createThumbnails(resource, img, false);
@@ -305,8 +309,6 @@ public class ResourcePreviewMaker
         try
         {
             Image img = new Image(FileInspector.openStream("http://www.filehippo.com/de/download/file/b9915e2b3dbaf63cc505890ee4cadd48302780c53bb04d55ecc8b3bd913ed7ce/"));
-
-            ;
 
             FileOutputStream out = new FileOutputStream("c:\\ablage\\test.dat");
             IOUtils.copy(img.getInputStream(), out);

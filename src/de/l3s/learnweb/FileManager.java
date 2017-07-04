@@ -298,8 +298,6 @@ public class FileManager
         file.setUrl(createUrl(file));
         file.setLastModified(new Date(rs.getTimestamp("timestamp").getTime()));
 
-        log.debug(fileId + " " + file.getName() + " - " + file.getType());
-
         if(!file.getActualFile().exists())
         {
             log.warn("Can't find file: " + file.getActualFile().getAbsolutePath());

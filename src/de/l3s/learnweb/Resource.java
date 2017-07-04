@@ -75,7 +75,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private String fileUrl;
     private String maxImageUrl; // an url to the largest image preview of this resource
     private String query; // the query which was used to find this resource
-    private int originalResourceId = 0; // if the resource was copied from an older fedora resource this stores the id of the original resource
+    private int originalResourceId = 0; // if the resource was copied from an existing Learnweb resource this field stores the id of the original resource
     private String machineDescription;
     private Thumbnail thumbnail0;
     private Thumbnail thumbnail1;

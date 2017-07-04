@@ -8,6 +8,24 @@
 	xmlns:p="http://primefaces.org/ui">
 
 <ui:composition> 
+	<ui:fragment rendered="#{userBean.user.organisation.id eq 480}">
+		<!-- Input fields for the yell course -->
+		<tr>
+			<td><h:outputText value="#{msg.title}" />:</td>
+			<td><p:inputText required="true" class="border-box-100" value="#{res.title}" /></td>
+		</tr>
+		<tr>
+			<td><h:outputText value="Audience" />:</td>
+			<td><p:inputText required="true" class="border-box-100" value="#{res.title}" /></td>
+			<!-- #{res.title} refers to Resource.format, change it to res.audience ....  -->
+		</tr>
+		<tr>
+			<td><h:outputText value="#{msg.description}" />:</td>
+			<td><p:inputTextarea value="#{res.description}" rows="4" style="overflow-y: scroll; width:100%; box-sizing: border-box;" class="border-box-100" /></td>
+		</tr>		
+	</ui:fragment>
+	
+	
 	<c:forEach var="field" items="#{userBean.user.organisation.metadataFields}">
 		<tr>
 			<c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">	
