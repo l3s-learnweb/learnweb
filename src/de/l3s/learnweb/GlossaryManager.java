@@ -26,7 +26,7 @@ public class GlossaryManager
     //Insert Italian and Uk terms related to Glossary entry
     public void InsertTerms(GlossaryEntry e)
     {
-        String InsertTerms = "INSERT INTO `lw_resource_glossary_terms`(`glossary_id`, `term`, `use`, `pronounciation`, `acronym`, `references`, `phraseology`, `language`, `deleted`) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String InsertTerms = "INSERT INTO `lw_resource_glossary_terms`(`glossary_id`, `term`, `use`, `pronounciation`, `acronym`, `references`, `phraseology`, `language`, `deleted`, `user_id`) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement preparedStmnt = null;
         try
         {
@@ -50,6 +50,7 @@ public class GlossaryManager
                 preparedStmnt.setString(7, t.getPhraseology());
                 preparedStmnt.setString(8, "English-uk");
                 preparedStmnt.setInt(9, 0);
+                preparedStmnt.setInt(10, e.getUser().getId());
                 preparedStmnt.executeQuery();
 
             }
@@ -65,6 +66,7 @@ public class GlossaryManager
                 preparedStmnt.setString(7, t.getPhraseology());
                 preparedStmnt.setString(8, "Italian-it");
                 preparedStmnt.setInt(9, 0);
+                preparedStmnt.setInt(10, e.getUser().getId());
                 preparedStmnt.executeQuery();
 
             }

@@ -49,6 +49,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private int count;
     private UploadedFile multimediaFile;
     private int userId;
+
     private int resourceId;
     private int groupId; // group id of the resource used only for the logger
     private int glossaryId;
@@ -534,6 +535,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public int getUserId()
     {
         return userId;
+    }
+
+    public void setUserId(int userId)
+    {
+        this.userId = userId;
     }
 
     public int getResourceId()
