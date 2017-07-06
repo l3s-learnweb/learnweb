@@ -75,7 +75,8 @@ function change_lightbox_content(showArchiveUrls){
 	if(showArchiveUrls)
 	{
 		$('#lightbox_content').children().first().hide();
-
+		$('#lightbox_footer').hide();
+		
 		$('#archive_lightbox_content').show(function(){
 			$(this).find("iframe").prop("src", function(){
 				return $(this).data("src");
@@ -85,6 +86,7 @@ function change_lightbox_content(showArchiveUrls){
 	else
 	{
 		$('#lightbox_content').children().first().show();
+		$('#lightbox_footer').show(); //displays last updated info on viewing thumbnail
 		$('#archive_lightbox_content').hide(function(){
 			$(this).find("iframe").prop("src","");
 		});

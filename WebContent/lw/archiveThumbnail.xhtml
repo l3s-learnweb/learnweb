@@ -77,7 +77,7 @@ xmlns:ui="http://java.sun.com/jsf/facelets"
 						});
 					</script>
 					<h:outputLabel styleClass="textInputLabel" for="input_frame" value="Frame Sim. (increments of 0.05):" />
-					<p:inputText id="input_frame" value="#{archiveThumbnailBean.frameSim}" styleClass="textInput" readonly="true">
+					<p:inputText id="input_frame" value="#{archiveThumbnailBean.frameSim}" styleClass="textInput">
 						<f:convertNumber minFractionDigits="2" />
 					</p:inputText>
 	
@@ -99,7 +99,7 @@ xmlns:ui="http://java.sun.com/jsf/facelets"
 	          		</script>
 	
 					<h:outputLabel styleClass="textInputLabel" for="input_text" value="Text Sim. (increments of 0.05):" />
-					<p:inputText id="input_text" value="#{archiveThumbnailBean.textSim}" styleClass="textInput" readonly="true">
+					<p:inputText id="input_text" value="#{archiveThumbnailBean.textSim}" styleClass="textInput">
 						<f:convertNumber minFractionDigits="2" />
 					</p:inputText>
 					<div class="clear"></div>
