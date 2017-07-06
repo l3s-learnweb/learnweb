@@ -27,16 +27,21 @@
 		
 		<ui:decorate template="/templates/main/header.xhtml" /> 		
 
-		<section id="content" class="#{smallPage? 'small_page':''}">
-			<p:messages id="message" showDetail="false" showSummary="true" escape="false" />
+		<section id="content" class="#{smallPage? 'small_page':''}">				
+			<ui:fragment rendered="#{not learnwebBean.maintenanceMode}">
+				<p:messages id="message" showDetail="false" showSummary="true" escape="false" />
+		
+				<h:panelGroup layout="block" styleClass="small_page" rendered="#{loginRequired and !userBean.loggedIn}">
+					<ui:include src="/templates/user/login.xhtml" />
+				</h:panelGroup>
 	
-			<h:panelGroup layout="block" styleClass="small_page" rendered="#{loginRequired and !userBean.loggedIn}">
-				<ui:include src="/templates/user/login.xhtml" />
-			</h:panelGroup>
-
-			<h:panelGroup rendered="#{!loginRequired || userBean.loggedIn}">
-				<ui:insert name="center_layout"></ui:insert>
-			</h:panelGroup>
+				<h:panelGroup rendered="#{!loginRequired || userBean.loggedIn}">
+					<ui:insert name="center_layout"></ui:insert>
+				</h:panelGroup>
+			</ui:fragment>
+			<ui:fragment rendered="#{learnwebBean.maintenanceMode}">
+				<div class="error" style="font-size:1.4rem">#{msg.service_unavailable}</div>
+			</ui:fragment>
 		</section>		
 		
 		<h:panelGroup layout="block" id="footer" rendered="#{not empty helpText}" styleClass="#{userBean.getPreference('helptext_hide')? 'display-none':''}">

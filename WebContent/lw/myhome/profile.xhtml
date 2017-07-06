@@ -103,10 +103,10 @@
 							<p:message rendered="false" showSummary="true" showDetail="false" styleClass="error" for="userdateofbirth" 
 							     	id="userdateofbirthMessage" />			
 			
-							<h:outputText value="#{msg.additionalinformation}:" />
-							<p:inputTextarea id="useradditionalinformation" value="#{profileBean.additionalInformation}" />
+							<h:outputText value="#{msg.additionalinformation}:" rendered="#{profileBean.moderatorAccess}" />
+							<p:inputTextarea id="useradditionalinformation" value="#{profileBean.additionalInformation}" rendered="#{profileBean.moderatorAccess}" />
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="useradditionalinformation" 
-									id="useradditionalinformationMessage" />	
+									id="useradditionalinformationMessage" rendered="#{profileBean.moderatorAccess}" />	
 									
 							<h:outputText value="#{msg.awards}:" rendered="#{profileBean.moderatorAccess}" />
 							<p:editor id="usercredits" value="#{profileBean.credits}" rendered="#{profileBean.moderatorAccess}" height="80"

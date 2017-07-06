@@ -26,6 +26,7 @@ public class LearnwebBean implements Serializable
 
     private transient Learnweb learnweb;
     private final String contextPath;
+    private boolean maintenanceMode = false;
 
     public LearnwebBean() throws IOException, ClassNotFoundException, SQLException
     {
@@ -35,7 +36,7 @@ public class LearnwebBean implements Serializable
 
         log.debug("init LearnwebBean: context='" + contextPath + "'");
 
-        learnweb = Learnweb.createInstance(contextPath);
+        learnweb = Learnweb.createInstance(getServerUrl());
     }
 
     @PostConstruct
@@ -47,7 +48,7 @@ public class LearnwebBean implements Serializable
 
     /**
      * 
-     * @return Returns the servername + contextpath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
+     * @return Returns the contextpath
      */
     public String getContextPath()
     {
@@ -67,12 +68,12 @@ public class LearnwebBean implements Serializable
         String path = ext.getRequestServletPath();
         path = path.substring(0, path.indexOf("/", 1) + 1);
         log.debug("server url: " + serverUrl + "; path " + path);
-        return serverUrl + ext.getRequestContextPath() + path;
+        return serverUrl + path;
     }
 
     /**
      * 
-     * @return example http://learnweb.l3s.uni-hannover.de
+     * @return example http://learnweb.l3s.uni-hannover.de or http://localhost:8080/Learnweb-Tomcat
      */
     public static String getServerUrl()
     {
@@ -81,13 +82,13 @@ public class LearnwebBean implements Serializable
             ExternalContext ext = UtilBean.getExternalContext();
 
             if(ext.getRequestServerPort() == 80 || ext.getRequestServerPort() == 443)
-                return ext.getRequestScheme() + "://" + ext.getRequestServerName();
+                return ext.getRequestScheme() + "://" + ext.getRequestServerName() + ext.getRequestContextPath();
             else
-                return ext.getRequestScheme() + "://" + ext.getRequestServerName() + ":" + ext.getRequestServerPort();
+                return ext.getRequestScheme() + "://" + ext.getRequestServerName() + ":" + ext.getRequestServerPort() + ext.getRequestContextPath();
         }
         catch(Exception e)
         {
-            log.warn("Can't get server url. This is expected in console mode", e);
+            log.warn("Can't get server url. This is expected in console mode");
             return "http://learnweb.l3s.uni-hannover.de";
         }
     }
@@ -143,4 +144,15 @@ public class LearnwebBean implements Serializable
     {
         return UtilBean.getLocaleMessage(msgKey);
     }
+
+    public boolean isMaintenanceMode()
+    {
+        return maintenanceMode;
+    }
+
+    public void setMaintenanceMode(boolean maintenanceMode)
+    {
+        this.maintenanceMode = maintenanceMode;
+    }
+
 }

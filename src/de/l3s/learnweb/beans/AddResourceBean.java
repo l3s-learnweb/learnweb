@@ -39,7 +39,7 @@ import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 import de.l3s.util.StringHelper;
 
 @ViewScoped
-@ManagedBean(name = "addResourceBean")
+@ManagedBean
 public class AddResourceBean extends ApplicationBean implements Serializable
 {
     private final static Logger log = Logger.getLogger(AddResourceBean.class);
@@ -210,7 +210,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.setThumbnail3(iconResource.getThumbnail3());
             resource.setThumbnail4(iconResource.getThumbnail4());
 
-            resource.setUrl(getLearnweb().getContextPath() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));
+            resource.setUrl(getLearnweb().getServerUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));
             resource.save();
             log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
@@ -239,7 +239,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     {
         try
         {
-            log.debug("addResource; id=" + resource.getId() + "; title=" + resource.getTitle());
+            log.debug("addResource; res=" + resource);
 
             if(resource.getStorageType() == Resource.FILE_RESOURCE && null == resource.getFile(TYPE.FILE_MAIN))
             {
@@ -647,6 +647,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         public CreateThumbnailThread(Resource resource)
         {
             this.resource = resource;
+            log.debug(this.resource.toString());
         }
 
         @Override
@@ -681,7 +682,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
                     resource.addFile(orginalFile);
                 }
 
-                ResourceMetadataExtractor rme = new ResourceMetadataExtractor(this.resource);
+                ResourceMetadataExtractor rme = new ResourceMetadataExtractor(resource);
                 rme.process();
                 rme.getResource().save();
             }

@@ -16,7 +16,6 @@ import com.sun.pdfview.PDFFile;
 import com.sun.pdfview.PDFPage;
 
 import de.l3s.learnweb.File.TYPE;
-import de.l3s.learnweb.beans.LearnwebBean;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 import de.l3s.util.Image;
@@ -278,7 +277,7 @@ public class ResourcePreviewMaker
         try
         {
             // create a simple url for the video, the thumbnail service does not support some special chars in urls
-            String url = videoThumbnailService + StringHelper.urlEncode(LearnwebBean.getServerUrl() + learnweb.getFileManager().createUrl(resource.getFile(TYPE.FILE_MAIN).getId(), "video.dat"));
+            String url = videoThumbnailService + StringHelper.urlEncode(learnweb.getFileManager().createUrl(resource.getFile(TYPE.FILE_MAIN).getId(), "video.dat"));
             log.debug("Create video thumbnail: " + url);
 
             // get website thumbnail

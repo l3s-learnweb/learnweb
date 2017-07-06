@@ -41,7 +41,7 @@ public class FileManager
     private final ICache<File> cache;
     private final java.io.File folder;
     private final String urlPattern;
-    private final String basePath;
+    private String basePath;
 
     protected FileManager(Learnweb learnweb) throws SQLException
     {
@@ -52,9 +52,7 @@ public class FileManager
         this.urlPattern = properties.getProperty("FILE_MANAGER_URL_PATTERN");
         this.cache = cacheSize == 0 ? new DummyCache<File>() : new Cache<File>(cacheSize);
         this.folder = new java.io.File(properties.getProperty("FILE_MANAGER_FOLDER").trim());
-        this.basePath = learnweb.getContextPath() + urlPattern;
-
-        log.debug("Init FileManager; basePath = " + basePath);
+        setServerUrl(learnweb.getServerUrl());
 
         if(!folder.exists())
             throw new RuntimeException("Folder '" + properties.getProperty("FILE_MANAGER_FOLDER") + "' does not exist.");
@@ -62,6 +60,16 @@ public class FileManager
             throw new RuntimeException("Can't read from folder '" + properties.getProperty("FILE_MANAGER_FOLDER") + "'");
         else if(!folder.canWrite())
             throw new RuntimeException("Can't write into folder '" + properties.getProperty("FILE_MANAGER_FOLDER") + "'");
+    }
+
+    public void setServerUrl(String serverUrl)
+    {
+        if(serverUrl.startsWith("http://") && !Learnweb.isInDevelopmentMode())
+            serverUrl = "https://" + serverUrl.substring(7);
+
+        this.basePath = serverUrl + urlPattern;
+
+        log.debug("basePath = " + basePath);
     }
 
     /**

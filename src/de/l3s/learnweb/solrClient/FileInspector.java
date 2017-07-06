@@ -16,7 +16,6 @@ import org.apache.solr.common.util.ContentStream;
 import org.apache.solr.common.util.NamedList;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.beans.LearnwebBean;
 import de.l3s.util.MimeTypes;
 import de.l3s.util.StringHelper;
 
@@ -138,11 +137,6 @@ public class FileInspector
 
     public static InputStream openStream(String url) throws IOException
     {
-        if(!url.startsWith("http"))
-        {
-            url = LearnwebBean.getServerUrl() + url;
-        }
-
         HttpURLConnection con = (HttpURLConnection) new URL(url).openConnection();
         con.setInstanceFollowRedirects(true);
         con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0");

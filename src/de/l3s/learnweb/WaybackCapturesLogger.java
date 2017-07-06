@@ -61,6 +61,7 @@ public class WaybackCapturesLogger
         try
         {
             queue.put(LAST_ENTRY);
+            consumerThread.join();
 
             cdxExecutorService.shutdown();
             //Wait for a while for currently executing tasks to terminate

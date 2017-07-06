@@ -6,6 +6,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -14,6 +17,8 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.User;
+import de.l3s.learnweb.UserManager;
 import de.l3s.learnweb.beans.UserBean;
 import de.l3s.learnweb.beans.UtilBean;
 import jcdashboard.model.UsesTable;
@@ -833,6 +838,146 @@ public class UserLogHome
             log.fatal("fatal sql error", e);
         }
         return actperday;
+    }
+
+    public Collection<HashMap<String, Object>> getTrackerStatisticsPerUser(Course course, String startdate, String enddate) throws SQLException
+    {
+        if(course.getMemberCount() == 0) // no course members -> nothing to return
+            return null;
+
+        StringBuilder sb = new StringBuilder();
+        for(User user : course.getMembers())
+        {
+            sb.append(',');
+            sb.append(user.getId());
+        }
+        String userIds = sb.substring(1);
+
+        log.debug(userIds);
+        UserManager userManager = learnweb.getUserManager();
+        HashMap<Integer, HashMap<String, Object>> mergedStatistics = new HashMap<Integer, HashMap<String, Object>>();
+        List<TrackerStatistic> learnwebStatistics = getTrackerUserStatistics(1, userIds, startdate, enddate);
+        List<TrackerStatistic> proxyStatistics = getTrackerUserStatistics(2, userIds, startdate, enddate);
+
+        for(TrackerStatistic learnwebStatistic : learnwebStatistics)
+        {
+            HashMap<String, Object> mergedStatistic = new HashMap<>();
+            mergedStatistic.put("user", userManager.getUser(learnwebStatistic.getUserId()));
+            mergedStatistic.put("learnweb", learnwebStatistic);
+            mergedStatistics.put(learnwebStatistic.getUserId(), mergedStatistic);
+        }
+
+        for(TrackerStatistic proxyStatistic : proxyStatistics)
+        {
+            HashMap<String, Object> mergedStatistic = mergedStatistics.get(proxyStatistic.getUserId());
+            if(mergedStatistic == null)
+            {
+                mergedStatistic = new HashMap<>();
+                mergedStatistic.put("user", userManager.getUser(proxyStatistic.getUserId()));
+            }
+            mergedStatistic.put("proxy", proxyStatistic);
+            mergedStatistics.put(proxyStatistic.getUserId(), mergedStatistic);
+        }
+
+        return mergedStatistics.values();
+    }
+
+    /**
+     * 
+     * @param clientId 1 == Learnweb, 2 == Learnweb proxy
+     * @param userIds comma separated list of user ids
+     * @param startdate
+     * @param enddate
+     * @return
+     * @throws SQLException
+     */
+    private List<TrackerStatistic> getTrackerUserStatistics(int clientId, String userIds, String startdate, String enddate) throws SQLException
+    {
+        List<TrackerStatistic> statistic = new LinkedList<TrackerStatistic>();
+
+        PreparedStatement select = learnweb.getConnection().prepareStatement(
+                "SELECT `external_user_id` as user_id, sum(`total_events`) as total_events, sum(`time_stay`) as time_stay, sum(`time_active`) as time_active, sum(`clicks`) as clicks, sum(`keypress`) as keypresses FROM tracker.`track` WHERE `external_client_id` = ? AND `external_user_id` IN ("
+                        + userIds + ") AND created_at BETWEEN ? AND ? GROUP BY `external_user_id`");
+
+        select.setString(1, Integer.toString(clientId));
+        select.setString(2, startdate);
+        select.setString(3, enddate);
+        ResultSet rs = select.executeQuery();
+        while(rs.next())
+        {
+            statistic.add(new TrackerStatistic(rs.getInt("user_id"), rs.getInt("total_events"), rs.getInt("time_stay"), rs.getInt("time_active"), rs.getInt("clicks"), rs.getInt("keypresses")));
+        }
+        return statistic;
+    }
+
+    public static class TrackerStatistic
+    {
+        private int userId;
+        private int totalEvents;
+        private int timeStay;
+        private int timeActive;
+        private int clicks;
+        private int keypresses;
+
+        public TrackerStatistic(int userId, int totalEvents, int timeStay, int timeActive, int clicks, int keypresses)
+        {
+            super();
+            this.userId = userId;
+            this.totalEvents = totalEvents;
+            this.timeStay = timeStay;
+            this.timeActive = timeActive;
+            this.clicks = clicks;
+            this.keypresses = keypresses;
+        }
+
+        public int getUserId()
+        {
+            return userId;
+        }
+
+        public int getTotalEvents()
+        {
+            return totalEvents;
+        }
+
+        public int getTimeStay()
+        {
+            return timeStay;
+        }
+
+        public int getTimeActive()
+        {
+            return timeActive;
+        }
+
+        public int getClicks()
+        {
+            return clicks;
+        }
+
+        public int getKeypresses()
+        {
+            return keypresses;
+        }
+
+        @Override
+        public String toString()
+        {
+            return "TrackerStatistic [userId=" + userId + ", totalEvents=" + totalEvents + ", timeStay=" + timeStay + ", timeActive=" + timeActive + ", clicks=" + clicks + ", keypresses=" + keypresses + "]";
+        }
+
+    }
+
+    public static void main(String[] args) throws SQLException, ClassNotFoundException
+    {
+        Learnweb learnweb = Learnweb.createInstance("/Learnweb-Tomcat");
+
+        UserLogHome ulh = new UserLogHome();
+        Course course = learnweb.getCourseManager().getCourseById(1245);
+        String startdate = "2017-03-02";
+        String enddate = "2017-04-02";
+
+        log.debug(ulh.getTrackerStatisticsPerUser(course, startdate, enddate));
     }
 
 }

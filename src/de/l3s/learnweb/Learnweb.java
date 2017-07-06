@@ -37,7 +37,7 @@ public class Learnweb
     private PreparedStatement pstmtGetChangeLog;
     private PreparedStatement pstmtLog;
     private PropertiesBundle properties;
-    private String contextPath;
+    private String serverUrl;
 
     // Manager (Data Access Objects):
 
@@ -97,12 +97,12 @@ public class Learnweb
     /**
      * This method should be used to create a Learnweb instance
      * 
-     * @param contextPath The context path without server name for example /Learnweb-Tomcat
+     * @param serverUrl http://learnweb.l3s.uni-hannover.de or http://localhost:8080/Learnweb-Tomcat
      * @return
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    public static Learnweb createInstance(String contextPath) throws ClassNotFoundException, SQLException
+    public static Learnweb createInstance(String serverUrl) throws ClassNotFoundException, SQLException
     {
         try
         {
@@ -115,8 +115,11 @@ public class Learnweb
                     return null; // to avoid infinite loop 
                 }
 
-                learnweb = new Learnweb(contextPath);
+                learnweb = new Learnweb(serverUrl);
             }
+            else
+                learnweb.setServerUrl(serverUrl);
+
             return learnweb;
         }
         catch(Exception e)
@@ -174,7 +177,7 @@ public class Learnweb
     private Learnweb(String contextUrl) throws ClassNotFoundException, SQLException
     {
         learnwebIsLoading = true;
-        this.contextPath = contextUrl;
+        this.serverUrl = contextUrl;
         //learnweb = this;
 
         try
@@ -351,7 +354,7 @@ public class Learnweb
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.warn(e);
         }
 
         try
@@ -598,9 +601,15 @@ public class Learnweb
      * 
      * @return Returns the servername + contextpath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
      */
-    public String getContextPath()
+    public String getServerUrl()
     {
-        return contextPath; // because we don't use httpS we can cache the url, change it if you want to use httpS too
+        return serverUrl; // because we don't use httpS we can cache the url, change it if you want to use httpS too
+    }
+
+    public void setServerUrl(String serverUrl)
+    {
+        this.serverUrl = serverUrl;
+        fileManager.setServerUrl(serverUrl);
     }
 
     public PresentationManager getPresentationManager()

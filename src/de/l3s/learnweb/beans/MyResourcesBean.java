@@ -741,8 +741,11 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     {
         if(url != null && !url.isEmpty())
         {
+            if(this.addResourceBean.getFormStep() != 1) // necessary to avoid a conflict with uploaded resources
+                return;
+
             this.rightPanelAction = RPAction.newResource;
-            this.addResourceBean.getResource().setStorageType(2);
+            this.addResourceBean.getResource().setStorageType(Resource.WEB_RESOURCE);
             this.addResourceBean.getResource().setUrl(url);
         }
     }

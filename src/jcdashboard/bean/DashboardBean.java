@@ -5,6 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -500,4 +501,16 @@ public class DashboardBean extends ApplicationBean implements Serializable
         this.selectedCourse = selectedCourse;
     }
 
+    public Collection<HashMap<String, Object>> getTrackerStatistics()
+    {
+        try
+        {
+            return ulh.getTrackerStatisticsPerUser(selectedCourse, startdate, enddate);
+        }
+        catch(Exception e)
+        {
+            log.error("Could not get statistic for course " + selectedCourse.getId(), e);
+        }
+        return null;
+    }
 }

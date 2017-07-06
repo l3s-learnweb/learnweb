@@ -59,6 +59,7 @@ public class SuggestionLogger
         try
         {
             queue.put(LAST_ENTRY);
+            consumerThread.join();
         }
         catch(Exception e)
         {
