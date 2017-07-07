@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -853,12 +854,12 @@ public class UserLogHome
         }
         String userIds = sb.substring(1);
 
-        log.debug(userIds);
         UserManager userManager = learnweb.getUserManager();
         HashMap<Integer, HashMap<String, Object>> mergedStatistics = new HashMap<Integer, HashMap<String, Object>>();
         List<TrackerStatistic> learnwebStatistics = getTrackerUserStatistics(1, userIds, startdate, enddate);
         List<TrackerStatistic> proxyStatistics = getTrackerUserStatistics(2, userIds, startdate, enddate);
 
+        // merge Learnweb and Proxy statistics into one table
         for(TrackerStatistic learnwebStatistic : learnwebStatistics)
         {
             HashMap<String, Object> mergedStatistic = new HashMap<>();
@@ -879,6 +880,25 @@ public class UserLogHome
             mergedStatistics.put(proxyStatistic.getUserId(), mergedStatistic);
         }
 
+        // sum proxy and learnweb statistc
+        for(HashMap<String, Object> entry : mergedStatistics.values())
+        {
+            TrackerStatistic proxyStatistic = (TrackerStatistic) entry.get("proxy");
+            TrackerStatistic learnwebStatistic = (TrackerStatistic) entry.get("learnweb");
+
+            TrackerStatistic summarizedStatistic;
+            if(proxyStatistic != null && learnwebStatistic != null)
+                summarizedStatistic = new TrackerStatistic(learnwebStatistic.getUserId(), learnwebStatistic.getTotalEvents() + proxyStatistic.getTotalEvents(), learnwebStatistic.getTimeStay() + proxyStatistic.getTimeStay(),
+                        learnwebStatistic.getTimeActive() + proxyStatistic.getTimeActive(), learnwebStatistic.getClicks() + proxyStatistic.getClicks(), learnwebStatistic.getKeypresses() + proxyStatistic.getKeypresses());
+            else if(proxyStatistic != null)
+                summarizedStatistic = proxyStatistic;
+            else if(learnwebStatistic != null)
+                summarizedStatistic = learnwebStatistic;
+            else
+                throw new IllegalStateException();
+
+            entry.put("summarized", summarizedStatistic);
+        }
         return mergedStatistics.values();
     }
 
@@ -918,6 +938,10 @@ public class UserLogHome
         private int timeActive;
         private int clicks;
         private int keypresses;
+        private long timeActiveInMinutes;
+        private String timeActiveFormatted;
+        private long timeStayInMinutes;
+        private String timeStayFormatted;
 
         public TrackerStatistic(int userId, int totalEvents, int timeStay, int timeActive, int clicks, int keypresses)
         {
@@ -928,6 +952,34 @@ public class UserLogHome
             this.timeActive = timeActive;
             this.clicks = clicks;
             this.keypresses = keypresses;
+
+            Duration durationActive = Duration.ofMillis(timeActive);
+            this.timeActiveInMinutes = durationActive.toMinutes();
+            this.timeActiveFormatted = formatDuration(durationActive);
+
+            Duration durationStay = Duration.ofMillis(timeStay);
+            this.timeStayInMinutes = durationStay.toMinutes();
+            this.timeStayFormatted = formatDuration(durationStay);
+        }
+
+        private static String formatDuration(Duration d)
+        {
+            long hours = d.toHours();
+            long minutes = d.minusHours(hours).toMinutes();
+
+            StringBuilder output = new StringBuilder();
+            if(hours > 0)
+            {
+                output.append(hours);
+                output.append("h ");
+            }
+
+            output.append(minutes);
+            if(minutes < 10)
+                output.append('0');
+            output.append("m");
+
+            return output.toString();
         }
 
         public int getUserId()
@@ -958,6 +1010,26 @@ public class UserLogHome
         public int getKeypresses()
         {
             return keypresses;
+        }
+
+        public long getTimeActiveInMinutes()
+        {
+            return timeActiveInMinutes;
+        }
+
+        public String getTimeActiveFormatted()
+        {
+            return timeActiveFormatted;
+        }
+
+        public long getTimeStayInMinutes()
+        {
+            return timeStayInMinutes;
+        }
+
+        public String getTimeStayFormatted()
+        {
+            return timeStayFormatted;
         }
 
         @Override

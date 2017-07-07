@@ -48,8 +48,8 @@ public class DashboardBean extends ApplicationBean implements Serializable
 
     private Integer sid = 10410;
 
-    private String startdate = "2017-03-02";
-    private String enddate = "2017-04-02"; // new SimpleDateFormat("yyyy-MM-dd").format(new Date());
+    private String startdate = "2017-01-01"; // "2017-03-02";
+    private String enddate = "2017-06-01"; // "2017-04-02" new SimpleDateFormat("yyyy-MM-dd").format(new Date());
     Map<String, String> graph02map = new HashMap<String, String>();
 
     ArrayList<TotalData> summarylist = null;
@@ -58,6 +58,8 @@ public class DashboardBean extends ApplicationBean implements Serializable
     private Course selectedCourse; // the visualized course
 
     private UserLogHome ulh;
+
+    private Collection<HashMap<String, Object>> trackerStatistic;
 
     public DashboardBean()
     {
@@ -114,6 +116,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
         graph03terms = "";
         summarylist = null;
         descdatalist = null;
+        trackerStatistic = null;
     }
 
     public String getStartdate()
@@ -503,14 +506,17 @@ public class DashboardBean extends ApplicationBean implements Serializable
 
     public Collection<HashMap<String, Object>> getTrackerStatistics()
     {
-        try
+        if(trackerStatistic == null)
         {
-            return ulh.getTrackerStatisticsPerUser(selectedCourse, startdate, enddate);
+            try
+            {
+                trackerStatistic = new ArrayList<>(ulh.getTrackerStatisticsPerUser(selectedCourse, startdate, enddate));
+            }
+            catch(Exception e)
+            {
+                log.error("Could not get statistic for course " + selectedCourse.getId(), e);
+            }
         }
-        catch(Exception e)
-        {
-            log.error("Could not get statistic for course " + selectedCourse.getId(), e);
-        }
-        return null;
+        return trackerStatistic;
     }
 }
