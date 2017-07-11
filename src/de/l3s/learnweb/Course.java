@@ -22,7 +22,8 @@ public class Course implements Serializable, Comparable<Course>
         Services_Allow_user_to_logout_from_interweb,
         Users_Require_mail_address,
         Search_History_log_enabled, // this should be a organization option
-        Course_Google_Docs_Sign_In_enabled // this should be a organization option		
+        Course_Google_Docs_Sign_In_enabled, // this should be a organization option
+        MandatoryFields_Affiliation
     }
 
     private int id;
