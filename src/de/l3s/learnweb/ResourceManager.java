@@ -192,7 +192,6 @@ public class ResourceManager
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
 
-        // TODO does this really return always only one result?
         if(rs.next())
         {
             e = new LogEntry(rs);

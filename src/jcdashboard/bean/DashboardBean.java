@@ -48,7 +48,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
 
     private Integer sid = 10410;
 
-    private String startdate = "2017-01-01"; // "2017-03-02";
+    private String startdate = "2017-03-01"; // "2017-03-02";
     private String enddate = "2017-06-01"; // "2017-04-02" new SimpleDateFormat("yyyy-MM-dd").format(new Date());
     Map<String, String> graph02map = new HashMap<String, String>();
 
@@ -514,7 +514,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
             }
             catch(Exception e)
             {
-                log.error("Could not get statistic for course " + selectedCourse.getId(), e);
+                log.error("Could not get statistic for course " + selectedCourse, e);
             }
         }
         return trackerStatistic;

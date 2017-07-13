@@ -922,7 +922,9 @@ public class UserLogHome
         select.setString(1, Integer.toString(clientId));
         select.setString(2, startdate);
         select.setString(3, enddate);
+        log.debug(select);
         ResultSet rs = select.executeQuery();
+
         while(rs.next())
         {
             statistic.add(new TrackerStatistic(rs.getInt("user_id"), rs.getInt("total_events"), rs.getInt("time_stay"), rs.getInt("time_active"), rs.getInt("clicks"), rs.getInt("keypresses")));
