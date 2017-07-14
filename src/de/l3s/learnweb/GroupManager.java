@@ -255,8 +255,7 @@ public class GroupManager
     public synchronized Group save(Group group) throws SQLException
     {
         PreparedStatement replace = learnweb.getConnection().prepareStatement(
-                "REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, "
-                        + ", metadata1, language, course_id, group_category_id, restriction_anonymous_resources, restriction_forum_category_required, policy_add, policy_annotate, policy_edit, policy_join, policy_view) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                "REPLACE INTO `lw_group` (group_id, `title`, `description`, `leader_id`, metadata1, language, course_id, group_category_id, restriction_anonymous_resources, restriction_forum_category_required, policy_add, policy_annotate, policy_edit, policy_join, policy_view) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
                 Statement.RETURN_GENERATED_KEYS);
 
         if(group.getId() < 0) // the Group is not yet stored at the database
