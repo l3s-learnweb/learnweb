@@ -20,6 +20,11 @@ import org.apache.log4j.Logger;
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.rm.AudienceManager;
+import de.l3s.learnweb.rm.CategoryManager;
+import de.l3s.learnweb.rm.ExtendedMetadataManager;
+import de.l3s.learnweb.rm.LanglevelManager;
+import de.l3s.learnweb.rm.PurposeManager;
 import de.l3s.learnweb.solrClient.SolrClient;
 import de.l3s.searchlogclient.SearchLogClient;
 import de.l3s.util.PropertiesBundle;
@@ -64,6 +69,13 @@ public class Learnweb
     private final SuggestionLogger suggestionLogger;
     private final WaybackCapturesLogger waybackCapturesLogger;
     private final SearchLogManager searchLogManager;
+
+    //added by Chloe 
+    private final AudienceManager audienceManager;
+    private final CategoryManager categoryManager;
+    private final ExtendedMetadataManager extendedMetadataManager;
+    private final LanglevelManager langlevelManager;
+    private final PurposeManager purposeManager;
 
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
@@ -226,6 +238,14 @@ public class Learnweb
         glossariesManager = new GlossaryManager(this);
         searchLogManager = new SearchLogManager(this);
         learnwebIsLoading = false;
+
+        //new managers added by Chloe 
+        audienceManager = new AudienceManager(this);
+        categoryManager = new CategoryManager(this);
+        extendedMetadataManager = new ExtendedMetadataManager(this);
+        langlevelManager = new LanglevelManager(this);
+        purposeManager = new PurposeManager(this);
+
     }
 
     /**
@@ -289,6 +309,33 @@ public class Learnweb
 
         pstmtLog = dbConnection.prepareStatement("INSERT DELAYED INTO `lw_user_log` (`user_id`, `session_id`, `action`, `target_id`, `params`, `group_id`, timestamp, execution_time, client_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 2)");
         pstmtGetChangeLog = dbConnection.prepareStatement("SELECT * FROM  `admin_change_log` ORDER BY  `admin_change_log`.`log_entry_num` DESC LIMIT 0 , 30");
+    }
+
+    //getters and setters for newly added managers (Chloe) 
+
+    public AudienceManager getAudienceManager()
+    {
+        return audienceManager;
+    }
+
+    public CategoryManager getCategoryManager()
+    {
+        return categoryManager;
+    }
+
+    public ExtendedMetadataManager getExtendedMetadataManager()
+    {
+        return extendedMetadataManager;
+    }
+
+    public LanglevelManager getLanglevelManager()
+    {
+        return langlevelManager;
+    }
+
+    public PurposeManager getPurposeManager()
+    {
+        return purposeManager;
     }
 
     private long lastCheck = 0L;
