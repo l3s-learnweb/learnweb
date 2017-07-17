@@ -1,0 +1,189 @@
+
+/** css rules for the new group resource search interface */
+
+@CHARSET "UTF-8";
+
+
+#cattree{
+	display:block;
+	height: 500px;
+	overflow-y: auto;
+	overflow-x: auto;
+}
+
+#sresult, #cresults {
+	display:block;
+	overflow-y: auto;
+	height: 645px;
+}
+
+
+
+#rlist {
+  list-style-type: none;
+  width: 980px;
+  padding-left: 0px;
+  margin-left: 5px;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  height: 200px;
+  overlow: auto;
+}
+
+#rlist img {
+	height: auto;
+	margin: 0 15px 0 0;
+  	list-style: none;
+  	float: left;
+}
+
+#rlist img.circle {
+	height: auto;
+	float: none;
+	margin-left: 2px;
+	margin-right: 2px;
+	vertical-align: bottom;
+}
+
+img.lwicon {
+	height: auto;
+	float: none;
+	margin-left: 2px;
+	margin-right: 2px;
+	vertical-align: bottom;
+	
+}
+
+#semantic, #contextual, #attributes {
+	width: 500px;
+}
+
+span#explanation {
+	color: #484f4f
+}
+
+#rlist img.bluecircle {
+	height: auto;
+	float: none;
+	margin-left: 2px;
+	margin-right: 2px;
+	vertical-align: bottom;
+	padding-top: 5px;
+}
+
+#rlist img.flag {
+	height: auto;
+	float: none;
+	margin-left: 2px;
+	margin-right: 2px;
+	vertical-align: top;
+	padding-top: 5px;
+}
+
+.rlabel {
+    line-height: 25px;
+}
+
+.rlabels {
+    line-height: 20px;
+    margin-left: 20px;
+}
+
+
+#rlist {
+	margin-top: 10px;
+	margin-bottom: 5px;
+	margin-left: 0px;
+    overflow-y: auto;
+}
+
+
+div#rnav {
+	width: 5%;
+	float: left;
+}
+
+div#rmain {
+	width: 94%;
+	float: right;
+	font-size: 14px;
+	
+}
+
+ 
+#rlist li:hover {
+  background: #eee;
+  cursor: pointer;
+}
+
+
+
+.tags {
+  font-size: 0.6em;
+  margin: 0.5em 0;
+}
+
+.tags .tag {
+  margin-right: 1em;
+  margin-bottom: 0.5em;
+}
+
+.tag {
+  display: inline-block;
+  padding: 0.3em 0.6em;
+  font-size: 0.8em;
+  border-radius: 6px;
+  color: #777;
+  background: #f1f1f1;
+  transition: all 0.3s;
+  -webkit-transition: all 0.3s;
+  margin-top: 8px;
+}
+
+.tag.tag-blue,
+.tag.tag-green,
+.tag.tag-red, 
+.tag.tag-grey { color: #fff; }
+
+.tag.tag-grey { 
+	background-color: #808080;
+	margin-right: 10px;
+	padding-top: 5px;
+ }
+
+.tag.tag-grey { background-color: #808080; }
+	
+
+.truncate {
+  display: block;
+  width: 750px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+}
+
+.truncateloc {
+  display: block;
+  width: 550px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+}
+
+.resource2-item {
+    display: inline-block;
+    position: relative;
+    vertical-align: top;
+    width: calc(100% - 16px); /* single column */
+    margin-bottom: 16px;
+    margin-right: 16px;
+    
+}
+
+.resources-filters-none {
+	display: none;
+    margin: 10px -10px -10px;
+}
+
