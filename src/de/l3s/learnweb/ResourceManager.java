@@ -22,6 +22,7 @@ import de.l3s.interwebj.jaxb.ThumbnailEntity;
 import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.beans.AddResourceBean;
+import de.l3s.learnweb.rm.Category;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.solrClient.SolrClient;
@@ -1417,6 +1418,89 @@ public class ResourceManager
         }
         */
         System.exit(0);
+    }
+
+    /* 
+     * New resource sql queries for extended metadata (Chloe) 
+     */
+
+    //queries regarding table: lw_rm_audience and lw_resource_audience
+    public List<Resource> getResourcesByAudienceId(int audienceId) throws SQLException
+    {
+        return getResourcesByAudienceId(audienceId, 1000);
+    }
+
+    public List<Resource> getResourcesByAudienceId(int audienceId, int maxResults) throws SQLException
+    {
+        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_audience USING ( resource_id ) WHERE audience_id = ? AND deleted = 0 LIMIT ? ", null, audienceId, maxResults);
+    }
+
+    //queries regarding table: lw_rm_langlevel and lw_resource_langlevel
+    public List<Resource> getResourcesByLanglevelId(int langlevelId) throws SQLException
+    {
+        return getResourcesByAudienceId(langlevelId, 1000);
+    }
+
+    public List<Resource> getResourcesByLanglevelId(int langlevelId, int maxResults) throws SQLException
+    {
+        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_langlevel USING ( resource_id ) WHERE langlevel_id = ? AND deleted = 0 LIMIT ? ", null, langlevelId, maxResults);
+    }
+
+    //queries regarding table: lw_rm_purpose and lw_resource_purpose
+    public List<Resource> getResourcesByPurposeId(int purposeId) throws SQLException
+    {
+        return getResourcesByAudienceId(purposeId, 1000);
+    }
+
+    public List<Resource> getResourcesByPurposeId(int purposeId, int maxResults) throws SQLException
+    {
+        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_purpose USING ( resource_id ) WHERE purpose_id = ? AND deleted = 0 LIMIT ? ", null, purposeId, maxResults);
+    }
+
+    //queries regarding table: lw_rm_catbot and lw_resource_category 
+    public List<Resource> getResourcesByCatbotId(int catbotId) throws SQLException
+    {
+        return getResourcesByCatbotId(catbotId, 1000);
+    }
+
+    public List<Resource> getResourcesByCatbotId(int catbotId, int maxResults) throws SQLException
+    {
+        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_category USING ( resource_id ) WHERE cat_bot_id = ? AND deleted = 0 LIMIT ? ", null, catbotId, maxResults);
+    }
+
+    //queries regarding table: lw_rm_catmid and lw_resource_category
+    public List<Resource> getResourcesByCatmidId(int catmidId) throws SQLException
+    {
+        return getResourcesByCatmidId(catmidId, 1000);
+    }
+
+    public List<Resource> getResourcesByCatmidId(int catmidId, int maxResults) throws SQLException
+    {
+        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_category USING ( resource_id ) WHERE cat_mid_id = ? AND deleted = 0 LIMIT ? ", null, catmidId, maxResults);
+    }
+
+    //queries regarding table: lw_rm_cattop and lw_resource_category 
+    public List<Resource> getResourcesByCattopId(int cattopId) throws SQLException
+    {
+        return getResourcesByCattopId(cattopId, 1000);
+    }
+
+    public List<Resource> getResourcesByCattopId(int cattopId, int maxResults) throws SQLException
+    {
+        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_category USING ( resource_id ) WHERE cat_top_id = ? AND deleted = 0 LIMIT ? ", null, cattopId, maxResults);
+    }
+
+    //save new resource_category 
+    protected void saveCategoryResource(Resource resource, Category category, User user) throws SQLException
+    {
+        PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_category` (`resource_id`, `user_id`, `cat_top_id`, `cat_mid_id`, `cat_bot_id`) VALUES (?, ?, ?, ?, ?)");
+        replace.setInt(1, null == resource ? 0 : resource.getId());
+        replace.setInt(2, null == user ? 0 : user.getId());
+        replace.setInt(3, null == category ? 0 : category.getCattop().getId());
+        replace.setInt(4, null == category ? 0 : category.getCatmid().getId());
+        replace.setInt(5, null == category ? 0 : category.getCatbot().getId());
+        replace.executeUpdate();
+        replace.close();
     }
 
 }
