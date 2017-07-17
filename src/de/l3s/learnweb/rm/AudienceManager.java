@@ -1,0 +1,143 @@
+package de.l3s.learnweb.rm;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Properties;
+
+import org.apache.log4j.Logger;
+
+import de.l3s.learnweb.Learnweb;
+
+public class AudienceManager
+{
+    private final static Logger log = Logger.getLogger(AudienceManager.class);
+
+    private final static String COLUMNS = "audience_id, audience_name";
+    private Learnweb learnweb;
+
+    public AudienceManager(Learnweb learnweb) throws SQLException
+    {
+        super();
+        Properties properties = learnweb.getProperties();
+        // int userCacheSize = Integer.parseInt(properties.getProperty("USER_CACHE"));
+
+        this.learnweb = learnweb;
+        /* this.cache = userCacheSize == 0 ? new DummyCache<User>() : new Cache<User>(userCacheSize);*/
+    }
+
+    /**
+     * returns a list of all audiences with a given resource id
+     * 
+     * @return
+     * @throws SQLException
+     */
+
+    public List<Audience> getAudiencesByResourceId(int resourceId) throws SQLException
+    {
+        List<Audience> audiences = new LinkedList<Audience>();
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_audience` JOIN lw_resource_audience USING(audience_id) WHERE resource_id = ? AND deleted = 0 ORDER BY audience_name");
+        select.setInt(1, resourceId);
+        ResultSet rs = select.executeQuery();
+        while(rs.next())
+        {
+            audiences.add(createAudience(rs));
+        }
+        select.close();
+
+        return audiences;
+    }
+
+    public List<String> getAudienceNamesByResourceId(int resourceId) throws SQLException
+    {
+        List<String> audiences = new LinkedList<String>();
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_audience` JOIN lw_resource_audience USING(audience_id) WHERE resource_id = ? AND deleted = 0 ORDER BY audience_name");
+        select.setInt(1, resourceId);
+        ResultSet rs = select.executeQuery();
+        while(rs.next())
+        {
+            audiences.add(rs.getString("audience_name"));
+        }
+        select.close();
+
+        return audiences;
+    }
+
+    /**
+     * returns a list of all audiences
+     * 
+     * @return
+     * @throws SQLException
+     */
+
+    public List<Audience> getAudiences() throws SQLException
+    {
+        List<Audience> audiences = new LinkedList<Audience>();
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_audience` WHERE deleted = 0 ORDER BY audience_name");
+        ResultSet rs = select.executeQuery();
+        while(rs.next())
+        {
+            audiences.add(createAudience(rs));
+        }
+        select.close();
+
+        return audiences;
+    }
+
+    public Audience getAudience(int audienceId) throws SQLException
+    {
+        Audience audience = new Audience();
+        if(audienceId == 0)
+            return null;
+        else if(audienceId < 1)
+            new IllegalArgumentException("invalid user id was requested: " + audienceId).printStackTrace();
+
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_audience` WHERE audience_id = ?");
+        select.setInt(1, audienceId);
+        ResultSet rs = select.executeQuery();
+
+        if(!rs.next())
+        {
+            new IllegalArgumentException("invalid audience id was requested: " + audienceId).printStackTrace();
+            return null; //throw new IllegalArgumentException("invalid audience id");
+        }
+        audience = createAudience(rs);
+        select.close();
+
+        log.debug("Get audience " + audience.getAudience_name() + " from db");
+
+        return audience;
+    }
+
+    public int getAudienceIdByAudiencename(String audiencename) throws SQLException
+    {
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT audience_id FROM `lw_rm_audience` WHERE audience_name = ?");
+        select.setString(1, audiencename);
+        ResultSet rs = select.executeQuery();
+
+        if(!rs.next())
+        {
+            //log.warn("invalid audience name was requested: " + audiencename);
+            return -1;
+        }
+        int audienceId = rs.getInt("audience_id");
+        select.close();
+
+        return audienceId;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Audience createAudience(ResultSet rs) throws SQLException
+    {
+        int audienceId = rs.getInt("audience_id");
+        Audience audience = new Audience();
+
+        audience.setId(rs.getInt("audience_id"));
+        audience.setAudience_name(rs.getString("audience_name"));
+
+        return audience;
+    }
+
+}
