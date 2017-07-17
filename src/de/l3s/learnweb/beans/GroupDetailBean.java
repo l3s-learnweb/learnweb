@@ -229,7 +229,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public String present()
     {
-        return "presentation?id=" + clickedPresentation.getPresentationId() + "&faces-redirect=true";
+        return "../lw/group/presentation.jsf?id=" + clickedPresentation.getPresentationId();
     }
 
     public String editPresentation(String format)

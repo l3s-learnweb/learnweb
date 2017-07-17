@@ -1336,6 +1336,15 @@ div.title {
 	float:right;
 	margin-right:2.5%;
 }
+.presentation_link{
+	padding: 3.5px 6px 3.5px 6px;
+    background-color: #dedede;
+    border-color: #ccc;
+    color: #4a4a4a;
+    border-style: solid;
+    border-width: 1px;
+    font-size: 1em;
+}
 div#presentation_preview {
     height:0px;    
    	width:95%;

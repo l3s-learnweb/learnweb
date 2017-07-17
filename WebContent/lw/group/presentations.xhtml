@@ -199,8 +199,10 @@
 							    <h:outputText value="#{groupDetailBean.clickedPresentation.presentationTitle}" escape="false" 
 							    	styleClass="align" />
 							</div>
-							<p:commandButton styleClass="presentation_commandbutton" action="#{groupDetailBean.present}" ajax="false" 
-								value="#{msg.present}"/>
+							<a class="presentation_commandbutton presentation_link" target="_blank" 
+			    				href="#{groupDetailBean.present()}">
+								#{msg.present}
+							</a>
 							<p:commandButton styleClass="presentation_commandbutton" onclick="PF('format_dialog2').show(); return false" 
 								ajax="false" value="#{msg.edit}"/>
 							<p:commandButton styleClass="presentation_commandbutton" onclick="PF('confirmation').show(); return false" 
