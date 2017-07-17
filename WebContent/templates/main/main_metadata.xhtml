@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:p="http://primefaces.org/ui" 
+	lang="#{userBean.localeCode}">
+
+<f:view locale="#{userBean.localeCode}" contentType="text/html">
+	<ui:insert name="metadata" />
+
+	<h:head>	
+		<title><h:outputText value="#{pageTitle}" escape="false" /> - Learnweb</title>
+		<link rel="shortcut icon" href="#{request.contextPath}/resources/icon/favicon.ico" />
+        <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/nanoscroller.css" />
+        <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/d3.css" />
+        <link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/css/Learnweb_chloe.css" />
+		<h:outputScript library="primefaces" name="jquery/jquery.js" target="head" />
+		<h:outputScript library="main-template" name="default2.js"/>
+		<h:outputScript library="js" name="jquery.mousewheel.min.js"/>
+		<h:outputScript library="js" name="jquery.nanoscroller.min.js"/>
+		<h:outputScript library ="js" name = "d3.min.js" target="head"/>
+		<h:outputScript library ="js" name = "Learnweb_chloe.js" target="head"/> 
+		
+		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/main6.css" />
+		<link rel="stylesheet" type="text/css" href="#{request.contextPath}/resources/main-template/responsive_design.css" />
+		
+		<base href="#{request.contextPath}/lw/" />
+		<ui:insert name="head-meta" />
+	</h:head>
+
+	<h:body>
+		<p:growl id="growl" rendered="#{userBean.loggedIn and not disableGrowl}" />
+		
+		<ui:decorate template="/templates/main/tooltips.xhtml" />
+		<ui:decorate template="/templates/main/header.xhtml" />
+		
+		<style type="text/css">
+			.ui-layout-north { height:46px !important; }
+		</style>
+		<p:layout fullPage="true" widgetVar="mainLayout">
+			<p:layoutUnit position="north" resizable="false" closable="false" collapsible="false" styleClass="northunit" style="display:block; height:46px;">
+				<script type="text/javascript">	
+				
+					function scroller()
+					{
+						try {
+							$(".nano").nanoScroller({
+                                paneClass: 'pane',
+                                sliderClass: 'slider',
+                                contentClass: 'content'
+							});
+						} catch(e) {
+							//console.log(e);
+						}						
+					}
+					
+					$(document).ready(function()
+					{
+						if($(".ui-layout-unit-content","#right_pane"))
+						{
+							$(".ui-layout-unit-content","#right_pane").addClass("nano");
+							$(".ui-layout-unit-content","#right_pane").wrapInner('&lt;div class="content" /&gt;');
+							$(".ui-layout-unit-content","#center_pane").addClass("nano");
+							$(".ui-layout-unit-content","#left_pane").addClass("nano");
+						}				
+						scroller();
+						setInterval("scroller()", 500);
+					});	
+				</script>				
+			
+				<ui:insert name="sub_menu_bar"></ui:insert>
+				
+			</p:layoutUnit>
+
+			<p:layoutUnit id="left_pane" rendered="#{userBean.loggedIn and !utilBean.viewResultSetPage}" position="west" size="223" resizable="false" closable="false" collapsible="false">
+				<div class="content">
+					<ui:decorate template="/templates/main/group_menu.xhtml" />
+				</div>
+			</p:layoutUnit>
+
+			<ui:insert name="right_layout" />
+			
+			<p:layoutUnit id="center_pane" position="center" >
+				<h:panelGroup layout="block" styleClass="#{loginRequired and !userBean.loggedIn? 'small_page':'content'}">
+					<p:messages id="message" escape="false" />
+					
+					<ui:fragment rendered="#{loginRequired and !userBean.loggedIn}">
+						<ui:include src="/templates/user/login.xhtml" />	
+					</ui:fragment>
+					
+					<ui:fragment rendered="#{!loginRequired || userBean.loggedIn}">
+						<ui:insert name="center_layout"></ui:insert>
+					</ui:fragment>	
+				</h:panelGroup>
+			</p:layoutUnit>
+
+		</p:layout>
+		<!-- 
+		<p:dialog header="Shared Resultsets" widgetVar="shared_resultsets_dialog" modal="false" minWidth="600" resizable="false" rendered="#{userBean.searchHistoryEnabled}">			
+			<h:form id="shared_resultsets_form">
+				<ui:decorate template="/lw/user/shared_resultsets.xhtml"></ui:decorate>
+			</h:form> 			
+		</p:dialog>	
+		 -->
+		 
+		<ui:insert name="bottom_panel"></ui:insert>
+	
+		<h:panelGroup layout="block" id="footer" rendered="#{not empty helpText and (!loginRequired || userBean.loggedIn)}" styleClass="#{userBean.getPreference('helptext_hide')? 'display-none':''}">
+			<h:outputText value="?" id="footer_question_mark" class="align-center"/>
+			<h:outputText value="#{helpText}" escape="false" style="padding: 0.7rem 10rem; display:block; font-size:1.5rem;" />
+			<a href="#" onclick="return footerClose();" id="footer_close" title="#{msg.close}"></a>
+		</h:panelGroup>
+		
+		<h:form styleClass="display-none">	
+			<p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" immediate="true" process="@this" />
+		</h:form>
+		
+	</h:body>
+</f:view>
+
+</html>
+
