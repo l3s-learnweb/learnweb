@@ -299,11 +299,11 @@
 												<label class="rlabel"><b>Title:
 												</b></label>#{res.title} <br /> 
 												<label class="rlabel"><b>Category:
-												</b></label>Education/Language Learning/Games <br /> <label
-													class="rlabel"><b>Contains: </b></label>Text, Audio, Video
+												</b></label>test res.eMetadata.categories[0] <br /> <label
+													class="rlabel"><b>Contains: </b></label>#{res.mtype}
 												<br /> 
 												<label class="rlabel"><b>Language: </b></label>
-												English <label class="rlabels"><b>Level (stats):
+												#{res.language} <label class="rlabels"><b>Level (stats):
 												</b></label>A1[10] A2[1] <br /> 
 												<label class="rlabel"><b>Target
 														learner (stats): </b></label>
@@ -484,7 +484,7 @@
 
 		<ui:fragment
 			rendered="#{groupDetailBean.group.canViewResources(userBean.user)}">
-			<h:panelGroup id="datagrid" styleClass="datagrid" layout="block"
+			<h:panelGroup id="datagrid" styleClass="display-none" layout="block"
 				pt:data-isEnabledMoving="#{groupDetailBean.canDeleteResourcesInTheGroup()}">
 				<h:panelGroup id="folderGrid" styleClass="folder-grid"
 					layout="block">
