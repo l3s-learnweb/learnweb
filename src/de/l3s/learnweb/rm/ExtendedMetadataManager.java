@@ -35,6 +35,7 @@ public class ExtendedMetadataManager
         /* this.cache = userCacheSize == 0 ? new DummyCache<User>() : new Cache<User>(userCacheSize);*/
     }
 
+    //get the list of authors for the given list of resources: used for display in author filter
     public List<String> getAuthorsByResourceIds(List<Resource> resources) throws SQLException
     {
         List<String> authors = new LinkedList<String>();
@@ -48,8 +49,20 @@ public class ExtendedMetadataManager
             ResultSet rs = select.executeQuery();
             while(rs.next())
             { //if the author does not exist already
+                String exist = "false";
+                for(String a : authors)
+                {
+                    if(a == rs.getString("author"))
+                    {
+                        exist = "true";
+                    }
+                }
 
-                authors.add(rs.getString("author"));
+                //add the author only if it does not yet exist
+                if(exist.equalsIgnoreCase("false"))
+                {
+                    authors.add(rs.getString("author"));
+                }
             }
             select.close();
         }
@@ -57,6 +70,17 @@ public class ExtendedMetadataManager
         return authors;
     }
 
+    //get the list of media sources for the given list of resources: used for display for source filter
+
+    //get the list of audience for the given list of resources: used for display for target learner filter
+
+    //get the list of language for the given list of resources: used for display for language filter
+
+    //get the list of language levels for the given list of resources: used for display for level filter
+
+    //get the list of purposes for the given list of resources: used for display for purpose filter
+
+    //get the entended metadata for the given resource id
     @SuppressWarnings({ "unchecked", "rawtypes" })
     public ExtendedMetadata getMetadataByResourceId(int resourceId) throws SQLException
     {
@@ -66,8 +90,8 @@ public class ExtendedMetadataManager
         //get mtype (maybe not necessary if added directly to resource) res.mtype
         //get msource (maybe not necessary if added directly to resource) res.msource
         //get language (maybe not necessary) res.language
-        //get target learners
 
+        //get target learners
         List<String> tlearners = new LinkedList<String>();
         Map<String, Integer> tcount = new HashMap();
 
