@@ -37,7 +37,7 @@ import de.l3s.util.StringHelper;
 public class ResourceManager
 {
     private final static String COMMENT_COLUMNS = "`comment_id`, `resource_id`, `user_id`, `text`, `date`";
-    private final static String RESOURCE_COLUMNS = "r.read_only_transcript, r.deleted, r.resource_id, r.title, r.description, r.url, r.storage_type, r.rights, r.source, r.language, r.type, r.format, r.owner_user_id, r.rating, r.rate_number, r.embedded_size1, r.embedded_size2, r.embedded_size3, r.embedded_size4, r.filename, r.max_image_url, r.query, r.original_resource_id, r.author, r.file_url, r.thumbnail0_url, r.thumbnail0_file_id, r.thumbnail0_width, r.thumbnail0_height, r.thumbnail1_url, r.thumbnail1_file_id, r.thumbnail1_width, r.thumbnail1_height, r.thumbnail2_url, r.thumbnail2_file_id, r.thumbnail2_width, r.thumbnail2_height, r.thumbnail3_url, r.thumbnail3_file_id, r.thumbnail3_width, r.thumbnail3_height, r.thumbnail4_url, r.thumbnail4_file_id, r.thumbnail4_width, r.thumbnail4_height, r.embeddedRaw, r.transcript, r.online_status, r.id_at_service, r.duration, r.restricted, r.resource_timestamp, r.creation_date, r.metadata, r.group_id, r.folder_id";
+    private final static String RESOURCE_COLUMNS = "r.read_only_transcript, r.deleted, r.resource_id, r.title, r.description, r.url, r.storage_type, r.rights, r.source, r.language, r.type, r.format, r.owner_user_id, r.rating, r.rate_number, r.embedded_size1, r.embedded_size2, r.embedded_size3, r.embedded_size4, r.filename, r.max_image_url, r.query, r.original_resource_id, r.author, r.file_url, r.thumbnail0_url, r.thumbnail0_file_id, r.thumbnail0_width, r.thumbnail0_height, r.thumbnail1_url, r.thumbnail1_file_id, r.thumbnail1_width, r.thumbnail1_height, r.thumbnail2_url, r.thumbnail2_file_id, r.thumbnail2_width, r.thumbnail2_height, r.thumbnail3_url, r.thumbnail3_file_id, r.thumbnail3_width, r.thumbnail3_height, r.thumbnail4_url, r.thumbnail4_file_id, r.thumbnail4_width, r.thumbnail4_height, r.embeddedRaw, r.transcript, r.online_status, r.id_at_service, r.duration, r.restricted, r.resource_timestamp, r.creation_date, r.metadata, r.group_id, r.folder_id, r.mtype, r.msource";
 
     private final static Logger log = Logger.getLogger(ResourceManager.class);
 
@@ -932,6 +932,8 @@ public class ResourceManager
             resource.setFolderId(rs.getInt("folder_id"));
             resource.setDeleted(rs.getInt("deleted") == 1);
             resource.setReadOnlyTranscript(rs.getInt("read_only_transcript") == 1);
+            resource.setMtype(rs.getString("mtype"));
+            resource.setMsource(rs.getString("msource"));
 
             // This must be set manually because we stored some external sources in Learnweb/Solr
             if(resource.getSource().equals("TED"))
