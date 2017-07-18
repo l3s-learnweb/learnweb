@@ -116,6 +116,8 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     //extended metadata (Chloe) 
     private transient ExtendedMetadata extendedMetadata = null;
+    private String mtype;
+    private String msource;
 
     /**
      * Do nothing constructor
@@ -1917,6 +1919,27 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         {
             return null;
         }
+    }
+
+    //setter and getter for new resource columns mtype and msource
+    public String getMtype()
+    {
+        return mtype;
+    }
+
+    public void setMtype(String mtype)
+    {
+        this.mtype = mtype;
+    }
+
+    public String getMsource()
+    {
+        return msource;
+    }
+
+    public void setMsource(String msource)
+    {
+        this.msource = msource;
     }
 
     //extended metadata setter and getter (chloe) 
