@@ -1,0 +1,100 @@
+<ui:composition template="/templates/main/main.xhtml"
+				xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:h="http://java.sun.com/jsf/html"
+				xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:p="http://primefaces.org/ui"
+				xmlns:c="http://java.sun.com/jsp/jstl/core"
+				xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+				xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+	<ui:param name="pageTitle" value="Archive-It Search" />
+	<ui:param name="disableGrowl" value="true" />
+	
+	<ui:define name="center_layout">
+		<h:outputStylesheet library="lightbox" name="lightbox.css"  />		
+		<h:outputStylesheet library="search" name="search.css"  />
+		<h:outputStylesheet library="archiveit-search" name="archiveit_search.css"  />		
+		<h:outputScript library="js" name="viewresultset.js" target="head"/>
+		
+		<script type="text/javascript">
+			var view = 'list';
+	    </script>
+	
+			<p:panel header="Archive-It Search" style="padding-top:10px;">		
+			<h:form id="search_form" prependId="false" >	
+				<table>
+					<tr>
+						<td><h:outputText value="query*" /> :</td>
+						<td><p:inputText id="input_query" required="true"
+								class="border-box-100" value="#{archiveitSearchBean.query}" />
+							<p:tooltip for="input_query" showEvent="focus" hideEvent="blur"
+								position="left" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="collection id*" /> :</td>
+						<td><p:inputText id="input_index" required="true"
+								class="border-box-100" value="#{archiveitSearchBean.index}" />
+							<p:tooltip for="input_index" showEvent="focus" hideEvent="blur"
+								position="left" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="types (separated by ';')" /> :</td>
+						<td><p:inputText id="input_type"
+								class="border-box-100" value="#{archiveitSearchBean.types}" />
+							<p:tooltip for="input_index" showEvent="focus" hideEvent="blur"
+								position="left" /></td>
+					</tr>
+					<tr>
+						<td><h:outputText value="sites (separated by ';')" /> :</td>
+						<td><p:inputText id="input_site" 
+								class="border-box-100" value="#{archiveitSearchBean.sites}" />
+							<p:tooltip for="input_site" showEvent="focus" hideEvent="blur"
+								position="left" /></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td><p:commandButton value="#{msg.searchLabel}" styleClass="greenbutton" action="#{archiveitSearchBean.onSearch()}" update=":opensearch_results :metadatasearch_results"/></td> 
+					 </tr>
+				</table>
+			</h:form>
+		</p:panel>
+		<h:panelGroup layout="block" id="opensearch_results">
+			
+			<div class="list_view">			
+				
+				<div class="resources">
+				<h:panelGroup layout="block" rendered="#{not empty archiveitSearchBean.resources}">
+					<span class="totalResultCount">OpenSearch API Results (#{archiveitSearchBean.archiveItResultCount})</span>
+					<ui:decorate template="/templates/search/resources.xhtml" >
+						<ui:param name="resources" value="#{archiveitSearchBean.resources}" />
+						<ui:param name="view" value="list" />					
+					</ui:decorate>
+				</h:panelGroup>
+				<h:panelGroup layout="block" rendered="#{empty archiveItSearchBean.resources}">
+					<span class="totalResultCount">OpenSearch API Results (#{archiveitSearchBean.archiveItResultCount})</span>
+				</h:panelGroup>
+				</div>	
+				<div class="clear"></div> 
+			</div>
+		</h:panelGroup>
+		<h:panelGroup layout="block" id="metadatasearch_results">
+			
+			<div class="list_view">			
+				
+				<div class="resources">
+				<h:panelGroup layout="block" rendered="#{not empty archiveitSearchBean.metadataIndexResources}">
+					<span class="totalResultCount">Metadata Index Results (#{archiveitSearchBean.metadataIndexResultCount})</span>
+					<ui:decorate template="/templates/search/resources.xhtml" >
+						<ui:param name="resources" value="#{archiveitSearchBean.metadataIndexResources}" />
+						<ui:param name="view" value="list" />					
+					</ui:decorate>
+				</h:panelGroup>
+				<h:panelGroup layout="block" rendered="#{empty archiveItSearchBean.metadataIndexResources}">
+					<span class="totalResultCount"><h:outputText value="Metadata Index Results (#{archiveitSearchBean.metadataIndexResultCount})"/></span>
+				</h:panelGroup>
+				</div>	
+				<div class="clear"></div> 
+			</div>
+		</h:panelGroup>
+	</ui:define>
+</ui:composition>
