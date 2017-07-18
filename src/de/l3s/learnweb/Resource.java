@@ -115,7 +115,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private transient MetadataMultiValueMapWrapper metadataMultiValue;
 
     //extended metadata (Chloe) 
-    private ExtendedMetadata extendedMetadata = new ExtendedMetadata();
+    private transient ExtendedMetadata extendedMetadata = null;
 
     /**
      * Do nothing constructor
@@ -1922,11 +1922,12 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     //extended metadata setter and getter (chloe) 
     public ExtendedMetadata getExtendedMetadata() throws SQLException
     {
-    	if (extendedMetadata == null) {
-        extendedMetadata = Learnweb.getInstance().getExtendedMetadataManager().getMetadataByResourceId(id);
-    	}
+        if(extendedMetadata == null)
+        {
+            extendedMetadata = Learnweb.getInstance().getExtendedMetadataManager().getMetadataByResourceId(id);
+        }
         return extendedMetadata;
-    	
+
     }
 
     public void setExtendedMetadata(ExtendedMetadata extendedMetadata)
