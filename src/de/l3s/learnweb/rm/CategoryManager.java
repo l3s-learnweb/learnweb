@@ -37,7 +37,7 @@ public class CategoryManager
     public List<Category> getCategoriesByResourceId(int resourceId) throws SQLException
     {
         List<Category> categories = new LinkedList<Category>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_resource_category` WHERE resource_id = ? AND deleted = 0 ORDER BY category_top_id");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_resource_category` WHERE resource_id = ? ORDER BY cat_top_id");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
         while(rs.next())
@@ -53,7 +53,7 @@ public class CategoryManager
     {
         List<Category> categories = new LinkedList<Category>();
         List<String> cats = new LinkedList<String>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_resource_category` WHERE resource_id = ? AND deleted = 0 ORDER BY category_top_id");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_resource_category` WHERE resource_id = ? ORDER BY cat_top_id");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
         while(rs.next())

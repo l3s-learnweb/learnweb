@@ -39,7 +39,7 @@ public class LanglevelManager
     public List<Langlevel> getLanglevelsByResourceId(int resourceId) throws SQLException
     {
         List<Langlevel> langlevels = new LinkedList<Langlevel>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_langlevel` JOIN lw_resource_langlevel USING(langlevel_id) WHERE resource_id = ? AND deleted = 0 ORDER BY audience_name");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_langlevel` JOIN lw_resource_langlevel USING(langlevel_id) WHERE resource_id = ? ORDER BY langlevel_id");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
         while(rs.next())
@@ -54,7 +54,7 @@ public class LanglevelManager
     public List<String> getLanglevelNamesByResourceId(int resourceId) throws SQLException
     {
         List<String> langlevels = new LinkedList<String>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_langlevel` JOIN lw_resource_langlevel USING(langlevel_id) WHERE resource_id = ? AND deleted = 0 ORDER BY audience_name");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_langlevel` JOIN lw_resource_langlevel USING(langlevel_id) WHERE resource_id = ? ORDER BY langlevel_id");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
         while(rs.next())
@@ -76,7 +76,7 @@ public class LanglevelManager
     public List<Langlevel> getLanglevels() throws SQLException
     {
         List<Langlevel> langlevels = new LinkedList<Langlevel>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_langlevel` ORDER BY audience_name");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_langlevel` ORDER BY langlevel_name");
         ResultSet rs = select.executeQuery();
         while(rs.next())
         {

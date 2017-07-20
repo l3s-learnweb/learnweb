@@ -10,19 +10,21 @@ public class ExtendedMetadata implements Serializable
     private static final long serialVersionUID = 8459836784341456001L;
     private int resourceId;
 
+    //extended metadata for a single resource: author, msource, mtype, language are already included in the main resource class
     private List<String> categories;
-    private List<String> authors;
-    private List<String> mtypes;
-    private List<String> sources;
     private List<String> targets;
     private List<String> purposes;
-    private List<String> langs;
     private List<String> levels;
-
     private Map<String, Integer> targetCount = new HashMap();
     private Map<String, Integer> purposeCount = new HashMap();
     private Map<String, Integer> levelCount = new HashMap();
-    private Map<String, Integer> categoryCount = new HashMap();
+    //private Map<String, Integer> categoryCount = new HashMap();
+
+    //aggregated list for search filters
+    private List<String> authors;
+    private List<String> mtypes;
+    private List<String> sources;
+    private List<String> langs;
 
     public ExtendedMetadata()
     {
@@ -147,6 +149,12 @@ public class ExtendedMetadata implements Serializable
     public void setCategories(List<String> categories)
     {
         this.categories = categories;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "ExtendedMetadata [categories=" + categories + ", levels=" + levels + ", targets=" + targets + ", purposes=" + purposes + ", levelCount=" + levelCount + ", targetCount=" + targetCount + "]";
     }
 
 }

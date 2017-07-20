@@ -38,7 +38,7 @@ public class AudienceManager
     public List<Audience> getAudiencesByResourceId(int resourceId) throws SQLException
     {
         List<Audience> audiences = new LinkedList<Audience>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_audience` JOIN lw_resource_audience USING(audience_id) WHERE resource_id = ? ORDER BY audience_name");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_audience` JOIN lw_resource_audience USING(audience_id) WHERE resource_id = ? ORDER BY audience_id");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
         while(rs.next())
@@ -53,7 +53,7 @@ public class AudienceManager
     public List<String> getAudienceNamesByResourceId(int resourceId) throws SQLException
     {
         List<String> audiences = new LinkedList<String>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_audience` JOIN lw_resource_audience USING(audience_id) WHERE resource_id = ? ORDER BY audience_name");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_audience` JOIN lw_resource_audience USING(audience_id) WHERE resource_id = ? ORDER BY audience_id");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
         while(rs.next())
@@ -75,7 +75,7 @@ public class AudienceManager
     public List<Audience> getAudiences() throws SQLException
     {
         List<Audience> audiences = new LinkedList<Audience>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_audience` ORDER BY audience_name");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_audience` ORDER BY audience_id");
         ResultSet rs = select.executeQuery();
         while(rs.next())
         {

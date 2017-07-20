@@ -38,7 +38,7 @@ public class PurposeManager
     public List<Purpose> getPurposesByResourceId(int resourceId) throws SQLException
     {
         List<Purpose> purposes = new LinkedList<Purpose>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_purpose` JOIN lw_resource_purpose USING(purpose_id) WHERE resource_id = ? AND deleted = 0 ORDER BY purpose_name");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_purpose` JOIN lw_resource_purpose USING(purpose_id) WHERE resource_id = ?  ORDER BY purpose_name");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
         while(rs.next())
@@ -53,7 +53,7 @@ public class PurposeManager
     public List<String> getPurposeNamesByResourceId(int resourceId) throws SQLException
     {
         List<String> purposes = new LinkedList<String>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_purpose` JOIN lw_resource_purpose USING(purpose_id) WHERE resource_id = ? AND deleted = 0 ORDER BY purpose_name");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_purpose` JOIN lw_resource_purpose USING(purpose_id) WHERE resource_id = ?  ORDER BY purpose_id");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
         while(rs.next())
@@ -75,7 +75,7 @@ public class PurposeManager
     public List<Purpose> getPurposes() throws SQLException
     {
         List<Purpose> purposes = new LinkedList<Purpose>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_purpose` ORDER BY purpose_name");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM `lw_rm_purpose` ORDER BY purpose_id");
         ResultSet rs = select.executeQuery();
         while(rs.next())
         {
