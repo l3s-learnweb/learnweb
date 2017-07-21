@@ -71,7 +71,8 @@ public class SearchFilters implements Serializable
         loro, // stored in SOLR
         yovisto, //  stored in SOLR
         learnweb, // stored in SOLR
-        archiveit// stored in SOLR
+        archiveit, // stored in SOLR
+        teded// stored in SOLR
         ;
 
         public boolean isLearnwebSource()
@@ -116,6 +117,8 @@ public class SearchFilters implements Serializable
                 return "LearnWeb";
             case archiveit:
                 return "Archive-It";
+            case teded:
+                return "TED-Ed";
             default:
                 return this.name();
             }

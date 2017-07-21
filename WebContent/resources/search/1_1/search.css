@@ -651,6 +651,11 @@ img.smallImage { cursor:pointer; margin:4px; }
 	background-image: url('#{resource['icon:services/tedx.gif']}');
 }
 
+.group-menu-header .source_teded,
+.group-menu-block.source_teded .group-menu-title {
+	background-image: url('#{resource['icon:services/tedx.gif']}');
+}
+
 .group-menu-header .source_loro,
 .group-menu-block.source_loro .group-menu-title {
 	background-image: url('#{resource['icon:services/loro.gif']}');

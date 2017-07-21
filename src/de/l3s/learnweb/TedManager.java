@@ -405,7 +405,8 @@ public class TedManager
         ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
 
         //Group tedxGroup = learnweb.getGroupManager().getGroupById(921);
-        Group tedxTrentoGroup = learnweb.getGroupManager().getGroupById(922);
+        //Group tedxTrentoGroup = learnweb.getGroupManager().getGroupById(922);
+        Group tedEdGroup = learnweb.getGroupManager().getGroupById(1291);
         User admin = learnweb.getUserManager().getUser(7727);
 
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT resource_id FROM lw_resource WHERE url = ?");
@@ -423,7 +424,10 @@ public class TedManager
         {
             params.put("page", Integer.toString(page));
 
-            SearchQuery interwebResponse = learnweb.getInterweb().search("user::TEDxTalks tedxtrento", params);
+            //SearchQuery interwebResponse = learnweb.getInterweb().search("user::TEDx tedxtrento", params);
+
+            //To fetch youtube videos from TED-Ed user
+            SearchQuery interwebResponse = learnweb.getInterweb().search("user::TEDEducation", params);
             //log.debug(interwebResponse.getResultCountAtService());
             resources = interwebResponse.getResults();
 
@@ -431,14 +435,23 @@ public class TedManager
             {
                 Resource resource = decoratedResource.getResource();
 
-                resource.setSource("TEDx");
-                resource.setLocation("TEDx");
+                resource.setSource("TED-Ed");
+                resource.setLocation("teded");
 
-                String[] title = resource.getTitle().split("\\|");
+                //Regex for setting the title and author for TEDx videos
+                /*String[] title = resource.getTitle().split("\\|");
                 if(title.length == 3 && title[2].startsWith(" TEDx"))
                 {
                     resource.setAuthor(title[1].trim());
                     resource.setTitle(title[0] + "|" + title[2]);
+                }*/
+
+                //Regex for setting the title and author for TED-Ed videos
+                String[] title = resource.getTitle().split("\\-");
+                if(title.length == 2 && !title[1].startsWith("Ed"))
+                {
+                    resource.setAuthor(title[1].trim());
+                    resource.setTitle(title[0]);
                 }
 
                 // check if resources is already stored in Learnweb
@@ -454,13 +467,13 @@ public class TedManager
                     {
                         learnwebResource.setIdAtService(resource.getIdAtService());
 
-                        if(learnwebResource.getGroupId() == tedxTrentoGroup.getId())
+                        if(learnwebResource.getGroupId() == tedEdGroup.getId())
                         {
                             log.error("resource is already part of the group");
                         }
                         else
                         {
-                            learnwebResource.setGroup(tedxTrentoGroup);
+                            learnwebResource.setGroup(tedEdGroup);
                         }
                         learnwebResource.save();
                     }
@@ -472,21 +485,21 @@ public class TedManager
                 else
                 {
                     rpm.processImage(resource, FileInspector.openStream(resource.getMaxImageUrl().replace("hqdefault", "mqdefault")));
-                    resource.setGroup(tedxTrentoGroup);
+                    resource.setGroup(tedEdGroup);
                     admin.addResource(resource);
 
                     log.debug("new video added");
                 }
 
                 //check if new transcripts are available for "resource" variable
-                fetchTedXTranscripts(resource.getIdAtService(), resource.getId());
+                //fetchTedXTranscripts(resource.getIdAtService(), resource.getId());
             }
 
             page++;
-            log.debug("page: " + page);
+            log.debug("page: " + page + " total results: " + resources.size());
             // break;
         }
-        while(resources.size() > 0 && page < 6);
+        while(resources.size() > 0 && page < 25);
     }
 
     public void insertTedXTranscripts(String resourceIdAtService, int resourceId, JSONObject transcriptItem) throws JSONException, SQLException
@@ -605,5 +618,6 @@ public class TedManager
     {
         TedManager tm = Learnweb.createInstance("").getTedManager();
         tm.fetchTedX(); //saveTedResource();
+        System.exit(0);
     }
 }
