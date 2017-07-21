@@ -67,8 +67,10 @@ public class Learnweb
     private final JobScheduler jobScheduler;
     private final GlossaryManager glossariesManager;
     private final SuggestionLogger suggestionLogger;
+
     private final WaybackCapturesLogger waybackCapturesLogger;
     private final SearchLogManager searchLogManager;
+    private final WaybackUrlManager waybackUrlManager;
 
     //added by Chloe 
     private final AudienceManager audienceManager;
@@ -237,6 +239,7 @@ public class Learnweb
         waybackCapturesLogger = new WaybackCapturesLogger(this);
         glossariesManager = new GlossaryManager(this);
         searchLogManager = new SearchLogManager(this);
+        waybackUrlManager = WaybackUrlManager.getInstance(this);
         learnwebIsLoading = false;
 
         //new managers added by Chloe 
@@ -751,6 +754,11 @@ public class Learnweb
     public SearchLogManager getSearchLogManager()
     {
         return searchLogManager;
+    }
+
+    public WaybackUrlManager getWaybackUrlManager()
+    {
+        return waybackUrlManager;
     }
 
 }
