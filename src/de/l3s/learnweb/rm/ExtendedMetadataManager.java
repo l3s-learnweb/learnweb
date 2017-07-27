@@ -115,6 +115,14 @@ public class ExtendedMetadataManager
         lcount = sortMetadataValueCount(langlevels);
         eMetadata.setLevelCount(lcount);
 
+        String lc = "";
+        for(Map.Entry<String, Integer> entry : lcount.entrySet())
+        {
+            lc += entry.getKey() + "[" + entry.getValue().toString() + "] ";
+        }
+
+        eMetadata.setlCount(lc);
+
         //get categories 
         List<String> categories = new LinkedList<String>();
         categories = Learnweb.getInstance().getCategoryManager().getCategoryNamesByResourceId(resourceId);
