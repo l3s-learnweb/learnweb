@@ -20,6 +20,10 @@ public class ExtendedMetadata implements Serializable
     private Map<String, Integer> levelCount = new HashMap();
     //private Map<String, Integer> categoryCount = new HashMap();
 
+    private String lCount;
+    private List<String> p4Count; //reading, writing, listening and speaking only
+    private List<String> pCount; //the rest 
+
     //aggregated list for search filters
     private List<String> authors;
     private List<String> mtypes;
@@ -149,6 +153,36 @@ public class ExtendedMetadata implements Serializable
     public void setCategories(List<String> categories)
     {
         this.categories = categories;
+    }
+
+    public String getlCount()
+    {
+        return lCount;
+    }
+
+    public void setlCount(String lCount)
+    {
+        this.lCount = lCount;
+    }
+
+    public List<String> getP4Count()
+    {
+        return p4Count;
+    }
+
+    public void setP4Count(List<String> p4Count)
+    {
+        this.p4Count = p4Count;
+    }
+
+    public List<String> getpCount()
+    {
+        return pCount;
+    }
+
+    public void setpCount(List<String> pCount)
+    {
+        this.pCount = pCount;
     }
 
     @Override
