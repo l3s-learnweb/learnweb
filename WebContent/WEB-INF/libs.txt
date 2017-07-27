@@ -9,9 +9,9 @@ commons-collections4-4.1.jar		LRUCache
 commons-collections-3.2.2			JSF Base (MyFaces)
 commons-digester-1.8.jar			JSF Base (MyFaces)
 commons-fileupload-1.3.jar			primefaces file upload
-commons-io-2.4.jar					FileManager, primefacces file upload, SolrClient
+commons-io-2.5.jar					FileManager, primefacces file upload, SolrClient
 commons-lang3-3.4.jar				Interweb, primefaces-extensions, Others, ArchiveSearch
-commons-logging-1.1.1.jar			JSF Base, Dependency of Google API
+commons-logging-1.2.jar			JSF Base, Dependency of Google API
 core.jar							Added by Trevor; for sprql client?
 crawler4j-4.2.jar					TED crawler
 cron4j-2.2.5.jar					Job Scheduler, added by Siyu
@@ -24,7 +24,7 @@ google-http-client-1.20.0.jar						Google API Client
 google-http-client-jackson2-1.20.0.jar				Google API Client
 google-oauth-client-1.20.0.jar						Google API Client
 gson-2.2.4.jar						Wikidata Client (Facts)
-guava-jdk5-13.0.jar					Dependency of Google API
+guava-19.0.jar					    Dependency of Google API
 hibernate-validator-5.2.1.Final.jar Bean Validator
 httpclient-4.5.2.jar				Dependency of SolrClient, Google API, crawler4j
 httpcore-4.4.5.jar					Dependency of SolrClient, Google API, crawler4j
