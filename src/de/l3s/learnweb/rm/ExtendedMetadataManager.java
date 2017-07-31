@@ -134,17 +134,20 @@ public class ExtendedMetadataManager
     @SuppressWarnings({ "rawtypes", "unchecked" })
     public Map sortMetadataValueCount(List<String> metadatas)
     {
+
         Map<String, Integer> sorted = new HashMap();
         List<String> tempnames = new ArrayList<String>();
         int initcount = 1;
+
         for(String md : metadatas)
         {
 
-            //check if the name exists already
             String exist = "no";
-            for(String tn : tempnames)
+            //check if the name exists already
+            for(int i = 0; i < tempnames.size(); i++)
             {
-                if(md == tn)
+
+                if(md.equalsIgnoreCase(tempnames.get(i)))
                 {
                     exist = "yes";
                 }
@@ -152,15 +155,15 @@ public class ExtendedMetadataManager
 
             if(exist.equalsIgnoreCase("no"))
             {
-                sorted.put(md, initcount);
                 tempnames.add(md);
+                sorted.put(md, initcount);
             }
-            else //if md already exists, only increase the count
+
+            if(exist.equalsIgnoreCase("yes")) //if md already exists, only increase the count
             {
                 sorted.put(md, sorted.get(md) + 1);
 
             }
-
         }
 
         return sorted;
