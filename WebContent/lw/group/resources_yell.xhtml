@@ -307,19 +307,46 @@
 												</b></label>#{res.eMetadata.lCount} <br /> 
 												<label class="rlabel"><b>Target
 														learner (stats): </b></label>
-												<img class="circle" src="#{request.contextPath}/resources/resources-chloe/images/green_circle.png" width="2%" />Pre-school[7] 
-												<img class="bluecircle" src="#{request.contextPath}/resources/resources-chloe/images/blue_circle.png" width="2%" />Teens[4]
-												<img class="circle" src="#{request.contextPath}/resources/resources-chloe/images/red_circle.png" width="2%" />Adults[1]
+														<ui:repeat value="#{res.eMetadata.targetCount.entrySet().toArray()}" var="t">
+										                
+														<h:graphicImage class="circle" value="/resources/resources-chloe/images/green_circle.png" width="2%" rendered="#{t.key == 'very young learners (pre-school)'} " />
+														<h:graphicImage class="circle" value="/resources/resources-chloe/images/green_circle.png" width="2%" rendered="#{t.key == 'young learners'}" />
+														<h:graphicImage class ="bluecircle" value="/resources/resources-chloe/images/blue_circle.png" width="2%" rendered="#{t.key == 'teenage learners'}" />
+														<h:graphicImage class ="circle" value="/resources/resources-chloe/images/red_circle.png" width="2%" rendered="#{t.key == 'teachers'}" />
+														<h:graphicImage class ="circle" value="/resources/resources-chloe/images/red_circle.png" width="2%" rendered="#{t.key == 'adult learners'}" />
+														
+														<h:outputText value="Pre-school" rendered="#{t.key == 'very young learners (pre-school)'}" />
+														<h:outputText value="Young learners" rendered="#{t.key == 'young learners'}" />
+														<h:outputText value="Teens" rendered="#{t.key == 'teenage learners'}" />
+														<h:outputText value="Adult learners" rendered="#{t.key == 'adult learners'}" />
+														<h:outputText value="Teachers" rendered="#{t.key == 'teachers'}" />
+														<h:outputText value="[#{t.value}] " /> 
+														
+														</ui:repeat>
 												<br /> 
 												<label class="rlabel"><b>Purpose of use (stats): </b></label>
-												<img class="bluecircle" src="#{request.contextPath}/resources/resources-chloe/images/speaking.png" width="2%" />Speaking[3] 
-												<img class="bluecircle" src="#{request.contextPath}/resources/resources-chloe/images/listening.png" width="2%" />Listening[5] 
-												<img class="bluecircle" src="#{request.contextPath}/resources/resources-chloe/images/writing.png" width="2%"/>Writing[1]
-												<img class="bluecircle" src="#{request.contextPath}/resources/resources-chloe/images/reading.png" width="2%" />Reading[0]
+												<ui:repeat value="#{res.eMetadata.purposeCount.entrySet().toArray()}" var="p">
+													<h:graphicImage class="bluecircle" value="/resources/resources-chloe/images/speaking.png" width="2%" rendered="#{p.key == 'speaking'}" />
+													<h:graphicImage class="bluecircle" value="/resources/resources-chloe/images/listening.png" width="2%" rendered="#{p.key == 'listening'}" />
+													<h:graphicImage class ="bluecircle" value="/resources/resources-chloe/images/writing.png" width="2%" rendered="#{p.key == 'writing'}" />
+													<h:graphicImage class ="bluecircle" value="/resources/resources-chloe/images/reading.png" width="2%" rendered="#{p.key == 'reading'}" />
+													
+													<h:outputText value="Speaking" rendered="#{p.key == 'speaking'}" />
+													<h:outputText value="Listening" rendered="#{p.key == 'listening'}" />
+													<h:outputText value="Writing" rendered="#{p.key == 'writing'}" />
+													<h:outputText value="Reading" rendered="#{p.key == 'reading'}" />
+													<h:outputText value="[#{p.value}] " rendered="#{p.key == 'speaking' or p.key == 'listening' or p.key =='writing' or p.key =='reading'}" /> 
+												</ui:repeat>
 												<br /> 
-												<span class="tag tag-grey">Games</span>
+												
+												<ui:repeat value="#{res.eMetadata.purposeCount.entrySet().toArray()}" var="p">
+													<ui:fragment rendered="#{p.key != 'speaking' and p.key != 'listening' and p.key !='writing' and p.key !='reading'}">
+    													<span class="tag tag-grey">#{p.key}</span>
+													</ui:fragment>
+												</ui:repeat>
+												<!--  <span class="tag tag-grey">Games</span>
 												<span class="tag tag-grey">Interactive</span>
-												<span class="tag tag-grey">Story telling</span>
+												<span class="tag tag-grey">Story telling</span> -->
 											</div>
 										</div>
 										<hr/>
