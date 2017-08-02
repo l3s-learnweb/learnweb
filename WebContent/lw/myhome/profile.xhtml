@@ -82,7 +82,7 @@
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="userfullname" id="userfullnameMessage" />
 			
 							<h:outputText value="#{msg.affiliation}:" />
-							<p:inputText id="useraffiliation" value="#{profileBean.affiliation}"  />
+							<p:inputText id="useraffiliation" value="#{profileBean.affiliation}" disabled="#{profileBean.affiliationRequired}"  />
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="useraffiliation" id="useraffiliationMessage" />
 							
 							<h:outputText value="#{msg.address}:" />

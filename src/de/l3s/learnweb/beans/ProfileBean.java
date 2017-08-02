@@ -21,6 +21,7 @@ import org.hibernate.validator.constraints.Email;
 import org.hibernate.validator.constraints.NotEmpty;
 import org.primefaces.event.FileUploadEvent;
 
+import de.l3s.learnweb.Course;
 import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.User;
@@ -82,6 +83,8 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
     private User user;
     private boolean moderatorAccess = false;
+    private boolean affiliationRequired = false;
+    private boolean mailRequired = false;
 
     public List<LogEntry> getLogMessages()
     {
@@ -113,7 +116,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
         if(user == null)
             return;
 
-        username = user.getUsername();
+        username = user.getRealUsername();
         email = user.getEmail();
         phone = user.getPhone();
         gender = user.getGender();
@@ -125,6 +128,15 @@ public class ProfileBean extends ApplicationBean implements Serializable
         fullName = user.getFullName();
         affiliation = user.getAffiliation();
         credits = user.getCredits();
+
+        for(Course course : user.getCourses())
+        {
+            if(course.getOption(Course.Option.Users_Require_mail_address))
+                mailRequired = true;
+
+            if(course.getOption(Course.Option.Users_Require_Affiliation))
+                affiliationRequired = true;
+        }
     }
 
     public String getUrlBase()
@@ -200,7 +212,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
     public void validateUsername(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
     {
-        if(getSelectedUser().getUsername().equals(value))
+        if(getSelectedUser().getRealUsername().equals(value))
         { // username not changed
             return;
         }
@@ -384,7 +396,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
         String password = (String) value;
 
         // returns the same user, if the password is correct
-        User checkUser = um.getUser(user.getUsername(), password);
+        User checkUser = um.getUser(user.getRealUsername(), password);
 
         if(!user.equals(checkUser))
         {
@@ -406,4 +418,13 @@ public class ProfileBean extends ApplicationBean implements Serializable
         }
     }
 
+    public boolean isAffiliationRequired()
+    {
+        return affiliationRequired;
+    }
+
+    public boolean isMailRequired()
+    {
+        return mailRequired;
+    }
 }

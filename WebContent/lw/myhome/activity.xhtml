@@ -13,6 +13,12 @@
 
 			
 	<ui:define name="center_layout">
+		<p:panel rendered="#{userBean.showMessageJoinGroup or userBean.showMessageAddResource}" header="#{msg.presentation_guide}">
+			<div style="width: 28rem;">
+				<ui:include src="/templates/user/guide.xhtml"/>
+			</div>	
+		</p:panel>
+		
 		<div class="center-header" id="group_header">
 			<h2>
 				#{msg.activity_stream}
@@ -41,7 +47,7 @@
 
 		<script type="text/javascript">
 			/* <!-- */
-			$("#center_pane").prepend($("#group_header"));
+			//$("#center_pane").prepend($("#group_header"));
 			/* --> */
 		</script>
 

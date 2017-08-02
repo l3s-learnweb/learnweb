@@ -27,7 +27,8 @@ public class Organisation implements Serializable, Comparable<Organisation>
         Resource_Hide_Star_rating,
         Resource_Hide_Thumb_rating,
         Groups_Hide_public_groups,
-        Misc_Proxy_enabled
+        Misc_Proxy_enabled,
+        Misc_Anonymize_usernames
     }
 
     private int id;

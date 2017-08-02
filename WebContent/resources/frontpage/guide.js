@@ -76,9 +76,15 @@ function lightbox_open()
 	box.show();
 };
 
-$(document).ready(function()
+$(window).load(function()
 {	
-		
+	setTimeout(function(){
+	    $("[data-lazy]").each(function (index, el) {
+	    	var element = $(el);
+	    	var url = element.attr('data-lazy');
+	    	element.attr('data', url);
+	    });	
+	}, 500);
 });
 
 $(document).resize(lightbox_resize_container);

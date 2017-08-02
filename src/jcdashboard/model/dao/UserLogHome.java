@@ -20,8 +20,6 @@ import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.UserManager;
-import de.l3s.learnweb.beans.UserBean;
-import de.l3s.learnweb.beans.UtilBean;
 import jcdashboard.model.UsesTable;
 
 // import org.apache.commons.logging.Log;
@@ -361,10 +359,16 @@ public class UserLogHome
                             + startdate + "' and rg.timestamp<'" + enddate + "' group by owner_user_id order by owner_user_id ");
              */
 
-            UserBean userBean = UtilBean.getUserBean();
+            //UserBean userBean = UtilBean.getUserBean();
 
+            /*
+             * old select includes jopin to user table
             PreparedStatement pstmt = learnweb.getConnection().prepareStatement(
                     "SELECT user_id, username, count( * ) AS count FROM lw_user_course c JOIN lw_resource r ON c.user_id = r.owner_user_id JOIN lw_user USING (user_id) JOIN lw_resource_glossary rg USING (resource_id)  WHERE c.course_id =? AND rg.deleted !=1 AND r.deleted !=1 AND rg.timestamp > ? AND rg.timestamp < ? GROUP BY r.owner_user_id ORDER BY username");
+            
+            */
+            PreparedStatement pstmt = learnweb.getConnection().prepareStatement(
+                    "SELECT user_id, count( * ) AS count FROM lw_user_course c JOIN lw_resource r ON c.user_id = r.owner_user_id JOIN lw_user USING (user_id) JOIN lw_resource_glossary rg USING (resource_id)  WHERE c.course_id =? AND rg.deleted !=1 AND r.deleted !=1 AND rg.timestamp > ? AND rg.timestamp < ? GROUP BY r.owner_user_id ORDER BY username");
             pstmt.setInt(1, course.getId());
             pstmt.setString(2, startdate);
             pstmt.setString(3, enddate);
@@ -373,7 +377,7 @@ public class UserLogHome
             ResultSet rs = pstmt.executeQuery();
             while(rs.next())
             {
-                conceptsPerUser.put(userBean.anonymizeUsername(rs.getInt("user_id"), rs.getString("username")), rs.getInt("count"));
+                conceptsPerUser.put(rs.getString("username"), rs.getInt("count"));
             }
         }
         catch(SQLException e)

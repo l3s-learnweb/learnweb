@@ -20,6 +20,7 @@ import org.jsoup.safety.Whitelist;
 import de.l3s.interwebj.AuthCredentials;
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.File.TYPE;
+import de.l3s.learnweb.Organisation.Option;
 import de.l3s.util.HasId;
 import de.l3s.util.Image;
 import de.l3s.util.MD5;
@@ -77,6 +78,7 @@ public class User implements Comparable<User>, Serializable, HasId
     private transient Date lastLoginDate = null;
     private transient Date currentLoginDate = null;
     private int forumPostCount = -1;
+    private transient Organisation organisation;
 
     public User()
     {
@@ -247,6 +249,13 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public String getUsername()
     {
+        if(getOrganisation().getId() == 1249 && getOrganisation().getOption(Option.Misc_Anonymize_usernames))
+            return "user " + id;
+        return username;
+    }
+
+    public String getRealUsername()
+    {
         return username;
     }
 
@@ -298,6 +307,7 @@ public class User implements Comparable<User>, Serializable, HasId
     public void setOrganisationId(int organisationId)
     {
         this.organisationId = organisationId;
+        this.organisation = null;
     }
 
     public int getOrganisationId()
@@ -307,7 +317,9 @@ public class User implements Comparable<User>, Serializable, HasId
 
     public Organisation getOrganisation()
     {
-        return Learnweb.getInstance().getOrganisationManager().getOrganisationById(organisationId);
+        if(organisation == null)
+            organisation = Learnweb.getInstance().getOrganisationManager().getOrganisationById(organisationId);
+        return organisation;
     }
 
     @Override
@@ -705,7 +717,7 @@ public class User implements Comparable<User>, Serializable, HasId
     @Override
     public String toString()
     {
-        return "[userId: " + getId() + " name: " + getUsername() + "]";
+        return "[userId: " + getId() + " name: " + getRealUsername() + "]";
     }
 
     public int getForumPostCount() throws SQLException

@@ -84,17 +84,7 @@ h4 { text-decoration:underline;	font-size:1.3rem; margin: 0.8rem 0 0.4rem; }
 	margin-bottom:0.8rem 0 2rem 0;
 }
 
-.video_guide.grey_border {
-	background:url(../../resources/frontpage/videoguide.jpg) top no-repeat;
-	width:100%;
-	height:155px;
-	cursor: pointer;
-	padding:0;
-	box-sizing: border-box;
-}
-.video_guide:hover{
-	background-position:bottom;
-}
+
 
 .first_column{
 	width:26%;
@@ -140,7 +130,3 @@ h4 { text-decoration:underline;	font-size:1.3rem; margin: 0.8rem 0 0.4rem; }
 		width:280px; 
 	}
 }
-
-#gallery { display:none; }
-.resource { width: 100%; height: 100% }
-.resource object { width: 100%; height: 100% }

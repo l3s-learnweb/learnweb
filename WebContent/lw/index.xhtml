@@ -11,8 +11,6 @@
 	
 	<ui:define name="center_layout">
 		<h:outputStylesheet name="frontpage/index.css" />
-		<h:outputStylesheet library="lightbox" name="lightbox.css" />
-		<h:outputScript library="frontpage" name="lightbox_guide.js"/>
 		
 		<div class="content_box">
 			<h1>
@@ -56,9 +54,9 @@
 				
 				<h2 class="page_header">
 					#{msg.presentation_guide}
-				</h2>				
+				</h2>					
 				
-				<div class="video_guide grey_border" onclick="lightbox_open(); return false;"></div>
+				<ui:include src="/templates/user/guide.xhtml"/>	
 			</div>
 		
 		
@@ -154,41 +152,7 @@
 			<a href="mailto:learnweb-support@l3s.de" >
 				<h:outputText value="learnweb-support@l3s.de"/>
 			</a>
-		</div>
-
-		<div id="lightbox">
-			<div id="lightbox_background" onclick="lightbox_close();"></div>
-
-			<div id="lightbox_container">
-				<div id="lightbox_content">
-					<div id="lightbox_navigate_left" onclick="lightbox_prev();"></div>
-					<div id="lightbox_navigate_right" onclick="lightbox_next();"></div>
-				</div>
-			</div>
-		</div>
-
-
-		<div id="gallery">
-			<div class="resource">
-				<object type="image/svg+xml" data="../resources/frontpage/toolGuide/ppt1.svg" />
-			</div>
-			<div class="resource">
-				<object type="image/svg+xml" data="../resources/frontpage/toolGuide/ppt2.svg" />
-			</div>
-			<div class="resource">
-				<object type="image/svg+xml" data="../resources/frontpage/toolGuide/ppt3.svg" />
-			</div>
-			<div class="resource">
-				<object type="image/svg+xml" data="../resources/frontpage/toolGuide/ppt4.svg" />
-			</div>
-			<div class="resource">
-				<object type="image/svg+xml" data="../resources/frontpage/toolGuide/ppt5.svg" />
-			</div>
-			<div class="resource">
-				<object type="image/svg+xml" data="../resources/frontpage/toolGuide/ppt6.svg" />
-			</div>
-			#{msg.searchHelp}
-		</div>		
+		</div>	
 	</ui:define>
 
 </ui:composition>

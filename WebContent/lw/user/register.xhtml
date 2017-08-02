@@ -30,7 +30,7 @@
 				#{msg.registerLabel}
 			</span>
 		</div>
-		
+		 
 		<p:panel >	
 			<h:form id="registerform">
 
@@ -43,8 +43,7 @@
 					<h:outputLabel for="password" value="#{msg.password}: *" />
 					<p:password id="password" value="#{registrationBean.password}" autocomplete="false" label="#{msg.password}" 
 						promptLabel="#{msg.passwordStrength_prompt}" weakLabel="#{msg.passwordStrength_weak}"
-						goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}">
-					
+						goodLabel="#{msg.passwordStrength_good}" strongLabel="#{msg.passwordStrength_strong}">					
 					</p:password>
 					<p:message id="passwordMessage" showSummary="true" showDetail="false" styleClass="error" for="password" />
 
@@ -52,15 +51,22 @@
 					<p:password id="confirm_password" value="#{registrationBean.confirmPassword}" label="#{msg.confirm_password}" 
 						validator="#{registrationBean.validatePassword}" promptLabel="#{msg.passwordStrength_prompt}" 
 						weakLabel="#{msg.passwordStrength_weak}" goodLabel="#{msg.passwordStrength_good}" 
-						strongLabel="#{msg.passwordStrength_strong}">
-					
+						strongLabel="#{msg.passwordStrength_strong}">					
 					</p:password>
 					<p:message id="confirmPasswordMessage" showSummary="true" showDetail="false" styleClass="error" for="confirm_password" />
+					
+					<h:outputLabel for="university" rendered="#{registrationBean.affiliationRequired}">#{msg.university}: *</h:outputLabel>
+					<p:selectOneMenu id="university" value="#{registrationBean.affiliation}" label="#{msg.university}" rendered="#{registrationBean.affiliationRequired}" required="true" style="width:125px">
+			            <f:selectItem itemLabel="University A" itemValue="University A" />
+			            <f:selectItem itemLabel="University B" itemValue="University B" />
+			            <f:selectItem itemLabel="University C" itemValue="University C" />
+			        </p:selectOneMenu>
+					<p:message id="universityMessage" showSummary="true" showDetail="false" styleClass="error" for="university" rendered="#{registrationBean.affiliationRequired}" />					
 
 					<h:outputLabel for="email">#{msg.email_address}:<h:outputText value=" *" rendered="#{registrationBean.mailRequired}"/></h:outputLabel>
 					<p:inputText id="email" value="#{registrationBean.email}" label="#{msg.email_address}" required="#{registrationBean.mailRequired}" />
 					<p:message id="emailMessage" showSummary="true" showDetail="false" styleClass="error" for="email" />
-
+					
 					<h:outputText value="" />			
 					<p:commandButton action="#{registrationBean.register}" value="#{msg.registerLabel}" ajax="false"/>
 					<h:outputText value="" />

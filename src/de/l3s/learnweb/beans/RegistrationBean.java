@@ -39,8 +39,10 @@ public class RegistrationBean extends ApplicationBean implements Serializable
     private String email;
 
     private String wizardTitle;
+    private String affiliation;
 
     private boolean mailRequired = false;
+    private boolean affiliationRequired = false;
 
     public String getUsername()
     {
@@ -150,21 +152,22 @@ public class RegistrationBean extends ApplicationBean implements Serializable
         if(wizardTitle == null)
             wizardTitle = getFacesContext().getExternalContext().getRequestParameterMap().get("wizard");
 
-        if(null != getWizard() && getWizard().length() != 0)
+        if(null != wizardTitle && wizardTitle.length() != 0)
         {
-            Course course = getLearnweb().getCourseManager().getCourseByWizard(getWizard());
+            Course course = getLearnweb().getCourseManager().getCourseByWizard(wizardTitle);
             if(null == course)
             {
                 addMessage(FacesMessage.SEVERITY_FATAL, "Invalid wizard parameter");
             }
             else
             {
-                if(course.getId() == 505) // extrawurst für yell
+                if(course.getId() == 505) // special message for yell
                     addMessage(FacesMessage.SEVERITY_INFO, "register_for_community", course.getTitle());
                 else
                     addMessage(FacesMessage.SEVERITY_INFO, "register_for_course", course.getTitle());
 
                 mailRequired = course.getOption(Course.Option.Users_Require_mail_address);
+                affiliationRequired = course.getOption(Course.Option.Users_Require_Affiliation);
             }
         }
         else
@@ -174,6 +177,21 @@ public class RegistrationBean extends ApplicationBean implements Serializable
     public boolean isMailRequired()
     {
         return mailRequired;
+    }
+
+    public String getAffiliation()
+    {
+        return affiliation;
+    }
+
+    public void setAffiliation(String affiliation)
+    {
+        this.affiliation = affiliation;
+    }
+
+    public boolean isAffiliationRequired()
+    {
+        return affiliationRequired;
     }
 
 }

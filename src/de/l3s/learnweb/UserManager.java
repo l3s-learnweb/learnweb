@@ -358,7 +358,7 @@ public class UserManager
             replace.setNull(1, java.sql.Types.INTEGER);
         else
             replace.setInt(1, user.getId());
-        replace.setString(2, user.getUsername());
+        replace.setString(2, user.getRealUsername());
         replace.setString(3, user.getEmail());
         replace.setInt(4, user.getOrganisationId());
         replace.setString(5, user.getInterwebKey());
