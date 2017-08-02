@@ -1,6 +1,12 @@
 package de.l3s.learnweb;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.HttpCookie;
 import java.net.HttpURLConnection;
 import java.net.InetAddress;
@@ -22,11 +28,12 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.text.ParseException;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.zip.GZIPInputStream;
+import java.util.zip.InflaterInputStream;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -37,6 +44,10 @@ import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.log4j.Logger;
 
 import com.google.common.cache.CacheBuilder;
@@ -174,11 +185,12 @@ public class WaybackUrlManager
             return false; // already up-to-date
         }
 
-        int statusCode = -1;
+        //int statusCode = -1;
 
         try
         {
-            statusCode = getStatusCode(urlRecord.getUrl().toString());
+            //statusCode = getStatusCode(urlRecord.getUrl().toString());
+            getStatusCode(urlRecord);
         }
         catch(Throwable t)
         {
@@ -187,8 +199,8 @@ public class WaybackUrlManager
 
         // TODO insert content and status into wb_url_content
 
-        urlRecord.setStatusCode((short) statusCode);
-        urlRecord.setStatusCodeDate(new Date());
+        //urlRecord.setStatusCode((short) statusCode);
+        //urlRecord.setStatusCodeDate(new Date());
         return true;
     }
 
@@ -350,7 +362,7 @@ public class WaybackUrlManager
         private Date statusCodeDate = new Date(3601000L);
         private String content;
 
-        protected UrlRecord(URL asciiUrl)
+        public UrlRecord(URL asciiUrl)
         {
             this.url = asciiUrl;
         }
@@ -486,12 +498,14 @@ public class WaybackUrlManager
 
     }
 
-    // TODO return a container that contains the status code and the content 
-    public static int getStatusCode(String urlStr) throws IOException
+    public UrlRecord getStatusCode(UrlRecord urlRecord) throws IOException, URISyntaxException
     {
+
         int responseCode = -1;
+        String urlStr = urlRecord.getUrl().toString();
+
         if(urlStr == null)
-            return responseCode;
+            return urlRecord;
 
         String originalUrl = urlStr; // in case we get redirect we need to compare the urls
         int maxRedirects = 20;
@@ -524,11 +538,17 @@ public class WaybackUrlManager
                 responseCode = connection.getResponseCode();
 
                 if(responseCode == -1)
-                    return 652;
+                {
+                    responseCode = 652;
+                    break;
+                }
 
                 String server = connection.getHeaderField("Server");
                 if(responseCode == 403 && server != null && server.equals("cloudflare-nginx"))
-                    return 606;
+                {
+                    responseCode = 606;
+                    break;
+                }
 
                 List<String> cookiesHeader = connection.getHeaderFields().get("Set-Cookie");
 
@@ -555,7 +575,10 @@ public class WaybackUrlManager
                     String location = connection.getHeaderField("Location");
 
                     if(location == null)
-                        return 607;
+                    {
+                        responseCode = 607; //no location for redirect status code
+                        break;
+                    }
 
                     location = location.replace(" ", "%20");
 
@@ -578,14 +601,55 @@ public class WaybackUrlManager
                         seenURLs = new LinkedList<>(); // init here to allow the two redirects to the initial url
 
                     if(seenURLs.contains(urlStr))
-                        return 604; // to many redirects
+                    {
+                        responseCode = 604;//too many redirects
+                        break;
+                    }
                     seenURLs.add(urlStr);
                 }
                 else
                 {
                     if(responseCode >= 200 && responseCode < 300)
                     {
-                        // TODO download content if mime type does not start with "application/" (don't download pdfs)
+                        //download content if mime type does not start with "application/" (don't download pdfs)
+                        String contentType = connection.getContentType();
+                        if(contentType != null && !contentType.startsWith("application/"))
+                        {
+                            //To handle gzip and deflate encodings
+                            String contentEncoding = connection.getContentEncoding();
+                            InputStream inputStream = null;
+                            if(contentEncoding != null && contentEncoding.equalsIgnoreCase("gzip"))
+                            {
+                                inputStream = new GZIPInputStream(connection.getInputStream());
+                            }
+                            else if(contentEncoding != null && contentEncoding.equalsIgnoreCase("deflate"))
+                            {
+                                inputStream = new InflaterInputStream(connection.getInputStream());
+                            }
+                            else
+                                inputStream = connection.getInputStream();
+
+                            //To check webpage character encoding if present in header field: Content-Type
+                            String[] contentTypeSplit = contentType.split("charset=");
+                            String charset = null;
+                            if(contentTypeSplit != null && contentTypeSplit.length == 2)
+                                charset = contentTypeSplit[1];
+
+                            BufferedReader br;
+                            if(charset != null && !charset.isEmpty())
+                                br = new BufferedReader(new InputStreamReader(inputStream, charset));
+                            else
+                                br = new BufferedReader(new InputStreamReader(inputStream));
+
+                            StringBuffer content = new StringBuffer();
+                            String inputLine;
+                            while((inputLine = br.readLine()) != null)
+                            {
+                                content.append(inputLine);
+                            }
+                            urlRecord.setContent(content.toString().trim());
+                            br.close();
+                        }
                     }
 
                     connection.disconnect();
@@ -595,52 +659,59 @@ public class WaybackUrlManager
             catch(UnknownHostException e)
             {
                 //log.warn("UnknownHostException: {}", urlStr);
-                return 600;
+                responseCode = 600;
+                break;
             }
             catch(ProtocolException e)
             {
                 log.warn("ProtocolException: " + e.getMessage() + "; URL: {}" + urlStr);
-                return 601;
+                responseCode = 601;
+                break;
             }
             catch(SocketException e)
             {
                 log.warn("SocketException: " + e.getMessage() + "; URL: {}" + urlStr);
-                return 602;
+                responseCode = 602;
+                logUrlInFile(urlStr);
+                break;
             }
             catch(SocketTimeoutException e)
             {
                 log.warn("SocketTimeoutException: " + e.getMessage() + "; URL: {}" + urlStr);
-                return 603;
+                responseCode = 603;
+                break;
             }
-
             catch(SSLException e)
             {
-                log.warn("SSLException: " + e.getMessage() + "; URL: {}" + urlStr);
-                return 650;
+                log.error("SSLException: " + e.getMessage() + "; URL: {}" + urlStr);
+                responseCode = getStatusCodeFromHttpClient(urlRecord);
+                break;
             }
             catch(Exception e)
             {
-                // this exception is thrown but not declared in the try block so we can't easily catch it
+                //this exception is thrown but not declared in the try block so we can't easily catch it
                 if(GeneralSecurityException.class.isAssignableFrom(e.getClass()))
                 {
                     log.warn("GeneralSecurityException: " + e.getMessage() + "; URL: {}" + urlStr);
-                    return 651;
+                    responseCode = 651;
+                    break;
                 }
                 else if(e.getCause() instanceof IllegalArgumentException)
                 {
                     log.warn("Invalid redirect: " + e.getCause().getMessage() + "; URL: {}" + urlStr);
-                    return 608; // redirect to invalid url
+                    responseCode = 608; //redirect to invalid url
+                    break;
                 }
                 else
                 {
-                    log.fatal("Can't check URL: " + urlStr);
+                    log.error("Can't check URL: " + urlStr);
                     throw e;
                 }
             }
         }
 
         if(maxRedirects == 0)
-            return 604; // to many redirects
+            responseCode = 604; // too many redirects
 
         // check if a URL was redirected to the base URL. This can usually be handled as some kind of error 404
         if(originalUrl != urlStr) // got a redirect
@@ -651,9 +722,58 @@ public class WaybackUrlManager
             if(responseCode < 300 && pathOld != null && pathOld.length() > 4 && (pathNew == null || pathNew.length() < 4))
                 responseCode = 605; // redirect to main page
 
-            //   log.debug("Redirect; status: {}; old {} ; new {}", responseCode, originalUrl, urlStr);
+            //log.debug("Redirect; status: {}; old {} ; new {}", responseCode, originalUrl, urlStr);
         }
-        return responseCode;
+
+        urlRecord.setStatusCode((short) responseCode);
+        urlRecord.setStatusCodeDate(new Date());
+        return urlRecord;
+    }
+
+    public UrlRecord getHtmlContent(String url) throws IOException, URISyntaxException
+    {
+        return getStatusCode(new UrlRecord(new URL(url)));
+    }
+
+    //This method is called only when there is a SSLHandshake failure from the previous method
+    public int getStatusCodeFromHttpClient(UrlRecord urlRecord)
+    {
+        try
+        {
+            HttpClient client = HttpClientBuilder.create().build();
+            HttpGet request = new HttpGet(urlRecord.getUrl().toString());
+            request.addHeader("User-Agent", "Mozilla/5.0");
+            HttpResponse response = client.execute(request);
+            BufferedReader rd = new BufferedReader(new InputStreamReader(response.getEntity().getContent()));
+
+            StringBuffer result = new StringBuffer();
+            String line = "";
+            while((line = rd.readLine()) != null)
+            {
+                result.append(line);
+            }
+            urlRecord.setContent(result.toString().trim());
+            return 200;
+        }
+        catch(IOException e)
+        {
+            log.error("SSLException from HttpClient as well: " + e.getMessage() + "; URL: {}" + urlRecord.getUrl().toString());
+            logUrlInFile(urlRecord.getUrl().toString());
+            return 650;
+        }
+    }
+
+    public void logUrlInFile(String url)
+    {
+        String filename = "/home/learnweb_user/searchlog_html_url_exceptions.txt";
+        try(PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter(filename, true))))
+        {
+            out.println(url);
+        }
+        catch(IOException e)
+        {
+            log.error("Exception while writing url exception to file " + e.getMessage());
+        }
     }
 
     public static void enableRelaxedSSLconnection()
@@ -782,18 +902,21 @@ public class WaybackUrlManager
 
     public static void main(String[] args) throws SQLException, IOException, URISyntaxException, NoSuchAlgorithmException, KeyManagementException, ClassNotFoundException
     {
-        Calendar minCrawlTime = Calendar.getInstance();
+        /*Calendar minCrawlTime = Calendar.getInstance();
         minCrawlTime.add(Calendar.DATE, -1);
         Date MIN_ACCEPTABLE_CRAWL_TIME = minCrawlTime.getTime();
-
+        
         log.debug("start");
         WaybackUrlManager manager = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de").getWaybackUrlManager();
         UrlRecord record = manager.getUrlRecord("http://www.google.com/");
         log.debug(record);
         manager.updateRecord(record, null, MIN_ACCEPTABLE_CRAWL_TIME);
         log.debug(record);
-
         // check statusCodeDate in the output
+        */
 
+        WaybackUrlManager manager = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de").getWaybackUrlManager();
+        System.out.println(manager.getHtmlContent("https://consortiumnews.com/2017/02/11/amnesty-international-stokes-syrian-war/"));
+        System.exit(0);
     }
 }

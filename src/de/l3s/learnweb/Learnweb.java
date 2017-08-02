@@ -394,6 +394,7 @@ public class Learnweb
         archiveUrlManager.onDestroy();
         suggestionLogger.stop();
         waybackCapturesLogger.stop();
+        searchLogManager.stop();
 
         try
         {

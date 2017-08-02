@@ -61,6 +61,7 @@ public class Search implements Serializable
     private boolean stopped;
     private transient SearchLogManager searchLogger;
     private int searchId;
+    private boolean logHTML;
 
     public Search(InterWeb interweb, String query, SearchFilters sf, User user)
     {
@@ -69,6 +70,9 @@ public class Search implements Serializable
         this.searchFilters = sf;
         this.userId = (null == user) ? -1 : user.getId();
         this.solrSearch = new SolrSearch(query, user);
+
+        String logHTMLPreference = user.getPreference("SEARCH_LOG_HTML");
+        this.logHTML = (logHTMLPreference == null) ? false : Boolean.parseBoolean(logHTMLPreference);
 
         if(query.startsWith("source:") || query.startsWith("location:") || query.startsWith("groups:") || query.startsWith("title:"))
         {
@@ -604,8 +608,16 @@ public class Search implements Serializable
 
     private void logResources(List<ResourceDecorator> resources)
     {
-        if(searchId > 0) // log resources only when the logQuery() was called before; This isn't the case on the group search page
-            getSearchLogger().logResources(searchId, resources);
+        /*if(searchId > 0) // log resources only when the logQuery() was called before; This isn't the case on the group search page
+            getSearchLogger().logResources(searchId, resources);*/
+
+        //call the method to fetch the html of the logged resources
+        //only if search_mode='text' and userId is admin/specificUser
+        if(searchId > 0 && configMode.equals(MODE.text) && logHTML)
+            getSearchLogger().logResources(searchId, resources, true);
+        else if(searchId > 0)
+            getSearchLogger().logResources(searchId, resources, false);
+
     }
 
     public void logResourceClicked(int rank, User user)
