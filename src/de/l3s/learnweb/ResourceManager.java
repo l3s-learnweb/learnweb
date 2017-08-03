@@ -940,6 +940,8 @@ public class ResourceManager
                 resource.setLocation("TED");
             else if(resource.getSource().equals("TEDx"))
                 resource.setLocation("TEDx");
+            else if(resource.getSource().equals("TED-Ed"))
+                resource.setLocation("TED-Ed");
             else if(resource.getSource().equals("LORO"))
                 resource.setLocation("LORO");
             else if(resource.getSource().equals("Yovisto"))
