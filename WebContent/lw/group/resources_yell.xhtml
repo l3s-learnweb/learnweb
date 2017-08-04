@@ -282,12 +282,13 @@
 				</h:form>
 				<br/>
 				<hr/>
+				<h:outputText value="Click on the resource to view details or add more useful information to help community to discover!"/>
 				<h:panelGroup id="searchResultSection">
 						<ui:repeat value="#{groupDetailBean.paginator.currentPage}" 
 							var="res">
 							<h:panelGroup id="rdetail" styleClass="resource2-item group-resources-item"
 								pt:data-itemType="resource" pt:data-itemId="#{res.resource.id}" layout="block">
-										<div id="rlist">
+										<div id="rlist" onclick="PF('rdetail_dialog').show()">
 											<div id="rnav">
 												<img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/web.png" width="98%" /> 
 												<img class="simg" src="#{request.contextPath}/resources/resources-chloe/images/bbc.png" width="98%" />
@@ -299,7 +300,9 @@
 												<label class="rlabel"><b>Title:
 												</b></label>#{res.title} <br /> 
 												<label class="rlabel"><b>Category:
-												</b></label>#{res.eMetadata.categories[0]} <br /> <label
+												</b></label>
+												<h:outputText value = "not available. please help to add it" rendered="#{empty res.eMetadata.categories[0]}"/>
+												<h:outputText value = "#{res.eMetadata.categories[0]}" rendered="#{not empty res.eMetadata.categories[0]}"/> <br /> <label
 													class="rlabel"><b>Contains: </b></label>#{res.mtype}
 												<br /> 
 												<label class="rlabel"><b>Language: </b></label>
@@ -367,7 +370,7 @@
 							var="res">
 							<h:panelGroup id="rdetail" styleClass="resource2-item group-resources-item"
 								pt:data-itemType="resource" pt:data-itemId="#{res.resource.id}" layout="block">
-										<div id="rlist">
+										<div id="rlist" onclick="PF('rdetail_dialog').show();">
 											<div id="rnav">
 												<img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/web.png" width="98%" /> 
 												<img class="simg" src="#{request.contextPath}/resources/resources-chloe/images/bbc.png" width="98%" />
@@ -494,6 +497,13 @@
 					title="#{msg.save}" value="#{msg.save}"
 					onsuccess="PF('comment_dialog').hide();" />
 			</h:form>
+		</p:dialog>
+		
+		<p:dialog id="popup_layout" header="#{resourceDetailBean.clickedResource.id eq -1? msg.click_to_view_details : resourceDetailBean.clickedResource.title}" widgetVar="rdetail_dialog"
+			appendTo="@(body)" width="600" height="450" modal="true" closable="true">
+			<ui:include src="/templates/resources/popup_pane.xhtml">
+				<ui:param name="bean" value="#{groupDetailBean}" />
+			</ui:include>
 		</p:dialog>
 
 		<ui:fragment
@@ -718,12 +728,13 @@
 			updateCarousel();
 
 			$("#center_pane").prepend($("#group_header")).append($("#paginator"));
+			
+			
+			
 		</script>
-
+		
 	</ui:define>
-	<ui:define name="right_layout">
-		<ui:decorate template="/templates/resources/blank.xhtml">
-			<ui:param name="bean" value="#{groupDetailBean}" />
-		</ui:decorate>
-	</ui:define>
+	
+	
+	
 </ui:composition>
