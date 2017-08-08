@@ -152,11 +152,14 @@ public class SuggestionLogger
                     catch(IOException e)
                     {
                         log.error(e);
+                        return "";
                     }
                 }
                 catch(SAXException e)
                 {
                     log.error("Exception in parsing xml doc of google suggestion with query: " + query + " in language: " + market, e);
+                    log.error("XML causing exception : " + xml);
+                    return "";
                 }
                 NodeList getData = null;
                 try
@@ -166,6 +169,7 @@ public class SuggestionLogger
                 catch(NullPointerException e)
                 {
                     log.error("Can not retrieve suggestions for query: " + query, e);
+                    return "";
                 }
                 for(int i = 0; i < getData.getLength(); i++)
                 {
