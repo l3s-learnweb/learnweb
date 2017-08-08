@@ -683,7 +683,7 @@ public class WaybackUrlManager
             }
             catch(SSLException e)
             {
-                log.error("SSLException: " + e.getMessage() + "; URL: {}" + urlStr);
+                log.warn("SSLException: " + e.getMessage() + "; URL: {}" + urlStr);
                 responseCode = getStatusCodeFromHttpClient(urlRecord);
                 break;
             }
@@ -704,8 +704,10 @@ public class WaybackUrlManager
                 }
                 else
                 {
-                    log.error("Can't check URL: " + urlStr);
-                    throw e;
+                    log.error("Can't check URL: " + urlStr, e);
+                    responseCode = 653;
+                    break;
+                    //throw e;
                 }
             }
         }
@@ -757,7 +759,7 @@ public class WaybackUrlManager
         }
         catch(IOException e)
         {
-            log.error("SSLException from HttpClient as well: " + e.getMessage() + "; URL: {}" + urlRecord.getUrl().toString());
+            log.warn("SSLException from HttpClient as well: " + e.getMessage() + "; URL: {}" + urlRecord.getUrl().toString());
             logUrlInFile(urlRecord.getUrl().toString());
             return 650;
         }
@@ -916,7 +918,9 @@ public class WaybackUrlManager
         */
 
         WaybackUrlManager manager = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de").getWaybackUrlManager();
-        System.out.println(manager.getHtmlContent("https://consortiumnews.com/2017/02/11/amnesty-international-stokes-syrian-war/"));
+        UrlRecord record = manager.getHtmlContent("https://simple.wikipedia.org/wiki/List_of_Renaissance_artists");
+        System.out.println(record.getStatusCode());
+        System.out.println(record.getContent());
         System.exit(0);
     }
 }
