@@ -157,8 +157,8 @@ public class SuggestionLogger
                 }
                 catch(SAXException e)
                 {
-                    log.error("Exception in parsing xml doc of google suggestion with query: " + query + " in language: " + market, e);
-                    log.error("XML causing exception : " + xml);
+                    log.error("Exception in parsing xml doc of google suggestion with query: " + query + " in language: " + market + "\n XML returned: " + xml, e);
+
                     return "";
                 }
                 NodeList getData = null;
@@ -168,7 +168,7 @@ public class SuggestionLogger
                 }
                 catch(NullPointerException e)
                 {
-                    log.error("Can not retrieve suggestions for query: " + query, e);
+                    log.error("Can not retrieve suggestions for query: " + query + "\n XML returned: " + xml, e);
                     return "";
                 }
                 for(int i = 0; i < getData.getLength(); i++)
