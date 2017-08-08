@@ -82,14 +82,14 @@ public class SuggestionLogger
                         break;
 
                     String suggestionsGoogle = null;
-                    /*try
+                    try
                     {
                         suggestionsGoogle = googleSuggestion(container.market, container.query);
                     }
                     catch(Exception e)
                     {
                         log.fatal("Couldn't get google suggestion for: " + container.query, e);
-                    }*/
+                    }
 
                     try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO `lw_log_suggestions` (`query`, `market`, `timestamp`, `suggestions_bing`, `suggestions_google`, session_id, user_id) VALUES (?, ?, ?, ?, ?, ?, ?)");)
                     {
