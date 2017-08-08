@@ -507,6 +507,7 @@ public class WaybackUrlManager
         if(urlStr == null)
             return urlRecord;
 
+        urlStr = urlStr.replaceAll(" ", "%20"); //few urls from Bing do not encode space correctly
         String originalUrl = urlStr; // in case we get redirect we need to compare the urls
         int maxRedirects = 20;
         String cookies = null;
@@ -580,7 +581,7 @@ public class WaybackUrlManager
                         break;
                     }
 
-                    location = location.replace(" ", "%20");
+                    location = location.replaceAll(" ", "%20");
 
                     //log.debug("Redirect {}; Location {}", responseCode, location);
 
@@ -738,7 +739,7 @@ public class WaybackUrlManager
     }
 
     //This method is called only when there is a SSLHandshake failure from the previous method
-    public int getStatusCodeFromHttpClient(UrlRecord urlRecord)
+    public int getStatusCodeFromHttpClient(UrlRecord urlRecord) throws URISyntaxException
     {
         try
         {
@@ -759,10 +760,17 @@ public class WaybackUrlManager
         }
         catch(IOException e)
         {
-            log.warn("SSLException from HttpClient as well: " + e.getMessage() + "; URL: {}" + urlRecord.getUrl().toString());
+            log.warn("HttpClient method: SSLException: " + e.getMessage() + "; URL: {}" + urlRecord.getUrl().toString());
             logUrlInFile(urlRecord.getUrl().toString());
             return 650;
         }
+        catch(IllegalArgumentException e)
+        {
+            log.warn("HttpClient method: Invalid url: " + e.getMessage() + "; URL: {}" + urlRecord.getUrl().toString());
+            logUrlInFile(urlRecord.getUrl().toString());
+            return 650;
+        }
+
     }
 
     public void logUrlInFile(String url)
@@ -918,7 +926,8 @@ public class WaybackUrlManager
         */
 
         WaybackUrlManager manager = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de").getWaybackUrlManager();
-        UrlRecord record = manager.getHtmlContent("https://simple.wikipedia.org/wiki/List_of_Renaissance_artists");
+        String url = "https://simple.wikipedia.org/wiki/List_of_Renaissance_artists";
+        UrlRecord record = manager.getHtmlContent(url);
         System.out.println(record.getStatusCode());
         System.out.println(record.getContent());
         System.exit(0);
