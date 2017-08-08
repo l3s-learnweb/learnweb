@@ -156,7 +156,7 @@ public class SuggestionLogger
                 }
                 catch(SAXException e)
                 {
-                    log.error("Exception in parsing xml doc of google suggestion with query: " + query, e);
+                    log.error("Exception in parsing xml doc of google suggestion with query: " + query + " in language: " + market, e);
                 }
                 NodeList getData = null;
                 try
