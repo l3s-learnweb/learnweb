@@ -468,6 +468,34 @@ $(document).ready(function () {
 
         selected.selectLastItem();
     });
+    
+    $(document).on('click', '.group-resources2-item', function (e) {
+        if (e.shiftKey && selected.getSize() > 0) {
+            var previous = selected.getItem(selected.getSize() - 1);
+            selected.add(this);
+            var current = selected.getItem(selected.getSize() - 1);
+            if (previous.id !== current.id) {
+                var isFound = false;
+                $('#rdetail').find('.group-resources2-item').each(function (i, el) {
+                    var elId = el.getAttribute("data-itemId");
+                    var elType = el.getAttribute("data-itemType");
+                    if ((elId == previous.id && elType == previous.type) || (elId == current.id && elType == current.type)) {
+                        isFound = !isFound;
+                        if (!isFound) return false;
+                    } else if (isFound) {
+                        selected.add(el);
+                    }
+                });
+            }
+        } else if (e.ctrlKey || e.metaKey) {
+            selected.add(this);
+        } else {
+            selected.clearAndAdd(this)
+        }
+
+        selected.selectLastItem();
+        PF('rdetail_dialog').show();
+    });
 
     $(document).on('click', '.resource-controls a', function (e) {
         var action = (this.className.match(/action-[^\s]+/) || []).pop().replace('action-', '');
