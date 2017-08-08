@@ -10,6 +10,7 @@
 		<h:outputScript library="resource-pane-template" name="resource-pane.js" target="head"/>
 		<h:outputStylesheet library="resource-pane-template" name="resource-pane.css"/>
 		<h:outputStylesheet library="lightbox" name="lightbox.css"/>
+		<h:outputStylesheet library="css" name="Learnweb_chloe.css"/>
 
 		<div id="right_pane_wrapper" class="right-panel">	
 			<h:panelGroup layout="block" id="add_resource_panel">					
@@ -445,6 +446,34 @@
 								</td>
 							</tr>
 							
+							<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.msource}">
+								<tr>
+									<td>
+										<span class="resource_field">
+											Media Source:
+										</span>
+									</td>
+									<td>
+										<h:outputText value="#{resourceDetailBean.clickedResource.msource}" escape="false" />
+											
+									</td>
+								</tr>
+							</ui:fragment>
+							
+							<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.mtype}">
+								<tr>
+									<td>
+										<span class="resource_field">
+											Contains:
+										</span>
+									</td>
+									<td>
+										<h:outputText value="#{resourceDetailBean.clickedResource.mtype}" escape="false" />
+											
+									</td>
+								</tr>
+							</ui:fragment>
+							
 							<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.metadataEntries}">
 								<ui:fragment rendered="#{not empty entry.value}">
 									<tr>
@@ -537,7 +566,7 @@
 							<div class="resource_field" style="padding-top: 10px">
 								#{msg.description}
 							</div>
-							<h:outputText id="resource_description" value="#{resourceDetailBean.clickedResource.descriptionHTML}" escape="false" />
+							<h:outputText id="resource_description" styleClass="text-ellipses line-clamp" value="#{resourceDetailBean.clickedResource.descriptionHTML}" escape="false" />
 						</h:panelGroup>
 								
 						<h:form id="archive_current_form" rendered="${resourceDetailBean.clickedResource.storageType == 2 and resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
@@ -587,12 +616,12 @@
 							<br class="clear" />
 						</h:panelGroup>					
 	
-						<h:form id="tag_form" rendered="${not empty resourceDetailBean.clickedResource.tags or resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
-							<div class="resource_field" style="padding-top: 10px; padding-bottom: 10px">
+						<h:form id="tag_form" styleClass="not-shown" rendered="${not empty resourceDetailBean.clickedResource.tags or resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
+							<div class="resource_field" style="padding-top: 10px; padding-bottom: 10px; display:none;">
 								#{msg.tags}
 							</div>
 	
-					        <ul style="margin: 0px; padding: 0px">
+					        <ul style="margin: 0px; padding: 0px; display:none;">
 						         <ui:repeat var="tag" value="#{resourceDetailBean.clickedResource.tags}">
 						         	<li class="tag_list">
 						         		<h:outputLink styleClass="tag_name ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
@@ -612,7 +641,7 @@
 						    </ul>
 						</h:form> 
 														
-						<h:form id="tag_input_form" rendered="#{resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">  
+						<h:form id="tag_input_form" styleClass="not-shown" rendered="#{resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">  
 						   
 						    <p:inputText styleClass="tag_field" value="#{resourceDetailBean.tagName}" id="tag_name"/>
 					    	<p:commandButton actionListener="#{resourceDetailBean.addTag}" styleClass="greenbutton clearfix" 
@@ -623,6 +652,8 @@
 					        </p:commandButton>
 					        
 					    </h:form>	
+					    <hr/>
+					    
 					    				   				   
 					    <h:form id="comment_input_form" styleClass="clear" prependId="false">
 					   
