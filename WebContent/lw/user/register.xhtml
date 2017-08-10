@@ -57,12 +57,14 @@
 					
 					<h:outputLabel for="university" rendered="#{registrationBean.affiliationRequired}">#{msg.university}: *</h:outputLabel>
 					<p:selectOneMenu id="university" value="#{registrationBean.affiliation}" label="#{msg.university}" rendered="#{registrationBean.affiliationRequired}" required="true" style="width:125px">
-			            <f:selectItem itemLabel="University A" itemValue="University A" />
-			            <f:selectItem itemLabel="University B" itemValue="University B" />
-			            <f:selectItem itemLabel="University C" itemValue="University C" />
+			            <f:selectItem itemLabel="Univ. of Messina" itemValue="Univ. of Messina" />
+			            <f:selectItem itemLabel="Univ. Tor Vergata" itemValue="Univ. Tor Vergata" />
+			            <f:selectItem itemLabel="Univ. of Florence" itemValue="Univ. of Florence" />
+			            <f:selectItem itemLabel="Univ. of Leeds" itemValue="Univ. of Leeds" />
+			            <f:selectItem itemLabel="Univ. of Aarhus" itemValue="Univ. of Aarhus" />
 			        </p:selectOneMenu>
 					<p:message id="universityMessage" showSummary="true" showDetail="false" styleClass="error" for="university" rendered="#{registrationBean.affiliationRequired}" />					
-
+					
 					<h:outputLabel for="email">#{msg.email_address}:<h:outputText value=" *" rendered="#{registrationBean.mailRequired}"/></h:outputLabel>
 					<p:inputText id="email" value="#{registrationBean.email}" label="#{msg.email_address}" required="#{registrationBean.mailRequired}" />
 					<p:message id="emailMessage" showSummary="true" showDetail="false" styleClass="error" for="email" />

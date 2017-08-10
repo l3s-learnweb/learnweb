@@ -18,6 +18,7 @@ import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.SearchFilters.SERVICE;
 import de.l3s.learnweb.WaybackUrlManager.UrlRecord;
 import de.l3s.util.StringHelper;
+import de.l3s.util.URL;
 
 public class SearchLogManager
 {
@@ -228,9 +229,11 @@ public class SearchLogManager
 
                     try
                     {
+                        String asciiUrl = new URL(url).toString();
+
                         Date crawlTime;
                         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT url_id, crawl_time FROM `learnweb_large`.`sl_resource_html` WHERE url = ? ORDER BY crawl_time DESC LIMIT 1");
-                        select.setString(1, url);
+                        select.setString(1, asciiUrl);
                         ResultSet rs = select.executeQuery();
                         if(rs.next())
                         {

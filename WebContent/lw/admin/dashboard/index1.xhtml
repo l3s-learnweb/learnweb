@@ -34,7 +34,7 @@ ul {
 								<ul class="nav side-menu">
 									<ui:repeat value="#{dashboard.selectedCourse.members}" var="user">
 										<li> 
-											<a target="_blank" href="admin/dashboard/studentlog.jsf?studentlogId=#{user.id}"><h:outputText value="${userBean.anonymizeUsername(user)}" /></a>
+											<a target="_blank" href="admin/dashboard/studentlog.jsf?studentlogId=#{user.id}"><h:outputText value="#{user.usernam}" /></a>
 										</li>
 									</ui:repeat>
 								</ul>
