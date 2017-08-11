@@ -33,6 +33,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.zip.GZIPInputStream;
+import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
 import javax.net.ssl.HostnameVerifier;
@@ -625,7 +626,8 @@ public class WaybackUrlManager
                             }
                             else if(contentEncoding != null && contentEncoding.equalsIgnoreCase("deflate"))
                             {
-                                inputStream = new InflaterInputStream(connection.getInputStream());
+                                Inflater inf = new Inflater(true);
+                                inputStream = new InflaterInputStream(connection.getInputStream(), inf);
                             }
                             else
                                 inputStream = connection.getInputStream();
@@ -926,10 +928,13 @@ public class WaybackUrlManager
         */
 
         WaybackUrlManager manager = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de").getWaybackUrlManager();
-        String url = "https://simple.wikipedia.org/wiki/List_of_Renaissance_artists";
+        String url = "http://wing.comp.nus.edu.sg/birndl-sigir2017/";
         UrlRecord record = manager.getHtmlContent(url);
         System.out.println(record.getStatusCode());
         System.out.println(record.getContent());
+        UrlRecord record2 = manager.new UrlRecord(new URL(url));
+        manager.getStatusCodeFromHttpClient(record2);
+        System.out.println(record2.getContent());
         System.exit(0);
     }
 }
