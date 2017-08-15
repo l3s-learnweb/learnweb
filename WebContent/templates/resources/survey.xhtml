@@ -8,6 +8,11 @@
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
 	lang="#{userBean.localeCode}">
 
+<ui:define name="metadata">
+				<f:metadata>
+					<f:viewParam name="resource_id" value="#{surveyBean.resource_id}" />
+				</f:metadata>
+			</ui:define>
 	<ui:param name="pageTitle" value="Survey" />
 	<ui:param name="loginRequired" value="true" />
 	

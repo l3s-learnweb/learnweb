@@ -67,7 +67,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
             }
             catch(Exception e)
             {
-                log.error("Couldn't log glossary action; resource: ");
+                log.error("Couldn't log glossary action; resource: ", e);
             }
 
         }
