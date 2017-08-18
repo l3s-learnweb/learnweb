@@ -43,10 +43,11 @@
 							$(".nano").nanoScroller({
                                 paneClass: 'pane',
                                 sliderClass: 'slider',
-                                contentClass: 'content'
+                                contentClass: 'content',
+                                alwaysVisible: true
 							});
 						} catch(e) {
-							//console.log(e);
+							console.log('scroller problem',e);
 						}						
 					}
 					

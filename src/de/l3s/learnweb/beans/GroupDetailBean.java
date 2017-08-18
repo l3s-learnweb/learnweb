@@ -488,8 +488,16 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             }
             else
             {
-                type = LinkType.LINK;
-                log(Action.group_adding_link, group.getId(), group.getId(), newLinkTitle);
+                if(newLinkUrl.startsWith("https://docs.google.com"))
+                {
+                    type = LinkType.DOCUMENT;
+                    log(Action.group_adding_document, group.getId(), group.getId(), newLinkTitle);
+                }
+                else
+                {
+                    type = LinkType.LINK;
+                    log(Action.group_adding_link, group.getId(), group.getId(), newLinkTitle);
+                }
             }
 
             group.addLink(newLinkTitle, newLinkUrl, type);
