@@ -175,6 +175,8 @@ public class Learnweb
             propteriesFileName = "lw_local_rishita";
         else if((new File("/home/astappev").exists()))
             propteriesFileName = "lw_local_oleh";
+        else if((new File("/Users/user").exists()))
+            propteriesFileName = "lw_local_luyan";
         else
             developmentMode = false;
 
