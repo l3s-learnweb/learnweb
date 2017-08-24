@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:composition> 		
+		<h:outputStylesheet library="lightbox" name="lightbox.css" />
+		<h:outputScript library="frontpage" name="guide.js"/>	
+		<style type="text/css">
+			.video_guide.grey_border {
+				background:url(#{request.contextPath}/resources/frontpage/videoguide.jpg) top no-repeat;
+				width:100%;
+				height:155px;
+				cursor: pointer;
+				padding:0;
+				box-sizing: border-box;
+			}
+			.video_guide:hover{
+				background-position:bottom;
+			}
+			.resource,
+			.resource object { width: 100%; height: 100% }
+		</style>
+		
+		<div class="video_guide grey_border" onclick="lightbox_open(); return false;"></div>		
+
+		<div id="lightbox">
+			<div id="lightbox_background" onclick="lightbox_close();"></div>
+
+			<div id="lightbox_container">
+				<div id="lightbox_content">
+					<div id="lightbox_navigate_left" onclick="lightbox_prev();"></div>
+					<div id="lightbox_navigate_right" onclick="lightbox_next();"></div>
+				</div>
+			</div>
+		</div>
+
+		<div id="gallery" class="display-none">
+			<div class="resource">
+				<object type="image/svg+xml" data-lazy="#{request.contextPath}/resources/archiveWeb/toolGuide/ppt1.svg" />
+			</div>
+			<div class="resource">
+				<object type="image/svg+xml" data-lazy="#{request.contextPath}/resources/archiveWeb/toolGuide/ppt2.svg" />
+			</div>
+			<div class="resource">
+				<object type="image/svg+xml" data-lazy="#{request.contextPath}/resources/archiveWeb/toolGuide/ppt3.svg" />
+			</div>
+			<div class="resource">
+				<object type="image/svg+xml" data-lazy="#{request.contextPath}/resources/archiveWeb/toolGuide/ppt4.svg" />
+			</div>
+			<div class="resource">
+				<object type="image/svg+xml" data-lazy="#{request.contextPath}/resources/archiveWeb/toolGuide/ppt5.svg" />
+			</div>
+			<div class="resource">
+				<object type="image/svg+xml" data-lazy="#{request.contextPath}/resources/archiveWeb/toolGuide/ppt6.svg" />
+			</div>
+			#{msg.searchHelp}
+		</div>			
+	</ui:composition>
+</html>

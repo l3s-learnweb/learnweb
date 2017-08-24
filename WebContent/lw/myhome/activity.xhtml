@@ -13,9 +13,14 @@
 
 			
 	<ui:define name="center_layout">
-		<p:panel rendered="#{userBean.showMessageJoinGroup or userBean.showMessageAddResource}" header="#{msg.presentation_guide}">
+		<p:panel rendered="#{(userBean.showMessageJoinGroup or userBean.showMessageAddResource) and userBean.user.activeCourse.id != 891}" header="#{msg.presentation_guide}">
 			<div style="width: 28rem;">
 				<ui:include src="/templates/user/guide.xhtml"/>
+			</div>	
+		</p:panel>
+		<p:panel rendered="#{(userBean.showMessageJoinGroup or userBean.showMessageAddResource) and userBean.user.activeCourse.id == 891}" header="#{msg.presentation_guide}">
+			<div style="width: 28rem;">
+				<ui:include src="/aw/guide.xhtml"/>
 			</div>	
 		</p:panel>
 		
