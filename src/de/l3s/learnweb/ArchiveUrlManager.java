@@ -267,7 +267,7 @@ public class ArchiveUrlManager
         if(rs.next())
         {
             int fileId = rs.getInt("file_id");
-            if(rs.getInt("httpstatuscode") != 200)
+            if(rs.getInt("httpstatuscode") != 200 || fileId == 0)
                 return null;
             else
                 return learnweb.getFileManager().getThumbnailUrl(fileId);

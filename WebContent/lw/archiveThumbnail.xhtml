@@ -46,7 +46,7 @@ xmlns:ui="http://java.sun.com/jsf/facelets"
 	                     zoomable="true"
 	                     movable="true"
 	                     axisOnTop="true" 
-	                     height="150px" showNavigation="true" widgetVar="tmlnbar" stackEvents="false">
+	                     height="125px" showNavigation="true" widgetVar="tmlnbar" stackEvents="false">
 	        		<p:ajax event="select" oncomplete="timelineEventSelect()"/> 
 	        	</p:timeline>
         	</h:form>
@@ -55,11 +55,12 @@ xmlns:ui="http://java.sun.com/jsf/facelets"
         <div class="rightpanel">
         	
 			<h:form prependId="false" styleClass="rightpanelContent">
+				<div class="messageDiv">Kindly refresh the page if you don't see the thumbnails.</div>
 				<div class="htmlDiv">
 					
 					<h:outputText value="#{msg['Archive.html_summary_title']}:" styleClass="title" escape="false"/>
 					
-					<div class="helptext">E.g. If frame similarity and text similarity is 0.85, then while comparing the versions in sequence it will remove those versions that have a similarity greater than 85% for both HTML DOM structure and text.</div>
+					<div class="helptext">E.g. If DOM similarity and text similarity is 0.85, then while comparing the versions in sequence it will remove those versions that have a similarity greater than 85% for both HTML DOM structure and text.</div>
 					<div id="slideA" class="slideA" style="margin-top: 10px;"></div>
 					<script>
 						$(function() {
@@ -76,7 +77,7 @@ xmlns:ui="http://java.sun.com/jsf/facelets"
 							$("#input_frame").val($("#slideA").slider("value"));
 						});
 					</script>
-					<h:outputLabel styleClass="textInputLabel" for="input_frame" value="Frame Sim. (increments of 0.05):" />
+					<h:outputLabel styleClass="textInputLabel" for="input_frame" value="DOM Sim. (increments of 0.05):" />
 					<p:inputText id="input_frame" value="#{archiveThumbnailBean.frameSim}" styleClass="textInput">
 						<f:convertNumber minFractionDigits="2" />
 					</p:inputText>

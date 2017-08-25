@@ -1,5 +1,6 @@
 var cf;
 var timeMaps = {};
+var maxItemHeight = 325;
 
 function loadTimeMaps()
 {
@@ -20,11 +21,26 @@ function timelineEventSelect()
 }
 
 function loadCF(){
-	cf = new ContentFlow('contentFlow', {reflectionColor: "#000000", circularFlow: false, startItem: 'visible', reflectionHeight: 0.3, maxItemHeight:385});
+	cf = new ContentFlow('contentFlow', {reflectionColor: "#000000", circularFlow: false, startItem: 'visible', reflectionHeight: 0.3, maxItemHeight:maxItemHeight});
 	cf._init();
 }
 
+function loadMaxItemSize(){
+	
+	if(screen.width < 1300)
+		maxItemHeight = 325;
+	else if(screen.width >= 1300 && screen.width < 1600)
+		maxItemHeight = 425;
+	else if(screen.width >=1600 && screen.width < 2100)
+		maxItemHeight = 600;
+	else if(screen.width >=2100)
+		maxItemHeight = 700;
+	
+	console.log(screen.width + ";" + maxItemHeight);
+}
+
 $(document).ready(function(){
+	loadMaxItemSize();
 	loadCF();
-	loadTimeMaps();	
+	loadTimeMaps();
 });

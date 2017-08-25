@@ -112,7 +112,7 @@ public class ArchiveThumbnailBean extends ApplicationBean
             Date timestamp = archiveUrlsHashMap.get(archiveUrl);
             //model = getModel(timestamp);
             if(fileUrl == null)
-                log.debug("Thumbnail does not exist");
+                log.info("Thumbnail does not exist for archive url: " + archiveUrl);
             else
                 listOfUrls.add(new ArchiveUrl(archiveUrl, fileUrl, timestamp));
         }
@@ -207,7 +207,7 @@ public class ArchiveThumbnailBean extends ApplicationBean
             String htmlText = null;
             String htmlTags = null;
 
-            PreparedStatement ps = getLearnweb().getConnection().prepareStatement("SELECT * FROM `lw_resource_archiveurl` JOIN `lw_resource_archive_shingles` USING(shingle_id) WHERE `resource_id`=? group by `shingle_id`");
+            PreparedStatement ps = getLearnweb().getConnection().prepareStatement("SELECT * FROM `lw_resource_archiveurl` JOIN `lw_resource_archive_shingles` USING(shingle_id) WHERE `resource_id`=? group by `shingle_id` ORDER BY timestamp");
             ps.setInt(1, resourceId);
             ResultSet rs = ps.executeQuery();
             if(rs.next())

@@ -40,7 +40,6 @@ body {
 	left:2%;
 	box-shadow: 10px 30px 40px rgba(0, 0, 0, .4);
 	display: block;
-	height: 20px;
 }
 
 .rightpanel {
@@ -60,6 +59,21 @@ body {
 	width: 90%;
 	height: auto;
 	padding: 10px 0px 0px 10px;
+}
+
+.messageDiv {
+  color:black;
+  font-size: 1rem;
+  position: relative;
+  width: 100%;
+  height: 20px;
+  text-align: center;
+  line-height:20px;
+  border: 2px solid #489a83;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border-radius: 5px;
+  margin-bottom:10px;
 }
 
 .slideA {
