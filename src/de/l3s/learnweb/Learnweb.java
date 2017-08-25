@@ -118,6 +118,9 @@ public class Learnweb
      */
     public static Learnweb createInstance(String serverUrl) throws ClassNotFoundException, SQLException
     {
+        if(serverUrl.startsWith("http://archiveweb") || serverUrl.startsWith("https://archiveweb"))
+            serverUrl = "http://learnweb.l3s.uni-hannover.de";
+
         try
         {
             if(learnweb == null)
@@ -193,6 +196,7 @@ public class Learnweb
     private Learnweb(String contextUrl) throws ClassNotFoundException, SQLException
     {
         learnwebIsLoading = true;
+        setServerUrl(contextUrl);
         this.serverUrl = contextUrl;
         //learnweb = this;
 
