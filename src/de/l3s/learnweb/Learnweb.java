@@ -196,7 +196,7 @@ public class Learnweb
     private Learnweb(String contextUrl) throws ClassNotFoundException, SQLException
     {
         learnwebIsLoading = true;
-        setServerUrl(contextUrl);
+        //setServerUrl(contextUrl);
         this.serverUrl = contextUrl;
         //learnweb = this;
 
