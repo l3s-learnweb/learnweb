@@ -77,11 +77,22 @@ public class Survey
         this.formQuestions = formQuestions;
     }
 
+    public int getOrganizationId()
+    {
+        return organizationId;
+    }
+
+    public void setOrganizationId(int organizationId)
+    {
+        this.organizationId = organizationId;
+    }
+
     Date end;
     int survey_id;
     int resource_id;
     String surveyTitle;
     String description;
+    int organizationId;
     ArrayList<SurveyMetaDataFields> formQuestions = new ArrayList<SurveyMetaDataFields>();
 
 }

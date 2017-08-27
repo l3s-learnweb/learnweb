@@ -46,6 +46,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     public static final int FILE_RESOURCE = 1;
     public static final int WEB_RESOURCE = 2;
     public static final int GLOSSARY_RESOURCE = 3;
+    public static final int SURVEY_RESOURCE = 4;
 
     private int id = -1; // default id, that indicates that this resource is not stored at fedora
     private int groupId;
@@ -59,7 +60,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private String location = ""; // The location where the resource (metadata) is stored; for example Learnweb, Flickr, Youtube ...
     private String language; // language code
     private String author = "";
-    private String type = ""; // possible types: text, image, video, pdf
+    private String type = ""; // possible types: text, image, video, pdf, glossary, survey
     private String format = "";
     private int duration;
     private int ownerUserId;
@@ -103,6 +104,11 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private HashMap<Integer, Boolean> isThumbRatedByUser = new HashMap<>(); // userId : hasRated
     private HashMap<Integer, Boolean> isRatedByUser = new HashMap<>(); // userId : hasRated
     private LinkedHashMap<Integer, File> files = new LinkedHashMap<>(); // resource_file_number : file
+
+    //Survey information
+    private Date openDate;
+    private Date closeDate;
+    private String[] validCourses;
 
     // caches
     private transient OwnerList<Tag, User> tags = null;
@@ -477,13 +483,15 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             return UtilBean.getLocaleMessage("web");
         else if(storageType == Resource.GLOSSARY_RESOURCE)
             return "Glossary";
+        else if(storageType == Resource.SURVEY_RESOURCE)
+            return "Survey";
         else
             throw new RuntimeException();
     }
 
     public void setStorageType(int type)
     {
-        if(type != FILE_RESOURCE && type != WEB_RESOURCE && type != GLOSSARY_RESOURCE)
+        if(type != FILE_RESOURCE && type != WEB_RESOURCE && type != GLOSSARY_RESOURCE && type != SURVEY_RESOURCE)
             throw new IllegalArgumentException();
         this.storageType = type;
     }
@@ -1956,6 +1964,36 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     public void setExtendedMetadata(ExtendedMetadata extendedMetadata)
     {
         this.extendedMetadata = extendedMetadata;
+    }
+
+    public Date getOpenDate()
+    {
+        return openDate;
+    }
+
+    public void setOpenDate(Date openDate)
+    {
+        this.openDate = openDate;
+    }
+
+    public Date getCloseDate()
+    {
+        return closeDate;
+    }
+
+    public void setCloseDate(Date closeDate)
+    {
+        this.closeDate = closeDate;
+    }
+
+    public String[] getValidCourses()
+    {
+        return validCourses;
+    }
+
+    public void setValidCourses(String[] validCourses)
+    {
+        this.validCourses = validCourses;
     }
 
 }

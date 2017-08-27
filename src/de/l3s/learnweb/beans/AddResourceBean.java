@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.faces.application.FacesMessage;
@@ -25,6 +26,7 @@ import org.primefaces.model.UploadedFile;
 
 import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
 import de.l3s.interwebj.IllegalResponseException;
+import de.l3s.learnweb.Course;
 import de.l3s.learnweb.File;
 import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.FileManager;
@@ -179,7 +181,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         {
             resource.setDeleted(false);
             resource.setSource("Glossary");
-            resource.setType("Image"); // TODO set to "Glossary" frontend needs to be updated too
+            resource.setType("Glossary"); // TODO set to "Glossary" frontend needs to be updated too
             resource.setUrl("");
 
             // add resource to a group if selected
@@ -220,7 +222,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource = new Resource();
             resource.setSource("Internet");
             resource.setLocation("Learnweb");
-            resource.setStorageType(Resource.FILE_RESOURCE);
+            resource.setStorageType(Resource.GLOSSARY_RESOURCE);
             resource.setDeleted(true);
             //resource.setUrl("");
         }
@@ -228,6 +230,79 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         {
             addFatalMessage(e);
         }
+    }
+
+    public void addSurvey() throws IOException
+    {
+
+        try
+        {
+            resource.setDeleted(false);
+            resource.setSource("Survey");
+            resource.setType("Survey");
+            resource.setUrl("");
+
+            // add resource to a group if selected
+            if(resourceTargetGroupId != 0)
+            {
+                resource.setGroupId(resourceTargetGroupId);
+                getUser().setActiveGroup(resourceTargetGroupId);
+            }
+
+            if(resourceTargetFolderId != 0)
+            {
+                resource.setFolderId(resourceTargetFolderId);
+            }
+
+            if(resource.getId() == -1)
+                resource = getUser().addResource(resource);
+            else
+            {
+
+                resource.save();
+            }
+
+            Resource iconResource = getLearnweb().getResourceManager().getResource(204095);
+
+            resource.setThumbnail0(iconResource.getThumbnail0());
+            resource.setThumbnail1(iconResource.getThumbnail1());
+            resource.setThumbnail2(iconResource.getThumbnail2());
+            resource.setThumbnail3(iconResource.getThumbnail3());
+            resource.setThumbnail4(iconResource.getThumbnail4());
+
+            resource.setUrl(getLearnweb().getServerUrl() + "/templates/resources/survey.jsf?resource_id=" + Integer.toString(resource.getId()));
+            resource.save();
+            getLearnweb().getCreateSurveyManager().createSurveyResource(resource.getId(), resource.getTitle(), resource.getDescription(), resource.getOpenDate(), resource.getCloseDate(), resource.getValidCourses());
+            log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
+            addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
+
+            UtilBean.getGroupDetailBean().updateResourcesFromSolr();
+
+            resource = new Resource();
+            resource.setSource("Internet");
+            resource.setLocation("Learnweb");
+            resource.setStorageType(Resource.SURVEY_RESOURCE);
+            resource.setDeleted(true);
+
+            //resource.setUrl("");
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
+    }
+
+    public String[] getCourseList()
+    {
+        List<Course> courseByOrganization = new ArrayList<Course>();
+        courseByOrganization = getLearnweb().getCourseManager().getCoursesByOrganisationId(getUser().getOrganisationId());
+        ArrayList<String> courseTitles = new ArrayList<String>();
+        for(Course c : courseByOrganization)
+        {
+            courseTitles.add(c.getTitle());
+        }
+
+        return courseTitles.toArray(new String[0]);
     }
 
     public Resource getResource()

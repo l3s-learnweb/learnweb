@@ -118,6 +118,52 @@
 										<p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="title_input"/>
 									</p:column>
 								</p:row>
+								<p:row rendered="#{addResourceBean.resource.storageType == 4}">
+									<p:column>
+										<h:outputText value="#{msg.title}:" />
+									</p:column>
+									<p:column rendered="#{addResourceBean.formStep == 1}">
+										<p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="survey_title"/>
+									</p:column>
+									</p:row>
+									<p:row rendered="#{addResourceBean.resource.storageType == 4}">
+									<p:column>
+										<h:outputText value="#{msg.description}:" />
+									</p:column>
+									<p:column rendered="#{addResourceBean.formStep == 1}">
+										<p:inputText value="#{addResourceBean.resource.description}" styleClass="add_field"  id="survey_desc"/>
+									</p:column>
+									
+									</p:row>
+									<p:row rendered="#{addResourceBean.resource.storageType == 4}">
+									<p:column>
+										<h:outputText value="Courses: "/>
+									</p:column>
+									<p:column>
+									<p:selectCheckboxMenu id="courses" value="#{addResourceBean.resource.validCourses}" label="--ALL---" multiple="true"
+                              		filter="true" filterMatchMode="startsWith" >
+                         
+           							 <f:selectItems value="#{addResourceBean.getCourseList()}" />
+        							</p:selectCheckboxMenu>
+									</p:column>
+									</p:row>
+									<p:row rendered="#{addResourceBean.resource.storageType == 4}">
+									<p:column>
+										<h:outputText value="Survey Open Date: " />
+									</p:column>
+									<p:column>	
+										<p:calendar id="open"  value="#{createSurveyBean.open}" showOn="button"></p:calendar>
+									</p:column>
+									</p:row>
+									<p:row rendered="#{addResourceBean.resource.storageType == 4}">
+									<p:column>	
+										<h:outputText  value="Survey Close Date: " />
+									</p:column>
+									<p:column>	
+										<p:calendar id="close" value="#{createSurveyBean.close}" showOn="button"></p:calendar>
+									</p:column>
+									</p:row>
+								
 								
 								<p:row rendered="#{addResourceBean.formStep > 1 and addResourceBean.resource.embeddedSize1 != null}">
 									<p:column>
@@ -137,6 +183,12 @@
 						
 						<p:commandButton id="create_glossary_button" value="Create Glossary" styleClass="greenbutton float-right" update=":growl :add_resource_panel :datagrid" 
 							action="#{addResourceBean.addGlossary}" ajax="true" oncomplete="update_header();resourceDND();" rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.storageType == 3}">
+							<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>
+							<f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"/>
+							<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{addResourceBean.resource}"/>
+						</p:commandButton>
+						<p:commandButton id="create_survey_button" value="Create Survey" styleClass="greenbutton float-right" update=":growl :add_resource_panel :datagrid" 
+							action="#{addResourceBean.addSurvey}" ajax="true" oncomplete="update_header();resourceDND();" rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.storageType == 4}">
 							<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>
 							<f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"/>
 							<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{addResourceBean.resource}"/>
@@ -188,7 +240,7 @@
 						
 					<h:outputText value="#{msg.group_resources_access_denied}" rendered="${not resourceDetailBean.clickedResource.canViewResource(userBean.user) and not (resourceDetailBean.clickedResource.deleted or resourceDetailBean.clickedResource.groupId eq 0)}"/>
 					<ui:fragment rendered="#{resourceDetailBean.clickedResource.canViewResource(userBean.user)}">			
-						<ui:fragment rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'video' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'image'}">
+						<ui:fragment rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'video' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'image' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'glossary' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'survey'}">
 							<div class="align-center" style="margin-top: 5px;">
 								<div id="lightbox">
 									<div id="lightbox_background" onclick="lightbox_close();"></div>
@@ -209,7 +261,7 @@
 										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'pdf'}">
 											   	<iframe src="#{resourceDetailBean.clickedResource.url}" style="width:100%; height:100%; "/>
 										    </ui:fragment>
-										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'Image'}">
+										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'Image' or resourceDetailBean.clickedResource.type eq 'Glossary' or resourceDetailBean.clickedResource.type eq 'Survey'}">
 										    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
 										    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
 										    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}"
@@ -281,13 +333,13 @@
 										<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
 									</div>
 								</ui:fragment>								
-								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'Video' and resourceDetailBean.clickedResource.type != 'Image'}">
+								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'Video' and resourceDetailBean.clickedResource.type != 'Image' and resourceDetailBean.clickedResource.type != 'Glossary' and resourceDetailBean.clickedResource.type != 'Survey' }">
 									<div class="preview_box">
 										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}'
 											escape="false"/>
 									</div>
 								</ui:fragment>
-								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'Image') and not empty resourceDetailBean.clickedResource.thumbnail3 or resourceDetailBean.clickedResource.type eq 'pdf'}">
+								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'Image' or resourceDetailBean.clickedResource.type eq 'Glossary' or resourceDetailBean.clickedResource.type eq 'Survey') and not empty resourceDetailBean.clickedResource.thumbnail3 or resourceDetailBean.clickedResource.type eq 'pdf'}">
 										<img class="preview_box" src="#{resourceDetailBean.clickedResource.thumbnail3.url}"
 											height="#{resourceDetailBean.clickedResource.thumbnail3.height}" onmouseup="lightbox_open();"
 											width="#{resourceDetailBean.clickedResource.thumbnail3.width}"
@@ -301,7 +353,7 @@
 										</a>
 									</div>
 								</ui:fragment>
-								<ui:fragment rendered="${resourceDetailBean.clickedResource.type eq 'Image' and empty resourceDetailBean.clickedResource.thumbnail3}">
+								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'Image') and empty resourceDetailBean.clickedResource.thumbnail3}">
 									<div class="preview_box">
 										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>
 									</div>
@@ -319,6 +371,14 @@
 								<h:outputLink value="showGlossary.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.source eq 'Glossary'}">
 											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
 											#{msg["Glossary.open"]}
+								</h:outputLink>
+								<h:outputLink value="../templates/resources/survey.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.source eq 'Survey'}">
+											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
+											Open Survey
+								</h:outputLink>
+								<h:outputLink value="../templates/resources/editSurvey.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.source eq 'Survey'}">
+											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
+											Edit Survey
 								</h:outputLink>
 							</div>
 						</ui:fragment>
@@ -342,7 +402,7 @@
 								</tr>
 							</ui:fragment>
 							
-							<ui:fragment rendered="${empty resourceDetailBean.clickedResource.fileName and resourceDetailBean.clickedResource.type.toLowerCase() != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type.toLowerCase() != 'video' and resourceDetailBean.clickedResource.type.toLowerCase() != 'image' }">
+							<ui:fragment rendered="${empty resourceDetailBean.clickedResource.fileName and resourceDetailBean.clickedResource.type.toLowerCase() != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'Glossary' and resourceDetailBean.clickedResource.type.toLowerCase() != 'video' and resourceDetailBean.clickedResource.type.toLowerCase() != 'image' }">
 								<tr>
 									<td>
 										<span class="resource_field">

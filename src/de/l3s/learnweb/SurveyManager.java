@@ -89,6 +89,8 @@ public class SurveyManager
             {
                 survey.surveyTitle = details.getString("title");
                 survey.description = details.getString("description");
+                survey.organizationId = details.getInt("organization_id");
+
             }
         }
         catch(SQLException e2)

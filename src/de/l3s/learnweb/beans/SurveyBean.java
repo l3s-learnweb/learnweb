@@ -28,6 +28,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
     private int resource_id; //change this when there is a way to generate Survey type resource
     private String surveyTitle;
     private String description;
+    private int organizationId;
     private Survey sv = new Survey();
 
     public Survey getSv()
@@ -95,6 +96,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
         questions = sv.getFormQuestions();
         surveyTitle = sv.getSurveyTitle();
         description = sv.getDescription();
+        organizationId = sv.getOrganizationId();
 
     }
 
@@ -170,5 +172,15 @@ public class SurveyBean extends ApplicationBean implements Serializable
     public void setDescription(String description)
     {
         this.description = description;
+    }
+
+    public int getOrganizationId()
+    {
+        return organizationId;
+    }
+
+    public void setOrganizationId(int organizationId)
+    {
+        this.organizationId = organizationId;
     }
 }

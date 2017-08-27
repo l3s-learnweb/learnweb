@@ -23,6 +23,8 @@
 	<h:form id="form" prependId="false">
 	<p:growl id="surveygrowl" autoUpdate="true" redisplay="false"
 						globalOnly="true" showDetail="true"></p:growl>
+						
+	<ui:fragment rendered="#{userBean.user.organisation.id eq surveyBean.organizationId or surveyBean.organizationId eq 0}">
 	<div class="headings">
 	<br/>
 	<h:outputText value="#{surveyBean.description}" style="text-align:center; font-weight:bold" ></h:outputText><br/>
@@ -108,6 +110,7 @@
 		
 
 					</p:commandButton>
+	</ui:fragment>
 	</h:form>
 	</h:panelGroup>
 	</ui:define>

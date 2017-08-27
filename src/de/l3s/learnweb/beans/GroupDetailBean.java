@@ -1428,6 +1428,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             this.getAddResourceBean().clearForm();
             this.getAddResourceBean().getResource().setStorageType(3);
             break;
+        case "survey":
+            this.setRightPanelAction(RPAction.newResource);
+            this.getAddResourceBean().clearForm();
+            this.getAddResourceBean().getResource().setStorageType(4);
+            break;
         default:
             log.warn("Unsupported item type: " + type);
             break;
