@@ -232,58 +232,58 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void addSurvey() throws IOException
+    /*public void addSurvey() throws IOException
     {
-
+    
         try
         {
             resource.setDeleted(false);
             resource.setSource("Survey");
             resource.setType("Survey");
             resource.setUrl("");
-
+    
             // add resource to a group if selected
             if(resourceTargetGroupId != 0)
             {
                 resource.setGroupId(resourceTargetGroupId);
                 getUser().setActiveGroup(resourceTargetGroupId);
             }
-
+    
             if(resourceTargetFolderId != 0)
             {
                 resource.setFolderId(resourceTargetFolderId);
             }
-
+    
             if(resource.getId() == -1)
                 resource = getUser().addResource(resource);
             else
             {
-
+    
                 resource.save();
             }
-
+    
             Resource iconResource = getLearnweb().getResourceManager().getResource(204095);
-
+    
             resource.setThumbnail0(iconResource.getThumbnail0());
             resource.setThumbnail1(iconResource.getThumbnail1());
             resource.setThumbnail2(iconResource.getThumbnail2());
             resource.setThumbnail3(iconResource.getThumbnail3());
             resource.setThumbnail4(iconResource.getThumbnail4());
-
+    
             resource.setUrl(getLearnweb().getServerUrl() + "/templates/resources/survey.jsf?resource_id=" + Integer.toString(resource.getId()));
             resource.save();
             getLearnweb().getCreateSurveyManager().createSurveyResource(resource.getId(), resource.getTitle(), resource.getDescription(), resource.getOpenDate(), resource.getCloseDate(), resource.getValidCourses());
             log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
-
+    
             UtilBean.getGroupDetailBean().updateResourcesFromSolr();
-
+    
             resource = new Resource();
             resource.setSource("Internet");
             resource.setLocation("Learnweb");
             resource.setStorageType(Resource.SURVEY_RESOURCE);
             resource.setDeleted(true);
-
+    
             //resource.setUrl("");
         }
         catch(SQLException e)
@@ -291,7 +291,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             addFatalMessage(e);
         }
     }
-
+    */
     public String[] getCourseList()
     {
         List<Course> courseByOrganization = new ArrayList<Course>();

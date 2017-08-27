@@ -29,7 +29,17 @@ public class createSurveyManager
 
         try
         {
+            Resource iconResource = learnweb.getResourceManager().getResource(204095);
+
             Resource surveyRes = new Resource();
+            surveyRes.setThumbnail0(iconResource.getThumbnail0());
+            surveyRes.setThumbnail1(iconResource.getThumbnail1());
+            surveyRes.setThumbnail2(iconResource.getThumbnail2());
+            surveyRes.setThumbnail3(iconResource.getThumbnail3());
+            surveyRes.setThumbnail4(iconResource.getThumbnail4());
+            surveyRes.setDeleted(false);
+            surveyRes.setSource("Survey");
+            surveyRes.setType("Survey");
             surveyRes.setTitle(title);
             surveyRes.setDescription(desc);
             surveyRes.setUrl(learnweb.getServerUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(surveyRes.getId()));
