@@ -24,7 +24,7 @@ public class createSurveyManager
         this.learnweb = learnweb;
     }
 
-    public void createSurveyResource(String title, String desc, java.util.Date open, java.util.Date close)
+    public void createSurveyResource(int userId, String title, String desc, java.util.Date open, java.util.Date close)
     {
 
         try
@@ -40,6 +40,8 @@ public class createSurveyManager
             surveyRes.setDeleted(false);
             surveyRes.setSource("Survey");
             surveyRes.setType("Survey");
+            surveyRes.setStorageType(Resource.SURVEY_RESOURCE);
+            surveyRes.setUser(learnweb.getUserManager().getUser(userId));
             surveyRes.setTitle(title);
             surveyRes.setDescription(desc);
             surveyRes.setUrl(learnweb.getServerUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(surveyRes.getId()));

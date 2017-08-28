@@ -6,6 +6,7 @@ import java.util.Date;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import de.l3s.learnweb.User;
 import de.l3s.learnweb.createSurveyManager;
 
 @ViewScoped
@@ -70,8 +71,9 @@ public class createSurveyBean extends ApplicationBean implements Serializable
 
     public void submit()
     {
+        User u = getUser();
         createSurveyManager sm = new createSurveyManager(getLearnweb());
-        sm.createSurveyResource(title, description, open, close);
+        sm.createSurveyResource(u.getId(), title, description, open, close);
     }
 
     private String title;
