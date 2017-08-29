@@ -9,48 +9,33 @@
 	<ui:param name="helpText" value="#{msg.groupResourceHelp}" />
 	<ui:param name="pageTitle" value="#{msg.group} - #{msg.resources}" />
 
+	<ui:param name="loginRequired" value="true" />
+	<ui:param name="helpText" value="#{msg.groupResourceHelp}"/>
+	<ui:param name="pageTitle" value="#{msg.group} - #{msg.resources}" />
+	<ui:param name="disableGrowl" value="false" />
+
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="group_id" value="#{groupDetailBean.groupId}" />
-			<f:viewParam name="folder_id"
-				value="#{groupDetailBean.selectedFolderId}" />
-			<f:viewParam name="resource_id"
-				value="#{resourceDetailBean.resourceId}" />
-			<f:event type="javax.faces.event.PreRenderViewEvent"
-				listener="#{groupDetailBean.preRenderView}" />
-			<f:event type="javax.faces.event.PreRenderViewEvent"
-				listener="#{resourceDetailBean.preRenderView}" />
+			<f:viewParam name="folder_id" value="#{groupDetailBean.selectedFolderId}" />
+			<f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}" />
+			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{groupDetailBean.preRenderView}" />
+			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{resourceDetailBean.preRenderView}" />
 		</f:metadata>
 	</ui:define>
 
 	<ui:define name="center_layout">
 
 		<h:form>
-			<p:remoteCommand name="selectGroupItemCommand"
-				actionListener="#{groupDetailBean.actionSelectGroupItem}"
-				oncomplete="update_header();resourceDND();" />
-			<p:remoteCommand name="editGroupItemCommand"
-				actionListener="#{groupDetailBean.actionEditGroupItem}"
-				oncomplete="update_header()" />
-			<p:remoteCommand name="createGroupItemCommand"
-				actionListener="#{groupDetailBean.actionCreateGroupItem}"
-				oncomplete="update_header()" />
-			<p:remoteCommand name="openFolderCommand"
-				actionListener="#{groupDetailBean.actionOpenFolder}"
-				update=":group_menu_tree :breadcrumbs :datagrid :paginator"
-				oncomplete="update_header();resourceDND();scroller();" />
-			<p:remoteCommand name="updateGroupItemsCommand"
-				actionListener="#{groupDetailBean.actionUpdateGroupItems}"
-				update=":group_menu_tree :datagrid :paginator "
-				oncomplete="resourceDND()" />
-			<p:remoteCommand name="updateAddResourcePaneCommand"
-				actionListener="#{groupDetailBean.updateTargetForAddResourceBean}"
-				oncomplete="update_header()" />
-			<p:remoteCommand name="updateThumbnailCommand"
-				actionListener="#{resourceDetailBean.setResourceThumbnail}"
-				oncomplete="update_header();resourceDND();" />
+			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{groupDetailBean.actionSelectGroupItem}" update=":add_resource_panel :growl" oncomplete="update_header();resourceDND();"/>
+			<p:remoteCommand name="editGroupItemCommand" actionListener="#{groupDetailBean.actionEditGroupItem}" update=":add_resource_panel :growl" oncomplete="update_header()"/>
+			<p:remoteCommand name="createGroupItemCommand" actionListener="#{groupDetailBean.actionCreateGroupItem}" update=":add_resource_panel :growl :datagrid" oncomplete="update_header()"/>
+			<p:remoteCommand name="openFolderCommand" actionListener="#{groupDetailBean.actionOpenFolder}" update=":group_menu_tree :breadcrumbs :datagrid :paginator :add_resource_panel :growl" oncomplete="update_header();resourceDND();scroller();"/>
+			<p:remoteCommand name="updateGroupItemsCommand" actionListener="#{groupDetailBean.actionUpdateGroupItems}" update=":group_menu_tree :datagrid :paginator :add_resource_panel :growl" oncomplete="resourceDND()"/>
+			<p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{groupDetailBean.updateTargetForAddResourceBean}" update=":add_resource_panel :growl" oncomplete="update_header()"/>
+			<p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}" update=":add_resource_panel :datagrid :growl" oncomplete="update_header();resourceDND();"/>
 		</h:form>
-
+	
 
 
 		<div class="center-header" id="group_header">
@@ -196,10 +181,9 @@
 						id="group_resource_searchbutton" />
 				</h:form>
 				<br />
-				<br />
 				
 				
-				<h:form id="accordion_form" style="width:1000px;">
+				<h:form id="accordion_form" style="width:530px;">
 					<p:accordionPanel>
 						<p:tab
 							title="Filters - refine your search or narrow down your search results!">
@@ -280,25 +264,24 @@
 						</p:tab>
 					</p:accordionPanel>
 				</h:form>
-				<br/>
 				<hr/>
-				<h:outputText value="Click on the resource to view details or add more useful information to help community to discover!"/>
+				<b><h:outputText value="Click on the resource to view details or add more useful information to help community to discover!"/></b>
 				<h:panelGroup id="searchResultSection">
 						<ui:repeat value="#{groupDetailBean.paginator.currentPage}" 
 							var="res">
 							<h:panelGroup id="rdetail" styleClass="resource2-item group-resources2-item"
 								pt:data-itemType="resource" pt:data-itemId="#{res.resource.id}" layout="block">
-										<div id="rlist">
-											<div id="rnav">
-												<img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/web.png" width="98%" /> 
-												<img class="simg" src="#{request.contextPath}/resources/resources-chloe/images/bbc.png" width="98%" />
+										<div id="rlist" style="width: 530px; height: auto;">
+											<div id="rnav" style="width: 10%;">
+												<img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/web.png" width="80%" /> 
+												<img class="simg" src="#{request.contextPath}/resources/resources-chloe/images/bbc.png" width="80%" />
 											</div>
 
-											<div id="rmain">
+											<div id="rmain" style="width: 90%;">
 												<img class="example1" src="#{request.contextPath}/resources/resources-chloe/images/barneybearbbc.png"
-													width="23%" /> 
+													width="30%" /> 
 												<label class="rlabel"><b>Title:
-												</b></label>#{res.title} <br /> 
+												</b></label> <span class="text-ellipses">#{res.title}</span><br /> 
 												<label class="rlabel"><b>Category:
 												</b></label>
 												<h:outputText value = "not available. please help to add it" rendered="#{empty res.eMetadata.categories[0]}"/>
@@ -349,7 +332,7 @@
 												</ui:repeat>
 											</div>
 										</div>
-										<hr/>
+										<hr style="margin-top:5px; margin-bottom:5px;" />
 							</h:panelGroup>
 						</ui:repeat>
 					</h:panelGroup>
@@ -499,13 +482,14 @@
 			</h:form>
 		</p:dialog>
 		
+		
 		<p:dialog id="popup_layout" header="#{resourceDetailBean.clickedResource.id eq -1? msg.click_to_view_details : resourceDetailBean.clickedResource.title}" widgetVar="rdetail_dialog"
 			appendTo="@(body)" width="600" height="450" modal="true" closable="true">
-			<ui:include src="/templates/resources/popup_pane.xhtml">
+			<ui:include src="/templates/resources/blank.xhtml">
 				<ui:param name="bean" value="#{groupDetailBean}" />
 			</ui:include>
 		</p:dialog>
-
+		
 		<ui:fragment
 			rendered="${not groupDetailBean.group.canViewResources(userBean.user)}">
 			<h3 class="error">
@@ -736,6 +720,11 @@
 		
 	</ui:define>
 	
+	<ui:define name="right_layout">
+		<ui:decorate  template="/templates/resources/right_pane_yell.xhtml">
+			<ui:param name="bean" value="#{groupDetailBean}" />
+		</ui:decorate>
+	</ui:define>
 	
 	
 </ui:composition>
