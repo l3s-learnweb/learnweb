@@ -469,6 +469,7 @@ $(document).ready(function () {
         selected.selectLastItem();
     });
     
+    //for resource_yell.html
     $(document).on('click', '.group-resources2-item', function (e) {
         if (e.shiftKey && selected.getSize() > 0) {
             var previous = selected.getItem(selected.getSize() - 1);
@@ -494,7 +495,6 @@ $(document).ready(function () {
         }
 
         selected.selectLastItem();
-        PF('rdetail_dialog').show();
     });
 
     $(document).on('click', '.resource-controls a', function (e) {
