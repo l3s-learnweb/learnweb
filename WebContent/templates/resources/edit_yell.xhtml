@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:p="http://primefaces.org/ui">
+
+<ui:composition> 
+	<ui:fragment rendered="#{userBean.user.organisation.id eq 480}">
+		<!-- Input fields for the yell course -->
+		<tr>
+			<td><h:outputText value="#{msg.title}" />:</td>
+			<td><p:inputText required="true" class="border-box-100" value="#{res.title}" /></td>
+		</tr>
+		<tr>
+			<td><h:outputText value="Audience_yellType_Change" />:</td>
+			<td><p:inputText required="true" class="border-box-100" value="#{res.title}" /></td>
+			<!-- #{res.title} refers to Resource.format, change it to res.audience ....  -->
+		</tr>
+		<tr>
+			<td><h:outputText value="#{msg.description}" />:</td>
+			<td><p:inputTextarea value="#{res.description}" rows="4" style="overflow-y: scroll; width:100%; box-sizing: border-box;" class="border-box-100" /></td>
+		</tr>		
+	</ui:fragment>
+	
+	
+	<c:forEach var="field" items="#{userBean.user.organisation.metadataFields}">
+		<tr>
+			<c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">	
+				<td colspan="2">
+					<c:if test="#{field.type eq 'FULLWIDTH_HEADER'}">
+						<h3><h:outputText value="${utilBean.getLocaleMessage(field.label, null)}" /></h3>
+					</c:if> 
+					<c:if test="#{field.type eq 'FULLWIDTH_DESCRIPTION'}">
+						<h4><h:outputText value="${utilBean.getLocaleMessage(field.label, null)}" /></h4>
+					</c:if> 
+					
+				</td>
+			</c:if>	
+			<c:if test="#{not fn:startsWith(field.type,'FULLWIDTH_')}">	
+				<td>
+					<h:outputText value="${utilBean.getLocaleMessage(field.name, null)}" />:
+				</td>
+				<td>
+					<c:if test="#{field.moderatorOnly and not userBean.moderator}">
+						<h:outputText value="#{res.metadataWrapper[field.name]}" />
+					</c:if> 
+					
+					<c:if test="#{not field.moderatorOnly or userBean.moderator}">
+						<c:if test="#{field.type eq 'INPUT_TEXT'}">					
+							<p:inputText id="input_#{field.name}" required="#{field.required}" class="border-box-100" value="#{res.metadataWrapper[field.name]}" title="#{field.info}" />
+							<p:tooltip for="input_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}" />
+						</c:if>
+						 
+						<c:if test="#{field.type eq 'INPUT_TEXTAREA'}">					
+							<p:inputTextarea id="input_area_#{field.name}" required="#{field.required}" value="#{res.metadataWrapper[field.name]}" title="#{field.info}" 
+								rows="4" style="overflow-y: scroll; width:100%; box-sizing: border-box;" class="border-box-100" />
+							<p:tooltip for="input_area_#{field.name}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}" /> 
+						</c:if>
+						
+						<c:if test="#{field.type eq 'AUTOCOMPLETE'}">	 				
+							<p:autoComplete id="input_complete_#{field.name}" required="#{field.required}" value="#{res.metadataWrapper[field.name]}" 
+								completeMethod="#{field.completeText}" class="border-box-100" /> 
+							<p:tooltip for="input_complete_#{field.name}" showEvent="hover" position="left" rendered="#{true}" value="blaaaaaaa #{field.info}" /> 
+						</c:if>
+	
+						<c:if test="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
+							<p:selectOneMenu id="input_selectone_#{field.name}" value="#{res.metadataWrapper[field.name]}" editable="#{field.type eq 'ONE_MENU_EDITABLE'}" required="#{field.required}"
+								class="border-box-100" title="#{field.info}">
+								<f:selectItems value="#{field.options}" var="option" itemLabel="#{option}" itemValue="#{option}" />
+							</p:selectOneMenu>
+							<p:tooltip for="input_selectone_#{field.name}" position="left" rendered="#{not empty field.info}" /> 
+						</c:if>	
+	
+						<c:if test="#{field.type eq 'MULTIPLE_MENU'}">
+							<p:selectCheckboxMenu id="input_selectmultiple_#{field.name}" value="#{res.metadataMultiValue[field.name]}" label="" multiple="true" title="#{field.info}"
+		                              required="#{field.required}" filter="#{field.optionsList.size() gt 8}" filterMatchMode="startsWith" panelStyle="width:250px" >
+					            <f:selectItems value="#{field.optionsList}" var="option" itemLabel="#{option.label}" itemValue="#{option.value}" />
+					        </p:selectCheckboxMenu>			
+							<p:tooltip for="input_selectmultiple_#{field.name}" position="left" rendered="#{not empty field.info}" /> 
+						</c:if>												
+	
+					</c:if>
+				</td>
+			</c:if>
+		</tr>
+	</c:forEach>
+
+</ui:composition>
+</html>
