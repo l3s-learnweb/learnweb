@@ -21,12 +21,12 @@
 
 #rlist {
   list-style-type: none;
-  width: 980px;
+  width: 530px;
   padding-left: 0px;
   margin-left: 5px;
   margin-top: 5px;
   margin-bottom: 5px;
-  height: 200px;
+  height: 100px;
   overlow: auto;
 }
 
@@ -39,7 +39,7 @@
 
 #rlist img {
 	height: auto;
-	margin: 0 15px 0 0;
+	margin: 0 5px 0 0;
   	list-style: none;
   	float: left;
 }
@@ -88,7 +88,7 @@ span#explanation {
 }
 
 .rlabel {
-    line-height: 25px;
+    line-height: 5px;
 }
 
 .rlabels {
@@ -106,14 +106,13 @@ span#explanation {
 
 
 div#rnav {
-	width: 5%;
+	width: 10%;
 	float: left;
 }
 
 div#rmain {
-	width: 94%;
+	width: 90%;
 	float: right;
-	font-size: 14px;
 	
 }
 
@@ -184,7 +183,6 @@ div#rmain {
     position: relative;
     vertical-align: top;
     width: calc(100% - 16px); /* single column */
-    margin-bottom: 16px;
     margin-right: 16px;
     
 }
@@ -249,7 +247,17 @@ div#rmain {
     display: none;
 }
 
+#resource_description {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+  -webkit-line-clamp: 5;
+  -webkit-box-orient: vertical; 
+}
+
+
 .text-ellipses {
+	overflow: hidden;
 	text-overflow: ellipsis;
 }
 
@@ -261,6 +269,11 @@ div#rmain {
 
 .not-shown {
 	display: none;
+}
+
+hr {
+	margin-top: 5px;
+	margin-bottom: 5px;
 }
 
 
