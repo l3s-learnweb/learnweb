@@ -248,7 +248,6 @@
 
 									<div id="lightbox_container">
 										<div id="lightbox_title">
-											<h:outputText value="testing. this is right_pane_yell"></h:outputText>
 											<h:outputText
 												value="#{resourceDetailBean.clickedResource.title}"
 												escape="false" />
@@ -543,15 +542,16 @@
 							<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata}">
 								<div id="eMetaDetail">
 								<hr/>
+								<div id="detailList">
 								<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.categories}">
-									<label class="rlabel"><b>Category: </b></label>#{resourceDetailBean.clickedResource.extendedMetadata.categories[0]} <br /> 
+									<label class="rdlabel"><b>Category: </b></label>#{resourceDetailBean.clickedResource.extendedMetadata.categories[0]} <br /> 
 								</ui:fragment>
 								<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.lCount}">
-									<label class="rlabel"><b>Level (stats): </b></label>#{resourceDetailBean.clickedResource.extendedMetadata.lCount} <br /> 
+									<label class="rdlabel"><b>Level (stats): </b></label>#{resourceDetailBean.clickedResource.extendedMetadata.lCount} <br /> 
 								</ui:fragment>
 								<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.targetCount}">
 									
-									<label class="rlabel"><b>Target learner
+									<label class="rdlabel"><b>Target learner
 											(stats): </b></label>
 									<ui:repeat
 										value="#{resourceDetailBean.clickedResource.extendedMetadata.targetCount.entrySet().toArray()}"
@@ -591,7 +591,7 @@
 									</ui:fragment>
 									
 									<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.purposeCount}">
-									<label class="rlabel"><b>Purpose of use
+									<label class="rdlabel"><b>Purpose of use
 											(stats): </b></label>
 									<ui:repeat
 										value="#{resourceDetailBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}"
@@ -629,6 +629,16 @@
 										</ui:fragment>
 									</ui:repeat>
 									</ui:fragment>
+									
+									</div> <!-- detailList -->
+									<br/>
+									
+									<div id="detailAdd">
+									<!-- add the button to show div detailBox -->
+									<p:commandButton id="detailAdd_button" styleClass="greenbutton centered"
+									value="Add your own" onclick="PF('adlg').show();" />
+									</div>
+									
 									<hr/>
 								</div>
 							</ui:fragment>
@@ -1277,10 +1287,23 @@
 					</table>
 				</h:form>
 
+				<p:dialog id="addDetailDlg" header="#{resourceDetailBean.clickedResource.title}" widgetVar="adlg" 
+				minWidth="440" appendTo="@(body)" modal="true">
+      				<h:form>
+            			
+            		<p:commandButton value="Save" onclick="PF('adlg').hide()" />  
+            		<p:commandButton value="Cancel" onclick="PF('adlg').hide()"/>
+           			</h:form>
+        		</p:dialog>
+        
 				<script type="text/javascript">
 					$("#right_pane_wrapper img").bind('load', function() {
 						scroller();
 					});
+					
+					
+					
+					
 				</script>
 			</h:panelGroup>
 		</div>
