@@ -91,6 +91,10 @@ span#explanation {
     line-height: 5px;
 }
 
+.rdlabel {
+	line-height: 20px;
+}
+
 .rlabels {
     line-height: 20px;
     margin-left: 20px;
@@ -274,6 +278,11 @@ div#rmain {
 hr {
 	margin-top: 5px;
 	margin-bottom: 5px;
+}
+
+.centered {
+text-align: center;
+margin-left: 35%;
 }
 
 
