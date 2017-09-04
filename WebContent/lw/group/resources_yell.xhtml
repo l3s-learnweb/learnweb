@@ -483,12 +483,16 @@
 		</p:dialog>
 		
 		
+		
+		
 		<p:dialog id="popup_layout" header="#{resourceDetailBean.clickedResource.id eq -1? msg.click_to_view_details : resourceDetailBean.clickedResource.title}" widgetVar="rdetail_dialog"
 			appendTo="@(body)" width="600" height="450" modal="true" closable="true">
 			<ui:include src="/templates/resources/blank.xhtml">
 				<ui:param name="bean" value="#{groupDetailBean}" />
 			</ui:include>
 		</p:dialog>
+		
+		
 		
 		<ui:fragment
 			rendered="${not groupDetailBean.group.canViewResources(userBean.user)}">
