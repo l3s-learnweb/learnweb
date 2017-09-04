@@ -1137,6 +1137,21 @@
 					</p:commandButton>
 				</h:form>
 
+			<p:dialog id="addDetailDlg" header="Add Your Own Categorization" widgetVar="adlg" 
+				minWidth="440" maxWidth="500" appendTo="@(body)" modal="true" closable="false">
+					<h:outputText value="Adding your own categorization can not only help you to refind resources but also help your community to discover them better!" />
+					<br/>
+					<h:outputText value="Select the values most proper for each categorization types and click on 'Save' button." />
+					<br/><br/>
+      				<b><h:outputText value="Resource Title: #{resourceDetailBean.clickedResource.title}" /></b>
+            	    <br/><br/>
+      				<h:form>
+      				
+            		<p:commandButton value="Save" onclick="adlg.hide(); return false;" />  
+            		<p:commandButton value="Cancel" onclick="adlg.hide(); return false;"/>
+           			</h:form>
+           			
+        		</p:dialog>
 				<h:panelGroup rendered="#{bean.rightPanelAction == 'newFolder'}"
 					styleClass="create-block new-folder" layout="block">
 
@@ -1287,14 +1302,7 @@
 					</table>
 				</h:form>
 
-				<p:dialog id="addDetailDlg" header="#{resourceDetailBean.clickedResource.title}" widgetVar="adlg" 
-				minWidth="440" appendTo="@(body)" modal="true">
-      				<h:form>
-            			
-            		<p:commandButton value="Save" onclick="PF('adlg').hide()" />  
-            		<p:commandButton value="Cancel" onclick="PF('adlg').hide()"/>
-           			</h:form>
-        		</p:dialog>
+				
         
 				<script type="text/javascript">
 					$("#right_pane_wrapper img").bind('load', function() {
