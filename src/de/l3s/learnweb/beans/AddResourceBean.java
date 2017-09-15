@@ -104,13 +104,22 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
             UploadedFile uploadedFile = event.getFile();
 
-            ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
+            FileInfo info = null;
 
-            log.debug("Get the mime type and extract text if possible");
-            FileInfo info = rpm.getFileInfo(uploadedFile.getInputstream(), uploadedFile.getFileName());
+            try
+            {
+                ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
 
-            log.debug("Create thumbnails");
-            rpm.processFile(resource, uploadedFile.getInputstream(), info);
+                log.debug("Get the mime type and extract text if possible");
+                info = rpm.getFileInfo(uploadedFile.getInputstream(), uploadedFile.getFileName());
+
+                log.debug("Create thumbnails");
+                rpm.processFile(resource, uploadedFile.getInputstream(), info);
+            }
+            catch(Exception e)
+            {
+                log.error("Thumbnail creation failed for " + info);
+            }
 
             resource.prepareEmbeddedCodes();
 
