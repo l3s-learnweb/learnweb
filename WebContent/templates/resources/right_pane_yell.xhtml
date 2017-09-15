@@ -1141,11 +1141,54 @@
 				minWidth="440" maxWidth="500" appendTo="@(body)" modal="true" closable="false">
 					<h:outputText value="Adding your own categorization can not only help you to refind resources but also help your community to discover them better!" />
 					<br/>
-					<h:outputText value="Select the values most proper for each categorization types and click on 'Save' button." />
+					<h:outputText value="Select the values most proper for each categorization type and click on 'Save' button." />
 					<br/><br/>
       				<b><h:outputText value="Resource Title: #{resourceDetailBean.clickedResource.title}" /></b>
             	    <br/><br/>
       				<h:form>
+      				<p:panelGrid columns="1" cellpadding="20" layout="grid">
+
+						<h:panelGroup>
+							<h:outputLabel for="catlist" value="Category:" />
+							<p:selectCheckboxMenu id="catlist"
+											value="#{searchFilterBean.selectedLevels}" label="Levels"
+											multiple="true" filter="true" filterMatchMode="startsWith"
+											panelStyle="width:250px">
+											<f:selectItems value="#{searchFilterBean.levels}" />
+							</p:selectCheckboxMenu>
+						</h:panelGroup>
+
+						<h:panelGroup>
+							<h:outputLabel for="levlist" value="Language Level:" />
+								<p:selectCheckboxMenu id="levlist"
+											value="#{searchFilterBean.selectedLevels}" label="Levels"
+											multiple="true" filter="true" filterMatchMode="startsWith"
+											panelStyle="width:250px">
+											<f:selectItems value="#{searchFilterBean.levels}" />
+								</p:selectCheckboxMenu>
+						</h:panelGroup>
+
+						<h:panelGroup>
+										<h:outputLabel for="aglist" value="Target Learner:" />
+										<p:selectCheckboxMenu id="aglist"
+											value="#{searchFilterBean.selectedTargets}"
+											label="Target Learners" multiple="true" filter="true"
+											filterMatchMode="startsWith" panelStyle="width:250px">
+											<f:selectItems value="#{searchFilterBean.targets}" />
+										</p:selectCheckboxMenu>
+						</h:panelGroup>
+
+						<h:panelGroup>
+										<h:outputLabel for="aclist" value="Purpose of Use:" />
+										<p:selectCheckboxMenu id="aclist"
+											value="#{searchFilterBean.selectedPurposes}"
+											label="Purposes of Use" multiple="true" filter="true"
+											filterMatchMode="startsWith" panelStyle="width:250px">
+											<f:selectItems value="#{searchFilterBean.purposes}" />
+										</p:selectCheckboxMenu>
+						</h:panelGroup>
+
+					</p:panelGrid>
       				
             		<p:commandButton value="Save" onclick="adlg.hide(); return false;" />  
             		<p:commandButton value="Cancel" onclick="adlg.hide(); return false;"/>
