@@ -5,7 +5,7 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 
-<ui:fragment rendered="#{userBean.loggedIn}" id="right_pane" >
+<ui:fragment rendered="#{userBean.loggedIn}" id="popup_pane" >
 
 		<h:outputScript library="resource-pane-template" name="resource-pane.js" target="head"/>
 		<h:outputStylesheet library="resource-pane-template" name="resource-pane.css"/>
@@ -566,7 +566,7 @@
 							<div class="resource_field" style="padding-top: 10px">
 								#{msg.description}
 							</div>
-							<h:outputText id="resource_description" styleClass="text-ellipses line-clamp" value="#{resourceDetailBean.clickedResource.descriptionHTML}" escape="false" />
+							<h:outputText id="resource_description" value="#{resourceDetailBean.clickedResource.descriptionHTML}" escape="false" />
 						</h:panelGroup>
 								
 						<h:form id="archive_current_form" rendered="${resourceDetailBean.clickedResource.storageType == 2 and resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
