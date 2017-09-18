@@ -1149,47 +1149,66 @@
       				<p:panelGrid columns="1" cellpadding="20" layout="grid">
 
 						<h:panelGroup>
-							<h:outputLabel for="catlist" value="Category:" />
-							<p:selectCheckboxMenu id="catlist"
+							<b><h:outputLabel for="catlist" value="Category:" /></b>
+							<h:panelGrid columns="6" cellpadding="10" layout="grid" id="catlist">
+							<h:outputLabel for="toplist" value="Top:" />
+							<p:selectCheckboxMenu id="toplist"
 											value="#{searchFilterBean.selectedLevels}" label="Levels"
 											multiple="true" filter="true" filterMatchMode="startsWith"
 											panelStyle="width:250px">
 											<f:selectItems value="#{searchFilterBean.levels}" />
 							</p:selectCheckboxMenu>
+							<h:outputLabel for="middlelist" value="Middle:" />
+							<p:selectCheckboxMenu id="middlelist"
+											value="#{searchFilterBean.selectedLevels}" label="Levels"
+											multiple="true" filter="true" filterMatchMode="startsWith"
+											panelStyle="width:250px">
+											<f:selectItems value="#{searchFilterBean.levels}" />
+							</p:selectCheckboxMenu>
+							<h:outputLabel for="bottomlist" value="Bottom:" />
+							<p:selectCheckboxMenu id="bottomlist"
+											value="#{searchFilterBean.selectedLevels}" label="Levels"
+											multiple="true" filter="true" filterMatchMode="startsWith"
+											panelStyle="width:250px">
+											<f:selectItems value="#{searchFilterBean.levels}" />
+							</p:selectCheckboxMenu>
+							</h:panelGrid>
 						</h:panelGroup>
 
 						<h:panelGroup>
-							<h:outputLabel for="levlist" value="Language Level:" />
+							<h:panelGrid columns="4" cellpadding="10" layout="grid">
+							<h:outputLabel for="levlist" value="Language Level: " />
 								<p:selectCheckboxMenu id="levlist"
 											value="#{searchFilterBean.selectedLevels}" label="Levels"
 											multiple="true" filter="true" filterMatchMode="startsWith"
 											panelStyle="width:250px">
 											<f:selectItems value="#{searchFilterBean.levels}" />
 								</p:selectCheckboxMenu>
-						</h:panelGroup>
-
-						<h:panelGroup>
-										<h:outputLabel for="aglist" value="Target Learner:" />
-										<p:selectCheckboxMenu id="aglist"
+							<h:outputLabel for="aglist" value="Target Learner:" />
+								<p:selectCheckboxMenu id="aglist"
 											value="#{searchFilterBean.selectedTargets}"
 											label="Target Learners" multiple="true" filter="true"
 											filterMatchMode="startsWith" panelStyle="width:250px">
 											<f:selectItems value="#{searchFilterBean.targets}" />
-										</p:selectCheckboxMenu>
+								</p:selectCheckboxMenu>
+							</h:panelGrid>
 						</h:panelGroup>
 
 						<h:panelGroup>
-										<h:outputLabel for="aclist" value="Purpose of Use:" />
-										<p:selectCheckboxMenu id="aclist"
+							<h:panelGrid columns="4" cellpadding="10" layout="grid">
+								<h:outputLabel for="aclist" value="Purpose of Use:" />
+									<p:selectCheckboxMenu id="aclist"
 											value="#{searchFilterBean.selectedPurposes}"
 											label="Purposes of Use" multiple="true" filter="true"
 											filterMatchMode="startsWith" panelStyle="width:250px">
 											<f:selectItems value="#{searchFilterBean.purposes}" />
-										</p:selectCheckboxMenu>
+									</p:selectCheckboxMenu>
+							</h:panelGrid>
 						</h:panelGroup>
 
 					</p:panelGrid>
-      				
+      				<br/>
+      				<br/>
             		<p:commandButton value="Save" onclick="adlg.hide(); return false;" />  
             		<p:commandButton value="Cancel" onclick="adlg.hide(); return false;"/>
            			</h:form>
