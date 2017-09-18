@@ -1,12 +1,17 @@
 package de.l3s.learnweb.rm.beans;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.event.ValueChangeEvent;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.rm.CategoryBottom;
+import de.l3s.learnweb.rm.CategoryMiddle;
+import de.l3s.learnweb.rm.CategoryTop;
 
 @ManagedBean
 //@RequestScoped
@@ -20,6 +25,9 @@ public class SearchFilterBean extends ApplicationBean
     private String[] selectedPurposes;
     private String[] selectedLanguages;
     private String[] selectedLevels;
+    private String selectedCattop = "";
+    private String selectedCatmid = "";
+    private String selectedCatbot = "";
 
     private List<String> authors;
     private List<String> mtypes;
@@ -28,11 +36,54 @@ public class SearchFilterBean extends ApplicationBean
     private List<String> purposes;
     private List<String> langs;
     private List<String> levels;
+    private List<CategoryTop> catTops;
+    private List<CategoryMiddle> catMids;
+    private List<CategoryBottom> catBots;
+    private List<String> cattops;
+    private List<String> catmids;
+    private List<String> catbots;
+    private int topDefaultId = 1;
 
     @PostConstruct
 
     public void init()
     {
+        //get all top categories
+        try
+        {
+            catTops = getLearnweb().getCategoryManager().getAllTopCategories();
+        }
+        catch(SQLException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+
+        cattops = new ArrayList<String>();
+        for(int i = 0; i < catTops.size(); i++)
+        {
+            cattops.add(catTops.get(i).getCattop_name());
+        }
+
+        //middle categories
+        try
+        {
+            catMids = getLearnweb().getCategoryManager().getAllMiddleCategoriesByCattopID(topDefaultId);
+        }
+        catch(SQLException e1)
+        {
+
+            e1.printStackTrace();
+        }
+
+        catmids = new ArrayList<String>();
+        for(int i = 0; i < catMids.size(); i++)
+        {
+            if(!(catMids.get(i).getCatmid_name().equalsIgnoreCase("x")))
+            {
+                catmids.add(catMids.get(i).getCatmid_name());
+            }
+        }
 
         //author filter values (must get it from db) 
         authors = new ArrayList<String>();
@@ -207,6 +258,107 @@ public class SearchFilterBean extends ApplicationBean
     public List<String> getLevels()
     {
         return levels;
+    }
+
+    //categories setter and getter
+    public String getSelectedCattop()
+    {
+        return selectedCattop;
+    }
+
+    public void setSelectedCattop(String selectedCattop)
+    {
+        this.selectedCattop = selectedCattop;
+    }
+
+    public String getSelectedCatmid()
+    {
+        return selectedCatmid;
+    }
+
+    public void setSelectedCatmid(String selectedCatmid)
+    {
+        this.selectedCatmid = selectedCatmid;
+    }
+
+    public String getSelectedCatbot()
+    {
+        return selectedCatbot;
+    }
+
+    public void setSelectedCatbot(String selectedCatbot)
+    {
+        this.selectedCatbot = selectedCatbot;
+    }
+
+    public List<String> getCattops()
+    {
+        return cattops;
+    }
+
+    public void setCattops(List<String> cattops)
+    {
+        this.cattops = cattops;
+    }
+
+    public List<String> getCatmids()
+    {
+        return catmids;
+    }
+
+    public void setCatmids(List<String> catmids)
+    {
+        this.catmids = catmids;
+    }
+
+    public List<String> getCatbots()
+    {
+        return catbots;
+    }
+
+    public void setCatbots(List<String> catbots)
+    {
+        this.catbots = catbots;
+    }
+
+    //populate middle category list when top category is selected
+    public void topCatChanged(ValueChangeEvent e)
+    {
+        String topcat = this.selectedCattop;
+        int cattopId = 0;
+        try
+        {
+            cattopId = getLearnweb().getCategoryManager().getCategoryTopByName(topcat);
+        }
+        catch(SQLException e1)
+        {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+        if(cattopId > 0)
+        {
+            try
+            {
+                catMids = getLearnweb().getCategoryManager().getAllMiddleCategoriesByCattopID(cattopId);
+            }
+            catch(SQLException e1)
+            {
+
+                e1.printStackTrace();
+            }
+
+            catmids = new ArrayList<String>();
+            for(int i = 0; i < catMids.size(); i++)
+            {
+                catmids.add(catMids.get(i).getCatmid_name());
+            }
+        }
+        else //if top category name returned with invalid id number < 1
+        {
+            new IllegalArgumentException("invalid top category Id was given: " + selectedCattop).printStackTrace();
+        }
+
     }
 
 }
