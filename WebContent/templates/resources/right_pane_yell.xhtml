@@ -1152,26 +1152,27 @@
 							<b><h:outputLabel for="catlist" value="Category:" /></b>
 							<h:panelGrid columns="6" cellpadding="10" layout="grid" id="catlist">
 							<h:outputLabel for="toplist" value="Top:" />
-							<p:selectCheckboxMenu id="toplist"
-											value="#{searchFilterBean.selectedLevels}" label="Levels"
-											multiple="true" filter="true" filterMatchMode="startsWith"
-											panelStyle="width:250px">
-											<f:selectItems value="#{searchFilterBean.levels}" />
-							</p:selectCheckboxMenu>
+							<p:selectOneMenu id="toplist"
+											value="#{searchFilterBean.selectedCattop}"
+											panelStyle="width:250px"
+											valueChangeListener="#{searchFilterBean.topCatChanged}">
+											<f:selectItems value="#{searchFilterBean.cattops}" />
+											<p:ajax update="middlelist" />
+							</p:selectOneMenu>
+							
 							<h:outputLabel for="middlelist" value="Middle:" />
-							<p:selectCheckboxMenu id="middlelist"
-											value="#{searchFilterBean.selectedLevels}" label="Levels"
-											multiple="true" filter="true" filterMatchMode="startsWith"
+							<p:selectOneMenu id="middlelist"
+											value="#{searchFilterBean.selectedCatmid}"
 											panelStyle="width:250px">
-											<f:selectItems value="#{searchFilterBean.levels}" />
-							</p:selectCheckboxMenu>
+											<f:selectItems value="#{searchFilterBean.catmids}" />
+							</p:selectOneMenu>
+							
 							<h:outputLabel for="bottomlist" value="Bottom:" />
-							<p:selectCheckboxMenu id="bottomlist"
-											value="#{searchFilterBean.selectedLevels}" label="Levels"
-											multiple="true" filter="true" filterMatchMode="startsWith"
+							<p:selectOneMenu id="bottomlist"
+											value="#{searchFilterBean.selectedCatbot}"
 											panelStyle="width:250px">
-											<f:selectItems value="#{searchFilterBean.levels}" />
-							</p:selectCheckboxMenu>
+											<f:selectItems value="#{searchFilterBean.catbots}" />
+							</p:selectOneMenu>
 							</h:panelGrid>
 						</h:panelGroup>
 
