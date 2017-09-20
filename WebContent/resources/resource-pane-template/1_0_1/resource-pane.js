@@ -311,7 +311,6 @@ function load_editor() {
 	if (showInLightbox) {
 		showInLightbox = false;
 		lightbox_open();
-		debugger;
 	    var canBeEdited = ($('#ed_can_be_edited').val()=='true');
 	    
 	    $('#lightbox_background').click(function() {
