@@ -240,7 +240,7 @@
 						
 					<h:outputText value="#{msg.group_resources_access_denied}" rendered="${not resourceDetailBean.clickedResource.canViewResource(userBean.user) and not (resourceDetailBean.clickedResource.deleted or resourceDetailBean.clickedResource.groupId eq 0)}"/>
 					<ui:fragment rendered="#{resourceDetailBean.clickedResource.canViewResource(userBean.user)}">			
-						<ui:fragment rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() eq 'spreadsheet' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'presentation' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'video' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'image'}">
+						<ui:fragment rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() eq 'spreadsheet' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'presentation' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'video' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'image' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'glossary' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'survey'}">
 							<div class="align-center" style="margin-top: 5px;">
 								<div id="lightbox">
 									<div id="lightbox_background" onclick="lightbox_close();"></div>
