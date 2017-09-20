@@ -219,7 +219,7 @@
 						</p:fieldset>
 						
 						<p:commandButton value="#{msg.addResource}" styleClass="greenbutton float-right" update=":growl :add_resource_panel :datagrid" 
-							action="#{addResourceBean.addResource}" ajax="true" oncomplete="update_header();resourceDND();" rendered="#{addResourceBean.formStep > 1}">
+							action="#{addResourceBean.addResource}" ajax="true" oncomplete="update_header();resourceDND(); load_editor();" rendered="#{addResourceBean.formStep > 1}">
 							<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>
 							<f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"/>
 							<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{addResourceBean.resource}"/>
@@ -240,7 +240,7 @@
 						
 					<h:outputText value="#{msg.group_resources_access_denied}" rendered="${not resourceDetailBean.clickedResource.canViewResource(userBean.user) and not (resourceDetailBean.clickedResource.deleted or resourceDetailBean.clickedResource.groupId eq 0)}"/>
 					<ui:fragment rendered="#{resourceDetailBean.clickedResource.canViewResource(userBean.user)}">			
-						<ui:fragment rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'video' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'image' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'glossary' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'survey'}">
+						<ui:fragment rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() eq 'spreadsheet' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'presentation' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'video' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'image'}">
 							<div class="align-center" style="margin-top: 5px;">
 								<div id="lightbox">
 									<div id="lightbox_background" onclick="lightbox_close();"></div>
@@ -251,13 +251,9 @@
 											<a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="close"></a>
 										</div>
 										<div id="lightbox_content">
-											<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text'}">
-											    <div style="overflow:auto; height:100%; width:100%; text-align:center;">
-											    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
-											    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
-											    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}" />
-											    </div>	
-										    </ui:fragment>
+											<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'Text' or resourceDetailBean.clickedResource.type eq 'Spreadsheet' or resourceDetailBean.clickedResource.type eq 'Presentation'}">
+												<div id ="lightbox_editor" />
+											</ui:fragment>
 										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'pdf'}">
 											   	<iframe src="#{resourceDetailBean.clickedResource.url}" style="width:100%; height:100%; "/>
 										    </ui:fragment>
@@ -332,8 +328,8 @@
 									<div class="preview_box" style="height:412px; width:100%;">
 										<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
 									</div>
-								</ui:fragment>								
-								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'Video' and resourceDetailBean.clickedResource.type != 'Image' and resourceDetailBean.clickedResource.type != 'Glossary' and resourceDetailBean.clickedResource.type != 'Survey' }">
+								</ui:fragment>
+								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type != 'Presentation' and resourceDetailBean.clickedResource.type != 'Spreadsheet' and resourceDetailBean.clickedResource.type != 'Text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'Video' and resourceDetailBean.clickedResource.type != 'Image' and resourceDetailBean.clickedResource.type != 'Glossary' and resourceDetailBean.clickedResource.type != 'Survey' }">
 									<div class="preview_box">
 										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}'
 											escape="false"/>
@@ -352,6 +348,14 @@
 											<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>
 										</a>
 									</div>
+								</ui:fragment>
+								<ui:fragment rendered="${resourceDetailBean.clickedResource.type eq 'Text' or resourceDetailBean.clickedResource.type eq 'Spreadsheet' or resourceDetailBean.clickedResource.type eq 'Presentation'}">
+									 <div class="preview_box editor_preview">
+									<h:inputHidden id="ed_can_be_edited" value="#{resourceDetailBean.clickedResource.canEditResource(userBean.user)}" />
+										<ui:decorate template="/templates/resources/editor.xhtml">
+											<ui:param name="bean" value="#{fileEditorBean}" />
+										</ui:decorate>
+									</div> 
 								</ui:fragment>
 								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'Image') and empty resourceDetailBean.clickedResource.thumbnail3}">
 									<div class="preview_box">
@@ -402,7 +406,13 @@
 								</tr>
 							</ui:fragment>
 							
-							<ui:fragment rendered="${empty resourceDetailBean.clickedResource.fileName and resourceDetailBean.clickedResource.type.toLowerCase() != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'Glossary' and resourceDetailBean.clickedResource.type.toLowerCase() != 'survey' and resourceDetailBean.clickedResource.type.toLowerCase() != 'video' and resourceDetailBean.clickedResource.type.toLowerCase() != 'image' }">
+							<ui:fragment rendered="${empty resourceDetailBean.clickedResource.fileName
+							 and resourceDetailBean.clickedResource.type.toLowerCase() != 'text'
+							  and resourceDetailBean.clickedResource.type != 'pdf'
+							   and resourceDetailBean.clickedResource.type != 'Glossary' 
+							   and resourceDetailBean.clickedResource.type.toLowerCase() != 'survey'
+							   and resourceDetailBean.clickedResource.type.toLowerCase() != 'video'
+							    and resourceDetailBean.clickedResource.type.toLowerCase() != 'image' }">
 								<tr>
 									<td>
 										<span class="resource_field">

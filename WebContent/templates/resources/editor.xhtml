@@ -1,0 +1,27 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:fragment>
+
+		<h:inputHidden id="ed_file_name" value="#{bean.file.fileName}" />
+		<h:inputHidden id="ed_file_ext" value="#{bean.filesExtension}" />
+		<h:inputHidden id="ed_file_url" value="#{bean.fullFilesUrl}" />
+		<h:inputHidden id="ed_callback_url" value="#{bean.callbackUrl}" />
+		<h:inputHidden id="ed_file_key" value="#{bean.key}" />
+		<h:inputHidden id="ed_file_type" value="#{bean.fileType}" />
+	
+
+		<h:outputScript library="resource-office-edit" name="editor.js"
+			target="head" />
+		<h:outputScript library="resource-office-edit" name="api.js"
+			target="head" />
+
+		<div id="iframeEditor"/>
+		
+	</ui:fragment>
+
+</ui:composition>

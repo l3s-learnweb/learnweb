@@ -12,6 +12,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.component.UIComponent;
 import javax.faces.context.FacesContext;
@@ -38,6 +39,7 @@ import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceMetadataExtractor;
 import de.l3s.learnweb.ResourcePreviewMaker;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
+import de.l3s.office.FileEditorBean;
 import de.l3s.util.StringHelper;
 
 @ViewScoped
@@ -62,6 +64,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     private List<String> selectedUploadServices;
 
     private int formStep = 1;
+
+    @ManagedProperty(value = "#{fileEditorBean}")
+    private FileEditorBean fileEditorBean;
 
     public AddResourceBean()
     {
@@ -355,6 +360,8 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             }
 
             resource.setDeleted(false);
+            if(resource.getType().equals("Presentation") || resource.getType().equals("Text") || resource.getType().equals("Spreadsheet"))
+                getFileEditorBean().fillInFileInfo(resource);
 
             // add resource to a group if selected
             if(resourceTargetGroupId != 0)
@@ -721,6 +728,16 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         
         Thread.sleep(99999999);
         */
+    }
+
+    public FileEditorBean getFileEditorBean()
+    {
+        return fileEditorBean;
+    }
+
+    public void setFileEditorBean(FileEditorBean fileEditorBean)
+    {
+        this.fileEditorBean = fileEditorBean;
     }
 
     public static class CreateThumbnailThread extends Thread

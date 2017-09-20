@@ -741,6 +741,10 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         }
         else if(type.equals("vnd.openxmlformats-officedocument.wordprocessingml.document"))
             this.type = "Text";
+        else if(type.equals("vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
+            this.type = "Spreadsheet";
+        else if(type.equals("vnd.openxmlformats-officedocument.presentationml.presentation"))
+            this.type = "Presentation";
         else
             this.type = type;
     }

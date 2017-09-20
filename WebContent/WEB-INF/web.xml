@@ -166,6 +166,17 @@
 		<servlet-name>frontpageServlet</servlet-name>
 		<url-pattern></url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<description>Servlet for saving edited documents</description>
+		<display-name>SaverServlet</display-name>
+		<servlet-name>saverServlet</servlet-name>
+		<servlet-class>de.l3s.office.SaverServlet</servlet-class>
+		<load-on-startup>4</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>saverServlet</servlet-name>
+		<url-pattern>/save</url-pattern>
+	</servlet-mapping>
 
 	<welcome-file-list>
 		<welcome-file>index.jsf</welcome-file>

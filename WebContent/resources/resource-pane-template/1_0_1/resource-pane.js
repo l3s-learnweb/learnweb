@@ -6,6 +6,8 @@
 /** @external updateAddResourcePaneCommand */
 /** @external updateThumbnailCommand */
 
+var showInLightbox = false;
+
 function scrollToElement(element) {
     //$('#right_pane .content').animate({ scrollTop: (element.offset().top + element.height() + 5 - $('#center_pane .content').height())}, 'slow');
     //console.log(element.offset().top, element.position().top, $('#center_pane .content').height(), element.height());
@@ -61,6 +63,11 @@ function lightbox_close() {
     box.hide();
     box.detach();
 }
+function lightbox_close_for_editor() {
+	$('#lightbox').hide();
+	$('#lightbox').detach();
+}
+
 function lightbox_resize_container() {
     var height = $(window).height() - 167;
     $('#lightbox_container').height(height < 200 ? 200 : height);
@@ -299,6 +306,30 @@ function check_tag(tagName){
 	
 	
 }
+
+function load_editor() {
+	if (showInLightbox) {
+		showInLightbox = false;
+		lightbox_open();
+		debugger;
+	    var canBeEdited = ($('#ed_can_be_edited').val()=='true');
+	    
+	    $('#lightbox_background').click(function() {
+	    	lightbox_close_for_editor();
+	    });
+	    $('#lightbox_close').click(function() {
+	    	lightbox_close_for_editor();
+	    });
+	    
+	    var mode = canBeEdited?"edit":"view";
+	    сonnectEditor("lightbox_editor",mode);
+	} else {
+		if ($("#right_pane .editor_preview").length) {
+			сonnectEditor("iframeEditor","embedded");
+		}
+	}
+}
+
 /* Context menu */
 function showContextMenu(className, e) {
     $(".resource-context-menu").addClass(className + "-cntx").finish().toggle().css({
@@ -443,6 +474,7 @@ $(document).ready(function () {
     });
 
     $(document).on('click', '.group-resources-item', function (e) {
+    	showInLightbox = false;
         if (e.shiftKey && selected.getSize() > 0) {
             var previous = selected.getItem(selected.getSize() - 1);
             selected.add(this);
@@ -469,7 +501,10 @@ $(document).ready(function () {
         selected.selectLastItem();
     });
     
-    //for resource_yell.html
+    $(document).on('dblclick', '.group-resources-item.resource-item', function () {
+    	showInLightbox = true;
+        });
+        //for resource_yell.html
     $(document).on('click', '.group-resources2-item', function (e) {
         if (e.shiftKey && selected.getSize() > 0) {
             var previous = selected.getItem(selected.getSize() - 1);

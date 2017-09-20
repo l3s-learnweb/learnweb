@@ -18,6 +18,9 @@ import com.sun.pdfview.PDFPage;
 import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
+import de.l3s.office.DocumentManager;
+import de.l3s.office.FileUtility;
+import de.l3s.office.ServiceConverter;
 import de.l3s.util.Image;
 import de.l3s.util.StringHelper;
 
@@ -92,19 +95,26 @@ public class ResourcePreviewMaker
             file.setMimeType(info.getMimeType());
             file.setDownloadLogActivated(true);
             fileManager.save(file, inputStream);
-            inputStream = file.getInputStream();
+            if(shouldBeConverted(file.getName()))
+            {
 
-            if(resource.getTitle() == null || resource.getTitle().length() == 0)
-                resource.setTitle(info.getTitle());
+                File fileForConversion = createFileForConversion(file);
+                inputStream = ServiceConverter.convert(file.getName(), fileForConversion.getUrl());
+                if(inputStream == null)
+                {
+                    inputStream = ServiceConverter.convert(file.getName(), fileForConversion.getUrl());
+                }
+                fileManager.delete(file);
+                fileManager.save(fileForConversion, inputStream);
+                fillResource(resource, info, getRightTypeForConvertedFile(type, info), fileForConversion);
+                inputStream = fileForConversion.getInputStream();
+            }
+            else
+            {
 
-            resource.addFile(file);
-            resource.setUrl(file.getUrl());
-            resource.setFileUrl(file.getUrl()); // for Loro resources the file url is different from the url
-            resource.setFileName(info.getFileName());
-            resource.setFormat(info.getMimeType());
-            resource.setType(type);
-            resource.setDescription(StringHelper.shortnString(info.getTextContent(), 1400));
-            resource.setMachineDescription(info.getTextContent());
+                fillResource(resource, info, type, file);
+                inputStream = file.getInputStream();
+            }
         }
 
         if(type.equalsIgnoreCase("pdf"))
@@ -119,7 +129,7 @@ public class ResourcePreviewMaker
         {
             processVideo(resource);
         }
-        else if(type.equalsIgnoreCase("msword") || type.equalsIgnoreCase("doc") || info.getMimeType().contains("ms-word") || info.getMimeType().contains("officedocument.wordprocessingml.document"))
+        else if(isDocFile(info, type))
         {
             try
             {
@@ -134,7 +144,7 @@ public class ResourcePreviewMaker
                 log.error("Error in creating thumbnails from Word " + resource.getFormat() + " for resource: " + resource.getId());
             }
         }
-        else if(info.getMimeType().contains("powerpoint") || info.getMimeType().contains("presentation"))
+        else if(isPresentationFile(info))
         {
             try
             {
@@ -152,7 +162,7 @@ public class ResourcePreviewMaker
                 log.error("Error in creating thumbnails from ppt " + resource.getFormat() + " for resource: " + resource.getId());
             }
         }
-        else if(info.getMimeType().contains("excel") || info.getMimeType().contains("spreadsheet"))
+        else if(isSpreadsheetFile(info))
         {
             try
             {
@@ -167,7 +177,74 @@ public class ResourcePreviewMaker
                 log.error("Error in creating thumbnails from xls " + resource.getFormat() + " for resource: " + resource.getId());
             }
         }
-        inputStream.close();
+        if(inputStream != null)
+            inputStream.close();
+    }
+
+    private boolean isSpreadsheetFile(FileInfo info)
+    {
+        return info.getMimeType().contains("excel") || info.getMimeType().contains("spreadsheet");
+    }
+
+    private boolean isPresentationFile(FileInfo info)
+    {
+        return info.getMimeType().contains("powerpoint") || info.getMimeType().contains("presentation");
+    }
+
+    private boolean isDocFile(FileInfo info, String type)
+    {
+        return type.equalsIgnoreCase("msword") || type.equalsIgnoreCase("doc") || info.getMimeType().contains("ms-word") || info.getMimeType().contains("officedocument.wordprocessingml.document");
+    }
+
+    private void fillResource(Resource resource, FileInfo info, String type, File file) throws SQLException
+    {
+        if(resource.getTitle() == null || resource.getTitle().length() == 0)
+            resource.setTitle(info.getTitle());
+
+        resource.addFile(file);
+        resource.setUrl(file.getUrl());
+        resource.setFileUrl(file.getUrl()); // for Loro resources the file url is different from the url
+        resource.setFileName(file.getName());
+        resource.setFormat(info.getMimeType());
+        resource.setType(type);
+        resource.setDescription(StringHelper.shortnString(info.getTextContent(), 1400));
+        resource.setMachineDescription(info.getTextContent());
+    }
+
+    private String getRightTypeForConvertedFile(String type, FileInfo info)
+    {
+        if(isDocFile(info, type))
+        {
+            return "vnd.openxmlformats-officedocument.wordprocessingml.document";
+        }
+        else if(isSpreadsheetFile(info))
+        {
+            return "vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+        }
+        else if(isPresentationFile(info))
+        {
+            return "vnd.openxmlformats-officedocument.presentationml.presentation";
+        }
+        return type;
+    }
+
+    private File createFileForConversion(File source)
+    {
+        File destination = new File();
+        //String fileUrl = "http://learnweb.l3s.uni-hannover.de" + source.getUrl().replace("/Learnweb-Tomcat/", "/").replace("http://localhost:8089", "");//TODO: DELETE IN PROD
+        String fileType = FileUtility.getFileType(source.getName());
+        String internalFileExt = DocumentManager.GetInternalExtension(fileType);
+        destination.setName(source.getName().substring(0, source.getName().indexOf(".")) + internalFileExt);
+        destination.setUrl(source.getUrl());
+        destination.setType(source.getType());
+        destination.setMimeType(source.getMimeType());
+        destination.setDownloadLogActivated(true);
+        return destination;
+    }
+
+    private boolean shouldBeConverted(String fileName)
+    {
+        return learnweb.getProperties().getProperty("files.docservice.convert-docs").contains(fileName.substring(fileName.indexOf(".")));
     }
 
     public void processImage(Resource resource, InputStream inputStream) throws IOException, SQLException
