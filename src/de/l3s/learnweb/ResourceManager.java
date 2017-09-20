@@ -446,6 +446,7 @@ public class ResourceManager
         resource.setUser(user);
 
         saveResource(resource);
+
         try
         {
             //To copy archive versions of a resource if it exists

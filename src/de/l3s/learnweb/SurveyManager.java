@@ -8,9 +8,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map.Entry;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.context.FacesContext;
-
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.log4j.Logger;
 
@@ -35,6 +32,8 @@ public class SurveyManager
     {
         Survey survey = new Survey();
         survey.resource_id = resource_id;
+
+        String titleDesc = "SELECT `title`, `description` FROM `lw_resource` WHERE `resource_id` = ?";
         String getSurveyId = "SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?";
         PreparedStatement ps = null;
         try
@@ -42,24 +41,10 @@ public class SurveyManager
             ps = learnweb.getConnection().prepareStatement(getSurveyId);
 
             ps.setInt(1, resource_id);
-        }
-        catch(SQLException e3)
-        {
-            // TODO Auto-generated catch block
-            e3.printStackTrace();
-        }
-        ResultSet rs = null;
-        try
-        {
+
+            ResultSet rs = null;
+
             rs = ps.executeQuery();
-        }
-        catch(SQLException e3)
-        {
-            // TODO Auto-generated catch block
-            e3.printStackTrace();
-        }
-        try
-        {
 
             if(rs.next())
             {
@@ -67,60 +52,44 @@ public class SurveyManager
                 //  start = rs.getDate("open_date");
                 // end = rs.getDate("close_date");
                 survey.survey_id = rs.getInt("survey_id");
-                System.out.println(survey.survey_id);
+
+                //System.out.println(survey.survey_id);
             }
             else
             {
                 System.out.println("RESOURCE ID: " + resource_id);
             }
-        }
-        catch(SQLException e2)
-        {
-            // TODO Auto-generated catch block
-            e2.printStackTrace();
-        }
-        String surveyDetails = "SELECT * FROM `lw_survey` WHERE `survey_id` = ?";
-        try
-        {
+            ps = learnweb.getConnection().prepareStatement(titleDesc);
+            ps.setInt(1, resource_id);
+            ResultSet descTitle = ps.executeQuery();
+            while(descTitle.next())
+            {
+                survey.description = descTitle.getString("description");
+                survey.surveyTitle = descTitle.getString("title");
+            }
+
+            String surveyDetails = "SELECT * FROM `lw_survey` WHERE `survey_id` = ?";
+
             ps = learnweb.getConnection().prepareStatement(surveyDetails);
             ps.setInt(1, survey.survey_id);
             ResultSet details = ps.executeQuery();
             if(details.next())
             {
-                survey.surveyTitle = details.getString("title");
-                survey.description = details.getString("description");
+                //survey.surveyTitle = details.getString("title");
+                // survey.description = details.getString("description");
                 survey.organizationId = details.getInt("organization_id");
 
             }
-        }
-        catch(SQLException e2)
-        {
-            log.error("Error in fetching survey details ", e2);
-        }
 
-        String query = "SELECT * FROM `lw_survey_question` WHERE `survey_id` = ?";
-        PreparedStatement preparedStmnt = null;
-        ResultSet result = null;
-        try
-        {
+            String query = "SELECT * FROM `lw_survey_question` WHERE `survey_id` = ?";
+            PreparedStatement preparedStmnt = null;
+            ResultSet result = null;
+
             preparedStmnt = learnweb.getConnection().prepareStatement(query);
             preparedStmnt.setInt(1, survey.survey_id);
-        }
-        catch(SQLException e1)
-        {
-            log.error("Error in establishing Connection", e1);
-        }
-        try
-        {
+
             result = preparedStmnt.executeQuery();
 
-        }
-        catch(SQLException e)
-        {
-            log.error("Error in fetching questions", e);
-        }
-        try
-        {
             while(result.next())
             {
                 SurveyMetaDataFields formQuestion = new SurveyMetaDataFields(result.getString("question"), MetadataType.valueOf(result.getString("question_type")));
@@ -159,14 +128,25 @@ public class SurveyManager
         return survey;
     }
 
-    public void upload(int user_id, HashMap<String, String> wrappedAnswers, HashMap<String, String[]> wrappedMultipleAnswers, int resource_id)
+    public boolean upload(int user_id, HashMap<String, String> wrappedAnswers, HashMap<String, String[]> wrappedMultipleAnswers, int resource_id)
     {
         int survey_id = 0;
+        String submitCheck = "SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?";
+
         String getSurveyId = "SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?";
         PreparedStatement ps = null;
         ResultSet rs = null;
         try
         {
+            ps = learnweb.getConnection().prepareStatement(submitCheck);
+            ps.setInt(1, resource_id);
+            ps.setInt(2, user_id);
+            rs = ps.executeQuery();
+            if(rs.next())
+            {
+
+                return false;
+            }
             ps = learnweb.getConnection().prepareStatement(getSurveyId);
 
             ps.setInt(1, resource_id);
@@ -251,8 +231,6 @@ public class SurveyManager
 
                 insert.executeQuery();
 
-                FacesContext context = FacesContext.getCurrentInstance();
-                context.addMessage(null, new FacesMessage("Successful entry"));
             }
             catch(SQLException e)
             {
@@ -260,6 +238,8 @@ public class SurveyManager
             }
 
         }
+        return true;
+
     }
 }
 /*public ArrayList<SurveyMetaDataFields> getFormQuestions()

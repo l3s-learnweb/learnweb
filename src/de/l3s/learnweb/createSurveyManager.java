@@ -3,6 +3,7 @@ package de.l3s.learnweb;
 import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.faces.application.FacesMessage;
@@ -22,6 +23,33 @@ public class createSurveyManager
     public createSurveyManager(Learnweb learnweb)
     {
         this.learnweb = learnweb;
+    }
+
+    public void copySurveyResource(int oldResourceId, int newResourceId)
+    {
+        String selectOldData = "SELECT `resource_id`, `survey_id`, `open_date`, `close_date` FROM `lw_survey_resource` WHERE `resource_id` = ?";
+        String insertCopy = "INSERT INTO `lw_survey_resource`(`resource_id`, `survey_id`, `open_date`, `close_date`) VALUES (?, ?, ?, ?)";
+        try
+        {
+            PreparedStatement cpResource = learnweb.getConnection().prepareStatement(selectOldData);
+            cpResource.setInt(1, oldResourceId);
+            ResultSet oldData = cpResource.executeQuery();
+            while(oldData.next())
+            {
+                PreparedStatement copy = learnweb.getConnection().prepareStatement(insertCopy);
+                copy.setInt(1, newResourceId);
+                copy.setInt(2, oldData.getInt("survey_id"));
+                copy.setDate(3, oldData.getDate("open_date"));
+                copy.setDate(4, oldData.getDate("close_date"));
+                copy.executeUpdate();
+
+            }
+        }
+        catch(SQLException e)
+        {
+            log.error("Error in copying survey resource for resource id: " + oldResourceId, e);
+        }
+
     }
 
     public void createSurveyResource(int userId, String title, String desc, java.util.Date open, java.util.Date close)

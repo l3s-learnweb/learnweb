@@ -9,7 +9,6 @@ import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 
@@ -108,10 +107,13 @@ public class SurveyBean extends ApplicationBean implements Serializable
             System.out.println(e.getKey());
             System.out.println(e.getValue().length);
         }
-        getLearnweb().getSurveyManager().upload(u.getId(), wrappedAnswers, wrappedMultipleAnswers, resource_id);
-        FacesContext context1 = FacesContext.getCurrentInstance();
+        boolean submit = getLearnweb().getSurveyManager().upload(u.getId(), wrappedAnswers, wrappedMultipleAnswers, resource_id);
 
-        context1.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_INFO, "Info: ", "Successful Submit"));
+        if(submit)
+            addGrowl(FacesMessage.SEVERITY_INFO, "Successful Submit");
+        else
+            addGrowl(FacesMessage.SEVERITY_ERROR, "You have submitted the form previously. You can only submit once.");
+
     }
 
     public int getResource_id()

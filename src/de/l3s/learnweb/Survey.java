@@ -5,7 +5,15 @@ import java.util.ArrayList;
 
 public class Survey
 {
-    Date start;
+    public boolean isSubmitted()
+    {
+        return submitted;
+    }
+
+    public void setSubmitted(boolean submitted)
+    {
+        this.submitted = submitted;
+    }
 
     public Date getStart()
     {
@@ -87,6 +95,8 @@ public class Survey
         this.organizationId = organizationId;
     }
 
+    boolean submitted;
+    Date start;
     Date end;
     int survey_id;
     int resource_id;
