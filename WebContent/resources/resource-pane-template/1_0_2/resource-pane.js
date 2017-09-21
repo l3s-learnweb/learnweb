@@ -310,18 +310,20 @@ function check_tag(tagName){
 function load_editor() {
 	if (showInLightbox) {
 		showInLightbox = false;
-		lightbox_open();
-	    var canBeEdited = ($('#ed_can_be_edited').val()=='true');
-	    
-	    $('#lightbox_background').click(function() {
-	    	lightbox_close_for_editor();
-	    });
-	    $('#lightbox_close').click(function() {
-	    	lightbox_close_for_editor();
-	    });
-	    
-	    var mode = canBeEdited?"edit":"view";
-	    сonnectEditor("lightbox_editor",mode);
+		if ($('#storageType').val() == '1') {
+			lightbox_open();
+			var canBeEdited = ($('#ed_can_be_edited').val() == 'true');
+
+			$('#lightbox_background').click(function() {
+				lightbox_close_for_editor();
+			});
+			$('#lightbox_close').click(function() {
+				lightbox_close_for_editor();
+			});
+
+			var mode = canBeEdited ? "edit" : "view";
+			сonnectEditor("lightbox_editor", mode);
+		}
 	} else {
 		if ($("#right_pane .editor_preview").length) {
 			сonnectEditor("iframeEditor","embedded");

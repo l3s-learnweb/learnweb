@@ -251,7 +251,7 @@
 											<a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="close"></a>
 										</div>
 										<div id="lightbox_content">
-											<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'Text' or resourceDetailBean.clickedResource.type eq 'Spreadsheet' or resourceDetailBean.clickedResource.type eq 'Presentation'}">
+											<ui:fragment rendered="#{resourceDetailBean.clickedResource.storageType == 1 and resourceDetailBean.clickedResource.type eq 'Text' or resourceDetailBean.clickedResource.type eq 'Spreadsheet' or resourceDetailBean.clickedResource.type eq 'Presentation'}">
 												<div id ="lightbox_editor" />
 											</ui:fragment>
 										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'pdf'}">
@@ -349,7 +349,7 @@
 										</a>
 									</div>
 								</ui:fragment>
-								<ui:fragment rendered="${resourceDetailBean.clickedResource.type eq 'Text' or resourceDetailBean.clickedResource.type eq 'Spreadsheet' or resourceDetailBean.clickedResource.type eq 'Presentation'}">
+								<ui:fragment rendered="${ (resourceDetailBean.clickedResource.storageType == 1 and resourceDetailBean.clickedResource.type eq 'Text') or resourceDetailBean.clickedResource.type eq 'Spreadsheet' or resourceDetailBean.clickedResource.type eq 'Presentation'}">
 									 <div class="preview_box editor_preview">
 									<h:inputHidden id="ed_can_be_edited" value="#{resourceDetailBean.clickedResource.canEditResource(userBean.user)}" />
 										<ui:decorate template="/templates/resources/editor.xhtml">
@@ -357,6 +357,7 @@
 										</ui:decorate>
 									</div> 
 								</ui:fragment>
+								 <h:inputHidden id="storageType" value="#{resourceDetailBean.clickedResource.storageType}" /> 
 								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'Image') and empty resourceDetailBean.clickedResource.thumbnail3}">
 									<div class="preview_box">
 										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>

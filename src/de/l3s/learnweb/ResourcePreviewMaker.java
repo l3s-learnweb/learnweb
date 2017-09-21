@@ -18,9 +18,7 @@ import com.sun.pdfview.PDFPage;
 import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
-import de.l3s.office.DocumentManager;
 import de.l3s.office.FileUtility;
-import de.l3s.office.ServiceConverter;
 import de.l3s.util.Image;
 import de.l3s.util.StringHelper;
 
@@ -97,13 +95,8 @@ public class ResourcePreviewMaker
             fileManager.save(file, inputStream);
             if(shouldBeConverted(file.getName()))
             {
-
                 File fileForConversion = createFileForConversion(file);
-                inputStream = ServiceConverter.convert(file.getName(), fileForConversion.getUrl());
-                if(inputStream == null)
-                {
-                    inputStream = ServiceConverter.convert(file.getName(), fileForConversion.getUrl());
-                }
+                inputStream = learnweb.getServiceConverter().convert(file.getName(), fileForConversion.getUrl());
                 fileManager.delete(file);
                 fileManager.save(fileForConversion, inputStream);
                 fillResource(resource, info, getRightTypeForConvertedFile(type, info), fileForConversion);
@@ -111,7 +104,6 @@ public class ResourcePreviewMaker
             }
             else
             {
-
                 fillResource(resource, info, type, file);
                 inputStream = file.getInputStream();
             }
@@ -231,9 +223,8 @@ public class ResourcePreviewMaker
     private File createFileForConversion(File source)
     {
         File destination = new File();
-        //String fileUrl = "http://learnweb.l3s.uni-hannover.de" + source.getUrl().replace("/Learnweb-Tomcat/", "/").replace("http://localhost:8089", "");//TODO: DELETE IN PROD
         String fileType = FileUtility.getFileType(source.getName());
-        String internalFileExt = DocumentManager.GetInternalExtension(fileType);
+        String internalFileExt = FileUtility.getInternalExtension(fileType);
         destination.setName(source.getName().substring(0, source.getName().indexOf(".")) + internalFileExt);
         destination.setUrl(source.getUrl());
         destination.setType(source.getType());
@@ -244,7 +235,7 @@ public class ResourcePreviewMaker
 
     private boolean shouldBeConverted(String fileName)
     {
-        return learnweb.getProperties().getProperty("files.docservice.convert-docs").contains(fileName.substring(fileName.indexOf(".")));
+        return learnweb.getProperties().getProperty("FILES.DOCSERVICE.CONVERT-DOCS").contains(fileName.substring(fileName.indexOf(".")));
     }
 
     public void processImage(Resource resource, InputStream inputStream) throws IOException, SQLException

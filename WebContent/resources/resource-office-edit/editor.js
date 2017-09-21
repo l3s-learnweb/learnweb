@@ -31,6 +31,7 @@ var onOutdatedVersion = function(event) {
 
 
 var сonnectEditor = function(id_div, type) {
+	debugger;
 	var mode = type=="edit"?"edit":"view"; 
 	var canBeEdited = type=="edit"?true:false; 
 	docEditor = new DocsAPI.DocEditor(id_div, {

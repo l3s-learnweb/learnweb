@@ -2,7 +2,6 @@ package de.l3s.office;
 
 public class RequestParameters
 {
-    public static final String URL_API = ConfigManager.GetProperty("files.docservice.url.api");
     public static final String DOCSERVICE_API_URL = "docserviceApiUrl";
     public static final String EMBEDDED = "embedded";
     public static final String DESKTOP = "desktop";

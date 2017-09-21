@@ -7,8 +7,6 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
-
 import de.l3s.learnweb.File;
 import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.Resource;
@@ -19,7 +17,6 @@ import de.l3s.learnweb.beans.ApplicationBean;
 public class FileEditorBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -655001215017199006L;
-    private final static Logger log = Logger.getLogger(FileEditorBean.class);
 
     private Resource file;
 

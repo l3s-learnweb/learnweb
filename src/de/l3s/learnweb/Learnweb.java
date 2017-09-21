@@ -26,6 +26,7 @@ import de.l3s.learnweb.rm.ExtendedMetadataManager;
 import de.l3s.learnweb.rm.LanglevelManager;
 import de.l3s.learnweb.rm.PurposeManager;
 import de.l3s.learnweb.solrClient.SolrClient;
+import de.l3s.office.ConverterService;
 import de.l3s.searchlogclient.SearchLogClient;
 import de.l3s.util.PropertiesBundle;
 import de.l3s.util.StringHelper;
@@ -79,6 +80,7 @@ public class Learnweb
     private final ExtendedMetadataManager extendedMetadataManager;
     private final LanglevelManager langlevelManager;
     private final PurposeManager purposeManager;
+    private final ConverterService serviceConverter;
 
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
@@ -236,6 +238,7 @@ public class Learnweb
         fileManager = new FileManager(this);
         solrClient = SolrClient.getInstance(this);
         resourcePreviewMaker = new ResourcePreviewMaker(this);
+        serviceConverter = new ConverterService(this);
         searchlogClient = new SearchLogClient(this);
         tedManager = new TedManager(this);
         archiveUrlManager = ArchiveUrlManager.getInstance(this);
@@ -781,6 +784,11 @@ public class Learnweb
     public createSurveyManager getCreateSurveyManager()
     {
         return createSurveyManager;
+    }
+
+    public ConverterService getServiceConverter()
+    {
+        return serviceConverter;
     }
 
 }

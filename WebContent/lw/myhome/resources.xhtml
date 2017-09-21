@@ -199,7 +199,6 @@
 						<ui:repeat var="res" value="#{folder.resourcesSubset}" >
 						   <h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
 							<div class="resource-block">
-
 								<div class="resource-preview">
 									<div class="resource-preview-wrapper">
 										<div class="resource-preview-wrapper2">
@@ -214,6 +213,7 @@
 									<div class="resource-title-wrapper">
 										<div class="resource-title-text">
 											<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
+										   
 											<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
 										</div>
 									</div>

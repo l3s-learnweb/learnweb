@@ -312,8 +312,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 {
                     this.setClickedGroupItem(resource);
                     if(resource.getType().equals("Presentation") || resource.getType().equals("Text") || resource.getType().equals("Spreadsheet"))
-                        ;
-                    getFileEditorBean().fillInFileInfo(resource);
+                        getFileEditorBean().fillInFileInfo(resource);
 
                 }
                 else

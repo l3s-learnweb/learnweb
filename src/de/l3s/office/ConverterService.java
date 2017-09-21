@@ -24,39 +24,31 @@ import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-public class ServiceConverter
+import de.l3s.learnweb.Learnweb;
+
+public class ConverterService
 {
     private static int CONVERT_TIMEOUT = 120000;
-    private static final String DOCUMENT_CONVERTER_URL = "http://haydn.kbs.uni-hannover.de:28080/ConvertService.ashx";
     private static final MessageFormat CONVERT_PARAMS = new MessageFormat("?url={0}&outputtype={1}&filetype={2}&title={3}&key={4}");
     private static final int MAX_TRY = 3;
-    private final static Logger logger = Logger.getLogger(ServiceConverter.class);
+    private final static Logger logger = Logger.getLogger(ConverterService.class);
+    private final Learnweb learnweb;
 
-    static
+    public ConverterService(Learnweb learnweb)
     {
-        try
-        {
-            int timeout = Integer.parseInt(ConfigManager.GetProperty("files.docservice.timeout"));
-            if(timeout > 0)
-            {
-                CONVERT_TIMEOUT = timeout;
-            }
-        }
-        catch(Exception ex)
-        {
-        }
+        this.learnweb = learnweb;
     }
 
-    public static InputStream convert(String fileName, String fileUri)
+    public InputStream convert(String fileName, String fileUri)
     {
         String fileExt = fileName.substring(fileName.lastIndexOf("."));
         String fileType = FileUtility.getFileType(fileName);
-        String internalFileExt = DocumentManager.GetInternalExtension(fileType);
+        String internalFileExt = FileUtility.getInternalExtension(fileType);
         try
         {
             String key = FileUtility.generateRevisionId(fileUri);
 
-            Pair<Integer, String> res = ServiceConverter.getConvertedUri(fileUri, fileExt, internalFileExt, key, false);
+            Pair<Integer, String> res = getConvertedUri(fileUri, fileExt, internalFileExt, key, false);
 
             int result = res.getKey();
             String newFileUri = res.getValue();
@@ -85,7 +77,7 @@ public class ServiceConverter
         return null;
     }
 
-    public static Pair<Integer, String> getConvertedUri(String documentUri, String fromExtension, String toExtension, String documentRevisionId, Boolean isAsync) throws Exception
+    public Pair<Integer, String> getConvertedUri(String documentUri, String fromExtension, String toExtension, String documentRevisionId, Boolean isAsync) throws Exception
     {
         String convertedDocumentUri = null;
 
@@ -130,7 +122,7 @@ public class ServiceConverter
         return new MutablePair<>(percent, convertedDocumentUri);
     }
 
-    private static String sendRequestToConvertService(String documentUri, String fromExtension, String toExtension, String documentRevisionId, Boolean isAsync) throws Exception
+    private String sendRequestToConvertService(String documentUri, String fromExtension, String toExtension, String documentRevisionId, Boolean isAsync) throws Exception
     {
         fromExtension = fromExtension == null || fromExtension.isEmpty() ? FileUtility.getFileExtension(documentUri) : fromExtension;
 
@@ -143,7 +135,7 @@ public class ServiceConverter
 
         Object[] args = { URLEncoder.encode(documentUri), toExtension.replace(".", ""), fromExtension.replace(".", ""), title, documentRevisionId };
 
-        String urlToConverter = DOCUMENT_CONVERTER_URL + CONVERT_PARAMS.format(args);
+        String urlToConverter = learnweb.getProperties().getProperty("FILES.DOCSERVICE.URL.CONVERTER") + CONVERT_PARAMS.format(args);
 
         if(isAsync)
             urlToConverter += "&async=true";
@@ -184,7 +176,7 @@ public class ServiceConverter
         return xml;
     }
 
-    private static void ProcessConvertServiceResponceError(int errorCode) throws Exception
+    private void ProcessConvertServiceResponceError(int errorCode) throws Exception
     {
         String errorMessage = "";
         String errorMessageTemplate = "Error occurred in the ConvertService: ";
@@ -225,7 +217,7 @@ public class ServiceConverter
         throw new Exception(errorMessage);
     }
 
-    private static Pair<Integer, String> getResponseUri(String xml) throws Exception
+    private Pair<Integer, String> getResponseUri(String xml) throws Exception
     {
         Document document = convertStringToXmlDocument(xml);
 
