@@ -3,6 +3,7 @@ package de.l3s.learnweb;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -28,21 +29,31 @@ public class SurveyManager
         this.learnweb = learnweb;
     }
 
-    public Survey getFormQuestions(int resource_id)
+    public Survey getFormQuestions(int resource_id, int userId)
     {
         Survey survey = new Survey();
         survey.resource_id = resource_id;
-
+        String submitCheck = "SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?";
         String titleDesc = "SELECT `title`, `description` FROM `lw_resource` WHERE `resource_id` = ?";
         String getSurveyId = "SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?";
         PreparedStatement ps = null;
         try
         {
+            ResultSet rs = null;
+            ps = learnweb.getConnection().prepareStatement(submitCheck);
+            ps.setInt(1, resource_id);
+            ps.setInt(2, userId);
+            rs = ps.executeQuery();
+            if(rs.next())
+            {
+
+                survey.submitted = true;
+
+            }
+
             ps = learnweb.getConnection().prepareStatement(getSurveyId);
 
             ps.setInt(1, resource_id);
-
-            ResultSet rs = null;
 
             rs = ps.executeQuery();
 
@@ -66,6 +77,14 @@ public class SurveyManager
             {
                 survey.description = descTitle.getString("description");
                 survey.surveyTitle = descTitle.getString("title");
+                if(survey.isSubmitted())
+                {
+
+                    survey.formQuestions = new ArrayList<SurveyMetaDataFields>();
+                    return survey;
+
+                }
+
             }
 
             String surveyDetails = "SELECT * FROM `lw_survey` WHERE `survey_id` = ?";
@@ -128,25 +147,15 @@ public class SurveyManager
         return survey;
     }
 
-    public boolean upload(int user_id, HashMap<String, String> wrappedAnswers, HashMap<String, String[]> wrappedMultipleAnswers, int resource_id)
+    public void upload(int user_id, HashMap<String, String> wrappedAnswers, HashMap<String, String[]> wrappedMultipleAnswers, int resource_id)
     {
         int survey_id = 0;
-        String submitCheck = "SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?";
 
         String getSurveyId = "SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?";
         PreparedStatement ps = null;
         ResultSet rs = null;
         try
         {
-            ps = learnweb.getConnection().prepareStatement(submitCheck);
-            ps.setInt(1, resource_id);
-            ps.setInt(2, user_id);
-            rs = ps.executeQuery();
-            if(rs.next())
-            {
-
-                return false;
-            }
             ps = learnweb.getConnection().prepareStatement(getSurveyId);
 
             ps.setInt(1, resource_id);
@@ -205,7 +214,7 @@ public class SurveyManager
         while(answer2.hasNext())
         {
             Entry<String, String[]> pair1 = answer2.next();
-            System.out.println(pair1.getKey() + " " + pair1.getValue().length);
+
             try
             {
                 PreparedStatement insert = learnweb.getConnection().prepareStatement(insertAnswers);
@@ -238,7 +247,6 @@ public class SurveyManager
             }
 
         }
-        return true;
 
     }
 }

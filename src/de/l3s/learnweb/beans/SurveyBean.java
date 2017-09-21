@@ -3,7 +3,6 @@ package de.l3s.learnweb.beans;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Map.Entry;
 
 import javax.annotation.PostConstruct;
 import javax.faces.application.FacesMessage;
@@ -28,6 +27,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
     private String surveyTitle;
     private String description;
     private int organizationId;
+    private boolean submitted;
     private Survey sv = new Survey();
 
     public Survey getSv()
@@ -90,26 +90,26 @@ public class SurveyBean extends ApplicationBean implements Serializable
     {
         SurveyManager sm = getLearnweb().getSurveyManager();
         questions = new ArrayList<SurveyMetaDataFields>();
-
-        sv = sm.getFormQuestions(resource_id);
+        User u = getUser();
+        sv = sm.getFormQuestions(resource_id, u.getId());
+        submitted = sv.isSubmitted();
         questions = sv.getFormQuestions();
+
         surveyTitle = sv.getSurveyTitle();
         description = sv.getDescription();
         organizationId = sv.getOrganizationId();
+        if(sv.isSubmitted())
+            addGrowl(FacesMessage.SEVERITY_ERROR, "You have submitted the form previously. You can only submit once.");
 
     }
 
     public void submit()
     {
         User u = getUser();
-        for(Entry<String, String[]> e : wrappedMultipleAnswers.entrySet())
-        {
-            System.out.println(e.getKey());
-            System.out.println(e.getValue().length);
-        }
-        boolean submit = getLearnweb().getSurveyManager().upload(u.getId(), wrappedAnswers, wrappedMultipleAnswers, resource_id);
 
-        if(submit)
+        getLearnweb().getSurveyManager().upload(u.getId(), wrappedAnswers, wrappedMultipleAnswers, resource_id);
+
+        if(!sv.isSubmitted())
             addGrowl(FacesMessage.SEVERITY_INFO, "Successful Submit");
         else
             addGrowl(FacesMessage.SEVERITY_ERROR, "You have submitted the form previously. You can only submit once.");
@@ -184,5 +184,15 @@ public class SurveyBean extends ApplicationBean implements Serializable
     public void setOrganizationId(int organizationId)
     {
         this.organizationId = organizationId;
+    }
+
+    public boolean isSubmitted()
+    {
+        return submitted;
+    }
+
+    public void setSubmitted(boolean submitted)
+    {
+        this.submitted = submitted;
     }
 }

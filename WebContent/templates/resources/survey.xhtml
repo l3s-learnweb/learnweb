@@ -106,7 +106,7 @@
 	</c:forEach>
 	</h:panelGrid>
 	</p:panel>
-	<p:commandButton ajax="false" id="submit" value="Submit" style="float:left;" styleClass="greenbutton resource_button" action="#{surveyBean.submit()}" update=":surveygrowl">
+	<p:commandButton ajax="false" id="submit" value="Submit" style="float:left;" styleClass="greenbutton resource_button" action="#{surveyBean.submit()}" update=":surveygrowl" disabled="#{surveyBean.submitted}">
 		
 
 					</p:commandButton>
