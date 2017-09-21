@@ -164,13 +164,14 @@
 		</h:form>
 		<br/>
 		<br/>
-		
-			<div class="page_header">
-				<span>
-					#{msg.otherGroups}
-				</span>
-			</div>
-			<h:form id="other_groups">
+		<h:form id="other_groups">
+			<ui:fragment rendered="#{not empty groupsBean.otherGroups}">
+				<div class="page_header">
+					<span>
+						#{msg.otherGroups}
+					</span>
+				</div>
+			
 				<p:dataTable var="group" value="#{groupsBean.otherGroups}" emptyMessage="#{msg.no_groups_found}"  paginator="false" >
 					<p:ajax event="filter" oncomplete="applyTooltip()"/>
 					<p:ajax event="sort" oncomplete="applyTooltip()"/>
@@ -216,9 +217,9 @@
 						 
 					</p:column>
 
-				</p:dataTable>
-			</h:form>
-
+				</p:dataTable>			
+			</ui:fragment>
+		</h:form>
 	</ui:define>
 </ui:composition>
 </html>

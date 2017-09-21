@@ -13,6 +13,15 @@
 		<from>/new/(.*)</from>
 		<to type="redirect">/$1</to>
 	</rule>
+	<rule>
+		<from>(/web-apps/.*)</from>
+		<to type="proxy">http://haydn.kbs.uni-hannover.de:28080/$1</to>
+	</rule>
+	<rule>
+	<!-- match against urls like http://haydn.kbs.uni-hannover.de:28080/2017-06-09-10-21/web-apps/apps/presentationeditor/embed/ -->
+		<from>(/\d{4}-\d{2}-\d{2}-\d{2}-\d{2}/.*)</from>
+		<to type="proxy">http://haydn.kbs.uni-hannover.de:28080/$1</to>
+	</rule>
 	
 	<rule>
 		<from>/archive/(.*)</from>

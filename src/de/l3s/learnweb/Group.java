@@ -734,6 +734,11 @@ public class Group implements Comparable<Group>, HasId, Serializable
         return false;
     }
 
+    /**
+     * the owner of resources is not shown if true
+     * 
+     * @return
+     */
     public boolean isRestrictionAnonymousResources()
     {
         return restrictionAnonymousResources;

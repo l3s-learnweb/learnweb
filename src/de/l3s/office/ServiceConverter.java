@@ -15,14 +15,14 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.lang3.tuple.MutablePair;
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-
-import javafx.util.Pair;
 
 public class ServiceConverter
 {
@@ -128,7 +128,7 @@ public class ServiceConverter
             percent = percent >= 100 ? 99 : percent;
         }
 
-        return new Pair<>(percent, convertedDocumentUri);
+        return new MutablePair<>(percent, convertedDocumentUri);
     }
 
     private static String sendRequestToConvertService(String documentUri, String fromExtension, String toExtension, String documentRevisionId, Boolean isAsync) throws Exception
@@ -265,7 +265,7 @@ public class ServiceConverter
             resultPercent = resultPercent >= 100 ? 99 : resultPercent;
         }
 
-        return new Pair<>(resultPercent, responseUri);
+        return new MutablePair<>(resultPercent, responseUri);
     }
 
     private static String convertStreamToString(InputStream stream) throws IOException
