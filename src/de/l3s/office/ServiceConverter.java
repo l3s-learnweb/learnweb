@@ -49,7 +49,6 @@ public class ServiceConverter
 
     public static InputStream convert(String fileName, String fileUri)
     {
-        fileUri = fileUri.replace("localhost", "130.75.87.143");
         String fileExt = fileName.substring(fileName.lastIndexOf("."));
         String fileType = FileUtility.getFileType(fileName);
         String internalFileExt = DocumentManager.GetInternalExtension(fileType);
