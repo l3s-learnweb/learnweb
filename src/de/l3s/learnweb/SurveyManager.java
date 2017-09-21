@@ -66,10 +66,7 @@ public class SurveyManager
 
                 //System.out.println(survey.survey_id);
             }
-            else
-            {
-                System.out.println("RESOURCE ID: " + resource_id);
-            }
+
             ps = learnweb.getConnection().prepareStatement(titleDesc);
             ps.setInt(1, resource_id);
             ResultSet descTitle = ps.executeQuery();
@@ -116,7 +113,7 @@ public class SurveyManager
                 {
                     String str = result.getString("answers").trim();
                     formQuestion.setAnswers(Arrays.asList(str.split("\\s*\\|\\|\\|\\s*")));
-                    System.out.println(formQuestion.getAnswers());
+
                 }
                 if(!result.getString("extra").isEmpty())
                 {
@@ -176,12 +173,9 @@ public class SurveyManager
                 //  start = rs.getDate("open_date");
                 // end = rs.getDate("close_date");
                 survey_id = rs.getInt("survey_id");
-                System.out.println(survey_id);
+
             }
-            else
-            {
-                System.out.println("RESOURCE ID: " + resource_id);
-            }
+
         }
         catch(SQLException e2)
         {
@@ -233,7 +227,7 @@ public class SurveyManager
                     {
                         str = str + s + ",";
                     }
-                    System.out.println("String= " + str);
+
                     str = str.substring(0, str.lastIndexOf(","));
                     insert.setString(4, str);
                 }

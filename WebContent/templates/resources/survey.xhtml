@@ -20,7 +20,7 @@
 	<h:outputStylesheet library="eu4all-survey" name="survey.css" />
 		<h:outputScript library="glossary" name="glossary.js" />
 	<h:panelGroup id="main_component" layout="block">
-	<h:form id="form" prependId="false">
+	<h:form id="form" prependId="false" >
 	<p:growl id="surveygrowl" autoUpdate="true" redisplay="false"
 						globalOnly="true" showDetail="true"></p:growl>
 						
@@ -31,7 +31,8 @@
 	
 	<br/>
 	</div>
-	<p:panel id="panel" header="#{surveyBean.surveyTitle}" style="margin-bottom:10px;">
+	<p:panel id="panelOut" header="#{surveyBean.surveyTitle}" style="margin-bottom:10px;" rendered="true">
+	<p:panel id="panel" widgetVar="formVar" rendered="true" style="border:none;">
 	<h:panelGrid columns="1" cellpadding="5">
 	<c:forEach var="field" items="#{surveyBean.questions}">
 	
@@ -106,7 +107,9 @@
 	</c:forEach>
 	</h:panelGrid>
 	</p:panel>
-	<p:commandButton ajax="false" id="submit" value="Submit" style="float:left;" styleClass="greenbutton resource_button" action="#{surveyBean.submit()}" update=":surveygrowl" disabled="#{surveyBean.submitted}">
+	</p:panel>
+	
+	<p:commandButton widgetVar="sub" id="submit" value="Submit" style="float:left;" styleClass="greenbutton resource_button" action="#{surveyBean.submit()}" update=":surveygrowl :message :panel" onclick="sub.disable();" oncomplete="PF('formVar').close();" disabled="#{surveyBean.submitted}">
 		
 
 					</p:commandButton>

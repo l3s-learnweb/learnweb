@@ -67,14 +67,11 @@ public class SurveyBean extends ApplicationBean implements Serializable
             }
             catch(Exception e)
             {
-                log.error("Couldn't log glossary action; resource: ", e);
+                log.error("Couldn't log survey action; resource: ", e);
             }
 
         }
-        else
-        {
-            System.out.println("Resource id is not set!");
-        }
+
     }
 
     @PostConstruct
@@ -110,7 +107,10 @@ public class SurveyBean extends ApplicationBean implements Serializable
         getLearnweb().getSurveyManager().upload(u.getId(), wrappedAnswers, wrappedMultipleAnswers, resource_id);
 
         if(!sv.isSubmitted())
+        {
             addGrowl(FacesMessage.SEVERITY_INFO, "Successful Submit");
+            sv.isSubmitted();
+        }
         else
             addGrowl(FacesMessage.SEVERITY_ERROR, "You have submitted the form previously. You can only submit once.");
 
