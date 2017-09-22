@@ -109,7 +109,7 @@
 	</p:panel>
 	</p:panel>
 	
-	<p:commandButton widgetVar="sub" id="submit" value="Submit" style="float:left;" styleClass="greenbutton resource_button" action="#{surveyBean.submit()}" update=":surveygrowl :message :panel" onclick="sub.disable();" oncomplete="PF('formVar').close();" disabled="#{surveyBean.submitted}">
+	<p:commandButton widgetVar="sub" id="submit" value="Submit" style="float:left;" styleClass="greenbutton resource_button" action="#{surveyBean.submit()}" update=":surveygrowl :message :panel"  oncomplete="if (args &amp;&amp; !args.validationFailed) {PF('formVar').close(); sub.disable();}" disabled="#{surveyBean.submitted}">
 		
 
 					</p:commandButton>
