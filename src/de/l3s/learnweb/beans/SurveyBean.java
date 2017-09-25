@@ -87,8 +87,11 @@ public class SurveyBean extends ApplicationBean implements Serializable
     {
         SurveyManager sm = getLearnweb().getSurveyManager();
         questions = new ArrayList<SurveyMetaDataFields>();
-        User u = getUser();
-        sv = sm.getFormQuestions(resource_id, u.getId());
+        User user = getUser();
+        if(user == null)
+            return;
+
+        sv = sm.getFormQuestions(resource_id, user.getId());
         submitted = sv.isSubmitted();
         questions = sv.getFormQuestions();
 
@@ -97,7 +100,6 @@ public class SurveyBean extends ApplicationBean implements Serializable
         organizationId = sv.getOrganizationId();
         if(sv.isSubmitted())
             addGrowl(FacesMessage.SEVERITY_ERROR, "You have submitted the form previously. You can only submit once.");
-
     }
 
     public void submit()
