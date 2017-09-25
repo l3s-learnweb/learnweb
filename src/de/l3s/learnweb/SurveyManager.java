@@ -144,13 +144,30 @@ public class SurveyManager
         return survey;
     }
 
-    public void upload(int user_id, HashMap<String, String> wrappedAnswers, HashMap<String, String[]> wrappedMultipleAnswers, int resource_id)
+    public void uploadAnswers(int user_id, HashMap<String, String> wrappedAnswers, HashMap<String, String[]> wrappedMultipleAnswers, int resource_id)
     {
         int survey_id = 0;
-
+        String submitCheck = "SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?";
         String getSurveyId = "SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?";
         PreparedStatement ps = null;
         ResultSet rs = null;
+        try
+        {
+            ps = learnweb.getConnection().prepareStatement(submitCheck);
+            ps.setInt(1, resource_id);
+            ps.setInt(2, user_id);
+            rs = ps.executeQuery();
+            if(rs.next())
+            {
+                //prevent upload on twice dblclick
+                return;
+            }
+
+        }
+        catch(SQLException e)
+        {
+            log.error("Error in checking submit check on answer upload" + e);
+        }
         try
         {
             ps = learnweb.getConnection().prepareStatement(getSurveyId);
@@ -161,8 +178,7 @@ public class SurveyManager
         }
         catch(SQLException e3)
         {
-            // TODO Auto-generated catch block
-            e3.printStackTrace();
+            log.error("Error in getting survey id ", e3);
         }
         try
         {
@@ -179,19 +195,27 @@ public class SurveyManager
         }
         catch(SQLException e2)
         {
-            // TODO Auto-generated catch block
-            e2.printStackTrace();
+            log.error(e2);
         }
         String insertAnswers = "INSERT INTO `lw_survey_answer`(`resource_id`, `user_id`, `question_id`, `answer`) VALUES (?, ?, ?, ?)";
 
         Iterator<Entry<String, String>> answer1 = wrappedAnswers.entrySet().iterator();
+        PreparedStatement insert = null;
+        try
+        {
+            insert = learnweb.getConnection().prepareStatement(insertAnswers);
+        }
+        catch(SQLException e1)
+        {
+            log.error("Error in initializing prepared Statement for answers", e1);
+        }
         while(answer1.hasNext())
         {
             Entry<String, String> pair = answer1.next();
 
             try
             {
-                PreparedStatement insert = learnweb.getConnection().prepareStatement(insertAnswers);
+
                 insert.setInt(1, resource_id);
                 insert.setInt(2, user_id);
                 insert.setInt(3, Integer.parseInt(pair.getKey()));
@@ -211,7 +235,7 @@ public class SurveyManager
 
             try
             {
-                PreparedStatement insert = learnweb.getConnection().prepareStatement(insertAnswers);
+
                 insert.setInt(1, resource_id);
                 insert.setInt(2, user_id);
                 insert.setInt(3, Integer.parseInt(pair1.getKey()));

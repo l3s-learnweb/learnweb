@@ -105,8 +105,8 @@ public class SurveyBean extends ApplicationBean implements Serializable
     public void submit()
     {
         User u = getUser();
-
-        getLearnweb().getSurveyManager().upload(u.getId(), wrappedAnswers, wrappedMultipleAnswers, resource_id);
+        if(!sv.isSubmitted())
+            getLearnweb().getSurveyManager().uploadAnswers(u.getId(), wrappedAnswers, wrappedMultipleAnswers, resource_id);
 
         if(!sv.isSubmitted())
         {
