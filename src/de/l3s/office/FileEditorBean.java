@@ -48,7 +48,8 @@ public class FileEditorBean extends ApplicationBean implements Serializable
 
     public void setKey()
     {
-        key = FileUtility.generateRevisionId(FileUtility.getInfoForKey(mainFile));
+        if(mainFile != null)
+            key = FileUtility.generateRevisionId(FileUtility.getInfoForKey(mainFile));
     }
 
     public String getCallbackUrl()

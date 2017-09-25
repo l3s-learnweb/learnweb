@@ -311,9 +311,8 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 if(resource != null)
                 {
                     this.setClickedGroupItem(resource);
-                    if(resource.getType().equals("Presentation") || resource.getType().equals("Text") || resource.getType().equals("Spreadsheet"))
+                    if((resource.getType().equals("Presentation") || resource.getType().equals("Text") || resource.getType().equals("Spreadsheet")) && resource.getStorageType() == 1)
                         getFileEditorBean().fillInFileInfo(resource);
-
                 }
                 else
                     throw new NullPointerException("Target resource does not exists");
