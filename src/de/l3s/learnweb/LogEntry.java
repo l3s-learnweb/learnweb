@@ -86,7 +86,12 @@ public class LogEntry implements Serializable
     public LogEntry(ResultSet rs) throws SQLException
     {
         userId = rs.getInt(1);
-        username = rs.getString(2);
+        User user = Learnweb.getInstance().getUserManager().getUser(userId);
+        if(user != null)
+            username = user.getUsername();
+        else
+            username = rs.getString(2);
+
         action = Action.values()[rs.getInt(3)];
         params = rs.getString(5);
         date = new Date(rs.getTimestamp(6).getTime());

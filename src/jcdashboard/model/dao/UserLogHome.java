@@ -792,8 +792,12 @@ public class UserLogHome
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
         try
         {
+            /*
             PreparedStatement pstmt = openConnection().prepareStatement("select  REPLACE(REPLACE(SUBSTRING_INDEX(referer, '/', 3),'.waps.io',''),'.secure','') as domain, count(*) as count from proxy_log where user_id=" + userId + " and date>'" + startdate + "' and date<'"
                     + enddate + "' and status_code < 400 group by (domain) order by count desc");
+            */
+            PreparedStatement pstmt = openConnection().prepareStatement("select  REPLACE(REPLACE(SUBSTRING_INDEX(url, '/', 3),'.waps.io',''),'.secure','') as domain, count(*) as count from tracker.track where external_client_id=2 AND external_user_id='" + userId
+                    + "' and created_at>'" + startdate + "' and created_at<'" + enddate + "' group by (domain) order by count desc");
             ResultSet rs = pstmt.executeQuery();
             while(rs.next())
                 actperday.put(rs.getString("domain"), rs.getInt("count"));

@@ -702,7 +702,7 @@
     function createIframe(config) {
         var iframe = document.createElement("iframe");
 
-        iframe.src = "http://zerberus.kbs.uni-hannover.de/web-apps/apps/"+getAppPath(config) + getAppParameters(config);
+        iframe.src = "http://haydn.kbs.uni-hannover.de/web-apps/apps/"+getAppPath(config) + getAppParameters(config);
         iframe.width = config.width;
         iframe.height = config.height;
         iframe.align = "top";
