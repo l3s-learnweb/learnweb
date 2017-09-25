@@ -111,9 +111,7 @@
 					
 					<p:commandButton widgetVar="sub" id="submit" value="Submit" style="float:left;" styleClass="greenbutton resource_button" action="#{surveyBean.submit()}"
 						update=":surveygrowl :message :panel"  oncomplete="if (args &amp;&amp; !args.validationFailed) {PF('formVar').close(); sub.disable();}"
-						disabled="#{surveyBean.submitted}">
-
-
+						disabled="#{surveyBean.submitted}" onstart="return confirm('Are you sure, you want to submit?');">
 					</p:commandButton>
 				</ui:fragment>
 			</h:form>
