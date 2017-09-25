@@ -106,8 +106,8 @@ public class FileEditorBean extends ApplicationBean implements Serializable
 
     public void setFullFilesUrl()
     {
-        String url = file.getFileUrl().contains(getServerUrl()) ? file.getFileUrl() : getServerUrlWithoutContextPath() + file.getFileUrl();
-        fullFilesUrl = url;
+        //String url = file.getFileUrl().contains(getServerUrl()) ? file.getFileUrl() : getServerUrlWithoutContextPath() + file.getFileUrl();
+        fullFilesUrl = file.getFileUrl();
     }
 
     public String getFullFilesUrl()
