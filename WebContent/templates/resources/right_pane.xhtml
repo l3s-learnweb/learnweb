@@ -252,7 +252,7 @@
 										</div>
 										<div id="lightbox_content">
 											<ui:fragment rendered="#{resourceDetailBean.clickedResource.storageType == 1 and resourceDetailBean.clickedResource.type eq 'Text' or resourceDetailBean.clickedResource.type eq 'Spreadsheet' or resourceDetailBean.clickedResource.type eq 'Presentation'}">
-												<div id="lightbox_editor_disabled" />
+												<div id="lightbox_editor" />
 											</ui:fragment>
 										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'pdf'}">
 											   	<iframe src="#{resourceDetailBean.clickedResource.url}" style="width:100%; height:100%; "/>
@@ -350,14 +350,16 @@
 									</div>
 								</ui:fragment>
 								<ui:fragment rendered="${ (resourceDetailBean.clickedResource.storageType == 1 and resourceDetailBean.clickedResource.type eq 'Text') or resourceDetailBean.clickedResource.type eq 'Spreadsheet' or resourceDetailBean.clickedResource.type eq 'Presentation'}">
+								
 									 <div class="preview_box editor_preview">
-									<h:inputHidden id="ed_can_be_edited" value="#{resourceDetailBean.clickedResource.canEditResource(userBean.user)}" />
+										<h:inputHidden id="ed_can_be_edited" value="#{resourceDetailBean.clickedResource.canEditResource(userBean.user)}" />
 										<ui:decorate template="/templates/resources/editor.xhtml">
 											<ui:param name="bean" value="#{fileEditorBean}" />
 										</ui:decorate>
-									</div> 
+									</div> 					
+									
 								</ui:fragment>
-								 <h:inputHidden id="storageType" value="#{resourceDetailBean.clickedResource.storageType}" /> 
+								<h:inputHidden id="storageType" value="#{resourceDetailBean.clickedResource.storageType}" /> 
 								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'Image') and empty resourceDetailBean.clickedResource.thumbnail3}">
 									<div class="preview_box">
 										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>
@@ -854,12 +856,12 @@
 									</div>
 								</div>				
 			
-								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type == 'Video'}">
+								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() == 'video'}">
 									<div class="preview_box" style="height:412px; width:100%;">
 										<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
 									</div>
 								</ui:fragment>								
-								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'Video' and resourceDetailBean.clickedResource.type != 'Image'}">
+								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() != 'text' and resourceDetailBean.clickedResource.type.toLowerCase() != 'pdf' and resourceDetailBean.clickedResource.type.toLowerCase() != 'video' and resourceDetailBean.clickedResource.type.toLowerCase() != 'image'}">
 									<div class="preview_box">
 										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}'
 											escape="false"/>
