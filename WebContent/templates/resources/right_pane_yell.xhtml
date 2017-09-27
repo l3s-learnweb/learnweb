@@ -539,15 +539,21 @@
 								</tr>
 							</ui:fragment>
 							
-							<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata}">
+							<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource}">
 								<div id="eMetaDetail">
 								<hr/>
 								<div id="detailList">
 								<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.categories}">
 									<label class="rdlabel"><b>Category: </b></label>#{resourceDetailBean.clickedResource.extendedMetadata.categories[0]} <br /> 
 								</ui:fragment>
+								<ui:fragment rendered="#{empty resourceDetailBean.clickedResource.extendedMetadata.categories}">
+									<label class="rdlabel"><b>Category: </b></label><i>(Not available. Click the button below to add)</i> <br /> 
+								</ui:fragment>
 								<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.lCount}">
 									<label class="rdlabel"><b>Level (stats): </b></label>#{resourceDetailBean.clickedResource.extendedMetadata.lCount} <br /> 
+								</ui:fragment>
+								<ui:fragment rendered="#{empty resourceDetailBean.clickedResource.extendedMetadata.lCount}">
+									<label class="rdlabel"><b>Level (stats): </b></label><i>(Not available. Click the button below to add)</i> <br /> 
 								</ui:fragment>
 								<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.targetCount}">
 									
@@ -588,9 +594,15 @@
 
 									</ui:repeat>
 									<br /> 
-									</ui:fragment>
-									
-									<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.purposeCount}">
+								</ui:fragment>
+								
+								<ui:fragment rendered="#{empty resourceDetailBean.clickedResource.extendedMetadata.targetCount}">
+									<label class="rdlabel"><b>Target Learner (stats): </b></label><i>(Not available. Click the button below to add)</i> <br />
+								</ui:fragment>
+								<ui:fragment rendered="#{empty resourceDetailBean.clickedResource.extendedMetadata.purposeCount}">
+									<label class="rdlabel"><b>Purpose of use (stats): </b></label><i>(Not available. Click the button below to add)</i> <br />
+								</ui:fragment>  
+								<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.purposeCount}">
 									<label class="rdlabel"><b>Purpose of use
 											(stats): </b></label>
 									<ui:repeat
@@ -628,16 +640,16 @@
 											<span class="tag tag-grey">#{p.key}</span>
 										</ui:fragment>
 									</ui:repeat>
-									</ui:fragment>
+								</ui:fragment>
 									
-									</div> <!-- detailList -->
-									<br/>
+								</div> <!-- detailList -->
+								<br/>
 									
-									<div id="detailAdd">
+								<div id="detailAdd">
 									<!-- add the button to show div detailBox -->
 									<p:commandButton id="detailAdd_button" styleClass="greenbutton centered"
 									value="Add your own" onclick="PF('adlg').show();" />
-									</div>
+								</div>
 									
 									<hr/>
 								</div>
