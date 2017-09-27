@@ -26,8 +26,10 @@
 				#{msg.last_activities}
 			</span> 
 			#{msg.of} #{userDetailBean.user.username}
-		</div>
-		<h:panelGroup id="profile_news">		
+		</div>		
+		
+		<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailBean.pageHidden}" />
+		<h:panelGroup id="profile_news" rendered="#{not userDetailBean.pageHidden}">		
 			<ui:decorate template="/templates/user/logs.xhtml">
 				<ui:param name="news" value="#{newsFeedBean.newslist}"/>
 			</ui:decorate >
@@ -38,14 +40,16 @@
 	<ui:define name="right_layout">
 
 		<p:layoutUnit position="east" size="38%" resizable="false" closable="false" 
-			collapsible="false" style="border: none;" id="right_pane" rendered="#{userBean.loggedIn}">
-			<div style="width:90%; position:relative; margin-left:auto; margin-right:auto;">
+			collapsible="false" style="border: none;" id="right_pane" rendered="#{userBean.loggedIn}">			
+			
+			<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailBean.pageHidden}" />
+			<h:panelGroup  rendered="#{not userDetailBean.pageHidden}" layout="block" style="width:90%; position:relative; margin-left:auto; margin-right:auto;">
 			
 				<ui:decorate template="/templates/user/profile.xhtml">
 					<ui:param name="user" value="#{userDetailBean.user}" />		
 				</ui:decorate>
 				
-			</div>
+			</h:panelGroup>
 		</p:layoutUnit>
 	</ui:define>
 </ui:composition>

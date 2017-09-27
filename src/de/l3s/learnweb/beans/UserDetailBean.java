@@ -6,15 +6,20 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
+import org.apache.log4j.Logger;
+
+import de.l3s.learnweb.Organisation.Option;
 import de.l3s.learnweb.User;
 
 @ManagedBean
 @RequestScoped
 public class UserDetailBean extends ApplicationBean
 {
+    private static final Logger log = Logger.getLogger(UserDetailBean.class);
 
     private int userId;
     private User user;
+    private boolean pageHidden = false; // true when the course uses username anonymization
 
     public int getUserId()
     {
@@ -26,6 +31,7 @@ public class UserDetailBean extends ApplicationBean
         this.userId = userId;
     }
 
+    @Override
     public User getUser()
     {
         return user;
@@ -46,10 +52,24 @@ public class UserDetailBean extends ApplicationBean
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("Can't load user", e);
         }
 
         if(null == user)
             addMessage(FacesMessage.SEVERITY_ERROR, "invalid user id");
+
+        if(user.getOrganisation().getId() == 1249 && user.getOrganisation().getOption(Option.Misc_Anonymize_usernames))
+            pageHidden = true;
     }
+
+    /**
+     * true when the course uses username anonymization
+     * 
+     * @return
+     */
+    public boolean isPageHidden()
+    {
+        return pageHidden;
+    }
+
 }

@@ -192,6 +192,10 @@ function updateUrlParameters(url, key, value) {
 function resourceDND() {
     var $dataGrid = $('#datagrid');
 
+    // disable drag and drop for the activity log
+    if($dataGrid.hasClass("not-selectable"))
+    	return;
+    
     $dataGrid.selectable({
         filter: 'div.group-resources-item',
         cancel: 'div.group-resources-item',

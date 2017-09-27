@@ -601,7 +601,9 @@
 										</span>
 									</td>
 									<td>
-										<h:outputText value="#{resourceDetailBean.clickedResource.prettyPath}" />
+										<a href="resources.jsf?group_id=#{resourceDetailBean.clickedResource.groupId}&folder_id=#{resourceDetailBean.clickedResource.folderId}&resource_id=#{resourceDetailBean.clickedResource.id}">
+											<h:outputText value="#{resourceDetailBean.clickedResource.prettyPath}" />
+										</a>
 									</td>
 								</tr>
 							</ui:fragment>

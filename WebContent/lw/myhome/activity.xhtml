@@ -64,7 +64,7 @@
 			</h:form>
 		</p:dialog>
 			
-		<h:dataTable var="datagrid" value="#{activityResourceBean.newslist}" id="datagrid" style="width:100%">
+		<h:dataTable var="datagrid" value="#{activityResourceBean.newslist}" id="datagrid" style="width:100%" styleClass="not-selectable">
 			<h:column>
 				<div class="newsfeed_user_image_div">
 				    <img id="userpic" src="#{datagrid.logEntry.userImage}" width="30" height="30" class="newsfeed_user_image" 
