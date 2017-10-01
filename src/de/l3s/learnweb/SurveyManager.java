@@ -97,7 +97,7 @@ public class SurveyManager
 
             }
 
-            String query = "SELECT * FROM `lw_survey_question` WHERE `survey_id` = ?";
+            String query = "SELECT * FROM `lw_survey_question` WHERE `survey_id` = ? ORDER BY `order` ASC";
             PreparedStatement preparedStmnt = null;
             ResultSet result = null;
 
