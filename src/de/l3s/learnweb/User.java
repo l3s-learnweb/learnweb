@@ -49,7 +49,7 @@ public class User implements Comparable<User>, Serializable, HasId
     private String profession;
     private String additionalInformation;
     private String interest;
-    private String phone;
+    private String studentId;
     private Date registrationDate;
     @Size(max = 255)
     private String credits;
@@ -193,9 +193,9 @@ public class User implements Comparable<User>, Serializable, HasId
         return interweb;
     }
 
-    public String getPhone()
+    public String getStudentId()
     {
-        return phone;
+        return studentId;
     }
 
     public String getProfession()
@@ -290,9 +290,9 @@ public class User implements Comparable<User>, Serializable, HasId
         this.interest = interest;
     }
 
-    public void setPhone(String phone)
+    public void setStudentId(String studentId)
     {
-        this.phone = phone;
+        this.studentId = studentId;
     }
 
     public void setProfession(String profession)

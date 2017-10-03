@@ -58,7 +58,8 @@
 							<h:outputText value="#{msg.photo}:" />
 							<p:fileUpload id="userphoto" fileUploadListener="${profileBean.handleFileUpload}" mode="advanced" style="width:16rem" 
 									update=":growl profile_image" auto="true" label="#{msg.choose_file}" cancelLabel="abb" sizeLimit="10485760" 
-									allowTypes="/(\.|\/)(gif|jpe?g|png)$/" />
+									allowTypes="/(\.|\/)(gif|jpe?g|png)$/"
+									disabled="#{profileBean.anonymizeUsername}" />
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="userphoto" id="userphotoMessage" />							
 							
 							<h:outputText value="#{msg.gender}:" />
@@ -70,12 +71,19 @@
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="usergender" id="usergenderMessage" />					
 				
 														
-							<h:outputText value="#{msg.email_address}:" />
+							<h:outputText>
+								#{msg.email_address}<h:outputText value=" *" rendered="#{profileBean.mailRequired}"/>:
+							</h:outputText>
 							<p:inputText id="useremail" value="#{profileBean.email}" validatorMessage="#{msg.email_message}" label="#{msg.email_address}:">
 								<f:ajax render="useremailMessage"/>							
 							</p:inputText>
-							<p:message showSummary="true" showDetail="false" styleClass="error" for="useremail" id="useremailMessage" />					
-
+							<p:message showSummary="true" showDetail="false" styleClass="error" for="useremail" id="useremailMessage" />
+							
+							<h:outputText>
+								#{msg.student_id}<h:outputText value=" *" rendered="#{profileBean.studentIdRequired}"/>:
+							</h:outputText>
+							<p:inputText id="studentId" value="#{profileBean.studentId}" label="#{msg.student_id}:" required="true" />
+							<p:message showSummary="true" showDetail="false" styleClass="error" for="studentId" id="studentIdMessage" />
 							
 							<h:outputText value="#{msg.full_name}:" />
 							<p:inputText id="userfullname" value="#{profileBean.fullName}"  />

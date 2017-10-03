@@ -69,6 +69,11 @@
 					<p:inputText id="email" value="#{registrationBean.email}" label="#{msg.email_address}" required="#{registrationBean.mailRequired}" />
 					<p:message id="emailMessage" showSummary="true" showDetail="false" styleClass="error" for="email" />
 					
+					
+					<h:outputLabel for="studentId" rendered="#{registrationBean.studentIdRequired}">#{msg.student_id} *:</h:outputLabel>			
+					<p:inputText id="studentId" value="#{registrationBean.studentId}" label="#{msg.student_id}:" rendered="#{registrationBean.studentIdRequired}" />
+					<p:message showSummary="true" showDetail="false" styleClass="error" for="studentId" id="studentIdMessage" rendered="#{registrationBean.studentIdRequired}" />
+					
 					<h:outputText value="" />			
 					<p:commandButton action="#{registrationBean.register}" value="#{msg.registerLabel}" ajax="false"/>
 					<h:outputText value="" />

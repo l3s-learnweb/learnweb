@@ -35,6 +35,9 @@ public class RegistrationBean extends ApplicationBean implements Serializable
     @NotEmpty
     private String confirmPassword;
 
+    @NotEmpty
+    private String studentId;
+
     @Email
     private String email;
 
@@ -43,6 +46,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 
     private boolean mailRequired = false;
     private boolean affiliationRequired = false;
+    private boolean studentIdRequired = false;
 
     public String getUsername()
     {
@@ -112,6 +116,12 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 
         final User user = learnweb.getUserManager().registerUser(username, password, email, wizardTitle);
 
+        if(studentIdRequired || affiliationRequired)
+        {
+            user.setStudentId(studentId);
+            user.setAffiliation(affiliation);
+            user.save();
+        }
         //addMessage(FacesMessage.SEVERITY_INFO, "register_success");
 
         // log the user in
@@ -168,6 +178,7 @@ public class RegistrationBean extends ApplicationBean implements Serializable
 
                 mailRequired = course.getOption(Course.Option.Users_Require_mail_address);
                 affiliationRequired = course.getOption(Course.Option.Users_Require_Affiliation);
+                studentIdRequired = course.getOption(Course.Option.Users_Require_Student_Id);
             }
         }
         else
@@ -189,9 +200,24 @@ public class RegistrationBean extends ApplicationBean implements Serializable
         this.affiliation = affiliation;
     }
 
+    public String getStudentId()
+    {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId)
+    {
+        this.studentId = studentId;
+    }
+
     public boolean isAffiliationRequired()
     {
         return affiliationRequired;
+    }
+
+    public boolean isStudentIdRequired()
+    {
+        return studentIdRequired;
     }
 
 }

@@ -24,6 +24,7 @@ import org.primefaces.event.FileUploadEvent;
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.UserManager;
 
@@ -53,7 +54,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
     private String username;
 
     @Size(min = 0, max = 50)
-    private String phone;
+    private String studentId;
 
     @Size(min = 0, max = 80)
     private String profession;
@@ -84,7 +85,9 @@ public class ProfileBean extends ApplicationBean implements Serializable
     private User user;
     private boolean moderatorAccess = false;
     private boolean affiliationRequired = false;
+    private boolean studentIdRequired = false;
     private boolean mailRequired = false;
+    private boolean anonymizeUsername;
 
     public List<LogEntry> getLogMessages()
     {
@@ -118,7 +121,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
         username = user.getRealUsername();
         email = user.getEmail();
-        phone = user.getPhone();
+        studentId = user.getStudentId();
         gender = user.getGender();
         dateofbirth = user.getDateofbirth();
         additionalInformation = user.getAdditionalInformation();
@@ -136,7 +139,12 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
             if(course.getOption(Course.Option.Users_Require_Affiliation))
                 affiliationRequired = true;
+
+            if(course.getOption(Course.Option.Users_Require_Student_Id))
+                studentIdRequired = true;
         }
+
+        anonymizeUsername = user.getOrganisation().getOption(Organisation.Option.Misc_Anonymize_usernames);
     }
 
     public String getUrlBase()
@@ -175,7 +183,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
         user.setEmail(email);
         user.setGender(gender);
         user.setInterest(interest);
-        user.setPhone(phone);
+        user.setStudentId(studentId);
         user.setProfession(profession);
         user.setUsername(username);
         user.setAffiliation(affiliation);
@@ -288,14 +296,14 @@ public class ProfileBean extends ApplicationBean implements Serializable
         this.username = username;
     }
 
-    public String getPhone()
+    public String getStudentId()
     {
-        return phone;
+        return studentId;
     }
 
-    public void setPhone(String phone)
+    public void setStudentId(String phone)
     {
-        this.phone = phone;
+        this.studentId = phone;
     }
 
     public String getProfession()
@@ -427,4 +435,15 @@ public class ProfileBean extends ApplicationBean implements Serializable
     {
         return mailRequired;
     }
+
+    public boolean isStudentIdRequired()
+    {
+        return studentIdRequired;
+    }
+
+    public boolean isAnonymizeUsername()
+    {
+        return anonymizeUsername;
+    }
+
 }

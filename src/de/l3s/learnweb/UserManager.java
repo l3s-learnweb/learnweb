@@ -371,7 +371,7 @@ public class UserManager
         replace.setString(12, user.getProfession());
         replace.setString(13, user.getAdditionalInformation());
         replace.setString(14, user.getInterest());
-        replace.setString(15, user.getPhone());
+        replace.setString(15, user.getStudentId());
         replace.setInt(16, user.isAdmin() ? 1 : 0);
         replace.setInt(17, user.isModerator() ? 1 : 0);
         replace.setInt(18, user.getActiveCourseId());
@@ -427,7 +427,7 @@ public class UserManager
         user.setProfession(rs.getString("profession"));
         user.setAdditionalinformation(rs.getString("additionalinformation"));
         user.setInterest(rs.getString("interest"));
-        user.setPhone(rs.getString("phone"));
+        user.setStudentId(rs.getString("phone"));
         user.setRegistrationDate(new Date(rs.getTimestamp("registration_date").getTime()));
         user.setCredits(rs.getString("credits"));
 
