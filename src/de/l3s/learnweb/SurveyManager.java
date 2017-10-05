@@ -147,11 +147,11 @@ public class SurveyManager
     public void uploadAnswers(int user_id, HashMap<String, String> wrappedAnswers, HashMap<String, String[]> wrappedMultipleAnswers, int resource_id)
     {
         int survey_id = 0;
-        //String submitCheck = "SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?";
+        String submitCheck = "SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?";
         String getSurveyId = "SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?";
         PreparedStatement ps = null;
         ResultSet rs = null;
-        /*try
+        try
         {
             ps = learnweb.getConnection().prepareStatement(submitCheck);
             ps.setInt(1, resource_id);
@@ -162,12 +162,12 @@ public class SurveyManager
                 //prevent upload on twice dblclick
                 return;
             }
-        
+
         }
         catch(SQLException e)
         {
             log.error("Error in checking submit check on answer upload" + e);
-        }*/
+        }
         try
         {
             ps = learnweb.getConnection().prepareStatement(getSurveyId);
