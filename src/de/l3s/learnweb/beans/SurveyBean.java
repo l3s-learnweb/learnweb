@@ -67,6 +67,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
             }
             catch(Exception e)
             {
+                resource_id = -1;
                 log.error("Couldn't log survey action; resource: ", e);
             }
 
@@ -77,7 +78,15 @@ public class SurveyBean extends ApplicationBean implements Serializable
     @PostConstruct
     public void init()
     {
-        resource_id = getParameterInt("resource_id");
+        try
+        {
+            resource_id = getParameterInt("resource_id");
+        }
+        catch(NullPointerException e)
+        {
+            resource_id = 0;
+        }
+
         if(resource_id > 0)
             getSurvey();
 

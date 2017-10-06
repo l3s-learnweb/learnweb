@@ -22,7 +22,7 @@
 		<h:panelGroup id="main_component" layout="block">
 			<h:form id="form" prependId="false">
 				<p:growl id="surveygrowl" autoUpdate="true" redisplay="false" globalOnly="true" showDetail="true"></p:growl>
-
+				<ui:fragment rendered="#{surveyBean.resource_id gt 0}">
 				<ui:fragment rendered="#{userBean.user.organisation.id eq surveyBean.organizationId or surveyBean.organizationId eq 0}">
 					<div class="headings">
 						<br />
@@ -114,6 +114,15 @@
 						disabled="#{surveyBean.submitted}">
 					</p:commandButton>
 				</ui:fragment>
+				</ui:fragment>
+				<ui:fragment rendered="#{surveyBean.resource_id le 0}">
+				<div class="noresource">
+				<br />
+				<br/>
+				<h:outputText value="Please select correct survey resource." style="text-align:center; font-weight:bold" ></h:outputText>
+				</div>
+				</ui:fragment>
+				
 			</h:form>
 		</h:panelGroup>
 	</ui:define>

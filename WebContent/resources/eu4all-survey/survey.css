@@ -8,6 +8,14 @@
 	margin:0px auto;
 	text-align:center;
 }
+.noresource{
+	
+	font-weight:bold;
+	font-size:1.5rem;
+	margin:0px auto;
+	text-align:center;
+}
+
 .inputfield{
 	font-family:Arial;
 	font-size:1.5rem;
