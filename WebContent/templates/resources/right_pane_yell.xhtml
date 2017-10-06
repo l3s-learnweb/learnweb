@@ -1165,7 +1165,7 @@
 							<h:panelGrid columns="6" cellpadding="10" layout="grid" id="catlist">
 							<h:outputLabel for="toplist" value="Top:" />
 							<p:selectOneMenu id="toplist"
-											value="#{searchFilterBean.selectedCattop}"
+											value="#{resourceDetailBean.selectedTopcat}"
 											panelStyle="width:250px"
 											valueChangeListener="#{searchFilterBean.topCatChanged}">
 											<f:selectItems value="#{searchFilterBean.cattops}" />
@@ -1174,14 +1174,14 @@
 							
 							<h:outputLabel for="middlelist" value="Middle:" />
 							<p:selectOneMenu id="middlelist"
-											value="#{searchFilterBean.selectedCatmid}"
+											value="#{resourceDetailBean.selectedMidcat}"
 											panelStyle="width:250px">
 											<f:selectItems value="#{searchFilterBean.catmids}" />
 							</p:selectOneMenu>
 							
 							<h:outputLabel for="bottomlist" value="Bottom:" />
 							<p:selectOneMenu id="bottomlist"
-											value="#{searchFilterBean.selectedCatbot}"
+											value="#{resourceDetailBean.selectedBotcat}"
 											panelStyle="width:250px">
 											<f:selectItems value="#{searchFilterBean.catbots}" />
 							</p:selectOneMenu>
@@ -1192,14 +1192,14 @@
 							<h:panelGrid columns="4" cellpadding="10" layout="grid">
 							<h:outputLabel for="levlist" value="Language Level: " />
 								<p:selectCheckboxMenu id="levlist"
-											value="#{searchFilterBean.selectedLevels}" label="Levels"
+											value="#{resourceDetailBean.selectedLevels}" label="Levels"
 											multiple="true" filter="true" filterMatchMode="startsWith"
 											panelStyle="width:250px">
 											<f:selectItems value="#{searchFilterBean.levels}" />
 								</p:selectCheckboxMenu>
 							<h:outputLabel for="aglist" value="Target Learner:" />
 								<p:selectCheckboxMenu id="aglist"
-											value="#{searchFilterBean.selectedTargets}"
+											value="#{resourceDetailBean.selectedTargets}"
 											label="Target Learners" multiple="true" filter="true"
 											filterMatchMode="startsWith" panelStyle="width:250px">
 											<f:selectItems value="#{searchFilterBean.targets}" />
@@ -1211,7 +1211,7 @@
 							<h:panelGrid columns="4" cellpadding="10" layout="grid">
 								<h:outputLabel for="aclist" value="Purpose of Use:" />
 									<p:selectCheckboxMenu id="aclist"
-											value="#{searchFilterBean.selectedPurposes}"
+											value="#{resourceDetailBean.selectedPurposes}"
 											label="Purposes of Use" multiple="true" filter="true"
 											filterMatchMode="startsWith" panelStyle="width:250px">
 											<f:selectItems value="#{searchFilterBean.purposes}" />
@@ -1222,7 +1222,7 @@
 					</p:panelGrid>
       				<br/>
       				<br/>
-            		<p:commandButton value="Save" onclick="adlg.hide(); return false;" />  
+            		<p:commandButton value="Save" actionListener = "#{resourceDetailBean.addNewMetadata}" oncomplete="adlg.hide(); return false;" />  
             		<p:commandButton value="Cancel" onclick="adlg.hide(); return false;"/>
            			</h:form>
            			
