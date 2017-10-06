@@ -23,6 +23,7 @@ import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.beans.AddResourceBean;
 import de.l3s.learnweb.rm.Category;
+import de.l3s.learnweb.rm.LanglevelManager;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.solrClient.SolrClient;
@@ -1506,6 +1507,26 @@ public class ResourceManager
         replace.setInt(5, null == category ? 0 : category.getCatbot().getId());
         replace.executeUpdate();
         replace.close();
+    }
+
+    //save new resource_langlevel
+    protected void saveLanglevelResource(Resource resource, String[] langlevels, User user) throws SQLException
+    {
+        LanglevelManager llm = Learnweb.getInstance().getLanglevelManager();
+        for(int i = 0; i < langlevels.length; i++)
+        {
+            //find id of the lang level first 
+            int llevelId = llm.getLanglevelIdByLanglevelname(langlevels[i]);
+            if(llevelId > 0)
+            {
+                PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_langlevel` (`resource_id`, `user_id`, `langlevel_id`) VALUES (?, ?, ?)");
+                replace.setInt(1, null == resource ? 0 : resource.getId());
+                replace.setInt(2, null == user ? 0 : user.getId());
+                replace.setInt(3, null == langlevels ? 0 : llevelId);
+                replace.executeUpdate();
+                replace.close();
+            }
+        }
     }
 
 }
