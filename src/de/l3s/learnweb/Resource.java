@@ -2000,4 +2000,11 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         this.validCourses = validCourses;
     }
 
+    //new methods to add new metadata to given resource
+    public void addNewLevels(String[] selectedLevels, User user) throws SQLException
+    {
+        ResourceManager rsm = Learnweb.getInstance().getResourceManager();
+        rsm.saveLanglevelResource(this, selectedLevels, user);
+    }
+
 }
