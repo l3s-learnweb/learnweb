@@ -61,6 +61,14 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     private boolean isStarRatingEnabled = false;
     private boolean isThumbRatingEnabled = false;
 
+    //added by Chloe: to allow addition of new extended metadata
+    private String selectedTopcat;
+    private String selectedMidcat;
+    private String selectedBotcat;
+    private String[] selectedLevels;
+    private String[] selectedTargets;
+    private String[] selectedPurposes;
+
     public ResourceDetailBean() throws SQLException
     {
         clickedResource = new Resource();
@@ -630,4 +638,112 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     {
         return isThumbRatingEnabled;
     }
+
+    //methods to add new extended metadata to a resource
+    public String addNewMetadata()
+    {
+        //check if each value is not empty, then pass it to Resource to add new 
+
+        //selectedLevels 
+        if(selectedLevels.length > 0)
+        {
+            //now move to clickedResource addNewLevels()
+            if(null == getUser())
+            {
+                addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
+                return null;
+            }
+
+            try
+            {
+                clickedResource.addNewLevels(selectedLevels, getUser());
+                addGrowl(FacesMessage.SEVERITY_INFO, "langlevels_added");
+                //log(Action.tagging_resource, clickedResource.getGroupId(), clickedResource.getId(), tagName);
+                selectedLevels = null; // clear lang level field 
+            }
+            catch(Exception e)
+            {
+                addFatalMessage(e);
+            }
+        }
+        else
+        {
+            return null;
+        }
+
+        if(selectedTargets.length > 0)
+        {
+            //now move to clickedResource addNewTargets()
+        }
+
+        if(selectedPurposes.length > 0)
+        {
+            //now move to clickedResource addNewPurposes()
+        }
+
+        return null;
+
+    }
+
+    //getter and setter for extended metadata variables
+    public String getSelectedTopcat()
+    {
+        return selectedTopcat;
+    }
+
+    public void setSelectedTopcat(String selectedTopcat)
+    {
+        this.selectedTopcat = selectedTopcat;
+    }
+
+    public String getSelectedMidcat()
+    {
+        return selectedMidcat;
+    }
+
+    public void setSelectedMidcat(String selectedMidcat)
+    {
+        this.selectedMidcat = selectedMidcat;
+    }
+
+    public String getSelectedBotcat()
+    {
+        return selectedBotcat;
+    }
+
+    public void setSelectedBotcat(String selectedBotcat)
+    {
+        this.selectedBotcat = selectedBotcat;
+    }
+
+    public String[] getSelectedLevels()
+    {
+        return selectedLevels;
+    }
+
+    public void setSelectedLevels(String[] selectedLevels)
+    {
+        this.selectedLevels = selectedLevels;
+    }
+
+    public String[] getSelectedTargets()
+    {
+        return selectedTargets;
+    }
+
+    public void setSelectedTargets(String[] selectedTargets)
+    {
+        this.selectedTargets = selectedTargets;
+    }
+
+    public String[] getSelectedPurposes()
+    {
+        return selectedPurposes;
+    }
+
+    public void setSelectedPurposes(String[] selectedPurposes)
+    {
+        this.selectedPurposes = selectedPurposes;
+    }
+
 }
