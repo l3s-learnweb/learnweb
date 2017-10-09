@@ -109,22 +109,22 @@ public class SurveyManager
             while(result.next())
             {
                 SurveyMetaDataFields formQuestion = new SurveyMetaDataFields(result.getString("question"), MetadataType.valueOf(result.getString("question_type")));
-                if(!result.getString("answers").isEmpty())
+                if(result.getString("answers") != null)
                 {
                     String str = result.getString("answers").trim();
                     formQuestion.setAnswers(Arrays.asList(str.split("\\s*\\|\\|\\|\\s*")));
 
                 }
-                if(!result.getString("extra").isEmpty())
+                if(result.getString("extra") != null)
                 {
                     formQuestion.setExtra(result.getString("extra"));
                 }
-                if(!result.getString("option").isEmpty())
+                if(result.getString("option") != null)
                 {
                     String str = result.getString("option").trim();
                     formQuestion.setOptions(Arrays.asList(str.split("\\s*\\|\\|\\|\\s*")));
                 }
-                if(!result.getString("info").isEmpty())
+                if(result.getString("info") != null)
                 {
                     formQuestion.setInfo(result.getString("info"));
                 }
