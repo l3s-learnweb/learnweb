@@ -3,6 +3,8 @@ package de.l3s.util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+import org.apache.log4j.Logger;
+
 public class MD5
 {
     public static String hash(String hashString)
@@ -35,7 +37,8 @@ public class MD5
         }
         catch(NoSuchAlgorithmException e)
         {
-            e.printStackTrace();
+            Logger.getLogger(MD5.class).error("fatal hashing error", e);
+
             return "error while hashing";
         }
     }

@@ -352,7 +352,7 @@ public class ResultSetBean extends ApplicationBean
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
             addGrowl(FacesMessage.SEVERITY_INFO, "fatal_error");
         }
 
@@ -453,7 +453,7 @@ public class ResultSetBean extends ApplicationBean
         }
         catch(Throwable e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
     }
 
@@ -572,7 +572,7 @@ public class ResultSetBean extends ApplicationBean
         }
         catch(ParseException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
         catch(ClientHandlerException e)
         {
@@ -813,7 +813,7 @@ public class ResultSetBean extends ApplicationBean
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
     }
 
@@ -837,7 +837,7 @@ public class ResultSetBean extends ApplicationBean
                 }
                 catch(SQLException e)
                 {
-                    e.printStackTrace();
+                    log.error("unhandled error", e);
                 }
                 resultsetFeed.add(new ResultsetFeed(sharedResultset.getUserSharing(), sharedResultset.getResultsetId(), sharedResultset.getMd5value(), sharedResultset.getQuery(), sharedResultset.getQueryTimestamp(), user));
             }

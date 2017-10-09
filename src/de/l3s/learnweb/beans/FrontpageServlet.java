@@ -8,6 +8,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 /**
  * Redirects users to the Learnweb or ArchiveWeb Frontpage depending of the used domain
  * 
@@ -49,7 +51,7 @@ public class FrontpageServlet extends HttpServlet
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            Logger.getLogger(FrontpageServlet.class).error("unhandled error", e);
             response.setStatus(500);
         }
     }

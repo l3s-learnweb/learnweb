@@ -27,7 +27,7 @@ import de.l3s.learnweb.User;
 @ViewScoped
 public class ReEditPresentationBean extends ApplicationBean implements Serializable
 {
-    private static final long serialVersionUID = 5990525657898323276L;
+    private static final long serialVersionUID = -9220412122901252187L;
     private static final Logger log = Logger.getLogger(ReEditPresentationBean.class);
     private int groupId;
     private Group group;

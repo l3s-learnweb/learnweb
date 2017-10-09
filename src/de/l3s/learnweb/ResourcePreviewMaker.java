@@ -448,49 +448,6 @@ public class ResourcePreviewMaker
         }
     }
 
-    /* public void processWOrd(Resource resource, InputStream ip)
-    {
-        XWPFDocument wordDocument = null;
-        try
-        {
-            wordDocument = new XWPFDocument(ip);
-        }
-        catch(IOException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
-        POIXMLProperties props = wordDocument.getProperties();
-    
-        String thumbnail = props.getThumbnailFilename();
-        if(thumbnail == null)
-        {
-            // No thumbnail
-        }
-        else
-        {
-            FileOutputStream fos = null;
-            try
-            {
-                fos = new FileOutputStream("c:\\temp\\" + thumbnail);
-            }
-            catch(FileNotFoundException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-            try
-            {
-                IOUtils.copy(props.getThumbnailImage(), fos);
-            }
-            catch(IOException e)
-            {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
-        }
-    }*/
-
     public void processPdf(Resource resource, InputStream inputStream) throws IOException, SQLException
     {
         ByteArrayOutputStream out = new ByteArrayOutputStream(BUFSIZE);

@@ -640,24 +640,25 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     }
 
     //methods to add new extended metadata to a resource
-    public String addNewMetadata()
+    public void addNewMetadata()
     {
+        //now move to clickedResource addNewLevels()
+        if(null == getUser())
+        {
+            addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
+            return;
+        }
+
         //check if each value is not empty, then pass it to Resource to add new 
 
         //selectedLevels 
         if(selectedLevels.length > 0)
         {
-            //now move to clickedResource addNewLevels()
-            if(null == getUser())
-            {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "loginRequiredText");
-                return null;
-            }
-
             try
             {
                 clickedResource.addNewLevels(selectedLevels, getUser());
-                addGrowl(FacesMessage.SEVERITY_INFO, "langlevels_added");
+                addGrowl(FacesMessage.SEVERITY_INFO, "langlevels_added"); // I would not add one message for each input field
+
                 //log(Action.tagging_resource, clickedResource.getGroupId(), clickedResource.getId(), tagName);
                 selectedLevels = null; // clear lang level field 
             }
@@ -668,7 +669,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
         else
         {
-            return null;
+            return;
         }
 
         if(selectedTargets.length > 0)
@@ -681,8 +682,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             //now move to clickedResource addNewPurposes()
         }
 
-        return null;
-
+        addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
     //getter and setter for extended metadata variables

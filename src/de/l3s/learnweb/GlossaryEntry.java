@@ -1,14 +1,19 @@
 package de.l3s.learnweb;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.primefaces.model.UploadedFile;
 
 import de.l3s.glossary.LanguageItem;
 
-public class GlossaryEntry
+public class GlossaryEntry implements Serializable
 {
+    private static final long serialVersionUID = -6600840950470704444L;
+    private static final Logger log = Logger.getLogger(GlossaryEntry.class);
+
     private List<LanguageItem> ItalianItems;
     private List<LanguageItem> UkItems;
     private String fileName;
@@ -145,8 +150,7 @@ public class GlossaryEntry
             }
             catch(SQLException e)
             {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.error("unhandled error", e);
             }
         }
         return user;

@@ -11,12 +11,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.annotation.PostConstruct;
-import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 
+import org.apache.log4j.Logger;
 import org.primefaces.model.chart.Axis;
 import org.primefaces.model.chart.AxisType;
 import org.primefaces.model.chart.BarChartModel;
@@ -38,13 +38,15 @@ import de.l3s.util.Sql;
 @SessionScoped
 public class UserAssessmentBean extends ApplicationBean implements Serializable
 {
+    private static final long serialVersionUID = 5446061086847252293L;
+
     /**
      * User Assessment Bean
      * 
      * @author Alana Morais
      */
 
-    private static final long serialVersionUID = 1L;
+    private static final Logger log = Logger.getLogger(UserAssessmentBean.class);
 
     //Form variables
     private List<User> group1 = new ArrayList<User>();
@@ -180,7 +182,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
     }
 
@@ -200,7 +202,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
     }
 
@@ -216,7 +218,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
             return null;
         }
     }
@@ -235,7 +237,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
             return null;
         }
     }
@@ -252,7 +254,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
             return null;
         }
     }
@@ -510,7 +512,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
             return null;
         }
     }
@@ -548,7 +550,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
             }
             catch(SQLException e)
             {
-                e.printStackTrace();
+                log.error("unhandled error", e);
                 return null;
             }
         }
@@ -573,7 +575,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
             }
             catch(SQLException e)
             {
-                e.printStackTrace();
+                log.error("unhandled error", e);
                 return null;
             }
         }
@@ -634,7 +636,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
             return null;
         }
     }
@@ -653,8 +655,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e1)
         {
-            addGrowl(FacesMessage.SEVERITY_FATAL, "Fatal error. Log out please.");
-            e1.printStackTrace();
+            addFatalMessage(e1);
         }
     }
 
@@ -730,7 +731,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
     }
 
@@ -759,7 +760,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
     }
 
@@ -788,7 +789,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
     }
 
@@ -826,7 +827,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
     }
 
@@ -851,7 +852,7 @@ public class UserAssessmentBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
     }
 

@@ -10,6 +10,7 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.regex.Pattern;
 
+import org.apache.log4j.Logger;
 import org.apache.solr.client.solrj.SolrServerException;
 import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
@@ -31,6 +32,7 @@ import edu.uci.ics.crawler4j.url.WebURL;
 
 public class TedCrawler extends WebCrawler
 {
+    private static final Logger log = Logger.getLogger(TedCrawler.class);
 
     /*No TED ID mentioned on the Ted talk page*/
     //static Connection dbcon;
@@ -96,7 +98,7 @@ public class TedCrawler extends WebCrawler
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
     }
 
@@ -112,7 +114,7 @@ public class TedCrawler extends WebCrawler
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
 
     }
@@ -193,7 +195,7 @@ public class TedCrawler extends WebCrawler
             }
             catch(SQLException e)
             {
-                e.printStackTrace();
+                log.error("unhandled error", e);
             }
 
             try
@@ -288,7 +290,7 @@ public class TedCrawler extends WebCrawler
                     }
                     catch(SQLException e)
                     {
-                        e.printStackTrace();
+                        log.error("unhandled error", e);
                     }
 
                 }
@@ -322,7 +324,7 @@ public class TedCrawler extends WebCrawler
                                 }
                                 catch(HttpStatusException e)
                                 {
-                                    e.printStackTrace();
+                                    log.error("unhandled error", e);
                                 }
                             }
                         }
@@ -333,7 +335,7 @@ public class TedCrawler extends WebCrawler
             }
             catch(IOException e)
             {
-                e.printStackTrace();
+                log.error("unhandled error", e);
             }
 
         }

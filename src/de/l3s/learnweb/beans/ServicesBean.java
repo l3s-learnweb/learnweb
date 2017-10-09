@@ -120,13 +120,13 @@ public class ServicesBean extends ApplicationBean implements Serializable
             catch(IOException e)
             {
                 addMessage(FacesMessage.SEVERITY_FATAL, "Interweb timeout");
-                e.printStackTrace();
+                log.error("unhandled error", e);
                 return;
             }
             catch(IllegalResponseException e)
             {
                 addMessage(FacesMessage.SEVERITY_FATAL, "Interweb error");
-                e.printStackTrace();
+                log.error("unhandled error", e);
                 this.services.clear();
                 return;
             }

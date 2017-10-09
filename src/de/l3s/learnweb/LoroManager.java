@@ -161,7 +161,7 @@ public class LoroManager
         catch(Exception e)
         {
             log.error("Failed because there was a problem in establishing connection.");
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
         return false;
     }
@@ -181,11 +181,11 @@ public class LoroManager
         }
         catch(FileNotFoundException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
         catch(UnsupportedEncodingException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
 
         getConnection();

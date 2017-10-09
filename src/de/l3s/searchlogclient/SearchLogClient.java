@@ -12,6 +12,8 @@ import java.util.LinkedList;
 
 import javax.ws.rs.core.MediaType;
 
+import org.apache.log4j.Logger;
+
 import com.sun.jersey.api.client.Client;
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
@@ -42,6 +44,7 @@ import de.l3s.util.StringHelper;
 
 public class SearchLogClient
 {
+    private static final Logger log = Logger.getLogger(SearchLogClient.class);
 
     //searchLog service URLs
     private static String baseURL;
@@ -854,7 +857,7 @@ public class SearchLogClient
         }
         catch(UnsupportedEncodingException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
 
         ArrayList<HistoryByDate> queryHistoryByDate = new ArrayList<HistoryByDate>();
@@ -890,7 +893,7 @@ public class SearchLogClient
         }
         catch(UnsupportedEncodingException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
 
         ArrayList<HistoryByDate> queryHistoryByDate = new ArrayList<HistoryByDate>();
@@ -927,7 +930,7 @@ public class SearchLogClient
         }
         catch(UnsupportedEncodingException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
 
         ArrayList<HistoryByDate> searchHistoryByDates = new ArrayList<HistoryByDate>();
@@ -960,7 +963,7 @@ public class SearchLogClient
         }
         catch(UnsupportedEncodingException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
 
         ArrayList<String> resourcesUrlList = new ArrayList<String>();
@@ -1021,7 +1024,7 @@ public class SearchLogClient
         }
         catch(UnsupportedEncodingException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
 
         WebResource web = client.resource(baseURL + resourcesByQueryAndTimestampURL + query + "/" + timestamp);
@@ -1101,7 +1104,7 @@ public class SearchLogClient
         }
         catch(UnsupportedEncodingException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
 
         WebResource web = client.resource(baseURL + resourcesByQueryAndTimeAndActionURL + query + "/" + timestamp + "/" + action);
@@ -1180,7 +1183,7 @@ public class SearchLogClient
         }
         catch(UnsupportedEncodingException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
 
         WebResource web = client.resource(baseURL + resourcesLogByResultsetAndActionURL + query + "/" + timestamp + "/" + action);

@@ -8,9 +8,12 @@ import java.util.List;
 
 import javax.validation.constraints.Size;
 
+import org.apache.log4j.Logger;
+
 public class Course implements Serializable, Comparable<Course>
 {
     private static final long serialVersionUID = -1101352995500154406L;
+    private static final Logger log = Logger.getLogger(Course.class);
 
     // add new options add the end , don't delete options !!!!!
     // if you add 64 options you have to add one options_field{x} column in lw_course 
@@ -339,7 +342,7 @@ public class Course implements Serializable, Comparable<Course>
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
 
             return 0;
         }

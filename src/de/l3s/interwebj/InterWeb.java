@@ -486,7 +486,7 @@ public class InterWeb implements Serializable
         }
         catch (IOException e)
         {
-        	e.printStackTrace();
+        	log.error("unhandled error", e);
         }*/
 
         UploadResponse uploadResponse = new UploadResponse(response.getEntityInputStream());

@@ -970,7 +970,6 @@ public class SearchFilters implements Serializable
         }
         catch(NumberFormatException | SQLException e)
         {
-            //e.printStackTrace();
             return id;
         }
     }

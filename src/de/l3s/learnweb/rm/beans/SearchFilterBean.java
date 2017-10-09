@@ -1,12 +1,16 @@
 package de.l3s.learnweb.rm.beans;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.annotation.PostConstruct;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
 import javax.faces.event.ValueChangeEvent;
+
+import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.rm.CategoryBottom;
@@ -14,10 +18,12 @@ import de.l3s.learnweb.rm.CategoryMiddle;
 import de.l3s.learnweb.rm.CategoryTop;
 
 @ManagedBean
-//@RequestScoped
-
-public class SearchFilterBean extends ApplicationBean
+@ViewScoped
+public class SearchFilterBean extends ApplicationBean implements Serializable
 {
+    private static final long serialVersionUID = 987526892886356642L;
+    private static final Logger log = Logger.getLogger(SearchFilterBean.class);
+
     private String[] selectedAuthors;
     private String[] selectedMtypes;
     private String[] selectedSources;
@@ -55,8 +61,7 @@ public class SearchFilterBean extends ApplicationBean
         }
         catch(SQLException e)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            addFatalMessage(e);
         }
 
         cattops = new ArrayList<String>();
@@ -72,8 +77,7 @@ public class SearchFilterBean extends ApplicationBean
         }
         catch(SQLException e1)
         {
-
-            e1.printStackTrace();
+            addFatalMessage(e1);
         }
 
         catmids = new ArrayList<String>();
@@ -324,7 +328,7 @@ public class SearchFilterBean extends ApplicationBean
     //populate middle category list when top category is selected
     public void topCatChanged(ValueChangeEvent e)
     {
-        String topcat = this.selectedCattop;
+        String topcat = (String) e.getNewValue();
         int cattopId = 0;
         try
         {

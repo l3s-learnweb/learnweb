@@ -1,5 +1,6 @@
 package de.l3s.clustering;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,6 +9,8 @@ import java.util.List;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
+
+import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.GroupManager;
@@ -19,8 +22,11 @@ import de.l3s.util.Sql;
 
 @ManagedBean
 @SessionScoped
-public class ClusterBean extends ApplicationBean
+public class ClusterBean extends ApplicationBean implements Serializable
 {
+    private static final long serialVersionUID = -8913025420503947035L;
+    private static final Logger log = Logger.getLogger(ClusterBean.class);
+
     private String jsonTextFormat = null;
     //Load from jsf pages
     private String classId;
@@ -166,7 +172,7 @@ public class ClusterBean extends ApplicationBean
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
     }
 
@@ -227,7 +233,7 @@ public class ClusterBean extends ApplicationBean
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
             return null;
         }
     }

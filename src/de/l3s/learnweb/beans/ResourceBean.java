@@ -101,7 +101,7 @@ public class ResourceBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
             addGrowl(FacesMessage.SEVERITY_ERROR, "fatal_error");
         }
         return null;
@@ -129,7 +129,7 @@ public class ResourceBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
             addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
         }
     }
@@ -197,7 +197,7 @@ public class ResourceBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
             addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
         }
 

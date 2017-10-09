@@ -13,6 +13,8 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.apache.log4j.Logger;
+
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.searchlogclient.jaxb.QueryLog;
@@ -23,6 +25,7 @@ import de.l3s.searchlogclient.jaxb.ViewingTime;
 @SessionScoped
 public class SelectUsersBean extends ApplicationBean implements Serializable
 {
+    private static final Logger log = Logger.getLogger(SelectUsersBean.class);
 
     private static final long serialVersionUID = 5314158272712896434L;
     private int selectedUser;
@@ -159,11 +162,11 @@ public class SelectUsersBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
         catch(ClassNotFoundException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
 
     }
@@ -208,11 +211,11 @@ public class SelectUsersBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
         catch(ClassNotFoundException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
     }
 
@@ -242,11 +245,11 @@ public class SelectUsersBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
         catch(ClassNotFoundException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
 
     }
@@ -276,11 +279,11 @@ public class SelectUsersBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
         catch(ClassNotFoundException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
 
     }

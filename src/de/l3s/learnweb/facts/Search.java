@@ -21,11 +21,14 @@ import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
+import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Search
 {
+    private static final Logger log = Logger.getLogger(Search.class);
+
     private static String[] propertyList = { "P569", "P19", "P570", "P20", "P21", "P26", "P40", "P102", "P112", "P17", "P159", "P1128", "452", "P36", "P473", "P1082", "P2046", "P272", "P161", "P57", "P136", "P50", "P1712", "P674", "P170", "P136", "P1104", "P577", "P178", "P404",
             "P136", "P400", "P287", "P725", "P225", "P141", "P279", "P2067", "P2048", "P18", "P31", "P131", "P154", "P41" };
     private static String serviceUrl = "http://godzilla.kbs.uni-hannover.de/bigdata/namespace/wdq/sparql";
@@ -88,7 +91,7 @@ public class Search
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
         finally
         {
@@ -105,7 +108,7 @@ public class Search
             }
             catch(IOException e)
             {
-                e.printStackTrace();
+                log.error("unhandled error", e);
             }
         }
         return idList;

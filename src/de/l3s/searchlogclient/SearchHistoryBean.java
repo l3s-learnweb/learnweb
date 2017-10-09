@@ -13,6 +13,8 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.SessionScoped;
 
+import org.apache.log4j.Logger;
+
 import com.sun.jersey.api.client.ClientHandlerException;
 
 import de.l3s.learnweb.Learnweb;
@@ -31,6 +33,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
 {
 
     private static final long serialVersionUID = -1722483813729380294L;
+    private static final Logger log = Logger.getLogger(SearchHistoryBean.class);
 
     private String newSearchComment;
     private Tag selectedTag;
@@ -426,7 +429,7 @@ public class SearchHistoryBean extends ApplicationBean implements Serializable
                 }
                 catch(ParseException e)
                 {
-                    e.printStackTrace();
+                    log.error("unhandled error", e);
                 }
 
             }

@@ -149,7 +149,7 @@ public class StudentlogBean extends ApplicationBean implements Serializable
         }
         catch(JSONException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
         return indice;
     }
@@ -479,7 +479,7 @@ public class StudentlogBean extends ApplicationBean implements Serializable
             }
             catch(ParseException e)
             {
-                e.printStackTrace();
+                log.error("unhandled error", e);
             }
             graph01label += " 		]";
 

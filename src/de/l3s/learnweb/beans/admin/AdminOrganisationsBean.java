@@ -109,7 +109,7 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
     // only helper classes to display the options
     public class OptionWrapper implements Serializable
     {
-        private static final long serialVersionUID = 2828959818690832148L;
+        private static final long serialVersionUID = 4028764135842666696L;
         private Option option;
         private boolean value;
 

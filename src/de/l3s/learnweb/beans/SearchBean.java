@@ -415,7 +415,7 @@ public class SearchBean extends ApplicationBean implements Serializable
         }
         catch(Throwable e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
         */
     }

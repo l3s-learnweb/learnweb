@@ -45,7 +45,7 @@ import de.l3s.util.StringHelper;
 @ViewScoped
 public class AdvSearchBean extends ApplicationBean implements Serializable
 {
-    private static final long serialVersionUID = -9105093690086624246L;
+    private static final long serialVersionUID = -3410396324920989385L;
     private static final Logger log = Logger.getLogger(AdvSearchBean.class);
     private static final DateFormat SOLR_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 

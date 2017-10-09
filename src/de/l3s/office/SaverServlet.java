@@ -32,6 +32,7 @@ import de.l3s.learnweb.Learnweb;
 
 public class SaverServlet extends HttpServlet
 {
+    private static final long serialVersionUID = 7296371511069054378L;
 
     private static final String SAMPLE_PPTX = "sample.pptx";
 
@@ -52,8 +53,6 @@ public class SaverServlet extends HttpServlet
     private static final String STATUS = "status";
 
     private static final String DELIMITER = "\\A";
-
-    private static final long serialVersionUID = 1L;
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException

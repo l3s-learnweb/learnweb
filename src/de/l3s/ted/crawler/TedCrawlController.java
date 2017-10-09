@@ -2,6 +2,7 @@ package de.l3s.ted.crawler;
 
 import java.net.URL;
 
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -15,6 +16,7 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 public class TedCrawlController implements Runnable
 {
     public static final String CRAWL_STORAGE_FOLDER = "/home/learnweb_user/TED_Crawl/";
+    private static final Logger log = Logger.getLogger(TedCrawlController.class);
 
     @Override
     public void run()
@@ -57,7 +59,7 @@ public class TedCrawlController implements Runnable
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
     }
 }

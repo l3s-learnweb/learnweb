@@ -117,7 +117,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
             addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
         }
     }
@@ -228,7 +228,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
 
     public class OptionWrapperGroup implements Serializable
     {
-        private static final long serialVersionUID = -7136479116433806735L;
+        private static final long serialVersionUID = -2323320446956640229L;
         private String title;
         private List<OptionWrapper> options;
 

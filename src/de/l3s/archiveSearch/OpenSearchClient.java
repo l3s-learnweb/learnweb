@@ -85,7 +85,7 @@ public class OpenSearchClient
         }
         catch(IOException | DOMException | ParseException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
         return resources;
     }

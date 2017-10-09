@@ -742,7 +742,7 @@ public class ArchiveUrlManager
         	}
         	catch(IOException e)
         	{
-        	    e.printStackTrace();
+        	    log.error("unhandled error", e);
         	}
         
             }

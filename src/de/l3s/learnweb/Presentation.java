@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -14,6 +15,8 @@ import org.jsoup.select.Elements;
 public class Presentation implements Serializable
 {
     private static final long serialVersionUID = 8403450212340352749L;
+    private static final Logger log = Logger.getLogger(Presentation.class);
+
     private int groupId;
     private int ownerId;
     private int presentationId;
@@ -72,7 +75,7 @@ public class Presentation implements Serializable
                     }
                     catch(SQLException e)
                     {
-                        e.printStackTrace();
+                        log.error("unhandled error", e);
                     }
                     catch(NumberFormatException ne)
                     {
@@ -85,7 +88,7 @@ public class Presentation implements Serializable
                         }
                         catch(SQLException se)
                         {
-                            se.printStackTrace();
+                            log.error("unhandled error", se);
                         }
                     }
                 }
@@ -102,7 +105,7 @@ public class Presentation implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
         return owner;
     }

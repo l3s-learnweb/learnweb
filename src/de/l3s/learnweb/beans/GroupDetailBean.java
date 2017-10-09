@@ -439,7 +439,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
     }
 
@@ -455,7 +455,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         }
         catch(SQLException e)
         {
-            e.printStackTrace();
+            log.error("unhandled error", e);
             addMessage(FacesMessage.SEVERITY_INFO, "sorry an error occurred");
         }
     }
@@ -1246,7 +1246,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         catch(SQLException e)
         {
             addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
 
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
@@ -1268,7 +1268,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         catch(SQLException e)
         {
             addGrowl(FacesMessage.SEVERITY_ERROR, "fatal error");
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
         addGrowl(FacesMessage.SEVERITY_INFO, "Copied Resources");
     }

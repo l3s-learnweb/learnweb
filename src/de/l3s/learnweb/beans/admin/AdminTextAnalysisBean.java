@@ -18,7 +18,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 @SessionScoped
 public class AdminTextAnalysisBean extends ApplicationBean implements Serializable
 {
-    private static final long serialVersionUID = 5584983377737726111L;
+    private static final long serialVersionUID = -3957625443067966969L;
 
     private String textBR;
     private String textNL;

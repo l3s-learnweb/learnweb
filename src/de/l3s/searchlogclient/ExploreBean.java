@@ -15,6 +15,8 @@ import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import com.sun.jersey.api.client.ClientHandlerException;
 
 import de.l3s.learnweb.Learnweb;
@@ -28,6 +30,7 @@ import de.l3s.searchlogclient.jaxb.ResourceLog;
 public class ExploreBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6889417588459447502L;
+    private static final Logger log = Logger.getLogger(ExploreBean.class);
 
     public enum MODE
     {
@@ -332,7 +335,7 @@ public class ExploreBean extends ApplicationBean implements Serializable
                 }
                 catch(ParseException e)
                 {
-                    e.printStackTrace();
+                    log.error("unhandled error", e);
                 }
 
             }

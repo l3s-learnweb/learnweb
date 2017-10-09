@@ -7,6 +7,8 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.log4j.Logger;
+
 @XmlRootElement
 public class SharedResultset
 {
@@ -36,7 +38,7 @@ public class SharedResultset
         }
         catch(ParseException e)
         {
-            e.printStackTrace();
+            Logger.getLogger(SharedResultset.class).error("unhandled error", e);
         }
         this.queryTimestamp = dateToString.format(queryDate);
     }

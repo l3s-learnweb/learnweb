@@ -1,10 +1,11 @@
 package de.l3s.learnweb.beans;
 
+import java.io.Serializable;
 import java.text.ParseException;
 import java.util.Random;
 
 import javax.faces.bean.ManagedBean;
-import javax.faces.view.ViewScoped;
+import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
 
@@ -14,7 +15,7 @@ import de.l3s.learnweb.facts.Search;
 
 @ManagedBean
 @ViewScoped
-public class FactSheetBean extends ApplicationBean
+public class FactSheetBean extends ApplicationBean implements Serializable
 {
     private String search;
     private Entity entity;

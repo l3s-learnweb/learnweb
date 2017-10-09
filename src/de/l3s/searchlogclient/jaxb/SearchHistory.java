@@ -7,6 +7,8 @@ import java.util.Date;
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
 
+import org.apache.log4j.Logger;
+
 @XmlRootElement(name = "SearchHistory")
 public class SearchHistory
 {
@@ -53,7 +55,7 @@ public class SearchHistory
         }
         catch(ParseException e)
         {
-            e.printStackTrace();
+            Logger.getLogger(SearchHistory.class).error("unhandled error", e);
         }
 
     }

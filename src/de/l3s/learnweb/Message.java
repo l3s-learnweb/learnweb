@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import org.apache.log4j.Logger;
+
 public class Message implements Comparable<Message>
 {
 
@@ -210,7 +212,7 @@ public class Message implements Comparable<Message>
         catch(SQLException e)
         {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            Logger.getLogger(Message.class).error("unhandled error", e);
         }
         return read;
     }

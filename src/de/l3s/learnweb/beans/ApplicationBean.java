@@ -92,7 +92,7 @@ public class ApplicationBean
         	v2 = new String(ptext, "UTF-8");// +" Kra Ðong";
         } 
         catch (UnsupportedEncodingException e) {
-        	e.printStackTrace();
+        	log.error("unhandled error", e);
         }
         
         log.debug(param +": "+ value +" oder "+ v2);

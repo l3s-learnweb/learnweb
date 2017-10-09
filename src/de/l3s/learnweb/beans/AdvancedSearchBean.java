@@ -283,7 +283,7 @@ public class AdvancedSearchBean
         catch(IOException | SolrServerException e)
         {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
 
         return "/lw/advancedSearch/search_result.xhtml?faces-redirect=true";

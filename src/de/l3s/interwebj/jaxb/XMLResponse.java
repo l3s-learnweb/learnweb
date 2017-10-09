@@ -1,9 +1,15 @@
 package de.l3s.interwebj.jaxb;
 
-import java.io.*;
+import java.io.ByteArrayOutputStream;
+import java.io.UnsupportedEncodingException;
 
-import javax.xml.bind.*;
-import javax.xml.bind.annotation.*;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlAttribute;
+import javax.xml.bind.annotation.XmlElement;
 
 @XmlAccessorType(XmlAccessType.FIELD)
 public class XMLResponse
@@ -50,13 +56,9 @@ public class XMLResponse
             m.marshal(this, baos);
             sb.append(baos.toString("UTF8"));
         }
-        catch(JAXBException e)
+        catch(JAXBException | UnsupportedEncodingException e)
         {
-            e.printStackTrace();
-        }
-        catch(UnsupportedEncodingException e)
-        {
-            e.printStackTrace();
+            sb.append("Interweb processing error: " + e.getMessage());
         }
         return sb.toString();
     }

@@ -49,7 +49,7 @@ public class GoogleDriveManager
         catch(Throwable e)
         {
             log.error("Can not init HTTP transport");
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
     }
 
@@ -89,7 +89,7 @@ public class GoogleDriveManager
         catch(IOException e)
         {
             log.error("Can not create document");
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
 
         return uploadedFile;
@@ -105,7 +105,7 @@ public class GoogleDriveManager
         catch(IOException e)
         {
             log.error("Can not get file");
-            e.printStackTrace();
+            log.error("unhandled error", e);
         }
 
         return file;
@@ -143,17 +143,17 @@ public class GoogleDriveManager
             catch(GeneralSecurityException e)
             {
                 log.error("Can not access to Google API");
-                e.printStackTrace();
+                log.error("unhandled error", e);
             }
             catch(URISyntaxException e)
             {
                 log.error("Can not load P12File for Google API");
-                e.printStackTrace();
+                log.error("unhandled error", e);
             }
             catch(IOException e)
             {
                 log.error("Can not get GoogleDrive credential");
-                e.printStackTrace();
+                log.error("unhandled error", e);
             }
 
             drive = new Drive.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential).setApplicationName(APPLICATION_NAME).build();

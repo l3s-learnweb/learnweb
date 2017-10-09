@@ -186,8 +186,9 @@ public class ResourceMetadataExtractor
             }
             catch(Exception e)
             {
+                log.error("unhandled error", e);
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.error("unhandled error", e);
             }
         }
         else if(resource.getSource().equalsIgnoreCase("vimeo") && resource.getIdAtService() != null)
@@ -237,7 +238,7 @@ public class ResourceMetadataExtractor
             catch(Exception e)
             {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.error("unhandled error", e);
             }
         }
         else if(resource.getSource().equalsIgnoreCase("flickr") && resource.getIdAtService() != null)
@@ -277,7 +278,7 @@ public class ResourceMetadataExtractor
             catch(Exception e)
             {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.error("unhandled error", e);
             }
         }
         else if(resource.getSource().equalsIgnoreCase("ipernity") && resource.getIdAtService() != null)
@@ -332,7 +333,7 @@ public class ResourceMetadataExtractor
             catch(Exception e)
             {
                 // TODO Auto-generated catch block
-                e.printStackTrace();
+                log.error("unhandled error", e);
             }
         }
         else

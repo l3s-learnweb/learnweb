@@ -1,6 +1,7 @@
 package de.l3s.learnweb.beans;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
@@ -9,12 +10,16 @@ import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.log4j.Logger;
+
 import de.l3s.learnweb.LogEntry.Action;
 
 @ManagedBean
 @RequestScoped
-public class LinkBean extends ApplicationBean
+public class LinkBean extends ApplicationBean implements Serializable
 {
+    private static final long serialVersionUID = -3874618772702216842L;
+    private static final Logger log = Logger.getLogger(LinkBean.class);
 
     private String url;
 
@@ -47,7 +52,7 @@ public class LinkBean extends ApplicationBean
             }
             catch(IOException e)
             {
-                e.printStackTrace();
+                log.error("unhandled error", e);
             }
         }
         return url;
