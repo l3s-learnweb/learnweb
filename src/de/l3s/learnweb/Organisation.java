@@ -79,8 +79,23 @@ public class Organisation implements Serializable, Comparable<Organisation>
 
         // define optional resource fields for some courses
         if(id == 480) // YELL 
-        {
-            // all yell fields are added manually
+        {            
+            metadata = new ResourceMetadataField("title", "title", MetadataType.INPUT_TEXT);
+            metadata.setRequired(true);
+            metadataFields.add(metadata);
+            
+            metadata = new ResourceMetadataField("author", "author", MetadataType.AUTOCOMPLETE)
+            {
+                private static final long serialVersionUID = -2914974737900412242L;
+
+                @Override
+                public List<String> completeText(String query)
+                {
+                    return ResourceMetaDataBean.completeAuthor(query);
+                }
+            };
+            metadataFields.add(metadata);
+            metadataFields.add(new ResourceMetadataField("description", "description", MetadataType.INPUT_TEXTAREA));            
         }
         else if(id == 893 ) // Admin 
         {

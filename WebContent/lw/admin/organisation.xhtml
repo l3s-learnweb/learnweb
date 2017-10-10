@@ -34,10 +34,14 @@
 					<f:selectItem itemLabel="myhome/activity.jsf" itemValue="myhome/activity.jsf" />
 					<f:selectItem itemLabel="myhome/welcome.jsf" itemValue="myhome/welcome.jsf" />
 				</p:selectOneMenu>
+				
+				<ui:fragment rendered="#{userBean.user.organisationId != 1249}">
+				<!-- EU-Made4all teachers should only edit the course welcome page -->
 				<p>
 					<h:outputText value="#{msg.welcome_message}:" />
 				</p>
 				<p:editor value="#{adminOrganisationsBean.selectedOrganisation.welcomeMessage}" width="600" />
+				</ui:fragment>
 				
 				<br/>
 				<p:accordionPanel autoHeight="false" id="courseoptions">

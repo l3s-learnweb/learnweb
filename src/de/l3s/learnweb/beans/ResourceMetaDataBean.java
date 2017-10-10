@@ -29,7 +29,8 @@ public class ResourceMetaDataBean
             "sk", "sl", "so", "sq", "sr", "srp", "sv", "sw", "szl", "ta", "te", "tg", "th", "tl", "tr", "tt", "ug", "uk", "ur", "uz", "vi", "zh", "zh-cn", "zh-tw" };
 
     private static final HashMap<String, List<SelectItem>> languageLists = new HashMap<String, List<SelectItem>>();
-    private static final HashMap<Integer, List<String>> authorLists = new HashMap<>();
+    private static final HashMap<Integer, List<String>> authorLists = new HashMap<>(); // quick and very dirt implementation
+    private static final HashMap<Integer, Long> authorListsCacheTime = new HashMap<>(); // quick and very dirt implementation
 
     public static List<SelectItem> getLanguageList()
     {
@@ -73,11 +74,12 @@ public class ResourceMetaDataBean
         int organisationId = user.getOrganisation().getId();
 
         List<String> authors = authorLists.get(organisationId);
+        Long cacheTime = authorListsCacheTime.getOrDefault(organisationId, 0L);
 
-        if(authors == null)
+        if(authors == null || cacheTime + 5000L < System.currentTimeMillis())
         {
             authors = loadAuthors(organisationId);
-            //return null;
+            authorListsCacheTime.put(organisationId, System.currentTimeMillis());
         }
 
         query = query.toLowerCase();
