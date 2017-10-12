@@ -44,6 +44,15 @@
 				#{groupDetailBean.group.title}
 				(#{groupDetailBean.group.resourcesCount} #{msg.resources}) </span>
 				
+			<h:form styleClass="layout_button" id="group_layout_options" prependId="false">
+				<p:commandButton value="#{msg.list_view}" icon="ui-icon-mylist" update=":tabs:keyResultSection :group_layout_options" rendered="#{groupDetailBean.gridView}">
+					<f:setPropertyActionListener target="#{groupDetailBean.gridView}" value="false"/>
+				</p:commandButton>
+				<p:commandButton value="#{msg.grid_view}" icon="ui-icon-mygrid" update=":tabs:keyResultSection :group_layout_options" rendered="#{!groupDetailBean.gridView}">
+					<f:setPropertyActionListener target="#{groupDetailBean.gridView}" value="true"/>
+				</p:commandButton>
+			</h:form>
+			
 			<h:form id="center_header_form">
 				<p:menuButton value="#{msg.upload_resource}"
 					rendered="#{groupDetailBean.group.canAddResources(userBean.user)}"
@@ -162,8 +171,8 @@
 		</div>
 		
 		<!-- from here begins the new metadata visualization -->
-		<p:tabView>
-			<p:tab title="Keyword Search">
+		<p:tabView id="tabs">
+			<p:tab id="keyword_tab" title="Keyword Search">
 				<h:form id="header_query_form" prependId="false">
 					<img alt=""
 						src="#{request.contextPath}/resources/main-template/img/search.png"
@@ -181,7 +190,6 @@
 						id="group_resource_searchbutton" />
 				</h:form>
 				<br />
-				
 				
 				<h:form id="accordion_form" style="width:530px;">
 					<p:accordionPanel>
@@ -265,8 +273,11 @@
 					</p:accordionPanel>
 				</h:form>
 				<hr/>
+				
 				<b><h:outputText value="Click on the resource to view details or add more useful information to help community to discover!"/></b>
-				<h:panelGroup id="searchResultSection">
+				
+				<h:panelGroup id="keyResultSection">
+					<h:panelGroup id="dataList" rendered="#{!groupDetailBean.gridView}">
 						<ui:repeat value="#{groupDetailBean.paginator.currentPage}" 
 							var="res">
 							<h:panelGroup id="rdetail" styleClass="resource2-item group-resources2-item"
@@ -336,12 +347,132 @@
 							</h:panelGroup>
 						</ui:repeat>
 					</h:panelGroup>
+					<h:panelGroup id="dataGrid" rendered="#{groupDetailBean.gridView}" layout="block"
+					pt:data-isEnabledMoving="#{groupDetailBean.canDeleteResourcesInTheGroup()}">
+					<h:panelGroup id="folderGrid" styleClass="folder-grid"
+					layout="block">
+					<br/>
+					
+					<ui:repeat value="#{groupDetailBean.subfolders}" var="folder">
+						<h:panelGroup styleClass="folder-item group-resources-item"
+							pt:data-itemType="folder" pt:data-itemId="#{folder.folderId}"
+							layout="block">
+							<div class="folder-block">
+
+								<div class="folder-icon">
+									<div class="folder-icon-wrapper">
+										<span class="icon icon-folder" />
+									</div>
+								</div>
+
+								<div class="folder-title">
+									<div class="folder-title-wrapper">
+										<h:outputText value="#{folder.name}" escape="false"
+											styleClass="folder-title-name" title="#{folder.name}" />
+									</div>
+
+									<h:panelGroup class="resource-controls" layout="block"
+										rendered="${groupDetailBean.canDeleteResourcesInTheGroup()}">
+										<h:outputLink value="#" title="#{msg.edit}"
+											styleClass="action-edit">
+											<h:graphicImage alt="Edit" value="../resources/icon/Edit.png" />
+										</h:outputLink>
+
+										<h:outputLink value="#" title="#{msg.delete}"
+											styleClass="action-delete">
+											<h:graphicImage alt="Remove"
+												value="../resources/icon/Remove.png" />
+										</h:outputLink>
+									</h:panelGroup>
+								</div>
+
+							</div>
+						</h:panelGroup>
+					</ui:repeat>
+				</h:panelGroup>
+
+				<h:panelGroup id="resourceGrid" styleClass="resource-grid"
+					layout="block">
+					<ui:repeat value="#{groupDetailBean.paginator.currentPage}"
+						var="res">
+						<h:panelGroup styleClass="resource-item group-resources-item"
+							pt:data-itemType="resource" pt:data-itemId="#{res.resource.id}"
+							layout="block">
+							<div class="resource-block">
+
+								<div class="resource-preview">
+									<div class="resource-preview-wrapper">
+										<div class="resource-preview-wrapper2">
+											<div class="resource-preview-block"></div>
+											<div class="resource-preview-block2"></div>
+											<h:graphicImage styleClass="resource-preview-image"
+												value="#{res.thumbnail1.url}"
+												rendered="#{not empty res.thumbnail1}" alt="#{res.title}" />
+											<h:outputText styleClass="resource-preview-empty"
+												escape="false"
+												value='#{res.resource.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}'
+												rendered="#{empty res.thumbnail1}" />
+										</div>
+									</div>
+
+									<h:panelGroup class="resource-controls" layout="block">
+										<h:outputLink value="#" title="#{msg.copy}"
+											styleClass="action-copy">
+											<h:graphicImage alt="Copy" value="/resources/icon/Add.png" />
+										</h:outputLink>
+
+										<ui:fragment
+											rendered="${groupDetailBean.canDeleteResourcesInTheGroup()}">
+											<h:outputLink value="#" title="#{msg.edit}"
+												styleClass="action-edit">
+												<h:graphicImage alt="Edit"
+													value="../resources/icon/Edit.png" />
+											</h:outputLink>
+
+											<h:outputLink value="#" title="#{msg.delete}"
+												styleClass="action-delete">
+												<h:graphicImage alt="Delete"
+													value="../resources/icon/Remove.png" />
+											</h:outputLink>
+										</ui:fragment>
+									</h:panelGroup>
+								</div>
+
+								<div class="resource-title">
+									<div class="resource-title-wrapper">
+										<!--<div class="resource-title-icon">
+											<div class="resource-title-icon-wrapper">
+												<img src="img.png" alt="Title" />
+											</div>
+										</div>-->
+										<div class="resource-title-text">
+											<h:outputText value="#{res.title}" escape="false"
+												styleClass="resource-title-name" title="#{res.title}" />
+											<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span>
+												#{msg.added_by} <span>#{res.ownerUser.username}</span></span>
+										</div>
+									</div>
+								</div>
+
+							</div>
+						</h:panelGroup>
+					</ui:repeat>
+				</h:panelGroup>
+
+				<h:outputText value="${msg.no_resources_found}"
+					class="nothing_found"
+					rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}" />
+
+				<h:outputText value="#{msg.no_results_found}" class="nothing_found"
+					rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}" />
+
+			
+					
+				</h:panelGroup>
+				</h:panelGroup>
 			</p:tab>
 
-
-
-
-			<p:tab title="Category Navigation">
+			<p:tab id="category_tab" title="Category Navigation">
 				<h:panelGroup>
 
 					<h:panelGroup id="catTreeSection">
@@ -394,6 +525,7 @@
 
 				</h:panelGroup>
 			</p:tab>
+		
 		</p:tabView>
 
 
