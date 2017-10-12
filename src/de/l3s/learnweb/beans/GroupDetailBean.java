@@ -123,6 +123,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private SearchFilters searchFilters;
     private AbstractPaginator paginator;
 
+    //Grid or List view of group resources
+    private boolean gridView = false;
+
     @ManagedProperty(value = "#{resourceDetailBean}")
     private ResourceDetailBean resourceDetailBean;
 
@@ -1814,6 +1817,17 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void setFileEditorBean(FileEditorBean fileEditorBean)
     {
         this.fileEditorBean = fileEditorBean;
+    }
+
+    //allow switching between grid and list view of group resources - chloe
+    public boolean isGridView()
+    {
+        return gridView;
+    }
+
+    public void setGridView(boolean gridView)
+    {
+        this.gridView = gridView;
     }
 
 }
