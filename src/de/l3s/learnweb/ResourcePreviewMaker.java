@@ -467,7 +467,7 @@ public class ResourcePreviewMaker
             {
                 p = pdfFile.getPage(page, true);
             }
-            catch(Exception e)
+            catch(NoClassDefFoundError | Exception e)
             { // some pdfs with special graphics cause errors
                 log.debug("Skip PDF page with errors; page: " + page + "; resource: " + resource);
                 return;
