@@ -257,7 +257,7 @@
 										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'pdf'}">
 											   	<iframe src="#{resourceDetailBean.clickedResource.url}" style="width:100%; height:100%; "/>
 										    </ui:fragment>
-										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'Image' or resourceDetailBean.clickedResource.type eq 'Glossary' or resourceDetailBean.clickedResource.type eq 'Survey'}">
+										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'Image' or resourceDetailBean.clickedResource.type eq 'Glossary' or resourceDetailBean.clickedResource.type eq 'Survey'}">
 										    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
 										    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
 										    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}"
@@ -329,7 +329,7 @@
 										<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
 									</div>
 								</ui:fragment>
-								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type != 'Presentation' and resourceDetailBean.clickedResource.type != 'Spreadsheet' and resourceDetailBean.clickedResource.type != 'Text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'Video' and resourceDetailBean.clickedResource.type != 'Image' and resourceDetailBean.clickedResource.type != 'Glossary' and resourceDetailBean.clickedResource.type != 'Survey' }">
+								<ui:fragment rendered="${resourceDetailBean.clickedResource.type != 'Presentation' and resourceDetailBean.clickedResource.type != 'Spreadsheet' and resourceDetailBean.clickedResource.type.toLowerCase() != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'Video' and resourceDetailBean.clickedResource.type != 'Image' and resourceDetailBean.clickedResource.type != 'Glossary' and resourceDetailBean.clickedResource.type != 'Survey'}">
 									<div class="preview_box">
 										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}'
 											escape="false"/>
