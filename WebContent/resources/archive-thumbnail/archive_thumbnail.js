@@ -35,8 +35,7 @@ function loadMaxItemSize(){
 		maxItemHeight = 600;
 	else if(screen.width >=2100)
 		maxItemHeight = 700;
-	
-	console.log(screen.width + ";" + maxItemHeight);
+
 }
 
 $(document).ready(function(){

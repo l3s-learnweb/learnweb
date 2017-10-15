@@ -70,6 +70,11 @@ public class ArchiveThumbnailBean extends ApplicationBean
         //	df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, UtilBean.getUserBean().getLocale());
     }
 
+    public Set<String> getSelectedArchiveUrls()
+    {
+        return selectedArchiveUrls;
+    }
+
     public List<ArchiveUrl> getArchiveUrls()
     {
         return archiveUrls;

@@ -104,12 +104,14 @@ xmlns:ui="http://java.sun.com/jsf/facelets"
 						<f:convertNumber minFractionDigits="2" />
 					</p:inputText>
 					<div class="clear"></div>
-					<p:commandButton id="process" styleClass="greenbutton" value="Submit" title="Press to refresh the Coverflow" update=":maincontent :timeline" oncomplete="loadCF(); loadTimeMaps();" actionListener="#{archiveThumbnailBean.computeSelectedArchivesHtmlBased}"/>
+					<p:commandButton id="process" styleClass="greenbutton" value="Submit" title="Press to refresh the Coverflow" update=":maincontent :timeline :no_of_resources1" oncomplete="loadCF(); loadTimeMaps();" actionListener="#{archiveThumbnailBean.computeSelectedArchivesHtmlBased}"/>
+					<h:outputText id="no_of_resources1" value="(displaying #{archiveThumbnailBean.selectedArchiveUrls.size()} out of #{archiveThumbnailBean.archiveUrls.size()})" style="color:black"/>
 				</div>
 				<div class="simhashDiv">
 					<h:outputText value="#{msg['Archive.simhash_summary_title']}:" styleClass="title" escape="false"/>
 					<br/>
-					<p:commandButton id="alsum" style="margin-top:5px;" styleClass="greenbutton" value="AlSummarization" title="Press to refresh the Coverflow" update=":maincontent :timeline" oncomplete="loadCF()" actionListener="#{archiveThumbnailBean.computeSelectedArchivesSimhashBased}"/>
+					<p:commandButton id="alsum" style="margin-top:5px;" styleClass="greenbutton" value="AlSummarization" title="Press to refresh the Coverflow" update=":maincontent :timeline no_of_resources2" oncomplete="loadCF()" actionListener="#{archiveThumbnailBean.computeSelectedArchivesSimhashBased}"/>
+					<h:outputText id="no_of_resources2" value="(displaying #{archiveThumbnailBean.selectedArchiveUrls.size()} out of #{archiveThumbnailBean.archiveUrls.size()})" style="color:black"/>
 				</div>
 			</h:form>
 		</div>
