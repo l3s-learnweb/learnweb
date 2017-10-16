@@ -51,7 +51,7 @@
 									</c:if>
 									<c:if test="#{field.type eq 'INPUT_TEXT'}">
 										<p:outputLabel for="input_#{field.id}" value="#{field.label}"></p:outputLabel>
-										<p:inputText id="input_#{field.id}" required="#{field.required}" value="#{surveyBean.wrappedAnswers[field.id]}" title="#{field.info}" />
+										<p:inputText id="input_#{field.id}" required="#{field.required}" value="#{surveyBean.wrappedAnswers[field.id]}" title="#{field.info}" style="width:70%;'" />
 										<p:tooltip for="input_#{field.id}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}" />
 									</c:if>
 
