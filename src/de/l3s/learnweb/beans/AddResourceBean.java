@@ -195,7 +195,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         {
             resource.setDeleted(false);
             resource.setSource("Glossary");
-            resource.setType("Glossary"); // TODO set to "Glossary" frontend needs to be updated too
+            resource.setType("Glossary");
             resource.setUrl("");
 
             // add resource to a group if selected

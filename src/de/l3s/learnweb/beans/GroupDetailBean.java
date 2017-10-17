@@ -1527,6 +1527,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                         {
                             getLearnweb().getCreateSurveyManager().copySurveyResource(itemId, newResource.getId());
                         }
+                        else if(resource.getStorageType() == 3)
+                        {
+                            getLearnweb().getGlossariesManager().copyGlossary(itemId, newResource.getId());
+                        }
                         numResources++;
                         log(Action.adding_resource, targetGroupId, resource.getId(), "");
                     }
