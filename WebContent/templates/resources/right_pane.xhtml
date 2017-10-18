@@ -257,7 +257,14 @@
 										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'pdf'}">
 											   	<iframe src="#{resourceDetailBean.clickedResource.url}" style="width:100%; height:100%; "/>
 										    </ui:fragment>
-										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'Image' or resourceDetailBean.clickedResource.type eq 'Glossary' or resourceDetailBean.clickedResource.type eq 'Survey'}">
+										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.storageType == 2 and resourceDetailBean.clickedResource.type eq 'text'}">
+											    <div style="overflow:auto; height:100%; width:100%; text-align:center;">
+											    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
+											    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
+											    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}" />
+											    </div>	
+										    </ui:fragment>
+										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'Image' or resourceDetailBean.clickedResource.type eq 'Glossary' or resourceDetailBean.clickedResource.type eq 'Survey'}">
 										    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
 										    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
 										    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}"
