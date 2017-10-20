@@ -79,7 +79,6 @@ xmlns:ui="http://java.sun.com/jsf/facelets"
 					</script>
 					<h:outputLabel styleClass="textInputLabel" for="input_frame" value="DOM Sim. (increments of 0.05):" />
 					<p:inputText id="input_frame" value="#{archiveThumbnailBean.frameSim}" styleClass="textInput">
-						<f:convertNumber minFractionDigits="2" />
 					</p:inputText>
 	
 					<div id="slideB" class="slideA"></div>
@@ -101,7 +100,7 @@ xmlns:ui="http://java.sun.com/jsf/facelets"
 	
 					<h:outputLabel styleClass="textInputLabel" for="input_text" value="Text Sim. (increments of 0.05):" />
 					<p:inputText id="input_text" value="#{archiveThumbnailBean.textSim}" styleClass="textInput">
-						<f:convertNumber minFractionDigits="2" />
+						
 					</p:inputText>
 					<div class="clear"></div>
 					<p:commandButton id="process" styleClass="greenbutton" value="Submit" title="Press to refresh the Coverflow" update=":maincontent :timeline :no_of_resources1" oncomplete="loadCF(); loadTimeMaps();" actionListener="#{archiveThumbnailBean.computeSelectedArchivesHtmlBased}"/>

@@ -445,7 +445,31 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         {
             String archiveUrl = getParameter("archive_url");
             ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
-            rpm.processArchivedVersion(clickedResource, archiveUrl);
+
+            FileManager fileManager = getLearnweb().getFileManager();
+            Collection<File> files = clickedResource.getFiles().values();
+            for(File file : files)
+            {
+                if(file.getType() == TYPE.THUMBNAIL_LARGE || file.getType() == TYPE.THUMBNAIL_MEDIUM || file.getType() == TYPE.THUMBNAIL_SMALL || file.getType() == TYPE.THUMBNAIL_SQUARD || file.getType() == TYPE.THUMBNAIL_VERY_SMALL) // number 4 is reserved for the source file
+                {
+                    log.debug("Delete " + file.getName());
+                    fileManager.delete(file);
+                }
+            }
+
+            //Getting mime type
+            FileInfo info = rpm.getFileInfo(FileInspector.openStream(archiveUrl), clickedResource.getFileName());
+            String type = info.getMimeType().substring(0, info.getMimeType().indexOf("/"));
+            if(type.equals("application"))
+                type = info.getMimeType().substring(info.getMimeType().indexOf("/") + 1);
+
+            if(type.equalsIgnoreCase("pdf"))
+            {
+                rpm.processPdf(clickedResource, FileInspector.openStream(archiveUrl));
+            }
+            else
+                rpm.processArchivedVersion(clickedResource, archiveUrl);
+
             clickedResource.save();
             log(Action.resource_thumbnail_update, clickedResource.getGroupId(), clickedResource.getId(), "");
             addGrowl(FacesMessage.SEVERITY_INFO, "Successfully updated the thumbnail");
