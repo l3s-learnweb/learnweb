@@ -24,9 +24,7 @@
 		<ui:insert name="head-meta" />
 	</h:head>
 
-	<h:body>
-		<p:growl id="growl" rendered="#{userBean.loggedIn and not disableGrowl}" />
-		
+	<h:body>		
 		<ui:decorate template="/templates/main/tooltips.xhtml" />
 		<ui:decorate template="/templates/main/header.xhtml" />
 		
@@ -110,8 +108,9 @@
 		
 		<h:form styleClass="display-none">	
 			<p:remoteCommand actionListener="#{userBean.setPreferenceRemote()}" name="setPreferenceRemote" async="true" immediate="true" process="@this" />
-		</h:form>
+		</h:form>		
 		
+		<p:growl id="growl" rendered="#{userBean.loggedIn and not disableGrowl}" />		
 	</h:body>
 </f:view>
 

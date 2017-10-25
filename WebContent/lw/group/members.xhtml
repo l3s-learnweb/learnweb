@@ -118,7 +118,8 @@
 					<ui:fragment rendered="#{groupDetailBean.clickedUser.id != -1}">
 					
 						<ui:decorate template="/templates/user/profile.xhtml">
-							<ui:param name="user" value="#{groupDetailBean.clickedUser}" />		
+							<ui:param name="user" value="#{groupDetailBean.clickedUser}" />	
+							<ui:param name="userDetailsHidden" value="#{groupDetailBean.userDetailsHidden}" />		
 						</ui:decorate>
 						
 					</ui:fragment>

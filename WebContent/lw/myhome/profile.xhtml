@@ -80,17 +80,24 @@
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="useremail" id="useremailMessage" />
 							
 							<h:outputText>
-								#{msg.student_id}<h:outputText value=" *" rendered="#{profileBean.studentIdRequired}"/>:
+								#{msg.student_id}<h:outputText value=" *" rendered="#{profileBean.studentIdRequired}" />:
 							</h:outputText>
 							<p:inputText id="studentId" value="#{profileBean.studentId}" label="#{msg.student_id}:" required="true" />
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="studentId" id="studentIdMessage" />
 							
+							<h:outputText value="Consent:" rendered="#{profileBean.studentIdRequired}" />
+							<h:panelGroup rendered="#{profileBean.studentIdRequired}">
+								<p:selectBooleanCheckbox  id="accept_terms" value="#{profileBean.acceptTermsAndConditions}" />
+								<p:outputLabel value=" I've given consent to use my data for the project" for="accept_terms"/>
+							</h:panelGroup>
+							<p:message rendered="#{profileBean.studentIdRequired}" showSummary="true" showDetail="false" styleClass="error" for="accept_terms" id="accept_termsMessage" />							
+							 
 							<h:outputText value="#{msg.full_name}:" />
 							<p:inputText id="userfullname" value="#{profileBean.fullName}"  />
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="userfullname" id="userfullnameMessage" />
 			
 							<h:outputText value="#{msg.affiliation}:" />
-							<p:inputText id="useraffiliation" value="#{profileBean.affiliation}" disabled="#{profileBean.affiliationRequired}"  />
+							<p:inputText id="useraffiliation" value="#{profileBean.affiliation}" required="#{profileBean.affiliationRequired}"  />
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="useraffiliation" id="useraffiliationMessage" />
 							
 							<h:outputText value="#{msg.address}:" />
@@ -104,13 +111,13 @@
 							<h:outputText value="#{msg.interest}:" />
 							<p:inputTextarea id="userinterest" value="#{profileBean.interest}"  />
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="userinterest" id="userinterestMessage" />					
-									
+								
 						  	<h:outputText rendered="false" value="#{msg.dateofbirth}:" />
 						    <p:calendar rendered="false" disabled="true" id="userdateofbirth" value="#{profileBean.dateofbirth}" 
 						     	navigator="true" maxdate="#{profileBean.maxBirthday}" locale="de"  />
 							<p:message rendered="false" showSummary="true" showDetail="false" styleClass="error" for="userdateofbirth" 
 							     	id="userdateofbirthMessage" />			
-			
+							
 							<h:outputText value="#{msg.additionalinformation}:" rendered="#{profileBean.moderatorAccess}" />
 							<p:inputTextarea id="useradditionalinformation" value="#{profileBean.additionalInformation}" rendered="#{profileBean.moderatorAccess}" />
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="useradditionalinformation" 

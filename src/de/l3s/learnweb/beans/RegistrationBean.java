@@ -42,6 +42,8 @@ public class RegistrationBean extends ApplicationBean implements Serializable
     private String email;
 
     private String wizardTitle;
+    private boolean wizardParamInvalid = false; // true if an invalid wizard parameter was given; no parameter is ok for the public course
+
     private String affiliation;
 
     private boolean mailRequired = false;
@@ -167,7 +169,8 @@ public class RegistrationBean extends ApplicationBean implements Serializable
             Course course = getLearnweb().getCourseManager().getCourseByWizard(wizardTitle);
             if(null == course)
             {
-                addMessage(FacesMessage.SEVERITY_FATAL, "Invalid wizard parameter");
+                addMessage(FacesMessage.SEVERITY_FATAL, "register_invalid_wizard_error");
+                wizardParamInvalid = true;
             }
             else
             {
@@ -220,4 +223,8 @@ public class RegistrationBean extends ApplicationBean implements Serializable
         return studentIdRequired;
     }
 
+    public boolean isWizardParamInvalid()
+    {
+        return wizardParamInvalid;
+    }
 }

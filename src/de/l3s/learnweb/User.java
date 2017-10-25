@@ -53,6 +53,7 @@ public class User implements Comparable<User>, Serializable, HasId
     private Date registrationDate;
     @Size(max = 255)
     private String credits;
+    private boolean acceptTermsAndConditions = false;
 
     private boolean destroyed = false;
 
@@ -812,6 +813,16 @@ public class User implements Comparable<User>, Serializable, HasId
     {
         this.activeCourseId = activeCourseId;
         this.activeCourse = null; // clear cache;
+    }
+
+    public boolean isAcceptTermsAndConditions()
+    {
+        return acceptTermsAndConditions;
+    }
+
+    public void setAcceptTermsAndConditions(boolean acceptTermsAndConditions)
+    {
+        this.acceptTermsAndConditions = acceptTermsAndConditions;
     }
 
 }

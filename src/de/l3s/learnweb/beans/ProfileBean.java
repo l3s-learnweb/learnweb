@@ -79,6 +79,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
 
     @Size(min = 0, max = 250)
     private String credits;
+    private boolean acceptTermsAndConditions;
 
     private List<LogEntry> logMessages;
 
@@ -131,6 +132,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
         fullName = user.getFullName();
         affiliation = user.getAffiliation();
         credits = user.getCredits();
+        acceptTermsAndConditions = user.isAcceptTermsAndConditions();
 
         for(Course course : user.getCourses())
         {
@@ -188,6 +190,7 @@ public class ProfileBean extends ApplicationBean implements Serializable
         user.setUsername(username);
         user.setAffiliation(affiliation);
         user.setFullName(fullName);
+        user.setAcceptTermsAndConditions(acceptTermsAndConditions);
 
         if(isModeratorAccess())
             user.setCredits(credits);
@@ -444,6 +447,16 @@ public class ProfileBean extends ApplicationBean implements Serializable
     public boolean isAnonymizeUsername()
     {
         return anonymizeUsername;
+    }
+
+    public boolean isAcceptTermsAndConditions()
+    {
+        return acceptTermsAndConditions;
+    }
+
+    public void setAcceptTermsAndConditions(boolean acceptTermsAndConditions)
+    {
+        this.acceptTermsAndConditions = acceptTermsAndConditions;
     }
 
 }

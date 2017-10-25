@@ -15,7 +15,10 @@
 	</div>
 				
 	<div class="profilebox grey_border">
-		<h:panelGrid columns="2" class="float-left">
+	
+		<h:outputText value="This information is hidden due to the privacy settings of your organization." rendered="#{userDetailsHidden}" />
+		
+		<h:panelGrid columns="2" class="float-left" rendered="#{not userDetailsHidden}">
 			<h:outputText value="#{msg.username}:" />
 			<h:outputText id="username" value="#{user.username}" />
 		

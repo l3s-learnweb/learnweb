@@ -44,6 +44,7 @@ import de.l3s.learnweb.Link.LinkType;
 import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.NewsEntry;
+import de.l3s.learnweb.Organisation.Option;
 import de.l3s.learnweb.Presentation;
 import de.l3s.learnweb.PresentationManager;
 import de.l3s.learnweb.Resource;
@@ -190,6 +191,16 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 addFatalMessage(e1);
             }
         }
+    }
+
+    public boolean isUserDetailsHidden()
+    {
+        User user = getUser();
+        if(user == null)
+            return false;
+        if(user.getOrganisation().getId() == 1249 && user.getOrganisation().getOption(Option.Misc_Anonymize_usernames))
+            return true;
+        return false;
     }
 
     /**
