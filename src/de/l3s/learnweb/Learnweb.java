@@ -121,7 +121,7 @@ public class Learnweb
      */
     public static Learnweb createInstance(String serverUrl) throws ClassNotFoundException, SQLException
     {
-        if(serverUrl.startsWith("http://archiveweb") || serverUrl.startsWith("https://archiveweb"))
+        if(null == serverUrl || serverUrl.startsWith("http://archiveweb") || serverUrl.startsWith("https://archiveweb"))
             serverUrl = "http://learnweb.l3s.uni-hannover.de";
 
         try

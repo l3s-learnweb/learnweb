@@ -131,7 +131,7 @@ public class ResourcePreviewMaker
                 if(wordPdf != null)
                     processPdf(resource, wordPdf);
             }
-            catch(Exception e)
+            catch(Throwable e)
             {
                 log.error("Error in creating thumbnails from Word " + resource.getFormat() + " for resource: " + resource.getId());
             }
@@ -149,7 +149,7 @@ public class ResourcePreviewMaker
                     createThumbnails(resource, pptImg, false);
                 }
             }
-            catch(Exception e)
+            catch(Throwable e)
             {
                 log.error("Error in creating thumbnails from ppt " + resource.getFormat() + " for resource: " + resource.getId());
             }
@@ -164,7 +164,7 @@ public class ResourcePreviewMaker
                 if(xlPdf != null)
                     processPdf(resource, xlPdf);
             }
-            catch(Exception e)
+            catch(Throwable e)
             {
                 log.error("Error in creating thumbnails from xls " + resource.getFormat() + " for resource: " + resource.getId());
             }
