@@ -1321,17 +1321,22 @@ public class ResourceManager
         SolrClient sm = lw.getSolrClient();
 
         int currentPage = 0;
-        final int totalResources = rm.getResourceCount(), perPage = 500;
+        final int totalResources = rm.getResourceCount(), perPage = 1000;
 
         while (currentPage * perPage <= totalResources)
         {
-            log.debug("Loading page " + currentPage + 1);
+            log.debug("Loading page " + (currentPage + 1));
 
             List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where deleted = ? order by resource_id desc limit ? offset ? ", "0", perPage, currentPage * perPage);
             log.debug(resources.size() + " resources loaded.");
 
-            for(Resource resource : resources)
-                sm.reIndexResource(resource);
+//            for(Resource resource : resources)
+//                sm.reIndexResource(resource);
+
+            // do reindexing in parallel
+            resources.parallelStream().forEach(sm::reIndexResource);
+
+            currentPage++;
         }
     }
 
