@@ -199,7 +199,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
                     dummyImage = new Thumbnail("http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg", 320, 180);
                 }
             }
-            else if(source.equals("Google") && type.equals("Video"))
+            else if(source.equals("Google") && type.equals(ResourceType.video))
             {
                 Pattern pattern = Pattern.compile("youtube.com/watch%3Fv%3D([^&]+)");
                 Matcher matcher = pattern.matcher(url);
@@ -236,12 +236,12 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             }
             else if(source.equals("Ipernity") && embeddedSize1 != null)
             {
-                if(type.equals("Image"))
+                if(type.equals(ResourceType.image))
                     embeddedSize3 = embeddedSize1.replace(".100.", ".500.");
                 else
                     embeddedSize3 = "<a href=\"" + url + "\">" + url + "</a>";
             }
-            else if(source.equals("Flickr") && type.equals("Image") && embeddedSize1 != null)
+            else if(source.equals("Flickr") && type.equals(ResourceType.image) && embeddedSize1 != null)
             {
                 if(null == embeddedSize3)
                     embeddedSize3 = embeddedSize1.replace("_t.", ".");

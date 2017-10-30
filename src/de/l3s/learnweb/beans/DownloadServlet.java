@@ -130,7 +130,7 @@ public class DownloadServlet extends HttpServlet
         {
             // Check if file actually exists in filesystem.
             File file = fileManager.getFileById(fileId);
-            if(null == file || !file.getName().equals(requestFileData[1]))
+            if(null == file) // TODO Oleh: compare file name (right now do not work with thumbnails) !file.getName().equals(requestFileData[1])
             {
                 log.warn("Requested file " + fileId + " does not exist or was deleted");
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
