@@ -44,9 +44,6 @@ public class SearchQuery implements Serializable
      * replaces all fields of this object with the values from the xml @param inputStream
      * 
      * @param inputStream stream of an interweb search query
-     * @param date
-     * @throws IOException
-     * @throws SAXException
      * @throws IllegalResponseException
      */
     private void parse(InputStream inputStream) throws IllegalResponseException
@@ -79,7 +76,7 @@ public class SearchQuery implements Serializable
             {
                 Resource currentResource = ResourceManager.getResourceFromInterwebResult(searchResult);
 
-                if(!currentResource.getType().equalsIgnoreCase("text") && null == currentResource.getThumbnail4()) // no thumbnail set
+                if(!currentResource.getType().equals(Resource.ResourceType.text) && null == currentResource.getThumbnail4()) // no thumbnail set
                 {
                     log.error("Found no thumbnail:" + searchResult);
 

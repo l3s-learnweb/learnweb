@@ -22,8 +22,8 @@ import de.l3s.learnweb.File;
 import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Organisation;
-import de.l3s.learnweb.ResourcePreviewMaker;
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 
 @ManagedBean
@@ -161,18 +161,16 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
     {
         UploadedFile uploadedFile = event.getFile();
 
-        ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
+        FileInspector fileInspector = new FileInspector(getLearnweb());
 
-        // get the mime type and extract text if possible
-        FileInfo info;
         try
         {
-            info = rpm.getFileInfo(uploadedFile.getInputstream(), uploadedFile.getFileName());
+            FileInfo fileInfo = fileInspector.inspect(uploadedFile.getInputstream(), uploadedFile.getFileName());
 
             File file = new File();
             file.setType(TYPE.SYSTEM_FILE);
-            file.setName(info.getFileName());
-            file.setMimeType(info.getMimeType());
+            file.setName(fileInfo.getFileName());
+            file.setMimeType(fileInfo.getMimeType());
 
             file = getLearnweb().getFileManager().save(file, uploadedFile.getInputstream());
 

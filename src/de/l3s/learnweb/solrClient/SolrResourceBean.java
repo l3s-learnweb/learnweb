@@ -87,7 +87,7 @@ public class SolrResourceBean
         this.url = resource.getUrl();
         this.language = resource.getLanguage().toLowerCase();
         this.source = resource.getSource().toLowerCase();
-        this.type = resource.getType().toLowerCase();
+        this.type = resource.getType().name();
         this.format = resource.getFormat().toLowerCase();
         this.author = resource.getAuthor();
         this.location = resource.getLocation().toLowerCase().replace("-", "");

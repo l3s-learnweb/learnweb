@@ -787,7 +787,7 @@ public class SearchFilters implements Serializable
     public boolean checkAfterLoadFilters(ResourceDecorator res)
     {
         //String type = res.getResource().getType(); // text Image Video
-        if(configFilters.containsKey(FILTERS.imageSize) && res.getResource().getType().equals("Image"))
+        if(configFilters.containsKey(FILTERS.imageSize) && res.getResource().getType().equals(Resource.ResourceType.image))
         {
             SIZE configSize = (SIZE) configFilters.get(FILTERS.imageSize);
             int width = res.getThumbnail4().getWidth(), minWidth = configSize.getMinWidth(), maxWidth = configSize.getMaxWidth();
@@ -798,7 +798,7 @@ public class SearchFilters implements Serializable
             }
         }
 
-        if(configFilters.containsKey(FILTERS.videoDuration) && res.getResource().getType().equals("Video"))
+        if(configFilters.containsKey(FILTERS.videoDuration) && res.getResource().getType().equals(Resource.ResourceType.video))
         {
             DURATION configDuration = (DURATION) configFilters.get(FILTERS.videoDuration);
             int duration = res.getResource().getDuration(), minDuration = configDuration.getMinDuration(), maxDuration = configDuration.getMaxDuration();

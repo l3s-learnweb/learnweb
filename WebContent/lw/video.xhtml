@@ -8,23 +8,27 @@
 		<f:viewParam name="resource_id" value="#{resourceBean.id}" required="true" />
 		<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{resourceBean.preRenderView}" />
 	</f:metadata>
-	
+
 	<h:head>
 		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 		<title>Video - Learnweb</title>
-		<link href="//vjs.zencdn.net/4.12/video-js.css" rel="stylesheet"/>
-		<script src="//vjs.zencdn.net/4.12/video.js"></script>
-	
-		<base href="#{request.contextPath}/lw/" />	
-		
+		<link href="//vjs.zencdn.net/6.2.4/video-js.css" rel="stylesheet"/>
+		<script src="//vjs.zencdn.net/6.2.4/video.js"></script>
+
+		<base href="#{request.contextPath}/lw/" />
+
 		<style type="text/css">
 		html, body { height:100%; margin:0; padding:0; }
 		</style>
 	</h:head>
-	
-	<h:body>	
-		<video class="video-js vjs-default-skin vjs-big-play-centered" controls="controls" data-setup="{}" poster="#{resourceBean.resource.thumbnail3.url}" height="100%" width="100%">
-			<source src="#{resourceBean.resource.fileUrl}" type="video/mp4" /> 
+
+	<h:body>
+		<video class="video-js vjs-fill vjs-default-skin vjs-big-play-centered" poster="#{resourceBean.resource.thumbnail3.url}" data-setup='{"controls": true, "autoplay": false, "preload": "auto"}' height="100%" width="100%">
+			<source src="#{resourceBean.resource.fileUrl}" type="#{resourceBean.resource.format}" />
+			<p class="vjs-no-js">
+				To view this video please enable JavaScript, and consider upgrading to a web browser that
+				<a href="http://videojs.com/html5-video-support/" target="_blank">supports HTML5 video</a>
+			</p>
 		</video>
 	</h:body> 
 </html>

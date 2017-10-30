@@ -278,7 +278,7 @@ public class ArchiveUrlManager
     public String addResourceToArchive(Resource resource)
     {
         String response = "";
-        if(!(resource.getStorageType() == Resource.FILE_RESOURCE))
+        if(!(resource.getStorageType() == Resource.LEARNWEB_RESOURCE))
         {
             Future<String> executorResponse = executorService.submit(new ArchiveNowWorker(resource));
 
@@ -536,7 +536,7 @@ public class ArchiveUrlManager
 
         resource.setLanguage(lwLang);
         resource.setSource("Archive-It");
-        resource.setType("text");
+        resource.setType(Resource.ResourceType.text);
         resource.setMetadataValue("collector", rs.getString("collector").trim());
         resource.setMetadataValue("coverage", rs.getString("coverage").trim());
         resource.setMetadataValue("publisher", rs.getString("publisher").trim());

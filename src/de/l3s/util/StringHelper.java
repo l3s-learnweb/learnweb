@@ -22,7 +22,7 @@ public class StringHelper
 
     /**
      * If the string is longer than maxLength it is split at the nearest blankspace
-     * 
+     *
      * @param str
      * @param maxLength
      * @return
@@ -51,7 +51,7 @@ public class StringHelper
 
     /**
      * Uses Integer.parseInt but instead of an exception it returns -1 if the input can not be parsed
-     * 
+     *
      * @param number string input
      * @return int value or -1 if can't be parsed
      */
@@ -127,7 +127,7 @@ public class StringHelper
 
     /**
      * Make first character upper case
-     * 
+     *
      * @param input
      * @return
      */
@@ -140,7 +140,7 @@ public class StringHelper
      * Translates a string into application/x-www-form-urlencoded format using a specific encoding scheme. <br/>
      * This method uses UTF-8. <br/>
      * It's just a convenience method to get rid of the UnsupportedEncodingException.
-     * 
+     *
      * @param str
      * @return
      */
@@ -176,7 +176,7 @@ public class StringHelper
 
     /**
      * Returns true if the given string contains only ASCII characters
-     * 
+     *
      * @param sequence
      * @return
      */
@@ -194,7 +194,7 @@ public class StringHelper
 
     /**
      * Encodes the domain using punycode and the query using percent-encoding
-     * 
+     *
      * @param url
      * @return
      * @throws URISyntaxException
@@ -230,6 +230,24 @@ public class StringHelper
         return url;
     }
 
+    public static String filenameChangeExt(String originalFilename, String newExt)
+    {
+        return originalFilename.substring(0, originalFilename.lastIndexOf('.')) + "." + newExt;
+    }
+
+    public static String getNameFromPath(String originalFilepath)
+    {
+        if(originalFilepath == null)
+        {
+            return null;
+        }
+
+        int lastUnixPos = originalFilepath.lastIndexOf('/');
+        int lastWindowsPos = originalFilepath.lastIndexOf('\\');
+        int index = Math.max(lastUnixPos, lastWindowsPos);
+        return originalFilepath.substring(index + 1);
+    }
+
     public static String decodeBase64(String encoded)
     {
         //decode byte array
@@ -260,7 +278,7 @@ public class StringHelper
 
     /**
      * Like Jsoup.clean but it preserves linebreaks and spacing
-     * 
+     *
      * @param html
      * @param whitelist for example: Whitelist.none()
      * @return

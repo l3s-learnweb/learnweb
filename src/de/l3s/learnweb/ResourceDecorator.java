@@ -220,7 +220,7 @@ public class ResourceDecorator implements Serializable
 
     public String getType()
     {
-        return resource.getType();
+        return resource.getType().toString();
     }
 
     public boolean isArchived()

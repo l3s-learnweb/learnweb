@@ -1363,7 +1363,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 if(resource != null)
                 {
                     this.setClickedGroupItem(resource);
-                    if((resource.getType().equals("Presentation") || resource.getType().equals("Text") || resource.getType().equals("Spreadsheet")) && resource.getStorageType() == 1)
+                    if((resource.getType().equals(Resource.ResourceType.presentation) || resource.getType().equals(Resource.ResourceType.text) || resource.getType().equals(Resource.ResourceType.spreadsheet)) && resource.getStorageType() == 1)
                         getFileEditorBean().fillInFileInfo(resource);
                 }
                 else

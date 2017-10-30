@@ -419,11 +419,11 @@ public class SearchLogClient
             Resource resourceSend;
             //creating a new resource type for the web service
             if(mode != MODE.text)
-                resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
+                resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType().name(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
                         resource.getThumbnail2().getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(),
                         resource.getResource().getThumbnail4().getUrl(), resultsetId, resource.getTempId());
             else
-                resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
+                resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType().name(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
                         resource.getTempId());
 
             //posting the resource to the web service
@@ -454,11 +454,11 @@ public class SearchLogClient
             Resource resourceSend;
             //creating a new resource type for the web service
             if(mode != MODE.text)
-                resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
+                resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType().name(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
                         resource.getThumbnail2().getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(),
                         resource.getResource().getThumbnail4().getUrl(), resultsetId, resource.getTempId());
             else
-                resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
+                resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType().name(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
                         resource.getTempId());
             resourcelist.add(resourceSend);
         }
@@ -501,11 +501,11 @@ public class SearchLogClient
                 //creating a new resource type for the web service
                 Resource resourceSend;
                 if(mode != MODE.text)
-                    resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
+                    resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType().name(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000),
                             resource.getThumbnail2().getHeight(), resource.getThumbnail2().getWidth(), resource.getThumbnail2().getUrl(), resource.getResource().getThumbnail4().getHeight(), resource.getResource().getThumbnail4().getWidth(),
                             resource.getResource().getThumbnail4().getUrl(), resultsetId, resource.getTempId());
                 else
-                    resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
+                    resourceSend = new Resource(resource.getResource().getId(), resource.getUrl(), resource.getResource().getType().name(), resource.getResource().getSource(), resource.getTitle(), StringHelper.shortnString(resource.getDescription(), 1000), resultsetId,
                             resource.getTempId());
 
                 resources.add(resourceSend);
@@ -609,10 +609,9 @@ public class SearchLogClient
 
     /**
      * This method adds a resource saved event to a resource saved list to post it to the service later
-     * 
-     * @param resultsetid
-     * @param resourcerank
-     * @param systemid
+     *
+     * @param resourceRank
+     * @param systemId
      */
     public void addResourceSavedList(int resourceRank, int systemId)
     {
@@ -679,9 +678,9 @@ public class SearchLogClient
      * batch to the
      * search log web service after a session change or stack limit
      * 
-     * @param resourcerank - The temporary rank or id assigned to a resource being displayed on the search results page
-     * @param starttime - The start timestamp when the user started viewing the resource
-     * @param endtime - The end timestamp when the user finished viewing the resource
+     * @param resourceRank - The temporary rank or id assigned to a resource being displayed on the search results page
+     * @param startTime - The start timestamp when the user started viewing the resource
+     * @param endTime - The end timestamp when the user finished viewing the resource
      * @param sessionId - The id of that particular session
      */
     public void passBatchViewingTime(int resourceRank, Date startTime, Date endTime, String sessionId)
@@ -879,8 +878,8 @@ public class SearchLogClient
     /**
      * This method returns the query history grouped by date for a given date range
      * 
-     * @param start_timestamp
-     * @param end_timestamp
+     * @param startTimestamp
+     * @param endTimestamp
      * @return It returns a filtered array list of query history grouped by date
      */
     public ArrayList<HistoryByDate> filterQueryHistoryByDates(String startTimestamp, String endTimestamp)

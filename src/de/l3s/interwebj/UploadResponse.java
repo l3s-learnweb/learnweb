@@ -46,7 +46,7 @@ public class UploadResponse implements Serializable
             result.setEmbeddedSize4Raw((resultElement.elementText("embedded_size4")));
             result.setMaxImageUrl((resultElement.elementText("max_image_url")));
 
-            if(!result.getType().equalsIgnoreCase("image"))
+            if(!result.getType().equals(Resource.ResourceType.image))
             {
                 result.setEmbeddedRaw(resultElement.elementText("embedded_size4"));
                 if(null == result.getEmbeddedRaw())

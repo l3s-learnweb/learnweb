@@ -122,7 +122,7 @@
 								</tr>
 							</ui:fragment>
 							
-							<ui:fragment rendered="${empty result.resource.fileName and result.resource.type.toLowerCase() != 'text' and result.resource.type != 'pdf' and result.resource.type.toLowerCase() != 'video' and result.resource.type.toLowerCase() != 'image' }">
+							<ui:fragment rendered="${empty result.resource.fileName and result.resource.type != 'text' and result.resource.type != 'pdf' and result.resource.type != 'video' and result.resource.type != 'image' }">
 								<tr>
 									<td>
 										<span class="resource_field">

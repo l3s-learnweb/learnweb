@@ -5,18 +5,8 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,10 +33,26 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         OFFLINE
     }
 
-    public static final int FILE_RESOURCE = 1;
+    public enum ResourceType
+    {
+        text,
+        video,
+        image,
+        audio,
+        pdf,
+        website,
+        spreadsheet,
+        presentation,
+        document,
+        file, // applications, archives, etc
+
+        // learnweb types
+        survey,
+        glossary,
+    }
+
+    public static final int LEARNWEB_RESOURCE = 1;
     public static final int WEB_RESOURCE = 2;
-    public static final int GLOSSARY_RESOURCE = 3;
-    public static final int SURVEY_RESOURCE = 4;
 
     private int id = -1; // default id, that indicates that this resource is not stored at fedora
     private int groupId;
@@ -60,8 +66,8 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private String location = ""; // The location where the resource (metadata) is stored; for example Learnweb, Flickr, Youtube ...
     private String language; // language code
     private String author = "";
-    private String type = ""; // possible types: text, image, video, pdf, glossary, survey
-    private String format = "";
+    private ResourceType type;
+    private String format = ""; // original mineType of the resource
     private int duration;
     private int ownerUserId;
     private String idAtService = "";
@@ -86,6 +92,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private Thumbnail thumbnail2c;
     private Thumbnail thumbnail3;
     private Thumbnail thumbnail4;
+    private String embeddedCode = null; // temporal
     private String embeddedRaw;
     private String transcript; //To store the English transcripts for TED videos
     private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
@@ -109,6 +116,9 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private Date openDate;
     private Date closeDate;
     private String[] validCourses;
+
+    // private temporal flags
+    private boolean isProcessingStarted = false; // is new thread for creating thumbnail or converting video started
 
     // caches
     private transient OwnerList<Tag, User> tags = null;
@@ -143,11 +153,12 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         this.title = title;
         this.source = source;
         this.url = url;
-        this.type = type;
+        this.setType(type);
         setThumbnail2(new Thumbnail(thumbnail_url, thumbnail_width, thumbnail_height));
         setThumbnail4(new Thumbnail(thumbnail4_url, thumbnail4_width, thumbnail4_height));
     }
 
+    // TODO Oleh: remove the method
     @Deprecated
     public void prepareEmbeddedCodes()
     {
@@ -286,7 +297,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
         if(embeddedSize1 == null || embeddedSize1.length() < 3)
         {
-            if(type.equalsIgnoreCase("audio"))
+            if(type.equals(ResourceType.audio))
                 embeddedSize1 = "<img src=\"../resources/resources/img/audio.png\" width=\"100\" height=\"100\" />";
             else if(format.startsWith("application/vnd.") || format.startsWith("application/ms"))
                 embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
@@ -477,22 +488,18 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public String getStringStorageType()
     {
-        if(storageType == Resource.FILE_RESOURCE)
-            return UtilBean.getLocaleMessage("file");
+        if(storageType == Resource.LEARNWEB_RESOURCE)
+            return UtilBean.getLocaleMessage("file"); // TODO: probably should be renamed to `Learnweb`
         else if(storageType == Resource.WEB_RESOURCE)
             return UtilBean.getLocaleMessage("web");
-        else if(storageType == Resource.GLOSSARY_RESOURCE)
-            return "Glossary";
-        else if(storageType == Resource.SURVEY_RESOURCE)
-            return "Survey";
         else
             throw new RuntimeException();
     }
 
     public void setStorageType(int type)
     {
-        if(type != FILE_RESOURCE && type != WEB_RESOURCE && type != GLOSSARY_RESOURCE && type != SURVEY_RESOURCE)
-            throw new IllegalArgumentException();
+        if(type != LEARNWEB_RESOURCE && type != WEB_RESOURCE)
+            throw new IllegalArgumentException("Unknown storageType of the resource: " + id);
         this.storageType = type;
     }
 
@@ -516,7 +523,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         return location;
     }
 
-    public String getType()
+    public ResourceType getType()
     {
         return type;
     }
@@ -727,26 +734,64 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         this.location = location;
     }
 
-    public void setType(String type)
+    public void setType(ResourceType type)
     {
-        if(type.equalsIgnoreCase("videos") || type.equalsIgnoreCase("video"))
-            this.type = "Video";
-        else if(type.equalsIgnoreCase("photos") || type.equalsIgnoreCase("image"))
-            this.type = "Image";
-        else if(null == type || type.length() == 0)
-        {
-            log.warn("Resource: " + id + "; type set to null", new Exception());
-            this.type = "Unknown";
+        this.type = type;
+    }
 
+    public void setType(String type) {
+        try {
+            this.type = ResourceType.valueOf(type.toLowerCase());
+        } catch (IllegalArgumentException e) {
+            if(type.equalsIgnoreCase("videos"))
+                this.type = ResourceType.video;
+            else if(type.equalsIgnoreCase("photos"))
+                this.type = ResourceType.image;
+            else
+                this.setTypeFromFormat(type);
         }
-        else if(type.equals("vnd.openxmlformats-officedocument.wordprocessingml.document"))
-            this.type = "Text";
-        else if(type.equals("vnd.openxmlformats-officedocument.spreadsheetml.sheet"))
-            this.type = "Spreadsheet";
-        else if(type.equals("vnd.openxmlformats-officedocument.presentationml.presentation"))
-            this.type = "Presentation";
-        else
-            this.type = type;
+    }
+
+    public void setTypeFromFormat(String format) {
+        if (StringUtils.isEmpty(format)) {
+            log.error("Given format is empty: " + format, new Exception());
+            return;
+        }
+
+        if(format.equals("text/plain"))
+            this.type = Resource.ResourceType.text;
+        else if (format.equals("text/html") || format.equals("application/xhtml+xml"))
+            this.type = Resource.ResourceType.website;
+        else if (format.startsWith("image/"))
+            this.type = Resource.ResourceType.image;
+        else if (format.startsWith("video/"))
+            this.type = Resource.ResourceType.video;
+        else if (format.startsWith("audio/"))
+            this.type = Resource.ResourceType.audio;
+        else if (format.equals("application/pdf"))
+            this.type = Resource.ResourceType.pdf;
+        else if (format.contains("ms-excel") || format.contains("spreadsheet"))
+            this.type = Resource.ResourceType.spreadsheet;
+        else if (format.contains("ms-powerpoint") || format.contains("presentation"))
+            this.type = Resource.ResourceType.presentation;
+        else if (format.contains("msword") || format.contains("ms-word") || format.contains("wordprocessing") || format.contains("opendocument.text") || format.equals("application/rtf"))
+            this.type = Resource.ResourceType.document;
+        else if (Arrays.asList(
+                "application/x-msdownload",
+                "application/x-ms-dos-executable",
+                "application/octet-stream",
+                "application/x-gzip",
+                "application/x-rar-compressed",
+                "application/zip",
+                "application/x-shockwave-flash",
+                "message/rfc822").contains(format))
+            // handle known types of downloadable resources
+            this.type = Resource.ResourceType.file;
+        else {
+            // if we do not know the format, then  log it and set it to downloadable
+            log.error("Unknown type for format: " + format, new Exception());
+            this.type = Resource.ResourceType.file;
+        }
     }
 
     /**
@@ -956,7 +1001,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     public String getEmbeddedSize3()
     {
 
-        if(getThumbnail3() != null && getType().equals("Image"))
+        if(getThumbnail3() != null && getType().equals(ResourceType.image))
             return getThumbnail3().toHTML();
 
         return embeddedSize3;
@@ -1012,7 +1057,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     /**
      * Url to the best (high resolution) available preview image.<br/>
-     * Only available for interweb search results
+     * Only available for interweb search results + ResourceMetadataExtractor save thumbnail url to the field
      */
     public String getMaxImageUrl()
     {
@@ -1268,35 +1313,42 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public String getEmbedded()
     {
-        Thumbnail large = getThumbnail4();
-
-        if(getType().equalsIgnoreCase("image"))
-            return "<img src=\"" + getThumbnail2().getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\" original-src=\"" + large.getUrl() + "\"/>";
-        else if(getType().equalsIgnoreCase("text"))
-            return "<iframe src=\"" + getUrl() + "\" />";
-        else if(getType().equalsIgnoreCase("video"))
+        if(embeddedCode == null)
         {
-            if(getSource().equalsIgnoreCase("loro") || getSource().equalsIgnoreCase("desktop"))
+            if(getType().equals(ResourceType.image))
             {
-                return "<iframe src=\"video.jsf?resource_id=" + id + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
+                Thumbnail large = getThumbnail4();
+                embeddedCode = "<img src=\"" + getThumbnail2().getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\" original-src=\"" + large.getUrl() + "\"/>";
             }
-            else if(getSource().equalsIgnoreCase("ted"))
+            else if(getType().equals(ResourceType.website))
             {
-                return "<iframe src=\"" + getUrl().replace("http://www", "//embed") + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
+                embeddedCode = "<iframe src=\"" + getUrl() + "\" />";
             }
-            /* TODO as soon as idAtService is correct
-            else if(getSource().equalsIgnoreCase("vimeo"))
+            else if(getType().equals(ResourceType.video))
             {
-                return "<iframe src=\"//player.vimeo.com/video/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
-            }*/
+                if(getSource().equalsIgnoreCase("loro") || getSource().equalsIgnoreCase("desktop"))
+                    embeddedCode = "<iframe src=\"video.jsf?resource_id=" + id + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
+                else if(getSource().equalsIgnoreCase("ted"))
+                    embeddedCode = "<iframe src=\"" + getUrl().replace("http://www", "//embed") + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
+                else if(getSource().equalsIgnoreCase("youtube"))
+                    embeddedCode = "<iframe src=\"https://youtube.com/embed/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>";
+                else if(getSource().equalsIgnoreCase("vimeo"))
+                    embeddedCode = "<iframe src=\"https://player.vimeo.com/video/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
+            }
+
+            // if no rules above works
+            if (embeddedCode == null)
+            {
+                if(getEmbeddedRaw() != null)
+                    embeddedCode = getEmbeddedRaw();
+                else if(getEmbeddedSize4() != null)
+                    embeddedCode = getEmbeddedSize4();
+                else if(getEmbeddedSize4() != null)
+                    embeddedCode = getEmbeddedSize4();
+            }
         }
-        if(getEmbeddedRaw() != null)
-            return getEmbeddedRaw();
 
-        if(getEmbeddedSize4() != null)
-            return getEmbeddedSize4();
-
-        return getEmbeddedSize3();
+        return embeddedCode;
     }
 
     public int getDuration()
@@ -1475,7 +1527,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     }
 
     /**
-     * @param comma separated list of language codes
+     * @param language comma separated list of language codes
      */
     public void setLanguage(String language)
     {
@@ -2000,11 +2052,18 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         this.validCourses = validCourses;
     }
 
+    public boolean isProcessingStarted() {
+        return isProcessingStarted;
+    }
+
+    public void setProcessingStarted(boolean processingStarted) {
+        isProcessingStarted = processingStarted;
+    }
+
     //new methods to add new metadata to given resource
     public void addNewLevels(String[] selectedLevels, User user) throws SQLException
     {
         ResourceManager rsm = Learnweb.getInstance().getResourceManager();
         rsm.saveLanglevelResource(this, selectedLevels, user);
     }
-
 }

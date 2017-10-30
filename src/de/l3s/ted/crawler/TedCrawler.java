@@ -246,7 +246,7 @@ public class TedCrawler extends WebCrawler
                     tedResource.setDescription(description);
                     tedResource.setUrl("http://www.ted.com/talks/" + slug);
                     tedResource.setSource("TED");
-                    tedResource.setType("Video");
+                    tedResource.setType(Resource.ResourceType.video);
                     tedResource.setDuration(duration);
                     tedResource.setMaxImageUrl(maxImageUrl);
                     tedResource.setCreationDate(publishedAt);

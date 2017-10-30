@@ -461,7 +461,7 @@ public class InterWeb implements Serializable
         MultiPart multiPart = new MultiPart();
         multiPart = multiPart.bodyPart(new FormDataBodyPart("title", resource.getTitle()));
         multiPart = multiPart.bodyPart(new FormDataBodyPart("description", resource.getDescription()));
-        multiPart = multiPart.bodyPart(new FormDataBodyPart("content_type", resource.getType().toLowerCase()));
+        multiPart = multiPart.bodyPart(new FormDataBodyPart("content_type", resource.getType().name()));
         multiPart = multiPart.bodyPart(new FileDataBodyPart("data", resource.getFile(TYPE.FILE_MAIN).getActualFile(), MediaType.MULTIPART_FORM_DATA_TYPE));
         //multiPart = multiPart.bodyPart(new FormDataBodyPart("data", "the data"));
 

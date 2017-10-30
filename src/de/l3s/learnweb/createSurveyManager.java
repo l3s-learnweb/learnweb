@@ -66,9 +66,9 @@ public class createSurveyManager
             surveyRes.setThumbnail3(iconResource.getThumbnail3());
             surveyRes.setThumbnail4(iconResource.getThumbnail4());
             surveyRes.setDeleted(false);
-            surveyRes.setSource("Survey");
-            surveyRes.setType("Survey");
-            surveyRes.setStorageType(Resource.SURVEY_RESOURCE);
+            surveyRes.setSource("Learnweb");
+            surveyRes.setType(Resource.ResourceType.survey);
+            surveyRes.setStorageType(Resource.LEARNWEB_RESOURCE);
             surveyRes.setUser(learnweb.getUserManager().getUser(userId));
             surveyRes.setTitle(title);
             surveyRes.setDescription(desc);

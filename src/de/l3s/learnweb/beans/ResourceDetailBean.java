@@ -301,20 +301,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 }
             }
 
-            if(clickedResource.getStorageType() == Resource.FILE_RESOURCE)
-            {
-                ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
-                log.debug("Get the mime type and extract text if possible");
-                FileInfo info = rpm.getFileInfo(FileInspector.openStream(clickedResource.getUrl()), clickedResource.getFileName());
+            ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
+            rpm.processResource(clickedResource);
 
-                log.debug("Create thumbnails");
-                rpm.processFile(clickedResource, FileInspector.openStream(clickedResource.getUrl()), info);
-            }
-            else
-            {
-                ResourceMetadataExtractor extractor = new ResourceMetadataExtractor(clickedResource);
-                extractor.makePreview();
-            }
             clickedResource.save();
         }
         catch(Exception e)
@@ -445,6 +434,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         {
             String archiveUrl = getParameter("archive_url");
             ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
+            ResourceMetadataExtractor rme = Learnweb.getInstance().getResourceMetadataExtractor();
 
             FileManager fileManager = getLearnweb().getFileManager();
             Collection<File> files = clickedResource.getFiles().values();
@@ -458,7 +448,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             }
 
             //Getting mime type
-            FileInfo info = rpm.getFileInfo(FileInspector.openStream(archiveUrl), clickedResource.getFileName());
+            FileInfo info = rme.getFileInfo(FileInspector.openStream(archiveUrl), clickedResource.getFileName());
             String type = info.getMimeType().substring(0, info.getMimeType().indexOf("/"));
             if(type.equals("application"))
                 type = info.getMimeType().substring(info.getMimeType().indexOf("/") + 1);
@@ -517,14 +507,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public void setClickedResource(Resource clickedResource)
     {
-        if(clickedResource != null && clickedResource.getType().equals("folder"))
-        {
-            this.clickedResource = new Resource();
-        }
-        else
-        {
-            this.clickedResource = clickedResource;
-        }
+        this.clickedResource = clickedResource;
     }
 
     public Tag getSelectedTag()

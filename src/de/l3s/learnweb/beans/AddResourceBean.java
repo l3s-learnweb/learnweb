@@ -73,7 +73,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         resource = new Resource();
         resource.setSource("Internet");
         resource.setLocation("Learnweb");
-        resource.setStorageType(Resource.FILE_RESOURCE);
+        resource.setStorageType(Resource.LEARNWEB_RESOURCE);
         resource.setDeleted(true); // hide the resource from the frontend until it is finally saved
     }
 
@@ -104,29 +104,36 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
             resource.setSource("Desktop");
             resource.setLocation("Learnweb");
-            resource.setStorageType(Resource.FILE_RESOURCE);
+            resource.setStorageType(Resource.LEARNWEB_RESOURCE);
             resource.setDeleted(true);
 
             UploadedFile uploadedFile = event.getFile();
 
-            FileInfo info = null;
+            FileManager fileManager = getLearnweb().getFileManager();
+            ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
 
-            try
-            {
-                ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
+            log.debug("Getting the fileInfo from uploaded file...");
+            FileInfo info = rme.getFileInfo(uploadedFile.getInputstream(), uploadedFile.getFileName());
 
-                log.debug("Get the mime type and extract text if possible");
-                info = rpm.getFileInfo(uploadedFile.getInputstream(), uploadedFile.getFileName());
+            log.debug("Saving file to database...");
+            File file = new File();
+            file.setType(TYPE.FILE_MAIN);
+            file.setName(info.getFileName());
+            file.setMimeType(info.getMimeType());
+            file.setDownloadLogActivated(true);
+            fileManager.save(file, uploadedFile.getInputstream());
+            resource.addFile(file);
+            resource.setUrl(file.getUrl());
+            resource.setFileUrl(file.getUrl()); // for Loro resources the file url is different from the url
+            resource.setFileName(info.getFileName());
 
-                log.debug("Create thumbnails");
-                rpm.processFile(resource, uploadedFile.getInputstream(), info);
-            }
-            catch(Exception e)
-            {
-                log.error("Thumbnail creation failed for " + info);
-            }
+            log.debug("Extracting info from uploaded file...");
+            rme.processFileResource(resource, info);
 
-            resource.prepareEmbeddedCodes();
+            log.debug("Creating thumbnails from uploaded file...");
+            Thread createThumbnailThread = new CreateThumbnailThread(resource);
+            createThumbnailThread.start();
+            createThumbnailThread.join(1000);
 
             /* not used in any course right now
              * disabled to save time
@@ -177,15 +184,28 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     public void handleUrlInput()
     {
-        log.debug("Handle Url input");
+        try
+        {
+            log.debug("Handle Url input");
 
-        resource.setStorageType(Resource.WEB_RESOURCE);
-        resource.setUrl(checkUrl(resource.getUrl()));
+            resource.setStorageType(Resource.WEB_RESOURCE);
+            resource.setUrl(checkUrl(resource.getUrl()));
 
-        ResourceMetadataExtractor rme = new ResourceMetadataExtractor(this.resource);
-        rme.process();
+            log.debug("Extracting info from given url...");
+            ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
+            rme.processWebResource(resource);
 
-        nextStep();
+            log.debug("Creating thumbnails from given url...");
+            Thread createThumbnailThread = new CreateThumbnailThread(resource);
+            createThumbnailThread.start();
+            createThumbnailThread.join(1000);
+
+            nextStep();
+        }
+        catch(InterruptedException e)
+        {
+            addFatalMessage(e);
+        }
     }
 
     public void addGlossary() throws IOException
@@ -194,8 +214,8 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         try
         {
             resource.setDeleted(false);
-            resource.setSource("Glossary");
-            resource.setType("Glossary");
+            resource.setSource("Learnweb");
+            resource.setType(Resource.ResourceType.glossary);
             resource.setUrl("");
 
             // add resource to a group if selected
@@ -233,10 +253,11 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
             UtilBean.getGroupDetailBean().updateResourcesFromSolr();
 
+            // TODO: looks strange, maybe redundant
             resource = new Resource();
             resource.setSource("Internet");
             resource.setLocation("Learnweb");
-            resource.setStorageType(Resource.GLOSSARY_RESOURCE);
+            resource.setStorageType(Resource.LEARNWEB_RESOURCE);
             resource.setDeleted(true);
             //resource.setUrl("");
         }
@@ -248,56 +269,56 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     /*public void addSurvey() throws IOException
     {
-    
+
         try
         {
             resource.setDeleted(false);
             resource.setSource("Survey");
             resource.setType("Survey");
             resource.setUrl("");
-    
+
             // add resource to a group if selected
             if(resourceTargetGroupId != 0)
             {
                 resource.setGroupId(resourceTargetGroupId);
                 getUser().setActiveGroup(resourceTargetGroupId);
             }
-    
+
             if(resourceTargetFolderId != 0)
             {
                 resource.setFolderId(resourceTargetFolderId);
             }
-    
+
             if(resource.getId() == -1)
                 resource = getUser().addResource(resource);
             else
             {
-    
+
                 resource.save();
             }
-    
+
             Resource iconResource = getLearnweb().getResourceManager().getResource(204095);
-    
+
             resource.setThumbnail0(iconResource.getThumbnail0());
             resource.setThumbnail1(iconResource.getThumbnail1());
             resource.setThumbnail2(iconResource.getThumbnail2());
             resource.setThumbnail3(iconResource.getThumbnail3());
             resource.setThumbnail4(iconResource.getThumbnail4());
-    
+
             resource.setUrl(getLearnweb().getServerUrl() + "/templates/resources/survey.jsf?resource_id=" + Integer.toString(resource.getId()));
             resource.save();
             getLearnweb().getCreateSurveyManager().createSurveyResource(resource.getId(), resource.getTitle(), resource.getDescription(), resource.getOpenDate(), resource.getCloseDate(), resource.getValidCourses());
             log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
-    
+
             UtilBean.getGroupDetailBean().updateResourcesFromSolr();
-    
+
             resource = new Resource();
             resource.setSource("Internet");
             resource.setLocation("Learnweb");
             resource.setStorageType(Resource.SURVEY_RESOURCE);
             resource.setDeleted(true);
-    
+
             //resource.setUrl("");
         }
         catch(SQLException e)
@@ -330,7 +351,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         {
             log.debug("addResource; res=" + resource);
 
-            if(resource.getStorageType() == Resource.FILE_RESOURCE && null == resource.getFile(TYPE.FILE_MAIN))
+            if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && null == resource.getFile(TYPE.FILE_MAIN))
             {
                 addGrowl(FacesMessage.SEVERITY_ERROR, "Select a file first");
                 return;
@@ -360,7 +381,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             }
 
             resource.setDeleted(false);
-            if(resource.getType().equals("Presentation") || resource.getType().equals("Text") || resource.getType().equals("Spreadsheet"))
+            if(resource.getType().equals(Resource.ResourceType.presentation) || resource.getType().equals(Resource.ResourceType.text) || resource.getType().equals(Resource.ResourceType.spreadsheet))
                 getFileEditorBean().fillInFileInfo(resource);
 
             // add resource to a group if selected
@@ -381,8 +402,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
                 resource.save();
 
             // create thumbnails for the resource
-            if(resource.getThumbnail2() == null || resource.getThumbnail2().getFileId() == 0 || resource.getType().equals("Video"))
+            if(!resource.isProcessingStarted() && (resource.getThumbnail2() == null || resource.getThumbnail2().getFileId() == 0 || resource.getType().equals(Resource.ResourceType.video))) {
                 new CreateThumbnailThread(resource).start();
+            }
 
             log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
 
@@ -393,7 +415,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource = new Resource();
             resource.setSource("Internet");
             resource.setLocation("Learnweb");
-            resource.setStorageType(Resource.FILE_RESOURCE);
+            resource.setStorageType(Resource.LEARNWEB_RESOURCE);
             resource.setDeleted(true);
         }
         catch(Exception e)
@@ -407,7 +429,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         resource = new Resource();
         resource.setSource("Internet");
         resource.setLocation("Learnweb");
-        resource.setStorageType(Resource.FILE_RESOURCE);
+        resource.setStorageType(Resource.LEARNWEB_RESOURCE);
     }
 
     public int getResourceTargetGroupId()
@@ -467,7 +489,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     /**
      * Returns java script from the embedded code because this can't be loaded thru ajax
-     * 
+     *
      * @return
      */
     public String getEmbeddedSize3()
@@ -663,7 +685,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
      * This function checks if a given String is a valid url.
      * When the url leads to a redirect the function will return the target of the redirect.
      * Returns null if the url is invalid or not reachable.
-     * 
+     *
      * @param urlStr
      * @return
      */
@@ -747,8 +769,8 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
         public CreateThumbnailThread(Resource resource)
         {
+            log.debug("Create CreateThumbnailThread for " + resource.toString());
             this.resource = resource;
-            log.debug(this.resource.toString());
         }
 
         @Override
@@ -756,49 +778,15 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         {
             try
             {
-                // convert videos that are not in mp4 format
-                if(resource.getStorageType() == Resource.FILE_RESOURCE && resource.getType().equals("Video") && !resource.getFormat().equals("video/mp4"))
-                {
-                    File orginalFile = resource.getFile(TYPE.FILE_MAIN);
-
-                    InputStream inputStream = orginalFile.getInputStream();
-                    // TODO convert
-
-                    FileManager fileManager = Learnweb.getInstance().getFileManager();
-
-                    // move original file
-                    orginalFile.setType(TYPE.FILE_ORIGINAL);
-                    fileManager.save(orginalFile);
-
-                    // create new file
-                    File convertedfile = new File();
-                    convertedfile.setType(TYPE.FILE_MAIN);
-                    convertedfile.setName("filename.mp4"); // TODO
-                    convertedfile.setMimeType("video/mp4");
-                    fileManager.save(convertedfile, inputStream);
-
-                    resource.setThumbnail2(null); // remove old thumbnail
-
-                    resource.addFile(convertedfile);
-                    resource.addFile(orginalFile);
-                }
-
-                ResourceMetadataExtractor rme = new ResourceMetadataExtractor(resource);
-                rme.process();
-                rme.getResource().save();
+                ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
+                resource.setProcessingStarted(true);
+                rpm.processResource(resource);
+                resource.setProcessingStarted(false);
+                resource.save();
             }
             catch(Exception e)
             {
-                log.error(e);
-
-                try
-                {
-                    resource.save();
-                }
-                catch(SQLException e1)
-                {
-                    log.fatal("can't save resource: " + resource.getId(), e1);
-                }
+                log.error("Error in CreateThumbnailThread " + e);
             }
         }
 

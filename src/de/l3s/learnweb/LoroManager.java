@@ -391,7 +391,7 @@ public class LoroManager
         metaData(rs, resource);
         if(rs.getString("doc_format").contains("image"))
         {
-            resource.setType("image");
+            resource.setType(Resource.ResourceType.image);
             String titleFilename = StringHelper.urlDecode(rs.getString("filename"));
             resource.setFileName(titleFilename);
             resource.setTitle(rs.getString("title") + " - " + titleFilename);
@@ -408,9 +408,9 @@ public class LoroManager
         }
         else if(rs.getString("doc_format").contains("video"))
         {
-            resource.setType("Video");
+            resource.setType(Resource.ResourceType.video);
             resource.setEmbeddedRaw(
-                    "<link href=\"http://vjs.zencdn.net/4.12/video-js.css\" rel=\"stylesheet\"/><script src=\"http://vjs.zencdn.net/4.12/video.js\"></script><video id=\"MY_VIDEO_1\" class=\"video-js vjs-default-skin vjs-big-play-centered\" controls=\"preload=none\" width=\"100%\" height=\"100%\" data-setup=\"{}\"><source src=\""
+                    "<link href=\"//vjs.zencdn.net/6.2.4/video-js.css\" rel=\"stylesheet\"/><script src=\"//vjs.zencdn.net/6.2.4/video.js\"></script><video id=\"MY_VIDEO_1\" class=\"video-js vjs-fill vjs-default-skin vjs-big-play-centered\" data-setup='{\"controls\": true, \"autoplay\": false, \"preload\": \"auto\"}' width=\"100%\" height=\"100%\"><source src=\""
                             + rs.getString("doc_url") + "\"> </video>");
             String titleFilename = StringHelper.urlDecode(rs.getString("filename"));
             resource.setFileName(titleFilename);
@@ -432,7 +432,7 @@ public class LoroManager
         else
         {
 
-            resource.setType("text");
+            resource.setType(Resource.ResourceType.text);
             resource.setTitle(rs.getString("title"));
             resource.setIdAtService(Integer.toString(rs.getInt("loro_resource_id")));
 

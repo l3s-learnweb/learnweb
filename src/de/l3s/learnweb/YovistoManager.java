@@ -257,7 +257,7 @@ public class YovistoManager
         resource.setUrl("http://www.yovisto.com/video/" + result.getInt("yovisto_id"));
         resource.setSource("Yovisto");
         resource.setLocation("Yovisto");
-        resource.setType("Video");
+        resource.setType(Resource.ResourceType.video);
         resource.setFormat(result.getString("format"));
         if(!result.getString("keywords").isEmpty())
             description = description + " \nKeywords: " + result.getString("keywords");

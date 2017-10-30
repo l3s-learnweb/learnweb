@@ -241,7 +241,7 @@
 					<ui:fragment
 						rendered="#{resourceDetailBean.clickedResource.canViewResource(userBean.user)}">
 						<ui:fragment
-							rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'video' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'image'}">
+							rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image'}">
 							<div class="align-center" style="margin-top: 5px;">
 								<div id="lightbox">
 									<div id="lightbox_background" onclick="lightbox_close();"></div>
@@ -271,7 +271,7 @@
 													style="width: 100%; height: 100%;" />
 											</ui:fragment>
 											<ui:fragment
-												rendered="#{resourceDetailBean.clickedResource.type eq 'Image'}">
+												rendered="#{resourceDetailBean.clickedResource.type eq 'image'}">
 												<img
 													src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
 													height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
@@ -348,7 +348,7 @@
 								</div>
 
 								<ui:fragment
-									rendered="#{resourceDetailBean.clickedResource.type == 'Video'}">
+									rendered="#{resourceDetailBean.clickedResource.type eq 'video'}">
 									<div class="preview_box" style="height: 412px; width: 100%;">
 										<h:outputText
 											value='#{resourceDetailBean.clickedResource.embedded}'
@@ -364,7 +364,7 @@
 									</div>
 								</ui:fragment>
 								<ui:fragment
-									rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'Image') and not empty resourceDetailBean.clickedResource.thumbnail3 or resourceDetailBean.clickedResource.type eq 'pdf'}">
+									rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'image') and not empty resourceDetailBean.clickedResource.thumbnail3 or resourceDetailBean.clickedResource.type eq 'pdf'}">
 									<img class="preview_box"
 										src="#{resourceDetailBean.clickedResource.thumbnail3.url}"
 										height="#{resourceDetailBean.clickedResource.thumbnail3.height}"
@@ -385,7 +385,7 @@
 									</div>
 								</ui:fragment>
 								<ui:fragment
-									rendered="${resourceDetailBean.clickedResource.type eq 'Image' and empty resourceDetailBean.clickedResource.thumbnail3}">
+									rendered="${resourceDetailBean.clickedResource.type eq 'image' and empty resourceDetailBean.clickedResource.thumbnail3}">
 									<div class="preview_box">
 										<h:outputText
 											value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}'
@@ -435,7 +435,7 @@
 							</ui:fragment>
 
 							<ui:fragment
-								rendered="${empty resourceDetailBean.clickedResource.fileName and resourceDetailBean.clickedResource.type.toLowerCase() != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type.toLowerCase() != 'video' and resourceDetailBean.clickedResource.type.toLowerCase() != 'image' }">
+								rendered="${empty resourceDetailBean.clickedResource.fileName and resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'video' and resourceDetailBean.clickedResource.type != 'image' }">
 								<tr>
 									<td><span class="resource_field"> #{msg.resource}:
 									</span></td>
@@ -931,7 +931,7 @@
 					rendered="#{bean.rightPanelAction == 'editResource' and resourceDetailBean.clickedResource.id != -1}"
 					id="edit_form">
 					<ui:fragment
-						rendered="#{resourceDetailBean.clickedResource.type.toLowerCase() eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'video' or resourceDetailBean.clickedResource.type.toLowerCase() eq 'image'}">
+						rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image'}">
 						<div class="align-center" style="margin-top: 5px;">
 							<div id="lightbox">
 								<div id="lightbox_background" onclick="lightbox_close();"></div>
@@ -961,7 +961,7 @@
 												style="width: 100%; height: 100%;" />
 										</ui:fragment>
 										<ui:fragment
-											rendered="#{resourceDetailBean.clickedResource.type eq 'Image'}">
+											rendered="#{resourceDetailBean.clickedResource.type eq 'image'}">
 											<img
 												src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
 												height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
@@ -1038,7 +1038,7 @@
 							</div>
 
 							<ui:fragment
-								rendered="#{resourceDetailBean.clickedResource.type == 'Video'}">
+								rendered="#{resourceDetailBean.clickedResource.type eq 'video'}">
 								<div class="preview_box" style="height: 412px; width: 100%;">
 									<h:outputText
 										value='#{resourceDetailBean.clickedResource.embedded}'
@@ -1054,7 +1054,7 @@
 								</div>
 							</ui:fragment>
 							<ui:fragment
-								rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'Image') and not empty resourceDetailBean.clickedResource.thumbnail3 or resourceDetailBean.clickedResource.type eq 'pdf'}">
+								rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'image') and not empty resourceDetailBean.clickedResource.thumbnail3 or resourceDetailBean.clickedResource.type eq 'pdf'}">
 								<img class="preview_box"
 									src="#{resourceDetailBean.clickedResource.thumbnail3.url}"
 									height="#{resourceDetailBean.clickedResource.thumbnail3.height}"
@@ -1074,7 +1074,7 @@
 								</div>
 							</ui:fragment>
 							<ui:fragment
-								rendered="${resourceDetailBean.clickedResource.type eq 'Image' and empty resourceDetailBean.clickedResource.thumbnail3}">
+								rendered="${resourceDetailBean.clickedResource.type eq 'image' and empty resourceDetailBean.clickedResource.thumbnail3}">
 								<div class="preview_box">
 									<h:outputText
 										value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}'

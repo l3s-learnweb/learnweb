@@ -64,6 +64,7 @@ public class Learnweb
     private final SolrClient solrClient;
     private final LoroManager loroManager;
     private final ResourcePreviewMaker resourcePreviewMaker;
+    private final ResourceMetadataExtractor resourceMetadataExtractor;
     private final YovistoManager yovistoManager;
     private final JobScheduler jobScheduler;
     private final GlossaryManager glossariesManager;
@@ -179,7 +180,7 @@ public class Learnweb
             propteriesFileName = "lw_local_rishita";
         else if(new File("/Users/Rishita/").exists())
             propteriesFileName = "lw_local_rishita";
-        else if((new File("/home/astappev").exists()))
+        else if((new File("C:\\Users\\astappev").exists()))
             propteriesFileName = "lw_local_oleh";
         else if((new File("/Users/user").exists()))
             propteriesFileName = "lw_local_luyan";
@@ -238,6 +239,7 @@ public class Learnweb
         fileManager = new FileManager(this);
         solrClient = SolrClient.getInstance(this);
         resourcePreviewMaker = new ResourcePreviewMaker(this);
+        resourceMetadataExtractor = new ResourceMetadataExtractor(this);
         serviceConverter = new ConverterService(this);
         searchlogClient = new SearchLogClient(this);
         tedManager = new TedManager(this);
@@ -316,6 +318,11 @@ public class Learnweb
     public ResourcePreviewMaker getResourcePreviewMaker()
     {
         return resourcePreviewMaker;
+    }
+
+    public ResourceMetadataExtractor getResourceMetadataExtractor()
+    {
+        return resourceMetadataExtractor;
     }
 
     private void connect() throws SQLException

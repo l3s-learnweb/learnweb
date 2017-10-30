@@ -25,7 +25,6 @@ import de.l3s.learnweb.beans.AddResourceBean;
 import de.l3s.learnweb.rm.Category;
 import de.l3s.learnweb.rm.LanglevelManager;
 import de.l3s.learnweb.solrClient.FileInspector;
-import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 import de.l3s.learnweb.solrClient.SolrClient;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
@@ -63,9 +62,21 @@ public class ResourceManager
 
     }
 
+    public int getResourceCount() throws SQLException
+    {
+        Long count = (Long) Sql.getSingleResult("SELECT COUNT(*) FROM lw_resource WHERE deleted = 0");
+        return count.intValue();
+    }
+
     public int getResourceCountByUserId(int userId) throws SQLException
     {
         Long count = (Long) Sql.getSingleResult("SELECT COUNT(*) FROM lw_resource r WHERE owner_user_id = " + userId + " AND deleted = 0");
+        return count.intValue();
+    }
+
+    public int getResourceCountByGroupId(int groupId) throws SQLException
+    {
+        Long count = (Long) Sql.getSingleResult("SELECT COUNT(*) FROM lw_resource r WHERE group_id = " + groupId + " AND deleted = 0");
         return count.intValue();
     }
 
@@ -95,10 +106,6 @@ public class ResourceManager
 
     /**
      * Returns all resources (which were not deleted)
-     *
-     * @param userId
-     * @return
-     * @throws SQLException
      */
     public List<Resource> getResourcesAll(int page, int pageSize) throws SQLException
     {
@@ -356,7 +363,7 @@ public class ResourceManager
         replace.setInt(5, resource.getStorageType());
         replace.setInt(6, resource.getRights());
         replace.setString(7, resource.getSource());
-        replace.setString(8, resource.getType());
+        replace.setString(8, resource.getType().name());
         replace.setString(9, resource.getFormat());
         replace.setInt(10, resource.getUserId());
         replace.setInt(11, resource.getRatingSum());
@@ -437,10 +444,6 @@ public class ResourceManager
 
         return resource;
     }
-
-    /**
-     * @see de.l3s.learnweb.ResourceManager#addResource(de.l3s.learnweb.Resource, de.l3s.learnweb.User, java.io.InputStream)
-     */
 
     protected Resource addResource(Resource resource, User user) throws SQLException
     {
@@ -774,7 +777,7 @@ public class ResourceManager
      *
     public AbstractPaginator getResourcesByGroupId(int groupId, Order order) throws SQLException
     {
-        int results = getCountResourceByGroupId(groupId);
+        int results = getResourceCountByGroupId(groupId);
     
         return new GroupPaginator(results, groupId, order);
     }
@@ -867,22 +870,6 @@ public class ResourceManager
         select.close();
 
         return resources;
-    }
-
-    public int getCountResourceByGroupId(int groupId) throws SQLException
-    {
-        int count = 0;
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM lw_resource WHERE group_id = ? AND deleted = 0");
-        select.setInt(1, groupId);
-        ResultSet rs = select.executeQuery();
-        if(rs.next())
-            count = rs.getInt(1);
-        else
-            throw new IllegalStateException("SQL query returned no result");
-
-        select.close();
-
-        return count;
     }
 
     private Resource createResource(ResultSet rs) throws SQLException
@@ -1076,7 +1063,7 @@ public class ResourceManager
         if(resource.getTitle().equals(resource.getDescription())) // delete description when equal to title
             resource.setDescription("");
 
-        if(!resource.getType().equalsIgnoreCase("image"))
+        if(!resource.getType().equals(Resource.ResourceType.image))
         {
             resource.setEmbeddedRaw(searchResult.getEmbeddedSize4());
             if(null == resource.getEmbeddedRaw())
@@ -1212,6 +1199,7 @@ public class ResourceManager
 
         Learnweb lw = Learnweb.getInstance();
         ResourceManager rm = new ResourceManager(lw);
+        ResourceMetadataExtractor rme = lw.getResourceMetadataExtractor();
         ResourcePreviewMaker rpm = lw.getResourcePreviewMaker();
 
         /*
@@ -1253,52 +1241,13 @@ public class ResourceManager
 
             try
             {
-                FileInfo info = new FileInspector(lw).inspect(FileInspector.openStream(url), "unknown");
+                rme.processResource(resource); // extract metadata
 
-                if(info.getMimeType().equals("text/html") || info.getMimeType().equals("text/plain") || info.getMimeType().equals("application/xhtml+xml") || info.getMimeType().equals("application/octet-stream") || info.getMimeType().equals("blog-post")
-                        || info.getMimeType().equals("application/x-gzip"))
-                {
-                    resource.setMachineDescription(info.getTextContent());
-                    resource.setUrl(url);
-
-                    rpm.processWebsite(resource);
-                    resource.setOnlineStatus(OnlineStatus.ONLINE);
-                    if(resource.getSource() == null)
-                        resource.setSource("Internet");
-
-                    resource.save();
-
-                }
-                else if(info.getMimeType().equals("application/pdf"))
-                {
-                    log.debug("process " + info.getMimeType());
-                    resource.setMachineDescription(info.getTextContent());
-
-                    rpm.processFile(resource, FileInspector.openStream(url), info);
-                    resource.save();
-                }
-                else if(info.getMimeType().startsWith("image/"))
-                {
-                    rpm.processImage(resource, FileInspector.openStream(url));
-                    resource.setFormat(info.getMimeType());
-                    resource.setType("Image");
-                    resource.save();
-                }
-                else if(info.getMimeType().contains("application/"))
-                {
-                    log.debug("process " + info.getMimeType());
-                    resource.setMachineDescription(info.getTextContent());
-
-                    rpm.processFile(resource, FileInspector.openStream(url), info);
-                    resource.save();
-                }
-                else
-                    log.error(info.getMimeType());
-
+                if(resource.getThumbnail4() == null)
+                    rpm.processResource(resource); // create thumbnails
             }
             catch(Exception e)
             {
-
                 log.error(e);
 
                 resource.setOnlineStatus(OnlineStatus.OFFLINE); // offline
@@ -1322,7 +1271,7 @@ public class ResourceManager
         ResourcePreviewMaker rpm = lw.getResourcePreviewMaker();
         for(Resource resource : resources)
         {
-            if(resource.getType().equals("Video") || resource.getType().equals("Image"))
+            if(resource.getType().equals(Resource.ResourceType.video) || resource.getType().equals(Resource.ResourceType.image))
             {
                 if(resource.getThumbnail4().getUrl() != null)
                     rpm.processImage(resource, FileInspector.openStream(resource.getThumbnail4().getUrl()));
@@ -1365,26 +1314,28 @@ public class ResourceManager
         }
     }
 
-    public static void reindexSelectedResources() throws SQLException, ClassNotFoundException
+    public static void reindexAllResources() throws SQLException, ClassNotFoundException
     {
         Learnweb lw = Learnweb.createInstance("");
         ResourceManager rm = lw.getResourceManager();
         SolrClient sm = lw.getSolrClient();
 
-        List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where  deleted = ? order by resource_id desc limit 1000", "0");
+        int currentPage = 0;
+        final int totalResources = rm.getResourceCount(), perPage = 500;
 
-        log.debug("Resources loaded");
-
-        for(Resource resource : resources)
+        while (currentPage * perPage <= totalResources)
         {
-            log.debug("Process: " + resource.toString());
+            log.debug("Loading page " + currentPage + 1);
 
-            sm.reIndexResource(resource);
+            List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where deleted = ? order by resource_id desc limit ? offset ? ", "0", perPage, currentPage * perPage);
+            log.debug(resources.size() + " resources loaded.");
 
+            for(Resource resource : resources)
+                sm.reIndexResource(resource);
         }
     }
 
-    public static void createMissingThumbnails() throws SQLException, ClassNotFoundException
+    public static void createMissingThumbnails() throws SQLException, ClassNotFoundException, IOException
     {
         Learnweb lw = Learnweb.createInstance("");
         ResourceManager rm = lw.getResourceManager();
@@ -1397,8 +1348,8 @@ public class ResourceManager
         {
             log.debug("Process: " + resource.getId());
 
-            ResourceMetadataExtractor extractor = new ResourceMetadataExtractor(resource);
-            extractor.makePreview();
+            ResourcePreviewMaker rme = Learnweb.getInstance().getResourcePreviewMaker();
+            rme.processResource(resource);
 
             resource.save();
 
@@ -1409,7 +1360,7 @@ public class ResourceManager
 
     public static void main(String[] args) throws SQLException, IOException, ClassNotFoundException
     {
-        reindexSelectedResources();
+        reindexAllResources();
 
         //reindexArchiveItResources();
         //createThumbnailsForWebResources();

@@ -390,7 +390,7 @@ public class TedManager
         resource.setUrl("http://www.ted.com/talks/" + rs.getString("slug"));
         resource.setSource("TED");
         resource.setLocation("TED");
-        resource.setType("Video");
+        resource.setType(Resource.ResourceType.video);
         resource.setDuration(rs.getInt("duration"));
         resource.setMaxImageUrl(rs.getString("photo2_url"));
         resource.setIdAtService(Integer.toString(rs.getInt("ted_id")));

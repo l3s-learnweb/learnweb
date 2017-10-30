@@ -231,7 +231,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
         if(resourceCount == -1 || cacheTime < now - 3000L)
         {
-            resourceCount = Learnweb.getInstance().getResourceManager().getCountResourceByGroupId(id);
+            resourceCount = Learnweb.getInstance().getResourceManager().getResourceCountByGroupId(id);
             cacheTime = now;
         }
         return resourceCount;
