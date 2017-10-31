@@ -180,6 +180,7 @@ public class ResourceMetadataExtractor
             }
 
             resource.setType(Resource.ResourceType.website);
+            // resource.setFormat("text/html");
             resource.setSource("Internet");
             FileInfo fileInfo = getFileInfo(FileInspector.openStream(resource.getUrl()), "unknown");
             processFileResource(resource, fileInfo);

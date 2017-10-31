@@ -193,9 +193,6 @@ public class ResourcePreviewMaker
 
     public void processWebsite(Resource resource) throws IOException, SQLException
     {
-        resource.setType(Resource.ResourceType.text);
-        resource.setFormat("text/html");
-
         URL thumbnailUrl = new URL(websiteThumbnailService + StringHelper.urlEncode(resource.getUrl()));
 
         // process image
