@@ -240,7 +240,7 @@
 						
 					<h:outputText value="#{msg.group_resources_access_denied}" rendered="${not resourceDetailBean.clickedResource.canViewResource(userBean.user) and not (resourceDetailBean.clickedResource.deleted or resourceDetailBean.clickedResource.groupId eq 0)}"/>
 					<ui:fragment rendered="#{resourceDetailBean.clickedResource.canViewResource(userBean.user)}">			
-						<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'spreadsheet' or resourceDetailBean.clickedResource.type eq 'presentation' or resourceDetailBean.clickedResource.type eq 'document' or resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image' or resourceDetailBean.clickedResource.type eq 'glossary' or resourceDetailBean.clickedResource.type eq 'survey'}">
+						<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'spreadsheet' or resourceDetailBean.clickedResource.type eq 'presentation' or resourceDetailBean.clickedResource.type eq 'document' or resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image' or resourceDetailBean.clickedResource.type eq 'glossary' or resourceDetailBean.clickedResource.type eq 'survey'}">
 							<div class="align-center" style="margin-top: 5px;">
 								<div id="lightbox">
 									<div id="lightbox_background" onclick="lightbox_close();"></div>
@@ -251,13 +251,13 @@
 											<a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="close"></a>
 										</div>
 										<div id="lightbox_content">
-											<ui:fragment rendered="#{resourceDetailBean.clickedResource.storageType == 1 and resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'spreadsheet' or resourceDetailBean.clickedResource.type eq 'presentation'}">
+											<ui:fragment rendered="#{resourceDetailBean.clickedResource.storageType == 1 and resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'spreadsheet' or resourceDetailBean.clickedResource.type eq 'presentation'}">
 												<div id="lightbox_editor" />
 											</ui:fragment>
 										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'pdf'}">
 											   	<iframe src="#{resourceDetailBean.clickedResource.url}" style="width:100%; height:100%; "/>
 										    </ui:fragment>
-										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.storageType == 2 and resourceDetailBean.clickedResource.type eq 'text'}">
+										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.storageType == 2 and (resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website')}">
 											    <div style="overflow:auto; height:100%; width:100%; text-align:center;">
 											    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
 											    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
@@ -329,26 +329,26 @@
 											</h:panelGroup>					
 										</div>
 									</div>
-								</div>				
-			
+								</div>
+
 								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type == 'video'}">
 									<div class="preview_box" style="height:412px; width:100%;">
 										<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
 									</div>
 								</ui:fragment>
-								<ui:fragment rendered="${resourceDetailBean.clickedResource.type != 'presentation' and resourceDetailBean.clickedResource.type != 'spreadsheet' and resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'video' and resourceDetailBean.clickedResource.type != 'image' and resourceDetailBean.clickedResource.type != 'glossary' and resourceDetailBean.clickedResource.type != 'survey'}">
+								<ui:fragment rendered="${resourceDetailBean.clickedResource.type != 'presentation' and resourceDetailBean.clickedResource.type != 'spreadsheet' and resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'website' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'video' and resourceDetailBean.clickedResource.type != 'image' and resourceDetailBean.clickedResource.type != 'glossary' and resourceDetailBean.clickedResource.type != 'survey'}">
 									<div class="preview_box">
 										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}'
 											escape="false"/>
 									</div>
 								</ui:fragment>
-								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'image' or resourceDetailBean.clickedResource.type eq 'glossary' or resourceDetailBean.clickedResource.type eq 'survey') and not empty resourceDetailBean.clickedResource.thumbnail3 or resourceDetailBean.clickedResource.type eq 'pdf'}">
+								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'image' or resourceDetailBean.clickedResource.type eq 'glossary' or resourceDetailBean.clickedResource.type eq 'survey') and not empty resourceDetailBean.clickedResource.thumbnail3 or resourceDetailBean.clickedResource.type eq 'pdf'}">
 										<img class="preview_box" src="#{resourceDetailBean.clickedResource.thumbnail3.url}"
 											height="#{resourceDetailBean.clickedResource.thumbnail3.height}" onmouseup="lightbox_open();"
 											width="#{resourceDetailBean.clickedResource.thumbnail3.width}"
 											style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"/>	
 								</ui:fragment>
-								<ui:fragment rendered="${resourceDetailBean.clickedResource.type eq 'text'  and empty resourceDetailBean.clickedResource.thumbnail3}">
+								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website') and empty resourceDetailBean.clickedResource.thumbnail3}">
 									<div class="preview_box" style="display: inline-block">
 										<a target="_blank" class="newsfeed_query_link" style="padding: 0px" 
 											href="#{resourceDetailBean.clickedResource.urlProxied}">
@@ -356,7 +356,7 @@
 										</a>
 									</div>
 								</ui:fragment>
-								<ui:fragment rendered="${ (resourceDetailBean.clickedResource.storageType == 1 and resourceDetailBean.clickedResource.type eq 'text') or resourceDetailBean.clickedResource.type eq 'spreadsheet' or resourceDetailBean.clickedResource.type eq 'presentation'}">
+								<ui:fragment rendered="${ (resourceDetailBean.clickedResource.storageType == 1 and (resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website')) or resourceDetailBean.clickedResource.type eq 'spreadsheet' or resourceDetailBean.clickedResource.type eq 'presentation'}">
 								
 									 <div class="preview_box editor_preview">
 										<h:inputHidden id="ed_can_be_edited" value="#{resourceDetailBean.clickedResource.canEditResource(userBean.user)}" />
@@ -376,7 +376,7 @@
 							<div class="align-center" style="padding-top: 10px">
 								<a class="hyperlink" href="#{resourceDetailBean.clickedResource.urlProxied}" target="_blank">
 									<h:outputText styleClass="hyperlink" 
-										rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf'}"
+										rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf'}"
 										value="#{resourceDetailBean.clickedResource.url}"/>
 								</a>
 								<a class="hyperlink" onclick="lightbox_open(); change_lightbox_content(true);" style="float:right;" title="#{msg['Archive.change_thumbnail']}?">
@@ -418,6 +418,7 @@
 							
 							<ui:fragment rendered="${empty resourceDetailBean.clickedResource.fileName
 							 and resourceDetailBean.clickedResource.type != 'text'
+							 and resourceDetailBean.clickedResource.type != 'website'
 							  and resourceDetailBean.clickedResource.type != 'pdf'
 							   and resourceDetailBean.clickedResource.type != 'glossary'
 							   and resourceDetailBean.clickedResource.type != 'survey'
@@ -777,7 +778,7 @@
 				</h:panelGroup>
 
 				<h:form rendered="#{bean.rightPanelAction == 'editResource' and resourceDetailBean.clickedResource.id != -1}" id="edit_form">
-						<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image'}">
+						<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image'}">
 							<div class="align-center" style="margin-top: 5px;">
 								<div id="lightbox">
 									<div id="lightbox_background" onclick="lightbox_close();"></div>
@@ -788,7 +789,7 @@
 											<a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="close"></a>
 										</div>
 										<div id="lightbox_content">
-											<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text'}">
+											<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website'}">
 											    <div style="overflow:auto; height:100%; width:100%; text-align:center;">
 											    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
 											    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
@@ -870,19 +871,19 @@
 										<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
 									</div>
 								</ui:fragment>								
-								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'video' and resourceDetailBean.clickedResource.type != 'image'}">
+								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'website' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'video' and resourceDetailBean.clickedResource.type != 'image'}">
 									<div class="preview_box">
 										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}'
 											escape="false"/>
 									</div>
 								</ui:fragment>
-								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'image') and not empty resourceDetailBean.clickedResource.thumbnail3 or resourceDetailBean.clickedResource.type eq 'pdf'}">
+								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'image') and not empty resourceDetailBean.clickedResource.thumbnail3 or resourceDetailBean.clickedResource.type eq 'pdf'}">
 										<img class="preview_box" src="#{resourceDetailBean.clickedResource.thumbnail3.url}"
 											height="#{resourceDetailBean.clickedResource.thumbnail3.height}" onmouseup="lightbox_open();"
 											width="#{resourceDetailBean.clickedResource.thumbnail3.width}"
 											style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"/>	
 								</ui:fragment>
-								<ui:fragment rendered="${resourceDetailBean.clickedResource.type eq 'text'  and empty resourceDetailBean.clickedResource.thumbnail3}">
+								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website') and empty resourceDetailBean.clickedResource.thumbnail3}">
 									<div class="preview_box" style="display: inline-block">
 										<a target="_blank" class="newsfeed_query_link" style="padding: 0px" 
 											href="#{resourceDetailBean.clickedResource.urlProxied}">
@@ -899,7 +900,7 @@
 							<div class="align-center" style="padding-top: 10px">
 								<a class="hyperlink" href="#{resourceDetailBean.clickedResource.urlProxied}" target="_blank">
 									<h:outputText styleClass="hyperlink" 
-										rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf'}"
+										rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf'}"
 										value="#{resourceDetailBean.clickedResource.url}"/>
 								</a>
 								<a class="hyperlink" onclick="lightbox_open(); change_lightbox_content(true);" style="float:right;" title="#{msg['Archive.change_thumbnail']}?">
