@@ -275,16 +275,16 @@ public class ResourcePreviewMaker
         File originalFile = null;
         try
         {
-            if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType().equals(Resource.ResourceType.video))
+            if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType().equals(Resource.ResourceType.video) && (resource.getThumbnail2() == null || resource.getThumbnail2().getFileId() == 0))
             {
                 originalFile = resource.getFile(TYPE.FILE_MAIN);
 
                 java.io.File tmpDir = new java.io.File(System.getProperty("java.io.tmpdir"));
-                java.io.File tempThumbnailFile = java.io.File.createTempFile(originalFile.getId() + "_thumbnail_", ".png", tmpDir);
+                java.io.File tempThumbnailFile = java.io.File.createTempFile(originalFile.getId() + "_thumbnail_", ".jpg", tmpDir);
 
                 String inputPath = originalFile.getActualFile().getAbsolutePath();
                 String outputPath = tempThumbnailFile.getAbsolutePath();
-                saveVideoThumbnail(inputPath, outputPath, 3);
+                saveVideoThumbnail(inputPath, outputPath, 1);
 
                 // generate thumbnail
                 Image img = new Image(new FileInputStream(outputPath));
@@ -394,10 +394,10 @@ public class ResourcePreviewMaker
         log.info(String.format("Creating thumbnail for '%s'...", StringHelper.getNameFromPath(format.filename)));
 
         FFmpegBuilder builder = new FFmpegBuilder()
+                .setStartOffset(seconds, TimeUnit.SECONDS)
                 .setInput(in)
                 .addOutput(outputMediaPath)
                 .setFrames(1)
-                .setStartOffset(seconds, TimeUnit.SECONDS)
                 .done();
 
         this.executor.createJob(builder).run();
