@@ -251,7 +251,7 @@
 											<a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="close"></a>
 										</div>
 										<div id="lightbox_content">
-											<ui:fragment rendered="#{resourceDetailBean.clickedResource.storageType == 1 and resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'spreadsheet' or resourceDetailBean.clickedResource.type eq 'presentation'}">
+											<ui:fragment rendered="#{resourceDetailBean.clickedResource.isOfficeResource()}">
 												<div id="lightbox_editor" />
 											</ui:fragment>
 										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'pdf'}">
@@ -336,7 +336,7 @@
 										<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
 									</div>
 								</ui:fragment>
-								<ui:fragment rendered="${resourceDetailBean.clickedResource.type != 'presentation' and resourceDetailBean.clickedResource.type != 'spreadsheet' and resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'website' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'video' and resourceDetailBean.clickedResource.type != 'image' and resourceDetailBean.clickedResource.type != 'glossary' and resourceDetailBean.clickedResource.type != 'survey'}">
+								<ui:fragment rendered="${resourceDetailBean.clickedResource.type != 'document' and resourceDetailBean.clickedResource.type != 'presentation' and resourceDetailBean.clickedResource.type != 'spreadsheet' and resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'video' and resourceDetailBean.clickedResource.type != 'image' and resourceDetailBean.clickedResource.type != 'glossary' and resourceDetailBean.clickedResource.type != 'survey'}">
 									<div class="preview_box">
 										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}'
 											escape="false"/>
@@ -356,13 +356,16 @@
 										</a>
 									</div>
 								</ui:fragment>
-								<ui:fragment rendered="${ (resourceDetailBean.clickedResource.storageType == 1 and (resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website')) or resourceDetailBean.clickedResource.type eq 'spreadsheet' or resourceDetailBean.clickedResource.type eq 'presentation'}">
+								<ui:fragment rendered="${resourceDetailBean.clickedResource.isOfficeResource()}">
 								
 									 <div class="preview_box editor_preview">
+									  	<h:inputHidden id="ed_user_id" value="#{userBean.user.id}" />
+		                                <h:inputHidden id="ed_user_name" value="#{userBean.user.username}" />
 										<h:inputHidden id="ed_can_be_edited" value="#{resourceDetailBean.clickedResource.canEditResource(userBean.user)}" />
 										<ui:decorate template="/templates/resources/editor.xhtml">
 											<ui:param name="bean" value="#{fileEditorBean}" />
 										</ui:decorate>
+										<p:commandButton onclick="load_lightbox_editor()" icon="fa fa-arrows-alt" styleClass="graybutton float-right" immediate="true" style="margin-top:1em;"/>
 									</div> 					
 									
 								</ui:fragment>

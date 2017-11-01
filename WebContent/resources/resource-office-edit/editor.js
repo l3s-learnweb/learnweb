@@ -45,11 +45,6 @@ var сonnectEditor = function(id_div, type) {
 			fileType : $('#ed_file_ext').val(),
 			key : $('#ed_file_key').val(),
 
-			info : {
-				author : "Me",
-				created : new Date(),
-			},
-
 			permissions : {
 				edit : canBeEdited,
 				download : true,
@@ -63,8 +58,8 @@ var сonnectEditor = function(id_div, type) {
 			callbackUrl : $('#ed_callback_url').val(),
 
 			user : {
-				id : null,
-				name : "John Smith",
+				id : $('#ed_user_id').val(),
+				name : $('#ed_user_name').val(),
 			},
 
 			embedded : {

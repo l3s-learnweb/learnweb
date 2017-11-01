@@ -56,7 +56,6 @@ import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.solrClient.SolrSearch;
 import de.l3s.learnweb.solrClient.SolrSearch.SearchPaginator;
-import de.l3s.office.FileEditorBean;
 import de.l3s.util.StringHelper;
 
 @ManagedBean(name = "groupDetailBean")
@@ -133,9 +132,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     @ManagedProperty(value = "#{addResourceBean}")
     private AddResourceBean addResourceBean;
 
-    @ManagedProperty(value = "#{fileEditorBean}")
-    private FileEditorBean fileEditorBean;
-
     private final int pageSize;
 
     public enum RPAction
@@ -146,7 +142,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         editResource,
         newFolder,
         editFolder,
-        viewFolder
+        viewFolder,
+        newFile,
+        editNewResource
     }
 
     public GroupDetailBean() throws SQLException
@@ -1363,8 +1361,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 if(resource != null)
                 {
                     this.setClickedGroupItem(resource);
-                    if((resource.getType().equals(Resource.ResourceType.presentation) || resource.getType().equals(Resource.ResourceType.text) || resource.getType().equals(Resource.ResourceType.spreadsheet)) && resource.getStorageType() == 1)
-                        getFileEditorBean().fillInFileInfo(resource);
+                    if(resource.isOfficeResource())
+                        getResourceDetailBean().getFileEditorBean().fillInFileInfo(resource);
                 }
                 else
                     throw new NullPointerException("Target resource does not exists");
@@ -1455,6 +1453,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             this.setRightPanelAction(RPAction.newResource);
             this.getAddResourceBean().clearForm();
             this.getAddResourceBean().getResource().setStorageType(4);
+            break;
+        case "newFile":
+            this.setRightPanelAction(RPAction.newFile);
+            this.getAddResourceBean().clearForm();
+            this.getAddResourceBean().getResource().setStorageType(1);
             break;
         default:
             log.warn("Unsupported item type: " + type);
@@ -1822,16 +1825,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         {
             addFatalMessage(e);
         }
-    }
-
-    public FileEditorBean getFileEditorBean()
-    {
-        return fileEditorBean;
-    }
-
-    public void setFileEditorBean(FileEditorBean fileEditorBean)
-    {
-        this.fileEditorBean = fileEditorBean;
     }
 
     //allow switching between grid and list view of group resources - chloe

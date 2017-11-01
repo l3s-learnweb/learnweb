@@ -1,7 +1,6 @@
 package de.l3s.learnweb.beans;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -134,7 +133,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             log.debug("Creating thumbnails from uploaded file...");
             Thread createThumbnailThread = new CreateThumbnailThread(resource);
             createThumbnailThread.start();
-            createThumbnailThread.join(1000);
+            createThumbnailThread.join();
 
             /* not used in any course right now
              * disabled to save time
@@ -383,7 +382,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             }
 
             resource.setDeleted(false);
-            if(resource.getType().equals(Resource.ResourceType.presentation) || resource.getType().equals(Resource.ResourceType.text) || resource.getType().equals(Resource.ResourceType.spreadsheet))
+            if(resource.isOfficeResource())
                 getFileEditorBean().fillInFileInfo(resource);
 
             // add resource to a group if selected

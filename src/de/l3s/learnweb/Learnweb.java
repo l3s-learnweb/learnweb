@@ -793,7 +793,7 @@ public class Learnweb
         return createSurveyManager;
     }
 
-    public ConverterService getServiceConverter()
+    public ConverterService getConverterService()
     {
         return serviceConverter;
     }

@@ -30,7 +30,6 @@ import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.GroupDetailBean.RPAction;
-import de.l3s.office.FileEditorBean;
 import de.l3s.util.StringHelper;
 
 @ManagedBean
@@ -66,9 +65,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
 
     @ManagedProperty(value = "#{addResourceBean}")
     private AddResourceBean addResourceBean;
-
-    @ManagedProperty(value = "#{fileEditorBean}")
-    private FileEditorBean fileEditorBean;
 
     public MyResourcesBean() throws SQLException
     {
@@ -311,8 +307,8 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 if(resource != null)
                 {
                     this.setClickedGroupItem(resource);
-                    if((resource.getType().equals(Resource.ResourceType.presentation) || resource.getType().equals(Resource.ResourceType.text) || resource.getType().equals(Resource.ResourceType.spreadsheet)) && resource.getStorageType() == 1)
-                        getFileEditorBean().fillInFileInfo(resource);
+                    if(resource.isOfficeResource())
+                        getResourceDetailBean().getFileEditorBean().fillInFileInfo(resource);
                 }
                 else
                     throw new NullPointerException("Target resource does not exists");
@@ -873,13 +869,4 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         this.addResourceBean = addResourceBean;
     }
 
-    public FileEditorBean getFileEditorBean()
-    {
-        return fileEditorBean;
-    }
-
-    public void setFileEditorBean(FileEditorBean fileEditorBean)
-    {
-        this.fileEditorBean = fileEditorBean;
-    }
 }

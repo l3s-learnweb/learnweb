@@ -3,13 +3,13 @@ package de.l3s.office;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.Scanner;
 
 import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -21,6 +21,7 @@ import org.json.simple.parser.ParseException;
 
 import de.l3s.learnweb.File;
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.Resource;
 
 /**
  * Servlet Class
@@ -34,17 +35,9 @@ public class SaverServlet extends HttpServlet
 {
     private static final long serialVersionUID = 7296371511069054378L;
 
-    private static final String SAMPLE_PPTX = "sample.pptx";
-
-    private static final String SAMPLE_XLSX = "sample.xlsx";
-
-    private static final String SAMPLE_DOCX = "sample.docx";
+    private static final String FILE_ID = "fileId";
 
     private final static Logger logger = Logger.getLogger(SaverServlet.class);
-
-    private static final String FILE_NAME = "fileName";
-
-    private static final String FILE_TYPE = "fileType";
 
     private static final String ERROR_0 = "{\"error\":0}";
 
@@ -55,18 +48,11 @@ public class SaverServlet extends HttpServlet
     private static final String DELIMITER = "\\A";
 
     @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException
-    {
-
-    }
-
-    @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException
     {
         try(PrintWriter writer = response.getWriter())
         {
-            String fileId = request.getParameter("fileId");
-
+            String fileId = request.getParameter(FILE_ID);
             try(Scanner scanner = new Scanner(request.getInputStream()))
             {
                 scanner.useDelimiter(DELIMITER);
@@ -95,46 +81,26 @@ public class SaverServlet extends HttpServlet
                 Learnweb learnweb = Learnweb.getInstance();
                 File file = learnweb.getFileManager().getFileById(Integer.parseInt(fileId));
                 file.setLastModified(new Date());
+                Resource resource = learnweb.getResourceManager().getResource(file.getResourceId());
                 URL url = new URL(downloadUri);
-                java.net.HttpURLConnection connection = (java.net.HttpURLConnection) url.openConnection();
+                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream = connection.getInputStream();
                 learnweb.getFileManager().save(file, inputStream);
-                logger.info(downloadUri);
+                learnweb.getResourcePreviewMaker().processResource(resource);
+                logger.debug("Saved document url: " + downloadUri);
                 inputStream.close();
                 connection.disconnect();
             }
         }
-        catch(ParseException e)
+        catch(ParseException | NumberFormatException e)
         {
             logger.error(e);
         }
-        catch(NumberFormatException e)
+        catch(SQLException | IOException e)
         {
             logger.error(e);
         }
-        catch(SQLException e)
-        {
-            logger.error(e);
-            ;
-        }
-        catch(IOException e)
-        {
-            logger.error(e);
-        }
-    }
 
-    private void readFromInputStream(HttpServletResponse response, InputStream is) throws IOException
-    {
-        try(ServletOutputStream out = response.getOutputStream())
-        {
-            int read;
-            final byte[] bytes = new byte[1024];
-            while((read = is.read(bytes)) != -1)
-            {
-                out.write(bytes, 0, read);
-            }
-            out.flush();
-        }
     }
 
 }

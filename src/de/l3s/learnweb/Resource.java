@@ -263,21 +263,21 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             String imageUrl = ResourcePreviewMaker.getBestImage(this);
         
             if(imageUrl != null)
-        	dummyImage = new Thumbnail(imageUrl, 300, 220);
+                dummyImage = new Thumbnail(imageUrl, 300, 220);
             else if(type.equalsIgnoreCase("audio"))
-        	dummyImage = new Thumbnail("../resources/resources/picol/document_music.svg", 200, 200);
+                dummyImage = new Thumbnail("../resources/resources/picol/document_music.svg", 200, 200);
             else if(type.equalsIgnoreCase("image"))
-        	dummyImage = new Thumbnail("../resources/resources/picol/document_image.svg", 200, 200);
+                dummyImage = new Thumbnail("../resources/resources/picol/document_image.svg", 200, 200);
             else if(format.startsWith("application/vnd.") || format.startsWith("application/ms"))
-        	dummyImage = new Thumbnail("../resources/resources/picol/document_text.svg", 200, 200);
+                dummyImage = new Thumbnail("../resources/resources/picol/document_text.svg", 200, 200);
             else if(format.startsWith("text/"))
-        	dummyImage = new Thumbnail("../resources/resources/picol/document_text.svg", 200, 200);
+                dummyImage = new Thumbnail("../resources/resources/picol/document_text.svg", 200, 200);
             else if(isRestricted())
-        	dummyImage = new Thumbnail("../resources/resources/picol/badge_security.svg", 200, 200);
+                dummyImage = new Thumbnail("../resources/resources/picol/badge_security.svg", 200, 200);
             else if(type.equalsIgnoreCase("video"))
-        	dummyImage = new Thumbnail("../resources/resources/picol/video.svg", 200, 200);
+                dummyImage = new Thumbnail("../resources/resources/picol/video.svg", 200, 200);
             else
-        	dummyImage = new Thumbnail("../resources/resources/picol/website.svg", 200, 200);
+                dummyImage = new Thumbnail("../resources/resources/picol/website.svg", 200, 200);
         
         }*/
 
@@ -484,6 +484,13 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     public int getStorageType()
     {
         return storageType;
+    }
+    
+    public boolean isOfficeResource()
+    {
+        return Resource.ResourceType.document.equals(type) || 
+               Resource.ResourceType.spreadsheet.equals(type)||
+               Resource.ResourceType.presentation.equals(type);
     }
 
     public String getStringStorageType()

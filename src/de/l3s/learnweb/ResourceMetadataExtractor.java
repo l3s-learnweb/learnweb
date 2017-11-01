@@ -10,7 +10,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import de.l3s.office.FileUtility;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -76,43 +75,6 @@ public class ResourceMetadataExtractor
         log.debug("Get the mime type and extract text if possible");
         FileInfo fileInfo = this.getFileInfo(mainFile.getInputStream(), resource.getFileName());
         processFileResource(resource, fileInfo);
-
-        // TODO Oleh: move it somewhere close to converting video to mp4
-        if(shouldBeConverted(fileInfo.getFileName()))
-        {
-            File fileForConversion = createFileForConversion(mainFile);
-
-            InputStream inputStream = learnweb.getServiceConverter().convert(fileInfo.getFileName(), fileForConversion.getUrl());
-            fileManager.delete(mainFile);
-
-            if(resource.getType().equals(Resource.ResourceType.document))
-                resource.setFormat("vnd.openxmlformats-officedocument.wordprocessingml.document");
-            else if(resource.getType().equals(Resource.ResourceType.spreadsheet))
-                resource.setFormat("vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            else if(resource.getType().equals(Resource.ResourceType.presentation))
-                resource.setFormat("vnd.openxmlformats-officedocument.presentationml.presentation");
-
-            fileForConversion.setMimeType(resource.getFormat());
-            fileManager.save(fileForConversion, inputStream);
-        }
-    }
-
-    private File createFileForConversion(File source)
-    {
-        File destination = new File();
-        String fileType = FileUtility.getFileType(source.getName());
-        String internalFileExt = FileUtility.getInternalExtension(fileType);
-        destination.setName(source.getName().substring(0, source.getName().indexOf(".")) + internalFileExt);
-        destination.setUrl(source.getUrl());
-        destination.setType(source.getType());
-        destination.setMimeType(source.getMimeType());
-        destination.setDownloadLogActivated(true);
-        return destination;
-    }
-
-    private boolean shouldBeConverted(String fileName)
-    {
-        return learnweb.getProperties().getProperty("FILES.DOCSERVICE.CONVERT-DOCS").contains(fileName.substring(fileName.lastIndexOf(".")));
     }
 
     public void processWebResource(Resource resource)

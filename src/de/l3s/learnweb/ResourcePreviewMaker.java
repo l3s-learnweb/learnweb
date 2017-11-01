@@ -1,6 +1,5 @@
 package de.l3s.learnweb;
 
-import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -11,13 +10,6 @@ import java.nio.ByteBuffer;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
-import net.bramp.ffmpeg.FFmpeg;
-import net.bramp.ffmpeg.FFmpegExecutor;
-import net.bramp.ffmpeg.FFprobe;
-import net.bramp.ffmpeg.builder.FFmpegBuilder;
-import net.bramp.ffmpeg.probe.FFmpegError;
-import net.bramp.ffmpeg.probe.FFmpegFormat;
-import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -27,8 +19,17 @@ import com.sun.pdfview.PDFPage;
 
 import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.solrClient.FileInspector;
+import de.l3s.office.ConverterRequest;
+import de.l3s.office.ConverterService;
 import de.l3s.util.Image;
 import de.l3s.util.StringHelper;
+import net.bramp.ffmpeg.FFmpeg;
+import net.bramp.ffmpeg.FFmpegExecutor;
+import net.bramp.ffmpeg.FFprobe;
+import net.bramp.ffmpeg.builder.FFmpegBuilder;
+import net.bramp.ffmpeg.probe.FFmpegError;
+import net.bramp.ffmpeg.probe.FFmpegFormat;
+import net.bramp.ffmpeg.probe.FFmpegProbeResult;
 
 /**
  * Helper for create preview for a Resource
@@ -87,17 +88,18 @@ public class ResourcePreviewMaker
     public void processResource(Resource resource) throws IOException, SQLException
     {
         InputStream inputStream = null;
-        try {
+        try
+        {
             if(resource.getType().equals(Resource.ResourceType.website))
             {
                 processWebsite(resource);
             }
-            else if (resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getFile(TYPE.FILE_MAIN) != null)
+            else if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getFile(TYPE.FILE_MAIN) != null)
             {
                 inputStream = resource.getFile(TYPE.FILE_MAIN).getInputStream();
                 processResource(resource, inputStream);
             }
-            else if (resource.getStorageType() == Resource.WEB_RESOURCE && StringUtils.isNotEmpty(resource.getMaxImageUrl()))
+            else if(resource.getStorageType() == Resource.WEB_RESOURCE && StringUtils.isNotEmpty(resource.getMaxImageUrl()))
             {
                 inputStream = FileInspector.openStream(resource.getMaxImageUrl());
                 processImage(resource, inputStream);
@@ -107,10 +109,15 @@ public class ResourcePreviewMaker
                 inputStream = FileInspector.openStream(resource.getUrl());
                 processResource(resource, inputStream);
             }
-        } catch (Throwable e) {
+        }
+        catch(Throwable e)
+        {
             log.error("Error in creating thumbnails from " + resource.getFormat() + " for resource: " + resource.getId(), e);
-        } finally {
-            if (inputStream != null) {
+        }
+        finally
+        {
+            if(inputStream != null)
+            {
                 inputStream.close();
             }
         }
@@ -130,43 +137,35 @@ public class ResourcePreviewMaker
         {
             processVideo(resource);
         }
-        else if(resource.getType().equals(Resource.ResourceType.document))
+        else if(resource.getType().equals(Resource.ResourceType.document) || resource.getType().equals(Resource.ResourceType.presentation) || resource.getType().equals(Resource.ResourceType.spreadsheet))
         {
-            InputStream pdfInputStream = null;
-            try {
-                pdfInputStream = ProcessOffice.processWord(resource, inputStream);
-                processPdf(resource, pdfInputStream);
-            } catch (Throwable e) {
-                log.error("Can't create pdf from document, resource " + resource.getId(), e);
-            } finally {
-                if (pdfInputStream != null) {
-                    pdfInputStream.close();
-                }
-            }
-        }
-        else if(resource.getType().equals(Resource.ResourceType.spreadsheet))
-        {
-            InputStream pdfInputStream = null;
-            try {
-                pdfInputStream = ProcessOffice.processXls(inputStream, resource);
-                processPdf(resource, pdfInputStream);
-            } catch (Throwable e) {
-                log.error("Can't create pdf from spreadsheet, resource " + resource.getId(), e);
-            } finally {
-                if (pdfInputStream != null) {
-                    pdfInputStream.close();
-                }
-            }
-        }
-        else if(resource.getType().equals(Resource.ResourceType.presentation))
-        {
-            BufferedImage image = ProcessOffice.processPPT(inputStream, resource);
-            createThumbnails(resource, new Image(image), false);
+            processOfficeDocument(resource);
         }
         else
         {
             log.error("Can't create thumbnail. Don't know how to handle resource " + resource.getId() + ", type " + resource.getType());
         }
+    }
+
+    private void processOfficeDocument(Resource resource)
+    {
+        try
+        {
+            ConverterService converterService = learnweb.getConverterService();
+            ConverterRequest request = converterService.createThumbnailConverterRequest(resource.getFile(TYPE.FILE_MAIN));
+            InputStream thumbnailStream = converterService.convert(request);
+            if(thumbnailStream != null)
+            {
+                Image image = new Image(thumbnailStream);
+                createThumbnails(resource, image, false);
+                thumbnailStream.close();
+            }
+        }
+        catch(IOException | SQLException e)
+        {
+            log.error("An error occurs during creating thumbnail for the document: resource_id=" + resource.getId() + "; file=" + resource.getFileUrl(), e);
+        }
+
     }
 
     public void processImage(Resource resource, InputStream inputStream) throws IOException, SQLException
@@ -292,13 +291,13 @@ public class ResourcePreviewMaker
                 tempThumbnailFile.delete();
             }
 
-//            // create a simple url for the video, the thumbnail service does not support some special chars in urls
-//            String url = videoThumbnailService + StringHelper.urlEncode(learnweb.getFileManager().createUrl(resource.getFile(TYPE.FILE_MAIN).getId(), "video.dat"));
-//            log.debug("Create video thumbnail: " + url);
-//
-//            // get website thumbnail
-//            Image img = new Image(new URL(url).openStream());
-//            createThumbnails(resource, img, false);
+            //            // create a simple url for the video, the thumbnail service does not support some special chars in urls
+            //            String url = videoThumbnailService + StringHelper.urlEncode(learnweb.getFileManager().createUrl(resource.getFile(TYPE.FILE_MAIN).getId(), "video.dat"));
+            //            log.debug("Create video thumbnail: " + url);
+            //
+            //            // get website thumbnail
+            //            Image img = new Image(new URL(url).openStream());
+            //            createThumbnails(resource, img, false);
         }
         catch(Exception e)
         {
@@ -326,7 +325,7 @@ public class ResourcePreviewMaker
                 // create new file
                 File convertedFile = new File();
                 convertedFile.setType(TYPE.FILE_MAIN);
-                convertedFile.setName(StringHelper.filenameChangeExt(originalFile.getName(),"mp4"));
+                convertedFile.setName(StringHelper.filenameChangeExt(originalFile.getName(), "mp4"));
                 convertedFile.setMimeType("video/mp4");
                 fileManager.save(convertedFile, new FileInputStream(outputPath));
                 tempVideoFile.delete();
@@ -364,14 +363,7 @@ public class ResourcePreviewMaker
         FFmpegFormat format = in.getFormat();
         log.info(String.format("Converting '%s' from format '%s' into mp4 format.", StringHelper.getNameFromPath(format.filename), format.format_long_name));
 
-        FFmpegBuilder builder = new FFmpegBuilder()
-                .setInput(in)
-                .overrideOutputFiles(true)
-                .addOutput(outputMediaPath)
-                .setFormat("mp4")
-                .setVideoCodec("libx264")
-                .setVideoBitRate(format.bit_rate)
-                .done();
+        FFmpegBuilder builder = new FFmpegBuilder().setInput(in).overrideOutputFiles(true).addOutput(outputMediaPath).setFormat("mp4").setVideoCodec("libx264").setVideoBitRate(format.bit_rate).done();
 
         this.executor.createJob(builder).run();
         log.info("Converting done.");
@@ -393,12 +385,7 @@ public class ResourcePreviewMaker
         FFmpegFormat format = in.getFormat();
         log.info(String.format("Creating thumbnail for '%s'...", StringHelper.getNameFromPath(format.filename)));
 
-        FFmpegBuilder builder = new FFmpegBuilder()
-                .setStartOffset(seconds, TimeUnit.SECONDS)
-                .setInput(in)
-                .addOutput(outputMediaPath)
-                .setFrames(1)
-                .done();
+        FFmpegBuilder builder = new FFmpegBuilder().setStartOffset(seconds, TimeUnit.SECONDS).setInput(in).addOutput(outputMediaPath).setFrames(1).done();
 
         this.executor.createJob(builder).run();
         log.info("Creating thumbnail done.");

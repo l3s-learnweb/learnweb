@@ -1,15 +1,19 @@
 package de.l3s.office;
 
-import java.net.URL;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import de.l3s.learnweb.File;
+import de.l3s.learnweb.Resource.ResourceType;
 
 public class FileUtility
 {
+
+    private static final String TEXT = "text";
+
+    private static final String PRESENTATION = "presentation";
+
+    private static final String SPREADSHEET = "spreadsheet";
 
     public static final List<String> EXT_DOCUMENT = Arrays.asList(".docx", ".doc", ".odt", ".rtf", ".txt", ".html", ".htm", ".mht", ".pdf", ".djvu", ".fb2", ".epub", ".xps");
 
@@ -17,17 +21,23 @@ public class FileUtility
 
     public static final List<String> EXT_PRESENTATION = Arrays.asList(".pps", ".ppsx", ".ppt", ".pptx", ".odp");
 
+    private static final String SAMPLE_PPTX = "sample.pptx";
+
+    private static final String SAMPLE_XLSX = "sample.xlsx";
+
+    private static final String SAMPLE_DOCX = "sample.docx";
+
     public static String getFileType(String fileName)
     {
         String ext = getFileExtension(fileName);
 
         if(EXT_SPREADSHEET.contains(ext))
-            return FileType.SPREADSHEET;
+            return SPREADSHEET;
 
         if(EXT_PRESENTATION.contains(ext))
-            return FileType.PRESENTATION;
+            return PRESENTATION;
 
-        return FileType.TEXT;
+        return TEXT;
     }
 
     public static String getInfoForKey(File file)
@@ -40,8 +50,9 @@ public class FileUtility
         return infoForKey;
     }
 
-    public static String generateRevisionId(String expectedKey)
+    public static String generateRevisionId(File file)
     {
+        String expectedKey = getInfoForKey(file);
         if(expectedKey.length() > 20)
             expectedKey = Integer.toString(expectedKey.hashCode());
 
@@ -60,15 +71,6 @@ public class FileUtility
         return null;
     }
 
-    public static String getFileNameWithoutExtension(String url)
-    {
-        String fileName = getFileName(url);
-        if(fileName == null)
-            return null;
-        String fileNameWithoutExt = fileName.substring(0, fileName.lastIndexOf('.'));
-        return fileNameWithoutExt;
-    }
-
     public static String getFileName(String url)
     {
         if(url == null)
@@ -78,38 +80,39 @@ public class FileUtility
         return fileName;
     }
 
-    public static Map<String, String> GetUrlParams(String url)
-    {
-        try
-        {
-            String query = new URL(url).getQuery();
-            String[] params = query.split("&");
-            Map<String, String> map = new HashMap<>();
-            for(String param : params)
-            {
-                String name = param.split("=")[0];
-                String value = param.split("=")[1];
-                map.put(name, value);
-            }
-            return map;
-        }
-        catch(Exception ex)
-        {
-            return null;
-        }
-    }
-
     public static String getInternalExtension(String fileType)
     {
-        if(fileType.equals(FileType.TEXT))
+        if(fileType.equals(ResourceType.document.toString()))
             return ".docx";
 
-        if(fileType.equals(FileType.SPREADSHEET))
+        if(fileType.equals(ResourceType.spreadsheet.toString()))
             return ".xlsx";
 
-        if(fileType.equals(FileType.PRESENTATION))
+        if(fileType.equals(ResourceType.presentation.toString()))
             return ".pptx";
 
         return ".docx";
+    }
+
+    public static String getRightSampleName(ResourceType fileType)
+    {
+        if(fileType != null)
+        {
+            switch(fileType)
+            {
+            case document:
+                return SAMPLE_DOCX;
+
+            case spreadsheet:
+                return SAMPLE_XLSX;
+
+            case presentation:
+                return SAMPLE_PPTX;
+
+            default:
+                break;
+            }
+        }
+        return null;
     }
 }

@@ -18,7 +18,7 @@ public class FileEditorBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -655001215017199006L;
 
-    private Resource file;
+    private Resource resource;
 
     private File mainFile;
 
@@ -37,19 +37,19 @@ public class FileEditorBean extends ApplicationBean implements Serializable
 
     public void fillInFileInfo(Resource resource)
     {
-        file = resource;
-        if(file != null)
-            mainFile = file.getFile(TYPE.FILE_MAIN);
+        this.resource = resource;
+        if(resource != null)
+            mainFile = resource.getFile(TYPE.FILE_MAIN);
         setFullFilesUrl();
         setKey();
-        setFileType(FileUtility.getFileType(file.getFileName()));
+        setFileType(FileUtility.getFileType(resource.getFileName()));
         setFilesExtension(FileUtility.getFileExtension(resource.getFileName()).replace(".", ""));
     }
 
     public void setKey()
     {
         if(mainFile != null)
-            key = FileUtility.generateRevisionId(FileUtility.getInfoForKey(mainFile));
+            key = FileUtility.generateRevisionId(mainFile);
     }
 
     public String getCallbackUrl()
@@ -74,14 +74,14 @@ public class FileEditorBean extends ApplicationBean implements Serializable
         return mainFile != null ? Integer.toString(mainFile.getId()) : "";
     }
 
-    public Resource getFile()
+    public Resource getResource()
     {
-        return file;
+        return resource;
     }
 
-    public void setFile(Resource file)
+    public void setResource(Resource file)
     {
-        this.file = file;
+        this.resource = file;
     }
 
     public String getFilesExtension()
@@ -106,8 +106,7 @@ public class FileEditorBean extends ApplicationBean implements Serializable
 
     public void setFullFilesUrl()
     {
-        //String url = file.getFileUrl().contains(getServerUrl()) ? file.getFileUrl() : getServerUrlWithoutContextPath() + file.getFileUrl();
-        fullFilesUrl = file.getFileUrl();
+        fullFilesUrl = resource.getFileUrl();
     }
 
     public String getFullFilesUrl()

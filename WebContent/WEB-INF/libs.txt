@@ -23,7 +23,7 @@ google-api-services-drive-v2-rev177-1.20.0.jar		Google Drive API
 google-http-client-1.20.0.jar						Google API Client
 google-http-client-jackson2-1.20.0.jar				Google API Client
 google-oauth-client-1.20.0.jar						Google API Client
-gson-2.2.4.jar						Wikidata Client (Facts)
+gson-2.8.0.jar						Converts Java Objects into JSON and back
 guava-19.0.jar					    Dependency of Google API
 hibernate-validator-5.2.1.Final.jar Bean Validator
 httpclient-4.5.2.jar				Dependency of SolrClient, Google API, crawler4j

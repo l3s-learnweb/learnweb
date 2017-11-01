@@ -15,6 +15,7 @@ import java.util.ResourceBundle;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.faces.event.ComponentSystemEvent;
@@ -42,6 +43,7 @@ import de.l3s.learnweb.TimelineData;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
+import de.l3s.office.FileEditorBean;
 
 @SuppressWarnings("unchecked")
 @ManagedBean(name = "resourceDetailBean")
@@ -60,6 +62,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     private boolean isStarRatingEnabled = false;
     private boolean isThumbRatingEnabled = false;
+
+    @ManagedProperty(value = "#{fileEditorBean}")
+    private FileEditorBean fileEditorBean;
 
     //added by Chloe: to allow addition of new extended metadata
     private String selectedTopcat;
@@ -103,7 +108,10 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             try
             {
                 clickedResource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-
+                if(clickedResource.isOfficeResource())
+                {
+                    getFileEditorBean().fillInFileInfo(clickedResource);
+                }
                 log(Action.opening_resource, clickedResource.getGroupId(), clickedResource.getId(), "");
             }
             catch(SQLException e)
@@ -644,6 +652,16 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     public boolean isThumbRatingEnabled()
     {
         return isThumbRatingEnabled;
+    }
+
+    public FileEditorBean getFileEditorBean()
+    {
+        return fileEditorBean;
+    }
+
+    public void setFileEditorBean(FileEditorBean fileEditorBean)
+    {
+        this.fileEditorBean = fileEditorBean;
     }
 
     //methods to add new extended metadata to a resource

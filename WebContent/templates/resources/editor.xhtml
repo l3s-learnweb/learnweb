@@ -7,14 +7,13 @@
 
 	<ui:fragment>
 
-		<h:inputHidden id="ed_file_name" value="#{bean.file.fileName}" />
+		<h:inputHidden id="ed_file_name" value="#{bean.resource.fileName}" />
 		<h:inputHidden id="ed_file_ext" value="#{bean.filesExtension}" />
 		<h:inputHidden id="ed_file_url" value="#{bean.fullFilesUrl}" />
 		<h:inputHidden id="ed_callback_url" value="#{bean.callbackUrl}" />
 		<h:inputHidden id="ed_file_key" value="#{bean.key}" />
 		<h:inputHidden id="ed_file_type" value="#{bean.fileType}" />
 	
-
 		<h:outputScript library="resource-office-edit" name="editor.js"
 			target="head" />
 		<h:outputScript library="resource-office-edit" name="api2.js"
