@@ -22,6 +22,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.RejectedExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
@@ -255,6 +256,11 @@ public class ArchiveUrlManager
         catch(SQLException e)
         {
             log.error("Error while fetching wayback url capture info: ", e);
+        }
+        catch(RejectedExecutionException e)
+        {
+            log.error("Checking if executor was shutdown: " + cdxExecutorService.isShutdown());
+            log.error("Executor exception while submitting new wayback capture request", e);
         }
     }
 
