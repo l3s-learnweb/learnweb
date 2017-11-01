@@ -106,6 +106,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.setLocation("Learnweb");
             resource.setStorageType(Resource.LEARNWEB_RESOURCE);
             resource.setDeleted(true);
+            resource.setUser(getUser());
 
             UploadedFile uploadedFile = event.getFile();
 
@@ -190,6 +191,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
             resource.setStorageType(Resource.WEB_RESOURCE);
             resource.setUrl(checkUrl(resource.getUrl()));
+            resource.setUser(getUser());
 
             log.debug("Extracting info from given url...");
             ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
@@ -396,7 +398,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
                 resource.setFolderId(resourceTargetFolderId);
             }
 
-            if(resource.getId() == -1) // a new resource which is not stored in the database yet
+            if(resource.getId() == -1 || resource.getUserId() == 0) // a new resource which is not stored in the database yet
                 resource = getUser().addResource(resource);
             else
                 resource.save();
