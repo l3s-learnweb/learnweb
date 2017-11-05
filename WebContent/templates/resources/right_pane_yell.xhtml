@@ -1046,7 +1046,7 @@
 								</div>
 							</ui:fragment>
 							<ui:fragment
-								rendered="#{resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'video' and resourceDetailBean.clickedResource.type != 'image'}">
+								rendered="#{resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'Video' and resourceDetailBean.clickedResource.type != 'Image'}">
 								<div class="preview_box">
 									<h:outputText
 										value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}'
@@ -1149,85 +1149,7 @@
 					</p:commandButton>
 				</h:form>
 
-				<p:dialog id="addDetailDlg" header="Add Your Own Categorization" widgetVar="adlg" 
-					minWidth="440" maxWidth="500" appendTo="@(body)" modal="true" closable="false">
 				
-						<h:outputText value="Adding your own categorization can not only help you to refind resources but also help your community to discover them better!" />
-						<br/>
-						<h:outputText value="Select the values most proper for each categorization type and click on 'Save' button." />
-						<br/><br/>
-	      				<b><h:outputText value="Resource Title: #{resourceDetailBean.clickedResource.title}" /></b>
-	            	    <br/><br/>
-	      				<h:form>
-	      				<p:panelGrid columns="1" cellpadding="20" layout="grid">
-	
-							<h:panelGroup>
-								<b><h:outputLabel for="catlist" value="Category:" /></b>
-								<h:panelGrid columns="6" cellpadding="10" layout="grid" id="catlist">
-								<h:outputLabel for="toplist" value="Top:" />
-								<p:selectOneMenu id="toplist"
-												value="#{resourceDetailBean.selectedTopcat}"
-												panelStyle="width:250px"
-												valueChangeListener="#{searchFilterBean.topCatChanged}">
-												<f:selectItems value="#{searchFilterBean.cattops}" />
-												<p:ajax update="middlelist" process="@this" />
-								</p:selectOneMenu>
-								
-								<h:outputLabel for="middlelist" value="Middle:" />
-								<p:selectOneMenu id="middlelist"
-												value="#{resourceDetailBean.selectedMidcat}"
-												panelStyle="width:250px">
-												<f:selectItems value="#{searchFilterBean.catmids}" />
-								</p:selectOneMenu>
-								
-								<h:outputLabel for="bottomlist" value="Bottom:" />
-								<p:selectOneMenu id="bottomlist"
-												value="#{resourceDetailBean.selectedBotcat}"
-												panelStyle="width:250px">
-												<f:selectItems value="#{searchFilterBean.catbots}" />
-								</p:selectOneMenu>
-								</h:panelGrid>
-							</h:panelGroup>
-	
-							<h:panelGroup>
-								<h:panelGrid columns="4" cellpadding="10" layout="grid">
-								<h:outputLabel for="levlist" value="Language Level: " />
-									<p:selectCheckboxMenu id="levlist"
-												value="#{resourceDetailBean.selectedLevels}" label="Levels"
-												multiple="true" filter="true" filterMatchMode="startsWith"
-												panelStyle="width:250px">
-												<f:selectItems value="#{searchFilterBean.levels}" />
-									</p:selectCheckboxMenu>
-								<h:outputLabel for="aglist" value="Target Learner:" />
-									<p:selectCheckboxMenu id="aglist"
-												value="#{resourceDetailBean.selectedTargets}"
-												label="Target Learners" multiple="true" filter="true"
-												filterMatchMode="startsWith" panelStyle="width:250px">
-												<f:selectItems value="#{searchFilterBean.targets}" />
-									</p:selectCheckboxMenu>
-								</h:panelGrid>
-							</h:panelGroup>
-	
-							<h:panelGroup>
-								<h:panelGrid columns="4" cellpadding="10" layout="grid">
-									<h:outputLabel for="aclist" value="Purpose of Use:" />
-										<p:selectCheckboxMenu id="aclist"
-												value="#{resourceDetailBean.selectedPurposes}"
-												label="Purposes of Use" multiple="true" filter="true"
-												filterMatchMode="startsWith" panelStyle="width:250px">
-												<f:selectItems value="#{searchFilterBean.purposes}" />
-										</p:selectCheckboxMenu>
-								</h:panelGrid>
-							</h:panelGroup>
-	
-						</p:panelGrid>
-	      				<br/>
-	      				<br/>
-	            		<p:commandButton value="Save" actionListener="#{resourceDetailBean.addNewMetadata}" update=":add_resource_panel :growl :resourceGrid" ajax="true" oncomplete="adlg.hide();" />
-	            		<p:commandButton value="Cancel" onclick="adlg.hide(); return false;"/>
-	           		</h:form>
-	           			
-        		</p:dialog>
 				
 				<h:panelGroup rendered="#{bean.rightPanelAction == 'newFolder'}"
 					styleClass="create-block new-folder" layout="block">
