@@ -22,8 +22,10 @@ import de.l3s.interwebj.jaxb.ThumbnailEntity;
 import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.beans.AddResourceBean;
+import de.l3s.learnweb.rm.AudienceManager;
 import de.l3s.learnweb.rm.Category;
 import de.l3s.learnweb.rm.LanglevelManager;
+import de.l3s.learnweb.rm.PurposeManager;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.SolrClient;
 import de.l3s.util.Cache;
@@ -1323,15 +1325,15 @@ public class ResourceManager
         int currentPage = 0;
         final int totalResources = rm.getResourceCount(), perPage = 1000;
 
-        while (currentPage * perPage <= totalResources)
+        while(currentPage * perPage <= totalResources)
         {
             log.debug("Loading page " + (currentPage + 1));
 
             List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where deleted = ? order by resource_id desc limit ? offset ? ", "0", perPage, currentPage * perPage);
             log.debug(resources.size() + " resources loaded.");
 
-//            for(Resource resource : resources)
-//                sm.reIndexResource(resource);
+            //            for(Resource resource : resources)
+            //                sm.reIndexResource(resource);
 
             // do reindexing in parallel
             resources.parallelStream().forEach(sm::reIndexResource);
@@ -1485,4 +1487,52 @@ public class ResourceManager
         }
     }
 
+    //save new resource_audience
+    protected void saveTargetResource(Resource resource, String[] targets, User user) throws SQLException
+    {
+        AudienceManager am = Learnweb.getInstance().getAudienceManager();
+        for(int i = 0; i < targets.length; i++)
+        {
+            //find id of the audience first 
+            int targetId = am.getAudienceIdByAudiencename(targets[i].toLowerCase());
+            if(targetId > 0)
+            {
+                PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_audience` (`resource_id`, `user_id`, `audience_id`) VALUES (?, ?, ?)");
+                replace.setInt(1, null == resource ? 0 : resource.getId());
+                replace.setInt(2, null == user ? 0 : user.getId());
+                replace.setInt(3, null == targets ? 0 : targetId);
+                replace.executeUpdate();
+                replace.close();
+            }
+        }
+    }
+
+    //save new resource_purpose
+    protected void savePurposeResource(Resource resource, String[] purposes, User user) throws SQLException
+    {
+        PurposeManager pm = Learnweb.getInstance().getPurposeManager();
+        for(int i = 0; i < purposes.length; i++)
+        {
+            //find id of the lang level first 
+            int purposeId = pm.getPurposeIdByPurposename(purposes[i].toLowerCase());
+            System.out.println(purposes[i].toLowerCase() + " " + purposeId + " " + resource.getId());
+            if(purposeId > 0)
+            {
+                PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_purpose` (`resource_id`, `user_id`, `purpose_id`) VALUES (?, ?, ?)");
+                replace.setInt(1, null == resource ? 0 : resource.getId());
+                replace.setInt(2, null == user ? 0 : user.getId());
+                replace.setInt(3, null == purposes ? 0 : purposeId);
+                replace.executeUpdate();
+                replace.close();
+            }
+        }
+    }
+
+    //save new resource_category
+    protected void saveCategoryResource(Resource resource, String topcat, String midcat, String botcat, User user) throws SQLException
+    {
+        //need cat_top_id, cat_mid_id, cat_bot_id to save
+        //need to save bottom cat if it does not exist yet (need midcat id to save) 
+
+    }
 }
