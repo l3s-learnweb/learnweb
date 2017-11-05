@@ -682,7 +682,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             try
             {
                 clickedResource.addNewLevels(selectedLevels, getUser());
-                addGrowl(FacesMessage.SEVERITY_INFO, "langlevels_added"); // I would not add one message for each input field
+                //addGrowl(FacesMessage.SEVERITY_INFO, "langlevels_added"); // I would not add one message for each input field
 
                 //log(Action.tagging_resource, clickedResource.getGroupId(), clickedResource.getId(), tagName);
                 selectedLevels = null; // clear lang level field 
@@ -692,22 +692,42 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 addFatalMessage(e);
             }
         }
-        else
-        {
-            return;
-        }
 
         if(selectedTargets.length > 0)
         {
             //now move to clickedResource addNewTargets()
+            try
+            {
+                clickedResource.addNewTargets(selectedTargets, getUser());
+                //addGrowl(FacesMessage.SEVERITY_INFO, "audiences_added");
+                selectedTargets = null;
+            }
+            catch(SQLException e)
+            {
+                // TODO Auto-generated catch block
+                addFatalMessage(e);
+            }
+
         }
 
         if(selectedPurposes.length > 0)
         {
             //now move to clickedResource addNewPurposes()
+            try
+            {
+                clickedResource.addNewPurposes(selectedPurposes, getUser());
+                //addGrowl(FacesMessage.SEVERITY_INFO, "purposes_added");
+                selectedPurposes = null;
+            }
+            catch(SQLException e)
+            {
+                // TODO Auto-generated catch block
+                addFatalMessage(e);
+            }
         }
 
         addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
+        return;
     }
 
     //getter and setter for extended metadata variables
