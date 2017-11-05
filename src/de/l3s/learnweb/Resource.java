@@ -5,8 +5,19 @@ import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -485,12 +496,10 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     {
         return storageType;
     }
-    
+
     public boolean isOfficeResource()
     {
-        return Resource.ResourceType.document.equals(type) || 
-               Resource.ResourceType.spreadsheet.equals(type)||
-               Resource.ResourceType.presentation.equals(type);
+        return Resource.ResourceType.document.equals(type) || Resource.ResourceType.spreadsheet.equals(type) || Resource.ResourceType.presentation.equals(type);
     }
 
     public String getStringStorageType()
@@ -746,10 +755,14 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         this.type = type;
     }
 
-    public void setType(String type) {
-        try {
+    public void setType(String type)
+    {
+        try
+        {
             this.type = ResourceType.valueOf(type.toLowerCase());
-        } catch (IllegalArgumentException e) {
+        }
+        catch(IllegalArgumentException e)
+        {
             if(type.equalsIgnoreCase("videos"))
                 this.type = ResourceType.video;
             else if(type.equalsIgnoreCase("photos"))
@@ -759,42 +772,37 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         }
     }
 
-    public void setTypeFromFormat(String format) {
-        if (StringUtils.isEmpty(format)) {
+    public void setTypeFromFormat(String format)
+    {
+        if(StringUtils.isEmpty(format))
+        {
             log.error("Given format is empty: " + format, new Exception());
             return;
         }
 
         if(format.equals("text/plain"))
             this.type = Resource.ResourceType.text;
-        else if (format.equals("text/html") || format.equals("application/xhtml+xml"))
+        else if(format.equals("text/html") || format.equals("application/xhtml+xml"))
             this.type = Resource.ResourceType.website;
-        else if (format.startsWith("image/"))
+        else if(format.startsWith("image/"))
             this.type = Resource.ResourceType.image;
-        else if (format.startsWith("video/"))
+        else if(format.startsWith("video/"))
             this.type = Resource.ResourceType.video;
-        else if (format.startsWith("audio/"))
+        else if(format.startsWith("audio/"))
             this.type = Resource.ResourceType.audio;
-        else if (format.equals("application/pdf"))
+        else if(format.equals("application/pdf"))
             this.type = Resource.ResourceType.pdf;
-        else if (format.contains("ms-excel") || format.contains("spreadsheet"))
+        else if(format.contains("ms-excel") || format.contains("spreadsheet"))
             this.type = Resource.ResourceType.spreadsheet;
-        else if (format.contains("ms-powerpoint") || format.contains("presentation"))
+        else if(format.contains("ms-powerpoint") || format.contains("presentation"))
             this.type = Resource.ResourceType.presentation;
-        else if (format.contains("msword") || format.contains("ms-word") || format.contains("wordprocessing") || format.contains("opendocument.text") || format.equals("application/rtf"))
+        else if(format.contains("msword") || format.contains("ms-word") || format.contains("wordprocessing") || format.contains("opendocument.text") || format.equals("application/rtf"))
             this.type = Resource.ResourceType.document;
-        else if (Arrays.asList(
-                "application/x-msdownload",
-                "application/x-ms-dos-executable",
-                "application/octet-stream",
-                "application/x-gzip",
-                "application/x-rar-compressed",
-                "application/zip",
-                "application/x-shockwave-flash",
-                "message/rfc822").contains(format))
+        else if(Arrays.asList("application/x-msdownload", "application/x-ms-dos-executable", "application/octet-stream", "application/x-gzip", "application/x-rar-compressed", "application/zip", "application/x-shockwave-flash", "message/rfc822").contains(format))
             // handle known types of downloadable resources
             this.type = Resource.ResourceType.file;
-        else {
+        else
+        {
             // if we do not know the format, then  log it and set it to downloadable
             log.error("Unknown type for format: " + format, new Exception());
             this.type = Resource.ResourceType.file;
@@ -1344,7 +1352,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             }
 
             // if no rules above works
-            if (embeddedCode == null)
+            if(embeddedCode == null)
             {
                 if(getEmbeddedRaw() != null)
                     embeddedCode = getEmbeddedRaw();
@@ -2059,11 +2067,13 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         this.validCourses = validCourses;
     }
 
-    public boolean isProcessingStarted() {
+    public boolean isProcessingStarted()
+    {
         return isProcessingStarted;
     }
 
-    public void setProcessingStarted(boolean processingStarted) {
+    public void setProcessingStarted(boolean processingStarted)
+    {
         isProcessingStarted = processingStarted;
     }
 
@@ -2072,5 +2082,17 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     {
         ResourceManager rsm = Learnweb.getInstance().getResourceManager();
         rsm.saveLanglevelResource(this, selectedLevels, user);
+    }
+
+    public void addNewTargets(String[] selectedTargets, User user) throws SQLException
+    {
+        ResourceManager rsm = Learnweb.getInstance().getResourceManager();
+        rsm.saveTargetResource(this, selectedTargets, user);
+    }
+
+    public void addNewPurposes(String[] selectedPurposes, User user) throws SQLException
+    {
+        ResourceManager rsm = Learnweb.getInstance().getResourceManager();
+        rsm.savePurposeResource(this, selectedPurposes, user);
     }
 }
