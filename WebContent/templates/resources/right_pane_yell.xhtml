@@ -610,25 +610,25 @@
 										var="p">
 										<h:graphicImage class="bluecircle"
 											value="/resources/resources-chloe/images/speaking.png"
-											width="2%" rendered="#{p.key == 'speaking'}" />
+											width="2%" rendered="#{p.key == 'speaking skills'}" />
 										<h:graphicImage class="bluecircle"
 											value="/resources/resources-chloe/images/listening.png"
-											width="2%" rendered="#{p.key == 'listening'}" />
+											width="2%" rendered="#{p.key == 'listening skills'}" />
 										<h:graphicImage class="bluecircle"
 											value="/resources/resources-chloe/images/writing.png"
-											width="2%" rendered="#{p.key == 'writing'}" />
+											width="2%" rendered="#{p.key == 'writing skills'}" />
 										<h:graphicImage class="bluecircle"
 											value="/resources/resources-chloe/images/reading.png"
-											width="2%" rendered="#{p.key == 'reading'}" />
+											width="2%" rendered="#{p.key == 'reading skills'}" />
 
 										<h:outputText value="Speaking"
-											rendered="#{p.key == 'speaking'}" />
+											rendered="#{p.key == 'speaking skills'}" />
 										<h:outputText value="Listening"
-											rendered="#{p.key == 'listening'}" />
-										<h:outputText value="Writing" rendered="#{p.key == 'writing'}" />
-										<h:outputText value="Reading" rendered="#{p.key == 'reading'}" />
+											rendered="#{p.key == 'listening skills'}" />
+										<h:outputText value="Writing" rendered="#{p.key == 'writing skills'}" />
+										<h:outputText value="Reading" rendered="#{p.key == 'reading skills'}" />
 										<h:outputText value="[#{p.value}] "
-											rendered="#{p.key == 'speaking' or p.key == 'listening' or p.key =='writing' or p.key =='reading'}" />
+											rendered="#{p.key == 'speaking skills' or p.key == 'listening skills' or p.key =='writing skills' or p.key =='reading skills'}" />
 									</ui:repeat>
 									<br />
 
@@ -636,7 +636,7 @@
 										value="#{resourceDetailBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}"
 										var="p">
 										<ui:fragment
-											rendered="#{p.key != 'speaking' and p.key != 'listening' and p.key !='writing' and p.key !='reading'}">
+											rendered="#{p.key != 'speaking skills' and p.key != 'listening skills' and p.key !='writing skills' and p.key !='reading skills'}">
 											<span class="tag tag-grey">#{p.key}</span>
 										</ui:fragment>
 									</ui:repeat>
