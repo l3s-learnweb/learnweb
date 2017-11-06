@@ -930,11 +930,11 @@ public class WaybackUrlManager
         WaybackUrlManager manager = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de").getWaybackUrlManager();
         String url = "http://wing.comp.nus.edu.sg/birndl-sigir2017/";
         UrlRecord record = manager.getHtmlContent(url);
-        System.out.println(record.getStatusCode());
-        System.out.println(record.getContent());
+        log.debug(record.getStatusCode());
+        log.debug(record.getContent());
         UrlRecord record2 = manager.new UrlRecord(new URL(url));
         manager.getStatusCodeFromHttpClient(record2);
-        System.out.println(record2.getContent());
+        log.debug(record2.getContent());
         System.exit(0);
     }
 }

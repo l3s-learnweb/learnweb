@@ -90,7 +90,7 @@ public class CDXClient
     {
 
         CDXClient cdxClient = new CDXClient();
-        System.out.println(cdxClient.getCaptureDate("www.facebook.com/theultrasoft", 1));
+        log.debug(cdxClient.getCaptureDate("www.facebook.com/theultrasoft", 1));
 
     }
 

@@ -1212,9 +1212,8 @@ public class ResourceManager
         			+ " FROM `lw_resource` r where  `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`resource_id` > 20000 and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown' ORDER BY `resource_id` DESC limit 20",
         		null);
         */
-        List<Resource> resources = rm.getResources(
-                "SELECT " + RESOURCE_COLUMNS
-                        + " FROM `lw_resource` r where `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`group_id` = 420 and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown'",
+        List<Resource> resources = rm.getResources("SELECT " + RESOURCE_COLUMNS
+                + " FROM `lw_resource` r where `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`group_id` = 420 and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown'",
                 null);
         for(Resource resource : resources)
         {
@@ -1515,7 +1514,7 @@ public class ResourceManager
         {
             //find id of the lang level first 
             int purposeId = pm.getPurposeIdByPurposename(purposes[i].toLowerCase());
-            System.out.println(purposes[i].toLowerCase() + " " + purposeId + " " + resource.getId());
+            log.debug(purposes[i].toLowerCase() + " " + purposeId + " " + resource.getId());
             if(purposeId > 0)
             {
                 PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_purpose` (`resource_id`, `user_id`, `purpose_id`) VALUES (?, ?, ?)");
