@@ -30,12 +30,6 @@
   overlow: auto;
 }
 
-#rlist:hover {
-	
-   background-color:#eeeeee;
-   cursor: pointer;
-
-}
 
 #rlist img {
 	height: auto;
@@ -44,12 +38,35 @@
   	float: left;
 }
 
+#rlist img.resource-preview-image{
+	float: left;
+	display: inline-block;
+    height: 100%;
+    width: 100%;
+    vertical-align: middle;
+    object-fit: cover;
+    margin: 0 0 0 0;
+}
+
+#rlist .resource-controls a {
+    width: 100%;
+    position: relative;
+}
+
+#rlist .resource-controls a img {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    margin-left: -8px;
+    margin-top: -8px;
+}
+
 #rlist img.circle {
 	height: auto;
 	float: none;
 	margin-left: 2px;
 	margin-right: 2px;
-	vertical-align: bottom;
+	
 }
 
 img.lwicon {
@@ -74,7 +91,7 @@ span#explanation {
 	float: none;
 	margin-left: 2px;
 	margin-right: 2px;
-	vertical-align: bottom;
+	
 	padding-top: 5px;
 }
 
@@ -118,12 +135,6 @@ div#rmain {
 	width: 90%;
 	float: right;
 	
-}
-
- 
-#rlist li:hover {
-  background: #eee;
-  cursor: pointer;
 }
 
 
@@ -189,6 +200,11 @@ div#rmain {
     width: calc(100% - 16px); /* single column */
     margin-right: 16px;
     
+}
+
+.resource2-item:hover .resource-controls, .folder-item:hover .resource-controls {
+    visibility: visible;
+    opacity: 1;
 }
 
 
@@ -283,6 +299,21 @@ hr {
 .centered {
 text-align: center;
 margin-left: 35%;
+}
+
+.resource-block2 {
+	width:145px;
+	height:120px;
+	float: left; 
+}
+
+.resource-block2:hover {
+	cursor: pointer;
+}
+
+.metadata-block {
+	margin-left: 160px;
+	
 }
 
 
