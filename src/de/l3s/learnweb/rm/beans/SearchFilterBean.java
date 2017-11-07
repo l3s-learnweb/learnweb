@@ -114,10 +114,10 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         //target learner values (fixed values) 
         targets = new ArrayList<String>();
         targets.add("Teachers");
-        targets.add("Adults");
-        targets.add("Teenagers");
+        targets.add("Adult learners");
+        targets.add("Teenage learners");
         targets.add("Young learners (Elementary)");
-        targets.add("Very young learners (Pre-school");
+        targets.add("Very young learners (Pre-school)");
 
         //purposes values (fixed values) 
         purposes = new ArrayList<String>();
