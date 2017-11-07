@@ -192,7 +192,7 @@
 				<br />
 				
 				<h:form id="accordion_form" style="width:530px;">
-					<p:accordionPanel>
+					<p:accordionPanel activeIndex="-2">
 						<p:tab
 							title="Filters - refine your search or narrow down your search results!">
 							<h:form id="metadata_filter_form">
@@ -284,8 +284,15 @@
 								pt:data-itemType="resource" pt:data-itemId="#{res.resource.id}" layout="block">
 										<div id="rlist" style="width: 530px; height: auto;">
 											<div id="rnav" style="width: 10%;">
-												<img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/web.png" width="80%" /> 
-												<img class="simg" src="#{request.contextPath}/resources/resources-chloe/images/bbc.png" width="80%" />
+											    <ui:fragment rendered="#{res.type == 'website'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/web.png" width="80%" /></ui:fragment>
+											    <ui:fragment rendered="#{res.type == 'pdf'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/pdf.png" width="80%" /></ui:fragment>
+											    <ui:fragment rendered="#{res.type == 'image'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/image.png" width="80%" /></ui:fragment>
+											    <ui:fragment rendered="#{res.type == 'audio'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/audio.png" width="80%" /></ui:fragment>
+											    <ui:fragment rendered="#{res.type == 'video'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/video.png" width="80%" /></ui:fragment>
+											    <ui:fragment rendered="#{res.type == 'file'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/file.png" width="80%" /></ui:fragment>
+											    
+												<!--<img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/web.png" width="80%" /> -->
+												<!--<img class="simg" src="#{request.contextPath}/resources/resources-chloe/images/bbc.png" width="80%" /> -->
 											</div>
 
 											<div id="rmain" style="width: 90%;">
@@ -301,7 +308,7 @@
 														    <h:outputText styleClass="resource-preview-empty" escape="false" value='#{res.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' rendered="#{empty res.thumbnail1}"/>
 													    </div>
 													</div>
-													<h:panelGroup class="resource-controls" layout="block">
+													<h:panelGroup class="resource-controls2" layout="block">
 														<h:outputLink value="#" title="#{msg.copy}"
 															styleClass="action-copy">
 														<h:graphicImage alt="Copy" value="/resources/icon/Add.png" />
@@ -341,14 +348,14 @@
 														learner (stats): </b></label>
 														<ui:repeat value="#{res.eMetadata.targetCount.entrySet().toArray()}" var="t">
 										                
-														<h:graphicImage class="circle" value="/resources/resources-chloe/images/green_circle.png" width="3%" rendered="#{t.key == 'very young learners (pre-school)'} " alt="o" />
-														<h:graphicImage class="circle" value="/resources/resources-chloe/images/green_circle.png" width="3%" rendered="#{t.key == 'young learners'}" alt="o" />
-														<h:graphicImage class ="bluecircle" value="/resources/resources-chloe/images/blue_circle.png" width="3%" rendered="#{t.key == 'teenage learners'}" alt="o" />
+														<h:graphicImage class="circle" value="/resources/resources-chloe/images/green_circle.png" width="3%" rendered="#{t.key == 'very young learners (pre-school)'}" alt="o" />
+														<h:graphicImage class="circle" value="/resources/resources-chloe/images/blue_circle.png" width="3%" rendered="#{t.key == 'young learners (elementary)'}" alt="o" />
+														<h:graphicImage class ="bluecircle" value="/resources/resources-chloe/images/yellow_circle.png" width="3%" rendered="#{t.key == 'teenage learners'}" alt="o" />
 														<h:graphicImage class ="circle" value="/resources/resources-chloe/images/red_circle.png" width="3%" rendered="#{t.key == 'teachers'}" alt="o" />
 														<h:graphicImage class ="circle" value="/resources/resources-chloe/images/red_circle.png" width="3%" rendered="#{t.key == 'adult learners'}" alt="o"/>
 														
 														<h:outputText value="Pre-school" rendered="#{t.key == 'very young learners (pre-school)'}" />
-														<h:outputText value="Young learners" rendered="#{t.key == 'young learners'}" />
+														<h:outputText value="Young learners" rendered="#{t.key == 'young learners (elementary)'}" />
 														<h:outputText value="Teens" rendered="#{t.key == 'teenage learners'}" />
 														<h:outputText value="Adult learners" rendered="#{t.key == 'adult learners'}" />
 														<h:outputText value="Teachers" rendered="#{t.key == 'teachers'}" />
