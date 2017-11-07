@@ -2083,6 +2083,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         ResourceManager rsm = Learnweb.getInstance().getResourceManager();
         rsm.saveLanglevelResource(this, selectedLevels, user);
         extendedMetadata = null; // invalidate cache
+        selectedLevels = null; //invalidate cache
     }
 
     public void addNewTargets(String[] selectedTargets, User user) throws SQLException
@@ -2090,6 +2091,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         ResourceManager rsm = Learnweb.getInstance().getResourceManager();
         rsm.saveTargetResource(this, selectedTargets, user);
         extendedMetadata = null; // invalidate cache
+        selectedTargets = null; //invaludate cache
     }
 
     public void addNewPurposes(String[] selectedPurposes, User user) throws SQLException
@@ -2097,5 +2099,6 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         ResourceManager rsm = Learnweb.getInstance().getResourceManager();
         rsm.savePurposeResource(this, selectedPurposes, user);
         extendedMetadata = null; // invalidate cache
+        selectedPurposes = null; //invaludate cache
     }
 }
