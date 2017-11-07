@@ -54,6 +54,11 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
 
     public void init()
     {
+        //reset variable lists
+        targets = null;
+        levels = null;
+        purposes = null;
+
         //get all top categories
         try
         {
