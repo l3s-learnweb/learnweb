@@ -503,7 +503,7 @@ $(document).ready(function () {
         selected.selectLastItem();
     });
     
-        //for resource_yell.html
+    //for resource_yell.html
     $(document).on('click', '.group-resources2-item', function (e) {
         if (e.shiftKey && selected.getSize() > 0) {
             var previous = selected.getItem(selected.getSize() - 1);
@@ -540,6 +540,18 @@ $(document).ready(function () {
         selected.clearAndAdd(element);
         doAction(action);
     });
+    
+    //for resources_yell.xhtml only 
+    $(document).on('click', '.resource-controls2 a', function (e) {
+        var action = (this.className.match(/action-[^\s]+/) || []).pop().replace('action-', '');
+        var element = $(this).parents('.group-resources2-item')[0];
+        e.preventDefault();
+        e.stopPropagation();
+
+        selected.clearAndAdd(element);
+        doAction(action);
+    });
+    
 
     $(document).on('dblclick', '.group-resources-item.folder-item', function () {
         var folderId = $(this).attr("data-itemId");
