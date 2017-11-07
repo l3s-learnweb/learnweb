@@ -675,7 +675,10 @@ function SelectedItems() {
 
     this.clear = function () {
         $(".group-resources-item.ui-selected").removeClass("ui-selected");
-
+        
+        //for resources_yell only
+        $(".group-resources2-item.ui-selected").removeClass("ui-selected");
+        
         this.items = [];
     };
 
