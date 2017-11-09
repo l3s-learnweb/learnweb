@@ -15,14 +15,27 @@
 			<td><p:inputText required="true" class="border-box-100" value="#{res.title}" /></td>
 		</tr>
 		<tr>
+			<td><h:outputText value="#{msg.language}" />:</td>
+			<td>
+				<h:selectOneRadio id="langradio"  styleClass="radio-inline" value="#{res.language}">
+					<f:selectItems value="#{searchFilterBean.langs}" />
+				</h:selectOneRadio>
+			</td>
+		</tr>
+		<tr>
+			<td><h:outputText value="#{msg.author}" />:</td>
+			<td><p:inputText required="false" class="border-box-100" value="#{res.author}" /></td>
+		</tr>
+		
+		<tr>
 			<td><h:outputText value="Media Source" />:</td>
-			<td><p:inputText required="true" class="border-box-100" value="#{res.title}" /></td>
+			<td><p:inputText required="false" class="border-box-100" value="#{res.msource}" /></td>
 			<!-- #{res.title} refers to Resource.format, change it to res.audience ....  -->
 		</tr>
 		<tr>
 			<td><h:outputLabel for="mtypelist" value="Media Type: (multiple if applicable)  " /></td>
 			<td><p:selectCheckboxMenu id="mtypelist"
-						value="#{searchFilterBean.selectedMtypes}"
+						value="#{res.selectedMtypes}"
 						label="Media Types" multiple="true" filter="true"
 						filterMatchMode="startsWith" panelStyle="width:343px">
 						<f:selectItems value="#{searchFilterBean.mtypes}" />
@@ -31,11 +44,12 @@
 		</tr>
 		<tr>
 			<td><h:outputText value="#{msg.description}" />:</td>
-			<td><p:inputTextarea value="#{res.description}" rows="4" style="overflow-y: scroll; width:100%; box-sizing: border-box;" class="border-box-100" /></td>
+			<td><p:inputTextarea required="true" value="#{res.description}" rows="4" style="overflow-y: scroll; width:100%; box-sizing: border-box;" class="border-box-100" />
+			</td>
 		</tr>		
 	</ui:fragment>
 	
-	
+	<!-- commenting out this section as to not to show the same fields 2 times!
 	<c:forEach var="field" items="#{userBean.user.organisation.metadataFields}">
 		<tr>
 			<c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">	
@@ -97,6 +111,6 @@
 			</c:if>
 		</tr>
 	</c:forEach>
-
+    -->
 </ui:composition>
 </html>
