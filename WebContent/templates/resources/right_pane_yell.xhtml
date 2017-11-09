@@ -569,7 +569,7 @@
 											rendered="#{t.key == 'very young learners (pre-school)'}" />
 										<h:graphicImage class="circle"
 											value="/resources/resources-chloe/images/blue_circle.png"
-											width="2%" rendered="#{t.key == 'young learners'}" />
+											width="2%" rendered="#{t.key == 'young learners (elementary)'}" />
 										<h:graphicImage class="bluecircle"
 											value="/resources/resources-chloe/images/yellow_circle.png"
 											width="2%" rendered="#{t.key == 'teenage learners'}" />
@@ -583,7 +583,7 @@
 										<h:outputText value="Pre-school"
 											rendered="#{t.key == 'very young learners (pre-school)'}" />
 										<h:outputText value="Young learners"
-											rendered="#{t.key == 'young learners'}" />
+											rendered="#{t.key == 'young learners (elementary)'}" />
 										<h:outputText value="Teens"
 											rendered="#{t.key == 'teenage learners'}" />
 										<h:outputText value="Adult learners"
@@ -1114,7 +1114,7 @@
 							<col span="1" style="width: 10%; min-width: 10rem;" />
 							<col span="1" />
 						</colgroup>
-						<ui:decorate template="/templates/resources/edit.xhtml">
+						<ui:decorate template="/templates/resources/edit_yell.xhtml">
 							<ui:param name="res" value="#{bean.clickedResource}" />
 						</ui:decorate>
 
@@ -1122,7 +1122,7 @@
 							<td colspan="2"><p:commandButton
 									styleClass="greenbutton float-right" value="#{msg.save}"
 									actionListener="#{bean.editClickedResource}"
-									update=":datagrid :add_resource_panel"
+									update=":tabs:keyResultSection :add_resource_panel"
 									oncomplete="update_header();resourceDND();"
 									style="margin-right:0;">
 									<f:setPropertyActionListener target="#{bean.rightPanelAction}"
