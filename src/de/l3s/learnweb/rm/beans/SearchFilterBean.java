@@ -31,6 +31,8 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
     private String[] selectedPurposes;
     private String[] selectedLanguages;
     private String[] selectedLevels;
+
+    private String selectedLang = "";
     private String selectedCattop = "";
     private String selectedCatmid = "";
     private String selectedCatbot = "";
@@ -58,6 +60,9 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         targets = null;
         levels = null;
         purposes = null;
+        mtypes = null;
+        langs = null;
+        //sources and authors come from the database? 
 
         //get all top categories
         try
@@ -237,17 +242,6 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         return purposes;
     }
 
-    //languages getter and setter
-    public String[] getSelectedLanguages()
-    {
-        return selectedLanguages;
-    }
-
-    public void setSelectedLanguages(String[] selectedLanguages)
-    {
-        this.selectedLanguages = selectedLanguages;
-    }
-
     public List<String> getLangs()
     {
         return langs;
@@ -267,6 +261,28 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
     public List<String> getLevels()
     {
         return levels;
+    }
+
+    //language getter and setter (when choosing a single language to save) 
+    public String getSelectedLang()
+    {
+        return selectedLang;
+    }
+
+    public void setSelectedLang(String selectedLang)
+    {
+        this.selectedLang = selectedLang;
+    }
+
+    //langs getter and setter (lang option display purpose) 
+    public String[] getSelectedLanguages()
+    {
+        return selectedLanguages;
+    }
+
+    public void setSelectedLanguages(String[] selectedLanguages)
+    {
+        this.selectedLanguages = selectedLanguages;
     }
 
     //categories setter and getter
