@@ -145,6 +145,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private transient ExtendedMetadata extendedMetadata = null;
     private String mtype;
     private String msource;
+    private String[] selectedMtypes;
 
     /**
      * Do nothing constructor
@@ -165,6 +166,27 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         this.source = source;
         this.url = url;
         this.setType(type);
+        setThumbnail2(new Thumbnail(thumbnail_url, thumbnail_width, thumbnail_height));
+        setThumbnail4(new Thumbnail(thumbnail4_url, thumbnail4_width, thumbnail4_height));
+    }
+
+    /**
+     * Chloe - extended constructor to include new metadata (language, author, media source and media type)
+     * when creating a new resource
+     */
+    public Resource(int id, String description, String title, String source, int thumbnail_height, int thumbnail_width, String thumbnail_url, int thumbnail4_height, int thumbnail4_width, String thumbnail4_url, String url, String type, String author, String language, String mtype,
+            String msource)
+    {
+        this.id = id;
+        this.description = description;
+        this.title = title;
+        this.source = source;
+        this.url = url;
+        this.setType(type);
+        this.language = language;
+        this.author = author;
+        this.mtype = mtype;
+        this.msource = msource;
         setThumbnail2(new Thumbnail(thumbnail_url, thumbnail_width, thumbnail_height));
         setThumbnail4(new Thumbnail(thumbnail4_url, thumbnail4_width, thumbnail4_height));
     }
@@ -2039,6 +2061,35 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     {
         this.extendedMetadata = extendedMetadata;
     }
+
+    //selectedMtypes setter and getter: the setter will convert selectedMtypes to mtype
+
+    public String[] getSelectedMtypes()
+    {
+        return selectedMtypes;
+    }
+
+    public void setSelectedMtypes(String[] selectedMtypes)
+    {
+        String mt = "";
+        this.selectedMtypes = selectedMtypes;
+        for(int i = 0; i < selectedMtypes.length; i++)
+        {
+            if(i < selectedMtypes.length - 1)
+            {
+                mt += selectedMtypes[i] + ", ";
+            }
+            else
+            {
+                mt += selectedMtypes[i];
+            }
+        }
+        this.mtype = mt;
+
+        this.selectedMtypes = null; //once setting value for mtype, reset selectedMtypes
+    }
+
+    //Opendate getter and setter
 
     public Date getOpenDate()
     {
