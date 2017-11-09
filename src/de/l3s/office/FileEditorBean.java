@@ -30,9 +30,11 @@ public class FileEditorBean extends ApplicationBean implements Serializable
 
     private String key;
 
+    private final String onlyOfficeClientUrl;
+
     public FileEditorBean()
     {
-
+        this.onlyOfficeClientUrl = getLearnweb().getProperties().getProperty("FILES.DOCSERVICE.URL.CLIENT");
     }
 
     public void fillInFileInfo(Resource resource)
@@ -117,6 +119,11 @@ public class FileEditorBean extends ApplicationBean implements Serializable
     public String getKey()
     {
         return key;
+    }
+
+    public String getOnlyOfficeClientUrl()
+    {
+        return onlyOfficeClientUrl;
     }
 
 }

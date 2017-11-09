@@ -57,7 +57,7 @@ public class LearnwebBean implements Serializable
 
     /**
      * 
-     * @return example for a local installation: http://localhost:8080/jlw/lw/
+     * @return example for a local installation: http://localhost:8080/Learnweb-Tomcat/lw/
      */
     public String getBaseUrl()
     {
@@ -88,7 +88,7 @@ public class LearnwebBean implements Serializable
         }
         catch(Exception e)
         {
-            log.warn("Can't get server url. This is expected in console mode");
+            log.warn("Can't get server url. This is only expected in console mode");
             return "http://learnweb.l3s.uni-hannover.de";
         }
     }

@@ -1100,6 +1100,9 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
      */
     public String getFileName()
     {
+        if(fileName == null)
+            return "";
+
         return fileName;
     }
 
