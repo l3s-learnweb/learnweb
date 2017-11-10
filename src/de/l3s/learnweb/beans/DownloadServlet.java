@@ -30,8 +30,8 @@ import de.l3s.learnweb.User;
  * Servlet Class
  *
  * @web.servlet name="downloadServlet" display-name="Simple DownloadServlet"
- * description="Simple Servlet for Streaming Files to the Clients
- * Browser"
+ *              description="Simple Servlet for Streaming Files to the Clients
+ *              Browser"
  * @web.servlet-mapping url-pattern="/download"
  */
 public class DownloadServlet extends HttpServlet
@@ -100,9 +100,9 @@ public class DownloadServlet extends HttpServlet
     /**
      * Process the actual request.
      *
-     * @param request  The request to be processed.
+     * @param request The request to be processed.
      * @param response The response to be created.
-     * @param content  Whether the request body should be written (GET) or not (HEAD).
+     * @param content Whether the request body should be written (GET) or not (HEAD).
      * @throws IOException If something fails at I/O level.
      */
     private void processRequest(HttpServletRequest request, HttpServletResponse response, boolean content) throws IOException
@@ -264,7 +264,7 @@ public class DownloadServlet extends HttpServlet
                     user = learnweb.getUserManager().getUser(userId);
 
                 if(null != user)
-                    Learnweb.getInstance().log(user, Action.downloading, 0, file.getResourceId(), Integer.toString(file.getId()), session.getId(), (int) (System.currentTimeMillis() - startTime));
+                    learnweb.log(user, Action.downloading, 0, file.getResourceId(), Integer.toString(file.getId()), session.getId(), (int) (System.currentTimeMillis() - startTime));
             }
 
             /* Prepare and initialize response */
@@ -302,7 +302,6 @@ public class DownloadServlet extends HttpServlet
             //response.addHeader("Cache-Control", "must-revalidate");//optional
             response.setDateHeader("Last-Modified", lastModified);
             response.setDateHeader("Expires", expires);
-
 
             /* Send requested file (part(s)) to client */
 
@@ -405,9 +404,9 @@ public class DownloadServlet extends HttpServlet
     /**
      * Copy the given byte range of the given input to the given output.
      *
-     * @param input  The input to copy the given range to the given output for.
+     * @param input The input to copy the given range to the given output for.
      * @param output The output to copy the given range from the given input for.
-     * @param start  Start of the byte range.
+     * @param start Start of the byte range.
      * @param length Length of the byte range.
      * @throws IOException If something fails at I/O level.
      */
@@ -449,23 +448,21 @@ public class DownloadServlet extends HttpServlet
      * Returns true if the given accept header accepts the given value.
      *
      * @param acceptHeader The accept header.
-     * @param toAccept     The value to be accepted.
+     * @param toAccept The value to be accepted.
      * @return True if the given accept header accepts the given value.
      */
     private static boolean accepts(String acceptHeader, String toAccept)
     {
         String[] acceptValues = acceptHeader.split("\\s*(,|;)\\s*");
         Arrays.sort(acceptValues);
-        return Arrays.binarySearch(acceptValues, toAccept) > -1
-                || Arrays.binarySearch(acceptValues, toAccept.replaceAll("/.*$", "/*")) > -1
-                || Arrays.binarySearch(acceptValues, "*/*") > -1;
+        return Arrays.binarySearch(acceptValues, toAccept) > -1 || Arrays.binarySearch(acceptValues, toAccept.replaceAll("/.*$", "/*")) > -1 || Arrays.binarySearch(acceptValues, "*/*") > -1;
     }
 
     /**
      * Returns true if the given match header matches the given value.
      *
      * @param matchHeader The match header.
-     * @param toMatch     The value to be matched.
+     * @param toMatch The value to be matched.
      * @return True if the given match header matches the given value.
      */
     private static boolean matches(String matchHeader, String toMatch)
@@ -479,9 +476,9 @@ public class DownloadServlet extends HttpServlet
      * Returns a substring of the given string value from the given begin index to the given end
      * index as a long. If the substring is empty, then -1 will be returned
      *
-     * @param value      The string value to return a substring as long for.
+     * @param value The string value to return a substring as long for.
      * @param beginIndex The begin index of the substring to be returned as long.
-     * @param endIndex   The end index of the substring to be returned as long.
+     * @param endIndex The end index of the substring to be returned as long.
      * @return A substring of the given string value as long or -1 if substring is empty.
      */
     private static long sublong(String value, int beginIndex, int endIndex)
@@ -504,7 +501,7 @@ public class DownloadServlet extends HttpServlet
          * Construct a byte range.
          *
          * @param start Start of the byte range.
-         * @param end   End of the byte range.
+         * @param end End of the byte range.
          * @param total Total length of the byte source.
          */
         public Range(long start, long end, long total)

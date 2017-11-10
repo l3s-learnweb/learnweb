@@ -188,7 +188,7 @@ public class ReEditPresentationBean extends ApplicationBean implements Serializa
             titleSlide = new ArrayList<Resource>();
             Resource resource = new Resource();
             resource.setId(1);
-            resource.setEmbeddedSize1Raw("<img src='../resources/icon/blank.png' width='1' height='50' />");
+            //resource.setEmbeddedSize1Raw("<img src='../resources/icon/blank.png' width='1' height='50' />");
             if(presentation.getPresentationTitle().isEmpty())
             {
                 resource.setTitle(group.getTitle());

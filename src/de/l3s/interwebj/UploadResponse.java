@@ -41,9 +41,13 @@ public class UploadResponse implements Serializable
             result.setSource(resultElement.elementText("service"));
             //currentResult.tags = resultElement.elementText("tags");				
             result.setUrl(resultElement.elementText("url"));
+            /*
+             TODO: has to be stored as thumbnails
+             
             result.setEmbeddedSize1Raw((resultElement.elementText("embedded_size1")));
             result.setEmbeddedSize3Raw((resultElement.elementText("embedded_size3")));
             result.setEmbeddedSize4Raw((resultElement.elementText("embedded_size4")));
+            */
             result.setMaxImageUrl((resultElement.elementText("max_image_url")));
 
             if(!result.getType().equals(Resource.ResourceType.image))

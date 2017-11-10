@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -84,7 +82,6 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private String idAtService = "";
     private int ratingSum;
     private int rateNumber;
-    private String embeddedSize1;
     private String embeddedSize3;
     private String embeddedSize4;
     private String embeddedSize1Raw;
@@ -191,154 +188,119 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         setThumbnail4(new Thumbnail(thumbnail4_url, thumbnail4_width, thumbnail4_height));
     }
 
-    // TODO Oleh: remove the method
     @Deprecated
     public void prepareEmbeddedCodes()
     {
-        Thumbnail dummyImage = null;
+        Thumbnail dummyImage = new Thumbnail("https://learnweb.l3s.uni-hannover.de/javax.faces.resource/icon/grain.png.jsf?ln=lightbox", 200, 200);
 
-        /*if(isRestricted())
-        {
-            embeddedSize1 = "<img src=\"../resources/resources/img/RestrictedAccess.jpg\" width=\"300\" height=\"214\" />";
-        
-        
-            dummyImage = new Thumbnail("../resources/resources/img/RestrictedAccess.jpg", 300, 214);
-        
-        }
-        else if(getOnlineStatus().equals(OnlineStatus.OFFLINE))
-        {
-            embeddedSize1 = "<img src=\"../resources/resources/img/page_no_longer_available.jpg\" width=\"300\" height=\"300\" />";
-        
-            dummyImage = new Thumbnail("../resources/resources/img/page_no_longer_available.jpg", 300, 300);
-        }
-        else*/
+        if(null == thumbnail0)
+            setThumbnail0(dummyImage.resize(150, 120));
+        if(null == thumbnail1)
+            setThumbnail1(dummyImage.resize(150, 150));
+        if(null == thumbnail2)
+            setThumbnail2(dummyImage);
+        if(null == thumbnail3)
+            setThumbnail3(dummyImage);
+        if(null == thumbnail4)
+            setThumbnail4(dummyImage);
+
+        /*
         if(null == embeddedSize1 || null == embeddedSize3)
         {
-
-            if(source.equalsIgnoreCase("YouTube"))
+        
+        if(source.equalsIgnoreCase("YouTube"))
+        {
+            Pattern pattern = Pattern.compile("v[/=]([^&]+)");
+            Matcher matcher = pattern.matcher(url);
+        
+            if(matcher.find())
             {
-                Pattern pattern = Pattern.compile("v[/=]([^&]+)");
-                Matcher matcher = pattern.matcher(url);
-
-                if(matcher.find())
-                {
-                    String videoId = matcher.group(1);
-                    if(null == embeddedSize1)
-                        this.embeddedSize1 = "<img src=\"http://img.youtube.com/vi/" + videoId + "/default.jpg\" width=\"100\" height=\"75\" />";
-                    if(null == embeddedSize3)
-                        this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
-                    this.format = "application/x-shockwave-flash";
-
-                    dummyImage = new Thumbnail("http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg", 320, 180);
-                }
-            }
-            else if(source.equals("Google") && type.equals(ResourceType.video))
-            {
-                Pattern pattern = Pattern.compile("youtube.com/watch%3Fv%3D([^&]+)");
-                Matcher matcher = pattern.matcher(url);
-
-                if(matcher.find())
-                {
-                    String videoId = matcher.group(1);
+                String videoId = matcher.group(1);
+                if(null == embeddedSize1)
                     this.embeddedSize1 = "<img src=\"http://img.youtube.com/vi/" + videoId + "/default.jpg\" width=\"100\" height=\"75\" />";
-                    this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
-
-                    this.format = "application/x-shockwave-flash";
-                    this.source = "YouTube";
-                    this.url = "https://www.youtube.com/watch?v=" + videoId;
-
-                    dummyImage = new Thumbnail("http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg", 320, 180);
-
-                }
-            }
-            else if(source.equalsIgnoreCase("Vimeo"))
-            {
-                Pattern pattern = Pattern.compile("vimeo\\.com/([^&]+)");
-                Matcher matcher = pattern.matcher(url);
-
-                if(matcher.find())
-                {
-                    String videoId = matcher.group(1);
-                    this.embeddedSize3 = "<object width=\"500\" height=\"375\"><param name=\"allowfullscreen\" value=\"true\" /><param name=\"allowscriptaccess\" value=\"always\" />" + "<param name=\"movie\" value=\"http://vimeo.com/moogaloop.swf?clip_id=" + videoId
-                            + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" /><embed src=\"http://vimeo.com/moogaloop.swf?clip_id=" + videoId
-                            + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"500\" height=\"375\"></embed></object>";
-                    this.format = "application/x-shockwave-flash";
-
-                }
-
-            }
-            else if(source.equals("Ipernity") && embeddedSize1 != null)
-            {
-                if(type.equals(ResourceType.image))
-                    embeddedSize3 = embeddedSize1.replace(".100.", ".500.");
-                else
-                    embeddedSize3 = "<a href=\"" + url + "\">" + url + "</a>";
-            }
-            else if(source.equals("Flickr") && type.equals(ResourceType.image) && embeddedSize1 != null)
-            {
                 if(null == embeddedSize3)
-                    embeddedSize3 = embeddedSize1.replace("_t.", ".");
+                    this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
+                this.format = "application/x-shockwave-flash";
+        
+                dummyImage = new Thumbnail("http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg", 320, 180);
             }
         }
-        /*
-        else
+        else if(source.equals("Google") && type.equals(ResourceType.video))
         {
-            for(File file : files.values())
+            Pattern pattern = Pattern.compile("youtube.com/watch%3Fv%3D([^&]+)");
+            Matcher matcher = pattern.matcher(url);
+        
+            if(matcher.find())
             {
-                embeddedSize1 = replacePlaceholder(embeddedSize1, file);
-                embeddedSize3 = replacePlaceholder(embeddedSize3, file);
+                String videoId = matcher.group(1);
+                this.embeddedSize1 = "<img src=\"http://img.youtube.com/vi/" + videoId + "/default.jpg\" width=\"100\" height=\"75\" />";
+                this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
+        
+                this.format = "application/x-shockwave-flash";
+                this.source = "YouTube";
+                this.url = "https://www.youtube.com/watch?v=" + videoId;
+        
+                dummyImage = new Thumbnail("http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg", 320, 180);
+        
             }
+        }
+        else if(source.equalsIgnoreCase("Vimeo"))
+        {
+            Pattern pattern = Pattern.compile("vimeo\\.com/([^&]+)");
+            Matcher matcher = pattern.matcher(url);
+        
+            if(matcher.find())
+            {
+                String videoId = matcher.group(1);
+                this.embeddedSize3 = "<object width=\"500\" height=\"375\"><param name=\"allowfullscreen\" value=\"true\" /><param name=\"allowscriptaccess\" value=\"always\" />" + "<param name=\"movie\" value=\"http://vimeo.com/moogaloop.swf?clip_id=" + videoId
+                        + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" /><embed src=\"http://vimeo.com/moogaloop.swf?clip_id=" + videoId
+                        + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"500\" height=\"375\"></embed></object>";
+                this.format = "application/x-shockwave-flash";
+        
+            }
+        
+        }
+        else if(source.equals("Ipernity") && embeddedSize1 != null)
+        {
+            if(type.equals(ResourceType.image))
+                embeddedSize3 = embeddedSize1.replace(".100.", ".500.");
+            else
+                embeddedSize3 = "<a href=\"" + url + "\">" + url + "</a>";
+        }
+        else if(source.equals("Flickr") && type.equals(ResourceType.image) && embeddedSize1 != null)
+        {
+            if(null == embeddedSize3)
+                embeddedSize3 = embeddedSize1.replace("_t.", ".");
+        }
         }
         
         
-        if(dummyImage == null && (thumbnail1 == null || thumbnail2 == null))
-        {
-            String imageUrl = ResourcePreviewMaker.getBestImage(this);
-        
-            if(imageUrl != null)
-                dummyImage = new Thumbnail(imageUrl, 300, 220);
-            else if(type.equalsIgnoreCase("audio"))
-                dummyImage = new Thumbnail("../resources/resources/picol/document_music.svg", 200, 200);
-            else if(type.equalsIgnoreCase("image"))
-                dummyImage = new Thumbnail("../resources/resources/picol/document_image.svg", 200, 200);
-            else if(format.startsWith("application/vnd.") || format.startsWith("application/ms"))
-                dummyImage = new Thumbnail("../resources/resources/picol/document_text.svg", 200, 200);
-            else if(format.startsWith("text/"))
-                dummyImage = new Thumbnail("../resources/resources/picol/document_text.svg", 200, 200);
-            else if(isRestricted())
-                dummyImage = new Thumbnail("../resources/resources/picol/badge_security.svg", 200, 200);
-            else if(type.equalsIgnoreCase("video"))
-                dummyImage = new Thumbnail("../resources/resources/picol/video.svg", 200, 200);
-            else
-                dummyImage = new Thumbnail("../resources/resources/picol/website.svg", 200, 200);
-        
-        }*/
-
         if(dummyImage != null)
         {
-            if(null == thumbnail0)
-                setThumbnail0(dummyImage.resize(150, 120));
-            if(null == thumbnail1)
-                setThumbnail1(dummyImage.resize(150, 150));
-            if(null == thumbnail2)
-                setThumbnail2(dummyImage);
-            if(null == thumbnail3)
-                setThumbnail3(dummyImage);
-            if(null == thumbnail4)
-                setThumbnail4(dummyImage);
+        if(null == thumbnail0)
+            setThumbnail0(dummyImage.resize(150, 120));
+        if(null == thumbnail1)
+            setThumbnail1(dummyImage.resize(150, 150));
+        if(null == thumbnail2)
+            setThumbnail2(dummyImage);
+        if(null == thumbnail3)
+            setThumbnail3(dummyImage);
+        if(null == thumbnail4)
+            setThumbnail4(dummyImage);
         }
-
+        
         if(embeddedSize1 == null || embeddedSize1.length() < 3)
         {
-            if(type.equals(ResourceType.audio))
-                embeddedSize1 = "<img src=\"../resources/resources/img/audio.png\" width=\"100\" height=\"100\" />";
-            else if(format.startsWith("application/vnd.") || format.startsWith("application/ms"))
-                embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
-            else if(storageType == WEB_RESOURCE)
-                embeddedSize1 = "<img src=\"../resources/resources/img/website-140.png\" width=\"100\" height=\"100\" />";
-            else if(format.startsWith("text/"))
-                embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
+        if(type.equals(ResourceType.audio))
+            embeddedSize1 = "<img src=\"../resources/resources/img/audio.png\" width=\"100\" height=\"100\" />";
+        else if(format.startsWith("application/vnd.") || format.startsWith("application/ms"))
+            embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
+        else if(storageType == WEB_RESOURCE)
+            embeddedSize1 = "<img src=\"../resources/resources/img/website-140.png\" width=\"100\" height=\"100\" />";
+        else if(format.startsWith("text/"))
+            embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
         }
+        */
     }
 
     public void addTag(String tagName, User user) throws SQLException
@@ -527,7 +489,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     public String getStringStorageType()
     {
         if(storageType == Resource.LEARNWEB_RESOURCE)
-            return UtilBean.getLocaleMessage("file"); // TODO: probably should be renamed to `Learnweb`
+            return "Learnweb"; // has been called before: UtilBean.getLocaleMessage("file"); 
         else if(storageType == Resource.WEB_RESOURCE)
             return UtilBean.getLocaleMessage("web");
         else
@@ -1014,7 +976,6 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     @Deprecated
     public void setEmbeddedSize1Raw(String embeddedSize1)
     {
-        this.embeddedSize1 = embeddedSize1;
         this.embeddedSize1Raw = embeddedSize1;
     }
 
@@ -1355,8 +1316,13 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     {
         if(embeddedCode == null)
         {
-            if(getType().equals(ResourceType.image))
+            if(StringUtils.isNoneEmpty(getEmbeddedRaw()) && !getSource().equals("Yovisto")) // if the embedded code was explicitly defined then use it. Is necessary for slidesahre resources. The old flash best code of Yovisto does not work any more
             {
+                embeddedCode = getEmbeddedRaw();
+            }
+            else if(getType().equals(ResourceType.image))
+            {
+                // first the small thumbnail is shown. The large image is loaded async through JS
                 Thumbnail large = getThumbnail4();
                 embeddedCode = "<img src=\"" + getThumbnail2().getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\" original-src=\"" + large.getUrl() + "\"/>";
             }
@@ -1366,7 +1332,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             }
             else if(getType().equals(ResourceType.video))
             {
-                if(getSource().equalsIgnoreCase("loro") || getSource().equalsIgnoreCase("desktop"))
+                if(getSource().equalsIgnoreCase("loro") || getSource().equals("Yovisto") || getSource().equalsIgnoreCase("desktop"))
                     embeddedCode = "<iframe src=\"video.jsf?resource_id=" + id + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
                 else if(getSource().equalsIgnoreCase("ted"))
                     embeddedCode = "<iframe src=\"" + getUrl().replace("http://www", "//embed") + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
@@ -1377,8 +1343,11 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             }
 
             // if no rules above works
+
             if(embeddedCode == null)
             {
+                log.error("can't create embeddedCode for resource: " + getId());
+
                 if(getEmbeddedRaw() != null)
                     embeddedCode = getEmbeddedRaw();
                 else if(getEmbeddedSize4() != null)
@@ -1386,6 +1355,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
                 else if(getEmbeddedSize4() != null)
                     embeddedCode = getEmbeddedSize4();
             }
+
         }
 
         return embeddedCode;

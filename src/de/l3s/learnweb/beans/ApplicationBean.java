@@ -82,21 +82,6 @@ public class ApplicationBean
     {
         String value = getFacesContext().getExternalContext().getRequestParameterMap().get(param);
 
-        /* utf 8 issue ...
-        if(null == value)
-            return null;
-            	
-        byte ptext[] = value.getBytes();
-        String v2 = "fehler";
-        try {
-        	v2 = new String(ptext, "UTF-8");// +" Kra Ðong";
-        } 
-        catch (UnsupportedEncodingException e) {
-        	log.error("unhandled error", e);
-        }
-        
-        log.debug(param +": "+ value +" oder "+ v2);
-        */
         return value;
     }
 

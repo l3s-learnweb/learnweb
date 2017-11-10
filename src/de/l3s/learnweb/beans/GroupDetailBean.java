@@ -1426,8 +1426,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void actionCreateGroupItem()
     {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        String type = params.get("type");
+        String type = getParameter("type");
 
         switch(type)
         {
@@ -1437,27 +1436,27 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         case "file":
             this.setRightPanelAction(RPAction.newResource);
             this.getAddResourceBean().clearForm();
-            this.getAddResourceBean().getResource().setStorageType(1);
+            this.getAddResourceBean().getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
             break;
         case "url":
             this.setRightPanelAction(RPAction.newResource);
             this.getAddResourceBean().clearForm();
-            this.getAddResourceBean().getResource().setStorageType(2);
+            this.getAddResourceBean().getResource().setStorageType(Resource.WEB_RESOURCE);
             break;
         case "glossary":
             this.setRightPanelAction(RPAction.newResource);
             this.getAddResourceBean().clearForm();
-            this.getAddResourceBean().getResource().setStorageType(3);
+            this.getAddResourceBean().getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
             break;
         case "survey":
             this.setRightPanelAction(RPAction.newResource);
             this.getAddResourceBean().clearForm();
-            this.getAddResourceBean().getResource().setStorageType(4);
+            this.getAddResourceBean().getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
             break;
         case "newFile":
             this.setRightPanelAction(RPAction.newFile);
             this.getAddResourceBean().clearForm();
-            this.getAddResourceBean().getResource().setStorageType(1);
+            this.getAddResourceBean().getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
             break;
         default:
             log.warn("Unsupported item type: " + type);

@@ -190,7 +190,7 @@ public class EditPresentationBean extends ApplicationBean implements Serializabl
             Resource resource = new Resource();
             resource.setTitle(group.getTitle());
             resource.setId(1);
-            resource.setEmbeddedSize1Raw("<img src='../resources/icon/blank.png' width='1' height='50' />");
+            //resource.setEmbeddedSize1Raw("<img src='../resources/icon/blank.png' width='1' height='50' />");
             //titleSlide.add(resource);
             resourcesAll.add(0, resource);
 

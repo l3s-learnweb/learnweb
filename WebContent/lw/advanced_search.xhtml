@@ -96,8 +96,7 @@
 						</h3>
 						
 						<a href="group/resources.jsf?group_id=#{result.resource.groupId}&amp;resource_id=#{result.resource.id}&amp;folder_id=#{result.resource.folderId}">
-							<ui:fragment rendered="#{not empty result.resource.thumbnail1}"><img class="resource-preview-image" src="#{result.resource.thumbnail1.url}" alt="#{result.resource.title}" /></ui:fragment>											
-							<h:outputText styleClass="resource-preview-empty" escape="false" value='#{result.resource.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' rendered="#{empty result.resource.thumbnail1}"/>
+							<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" title="#{res.title}"></img>							
 						</a>
 					
 						<div class="resource-title-text">
