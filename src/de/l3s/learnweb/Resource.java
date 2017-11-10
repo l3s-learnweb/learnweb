@@ -1265,9 +1265,10 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
      */
     public Thumbnail getThumbnail3()
     {
+        /*
         if(null == thumbnail3)
             return getThumbnail2();
-
+        */
         return thumbnail3;
     }
 
