@@ -364,6 +364,9 @@ function openGroup(folderId) {
 
 function doAction(action, extraAttr1, extraAttr2) {
     switch (action) {
+    	case 'new-file':
+    		createGroupItemCommand([{name: 'type', value: 'newFile'},{name: 'docType', value: extraAttr1 } ]);
+    		break;
         case 'create-folder':
             createGroupItemCommand([{name: 'type', value: 'folder'}]);
             break;

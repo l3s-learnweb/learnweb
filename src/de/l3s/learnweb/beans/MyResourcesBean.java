@@ -647,6 +647,18 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         }
     }
 
+    public void updateResources()
+    {
+        try
+        {
+            resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(0, 0, getUser().getId(), 1000);
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
+    }
+
     public RPAction getRightPanelAction()
     {
         return rightPanelAction;

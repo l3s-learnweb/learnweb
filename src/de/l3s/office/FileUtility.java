@@ -80,15 +80,15 @@ public class FileUtility
         return fileName;
     }
 
-    public static String getInternalExtension(String fileType)
+    public static String getInternalExtension(ResourceType fileType)
     {
-        if(fileType.equals(ResourceType.document.toString()))
+        if(fileType.equals(ResourceType.document))
             return ".docx";
 
-        if(fileType.equals(ResourceType.spreadsheet.toString()))
+        if(fileType.equals(ResourceType.spreadsheet))
             return ".xlsx";
 
-        if(fileType.equals(ResourceType.presentation.toString()))
+        if(fileType.equals(ResourceType.presentation))
             return ".pptx";
 
         return ".docx";

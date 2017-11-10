@@ -24,16 +24,6 @@ public class ConverterService
     private final static Logger log = Logger.getLogger(ConverterService.class);
     private final Learnweb learnweb;
 
-    public ConverterRequest createConverterRequest(File file)
-    {
-        String fileExt = file.getName().substring(file.getName().lastIndexOf("."));
-        String fileType = FileUtility.getFileType(file.getName());
-        String internalFileExt = FileUtility.getInternalExtension(fileType);
-        String key = FileUtility.generateRevisionId(file);
-        ConverterRequest request = new ConverterRequest(fileExt, internalFileExt, file.getName(), file.getUrl(), key);
-        return request;
-    }
-
     public ConverterRequest createThumbnailConverterRequest(File file)
     {
         String fileExt = file.getName().substring(file.getName().lastIndexOf("."));

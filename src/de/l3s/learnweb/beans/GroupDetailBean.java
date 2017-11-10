@@ -143,8 +143,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         newFolder,
         editFolder,
         viewFolder,
-        newFile,
-        editNewResource
+        newFile
     }
 
     public GroupDetailBean() throws SQLException
@@ -1427,7 +1426,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void actionCreateGroupItem()
     {
         String type = getParameter("type");
-
+        String docType = getParameter("docType");
         switch(type)
         {
         case "folder":
@@ -1456,6 +1455,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         case "newFile":
             this.setRightPanelAction(RPAction.newFile);
             this.getAddResourceBean().clearForm();
+            this.getAddResourceBean().getResource().setType(docType);
             this.getAddResourceBean().getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
             break;
         default:

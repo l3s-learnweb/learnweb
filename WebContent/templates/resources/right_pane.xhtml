@@ -44,6 +44,11 @@
 						{
 							$(".ui-layout-unit-header","#right_pane").html("#{msg.folder} - "+ folderTitle);
 						}
+						else if(#{bean.rightPanelAction == 'newFile'})
+						{
+							var header = "#{msg.create}" + ' ' + ($('#new_resource_type').val()=="Text"?"Document":$('#new_resource_type').val());
+							$(".ui-layout-unit-header","#right_pane").html(header);
+						}
 						else
 						{
 							$(".ui-layout-unit-header","#right_pane").html("#{msg.click_to_view_details}");
@@ -55,7 +60,16 @@
 						lightbox_load();
 					}
 					//update_header();
-				</script>		
+				</script>	
+					
+				<ui:fragment  rendered="#{bean.rightPanelAction == 'newFile'}">
+					<h:inputHidden id="new_resource_type" value="#{addResourceBean.resource.type}" />
+					<ui:decorate template="/templates/resources/createFile.xhtml">
+						<ui:param name="bean" value="#{bean}" />
+						<ui:param name="addResourceBean" value="#{addResourceBean}" />
+						<ui:param name="resourceDetailBean" value="#{resourceDetailBean}" />
+					</ui:decorate>
+				</ui:fragment> 
 				
 				<h:panelGroup id="add_resource_section" rendered="#{bean.rightPanelAction == 'newResource'}" styleClass="create-block new-resource" style="padding-bottom:2rem" layout="block">
 				
@@ -367,10 +381,7 @@
 									</div> 					
 									
 								</ui:fragment>
-								<!-- seems to be unncesssary
-								 
-								<h:inputHidden id="storageType" value="#{resourceDetailBean.clickedResource.storageType}" />
-								 --> 
+								
 								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'image') and empty resourceDetailBean.clickedResource.thumbnail3}">
 									<div class="preview_box">
 										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>

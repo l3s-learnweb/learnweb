@@ -70,6 +70,11 @@ public class UtilBean implements Serializable
         return (GroupDetailBean) getManagedBean("groupDetailBean");
     }
 
+    public static MyResourcesBean getMyResourcesBean()
+    {
+        return (MyResourcesBean) getManagedBean("myResourcesBean");
+    }
+
     public static AddResourceBean getAddResourceBean()
     {
         return (AddResourceBean) getManagedBean("addResourceBean");

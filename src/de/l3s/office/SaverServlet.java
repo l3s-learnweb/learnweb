@@ -74,7 +74,7 @@ public class SaverServlet extends HttpServlet
         try
         {
             JSONObject jsonObj = (JSONObject) new JSONParser().parse(body);
-            logger.info((long) jsonObj.get(STATUS));
+            logger.info("Document " + fileId + " status : " + (long) jsonObj.get(STATUS));
             if((long) jsonObj.get(STATUS) == DocumentStatus.READY_FOR_SAVING.getStatus())
             {
                 String downloadUri = (String) jsonObj.get(URL);

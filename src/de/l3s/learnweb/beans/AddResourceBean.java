@@ -1,8 +1,10 @@
 package de.l3s.learnweb.beans;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.HttpURLConnection;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.UnknownHostException;
 import java.sql.SQLException;
@@ -18,6 +20,7 @@ import javax.faces.context.FacesContext;
 import javax.faces.validator.ValidatorException;
 
 import org.apache.commons.codec.DecoderException;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
@@ -35,16 +38,19 @@ import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.Resource.ResourceType;
 import de.l3s.learnweb.ResourceMetadataExtractor;
 import de.l3s.learnweb.ResourcePreviewMaker;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 import de.l3s.office.FileEditorBean;
+import de.l3s.office.FileUtility;
 import de.l3s.util.StringHelper;
 
 @ViewScoped
 @ManagedBean
 public class AddResourceBean extends ApplicationBean implements Serializable
 {
+    private static final String OFFICE_FILES_FOLDER = "/de/l3s/learnweb/office/documents/";
     private final static Logger log = Logger.getLogger(AddResourceBean.class);
     private final static long serialVersionUID = 1736402639245432708L;
 
@@ -85,6 +91,68 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     {
         log.warn("setClickedResource() was called but is not implemented");
         // this method might be called due to the strange right_panel implementation
+    }
+
+    public void createFile()
+    {
+        try
+        {
+            log.debug("Creating new file..");
+            resource.setSource("Learnweb");
+            resource.setLocation("Learnweb");
+            resource.setStorageType(Resource.LEARNWEB_RESOURCE);
+            resource.setUser(getUser());
+            resource.setDeleted(true);
+            java.io.File newFile = getOfficeFileFromResources();
+            FileInfo info = null;
+            try
+            {
+                FileManager fileManager = getLearnweb().getFileManager();
+                ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
+
+                log.debug("Getting the fileInfo from uploaded file...");
+                info = rme.getFileInfo(new FileInputStream(newFile), resource.getFileName());
+
+                log.debug("Saving file...");
+                File file = new File();
+                file.setType(TYPE.FILE_MAIN);
+                file.setName(info.getFileName());
+                file.setMimeType(info.getMimeType());
+                file.setDownloadLogActivated(true);
+                fileManager.save(file, new FileInputStream(newFile));
+                resource.addFile(file);
+                resource.setUrl(file.getUrl());
+                resource.setFileUrl(file.getUrl()); // for Loro resources the file url is different from the url
+                resource.setFileName(info.getFileName());
+
+                log.debug("Extracting info from uploaded file...");
+                rme.processFileResource(resource, info);
+                resource.setDescription(StringUtils.EMPTY);
+                log.debug("Creating thumbnails from uploaded file...");
+                Thread createThumbnailThread = new CreateThumbnailThread(resource);
+                createThumbnailThread.start();
+                createThumbnailThread.join();
+            }
+            catch(Exception e)
+            {
+                log.error("Thumbnail creation failed for " + info);
+            }
+            addResource();
+
+        }
+        catch(Exception e)
+        {
+            addFatalMessage(e);
+        }
+    }
+
+    private java.io.File getOfficeFileFromResources() throws URISyntaxException
+    {
+        ResourceType resourceType = resource.getType();
+        resource.setFileName(resource.getFileName() + FileUtility.getInternalExtension(resourceType));
+        ClassLoader classloader = Thread.currentThread().getContextClassLoader();
+        URL resourceUrl = classloader.getResource(OFFICE_FILES_FOLDER + FileUtility.getRightSampleName(resourceType));
+        return new java.io.File(resourceUrl.toURI());
     }
 
     public void clearForm()
@@ -346,6 +414,16 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         return resource;
     }
 
+    public void validateNewDocName(FacesContext context, UIComponent component, Object value) throws ValidatorException, SQLException
+    {
+        String fileName = (String) value;
+
+        if(StringUtils.isEmpty(fileName))
+        {
+            throw new ValidatorException(getFacesMessage(FacesMessage.SEVERITY_ERROR, "empty_file_name"));
+        }
+    }
+
     public void addResource()
     {
         try
@@ -411,14 +489,14 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
 
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
-
-            UtilBean.getGroupDetailBean().updateResourcesFromSolr();
-
-            resource = new Resource();
-            resource.setSource("Internet");
-            resource.setLocation("Learnweb");
-            resource.setStorageType(Resource.LEARNWEB_RESOURCE);
-            resource.setDeleted(true);
+            if(resource.getGroupId() == 0)
+            {
+                UtilBean.getMyResourcesBean().updateResources();
+            }
+            else
+            {
+                UtilBean.getGroupDetailBean().updateResourcesFromSolr();
+            }
         }
         catch(Exception e)
         {
