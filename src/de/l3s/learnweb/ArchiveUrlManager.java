@@ -121,63 +121,30 @@ public class ArchiveUrlManager
                 }
             }
 
+            String archiveURL = null, mementoDateString = null;
             try
             {
-                /*HttpsURLConnection con = (HttpsURLConnection) serviceUrlObj.openConnection();
-                con.setRequestMethod("POST");
-                con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:25.0) Gecko/20100101 Firefox/25.0");
-                con.setDoOutput(true);
-                
-                String urlParameters = "url=" + resource.getUrl();
-                
-                DataOutputStream wr = new DataOutputStream(con.getOutputStream());
-                wr.writeBytes(urlParameters);
-                wr.flush();
-                wr.close();
-                
-                log.debug("Sending archive request for URL : " + resource.getUrl());
-                BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
-                String inputLine;
-                StringBuffer response = new StringBuffer();
-                
-                while((inputLine = in.readLine()) != null)
-                {
-                    response.append(inputLine);
-                }
-                in.close();
-                
-                String resp = response.toString();
-                
-                Pattern p = Pattern.compile("https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");
-                Matcher filenameParts = p.matcher(resp);
-                String archiveURL = null;
-                if(filenameParts.find())
-                    archiveURL = resp.substring(filenameParts.start(), filenameParts.end());
-                
-                String responseDateGMTString = con.getHeaderField("Date");
-                Date archiveUrlDate = null;
-                
-                if(responseDateGMTString != null)
-                    archiveUrlDate = responseDate.parse(responseDateGMTString);*/
                 Client client = Client.create();
                 WebResource webResource = client.resource(archiveSaveURL + resource.getUrl());
                 ClientResponse response = webResource.get(ClientResponse.class);
+
                 if(response.getStatus() == HttpURLConnection.HTTP_OK)
                 {
-                    String archiveURL = null, mementoDateString = null;
                     if(response.getHeaders().containsKey("Content-Location"))
                         archiveURL = "http://web.archive.org" + response.getHeaders().getFirst("Content-Location");
                     else
-                        log.info("Content Location not found");
+                        log.debug("Content Location not found");
+
                     if(response.getHeaders().containsKey("X-Archive-Orig-Date"))
                         mementoDateString = response.getHeaders().getFirst("X-Archive-Orig-Date");
                     else
-                        log.info("X-Archive-Orig-Date not found");
+                        log.debug("X-Archive-Orig-Date not found");
+
                     Date archiveUrlDate = null;
                     if(mementoDateString != null)
                         archiveUrlDate = responseDate.parse(mementoDateString);
 
-                    log.info("Archived URL:" + archiveURL + " Memento DateTime:" + mementoDateString);
+                    log.debug("Archived URL:" + archiveURL + " Memento DateTime:" + mementoDateString);
                     PreparedStatement prepStmt = learnweb.getConnection().prepareStatement("INSERT into lw_resource_archiveurl(`resource_id`,`archive_url`,`timestamp`) VALUES (?,?,?)");
                     prepStmt.setInt(1, resource.getId());
                     prepStmt.setString(2, archiveURL);
@@ -193,16 +160,21 @@ public class ArchiveUrlManager
                         if(response.getHeaders().getFirst("X-Archive-Wayback-Liveweb-Error").equalsIgnoreCase("RobotAccessControlException: Blocked By Robots"))
                             return "ROBOTS_ERROR";
                         else
-                            log.info("Cannot save URL because of an error other than robots.txt");
+                        {
+                            log.error("Cannot archive URL because of an error other than robots.txt for resource: " + resource.getId());
+                            return "GENERIC_ERROR";
+                        }
                 }
             }
             catch(SQLException e)
             {
-                log.error("Error while trying to save the resource with the archived URL", e);
+                log.error("Error while trying to save the archived URL for resource: " + resource.getId(), e);
+                return "SQL_SAVE_ERROR";
             }
             catch(ParseException e)
             {
-                log.error("Error while trying to parse the response date for archive URL service", e);
+                log.error("Error while trying to parse the response date from archive URL service for resource: " + resource.getId() + "; Date trying to parse: " + mementoDateString, e);
+                return "PARSE_DATE_ERROR";
             }
 
             return "ARCHIVE_SUCCESS";
@@ -291,15 +263,15 @@ public class ArchiveUrlManager
             try
             {
                 response = executorResponse.get();
-                log.info(response);
+                //log.debug(response);
             }
             catch(InterruptedException e)
             {
-                log.error("Execution of the thread was interrupted", e);
+                log.error("Execution of the thread was interrupted on a task for resource: " + resource.getId(), e);
             }
             catch(ExecutionException e)
             {
-                log.error("Error while retrieving response from a task that was interrupted by an exception", e);
+                log.error("Error while retrieving response from a task that was interrupted by an exception for resource: " + resource.getId(), e);
             }
             //resources.add(resource);
         }

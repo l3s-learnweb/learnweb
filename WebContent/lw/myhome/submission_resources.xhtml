@@ -1,0 +1,180 @@
+<ui:composition template="/templates/main/main_old.xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	lang="#{userBean.localeCode}">
+	
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="submission_id" value="#{submitResourcesBean.submissionId}"/>
+			<f:viewParam name="user_id" value="#{submitResourcesBean.userId}" />
+			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{resourceDetailBean.preRenderView}" />
+			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{submitResourcesBean.preRenderView}"/>
+		</f:metadata>
+	</ui:define>
+	
+	<ui:param name="pageTitle" value="#{msg['Submission.title']}" />
+	<ui:param name="loginRequired" value="true" />
+
+	<ui:define name="center_layout">
+	
+		<script>
+			var max_resources = #{submitResourcesBean.selectedSubmission.noOfResources};
+			var resources_to_select = max_resources;
+		</script>
+		<h:form>
+			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submitResourcesBean.actionSelectGroupItem}" update=":add_resource_panel :growl" oncomplete="update_header();resourceDND(); load_editor(); "/>
+			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submitResourcesBean.actionUpdateSelectedItems}" update=":add_resource_panel :resourceGrid2" oncomplete="update_header(); resourceDND(); updateMaxResources();"/>
+		</h:form>
+		
+		<p:dialog header="#{msg.edit}" id="comment_dialog1" modal="true" minWidth="440" appendTo="@(body)" widgetVar="comment_dialog">
+			<h:form id="comment_dialog_form">
+				<p:inputTextarea autoResize="1" maxHeight="20" value="#{resourceDetailBean.clickedComment.text}"
+					styleClass="resource_dialog_field"/>
+				<p:commandButton actionListener="#{resourceDetailBean.onEditComment}" update=":add_resource_panel" title="#{msg.save}"
+					value="#{msg.save}" onsuccess="PF('comment_dialog').hide();"/>
+			</h:form>
+		</p:dialog>
+		
+		<h:panelGroup rendered="#{not submitResourcesBean.submitted}"><h3 class="title-header">#{msg['Submission.select_resources_header']}</h3></h:panelGroup>
+		<h:panelGroup rendered="#{submitResourcesBean.submitted}"><h3 class="title-header">The resources that you have submitted</h3></h:panelGroup>
+		<hr class="title-divider"/>
+		
+		<h:outputStylesheet library="lightbox" name="lightbox.css" />
+		<h:outputStylesheet library="resource-submission" name="submit.css" />
+		<h:outputScript library="resource-submission" name="submit.js" />
+		
+		<h:panelGroup layout="block" id="datagrid" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
+		<h:panelGroup id="resourceGrid2" styleClass="resource-grid" layout="block">
+				<ui:repeat var="res" value="#{submitResourcesBean.selectedResources}" >
+
+					<h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
+						<div class="resource-block">
+
+							<div class="resource-preview">
+								<div class="resource-preview-wrapper">
+									<div class="resource-preview-wrapper2">
+										<div class="resource-preview-block"></div>
+										<div class="resource-preview-block2"></div>
+										<ui:fragment rendered="#{not empty res.thumbnail1}"><img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" /></ui:fragment>	
+										<h:outputText styleClass="resource-preview-empty" escape="false" value='#{res.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' rendered="#{empty res.thumbnail1}"/>
+									</div>
+								</div>
+								<h:form class="resource-controls" rendered="${res.canDeleteResource(userBean.user)}">
+									<h:outputLink value="#" title="#{msg.delete}" styleClass="action-remove">
+										<h:graphicImage alt="Delete" value="../resources/icon/Remove.png"/>
+									</h:outputLink>
+								</h:form>
+							</div>
+
+							<div class="resource-title">
+								<div class="resource-title-wrapper">
+									<!--<div class="resource-title-icon">
+											<div class="resource-title-icon-wrapper">
+												<img src="img.png" alt="Title" />
+											</div>
+										</div>-->
+									<div class="resource-title-text">
+										<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
+										<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
+									</div>
+								</div>
+							</div>
+
+						</div>
+					</h:panelGroup>
+				</ui:repeat>
+
+				<h:outputText value="No resources were submitted" rendered="#{empty submitResourcesBean.selectedResources and submitResourcesBean.submitted}" class="nothing_found"/>
+				<h:panelGroup id="add_resource_sign" class="resource-item" layout="block" rendered="#{not submitResourcesBean.submitted}">
+						<div class="resource-block" style="box-shadow:none;">
+							<div class="resource-preview">
+								<div class="resource-preview-wrapper">
+								<div class="resource-preview-wrapper2">
+									<img class="resource-preview-image add-resource-image" src="../resources/image/add_sign.png" style="" alt="select a resource" />
+								</div>
+								</div>
+							</div>	
+						</div>
+				</h:panelGroup>
+				<div class="clear"></div>
+				<h:form id="submit_resources_form" prependId="false">
+					<p:commandButton id="submit_resources_button" value="#{msg.submit}" class="greenbutton" style="display:none;" action="#{submitResourcesBean.actionSubmitItems}" update=":add_resource_panel :resourceGrid2 :growl" onclick="return confirmSubmitMessage();"/>
+				</h:form>
+		</h:panelGroup>
+		</h:panelGroup>
+		<h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu" rendered="#{not submitResourcesBean.submitted}">
+			<ui:fragment>
+				<div class="context-menu-item action-remove" role="menuitem">
+					<div class="context-menu-item-wrapper">
+						<span class="context-menu-item-icon" />
+						<span class="context-menu-item-content">Remove</span>
+					</div>
+				</div>
+			</ui:fragment>
+		</h:panelGroup>
+		<div id="lightbox" class="submit-resources">
+			<div id="lightbox_background" onclick="select_res_lightbox.close();"></div>
+
+			<div id="lightbox_container">
+				<div id="lightbox_title">
+					<h:outputFormat value="#{msg['Submission.lightbox_header']}">
+						<f:param value="#{submitResourcesBean.selectedSubmission.noOfResources}"/>
+					</h:outputFormat>
+					<a href="#" onclick="select_res_lightbox.close(); return false;" id="lightbox_close" title="close"></a>
+				</div>
+				<div id="lightbox_content" style="overflow-y:auto;">
+				<h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block" style="padding-left:5px;padding-top:5px;background-color:white;">
+				<ui:repeat var="res" value="#{submitResourcesBean.resources}" >
+
+					<h:panelGroup styleClass="resource-item2 group-resources-item2" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
+						<div class="resource-block">
+
+							<div class="resource-preview">
+								<div class="resource-preview-wrapper">
+									<div class="resource-preview-wrapper2">
+										<div class="resource-preview-block"></div>
+										<div class="resource-preview-block2"></div>
+										<ui:fragment rendered="#{not empty res.thumbnail1}"><img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" /></ui:fragment>	
+										<h:outputText styleClass="resource-preview-empty" escape="false" value='#{res.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' rendered="#{empty res.thumbnail1}"/>
+									</div>
+								</div>
+							</div>
+
+							<div class="resource-title">
+								<div class="resource-title-wrapper">
+									<div class="resource-title-text">
+										<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
+										<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
+									</div>
+								</div>
+							</div>
+
+						</div>
+						
+					</h:panelGroup>
+				</ui:repeat>
+
+				<h:outputText value="#{msg.no_resources_found}" rendered="#{empty myResourcesBean.resources and !myResourcesBean.rootFolder}" class="nothing_found"/>
+				</h:panelGroup>
+				</div>
+				<div id="lightbox_footer">
+					<span id="archive_timestamp_overlay_text">#{msg['Submission.select_resources']}:
+					<button class="greenbutton" onclick="selectResources();">#{msg.add}</button>
+					</span>
+				</div>
+			</div>
+			
+		</div>
+	</ui:define>
+	
+	<ui:define name="right_layout">
+		<ui:decorate  template="/templates/resources/right_pane.xhtml">
+			<ui:param name="bean" value="#{submitResourcesBean}" />
+		</ui:decorate >
+	</ui:define>
+</ui:composition>	

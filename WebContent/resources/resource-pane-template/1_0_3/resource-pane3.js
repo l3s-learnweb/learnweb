@@ -461,6 +461,13 @@ function doAction(action, extraAttr1, extraAttr2) {
                 console.error("No resources selected.");
             }
             break;
+        case 'remove': 
+        	updateSelectedItemsCommand([
+        	    {name: 'action', value: 'remove'},
+        	    {name: 'items', value: selected.getItemsAsJson()}
+        	]);
+        	update_url(0);
+        	break;
         default:
             console.log("Unimplemented or unsupported action: ", action);
     }

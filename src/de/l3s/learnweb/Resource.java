@@ -60,6 +60,14 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         glossary,
     }
 
+    public enum ResourceViewRights
+    {
+        default_rights, //inherits group rights
+        original_owner_readable, //owner of getOriginalResourceId can also view resource
+        learnweb_readable, //all learnweb users can view resource given url
+        world_readable, //all internet users with access to url can view resource
+    }
+
     public static final int LEARNWEB_RESOURCE = 1;
     public static final int WEB_RESOURCE = 2;
 
@@ -70,7 +78,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private String description = "";
     private String url;
     private int storageType = WEB_RESOURCE;
-    private int rights = 0;
+    private ResourceViewRights rights = ResourceViewRights.default_rights;
     private String source = ""; // The place where the resource was found
     private String location = ""; // The location where the resource (metadata) is stored; for example Learnweb, Flickr, Youtube ...
     private String language; // language code
@@ -352,7 +360,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         return comments;
     }
 
-    public Comment addComment(String text, User user) throws Exception
+    public Comment addComment(String text, User user) throws SQLException
     {
         Comment comment = Learnweb.getInstance().getResourceManager().commentResource(text, user, this);
 
@@ -505,10 +513,29 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public int getRights()
     {
-        return rights;
+        return rights.ordinal();
     }
 
     public void setRights(int rights)
+    {
+        //this.rights = rights;
+        switch(rights)
+        {
+        case 0:
+            this.rights = ResourceViewRights.default_rights;
+            break;
+        case 1:
+            this.rights = ResourceViewRights.original_owner_readable;
+            break;
+        case 2:
+            this.rights = ResourceViewRights.learnweb_readable;
+            break;
+        case 3:
+            this.rights = ResourceViewRights.world_readable;
+        }
+    }
+
+    public void setRights(ResourceViewRights rights)
     {
         this.rights = rights;
     }
@@ -629,7 +656,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         r.setDescription(description);
         r.setUrl(url);
         r.setStorageType(storageType);
-        r.setRights(rights);
+        r.setRights(rights.ordinal());
         r.setLocation(location);
         r.setSource(source);
         r.setAuthor(author);
@@ -1673,15 +1700,24 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public boolean canViewResource(User user) throws SQLException
     {
-        if(user == null) // not logged in
-            return false;
 
-        Group group = getGroup();
+        switch(rights)
+        {
+        case world_readable:
+            return true;
+        case learnweb_readable:
+            return user == null ? false : true;
+        case original_owner_readable:
+            Resource originalResource = Learnweb.getInstance().getResourceManager().getResource(originalResourceId);
+            return originalResource != null ? (originalResource.getUserId() == user.getId()) : false;
+        case default_rights:
+            Group group = getGroup();
+            if(group != null)
+                return group.canViewResources(user);
+        }
 
-        if(group != null)
-            return group.canViewResources(user);
-
-        if(user.isAdmin() || ownerUserId == user.getId())
+        //admins, moderators and resource owners can always view the resource
+        if(user != null && (user.isAdmin() || user.isModerator() || ownerUserId == user.getId()))
             return true;
 
         return false;
@@ -2125,5 +2161,17 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         rsm.savePurposeResource(this, selectedPurposes, user);
         extendedMetadata = null; // invalidate cache
         selectedPurposes = null; //invalidate cache
+    }
+
+    public void cloneComments(List<Comment> comments) throws SQLException
+    {
+        for(Comment comment : comments)
+            addComment(comment.getText(), comment.getUser());
+    }
+
+    public void cloneTags(OwnerList<Tag, User> tags) throws SQLException
+    {
+        for(Tag tag : tags)
+            addTag(tag.getName(), tags.getElementOwner(tag));
     }
 }

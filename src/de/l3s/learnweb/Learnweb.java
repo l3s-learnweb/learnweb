@@ -70,6 +70,7 @@ public class Learnweb
     private final GlossaryManager glossariesManager;
     private final SuggestionLogger suggestionLogger;
     private final SurveyManager surveyManager;
+    private final SubmissionManager submissionManager;
     private final createSurveyManager createSurveyManager;
     private final WaybackCapturesLogger waybackCapturesLogger;
     private final SearchLogManager searchLogManager;
@@ -254,6 +255,7 @@ public class Learnweb
         glossariesManager = new GlossaryManager(this);
         searchLogManager = new SearchLogManager(this);
         surveyManager = new SurveyManager(this);
+        submissionManager = new SubmissionManager(this);
         createSurveyManager = new createSurveyManager(this);
         waybackUrlManager = WaybackUrlManager.getInstance(this);
         learnwebIsLoading = false;
@@ -796,6 +798,11 @@ public class Learnweb
     public ConverterService getConverterService()
     {
         return serviceConverter;
+    }
+
+    public SubmissionManager getSubmissionManager()
+    {
+        return submissionManager;
     }
 
 }

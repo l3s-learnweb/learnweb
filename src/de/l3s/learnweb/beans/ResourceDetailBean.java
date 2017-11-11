@@ -230,6 +230,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 addGrowl(FacesMessage.SEVERITY_INFO, "addedToArchiveQueue");
             else if(response.equalsIgnoreCase("robots_error"))
                 addGrowl(FacesMessage.SEVERITY_INFO, "archiveRobotsMessage");
+            else if(response.equalsIgnoreCase("generic_error"))
+                addGrowl(FacesMessage.SEVERITY_INFO, "archiveErrorMessage");
         }
         else
             addGrowl(FacesMessage.SEVERITY_INFO, "archiveWaitMessage");
