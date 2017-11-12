@@ -341,6 +341,11 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         return catbots;
     }
 
+    public List<String> showCatbots(String query)
+    {
+        return catbots;
+    }
+
     public void setCatbots(List<String> catbots)
     {
         this.catbots = catbots;
@@ -348,7 +353,10 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
 
     //populate middle category list when top category is selected
     public void topCatChanged(ValueChangeEvent e)
-    {
+    { //reset catMids and catmids
+        catMids = null;
+        catmids = null;
+
         String topcat = (String) e.getNewValue();
         int cattopId = 0;
         try
@@ -376,7 +384,10 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
             catmids = new ArrayList<String>();
             for(int i = 0; i < catMids.size(); i++)
             {
-                catmids.add(catMids.get(i).getCatmid_name());
+                if(!(catMids.get(i).getCatmid_name().equalsIgnoreCase("x")))
+                {
+                    catmids.add(catMids.get(i).getCatmid_name());
+                }
             }
         }
         else //if top category name returned with invalid id number < 1
@@ -386,4 +397,62 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
 
     }
 
+    //populate bottom category when middle category is selected! attention: user need to be able to add a new bottom cat so adding "add a new category" in the string
+    public void midCatChanged(ValueChangeEvent e)
+    { //reset catBots and catbots
+        catBots = null;
+        catbots = null;
+
+        String midcat = (String) e.getNewValue();
+        log.info("midcat value is " + midcat);
+
+        int catmidId = 0;
+        try
+        {
+            catmidId = getLearnweb().getCategoryManager().getCategoryMiddleByName(midcat);
+        }
+        catch(SQLException e1)
+        {
+            // TODO Auto-generated catch block
+            e1.printStackTrace();
+        }
+
+        log.info("catmidId is " + catmidId);
+
+        if(catmidId > 0)
+        {
+            try
+            {
+                catBots = getLearnweb().getCategoryManager().getAllBottomCategoriesByCatmidID(catmidId);
+            }
+            catch(SQLException e1)
+            {
+
+                e1.printStackTrace();
+            }
+
+            catbots = new ArrayList<String>();
+            for(int i = 0; i < catBots.size(); i++)
+            {
+                if(!(catBots.get(i).getCatbot_name().equalsIgnoreCase("x")))
+                {
+                    catbots.add(catBots.get(i).getCatbot_name());
+                }
+            }
+        }
+        else //if middle category name returned with invalid id number < 1
+        {
+            new IllegalArgumentException("invalid mid category Id was given: " + selectedCatmid).printStackTrace();
+        }
+        //log.info("catbots length is " + catbots.size());
+    }
+
+    public void botCatChanged(ValueChangeEvent e)
+    {
+        String botcat = (String) e.getNewValue();
+        if(botcat.equalsIgnoreCase("add a new category"))
+        {
+            log.info("adding a new category has been chosen!");
+        }
+    }
 }
