@@ -85,8 +85,8 @@ public class CategoryManager
             String midcatName = "x";
             String botcatName = "x";
             topId = getCategoryTopByName(topcatName);
-            midId = getCategoryMiddleByName(midcatName, topId);
-            botId = getCategoryBottomByName(botcatName, midId);
+            midId = getCategoryMiddleByNameAndTopcatId(midcatName, topId);
+            botId = getCategoryBottomByNameAndMidcatId(botcatName, midId);
 
             catids.add(topId);
             catids.add(midId);
@@ -99,8 +99,8 @@ public class CategoryManager
             String midcatName = ids[1];
             String botcatName = "x";
             topId = getCategoryTopByName(topcatName);
-            midId = getCategoryMiddleByName(midcatName, topId);
-            botId = getCategoryBottomByName(botcatName, midId);
+            midId = getCategoryMiddleByNameAndTopcatId(midcatName, topId);
+            botId = getCategoryBottomByNameAndMidcatId(botcatName, midId);
 
             catids.add(topId);
             catids.add(midId);
@@ -113,8 +113,8 @@ public class CategoryManager
             String midcatName = ids[1];
             String botcatName = ids[2];
             topId = getCategoryTopByName(topcatName);
-            midId = getCategoryMiddleByName(midcatName, topId);
-            botId = getCategoryBottomByName(botcatName, midId);
+            midId = getCategoryMiddleByNameAndTopcatId(midcatName, topId);
+            botId = getCategoryBottomByNameAndMidcatId(botcatName, midId);
 
             catids.add(topId);
             catids.add(midId);
@@ -262,7 +262,7 @@ public class CategoryManager
     }
 
     //get bottom category given the name and mid category Id. if it does not exist create one
-    public int getCategoryBottomByName(String catbotName, int catmidId) throws SQLException
+    public int getCategoryBottomByNameAndMidcatId(String catbotName, int catmidId) throws SQLException
     {
         CategoryBottom catbot = new CategoryBottom();
         int catbotId;
@@ -290,7 +290,7 @@ public class CategoryManager
     }
 
     //get middle category given the name and top category Id (if it does not exist, this is an error because middle categories are fixed) 
-    public int getCategoryMiddleByName(String catmidName, int cattopId) throws SQLException
+    public int getCategoryMiddleByNameAndTopcatId(String catmidName, int cattopId) throws SQLException
     {
         CategoryMiddle catmid = new CategoryMiddle();
         int catmidId;
@@ -319,7 +319,7 @@ public class CategoryManager
     public int getCategoryTopByName(String cattopName) throws SQLException
     {
         CategoryTop cattop = new CategoryTop();
-        int cattopId;
+        //int cattopId;
         if(cattopName == null)
         {
             new IllegalArgumentException("invalid top category name was requested: " + cattopName).printStackTrace();
@@ -338,6 +338,49 @@ public class CategoryManager
         select.close();
 
         return cattop.getId();
+    }
+
+    //get middle category given the name 
+    public int getCategoryMiddleByName(String catmidName) throws SQLException
+    {
+        CategoryMiddle catmid = new CategoryMiddle();
+        //int catmidId;
+        if(catmidName == null)
+        {
+            new IllegalArgumentException("invalid middle category name was requested: " + catmidName).printStackTrace();
+        }
+
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_MID + " FROM `lw_rm_catmid` WHERE cat_mid_name = ?");
+        select.setString(1, catmidName);
+        ResultSet rs = select.executeQuery();
+
+        if(!rs.next())
+        {
+            new IllegalArgumentException("invalid cat mid name was requested: " + catmidName).printStackTrace();
+            return -1;
+        }
+        catmid = createCategoryMiddle(rs);
+        select.close();
+
+        return catmid.getId();
+    }
+
+    //save new bottom category given the name and midcatId 
+    public int saveNewBottomCategory(String catbotName, int catmidId) throws SQLException
+    {
+        int catbotId;
+        PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_rm_catbot` (`cat_bot_name`, `cat_mid_id`) VALUES (?, ?)");
+        replace.setString(1, catbotName);
+        replace.setInt(2, catmidId);
+        replace.executeUpdate();
+
+        //get the generated Id
+        ResultSet rs = replace.getGeneratedKeys();
+        if(!rs.next())
+            throw new SQLException("database error: no id generated");
+        catbotId = rs.getInt(1);
+        replace.close();
+        return catbotId;
     }
 
     //create category
