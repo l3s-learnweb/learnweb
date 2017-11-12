@@ -73,6 +73,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     private String[] selectedLevels;
     private String[] selectedTargets;
     private String[] selectedPurposes;
+    private String newBotcat = "";
 
     public ResourceDetailBean() throws SQLException
     {
@@ -728,6 +729,33 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             }
         }
 
+        //adding category if any; allow users to add category only when at least top category is valid
+        if(!(selectedTopcat.equalsIgnoreCase("Select Category Level 1")))
+        {
+
+            if(selectedMidcat.equalsIgnoreCase("Select Category Level 2"))
+            {
+                selectedMidcat = "x";
+                selectedBotcat = "x";
+            }
+
+            if((selectedBotcat.equalsIgnoreCase("")) || (selectedBotcat == null))
+            {
+                selectedBotcat = "x";
+            }
+
+            try
+            {
+                clickedResource.addNewCategory(selectedTopcat, selectedMidcat, selectedBotcat, getUser());
+                //addGrowl(FacesMessage.SEVERITY_INFO, "category_added");
+            }
+            catch(SQLException e)
+            {
+                // TODO Auto-generated catch block
+                e.printStackTrace();
+            }
+        }
+
         addMessage(FacesMessage.SEVERITY_INFO, "Changes_saved");
         return;
     }
@@ -791,6 +819,16 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     public void setSelectedPurposes(String[] selectedPurposes)
     {
         this.selectedPurposes = selectedPurposes;
+    }
+
+    public String getNewBotcat()
+    {
+        return newBotcat;
+    }
+
+    public void setNewBotcat(String newBotcat)
+    {
+        this.newBotcat = newBotcat;
     }
 
 }
