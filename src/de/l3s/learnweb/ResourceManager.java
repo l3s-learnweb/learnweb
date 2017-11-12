@@ -24,6 +24,7 @@ import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.beans.AddResourceBean;
 import de.l3s.learnweb.rm.AudienceManager;
 import de.l3s.learnweb.rm.Category;
+import de.l3s.learnweb.rm.CategoryManager;
 import de.l3s.learnweb.rm.LanglevelManager;
 import de.l3s.learnweb.rm.PurposeManager;
 import de.l3s.learnweb.solrClient.FileInspector;
@@ -1535,8 +1536,37 @@ public class ResourceManager
     //save new resource_category
     protected void saveCategoryResource(Resource resource, String topcat, String midcat, String botcat, User user) throws SQLException
     {
+        int topcatId = 0;
+        int midcatId = 0;
+        int botcatId = 0;
         //need cat_top_id, cat_mid_id, cat_bot_id to save
         //need to save bottom cat if it does not exist yet (need midcat id to save) 
+        CategoryManager cm = Learnweb.getInstance().getCategoryManager();
+        topcatId = cm.getCategoryTopByName(topcat);
+        if(topcatId > 0)
+        {
+            midcatId = cm.getCategoryMiddleByNameAndTopcatId(midcat, topcatId);
+            if(midcatId > 0)
+            {
+                botcat = botcat.toLowerCase(); //to avoid creating a duplicate bottom category
+                botcatId = cm.getCategoryBottomByNameAndMidcatId(botcat, midcatId);
+                if(botcatId <= 0)
+                {
+                    botcatId = cm.saveNewBottomCategory(botcat, midcatId);
+                }
+
+                //save new resource_category entry
+                PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_category` (`resource_id`, `user_id`, `cat_top_id`, `cat_mid_id`, `cat_bot_id`) VALUES (?, ?, ?, ?, ?)");
+                replace.setInt(1, null == resource ? 0 : resource.getId());
+                replace.setInt(2, null == user ? 0 : user.getId());
+                replace.setInt(3, topcatId);
+                replace.setInt(4, midcatId);
+                replace.setInt(5, botcatId);
+                replace.executeUpdate();
+                replace.close();
+
+            }
+        }
 
     }
 }
