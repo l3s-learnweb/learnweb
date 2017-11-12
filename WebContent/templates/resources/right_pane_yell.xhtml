@@ -1322,28 +1322,29 @@
 								<b><h:outputLabel for="catlist" value="Category:" /></b>
 								<h:panelGrid columns="6" cellpadding="10" layout="grid"
 									id="catlist">
-									<h:outputLabel for="toplist" value="Top:" />
+									<h:outputLabel for="toplist" value="Level 1:" />
 									<p:selectOneMenu id="toplist"
 										value="#{resourceDetailBean.selectedTopcat}"
-										panelStyle="width:250px"
+										panelStyle="width:150px"
 										valueChangeListener="#{searchFilterBean.topCatChanged}">
+										<f:selectItem itemLabel="Select Category Level 1" itemValue="-1" />
 										<f:selectItems value="#{searchFilterBean.cattops}" />
 										<p:ajax update="middlelist" process="@this" />
 									</p:selectOneMenu>
 	
-									<h:outputLabel for="middlelist" value="Middle:" />
+									<h:outputLabel for="middlelist" value="Level 2:" />
 									<p:selectOneMenu id="middlelist"
 										value="#{resourceDetailBean.selectedMidcat}"
-										panelStyle="width:250px">
+										panelStyle="width:150px"
+										valueChangeListener="#{searchFilterBean.midCatChanged}">
+										<f:selectItem itemLabel="Select Category Level 2" itemValue="-1" />
 										<f:selectItems value="#{searchFilterBean.catmids}" />
+										<p:ajax update="bottomlist" process="@this" />
 									</p:selectOneMenu>
 	
-									<h:outputLabel for="bottomlist" value="Bottom:" />
-									<p:selectOneMenu id="bottomlist"
-										value="#{resourceDetailBean.selectedBotcat}"
-										panelStyle="width:250px">
-										<f:selectItems value="#{searchFilterBean.catbots}" />
-									</p:selectOneMenu>
+									<h:outputLabel for="bottomlist" value="Level 3: (Choose or type a new one)" />
+        							<p:autoComplete id="bottomlist" panelStyle="width:150px" dropdown="true" value="#{resourceDetailBean.selectedBotcat}" completeMethod="#{searchFilterBean.showCatbots}" />
+									
 								</h:panelGrid>
 							</h:panelGroup>
 	
@@ -1386,7 +1387,7 @@
 							update=":add_resource_panel :tabs:keyResultSection :growl"
 							onsuccess="adlg.hide();" />
 						<p:commandButton value="Cancel"
-							onclick="adlg.hide();" />
+							onclick="adlg.hide(); return false;" />
 					</h:form>
 	
 				</p:dialog>		
@@ -1396,9 +1397,11 @@
 						scroller();
 					});
 					
-					
-					
-					
+					function validateBottomCat(selectedValue){
+						if (selectedValue == "add a new category"){
+							$('#bottomlist').toggle(); //hide list
+						}
+					}
 				</script>
 			</h:panelGroup>
 		</div>
