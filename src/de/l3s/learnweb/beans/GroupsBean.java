@@ -71,18 +71,18 @@ public class GroupsBean extends ApplicationBean implements Serializable
         addGrowl(FacesMessage.SEVERITY_INFO, "groupLeft", selectedGroup.getTitle());
     }
 
-    public void deleteGroup() throws Exception
+    public String deleteGroup() throws Exception
     {
         if(selectedGroup == null)
         {
             log.error("selectedGroup is null");
-            return;
+            return null;
         }
 
         if(!canDeleteGroup(selectedGroup))
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
-            return;
+            return null;
         }
 
         getUser().setActiveGroup(selectedGroup);
@@ -92,7 +92,9 @@ public class GroupsBean extends ApplicationBean implements Serializable
         myGroups = getUser().getGroups();
         joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
 
-        addGrowl(FacesMessage.SEVERITY_INFO, "group_deleted", selectedGroup.getTitle());
+        addMessage(FacesMessage.SEVERITY_INFO, "group_deleted", selectedGroup.getTitle());
+
+        return "/lw/myhome/groups.xhtml";
     }
 
     public boolean canDeleteGroup(Group group) throws SQLException

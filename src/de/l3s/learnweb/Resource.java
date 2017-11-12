@@ -207,11 +207,13 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             setThumbnail1(dummyImage.resize(150, 150));
         if(null == thumbnail2)
             setThumbnail2(dummyImage);
+
+        /*
         if(null == thumbnail3)
             setThumbnail3(dummyImage);
         if(null == thumbnail4)
             setThumbnail4(dummyImage);
-
+        
         /*
         if(null == embeddedSize1 || null == embeddedSize3)
         {
@@ -1700,6 +1702,9 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public boolean canViewResource(User user) throws SQLException
     {
+        //admins, moderators and resource owners can always view the resource
+        if(user != null && (user.isAdmin() || user.isModerator() || ownerUserId == user.getId()))
+            return true;
 
         switch(rights)
         {
@@ -1715,10 +1720,6 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             if(group != null)
                 return group.canViewResources(user);
         }
-
-        //admins, moderators and resource owners can always view the resource
-        if(user != null && (user.isAdmin() || user.isModerator() || ownerUserId == user.getId()))
-            return true;
 
         return false;
     }
