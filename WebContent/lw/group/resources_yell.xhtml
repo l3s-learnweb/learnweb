@@ -29,11 +29,11 @@
 		<h:form>
 			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{groupDetailBean.actionSelectGroupItem}" update=":add_resource_panel :growl" oncomplete="update_header();resourceDND();"/>
 			<p:remoteCommand name="editGroupItemCommand" actionListener="#{groupDetailBean.actionEditGroupItem}" update=":add_resource_panel :growl" oncomplete="update_header()"/>
-			<p:remoteCommand name="createGroupItemCommand" actionListener="#{groupDetailBean.actionCreateGroupItem}" update=":add_resource_panel :growl :datagrid" oncomplete="update_header()"/>
-			<p:remoteCommand name="openFolderCommand" actionListener="#{groupDetailBean.actionOpenFolder}" update=":group_menu_tree :breadcrumbs :datagrid :paginator :add_resource_panel :growl" oncomplete="update_header();resourceDND();scroller();"/>
-			<p:remoteCommand name="updateGroupItemsCommand" actionListener="#{groupDetailBean.actionUpdateGroupItems}" update=":group_menu_tree :datagrid :paginator :add_resource_panel :growl" oncomplete="resourceDND()"/>
+			<p:remoteCommand name="createGroupItemCommand" actionListener="#{groupDetailBean.actionCreateGroupItem}" update=":add_resource_panel :growl :tabs:keyResultSection" oncomplete="update_header()"/>
+			<p:remoteCommand name="openFolderCommand" actionListener="#{groupDetailBean.actionOpenFolder}" update=":group_menu_tree :breadcrumbs :tabs:keyResultSection :paginator :add_resource_panel :growl" oncomplete="update_header();resourceDND();scroller();"/>
+			<p:remoteCommand name="updateGroupItemsCommand" actionListener="#{groupDetailBean.actionUpdateGroupItems}" update=":group_menu_tree :tabs:keyResultSection :paginator :add_resource_panel :growl" oncomplete="resourceDND()"/>
 			<p:remoteCommand name="updateAddResourcePaneCommand" actionListener="#{groupDetailBean.updateTargetForAddResourceBean}" update=":add_resource_panel :growl" oncomplete="update_header()"/>
-			<p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}" update=":add_resource_panel :datagrid :growl" oncomplete="update_header();resourceDND();"/>
+			<p:remoteCommand name="updateThumbnailCommand" actionListener="#{resourceDetailBean.setResourceThumbnail}" update=":add_resource_panel :tabs:keyResultSection :growl" oncomplete="update_header();resourceDND();"/>
 		</h:form>
 	
 
@@ -218,7 +218,7 @@
 									</h:panelGroup>
 
 									<h:panelGroup>
-										<h:outputLabel for="slist" value="Source:  " />
+										<h:outputLabel for="slist" value="Media Source:  " />
 										<p:selectCheckboxMenu id="slist"
 											value="#{searchFilterBean.selectedSources}" label="Sources"
 											multiple="true" filter="true" filterMatchMode="startsWith"
@@ -266,7 +266,14 @@
 											<f:selectItems value="#{searchFilterBean.purposes}" />
 										</p:selectCheckboxMenu>
 									</h:panelGroup>
-
+									
+									<h:panelGroup>
+										<p:commandButton styleClass="greenbutton" value="Filter"
+											update=":tabs:keyResultSection :growl"
+											 />
+										<p:commandButton styleClass="greenbutton" value="Reset"
+											 />
+									</h:panelGroup>
 								</p:panelGrid>
 							</h:form>
 						</p:tab>
