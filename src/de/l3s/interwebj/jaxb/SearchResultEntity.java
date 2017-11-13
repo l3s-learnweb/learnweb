@@ -133,6 +133,9 @@ public class SearchResultEntity
 
     public String getType()
     {
+        if(type.equalsIgnoreCase("text"))
+            this.type = "website";
+
         return type;
     }
 
@@ -150,11 +153,6 @@ public class SearchResultEntity
     {
         this.description = description;
     }
-
-    //	public void setEmbedded(String embedded)
-    //	{
-    //		this.embedded = embedded;
-    //	}
 
     public void setIdAtService(String idAtService)
     {

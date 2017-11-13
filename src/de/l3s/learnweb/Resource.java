@@ -1358,7 +1358,14 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             }
             else if(getType().equals(ResourceType.website))
             {
-                embeddedCode = "<iframe src=\"" + getUrl() + "\" />";
+                if(thumbnail4 != null)
+                {
+                    // first the small thumbnail is shown. The large image is loaded async through JS
+                    Thumbnail large = getThumbnail4();
+                    embeddedCode = "<img src=\"" + getThumbnail2().getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\" original-src=\"" + large.getUrl() + "\"/>";
+                }
+                else
+                    embeddedCode = "<iframe src=\"" + getUrl() + "\" />";
             }
             else if(getType().equals(ResourceType.video))
             {
@@ -1376,7 +1383,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
             if(embeddedCode == null)
             {
-                log.error("can't create embeddedCode for resource: " + getId());
+                log.error("can't create embeddedCode for resource: " + toString(), new Exception());
 
                 if(getEmbeddedRaw() != null)
                     embeddedCode = getEmbeddedRaw();
@@ -2174,5 +2181,16 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     {
         for(Tag tag : tags)
             addTag(tag.getName(), tags.getElementOwner(tag));
+    }
+
+    public void addNewCategory(String selectedTopcat, String selectedMidcat, String selectedBotcat, User user) throws SQLException
+    {
+
+        ResourceManager rsm = Learnweb.getInstance().getResourceManager();
+
+        rsm.saveCategoryResource(this, selectedTopcat, selectedMidcat, selectedBotcat, user);
+
+        extendedMetadata = null;
+
     }
 }

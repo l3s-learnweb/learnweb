@@ -273,7 +273,8 @@
 
 		<div id="new_results" style="display:none;">	
 			<h:panelGroup id="nextPage" layout="block">				
-				<ui:decorate  template="/templates/search/resources_#{searchBean.view}.xhtml">
+				<ui:decorate  template="/templates/search/resources.xhtml">
+					<ui:param name="view" value="#{searchBean.view}" />	
 					<ui:param name="resources" value="#{searchBean.nextPage}" />
 				</ui:decorate>		
 			</h:panelGroup>

@@ -1,6 +1,5 @@
 package de.l3s.interwebj;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -16,7 +15,6 @@ import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
-import org.xml.sax.SAXException;
 
 import de.l3s.interwebj.jaxb.SearchResponse;
 import de.l3s.interwebj.jaxb.SearchResultEntity;
@@ -76,7 +74,7 @@ public class SearchQuery implements Serializable
             {
                 Resource currentResource = ResourceManager.getResourceFromInterwebResult(searchResult);
 
-                if(!currentResource.getType().equals(Resource.ResourceType.text) && null == currentResource.getThumbnail4()) // no thumbnail set
+                if(!currentResource.getType().equals(Resource.ResourceType.website) && null == currentResource.getThumbnail2()) // no thumbnail set
                 {
                     log.error("Found no thumbnail:" + searchResult);
 

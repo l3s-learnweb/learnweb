@@ -748,11 +748,12 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             {
                 clickedResource.addNewCategory(selectedTopcat, selectedMidcat, selectedBotcat, getUser());
                 //addGrowl(FacesMessage.SEVERITY_INFO, "category_added");
+
             }
             catch(SQLException e)
             {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+                addFatalMessage(e);
+                return;
             }
         }
 

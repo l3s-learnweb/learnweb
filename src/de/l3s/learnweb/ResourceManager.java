@@ -1135,7 +1135,7 @@ public class ResourceManager
             if(resource.getThumbnail2() == null)
                 resource.setThumbnail2(new Thumbnail(biggestThumbnail.getUrl(), biggestThumbnail.getWidth(), biggestThumbnail.getHeight()));
         }
-        else if(!searchResult.getType().equals("text"))
+        else if(!searchResult.getType().equals("website"))
         {
             log.warn("no image url for: " + searchResult.toString());
         }
