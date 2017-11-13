@@ -377,7 +377,7 @@
 		                                <h:inputHidden id="ed_user_name" value="#{userBean.user.username}" />
 										<h:inputHidden id="ed_can_be_edited" value="#{resourceDetailBean.clickedResource.canEditResource(userBean.user)}" />
 										<ui:decorate template="/templates/resources/editor.xhtml" />
-										<p:commandButton onclick="load_lightbox_editor()" icon="fa fa-arrows-alt" styleClass="graybutton float-right" immediate="true" style="margin-top:1em;"/>
+										<p:commandButton onclick="load_lightbox_editor(); return false;" icon="fa fa-arrows-alt" styleClass="graybutton float-right" immediate="true" style="margin-top:1em;"/>
 									</div> 					
 									
 								</ui:fragment>
