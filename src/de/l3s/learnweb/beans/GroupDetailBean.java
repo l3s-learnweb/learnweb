@@ -54,6 +54,8 @@ import de.l3s.learnweb.SearchFilters;
 import de.l3s.learnweb.SearchFilters.Filter;
 import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.rm.ExtendedMetadataSearchFilters;
+import de.l3s.learnweb.rm.beans.ExtendedMetadataSearchBean;
 import de.l3s.learnweb.solrClient.SolrSearch;
 import de.l3s.learnweb.solrClient.SolrSearch.SearchPaginator;
 import de.l3s.util.StringHelper;
@@ -123,8 +125,21 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private SearchFilters searchFilters;
     private AbstractPaginator paginator;
 
+    //extended metadata search/filters (Chloe)
+    private ExtendedMetadataSearchFilters emFilters;
+    private String[] selectedAuthors;
+    private String[] selectedMtypes;
+    private String[] selectedSources;
+    private String[] selectedTargets;
+    private String[] selectedPurposes;
+    private String[] selectedLanguages;
+    private String[] selectedLevels;
+
     //Grid or List view of group resources
     private boolean gridView = false;
+
+    @ManagedProperty(value = "#{extendedMetadataSearchBean}")
+    private ExtendedMetadataSearchBean emSearchBean;
 
     @ManagedProperty(value = "#{resourceDetailBean}")
     private ResourceDetailBean resourceDetailBean;
@@ -1835,6 +1850,138 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void setGridView(boolean gridView)
     {
         this.gridView = gridView;
+    }
+
+    //metadata filter search variables and methods to be called from resources_yell.xhtml 
+    //setter and getter for extended metadata search variables
+
+    public ExtendedMetadataSearchFilters getEmFilters()
+    {
+        return emFilters;
+    }
+
+    public void setEmFilters(ExtendedMetadataSearchFilters emFilters)
+    {
+        this.emFilters = emFilters;
+    }
+
+    public String[] getSelectedAuthors()
+    {
+        return selectedAuthors;
+    }
+
+    public void setSelectedAuthors(String[] selectedAuthors)
+    {
+        this.selectedAuthors = selectedAuthors;
+    }
+
+    public String[] getSelectedMtypes()
+    {
+        return selectedMtypes;
+    }
+
+    public void setSelectedMtypes(String[] selectedMtypes)
+    {
+        this.selectedMtypes = selectedMtypes;
+    }
+
+    public String[] getSelectedSources()
+    {
+        return selectedSources;
+    }
+
+    public void setSelectedSources(String[] selectedSources)
+    {
+        this.selectedSources = selectedSources;
+    }
+
+    public String[] getSelectedTargets()
+    {
+        return selectedTargets;
+    }
+
+    public void setSelectedTargets(String[] selectedTargets)
+    {
+        this.selectedTargets = selectedTargets;
+    }
+
+    public String[] getSelectedPurposes()
+    {
+        return selectedPurposes;
+    }
+
+    public void setSelectedPurposes(String[] selectedPurposes)
+    {
+        this.selectedPurposes = selectedPurposes;
+    }
+
+    public String[] getSelectedLanguages()
+    {
+        return selectedLanguages;
+    }
+
+    public void setSelectedLanguages(String[] selectedLanguages)
+    {
+        this.selectedLanguages = selectedLanguages;
+    }
+
+    public String[] getSelectedLevels()
+    {
+        return selectedLevels;
+    }
+
+    public void setSelectedLevels(String[] selectedLevels)
+    {
+        this.selectedLevels = selectedLevels;
+    }
+
+    public ExtendedMetadataSearchBean getEmSearchBean()
+    {
+        return emSearchBean;
+    }
+
+    public void setEmSearchBean(ExtendedMetadataSearchBean emSearchBean)
+    {
+        this.emSearchBean = emSearchBean;
+    }
+
+    //extended metadata filtering methods and returns filter results (paginator) 
+    public void onMetadataFilterClick()
+    {
+        System.out.println("metadataFilter clicked");
+
+        //set the filters of emFilters 
+        emFilters.setFilterAuthors(selectedAuthors);
+        emFilters.setFilterLangs(selectedLanguages);
+        emFilters.setFilterLevels(selectedLevels);
+        emFilters.setFilterMtypes(selectedMtypes);
+        emFilters.setFilterPurposes(selectedPurposes);
+        emFilters.setFilterTargets(selectedTargets);
+
+        int folderId = (selectedFolder != null && selectedFolder.getId() > 0) ? selectedFolder.getId() : 0;
+
+        emSearchBean = new ExtendedMetadataSearchBean(getUser());
+        emSearchBean.setResultsPerPage(8);
+        //emSearchBean.setSort("timestamp DESC");
+
+        paginator = emSearchBean.getFilterResults(groupId, folderId, emFilters, getUser());
+
+        try
+        {
+            if(paginator.getCurrentPage() != null)
+            {
+                log.info(paginator.getCurrentPage().size());
+            }
+            else
+            {
+                log.info("paginator current page is null");
+            }
+        }
+        catch(SQLException | IOException | SolrServerException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
 }
