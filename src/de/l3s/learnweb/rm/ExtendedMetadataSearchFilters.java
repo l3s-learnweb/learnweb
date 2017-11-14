@@ -1,7 +1,6 @@
 package de.l3s.learnweb.rm;
 
 import java.io.Serializable;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -10,87 +9,124 @@ public class ExtendedMetadataSearchFilters implements Serializable
     private static final long serialVersionUID = 9091606684801652063L;
     final static Logger log = Logger.getLogger(ExtendedMetadataSearchFilters.class);
 
-    private List<String> authors;
-    private List<String> mtypes;
-    private List<String> sources;
-    private List<String> targets;
-    private List<String> purposes;
-    private List<String> langs;
-    private List<String> levels;
+    private Integer resultsPerPage = 8;
+    private Integer resultsPerGroup = 2;
+    private String[] filterAuthors;
+    private String[] filterMtypes;
+    private String[] filterSources;
+    private String[] filterTargets;
+    private String[] filterPurposes;
+    private String[] filterLangs;
+    private String[] filterLevels;
 
     public ExtendedMetadataSearchFilters()
     {
 
     }
 
-    public List<String> getAuthors()
+    //setters and getters
+
+    public Integer getResultsPerPage()
     {
-        return authors;
+        return resultsPerPage;
     }
 
-    public void setAuthors(List<String> authors)
+    public void setResultsPerPage(Integer resultsPerPage)
     {
-        this.authors = authors;
+        this.resultsPerPage = resultsPerPage;
     }
 
-    public List<String> getMtypes()
+    public Integer getResultsPerGroup()
     {
-        return mtypes;
+        return resultsPerGroup;
     }
 
-    public void setMtypes(List<String> mtypes)
+    public void setResultsPerGroup(Integer resultsPerGroup)
     {
-        this.mtypes = mtypes;
+        this.resultsPerGroup = resultsPerGroup;
     }
 
-    public List<String> getSources()
+    public String[] getFilterAuthors()
     {
-        return sources;
+        return filterAuthors;
     }
 
-    public void setSources(List<String> sources)
+    public void setFilterAuthors(String[] filterAuthors)
     {
-        this.sources = sources;
+        this.filterAuthors = filterAuthors;
     }
 
-    public List<String> getTargets()
+    public String[] getFilterMtypes()
     {
-        return targets;
+        return filterMtypes;
     }
 
-    public void setTargets(List<String> targets)
+    public void setFilterMtypes(String[] filterMtypes)
     {
-        this.targets = targets;
+        this.filterMtypes = filterMtypes;
     }
 
-    public List<String> getPurposes()
+    public String[] getFilterSources()
     {
-        return purposes;
+        return filterSources;
     }
 
-    public void setPurposes(List<String> purposes)
+    public void setFilterSources(String[] filterSources)
     {
-        this.purposes = purposes;
+        this.filterSources = filterSources;
     }
 
-    public List<String> getLangs()
+    public String[] getFilterTargets()
     {
-        return langs;
+        return filterTargets;
     }
 
-    public void setLangs(List<String> langs)
+    public void setFilterTargets(String[] filterTargets)
     {
-        this.langs = langs;
+        this.filterTargets = filterTargets;
     }
 
-    public List<String> getLevels()
+    public String[] getFilterPurposes()
     {
-        return levels;
+        return filterPurposes;
     }
 
-    public void setLevels(List<String> levels)
+    public void setFilterPurposes(String[] filterPurposes)
     {
-        this.levels = levels;
+        this.filterPurposes = filterPurposes;
+    }
+
+    public String[] getFilterLangs()
+    {
+        return filterLangs;
+    }
+
+    public void setFilterLangs(String[] filterLangs)
+    {
+        this.filterLangs = filterLangs;
+    }
+
+    public String[] getFilterLevels()
+    {
+        return filterLevels;
+    }
+
+    public void setFilterLevels(String[] filterLevels)
+    {
+        this.filterLevels = filterLevels;
+    }
+
+    //reset all filters to null. called when reset button is clicked 
+
+    public void resetFilters()
+    {
+        this.filterAuthors = null;
+        this.filterMtypes = null;
+        this.filterSources = null;
+        this.filterTargets = null;
+        this.filterPurposes = null;
+        this.filterLangs = null;
+        this.filterLevels = null;
     }
 
 }
