@@ -45,10 +45,10 @@
 				(#{groupDetailBean.group.resourcesCount} #{msg.resources}) </span>
 				
 			<h:form styleClass="layout_button" id="group_layout_options" prependId="false">
-				<p:commandButton value="#{msg.list_view}" icon="ui-icon-mylist" update=":tabs:keyResultSection :group_layout_options" rendered="#{groupDetailBean.gridView}">
+				<p:commandButton value="#{msg.list_view}" icon="ui-icon-mylist" update=":tabs:keyResultSection :tabs:catResultSection :group_layout_options" rendered="#{groupDetailBean.gridView}">
 					<f:setPropertyActionListener target="#{groupDetailBean.gridView}" value="false"/>
 				</p:commandButton>
-				<p:commandButton value="#{msg.grid_view}" icon="ui-icon-mygrid" update=":tabs:keyResultSection :group_layout_options" rendered="#{!groupDetailBean.gridView}">
+				<p:commandButton value="#{msg.grid_view}" icon="ui-icon-mygrid" update=":tabs:keyResultSection :tabs:catResultSection :group_layout_options" rendered="#{!groupDetailBean.gridView}">
 					<f:setPropertyActionListener target="#{groupDetailBean.gridView}" value="true"/>
 				</p:commandButton>
 			</h:form>
@@ -182,11 +182,11 @@
 						value="#{groupDetailBean.query}" id="input_query_form"
 						onkeyup="if (event.keyCode == 13) {document.getElementById('group_resource_searchbutton').click(); return false; }" />
 
-					<p:commandButton style="visibility:hidden;"
+					<p:commandButton
 						actionListener="${groupDetailBean.onQueryChange()}"
 						partialSubmit="true"
 						oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();scroller();"
-						process="@form" update=":datagrid :paginator" value=""
+						process="@form" update=":tabs:keyResultSection :paginator" value=""
 						id="group_resource_searchbutton" />
 				</h:form>
 				<br />
@@ -201,7 +201,7 @@
 									<h:panelGroup>
 										<h:outputLabel for="alist" value="Author:  " />
 										<p:selectCheckboxMenu id="alist"
-											value="#{searchFilterBean.selectedAuthors}" label="Authors"
+											value="#{groupDetailBean.selectedAuthors}" label="Authors"
 											multiple="true" filter="true" filterMatchMode="startsWith">
 											<f:selectItems value="#{searchFilterBean.authors}" />
 										</p:selectCheckboxMenu>
@@ -210,7 +210,7 @@
 									<h:panelGroup>
 										<h:outputLabel for="mtlist" value="Media Type:  " />
 										<p:selectCheckboxMenu id="mtlist"
-											value="#{searchFilterBean.selectedMtypes}"
+											value="#{groupDetailBean.selectedMtypes}"
 											label="Media Types" multiple="true" filter="true"
 											filterMatchMode="startsWith" panelStyle="width:250px">
 											<f:selectItems value="#{searchFilterBean.mtypes}" />
@@ -220,7 +220,7 @@
 									<h:panelGroup>
 										<h:outputLabel for="slist" value="Media Source:  " />
 										<p:selectCheckboxMenu id="slist"
-											value="#{searchFilterBean.selectedSources}" label="Sources"
+											value="#{groupDetailBean.selectedSources}" label="Sources"
 											multiple="true" filter="true" filterMatchMode="startsWith"
 											panelStyle="width:250px">
 											<f:selectItems value="#{searchFilterBean.sources}" />
@@ -230,7 +230,7 @@
 									<h:panelGroup>
 										<h:outputLabel for="llist" value="Language:" />
 										<p:selectCheckboxMenu id="llist"
-											value="#{searchFilterBean.selectedLanguages}"
+											value="#{groupDetailBean.selectedLanguages}"
 											label="Languages" multiple="true" filter="true"
 											filterMatchMode="startsWith" panelStyle="width:250px">
 											<f:selectItems value="#{searchFilterBean.langs}" />
@@ -240,7 +240,7 @@
 									<h:panelGroup>
 										<h:outputLabel for="levlist" value="Language Level:" />
 										<p:selectCheckboxMenu id="levlist"
-											value="#{searchFilterBean.selectedLevels}" label="Levels"
+											value="#{groupDetailBean.selectedLevels}" label="Levels"
 											multiple="true" filter="true" filterMatchMode="startsWith"
 											panelStyle="width:250px">
 											<f:selectItems value="#{searchFilterBean.levels}" />
@@ -250,7 +250,7 @@
 									<h:panelGroup>
 										<h:outputLabel for="aglist" value="Target Learner:" />
 										<p:selectCheckboxMenu id="aglist"
-											value="#{searchFilterBean.selectedTargets}"
+											value="#{groupDetailBean.selectedTargets}"
 											label="Target Learners" multiple="true" filter="true"
 											filterMatchMode="startsWith" panelStyle="width:250px">
 											<f:selectItems value="#{searchFilterBean.targets}" />
@@ -260,20 +260,20 @@
 									<h:panelGroup>
 										<h:outputLabel for="aclist" value="Purpose of Use:" />
 										<p:selectCheckboxMenu id="aclist"
-											value="#{searchFilterBean.selectedPurposes}"
+											value="#{groupDetailBean.selectedPurposes}"
 											label="Purposes of Use" multiple="true" filter="true"
 											filterMatchMode="startsWith" panelStyle="width:250px">
 											<f:selectItems value="#{searchFilterBean.purposes}" />
 										</p:selectCheckboxMenu>
 									</h:panelGroup>
 									
-									<h:panelGroup>
-										<p:commandButton styleClass="greenbutton" value="Filter"
-											update=":tabs:keyResultSection :growl"
+									
+									<p:commandButton styleClass="greenbutton" value="Filter"
+										    actionListener = "#{groupDetailBean.onMetadataFilterClick}"
+											oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();scroller();"
+											process="@form" update=":paginator :tabs:keyResultSection"
 											 />
-										<p:commandButton styleClass="greenbutton" value="Reset"
-											 />
-									</h:panelGroup>
+									
 								</p:panelGrid>
 							</h:form>
 						</p:tab>
@@ -296,7 +296,7 @@
 											    <ui:fragment rendered="#{res.type == 'image'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/image.png" width="80%" /></ui:fragment>
 											    <ui:fragment rendered="#{res.type == 'audio'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/audio.png" width="80%" /></ui:fragment>
 											    <ui:fragment rendered="#{res.type == 'video'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/video.png" width="70%" /></ui:fragment>
-											    <ui:fragment rendered="#{res.type == 'file'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/file.png" width="80%" /></ui:fragment>
+											    <ui:fragment rendered="#{res.type == 'file'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/file.png" width="70%" /></ui:fragment>
 											    
 												<!--<img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/web.png" width="80%" /> -->
 												<!--<img class="simg" src="#{request.contextPath}/resources/resources-chloe/images/bbc.png" width="80%" /> -->
@@ -346,16 +346,25 @@
 												<div class="metadata-block">
 												<label class="rlabel"><b>Title:
 												</b></label> <span class="text-ellipses">#{res.title}</span><br /> 
-												<label class="rlabel"><b>Category:
-												</b></label>
-												<h:outputText value = "not available. please help to add it" rendered="#{empty res.eMetadata.categories[0]}"/>
-												<h:outputText value = "#{res.eMetadata.categories[0]}" rendered="#{not empty res.eMetadata.categories[0]}"/> <br /> <label
-													class="rlabel"><b>Contains: </b></label>#{res.mtype}
-												<br /> 
-												<label class="rlabel"><b>Language: </b></label>
-												#{res.language} <label class="rlabels"><b>Level (stats):
-												</b></label>#{res.eMetadata.lCount} <br /> 
-												<label class="rlabel"><b>Target
+												<ui:fragment rendered="#{not empty res.eMetadata.categories[0]}" >
+													<label class="rlabel"><b>Category:
+													</b></label>
+													<h:outputText value = "#{res.eMetadata.categories[0]}" rendered="#{not empty res.eMetadata.categories[0]}"/> <br />
+												</ui:fragment>
+												<ui:fragment rendered="#{not empty res.mtype}">
+													<label class="rlabel"><b>Contains: </b></label>#{res.mtype}
+													<br /> 
+												</ui:fragment>
+												<ui:fragment rendered="#{not empty res.language}">
+													<label class="rlabel"><b>Language: </b></label>
+													#{res.language} 
+												</ui:fragment>
+												<ui:fragment rendered="#{not empty res.eMetadata.lCount}">
+													<label class="rlabels"><b>Level (stats):
+													</b></label>#{res.eMetadata.lCount} <br /> 
+												</ui:fragment>
+												<ui:fragment rendered="#{not empty res.eMetadata.targetCount}">
+													<label class="rlabel"><b>Target
 														learner (stats): </b></label>
 														<ui:repeat value="#{res.eMetadata.targetCount.entrySet().toArray()}" var="t">
 										                
@@ -373,9 +382,10 @@
 														<h:outputText value="[#{t.value}] " /> 
 														
 														</ui:repeat>
-												<br /> 
-												
-												<label class="rlabel"><b>Purpose of use (stats): </b></label>
+													<br /> 
+												</ui:fragment>
+												<ui:fragment rendered="#{not empty res.eMetadata.purposeCount}">
+													<label class="rlabel"><b>Purpose of use (stats): </b></label>
 														<ui:repeat value="#{res.eMetadata.purposeCount.entrySet().toArray()}" var="p">
 														<h:graphicImage class="bluecircle" value="/resources/resources-chloe/images/speaking.png" width="3%" rendered="#{p.key == 'speaking skills'}" alt="speaking" />
 														<h:graphicImage class="bluecircle" value="/resources/resources-chloe/images/listening.png" width="3%" rendered="#{p.key == 'listening skills'}" alt="listening" />
@@ -388,20 +398,32 @@
 														<h:outputText value="Reading" rendered="#{p.key == 'reading skills'}" />
 														<h:outputText value="[#{p.value}] " rendered="#{p.key == 'speaking skills' or p.key == 'listening skills' or p.key =='writing skills' or p.key =='reading skills'}" /> 
 														</ui:repeat>
-												<br /> 
+													<br /> 
 												
-												<ui:repeat value="#{res.eMetadata.purposeCount.entrySet().toArray()}" var="p">
-													<ui:fragment rendered="#{p.key != 'speaking skills' and p.key != 'listening skills' and p.key !='writing skills' and p.key !='reading skills'}">
+													<ui:repeat value="#{res.eMetadata.purposeCount.entrySet().toArray()}" var="p">
+														<ui:fragment rendered="#{p.key != 'speaking skills' and p.key != 'listening skills' and p.key !='writing skills' and p.key !='reading skills'}">
     													<span class="tag tag-grey">#{p.key}</span>
-													</ui:fragment>
-												</ui:repeat>
+														</ui:fragment>
+													</ui:repeat>
+												</ui:fragment>
 											</div>
 										</div>
 									</div>
 									<hr style="margin-top:5px; margin-bottom:5px;" />
 							</h:panelGroup>
 						</ui:repeat>
+						
+						<h:outputText value="${msg.no_resources_found}"
+							class="nothing_found"
+							rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}" />
+
+						<h:outputText value="#{msg.no_results_found}" class="nothing_found"
+							rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'FilterPaginator'}" />
+						
+						<h:outputText value="#{msg.no_results_found}" class="nothing_found"
+							rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}" />
 					</h:panelGroup>
+					
 					
 					<h:panelGroup id="dataGrid" rendered="#{groupDetailBean.gridView}" layout="block"
 					pt:data-isEnabledMoving="#{groupDetailBean.canDeleteResourcesInTheGroup()}">
@@ -441,13 +463,12 @@
 										</h:outputLink>
 									</h:panelGroup>
 								</div>
-
 							</div>
-						</h:panelGroup>
-					</ui:repeat>
-				</h:panelGroup>
+							</h:panelGroup>
+						</ui:repeat>
+					</h:panelGroup>
 
-						<h:panelGroup id="resourceGrid" styleClass="resource-grid"
+					<h:panelGroup id="resourceGrid" styleClass="resource-grid"
 						layout="block">
 						<ui:repeat value="#{groupDetailBean.paginator.currentPage}"
 						var="res">
@@ -508,11 +529,10 @@
 										</div>
 									</div>
 								</div>
-
 							</div>
 						</h:panelGroup>
-					</ui:repeat>
-				</h:panelGroup>
+						</ui:repeat>
+					</h:panelGroup>
 
 					<h:outputText value="${msg.no_resources_found}"
 					class="nothing_found"
@@ -526,56 +546,267 @@
 			</p:tab>
 
 			<p:tab id="category_tab" title="Category Navigation">
-				<h:panelGroup>
-
+				    <b><h:outputText value="Click on the category to view resources belonging to that category!"/></b>
 					<h:panelGroup id="catTreeSection">
 						<div id="cattree"></div>
 					</h:panelGroup>
 					<hr/>
 					<h:panelGroup id="catResultSection">
-						<ui:repeat value="#{groupDetailBean.paginator.currentPage}"
+						<h:panelGroup id="dataList2" rendered="#{!groupDetailBean.gridView}">
+						<ui:repeat value="#{groupDetailBean.paginator.currentPage}" 
 							var="res">
-							<h:panelGroup id="rdetail" styleClass="resource2-item group-resources-item"
+							<h:panelGroup id="rdetail" styleClass="resource2-item group-resources2-item"
 								pt:data-itemType="resource" pt:data-itemId="#{res.resource.id}" layout="block">
-										<div id="rlist">
-											<div id="rnav">
-												<img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/web.png" width="98%" /> 
-												<img class="simg" src="#{request.contextPath}/resources/resources-chloe/images/bbc.png" width="98%" />
+										<div id="rlist" style="width: 530px; height: auto;">
+											<div id="rnav" style="width: 10%;">
+											    <ui:fragment rendered="#{res.type == 'website'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/web.png" width="80%" /></ui:fragment>
+											    <ui:fragment rendered="#{res.type == 'pdf'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/pdf.png" width="70%" /></ui:fragment>
+											    <ui:fragment rendered="#{res.type == 'image'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/image.png" width="80%" /></ui:fragment>
+											    <ui:fragment rendered="#{res.type == 'audio'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/audio.png" width="80%" /></ui:fragment>
+											    <ui:fragment rendered="#{res.type == 'video'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/video.png" width="70%" /></ui:fragment>
+											    <ui:fragment rendered="#{res.type == 'file'}"><img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/file.png" width="70%" /></ui:fragment>
+											    
+												<!--<img class="timg" src="#{request.contextPath}/resources/resources-chloe/images/web.png" width="80%" /> -->
+												<!--<img class="simg" src="#{request.contextPath}/resources/resources-chloe/images/bbc.png" width="80%" /> -->
 											</div>
 
-											<div id="rmain">
-												<img class="example1" src="#{request.contextPath}/resources/resources-chloe/images/barneybearbbc.png"
-													width="23%" /> 
+											<div id="rmain" style="width: 90%;">
+											    <div class="resource-block2">
+											    <div class="resource-preview">
+											     	<div class="resource-preview-wrapper">
+														<div class="resource-preview-wrapper2">
+														<div class="resource-preview-block"></div>
+														<div class="resource-preview-block2"></div>
+														
+														
+											<div class="resource-preview-block"></div>
+											<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" title="#{res.title}"></img>	
+											    			<ui:fragment rendered="#{not empty res.thumbnail1}"><img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" /></ui:fragment>	
+															<!--<img class="example1" src="#{request.contextPath}/resources/resources-chloe/images/barneybearbbc.png"
+															width="30%" /> -->
+														    <h:outputText styleClass="resource-preview-empty" escape="false" value='#{res.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' rendered="#{empty res.thumbnail1}"/>
+													    </div>
+													</div>
+													<h:panelGroup class="resource-controls2" layout="block">
+														<h:outputLink value="#" title="#{msg.copy}"
+															styleClass="action-copy">
+														<h:graphicImage alt="Copy" value="/resources/icon/Add.png" />
+														</h:outputLink>
+
+														<ui:fragment
+															rendered="${groupDetailBean.canDeleteResourcesInTheGroup()}">
+															<h:outputLink value="#" title="#{msg.edit}"
+																styleClass="action-edit">
+															<h:graphicImage alt="Edit"
+																value="../resources/icon/Edit.png" />
+															</h:outputLink>
+
+															<h:outputLink value="#" title="#{msg.delete}"
+																styleClass="action-delete">
+															<h:graphicImage alt="Delete"
+																value="../resources/icon/Remove.png" />
+															</h:outputLink>
+														</ui:fragment>
+													</h:panelGroup>
+												</div>
+												</div>
+												
+												<div class="metadata-block">
 												<label class="rlabel"><b>Title:
-												</b></label>#{res.title} <br /> 
-												<label class="rlabel"><b>Category:
-												</b></label>Education/Language Learning/Games <br /> <label
-													class="rlabel"><b>Contains: </b></label>Text, Audio, Video
-												<br /> 
-												<label class="rlabel"><b>Language: </b></label>
-												English <label class="rlabels"><b>Level (stats):
-												</b></label>A1[10] A2[1] <br /> 
-												<label class="rlabel"><b>Target
+												</b></label> <span class="text-ellipses">#{res.title}</span><br /> 
+												<ui:fragment rendered="#{not empty res.eMetadata.categories[0]}" >
+													<label class="rlabel"><b>Category:
+													</b></label>
+													<h:outputText value = "#{res.eMetadata.categories[0]}" rendered="#{not empty res.eMetadata.categories[0]}"/> <br />
+												</ui:fragment>
+												<ui:fragment rendered="#{not empty res.mtype}">
+													<label class="rlabel"><b>Contains: </b></label>#{res.mtype}
+													<br /> 
+												</ui:fragment>
+												<ui:fragment rendered="#{not empty res.language}">
+													<label class="rlabel"><b>Language: </b></label>
+													#{res.language} 
+												</ui:fragment>
+												<ui:fragment rendered="#{not empty res.eMetadata.lCount}">
+													<label class="rlabels"><b>Level (stats):
+													</b></label>#{res.eMetadata.lCount} <br /> 
+												</ui:fragment>
+												<ui:fragment rendered="#{not empty res.eMetadata.targetCount}">
+													<label class="rlabel"><b>Target
 														learner (stats): </b></label>
-												<img class="circle" src="#{request.contextPath}/resources/resources-chloe/images/green_circle.png" width="2%" />Pre-school[7] 
-												<img class="bluecircle" src="#{request.contextPath}/resources/resources-chloe/images/blue_circle.png" width="2%" />Teens[4]
-												<img class="circle" src="#{request.contextPath}/resources/resources-chloe/images/red_circle.png" width="2%" />Adults[1]
-												<br /> 
-												<label class="rlabel"><b>Purpose of use (stats): </b></label>
-												<img class="bluecircle" src="#{request.contextPath}/resources/resources-chloe/images/speaking.png" width="2%" />Speaking[3] 
-												<img class="bluecircle" src="#{request.contextPath}/resources/resources-chloe/images/listening.png" width="2%" />Listening[5] 
-												<img class="bluecircle" src="#{request.contextPath}/resources/resources-chloe/images/writing.png" width="2%"/>Writing[1]
-												<img class="bluecircle" src="#{request.contextPath}/resources/resources-chloe/images/reading.png" width="2%" />Reading[0]
-												<br /> 
-												<span class="tag tag-grey">Games</span>
-												<span class="tag tag-grey">Interactive</span>
-												<span class="tag tag-grey">Story telling</span>
+														<ui:repeat value="#{res.eMetadata.targetCount.entrySet().toArray()}" var="t">
+										                
+														<h:graphicImage class="circle" value="/resources/resources-chloe/images/green_circle.png" width="3%" rendered="#{t.key == 'very young learners (pre-school)'}" alt="o" />
+														<h:graphicImage class="circle" value="/resources/resources-chloe/images/blue_circle.png" width="3%" rendered="#{t.key == 'young learners (elementary)'}" alt="o" />
+														<h:graphicImage class ="bluecircle" value="/resources/resources-chloe/images/yellow_circle.png" width="3%" rendered="#{t.key == 'teenage learners'}" alt="o" />
+														<h:graphicImage class ="circle" value="/resources/resources-chloe/images/red_circle.png" width="3%" rendered="#{t.key == 'teachers'}" alt="o" />
+														<h:graphicImage class ="circle" value="/resources/resources-chloe/images/red_circle.png" width="3%" rendered="#{t.key == 'adult learners'}" alt="o"/>
+														
+														<h:outputText value="Pre-school" rendered="#{t.key == 'very young learners (pre-school)'}" />
+														<h:outputText value="Young learners" rendered="#{t.key == 'young learners (elementary)'}" />
+														<h:outputText value="Teens" rendered="#{t.key == 'teenage learners'}" />
+														<h:outputText value="Adult learners" rendered="#{t.key == 'adult learners'}" />
+														<h:outputText value="Teachers" rendered="#{t.key == 'teachers'}" />
+														<h:outputText value="[#{t.value}] " /> 
+														
+														</ui:repeat>
+													<br /> 
+												</ui:fragment>
+												<ui:fragment rendered="#{not empty res.eMetadata.purposeCount}">
+													<label class="rlabel"><b>Purpose of use (stats): </b></label>
+														<ui:repeat value="#{res.eMetadata.purposeCount.entrySet().toArray()}" var="p">
+														<h:graphicImage class="bluecircle" value="/resources/resources-chloe/images/speaking.png" width="3%" rendered="#{p.key == 'speaking skills'}" alt="speaking" />
+														<h:graphicImage class="bluecircle" value="/resources/resources-chloe/images/listening.png" width="3%" rendered="#{p.key == 'listening skills'}" alt="listening" />
+														<h:graphicImage class ="bluecircle" value="/resources/resources-chloe/images/writing.png" width="3%" rendered="#{p.key == 'writing skills'}" alt="writing" />
+														<h:graphicImage class ="bluecircle" value="/resources/resources-chloe/images/reading.png" width="3%" rendered="#{p.key == 'reading skills'}" alt="reading" />
+													
+														<h:outputText value="Speaking" rendered="#{p.key == 'speaking skills'}" />
+														<h:outputText value="Listening" rendered="#{p.key == 'listening skills'}" />
+														<h:outputText value="Writing" rendered="#{p.key == 'writing skills'}" />
+														<h:outputText value="Reading" rendered="#{p.key == 'reading skills'}" />
+														<h:outputText value="[#{p.value}] " rendered="#{p.key == 'speaking skills' or p.key == 'listening skills' or p.key =='writing skills' or p.key =='reading skills'}" /> 
+														</ui:repeat>
+													<br /> 
+												
+													<ui:repeat value="#{res.eMetadata.purposeCount.entrySet().toArray()}" var="p">
+														<ui:fragment rendered="#{p.key != 'speaking skills' and p.key != 'listening skills' and p.key !='writing skills' and p.key !='reading skills'}">
+    													<span class="tag tag-grey">#{p.key}</span>
+														</ui:fragment>
+													</ui:repeat>
+												</ui:fragment>
 											</div>
 										</div>
+									</div>
+									<hr style="margin-top:5px; margin-bottom:5px;" />
+							</h:panelGroup>
+						</ui:repeat>
+						
+						<h:outputText value="${msg.no_resources_found}"
+							class="nothing_found"
+							rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}" />
+
+						<h:outputText value="#{msg.no_results_found}" class="nothing_found"
+							rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'FilterPaginator'}" />
+					</h:panelGroup>
+					
+					
+					<h:panelGroup id="dataGrid2" rendered="#{groupDetailBean.gridView}" layout="block"
+					pt:data-isEnabledMoving="#{groupDetailBean.canDeleteResourcesInTheGroup()}">
+						<h:panelGroup id="folderGrid2" styleClass="folder-grid"
+						layout="block">
+						<br/>
+					
+						<ui:repeat value="#{groupDetailBean.subfolders}" var="folder">
+						<h:panelGroup styleClass="folder-item group-resources-item"
+							pt:data-itemType="folder" pt:data-itemId="#{folder.folderId}"
+							layout="block">
+							<div class="folder-block">
+
+								<div class="folder-icon">
+									<div class="folder-icon-wrapper">
+										<span class="icon icon-folder" />
+									</div>
+								</div>
+
+								<div class="folder-title">
+									<div class="folder-title-wrapper">
+										<h:outputText value="#{folder.name}" escape="false"
+											styleClass="folder-title-name" title="#{folder.name}" />
+									</div>
+
+									<h:panelGroup class="resource-controls" layout="block"
+										rendered="${groupDetailBean.canDeleteResourcesInTheGroup()}">
+										<h:outputLink value="#" title="#{msg.edit}"
+											styleClass="action-edit">
+											<h:graphicImage alt="Edit" value="../resources/icon/Edit.png" />
+										</h:outputLink>
+
+										<h:outputLink value="#" title="#{msg.delete}"
+											styleClass="action-delete">
+											<h:graphicImage alt="Remove"
+												value="../resources/icon/Remove.png" />
+										</h:outputLink>
+									</h:panelGroup>
+								</div>
+							</div>
 							</h:panelGroup>
 						</ui:repeat>
 					</h:panelGroup>
 
+					<h:panelGroup id="resourceGrid2" styleClass="resource-grid"
+						layout="block">
+						<ui:repeat value="#{groupDetailBean.paginator.currentPage}"
+						var="res">
+						<h:panelGroup styleClass="resource-item group-resources-item"
+							pt:data-itemType="resource" pt:data-itemId="#{res.resource.id}"
+							layout="block">
+							<div class="resource-block">
+								<div class="resource-preview">
+									<div class="resource-preview-wrapper">
+										<div class="resource-preview-wrapper2">
+											<div class="resource-preview-block"></div>
+											<div class="resource-preview-block2"></div>
+											<h:graphicImage styleClass="resource-preview-image"
+												value="#{res.thumbnail1.url}"
+												rendered="#{not empty res.thumbnail1}" alt="#{res.title}" />
+											<h:outputText styleClass="resource-preview-empty"
+												escape="false"
+												value='#{res.resource.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}'
+												rendered="#{empty res.thumbnail1}" />
+										</div>
+									</div>
+
+									<h:panelGroup class="resource-controls" layout="block">
+										<h:outputLink value="#" title="#{msg.copy}"
+											styleClass="action-copy">
+											<h:graphicImage alt="Copy" value="/resources/icon/Add.png" />
+										</h:outputLink>
+
+										<ui:fragment
+											rendered="${groupDetailBean.canDeleteResourcesInTheGroup()}">
+											<h:outputLink value="#" title="#{msg.edit}"
+												styleClass="action-edit">
+												<h:graphicImage alt="Edit"
+													value="../resources/icon/Edit.png" />
+											</h:outputLink>
+
+											<h:outputLink value="#" title="#{msg.delete}"
+												styleClass="action-delete">
+												<h:graphicImage alt="Delete"
+													value="../resources/icon/Remove.png" />
+											</h:outputLink>
+										</ui:fragment>
+									</h:panelGroup>
+								</div>
+
+								<div class="resource-title">
+									<div class="resource-title-wrapper">
+										<!--<div class="resource-title-icon">
+											<div class="resource-title-icon-wrapper">
+												<img src="img.png" alt="Title" />
+											</div>
+										</div>-->
+										<div class="resource-title-text">
+											<h:outputText value="#{res.title}" escape="false"
+												styleClass="resource-title-name" title="#{res.title}" />
+											<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span>
+												#{msg.added_by} <span>#{res.ownerUser.username}</span></span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</h:panelGroup>
+						</ui:repeat>
+					</h:panelGroup>
+
+					<h:outputText value="${msg.no_resources_found}"
+					class="nothing_found"
+					rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}" />
+
+					<h:outputText value="#{msg.no_results_found}" class="nothing_found"
+					rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}" />
+
+					</h:panelGroup>
 				</h:panelGroup>
 			</p:tab>
 		
