@@ -1312,6 +1312,22 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         return thumbnail4;
     }
 
+    public Thumbnail getLargestThumbnail()
+    {
+        if(null != thumbnail4)
+            return thumbnail4;
+        if(null != thumbnail3)
+            return thumbnail3;
+        if(null != thumbnail2)
+            return thumbnail2;
+        if(null != thumbnail1)
+            return thumbnail1;
+        if(null != thumbnail0)
+            return thumbnail0;
+
+        return null;
+    }
+
     public void setThumbnail0(Thumbnail thumbnail0)
     {
         this.thumbnail0 = thumbnail0;
@@ -1344,6 +1360,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public String getEmbedded()
     {
+        log.debug("get embeddes" + toString());
         if(embeddedCode == null)
         {
             if(StringUtils.isNoneEmpty(getEmbeddedRaw()) && !getSource().equals("Yovisto")) // if the embedded code was explicitly defined then use it. Is necessary for slidesahre resources. The old flash based code of Yovisto does not work any more
@@ -1353,7 +1370,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             else if(getType().equals(ResourceType.image))
             {
                 // first the small thumbnail is shown. The large image is loaded async through JS
-                Thumbnail large = getThumbnail4();
+                Thumbnail large = getLargestThumbnail();
                 embeddedCode = "<img src=\"" + getThumbnail2().getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\" original-src=\"" + large.getUrl() + "\"/>";
             }
             else if(getType().equals(ResourceType.website))
@@ -1361,7 +1378,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
                 if(thumbnail4 != null)
                 {
                     // first the small thumbnail is shown. The large image is loaded async through JS
-                    Thumbnail large = getThumbnail4();
+                    Thumbnail large = getLargestThumbnail();
                     embeddedCode = "<img src=\"" + getThumbnail2().getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\" original-src=\"" + large.getUrl() + "\"/>";
                 }
                 else
