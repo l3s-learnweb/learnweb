@@ -1948,14 +1948,15 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void onMetadataFilterClick()
     {
         System.out.println("metadataFilter clicked");
+        emFilters = new ExtendedMetadataSearchFilters();
 
-        //set the filters of emFilters 
         emFilters.setFilterAuthors(selectedAuthors);
         emFilters.setFilterLangs(selectedLanguages);
         emFilters.setFilterLevels(selectedLevels);
         emFilters.setFilterMtypes(selectedMtypes);
         emFilters.setFilterPurposes(selectedPurposes);
         emFilters.setFilterTargets(selectedTargets);
+        emFilters.setFilterSources(selectedSources);
 
         int folderId = (selectedFolder != null && selectedFolder.getId() > 0) ? selectedFolder.getId() : 0;
 
@@ -1964,23 +1965,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         //emSearchBean.setSort("timestamp DESC");
 
         paginator = emSearchBean.getFilterResults(groupId, folderId, emFilters, getUser());
-
-        try
-        {
-            if(paginator.getCurrentPage() != null)
-            {
-                log.info(paginator.getCurrentPage().size());
-            }
-            else
-            {
-                log.info("paginator current page is null");
-            }
-        }
-        catch(SQLException | IOException | SolrServerException e)
-        {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
     }
 
 }
