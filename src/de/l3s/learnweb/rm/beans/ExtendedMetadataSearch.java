@@ -20,16 +20,14 @@ import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.rm.ExtendedMetadataSearchFilters;
 
-@ManagedBean
-@ViewScoped
-public class ExtendedMetadataSearchBean extends ApplicationBean implements Serializable
+public class ExtendedMetadataSearch implements Serializable
 {
 
     //populate search filter options (from MetadataSearchFilter.java) 
     //set selected values for each metadata search filter 
 
     private static final long serialVersionUID = 3635253409650813764L;
-    private final static Logger log = Logger.getLogger(ExtendedMetadataSearchBean.class);
+    private final static Logger log = Logger.getLogger(ExtendedMetadataSearch.class);
 
     private ExtendedMetadataSearchFilters mFilters = new ExtendedMetadataSearchFilters();
     private FilterPaginator filterPaginator;
@@ -44,7 +42,7 @@ public class ExtendedMetadataSearchBean extends ApplicationBean implements Seria
     private int userId;
     private List<ResourceDecorator> results = new LinkedList<ResourceDecorator>();
 
-    public ExtendedMetadataSearchBean(User user)
+    public ExtendedMetadataSearch(User user)
     {
 
         this.userId = user == null ? 0 : user.getId();
@@ -352,9 +350,9 @@ public class ExtendedMetadataSearchBean extends ApplicationBean implements Seria
     {
         private final static long serialVersionUID = 3823389610985272265L;
 
-        private final ExtendedMetadataSearchBean filter;
+        private final ExtendedMetadataSearch filter;
 
-        public FilterPaginator(ExtendedMetadataSearchBean filter)
+        public FilterPaginator(ExtendedMetadataSearch filter)
         {
             super(filter.getResultsPerPage());
             this.filter = filter;

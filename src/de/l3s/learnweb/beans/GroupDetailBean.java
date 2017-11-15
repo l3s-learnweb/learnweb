@@ -55,7 +55,7 @@ import de.l3s.learnweb.SearchFilters.Filter;
 import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.rm.ExtendedMetadataSearchFilters;
-import de.l3s.learnweb.rm.beans.ExtendedMetadataSearchBean;
+import de.l3s.learnweb.rm.beans.ExtendedMetadataSearch;
 import de.l3s.learnweb.solrClient.SolrSearch;
 import de.l3s.learnweb.solrClient.SolrSearch.SearchPaginator;
 import de.l3s.util.StringHelper;
@@ -138,8 +138,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     //Grid or List view of group resources
     private boolean gridView = false;
 
-    @ManagedProperty(value = "#{extendedMetadataSearchBean}")
-    private ExtendedMetadataSearchBean emSearchBean;
+    private ExtendedMetadataSearch emSearchBean;
 
     @ManagedProperty(value = "#{resourceDetailBean}")
     private ResourceDetailBean resourceDetailBean;
@@ -1935,12 +1934,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         this.selectedLevels = selectedLevels;
     }
 
-    public ExtendedMetadataSearchBean getEmSearchBean()
+    public ExtendedMetadataSearch getEmSearchBean()
     {
         return emSearchBean;
     }
 
-    public void setEmSearchBean(ExtendedMetadataSearchBean emSearchBean)
+    public void setEmSearchBean(ExtendedMetadataSearch emSearchBean)
     {
         this.emSearchBean = emSearchBean;
     }
@@ -1960,7 +1959,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
         int folderId = (selectedFolder != null && selectedFolder.getId() > 0) ? selectedFolder.getId() : 0;
 
-        emSearchBean = new ExtendedMetadataSearchBean(getUser());
+        emSearchBean = new ExtendedMetadataSearch(getUser());
         emSearchBean.setResultsPerPage(8);
         //emSearchBean.setSort("timestamp DESC");
 
