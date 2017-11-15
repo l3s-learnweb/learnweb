@@ -5,15 +5,11 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 
-	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east"
-		size="38%" resizable="false" closable="false" collapsible="false"
-		header="#{resourceDetailBean.clickedResource.id eq -1? msg.click_to_view_details : resourceDetailBean.clickedResource.title}"
-		id="right_pane">
+	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false"
+		header="#{resourceDetailBean.clickedResource.id eq -1? msg.click_to_view_details : resourceDetailBean.clickedResource.title}" id="right_pane">
 
-		<h:outputScript library="resource-pane-template"
-			name="resource-pane3.js" target="head" />
-		<h:outputStylesheet library="resource-pane-template"
-			name="resource-pane.css" />
+		<h:outputScript library="resource-pane-template" name="resource-pane3.js" target="head" />
+		<h:outputStylesheet library="resource-pane-template" name="resource-pane.css" />
 		<h:outputStylesheet library="lightbox" name="lightbox.css" />
 
 		<div id="right_pane_wrapper" class="right-panel">
@@ -48,6 +44,11 @@
 						{
 							$(".ui-layout-unit-header","#right_pane").html("#{msg.folder} - "+ folderTitle);
 						}
+						else if(#{bean.rightPanelAction == 'newFile'})
+						{
+							var header = "#{msg.create}" + ' ' + ($('#new_resource_type').val()=="Text"?"Document":$('#new_resource_type').val());
+							$(".ui-layout-unit-header","#right_pane").html(header);
+						}
 						else
 						{
 							$(".ui-layout-unit-header","#right_pane").html("#{msg.click_to_view_details}");
@@ -60,7 +61,16 @@
 					}
 					//update_header();
 				</script>
-
+                
+                <ui:fragment  rendered="#{bean.rightPanelAction == 'newFile'}">
+					<h:inputHidden id="new_resource_type" value="#{addResourceBean.resource.type}" />
+					<ui:decorate template="/templates/resources/createFile.xhtml">
+						<ui:param name="bean" value="#{bean}" />
+						<ui:param name="addResourceBean" value="#{addResourceBean}" />
+						<ui:param name="resourceDetailBean" value="#{resourceDetailBean}" />
+					</ui:decorate>
+				</ui:fragment> 
+				
 				<h:panelGroup id="add_resource_section"
 					rendered="#{bean.rightPanelAction == 'newResource'}"
 					styleClass="create-block new-resource" style="padding-bottom:2rem"
@@ -136,9 +146,53 @@
 											requiredmessage="#{msg.mandatory_field}" id="title_input" />
 									</p:column>
 								</p:row>
+								<p:row rendered="#{addResourceBean.resource.storageType == 4}">
+									<p:column>
+										<h:outputText value="#{msg.title}:" />
+									</p:column>
+									<p:column rendered="#{addResourceBean.formStep == 1}">
+										<p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="survey_title"/>
+									</p:column>
+									</p:row>
+									<p:row rendered="#{addResourceBean.resource.storageType == 4}">
+									<p:column>
+										<h:outputText value="#{msg.description}:" />
+									</p:column>
+									<p:column rendered="#{addResourceBean.formStep == 1}">
+										<p:inputText value="#{addResourceBean.resource.description}" styleClass="add_field"  id="survey_desc"/>
+									</p:column>
+									
+									</p:row>
+									<p:row rendered="#{addResourceBean.resource.storageType == 4}">
+									<p:column>
+										<h:outputText value="Courses: "/>
+									</p:column>
+									<p:column>
+									<p:selectCheckboxMenu id="courses" value="#{addResourceBean.resource.validCourses}" label="--ALL---" multiple="true"
+                              		filter="true" filterMatchMode="startsWith" >
+                         
+           							 <f:selectItems value="#{addResourceBean.getCourseList()}" />
+        							</p:selectCheckboxMenu>
+									</p:column>
+									</p:row>
+									<p:row rendered="#{addResourceBean.resource.storageType == 4}">
+									<p:column>
+										<h:outputText value="survey Open Date: " />
+									</p:column>
+									<p:column>	
+										<p:calendar id="open"  value="#{createsurveyBean.open}" showOn="button"></p:calendar>
+									</p:column>
+									</p:row>
+									<p:row rendered="#{addResourceBean.resource.storageType == 4}">
+									<p:column>	
+										<h:outputText  value="survey Close Date: " />
+									</p:column>
+									<p:column>	
+										<p:calendar id="close" value="#{createsurveyBean.close}" showOn="button"></p:calendar>
+									</p:column>
+									</p:row>
 
-								<p:row
-									rendered="#{addResourceBean.formStep > 1 and addResourceBean.resource.embeddedSize1 != null}">
+									<p:row rendered="#{addResourceBean.formStep > 1 and addResourceBean.resource.embeddedSize1 != null}">
 									<p:column>
 										<h:outputText value="#{msg.preview}:" />
 									</p:column>
@@ -172,7 +226,12 @@
 								target="#{resourceDetailBean.clickedResource}"
 								value="#{addResourceBean.resource}" />
 						</p:commandButton>
-
+                        <p:commandButton id="create_survey_button" value="Create survey" styleClass="greenbutton float-right" update=":growl :add_resource_panel :datagrid" 
+							action="#{addResourceBean.addsurvey}" ajax="true" oncomplete="update_header();resourceDND();" rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.storageType == 4}">
+							<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>
+							<f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"/>
+							<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{addResourceBean.resource}"/>
+						</p:commandButton>
 						<p:commandButton value="#{msg.cancel}"
 							styleClass="graybutton float-right" immediate="true"
 							actionListener="#{addResourceBean.cancelUpload}" ajax="true"
