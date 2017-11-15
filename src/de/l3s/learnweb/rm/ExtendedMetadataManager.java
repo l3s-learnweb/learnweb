@@ -98,6 +98,7 @@ public class ExtendedMetadataManager
         tlearners = Learnweb.getInstance().getAudienceManager().getAudienceNamesByResourceId(resourceId);
         tcount = sortMetadataValueCount(tlearners);
         eMetadata.setTargetCount(tcount);
+        eMetadata.setTargets(tlearners);
 
         //get purposes
         List<String> purposes = new LinkedList<String>();
@@ -106,6 +107,7 @@ public class ExtendedMetadataManager
         purposes = Learnweb.getInstance().getPurposeManager().getPurposeNamesByResourceId(resourceId);
         pcount = sortMetadataValueCount(purposes);
         eMetadata.setPurposeCount(pcount);
+        eMetadata.setPurposes(purposes);
 
         //lang levels
         List<String> langlevels = new LinkedList<String>();
@@ -114,6 +116,7 @@ public class ExtendedMetadataManager
         langlevels = Learnweb.getInstance().getLanglevelManager().getLanglevelNamesByResourceId(resourceId);
         lcount = sortMetadataValueCount(langlevels);
         eMetadata.setLevelCount(lcount);
+        eMetadata.setLevels(langlevels);
 
         String lc = "";
         for(Map.Entry<String, Integer> entry : lcount.entrySet())
