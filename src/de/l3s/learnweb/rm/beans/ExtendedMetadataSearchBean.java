@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.faces.bean.ManagedBean;
+import javax.faces.bean.ViewScoped;
+
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.AbstractPaginator;
@@ -17,8 +20,9 @@ import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.rm.ExtendedMetadataSearchFilters;
 
+@ManagedBean
+@ViewScoped
 public class ExtendedMetadataSearchBean extends ApplicationBean implements Serializable
-
 {
 
     //populate search filter options (from MetadataSearchFilter.java) 

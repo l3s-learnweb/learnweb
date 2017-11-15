@@ -1346,7 +1346,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     {
         if(embeddedCode == null)
         {
-            if(StringUtils.isNoneEmpty(getEmbeddedRaw()) && !getSource().equals("Yovisto")) // if the embedded code was explicitly defined then use it. Is necessary for slidesahre resources. The old flash best code of Yovisto does not work any more
+            if(StringUtils.isNoneEmpty(getEmbeddedRaw()) && !getSource().equals("Yovisto")) // if the embedded code was explicitly defined then use it. Is necessary for slidesahre resources. The old flash based code of Yovisto does not work any more
             {
                 embeddedCode = getEmbeddedRaw();
             }
@@ -1383,7 +1383,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
             if(embeddedCode == null)
             {
-                log.error("can't create embeddedCode for resource: " + toString(), new Exception());
+                log.warn("can't create embeddedCode for resource: " + toString());
 
                 if(getEmbeddedRaw() != null)
                     embeddedCode = getEmbeddedRaw();
