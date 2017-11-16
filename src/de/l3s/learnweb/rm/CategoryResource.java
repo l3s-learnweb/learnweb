@@ -1,14 +1,15 @@
 package de.l3s.learnweb.rm;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class CategoryResource implements Serializable
 {
     private static final long serialVersionUID = 8747926606454387782L;
     private int resourceId;
     private String topcatName;
-    private String[] midcatNames;
-    private String[] botcatNames;
+    private List<String> midcatNames;
+    private List<String> botcatNames;
 
     public CategoryResource()
     {
@@ -35,22 +36,22 @@ public class CategoryResource implements Serializable
         this.topcatName = topcatName;
     }
 
-    public String[] getMidcatNames()
+    public List<String> getMidcatNames()
     {
         return midcatNames;
     }
 
-    public void setMidcatNames(String[] midcatNames)
+    public void setMidcatNames(List<String> midcatNames)
     {
         this.midcatNames = midcatNames;
     }
 
-    public String[] getBotcatNames()
+    public List<String> getBotcatNames()
     {
         return botcatNames;
     }
 
-    public void setBotcatNames(String[] botcatNames)
+    public void setBotcatNames(List<String> botcatNames)
     {
         this.botcatNames = botcatNames;
     }
