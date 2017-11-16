@@ -370,7 +370,7 @@
 										</a>
 									</div>
 								</ui:fragment>
-								<ui:fragment rendered="${resourceDetailBean.clickedResource.isOfficeResource()}">
+								<ui:fragment rendered="${resourceDetailBean.clickedResource.isOfficeResource() and not (resourceDetailBean.clickedResource.onlineStatus eq 'OFFLINE')}">
 								
 									 <div class="preview_box editor_preview">
 									  	<h:inputHidden id="ed_user_id" value="#{userBean.user.id}" />

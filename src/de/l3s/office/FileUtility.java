@@ -21,11 +21,22 @@ public class FileUtility
 
     public static final List<String> EXT_PRESENTATION = Arrays.asList(".pps", ".ppsx", ".ppt", ".pptx", ".odp");
 
+    public static final List<String> EXT_DOCUMENT_CONVERT = Arrays.asList(".mht", ".docm", ".dot", ".dotm", ".dotx", ".fodt");
+
+    public static final List<String> EXT_SPREADSHEET_CONVERT = Arrays.asList(".fods", ".xlsm", ".xlt", ".xltm", ".xltx");
+
+    public static final List<String> EXT_PRESENTATION_CONVERT = Arrays.asList(".fodp", ".pot", ".potm", ".potx", ".pps", ".ppsx", ".pptm", ".ppsm");
+
     private static final String SAMPLE_PPTX = "sample.pptx";
 
     private static final String SAMPLE_XLSX = "sample.xlsx";
 
     private static final String SAMPLE_DOCX = "sample.docx";
+
+    public static boolean canBeViewed(String fileExt)
+    {
+        return !(EXT_DOCUMENT_CONVERT.contains(fileExt) || EXT_SPREADSHEET_CONVERT.contains(fileExt) || EXT_PRESENTATION_CONVERT.contains(fileExt));
+    }
 
     public static String getFileType(String fileName)
     {
