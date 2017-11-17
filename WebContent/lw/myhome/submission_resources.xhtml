@@ -64,7 +64,7 @@
 										<h:outputText styleClass="resource-preview-empty" escape="false" value='#{res.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' rendered="#{empty res.thumbnail1}"/>
 									</div>
 								</div>
-								<h:form class="resource-controls" rendered="${res.canDeleteResource(userBean.user)}">
+								<h:form class="resource-controls" rendered="#{not submitResourcesBean.submitted}">
 									<h:outputLink value="#" title="#{msg.delete}" styleClass="action-remove">
 										<h:graphicImage alt="Delete" value="../resources/icon/Remove.png"/>
 									</h:outputLink>

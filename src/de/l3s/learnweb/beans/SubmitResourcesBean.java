@@ -63,6 +63,8 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
     private List<Submission> currentSubmissions;
     private List<Submission> futureSubmissions;
 
+    private List<User> users; //To fetch list of users for a given course
+    private Map<Integer, Integer> userSubmissions; //to store map of user id and total no. of submissions
     @ManagedProperty(value = "#{resourceDetailBean}")
     private ResourceDetailBean resourceDetailBean;
 
@@ -507,4 +509,35 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         return Learnweb.getInstance().getSubmissionManager().getSubmissionsByCourse(getUser().getActiveCourseId());
     }
 
+    public List<User> getUsers() throws SQLException
+    {
+        if(users == null)
+        {
+            //HashMap<User, Integer> usersSubmissions = new HashMap<User, Integer>();
+            Integer courseId = getParameterInt("course_id");
+
+            if(courseId != null)
+            {
+                this.courseId = courseId;
+                users = getLearnweb().getCourseManager().getCourseById(courseId).getMembers();
+                userSubmissions = getLearnweb().getSubmissionManager().getUsersSubmissionsByCourseId(courseId);
+            }
+        }
+        return users;
+    }
+
+    public int getNumberOfSubmissions(int userId)
+    {
+        if(userSubmissions.containsKey(userId))
+            return userSubmissions.get(userId);
+
+        return 0;
+    }
+
+    public List<Submission> getActiveSubmissions()
+    {
+        if(currentSubmissions == null)
+            currentSubmissions = getLearnweb().getSubmissionManager().getActiveSubmissionsByCourse(getUser().getActiveCourseId());
+        return currentSubmissions;
+    }
 }

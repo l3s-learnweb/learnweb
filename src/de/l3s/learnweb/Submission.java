@@ -87,6 +87,12 @@ public class Submission
         this.noOfResources = noOfResources;
     }
 
+    public void setNoOfResources(String noOfResources)
+    {
+        if(noOfResources != null)
+            this.noOfResources = Integer.parseInt(noOfResources);
+    }
+
     public boolean isPastSubmission()
     {
         Date today = new Date();

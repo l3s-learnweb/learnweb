@@ -43,7 +43,7 @@
 							styleClass="resource_dialog_field"/>
 						<h:outputText value="#{msg['Submission.open_date']}"/> <p:calendar value="#{submitResourcesBean.selectedSubmission.openDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
 						<h:outputText value="#{msg['Submission.close_date']}"/> <p:calendar value="#{submitResourcesBean.selectedSubmission.closeDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
-						<h:outputText value="Max no. of resources"/> <p:inputNumber value="#{submitResourcesBean.selectedSubmission.noOfResources}"/>
+						<h:outputText value="#{msg['Submission.max_resources']}"/> <p:inputText value="#{submitResourcesBean.selectedSubmission.noOfResources}"/>
 						
 						<p:commandButton value="#{msg.save}" styleClass="greenbutton" onclick="PF('submission_edit_dialog').hide();" update=":submissions" actionListener="#{submitResourcesBean.updateSubmissionDetails()}" oncomplete="addSubmissionHeaderClickHandler();"/> <h:outputText value=""/> 
 					</h:panelGrid>	
@@ -59,7 +59,7 @@
 						styleClass="resource_dialog_field"/>
 					<h:outputText value="#{msg['Submission.open_date']}"/> <p:calendar value="#{submitResourcesBean.newSubmission.openDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
 					<h:outputText value="#{msg['Submission.close_date']}"/> <p:calendar value="#{submitResourcesBean.newSubmission.closeDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
-					<h:outputText value="Max no. of resources"/> <p:inputNumber value="#{submitResourcesBean.newSubmission.noOfResources}"/>
+					<h:outputText value="#{msg['Submission.max_resources']}"/> <p:inputText value="#{submitResourcesBean.newSubmission.noOfResources}"/>
 					
 					<p:commandButton value="#{msg.save}" styleClass="greenbutton" onclick="PF('create_submission_dialog').hide();" update=":submissions :create_submission_dialog1" actionListener="#{submitResourcesBean.createNewSubmission()}" oncomplete="addSubmissionHeaderClickHandler();"/> <h:outputText value=""/> 
 				</h:panelGrid>	
@@ -72,7 +72,9 @@
 				</span>
 			</div>
 			<h:panelGroup id="submissions" layout="block">
-				<h:outputText id="no_submissions" rendered="${submitResourcesBean.pastSubmissions.size() == 0 and submitResourcesBean.currentSubmissions.size() == 0 and submitResourcesBean.futureSubmissions.size() == 0}">There are no submissions for this course at the moment</h:outputText>
+				<div>
+					<h:outputText id="no_submissions" rendered="${submitResourcesBean.pastSubmissions.size() == 0 and submitResourcesBean.currentSubmissions.size() == 0 and submitResourcesBean.futureSubmissions.size() == 0}" value="#{msg['Submission.no_submissions_message']}"/>
+				</div>
 				<h:panelGroup id="past_submissions" layout="block" rendered="${submitResourcesBean.pastSubmissions.size() > 0}">
 					<div class="submission_header">
 						<div style="margin-top:10px;"><h1>#{msg['Submission.past_submissions']} (${submitResourcesBean.pastSubmissions.size()})</h1></div>
@@ -104,11 +106,11 @@
 					</div>
 				</h:panelGroup>
 				<br/>
-				<h:form>
-				<p:commandLink styleClass="greenbutton" style="margin-top:20px;text-decoration:none;" title="#{msg['Submission.create_new_submission']}" rendered="#{userBean.admin || userBean.moderator}"
-							process="@this" oncomplete="PF('create_submission_dialog').show();" update=":create_submission_dialog1">
-							#{msg['Submission.create_new_submission']}
-				</p:commandLink>
+				<h:form prependId="false">
+					<p:commandLink styleClass="greenbutton" style="margin-top:20px;text-decoration:none;" title="#{msg['Submission.create_new_submission']}" rendered="#{userBean.admin || userBean.moderator}"
+								process="@this" oncomplete="PF('create_submission_dialog').show();" update=":create_submission_dialog1">
+								#{msg['Submission.create_new_submission']}
+					</p:commandLink>
 				</h:form>
 			</h:panelGroup>			
 		</ui:define>

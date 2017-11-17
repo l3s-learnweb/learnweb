@@ -56,7 +56,12 @@
 						style="text-decoration:none;" title="#{msg.delete}">
 															
 						<h:graphicImage value="/resources/icon/silk/delete.png" width="16" height="16" alt="#{msg.delete}" />
-					</p:commandLink>						
+					</p:commandLink>
+					<span style="margin-left:5px;">
+						<h:outputLink value="admin/users_submissions.jsf?course_id=#{course.id}" title="#{msg['Submission.view_user_submissions']}">
+							 <h:graphicImage value="/resources/icon/user_submission.png" width="16" height="16" alt="#{msg['Submission.view_user_submissions']}" />
+						</h:outputLink>
+					</span>						
 				</p:column>
 			</p:dataTable>	
 		</h:form>

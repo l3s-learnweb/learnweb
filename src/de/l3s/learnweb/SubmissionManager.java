@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -31,6 +32,36 @@ public class SubmissionManager
         try
         {
             PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE course_id=? ORDER BY close_datetime");
+            ps.setInt(1, courseId);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                Submission s = new Submission();
+                s.setId(rs.getInt("submission_id"));
+                s.setCourseId(courseId);
+                s.setTitle(rs.getString("title"));
+                s.setDescription(rs.getString("description"));
+                s.setOpenDatetime(rs.getDate("open_datetime"));
+                s.setCloseDatetime(rs.getDate("close_datetime"));
+                s.setNoOfResources(rs.getInt("number_of_resources"));
+
+                submissions.add(s);
+            }
+        }
+        catch(SQLException e)
+        {
+            log.error("Error while retrieving submissions by course", e);
+        }
+
+        return submissions;
+    }
+
+    public ArrayList<Submission> getActiveSubmissionsByCourse(int courseId)
+    {
+        ArrayList<Submission> submissions = new ArrayList<Submission>();
+        try
+        {
+            PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE course_id=? AND close_datetime >= NOW() AND open_datetime < NOW() ORDER BY close_datetime");
             ps.setInt(1, courseId);
             ResultSet rs = ps.executeQuery();
             while(rs.next())
@@ -144,5 +175,25 @@ public class SubmissionManager
             log.error("Error while retrieving submitted resources for submission id: " + submissionId, e);
         }
         return submittedResources;
+    }
+
+    public HashMap<Integer, Integer> getUsersSubmissionsByCourseId(int courseId)
+    {
+        HashMap<Integer, Integer> usersSubmissions = new HashMap<Integer, Integer>();
+        try
+        {
+            PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT user_id, COUNT(*) as count FROM lw_submit_resource JOIN lw_submit USING(submission_id) WHERE course_id = ? GROUP BY user_id");
+            ps.setInt(1, courseId);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                usersSubmissions.put(rs.getInt("user_id"), rs.getInt("count"));
+            }
+        }
+        catch(SQLException e)
+        {
+            log.error("Error while retrieving number of submissions for users of course id: " + courseId, e);
+        }
+        return usersSubmissions;
     }
 }
