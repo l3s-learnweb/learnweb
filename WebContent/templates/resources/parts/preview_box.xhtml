@@ -1,0 +1,50 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:panelGroup layout="block" styleClass="preview_box" id="preview_box">
+        <c:choose>
+            <c:when test="#{resource.type eq 'video'}">
+                <div class="preview_box_wrapper" style="height:412px; width:100%;">
+                    <h:outputText value='#{resource.embedded}' escape="false"/>
+                </div>
+            </c:when>
+            <c:when test="#{resource.type eq 'website' and not empty resource.thumbnail3}">
+                <a target="_blank" class="preview_box_wrapper newsfeed_query_link" style="padding: 0" href="#{resource.urlProxied}">
+                    <img src="#{resource.thumbnail3.url}" height="#{resource.thumbnail3.height}" onmouseup="lightbox_open();" width="#{resource.thumbnail3.width}" style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"/>
+                </a>
+            </c:when>
+            <c:when test="#{resource.type eq 'website' and empty resource.thumbnail3}">
+                <div class="preview_box_wrapper preview_box_wrapper" style="display: inline-block">
+                    <a target="_blank" class="newsfeed_query_link" style="padding: 0" href="#{resource.urlProxied}">
+                        <h:outputText value='#{resource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>
+                    </a>
+                </div>
+            </c:when>
+            <c:when test="${resource.isOfficeResource() and not (resource.onlineStatus eq 'OFFLINE')}">
+                <div class="preview_box_wrapper editor_preview">
+                    <h:inputHidden id="ed_user_id" value="#{userBean.user.id}"/>
+                    <h:inputHidden id="ed_user_name" value="#{userBean.user.username}"/>
+                    <h:inputHidden id="ed_can_be_edited" value="#{resource.canEditResource(userBean.user)}"/>
+                    <ui:decorate template="/templates/resources/editor.xhtml"/>
+                    <p:commandButton onclick="load_lightbox_editor(); return false;" icon="fa fa-arrows-alt" styleClass="graybutton float-right" immediate="true" style="margin-top:1em;"/>
+                </div>
+            </c:when>
+            <c:when test="#{not empty resource.thumbnail3}">
+                <div class="preview_box_wrapper">
+                    <img src="#{resource.thumbnail3.url}" onmouseup="lightbox_open();"
+                         height="#{resource.thumbnail3.height}" width="#{resource.thumbnail3.width}"
+                         style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"/>
+                </div>
+            </c:when>
+            <c:otherwise>
+                <div class="preview_box_wrapper">
+                    <h:outputText value='#{resource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>
+                </div>
+            </c:otherwise>
+        </c:choose>
+    </h:panelGroup>
+</ui:composition>

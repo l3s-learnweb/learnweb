@@ -1,0 +1,97 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <h:outputStylesheet library="lightbox" name="lightbox.css"/>
+
+    <h:panelGroup layout="block" styleClass="lightbox" id="lightbox">
+        <div id="lightbox_background" onclick="lightbox_close();"></div>
+
+        <div id="lightbox_container">
+            <div id="lightbox_title">
+                <h:outputText value="#{resource.title}" escape="false"/>
+                <a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="close"></a>
+            </div>
+            <div id="lightbox_content">
+                <c:choose>
+                    <c:when test="#{resource.isOfficeResource()}">
+                        <div id="lightbox_editor"/>
+                    </c:when>
+                    <c:when test="#{resource.type eq 'pdf'}">
+                        <iframe src="#{resource.url}" style="width:100%; height:100%; "/>
+                    </c:when>
+                    <c:when test="#{resource.type eq 'image' or resource.type eq 'glossary' or resource.type eq 'survey'}">
+                        <img src="#{resource.thumbnail4.url}" height="#{resource.thumbnail4.height}" width="#{resource.thumbnail4.width}"
+                             style="height:auto; width:auto; max-height:100%; max-width:100%; display:block; margin:0 auto; position: relative; top: 50%; transform: translateY(-50%);-moz-transform:translateY(-50%);-webkit-transform:translateY(-50%); -o-transform:translateY(-50%);-ms-transform:translateY(-50%);"/>
+                    </c:when>
+                    <c:when test="#{resource.storageType == 2 and (resource.type eq 'text' or resource.type eq 'website')}">
+                        <div style="overflow:auto; height:100%; width:100%; text-align:center;">
+                            <img src="#{resource.thumbnail4.url}" height="#{resource.thumbnail4.height}" width="#{resource.thumbnail4.width}"/>
+                        </div>
+                    </c:when>
+                    <c:otherwise>
+                        <!-- TODO: add default block -->
+                    </c:otherwise>
+                </c:choose>
+
+                <!-- TODO: merge two blocks below into choose block above -->
+                <h:panelGroup layout="block" id="archive_lightbox_content" style="display:none;height:97%;" rendered="${not empty resource.archiveUrls and resource.canEditResource(userBean.user)}">
+                    <div id="archive_list">
+                        <ui:fragment rendered="${resource.archiveUrls.size() le 100}">
+                            <ul>
+                                <ui:repeat var="entry" value="#{resource.archiveUrls}">
+                                    <li>
+                                        <a href="#{entry.archiveUrl}" onclick="onclick_archive_url(event);">
+                                            <h:outputText value="${userBean.formatDate(entry.timestamp)}"/>
+                                        </a>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+                        </ui:fragment>
+                        <ui:fragment rendered="${resource.archiveUrls.size() gt 100}">
+                            <script type="text/javascript">archiveListInitialize();</script>
+                            <ul>
+                                <ui:repeat var="entry" value="#{resource.archiveUrlsAsYears.entrySet().toArray()}">
+                                    <li class="years">
+                                        <span>#{entry.key}</span>
+                                        <ul class="archive-versions">
+                                            <ui:repeat var="version" value="#{entry.value}">
+                                                <li>
+                                                    <a href="#{version.archiveUrl}" onclick="onclick_archive_url(event);">
+                                                        <h:outputText value="${userBean.formatDate(version.timestamp)}"/>
+                                                    </a>
+                                                </li>
+                                            </ui:repeat>
+                                        </ul>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+                        </ui:fragment>
+                    </div>
+                    <div id="archive_iframe_div">
+                        <iframe id="archive_iframe" data-src="#{resource.lastArchivedObject.archiveUrl}" style="width:100%; height:100%;"/>
+                    </div>
+                    <div id="archive_timestamp_overlay">
+                        <span id="archive_timestamp_overlay_text">
+                            #{msg["Archive.show_version"]}:
+                            <h:outputText id="archive_timestamp" value="${userBean.formatDate(resource.lastArchivedObject.timestamp)}"/>
+                        </span>
+                        <button id="set_thumbnail_button" class="greenbutton float-right" style="top:3px;right:3px;position:relative;" onclick="updateThumbnail();">#{msg["Archive.set_thumbnail"]}</button>
+                    </div>
+                </h:panelGroup>
+                <h:panelGroup rendered="${not empty resource.thumbnailUpdateInfo}">
+                    <div id="lightbox_footer">
+                        <span id="archive_timestamp_overlay_text">
+                            #{msg["Archive.thumbnail_update_info"]}:
+                            <h:outputText value="${userBean.formatDate(resource.thumbnailUpdateInfo.date)}"/>
+                            (#{msg.by} ${resource.thumbnailUpdateInfo.username})
+                        </span>
+                    </div>
+                </h:panelGroup>
+            </div>
+        </div>
+    </h:panelGroup>
+</ui:composition>

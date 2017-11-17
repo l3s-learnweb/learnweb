@@ -10,7 +10,6 @@
 
 		<h:outputScript library="resource-pane-template" name="resource-pane3.js" target="head"/>
 		<h:outputStylesheet library="resource-pane-template" name="resource-pane.css"/>
-		<h:outputStylesheet library="lightbox" name="lightbox.css"/>
 
 		<div id="right_pane_wrapper" class="right-panel">	
 			<h:panelGroup layout="block" id="add_resource_panel">					
@@ -244,7 +243,7 @@
 							oncomplete="update_header()" style="margin-right:0.5em;">
 							<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none"/>
 						</p:commandButton>	
-						
+
 						<br class="clear"/>							
 					</h:form>
 				</h:panelGroup>
@@ -256,141 +255,17 @@
 					<ui:fragment rendered="#{resourceDetailBean.clickedResource.canViewResource(userBean.user)}">			
 						<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'spreadsheet' or resourceDetailBean.clickedResource.type eq 'presentation' or resourceDetailBean.clickedResource.type eq 'document' or resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image' or resourceDetailBean.clickedResource.type eq 'glossary' or resourceDetailBean.clickedResource.type eq 'survey'}">
 							<div class="align-center" style="margin-top: 5px;">
-								<div id="lightbox">
-									<div id="lightbox_background" onclick="lightbox_close();"></div>
-									
-									<div id="lightbox_container">	
-										<div id="lightbox_title">
-											<h:outputText value="#{resourceDetailBean.clickedResource.title}" escape="false" />
-											<a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="close"></a>
-										</div>
-										<div id="lightbox_content">
-											<ui:fragment rendered="#{resourceDetailBean.clickedResource.isOfficeResource()}">
-												<div id="lightbox_editor" />
-											</ui:fragment>
-										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'pdf'}">
-											   	<iframe src="#{resourceDetailBean.clickedResource.url}" style="width:100%; height:100%; "/>
-										    </ui:fragment>
-										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.storageType == 2 and (resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website')}">
-											    <div style="overflow:auto; height:100%; width:100%; text-align:center;">
-											    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
-											    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
-											    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}" />
-											    </div>	
-										    </ui:fragment>
-										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'image' or resourceDetailBean.clickedResource.type eq 'glossary' or resourceDetailBean.clickedResource.type eq 'survey'}">
-										    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
-										    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
-										    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}"
-										    		style="height:auto; width:auto; max-height:100%; max-width:100%; display:block; margin:0 auto; position: relative; 
-										    		top: 50%; transform: translateY(-50%);-moz-transform:translateY(-50%);-webkit-transform:translateY(-50%);
-										    		-o-transform:translateY(-50%);-ms-transform:translateY(-50%);"/>	
-										    </ui:fragment>	
-										    <h:panelGroup layout="block" id="archive_lightbox_content" style="display:none;height:97%;" rendered="${not empty resourceDetailBean.clickedResource.archiveUrls and resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
-												<div id="archive_list">
-													<ui:fragment rendered="${resourceDetailBean.clickedResource.archiveUrls.size() le 100}">
-														<ul>
-															<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.archiveUrls}">
-																<li>
-																	<a href="#{entry.archiveUrl}" onclick="onclick_archive_url(event);">
-																		<h:outputText value="${userBean.formatDate(entry.timestamp)}"/>
-																	</a>
-																</li>
-															</ui:repeat>
-														</ul>
-													</ui:fragment>
-													<ui:fragment rendered="${resourceDetailBean.clickedResource.archiveUrls.size() gt 100}">
-														<script type="text/javascript">
-															archiveListInitialize();
-														</script>
-														<ul>
-															<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.archiveUrlsAsYears.entrySet().toArray()}">
-																<li class="years">
-																	<span>#{entry.key}</span>
-																	<ul class="archive-versions">
-																		<ui:repeat var="version" value="#{entry.value}">
-																				<li>
-																					<a href="#{version.archiveUrl}" onclick="onclick_archive_url(event);">
-																						<h:outputText value="${userBean.formatDate(version.timestamp)}"/>
-																					</a>
-																				</li>
-																		</ui:repeat>
-																	</ul>
-																</li>
-															</ui:repeat>
-														</ul>
-													</ui:fragment>
-												</div>
-												<div id="archive_iframe_div">
-													<iframe id="archive_iframe" data-src="#{resourceDetailBean.clickedResource.lastArchivedObject.archiveUrl}" style="width:100%; height:100%;"/>
-												</div>
-												<div id="archive_timestamp_overlay">
-													<span id="archive_timestamp_overlay_text">
-														#{msg["Archive.show_version"]}:
-														<h:outputText id="archive_timestamp" value="${userBean.formatDate(resourceDetailBean.clickedResource.lastArchivedObject.timestamp)}"/>
-													</span>
-													<button id="set_thumbnail_button" class="greenbutton float-right" style="top:3px;right:3px;position:relative;" onclick="updateThumbnail();">#{msg["Archive.set_thumbnail"]}</button>
-												</div>
-											</h:panelGroup>
-											<h:panelGroup rendered="${not empty resourceDetailBean.clickedResource.thumbnailUpdateInfo}">
-												<div id="lightbox_footer">
-													<span id="archive_timestamp_overlay_text">
-														#{msg["Archive.thumbnail_update_info"]}:
-														<h:outputText value="${userBean.formatDate(resourceDetailBean.clickedResource.thumbnailUpdateInfo.date)}"/>
-														(#{msg.by} ${resourceDetailBean.clickedResource.thumbnailUpdateInfo.username})
-													</span>
-												</div>
-											</h:panelGroup>					
-										</div>
-									</div>
-								</div>
+								<ui:decorate template="/templates/resources/parts/lightbox.xhtml">
+									<ui:param name="resource" value="#{resourceDetailBean.clickedResource}" />
+								</ui:decorate>
 
-								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type == 'video'}">
-									<div class="preview_box" style="height:412px; width:100%;">
-										<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
-									</div>
-								</ui:fragment>
-								<ui:fragment rendered="${resourceDetailBean.clickedResource.type != 'document' and resourceDetailBean.clickedResource.type != 'presentation' and resourceDetailBean.clickedResource.type != 'spreadsheet' and resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'video' and resourceDetailBean.clickedResource.type != 'image' and resourceDetailBean.clickedResource.type != 'glossary' and resourceDetailBean.clickedResource.type != 'survey' and resourceDetailBean.clickedResource.type != 'website'}">
-									<div class="preview_box">
-										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}'
-											escape="false"/>
-									</div>
-								</ui:fragment>
-								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'image' or resourceDetailBean.clickedResource.type eq 'glossary' or resourceDetailBean.clickedResource.type eq 'survey') and not empty resourceDetailBean.clickedResource.thumbnail3 or resourceDetailBean.clickedResource.type eq 'pdf'}">
-										<img class="preview_box" src="#{resourceDetailBean.clickedResource.thumbnail3.url}"
-											height="#{resourceDetailBean.clickedResource.thumbnail3.height}" onmouseup="lightbox_open();"
-											width="#{resourceDetailBean.clickedResource.thumbnail3.width}"
-											style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"/>	
-								</ui:fragment>
-								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website') and empty resourceDetailBean.clickedResource.thumbnail3}">
-									<div class="preview_box" style="display: inline-block">
-										<a target="_blank" class="newsfeed_query_link" style="padding: 0px" 
-											href="#{resourceDetailBean.clickedResource.urlProxied}">
-											<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>
-										</a>
-									</div>
-								</ui:fragment>
-								<ui:fragment rendered="${resourceDetailBean.clickedResource.isOfficeResource() and not (resourceDetailBean.clickedResource.onlineStatus eq 'OFFLINE')}">
-								
-									 <div class="preview_box editor_preview">
-									  	<h:inputHidden id="ed_user_id" value="#{userBean.user.id}" />
-		                                <h:inputHidden id="ed_user_name" value="#{userBean.user.username}" />
-										<h:inputHidden id="ed_can_be_edited" value="#{resourceDetailBean.clickedResource.canEditResource(userBean.user)}" />
-										<ui:decorate template="/templates/resources/editor.xhtml" />
-										<p:commandButton onclick="load_lightbox_editor(); return false;" icon="fa fa-arrows-alt" styleClass="graybutton float-right" immediate="true" style="margin-top:1em;"/>
-									</div> 					
-									
-								</ui:fragment>
-								
-								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'image') and empty resourceDetailBean.clickedResource.thumbnail3}">
-									<div class="preview_box">
-										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>
-									</div>
-								</ui:fragment>
+								<ui:decorate template="/templates/resources/parts/preview_box.xhtml">
+									<ui:param name="resource" value="#{resourceDetailBean.clickedResource}" />
+								</ui:decorate>
 							</div>
 							<div class="align-center" style="padding-top: 10px">
 								<a class="hyperlink" href="#{resourceDetailBean.clickedResource.urlProxied}" target="_blank">
-									<h:outputText styleClass="hyperlink" 
+									<h:outputText styleClass="hyperlink"
 										rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf'}"
 										value="#{resourceDetailBean.clickedResource.url}"/>
 								</a>
@@ -411,8 +286,6 @@
 								</h:outputLink> -->
 							</div>
 						</ui:fragment>
-					
-						
 						
 						<table id="resources_informations_table" class="full-width">
 	
@@ -795,122 +668,13 @@
 				<h:form rendered="#{bean.rightPanelAction == 'editResource' and resourceDetailBean.clickedResource.id != -1}" id="edit_form">
 						<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image'}">
 							<div class="align-center" style="margin-top: 5px;">
-								<div id="lightbox">
-									<div id="lightbox_background" onclick="lightbox_close();"></div>
-									
-									<div id="lightbox_container">	
-										<div id="lightbox_title">
-											<h:outputText value="#{resourceDetailBean.clickedResource.title}" escape="false" />
-											<a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="close"></a>
-										</div>
-										<div id="lightbox_content">
-											<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website'}">
-											    <div style="overflow:auto; height:100%; width:100%; text-align:center;">
-											    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
-											    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
-											    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}" />
-											    </div>	
-										    </ui:fragment>
-										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'pdf'}">
-											   	<iframe src="#{resourceDetailBean.clickedResource.url}" style="width:100%; height:100%; "/>
-										    </ui:fragment>
-										    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'image'}">
-										    	<img src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
-										    		height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
-										    		width="#{resourceDetailBean.clickedResource.thumbnail4.width}"
-										    		style="height:auto; width:auto; max-height:100%; max-width:100%; display:block; margin:0 auto; position: relative; 
-										    		top: 50%; transform: translateY(-50%);-moz-transform:translateY(-50%);-webkit-transform:translateY(-50%);
-										    		-o-transform:translateY(-50%);-ms-transform:translateY(-50%);"/>	
-										    </ui:fragment>	
-										    <h:panelGroup layout="block" id="archive_lightbox_content" style="display:none;height:97%;" rendered="${not empty resourceDetailBean.clickedResource.archiveUrls and resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
-												<div id="archive_list">
-													<ui:fragment rendered="${resourceDetailBean.clickedResource.archiveUrls.size() le 100}">
-														<ul>
-															<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.archiveUrls}">
-																<li>
-																	<a href="#{entry.archiveUrl}" onclick="onclick_archive_url(event);">
-																		<h:outputText value="${userBean.formatDate(entry.timestamp)}"/>
-																	</a>
-																</li>
-															</ui:repeat>
-														</ul>
-													</ui:fragment>
-													<ui:fragment rendered="${resourceDetailBean.clickedResource.archiveUrls.size() gt 100}">
-														<script type="text/javascript">
-															archiveListInitialize();
-														</script>
-														<ul>
-															<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.archiveUrlsAsYears.entrySet().toArray()}">
-																<li class="years">
-																	<span>#{entry.key}</span>
-																	<ul class="archive-versions">
-																		<ui:repeat var="version" value="#{entry.value}">
-																				<li>
-																					<a href="#{version.archiveUrl}" onclick="onclick_archive_url(event);">
-																						<h:outputText value="${userBean.formatDate(version.timestamp)}"/>
-																					</a>
-																				</li>
-																		</ui:repeat>
-																	</ul>
-																</li>
-															</ui:repeat>
-														</ul>
-													</ui:fragment>
-												</div>
-												<div id="archive_iframe_div">
-													<iframe id="archive_iframe" data-src="#{resourceDetailBean.clickedResource.lastArchivedObject.archiveUrl}" style="width:100%; height:100%;"/>
-												</div>
-												<div id="archive_timestamp_overlay">
-													<span id="archive_timestamp_overlay_text">
-														#{msg["Archive.show_version"]}:
-														<h:outputText id="archive_timestamp" value="${userBean.formatDate(resourceDetailBean.clickedResource.lastArchivedObject.timestamp)}"/>
-													</span>
-													<button id="set_thumbnail_button" class="greenbutton float-right" style="top:3px;right:3px;position:relative;" onclick="updateThumbnail();">#{msg["Archive.set_thumbnail"]}</button>
-												</div>
-											</h:panelGroup>
-											<h:panelGroup rendered="${not empty resourceDetailBean.clickedResource.thumbnailUpdateInfo}">
-												<div id="lightbox_footer">
-													<span id="archive_timestamp_overlay_text">
-														#{msg["Archive.thumbnail_update_info"]}:
-														<h:outputText value="${userBean.formatDate(resourceDetailBean.clickedResource.thumbnailUpdateInfo.date)}"/>
-														(#{msg.by} ${resourceDetailBean.clickedResource.thumbnailUpdateInfo.username})
-													</span>
-												</div>
-											</h:panelGroup>					
-										</div>
-									</div>
-								</div>				
-			
-								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type == 'video'}">
-									<div class="preview_box" style="height:412px; width:100%;">
-										<h:outputText value='#{resourceDetailBean.clickedResource.embedded}' escape="false" />
-									</div>
-								</ui:fragment>								
-								<ui:fragment rendered="#{resourceDetailBean.clickedResource.type != 'text' and resourceDetailBean.clickedResource.type != 'website' and resourceDetailBean.clickedResource.type != 'pdf' and resourceDetailBean.clickedResource.type != 'video' and resourceDetailBean.clickedResource.type != 'image'}">
-									<div class="preview_box">
-										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}'
-											escape="false"/>
-									</div>
-								</ui:fragment>
-								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'image') and not empty resourceDetailBean.clickedResource.thumbnail3 or resourceDetailBean.clickedResource.type eq 'pdf'}">
-										b<img class="preview_box" src="#{resourceDetailBean.clickedResource.thumbnail3.url}"
-											height="#{resourceDetailBean.clickedResource.thumbnail3.height}" onmouseup="lightbox_open();"
-											width="#{resourceDetailBean.clickedResource.thumbnail3.width}"
-											style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"/>	
-								</ui:fragment>
-								<ui:fragment rendered="${(resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website') and empty resourceDetailBean.clickedResource.thumbnail3}">
-									<div class="preview_box" style="display: inline-block">
-										<a target="_blank" class="newsfeed_query_link" style="padding: 0px" 
-											href="#{resourceDetailBean.clickedResource.urlProxied}">
-											<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>
-										</a>
-									</div>
-								</ui:fragment>
-								<ui:fragment rendered="${resourceDetailBean.clickedResource.type eq 'image' and empty resourceDetailBean.clickedResource.thumbnail3}">
-									<div class="preview_box">c
-										<h:outputText value='#{resourceDetailBean.clickedResource.embeddedSize3.replaceAll("/>","").replaceAll(">","").concat(" style=\"max-width:100%\" />")}' escape="false"/>
-									</div>
-								</ui:fragment>
+                                <ui:decorate template="/templates/resources/parts/lightbox.xhtml">
+                                    <ui:param name="resource" value="#{resourceDetailBean.clickedResource}" />
+                                </ui:decorate>
+
+                                <ui:decorate template="/templates/resources/parts/preview_box.xhtml">
+                                    <ui:param name="resource" value="#{resourceDetailBean.clickedResource}" />
+                                </ui:decorate>
 							</div>
 							<div class="align-center" style="padding-top: 10px">
 								<a class="hyperlink" href="#{resourceDetailBean.clickedResource.urlProxied}" target="_blank">
@@ -928,7 +692,6 @@
 							</div>
 						</ui:fragment>
 
-	    
 					<table id="edit_table" class="full-width">
 						<colgroup>
 							<col span="1" style="width: 10%; min-width: 10rem;" />
