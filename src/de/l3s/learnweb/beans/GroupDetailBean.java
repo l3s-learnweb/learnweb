@@ -1530,7 +1530,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 return;
             }
 
-            if(targetGroupId != 0 && !canEditResourcesInGroup(targetGroup))
+            if(targetGroup != null && !canEditResourcesInGroup(targetGroup))
             {
                 addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to add new resources in target group");
                 return;
