@@ -7,6 +7,9 @@ public class CategoryResource implements Serializable
 {
     private static final long serialVersionUID = 8747926606454387782L;
     private int resourceId;
+    private int topcatId;
+    private int midcatId;
+    private int botcatId;
     private String topcatName;
     private List<String> midcatNames;
     private List<String> botcatNames;
@@ -54,6 +57,36 @@ public class CategoryResource implements Serializable
     public void setBotcatNames(List<String> botcatNames)
     {
         this.botcatNames = botcatNames;
+    }
+
+    public int getTopcatId()
+    {
+        return topcatId;
+    }
+
+    public void setTopcatId(int topcatId)
+    {
+        this.topcatId = topcatId;
+    }
+
+    public int getMidcatId()
+    {
+        return midcatId;
+    }
+
+    public void setMidcatId(int midcatId)
+    {
+        this.midcatId = midcatId;
+    }
+
+    public int getBotcatId()
+    {
+        return botcatId;
+    }
+
+    public void setBotcatId(int botcatId)
+    {
+        this.botcatId = botcatId;
     }
 
 }

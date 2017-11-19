@@ -20,6 +20,7 @@ public class CategoryManager
     private final static String COLUMNS_TOP = "cat_top_id, cat_top_name";
     private final static String COLUMNS_MID = "cat_mid_id, cat_mid_name, cat_top_id";
     private final static String COLUMNS_BOT = "cat_bot_id, cat_bot_name, cat_mid_id";
+    private final static String COLUMNS_CATRESOURCE = "resource_id, cat_top_id, cat_mid_id, cat_bot_id";
 
     private Learnweb learnweb;
 
@@ -31,6 +32,23 @@ public class CategoryManager
 
         this.learnweb = learnweb;
         /* this.cache = userCacheSize == 0 ? new DummyCache<User>() : new Cache<User>(userCacheSize);*/
+    }
+
+    //get category_resource for a given resource Id
+    public List<CategoryResource> getCategoryResourcesByResourceId(int resourceId) throws SQLException
+    {
+        List<CategoryResource> cresources = new ArrayList<CategoryResource>();
+        List<Category> categories = new LinkedList<Category>();
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_CATRESOURCE + " FROM `lw_resource_category` WHERE resource_id = ?");
+        select.setInt(1, resourceId);
+        ResultSet rs = select.executeQuery();
+        while(rs.next())
+        {
+            cresources.add(createCategoryResource(rs));
+        }
+        select.close();
+
+        return cresources;
     }
 
     //get category list for a given resource ID 
@@ -340,7 +358,31 @@ public class CategoryManager
         return cattop.getId();
     }
 
-    //get middle category given the name 
+    //get bottom categoryId given the name
+    public int getCategoryBottomByName(String catbotName) throws SQLException
+    {
+        CategoryBottom catbot = new CategoryBottom();
+        if(catbotName == null)
+        {
+            new IllegalArgumentException("invalid bottom category name was requested: " + catbotName).printStackTrace();
+        }
+
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_BOT + " FROM `lw_rm_catbot` WHERE cat_bot_name = ?");
+        select.setString(1, catbotName);
+        ResultSet rs = select.executeQuery();
+
+        if(!rs.next())
+        {
+            new IllegalArgumentException("invalid cat bot name was requested: " + catbotName).printStackTrace();
+            return -1;
+        }
+        catbot = createCategoryBottom(rs);
+        select.close();
+
+        return catbot.getId();
+    }
+
+    //get middle categoryId given the name 
     public int getCategoryMiddleByName(String catmidName) throws SQLException
     {
         CategoryMiddle catmid = new CategoryMiddle();
@@ -365,6 +407,77 @@ public class CategoryManager
         return catmid.getId();
     }
 
+    //get top category given the name
+    public CategoryTop getTopCategoryByName(String cattopName) throws SQLException
+    {
+        CategoryTop cattop = new CategoryTop();
+        if(cattopName == null)
+        {
+            new IllegalArgumentException("invalid top category name was requested: " + cattopName).printStackTrace();
+        }
+
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_TOP + " FROM `lw_rm_cattop` WHERE cat_top_name = ?");
+        select.setString(1, cattopName);
+        ResultSet rs = select.executeQuery();
+
+        if(!rs.next())
+        {
+            new IllegalArgumentException("invalid cat top name was requested: " + cattopName).printStackTrace();
+        }
+        cattop = createCategoryTop(rs);
+        select.close();
+        return cattop;
+    }
+
+    //get middle category given the name
+    public CategoryMiddle getMiddleCategoryByName(String catmidName) throws SQLException
+    {
+        CategoryMiddle catmid = new CategoryMiddle();
+        if(catmidName == null)
+        {
+            new IllegalArgumentException("invalid middle category name was requested: " + catmidName).printStackTrace();
+        }
+
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_MID + " FROM `lw_rm_catmid` WHERE cat_mid_name = ?");
+        select.setString(1, catmidName);
+        ResultSet rs = select.executeQuery();
+
+        if(!rs.next())
+        {
+            new IllegalArgumentException("invalid cat mid name was requested: " + catmidName).printStackTrace();
+        }
+
+        catmid = createCategoryMiddle(rs);
+        select.close();
+        return catmid;
+    }
+
+    //get bottom category given the name 
+    public CategoryBottom getBottomCategoryByName(String catbotName) throws SQLException
+    {
+        CategoryBottom catbot = new CategoryBottom();
+
+        if(catbotName == null)
+        {
+            new IllegalArgumentException("invalid bottom category name was requested: " + catbotName).printStackTrace();
+        }
+
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_BOT + " FROM `lw_rm_catbot` WHERE cat_bot_name =?");
+        select.setString(1, catbotName);
+        ResultSet rs = select.executeQuery();
+
+        if(!rs.next())
+        {
+            new IllegalArgumentException("invalid cat mid name was requested: " + catbotName).printStackTrace();
+        }
+        else
+        {
+            catbot = createCategoryBottom(rs);
+            select.close();
+        }
+        return catbot;
+    }
+
     //save new bottom category given the name and midcatId 
     public int saveNewBottomCategory(String catbotName, int catmidId) throws SQLException
     {
@@ -381,6 +494,20 @@ public class CategoryManager
         catbotId = rs.getInt(1);
         replace.close();
         return catbotId;
+    }
+
+    //create category_resource
+    @SuppressWarnings("unchecked")
+    private CategoryResource createCategoryResource(ResultSet rs) throws SQLException
+    {
+
+        CategoryResource catresource = new CategoryResource();
+        catresource.setResourceId(rs.getInt("resource_id"));
+        catresource.setTopcatId(rs.getInt("cat_top_id"));
+        catresource.setMidcatId(rs.getInt("cat_mid_id"));
+        catresource.setBotcatId(rs.getInt("cat_bot_id"));
+
+        return catresource;
     }
 
     //create category
