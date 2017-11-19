@@ -20,7 +20,6 @@ import de.l3s.learnweb.User;
 @ManagedBean
 public class SurveyBean extends ApplicationBean implements Serializable
 {
-
     private static final long serialVersionUID = -6217166153267996666L;
     private static final Logger log = Logger.getLogger(SurveyBean.class);
     private int resource_id; //change this when there is a way to generate Survey type resource
@@ -47,7 +46,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
 
     public SurveyBean()
     {
-        System.out.println("Constructor is initialized");
+        // to nothing constructor
     }
 
     public void preRenderView()

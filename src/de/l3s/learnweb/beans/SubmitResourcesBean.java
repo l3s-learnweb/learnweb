@@ -42,7 +42,6 @@ import de.l3s.util.StringHelper;
 @ViewScoped
 public class SubmitResourcesBean extends ApplicationBean implements Serializable
 {
-
     private static final long serialVersionUID = -2494290373382483709L;
     private final static Logger log = Logger.getLogger(SubmitResourcesBean.class);
 

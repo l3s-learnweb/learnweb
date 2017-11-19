@@ -131,11 +131,12 @@
 
 			<p:panel header="#{msg.error}">
 		
-				<p class="error">#{msg.fatal_error}</p>
+				<p class="error" onclick="$('#stacktrace').fadeIn();">#{msg.fatal_error}</p>
 				
-				<h:outputText value="Message:#{pfExceptionHandler.message}" />
-				<h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
-	
+				<div id="stacktrace" class="display-none">
+					<h:outputText value="Message:#{pfExceptionHandler.message}" />
+					<h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
+				</div>
 			</p:panel>
 		</section>
 		

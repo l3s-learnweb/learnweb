@@ -21,6 +21,11 @@ public class UserDetailBean extends ApplicationBean
     private User user;
     private boolean pageHidden = false; // true when the course uses username anonymization
 
+    public UserDetailBean()
+    {
+        // to nothing constructor
+    }
+
     public int getUserId()
     {
         return userId;

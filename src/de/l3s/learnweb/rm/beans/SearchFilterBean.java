@@ -52,8 +52,12 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
     private List<String> catbots;
     private int topDefaultId = 1;
 
-    @PostConstruct
+    public SearchFilterBean()
+    {
+        // do nothing constructor
+    }
 
+    @PostConstruct
     public void init()
     {
         //reset variable lists
@@ -160,6 +164,7 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         levels.add("A2");
         levels.add("A1");
 
+        log.debug("init: " + levels);
     }
 
     //mtypes getter and setter
@@ -260,6 +265,7 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
 
     public List<String> getLevels()
     {
+        log.debug("get level " + levels);
         return levels;
     }
 
