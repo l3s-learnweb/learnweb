@@ -6,9 +6,6 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
-
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.AbstractPaginator;
@@ -17,7 +14,8 @@ import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.ResourceManager;
 import de.l3s.learnweb.User;
-import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.rm.CategoryManager;
+import de.l3s.learnweb.rm.CategoryResource;
 import de.l3s.learnweb.rm.ExtendedMetadataSearchFilters;
 
 public class ExtendedMetadataSearch implements Serializable
@@ -38,7 +36,7 @@ public class ExtendedMetadataSearch implements Serializable
     private String sorting;
     private String groupField = "";
 
-    protected long totalResults = -1;
+    private int totalResults = 0;
     private int userId;
     private List<ResourceDecorator> results = new LinkedList<ResourceDecorator>();
 
@@ -47,6 +45,110 @@ public class ExtendedMetadataSearch implements Serializable
 
         this.userId = user == null ? 0 : user.getId();
 
+    }
+
+    public FilterPaginator getUnFilteredResults(List<Resource> groupResources)
+    {
+        FilterPaginator ufPaginator = new FilterPaginator(this);
+        setTotalResults(groupResources.size());
+        this.results = convertToFinalResults(groupResources);
+        return ufPaginator;
+    }
+
+    public FilterPaginator getCatFilterResults(List<Resource> gResources, String catName, String catLevel) throws SQLException
+    {
+        log.info(catLevel);
+
+        FilterPaginator cPaginator = new FilterPaginator(this);
+        List<Resource> cFinalResults = new ArrayList<Resource>();
+
+        if(gResources.size() > 0)
+        {
+            if(catLevel.equalsIgnoreCase("0"))
+            {
+                cFinalResults = gResources;
+            }
+            else
+            {
+                for(int i = 0; i < gResources.size(); i++)
+                {
+                    String result = filterByCategory(gResources.get(i).getId(), catName, catLevel);
+
+                    if(result.equalsIgnoreCase("yes"))
+                    {
+                        cFinalResults.add(gResources.get(i));
+                    }
+                }
+            }
+        }
+
+        log.info("cfinalresults are " + cFinalResults.size());
+
+        setTotalResults(cFinalResults.size());
+
+        log.info("total results is " + this.totalResults);
+
+        this.results = convertToFinalResults(cFinalResults);
+
+        log.info("cfinalresults are " + cFinalResults.size());
+
+        setTotalResults(cFinalResults.size());
+
+        log.info("total results is " + this.totalResults);
+
+        this.results = convertToFinalResults(cFinalResults);
+
+        return cPaginator;
+    }
+
+    public String filterByCategory(int resourceId, String cname, String stype) throws SQLException
+    {
+
+        String result = "no";
+        CategoryManager cm = Learnweb.getInstance().getCategoryManager();
+
+        List<CategoryResource> cr = new ArrayList<CategoryResource>();
+        cr = cm.getCategoryResourcesByResourceId(resourceId);
+
+        if(cr.size() > 0)
+        {
+            if(stype.equals("1"))
+            {
+
+                int topcat_id = cm.getCategoryTopByName(cname);
+                for(int i = 0; i < cr.size(); i++)
+                {
+                    if(topcat_id == cr.get(i).getTopcatId())
+                    {
+                        result = "yes";
+                    }
+                }
+            }
+            else if(stype.equals("2"))
+            {
+                int midcat_id = cm.getCategoryMiddleByName(cname);
+                for(int i = 0; i < cr.size(); i++)
+                {
+                    if(midcat_id == cr.get(i).getMidcatId())
+                    {
+                        result = "yes";
+                    }
+                }
+            }
+            else
+            {
+                int botcat_id = cm.getCategoryBottomByName(cname);
+                for(int i = 0; i < cr.size(); i++)
+                {
+                    if(botcat_id == cr.get(i).getBotcatId())
+                    {
+                        result = "yes";
+                    }
+                }
+            }
+        }
+
+        return result;
     }
 
     public FilterPaginator getFilterResults(int groupId, int folderId, ExtendedMetadataSearchFilters emFilters, User user)
@@ -127,7 +229,6 @@ public class ExtendedMetadataSearch implements Serializable
             }
         }
 
-        log.info("before setting paginator, the final result size is" + filterResults.size());
         //convert the final filterResults into list of resource decorator
         setTotalResults(filterResults.size());
         this.results = convertToFinalResults(filterResults);
@@ -378,7 +479,7 @@ public class ExtendedMetadataSearch implements Serializable
     {
         List<ResourceDecorator> presources = new LinkedList<ResourceDecorator>();
         List<ResourceDecorator> resources = this.results;
-        int startIndex;
+        int startIndex = 0;
 
         if(currentPage == 1)
         {
@@ -388,6 +489,7 @@ public class ExtendedMetadataSearch implements Serializable
         {
             startIndex = (currentPage - 1) * this.resultsPerPage;
         }
+
         int endIndex = startIndex + this.resultsPerPage;
 
         for(int i = 0; i < resources.size(); i++)
@@ -466,7 +568,7 @@ public class ExtendedMetadataSearch implements Serializable
         return totalResults;
     }
 
-    public void setTotalResults(long totalResults)
+    public void setTotalResults(int totalResults)
     {
         this.totalResults = totalResults;
     }
