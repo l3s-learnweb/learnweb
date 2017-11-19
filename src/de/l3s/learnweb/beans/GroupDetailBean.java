@@ -33,6 +33,8 @@ import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
+import com.google.gson.Gson;
+
 import de.l3s.learnweb.AbstractPaginator;
 import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.GoogleDriveManager;
@@ -54,6 +56,7 @@ import de.l3s.learnweb.SearchFilters;
 import de.l3s.learnweb.SearchFilters.Filter;
 import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.rm.CategoryTree;
 import de.l3s.learnweb.rm.ExtendedMetadataSearchFilters;
 import de.l3s.learnweb.rm.beans.ExtendedMetadataSearch;
 import de.l3s.learnweb.solrClient.SolrSearch;
@@ -134,11 +137,17 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private String[] selectedPurposes;
     private String[] selectedLanguages;
     private String[] selectedLevels;
+    private String selectedCatNode;
 
     //Grid or List view of group resources
     private boolean gridView = false;
 
+    //for extended Metadata filter search
     private ExtendedMetadataSearch emSearchBean;
+
+    //for category filter search
+    private CategoryTree groupCatTree;
+    private String groupCatJson; //JSONified groupCatTree for javascript function
 
     @ManagedProperty(value = "#{resourceDetailBean}")
     private ResourceDetailBean resourceDetailBean;
@@ -1934,6 +1943,16 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         this.selectedLevels = selectedLevels;
     }
 
+    public String getSelectedCatNode()
+    {
+        return selectedCatNode;
+    }
+
+    public void setSelectedCatNode(String selectedCatNode)
+    {
+        this.selectedCatNode = selectedCatNode;
+    }
+
     public ExtendedMetadataSearch getEmSearchBean()
     {
         return emSearchBean;
@@ -1942,6 +1961,62 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void setEmSearchBean(ExtendedMetadataSearch emSearchBean)
     {
         this.emSearchBean = emSearchBean;
+    }
+
+    public CategoryTree getGroupCatTree() throws SQLException
+    {
+        if(groupCatTree == null)
+        {
+            groupCatTree = createGroupCatTree(this.group.getResources());
+        }
+        return groupCatTree;
+    }
+
+    private CategoryTree createGroupCatTree(List<Resource> resources) throws SQLException
+    {
+        CategoryTree cattree;
+
+        cattree = new CategoryTree(resources);
+
+        return cattree;
+    }
+
+    public String getGroupCatJson() throws SQLException
+    {
+        if(groupCatJson == null)
+        {
+            this.groupCatTree = getGroupCatTree();
+        }
+
+        Gson gson = new Gson();
+        this.groupCatJson = gson.toJson(this.groupCatTree);
+
+        return groupCatJson;
+    }
+
+    public void setGroupCatJson(String groupCatJson)
+    {
+        this.groupCatJson = groupCatJson;
+    }
+
+    public void setGroupCatTree(CategoryTree groupCatTree)
+    {
+        this.groupCatTree = groupCatTree;
+    }
+
+    //category filtering method called from javascript(Learnweb_chloe_v2.js) via remotecommand 
+    public void onCategoryFilterClick() throws SQLException
+    {
+        String catname = getParameter("catname");
+        String catlevel = getParameter("catlevel");
+
+        this.selectedCatNode = catname;
+
+        emSearchBean = new ExtendedMetadataSearch(getUser());
+        emSearchBean.setResultsPerPage(8);
+        List<Resource> gResources = group.getResources();
+
+        paginator = emSearchBean.getCatFilterResults(gResources, catname, catlevel);
     }
 
     //extended metadata filtering methods and returns filter results (paginator) 
