@@ -432,6 +432,9 @@ public class ExtendedMetadataSearch implements Serializable
 
     public long getTotalResultCount()
     {
+        if(totalResults == -1)
+            log.warn("invalid state total results should not be -1");
+
         if(totalResults < 0)
         {
             return 0;
@@ -450,6 +453,8 @@ public class ExtendedMetadataSearch implements Serializable
         {
             super(filter.getResultsPerPage());
             this.filter = filter;
+
+            log.debug("created new FilterPaginator");
         }
 
         @Override

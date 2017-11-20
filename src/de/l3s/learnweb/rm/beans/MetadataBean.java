@@ -25,11 +25,15 @@ public class MetadataBean extends ApplicationBean implements Serializable
     private ExtendedMetadata em;
     private String category = "empty";
 
+    public MetadataBean()
+    {
+        // don't delete this contructor. It is required by the Java Bean conventions
+    }
+
     public void loadMetadata()
     {
         if(null != resource)
         {
-
             try
             {
                 em = resource.getExtendedMetadata();

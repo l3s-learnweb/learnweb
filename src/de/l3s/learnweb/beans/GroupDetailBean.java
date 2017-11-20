@@ -143,7 +143,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private boolean gridView = false;
 
     //for extended Metadata filter search
-    private ExtendedMetadataSearch emSearchBean;
+    private ExtendedMetadataSearch extendedMetadataSearch;
 
     //for category filter search
     private CategoryTree groupCatTree;
@@ -1953,16 +1953,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         this.selectedCatNode = selectedCatNode;
     }
 
-    public ExtendedMetadataSearch getEmSearchBean()
-    {
-        return emSearchBean;
-    }
-
-    public void setEmSearchBean(ExtendedMetadataSearch emSearchBean)
-    {
-        this.emSearchBean = emSearchBean;
-    }
-
     public CategoryTree getGroupCatTree() throws SQLException
     {
         if(groupCatTree == null)
@@ -2007,8 +1997,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     //category filtering method called from javascript(Learnweb_chloe_v2.js) via remotecommand 
     public void onCategoryFilterClick() throws SQLException
     {
-        emSearchBean = new ExtendedMetadataSearch(getUser());
-        emSearchBean.setResultsPerPage(8);
+        extendedMetadataSearch = new ExtendedMetadataSearch(getUser());
+        extendedMetadataSearch.setResultsPerPage(8);
 
         String catname = getParameter("catname");
         String catlevel = getParameter("catlevel");
@@ -2017,7 +2007,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
         List<Resource> gResources = group.getResources();
 
-        paginator = emSearchBean.getCatFilterResults(gResources, catname, catlevel);
+        paginator = extendedMetadataSearch.getCatFilterResults(gResources, catname, catlevel);
     }
 
     //extended metadata filtering methods and returns filter results (paginator) 
@@ -2036,11 +2026,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
         int folderId = (selectedFolder != null && selectedFolder.getId() > 0) ? selectedFolder.getId() : 0;
 
-        emSearchBean = new ExtendedMetadataSearch(getUser());
-        emSearchBean.setResultsPerPage(8);
+        extendedMetadataSearch = new ExtendedMetadataSearch(getUser());
+        extendedMetadataSearch.setResultsPerPage(8);
         //emSearchBean.setSort("timestamp DESC");
 
-        paginator = emSearchBean.getFilterResults(groupId, folderId, emFilters, getUser());
+        paginator = extendedMetadataSearch.getFilterResults(groupId, folderId, emFilters, getUser());
     }
 
 }
