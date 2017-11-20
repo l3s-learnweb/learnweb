@@ -300,7 +300,7 @@
 					<ui:fragment
 						rendered="#{resourceDetailBean.clickedResource.canViewResource(userBean.user)}">
 						<ui:fragment
-							rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image'}">
+							rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image' or resourceDetailBean.clickedResource.type eq 'website'}">
 							<div class="align-center" style="margin-top: 5px;">
 								<div id="lightbox">
 									<div id="lightbox_background" onclick="lightbox_close();"></div>
@@ -316,6 +316,16 @@
 										<div id="lightbox_content">
 											<ui:fragment
 												rendered="#{resourceDetailBean.clickedResource.type eq 'text'}">
+												<div
+													style="overflow: auto; height: 100%; width: 100%; text-align: center;">
+													<img
+														src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
+														height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
+														width="#{resourceDetailBean.clickedResource.thumbnail4.width}" />
+												</div>
+											</ui:fragment>
+											<ui:fragment
+												rendered="#{resourceDetailBean.clickedResource.type eq 'website'}">
 												<div
 													style="overflow: auto; height: 100%; width: 100%; text-align: center;">
 													<img
