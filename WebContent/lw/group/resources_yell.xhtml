@@ -152,10 +152,6 @@
 	<p:tabView id="tabs">
 		<p:tab id="keyword_tab" title="Keyword Search">
 			<h:form id="header_query_form" prependId="false">
-				<img alt=""
-					src="#{request.contextPath}/resources/main-template/img/search.png"
-					height="20" width="20" id="search_group_resource"
-					style="padding: 0px 15px; cursor: pointer; vertical-align: bottom;" />
 				<h:inputText style="width: 400px; padding: 3px 0;"
 					value="#{groupDetailBean.query}" id="input_query_form"
 					onkeyup="if (event.keyCode == 13) {document.getElementById('group_resource_searchbutton').click(); return false; }" />
