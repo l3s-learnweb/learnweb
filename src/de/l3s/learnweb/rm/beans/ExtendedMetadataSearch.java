@@ -161,7 +161,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
                 sAuthors += emFilters.getFilterAuthors()[i] + ";";
             }
 
-            log(Action.group_metadata_search, groupId, groupId, sAuthors);
+            log(Action.group_metadata_search, groupId, 0, "filterByAuthors: " + sAuthors);
         }
 
         //filter by language if not null
@@ -175,7 +175,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
                 sLangs += emFilters.getFilterLangs()[i] + ";";
             }
 
-            log(Action.group_metadata_search, groupId, groupId, sLangs);
+            log(Action.group_metadata_search, groupId, 0, "filterByLangs: " + sLangs);
         }
 
         //filter by level if not null
@@ -191,7 +191,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
                     sLevels += emFilters.getFilterLevels()[i] + ";";
                 }
 
-                log(Action.group_metadata_search, groupId, groupId, sLevels);
+                log(Action.group_metadata_search, groupId, 0, "filterByLangLevels: " + sLevels);
             }
             catch(SQLException e)
             {
@@ -211,7 +211,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
                 smSources += emFilters.getFilterSources()[i] + ";";
             }
 
-            log(Action.group_metadata_search, groupId, groupId, smSources);
+            log(Action.group_metadata_search, groupId, 0, "filterByMediaSources: " + smSources);
         }
 
         //filter by media type if not null
@@ -226,7 +226,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
                 smTypes += emFilters.getFilterMtypes()[i] + ";";
             }
 
-            log(Action.group_metadata_search, groupId, groupId, smTypes);
+            log(Action.group_metadata_search, groupId, 0, "filterByMediaTypes: " + smTypes);
         }
 
         //filter by audience if not null
@@ -242,7 +242,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
                     sTargets += emFilters.getFilterTargets()[i] + ";";
                 }
 
-                log(Action.group_metadata_search, groupId, groupId, sTargets);
+                log(Action.group_metadata_search, groupId, 0, "filterByAudiences: " + sTargets);
             }
             catch(SQLException e)
             {
@@ -264,7 +264,7 @@ public class ExtendedMetadataSearch extends ApplicationBean implements Serializa
                     sPurposes += emFilters.getFilterPurposes()[i] + ";";
                 }
 
-                log(Action.group_metadata_search, groupId, groupId, sPurposes);
+                log(Action.group_metadata_search, groupId, 0, "filterByPurposes: " + sPurposes);
             }
             catch(SQLException e)
             {
