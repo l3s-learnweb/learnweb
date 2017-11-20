@@ -10,15 +10,17 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.AbstractPaginator;
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceDecorator;
 import de.l3s.learnweb.ResourceManager;
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.rm.CategoryManager;
 import de.l3s.learnweb.rm.CategoryResource;
 import de.l3s.learnweb.rm.ExtendedMetadataSearchFilters;
 
-public class ExtendedMetadataSearch implements Serializable
+public class ExtendedMetadataSearch extends ApplicationBean implements Serializable
 {
 
     //populate search filter options (from MetadataSearchFilter.java) 
@@ -152,6 +154,14 @@ public class ExtendedMetadataSearch implements Serializable
         if(emFilters.getFilterAuthors().length > 0)
         {
             filterResults = filterResultsByAuthors(emFilters.getFilterAuthors(), filterResults);
+
+            String sAuthors = "";
+            for(int i = 0; i < emFilters.getFilterAuthors().length; i++)
+            {
+                sAuthors += emFilters.getFilterAuthors()[i] + ";";
+            }
+
+            log(Action.group_metadata_search, groupId, groupId, sAuthors);
         }
 
         //filter by language if not null
@@ -159,6 +169,13 @@ public class ExtendedMetadataSearch implements Serializable
         {
             filterResults = filterResultsByLanguages(emFilters.getFilterLangs(), filterResults);
 
+            String sLangs = "";
+            for(int i = 0; i < emFilters.getFilterLangs().length; i++)
+            {
+                sLangs += emFilters.getFilterLangs()[i] + ";";
+            }
+
+            log(Action.group_metadata_search, groupId, groupId, sLangs);
         }
 
         //filter by level if not null
@@ -167,6 +184,14 @@ public class ExtendedMetadataSearch implements Serializable
             try
             {
                 filterResults = filterResultsByLevels(emFilters.getFilterLevels(), filterResults);
+
+                String sLevels = "";
+                for(int i = 0; i < emFilters.getFilterLevels().length; i++)
+                {
+                    sLevels += emFilters.getFilterLevels()[i] + ";";
+                }
+
+                log(Action.group_metadata_search, groupId, groupId, sLevels);
             }
             catch(SQLException e)
             {
@@ -179,14 +204,29 @@ public class ExtendedMetadataSearch implements Serializable
         if((emFilters.getFilterSources().length > 0) && (emFilters.getFilterSources() != null))
         {
             filterResults = filterResultsByMsources(emFilters.getFilterSources(), filterResults);
+
+            String smSources = "";
+            for(int i = 0; i < emFilters.getFilterSources().length; i++)
+            {
+                smSources += emFilters.getFilterSources()[i] + ";";
+            }
+
+            log(Action.group_metadata_search, groupId, groupId, smSources);
         }
 
         //filter by media type if not null
         if(emFilters.getFilterMtypes().length > 0)
 
         {
-            log.info("inside filter if condition before calling filterresultsbymtypes: " + filterResults.size());
             filterResults = filterResultsByMtypes(emFilters.getFilterMtypes(), filterResults);
+
+            String smTypes = "";
+            for(int i = 0; i < emFilters.getFilterMtypes().length; i++)
+            {
+                smTypes += emFilters.getFilterMtypes()[i] + ";";
+            }
+
+            log(Action.group_metadata_search, groupId, groupId, smTypes);
         }
 
         //filter by audience if not null
@@ -195,6 +235,14 @@ public class ExtendedMetadataSearch implements Serializable
             try
             {
                 filterResults = filterResultsByTargets(emFilters.getFilterTargets(), filterResults);
+
+                String sTargets = "";
+                for(int i = 0; i < emFilters.getFilterTargets().length; i++)
+                {
+                    sTargets += emFilters.getFilterTargets()[i] + ";";
+                }
+
+                log(Action.group_metadata_search, groupId, groupId, sTargets);
             }
             catch(SQLException e)
             {
@@ -209,6 +257,14 @@ public class ExtendedMetadataSearch implements Serializable
             try
             {
                 filterResults = filterResultsByPurposes(emFilters.getFilterPurposes(), filterResults);
+
+                String sPurposes = "";
+                for(int i = 0; i < emFilters.getFilterPurposes().length; i++)
+                {
+                    sPurposes += emFilters.getFilterPurposes()[i] + ";";
+                }
+
+                log(Action.group_metadata_search, groupId, groupId, sPurposes);
             }
             catch(SQLException e)
             {
