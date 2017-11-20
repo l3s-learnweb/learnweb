@@ -2007,13 +2007,14 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     //category filtering method called from javascript(Learnweb_chloe_v2.js) via remotecommand 
     public void onCategoryFilterClick() throws SQLException
     {
+        emSearchBean = new ExtendedMetadataSearch(getUser());
+        emSearchBean.setResultsPerPage(8);
+
         String catname = getParameter("catname");
         String catlevel = getParameter("catlevel");
 
         this.selectedCatNode = catname;
 
-        emSearchBean = new ExtendedMetadataSearch(getUser());
-        emSearchBean.setResultsPerPage(8);
         List<Resource> gResources = group.getResources();
 
         paginator = emSearchBean.getCatFilterResults(gResources, catname, catlevel);
@@ -2022,7 +2023,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     //extended metadata filtering methods and returns filter results (paginator) 
     public void onMetadataFilterClick()
     {
-        System.out.println("metadataFilter clicked");
+
         emFilters = new ExtendedMetadataSearchFilters();
 
         emFilters.setFilterAuthors(selectedAuthors);
