@@ -685,9 +685,13 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             try
             {
                 clickedResource.addNewLevels(selectedLevels, getUser());
-                //addGrowl(FacesMessage.SEVERITY_INFO, "langlevels_added"); // I would not add one message for each input field
 
-                //log(Action.tagging_resource, clickedResource.getGroupId(), clickedResource.getId(), tagName);
+                String sLevels = "";
+                for(int i = 0; i < selectedLevels.length; i++)
+                {
+                    sLevels += selectedLevels[i] + ";";
+                }
+                log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), sLevels);
                 selectedLevels = null; // clear lang level field 
             }
             catch(Exception e)
@@ -702,7 +706,13 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             try
             {
                 clickedResource.addNewTargets(selectedTargets, getUser());
-                //addGrowl(FacesMessage.SEVERITY_INFO, "audiences_added");
+
+                String sTargets = "";
+                for(int i = 0; i < selectedTargets.length; i++)
+                {
+                    sTargets += selectedTargets[i] + ";";
+                }
+                log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), sTargets);
                 selectedTargets = null;
             }
             catch(SQLException e)
@@ -719,7 +729,13 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             try
             {
                 clickedResource.addNewPurposes(selectedPurposes, getUser());
-                //addGrowl(FacesMessage.SEVERITY_INFO, "purposes_added");
+
+                String sPurposes = "";
+                for(int i = 0; i < selectedTargets.length; i++)
+                {
+                    sPurposes += selectedPurposes[i] + ";";
+                }
+                log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), sPurposes);
                 selectedPurposes = null;
             }
             catch(SQLException e)
@@ -747,7 +763,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             try
             {
                 clickedResource.addNewCategory(selectedTopcat, selectedMidcat, selectedBotcat, getUser());
-                //addGrowl(FacesMessage.SEVERITY_INFO, "category_added");
+
+                String sCat = selectedTopcat + "/" + selectedMidcat + "/" + selectedBotcat;
+                log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), sCat);
 
             }
             catch(SQLException e)

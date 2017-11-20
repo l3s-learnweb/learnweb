@@ -12,18 +12,19 @@ import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.GroupItem;
 import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.beans.GroupDetailBean.RPAction;
 import de.l3s.learnweb.NewsEntry;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Tag;
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.beans.GroupDetailBean.RPAction;
 
 @ManagedBean
 @ViewScoped
 public class ActivityResourceBean extends ApplicationBean implements Serializable
 {
     private final static Action[] FILTER = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
-            Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource };
+            Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.adding_resource_metadata, Action.adding_yourown_metadata, Action.group_metadata_search,
+            Action.group_category_search };
 
     private static final long serialVersionUID = -7630987853810267209L;
     private ArrayList<NewsEntry> newslist;

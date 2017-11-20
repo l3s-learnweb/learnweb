@@ -488,6 +488,24 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
             log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
 
+            //detailed logging of new metadata (author, language, media source, media type 
+            if(resource.getAuthor() != null)
+            {
+                log(Action.adding_resource_metadata, resourceTargetGroupId, resource.getId(), "added Author");
+            }
+            if(resource.getLanguage() != null)
+            {
+                log(Action.adding_resource_metadata, resourceTargetGroupId, resource.getId(), "added Language");
+            }
+            if(resource.getMsource() != null)
+            {
+                log(Action.adding_resource_metadata, resourceTargetGroupId, resource.getId(), "added Media source");
+            }
+            if(resource.getMtype() != null)
+            {
+                log(Action.adding_resource_metadata, resourceTargetGroupId, resource.getId(), "added Media types");
+            }
+
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
             if(resource.getGroupId() == 0)
             {

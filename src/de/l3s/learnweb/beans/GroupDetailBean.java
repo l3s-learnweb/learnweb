@@ -582,6 +582,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void editClickedResource()
     {
         log(Action.edit_resource, clickedGroupItem.getGroupId(), clickedGroupItem.getId(), null);
+
         try
         {
             clickedGroupItem.save();
@@ -2010,6 +2011,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         List<Resource> gResources = group.getResources();
 
         paginator = extendedMetadataSearch.getCatFilterResults(gResources, catname, catlevel);
+
+        log(Action.group_category_search, groupId, groupId, catname);
     }
 
     //extended metadata filtering methods and returns filter results (paginator) 
