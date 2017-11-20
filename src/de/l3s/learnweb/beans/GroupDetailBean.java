@@ -63,7 +63,7 @@ import de.l3s.learnweb.solrClient.SolrSearch;
 import de.l3s.learnweb.solrClient.SolrSearch.SearchPaginator;
 import de.l3s.util.StringHelper;
 
-@ManagedBean(name = "groupDetailBean")
+@ManagedBean
 @ViewScoped
 public class GroupDetailBean extends ApplicationBean implements Serializable
 {
@@ -357,7 +357,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         return members;
     }
 
-    public Group getGroup() throws SQLException
+    public Group getGroup()
     {
         return group;
     }
@@ -698,6 +698,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public boolean canEditTheResource(GroupItem obj) throws SQLException
     {
+        User user = getUser();
+        if(null == user)
+            return false;
+
+        if(user.isAdmin())
+            return true;
+
         if(obj.getGroupId() == 0 && obj.getUserId() == getUser().getId())
             return true;
 

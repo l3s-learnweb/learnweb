@@ -22,9 +22,14 @@ import de.l3s.learnweb.User;
 import de.l3s.learnweb.UserManager;
 import jcdashboard.model.UsesTable;
 
-// import org.apache.commons.logging.Log;
-// import org.apache.commons.logging.LogFactory;
+/*
+Used views:
 
+resource:
+CREATE ALGORITHM=UNDEFINED DEFINER=`root`@`%` SQL SECURITY DEFINER VIEW `resource` AS select `b`.`resource_id` AS `resource_id`,`b`.`deleted` AS `deleted`,`b`.`group_id` AS `group_id`,`b`.`folder_id` AS `folder_id`,`b`.`title` AS `title`,`b`.`description` AS `description`,`b`.`url` AS `url`,`b`.`storage_type` AS `storage_type`,`b`.`rights` AS `rights`,`b`.`source` AS `source`,`b`.`language` AS `language`,`b`.`author` AS `author`,`b`.`type` AS `type`,`b`.`format` AS `format`,`b`.`duration` AS `duration`,`b`.`owner_user_id` AS `owner_user_id`,`b`.`id_at_service` AS `id_at_service`,`b`.`rating` AS `rating`,`b`.`rate_number` AS `rate_number`,`b`.`embedded_size1` AS `embedded_size1`,`b`.`embedded_size2` AS `embedded_size2`,`b`.`embedded_size3` AS `embedded_size3`,`b`.`embedded_size4` AS `embedded_size4`,`b`.`filename` AS `filename`,`b`.`file_url` AS `file_url`,`b`.`max_image_url` AS `max_image_url`,`b`.`query` AS `query`,`b`.`original_resource_id` AS `original_resource_id`,`b`.`machine_description` AS `machine_description`,`b`.`access` AS `access`,`b`.`thumbnail0_url` AS `thumbnail0_url`,`b`.`thumbnail0_file_id` AS `thumbnail0_file_id`,`b`.`thumbnail0_width` AS `thumbnail0_width`,`b`.`thumbnail0_height` AS `thumbnail0_height`,`b`.`thumbnail1_url` AS `thumbnail1_url`,`b`.`thumbnail1_file_id` AS `thumbnail1_file_id`,`b`.`thumbnail1_width` AS `thumbnail1_width`,`b`.`thumbnail1_height` AS `thumbnail1_height`,`b`.`thumbnail2_url` AS `thumbnail2_url`,`b`.`thumbnail2_file_id` AS `thumbnail2_file_id`,`b`.`thumbnail2_width` AS `thumbnail2_width`,`b`.`thumbnail2_height` AS `thumbnail2_height`,`b`.`thumbnail3_url` AS `thumbnail3_url`,`b`.`thumbnail3_file_id` AS `thumbnail3_file_id`,`b`.`thumbnail3_width` AS `thumbnail3_width`,`b`.`thumbnail3_height` AS `thumbnail3_height`,`b`.`thumbnail4_url` AS `thumbnail4_url`,`b`.`thumbnail4_file_id` AS `thumbnail4_file_id`,`b`.`thumbnail4_width` AS `thumbnail4_width`,`b`.`thumbnail4_height` AS `thumbnail4_height`,`b`.`embeddedRaw` AS `embeddedRaw`,`b`.`transcript` AS `transcript`,`b`.`read_only_transcript` AS `read_only_transcript`,`b`.`online_status` AS `online_status`,`b`.`restricted` AS `restricted`,`b`.`resource_timestamp` AS `resource_timestamp`,`b`.`creation_date` AS `creation_date`,`b`.`metadata` AS `metadata` from (`learnweb_main`.`lw_user_course` `a` join `learnweb_main`.`lw_resource` `b` on((`a`.`user_id` = `b`.`owner_user_id`))) where (`a`.`course_id` = 1245)
+
+
+ */
 public class UserLogHome
 {
     private static final Logger log = Logger.getLogger(UserLogHome.class);
@@ -367,6 +372,8 @@ public class UserLogHome
                     "SELECT user_id, username, count( * ) AS count FROM lw_user_course c JOIN lw_resource r ON c.user_id = r.owner_user_id JOIN lw_user USING (user_id) JOIN lw_resource_glossary rg USING (resource_id)  WHERE c.course_id =? AND rg.deleted !=1 AND r.deleted !=1 AND rg.timestamp > ? AND rg.timestamp < ? GROUP BY r.owner_user_id ORDER BY username");
             
             */
+
+            UserManager userManager = learnweb.getUserManager();
             PreparedStatement pstmt = learnweb.getConnection().prepareStatement(
                     "SELECT user_id, count( * ) AS count FROM lw_user_course c JOIN lw_resource r ON c.user_id = r.owner_user_id JOIN lw_user USING (user_id) JOIN lw_resource_glossary rg USING (resource_id)  WHERE c.course_id =? AND rg.deleted !=1 AND r.deleted !=1 AND rg.timestamp > ? AND rg.timestamp < ? GROUP BY r.owner_user_id ORDER BY username");
             pstmt.setInt(1, course.getId());
@@ -377,7 +384,7 @@ public class UserLogHome
             ResultSet rs = pstmt.executeQuery();
             while(rs.next())
             {
-                conceptsPerUser.put(rs.getString("username"), rs.getInt("count"));
+                conceptsPerUser.put(userManager.getUser(rs.getInt("user_id")).getUsername(), rs.getInt("count"));
             }
         }
         catch(SQLException e)

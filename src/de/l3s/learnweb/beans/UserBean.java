@@ -292,6 +292,29 @@ public class UserBean implements Serializable
         return user.isModerator();
     }
 
+    public boolean isMemberOfCourse(int courseId)
+    {
+        User user = getUser();
+
+        if(user == null)
+            return false;
+
+        try
+        {
+            for(Course course : user.getCourses())
+            {
+                if(courseId == course.getId())
+                    return true;
+            }
+        }
+        catch(SQLException e)
+        {
+            log.error("sql error", e);
+        }
+
+        return false;
+    }
+
     /**
      * returns true when the currently logged in user is allowed to moderate the given courses
      * 

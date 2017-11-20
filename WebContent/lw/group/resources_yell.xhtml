@@ -285,14 +285,8 @@
 										     	<div class="resource-preview-wrapper">
 													<div class="resource-preview-wrapper2">
 													<div class="resource-preview-block"></div>
-													<div class="resource-preview-block2"></div>
-													
-													
-										<div class="resource-preview-block"></div>
-										<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" title="#{res.title}"></img>	
-										    			<ui:fragment rendered="#{not empty res.thumbnail1}"><img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" /></ui:fragment>	
-														<!--<img class="example1" src="#{request.contextPath}/resources/resources-chloe/images/barneybearbbc.png"
-														width="30%" /> -->
+													<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" title="#{res.title}" />	
+										    			
 													    <h:outputText styleClass="resource-preview-empty" escape="false" value='#{res.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' rendered="#{empty res.thumbnail1}"/>
 												    </div>
 												</div>
@@ -457,14 +451,7 @@
 								<div class="resource-preview-wrapper">
 									<div class="resource-preview-wrapper2">
 										<div class="resource-preview-block"></div>
-										<div class="resource-preview-block2"></div>
-										<h:graphicImage styleClass="resource-preview-image"
-											value="#{res.thumbnail1.url}"
-											rendered="#{not empty res.thumbnail1}" alt="#{res.title}" />
-										<h:outputText styleClass="resource-preview-empty"
-											escape="false"
-											value='#{res.resource.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}'
-											rendered="#{empty res.thumbnail1}" />
+										<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" title="#{res.title}" />		
 									</div>
 								</div>
 
@@ -555,14 +542,8 @@
 										     	<div class="resource-preview-wrapper">
 													<div class="resource-preview-wrapper2">
 													<div class="resource-preview-block"></div>
-													<div class="resource-preview-block2"></div>
-													
-													
-										<div class="resource-preview-block"></div>
-										<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" title="#{res.title}"></img>	
-										    			<ui:fragment rendered="#{not empty res.thumbnail1}"><img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" /></ui:fragment>	
-														<!--<img class="example1" src="#{request.contextPath}/resources/resources-chloe/images/barneybearbbc.png"
-														width="30%" /> -->
+													<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" title="#{res.title}" />		
+										    		
 													    <h:outputText styleClass="resource-preview-empty" escape="false" value='#{res.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}' rendered="#{empty res.thumbnail1}"/>
 												    </div>
 												</div>
@@ -724,14 +705,7 @@
 								<div class="resource-preview-wrapper">
 									<div class="resource-preview-wrapper2">
 										<div class="resource-preview-block"></div>
-										<div class="resource-preview-block2"></div>
-										<h:graphicImage styleClass="resource-preview-image"
-											value="#{res.thumbnail1.url}"
-											rendered="#{not empty res.thumbnail1}" alt="#{res.title}" />
-										<h:outputText styleClass="resource-preview-empty"
-											escape="false"
-											value='#{res.resource.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}'
-											rendered="#{empty res.thumbnail1}" />
+										<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" title="#{res.title}" />	
 									</div>
 								</div>
 
@@ -863,30 +837,12 @@
 		</h:panelGroup>
 	</p:dialog>
 
-	<p:dialog header="#{msg.edit}" id="comment_dialog1" modal="true"
-		minWidth="440" appendTo="@(body)" widgetVar="comment_dialog">
-		<h:form id="comment_dialog_form">
-			<p:inputTextarea autoResize="1" maxHeight="20"
-				value="#{resourceDetailBean.clickedComment.text}"
-				id="edit_comment_textbox" />
-			<p:commandButton
-				actionListener="#{resourceDetailBean.onEditComment}"
-				title="#{msg.save}" value="#{msg.save}"
-				onsuccess="PF('comment_dialog').hide();" />
-		</h:form>
-	</p:dialog>
-	
-	
-	
-	
 	<p:dialog id="popup_layout" header="#{resourceDetailBean.clickedResource.id eq -1? msg.click_to_view_details : resourceDetailBean.clickedResource.title}" widgetVar="rdetail_dialog"
 		appendTo="@(body)" width="600" height="450" modal="true" closable="true">
 		<ui:include src="/templates/resources/blank.xhtml">
 			<ui:param name="bean" value="#{groupDetailBean}" />
 		</ui:include>
 	</p:dialog>
-	
-	
 	
 	<ui:fragment
 		rendered="${not groupDetailBean.group.canViewResources(userBean.user)}">
@@ -955,14 +911,7 @@
 								<div class="resource-preview-wrapper">
 									<div class="resource-preview-wrapper2">
 										<div class="resource-preview-block"></div>
-										<div class="resource-preview-block2"></div>
-										<h:graphicImage styleClass="resource-preview-image"
-											value="#{res.thumbnail1.url}"
-											rendered="#{not empty res.thumbnail1}" alt="#{res.title}" />
-										<h:outputText styleClass="resource-preview-empty"
-											escape="false"
-											value='#{res.resource.embeddedSize1.replaceAll("width=\".*\"","").replaceAll("height=\".*\"","").replaceAll("/>","").replaceAll(">","").concat(" width=\"150\" height=\"150\" />")}'
-											rendered="#{empty res.thumbnail1}" />
+										<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" title="#{res.title}" />	
 									</div>
 								</div>
 
