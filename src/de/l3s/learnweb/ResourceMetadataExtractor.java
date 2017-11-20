@@ -48,14 +48,10 @@ public class ResourceMetadataExtractor
 
     private static final int DESCRIPTION_LIMIT = 1400;
 
-    private final Learnweb learnweb;
-    private final FileManager fileManager;
     private final FileInspector fileInspector;
 
     public ResourceMetadataExtractor(Learnweb learnweb)
     {
-        this.learnweb = learnweb;
-        this.fileManager = learnweb.getFileManager();
         this.fileInspector = new FileInspector(learnweb);
     }
 
@@ -179,9 +175,9 @@ public class ResourceMetadataExtractor
             }*/
 
             JSONObject thumbnails = snippet.getJSONObject("thumbnails");
-            Optional<String> size = Arrays.stream(new String[] {"maxres", "standard", "high", "medium", "default"}).filter(thumbnails::has).findFirst();
+            Optional<String> size = Arrays.stream(new String[] { "maxres", "standard", "high", "medium", "default" }).filter(thumbnails::has).findFirst();
 
-            if (size.isPresent())
+            if(size.isPresent())
                 resource.setMaxImageUrl(thumbnails.getJSONObject(size.get()).getString("url"));
         }
     }
@@ -207,9 +203,9 @@ public class ResourceMetadataExtractor
             resource.addTag(tag, null);
             }*/
 
-            Optional<String> size = Arrays.stream(new String[] {"thumbnail_large", "thumbnail_medium", "thumbnail_small"}).filter(json::has).findFirst();
+            Optional<String> size = Arrays.stream(new String[] { "thumbnail_large", "thumbnail_medium", "thumbnail_small" }).filter(json::has).findFirst();
 
-            if (size.isPresent())
+            if(size.isPresent())
                 resource.setMaxImageUrl(json.getString(size.get()));
         }
     }
@@ -223,7 +219,8 @@ public class ResourceMetadataExtractor
                 resource.setTitle(json.getJSONObject("title").getString("_content"));
             if(StringUtils.isEmpty(resource.getDescription()))
                 resource.setDescription(StringHelper.shortnString(json.getJSONObject("description").getString("_content"), DESCRIPTION_LIMIT));
-            if(StringUtils.isEmpty(resource.getAuthor())) {
+            if(StringUtils.isEmpty(resource.getAuthor()))
+            {
                 JSONObject owner = json.getJSONObject("owner");
                 String realname = owner.getString("realname");
                 resource.setAuthor(StringUtils.isNotEmpty(realname) ? realname : owner.getString("username"));
@@ -314,11 +311,12 @@ public class ResourceMetadataExtractor
     {
         Long result = 0L;
         long multi = 1;
-        while (snipcode.length() > 0) {
-            String digit = snipcode.substring(snipcode.length()-1);
+        while(snipcode.length() > 0)
+        {
+            String digit = snipcode.substring(snipcode.length() - 1);
             result = result + multi * base58alphabetString.lastIndexOf(digit);
             multi = multi * base58alphabetString.length();
-            snipcode = snipcode.substring(0, snipcode.length()-1);
+            snipcode = snipcode.substring(0, snipcode.length() - 1);
         }
         return result.toString();
     }

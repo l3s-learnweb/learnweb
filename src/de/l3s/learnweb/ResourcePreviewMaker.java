@@ -56,7 +56,6 @@ public class ResourcePreviewMaker
     private final Learnweb learnweb;
     private final FileManager fileManager;
     private final String websiteThumbnailService;
-    private final String videoThumbnailService;
     private final String archiveThumbnailService;
 
     private FFprobe ffprobe;
@@ -68,7 +67,6 @@ public class ResourcePreviewMaker
         this.fileManager = this.learnweb.getFileManager();
         this.archiveThumbnailService = learnweb.getProperties().getProperty("ARCHIVE_WEBSITE_THUMBNAIL_SERVICE");
         this.websiteThumbnailService = learnweb.getProperties().getProperty("WEBSITE_THUMBNAIL_SERVICE");
-        this.videoThumbnailService = learnweb.getProperties().getProperty("VIDEO_THUMBNAIL_SERVICE");
 
         try
         {
