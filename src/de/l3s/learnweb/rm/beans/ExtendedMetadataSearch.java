@@ -36,7 +36,7 @@ public class ExtendedMetadataSearch implements Serializable
     private String sorting;
     private String groupField = "";
 
-    private int totalResults = 0;
+    protected long totalResults = -1;
     private int userId;
     private List<ResourceDecorator> results = new LinkedList<ResourceDecorator>();
 
@@ -57,9 +57,9 @@ public class ExtendedMetadataSearch implements Serializable
 
     public FilterPaginator getCatFilterResults(List<Resource> gResources, String catName, String catLevel) throws SQLException
     {
-        log.info(catLevel);
 
         FilterPaginator cPaginator = new FilterPaginator(this);
+
         List<Resource> cFinalResults = new ArrayList<Resource>();
 
         if(gResources.size() > 0)
@@ -82,19 +82,7 @@ public class ExtendedMetadataSearch implements Serializable
             }
         }
 
-        log.info("cfinalresults are " + cFinalResults.size());
-
         setTotalResults(cFinalResults.size());
-
-        log.info("total results is " + this.totalResults);
-
-        this.results = convertToFinalResults(cFinalResults);
-
-        log.info("cfinalresults are " + cFinalResults.size());
-
-        setTotalResults(cFinalResults.size());
-
-        log.info("total results is " + this.totalResults);
 
         this.results = convertToFinalResults(cFinalResults);
 
@@ -444,7 +432,12 @@ public class ExtendedMetadataSearch implements Serializable
 
     public long getTotalResultCount()
     {
-        return totalResults;
+        if(totalResults < 0)
+        {
+            return 0;
+        }
+        else
+            return totalResults;
     }
 
     public static class FilterPaginator extends AbstractPaginator
@@ -460,12 +453,21 @@ public class ExtendedMetadataSearch implements Serializable
         }
 
         @Override
+        public boolean isEmpty()
+        {
+            if((int) filter.getTotalResultCount() == 0)
+                return true;
+            return false;
+        }
+
+        @Override
         public synchronized List<ResourceDecorator> getCurrentPage()
         {
             if(getCurrentPageCache() != null)
                 return getCurrentPageCache();
 
             List<ResourceDecorator> presults = filter.getResourcesByPage(getPageIndex() + 1);
+
             setTotalResults((int) filter.getTotalResultCount());
 
             setCurrentPageCache(presults);
