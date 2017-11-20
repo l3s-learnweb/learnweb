@@ -66,7 +66,14 @@ public class LogEntry implements Serializable
         glossary_term_delete, // target_id = resource id, target_id = glossary term id
         resource_thumbnail_update, // target_id = resource_id
         submission_submitted, //target_id = resource_id
-        extended_metadata_open_dialog
+        extended_metadata_open_dialog,
+
+        //log entries for extended metadata (yell group only) 
+        adding_yourown_metadata, //target_id = clicked resource id, param = type of metadata added
+        adding_resource_metadata, //target_id = resource id, param = type of metadata added (options: author, language, media source, media type) 
+        edit_resource_metadata, //target_id = resource id, param = type of metadata edited (options: author, language, media source, media type) 
+        group_metadata_search, // param = filter:value only if it is not null
+        group_category_search // param = clicked category 
     }
 
     private final static HashSet<Action> resourceActions = Sets.newHashSet(Action.tagging_resource, Action.rating_resource, Action.commenting_resource, Action.opening_resource, Action.adding_resource, Action.deleting_comment, Action.edit_resource, Action.thumb_rating_resource);
