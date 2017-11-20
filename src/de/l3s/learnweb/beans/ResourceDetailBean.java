@@ -731,7 +731,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 clickedResource.addNewPurposes(selectedPurposes, getUser());
 
                 String sPurposes = "";
-                for(int i = 0; i < selectedTargets.length; i++)
+                for(int i = 0; i < selectedPurposes.length; i++)
                 {
                     sPurposes += selectedPurposes[i] + ";";
                 }
