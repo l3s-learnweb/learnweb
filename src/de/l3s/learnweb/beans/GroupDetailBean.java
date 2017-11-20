@@ -1172,11 +1172,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         this.logMessages = logMessages;
     }
 
-    public void setNewslist(ArrayList<NewsEntry> newslist)
-    {
-        this.newslist = newslist;
-    }
-
     public void setNewestResourceHidden(boolean newestResourceHidden)
     {
         isNewestResourceHidden = newestResourceHidden;

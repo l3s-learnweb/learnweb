@@ -334,6 +334,126 @@
 						</ui:fragment>
 
 
+ 
+							<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource}">
+								<div id="eMetaDetail">
+								<hr/>
+								<div id="detailList">
+								<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.categories}">
+									<label class="rdlabel"><b>Category: </b></label>#{resourceDetailBean.clickedResource.extendedMetadata.categories[0]} <br /> 
+								</ui:fragment>
+								<ui:fragment rendered="#{empty resourceDetailBean.clickedResource.extendedMetadata.categories}">
+									<label class="rdlabel"><b>Category: </b></label><i>(Not available. Click the button below to add)</i> <br /> 
+								</ui:fragment>
+								<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.lCount}">
+									<label class="rdlabel"><b>Level (stats): </b></label>#{resourceDetailBean.clickedResource.extendedMetadata.lCount} <br /> 
+								</ui:fragment>
+								<ui:fragment rendered="#{empty resourceDetailBean.clickedResource.extendedMetadata.lCount}">
+									<label class="rdlabel"><b>Level (stats): </b></label><i>(Not available. Click the button below to add)</i> <br /> 
+								</ui:fragment>
+								<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.targetCount}">
+									
+									<label class="rdlabel"><b>Target learner
+											(stats): </b></label>
+									<ui:repeat
+										value="#{resourceDetailBean.clickedResource.extendedMetadata.targetCount.entrySet().toArray()}"
+										var="t">
+
+										<h:graphicImage class="circle"
+											value="/resources/resources-chloe/images/green_circle.png"
+											width="2%"
+											rendered="#{t.key == 'very young learners (pre-school)'}" />
+										<h:graphicImage class="circle"
+											value="/resources/resources-chloe/images/blue_circle.png"
+											width="2%" rendered="#{t.key == 'young learners (elementary)'}" />
+										<h:graphicImage class="bluecircle"
+											value="/resources/resources-chloe/images/yellow_circle.png"
+											width="2%" rendered="#{t.key == 'teenage learners'}" />
+										<h:graphicImage class="circle"
+											value="/resources/resources-chloe/images/red_circle.png"
+											width="2%" rendered="#{t.key == 'teachers'}" />
+										<h:graphicImage class="circle"
+											value="/resources/resources-chloe/images/red_circle.png"
+											width="2%" rendered="#{t.key == 'adult learners'}" />
+
+										<h:outputText value="Pre-school"
+											rendered="#{t.key == 'very young learners (pre-school)'}" />
+										<h:outputText value="Young learners"
+											rendered="#{t.key == 'young learners (elementary)'}" />
+										<h:outputText value="Teens"
+											rendered="#{t.key == 'teenage learners'}" />
+										<h:outputText value="Adult learners"
+											rendered="#{t.key == 'adult learners'}" />
+										<h:outputText value="Teachers"
+											rendered="#{t.key == 'teachers'}" />
+										<h:outputText value="[#{t.value}] " />
+
+									</ui:repeat>
+									<br /> 
+								</ui:fragment>
+								
+								<ui:fragment rendered="#{empty resourceDetailBean.clickedResource.extendedMetadata.targetCount}">
+									<label class="rdlabel"><b>Target Learner (stats): </b></label><i>(Not available. Click the button below to add)</i> <br />
+								</ui:fragment>
+								<ui:fragment rendered="#{empty resourceDetailBean.clickedResource.extendedMetadata.purposeCount}">
+									<label class="rdlabel"><b>Purpose of use (stats): </b></label><i>(Not available. Click the button below to add)</i> <br />
+								</ui:fragment>  
+								<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.purposeCount}">
+									<label class="rdlabel"><b>Purpose of use
+											(stats): </b></label>
+									<ui:repeat
+										value="#{resourceDetailBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}"
+										var="p">
+										<h:graphicImage class="bluecircle"
+											value="/resources/resources-chloe/images/speaking.png"
+											width="2%" rendered="#{p.key == 'speaking skills'}" />
+										<h:graphicImage class="bluecircle"
+											value="/resources/resources-chloe/images/listening.png"
+											width="2%" rendered="#{p.key == 'listening skills'}" />
+										<h:graphicImage class="bluecircle"
+											value="/resources/resources-chloe/images/writing.png"
+											width="2%" rendered="#{p.key == 'writing skills'}" />
+										<h:graphicImage class="bluecircle"
+											value="/resources/resources-chloe/images/reading.png"
+											width="2%" rendered="#{p.key == 'reading skills'}" />
+
+										<h:outputText value="Speaking"
+											rendered="#{p.key == 'speaking skills'}" />
+										<h:outputText value="Listening"
+											rendered="#{p.key == 'listening skills'}" />
+										<h:outputText value="Writing" rendered="#{p.key == 'writing skills'}" />
+										<h:outputText value="Reading" rendered="#{p.key == 'reading skills'}" />
+										<h:outputText value="[#{p.value}] "
+											rendered="#{p.key == 'speaking skills' or p.key == 'listening skills' or p.key =='writing skills' or p.key =='reading skills'}" />
+									</ui:repeat>
+									<br />
+
+									<ui:repeat
+										value="#{resourceDetailBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}"
+										var="p">
+										<ui:fragment
+											rendered="#{p.key != 'speaking skills' and p.key != 'listening skills' and p.key !='writing skills' and p.key !='reading skills'}">
+											<span class="tag tag-grey">#{p.key}</span>
+										</ui:fragment>
+									</ui:repeat>
+								</ui:fragment>
+									
+								</div> <!-- detailList -->
+								<br/>
+									
+									<div id="detailAdd">
+										<!-- add the button to show div detailBox -->
+										<h:form>
+											<p:commandButton id="detailAdd_button"
+												styleClass="greenbutton centered" value="Add your own" update=":add_metadata_form"
+												onsuccess="PF('adlg').show();" ajax="true" process="@form" partialSubmit="true"
+												actionListener="{resourceDetailBean.onOpenExtendedMetadataDialog}"/>
+										</h:form>
+									</div>
+									
+									<hr/>
+								</div>
+							</ui:fragment>
 
 						<table id="resources_informations_table" class="full-width">
 
@@ -454,122 +574,6 @@
 								</tr>
 							</ui:fragment>
 							
-							<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource}">
-								<div id="eMetaDetail">
-								<hr/>
-								<div id="detailList">
-								<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.categories}">
-									<label class="rdlabel"><b>Category: </b></label>#{resourceDetailBean.clickedResource.extendedMetadata.categories[0]} <br /> 
-								</ui:fragment>
-								<ui:fragment rendered="#{empty resourceDetailBean.clickedResource.extendedMetadata.categories}">
-									<label class="rdlabel"><b>Category: </b></label><i>(Not available. Click the button below to add)</i> <br /> 
-								</ui:fragment>
-								<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.lCount}">
-									<label class="rdlabel"><b>Level (stats): </b></label>#{resourceDetailBean.clickedResource.extendedMetadata.lCount} <br /> 
-								</ui:fragment>
-								<ui:fragment rendered="#{empty resourceDetailBean.clickedResource.extendedMetadata.lCount}">
-									<label class="rdlabel"><b>Level (stats): </b></label><i>(Not available. Click the button below to add)</i> <br /> 
-								</ui:fragment>
-								<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.targetCount}">
-									
-									<label class="rdlabel"><b>Target learner
-											(stats): </b></label>
-									<ui:repeat
-										value="#{resourceDetailBean.clickedResource.extendedMetadata.targetCount.entrySet().toArray()}"
-										var="t">
-
-										<h:graphicImage class="circle"
-											value="/resources/resources-chloe/images/green_circle.png"
-											width="2%"
-											rendered="#{t.key == 'very young learners (pre-school)'}" />
-										<h:graphicImage class="circle"
-											value="/resources/resources-chloe/images/blue_circle.png"
-											width="2%" rendered="#{t.key == 'young learners (elementary)'}" />
-										<h:graphicImage class="bluecircle"
-											value="/resources/resources-chloe/images/yellow_circle.png"
-											width="2%" rendered="#{t.key == 'teenage learners'}" />
-										<h:graphicImage class="circle"
-											value="/resources/resources-chloe/images/red_circle.png"
-											width="2%" rendered="#{t.key == 'teachers'}" />
-										<h:graphicImage class="circle"
-											value="/resources/resources-chloe/images/red_circle.png"
-											width="2%" rendered="#{t.key == 'adult learners'}" />
-
-										<h:outputText value="Pre-school"
-											rendered="#{t.key == 'very young learners (pre-school)'}" />
-										<h:outputText value="Young learners"
-											rendered="#{t.key == 'young learners (elementary)'}" />
-										<h:outputText value="Teens"
-											rendered="#{t.key == 'teenage learners'}" />
-										<h:outputText value="Adult learners"
-											rendered="#{t.key == 'adult learners'}" />
-										<h:outputText value="Teachers"
-											rendered="#{t.key == 'teachers'}" />
-										<h:outputText value="[#{t.value}] " />
-
-									</ui:repeat>
-									<br /> 
-								</ui:fragment>
-								
-								<ui:fragment rendered="#{empty resourceDetailBean.clickedResource.extendedMetadata.targetCount}">
-									<label class="rdlabel"><b>Target Learner (stats): </b></label><i>(Not available. Click the button below to add)</i> <br />
-								</ui:fragment>
-								<ui:fragment rendered="#{empty resourceDetailBean.clickedResource.extendedMetadata.purposeCount}">
-									<label class="rdlabel"><b>Purpose of use (stats): </b></label><i>(Not available. Click the button below to add)</i> <br />
-								</ui:fragment>  
-								<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.purposeCount}">
-									<label class="rdlabel"><b>Purpose of use
-											(stats): </b></label>
-									<ui:repeat
-										value="#{resourceDetailBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}"
-										var="p">
-										<h:graphicImage class="bluecircle"
-											value="/resources/resources-chloe/images/speaking.png"
-											width="2%" rendered="#{p.key == 'speaking skills'}" />
-										<h:graphicImage class="bluecircle"
-											value="/resources/resources-chloe/images/listening.png"
-											width="2%" rendered="#{p.key == 'listening skills'}" />
-										<h:graphicImage class="bluecircle"
-											value="/resources/resources-chloe/images/writing.png"
-											width="2%" rendered="#{p.key == 'writing skills'}" />
-										<h:graphicImage class="bluecircle"
-											value="/resources/resources-chloe/images/reading.png"
-											width="2%" rendered="#{p.key == 'reading skills'}" />
-
-										<h:outputText value="Speaking"
-											rendered="#{p.key == 'speaking skills'}" />
-										<h:outputText value="Listening"
-											rendered="#{p.key == 'listening skills'}" />
-										<h:outputText value="Writing" rendered="#{p.key == 'writing skills'}" />
-										<h:outputText value="Reading" rendered="#{p.key == 'reading skills'}" />
-										<h:outputText value="[#{p.value}] "
-											rendered="#{p.key == 'speaking skills' or p.key == 'listening skills' or p.key =='writing skills' or p.key =='reading skills'}" />
-									</ui:repeat>
-									<br />
-
-									<ui:repeat
-										value="#{resourceDetailBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}"
-										var="p">
-										<ui:fragment
-											rendered="#{p.key != 'speaking skills' and p.key != 'listening skills' and p.key !='writing skills' and p.key !='reading skills'}">
-											<span class="tag tag-grey">#{p.key}</span>
-										</ui:fragment>
-									</ui:repeat>
-								</ui:fragment>
-									
-								</div> <!-- detailList -->
-								<br/>
-									
-								<div id="detailAdd">
-									<!-- add the button to show div detailBox -->
-									<p:commandButton id="detailAdd_button"
-										styleClass="greenbutton centered" value="Add your own"
-										onclick="PF('adlg').show(); return false;" ajax="true" />
-									</div>
-									
-									<hr/>
-								</div>
-							</ui:fragment>
 
 
 							<tr>
@@ -747,7 +751,7 @@
 								update=" :datagrid :tag_form :growl :tag_input_form:tag_name"
 								process="@form"
 								style="margin-right:0;margin-top:4px;float:right"
-								ajaxsingle="true" oncomplete="return false;">
+								partialSubmit="true">
 
 								<f:setPropertyActionListener target="#{bean.reloadLogs}"
 									value="true" />
@@ -1216,85 +1220,77 @@
 						</tr>
 					</table>
 				</h:form>
-
+ 
 				<p:dialog id="addDetailDlg" header="Add Your Own Categorization"
 					widgetVar="adlg" minWidth="440" maxWidth="500" appendTo="@(body)"
-					modal="true" closable="false">
-	
+					modal="true" closable="true">
+	 
 					<h:outputText value="Please, add your own categorization: this will help you and other users find resources easily and efficiently." />
 					<br />
 					<h:outputText value="Select the most appropriate tags or type them; then, click on the &quot;SAVE&quot; button." />
 					<br />
 					<br />
-					<b><h:outputText
-							value="Resource Title: #{resourceDetailBean.clickedResource.title}" /></b>
+					<b><h:outputText value="Resource Title: #{resourceDetailBean.clickedResource.title}" /></b>
 					<br />
 					<br />
-					<h:form>
-						<p:panelGrid columns="1" cellpadding="20" layout="grid">
+					<h:form id="add_metadata_form">
+				
+						<b><p:outputLabel for="toplist" value="Category:" /></b>
+						<h:panelGrid columns="6" cellpadding="10" id="catlist">
+							<h:outputLabel for="toplist" value="Level 1:" />
+							<p:selectOneMenu id="toplist"
+								value="#{resourceDetailBean.selectedTopcat}"
+								panelStyle="width:150px"
+								valueChangeListener="#{searchFilterBean.topCatChanged}">
+								<f:selectItem itemLabel="Select Category Level 1" itemValue="-1" />
+								<f:selectItems value="#{searchFilterBean.cattops}" />
+								<p:ajax update="middlelist" process="@this" />
+							</p:selectOneMenu>
+
+							<p:outputLabel for="middlelist" value="Level 2:" />
+							<p:selectOneMenu id="middlelist"
+								value="#{resourceDetailBean.selectedMidcat}"
+								panelStyle="width:150px"
+								valueChangeListener="#{searchFilterBean.midCatChanged}">
+								<f:selectItem itemLabel="Select Category Level 2" itemValue="-1" />
+								<f:selectItems value="#{searchFilterBean.catmids}" />
+								<p:ajax update="bottomlist" process="@this" />
+							</p:selectOneMenu>
+
+							<p:outputLabel for="bottomlist" value="Level 3: (Choose or type a new one)" />
+      							<p:autoComplete id="bottomlist" panelStyle="width:150px" dropdown="true" value="#{resourceDetailBean.selectedBotcat}" completeMethod="#{searchFilterBean.showCatbots}" />
+							
+						</h:panelGrid>
+
+						
+						<h:panelGrid columns="4" cellpadding="10">
+							<p:outputLabel for="levlist" value="Language Level: " />
+							<p:selectCheckboxMenu id="levlist"
+								value="#{resourceDetailBean.selectedLevels}" label="Levels"
+								multiple="true" filter="false" filterMatchMode="startsWith"
+								panelStyle="width:250px">
+								<f:selectItems value="#{searchFilterBean.levels}" />
+							</p:selectCheckboxMenu>
+							<p:outputLabel for="aglist" value="Target Learner:" />
+							<p:selectCheckboxMenu id="aglist"
+								value="#{resourceDetailBean.selectedTargets}"
+								label="Target Learners" multiple="true" filter="false"
+								filterMatchMode="startsWith" panelStyle="width:250px">
+								<f:selectItems value="#{searchFilterBean.targets}" />
+							</p:selectCheckboxMenu>
+						</h:panelGrid>
+					
+						<h:panelGrid columns="2" cellpadding="10">
+							<p:outputLabel for="aclist" value="Purpose of Use:" />
+							<p:selectCheckboxMenu id="aclist"
+								value="#{resourceDetailBean.selectedPurposes}"
+								label="Purposes of Use" multiple="true" filter="false"
+								filterMatchMode="startsWith" panelStyle="width:250px">
+								<f:selectItems value="#{searchFilterBean.purposes}" />
+							</p:selectCheckboxMenu>
+						</h:panelGrid>
+						
 	
-							<h:panelGroup>
-								<b><h:outputLabel for="catlist" value="Category:" /></b>
-								<h:panelGrid columns="6" cellpadding="10" layout="grid"
-									id="catlist">
-									<h:outputLabel for="toplist" value="Level 1:" />
-									<p:selectOneMenu id="toplist"
-										value="#{resourceDetailBean.selectedTopcat}"
-										panelStyle="width:150px"
-										valueChangeListener="#{searchFilterBean.topCatChanged}">
-										<f:selectItem itemLabel="Select Category Level 1" itemValue="-1" />
-										<f:selectItems value="#{searchFilterBean.cattops}" />
-										<p:ajax update="middlelist" process="@this" />
-									</p:selectOneMenu>
-	
-									<h:outputLabel for="middlelist" value="Level 2:" />
-									<p:selectOneMenu id="middlelist"
-										value="#{resourceDetailBean.selectedMidcat}"
-										panelStyle="width:150px"
-										valueChangeListener="#{searchFilterBean.midCatChanged}">
-										<f:selectItem itemLabel="Select Category Level 2" itemValue="-1" />
-										<f:selectItems value="#{searchFilterBean.catmids}" />
-										<p:ajax update="bottomlist" process="@this" />
-									</p:selectOneMenu>
-	
-									<h:outputLabel for="bottomlist" value="Level 3: (Choose or type a new one)" />
-        							<p:autoComplete id="bottomlist" panelStyle="width:150px" dropdown="true" value="#{resourceDetailBean.selectedBotcat}" completeMethod="#{searchFilterBean.showCatbots}" />
-									
-								</h:panelGrid>
-							</h:panelGroup>
-	
-							<h:panelGroup>
-								<h:panelGrid columns="4" cellpadding="10" layout="grid">
-									<h:outputLabel for="levlist" value="Language Level: " />
-									<p:selectCheckboxMenu id="levlist"
-										value="#{resourceDetailBean.selectedLevels}" label="Levels"
-										multiple="true" filter="true" filterMatchMode="startsWith"
-										panelStyle="width:250px">
-										<f:selectItems value="#{searchFilterBean.levels}" />
-									</p:selectCheckboxMenu>
-									<h:outputLabel for="aglist" value="Target Learner:" />
-									<p:selectCheckboxMenu id="aglist"
-										value="#{resourceDetailBean.selectedTargets}"
-										label="Target Learners" multiple="true" filter="true"
-										filterMatchMode="startsWith" panelStyle="width:250px">
-										<f:selectItems value="#{searchFilterBean.targets}" />
-									</p:selectCheckboxMenu>
-								</h:panelGrid>
-							</h:panelGroup>
-	
-							<h:panelGroup>
-								<h:panelGrid columns="2" cellpadding="10" layout="grid">
-									<h:outputLabel for="aclist" value="Purpose of Use:" />
-									<p:selectCheckboxMenu id="aclist"
-										value="#{resourceDetailBean.selectedPurposes}"
-										label="Purposes of Use" multiple="true" filter="true"
-										filterMatchMode="startsWith" panelStyle="width:250px">
-										<f:selectItems value="#{searchFilterBean.purposes}" />
-									</p:selectCheckboxMenu>
-								</h:panelGrid>
-							</h:panelGroup>
-	
-						</p:panelGrid>
 						<br />
 						<br />
 						<p:commandButton value="Save"
@@ -1306,7 +1302,7 @@
 					</h:form>
 	
 				</p:dialog>		
-        
+         
 				<script type="text/javascript">
 					$("#right_pane_wrapper img").bind('load', function() {
 						scroller();

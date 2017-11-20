@@ -265,7 +265,6 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
 
     public List<String> getLevels()
     {
-        log.debug("get level " + levels);
         return levels;
     }
 

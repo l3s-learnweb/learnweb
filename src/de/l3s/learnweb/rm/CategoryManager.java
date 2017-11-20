@@ -324,7 +324,7 @@ public class CategoryManager
 
         if(!rs.next())
         {
-            new IllegalArgumentException("invalid cat middle name was requested: " + catmidName).printStackTrace();
+            log.debug("invalid cat middle name was requested: " + catmidName, new IllegalArgumentException());
             return -1;
         }
         catmid = createCategoryMiddle(rs);

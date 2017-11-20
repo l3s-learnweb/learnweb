@@ -832,4 +832,11 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         this.newBotcat = newBotcat;
     }
 
+    public void onOpenExtendedMetadataDialog()
+    {
+        log.debug("onOpenExtendedMetadataDialog");
+        int groupId = clickedResource == null ? 0 : clickedResource.getGroupId();
+        log(Action.extended_metadata_open_dialog, groupId, 0);
+    }
+
 }

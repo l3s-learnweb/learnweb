@@ -66,6 +66,7 @@ public class LogEntry implements Serializable
         glossary_term_delete, // target_id = resource id, target_id = glossary term id
         resource_thumbnail_update, // target_id = resource_id
         submission_submitted, //target_id = resource_id
+        extended_metadata_open_dialog
     }
 
     private final static HashSet<Action> resourceActions = Sets.newHashSet(Action.tagging_resource, Action.rating_resource, Action.commenting_resource, Action.opening_resource, Action.adding_resource, Action.deleting_comment, Action.edit_resource, Action.thumb_rating_resource);
