@@ -851,7 +851,7 @@
 					rendered="#{bean.rightPanelAction == 'editResource' and resourceDetailBean.clickedResource.id != -1}"
 					id="edit_form">
 					<ui:fragment
-						rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image'}">
+						rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image' or or resourceDetailBean.clickedResource.type eq 'website'}">
 						<div class="align-center" style="margin-top: 5px;">
 							<div id="lightbox">
 								<div id="lightbox_background" onclick="lightbox_close();"></div>
@@ -867,6 +867,16 @@
 									<div id="lightbox_content">
 										<ui:fragment
 											rendered="#{resourceDetailBean.clickedResource.type eq 'text'}">
+											<div
+												style="overflow: auto; height: 100%; width: 100%; text-align: center;">
+												<img
+													src="#{resourceDetailBean.clickedResource.thumbnail4.url}"
+													height="#{resourceDetailBean.clickedResource.thumbnail4.height}"
+													width="#{resourceDetailBean.clickedResource.thumbnail4.width}" />
+											</div>
+										</ui:fragment>
+										<ui:fragment
+											rendered="#{resourceDetailBean.clickedResource.type eq 'website'}">
 											<div
 												style="overflow: auto; height: 100%; width: 100%; text-align: center;">
 												<img
@@ -1006,7 +1016,7 @@
 							<a class="hyperlink"
 								href="#{resourceDetailBean.clickedResource.urlProxied}"
 								target="_blank"> <h:outputText styleClass="hyperlink"
-									rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf'}"
+									rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'website'}"
 									value="#{resourceDetailBean.clickedResource.url}" />
 							</a> <a class="hyperlink"
 								onclick="lightbox_open(); change_lightbox_content(true);"
