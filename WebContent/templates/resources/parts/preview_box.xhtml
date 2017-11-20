@@ -13,9 +13,7 @@
 		    </div>
 		</ui:fragment>
 		<ui:fragment rendered="#{resource.type eq 'website' and not empty resource.thumbnail3}">
-		    <a target="_blank" class="preview_box_wrapper newsfeed_query_link" style="padding: 0" href="#{resource.urlProxied}">
-		        <img src="#{resource.thumbnail3.url}" height="#{resource.thumbnail3.height}" onmouseup="lightbox_open();" width="#{resource.thumbnail3.width}" style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"/>
-		    </a>
+		    <img src="#{resource.thumbnail3.url}" height="#{resource.thumbnail3.height}" onmouseup="lightbox_open();" width="#{resource.thumbnail3.width}" style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"/>
 		</ui:fragment>
 		<ui:fragment rendered="#{resource.isOfficeResource() and not (resource.onlineStatus eq 'OFFLINE')}">
 		    <div class="preview_box_wrapper editor_preview">

@@ -146,7 +146,7 @@
 										</a>
 									</li>
 								</ui:fragment>
-								<ui:fragment rendered="#{userBean.admin || userBean.moderator}">
+								<ui:fragment rendered="#{userBean.moderator}">
 									<li class="menupoint">
 										<h:outputText value="#{msg.moderator}" />
 									</li>
@@ -195,6 +195,13 @@
 											<h:outputText value="#{msg.transcript_summaries}" />
 										</a>
 									</li>
+									<ui:fragment rendered="#{userBean.isMemberOfCourse(1245)}">
+									<li>
+										<a href="#{request.contextPath}/lw/admin/dashboard/index1.jsf">
+											<h:outputText value="Glossary Dashboard" />
+										</a>
+									</li>
+									</ui:fragment>
 								</ui:fragment> 
 							</ul>						
 						</li>
