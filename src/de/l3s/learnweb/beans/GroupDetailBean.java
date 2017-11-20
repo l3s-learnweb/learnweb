@@ -2012,7 +2012,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
         paginator = extendedMetadataSearch.getCatFilterResults(gResources, catname, catlevel);
 
-        log(Action.group_category_search, groupId, groupId, catname);
+        log(Action.group_category_search, groupId, 0, catname);
     }
 
     //extended metadata filtering methods and returns filter results (paginator) 

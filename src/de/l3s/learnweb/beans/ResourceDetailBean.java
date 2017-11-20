@@ -691,7 +691,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 {
                     sLevels += selectedLevels[i] + ";";
                 }
-                log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), sLevels);
+                log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), "language levels: " + sLevels);
                 selectedLevels = null; // clear lang level field 
             }
             catch(Exception e)
@@ -712,7 +712,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 {
                     sTargets += selectedTargets[i] + ";";
                 }
-                log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), sTargets);
+                log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), "audiences: " + sTargets);
                 selectedTargets = null;
             }
             catch(SQLException e)
@@ -735,7 +735,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 {
                     sPurposes += selectedPurposes[i] + ";";
                 }
-                log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), sPurposes);
+                log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), "purposes: " + sPurposes);
                 selectedPurposes = null;
             }
             catch(SQLException e)
@@ -765,7 +765,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 clickedResource.addNewCategory(selectedTopcat, selectedMidcat, selectedBotcat, getUser());
 
                 String sCat = selectedTopcat + "/" + selectedMidcat + "/" + selectedBotcat;
-                log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), sCat);
+                log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), "category: " + sCat);
 
             }
             catch(SQLException e)
