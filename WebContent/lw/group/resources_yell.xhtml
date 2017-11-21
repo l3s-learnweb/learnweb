@@ -177,7 +177,7 @@
 									<p:selectCheckboxMenu id="alist"
 										value="#{groupDetailBean.selectedAuthors}" label="Authors"
 										multiple="true" filter="true" filterMatchMode="startsWith">
-										<f:selectItems value="#{searchFilterBean.authors}" />
+										<f:selectItems value="#{groupDetailBean.authors}" />
 									</p:selectCheckboxMenu>
 								</h:panelGroup>
 
@@ -197,7 +197,7 @@
 										value="#{groupDetailBean.selectedSources}" label="Sources"
 										multiple="true" filter="true" filterMatchMode="startsWith"
 										panelStyle="width:250px">
-										<f:selectItems value="#{searchFilterBean.sources}" />
+										<f:selectItems value="#{groupDetailBean.msources}" />
 									</p:selectCheckboxMenu>
 								</h:panelGroup>
 
