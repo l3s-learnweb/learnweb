@@ -139,6 +139,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private String[] selectedLevels;
     private String selectedCatNode;
 
+    //extended metadata search/filters - authors and media sources from resources belonging to selected group only
+    private List<String> authors;
+    private List<String> msources;
+
     //Grid or List view of group resources
     private boolean gridView = false;
 
@@ -1954,6 +1958,94 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void setSelectedCatNode(String selectedCatNode)
     {
         this.selectedCatNode = selectedCatNode;
+    }
+
+    public List<String> getAuthors()
+    {
+
+        //get the list of unique authors from database
+        try
+        {
+            authors = new ArrayList<String>();
+            List<Resource> gresources = this.group.getResources();
+
+            for(int i = 0; i < gresources.size(); i++)
+            {
+                String exist = "false";
+
+                if((gresources.get(i).getAuthor() != null) && (gresources.get(i).getAuthor().length() != 0))
+                {
+
+                    for(int j = 0; j < authors.size(); j++)
+                    {
+                        if(authors.get(j).equalsIgnoreCase(gresources.get(i).getAuthor().trim()))
+                        {
+                            exist = "true";
+                        }
+                    }
+
+                    if(exist.equals("false"))
+                    {
+                        authors.add(gresources.get(i).getAuthor().trim());
+                    }
+                }
+            }
+        }
+        catch(SQLException e)
+        {
+            log.debug(e);
+        }
+
+        return authors;
+    }
+
+    public void setAuthors(List<String> authors)
+    {
+        this.authors = authors;
+
+    }
+
+    public List<String> getMsources()
+    {
+        //get the list of unique media sources from database 
+        try
+        {
+            msources = new ArrayList<String>();
+            List<Resource> gresources = this.group.getResources();
+
+            for(int i = 0; i < gresources.size(); i++)
+            {
+                String exist = "false";
+
+                if((gresources.get(i).getMsource() != null) && (gresources.get(i).getMsource().length() != 0))
+                {
+
+                    for(int j = 0; j < msources.size(); j++)
+                    {
+                        if(msources.get(j).equalsIgnoreCase(gresources.get(i).getMsource().trim()))
+                        {
+                            exist = "true";
+                        }
+                    }
+
+                    if(exist.equals("false"))
+                    {
+                        msources.add(gresources.get(i).getMsource().trim());
+                    }
+                }
+            }
+        }
+        catch(SQLException e)
+        {
+            log.debug(e);
+        }
+
+        return msources;
+    }
+
+    public void setMsources(List<String> msources)
+    {
+        this.msources = msources;
     }
 
     public CategoryTree getGroupCatTree() throws SQLException
