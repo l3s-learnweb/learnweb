@@ -66,7 +66,8 @@ public class SearchFilterBean extends ApplicationBean implements Serializable
         purposes = null;
         mtypes = null;
         langs = null;
-        //sources and authors come from the database? 
+
+        //media sources and authors from database 
 
         //get all top categories
         try
