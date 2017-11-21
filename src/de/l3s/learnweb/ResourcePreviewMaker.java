@@ -22,6 +22,7 @@ import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.office.ConverterRequest;
 import de.l3s.office.ConverterService;
 import de.l3s.util.Image;
+import de.l3s.util.Misc;
 import de.l3s.util.StringHelper;
 import net.bramp.ffmpeg.FFmpeg;
 import net.bramp.ffmpeg.FFmpegExecutor;
@@ -79,7 +80,7 @@ public class ResourcePreviewMaker
         }
         catch(IOException e)
         {
-            log.error("Couldn't find ffmpeg library.");
+            log.error("Couldn't find ffmpeg library. " + Misc.getSystemDescription());
         }
     }
 
