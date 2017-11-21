@@ -1012,15 +1012,23 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void setClickedGroupItem(GroupItem clickedGroupItem)
     {
-        this.clickedGroupItem = clickedGroupItem;
-        if(clickedGroupItem instanceof Resource)
-        {
-            this.getResourceDetailBean().setClickedResource((Resource) clickedGroupItem);
-            this.rightPanelAction = RPAction.viewResource;
-        }
-        else
-        {
-            this.rightPanelAction = RPAction.viewFolder;
+        if (clickedGroupItem == null) {
+            if(this.clickedGroupItem instanceof Resource)
+                this.getResourceDetailBean().setClickedResource(null);
+
+            this.clickedGroupItem = null;
+            this.rightPanelAction = RPAction.none;
+        } else {
+            this.clickedGroupItem = clickedGroupItem;
+            if(clickedGroupItem instanceof Resource)
+            {
+                this.getResourceDetailBean().setClickedResource((Resource) clickedGroupItem);
+                this.rightPanelAction = RPAction.viewResource;
+            }
+            else
+            {
+                this.rightPanelAction = RPAction.viewFolder;
+            }
         }
     }
 
@@ -1731,7 +1739,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                         int folderGroupId = folder.getGroupId();
                         String folderName = folder.getTitle();
                         if(clickedGroupItem != null && clickedGroupItem.equals(folder))
-                            clickedGroupItem = null;
+                            setClickedGroupItem(null);
 
                         if(selectedFolder != null && selectedFolder.equals(folder))
                             selectedFolder = null;
@@ -1762,7 +1770,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                         int resourceGroupId = resource.getGroupId();
                         String resourceTitle = resource.getTitle();
                         if(clickedGroupItem != null && clickedGroupItem.equals(resource))
-                            clickedGroupItem = null;
+                            setClickedGroupItem(null);
 
                         resource.delete();
                         numResources++;

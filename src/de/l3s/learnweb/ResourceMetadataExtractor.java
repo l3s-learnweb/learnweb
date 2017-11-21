@@ -146,7 +146,7 @@ public class ResourceMetadataExtractor
         catch(JSONException | IOException e)
         {
             resource.setOnlineStatus(OnlineStatus.UNKNOWN); // most probably offline
-            log.error("Can't get more details about resource (url: " + resource.getUrl() + ") from " + resource.getSource() + " source.");
+            log.error("Can't get more details about resource (id: " + resource.getId() + ", url: " + resource.getUrl() + ") from " + resource.getSource() + " source.", e);
         }
     }
 
@@ -355,5 +355,6 @@ public class ResourceMetadataExtractor
         log.debug(resource.getDescription());
         log.debug(resource.getAuthor());
         log.debug(resource.getMaxImageUrl());
+        System.exit(0);
     }
 }

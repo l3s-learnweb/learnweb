@@ -16,28 +16,22 @@
                 <a href="#" onclick="lightbox_close(); return false;" id="lightbox_close" title="close"></a>
             </div>
             <div id="lightbox_content">
-                <c:choose>
-                    <c:when test="#{resource.isOfficeResource()}">
-                        <div id="lightbox_editor"/>
-                    </c:when>
-                    <c:when test="#{resource.type eq 'pdf'}">
-                        <iframe src="#{resource.url}" style="width:100%; height:100%; "/>
-                    </c:when>
-                    <c:when test="#{resource.type eq 'image' or resource.type eq 'glossary' or resource.type eq 'survey'}">
-                        <img src="#{resource.thumbnail4.url}" height="#{resource.thumbnail4.height}" width="#{resource.thumbnail4.width}"
-                             style="height:auto; width:auto; max-height:100%; max-width:100%; display:block; margin:0 auto; position: relative; top: 50%; transform: translateY(-50%);-moz-transform:translateY(-50%);-webkit-transform:translateY(-50%); -o-transform:translateY(-50%);-ms-transform:translateY(-50%);"/>
-                    </c:when>
-                    <c:when test="#{resource.storageType == 2 and (resource.type eq 'text' or resource.type eq 'website')}">
-                        <div style="overflow:auto; height:100%; width:100%; text-align:center;">
-                            <img src="#{resource.thumbnail4.url}" height="#{resource.thumbnail4.height}" width="#{resource.thumbnail4.width}"/>
-                        </div>
-                    </c:when>
-                    <c:otherwise>
-                        <!-- TODO: add default block -->
-                    </c:otherwise>
-                </c:choose>
+                <ui:fragment rendered="#{resource.isOfficeResource()}">
+                    <div id="lightbox_editor"/>
+                </ui:fragment>
+                <ui:fragment rendered="#{resource.type eq 'pdf'}">
+                    <iframe src="#{resource.url}" style="width:100%; height:100%; "/>
+                </ui:fragment>
+                <ui:fragment rendered="#{resource.type eq 'image' or resource.type eq 'glossary' or resource.type eq 'survey'}">
+                    <img src="#{resource.thumbnail4.url}" height="#{resource.thumbnail4.height}" width="#{resource.thumbnail4.width}"
+                         style="height:auto; width:auto; max-height:100%; max-width:100%; display:block; margin:0 auto; position: relative; top: 50%; transform: translateY(-50%);-moz-transform:translateY(-50%);-webkit-transform:translateY(-50%); -o-transform:translateY(-50%);-ms-transform:translateY(-50%);"/>
+                </ui:fragment>
+                <ui:fragment rendered="#{resource.storageType == 2 and (resource.type eq 'text' or resource.type eq 'website')}">
+                    <div style="overflow:auto; height:100%; width:100%; text-align:center;">
+                        <img src="#{resource.thumbnail4.url}" height="#{resource.thumbnail4.height}" width="#{resource.thumbnail4.width}"/>
+                    </div>
+                </ui:fragment>
 
-                <!-- TODO: merge two blocks below into choose block above -->
                 <h:panelGroup layout="block" id="archive_lightbox_content" style="display:none;height:97%;" rendered="${not empty resource.archiveUrls and resource.canEditResource(userBean.user)}">
                     <div id="archive_list">
                         <ui:fragment rendered="${resource.archiveUrls.size() le 100}">

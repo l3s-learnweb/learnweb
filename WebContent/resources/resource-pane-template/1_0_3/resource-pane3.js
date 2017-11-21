@@ -456,6 +456,7 @@ function doAction(action, extraAttr1, extraAttr2) {
                         {name: 'action', value: 'delete'},
                         {name: 'items', value: selected.getItemsAsJson()}
                     ]);
+                    update_url(0);
                 });
             } else {
                 console.error("No resources selected.");
