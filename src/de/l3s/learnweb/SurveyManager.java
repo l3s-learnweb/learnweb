@@ -29,6 +29,117 @@ public class SurveyManager
         this.learnweb = learnweb;
     }
 
+
+    public Survey getAssessmentFormDetails(int resource_id, int userId)
+    {
+        HashMap<String, String> wrappedAnswers = new HashMap<String, String>();
+        HashMap<String, String[]> wrappedMultipleAnswers = new HashMap<String, String[]>();
+        Survey survey = new Survey();
+        String assessmentAnswers = "SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?";
+        String titleDesc = "SELECT `title`, `description` FROM `lw_resource` WHERE `resource_id` = ?";
+        String getSurveyId = "SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?";
+        String query = "SELECT * FROM `lw_survey_question` WHERE `survey_id` = ? and `deleted`=0 ORDER BY `order` ASC";
+        try
+        {
+            PreparedStatement preparedStmnt = null;
+            ResultSet result = null;
+            preparedStmnt = learnweb.getConnection().prepareStatement(getSurveyId);
+
+            preparedStmnt.setInt(1, resource_id);
+
+            result = preparedStmnt.executeQuery();
+
+            if(result.next())
+            {
+
+                //  start = rs.getDate("open_date");
+                // end = rs.getDate("close_date");
+                survey.survey_id = result.getInt("survey_id");
+
+                //System.out.println(survey.survey_id);
+            }
+
+            preparedStmnt = learnweb.getConnection().prepareStatement(titleDesc);
+            preparedStmnt.setInt(1, resource_id);
+            ResultSet descTitle = preparedStmnt.executeQuery();
+            while(descTitle.next())
+            {
+                survey.description = descTitle.getString("description");
+                survey.surveyTitle = descTitle.getString("title");
+            }
+
+            preparedStmnt = learnweb.getConnection().prepareStatement(query);
+            preparedStmnt.setInt(1, survey.survey_id);
+
+            result = preparedStmnt.executeQuery();
+            HashMap<String, SurveyMetaDataFields> formquestions = new HashMap<String, SurveyMetaDataFields>();
+            while(result.next())
+            {
+                SurveyMetaDataFields formQuestion = new SurveyMetaDataFields(result.getString("question"), MetadataType.valueOf(result.getString("question_type")));
+                if(result.getString("answers") != null)
+                {
+                    String str = result.getString("answers").trim();
+                    formQuestion.setAnswers(Arrays.asList(str.split("\\s*\\|\\|\\|\\s*")));
+
+                }
+                if(result.getString("extra") != null)
+                {
+                    formQuestion.setExtra(result.getString("extra"));
+                }
+                if(result.getString("option") != null)
+                {
+                    String str = result.getString("option").trim();
+                    formQuestion.setOptions(Arrays.asList(str.split("\\s*\\|\\|\\|\\s*")));
+                }
+                if(result.getString("info") != null)
+                {
+                    formQuestion.setInfo(result.getString("info"));
+                }
+                else
+                {
+                    formQuestion.setInfo("");
+                }
+                formQuestion.setRequired(result.getBoolean("required"));
+                formQuestion.setId(Integer.toString(result.getInt("question_id")));
+                formquestions.put(formQuestion.getId(), formQuestion);
+                survey.formQuestions.add(formQuestion);
+            }
+            ResultSet rs = null;
+            preparedStmnt = learnweb.getConnection().prepareStatement(assessmentAnswers);
+            preparedStmnt.setInt(1, resource_id);
+            preparedStmnt.setInt(2, userId);
+            rs = preparedStmnt.executeQuery();
+            while(rs.next())
+            {
+                survey.submitted = true;
+
+                MetadataType ansType = formquestions.get(Integer.toString(rs.getInt("question_id"))).getType();
+                if(ansType.equals("MULTIPLE_MENU") || ansType.equals("MANY_CHECKBOX"))
+                {
+                    String[] answer;
+                    if(rs.getString("answer").contains("|||"))
+                        answer = rs.getString("answer").split("|||");
+                    else
+                        answer = new String[] { rs.getString("answer") };
+                    wrappedMultipleAnswers.put(Integer.toString(rs.getInt("question_id")), answer);
+
+                }
+                else
+                {
+                    wrappedAnswers.put(Integer.toString(rs.getInt("question_id")), rs.getString("answer"));
+                }
+            }
+            survey.wrappedAnswers = wrappedAnswers;
+            survey.wrappedMultipleAnswers = wrappedMultipleAnswers;
+
+        }
+        catch(SQLException e)
+        {
+            log.error(e);
+        }
+        return survey;
+    }
+
     public Survey getSurveyByUserId(int resourceId, int userId) throws SQLException
     {
         Survey survey = new Survey();
@@ -46,6 +157,7 @@ public class SurveyManager
 
         return survey;
     }
+
 
     public Survey getFormQuestions(int resource_id, int userId)
     {
@@ -267,7 +379,7 @@ public class SurveyManager
                     String str = "";
                     for(String s : pair1.getValue())
                     {
-                        str = str + s + ",";
+                        str = str + s + "|||";
                     }
 
                     str = str.substring(0, str.lastIndexOf(","));

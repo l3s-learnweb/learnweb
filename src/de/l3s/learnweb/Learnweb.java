@@ -75,6 +75,8 @@ public class Learnweb
     private final WaybackCapturesLogger waybackCapturesLogger;
     private final SearchLogManager searchLogManager;
     private final WaybackUrlManager waybackUrlManager;
+    //TODO: Delete assessment survey manager 
+    private final AssessmentManager assessmentManager;
 
     //added by Chloe 
     private final AudienceManager audienceManager;
@@ -258,6 +260,7 @@ public class Learnweb
         submissionManager = new SubmissionManager(this);
         createSurveyManager = new createSurveyManager(this);
         waybackUrlManager = WaybackUrlManager.getInstance(this);
+        assessmentManager = new AssessmentManager(this);
         learnwebIsLoading = false;
 
         //new managers added by Chloe 
@@ -803,6 +806,11 @@ public class Learnweb
     public SubmissionManager getSubmissionManager()
     {
         return submissionManager;
+    }
+
+    public AssessmentManager getAssessmentManager()
+    {
+        return assessmentManager;
     }
 
 }

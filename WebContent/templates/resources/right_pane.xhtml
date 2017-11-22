@@ -272,13 +272,17 @@
 								<a class="hyperlink" onclick="lightbox_open(); change_lightbox_content(true);" style="float:right;" title="#{msg['Archive.change_thumbnail']}?">
 									<h:graphicImage style="cursor:pointer;" value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg['Archive.change_thumbnail']}?" rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}"/>
 								</a>
-								<h:outputLink value="showGlossary.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.source eq 'glossary'}">
+								<h:outputLink value="showGlossary.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.type eq 'glossary'}">
 											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
 											#{msg["Glossary.open"]}
 								</h:outputLink>
-								<h:outputLink value="../templates/resources/survey.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.source eq 'survey'}">
+								<h:outputLink value="../templates/resources/survey.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.type eq 'survey'}">
 											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
 											Open survey
+								</h:outputLink>
+								<h:outputLink value="../lw/survey/assessment/assessment.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.type eq 'survey' and userBean.user.moderator eq true and (resourceDetailBean.clickedResource.id eq 204492 or resourceDetailBean.clickedResource.id eq 204491 or resourceDetailBean.clickedResource.id eq 204490 or resourceDetailBean.clickedResource.id eq 204316 or resourceDetailBean.clickedResource.id eq 204315 )}">
+											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
+											User Results 
 								</h:outputLink>
 								<!-- <h:outputLink value="../templates/resources/editsurvey.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.source eq 'survey'}">
 											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />

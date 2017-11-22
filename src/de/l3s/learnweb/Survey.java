@@ -2,6 +2,7 @@ package de.l3s.learnweb;
 
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Survey
 {
@@ -95,7 +96,30 @@ public class Survey
         this.organizationId = organizationId;
     }
 
+
+    public HashMap<String, String> getWrappedAnswers()
+    {
+        return wrappedAnswers;
+    }
+
+    public void setWrappedAnswers(HashMap<String, String> wrappedAnswers)
+    {
+        this.wrappedAnswers = wrappedAnswers;
+    }
+
+    public HashMap<String, String[]> getWrappedMultipleAnswers()
+    {
+        return wrappedMultipleAnswers;
+    }
+
+    public void setWrappedMultipleAnswers(HashMap<String, String[]> wrappedMultipleAnswers)
+    {
+        this.wrappedMultipleAnswers = wrappedMultipleAnswers;
+    }
+
+
     boolean submitted = false;
+
     Date start;
     Date end;
     int survey_id;
@@ -104,5 +128,6 @@ public class Survey
     String description;
     int organizationId;
     ArrayList<SurveyMetaDataFields> formQuestions = new ArrayList<SurveyMetaDataFields>();
-
+    HashMap<String, String> wrappedAnswers = new HashMap<String, String>();
+    HashMap<String, String[]> wrappedMultipleAnswers = new HashMap<String, String[]>();
 }
