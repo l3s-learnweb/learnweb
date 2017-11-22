@@ -29,6 +29,24 @@ public class SurveyManager
         this.learnweb = learnweb;
     }
 
+    public Survey getSurveyByUserId(int resourceId, int userId) throws SQLException
+    {
+        Survey survey = new Survey();
+        survey.setResource_id(resourceId);
+
+        String select = "SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?";
+        PreparedStatement ps = learnweb.getConnection().prepareStatement(select);
+        ps.setInt(1, resourceId);
+        ps.setInt(2, userId);
+        ResultSet rs = ps.executeQuery();
+        if(rs.next())
+        {
+            survey.setSubmitted(true);
+        }
+
+        return survey;
+    }
+
     public Survey getFormQuestions(int resource_id, int userId)
     {
         Survey survey = new Survey();

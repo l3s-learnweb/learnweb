@@ -95,7 +95,7 @@ public class Survey
         this.organizationId = organizationId;
     }
 
-    boolean submitted;
+    boolean submitted = false;
     Date start;
     Date end;
     int survey_id;
