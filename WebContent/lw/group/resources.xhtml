@@ -171,12 +171,12 @@
 								<ul class="filter-sub-bar vCarousel-wrapper filter-vCarousel">
 									<h:panelGroup styleClass="vCarousel-container" layout="block">
 										<li class="#{!filter.active ? 'active' : null}">
-											<p:commandButton value="#{filter.anyText}" action="#{groupDetailBean.changeFilters(filter.anyUrl)}" update=":datagrid :paginator :filters" oncomplete="updateCarousel()"/>
+											<p:commandButton value="#{filter.anyText}" action="#{groupDetailBean.changeFilters(filter.anyUrl)}" update=":datagrid :paginator :filters" oncomplete="updateCarousel();resourceDND();"/>
 										</li>
 	
 										<ui:repeat value="#{filter.items}" var="item">
 											<li class="#{item.active ? 'active' : null}">
-												<p:commandButton value="#{item.name} #{item.counter != null ? '('.concat(item.counter).concat(')') : null}" action="#{groupDetailBean.changeFilters(item.url)}" update=":datagrid :paginator :filters" oncomplete="updateCarousel()"/>
+												<p:commandButton value="#{item.name} #{item.counter != null ? '('.concat(item.counter).concat(')') : null}" action="#{groupDetailBean.changeFilters(item.url)}" update=":datagrid :paginator :filters" oncomplete="updateCarousel();resourceDND();"/>
 											</li>
 										</ui:repeat>
 	
@@ -189,7 +189,7 @@
 						</ui:repeat>
 						<h:panelGroup rendered="#{groupDetailBean.searchFilters != null}">
 							<li class="filter clear-filters">
-								<p:commandButton value="#{msg.clear_filters}" action="#{groupDetailBean.changeFilters(null)}" update=":datagrid :paginator :filters" oncomplete="updateCarousel()"/>
+								<p:commandButton value="#{msg.clear_filters}" action="#{groupDetailBean.changeFilters(null)}" update=":datagrid :paginator :filters" oncomplete="updateCarousel();resourceDND();"/>
 							</li>
 						</h:panelGroup>
 					</ul>
