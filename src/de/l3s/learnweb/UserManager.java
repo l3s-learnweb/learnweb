@@ -377,7 +377,7 @@ public class UserManager
         replace.setString(15, user.getStudentId());
         replace.setInt(16, user.isAdmin() ? 1 : 0);
         replace.setInt(17, user.isModerator() ? 1 : 0);
-        replace.setInt(18, user.getActiveCourseId());
+        replace.setInt(18, 0); // not used any more
         replace.setTimestamp(19, user.getRegistrationDate() == null ? new java.sql.Timestamp(System.currentTimeMillis()) : new java.sql.Timestamp(user.getRegistrationDate().getTime()));
         replace.setString(20, user.getPassword());
 

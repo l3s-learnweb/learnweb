@@ -302,7 +302,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         if(group != null)
         {
             editedGroupDescription = group.getDescription();
-            editedGroupLeaderId = group.getLeader().getId();
+            editedGroupLeaderId = group.getLeader() == null ? 0 : group.getLeader().getId();
             editedGroupTitle = group.getTitle();
 
             if(null == selectedFolder)
@@ -1012,13 +1012,16 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void setClickedGroupItem(GroupItem clickedGroupItem)
     {
-        if (clickedGroupItem == null) {
+        if(clickedGroupItem == null)
+        {
             if(this.clickedGroupItem instanceof Resource)
                 this.getResourceDetailBean().setClickedResource(null);
 
             this.clickedGroupItem = null;
             this.rightPanelAction = RPAction.none;
-        } else {
+        }
+        else
+        {
             this.clickedGroupItem = clickedGroupItem;
             if(clickedGroupItem instanceof Resource)
             {

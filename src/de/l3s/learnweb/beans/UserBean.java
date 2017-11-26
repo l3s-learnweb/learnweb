@@ -171,6 +171,8 @@ public class UserBean implements Serializable
                 activeCourseId = 505; //activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(505);
             else if(user.getId() == 8963) // LAbInt set active course to LabInt 2016
                 activeCourseId = 1225; //activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(505);
+            else if(user.getOrganisationId() == 1249) // eu made 4 all
+                activeCourseId = 1250;
             else
             {
 
@@ -391,30 +393,7 @@ public class UserBean implements Serializable
         // in case of errors load public course
         return Learnweb.getInstance().getCourseManager().getCourseById(485);
 
-        /*
-        if(activeCourseCacheTime + 60000 < System.currentTimeMillis() || activeCourseCache == null)
-        {
-            if(specialDomain.equals("archiveweb"))
-        	activeCourseId = 891;
-            else if(activeCourseId == 0)
-        	activeCourseId = 485; // set to public course
-        
-            this.activeCourseCache = Learnweb.getInstance().getCourseManager().getCourseById(activeCourseId);
-            this.activeCourseCacheTime = System.currentTimeMillis();
-        }
-        return activeCourseCache;
-        */
     }
-    /*
-    public void setActiveCourseId(int activeCourseId)
-    {
-    	this.activeCourseCache = null;
-    	this.activeCourseId = activeCourseId;
-    
-    	if(isLoggedIn())
-    	    getUser().setActiveCourseId(activeCourseId);
-    }
-    */
 
     @Override
     public String toString()
