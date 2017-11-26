@@ -17,7 +17,7 @@ public class File implements Serializable, HasId
     public enum TYPE
     {
         UNKNOWN, // 0
-        THUMBNAIL_SQUARD, // 1
+        THUMBNAIL_SQUARED, // 1
         THUMBNAIL_SMALL, // 2
         THUMBNAIL_MEDIUM, // 3
         FILE_MAIN, // 4 the file that can be downloaded/viewed

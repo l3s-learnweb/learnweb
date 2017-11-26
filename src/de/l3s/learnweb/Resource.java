@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
+import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.rm.ExtendedMetadata;
 import de.l3s.util.HasId;
@@ -72,8 +73,8 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     public static final int WEB_RESOURCE = 2;
 
     private int id = -1; // default id, that indicates that this resource is not stored at fedora
-    private int groupId;
-    private int folderId;
+    private int groupId = 0;
+    private int folderId = 0;
     private String title;
     private String description = "";
     private String url;
@@ -1199,7 +1200,6 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public LinkedHashMap<Integer, File> getFiles()
     {
-        // TODO add lazy loading as soon as embedded images are removed
         return files;
     }
 
@@ -1225,13 +1225,14 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         return files.get(fileType.ordinal());
     }
 
-    /*
-    @Deprecated
-    private static String replacePlaceholder(String embeddedCode, File file)
+    /**
+     * 
+     * @return If the uploaded file was modified (e.g. a video or office document) we keep a copy of the original file
+     */
+    public File getOriginalFile()
     {
-        return embeddedCode.replace("{learnweb_file_" + file.getResourceFileNumber() + "}", file.getUrl());
+        return getFile(TYPE.FILE_ORIGINAL);
     }
-    */
 
     /**
      * @return Text that has been automatically extracted from the source file/url
@@ -1690,6 +1691,12 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     {
         path = null;
         prettyPath = null;
+        tags = null;
+        comments = null;
+        owner = null;
+        archiveUrls = null;
+        metadataWrapper = null;
+        metadataMultiValue = null;
     }
 
     public boolean canEditResource(User user) throws SQLException
@@ -2210,4 +2217,5 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         extendedMetadata = null;
 
     }
+
 }

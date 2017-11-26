@@ -48,8 +48,11 @@ public class UserManager
         this.cache = userCacheSize == 0 ? new DummyCache<User>() : new Cache<User>(userCacheSize);
     }
 
-    public void resetCache() throws SQLException
+    public void resetCache()
     {
+        for(User user : cache.getValues())
+            user.clearCaches();
+
         cache.clear();
     }
 

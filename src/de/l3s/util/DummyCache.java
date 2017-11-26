@@ -1,5 +1,7 @@
 package de.l3s.util;
 
+import java.util.Collection;
+
 /**
  * A dummy implementation of the ICache Interface, which doesn't cache anything
  * 
@@ -62,5 +64,11 @@ public class DummyCache<E> implements ICache<E>
     public int size()
     {
         return -1;
+    }
+
+    @Override
+    public Collection<E> getValues()
+    {
+        return null;
     }
 }

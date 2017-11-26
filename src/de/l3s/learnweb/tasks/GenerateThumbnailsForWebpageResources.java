@@ -34,12 +34,14 @@ public class GenerateThumbnailsForWebpageResources
      */
     public static void main(String[] args) throws SQLException, MalformedURLException, IOException, ClassNotFoundException
     {
-        Learnweb learnweb = Learnweb.createInstance("");
+        //System.out.println(AddResourceBean.checkUrl("http://www.teachingideas.co.uk/"));
+        //System.exit(0);
+
+        Learnweb learnweb = Learnweb.createInstance(null);
         ResourceManager rm = learnweb.getResourceManager();
         ResourcePreviewMaker rpm = Learnweb.getInstance().getResourcePreviewMaker();
 
-        String query = "SELECT * FROM `lw_resource` WHERE `deleted` =0 AND `type` LIKE 'text' AND `format` LIKE 'text/html' AND thumbnail0_file_id =0 limit 10";
-        query = "SELECT * FROM `lw_resource` WHERE `storage_type` =2 AND `type` LIKE 'file' AND deleted =0 AND url NOT LIKE '%learnweb%'";
+        String query = "SELECT * FROM `lw_resource` WHERE `storage_type` =2 AND `type` LIKE 'website' AND deleted =0 AND url NOT LIKE '%learnweb%' AND online_status = 'UNKNOWN' and thumbnail0_file_id = 0 ORDER BY resource_id DESC";
 
         List<Resource> resources = rm.getResources(query, null);
         log.debug("start");
@@ -60,6 +62,9 @@ public class GenerateThumbnailsForWebpageResources
                 log.debug("offline");
                 continue;
             }
+            resource.setOnlineStatus(OnlineStatus.ONLINE);
+
+            log.debug("online");
 
             if(resource.getThumbnail0().getFileId() == 0)
             {
@@ -71,7 +76,7 @@ public class GenerateThumbnailsForWebpageResources
                 }
                 catch(Throwable t)
                 {
-                    log.error("Can't create thumbnail", t);
+                    log.warn("Can't create thumbnail for url: " + url, t);
                 }
             }
 

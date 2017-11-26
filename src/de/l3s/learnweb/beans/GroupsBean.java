@@ -50,11 +50,24 @@ public class GroupsBean extends ApplicationBean implements Serializable
         if(null == user || null == selectedGroup)
             return;
 
-        user.joinGroup(selectedGroup);
-        myGroups = getUser().getGroups();
-        joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
-        log(Action.group_joining, selectedGroup.getId(), selectedGroup.getId());
-        addGrowl(FacesMessage.SEVERITY_INFO, "groupJoined", selectedGroup.getTitle());
+        // make sure users can not join groups simultaneously  
+        synchronized(selectedGroup)
+        {
+            if(selectedGroup.isMemberCountLimited())
+            {
+                if(selectedGroup.getMemberCount() >= selectedGroup.getMaxMemberCount())
+                {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "group_full");
+                    return;
+                }
+            }
+            user.joinGroup(selectedGroup);
+            myGroups = getUser().getGroups();
+            joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
+            log(Action.group_joining, selectedGroup.getId(), selectedGroup.getId());
+            addGrowl(FacesMessage.SEVERITY_INFO, "groupJoined", selectedGroup.getTitle());
+        }
+
     }
 
     public void leaveGroup() throws Exception

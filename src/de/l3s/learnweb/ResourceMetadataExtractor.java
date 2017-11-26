@@ -22,6 +22,7 @@ import de.l3s.learnweb.Resource.OnlineStatus;
 import de.l3s.learnweb.beans.AddResourceBean;
 import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
+import de.l3s.office.FileUtility;
 import de.l3s.util.StringHelper;
 
 /**
@@ -138,9 +139,8 @@ public class ResourceMetadataExtractor
             }
 
             resource.setType(Resource.ResourceType.website);
-            // resource.setFormat("text/html");
-            resource.setSource("Internet");
-            FileInfo fileInfo = getFileInfo(FileInspector.openStream(resource.getUrl()), "unknown");
+
+            FileInfo fileInfo = getFileInfo(resource.getUrl());
             processFileResource(resource, fileInfo);
         }
         catch(JSONException | IOException e)
@@ -290,8 +290,11 @@ public class ResourceMetadataExtractor
     {
         resource.setFormat(fileInfo.getMimeType());
         resource.setTypeFromFormat(resource.getFormat());
+        resource.setFileName(fileInfo.getFileName());
 
-        if(StringUtils.isNotEmpty(fileInfo.getTitle()) && StringUtils.isEmpty(resource.getTitle()))
+        log.debug("type: " + resource.getType() + "; file: " + fileInfo.toString());
+
+        if(StringUtils.isNotEmpty(fileInfo.getTitle()) && StringUtils.isEmpty(resource.getTitle()) && !fileInfo.getTitle().equalsIgnoreCase("unknown"))
             resource.setTitle(fileInfo.getTitle());
 
         if(StringUtils.isNotEmpty(fileInfo.getAuthor()) && StringUtils.isEmpty(resource.getAuthor()))
@@ -323,6 +326,13 @@ public class ResourceMetadataExtractor
 
     public FileInfo getFileInfo(InputStream inputStream, String fileName) throws IOException
     {
+        return fileInspector.inspect(inputStream, fileName);
+    }
+
+    public FileInfo getFileInfo(String url) throws IOException
+    {
+        String fileName = FileUtility.getFileName(url);
+        InputStream inputStream = FileInspector.openStream(url);
         return fileInspector.inspect(inputStream, fileName);
     }
 

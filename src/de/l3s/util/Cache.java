@@ -1,5 +1,6 @@
 package de.l3s.util;
 
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.concurrent.locks.Lock;
@@ -125,5 +126,11 @@ public class Cache<E> implements ICache<E>
     public int size()
     {
         return values.size();
+    }
+
+    @Override
+    public Collection<E> getValues()
+    {
+        return values.values();
     }
 }

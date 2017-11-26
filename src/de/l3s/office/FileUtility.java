@@ -87,7 +87,11 @@ public class FileUtility
         if(url == null)
             return null;
 
-        String fileName = url.substring(url.lastIndexOf('/') + 1, url.length());
+        int lastIndex = url.lastIndexOf('/');
+        if(lastIndex < 1)
+            return "";
+
+        String fileName = url.substring(lastIndex + 1, url.length());
         return fileName;
     }
 

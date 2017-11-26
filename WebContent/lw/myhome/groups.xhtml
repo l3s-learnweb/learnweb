@@ -76,7 +76,7 @@
 					</div> 
 					<br/>
 						
-					<p:commandButton id="create_group_button" ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" 
+					<p:commandButton id="create_group_button" ajax="true" value="#{msg.createGroup}" action="#{groupsBean.onCreateGroup}" oncomplete="applyTooltip()"
 						styleClass="greenbutton" process="@form" update="@form :my_groups :growl :group_menu" />	
 					
 				</h:form>
@@ -120,8 +120,7 @@
 		<h:form id="my_groups">
 					
 			<p:dataTable var="group" value="#{groupsBean.myGroups}" emptyMessage="#{msg.no_groups_found}" dynamic="false">
-				<p:ajax event="sort" oncomplete="applyTooltip()"/>
-				
+				<p:ajax event="sort" oncomplete="applyTooltip()" />				
 				
 				<p:column headerText="#{msg.title}" sortBy="#{group.title}" width="17%">
 					
@@ -129,9 +128,10 @@
 					
 						<f:param name="group_id" value="#{group.id}" />
 						<h:outputText value="#{group.longTitle}" />
-					</h:outputLink>
-					
+					</h:outputLink>								
+										
 					<h:outputText value=" (#{msg.new_word})" styleClass="bold_red" rendered="${userBean.newGroups.contains(group)}"/>
+					
 				</p:column>
 
 				<p:column headerText="#{msg.description}" sortBy="#{group.description}" styleClass="group_description" >
@@ -144,11 +144,16 @@
 				
 				<p:column headerText="#{msg.course}" sortBy="#{group.course.title}" width="11%" >
 					<h:outputText value="#{group.course.title}" />						
+				</p:column>	
+				
+				<p:column headerText="#{msg.members}" sortBy="#{group.memberCount}"  width="60" styleClass="align-center">
+					<h:outputText value=" #{group.memberCount} #{msg.of} #{group.maxMemberCount}"  rendered="#{group.memberCountLimited}"/>
+					<h:outputText value=" #{group.memberCount}"  rendered="#{not group.memberCountLimited}"/>					
 				</p:column>		
 				
-				<p:column headerText="#{msg.options}" styleClass="nowrap align-center" width="70">					
+				<p:column headerText="#{msg.options}" styleClass="nowrap align-center" width="60">					
 					<p:commandLink action="#{groupsBean.leaveGroup}" styleClass="optionIcon" process="@this" 
-						update=":other_groups :growl :group_menu :my_groups"  title="#{msg.leave}"
+						update=":other_groups :growl :group_menu :my_groups"  title="#{msg.leave}" oncomplete="applyTooltip()"
 						onstart="return confirm('${groupsBean.getLocaleMessage('leave_group_question', group.title)}');">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 						<h:graphicImage value="/resources/icon/silk/group_delete.png" width="16" height="16" alt="#{msg.leave}" />
@@ -159,6 +164,8 @@
 							<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
 					</h:outputLink>					
 				</p:column>
+				
+				
 			</p:dataTable>
 			<br/><br/>
 		</h:form>
@@ -197,15 +204,20 @@
 					<p:column headerText="#{msg.course}" width="8%" filterBy="#{group.course.title}" filterMatchMode="contains" styleClass="other_groups_course_title">
 						<h:outputText value="#{group.course.title}" />						
 					</p:column>
+				
+					<p:column headerText="#{msg.members}" sortBy="#{group.memberCount}"  width="60" styleClass="align-center">
+						<h:outputText value=" #{group.memberCount} #{msg.of} #{group.maxMemberCount}"  rendered="#{group.memberCountLimited}"/>
+						<h:outputText value=" #{group.memberCount}"  rendered="#{not group.memberCountLimited}"/>					
+					</p:column>	
 					
-					<p:column styleClass="nowrap align-center" width="70">	
+					<p:column styleClass="nowrap align-center" width="60">	
 						<f:facet name="header">
 								<span id="option_join_group">
 									#{msg.options}
 								</span>
 						</f:facet>	
 						<p:commandLink action="#{groupsBean.joinGroup}" update=":other_groups :growl :group_menu :my_groups"  
-							process="@this" styleClass="optionIcon" title="#{msg.join}">
+							process="@this" styleClass="optionIcon" title="#{msg.join}" oncomplete="applyTooltip()">
 							<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 							<h:graphicImage value="/resources/icon/silk/group_add.png" width="16" height="16" alt="#{msg.join}" />
 						</p:commandLink>

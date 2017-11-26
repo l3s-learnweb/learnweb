@@ -1,5 +1,6 @@
 package de.l3s.util;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Map;
 
@@ -57,5 +58,11 @@ public class LRUCache<E> implements ICache<E>
     public int size()
     {
         return values.size();
+    }
+
+    @Override
+    public Collection<E> getValues()
+    {
+        return values.values();
     }
 }

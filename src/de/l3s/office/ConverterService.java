@@ -79,7 +79,7 @@ public class ConverterService
         }
         catch(Exception ex)
         {
-            log.error("Error during conversion : " + ex);
+            log.error("Error during conversion; URL: " + request.getUrl() + "; " + ex);
         }
         return null;
     }

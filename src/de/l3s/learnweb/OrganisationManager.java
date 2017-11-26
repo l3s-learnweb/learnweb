@@ -35,7 +35,7 @@ public class OrganisationManager
         this.resetCache();
     }
 
-    public void resetCache()
+    public void resetCache() throws SQLException
     {
         cache.clear();
 
@@ -45,10 +45,6 @@ public class OrganisationManager
             ResultSet rs = select.executeQuery("SELECT " + COLUMNS + " FROM lw_organisation ORDER BY title");
             while(rs.next())
                 cache.put(rs.getInt("organisation_id"), new Organisation(rs));
-        }
-        catch(SQLException e)
-        {
-            throw new RuntimeException(e);
         }
     }
 

@@ -259,6 +259,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.setStorageType(Resource.WEB_RESOURCE);
             resource.setUrl(checkUrl(resource.getUrl()));
             resource.setUser(getUser());
+            resource.setSource("Internet");
 
             log.debug("Extracting info from given url...");
             ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
@@ -279,44 +280,30 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     public void addGlossary() throws IOException
     {
-
         try
         {
             resource.setDeleted(false);
             resource.setSource("Learnweb");
             resource.setType(Resource.ResourceType.glossary);
-            resource.setUrl("");
-
-            // add resource to a group if selected
-            if(resourceTargetGroupId != 0)
-            {
-                resource.setGroupId(resourceTargetGroupId);
-                getUser().setActiveGroup(resourceTargetGroupId);
-            }
-
-            if(resourceTargetFolderId != 0)
-            {
-                resource.setFolderId(resourceTargetFolderId);
-            }
-
-            if(resource.getId() == -1)
-                resource = getUser().addResource(resource);
-            else
-            {
-
-                resource.save();
-            }
+            resource.setUrl(getLearnweb().getServerUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));
 
             Resource iconResource = getLearnweb().getResourceManager().getResource(200233);
-
             resource.setThumbnail0(iconResource.getThumbnail0());
             resource.setThumbnail1(iconResource.getThumbnail1());
             resource.setThumbnail2(iconResource.getThumbnail2());
             resource.setThumbnail3(iconResource.getThumbnail3());
             resource.setThumbnail4(iconResource.getThumbnail4());
 
-            resource.setUrl(getLearnweb().getServerUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));
-            resource.save();
+            // add resource to a group if selected
+            resource.setGroupId(resourceTargetGroupId);
+            resource.setFolderId(resourceTargetFolderId);
+            getUser().setActiveGroup(resourceTargetGroupId);
+
+            if(resource.getId() == -1)
+                resource = getUser().addResource(resource);
+            else
+                resource.save();
+
             log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
 
@@ -328,7 +315,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.setLocation("Learnweb");
             resource.setStorageType(Resource.LEARNWEB_RESOURCE);
             resource.setDeleted(true);
-            //resource.setUrl("");
         }
         catch(SQLException e)
         {
@@ -460,22 +446,16 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             }
 
             resource.setDeleted(false);
+            resource.setUser(getUser());
             if(resource.isOfficeResource())
                 getFileEditorBean().fillInFileInfo(resource);
 
-            // add resource to a group if selected
-            if(resourceTargetGroupId != 0)
-            {
-                resource.setGroupId(resourceTargetGroupId);
-                getUser().setActiveGroup(resourceTargetGroupId);
-            }
+            // add resource to a group if selected            
+            resource.setGroupId(resourceTargetGroupId);
+            resource.setFolderId(resourceTargetFolderId);
+            getUser().setActiveGroup(resourceTargetGroupId);
 
-            if(resourceTargetFolderId != 0)
-            {
-                resource.setFolderId(resourceTargetFolderId);
-            }
-
-            if(resource.getId() == -1 || resource.getUserId() == 0) // a new resource which is not stored in the database yet
+            if(resource.getId() == -1) // a new resource which is not stored in the database yet
                 resource = getUser().addResource(resource);
             else
                 resource.save();

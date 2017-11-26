@@ -19,8 +19,8 @@ public class Course implements Serializable, Comparable<Course>
     // if you add 64 options you have to add one options_field{x} column in lw_course 
     public static enum Option implements Comparable<Option>
     {
-        Resources_Enable_Star_rating,
-        Resources_Enable_Thumb_rating,
+        Unused_1,
+        Unused_2,
         Users_Hide_language_switch,
         Services_Allow_user_to_logout_from_interweb,
         Users_Require_mail_address,

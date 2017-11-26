@@ -36,7 +36,6 @@ import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.ResourcePreviewMaker;
 
 public class ArchiveItShingle
 {
@@ -162,6 +161,7 @@ public class ArchiveItShingle
         ps.close();
     }
 
+    /*
     public void generateThumbnails(int resourceId) throws IOException, SQLException
     {
         ResourcePreviewMaker resourcePreviewMaker = Learnweb.getInstance().getResourcePreviewMaker();
@@ -175,7 +175,7 @@ public class ArchiveItShingle
                 resourcePreviewMaker.processArchiveWebsite(resourceId, rs.getString("archive_url"));
         }
         ps.close();
-    }
+    }*/
 
     public void computeUniqueArchivesByPair(HashMap<String, String> archiveUrls, int resourceId) throws SQLException
     {

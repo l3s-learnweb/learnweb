@@ -37,7 +37,7 @@ public class GroupManager
 {
 
     // if you change this, you have to change the constructor of Group too
-    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.metadata1, g.language, g.restriction_anonymous_resources, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation, g.restriction_forum_category_required, g.policy_add, g.policy_annotate, g.policy_edit, g.policy_join, g.policy_view";
+    private final static String COLUMNS = "g.group_id, g.title, g.description, g.leader_id, g.course_id, g.university, g.metadata1, g.language, g.restriction_anonymous_resources, lw_group_category.group_category_id, lw_group_category.category_title, lw_group_category.category_abbreviation, g.restriction_forum_category_required, g.policy_add, g.policy_annotate, g.policy_edit, g.policy_join, g.policy_view, g.max_member_count";
     private static Logger log = Logger.getLogger(GroupManager.class);
 
     private Learnweb learnweb;
@@ -54,8 +54,11 @@ public class GroupManager
         this.folderCache = groupCacheSize == 0 ? new DummyCache<Folder>() : new Cache<Folder>(folderCacheSize);
     }
 
-    public void resetCache() throws SQLException
+    public void resetCache()
     {
+        for(Group group : groupCache.getValues())
+            group.clearCaches();
+
         groupCache.clear();
         folderCache.clear();
     }
@@ -163,6 +166,7 @@ public class GroupManager
             group.setCategoryAbbreviation(rs.getString("category_abbreviation"));
             group.setRestrictionForumCategoryRequired(rs.getInt("restriction_forum_category_required") == 1);
             group.setRestrictionAnonymousResources(rs.getInt("restriction_anonymous_resources") == 1);
+            group.setMaxMemberCount(rs.getInt("max_member_count"));
 
             group.setPolicyAdd(POLICY_ADD.valueOf(rs.getString("policy_add")));
             group.setPolicyAnnotate(POLICY_ANNOTATE.valueOf(rs.getString("policy_annotate")));

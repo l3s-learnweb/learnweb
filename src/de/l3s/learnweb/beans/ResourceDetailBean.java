@@ -29,12 +29,12 @@ import org.primefaces.event.RateEvent;
 
 import de.l3s.learnweb.ArchiveUrl;
 import de.l3s.learnweb.Comment;
-import de.l3s.learnweb.Course;
 import de.l3s.learnweb.File;
 import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.FileManager;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourceMetadataExtractor;
 import de.l3s.learnweb.ResourcePreviewMaker;
@@ -82,13 +82,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         User user = getUser();
         if(user != null)
         {
-            Course course = user.getActiveCourse();
-
-            if(course != null)
-            {
-                isThumbRatingEnabled = course.getOption(Course.Option.Resources_Enable_Thumb_rating);
-                isStarRatingEnabled = course.getOption(Course.Option.Resources_Enable_Star_rating);
-            }
+            Organisation org = user.getOrganisation();
+            isThumbRatingEnabled = !org.getOption(Organisation.Option.Resource_Hide_Thumb_rating);
+            isStarRatingEnabled = !org.getOption(Organisation.Option.Resource_Hide_Star_rating);
         }
     }
 
@@ -305,7 +301,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             Collection<File> files = clickedResource.getFiles().values();
             for(File file : files)
             {
-                if(file.getType() == TYPE.THUMBNAIL_LARGE || file.getType() == TYPE.THUMBNAIL_MEDIUM || file.getType() == TYPE.THUMBNAIL_SMALL || file.getType() == TYPE.THUMBNAIL_SQUARD || file.getType() == TYPE.THUMBNAIL_VERY_SMALL) // number 4 is reserved for the source file
+                if(file.getType() == TYPE.THUMBNAIL_LARGE || file.getType() == TYPE.THUMBNAIL_MEDIUM || file.getType() == TYPE.THUMBNAIL_SMALL || file.getType() == TYPE.THUMBNAIL_SQUARED || file.getType() == TYPE.THUMBNAIL_VERY_SMALL) // number 4 is reserved for the source file
                 {
                     log.debug("Delete " + file.getName());
                     fileManager.delete(file);
@@ -451,7 +447,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             Collection<File> files = clickedResource.getFiles().values();
             for(File file : files)
             {
-                if(file.getType() == TYPE.THUMBNAIL_LARGE || file.getType() == TYPE.THUMBNAIL_MEDIUM || file.getType() == TYPE.THUMBNAIL_SMALL || file.getType() == TYPE.THUMBNAIL_SQUARD || file.getType() == TYPE.THUMBNAIL_VERY_SMALL) // number 4 is reserved for the source file
+                if(file.getType() == TYPE.THUMBNAIL_LARGE || file.getType() == TYPE.THUMBNAIL_MEDIUM || file.getType() == TYPE.THUMBNAIL_SMALL || file.getType() == TYPE.THUMBNAIL_SQUARED || file.getType() == TYPE.THUMBNAIL_VERY_SMALL) // number 4 is reserved for the source file
                 {
                     log.debug("Delete " + file.getName());
                     fileManager.delete(file);

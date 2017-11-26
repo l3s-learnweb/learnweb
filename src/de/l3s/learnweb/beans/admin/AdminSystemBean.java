@@ -95,7 +95,20 @@ public class AdminSystemBean extends ApplicationBean implements Serializable
 
     public void onClearCaches()
     {
-        getLearnweb().getOrganisationManager().resetCache();
+        try
+        {
+            Learnweb learnweb = getLearnweb();
+            learnweb.getOrganisationManager().resetCache();
+            learnweb.getCourseManager().resetCache();
+            learnweb.getResourceManager().resetCache();
+            learnweb.getGroupManager().resetCache();
+            learnweb.getUserManager().resetCache();
+            learnweb.getFileManager().resetCache();
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
 
         addMessage(FacesMessage.SEVERITY_INFO, "Caches cleared");
     }

@@ -89,14 +89,27 @@ public class ResourcePreviewMaker
         InputStream inputStream = null;
         try
         {
+            // if a web resource is not a simple website then download it
+            if(resource.getStorageType() == Resource.WEB_RESOURCE && !resource.getType().equals(Resource.ResourceType.website) && (resource.getSource().equals("Bing") || resource.getSource().equals("Internet")))
+            {
+                File file = new File();
+                file.setType(TYPE.FILE_MAIN);
+                file.setName(resource.getFileName());
+                file.setMimeType(resource.getFormat());
+                fileManager.save(file, FileInspector.openStream(resource.getUrl()));
+                resource.addFile(file);
+
+                resource.setFileUrl(file.getUrl());
+            }
+
             if(resource.getType().equals(Resource.ResourceType.website))
             {
                 processWebsite(resource);
             }
-            else if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getFile(TYPE.FILE_MAIN) != null)
+            else if(resource.getFile(TYPE.FILE_MAIN) != null) // resource.getStorageType() == Resource.LEARNWEB_RESOURCE && 
             {
                 inputStream = resource.getFile(TYPE.FILE_MAIN).getInputStream();
-                processResource(resource, inputStream);
+                processFile(resource, inputStream);
             }
             else if(resource.getStorageType() == Resource.WEB_RESOURCE && StringUtils.isNotEmpty(resource.getMaxImageUrl()))
             {
@@ -106,7 +119,7 @@ public class ResourcePreviewMaker
             else
             {
                 inputStream = FileInspector.openStream(resource.getUrl());
-                processResource(resource, inputStream);
+                processFile(resource, inputStream);
             }
         }
         catch(Throwable e)
@@ -122,7 +135,7 @@ public class ResourcePreviewMaker
         }
     }
 
-    private void processResource(Resource resource, InputStream inputStream) throws IOException, SQLException
+    private void processFile(Resource resource, InputStream inputStream) throws IOException, SQLException
     {
         if(resource.getType().equals(Resource.ResourceType.image))
         {
@@ -136,7 +149,7 @@ public class ResourcePreviewMaker
         {
             processVideo(resource);
         }
-        else if(resource.getType().equals(Resource.ResourceType.document) || resource.getType().equals(Resource.ResourceType.presentation) || resource.getType().equals(Resource.ResourceType.spreadsheet))
+        else if(resource.getType().equals(Resource.ResourceType.document) || resource.getType().equals(Resource.ResourceType.presentation) && !resource.getSource().equalsIgnoreCase("Slideshare") || resource.getType().equals(Resource.ResourceType.spreadsheet))
         {
             processOfficeDocument(resource);
         }
@@ -236,17 +249,23 @@ public class ResourcePreviewMaker
      * This method is used to process an archived web page to
      * generate thumbnails specific for the CoverFlow Visualization
      */
+    /*
     public void processArchiveWebsite(int resourceId, String url) throws IOException, SQLException
     {
+    
+    What's the difference to the usual website thumbnail generation?
+    Let's discuss this before this method is used again.
+    
+    
         URL thumbnailUrl = new URL(archiveThumbnailService + StringHelper.urlEncode(url));
-
+    
         // process image
         Image img = new Image(thumbnailUrl.openStream());
-
+    
         File file = new File();
         file.setResourceId(resourceId);
         file.setMimeType("image/png");
-
+    
         if(img.getWidth() > SIZE3_MAX_WIDTH && img.getHeight() > SIZE3_MAX_HEIGHT)
         {
             img = img.getResized(SIZE3_MAX_WIDTH, SIZE3_MAX_HEIGHT, true);
@@ -258,15 +277,16 @@ public class ResourcePreviewMaker
             file.setType(TYPE.THUMBNAIL_LARGE);
             file.setName("wayback_thumbnail.jpg");
         }
-
+    
         file = fileManager.save(file, img.getInputStream());
-
+    
         if(file.getId() > 0)
         {
             learnweb.getArchiveUrlManager().updateArchiveUrl(file.getId(), resourceId, url);
         }
-
+    
     }
+    */
 
     public void processVideo(Resource resource)
     {
@@ -456,7 +476,7 @@ public class ResourcePreviewMaker
 
             thumbnail = croppedToAspectRatio ? img.getCroppedAndResized(SIZE1_WIDTH, SIZE1_WIDTH) : img.getResizedToSquare2(SIZE1_WIDTH, 0.0);
             file = new File();
-            file.setType(TYPE.THUMBNAIL_SQUARD);
+            file.setType(TYPE.THUMBNAIL_SQUARED);
             file.setName("thumbnail1.png");
             file.setMimeType("image/png");
             fileManager.save(file, thumbnail.getInputStream());

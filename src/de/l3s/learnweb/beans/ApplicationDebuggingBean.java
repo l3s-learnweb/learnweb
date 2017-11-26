@@ -25,12 +25,12 @@ public class ApplicationDebuggingBean implements Serializable
 
     private static final long serialVersionUID = 6714523666863887982L;
 
-    private long startTime;
+    //private long startTime;
 
     public ApplicationDebuggingBean()
     {
 
-        startTime = System.currentTimeMillis();
+        //startTime = System.currentTimeMillis();
     }
 
     public String getSessionId()

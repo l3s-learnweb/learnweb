@@ -390,4 +390,9 @@ public class FileManager
 
     }
 
+    public void resetCache()
+    {
+        cache.clear();
+    }
+
 }

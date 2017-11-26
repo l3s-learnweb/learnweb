@@ -31,7 +31,9 @@ import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.Resource.ResourceType;
 import de.l3s.learnweb.ResourceDecorator;
+import de.l3s.learnweb.ResourceMetadataExtractor;
 import de.l3s.learnweb.Search;
 import de.l3s.learnweb.Search.GroupedResources;
 import de.l3s.learnweb.SearchFilters;
@@ -41,6 +43,8 @@ import de.l3s.learnweb.SearchFilters.FilterItem;
 import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.SearchFilters.SERVICE;
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.beans.AddResourceBean.CreateThumbnailThread;
+import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 
 @ManagedBean
 @ViewScoped
@@ -301,8 +305,10 @@ public class SearchBean extends ApplicationBean implements Serializable
                     getLearnweb().getWaybackCapturesLogger().logWaybackCaptures(newResource);
             }
             else
+            {
                 // create a copy 
                 newResource = selectedResource.clone();
+            }
 
             newResource.setQuery(query);
             //These metadata entries are not required while storing resource at the database
@@ -312,18 +318,9 @@ public class SearchBean extends ApplicationBean implements Serializable
             log.debug("Add resource); group: " + selectedResourceTargetGroupId + "; folder: " + selectedResourceTargetFolderId);
 
             // add resource to a group if selected
-            if(selectedResourceTargetGroupId != 0)
-            {
-                newResource.setGroupId(selectedResourceTargetGroupId);
-                user.setActiveGroup(selectedResourceTargetGroupId);
-
-                if(selectedResourceTargetFolderId != 0)
-                {
-                    newResource.setFolderId(selectedResourceTargetFolderId);
-                }
-            }
-            else
-                newResource.setGroupId(selectedResourceTargetGroupId); //This is for resources to be added to MyResources
+            newResource.setGroupId(selectedResourceTargetGroupId);
+            newResource.setFolderId(selectedResourceTargetFolderId);
+            user.setActiveGroup(selectedResourceTargetGroupId);
 
             newResource = user.addResource(newResource);
 
@@ -331,28 +328,19 @@ public class SearchBean extends ApplicationBean implements Serializable
             if(newResource.getThumbnail2() == null || newResource.getThumbnail2().getFileId() == 0)
                 new AddResourceBean.CreateThumbnailThread(newResource).start();
 
-            /*
-            //Logs when a resource has been saved by the user to LearnWeb
-            if(logEnabled)
+            // we need to check whether a Bing result is a PDF, Word or other document
+            if(newResource.getOriginalResourceId() == 0 && (newResource.getType().equals(ResourceType.website) || newResource.getType().equals(ResourceType.text)) && newResource.getSource().equals("Bing"))
             {
-                try
-                {
-                    Date date = new Date(); // To get the time stamp as to when the resource was saved.
-            
-                    int tempresourceId = getSearchLogClient().getResourceIdByUrl(newResource.getUrl());
-                    getSearchLogClient().saveResourceLog(user.getId(), date, ACTION.resource_saved, newResource.getUrl(), tempresourceId, newResource.getTitle(), newResource.getSource());
-                    getSearchLogClient().addResourceSavedList(tempresourceId, newResource.getId());
-                }
-                catch(ClientHandlerException e)
-                {
-                    log.debug("Search Tracker service is down");
-                }
-                catch(RuntimeException e)
-                {
-                    log.debug(e.getMessage());
-                }
-            }*/
-            user.setActiveGroup(selectedResourceTargetGroupId);
+                log.debug("Extracting info from given url...");
+                ResourceMetadataExtractor rme = getLearnweb().getResourceMetadataExtractor();
+                FileInfo fileInfo = rme.getFileInfo(newResource.getUrl());
+                rme.processFileResource(newResource, fileInfo);
+            }
+
+            log.debug("Creating thumbnails from given url...");
+            Thread createThumbnailThread = new CreateThumbnailThread(newResource);
+            createThumbnailThread.start();
+
             search.logResourceSaved(selectedResourceTempId, getUser(), newResource.getId());
             log(Action.adding_resource, selectedResourceTargetGroupId, newResource.getId(), search.getId() + " - " + selectedResourceTempId);
 

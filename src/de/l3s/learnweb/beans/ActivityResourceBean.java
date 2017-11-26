@@ -22,9 +22,9 @@ import de.l3s.learnweb.beans.GroupDetailBean.RPAction;
 @ViewScoped
 public class ActivityResourceBean extends ApplicationBean implements Serializable
 {
+    // the filter defines which log entries are show on this page
     private final static Action[] FILTER = new Action[] { Action.adding_resource, Action.commenting_resource, Action.edit_resource, Action.group_adding_document, Action.group_adding_link, Action.group_changing_description, Action.group_changing_leader,
-            Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource, Action.adding_resource_metadata, Action.adding_yourown_metadata, Action.group_metadata_search,
-            Action.group_category_search };
+            Action.group_changing_title, Action.group_creating, Action.group_deleting, Action.rating_resource, Action.tagging_resource, Action.thumb_rating_resource };
 
     private static final long serialVersionUID = -7630987853810267209L;
     private ArrayList<NewsEntry> newslist;

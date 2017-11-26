@@ -1,5 +1,7 @@
 package de.l3s.util;
 
+import java.util.Collection;
+
 public interface ICache<E>
 {
 
@@ -35,4 +37,10 @@ public interface ICache<E>
      */
     public int size();
 
+    /**
+     * Return all values of this cache
+     * 
+     * @return
+     */
+    public Collection<E> getValues();
 }

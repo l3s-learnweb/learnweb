@@ -94,6 +94,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     private boolean restrictionForumCategoryRequired = false;
     private boolean restrictionAnonymousResources = false; // the owner of resources is not shown
+    private int maxMemberCount = -1; // defines how many users can join this group
 
     // caches
     private String categoryTitle;
@@ -115,36 +116,14 @@ public class Group implements Comparable<Group>, HasId, Serializable
         members = null;
         links = null;
         folders = null;
+        resourceCount = -1;
+        memberCount = -1;
     }
 
     public Group()
     {
         this.id = -1;
     }
-
-    /*
-    public Group(ResultSet rs) throws SQLException
-    {
-        setId(rs.getInt("group_id"));
-        setTitle(rs.getString("title"));
-        setDescription(rs.getString("description"));
-        setLeaderUserId(rs.getInt("leader_id"));
-        setMetadata1(rs.getString("metadata1"));
-        setLanguage(rs.getString("language"));
-        setCourseId(rs.getInt("course_id"));
-        setCategoryId(rs.getInt("group_category_id"));
-        setCategoryTitle(rs.getString("category_title"));
-        setCategoryAbbreviation(rs.getString("category_abbreviation"));
-        setRestrictionForumCategoryRequired(rs.getInt("restriction_forum_category_required") == 1);
-        setRestrictionAnonymousResources(rs.getInt("restriction_anonymous_resources") == 1);
-    
-        setPolicyAdd(POLICY_ADD.valueOf(rs.getString("policy_add")));
-        setPolicyAnnotate(POLICY_ANNOTATE.valueOf(rs.getString("policy_annotate")));
-        setPolicyEdit(POLICY_EDIT.valueOf(rs.getString("policy_edit")));
-        setPolicyJoin(POLICY_JOIN.valueOf(rs.getString("policy_join")));
-        setPolicyView(POLICY_VIEW.valueOf(rs.getString("policy_view")));
-    }
-    */
 
     @Override
     public int getId()
@@ -154,24 +133,24 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     public List<User> getMembers() throws SQLException
     {
-        long now = System.currentTimeMillis();
+        //long now = System.currentTimeMillis();
 
-        if(null == members || cacheTime < now - 3000L)
+        if(null == members)// || cacheTime < now - 3000L)
         {
             members = Learnweb.getInstance().getUserManager().getUsersByGroupId(id);
-            cacheTime = now;
+            //cacheTime = now;
         }
         return members;
     }
 
     public int getMemberCount() throws SQLException
     {
-        long now = System.currentTimeMillis();
+        //long now = System.currentTimeMillis();
 
-        if(-1 == memberCount || cacheTime < now - 3000L)
+        if(-1 == memberCount)// || cacheTime < now - 3000L)
         {
             memberCount = Learnweb.getInstance().getGroupManager().getMemberCount(id);
-            cacheTime = now;
+            //cacheTime = now;
         }
         return memberCount;
     }
@@ -747,6 +726,29 @@ public class Group implements Comparable<Group>, HasId, Serializable
     public void setRestrictionAnonymousResources(boolean restrictionAnonymousResources)
     {
         this.restrictionAnonymousResources = restrictionAnonymousResources;
+    }
+
+    public int getMaxMemberCount()
+    {
+        return maxMemberCount;
+    }
+
+    public void setMaxMemberCount(int maxMemberCount)
+    {
+        this.maxMemberCount = maxMemberCount;
+    }
+
+    public boolean isMemberCountLimited()
+    {
+        return maxMemberCount > -1;
+    }
+
+    public void setMemberCountLimited(boolean memberCountLimited)
+    {
+        if(!memberCountLimited) // if no limit > set the member limit infinite
+            maxMemberCount = -1;
+        else if(maxMemberCount <= 0) // if limit true but not defined yet > set default limit = 1
+            maxMemberCount = 1;
     }
 
 }

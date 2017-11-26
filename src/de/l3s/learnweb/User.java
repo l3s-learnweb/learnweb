@@ -71,7 +71,6 @@ public class User implements Comparable<User>, Serializable, HasId
 
     // caches
     private transient List<Course> courses;
-    private transient List<Resource> resources;
     private transient List<Group> groups;
     private transient LinkedList<Group> writeAbleGroups;
     private String imageUrl;
@@ -88,9 +87,10 @@ public class User implements Comparable<User>, Serializable, HasId
     public void clearCaches()
     {
         courses = null;
-        resources = null;
         groups = null;
         writeAbleGroups = null;
+        organisation = null;
+        imageUrl = null;
     }
 
     public void onDestroy()
@@ -209,28 +209,17 @@ public class User implements Comparable<User>, Serializable, HasId
         Learnweb learnweb = Learnweb.getInstance();
         resource = learnweb.getResourceManager().addResource(resource, this);
 
-        //learnweb.getArchiveUrlManager().addResourceToArchive(resource);
-
-        if(null != resources)
-            resources.add(resource);
-
         return resource;
     }
 
     public void deleteResource(Resource resource) throws SQLException
     {
-        if(null != resources)
-            resources.remove(resource);
-
         Learnweb.getInstance().getResourceManager().deleteResource(resource);
     }
 
     public List<Resource> getResources() throws SQLException
     {
-        //if(null == resources)
-        resources = Learnweb.getInstance().getResourceManager().getResourcesByUserId(this.getId());
-
-        return resources;
+        return Learnweb.getInstance().getResourceManager().getResourcesByUserId(this.getId());
     }
 
     public int getResourceCount() throws SQLException
@@ -467,8 +456,12 @@ public class User implements Comparable<User>, Serializable, HasId
      */
     public Group getActiveGroup() throws SQLException
     {
-        if(null == activeGroup && activeGroupId != 0)
+        if(activeGroupId == 0)
+            return null;
+
+        if(null == activeGroup)
             activeGroup = Learnweb.getInstance().getGroupManager().getGroupById(activeGroupId);
+
         return activeGroup;
     }
 
@@ -784,6 +777,12 @@ public class User implements Comparable<User>, Serializable, HasId
         preferences.put(key, value);
     }
 
+    /**
+     * Since the user can not manually change the active course you should use this value very carefully
+     * 
+     * @return
+     */
+    @Deprecated
     public int getActiveCourseId()
     {
         try

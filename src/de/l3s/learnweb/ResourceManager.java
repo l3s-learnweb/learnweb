@@ -21,6 +21,7 @@ import de.l3s.interwebj.jaxb.SearchResultEntity;
 import de.l3s.interwebj.jaxb.ThumbnailEntity;
 import de.l3s.learnweb.File.TYPE;
 import de.l3s.learnweb.Resource.OnlineStatus;
+import de.l3s.learnweb.Resource.ResourceType;
 import de.l3s.learnweb.beans.AddResourceBean;
 import de.l3s.learnweb.rm.AudienceManager;
 import de.l3s.learnweb.rm.Category;
@@ -469,7 +470,6 @@ public class ResourceManager
         }
         resource = cache.put(resource);
 
-        // replaces the file placeholders with their urls
         resource.prepareEmbeddedCodes();
 
         return resource;
@@ -947,7 +947,9 @@ public class ResourceManager
             else
                 resource.setLocation("Learnweb");
 
-            // TODO remove as soon as embedded images are removed
+            if(resource.getType().equals(ResourceType.glossary))
+                resource.setUrl(learnweb.getServerUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));
+
             if(!resource.isDeleted())
             {
                 List<File> files = learnweb.getFileManager().getFilesByResource(resource.getId());
@@ -956,7 +958,8 @@ public class ResourceManager
                     resource.addFile(file);
                     if(file.getType().equals(TYPE.FILE_MAIN))
                     {
-                        resource.setUrl(file.getUrl());
+                        if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE)
+                            resource.setUrl(file.getUrl());
                         resource.setFileUrl(file.getUrl());
                     }
                 }
@@ -1041,8 +1044,11 @@ public class ResourceManager
         return resources;
     }
 
-    public void resetCache() throws SQLException
+    public void resetCache()
     {
+        for(Resource resource : cache.getValues())
+            resource.clearCaches();
+
         cache.clear();
     }
 

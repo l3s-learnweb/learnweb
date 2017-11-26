@@ -72,30 +72,6 @@ public class FileInspector
 
         NamedList<Object> metadata = (NamedList<Object>) result.get("null_metadata");
 
-        /*
-        if(metadata.indexOf("title", 0) > -1)
-        {
-            List<String> titles = (List<String>) metadata.get("title");
-            if(titles.size() > 0 && titles.get(0).length() > 0)
-                info.title = titles.get(0);
-        }
-        if(metadata.indexOf("description", 0) > -1)
-        {
-            List<String> descriptions = (List<String>) metadata.get("description");
-            if(descriptions.size() > 0 && descriptions.get(0).length() > 0)
-                info.description = descriptions.get(0);
-        }
-        if(metadata.indexOf("Author", 0) > -1)
-        {
-            List<String> authors = (List<String>) metadata.get("Author", 0);
-            info.author = authors.get(0);
-        }
-        if(metadata.indexOf("Content-Type", 0) > -1)
-        {
-            List<String> types = (List<String>) metadata.get("Content-Type");
-            if(types.size() > 0 && types.get(0).length() > 0)
-                info.mimeType = types.get(0).split(";")[0];
-        }*/
         if(metadata.indexOf("title", 0) > -1)
         {
             String title = metadata2String(metadata.get("title"));
