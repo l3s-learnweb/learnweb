@@ -17,6 +17,7 @@ import org.apache.solr.common.util.NamedList;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.util.MimeTypes;
+import de.l3s.util.Misc;
 import de.l3s.util.StringHelper;
 
 public class FileInspector
@@ -65,7 +66,7 @@ public class FileInspector
         }
         catch(Exception e)
         {
-            log.error("FileInspector: Can't extract Text from File", e);
+            log.error("FileInspector: Can't extract Text from File; " + Misc.getSystemDescription(), e);
 
             return info;
         }

@@ -220,7 +220,7 @@ public class SolrClient
     public static void main(String[] args) throws SQLException, IOException, SolrServerException, ClassNotFoundException
     {
 
-        Learnweb learnweb = Learnweb.createInstance("");
+        Learnweb learnweb = Learnweb.getInstance();
         SolrClient solr = learnweb.getSolrClient();
         log.debug(solr.getAutoCompletion("author_s", "phi C"));
 

@@ -1329,7 +1329,7 @@ public class ResourceManager
 
     public static void reindexAllResources() throws SQLException, ClassNotFoundException
     {
-        Learnweb lw = Learnweb.createInstance("");
+        Learnweb lw = Learnweb.getInstance();
         ResourceManager rm = lw.getResourceManager();
         SolrClient sm = lw.getSolrClient();
 
@@ -1355,7 +1355,7 @@ public class ResourceManager
 
     public static void createMissingThumbnails() throws SQLException, ClassNotFoundException, IOException
     {
-        Learnweb lw = Learnweb.createInstance("");
+        Learnweb lw = Learnweb.getInstance();
         ResourceManager rm = lw.getResourceManager();
 
         List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where  group_id =? AND thumbnail0_file_id =0", "419");

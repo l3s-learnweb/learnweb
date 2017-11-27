@@ -355,7 +355,7 @@ public class ResourceMetadataExtractor
         resource.setStorageType(Resource.WEB_RESOURCE);
         resource.setUrl(url);
 
-        ResourceMetadataExtractor rme = new ResourceMetadataExtractor(Learnweb.createInstance(""));
+        ResourceMetadataExtractor rme = new ResourceMetadataExtractor(Learnweb.getInstance());
         rme.processResource(resource);
 
         log.debug(resource.getType());

@@ -68,8 +68,6 @@ public class FileManager
             serverUrl = "https://" + serverUrl.substring(7);
 
         this.basePath = serverUrl + urlPattern;
-
-        log.debug("basePath = " + basePath);
     }
 
     /**

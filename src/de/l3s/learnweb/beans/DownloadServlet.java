@@ -64,13 +64,13 @@ public class DownloadServlet extends HttpServlet
         try
         {
             this.learnweb = Learnweb.createInstance(context);
+            this.urlPattern = learnweb.getProperties().getProperty("FILE_MANAGER_URL_PATTERN");
+            this.fileManager = learnweb.getFileManager();
         }
         catch(Exception e)
         {
             log.fatal("fatal error: ", e);
         }
-        this.urlPattern = learnweb.getProperties().getProperty("FILE_MANAGER_URL_PATTERN");
-        this.fileManager = learnweb.getFileManager();
     }
 
     /**

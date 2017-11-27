@@ -616,7 +616,7 @@ public class TedManager
 
     public static void main(String[] args) throws IOException, IllegalResponseException, SQLException, ClassNotFoundException
     {
-        TedManager tm = Learnweb.createInstance("").getTedManager();
+        TedManager tm = Learnweb.getInstance().getTedManager();
         tm.fetchTedX(); //saveTedResource();
         System.exit(0);
     }

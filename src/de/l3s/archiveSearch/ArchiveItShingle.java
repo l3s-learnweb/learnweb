@@ -543,7 +543,7 @@ public class ArchiveItShingle
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException
     {
         ArchiveItShingle archiveItShingle = new ArchiveItShingle();
-        Group g = Learnweb.createInstance("").getGroupManager().getGroupById(1132);
+        Group g = Learnweb.getInstance().getGroupManager().getGroupById(1132);
         /*float sumTotalAvgHammingDistances = 0f;
         int noAvgHammingDistances = 0;
         for(Resource r : g.getResources())
@@ -613,9 +613,9 @@ public class ArchiveItShingle
         for(Resource r : g.getResources())
         {
             LinkedList<ArchiveUrl> archiveUrls = new LinkedList<ArchiveUrl>();
-            PreparedStatement ps = Learnweb.createInstance("").getConnection()
+            PreparedStatement ps = Learnweb.getInstance().getConnection()
             .prepareStatement("SELECT * FROM `lw_resource_archiveurl` JOIN lw_resource_archive_shingles USING(shingle_id) WHERE `resource_id`=? AND httpstatuscode=200 GROUP BY htmltags, htmltext ORDER BY timestamp ASC");
-            PreparedStatement ps = Learnweb.createInstance("").getConnection().prepareStatement("SELECT * FROM `lw_resource_archiveurl` WHERE `resource_id`=? AND httpstatuscode=200 ORDER BY timestamp ASC");
+            PreparedStatement ps = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM `lw_resource_archiveurl` WHERE `resource_id`=? AND httpstatuscode=200 ORDER BY timestamp ASC");
             //ps.setInt(1, 169896);
             ps.setInt(1, r.getId());
             ResultSet rs = ps.executeQuery();

@@ -494,7 +494,9 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public boolean isOfficeResource()
     {
-        return Resource.ResourceType.document.equals(type) || Resource.ResourceType.spreadsheet.equals(type) && source.equals("SlideShare") || Resource.ResourceType.presentation.equals(type);
+        if(source.equals("SlideShare"))
+            return false;
+        return Resource.ResourceType.document.equals(type) || Resource.ResourceType.spreadsheet.equals(type) || Resource.ResourceType.presentation.equals(type);
     }
 
     public String getStringStorageType()
