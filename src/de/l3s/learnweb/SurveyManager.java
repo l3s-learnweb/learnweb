@@ -457,7 +457,12 @@ public class SurveyManager
                     pSttmnt.setInt(3, resourceId);
                     ResultSet result = pSttmnt.executeQuery();
                     if(result.next())
-                        ans.answers.put(qid, result.getString("answer"));
+                    {
+                        String answerOfUser = result.getString("answer");
+                        if(answerOfUser.contains("|||"))
+                            answerOfUser.replaceAll("|||", ",");
+                        ans.answers.put(qid, answerOfUser);
+                    }
                     else
                         ans.answers.put(qid, "Unanswered");
                 }
