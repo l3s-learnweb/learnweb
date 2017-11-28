@@ -50,6 +50,7 @@ import de.l3s.learnweb.Organisation.Option;
 import de.l3s.learnweb.Presentation;
 import de.l3s.learnweb.PresentationManager;
 import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.Resource.ResourceType;
 import de.l3s.learnweb.ResourceManager;
 import de.l3s.learnweb.ResourceManager.Order;
 import de.l3s.learnweb.SearchFilters;
@@ -1487,6 +1488,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             this.setRightPanelAction(RPAction.newResource);
             this.getAddResourceBean().clearForm();
             this.getAddResourceBean().getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
+            this.getAddResourceBean().getResource().setType(ResourceType.glossary);
             break;
         case "survey":
             this.setRightPanelAction(RPAction.newResource);

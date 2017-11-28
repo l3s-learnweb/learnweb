@@ -10,6 +10,17 @@
 	margin:0px auto;
 	text-align:center;
 }
+.ui-datatable-frozenlayout-left {
+   width: 5% !important;
+}
+
+.ui-datatable table
+{
+table-layout: auto !important;
+}
+/* .ui-datatable-scrollable-header-box table, .ui-datatable-scrollable-footer-box table, .ui-datatable-scrollable-body table {
+    table-layout: auto !important ;
+} */
 .noresource{
 	
 	font-weight:bold;

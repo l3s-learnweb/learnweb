@@ -79,7 +79,8 @@
 						<f:setPropertyActionListener target="#{myResourcesBean.rightPanelAction}" value="newResource"/>
 					</p:menuitem>
 					<p:menuitem value="Add Glossary" icon="ui-icon-link" update=":add_resource_panel" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
-						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="3"/>
+						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="1"/>
+						<f:setPropertyActionListener target="#{addResourceBean.resource.type}" value="glossary"></f:setPropertyActionListener>
 						<f:setPropertyActionListener target="#{myResourcesBean.rightPanelAction}" value="newResource"/>
 					</p:menuitem>			        
 			    </p:tieredMenu>

@@ -75,7 +75,7 @@ public class Learnweb
     private final WaybackCapturesLogger waybackCapturesLogger;
     private final SearchLogManager searchLogManager;
     private final WaybackUrlManager waybackUrlManager;
-    //TODO: Delete assessment survey manager 
+    //TODO: Delete assessment survey manager or rename if detailed user answers fn is kept
     private final AssessmentManager assessmentManager;
 
     //added by Chloe 

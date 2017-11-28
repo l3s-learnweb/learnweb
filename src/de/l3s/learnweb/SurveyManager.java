@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.ArrayUtils;
@@ -28,7 +30,6 @@ public class SurveyManager
     {
         this.learnweb = learnweb;
     }
-
 
     public Survey getAssessmentFormDetails(int resource_id, int userId)
     {
@@ -157,7 +158,6 @@ public class SurveyManager
 
         return survey;
     }
-
 
     public Survey getFormQuestions(int resource_id, int userId)
     {
@@ -396,6 +396,79 @@ public class SurveyManager
 
         }
 
+    }
+
+    public LinkedHashMap<String, String> getAnsweredQuestions(int resourceId)
+    {
+        LinkedHashMap<String, String> questions = new LinkedHashMap<String, String>();
+        int surveyId;
+
+        String getSurveyId = "SELECT `survey_id` FROM `lw_survey_resource` WHERE `resource_id`=?";
+        String getQuestionByOrder = "SELECT distinct(t2.question_id), t1.question FROM `lw_survey_question` t1, lw_survey_answer t2 where t2.question_id = t1.question_id and t1.survey_id=? order by `order`";
+
+        try
+        {
+            PreparedStatement pSttmnt = learnweb.getConnection().prepareStatement(getSurveyId);
+            pSttmnt.setInt(1, resourceId);
+            ResultSet idResult = pSttmnt.executeQuery();
+            if(idResult.next())
+            {
+                surveyId = idResult.getInt("survey_id");
+                pSttmnt = learnweb.getConnection().prepareStatement(getQuestionByOrder);
+                pSttmnt.setInt(1, surveyId);
+                ResultSet result = pSttmnt.executeQuery();
+                while(result.next())
+                {
+                    questions.put(Integer.toString(result.getInt("question_id")), result.getString("question"));
+                }
+            }
+        }
+        catch(SQLException e)
+        {
+            log.error("Error in fetching questions for survey result, resource id: " + resourceId, e);
+        }
+
+        return questions;
+    }
+
+    public List<SurveyAnswer> getAnswerByUser(int resourceId, HashMap<String, String> question)
+    {
+        String answerByUser = "SELECT `answer` FROM `lw_survey_answer` WHERE `question_id`=? and `user_id`=? and `resource_id`=?";
+        String userIds = "SELECT distinct(`user_id`) FROM `lw_survey_answer` WHERE `resource_id`=?";
+
+        List<SurveyAnswer> answers = new ArrayList<SurveyAnswer>();
+
+        try
+        {
+            PreparedStatement pSttmnt = learnweb.getConnection().prepareStatement(userIds);
+            pSttmnt.setInt(1, resourceId);
+            ResultSet ids = pSttmnt.executeQuery();
+            while(ids.next())
+            {
+                SurveyAnswer ans = new SurveyAnswer();
+                ans.userId = Integer.toString(ids.getInt("user_id"));
+                ans.userName = learnweb.getUserManager().getUser(ids.getInt("user_id")).getUsername();
+                pSttmnt = learnweb.getConnection().prepareStatement(answerByUser);
+                for(String qid : question.keySet())
+                {
+                    pSttmnt.setInt(1, Integer.parseInt(qid));
+                    pSttmnt.setInt(2, ids.getInt("user_id"));
+                    pSttmnt.setInt(3, resourceId);
+                    ResultSet result = pSttmnt.executeQuery();
+                    if(result.next())
+                        ans.answers.put(qid, result.getString("answer"));
+                    else
+                        ans.answers.put(qid, "Unanswered");
+                }
+                answers.add(ans);
+            }
+        }
+        catch(SQLException e)
+        {
+            log.error("Error in fetching answer for resource id: " + resourceId, e);
+        }
+
+        return answers;
     }
 }
 /*public ArrayList<SurveyMetaDataFields> getFormQuestions()
