@@ -44,6 +44,7 @@ public class SubmissionManager
                 s.setOpenDatetime(rs.getDate("open_datetime"));
                 s.setCloseDatetime(rs.getDate("close_datetime"));
                 s.setNoOfResources(rs.getInt("number_of_resources"));
+                s.setSurveyResourceId(rs.getInt("survey_resource_id"));
 
                 submissions.add(s);
             }
@@ -56,24 +57,87 @@ public class SubmissionManager
         return submissions;
     }
 
-    public ArrayList<Submission> getActiveSubmissionsByCourse(int courseId)
+    public ArrayList<Submission> getSubmissionsByUser(User user)
     {
         ArrayList<Submission> submissions = new ArrayList<Submission>();
+
         try
         {
-            PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE course_id=? AND close_datetime >= NOW() AND open_datetime < NOW() ORDER BY close_datetime");
-            ps.setInt(1, courseId);
+            List<Course> courses = user.getCourses();
+            StringBuilder builder = new StringBuilder();
+
+            for(int i = 0; i < courses.size(); i++)
+            {
+                builder.append("?,");
+            }
+
+            String pStmt = "SELECT * FROM lw_submit WHERE course_id IN (" + builder.deleteCharAt(builder.length() - 1).toString() + ") ORDER BY close_datetime";
+
+            PreparedStatement ps = learnweb.getConnection().prepareStatement(pStmt);
+            int index = 1;
+            for(Course course : courses)
+            {
+                ps.setInt(index++, course.getId());
+            }
+
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             {
                 Submission s = new Submission();
                 s.setId(rs.getInt("submission_id"));
-                s.setCourseId(courseId);
+                s.setCourseId(rs.getInt("course_id"));
                 s.setTitle(rs.getString("title"));
                 s.setDescription(rs.getString("description"));
                 s.setOpenDatetime(rs.getDate("open_datetime"));
                 s.setCloseDatetime(rs.getDate("close_datetime"));
                 s.setNoOfResources(rs.getInt("number_of_resources"));
+                s.setSurveyResourceId(rs.getInt("survey_resource_id"));
+
+                submissions.add(s);
+            }
+        }
+        catch(SQLException e)
+        {
+            log.error("Error while retrieving submissions by course", e);
+        }
+
+        return submissions;
+    }
+
+    public ArrayList<Submission> getActiveSubmissionsByUser(User user)
+    {
+        ArrayList<Submission> submissions = new ArrayList<Submission>();
+        try
+        {
+            List<Course> courses = user.getCourses();
+            StringBuilder builder = new StringBuilder();
+
+            for(int i = 0; i < courses.size(); i++)
+            {
+                builder.append("?,");
+            }
+
+            String pStmt = "SELECT * FROM lw_submit WHERE course_id IN (" + builder.deleteCharAt(builder.length() - 1).toString() + ") AND close_datetime >= NOW() AND open_datetime < NOW() ORDER BY close_datetime";
+
+            PreparedStatement ps = learnweb.getConnection().prepareStatement(pStmt);
+            int index = 1;
+            for(Course course : courses)
+            {
+                ps.setInt(index++, course.getId());
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                Submission s = new Submission();
+                s.setId(rs.getInt("submission_id"));
+                s.setCourseId(rs.getInt("course_id"));
+                s.setTitle(rs.getString("title"));
+                s.setDescription(rs.getString("description"));
+                s.setOpenDatetime(rs.getDate("open_datetime"));
+                s.setCloseDatetime(rs.getDate("close_datetime"));
+                s.setNoOfResources(rs.getInt("number_of_resources"));
+                s.setSurveyResourceId(rs.getInt("survey_resource_id"));
 
                 submissions.add(s);
             }
@@ -103,6 +167,7 @@ public class SubmissionManager
                 s.setOpenDatetime(rs.getDate("open_datetime"));
                 s.setCloseDatetime(rs.getDate("close_datetime"));
                 s.setNoOfResources(rs.getInt("number_of_resources"));
+                s.setSurveyResourceId(rs.getInt("survey_resource_id"));
             }
         }
         catch(SQLException e)
@@ -133,7 +198,7 @@ public class SubmissionManager
     {
         try
         {
-            String query = "REPLACE INTO lw_submit(`submission_id`, `course_id`, `title`, `description`, `open_datetime`, `close_datetime`, `number_of_resources`) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String query = "REPLACE INTO lw_submit(`submission_id`, `course_id`, `title`, `description`, `open_datetime`, `close_datetime`, `number_of_resources`, `survey_resource_id`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement replace = learnweb.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
             if(submission.getId() < 0)
@@ -146,6 +211,7 @@ public class SubmissionManager
             replace.setDate(5, new java.sql.Date(submission.getOpenDatetime().getTime()));
             replace.setDate(6, new java.sql.Date(submission.getCloseDatetime().getTime()));
             replace.setInt(7, submission.getNoOfResources());
+            replace.setInt(8, submission.getSurveyResourceId());
             replace.executeUpdate();
         }
         catch(SQLException e)

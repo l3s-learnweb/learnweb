@@ -10,7 +10,7 @@
 		<ui:define name="metadata">
 			<f:metadata>
 				<f:viewParam name="user_id" value="#{submitResourcesBean.userId}" />
-				<f:viewParam name="course_id" value="#{submitResourcesBean.courseId}" />
+				
 				<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{submitResourcesBean.preRenderView}"/>
 			</f:metadata>
 		</ui:define>
@@ -28,8 +28,47 @@
 			    });
 			}
 			
+			function toggleSurveySelectField(show, surveySelectType)
+			{
+				var selectFieldIdPrefix = surveySelectType == "edit" ? "#edit_survey" : "#survey";
+			    if(show)
+			    {
+			    	$(selectFieldIdPrefix + '_url').show();
+			        $(selectFieldIdPrefix + '_url_input').show();
+			    }
+			   	else
+			   	{
+			    	$(selectFieldIdPrefix + '_url').hide();
+			        $(selectFieldIdPrefix + '_url_input').hide();
+			        $(selectFieldIdPrefix + '_url_input_message').hide();
+			    }
+			}
+
+			function handleDialogSubmit(xhr, status, args, dialogWidgetVar) {
+		        if (args.validationFailed) {
+		        	PF(dialogWidgetVar).show();
+		        	var surveySelectType = dialogWidgetVar == 'create_submission_dialog' ? 'create' : 'edit';
+		        	toggleSurveySelectField(surveyCheckBox.input.is(':checked'), surveySelectType);
+		        } else {
+		        	PF(dialogWidgetVar).hide();
+		        	addSubmissionHeaderClickHandler();
+		        }
+		    }
+			
+			function courseChange(data)
+			{
+				var status = data.status;
+				if(status == "success")
+				{
+					toggleSurveySelectField(surveyCheckBox.input.is(':checked'), 'create');
+					toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');
+				}
+			}
+			
 			$(document).ready(function(){
 				addSubmissionHeaderClickHandler();
+				toggleSurveySelectField(surveyCheckBox.input.is(':checked'), 'create');
+				toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');
 			});
 			</script>
 			<h:outputStylesheet library="resource-submission" name="submit.css" />
@@ -38,37 +77,102 @@
 				<h:form id="submission_dialog_form" prependId="false">
 					<h:panelGrid columns="2">
 					
-						<h:outputText value="#{msg.title}" title="#{msg.title}"/> <p:inputText value="#{submitResourcesBean.selectedSubmission.title}"/>
-						<h:outputText value="#{msg.description}" title="#{msg.description}"/> <p:inputTextarea autoResize="1" maxHeight="20" value="#{submitResourcesBean.selectedSubmission.description}"
-							styleClass="resource_dialog_field"/>
-						<h:outputText value="#{msg['Submission.open_date']}"/> <p:calendar value="#{submitResourcesBean.selectedSubmission.openDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
-						<h:outputText value="#{msg['Submission.close_date']}"/> <p:calendar value="#{submitResourcesBean.selectedSubmission.closeDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
-						<h:outputText value="#{msg['Submission.max_resources']}"/> <p:inputText value="#{submitResourcesBean.selectedSubmission.noOfResources}"/>
+						<h:outputText value="#{msg.title}" title="#{msg.title}"/> 
+						<p:inputText value="#{submitResourcesBean.selectedSubmission.title}"/>
 						
-						<p:commandButton value="#{msg.save}" styleClass="greenbutton" onclick="PF('submission_edit_dialog').hide();" update=":submissions" actionListener="#{submitResourcesBean.updateSubmissionDetails()}" oncomplete="addSubmissionHeaderClickHandler();"/> <h:outputText value=""/> 
+						<h:outputText value="#{msg.course}" title="#{msg.course}"/>
+						<h:selectOneMenu value="#{submitResourcesBean.selectedSubmission.courseId}" style="width:22rem;">	
+							<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
+							<f:ajax listener="#{submitResourcesBean.onEditSurveyChangeCourse}"
+								render="edit_survey_url_input" onevent="courseChange"/>
+						</h:selectOneMenu>
+						
+						<h:outputText value="#{msg.description}" title="#{msg.description}"/> 
+						<p:inputTextarea autoResize="1" maxHeight="20" value="#{submitResourcesBean.selectedSubmission.description}" styleClass="resource_dialog_field"/>
+						
+						<h:outputText value="#{msg['Submission.open_date']}"/>
+						<p:calendar value="#{submitResourcesBean.selectedSubmission.openDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
+						
+						<h:outputText value="#{msg['Submission.close_date']}"/>
+						<p:calendar value="#{submitResourcesBean.selectedSubmission.closeDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
+						
+						<h:outputText value="#{msg['Submission.max_resources']}"/>
+						<p:inputText value="#{submitResourcesBean.selectedSubmission.noOfResources}"/>
+						
+						<h:outputText value="#{msg['Submission.survey_mandatory']}"/>
+						<p:selectBooleanCheckbox value="#{submitResourcesBean.selectedSubmission.surveyMandatory}" widgetVar="editSurveyCheckBox">
+							<p:ajax update=":edit_survey_url_input" oncomplete="toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');"/>
+						</p:selectBooleanCheckbox>
+					
+						<h:outputText id="edit_survey_url" value="#{msg['Submission.survey_url']}" style="display:none;"/>
+						<h:selectOneMenu id="edit_survey_url_input" value="#{submitResourcesBean.selectedSubmission.surveyResourceId}" style="display:none;width:22rem;" required="#{submitResourcesBean.selectedSubmission.surveyMandatory}" requiredMessage="#{msg['Submission.survey_url_required']}">	
+							<f:selectItem itemLabel="Select Survey Resource" itemValue="-1"/>
+							<f:selectItems value="#{submitResourcesBean.editSurveyResourcesList}"/>
+						</h:selectOneMenu>
+						
+						<p:commandButton value="#{msg.save}" styleClass="greenbutton" onclick="PF('submission_edit_dialog').hide();" update=":submissions" actionListener="#{submitResourcesBean.updateSubmissionDetails()}" oncomplete="addSubmissionHeaderClickHandler();"/>
+						<h:outputText value=""/> 
 					</h:panelGrid>	
 				</h:form>
 			</p:dialog>
 		
 			<p:dialog header="#{msg['Submission.create_new_submission']}" id="create_submission_dialog1" modal="true" minWidth="440" appendTo="@(body)" widgetVar="create_submission_dialog">
 				<h:form id="create_submission_dialog_form" prependId="false">
-				<h:panelGrid columns="2">
+				<h:panelGrid columns="3">
 				
-					<h:outputText value="#{msg.title}" title="#{msg.title}"/> <p:inputText value="#{submitResourcesBean.newSubmission.title}"/>
-					<h:outputText value="#{msg.description}" title="#{msg.description}"/> <p:inputTextarea autoResize="1" maxHeight="20" value="#{submitResourcesBean.newSubmission.description}"
-						styleClass="resource_dialog_field"/>
-					<h:outputText value="#{msg['Submission.open_date']}"/> <p:calendar value="#{submitResourcesBean.newSubmission.openDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
-					<h:outputText value="#{msg['Submission.close_date']}"/> <p:calendar value="#{submitResourcesBean.newSubmission.closeDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
-					<h:outputText value="#{msg['Submission.max_resources']}"/> <p:inputText value="#{submitResourcesBean.newSubmission.noOfResources}"/>
+					<h:outputText value="#{msg.title}" title="#{msg.title}"/>
+					<p:inputText id="title_input" value="#{submitResourcesBean.newSubmission.title}"/>
+					<p:message for="title_input" display="icon" />
 					
-					<p:commandButton value="#{msg.save}" styleClass="greenbutton" onclick="PF('create_submission_dialog').hide();" update=":submissions :create_submission_dialog1" actionListener="#{submitResourcesBean.createNewSubmission()}" oncomplete="addSubmissionHeaderClickHandler();"/> <h:outputText value=""/> 
+					<h:outputText value="#{msg.course}" title="#{msg.course}"/>
+					<h:selectOneMenu value="#{submitResourcesBean.newSubmission.courseId}" style="width:22rem;">	
+						<f:selectItem itemLabel="-- Select Course--" />
+						<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
+						<f:ajax listener="#{submitResourcesBean.onCreateSurveyChangeCourse}"
+								render="survey_url_input" onevent="courseChange"/>
+					</h:selectOneMenu>
+					<h:outputText value="" />
+							
+					<h:outputText value="#{msg.description}" title="#{msg.description}"/> 
+					<p:inputTextarea id="description" autoResize="1" maxHeight="20" value="#{submitResourcesBean.newSubmission.description}" styleClass="resource_dialog_field"/>
+					<p:message for="description" display="icon" />
+					
+					<h:outputText value="#{msg['Submission.open_date']}"/>
+					<p:calendar id="open_date" value="#{submitResourcesBean.newSubmission.openDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
+					<p:message for="open_date" display="icon" />
+					
+					<h:outputText value="#{msg['Submission.close_date']}"/>
+					<p:calendar id="close_date" value="#{submitResourcesBean.newSubmission.closeDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/>
+					<p:message for="close_date" display="icon" />
+					
+					<h:outputText value="#{msg['Submission.max_resources']}"/>
+					<p:inputText id="max_resources" value="#{submitResourcesBean.newSubmission.noOfResources}"/>
+					<p:message for="max_resources" display="icon" />
+					
+					<h:outputText value="#{msg['Submission.survey_mandatory']}"/>
+					<p:selectBooleanCheckbox value="#{submitResourcesBean.newSubmission.surveyMandatory}" widgetVar="surveyCheckBox" id="survey_checkbox">
+						<p:ajax update=":survey_url_input" oncomplete="toggleSurveySelectField(surveyCheckBox.input.is(':checked'), 'create');"/>
+					</p:selectBooleanCheckbox>
+					<p:message for="survey_checkbox" display="icon" />
+					
+					<h:outputText id="survey_url" value="#{msg['Submission.survey_url']}" style="display:none;"/>
+					<h:selectOneMenu id="survey_url_input" value="#{submitResourcesBean.newSubmission.surveyResourceId}" style="display:none;width:22rem;" required="#{submitResourcesBean.newSubmission.surveyMandatory}" requiredMessage="#{msg['Submission.survey_url_required']}">	
+						<f:selectItem itemLabel="Select Survey Resource" />
+						<f:selectItems value="#{submitResourcesBean.surveyResourcesList}"/>
+					</h:selectOneMenu>
+					<p:message id="survey_url_input_message" for="survey_url_input" display="icon" />
+					
+					<p:commandButton value="#{msg.save}" styleClass="greenbutton" update=":submissions :create_submission_dialog1" actionListener="#{submitResourcesBean.createNewSubmission()}" oncomplete="handleDialogSubmit(xhr, status, args, 'create_submission_dialog')"/>
+					<h:outputText value=""/>
+					<h:outputText value=""/>
 				</h:panelGrid>	
 				</h:form>
 			</p:dialog>
 			
 			<div class="page_header">
 				<span>
-					#{msg['Submission.overview']}
+					<h:outputText value="#{msg['Submission.overview']}" rendered="#{not userBean.moderator || submitResourcesBean.submissionOverviewReadOnly}"/>
+					<h:outputText value="Submission Forms Overview" rendered="#{userBean.moderator and not submitResourcesBean.submissionOverviewReadOnly}"/>
 				</span>
 			</div>
 			<h:panelGroup id="submissions" layout="block">
@@ -107,8 +211,8 @@
 				</h:panelGroup>
 				<br/>
 				<h:form prependId="false">
-					<p:commandLink styleClass="greenbutton" style="margin-top:20px;text-decoration:none;" title="#{msg['Submission.create_new_submission']}" rendered="#{userBean.admin || userBean.moderator}"
-								process="@this" oncomplete="PF('create_submission_dialog').show();" update=":create_submission_dialog1">
+					<p:commandLink styleClass="greenbutton" style="margin-top:20px;text-decoration:none;" title="#{msg['Submission.create_new_submission']}" rendered="#{(userBean.admin || userBean.moderator) and not submitResourcesBean.submissionOverviewReadOnly}"
+								process="@this" oncomplete="PF('create_submission_dialog').show();">
 								#{msg['Submission.create_new_submission']}
 					</p:commandLink>
 				</h:form>

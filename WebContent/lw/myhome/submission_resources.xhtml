@@ -27,8 +27,8 @@
 			var resources_to_select = max_resources;
 		</script>
 		<h:form>
-			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submitResourcesBean.actionSelectGroupItem}" update=":add_resource_panel :growl" oncomplete="update_header();resourceDND(); load_editor(); "/>
-			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submitResourcesBean.actionUpdateSelectedItems}" update=":add_resource_panel :resourceGrid2" oncomplete="update_header(); resourceDND(); updateMaxResources();"/>
+			<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submitResourcesBean.actionSelectGroupItem}" update=":add_resource_panel :growl" oncomplete="update_header();selectresourceDND(); load_editor(); "/>
+			<p:remoteCommand name="updateSelectedItemsCommand" actionListener="#{submitResourcesBean.actionUpdateSelectedItems}" update=":add_resource_panel :resourceGrid2" oncomplete="update_header(); selectresourceDND(); updateMaxResources();"/>
 		</h:form>
 		
 		<h:panelGroup rendered="#{not submitResourcesBean.submitted}"><h3 class="title-header">#{msg['Submission.select_resources_header']}</h3></h:panelGroup>
@@ -39,7 +39,7 @@
 		<h:outputStylesheet library="resource-submission" name="submit.css" />
 		<h:outputScript library="resource-submission" name="submit.js" />
 		
-		<h:panelGroup layout="block" id="datagrid" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
+		<h:panelGroup layout="block" id="datagrid" styleClass="datagrid" pt:data-isEnabledMoving="false">
 		<h:panelGroup id="resourceGrid2" styleClass="resource-grid" layout="block">
 				<ui:repeat var="res" value="#{submitResourcesBean.selectedResources}" >
 
@@ -116,7 +116,7 @@
 					</h:outputFormat>
 					<a href="#" onclick="select_res_lightbox.close(); return false;" id="lightbox_close" title="close"></a>
 				</div>
-				<div id="lightbox_content" style="overflow-y:auto;">
+				<div id="lightbox_content" style="overflow-y:auto;overflow-x:hidden;">
 				<h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block" style="padding-left:5px;padding-top:5px;background-color:white;">
 				<ui:repeat var="res" value="#{submitResourcesBean.resources}" >
 
@@ -145,13 +145,21 @@
 						
 					</h:panelGroup>
 				</ui:repeat>
-
-				<h:outputText value="#{msg.no_resources_found}" rendered="#{empty myResourcesBean.resources and !myResourcesBean.rootFolder}" class="nothing_found"/>
+				<h:panelGroup style="background-color:white;height:100%;" rendered="#{empty submitResourcesBean.resources}" layout="block">
+					<h:outputText value="#{msg.no_resources_found}" class="nothing_found" style="color:black;"/>
+					<span style="color:black;" class="nothing_found">
+						First add resources to  
+						<h:outputLink value="myhome/resources.jsf" style="text-decoration:underline;color:black;">
+						#{msg.myResourcesTitle}.
+						</h:outputLink>
+					</span>
 				</h:panelGroup>
+				</h:panelGroup>
+				
 				</div>
-				<div id="lightbox_footer">
-					<span id="archive_timestamp_overlay_text">#{msg['Submission.select_resources']}:
-					<button class="greenbutton" onclick="selectResources();">#{msg.add}</button>
+				<div id="lightbox_footer" style="background: rgba(0, 0, 0, .80);">
+					<span id="archive_timestamp_overlay_text">
+					<button class="greenbutton" style="padding:8px 14px; font-size:16px !important;" onclick="selectResources();">#{msg.add}</button>
 					</span>
 				</div>
 			</div>

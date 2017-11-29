@@ -29,9 +29,13 @@ function updateMaxResources(){
 		$('#add_resource_sign').hide();
 	if(no_selected_resources > 0)
 		$('#submit_resources_button').show();
+	
+	$('#add_resource_sign').on('click', function(){
+		select_res_lightbox.open();
+	});
 }
 
-function resourceDND() {
+function selectresourceDND() {
     var $dataGrid = $('#resourceGrid');
 
     // disable drag and drop for the activity log
@@ -57,16 +61,16 @@ function resourceDND() {
         },
         stop: function () {
             selectedResources.add($(".ui-selected"));
-        }
-
+        },
+        cancel: 'a'
     });
 }
 
 $(document).ready(function(){
-	resourceDND();
+	selectresourceDND();
 	select_res_lightbox.load();
 	$(window).resize(select_res_lightbox.resize_container);
-	$(document).on('click','#add_resource_sign', function(){
+	$('#add_resource_sign').on('click', function(){
 		select_res_lightbox.open();
 	});
 	

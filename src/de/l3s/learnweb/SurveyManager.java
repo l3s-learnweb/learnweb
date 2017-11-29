@@ -398,6 +398,32 @@ public class SurveyManager
 
     }
 
+    public List<Resource> getSurveyResourcesByUserAndCourse(int userId, int courseId)
+    {
+        ArrayList<Resource> resources = new ArrayList<Resource>();
+        try
+        {
+            String pStmt = "SELECT t1.resource_id FROM lw_resource t1 JOIN lw_group t2 ON t1.group_id=t2.group_id WHERE t1.type='survey' AND t1.deleted=0 AND (t2.course_id=? OR t1.owner_user_id=?) ORDER BY t1.group_id";
+            PreparedStatement ps = learnweb.getConnection().prepareStatement(pStmt);
+            ps.setInt(1, courseId);
+            ps.setInt(2, userId);
+
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                int resourceId = rs.getInt("resource_id");
+                Resource r = learnweb.getResourceManager().getResource(resourceId);
+                resources.add(r);
+            }
+        }
+        catch(SQLException e)
+        {
+            log.error("Error while retrieving submissions by course", e);
+        }
+
+        return resources;
+    }
+
     public LinkedHashMap<String, String> getAnsweredQuestions(int resourceId)
     {
         LinkedHashMap<String, String> questions = new LinkedHashMap<String, String>();

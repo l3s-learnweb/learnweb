@@ -45,7 +45,7 @@
 					<f:facet name="header">
 						#{msg['Submission.no_of_submissions']}
 					</f:facet>
-					<h:outputText value="#{submitResourcesBean.getNumberOfSubmissions(user.id)}"/>
+					<h:outputText value="${submitResourcesBean.getNumberOfSubmissions(user.id)}"/>
 				</p:column>
 				
 				<p:column style="width: 10%;">
@@ -54,7 +54,6 @@
 					</f:facet>
 					<h:outputLink value="myhome/submission_overview.jsf">
 						<f:param name="user_id" value="#{user.id}"/>
-						<f:param name="course_id" value="#{submitResourcesBean.courseId}" />
 						#{msg['Submission.view_submissions']}
 					</h:outputLink>
 				</p:column>

@@ -12,7 +12,10 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ManagedProperty;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 import javax.faces.event.ComponentSystemEvent;
+import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
@@ -49,7 +52,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
     private int courseId; //For retrieving submissions of specific course
     private int submissionId;
     private Submission newSubmission = new Submission();
-    private Submission selectedSubmission;
+    private Submission selectedSubmission = new Submission();
     private boolean submitted = false;
     private RPAction rightPanelAction = null;
 
@@ -61,6 +64,9 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
     private List<Submission> pastSubmissions;
     private List<Submission> currentSubmissions;
     private List<Submission> futureSubmissions;
+    private List<SelectItem> surveyResourcesList;
+    private List<SelectItem> editSurveyResourcesList;
+    private boolean submissionOverviewReadOnly = false;
 
     private List<User> users; //To fetch list of users for a given course
     private Map<Integer, Integer> userSubmissions; //to store map of user id and total no. of submissions
@@ -76,6 +82,8 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
             return;
 
         clickedResource = new Resource();
+        surveyResourcesList = new ArrayList<SelectItem>();
+        editSurveyResourcesList = new ArrayList<SelectItem>();
     }
 
     public void preRenderView(ComponentSystemEvent e) throws SQLException
@@ -106,6 +114,18 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         }
 
         //log.info("submission id:" + submissionId + " max no. of resources: " + selectedSubmission.getNoOfResources());
+
+        if(getUser().getId() != this.userId)
+            submissionOverviewReadOnly = true;
+
+        getFacesContext().getExternalContext().setResponseCharacterEncoding("UTF-8");
+        // stop caching (back button problem)
+        HttpServletResponse response = (HttpServletResponse) getFacesContext().getExternalContext().getResponse();
+
+        response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate"); // HTTP 1.1.
+        response.setHeader("Pragma", "no-cache"); // HTTP 1.0.
+        response.setDateHeader("Expires", 0); // Proxies.
+
     }
 
     public List<Resource> getResources()
@@ -423,7 +443,6 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
     /* -------- Methods below are used for the submission overview page ---------*/
     public void createNewSubmission()
     {
-        newSubmission.setCourseId(courseId);
         getLearnweb().getSubmissionManager().saveSubmission(newSubmission);
         clearSubmissionLists();
         this.newSubmission = new Submission();
@@ -460,9 +479,9 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
             if(u == null)
                 u = getUser();
 
-            int courseId = this.courseId > 0 ? this.courseId : u.getActiveCourseId();
+            //int courseId = this.courseId > 0 ? this.courseId : u.getActiveCourseId();
 
-            List<Submission> submissions = Learnweb.getInstance().getSubmissionManager().getSubmissionsByCourse(courseId);
+            List<Submission> submissions = Learnweb.getInstance().getSubmissionManager().getSubmissionsByUser(u);
             for(Submission s : submissions)
             {
                 if(s.isPastSubmission())
@@ -505,7 +524,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
 
     public List<Submission> getSubmissions()
     {
-        return Learnweb.getInstance().getSubmissionManager().getSubmissionsByCourse(getUser().getActiveCourseId());
+        return Learnweb.getInstance().getSubmissionManager().getSubmissionsByUser(getUser());
     }
 
     public List<User> getUsers() throws SQLException
@@ -536,7 +555,80 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
     public List<Submission> getActiveSubmissions()
     {
         if(currentSubmissions == null)
-            currentSubmissions = getLearnweb().getSubmissionManager().getActiveSubmissionsByCourse(getUser().getActiveCourseId());
+            currentSubmissions = getLearnweb().getSubmissionManager().getActiveSubmissionsByUser(getUser());
         return currentSubmissions;
+    }
+
+    public List<SelectItem> getSurveyResourcesList()
+    {
+        return surveyResourcesList;
+    }
+
+    public String getResourcePath(Resource r)
+    {
+        String resourcePath = null;
+        try
+        {
+            if(r.getGroupId() == 0)
+                resourcePath = "My Resources > " + r.getTitle();
+            else if(r.getGroupId() > 0)
+            {
+                if(r.getPrettyPath() != null)
+                {
+                    resourcePath = r.getPrettyPath() + " > " + r.getTitle();
+                }
+                else
+                    resourcePath = r.getGroup().getTitle() + " > " + r.getTitle();
+            }
+        }
+        catch(SQLException e)
+        {
+            log.error("Error while retrieving group information for resource: " + r.getId(), e);
+        }
+        return resourcePath;
+    }
+
+    public List<SelectItem> getEditSurveyResourcesList()
+    {
+        if(editSurveyResourcesList.isEmpty() && this.selectedSubmission.getCourseId() > 0)
+        {
+            List<Resource> editSurveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(getUserId(), this.selectedSubmission.getCourseId());
+            for(Resource r : editSurveyResourcesForCourse)
+            {
+                String resourcePath = getResourcePath(r);
+                if(resourcePath != null)
+                    editSurveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
+            }
+        }
+        return editSurveyResourcesList;
+    }
+
+    public void onCreateSurveyChangeCourse(AjaxBehaviorEvent event)
+    {
+        surveyResourcesList.clear();
+        List<Resource> surveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(getUserId(), this.newSubmission.getCourseId());
+        for(Resource r : surveyResourcesForCourse)
+        {
+            String resourcePath = getResourcePath(r);
+            if(resourcePath != null)
+                surveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
+        }
+    }
+
+    public void onEditSurveyChangeCourse(AjaxBehaviorEvent event)
+    {
+        editSurveyResourcesList.clear();
+        List<Resource> surveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(getUserId(), this.newSubmission.getCourseId());
+        for(Resource r : surveyResourcesForCourse)
+        {
+            String resourcePath = getResourcePath(r);
+            if(resourcePath != null)
+                surveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
+        }
+    }
+
+    public boolean isSubmissionOverviewReadOnly()
+    {
+        return submissionOverviewReadOnly;
     }
 }

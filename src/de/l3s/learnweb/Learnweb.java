@@ -288,7 +288,7 @@ public class Learnweb
     {
         log.debug("Init LearnwebServer");
 
-        if(isInDevelopmentMode())
+        if(!isInDevelopmentMode())
             jobScheduler.startAllJobs();
         else
             log.debug("JobScheduler not started for context In development mode");

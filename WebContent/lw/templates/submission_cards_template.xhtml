@@ -9,8 +9,8 @@
 				<h2>
 					<b>#{submission.title} </b>
 					<h:form style="display:inline;">
-						<p:commandLink style="text-decoration:none;" title="#{msg.edit}" rendered="#{userBean.admin || userBean.moderator}"
-							process="@this" oncomplete="PF('submission_edit_dialog').show();" update=":edit_submission_dialog1">
+						<p:commandLink style="text-decoration:none;" title="#{msg.edit}" rendered="#{(userBean.admin || userBean.moderator) and not submitResourcesBean.submissionOverviewReadOnly}"
+							process="@this" oncomplete="PF('submission_edit_dialog').show();toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');" update=":edit_submission_dialog1">
 							<f:setPropertyActionListener target="#{submitResourcesBean.selectedSubmission}" value="#{submission}" />
 							<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
 						</p:commandLink>
@@ -41,17 +41,38 @@
 			<div>
 				<h:outputLink styleClass="greenbutton submission_link"
 					value="myhome/submission_resources.jsf"
-					rendered="#{submission.pastSubmission}">
+					rendered="#{submission.pastSubmission and (not userBean.moderator || submitResourcesBean.submissionOverviewReadOnly)}">
 					<f:param name="submission_id" value="#{submission.id}" />
 					<f:param name="user_id" value="#{submitResourcesBean.userId}" />
 					#{msg['Submission.view_submission']}
 				</h:outputLink>
 				<h:outputLink styleClass="greenbutton submission_link"
 					value="myhome/submission_resources.jsf"
-					rendered="#{submission.currentSubmission}">
+					rendered="#{submission.currentSubmission and submission.isSurveySubmitted(userBean.user.id) and not userBean.moderator}">
 					<f:param name="submission_id" value="#{submission.id}" />
 					<f:param name="user_id" value="#{submitResourcesBean.userId}" />
 					#{msg['Submission.submit_resources']}
+				</h:outputLink>
+				<h:outputLink styleClass="greenbutton submission_link"
+					value="myhome/submission_resources.jsf"
+					rendered="#{submission.currentSubmission and submission.isSurveySubmitted(userBean.user.id) and userBean.moderator and not submitResourcesBean.submissionOverviewReadOnly}">
+					<f:param name="submission_id" value="#{submission.id}" />
+					<f:param name="user_id" value="#{submitResourcesBean.userId}" />
+					Test Submit Resources
+				</h:outputLink>
+				<h:outputLink  style="text-decoration: underline;" styleClass="submission_link"
+					value="../templates/resources/survey.jsf"
+					rendered="#{submission.currentSubmission and not submission.isSurveySubmitted(userBean.user.id) and not submitResourcesBean.submissionOverviewReadOnly}">
+					<f:param name="resource_id" value="#{submission.surveyResourceId}" />
+					<h:outputText id="survey_submit_message" value="Please submit the survey first"/>
+				</h:outputLink>
+				
+				<h:outputLink styleClass="greenbutton submission_link"
+					value="myhome/submission_resources.jsf"
+					rendered="#{submission.currentSubmission and userBean.moderator and submitResourcesBean.submissionOverviewReadOnly}">
+					<f:param name="submission_id" value="#{submission.id}" />
+					<f:param name="user_id" value="#{submitResourcesBean.userId}" />
+					#{msg['Submission.view_submission']}
 				</h:outputLink>
 			</div>
 		</div>
