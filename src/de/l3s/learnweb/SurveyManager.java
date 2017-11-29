@@ -404,8 +404,8 @@ public class SurveyManager
         int surveyId;
 
         String getSurveyId = "SELECT `survey_id` FROM `lw_survey_resource` WHERE `resource_id`=?";
-        String getQuestionByOrder = "SELECT distinct(t2.question_id), t1.question FROM `lw_survey_question` t1, lw_survey_answer t2 where t2.question_id = t1.question_id and t1.survey_id=? and t2.resource_id=? order by `order`";
-
+        //String getQuestionByOrder = "SELECT distinct(t2.question_id), t1.question FROM `lw_survey_question` t1, lw_survey_answer t2 where t2.question_id = t1.question_id and t1.survey_id=? and t2.resource_id=? order by `order`";
+        String getQuestionByOrder = "SELECT distinct(t1.question_id), t1.question, t1.survey_id FROM `lw_survey_question` t1, lw_survey_answer t2 where (t2.question_id = t1.question_id or (t1.deleted=? and t1.question_type IN (\"INPUT_TEXT\", \"ONE_RADIO\", \"INPUT_TEXTAREA\", \"ONE_MENU\", \"ONE_MENU_EDITABLE\", \"MULTIPLE_MENU\", \"MANY_CHECKBOX\" ))) and t1.survey_id=? and t2.resource_id=? order by t1.`order`";
         try
         {
             PreparedStatement pSttmnt = learnweb.getConnection().prepareStatement(getSurveyId);
@@ -415,8 +415,9 @@ public class SurveyManager
             {
                 surveyId = idResult.getInt("survey_id");
                 pSttmnt = learnweb.getConnection().prepareStatement(getQuestionByOrder);
-                pSttmnt.setInt(1, surveyId);
-                pSttmnt.setInt(2, resourceId);
+                pSttmnt.setBoolean(1, false);
+                pSttmnt.setInt(2, surveyId);
+                pSttmnt.setInt(3, resourceId);
                 ResultSet result = pSttmnt.executeQuery();
                 while(result.next())
                 {
