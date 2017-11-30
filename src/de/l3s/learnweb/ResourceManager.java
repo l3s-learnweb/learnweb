@@ -998,20 +998,20 @@ public class ResourceManager
 
     private Thumbnail createThumbnail(ResultSet rs, int thumbnailSize) throws SQLException
     {
-        String prefix = "thumbnail" + thumbnailSize + "_";
-        String url = rs.getString(prefix + "url");
-        int fileId = rs.getInt(prefix + "file_id");
+        String prefix = "thumbnail" + thumbnailSize;
+        String url = rs.getString(prefix + "_url");
+        int fileId = rs.getInt(prefix + "_file_id");
 
         if(fileId != 0)
         {
-            url = learnweb.getFileManager().getThumbnailUrl(fileId);
+            url = learnweb.getFileManager().createUrl(fileId, prefix + ".png");
         }
         else if(url == null)
         {
             return null;
         }
 
-        return new Thumbnail(url, rs.getInt(prefix + "width"), rs.getInt(prefix + "height"), fileId);
+        return new Thumbnail(url, rs.getInt(prefix + "_width"), rs.getInt(prefix + "_height"), fileId);
     }
 
     /**

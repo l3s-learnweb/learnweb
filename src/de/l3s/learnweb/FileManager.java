@@ -84,7 +84,7 @@ public class FileManager
         if(null != file)
             return file;
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_file WHERE file_id = ? AND deleted = 0");
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_file WHERE file_id = ?"); // AND deleted = 0
         select.setInt(1, id);
         ResultSet rs = select.executeQuery();
         if(rs.next())

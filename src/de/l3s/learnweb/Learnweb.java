@@ -125,12 +125,6 @@ public class Learnweb
      */
     public static Learnweb createInstance(String serverUrl) throws ClassNotFoundException, SQLException
     {
-        if(null == serverUrl)
-        {
-            serverUrl = "http://learnweb.l3s.uni-hannover.de";
-            log.error("You should provide aabsolute base server url; Will use by default: " + serverUrl);
-        }
-
         try
         {
             if(learnweb == null)
@@ -230,7 +224,12 @@ public class Learnweb
 
         String serverUrl = properties.getProperty("SERVER_URL");
 
-        if(serverUrl != null && serverUrl.startsWith("http"))
+        if(null == serverUrl || serverUrl.startsWith("/"))
+        {
+            this.serverUrl = "http://learnweb.l3s.uni-hannover.de";
+            log.error("You haven't provided an absolute base server url; Will use by default: " + serverUrl);
+        }
+        else if(serverUrl.startsWith("http"))
             this.serverUrl = serverUrl;
         else if(!serverUrl.equalsIgnoreCase("auto"))
             log.error("You have defined and invalid SERVER_URL in your properties file.");
@@ -697,10 +696,13 @@ public class Learnweb
         if(this.serverUrl != null && this.serverUrl.startsWith("http"))
             return; // ignore new serverUrl
 
+        if(this.serverUrl.equals(serverUrl))
+            return;
+
         this.serverUrl = serverUrl;
         fileManager.setServerUrl(serverUrl);
 
-        log.debug("server base url = " + serverUrl);
+        log.debug("Server base url updated: " + serverUrl);
     }
 
     public PresentationManager getPresentationManager()

@@ -111,7 +111,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                 }
                 log(Action.opening_resource, clickedResource.getGroupId(), clickedResource.getId(), "");
             }
-            catch(SQLException e)
+            catch(Exception e)
             {
                 addFatalMessage(e);
             }

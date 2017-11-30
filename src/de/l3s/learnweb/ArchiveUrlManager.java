@@ -248,7 +248,7 @@ public class ArchiveUrlManager
             if(rs.getInt("httpstatuscode") != 200 || fileId == 0)
                 return null;
             else
-                return learnweb.getFileManager().getThumbnailUrl(fileId);
+                return learnweb.getFileManager().createUrl(fileId, "wayback_thumbnail.png");
         }
         return null;
     }

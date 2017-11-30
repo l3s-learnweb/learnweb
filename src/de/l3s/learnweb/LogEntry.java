@@ -289,7 +289,10 @@ public class LogEntry implements Serializable
             resource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
 
             if(resource == null || resource.isDeleted())
+            {
                 resourceId = 0;
+                resource = null;
+            }
         }
         return resource;
     }

@@ -528,13 +528,13 @@ public class SolrSearch implements Serializable
 
                 if(null == resource)
                 {
-                    log.fatal("could not find resource with id:" + solrResource.getId());
+                    log.warn("could not find resource with id:" + solrResource.getId());
                     continue;
                 }
             }
             else
             { // cached resources
-                log.fatal("Cached resources are dissabled. This should never happen. Solr is in a corrupted state.");
+                log.fatal("Cached resources are disabled. This should never happen. Solr is in a corrupted state.");
                 /*		
                 		resource = new Resource();
                 		resource.setUrl(solrResource.getId());

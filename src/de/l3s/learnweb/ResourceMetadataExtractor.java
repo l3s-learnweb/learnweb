@@ -291,6 +291,7 @@ public class ResourceMetadataExtractor
         resource.setFormat(fileInfo.getMimeType());
         resource.setTypeFromFormat(resource.getFormat());
         resource.setFileName(fileInfo.getFileName());
+        resource.setFileUrl(resource.getUrl());
 
         log.debug("type: " + resource.getType() + "; file: " + fileInfo.toString());
 

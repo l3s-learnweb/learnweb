@@ -1237,6 +1237,15 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     }
 
     /**
+     * 
+     * @return If the uploaded file was modified (e.g. a video or office document) we keep a copy of the original file
+     */
+    public File getMainFile()
+    {
+        return getFile(TYPE.FILE_MAIN);
+    }
+
+    /**
      * @return Text that has been automatically extracted from the source file/url
      */
     public String getMachineDescription()
@@ -1363,12 +1372,14 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public String getEmbedded()
     {
-        log.debug("get embeddes" + toString());
         if(embeddedCode == null)
         {
-            if(StringUtils.isNoneEmpty(getEmbeddedRaw()) && !getSource().equals("Yovisto")) // if the embedded code was explicitly defined then use it. Is necessary for slidesahre resources. The old flash based code of Yovisto does not work any more
+            if(StringUtils.isNoneEmpty(getEmbeddedRaw()) && !getSource().equals("Yovisto") && !getSource().equals("TED")) // if the embedded code was explicitly defined then use it. Is necessary for slideshare resources. The old flash based code of Yovisto does not work any more
             {
-                embeddedCode = getEmbeddedRaw();
+                if(getSource().equals("TED"))
+                    embeddedCode = getEmbeddedRaw().replace("http://", "https://");
+                else
+                    embeddedCode = getEmbeddedRaw();
             }
             else if(getType().equals(ResourceType.image))
             {
@@ -1381,25 +1392,25 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
                 if(thumbnail4 != null)
                 {
                     // first the small thumbnail is shown. The large image is loaded async through JS
-                    Thumbnail large = getLargestThumbnail();
+                    Thumbnail large = thumbnail4;
                     embeddedCode = "<img src=\"" + getThumbnail2().getUrl() + "\" height=\"" + large.getHeight() + "\" width=\"" + large.getWidth() + "\" original-src=\"" + large.getUrl() + "\"/>";
                 }
                 else
-                    embeddedCode = "<iframe src=\"" + getUrl() + "\" />";
+                    embeddedCode = "<iframe src=\"" + getUrl() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" />";
             }
             else if(getType().equals(ResourceType.video))
             {
                 if(getSource().equalsIgnoreCase("loro") || getSource().equals("Yovisto") || getSource().equalsIgnoreCase("desktop"))
                     embeddedCode = "<iframe src=\"video.jsf?resource_id=" + id + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
                 else if(getSource().equalsIgnoreCase("ted"))
-                    embeddedCode = "<iframe src=\"" + getUrl().replace("http://www", "//embed") + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
+                    embeddedCode = "<iframe src=\"" + getUrl().replace("http://www", "//embed").replace("https://www", "//embed") + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\"  webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>";
                 else if(getSource().equalsIgnoreCase("youtube"))
                     embeddedCode = "<iframe src=\"https://youtube.com/embed/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>";
                 else if(getSource().equalsIgnoreCase("vimeo"))
                     embeddedCode = "<iframe src=\"https://player.vimeo.com/video/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
             }
 
-            // if no rules above works
+            // if no rule above works
 
             if(embeddedCode == null)
             {

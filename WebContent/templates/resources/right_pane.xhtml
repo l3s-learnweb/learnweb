@@ -333,12 +333,24 @@
 										</span>
 									</td>
 									<td>
-										<a href="#{resourceDetailBean.clickedResource.url}">
-											<span style="float:left;text-decoration:underline;">#{resourceDetailBean.clickedResource.fileName}</span><span class="ui-icon ui-icon-arrowthickstop-1-s" style="float:left;"></span>
+										<a href="#{resourceDetailBean.clickedResource.fileUrl}">
+											<span style="text-decoration:underline;" class="float-left">#{resourceDetailBean.clickedResource.fileName}</span><span class="ui-icon ui-icon-arrowthickstop-1-s float-left "></span>
 										</a>
+										<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.originalFile}">
+											<div style="clear:both;"></div>
+											<a href="#{resourceDetailBean.clickedResource.originalFile.url}">
+												<span style="float:left;text-decoration:underline;">#{resourceDetailBean.clickedResource.originalFile.name}</span><span class="ui-icon ui-icon-arrowthickstop-1-s" style="float:left;"></span>												
+											</a>
+											(Backup
+											<h:outputText value="#{resourceDetailBean.clickedResource.originalFile.lastModified}">
+										        <f:convertDateTime type="date" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+										    </h:outputText>)
+										</ui:fragment>
 									</td>
 								</tr>
 							</ui:fragment>
+							
+							
 							
 							<ui:fragment rendered="${empty resourceDetailBean.clickedResource.fileName
 							 and resourceDetailBean.clickedResource.type != 'text'

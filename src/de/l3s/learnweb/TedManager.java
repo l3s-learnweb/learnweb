@@ -387,7 +387,7 @@ public class TedManager
 
         resource.setTitle(rs.getString("title"));
         resource.setDescription(rs.getString("description"));
-        resource.setUrl("http://www.ted.com/talks/" + rs.getString("slug"));
+        resource.setUrl("https://www.ted.com/talks/" + rs.getString("slug"));
         resource.setSource("TED");
         resource.setLocation("TED");
         resource.setType(Resource.ResourceType.video);
@@ -395,7 +395,7 @@ public class TedManager
         resource.setMaxImageUrl(rs.getString("photo2_url"));
         resource.setIdAtService(Integer.toString(rs.getInt("ted_id")));
         resource.setCreationDate(rs.getTimestamp("published_at"));
-        resource.setEmbeddedRaw("<iframe src=\"http://embed.ted.com/talks/" + rs.getString("slug") + ".html\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>");
+        resource.setEmbeddedRaw("<iframe src=\"https://embed.ted.com/talks/" + rs.getString("slug") + ".html\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>");
         resource.setTranscript("");
         return resource;
     }

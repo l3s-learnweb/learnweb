@@ -46,7 +46,7 @@ public class DownloadServlet extends HttpServlet
 
     private Learnweb learnweb;
 
-    private String urlPattern; // as defined in web.xml
+    private String urlPattern = "/download"; // as defined in web.xml
     private FileManager fileManager;
 
     public DownloadServlet() throws ClassNotFoundException, SQLException
@@ -111,11 +111,11 @@ public class DownloadServlet extends HttpServlet
 
         // extract the file id from the request string
         String requestString = request.getRequestURI();
-        int index = requestString.indexOf(urlPattern); // TODO Oleh: is it make any sense? How we can reach this servlet without /download/ ?
-        String[] requestFileData = requestString.substring(index + urlPattern.length()).split("/"); // TODO Oleh: is it always should be two elements?
-        if(index == -1 && requestFileData.length != 2)
+        int index = requestString.indexOf(urlPattern);
+        String[] requestFileData = requestString.substring(index + urlPattern.length()).split("/");
+        if(requestFileData.length != 2)
         {
-            log.warn("Invalid download URL: " + requestString);
+            log.error("Invalid download URL: " + requestString);
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
@@ -135,6 +135,11 @@ public class DownloadServlet extends HttpServlet
                 log.warn("Requested file " + fileId + " does not exist or was deleted");
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;
+            }
+
+            if(!file.getName().equals(requestFileData[1]))
+            {
+                log.warn("Requested file name (" + requestFileData[1] + ") does not match stored filename (" + file.getName() + "); fileId=" + fileId);
             }
 
             long lastModified = file.getLastModified().getTime();

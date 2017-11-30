@@ -28,23 +28,6 @@ public class NewsEntry implements Comparable<NewsEntry>, Serializable
     private Action newsAction;
     private LogEntry logEntry;
 
-    //variable for checking if the item is a resource oriented action or user oriented
-
-    public NewsEntry(LogEntry news, User user, Resource resource, Integer comments, Integer tags, String text, Boolean resourceAction, Date date)
-    {
-        super();
-        this.user = user;
-        this.resource = resource;
-        this.comments = comments;
-        this.tags = tags;
-        this.text = text;
-        this.resourceAction = resourceAction;
-        this.date = date;
-        this.newsAction = news.getAction();
-
-        this.logEntry = news;
-    }
-
     public NewsEntry(LogEntry l) throws SQLException
     {
         Resource r = l.getResource();

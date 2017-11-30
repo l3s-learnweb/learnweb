@@ -22,7 +22,7 @@ import de.l3s.learnweb.SurveyMetaDataFields.MetadataType;
  */
 public class SurveyManager
 {
-    public static Logger log = Logger.getLogger(SurveyManager.class);
+    private final static Logger log = Logger.getLogger(SurveyManager.class);
     private final Learnweb learnweb;
     //private ArrayList<SurveyMetaDataFields> formQuestions = new ArrayList<SurveyMetaDataFields>();
 
@@ -42,13 +42,9 @@ public class SurveyManager
         String query = "SELECT * FROM `lw_survey_question` WHERE `survey_id` = ? and `deleted`=0 ORDER BY `order` ASC";
         try
         {
-            PreparedStatement preparedStmnt = null;
-            ResultSet result = null;
-            preparedStmnt = learnweb.getConnection().prepareStatement(getSurveyId);
-
+            PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement(getSurveyId);
             preparedStmnt.setInt(1, resource_id);
-
-            result = preparedStmnt.executeQuery();
+            ResultSet result = preparedStmnt.executeQuery();
 
             if(result.next())
             {
