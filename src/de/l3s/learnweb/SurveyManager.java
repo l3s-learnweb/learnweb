@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.ArrayUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.SurveyMetaDataFields.MetadataType;
@@ -36,14 +37,15 @@ public class SurveyManager
         HashMap<String, String> wrappedAnswers = new HashMap<String, String>();
         HashMap<String, String[]> wrappedMultipleAnswers = new HashMap<String, String[]>();
         Survey survey = new Survey();
-        String assessmentAnswers = "SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?";
-        String titleDesc = "SELECT `title`, `description` FROM `lw_resource` WHERE `resource_id` = ?";
-        String getSurveyId = "SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?";
-        String query = "SELECT * FROM `lw_survey_question` WHERE `survey_id` = ? and `deleted`=0 ORDER BY `order` ASC";
+
         try
         {
-            PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement(getSurveyId);
+
+            //Getting survey ID
+            PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?");
+
             preparedStmnt.setInt(1, resource_id);
+
             ResultSet result = preparedStmnt.executeQuery();
 
             if(result.next())
@@ -53,10 +55,9 @@ public class SurveyManager
                 // end = rs.getDate("close_date");
                 survey.survey_id = result.getInt("survey_id");
 
-                //System.out.println(survey.survey_id);
             }
-
-            preparedStmnt = learnweb.getConnection().prepareStatement(titleDesc);
+            //Getting title and description
+            preparedStmnt = learnweb.getConnection().prepareStatement("SELECT `title`, `description` FROM `lw_resource` WHERE `resource_id` = ?");
             preparedStmnt.setInt(1, resource_id);
             ResultSet descTitle = preparedStmnt.executeQuery();
             while(descTitle.next())
@@ -65,7 +66,8 @@ public class SurveyManager
                 survey.surveyTitle = descTitle.getString("title");
             }
 
-            preparedStmnt = learnweb.getConnection().prepareStatement(query);
+            //Getting survey questions
+            preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_question` WHERE `survey_id` = ? and `deleted`=0 ORDER BY `order` ASC");
             preparedStmnt.setInt(1, survey.survey_id);
 
             result = preparedStmnt.executeQuery();
@@ -101,29 +103,38 @@ public class SurveyManager
                 formquestions.put(formQuestion.getId(), formQuestion);
                 survey.formQuestions.add(formQuestion);
             }
-            ResultSet rs = null;
-            preparedStmnt = learnweb.getConnection().prepareStatement(assessmentAnswers);
+            //Get answered results for user-wise display of results
+            preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?");
             preparedStmnt.setInt(1, resource_id);
             preparedStmnt.setInt(2, userId);
-            rs = preparedStmnt.executeQuery();
+            ResultSet rs = preparedStmnt.executeQuery();
             while(rs.next())
             {
                 survey.submitted = true;
-
-                MetadataType ansType = formquestions.get(Integer.toString(rs.getInt("question_id"))).getType();
-                if(ansType.equals("MULTIPLE_MENU") || ansType.equals("MANY_CHECKBOX"))
+                if(formquestions.containsKey(Integer.toString(rs.getInt("question_id"))))
                 {
-                    String[] answer;
-                    if(rs.getString("answer").contains("|||"))
-                        answer = rs.getString("answer").split("|||");
-                    else
-                        answer = new String[] { rs.getString("answer") };
-                    wrappedMultipleAnswers.put(Integer.toString(rs.getInt("question_id")), answer);
+                    MetadataType ansType = formquestions.get(Integer.toString(rs.getInt("question_id"))).getType();
+                    if(ansType.equals(MetadataType.MULTIPLE_MENU) || ansType.equals(MetadataType.MANY_CHECKBOX))
+                    {
+                        String[] answer;
+                        /*if(rs.getString("answer").matches(("[\\w+\\|\\|\\|\\w+]")))*/
+                        //answer=rs.getString("answer");
+                        answer = rs.getString("answer").split("\\s*\\|\\|\\|\\s*");
 
+                        System.out.println("answer:" + StringUtils.join(answer, ","));
+                        /*else
+                            answer = new String[] { rs.getString("answer") };*/
+                        wrappedMultipleAnswers.put(Integer.toString(rs.getInt("question_id")), answer);
+
+                    }
+                    else
+                    {
+                        wrappedAnswers.put(Integer.toString(rs.getInt("question_id")), rs.getString("answer"));
+                    }
                 }
                 else
                 {
-                    wrappedAnswers.put(Integer.toString(rs.getInt("question_id")), rs.getString("answer"));
+                    System.out.println("question id:" + Integer.toString(rs.getInt("question_id")));
                 }
             }
             survey.wrappedAnswers = wrappedAnswers;
@@ -378,7 +389,7 @@ public class SurveyManager
                         str = str + s + "|||";
                     }
 
-                    str = str.substring(0, str.lastIndexOf(","));
+                    str = str.substring(0, str.lastIndexOf("\\|\\|\\|"));
                     insert.setString(4, str);
                 }
 
@@ -472,6 +483,7 @@ public class SurveyManager
                 SurveyAnswer ans = new SurveyAnswer();
                 ans.userId = Integer.toString(ids.getInt("user_id"));
                 ans.userName = learnweb.getUserManager().getUser(ids.getInt("user_id")).getUsername();
+                ans.studentId = learnweb.getUserManager().getUser(ids.getInt("user_id")).getStudentId();
                 pSttmnt = learnweb.getConnection().prepareStatement(answerByUser);
                 for(String qid : question.keySet())
                 {
@@ -482,8 +494,9 @@ public class SurveyManager
                     if(result.next())
                     {
                         String answerOfUser = result.getString("answer");
-                        if(answerOfUser.contains("|||"))
-                            answerOfUser.replaceAll("|||", ",");
+
+                        answerOfUser = answerOfUser.replaceAll("\\|\\|\\|", ",");
+
                         ans.answers.put(qid, answerOfUser);
                     }
                     else
@@ -498,6 +511,29 @@ public class SurveyManager
         }
 
         return answers;
+    }
+
+    public ArrayList<User> getSurveyUsers(int resourceId)
+    {
+        ArrayList<User> users = new ArrayList<User>();
+        String getUserId = "SELECT distinct(`user_id`) FROM `lw_survey_answer` WHERE resource_id=?";
+        try
+        {
+            PreparedStatement ps = learnweb.getConnection().prepareStatement(getUserId);
+            ps.setInt(1, resourceId);
+            ResultSet userId = ps.executeQuery();
+            while(userId.next())
+            {
+                User user = learnweb.getUserManager().getUser(userId.getInt("user_id"));
+                users.add(user);
+            }
+        }
+        catch(SQLException e)
+        {
+            log.error("Error in fetching users for assessment survey: " + resourceId);
+        }
+        return users;
+
     }
 }
 /*public ArrayList<SurveyMetaDataFields> getFormQuestions()

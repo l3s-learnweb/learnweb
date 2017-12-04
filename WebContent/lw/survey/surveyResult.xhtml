@@ -21,6 +21,7 @@
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="eu4all-survey" name="survey.css" />
 		<h:outputScript library="glossary" name="glossary.js" />
+		<ui:fragment rendered="#{userBean.user.moderator eq true}">
 		<h:form>
 			<p:panel id="panelOut" header="#{surveyResultBean.title}" style="margin-bottom:10px;" rendered="true">
 			<p:dataTable id="survey_result"  var="result" value="#{surveyResultBean.answers}"  paginator="true" rows="12" paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}">
@@ -37,8 +38,25 @@
 			<f:facet name="header" >
 				<h:outputText value="User"></h:outputText>
 			</f:facet>
-			<h:outputText value="#{result.userName}"></h:outputText>
+			<h:outputText value="#{result.userName} "></h:outputText>
+			<h:outputLink id="print_user"  value="survey/assessment/assessmentAnswers.jsf"  >
+				
+			
+       			 	<h:graphicImage  library="icon" name="print-icon.png" width="10" height="10" alt="Print}"/> 
+       			 	<f:param name="resource_id" value="#{assessmentGridBean.resource_id}"></f:param>
+       			 	<f:param name="user_id" value="#{result.userId}" />
+       			 </h:outputLink>
+       			 <p:tooltip id="survey_print_tooltip" for="print_user" value="Print form answers of user: #{result.userName}"/>
 			</p:column>
+			<p:column >
+				<f:facet name="header" >
+				<h:outputText value="Student ID"></h:outputText>
+			</f:facet>
+				 <h:outputText value="${result.studentId}" />
+				 
+       			 
+       			
+   			 </p:column>
 			<p:columns var="column" value="#{surveyResultBean.columns}">
 			<f:facet name="header">
 			
@@ -51,6 +69,12 @@
 			</p:dataTable>
 			</p:panel>
 		</h:form>
+		</ui:fragment>
+		<ui:fragment rendered="#{userBean.user.moderator eq false}">
+				<br/>
+				<br/>
+				<h:outputText value="You do not have permission to view this page." style="text-align:center; font-weight:bold; color:red;" ></h:outputText>
+				</ui:fragment>
 		</ui:define>
 		</ui:composition>
 		

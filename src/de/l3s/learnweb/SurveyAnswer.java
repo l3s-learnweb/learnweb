@@ -13,6 +13,7 @@ public class SurveyAnswer implements Serializable
     public String userId;
     public LinkedHashMap<String, String> answers = new LinkedHashMap<String, String>();
     public String userName;
+    public String studentId;
 
     public SurveyAnswer()
     {
@@ -51,6 +52,16 @@ public class SurveyAnswer implements Serializable
     public void setAnswers(LinkedHashMap<String, String> answers)
     {
         this.answers = answers;
+    }
+
+    public String getStudentId()
+    {
+        return studentId;
+    }
+
+    public void setStudentId(String studentId)
+    {
+        this.studentId = studentId;
     }
 
     public String getUserName()

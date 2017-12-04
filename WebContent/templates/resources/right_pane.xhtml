@@ -311,11 +311,11 @@
 											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
 											Result 
 								</h:outputLink>
-								<h:outputLink id="detailOverview" value="../lw/survey/assessment/assessment.jsf" style="margin-left:5px" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.type eq 'survey' and userBean.user.moderator eq true }" >
+								<!-- <h:outputLink id="detailOverview" value="../lw/survey/assessment/assessment.jsf" style="margin-left:5px" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.type eq 'survey' and userBean.user.moderator eq true }" >
 											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
 											User Submissions 
 								</h:outputLink>
-								<p:tooltip id="survey_tooltip" for="detailOverview" value="detailed user-wise results"/>
+								<p:tooltip id="survey_tooltip" for="detailOverview" value="detailed user-wise results"/> -->
 								<!-- <h:outputLink value="../templates/resources/editsurvey.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.source eq 'survey'}">
 											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
 											Edit survey

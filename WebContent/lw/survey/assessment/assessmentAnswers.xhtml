@@ -30,7 +30,7 @@
 		<h:outputScript library="survey" name="jQuery.print.js" />
 		<h:panelGroup id="main_component" layout="block">
 			<h:form id="form" prependId="false">
-				
+				<ui:fragment rendered="#{userBean.user.moderator eq true}">
 				<ui:fragment rendered="#{assessmentGridBean.resource_id gt 0}">
 				<ui:fragment rendered="#{userBean.user.organisation.id eq assessmentGridBean.organizationId or assessmentGridBean.organizationId eq 0}">
 					<div class="headings">
@@ -121,6 +121,12 @@
 					
 					
 				</ui:fragment>
+				</ui:fragment>
+				</ui:fragment>
+				<ui:fragment rendered="#{userBean.user.moderator eq false}">
+				<br/>
+				<br/>
+				<h:outputText value="You do not have permission to view this page." style="text-align:center; font-weight:bold; color:red;" ></h:outputText>
 				</ui:fragment>
 				<ui:fragment rendered="#{assessmentGridBean.resource_id le 0}">
 				<div class="noresource">

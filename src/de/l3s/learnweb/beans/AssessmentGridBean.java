@@ -12,7 +12,6 @@ import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.AssessmentManager;
 import de.l3s.learnweb.Survey;
 import de.l3s.learnweb.SurveyManager;
 import de.l3s.learnweb.SurveyMetaDataFields;
@@ -121,7 +120,7 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
 
         users = new ArrayList<User>();
 
-        AssessmentManager assessManager = new AssessmentManager(getLearnweb());
+        SurveyManager assessManager = getLearnweb().getSurveyManager();
         users = assessManager.getSurveyUsers(resource_id);
 
     }
