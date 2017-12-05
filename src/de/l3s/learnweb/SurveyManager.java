@@ -384,12 +384,13 @@ public class SurveyManager
                 else
                 {
                     String str = "";
+                    System.out.println(StringUtils.join(pair1.getValue(), ","));
                     for(String s : pair1.getValue())
                     {
                         str = str + s + "|||";
                     }
-
-                    str = str.substring(0, str.lastIndexOf("\\|\\|\\|"));
+                    System.out.println(str);
+                    str = str.substring(0, str.lastIndexOf("|||"));
                     insert.setString(4, str);
                 }
 
