@@ -1737,7 +1737,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                         if(!canDeleteTheResource(folder))
                         {
                             numSkipped++;
-                            log.warn("The use don't have permissions to delete folder in target group.");
+                            log.warn("The user don't have permissions to delete folder in target group.");
                             continue;
                         }
 

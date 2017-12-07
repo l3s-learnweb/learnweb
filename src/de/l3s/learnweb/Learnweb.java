@@ -15,6 +15,7 @@ import java.util.Properties;
 
 import javax.servlet.ServletContext;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.InterWeb;
@@ -107,7 +108,7 @@ public class Learnweb
             }
             catch(Exception e)
             {
-                throw new RuntimeException("Learnweb is not initialized correctly. Check log files.");
+                throw new RuntimeException("Learnweb is not initialized correctly. Check log files. Or you have to use createInstance(String serverUrl)");
             }
         }
         return learnweb;
@@ -192,16 +193,14 @@ public class Learnweb
 
     /**
      * 
-     * @param contextUrl The servername + contextpath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
+     * @param guessedServerUrl The servername + contextpath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
      * 
      * @throws ClassNotFoundException
      * @throws SQLException
      */
-    private Learnweb(String contextUrl) throws ClassNotFoundException, SQLException
+    private Learnweb(String guessedServerUrl) throws ClassNotFoundException, SQLException
     {
         learnwebIsLoading = true;
-
-        this.serverUrl = contextUrl;
 
         try
         {
@@ -220,17 +219,22 @@ public class Learnweb
             log.error("Property error", e);
         }
 
-        String serverUrl = properties.getProperty("SERVER_URL");
+        String propertiesServerUrl = properties.getProperty("SERVER_URL");
 
-        if(null == serverUrl || serverUrl.startsWith("/"))
+        if(null == propertiesServerUrl || propertiesServerUrl.startsWith("/"))
         {
             this.serverUrl = "http://learnweb.l3s.uni-hannover.de";
-            log.error("You haven't provided an absolute base server url; Will use by default: " + serverUrl);
+            log.error("You haven't provided an absolute base server url; Will use by default: " + this.serverUrl);
         }
-        else if(serverUrl.startsWith("http"))
-            this.serverUrl = serverUrl;
-        else if(!serverUrl.equalsIgnoreCase("auto"))
-            log.error("You have defined and invalid SERVER_URL in your properties file.");
+        else if(propertiesServerUrl.startsWith("http"))
+            this.serverUrl = propertiesServerUrl;
+        else if(propertiesServerUrl.equalsIgnoreCase("auto") && StringUtils.isNotEmpty(guessedServerUrl))
+            this.serverUrl = guessedServerUrl;
+        else
+        {
+            this.serverUrl = "http://learnweb.l3s.uni-hannover.de";
+            log.error("We could not guess the server name. Will use by default: " + this.serverUrl);
+        }
 
         Class.forName("org.mariadb.jdbc.Driver");
         connect();

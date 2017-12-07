@@ -199,7 +199,7 @@ public class UserBean implements Serializable
             user.onDestroy();
         }
 
-        log.debug("Session Destroyed;");
+        //log.debug("Session Destroyed;");
     }
 
     public String getPreference(String key)

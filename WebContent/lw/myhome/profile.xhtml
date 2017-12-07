@@ -78,11 +78,11 @@
 								<f:ajax render="useremailMessage"/>							
 							</p:inputText>
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="useremail" id="useremailMessage" />
-							
+														
 							<h:outputText>
 								#{msg.student_id}<h:outputText value=" *" rendered="#{profileBean.studentIdRequired}" />:
 							</h:outputText>
-							<p:inputText id="studentId" value="#{profileBean.studentId}" label="#{msg.student_id}:" required="true" />
+							<p:inputText id="studentId" value="#{profileBean.studentId}" label="#{msg.student_id}:" required="#{profileBean.studentIdRequired}" />
 							<p:message showSummary="true" showDetail="false" styleClass="error" for="studentId" id="studentIdMessage" />
 							
 							<h:outputText value="Consent:" rendered="#{profileBean.studentIdRequired}" />

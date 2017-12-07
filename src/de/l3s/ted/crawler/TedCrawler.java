@@ -250,7 +250,8 @@ public class TedCrawler extends WebCrawler
                     tedResource.setDuration(duration);
                     tedResource.setMaxImageUrl(maxImageUrl);
                     tedResource.setCreationDate(publishedAt);
-                    tedResource.setEmbeddedRaw("<iframe src=\"http://embed.ted.com/talks/" + slug + ".html\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>");
+                    // the embeeded code is created on the fly in Resource.getEmbedded()
+                    //tedResource.setEmbeddedRaw("<iframe src=\"http://embed.ted.com/talks/" + slug + ".html\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>");
                     tedResource.setTranscript("");
                     try
                     {

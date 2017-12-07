@@ -1,7 +1,11 @@
 package de.l3s.learnweb.solrClient;
 
 import java.sql.SQLException;
-import java.util.*;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
 import org.apache.solr.client.solrj.beans.Field;
@@ -39,12 +43,13 @@ public class SolrResourceBean
     @Field("format")
     private String format;
 
+    /*
     @Field("thumbnailWidth")
     private int thumbnailWidth;
-
+    
     @Field("thumbnailHeight")
     private int thumbnailHeight;
-
+    */
     @Field("author")
     private String author;
 
@@ -110,10 +115,12 @@ public class SolrResourceBean
                 comments.add(comment.getText());
         }
 
-        if (null != resource.getThumbnail4()) {
+        /*
+        if(null != resource.getThumbnail4())
+        {
             this.thumbnailHeight = resource.getThumbnail4().getHeight();
             this.thumbnailWidth = resource.getThumbnail4().getWidth();
-        }
+        }*/
 
         // copy metadata to dynamic fields
         dynamicFieldsStrings = new HashMap<>(resource.getMetadata().size());
@@ -213,26 +220,27 @@ public class SolrResourceBean
         this.format = format;
     }
 
+    /*
     public int getThumbnailWidth()
     {
         return thumbnailWidth;
     }
-
+    
     public void setThumbnailWidth(int thumbnailWidth)
     {
         this.thumbnailWidth = thumbnailWidth;
     }
-
+    
     public int getThumbnailHeight()
     {
         return thumbnailHeight;
     }
-
+    
     public void setThumbnailHeight(int thumbnailHeight)
     {
         this.thumbnailHeight = thumbnailHeight;
     }
-
+    */
     public String getAuthor()
     {
         return author;

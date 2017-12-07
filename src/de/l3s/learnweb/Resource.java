@@ -1665,8 +1665,9 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     @Override
     public void delete() throws SQLException
     {
-        this.setGroupId(0);
-        this.setFolderId(0);
+        //this.setGroupId(0);
+        //this.setFolderId(0);
+        setDeleted(true);
         this.save();
     }
 

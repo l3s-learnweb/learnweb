@@ -3,6 +3,7 @@ package de.l3s.learnweb.solrClient;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -13,11 +14,13 @@ import org.apache.solr.client.solrj.impl.HttpSolrClient;
 import org.apache.solr.client.solrj.response.FacetField;
 import org.apache.solr.client.solrj.response.FacetField.Count;
 import org.apache.solr.client.solrj.response.QueryResponse;
+import org.apache.solr.client.solrj.response.UpdateResponse;
 import org.apache.solr.common.SolrDocument;
 
 import de.l3s.learnweb.Comment;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.ResourceManager;
 import de.l3s.learnweb.Tag;
 
 public class SolrClient
@@ -29,12 +32,14 @@ public class SolrClient
     private final String serverUrl;
     private final HttpSolrClient server;
 
+    private Learnweb learnweb;
+
     private SolrClient(Learnweb learnweb)
     {
         instance = this;
-        // see /Learnweb/Resources/de/l3s/learnweb/config/learnweb.properties
-        serverUrl = learnweb.getProperties().getProperty("SOLR_SERVER_URL");
-        server = new HttpSolrClient.Builder(serverUrl).build();
+        this.serverUrl = learnweb.getProperties().getProperty("SOLR_SERVER_URL");
+        this.server = new HttpSolrClient.Builder(serverUrl).build();
+        this.learnweb = learnweb;
     }
 
     public static SolrClient getInstance(Learnweb learnweb)
@@ -80,7 +85,10 @@ public class SolrClient
     {
         try
         {
-            indexResource(resource);
+            if(resource.isDeleted())
+                deleteFromIndex(resource.getId());
+            else
+                indexResource(resource);
         }
         catch(Throwable t)
         {
@@ -91,18 +99,6 @@ public class SolrClient
     public void deleteFromIndex(int resourceId) throws SolrServerException, IOException
     {
         server.deleteById("r_" + resourceId);
-        server.commit();
-    }
-
-    /**
-     * This function delete all learnweb resources(with id starts with r_ ) from solr
-     * 
-     * @throws SolrServerException
-     * @throws IOException
-     */
-    public void deleteAllFromIndex() throws SolrServerException, IOException
-    {
-        server.deleteByQuery("id:r_*");
         server.commit();
     }
 
@@ -180,6 +176,21 @@ public class SolrClient
             return null;
     }
 
+    public long countResources(String query) throws SolrServerException, IOException
+    {
+        List<Integer> ids = new LinkedList<Integer>();
+        SolrQuery solrQuery = new SolrQuery();
+        solrQuery.setQuery(query);
+        solrQuery.setFields("id");
+        QueryResponse result = server.query(solrQuery);
+        if(null != result)
+        {
+            return result.getResults().getNumFound();
+        }
+        else
+            return -1;
+    }
+
     private int extractId(String id)
     {
         try
@@ -220,22 +231,22 @@ public class SolrClient
     public static void main(String[] args) throws SQLException, IOException, SolrServerException, ClassNotFoundException
     {
 
-        Learnweb learnweb = Learnweb.getInstance();
+        Learnweb learnweb = Learnweb.createInstance(null);
         SolrClient solr = learnweb.getSolrClient();
-        log.debug(solr.getAutoCompletion("author_s", "phi C"));
+        //log.debug(solr.getAutoCompletion("author_s", "phi C"));
 
         //SolrClient.indexOneResource(67069);
         //SolrClient.indexOneResource(72364);
         //solr.deleteFromIndex(202667);
         //deleteOneResource(67069);
 
-        //SolrClient.deleteAllResource();
-        //SolrClient.indexAllResources();
+        solr.deleteAllResource();
+        solr.indexAllResources();
         //SolrClient.indexOneResource(192248);
         //SolrClient.indexOneResource(67571);
 
         log.debug("All tasks completed.");
-        System.exit(0);
+        learnweb.onDestroy();
         //SolrClient.deleteInvalidEntries();
 
     }
@@ -261,13 +272,10 @@ public class SolrClient
      * @throws SolrServerException
      * @throws IOException
      */
-    public static void deleteAllResource() throws SQLException, IOException, SolrServerException
+    public void deleteAllResource() throws SQLException, IOException, SolrServerException
     {
-        Learnweb learnweb = Learnweb.getInstance();
-        SolrClient indexer = learnweb.getSolrClient();
-
-        indexer.server.deleteByQuery("*:*");
-        indexer.server.commit();
+        server.deleteByQuery("*:*");
+        server.commit();
     }
 
     /**
@@ -277,53 +285,47 @@ public class SolrClient
      * @throws SolrServerException
      * @throws IOException
      */
-    public static void indexAllResources() throws SQLException, IOException, SolrServerException
+    protected void indexAllResources() throws SQLException, IOException, SolrServerException
     {
-        Learnweb learnweb = Learnweb.getInstance();
-        SolrClient indexer = learnweb.getSolrClient();
+        final int batchSize = 1000;
+        ResourceManager resourceManager = learnweb.getResourceManager();
+        resourceManager.setReindexMode(true);
+
+        Collection<SolrResourceBean> solrResourceBeans = new ArrayList<>(batchSize);
+        long sendResources = 0;
 
         for(int i = 0;; i++)
         {
-
-            List<Resource> resources = learnweb.getResourceManager().getResourcesAll(i, 1000); // loads all resources (very slow)
-
-            // List<Resource> resources = learnweb.getGroupManager().getGroupById(118).getResources();
+            log.debug("Load page: " + i);
+            List<Resource> resources = resourceManager.getResourcesAll(i, batchSize);
 
             if(resources.size() == 0)
             {
-                log.debug("finished: zero size");
+                log.debug("finished: last page");
                 break;
             }
 
-            log.debug("page: " + i);
+            log.debug("Process page: " + i);
+
+            solrResourceBeans.clear();
 
             for(Resource resource : resources)
             {
-
-                /*
-                File file = resource.getFile(4);
-                
-                if(file != null && file.getUrl().startsWith("http://learnweb.l3s.uni-hannover.de")) // resource has an attached file
-                {
-                
-                FileInspector inspector = new FileInspector();
-                FileInfo info = inspector.inspect((new URL(file.getUrl())).openStream(), file.getName());
-                
-                log.debug(info);
-                
-                if(info.getTextContent() != null)
-                {
-                resource.setMachineDescription(info.getTextContent());
-                resource.save();
-                
-                log.debug("saved description ");
-                }
-                
-                }*/
-                log.debug("Process resource: " + resource.getId());
-
-                indexer.reIndexResource(resource);
+                solrResourceBeans.add(new SolrResourceBean(resource));
+                sendResources++;
             }
+
+            UpdateResponse response = server.addBeans(solrResourceBeans);
+            if(response.getStatus() != 0)
+                throw new RuntimeException(response.toString());
+
+            server.commit();
+
+            long indexedResources = countResources("*:*");
+
+            if(sendResources != indexedResources)
+                throw new RuntimeException(sendResources + " - " + indexedResources);
+
         }
     }
 

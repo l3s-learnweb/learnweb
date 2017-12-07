@@ -218,7 +218,7 @@ public class UserManager
 
         user = cache.put(user);
 
-        log.debug("Get user " + user.getUsername() + " from db");
+        //log.debug("Get user " + user.getUsername() + " from db");
 
         return user;
     }

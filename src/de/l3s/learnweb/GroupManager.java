@@ -663,9 +663,7 @@ public class GroupManager
 
         for(Resource resource : folder.getResources())
         {
-            resource.setGroupId(0);
-            resource.setFolderId(0);
-            resource.save();
+            resource.delete();
         }
 
         Folder parentFolder = folder.getParentFolder();

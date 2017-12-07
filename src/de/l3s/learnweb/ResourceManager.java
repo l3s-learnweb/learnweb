@@ -49,6 +49,8 @@ public class ResourceManager
 
     private ICache<Resource> cache;
 
+    private boolean reindexMode = false; // if this flag is true some performance optimizations for reindexing all resources are enabled
+
     public enum Order
     {
         TITLE,
@@ -950,7 +952,9 @@ public class ResourceManager
             if(resource.getType().equals(ResourceType.glossary))
                 resource.setUrl(learnweb.getServerUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));
 
-            if(!resource.isDeleted())
+            if(resource.isDeleted())
+                log.debug("resource " + resource.getId() + " was requested but is deleted");
+            else if(!isReindexMode())
             {
                 List<File> files = learnweb.getFileManager().getFilesByResource(resource.getId());
                 for(File file : files)
@@ -964,8 +968,6 @@ public class ResourceManager
                     }
                 }
             }
-            else
-                log.debug("resource " + resource.getId() + " was requested but is deleted");
 
             // deserialize metadata
             byte[] metadataBytes = rs.getBytes("metadata");
@@ -1575,4 +1577,25 @@ public class ResourceManager
         }
 
     }
+
+    /**
+     * if this flag is true some performance optimizations for reindexing all resources are enabled
+     * 
+     * @return
+     */
+    private boolean isReindexMode()
+    {
+        return reindexMode;
+    }
+
+    /**
+     * this method enables some performance optimizations for reindexing all resources
+     * 
+     * @param reindexMode
+     */
+    public void setReindexMode(boolean reindexMode)
+    {
+        this.reindexMode = reindexMode;
+    }
+
 }
