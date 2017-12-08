@@ -28,7 +28,6 @@ import de.l3s.learnweb.rm.Category;
 import de.l3s.learnweb.rm.CategoryManager;
 import de.l3s.learnweb.rm.LanglevelManager;
 import de.l3s.learnweb.rm.PurposeManager;
-import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.SolrClient;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
@@ -88,7 +87,7 @@ public class ResourceManager
 
     public List<Resource> getResourcesByUserId(int userId) throws SQLException
     {
-        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE owner_user_id = ? AND deleted = 0 limit 250", null, userId); // TODO implement paging remove limit
+        return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE owner_user_id = ? AND deleted = 0", null, userId);
     }
 
     public List<Resource> getResourcesByTagId(int tagId) throws SQLException
@@ -116,29 +115,6 @@ public class ResourceManager
     public List<Resource> getResourcesAll(int page, int pageSize) throws SQLException
     {
         return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `deleted` = 0 ORDER BY resource_id LIMIT " + (page * pageSize) + "," + pageSize + "", null);
-    }
-
-    public List<Integer> getInvalidResourceIds() throws SQLException
-    {
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT resource_id FROM lw_resource ORDER BY resource_id ");
-        List<Integer> invalidIds = new LinkedList<>();
-
-        int counter = 1;
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
-        {
-            int validId = rs.getInt(1);
-
-            while(counter < validId)
-            {
-                invalidIds.add(counter);
-                counter++;
-            }
-            counter++;
-        }
-        select.close();
-
-        return invalidIds;
     }
 
     public boolean isResourceRatedByUser(int resourceId, int userId) throws SQLException
@@ -346,15 +322,6 @@ public class ResourceManager
 
     public Resource saveResource(Resource resource) throws SQLException
     {
-        /*if(resource.isRestricted() || resource.getOnlineStatus().equals(OnlineStatus.OFFLINE)) // TODO this is only a workaround; remove as soon as possible
-        {
-            resource.setThumbnail0(null);
-            resource.setThumbnail1(null);
-            resource.setThumbnail2(null);
-            resource.setThumbnail3(null);
-            resource.setThumbnail4(null);
-        }*/
-
         String query = "REPLACE INTO `lw_resource` (`resource_id` ,`title` ,`description` ,`url` ,`storage_type` ,`rights` ,`source` ,`type` ,`format` ,`owner_user_id` ,`rating` ,`rate_number` ,`query`, embedded_size1, embedded_size2, embedded_size3, embedded_size4, filename, max_image_url, original_resource_id, machine_description, author, file_url, thumbnail0_url, thumbnail0_file_id, thumbnail0_width, thumbnail0_height, thumbnail1_url, thumbnail1_file_id, thumbnail1_width, thumbnail1_height, thumbnail2_url, thumbnail2_file_id, thumbnail2_width, thumbnail2_height, thumbnail3_url, thumbnail3_file_id, thumbnail3_width, thumbnail3_height, thumbnail4_url, thumbnail4_file_id, thumbnail4_width, thumbnail4_height, embeddedRaw, transcript, online_status, id_at_service, duration, restricted, language, creation_date, metadata, group_id, folder_id, deleted, read_only_transcript, mtype, msource) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
                 + "?, ?)";
         PreparedStatement replace = learnweb.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -1274,61 +1241,6 @@ public class ResourceManager
         }
     }
 
-    public static void createThumbnailsForTEDVideos() throws SQLException, IOException
-    {
-
-        Learnweb lw = Learnweb.getInstance();
-        ResourceManager rm = new ResourceManager(lw);
-        // ResourcePreviewMaker pm = lw.getResourcePrevewMaker();
-
-        List<Resource> resources = rm.getResources("SELECT " + RESOURCE_COLUMNS + " FROM `lw_resource` r where `deleted` = 0 AND  source = 'ted' and thumbnail2_file_id=0  ORDER BY `resource_id` DESC limit 10", null);
-
-        ResourcePreviewMaker rpm = lw.getResourcePreviewMaker();
-        for(Resource resource : resources)
-        {
-            if(resource.getType().equals(Resource.ResourceType.video) || resource.getType().equals(Resource.ResourceType.image))
-            {
-                if(resource.getThumbnail4().getUrl() != null)
-                    rpm.processImage(resource, FileInspector.openStream(resource.getThumbnail4().getUrl()));
-
-                resource.save();
-            }
-        }
-    }
-
-    public static void reindexArchiveItResources() throws SQLException
-    {
-        Learnweb lw = Learnweb.getInstance();
-        ResourceManager rm = lw.getResourceManager();
-        //SolrClient sm = lw.getSolrClient();
-
-        PreparedStatement detailSelect = lw.getConnection().prepareStatement("SELECT collector, coverage, publisher FROM `archiveit_collection` WHERE `lw_resource_id` = ? and collection_id = 1068");
-
-        List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where deleted=0 AND group_id = 943 AND source=?", "Archive-It");
-
-        log.debug("Resources loaded");
-
-        for(Resource resource : resources)
-        {
-            log.debug("Process: " + resource.getId());
-
-            detailSelect.setInt(1, resource.getId());
-            ResultSet rs = detailSelect.executeQuery();
-
-            if(rs.next())
-            {
-                resource.setMetadataValue("collector", rs.getString("collector").trim());
-                resource.setMetadataValue("coverage", rs.getString("coverage").trim());
-                resource.setMetadataValue("publisher", rs.getString("publisher").trim());
-
-                resource.save();
-                //sm.reIndexResource(resource);
-            }
-            else
-                log.error("no archiveit_collection entry for id: " + resource.getId());
-        }
-    }
-
     public static void reindexAllResources() throws SQLException, ClassNotFoundException
     {
         Learnweb lw = Learnweb.getInstance();
@@ -1353,48 +1265,6 @@ public class ResourceManager
 
             currentPage++;
         }
-    }
-
-    public static void createMissingThumbnails() throws SQLException, ClassNotFoundException, IOException
-    {
-        Learnweb lw = Learnweb.getInstance();
-        ResourceManager rm = lw.getResourceManager();
-
-        List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where  group_id =? AND thumbnail0_file_id =0", "419");
-
-        log.debug("Resources loaded");
-
-        for(Resource resource : resources)
-        {
-            log.debug("Process: " + resource.getId());
-
-            ResourcePreviewMaker rme = Learnweb.getInstance().getResourcePreviewMaker();
-            rme.processResource(resource);
-
-            resource.save();
-
-            //sm.reIndexResource(resource);
-
-        }
-    }
-
-    public static void main(String[] args) throws SQLException, IOException, ClassNotFoundException
-    {
-        reindexAllResources();
-
-        //reindexArchiveItResources();
-        //createThumbnailsForWebResources();
-        /*
-        SolrClient solr = Learnweb.getInstance().getSolrClient();
-        List<Resource> resources = Learnweb.getInstance().getResourceManager().getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where deleted=1", null);
-        for(Resource resource : resources)
-        {
-            log.debug("Process: " + resource.getId());
-        
-            solr.deleteFromIndex(resource.getId());
-        }
-        */
-        System.exit(0);
     }
 
     /* 

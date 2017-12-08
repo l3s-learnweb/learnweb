@@ -99,7 +99,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             Folder folder = new Folder(0, groupId, group.getTitle());
             breadcrumb.add(0, folder);
             updateBreadcrumb();
-            resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(groupId, getSelectedFolderId(), getUser().getId(), 1000);
+            resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(groupId, getSelectedFolderId(), getUser().getId(), 10000);
         }
         else if(getParameterInt("group_id") != null && getParameterInt("folder_id") != null)
         {
@@ -108,7 +108,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 rootFolder = false;
                 Folder folder = new Folder(0, 0, UtilBean.getLocaleMessage("myPrivateResources"));
                 breadcrumb.add(folder);
-                resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(0, 0, getUser().getId(), 1000);
+                resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(0, 0, getUser().getId(), 10000);
             }
         }
 
@@ -262,7 +262,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             else
                 breadcrumb.add(clickedFolder);
         }
-        resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(clickedFolder.getGroupId(), clickedFolder.getId(), getUser().getId(), 1000);
+        resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(clickedFolder.getGroupId(), clickedFolder.getId(), getUser().getId(), 10000);
     }
 
     public GroupItem getClickedGroupItem()
@@ -633,7 +633,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             {
                 addGrowl(FacesMessage.SEVERITY_INFO, "resourcesDeletedSuccessfully", numResources);
                 if(numResources > 0)
-                    resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(0, 0, getUser().getId(), 1000);
+                    resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(0, 0, getUser().getId(), 10000);
             }
 
             if(numSkipped > 0)

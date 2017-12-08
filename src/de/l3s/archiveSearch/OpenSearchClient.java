@@ -80,7 +80,7 @@ public class OpenSearchClient
         String response;
         try
         {
-            response = IOUtils.toString(new URL(openSearchUrl));
+            response = IOUtils.toString(new URL(openSearchUrl), "UTF-8");
             resources = parseXmlResponse(response);
         }
         catch(IOException | DOMException | ParseException e)

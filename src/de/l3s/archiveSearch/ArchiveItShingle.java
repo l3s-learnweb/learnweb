@@ -294,7 +294,7 @@ public class ArchiveItShingle
         int groupSize = group.getResources().size();
 
         float avgSum = 0;
-        int count = 0, nonDupCount = 0, countSum = 0, dupCountSum = 0;//, evCount = 0;
+        int count = 0, countSum = 0, dupCountSum = 0;//, evCount = 0 nonDupCount = 0, ;
         float textSim = 0.8f, frameSim = 0.8f;
         for(Resource r : group.getResources())
         {
@@ -311,7 +311,7 @@ public class ArchiveItShingle
             rs = ps.executeQuery();
             if(rs.last())
             {
-                nonDupCount = rs.getRow();
+                //nonDupCount = rs.getRow();
                 rs.beforeFirst();
             }
 

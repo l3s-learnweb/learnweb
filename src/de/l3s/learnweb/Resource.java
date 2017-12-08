@@ -1156,7 +1156,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     }
 
     /**
-     * @return if the resource was copied from an older fedora resource this returns the id of the original resource <b>0</b> otherwise
+     * @return if the resource was copied from an older Learnweb resource this returns the id of the original resource <b>0</b> otherwise
      */
     public int getOriginalResourceId()
     {
@@ -1164,7 +1164,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     }
 
     /**
-     * @param originalResourceId if the resource was copied from an older fedora resource this stores the id of the original resource
+     * @param originalResourceId if the resource was copied from an older Learnweb resource this stores the id of the original resource
      */
     public void setOriginalResourceId(int originalResourceId)
     {

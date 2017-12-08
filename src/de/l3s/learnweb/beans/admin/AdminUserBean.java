@@ -3,11 +3,13 @@ package de.l3s.learnweb.beans.admin;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import de.l3s.learnweb.Group;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.beans.LoginBean;
@@ -81,5 +83,10 @@ public class AdminUserBean extends ApplicationBean implements Serializable
         //Updating moderator rights for particular user
         targetUser.save();
         addGrowl(FacesMessage.SEVERITY_INFO, "Updated moderator settings for '" + targetUser.getUsername() + "'");
+    }
+
+    public String concatGroups(List<Group> groups)
+    {
+        return groups.stream().sorted().map(g -> g.getTitle()).collect(Collectors.joining(", "));
     }
 }

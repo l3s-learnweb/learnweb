@@ -178,7 +178,6 @@ public class SolrClient
 
     public long countResources(String query) throws SolrServerException, IOException
     {
-        List<Integer> ids = new LinkedList<Integer>();
         SolrQuery solrQuery = new SolrQuery();
         solrQuery.setQuery(query);
         solrQuery.setFields("id");
@@ -240,7 +239,7 @@ public class SolrClient
         //solr.deleteFromIndex(202667);
         //deleteOneResource(67069);
 
-        solr.deleteAllResource();
+        //solr.deleteAllResource();
         solr.indexAllResources();
         //SolrClient.indexOneResource(192248);
         //SolrClient.indexOneResource(67571);
@@ -249,20 +248,6 @@ public class SolrClient
         learnweb.onDestroy();
         //SolrClient.deleteInvalidEntries();
 
-    }
-
-    public static void deleteInvalidEntries() throws SQLException, SolrServerException, IOException
-    {
-        Learnweb learnweb = Learnweb.getInstance();
-        SolrClient indexer = learnweb.getSolrClient();
-
-        List<Integer> invalidIds = learnweb.getResourceManager().getInvalidResourceIds();
-
-        for(int id : invalidIds)
-        {
-            log.debug("delete: " + id);
-            indexer.deleteFromIndex(id);
-        }
     }
 
     /**

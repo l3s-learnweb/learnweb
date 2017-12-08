@@ -104,7 +104,7 @@ public class CDXClient
         String response;
         try
         {
-            response = IOUtils.toString(new URL("http://web.archive.org/cdx/search/cdx?url=" + StringHelper.urlEncode(url) + "&fl=timestamp&limit=" + limit));
+            response = IOUtils.toString(new URL("http://web.archive.org/cdx/search/cdx?url=" + StringHelper.urlEncode(url) + "&fl=timestamp&limit=" + limit), "UTF-8");
 
             if(response.trim().length() == 0)
             {
@@ -141,7 +141,7 @@ public class CDXClient
 
             url = url.substring(url.indexOf("//") + 2); // remove leading http(s)://
             log.debug("Getting wayback captures for: " + url);
-            response = IOUtils.readLines(new URL("http://web.archive.org/cdx/search/cdx?url=" + StringHelper.urlEncode(url) + "&fl=timestamp").openStream());
+            response = IOUtils.readLines(new URL("http://web.archive.org/cdx/search/cdx?url=" + StringHelper.urlEncode(url) + "&fl=timestamp").openStream(), "UTF-8");
 
             if(response == null || response.isEmpty())
             {
