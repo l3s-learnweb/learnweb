@@ -25,7 +25,9 @@ public class File implements Serializable, HasId
         THUMBNAIL_VERY_SMALL, // 6
         FILE_ORIGINAL, // 7 if the file was converted the original file should be moved to this location
         PROFILE_PICTURE, // 8
-        SYSTEM_FILE // 9 for example course header images
+        SYSTEM_FILE, // 9 for example course header images
+        HISTORY_FILE, // 10 previous version of an office file
+        CHANGES, // 11 zip file with changes for office resources
     }
 
     private int fileId = -1;

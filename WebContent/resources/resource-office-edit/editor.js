@@ -1,5 +1,10 @@
-
 var docEditor;
+
+function lightbox_close_for_editor() {
+	$('#lightbox').hide();
+	$('#lightbox').detach();
+	location.reload(true);
+}
 
 var innerAlert = function(message) {
 	if (console && console.log)
@@ -28,6 +33,32 @@ var onOutdatedVersion = function(event) {
 	location.reload(true);
 };
 
+var onRequestHistoryClose = function() {
+    document.location.reload();
+};
+
+var history_info = {};  
+
+
+var onRequestHistoryData = function(event) {
+	debugger;
+	var url = "/Learnweb-Tomcat/history";
+    $.post(url+"?version=" + event.data+"&resourceId=" + $('#ed_resource_id').val(),JSON.stringify(history_info), function(json) {   
+    	docEditor.setHistoryData(json);    
+    }, "json"); 
+   
+};
+
+
+
+var onRequestHistory = function() {
+	var url = "/Learnweb-Tomcat/history?resourceId=" + $('#ed_resource_id').val()
+        $.get(url, function(json) {  
+        	history_info = json;
+        	docEditor.refreshHistory(json);
+        });   
+    };
+
 
 
 var сonnectEditor = function(id_div, type) {
@@ -55,11 +86,11 @@ var сonnectEditor = function(id_div, type) {
 
 			lang : "en",
 
-			callbackUrl : $('#ed_callback_url').val(),
+			callbackUrl : $('#ed_callback_url').val() + "&userId=" + ed_user_id,
 
 			user : {
-				id : $('#ed_user_id').val(),
-				name : $('#ed_user_name').val(),
+				id : ed_user_id,
+				name : ed_user_name,
 			},
 
 			embedded : {
@@ -74,6 +105,9 @@ var сonnectEditor = function(id_div, type) {
 			'onRequestEditRights' : onRequestEditRights,
 			"onError" : onError,
 			"onOutdatedVersion" : onOutdatedVersion,
+			"onRequestHistoryData":onRequestHistoryData,
+			"onRequestHistory":onRequestHistory,
+			"onRequestHistoryClose":onRequestHistoryClose,
 		}
 	});
 	docEditor;

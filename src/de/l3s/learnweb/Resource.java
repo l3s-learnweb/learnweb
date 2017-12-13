@@ -499,6 +499,11 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         return Resource.ResourceType.document.equals(type) || Resource.ResourceType.spreadsheet.equals(type) || Resource.ResourceType.presentation.equals(type);
     }
 
+    public boolean isOffline()
+    {
+        return OnlineStatus.OFFLINE.equals(onlineStatus);
+    }
+
     public String getStringStorageType()
     {
         if(storageType == Resource.LEARNWEB_RESOURCE)

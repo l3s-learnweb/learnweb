@@ -1,4 +1,4 @@
-package de.l3s.office;
+package de.l3s.office.converter.model;
 
 public class ConverterRequest
 {

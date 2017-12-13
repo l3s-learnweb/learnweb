@@ -187,6 +187,17 @@
 		<servlet-name>saverServlet</servlet-name>
 		<url-pattern>/save</url-pattern>
 	</servlet-mapping>
+	<servlet>
+		<description>Servlet for getting document history</description>
+		<display-name>HistoryServlet</display-name>
+		<servlet-name>historyServlet</servlet-name>
+		<servlet-class>de.l3s.office.HistoryServlet</servlet-class>
+		<load-on-startup>5</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>historyServlet</servlet-name>
+		<url-pattern>/history</url-pattern>
+	</servlet-mapping>
 
 	<welcome-file-list>
 		<welcome-file>index.jsf</welcome-file>

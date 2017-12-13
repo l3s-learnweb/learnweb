@@ -77,6 +77,8 @@ public class Learnweb
     private final SearchLogManager searchLogManager;
     private final WaybackUrlManager waybackUrlManager;
 
+    private final HistoryManager historyManager;
+
     //added by Chloe 
     private final AudienceManager audienceManager;
     private final CategoryManager categoryManager;
@@ -272,6 +274,7 @@ public class Learnweb
         waybackUrlManager = WaybackUrlManager.getInstance(this);
 
         learnwebIsLoading = false;
+        historyManager = new HistoryManager(this);
 
         //new managers added by Chloe 
         audienceManager = new AudienceManager(this);
@@ -824,6 +827,12 @@ public class Learnweb
     public SubmissionManager getSubmissionManager()
     {
         return submissionManager;
+    }
+    
+
+    public HistoryManager getHistoryManager()
+    {
+        return historyManager;
     }
 
 }

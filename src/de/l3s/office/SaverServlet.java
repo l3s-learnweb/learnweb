@@ -15,11 +15,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
+
+import com.google.gson.Gson;
 
 import de.l3s.learnweb.File;
+import de.l3s.learnweb.File.TYPE;
+import de.l3s.office.history.model.Change;
+import de.l3s.office.history.model.History;
+import de.l3s.office.history.model.OfficeUser;
+import de.l3s.office.history.model.SavingInfo;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
 
@@ -37,15 +41,15 @@ public class SaverServlet extends HttpServlet
 
     private static final String FILE_ID = "fileId";
 
+    private static final String USER_ID = "userId";
+
     private final static Logger logger = Logger.getLogger(SaverServlet.class);
 
     private static final String ERROR_0 = "{\"error\":0}";
 
-    private static final String URL = "url";
-
-    private static final String STATUS = "status";
-
     private static final String DELIMITER = "\\A";
+
+    private static Learnweb learnweb;
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException
@@ -53,11 +57,14 @@ public class SaverServlet extends HttpServlet
         try(PrintWriter writer = response.getWriter())
         {
             String fileId = request.getParameter(FILE_ID);
+            String userId = request.getParameter(USER_ID);
             try(Scanner scanner = new Scanner(request.getInputStream()))
             {
                 scanner.useDelimiter(DELIMITER);
                 String body = scanner.hasNext() ? scanner.next() : "";
-                parseResponse(body, fileId);
+                Gson gson = new Gson();
+                SavingInfo savingInfo = gson.fromJson(body, SavingInfo.class);
+                parseResponse(savingInfo, fileId, userId);
             }
             request.getRemoteAddr();
             writer.write(ERROR_0);
@@ -69,30 +76,32 @@ public class SaverServlet extends HttpServlet
 
     }
 
-    private void parseResponse(String body, String fileId)
+    private void parseResponse(SavingInfo info, String fileId, String userId)
     {
         try
         {
-            JSONObject jsonObj = (JSONObject) new JSONParser().parse(body);
-            logger.info("Document " + fileId + " status : " + (long) jsonObj.get(STATUS));
-            if((long) jsonObj.get(STATUS) == DocumentStatus.READY_FOR_SAVING.getStatus())
+            logger.info("Document " + fileId + " status : " + info.getStatus());
+            if(info.getStatus() == DocumentStatus.READY_FOR_SAVING.getStatus())
             {
-                String downloadUri = (String) jsonObj.get(URL);
-                Learnweb learnweb = Learnweb.getInstance();
+                learnweb = Learnweb.getInstance();
                 File file = learnweb.getFileManager().getFileById(Integer.parseInt(fileId));
+                File previousVersionFile = learnweb.getFileManager().copy(file);
                 file.setLastModified(new Date());
                 Resource resource = learnweb.getResourceManager().getResource(file.getResourceId());
-                URL url = new URL(downloadUri);
+                URL url = new URL(info.getUrl());
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 InputStream inputStream = connection.getInputStream();
+                learnweb.getFileManager().save(previousVersionFile, file.getInputStream());
                 learnweb.getFileManager().save(file, inputStream);
+                resource.setUrl(file.getUrl());
                 learnweb.getResourcePreviewMaker().processResource(resource);
-                logger.debug("Saved document url: " + downloadUri);
-                inputStream.close();
-                connection.disconnect();
+                logger.info("Started history saving for resourceId = " + file.getResourceId());
+                previousVersionFile.setType(TYPE.HISTORY_FILE);
+                logger.info("History is saved resourceId = " + file.getResourceId());
+                createResourceHistory(info, previousVersionFile, file.getResourceId(), Integer.parseInt(userId));
             }
         }
-        catch(ParseException | NumberFormatException e)
+        catch(NumberFormatException e)
         {
             logger.error(e);
         }
@@ -101,6 +110,41 @@ public class SaverServlet extends HttpServlet
             logger.error(e);
         }
 
+    }
+
+    private void createResourceHistory(SavingInfo info, File previosVersion, int resourceId, int userId) throws IOException, SQLException
+    {
+        History history = new History();
+        history.setResourceId(resourceId);
+        OfficeUser officeUser = new OfficeUser();
+        officeUser.setId(userId);
+        history.setUser(officeUser);
+        history.setCreated(info.getLastSave().replace('T', ' ').substring(0, info.getLastSave().indexOf('.')));
+        history.setPreviousVersionFileId(previosVersion.getId());
+        history.setServerVersion(info.getHistory().getServerVersion());
+        history.setKey(info.getKey());
+        File changesFile = new File();
+        changesFile.setType(TYPE.CHANGES);
+        changesFile.setName("changes.zip");
+        changesFile.setMimeType("zip");
+        changesFile.setResourceId(resourceId);
+        URL url = new URL(info.getChangesurl());
+        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+        InputStream inputStream = connection.getInputStream();
+        learnweb.getFileManager().save(changesFile, inputStream);
+        history.setChangesFileId(changesFile.getId());
+        learnweb.getHistoryManager().saveHistory(history);
+        for(Change change : info.getHistory().getChanges())
+        {
+            Change fileChange = new Change();
+            OfficeUser user = new OfficeUser();
+            user.setId(change.getUser().getId());
+            fileChange.setUser(user);
+            fileChange.setHistoryId(history.getId());
+            fileChange.setCreated(change.getCreated());
+            learnweb.getHistoryManager().saveChange(fileChange);
+            history.addChange(fileChange);
+        }
     }
 
 }

@@ -393,4 +393,21 @@ public class FileManager
         cache.clear();
     }
 
+    public File copy(File source)
+    {
+        File destination = new File();
+        if(source.getName() != null)
+            destination.setName(source.getName());
+        if(source.getUrl() != null)
+            destination.setUrl(source.getUrl());
+        if(source.getType() != null)
+            destination.setType(source.getType());
+        if(source.getLastModified() != null)
+            destination.setLastModified(source.getLastModified());
+        if(source.getMimeType() != null)
+            destination.setMimeType(source.getMimeType());
+        destination.setResourceId(source.getResourceId());
+        return destination;
+    }
+
 }
