@@ -62,10 +62,6 @@ function lightbox_close() {
     box.hide();
     box.detach();
 }
-function lightbox_close_for_editor() {
-	$('#lightbox').hide();
-	$('#lightbox').detach();
-}
 
 function lightbox_resize_container() {
     var height = $(window).height() - 167;
@@ -320,7 +316,7 @@ function load_editor() {
 function load_lightbox_editor() {
     
 	lightbox_open();
-	var canBeEdited = ($('#ed_can_be_edited').val() == 'true');
+	var canBeEdited = (ed_can_be_edited == 'true');
 
 	$('#lightbox_background').click(function() {
 		lightbox_close_for_editor();
@@ -512,6 +508,7 @@ $(document).ready(function () {
         }
 
         selected.selectLastItem();
+        load_editor();
     });
     
     //for resource_yell.html
@@ -540,6 +537,7 @@ $(document).ready(function () {
         }
 
         selected.selectLastItem();
+        load_editor();
     });
 
     $(document).on('click', '.resource-controls a', function (e) {

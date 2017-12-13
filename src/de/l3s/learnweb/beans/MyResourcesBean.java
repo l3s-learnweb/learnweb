@@ -307,8 +307,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                 if(resource != null)
                 {
                     this.setClickedGroupItem(resource);
-                    if(resource.isOfficeResource())
-                        getResourceDetailBean().getFileEditorBean().fillInFileInfo(resource);
                 }
                 else
                     throw new NullPointerException("Target resource does not exists");

@@ -13,6 +13,7 @@
 		<h:inputHidden id="ed_callback_url" value="#{fileEditorBean.callbackUrl}" />
 		<h:inputHidden id="ed_file_key" value="#{fileEditorBean.key}" />
 		<h:inputHidden id="ed_file_type" value="#{fileEditorBean.fileType}" />
+		<h:inputHidden id="ed_resource_id" value="#{fileEditorBean.resource.id}" />
 	
 		<h:outputScript target="head">var ONLY_OFFICE_CLIENT_URL = '#{fileEditorBean.onlyOfficeClientUrl}';</h:outputScript>
 		<h:outputScript library="resource-office-edit" name="editor.js" target="head" />

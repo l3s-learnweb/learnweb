@@ -15,11 +15,13 @@
 		<ui:fragment rendered="#{resource.type eq 'website' and not empty resource.thumbnail3}">
 		    <img src="#{resource.thumbnail3.url}" height="#{resource.thumbnail3.height}" onmouseup="lightbox_open();" width="#{resource.thumbnail3.width}" style="max-width: 100%; height: auto; margin:0 auto; display:block; cursor: -webkit-zoom-in; cursor: -moz-zoom-in; cursor:zoom-in;"/>
 		</ui:fragment>
-		<ui:fragment rendered="#{resource.isOfficeResource() and not (resource.onlineStatus eq 'OFFLINE')}">
+		<ui:fragment rendered="#{resource.isOfficeResource() and not (resource.isOffline())}">
 		    <div class="preview_box_wrapper editor_preview">
-		        <h:inputHidden id="ed_user_id" value="#{userBean.user.id}"/>
-		        <h:inputHidden id="ed_user_name" value="#{userBean.user.username}"/>
-		        <h:inputHidden id="ed_can_be_edited" value="#{resource.canEditResource(userBean.user)}"/>
+			    <h:outputScript target="head">
+			        var ed_user_id = '#{userBean.user.id}';
+			        var ed_user_name = '#{userBean.user.username}';
+			        var ed_can_be_edited = '#{resource.canEditResource(userBean.user)}';
+			    </h:outputScript>
 		        <ui:decorate template="/templates/resources/editor.xhtml"/>
 		        <p:commandButton onclick="load_lightbox_editor(); return false;" icon="fa fa-arrows-alt" styleClass="graybutton float-right" immediate="true" style="margin-top:1em;"/>
 		    </div>
