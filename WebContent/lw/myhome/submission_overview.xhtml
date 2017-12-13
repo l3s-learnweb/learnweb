@@ -3,14 +3,17 @@
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	lang="#{userBean.localeCode}">
 
 	<ui:composition template="/templates/main/main_old.xhtml">
 	
 		<ui:define name="metadata">
 			<f:metadata>
 				<f:viewParam name="user_id" value="#{submitResourcesBean.userId}" />
-				
+				<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{resourceDetailBean.preRenderView}" />
 				<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{submitResourcesBean.preRenderView}"/>
 			</f:metadata>
 		</ui:define>
@@ -71,6 +74,10 @@
 				toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');
 			});
 			</script>
+			<h:form>
+				<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submitResourcesBean.actionSelectGroupItem}" update=":add_resource_panel :growl" oncomplete="update_header();load_editor(); "/>
+			</h:form>
+			
 			<h:outputStylesheet library="resource-submission" name="submit.css" />
 			
 			<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" modal="true" minWidth="440" appendTo="@(body)" widgetVar="submission_edit_dialog">
@@ -216,7 +223,13 @@
 								#{msg['Submission.create_new_submission']}
 					</p:commandLink>
 				</h:form>
-			</h:panelGroup>			
+			</h:panelGroup>
+			<h:panelGroup id="datagrid" class="not-selectable display-none"></h:panelGroup>			
+		</ui:define>
+		<ui:define name="right_layout">
+			<ui:decorate  template="/templates/resources/right_pane.xhtml">
+				<ui:param name="bean" value="#{submitResourcesBean}" />
+			</ui:decorate>
 		</ui:define>
 	</ui:composition>
 </html>

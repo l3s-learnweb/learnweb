@@ -2,6 +2,7 @@ package de.l3s.learnweb;
 
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -21,6 +22,8 @@ public class Submission
     int surveyResourceId = -1;
     Survey surveyResource;
     boolean surveyMandatory = false;
+
+    List<Resource> submittedResources;
 
     public Submission()
     {
@@ -184,5 +187,15 @@ public class Submission
         }
 
         return false;
+    }
+
+    public List<Resource> getSubmittedResources()
+    {
+        return submittedResources;
+    }
+
+    public void setSubmittedResources(List<Resource> submittedResources)
+    {
+        this.submittedResources = submittedResources;
     }
 }

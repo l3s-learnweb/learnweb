@@ -84,7 +84,8 @@ public class SubmissionManager
             while(rs.next())
             {
                 Submission s = new Submission();
-                s.setId(rs.getInt("submission_id"));
+                int submissionId = rs.getInt("submission_id");
+                s.setId(submissionId);
                 s.setCourseId(rs.getInt("course_id"));
                 s.setTitle(rs.getString("title"));
                 s.setDescription(rs.getString("description"));
@@ -92,6 +93,7 @@ public class SubmissionManager
                 s.setCloseDatetime(rs.getDate("close_datetime"));
                 s.setNoOfResources(rs.getInt("number_of_resources"));
                 s.setSurveyResourceId(rs.getInt("survey_resource_id"));
+                s.setSubmittedResources(getResourcesByIdAndUserId(submissionId, user.getId()));
 
                 submissions.add(s);
             }
@@ -248,7 +250,7 @@ public class SubmissionManager
         HashMap<Integer, Integer> usersSubmissions = new HashMap<Integer, Integer>();
         try
         {
-            PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT user_id, COUNT(*) as count FROM lw_submit_resource JOIN lw_submit USING(submission_id) WHERE course_id = ? GROUP BY user_id");
+            PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT t1.user_id, COUNT(*) as count FROM (SELECT DISTINCT submission_id, user_id FROM lw_submit_resource) t1 JOIN lw_submit t2 USING(submission_id) WHERE course_id = ? GROUP BY user_id");
             ps.setInt(1, courseId);
             ResultSet rs = ps.executeQuery();
             while(rs.next())

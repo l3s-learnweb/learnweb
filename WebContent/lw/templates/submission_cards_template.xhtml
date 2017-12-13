@@ -1,11 +1,13 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
 	<ui:repeat var="submission" value="#{submissions}">
-		<div id="submission_card">
-			<div id="submission_details">
+		<div class="submission_card">
+		<div class="submission_card_details">
+			<div class="submission_details">
 				<h2>
 					<b>#{submission.title} </b>
 					<h:form style="display:inline;">
@@ -16,9 +18,9 @@
 						</p:commandLink>
 					</h:form>
 				</h2>
-				<span id="submission_description">#{submission.description}</span>
+				<span class="submission_description">#{submission.description}</span>
 			</div>
-			<div id="submission_time_block">
+			<div class="submission_time_block">
 				<table style="position: relative; float: right;">
 					<tr>
 						<td><span style="font-weight: bold;">#{msg['Submission.open_date']}: </span></td>
@@ -64,7 +66,7 @@
 					value="../templates/resources/survey.jsf"
 					rendered="#{submission.currentSubmission and not submission.isSurveySubmitted(userBean.user.id) and not submitResourcesBean.submissionOverviewReadOnly}">
 					<f:param name="resource_id" value="#{submission.surveyResourceId}" />
-					<h:outputText id="survey_submit_message" value="Please submit the survey first"/>
+					<h:outputText class="survey_submit_message" value="Please submit the survey first"/>
 				</h:outputLink>
 				
 				<h:outputLink styleClass="greenbutton submission_link"
@@ -75,6 +77,41 @@
 					#{msg['Submission.view_submission']}
 				</h:outputLink>
 			</div>
+		</div>
+		<h:panelGroup class="submission_card_resources" layout="block" rendered="#{not empty submission.submittedResources}">
+			<hr/>
+			<h:panelGroup layout="block" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
+			<h:panelGroup styleClass="resource-grid" layout="block" style="margin-bottom:0px;">
+					<ui:repeat var="res" value="#{submission.submittedResources}" >
+	
+						<h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
+							<div class="resource-block">
+	
+								<div class="resource-preview">
+									<div class="resource-preview-wrapper">
+										<div class="resource-preview-wrapper2">
+											<div class="resource-preview-block"></div>
+											<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" />
+										</div>
+									</div>
+								</div>
+	
+								<div class="resource-title">
+									<div class="resource-title-wrapper">
+										<div class="resource-title-text">
+											<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
+											<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
+										</div>
+									</div>
+								</div>
+	
+							</div>
+						</h:panelGroup>
+					</ui:repeat>
+			</h:panelGroup>
+			</h:panelGroup>
+			
+		</h:panelGroup>
 		</div>
 	</ui:repeat>
 </ui:composition>

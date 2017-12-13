@@ -12,6 +12,7 @@
 		<f:metadata>
 			<f:viewParam name="submission_id" value="#{submitResourcesBean.submissionId}"/>
 			<f:viewParam name="user_id" value="#{submitResourcesBean.userId}" />
+			<f:viewParam name="resource_id" value="#{resourceDetailBean.resourceId}" />
 			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{resourceDetailBean.preRenderView}" />
 			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{submitResourcesBean.preRenderView}"/>
 		</f:metadata>
@@ -170,6 +171,6 @@
 	<ui:define name="right_layout">
 		<ui:decorate  template="/templates/resources/right_pane.xhtml">
 			<ui:param name="bean" value="#{submitResourcesBean}" />
-		</ui:decorate >
+		</ui:decorate>
 	</ui:define>
 </ui:composition>	

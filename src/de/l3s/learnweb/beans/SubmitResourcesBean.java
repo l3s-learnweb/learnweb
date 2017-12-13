@@ -84,6 +84,9 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         clickedResource = new Resource();
         surveyResourcesList = new ArrayList<SelectItem>();
         editSurveyResourcesList = new ArrayList<SelectItem>();
+
+        if(getParameterInt("resource_id") != null)
+            setRightPanelAction("viewResource");
     }
 
     public void preRenderView(ComponentSystemEvent e) throws SQLException
