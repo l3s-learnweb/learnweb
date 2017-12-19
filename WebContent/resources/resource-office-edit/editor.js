@@ -86,11 +86,11 @@ var сonnectEditor = function(id_div, type) {
 
 			lang : "en",
 
-			callbackUrl : $('#ed_callback_url').val() + "&userId=" + ed_user_id,
+			callbackUrl : $('#ed_callback_url').val() + "&userId=" + $('ed_user_id').val(),
 
 			user : {
-				id : ed_user_id,
-				name : ed_user_name,
+				id : $('#ed_user_id').val(),
+				name : $('#ed_user_name').val(),
 			},
 
 			embedded : {

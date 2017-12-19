@@ -314,9 +314,9 @@ function load_editor() {
 }
 
 function load_lightbox_editor() {
-    
+    debugger;
 	lightbox_open();
-	var canBeEdited = (ed_can_be_edited == 'true');
+	var canBeEdited = ($('#ed_can_be_edited').val() == 'true');
 
 	$('#lightbox_background').click(function() {
 		lightbox_close_for_editor();
