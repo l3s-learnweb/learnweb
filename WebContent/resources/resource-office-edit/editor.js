@@ -86,7 +86,7 @@ var сonnectEditor = function(id_div, type) {
 
 			lang : "en",
 
-			callbackUrl : $('#ed_callback_url').val() + "&userId=" + $('ed_user_id').val(),
+			callbackUrl : $('#ed_callback_url').val() + "&userId=" + $('#ed_user_id').val(),
 
 			user : {
 				id : $('#ed_user_id').val(),
