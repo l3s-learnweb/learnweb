@@ -6,15 +6,15 @@
 	xmlns:p="http://primefaces.org/ui">
 
 	<ui:fragment>
-
-		<h:inputHidden id="ed_file_name" value="#{fileEditorBean.resource.fileName}" />
-		<h:inputHidden id="ed_file_ext" value="#{fileEditorBean.filesExtension}" />
-		<h:inputHidden id="ed_file_url" value="#{fileEditorBean.fullFilesUrl}" />
-		<h:inputHidden id="ed_callback_url" value="#{fileEditorBean.callbackUrl}" />
-		<h:inputHidden id="ed_file_key" value="#{fileEditorBean.key}" />
-		<h:inputHidden id="ed_file_type" value="#{fileEditorBean.fileType}" />
-		<h:inputHidden id="ed_resource_id" value="#{fileEditorBean.resource.id}" />
-	
+     <form id="editor_values">
+		<input type="hidden"  id="ed_file_name" value="#{fileEditorBean.resource.fileName}" />
+		<input type="hidden"  id="ed_file_ext" value="#{fileEditorBean.filesExtension}" />
+		<input type="hidden"  id="ed_file_url" value="#{fileEditorBean.fullFilesUrl}" />
+		<input type="hidden"  id="ed_callback_url" value="#{fileEditorBean.callbackUrl}" />
+		<input type="hidden"  id="ed_file_key" value="#{fileEditorBean.key}" />
+		<input type="hidden"  id="ed_file_type" value="#{fileEditorBean.fileType}" />
+		<input type="hidden"  id="ed_resource_id" value="#{fileEditorBean.resource.id}" />
+	</form>
 		<h:outputScript target="head">var ONLY_OFFICE_CLIENT_URL = '#{fileEditorBean.onlyOfficeClientUrl}';</h:outputScript>
 		<h:outputScript library="resource-office-edit" name="editor.js" target="head" />
 		<h:outputScript library="resource-office-edit" name="api3.js" target="head" />

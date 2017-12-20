@@ -17,9 +17,11 @@
 		</ui:fragment>
 		<ui:fragment rendered="#{resource.isOfficeResource() and not (resource.isOffline())}">
 		    <div class="preview_box_wrapper editor_preview">
-		        <h:inputHidden id="ed_user_id" value="#{userBean.user.id}"/>
-		        <h:inputHidden id="ed_user_name" value="#{userBean.user.username}"/>
-		        <h:inputHidden id="ed_can_be_edited" value="#{resource.canEditResource(userBean.user)}"/>
+		    <form id = "editor_user_info">
+		        <input type="hidden"  id="ed_user_id" value="#{userBean.user.id}"/>
+		        <input type="hidden"  id="ed_user_name" value="#{userBean.user.username}"/>
+                <input type="hidden" id="ed_can_be_edited" value="#{resource.canEditResource(userBean.user)}"/>
+		     </form>   
 		        <ui:decorate template="/templates/resources/editor.xhtml"/>
 		        <p:commandButton onclick="load_lightbox_editor(); return false;" icon="fa fa-arrows-alt" styleClass="graybutton float-right" immediate="true" style="margin-top:1em;"/>
 		    </div>
