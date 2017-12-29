@@ -52,6 +52,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
     public List<String> getQueries()
     {
+        queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionId("");
         return queries;
     }
 

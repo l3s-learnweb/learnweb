@@ -3,6 +3,7 @@
 	xmlns:h="http://java.sun.com/jsf/html" 
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	lang="#{userBean.localeCode}">
 
 	<ui:define name="metadata">
@@ -14,7 +15,7 @@
 	<ui:param name="pageTitle" value="Search History" />
 	
 	<ui:define name="center_layout">
-	<h2>#{newSearchHistoryBean.title}</h2>
+	<h4>#{newSearchHistoryBean.title}</h4>
 	<!-- Include your demo2.xhtml code inside this tag -->
 	<!-- <ui:include src="demo4.xhtml"></ui:include> -->
 	<h:body>

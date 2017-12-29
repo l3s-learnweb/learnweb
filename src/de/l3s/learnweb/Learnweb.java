@@ -28,6 +28,7 @@ import de.l3s.learnweb.rm.LanglevelManager;
 import de.l3s.learnweb.rm.PurposeManager;
 import de.l3s.learnweb.solrClient.SolrClient;
 import de.l3s.office.ConverterService;
+import de.l3s.searchHistoryTest.SearchHistoryManager;
 import de.l3s.searchlogclient.SearchLogClient;
 import de.l3s.util.PropertiesBundle;
 import de.l3s.util.StringHelper;
@@ -78,6 +79,7 @@ public class Learnweb
     private final WaybackUrlManager waybackUrlManager;
 
     private final HistoryManager historyManager;
+    private final SearchHistoryManager searchHistoryManager;
 
     //added by Chloe 
     private final AudienceManager audienceManager;
@@ -275,6 +277,7 @@ public class Learnweb
 
         learnwebIsLoading = false;
         historyManager = new HistoryManager(this);
+        searchHistoryManager = new SearchHistoryManager(this);
 
         //new managers added by Chloe 
         audienceManager = new AudienceManager(this);
@@ -828,11 +831,15 @@ public class Learnweb
     {
         return submissionManager;
     }
-    
 
     public HistoryManager getHistoryManager()
     {
         return historyManager;
+    }
+
+    public SearchHistoryManager getSearchHistoryManager()
+    {
+        return searchHistoryManager;
     }
 
 }
