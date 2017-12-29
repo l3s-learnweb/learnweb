@@ -1,0 +1,104 @@
+<ui:composition template="/templates/main/main.xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	lang="#{userBean.localeCode}">
+
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:event type="preRenderView" listener="#{newSearchHistoryBean.preRenderView}" />
+		</f:metadata>
+	</ui:define>
+
+	<ui:param name="pageTitle" value="Search History" />
+	
+	<ui:define name="center_layout">
+	<h2>#{newSearchHistoryBean.title}</h2>
+	<!-- Include your demo2.xhtml code inside this tag -->
+	<!-- <ui:include src="demo4.xhtml"></ui:include> -->
+	<h:body>
+		<div id="canvas" class="w3-container" style="height:500px; margin:0 auto;">
+			<button onclick="draw()">knowledge graph</button>
+		</div>
+		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/>
+		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
+	    <script type="text/javascript" src="#{request.contextPath}/resources/search-history/jsnetworkx.js"></script>
+	    <script type="text/javascript" src="#{request.contextPath}/resources/search-history/d3-tip.js"></script>
+		<script>
+		function draw(){
+				var i, j;
+				var G = new jsnx.Graph();
+				var queries = [<c:forEach items="#{getElements.queries}" var="query">"#{query}",</c:forEach>];
+				var len_1 = queries.length;
+				var entities = [<c:forEach items="#{getElements.entities}" var="entity">"#{entity}",</c:forEach>];
+				var len_2 = entities.length;
+				var related = [<c:forEach items="#{getElements.related}" var="entity">#{entity},</c:forEach>];
+				var len_3 = related.length;
+				var edges = [<c:forEach items="#{getElements.edges}" var="entity">#{entity},</c:forEach>];
+				var len_4 = edges.length;
+				//add nodes
+				//entities
+				for(i=0; i &lt; len_2; i++){
+					G.addNode(entities[i],{count:10, color: '#d0e8e5'});
+				}
+				
+				//queries
+				for(i=0; i &lt; len_1; i++){
+					G.addNode(queries[i], {count:15, color: '#489a83'});
+				}
+				
+				//add edges
+				//relationships
+				for(i=0; i &lt; len_4; i++){
+					var nodepairs = edges[i];
+					G.addEdge(nodepairs[0],nodepairs[1], {color:'#d2dde0'});
+				}
+				
+				//edges between queries and entities
+				for(i=0; i &lt; len_3; i++){
+					var reen = related[i];
+					for(j=0; j &lt; 5; j++){
+						G.addEdge(queries[i],reen[j], {color:'#99c2ff'});
+					}
+				}
+				//step edges between query nodes
+				for(i=0; i &lt; len_1; i++){
+					G.addEdge(queries[i], queries[i+1], {color: "black"});
+				}
+				
+				jsnx.draw(G,{
+					element: "#canvas",
+					layoutAttr:{
+						charge:-200,
+						linkDistance:150
+					},
+					withLabels: true,
+					nodeAttr:{
+						r: function(d){
+							return d.data.count;
+						}
+					},
+					nodeStyle:{
+						fill:function(d){
+							return d.data.color;
+						},
+						stroke: 'none'
+					},
+					labelStyle:{
+						fill: 'black',
+						'font-size': 8
+					},
+					edgeStyle: {
+						fill:function(d){
+							return d.data.color;
+						}
+					},
+					stickyDrag: true
+				});
+		}
+		</script>
+</h:body>
+	</ui:define>
+	
+</ui:composition>
