@@ -25,6 +25,7 @@ import de.l3s.learnweb.FileManager;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.User;
+import de.l3s.util.StringHelper;
 
 /**
  * Servlet Class
@@ -111,6 +112,7 @@ public class DownloadServlet extends HttpServlet
 
         // extract the file id from the request string
         String requestString = request.getRequestURI();
+
         int index = requestString.indexOf(urlPattern);
         String[] requestFileData = requestString.substring(index + urlPattern.length()).split("/");
         if(requestFileData.length != 2)
@@ -160,7 +162,15 @@ public class DownloadServlet extends HttpServlet
 
             // If-Modified-Since header should be greater than LastModified. If so, then return 304.
             // This header is ignored if any If-None-Match header is specified.
-            long ifModifiedSince = request.getDateHeader("If-Modified-Since");
+            long ifModifiedSince = -1;
+            try
+            {
+                ifModifiedSince = request.getDateHeader("If-Modified-Since");
+            }
+            catch(IllegalArgumentException e)
+            {
+                log.error("Illagal If-Modified-Since header: " + e.getMessage() + "; " + LearnwebExceptionHandler.getRequestSummary(request));
+            }
             if(ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified)
             {
                 response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
@@ -261,6 +271,8 @@ public class DownloadServlet extends HttpServlet
 
             if(file.isDownloadLogActivated())
             {
+                log.debug(requestString + "\n" + StringHelper.urlDecode(requestString));
+
                 HttpSession session = request.getSession(true);
                 User user = null;
                 Integer userId = (Integer) session.getAttribute("learnweb_user_id");
