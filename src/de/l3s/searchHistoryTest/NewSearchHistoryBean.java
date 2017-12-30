@@ -7,9 +7,11 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
 
@@ -28,6 +30,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     private List<Session> sessions;
     private String title;
     private int userId;
+    private String selectedSessionId;
     private DateFormat dateFormatter;
     private DateFormat timeFormatter;
 
@@ -54,8 +57,8 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     }
 
     /**
-     * You can include the parsing of the dataset to set the
-     * queries and entities here
+     * You can load the queries and entities
+     * from the database here
      */
     public void loadData()
     {
@@ -93,6 +96,14 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         }
 
         return sessions;
+    }
+
+    public void actionUpdateKGData()
+    {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String sessionId = params.get("session-id");
+        selectedSessionId = sessionId;
+        System.out.println(sessionId);
     }
 
     public String formatDate(Date date, Locale locale)

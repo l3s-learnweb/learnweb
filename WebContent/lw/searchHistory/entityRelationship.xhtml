@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	lang="#{userBean.localeCode}">
 
 	<ui:define name="metadata">
@@ -27,6 +28,9 @@
 		<script type="text/javascript" src="#{request.contextPath}/resources/search-history/jsnetworkx.js"></script>
 		<script type="text/javascript" src="#{request.contextPath}/resources/search-history/d3-tip.js"></script>
 		
+		<h:form>
+			<p:remoteCommand name="updateKG" actionListener="#{newSearchHistoryBean.actionUpdateKGData}" update="" oncomplete=""/>
+		</h:form>
 		<div class="history-container">
 			<div class="session-timeline">
 				<div>
@@ -43,7 +47,7 @@
 	            	<ui:repeat var="session1" value="#{newSearchHistoryBean.sessions}">
 	                <li>
 	                    <span></span>
-	                    <div style="cursor:pointer" class="session_block">
+	                    <h:panelGroup layout="block" style="cursor:pointer" class="session_block" pt:data-sessionId="#{session1.sessionId}">
 		                    <div class="title"></div>
 		                    <div class="info">
 		                    	<ui:repeat var="query" value="#{session1.queries}">
@@ -56,7 +60,7 @@
 		                       	<span>#{newSearchHistoryBean.formatTime(session1.startTimestamp, userBean.locale)}</span>
 		                        <span>#{newSearchHistoryBean.formatTime(session1.endTimestamp, userBean.locale)}</span>
 		                    </div>
-	                    </div>
+	                    </h:panelGroup>
 	                </li>
 	                </ui:repeat>
 	                <li>
@@ -87,7 +91,17 @@
 					$('.session-timeline').hide();
 					$('.knowledge-graph').css('grid-column','1 / -1');
 				});
+			
+			$('.session_block').on('click', function(e){
+				var element = e.currentTarget;
+				var sessionId = element.getAttribute("data-sessionid"); 
+				console.log(sessionId);
+				updateKG([
+					{name: "session-id", value: sessionId }
+				]);
+			});
 		});
+		
 		function draw(){
 				var i, j;
 				var G = new jsnx.Graph();

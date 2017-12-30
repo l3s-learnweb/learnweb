@@ -104,16 +104,6 @@ public class SearchHistoryManager
             return queries.getLast().getTimestamp();
         }
 
-        public String getQueriesAsString()
-        {
-            String queriesString = "";
-            int i = 0;
-            for(; i < queries.size() - 1; i++)
-                queriesString += queries.get(i).getQuery() + " &#8594; ";
-
-            queriesString += queries.get(i).getQuery();
-            return queriesString;
-        }
     }
 
     public class Query
