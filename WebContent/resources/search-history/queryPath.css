@@ -28,3 +28,174 @@
   top: 100%;
   left: 0;
 }
+
+/* CSS grid styles for the container */
+.history-container {
+	height:100%;
+	padding-top:5px;
+	padding-left: 5px;
+	display: grid;
+	grid-template-columns: 1fr 3fr;
+}
+
+.session-timeline {
+	border-right: 1px solid lightgrey;
+	grid-column: 1 / 2;
+}
+
+.knowledge-graph {
+	grid-column: 2 / -1;
+}
+
+.snippet-viewer {
+	display: none;	
+}
+
+.hideIcon {
+	display:none;
+	float:right;
+	height:14px;
+	width:14px;
+	padding-right:5px;
+	cursor: pointer;
+}
+/* styles for vertical session timeline */
+.box {
+  /*margin: 0 10%;*/
+  height: 550px;
+  overflow: auto;
+  padding: 0 0 0 40px;
+}
+
+.box ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  transition: all 0.5s linear;
+  top: 0;
+}
+
+.box ul:last-of-type {
+  /*top: 80px;*/
+}
+
+.box ul:before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 100%;
+  border: 1px dashed #489a83;
+  position: absolute;
+  top: 0;
+  left: 30px;
+}
+
+.box ul li {
+  margin: 20px 60px 60px;
+  position: relative;
+  padding: 10px 20px;
+  background: rgba(72, 154, 131, 1);
+  color: #fff;
+  border-radius: 10px;
+  line-height: 20px;
+  width: 60%;
+}
+
+.box ul li > span {
+  content: "";
+  display: block;
+  width: 0;
+  height: 100%;
+  border: 1px solid #489a83;
+  position: absolute;
+  top: 0;
+  left: -30px;
+}
+
+.box ul li > span:before,
+.box ul li > span:after {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #489a83;
+  border: 2px solid #fff;
+  position: absolute;
+  left: -7.5px;
+}
+
+.box ul li > span:before {
+  top: -10px;
+}
+.box ul li > span:after {
+  top: 95%;
+}
+
+.box .title {
+  text-transform: uppercase;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 5px;
+  background-color: inherit;
+  padding: 0;
+}
+
+.box .info:first-letter {
+  /*text-transform: capitalize;*/
+  line-height: 1.7;
+}
+
+.box .time span {
+  position: absolute;
+  left: -100px;
+  color: black;
+  /*font-size: 80%;*/
+  font-weight: bold;
+}
+.box .time span:first-child {
+  top: -25px;
+  font-size:80%;
+}
+
+
+.box .time span:nth-child(2) {
+  top: -10px;	
+}
+
+.box .time span:last-child {
+  top: 94%;
+}
+
+/*styles for service icons */
+div.info > span {
+	background-size: 10px 10px;
+    background-position: left center;
+    background-repeat: no-repeat;
+    padding-left: 15px;
+}
+
+div.info span:after {
+	content:'\2192';
+}
+
+div.info span:last-child:after {
+	content:'';
+}
+
+div.info .source_bing {
+	background-image: url('#{resource['icon:services/bing.gif']}');
+}
+
+div.info .source_learnweb {
+	background-image: url('#{resource['icon:services/learnweb.gif']}');
+}
+
+div.info .source_archiveit {
+	background-image: url('#{resource['icon:services/archiveit.gif']}');
+}
+
+div.info .source_loro {
+	background-image: url('#{resource['icon:services/loro.gif']}');
+}

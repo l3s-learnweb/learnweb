@@ -13,20 +13,81 @@
 	</ui:define>
 
 	<ui:param name="pageTitle" value="Search History" />
+	<ui:param name="loginRequired" value="true" />
 	
 	<ui:define name="center_layout">
-	<h4>#{newSearchHistoryBean.title}</h4>
-	<!-- Include your demo2.xhtml code inside this tag -->
-	<!-- <ui:include src="demo4.xhtml"></ui:include> -->
-	<h:body>
-		<div id="canvas" class="w3-container" style="height:500px; margin:0 auto;">
-			<button onclick="draw()">knowledge graph</button>
-		</div>
-		<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/>
+		<!-- Include your demo2.xhtml code inside this tag -->
+		<!-- <ui:include src="demo4.xhtml"></ui:include> -->
+		<!-- <h4>#{newSearchHistoryBean.title}</h4> -->
+	
 		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-	    <script type="text/javascript" src="#{request.contextPath}/resources/search-history/jsnetworkx.js"></script>
-	    <script type="text/javascript" src="#{request.contextPath}/resources/search-history/d3-tip.js"></script>
+		<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/> -->
+		<h:outputStylesheet library="search-history" name="queryPath.css"  />
+		
+		<script type="text/javascript" src="#{request.contextPath}/resources/search-history/jsnetworkx.js"></script>
+		<script type="text/javascript" src="#{request.contextPath}/resources/search-history/d3-tip.js"></script>
+		
+		<div class="history-container">
+			<div class="session-timeline">
+				<div>
+					<div style="display:inline-block;"><h3>Sessions</h3></div>
+					<span class="hideIcon">
+						<svg x="0px" y="0px" width="14px" height="14px" viewBox="0 0 10 10" focusable="false">
+							<polygon class="a-s-fa-Ha-pa" fill="#000000" points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 ">
+							</polygon>
+						</svg>
+					</span>
+				</div>
+				<div class="box">
+	            <ul id="first-list">
+	            	<ui:repeat var="session1" value="#{newSearchHistoryBean.sessions}">
+	                <li>
+	                    <span></span>
+	                    <div style="cursor:pointer" class="session_block">
+		                    <div class="title"></div>
+		                    <div class="info">
+		                    	<ui:repeat var="query" value="#{session1.queries}">
+		                    		<span class="source_#{query.service}">#{query.query}</span>
+		                    	</ui:repeat>
+		                    	
+		                    </div>
+		                    <div class="time">
+		                        <span>#{newSearchHistoryBean.formatDate(session1.startTimestamp, userBean.locale)}</span>
+		                       	<span>#{newSearchHistoryBean.formatTime(session1.startTimestamp, userBean.locale)}</span>
+		                        <span>#{newSearchHistoryBean.formatTime(session1.endTimestamp, userBean.locale)}</span>
+		                    </div>
+	                    </div>
+	                </li>
+	                </ui:repeat>
+	                <li>
+	                    <span></span>
+	                    <div class="title"></div>
+	                    <div class="info"><span style="background-image: url('#{resource['icon:services/bing.gif']}');background-size: 16px 16px;background-position: left center;background-repeat: no-repeat;padding-left: 20px;">query1</span> &#8594; query2 &#8594; query3 &#8594; query4 &#8594; query5</div>
+	                    <div class="time">
+	                        <span>JUN, 29<sup>th</sup> 2017</span>
+	                        <span>10:00 AM</span>
+	                        <span>11:36 AM</span>
+	                    </div>
+	                </li>
+				</ul>
+				</div>
+			
+			</div>
+			<div class="knowledge-graph">
+				<div id="canvas" class="w3-container" style="height:500px; margin:0 auto;">
+					<button onclick="draw()">knowledge graph</button>
+				</div>
+			</div>
+			<div class="snippet-viewer">Query Snippets</div>
+		</div>
+		
 		<script>
+		$(document).ready(function(){
+			$('.hideIcon').on('click',function(){
+					$('.session-timeline').hide();
+					$('.knowledge-graph').css('grid-column','1 / -1');
+				});
+		});
 		function draw(){
 				var i, j;
 				var G = new jsnx.Graph();
@@ -99,7 +160,7 @@
 				});
 		}
 		</script>
-</h:body>
+
 	</ui:define>
 	
 </ui:composition>

@@ -1,8 +1,12 @@
 package de.l3s.searchHistoryTest;
 
 import java.io.Serializable;
+import java.sql.SQLException;
+import java.text.DateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
@@ -10,6 +14,7 @@ import javax.faces.bean.ViewScoped;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.searchHistoryTest.SearchHistoryManager.Session;
 
 @ManagedBean
 @ViewScoped
@@ -20,7 +25,11 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
     private List<String> queries;
     private List<String> entities;
+    private List<Session> sessions;
     private String title;
+    private int userId;
+    private DateFormat dateFormatter;
+    private DateFormat timeFormatter;
 
     /**
      * Load the variables that needs values before the view is rendered
@@ -31,6 +40,8 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
             return;
 
         loadData();
+        if(getUser() != null)
+            userId = getUser().getId();
     }
 
     public NewSearchHistoryBean()
@@ -39,6 +50,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         title = "Search History";
         queries = new ArrayList<String>();
         entities = new ArrayList<String>();
+        //sessions = new Linked<String>();
     }
 
     /**
@@ -64,5 +76,36 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     public String getTitle()
     {
         return title;
+    }
+
+    public List<Session> getSessions()
+    {
+        if(sessions == null)
+        {
+            try
+            {
+                sessions = getLearnweb().getSearchHistoryManager().getSessionsForUser(userId);
+            }
+            catch(SQLException e)
+            {
+                log.error("Error while fetching list of sessions for particular user: " + userId, e);
+            }
+        }
+
+        return sessions;
+    }
+
+    public String formatDate(Date date, Locale locale)
+    {
+        if(dateFormatter == null)
+            dateFormatter = DateFormat.getDateInstance(DateFormat.DEFAULT, locale);
+        return dateFormatter.format(date);
+    }
+
+    public String formatTime(Date date, Locale locale)
+    {
+        if(timeFormatter == null)
+            timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
+        return timeFormatter.format(date);
     }
 }
