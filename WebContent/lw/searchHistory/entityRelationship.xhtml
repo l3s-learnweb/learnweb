@@ -29,7 +29,7 @@
 		<script type="text/javascript" src="#{request.contextPath}/resources/search-history/d3-tip.js"></script>
 		
 		<h:form>
-			<p:remoteCommand name="updateKG" actionListener="#{newSearchHistoryBean.actionUpdateKGData}" update="" oncomplete=""/>
+			<p:remoteCommand name="updateKG" actionListener="#{newSearchHistoryBean.actionUpdateKGData}" update="updateGraph" oncomplete="draw()"/>
 		</h:form>
 		<div class="history-container">
 			<div class="session-timeline">
@@ -77,9 +77,34 @@
 				</div>
 			
 			</div>
+
 			<div class="knowledge-graph">
 				<div id="canvas" class="w3-container" style="height:500px; margin:0 auto;">
-					<button onclick="draw()">knowledge graph</button>
+					<h:panelGroup id="updateGraph">
+					<button onclick="drawQueryPath()">Query Path</button>
+						<div id="queries" style="display:none">
+							<ui:repeat var="query" value="#{newSearchHistoryBean.queries}">
+			                    #{query},
+			                </ui:repeat>
+		                </div>
+		                <div id="entities" style="display:none">
+							<ui:repeat var="entity" value="#{newSearchHistoryBean.entities}">
+			                    #{entity},
+			                </ui:repeat>
+		                </div>
+		                <div id="related" style="display:none">
+							<ui:repeat var="relatedEntities" value="#{newSearchHistoryBean.related}">
+								<ui:repeat var="relatedEntity" value="#{relatedEntities}">
+			                    	#{relatedEntity},
+			                    </ui:repeat>;
+			                </ui:repeat>
+		                </div>
+		                <div id="edges" style="display:none">
+							<ui:repeat var="edge" value="#{newSearchHistoryBean.edges}">
+			                    #{edge[0]},#{edge[1]};
+			                </ui:repeat>
+		                </div>
+					</h:panelGroup>
 				</div>
 			</div>
 			<div class="snippet-viewer">Query Snippets</div>
@@ -102,76 +127,202 @@
 			});
 		});
 		
-		function draw(){
-				var i, j;
-				var G = new jsnx.Graph();
-				var queries = [<c:forEach items="#{getElements.queries}" var="query">"#{query}",</c:forEach>];
-				var len_1 = queries.length;
-				var entities = [<c:forEach items="#{getElements.entities}" var="entity">"#{entity}",</c:forEach>];
-				var len_2 = entities.length;
-				var related = [<c:forEach items="#{getElements.related}" var="entity">#{entity},</c:forEach>];
-				var len_3 = related.length;
-				var edges = [<c:forEach items="#{getElements.edges}" var="entity">#{entity},</c:forEach>];
-				var len_4 = edges.length;
-				//add nodes
-				//entities
-				for(i=0; i &lt; len_2; i++){
-					G.addNode(entities[i],{count:10, color: '#d0e8e5'});
+		function draw()
+		{
+			var i, j;
+			var G = new jsnx.Graph();
+			var queryStrs = document.getElementById("queries").innerHTML.split(",");
+		    var queries = [];
+		    for (i = 0; i &lt; queryStrs.length-1; i++)
+		    {
+		    	queries.push(queryStrs[i].trim());
+		    }
+		    var len_1 = queries.length;
+		    console.log(queries);
+		    console.log(len_1);
+		    
+		    var entityStrs = document.getElementById("entities").innerHTML.split(",");
+		    var entities = [];
+		    for (i = 0; i &lt; entityStrs.length-1; i++)
+		    {
+		    	entities.push(entityStrs[i].trim());
+		    }
+		    var len_2 = entities.length;
+		    console.log(entities);
+		    console.log(len_2);
+		    
+		    var relatedStrs = document.getElementById("related").innerHTML.split(";");
+		    var related = [];
+		    for (i = 0; i &lt; relatedStrs.length-1; i++)
+		    {
+		    	var relatedStr = relatedStrs[i].trim().split(",");
+		    	var relatedArr = [];
+		    	for (j = 0; j &lt; relatedStr.length-1; j++)
+		    	{
+		    		relatedArr.push(relatedStr[j].trim());
+		    	}
+		    	related.push(relatedArr);
+		    }
+		    var len_3 = related.length;
+		    console.log(related);
+		    
+		    var edgeStrs = document.getElementById("edges").innerHTML.split(";");
+		    var edges = [];
+		    for (i = 0; i &lt; edgeStrs.length-1; i++)
+		    {
+		    	var edgeStr = edgeStrs[i].trim().split(",");
+		    	edges.push([edgeStr[0].trim(), edgeStr[1].trim()]);
+		    }
+		    var len_4 = edges.length;
+		    console.log(edges);
+		    
+			//add nodesd
+			//entities
+			for(i=0; i &lt; len_2; i++){
+				G.addNode(entities[i],{count:10, color: '#d0e8e5'});
+			}
+			
+			//queries
+			for(i=0; i &lt; len_1; i++){
+				G.addNode(queries[i], {count:15, color: '#489a83'});
+			}
+			
+			//add edges
+			//relationships
+			for(i=0; i &lt; len_4; i++){
+				var nodepairs = edges[i];
+				console.log(nodepairs[0] + ", " + nodepairs[1]);
+				G.addEdge(nodepairs[0],nodepairs[1], {color:'#d2dde0'});
+			}
+			
+			//edges between queries and entities
+			for(i=0; i &lt; len_3; i++){
+				var reen = related[i];
+				for(j=0; j &lt; reen.length; j++){
+					G.addEdge(queries[i],reen[j], {color:'#99c2ff'});
 				}
-				
-				//queries
-				for(i=0; i &lt; len_1; i++){
-					G.addNode(queries[i], {count:15, color: '#489a83'});
-				}
-				
-				//add edges
-				//relationships
-				for(i=0; i &lt; len_4; i++){
-					var nodepairs = edges[i];
-					G.addEdge(nodepairs[0],nodepairs[1], {color:'#d2dde0'});
-				}
-				
-				//edges between queries and entities
-				for(i=0; i &lt; len_3; i++){
-					var reen = related[i];
-					for(j=0; j &lt; 5; j++){
-						G.addEdge(queries[i],reen[j], {color:'#99c2ff'});
+			}
+			//step edges between query nodes
+			for(i=0; i &lt; len_1; i++){
+				G.addEdge(queries[i], queries[i+1], {color: "black"});
+			}
+			
+			jsnx.draw(G,{
+				element: "#canvas",
+				layoutAttr:{
+					charge:-200,
+					linkDistance:150
+				},
+				withLabels: true,
+				nodeAttr:{
+					r: function(d){
+						return d.data.count;
 					}
-				}
-				//step edges between query nodes
-				for(i=0; i &lt; len_1; i++){
-					G.addEdge(queries[i], queries[i+1], {color: "black"});
-				}
-				
-				jsnx.draw(G,{
-					element: "#canvas",
-					layoutAttr:{
-						charge:-200,
-						linkDistance:150
+				},
+				nodeStyle:{
+					fill:function(d){
+						return d.data.color;
 					},
-					withLabels: true,
-					nodeAttr:{
-						r: function(d){
-							return d.data.count;
-						}
+					stroke: 'none'
+				},
+				labelStyle:{
+					fill: 'black',
+					'font-size': 8
+				},
+				edgeStyle: {
+					fill:function(d){
+						return d.data.color;
+					}
+				},
+				stickyDrag: true
+			});
+		}
+		
+		//draw query path
+		var tip = d3.tip()
+		  .attr('class', 'd3-tip')
+		  .offset([-10, 0])
+		  //.html("test");
+		  .html(function(d) {
+			var string1 = "<ul>";
+			
+			for(var i=0; i &lt; d.data.entities.length; i++){
+				string1 += "<li>" + d.data.entities[i] + "</li>";
+			}
+			string1 += "</ul>";
+			console.log(string1);
+		    return string1;
+		  });
+		//d3.select("body").call(tip);
+		
+		function drawQueryPath(){
+			var i;
+			var G = new jsnx.DiGraph();
+			var queryStrs = document.getElementById("queries").innerHTML.split(",");
+		    var queArray = [];
+		    for (i = 0; i &lt; queryStrs.length-1; i++)
+		    {
+		    	queArray.push(queryStrs[i].trim());
+		    }
+		    var len = queArray.length;
+		    console.log(queArray);
+		    console.log(len);
+			
+		    var relatedStrs = document.getElementById("related").innerHTML.split(";");
+		    var related = [];
+		    for (i = 0; i &lt; relatedStrs.length-1; i++)
+		    {
+		    	var relatedStr = relatedStrs[i].trim().split(",");
+		    	var relatedArr = [];
+		    	for (j = 0; j &lt; relatedStr.length-1; j++)
+		    	{
+		    		relatedArr.push(relatedStr[j].trim());
+		    	}
+		    	related.push(relatedArr);
+		    }
+		    var len_3 = related.length;
+		    console.log(related);
+		    
+			//addnode		
+			for(i=0; i &lt; len; i++){
+				//var nodeA = {toString: function(){return queArray[i]}}
+				//console.log(enArray[i]);
+				//console.log(JSON.parse(enArray[i].entities));
+				G.addNode(queArray[i], {count:20, color: '#489a83', entities: related[i]});
+			}
+			//addedge
+			for(i=0; i &lt; len-1; i++){
+				G.addEdge(queArray[i], queArray[i+1]);
+			}
+		
+			jsnx.draw(G,{
+				element: "#canvas",
+				layoutAttr:{
+					charge:-200,
+					linkDistance:150
+				},
+				withLabels: true,
+				nodeAttr:{
+					r: function(d){
+						return d.data.count;
+					}
+				},
+				nodeStyle:{
+					fill:function(d){
+						return d.data.color;
 					},
-					nodeStyle:{
-						fill:function(d){
-							return d.data.color;
-						},
-						stroke: 'none'
-					},
-					labelStyle:{
-						fill: 'black',
-						'font-size': 8
-					},
-					edgeStyle: {
-						fill:function(d){
-							return d.data.color;
-						}
-					},
-					stickyDrag: true
-				});
+					stroke: 'none'
+				},
+				labelStyle:{
+					fill: 'black'
+				},
+				stickyDrag: true
+			});
+			
+			d3.select('svg').call(tip);
+			d3.selectAll('.node').on('dblclick',tip.show);
+			d3.selectAll('.node').on('mouseout', tip.hide);
+			
 		}
 		</script>
 
