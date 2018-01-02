@@ -2,6 +2,7 @@ package de.l3s.util;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -47,4 +48,31 @@ public class Sql
 
         stmt.setNull(parameterIndex, java.sql.Types.BLOB);
     }
+
+    public static Object getSerializedObject(ResultSet rs, String field) throws SQLException
+    {
+        byte[] columnBytes = rs.getBytes(field);
+
+        if(columnBytes != null && columnBytes.length > 0)
+        {
+            ByteArrayInputStream columnBAIS = new ByteArrayInputStream(columnBytes);
+
+            try
+            {
+                ObjectInputStream columnOIS = new ObjectInputStream(columnBAIS);
+
+                // re-create the object
+                Object column = columnOIS.readObject();
+
+                if(column != null)
+                    return column;
+            }
+            catch(Exception e)
+            {
+                log.error("Couldn't load column " + field, e);
+            }
+        }
+        return null;
+    }
+
 }

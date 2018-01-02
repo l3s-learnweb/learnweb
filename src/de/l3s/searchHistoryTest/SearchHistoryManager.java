@@ -13,6 +13,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.util.Sql;
 
 public class SearchHistoryManager
 {
@@ -50,13 +51,13 @@ public class SearchHistoryManager
         }
         catch(SQLException e)
         {
-            // TODO Auto-generated catch block
             log.error("Error while fetching queries for a specific session: " + sessionId, e);
         }
 
         return queries;
     }
 
+    @SuppressWarnings("unchecked")
     public List<String> getRelatedEntitiesForSearchId(int searchId)
     {
         List<String> entities = new ArrayList<>();
@@ -79,7 +80,6 @@ public class SearchHistoryManager
         }
         catch(SQLException e)
         {
-            // TODO Auto-generated catch block
             log.error("Error while fetching related entities for search id: " + searchId, e);
         }
         return entities;
@@ -134,23 +134,26 @@ public class SearchHistoryManager
             PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT * FROM learnweb_large.sl_entity_co_occur WHERE score > 0.02 AND source = ?");
             pstmt.setString(1, entity);
             ResultSet rs = pstmt.executeQuery();
-            int i = 0;
+            //int i = 0;
             while(rs.next())
             {
-                i++;
-                edges.add(new Edge(rs.getString("source"), rs.getString("target"), rs.getDouble("score")));
+                //i++;
+                try
+                {
+                    edges.add(new Edge(rs.getString("source"), rs.getString("target"), rs.getDouble("score")));
+                }
+                catch(InvalidEdgeException e)
+                {
+                    log.error("Invalid edge fetched for " + entity, e);
+                }
+
             }
         }
         catch(SQLException e)
         {
-            // TODO Auto-generated catch block
             log.error("Error while fetching edges for entity: " + entity, e);
         }
-        catch(Exception e)
-        {
-            // TODO Auto-generated catch block
-            log.error("Invalid entities for edge fetched: " + entity, e);
-        }
+
         return edges;
     }
 
@@ -348,26 +351,22 @@ public class SearchHistoryManager
         private String target;
         private double score;
 
-        public Edge(String source, String target, double score) throws Exception
+        public Edge(String source, String target, double score) throws InvalidEdgeException
         {
             if(source == null || target == null)
             {
-                throw new Exception()
-                {
-                };
+                throw new InvalidEdgeException("source: " + source + ", target: " + target);
             }
             this.source = source;
             this.target = target;
             this.score = score;
         }
 
-        public Edge(String source, String target) throws Exception
+        public Edge(String source, String target) throws InvalidEdgeException
         {
             if(source == null || target == null)
             {
-                throw new Exception()
-                {
-                };
+                throw new InvalidEdgeException("source: " + source + ", target: " + target);
             }
             this.source = source;
             this.target = target;
@@ -416,5 +415,15 @@ public class SearchHistoryManager
             return builder.toString();
         }
 
+    }
+
+    class InvalidEdgeException extends Exception
+    {
+        private static final long serialVersionUID = 5313241019420503034L;
+
+        public InvalidEdgeException(String message)
+        {
+            super(message);
+        }
     }
 }

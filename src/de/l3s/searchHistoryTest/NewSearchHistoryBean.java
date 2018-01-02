@@ -212,7 +212,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String sessionId = params.get("session-id");
         selectedSessionId = sessionId;
-        System.out.println("session id: " + sessionId);
+        log.info("session id: " + sessionId);
 
         // update queries
         if(this.queries == null)
@@ -226,7 +226,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         {
             this.queries.add(query.getQuery());
         }
-        System.out.println("get queries:" + this.queries.size());
+        log.info("get queries:" + this.queries.size());
 
         // update entities
         if(this.entities == null)
@@ -239,7 +239,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         {
             this.entities.add(entity);
         }
-        System.out.println("get entities:" + this.entities.size());
+        log.info("get entities:" + this.entities.size());
 
         // update related
         if(this.related == null)
@@ -257,7 +257,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
             this.related.add(relatedEntityStrs);
         }
 
-        System.out.println("get related:" + this.related.size());
+        log.info("get related:" + this.related.size());
 
         // update edges
         if(this.edges == null)
@@ -275,7 +275,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
             this.edges.add(edgeNodes);
         }
 
-        System.out.println("get edges:" + this.edges.size());
+        log.info("get edges:" + this.edges.size());
 
     }
 
