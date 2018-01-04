@@ -13,6 +13,7 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.Resource;
 import de.l3s.util.Sql;
 
 public class SearchHistoryManager
@@ -57,10 +58,50 @@ public class SearchHistoryManager
         return queries;
     }
 
+    public List<SearchResult> getSearchResultsForSearchId(int searchId, int limit)
+    {
+        List<SearchResult> searchResults = new ArrayList<SearchResult>();
+        try
+        {
+            PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM learnweb_large.sl_resource WHERE search_id = ? ORDER BY rank LIMIT ?");
+            pStmt.setInt(1, searchId);
+            pStmt.setInt(2, limit);
+
+            ResultSet rs = pStmt.executeQuery();
+            while(rs.next())
+            {
+                SearchResult result = new SearchResult();
+                result.setRank(rs.getInt("rank"));
+                int resourceId = rs.getInt("resource_id");
+                if(resourceId > 0)
+                {
+                    Resource r = learnweb.getResourceManager().getResource(resourceId);
+                    result.setUrl(r.getUrl());
+                    result.setTitle(r.getTitle());
+                    result.setDescription(r.getDescription());
+                }
+                else
+                {
+                    result.setUrl(rs.getString("url"));
+                    result.setTitle(rs.getString("title"));
+                    result.setDescription(rs.getString("description"));
+                }
+                searchResults.add(result);
+            }
+            pStmt.close();
+        }
+        catch(SQLException e)
+        {
+            log.error("Error while fetching search results for search id: " + searchId, e);
+        }
+
+        return searchResults;
+    }
+
     @SuppressWarnings("unchecked")
     public List<String> getRelatedEntitiesForSearchId(int searchId)
     {
-        List<String> entities = new ArrayList<>();
+        List<String> entities = new ArrayList<String>();
         try
         {
             PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT related_entities FROM learnweb_large.sl_query_entities WHERE search_id = ?");
@@ -204,7 +245,7 @@ public class SearchHistoryManager
             entities.add(query.getQuery());
         }
 
-        List<List<String>> relatedEntitiesList = this.getRelatedEntitiesForQueries(queries);
+        List<List<String>> relatedEntitiesList = getRelatedEntitiesForQueries(queries);
         for(List<String> relatedEntities : relatedEntitiesList)
         {
             entities.addAll(relatedEntities);
@@ -342,6 +383,54 @@ public class SearchHistoryManager
         public void setRelatedEntities(List<String> relatedEntities)
         {
             this.relatedEntities = relatedEntities;
+        }
+    }
+
+    public class SearchResult
+    {
+        private int rank;
+        private String url;
+        private String title;
+        private String description;
+
+        public int getRank()
+        {
+            return rank;
+        }
+
+        public void setRank(int rank)
+        {
+            this.rank = rank;
+        }
+
+        public String getUrl()
+        {
+            return url;
+        }
+
+        public void setUrl(String url)
+        {
+            this.url = url;
+        }
+
+        public String getTitle()
+        {
+            return title;
+        }
+
+        public void setTitle(String title)
+        {
+            this.title = title;
+        }
+
+        public String getDescription()
+        {
+            return description;
+        }
+
+        public void setDescription(String description)
+        {
+            this.description = description;
         }
     }
 

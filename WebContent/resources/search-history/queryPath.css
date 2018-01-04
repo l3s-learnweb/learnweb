@@ -35,10 +35,11 @@
 	padding-top:5px;
 	padding-left: 5px;
 	display: grid;
-	grid-template-columns: 1fr 3fr;
+	grid-template-columns: 1fr 5fr;
 }
 
 .session-timeline {
+	height:100%;
 	border-right: 1px solid lightgrey;
 	grid-column: 1 / 2;
 }
@@ -48,17 +49,27 @@
 }
 
 .snippet-viewer {
-	display: none;	
+	display: none;
+    position: absolute;
+    padding: 5px 0px 0px 5px;
+    background-color: white;
+    right: 0;
+    top: 48px;
+    height: 91%;
+    width: 250px;
+    z-index: 500;
+    overflow-y: none;
+    box-shadow: -5px 0px 8px rgba(0, 0, 0, 0.1);
 }
 
 .hideIcon {
-	display:none;
 	float:right;
 	height:14px;
 	width:14px;
-	padding-right:5px;
+	padding-right:10px;
 	cursor: pointer;
 }
+
 /* styles for vertical session timeline */
 .box {
   /*margin: 0 10%;*/
@@ -198,4 +209,14 @@ div.info .source_archiveit {
 
 div.info .source_loro {
 	background-image: url('#{resource['icon:services/loro.gif']}');
+}
+
+/*styles for snippet viewer*/
+#snippets {
+	overflow-y: auto;
+	height: 95%;
+}
+.snippet {
+	width: 95%;
+	margin-bottom: 10px;
 }

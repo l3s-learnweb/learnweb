@@ -17,9 +17,6 @@
 	<ui:param name="loginRequired" value="true" />
 	
 	<ui:define name="center_layout">
-		<!-- Include your demo2.xhtml code inside this tag -->
-		<!-- <ui:include src="demo4.xhtml"></ui:include> -->
-		<!-- <h4>#{newSearchHistoryBean.title}</h4> -->
 	
 		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 		<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/> -->
@@ -30,17 +27,12 @@
 		
 		<h:form>
 			<p:remoteCommand name="updateKG" actionListener="#{newSearchHistoryBean.actionUpdateKGData}" update="updateGraph" oncomplete="draw()"/>
+			<p:remoteCommand name="setSelectedSearchId" actionListener="#{newSearchHistoryBean.actionSelectedSearchId}" update="snippets" oncomplete="$('.snippet-viewer').show();"/>
 		</h:form>
 		<div class="history-container">
 			<div class="session-timeline">
 				<div>
 					<div style="display:inline-block;"><h3>Sessions</h3></div>
-					<span class="hideIcon">
-						<svg x="0px" y="0px" width="14px" height="14px" viewBox="0 0 10 10" focusable="false">
-							<polygon class="a-s-fa-Ha-pa" fill="#000000" points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 ">
-							</polygon>
-						</svg>
-					</span>
 				</div>
 				<div class="box">
 	            <ul id="first-list">
@@ -63,23 +55,13 @@
 	                    </h:panelGroup>
 	                </li>
 	                </ui:repeat>
-	                <li>
-	                    <span></span>
-	                    <div class="title"></div>
-	                    <div class="info"><span style="background-image: url('#{resource['icon:services/bing.gif']}');background-size: 16px 16px;background-position: left center;background-repeat: no-repeat;padding-left: 20px;">query1</span> &#8594; query2 &#8594; query3 &#8594; query4 &#8594; query5</div>
-	                    <div class="time">
-	                        <span>JUN, 29<sup>th</sup> 2017</span>
-	                        <span>10:00 AM</span>
-	                        <span>11:36 AM</span>
-	                    </div>
-	                </li>
 				</ul>
 				</div>
 			
 			</div>
 
 			<div class="knowledge-graph">
-				<div id="canvas" class="w3-container" style="height:500px; margin:0 auto;">
+				<div id="canvas" class="w3-container" style="height:540px; margin:0 auto;">
 					<h:panelGroup id="updateGraph">
 					<button onclick="drawQueryPath()" id="query_path_button">Query Path</button>
 						<div id="queries" style="display:none">
@@ -104,17 +86,37 @@
 			                    #{edge[0]},#{edge[1]};
 			                </ui:repeat>
 		                </div>
+		                <h:outputScript>
+		                	var queriesJsonArr = #{newSearchHistoryBean.queriesAsJson};
+		                </h:outputScript>
 					</h:panelGroup>
 				</div>
 			</div>
-			<div class="snippet-viewer">Query Snippets</div>
+			<div class="snippet-viewer">
+				<span style="font-size:1.4rem;">Query Snippets</span>
+				<span class="hideIcon">
+					<svg x="0px" y="0px" width="14px" height="14px" viewBox="0 0 10 10" focusable="false">
+						<polygon class="a-s-fa-Ha-pa" fill="#000000" points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 ">
+						</polygon>
+					</svg>
+				</span>
+				<h:panelGroup layout="block" id="snippets">
+					<div style="margin-bottom: 10px;"></div>
+					<ui:repeat var="snippet" value="#{newSearchHistoryBean.getSearchResults(newSearchHistoryBean.selectedSearchId)}">
+						<div class="snippet">
+							<span><a href="#{snippet.url}"><h:outputText value="#{snippet.title}" escape="false"/></a></span><br/>
+							<span>#{snippet.description}</span>
+						</div>
+					</ui:repeat>
+				</h:panelGroup>
+			</div>
 		</div>
 		
 		<script>
 		$(document).ready(function(){
 			$('.hideIcon').on('click',function(){
-					$('.session-timeline').hide();
-					$('.knowledge-graph').css('grid-column','1 / -1');
+					$('.snippet-viewer').hide();
+					//$('.knowledge-graph').css('grid-column','1 / -1');
 				});
 			
 			$('.session_block').on('click', function(e){
@@ -183,12 +185,15 @@
 			//add nodesd
 			//entities
 			for(i=0; i &lt; len_2; i++){
-				G.addNode(entities[i],{count:10, color: '#d0e8e5'});
+				G.addNode(entities[i],{count:10, color: '#d0e8e5', type: 'concept'});
 			}
 			
 			//queries
-			for(i=0; i &lt; len_1; i++){
-				G.addNode(queries[i], {count:15, color: '#489a83'});
+			/*for(i=0; i &lt; len_1; i++){
+				G.addNode(queries[i], {count:15, color: '#489a83', type: 'query'});
+			}*/
+			for(i = 0; i &lt; queriesJsonArr.length; i++){
+				G.addNode(queriesJsonArr[i].query, {count: 15, color: '#489a83', type: 'query', search_id: queriesJsonArr[i].search_id});
 			}
 			
 			//add edges
@@ -214,7 +219,7 @@
 			jsnx.draw(G,{
 				element: "#canvas",
 				layoutAttr:{
-					charge:-200,
+					charge:-300,
 					linkDistance:150
 				},
 				withLabels: true,
@@ -240,8 +245,19 @@
 				},
 				stickyDrag: true
 			});
+			
+			d3.selectAll('.node').on('dblclick', function(d) {
+			    if(d.data.type == 'query')
+			    {
+			    	//console.log(d.data.search_id);
+			    	setSelectedSearchId([
+			    	 	{name: "search-id", value: d.data.search_id }
+			    	]);
+			    }
+			});
+
 		}
-		
+
 		//draw query path
 		var tip = d3.tip()
 		  .attr('class', 'd3-tip')

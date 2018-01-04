@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -15,10 +16,14 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 
 import org.apache.log4j.Logger;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.searchHistoryTest.SearchHistoryManager.Edge;
 import de.l3s.searchHistoryTest.SearchHistoryManager.Query;
+import de.l3s.searchHistoryTest.SearchHistoryManager.SearchResult;
 import de.l3s.searchHistoryTest.SearchHistoryManager.Session;
 
 @ManagedBean
@@ -39,6 +44,8 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     private String selectedSessionId;
     private DateFormat dateFormatter;
     private DateFormat timeFormatter;
+    private Map<Integer, List<SearchResult>> searchIdSnippets;
+    private int selectedSearchId;
 
     /**
      * Load the variables that needs values before the view is rendered
@@ -59,7 +66,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         title = "Search History";
         queries = new ArrayList<String>();
         entities = new ArrayList<String>();
-        //sessions = new Linked<String>();
+        searchIdSnippets = new HashMap<Integer, List<SearchResult>>();
     }
 
     /**
@@ -79,6 +86,28 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     public List<String> getQueries()
     {
         return queries;
+    }
+
+    public String getQueriesAsJson()
+    {
+        List<Query> queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromCache(userId, selectedSessionId);
+
+        JSONArray queriesArr = new JSONArray();
+        for(Query q : queries)
+        {
+            try
+            {
+                JSONObject queryObj = new JSONObject();
+                queryObj.put("search_id", q.getSearchId());
+                queryObj.put("query", q.getQuery());
+                queriesArr.put(queryObj);
+            }
+            catch(JSONException e)
+            {
+                log.error("Error while creating creating json object for query: " + q.getSearchId(), e);
+            }
+        }
+        return queriesArr.toString();
     }
 
     /**
@@ -131,6 +160,21 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         }
 
         return sessions;
+    }
+
+    public String getSelectedSessionId()
+    {
+        return selectedSessionId;
+    }
+
+    public int getSelectedSearchId()
+    {
+        return selectedSearchId;
+    }
+
+    public List<SearchResult> getSearchResults(int searchId)
+    {
+        return searchIdSnippets.get(searchId);
     }
 
     /*
@@ -220,13 +264,15 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
             this.queries = new ArrayList<String>();
         }
         this.queries.clear();
-        SearchHistoryManager manager = this.getLearnweb().getSearchHistoryManager();
-        List<Query> queryList = manager.getQueriesForSessionFromCache(this.userId, this.selectedSessionId);
+        SearchHistoryManager manager = getLearnweb().getSearchHistoryManager();
+        List<Query> queryList = manager.getQueriesForSessionFromCache(userId, selectedSessionId);
         for(Query query : queryList)
         {
-            this.queries.add(query.getQuery());
+            queries.add(query.getQuery());
+            if(!searchIdSnippets.containsKey(query.getSearchId()))
+                searchIdSnippets.put(query.getSearchId(), manager.getSearchResultsForSearchId(query.getSearchId(), 10));
         }
-        log.info("get queries:" + this.queries.size());
+        log.info("get queries:" + queries.size());
 
         // update entities
         if(this.entities == null)
@@ -277,6 +323,13 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
         log.info("get edges:" + this.edges.size());
 
+    }
+
+    public void actionSelectedSearchId()
+    {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        int searchId = Integer.parseInt(params.get("search-id"));
+        selectedSearchId = searchId;
     }
 
     public String formatDate(Date date, Locale locale)
