@@ -35,6 +35,8 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
     private List<String> queries;
     private List<String> entities;
+    private List<Entity> entityList;
+    //private List<Integer> ranks;
     // related entities of a query
     private List<List<String>> related;
     private List<List<String>> edges;
@@ -46,6 +48,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     private DateFormat timeFormatter;
     private Map<Integer, List<SearchResult>> searchIdSnippets;
     private int selectedSearchId;
+    private String selectedEntity;
 
     /**
      * Load the variables that needs values before the view is rendered
@@ -66,6 +69,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         title = "Search History";
         queries = new ArrayList<String>();
         entities = new ArrayList<String>();
+        entityList = new ArrayList<Entity>();
         searchIdSnippets = new HashMap<Integer, List<SearchResult>>();
     }
 
@@ -100,6 +104,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
                 JSONObject queryObj = new JSONObject();
                 queryObj.put("search_id", q.getSearchId());
                 queryObj.put("query", q.getQuery());
+
                 queriesArr.put(queryObj);
             }
             catch(JSONException e)
@@ -118,6 +123,28 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     public List<String> getEntities()
     {
         return entities;
+    }
+
+    public List<Entity> getEntityList()
+    {
+        return entityList;
+    }
+
+    /**
+     * Get snippet ranks for a selected entity
+     * 
+     * @return
+     * @throws Exception
+     */
+    public List<Integer> getRanks() throws Exception
+    {
+        List<Integer> ranks = new ArrayList<>();
+        List<Entity> entityList = this.getEntityList();
+        String entityName = this.getSeletedEntity();
+        ranks = getLearnweb().getSearchHistoryManager().getRanksForEntity(entityList, entityName);
+        //System.out.println("ranks: " + ranks);
+        log.info("get ranks:" + ranks.size());
+        return ranks;
     }
 
     /**
@@ -172,86 +199,17 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         return selectedSearchId;
     }
 
+    public String getSeletedEntity()
+    {
+        return selectedEntity;
+    }
+
     public List<SearchResult> getSearchResults(int searchId)
     {
         return searchIdSnippets.get(searchId);
     }
 
-    /*
-    public void actionUpdateKGData()
-    {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        String sessionId = params.get("session-id");
-        selectedSessionId = sessionId;
-        System.out.println(sessionId);
-    
-        // update queries
-        if(this.queries == null)
-        {
-            this.queries = new ArrayList<String>();
-        }
-        this.queries.clear();
-        SearchHistoryManager manager = this.getLearnweb().getSearchHistoryManager();
-        List<Query> queryList = manager.getQueriesForSessionId(this.selectedSessionId);
-        for(Query query : queryList)
-        {
-            this.queries.add(query.getQuery());
-        }
-        System.out.println("get queries:" + this.queries.size() + ", session id: " + this.selectedSessionId);
-    
-        // update entities
-        if(this.entities == null)
-        {
-            this.entities = new ArrayList<String>();
-        }
-        this.entities.clear();
-        Set<String> entitySet = manager.getMergedEntities(queryList);
-        for(String entity : entitySet)
-        {
-            this.entities.add(entity);
-        }
-        System.out.println("get entities:" + this.entities.size() + ", session id: " + this.selectedSessionId);
-    
-        // update related
-        if(this.related == null)
-        {
-            this.related = new ArrayList<>();
-        }
-        this.related.clear();
-        for(Query query : queryList)
-        {
-            List<String> relatedEntityStrs = new ArrayList<>();
-            List<String> relatedEntityList = manager.getRelatedEntitiesForSearchId(query.getSearchId());
-            for(String entity : relatedEntityList)
-            {
-                relatedEntityStrs.add("\"" + entity + "\"");
-            }
-            this.related.add(relatedEntityStrs);
-        }
-        System.out.println("get related:" + this.related.size() + ", session id: " + this.selectedSessionId);
-    
-        // update edges
-        if(this.edges == null)
-        {
-            this.edges = new ArrayList<>();
-        }
-        this.edges.clear();
-    
-        Set<Edge> edgeSet = manager.getAllEdges(entitySet);
-        for(Edge edge : edgeSet)
-        {
-            List<String> edgeNodes = new ArrayList<>();
-            edgeNodes.add("\"" + edge.getSource() + "\"");
-            edgeNodes.add("\"" + edge.getTarget() + "\"");
-            this.edges.add(edgeNodes);
-        }
-    
-        System.out.println("get edges:" + this.edges.size() + ", session id: " + this.selectedSessionId);
-    
-    }
-    */
-
-    public void actionUpdateKGData()
+    public void actionUpdateKGData() throws Exception
     {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String sessionId = params.get("session-id");
@@ -286,6 +244,15 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
             this.entities.add(entity);
         }
         log.info("get entities:" + this.entities.size());
+
+        //update entityList
+        if(this.entityList == null)
+        {
+            this.entityList = new ArrayList<Entity>();
+        }
+        this.entityList.clear();
+        this.entityList = manager.getMergedEntitiesInEntitiyForSession(queryList);
+        log.info("get entityList: " + this.entityList.size());
 
         // update related
         if(this.related == null)
@@ -332,6 +299,14 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         selectedSearchId = searchId;
     }
 
+    public void actionSelectedEntity()
+    {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        String entityName = params.get("entity-name");
+        selectedEntity = entityName;
+        //System.out.println("selectedEntity:" + selectedEntity);
+    }
+
     public String formatDate(Date date, Locale locale)
     {
         if(dateFormatter == null)
@@ -346,3 +321,77 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         return timeFormatter.format(date);
     }
 }
+
+/*
+public void actionUpdateKGData()
+{
+    Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+    String sessionId = params.get("session-id");
+    selectedSessionId = sessionId;
+    System.out.println(sessionId);
+
+    // update queries
+    if(this.queries == null)
+    {
+        this.queries = new ArrayList<String>();
+    }
+    this.queries.clear();
+    SearchHistoryManager manager = this.getLearnweb().getSearchHistoryManager();
+    List<Query> queryList = manager.getQueriesForSessionId(this.selectedSessionId);
+    for(Query query : queryList)
+    {
+        this.queries.add(query.getQuery());
+    }
+    System.out.println("get queries:" + this.queries.size() + ", session id: " + this.selectedSessionId);
+
+    // update entities
+    if(this.entities == null)
+    {
+        this.entities = new ArrayList<String>();
+    }
+    this.entities.clear();
+    Set<String> entitySet = manager.getMergedEntities(queryList);
+    for(String entity : entitySet)
+    {
+        this.entities.add(entity);
+    }
+    System.out.println("get entities:" + this.entities.size() + ", session id: " + this.selectedSessionId);
+
+    // update related
+    if(this.related == null)
+    {
+        this.related = new ArrayList<>();
+    }
+    this.related.clear();
+    for(Query query : queryList)
+    {
+        List<String> relatedEntityStrs = new ArrayList<>();
+        List<String> relatedEntityList = manager.getRelatedEntitiesForSearchId(query.getSearchId());
+        for(String entity : relatedEntityList)
+        {
+            relatedEntityStrs.add("\"" + entity + "\"");
+        }
+        this.related.add(relatedEntityStrs);
+    }
+    System.out.println("get related:" + this.related.size() + ", session id: " + this.selectedSessionId);
+
+    // update edges
+    if(this.edges == null)
+    {
+        this.edges = new ArrayList<>();
+    }
+    this.edges.clear();
+
+    Set<Edge> edgeSet = manager.getAllEdges(entitySet);
+    for(Edge edge : edgeSet)
+    {
+        List<String> edgeNodes = new ArrayList<>();
+        edgeNodes.add("\"" + edge.getSource() + "\"");
+        edgeNodes.add("\"" + edge.getTarget() + "\"");
+        this.edges.add(edgeNodes);
+    }
+
+    System.out.println("get edges:" + this.edges.size() + ", session id: " + this.selectedSessionId);
+
+}
+*/

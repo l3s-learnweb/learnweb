@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
-import de.l3s.util.Sql;
 
 public class SearchHistoryManager
 {
@@ -58,6 +57,89 @@ public class SearchHistoryManager
         return queries;
     }
 
+    /**
+     * retired function which fetches data from database.
+     * 
+     * @param queries
+     * @return
+     * @throws Exception
+     */
+    public Set<String> getMergedEntities(List<Query> queries) throws Exception
+    {
+        Set<String> entities = new HashSet<>();
+
+        for(Query query : queries)
+        {
+            entities.add(query.getQuery());
+            int searchId = query.getSearchId();
+            List<Entity> relatedEntities = this.getRelatedEntitiesForSearchId(searchId);
+            for(Entity entity : relatedEntities)
+            {
+                entities.add(entity.getEntityName());
+            }
+        }
+
+        return entities;
+    }
+    /*
+    @SuppressWarnings("unchecked")
+    public List<String> getRelatedEntitiesForSearchId(int searchId)
+    {
+        List<String> entities = new ArrayList<String>();
+        try
+        {
+            PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT related_entities FROM learnweb_large.sl_query_entities WHERE search_id = ?");
+            pstmt.setInt(1, searchId);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                Object object = Sql.getSerializedObject(rs, "related_entities");
+                if(object == null)
+                    break;
+    
+                List<String> related_entities = (List<String>) object;
+    
+                entities.addAll(related_entities);
+            }
+            pstmt.close();
+        }
+        catch(SQLException e)
+        {
+            log.error("Error while fetching related entities for search id: " + searchId, e);
+        }
+        return entities;
+    }*/
+    /*public List<String> getRelatedEntitiesForSearchId(int searchId) throws Exception
+    {
+        List<String> entities = new ArrayList<String>();
+        try
+        {
+            PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT related_entities FROM learnweb_large.sl_query_entities WHERE search_id = ?");
+            pstmt.setInt(1, searchId);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                Object object = Sql.getSerializedObject(rs, "related_entities");
+                if(object == null)
+                    break;
+                List<String> related_entities = (List<String>) object;
+    
+                for(String re : related_entities)
+                {
+                    Entity entity = Entity.fromString(re);
+                    entities.add(entity.getEntityName());
+                }
+            }
+        }
+        catch(SQLException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        System.out.println("related entities: " + entities);
+        return entities;
+    }*/
+
     public List<SearchResult> getSearchResultsForSearchId(int searchId, int limit)
     {
         List<SearchResult> searchResults = new ArrayList<SearchResult>();
@@ -98,10 +180,9 @@ public class SearchHistoryManager
         return searchResults;
     }
 
-    @SuppressWarnings("unchecked")
-    public List<String> getRelatedEntitiesForSearchId(int searchId)
+    public List<Entity> getRelatedEntitiesForSearchId(int searchId) throws Exception
     {
-        List<String> entities = new ArrayList<String>();
+        List<Entity> entities = new ArrayList<>();
         try
         {
             PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT related_entities FROM learnweb_large.sl_query_entities WHERE search_id = ?");
@@ -112,90 +193,22 @@ public class SearchHistoryManager
                 Object object = Sql.getSerializedObject(rs, "related_entities");
                 if(object == null)
                     break;
-
                 List<String> related_entities = (List<String>) object;
 
-                entities.addAll(related_entities);
-            }
-            pstmt.close();
-        }
-        catch(SQLException e)
-        {
-            log.error("Error while fetching related entities for search id: " + searchId, e);
-        }
-        return entities;
-    }
-
-    /**
-     * retired function which fetches data from database.
-     * 
-     * @param queries
-     * @return
-     */
-    public Set<String> getMergedEntities(List<Query> queries)
-    {
-        Set<String> entities = new HashSet<>();
-
-        for(Query query : queries)
-        {
-            int searchId = query.getSearchId();
-            List<String> relatedEntities = this.getRelatedEntitiesForSearchId(searchId);
-            entities.add(query.getQuery());
-            entities.addAll(relatedEntities);
-        }
-
-        return entities;
-    }
-
-    public Set<Edge> getAllEdges(Set<String> entities)
-    {
-        Set<Edge> edges = new HashSet<>();
-
-        for(String entity : entities)
-        {
-            Set<Edge> edgesForEachEntity = this.getEdgesForEachEntity(entity);
-            for(Edge edge : edgesForEachEntity)
-            {
-                if(entities.contains(edge.getSource()) && entities.contains(edge.target))
+                for(String re : related_entities)
                 {
-                    edges.add(edge);
+                    Entity entity = Entity.fromString(re);
+                    entities.add(entity);
                 }
-            }
-        }
-
-        return edges;
-    }
-
-    private Set<Edge> getEdgesForEachEntity(String entity)
-    {
-        Set<Edge> edges = new HashSet<>();
-
-        try
-        {
-            PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT * FROM learnweb_large.sl_entity_co_occur WHERE score > 0.02 AND source = ?");
-            pstmt.setString(1, entity);
-            ResultSet rs = pstmt.executeQuery();
-            //int i = 0;
-            while(rs.next())
-            {
-                //i++;
-                try
-                {
-                    edges.add(new Edge(rs.getString("source"), rs.getString("target"), rs.getDouble("score")));
-                }
-                catch(InvalidEdgeException e)
-                {
-                    log.error("Invalid edge fetched for " + entity, e);
-                }
-
             }
         }
         catch(SQLException e)
         {
-            log.error("Error while fetching edges for entity: " + entity, e);
+            // TODO Auto-generated catch block
+            e.printStackTrace();
         }
-
-        return edges;
+        //System.out.println("related entities: " + entities);
+        return entities;
     }
 
     public List<Query> getQueriesForSessionFromCache(int userId, String sessionId)
@@ -220,7 +233,7 @@ public class SearchHistoryManager
         return queries;
     }
 
-    public List<List<String>> getRelatedEntitiesForQueries(List<Query> queries)
+    public List<List<String>> getRelatedEntitiesForQueries(List<Query> queries) throws Exception
     {
         List<List<String>> entitiesList = new ArrayList<>();
 
@@ -228,15 +241,21 @@ public class SearchHistoryManager
         {
             if(query.getRelatedEntities() == null)
             {
-                query.setRelatedEntities(this.getRelatedEntitiesForSearchId(query.searchId));
+                List<Entity> entities = this.getRelatedEntitiesForSearchId(query.searchId);
+                List<String> entityStrs = new ArrayList<>();
+                for(Entity entity : entities)
+                {
+                    entityStrs.add(entity.getEntityName());
+                }
+                query.setRelatedEntities(entityStrs);
             }
             entitiesList.add(query.getRelatedEntities());
         }
-
+        //System.out.println("related entities: " + entitiesList);
         return entitiesList;
     }
 
-    public Set<String> getMergedEntitiesForSession(List<Query> queries)
+    public Set<String> getMergedEntitiesForSession(List<Query> queries) throws Exception
     {
         Set<String> entities = new HashSet<>();
 
@@ -252,6 +271,41 @@ public class SearchHistoryManager
         }
 
         return entities;
+    }
+
+    public List<Entity> getEntitiesInEntityForQuery(Query query) throws Exception
+    {
+        List<Entity> entities = new ArrayList<>();
+        entities = this.getRelatedEntitiesForSearchId(query.searchId);
+        return entities;
+    }
+
+    public List<Entity> getMergedEntitiesInEntitiyForSession(List<Query> queries) throws Exception
+    {
+        List<Entity> entities = new ArrayList<>();
+        for(Query query : queries)
+        {
+            if(query.getRelatedEntities() != null)
+            {
+                List<Entity> entityList = this.getEntitiesInEntityForQuery(query);
+                //List<Entity> entityList = this.getRelatedEntitiesForSearchId(query.searchId);
+                entities.addAll(entityList);
+            }
+        }
+        return entities;
+    }
+
+    public List<Integer> getRanksForEntity(List<Entity> entities, String entityName)
+    {
+        List<Integer> ranks = new ArrayList<>();
+        for(Entity entity : entities)
+        {
+            if(entity.getEntityName().equals(entityName))
+            {
+                ranks = entity.getRanks();
+            }
+        }
+        return ranks;
     }
 
     public List<Session> getSessionsForUser(int userId) throws SQLException
@@ -285,6 +339,58 @@ public class SearchHistoryManager
         return sessions;
     }
 
+    public Set<Edge> getAllEdges(Set<String> entities)
+    {
+        Set<Edge> edges = new HashSet<>();
+
+        for(String entity : entities)
+        {
+            Set<Edge> edgesForEachEntity = this.getEdgesForEachEntity(entity);
+            for(Edge edge : edgesForEachEntity)
+            {
+                if(entities.contains(edge.getSource()) && entities.contains(edge.target))
+                {
+                    edges.add(edge);
+                }
+            }
+        }
+
+        return edges;
+    }
+
+    private Set<Edge> getEdgesForEachEntity(String entity)
+    {
+        Set<Edge> edges = new HashSet<>();
+
+        try
+        {
+            PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT * FROM learnweb_large.sl_entity_co_occur WHERE score > 0.05 AND source = ?");
+            pstmt.setString(1, entity);
+            ResultSet rs = pstmt.executeQuery();
+            //int i = 0;
+            while(rs.next())
+            {
+                //i++;
+                try
+                {
+                    edges.add(new Edge(rs.getString("source"), rs.getString("target"), rs.getDouble("score")));
+                }
+                catch(InvalidEdgeException e)
+                {
+                    log.error("Invalid edge fetched for " + entity, e);
+                }
+
+            }
+        }
+        catch(SQLException e)
+        {
+            log.error("Error while fetching edges for entity: " + entity, e);
+        }
+
+        return edges;
+    }
+
+    /*
     public static void main(String[] args) throws ClassNotFoundException, SQLException
     {
         SearchHistoryManager searchHistoryManager = Learnweb.createInstance("").getSearchHistoryManager();
@@ -292,8 +398,23 @@ public class SearchHistoryManager
         searchHistoryManager.getSessionsForUser(10683);
         long end = System.currentTimeMillis();
         System.out.println(end - start);
-
+    
         System.exit(0);
+    }*/
+    public static void main(String[] args) throws ClassNotFoundException, SQLException
+    {
+        SearchHistoryManager manager = Learnweb.createInstance("").getSearchHistoryManager();
+        try
+        {
+            List<Query> queries = manager.getSessionsForUser(10683).get(0).getQueries();
+            List<Entity> entities = manager.getMergedEntitiesInEntitiyForSession(queries);
+
+        }
+        catch(Exception e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
 
     public class Session
@@ -340,6 +461,7 @@ public class SearchHistoryManager
         private Date timestamp;
         private String service;
         private List<String> relatedEntities;
+        //private List<Entity> relatedEntitiesInEntity;
 
         public Query(int searchId, String query)
         {
@@ -384,6 +506,16 @@ public class SearchHistoryManager
         {
             this.relatedEntities = relatedEntities;
         }
+
+        //public List<Entity> getRelatedEntitiesInEntity()
+        //{
+        //  return this.relatedEntitiesInEntity;
+        //}
+
+        //public void setRelatedEntitiesInEntityForm(List<Entity> relatedEntities)
+        //{
+        //  this.relatedEntitiesInEntity = relatedEntities;
+        //}
     }
 
     public class SearchResult
