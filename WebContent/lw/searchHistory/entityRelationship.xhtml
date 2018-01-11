@@ -28,6 +28,7 @@
 		<h:form>
 			<p:remoteCommand name="updateKG" actionListener="#{newSearchHistoryBean.actionUpdateKGData}" update="updateGraph" oncomplete="draw()"/>
 			<p:remoteCommand name="setSelectedSearchId" actionListener="#{newSearchHistoryBean.actionSelectedSearchId}" update="snippets" oncomplete="$('.snippet-viewer').show();"/>
+			<p:remoteCommand name="setSelectedEntity" actionListener="#{newSearchHistoryBean.actionSelectedEntity}" update="updateRanks" oncomplete=""/>
 		</h:form>
 		<div class="history-container">
 			<div class="session-timeline">
@@ -70,15 +71,13 @@
 			                </ui:repeat>
 		                </div>
 		                <div id="entities" style="display:none">
-							<ui:repeat var="entity" value="#{newSearchHistoryBean.entities}">
+							<ui:repeat var="entity" value="#{newSearchHistoryBean.entities}" >
 			                    #{entity},
 			                </ui:repeat>
 		                </div>
-		                <div id="related" style="display:none">
-							<ui:repeat var="relatedEntities" value="#{newSearchHistoryBean.related}">
-								<ui:repeat var="relatedEntity" value="#{relatedEntities}">
-			                    	#{relatedEntity},
-			                    </ui:repeat>;
+		                <div id="entityList" style="display:none">
+							<ui:repeat var="entityl" value="#{newSearchHistoryBean.entityList}" >
+			                    #{entityl},
 			                </ui:repeat>
 		                </div>
 		                <div id="edges" style="display:none">
@@ -86,11 +85,27 @@
 			                    #{edge[0]},#{edge[1]};
 			                </ui:repeat>
 		                </div>
+		                <div id="related" style="display:none">
+							<ui:repeat var="relatedEntities" value="#{newSearchHistoryBean.related}">
+								<ui:repeat var="relatedEntity" value="#{relatedEntities}">
+			                    #{relatedEntity},
+			                    </ui:repeat>;
+			                </ui:repeat>
+		                </div>
 		                <h:outputScript>
 		                	var queriesJsonArr = #{newSearchHistoryBean.queriesAsJson};
 		                </h:outputScript>
 					</h:panelGroup>
 				</div>
+			</div>
+			<div>
+				<h:panelGroup id="updateRanks">
+						<div id="ranks">
+							<ui:repeat var="rank" value="#{newSearchHistoryBean.ranks}">
+					           #{rank},        
+					        </ui:repeat>
+						</div>
+					</h:panelGroup>
 			</div>
 			<div class="snippet-viewer">
 				<span style="font-size:1.4rem;">Query Snippets</span>
@@ -182,10 +197,10 @@
 		    var len_4 = edges.length;
 		    console.log(edges);
 		    
-			//add nodesd
+			//add nodes
 			//entities
 			for(i=0; i &lt; len_2; i++){
-				G.addNode(entities[i],{count:10, color: '#d0e8e5', type: 'concept'});
+				G.addNode(entities[i],{count:10, color: '#d0e8e5', type: 'entity', entity_name: entities[i]});
 			}
 			
 			//queries
@@ -252,6 +267,10 @@
 			    	//console.log(d.data.search_id);
 			    	setSelectedSearchId([
 			    	 	{name: "search-id", value: d.data.search_id }
+			    	]);
+			    }else if(d.data.type == 'entity'){
+			    	setSelectedEntity([
+			    		{name: "entity-name", value: d.data.entity_name }
 			    	]);
 			    }
 			});
