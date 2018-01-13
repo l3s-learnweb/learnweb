@@ -5,7 +5,7 @@ import java.util.List;
 
 public class Entity
 {
-    public static double score = 0.0;
+    private double score = 0.0;
     private String entityName = null;
     private List<Integer> ranks = null;
 

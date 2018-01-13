@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
+import de.l3s.util.Sql;
 
 public class SearchHistoryManager
 {
@@ -27,7 +28,7 @@ public class SearchHistoryManager
     }
 
     /**
-     * retired function which fetches data from database.
+     * Returns queries for given session id
      * 
      * @param sessionId
      * @return
@@ -58,12 +59,13 @@ public class SearchHistoryManager
     }
 
     /**
-     * retired function which fetches data from database.
+     * This function doesn't seem to be used anywhere
      * 
      * @param queries
      * @return
      * @throws Exception
      */
+    @Deprecated
     public Set<String> getMergedEntities(List<Query> queries) throws Exception
     {
         Set<String> entities = new HashSet<>();
@@ -133,8 +135,7 @@ public class SearchHistoryManager
         }
         catch(SQLException e)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+             log.error(e);
         }
         System.out.println("related entities: " + entities);
         return entities;
@@ -153,6 +154,7 @@ public class SearchHistoryManager
             while(rs.next())
             {
                 SearchResult result = new SearchResult();
+                result.setSearchId(searchId);
                 result.setRank(rs.getInt("rank"));
                 int resourceId = rs.getInt("resource_id");
                 if(resourceId > 0)
@@ -180,9 +182,10 @@ public class SearchHistoryManager
         return searchResults;
     }
 
-    public List<Entity> getRelatedEntitiesForSearchId(int searchId) throws Exception
+    @SuppressWarnings("unchecked")
+    public List<Entity> getRelatedEntitiesForSearchId(int searchId)
     {
-        List<Entity> entities = new ArrayList<>();
+        List<Entity> entities = new ArrayList<Entity>();
         try
         {
             PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT related_entities FROM learnweb_large.sl_query_entities WHERE search_id = ?");
@@ -193,9 +196,9 @@ public class SearchHistoryManager
                 Object object = Sql.getSerializedObject(rs, "related_entities");
                 if(object == null)
                     break;
-                List<String> related_entities = (List<String>) object;
+                List<String> relatedEntities = (List<String>) object;
 
-                for(String re : related_entities)
+                for(String re : relatedEntities)
                 {
                     Entity entity = Entity.fromString(re);
                     entities.add(entity);
@@ -204,10 +207,9 @@ public class SearchHistoryManager
         }
         catch(SQLException e)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error("Error while fetching related entities for search id: " + searchId, e);
         }
-        //System.out.println("related entities: " + entities);
+        //log.info("related entities: " + entities);
         return entities;
     }
 
@@ -233,6 +235,7 @@ public class SearchHistoryManager
         return queries;
     }
 
+    @Deprecated
     public List<List<String>> getRelatedEntitiesForQueries(List<Query> queries) throws Exception
     {
         List<List<String>> entitiesList = new ArrayList<>();
@@ -255,6 +258,7 @@ public class SearchHistoryManager
         return entitiesList;
     }
 
+    @Deprecated
     public Set<String> getMergedEntitiesForSession(List<Query> queries) throws Exception
     {
         Set<String> entities = new HashSet<>();
@@ -273,6 +277,7 @@ public class SearchHistoryManager
         return entities;
     }
 
+    @Deprecated
     public List<Entity> getEntitiesInEntityForQuery(Query query) throws Exception
     {
         List<Entity> entities = new ArrayList<>();
@@ -280,6 +285,7 @@ public class SearchHistoryManager
         return entities;
     }
 
+    @Deprecated
     public List<Entity> getMergedEntitiesInEntitiyForSession(List<Query> queries) throws Exception
     {
         List<Entity> entities = new ArrayList<>();
@@ -295,6 +301,7 @@ public class SearchHistoryManager
         return entities;
     }
 
+    @Deprecated
     public List<Integer> getRanksForEntity(List<Entity> entities, String entityName)
     {
         List<Integer> ranks = new ArrayList<>();
@@ -345,10 +352,11 @@ public class SearchHistoryManager
 
         for(String entity : entities)
         {
-            Set<Edge> edgesForEachEntity = this.getEdgesForEachEntity(entity);
+            Set<Edge> edgesForEachEntity = this.getEdgesForEntity(entity);
             for(Edge edge : edgesForEachEntity)
             {
-                if(entities.contains(edge.getSource()) && entities.contains(edge.target))
+                //Because the getEdgesForEntity returns all edges where source = entity thus source is already in entities 
+                if(/*entities.contains(edge.getSource()) &&*/ entities.contains(edge.target))
                 {
                     edges.add(edge);
                 }
@@ -358,7 +366,7 @@ public class SearchHistoryManager
         return edges;
     }
 
-    private Set<Edge> getEdgesForEachEntity(String entity)
+    private Set<Edge> getEdgesForEntity(String entity)
     {
         Set<Edge> edges = new HashSet<>();
 
@@ -367,10 +375,8 @@ public class SearchHistoryManager
             PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT * FROM learnweb_large.sl_entity_co_occur WHERE score > 0.05 AND source = ?");
             pstmt.setString(1, entity);
             ResultSet rs = pstmt.executeQuery();
-            //int i = 0;
             while(rs.next())
             {
-                //i++;
                 try
                 {
                     edges.add(new Edge(rs.getString("source"), rs.getString("target"), rs.getDouble("score")));
@@ -412,8 +418,7 @@ public class SearchHistoryManager
         }
         catch(Exception e)
         {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
+            log.error(e);
         }
     }
 
@@ -520,10 +525,21 @@ public class SearchHistoryManager
 
     public class SearchResult
     {
+        private int searchId;
         private int rank;
         private String url;
         private String title;
         private String description;
+
+        public int getSearchId()
+        {
+            return searchId;
+        }
+
+        public void setSearchId(int searchId)
+        {
+            this.searchId = searchId;
+        }
 
         public int getRank()
         {
