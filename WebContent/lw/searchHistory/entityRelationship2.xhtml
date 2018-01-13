@@ -115,25 +115,7 @@
 		{
 			var i, j;
 			var G = new jsnx.Graph();
-			/*var queryStrs = document.getElementById("queries").innerHTML.split(",");
-		    var queries = [];
-		    for (i = 0; i &lt; queryStrs.length-1; i++)
-		    {
-		    	queries.push(queryStrs[i].trim());
-		    }
-		    var len_1 = queries.length;
-		    console.log(queries);
-		    console.log(len_1);
-		    
-		    var entityStrs = document.getElementById("entities").innerHTML.split(",");
-		    var entities = [];
-		    for (i = 0; i &lt; entityStrs.length-1; i++)
-		    {
-		    	entities.push(entityStrs[i].trim());
-		    }
-		    var len_2 = entities.length;
-		    console.log(entities);
-		    console.log(len_2);*/
+			
 		    var entities = new Set();
 		    var entityRanksMap = new Map();
 		    for (i = 0; i &lt; queriesJsonArr.length; i++)
@@ -150,69 +132,25 @@
 		    			entityRanksMap.set(entity.entity_name, new Map([[queryObj.search_id, entity.ranks]]));//[{search_id: queryObj.search_id, ranks: entity.ranks}]);
 		    	}
 		    }
-
-		    /*var relatedStrs = document.getElementById("related").innerHTML.split(";");
-		    var related = [];
-		    for (i = 0; i &lt; relatedStrs.length-1; i++)
-		    {
-		    	var relatedStr = relatedStrs[i].trim().split(",");
-		    	var relatedArr = [];
-		    	for (j = 0; j &lt; relatedStr.length-1; j++)
-		    	{
-		    		relatedArr.push(relatedStr[j].trim());
-		    	}
-		    	related.push(relatedArr);
-		    }
-		    var len_3 = related.length;
-		    console.log(related);
 		    
-		    var edgeStrs = document.getElementById("edges").innerHTML.split(";");
-		    var edges = [];
-		    for (i = 0; i &lt; edgeStrs.length-1; i++)
-		    {
-		    	var edgeStr = edgeStrs[i].trim().split(",");
-		    	edges.push([edgeStr[0].trim(), edgeStr[1].trim()]);
-		    }
-		    var len_4 = edges.length;
-		    console.log(edges);*/
-		    
-			//add nodes
-			//entities
-			/*for(i=0; i &lt; len_2; i++){
-				G.addNode(entities[i],{count:10, color: '#d0e8e5', type: 'entity', entity_name: entities[i]});
-			}*/
+			//add node entities
 			entities.forEach(function(entity){
 				G.addNode(entity, {count: 10, color: '#d0e8e5', type: 'entity', entity_name: entity});
 			});
 				
 			
 			//queries
-			/*for(i=0; i &lt; len_1; i++){
-				G.addNode(queries[i], {count:15, color: '#489a83', type: 'query'});
-			}*/
 			for(i = 0; i &lt; queriesJsonArr.length; i++){
 				G.addNode(queriesJsonArr[i].query, {count: 15, color: '#489a83', type: 'query', search_id: queriesJsonArr[i].search_id});
 			}
 			
-			//add edges
-			//relationships
-			/*for(i=0; i &lt; len_4; i++){
-				var nodepairs = edges[i];
-				//console.log(nodepairs[0] + ", " + nodepairs[1]);
-				G.addEdge(nodepairs[0],nodepairs[1], {color:'#d2dde0'});
-			}*/
+			//add edge relationships
 			for(i = 0; i &lt; edgesJsonArr.length; i++){
 				var edge = edgesJsonArr[i];
 				G.addEdge(edge.source, edge.target, {color: '#d2dde0'});
 			}
 			
 			//edges between queries and entities
-			/*for(i=0; i &lt; len_3; i++){
-				var reen = related[i];
-				for(j=0; j &lt; reen.length; j++){
-					G.addEdge(queries[i],reen[j], {color:'#99c2ff'});
-				}
-			}*/
 			for(i = 0; i &lt; queriesJsonArr.length; i++){
 				var related_entities = queriesJsonArr[i].related_entities;
 				var query = queriesJsonArr[i].query;
@@ -222,9 +160,6 @@
 			}
 			
 			//step edges between query nodes
-			/*for(i=0; i &lt; len_1; i++){
-				G.addEdge(queries[i], queries[i+1], {color: "black"});
-			}*/
 			for(i=0; i &lt; queriesJsonArr.length - 1; i++){
 				G.addEdge(queriesJsonArr[i].query, queriesJsonArr[i + 1].query, {color: "black"});
 			}

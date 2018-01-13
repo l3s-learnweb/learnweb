@@ -37,12 +37,6 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     private List<String> queries;
     private Set<String> entities;
 
-    @Deprecated
-    private List<Entity> entityList;
-    //private List<Integer> ranks;
-    // related entities of a query
-    private List<List<String>> related;
-    private List<List<String>> edges;
     private List<Session> sessions;
     private String title;
     private int userId;
@@ -51,7 +45,6 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     private DateFormat timeFormatter;
     private Map<Integer, List<SearchResult>> searchIdSnippets;
 
-    private String selectedEntity;
     private List<Integer> selectedSearchIds;
 
     /**
@@ -72,7 +65,6 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         title = "Search History";
         queries = new ArrayList<String>();
         entities = new HashSet<String>();
-        entityList = new ArrayList<Entity>();
         searchIdSnippets = new HashMap<Integer, List<SearchResult>>();
         selectedSearchIds = new ArrayList<Integer>();
     }
@@ -159,51 +151,6 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         return entities;
     }
 
-    public List<Entity> getEntityList()
-    {
-        return entityList;
-    }
-
-    /**
-     * Get snippet ranks for a selected entity
-     * 
-     * @return
-     * @throws Exception
-     */
-    @Deprecated
-    public List<Integer> getRanks() throws Exception
-    {
-        List<Integer> ranks = new ArrayList<>();
-        List<Entity> entityList = this.getEntityList();
-        String entityName = this.getSeletedEntity();
-        ranks = getLearnweb().getSearchHistoryManager().getRanksForEntity(entityList, entityName);
-        //System.out.println("ranks: " + ranks);
-        log.info("get ranks:" + ranks.size());
-        return ranks;
-    }
-
-    /**
-     * Get related entities for each query in a selected session.
-     * 
-     * @return
-     */
-    @Deprecated
-    public List<List<String>> getRelated()
-    {
-        return this.related;
-    }
-
-    /**
-     * Get edges in a selected session.
-     * 
-     * @return
-     */
-    @Deprecated
-    public List<List<String>> getEdges()
-    {
-        return this.edges;
-    }
-
     public String getTitle()
     {
         return title;
@@ -231,20 +178,6 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         return selectedSessionId;
     }
 
-    @Deprecated
-    public String getSeletedEntity()
-    {
-        return selectedEntity;
-    }
-
-    @Deprecated
-    public List<SearchResult> getSearchResults(int searchId)
-    {
-        if(!searchIdSnippets.containsKey(searchId))
-            searchIdSnippets.put(searchId, getLearnweb().getSearchHistoryManager().getSearchResultsForSearchId(searchId, 10));
-        return searchIdSnippets.get(searchId);
-    }
-
     public List<SearchResult> getSearchResults()
     {
         List<SearchResult> searchResults = new ArrayList<SearchResult>();
@@ -264,66 +197,6 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         String sessionId = params.get("session-id");
         selectedSessionId = sessionId;
         log.info("session id: " + sessionId);
-
-        /*
-        // update queries
-        this.queries.clear();
-        SearchHistoryManager manager = getLearnweb().getSearchHistoryManager();
-        List<Query> queryList = manager.getQueriesForSessionFromCache(userId, selectedSessionId);
-        for(Query query : queryList)
-        {
-            queries.add(query.getQuery());
-            if(!searchIdSnippets.containsKey(query.getSearchId()))
-                searchIdSnippets.put(query.getSearchId(), manager.getSearchResultsForSearchId(query.getSearchId(), 10));
-        }
-        log.info("get queries:" + queries.size());
-        
-        // update entities
-        this.entities.clear();
-        this.entities.addAll(manager.getMergedEntitiesForSession(queryList));
-        log.info("get entities:" + this.entities.size());
-        
-        //update entityList
-        this.entityList.clear();
-        this.entityList = manager.getMergedEntitiesInEntitiyForSession(queryList);
-        log.info("get entityList: " + this.entityList.size());
-        
-        // update related
-        if(this.related == null)
-        {
-            this.related = new ArrayList<>();
-        }
-        this.related.clear();
-        
-        List<List<String>> relatedEntitiesList = manager.getRelatedEntitiesForQueries(queryList);
-        
-        for(List<String> relatedEntities : relatedEntitiesList)
-        {
-            List<String> relatedEntityStrs = new ArrayList<>();
-            relatedEntityStrs.addAll(relatedEntities);
-            this.related.add(relatedEntityStrs);
-        }
-        
-        log.info("get related:" + this.related.size());
-        
-        // update edges
-        if(this.edges == null)
-        {
-            this.edges = new ArrayList<>();
-        }
-        this.edges.clear();
-        
-        Set<Edge> edgeSet = manager.getAllEdges(entities);
-        for(Edge edge : edgeSet)
-        {
-            List<String> edgeNodes = new ArrayList<>();
-            edgeNodes.add(edge.getSource());
-            edgeNodes.add(edge.getTarget());
-            this.edges.add(edgeNodes);
-        }
-        
-        log.info("get edges:" + this.edges.size());
-        */
     }
 
     public void actionSelectedSearchId()
@@ -332,14 +205,6 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         int searchId = Integer.parseInt(params.get("search-id"));
         selectedSearchIds.clear();
         selectedSearchIds.add(searchId);
-    }
-
-    @Deprecated
-    public void actionSelectedEntity()
-    {
-        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
-        String entityName = params.get("entity-name");
-        selectedEntity = entityName;
     }
 
     public void actionSelectedSearchIds()
