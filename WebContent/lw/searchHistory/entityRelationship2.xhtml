@@ -27,8 +27,8 @@
 		
 		<h:form>
 			<p:remoteCommand name="updateKG" actionListener="#{newSearchHistoryBean.actionUpdateKGData}" update="updateGraph" oncomplete="draw()"/>
-			<p:remoteCommand name="setSelectedSearchId" actionListener="#{newSearchHistoryBean.actionSelectedSearchId}" update="snippets" oncomplete="$('.snippet-viewer').show();"/>
-			<p:remoteCommand name="setSelectedSearchIds" actionListener="#{newSearchHistoryBean.actionSelectedSearchIds}" update="snippets" oncomplete="filterSnippets();"/>
+			<p:remoteCommand name="setSelectedSearchId" actionListener="#{newSearchHistoryBean.actionSelectedSearchId}" update="snippets snippet-viewer-entity" oncomplete="$('.snippet-viewer').show();"/>
+			<p:remoteCommand name="setSelectedSearchIds" actionListener="#{newSearchHistoryBean.actionSelectedSearchIds}" update="snippets snippet-viewer-entity" oncomplete="filterSnippets();"/>
 		</h:form>
 		<div class="history-container">
 			<div class="session-timeline">
@@ -73,160 +73,29 @@
 				</div>
 			</div>
 			<div class="snippet-viewer">
-				<span style="font-size:1.4rem;">Query Snippets</span>
+				<h:outputText style="font-size:1.4rem;" value="Snippets: " />
 				<span class="hideIcon">
 					<svg x="0px" y="0px" width="14px" height="14px" viewBox="0 0 10 10" focusable="false">
 						<polygon class="a-s-fa-Ha-pa" fill="#000000" points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 ">
 						</polygon>
 					</svg>
 				</span>
+				<h:outputText id="snippet-viewer-entity" style="font-size:1.4rem; font-style: italic;" value="#{newSearchHistoryBean.selectedEntity}"/>
 				<h:panelGroup layout="block" id="snippets">
 					<div style="margin-bottom: 10px;"></div>
 					<ui:repeat var="snippet" value="#{newSearchHistoryBean.getSearchResults()}">
 						<h:panelGroup layout="block" class="snippet" pt:data-searchId="#{snippet.searchId}" pt:data-rank="#{snippet.rank}">
 							<span><a href="#{snippet.url}"><h:outputText value="#{snippet.title}" escape="false"/></a></span><br/>
-							<span>#{snippet.description}</span>
+							<span class="reference_url">#{snippet.url}</span><br/>
+							<span>#{snippet.description}</span><br/>
+							<span class="snippet_query">query: #{newSearchHistoryBean.getQuery(snippet.searchId)}</span>
+							<span style="color:grey;float:right;">rank: &#35;#{snippet.rank}</span>
 						</h:panelGroup>
 					</ui:repeat>
 				</h:panelGroup>
 			</div>
 		</div>
-		
-		<script>
-		$(document).ready(function(){
-			$('.hideIcon').on('click',function(){
-					$('.snippet-viewer').hide();
-				});
-			
-			$('.session_block').on('click', function(e){
-				var element = e.currentTarget;
-				var sessionId = element.getAttribute("data-sessionid"); 
-				$('.box ul li').css("background","#489a83");
-				$(element).parent().css("background","darkgrey");
-				updateKG([
-					{name: "session-id", value: sessionId }
-				]);
-			});
-			
-			$('#query_path_button').hide();
-		});
-		var searchRanks;
-		function draw()
-		{
-			var i, j;
-			var G = new jsnx.Graph();
-			
-		    var entities = new Set();
-		    var entityRanksMap = new Map();
-		    for (i = 0; i &lt; queriesJsonArr.length; i++)
-		    {
-		    	var queryObj = queriesJsonArr[i];
-		    	var related_entities = queryObj.related_entities;
-		    	for(j = 0; j &lt; related_entities.length; j++)
-		    	{
-		    		var entity = related_entities[j];
-		    		entities.add(entity.entity_name);
-		    		if(entityRanksMap.has(entity.entity_name))
-		    			entityRanksMap.get(entity.entity_name).set(queryObj.search_id, entity.ranks);//.push({search_id: queryObj.search_id, ranks: entity.ranks});
-		    		else
-		    			entityRanksMap.set(entity.entity_name, new Map([[queryObj.search_id, entity.ranks]]));//[{search_id: queryObj.search_id, ranks: entity.ranks}]);
-		    	}
-		    }
-		    
-			//add node entities
-			entities.forEach(function(entity){
-				G.addNode(entity, {count: 10, color: '#d0e8e5', type: 'entity', entity_name: entity});
-			});
-				
-			
-			//queries
-			for(i = 0; i &lt; queriesJsonArr.length; i++){
-				G.addNode(queriesJsonArr[i].query, {count: 15, color: '#489a83', type: 'query', search_id: queriesJsonArr[i].search_id});
-			}
-			
-			//add edge relationships
-			for(i = 0; i &lt; edgesJsonArr.length; i++){
-				var edge = edgesJsonArr[i];
-				G.addEdge(edge.source, edge.target, {color: '#d2dde0'});
-			}
-			
-			//edges between queries and entities
-			for(i = 0; i &lt; queriesJsonArr.length; i++){
-				var related_entities = queriesJsonArr[i].related_entities;
-				var query = queriesJsonArr[i].query;
-				for(j = 0; j &lt; related_entities.length; j++){
-					G.addEdge(query, related_entities[j].entity_name, {color:'#99c2ff'});
-				}
-			}
-			
-			//step edges between query nodes
-			for(i=0; i &lt; queriesJsonArr.length - 1; i++){
-				G.addEdge(queriesJsonArr[i].query, queriesJsonArr[i + 1].query, {color: "black"});
-			}
-			
-			jsnx.draw(G,{
-				element: "#canvas",
-				layoutAttr:{
-					charge:-300,
-					linkDistance:150
-				},
-				withLabels: true,
-				nodeAttr:{
-					r: function(d){
-						return d.data.count;
-					}
-				},
-				nodeStyle:{
-					fill:function(d){
-						return d.data.color;
-					},
-					stroke: 'none'
-				},
-				labelStyle:{
-					fill: 'black',
-					'font-size': 8
-				},
-				edgeStyle: {
-					fill:function(d){
-						return d.data.color;
-					}
-				},
-				stickyDrag: true
-			});
-			
-			d3.selectAll('.node').on('dblclick', function(d) {
-			    if(d.data.type == 'query')
-			    {
-			    	setSelectedSearchId([
-			    	 	{name: "search-id", value: d.data.search_id }
-			    	]);
-			    }else if(d.data.type == 'entity'){
-			    	searchRanks = entityRanksMap.get(d.data.entity_name);
-			    	var search_ids = "";
-			    	searchRanks.forEach(function(value, key){
-			    		search_ids += key + ",";
-			    	});
-			    	
-			    	setSelectedSearchIds([
-			    		{name: "search-ids", value: search_ids }
-			    	]);
-			    }
-			});
 
-		}
-		
-		function filterSnippets()
-		{
-			$('.snippet').each(function(){
-				search_id = $(this).data('searchid');
-				rank = $(this).data('rank');
-				if(!searchRanks.get(search_id).includes(rank))
-					$(this).hide();
-			});
-			
-			$('.snippet-viewer').show();
-		}
-		</script>
 		<script type="text/javascript" src="#{request.contextPath}/resources/search-history/entity-relationship.js"></script>
 	</ui:define>
 	

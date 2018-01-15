@@ -41,11 +41,13 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     private String title;
     private int userId;
     private String selectedSessionId;
+    private String selectedEntity;
     private DateFormat dateFormatter;
     private DateFormat timeFormatter;
     private Map<Integer, List<SearchResult>> searchIdSnippets;
 
     private List<Integer> selectedSearchIds;
+    private Map<Integer, String> searchIdQueryMap;
 
     /**
      * Load the variables that needs values before the view is rendered
@@ -67,6 +69,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         entities = new HashSet<String>();
         searchIdSnippets = new HashMap<Integer, List<SearchResult>>();
         selectedSearchIds = new ArrayList<Integer>();
+        searchIdQueryMap = new HashMap<Integer, String>();
     }
 
     /**
@@ -83,6 +86,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     {
         List<Query> queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromCache(userId, selectedSessionId);
         entities.clear();
+        //searchIdQueryMap.clear();
 
         JSONArray queriesArr = new JSONArray();
         for(Query q : queries)
@@ -93,6 +97,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
                 JSONObject queryObj = new JSONObject();
                 queryObj.put("search_id", q.getSearchId());
                 queryObj.put("query", q.getQuery());
+                searchIdQueryMap.put(q.getSearchId(), q.getQuery());
 
                 List<Entity> relatedEntities = getLearnweb().getSearchHistoryManager().getRelatedEntitiesForSearchId(q.getSearchId());
                 JSONArray relatedEntitiesArr = new JSONArray();
@@ -156,6 +161,16 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         return title;
     }
 
+    public String getSelectedEntity()
+    {
+        return selectedEntity;
+    }
+
+    public String getQuery(int searchId)
+    {
+        return searchIdQueryMap.getOrDefault(searchId, "");
+    }
+
     public List<Session> getSessions()
     {
         if(sessions == null)
@@ -203,6 +218,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         int searchId = Integer.parseInt(params.get("search-id"));
+        selectedEntity = params.get("entity-name");
         selectedSearchIds.clear();
         selectedSearchIds.add(searchId);
     }
@@ -212,6 +228,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         selectedSearchIds.clear();
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String searchIdsStr = params.get("search-ids");
+        selectedEntity = params.get("entity-name");
         String[] searchIds = searchIdsStr.split(",");
         for(String searchId : searchIds)
             selectedSearchIds.add(Integer.parseInt(searchId));
@@ -230,6 +247,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
             timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
         return timeFormatter.format(date);
     }
+
 }
 
 /*
