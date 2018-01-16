@@ -57,6 +57,7 @@ var tip = d3.tip()
 		});
 
 var searchRanks;
+var linked = new Map();
 function draw()
 {
 	var i, j;
@@ -71,6 +72,7 @@ function draw()
     	for(j = 0; j < related_entities.length; j++)
     	{
     		var entity = related_entities[j];
+    		entities.add(queriesJsonArr[i].query);
     		entities.add(entity.entity_name);
     		if(entityRanksMap.has(entity.entity_name))
     			entityRanksMap.get(entity.entity_name).set(queryObj.search_id, entity.ranks);//.push({search_id: queryObj.search_id, ranks: entity.ranks});
@@ -159,8 +161,63 @@ function draw()
 	    		{name: "entity-name", value: d.data.entity_name}
 	    	]);
 	    }
-	});
+	})
+	.on('mouseover', connectedNodes)
+	.on('mouseout', recoverNodes);
+	
+	//add nodes as keys to a map
+	var link;
+    for(i = 0;i < edgesJsonArr.length; i++){
+    	link = edgesJsonArr[i].source + ","+edgesJsonArr[i].target;
+    	linked.set(link, 1);
+    }
+    entities.forEach(function(entity){
+    	link = entity + "," + entity;
+    	linked.set(link, 1);
+    });
+    for(i = 0; i < queriesJsonArr.length; i++){
+		var related_entities = queriesJsonArr[i].related_entities;
+		var query = queriesJsonArr[i].query;
+		for(j = 0; j < related_entities.length; j++){
+			link = query + "," +related_entities[j].entity_name;
+			linked.set(link, 1);
+		}
+	}
+    for(i=0; i < queriesJsonArr.length - 1; i++){
+		link = queriesJsonArr[i].query +","+ queriesJsonArr[i + 1].query;
+		linked.set(link, 1);
+	}
+	console.log(linked);
+}
 
+//change opacity of those aren't in the map
+var toggle = 0;
+function neighboring(a, b){
+	return linked.has(a + "," + b);
+}
+
+function connectedNodes(){
+	var node = d3.selectAll('.node');
+	var edge = d3.selectAll('.edge');
+	if(toggle ==0){
+		var sj = d3.select(this).node().__data__.node;
+		console.log(sj);
+		node.style("opacity", function(o){
+			var ob = o.node;
+			//console.log(ob);
+			return neighboring(sj,ob)|neighboring(ob,sj) ? 1:0.1;
+		});
+		edge.style("opacity", function(e){
+			return sj == e.source.node | sj == e.target.node ? 1:0.1;
+		});
+		toggle = 1;
+	}
+}
+//recover when mouse out
+function recoverNodes(){
+	d3.selectAll('.node').style("opacity", 1);
+	d3.selectAll('.edge').style("opacity", 1);
+	toggle = 0;
 }
 
 function drawQueryPath()
