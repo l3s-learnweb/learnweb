@@ -1577,11 +1577,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                         newResource.setGroupId(targetGroupId);
                         newResource.setFolderId(targetFolderId);
                         resource = getUser().addResource(newResource);
-                        if(resource.getStorageType() == 4)
+                        if(resource.getType().equals(Resource.ResourceType.survey))
                         {
                             getLearnweb().getCreateSurveyManager().copySurveyResource(itemId, newResource.getId());
                         }
-                        else if(resource.getStorageType() == 3)
+                        else if(resource.getType().equals(Resource.ResourceType.glossary))
                         {
                             getLearnweb().getGlossariesManager().copyGlossary(itemId, newResource.getId());
                         }
