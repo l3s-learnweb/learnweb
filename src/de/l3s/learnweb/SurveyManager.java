@@ -177,23 +177,28 @@ public class SurveyManager
         PreparedStatement ps = null;
         try
         {
-            ResultSet rs = null;
-            ps = learnweb.getConnection().prepareStatement(submitCheck);
-            ps.setInt(1, resource_id);
-            ps.setInt(2, userId);
-            rs = ps.executeQuery();
-            if(rs.next())
+            HashSet<Integer> surveyResources = new HashSet<Integer>();
+            surveyResources.addAll(getSameSurveyResources(resource_id));
+            for(int surveyResource_id : surveyResources)
             {
+                ResultSet rs = null;
+                ps = learnweb.getConnection().prepareStatement(submitCheck);
+                ps.setInt(1, surveyResource_id);
+                ps.setInt(2, userId);
+                rs = ps.executeQuery();
+                if(rs.next())
+                {
 
-                survey.submitted = true;
+                    survey.submitted = true;
 
+                }
             }
 
             ps = learnweb.getConnection().prepareStatement(getSurveyId);
 
             ps.setInt(1, resource_id);
 
-            rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
             if(rs.next())
             {
