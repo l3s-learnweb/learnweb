@@ -164,30 +164,6 @@ function draw()
 	})
 	.on('mouseover', connectedNodes)
 	.on('mouseout', recoverNodes);
-	
-	//add nodes as keys to a map
-	var link;
-    for(i = 0;i < edgesJsonArr.length; i++){
-    	link = edgesJsonArr[i].source + ","+edgesJsonArr[i].target;
-    	linked.set(link, 1);
-    }
-    entities.forEach(function(entity){
-    	link = entity + "," + entity;
-    	linked.set(link, 1);
-    });
-    for(i = 0; i < queriesJsonArr.length; i++){
-		var related_entities = queriesJsonArr[i].related_entities;
-		var query = queriesJsonArr[i].query;
-		for(j = 0; j < related_entities.length; j++){
-			link = query + "," +related_entities[j].entity_name;
-			linked.set(link, 1);
-		}
-	}
-    for(i=0; i < queriesJsonArr.length - 1; i++){
-		link = queriesJsonArr[i].query +","+ queriesJsonArr[i + 1].query;
-		linked.set(link, 1);
-	}
-	console.log(linked);
 }
 
 //change opacity of those aren't in the map
@@ -196,19 +172,18 @@ function neighboring(a, b){
 	return linked.has(a + "," + b);
 }
 
-function connectedNodes(){
+function connectedNodes(d){
 	var node = d3.selectAll('.node');
 	var edge = d3.selectAll('.edge');
-	if(toggle ==0){
-		var sj = d3.select(this).node().__data__.node;
-		console.log(sj);
+	if(toggle == 0){
+		var sj = d.node;
+		var nodes = d.G.neighbors(d.node).concat(d.node);
 		node.style("opacity", function(o){
 			var ob = o.node;
-			//console.log(ob);
-			return neighboring(sj,ob)|neighboring(ob,sj) ? 1:0.1;
+			return nodes.includes(ob) ? 1:0.1;
 		});
 		edge.style("opacity", function(e){
-			return sj == e.source.node | sj == e.target.node ? 1:0.1;
+			return sj == e.source.node| sj ==e.target.node ? 1:0.1;
 		});
 		toggle = 1;
 	}
