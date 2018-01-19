@@ -57,9 +57,12 @@ var tip = d3.tip()
 		});
 
 var searchRanks;
-var linked = new Map();
+//var linked = new Map();
 function draw()
 {
+	var width = $('#canvas').width();
+	var height = $('#canvas').height();
+	console.log("height: " + height + " width: " + width);
 	var i, j;
 	var G = new jsnx.Graph();
 	
@@ -89,13 +92,16 @@ function draw()
 	
 	//queries
 	for(i = 0; i < queriesJsonArr.length; i++){
-		G.addNode(queriesJsonArr[i].query, {count: 15, color: '#489a83', type: 'query', search_id: queriesJsonArr[i].search_id});
+		if(i == 0)
+			G.addNode(queriesJsonArr[i].query, {count: 15, color: 'yellowgreen', type: 'query', search_id: queriesJsonArr[i].search_id});
+		else
+			G.addNode(queriesJsonArr[i].query, {count: 15, color: '#489a83', type: 'query', search_id: queriesJsonArr[i].search_id});
 	}
 	
 	//add edge relationships
 	for(i = 0; i < edgesJsonArr.length; i++){
 		var edge = edgesJsonArr[i];
-		G.addEdge(edge.source, edge.target, {color: '#d2dde0'});
+		G.addEdge(edge.source, edge.target, {color: '#d2dde0', score: edge.score});
 	}
 	
 	//edges between queries and entities
@@ -137,7 +143,13 @@ function draw()
 		edgeStyle: {
 			fill:function(d){
 				return d.data.color;
-			}
+				//console.log(d.edge + ": " + d.data.score + ": " + d3.interpolateGreens(d.data.score));
+				//return d.data.score == undefined ? d.data.color : d3.interpolateReds(d.data.score);
+			},
+			/*stroke: function(d){
+				console.log(d.edge + ": " + d.data.score);
+				return d.data.score ? d.data.color : d3.interpolateGreens(d.data.score);
+			}*/
 		},
 		stickyDrag: true
 	});
@@ -168,9 +180,9 @@ function draw()
 
 //change opacity of those aren't in the map
 var toggle = 0;
-function neighboring(a, b){
+/*function neighboring(a, b){
 	return linked.has(a + "," + b);
-}
+}*/
 
 function connectedNodes(d){
 	var node = d3.selectAll('.node');
@@ -188,6 +200,7 @@ function connectedNodes(d){
 		toggle = 1;
 	}
 }
+
 //recover when mouse out
 function recoverNodes(){
 	d3.selectAll('.node').style("opacity", 1);

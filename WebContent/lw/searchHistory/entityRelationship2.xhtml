@@ -19,7 +19,10 @@
 	<ui:define name="center_layout">
 	
 		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-		<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/> -->
+		<script src="https://d3js.org/d3-color.v1.min.js"></script>
+   		<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    	<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+		
 		<h:outputStylesheet library="search-history" name="queryPath.css"  />
 		
 		<script type="text/javascript" src="#{request.contextPath}/resources/search-history/jsnetworkx.js"></script>
@@ -32,9 +35,8 @@
 		</h:form>
 		<div class="history-container">
 			<div class="session-timeline">
-				<div>
-					<div style="display:inline-block;"><h3>Sessions</h3></div>
-				</div>
+				<div style="margin-bottom:10px;"><span style="font-size: 1.4rem;font-weight: bold;">Sessions</span></div>
+				
 				<div class="box">
 	            <ul id="first-list">
 	            	<ui:repeat var="session1" value="#{newSearchHistoryBean.sessions}">
@@ -62,7 +64,7 @@
 			</div>
 
 			<div class="knowledge-graph">
-				<div id="canvas" class="w3-container" style="height:540px; margin:0 auto;">
+				<div id="canvas" class="w3-container" style="height:100%; margin:0 auto;">
 					<h:panelGroup id="updateGraph">
 						<button onclick="drawQueryPath()" id="query_path_button">Query Path</button>
 		                <h:outputScript>
