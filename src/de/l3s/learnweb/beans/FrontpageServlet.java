@@ -2,6 +2,7 @@ package de.l3s.learnweb.beans;
 
 import java.io.IOException;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -40,14 +41,17 @@ public class FrontpageServlet extends HttpServlet
     {
         try
         {
-            String url = request.getContextPath();
+            String url = "";//request.getContextPath();
 
             if(isArchiveWebRequest(request))
                 url += "/aw/";
             else
                 url += "/lw/";
 
-            response.sendRedirect(url);
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(url);
+            dispatcher.forward(request, response);
+
+            //response.sendRedirect(url);
         }
         catch(Exception e)
         {

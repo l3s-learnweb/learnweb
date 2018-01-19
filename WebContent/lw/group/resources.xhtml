@@ -57,33 +57,35 @@
 					(#{groupDetailBean.group.resourcesCount} #{msg.resources})
 					</span>
 				<h:form id="center_header_form">
-	                <p:commandButton id="add_group_resource_button" value="#{msg.upload_resource}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton" type="button" />
-				    <p:tieredMenu overlay="true" trigger="add_group_resource_button" my="left top" at="left bottom" style="width:200px">
+	                <p:commandButton id="add_group_resource_button" value="#{msg.upload_resource}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton" type="button" 
+	                	rendered="#{groupDetailBean.group.canAddResources(userBean.user)}"/>
+				    <p:tieredMenu overlay="true" trigger="add_group_resource_button" my="left top" at="left bottom" style="width:200px" widgetVar="add_resource_menu"
+				    	rendered="#{groupDetailBean.group.canAddResources(userBean.user)}">						
+						<p:menuitem value="#{msg.create_folder}" icon="ui-icon-folder-collapsed" onclick="doAction('create-folder'); PF('add_resource_menu').hide(); return false;" />
+						<p:separator />
 						<p:submenu label="#{msg.create}" icon="fa fa-plus-square">
 							<p:menuitem value="#{msg.office_document}"
-								onclick="doAction('new-file', 'document'); return false;"
+								onclick="doAction('new-file', 'document'); PF('add_resource_menu').hide(); return false;"
 								icon="fa fa-file-word-o" update=":add_resource_panel"
 								oncomplete="update_header()"
 								actionListener="#{addResourceBean.clearForm()}">
 							</p:menuitem>
 							<p:menuitem value="#{msg.office_spreadsheet}"
-								onclick="doAction('new-file','spreadsheet'); return false;"
+								onclick="doAction('new-file','spreadsheet'); PF('add_resource_menu').hide(); return false;"
 								icon="fa fa-file-excel-o" update=":add_resource_panel"
 								oncomplete="update_header()"
 								actionListener="#{addResourceBean.clearForm()}">
 							</p:menuitem>
 							<p:menuitem value="#{msg.office_presentation}"
-								onclick="doAction('new-file', 'presentation'); return false;"
+								onclick="doAction('new-file', 'presentation'); PF('add_resource_menu').hide(); return false;"
 								icon="fa fa-file-powerpoint-o" update=":add_resource_panel"
 								oncomplete="update_header()"
 								actionListener="#{addResourceBean.clearForm()}">
 							</p:menuitem>
 						</p:submenu>
-						<p:menuitem value="#{msg.create_folder}" icon="ui-icon-folder-collapsed" onclick="doAction('create-folder'); return false;" />
-						<p:separator />
-						<p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" onclick="doAction('upload-file'); return false;" />
-						<p:menuitem value="#{msg.upload_url}" icon="ui-icon-link" onclick="doAction('add-website'); return false;" />
-						<p:menuitem value="#{msg['Glossary.add_glossary']}" icon="ui-icon-link" onclick="doAction('add-glossary'); return false;" />
+						<p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" onclick="doAction('upload-file'); PF('add_resource_menu').hide(); return false;" />
+						<p:menuitem value="#{msg.upload_url}" icon="ui-icon-link" onclick="doAction('add-website'); PF('add_resource_menu').hide(); return false;" />
+						<p:menuitem value="#{msg['Glossary.add_glossary']}" icon="ui-icon-link" onclick="doAction('add-glossary'); PF('add_resource_menu').hide(); return false;" />
 					</p:tieredMenu>
 	
 					<p:commandLink rendered="#{groupDetailBean.group.canJoinGroup(userBean.user)}" value="#{msg.join_group}" action="#{groupsBean.joinGroup}"

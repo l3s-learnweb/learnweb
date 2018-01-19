@@ -42,7 +42,6 @@ public class Learnweb
     private Connection dbConnection;
     private InterWeb interweb;
 
-    private PreparedStatement pstmtGetChangeLog;
     private PreparedStatement pstmtLog;
     private PropertiesBundle properties;
     private String serverUrl;
@@ -353,7 +352,7 @@ public class Learnweb
         dbConnection.createStatement().execute("SET @@SQL_MODE = REPLACE(@@SQL_MODE, 'ONLY_FULL_GROUP_BY', '')");
 
         pstmtLog = dbConnection.prepareStatement("INSERT DELAYED INTO `lw_user_log` (`user_id`, `session_id`, `action`, `target_id`, `params`, `group_id`, timestamp, execution_time, client_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 2)");
-        pstmtGetChangeLog = dbConnection.prepareStatement("SELECT * FROM  `admin_change_log` ORDER BY  `admin_change_log`.`log_entry_num` DESC LIMIT 0 , 30");
+
     }
 
     //getters and setters for newly added managers (Chloe) 
@@ -672,22 +671,6 @@ public class Learnweb
     public void setAdminMessage(String adminMessage)
     {
         this.adminMessage = adminMessage;
-    }
-
-    public List<String> getChangeLog() throws SQLException
-    {
-        checkConnection();
-        List<String> messages = new LinkedList<String>();
-        ResultSet rs = pstmtGetChangeLog.executeQuery();
-        String msg = null;
-        while(rs.next())
-        {
-            java.sql.Timestamp ts = rs.getTimestamp(3);
-            msg = rs.getString(2);
-            msg = ts.toString() + " : " + msg;
-            messages.add(msg);
-        }
-        return messages;
     }
 
     /**

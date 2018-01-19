@@ -1,0 +1,149 @@
+<ui:composition template="/templates/main/main.xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html" 
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+						
+	<ui:param name="pageTitle" value="#{msg['ArchiveWeb.homepageTitle']}" />	
+	<ui:param name="disableGrowl" value="true" />
+
+	<ui:define name="center_layout">
+		<h:outputStylesheet name="frontpage/index.css" />
+		<style type="text/css">
+			body{ background-image:url(../resources/archiveWeb/tib.jpg); }
+		</style>
+
+		<div class="content_box">
+			<h1>
+				Welcome to ArchiveWeb
+			</h1>
+
+			<h:outputText value="#{msg['ArchiveWeb.homepage']}" styleClass="homepage_infotext" />
+
+			<div id="div_left">
+
+				<ui:fragment rendered="#{!userBean.loggedIn}">
+
+					<h2 class="page_header">
+						#{msg.loginLabel}
+					</h2>
+					<h:form class="grey_border">
+						<p:focus for="username"/>
+						<h:panelGrid columns="3">
+							<h:outputLabel for="username" value="#{msg.username}:"/>
+							<p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" styleClass="inputbox"/>
+							<p:message styleClass="error" for="username" display="icon"/>
+
+							<h:outputLabel for="password" value="#{msg.password}:"/>
+							<p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" styleClass="inputbox"/>
+							<p:message styleClass="error" for="password" display="icon"/>
+
+							<h:outputText value="" />
+							<p:commandButton styleClass="greenbutton" action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" 
+								style="margin-top:5px;"/>
+							<h:outputText value="" />
+
+						</h:panelGrid>
+						<br />
+						<h:outputLink class="forgotten_password" value="user/password.jsf">
+							<h:outputText value="#{msg.forgotten_password}" />
+						</h:outputLink>
+					</h:form>
+				<br/>
+				<br/>
+				</ui:fragment>
+				
+
+			</div>
+		
+		
+			
+			<div id="div_right">
+
+				<ui:fragment rendered="#{!userBean.loggedIn}">
+
+					<h2 class="page_header">
+						#{msg['ArchiveWeb.sign_up']}
+					</h2>
+					
+					<div class="grey_border">
+						<h:outputText value="#{msg['ArchiveWeb.sign_up_description']}" />
+						<h:form id="registerform">
+							<h:panelGrid columns="3">
+								<h:outputLabel for="register_username" value="#{msg.username}: *" />
+								<p:inputText id="register_username" value="#{archiveWebRegistrationBean.username}"
+									validator="#{archiveWebRegistrationBean.validateUsername}" label="#{msg.username}" />
+								<p:message showSummary="true" showDetail="false"
+									styleClass="error" for="register_username" id="usernameMessage" />
+
+								<h:outputLabel for="register_password" value="#{msg.password}: *" />
+								<p:password id="register_password" value="#{archiveWebRegistrationBean.password}"
+									autocomplete="false" label="#{msg.password}">
+								</p:password>
+								<p:message id="passwordMessage" showSummary="true"
+									showDetail="false" styleClass="error" for="register_password" />
+
+								<h:outputLabel for="email" value="#{msg.email_address}: *" />
+								<p:inputText id="email" value="#{archiveWebRegistrationBean.email}"
+									label="#{msg.email_address}" />
+								<p:message id="emailMessage" showSummary="true"
+									showDetail="false" styleClass="error" for="email" />
+
+								<h:outputLabel for="affiliation" value="#{msg.affiliation}: *" />
+								<p:inputText id="affiliation" value="#{archiveWebRegistrationBean.affiliation}"
+									label="#{msg.affiliation}" />
+								<p:message id="affiliationMessage" showSummary="true"
+									showDetail="false" styleClass="error" for="affiliation" />
+								
+								<h:outputLabel for="description" value="#{msg.description}: *" />
+								<p:inputTextarea id="description" value="#{archiveWebRegistrationBean.description}"
+									label="#{msg.description}" placeholder="#{msg['ArchiveWeb.short_description']}" rows="5" cols="50"/>
+								<p:message id="descriptionMessage" showSummary="true"
+									showDetail="false" styleClass="error" for="description" />
+									
+								<h:outputText value="" />
+								<p:commandButton action="#{archiveWebRegistrationBean.sendMail}"
+									value="#{msg['ArchiveWeb.send_request']}" ajax="false"/>
+								<h:outputText value="" />
+							</h:panelGrid>
+							<br/>
+							<h:outputText value="* #{msg.mandatory_field}" />
+						</h:form>
+					</div>
+					<br/>
+				</ui:fragment>
+				
+				<h2 class="page_header">
+					#{msg['Changelog.title']}
+				</h2>
+				
+				<div class="grey_border">
+					<h4>
+						<h:outputText value="${utilBean.StringToDate('16.10.2015')}">
+	           				<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
+	       				</h:outputText>	
+	       			</h4>
+					<h:panelGrid columns="2" columnClasses="first_column,description">
+						<h:outputText value="#{msg['Changelog.search_filters']}:" class="changes"/>
+						<h:outputText value="#{msg['Changelog.2015_10_search_filters_description']}"/>
+	
+						<h:outputText value="#{msg['Changelog.group_search']}:" class="changes"/>
+						<h:outputText value="#{msg['Changelog.2015_10_group_search_description']}"/>
+					</h:panelGrid>
+
+				</div>
+			</div>
+
+			<br class="clear" />
+
+		</div>
+
+		<div id="index_footer">
+			<h:outputText value="#{msg['ArchiveWeb.index_footer_text']} "/>
+			<!-- <a href="mailto:learnweb-support@l3s.de" >
+				<h:outputText value="learnweb-support@l3s.de"/>
+			</a> -->
+		</div>
+	</ui:define>
+
+</ui:composition>
