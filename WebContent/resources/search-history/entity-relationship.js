@@ -57,6 +57,7 @@ var tip = d3.tip()
 		});
 
 var searchRanks;
+var colorScale = d3.scaleLinear().domain([0, 1]).range([0.1, 0.5]);
 //var linked = new Map();
 function draw()
 {
@@ -134,6 +135,11 @@ function draw()
 				}
 			}
 		},
+		edgeAttr:{
+			id: function(d){
+				return d.data.score == undefined ? 'related-edge' : 'score-edge';
+			}
+		},
 		nodeStyle:{
 			fill:function(d){
 				return d.data.color;
@@ -146,9 +152,10 @@ function draw()
 		},
 		edgeStyle: {
 			fill:function(d){
-				return d.data.color;
-				//console.log(d.edge + ": " + d.data.score + ": " + d3.interpolateGreens(d.data.score));
-				//return d.data.score == undefined ? d.data.color : d3.interpolateReds(d.data.score);
+				//return d.data.color;
+				//console.log(d.edge + ": " + d.data.score + ": " + d3.interpolateGreys(d.data.score));
+				//return d.data.score == undefined ? d.data.color : d3.interpolateGreys(colorScale(d.data.score));
+				return d.data.score == undefined ? d.data.color : d3.interpolateGreens(colorScale(d.data.score));
 			},
 			/*stroke: function(d){
 				console.log(d.edge + ": " + d.data.score);
@@ -158,6 +165,9 @@ function draw()
 		stickyDrag: true
 	});
 	
+	//Adding opacity of 0.5 to score edges which have green color scale
+	d3.selectAll('#score-edge').style("opacity", 0.5);
+
 	d3.selectAll('.node').on('dblclick', function(d) {
 	    if(d.data.type == 'query')
 	    {
@@ -184,13 +194,15 @@ function draw()
 
 //change opacity of those aren't in the map
 var toggle = 0;
-/*function neighboring(a, b){
-	return linked.has(a + "," + b);
-}*/
+function changeEdgeOpacity(e, selectedNode){
+	return selectedNode == e.source.node| selectedNode == e.target.node ? 1 : 0.1;
+}
 
 function connectedNodes(d){
 	var node = d3.selectAll('.node');
-	var edge = d3.selectAll('.edge');
+	//var edge = d3.selectAll('.edge');
+	var scoreEdge = d3.selectAll('#score-edge');
+	var relatedEdge = d3.selectAll('#related-edge');
 	if(toggle == 0){
 		var sj = d.node;
 		var nodes = d.G.neighbors(d.node).concat(d.node);
@@ -198,17 +210,21 @@ function connectedNodes(d){
 			var ob = o.node;
 			return nodes.includes(ob) ? 1:0.1;
 		});
-		edge.style("opacity", function(e){
+		/*edge.style("opacity", function(e){
 			return sj == e.source.node| sj ==e.target.node ? 1:0.1;
-		});
+		});*/
+		scoreEdge.style("opacity", function(e){return changeEdgeOpacity(e, sj);});
+		relatedEdge.style("opacity",function(e){return changeEdgeOpacity(e, sj);});
 		toggle = 1;
 	}
 }
 
-//recover when mouse out
+//reset when mouse out
 function recoverNodes(){
 	d3.selectAll('.node').style("opacity", 1);
-	d3.selectAll('.edge').style("opacity", 1);
+	//d3.selectAll('.edge').style("opacity", 1);
+	d3.selectAll('#score-edge').style("opacity", 0.5);
+	d3.selectAll('#related-edge').style("opacity", 1);
 	toggle = 0;
 }
 
