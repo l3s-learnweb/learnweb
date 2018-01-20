@@ -86,19 +86,19 @@ function draw()
     
 	//add node entities
 	entities.forEach(function(entity){
-		G.addNode(entity, {count: 10, color: '#d0e8e5', type: 'entity', entity_name: entity});
+		G.addNode(entity, {count: width/150, color: '#d0e8e5', type: 'entity', entity_name: entity});
 	});
 		
 	
 	//queries
 	for(i = 0; i < queriesJsonArr.length; i++){
 		if(i == 0)
-			G.addNode(queriesJsonArr[i].query, {count: 15, color: 'yellowgreen', type: 'query', search_id: queriesJsonArr[i].search_id});
+			G.addNode(queriesJsonArr[i].query, {count: width/75, color: 'yellowgreen', type: 'query', search_id: queriesJsonArr[i].search_id});
 		else
-			G.addNode(queriesJsonArr[i].query, {count: 15, color: '#489a83', type: 'query', search_id: queriesJsonArr[i].search_id});
+			G.addNode(queriesJsonArr[i].query, {count: width/75, color: '#489a83', type: 'query', search_id: queriesJsonArr[i].search_id});
 	}
 	
-	//add edge relationships
+	//add edge relationshipss
 	for(i = 0; i < edgesJsonArr.length; i++){
 		var edge = edgesJsonArr[i];
 		G.addEdge(edge.source, edge.target, {color: '#d2dde0', score: edge.score});
@@ -122,12 +122,16 @@ function draw()
 		element: "#canvas",
 		layoutAttr:{
 			charge:-300,
-			linkDistance:150
+			linkDistance:width/7
 		},
 		withLabels: true,
 		nodeAttr:{
 			r: function(d){
-				return d.data.count;
+				if(width>1200){
+					return d.data.count;
+				}else{
+					return d.data.count*1.5;
+				}
 			}
 		},
 		nodeStyle:{
@@ -138,7 +142,7 @@ function draw()
 		},
 		labelStyle:{
 			fill: 'black',
-			'font-size': 8
+			'font-size': 10
 		},
 		edgeStyle: {
 			fill:function(d){
