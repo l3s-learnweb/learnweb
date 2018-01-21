@@ -104,6 +104,7 @@ function draw()
 		var edge = edgesJsonArr[i];
 		G.addEdge(edge.source, edge.target, {color: '#d2dde0', score: edge.score});
 	}
+	console.log(edgesJsonArr.length);
 	
 	//edges between queries and entities
 	for(i = 0; i < queriesJsonArr.length; i++){

@@ -186,21 +186,39 @@ public class SearchHistoryManager
     public Set<Edge> getAllEdges(Set<String> entities)
     {
         Set<Edge> edges = new HashSet<>();
-
+        int maxEdgeScore = 0;
         for(String entity : entities)
         {
             Set<Edge> edgesForEachEntity = this.getEdgesForEntity(entity);
             for(Edge edge : edgesForEachEntity)
             {
                 //Because the getEdgesForEntity returns all edges where source = entity thus source is already in entities 
-                if(entities.contains(edge.target))
+                if(entities.contains(edge.source) && entities.contains(edge.target))
                 {
                     edges.add(edge);
+                    if(edge.getScore() > maxEdgeScore)
+                        maxEdgeScore = (int) edge.getScore();
                 }
             }
         }
+        log.info("max edge score:" + maxEdgeScore);
 
-        return edges;
+        Set<Edge> filteredEdges = new HashSet<Edge>();
+        for(Edge edge : edges)
+        {
+            //log.info(edge.getSource() + "," + edge.getTarget() + ":" + edge.getScore());
+            double score = 0.0;
+            if(maxEdgeScore > 1000)
+                score = 1 - 50d / (50d + edge.getScore());
+            else
+                score = edge.getScore() / maxEdgeScore;
+
+            edge.setScore(score);
+            //log.info(edge.getSource() + "," + edge.getTarget() + ":" + edge.getScore());
+            if(score >= 0.1)
+                filteredEdges.add(edge);
+        }
+        return filteredEdges;
     }
 
     private Set<Edge> getEdgesForEntity(String entity)
@@ -209,7 +227,7 @@ public class SearchHistoryManager
 
         try
         {
-            PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT * FROM learnweb_large.sl_entity_co_occur WHERE score > 0.05 AND source = ?");
+            PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT * FROM learnweb_large.sl_entity_co_occur WHERE score > 0 AND source = ?");
             pstmt.setString(1, entity);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next())
@@ -445,6 +463,11 @@ public class SearchHistoryManager
         public double getScore()
         {
             return score;
+        }
+
+        public void setScore(double score)
+        {
+            this.score = score;
         }
 
         @Override
