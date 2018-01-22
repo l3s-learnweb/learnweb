@@ -167,7 +167,7 @@ function draw()
 	});
 	
 	//Adding opacity of 0.5 to score edges which have green color scale
-	d3.selectAll('#score-edge').style("opacity", 0.3);
+	d3.selectAll('#score-edge').style("opacity", 0.5);
 
 	d3.selectAll('.node').on('dblclick', function(d) {
 	    if(d.data.type == 'query')
@@ -224,7 +224,7 @@ function connectedNodes(d){
 function recoverNodes(){
 	d3.selectAll('.node').style("opacity", 1);
 	//d3.selectAll('.edge').style("opacity", 1);
-	d3.selectAll('#score-edge').style("opacity", 0.3);
+	d3.selectAll('#score-edge').style("opacity", 0.5);
 	d3.selectAll('#related-edge').style("opacity", 1);
 	toggle = 0;
 }

@@ -19,7 +19,11 @@
 	<ui:define name="center_layout">
 	
 		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-		<!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"/> -->
+		<script src="https://d3js.org/d3-color.v1.min.js"></script>
+   		<script src="https://d3js.org/d3-interpolate.v1.min.js"></script>
+    	<script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    	<script src="https://d3js.org/d3-scale.v1.min.js"></script>
+		
 		<h:outputStylesheet library="search-history" name="queryPath.css"  />
 		
 		<script type="text/javascript" src="#{request.contextPath}/resources/search-history/jsnetworkx.js"></script>
@@ -27,14 +31,13 @@
 		
 		<h:form>
 			<p:remoteCommand name="updateKG" actionListener="#{newSearchHistoryBean.actionUpdateKGData}" update="updateGraph" oncomplete="draw()"/>
-			<p:remoteCommand name="setSelectedSearchId" actionListener="#{newSearchHistoryBean.actionSelectedSearchId}" update="snippets" oncomplete="$('.snippet-viewer').show();"/>
-			<p:remoteCommand name="setSelectedEntity" actionListener="#{newSearchHistoryBean.actionSelectedEntity}" update="updateRanks" oncomplete=""/>
+			<p:remoteCommand name="setSelectedSearchId" actionListener="#{newSearchHistoryBean.actionSelectedSearchId}" update="snippets snippet-viewer-entity" oncomplete="$('.snippet-viewer').show();"/>
+			<p:remoteCommand name="setSelectedSearchIds" actionListener="#{newSearchHistoryBean.actionSelectedSearchIds}" update="snippets snippet-viewer-entity" oncomplete="filterSnippets();"/>
 		</h:form>
 		<div class="history-container">
 			<div class="session-timeline">
-				<div>
-					<div style="display:inline-block;"><h3>Sessions</h3></div>
-				</div>
+				<div style="margin-bottom:10px;"><span style="font-size: 1.4rem;font-weight: bold;">Sessions</span></div>
+				
 				<div class="box">
 	            <ul id="first-list">
 	            	<ui:repeat var="session1" value="#{newSearchHistoryBean.sessions}">
@@ -62,309 +65,41 @@
 			</div>
 
 			<div class="knowledge-graph">
-				<div id="canvas" class="w3-container" style="height:540px; margin:0 auto;">
+				<div id="canvas" class="w3-container" style="height:100%; margin:0 auto;">
 					<h:panelGroup id="updateGraph">
-					<button onclick="drawQueryPath()" id="query_path_button">Query Path</button>
-						<div id="queries" style="display:none">
-							<ui:repeat var="query" value="#{newSearchHistoryBean.queries}">
-			                    #{query},
-			                </ui:repeat>
-		                </div>
-		                <div id="entities" style="display:none">
-							<ui:repeat var="entity" value="#{newSearchHistoryBean.entities}" >
-			                    #{entity},
-			                </ui:repeat>
-		                </div>
-		                <div id="entityList" style="display:none">
-							<ui:repeat var="entityl" value="#{newSearchHistoryBean.entityList}" >
-			                    #{entityl},
-			                </ui:repeat>
-		                </div>
-		                <div id="edges" style="display:none">
-							<ui:repeat var="edge" value="#{newSearchHistoryBean.edges}">
-			                    #{edge[0]},#{edge[1]};
-			                </ui:repeat>
-		                </div>
-		                <div id="related" style="display:none">
-							<ui:repeat var="relatedEntities" value="#{newSearchHistoryBean.related}">
-								<ui:repeat var="relatedEntity" value="#{relatedEntities}">
-			                    #{relatedEntity},
-			                    </ui:repeat>;
-			                </ui:repeat>
-		                </div>
+						<button onclick="drawQueryPath()" id="query_path_button">Query Path</button>
 		                <h:outputScript>
 		                	var queriesJsonArr = #{newSearchHistoryBean.queriesAsJson};
+		                	var edgesJsonArr = #{newSearchHistoryBean.edgesAsJson};
 		                </h:outputScript>
 					</h:panelGroup>
 				</div>
 			</div>
-			<div>
-				<h:panelGroup id="updateRanks">
-						<div id="ranks">
-							<ui:repeat var="rank" value="#{newSearchHistoryBean.ranks}">
-					           #{rank},        
-					        </ui:repeat>
-						</div>
-					</h:panelGroup>
-			</div>
 			<div class="snippet-viewer">
-				<span style="font-size:1.4rem;">Query Snippets</span>
+				<h:outputText style="font-size:1.4rem;" value="Snippets: " />
 				<span class="hideIcon">
 					<svg x="0px" y="0px" width="14px" height="14px" viewBox="0 0 10 10" focusable="false">
 						<polygon class="a-s-fa-Ha-pa" fill="#000000" points="10,1.01 8.99,0 5,3.99 1.01,0 0,1.01 3.99,5 0,8.99 1.01,10 5,6.01 8.99,10 10,8.99 6.01,5 ">
 						</polygon>
 					</svg>
 				</span>
+				<h:outputText id="snippet-viewer-entity" style="font-size:1.4rem; font-style: italic;" value="#{newSearchHistoryBean.selectedEntity}"/>
 				<h:panelGroup layout="block" id="snippets">
 					<div style="margin-bottom: 10px;"></div>
-					<ui:repeat var="snippet" value="#{newSearchHistoryBean.getSearchResults(newSearchHistoryBean.selectedSearchId)}">
-						<div class="snippet">
+					<ui:repeat var="snippet" value="#{newSearchHistoryBean.getSearchResults()}">
+						<h:panelGroup layout="block" class="snippet" pt:data-searchId="#{snippet.searchId}" pt:data-rank="#{snippet.rank}">
 							<span><a href="#{snippet.url}"><h:outputText value="#{snippet.title}" escape="false"/></a></span><br/>
-							<span>#{snippet.description}</span>
-						</div>
+							<span class="reference_url">#{snippet.url}</span><br/>
+							<span>#{snippet.description}</span><br/>
+							<span class="snippet_query">query: #{newSearchHistoryBean.getQuery(snippet.searchId)}</span>
+							<span style="color:grey;float:right;">rank: &#35;#{snippet.rank}</span>
+						</h:panelGroup>
 					</ui:repeat>
 				</h:panelGroup>
 			</div>
 		</div>
-		
-		<script>
-		$(document).ready(function(){
-			$('.hideIcon').on('click',function(){
-					$('.snippet-viewer').hide();
-					//$('.knowledge-graph').css('grid-column','1 / -1');
-				});
-			
-			$('.session_block').on('click', function(e){
-				var element = e.currentTarget;
-				var sessionId = element.getAttribute("data-sessionid"); 
-				//console.log(sessionId);
-				$('.box ul li').css("background","#489a83");
-				$(element).parent().css("background","darkgrey");
-				updateKG([
-					{name: "session-id", value: sessionId }
-				]);
-			});
-			
-			$('#query_path_button').hide();
-		});
-		
-		function draw()
-		{
-			var i, j;
-			var G = new jsnx.Graph();
-			var queryStrs = document.getElementById("queries").innerHTML.split(",");
-		    var queries = [];
-		    for (i = 0; i &lt; queryStrs.length-1; i++)
-		    {
-		    	queries.push(queryStrs[i].trim());
-		    }
-		    var len_1 = queries.length;
-		    console.log(queries);
-		    console.log(len_1);
-		    
-		    var entityStrs = document.getElementById("entities").innerHTML.split(",");
-		    var entities = [];
-		    for (i = 0; i &lt; entityStrs.length-1; i++)
-		    {
-		    	entities.push(entityStrs[i].trim());
-		    }
-		    var len_2 = entities.length;
-		    console.log(entities);
-		    console.log(len_2);
-		    
-		    var relatedStrs = document.getElementById("related").innerHTML.split(";");
-		    var related = [];
-		    for (i = 0; i &lt; relatedStrs.length-1; i++)
-		    {
-		    	var relatedStr = relatedStrs[i].trim().split(",");
-		    	var relatedArr = [];
-		    	for (j = 0; j &lt; relatedStr.length-1; j++)
-		    	{
-		    		relatedArr.push(relatedStr[j].trim());
-		    	}
-		    	related.push(relatedArr);
-		    }
-		    var len_3 = related.length;
-		    console.log(related);
-		    
-		    var edgeStrs = document.getElementById("edges").innerHTML.split(";");
-		    var edges = [];
-		    for (i = 0; i &lt; edgeStrs.length-1; i++)
-		    {
-		    	var edgeStr = edgeStrs[i].trim().split(",");
-		    	edges.push([edgeStr[0].trim(), edgeStr[1].trim()]);
-		    }
-		    var len_4 = edges.length;
-		    console.log(edges);
-		    
-			//add nodes
-			//entities
-			for(i=0; i &lt; len_2; i++){
-				G.addNode(entities[i],{count:10, color: '#d0e8e5', type: 'entity', entity_name: entities[i]});
-			}
-			
-			//queries
-			/*for(i=0; i &lt; len_1; i++){
-				G.addNode(queries[i], {count:15, color: '#489a83', type: 'query'});
-			}*/
-			for(i = 0; i &lt; queriesJsonArr.length; i++){
-				G.addNode(queriesJsonArr[i].query, {count: 15, color: '#489a83', type: 'query', search_id: queriesJsonArr[i].search_id});
-			}
-			
-			//add edges
-			//relationships
-			for(i=0; i &lt; len_4; i++){
-				var nodepairs = edges[i];
-				console.log(nodepairs[0] + ", " + nodepairs[1]);
-				G.addEdge(nodepairs[0],nodepairs[1], {color:'#d2dde0'});
-			}
-			
-			//edges between queries and entities
-			for(i=0; i &lt; len_3; i++){
-				var reen = related[i];
-				for(j=0; j &lt; reen.length; j++){
-					G.addEdge(queries[i],reen[j], {color:'#99c2ff'});
-				}
-			}
-			//step edges between query nodes
-			for(i=0; i &lt; len_1; i++){
-				G.addEdge(queries[i], queries[i+1], {color: "black"});
-			}
-			
-			jsnx.draw(G,{
-				element: "#canvas",
-				layoutAttr:{
-					charge:-300,
-					linkDistance:150
-				},
-				withLabels: true,
-				nodeAttr:{
-					r: function(d){
-						return d.data.count;
-					}
-				},
-				nodeStyle:{
-					fill:function(d){
-						return d.data.color;
-					},
-					stroke: 'none'
-				},
-				labelStyle:{
-					fill: 'black',
-					'font-size': 8
-				},
-				edgeStyle: {
-					fill:function(d){
-						return d.data.color;
-					}
-				},
-				stickyDrag: true
-			});
-			
-			d3.selectAll('.node').on('dblclick', function(d) {
-			    if(d.data.type == 'query')
-			    {
-			    	//console.log(d.data.search_id);
-			    	setSelectedSearchId([
-			    	 	{name: "search-id", value: d.data.search_id }
-			    	]);
-			    }else if(d.data.type == 'entity'){
-			    	setSelectedEntity([
-			    		{name: "entity-name", value: d.data.entity_name }
-			    	]);
-			    }
-			});
 
-		}
-
-		//draw query path
-		var tip = d3.tip()
-		  .attr('class', 'd3-tip')
-		  .offset([-10, 0])
-		  //.html("test");
-		  .html(function(d) {
-			var string1 = "<ul>";
-			
-			for(var i=0; i &lt; d.data.entities.length; i++){
-				string1 += "<li>" + d.data.entities[i] + "</li>";
-			}
-			string1 += "</ul>";
-			console.log(string1);
-		    return string1;
-		  });
-		//d3.select("body").call(tip);
-		
-		function drawQueryPath(){
-			var i;
-			var G = new jsnx.DiGraph();
-			var queryStrs = document.getElementById("queries").innerHTML.split(",");
-		    var queArray = [];
-		    for (i = 0; i &lt; queryStrs.length-1; i++)
-		    {
-		    	queArray.push(queryStrs[i].trim());
-		    }
-		    var len = queArray.length;
-		    console.log(queArray);
-		    console.log(len);
-			
-		    var relatedStrs = document.getElementById("related").innerHTML.split(";");
-		    var related = [];
-		    for (i = 0; i &lt; relatedStrs.length-1; i++)
-		    {
-		    	var relatedStr = relatedStrs[i].trim().split(",");
-		    	var relatedArr = [];
-		    	for (j = 0; j &lt; relatedStr.length-1; j++)
-		    	{
-		    		relatedArr.push(relatedStr[j].trim());
-		    	}
-		    	related.push(relatedArr);
-		    }
-		    var len_3 = related.length;
-		    console.log(related);
-		    
-			//addnode		
-			for(i=0; i &lt; len; i++){
-				//var nodeA = {toString: function(){return queArray[i]}}
-				//console.log(enArray[i]);
-				//console.log(JSON.parse(enArray[i].entities));
-				G.addNode(queArray[i], {count:20, color: '#489a83', entities: related[i]});
-			}
-			//addedge
-			for(i=0; i &lt; len-1; i++){
-				G.addEdge(queArray[i], queArray[i+1]);
-			}
-		
-			jsnx.draw(G,{
-				element: "#canvas",
-				layoutAttr:{
-					charge:-200,
-					linkDistance:150
-				},
-				withLabels: true,
-				nodeAttr:{
-					r: function(d){
-						return d.data.count;
-					}
-				},
-				nodeStyle:{
-					fill:function(d){
-						return d.data.color;
-					},
-					stroke: 'none'
-				},
-				labelStyle:{
-					fill: 'black'
-				},
-				stickyDrag: true
-			});
-			
-			d3.select('svg').call(tip);
-			d3.selectAll('.node').on('dblclick',tip.show);
-			d3.selectAll('.node').on('mouseout', tip.hide);
-			
-		}
-		</script>
-
+		<script type="text/javascript" src="#{request.contextPath}/resources/search-history/entity-relationship2.js"></script>
 	</ui:define>
 	
 </ui:composition>
