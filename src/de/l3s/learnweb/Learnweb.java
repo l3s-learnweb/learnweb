@@ -66,7 +66,6 @@ public class Learnweb
     private final LoroManager loroManager;
     private final ResourcePreviewMaker resourcePreviewMaker;
     private final ResourceMetadataExtractor resourceMetadataExtractor;
-    private final YovistoManager yovistoManager;
     private final JobScheduler jobScheduler;
     private final GlossaryManager glossariesManager;
     private final SuggestionLogger suggestionLogger;
@@ -264,7 +263,6 @@ public class Learnweb
         mementoClient = new MementoClient(this);
         loroManager = new LoroManager(this);
         jobScheduler = new JobScheduler(this);
-        yovistoManager = new YovistoManager(this);
         suggestionLogger = new SuggestionLogger(this);
         waybackCapturesLogger = new WaybackCapturesLogger(this);
         glossariesManager = new GlossaryManager(this);
@@ -753,11 +751,6 @@ public class Learnweb
         resourceManager.resetCache();
         groupManager.resetCache();
         courseManager.resetCache();
-    }
-
-    public YovistoManager getYovistoManager()
-    {
-        return yovistoManager;
     }
 
     public SuggestionLogger getSuggestionLogger()
