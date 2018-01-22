@@ -7,12 +7,14 @@ public class Entity
 {
     private double score = 0.0;
     private String entityName = null;
+    private String dbpediaName = null;
     private List<Integer> ranks = null;
 
-    public Entity(String entityName)
+    public Entity(String dbpediaName)
     {
-        this.entityName = entityName;
-        this.ranks = new ArrayList<>();
+        this.dbpediaName = dbpediaName;
+        this.entityName = dbpediaName.replaceAll("[_()]", " ").trim();
+        this.ranks = new ArrayList<Integer>();
     }
 
     public Double getScore()
@@ -48,6 +50,16 @@ public class Entity
         return this.ranks;
     }
 
+    public String getDbpediaName()
+    {
+        return dbpediaName;
+    }
+
+    public void setDbpediaName(String dbpediaName)
+    {
+        this.dbpediaName = dbpediaName;
+    }
+
     @Override
     public int hashCode()
     {
@@ -71,14 +83,15 @@ public class Entity
 
     /**
      * The string format is:
-     * entityName::3;1;5;6;2;...;4;9
+     * dbpediaName;score::3;1;5;6;2;...;4;9
      * 
      * @return
      */
     @Override
     public String toString()
     {
-        StringBuilder builder = new StringBuilder(this.entityName);
+        StringBuilder builder = new StringBuilder(dbpediaName);
+        builder.append(";").append(score);
         builder.append("::");
         boolean flag = false;
         for(int rank : this.ranks)
@@ -92,38 +105,15 @@ public class Entity
     public static Entity fromString(String str)
     {
         String[] tokens = str.split("::");
-        Entity entity = new Entity(tokens[0]);
+        String[] entityInfoArr = tokens[0].split(";");
+        Entity entity = new Entity(entityInfoArr[0]);
+        entity.setScore(Double.parseDouble(entityInfoArr[1]));
         if(tokens.length == 2)
         {
             String[] rankStrs = tokens[1].split(";");
             for(String rankStr : rankStrs)
-            {
                 entity.ranks.add(Integer.parseInt(rankStr));
-            }
         }
         return entity;
     }
-    /*
-     * public static void main(String[] args) throws Exception
-    {
-        EntitySet entitySet = new EntitySet();
-    
-        // add entities to set.
-        entitySet.add(new Entity("e1"));
-        entitySet.add(new Entity("e2"));
-    
-        // update their ranks
-        entitySet.get("e1").addRank(1);
-        entitySet.get("e2").addRank(2);
-    
-        // transform an entity set to string list, so that it can be easily serialized and then stored in database.
-        List<String> strs = entitySet.toStringList();
-    
-        // database operations...
-    
-        // then, after we get a string list from database, we can transform the strings to entities.
-        Entity entity = Entity.fromString(strs.get(1));
-        System.out.println(entity);
-    }
-     */
 }
