@@ -87,7 +87,7 @@ function draw()
     
 	//add node entities
 	entities.forEach(function(entity){
-		G.addNode(entity, {count: width/150, color: '#d0e8e5', type: 'entity', entity_name: entity});
+		G.addNode(entity, {count: width/150, color: '#84cccc', type: 'entity', entity_name: entity});
 	});
 		
 	
@@ -124,7 +124,7 @@ function draw()
 		element: "#canvas",
 		layoutAttr:{
 			charge:-300,
-			linkDistance:width/7
+			linkDistance: width/6
 		},
 		withLabels: true,
 		nodeAttr:{
@@ -167,7 +167,7 @@ function draw()
 	});
 	
 	//Adding opacity of 0.5 to score edges which have green color scale
-	d3.selectAll('#score-edge').style("opacity", 0.5);
+	d3.selectAll('#score-edge').style("opacity", 0.3);
 
 	d3.selectAll('.node').on('dblclick', function(d) {
 	    if(d.data.type == 'query')
@@ -224,7 +224,7 @@ function connectedNodes(d){
 function recoverNodes(){
 	d3.selectAll('.node').style("opacity", 1);
 	//d3.selectAll('.edge').style("opacity", 1);
-	d3.selectAll('#score-edge').style("opacity", 0.5);
+	d3.selectAll('#score-edge').style("opacity", 0.3);
 	d3.selectAll('#related-edge').style("opacity", 1);
 	toggle = 0;
 }
