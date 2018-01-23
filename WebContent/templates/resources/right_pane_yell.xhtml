@@ -105,11 +105,11 @@
 									</p:column>
 								</p:row>
 
-								<p:row rendered="#{addResourceBean.resource.storageType == 1}">
+								<p:row rendered="#{addResourceBean.resource.storageType == 1 and not (addResourceBean.resource.type eq 'glossary' or addResourceBean.resource.type eq 'survey')}">
 									<p:column>
 										<h:outputText value="#{msg.file}:" />
 									</p:column>
-									<p:column rendered="#{addResourceBean.formStep == 1}">
+									<p:column rendered="#{addResourceBean.formStep == 1 }">
 										<p:fileUpload
 											fileUploadListener="#{addResourceBean.handleFileUpload}"
 											mode="advanced" auto="true" sizeLimit="10000000000"
@@ -136,7 +136,7 @@
 									</p:column>
 								</p:row>
 
-								<p:row rendered="#{addResourceBean.resource.storageType == 3}">
+								<p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'glossary'}">
 									<p:column>
 										<h:outputText value="#{msg.title}:" />
 									</p:column>
@@ -146,7 +146,7 @@
 											requiredmessage="#{msg.mandatory_field}" id="title_input" />
 									</p:column>
 								</p:row>
-								<p:row rendered="#{addResourceBean.resource.storageType == 4}">
+								<p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'survey'}">
 									<p:column>
 										<h:outputText value="#{msg.title}:" />
 									</p:column>
@@ -154,7 +154,7 @@
 										<p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="survey_title"/>
 									</p:column>
 									</p:row>
-									<p:row rendered="#{addResourceBean.resource.storageType == 4}">
+									<p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'survey'}">
 									<p:column>
 										<h:outputText value="#{msg.description}:" />
 									</p:column>
@@ -163,7 +163,7 @@
 									</p:column>
 									
 									</p:row>
-									<p:row rendered="#{addResourceBean.resource.storageType == 4}">
+									<p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'survey'}">
 									<p:column>
 										<h:outputText value="Courses: "/>
 									</p:column>
@@ -175,7 +175,7 @@
         							</p:selectCheckboxMenu>
 									</p:column>
 									</p:row>
-									<p:row rendered="#{addResourceBean.resource.storageType == 4}">
+									<p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'survey'}">
 									<p:column>
 										<h:outputText value="survey Open Date: " />
 									</p:column>
@@ -183,7 +183,7 @@
 										<p:calendar id="open"  value="#{createsurveyBean.open}" showOn="button"></p:calendar>
 									</p:column>
 									</p:row>
-									<p:row rendered="#{addResourceBean.resource.storageType == 4}">
+									<p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'survey'}">
 									<p:column>	
 										<h:outputText  value="survey Close Date: " />
 									</p:column>
@@ -217,7 +217,7 @@
 							update=":growl :add_resource_panel :datagrid"
 							action="#{addResourceBean.addGlossary}" ajax="true"
 							oncomplete="update_header();resourceDND();"
-							rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.storageType == 3}">
+							rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'glossary'}">
 							<f:setPropertyActionListener target="#{bean.reloadLogs}"
 								value="true" />
 							<f:setPropertyActionListener target="#{bean.clickedResource}"
@@ -227,7 +227,7 @@
 								value="#{addResourceBean.resource}" />
 						</p:commandButton>
                         <p:commandButton id="create_survey_button" value="Create survey" styleClass="greenbutton float-right" update=":growl :add_resource_panel :datagrid" 
-							action="#{addResourceBean.addsurvey}" ajax="true" oncomplete="update_header();resourceDND();" rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.storageType == 4}">
+							action="#{addResourceBean.addSurvey}" ajax="true" oncomplete="update_header();resourceDND();" rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'survey'}">
 							<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>
 							<f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"/>
 							<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{addResourceBean.resource}"/>
@@ -318,11 +318,11 @@
 								<a class="hyperlink" onclick="lightbox_open(); change_lightbox_content(true);" style="float:right;" title="#{msg['Archive.change_thumbnail']}?">
 									<h:graphicImage style="cursor:pointer;" value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg['Archive.change_thumbnail']}?" rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}"/>
 								</a>
-								<h:outputLink value="showGlossary.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.source eq 'glossary'}">
+								<h:outputLink value="showGlossary.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.type eq 'glossary'}">
 											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
 											#{msg["Glossary.open"]}
 								</h:outputLink>
-								<h:outputLink value="../templates/resources/survey.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.source eq 'survey'}">
+								<h:outputLink value="../templates/resources/survey.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.type eq 'survey'}">
 											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
 											Open survey
 								</h:outputLink>
