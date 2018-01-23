@@ -55,6 +55,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private int glossaryId;
     private List<GlossaryItems> items = new ArrayList<GlossaryItems>();
     private List<GlossaryItems> filteredItems = new ArrayList<GlossaryItems>();
+    private int numberOfEntries;
 
     private GlossaryItems selectedGlossaryItem;
 
@@ -607,6 +608,16 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public void setFilteredItems(List<GlossaryItems> filteredItems)
     {
         this.filteredItems = filteredItems;
+    }
+
+    public int getNumberOfEntries()
+    {
+        return numberOfEntries;
+    }
+
+    public void setNumberOfEntries(int numberOfEntries)
+    {
+        this.numberOfEntries = numberOfEntries;
     }
 
 }

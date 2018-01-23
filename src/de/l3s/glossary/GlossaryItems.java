@@ -17,7 +17,7 @@ public class GlossaryItems implements Serializable
     private int glossId;
 
     private List<LanguageItem> finalItems;
-
+    private String englishTerm = "";
     private String value;
     private String glossIdString;
     private String pronounciation;
@@ -188,6 +188,16 @@ public class GlossaryItems implements Serializable
     public void setDate(Timestamp date)
     {
         this.date = date;
+    }
+
+    public String getEnglishTerm()
+    {
+        return englishTerm;
+    }
+
+    public void setEnglishTerm(String englishTerm)
+    {
+        this.englishTerm = englishTerm;
     }
 
 }

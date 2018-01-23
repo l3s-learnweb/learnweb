@@ -296,7 +296,7 @@ public class GlossaryManager
     {
         List<GlossaryItems> items = new ArrayList<GlossaryItems>();
         String mainDetails = "SELECT * FROM `lw_resource_glossary` WHERE `resource_id` = ? AND `deleted`= ?";
-        String termDetails = "SELECT * FROM `lw_resource_glossary_terms` WHERE `glossary_id` = ? AND `deleted`= ?";
+        String termDetails = "SELECT * FROM `lw_resource_glossary_terms` WHERE `glossary_id` = ? AND `deleted`= ? order by(`language`)";
         PreparedStatement preparedStmnt = null;
         ResultSet result = null;
 
@@ -317,7 +317,7 @@ public class GlossaryManager
                 ResultSet termResults = ps.executeQuery();
                 ResultSet termTime = ps.executeQuery();
                 Timestamp latestTimestamp = getLatestTimestamp(glossaryId, result.getTimestamp("timestamp"), termTime);
-
+                String englishTerm = null;
                 while(termResults.next())
                 {
 
@@ -340,9 +340,13 @@ public class GlossaryManager
                     gloss.setDate(latestTimestamp);
 
                     if(termResults.getString("language").contains("uk"))
+                    {
                         gloss.setLanguage("English");
+                        englishTerm = termResults.getString("term");
+                    }
                     else
                         gloss.setLanguage("Italian");
+                    gloss.setEnglishTerm(englishTerm);
 
                     LanguageItem uk = new LanguageItem();
                     uk.setAcronym(termResults.getString("acronym"));

@@ -4,6 +4,7 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
+	
 	lang="#{userBean.localeCode}">
 
 	<ui:param name="pageTitle" value="#{msg['Glossary.glossary']}" />
@@ -23,15 +24,14 @@
 		<h:panelGroup id="main_component" layout="block">
 			<h:form prependId="false">
 				<p:dataTable id="my_gloss_table" var="item"
-					value="#{glossaryBean.items}" sortBy="#{item.date}"
+					value="#{glossaryBean.items}" sortBy="#{item.englishTerm}"
 					widgetVar="glossTable" tableStyle="table-layout: auto;"
 					paginator="true" rows="12" paginatorPosition="bottom"
 					filteredValue="#{glossaryBean.filteredItems}"
 					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-					sortOrder="descending">
+					sortOrder="ascending">
 					<p:ajax event="filter" oncomplete="groupRow(2)" />
 					<p:ajax event="page" oncomplete="groupRow(2)"></p:ajax>
-
 					<f:facet name="header">
 						<p:outputPanel autoUpdate="true">
 							<h:outputText value="#{msg['Glossary.search_all_field']}" />
@@ -39,6 +39,7 @@
 								onkeyup="PF('glossTable').filter()" style="width:150px"
 								placeholder="#{msg['Glossary.search_filter_placeholder']}" />
 						</p:outputPanel>
+						
 					</f:facet>
 					<f:facet name="{Exporters}">
 						<h:commandLink styleClass="excel_export_todo_use">
@@ -122,10 +123,15 @@
 						filterBy="#{item.phraseology}" filterStyle="display:none">
 						<h:outputText value="#{item.phraseology}" />
 					</p:column>
-					<p:column headerText="Date" style="display:none">
-						<h:outputText value="#{item.date}"></h:outputText>
+					<p:column headerText="english terms for ordering" style="display:none">
+					
+						<h:outputText value="#{item.englishTerm}"></h:outputText>
 					</p:column>
-
+					<f:facet name="footer">
+					<p:outputPanel >
+							<h:outputText value="Total Entries = #{glossaryBean.items.size()}"></h:outputText>
+						</p:outputPanel>	
+					</f:facet>
 
 
 
