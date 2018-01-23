@@ -515,7 +515,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     public void setClickedResource(Resource clickedResource)
     {
         this.clickedResource = clickedResource;
-        if(clickedResource.isOfficeResource())
+        if(clickedResource != null && clickedResource.isOfficeResource())
         {
             fileEditorBean.fillInFileInfo(clickedResource);
         }
