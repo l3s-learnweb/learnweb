@@ -462,6 +462,12 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         clearSubmissionLists();
     }
 
+    public void deleteSubmission()
+    {
+        getLearnweb().getSubmissionManager().deleteSubmission(selectedSubmission.getId());
+        clearSubmissionLists();
+    }
+
     public void clearSubmissionLists()
     {
         pastSubmissions = null;
@@ -633,5 +639,12 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
     public boolean isSubmissionOverviewReadOnly()
     {
         return submissionOverviewReadOnly;
+    }
+
+    public String getCourseTitle(int courseId)
+    {
+        if(courseId > 0)
+            return getLearnweb().getCourseManager().getCourseById(courseId).getTitle();
+        return null;
     }
 }

@@ -31,7 +31,7 @@ public class SubmissionManager
         ArrayList<Submission> submissions = new ArrayList<Submission>();
         try
         {
-            PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE course_id=? ORDER BY close_datetime");
+            PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE course_id=? AND deleted=0 ORDER BY close_datetime");
             ps.setInt(1, courseId);
             ResultSet rs = ps.executeQuery();
             while(rs.next())
@@ -71,7 +71,7 @@ public class SubmissionManager
                 builder.append("?,");
             }
 
-            String pStmt = "SELECT * FROM lw_submit WHERE course_id IN (" + builder.deleteCharAt(builder.length() - 1).toString() + ") ORDER BY close_datetime";
+            String pStmt = "SELECT * FROM lw_submit WHERE course_id IN (" + builder.deleteCharAt(builder.length() - 1).toString() + ") AND deleted=0 ORDER BY close_datetime";
 
             PreparedStatement ps = learnweb.getConnection().prepareStatement(pStmt);
             int index = 1;
@@ -119,7 +119,7 @@ public class SubmissionManager
                 builder.append("?,");
             }
 
-            String pStmt = "SELECT * FROM lw_submit WHERE course_id IN (" + builder.deleteCharAt(builder.length() - 1).toString() + ") AND close_datetime >= NOW() AND open_datetime < NOW() ORDER BY close_datetime";
+            String pStmt = "SELECT * FROM lw_submit WHERE course_id IN (" + builder.deleteCharAt(builder.length() - 1).toString() + ") AND close_datetime >= NOW() AND open_datetime < NOW() AND deleted=0 ORDER BY close_datetime";
 
             PreparedStatement ps = learnweb.getConnection().prepareStatement(pStmt);
             int index = 1;
@@ -222,6 +222,22 @@ public class SubmissionManager
         }
     }
 
+    public void deleteSubmission(int submissionId)
+    {
+        try
+        {
+            String query = "UPDATE lw_submit SET deleted = 1 WHERE submission_id = ?";
+            PreparedStatement update = learnweb.getConnection().prepareStatement(query);
+            update.setInt(1, submissionId);
+            update.executeUpdate();
+            update.close();
+        }
+        catch(SQLException e)
+        {
+            log.error("Error while deleting submission " + submissionId, e);
+        }
+    }
+
     public List<Resource> getResourcesByIdAndUserId(int submissionId, int userId)
     {
         List<Resource> submittedResources = new ArrayList<Resource>();
@@ -250,7 +266,7 @@ public class SubmissionManager
         HashMap<Integer, Integer> usersSubmissions = new HashMap<Integer, Integer>();
         try
         {
-            PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT t1.user_id, COUNT(*) as count FROM (SELECT DISTINCT submission_id, user_id FROM lw_submit_resource) t1 JOIN lw_submit t2 USING(submission_id) WHERE course_id = ? GROUP BY user_id");
+            PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT t1.user_id, COUNT(*) as count FROM (SELECT DISTINCT submission_id, user_id FROM lw_submit_resource) t1 JOIN lw_submit t2 USING(submission_id) WHERE course_id = ? AND deleted=0 GROUP BY user_id");
             ps.setInt(1, courseId);
             ResultSet rs = ps.executeQuery();
             while(rs.next())
