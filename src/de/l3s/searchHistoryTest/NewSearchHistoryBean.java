@@ -54,10 +54,13 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
      */
     public void preRenderView()
     {
+        if(getUser() == null)
+            return;
+
         if(isAjaxRequest())
             return;
 
-        if(getUser() != null)
+        if(userId == 0)
             userId = getUser().getId();
     }
 
@@ -246,6 +249,16 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         if(timeFormatter == null)
             timeFormatter = DateFormat.getTimeInstance(DateFormat.SHORT, locale);
         return timeFormatter.format(date);
+    }
+
+    public int getUserId()
+    {
+        return userId;
+    }
+
+    public void setUserId(int userId)
+    {
+        this.userId = userId;
     }
 
 }

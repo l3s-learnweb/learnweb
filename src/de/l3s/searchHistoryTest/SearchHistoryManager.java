@@ -40,7 +40,7 @@ public class SearchHistoryManager
         try
         {
             PreparedStatement pstmt = learnweb.getConnection().prepareStatement(
-                    "SELECT t1.search_id, t1.query FROM learnweb_large.sl_query t1 join learnweb_main.lw_user_log t2 ON (t1.search_id=t2.target_id AND t1.user_id=t2.user_id AND t1.query=t2.params)  WHERE t2.action = 5 AND t1.mode='text' AND t1.language='en' AND t2.session_id=? AND t1.user_id != 0  ORDER BY t1.timestamp ASC");
+                    "SELECT t1.search_id, t1.query FROM learnweb_large.sl_query t1 join learnweb_main.lw_user_log t2 ON (t1.search_id=t2.target_id AND t1.user_id=t2.user_id AND t1.query=t2.params)  WHERE t2.action = 5 AND t1.mode='text' AND t2.session_id=? AND t1.user_id != 0  ORDER BY t1.timestamp ASC");
             pstmt.setString(1, sessionId);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next())
@@ -156,7 +156,7 @@ public class SearchHistoryManager
     {
         List<Session> sessions = new ArrayList<Session>();
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement(
-                "SELECT t2.session_id FROM learnweb_large.`sl_query` t1 join learnweb_main.lw_user_log t2 WHERE t1.search_id=t2.target_id AND t2.action = 5 AND t1.user_id=t2.user_id AND t1.query=t2.params AND t1.mode='text' AND t1.language='en' AND t1.user_id=? GROUP BY t2.session_id ORDER BY t1.timestamp DESC");
+                "SELECT t2.session_id FROM learnweb_large.`sl_query` t1 join learnweb_main.lw_user_log t2 WHERE t1.search_id=t2.target_id AND t2.action = 5 AND t1.user_id=t2.user_id AND t1.query=t2.params AND t1.mode='text' AND t1.user_id=? GROUP BY t2.session_id ORDER BY t1.timestamp DESC");
         pStmt.setInt(1, userId);
         ResultSet rs = pStmt.executeQuery();
 
@@ -165,7 +165,7 @@ public class SearchHistoryManager
             String sessionId = rs.getString("session_id");
             LinkedList<Query> queries = new LinkedList<Query>();
             PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement(
-                    "SELECT t1.search_id, t1.query, t1.timestamp, t1.service FROM learnweb_large.`sl_query` t1 join learnweb_main.lw_user_log t2 WHERE t1.search_id=t2.target_id AND t2.action = 5 AND t1.user_id=t2.user_id AND t1.query=t2.params AND t1.mode='text' AND t1.language='en' AND t2.session_id=? ORDER BY t1.timestamp");
+                    "SELECT t1.search_id, t1.query, t1.timestamp, t1.service FROM learnweb_large.`sl_query` t1 join learnweb_main.lw_user_log t2 WHERE t1.search_id=t2.target_id AND t2.action = 5 AND t1.user_id=t2.user_id AND t1.query=t2.params AND t1.mode='text' AND t2.session_id=? ORDER BY t1.timestamp");
             pStmt2.setString(1, sessionId);
             ResultSet rs2 = pStmt2.executeQuery();
             while(rs2.next())
