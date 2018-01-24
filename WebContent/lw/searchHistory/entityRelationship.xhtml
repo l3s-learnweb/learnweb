@@ -37,11 +37,15 @@
 			<p:remoteCommand name="setSelectedSearchIds" actionListener="#{newSearchHistoryBean.actionSelectedSearchIds}" update="snippets snippet-viewer-entity" oncomplete="filterSnippets();"/>
 			<p:remoteCommand name="setSelectedGroupId" actionListener="#{newSearchHistoryBean.actionSelectedGroupId}" update="updateSessions" oncomplete="bindClickToSessionBlock();"/>
 			<p:remoteCommand name="setGroupUnselected" actionListener="#{newSearchHistoryBean.actionSetGroupUnselected}" update="updateSessions" oncomplete="bindClickToSessionBlock();"/>
-		
 		</h:form>
 		<div class="history-container">
 			<h:panelGroup id="updateSessions">
+				
 				<div class="session-timeline">
+					<div style="margin:auto;width:63%;">
+						<button onclick="selectGroupId()" id="selected_group_id_button" class="greenbutton">My Groups</button>
+						<button onclick="unselectGroup()" id="group_unselected_button" class="greenbutton">My History</button>
+					</div>
 					<div style="margin-bottom:10px;"><span style="font-size: 1.4rem;font-weight: bold;">Sessions</span></div>
 					
 					<div class="box">
@@ -72,10 +76,9 @@
 			
 			<div class="knowledge-graph">
 				<div id="canvas" class="w3-container" style="height:100%; margin:0 auto;">
-				<button onclick="selectGroupId()" id="selected_group_id_button">My Groups</button>
-				<button onclick="unselectGroup()" id="group_unselected_button">My History</button>
+
 					<h:panelGroup id="updateGraph">
-						<button onclick="drawQueryPath()" id="query_path_button">Query Path</button>
+						<!-- <button onclick="drawQueryPath()" id="query_path_button">Query Path</button> -->
 		                <h:outputScript>
 		                	var queriesJsonArr = #{newSearchHistoryBean.queriesAsJson};
 		                	var edgesJsonArr = #{newSearchHistoryBean.edgesAsJson};

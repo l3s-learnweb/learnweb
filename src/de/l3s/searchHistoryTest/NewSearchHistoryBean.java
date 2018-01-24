@@ -71,7 +71,6 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
     public NewSearchHistoryBean()
     {
-        log.info("Initializing Search History Bean");
         title = "Search History";
         queries = new ArrayList<String>();
         entities = new HashSet<String>();
@@ -95,7 +94,6 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         List<Query> queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromCache(userId, selectedSessionId);
         System.out.println(queries.size() + " queries got for user (" + userId + ") and session id (" + selectedSessionId + ")");
         entities.clear();
-        //searchIdQueryMap.clear();
 
         JSONArray queriesArr = new JSONArray();
         for(Query q : queries)
