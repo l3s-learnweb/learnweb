@@ -10,6 +10,7 @@
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="user_id" value="#{newSearchHistoryBean.userId}" />
+			<f:viewParam name="group_id" value="#{newSearchHistoryBean.selectedGroupId}" />
 			<f:event type="preRenderView" listener="#{newSearchHistoryBean.preRenderView}" />
 		</f:metadata>
 	</ui:define>
@@ -34,39 +35,45 @@
 			<p:remoteCommand name="updateKG" actionListener="#{newSearchHistoryBean.actionUpdateKGData}" update="updateGraph" oncomplete="draw()"/>
 			<p:remoteCommand name="setSelectedSearchId" actionListener="#{newSearchHistoryBean.actionSelectedSearchId}" update="snippets snippet-viewer-entity" oncomplete="$('.snippet-viewer').show();"/>
 			<p:remoteCommand name="setSelectedSearchIds" actionListener="#{newSearchHistoryBean.actionSelectedSearchIds}" update="snippets snippet-viewer-entity" oncomplete="filterSnippets();"/>
+			<p:remoteCommand name="setSelectedGroupId" actionListener="#{newSearchHistoryBean.actionSelectedGroupId}" update="updateSessions" oncomplete="bindClickToSessionBlock();"/>
+			<p:remoteCommand name="setGroupUnselected" actionListener="#{newSearchHistoryBean.actionSetGroupUnselected}" update="updateSessions" oncomplete="bindClickToSessionBlock();"/>
+		
 		</h:form>
 		<div class="history-container">
-			<div class="session-timeline">
-				<div style="margin-bottom:10px;"><span style="font-size: 1.4rem;font-weight: bold;">Sessions</span></div>
-				
-				<div class="box">
-	            <ul id="first-list">
-	            	<ui:repeat var="session1" value="#{newSearchHistoryBean.sessions}">
-	                <li>
-	                    <span></span>
-	                    <h:panelGroup layout="block" style="cursor:pointer" class="session_block" pt:data-sessionId="#{session1.sessionId}">
-		                    <div class="title"></div>
-		                    <div class="info">
-		                    	<ui:repeat var="query" value="#{session1.queries}">
-		                    		<span class="source_#{query.service}">#{query.query}</span>
-		                    	</ui:repeat>
-		                    	
-		                    </div>
-		                    <div class="time">
-		                        <span>#{newSearchHistoryBean.formatDate(session1.startTimestamp, userBean.locale)}</span>
-		                       	<span>#{newSearchHistoryBean.formatTime(session1.startTimestamp, userBean.locale)}</span>
-		                        <span>#{newSearchHistoryBean.formatTime(session1.endTimestamp, userBean.locale)}</span>
-		                    </div>
-	                    </h:panelGroup>
-	                </li>
-	                </ui:repeat>
-				</ul>
+			<h:panelGroup id="updateSessions">
+				<div class="session-timeline">
+					<div style="margin-bottom:10px;"><span style="font-size: 1.4rem;font-weight: bold;">Sessions</span></div>
+					
+					<div class="box">
+		            <ul id="first-list">
+		            	<ui:repeat var="session1" value="#{newSearchHistoryBean.sessions}">
+		                <li>
+		                    <span></span>
+		                    <h:panelGroup layout="block" style="cursor:pointer" class="session_block" pt:data-sessionid="#{session1.sessionId}">
+			                    <div class="title"></div>
+			                    <div class="info">
+			                    	<ui:repeat var="query" value="#{session1.queries}">
+			                    		<span class="source_#{query.service}">#{query.query}</span>
+			                    	</ui:repeat>
+			                    	
+			                    </div>
+			                    <div class="time">
+			                        <span>#{newSearchHistoryBean.formatDate(session1.startTimestamp, userBean.locale)}</span>
+			                       	<span>#{newSearchHistoryBean.formatTime(session1.startTimestamp, userBean.locale)}</span>
+			                        <span>#{newSearchHistoryBean.formatTime(session1.endTimestamp, userBean.locale)}</span>
+			                    </div>
+		                    </h:panelGroup>
+		                </li>
+		                </ui:repeat>
+					</ul>
+					</div>
 				</div>
+			</h:panelGroup>
 			
-			</div>
-
 			<div class="knowledge-graph">
 				<div id="canvas" class="w3-container" style="height:100%; margin:0 auto;">
+				<button onclick="selectGroupId()" id="selected_group_id_button">My Groups</button>
+				<button onclick="unselectGroup()" id="group_unselected_button">My History</button>
 					<h:panelGroup id="updateGraph">
 						<button onclick="drawQueryPath()" id="query_path_button">Query Path</button>
 		                <h:outputScript>
