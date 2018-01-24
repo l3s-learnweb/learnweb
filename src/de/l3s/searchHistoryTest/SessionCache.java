@@ -21,24 +21,40 @@ public class SessionCache
 
     private SessionCache()
     {
-        cache = new HashMap<>();
+        userSessionCache = new HashMap<>();
+        groupSessionCache = new HashMap<>();
     }
 
-    private Map<Integer, List<Session>> cache = null;
+    private Map<Integer, List<Session>> userSessionCache = null;
+    private Map<Integer, List<Session>> groupSessionCache = null;
 
-    public synchronized void put(int userId, List<Session> sessions)
+    public synchronized void cacheByUserId(int userId, List<Session> sessions)
     {
-        this.cache.put(userId, sessions);
+        this.userSessionCache.put(userId, sessions);
     }
 
-    public synchronized List<Session> get(int userId)
+    public synchronized List<Session> getByUserId(int userId)
     {
-        return this.cache.get(userId);
+        return this.userSessionCache.get(userId);
     }
 
-    public synchronized boolean exists(int userId)
+    public synchronized boolean existsUserId(int userId)
     {
-        return this.cache.containsKey(userId);
+        return this.userSessionCache.containsKey(userId);
     }
 
+    public synchronized void cacheByGroupId(int groupId, List<Session> sessions)
+    {
+        this.groupSessionCache.put(groupId, sessions);
+    }
+
+    public synchronized List<Session> getByGroupId(int groupId)
+    {
+        return this.groupSessionCache.get(groupId);
+    }
+
+    public synchronized boolean existsGroupId(int groupId)
+    {
+        return this.groupSessionCache.containsKey(groupId);
+    }
 }

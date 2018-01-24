@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.Resource.ResourceType;
 import de.l3s.util.Sql;
 
 public class SearchHistoryManager
@@ -40,7 +41,7 @@ public class SearchHistoryManager
         try
         {
             PreparedStatement pstmt = learnweb.getConnection().prepareStatement(
-                    "SELECT t1.search_id, t1.query FROM learnweb_large.sl_query t1 join learnweb_main.lw_user_log t2 ON (t1.search_id=t2.target_id AND t1.user_id=t2.user_id AND t1.query=t2.params)  WHERE t2.action = 5 AND t1.mode='text' AND t2.session_id=? AND t1.user_id != 0  ORDER BY t1.timestamp ASC");
+                    "SELECT t1.search_id, t1.query FROM learnweb_large.sl_query t1 join learnweb_main.lw_user_log t2 ON (t1.search_id=t2.target_id AND t1.user_id=t2.user_id AND t1.query=t2.params)  WHERE t2.action = 5 AND t1.mode='text' AND t1.language='en' AND t2.session_id=? AND t1.user_id != 0  ORDER BY t1.timestamp ASC");
             pstmt.setString(1, sessionId);
             ResultSet rs = pstmt.executeQuery();
             while(rs.next())
@@ -134,11 +135,11 @@ public class SearchHistoryManager
     {
         List<Query> queries = null;
 
-        if(SessionCache.Instance().exists(userId))
+        if(SessionCache.Instance().existsUserId(userId))
         {
             queries = new ArrayList<>();
 
-            List<Session> sessions = SessionCache.Instance().get(userId);
+            List<Session> sessions = SessionCache.Instance().getByUserId(userId);
 
             for(Session session : sessions)
             {
@@ -156,7 +157,7 @@ public class SearchHistoryManager
     {
         List<Session> sessions = new ArrayList<Session>();
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement(
-                "SELECT t2.session_id FROM learnweb_large.`sl_query` t1 join learnweb_main.lw_user_log t2 WHERE t1.search_id=t2.target_id AND t2.action = 5 AND t1.user_id=t2.user_id AND t1.query=t2.params AND t1.mode='text' AND t1.user_id=? GROUP BY t2.session_id ORDER BY t1.timestamp DESC");
+                "SELECT t2.session_id FROM learnweb_large.`sl_query` t1 join learnweb_main.lw_user_log t2 WHERE t1.search_id=t2.target_id AND t2.action = 5 AND t1.user_id=t2.user_id AND t1.query=t2.params AND t1.mode='text' AND t1.language='en' AND t1.user_id=? GROUP BY t2.session_id ORDER BY t1.timestamp DESC");
         pStmt.setInt(1, userId);
         ResultSet rs = pStmt.executeQuery();
 
@@ -165,7 +166,7 @@ public class SearchHistoryManager
             String sessionId = rs.getString("session_id");
             LinkedList<Query> queries = new LinkedList<Query>();
             PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement(
-                    "SELECT t1.search_id, t1.query, t1.timestamp, t1.service FROM learnweb_large.`sl_query` t1 join learnweb_main.lw_user_log t2 WHERE t1.search_id=t2.target_id AND t2.action = 5 AND t1.user_id=t2.user_id AND t1.query=t2.params AND t1.mode='text' AND t2.session_id=? ORDER BY t1.timestamp");
+                    "SELECT t1.search_id, t1.query, t1.timestamp, t1.service FROM learnweb_large.`sl_query` t1 join learnweb_main.lw_user_log t2 WHERE t1.search_id=t2.target_id AND t2.action = 5 AND t1.user_id=t2.user_id AND t1.query=t2.params AND t1.mode='text' AND t1.language='en' AND t2.session_id=? ORDER BY t1.timestamp");
             pStmt2.setString(1, sessionId);
             ResultSet rs2 = pStmt2.executeQuery();
             while(rs2.next())
@@ -178,7 +179,7 @@ public class SearchHistoryManager
             sessions.add(session);
         }
 
-        SessionCache.Instance().put(userId, sessions);
+        SessionCache.Instance().cacheByUserId(userId, sessions);
 
         return sessions;
     }
@@ -251,17 +252,97 @@ public class SearchHistoryManager
         return edges;
     }
 
-    /*
-    public static void main(String[] args) throws ClassNotFoundException, SQLException
+    public List<Session> getSessionsForGroupId(int groupId) throws Exception
+    {
+        List<Session> sessions = new ArrayList<>();
+        Set<String> sessionIds = new HashSet<>();
+
+        if(SessionCache.Instance().existsGroupId(groupId))
+        {
+            return SessionCache.Instance().getByGroupId(groupId);
+        }
+
+        PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT t1.session_id, t1.params from learnweb_main.lw_user_log t1 JOIN learnweb_main.lw_resource t2 ON (t1.target_id=t2.resource_id) WHERE t1.action = 15 AND t2.group_id=? AND t2.type='website'");
+        pstmt.setInt(1, groupId);
+        ResultSet rs = pstmt.executeQuery();
+        while(rs.next())
+        {
+            String sessionId = rs.getString("session_id");
+            if(sessionIds.contains(sessionId) == false)
+            {
+                String params = rs.getString("params");
+                if(params.matches("\\d+ - \\d+"))
+                {
+                    PreparedStatement pStmt4 = learnweb.getConnection().prepareStatement(
+                            "SELECT t1.search_id, t1.query, t1.timestamp, t1.service FROM learnweb_large.`sl_query` t1 join learnweb_main.lw_user_log t2 WHERE t1.search_id=t2.target_id AND t2.action = 5 AND t1.user_id=t2.user_id AND t1.query=t2.params AND t1.mode='text' AND t2.session_id=? ORDER BY t1.timestamp");
+                    pStmt4.setString(1, sessionId);
+                    ResultSet rs4 = pStmt4.executeQuery();
+                    LinkedList<Query> queries = new LinkedList<Query>();
+                    while(rs4.next())
+                    {
+                        Query query = new Query(rs4.getInt("search_id"), rs4.getString("query"), new Date(rs4.getTimestamp("timestamp").getTime()), rs4.getString("service"));
+                        queries.add(query);
+                    }
+                    Session session = new Session(sessionId);
+                    session.setQueries(queries);
+                    sessions.add(session);
+                }
+                sessionIds.add(sessionId);
+            }
+        }
+
+        SessionCache.Instance().cacheByGroupId(groupId, sessions);
+
+        return sessions;
+    }
+
+    //Map<group_id, List<Session>>
+    public Set<Integer> getGroupIds() throws SQLException
+    {
+        Set<Integer> groupIds = new HashSet<>();
+        PreparedStatement pstmt1 = learnweb.getConnection().prepareStatement("SELECT search_id, rank FROM learnweb_large.sl_action WHERE action='resource_saved';");
+        ResultSet rs = pstmt1.executeQuery();
+        while(rs.next())
+        {
+            String format = rs.getString("search_id") + " - " + rs.getString("rank");
+            PreparedStatement pstmt2 = learnweb.getConnection().prepareStatement("SELECT target_id, group_id from learnweb_main.lw_user_log WHERE action = 15 AND params = " + "\"" + format + "\"" + ";");
+            ResultSet rs2 = pstmt2.executeQuery();
+            while(rs2.next())
+            {
+                String target_id = rs2.getString("target_id");
+                Resource re = learnweb.getResourceManager().getResource(Integer.parseInt(target_id));
+                if(re.getGroupId() != 0 && (re.getType() == ResourceType.text || re.getType() == ResourceType.website))
+                {
+                    groupIds.add(re.getGroupId());
+                }
+            }
+        }
+        return groupIds;
+    }
+
+    public static void main(String[] args) throws Exception
     {
         SearchHistoryManager searchHistoryManager = Learnweb.createInstance("").getSearchHistoryManager();
         long start = System.currentTimeMillis();
-        searchHistoryManager.getSessionsForUser(10683);
+
+        /*
+        List<Session> sessions = searchHistoryManager.getSessionsForGroupId(464);
+        for(Session session : sessions)
+        {
+            System.out.println(session.getSessionId());
+        }
         long end = System.currentTimeMillis();
-        System.out.println(end - start);
-    
+        //System.out.println(end - start);
+         * */
+
+        Set<Integer> groupIds = searchHistoryManager.getGroupIds();
+        for(int groupId : groupIds)
+        {
+            System.out.println(groupId);
+        }
+
         System.exit(0);
-    }*/
+    }
 
     public class Session
     {

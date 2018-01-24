@@ -40,6 +40,9 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     private List<Session> sessions;
     private String title;
     private int userId;
+    private int selectedGroupId;
+    private boolean groupIdSelected;
+    private List<Session> groupSessions;
     private String selectedSessionId;
     private String selectedEntity;
     private DateFormat dateFormatter;
@@ -62,6 +65,8 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
         if(userId == 0)
             userId = getUser().getId();
+
+        groupIdSelected = false;
     }
 
     public NewSearchHistoryBean()
@@ -88,6 +93,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     public String getQueriesAsJson()
     {
         List<Query> queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromCache(userId, selectedSessionId);
+        System.out.println(queries.size() + " queries got for user (" + userId + ") and session id (" + selectedSessionId + ")");
         entities.clear();
         //searchIdQueryMap.clear();
 
@@ -176,19 +182,45 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
     public List<Session> getSessions()
     {
-        if(sessions == null)
+        if(this.groupIdSelected)
         {
-            try
+            if(groupSessions != null)
             {
-                sessions = getLearnweb().getSearchHistoryManager().getSessionsForUser(userId);
+                System.out.println("# group sessions: " + groupSessions.size());
+                for(Session session : groupSessions)
+                {
+                    for(Query query : session.getQueries())
+                    {
+                        System.out.print(query.getQuery() + " -> ");
+                    }
+                    System.out.println();
+                }
             }
-            catch(SQLException e)
-            {
-                log.error("Error while fetching list of sessions for particular user: " + userId, e);
-            }
+            return groupSessions;
         }
+        else
+        {
+            if(sessions == null)
+            {
+                try
+                {
+                    System.out.println("user id: " + userId);
+                    sessions = getLearnweb().getSearchHistoryManager().getSessionsForUser(userId);
+                }
+                catch(SQLException e)
+                {
+                    log.error("Error while fetching list of sessions for particular user: " + userId, e);
+                }
+            }
 
-        return sessions;
+            return sessions;
+        }
+    }
+
+    public List<Session> getGroupSessions()
+    {
+        System.out.println("why call me...");
+        return null;
     }
 
     public String getSelectedSessionId()
@@ -215,6 +247,27 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         String sessionId = params.get("session-id");
         selectedSessionId = sessionId;
         log.info("session id: " + sessionId);
+    }
+
+    public void actionSelectedGroupId() throws Exception
+    {
+        Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
+        int groupId = Integer.parseInt(params.get("group-id"));
+        selectedGroupId = groupId;
+        log.info("group id: " + groupId);
+
+        if(SessionCache.Instance().existsGroupId(selectedGroupId) == false)
+        {
+            SessionCache.Instance().cacheByGroupId(groupId, getLearnweb().getSearchHistoryManager().getSessionsForGroupId(groupId));
+        }
+        this.groupSessions = SessionCache.Instance().getByGroupId(groupId);
+
+        groupIdSelected = true;
+    }
+
+    public void actionSetGroupUnselected()
+    {
+        groupIdSelected = false;
     }
 
     public void actionSelectedSearchId()
@@ -259,6 +312,17 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     public void setUserId(int userId)
     {
         this.userId = userId;
+    }
+
+    public int getSelectedGroupId()
+    {
+        return selectedGroupId;
+    }
+
+    public void setSelectedGroupId(int selectedGroupId)
+    {
+        System.out.println("selected group id: " + selectedGroupId);
+        this.selectedGroupId = selectedGroupId;
     }
 
 }
