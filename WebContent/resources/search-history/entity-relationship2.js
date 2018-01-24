@@ -17,6 +17,32 @@ $(document).ready(function(){
 	$('#query_path_button').hide();
 });
 
+function selectGroupId()
+{
+	setSelectedGroupId([
+		// the group id is temporary hard coded.
+	    {name: "group-id", value: 1247 }
+	]);
+}
+
+function unselectGroup()
+{
+	setGroupUnselected([]);
+}
+
+function bindClickToSessionBlock ()
+{
+	$('.session_block').on('click', function(e){
+		var element = e.currentTarget;
+		var sessionId = element.getAttribute("data-sessionid"); 
+		$('.box ul li').css("background","#489a83");
+		$(element).parent().css("background","darkgrey");
+		updateKG([
+		    {name: "session-id", value: sessionId }
+		]);
+	});
+}
+
 //function to highlight selected snippets for particular entity
 function filterSnippets()
 {
