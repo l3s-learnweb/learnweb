@@ -47,6 +47,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private List<SelectItem> availableTopicThrees;
     private String valueHeaderIt;
     private int count;
+    private int glossaryEntryCount;
     private UploadedFile multimediaFile;
     private int userId;
 
@@ -68,7 +69,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             getGlossaryItems(resourceId);
             setFilteredItems(getItems());
-
+            glossaryEntryCount = getGlossaryEntryCount(resourceId);
             try
             {
                 Resource resource = getLearnweb().getResourceManager().getResource(resourceId);
@@ -83,11 +84,19 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
+    private int getGlossaryEntryCount(int resourceId)
+    {
+        int glossEntryCount = getLearnweb().getGlossariesManager().getEntryCount(resourceId);
+        return glossEntryCount;
+
+    }
+
     @PostConstruct
     public void init()
     {
 
         createEntry();
+        glossaryEntryCount = getGlossaryEntryCount(resourceId);
 
     }
 
@@ -618,6 +627,16 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public void setNumberOfEntries(int numberOfEntries)
     {
         this.numberOfEntries = numberOfEntries;
+    }
+
+    public int getGlossaryEntryCount()
+    {
+        return glossaryEntryCount;
+    }
+
+    public void setGlossaryEntryCount(int glossaryEntryCount)
+    {
+        this.glossaryEntryCount = glossaryEntryCount;
     }
 
 }

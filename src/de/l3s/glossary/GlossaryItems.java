@@ -18,6 +18,7 @@ public class GlossaryItems implements Serializable
 
     private List<LanguageItem> finalItems;
     private String englishTerm = "";
+
     private String value;
     private String glossIdString;
     private String pronounciation;

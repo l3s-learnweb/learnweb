@@ -24,14 +24,15 @@
 		<h:panelGroup id="main_component" layout="block">
 			<h:form prependId="false">
 				<p:dataTable id="my_gloss_table" var="item"
-					value="#{glossaryBean.items}" sortBy="#{item.englishTerm}"
+					value="#{glossaryBean.items}" 
 					widgetVar="glossTable" tableStyle="table-layout: auto;"
 					paginator="true" rows="12" paginatorPosition="bottom"
 					filteredValue="#{glossaryBean.filteredItems}"
-					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}"
-					sortOrder="ascending">
+					sortBy="#{item.date}" sortOrder="descending"
+					paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {Exporters}" >
 					<p:ajax event="filter" oncomplete="groupRow(2)" />
 					<p:ajax event="page" oncomplete="groupRow(2)"></p:ajax>
+					<p:ajax event="sort" oncomplete="groupRow(2)"></p:ajax>
 					<f:facet name="header">
 						<p:outputPanel autoUpdate="true">
 							<h:outputText value="#{msg['Glossary.search_all_field']}" />
@@ -71,23 +72,23 @@
 
 					<p:column headerText="#{msg['Glossary.topic']} 1" filterable="true"
 						filterBy="#{item.topic_1}" filterMatchMode="contains"
-						filterStyle="width: 90%;">
+						filterStyle="width: 90%;" sortBy="#{item.topic_1}">
 						<h:outputText value="#{item.topic_1}"
 							pt:data-itemId="#{item.glossId}" id="cell1" />
 					</p:column>
 					<p:column headerText="#{msg['Glossary.topic']} 2" filterable="true"
 						filterBy="#{item.topic_2}" filterMatchMode="contains"
-						filterStyle="width: 90%;">
+						filterStyle="width: 90%;" sortBy="#{item.topic_2}">
 						<h:outputText value="#{item.topic_2}"
 							pt:data-itemId="#{item.glossId}" id="cell2" />
 					</p:column>
 					<p:column headerText="#{msg['Glossary.topic']} 3" filterable="true"
 						filterBy="#{item.topic_3}" filterMatchMode="contains"
-						filterStyle="width: 90%;">
+						filterStyle="width: 90%;" sortBy="#{item.topic_3}">
 						<h:outputText value="#{item.topic_3}"
 							pt:data-itemId="#{item.glossId}" id="cell3" />
 					</p:column>
-					<p:column headerText="#{msg['Glossary.description']}"
+					<p:column headerText="#{msg['Glossary.description']}" sortBy="#{item.description}"
 						filterBy="#{item.description}" filterable="true"
 						filterMatchMode="contains" filterStyle="width: 90%;">
 						<h:outputText value="#{item.description}"
@@ -96,7 +97,7 @@
 
 					<p:column headerText="#{msg['Glossary.term']}" filterable="true"
 						filterMatchMode="contains" filterBy="#{item.value}"
-						filterStyle="width: 90%;">
+						filterStyle="width: 90%;" sortBy="#{item.englishTerm}" >
 						<h:outputText value="#{item.value}" />
 					</p:column>
 					<p:column headerText="#{msg.language}" filterBy="#{item.language}"
@@ -125,11 +126,11 @@
 					</p:column>
 					<p:column headerText="english terms for ordering" style="display:none">
 					
-						<h:outputText value="#{item.englishTerm}"></h:outputText>
+						<h:outputText value="#{item.date}"></h:outputText>
 					</p:column>
 					<f:facet name="footer">
 					<p:outputPanel >
-							<h:outputText value="Total Entries = #{glossaryBean.items.size()}"></h:outputText>
+							<h:outputText value="Total Entries = #{glossaryBean.glossaryEntryCount}"></h:outputText>
 						</p:outputPanel>	
 					</f:facet>
 

@@ -269,6 +269,26 @@ public class GlossaryManager
 
     }
 
+    public int getEntryCount(int resourceId)
+    {
+        int entryCount = 0;
+        String getCount = "SELECT count(*) as entry FROM `lw_resource_glossary` WHERE `resource_id`=?";
+        try
+        {
+            PreparedStatement ps = learnweb.getConnection().prepareStatement(getCount);
+            ps.setInt(1, resourceId);
+            ResultSet result = ps.executeQuery();
+            if(result.next())
+                entryCount = result.getInt("entry");
+        }
+        catch(SQLException e)
+        {
+            log.error("Error in fetching entry count for glossary with resource id: " + resourceId, e);
+        }
+
+        return entryCount;
+    }
+
     public void deleteFromDb(int glossId)
     {
         String deleteTerms = "UPDATE `lw_resource_glossary_terms` SET `deleted`= ? WHERE glossary_id = ? ";
@@ -306,8 +326,10 @@ public class GlossaryManager
             preparedStmnt.setInt(1, id);
             preparedStmnt.setInt(2, 0);
             result = preparedStmnt.executeQuery();
+
             while(result.next())
             {
+
                 List<LanguageItem> finalList = new ArrayList<LanguageItem>();
 
                 int glossaryId = result.getInt("glossary_id");
