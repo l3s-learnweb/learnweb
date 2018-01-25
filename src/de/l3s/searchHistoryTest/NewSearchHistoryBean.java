@@ -302,6 +302,11 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         return timeFormatter.format(date);
     }
 
+    public boolean getGroupIdSelected()
+    {
+        return groupIdSelected;
+    }
+
     public int getUserId()
     {
         return userId;
