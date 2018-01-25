@@ -21,7 +21,7 @@ function selectGroupId()
 {
 	setSelectedGroupId([
 		// the group id is temporary hard coded.
-	    {name: "group-id", value: 1247 }
+	    {name: "group-id", value: 419 }
 	]);
 }
 
