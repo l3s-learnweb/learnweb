@@ -15,12 +15,14 @@ import java.util.Set;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
+import javax.faces.event.AjaxBehaviorEvent;
 
 import org.apache.log4j.Logger;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.searchHistoryTest.SearchHistoryManager.Edge;
 import de.l3s.searchHistoryTest.SearchHistoryManager.Query;
@@ -263,6 +265,19 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         groupIdSelected = true;
     }
 
+    public void onChangeGroup(AjaxBehaviorEvent event) throws Exception
+    {
+        log.info("group id: " + selectedGroupId);
+
+        if(!SessionCache.Instance().existsGroupId(selectedGroupId))
+        {
+            SessionCache.Instance().cacheByGroupId(selectedGroupId, getLearnweb().getSearchHistoryManager().getSessionsForGroupId(selectedGroupId));
+        }
+        this.groupSessions = SessionCache.Instance().getByGroupId(selectedGroupId);
+
+        groupIdSelected = true;
+    }
+
     public void actionSetGroupUnselected()
     {
         groupIdSelected = false;
@@ -310,6 +325,20 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     public int getUserId()
     {
         return userId;
+    }
+
+    public User getCurrentUser()
+    {
+        User user = null;
+        try
+        {
+            user = getLearnweb().getUserManager().getUser(userId);
+        }
+        catch(SQLException e)
+        {
+            log.error(e);
+        }
+        return user == null ? getUser() : user;
     }
 
     public void setUserId(int userId)

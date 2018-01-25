@@ -39,15 +39,27 @@
 			<p:remoteCommand name="setGroupUnselected" actionListener="#{newSearchHistoryBean.actionSetGroupUnselected}" update="updateSessions" oncomplete="bindClickToSessionBlock();"/>
 		</h:form>
 		<div class="history-container">
-			<h:panelGroup id="updateSessions">
+			
 				
 				<div class="session-timeline">
 					<div style="margin:auto;width:63%;">
-						<button onclick="selectGroupId()" id="selected_group_id_button" class="greenbutton">My Groups</button>
+						<button onclick="$('#select-groups').show();" id="selected_group_id_button" class="greenbutton">My Groups</button>
 						<button onclick="unselectGroup()" id="group_unselected_button" class="greenbutton">My History</button>
 					</div>
+					<div id="select-groups" style="display:none;margin-bottom:10px;margin-top:5px;">
+						<h:form prependId="false">
+							<h:outputText value="Select Group: "/>
+							<h:selectOneMenu id="select-group-menu" value="#{newSearchHistoryBean.selectedGroupId}" style="width:22rem;">	
+								<f:selectItem itemLabel="---------------" itemValue="-1"/>
+								<f:selectItems var="group" value="#{newSearchHistoryBean.currentUser.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
+								<f:ajax listener="#{newSearchHistoryBean.onChangeGroup}"
+									render="updateSessions"/>
+							</h:selectOneMenu>
+						</h:form>	
+					</div>
 					<div style="margin-bottom:10px;"><span style="font-size: 1.4rem;font-weight: bold;">Sessions</span></div>
-					
+					<h:panelGroup id="updateSessions">
+					<h:outputText value="No Sessions have been recorded yet." rendered="#{empty newSearchHistoryBean.sessions}"/>
 					<div class="box">
 		            <ul id="first-list">
 		            	<ui:repeat var="session1" value="#{newSearchHistoryBean.sessions}">
@@ -73,8 +85,9 @@
 		                </ui:repeat>
 					</ul>
 					</div>
+					</h:panelGroup>
 				</div>
-			</h:panelGroup>
+			
 			
 			<div class="knowledge-graph">
 				<div id="canvas" class="w3-container" style="height:100%; margin:0 auto;">

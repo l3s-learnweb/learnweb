@@ -28,6 +28,8 @@ function selectGroupId()
 function unselectGroup()
 {
 	setGroupUnselected([]);
+	$('#select-groups').hide();
+	document.getElementById('select-group-menu').selectedIndex = 0
 }
 
 function bindClickToSessionBlock ()

@@ -152,13 +152,13 @@ public class SearchHistoryManager
         return queries;
     }
 
-    public String getUserNameForSessionId(String sessionId) throws SQLException
+    /*public String getUserNameForSessionId(String sessionId) throws SQLException
     {
-
+    
         PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT DISTINCT(t1.username) AS username FROM learnweb_main.lw_user t1 JOIN learnweb_main.lw_user_log t2 ON (t1.user_id=t2.user_id) WHERE t2.session_id=?");
         pstmt.setString(1, sessionId);
         ResultSet rs = pstmt.executeQuery();
-
+    
         if(rs.next())
         {
             return rs.getString("username");
@@ -167,7 +167,7 @@ public class SearchHistoryManager
         {
             return null;
         }
-    }
+    }*/
 
     public List<Session> getSessionsForUser(int userId) throws SQLException
     {
@@ -271,12 +271,13 @@ public class SearchHistoryManager
         }
 
         PreparedStatement pstmt = learnweb.getConnection()
-                .prepareStatement("SELECT t1.session_id, t1.params from learnweb_main.lw_user_log t1 JOIN learnweb_main.lw_resource t2 ON (t1.target_id=t2.resource_id) WHERE t1.action = 15 AND t2.group_id=? AND t2.type NOT IN ('image','video')");
+                .prepareStatement("SELECT t1.user_id, t1.session_id, t1.params from learnweb_main.lw_user_log t1 JOIN learnweb_main.lw_resource t2 ON (t1.target_id=t2.resource_id) WHERE t1.action = 15 AND t2.group_id=? AND t2.type NOT IN ('image','video')");
         pstmt.setInt(1, groupId);
         ResultSet rs = pstmt.executeQuery();
         while(rs.next())
         {
             String sessionId = rs.getString("session_id");
+            int userId = rs.getInt("user_id");
             if(!sessionIds.contains(sessionId))
             {
                 String params = rs.getString("params");
@@ -286,7 +287,7 @@ public class SearchHistoryManager
                     queries.addAll(getQueriesForSessionId(sessionId));
                     Session session = new Session(sessionId);
                     session.setQueries(queries);
-                    String userName = getUserNameForSessionId(sessionId);
+                    String userName = learnweb.getUserManager().getUser(userId).getUsername();//getUserNameForSessionId(sessionId);
                     session.setUserName(userName);
                     sessions.add(session);
                 }
