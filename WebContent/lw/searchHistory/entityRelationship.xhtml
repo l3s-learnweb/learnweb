@@ -59,13 +59,15 @@
 			                    	<ui:repeat var="query" value="#{session1.queries}">
 			                    		<span class="source_#{query.service}">#{query.query}</span>
 			                    	</ui:repeat>
-			                    	
 			                    </div>
+			                    
 			                    <div class="time">
 			                        <span>#{newSearchHistoryBean.formatDate(session1.startTimestamp, userBean.locale)}</span>
 			                       	<span>#{newSearchHistoryBean.formatTime(session1.startTimestamp, userBean.locale)}</span>
 			                        <span>#{newSearchHistoryBean.formatTime(session1.endTimestamp, userBean.locale)}</span>
+			                        
 			                    </div>
+			                    <span><b>#{newSearchHistoryBean.groupIdSelected == false ? '' : 'From: '.concat(session1.userName)}</b></span>
 		                    </h:panelGroup>
 		                </li>
 		                </ui:repeat>
