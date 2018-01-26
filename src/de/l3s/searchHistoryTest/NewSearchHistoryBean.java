@@ -42,6 +42,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     private List<Session> sessions;
     private String title;
     private int userId;
+    private int selectedUserId;
     private int selectedGroupId;
     private boolean groupIdSelected;
     private List<Session> groupSessions;
@@ -66,7 +67,10 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
             return;
 
         if(userId == 0)
+        {
             userId = getUser().getId();
+            selectedUserId = userId;
+        }
 
         groupIdSelected = false;
     }
@@ -93,8 +97,13 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
     public String getQueriesAsJson()
     {
-        List<Query> queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromCache(userId, selectedSessionId);
-        System.out.println(queries.size() + " queries got for user (" + userId + ") and session id (" + selectedSessionId + ")");
+        List<Query> queries = null;
+        if(!groupIdSelected)
+            queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromCache(selectedUserId, selectedSessionId);
+        else
+            queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromGroupCache(selectedGroupId, selectedSessionId);
+
+        System.out.println(queries.size() + " queries got for user (" + selectedUserId + ") and session id (" + selectedSessionId + ")");
         entities.clear();
 
         JSONArray queriesArr = new JSONArray();
@@ -245,8 +254,10 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     {
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         String sessionId = params.get("session-id");
+        int userId = Integer.parseInt(params.get("user-id"));
         selectedSessionId = sessionId;
-        log.info("session id: " + sessionId);
+        selectedUserId = userId;
+        log.info("session id: " + sessionId + "user id: " + userId);
     }
 
     public void actionSelectedGroupId() throws Exception
@@ -280,6 +291,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
     public void actionSetGroupUnselected()
     {
+        selectedUserId = getUserId();
         groupIdSelected = false;
     }
 

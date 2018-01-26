@@ -4,15 +4,7 @@ $(document).ready(function(){
 		$('.snippet-viewer').hide();
 	});
 
-	$('.session_block').on('click', function(e){
-		var element = e.currentTarget;
-		var sessionId = element.getAttribute("data-sessionid"); 
-		$('.box ul li').css("background","#489a83");
-		$(element).parent().css("background","darkgrey");
-		updateKG([
-		    {name: "session-id", value: sessionId }
-		]);
-	});
+	bindClickToSessionBlock();
 
 	$('#query_path_button').hide();
 });
@@ -23,6 +15,15 @@ function selectGroupId()
 		// the group id is temporary hard coded.
 	    {name: "group-id", value: 419 }
 	]);
+}
+
+function groupChange(data)
+{
+	var status = data.status;
+	if(status == "success")
+	{
+		bindClickToSessionBlock();
+	}
 }
 
 function unselectGroup()
@@ -36,11 +37,13 @@ function bindClickToSessionBlock ()
 {
 	$('.session_block').on('click', function(e){
 		var element = e.currentTarget;
-		var sessionId = element.getAttribute("data-sessionid"); 
+		var sessionId = element.getAttribute("data-sessionid");
+		var userId = element.getAttribute("data-userid");
 		$('.box ul li').css("background","#489a83");
 		$(element).parent().css("background","darkgrey");
 		updateKG([
-		    {name: "session-id", value: sessionId }
+		    {name: "session-id", value: sessionId },
+		    {name: "user-id", value: userId}
 		]);
 	});
 }

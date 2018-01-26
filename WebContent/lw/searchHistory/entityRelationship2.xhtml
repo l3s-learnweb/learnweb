@@ -44,7 +44,7 @@
 	            	<ui:repeat var="session1" value="#{newSearchHistoryBean.sessions}">
 	                <li>
 	                    <span></span>
-	                    <h:panelGroup layout="block" style="cursor:pointer" class="session_block" pt:data-sessionId="#{session1.sessionId}">
+	                    <h:panelGroup layout="block" style="cursor:pointer" class="session_block" pt:data-sessionId="#{session1.sessionId}" pt:data-userid="#{session1.userId}">
 		                    <div class="title"></div>
 		                    <div class="info">
 		                    	<ui:repeat var="query" value="#{session1.queries}">

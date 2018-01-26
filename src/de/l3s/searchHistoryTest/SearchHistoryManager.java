@@ -132,11 +132,10 @@ public class SearchHistoryManager
 
     public List<Query> getQueriesForSessionFromCache(int userId, String sessionId)
     {
-        List<Query> queries = null;
+        List<Query> queries = new ArrayList<Query>();
 
         if(SessionCache.Instance().existsUserId(userId))
         {
-            queries = new ArrayList<>();
 
             List<Session> sessions = SessionCache.Instance().getByUserId(userId);
 
@@ -152,22 +151,26 @@ public class SearchHistoryManager
         return queries;
     }
 
-    /*public String getUserNameForSessionId(String sessionId) throws SQLException
+    public List<Query> getQueriesForSessionFromGroupCache(int groupId, String sessionId)
     {
-    
-        PreparedStatement pstmt = learnweb.getConnection().prepareStatement("SELECT DISTINCT(t1.username) AS username FROM learnweb_main.lw_user t1 JOIN learnweb_main.lw_user_log t2 ON (t1.user_id=t2.user_id) WHERE t2.session_id=?");
-        pstmt.setString(1, sessionId);
-        ResultSet rs = pstmt.executeQuery();
-    
-        if(rs.next())
+        List<Query> queries = new ArrayList<Query>();
+
+        if(SessionCache.Instance().existsGroupId(groupId))
         {
-            return rs.getString("username");
+
+            List<Session> sessions = SessionCache.Instance().getByGroupId(groupId);
+
+            for(Session session : sessions)
+            {
+                if(session.getSessionId().equals(sessionId))
+                {
+                    queries.addAll(session.getQueries());
+                }
+            }
         }
-        else
-        {
-            return null;
-        }
-    }*/
+
+        return queries;
+    }
 
     public List<Session> getSessionsForUser(int userId) throws SQLException
     {
@@ -183,6 +186,7 @@ public class SearchHistoryManager
             LinkedList<Query> queries = new LinkedList<Query>();
             queries.addAll(getQueriesForSessionId(sessionId));
             Session session = new Session(sessionId);
+            session.setUserId(userId);
             session.setQueries(queries);
             sessions.add(session);
         }
@@ -288,6 +292,7 @@ public class SearchHistoryManager
                     Session session = new Session(sessionId);
                     session.setQueries(queries);
                     String userName = learnweb.getUserManager().getUser(userId).getUsername();//getUserNameForSessionId(sessionId);
+                    session.setUserId(userId);
                     session.setUserName(userName);
                     sessions.add(session);
                 }
@@ -350,6 +355,7 @@ public class SearchHistoryManager
 
     public class Session
     {
+        private int userId;
         private String userName;
         private String sessionId;
         private LinkedList<Query> queries;
@@ -394,6 +400,15 @@ public class SearchHistoryManager
             return queries.getLast().getTimestamp();
         }
 
+        public int getUserId()
+        {
+            return userId;
+        }
+
+        public void setUserId(int userId)
+        {
+            this.userId = userId;
+        }
     }
 
     public class Query
