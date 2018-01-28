@@ -22,7 +22,7 @@ function groupChange(data)
 	var status = data.status;
 	if(status == "success")
 	{
-		bindClickToSessionBlock();
+		bindClickToSessionBlock(selectedGroupId);
 	}
 }
 
@@ -33,13 +33,14 @@ function unselectGroup()
 	document.getElementById('select-group-menu').selectedIndex = 0
 }
 
-function bindClickToSessionBlock ()
+function bindClickToSessionBlock (selectedGroupId)
 {
 	$('.session_block').on('click', function(e){
 		var element = e.currentTarget;
 		var sessionId = element.getAttribute("data-sessionid");
 		var userId = element.getAttribute("data-userid");
-		$('.box ul li').css("background","#489a83");
+		var sessioncolor =  (selectedGroupId ==0) ? "#489a83" : "#2a915a";
+		$('.box ul li').css("background",sessioncolor);
 		$(element).parent().css("background","darkgrey");
 		updateKG([
 		    {name: "session-id", value: sessionId },
@@ -124,11 +125,10 @@ function draw()
 	
 	//queries
 	for(i = 0; i < queriesJsonArr.length; i++){
-		if(i == 0)
-			G.addNode(queriesJsonArr[i].query, {count: width/75, color: 'yellowgreen', type: 'query', search_id: queriesJsonArr[i].search_id});
-		else
-			G.addNode(queriesJsonArr[i].query, {count: width/75, color: '#489a83', type: 'query', search_id: queriesJsonArr[i].search_id});
+		//var node = queriesJsonArr[i];
+		G.addNode(queriesJsonArr[i].query, {count: width/75, color: (selectedGroupId ==0) ? "#489a83" : "#2a915a", type: 'query', search_id: queriesJsonArr[i].search_id});
 	}
+	G.addNode(queriesJsonArr[0].query, {count: width/75, color: 'yellowgreen', type: 'query', search_id: queriesJsonArr[0].search_id});
 	
 	//add edge relationshipss
 	for(i = 0; i < edgesJsonArr.length; i++){
