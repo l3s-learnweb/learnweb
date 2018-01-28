@@ -205,6 +205,114 @@
   top: 94%;
 }
 
+/* styles for vertical group session timeline */
+.box1 {
+  /*margin: 0 10%;*/
+  height: 96%;
+  overflow: auto;
+  padding: 0 0 0 40px;
+}
+
+.box1 ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  transition: all 0.5s linear;
+  top: 0;
+}
+
+.box1 ul:last-of-type {
+  /*top: 80px;*/
+}
+
+.box1 ul:before {
+  content: "";
+  display: block;
+  width: 0;
+  height: 100%;
+  border: 1px dashed #489a83;
+  position: absolute;
+  top: 0;
+  left: 30px;
+}
+
+.box1 ul li {
+  margin: 20px 60px 60px;
+  position: relative;
+  padding: 10px 20px;
+  background: #2a915a;
+  color: #fff;
+  border-radius: 10px;
+  line-height: 20px;
+  width: 60%;
+}
+
+.box1 ul li > span {
+  content: "";
+  display: block;
+  width: 0;
+  height: 100%;
+  border: 1px solid #489a83;
+  position: absolute;
+  top: 0;
+  left: -30px;
+}
+
+.box1 ul li > span:before,
+.box1 ul li > span:after {
+  content: "";
+  display: block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #2a915a;
+  border: 2px solid #fff;
+  position: absolute;
+  left: -7.5px;
+}
+
+.box1 ul li > span:before {
+  top: -10px;
+}
+.box1 ul li > span:after {
+  top: 95%;
+}
+
+.box1 .title {
+  text-transform: uppercase;
+  font-weight: 700;
+  color: white;
+  margin-bottom: 5px;
+  background-color: inherit;
+  padding: 0;
+}
+
+.box1 .info:first-letter {
+  /*text-transform: capitalize;*/
+  line-height: 1.7;
+}
+
+.box1 .time span {
+  position: absolute;
+  left: -100px;
+  color: black;
+  /*font-size: 80%;*/
+  font-weight: bold;
+}
+.box1 .time span:first-child {
+  top: -25px;
+  font-size:80%;
+}
+
+
+.box1 .time span:nth-child(2) {
+  top: -10px;	
+}
+
+.box1 .time span:last-child {
+  top: 94%;
+}
 /*styles for service icons */
 div.info > span {
 	background-size: 10px 10px;
