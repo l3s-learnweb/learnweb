@@ -79,11 +79,11 @@ var сonnectEditor = function(id_div, type) {
 			permissions : {
 				edit : canBeEdited,
 				download : true,
+				comment:true
 			}
 		},
 		editorConfig : {
 			mode : mode,
-
 			lang : "en",
 
 			callbackUrl : $('#ed_callback_url').val() + "&userId=" + $('#ed_user_id').val(),
