@@ -59,8 +59,9 @@
 					</div>
 					<div style="margin-bottom:10px;"><span style="font-size: 1.4rem;font-weight: bold;">Sessions</span></div>
 					<h:panelGroup id="updateSessions">
+					<h:outputScript>var selectedGroupId = #{newSearchHistoryBean.selectedGroupId}</h:outputScript>
 					<h:outputText value="No Sessions have been recorded yet." rendered="#{empty newSearchHistoryBean.sessions}"/>
-					<div class="box">
+					<div class="#{newSearchHistoryBean.groupIdSelected == false ? 'box' : 'box1'}">
 		            <ul id="first-list">
 		            	<ui:repeat var="session1" value="#{newSearchHistoryBean.sessions}">
 		                <li>
