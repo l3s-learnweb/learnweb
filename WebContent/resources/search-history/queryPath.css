@@ -231,7 +231,7 @@
   display: block;
   width: 0;
   height: 100%;
-  border: 1px dashed #489a83;
+  border: 1px dashed #848484;
   position: absolute;
   top: 0;
   left: 30px;
@@ -241,7 +241,7 @@
   margin: 20px 60px 60px;
   position: relative;
   padding: 10px 20px;
-  background: #2a915a;
+  background: #848484;
   color: #fff;
   border-radius: 10px;
   line-height: 20px;
@@ -253,7 +253,7 @@
   display: block;
   width: 0;
   height: 100%;
-  border: 1px solid #489a83;
+  border: 1px solid #848484;
   position: absolute;
   top: 0;
   left: -30px;
@@ -266,7 +266,7 @@
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: #2a915a;
+  background: #848484;
   border: 2px solid #fff;
   position: absolute;
   left: -7.5px;
