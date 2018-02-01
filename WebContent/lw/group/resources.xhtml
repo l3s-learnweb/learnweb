@@ -306,11 +306,13 @@
 												<h:graphicImage alt="Copy" value="/resources/icon/Add.png"/>
 											</h:outputLink>
 		
-											<ui:fragment rendered="${groupDetailBean.canDeleteResourcesInTheGroup()}">
+											<ui:fragment rendered="${res.resource.canEditResource(userBean.user)}">
 												<h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit" >
 													<h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
 												</h:outputLink>
+											</ui:fragment>
 		
+											<ui:fragment rendered="${res.resource.canDeleteResource(userBean.user)}">
 												<h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete">
 													<h:graphicImage alt="Delete" value="../resources/icon/Remove.png"/>
 												</h:outputLink>

@@ -737,25 +737,31 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         return group.canEditResources(getUser());
     }
 
-    public boolean canEditResourcesInTheGroup() throws SQLException
-    {
-        return canEditResourcesInGroup(getGroup());
-    }
-
     public boolean canCopyResourcesFromTheGroup() throws SQLException
-    {
-        return canSeeResourcesInTheGroup();
-    }
-
-    public boolean canSeeResourcesInTheGroup() throws SQLException
     {
         return getGroup().canViewResources(getUser());
     }
 
     public List<Presentation> getPresentations() throws SQLException
     {
-        presentations = getLearnweb().getPresentationManager().getPresentationsByGroupId(groupId);
+        if(presentations == null)
+            presentations = getLearnweb().getPresentationManager().getPresentationsByGroupId(groupId);
         return presentations;
+    }
+
+    public boolean hasPresentations()
+    {
+        try
+        {
+            List<Presentation> presentations = getPresentations();
+
+            return presentations.size() > 0;
+        }
+        catch(SQLException e)
+        {
+            log.error(e);
+        }
+        return false;
     }
 
     public void setPresentations(List<Presentation> presentations)
@@ -969,7 +975,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
      */
     public void addFolder() throws SQLException
     {
-        if(canEditResourcesInTheGroup() && newFolderName != null && !newFolderName.isEmpty())
+        if(canEditResourcesInGroup(getGroup()) && newFolderName != null && !newFolderName.isEmpty())
         {
             Folder newFolder = new Folder(groupId, newFolderName, newFolderDescription);
             newFolder.setParentFolderId(getSelectedFolderId());
@@ -990,7 +996,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
      */
     public void editFolder() throws SQLException
     {
-        if(canEditResourcesInTheGroup() && clickedGroupItem != null && clickedGroupItem.getId() > 0)
+        if(canEditResourcesInGroup(getGroup()) && clickedGroupItem != null && clickedGroupItem.getId() > 0)
         {
             log(Action.edit_folder, groupId, clickedGroupItem.getId(), clickedGroupItem.getTitle());
 
@@ -1630,7 +1636,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             }
 
             Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
-            if(!canEditResourcesInTheGroup())
+            if(!canEditResourcesInGroup(getGroup()))
             {
                 addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to move this resource");
                 return;
@@ -1816,7 +1822,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         try
         {
             int numResources = 0, numSkipped = 0;
-            if(!canEditResourcesInTheGroup())
+            if(!canEditResourcesInGroup(getGroup()))
             {
                 addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to edit this resource");
                 return;

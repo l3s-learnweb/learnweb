@@ -1726,7 +1726,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         Group group = getGroup();
 
         if(group != null)
-            return group.canEditResources(user);
+            return group.canEditResource(user, this);
 
         if(user.isAdmin() || ownerUserId == user.getId())
             return true;
@@ -1741,8 +1741,8 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
         Group group = getGroup();
 
-        if(group != null)
-            return group.canDeleteResources(user);
+        if(group != null) // if the resource is part of a group the group policy has priority
+            return group.canDeleteResource(user, this);
 
         if(user.isAdmin() || ownerUserId == user.getId())
             return true;

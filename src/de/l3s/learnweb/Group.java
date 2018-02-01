@@ -40,7 +40,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     /**
      * Who can join this group? *
      */
-    public enum POLICY_JOIN
+    public enum POLICY_JOIN // be careful when adding options. Add them only at the end. since we store only the ordinal value changing the order causes problems
     {
         ALL_LEARNWEB_USERS,
         COURSE_MEMBERS,
@@ -50,7 +50,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     /**
      * Who can add resources and folders to this group? *
      */
-    public enum POLICY_ADD
+    public enum POLICY_ADD // be careful when adding options. Add them only at the end. since we store only the ordinal value changing the order causes problems
     {
         GROUP_MEMBERS,
         GROUP_LEADER
@@ -59,16 +59,17 @@ public class Group implements Comparable<Group>, HasId, Serializable
     /**
      * Who can delete or edit resources and folders of this group?
      */
-    public enum POLICY_EDIT
+    public enum POLICY_EDIT // be careful when adding options. Add them only at the end. since we store only the ordinal value changing the order causes problems
     {
         GROUP_MEMBERS,
-        GROUP_LEADER
+        GROUP_LEADER,
+        GROUP_LEADER_AND_FILE_OWNER
     }
 
     /**
      * Who can view resources of this group?
      */
-    public enum POLICY_VIEW
+    public enum POLICY_VIEW // be careful when adding options. Add them only at the end. since we store only the ordinal value changing the order causes problems
     {
         ALL_LEARNWEB_USERS,
         COURSE_MEMBERS,
@@ -79,7 +80,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     /**
      * Who can tag or comment resources of this group?
      */
-    public enum POLICY_ANNOTATE
+    public enum POLICY_ANNOTATE // be careful when adding options. Add them only at the end. since we store only the ordinal value changing the order causes problems
     {
         ALL_LEARNWEB_USERS,
         COURSE_MEMBERS,
@@ -617,12 +618,24 @@ public class Group implements Comparable<Group>, HasId, Serializable
         return false;
     }
 
-    public boolean canDeleteResources(User user) throws SQLException
+    public boolean canDeleteResource(User user, Resource resource) throws SQLException
     {
-        return canEditResources(user); // currently they share the same policy
+        return canEditResource(user, resource); // currently they share the same policy
     }
 
+    @Deprecated
+    public boolean canDeleteResources(User user) throws SQLException
+    {
+        return canDeleteResource(user, null);
+    }
+
+    @Deprecated
     public boolean canEditResources(User user) throws SQLException
+    {
+        return canEditResource(user, null);
+    }
+
+    public boolean canEditResource(User user, Resource resource) throws SQLException
     {
         if(user == null) // not logged in
             return false;
@@ -631,6 +644,9 @@ public class Group implements Comparable<Group>, HasId, Serializable
             return true;
 
         if(policyEdit == POLICY_EDIT.GROUP_MEMBERS && isMember(user))
+            return true;
+
+        if(policyEdit == POLICY_EDIT.GROUP_LEADER_AND_FILE_OWNER && resource != null && user != null && resource.getUserId() == user.getId())
             return true;
 
         return false;
