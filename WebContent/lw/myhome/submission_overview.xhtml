@@ -33,17 +33,17 @@
 			
 			function toggleSurveySelectField(show, surveySelectType)
 			{
-				var selectFieldIdPrefix = surveySelectType == "edit" ? "#edit_survey" : "#survey";
+				var selectFieldIdPrefix = surveySelectType == "edit" ? "#edit_dialog_survey" : "#create_dialog_survey";
 			    if(show)
 			    {
-			    	$(selectFieldIdPrefix + '_url').show();
-			        $(selectFieldIdPrefix + '_url_input').show();
+			    	$(selectFieldIdPrefix + '_text').show();
+			        $(selectFieldIdPrefix + '_menu').show();
 			    }
 			   	else
 			   	{
-			    	$(selectFieldIdPrefix + '_url').hide();
-			        $(selectFieldIdPrefix + '_url_input').hide();
-			        $(selectFieldIdPrefix + '_url_input_message').hide();
+			    	$(selectFieldIdPrefix + '_text').hide();
+			        $(selectFieldIdPrefix + '_menu').hide();
+			        $(selectFieldIdPrefix + '_menu_message').hide();
 			    }
 			}
 
@@ -104,7 +104,7 @@
 							<h:selectOneMenu value="#{submitResourcesBean.selectedSubmission.courseId}" style="width:22rem;">	
 								<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
 								<f:ajax listener="#{submitResourcesBean.onEditSurveyChangeCourse}"
-									render="edit_survey_url_input" onevent="courseChange"/>
+									render="edit_dialog_survey_menu" onevent="courseChange"/>
 							</h:selectOneMenu>
 							</p:column>
 						</p:row>
@@ -133,15 +133,15 @@
 							<p:column><h:outputText value="#{msg['Submission.survey_mandatory']}"/></p:column>
 							<p:column>
 							<p:selectBooleanCheckbox value="#{submitResourcesBean.selectedSubmission.surveyMandatory}" widgetVar="editSurveyCheckBox">
-								<p:ajax update=":edit_survey_url_input" oncomplete="toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');"/>
+								<p:ajax update=":edit_dialog_survey_menu" oncomplete="toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');"/>
 							</p:selectBooleanCheckbox>
 							</p:column>
 						</p:row>
 						
 						<p:row>
-							<p:column><h:outputText id="edit_survey_url" value="#{msg['Submission.survey_url']}" style="display:none;"/></p:column>
+							<p:column><h:outputText id="edit_dialog_survey_text" value="#{msg['Submission.survey']}" style="display:none;"/></p:column>
 							<p:column>
-							<h:selectOneMenu id="edit_survey_url_input" value="#{submitResourcesBean.selectedSubmission.surveyResourceId}" style="display:none;width:22rem;" required="#{submitResourcesBean.selectedSubmission.surveyMandatory}" requiredMessage="#{msg['Submission.survey_url_required']}">	
+							<h:selectOneMenu id="edit_dialog_survey_menu" value="#{submitResourcesBean.selectedSubmission.surveyResourceId}" style="display:none;width:22rem;" required="#{submitResourcesBean.selectedSubmission.surveyMandatory}" requiredMessage="#{msg['Submission.survey_required']}">	
 								<f:selectItem itemLabel="Select Survey Resource" itemValue="-1"/>
 								<f:selectItems value="#{submitResourcesBean.editSurveyResourcesList}"/>
 							</h:selectOneMenu>
@@ -179,7 +179,7 @@
 						<f:selectItem itemLabel="-- Select Course--" />
 						<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
 						<f:ajax listener="#{submitResourcesBean.onCreateSurveyChangeCourse}"
-								render="survey_url_input" onevent="courseChange"/>
+								render="create_dialog_survey_menu" onevent="courseChange"/>
 					</h:selectOneMenu>
 					<h:outputText value="" />
 							
@@ -201,16 +201,16 @@
 					
 					<h:outputText value="#{msg['Submission.survey_mandatory']}"/>
 					<p:selectBooleanCheckbox value="#{submitResourcesBean.newSubmission.surveyMandatory}" widgetVar="surveyCheckBox" id="survey_checkbox">
-						<p:ajax update=":survey_url_input" oncomplete="toggleSurveySelectField(surveyCheckBox.input.is(':checked'), 'create');"/>
+						<p:ajax update=":create_dialog_survey_menu" oncomplete="toggleSurveySelectField(surveyCheckBox.input.is(':checked'), 'create');"/>
 					</p:selectBooleanCheckbox>
 					<p:message for="survey_checkbox" display="icon" />
 					
-					<h:outputText id="survey_url" value="#{msg['Submission.survey_url']}" style="display:none;"/>
-					<h:selectOneMenu id="survey_url_input" value="#{submitResourcesBean.newSubmission.surveyResourceId}" style="display:none;width:22rem;" required="#{submitResourcesBean.newSubmission.surveyMandatory}" requiredMessage="#{msg['Submission.survey_url_required']}">	
+					<h:outputText id="create_dialog_survey_text" value="#{msg['Submission.survey']}" style="display:none;"/>
+					<h:selectOneMenu id="create_dialog_survey_menu" value="#{submitResourcesBean.newSubmission.surveyResourceId}" style="display:none;width:22rem;" required="#{submitResourcesBean.newSubmission.surveyMandatory}" requiredMessage="#{msg['Submission.survey_required']}">	
 						<f:selectItem itemLabel="Select Survey Resource" />
 						<f:selectItems value="#{submitResourcesBean.surveyResourcesList}"/>
 					</h:selectOneMenu>
-					<p:message id="survey_url_input_message" for="survey_url_input" display="icon" />
+					<p:message id="create_dialog_survey_menu_message" for="create_dialog_survey_menu" display="icon" />
 					
 					<p:commandButton value="#{msg.save}" styleClass="greenbutton" update=":submissions :create_submission_dialog1" actionListener="#{submitResourcesBean.createNewSubmission()}" oncomplete="handleDialogSubmit(xhr, status, args, 'create_submission_dialog')"/>
 					<h:outputText value=""/>
