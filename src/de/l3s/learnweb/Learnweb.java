@@ -39,6 +39,12 @@ public class Learnweb
     public final static String salt2 = "3a129713cc1b33650816d61450";
     private final static Logger log = Logger.getLogger(Learnweb.class);
 
+    public enum SERVICE
+    {
+        LEARNWEB,
+        AMA
+    };
+
     private Connection dbConnection;
     private InterWeb interweb;
 
@@ -75,9 +81,9 @@ public class Learnweb
     private final WaybackCapturesLogger waybackCapturesLogger;
     private final SearchLogManager searchLogManager;
     private final WaybackUrlManager waybackUrlManager;
-
     private final HistoryManager historyManager;
     private final SearchHistoryManager searchHistoryManager;
+    private final ConverterService serviceConverter;
 
     //added by Chloe 
     private final AudienceManager audienceManager;
@@ -85,11 +91,11 @@ public class Learnweb
     private final ExtendedMetadataManager extendedMetadataManager;
     private final LanglevelManager langlevelManager;
     private final PurposeManager purposeManager;
-    private final ConverterService serviceConverter;
 
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
     private static boolean developmentMode = true; //  true if run on Localhost, disables email logger
+    private final SERVICE service; // describes whehter this instance runs for Learnweb or AMA
 
     /**
      * Use createInstance() first
@@ -161,10 +167,18 @@ public class Learnweb
     {
         String propteriesFileName = "lw_local_other";
 
+        String workingDirectory = new File(".").getAbsolutePath();
+        log.debug("workingDirectory: " + workingDirectory);
+
         // if you need to override values in learnweb.properties file for local testing, do it in a separate properties file and add it here:
-        if((new File("/home/learnweb_user")).exists())
+        if(workingDirectory.startsWith("/home/learnweb_user"))
         {
             propteriesFileName = "learnweb";
+            developmentMode = false;
+        }
+        else if(workingDirectory.startsWith("/home/ama_user"))
+        {
+            propteriesFileName = "ama";
             developmentMode = false;
         }
         else if((new File("/Users/chloe0502/Documents/workspace/learnweb/learnwebFiles")).exists())
@@ -173,6 +187,8 @@ public class Learnweb
             propteriesFileName = "lw_local_philipp";
         else if((new File("C:\\programmieren\\philipp_uni.txt")).exists())
             propteriesFileName = "lw_local_philipp_uni";
+        else if((new File("C:\\programmieren\\ama.txt")).exists())
+            propteriesFileName = "lw_local_philipp_ama";
         else if((new File("/home/fernando/trevor.txt").exists()))
             propteriesFileName = "lw_local_trevor_uni";
         else if((new File("/Users/trevor").exists()))
@@ -223,6 +239,8 @@ public class Learnweb
             log.error("Property error", e);
         }
 
+        // load server URL from config file or guess it
+
         String propertiesServerUrl = properties.getProperty("SERVER_URL");
 
         if(null == propertiesServerUrl || propertiesServerUrl.startsWith("/"))
@@ -240,8 +258,13 @@ public class Learnweb
             log.error("We could not guess the server name. Will use by default: " + this.serverUrl);
         }
 
+        // connect to database
         Class.forName("org.mariadb.jdbc.Driver");
         connect();
+
+        service = SERVICE.valueOf(properties.getProperty("SERVICE"));
+        if(service == null)
+            throw new IllegalArgumentException("invalid propertie: SERVICE=" + properties.getProperty("SERVICE"));
 
         interweb = new InterWeb(properties.getProperty("INTERWEBJ_API_URL"), properties.getProperty("INTERWEBJ_API_KEY"), properties.getProperty("INTERWEBJ_API_SECRET"));
 
@@ -294,10 +317,10 @@ public class Learnweb
     {
         log.debug("Init LearnwebServer");
 
-        if(!isInDevelopmentMode())
+        if(!isInDevelopmentMode() || getService() != SERVICE.LEARNWEB)
             jobScheduler.startAllJobs();
         else
-            log.debug("JobScheduler not started for context In development mode");
+            log.debug("JobScheduler not started for service=" + SERVICE.LEARNWEB + "; development mode=" + isInDevelopmentMode());
     }
 
     public FileManager getFileManager()
@@ -818,6 +841,11 @@ public class Learnweb
     public SearchHistoryManager getSearchHistoryManager()
     {
         return searchHistoryManager;
+    }
+
+    public SERVICE getService()
+    {
+        return service;
     }
 
 }

@@ -44,7 +44,10 @@ public class OrganisationManager
         {
             ResultSet rs = select.executeQuery("SELECT " + COLUMNS + " FROM lw_organisation ORDER BY title");
             while(rs.next())
-                cache.put(rs.getInt("organisation_id"), new Organisation(rs));
+            {
+                Organisation organisation = new Organisation(rs);
+                cache.put(rs.getInt("organisation_id"), organisation);
+            }
         }
     }
 

@@ -11,6 +11,9 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.Learnweb.SERVICE;
+
 /**
  * Redirects users to the Learnweb or ArchiveWeb Frontpage depending of the used domain
  * 
@@ -18,6 +21,7 @@ import org.apache.log4j.Logger;
 public class FrontpageServlet extends HttpServlet
 {
     private final static long serialVersionUID = 7083477034183456614L;
+    private final static Logger log = Logger.getLogger(FrontpageServlet.class);
 
     public FrontpageServlet()
     {
@@ -39,15 +43,27 @@ public class FrontpageServlet extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        SERVICE service = null;
         try
         {
-            String url = "";//request.getContextPath();
+            Learnweb learnweb = Learnweb.getInstance();
+            service = learnweb.getService();
+        }
+        catch(Exception e)
+        {
+            log.error("unhandled error", e);
+        }
+        String url;//request.getContextPath();
 
-            if(isArchiveWebRequest(request))
-                url += "/aw/";
-            else
-                url += "/lw/";
+        if(service == SERVICE.AMA)
+            url = "/ama/";
+        else if(isArchiveWebRequest(request))
+            url = "/aw/";
+        else
+            url = "/lw/";
 
+        try
+        {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(url);
             dispatcher.forward(request, response);
 
@@ -55,7 +71,7 @@ public class FrontpageServlet extends HttpServlet
         }
         catch(Exception e)
         {
-            Logger.getLogger(FrontpageServlet.class).error("unhandled error", e);
+            log.error("unhandled error", e);
             response.setStatus(500);
         }
     }
