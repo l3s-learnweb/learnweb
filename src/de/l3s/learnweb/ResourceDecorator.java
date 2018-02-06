@@ -168,6 +168,18 @@ public class ResourceDecorator implements Serializable
         return resource.getEmbedded();
     }
 
+    @Deprecated
+    public String getEmbeddedSize1()
+    {
+        return resource.getEmbeddedSize1();
+    }
+
+    @Deprecated
+    public String getEmbeddedSize3()
+    {
+        return resource.getEmbeddedSize3();
+    }
+
     public String getUrl()
     {
         return resource.getUrl();

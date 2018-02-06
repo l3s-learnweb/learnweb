@@ -1069,4 +1069,10 @@ public class UserLogHome
         log.debug(ulh.getTrackerStatisticsPerUser(course, startdate, enddate));
     }
 
+    public Map<String, Integer> userGlossary()
+    {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
 }
