@@ -5,31 +5,35 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
 
-	<ui:composition> 	
+	<ui:composition>
 		<div class="page_header">
 			<span>
 				#{msg.loginTitle}
 			</span>
 		</div>
 		<div class="grey_border">
-		
+
 			<h:form rendered="#{!userBean.loggedIn}">
 				<p:focus for="username"/>
 				<h:panelGrid columns="3">
 					<h:outputLabel for="username" value="#{msg.username}:"/>
 					<p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" />
 					<p:message styleClass="error" for="username" />
-					
+
 					<h:outputLabel for="password" value="#{msg.password}:"/>
 					<p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" />
 					<p:message styleClass="error" for="password" />
-					
+
 					<h:outputText value="" />
-					<p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" />	
+					<p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false"/>
 					<h:outputText value="" />
 				</h:panelGrid>
-			</h:form>		
-			
+
+				<p:captcha label="Captcha" rendered="#{not empty captchaEnabled}"/>
+
+
+			</h:form>
+
 			<h:outputText rendered="#{userBean.loggedIn}" value="#{msg.you_are_already_logged_in}" style="font-weight:bold;"/>
 			<br/>
 			<br/>
@@ -40,7 +44,7 @@
 			<h:outputLink value="#{request.contextPath}/lw/user/register.jsf">
 				<h:outputText value="#{msg.registerLabel}" />
 			</h:outputLink>
-		
+
 		</div>
 	</ui:composition>
 </html>

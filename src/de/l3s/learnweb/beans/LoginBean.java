@@ -7,12 +7,17 @@ import java.util.Date;
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.loginprotection.AccessData;
+import de.l3s.learnweb.loginprotection.ProtectionManager;
 
 @ManagedBean
 @RequestScoped
@@ -48,12 +53,56 @@ public class LoginBean extends ApplicationBean implements Serializable
 
     public String login() throws SQLException
     {
+        //Getting IP
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
+        String IP = request.getHeader("X-FORWARDED-FOR");
+        if(IP == null)
+        {
+            IP = request.getRemoteAddr();
+        }
+
+        //Gets the ip and username info from protection manager
+        ProtectionManager PM = getLearnweb().getProtectionManager();
+        AccessData ipData = PM.getIPData(IP);
+        AccessData usernameData = PM.getUsernameData(username);
+        Date now = new Date();
+
+        //Checks if the selected IP has been banned
+        if(ipData != null && (ipData.banDate.after(now)))
+        {
+            addMessage(FacesMessage.SEVERITY_ERROR, "ip_banned");
+            return null;
+        }
+
+        //Checks if the selected username has been banned
+        if(usernameData != null && (usernameData.banDate.after(now)))
+        {
+            addMessage(FacesMessage.SEVERITY_ERROR, "username_banned");
+            return null;
+        }
+
+        //Checking for captcha
+        if((usernameData != null && usernameData.attempts >= 1) || (ipData != null && ipData.attempts >= 1))
+        {
+            session.setAttribute("captchaEnabled", true);
+        }
+
+        //USER AUTHORIZATION HAPPENS HERE
         final User user = getLearnweb().getUserManager().getUser(username, password);
 
         if(null == user)
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "wrong_username_or_password");
+            PM.updateFailedAttempts(IP, username);
             return null;
+        }
+        else
+        {
+            //On correct login resets the data
+            usernameData.reset();
+            ipData.reset();
+            session.removeAttribute("captchaEnabled");
         }
 
         return loginUser(this, user);
@@ -65,7 +114,7 @@ public class LoginBean extends ApplicationBean implements Serializable
     }
 
     /**
-     * 
+     *
      * @param bean
      * @param user
      * @param disableLog Only useful when a moderator logs into a user account
@@ -135,7 +184,7 @@ public class LoginBean extends ApplicationBean implements Serializable
 
         if(userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(userBean.getUser())) // a moderator logs out from a user account
         {
-            userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator 
+            userBean.setUser(userBean.getModeratorUser()); // logout user and login moderator
             return "/lw/admin/users.xhtml?faces-redirect=true";
         }
         else

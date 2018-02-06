@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.loginprotection.ProtectionManager;
 import de.l3s.learnweb.rm.AudienceManager;
 import de.l3s.learnweb.rm.CategoryManager;
 import de.l3s.learnweb.rm.ExtendedMetadataManager;
@@ -38,12 +39,6 @@ public class Learnweb
     public final static String salt1 = "ff4a9ff19306ee0407cf69d592";
     public final static String salt2 = "3a129713cc1b33650816d61450";
     private final static Logger log = Logger.getLogger(Learnweb.class);
-
-    public enum SERVICE
-    {
-        LEARNWEB,
-        AMA
-    };
 
     private Connection dbConnection;
     private InterWeb interweb;
@@ -81,25 +76,28 @@ public class Learnweb
     private final WaybackCapturesLogger waybackCapturesLogger;
     private final SearchLogManager searchLogManager;
     private final WaybackUrlManager waybackUrlManager;
+
     private final HistoryManager historyManager;
     private final SearchHistoryManager searchHistoryManager;
-    private final ConverterService serviceConverter;
 
-    //added by Chloe 
+    //added by Chloe
     private final AudienceManager audienceManager;
     private final CategoryManager categoryManager;
     private final ExtendedMetadataManager extendedMetadataManager;
     private final LanglevelManager langlevelManager;
     private final PurposeManager purposeManager;
+    private final ConverterService serviceConverter;
 
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
     private static boolean developmentMode = true; //  true if run on Localhost, disables email logger
-    private final SERVICE service; // describes whehter this instance runs for Learnweb or AMA
+
+    //Added by Kate
+    private final ProtectionManager protectionManager;
 
     /**
      * Use createInstance() first
-     * 
+     *
      * @return
      */
     public static Learnweb getInstance()
@@ -124,7 +122,7 @@ public class Learnweb
 
     /**
      * This method should be used to create a Learnweb instance
-     * 
+     *
      * @param serverUrl http://learnweb.l3s.uni-hannover.de or http://localhost:8080/Learnweb-Tomcat
      * @return
      * @throws ClassNotFoundException
@@ -140,7 +138,7 @@ public class Learnweb
                 {
                     log.warn("Learnweb instance requested while it was still loading. Happens mostly because of connection or config problems");
 
-                    return null; // to avoid infinite loop 
+                    return null; // to avoid infinite loop
                 }
 
                 learnweb = new Learnweb(serverUrl);
@@ -160,25 +158,17 @@ public class Learnweb
 
     /**
      * Returns the properties file to use depending on the machine Learnweb is running on.
-     * 
+     *
      * @return
      */
     private static String getPropteriesFileName()
     {
         String propteriesFileName = "lw_local_other";
 
-        String workingDirectory = new File(".").getAbsolutePath();
-        log.debug("workingDirectory: " + workingDirectory);
-
         // if you need to override values in learnweb.properties file for local testing, do it in a separate properties file and add it here:
-        if(workingDirectory.startsWith("/home/learnweb_user"))
+        if((new File("/home/learnweb_user")).exists())
         {
             propteriesFileName = "learnweb";
-            developmentMode = false;
-        }
-        else if(workingDirectory.startsWith("/home/ama_user"))
-        {
-            propteriesFileName = "ama";
             developmentMode = false;
         }
         else if((new File("/Users/chloe0502/Documents/workspace/learnweb/learnwebFiles")).exists())
@@ -187,8 +177,6 @@ public class Learnweb
             propteriesFileName = "lw_local_philipp";
         else if((new File("C:\\programmieren\\philipp_uni.txt")).exists())
             propteriesFileName = "lw_local_philipp_uni";
-        else if((new File("C:\\programmieren\\ama.txt")).exists())
-            propteriesFileName = "lw_local_philipp_ama";
         else if((new File("/home/fernando/trevor.txt").exists()))
             propteriesFileName = "lw_local_trevor_uni";
         else if((new File("/Users/trevor").exists()))
@@ -203,7 +191,7 @@ public class Learnweb
             propteriesFileName = "lw_local_luyan";
         else if((new File("F:\\workspace\\lwresources").exists()))
             propteriesFileName = "lw_local_mariia";
-        else if((new File("C:\\Users\\Kate\\Downloads\\LEARNWEB").exists()))
+        else if((new File("C:\\Users\\Kate\\Documents\\LEARNWEB").exists()))
             propteriesFileName = "lw_local_kate";
         else
             developmentMode = false;
@@ -212,9 +200,9 @@ public class Learnweb
     }
 
     /**
-     * 
+     *
      * @param guessedServerUrl The servername + contextpath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
-     * 
+     *
      * @throws ClassNotFoundException
      * @throws SQLException
      */
@@ -239,8 +227,6 @@ public class Learnweb
             log.error("Property error", e);
         }
 
-        // load server URL from config file or guess it
-
         String propertiesServerUrl = properties.getProperty("SERVER_URL");
 
         if(null == propertiesServerUrl || propertiesServerUrl.startsWith("/"))
@@ -258,13 +244,8 @@ public class Learnweb
             log.error("We could not guess the server name. Will use by default: " + this.serverUrl);
         }
 
-        // connect to database
         Class.forName("org.mariadb.jdbc.Driver");
         connect();
-
-        service = SERVICE.valueOf(properties.getProperty("SERVICE"));
-        if(service == null)
-            throw new IllegalArgumentException("invalid propertie: SERVICE=" + properties.getProperty("SERVICE"));
 
         interweb = new InterWeb(properties.getProperty("INTERWEBJ_API_URL"), properties.getProperty("INTERWEBJ_API_KEY"), properties.getProperty("INTERWEBJ_API_SECRET"));
 
@@ -301,12 +282,15 @@ public class Learnweb
         historyManager = new HistoryManager(this);
         searchHistoryManager = new SearchHistoryManager(this);
 
-        //new managers added by Chloe 
+        //new managers added by Chloe
         audienceManager = new AudienceManager(this);
         categoryManager = new CategoryManager(this);
         extendedMetadataManager = new ExtendedMetadataManager(this);
         langlevelManager = new LanglevelManager(this);
         purposeManager = new PurposeManager(this);
+
+        //Managers added by Kate
+        protectionManager = new ProtectionManager(this);
 
     }
 
@@ -317,10 +301,10 @@ public class Learnweb
     {
         log.debug("Init LearnwebServer");
 
-        if(!isInDevelopmentMode() || getService() != SERVICE.LEARNWEB)
+        if(!isInDevelopmentMode())
             jobScheduler.startAllJobs();
         else
-            log.debug("JobScheduler not started for service=" + SERVICE.LEARNWEB + "; development mode=" + isInDevelopmentMode());
+            log.debug("JobScheduler not started for context In development mode");
     }
 
     public FileManager getFileManager()
@@ -378,7 +362,7 @@ public class Learnweb
 
     }
 
-    //getters and setters for newly added managers (Chloe) 
+    //getters and setters for newly added managers (Chloe)
 
     public AudienceManager getAudienceManager()
     {
@@ -433,7 +417,7 @@ public class Learnweb
 
     /**
      * Returns an instance of Interweb for the user anonymous
-     * 
+     *
      * @return
      */
     public InterWeb getInterweb()
@@ -479,7 +463,7 @@ public class Learnweb
         }
         catch(SQLException e)
         {
-        } // ignore	
+        } // ignore
 
         log.info("Shutdown Learnweb completed");
     }
@@ -497,7 +481,7 @@ public class Learnweb
     /**
      * Logs a user action. The parameters "targetId" and "params" depend on the
      * logged action. Look at the code of LogEntry.Action for explanation.
-     * 
+     *
      * @param user
      * @param action
      * @param targetId optional value; should be 0 if not required
@@ -506,7 +490,7 @@ public class Learnweb
      * @param sessionId
      * @param executionTime in milliseconds
      * @throws SQLException
-     * 
+     *
      *             public void log(User user, LogEntry.Action action, int targetId, String params, String sessionId, int executionTime)
      *             {
      *             log(user, action, -1, targetId, params, sessionId, executionTime);
@@ -561,7 +545,7 @@ public class Learnweb
             Action.group_deleting_link };
 
     /**
-     * 
+     *
      * @param userId
      * @param actions if actions is null the default filter is used
      * @param limit
@@ -598,7 +582,7 @@ public class Learnweb
     }
 
     /**
-     * 
+     *
      * @param groupId
      * @param actions if actions is null the default filter is used
      * @return
@@ -610,7 +594,7 @@ public class Learnweb
     }
 
     /**
-     * 
+     *
      * @param groupId
      * @param actions if actions is null the default filter is used
      * @param limit if limit is -1 all log entrys are returned
@@ -697,7 +681,7 @@ public class Learnweb
     }
 
     /**
-     * 
+     *
      * @return Returns the servername + contextpath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
      */
     public String getServerUrl()
@@ -766,7 +750,7 @@ public class Learnweb
 
     /**
      * You should never call this
-     * 
+     *
      * @throws SQLException
      */
     public void resetCaches() throws SQLException
@@ -843,9 +827,9 @@ public class Learnweb
         return searchHistoryManager;
     }
 
-    public SERVICE getService()
+    public ProtectionManager getProtectionManager()
     {
-        return service;
+        return protectionManager;
     }
 
 }

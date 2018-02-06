@@ -24,9 +24,9 @@ import de.l3s.util.Sql;
 /**
  * DAO for the User class.
  * Because there are only a few Users we keep them all in memory
- * 
+ *
  * @author Philipp
- * 
+ *
  */
 public class UserManager
 {
@@ -57,7 +57,7 @@ public class UserManager
     }
 
     /**
-     * 
+     *
      * @return number of cached objects
      */
     public int getCacheSize()
@@ -82,7 +82,7 @@ public class UserManager
 
     /**
      * returns a list of all users
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -133,7 +133,7 @@ public class UserManager
 
     /**
      * get a user by username and password
-     * 
+     *
      * @param Username
      * @param Password
      * @return null if user not found
@@ -183,7 +183,7 @@ public class UserManager
     /**
      * Get a User by his id
      * returns null if the user does not exist
-     * 
+     *
      * @param userId
      * @return
      * @throws SQLException
@@ -225,7 +225,7 @@ public class UserManager
 
     /**
      * Get a User ID given the username
-     * 
+     *
      * @param username
      * @return Returns -1 if an invalid username was given
      * @throws SQLException
@@ -248,7 +248,7 @@ public class UserManager
     }
 
     /**
-     * 
+     *
      * @param username
      * @param password
      * @param email
@@ -304,7 +304,7 @@ public class UserManager
 
     /**
      * Returns true if username is already in use
-     * 
+     *
      * @param username
      * @return
      * @throws SQLException
@@ -323,7 +323,7 @@ public class UserManager
 
     /**
      * Returns 1.1.1970 00:00:00 if the user never logged in
-     * 
+     *
      * @param userId
      * @return
      * @throws SQLException
@@ -347,7 +347,7 @@ public class UserManager
     /**
      * Saves the User to the database.
      * If the User is not yet stored at the database, a new record will be created and the returned User contains the new id.
-     * 
+     *
      * @param user
      * @return
      * @throws SQLException
@@ -357,7 +357,7 @@ public class UserManager
     {
         PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
-        if(user.getId() < 0) // the User is not yet stored at the database 
+        if(user.getId() < 0) // the User is not yet stored at the database
             replace.setNull(1, java.sql.Types.INTEGER);
         else
             replace.setInt(1, user.getId());
