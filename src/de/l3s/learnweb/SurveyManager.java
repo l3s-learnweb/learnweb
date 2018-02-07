@@ -13,7 +13,6 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import org.apache.commons.lang3.ArrayUtils;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.SurveyMetaDataFields.MetadataType;
@@ -122,7 +121,7 @@ public class SurveyManager
                         //answer=rs.getString("answer");
                         answer = rs.getString("answer").split("\\s*\\|\\|\\|\\s*");
 
-                        System.out.println("answer:" + StringUtils.join(answer, ","));
+
                         /*else
                             answer = new String[] { rs.getString("answer") };*/
                         wrappedMultipleAnswers.put(Integer.toString(rs.getInt("question_id")), answer);
@@ -133,10 +132,7 @@ public class SurveyManager
                         wrappedAnswers.put(Integer.toString(rs.getInt("question_id")), rs.getString("answer"));
                     }
                 }
-                else
-                {
-                    System.out.println("question id:" + Integer.toString(rs.getInt("question_id")));
-                }
+
             }
             survey.wrappedAnswers = wrappedAnswers;
             survey.wrappedMultipleAnswers = wrappedMultipleAnswers;
@@ -207,7 +203,7 @@ public class SurveyManager
                 // end = rs.getDate("close_date");
                 survey.survey_id = rs.getInt("survey_id");
 
-                //System.out.println(survey.survey_id);
+
             }
 
             ps = learnweb.getConnection().prepareStatement(titleDesc);
@@ -390,12 +386,12 @@ public class SurveyManager
                 else
                 {
                     String str = "";
-                    System.out.println(StringUtils.join(pair1.getValue(), ","));
+
                     for(String s : pair1.getValue())
                     {
                         str = str + s + "|||";
                     }
-                    System.out.println(str);
+
                     str = str.substring(0, str.lastIndexOf("|||"));
                     insert.setString(4, str);
                 }
