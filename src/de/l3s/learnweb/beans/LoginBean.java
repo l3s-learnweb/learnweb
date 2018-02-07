@@ -105,8 +105,15 @@ public class LoginBean extends ApplicationBean implements Serializable
         else
         {
             //On correct login resets the data
-            usernameData.reset();
-            ipData.reset();
+            if(usernameData != null)
+            {
+                usernameData.reset();
+            }
+
+            if(ipData != null)
+            {
+                ipData.reset();
+            }
             session.removeAttribute("captchaEnabled");
         }
 
