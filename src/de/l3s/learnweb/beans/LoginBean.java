@@ -72,7 +72,12 @@ public class LoginBean extends ApplicationBean implements Serializable
         if(ipData != null && (ipData.banDate.after(now)))
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "ip_banned");
+            session.setAttribute("ipbanned", true);
             return null;
+        }
+        else
+        {
+            session.removeAttribute("ipbanned");
         }
 
         //Checks if the selected username has been banned
@@ -82,8 +87,8 @@ public class LoginBean extends ApplicationBean implements Serializable
             return null;
         }
 
-        //Checking for captcha
-        if((usernameData != null && usernameData.attempts >= 1) || (ipData != null && ipData.attempts >= 1))
+        //Checking whether captcha is needed
+        if((usernameData != null && usernameData.attempts >= 3) || (ipData != null && ipData.attempts >= 3))
         {
             session.setAttribute("captchaEnabled", true);
         }

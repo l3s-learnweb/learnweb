@@ -25,11 +25,11 @@
 					<p:message styleClass="error" for="password" />
 
 					<h:outputText value="" />
-					<p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false"/>
+					<p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" rendered="#{empty ipbanned}"/>
 					<h:outputText value="" />
 				</h:panelGrid>
 
-				<p:captcha label="Captcha" rendered="#{not empty captchaEnabled}"/>
+				<p:captcha label="Captcha" rendered="#{not empty captchaEnabled and empty ipbanned}"/>
 
 
 			</h:form>
