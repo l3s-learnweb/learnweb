@@ -42,6 +42,8 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
             courses = new ArrayList<Course>(getLearnweb().getCourseManager().getCoursesAll());
         else if(getUser().isModerator())
             courses = new ArrayList<Course>(getUser().getOrganisation().getCourses());
+        else
+            return;
 
         Collections.sort(courses);
     }

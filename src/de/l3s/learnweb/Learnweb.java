@@ -47,6 +47,13 @@ public class Learnweb
     private PropertiesBundle properties;
     private String serverUrl;
 
+    // list of Learnweb installations
+    public enum SERVICE
+    {
+        LEARNWEB,
+        AMA
+    };
+
     // Manager (Data Access Objects):
 
     private final ForumManager forumManager;
@@ -79,6 +86,7 @@ public class Learnweb
 
     private final HistoryManager historyManager;
     private final SearchHistoryManager searchHistoryManager;
+    private final ProtectionManager protectionManager;
 
     //added by Chloe
     private final AudienceManager audienceManager;
@@ -91,9 +99,7 @@ public class Learnweb
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
     private static boolean developmentMode = true; //  true if run on Localhost, disables email logger
-
-    //Added by Kate
-    private final ProtectionManager protectionManager;
+    private final SERVICE service; // describes whehter this instance runs for Learnweb or AMA
 
     /**
      * Use createInstance() first
@@ -165,10 +171,18 @@ public class Learnweb
     {
         String propteriesFileName = "lw_local_other";
 
+        String workingDirectory = new File(".").getAbsolutePath();
+        log.debug("workingDirectory: " + workingDirectory);
+
         // if you need to override values in learnweb.properties file for local testing, do it in a separate properties file and add it here:
-        if((new File("/home/learnweb_user")).exists())
+        if(workingDirectory.startsWith("/home/learnweb_user"))
         {
             propteriesFileName = "learnweb";
+            developmentMode = false;
+        }
+        else if(workingDirectory.startsWith("/home/ama_user"))
+        {
+            propteriesFileName = "ama";
             developmentMode = false;
         }
         else if((new File("/Users/chloe0502/Documents/workspace/learnweb/learnwebFiles")).exists())
@@ -227,6 +241,7 @@ public class Learnweb
             log.error("Property error", e);
         }
 
+        // load server URL from config file or guess it
         String propertiesServerUrl = properties.getProperty("SERVER_URL");
 
         if(null == propertiesServerUrl || propertiesServerUrl.startsWith("/"))
@@ -246,6 +261,10 @@ public class Learnweb
 
         Class.forName("org.mariadb.jdbc.Driver");
         connect();
+
+        service = SERVICE.valueOf(properties.getProperty("SERVICE"));
+        if(service == null)
+            throw new IllegalArgumentException("invalid propertie: SERVICE=" + properties.getProperty("SERVICE"));
 
         interweb = new InterWeb(properties.getProperty("INTERWEBJ_API_URL"), properties.getProperty("INTERWEBJ_API_KEY"), properties.getProperty("INTERWEBJ_API_SECRET"));
 
@@ -301,10 +320,10 @@ public class Learnweb
     {
         log.debug("Init LearnwebServer");
 
-        if(!isInDevelopmentMode())
+        if(!isInDevelopmentMode() || getService() != SERVICE.LEARNWEB)
             jobScheduler.startAllJobs();
         else
-            log.debug("JobScheduler not started for context In development mode");
+            log.debug("JobScheduler not started for service=" + SERVICE.LEARNWEB + "; development mode=" + isInDevelopmentMode());
     }
 
     public FileManager getFileManager()
@@ -832,4 +851,8 @@ public class Learnweb
         return protectionManager;
     }
 
+    public SERVICE getService()
+    {
+        return service;
+    }
 }

@@ -60,7 +60,7 @@ public class SearchLogManager
             else if(searchFilters.length() > 1000)
                 searchFilters = searchFilters.substring(0, 1000);
 
-            log.debug("log: " + query + " _ " + searchMode + " _ " + searchFilters + " _ " + userId + " _ ");
+            //log.debug("log: " + query + " _ " + searchMode + " _ " + searchFilters + " _ " + userId + " _ ");
 
             PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO `learnweb_large`.`sl_query` (" + QUERY_COLUMNS + ") VALUES (?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP);", Statement.RETURN_GENERATED_KEYS);
             insert.setString(1, query);
@@ -126,8 +126,8 @@ public class SearchLogManager
                     if(thumbnail != null)
                     {
                         insert.setString(7, thumbnail.getUrl());
-                        insert.setInt(8, thumbnail.getHeight());
-                        insert.setInt(9, thumbnail.getWidth());
+                        insert.setInt(8, thumbnail.getHeight() > 65535 ? 65535 : thumbnail.getHeight());
+                        insert.setInt(9, thumbnail.getWidth() > 65535 ? 65535 : thumbnail.getWidth());
                     }
                     else
                     {

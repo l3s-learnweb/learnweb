@@ -2,29 +2,37 @@ package de.l3s.learnweb;
 
 import java.io.Serializable;
 
+import org.apache.log4j.Logger;
+
 public class Thumbnail implements Comparable<Thumbnail>, Serializable
 {
     private static final long serialVersionUID = -792701713759619246L;
+    private static final Logger log = Logger.getLogger(Thumbnail.class);
 
-    private int width;
-    private int height;
+    private int width = 0;
+    private int height = 0;
     private final String url;
     private final int fileId;
 
     public Thumbnail(String url, int width, int height, int fileId)
     {
         this.url = url;
-        this.width = width;
-        this.height = height;
         this.fileId = fileId;
+
+        if(width < 0)
+            log.warn("Ignore negative width: " + width);
+        else
+            this.width = width;
+
+        if(height < 0)
+            log.warn("Ignore negative height: " + height);
+        else
+            this.height = height;
     }
 
     public Thumbnail(String url, int width, int height)
     {
-        this.url = url;
-        this.width = width;
-        this.height = height;
-        this.fileId = 0;
+        this(url, width, height, 0);
     }
 
     /**

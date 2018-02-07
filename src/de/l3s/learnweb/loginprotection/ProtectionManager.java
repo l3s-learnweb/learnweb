@@ -61,8 +61,7 @@ public class ProtectionManager
         }
         catch(SQLException e)
         {
-            log.error("Failed to load banlists. SQLException: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Failed to load banlists.", e);
         }
     }
 
@@ -169,8 +168,7 @@ public class ProtectionManager
         }
         catch(SQLException e)
         {
-            log.error("Ban attempt failed. SQLException: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Ban attempt failed.", e);
         }
     }
 

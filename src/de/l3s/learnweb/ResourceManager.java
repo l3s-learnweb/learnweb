@@ -916,7 +916,7 @@ public class ResourceManager
             else
                 resource.setLocation("Learnweb");
 
-            if(resource.getType().equals(ResourceType.glossary))
+            if(resource.getType() != null && resource.getType().equals(ResourceType.glossary))
                 resource.setUrl(learnweb.getServerUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));
 
             if(resource.isDeleted())
