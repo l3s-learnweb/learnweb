@@ -32,14 +32,13 @@ public class SurveyManager
         this.learnweb = learnweb;
     }
 
-    public Survey getAssessmentFormDetails(int resource_id, int userId)
+    public Survey getAssessmentFormDetails(int resource_id, int userId) throws SQLException
     {
         HashMap<String, String> wrappedAnswers = new HashMap<String, String>();
         HashMap<String, String[]> wrappedMultipleAnswers = new HashMap<String, String[]>();
         Survey survey = new Survey();
 
-        try
-        {
+
 
             //Getting survey ID
             PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?");
@@ -137,11 +136,7 @@ public class SurveyManager
             survey.setWrappedAnswers(wrappedAnswers);
             survey.setWrappedMultipleAnswers(wrappedMultipleAnswers);
 
-        }
-        catch(SQLException e)
-        {
-            log.error(e);
-        }
+
         return survey;
     }
 
@@ -163,7 +158,7 @@ public class SurveyManager
         return survey;
     }
 
-    public Survey getFormQuestions(int resourceId, int userId)
+    public Survey getFormQuestions(int resourceId, int userId) throws SQLException
     {
         Survey survey = new Survey();
         survey.setResourceId(resourceId);
@@ -171,8 +166,7 @@ public class SurveyManager
         String titleDesc = "SELECT `title`, `description` FROM `lw_resource` WHERE `resource_id` = ?";
         String getSurveyId = "SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?";
         PreparedStatement ps = null;
-        try
-        {
+
             HashSet<Integer> surveyResources = new HashSet<Integer>();
             surveyResources.addAll(getSameSurveyResources(resourceId));
             for(int surveyResource_id : surveyResources)
@@ -275,23 +269,18 @@ public class SurveyManager
                 formQuestion.setId(Integer.toString(result.getInt("question_id")));
                 survey.getFormQuestions().add(formQuestion);
             }
-        }
-        catch(SQLException e)
-        {
-            log.error(e);
-        }
+
         return survey;
     }
 
-    public void uploadAnswers(int user_id, HashMap<String, String> wrappedAnswers, HashMap<String, String[]> wrappedMultipleAnswers, int resource_id)
+    public void uploadAnswers(int user_id, HashMap<String, String> wrappedAnswers, HashMap<String, String[]> wrappedMultipleAnswers, int resource_id) throws SQLException
     {
-        int survey_id = 0;
+
         String submitCheck = "SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?";
         String getSurveyId = "SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?";
         PreparedStatement ps = null;
         ResultSet rs = null;
-        try
-        {
+
             ps = learnweb.getConnection().prepareStatement(submitCheck);
             ps.setInt(1, resource_id);
             ps.setInt(2, user_id);
@@ -302,69 +291,42 @@ public class SurveyManager
                 return;
             }
 
-        }
-        catch(SQLException e)
-        {
-            log.error("Error in checking submit check on answer upload" + e);
-        }
-        try
-        {
-            ps = learnweb.getConnection().prepareStatement(getSurveyId);
+        ps = learnweb.getConnection().prepareStatement(getSurveyId);
 
             ps.setInt(1, resource_id);
 
             rs = ps.executeQuery();
-        }
-        catch(SQLException e3)
-        {
-            log.error("Error in getting survey id ", e3);
-        }
-        try
-        {
+
 
             if(rs.next())
             {
 
                 //  start = rs.getDate("open_date");
                 // end = rs.getDate("close_date");
-                survey_id = rs.getInt("survey_id");
+
 
             }
 
-        }
-        catch(SQLException e2)
-        {
-            log.error(e2);
-        }
+
         String insertAnswers = "INSERT INTO `lw_survey_answer`(`resource_id`, `user_id`, `question_id`, `answer`) VALUES (?, ?, ?, ?)";
 
         Iterator<Entry<String, String>> answer1 = wrappedAnswers.entrySet().iterator();
         PreparedStatement insert = null;
-        try
-        {
+
             insert = learnweb.getConnection().prepareStatement(insertAnswers);
-        }
-        catch(SQLException e1)
-        {
-            log.error("Error in initializing prepared Statement for answers", e1);
-        }
+
         while(answer1.hasNext())
         {
             Entry<String, String> pair = answer1.next();
 
-            try
-            {
+
 
                 insert.setInt(1, resource_id);
                 insert.setInt(2, user_id);
                 insert.setInt(3, Integer.parseInt(pair.getKey()));
                 insert.setString(4, pair.getValue());
                 insert.executeQuery();
-            }
-            catch(SQLException e)
-            {
-                log.error("Error in inserting answers for survey ID= " + survey_id, e);
-            }
+
 
         }
         Iterator<Entry<String, String[]>> answer2 = wrappedMultipleAnswers.entrySet().iterator();
@@ -372,8 +334,7 @@ public class SurveyManager
         {
             Entry<String, String[]> pair1 = answer2.next();
 
-            try
-            {
+
 
                 insert.setInt(1, resource_id);
                 insert.setInt(2, user_id);
@@ -398,21 +359,16 @@ public class SurveyManager
 
                 insert.executeQuery();
 
-            }
-            catch(SQLException e)
-            {
-                log.error("Error in inserting answers for survey ID= " + survey_id, e);
-            }
+
 
         }
 
     }
 
-    public List<Resource> getSurveyResourcesByUserAndCourse(int userId, int courseId)
+    public List<Resource> getSurveyResourcesByUserAndCourse(int userId, int courseId) throws SQLException
     {
         ArrayList<Resource> resources = new ArrayList<Resource>();
-        try
-        {
+
             String pStmt = "SELECT t1.resource_id FROM lw_resource t1 JOIN lw_group t2 ON t1.group_id=t2.group_id WHERE t1.type='survey' AND t1.deleted=0 AND (t2.course_id=? OR t1.owner_user_id=?) ORDER BY t1.group_id";
             PreparedStatement ps = learnweb.getConnection().prepareStatement(pStmt);
             ps.setInt(1, courseId);
@@ -425,17 +381,13 @@ public class SurveyManager
                 Resource r = learnweb.getResourceManager().getResource(resourceId);
                 resources.add(r);
             }
-        }
-        catch(SQLException e)
-        {
-            log.error("Error while retrieving submissions by course", e);
-        }
+
 
         return resources;
     }
 
     //Get questions
-    public LinkedHashMap<String, String> getAnsweredQuestions(int resourceId)
+    public LinkedHashMap<String, String> getAnsweredQuestions(int resourceId) throws SQLException
     {
         LinkedHashMap<String, String> questions = new LinkedHashMap<String, String>();
         int surveyId;
@@ -444,8 +396,7 @@ public class SurveyManager
         //String getQuestionByOrder = "SELECT distinct(t2.question_id), t1.question FROM `lw_survey_question` t1, lw_survey_answer t2 where t2.question_id = t1.question_id and t1.survey_id=? and t2.resource_id=? order by `order`";
         String getQuestionByOrder = "SELECT distinct(t1.question_id), t1.question, t1.survey_id FROM `lw_survey_question` t1, lw_survey_answer t2 where (t2.question_id = t1.question_id or (t1.deleted=? and t1.question_type IN (\"INPUT_TEXT\", \"ONE_RADIO\", \"INPUT_TEXTAREA\", \"ONE_MENU\", \"ONE_MENU_EDITABLE\", \"MULTIPLE_MENU\", \"MANY_CHECKBOX\" ))) and t1.survey_id=? and t2.resource_id=? order by t1.`order`";
         //Check if all questions are fetched.
-        try
-        {
+
             PreparedStatement pSttmnt = learnweb.getConnection().prepareStatement(getSurveyId);
             pSttmnt.setInt(1, resourceId);
             ResultSet idResult = pSttmnt.executeQuery();
@@ -464,23 +415,18 @@ public class SurveyManager
                 }
             }
 
-        }
-        catch(SQLException e)
-        {
-            log.error("Error in fetching questions for survey result, resource id: " + resourceId, e);
-        }
+
 
         return questions;
     }
 
-    public HashSet<Integer> getSameSurveyResources(int resourceId)
+    public HashSet<Integer> getSameSurveyResources(int resourceId) throws SQLException
     {
         HashSet<Integer> surveyResources = new HashSet<Integer>();
         surveyResources.add(resourceId);
         Resource surveyResource;
         int groupId;
-        try
-        {
+
             int surveyId = 0;
 
             surveyResource = learnweb.getResourceManager().getResource(resourceId);
@@ -511,15 +457,11 @@ public class SurveyManager
                     }
                 }
             }
-        }
-        catch(SQLException e1)
-        {
-            log.error("Error in fetching similar survey resources from a course for resource id:" + resourceId, e1);
-        }
+
         return surveyResources;
     }
 
-    public List<SurveyAnswer> getAnswerByUser(int resourceId, HashMap<String, String> question)
+    public List<SurveyAnswer> getAnswerByUser(int resourceId, HashMap<String, String> question) throws SQLException
     {
         String answerByUser = "SELECT `answer` FROM `lw_survey_answer` WHERE `question_id`=? and `user_id`=? and `resource_id`=?";
         String userIds = "SELECT distinct(`user_id`) FROM `lw_survey_answer` WHERE `resource_id`=?";
@@ -531,8 +473,7 @@ public class SurveyManager
         surveyResources.addAll(getSameSurveyResources(resourceId));
         for(int surveyResourceId : surveyResources)
         {
-            try
-            {
+
                 PreparedStatement pSttmnt = learnweb.getConnection().prepareStatement(userIds);
                 pSttmnt.setInt(1, surveyResourceId);
                 ResultSet ids = pSttmnt.executeQuery();
@@ -562,16 +503,12 @@ public class SurveyManager
                     }
                     answers.add(ans);
                 }
-            }
-            catch(SQLException e)
-            {
-                log.error("Error in fetching answer for resource id: " + surveyResourceId, e);
-            }
+
         }
         return answers;
     }
 
-    public ArrayList<User> getSurveyUsers(int resourceId)
+    public ArrayList<User> getSurveyUsers(int resourceId) throws SQLException
     {
         HashSet<Integer> surveyResources = new HashSet<Integer>();
         surveyResources = getSameSurveyResources(resourceId);
@@ -579,8 +516,7 @@ public class SurveyManager
         for(int surveyResourceId : surveyResources)
         {
             String getUserId = "SELECT distinct(`user_id`) FROM `lw_survey_answer` WHERE resource_id=?";
-            try
-            {
+
                 PreparedStatement ps = learnweb.getConnection().prepareStatement(getUserId);
                 ps.setInt(1, surveyResourceId);
                 ResultSet userId = ps.executeQuery();
@@ -590,11 +526,7 @@ public class SurveyManager
                     if(!users.contains(user))
                         users.add(user);
                 }
-            }
-            catch(SQLException e)
-            {
-                log.error("Error in fetching users for assessment survey: " + surveyResourceId);
-            }
+
 
         }
         return users;

@@ -23,11 +23,11 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
 {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 4308612517681227920L;
     private static final Logger log = Logger.getLogger(AssessmentGridBean.class);
-    private int resource_id = 0; //change this when there is a way to generate Survey type resource
+    private int resourceId = 0; //change this when there is a way to generate Survey type resource
     private String title;
     private String surveyTitle;
     private String description;
@@ -51,7 +51,7 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
         if(isAjaxRequest())
             return;
 
-        if(resource_id > 0)
+        if(resourceId > 0)
         {
 
             try
@@ -66,7 +66,7 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
             }
             catch(Exception e)
             {
-                resource_id = -1;
+                resourceId = -1;
                 log.error("Couldn't log survey action; resource: ", e);
             }
 
@@ -79,12 +79,12 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
     {
         try
         {
-            resource_id = getParameterInt("resource_id");
+            resourceId = getParameterInt("resource_id");
 
         }
         catch(NullPointerException e)
         {
-            resource_id = 0;
+            resourceId = 0;
         }
         try
         {
@@ -99,16 +99,16 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
         {
             getSurvey();
         }
-        else if(resource_id > 0)
+        else if(resourceId > 0)
         {
             //getSurvey();
             try
             {
-                title = getLearnweb().getResourceManager().getResource(resource_id).getTitle();
+                title = getLearnweb().getResourceManager().getResource(resourceId).getTitle();
             }
             catch(SQLException e)
             {
-                log.warn("Couldn't fetch assessment grid title for resource id: " + resource_id);
+                log.warn("Couldn't fetch assessment grid title for resource id: " + resourceId);
             }
             getAssessmentUsers();
         }
@@ -121,7 +121,15 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
         users = new ArrayList<User>();
 
         SurveyManager assessManager = getLearnweb().getSurveyManager();
-        users = assessManager.getSurveyUsers(resource_id);
+        try
+        {
+        users = assessManager.getSurveyUsers(resourceId);
+        }
+        catch(Exception e)
+        {
+            log.error("Error in fetching users who answered survey: " + resourceId);
+
+        }
 
     }
 
@@ -130,13 +138,19 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
 
         SurveyManager sm = getLearnweb().getSurveyManager();
         questions = new ArrayList<SurveyMetaDataFields>();
-
-        sv = sm.getAssessmentFormDetails(resource_id, userId);
+        try
+        {
+        sv = sm.getAssessmentFormDetails(resourceId, userId);
         submitted = sv.isSubmitted();
         questions = sv.getFormQuestions();
         surveyTitle = sv.getSurveyTitle();
         wrappedAnswers = sv.getWrappedAnswers();
         wrappedMultipleAnswers = sv.getWrappedMultipleAnswers();
+        }
+        catch(Exception e)
+        {
+            log.error("Error in fetching assessment form details for survey :" + resourceId, e);
+        }
 
     }
 
@@ -150,14 +164,14 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
         this.sv = sv;
     }
 
-    public int getResource_id()
+    public int getResourceId()
     {
-        return resource_id;
+        return resourceId;
     }
 
-    public void setResource_id(int resource_id)
+    public void setResourceId(int resource_id)
     {
-        this.resource_id = resource_id;
+        this.resourceId = resource_id;
     }
 
     public String getSurveyTitle()

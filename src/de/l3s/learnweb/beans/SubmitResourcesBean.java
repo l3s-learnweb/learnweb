@@ -37,7 +37,7 @@ import de.l3s.util.StringHelper;
 
 /**
  * Bean for pages myhome/submission_overview.jsf and myhome/submission_resources.jsf
- * 
+ *
  * @author Trevor
  *
  */
@@ -601,12 +601,19 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
     {
         if(editSurveyResourcesList.isEmpty() && this.selectedSubmission.getCourseId() > 0)
         {
+            try
+            {
             List<Resource> editSurveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(getUserId(), this.selectedSubmission.getCourseId());
             for(Resource r : editSurveyResourcesForCourse)
             {
                 String resourcePath = getResourcePath(r);
                 if(resourcePath != null)
                     editSurveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
+                }
+            }
+            catch(Exception e)
+            {
+                log.error("Error in getting edit survey resources list for user: " + getUserId(), e);
             }
         }
         return editSurveyResourcesList;
@@ -615,6 +622,27 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
     public void onCreateSurveyChangeCourse(AjaxBehaviorEvent event)
     {
         surveyResourcesList.clear();
+        try
+        {
+        List<Resource> surveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(getUserId(), this.newSubmission.getCourseId());
+        for(Resource r : surveyResourcesForCourse)
+        {
+            String resourcePath = getResourcePath(r);
+            if(resourcePath != null)
+                surveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
+            }
+        }
+        catch(Exception e)
+        {
+            log.error("Error in getting survey resources for  course", e);
+        }
+    }
+
+    public void onEditSurveyChangeCourse(AjaxBehaviorEvent event)
+    {
+        editSurveyResourcesList.clear();
+        try
+        {
         List<Resource> surveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(getUserId(), this.newSubmission.getCourseId());
         for(Resource r : surveyResourcesForCourse)
         {
@@ -622,17 +650,10 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
             if(resourcePath != null)
                 surveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
         }
-    }
-
-    public void onEditSurveyChangeCourse(AjaxBehaviorEvent event)
-    {
-        editSurveyResourcesList.clear();
-        List<Resource> surveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(getUserId(), this.newSubmission.getCourseId());
-        for(Resource r : surveyResourcesForCourse)
+        }
+        catch(Exception e)
         {
-            String resourcePath = getResourcePath(r);
-            if(resourcePath != null)
-                surveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
+            log.error("Error in getting survey resources for course ", e);
         }
     }
 

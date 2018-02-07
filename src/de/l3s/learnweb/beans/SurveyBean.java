@@ -22,7 +22,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -6217166153267996666L;
     private static final Logger log = Logger.getLogger(SurveyBean.class);
-    private int resource_id; //change this when there is a way to generate Survey type resource
+    private int resourceId; //change this when there is a way to generate Survey type resource
     private String surveyTitle;
     private String description;
     private int organizationId;
@@ -54,7 +54,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
         if(isAjaxRequest())
             return;
 
-        if(resource_id > 0)
+        if(resourceId > 0)
         {
 
             try
@@ -66,7 +66,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
             }
             catch(Exception e)
             {
-                resource_id = -1;
+                resourceId = -1;
                 log.error("Couldn't log survey action; resource: ", e);
             }
 
@@ -79,14 +79,14 @@ public class SurveyBean extends ApplicationBean implements Serializable
     {
         try
         {
-            resource_id = getParameterInt("resource_id");
+            resourceId = getParameterInt("resource_id");
         }
         catch(NullPointerException e)
         {
-            resource_id = 0;
+            resourceId = 0;
         }
 
-        if(resource_id > 0)
+        if(resourceId > 0)
             getSurvey();
 
     }
@@ -98,8 +98,9 @@ public class SurveyBean extends ApplicationBean implements Serializable
         User user = getUser();
         if(user == null)
             return;
-
-        sv = sm.getFormQuestions(resource_id, user.getId());
+        try
+        {
+        sv = sm.getFormQuestions(resourceId, user.getId());
         submitted = sv.isSubmitted();
         questions = sv.getFormQuestions();
 
@@ -108,14 +109,27 @@ public class SurveyBean extends ApplicationBean implements Serializable
         organizationId = sv.getOrganizationId();
         if(sv.isSubmitted())
             addGrowl(FacesMessage.SEVERITY_ERROR, "You have submitted the form previously. You can only submit once.");
+        }
+        catch(Exception e)
+        {
+            log.error("Error in fetching form questions for survey: " + resourceId, e);
+        }
     }
 
     public void submit()
     {
         User u = getUser();
         if(!sv.isSubmitted())
-            getLearnweb().getSurveyManager().uploadAnswers(u.getId(), wrappedAnswers, wrappedMultipleAnswers, resource_id);
-
+        {
+            try
+            {
+            getLearnweb().getSurveyManager().uploadAnswers(u.getId(), wrappedAnswers, wrappedMultipleAnswers, resourceId);
+            }
+            catch(Exception e)
+            {
+                log.error("Error in uploading answers for User: " + u.getId() + " for survey: " + sv.getSurveyId());
+            }
+        }
         if(!sv.isSubmitted())
         {
             addGrowl(FacesMessage.SEVERITY_INFO, "Successful Submit");
@@ -126,14 +140,14 @@ public class SurveyBean extends ApplicationBean implements Serializable
 
     }
 
-    public int getResource_id()
+    public int getResourceId()
     {
-        return resource_id;
+        return resourceId;
     }
 
-    public void setResource_id(int resource_id)
+    public void setResourceId(int resource_id)
     {
-        this.resource_id = resource_id;
+        this.resourceId = resource_id;
     }
 
     public HashMap<String, String> getWrappedAnswers()

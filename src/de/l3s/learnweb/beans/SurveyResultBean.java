@@ -20,7 +20,7 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
 {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = 706177879900332816L;
     private static final Logger log = Logger.getLogger(SurveyResultBean.class);
@@ -63,6 +63,8 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
 
         columns = new ArrayList<ColumnModel>();
         LinkedHashMap<String, String> questions = new LinkedHashMap<String, String>();
+        try
+        {
         questions = getLearnweb().getSurveyManager().getAnsweredQuestions(resourceId);
         answers = getLearnweb().getSurveyManager().getAnswerByUser(getResourceId(), questions);
         int questionIndex = 1;
@@ -71,6 +73,11 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
             ColumnModel col = new ColumnModel(questions.get(qid), qid, questionIndex);
             columns.add(col);
             questionIndex++;
+            }
+        }
+        catch(Exception e)
+        {
+            log.error("Error in fetching result for survey: " + resourceId);
         }
     }
 
@@ -118,7 +125,7 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
     {
 
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = -8787608049574883366L;
         private String header;
