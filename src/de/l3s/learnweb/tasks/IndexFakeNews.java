@@ -4,64 +4,102 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.Resource;
+import de.l3s.learnweb.Resource.ResourceType;
+import de.l3s.learnweb.ResourceManager;
 
 public class IndexFakeNews
 {
     private final static Logger log = Logger.getLogger(IndexFakeNews.class);
 
-    public static void main(String[] args) throws IOException
-    {
+    private Learnweb learnweb;
 
+    private ResourceManager resourceManager;
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException, SQLException
+    {
+        new IndexFakeNews();
     }
 
     public IndexFakeNews() throws IOException, ClassNotFoundException, SQLException
     {
-        Learnweb learnweb = Learnweb.createInstance(null);
+        learnweb = Learnweb.createInstance(null);
+        resourceManager = learnweb.getResourceManager();
+
+        //deleteAllFakeNewsResources();
 
         for(File file : new File("C:\\Programmieren\\Snopes").listFiles())
         {
-            System.out.println(file);
+            log.debug("process file: " + file);
             indexFile(file);
-            break;
         }
     }
 
-    private static void indexFile(File file)
+    public void deleteAllFakeNewsResources() throws SQLException
+    {
+        List<Resource> resources = resourceManager.getResources("SELECT * FROM lw_resource r WHERE source = ?", "FactCheck");
+
+        for(Resource resource : resources)
+        {
+            log.debug("Delete: " + resource);
+            resourceManager.deleteResource(resource.getId());
+        }
+
+        System.exit(0);
+    }
+
+    private void indexFile(File file)
     {
         JSONParser parser = new JSONParser();
 
         try
         {
+            Resource resource = new Resource();
+            resource.setType(ResourceType.website);
+            resource.setSource("FactCheck");
+            resource.setLocation("FactCheck");
+            resource.setMetadataValue("publisher", "snopes.com");
+            resource.setUserId(7727); // Admin
+            resource.setGroupId(1346); // Admin Fact Check group
+
             JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(file));
 
-            String Origins = (String) jsonObject.get("Origins");
-            System.out.println(Origins);
-
             String title = (String) jsonObject.get("Fact Check");
-            System.out.println(title);
+            if(StringUtils.isEmpty(title))
+                title = (String) jsonObject.get("Claim");
+            if(StringUtils.isEmpty(title))
+                title = ((String) jsonObject.get("Claim_ID")).replace("-", " ");
+            resource.setTitle(title);
 
+            String Origins = (String) jsonObject.get("Origins");
             String description = (String) jsonObject.get("Description");
             description += "\n" + Origins;
-            System.out.println(description);
+            resource.setDescription(description);
 
             String machineDescription = (String) jsonObject.get("Example");
-            System.out.println(machineDescription);
+            resource.setMachineDescription(machineDescription);
 
             String URL = (String) jsonObject.get("URL");
             if(!URL.startsWith("http"))
                 URL = "http://" + URL;
-            System.out.println(URL);
+            resource.setUrl(URL);
 
+            resourceManager.saveResource(resource);
+
+            log.debug("Added resource: " + resource);
+            /*
             String tags = (String) jsonObject.get("Tags");
-            System.out.println(tags.split(";"));
-
-            System.out.println(jsonObject);
+            for(String tag : tags.split(";"))
+                resource.addTag(tag, user);
+            */
         }
         catch(Exception e)
         {

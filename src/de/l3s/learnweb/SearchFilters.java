@@ -72,7 +72,8 @@ public class SearchFilters implements Serializable
         yovisto, //  stored in SOLR
         learnweb, // stored in SOLR
         archiveit, // stored in SOLR
-        teded// stored in SOLR
+        teded, // stored in SOLR
+        factcheck // stored in SOLR
         ;
 
         public boolean isLearnwebSource()
@@ -119,6 +120,8 @@ public class SearchFilters implements Serializable
                 return "Archive-It";
             case teded:
                 return "TED-Ed";
+            case factcheck:
+                return "Fact Check";
             default:
                 return this.name();
             }
@@ -780,7 +783,7 @@ public class SearchFilters implements Serializable
 
     /**
      * Check filters like image width and video duration
-     * 
+     *
      * @param res
      * @return boolean
      */

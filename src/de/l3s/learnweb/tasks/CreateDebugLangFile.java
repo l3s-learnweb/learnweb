@@ -9,7 +9,7 @@ import java.util.ResourceBundle;
 import org.apache.log4j.Logger;
 
 /**
- * 
+ *
  * @author Philipp
  *
  */
@@ -27,16 +27,13 @@ public class CreateDebugLangFile
 
         while(keys.hasMoreElements())
         {
-
             String key = keys.nextElement();
             props.setProperty(key, "#" + key + "#");
             log.debug(key);
-
         }
 
         props.store(out, null);
         out.close();
-
     }
-
 }
+

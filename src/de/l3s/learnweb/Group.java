@@ -40,7 +40,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     /**
      * Who can join this group? *
      */
-    public enum POLICY_JOIN // be careful when adding options. Add them only at the end. since we store only the ordinal value changing the order causes problems
+    public enum POLICY_JOIN // be careful when adding options. The new option must be added to the lw_group table too
     {
         ALL_LEARNWEB_USERS,
         COURSE_MEMBERS,
@@ -50,7 +50,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     /**
      * Who can add resources and folders to this group? *
      */
-    public enum POLICY_ADD // be careful when adding options. Add them only at the end. since we store only the ordinal value changing the order causes problems
+    public enum POLICY_ADD // be careful when adding options. The new option must be added to the lw_group table too
     {
         GROUP_MEMBERS,
         GROUP_LEADER
@@ -59,7 +59,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     /**
      * Who can delete or edit resources and folders of this group?
      */
-    public enum POLICY_EDIT // be careful when adding options. Add them only at the end. since we store only the ordinal value changing the order causes problems
+    public enum POLICY_EDIT // be careful when adding options. The new option must be added to the lw_group table too
     {
         GROUP_MEMBERS,
         GROUP_LEADER,
@@ -69,7 +69,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     /**
      * Who can view resources of this group?
      */
-    public enum POLICY_VIEW // be careful when adding options. Add them only at the end. since we store only the ordinal value changing the order causes problems
+    public enum POLICY_VIEW // be careful when adding options. The new option must be added to the lw_group table too
     {
         ALL_LEARNWEB_USERS,
         COURSE_MEMBERS,
@@ -80,7 +80,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     /**
      * Who can tag or comment resources of this group?
      */
-    public enum POLICY_ANNOTATE // be careful when adding options. Add them only at the end. since we store only the ordinal value changing the order causes problems
+    public enum POLICY_ANNOTATE // be careful when adding options. The new option must be added to the lw_group table too
     {
         ALL_LEARNWEB_USERS,
         COURSE_MEMBERS,
@@ -158,7 +158,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     }
 
     /**
-     * 
+     *
      * @param user Returns TRUE if the user is member of this group
      * @throws SQLException
      */
@@ -220,7 +220,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     /**
      * Only root folders
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -263,7 +263,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     /**
      * Title + category abbreviation (if group is categorized)
-     * 
+     *
      * @return
      */
     public String getLongTitle()
@@ -316,7 +316,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     /**
      * The course of the user who created this group and which course this group will belong to
-     * 
+     *
      * @return
      */
     public int getCourseId()
@@ -413,7 +413,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     }
 
     /**
-     * 
+     *
      * @param actions if actions is null the default filter is used
      * @param limit if limit is -1 all log entrys are returned
      * @return
@@ -426,7 +426,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     /**
      * returns the 5 newest log entrys
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -732,7 +732,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
 
     /**
      * the owner of resources is not shown if true
-     * 
+     *
      * @return
      */
     public boolean isRestrictionAnonymousResources()

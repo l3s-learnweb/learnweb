@@ -55,7 +55,7 @@ public class ResourceManager
         TITLE,
         TYPE,
         DATE
-    } // ...
+    }
 
     protected ResourceManager(Learnweb learnweb)
     {
@@ -322,6 +322,9 @@ public class ResourceManager
 
     public Resource saveResource(Resource resource) throws SQLException
     {
+        if(resource.getUserId() <= 0)
+            log.fatal("Resource has no owner" + resource, new IllegalArgumentException("Resource has no owner"));
+
         String query = "REPLACE INTO `lw_resource` (`resource_id` ,`title` ,`description` ,`url` ,`storage_type` ,`rights` ,`source` ,`type` ,`format` ,`owner_user_id` ,`rating` ,`rate_number` ,`query`, embedded_size1, embedded_size2, embedded_size3, embedded_size4, filename, max_image_url, original_resource_id, machine_description, author, file_url, thumbnail0_url, thumbnail0_file_id, thumbnail0_width, thumbnail0_height, thumbnail1_url, thumbnail1_file_id, thumbnail1_width, thumbnail1_height, thumbnail2_url, thumbnail2_file_id, thumbnail2_width, thumbnail2_height, thumbnail3_url, thumbnail3_file_id, thumbnail3_width, thumbnail3_height, thumbnail4_url, thumbnail4_file_id, thumbnail4_width, thumbnail4_height, embeddedRaw, transcript, online_status, id_at_service, duration, restricted, language, creation_date, metadata, group_id, folder_id, deleted, read_only_transcript, mtype, msource) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
                 + "?, ?)";
         PreparedStatement replace = learnweb.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
@@ -658,7 +661,7 @@ public class ResourceManager
 
     /**
      * Extracts the plain resources from a list of decorated resources
-     * 
+     *
      * @param resources
      * @return
      */
@@ -754,23 +757,23 @@ public class ResourceManager
     public AbstractPaginator getResourcesByGroupId(int groupId, Order order) throws SQLException
     {
         int results = getResourceCountByGroupId(groupId);
-    
+
         return new GroupPaginator(results, groupId, order);
     }
-    
+
     private static class GroupPaginator extends AbstractPaginator
     {
         private static final long serialVersionUID = 399863025926697377L;
         private final int groupId;
         private final Order order;
-    
+
         public GroupPaginator(int totalResults, int groupId, Order order)
         {
             super(totalResults);
             this.groupId = groupId;
             this.order = order;
         }
-    
+
         @Override
         public List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException
         {
@@ -800,9 +803,9 @@ public class ResourceManager
 
     /*
     public OwnerList<Resource, User> getResourcesByGroupId(int groupId, int page, int pageSize, Order order) throws SQLException
-    {    
+    {
     OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
-    
+
     PreparedStatement select = learnweb.getConnection().prepareStatement(
     	"SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
     select.setInt(1, groupId);
@@ -812,12 +815,12 @@ public class ResourceManager
     while(rs.next())
     {
         Resource resource = createResource(rs);
-    
+
         if(null != resource)
     	resources.add(resource.getOwnerUser(), resource.getCreationDate());
     }
     select.close();
-    
+
     return resources;
     }
     */
@@ -1267,8 +1270,8 @@ public class ResourceManager
         }
     }
 
-    /* 
-     * New resource sql queries for extended metadata (Chloe) 
+    /*
+     * New resource sql queries for extended metadata (Chloe)
      */
 
     //queries regarding table: lw_rm_audience and lw_resource_audience
@@ -1304,7 +1307,7 @@ public class ResourceManager
         return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_purpose USING ( resource_id ) WHERE purpose_id = ? AND deleted = 0 LIMIT ? ", null, purposeId, maxResults);
     }
 
-    //queries regarding table: lw_rm_catbot and lw_resource_category 
+    //queries regarding table: lw_rm_catbot and lw_resource_category
     public List<Resource> getResourcesByCatbotId(int catbotId) throws SQLException
     {
         return getResourcesByCatbotId(catbotId, 1000);
@@ -1326,7 +1329,7 @@ public class ResourceManager
         return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_category USING ( resource_id ) WHERE cat_mid_id = ? AND deleted = 0 LIMIT ? ", null, catmidId, maxResults);
     }
 
-    //queries regarding table: lw_rm_cattop and lw_resource_category 
+    //queries regarding table: lw_rm_cattop and lw_resource_category
     public List<Resource> getResourcesByCattopId(int cattopId) throws SQLException
     {
         return getResourcesByCattopId(cattopId, 1000);
@@ -1337,7 +1340,7 @@ public class ResourceManager
         return getResources("SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_resource_category USING ( resource_id ) WHERE cat_top_id = ? AND deleted = 0 LIMIT ? ", null, cattopId, maxResults);
     }
 
-    //save new resource_category 
+    //save new resource_category
     protected void saveCategoryResource(Resource resource, Category category, User user) throws SQLException
     {
         PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_category` (`resource_id`, `user_id`, `cat_top_id`, `cat_mid_id`, `cat_bot_id`) VALUES (?, ?, ?, ?, ?)");
@@ -1356,7 +1359,7 @@ public class ResourceManager
         LanglevelManager llm = Learnweb.getInstance().getLanglevelManager();
         for(int i = 0; i < langlevels.length; i++)
         {
-            //find id of the lang level first 
+            //find id of the lang level first
             int llevelId = llm.getLanglevelIdByLanglevelname(langlevels[i]);
             if(llevelId > 0)
             {
@@ -1376,7 +1379,7 @@ public class ResourceManager
         AudienceManager am = Learnweb.getInstance().getAudienceManager();
         for(int i = 0; i < targets.length; i++)
         {
-            //find id of the audience first 
+            //find id of the audience first
             int targetId = am.getAudienceIdByAudiencename(targets[i].toLowerCase());
             if(targetId > 0)
             {
@@ -1396,7 +1399,7 @@ public class ResourceManager
         PurposeManager pm = Learnweb.getInstance().getPurposeManager();
         for(int i = 0; i < purposes.length; i++)
         {
-            //find id of the lang level first 
+            //find id of the lang level first
             int purposeId = pm.getPurposeIdByPurposename(purposes[i].toLowerCase());
             log.debug(purposes[i].toLowerCase() + " " + purposeId + " " + resource.getId());
             if(purposeId > 0)
@@ -1418,7 +1421,7 @@ public class ResourceManager
         int midcatId = 0;
         int botcatId = 0;
         //need cat_top_id, cat_mid_id, cat_bot_id to save
-        //need to save bottom cat if it does not exist yet (need midcat id to save) 
+        //need to save bottom cat if it does not exist yet (need midcat id to save)
         CategoryManager cm = Learnweb.getInstance().getCategoryManager();
         topcatId = cm.getCategoryTopByName(topcat);
         if(topcatId > 0)
@@ -1450,7 +1453,7 @@ public class ResourceManager
 
     /**
      * if this flag is true some performance optimizations for reindexing all resources are enabled
-     * 
+     *
      * @return
      */
     private boolean isReindexMode()
@@ -1460,7 +1463,7 @@ public class ResourceManager
 
     /**
      * this method enables some performance optimizations for reindexing all resources
-     * 
+     *
      * @param reindexMode
      */
     public void setReindexMode(boolean reindexMode)

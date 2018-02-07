@@ -747,7 +747,6 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     @Override
     public void setTitle(String title)
     {
-
         this.title = StringUtils.isNotEmpty(title) ? StringEscapeUtils.unescapeHtml4(Jsoup.clean(title, Whitelist.none())) : "no title";
     }
 
