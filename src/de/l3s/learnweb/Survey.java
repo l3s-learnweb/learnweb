@@ -6,6 +6,27 @@ import java.util.HashMap;
 
 public class Survey
 {
+    private boolean submitted = false;
+
+    private Date start;
+
+    private Date end;
+
+    private int surveyId;
+
+    private int resourceId;
+
+    private String surveyTitle;
+
+    private String description;
+
+    private int organizationId;
+
+    private ArrayList<SurveyMetaDataFields> formQuestions = new ArrayList<SurveyMetaDataFields>();
+
+    private HashMap<String, String> wrappedAnswers = new HashMap<String, String>();
+
+    private HashMap<String, String[]> wrappedMultipleAnswers = new HashMap<String, String[]>();
     public boolean isSubmitted()
     {
         return submitted;
@@ -36,24 +57,24 @@ public class Survey
         this.end = end;
     }
 
-    public int getSurvey_id()
+    public int getSurveyId()
     {
-        return survey_id;
+        return surveyId;
     }
 
-    public void setSurvey_id(int survey_id)
+    public void setSurveyId(int survey_id)
     {
-        this.survey_id = survey_id;
+        this.surveyId = survey_id;
     }
 
-    public int getResource_id()
+    public int getResourceId()
     {
-        return resource_id;
+        return resourceId;
     }
 
-    public void setResource_id(int resource_id)
+    public void setResourceId(int resource_id)
     {
-        this.resource_id = resource_id;
+        this.resourceId = resource_id;
     }
 
     public String getSurveyTitle()
@@ -115,17 +136,4 @@ public class Survey
     {
         this.wrappedMultipleAnswers = wrappedMultipleAnswers;
     }
-
-    boolean submitted = false;
-
-    Date start;
-    Date end;
-    int survey_id;
-    int resource_id;
-    String surveyTitle;
-    String description;
-    int organizationId;
-    ArrayList<SurveyMetaDataFields> formQuestions = new ArrayList<SurveyMetaDataFields>();
-    HashMap<String, String> wrappedAnswers = new HashMap<String, String>();
-    HashMap<String, String[]> wrappedMultipleAnswers = new HashMap<String, String[]>();
 }
