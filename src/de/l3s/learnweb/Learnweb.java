@@ -80,7 +80,7 @@ public class Learnweb
     private final SuggestionLogger suggestionLogger;
     private final SurveyManager surveyManager;
     private final SubmissionManager submissionManager;
-    private final CreateSurveyManager createSurveyManager;
+    private final createSurveyManager createSurveyManager;
     private final WaybackCapturesLogger waybackCapturesLogger;
     private final SearchLogManager searchLogManager;
     private final WaybackUrlManager waybackUrlManager;
@@ -295,7 +295,7 @@ public class Learnweb
         searchLogManager = new SearchLogManager(this);
         surveyManager = new SurveyManager(this);
         submissionManager = new SubmissionManager(this);
-        createSurveyManager = new CreateSurveyManager(this);
+        createSurveyManager = new createSurveyManager(this);
         waybackUrlManager = WaybackUrlManager.getInstance(this);
 
         learnwebIsLoading = false;
@@ -822,7 +822,7 @@ public class Learnweb
         return surveyManager;
     }
 
-    public CreateSurveyManager getCreateSurveyManager()
+    public createSurveyManager getCreateSurveyManager()
     {
         return createSurveyManager;
     }
