@@ -36,9 +36,10 @@ public class IndexFakeNews
 
         //deleteAllFakeNewsResources();
 
+        int i = 1;
         for(File file : new File("C:\\Programmieren\\Snopes").listFiles())
         {
-            log.debug("process file: " + file);
+            log.debug("process file: " + (i++) + ", " + file);
             indexFile(file);
         }
     }
