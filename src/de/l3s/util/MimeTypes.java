@@ -363,7 +363,7 @@ public class MimeTypes
     public static String getMimeType(String ext)
     {
         String mimeType = lookupMimeType(ext);
-        if (mimeType == null)
+        if(mimeType == null)
         {
             mimeType = MIME_APPLICATION_OCTET_STREAM;
         }

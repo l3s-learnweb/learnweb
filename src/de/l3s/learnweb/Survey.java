@@ -96,7 +96,6 @@ public class Survey
         this.organizationId = organizationId;
     }
 
-
     public HashMap<String, String> getWrappedAnswers()
     {
         return wrappedAnswers;
@@ -116,7 +115,6 @@ public class Survey
     {
         this.wrappedMultipleAnswers = wrappedMultipleAnswers;
     }
-
 
     boolean submitted = false;
 

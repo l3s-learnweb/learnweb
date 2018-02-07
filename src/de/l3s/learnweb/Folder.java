@@ -110,7 +110,8 @@ public class Folder implements Serializable, HasId, GroupItem
         if(parentFolderId == 0)
             return null;
 
-        if(parentFolderId == folderId) {
+        if(parentFolderId == folderId)
+        {
             log.warn("Folder " + folderId + " has itself as parent folder.");
             return null;
         }
@@ -142,11 +143,13 @@ public class Folder implements Serializable, HasId, GroupItem
         this.setTitle(name);
     }
 
-    public String getDescription() {
+    public String getDescription()
+    {
         return description;
     }
 
-    public void setDescription(String description) {
+    public void setDescription(String description)
+    {
         this.description = description;
     }
 

@@ -349,7 +349,7 @@ public class StudentviewBean
     	
     	return graph03label;
     }
-
+    
     public String getGraph03terms() {
     	UserLogHome ulh=new UserLogHome();
     	Map<String, Integer> mappa = ulh.userGlossaryTerm();
@@ -361,7 +361,7 @@ public class StudentviewBean
     	
     	return graph03terms;
     }
-
+    
     public String getGraph03concepts() {
     	UserLogHome ulh=new UserLogHome();
     	Map<String, Integer> mappa = ulh.userGlossary();
