@@ -87,7 +87,7 @@ public class GlossaryManager
             ps = learnweb.getConnection().prepareStatement(selectOldData);
             ps.setInt(1, oldResourceId);
             ResultSet oldData = ps.executeQuery();
-            if(oldData.next())
+            while(oldData.next())
             {
                 ps = learnweb.getConnection().prepareStatement(insertNewData);
                 ps.setInt(1, newResourceId);
