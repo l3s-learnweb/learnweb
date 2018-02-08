@@ -864,7 +864,7 @@ public class ResourceManager
 
         if(StringUtils.isEmpty(source))
         {
-            log.error("Empty source for resource: " + resource, new IllegalArgumentException());
+            log.warn("Empty source for resource: " + resource, new IllegalArgumentException());
             return "Learnweb";
         }
 
