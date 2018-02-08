@@ -634,8 +634,6 @@ public class SearchFilters implements Serializable
         {
             for(Count c : availableResources.get(fs))
             {
-                log.debug("count " + c.getCount() + " - " + c.getName());
-
                 SERVICE src = getServiceByName(c.getName());
                 FilterItem fi = new FilterItem(src.toString(), c.getCount() > 0 ? c.getCount() : null, src.name(), current != null && current.equals(src));
                 filters.add(fi);
