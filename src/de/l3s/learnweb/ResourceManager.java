@@ -15,6 +15,7 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.jaxb.SearchResultEntity;
@@ -851,6 +852,54 @@ public class ResourceManager
         return resources;
     }
 
+    /**
+     * Returns the the location were a resource is stored. Necessary because some external sources are indexed in our Solr instance
+     *
+     * @param resource
+     * @return
+     */
+    private static String getLocation(Resource resource)
+    {
+        String source = resource.getSource();
+
+        if(StringUtils.isEmpty(source))
+        {
+            log.error("Empty source for resource: " + resource, new IllegalArgumentException());
+            return "Learnweb";
+        }
+
+        switch(source)
+        {
+        case "TED-Ed":
+        case "TED":
+        case "TEDx":
+        case "Yovisto":
+        case "Archive-It":
+        case "FactCheck":
+            return source;
+        default:
+            return "Learnweb";
+        }
+            /*
+        if(resource.getSource().equals("TED"))
+            resource.setLocation("TED");
+        else if(resource.getSource().equals("TEDx"))
+            resource.setLocation("TEDx");
+        else if(resource.getSource().equals("TED-Ed"))
+            resource.setLocation("TED-Ed");
+        else if(resource.getSource().equals("LORO"))
+            resource.setLocation("LORO");
+        else if(resource.getSource().equals("Yovisto"))
+            resource.setLocation("Yovisto");
+        else if(resource.getSource().equals("Archive-It"))
+            resource.setLocation("Archive-It");
+        else if(resource.getSource().equals("FactCheck"))
+            resource.setLocation("FactCheck");
+        else
+            resource.setLocation("Learnweb");
+            */
+    }
+
     private Resource createResource(ResultSet rs) throws SQLException
     {
         int id = rs.getInt("resource_id");
@@ -904,20 +953,7 @@ public class ResourceManager
             resource.setMsource(rs.getString("msource"));
 
             // This must be set manually because we stored some external sources in Learnweb/Solr
-            if(resource.getSource().equals("TED"))
-                resource.setLocation("TED");
-            else if(resource.getSource().equals("TEDx"))
-                resource.setLocation("TEDx");
-            else if(resource.getSource().equals("TED-Ed"))
-                resource.setLocation("TED-Ed");
-            else if(resource.getSource().equals("LORO"))
-                resource.setLocation("LORO");
-            else if(resource.getSource().equals("Yovisto"))
-                resource.setLocation("Yovisto");
-            else if(resource.getSource().equals("Archive-It"))
-                resource.setLocation("Archive-It");
-            else
-                resource.setLocation("Learnweb");
+            resource.setLocation(getLocation(resource));
 
             if(resource.getType() != null && resource.getType().equals(ResourceType.glossary))
                 resource.setUrl(learnweb.getServerUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));

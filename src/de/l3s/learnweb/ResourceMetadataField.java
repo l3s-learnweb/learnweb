@@ -23,14 +23,14 @@ public class ResourceMetadataField implements Serializable
         FULLWIDTH_DESCRIPTION
     }
 
-    private String name; // the name of this field, will be used as SOLR column name  
+    private String name; // the name of this field, will be used as SOLR column name
     private String label; // label on the website, is replaced by a translated term if available
     private String info; // an explanation, displayed as tooltip
-    private MetadataType type;
+    private MetadataType type; // represents primeface input types
     private List<String> options = new LinkedList<String>(); // default options for some input types like OneMenu
+    private transient List<SelectItem> optionsList; // options wrapped into select itmes
     private boolean moderatorOnly = false; // only admins and moderators have write access
     private boolean required = false;
-    private List<SelectItem> optionsList;
 
     public ResourceMetadataField(String name, String label, MetadataType type)
     {

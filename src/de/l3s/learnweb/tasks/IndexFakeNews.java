@@ -15,6 +15,7 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Resource.ResourceType;
 import de.l3s.learnweb.ResourceManager;
+import de.l3s.learnweb.solrClient.SolrClient;
 
 public class IndexFakeNews
 {
@@ -34,24 +35,26 @@ public class IndexFakeNews
         learnweb = Learnweb.createInstance(null);
         resourceManager = learnweb.getResourceManager();
 
-        //deleteAllFakeNewsResources();
+        reindexAllFakeNewsResources();
 
         int i = 1;
-        for(File file : new File("C:\\Programmieren\\Snopes").listFiles())
+        for(File file : new File("./Snopes").listFiles())
         {
             log.debug("process file: " + (i++) + ", " + file);
             indexFile(file);
         }
     }
 
-    public void deleteAllFakeNewsResources() throws SQLException
+    public void reindexAllFakeNewsResources() throws SQLException
     {
         List<Resource> resources = resourceManager.getResources("SELECT * FROM lw_resource r WHERE source = ?", "FactCheck");
-
+        resourceManager.setReindexMode(true);
+        SolrClient solrClient = learnweb.getSolrClient();
         for(Resource resource : resources)
         {
-            log.debug("Delete: " + resource);
-            resourceManager.deleteResource(resource.getId());
+            log.debug("Process: " + resource);
+            solrClient.reIndexResource(resource);
+            //resourceManager.deleteResource(resource.getId());
         }
 
         System.exit(0);

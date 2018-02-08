@@ -26,6 +26,7 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
 import de.l3s.learnweb.File.TYPE;
+import de.l3s.learnweb.SearchFilters.SERVICE;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.rm.ExtendedMetadata;
 import de.l3s.util.HasId;
@@ -147,7 +148,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private transient MetadataMapWrapper metadataWrapper; // includes static fields like title, description, author into the map
     private transient MetadataMultiValueMapWrapper metadataMultiValue;
 
-    //extended metadata (Chloe) 
+    //extended metadata (Chloe)
     private transient ExtendedMetadata extendedMetadata = null;
     private String mtype;
     private String msource;
@@ -214,16 +215,16 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
             setThumbnail3(dummyImage);
         if(null == thumbnail4)
             setThumbnail4(dummyImage);
-        
+
         /*
         if(null == embeddedSize1 || null == embeddedSize3)
         {
-        
+
         if(source.equalsIgnoreCase("YouTube"))
         {
             Pattern pattern = Pattern.compile("v[/=]([^&]+)");
             Matcher matcher = pattern.matcher(url);
-        
+
             if(matcher.find())
             {
                 String videoId = matcher.group(1);
@@ -232,7 +233,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
                 if(null == embeddedSize3)
                     this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
                 this.format = "application/x-shockwave-flash";
-        
+
                 dummyImage = new Thumbnail("http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg", 320, 180);
             }
         }
@@ -240,26 +241,26 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         {
             Pattern pattern = Pattern.compile("youtube.com/watch%3Fv%3D([^&]+)");
             Matcher matcher = pattern.matcher(url);
-        
+
             if(matcher.find())
             {
                 String videoId = matcher.group(1);
                 this.embeddedSize1 = "<img src=\"http://img.youtube.com/vi/" + videoId + "/default.jpg\" width=\"100\" height=\"75\" />";
                 this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
-        
+
                 this.format = "application/x-shockwave-flash";
                 this.source = "YouTube";
                 this.url = "https://www.youtube.com/watch?v=" + videoId;
-        
+
                 dummyImage = new Thumbnail("http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg", 320, 180);
-        
+
             }
         }
         else if(source.equalsIgnoreCase("Vimeo"))
         {
             Pattern pattern = Pattern.compile("vimeo\\.com/([^&]+)");
             Matcher matcher = pattern.matcher(url);
-        
+
             if(matcher.find())
             {
                 String videoId = matcher.group(1);
@@ -267,9 +268,9 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
                         + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" /><embed src=\"http://vimeo.com/moogaloop.swf?clip_id=" + videoId
                         + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"500\" height=\"375\"></embed></object>";
                 this.format = "application/x-shockwave-flash";
-        
+
             }
-        
+
         }
         else if(source.equals("Ipernity") && embeddedSize1 != null)
         {
@@ -284,8 +285,8 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
                 embeddedSize3 = embeddedSize1.replace("_t.", ".");
         }
         }
-        
-        
+
+
         if(dummyImage != null)
         {
         if(null == thumbnail0)
@@ -299,7 +300,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         if(null == thumbnail4)
             setThumbnail4(dummyImage);
         }
-        
+
         if(embeddedSize1 == null || embeddedSize1.length() < 3)
         {
         if(type.equals(ResourceType.audio))
@@ -507,7 +508,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     public String getStringStorageType()
     {
         if(storageType == Resource.LEARNWEB_RESOURCE)
-            return "Learnweb"; // has been called before: UtilBean.getLocaleMessage("file"); 
+            return "Learnweb"; // has been called before: UtilBean.getLocaleMessage("file");
         else if(storageType == Resource.WEB_RESOURCE)
             return UtilBean.getLocaleMessage("web");
         else
@@ -747,7 +748,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     @Override
     public void setTitle(String title)
     {
-        this.title = StringUtils.isNotEmpty(title) ? StringEscapeUtils.unescapeHtml4(Jsoup.clean(title, Whitelist.none())) : "no title";
+        this.title = StringUtils.isNotEmpty(title) ? StringHelper.shortnString(StringEscapeUtils.unescapeHtml4(Jsoup.clean(title, Whitelist.none())), 980) : "no title";
     }
 
     public void setDescription(String description)
@@ -906,7 +907,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     /**
      * Returns the url of this resource but proxied through WAPS.io if enabled
-     * 
+     *
      * @return
      */
     public String getUrlProxied()
@@ -1197,6 +1198,11 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public void setSource(String source)
     {
+        SERVICE service = SERVICE.valueOf(source.toLowerCase().replace("-", ""));
+        if(service == null)
+            log.warn("Invalid source: " + source + " resource " + this);
+        // TODO use  enum instead of string
+
         /*
         if(null == source || source.length() == 0)
             log.info("Resource: " + id + "; source set to null");
@@ -1232,7 +1238,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     }
 
     /**
-     * 
+     *
      * @return If the uploaded file was modified (e.g. a video or office document) we keep a copy of the original file
      */
     public File getOriginalFile()
@@ -1241,7 +1247,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     }
 
     /**
-     * 
+     *
      * @return If the uploaded file was modified (e.g. a video or office document) we keep a copy of the original file
      */
     public File getMainFile()
@@ -1862,7 +1868,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     /**
      * A map wrapper to support multi valued input fields
-     * 
+     *
      * @author Kemkes
      *
      */
@@ -1988,7 +1994,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     /**
      * A map wrapper to support multi valued input fields
-     * 
+     *
      * @author Kemkes
      *
      */
@@ -2103,7 +2109,7 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         this.msource = msource;
     }
 
-    //extended metadata setter and getter (chloe) 
+    //extended metadata setter and getter (chloe)
     public ExtendedMetadata getExtendedMetadata() throws SQLException
     {
         if(extendedMetadata == null)

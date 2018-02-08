@@ -676,6 +676,11 @@ img.smallImage { cursor:pointer; margin:4px; }
 	background-image: url('#{resource['icon:services/archiveit.gif']}');
 }
 
+.group-menu-header .source_factcheck,
+.group-menu-block.source_factcheck .group-menu-title {
+	background-image: url('#{resource['icon:services/learnweb.gif']}');
+}
+
 .group-menu-bar .group-menu-content {
 	font-size: 1.2rem;
 	padding-top: 2px;

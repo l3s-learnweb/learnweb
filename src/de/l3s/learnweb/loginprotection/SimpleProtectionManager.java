@@ -60,7 +60,7 @@ public class SimpleProtectionManager implements ProtectionManager
                     IPMap.put(rs.getString("name"), new AccessData(1, rs.getDate("bandate"), rs.getString("name")));
                 }
             }
-
+            select.close();
         }
         catch(SQLException e)
         {
@@ -180,9 +180,8 @@ public class SimpleProtectionManager implements ProtectionManager
             accData.setBan(bantime);
         }
 
-        try
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_bans (name, bandate, type) VALUES(?, ? ,?) ON DUPLICATE KEY UPDATE bandate=VALUES(bandate)");)
         {
-            PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_bans (name, bandate, type) VALUES(?, ? ,?) ON DUPLICATE KEY UPDATE bandate=VALUES(bandate)");
             insert.setString(1, accData.getName());
             insert.setDate(2, new java.sql.Date(accData.getBanDate().getTime()));
             if(isIP)
@@ -243,12 +242,10 @@ public class SimpleProtectionManager implements ProtectionManager
         IPMap.remove(name);
         usernameMap.remove(name);
 
-        try
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans WHERE name=?");)
         {
-            PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans WHERE name=?");
             delete.setString(1, name);
             delete.execute();
-
         }
         catch(SQLException e)
         {
@@ -256,7 +253,6 @@ public class SimpleProtectionManager implements ProtectionManager
         }
 
         log.debug("Unbanned " + name);
-
     }
 
     /**
@@ -268,11 +264,9 @@ public class SimpleProtectionManager implements ProtectionManager
         IPMap.clear();
         usernameMap.clear();
 
-        try
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans");)
         {
-            PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans");
             delete.execute();
-
         }
         catch(SQLException e)
         {
@@ -281,7 +275,6 @@ public class SimpleProtectionManager implements ProtectionManager
 
         log.debug("Banlist cleared.");
     }
-
     /**
      * Erases all banlist entries that have expired more than 3 days ago.
      */
