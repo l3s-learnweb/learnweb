@@ -3,7 +3,11 @@ package de.l3s.learnweb.loginprotection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -49,11 +53,11 @@ public class SimpleProtectionManager implements ProtectionManager
             {
                 if(rs.getString("type").equals("user"))
                 {
-                    usernameMap.put(rs.getString("name"), new AccessData(1, rs.getDate("bandate")));
+                    usernameMap.put(rs.getString("name"), new AccessData(1, rs.getDate("bandate"),rs.getString("name")));
                 }
                 else if(rs.getString("type").equals("IP"))
                 {
-                    IPMap.put(rs.getString("name"), new AccessData(1, rs.getDate("bandate")));
+                    IPMap.put(rs.getString("name"), new AccessData(1, rs.getDate("bandate"), rs.getString("name")));
                 }
             }
 
@@ -64,6 +68,18 @@ public class SimpleProtectionManager implements ProtectionManager
         }
 
         log.debug("Loaded banlists of usernames and IPs with " + usernameMap.size() + " and " + IPMap.size() + " entries respectively.");
+    }
+
+    /**
+     * Returns current banlist. Includes both bans by IP and by username.
+     */
+    @Override
+    public List<AccessData> getBanlist()
+    {
+        List<AccessData> banlist = new ArrayList<AccessData>();
+        banlist.addAll(IPMap.values());
+        banlist.addAll(usernameMap.values());
+        return banlist;
     }
 
     @Override
@@ -87,51 +103,60 @@ public class SimpleProtectionManager implements ProtectionManager
      * At 10+ failed attempts username/IP gets a 2-hour ban, incrementing by 2 for each failed attempt
      */
     @Override
-    public void updateFailedAttempts(String IP, String username)
+    public synchronized void updateFailedAttempts(String IP, String username)
     {
         AccessData ipData = IPMap.get(IP);
         AccessData usernameData = usernameMap.get(username);
 
         if(ipData == null)
         {
-            ipData = new AccessData();
+            ipData = new AccessData(IP);
             IPMap.put(IP, ipData);
+            ipData.setAttempts(ipData.getAttempts() + 1);
+        }
+        else
+        {
+            ipData.setAttempts(ipData.getAttempts() + 1);
+            if(usernameData.getAttempts() >= 10)
+            {
+                int bantime = 2 + 2 * usernameData.getAttempts() % 10;
+                ban(usernameData, bantime, false);
+                log.debug("Banned username " + username + " for " + bantime + " hours after " + usernameData.getAttempts() + " failed login attempts");
+            }
+            else if(usernameData.getAttempts() >= 50)
+            {
+                usernameData.permaban();
+                ban(usernameData, -1, false);
+                log.debug("Permabanned username " + username + " for excessive failed login attempts");
+            }
         }
 
         if(usernameData == null)
         {
-            usernameData = new AccessData();
+            usernameData = new AccessData(username);
             usernameMap.put(username, usernameData);
-            return;
+            usernameData.setAttempts(usernameData.getAttempts() + 1);
+        }
+        else
+        {
+            usernameData.setAttempts(usernameData.getAttempts() + 1);
+            if(ipData.getAttempts() >= 10)
+            {
+                int bantime = 2 + 2 * ipData.getAttempts() % 10;
+                ban(ipData, bantime, true);
+                log.debug("Banned IP " + IP + " for " + bantime + " hours after " + ipData.getAttempts() + " failed login attempts");
+
+            }
+            else if(ipData.getAttempts() >= 50)
+            {
+                ipData.permaban();
+                ban(ipData, -1, true);
+                log.debug("Permabanned IP " + IP + " for excessive failed login attempts");
+            }
         }
 
-        ipData.attempts++;
-        usernameData.attempts++;
 
-        if(ipData.attempts >= 50)
-        {
-            ipData.permaban();
-            log.debug("Permabanned IP " + IP + " for excessive failed login attempts");
-        }
-        else if(ipData.attempts >= 10)
-        {
-            int bantime = 2 + 2 * ipData.attempts % 10;
-            ban(ipData, IP, bantime, true);
-            log.debug("Banned IP " + IP + " for " + bantime + " hours after " + ipData.attempts + " failed login attempts");
 
-        }
-
-        if(usernameData.attempts >= 50)
-        {
-            usernameData.permaban();
-            log.debug("Permabanned username " + username + " for excessive failed login attempts");
-        }
-        else if(usernameData.attempts >= 10)
-        {
-            int bantime = 2 + 2 * usernameData.attempts % 10;
-            ban(usernameData, username, bantime, false);
-            log.debug("Banned username " + username + " for " + bantime + " hours after " + usernameData.attempts + " failed login attempts");
-        }
 
     }
 
@@ -144,7 +169,7 @@ public class SimpleProtectionManager implements ProtectionManager
      * @param permaban Whether the ban is temporary or permament
      */
     @Override
-    public void ban(AccessData accData, String name, int bantime, boolean isIP)
+    public synchronized void ban(AccessData accData, int bantime, boolean isIP)
     {
         if(bantime < 0)
         {
@@ -158,8 +183,8 @@ public class SimpleProtectionManager implements ProtectionManager
         try
         {
             PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_bans (name, bandate, type) VALUES(?, ? ,?) ON DUPLICATE KEY UPDATE bandate=VALUES(bandate)");
-            insert.setString(1, name);
-            insert.setDate(2, new java.sql.Date(accData.banDate.getTime()));
+            insert.setString(1, accData.getName());
+            insert.setDate(2, new java.sql.Date(accData.getBanDate().getTime()));
             if(isIP)
             {
                 insert.setString(3, "IP");
@@ -170,6 +195,8 @@ public class SimpleProtectionManager implements ProtectionManager
             }
 
             insert.execute();
+
+            log.debug("Banned " + accData.getName() + " until " + accData.getBanDate());
         }
         catch(SQLException e)
         {
@@ -177,13 +204,41 @@ public class SimpleProtectionManager implements ProtectionManager
         }
     }
 
+    @Override
+    public synchronized void ban(String name, int bantime, boolean isIP)
+    {
+        AccessData accData;
+
+        if(isIP)
+        {
+            accData = IPMap.get(name);
+            if(accData == null)
+            {
+                accData = new AccessData(name);
+                IPMap.put(name, accData);
+            }
+        }
+        else
+        {
+            accData = usernameMap.get(name);
+            if(accData == null)
+            {
+                accData = new AccessData(name);
+                usernameMap.put(name, accData);
+            }
+        }
+
+        ban(accData, bantime, isIP);
+
+    }
+
     /**
-     * Unbans a given name or IP. To be used by moderators.
+     * Unbans a given name or IP. To be used by moderators\admins.
      *
      * @param name Name\Address that will be cleared of their sins
      */
     @Override
-    public void unban(String name)
+    public synchronized void unban(String name)
     {
         IPMap.remove(name);
         usernameMap.remove(name);
@@ -226,5 +281,38 @@ public class SimpleProtectionManager implements ProtectionManager
 
         log.debug("Banlist cleared.");
     }
+
+    /**
+     * Erases all banlist entries that have expired more than 3 days ago.
+     */
+    @Override
+    public void cleanUpOutdatedBans()
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, -3);
+
+        try
+        {
+            PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans WHERE bandate <= CAST(? AS DATE)");
+            delete.setDate(1, new java.sql.Date(cal.getTimeInMillis()));
+            delete.execute();
+
+        }
+        catch(SQLException e)
+        {
+            log.error("Expired ban cleanup failed. SQLException: ", e);
+        }
+
+        IPMap.clear();
+        usernameMap.clear();
+
+        loadBanLists();
+
+        log.debug("Older entries have been cleaned up from balists.");
+
+    }
+
+
 
 }

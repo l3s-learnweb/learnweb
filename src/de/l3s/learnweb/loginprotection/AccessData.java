@@ -13,19 +13,22 @@ import java.util.Date;
  */
 public class AccessData
 {
-    public int attempts;
-    public Date banDate;
+    private int attempts;
+    private Date banDate;
+    private String name;
 
-    public AccessData()
+    public AccessData(String name)
     {
-        attempts = 1;
-        banDate = new Date(0);
+        setAttempts(0);
+        setBanDate(new Date(0));
+        this.setName(name);
     }
 
-    public AccessData(int attempts, Date banDate)
+    public AccessData(int attempts, Date banDate, String name)
     {
-        this.attempts = attempts;
-        this.banDate = banDate;
+        this.setAttempts(attempts);
+        this.setBanDate(banDate);
+        this.setName(name);
     }
 
     /**
@@ -33,8 +36,8 @@ public class AccessData
      */
     public void reset()
     {
-        attempts = 0;
-        banDate = new Date(0);
+        setAttempts(0);
+        setBanDate(new Date(0));
     }
 
     /**
@@ -45,7 +48,7 @@ public class AccessData
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.HOUR_OF_DAY, hours);
-        banDate = cal.getTime();
+        setBanDate(cal.getTime());
     }
 
     /**
@@ -56,6 +59,36 @@ public class AccessData
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
         cal.add(Calendar.YEAR, 400);
-        banDate = cal.getTime();
+        setBanDate(cal.getTime());
+    }
+
+    public int getAttempts()
+    {
+        return attempts;
+    }
+
+    public void setAttempts(int attempts)
+    {
+        this.attempts = attempts;
+    }
+
+    public Date getBanDate()
+    {
+        return banDate;
+    }
+
+    public void setBanDate(Date banDate)
+    {
+        this.banDate = banDate;
+    }
+
+    public String getName()
+    {
+        return name;
+    }
+
+    public void setName(String name)
+    {
+        this.name = name;
     }
 }

@@ -1,0 +1,89 @@
+<ui:composition
+	template="/templates/main/main.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg.banlist_header}"/>
+
+	<ui:define name="center_layout">
+
+	<style type="text/css">
+		.ui-state-hover, .ui-state-focus, .ui-state-active{
+			box-shadow:0 0 0px 0px #fff !important;
+			background-color:#d1d1d1 !important;
+			background-image:none !important;
+			border:1px solid #a8a8a8 !important;
+		}
+		.page_header{margin:5px 5px 0px 5px;}
+		#banlistform{padding:5px; width:100%;}
+	</style>
+
+		<div class="page_header">
+			<span>
+				#{msg.banlist_header}
+			</span>
+		</div>
+
+		<p:panel header="#{msg.manual_ban}" style="margin:5px;">
+			<h:form id="banuser">
+				#{msg.name_or_ip}: <h:inputText value="#{adminBanlistBean.name}" id="b_name" required="true"/> <br/>
+				#{msg.ban_for}: <h:inputText value="#{adminBanlistBean.bantime}" id="b_date" required="true"/> <br/>
+				<h:selectOneRadio value="#{adminBanlistBean.type}" required="true">
+				   	<f:selectItem itemValue="user" itemLabel="User"/>
+				   	<f:selectItem itemValue="ip" itemLabel="IP" />
+				</h:selectOneRadio>
+
+				<h:commandButton action="${adminBanlistBean.onManualBan}" value="#{msg.manual_ban}" process="@form" style="margin-top:10px;"/>
+			</h:form>
+		</p:panel>
+
+		<br/>
+
+	<p:panel header="#{msg.banlist}">
+		<h:form id="banlistform" >
+			<p:dataTable var="entry" value="#{adminBanlistBean.banlist}" rows="50" paginator="true" rowsPerPageTemplate="50,100,250"
+	               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+
+				<p:column headerText="#{msg.name}" sortBy="#{entry.name}">
+					<h:outputText value="#{entry.name}" />
+				</p:column>
+
+				<p:column headerText="#{msg.bandate}" sortBy="#{entry.banDate}">
+					<h:outputText value="#{entry.banDate}">
+					    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+					</h:outputText>
+				</p:column>
+
+				<p:column headerText="#{msg.attempts}" sortBy="#{entry.attempts}">
+					<h:outputText value="#{entry.attempts}"/>
+				</p:column>
+
+				<p:column headerText="#{msg.options}">
+					<f:facet name="header">
+						#{msg.options}
+					</f:facet>
+					<p:commandLink actionListener="#{adminBanlistBean.onUnban(entry.name)}" process="@this"
+						update=":banlistform :growl"
+						onstart="return confirm('Unban \'#{entry.name}\'?');"
+						style="text-decoration:none;" title="#{msg.unban}">
+
+						<h:graphicImage value="/resources/icon/Remove.png" width="16" height="16" alt="#{msg.unban}" />
+					</p:commandLink>
+				</p:column>
+			</p:dataTable>
+		</h:form>
+	</p:panel>
+
+	<p:panel header="#{msg.misc_actions}" style="margin:5px;">
+		<h:form>
+			<h:commandButton action="${adminBanlistBean.onClearBanlist}" value="#{msg.clear_bans}" style="margin:10px;" onclick="return confirm('Are you sure you want to clear the banlist? This cannot be undone.')" immediate="true"/>
+			<h:commandButton action="${adminBanlistBean.onDeleteOutdatedBans}" value="#{msg.clean_up_bans}" style="margin:10px;" immediate="true"/>
+		</h:form>
+	</p:panel>
+
+	</ui:define>
+</ui:composition>

@@ -1,18 +1,18 @@
-<html xmlns:ui="http://java.sun.com/jsf/facelets" 
-      xmlns:h="http://java.sun.com/jsf/html" 
-      xmlns:f="http://java.sun.com/jsf/core" 
+<html xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
       xmlns:p="http://primefaces.org/ui">
-      
+
 <ui:composition>
 	<h:outputScript name="main-template/jquery-ui.min.js" />
 
 	<header id="header" class="header">
-		<div id="main_menu_bar" style="background-color: #{userBean.bannerColor}; #{userBean.bannerImage}">			
-		
+		<div id="main_menu_bar" style="background-color: #{userBean.bannerColor}; #{userBean.bannerImage}">
+
 			<img src="#{request.contextPath}/resources/main-template/img/ajax-loader.gif" alt="Loading" id="loadingsymbol"/>
-			<p:ajaxStatus onstart="document.getElementById('loadingsymbol').style.visibility='visible';" 
-				onsuccess="document.getElementById('loadingsymbol').style.visibility='hidden';" />			
-		 
+			<p:ajaxStatus onstart="document.getElementById('loadingsymbol').style.visibility='visible';"
+				onsuccess="document.getElementById('loadingsymbol').style.visibility='hidden';" />
+
 			<form action="#{request.contextPath}/lw/search.jsf" method="get" onsubmit="removeViewstate(this);" id="searchform">
 				<a href="#{userBean.bannerLink}" id="learnweb_logo">
 					Logo
@@ -21,7 +21,7 @@
 				<input type="hidden" name="action" value="#{searchBean.queryMode}" />
 				<input type="submit" value=" " id="searchbutton" title="#{msg.searchLabel}" />
 			</form>
-			
+
 			<ui:fragment rendered="#{userBean.loggedIn}">
 				<div class="userbar">
 					<ul>
@@ -39,21 +39,21 @@
 							<a href="#{request.contextPath}/lw/myhome/activity.jsf" id="activitystream">
 								<h:outputText value="#{msg.activity_stream}" />
 							</a>
-						</li>	
+						</li>
 						<li>
 							<a href="#{request.contextPath}/lw/myhome/profile.jsf" id="profile">
 								<h:outputText value="#{msg.myProfileTitle}" />
 							</a>
-						</li>				
+						</li>
 						<li>
-							<img alt="" src="#{request.contextPath}/resources/main-template/img/dropdownmenu.png" height="28" width="28" 
+							<img alt="" src="#{request.contextPath}/resources/main-template/img/dropdownmenu.png" height="28" width="28"
 								class="menu" tabindex="0" />
-							
-							<ul>				
+
+							<ul>
 								<li class="menupoint">
 									<h:outputText value="#{msg.my_stuff}" />
 								</li>
-								
+
 								<li>
 									<a href="#{request.contextPath}/lw/myhome/resources.jsf" id="moremyresources">
 										<h:outputText value="#{msg.myResourcesTitle}" />
@@ -68,7 +68,7 @@
 									<a href="#{request.contextPath}/lw/myhome/activity.jsf" id="moreactivitystream">
 										<h:outputText value="#{msg.activity_stream}" />
 									</a>
-								</li>							
+								</li>
 								<li>
 									<a href="#{request.contextPath}/lw/myhome/profile.jsf" id="moreprofile">
 										<h:outputText value="#{msg.myProfileTitle}" />
@@ -95,7 +95,7 @@
 										<h:outputText value="#{msg.notification}" />
 									</a>
 								</li>
-								
+
 								<li>
 									<a href="#{request.contextPath}/lw/user/login.jsf" id="login">
 										#{msg.loginLabel}
@@ -103,30 +103,35 @@
 								</li>
 								<li>
 									<h:form id="logout">
-										<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true" 
+										<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true"
 											title="#{msg.logoutLabel}" value="#{msg.logoutLabel}" />
 									</h:form>
 								</li>
 								<ui:fragment rendered="#{userBean.admin}">
-								
+
 									<li>
 										<a href="#{request.contextPath}/lw/explore.jsf?mode=list_view&amp;page=1">
 											<h:outputText value="#{msg.search_history}" />
 										</a>
 									</li>
-								
+
 									<li>
 										<a href="#{request.contextPath}/lw/myhome/services.jsf">
 											<h:outputText value="#{msg.web2_0services}" />
 										</a>
 									</li>
-									
+
 									<li class="menupoint">
 										<h:outputText value="#{msg.admin}" />
 									</li>
 									<li>
 										<a href="#{request.contextPath}/lw/admin/organisations.jsf">
 											<h:outputText value="Organisations" />
+										</a>
+									</li>
+									<li>
+										<a href="#{request.contextPath}/lw/admin/banlist.jsf">
+											<h:outputText value="Banlist" />
 										</a>
 									</li>
 									<li>
@@ -201,17 +206,17 @@
 										</a>
 									</li>
 									</ui:fragment>
-								</ui:fragment> 
-							</ul>						
+								</ui:fragment>
+							</ul>
 						</li>
 					</ul>
-				</div>				
+				</div>
 			</ui:fragment>
-			
+
 			<ui:fragment rendered="#{userBean.languageSwitchEnabled}">
 				<div id="language_selector" class="hover-white" tabindex="0">
 					<img alt="#{userBean.localeCode}" src="#{request.contextPath}/resources/main-template/img/flag_#{userBean.localeCode}.png" />
-	
+
 					<h:form>
 						<ul>
 							<li>
@@ -245,30 +250,30 @@
 					</h:form>
 				</div>
 			</ui:fragment>
-									
-			<p:graphicImage value="/resources/main-template/img/question.png" alt="#{msg.help}" onclick="footerToggle();" 
+
+			<p:graphicImage value="/resources/main-template/img/question.png" alt="#{msg.help}" onclick="footerToggle();"
 				rendered="#{not empty helpText}" id="informationonscreen" />
-		
+
 			<h:outputLink value="#{request.contextPath}/lw/myhome/notification.jsf" rendered="#{userBean.loggedIn}" id="message_div">
-				<h:outputText value="#{notificationReaderBean.howManyNewMessages}" rendered="#{notificationReaderBean.howManyNewMessages gt 0}" 
+				<h:outputText value="#{notificationReaderBean.howManyNewMessages}" rendered="#{notificationReaderBean.howManyNewMessages gt 0}"
 					id="message_count"/>
-				
-				<img alt="message" src="#{request.contextPath}/resources/main-template/img/message.png" id="message_button" 
+
+				<img alt="message" src="#{request.contextPath}/resources/main-template/img/message.png" id="message_button"
 					class="header_buttons hover-white"/>
 			</h:outputLink>
 
-			<h:outputLink id="loginbutton" value="#{request.contextPath}/lw/user/login.jsf" rendered="#{not userBean.loggedIn}" 
+			<h:outputLink id="loginbutton" value="#{request.contextPath}/lw/user/login.jsf" rendered="#{not userBean.loggedIn}"
 				class="hover-white">
 				#{msg.loginLabel}
 			</h:outputLink>
 
 			<h:form>
 				<h:commandLink action="#{loginBean.logout}" rendered="#{userBean.loggedIn}" immediate="true" title="#{msg.logoutLabel}">
-					<img alt="#{msg.logoutLabel}" src="#{request.contextPath}/resources/main-template/img/logout.png" id="logoutbutton" 
+					<img alt="#{msg.logoutLabel}" src="#{request.contextPath}/resources/main-template/img/logout.png" id="logoutbutton"
 						class="header_buttons hover-white" />
 				</h:commandLink>
 			</h:form>
-			
+
 
 		</div>
 
@@ -294,9 +299,9 @@
 		<p:ajaxExceptionHandler type="java.lang.Exception" update="exceptionDialog" onexception="PF('exceptionDialog').show();" />
 
 		<p:dialog id="exceptionDialog" header="Exception '#{pfExceptionHandler.type}' occured!" widgetVar="exceptionDialog" height="500px">
-	        #{msg.message}: #{pfExceptionHandler.message} 
+	        #{msg.message}: #{pfExceptionHandler.message}
 	        <br />
-	        StackTrace: 
+	        StackTrace:
 	        <h:outputText value="#{pfExceptionHandler.formattedStackTrace}" escape="false" />
 			<br />
 		</p:dialog>
@@ -304,19 +309,19 @@
 		<p:dialog header="#{msg.session_expired}" widgetVar="expiredExceptionDialog" modal="true">
 			<div class="error" style="font-size:1.4rem">
 				#{msg.reload_page}
-			</div>	        
+			</div>
 	        <br/>
 	        <br/>
-	        <p:button onclick="document.location.href = document.location.href; return false;" value="#{msg.reload}" />	        
+	        <p:button onclick="document.location.href = document.location.href; return false;" value="#{msg.reload}" />
 		</p:dialog>
 	</h:form>
-	
-	<h:form class="display-none">	
+
+	<h:form class="display-none">
 		<p:remoteCommand actionListener="${searchBean.logQuerySuggestion()}" name="logQuerySuggestion" async="true" process="@this" partialSubmit="true" global="false"/>
 	</h:form>
 	<script type="text/javascript">
 		var market = '#{userBean.localeCode}';
-	</script>	
+	</script>
 
 </ui:composition>
 

@@ -1,5 +1,7 @@
 package de.l3s.learnweb.loginprotection;
 
+import java.util.List;
+
 /**
  * Interface for the brute force protection manager class. Maintains separate bans on IP and usernames, records failed login attempts and can remove
  * bans as well as add them.
@@ -12,6 +14,8 @@ public interface ProtectionManager
     public AccessData getIPData(String IP);
 
     public AccessData getUsernameData(String username);
+
+    public List<AccessData> getBanlist();
 
     /**
      * Records a failed attempt to log in. Depending on the specific implementation, also updates bantimes.
@@ -33,10 +37,23 @@ public interface ProtectionManager
     /**
      * Bans selected IP or username for a given amount of time (or unlimited time) and updates the relevant database table.
      *
+     * @param accData AccessData of the username\IP that will be banned
+     * @param bantime Duration of the ban (in hours). Negative bantime values equals permaban.
+     * @param isIP Whether the given name is an IP (true) or username (false)
+     */
+    void ban(AccessData accData, int bantime, boolean isIP);
+
+    /**
+     * Bans selected IP or username by name for a given amount of time (or unlimited time) and updates the relevant database table.
+     *
      * @param name IP that will be banned
      * @param bantime Duration of the ban (in hours). Negative bantime values equals permaban.
      * @param isIP Whether the given name is an IP (true) or username (false)
-     * @param permaban Whether the ban is temporary or permament
      */
-    void ban(AccessData accData, String name, int bantime, boolean isIP);
+    void ban(String name, int bantime, boolean isIP);
+
+    /**
+     * Deletes all bans that have already expired at least a few days ago. Specific date is dependant on implementation.
+     */
+    public void cleanUpOutdatedBans();
 }
