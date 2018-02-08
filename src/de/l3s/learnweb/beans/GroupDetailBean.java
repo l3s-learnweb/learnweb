@@ -1803,7 +1803,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             {
                 addGrowl(FacesMessage.SEVERITY_INFO, "resourcesDeletedSuccessfully", numFolders + numResources);
                 if(numResources > 0)
+                {
                     this.updateResourcesFromSolr();
+                    getResourceDetailBean().setClickedResource(new Resource());
+                    getResourceDetailBean().setResourceId(-1);
+                }
             }
 
             if(numSkipped > 0)
@@ -1884,7 +1888,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         this.gridView = gridView;
     }
 
-    //metadata filter search variables and methods to be called from resources_yell.xhtml 
+    //metadata filter search variables and methods to be called from resources_yell.xhtml
     //setter and getter for extended metadata search variables
 
     public ExtendedMetadataSearchFilters getEmFilters()
@@ -2024,7 +2028,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public List<String> getMsources()
     {
-        //get the list of unique media sources from database 
+        //get the list of unique media sources from database
         try
         {
             msources = new ArrayList<String>();
@@ -2106,7 +2110,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         this.groupCatTree = groupCatTree;
     }
 
-    //category filtering method called from javascript(Learnweb_chloe_v2.js) via remotecommand 
+    //category filtering method called from javascript(Learnweb_chloe_v2.js) via remotecommand
     public void onCategoryFilterClick() throws SQLException
     {
         extendedMetadataSearch = new ExtendedMetadataSearch(getUser());
@@ -2124,7 +2128,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         log(Action.group_category_search, groupId, 0, catname);
     }
 
-    //extended metadata filtering methods and returns filter results (paginator) 
+    //extended metadata filtering methods and returns filter results (paginator)
     public void onMetadataFilterClick()
     {
 

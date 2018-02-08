@@ -134,13 +134,13 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     {
         if(!(tagO instanceof Tag))
             return false;
-    
+
         User user = getUser();
         if(null == user)
             return false;
         if(user.isAdmin() || user.isModerator())
             return true;
-    
+
         Tag tag = (Tag) tagO;
         User owner = clickedResource.getTags().getElementOwner(tag);
         if(user.equals(owner))
@@ -510,13 +510,13 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     {
         return group.canDeleteResources(getUser());
     }
-    
+
     public boolean canEditResourcesInGroup(Group group) throws SQLException
     {
         return group.canEditResources(getUser());
     }
-    
-    
+
+
     @Deprecated
     public boolean canDeleteResources() throws SQLException
     {
@@ -630,8 +630,10 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             if(numResources > 0)
             {
                 addGrowl(FacesMessage.SEVERITY_INFO, "resourcesDeletedSuccessfully", numResources);
-                if(numResources > 0)
-                    resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(0, 0, getUser().getId(), 10000);
+                resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(0, 0, getUser().getId(), 10000);
+
+                getResourceDetailBean().setClickedResource(new Resource());
+                getResourceDetailBean().setResourceId(-1);
             }
 
             if(numSkipped > 0)
