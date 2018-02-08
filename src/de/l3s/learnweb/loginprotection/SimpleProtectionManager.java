@@ -37,6 +37,7 @@ public class SimpleProtectionManager implements ProtectionManager
         usernameMap = new HashMap<String, AccessData>();
         IPMap = new HashMap<String, AccessData>();
         loadBanLists();
+
     }
 
     /**
@@ -117,29 +118,7 @@ public class SimpleProtectionManager implements ProtectionManager
         else
         {
             ipData.setAttempts(ipData.getAttempts() + 1);
-            if(usernameData.getAttempts() >= 10)
-            {
-                int bantime = 2 + 2 * usernameData.getAttempts() % 10;
-                ban(usernameData, bantime, false);
-                log.debug("Banned username " + username + " for " + bantime + " hours after " + usernameData.getAttempts() + " failed login attempts");
-            }
-            else if(usernameData.getAttempts() >= 50)
-            {
-                usernameData.permaban();
-                ban(usernameData, -1, false);
-                log.debug("Permabanned username " + username + " for excessive failed login attempts");
-            }
-        }
 
-        if(usernameData == null)
-        {
-            usernameData = new AccessData(username);
-            usernameMap.put(username, usernameData);
-            usernameData.setAttempts(usernameData.getAttempts() + 1);
-        }
-        else
-        {
-            usernameData.setAttempts(usernameData.getAttempts() + 1);
             if(ipData.getAttempts() >= 10)
             {
                 int bantime = 2 + 2 * ipData.getAttempts() % 10;
@@ -152,6 +131,30 @@ public class SimpleProtectionManager implements ProtectionManager
                 ipData.permaban();
                 ban(ipData, -1, true);
                 log.debug("Permabanned IP " + IP + " for excessive failed login attempts");
+            }
+        }
+
+        if(usernameData == null)
+        {
+            usernameData = new AccessData(username);
+            usernameMap.put(username, usernameData);
+            usernameData.setAttempts(usernameData.getAttempts() + 1);
+
+        }
+        else
+        {
+            usernameData.setAttempts(usernameData.getAttempts() + 1);
+            if(usernameData.getAttempts() >= 10)
+            {
+                int bantime = 2 + 2 * usernameData.getAttempts() % 10;
+                ban(usernameData, bantime, false);
+                log.debug("Banned username " + username + " for " + bantime + " hours after " + usernameData.getAttempts() + " failed login attempts");
+            }
+            else if(usernameData.getAttempts() >= 50)
+            {
+                usernameData.permaban();
+                ban(usernameData, -1, false);
+                log.debug("Permabanned username " + username + " for excessive failed login attempts");
             }
         }
 
@@ -305,7 +308,6 @@ public class SimpleProtectionManager implements ProtectionManager
         log.debug("Older entries have been cleaned up from balists.");
 
     }
-
 
 
 }
