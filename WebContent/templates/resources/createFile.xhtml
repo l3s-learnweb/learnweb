@@ -12,7 +12,8 @@
 			layout="block">
 
 			<h:form id="create_file_form">
-				<p:fieldset style="margin-bottom:20px">
+				<p:fieldset id="create_file_fieldset"
+					style="margin-bottom:20px">
 					<p:panelGrid styleClass="full-width">
 						<p:row>
 							<p:column>
@@ -26,34 +27,57 @@
 						</p:row>
 						<p:row>
 							<p:column>
-								<h:outputText value="#{msg.file_name}*:"  />
+								<h:outputText value="#{msg.file_name}*:" />
 							</p:column>
 							<p:column>
-								<p:inputText validator="#{addResourceBean.validateNewDocName}"   value="#{addResourceBean.resource.fileName}" styleClass="add_field" />
+								<p:inputText validator="#{addResourceBean.validateNewDocName}"
+									value="#{addResourceBean.resource.fileName}"
+									styleClass="add_field" />
 							</p:column>
 						</p:row>
 					</p:panelGrid>
 				</p:fieldset>
 				* #{msg.mandatory_field}
 
-				<p:commandButton id="create_file_button" value="#{msg.create}" styleClass="greenbutton float-right"
+				<p:commandButton id="create_file_button" widgetVar="create-button"
+					value="#{msg.create}" styleClass="greenbutton float-right"
 					actionListener="#{addResourceBean.createFile}" ajax="true"
-					update=":growl :add_resource_panel :datagrid"  oncomplete="update_header();resourceDND(); load_lightbox_editor();load_editor();">
-					<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewResource" />
-					<f:setPropertyActionListener target="#{addResourceBean.formStep}" value="0" />
-			        <f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"/>
-					<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{addResourceBean.resource}"/>	
+					onstart="PF('create-button').disable()"
+					update=":growl :add_resource_panel :datagrid"
+					oncomplete="update_header();resourceDND(); load_lightbox_editor();load_editor();">
+					<f:setPropertyActionListener target="#{bean.rightPanelAction}"
+						value="viewResource" />
+					<f:setPropertyActionListener target="#{addResourceBean.formStep}"
+						value="0" />
+					<f:setPropertyActionListener target="#{bean.clickedResource}"
+						value="#{addResourceBean.resource}" />
+					<f:setPropertyActionListener
+						target="#{resourceDetailBean.clickedResource}"
+						value="#{addResourceBean.resource}" />
 				</p:commandButton>
 
 				<p:commandButton value="#{msg.cancel}"
 					styleClass="graybutton float-right" immediate="true"
 					actionListener="#{addResourceBean.cancelUpload}" ajax="true"
-					update=":add_resource_panel" oncomplete="update_header(); load_editor();"
+					update=":add_resource_panel"
+					oncomplete="update_header(); PF('block1').hide();load_editor();"
 					style="margin-right:0.5em;">
-					<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none" />
+					<f:setPropertyActionListener target="#{bean.rightPanelAction}"
+						value="none" />
 				</p:commandButton>
 				<br class="clear" />
+				<p:blockUI block="create_file_fieldset" trigger="create_file_button"
+					widgetVar="block1">
+					<div class="float-left" style="height: 25px; line-height: 25px;">#{msg.please_wait}</div>
+					<div class="loading-animation small float-left">
+						<div></div>
+						<div></div>
+						<div></div>
+					</div>
+				</p:blockUI>
 			</h:form>
+
+
 
 		</h:panelGroup>
 	</ui:fragment>
