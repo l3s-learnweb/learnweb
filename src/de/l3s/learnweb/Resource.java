@@ -26,7 +26,6 @@ import org.jsoup.Jsoup;
 import org.jsoup.safety.Whitelist;
 
 import de.l3s.learnweb.File.TYPE;
-import de.l3s.learnweb.SearchFilters.SERVICE;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.rm.ExtendedMetadata;
 import de.l3s.util.HasId;
@@ -1198,11 +1197,12 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
     public void setSource(String source)
     {
+        /*
         SERVICE service = SERVICE.valueOf(source.toLowerCase().replace("-", ""));
         if(service == null)
             log.warn("Invalid source: " + source + " resource " + this);
         // TODO use  enum instead of string
-
+        */
         /*
         if(null == source || source.length() == 0)
             log.info("Resource: " + id + "; source set to null");
