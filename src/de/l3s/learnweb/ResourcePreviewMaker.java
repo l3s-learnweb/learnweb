@@ -10,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.sql.SQLException;
 import java.util.concurrent.TimeUnit;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
@@ -106,7 +107,7 @@ public class ResourcePreviewMaker
             {
                 processWebsite(resource);
             }
-            else if(resource.getFile(TYPE.FILE_MAIN) != null) // resource.getStorageType() == Resource.LEARNWEB_RESOURCE && 
+            else if(resource.getFile(TYPE.FILE_MAIN) != null) // resource.getStorageType() == Resource.LEARNWEB_RESOURCE &&
             {
                 inputStream = resource.getFile(TYPE.FILE_MAIN).getInputStream();
                 processFile(resource, inputStream);
@@ -245,49 +246,6 @@ public class ResourcePreviewMaker
         createThumbnails(resource, img, true);
     }
 
-    /**
-     * This method is used to process an archived web page to
-     * generate thumbnails specific for the CoverFlow Visualization
-     */
-    /*
-    public void processArchiveWebsite(int resourceId, String url) throws IOException, SQLException
-    {
-    
-    What's the difference to the usual website thumbnail generation?
-    Let's discuss this before this method is used again.
-    
-    
-        URL thumbnailUrl = new URL(archiveThumbnailService + StringHelper.urlEncode(url));
-    
-        // process image
-        Image img = new Image(thumbnailUrl.openStream());
-    
-        File file = new File();
-        file.setResourceId(resourceId);
-        file.setMimeType("image/png");
-    
-        if(img.getWidth() > SIZE3_MAX_WIDTH && img.getHeight() > SIZE3_MAX_HEIGHT)
-        {
-            img = img.getResized(SIZE3_MAX_WIDTH, SIZE3_MAX_HEIGHT, true);
-            file.setType(TYPE.THUMBNAIL_MEDIUM);
-            file.setName("wayback_thumbnail3.jpg");
-        }
-        else
-        {
-            file.setType(TYPE.THUMBNAIL_LARGE);
-            file.setName("wayback_thumbnail.jpg");
-        }
-    
-        file = fileManager.save(file, img.getInputStream());
-    
-        if(file.getId() > 0)
-        {
-            learnweb.getArchiveUrlManager().updateArchiveUrl(file.getId(), resourceId, url);
-        }
-    
-    }
-    */
-
     public void processVideo(Resource resource)
     {
         File originalFile = null;
@@ -296,27 +254,22 @@ public class ResourcePreviewMaker
             if(resource.getStorageType() == Resource.LEARNWEB_RESOURCE && resource.getType().equals(Resource.ResourceType.video) && (resource.getThumbnail2() == null || resource.getThumbnail2().getFileId() == 0))
             {
                 originalFile = resource.getFile(TYPE.FILE_MAIN);
-
-                java.io.File tmpDir = new java.io.File(System.getProperty("java.io.tmpdir"));
-                java.io.File tempThumbnailFile = java.io.File.createTempFile(originalFile.getId() + "_thumbnail_", ".jpg", tmpDir);
-
                 String inputPath = originalFile.getActualFile().getAbsolutePath();
-                String outputPath = tempThumbnailFile.getAbsolutePath();
-                saveVideoThumbnail(inputPath, outputPath, 1);
+
+                java.io.File tmpDir = new java.io.File(System.getProperty("java.io.tmpdir"), originalFile.getId() + "_thumbnails");
+                if(tmpDir.mkdir())
+                    log.fatal("Couldn't create temp direcotory for thumbnail creation");
+
+                // take 3 frames at different positions from the video and use the largest (highest contrast) as preview image
+                String bestImagePath = createVideoPreviewImage(inputPath, tmpDir);
 
                 // generate thumbnail
-                Image img = new Image(new FileInputStream(outputPath));
+                Image img = new Image(new FileInputStream(bestImagePath));
                 createThumbnails(resource, img, false);
-                tempThumbnailFile.delete();
-            }
 
-            //            // create a simple url for the video, the thumbnail service does not support some special chars in urls
-            //            String url = videoThumbnailService + StringHelper.urlEncode(learnweb.getFileManager().createUrl(resource.getFile(TYPE.FILE_MAIN).getId(), "video.dat"));
-            //            log.debug("Create video thumbnail: " + url);
-            //
-            //            // get website thumbnail
-            //            Image img = new Image(new URL(url).openStream());
-            //            createThumbnails(resource, img, false);
+                // clean up
+                FileUtils.deleteDirectory(tmpDir);
+            }
         }
         catch(Exception e)
         {
@@ -358,7 +311,7 @@ public class ResourcePreviewMaker
         }
         catch(Exception e)
         {
-            log.error("An error occurs during converting video " + resource.getId(), e);
+            log.error("An error occured during video conversion " + resource.getId(), e);
         }
     }
 
@@ -389,9 +342,37 @@ public class ResourcePreviewMaker
         log.info("Converting done.");
     }
 
-    private void saveVideoThumbnail(String inputMediaPath, String outputMediaPath, long seconds) throws IOException
+    private String createVideoPreviewImage(String inputMediaPath, java.io.File tmpDir) throws IOException
     {
-        saveVideoThumbnail(this.getFFProbe(inputMediaPath), outputMediaPath, seconds);
+        final int candidateCount = 5;
+        String bestImagePath = null;
+        long bestImageFileSize = 0;
+
+        FFmpegProbeResult ffProbeResult = this.getFFProbe(inputMediaPath);
+
+        for(int i = 0; i < candidateCount; i++)
+        {
+            int seconds = (int) Math.pow(10, i);
+            try
+            {
+                java.io.File tempThumbnailFile = java.io.File.createTempFile("image_" + i, ".jpg", tmpDir);
+                String outputPath = tempThumbnailFile.getAbsolutePath();
+                saveVideoThumbnail(ffProbeResult, outputPath, seconds);
+
+                long fileSize = (new java.io.File(outputPath)).length();
+                if(fileSize > bestImageFileSize)
+                {
+                    bestImageFileSize = fileSize;
+                    bestImagePath = outputPath;
+                }
+            }
+            catch(Exception e)
+            {
+                log.warn("Couldn't create thumbnail at positon " + seconds, e);
+            }
+        }
+
+        return bestImagePath;
     }
 
     private void saveVideoThumbnail(FFmpegProbeResult in, String outputMediaPath, long seconds) throws IOException

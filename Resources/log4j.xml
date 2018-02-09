@@ -48,6 +48,9 @@
     <logger name="solr.client">
     	<level value="FATAL" />    	
     </logger>
+    <logger name="net.bramp.ffmpeg">
+    	<level value="INFO" />    	
+    </logger>
     
  
 	<root>

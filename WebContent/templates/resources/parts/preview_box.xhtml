@@ -8,7 +8,7 @@
     <h:panelGroup layout="block" styleClass="preview_box" id="preview_box">
       
 		<ui:fragment rendered="#{resource.type eq 'video'}">
-		    <div class="preview_box_wrapper" style="height:412px; width:100%;">
+		    <div class="preview_box_wrapper" style="height:412px; width:100%; position: relative;">
 		        <h:outputText value='#{resource.embedded}' escape="false"/>
 		    </div>
 		</ui:fragment>

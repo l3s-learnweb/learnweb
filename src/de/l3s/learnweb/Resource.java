@@ -40,7 +40,8 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     {
         UNKNOWN,
         ONLINE,
-        OFFLINE
+        OFFLINE,
+        PROCESSING // e.g. while a document/video is converted
     }
 
     public enum ResourceType
@@ -133,9 +134,6 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private Date openDate;
     private Date closeDate;
     private String[] validCourses;
-
-    // private temporal flags
-    private boolean isProcessingStarted = false; // is new thread for creating thumbnail or converting video started
 
     // caches
     private transient OwnerList<Tag, User> tags = null;
@@ -499,9 +497,19 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         return Resource.ResourceType.document.equals(type) || Resource.ResourceType.spreadsheet.equals(type) || Resource.ResourceType.presentation.equals(type);
     }
 
+    public boolean isOnline()
+    {
+        return OnlineStatus.ONLINE.equals(onlineStatus);
+    }
+
     public boolean isOffline()
     {
         return OnlineStatus.OFFLINE.equals(onlineStatus);
+    }
+
+    public boolean isProcessing()
+    {
+        return OnlineStatus.PROCESSING.equals(onlineStatus);
     }
 
     public String getStringStorageType()
@@ -1384,8 +1392,11 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     {
         if(embeddedCode == null)
         {
-            if(StringUtils.isNoneEmpty(getEmbeddedRaw()) && !getSource().equals("Yovisto") && !getSource().equals("TED")) // if the embedded code was explicitly defined then use it. Is necessary for slideshare resources. The old flash based code of Yovisto does not work any more
+            if(StringUtils.isNoneEmpty(getEmbeddedRaw()) && !getSource().equals("Yovisto") && !getSource().equals("TED"))
             {
+                // if the embedded code was explicitly defined then use it. Is necessary for slideshare resources.
+                // But the old flash based code of Yovisto does not work any more
+
                 if(getSource().equals("TED"))
                     embeddedCode = getEmbeddedRaw().replace("http://", "https://");
                 else
@@ -1418,6 +1429,13 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
                     embeddedCode = "<iframe src=\"https://youtube.com/embed/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" allowfullscreen></iframe>";
                 else if(getSource().equalsIgnoreCase("vimeo"))
                     embeddedCode = "<iframe src=\"https://player.vimeo.com/video/" + getIdAtService() + "\" width=\"100%\" height=\"100%\" frameborder=\"0\" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>";
+
+                if(isProcessing())
+                {
+                    String response = "<h3 style='padding: 2rem; color: red; position: absolute; width: 100%; box-sizing: border-box;'>We are converting this video. If your browser can't display it, try again in a few minutes.</h3>" + embeddedCode;
+                    embeddedCode = null; // do not cache the temporal warning
+                    return response;
+                }
             }
 
             // if no rule above works
@@ -2182,16 +2200,6 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     public void setValidCourses(String[] validCourses)
     {
         this.validCourses = validCourses;
-    }
-
-    public boolean isProcessingStarted()
-    {
-        return isProcessingStarted;
-    }
-
-    public void setProcessingStarted(boolean processingStarted)
-    {
-        isProcessingStarted = processingStarted;
     }
 
     //new methods to add new metadata to given resource

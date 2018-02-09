@@ -57,7 +57,7 @@ public class SolrClient
 
     /**
      * Add a new resource to the Solr index.
-     * 
+     *
      * @param resource
      * @throws SQLException
      * @throws SolrServerException
@@ -75,7 +75,7 @@ public class SolrClient
 
     /**
      * This function will be called after the resource meta data changed
-     * 
+     *
      * @param resource
      * @throws SolrServerException
      * @throws IOException
@@ -105,7 +105,7 @@ public class SolrClient
     /**
      * This method will be called when a comment was added to an existing (and already indexed) resource
      * This function should be called after the comment has been added to the resource
-     * 
+     *
      * @param comment
      * @throws SQLException
      * @throws Exception
@@ -119,7 +119,7 @@ public class SolrClient
     /**
      * This method will be called when a tag was added to an existing (and already indexed) resource
      * This function should be called after the tag has been added to the resource
-     * 
+     *
      * @param tag
      * @param resource The resource to which the tag was added
      * @throws SQLException
@@ -133,7 +133,7 @@ public class SolrClient
 
     /**
      * This function should be called after the tag has been deleted from the resource
-     * 
+     *
      * @param tag
      * @param resource
      * @throws Exception
@@ -145,7 +145,7 @@ public class SolrClient
 
     /**
      * This function should be called after the comment has been deleted from the resource
-     * 
+     *
      * @param comment
      * @throws Exception
      */
@@ -265,7 +265,7 @@ public class SolrClient
 
     /**
      * Index all resources
-     * 
+     *
      * @throws SQLException
      * @throws SolrServerException
      * @throws IOException
@@ -302,7 +302,7 @@ public class SolrClient
 
             UpdateResponse response = server.addBeans(solrResourceBeans);
             if(response.getStatus() != 0)
-                throw new RuntimeException(response.toString());
+                throw new RuntimeException("invalid response code: " + response.getStatus() + "; desc: " + response.toString());
 
             server.commit();
 

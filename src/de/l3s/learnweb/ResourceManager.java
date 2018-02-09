@@ -29,7 +29,6 @@ import de.l3s.learnweb.rm.Category;
 import de.l3s.learnweb.rm.CategoryManager;
 import de.l3s.learnweb.rm.LanglevelManager;
 import de.l3s.learnweb.rm.PurposeManager;
-import de.l3s.learnweb.solrClient.SolrClient;
 import de.l3s.util.Cache;
 import de.l3s.util.DummyCache;
 import de.l3s.util.ICache;
@@ -864,7 +863,7 @@ public class ResourceManager
 
         if(StringUtils.isEmpty(source))
         {
-            log.warn("Empty source for resource: " + resource, new IllegalArgumentException());
+            //log.warn("Empty source for resource: " + resource, new IllegalArgumentException());
             return "Learnweb";
         }
 
@@ -1280,31 +1279,14 @@ public class ResourceManager
         }
     }
 
+    /*
+     * See solrclient for a faster implementation
+     *
     public static void reindexAllResources() throws SQLException, ClassNotFoundException
     {
-        Learnweb lw = Learnweb.getInstance();
-        ResourceManager rm = lw.getResourceManager();
-        SolrClient sm = lw.getSolrClient();
 
-        int currentPage = 0;
-        final int totalResources = rm.getResourceCount(), perPage = 1000;
-
-        while(currentPage * perPage <= totalResources)
-        {
-            log.debug("Loading page " + (currentPage + 1));
-
-            List<Resource> resources = rm.getResources("select " + RESOURCE_COLUMNS + " from lw_resource r where deleted = ? order by resource_id desc limit ? offset ? ", "0", perPage, currentPage * perPage);
-            log.debug(resources.size() + " resources loaded.");
-
-            //            for(Resource resource : resources)
-            //                sm.reIndexResource(resource);
-
-            // do reindexing in parallel
-            resources.parallelStream().forEach(sm::reIndexResource);
-
-            currentPage++;
-        }
     }
+    */
 
     /*
      * New resource sql queries for extended metadata (Chloe)
