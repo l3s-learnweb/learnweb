@@ -3,6 +3,7 @@ package de.l3s.learnweb.beans;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
+import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -49,6 +50,11 @@ public class LoginBean extends ApplicationBean implements Serializable
     public void setPassword(String password)
     {
         this.password = password;
+    }
+
+    public Locale getLocale()
+    {
+        return FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
     }
 
     public String login() throws SQLException

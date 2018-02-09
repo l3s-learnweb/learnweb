@@ -44,7 +44,7 @@
 						</h:panelGrid>
 						<br />
 
-						<p:captcha label="Captcha" rendered="#{not empty captchaEnabled and empty ipbanned}" />
+						<p:captcha label="Captcha" rendered="#{not empty captchaEnabled and empty ipbanned}" language="#{userBean.locale}"/>
 
 						<h:outputLink class="forgotten_password" value="user/password.jsf">
 							<h:outputText value="#{msg.forgotten_password}" />

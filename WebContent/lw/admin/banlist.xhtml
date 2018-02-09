@@ -18,6 +18,7 @@
 			background-image:none !important;
 			border:1px solid #a8a8a8 !important;
 		}
+
 		.page_header{margin:5px 5px 0px 5px;}
 		#banlistform{padding:5px; width:100%;}
 	</style>
@@ -30,9 +31,9 @@
 
 		<p:panel header="#{msg.manual_ban}" style="margin:5px;">
 			<h:form id="banuser">
-				#{msg.name_or_ip}: <h:inputText value="#{adminBanlistBean.name}" id="b_name" required="true"/> <br/>
-				#{msg.ban_for}: <h:inputText value="#{adminBanlistBean.bantime}" id="b_date" required="true"/> <br/>
-				<h:selectOneRadio value="#{adminBanlistBean.type}" required="true">
+				#{msg.name_or_ip}: <h:inputText value="#{adminBanlistBean.name}" id="name" required="true"/> <br/>
+				#{msg.ban_for}: <h:inputText value="#{adminBanlistBean.bantime}" id="date" required="true"/> <br/>
+				<h:selectOneRadio value="#{adminBanlistBean.type}" required="true" id="type">
 				   	<f:selectItem itemValue="user" itemLabel="User"/>
 				   	<f:selectItem itemValue="ip" itemLabel="IP" />
 				</h:selectOneRadio>
