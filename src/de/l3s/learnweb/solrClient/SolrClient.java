@@ -306,11 +306,12 @@ public class SolrClient
 
             server.commit();
 
+            /*
             long indexedResources = countResources("*:*");
-
+            
             if(sendResources != indexedResources)
                 throw new RuntimeException(sendResources + " - " + indexedResources);
-
+            */
         }
     }
 

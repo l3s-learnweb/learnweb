@@ -21,10 +21,6 @@ import de.l3s.learnweb.User;
 @ManagedBean
 public class AssessmentGridBean extends ApplicationBean implements Serializable
 {
-
-    /**
-     *
-     */
     private static final long serialVersionUID = 4308612517681227920L;
     private static final Logger log = Logger.getLogger(AssessmentGridBean.class);
     private int resourceId = 0; //change this when there is a way to generate Survey type resource

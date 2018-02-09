@@ -110,7 +110,7 @@ public class ResourceManager
     }
 
     /**
-     * Returns all resources (which were not deleted)
+     * Returns all resources (that were not deleted)
      */
     public List<Resource> getResourcesAll(int page, int pageSize) throws SQLException
     {
