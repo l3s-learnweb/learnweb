@@ -136,6 +136,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         availableTopicThrees = new ArrayList<SelectItem>();
 
         availableTopicOnes.add(new SelectItem("MEDICINE"));
+        availableTopicOnes.add(new SelectItem("European Politics"));
+        availableTopicOnes.add(new SelectItem("Environment"));
         secondaryLangItems = new ArrayList<LanguageItem>();
         secondaryLangItems.add(new LanguageItem());
         primaryLangItems = new ArrayList<LanguageItem>();
@@ -147,7 +149,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         createEntry();
         setSelectedTopicOne(gloss.getTopic_1());
-        createAvailableTopicTwos();
+        createAvailableTopicTwos(getSelectedTopicOne());
 
         setSelectedTopicTwo(gloss.getTopic_2());
 
@@ -339,8 +341,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void createAvailableTopicTwos()
+    public void createAvailableTopicTwos(String topic1)
     {
+        if(topic1.equalsIgnoreCase("medicine"))
+        {
         availableTopicTwos.add(new SelectItem("Diseases and disorders"));
         availableTopicTwos.add(new SelectItem("Anatomy"));
         availableTopicTwos.add(new SelectItem("Medical branches"));
@@ -348,11 +352,14 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         availableTopicTwos.add(new SelectItem("Professions"));
         availableTopicTwos.add(new SelectItem("Food and nutrition"));
         availableTopicTwos.add(new SelectItem("other"));
+        }
+        else
+            availableTopicTwos = new ArrayList<SelectItem>();
     }
 
     public void changeTopicOne(AjaxBehaviorEvent event)
     {
-        createAvailableTopicTwos();
+        createAvailableTopicTwos(selectedTopicOne);
         selectedTopicTwo = selectedTopicThree = "";
         availableTopicThrees = new ArrayList<SelectItem>();
         availableTopicThrees.clear();

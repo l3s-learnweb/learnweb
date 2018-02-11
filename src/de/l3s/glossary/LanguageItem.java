@@ -14,7 +14,7 @@ public class LanguageItem implements Serializable
         {
             @Override
             public String toString() {
-                return "English-uk";
+                return "English-EN";
             }
         },
         IT
@@ -22,7 +22,7 @@ public class LanguageItem implements Serializable
 
             @Override
                 public String toString() {
-                return "Italian-it";
+                return "Italian-IT";
                 }
         },
 
