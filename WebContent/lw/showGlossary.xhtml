@@ -169,7 +169,7 @@
 
 						<p:outputLabel for="topic_2" value="#{msg['Glossary.topic']} 2 "></p:outputLabel>
 						<p:selectOneMenu id="topic_2"
-							value="#{glossaryBean.selectedTopicTwo}">
+							value="#{glossaryBean.selectedTopicTwo}" editable="true">
 							<f:selectItem itemValue="#{null}" itemLabel="-- select --" />
 							<f:selectItems value="#{glossaryBean.availableTopicTwos}" />
 							<f:ajax listener="#{glossaryBean.changeTopicTwo}"
@@ -179,7 +179,7 @@
 
 						<p:outputLabel for="topic_3" value="#{msg['Glossary.topic']} 3 "></p:outputLabel>
 						<p:selectOneMenu id="topic_3"
-							value="#{glossaryBean.selectedTopicThree}">
+							value="#{glossaryBean.selectedTopicThree}" editable="true">
 							<f:selectItem itemValue="#{null}" itemLabel="-- select --" />
 							<f:selectItems value="#{glossaryBean.availableTopicThrees}" />
 						</p:selectOneMenu>
