@@ -8,15 +8,79 @@ public class LanguageItem implements Serializable
 {
     private static final long serialVersionUID = 7068970099338006288L;
 
+    public enum language
+    {
+        EN
+        {
+            @Override
+            public String toString() {
+                return "English-uk";
+            }
+        },
+        IT
+        {
+
+            @Override
+                public String toString() {
+                return "Italian-it";
+                }
+        },
+
+        FR
+        {
+            @Override
+            public String toString()
+            {
+                return "French-FR";
+            }
+        },
+        NL
+        {
+            @Override
+            public String toString()
+            {
+                return "Dutch-NL";
+            }
+        },
+        DE
+        {
+            @Override
+            public String toString()
+            {
+                return "German-DE";
+            }
+        }
+    }
+
     private String value;
     private String pronounciation;
     private String acronym;
     private String references;
     private String phraseology;
     private List<String> selectedUses;
-    private String language;
+    private language language;
     private int termId;
     private String useLabel = "Use";
+
+    public language getEnum(String langValue)
+    {
+        switch(langValue)
+        {
+        case "English-EN":
+            return language.EN;
+        case "Italian-IT":
+            return language.IT;
+        case "French-FR":
+            return language.FR;
+        case "Dutch-NL":
+            return language.NL;
+        case "German-DE":
+            return language.DE;
+        default:
+            return null;
+
+        }
+    }
 
     public void updateUseLabel()
     {
@@ -126,12 +190,12 @@ public class LanguageItem implements Serializable
 
     }
 
-    public String getLanguage()
+    public de.l3s.glossary.LanguageItem.language getLanguage()
     {
         return language;
     }
 
-    public void setLanguage(String language)
+    public void setLanguage(de.l3s.glossary.LanguageItem.language language)
     {
         this.language = language;
     }

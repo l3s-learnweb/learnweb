@@ -14,8 +14,8 @@ public class GlossaryEntry implements Serializable
     private static final long serialVersionUID = -6600840950470704444L;
     private static final Logger log = Logger.getLogger(GlossaryEntry.class);
 
-    private List<LanguageItem> ItalianItems;
-    private List<LanguageItem> UkItems;
+    private List<LanguageItem> secondLanguageItems;
+    private List<LanguageItem> firstLanguageItems;
     private String fileName;
     private String selectedTopicOne;
     private String selectedTopicTwo;
@@ -53,29 +53,29 @@ public class GlossaryEntry implements Serializable
 
     }
 
-    public List<LanguageItem> getItalianItems()
+    public List<LanguageItem> getSecondLanguageItems()
     {
-        return ItalianItems;
+        return secondLanguageItems;
 
     }
 
-    public void setItalianItems(List<LanguageItem> itItems)
+    public void setSecondLanguageItems(List<LanguageItem> itItems)
     {
-        this.ItalianItems = itItems;
+        this.secondLanguageItems = itItems;
 
     }
 
-    public List<LanguageItem> getUkItems()
+    public List<LanguageItem> getFirstLanguageItems()
     {
 
-        return UkItems;
+        return firstLanguageItems;
 
     }
 
-    public void setUkItems(List<LanguageItem> ukItems)
+    public void setFirstLanguageItems(List<LanguageItem> ukItems)
     {
 
-        this.UkItems = ukItems;
+        this.firstLanguageItems = ukItems;
 
     }
 

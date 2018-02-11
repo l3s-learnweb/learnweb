@@ -17,7 +17,9 @@ public class GlossaryItems implements Serializable
     private int glossId;
 
     private List<LanguageItem> finalItems;
-    private String englishTerm = "";
+    private String primaryLanguageTerm = ""; //for ordering of terms
+    private de.l3s.glossary.LanguageItem.language primaryLanguage;
+    private de.l3s.glossary.LanguageItem.language secondaryLanguage;
 
     private String value;
     private String glossIdString;
@@ -191,14 +193,34 @@ public class GlossaryItems implements Serializable
         this.date = date;
     }
 
-    public String getEnglishTerm()
+    public String getPrimaryLanguageTerm()
     {
-        return englishTerm;
+        return primaryLanguageTerm;
     }
 
-    public void setEnglishTerm(String englishTerm)
+    public void setPrimaryLanguageTerm(String englishTerm)
     {
-        this.englishTerm = englishTerm;
+        this.primaryLanguageTerm = englishTerm;
+    }
+
+    public de.l3s.glossary.LanguageItem.language getPrimaryLanguage()
+    {
+        return primaryLanguage;
+    }
+
+    public void setPrimaryLanguage(de.l3s.glossary.LanguageItem.language primaryLanguage)
+    {
+        this.primaryLanguage = primaryLanguage;
+    }
+
+    public de.l3s.glossary.LanguageItem.language getSecondaryLanguage()
+    {
+        return secondaryLanguage;
+    }
+
+    public void setSecondaryLanguage(de.l3s.glossary.LanguageItem.language secondaryLanguage)
+    {
+        this.secondaryLanguage = secondaryLanguage;
     }
 
 }

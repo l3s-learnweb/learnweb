@@ -25,6 +25,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
+import de.l3s.glossary.LanguageItem.language;
 import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
 import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.learnweb.Course;
@@ -61,7 +62,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     private Folder targetFolder;
     private Group targetGroup;
-
+    private language[] glossaryLaguage = { language.DE, language.EN, language.FR, language.IT, language.NL };
     private String newUrl;
 
     private List<ServiceInformation> uploadServices;
@@ -298,8 +299,10 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.setFolderId(resourceTargetFolderId);
             getUser().setActiveGroup(resourceTargetGroupId);
 
-            if(resource.getId() == -1)
+            if(resource.getId() == -1){
                 resource = getUser().addResource(resource);
+                getLearnweb().getGlossariesManager().setLanguagePairs(resource.getId(), resource.getLanguageOne().toString(), resource.getLanguageTwo().toString());
+            }
             else
                 resource.save();
 
@@ -308,12 +311,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
             UtilBean.getGroupDetailBean().updateResourcesFromSolr();
 
-            // TODO: looks strange, maybe redundant
-            resource = new Resource();
-            resource.setSource("Internet");
-            resource.setLocation("Learnweb");
-            resource.setStorageType(Resource.LEARNWEB_RESOURCE);
-            resource.setDeleted(true);
+
         }
         catch(SQLException e)
         {
@@ -345,6 +343,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
             if(resource.getId() == -1)
                 resource = getUser().addResource(resource);
+
             else
             {
 
@@ -756,6 +755,16 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     public void setFileEditorBean(FileEditorBean fileEditorBean)
     {
         this.fileEditorBean = fileEditorBean;
+    }
+
+    public language[] getGlossaryLaguage()
+    {
+        return glossaryLaguage;
+    }
+
+    public void setGlossaryLaguage(language[] glossaryLaguage)
+    {
+        this.glossaryLaguage = glossaryLaguage;
     }
 
     public static class CreateThumbnailThread extends Thread

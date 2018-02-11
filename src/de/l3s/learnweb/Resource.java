@@ -135,6 +135,12 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
     private Date closeDate;
     private String[] validCourses;
 
+
+    //glossary information
+    private String languageOne;
+    private String languageTwo;
+
+
     // caches
     private transient OwnerList<Tag, User> tags = null;
     private transient List<Comment> comments;
@@ -2248,6 +2254,26 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
 
         extendedMetadata = null;
 
+    }
+
+    public String getLanguageOne()
+    {
+        return languageOne;
+    }
+
+    public void setLanguageOne(String languageOne)
+    {
+        this.languageOne = languageOne;
+    }
+
+    public String getLanguageTwo()
+    {
+        return languageTwo;
+    }
+
+    public void setLanguageTwo(String languageTwo)
+    {
+        this.languageTwo = languageTwo;
     }
 
 }

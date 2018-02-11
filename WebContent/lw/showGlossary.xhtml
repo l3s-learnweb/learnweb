@@ -97,7 +97,7 @@
 
 					<p:column headerText="#{msg['Glossary.term']}" filterable="true"
 						filterMatchMode="contains" filterBy="#{item.value}"
-						filterStyle="width: 90%;" sortBy="#{item.englishTerm}" >
+						filterStyle="width: 90%;" sortBy="#{item.primaryLanguageTerm}" >
 						<h:outputText value="#{item.value}" />
 					</p:column>
 					<p:column headerText="#{msg.language}" filterBy="#{item.language}"
@@ -195,13 +195,13 @@
 
 					</p:panelGrid>
 					<br />
-					<p:dataTable value="#{glossaryBean.ukItems}" var="item"
+					<p:dataTable value="#{glossaryBean.primaryLangItems}" var="item"
 						id="uk_terms" tableStyle="width:100%">
 						<f:facet name="header">
-							<h:outputText value="#{msg['Glossary.english_terms']}"></h:outputText>
+							<h:outputText value="#{glossaryBean.primaryLanguage.toString()}"></h:outputText>
 						</f:facet>
 
-						<p:column headerText="#{msg['Glossary.term']} EN">
+						<p:column headerText="#{msg['Glossary.term']}">
 
 							<p:inputText id="termuk" value='#{item.value}' style="width: 90%" />
 							<!-- <f:validator validatorId="termCountValidation"></f:validator>
@@ -278,13 +278,13 @@
 					<br />
 					<br />
 
-					<p:dataTable value="#{glossaryBean.italianItems}" var="item"
+					<p:dataTable value="#{glossaryBean.secondaryLangItems}" var="item"
 						id="italian_terms" tableStyle="width:100%">
 						<f:facet name="header">
-							<h:outputText value="#{msg['Glossary.italian_terms']}"></h:outputText>
+							<h:outputText value="#{glossaryBean.secondaryLanguage.toString()}"></h:outputText>
 						</f:facet>
 
-						<p:column headerText="#{msg['Glossary.term']} IT">
+						<p:column headerText="#{msg['Glossary.term']}">
 
 							<p:inputText id="termIt" value='#{item.value}' style="width: 90%" />
 						</p:column>

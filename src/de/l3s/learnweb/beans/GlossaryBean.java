@@ -1,6 +1,7 @@
 package de.l3s.learnweb.beans;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,6 +22,7 @@ import org.primefaces.model.UploadedFile;
 
 import de.l3s.glossary.GlossaryItems;
 import de.l3s.glossary.LanguageItem;
+import de.l3s.glossary.LanguageItem.language;
 import de.l3s.learnweb.GlossaryEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
@@ -33,8 +35,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = -1811030091337893637L;
     private static final Logger log = Logger.getLogger(GlossaryBean.class);
 
-    private List<LanguageItem> ItalianItems;
-    private List<LanguageItem> UkItems;
+    private List<LanguageItem> secondaryLangItems;
+    private List<LanguageItem> primaryLangItems;
     private List<LanguageItem> languageItems;
     private List<String> Uses;
     private String fileName;
@@ -50,7 +52,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private int glossaryEntryCount;
     private UploadedFile multimediaFile;
     private int userId;
-
+    private language primaryLanguage;
+    private language secondaryLanguage;
     private int resourceId;
     private int groupId; // group id of the resource used only for the logger
     private int glossaryId;
@@ -68,6 +71,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         if(resourceId > 0)
         {
             getGlossaryItems(resourceId);
+            setlanguagePair(resourceId);
             setFilteredItems(getItems());
             glossaryEntryCount = getGlossaryEntryCount(resourceId);
             try
@@ -84,19 +88,37 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
-    private int getGlossaryEntryCount(int resourceId)
-    {
-        int glossEntryCount = getLearnweb().getGlossariesManager().getEntryCount(resourceId);
-        return glossEntryCount;
-
-    }
-
     @PostConstruct
     public void init()
     {
 
         createEntry();
         glossaryEntryCount = getGlossaryEntryCount(resourceId);
+
+    }
+
+    private void setlanguagePair(int resourceId2)
+    {
+        try
+        {
+            String[] langPair = getLearnweb().getGlossariesManager().getLanguagePairs(resourceId2);
+            LanguageItem l = new LanguageItem();
+            setPrimaryLanguage(l.getEnum(langPair[0]));
+            l = new LanguageItem();
+            setSecondaryLanguage(l.getEnum(langPair[1]));
+
+        }
+        catch(SQLException e)
+        {
+            log.error("Error in fetching language pairs for glossary: " + resourceId2, e);
+        }
+
+    }
+
+    private int getGlossaryEntryCount(int resourceId)
+    {
+        int glossEntryCount = getLearnweb().getGlossariesManager().getEntryCount(resourceId);
+        return glossEntryCount;
 
     }
 
@@ -114,10 +136,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         availableTopicThrees = new ArrayList<SelectItem>();
 
         availableTopicOnes.add(new SelectItem("MEDICINE"));
-        ItalianItems = new ArrayList<LanguageItem>();
-        ItalianItems.add(new LanguageItem());
-        UkItems = new ArrayList<LanguageItem>();
-        UkItems.add(new LanguageItem());
+        secondaryLangItems = new ArrayList<LanguageItem>();
+        secondaryLangItems.add(new LanguageItem());
+        primaryLangItems = new ArrayList<LanguageItem>();
+        primaryLangItems.add(new LanguageItem());
 
     }
 
@@ -132,27 +154,27 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         createAvailableTopicThree(gloss.getTopic_2());
         setSelectedTopicThree(gloss.getTopic_3());
         setDescription(gloss.getDescription());
-        List<LanguageItem> ukItemsToSet = new ArrayList<LanguageItem>();
-        List<LanguageItem> itItemsToSet = new ArrayList<LanguageItem>();
+        List<LanguageItem> primaryItemsToSet = new ArrayList<LanguageItem>();
+        List<LanguageItem> secondaryItemsToSet = new ArrayList<LanguageItem>();
         for(LanguageItem l : gloss.getFinalItems())
         {
 
-            if(l.getLanguage().equalsIgnoreCase("english"))
+            if(l.getLanguage().equals(primaryLanguage))
             {
                 l.setUseLabel("Use");
                 l.updateUseLabel();
-                ukItemsToSet.add(l);
+                primaryItemsToSet.add(l);
 
             }
-            else if(l.getLanguage().equalsIgnoreCase("italian"))
+            else if(l.getLanguage().equals(secondaryLanguage))
             {
                 l.setUseLabel("Use");
                 l.updateUseLabel();
-                itItemsToSet.add(l);
+                secondaryItemsToSet.add(l);
             }
         }
-        setItalianItems(itItemsToSet);
-        setUkItems(ukItemsToSet);
+        setSecondaryLangItems(secondaryItemsToSet);
+        setPrimaryLangItems(primaryItemsToSet);
         setGlossaryId(gloss.getGlossId());
 
     }
@@ -161,13 +183,13 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         boolean upload = false;
 
-        for(LanguageItem uk : getUkItems())
+        for(LanguageItem one : getPrimaryLangItems())
         {
-            if(!uk.getValue().isEmpty() && !upload)
+            if(!one.getValue().isEmpty() && !upload)
             {
-                for(LanguageItem it : getItalianItems())
+                for(LanguageItem two : getSecondaryLangItems())
                 {
-                    if(!it.getValue().isEmpty())
+                    if(!two.getValue().isEmpty())
                         upload = true;
                     break;
                 }
@@ -184,10 +206,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             entry.setSelectedTopicOne(getSelectedTopicOne());
             entry.setSelectedTopicTwo(getSelectedTopicTwo());
             entry.setSelectedTopicThree(getSelectedTopicThree());
-            entry.setUkItems(getUkItems());
+            entry.setFirstLanguageItems(getPrimaryLangItems());
             entry.setUserId(getUserId());
             entry.setUser(u);
-            entry.setItalianItems(getItalianItems());
+            entry.setSecondLanguageItems(getSecondaryLangItems());
             entry.setResourceId(getResourceId());
             entry.setGlossaryId(getGlossaryId());
 
@@ -211,7 +233,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             FacesContext context = FacesContext.getCurrentInstance();
 
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Please enter atleast one valid entry for both Italian and UK items"));
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Please enter atleast one valid entry for both language terms"));
             return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId());
         }
 
@@ -234,9 +256,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public void addIt()
     {
-        ItalianItems.add(new LanguageItem());
+        secondaryLangItems.add(new LanguageItem());
         count++;
-        valueHeaderIt = "Term It" + Integer.toString(count);
+        valueHeaderIt = "Term Two" + Integer.toString(count);
 
         log(Action.glossary_term_add, groupId, resourceId);
     }
@@ -245,7 +267,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         try
         {
-            List<LanguageItem> iItems = new ArrayList<LanguageItem>(ItalianItems);
+            List<LanguageItem> iItems = new ArrayList<LanguageItem>(secondaryLangItems);
             boolean remove = false;
             for(LanguageItem i : iItems)
             {
@@ -255,7 +277,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             }
             if(remove)
             {
-                ItalianItems.remove(item);
+                secondaryLangItems.remove(item);
 
                 log(Action.glossary_term_delete, groupId, resourceId, Integer.toString(item.getTermId()));
             }
@@ -263,7 +285,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             {
                 FacesContext context1 = FacesContext.getCurrentInstance();
 
-                context1.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "You need atleast one entry of Italian Items"));
+                context1.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "You need atleast one entry of Second Language Terms"));
             }
         }
         catch(Exception e)
@@ -276,17 +298,17 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         try
         {
-            List<LanguageItem> uItems = new ArrayList<LanguageItem>(UkItems);
+            List<LanguageItem> primaryItems = new ArrayList<LanguageItem>(primaryLangItems);
             boolean remove = false;
-            for(LanguageItem u : uItems)
+            for(LanguageItem u : primaryItems)
             {
                 if(!u.getValue().isEmpty())
-                    if(uItems.size() > 1)
+                    if(primaryItems.size() > 1)
                         remove = true;
             }
             if(remove)
             {
-                UkItems.remove(item);
+                primaryLangItems.remove(item);
 
                 log(Action.glossary_term_delete, groupId, resourceId, Integer.toString(item.getTermId()));
             }
@@ -294,7 +316,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             {
                 FacesContext context1 = FacesContext.getCurrentInstance();
 
-                context1.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "You need atleast one entry of UK Items"));
+                context1.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "You need atleast one entry of First Language Terms"));
             }
         }
         catch(Exception e)
@@ -307,7 +329,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         try
         {
-            UkItems.add(new LanguageItem());
+            primaryLangItems.add(new LanguageItem());
 
             log(Action.glossary_term_add, groupId, resourceId, "");
         }
@@ -427,24 +449,24 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     }
 
-    public List<LanguageItem> getItalianItems()
+    public List<LanguageItem> getSecondaryLangItems()
     {
-        return ItalianItems;
+        return secondaryLangItems;
     }
 
-    public void setItalianItems(List<LanguageItem> itItems)
+    public void setSecondaryLangItems(List<LanguageItem> itItems)
     {
-        this.ItalianItems = itItems;
+        this.secondaryLangItems = itItems;
     }
 
-    public List<LanguageItem> getUkItems()
+    public List<LanguageItem> getPrimaryLangItems()
     {
-        return UkItems;
+        return primaryLangItems;
     }
 
-    public void setUkItems(List<LanguageItem> ukItems)
+    public void setPrimaryLangItems(List<LanguageItem> ukItems)
     {
-        this.UkItems = ukItems;
+        this.primaryLangItems = ukItems;
     }
 
     public String getSelectedTopicTwo()
@@ -637,6 +659,26 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public void setGlossaryEntryCount(int glossaryEntryCount)
     {
         this.glossaryEntryCount = glossaryEntryCount;
+    }
+
+    public language getPrimaryLanguage()
+    {
+        return primaryLanguage;
+    }
+
+    public void setPrimaryLanguage(language primaryLanguage)
+    {
+        this.primaryLanguage = primaryLanguage;
+    }
+
+    public language getSecondaryLanguage()
+    {
+        return secondaryLanguage;
+    }
+
+    public void setSecondaryLanguage(language secondaryLanguage)
+    {
+        this.secondaryLanguage = secondaryLanguage;
     }
 
 }
