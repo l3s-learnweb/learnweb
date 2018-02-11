@@ -87,7 +87,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
     /**
      * Get all queries in a selected session.
-     * 
+     *
      * @return
      */
     public List<String> getQueries()
@@ -103,7 +103,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         else
             queries = getLearnweb().getSearchHistoryManager().getQueriesForSessionFromGroupCache(selectedGroupId, selectedSessionId);
 
-        System.out.println(queries.size() + " queries got for user (" + selectedUserId + ") and session id (" + selectedSessionId + ")");
+        //log.info(queries.size() + " queries got for user (" + selectedUserId + ") and session id (" + selectedSessionId + ")");
         entities.clear();
 
         JSONArray queriesArr = new JSONArray();
@@ -166,7 +166,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
     /**
      * Get all entities in a selected session.
-     * 
+     *
      * @return
      */
     public Set<String> getEntities()
@@ -193,18 +193,17 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
     {
         if(this.groupIdSelected)
         {
-            if(groupSessions != null)
+            /*if(groupSessions != null)
             {
-                System.out.println("# group sessions: " + groupSessions.size());
+                //log.info("# group sessions: " + groupSessions.size());
                 for(Session session : groupSessions)
                 {
                     for(Query query : session.getQueries())
                     {
-                        System.out.print(query.getQuery() + " -> ");
+                        //log.info(query.getQuery() + " -> ");
                     }
-                    System.out.println();
                 }
-            }
+            }*/
             return groupSessions;
         }
         else
@@ -213,7 +212,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
             {
                 try
                 {
-                    System.out.println("user id: " + userId);
+                    //log.info("user id: " + userId);
                     sessions = getLearnweb().getSearchHistoryManager().getSessionsForUser(userId);
                 }
                 catch(SQLException e)
@@ -228,7 +227,6 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
     public List<Session> getGroupSessions()
     {
-        System.out.println("why call me...");
         return null;
     }
 
@@ -257,7 +255,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         int userId = Integer.parseInt(params.get("user-id"));
         selectedSessionId = sessionId;
         selectedUserId = userId;
-        log.info("session id: " + sessionId + "user id: " + userId);
+        //log.info("session id: " + sessionId + "user id: " + userId);
     }
 
     public void actionSelectedGroupId() throws Exception
@@ -265,7 +263,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
         Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
         int groupId = Integer.parseInt(params.get("group-id"));
         selectedGroupId = groupId;
-        log.info("group id: " + groupId);
+        log.info("selected group id: " + groupId);
 
         if(SessionCache.Instance().existsGroupId(selectedGroupId) == false)
         {
@@ -278,7 +276,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
     public void onChangeGroup(AjaxBehaviorEvent event) throws Exception
     {
-        log.info("group id: " + selectedGroupId);
+        //log.info("group id: " + selectedGroupId);
 
         if(!SessionCache.Instance().existsGroupId(selectedGroupId))
         {
@@ -365,7 +363,7 @@ public class NewSearchHistoryBean extends ApplicationBean implements Serializabl
 
     public void setSelectedGroupId(int selectedGroupId)
     {
-        System.out.println("selected group id: " + selectedGroupId);
+        //log.info("selected group id: " + selectedGroupId);
         this.selectedGroupId = selectedGroupId;
     }
 
@@ -377,7 +375,7 @@ public void actionUpdateKGData()
     Map<String, String> params = FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap();
     String sessionId = params.get("session-id");
     selectedSessionId = sessionId;
-    System.out.println(sessionId);
+    log.info(sessionId);
 
     // update queries
     if(this.queries == null)
@@ -391,7 +389,7 @@ public void actionUpdateKGData()
     {
         this.queries.add(query.getQuery());
     }
-    System.out.println("get queries:" + this.queries.size() + ", session id: " + this.selectedSessionId);
+    log.info("get queries:" + this.queries.size() + ", session id: " + this.selectedSessionId);
 
     // update entities
     if(this.entities == null)
@@ -404,7 +402,7 @@ public void actionUpdateKGData()
     {
         this.entities.add(entity);
     }
-    System.out.println("get entities:" + this.entities.size() + ", session id: " + this.selectedSessionId);
+    log.info("get entities:" + this.entities.size() + ", session id: " + this.selectedSessionId);
 
     // update related
     if(this.related == null)
@@ -422,7 +420,7 @@ public void actionUpdateKGData()
         }
         this.related.add(relatedEntityStrs);
     }
-    System.out.println("get related:" + this.related.size() + ", session id: " + this.selectedSessionId);
+    log.info("get related:" + this.related.size() + ", session id: " + this.selectedSessionId);
 
     // update edges
     if(this.edges == null)
@@ -440,7 +438,7 @@ public void actionUpdateKGData()
         this.edges.add(edgeNodes);
     }
 
-    System.out.println("get edges:" + this.edges.size() + ", session id: " + this.selectedSessionId);
+    log.info("get edges:" + this.edges.size() + ", session id: " + this.selectedSessionId);
 
 }
 */

@@ -35,12 +35,12 @@ function unselectGroup()
 
 function bindClickToSessionBlock (selectedGroupId)
 {
-	var sessioncolor =  (selectedGroupId ==0) ? "#489a83" : "#848484";
+	var sessioncolor =  (selectedGroupId == undefined) ? "#489a83" : "#848484";
 	$('.session_block').on('click', function(e){
 		var element = e.currentTarget;
 		var sessionId = element.getAttribute("data-sessionid");
 		var userId = element.getAttribute("data-userid");
-		if(selectedGroupId ==0){
+		if(selectedGroupId == undefined){
 			$('.box ul li').css("background",sessioncolor);
 		}
 		else $('.box1 ul li').css("background",sessioncolor);

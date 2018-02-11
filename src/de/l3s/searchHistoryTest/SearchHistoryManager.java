@@ -29,7 +29,7 @@ public class SearchHistoryManager
 
     /**
      * Returns queries for given session id
-     * 
+     *
      * @param sessionId
      * @return
      */
@@ -205,7 +205,7 @@ public class SearchHistoryManager
             Set<Edge> edgesForEachEntity = this.getEdgesForEntity(entity);
             for(Edge edge : edgesForEachEntity)
             {
-                //Because the getEdgesForEntity returns all edges where source = entity thus source is already in entities 
+                //Because the getEdgesForEntity returns all edges where source = entity thus source is already in entities
                 if(entities.contains(edge.target))
                 {
                     edges.add(edge);
@@ -214,7 +214,7 @@ public class SearchHistoryManager
                 }
             }
         }
-        log.info("max edge score:" + maxEdgeScore);
+        //log.info("max edge score:" + maxEdgeScore);
 
         Set<Edge> filteredEdges = new HashSet<Edge>();
         for(Edge edge : edges)
@@ -275,7 +275,8 @@ public class SearchHistoryManager
         }
 
         PreparedStatement pstmt = learnweb.getConnection()
-                .prepareStatement("SELECT t1.user_id, t1.session_id, t1.params from learnweb_main.lw_user_log t1 JOIN learnweb_main.lw_resource t2 ON (t1.target_id=t2.resource_id) WHERE t1.action = 15 AND t2.group_id=? AND t2.type NOT IN ('image','video')");
+                .prepareStatement(
+                        "SELECT t1.user_id, t1.session_id, t1.params from learnweb_main.lw_user_log t1 JOIN learnweb_main.lw_resource t2 ON (t1.target_id=t2.resource_id) WHERE t1.action = 15 AND t2.group_id=? AND t2.type NOT IN ('image','video') ORDER BY t1.timestamp DESC");
         pstmt.setInt(1, groupId);
         ResultSet rs = pstmt.executeQuery();
         while(rs.next())
@@ -342,13 +343,13 @@ public class SearchHistoryManager
         }
         long end = System.currentTimeMillis();
         //System.out.println(end - start);
-         * */
+
 
         Set<Integer> groupIds = searchHistoryManager.getGroupIds();
         for(int groupId : groupIds)
         {
-            System.out.println(groupId);
-        }
+            log.info(groupId);
+        }*/
 
         System.exit(0);
     }
