@@ -68,6 +68,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         if(isAjaxRequest())
             return;
 
+
         if(resourceId > 0)
         {
             getGlossaryItems(resourceId);
@@ -91,9 +92,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     @PostConstruct
     public void init()
     {
-
+        resourceId = getParameterInt("resource_id");
         createEntry();
         glossaryEntryCount = getGlossaryEntryCount(resourceId);
+
 
     }
 
@@ -131,10 +133,12 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         Uses.add("informal");
         setDescription("");
         setSelectedTopicOne("");
+        setSelectedTopicTwo("");
+        setSelectedTopicThree("");
         availableTopicOnes = new ArrayList<SelectItem>();
         availableTopicTwos = new ArrayList<SelectItem>();
         availableTopicThrees = new ArrayList<SelectItem>();
-
+        //Add topic One
         availableTopicOnes.add(new SelectItem("MEDICINE"));
         availableTopicOnes.add(new SelectItem("European Politics"));
         availableTopicOnes.add(new SelectItem("Environment"));
@@ -229,14 +233,19 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             else
                 log(Action.glossary_entry_edit, groupId, resourceId, Integer.toString(getGlossaryId()));
 
+            createEntry();
+            glossaryEntryCount = getGlossaryEntryCount(resourceId);
+            //RequestContext.getCurrentInstance().update("main_component");
             return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
+
         }
         else
         {
             FacesContext context = FacesContext.getCurrentInstance();
 
-            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "Please enter atleast one valid entry for both language terms"));
-            return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId());
+            context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter atleast one valid entry for both language terms", ""));
+            context.getExternalContext().getFlash().setKeepMessages(true);
+            return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
         }
 
     }

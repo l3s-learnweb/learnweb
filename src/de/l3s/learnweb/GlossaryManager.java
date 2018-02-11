@@ -39,6 +39,7 @@ public class GlossaryManager
         try
         {
             String[] languagePair = getLanguagePairs(e.getResourceId());
+
             for(LanguageItem t : e.getFirstLanguageItems())
             {
                 preparedStmnt = learnweb.getConnection().prepareStatement(InsertTerms);
