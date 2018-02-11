@@ -289,7 +289,7 @@ public class GlossaryManager
     public int getEntryCount(int resourceId)
     {
         int entryCount = 0;
-        String getCount = "SELECT count(*) as entry FROM `lw_resource_glossary` WHERE `resource_id`=?";
+        String getCount = "SELECT count(*) as entry FROM `lw_resource_glossary` WHERE `resource_id`=? and deleted=0";
         try
         {
             PreparedStatement ps = learnweb.getConnection().prepareStatement(getCount);
