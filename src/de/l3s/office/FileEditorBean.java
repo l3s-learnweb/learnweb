@@ -7,8 +7,6 @@ import java.io.Serializable;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-import javax.faces.context.FacesContext;
-import javax.servlet.http.HttpServletRequest;
 
 import de.l3s.learnweb.File;
 import de.l3s.learnweb.File.TYPE;
@@ -67,20 +65,22 @@ public class FileEditorBean extends ApplicationBean implements Serializable
 
     public String getCallbackUrl()
     {
-        return getServerUrl() + "/save" + "?fileId=" + getMainFileId();
+        return getLearnweb().getSecureServerUrl() + "/save" + "?fileId=" + getMainFileId();
     }
 
+    /*
     private String getServerUrl()
     {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         return getServerUrlWithoutContextPath() + request.getContextPath();
     }
-
+    
     private String getServerUrlWithoutContextPath()
     {
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         return request.getScheme() + "://" + request.getServerName() + ':' + request.getServerPort();
     }
+    */
 
     private String getMainFileId()
     {

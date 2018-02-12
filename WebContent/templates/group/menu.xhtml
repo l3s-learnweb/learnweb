@@ -1,0 +1,54 @@
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core"
+                xmlns:p="http://primefaces.org/ui">
+
+		<div class="center-header" id="group_header">
+		
+			<ui:insert name="title"></ui:insert>
+				
+			<ul>
+				<li>
+					<a href="./group/overview.jsf?group_id=#{group.id}">
+						<h:outputText value="#{msg.overview}" />
+					</a>
+				</li>								
+				<li>
+					<a href="./group/resources.jsf?group_id=#{group.id}">
+						<h:outputText value="#{msg.resources}" />
+					</a>
+				</li>								
+				<li>
+					<a href="./group/members.jsf?group_id=#{group.id}">
+						<h:outputText value="#{msg.members}" />
+					</a>
+				</li>	
+				<ui:fragment rendered="false">							
+				<li>
+					<a href="./group/presentations.jsf?group_id=#{group.id}">
+						<h:outputText value="#{msg.presentations}" />
+					</a>
+				</li>
+				</ui:fragment>								
+				<li>
+					<a href="./group/links.jsf?group_id=#{group.id}">
+						<h:outputText value="#{msg.links}" />
+					</a>
+				</li>								
+				<li>
+					<a class="active" href="./group/forum.jsf?group_id=#{group.id}">
+						<h:outputText value="#{msg.forum}" />
+					</a>
+				</li>
+				<ui:fragment rendered="${group.course.isModerator(userBean.user) || group.isLeader(userBean.user)}">							
+				<li>
+					<a href="./group/options.jsf?group_id=#{group.id}">
+						<h:outputText value="#{msg.options}" />
+					</a>
+				</li>
+				</ui:fragment>
+			</ul>
+		</div>  
+</ui:composition>

@@ -167,7 +167,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     /**
      * Returns User.GENDER_MALE, User.GENDER_FEMALE or 0 if not set
-     * 
+     *
      * @return
      */
     public int getGender()
@@ -331,7 +331,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     /**
      * returns the groups the user is member off
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -346,7 +346,7 @@ public class User implements Comparable<User>, Serializable, HasId
     }
 
     /**
-     * 
+     *
      * @return number of groups this user is member of
      * @throws SQLException
      */
@@ -357,7 +357,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     /**
      * returns the groups the user can add resources to
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -425,7 +425,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     /**
      * Defines the group, the user ist currently working on
-     * 
+     *
      * @param group
      * @throws SQLException
      */
@@ -438,7 +438,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     /**
      * Defines the group, the user ist currently working on
-     * 
+     *
      * @param group
      * @throws SQLException
      */
@@ -450,7 +450,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     /**
      * Returns the group, which the user is currently working on
-     * 
+     *
      * @return may be null if not yet set
      * @throws SQLException
      */
@@ -467,7 +467,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     /**
      * Returns the id of the group, which the user is currently working on
-     * 
+     *
      * @return may be null if not yet set
      * @throws SQLException
      */
@@ -527,7 +527,7 @@ public class User implements Comparable<User>, Serializable, HasId
     /**
      * returns the url of the users image
      * or a default image if no image has been added
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -551,16 +551,18 @@ public class User implements Comparable<User>, Serializable, HasId
 
     /**
      * creates the URL for a given fileId of a profile image
-     * 
+     *
      * @param fileId
      * @return
      */
     public static String getImage(int fileId)
     {
-        if(fileId > 0)
-            return Learnweb.getInstance().getFileManager().createUrl(fileId, "user_icon.png");
+        Learnweb learnweb = Learnweb.getInstance();
 
-        return Learnweb.getInstance().getServerUrl() + "/resources/image/no_profile.jpg";
+        if(fileId > 0)
+            return learnweb.getFileManager().createUrl(fileId, "user_icon.png");
+
+        return learnweb.getSecureServerUrl() + "/resources/image/no_profile.jpg";
     }
 
     public void setId(int id)
@@ -570,7 +572,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     /**
      * key of the interweb token
-     * 
+     *
      * @return
      */
     public String getInterwebKey()
@@ -580,7 +582,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     /**
      * key of the interweb token
-     * 
+     *
      * @param iwKey
      */
     public void setInterwebKey(String iwKey)
@@ -591,7 +593,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     /**
      * secret of the interweb token
-     * 
+     *
      * @return
      */
     public String getInterwebSecret()
@@ -601,7 +603,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     /**
      * secret of the interweb token
-     * 
+     *
      * @param iwSecret
      */
     public void setInterwebSecret(String iwSecret)
@@ -664,7 +666,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     /**
      * If the password is not encrypted (plain text) set isEncrypted to false
-     * 
+     *
      * @param password
      * @param isEncrypted
      */
@@ -779,7 +781,7 @@ public class User implements Comparable<User>, Serializable, HasId
 
     /**
      * Since the user can not manually change the active course you should use this value very carefully
-     * 
+     *
      * @return
      */
     @Deprecated

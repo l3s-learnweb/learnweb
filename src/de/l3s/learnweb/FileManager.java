@@ -26,9 +26,9 @@ import de.l3s.util.StringHelper;
 
 /**
  * DAO for the File class.
- * 
+ *
  * @author Philipp
- * 
+ *
  */
 public class FileManager
 {
@@ -52,7 +52,7 @@ public class FileManager
         this.urlPattern = properties.getProperty("FILE_MANAGER_URL_PATTERN");
         this.cache = cacheSize == 0 ? new DummyCache<File>() : new Cache<File>(cacheSize);
         this.folder = new java.io.File(properties.getProperty("FILE_MANAGER_FOLDER").trim());
-        setServerUrl(learnweb.getServerUrl());
+        setServerUrl(learnweb.getSecureServerUrl());
 
         if(!folder.exists())
             throw new RuntimeException("Folder '" + properties.getProperty("FILE_MANAGER_FOLDER") + "' does not exist.");
@@ -64,15 +64,13 @@ public class FileManager
 
     public void setServerUrl(String serverUrl)
     {
-        if(serverUrl.startsWith("http://") && !Learnweb.isInDevelopmentMode())
-            serverUrl = "https://" + serverUrl.substring(7);
 
         this.basePath = serverUrl + urlPattern;
     }
 
     /**
      * Get a File by its id
-     * 
+     *
      * @param id
      * @return null if not found
      * @throws SQLException
@@ -145,7 +143,7 @@ public class FileManager
     
     Iterator<Integer> iter = set.iterator();
     
-    // delete the resources 
+    // delete the resources
     ResourceManager rm = Learnweb.getInstance().getResourceManager();
     
     while(iter.hasNext())
@@ -182,7 +180,7 @@ public class FileManager
     /**
      * Saves the file to the database.
      * If the file is not yet stored at the database, a new record will be created and the returned file contains the new id.
-     * 
+     *
      * @param file
      * @param inputStream
      * @return
@@ -196,7 +194,7 @@ public class FileManager
 
         PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_file` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
-        if(file.getId() < 0) // the file is not yet stored at the database 			
+        if(file.getId() < 0) // the file is not yet stored at the database
             replace.setNull(1, java.sql.Types.INTEGER);
         else
             replace.setInt(1, file.getId());
@@ -333,7 +331,7 @@ public class FileManager
     /**
      * Returns the download url for a specific file and appends "thumbnail.png".
      * this method doesn't check if the file exists or the mime type is correct
-     * 
+     *
      * @param fileId
      * @return
      */
@@ -348,7 +346,7 @@ public class FileManager
     }
 
     /**
-     * 
+     *
      * @return number of cached objects
      */
     public int getCacheSize()

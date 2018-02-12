@@ -1,203 +1,179 @@
-<ui:composition template="/templates/main/main_old.xhtml" 
-	xmlns:ui="http://java.sun.com/jsf/facelets" 
-	xmlns:h="http://java.sun.com/jsf/html" 
+<ui:composition template="/templates/main/main_old.xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:p="http://primefaces.org/ui">
+
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="topic_id" value="#{forumPostBean.topicId}" />
-			<f:event type="javax.faces.event.PreRenderViewEvent" listener="#{forumPostBean.preRenderView}" /> 
+			<f:event type="javax.faces.event.PreRenderViewEvent"
+				listener="#{forumPostBean.preRenderView}" />
 		</f:metadata>
 	</ui:define>
-	
+
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="disableGrowl" value="true" />
-	<ui:param name="pageTitle" value="#{forumPostBean.topic.title}" escape="false" />
+	<ui:param name="pageTitle" value="#{forumPostBean.topic.title}"
+		escape="false" />
 
-	<ui:define name="center_layout">	
+	<ui:define name="center_layout">
 		<h:outputStylesheet library="forum" name="forum.css" />
-		
-		<div class="center-header" id="group_header">
-			<h2>
-				#{msg['ForumIndex.messages']}
-			</h2> 
-			#{msg.of} "#{forumPostBean.topic.title}"
+
+		<ui:decorate template="/templates/group/menu.xhtml">
+			<ui:param name="group" value="#{forumPostBean.group}" />
 			
-			<h:form id="center_header_form">
-				<ui:fragment rendered="#{forumPostBean.member}">
-					<a href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{forumPostBean.topic.id}#reply" 
-						class="resource_button greenbutton" onclick="$('#center_pane .content').animate({ scrollTop: 2500 }, 'slow'); return false;">
-						#{msg['ForumIndex.post_reply']} 
-					</a>
-				</ui:fragment>
-				
-				<p:commandLink rendered="#{not forumPostBean.member}" action="#{groupsBean.joinGroup}" 
-					styleClass="resource_button greenbutton" update=":growl :group_menu @form" partialSubmit="true" 
-					process="@this" value="#{msg.join_group}">
-					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
-				</p:commandLink>
-			</h:form>
-				
-			<ul>
-				<li>
-					<a href="./group/overview.jsf?group_id=#{forumPostBean.topic.groupId}">
-						<h:outputText value="#{msg.overview}" />
-					</a>
-				</li>								
-				<li>
-					<a href="./group/resources.jsf?group_id=#{forumPostBean.topic.groupId}">
-						<h:outputText value="#{msg.resources}" />
-					</a>
-				</li>								
-				<li>
-					<a href="./group/members.jsf?group_id=#{forumPostBean.topic.groupId}">
-						<h:outputText value="#{msg.members}" />
-					</a>
-				</li>								
-				<li>
-					<a href="./group/presentations.jsf?group_id=#{forumPostBean.topic.groupId}">
-						<h:outputText value="#{msg.presentations}" />
-					</a>
-				</li>								
-				<li>
-					<a href="./group/links.jsf?group_id=#{forumPostBean.topic.groupId}">
-						<h:outputText value="#{msg.links}" />
-					</a>
-				</li>								
-				<li>
-					<a class="active" href="./group/forum.jsf?group_id=#{forumPostBean.topic.groupId}">
-						<h:outputText value="#{msg.forum}" />
-					</a>
-				</li>
-				<ui:fragment rendered="${groupDetailBean.group.course.isModerator(userBean.user) || groupDetailBean.group.isLeader(userBean.user)}">							
-				<li>
-					<a href="./group/options.jsf?group_id=#{forumPostBean.topic.groupId}">
-						<h:outputText value="#{msg.options}" />
-					</a>
-				</li>
-				</ui:fragment>
-			</ul>
-		</div>  	
-	
+			<ui:define name="title">
+				<h2>#{msg['ForumIndex.messages']}</h2> 
+				#{msg.of} "#{forumPostBean.topic.title}"
+			
+				<h:form id="center_header_form">
+					<ui:fragment rendered="#{forumPostBean.member}">
+						<a
+							href="#{request.contextPath}/lw/group/forum_post.jsf?topic_id=#{forumPostBean.topic.id}#reply"
+							class="resource_button greenbutton"
+							onclick="$('#center_pane .content').animate({ scrollTop: 2500 }, 'slow'); return false;">
+							#{msg['ForumIndex.post_reply']} </a>
+					</ui:fragment>
+
+					<p:commandLink rendered="#{not forumPostBean.member}"
+						action="#{groupsBean.joinGroup}"
+						styleClass="resource_button greenbutton"
+						update=":growl :group_menu @form" partialSubmit="true"
+						process="@this" value="#{msg.join_group}">
+						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}"
+							value="#{forumPostBean.group}" />
+					</p:commandLink>
+				</h:form>
+			</ui:define>
+		</ui:decorate>		
+  
 		<script type="text/javascript">
-		/* <!-- */
+			/* <!-- */
 			$("#center_pane").prepend($("#group_header"));
-		/* --> */
-		</script>	
-				
+			/* --> */
+		</script>
+
 		<h:form prependId="false">
-		    <p:dataTable var="post" value="#{forumPostBean.posts}" rows="10" paginator="true" 
-		    	lazy="false" paginatorPosition="bottom" id="forum_post_table"
-		    	paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}" >
-		      
-				<p:ajax event="page" 
+			<p:dataTable var="post" value="#{forumPostBean.posts}" rows="10"
+				paginator="true" lazy="false" paginatorPosition="bottom"
+				id="forum_post_table"
+				paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+
+				<p:ajax event="page"
 					onsuccess="$('#center_pane .content').scrollTop(0); setTimeout('$(\'#center_pane .content\').scrollTop(0)', 10);" />
-				
-		      	<p:column headerText="#{msg.author}" styleClass="align-center">
-		        	<a href="./user/detail.jsf?user_id=#{post.userId}" >
-		        		<h:outputText value="#{post.user.username}"/>
-		        	</a>
-		
-					<br style="margin-bottom:0.5rem;"/>
-					
-		        	<img height="100" width="100" src="${learnwebBean.getProfileImage(user)}" id="profile_image" 
-		        		alt="profile image"/>
-		        	
-		        	<div class="align-left">
-			        	<h:outputText value="#{msg.registered_since}: "/>
-							<h:outputText value="#{post.user.registrationDate}">
-								<f:convertDateTime dateStyle="default" type="date" timeZone="#{userBean.timeZone}" />
+
+				<p:column headerText="#{msg.author}" styleClass="align-center">
+					<a href="./user/detail.jsf?user_id=#{post.userId}"> <h:outputText
+							value="#{post.user.username}" />
+					</a>
+
+					<br style="margin-bottom: 0.5rem;" />
+
+					<img height="100" width="100"
+						src="${learnwebBean.getProfileImage(user)}" id="profile_image"
+						alt="profile image" />
+
+					<div class="align-left">
+						<h:outputText value="#{msg.registered_since}: " />
+						<h:outputText value="#{post.user.registrationDate}">
+							<f:convertDateTime dateStyle="default" type="date"
+								timeZone="#{userBean.timeZone}" />
+						</h:outputText>
+						<br />
+						<h:outputText
+							value="#{msg['ForumIndex.messages']}: #{post.user.forumPostCount}" />
+					</div>
+				</p:column>
+
+				<p:column headerText="#{msg['ForumIndex.messages']}"
+					style="position:relative;">
+					<div class="post_title">
+						<div class="float-right">
+							#{msg['ForumIndex.postedOn']}
+							<h:outputText value="#{post.date}">
+								<f:convertDateTime type="both" timeStyle="short"
+									dateStyle="long" timeZone="#{userBean.timeZone}" />
 							</h:outputText>
-			        	<br/>
-			        	<h:outputText value="#{msg['ForumIndex.messages']}: #{post.user.forumPostCount}" />
-		        	</div>
-		        </p:column>
-		        
-		        <p:column headerText="#{msg['ForumIndex.messages']}" style="position:relative;">
-		        	<div class="post_title" >
-					   <div class="float-right" >
-					       	#{msg['ForumIndex.postedOn']}
-					        <h:outputText value="#{post.date}">
-						        <f:convertDateTime type="both" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
-						    </h:outputText>
-						</div>	
-		        		<ui:fragment rendered="#{not empty post.category}">
+						</div>
+						<ui:fragment rendered="#{not empty post.category}">
 		        			#{msg.category}: #{post.category}
-		        		</ui:fragment>	        		
-		        		<div class="clear"></div>				   	
-					</div>				    
-				   
+		        		</ui:fragment>
+						<div class="clear"></div>
+					</div>
+
 					<div class="post_text">
-						<h:outputText value="#{post.text}" escape="false" />					
-			     	
-					     <div class="post_button">	        		
-		        			<ui:fragment rendered="#{post.editCount gt 0}">
-								<div class="post_info" >
-						        	<h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
-						        		<f:param value="#{post.editCount}"/>
-										<f:param value="#{post.lastEditDate}"/>
-										<f:param value="#{post.editUser.username}"/>
-						            </h:outputFormat>
-					           	</div>
-					     	</ui:fragment>
-				     	
-					    	<h:commandLink value="#{msg.delete}" rendered="#{forumPostBean.canDeletePost(post)}" actionListener="#{forumPostBean.deletePost(post)}" styleClass="greenbutton float-right"/>
-					    	<h:outputLink value="group/forum_post_edit.jsf" rendered="#{forumPostBean.canEditPost(post)}" styleClass="greenbutton float-right">
-						    	<f:param name="post_id" value="#{post.id}" />
+						<h:outputText value="#{post.text}" escape="false" />
+
+						<div class="post_button">
+							<ui:fragment rendered="#{post.editCount gt 0}">
+								<div class="post_info">
+									<h:outputFormat value="#{msg['PostShow.editCountSingle_Many']}">
+										<f:param value="#{post.editCount}" />
+										<f:param value="#{post.lastEditDate}" />
+										<f:param value="#{post.editUser.username}" />
+									</h:outputFormat>
+								</div>
+							</ui:fragment>
+
+							<h:commandLink value="#{msg.delete}"
+								rendered="#{forumPostBean.canDeletePost(post)}"
+								actionListener="#{forumPostBean.deletePost(post)}"
+								styleClass="greenbutton float-right" />
+							<h:outputLink value="group/forum_post_edit.jsf"
+								rendered="#{forumPostBean.canEditPost(post)}"
+								styleClass="greenbutton float-right">
+								<f:param name="post_id" value="#{post.id}" />
 						    	#{msg.edit}
 					    	</h:outputLink>
-					  		<p:commandLink value="#{msg['ForumIndex.quote']}" actionListener="#{forumPostBean.quotePost(post)}" oncomplete="$('#center_pane .content').animate({ scrollTop: 2500 }, 'slow');" update=":post_form:post_message" ajax="true" styleClass="greenbutton float-right" />
-				  		</div>
-				   	</div>
-		        </p:column>
-		        
-		    </p:dataTable>
+							<p:commandLink value="#{msg['ForumIndex.quote']}"
+								actionListener="#{forumPostBean.quotePost(post)}"
+								oncomplete="$('#center_pane .content').animate({ scrollTop: 2500 }, 'slow');"
+								update=":post_form:post_message" ajax="true"
+								styleClass="greenbutton float-right" />
+						</div>
+					</div>
+				</p:column>
+
+			</p:dataTable>
 		</h:form>
-		
+
 		<ui:fragment rendered="#{forumPostBean.member}">
 			<div class="page_header" id="reply">
-				<span>
-					#{msg['ForumIndex.reply']}
-				</span>
+				<span> #{msg['ForumIndex.reply']} </span>
 			</div>
-				
+
 			<div class="grey_border">
 				<h:form id="post_form">
 					<table id="answer_table">
 						<tr>
-							<td class="width_10">
-								<h:outputText value="#{msg.category}: "/>
+							<td class="width_10"><h:outputText value="#{msg.category}: " />
 							</td>
-							<td>
-								<p:selectOneMenu id="post_category" styleClass="category" value="#{forumPostBean.newPost.category}" editable="true"
-									 label="#{msg.category}" required="#{forumPostBean.group.restrictionForumCategoryRequired}">
-				
-							        <f:selectItems value="#{forumPostBean.categories}" />
-						       	</p:selectOneMenu>	
-							</td>
-							<td class="width_30">
-								<p:message for="post_category"/>
-							</td>
+							<td><p:selectOneMenu id="post_category"
+									styleClass="category" value="#{forumPostBean.newPost.category}"
+									editable="true" label="#{msg.category}"
+									required="#{forumPostBean.group.restrictionForumCategoryRequired}">
+
+									<f:selectItems value="#{forumPostBean.categories}" />
+								</p:selectOneMenu></td>
+							<td class="width_30"><p:message for="post_category" /></td>
 						</tr>
 						<tr>
-							<td colspan="2">
-								<p:editor id="post_message" widgetVar="editorWidget" value="#{forumPostBean.newPost.text}" 
+							<td colspan="2"><p:editor id="post_message"
+									widgetVar="editorWidget" value="#{forumPostBean.newPost.text}"
 									label="#{msg['PostShow.postContent']}"
-									controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">	
-			 					</p:editor>
-							</td>
-							<td class="width_30">
-								<p:message for="post_message"/>
-							</td>
+									controls="bold italic underline strikethrough subscript superscript font size style color highlight bullets numbering outdent indent alignleft center alignright justify undo redo rule image link unlink">
+								</p:editor></td>
+							<td class="width_30"><p:message for="post_message" /></td>
 						</tr>
 						<tr>
-							<td colspan="3">
-								<p:commandButton ajax="true" value="#{msg.save}" styleClass="greenbutton save_button" 
-									action="#{forumPostBean.onSavePost}" validateClient="true" update="@form :forum_post_table"/>
-							</td>
+							<td colspan="3"><p:commandButton ajax="true"
+									value="#{msg.save}" styleClass="greenbutton save_button"
+									action="#{forumPostBean.onSavePost}" validateClient="true"
+									update="@form :forum_post_table" /></td>
 						</tr>
 					</table>
-				</h:form> 
+				</h:form>
 			</div>
 		</ui:fragment>
 	</ui:define>

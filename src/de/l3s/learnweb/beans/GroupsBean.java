@@ -24,6 +24,7 @@ public class GroupsBean extends ApplicationBean implements Serializable
 {
     private static final Logger log = Logger.getLogger(GroupsBean.class);
     private static final long serialVersionUID = 5364340827474357098L;
+
     private List<Group> joinAbleGroups;
     private List<Group> myGroups;
     private Group selectedGroup;
@@ -31,83 +32,111 @@ public class GroupsBean extends ApplicationBean implements Serializable
     private Group newGroup;
     private boolean otherGroupsShowLanguage;
 
-    public GroupsBean() throws SQLException
+    public GroupsBean()
     {
         if(getUser() == null)
             return;
 
-        joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
-        myGroups = getUser().getGroups();
-        newGroup = new Group();
+        try
+        {
+            joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
+            myGroups = getUser().getGroups();
+            newGroup = new Group();
 
-        otherGroupsShowLanguage = isLanguageSet(joinAbleGroups);
+            otherGroupsShowLanguage = isLanguageSet(joinAbleGroups);
+        }
+        catch(Exception e)
+        {
+            addFatalMessage(e);
+        }
     }
 
-    public void joinGroup() throws Exception
+    public void joinGroup()
     {
-        User user = getUser();
-
-        if(null == user || null == selectedGroup)
-            return;
-
-        // make sure users can not join groups simultaneously  
-        synchronized(selectedGroup)
+        try
         {
-            if(selectedGroup.isMemberCountLimited())
+            User user = getUser();
+
+            if(null == user || null == selectedGroup)
+                return;
+
+            // make sure users can not join groups simultaneously
+            synchronized(selectedGroup)
             {
-                if(selectedGroup.getMemberCount() >= selectedGroup.getMaxMemberCount())
+                if(selectedGroup.isMemberCountLimited())
                 {
-                    addMessage(FacesMessage.SEVERITY_ERROR, "group_full");
-                    return;
+                    if(selectedGroup.getMemberCount() >= selectedGroup.getMaxMemberCount())
+                    {
+                        addMessage(FacesMessage.SEVERITY_ERROR, "group_full");
+                        return;
+                    }
                 }
+                user.joinGroup(selectedGroup);
+                myGroups = getUser().getGroups();
+                joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
+                log(Action.group_joining, selectedGroup.getId(), selectedGroup.getId());
+                addGrowl(FacesMessage.SEVERITY_INFO, "groupJoined", selectedGroup.getTitle());
             }
-            user.joinGroup(selectedGroup);
+        }
+        catch(Exception e)
+        {
+            addFatalMessage(e);
+        }
+    }
+
+    public void leaveGroup()
+    {
+        try
+        {
+            if(null == getUser() || null == selectedGroup)
+                return;
+
+            log(Action.group_leaving, selectedGroup.getId(), selectedGroup.getId());
+
+            getUser().leaveGroup(selectedGroup);
             myGroups = getUser().getGroups();
             joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
-            log(Action.group_joining, selectedGroup.getId(), selectedGroup.getId());
-            addGrowl(FacesMessage.SEVERITY_INFO, "groupJoined", selectedGroup.getTitle());
-        }
 
+            addGrowl(FacesMessage.SEVERITY_INFO, "groupLeft", selectedGroup.getTitle());
+        }
+        catch(Exception e)
+        {
+            addFatalMessage(e);
+        }
     }
 
-    public void leaveGroup() throws Exception
+    public String deleteGroup()
     {
-        if(null == getUser() || null == selectedGroup)
-            return;
-
-        log(Action.group_leaving, selectedGroup.getId(), selectedGroup.getId());
-
-        getUser().leaveGroup(selectedGroup);
-        myGroups = getUser().getGroups();
-        joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
-
-        addGrowl(FacesMessage.SEVERITY_INFO, "groupLeft", selectedGroup.getTitle());
-    }
-
-    public String deleteGroup() throws Exception
-    {
-        if(selectedGroup == null)
+        try
         {
-            log.error("selectedGroup is null");
-            return null;
-        }
+            if(selectedGroup == null)
+            {
+                log.error("selectedGroup is null");
+                return null;
+            }
 
-        if(!canDeleteGroup(selectedGroup))
+            if(!canDeleteGroup(selectedGroup))
+            {
+                addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
+                return null;
+            }
+
+            getUser().setActiveGroup(selectedGroup);
+            log(Action.group_deleting, selectedGroup.getId(), selectedGroup.getId(), selectedGroup.getTitle());
+
+            getUser().deleteGroup(selectedGroup);
+            myGroups = getUser().getGroups();
+            joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
+
+            addMessage(FacesMessage.SEVERITY_INFO, "group_deleted", selectedGroup.getTitle());
+
+            return "/lw/myhome/groups.xhtml";
+        }
+        catch(Exception e)
         {
-            addMessage(FacesMessage.SEVERITY_ERROR, "invalid_request");
-            return null;
+            addFatalMessage(e);
         }
-
-        getUser().setActiveGroup(selectedGroup);
-        log(Action.group_deleting, selectedGroup.getId(), selectedGroup.getId(), selectedGroup.getTitle());
-
-        getUser().deleteGroup(selectedGroup);
-        myGroups = getUser().getGroups();
-        joinAbleGroups = getLearnweb().getGroupManager().getJoinAbleGroups(getUser());
-
-        addMessage(FacesMessage.SEVERITY_INFO, "group_deleted", selectedGroup.getTitle());
-
-        return "/lw/myhome/groups.xhtml";
+        return null;
     }
 
     public boolean canDeleteGroup(Group group) throws SQLException
@@ -118,26 +147,32 @@ public class GroupsBean extends ApplicationBean implements Serializable
         return group.canDeleteGroup(getUser());
     }
 
-    public String onCreateGroup() throws Exception
+    public String onCreateGroup()
     {
         if(null == getUser())
             return null;
 
-        newGroup.setLeader(getUser());
+        try
+        {
+            newGroup.setLeader(getUser());
 
-        Group group = getLearnweb().getGroupManager().save(newGroup);
-        getUser().joinGroup(group);
+            Group group = getLearnweb().getGroupManager().save(newGroup);
+            getUser().joinGroup(group);
 
-        // refresh group list
-        myGroups = getUser().getGroups();
+            // refresh group list
+            myGroups = getUser().getGroups();
 
-        // log and show notification
-        log(Action.group_creating, group.getId(), group.getId());
-        addGrowl(FacesMessage.SEVERITY_INFO, "groupCreated", newGroup.getTitle());
+            // log and show notification
+            log(Action.group_creating, group.getId(), group.getId());
+            addGrowl(FacesMessage.SEVERITY_INFO, "groupCreated", newGroup.getTitle());
 
-        // reset new group var
-        newGroup = new Group();
-
+            // reset new group var
+            newGroup = new Group();
+        }
+        catch(Exception e)
+        {
+            addFatalMessage(e);
+        }
         return null;
     }
 
@@ -175,22 +210,6 @@ public class GroupsBean extends ApplicationBean implements Serializable
     {
         this.selectedGroup = selectedGroup;
     }
-    /*
-    public List<SelectItem> getMembersOfSelectedGroup() throws SQLException
-    {
-        if(null == selectedGroup)
-            return new ArrayList<SelectItem>();
-    
-        List<SelectItem> yourList;
-        yourList = new ArrayList<SelectItem>();
-    
-        for(User member : selectedGroup.getMembers())
-            yourList.add(new SelectItem(member.getId(), member.getUsername()));
-    
-        return yourList;
-    }
-    never used
-    */
 
     public boolean isOtherGroupsShowLanguage()
     {

@@ -15,71 +15,34 @@
 	<ui:param name="disableGrowl" value="true" />
 	<ui:param name="pageTitle" value="#{msg.forum}" escape="false" />
 
-	<ui:define name="center_layout">
-	
+	<ui:define name="center_layout">	
 		<h:outputStylesheet library="forum" name="forum.css" />
 	
-		<div class="center-header" id="group_header">
+		<ui:decorate template="/templates/group/menu.xhtml">
+			<ui:param name="group" value="#{forumTopicsBean.group}" />
+			
+			<ui:define name="title">
 			<h2>
 				#{msg.forum}
 			</h2> 
 			#{msg.of} #{forumTopicsBean.group.title}
 			
 			<h:form id="center_header_form">
-				<ui:fragment rendered="#{groupDetailBean.member}">
+				<ui:fragment rendered="${forumTopicsBean.group.isMember(userBean.user)}">
 					<a href="#{request.contextPath}/lw/group/forum.jsf?group_id=#{forumTopicsBean.group.id}#new_topic" 
 						class="resource_button greenbutton" onclick="$('#center_pane .content').animate({ scrollTop: 1000 }, 'slow'); return false;">
 						#{msg['ForumIndex.new_topic']}
 					</a>
 				</ui:fragment>
 				
-				<p:commandLink rendered="#{not groupDetailBean.member}" action="#{groupsBean.joinGroup}" 
+				<p:commandLink rendered="${not forumTopicsBean.group.isMember(userBean.user)}" action="#{groupsBean.joinGroup}" 
 					styleClass="resource_button greenbutton" update=":growl :group_menu @form" partialSubmit="true" 
 					process="@this" value="#{msg.join_group}">
 					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
 				</p:commandLink>
 			</h:form>
-				
-			<ul>								
-				<li>
-					<a href="./group/overview.jsf?group_id=#{forumTopicsBean.group.id}">
-						<h:outputText value="#{msg.overview}" />
-					</a>
-				</li>								
-				<li>
-					<a href="./group/resources.jsf?group_id=#{forumTopicsBean.group.id}">
-						<h:outputText value="#{msg.resources}" />
-					</a>
-				</li>								
-				<li>
-					<a href="./group/members.jsf?group_id=#{forumTopicsBean.group.id}">
-						<h:outputText value="#{msg.members}" />
-					</a>
-				</li>								
-				<li>
-					<a href="./group/presentations.jsf?group_id=#{forumTopicsBean.group.id}">
-						<h:outputText value="#{msg.presentations}" />
-					</a>
-				</li>								
-				<li>
-					<a class="" href="./group/links.jsf?group_id=#{forumTopicsBean.group.id}">
-						<h:outputText value="#{msg.links}" />
-					</a>
-				</li>								
-				<li>
-					<a class="active" href="./group/forum.jsf?group_id=#{forumTopicsBean.group.id}">
-						<h:outputText value="#{msg.forum}" />
-					</a>
-				</li>
-				<ui:fragment rendered="${groupDetailBean.group.course.isModerator(userBean.user) || groupDetailBean.group.isLeader(userBean.user)}">							
-				<li>
-					<a href="./group/options.jsf?group_id=#{groupDetailBean.group.id}">
-						<h:outputText value="#{msg.options}" />
-					</a>
-				</li>
-				</ui:fragment>
-			</ul>
-		</div>  
+			</ui:define>
+		</ui:decorate>		
 		
 		<script type="text/javascript">
 		/* <!-- */

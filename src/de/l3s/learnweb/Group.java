@@ -10,6 +10,7 @@ import javax.validation.constraints.Size;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.learnweb.Link.LinkType;
@@ -20,6 +21,7 @@ import de.l3s.util.HasId;
 public class Group implements Comparable<Group>, HasId, Serializable
 {
     private static final long serialVersionUID = -6209978709028007958L;
+    private static final Logger log = Logger.getLogger(Group.class);
 
     private int id;
     private int leaderUserId;
@@ -101,7 +103,6 @@ public class Group implements Comparable<Group>, HasId, Serializable
     // caches
     private String categoryTitle;
     private String categoryAbbreviation;
-
     private transient List<Link> documentLinks;
     private transient List<User> members;
     private transient List<Link> links;
@@ -110,6 +111,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     private long cacheTime = 0L;
     private int resourceCount = -1;
     private int memberCount = -1;
+    private int linkCount = -1;
     private HashMap<Integer, Integer> lastVisitCache = new HashMap<Integer, Integer>();
 
     public void clearCaches()
@@ -371,6 +373,22 @@ public class Group implements Comparable<Group>, HasId, Serializable
             links = Learnweb.getInstance().getLinkManager().getLinksByGroupId(id, LinkType.LINK);
 
         return Collections.unmodifiableList(links);
+    }
+
+    public boolean hasLinks()
+    {
+        try
+        {
+            if(linkCount < 0)
+                linkCount = Learnweb.getInstance().getLinkManager().getLinksByGroupId(id, LinkType.LINK).size();
+
+            return linkCount > 0;
+        }
+        catch(SQLException e)
+        {
+            log.error(e);
+        }
+        return false;
     }
 
     public void addLink(String title, String url, LinkType type) throws SQLException

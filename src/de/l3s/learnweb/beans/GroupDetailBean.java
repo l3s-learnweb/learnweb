@@ -749,12 +749,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         return presentations;
     }
 
+    /*
     public boolean hasPresentations()
     {
         try
         {
             List<Presentation> presentations = getPresentations();
-
+    
             return presentations.size() > 0;
         }
         catch(SQLException e)
@@ -762,7 +763,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             log.error(e);
         }
         return false;
-    }
+    }*/
 
     public void setPresentations(List<Presentation> presentations)
     {

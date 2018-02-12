@@ -25,7 +25,6 @@ import de.l3s.learnweb.FileManager;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.User;
-import de.l3s.util.StringHelper;
 
 /**
  * Servlet Class
@@ -138,10 +137,12 @@ public class DownloadServlet extends HttpServlet
                 return;
             }
 
+            /*
+             * Name needs to be urldecoded. Is it really useful?
             if(!file.getName().equals(requestFileData[1]))
             {
                 log.warn("Requested file name (" + requestFileData[1] + ") does not match stored filename (" + file.getName() + "); fileId=" + fileId);
-            }
+            }*/
 
             long lastModified = file.getLastModified().getTime();
             String eTag = file.getName() + "_" + file.getLength() + "_" + lastModified;
@@ -270,7 +271,7 @@ public class DownloadServlet extends HttpServlet
 
             if(file.isDownloadLogActivated())
             {
-                log.debug(requestString + "\n" + StringHelper.urlDecode(requestString));
+                //log.debug(requestString + "\n" + StringHelper.urlDecode(requestString));
 
                 HttpSession session = request.getSession(true);
                 User user = null;

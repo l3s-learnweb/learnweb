@@ -257,10 +257,10 @@ public class ResourcePreviewMaker
                 String inputPath = originalFile.getActualFile().getAbsolutePath();
 
                 java.io.File tmpDir = new java.io.File(System.getProperty("java.io.tmpdir"), originalFile.getId() + "_thumbnails");
-                if(tmpDir.mkdir())
+                if(!tmpDir.mkdir())
                     log.fatal("Couldn't create temp direcotory for thumbnail creation");
 
-                // take 3 frames at different positions from the video and use the largest (highest contrast) as preview image
+                // take multiple frames at different positions from the video and use the largest (highest contrast) as preview image
                 String bestImagePath = createVideoPreviewImage(inputPath, tmpDir);
 
                 // generate thumbnail
@@ -293,6 +293,7 @@ public class ResourcePreviewMaker
                 // move original file
                 originalFile.setType(TYPE.FILE_ORIGINAL);
                 fileManager.save(originalFile);
+                resource.addFile(originalFile);
 
                 // create new file
                 File convertedFile = new File();

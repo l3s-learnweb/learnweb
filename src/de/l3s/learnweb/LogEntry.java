@@ -21,7 +21,7 @@ public class LogEntry implements Serializable
     { // add new values add the BOTTOM !!!
         tagging_resource, // param = the tag; target_id = id of the resource
         rating_resource, // param = rate; target_id = id of the resource
-        commenting_resource, // param = comment id; target_id = id of the resource		
+        commenting_resource, // param = comment id; target_id = id of the resource
         opening_resource, // target_id = id of the tagged resource
         unused, // param = the url
         searching, // param = search query
@@ -30,13 +30,13 @@ public class LogEntry implements Serializable
         group_leaving, // target_id = group_id
         login,
         logout,
-        forum_post_added, // target_id = 
+        forum_post_added, // target_id =
         register,
         changing_profile, // target_id = user_id of the user whose profile was changed
         deleting_resource, // param = resource title; target_id = resource id
         adding_resource, // target_id = resource id
         open_link,
-        deleting_comment, // target_id = resource id; param = comment_id 
+        deleting_comment, // target_id = resource id; param = comment_id
         unused2,
         edit_resource, // target_id = resource id
         unused4,
@@ -68,12 +68,12 @@ public class LogEntry implements Serializable
         submission_submitted, //target_id = resource_id
         extended_metadata_open_dialog,
 
-        //log entries for extended metadata (yell group only) 
+        //log entries for extended metadata (yell group only)
         adding_yourown_metadata, //target_id = clicked resource id, param = type of metadata added
-        adding_resource_metadata, //target_id = resource id, param = type of metadata added (options: author, language, media source, media type) 
-        edit_resource_metadata, //target_id = resource id, param = type of metadata edited (options: author, language, media source, media type) 
+        adding_resource_metadata, //target_id = resource id, param = type of metadata added (options: author, language, media source, media type)
+        edit_resource_metadata, //target_id = resource id, param = type of metadata edited (options: author, language, media source, media type)
         group_metadata_search, // param = filter:value only if it is not null
-        group_category_search // param = clicked category 
+        group_category_search // param = clicked category
     }
 
     private final static HashSet<Action> resourceActions = Sets.newHashSet(Action.tagging_resource, Action.rating_resource, Action.commenting_resource, Action.opening_resource, Action.adding_resource, Action.deleting_comment, Action.edit_resource, Action.thumb_rating_resource);
@@ -113,9 +113,9 @@ public class LogEntry implements Serializable
             resourceId = targetId;
         /* currently not used
         else if(folderActions.contains(action))
-            fileId = targetId;   
+            fileId = targetId;
         */
-        String url = Learnweb.getInstance().getServerUrl() + "/lw/";
+        String url = "";//Learnweb.getInstance().getServerUrl() + "/lw/";
 
         String usernameLink = "<a href=\"" + url + "user/detail.jsf?user_id=" + userId + "\" style=\" color:#3399FF;text-decoration:none;\">" + username + "</a> ";
 
@@ -233,7 +233,7 @@ public class LogEntry implements Serializable
             //description = usernameLink + " has downloaded " + resource;
             break;
         default:
-            description = "no message for action " + action.name(); // should never happen; 
+            description = "no message for action " + action.name(); // should never happen;
         }
     }
 

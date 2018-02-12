@@ -47,6 +47,7 @@ public class Learnweb
     private PreparedStatement pstmtLog;
     private PropertiesBundle properties;
     private String serverUrl;
+    private String secureServerUrl;
 
     // list of Learnweb installations
     public enum SERVICE
@@ -247,16 +248,16 @@ public class Learnweb
 
         if(null == propertiesServerUrl || propertiesServerUrl.startsWith("/"))
         {
-            this.serverUrl = "http://learnweb.l3s.uni-hannover.de";
+            setServerUrl("http://learnweb.l3s.uni-hannover.de");
             log.error("You haven't provided an absolute base server url; Will use by default: " + this.serverUrl);
         }
         else if(propertiesServerUrl.startsWith("http"))
-            this.serverUrl = propertiesServerUrl;
+            setServerUrl(propertiesServerUrl);
         else if(propertiesServerUrl.equalsIgnoreCase("auto") && StringUtils.isNotEmpty(guessedServerUrl))
-            this.serverUrl = guessedServerUrl;
+            setServerUrl(guessedServerUrl);
         else
         {
-            this.serverUrl = "http://learnweb.l3s.uni-hannover.de";
+            setServerUrl("http://learnweb.l3s.uni-hannover.de");
             log.error("We could not guess the server name. Will use by default: " + this.serverUrl);
         }
 
@@ -688,37 +689,41 @@ public class Learnweb
         return log;
     }
 
-    private String adminMessage;
-
-    public String getAdminMessage() throws SQLException
-    {
-        return adminMessage;
-    }
-
-    public void setAdminMessage(String adminMessage)
-    {
-        this.adminMessage = adminMessage;
-    }
-
     /**
      *
      * @return Returns the servername + contextpath. For the default installation this is: http://learnweb.l3s.uni-hannover.de
      */
     public String getServerUrl()
     {
-        return serverUrl; // because we don't use httpS we can cache the url, change it if you want to use httpS too
+        return serverUrl;
+    }
+
+    /**
+     *
+     * @return Returns the HTTPS version of getServerUrl(). Returns HTTP if Learnweb is run in development mode.
+     *         For the default installation this is: https://learnweb.l3s.uni-hannover.de
+     */
+    public String getSecureServerUrl()
+    {
+        return secureServerUrl;
     }
 
     public void setServerUrl(String serverUrl)
     {
-        if(this.serverUrl != null && this.serverUrl.startsWith("http"))
+        if(this.serverUrl == null)
+            this.serverUrl = serverUrl;
+        else if(this.serverUrl.startsWith("http") || this.serverUrl.equals(serverUrl))
             return; // ignore new serverUrl
 
-        if(this.serverUrl.equals(serverUrl))
-            return;
-
         this.serverUrl = serverUrl;
-        fileManager.setServerUrl(serverUrl);
+
+        if(serverUrl.startsWith("http://") && !Learnweb.isInDevelopmentMode())
+            this.secureServerUrl = "https://" + serverUrl.substring(7);
+        else
+            this.secureServerUrl = this.serverUrl;
+
+        if(fileManager != null)
+            fileManager.setServerUrl(secureServerUrl);
 
         log.debug("Server base url updated: " + serverUrl);
     }
