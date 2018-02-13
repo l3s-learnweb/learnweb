@@ -2,21 +2,21 @@
 <!DOCTYPE log4j:configuration PUBLIC
   "-//APACHE//DTD LOG4J 1.2//EN" "http://logging.apache.org/log4j/1.2/apidocs/org/apache/log4j/xml/doc-files/log4j.dtd">
 <log4j:configuration debug="true" xmlns:log4j='http://jakarta.apache.org/log4j/'>
- 
+
 	<appender name="console" class="org.apache.log4j.ConsoleAppender">
 	    <layout class="org.apache.log4j.PatternLayout">
-		<param name="ConversionPattern" 
+		<param name="ConversionPattern"
 			value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{9}:%L - %m%n" />
 	    </layout>
 	</appender>
- 
+
 	<appender name="file" class="org.apache.log4j.RollingFileAppender">
 	    <param name="append" value="false" />
 	    <param name="maxFileSize" value="300MB" />
 	    <param name="maxBackupIndex" value="10" />
 	    <param name="file" value="${catalina.home}/logs/learnweb.log" />
 	    <layout class="org.apache.log4j.PatternLayout">
-		<param name="ConversionPattern" 
+		<param name="ConversionPattern"
 			value="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{2}:%L - %m%n" />
 	    </layout>
 	</appender>
@@ -38,26 +38,40 @@
             <param name="LevelMax" value="FATAL"/>
         </filter>
     </appender>
-     
+
+	<appender name="requests-app" class="org.apache.log4j.RollingFileAppender">
+	    <param name="maxFileSize" value="300MB" />
+	    <param name="maxBackupIndex" value="10" />
+	    <param name="file" value="${catalina.home}/logs/requests.csv" />
+
+	    <layout class="org.apache.log4j.PatternLayout">
+	      <param name="ConversionPattern" value="%m%n"/>
+	    </layout>
+	  </appender>
+
     <logger name="org.apache">
-    	<level value="FATAL" />    	
+    	<level value="FATAL" />
     </logger>
     <logger name="org.hibernate.validator">
-    	<level value="FATAL" />    	
-    </logger> 
+    	<level value="FATAL" />
+    </logger>
     <logger name="solr.client">
-    	<level value="FATAL" />    	
+    	<level value="FATAL" />
     </logger>
     <logger name="net.bramp.ffmpeg">
-    	<level value="INFO" />    	
+    	<level value="INFO" />
     </logger>
-    
- 
+    <logger name="lw.requests" additivity="false">
+    	<level value="INFO" />
+		<appender-ref ref="requests-app" />
+    </logger>
+
+
 	<root>
 		<level value="DEBUG" />
-		<appender-ref ref="console" /> 
+		<appender-ref ref="console" />
 	 	<appender-ref ref="file" />
 	 	<appender-ref ref="email" />
 	</root>
- 
+
 </log4j:configuration>

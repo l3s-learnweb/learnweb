@@ -37,7 +37,6 @@ public class SimpleProtectionManager implements ProtectionManager
         usernameMap = new HashMap<String, AccessData>();
         IPMap = new HashMap<String, AccessData>();
         loadBanLists();
-
     }
 
     /**
@@ -54,13 +53,14 @@ public class SimpleProtectionManager implements ProtectionManager
             {
                 if(rs.getString("type").equals("user"))
                 {
-                    usernameMap.put(rs.getString("name"), new AccessData(1, rs.getDate("bandate"),rs.getString("name")));
+                    usernameMap.put(rs.getString("name"), new AccessData(1, rs.getDate("bandate"), rs.getString("name")));
                 }
                 else if(rs.getString("type").equals("IP"))
                 {
                     IPMap.put(rs.getString("name"), new AccessData(1, rs.getDate("bandate"), rs.getString("name")));
                 }
             }
+
             select.close();
         }
         catch(SQLException e)
@@ -157,9 +157,6 @@ public class SimpleProtectionManager implements ProtectionManager
                 log.debug("Permabanned username " + username + " for excessive failed login attempts");
             }
         }
-
-
-
 
     }
 
@@ -278,6 +275,7 @@ public class SimpleProtectionManager implements ProtectionManager
 
         log.debug("Banlist cleared.");
     }
+
     /**
      * Erases all banlist entries that have expired more than 3 days ago.
      */
@@ -308,6 +306,5 @@ public class SimpleProtectionManager implements ProtectionManager
         log.debug("Older entries have been cleaned up from balists.");
 
     }
-
 
 }

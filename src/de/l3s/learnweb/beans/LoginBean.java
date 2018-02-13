@@ -15,10 +15,10 @@ import javax.servlet.http.HttpSession;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.Organisation;
-import de.l3s.learnweb.User;
 import de.l3s.learnweb.loginprotection.AccessData;
 import de.l3s.learnweb.loginprotection.ProtectionManager;
+import de.l3s.learnweb.Organisation;
+import de.l3s.learnweb.User;
 
 @ManagedBean
 @RequestScoped
