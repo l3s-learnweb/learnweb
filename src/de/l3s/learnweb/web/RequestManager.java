@@ -4,6 +4,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -107,10 +108,34 @@ public class RequestManager
     }
 
     /**
-     * Writes the data on this day's requests without
+     * Removes requests that are older than one week from the memory.
+     * Note: This doesn't erase them from the requests.csv, which saves every request.
+     */
+    public void cleanOldRequests()
+    {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(new Date());
+        cal.add(Calendar.DATE, -7);
+
+        Date threshold = cal.getTime();
+
+        //TODO: Optimaze this, current algorithm is awful!
+        for(RequestData req : requests)
+        {
+            if(req.time.before(threshold))
+            {
+                requests.remove(req);
+            }
+        }
+
+    }
+
+    /**
+     * Writes the data on this day's requests.
      */
     public void compileReport()
     {
+        //TODO: Oh boy
     }
 
 }
