@@ -239,7 +239,7 @@ public class SolrClient
         //solr.deleteFromIndex(202667);
         //deleteOneResource(67069);
 
-        //solr.deleteAllResource();
+        solr.deleteAllResource();
         solr.indexAllResources();
         //SolrClient.indexOneResource(192248);
         //SolrClient.indexOneResource(67571);
@@ -277,7 +277,7 @@ public class SolrClient
         resourceManager.setReindexMode(true);
 
         Collection<SolrResourceBean> solrResourceBeans = new ArrayList<>(batchSize);
-        long sendResources = 0;
+        //long sendResources = 0;
 
         for(int i = 0;; i++)
         {
@@ -297,7 +297,7 @@ public class SolrClient
             for(Resource resource : resources)
             {
                 solrResourceBeans.add(new SolrResourceBean(resource));
-                sendResources++;
+                //sendResources++;
             }
 
             UpdateResponse response = server.addBeans(solrResourceBeans);
@@ -308,7 +308,7 @@ public class SolrClient
 
             /*
             long indexedResources = countResources("*:*");
-            
+
             if(sendResources != indexedResources)
                 throw new RuntimeException(sendResources + " - " + indexedResources);
             */
