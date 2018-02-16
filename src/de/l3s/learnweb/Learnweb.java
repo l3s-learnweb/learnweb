@@ -860,6 +860,11 @@ public class Learnweb
         return protectionManager;
     }
 
+    public RequestManager getRequestManager()
+    {
+        return requestManager;
+    }
+
     public SERVICE getService()
     {
         return service;

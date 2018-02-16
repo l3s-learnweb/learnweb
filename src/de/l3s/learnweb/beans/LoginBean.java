@@ -15,10 +15,10 @@ import javax.servlet.http.HttpSession;
 import org.hibernate.validator.constraints.NotEmpty;
 
 import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.loginprotection.AccessData;
-import de.l3s.learnweb.loginprotection.ProtectionManager;
 import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.User;
+import de.l3s.learnweb.loginprotection.AccessData;
+import de.l3s.learnweb.loginprotection.ProtectionManager;
 
 @ManagedBean
 @RequestScoped
@@ -110,7 +110,7 @@ public class LoginBean extends ApplicationBean implements Serializable
         }
         else
         {
-            //On correct login resets the data
+            //On correct login resets the data and also records login into manager
             if(usernameData != null)
             {
                 usernameData.reset();
@@ -121,6 +121,8 @@ public class LoginBean extends ApplicationBean implements Serializable
                 ipData.reset();
             }
             session.removeAttribute("captchaEnabled");
+
+            getLearnweb().getRequestManager().recordLogin(IP, username);
         }
 
         return loginUser(this, user);
@@ -195,6 +197,7 @@ public class LoginBean extends ApplicationBean implements Serializable
         return viewId + "?faces-redirect=true&includeViewParams=true";
     }
 
+    @SuppressWarnings("deprecation")
     public String logout()
     {
         UserBean userBean = UtilBean.getUserBean();

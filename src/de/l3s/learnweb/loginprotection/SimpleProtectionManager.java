@@ -44,9 +44,8 @@ public class SimpleProtectionManager implements ProtectionManager
      */
     private void loadBanLists()
     {
-        try
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_bans"))
         {
-            PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_bans");
 
             ResultSet rs = select.executeQuery();
             while(rs.next())
@@ -61,7 +60,6 @@ public class SimpleProtectionManager implements ProtectionManager
                 }
             }
 
-            select.close();
         }
         catch(SQLException e)
         {
@@ -180,7 +178,7 @@ public class SimpleProtectionManager implements ProtectionManager
             accData.setBan(bantime);
         }
 
-        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_bans (name, bandate, type) VALUES(?, ? ,?) ON DUPLICATE KEY UPDATE bandate=VALUES(bandate)");)
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_bans (name, bandate, type) VALUES(?, ? ,?) ON DUPLICATE KEY UPDATE bandate=VALUES(bandate)"))
         {
             insert.setString(1, accData.getName());
             insert.setDate(2, new java.sql.Date(accData.getBanDate().getTime()));
@@ -284,7 +282,7 @@ public class SimpleProtectionManager implements ProtectionManager
     {
         Calendar cal = Calendar.getInstance();
         cal.setTime(new Date());
-        cal.add(Calendar.DATE, -3);
+        cal.add(Calendar.DATE, -7);
 
         try
         {
@@ -303,7 +301,7 @@ public class SimpleProtectionManager implements ProtectionManager
 
         loadBanLists();
 
-        log.debug("Older entries have been cleaned up from balists.");
+        log.debug("Older entries have been cleaned up from banlists.");
 
     }
 

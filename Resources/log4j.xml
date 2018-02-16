@@ -39,16 +39,6 @@
         </filter>
     </appender>
 
-	<appender name="requests-app" class="org.apache.log4j.RollingFileAppender">
-	    <param name="maxFileSize" value="300MB" />
-	    <param name="maxBackupIndex" value="10" />
-	    <param name="file" value="${catalina.home}/logs/requests.csv" />
-
-	    <layout class="org.apache.log4j.PatternLayout">
-	      <param name="ConversionPattern" value="%m%n"/>
-	    </layout>
-	  </appender>
-
     <logger name="org.apache">
     	<level value="FATAL" />
     </logger>
@@ -60,10 +50,6 @@
     </logger>
     <logger name="net.bramp.ffmpeg">
     	<level value="INFO" />
-    </logger>
-    <logger name="lw.requests" additivity="false">
-    	<level value="INFO" />
-		<appender-ref ref="requests-app" />
     </logger>
 
 

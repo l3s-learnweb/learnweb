@@ -10,14 +10,49 @@ import java.util.Date;
  */
 public class RequestData
 {
-    public String IP;
-    public Date time;
-    public String URL;
+    private String IP;
+    private Date time;
+    private String URL;
+
+    public RequestData()
+    {
+    }
 
     public RequestData(String i, Date t, String u)
     {
-        IP = i;
-        time = t;
-        URL = u;
+        setIP(i);
+        setTime(t);
+        setURL(u);
     }
+
+    public String getIP()
+    {
+        return IP;
+    }
+
+    public void setIP(String iP)
+    {
+        IP = iP;
+    }
+
+    public Date getTime()
+    {
+        return time;
+    }
+
+    public void setTime(Date time)
+    {
+        this.time = time;
+    }
+
+    public String getURL()
+    {
+        return URL;
+    }
+
+    public void setURL(String uRL)
+    {
+        URL = uRL;
+    }
+
 }

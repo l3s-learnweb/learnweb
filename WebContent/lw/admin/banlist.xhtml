@@ -46,8 +46,8 @@
 
 	<p:panel header="#{msg.banlist}">
 		<h:form id="banlistform" >
-			<p:dataTable var="entry" value="#{adminBanlistBean.banlist}" rows="50" paginator="true" rowsPerPageTemplate="50,100,250"
-	               paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}">
+			<p:dataTable var="entry" value="#{adminBanlistBean.banlist}" rows="50" paginator="true"
+	               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
 				<p:column headerText="#{msg.name}" sortBy="#{entry.name}">
 					<h:outputText value="#{entry.name}" />

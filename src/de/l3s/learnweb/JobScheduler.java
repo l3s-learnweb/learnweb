@@ -3,7 +3,7 @@ package de.l3s.learnweb;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.loginprotection.ExpiredBansCleaner;
-import de.l3s.learnweb.web.OldRequestsCleaner;
+import de.l3s.learnweb.web.RequestsTaskHandler;
 import de.l3s.tedapi.crawler.CheckNewTedVideos;
 import de.l3s.tedapi.crawler.CheckUpdatedTedVideos;
 import it.sauronsoftware.cron4j.Scheduler;
@@ -39,9 +39,11 @@ public class JobScheduler
 
         //scheduler.schedule("0 1 * * *", new TedCrawlController());
 
-        //Cleans up expired bans and old requests (only from memory) once a week on Sunday at 3:00AM
+        //Cleans up expired bans once a week on Sunday at 3:00AM
         scheduler.schedule("0 3 * * Sun", new ExpiredBansCleaner());
-        scheduler.schedule("0 3 * * Sun", new OldRequestsCleaner());
+
+        //Cleans up requests once an hour
+        scheduler.schedule("0 * * * *", new RequestsTaskHandler());
     }
 
     public void startAllJobs()
