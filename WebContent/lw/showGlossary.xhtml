@@ -71,21 +71,21 @@
 					</p:column>
 
 					<p:column headerText="#{msg['Glossary.topic']} 1" filterable="true"
-						filterBy="#{item.topic_1}" filterMatchMode="contains"
-						filterStyle="width: 90%;" sortBy="#{item.topic_1}">
-						<h:outputText value="#{item.topic_1}"
+						filterBy="#{item.topic1}" filterMatchMode="contains"
+						filterStyle="width: 90%;" sortBy="#{item.topic1}">
+						<h:outputText value="#{item.topic1}"
 							pt:data-itemId="#{item.glossId}" id="cell1" />
 					</p:column>
 					<p:column headerText="#{msg['Glossary.topic']} 2" filterable="true"
-						filterBy="#{item.topic_2}" filterMatchMode="contains"
-						filterStyle="width: 90%;" sortBy="#{item.topic_2}">
-						<h:outputText value="#{item.topic_2}"
+						filterBy="#{item.topic2}" filterMatchMode="contains"
+						filterStyle="width: 90%;" sortBy="#{item.topic2}">
+						<h:outputText value="#{item.topic2}"
 							pt:data-itemId="#{item.glossId}" id="cell2" />
 					</p:column>
 					<p:column headerText="#{msg['Glossary.topic']} 3" filterable="true"
-						filterBy="#{item.topic_3}" filterMatchMode="contains"
-						filterStyle="width: 90%;" sortBy="#{item.topic_3}">
-						<h:outputText value="#{item.topic_3}"
+						filterBy="#{item.topic3}" filterMatchMode="contains"
+						filterStyle="width: 90%;" sortBy="#{item.topic3}">
+						<h:outputText value="#{item.topic3}"
 							pt:data-itemId="#{item.glossId}" id="cell3" />
 					</p:column>
 					<p:column headerText="#{msg['Glossary.description']}" sortBy="#{item.description}"
@@ -156,38 +156,43 @@
 					<p:panelGrid id="grid" styleClass="centered-form" columns="3"
 						style="border-style: none !important; margin: 0 auto;">
 
-						<p:outputLabel for="topic_1" value="#{msg['Glossary.topic']} 1 "></p:outputLabel>
+						<p:outputLabel for="topic_1" value="#{msg['Glossary.topic']} 1 " />
 						<p:selectOneMenu id="topic_1"
 							value="#{glossaryBean.selectedTopicOne}" required="true"
 							requiredMessage="#{msg['Glossary.topic_one_message']}">
-							<f:selectItem itemValue="#{null}" itemLabel="-- select --" />
 							<f:selectItems value="#{glossaryBean.availableTopicOnes}" />
 							<f:ajax listener="#{glossaryBean.changeTopicOne}"
 								render="topic_2 topic_3" />
 						</p:selectOneMenu>
 						<p:message for="topic_1" />
 
-						<p:outputLabel for="topic_2" value="#{msg['Glossary.topic']} 2 "></p:outputLabel>
-						<p:selectOneMenu id="topic_2"
-							value="#{glossaryBean.selectedTopicTwo}" editable="true">
-							<f:selectItem itemValue="#{null}" itemLabel="-- select --" />
-							<f:selectItems value="#{glossaryBean.availableTopicTwos}" />
-							<f:ajax listener="#{glossaryBean.changeTopicTwo}"
-								render="topic_3" />
-						</p:selectOneMenu>
+						<p:outputLabel for="topic_2" value="#{msg['Glossary.topic']} 2 " />
+						<h:panelGroup id="topic_2">
+							<p:selectOneMenu rendered="#{not empty glossaryBean.availableTopicTwos}"
+								value="#{glossaryBean.selectedTopicTwo}" editable="true">
+								<f:selectItems value="#{glossaryBean.availableTopicTwos}" />
+								<f:ajax listener="#{glossaryBean.changeTopicTwo}"
+									render="topic_3" />
+							</p:selectOneMenu>
+							<p:inputText rendered="#{empty glossaryBean.availableTopicTwos}"
+								value="#{glossaryBean.selectedTopicThree}" />
+						</h:panelGroup>
 						<p:message for="topic_2" />
 
-						<p:outputLabel for="topic_3" value="#{msg['Glossary.topic']} 3 "></p:outputLabel>
-						<p:selectOneMenu id="topic_3"
-							value="#{glossaryBean.selectedTopicThree}" editable="true">
-							<f:selectItem itemValue="#{null}" itemLabel="-- select --" />
-							<f:selectItems value="#{glossaryBean.availableTopicThrees}" />
-						</p:selectOneMenu>
+						<p:outputLabel for="topic_3" value="#{msg['Glossary.topic']} 3 " />
+						<h:panelGroup id="topic_3">
+							<p:selectOneMenu rendered="#{not empty glossaryBean.availableTopicThrees}"
+								value="#{glossaryBean.selectedTopicThree}" editable="true">
+								<f:selectItems value="#{glossaryBean.availableTopicThrees}" />
+							</p:selectOneMenu>
+							<p:inputText rendered="#{empty glossaryBean.availableTopicThrees}"
+								value="#{glossaryBean.selectedTopicThree}" />
+						</h:panelGroup>
 						<h:outputText value="" />
 
 						<p:outputLabel value="#{msg['Glossary.description']} "
 							for="description"></p:outputLabel>
-						<h:inputText id="description" value="#{glossaryBean.description}"
+						<p:inputText id="description" value="#{glossaryBean.description}"
 							styleClass="inputfield" required="true"
 							requiredMessage="#{msg['Glossary.description_message']}" />
 						<p:message for="description" />
@@ -289,7 +294,7 @@
 							<p:inputText id="termIt" value='#{item.value}' style="width: 90%" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.use']}"
-							style="text-align: center">
+							style="text-align: center"> 
 							<p:selectCheckboxMenu id="useIt" value="#{item.selectedUses}"
 								styleClass="test-use-checkbox" label="#{item.useLabel}">
 								<f:selectItems value="#{glossaryBean.uses}" />

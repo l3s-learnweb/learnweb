@@ -159,7 +159,7 @@ public class GlossaryEntry implements Serializable
     public void setUser(User user)
     {
         this.user = user;
-
+        this.userId = user.getId();
     }
 
     public int getUserId()
@@ -170,7 +170,7 @@ public class GlossaryEntry implements Serializable
     public void setUserId(int userId)
     {
         this.userId = userId;
-
+        this.user = null;
     }
 
     public int getResourceId()

@@ -26,7 +26,6 @@ import de.l3s.glossary.LanguageItem.LANGUAGE;
 import de.l3s.learnweb.GlossaryEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.User;
 
 @ViewScoped
 @ManagedBean
@@ -34,19 +33,20 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -1811030091337893637L;
     private static final Logger log = Logger.getLogger(GlossaryBean.class);
+    private static final String PREFERENCE_TOPIC1 = "GLOSSARY_TOPIC1";
 
     private List<LanguageItem> secondaryLangItems;
     private List<LanguageItem> primaryLangItems;
     private List<LanguageItem> languageItems;
-    private List<String> Uses;
+    private final List<String> uses = new ArrayList<String>();
     private String fileName;
     private String selectedTopicOne;
     private String selectedTopicTwo;
     private String selectedTopicThree;
     public String description;
-    private List<SelectItem> availableTopicOnes;
-    private List<SelectItem> availableTopicTwos;
-    private List<SelectItem> availableTopicThrees;
+    private final List<SelectItem> availableTopicOnes = new ArrayList<SelectItem>();
+    private List<SelectItem> availableTopicTwos = new ArrayList<SelectItem>();
+    private List<SelectItem> availableTopicThrees = new ArrayList<SelectItem>();
     private String valueHeaderIt;
     private int count;
     private int glossaryEntryCount;
@@ -67,7 +67,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     {
         if(isAjaxRequest())
             return;
-
 
         if(resourceId > 0)
         {
@@ -92,11 +91,19 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     @PostConstruct
     public void init()
     {
+        //Add topic One
+        availableTopicOnes.add(new SelectItem("Environment"));
+        availableTopicOnes.add(new SelectItem("European Politics"));
+        availableTopicOnes.add(new SelectItem("Medicine"));
+        availableTopicOnes.add(new SelectItem("Tourism"));
+
+        uses.add("technical");
+        uses.add("popular");
+        uses.add("informal");
+
         resourceId = getParameterInt("resource_id");
         createEntry();
         glossaryEntryCount = getGlossaryEntryCount(resourceId);
-
-
     }
 
     private void setlanguagePair(int resourceId2)
@@ -126,63 +133,55 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public void createEntry()
     {
-
-        Uses = new ArrayList<String>();
-        Uses.add("technical");
-        Uses.add("popular");
-        Uses.add("informal");
         setDescription("");
-        setSelectedTopicOne("");
-        setSelectedTopicTwo("");
-        setSelectedTopicThree("");
-        availableTopicOnes = new ArrayList<SelectItem>();
-        availableTopicTwos = new ArrayList<SelectItem>();
-        availableTopicThrees = new ArrayList<SelectItem>();
-        //Add topic One
-        availableTopicOnes.add(new SelectItem("MEDICINE"));
-        availableTopicOnes.add(new SelectItem("European Politics"));
-        availableTopicOnes.add(new SelectItem("Environment"));
+
+        selectedTopicThree = "";
+        selectedTopicTwo = "";
+        selectedTopicOne = getPreference(PREFERENCE_TOPIC1, availableTopicOnes.get(0).getValue().toString());
+        availableTopicThrees.clear();
+        createAvailableTopicsTwo();
+
         secondaryLangItems = new ArrayList<LanguageItem>();
         secondaryLangItems.add(new LanguageItem());
         primaryLangItems = new ArrayList<LanguageItem>();
         primaryLangItems.add(new LanguageItem());
-
     }
 
     public void setForm(GlossaryItems gloss)
     {
         createEntry();
-        setSelectedTopicOne(gloss.getTopic_1());
-        createAvailableTopicTwos(getSelectedTopicOne());
 
-        setSelectedTopicTwo(gloss.getTopic_2());
+        setSelectedTopicOne(gloss.getTopic1());
+        createAvailableTopicsTwo();
 
-        createAvailableTopicThree(gloss.getTopic_2());
-        setSelectedTopicThree(gloss.getTopic_3());
+        setSelectedTopicTwo(gloss.getTopic2());
+        createAvailableTopicsThree();
+
+        setSelectedTopicThree(gloss.getTopic3());
+
         setDescription(gloss.getDescription());
         List<LanguageItem> primaryItemsToSet = new ArrayList<LanguageItem>();
         List<LanguageItem> secondaryItemsToSet = new ArrayList<LanguageItem>();
-        for(LanguageItem l : gloss.getFinalItems())
+
+        for(LanguageItem languageItem : gloss.getFinalItems())
         {
-
-            if(l.getLanguage().equals(primaryLanguage))
+            if(languageItem.getLanguage().equals(primaryLanguage))
             {
-                l.setUseLabel("Use");
-                l.updateUseLabel();
-                primaryItemsToSet.add(l);
-
+                languageItem.setUseLabel("Use");
+                languageItem.updateUseLabel();
+                primaryItemsToSet.add(languageItem);
             }
-            else if(l.getLanguage().equals(secondaryLanguage))
+            else if(languageItem.getLanguage().equals(secondaryLanguage))
             {
-                l.setUseLabel("Use");
-                l.updateUseLabel();
-                secondaryItemsToSet.add(l);
+                languageItem.setUseLabel("Use");
+                languageItem.updateUseLabel();
+                secondaryItemsToSet.add(languageItem);
             }
         }
+
         setSecondaryLangItems(secondaryItemsToSet);
         setPrimaryLangItems(primaryItemsToSet);
         setGlossaryId(gloss.getGlossId());
-
     }
 
     public String upload()
@@ -203,7 +202,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
         if(upload)
         {
-            User u = getUser();
             GlossaryEntry entry = new GlossaryEntry();
 
             entry.setDescription(getDescription());
@@ -213,8 +211,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             entry.setSelectedTopicTwo(getSelectedTopicTwo());
             entry.setSelectedTopicThree(getSelectedTopicThree());
             entry.setFirstLanguageItems(getPrimaryLangItems());
-            entry.setUserId(getUserId());
-            entry.setUser(u);
+            entry.setUser(getUser());
             entry.setSecondLanguageItems(getSecondaryLangItems());
             entry.setResourceId(getResourceId());
             entry.setGlossaryId(getGlossaryId());
@@ -225,7 +222,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                 FacesContext context = FacesContext.getCurrentInstance();
                 context.addMessage(null, new FacesMessage("Successful entry"));
                 context.getExternalContext().getFlash().setKeepMessages(true);
-
             }
 
             if(getGlossaryId() == 0)
@@ -265,6 +261,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
     }
 
+    // TODO rename
     public void addIt()
     {
         secondaryLangItems.add(new LanguageItem());
@@ -274,6 +271,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         log(Action.glossary_term_add, groupId, resourceId);
     }
 
+    // TODO rename
     public void removeIt(LanguageItem item)
     {
         try
@@ -294,9 +292,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             }
             else
             {
-                FacesContext context1 = FacesContext.getCurrentInstance();
-
-                context1.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "You need atleast one entry of Second Language Terms"));
+                addMessage(FacesMessage.SEVERITY_ERROR, "You need atleast one entry of Second Language Terms");
             }
         }
         catch(Exception e)
@@ -305,6 +301,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
+    // TODO rename
     public void removeUk(LanguageItem item)
     {
         try
@@ -336,6 +333,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
+    // TODO rename
     public void addUk()
     {
         try
@@ -350,50 +348,67 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void createAvailableTopicTwos(String topic1)
-    {
-        if(topic1.equalsIgnoreCase("medicine"))
-        {
-        availableTopicTwos.add(new SelectItem("Diseases and disorders"));
-        availableTopicTwos.add(new SelectItem("Anatomy"));
-        availableTopicTwos.add(new SelectItem("Medical branches"));
-        availableTopicTwos.add(new SelectItem("Institutions"));
-        availableTopicTwos.add(new SelectItem("Professions"));
-        availableTopicTwos.add(new SelectItem("Food and nutrition"));
-        availableTopicTwos.add(new SelectItem("other"));
-        }
-        else
-            availableTopicTwos = new ArrayList<SelectItem>();
-    }
-
     public void changeTopicOne(AjaxBehaviorEvent event)
     {
-        createAvailableTopicTwos(selectedTopicOne);
+        createAvailableTopicsTwo();
         selectedTopicTwo = selectedTopicThree = "";
-        availableTopicThrees = new ArrayList<SelectItem>();
         availableTopicThrees.clear();
     }
 
-    public void createAvailableTopicThree(String selectedtopicTwo)
+    private void createAvailableTopicsTwo()
     {
-        availableTopicThrees = new ArrayList<SelectItem>();
-        if(selectedTopicTwo.equalsIgnoreCase("Diseases and disorders"))
+        availableTopicTwos.clear();
+
+        if(selectedTopicOne.equalsIgnoreCase("medicine"))
         {
-            availableTopicThrees.add(new SelectItem("Signs and symptoms"));
-            availableTopicThrees.add(new SelectItem("Diagnostic techniques"));
-            availableTopicThrees.add(new SelectItem("Therapies"));
-            availableTopicThrees.add(new SelectItem("Drugs"));
+            availableTopicTwos.add(new SelectItem("Diseases and disorders"));
+            availableTopicTwos.add(new SelectItem("Anatomy"));
+            availableTopicTwos.add(new SelectItem("Medical branches"));
+            availableTopicTwos.add(new SelectItem("Institutions"));
+            availableTopicTwos.add(new SelectItem("Professions"));
+            availableTopicTwos.add(new SelectItem("Food and nutrition"));
+            availableTopicTwos.add(new SelectItem("other"));
         }
-        else if(selectedTopicTwo.equalsIgnoreCase("Anatomy"))
+        else if(selectedTopicOne.equalsIgnoreCase("TOURISM"))
         {
-            availableTopicThrees.add(new SelectItem("Organs"));
-            availableTopicThrees.add(new SelectItem("Bones"));
-            availableTopicThrees.add(new SelectItem("Muscles"));
-            availableTopicThrees.add(new SelectItem("Other"));
+            availableTopicTwos.add(new SelectItem("Accommodation"));
+            availableTopicTwos.add(new SelectItem("Surroundings"));
+            availableTopicTwos.add(new SelectItem("Heritage"));
+            availableTopicTwos.add(new SelectItem("Food and Produce"));
+            availableTopicTwos.add(new SelectItem("Activities and Tours"));
+            availableTopicTwos.add(new SelectItem("Travel and Transport"));
         }
-        else
+    }
+
+    private void createAvailableTopicsThree()
+    {
+        availableTopicThrees.clear();
+
+        if(selectedTopicOne.equalsIgnoreCase("medicine"))
         {
-            availableTopicThrees = new ArrayList<SelectItem>();
+            if(selectedTopicTwo.equalsIgnoreCase("Diseases and disorders"))
+            {
+                availableTopicThrees.add(new SelectItem("Signs and symptoms"));
+                availableTopicThrees.add(new SelectItem("Diagnostic techniques"));
+                availableTopicThrees.add(new SelectItem("Therapies"));
+                availableTopicThrees.add(new SelectItem("Drugs"));
+            }
+            else if(selectedTopicTwo.equalsIgnoreCase("Anatomy"))
+            {
+                availableTopicThrees.add(new SelectItem("Organs"));
+                availableTopicThrees.add(new SelectItem("Bones"));
+                availableTopicThrees.add(new SelectItem("Muscles"));
+                availableTopicThrees.add(new SelectItem("Other"));
+            }
+        }
+        if(selectedTopicOne.equalsIgnoreCase("TOURISM"))
+        {
+            if(selectedTopicTwo.equalsIgnoreCase("Heritage"))
+            {
+                availableTopicThrees.add(new SelectItem("History"));
+                availableTopicThrees.add(new SelectItem("Architecture"));
+                availableTopicThrees.add(new SelectItem("Festivals"));
+            }
         }
     }
 
@@ -419,21 +434,16 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                 {
                     if(cell.getStringCellValue().equals(cell0.getStringCellValue()))
                     {
-
                         continue;
-
                     }
                     else
                     {
-
                         int rowIndex = i;
                         if(sheet.getRow(rowIndex).getCell(0) != null)
                         {
                             cell0 = sheet.getRow(rowIndex).getCell(0);
                             sheet.shiftRows(rowIndex, sheet.getLastRowNum(), 1);
-
                         }
-
                     }
                 }
 
@@ -448,7 +458,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public void changeTopicTwo(AjaxBehaviorEvent event)
     {
-        createAvailableTopicThree(selectedTopicTwo);
+        createAvailableTopicsThree();
         selectedTopicThree = null;
     }
 
@@ -462,7 +472,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public void setDescription(String description)
     {
         this.description = description;
-
     }
 
     public List<LanguageItem> getSecondaryLangItems()
@@ -503,6 +512,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public void setSelectedTopicOne(String selectedTopicOne)
     {
         this.selectedTopicOne = selectedTopicOne;
+        setPreference(PREFERENCE_TOPIC1, selectedTopicOne);
     }
 
     public String getSelectedTopicThree()
@@ -532,22 +542,12 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     public List<String> getUses()
     {
-        return Uses;
-    }
-
-    public void setUses(List<String> uses)
-    {
-        Uses = uses;
+        return uses;
     }
 
     public String getValueHeaderIt()
     {
         return valueHeaderIt;
-    }
-
-    public void setValueHeaderIt(String valueHeaderIt)
-    {
-        this.valueHeaderIt = valueHeaderIt;
     }
 
     public int getCount()
@@ -662,19 +662,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         return numberOfEntries;
     }
 
-    public void setNumberOfEntries(int numberOfEntries)
-    {
-        this.numberOfEntries = numberOfEntries;
-    }
-
     public int getGlossaryEntryCount()
     {
         return glossaryEntryCount;
-    }
-
-    public void setGlossaryEntryCount(int glossaryEntryCount)
-    {
-        this.glossaryEntryCount = glossaryEntryCount;
     }
 
     public LANGUAGE getPrimaryLanguage()

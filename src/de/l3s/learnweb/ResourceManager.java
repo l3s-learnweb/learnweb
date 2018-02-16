@@ -757,23 +757,23 @@ public class ResourceManager
     public AbstractPaginator getResourcesByGroupId(int groupId, Order order) throws SQLException
     {
         int results = getResourceCountByGroupId(groupId);
-
+    
         return new GroupPaginator(results, groupId, order);
     }
-
+    
     private static class GroupPaginator extends AbstractPaginator
     {
         private static final long serialVersionUID = 399863025926697377L;
         private final int groupId;
         private final Order order;
-
+    
         public GroupPaginator(int totalResults, int groupId, Order order)
         {
             super(totalResults);
             this.groupId = groupId;
             this.order = order;
         }
-
+    
         @Override
         public List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException
         {
@@ -805,7 +805,7 @@ public class ResourceManager
     public OwnerList<Resource, User> getResourcesByGroupId(int groupId, int page, int pageSize, Order order) throws SQLException
     {
     OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
-
+    
     PreparedStatement select = learnweb.getConnection().prepareStatement(
     	"SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
     select.setInt(1, groupId);
@@ -815,12 +815,12 @@ public class ResourceManager
     while(rs.next())
     {
         Resource resource = createResource(rs);
-
+    
         if(null != resource)
     	resources.add(resource.getOwnerUser(), resource.getCreationDate());
     }
     select.close();
-
+    
     return resources;
     }
     */
@@ -879,24 +879,24 @@ public class ResourceManager
         default:
             return "Learnweb";
         }
-            /*
+        /*
         if(resource.getSource().equals("TED"))
-            resource.setLocation("TED");
+        resource.setLocation("TED");
         else if(resource.getSource().equals("TEDx"))
-            resource.setLocation("TEDx");
+        resource.setLocation("TEDx");
         else if(resource.getSource().equals("TED-Ed"))
-            resource.setLocation("TED-Ed");
+        resource.setLocation("TED-Ed");
         else if(resource.getSource().equals("LORO"))
-            resource.setLocation("LORO");
+        resource.setLocation("LORO");
         else if(resource.getSource().equals("Yovisto"))
-            resource.setLocation("Yovisto");
+        resource.setLocation("Yovisto");
         else if(resource.getSource().equals("Archive-It"))
-            resource.setLocation("Archive-It");
+        resource.setLocation("Archive-It");
         else if(resource.getSource().equals("FactCheck"))
-            resource.setLocation("FactCheck");
+        resource.setLocation("FactCheck");
         else
-            resource.setLocation("Learnweb");
-            */
+        resource.setLocation("Learnweb");
+        */
     }
 
     private Resource createResource(ResultSet rs) throws SQLException
@@ -915,8 +915,8 @@ public class ResourceManager
             resource.setRights(rs.getInt("rights"));
             resource.setSource(rs.getString("source"));
             resource.setAuthor(rs.getString("author"));
-            resource.setType(rs.getString("type"));
             resource.setFormat(rs.getString("format"));
+            resource.setType(rs.getString("type"));
             resource.setUserId(rs.getInt("owner_user_id"));
             resource.setRatingSum(rs.getInt("rating"));
             resource.setRateNumber(rs.getInt("rate_number"));
@@ -1230,9 +1230,8 @@ public class ResourceManager
         			+ " FROM `lw_resource` r where  `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`resource_id` > 20000 and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown' ORDER BY `resource_id` DESC limit 20",
         		null);
         */
-        List<Resource> resources = rm.getResources(
-                "SELECT " + RESOURCE_COLUMNS
-                        + " FROM `lw_resource` r where `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`group_id` = 420 and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown'",
+        List<Resource> resources = rm.getResources("SELECT " + RESOURCE_COLUMNS
+                + " FROM `lw_resource` r where `deleted` = 0 AND `storage_type` = 2 AND `type` NOT IN ('image','video') and restricted = 0 and r.`group_id` = 420 and type !='pdf' and source not in ('SlideShare','loro') and thumbnail2_file_id=0 and online_status = 'unknown'",
                 null);
         for(Resource resource : resources)
         {
@@ -1284,7 +1283,7 @@ public class ResourceManager
      *
     public static void reindexAllResources() throws SQLException, ClassNotFoundException
     {
-
+    
     }
     */
 

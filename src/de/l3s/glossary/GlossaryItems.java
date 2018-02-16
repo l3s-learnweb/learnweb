@@ -9,9 +9,9 @@ public class GlossaryItems implements Serializable
 {
     private static final long serialVersionUID = -5692141840144862371L;
 
-    private String topic_1; // TODO remove underscores, don't forget to remove it in the corresponding xhtml file
-    private String topic_2; // TODO remove underscores, don't forget to remove it in the corresponding xhtml file
-    private String topic_3; // TODO remove underscores, don't forget to remove it in the corresponding xhtml file
+    private String topic1;
+    private String topic2;
+    private String topic3;
     private String description;
 
     private int glossId;
@@ -32,34 +32,34 @@ public class GlossaryItems implements Serializable
     private int termId;
     private Timestamp date;
 
-    public String getTopic_1()
+    public String getTopic1()
     {
-        return topic_1;
+        return topic1;
     }
 
     public void setTopic_1(String topic_1)
     {
-        this.topic_1 = topic_1;
+        this.topic1 = topic_1;
     }
 
-    public String getTopic_2()
+    public String getTopic2()
     {
-        return topic_2;
+        return topic2;
     }
 
-    public void setTopic_2(String topic_2)
+    public void setTopic_2(String topic2)
     {
-        this.topic_2 = topic_2;
+        this.topic2 = topic2;
     }
 
-    public String getTopic_3()
+    public String getTopic3()
     {
-        return topic_3;
+        return topic3;
     }
 
     public void setTopic_3(String topic_3)
     {
-        this.topic_3 = topic_3;
+        this.topic3 = topic_3;
     }
 
     public String getDescription()
@@ -173,6 +173,7 @@ public class GlossaryItems implements Serializable
         this.termId = termId;
     }
 
+    // TODO remove
     public String getGlossIdString()
     {
         return glossIdString;

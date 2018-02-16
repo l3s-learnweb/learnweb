@@ -52,7 +52,7 @@ public class GlossaryManager
                 preparedStmnt.setString(7, t.getPhraseology());
                 preparedStmnt.setString(8, languagePair[0]);
                 preparedStmnt.setInt(9, 0);
-                preparedStmnt.setInt(10, e.getUser().getId());
+                preparedStmnt.setInt(10, e.getUserId());
                 preparedStmnt.executeQuery();
 
             }
@@ -344,25 +344,19 @@ public class GlossaryManager
 
     public String[] getLanguagePairs(int resourceId) throws SQLException
     {
-        String primaryLanguage = "";
-        String secondaryLanguage = "";
-        String getPrimarySecondaryLang = "SELECT * FROM `lw_resource_glossary_main` WHERE `resource_id`=?";
-        PreparedStatement preparedStmnt = null;
-        ResultSet result = null;
-        preparedStmnt = learnweb.getConnection().prepareStatement(getPrimarySecondaryLang);
-        preparedStmnt.setInt(1, resourceId);
-        result = preparedStmnt.executeQuery();
-        String langPair[] = null;
+        PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_resource_glossary_main` WHERE `resource_id`=?");
+        ps.setInt(1, resourceId);
+        ResultSet result = ps.executeQuery();
+
+        String langPair[] = new String[2];
         if(result.next())
         {
-            primaryLanguage = result.getString("language_one");
-            secondaryLanguage = result.getString("language_two");
-            langPair = new String[] { primaryLanguage, secondaryLanguage };
+            langPair[0] = result.getString("language_one"); // primary Language
+            langPair[1] = result.getString("language_two"); // secondary Language
         }
-
+        ps.close();
 
         return langPair;
-
     }
 
     public List<GlossaryItems> getGlossaryItems(int id)
