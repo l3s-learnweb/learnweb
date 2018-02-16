@@ -614,9 +614,79 @@ public class TedManager
         return resp;
     }
 
+    //Remove duplicate TED Resources from group 862 starting from the resourceId
+    public void removeDuplicateTEDResources(int resourceId) throws SQLException
+    {
+        PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_resource` WHERE group_id = 862 AND owner_user_id = 7727 AND deleted = 0 AND resource_id > ?");
+        pStmt.setInt(1, resourceId);
+        ResultSet rs = pStmt.executeQuery();
+        while(rs.next())
+        {
+            int resId = rs.getInt("resource_id");
+            PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement("SELECT * FROM ted_video WHERE resource_id = ?");
+            pStmt2.setInt(1, resId);
+            ResultSet rs2 = pStmt2.executeQuery();
+            boolean existsInTedVideo = false;
+            if(rs2.next())
+            {
+                existsInTedVideo = true;
+            }
+            pStmt2.close();
+
+            if(!existsInTedVideo)
+            {
+                Resource r = learnweb.getResourceManager().getResource(resId);
+                r.setDeleted(true);
+                r.save();
+                PreparedStatement pStmt3 = learnweb.getConnection().prepareStatement("DELETE FROM ted_transcripts_paragraphs WHERE resource_id = ?");
+                pStmt3.setInt(1, resId);
+                int deleted = pStmt3.executeUpdate();
+                log.info("Deleted(" + deleted + ") transcripts for duplicate TED video: " + resId);
+                pStmt3.close();
+            }
+        }
+        pStmt.close();
+    }
+
+    //Link existing resources to TED resources in the original TED group
+    public void linkResourcesToTEDResources() throws SQLException
+    {
+        PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT resource_id FROM lw_resource WHERE url LIKE '%ted.com/talks%' AND source != 'TED'");
+        ResultSet rs = pStmt.executeQuery();
+        while(rs.next())
+        {
+            Resource r = learnweb.getResourceManager().getResource(rs.getInt("resource_id"));
+            int tedVideoResourceId = getTedVideoResourceId(r.getUrl());
+            log.info(tedVideoResourceId);
+            if(tedVideoResourceId > 0)
+            {
+                Resource r2 = learnweb.getResourceManager().getResource(tedVideoResourceId);
+
+                r.setSource("TED");
+                r.setMaxImageUrl(r2.getMaxImageUrl());
+                List<File> files = learnweb.getFileManager().getFilesByResource(r.getId());
+                for(File f : files)
+                {
+                    learnweb.getFileManager().delete(f.getId());
+                }
+                r.setThumbnail0(r2.getThumbnail0());
+                r.setThumbnail1(r2.getThumbnail1());
+                r.setThumbnail2(r2.getThumbnail2());
+                r.setThumbnail3(r2.getThumbnail3());
+                r.setThumbnail4(r2.getThumbnail4());
+                r.setDuration(r2.getDuration());
+                r.setIdAtService(r2.getIdAtService());
+                r.setType(r2.getType());
+                r.setFormat(r2.getFormat());
+                r.save();
+            }
+        }
+        pStmt.close();
+    }
+
     public static void main(String[] args) throws IOException, IllegalResponseException, SQLException, ClassNotFoundException
     {
-        TedManager tm = Learnweb.getInstance().getTedManager();
+        TedManager tm = Learnweb.createInstance("").getTedManager();
         tm.fetchTedX(); //saveTedResource();
         System.exit(0);
     }
