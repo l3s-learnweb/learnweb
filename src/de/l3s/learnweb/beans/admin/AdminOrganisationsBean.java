@@ -9,7 +9,7 @@ import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 
 import org.apache.log4j.Logger;
 
@@ -18,7 +18,7 @@ import de.l3s.learnweb.Organisation.Option;
 import de.l3s.learnweb.beans.ApplicationBean;
 
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class AdminOrganisationsBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -4815509777068370043L;
@@ -29,8 +29,9 @@ public class AdminOrganisationsBean extends ApplicationBean implements Serializa
 
     public AdminOrganisationsBean() throws SQLException
     {
+        log.debug("init AdminOrganisationsBean");
         organisations = new ArrayList<Organisation>(getLearnweb().getOrganisationManager().getOrganisationsAll());
-        setSelectedOrganisation(getUser().getOrganisation()); // by default edit the users organization 
+        setSelectedOrganisation(getUser().getOrganisation()); // by default edit the users organization
     }
 
     public void onSave()

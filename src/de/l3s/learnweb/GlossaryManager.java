@@ -426,7 +426,7 @@ public class GlossaryManager
                         gloss.setLanguage(secondaryLanguage);
                     gloss.setPrimaryLanguageTerm(primaryLangTerm);
 
-                    LanguageItem it = new LanguageItem();
+                    LanguageItem it = new LanguageItem(); // TODO "it" name
                     gloss.setPrimaryLanguage(it.getEnum(primaryLanguage));
                     gloss.setSecondaryLanguage(it.getEnum(secondaryLanguage));
                     it.setAcronym(termResults.getString("acronym"));
@@ -435,13 +435,13 @@ public class GlossaryManager
                     it.setPronounciation(termResults.getString("pronounciation"));
                     it.setReferences(termResults.getString("references"));
                     it.setTermId(termResults.getInt("glossary_term_id"));
-                    List<String> setUse = new ArrayList<String>();
+                    List<String> setUse = new ArrayList<String>(); // TODO improve
                     if(termResults.getString("use").contains(","))
                         setUse = Arrays.asList(termResults.getString("use").split(", "));
                     else
                         setUse.add(termResults.getString("use").trim());
                     it.setSelectedUses(setUse);
-                    if(termResults.getString("language").equals(primaryLanguage))
+                    if(termResults.getString("language").equals(primaryLanguage)) // TODO improve
                         it.setLanguage(it.getEnum(primaryLanguage));
                     else
                         it.setLanguage(it.getEnum(secondaryLanguage));
