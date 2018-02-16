@@ -88,9 +88,10 @@ public class RequestManager
      */
     public boolean checkBanned(String ip)
     {
-        if(banlist.containsKey(ip))
+        Date bandate = banlist.get(ip);
+        if(bandate != null)
         {
-            return banlist.get(ip).after(new Date());
+            return bandate.after(new Date());
         }
         else
         {

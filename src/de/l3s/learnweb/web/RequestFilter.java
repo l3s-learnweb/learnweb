@@ -11,6 +11,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.log4j.Logger;
+
 /**
  * Logs incoming requests by IPs. Records IP, time and URL, then at the end of the day stores it into a log file.
  *
@@ -19,27 +21,34 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class RequestFilter implements Filter
 {
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
     {
-        HttpServletRequest req = (HttpServletRequest) request;
-
-        String IP = req.getHeader("X-FORWARDED-FOR");
-        if(IP == null)
+        try
         {
-            IP = request.getRemoteAddr();
-        }
+            HttpServletRequest req = (HttpServletRequest) request;
 
-        if(RequestManager.instance().checkBanned(IP))
+            String IP = req.getHeader("X-FORWARDED-FOR");
+            if(IP == null)
+            {
+                IP = request.getRemoteAddr();
+            }
+
+            if(RequestManager.instance().checkBanned(IP))
+            {
+                return;
+            }
+
+            String url = req.getRequestURL().toString();
+            Date now = new Date();
+
+            RequestManager.instance().recordRequest(IP, now, url);
+        }
+        catch(Throwable e) // makes sure that an error in request manager doesn't block the system
         {
-            return;
+            Logger.getLogger(RequestFilter.class).fatal("request filter error", e);
         }
-
-        String url = req.getRequestURL().toString();
-        Date now = new Date();
-
-        RequestManager.instance().recordRequest(IP, now, url);
-
         chain.doFilter(request, response);
 
     }
