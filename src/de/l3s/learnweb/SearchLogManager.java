@@ -97,10 +97,8 @@ public class SearchLogManager
         if(searchId < 0) // failed to log query, no need to log resources
             return;
 
-        try
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO `learnweb_large`.`sl_resource` (" + RESOURCE_COLUMNS + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");)
         {
-            PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO `learnweb_large`.`sl_resource` (" + RESOURCE_COLUMNS + ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-
             for(ResourceDecorator decoratedResource : resources)
             {
                 insert.setInt(1, searchId);
@@ -150,7 +148,6 @@ public class SearchLogManager
             }
 
             insert.executeBatch();
-            insert.close();
         }
         catch(Exception e)
         {
@@ -164,7 +161,7 @@ public class SearchLogManager
     }
 
     /**
-     * 
+     *
      * @param searchId
      * @param rank
      * @param user
