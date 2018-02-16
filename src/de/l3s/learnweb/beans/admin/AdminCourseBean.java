@@ -1,6 +1,7 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -36,7 +37,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
     private Course course = null;
     private List<OptionWrapperGroup> optionGroups;
     private int courseId;
-    private ArrayList<Organisation> organisations;
+    private final List<Organisation> organisations;
 
     public AdminCourseBean()
     {
@@ -44,7 +45,7 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
         Collections.sort(organisations);
     }
 
-    public void loadCourse()
+    public void loadCourse() throws SQLException
     {
         if(getUser() == null) // not logged in
             return;
@@ -137,7 +138,14 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
         if(courseId != this.courseId)
         {
             this.courseId = courseId;
-            loadCourse();
+            try
+            {
+                loadCourse();
+            }
+            catch(SQLException e)
+            {
+                addFatalMessage(e);
+            }
         }
 
     }
@@ -149,10 +157,10 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
 
     /**
      * Returns a list of all available organisations. For select box to select to which organisation a course belongs
-     * 
+     *
      * @return
      */
-    public ArrayList<Organisation> getOrganisations()
+    public List<Organisation> getOrganisations()
     {
         return organisations;
     }
@@ -256,5 +264,4 @@ public class AdminCourseBean extends ApplicationBean implements Serializable
             return o1.name().compareTo(o2.name());
         }
     }
-
 }

@@ -25,7 +25,7 @@ import org.apache.log4j.Logger;
 import org.primefaces.event.FileUploadEvent;
 import org.primefaces.model.UploadedFile;
 
-import de.l3s.glossary.LanguageItem.language;
+import de.l3s.glossary.LanguageItem.LANGUAGE;
 import de.l3s.interwebj.AuthorizationInformation.ServiceInformation;
 import de.l3s.interwebj.IllegalResponseException;
 import de.l3s.learnweb.Course;
@@ -62,7 +62,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     private Folder targetFolder;
     private Group targetGroup;
-    private language[] glossaryLaguage = { language.DE, language.EN, language.FR, language.IT, language.NL };
+    private LANGUAGE[] glossaryLaguage = { LANGUAGE.DE, LANGUAGE.EN, LANGUAGE.FR, LANGUAGE.IT, LANGUAGE.NL };
     private String newUrl;
 
     private List<ServiceInformation> uploadServices;
@@ -755,12 +755,12 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         this.fileEditorBean = fileEditorBean;
     }
 
-    public language[] getGlossaryLaguage()
+    public LANGUAGE[] getGlossaryLaguage()
     {
         return glossaryLaguage;
     }
 
-    public void setGlossaryLaguage(language[] glossaryLaguage)
+    public void setGlossaryLaguage(LANGUAGE[] glossaryLaguage)
     {
         this.glossaryLaguage = glossaryLaguage;
     }

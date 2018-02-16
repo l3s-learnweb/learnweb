@@ -15,6 +15,7 @@ import javax.validation.constraints.Size;
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.OrganisationManager;
+import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
 
 @ManagedBean
@@ -52,9 +53,14 @@ public class AdminCoursesBean extends ApplicationBean implements Serializable
     {
         try
         {
+            User user = getUser();
+
             Course course = new Course();
             course.setTitle(newCourseTitle);
+            course.setOrganisationId(user.getOrganisationId());
             getLearnweb().getCourseManager().save(course);
+
+            course.addUser(user);
             addMessage(FacesMessage.SEVERITY_INFO, "A new course has been created. You should edit it now.");
             load(); // update course list
         }

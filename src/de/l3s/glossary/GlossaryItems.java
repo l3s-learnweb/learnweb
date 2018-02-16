@@ -9,17 +9,17 @@ public class GlossaryItems implements Serializable
 {
     private static final long serialVersionUID = -5692141840144862371L;
 
-    private String topic_1;
-    private String topic_2;
-    private String topic_3;
+    private String topic_1; // TODO remove underscores, don't forget to remove it in the corresponding xhtml file
+    private String topic_2; // TODO remove underscores, don't forget to remove it in the corresponding xhtml file
+    private String topic_3; // TODO remove underscores, don't forget to remove it in the corresponding xhtml file
     private String description;
 
     private int glossId;
 
     private List<LanguageItem> finalItems;
     private String primaryLanguageTerm = ""; //for ordering of terms
-    private de.l3s.glossary.LanguageItem.language primaryLanguage;
-    private de.l3s.glossary.LanguageItem.language secondaryLanguage;
+    private de.l3s.glossary.LanguageItem.LANGUAGE primaryLanguage;
+    private de.l3s.glossary.LanguageItem.LANGUAGE secondaryLanguage;
 
     private String value;
     private String glossIdString;
@@ -203,22 +203,22 @@ public class GlossaryItems implements Serializable
         this.primaryLanguageTerm = englishTerm;
     }
 
-    public de.l3s.glossary.LanguageItem.language getPrimaryLanguage()
+    public de.l3s.glossary.LanguageItem.LANGUAGE getPrimaryLanguage()
     {
         return primaryLanguage;
     }
 
-    public void setPrimaryLanguage(de.l3s.glossary.LanguageItem.language primaryLanguage)
+    public void setPrimaryLanguage(de.l3s.glossary.LanguageItem.LANGUAGE primaryLanguage)
     {
         this.primaryLanguage = primaryLanguage;
     }
 
-    public de.l3s.glossary.LanguageItem.language getSecondaryLanguage()
+    public de.l3s.glossary.LanguageItem.LANGUAGE getSecondaryLanguage()
     {
         return secondaryLanguage;
     }
 
-    public void setSecondaryLanguage(de.l3s.glossary.LanguageItem.language secondaryLanguage)
+    public void setSecondaryLanguage(de.l3s.glossary.LanguageItem.LANGUAGE secondaryLanguage)
     {
         this.secondaryLanguage = secondaryLanguage;
     }

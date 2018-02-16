@@ -8,12 +8,15 @@ public class LanguageItem implements Serializable
 {
     private static final long serialVersionUID = 7068970099338006288L;
 
-    public enum language
+    //private Locale[] supportedLanguages = { Locale.GERMANY, Locale.UK };
+
+    public enum LANGUAGE
     {
         EN
         {
             @Override
-            public String toString() {
+            public String toString()
+            {
                 return "English-EN";
             }
         },
@@ -21,9 +24,10 @@ public class LanguageItem implements Serializable
         {
 
             @Override
-                public String toString() {
+            public String toString()
+            {
                 return "Italian-IT";
-                }
+            }
         },
 
         FR
@@ -58,11 +62,11 @@ public class LanguageItem implements Serializable
     private String references;
     private String phraseology;
     private List<String> selectedUses;
-    private language language;
+    private LANGUAGE language;
     private int termId;
     private String useLabel = "Use";
 
-    public language getEnum(String langValue)
+    public LANGUAGE getEnum(String langValue)
     {
         switch(langValue)
         {
@@ -190,12 +194,12 @@ public class LanguageItem implements Serializable
 
     }
 
-    public de.l3s.glossary.LanguageItem.language getLanguage()
+    public de.l3s.glossary.LanguageItem.LANGUAGE getLanguage()
     {
         return language;
     }
 
-    public void setLanguage(de.l3s.glossary.LanguageItem.language language)
+    public void setLanguage(de.l3s.glossary.LanguageItem.LANGUAGE language)
     {
         this.language = language;
     }

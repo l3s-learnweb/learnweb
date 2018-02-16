@@ -41,7 +41,15 @@
 						<f:selectItems var="org" value="#{adminCourseBean.organisations}" itemLabel="#{org.title}" itemValue="#{org.id}"/>
 					</p:selectOneMenu>
 					<p:message for="c_organisation" showSummary="true" showDetail="false" id="message_c_organisation" rendered="#{userBean.admin}"/>
-							
+						
+					<h:outputText value="Default group:" />
+					<p:selectOneMenu id="c_group" value="#{adminCourseBean.course.defaultGroupId}">
+						<f:selectItem itemLabel="No default group" itemValue="0" />
+						<f:selectItem itemLabel="------------" itemValue="-1" itemDisabled="true" />	
+						<f:selectItems var="group" value="#{adminCourseBean.course.groups}" itemLabel="#{group.title}" itemValue="#{group.id}"/>
+					</p:selectOneMenu>
+					<p:message for="c_group" showSummary="true" showDetail="false" />
+						
 					<h:outputText value="Banner color:" />
 					<p:colorPicker id="popupCP" value="#{adminCourseBean.course.bannerColor}" widgetVar="picker"/>
 					<p:message for="popupCP" showSummary="true" showDetail="false" />

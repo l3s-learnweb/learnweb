@@ -22,7 +22,7 @@ import org.primefaces.model.UploadedFile;
 
 import de.l3s.glossary.GlossaryItems;
 import de.l3s.glossary.LanguageItem;
-import de.l3s.glossary.LanguageItem.language;
+import de.l3s.glossary.LanguageItem.LANGUAGE;
 import de.l3s.learnweb.GlossaryEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
@@ -52,8 +52,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private int glossaryEntryCount;
     private UploadedFile multimediaFile;
     private int userId;
-    private language primaryLanguage;
-    private language secondaryLanguage;
+    private LANGUAGE primaryLanguage;
+    private LANGUAGE secondaryLanguage;
     private int resourceId;
     private int groupId; // group id of the resource used only for the logger
     private int glossaryId;
@@ -677,22 +677,22 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         this.glossaryEntryCount = glossaryEntryCount;
     }
 
-    public language getPrimaryLanguage()
+    public LANGUAGE getPrimaryLanguage()
     {
         return primaryLanguage;
     }
 
-    public void setPrimaryLanguage(language primaryLanguage)
+    public void setPrimaryLanguage(LANGUAGE primaryLanguage)
     {
         this.primaryLanguage = primaryLanguage;
     }
 
-    public language getSecondaryLanguage()
+    public LANGUAGE getSecondaryLanguage()
     {
         return secondaryLanguage;
     }
 
-    public void setSecondaryLanguage(language secondaryLanguage)
+    public void setSecondaryLanguage(LANGUAGE secondaryLanguage)
     {
         this.secondaryLanguage = secondaryLanguage;
     }

@@ -20,7 +20,7 @@
 
 	<ui:define name="center_layout">
 		<ui:fragment rendered="#{not empty registrationBean.wizard}">
-			<style type="text/css">
+			<style>
 				header {display:none; }
 			</style>
 		</ui:fragment>
@@ -75,6 +75,10 @@
 						<p:inputText id="studentId" value="#{registrationBean.studentId}" label="#{msg.student_id}:" rendered="#{registrationBean.studentIdRequired}" />
 						<p:message showSummary="true" showDetail="false" styleClass="error" for="studentId" id="studentIdMessage" rendered="#{registrationBean.studentIdRequired}" />
 
+						<h:panelGroup style="height:74px;" layout="block"></h:panelGroup>
+						<p:captcha label="Captcha" id="captcha" language="#{userBean.locale}"/>
+						<p:message showSummary="true" showDetail="false" styleClass="error" for="captcha" />
+
 						<h:outputText value="" />
 						<p:commandButton action="#{registrationBean.register}" value="#{msg.registerLabel}" ajax="false"/>
 						<h:outputText value="" />
@@ -95,7 +99,7 @@
 						</ul>
 					</h:panelGroup>
 
-					<p:captcha label="Captcha" rendered="#{empty ipbanned}" language="#{userBean.locale}"/>
+					
 
 				</h:form>
 			</p:panel>

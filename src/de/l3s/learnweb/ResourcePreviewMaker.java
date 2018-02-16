@@ -307,6 +307,7 @@ public class ResourcePreviewMaker
                 resource.addFile(convertedFile);
                 resource.setFileName(convertedFile.getName());
                 resource.setFileUrl(convertedFile.getUrl());
+                resource.setUrl(convertedFile.getUrl());
                 resource.setFormat("video/mp4");
             }
         }
