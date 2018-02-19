@@ -81,7 +81,7 @@
 
 	<p:panel header="#{msg.misc_actions}" style="margin:5px;">
 		<h:form>
-			<h:commandButton action="${adminBanlistBean.onClearBanlist}" value="#{msg.clear_bans}" style="margin:10px;" onclick="return confirm('Are you sure you want to clear the banlist? This cannot be undone.')" immediate="true"/>
+			<h:commandButton action="${adminBanlistBean.onClearBanlist}" value="#{msg.clear_bans} (Dev)" style="margin:10px;" onclick="return confirm('Are you sure you want to clear the banlist? This cannot be undone.')" immediate="true"/>
 			<h:commandButton action="${adminBanlistBean.onDeleteOutdatedBans}" value="#{msg.clean_up_bans}" style="margin:10px;" immediate="true"/>
 		</h:form>
 	</p:panel>

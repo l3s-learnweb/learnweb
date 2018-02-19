@@ -91,6 +91,7 @@
 					    						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
 												</h:outputText>
 				<h:commandButton action="${adminRequestListBean.onUpdateAggregatedRequests}" value="#{msg.update}" style="margin:10px;" immediate="true"/>
+				<h:commandButton action="${adminRequestListBean.onClearRequestsDB}" value="Clear table (Dev)" style="margin:10px;" immediate="true"/>
 			</span>
 
 			<p:dataTable var="entry" value="#{adminRequestListBean.aggregatedRequests}" rows="50" paginator="true"
@@ -100,7 +101,7 @@
 					<h:outputText value="#{entry.IP}" />
 				</p:column>
 
-				<p:column headerText="{msg.requests_count}" sortBy="#{entry.requests}">
+				<p:column headerText="#{msg.requests_count}" sortBy="#{entry.requests}">
 					<h:outputText value="#{entry.requests}" />
 				</p:column>
 

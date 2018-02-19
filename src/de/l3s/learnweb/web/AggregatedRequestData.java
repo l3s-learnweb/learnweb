@@ -28,6 +28,7 @@ public class AggregatedRequestData
         this.requests = requests;
         this.loginCount = loginCount;
         this.usernames = usernames;
+        this.time = time;
     }
 
     public String getIP()

@@ -25,7 +25,6 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
     private List<Map.Entry<String, Set<String>>> logins;
 
     private List<AggregatedRequestData> aggregatedRequests = null;
-    private Date aggrRequestsUpdated;
 
     public AdminRequestListBean()
     {
@@ -41,7 +40,6 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
                 requests = getLearnweb().getRequestManager().getRequests();
                 logins = new ArrayList<Map.Entry<String, Set<String>>>(getLearnweb().getRequestManager().getLogins().entrySet());
                 aggregatedRequests = getLearnweb().getRequestManager().getAggrRequests();
-                aggrRequestsUpdated = getLearnweb().getRequestManager().getAggrRequestsUpdateTime();
             }
         }
         catch(Exception e)
@@ -82,12 +80,7 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
 
     public Date getAggrRequestsUpdated()
     {
-        return aggrRequestsUpdated;
-    }
-
-    public void setAggrRequestsUpdated(Date aggrRequestsUpdated)
-    {
-        this.aggrRequestsUpdated = aggrRequestsUpdated;
+        return getLearnweb().getRequestManager().getAggrRequestsUpdateTime();
     }
 
     public void onUpdateAggregatedRequests()
@@ -98,6 +91,11 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
     public void onRecordRequests()
     {
         getLearnweb().getRequestManager().recordRequestsToDB();
+    }
+
+    public void onClearRequestsDB()
+    {
+        getLearnweb().getRequestManager().clearRequestsDB();
     }
 
 }

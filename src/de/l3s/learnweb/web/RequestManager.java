@@ -64,6 +64,7 @@ public class RequestManager
         requests = new ArrayList<RequestData>();
         logins = new HashMap<String, Set<String>>();
         aggrRequestsUpdated = new Date(0);
+        aggregatedRequests = new ArrayList<AggregatedRequestData>();
     }
 
     /**
@@ -111,7 +112,7 @@ public class RequestManager
     /**
      * Adds a given request to the requests list
      */
-    public void recordRequest(String ip, Date time, String url)
+    public synchronized void recordRequest(String ip, Date time, String url)
     {
         requests.add(new RequestData(ip, time, url));
     }
@@ -119,7 +120,7 @@ public class RequestManager
     /**
      * Records successful login into a Map(IP, Set(username)), thus matching every IP to usernames that were logged into from it.
      */
-    public void recordLogin(String ip, String username)
+    public synchronized void recordLogin(String ip, String username)
     {
         Set<String> names = logins.get(ip);
         if(names == null)
@@ -166,10 +167,6 @@ public class RequestManager
         {
             java.sql.Date insertionTime = new java.sql.Date(new Date().getTime());
 
-            //Todo: Figure out how the bulk inserts work
-            //Current implementation just does multiple inserts which is HORRIBLY inefficient
-            //learnweb.getConnection().prepareStatement("BEGIN;").execute();
-
             for(Entry<String, Long> entry : requestsByIP.entrySet())
             {
                 Set<String> log = logins.get(entry.getKey());
@@ -186,9 +183,12 @@ public class RequestManager
                 insert.setInt(3, loginCount);
                 insert.setString(4, usernames);
                 insert.setDate(5, insertionTime);
+
+                insert.addBatch();
             }
 
-            //learnweb.getConnection().prepareStatement("END;").execute();
+            insert.executeBatch();
+
         }
         catch(SQLException e)
         {
@@ -209,12 +209,6 @@ public class RequestManager
 
     public List<AggregatedRequestData> getAggregatedRequests()
     {
-        if(aggregatedRequests == null)
-        {
-            aggregatedRequests = new ArrayList<AggregatedRequestData>();
-            updateAggregatedRequests();
-        }
-
         return aggregatedRequests;
     }
 
@@ -238,6 +232,21 @@ public class RequestManager
         }
 
         aggrRequestsUpdated = new Date();
+    }
+
+    /**
+     * Clears the requests DB. Dev purposes only.
+     */
+    public void clearRequestsDB()
+    {
+        try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_requests"))
+        {
+            delete.execute();
+        }
+        catch(SQLException e)
+        {
+            log.error("Failed to load banlists. SQLException: ", e);
+        }
     }
 
     public List<AggregatedRequestData> getAggrRequests()
