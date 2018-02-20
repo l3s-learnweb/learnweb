@@ -1,36 +1,21 @@
 package de.l3s.ted.crawler;
 
-import java.io.IOException;
-import java.net.URL;
 import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.HashSet;
 import java.util.regex.Pattern;
 
 import org.apache.log4j.Logger;
-import org.apache.solr.client.solrj.SolrServerException;
-import org.jsoup.HttpStatusException;
-import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.ResourcePreviewMaker;
 import de.l3s.learnweb.User;
-import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.SolrClient;
-import edu.uci.ics.crawler4j.crawler.Page;
-import edu.uci.ics.crawler4j.crawler.WebCrawler;
-import edu.uci.ics.crawler4j.parser.HtmlParseData;
-import edu.uci.ics.crawler4j.url.WebURL;
 
-public class TedCrawler extends WebCrawler
+public class TedCrawler
 {
     private static final Logger log = Logger.getLogger(TedCrawler.class);
 
@@ -48,29 +33,30 @@ public class TedCrawler extends WebCrawler
     /**
      * You should implement this function to specify whether the given url
      * should be crawled or not (based on your crawling logic).
+     * 
+     * //If the page URL matches any of these given conditions, dont crawl the page.
+     * public boolean neglectThisPage(Page page)
+     * {
+     * if(page.getWebURL().getURL().contains("?v2"))
+     * return false;
+     * else if(page.getWebURL().getURL().contains("?page"))
+     * return false;
+     * else if(page.getWebURL().getURL().contains("/browse"))
+     * return false;
+     * else if(page.getWebURL().getURL().contains("/transcript"))
+     * return false;
+     * else if(page.getWebURL().getURL().contains("/recommendations"))
+     * return false;
+     * else if(page.getWebURL().getURL().contains("/citations"))
+     * return false;
+     * else if(page.getWebURL().getURL().contains("/corrections"))
+     * return false;
+     * else
+     * return true;
+     * }
      */
-    //If the page URL matches any of these given conditions, dont crawl the page.
-    public boolean neglectThisPage(Page page)
-    {
-        if(page.getWebURL().getURL().contains("?v2"))
-            return false;
-        else if(page.getWebURL().getURL().contains("?page"))
-            return false;
-        else if(page.getWebURL().getURL().contains("/browse"))
-            return false;
-        else if(page.getWebURL().getURL().contains("/transcript"))
-            return false;
-        else if(page.getWebURL().getURL().contains("/recommendations"))
-            return false;
-        else if(page.getWebURL().getURL().contains("/citations"))
-            return false;
-        else if(page.getWebURL().getURL().contains("/corrections"))
-            return false;
-        else
-            return true;
-    }
 
-    //A function to call and parse the transcript pages. 
+    //A function to call and parse the transcript pages.
     //It extracts the transcript values and calls the function for converting the parsed values to RDF and then inserts the data(value, ID, lang) into the database.
     public static void extractTranscriptElements(Document dc, int resourceId, String lang/*, ToRDFController rdfControllerobject*/)
     {
@@ -102,7 +88,7 @@ public class TedCrawler extends WebCrawler
         }
     }
 
-    //Class TED Crawler   
+    //Class TED Crawler
     public TedCrawler()
     {
         rpm = Learnweb.getInstance().getResourcePreviewMaker();
@@ -124,21 +110,22 @@ public class TedCrawler extends WebCrawler
     /**
      * This function is called when a page is fetched and ready to be processed
      * by your program.
+     *
+     * @Override
+     *           public boolean shouldVisit(Page referringPage, WebURL url)
+     *           {
+     *           String href = url.getURL().toLowerCase();
+     *
+     *           return !FILTERS.matcher(href).matches() && href.contains("/talks/");
+     *           }
      */
-    @Override
-    public boolean shouldVisit(Page referringPage, WebURL url)
-    {
-        String href = url.getURL().toLowerCase();
 
-        return !FILTERS.matcher(href).matches() && href.contains("/talks/");
-    }
-
-    @Override
+    /*@Override
     public void visit(Page page)
     {
 
         if(!neglectThisPage(page))
-            return; //dont crawl the page if the value of this function is true 
+            return; //dont crawl the page if the value of this function is true
 
         HashSet<String> languageSet = new HashSet<String>();
         HashSet<String> languageListfromDatabase = new HashSet<String>();
@@ -205,7 +192,7 @@ public class TedCrawler extends WebCrawler
 
                 if(decideWhatToCrawl == CRAWL_FOR_NEW_VIDEOS)
                 {
-                    //if the videos are new, crawl for the basic attributes such as title, speaker, transcripts and call the function to convert them to RDF and insert into the database					
+                    //if the videos are new, crawl for the basic attributes such as title, speaker, transcripts and call the function to convert them to RDF and insert into the database
 
                     Element totalviewsel = doc.select(".talk-sharing__value").first();
                     totalViews = totalviewsel.text();
@@ -296,7 +283,7 @@ public class TedCrawler extends WebCrawler
 
                 }
 
-                //if the videos are old, don't crawl for the basic attributes but only for the new transcripts added 	
+                //if the videos are old, don't crawl for the basic attributes but only for the new transcripts added
                 if(decideWhatToCrawl == CRAWL_FOR_TRANSCRIPTS)
                 {
 
@@ -340,5 +327,5 @@ public class TedCrawler extends WebCrawler
             }
 
         }
-    }
+    }*/
 }
