@@ -29,98 +29,103 @@
 			</span>
 		</div>
 
+	<p:panel>
+	<p:tabView>
+        <p:tab title="#{msg.requests}">
+			<h:form id="requestform" >
 
-	<p:panel header="#{msg.requests}">
-		<h:form id="requestform" >
+					<span>
+						<h:commandButton action="${adminRequestListBean.onRecordRequests}" value="#{msg.record_request} (Dev)" style="margin:10px;" immediate="true"/>
+					</span>
 
-			<span>
-				<h:commandButton action="${adminRequestListBean.onRecordRequests}" value="#{msg.record_request}" style="margin:10px;" immediate="true"/>
-			</span>
+					<p:dataTable var="entry" value="#{adminRequestListBean.requests}" filteredValue="#{adminRequestListBean.filteredRequests}" rows="100" paginator="true"
+			               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+			               currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})"
+			               >
 
-			<p:dataTable var="entry" value="#{adminRequestListBean.requests}" filteredValue="#{adminRequestListBean.filteredRequests}" rows="100" paginator="true"
-	               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-	               currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})"
-	               >
+						<p:column headerText="IP" sortBy="#{entry.IP}" filterBy="#{entry.IP}" filterMatchMode="contains">
+							<h:outputText value="#{entry.IP}" />
+						</p:column>
 
-				<p:column headerText="IP" sortBy="#{entry.IP}" filterBy="#{entry.IP}" filterMatchMode="contains">
-					<h:outputText value="#{entry.IP}" />
-				</p:column>
+						<p:column headerText="#{msg.time}" sortBy="#{entry.time}" filterBy="#{entry.time}" filterMatchMode="gte">
+							<h:outputText value="#{entry.time}">
+							    <f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
+							</h:outputText>
+						</p:column>
 
-				<p:column headerText="#{msg.time}" sortBy="#{entry.time}" filterBy="#{entry.time}" filterMatchMode="gte">
-					<h:outputText value="#{entry.time}">
-					    <f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
-					</h:outputText>
-				</p:column>
+						<p:column headerText="URL" sortBy="#{entry.URL}" filterBy="#{entry.URL}" filterMatchMode="contains">
+							<h:outputText value="#{entry.URL}" />
+						</p:column>
 
-				<p:column headerText="URL" sortBy="#{entry.URL}" filterBy="#{entry.URL}" filterMatchMode="contains">
-					<h:outputText value="#{entry.URL}" />
-				</p:column>
+					</p:dataTable>
+				</h:form>
+        </p:tab>
 
-			</p:dataTable>
-		</h:form>
-	</p:panel>
+        <p:tab title="#{msg.logins}">
+			<h:form>
+				<p:dataTable var="entry" value="#{adminRequestListBean.logins}" rows="100" paginator="true"
+		               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
+		               currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})"
+		               >
 
-	<p:panel header="#{msg.logins}">
-		<h:form>
-			<p:dataTable var="entry" value="#{adminRequestListBean.logins}" rows="100" paginator="true"
-	               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
-	               currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})"
-	               >
+					<p:column headerText="IP" sortBy="#{entry.key}">
+						<h:outputText value="#{entry.key}" />
+					</p:column>
 
-				<p:column headerText="IP" sortBy="#{entry.key}">
-					<h:outputText value="#{entry.key}" />
-				</p:column>
+					<p:column headerText="#{msg.logins_amount}" sortBy="#{entry.value.size()}">
+						<h:outputText value="#{entry.value.size()}" />
+					</p:column>
 
-				<p:column headerText="#{msg.logins_amount}" sortBy="#{entry.value.size()}">
-					<h:outputText value="#{entry.value.size()}" />
-				</p:column>
+					<p:column headerText="#{msg.request_usernames}" sortBy="#{entry.value.toString()}">
+						<h:outputText value="#{entry.value.toString()}" />
+					</p:column>
 
-				<p:column headerText="#{msg.request_usernames}" sortBy="#{entry.value.toString()}">
-					<h:outputText value="#{entry.value.toString()}" />
-				</p:column>
+				</p:dataTable>
+			</h:form>
+        </p:tab>
 
-			</p:dataTable>
-		</h:form>
-	</p:panel>
+        <p:tab title="#{msg.aggr_requests}">
+			<h:form id="aggrrequestform" >
 
-	<p:panel header="#{msg.aggr_requests}">
-		<h:form id="aggrrequestform" >
+				<span>
+					#{msg.aggr_request_updated}:   <h:outputText value="#{adminRequestListBean.aggrRequestsUpdated}">
+						    						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+													</h:outputText>
+					<h:commandButton action="${adminRequestListBean.onUpdateAggregatedRequests}" value="#{msg.update}" style="margin:10px;" immediate="true"/>
+					<h:commandButton action="${adminRequestListBean.onClearRequestsDB}" value="Clear table (Dev)" style="margin:10px;" immediate="true"/>
+				</span>
 
-			<span>
-				#{msg.aggr_request_updated}:   <h:outputText value="#{adminRequestListBean.aggrRequestsUpdated}">
-					    						<f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
-												</h:outputText>
-				<h:commandButton action="${adminRequestListBean.onUpdateAggregatedRequests}" value="#{msg.update}" style="margin:10px;" immediate="true"/>
-				<h:commandButton action="${adminRequestListBean.onClearRequestsDB}" value="Clear table (Dev)" style="margin:10px;" immediate="true"/>
-			</span>
+				<p:dataTable var="entry" value="#{adminRequestListBean.aggregatedRequests}" rows="50" paginator="true"
+		               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}">
 
-			<p:dataTable var="entry" value="#{adminRequestListBean.aggregatedRequests}" rows="50" paginator="true"
-	               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}">
+					<p:column headerText="IP" sortBy="#{entry.IP}">
+						<h:outputText value="#{entry.IP}" />
+					</p:column>
 
-				<p:column headerText="IP" sortBy="#{entry.IP}">
-					<h:outputText value="#{entry.IP}" />
-				</p:column>
+					<p:column headerText="#{msg.requests_count}" sortBy="#{entry.requests}">
+						<h:outputText value="#{entry.requests}" />
+					</p:column>
 
-				<p:column headerText="#{msg.requests_count}" sortBy="#{entry.requests}">
-					<h:outputText value="#{entry.requests}" />
-				</p:column>
+					<p:column headerText="#{msg.logins_amount}" sortBy="#{entry.loginCount}">
+						<h:outputText value="#{entry.loginCount}" />
+					</p:column>
 
-				<p:column headerText="#{msg.logins_amount}" sortBy="#{entry.loginCount}">
-					<h:outputText value="#{entry.loginCount}" />
-				</p:column>
+					<p:column headerText="#{msg.request_usernames}" sortBy="#{entry.usernames}">
+						<h:outputText value="#{entry.usernames}" />
+					</p:column>
 
-				<p:column headerText="#{msg.request_usernames}" sortBy="#{entry.usernames}">
-					<h:outputText value="#{entry.usernames}" />
-				</p:column>
+					<p:column headerText="#{msg.time_stamp}" sortBy="#{entry.time}">
+						<h:outputText value="#{entry.time}">
+						    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+						</h:outputText>
+					</p:column>
 
-				<p:column headerText="#{msg.time_stamp}" sortBy="#{entry.time}">
-					<h:outputText value="#{entry.time}">
-					    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
-					</h:outputText>
-				</p:column>
+				</p:dataTable>
+			</h:form>
+        </p:tab>
+    </p:tabView>
 
-			</p:dataTable>
-		</h:form>
+
 	</p:panel>
 
 

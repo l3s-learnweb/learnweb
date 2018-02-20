@@ -6,9 +6,9 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.apache.log4j.Logger;
 
@@ -34,8 +34,8 @@ public class SimpleProtectionManager implements ProtectionManager
     public SimpleProtectionManager(Learnweb learnweb)
     {
         this.learnweb = learnweb;
-        usernameMap = new HashMap<String, AccessData>();
-        IPMap = new HashMap<String, AccessData>();
+        usernameMap = new ConcurrentHashMap<String, AccessData>();
+        IPMap = new ConcurrentHashMap<String, AccessData>();
         loadBanLists();
     }
 
@@ -52,11 +52,11 @@ public class SimpleProtectionManager implements ProtectionManager
             {
                 if(rs.getString("type").equals("user"))
                 {
-                    usernameMap.put(rs.getString("name"), new AccessData(1, rs.getDate("bandate"), rs.getString("name")));
+                    usernameMap.put(rs.getString("name"), new AccessData(1, rs.getTimestamp("bandate"), rs.getString("name")));
                 }
                 else if(rs.getString("type").equals("IP"))
                 {
-                    IPMap.put(rs.getString("name"), new AccessData(1, rs.getDate("bandate"), rs.getString("name")));
+                    IPMap.put(rs.getString("name"), new AccessData(1, rs.getTimestamp("bandate"), rs.getString("name")));
                 }
             }
 
@@ -102,7 +102,7 @@ public class SimpleProtectionManager implements ProtectionManager
      * At 10+ failed attempts username/IP gets a 2-hour ban, incrementing by 2 for each failed attempt
      */
     @Override
-    public synchronized void updateFailedAttempts(String IP, String username)
+    public void updateFailedAttempts(String IP, String username)
     {
         AccessData ipData = IPMap.get(IP);
         AccessData usernameData = usernameMap.get(username);
@@ -167,7 +167,7 @@ public class SimpleProtectionManager implements ProtectionManager
      * @param permaban Whether the ban is temporary or permament
      */
     @Override
-    public synchronized void ban(AccessData accData, int bantime, boolean isIP)
+    public void ban(AccessData accData, int bantime, boolean isIP)
     {
         if(bantime < 0)
         {
@@ -178,10 +178,10 @@ public class SimpleProtectionManager implements ProtectionManager
             accData.setBan(bantime);
         }
 
-        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_bans (name, bandate, type) VALUES(?, ? ,?) ON DUPLICATE KEY UPDATE bandate=VALUES(bandate)"))
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO lw_bans (name, bandate, type) VALUES(?, ? ,?) ON DUPLICATE KEY UPDATE bandate=VALUES(bandate)"))
         {
             insert.setString(1, accData.getName());
-            insert.setDate(2, new java.sql.Date(accData.getBanDate().getTime()));
+            insert.setTimestamp(2, new java.sql.Timestamp(accData.getBanDate().getTime()));
             if(isIP)
             {
                 insert.setString(3, "IP");
@@ -194,6 +194,11 @@ public class SimpleProtectionManager implements ProtectionManager
             insert.execute();
 
             log.debug("Banned " + accData.getName() + " until " + accData.getBanDate());
+
+            if(isIP)
+            {
+                learnweb.getRequestManager().addBan(accData.getName(), accData.getBanDate());
+            }
         }
         catch(SQLException e)
         {
@@ -202,7 +207,7 @@ public class SimpleProtectionManager implements ProtectionManager
     }
 
     @Override
-    public synchronized void ban(String name, int bantime, boolean isIP)
+    public void ban(String name, int bantime, boolean isIP)
     {
         AccessData accData;
 
@@ -235,7 +240,7 @@ public class SimpleProtectionManager implements ProtectionManager
      * @param name Name\Address that will be cleared of their sins
      */
     @Override
-    public synchronized void unban(String name)
+    public void unban(String name)
     {
         IPMap.remove(name);
         usernameMap.remove(name);
@@ -286,8 +291,8 @@ public class SimpleProtectionManager implements ProtectionManager
 
         try
         {
-            PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans WHERE bandate <= CAST(? AS DATE)");
-            delete.setDate(1, new java.sql.Date(cal.getTimeInMillis()));
+            PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_bans WHERE bandate <= ?");
+            delete.setTimestamp(1, new java.sql.Timestamp(cal.getTimeInMillis()));
             delete.execute();
 
         }

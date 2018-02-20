@@ -6,6 +6,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Set;
 
 import javax.faces.bean.ManagedBean;
@@ -20,7 +21,7 @@ import de.l3s.learnweb.web.RequestData;
 public class AdminRequestListBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -5469152668344315959L;
-    private List<RequestData> requests;
+    private Queue<RequestData> requests;
     private List<RequestData> filteredRequests;
     private List<Map.Entry<String, Set<String>>> logins;
 
@@ -48,7 +49,7 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
         }
     }
 
-    public List<RequestData> getRequests()
+    public Queue<RequestData> getRequests()
     {
         return requests;
     }
@@ -91,11 +92,16 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
     public void onRecordRequests()
     {
         getLearnweb().getRequestManager().recordRequestsToDB();
+        getLearnweb().getRequestManager().updateAggregatedRequests();
+        aggregatedRequests = getLearnweb().getRequestManager().getAggrRequests();
     }
 
     public void onClearRequestsDB()
     {
         getLearnweb().getRequestManager().clearRequestsDB();
+        getLearnweb().getRequestManager().updateAggregatedRequests();
+        aggregatedRequests = getLearnweb().getRequestManager().getAggrRequests();
+
     }
 
 }

@@ -5,14 +5,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
 
 import org.apache.log4j.Logger;
@@ -33,7 +34,7 @@ public class RequestManager
 
     //Basic maps/list
     private final Map<String, Date> banlist;
-    private List<RequestData> requests = Collections.synchronizedList(new ArrayList<RequestData>());
+    private Queue<RequestData> requests;
     private final Map<String, Set<String>> logins;
 
     //Aggregated data info
@@ -61,8 +62,9 @@ public class RequestManager
     private RequestManager(Learnweb learnweb)
     {
         this.learnweb = learnweb;
-        banlist = new HashMap<String, Date>();
-        logins = new HashMap<String, Set<String>>();
+        banlist = new ConcurrentHashMap<String, Date>();
+        logins = new ConcurrentHashMap<String, Set<String>>();
+        requests = new ConcurrentLinkedQueue<RequestData>();
         aggrRequestsUpdated = new Date(0);
         aggregatedRequests = new ArrayList<AggregatedRequestData>();
     }
@@ -77,9 +79,8 @@ public class RequestManager
             ResultSet rs = select.executeQuery();
             while(rs.next())
             {
-                banlist.put(rs.getString("name"), rs.getDate("bandate"));
+                banlist.put(rs.getString("name"), rs.getTimestamp("bandate"));
             }
-            select.close();
         }
         catch(SQLException e)
         {
@@ -110,16 +111,16 @@ public class RequestManager
     /**
      * Adds a given request to the requests list
      */
-    public synchronized void recordRequest(String ip, String url)
+    public void recordRequest(String ip, String url)
     {
         Date time = new Date();
-        requests.add(new RequestData(ip, time, url));
+        requests.offer(new RequestData(ip, time, url));
     }
 
     /**
      * Records successful login into a Map(IP, Set(username)), thus matching every IP to usernames that were logged into from it.
      */
-    public synchronized void recordLogin(String ip, String username)
+    public void recordLogin(String ip, String username)
     {
         Set<String> names = logins.get(ip);
         if(names == null)
@@ -129,6 +130,14 @@ public class RequestManager
         }
 
         names.add(username);
+    }
+
+    /**
+     * Adds some fresh bans to the IP banlist.
+     */
+    public void addBan(String ip, Date bandate)
+    {
+        banlist.put(ip, bandate);
     }
 
     /**
@@ -142,20 +151,12 @@ public class RequestManager
 
         Date threshold = cal.getTime();
 
-        int index = 0;
-        for(RequestData req : requests)
+        while(requests.peek().getTime().before(threshold))
         {
-            if(req.getTime().after(threshold))
-            {
-                index = requests.indexOf(req);
-                logins.remove(req.getIP());
-            }
+            logins.remove(requests.peek().getIP());
+            requests.poll();
         }
 
-        synchronized(this)
-        {
-            requests = requests.subList(index, requests.size() - 1);
-        }
     }
 
     /**
@@ -165,13 +166,14 @@ public class RequestManager
     {
         Map<String, Long> requestsByIP = requests.stream().collect(Collectors.groupingBy(RequestData::getIP, Collectors.counting()));
 
-        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO lw_requests (IP, requests, logins, usernames, time) VALUES(?, ?, ?, ?, ?);"))
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_requests (IP, requests, logins, usernames, time) VALUES(?, ?, ?, ?, ?);"))
         {
-            java.sql.Date insertionTime = new java.sql.Date(new Date().getTime());
+            java.sql.Timestamp insertionTime = new java.sql.Timestamp(new Date().getTime());
 
             for(Entry<String, Long> entry : requestsByIP.entrySet())
             {
                 Set<String> log = logins.get(entry.getKey());
+
                 int loginCount = 0;
                 String usernames = "";
                 if(log != null)
@@ -184,7 +186,7 @@ public class RequestManager
                 insert.setInt(2, entry.getValue().intValue());
                 insert.setInt(3, loginCount);
                 insert.setString(4, usernames);
-                insert.setDate(5, insertionTime);
+                insert.setTimestamp(5, insertionTime);
 
                 insert.addBatch();
             }
@@ -199,7 +201,7 @@ public class RequestManager
 
     }
 
-    public List<RequestData> getRequests()
+    public Queue<RequestData> getRequests()
     {
         return requests;
     }
@@ -219,13 +221,13 @@ public class RequestManager
      */
     public void updateAggregatedRequests()
     {
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_requests WHERE time >= CAST(? AS DATE)"))
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_requests WHERE time >= ?"))
         {
-            select.setDate(1, new java.sql.Date(aggrRequestsUpdated.getTime()));
+            select.setTimestamp(1, new java.sql.Timestamp(aggrRequestsUpdated.getTime()));
             ResultSet rs = select.executeQuery();
             while(rs.next())
             {
-                aggregatedRequests.add(new AggregatedRequestData(rs.getString("IP"), rs.getInt("requests"), rs.getInt("logins"), rs.getString("usernames"), rs.getDate("time")));
+                aggregatedRequests.add(new AggregatedRequestData(rs.getString("IP"), rs.getInt("requests"), rs.getInt("logins"), rs.getString("usernames"), rs.getTimestamp("time")));
             }
         }
         catch(SQLException e)
@@ -244,6 +246,7 @@ public class RequestManager
         try(PreparedStatement delete = learnweb.getConnection().prepareStatement("DELETE FROM lw_requests"))
         {
             delete.execute();
+            aggregatedRequests = new ArrayList<AggregatedRequestData>();
         }
         catch(SQLException e)
         {
