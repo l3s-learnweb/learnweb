@@ -153,7 +153,6 @@ public class Submission
 
     public int getSurveyResourceId()
     {
-        System.out.println(surveyResourceId);
         return surveyResourceId;
     }
 

@@ -56,18 +56,18 @@
 				</h:outputLink>
 				<h:outputLink styleClass="greenbutton submission_link"
 					value="myhome/submission_resources.jsf"
-					rendered="#{submission.currentSubmission and submission.isSurveySubmitted(userBean.user.id) and not userBean.moderator}">
+					rendered="#{submission.currentSubmission and submission.isSurveySubmitted(userBean.user.id) and not submitResourcesBean.submissionOverviewReadOnly}">
 					<f:param name="submission_id" value="#{submission.id}" />
 					<f:param name="user_id" value="#{submitResourcesBean.userId}" />
 					#{msg['Submission.submit_resources']}
 				</h:outputLink>
-				<h:outputLink styleClass="greenbutton submission_link"
+				<!-- <h:outputLink styleClass="greenbutton submission_link"
 					value="myhome/submission_resources.jsf"
 					rendered="#{submission.currentSubmission and submission.isSurveySubmitted(userBean.user.id) and userBean.moderator and not submitResourcesBean.submissionOverviewReadOnly}">
 					<f:param name="submission_id" value="#{submission.id}" />
 					<f:param name="user_id" value="#{submitResourcesBean.userId}" />
 					Test Submit Resources
-				</h:outputLink>
+				</h:outputLink> -->
 				<h:outputLink  style="text-decoration: underline;" styleClass="submission_link"
 					value="../templates/resources/survey.jsf"
 					rendered="#{submission.currentSubmission and not submission.isSurveySubmitted(userBean.user.id) and not submitResourcesBean.submissionOverviewReadOnly}">
