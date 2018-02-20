@@ -100,49 +100,6 @@ public class JobScheduler
         }
     }
 
-    /*
-    private class UpdateYovistoVideos extends Task
-    {
-    
-        @Override
-        public boolean canBePaused()
-        {
-            return true;
-        }
-    
-        @Override
-        public boolean canBeStopped()
-        {
-            return true;
-        }
-    
-        @Override
-        public boolean supportsCompletenessTracking()
-        {
-            return true;
-        }
-    
-        @Override
-        public boolean supportsStatusTracking()
-        {
-            return true;
-        }
-    
-        @Override
-        public void execute(TaskExecutionContext context)
-        {
-    
-            try
-            {
-                learnweb.getYovistoManager().saveYovistoResource();
-            }
-            catch(Throwable t)
-            {
-                log.fatal("Can't update Yovisto videos to learnweb", t);
-            }
-        }
-    }
-    */
     public static void main(String[] args)
     {
         Learnweb learnweb = Learnweb.getInstance();

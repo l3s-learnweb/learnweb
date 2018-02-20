@@ -5,6 +5,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -31,9 +32,9 @@ public class RequestManager
     private final Learnweb learnweb;
 
     //Basic maps/list
-    private Map<String, Date> banlist;
-    private List<RequestData> requests;
-    private Map<String, Set<String>> logins;
+    private final Map<String, Date> banlist;
+    private List<RequestData> requests = Collections.synchronizedList(new ArrayList<RequestData>());
+    private final Map<String, Set<String>> logins;
 
     //Aggregated data info
     private List<AggregatedRequestData> aggregatedRequests = null;
@@ -61,7 +62,6 @@ public class RequestManager
     {
         this.learnweb = learnweb;
         banlist = new HashMap<String, Date>();
-        requests = new ArrayList<RequestData>();
         logins = new HashMap<String, Set<String>>();
         aggrRequestsUpdated = new Date(0);
         aggregatedRequests = new ArrayList<AggregatedRequestData>();
@@ -72,10 +72,8 @@ public class RequestManager
      */
     private void loadBanlist()
     {
-        try
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_bans WHERE type='IP' AND bandate > now()");)
         {
-            PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_bans WHERE type='IP' AND bandate > now()");
-
             ResultSet rs = select.executeQuery();
             while(rs.next())
             {
@@ -112,8 +110,9 @@ public class RequestManager
     /**
      * Adds a given request to the requests list
      */
-    public synchronized void recordRequest(String ip, Date time, String url)
+    public synchronized void recordRequest(String ip, String url)
     {
+        Date time = new Date();
         requests.add(new RequestData(ip, time, url));
     }
 
@@ -153,7 +152,10 @@ public class RequestManager
             }
         }
 
-        requests = requests.subList(index, requests.size() - 1);
+        synchronized(this)
+        {
+            requests = requests.subList(index, requests.size() - 1);
+        }
     }
 
     /**
@@ -163,7 +165,7 @@ public class RequestManager
     {
         Map<String, Long> requestsByIP = requests.stream().collect(Collectors.groupingBy(RequestData::getIP, Collectors.counting()));
 
-        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT INTO lw_requests (IP, requests, logins, usernames, time) VALUES(?, ?, ?, ?, ?);"))
+        try(PreparedStatement insert = learnweb.getConnection().prepareStatement("INSERT DELAYED INTO lw_requests (IP, requests, logins, usernames, time) VALUES(?, ?, ?, ?, ?);"))
         {
             java.sql.Date insertionTime = new java.sql.Date(new Date().getTime());
 
@@ -228,7 +230,7 @@ public class RequestManager
         }
         catch(SQLException e)
         {
-            log.error("Failed to load banlists. SQLException: ", e);
+            log.error("Failed to load AggregatedRequests. SQLException: ", e);
         }
 
         aggrRequestsUpdated = new Date();

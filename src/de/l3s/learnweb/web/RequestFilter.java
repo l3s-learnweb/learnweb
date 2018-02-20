@@ -1,7 +1,6 @@
 package de.l3s.learnweb.web;
 
 import java.io.IOException;
-import java.util.Date;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -35,22 +34,22 @@ public class RequestFilter implements Filter
                 IP = request.getRemoteAddr();
             }
 
-            if(RequestManager.instance().checkBanned(IP))
+            final RequestManager requestManager = RequestManager.instance();
+            if(requestManager.checkBanned(IP))
             {
                 return;
             }
 
             String url = req.getRequestURL().toString();
-            Date now = new Date();
 
-            RequestManager.instance().recordRequest(IP, now, url);
+            requestManager.recordRequest(IP, url);
         }
         catch(Throwable e) // makes sure that an error in request manager doesn't block the system
         {
             Logger.getLogger(RequestFilter.class).fatal("request filter error", e);
         }
-        chain.doFilter(request, response);
 
+        chain.doFilter(request, response);
     }
 
     @Override
