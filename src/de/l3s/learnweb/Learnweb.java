@@ -21,6 +21,7 @@ import org.apache.log4j.Logger;
 import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.UtilBean;
+import de.l3s.learnweb.dashboard.DashboardManager;
 import de.l3s.learnweb.loginprotection.ProtectionManager;
 import de.l3s.learnweb.loginprotection.SimpleProtectionManager;
 import de.l3s.learnweb.rm.AudienceManager;
@@ -91,6 +92,7 @@ public class Learnweb
     private final SearchHistoryManager searchHistoryManager;
     private final ProtectionManager protectionManager;
     private final RequestManager requestManager;
+    private final DashboardManager dashboardManager;
 
     //added by Chloe
     private final AudienceManager audienceManager;
@@ -103,7 +105,7 @@ public class Learnweb
     private static Learnweb learnweb = null;
     private static boolean learnwebIsLoading = false;
     private static boolean developmentMode = true; //  true if run on Localhost, disables email logger
-    private final SERVICE service; // describes whehter this instance runs for Learnweb or AMA
+    private final SERVICE service; // describes whether this instance runs for Learnweb or AMA
 
     /**
      * Use createInstance() first
@@ -300,8 +302,10 @@ public class Learnweb
         submissionManager = new SubmissionManager(this);
         createSurveyManager = new createSurveyManager(this);
         waybackUrlManager = WaybackUrlManager.getInstance(this);
+        dashboardManager = DashboardManager.getInstance(this);
 
         learnwebIsLoading = false;
+
         historyManager = new HistoryManager(this);
         searchHistoryManager = new SearchHistoryManager(this);
 
@@ -315,7 +319,6 @@ public class Learnweb
         //Managers added by Kate
         protectionManager = new SimpleProtectionManager(this);
         requestManager = RequestManager.init(this);
-
     }
 
     /**
@@ -865,8 +868,19 @@ public class Learnweb
         return requestManager;
     }
 
+    /**
+     * describes whether this instance runs for Learnweb or AMA
+     *
+     * @return
+     */
     public SERVICE getService()
     {
         return service;
     }
+
+    public DashboardManager getDashboardManager()
+    {
+        return dashboardManager;
+    }
+
 }

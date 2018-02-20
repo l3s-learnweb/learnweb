@@ -3,6 +3,7 @@ package de.l3s.learnweb;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -16,7 +17,7 @@ public class Course implements Serializable, Comparable<Course>
     private static final Logger log = Logger.getLogger(Course.class);
 
     // add new options add the end , don't delete options !!!!!
-    // if you add 64 options you have to add one options_field{x} column in lw_course 
+    // if you add 64 options you have to add one options_field{x} column in lw_course
     public static enum Option implements Comparable<Option>
     {
         Unused_1,
@@ -121,7 +122,7 @@ public class Course implements Serializable, Comparable<Course>
 
     /**
      * A negative id indicates, that this object is not stored at the database
-     * 
+     *
      * @return
      */
     public int getId()
@@ -131,7 +132,7 @@ public class Course implements Serializable, Comparable<Course>
 
     /**
      * This method should only be called by CourseManager
-     * 
+     *
      * @param id
      */
     public void setId(int id)
@@ -226,6 +227,23 @@ public class Course implements Serializable, Comparable<Course>
         return Learnweb.getInstance().getUserManager().getUsersByCourseId(id);
     }
 
+    /**
+     *
+     * @return The userIds fo all course members
+     * @throws SQLException
+     */
+    public List<Integer> getUserIds() throws SQLException
+    {
+        List<User> users = getMembers();
+        List<Integer> userIds = new ArrayList<>(users.size());
+
+        for(User user : users)
+        {
+            userIds.add(user.getId());
+        }
+        return userIds;
+    }
+
     public void addUser(User user) throws SQLException
     {
         if(memberCount != -1)
@@ -236,7 +254,7 @@ public class Course implements Serializable, Comparable<Course>
 
     /**
      * True if the given user is a moderator if this course
-     * 
+     *
      * @param user
      * @return True if the given user is a moderator of this course
      * @throws SQLException

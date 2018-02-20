@@ -21,25 +21,25 @@ public class ApplicationBean
         /*
         if(isAjaxRequest())
         	return;
-        
+
         FacesContext facesContext = getFacesContext();
         ExternalContext ext = facesContext.getExternalContext();
-        HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();		
+        HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();
         UIViewRoot viewRoot = facesContext.getViewRoot();
-        
+
         if(null == viewRoot)
         	log.error("ApplicationBean::viewRoot is null");
         else
         {
-        	String request = viewRoot.getViewId();		
-        	String ip = servletRequest.getRemoteAddr();			
-        
+        	String request = viewRoot.getViewId();
+        	String ip = servletRequest.getRemoteAddr();
+
         	log.debug(request +" - "+ ip);
         }
         */
         startTime = System.currentTimeMillis();
 
-        //getSessionId(); // hopefully prevents java.lang.IllegalStateException: Cannot create a session after the response has been committed 
+        //getSessionId(); // hopefully prevents java.lang.IllegalStateException: Cannot create a session after the response has been committed
     }
 
     public String getSessionId()
@@ -74,7 +74,7 @@ public class ApplicationBean
 
     /**
      * Returns the http get paramater or null if not found
-     * 
+     *
      * @param param
      * @return
      */
@@ -88,7 +88,7 @@ public class ApplicationBean
     /**
      * Returns the http get parameter as int.
      * Is null if not found or couldn't be parsed
-     * 
+     *
      * @param param
      * @return
      */
@@ -111,13 +111,13 @@ public class ApplicationBean
 
     /**
      * Returns the currently logged in user.
-     * 
+     *
      * @return null if not logged in
      */
     protected User getUser()
     {
         /*
-         * This value should not be cached. The value would not be updated if the users logs out.
+         * This value should not be cached. The value would not be updated if the user logs out.
          */
         return UtilBean.getUserBean().getUser();
     }
@@ -131,7 +131,7 @@ public class ApplicationBean
 
     /**
      * get a message from the message property files depending on the currently used local
-     * 
+     *
      * @param msgKey
      * @param args
      * @return
@@ -158,7 +158,7 @@ public class ApplicationBean
 
     /**
      * adds a global message to the jsf context. this will be displayed by the p:messages component
-     * 
+     *
      * @param severity
      * @param msgKey
      * @param args
@@ -170,7 +170,7 @@ public class ApplicationBean
 
     /**
      * adds a global message to the jsf context. this will be displayed for a minute by the p:growl component
-     * 
+     *
      * @param severity
      * @param msgKey
      * @param args
@@ -182,7 +182,7 @@ public class ApplicationBean
 
     /**
      * returns the currently used template directory. By default this is "lw/"
-     * 
+     *
      * @return
      */
     protected static String getTemplateDir()
@@ -197,7 +197,7 @@ public class ApplicationBean
 
     /**
      * retrieves an object that was previously set by setPreference()
-     * 
+     *
      * @param key
      * @return
      */
@@ -208,7 +208,7 @@ public class ApplicationBean
 
     /**
      * returns defaultValue if no corresponding value is found for the key
-     * 
+     *
      * @param key
      * @param defaultValue
      * @return
@@ -221,7 +221,7 @@ public class ApplicationBean
 
     /**
      * Stores an object in the session
-     * 
+     *
      * @param key
      * @param value
      */
@@ -234,11 +234,11 @@ public class ApplicationBean
      * Logs a user action for the currently active user.
      * The parameters "targetId" and "params" depend on the logged action.
      * Look at the code of LogEntry.Action for explanation.
-     * 
+     *
      * @param action
      * @param targetId
      * @param params
-     * 
+     *
      *            protected void log(LogEntry.Action action, int targetId, String params)
      *            {
      *            int executionTime = (int) (System.currentTimeMillis() - startTime);
@@ -249,7 +249,7 @@ public class ApplicationBean
      * Logs a user action for the currently active user.
      * The parameters "targetId" and "params" depend on the logged action.
      * Look at the code of LogEntry.Action for explanation.
-     * 
+     *
      * @param action
      * @param groupId
      * @param targetId
@@ -265,7 +265,7 @@ public class ApplicationBean
      * Logs a user action for the currently active user.
      * The parameters "targetId" depend on the logged action.
      * Look at the code of LogEntry.Action for explanation.
-     * 
+     *
      * @param action
      * @param groupId
      * @param targetId

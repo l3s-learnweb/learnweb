@@ -18,8 +18,8 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.User;
 import de.l3s.learnweb.UserManager;
+import de.l3s.util.StringHelper;
 import jcdashboard.model.UsesTable;
 
 /*
@@ -91,7 +91,7 @@ public class UserLogHome
 
     /**
      * Only used on http://localhost:8080/Learnweb-Tomcat/lw/admin/dashboard/dashboard.jsf
-     * 
+     *
      * @return
      */
     public Map<String, Integer> actionPerDay()
@@ -128,7 +128,7 @@ public class UserLogHome
         {
             log.fatal("fatal sql error", e);
         }
-    
+
         return actperday;
     }
     */
@@ -329,11 +329,11 @@ public class UserLogHome
 
     /*
      * never used
-     
+
     public Map<String, Integer> userGlossary()
     {
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
-    
+
         try
         {
             PreparedStatement pstmt = openConnection().prepareStatement(
@@ -341,7 +341,7 @@ public class UserLogHome
             ResultSet rs = pstmt.executeQuery();
             while(rs.next())
                 actperday.put( rs.getString("owner_user_id"), rs.getInt("count"));
-    
+
             closeConnection();
         }
         catch(SQLException e)
@@ -370,7 +370,7 @@ public class UserLogHome
              * old select includes jopin to user table
             PreparedStatement pstmt = learnweb.getConnection().prepareStatement(
                     "SELECT user_id, username, count( * ) AS count FROM lw_user_course c JOIN lw_resource r ON c.user_id = r.owner_user_id JOIN lw_user USING (user_id) JOIN lw_resource_glossary rg USING (resource_id)  WHERE c.course_id =? AND rg.deleted !=1 AND r.deleted !=1 AND rg.timestamp > ? AND rg.timestamp < ? GROUP BY r.owner_user_id ORDER BY username");
-            
+
             */
 
             UserManager userManager = learnweb.getUserManager();
@@ -669,7 +669,7 @@ public class UserLogHome
             // getTotalSourceNoempty
             /*pstmt = openConnection().prepareStatement("select count(distinct rgt.references) as count from resource_glossary rg, resource_glossary_terms rgt where rg.glossary_id=rgt.glossary_id and resource_id IN (select resource_id from resource where owner_user_id="+sid+" and deleted<>1) and rgt.references<>'' and rgt.deleted <>1 and rg.deleted<>1 and rg.timestamp>'"+startdate+"' and rg.timestamp<'"+enddate+"'");
             rs = pstmt.executeQuery();
-            while (rs.next()) 
+            while (rs.next())
                 result=rs.getString("count");
             summary.put("sources",Integer.parseInt(""+result));
             */
@@ -861,6 +861,7 @@ public class UserLogHome
         if(course.getMemberCount() == 0) // no course members -> nothing to return
             return null;
 
+        /*
         StringBuilder sb = new StringBuilder();
         for(User user : course.getMembers())
         {
@@ -868,6 +869,8 @@ public class UserLogHome
             sb.append(user.getId());
         }
         String userIds = sb.substring(1);
+        */
+        String userIds = StringHelper.implodeInt(course.getUserIds(), ",");
 
         UserManager userManager = learnweb.getUserManager();
         HashMap<Integer, HashMap<String, Object>> mergedStatistics = new HashMap<Integer, HashMap<String, Object>>();
@@ -918,7 +921,7 @@ public class UserLogHome
     }
 
     /**
-     * 
+     *
      * @param clientId 1 == Learnweb, 2 == Learnweb proxy
      * @param userIds comma separated list of user ids
      * @param startdate
