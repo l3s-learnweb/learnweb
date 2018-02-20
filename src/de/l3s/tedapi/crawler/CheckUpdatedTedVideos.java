@@ -121,22 +121,6 @@ public class CheckUpdatedTedVideos extends BaseTedApiCrawler implements Runnable
 
                                 }
 
-                                /*if(updateTranscripts)
-                                {
-                                    langs = languages.iterator();
-                                    while(langs.hasNext())
-                                    {
-                                	JSONObject innerlangs = (JSONObject) langs.next();
-                                	JSONObject lang = (JSONObject) innerlangs.get("language");
-                                	langCode = lang.get("language_code").toString();
-                                	if(langCodesFromDb.contains(langCode))
-                                	{
-                                	    pushTranscriptToDb(tedId, lwResourceId, langCode, lang.get("name").toString(), "REPLACE INTO");
-                                	    log.info("Updated ted transcript for ted video: " + tedId + " and language: " + langCode);
-                                	}
-                                    }
-                                }*/
-
                                 slug = jsonTalkObj.get("slug").toString();
 
                                 if(!slug.equalsIgnoreCase(slugFromDb))

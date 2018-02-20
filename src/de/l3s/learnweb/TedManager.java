@@ -526,15 +526,6 @@ public class TedManager
 
         JSONObject transcriptJSON = XML.toJSONObject(resp.getEntity(String.class));
 
-        //TODO:To remove once ted_transcripts table is deleted
-        /*String dbStmt = "REPLACE INTO `ted_transcripts`(`resource_id`, `language_code`, `language`, `json`) VALUES (?,?,?,?)";
-        PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement(dbStmt);
-        pStmt2.setInt(1, resourceId);
-        pStmt2.setString(2, langCode);
-        pStmt2.setString(3, langName);
-        pStmt2.setString(4, transcriptJSON.toString());
-        pStmt2.executeUpdate();
-        pStmt2.close();*/
         String dbStmt = "REPLACE INTO `ted_transcripts_lang_mapping`(`language_code`,`language`) VALUES (?,?)";
         PreparedStatement pStmt2 = learnweb.getConnection().prepareStatement(dbStmt);
         pStmt2.setString(1, langCode);

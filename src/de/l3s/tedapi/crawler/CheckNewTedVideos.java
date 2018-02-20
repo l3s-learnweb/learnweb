@@ -141,33 +141,6 @@ public class CheckNewTedVideos extends BaseTedApiCrawler implements Runnable
                 admin.addResource(tedResource);
 
                 solr.indexResource(tedResource);
-                /*prepareStmt = "REPLACE INTO `lw_resource`(`title`, `description`, `url`, `source`, `type`, `duration`, `id_at_service`, `max_image_url`, `embeddedRaw`, `storage_type`, `rights`, `author`, `format`, `owner_user_id`, `rating`, `rate_number`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
-                pStmt = getDbcon().prepareStatement(prepareStmt, Statement.RETURN_GENERATED_KEYS);
-                pStmt.setString(1, title);
-                pStmt.setString(2, description);
-                pStmt.setString(3, "http://www.ted.com/talks/" + slug);
-                pStmt.setString(4, "TED");
-                pStmt.setString(5, "Video");
-                pStmt.setInt(6, totalDuration);
-                pStmt.setString(7, Integer.toString(tedId));
-                pStmt.setString(8, picsURL.get(1));
-                pStmt.setString(9, "<iframe src=\"http://embed.ted.com/talks/" + slug + ".html\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>");
-                pStmt.setInt(10, 2);
-                pStmt.setInt(11, 0);
-                pStmt.setString(12, "");
-                pStmt.setString(13, "");
-                pStmt.setInt(14, 0);
-                pStmt.setInt(15, 0);
-                pStmt.setInt(16, 0);
-                pStmt.executeUpdate();
-                
-                ResultSet rs = pStmt.getGeneratedKeys();
-                if(!rs.next())
-                {
-                    log.error("database error: no id generated for TED video ID:" + tedId + "and TED video URL:" + slug);
-                    continue;
-                }
-                lwResourceId = rs.getInt(1);*/
 
                 JSONArray languages = (JSONArray) jsonTalkObj.get("languages");
                 Iterator langs = languages.iterator();

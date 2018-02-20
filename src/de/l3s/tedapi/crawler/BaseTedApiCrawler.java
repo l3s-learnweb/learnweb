@@ -33,7 +33,7 @@ public class BaseTedApiCrawler
     static String tedTalksURL;
     static String tedTranscriptsBaseURL;
 
-    //logging 
+    //logging
     public final static Logger log = Logger.getLogger(BaseTedApiCrawler.class);
 
     public BaseTedApiCrawler()
@@ -74,25 +74,7 @@ public class BaseTedApiCrawler
 
         try
         {
-            //TODO: Remove this section once ted_transcripts table is removed
-            /*String dbStmt = dbAction + " `ted_transcripts`(`resource_id`, `language_code`, `language`, `json`) VALUES (?,?,?,?)";
-            PreparedStatement pStmt2 = Learnweb.getInstance().getConnection().prepareStatement(dbStmt);
-            
-            pStmt2.setInt(1, lwResourceId);
-            pStmt2.setString(2, langCode);
-            pStmt2.setString(3, langName);
-            pStmt2.setString(4, jsonSubtitle);
-            
-            int dbReturnValue = pStmt2.executeUpdate();
-            pStmt2.close();
-            if(dbReturnValue == 1)
-            {
-            log.info(tedId + " ted_transcript " + langName + " json inserted successfully");
-            }
-            else
-            log.info(tedId + " ted_transcript " + langName + "  json already inserted");*/
-
-            //Storing languge code to language mapping 
+            //Storing languge code to language mapping
             String dbStmt = "REPLACE INTO ted_transcripts_lang_mapping(`language_code`,`language`) VALUES (?,?)";
             PreparedStatement pStmt2 = Learnweb.getInstance().getConnection().prepareStatement(dbStmt);
             pStmt2.setString(1, langCode);
@@ -253,8 +235,8 @@ public class BaseTedApiCrawler
             String changedurl = AddResourceBean.checkUrl(url);
             if(changedurl != null && !changedurl.equals(url))
             {
-                System.out.println(url);
-                System.out.println(changedurl);
+                log.info("old_url: " + url);
+                log.info("updated_url: " + changedurl);
                 String apiKey = tedApiCrawler.properties.getProperty("ted_apikey_2");
                 MultivaluedMap<String, String> params = new MultivaluedMapImpl();
                 params.add("api-key", apiKey);
@@ -281,9 +263,9 @@ public class BaseTedApiCrawler
                         String title = jsonTalkObj.get("name").toString();
                         String description = jsonTalkObj.get("description").toString();
                         String slug = jsonTalkObj.get("slug").toString();
-                        System.out.println("title: " + title);
-                        System.out.println("description: " + description);
-                        System.out.println("slug: " + slug);
+                        log.info("title: " + title);
+                        log.info("description: " + description);
+                        log.info("slug: " + slug);
                         pStmt2.setString(1, title);
                         pStmt2.setString(2, description);
                         pStmt2.setString(3, slug);
@@ -309,7 +291,7 @@ public class BaseTedApiCrawler
                 }
 
             }
-            System.out.println("url :" + url);
+            log.info("url :" + url);
         }
         pStmt.close();
         pStmt2.close();
