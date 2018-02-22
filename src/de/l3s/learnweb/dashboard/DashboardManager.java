@@ -1,5 +1,6 @@
 package de.l3s.learnweb.dashboard;
 
+import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -12,6 +13,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.User;
 import de.l3s.util.StringHelper;
 
 /*
@@ -50,12 +52,13 @@ public class DashboardManager
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT r.owner_user_id, "
-                        + "COUNT(*) as count, COUNT( NULLIF( pronounciation, '' ) ) as pronounciation,  "
+                        + "COUNT(*) as count, COUNT( NULLIF( pronounciation, '' ) ) as pronounciation, "
                         + "COUNT( NULLIF( acronym, '' ) ) as acronym, "
                         + "COUNT( NULLIF( phraseology, '' ) ) as phraseology, "
                         + "COUNT( NULLIF( rgt.use, '' ) ) as uses, "
                         + "COUNT( NULLIF( rgt.references, '' ) ) as source "
-                        + "FROM lw_resource r" + "JOIN lw_resource_glossary rg USING(resource_id) "
+                        + "FROM lw_resource r "
+                        + "JOIN lw_resource_glossary rg USING(resource_id) "
                         + "JOIN lw_resource_glossary_terms rgt USING(glossary_id) "
                         + "WHERE rg.deleted != 1 AND r.deleted != 1 AND rgt.deleted != 1 "
                         + "AND owner_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") "
@@ -68,22 +71,25 @@ public class DashboardManager
             while(rs.next())
             {
                 GlossaryFieldSummery fieldSummery = new GlossaryFieldSummery();
-                fieldSummery.setUserid(rs.getInt("owner_user_id"));
+                fieldSummery.setUserId(rs.getInt("owner_user_id"));
                 fieldSummery.setTotal(rs.getInt("count"));
                 fieldSummery.setPronounciation(rs.getInt("pronounciation"));
                 fieldSummery.setAcronym(rs.getInt("acronym"));
                 fieldSummery.setPhraseology(rs.getInt("phraseology"));
                 fieldSummery.setUses(rs.getInt("uses"));
                 fieldSummery.setSource(rs.getInt("source"));
+
+                summeries.add(fieldSummery);
             }
         }
 
         return summeries;
     }
 
-    public static class GlossaryFieldSummery
+    public static class GlossaryFieldSummery implements Serializable
     {
-        int userid;
+        private static final long serialVersionUID = -4378112533840640208L;
+        int userId;
         int total;
         int pronounciation;
         int acronym;
@@ -91,19 +97,37 @@ public class DashboardManager
         int uses;
         int source;
 
+        private transient User user;
+
         public float getAvg()
         {
             return ((float) (pronounciation + acronym + phraseology + uses + source) / (total * 5));
         }
 
-        public int getUserid()
+        public User getUser()
         {
-            return userid;
+            if(null == user)
+            {
+                try
+                {
+                    user = Learnweb.getInstance().getUserManager().getUser(userId);
+                }
+                catch(SQLException e)
+                {
+                    log.fatal("can't get user: " + userId, e);
+                }
+            }
+            return user;
         }
 
-        public void setUserid(int userid)
+        public int getUserid()
         {
-            this.userid = userid;
+            return userId;
+        }
+
+        private void setUserId(int userid)
+        {
+            this.userId = userid;
         }
 
         public int getTotal()
@@ -111,7 +135,7 @@ public class DashboardManager
             return total;
         }
 
-        public void setTotal(int total)
+        private void setTotal(int total)
         {
             this.total = total;
         }
@@ -121,7 +145,7 @@ public class DashboardManager
             return pronounciation;
         }
 
-        public void setPronounciation(int pronounciation)
+        private void setPronounciation(int pronounciation)
         {
             this.pronounciation = pronounciation;
         }
@@ -131,7 +155,7 @@ public class DashboardManager
             return acronym;
         }
 
-        public void setAcronym(int acronym)
+        private void setAcronym(int acronym)
         {
             this.acronym = acronym;
         }
@@ -141,7 +165,7 @@ public class DashboardManager
             return phraseology;
         }
 
-        public void setPhraseology(int phraseology)
+        private void setPhraseology(int phraseology)
         {
             this.phraseology = phraseology;
         }
@@ -151,7 +175,7 @@ public class DashboardManager
             return uses;
         }
 
-        public void setUses(int uses)
+        private void setUses(int uses)
         {
             this.uses = uses;
         }
@@ -161,7 +185,7 @@ public class DashboardManager
             return source;
         }
 
-        public void setSource(int source)
+        private void setSource(int source)
         {
             this.source = source;
         }

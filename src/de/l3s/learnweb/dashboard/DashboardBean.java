@@ -2,6 +2,8 @@ package de.l3s.learnweb.dashboard;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +17,7 @@ import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.dashboard.DashboardManager.GlossaryFieldSummery;
 
-@ManagedBean()
+@ManagedBean
 @ViewScoped
 public class DashboardBean extends ApplicationBean implements Serializable
 {
@@ -24,33 +26,42 @@ public class DashboardBean extends ApplicationBean implements Serializable
     private static final String PREFERENCE_STARTDATE = "dashboard_startdate";
     private static final String PREFERENCE_ENDDATE = "dashboard_enddate";
 
-    private Course selectedCourse; // the visualized course
     private Date startDate;
     private Date endDate;
+    private Course selectedCourse; // the visualized course
+    private Integer selectedUserId = null; // optionally select a single user to display
+
     private List<GlossaryFieldSummery> glossaryFieldSummeryPerUser;
 
     public DashboardBean()
     {
+    }
+
+    public void onLoad()
+    {
+        log.debug("onLoad");
         User user = getUser(); // the current user
         if(user == null || !user.isModerator()) // not logged in or no privileges
             return;
 
         try
         {
+            startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2017-03-01");
+            endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2017-06-01");
+
             // for now just hard coded to use Francesca's course
             selectedCourse = getLearnweb().getCourseManager().getCourseById(1245);
 
             List<Integer> selectedUserIds = selectedCourse.getUserIds();
-
+            log.debug("users: " + selectedUserIds);
             DashboardManager dashboardManager = getLearnweb().getDashboardManager();
 
             glossaryFieldSummeryPerUser = dashboardManager.getGlossaryFieldSummeryPerUser(selectedUserIds, startDate, endDate);
         }
-        catch(SQLException e)
+        catch(SQLException | ParseException e)
         {
             addFatalMessage(e);
         }
-
     }
 
     public Date getStartDate()
@@ -80,6 +91,18 @@ public class DashboardBean extends ApplicationBean implements Serializable
     public List<GlossaryFieldSummery> getGlossaryFieldSummeryPerUser()
     {
         return glossaryFieldSummeryPerUser;
+    }
+
+    public Integer getSelectedUserId()
+    {
+
+        return selectedUserId;
+    }
+
+    public void setSelectedUserId(Integer selectedUserId)
+    {
+        log.debug("getSelectedUserId: " + selectedUserId);
+        this.selectedUserId = selectedUserId;
     }
 
 }

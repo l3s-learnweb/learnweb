@@ -21,19 +21,19 @@ public class ApplicationBean
         /*
         if(isAjaxRequest())
         	return;
-
+        
         FacesContext facesContext = getFacesContext();
         ExternalContext ext = facesContext.getExternalContext();
         HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();
         UIViewRoot viewRoot = facesContext.getViewRoot();
-
+        
         if(null == viewRoot)
         	log.error("ApplicationBean::viewRoot is null");
         else
         {
         	String request = viewRoot.getViewId();
         	String ip = servletRequest.getRemoteAddr();
-
+        
         	log.debug(request +" - "+ ip);
         }
         */
@@ -279,7 +279,7 @@ public class ApplicationBean
     protected void addFatalMessage(Throwable exception)
     {
         addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
-        addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
+        //addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
 
         Logger.getLogger(ApplicationBean.class).fatal("Fatal unhandled error on " + LearnwebExceptionHandler.getRequestSummary(), exception);
     }

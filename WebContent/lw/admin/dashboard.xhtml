@@ -1,10 +1,15 @@
-<ui:composition template="/templates/main/main.xhtml"
-	xmlns="http://www.w3.org/1999/xhtml"
+<ui:composition template="/templates/main/main.xhtml" 
 	xmlns:ui="http://java.sun.com/jsf/facelets"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="user_id" value="#{dashboardBean.selectedUserId}" />			
+    		<f:viewAction action="#{dashboardBean.onLoad}"/>
+		</f:metadata>
+	</ui:define>
 
 	<ui:param name="loginRequired" value="true" />
 	<ui:param name="pageTitle" value="Dashboard" />
@@ -12,7 +17,7 @@
 	<ui:define name="center_layout">
 
 		<style>
-</style>
+		</style>
 
 		<div class="page_header" style="margin: 5px;">
 			<span>Dashboard</span>
@@ -20,56 +25,53 @@
 
 		<p:panel style="margin:5px;">
 			<h:form id="mainform">
-				<h:panelGroup id="proxypanel">
-					<h:dataTable value="#{dashboardBean.fields}" var="entry"
-						styleClass="countries_list">
-						<h:column>
-							<f:facet name="header"></f:facet>
-							<a href="#{entry.userid}" target="_blank">#{entry.userid}</a>
-						</h:column>
-						<h:column>
-							<f:facet name="header">terms</f:facet>    				
+				<p:dataTable value="#{dashboardBean.glossaryFieldSummeryPerUser}" var="entry" styleClass="countries_list">
+					<p:column>
+						<f:facet name="header"></f:facet>
+						<a href="dashboard.jsf?user_id=#{entry.userid}">#{entry.user.username}</a>
+					</p:column>
+					<p:column styleClass="align-right">
+						<f:facet name="header">Terms</f:facet>    				
 					      		#{entry.total}
-					   		</h:column>
-						<h:column>
-							<f:facet name="header">pronunciation</f:facet>
+					   		</p:column>
+					<p:column styleClass="align-right">
+						<f:facet name="header">Pronunciation</f:facet>
 
-							<h:outputText value="#{entry.pronounciation/entry.total*100}">
-								<f:convertNumber locale="en-US" pattern="#0.00" />
-							</h:outputText>%
-					   		</h:column>
-						<h:column>
-							<f:facet name="header">acronym</f:facet>
-							<h:outputText value="#{entry.acronym/entry.total*100}">
-								<f:convertNumber locale="en-US" pattern="#0.00" />
-							</h:outputText>%
-					   		</h:column>
-						<h:column>
-							<f:facet name="header">phraseology</f:facet>
-							<h:outputText value="#{entry.phraseology/entry.total*100}">
-								<f:convertNumber locale="en-US" pattern="#0.00" />
-							</h:outputText>%
-					   		</h:column>
-						<h:column>
-							<f:facet name="header">uses</f:facet>
-							<h:outputText value="#{entry.uses/entry.total*100}">
-								<f:convertNumber locale="en-US" pattern="#0.00" />
-							</h:outputText>%
-					   		</h:column>
-						<h:column>
-							<f:facet name="header">source</f:facet>
-							<h:outputText value="#{entry.source/entry.total*100}">
-								<f:convertNumber locale="en-US" pattern="#0.00" />
-							</h:outputText>%
-					   		</h:column>
-						<h:column>
-							<f:facet name="header">AVG %</f:facet>
-							<h:outputText value="#{entry.avg*100}">
-								<f:convertNumber locale="en-US" pattern="#0.00" />
-							</h:outputText>%
-					   		</h:column>
-					</h:dataTable>
-				</h:panelGroup>
+						<h:outputText value="#{entry.pronounciation/entry.total*100}">
+							<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
+						</h:outputText>%
+					</p:column>
+					<p:column styleClass="align-right">
+						<f:facet name="header">Acronym</f:facet>
+						<h:outputText value="#{entry.acronym/entry.total*100}">
+							<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
+						</h:outputText>%
+					</p:column>
+					<p:column styleClass="align-right">
+						<f:facet name="header">Phraseology</f:facet>
+						<h:outputText value="#{entry.phraseology/entry.total*100}">
+							<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
+						</h:outputText>%
+					</p:column>
+					<p:column styleClass="align-right">
+						<f:facet name="header">Uses</f:facet>
+						<h:outputText value="#{entry.uses/entry.total*100}">
+							<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
+						</h:outputText>%
+					</p:column>
+					<p:column styleClass="align-right">
+						<f:facet name="header">Source</f:facet>
+						<h:outputText value="#{entry.source/entry.total*100}">
+							<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
+						</h:outputText>%
+					</p:column>
+					<p:column styleClass="align-right">
+						<f:facet name="header">AVG %</f:facet>
+						<h:outputText value="#{entry.avg*100}">
+							<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
+						</h:outputText>%
+					</p:column>
+				</p:dataTable>
 			</h:form>
 		</p:panel>
 	</ui:define>
