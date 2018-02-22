@@ -907,7 +907,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         {
             paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
             //TODO: remove it
-            RequestContext.getCurrentInstance().update(":filters");
+//            RequestContext.getCurrentInstance().update(":filters");
         }
         catch(SQLException | IOException | SolrServerException e)
         {

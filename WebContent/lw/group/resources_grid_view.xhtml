@@ -1,0 +1,100 @@
+<ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core" xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
+
+    <h:panelGroup id="datagrid" styleClass="datagrid" layout="block"
+                  pt:data-isEnabledMoving="#{groupDetailBean.canDeleteResourcesInTheGroup()}">
+        <h:panelGroup id="folderGrid" styleClass="folder-grid" layout="block">
+            <ui:repeat value="#{groupDetailBean.subfolders}" var="folder">
+                <h:panelGroup styleClass="folder-item group-resources-item" pt:data-itemType="folder"
+                              pt:data-itemId="#{folder.folderId}" layout="block">
+                    <div class="folder-block">
+
+                        <div class="folder-icon">
+                            <div class="folder-icon-wrapper">
+                                <span class="icon icon-folder"/>
+                            </div>
+                        </div>
+
+                        <div class="folder-title">
+                            <div class="folder-title-wrapper">
+                                <h:outputText value="#{folder.name}" escape="false" styleClass="folder-title-name"
+                                              title="#{folder.name}"/>
+                            </div>
+
+                            <h:panelGroup class="resource-controls" layout="block"
+                                          rendered="${groupDetailBean.canDeleteResourcesInTheGroup()}">
+                                <h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit">
+                                    <h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
+                                </h:outputLink>
+
+                                <h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete">
+                                    <h:graphicImage alt="Remove" value="../resources/icon/Remove.png"/>
+                                </h:outputLink>
+                            </h:panelGroup>
+                        </div>
+
+                    </div>
+                </h:panelGroup>
+            </ui:repeat>
+        </h:panelGroup>
+
+        <h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block">
+            <ui:repeat value="#{groupDetailBean.paginator.currentPage}" var="res">
+                <h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource"
+                              pt:data-itemId="#{res.resource.id}" layout="block">
+                    <div class="resource-block">
+
+                        <div class="resource-preview">
+                            <div class="resource-preview-wrapper">
+                                <div class="resource-preview-wrapper2">
+                                    <div class="resource-preview-block"></div>
+                                    <img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}"
+                                         title="#{res.title}"></img>
+                                </div>
+                            </div>
+
+                            <h:panelGroup class="resource-controls" layout="block">
+                                <h:outputLink value="#" title="#{msg.copy}" styleClass="action-copy">
+                                    <h:graphicImage alt="Copy" value="/resources/icon/Add.png"/>
+                                </h:outputLink>
+
+                                <ui:fragment rendered="${res.resource.canEditResource(userBean.user)}">
+                                    <h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit">
+                                        <h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
+                                    </h:outputLink>
+                                </ui:fragment>
+
+                                <ui:fragment rendered="${res.resource.canDeleteResource(userBean.user)}">
+                                    <h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete">
+                                        <h:graphicImage alt="Delete" value="../resources/icon/Remove.png"/>
+                                    </h:outputLink>
+                                </ui:fragment>
+                            </h:panelGroup>
+                        </div>
+
+                        <div class="resource-title">
+                            <div class="resource-title-wrapper">
+                                <div class="resource-title-text">
+                                    <h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name"
+                                                  title="#{res.title}"/>
+                                    <span class="resource-title-summary"><span>
+                                    ${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by}
+                                        <span>#{res.ownerUser.username}</span></span>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </h:panelGroup>
+            </ui:repeat>
+        </h:panelGroup>
+
+        <h:outputText value="${msg.no_resources_found}" class="nothing_found"
+                      rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'GroupPaginator'}"/>
+
+        <h:outputText value="#{msg.no_results_found}" class="nothing_found"
+                      rendered="#{groupDetailBean.paginator.isEmpty() and groupDetailBean.paginator.getClass().getSimpleName() eq 'SearchPaginator'}"/>
+
+    </h:panelGroup>
+
+</ui:composition>

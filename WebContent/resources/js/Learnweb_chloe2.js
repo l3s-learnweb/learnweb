@@ -236,6 +236,7 @@ function drawTreeDiagram(treeData) {
 	function click(d) {
 		filterByClickedCategory(d.name, d.depth);
 		d3.event.preventDefault();
+        return false;
 	}
 }
 

@@ -549,7 +549,7 @@ $(document).ready(function () {
         doAction(action);
     });
     
-    //for resources_yell.xhtml only 
+    //for resources_list_view.xhtml only
     $(document).on('click', '.resource-controls2 a', function (e) {
         var action = (this.className.match(/action-[^\s]+/) || []).pop().replace('action-', '');
         var element = $(this).parents('.group-resources2-item')[0];

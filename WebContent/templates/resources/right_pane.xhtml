@@ -1,380 +1,651 @@
-<ui:composition xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:c="http://java.sun.com/jsp/jstl/core"
-	xmlns:p="http://primefaces.org/ui">
+<ui:composition xmlns="http://www.w3.org/1999/xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui">
 
-	<p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false" collapsible="false" 
-		header="#{resourceDetailBean.clickedResource.id eq -1? msg.click_to_view_details : resourceDetailBean.clickedResource.title}" id="right_pane">
+    <p:layoutUnit rendered="#{userBean.loggedIn}" position="east" size="38%" resizable="false" closable="false"
+                  collapsible="false"
+                  header="#{resourceDetailBean.clickedResource.id eq -1? msg.click_to_view_details : resourceDetailBean.clickedResource.title}"
+                  id="right_pane">
 
-		<h:outputScript library="resource-pane-template" name="resource-pane4.js" target="head"/>
-		<h:outputStylesheet library="resource-pane-template" name="resource-pane.css"/>
+        <h:outputScript library="resource-pane-template" name="resource-pane4.js" target="head"/>
+        <h:outputStylesheet library="resource-pane-template" name="resource-pane.css"/>
 
-		<div id="right_pane_wrapper" class="right-panel">	
-			<h:panelGroup layout="block" id="add_resource_panel">					
-				<script type="text/javascript">
-					function update_header()
-					{
-						var resourceTitle = "#{utilBean.addSlashes(resourceDetailBean.clickedResource.title)}";
-						var folderTitle = "#{utilBean.addSlashes(bean.clickedFolder.name)}";
-						
-						if(#{bean.rightPanelAction == 'newResource'})
-						{
-							$(".ui-layout-unit-header","#right_pane").html("#{msg.upload_resource}");
-						}
-						else if(#{bean.rightPanelAction == 'editResource'})
-						{
-							$(".ui-layout-unit-header","#right_pane").html("#{msg.edit_resource} - "+ resourceTitle);
-						}
-						else if(#{bean.rightPanelAction == 'viewResource'})
-						{
-							$(".ui-layout-unit-header","#right_pane").html(resourceTitle);
-						}
-						else if(#{bean.rightPanelAction == 'newFolder'})
-						{
-							$(".ui-layout-unit-header","#right_pane").html("#{msg.create_folder}");
-						}
-						else if(#{bean.rightPanelAction == 'editFolder'})
-						{
-							$(".ui-layout-unit-header","#right_pane").html("#{msg.edit_folder} - "+ folderTitle);
-						}
-						else if(#{bean.rightPanelAction == 'viewFolder'})
-						{
-							$(".ui-layout-unit-header","#right_pane").html("#{msg.folder} - "+ folderTitle);
-						}
-						else if(#{bean.rightPanelAction == 'newFile'})
-						{
-							var header = "#{msg.create}" + ' ' + ($('#new_resource_type').val()=="Text"?"Document":$('#new_resource_type').val());
-							$(".ui-layout-unit-header","#right_pane").html(header);
-						}
-						else
-						{
-							$(".ui-layout-unit-header","#right_pane").html("#{msg.click_to_view_details}");
-						}
-						
-						$('#right_pane .content').scrollTop(0);
-						
-						scroller();
-						lightbox_load();
-					}
-					//update_header();
-				</script>	
-					
-				<ui:fragment  rendered="#{bean.rightPanelAction == 'newFile'}">
-					<h:inputHidden id="new_resource_type" value="#{addResourceBean.resource.type}" />
-					<ui:decorate template="/templates/resources/createFile.xhtml">
-						<ui:param name="bean" value="#{bean}" />
-						<ui:param name="addResourceBean" value="#{addResourceBean}" />
-						<ui:param name="resourceDetailBean" value="#{resourceDetailBean}" />
-					</ui:decorate>
-				</ui:fragment> 
-				
-				<h:panelGroup id="add_resource_section" rendered="#{bean.rightPanelAction == 'newResource'}" styleClass="create-block new-resource" style="padding-bottom:2rem" layout="block">
-				
-					<h:form id="add_resource_upload_form" rendered="#{addResourceBean.formStep > 0}">
-					 
-						<p:fieldset legend="#{msg.step} 1" style="margin-bottom:20px" id="step1_field">
-							<p:panelGrid styleClass="full-width">
-								<p:row>
-									<p:column>
-										<h:outputText value="#{msg.type}:" />
-									</p:column>
-									<p:column>
-										<h:outputText value="#{addResourceBean.resource.getStringStorageType()}"/>
-									</p:column>
-								</p:row>
+        <div id="right_pane_wrapper" class="right-panel">
+            <h:panelGroup layout="block" id="add_resource_panel">
+                <script type="text/javascript">
+                    function update_header()
+                    {
+                        var resourceTitle = "#{utilBean.addSlashes(resourceDetailBean.clickedResource.title)}";
+                        var folderTitle = "#{utilBean.addSlashes(bean.clickedFolder.name)}";
 
-								<p:row>
-									<p:column>
-										<h:outputText value="#{msg.location}:" />
-									</p:column>
-									<p:column rendered="#{addResourceBean.formStep == 1}">
-										<p:commandLink onstart="selectNewResourceLocation();">
-											<h:outputText value="#{addResourceBean.currentPath}"/>
-										</p:commandLink>
-									</p:column>
-									<p:column rendered="#{addResourceBean.formStep > 1}">
-										<h:outputText value="#{addResourceBean.currentPath}"/>
-									</p:column>
-								</p:row>
+                        if (#{bean.rightPanelAction == 'newResource'})
+                        {
+                            $(".ui-layout-unit-header", "#right_pane").html("#{msg.upload_resource}");
+                        }
+                        else if (#{bean.rightPanelAction == 'editResource'})
+                        {
+                            $(".ui-layout-unit-header", "#right_pane").html("#{msg.edit_resource} - " + resourceTitle);
+                        }
+                        else if (#{bean.rightPanelAction == 'viewResource'})
+                        {
+                            $(".ui-layout-unit-header", "#right_pane").html(resourceTitle);
+                        }
+                        else if (#{bean.rightPanelAction == 'newFolder'})
+                        {
+                            $(".ui-layout-unit-header", "#right_pane").html("#{msg.create_folder}");
+                        }
+                        else if (#{bean.rightPanelAction == 'editFolder'})
+                        {
+                            $(".ui-layout-unit-header", "#right_pane").html("#{msg.edit_folder} - " + folderTitle);
+                        }
+                        else if (#{bean.rightPanelAction == 'viewFolder'})
+                        {
+                            $(".ui-layout-unit-header", "#right_pane").html("#{msg.folder} - " + folderTitle);
+                        }
+                        else if (#{bean.rightPanelAction == 'newFile'})
+                        {
+                            var header = "#{msg.create}" + ' ' + ($('#new_resource_type').val() == "Text" ? "Document" : $('#new_resource_type').val());
+                            $(".ui-layout-unit-header", "#right_pane").html(header);
+                        }
+                        else
+                        {
+                            $(".ui-layout-unit-header", "#right_pane").html("#{msg.click_to_view_details}");
+                        }
 
-								<p:row rendered="#{addResourceBean.resource.storageType == 1 and not (addResourceBean.resource.type eq 'glossary' or addResourceBean.resource.type eq 'survey') }">
-									<p:column>
-										<h:outputText value="#{msg.file}:" />
-									</p:column>
-									<p:column rendered="#{addResourceBean.formStep == 1 and not (addResourceBean.resource.type eq 'glossary' or addResourceBean.resource.type eq 'survey') }">
-										<p:fileUpload fileUploadListener="#{addResourceBean.handleFileUpload}" mode="advanced" auto="true" sizeLimit="10000000000" fileLimit="1" label="#{msg.choose_file}" update=":growl :add_resource_section"/>
-									</p:column>
-									<p:column rendered="#{addResourceBean.formStep > 1}">
-										<h:outputText value="#{addResourceBean.resource.url}"/>
-									</p:column>
-								</p:row>
-								
-								<p:row rendered="#{addResourceBean.resource.storageType == 2 }">
-									<p:column>
-										<h:outputText value="URL:" />
-									</p:column>
-									<p:column rendered="#{addResourceBean.formStep == 1}">
-										<p:inputText value="#{addResourceBean.resource.url}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="url_input" validator="#{addResourceBean.validateUrl}" label="URL"/>
-									</p:column>
-									<p:column rendered="#{addResourceBean.formStep > 1 }">
-										<h:outputText value="#{addResourceBean.resource.url}"/>
-									</p:column>
-								</p:row>
-								
-								<p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'glossary'}">
-									<p:column>
-										<h:outputText value="#{msg.title}:" />
-									</p:column>
-									<p:column rendered="#{addResourceBean.formStep == 1}">
-										<p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="title_input"/>
-									</p:column>
-								</p:row>
-								<p:row rendered="#{addResourceBean.resource.type eq 'glossary'}">
-								<p:column>
-										<h:outputText value="Language One: " />
-									</p:column>
-								<p:column rendered="#{addResourceBean.formStep == 1}">
-								<p:selectOneMenu id="langOne" value="#{addResourceBean.resource.languageOne}" required="true" requiredMessage="#{msg.mandatory_field}">
-									<f:selectItem itemLabel="-Select-"  itemDisabled="true"/>
-									<f:selectItems value="#{addResourceBean.glossaryLaguage}" var="lang" itemValue="#{lang.toString()}" itemLabel="#{lang.toString()}"></f:selectItems>
-								</p:selectOneMenu>
-								</p:column>
-								</p:row>
-								<p:row rendered="#{addResourceBean.resource.type eq 'glossary'}">
-								<p:column>
-										<h:outputText value="Language Two: " />
-									</p:column>
-								<p:column rendered="#{addResourceBean.formStep == 1}">
-								<p:selectOneMenu id="langTwo" value="#{addResourceBean.resource.languageTwo}" required="true" requiredMessage="#{msg.mandatory_field}">
-									<f:selectItem itemLabel="-Select-" itemDisabled="true"/>
-									<f:selectItems value="#{addResourceBean.glossaryLaguage}" var="lang" itemValue="#{lang.toString()}" itemLabel="#{lang.toString()}"></f:selectItems>
-								</p:selectOneMenu>
-								</p:column>
-								</p:row>
-								<p:row rendered="#{addResourceBean.resource.storageType == 4}">
-									<p:column>
-										<h:outputText value="#{msg.title}:" />
-									</p:column>
-									<p:column rendered="#{addResourceBean.formStep == 1}">
-										<p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="survey_title"/>
-									</p:column>
-									</p:row>
-									<p:row rendered="#{addResourceBean.resource.storageType == 4}">
-									<p:column>
-										<h:outputText value="#{msg.description}:" />
-									</p:column>
-									<p:column rendered="#{addResourceBean.formStep == 1}">
-										<p:inputText value="#{addResourceBean.resource.description}" styleClass="add_field"  id="survey_desc"/>
-									</p:column>
-									
-									</p:row>
-									<p:row rendered="#{addResourceBean.resource.storageType == 4}">
-									<p:column>
-										<h:outputText value="Courses: "/>
-									</p:column>
-									<p:column>
-									<p:selectCheckboxMenu id="courses" value="#{addResourceBean.resource.validCourses}" label="--ALL---" multiple="true"
-                              		filter="true" filterMatchMode="startsWith" >
-                         
-           							 <f:selectItems value="#{addResourceBean.getCourseList()}" />
-        							</p:selectCheckboxMenu>
-									</p:column>
-									</p:row>
-									<p:row rendered="#{addResourceBean.resource.storageType == 4}">
-									<p:column>
-										<h:outputText value="survey Open Date: " />
-									</p:column>
-									<p:column>	
-										<p:calendar id="open"  value="#{createsurveyBean.open}" showOn="button"></p:calendar>
-									</p:column>
-									</p:row>
-									<p:row rendered="#{addResourceBean.resource.storageType == 4}">
-									<p:column>	
-										<h:outputText  value="survey Close Date: " />
-									</p:column>
-									<p:column>	
-										<p:calendar id="close" value="#{createsurveyBean.close}" showOn="button"></p:calendar>
-									</p:column>
-									</p:row>
-								
-								
-								<p:row rendered="#{false and addResourceBean.formStep > 1 and addResourceBean.resource.embeddedSize1 != null}">
-									
-									<p:column>
-									
-										<h:outputText value="#{msg.preview}:" />
-									</p:column>
-									<p:column styleClass="form-preview">
-										<h:outputText id="preview" escape="false" value="#{addResourceBean.resource.embeddedSize1}"/>
-									</p:column>
-								</p:row>
-							</p:panelGrid>
-						</p:fieldset>
-						
-						<script type="text/javascript">
-							function firstStepStart()
-							{
-								console.log('start');
-								PF('next_button').disable();
-								$('#first_step_loading_screen').show();
-							}
-							
-							function firstStepComplete()
-							{
-								console.log('complet');
-								$('#first_step_loading_screen').hide();
-							}
-						</script>
-						
-						<p:commandButton id="next_button" widgetVar="next-button" value="#{msg.nextStep}" styleClass="greenbutton float-right" update=":growl :add_resource_section" 
-							action="#{addResourceBean.handleUrlInput}" ajax="true" rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.storageType == 2}"
-							onstart="PF('next-button').disable();">
-						</p:commandButton>
-						
-						<p:blockUI block="step1_field" trigger="next_button" widgetVar="block-step1">
-							<div class="float-left" style="height: 25px; line-height: 25px;">#{msg.please_wait}</div>
-							<div class="loading-animation small float-left">
-								<div></div>
-								<div></div>
-								<div></div>
-							</div>				        
-					    </p:blockUI>
-						
-						<p:commandButton id="create_glossary_button" value="Create Glossary" styleClass="greenbutton float-right" update=":growl :add_resource_panel :datagrid" 
-							action="#{addResourceBean.addGlossary}" ajax="true" oncomplete="update_header();resourceDND();" rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'glossary'}">
-							<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>
-							<f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"/>
-							<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{addResourceBean.resource}"/>
-						</p:commandButton>
-						<p:commandButton id="create_survey_button" value="Create survey" styleClass="greenbutton float-right" update=":growl :add_resource_panel :datagrid" 
-							action="#{addResourceBean.addsurvey}" ajax="true" oncomplete="update_header();resourceDND();" rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.storageType == 4}">
-							<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>
-							<f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"/>
-							<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{addResourceBean.resource}"/>
-						</p:commandButton>
-						
-						<p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right" immediate="true" 
-							actionListener="#{addResourceBean.cancelUpload}" ajax="true" update=":add_resource_panel" 
-							oncomplete="update_header(); PF('block-step1').hide(); PF('next-button').enable();" style="margin-right:0.5em;" rendered="#{addResourceBean.formStep == 1}">
-							<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none"/>
-						</p:commandButton>	
-						
-						<br class="clear"/>
-					</h:form>
-						
-					<h:form id="add_resource_meta_form" rendered="#{addResourceBean.formStep > 1}">
-						
-						<p:fieldset legend="#{msg.step} 2" style="margin-bottom:20px">
-						
-							<table id="add_attributes_table" class="full-width">	
-								<colgroup>
-									<col span="1" style="width: 10%; min-width: 10rem;" />
-									<col span="1" />
-								</colgroup>						
-								<ui:decorate template="/templates/resources/edit.xhtml">
-									<ui:param name="res" value="#{addResourceBean.resource}" />
-								</ui:decorate>
-							</table>
-						</p:fieldset>
-						
-						<p:commandButton value="#{msg.addResource}" styleClass="greenbutton float-right" update=":growl :add_resource_panel :datagrid" 
-							action="#{addResourceBean.addResource}" ajax="true" oncomplete="update_header();resourceDND(); load_editor();" rendered="#{addResourceBean.formStep > 1}">
-							<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>
-							<f:setPropertyActionListener target="#{bean.clickedResource}" value="#{addResourceBean.resource}"/>
-							<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{addResourceBean.resource}"/>
-						</p:commandButton>
-						
-						<p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right" immediate="true" 
-							actionListener="#{addResourceBean.clearForm()}" ajax="true" update=":add_resource_panel" 
-							oncomplete="update_header()" style="margin-right:0.5em;">
-							<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none"/>
-						</p:commandButton>	
+                        $('#right_pane .content').scrollTop(0);
 
-						<br class="clear"/>							
-					</h:form>
-				</h:panelGroup>
-				
-				<h:panelGroup rendered="#{bean.rightPanelAction == 'viewResource' and resourceDetailBean.clickedResource.id != -1}" layout="block">
-					<h:outputText value="This resource has been removed" rendered="${(not resourceDetailBean.clickedResource.canViewResource(userBean.user)) and (resourceDetailBean.clickedResource.deleted or resourceDetailBean.clickedResource.groupId eq 0)}" />
-						
-					<h:outputText value="#{msg.group_resources_access_denied}" rendered="${not resourceDetailBean.clickedResource.canViewResource(userBean.user) and not (resourceDetailBean.clickedResource.deleted or resourceDetailBean.clickedResource.groupId eq 0)}"/>
-					<ui:fragment rendered="#{resourceDetailBean.clickedResource.canViewResource(userBean.user)}">			
-						<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'spreadsheet' or resourceDetailBean.clickedResource.type eq 'presentation' or resourceDetailBean.clickedResource.type eq 'document' or resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image' or resourceDetailBean.clickedResource.type eq 'glossary' or resourceDetailBean.clickedResource.type eq 'survey'}">
-							<div class="align-center" style="margin-top: 5px;">
-								<ui:decorate template="/templates/resources/parts/lightbox.xhtml">
-									<ui:param name="resource" value="#{resourceDetailBean.clickedResource}" />
-								</ui:decorate>
+                        scroller();
+                        lightbox_load();
+                    }
 
-								<ui:decorate template="/templates/resources/parts/preview_box.xhtml">
-									<ui:param name="resource" value="#{resourceDetailBean.clickedResource}" />
-								</ui:decorate>
-							</div>
-							<div class="align-center" style="padding-top: 10px">
-								<a class="hyperlink" href="#{resourceDetailBean.clickedResource.urlProxied}" target="_blank">
-									<h:outputText styleClass="hyperlink"
-										rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf'}"
-										value="#{resourceDetailBean.clickedResource.url}"/>
-								</a>
-								<a class="hyperlink" onclick="lightbox_open(); change_lightbox_content(true);" style="float:right;" title="#{msg['Archive.change_thumbnail']}?">
-									<h:graphicImage style="cursor:pointer;" value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg['Archive.change_thumbnail']}?" rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}"/>
-								</a>
-								<h:outputLink value="showGlossary.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.type eq 'glossary'}">
-											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
-											#{msg["Glossary.open"]}
-								</h:outputLink>
-								<h:outputLink value="../templates/resources/survey.jsf"  styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.type eq 'survey'}">
-											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
-											Open survey
-								</h:outputLink>
-								
-								<h:outputLink id="survey_esult" value="../lw/survey/surveyResult.jsf" style="margin-left:5px" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.type eq 'survey' and userBean.user.moderator eq true }" >
-											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
-											Result 
-								</h:outputLink>
-								<!-- <h:outputLink id="detailOverview" value="../lw/survey/assessment/assessment.jsf" style="margin-left:5px" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.type eq 'survey' and userBean.user.moderator eq true }" >
-											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
-											User Submissions 
-								</h:outputLink>
-								<p:tooltip id="survey_tooltip" for="detailOverview" value="detailed user-wise results"/> -->
-								<!-- <h:outputLink value="../templates/resources/editsurvey.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.source eq 'survey'}">
-											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
-											Edit survey
-								</h:outputLink> -->
-							</div>
-						</ui:fragment>
-						
-						<table id="resources_informations_table" class="full-width">
-	
-							<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.fileName and not resourceDetailBean.clickedResource.source.equals('LORO')}">
-								<tr>
-									<td>
+                    //update_header();
+                </script>
+
+                <ui:fragment rendered="#{bean.rightPanelAction == 'newFile'}">
+                    <h:inputHidden id="new_resource_type" value="#{addResourceBean.resource.type}"/>
+                    <ui:decorate template="/templates/resources/createFile.xhtml">
+                        <ui:param name="bean" value="#{bean}"/>
+                        <ui:param name="addResourceBean" value="#{addResourceBean}"/>
+                        <ui:param name="resourceDetailBean" value="#{resourceDetailBean}"/>
+                    </ui:decorate>
+                </ui:fragment>
+
+                <h:panelGroup id="add_resource_section" rendered="#{bean.rightPanelAction == 'newResource'}"
+                              styleClass="create-block new-resource" style="padding-bottom:2rem" layout="block">
+
+                    <h:form id="add_resource_upload_form" rendered="#{addResourceBean.formStep > 0}">
+
+                        <p:fieldset legend="#{msg.step} 1" style="margin-bottom:20px" id="step1_field">
+                            <p:panelGrid styleClass="full-width">
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="#{msg.type}:"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{addResourceBean.resource.getStringStorageType()}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="#{msg.location}:"/>
+                                    </p:column>
+                                    <p:column rendered="#{addResourceBean.formStep == 1}">
+                                        <p:commandLink onstart="selectNewResourceLocation();">
+                                            <h:outputText value="#{addResourceBean.currentPath}"/>
+                                        </p:commandLink>
+                                    </p:column>
+                                    <p:column rendered="#{addResourceBean.formStep > 1}">
+                                        <h:outputText value="#{addResourceBean.currentPath}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row rendered="#{addResourceBean.resource.storageType == 1 and not (addResourceBean.resource.type eq 'glossary' or addResourceBean.resource.type eq 'survey') }">
+                                    <p:column>
+                                        <h:outputText value="#{msg.file}:"/>
+                                    </p:column>
+                                    <p:column
+                                            rendered="#{addResourceBean.formStep == 1 and not (addResourceBean.resource.type eq 'glossary' or addResourceBean.resource.type eq 'survey') }">
+                                        <p:fileUpload fileUploadListener="#{addResourceBean.handleFileUpload}"
+                                                      mode="advanced" auto="true" sizeLimit="10000000000" fileLimit="1"
+                                                      label="#{msg.choose_file}" update=":growl :add_resource_section"/>
+                                    </p:column>
+                                    <p:column rendered="#{addResourceBean.formStep > 1}">
+                                        <h:outputText value="#{addResourceBean.resource.url}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row rendered="#{addResourceBean.resource.storageType == 2 }">
+                                    <p:column>
+                                        <h:outputText value="URL:"/>
+                                    </p:column>
+                                    <p:column rendered="#{addResourceBean.formStep == 1}">
+                                        <p:inputText value="#{addResourceBean.resource.url}" styleClass="add_field"
+                                                     required="true" requiredmessage="#{msg.mandatory_field}"
+                                                     id="url_input" validator="#{addResourceBean.validateUrl}"
+                                                     label="URL"/>
+                                    </p:column>
+                                    <p:column rendered="#{addResourceBean.formStep > 1 }">
+                                        <h:outputText value="#{addResourceBean.resource.url}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'glossary'}">
+                                    <p:column>
+                                        <h:outputText value="#{msg.title}:"/>
+                                    </p:column>
+                                    <p:column rendered="#{addResourceBean.formStep == 1}">
+                                        <p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field"
+                                                     required="true" requiredmessage="#{msg.mandatory_field}"
+                                                     id="title_input"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row rendered="#{addResourceBean.resource.type eq 'glossary'}">
+                                    <p:column>
+                                        <h:outputText value="Language One: " />
+                                    </p:column>
+                                    <p:column rendered="#{addResourceBean.formStep == 1}">
+                                        <p:selectOneMenu id="langOne" value="#{addResourceBean.resource.languageOne}" required="true" requiredMessage="#{msg.mandatory_field}">
+                                            <f:selectItem itemLabel="-Select-"  itemDisabled="true"/>
+                                            <f:selectItems value="#{addResourceBean.glossaryLaguage}" var="lang" itemValue="#{lang.toString()}" itemLabel="#{lang.toString()}"></f:selectItems>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+                                <p:row rendered="#{addResourceBean.resource.type eq 'glossary'}">
+                                    <p:column>
+                                        <h:outputText value="Language Two: " />
+                                    </p:column>
+                                    <p:column rendered="#{addResourceBean.formStep == 1}">
+                                        <p:selectOneMenu id="langTwo" value="#{addResourceBean.resource.languageTwo}" required="true" requiredMessage="#{msg.mandatory_field}">
+                                            <f:selectItem itemLabel="-Select-" itemDisabled="true"/>
+                                            <f:selectItems value="#{addResourceBean.glossaryLaguage}" var="lang" itemValue="#{lang.toString()}" itemLabel="#{lang.toString()}"></f:selectItems>
+                                        </p:selectOneMenu>
+                                    </p:column>
+                                </p:row>
+                                <p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'survey'}">
+                                    <p:column>
+                                        <h:outputText value="#{msg.title}:"/>
+                                    </p:column>
+                                    <p:column rendered="#{addResourceBean.formStep == 1}">
+                                        <p:inputText value="#{addResourceBean.resource.title}" styleClass="add_field"
+                                                     required="true" requiredmessage="#{msg.mandatory_field}"
+                                                     id="survey_title"/>
+                                    </p:column>
+                                </p:row>
+                                <p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'survey'}">
+                                    <p:column>
+                                        <h:outputText value="#{msg.description}:"/>
+                                    </p:column>
+                                    <p:column rendered="#{addResourceBean.formStep == 1}">
+                                        <p:inputText value="#{addResourceBean.resource.description}"
+                                                     styleClass="add_field" id="survey_desc"/>
+                                    </p:column>
+
+                                </p:row>
+                                <p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'survey'}">
+                                    <p:column>
+                                        <h:outputText value="Courses: "/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:selectCheckboxMenu id="courses"
+                                                              value="#{addResourceBean.resource.validCourses}"
+                                                              label="--ALL---" multiple="true" filter="true"
+                                                              filterMatchMode="startsWith">
+
+                                            <f:selectItems value="#{addResourceBean.getCourseList()}"/>
+                                        </p:selectCheckboxMenu>
+                                    </p:column>
+                                </p:row>
+                                <p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'survey'}">
+                                    <p:column>
+                                        <h:outputText value="survey Open Date: "/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:calendar id="open" value="#{createsurveyBean.open}"
+                                                    showOn="button"></p:calendar>
+                                    </p:column>
+                                </p:row>
+                                <p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'survey'}">
+                                    <p:column>
+                                        <h:outputText value="survey Close Date: "/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:calendar id="close" value="#{createsurveyBean.close}"
+                                                    showOn="button"></p:calendar>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row rendered="#{false and addResourceBean.formStep > 1 and addResourceBean.resource.embeddedSize1 != null}">
+                                    <p:column>
+
+                                        <h:outputText value="#{msg.preview}:"/>
+                                    </p:column>
+                                    <p:column styleClass="form-preview">
+                                        <h:outputText id="preview" escape="false"
+                                                      value="#{addResourceBean.resource.embeddedSize1}"/>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+                        </p:fieldset>
+
+                        <script type="text/javascript">
+                            function firstStepStart()
+                            {
+                                console.log('start');
+                                PF('next_button').disable();
+                                $('#first_step_loading_screen').show();
+                            }
+
+                            function firstStepComplete()
+                            {
+                                console.log('complet');
+                                $('#first_step_loading_screen').hide();
+                            }
+                        </script>
+
+                        <p:commandButton id="next_button" widgetVar="next-button" value="#{msg.nextStep}"
+                                         styleClass="greenbutton float-right" update=":growl :add_resource_section"
+                                         action="#{addResourceBean.handleUrlInput}" ajax="true"
+                                         rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.storageType == 2}"
+                                         onstart="PF('next-button').disable();">
+                        </p:commandButton>
+
+                        <p:blockUI block="step1_field" trigger="next_button" widgetVar="block-step1">
+                            <div class="float-left" style="height: 25px; line-height: 25px;">#{msg.please_wait}</div>
+                            <div class="loading-animation small float-left">
+                                <div></div>
+                                <div></div>
+                                <div></div>
+                            </div>
+                        </p:blockUI>
+
+                        <p:commandButton id="create_glossary_button" value="Create Glossary"
+                                         styleClass="greenbutton float-right"
+                                         update=":growl :add_resource_panel :datagrid"
+                                         action="#{addResourceBean.addGlossary}" ajax="true"
+                                         oncomplete="update_header();resourceDND();"
+                                         rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'glossary'}">
+                            <f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>
+                            <f:setPropertyActionListener target="#{bean.clickedResource}"
+                                                         value="#{addResourceBean.resource}"/>
+                            <f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}"
+                                                         value="#{addResourceBean.resource}"/>
+                        </p:commandButton>
+                        <p:commandButton id="create_survey_button" value="Create survey"
+                                         styleClass="greenbutton float-right"
+                                         update=":growl :add_resource_panel :datagrid"
+                                         action="#{addResourceBean.addSurvey}" ajax="true"
+                                         oncomplete="update_header();resourceDND();"
+                                         rendered="#{addResourceBean.formStep == 1 and addResourceBean.resource.type eq 'survey'}">
+                            <f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>
+                            <f:setPropertyActionListener target="#{bean.clickedResource}"
+                                                         value="#{addResourceBean.resource}"/>
+                            <f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}"
+                                                         value="#{addResourceBean.resource}"/>
+                        </p:commandButton>
+
+                        <p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right" immediate="true"
+                                         actionListener="#{addResourceBean.cancelUpload}" ajax="true"
+                                         update=":add_resource_panel"
+                                         oncomplete="update_header(); PF('block-step1').hide(); PF('next-button').enable();"
+                                         style="margin-right:0.5em;" rendered="#{addResourceBean.formStep == 1}">
+                            <f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none"/>
+                        </p:commandButton>
+
+                        <br class="clear"/>
+                    </h:form>
+
+                    <h:form id="add_resource_meta_form" rendered="#{addResourceBean.formStep > 1}">
+
+                        <p:fieldset legend="#{msg.step} 2" style="margin-bottom:20px">
+
+                            <table id="add_attributes_table" class="full-width">
+                                <colgroup>
+                                    <col span="1" style="width: 10%; min-width: 10rem;"/>
+                                    <col span="1"/>
+                                </colgroup>
+                                <ui:decorate template="/templates/resources/edit.xhtml">
+                                    <ui:param name="res" value="#{addResourceBean.resource}"/>
+                                </ui:decorate>
+                            </table>
+                        </p:fieldset>
+
+                        <p:commandButton value="#{msg.addResource}" styleClass="greenbutton float-right"
+                                         update=":growl :add_resource_panel :datagrid"
+                                         action="#{addResourceBean.addResource}" ajax="true"
+                                         oncomplete="update_header();resourceDND(); load_editor();"
+                                         rendered="#{addResourceBean.formStep > 1}">
+                            <f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>
+                            <f:setPropertyActionListener target="#{bean.clickedResource}"
+                                                         value="#{addResourceBean.resource}"/>
+                            <f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}"
+                                                         value="#{addResourceBean.resource}"/>
+                        </p:commandButton>
+
+                        <p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right" immediate="true"
+                                         actionListener="#{addResourceBean.clearForm()}" ajax="true"
+                                         update=":add_resource_panel" oncomplete="update_header()"
+                                         style="margin-right:0.5em;">
+                            <f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none"/>
+                        </p:commandButton>
+
+                        <br class="clear"/>
+                    </h:form>
+                </h:panelGroup>
+
+                <h:panelGroup
+                        rendered="#{bean.rightPanelAction == 'viewResource' and resourceDetailBean.clickedResource.id != -1}"
+                        layout="block">
+                    <h:outputText value="This resource has been removed"
+                                  rendered="${(not resourceDetailBean.clickedResource.canViewResource(userBean.user)) and (resourceDetailBean.clickedResource.deleted or resourceDetailBean.clickedResource.groupId eq 0)}"/>
+
+                    <h:outputText value="#{msg.group_resources_access_denied}"
+                                  rendered="${not resourceDetailBean.clickedResource.canViewResource(userBean.user) and not (resourceDetailBean.clickedResource.deleted or resourceDetailBean.clickedResource.groupId eq 0)}"/>
+                    <ui:fragment rendered="#{resourceDetailBean.clickedResource.canViewResource(userBean.user)}">
+                        <ui:fragment
+                                rendered="#{resourceDetailBean.clickedResource.type eq 'spreadsheet' or resourceDetailBean.clickedResource.type eq 'presentation' or resourceDetailBean.clickedResource.type eq 'document' or resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image' or resourceDetailBean.clickedResource.type eq 'glossary' or resourceDetailBean.clickedResource.type eq 'survey'}">
+                            <div class="align-center" style="margin-top: 5px;">
+                                <ui:decorate template="/templates/resources/parts/lightbox.xhtml">
+                                    <ui:param name="resource" value="#{resourceDetailBean.clickedResource}"/>
+                                </ui:decorate>
+
+                                <ui:decorate template="/templates/resources/parts/preview_box.xhtml">
+                                    <ui:param name="resource" value="#{resourceDetailBean.clickedResource}"/>
+                                </ui:decorate>
+                            </div>
+                            <div class="align-center" style="padding-top: 10px">
+                                <a class="hyperlink" href="#{resourceDetailBean.clickedResource.urlProxied}"
+                                   target="_blank">
+                                    <h:outputText styleClass="hyperlink"
+                                                  rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf'}"
+                                                  value="#{resourceDetailBean.clickedResource.url}"/>
+                                </a>
+                                <a class="hyperlink" onclick="lightbox_open(); change_lightbox_content(true);"
+                                   style="float:right;" title="#{msg['Archive.change_thumbnail']}?">
+                                    <h:graphicImage style="cursor:pointer;" value="/resources/icon/silk/pencil.png"
+                                                    width="16" height="16" alt="#{msg['Archive.change_thumbnail']}?"
+                                                    rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}"/>
+                                </a>
+                                <h:outputLink value="showGlossary.jsf"
+                                              styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
+                                              rendered="#{resourceDetailBean.clickedResource.type eq 'glossary'}">
+                                    <f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}"/>
+                                    #{msg["Glossary.open"]}
+                                </h:outputLink>
+                                <h:outputLink value="../templates/resources/survey.jsf"
+                                              styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
+                                              rendered="#{resourceDetailBean.clickedResource.type eq 'survey'}">
+                                    <f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}"/>
+                                    Open survey
+                                </h:outputLink>
+
+                                <h:outputLink id="survey_esult" value="../lw/survey/surveyResult.jsf"
+                                              style="margin-left:5px"
+                                              styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
+                                              rendered="#{resourceDetailBean.clickedResource.type eq 'survey' and userBean.user.moderator eq true }">
+                                    <f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}"/>
+                                    Result
+                                </h:outputLink>
+                                <!-- <h:outputLink id="detailOverview" value="../lw/survey/assessment/assessment.jsf" style="margin-left:5px" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.type eq 'survey' and userBean.user.moderator eq true }" >
+                                            <f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
+                                            User Submissions
+                                </h:outputLink>
+                                <p:tooltip id="survey_tooltip" for="detailOverview" value="detailed user-wise results"/> -->
+                                <!-- <h:outputLink value="../templates/resources/editsurvey.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.source eq 'survey'}">
+                                            <f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
+                                            Edit survey
+                                </h:outputLink> -->
+                            </div>
+                        </ui:fragment>
+
+                        <c:if test="${userBean.user.organisation.id eq 480}">
+                            <ui:fragment rendered="#{not empty resourceDetailBean.clickedResource}">
+                                <div id="eMetaDetail">
+                                    <hr/>
+                                    <div id="detailList">
+                                        <ui:fragment
+                                                rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.categories}">
+                                            <label class="rdlabel"><b>Category: </b></label>#{resourceDetailBean.clickedResource.extendedMetadata.categories[0]}
+                                            <br/>
+                                        </ui:fragment>
+                                        <ui:fragment
+                                                rendered="#{empty resourceDetailBean.clickedResource.extendedMetadata.categories}">
+                                            <label class="rdlabel"><b>Category: </b></label><i>(Not available. Click the button below to add)</i>
+                                            <br/>
+                                        </ui:fragment>
+                                        <ui:fragment
+                                                rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.lCount}">
+                                            <label class="rdlabel"><b>Level (stats): </b></label>#{resourceDetailBean.clickedResource.extendedMetadata.lCount}
+                                            <br/>
+                                        </ui:fragment>
+                                        <ui:fragment
+                                                rendered="#{empty resourceDetailBean.clickedResource.extendedMetadata.lCount}">
+                                            <label class="rdlabel"><b>Level (stats): </b></label><i>(Not available. Click the button below to add)</i>
+                                            <br/>
+                                        </ui:fragment>
+                                        <ui:fragment
+                                                rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.targetCount}">
+
+                                            <label class="rdlabel"><b>Target learner
+                                                (stats): </b></label>
+                                            <ui:repeat
+                                                    value="#{resourceDetailBean.clickedResource.extendedMetadata.targetCount.entrySet().toArray()}"
+                                                    var="t">
+
+                                                <h:graphicImage class="circle"
+                                                                value="/resources/resources-chloe/images/green_circle.png"
+                                                                width="2%"
+                                                                rendered="#{t.key == 'very young learners (pre-school)'}"/>
+                                                <h:graphicImage class="circle"
+                                                                value="/resources/resources-chloe/images/blue_circle.png"
+                                                                width="2%"
+                                                                rendered="#{t.key == 'young learners (elementary)'}"/>
+                                                <h:graphicImage class="bluecircle"
+                                                                value="/resources/resources-chloe/images/yellow_circle.png"
+                                                                width="2%" rendered="#{t.key == 'teenage learners'}"/>
+                                                <h:graphicImage class="circle"
+                                                                value="/resources/resources-chloe/images/red_circle.png"
+                                                                width="2%" rendered="#{t.key == 'teachers'}"/>
+                                                <h:graphicImage class="circle"
+                                                                value="/resources/resources-chloe/images/red_circle.png"
+                                                                width="2%" rendered="#{t.key == 'adult learners'}"/>
+
+                                                <h:outputText value="Pre-school"
+                                                              rendered="#{t.key == 'very young learners (pre-school)'}"/>
+                                                <h:outputText value="Young learners"
+                                                              rendered="#{t.key == 'young learners (elementary)'}"/>
+                                                <h:outputText value="Teens" rendered="#{t.key == 'teenage learners'}"/>
+                                                <h:outputText value="Adult learners"
+                                                              rendered="#{t.key == 'adult learners'}"/>
+                                                <h:outputText value="Teachers" rendered="#{t.key == 'teachers'}"/>
+                                                <h:outputText value="[#{t.value}] "/>
+
+                                            </ui:repeat>
+                                            <br/>
+                                        </ui:fragment>
+
+                                        <ui:fragment
+                                                rendered="#{empty resourceDetailBean.clickedResource.extendedMetadata.targetCount}">
+                                            <label class="rdlabel"><b>Target Learner (stats): </b></label><i>(Not available. Click the button below to add)</i>
+                                            <br/>
+                                        </ui:fragment>
+                                        <ui:fragment
+                                                rendered="#{empty resourceDetailBean.clickedResource.extendedMetadata.purposeCount}">
+                                            <label class="rdlabel"><b>Purpose of use (stats): </b></label><i>(Not available. Click the button below to add)</i>
+                                            <br/>
+                                        </ui:fragment>
+                                        <ui:fragment
+                                                rendered="#{not empty resourceDetailBean.clickedResource.extendedMetadata.purposeCount}">
+                                            <label class="rdlabel"><b>Purpose of use
+                                                (stats): </b></label>
+                                            <ui:repeat
+                                                    value="#{resourceDetailBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}"
+                                                    var="p">
+                                                <h:graphicImage class="bluecircle"
+                                                                value="/resources/resources-chloe/images/speaking.png"
+                                                                width="2%" rendered="#{p.key == 'speaking skills'}"/>
+                                                <h:graphicImage class="bluecircle"
+                                                                value="/resources/resources-chloe/images/listening.png"
+                                                                width="2%" rendered="#{p.key == 'listening skills'}"/>
+                                                <h:graphicImage class="bluecircle"
+                                                                value="/resources/resources-chloe/images/writing.png"
+                                                                width="2%" rendered="#{p.key == 'writing skills'}"/>
+                                                <h:graphicImage class="bluecircle"
+                                                                value="/resources/resources-chloe/images/reading.png"
+                                                                width="2%" rendered="#{p.key == 'reading skills'}"/>
+
+                                                <h:outputText value="Speaking"
+                                                              rendered="#{p.key == 'speaking skills'}"/>
+                                                <h:outputText value="Listening"
+                                                              rendered="#{p.key == 'listening skills'}"/>
+                                                <h:outputText value="Writing" rendered="#{p.key == 'writing skills'}"/>
+                                                <h:outputText value="Reading" rendered="#{p.key == 'reading skills'}"/>
+                                                <h:outputText value="[#{p.value}] "
+                                                              rendered="#{p.key == 'speaking skills' or p.key == 'listening skills' or p.key =='writing skills' or p.key =='reading skills'}"/>
+                                            </ui:repeat>
+                                            <br/>
+
+                                            <ui:repeat
+                                                    value="#{resourceDetailBean.clickedResource.extendedMetadata.purposeCount.entrySet().toArray()}"
+                                                    var="p">
+                                                <ui:fragment
+                                                        rendered="#{p.key != 'speaking skills' and p.key != 'listening skills' and p.key !='writing skills' and p.key !='reading skills'}">
+                                                    <span class="tag tag-grey">#{p.key}</span>
+                                                </ui:fragment>
+                                            </ui:repeat>
+                                        </ui:fragment>
+
+                                    </div> <!-- detailList -->
+                                    <br/>
+
+                                    <div id="detailAdd">
+                                        <!-- add the button to show div detailBox -->
+                                        <h:form>
+                                            <p:commandButton id="detailAdd_button" styleClass="greenbutton centered"
+                                                             value="Add your own" update=":add_metadata_form"
+                                                             onsuccess="PF('adlg').show();" ajax="true" process="@form"
+                                                             partialSubmit="true"
+                                                             actionListener="{resourceDetailBean.onOpenExtendedMetadataDialog}"/>
+                                        </h:form>
+                                    </div>
+
+                                    <hr/>
+                                </div>
+                            </ui:fragment>
+
+                            <p:dialog id="addDetailDlg" header="Add Your Own Categorization" widgetVar="adlg" minWidth="440"
+                                      maxWidth="500" appendTo="@(body)" modal="true" closable="true">
+
+                                <h:outputText
+                                        value="Please, add your own categorization: this will help you and other users find resources easily and efficiently."/>
+                                <br/>
+                                <h:outputText
+                                        value="Select the most appropriate tags or type them; then, click on the &quot;SAVE&quot; button."/>
+                                <br/>
+                                <br/>
+                                <b><h:outputText value="Resource Title: #{resourceDetailBean.clickedResource.title}"/></b>
+                                <br/>
+                                <br/>
+                                <h:form id="add_metadata_form">
+
+                                    <b><p:outputLabel for="toplist" value="Category:"/></b>
+                                    <h:panelGrid columns="6" cellpadding="10" id="catlist">
+                                        <h:outputLabel for="toplist" value="Level 1:"/>
+                                        <p:selectOneMenu id="toplist" value="#{resourceDetailBean.selectedTopcat}"
+                                                         panelStyle="width:150px"
+                                                         valueChangeListener="#{searchFilterBean.topCatChanged}">
+                                            <f:selectItem itemLabel="Select Category Level 1" itemValue="-1"/>
+                                            <f:selectItems value="#{searchFilterBean.cattops}"/>
+                                            <p:ajax update="middlelist" process="@this"/>
+                                        </p:selectOneMenu>
+
+                                        <p:outputLabel for="middlelist" value="Level 2:"/>
+                                        <p:selectOneMenu id="middlelist" value="#{resourceDetailBean.selectedMidcat}"
+                                                         panelStyle="width:150px"
+                                                         valueChangeListener="#{searchFilterBean.midCatChanged}">
+                                            <f:selectItem itemLabel="Select Category Level 2" itemValue="-1"/>
+                                            <f:selectItems value="#{searchFilterBean.catmids}"/>
+                                            <p:ajax update="bottomlist" process="@this"/>
+                                        </p:selectOneMenu>
+
+                                        <p:outputLabel for="bottomlist" value="Level 3: (Choose or type a new one)"/>
+                                        <p:autoComplete id="bottomlist" panelStyle="width:150px" dropdown="true"
+                                                        value="#{resourceDetailBean.selectedBotcat}"
+                                                        completeMethod="#{searchFilterBean.showCatbots}"/>
+
+                                    </h:panelGrid>
+
+                                    <h:panelGrid columns="4" cellpadding="10">
+                                        <p:outputLabel for="levlist" value="Language Level: "/>
+                                        <p:selectCheckboxMenu id="levlist" value="#{resourceDetailBean.selectedLevels}"
+                                                              label="Levels" multiple="true" filter="false"
+                                                              filterMatchMode="startsWith" panelStyle="width:250px">
+                                            <f:selectItems value="#{searchFilterBean.levels}"/>
+                                        </p:selectCheckboxMenu>
+                                        <p:outputLabel for="aglist" value="Target Learner:"/>
+                                        <p:selectCheckboxMenu id="aglist" value="#{resourceDetailBean.selectedTargets}"
+                                                              label="Target Learners" multiple="true" filter="false"
+                                                              filterMatchMode="startsWith" panelStyle="width:250px">
+                                            <f:selectItems value="#{searchFilterBean.targets}"/>
+                                        </p:selectCheckboxMenu>
+                                    </h:panelGrid>
+
+                                    <h:panelGrid columns="2" cellpadding="10">
+                                        <p:outputLabel for="aclist" value="Purpose of Use:"/>
+                                        <p:selectCheckboxMenu id="aclist" value="#{resourceDetailBean.selectedPurposes}"
+                                                              label="Purposes of Use" multiple="true" filter="false"
+                                                              filterMatchMode="startsWith" panelStyle="width:250px">
+                                            <f:selectItems value="#{searchFilterBean.purposes}"/>
+                                        </p:selectCheckboxMenu>
+                                    </h:panelGrid>
+
+                                    <br/>
+                                    <br/>
+                                    <p:commandButton value="Save" actionListener="#{resourceDetailBean.addNewMetadata}"
+                                                     update=":add_resource_panel :growl"
+                                                     onsuccess="adlg.hide();"/> <!--TODO: need to update resources somehow-->
+                                    <p:commandButton value="Cancel" onclick="adlg.hide(); return false;"/>
+                                </h:form>
+                            </p:dialog>
+                        </c:if>
+
+                        <table id="resources_informations_table" class="full-width">
+
+                            <ui:fragment
+                                    rendered="${not empty resourceDetailBean.clickedResource.fileName and not resourceDetailBean.clickedResource.source.equals('LORO')}">
+                                <tr>
+                                    <td>
 										<span class="resource_field">
 											#{msg.file}: 
 										</span>
-									</td>
-									<td>
-										<a href="#{resourceDetailBean.clickedResource.fileUrl}">
-											<span style="text-decoration:underline;" class="float-left">#{resourceDetailBean.clickedResource.fileName}</span><span class="ui-icon ui-icon-arrowthickstop-1-s float-left "></span>
-										</a>
-										<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.originalFile}">
-											<div style="clear:both;"></div>
-											<a href="#{resourceDetailBean.clickedResource.originalFile.url}">
-												<span style="float:left;text-decoration:underline;">#{resourceDetailBean.clickedResource.originalFile.name}</span><span class="ui-icon ui-icon-arrowthickstop-1-s" style="float:left;"></span>												
-											</a>
-											(Backup
-											<h:outputText value="#{resourceDetailBean.clickedResource.originalFile.lastModified}">
-										        <f:convertDateTime type="date" timeStyle="short" dateStyle="long" timeZone="#{userBean.timeZone}"/>
-										    </h:outputText>)
-										</ui:fragment>
-									</td>
-								</tr>
-							</ui:fragment>
-							
-							
-							
-							<ui:fragment rendered="${empty resourceDetailBean.clickedResource.fileName
+                                    </td>
+                                    <td>
+                                        <a href="#{resourceDetailBean.clickedResource.fileUrl}">
+                                            <span style="text-decoration:underline;"
+                                                  class="float-left">#{resourceDetailBean.clickedResource.fileName}</span><span
+                                                class="ui-icon ui-icon-arrowthickstop-1-s float-left "></span>
+                                        </a>
+                                        <ui:fragment
+                                                rendered="${not empty resourceDetailBean.clickedResource.originalFile}">
+                                            <div style="clear:both;"></div>
+                                            <a href="#{resourceDetailBean.clickedResource.originalFile.url}">
+                                                <span style="float:left;text-decoration:underline;">#{resourceDetailBean.clickedResource.originalFile.name}</span><span
+                                                    class="ui-icon ui-icon-arrowthickstop-1-s"
+                                                    style="float:left;"></span>
+                                            </a>
+                                            (Backup
+                                            <h:outputText
+                                                    value="#{resourceDetailBean.clickedResource.originalFile.lastModified}">
+                                                <f:convertDateTime type="date" timeStyle="short" dateStyle="long"
+                                                                   timeZone="#{userBean.timeZone}"/>
+                                            </h:outputText>)
+                                        </ui:fragment>
+                                    </td>
+                                </tr>
+                            </ui:fragment>
+
+
+                            <ui:fragment rendered="${empty resourceDetailBean.clickedResource.fileName
 							 and resourceDetailBean.clickedResource.type != 'text'
 							 and resourceDetailBean.clickedResource.type != 'website'
 							  and resourceDetailBean.clickedResource.type != 'pdf'
@@ -382,217 +653,247 @@
 							   and resourceDetailBean.clickedResource.type != 'survey'
 							   and resourceDetailBean.clickedResource.type != 'video'
 							    and resourceDetailBean.clickedResource.type != 'image' }">
-								<tr>
-									<td>
+                                <tr>
+                                    <td>
 										<span class="resource_field">
 											#{msg.resource}: 
 										</span>
-									</td>
-									<td>
-										<a style="color: #22e" href="#{resourceDetailBean.clickedResource.urlProxied}">
-											#{resourceDetailBean.clickedResource.url}
-										</a>
-									</td>
-								</tr>
-							</ui:fragment>
-												
-							<ui:fragment rendered="#{resourceDetailBean.starRatingEnabled}">
-								<tr>
-									<td>
+                                    </td>
+                                    <td>
+                                        <a style="color: #22e" href="#{resourceDetailBean.clickedResource.urlProxied}">
+                                            #{resourceDetailBean.clickedResource.url}
+                                        </a>
+                                    </td>
+                                </tr>
+                            </ui:fragment>
+
+                            <ui:fragment rendered="#{resourceDetailBean.starRatingEnabled}">
+                                <tr>
+                                    <td>
 										<span class="resource_field">
 											#{msg.relevance}: 
 										</span>
-									</td>
-									<td>
-										<h:form id="rate_form">
-											<p:rating value="#{resourceDetailBean.clickedResource.starRatingRounded}" disabled="${resourceDetailBean.starRatedByUser or not resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}" cancel="false" style="vertical-align: bottom; margin-right:10px; display:inline-block;">
-												<p:ajax event="rate" listener="#{resourceDetailBean.handleRate}" update="rate_form :growl" />			
-											</p:rating>
-											 
-											<h:outputText value="#{resourceDetailBean.clickedResource.starRating}">
-												<f:convertNumber maxFractionDigits="1" minFractionDigits="1" />
-											</h:outputText>	
-											(<h:outputFormat value="#{msg.votes}"><f:param value="#{resourceDetailBean.clickedResource.rateNumber}" /></h:outputFormat>)
-										</h:form>
-									</td>
-								</tr>
-							</ui:fragment>
-												
-							<ui:fragment rendered="#{resourceDetailBean.thumbRatingEnabled}">
-								<tr>
-									<td>
+                                    </td>
+                                    <td>
+                                        <h:form id="rate_form">
+                                            <p:rating value="#{resourceDetailBean.clickedResource.starRatingRounded}"
+                                                      disabled="${resourceDetailBean.starRatedByUser or not resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}"
+                                                      cancel="false"
+                                                      style="vertical-align: bottom; margin-right:10px; display:inline-block;">
+                                                <p:ajax event="rate" listener="#{resourceDetailBean.handleRate}"
+                                                        update="rate_form :growl"/>
+                                            </p:rating>
+
+                                            <h:outputText value="#{resourceDetailBean.clickedResource.starRating}">
+                                                <f:convertNumber maxFractionDigits="1" minFractionDigits="1"/>
+                                            </h:outputText>
+                                            (<h:outputFormat value="#{msg.votes}"><f:param
+                                                value="#{resourceDetailBean.clickedResource.rateNumber}"/></h:outputFormat>)
+                                        </h:form>
+                                    </td>
+                                </tr>
+                            </ui:fragment>
+
+                            <ui:fragment rendered="#{resourceDetailBean.thumbRatingEnabled}">
+                                <tr>
+                                    <td>
 										<span class="resource_field">
 											#{msg.reliability}: 
 										</span>
-									</td>
-									<td>
-										<h:form id="thumbrating">
-											<h:panelGrid columns="4" >
-												<h:outputText value="+#{resourceDetailBean.clickedResource.thumbUp}" />
-												<p:commandLink actionListener="#{resourceDetailBean.onThumbUp}" update="thumbrating :growl">
-													<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
-													<h:graphicImage value="/resources/icon/thumb_up.png" width="16" height="16" alt="Rate thump up"/>
-												</p:commandLink>
-				
-												<p:commandLink actionListener="#{resourceDetailBean.onThumbDown}" update="thumbrating :growl">
-													<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
-													<h:graphicImage value="/resources/icon/thumb_dw.png" width="16" height="16" alt="Rate thump down" />
-												</p:commandLink>
-												<h:outputText value="-#{resourceDetailBean.clickedResource.thumbDown}" />
-											</h:panelGrid>
-										</h:form>
-									</td>
-								</tr>
-							</ui:fragment>				
-	
-							<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.author}">
-								<tr>
-									<td>
-										<span class="resource_field">
-											#{msg.author}: 
-										</span>
-									</td>
-									<td>
-										<h:outputText value="#{resourceDetailBean.clickedResource.author}"/>
-									</td>
-								</tr>
-							</ui:fragment>
-							
-							<ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.language}">
-								<tr>
-									<td>
-										<span class="resource_field">
-											#{msg.language}:
-										</span>
-									</td>
-									<td>
-										<ui:repeat var="language" value="#{resourceDetailBean.clickedResource.metadataMultiValue['language']}" varStatus="status">
-											<h:outputText value="#{msg['language_' += language]}" /><h:outputText value=", " rendered="#{!status.last}" escape="false" />
-										</ui:repeat>	
-									</td>
-								</tr>
-							</ui:fragment>
-							
-							<tr>
-								<td>
+                                    </td>
+                                    <td>
+                                        <h:form id="thumbrating">
+                                            <h:panelGrid columns="4">
+                                                <h:outputText value="+#{resourceDetailBean.clickedResource.thumbUp}"/>
+                                                <p:commandLink actionListener="#{resourceDetailBean.onThumbUp}"
+                                                               update="thumbrating :growl">
+                                                    <f:param name="resource_id"
+                                                             value="#{resourceDetailBean.clickedResource.id}"/>
+                                                    <h:graphicImage value="/resources/icon/thumb_up.png" width="16"
+                                                                    height="16" alt="Rate thump up"/>
+                                                </p:commandLink>
+
+                                                <p:commandLink actionListener="#{resourceDetailBean.onThumbDown}"
+                                                               update="thumbrating :growl">
+                                                    <f:param name="resource_id"
+                                                             value="#{resourceDetailBean.clickedResource.id}"/>
+                                                    <h:graphicImage value="/resources/icon/thumb_dw.png" width="16"
+                                                                    height="16" alt="Rate thump down"/>
+                                                </p:commandLink>
+                                                <h:outputText value="-#{resourceDetailBean.clickedResource.thumbDown}"/>
+                                            </h:panelGrid>
+                                        </h:form>
+                                    </td>
+                                </tr>
+                            </ui:fragment>
+
+                            <ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.author}">
+                                <tr>
+                                    <td><span class="resource_field">#{msg.author}:</span></td>
+                                    <td><h:outputText value="#{resourceDetailBean.clickedResource.author}"/></td>
+                                </tr>
+                            </ui:fragment>
+
+                            <ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.msource}">
+                                <tr>
+                                    <td><span class="resource_field"> Media Source: </span></td>
+                                    <td><h:outputText value="#{resourceDetailBean.clickedResource.msource}"/></td>
+                                </tr>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.mtype}">
+                                <tr>
+                                    <td><span class="resource_field"> Contains: </span></td>
+                                    <td><h:outputText value="#{resourceDetailBean.clickedResource.mtype}"/></td>
+                                </tr>
+                            </ui:fragment>
+
+                            <ui:fragment rendered="#{not empty resourceDetailBean.clickedResource.language}">
+                                <tr>
+                                    <td><span class="resource_field">#{msg.language}:</span></td>
+                                    <td>
+                                        <ui:repeat var="language"
+                                                   value="#{resourceDetailBean.clickedResource.metadataMultiValue['language']}"
+                                                   varStatus="status">
+                                            <h:outputText value="#{msg['language_' += language]}"/><h:outputText
+                                                value=", " rendered="#{!status.last}" escape="false"/>
+                                        </ui:repeat>
+                                    </td>
+                                </tr>
+                            </ui:fragment>
+
+                            <tr>
+                                <td>
 									<span class="resource_field">
 										#{msg.source}: 
 									</span>
-								</td>
-								<td style="overflow:hidden;">
-									<a href="#{resourceDetailBean.clickedResource.urlProxied}"><h:outputText value="#{resourceDetailBean.clickedResource.source}" /></a>
-									<span style="display:inline-block; width:300px;"> </span>
-								</td>
-							</tr>
-							
-							<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.metadataEntries}">
-								<ui:fragment rendered="#{not empty entry.value}">
-									<tr>
-										<td>
+                                </td>
+                                <td style="overflow:hidden;">
+                                    <a href="#{resourceDetailBean.clickedResource.urlProxied}"><h:outputText
+                                            value="#{resourceDetailBean.clickedResource.source}"/></a>
+                                    <span style="display:inline-block; width:300px;"> </span>
+                                </td>
+                            </tr>
+
+                            <ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.metadataEntries}">
+                                <ui:fragment rendered="#{not empty entry.value}">
+                                    <tr>
+                                        <td>
 											<span class="resource_field">
-												<h:outputText value="${utilBean.getLocaleMessage(entry.key, null)}" />: 
+												<h:outputText value="${utilBean.getLocaleMessage(entry.key, null)}"/>:
 											</span>
-										</td>
-										<td>
-											<h:outputText value="#{entry.value}" />									
-										</td>
-									</tr>
-								</ui:fragment>
-							</ui:repeat>
-							
-							<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.group}">
-								<tr>
-									<td>
+                                        </td>
+                                        <td>
+                                            <h:outputText value="#{entry.value}"/>
+                                        </td>
+                                    </tr>
+                                </ui:fragment>
+                            </ui:repeat>
+
+                            <ui:fragment rendered="${not empty resourceDetailBean.clickedResource.group}">
+                                <tr>
+                                    <td>
 										<span class="resource_field">
 											#{msg.group}: 
 										</span>
-									</td>
-									<td>
-										<h:outputLink value="group/overview.jsf" style="display:inline-block; margin-right:1rem;">
-											<f:param name="group_id" value="#{resourceDetailBean.clickedResource.group.id}" />
-											<h:outputText value="#{resourceDetailBean.clickedResource.group.title}" />
-										</h:outputLink>
-									</td>
-								</tr>
-							</ui:fragment>
-							<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.originalGroup}">
-								<tr>
-									<td>
+                                    </td>
+                                    <td>
+                                        <h:outputLink value="group/overview.jsf"
+                                                      style="display:inline-block; margin-right:1rem;">
+                                            <f:param name="group_id"
+                                                     value="#{resourceDetailBean.clickedResource.group.id}"/>
+                                            <h:outputText value="#{resourceDetailBean.clickedResource.group.title}"/>
+                                        </h:outputLink>
+                                    </td>
+                                </tr>
+                            </ui:fragment>
+                            <ui:fragment rendered="${not empty resourceDetailBean.clickedResource.originalGroup}">
+                                <tr>
+                                    <td>
 										<span class="resource_field">
 											#{msg.copied_from}: 
 										</span>
-									</td>
-									<td>
-										<h:outputLink value="group/overview.jsf" style="display:inline-block; margin-right:1rem;">
-											<f:param name="group_id" value="#{resourceDetailBean.clickedResource.originalGroup.id}" />
-											<h:outputText value="#{resourceDetailBean.clickedResource.originalGroup.title}" />
-										</h:outputLink>
-									</td>
-								</tr>
-							</ui:fragment>
-							<ui:fragment rendered="${resourceDetailBean.clickedResource.source == 'TED' or resourceDetailBean.clickedResource.source == 'TEDx'}">
-								<tr>
-									<td>
+                                    </td>
+                                    <td>
+                                        <h:outputLink value="group/overview.jsf"
+                                                      style="display:inline-block; margin-right:1rem;">
+                                            <f:param name="group_id"
+                                                     value="#{resourceDetailBean.clickedResource.originalGroup.id}"/>
+                                            <h:outputText
+                                                    value="#{resourceDetailBean.clickedResource.originalGroup.title}"/>
+                                        </h:outputLink>
+                                    </td>
+                                </tr>
+                            </ui:fragment>
+                            <ui:fragment
+                                    rendered="${resourceDetailBean.clickedResource.source == 'TED' or resourceDetailBean.clickedResource.source == 'TEDx'}">
+                                <tr>
+                                    <td>
 										<span class="resource_field">
 											#{msg.transcript}: 
 										</span>
-									</td>
-									<td>
-										<h:outputLink value="ted_transcript.jsf" style="text-decoration:underline;">
-											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
-											#{msg.link_to_transcript}
-										</h:outputLink>
-									</td>
-								</tr>
-							</ui:fragment>							
-							<ui:fragment rendered="${not empty resourceDetailBean.clickedResource.creationDate}">
-								<tr>
-									<td>
+                                    </td>
+                                    <td>
+                                        <h:outputLink value="ted_transcript.jsf" style="text-decoration:underline;">
+                                            <f:param name="resource_id"
+                                                     value="#{resourceDetailBean.clickedResource.id}"/>
+                                            #{msg.link_to_transcript}
+                                        </h:outputLink>
+                                    </td>
+                                </tr>
+                            </ui:fragment>
+                            <ui:fragment rendered="${not empty resourceDetailBean.clickedResource.creationDate}">
+                                <tr>
+                                    <td>
 										<span class="resource_field">
 											#{msg.date}:
 										</span>
-									</td>
-									<td>
-										<h:outputText value="#{resourceDetailBean.clickedResource.creationDate}">
-											<f:convertDateTime type="date" dateStyle="long" timeZone="#{userBean.timeZone}"/>
-										</h:outputText>
-									</td>
-								</tr>
-							</ui:fragment>
-							<ui:fragment rendered="#{resourceDetailBean.clickedResource.folderId != 0}">
-								<tr>
-									<td>
+                                    </td>
+                                    <td>
+                                        <h:outputText value="#{resourceDetailBean.clickedResource.creationDate}">
+                                            <f:convertDateTime type="date" dateStyle="long"
+                                                               timeZone="#{userBean.timeZone}"/>
+                                        </h:outputText>
+                                    </td>
+                                </tr>
+                            </ui:fragment>
+                            <ui:fragment rendered="#{resourceDetailBean.clickedResource.folderId != 0}">
+                                <tr>
+                                    <td>
 										<span class="resource_field">
 											#{msg.path}:
 										</span>
-									</td>
-									<td>
-										<a href="group/resources.jsf?group_id=#{resourceDetailBean.clickedResource.groupId}&amp;folder_id=#{resourceDetailBean.clickedResource.folderId}&amp;resource_id=#{resourceDetailBean.clickedResource.id}">
-											<h:outputText value="#{resourceDetailBean.clickedResource.prettyPath}" />
-										</a>
-									</td>
-								</tr>
-							</ui:fragment>
-						</table>
-	
-						<h:panelGroup rendered="#{not empty resourceDetailBean.clickedResource.description}">
-							<div class="resource_field" style="padding-top: 10px">
-								#{msg.description}
-							</div>
-							<h:outputText id="resource_description" value="#{resourceDetailBean.clickedResource.descriptionHTML}" escape="false" />
-						</h:panelGroup>
-								
-						<h:form id="archive_current_form" rendered="${resourceDetailBean.clickedResource.storageType == 2 and resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
+                                    </td>
+                                    <td>
+                                        <a href="group/resources.jsf?group_id=#{resourceDetailBean.clickedResource.groupId}&amp;folder_id=#{resourceDetailBean.clickedResource.folderId}&amp;resource_id=#{resourceDetailBean.clickedResource.id}">
+                                            <h:outputText value="#{resourceDetailBean.clickedResource.prettyPath}"/>
+                                        </a>
+                                    </td>
+                                </tr>
+                            </ui:fragment>
+                        </table>
+
+                        <h:panelGroup rendered="#{not empty resourceDetailBean.clickedResource.description}">
+                            <div class="resource_field" style="padding-top: 10px">
+                                #{msg.description}
+                            </div>
+                            <h:outputText id="resource_description"
+                                          value="#{resourceDetailBean.clickedResource.descriptionHTML}" escape="false"/>
+                        </h:panelGroup>
+
+                        <h:form id="archive_current_form"
+                                rendered="${resourceDetailBean.clickedResource.storageType == 2 and resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
 							<span class="resource_field">
 								#{msg.current_version}: 
 							</span>
-							<p:commandButton action="#{resourceDetailBean.archiveCurrentVersion}" styleClass="greenbutton" 
-								value="#{msg['Archive.now']}" update=":growl :archive_view :archive_view_options" style="margin-top:10px"/>
-						</h:form>
-								
-						<h:panelGroup id="archive_view_options" layout="block">
-							<h:panelGroup layout="block" style="padding-top: 15px;" 
-								rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
+                            <p:commandButton action="#{resourceDetailBean.archiveCurrentVersion}"
+                                             styleClass="greenbutton" value="#{msg['Archive.now']}"
+                                             update=":growl :archive_view :archive_view_options"
+                                             style="margin-top:10px"/>
+                        </h:form>
+
+                        <h:panelGroup id="archive_view_options" layout="block">
+                            <h:panelGroup layout="block" style="padding-top: 15px;"
+                                          rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
 								<span class="resource_field" style="position:relative;">
 									#{msg['Archive.versions']} (
 									<span id="no_of_archive_versions" style="color:red">
@@ -600,365 +901,436 @@
 									</span>
 									): 
 								</span>
-								
-								<p:commandButton id="list_button" styleClass="greenbutton" value="#{msg.list_view}" 
-									onclick="open_list_view(); return false;" />
-								<p:commandButton id="timeline_button" styleClass="greenbutton" value="#{msg.timeline_view}" 
-									onclick="return open_timeline_view(); return false;" />
-									<!-- Insert thumbnail link visualization -->
-							</h:panelGroup>
-						</h:panelGroup>
-						<h:panelGroup id="archive_view" layout="block">
-							<h:panelGroup id="archive_list_view" layout="block" 
-								rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
-								<ul>
-									<ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.archiveUrls}">
-										<li>
-											<a href="#{entry.archiveUrl}" target="_blank">
-												<h:outputText value="${userBean.formatDate(entry.timestamp)}"/>
-											</a>
-										</li>
-									</ui:repeat>
-								</ul>
-							</h:panelGroup>
-							<h:panelGroup id="timeline_view" layout="block" 
-								rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
-								<ui:decorate template="/lw/templates/archive_timeline_template.xhtml">
-								</ui:decorate>
-							</h:panelGroup>
-							<br class="clear" />
-						</h:panelGroup>					
-	
-						<h:form id="tag_form" rendered="${not empty resourceDetailBean.clickedResource.tags or resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
-							<div class="resource_field" style="padding-top: 10px; padding-bottom: 10px">
-								#{msg.tags}
-							</div>
-	
-					        <ul style="margin: 0px; padding: 0px">
-						         <ui:repeat var="tag" value="#{resourceDetailBean.clickedResource.tags}">
-						         	<li class="tag_list">
-						         		<h:outputLink styleClass="tag_name ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only" 
-						         			value="search.jsf">
+
+                                <p:commandButton id="list_button" styleClass="greenbutton" value="#{msg.list_view}"
+                                                 onclick="open_list_view(); return false;"/>
+                                <p:commandButton id="timeline_button" styleClass="greenbutton"
+                                                 value="#{msg.timeline_view}"
+                                                 onclick="return open_timeline_view(); return false;"/>
+                                <!-- Insert thumbnail link visualization -->
+                            </h:panelGroup>
+                        </h:panelGroup>
+                        <h:panelGroup id="archive_view" layout="block">
+                            <h:panelGroup id="archive_list_view" layout="block"
+                                          rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
+                                <ul>
+                                    <ui:repeat var="entry" value="#{resourceDetailBean.clickedResource.archiveUrls}">
+                                        <li>
+                                            <a href="#{entry.archiveUrl}" target="_blank">
+                                                <h:outputText value="${userBean.formatDate(entry.timestamp)}"/>
+                                            </a>
+                                        </li>
+                                    </ui:repeat>
+                                </ul>
+                            </h:panelGroup>
+                            <h:panelGroup id="timeline_view" layout="block"
+                                          rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}">
+                                <ui:decorate template="/lw/templates/archive_timeline_template.xhtml">
+                                </ui:decorate>
+                            </h:panelGroup>
+                            <br class="clear"/>
+                        </h:panelGroup>
+
+                        <h:form id="tag_form"
+                                rendered="${not empty resourceDetailBean.clickedResource.tags or resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
+                            <div class="resource_field" style="padding-top: 10px; padding-bottom: 10px">
+                                #{msg.tags}
+                            </div>
+
+                            <ul style="margin: 0px; padding: 0px">
+                                <ui:repeat var="tag" value="#{resourceDetailBean.clickedResource.tags}">
+                                    <li class="tag_list">
+                                        <h:outputLink
+                                                styleClass="tag_name ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only"
+                                                value="search.jsf">
 						         			<span class="ui-button-text">
 						         				#{tag.name}
 						         			</span>
-								         		<f:param name="action" value="image"/>
-								         		<f:param name="query" value="#{tag.name}"/>
-						         		</h:outputLink>
-						         		<p:commandButton styleClass="tag_x float-right" action="#{resourceDetailBean.onDeleteTag}" 
-						         			value="x" update=":add_resource_panel :growl" process="@form" rendered="#{resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
-						         			<f:setPropertyActionListener target="#{resourceDetailBean.selectedTag}" value="#{tag}"/>
-						         		</p:commandButton>
-						         	</li>
-						         </ui:repeat>
-						    </ul>
-						</h:form> 
-														
-						<h:form id="tag_input_form" rendered="#{resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">  
-						   
-						    <p:inputText styleClass="tag_field" value="#{resourceDetailBean.tagName}" id="tag_name"/>
-					    	<p:commandButton actionListener="#{resourceDetailBean.addTag}" styleClass="greenbutton clearfix" 
-					    		value="#{msg.addTag}" update=" :datagrid :tag_form :growl :tag_input_form:tag_name" process="@form" 
-					    		style="margin-right:0;margin-top:4px;float:right">				    		
-					    	  	
-					    	  	<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>	
-					        </p:commandButton>
-					        
-					    </h:form>	
-					    				   				   
-					    <h:form id="comment_input_form" styleClass="clear" prependId="false">
-					   
-							<h:panelGroup layout="block" class="resource_field" style="padding-top: 10px" rendered="${not empty resourceDetailBean.clickedResource.comments or resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">
-								#{msg.comments}
-							</h:panelGroup>						
-							
-							<ui:fragment rendered="#{resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">
-								<br/>
-								<div style="position:relative; padding-left:60px;">
-									<img id="userpic" src="${learnwebBean.getProfileImage(userBean.user)}" width="50" height="50" 
-										style="position:absolute;left:0" alt="Profile picture"/> 
-									
-									<p:inputTextarea id="commentfield" style="width:100%;min-height:50px;box-sizing:border-box;" rows="2" 
-										value="#{resourceDetailBean.newComment}" placeholder="#{msg.addComment}" required="true"/>
-									<br/>
-								</div>
-								<p:commandButton id="comment_button" styleClass="greenbutton float-right" value="#{msg.addComment}" 
-									actionListener="#{resourceDetailBean.addComment()}" update=":datagrid :comment_input_form :comment_form :growl">
-									<f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>	
-								</p:commandButton>
-							</ui:fragment>
-						</h:form>
-						<br class="clear" />
-						<h:form id="comment_form" styleClass="clear" prependId="false" style="margin-bottom:40px;">
-							<h:panelGroup layout="block" rendered="#{not empty resourceDetailBean.clickedResource.comments}" styleClass="comments">
-					
-								<ui:repeat var="comment" value="#{resourceDetailBean.clickedResource.comments}">
-									<div class="comment">
-										<img class="userpic" src="#{comment.getUser().image}" width="30" height="30" alt="Profile picture"/>
-										<div class="username_div">
+                                            <f:param name="action" value="image"/>
+                                            <f:param name="query" value="#{tag.name}"/>
+                                        </h:outputLink>
+                                        <p:commandButton styleClass="tag_x float-right"
+                                                         action="#{resourceDetailBean.onDeleteTag}" value="x"
+                                                         update=":add_resource_panel :growl" process="@form"
+                                                         rendered="#{resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
+                                            <f:setPropertyActionListener target="#{resourceDetailBean.selectedTag}"
+                                                                         value="#{tag}"/>
+                                        </p:commandButton>
+                                    </li>
+                                </ui:repeat>
+                            </ul>
+                        </h:form>
+
+                        <h:form id="tag_input_form"
+                                rendered="#{resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">
+
+                            <p:inputText styleClass="tag_field" value="#{resourceDetailBean.tagName}" id="tag_name"/>
+                            <p:commandButton actionListener="#{resourceDetailBean.addTag}"
+                                             styleClass="greenbutton clearfix" value="#{msg.addTag}"
+                                             update=" :datagrid :tag_form :growl :tag_input_form:tag_name"
+                                             process="@form" style="margin-right:0;margin-top:4px;float:right"
+                                             partialSubmit="true">
+
+                                <f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>
+                            </p:commandButton>
+
+                        </h:form>
+
+                        <h:form id="comment_input_form" styleClass="clear" prependId="false">
+
+                            <h:panelGroup layout="block" class="resource_field" style="padding-top: 10px"
+                                          rendered="${not empty resourceDetailBean.clickedResource.comments or resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">
+                                #{msg.comments}
+                            </h:panelGroup>
+
+                            <ui:fragment
+                                    rendered="#{resourceDetailBean.clickedResource.canAnnotateResource(userBean.user)}">
+                                <br/>
+                                <div style="position:relative; padding-left:60px;">
+                                    <img id="userpic" src="${learnwebBean.getProfileImage(userBean.user)}" width="50"
+                                         height="50" style="position:absolute;left:0" alt="Profile picture"/>
+
+                                    <p:inputTextarea id="commentfield"
+                                                     style="width:100%;min-height:50px;box-sizing:border-box;" rows="2"
+                                                     value="#{resourceDetailBean.newComment}"
+                                                     placeholder="#{msg.addComment}" required="true"/>
+                                    <br/>
+                                </div>
+                                <p:commandButton id="comment_button" styleClass="greenbutton float-right"
+                                                 value="#{msg.addComment}"
+                                                 actionListener="#{resourceDetailBean.addComment()}"
+                                                 update=":datagrid :comment_input_form :comment_form :growl">
+                                    <f:setPropertyActionListener target="#{bean.reloadLogs}" value="true"/>
+                                </p:commandButton>
+                            </ui:fragment>
+                        </h:form>
+                        <br class="clear"/>
+                        <h:form id="comment_form" styleClass="clear" prependId="false" style="margin-bottom:40px;">
+                            <h:panelGroup layout="block"
+                                          rendered="#{not empty resourceDetailBean.clickedResource.comments}"
+                                          styleClass="comments">
+
+                                <ui:repeat var="comment" value="#{resourceDetailBean.clickedResource.comments}">
+                                    <div class="comment">
+                                        <img class="userpic" src="#{comment.getUser().image}" width="30" height="30"
+                                             alt="Profile picture"/>
+                                        <div class="username_div">
 											<span class="username">
-												<a href="user/detail.jsf?user_id=#{comment.user.id}" class="username_link">
+												<a href="user/detail.jsf?user_id=#{comment.user.id}"
+                                                   class="username_link">
 													#{comment.user.username}
 												</a>
 											</span>
-											<span title="#{comment.date}" class="comment_date">
+                                            <span title="#{comment.date}" class="comment_date">
 												#{userBean.getPrettyDate(comment.date)}
-											</span>												
-											<div style="margin-top:5px;">
-												#{comment.text}
-											</div>
-	
-										</div>
-										<div class="clear"></div>
-										<div style="padding-left: 40px;">
-											<p:commandLink rendered="#{resourceDetailBean.canEditComment(comment)}" 
-												style="margin-right: 5px; font-size: 10px !important; color: green" value="#{msg.edit}" 
-												onsuccess="PF('comment_dialog').show();" ajax="true" update=":comment_dialog_form">
-												<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
-											</p:commandLink>
-											<p:commandLink rendered="#{resourceDetailBean.canEditComment(comment)}" 
-												action="#{resourceDetailBean.onDeleteComment}"
-												style="margin-right: 5px; font-size: 10px !important; color: red" value="#{msg.delete}" 
-												onstart="return confirm('#{msg.delete_message_comments}');" ajax="true" 
-												update=":add_resource_panel :growl">
-												<f:setPropertyActionListener target="#{resourceDetailBean.clickedComment}" value="#{comment}"/>
-											</p:commandLink>
-										</div>				
-										
-									</div>
-								</ui:repeat>
-							</h:panelGroup>								
-						</h:form>
-									
-						<script type="text/javascript">
-					   		prepareCommentButton();
-					   </script>
-					   
-					   <p:dialog header="#{msg.edit}" modal="true" minWidth="440" width="540" appendTo="@(body)" widgetVar="comment_dialog">
-							<h:form id="comment_dialog_form" style="padding-right:8px;">	
-								<p:inputTextarea autoResize="1" maxHeight="20" value="#{resourceDetailBean.clickedComment.text}" style="width:100%;"/>
-								
-								<p:commandButton actionListener="#{resourceDetailBean.onEditComment}" update=":add_resource_panel :growl" title="#{msg.save}" 
-									value="#{msg.save}"	onsuccess="PF('comment_dialog').hide();"
-									style="display:block; margin-top:5px;" />
-							</h:form>
-						</p:dialog>
-				   </ui:fragment>	
-				</h:panelGroup>
+											</span>
+                                            <div style="margin-top:5px;">
+                                                #{comment.text}
+                                            </div>
 
-				<h:form rendered="#{bean.rightPanelAction == 'editResource' and resourceDetailBean.clickedResource.id != -1}" id="edit_form">
-						<ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image'}">
-							<div class="align-center" style="margin-top: 5px;">
-                                <ui:decorate template="/templates/resources/parts/lightbox.xhtml">
-                                    <ui:param name="resource" value="#{resourceDetailBean.clickedResource}" />
-                                </ui:decorate>
+                                        </div>
+                                        <div class="clear"></div>
+                                        <div style="padding-left: 40px;">
+                                            <p:commandLink rendered="#{resourceDetailBean.canEditComment(comment)}"
+                                                           style="margin-right: 5px; font-size: 10px !important; color: green"
+                                                           value="#{msg.edit}" onsuccess="PF('comment_dialog').show();"
+                                                           ajax="true" update=":comment_dialog_form">
+                                                <f:setPropertyActionListener
+                                                        target="#{resourceDetailBean.clickedComment}"
+                                                        value="#{comment}"/>
+                                            </p:commandLink>
+                                            <p:commandLink rendered="#{resourceDetailBean.canEditComment(comment)}"
+                                                           action="#{resourceDetailBean.onDeleteComment}"
+                                                           style="margin-right: 5px; font-size: 10px !important; color: red"
+                                                           value="#{msg.delete}"
+                                                           onstart="return confirm('#{msg.delete_message_comments}');"
+                                                           ajax="true" update=":add_resource_panel :growl">
+                                                <f:setPropertyActionListener
+                                                        target="#{resourceDetailBean.clickedComment}"
+                                                        value="#{comment}"/>
+                                            </p:commandLink>
+                                        </div>
 
-                                <ui:decorate template="/templates/resources/parts/preview_box.xhtml">
-                                    <ui:param name="resource" value="#{resourceDetailBean.clickedResource}" />
-                                </ui:decorate>
-							</div>
-							<div class="align-center" style="padding-top: 10px">
-								<a class="hyperlink" href="#{resourceDetailBean.clickedResource.urlProxied}" target="_blank">
-									<h:outputText styleClass="hyperlink" 
-										rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf'}"
-										value="#{resourceDetailBean.clickedResource.url}"/>
-								</a>
-								<a class="hyperlink" onclick="lightbox_open(); change_lightbox_content(true);" style="float:right;" title="#{msg['Archive.change_thumbnail']}?">
-									<h:graphicImage style="cursor:pointer;" value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg['Archive.change_thumbnail']}?" rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}"/>
-								</a>
-								<h:outputLink value="showGlossary.jsf" styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix" rendered="#{resourceDetailBean.clickedResource.source eq 'glossary'}">
-											<f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}" />
-											#{msg["Glossary.open"]}
-								</h:outputLink>
-							</div>
-						</ui:fragment>
+                                    </div>
+                                </ui:repeat>
+                            </h:panelGroup>
+                        </h:form>
 
-					<table id="edit_table" class="full-width">
-						<colgroup>
-							<col span="1" style="width: 10%; min-width: 10rem;" />
-							<col span="1" />
-						</colgroup>					
-						<ui:decorate template="/templates/resources/edit.xhtml">
-							<ui:param name="res" value="#{bean.clickedResource}" />
-						</ui:decorate>
+                        <script type="text/javascript">
+                            prepareCommentButton();
+                        </script>
 
-						<tr>
-							<td colspan="2">
-								<p:commandButton styleClass="greenbutton float-right" value="#{msg.save}" actionListener="#{bean.editClickedResource}"
-									update=":datagrid :add_resource_panel" oncomplete="update_header();resourceDND();" style="margin-right:0;">
-									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewResource" />
-								</p:commandButton>
-								<p:commandButton styleClass="greenbutton float-right" value="#{msg.cancel}" update=":add_resource_panel" style="margin-right:0.5em" immediate="true">
-									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewResource" />
-								</p:commandButton>
-							</td>
-						</tr>
-					</table>		
-					
-					
-					
-					<p:commandButton styleClass="graybutton" value="Recreate thumbnail" actionListener="#{resourceDetailBean.onUpdateThumbnail}" 
-					update=":add_resource_panel"  immediate="true" rendered="#{userBean.admin}">
-						<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewResource"/>
-						<f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}" value="#{bean.clickedResource}"/>
-					</p:commandButton>
-				</h:form>
-				
-				<h:panelGroup rendered="#{bean.rightPanelAction == 'newFolder'}" styleClass="create-block new-folder" layout="block">
-				
-					<h:form id="add_folder_form">
+                        <p:dialog header="#{msg.edit}" modal="true" minWidth="440" width="540" appendTo="@(body)"
+                                  widgetVar="comment_dialog">
+                            <h:form id="comment_dialog_form" style="padding-right:8px;">
+                                <p:inputTextarea autoResize="1" maxHeight="20"
+                                                 value="#{resourceDetailBean.clickedComment.text}" style="width:100%;"/>
 
-						<p:fieldset style="margin-bottom:20px">
-							<p:panelGrid id="add_folder_table" styleClass="full-width">
-								<p:row>
-									<p:column>
-										<h:outputText value="#{msg.group}:" />
-									</p:column>
-									<p:column>
-										<h:outputText value="#{bean.group.title}"/>
-									</p:column>
-								</p:row>
+                                <p:commandButton actionListener="#{resourceDetailBean.onEditComment}"
+                                                 update=":add_resource_panel :growl" title="#{msg.save}"
+                                                 value="#{msg.save}" onsuccess="PF('comment_dialog').hide();"
+                                                 style="display:block; margin-top:5px;"/>
+                            </h:form>
+                        </p:dialog>
+                    </ui:fragment>
+                </h:panelGroup>
 
-								<p:row rendered="#{bean.selectedFolder != null and bean.selectedFolder.id > 0}">
-									<p:column>
-										<h:outputText value="#{msg.path}:" />
-									</p:column>
-									<p:column>
-										<h:outputText value="#{bean.selectedFolder.prettyPath}"/>
-									</p:column>
-								</p:row>
+                <h:form rendered="#{bean.rightPanelAction == 'editResource' and resourceDetailBean.clickedResource.id != -1}"
+                        id="edit_form">
+                    <ui:fragment
+                            rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image'}">
+                        <div class="align-center" style="margin-top: 5px;">
+                            <ui:decorate template="/templates/resources/parts/lightbox.xhtml">
+                                <ui:param name="resource" value="#{resourceDetailBean.clickedResource}"/>
+                            </ui:decorate>
 
-								<p:row>
-									<p:column>
-										<h:outputText value="#{msg.title}*:" />
-									</p:column>
-									<p:column>
-										<p:inputText value="#{bean.newFolderName}" styleClass="add_field" required="true" requiredmessage="#{msg.mandatory_field}" id="folder_title_input" />
-									</p:column>
-								</p:row>
+                            <ui:decorate template="/templates/resources/parts/preview_box.xhtml">
+                                <ui:param name="resource" value="#{resourceDetailBean.clickedResource}"/>
+                            </ui:decorate>
+                        </div>
+                        <div class="align-center" style="padding-top: 10px">
+                            <a class="hyperlink" href="#{resourceDetailBean.clickedResource.urlProxied}"
+                               target="_blank">
+                                <h:outputText styleClass="hyperlink"
+                                              rendered="#{resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf'}"
+                                              value="#{resourceDetailBean.clickedResource.url}"/>
+                            </a>
+                            <a class="hyperlink" onclick="lightbox_open(); change_lightbox_content(true);"
+                               style="float:right;" title="#{msg['Archive.change_thumbnail']}?">
+                                <h:graphicImage style="cursor:pointer;" value="/resources/icon/silk/pencil.png"
+                                                width="16" height="16" alt="#{msg['Archive.change_thumbnail']}?"
+                                                rendered="#{not empty resourceDetailBean.clickedResource.archiveUrls}"/>
+                            </a>
+                            <h:outputLink value="showGlossary.jsf"
+                                          styleClass="ui-button ui-widget ui-state-default ui-corner-all ui-button-text-only greenbutton clearfix"
+                                          rendered="#{resourceDetailBean.clickedResource.source eq 'Glossary'}">
+                                <f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}"/>
+                                #{msg["Glossary.open"]}
+                            </h:outputLink>
+                        </div>
+                    </ui:fragment>
 
-								<p:row>
-									<p:column>
-										<h:outputText value="#{msg.description}*:" />
-									</p:column>
-									<p:column>
-										<p:inputTextarea id="folderDescription" value="#{bean.newFolderDescription}" autoResize="true" styleClass="add_field" style="min-height:100px;"/>
-									</p:column>
-								</p:row>
-							</p:panelGrid>
+                    <table id="edit_table" class="full-width">
+                        <colgroup>
+                            <col span="1" style="width: 10%; min-width: 10rem;"/>
+                            <col span="1"/>
+                        </colgroup>
+                        <ui:decorate template="/templates/resources/edit.xhtml">
+                            <ui:param name="res" value="#{bean.clickedResource}"/>
+                        </ui:decorate>
 
-							* #{msg.mandatory_field}
-						</p:fieldset>
-						
-						<p:commandButton value="#{msg.create_folder}" styleClass="greenbutton float-right" update=":group_menu_tree :folderGrid :growl :add_resource_panel" action="#{bean.addFolder}" ajax="true" oncomplete="update_header();resourceDND();">
-							<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none"/>
-						</p:commandButton>	
-						
-						<p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right" update=":add_resource_panel" oncomplete="update_header()" style="margin-right:0.5em;" immediate="true">
-							<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none"/>
-						</p:commandButton>												
-					</h:form>
-				</h:panelGroup>
+                        <tr>
+                            <td colspan="2">
+                                <p:commandButton styleClass="greenbutton float-right" value="#{msg.save}"
+                                                 actionListener="#{bean.editClickedResource}"
+                                                 update=":resourcesView :add_resource_panel"
+                                                 oncomplete="update_header();resourceDND();" style="margin-right:0;">
+                                    <f:setPropertyActionListener target="#{bean.rightPanelAction}"
+                                                                 value="viewResource"/>
+                                </p:commandButton>
+                                <p:commandButton styleClass="greenbutton float-right" value="#{msg.cancel}"
+                                                 update=":add_resource_panel" style="margin-right:0.5em"
+                                                 immediate="true">
+                                    <f:setPropertyActionListener target="#{bean.rightPanelAction}"
+                                                                 value="viewResource"/>
+                                </p:commandButton>
+                            </td>
+                        </tr>
+                    </table>
 
-				<h:panelGroup rendered="#{bean.rightPanelAction == 'viewFolder' and bean.clickedGroupItem.id != -1}" layout="block">
-					<table id="view_folder_table" class="full-width">
-						<tr>
-							<td>
-								#{msg.group}:
-							</td>
-							<td>
-								<h:outputText style="width: 96%" value="#{bean.clickedFolder.group.title}"/>
-							</td>
-						</tr>
-						<ui:fragment rendered="#{bean.clickedFolder.parentFolder != null}">
-							<tr>
-								<td>
-									#{msg.path}:
-								</td>
-								<td>
-									<h:outputText style="width: 96%" value="#{bean.clickedFolder.parentFolder.prettyPath}"/>
-								</td>
-							</tr>
-						</ui:fragment>
-						<tr>
-							<td>
-								#{msg.title}:
-							</td>
-							<td>
-								<h:outputText style="width: 96%" value="#{bean.clickedFolder.name}"/>
-							</td>
-						</tr>
-						<ui:fragment rendered="#{not empty bean.clickedFolder.description}">
-							<tr>
-								<td>
-									#{msg.description}:
-								</td>
-								<td>
-									<h:outputText style="width: 96%" value="#{bean.clickedFolder.description}" escape="false"/>
-								</td>
-							</tr>
-						</ui:fragment>
-					</table>
-				</h:panelGroup>
-				
-				<h:form rendered="#{bean.rightPanelAction == 'editFolder' and groupDetailBean.clickedFolder.folderId != -1}" id="edit_folder_form">
-					<table id="edit_folder_table" class="full-width">
-						<tr>
-							<td>
-								#{msg.group}:
-							</td>
-							<td>
-								<h:outputText style="width: 96%" value="#{bean.clickedFolder.group.title}"/>
-							</td>
-						</tr>
-						<ui:fragment rendered="#{bean.clickedFolder.parentFolder != null}">
-							<tr>
-								<td>
-									#{msg.path}:
-								</td>
-								<td>
-									<h:outputText style="width: 96%" value="#{bean.clickedFolder.parentFolder.prettyPath}"/>
-								</td>
-							</tr>
-						</ui:fragment>
-						<tr>
-							<td>
-								#{msg.title}:
-							</td>
-							<td>
-								<p:inputText style="width: 96%" value="#{bean.clickedFolder.name}"/>
-							</td>
-						</tr>
-						<tr>
-							<td>
-								#{msg.description}:
-							</td>
-							<td>
-								<p:inputTextarea style="width: 96%" value="#{bean.clickedFolder.description}" autoResize="true"/>
-							</td>
-						</tr>
-						<tr>
-							<td colspan="2" class="align-right">
-								<p:commandButton styleClass="graybutton" value="#{msg.cancel}" 
-									update=":add_resource_panel" oncomplete="update_header();" style="margin-right:0.5em;" immediate="true">
-									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewFolder"/>
-								</p:commandButton>
-								<p:commandButton styleClass="greenbutton" value="#{msg.save}" 
-									actionListener="#{bean.editFolder}" update=":group_menu_tree :folderGrid :add_resource_panel :growl" 
-									oncomplete="update_header();resourceDND();" style="margin-right:0.5em;">
-									<f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewFolder"/>
-								</p:commandButton>
-							</td>
-						</tr>
-					</table>						
-				</h:form>
-				
-				<script type="text/javascript">
-					$("#right_pane_wrapper img").bind('load', function() {
-						scroller();
-					});
-				</script>
-			</h:panelGroup>
-		</div>
-	</p:layoutUnit>
+
+                    <p:commandButton styleClass="graybutton" value="Recreate thumbnail"
+                                     actionListener="#{resourceDetailBean.onUpdateThumbnail}"
+                                     update=":add_resource_panel" immediate="true" rendered="#{userBean.admin}">
+                        <f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewResource"/>
+                        <f:setPropertyActionListener target="#{resourceDetailBean.clickedResource}"
+                                                     value="#{bean.clickedResource}"/>
+                    </p:commandButton>
+                </h:form>
+
+                <h:panelGroup rendered="#{bean.rightPanelAction == 'newFolder'}" styleClass="create-block new-folder"
+                              layout="block">
+
+                    <h:form id="add_folder_form">
+
+                        <p:fieldset style="margin-bottom:20px">
+                            <p:panelGrid id="add_folder_table" styleClass="full-width">
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="#{msg.group}:"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{bean.group.title}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row rendered="#{bean.selectedFolder != null and bean.selectedFolder.id > 0}">
+                                    <p:column>
+                                        <h:outputText value="#{msg.path}:"/>
+                                    </p:column>
+                                    <p:column>
+                                        <h:outputText value="#{bean.selectedFolder.prettyPath}"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="#{msg.title}*:"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputText value="#{bean.newFolderName}" styleClass="add_field"
+                                                     required="true" requiredmessage="#{msg.mandatory_field}"
+                                                     id="folder_title_input"/>
+                                    </p:column>
+                                </p:row>
+
+                                <p:row>
+                                    <p:column>
+                                        <h:outputText value="#{msg.description}*:"/>
+                                    </p:column>
+                                    <p:column>
+                                        <p:inputTextarea id="folderDescription" value="#{bean.newFolderDescription}"
+                                                         autoResize="true" styleClass="add_field"
+                                                         style="min-height:100px;"/>
+                                    </p:column>
+                                </p:row>
+                            </p:panelGrid>
+
+                            * #{msg.mandatory_field}
+                        </p:fieldset>
+
+                        <p:commandButton value="#{msg.create_folder}" styleClass="greenbutton float-right"
+                                         update=":group_menu_tree :folderGrid :growl :add_resource_panel"
+                                         action="#{bean.addFolder}" ajax="true"
+                                         oncomplete="update_header();resourceDND();">
+                            <f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none"/>
+                        </p:commandButton>
+
+                        <p:commandButton value="#{msg.cancel}" styleClass="graybutton float-right"
+                                         update=":add_resource_panel" oncomplete="update_header()"
+                                         style="margin-right:0.5em;" immediate="true">
+                            <f:setPropertyActionListener target="#{bean.rightPanelAction}" value="none"/>
+                        </p:commandButton>
+                    </h:form>
+                </h:panelGroup>
+
+                <h:panelGroup rendered="#{bean.rightPanelAction == 'viewFolder' and bean.clickedGroupItem.id != -1}"
+                              layout="block">
+                    <table id="view_folder_table" class="full-width">
+                        <tr>
+                            <td>
+                                #{msg.group}:
+                            </td>
+                            <td>
+                                <h:outputText style="width: 96%" value="#{bean.clickedFolder.group.title}"/>
+                            </td>
+                        </tr>
+                        <ui:fragment rendered="#{bean.clickedFolder.parentFolder != null}">
+                            <tr>
+                                <td>
+                                    #{msg.path}:
+                                </td>
+                                <td>
+                                    <h:outputText style="width: 96%"
+                                                  value="#{bean.clickedFolder.parentFolder.prettyPath}"/>
+                                </td>
+                            </tr>
+                        </ui:fragment>
+                        <tr>
+                            <td>
+                                #{msg.title}:
+                            </td>
+                            <td>
+                                <h:outputText style="width: 96%" value="#{bean.clickedFolder.name}"/>
+                            </td>
+                        </tr>
+                        <ui:fragment rendered="#{not empty bean.clickedFolder.description}">
+                            <tr>
+                                <td>
+                                    #{msg.description}:
+                                </td>
+                                <td>
+                                    <h:outputText style="width: 96%" value="#{bean.clickedFolder.description}"
+                                                  escape="false"/>
+                                </td>
+                            </tr>
+                        </ui:fragment>
+                    </table>
+                </h:panelGroup>
+
+                <h:form rendered="#{bean.rightPanelAction == 'editFolder' and groupDetailBean.clickedFolder.folderId != -1}"
+                        id="edit_folder_form">
+                    <table id="edit_folder_table" class="full-width">
+                        <tr>
+                            <td>
+                                #{msg.group}:
+                            </td>
+                            <td>
+                                <h:outputText style="width: 96%" value="#{bean.clickedFolder.group.title}"/>
+                            </td>
+                        </tr>
+                        <ui:fragment rendered="#{bean.clickedFolder.parentFolder != null}">
+                            <tr>
+                                <td>
+                                    #{msg.path}:
+                                </td>
+                                <td>
+                                    <h:outputText style="width: 96%"
+                                                  value="#{bean.clickedFolder.parentFolder.prettyPath}"/>
+                                </td>
+                            </tr>
+                        </ui:fragment>
+                        <tr>
+                            <td>
+                                #{msg.title}:
+                            </td>
+                            <td>
+                                <p:inputText style="width: 96%" value="#{bean.clickedFolder.name}"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                #{msg.description}:
+                            </td>
+                            <td>
+                                <p:inputTextarea style="width: 96%" value="#{bean.clickedFolder.description}"
+                                                 autoResize="true"/>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2" class="align-right">
+                                <p:commandButton styleClass="graybutton" value="#{msg.cancel}"
+                                                 update=":add_resource_panel" oncomplete="update_header();"
+                                                 style="margin-right:0.5em;" immediate="true">
+                                    <f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewFolder"/>
+                                </p:commandButton>
+                                <p:commandButton styleClass="greenbutton" value="#{msg.save}"
+                                                 actionListener="#{bean.editFolder}"
+                                                 update=":group_menu_tree :folderGrid :add_resource_panel :growl"
+                                                 oncomplete="update_header();resourceDND();"
+                                                 style="margin-right:0.5em;">
+                                    <f:setPropertyActionListener target="#{bean.rightPanelAction}" value="viewFolder"/>
+                                </p:commandButton>
+                            </td>
+                        </tr>
+                    </table>
+                </h:form>
+
+                <script type="text/javascript">
+                    $("#right_pane_wrapper img").bind('load', function ()
+                    {
+                        scroller();
+                    });
+
+                    function validateBottomCat(selectedValue)
+                    {
+                        if (selectedValue == "add a new category")
+                        {
+                            $('#bottomlist').toggle(); //hide list
+                        }
+                    }
+                </script>
+            </h:panelGroup>
+        </div>
+    </p:layoutUnit>
 </ui:composition>
