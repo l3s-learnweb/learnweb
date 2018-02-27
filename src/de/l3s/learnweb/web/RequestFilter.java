@@ -35,10 +35,11 @@ public class RequestFilter implements Filter
             }
 
             final RequestManager requestManager = RequestManager.instance();
-            if(requestManager.checkBanned(IP))
-            {
-                return;
-            }
+            //TEMPORARILY DISABLED
+            //            if(requestManager.checkBanned(IP))
+            //            {
+            //                return;
+            //            }
 
             String url = req.getRequestURL().toString();
 
