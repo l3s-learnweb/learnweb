@@ -163,7 +163,7 @@
 				<p:button value="#{msg.save}" styleClass="confirm greenbutton" onclick="return false"/>
 			</h:panelGroup>
 		</p:dialog>
-
+		<h:panelGroup layout="block" id="resourcesView">
 		<h:panelGroup layout="block" id="datagrid" styleClass="datagrid" pt:data-isEnabledMoving="false">
 			<h:panelGroup id="folderGrid" layout="block" styleClass="folder-grid">
 				<h:panelGroup rendered="#{!myResourcesBean.folderView or !myResourcesBean.rootFolder}">
@@ -309,7 +309,7 @@
 				<h:outputText value="#{msg.no_resources_found}" rendered="#{empty myResourcesBean.resources and !myResourcesBean.rootFolder}" class="nothing_found"/>
 			</h:panelGroup>
 		</h:panelGroup>
-
+		</h:panelGroup>
 		<h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu">
 			<ui:fragment rendered="${myResourcesBean.clickedResource.canAnnotateResource(userBean.user)}">
 				<div class="context-menu-item action-add-tag" role="menuitem">
