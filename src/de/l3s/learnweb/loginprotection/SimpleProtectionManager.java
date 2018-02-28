@@ -28,14 +28,14 @@ public class SimpleProtectionManager implements ProtectionManager
     private final Learnweb learnweb;
 
     //Two separate hashmaps that keep track of failed attempts and bantimes
-    private Map<String, AccessData> usernameMap;
-    private Map<String, AccessData> IPMap;
+    private Map<String, BanData> usernameMap;
+    private Map<String, BanData> IPMap;
 
     public SimpleProtectionManager(Learnweb learnweb)
     {
         this.learnweb = learnweb;
-        usernameMap = new ConcurrentHashMap<String, AccessData>();
-        IPMap = new ConcurrentHashMap<String, AccessData>();
+        usernameMap = new ConcurrentHashMap<String, BanData>();
+        IPMap = new ConcurrentHashMap<String, BanData>();
         loadBanLists();
     }
 
@@ -52,11 +52,11 @@ public class SimpleProtectionManager implements ProtectionManager
             {
                 if(rs.getString("type").equals("user"))
                 {
-                    usernameMap.put(rs.getString("name"), new AccessData(1, rs.getTimestamp("bandate"), rs.getString("name")));
+                    usernameMap.put(rs.getString("name"), new BanData(1, rs.getTimestamp("bandate"), rs.getString("name")));
                 }
                 else if(rs.getString("type").equals("IP"))
                 {
-                    IPMap.put(rs.getString("name"), new AccessData(1, rs.getTimestamp("bandate"), rs.getString("name")));
+                    IPMap.put(rs.getString("name"), new BanData(1, rs.getTimestamp("bandate"), rs.getString("name")));
                 }
             }
 
@@ -73,22 +73,22 @@ public class SimpleProtectionManager implements ProtectionManager
      * Returns current banlist. Includes both bans by IP and by username.
      */
     @Override
-    public List<AccessData> getBanlist()
+    public List<BanData> getBanlist()
     {
-        List<AccessData> banlist = new ArrayList<AccessData>();
+        List<BanData> banlist = new ArrayList<BanData>();
         banlist.addAll(IPMap.values());
         banlist.addAll(usernameMap.values());
         return banlist;
     }
 
     @Override
-    public AccessData getIPData(String IP)
+    public BanData getIPData(String IP)
     {
         return IPMap.get(IP);
     }
 
     @Override
-    public AccessData getUsernameData(String username)
+    public BanData getUsernameData(String username)
     {
         return usernameMap.get(username);
     }
@@ -104,12 +104,12 @@ public class SimpleProtectionManager implements ProtectionManager
     @Override
     public void updateFailedAttempts(String IP, String username)
     {
-        AccessData ipData = IPMap.get(IP);
-        AccessData usernameData = usernameMap.get(username);
+        BanData ipData = IPMap.get(IP);
+        BanData usernameData = usernameMap.get(username);
 
         if(ipData == null)
         {
-            ipData = new AccessData(IP);
+            ipData = new BanData(IP);
             IPMap.put(IP, ipData);
             ipData.setAttempts(ipData.getAttempts() + 1);
         }
@@ -117,24 +117,24 @@ public class SimpleProtectionManager implements ProtectionManager
         {
             ipData.setAttempts(ipData.getAttempts() + 1);
 
-            if(ipData.getAttempts() >= 10)
+            if(ipData.getAttempts() >= 30)
             {
                 int bantime = 2 + 2 * ipData.getAttempts() % 10;
-                ban(ipData, bantime, true);
+                //ban(ipData, bantime, true);
                 log.debug("Banned IP " + IP + " for " + bantime + " hours after " + ipData.getAttempts() + " failed login attempts");
 
             }
-            else if(ipData.getAttempts() >= 50)
+            else if(ipData.getAttempts() >= 100)
             {
                 ipData.permaban();
-                ban(ipData, -1, true);
+                //ban(ipData, -1, true);
                 log.debug("Permabanned IP " + IP + " for excessive failed login attempts");
             }
         }
 
         if(usernameData == null)
         {
-            usernameData = new AccessData(username);
+            usernameData = new BanData(username);
             usernameMap.put(username, usernameData);
             usernameData.setAttempts(usernameData.getAttempts() + 1);
 
@@ -167,7 +167,7 @@ public class SimpleProtectionManager implements ProtectionManager
      * @param permaban Whether the ban is temporary or permament
      */
     @Override
-    public void ban(AccessData accData, int bantime, boolean isIP)
+    public void ban(BanData accData, int bantime, boolean isIP)
     {
         if(bantime < 0)
         {
@@ -209,14 +209,14 @@ public class SimpleProtectionManager implements ProtectionManager
     @Override
     public void ban(String name, int bantime, boolean isIP)
     {
-        AccessData accData;
+        BanData accData;
 
         if(isIP)
         {
             accData = IPMap.get(name);
             if(accData == null)
             {
-                accData = new AccessData(name);
+                accData = new BanData(name);
                 IPMap.put(name, accData);
             }
         }
@@ -225,7 +225,7 @@ public class SimpleProtectionManager implements ProtectionManager
             accData = usernameMap.get(name);
             if(accData == null)
             {
-                accData = new AccessData(name);
+                accData = new BanData(name);
                 usernameMap.put(name, accData);
             }
         }
