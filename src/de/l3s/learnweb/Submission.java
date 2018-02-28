@@ -1,6 +1,7 @@
 package de.l3s.learnweb;
 
 import java.sql.SQLException;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -87,7 +88,13 @@ public class Submission
 
     public void setCloseDatetime(Date closeDatetime)
     {
-        this.closeDatetime = closeDatetime;
+        Calendar c = Calendar.getInstance();
+        c.setTime(closeDatetime);
+        c.set(Calendar.HOUR_OF_DAY, 23);
+        c.set(Calendar.MINUTE, 59);
+        c.set(Calendar.SECOND, 59);
+        c.set(Calendar.MILLISECOND, 999);
+        this.closeDatetime = c.getTime();
     }
 
     public int getNoOfResources()

@@ -11,7 +11,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
- * 
+ *
  * @author Trevor
  */
 public class SubmissionManager
@@ -211,7 +211,7 @@ public class SubmissionManager
             replace.setString(3, submission.getTitle());
             replace.setString(4, submission.getDescription());
             replace.setDate(5, new java.sql.Date(submission.getOpenDatetime().getTime()));
-            replace.setDate(6, new java.sql.Date(submission.getCloseDatetime().getTime()));
+            replace.setTimestamp(6, new java.sql.Timestamp(submission.getCloseDatetime().getTime()));
             replace.setInt(7, submission.getNoOfResources());
             replace.setInt(8, submission.getSurveyResourceId());
             replace.executeUpdate();
@@ -280,4 +280,5 @@ public class SubmissionManager
         }
         return usersSubmissions;
     }
+
 }
