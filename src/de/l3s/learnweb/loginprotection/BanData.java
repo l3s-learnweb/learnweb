@@ -11,20 +11,20 @@ import java.util.Date;
  * @author Kate
  *
  */
-public class AccessData
+public class BanData
 {
     private int attempts;
     private Date banDate;
     private String name;
 
-    public AccessData(String name)
+    public BanData(String name)
     {
         setAttempts(0);
         setBanDate(new Date(0));
         this.setName(name);
     }
 
-    public AccessData(int attempts, Date banDate, String name)
+    public BanData(int attempts, Date banDate, String name)
     {
         this.setAttempts(attempts);
         this.setBanDate(banDate);

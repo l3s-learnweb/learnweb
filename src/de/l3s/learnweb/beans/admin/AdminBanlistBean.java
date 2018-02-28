@@ -7,14 +7,14 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 
 import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.loginprotection.AccessData;
+import de.l3s.learnweb.loginprotection.BanData;
 
 @ManagedBean
 @RequestScoped
 public class AdminBanlistBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -5469152668344315959L;
-    private List<AccessData> banlist;
+    private List<BanData> banlist;
 
     private String name;
     private int bantime;
@@ -79,7 +79,7 @@ public class AdminBanlistBean extends ApplicationBean implements Serializable
         load();
     }
 
-    public List<AccessData> getBanlist()
+    public List<BanData> getBanlist()
     {
         return banlist;
     }

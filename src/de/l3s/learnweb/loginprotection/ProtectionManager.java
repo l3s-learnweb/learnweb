@@ -11,11 +11,11 @@ import java.util.List;
  */
 public interface ProtectionManager
 {
-    public AccessData getIPData(String IP);
+    public BanData getIPData(String IP);
 
-    public AccessData getUsernameData(String username);
+    public BanData getUsernameData(String username);
 
-    public List<AccessData> getBanlist();
+    public List<BanData> getBanlist();
 
     /**
      * Records a failed attempt to log in. Depending on the specific implementation, also updates bantimes.
@@ -41,7 +41,7 @@ public interface ProtectionManager
      * @param bantime Duration of the ban (in hours). Negative bantime values equals permaban.
      * @param isIP Whether the given name is an IP (true) or username (false)
      */
-    void ban(AccessData accData, int bantime, boolean isIP);
+    void ban(BanData accData, int bantime, boolean isIP);
 
     /**
      * Bans selected IP or username by name for a given amount of time (or unlimited time) and updates the relevant database table.

@@ -17,7 +17,7 @@ import org.hibernate.validator.constraints.NotEmpty;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.User;
-import de.l3s.learnweb.loginprotection.AccessData;
+import de.l3s.learnweb.loginprotection.BanData;
 import de.l3s.learnweb.loginprotection.ProtectionManager;
 
 @ManagedBean
@@ -70,8 +70,8 @@ public class LoginBean extends ApplicationBean implements Serializable
 
         //Gets the ip and username info from protection manager
         ProtectionManager PM = getLearnweb().getProtectionManager();
-        AccessData ipData = PM.getIPData(IP);
-        AccessData usernameData = PM.getUsernameData(username);
+        BanData ipData = PM.getIPData(IP);
+        BanData usernameData = PM.getUsernameData(username);
         Date now = new Date();
 
         //Checks if the selected IP has been banned
