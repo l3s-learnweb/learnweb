@@ -12,34 +12,40 @@
 			</span>
 		</div>
 		<div class="grey_border">
-
-			<h:form rendered="#{!userBean.loggedIn}">
+		<h:form rendered="#{!userBean.loggedIn}">
+			<table>
 				<p:focus for="username"/>
-					<h:outputLabel for="username" value="#{msg.username}:"/>
+					<tr><h:outputLabel for="username" value="#{msg.username}:"/>
 					<p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" styleClass="inputbox"/>
 					<p:message styleClass="error" for="username" display="icon"/>
+					</tr>
 
+					<tr>
 					<h:outputLabel for="password" value="#{msg.password}:"/>
 					<p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" styleClass="inputbox"/>
 					<p:message styleClass="error" for="password" display="icon"/>
+					</tr>
 
+					<tr>
 					<h:outputText value="" />
 					<p:commandButton styleClass="greenbutton" action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false"
-						style="margin-top:5px;" rendered="#{empty ipbanned}"/>
+						style="margin-top:5px;"/>
 					<h:outputText value="" />
+					</tr>
 
-					<br />
-
+					<tr><td>
 					<div id="captcha-container" style="transform:scale(0.9);transform-origin:0; 0 margin-top: 15px" >
-						<p:captcha label="Captcha" rendered="#{not empty captchaEnabled and empty ipbanned}" language="#{userBean.locale}"/>
-					</div>
+						<p:captcha label="Captcha" rendered="#{not empty captchaEnabled}" language="#{userBean.locale}"/>
+					</div></td>
+					</tr>
 
-
+					<tr><td>
 					<h:outputLink class="forgotten_password" value="user/password.jsf">
 						<h:outputText value="#{msg.forgotten_password}" />
-					</h:outputLink>
-
-			</h:form>
+					</h:outputLink></td>
+					</tr>
+				</table>
+		</h:form>
 
 			<h:outputText rendered="#{userBean.loggedIn}" value="#{msg.you_are_already_logged_in}" style="font-weight:bold;"/>
 			<br/>
