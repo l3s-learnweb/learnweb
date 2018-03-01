@@ -99,7 +99,7 @@
 		</h:panelGroup>
 		<h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu" rendered="#{not submitResourcesBean.submitted}">
 			<ui:fragment>
-				<div class="context-menu-item action-remove" role="menuitem">
+				<div class="context-menu-item action-remove" role="menuitem" data-action="remove" data-per="canDeleteResource">
 					<div class="context-menu-item-wrapper">
 						<span class="context-menu-item-icon" />
 						<span class="context-menu-item-content">Remove</span>

@@ -505,26 +505,6 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             addFatalMessage(e);
         }
     }
-    /*
-    public boolean canDeleteResourcesInGroup(Group group) throws SQLException
-    {
-        return group.canDeleteResources(getUser());
-    }
-
-    public boolean canEditResourcesInGroup(Group group) throws SQLException
-    {
-        return group.canEditResources(getUser());
-    }
-
-
-    @Deprecated
-    public boolean canDeleteResources() throws SQLException
-    {
-        if(getCurrentFolder() != null)
-            return getCurrentFolder().getTitle().equalsIgnoreCase("my private resources"); // TODO this should be removed
-        return false;
-    }
-    */
 
     private void actionCopyGroupItems(JSONArray objects)
     {

@@ -163,68 +163,130 @@
 				<p:button value="#{msg.save}" styleClass="confirm greenbutton" onclick="return false"/>
 			</h:panelGroup>
 		</p:dialog>
-		<h:panelGroup layout="block" id="resourcesView">
-		<h:panelGroup layout="block" id="datagrid" styleClass="datagrid" pt:data-isEnabledMoving="false">
-			<h:panelGroup id="folderGrid" layout="block" styleClass="folder-grid">
-				<h:panelGroup rendered="#{!myResourcesBean.folderView or !myResourcesBean.rootFolder}">
-					<ui:repeat var="folder" value="#{myResourcesBean.folders}">
-					<h:panelGroup layout="block" rendered="#{myResourcesBean.rootFolder and folder.groupId == 0}">
-						<h:panelGroup styleClass="folder-item group-resources-item" pt:data-itemType="#{myResourcesBean.rootFolder ? 'group':'folder'}" pt:data-itemId="#{myResourcesBean.rootFolder ? folder.groupId : folder.id}" layout="block">
-							<div class="folder-block">
+		<h:panelGroup id="resourcesView" layout="block"
+					  pt:data-canAddResources="true"
+					  pt:data-canMoveResources="false">
+			<h:panelGroup layout="block" id="datagrid" styleClass="datagrid">
+				<h:panelGroup id="folderGrid" layout="block" styleClass="folder-grid">
+					<h:panelGroup rendered="#{!myResourcesBean.folderView or !myResourcesBean.rootFolder}">
+						<ui:repeat var="folder" value="#{myResourcesBean.folders}">
+							<h:panelGroup layout="block" rendered="#{myResourcesBean.rootFolder and folder.groupId == 0}">
+								<h:panelGroup styleClass="folder-item group-resources-item" layout="block"
+											  pt:data-itemType="#{myResourcesBean.rootFolder ? 'group': 'folder'}"
+											  pt:data-itemId="#{myResourcesBean.rootFolder ? folder.groupId : folder.id}"
+											  pt:data-canViewResource="true"
+											  pt:data-canEditResource="true"
+											  pt:data-canDeleteResource="true">
+									<div class="folder-block">
 
-								<div class="folder-icon">
-									<div class="folder-icon-wrapper">
-										<span class="icon icon-folder" />
+										<div class="folder-icon">
+											<div class="folder-icon-wrapper">
+												<span class="icon icon-folder" />
+											</div>
+										</div>
+
+										<div class="folder-title">
+											<div class="folder-title-wrapper">
+												<h:outputText value="#{folder.name}" escape="false" styleClass="folder-title-name" title="#{folder.name}" />
+											</div>
+										</div>
+
 									</div>
-								</div>
+								</h:panelGroup>
+								<hr style="margin-top:10px;width:97%"/>
+								<h3>#{msg.myhomeVirtualFolders}</h3>
+								<br/>
+							</h:panelGroup>
+							<h:panelGroup layout="block" rendered="#{folder.groupId != 0}">
+								<h:panelGroup styleClass="folder-item group-resources-item" layout="block"
+											  pt:data-itemType="#{myResourcesBean.rootFolder ? 'group': 'folder'}"
+											  pt:data-itemId="#{myResourcesBean.rootFolder ? folder.groupId : folder.id}"
+											  pt:data-canViewResource="true"
+											  pt:data-canEditResource="true"
+											  pt:data-canDeleteResource="true">
+									<div class="folder-block">
 
-								<div class="folder-title">
-									<div class="folder-title-wrapper">
-										<h:outputText value="#{folder.name}" escape="false" styleClass="folder-title-name" title="#{folder.name}" />
+										<div class="folder-icon">
+											<div class="folder-icon-wrapper">
+												<span class="icon icon-folder" />
+											</div>
+										</div>
+
+										<div class="folder-title">
+											<div class="folder-title-wrapper">
+												<h:outputText value="#{folder.name}" escape="false" styleClass="folder-title-name" title="#{folder.name}" />
+											</div>
+										</div>
+
 									</div>
-								</div>
-
-							</div>
-						</h:panelGroup>
-						<hr style="margin-top:10px;width:97%"/>
-						<h3>#{msg.myhomeVirtualFolders}</h3>
-						<br/>
+								</h:panelGroup>
+							</h:panelGroup>
+						</ui:repeat>
 					</h:panelGroup>
-					<h:panelGroup layout="block" rendered="#{folder.groupId != 0}">
-						<h:panelGroup styleClass="folder-item group-resources-item" pt:data-itemType="#{myResourcesBean.rootFolder ? 'group':'folder'}" pt:data-itemId="#{myResourcesBean.rootFolder ? folder.groupId : folder.id}" layout="block">
-							<div class="folder-block">
+					<h:panelGroup rendered="#{myResourcesBean.rootFolder and myResourcesBean.folderView}" styleClass="myresource-listview">
+						<ui:repeat var="folder" value="#{myResourcesBean.folders}">
+							<hr/>
+							<h:form>
+								<p:commandLink styleClass="resource_command_link" update=":breadcrumb :datagrid :add_resource_panel :folder_layout_options" oncomplete="update_header();update_url(0, #{folder.folderId}, #{folder.groupId});resourceDND();">
+									<f:setPropertyActionListener target="#{myResourcesBean.clickedFolder}" value="#{folder}" />
+									<h:outputText value="#{folder.name}" escape="false" styleClass="resource_short_title"/>
+								</p:commandLink>
+							</h:form>
+							<br/>
+							<div>
+							<ui:repeat var="res" value="#{folder.resourcesSubset}" >
+							   <h:panelGroup styleClass="resource-item group-resources-item" layout="block"
+											 pt:data-itemType="resource"
+											 pt:data-itemId="#{res.id}"
+											 pt:data-canViewResource="true"
+											 pt:data-canEditResource="true"
+											 pt:data-canDeleteResource="true"
+											 pt:data-canAnnotateResource="true">
+								<div class="resource-block">
+									<div class="resource-preview">
+										<div class="resource-preview-wrapper">
+											<div class="resource-preview-wrapper2">
+												<div class="resource-preview-block"></div>
+												<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" />
+											</div>
+										</div>
+									</div>
+									<div class="resource-title">
+										<div class="resource-title-wrapper">
+											<div class="resource-title-text">
+												<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
 
-								<div class="folder-icon">
-									<div class="folder-icon-wrapper">
-										<span class="icon icon-folder" />
+												<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
+											</div>
+										</div>
 									</div>
 								</div>
-
-								<div class="folder-title">
-									<div class="folder-title-wrapper">
-										<h:outputText value="#{folder.name}" escape="false" styleClass="folder-title-name" title="#{folder.name}" />
-									</div>
-								</div>
-
+							  </h:panelGroup>
+							</ui:repeat>
 							</div>
-						</h:panelGroup>
+							<br/>
+							<h:form>
+								<p:commandLink styleClass="more_resources_link" update=":breadcrumb :datagrid :add_resource_panel :folder_layout_options" oncomplete="update_header();update_url(0, #{folder.folderId});resourceDND();">
+										<f:setPropertyActionListener target="#{myResourcesBean.clickedFolder}" value="#{folder}" />
+										<h:outputText value="#{msg.show_all_my_resources_in_this_group}" />
+								</p:commandLink>
+							</h:form>
+							<div class="clear"></div>
+						</ui:repeat>
 					</h:panelGroup>
-					</ui:repeat>
 				</h:panelGroup>
-				<h:panelGroup rendered="#{myResourcesBean.rootFolder and myResourcesBean.folderView}" styleClass="myresource-listview">
-					<ui:repeat var="folder" value="#{myResourcesBean.folders}">
-						<hr/>
-						<h:form>
-							<p:commandLink styleClass="resource_command_link" update=":breadcrumb :datagrid :add_resource_panel :folder_layout_options" oncomplete="update_header();update_url(0, #{folder.folderId}, #{folder.groupId});resourceDND();">
-								<f:setPropertyActionListener target="#{myResourcesBean.clickedFolder}" value="#{folder}" />
-								<h:outputText value="#{folder.name}" escape="false" styleClass="resource_short_title"/>
-							</p:commandLink>
-						</h:form>
-						<br/>
-						<div>
-						<ui:repeat var="res" value="#{folder.resourcesSubset}" >
-						   <h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
+				<h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block">
+					<ui:repeat var="res" value="#{myResourcesBean.resources}" >
+
+						<h:panelGroup styleClass="resource-item group-resources-item" layout="block"
+									  pt:data-itemType="resource"
+									  pt:data-itemId="#{res.id}"
+									  pt:data-canViewResource="true"
+									  pt:data-canEditResource="true"
+									  pt:data-canDeleteResource="true"
+									  pt:data-canAnnotateResource="true">
 							<div class="resource-block">
+
 								<div class="resource-preview">
 									<div class="resource-preview-wrapper">
 										<div class="resource-preview-wrapper2">
@@ -232,87 +294,49 @@
 											<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" />
 										</div>
 									</div>
+
+									<h:form class="resource-controls">
+										<h:outputLink value="#" title="#{msg.copy}" styleClass="action-copy">
+											<h:graphicImage alt="Copy" value="/resources/icon/Add.png"/>
+										</h:outputLink>
+
+										<ui:fragment rendered="${res.canDeleteResource(userBean.user)}">
+											<h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit" >
+												<h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
+											</h:outputLink>
+
+											<h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete">
+												<h:graphicImage alt="Delete" value="../resources/icon/Remove.png"/>
+											</h:outputLink>
+										</ui:fragment>
+									</h:form>
 								</div>
+
 								<div class="resource-title">
 									<div class="resource-title-wrapper">
+										<!--<div class="resource-title-icon">
+												<div class="resource-title-icon-wrapper">
+													<img src="img.png" alt="Title" />
+												</div>
+											</div>-->
 										<div class="resource-title-text">
 											<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
-										   
 											<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
 										</div>
 									</div>
 								</div>
+
 							</div>
-						  </h:panelGroup>
-						</ui:repeat>
-						</div>
-						<br/>
-						<h:form>
-							<p:commandLink styleClass="more_resources_link" update=":breadcrumb :datagrid :add_resource_panel :folder_layout_options" oncomplete="update_header();update_url(0, #{folder.folderId});resourceDND();">
-									<f:setPropertyActionListener target="#{myResourcesBean.clickedFolder}" value="#{folder}" />
-									<h:outputText value="#{msg.show_all_my_resources_in_this_group}" />
-							</p:commandLink>
-						</h:form>
-						<div class="clear"></div>
+						</h:panelGroup>
 					</ui:repeat>
+
+					<h:outputText value="#{msg.no_resources_found}" rendered="#{empty myResourcesBean.resources and !myResourcesBean.rootFolder}" class="nothing_found"/>
 				</h:panelGroup>
 			</h:panelGroup>
-			<h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block">
-				<ui:repeat var="res" value="#{myResourcesBean.resources}" >
-
-					<h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
-						<div class="resource-block">
-
-							<div class="resource-preview">
-								<div class="resource-preview-wrapper">
-									<div class="resource-preview-wrapper2">
-										<div class="resource-preview-block"></div>
-										<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" />
-									</div>
-								</div>
-
-								<h:form class="resource-controls">
-									<h:outputLink value="#" title="#{msg.copy}" styleClass="action-copy">
-										<h:graphicImage alt="Copy" value="/resources/icon/Add.png"/>
-									</h:outputLink>
-
-									<ui:fragment rendered="${res.canDeleteResource(userBean.user)}">
-										<h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit" >
-											<h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
-										</h:outputLink>
-
-										<h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete">
-											<h:graphicImage alt="Delete" value="../resources/icon/Remove.png"/>
-										</h:outputLink>
-									</ui:fragment>
-								</h:form>
-							</div>
-
-							<div class="resource-title">
-								<div class="resource-title-wrapper">
-									<!--<div class="resource-title-icon">
-											<div class="resource-title-icon-wrapper">
-												<img src="img.png" alt="Title" />
-											</div>
-										</div>-->
-									<div class="resource-title-text">
-										<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
-										<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
-									</div>
-								</div>
-							</div>
-
-						</div>
-					</h:panelGroup>
-				</ui:repeat>
-
-				<h:outputText value="#{msg.no_resources_found}" rendered="#{empty myResourcesBean.resources and !myResourcesBean.rootFolder}" class="nothing_found"/>
-			</h:panelGroup>
-		</h:panelGroup>
 		</h:panelGroup>
 		<h:panelGroup layout="block" id="context-menu" class="context-menu resource-context-menu" role="menu">
 			<ui:fragment rendered="${myResourcesBean.clickedResource.canAnnotateResource(userBean.user)}">
-				<div class="context-menu-item action-add-tag" role="menuitem">
+				<div class="context-menu-item action-add-tag" role="menuitem" data-action="add-tag" data-per="canAnnotateResource">
 					<div class="context-menu-item-wrapper">
 						<span class="context-menu-item-icon" />
 						<span class="context-menu-item-content">#{msg.addTag}</span>
@@ -320,27 +344,27 @@
 				</div>
 			</ui:fragment>
 			<ui:fragment rendered="${myResourcesBean.clickedResource.canEditResource(userBean.user)}">
-				<div class="context-menu-item action-edit" role="menuitem">
+				<div class="context-menu-item action-edit" role="menuitem" data-action="add-tag" data-per="canEditResource">
 					<div class="context-menu-item-wrapper">
 						<span class="context-menu-item-icon" />
 						<span class="context-menu-item-content">#{msg.edit}</span>
 					</div>
 				</div>
 			</ui:fragment>
-			<div class="context-menu-item action-copy" role="menuitem">
+			<div class="context-menu-item action-copy" role="menuitem" data-action="copy" data-per="canViewResource">
 				<div class="context-menu-item-wrapper">
 					<span class="context-menu-item-icon" />
 					<span class="context-menu-item-content">#{msg.copy}</span>
 				</div>
 			</div>
-			<div class="context-menu-item action-open-folder" role="menuitem">
+			<div class="context-menu-item action-open-folder" role="menuitem" data-action="open-folder" data-per="canViewResource">
 					<div class="context-menu-item-wrapper">
 						<span class="context-menu-item-icon" />
 						<span class="context-menu-item-content">#{msg.open}</span>
 					</div>
 			</div>
 			<ui:fragment rendered="${myResourcesBean.clickedResource.canDeleteResource(userBean.user)}">
-				<div class="context-menu-item action-delete" role="menuitem">
+				<div class="context-menu-item action-delete" role="menuitem" data-action="delete" data-per="canDeleteResource">
 					<div class="context-menu-item-wrapper">
 						<span class="context-menu-item-icon" />
 						<span class="context-menu-item-content">#{msg.delete}</span>

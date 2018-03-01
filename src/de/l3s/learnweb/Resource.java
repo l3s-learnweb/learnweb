@@ -31,7 +31,7 @@ import de.l3s.learnweb.rm.ExtendedMetadata;
 import de.l3s.util.HasId;
 import de.l3s.util.StringHelper;
 
-public class Resource implements HasId, Serializable, GroupItem // AbstractResultItem,
+public class Resource extends GroupItem implements HasId, Serializable // AbstractResultItem,
 {
     private static final long serialVersionUID = -8486919346993051937L;
     private final static Logger log = Logger.getLogger(Resource.class);
@@ -1752,42 +1752,11 @@ public class Resource implements HasId, Serializable, GroupItem // AbstractResul
         metadataMultiValue = null;
     }
 
-    public boolean canEditResource(User user) throws SQLException
-    {
-        if(user == null) // not logged in
-            return false;
-
-        Group group = getGroup();
-
-        if(group != null)
-            return group.canEditResource(user, this);
-
-        if(user.isAdmin() || ownerUserId == user.getId())
-            return true;
-
-        return false;
-    }
-
-    public boolean canDeleteResource(User user) throws SQLException
-    {
-        if(user == null) // not logged in
-            return false;
-
-        Group group = getGroup();
-
-        if(group != null) // if the resource is part of a group the group policy has priority
-            return group.canDeleteResource(user, this);
-
-        if(user.isAdmin() || ownerUserId == user.getId())
-            return true;
-
-        return false;
-    }
-
+    @Override
     public boolean canViewResource(User user) throws SQLException
     {
         //admins, moderators and resource owners can always view the resource
-        if(user != null && (user.isAdmin() || user.isModerator() || ownerUserId == user.getId()))
+        if(user != null && (user.isAdmin() || user.isModerator() || getUserId() == user.getId()))
             return true;
 
         switch(rights)

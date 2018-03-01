@@ -1,6 +1,7 @@
 <ui:composition template="/templates/main/main_old.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
                 xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
-                xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui">
+                xmlns:c="http://java.sun.com/jsp/jstl/core" xmlns:p="http://primefaces.org/ui"
+                xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
     <ui:param name="loginRequired" value="true"/>
     <ui:param name="helpText" value="#{msg.groupResourceHelp}"/>
@@ -398,7 +399,10 @@
         </c:if>
 
         <ui:fragment rendered="#{groupDetailBean.group.canViewResources(userBean.user)}">
-            <h:panelGroup id="resourcesView" layout="block">
+            <h:panelGroup id="resourcesView" layout="block"
+                          pt:data-canAddResources="#{groupDetailBean.group.canAddResources(userBean.user)}"
+                          pt:data-canMoveResources="#{groupDetailBean.group.canMoveResources(userBean.user)}">
+
                 <c:if test="${userBean.user.organisation.id eq 480}">
                     <ui:fragment rendered="#{not empty groupDetailBean.selectedCatNode}">
                         <h:outputText value="Selected category is: #{groupDetailBean.selectedCatNode}"/>
@@ -424,69 +428,61 @@
                 </ui:decorate>
             </h:panelGroup>
 
-            <div class="context-menu resource-context-menu" role="menu">
-                <div class="context-menu-item action-open-folder" role="menuitem">
+            <div class="context-menu resource-context-menu" role="menu" id="context-menu">
+                <div class="context-menu-item action-open-folder" role="menuitem" data-action="open-folder" data-per="canViewResource">
                     <div class="context-menu-item-wrapper">
                         <span class="context-menu-item-icon"/>
                         <span class="context-menu-item-content">#{msg.open}</span>
                     </div>
                 </div>
-                <ui:fragment rendered="#{groupDetailBean.group.canAddResources(userBean.user)}">
-                    <div class="context-menu-item action-create-folder" role="menuitem">
-                        <div class="context-menu-item-wrapper">
-                            <span class="context-menu-item-icon"/>
-                            <span class="context-menu-item-content">#{msg.create_folder}</span>
-                        </div>
+                <div class="context-menu-item action-create-folder" role="menuitem" data-action="create-folder" data-per="canAddResources">
+                    <div class="context-menu-item-wrapper">
+                        <span class="context-menu-item-icon"/>
+                        <span class="context-menu-item-content">#{msg.create_folder}</span>
                     </div>
-                    <div class="context-menu-item divider action-upload-file" role="menuitem">
-                        <div class="context-menu-item-wrapper">
-                            <span class="context-menu-item-icon"/>
-                            <span class="context-menu-item-content">#{msg.upload_file}</span>
-                        </div>
+                </div>
+                <div class="context-menu-item divider action-upload-file" role="menuitem" data-action="upload-file" data-per="canAddResources">
+                    <div class="context-menu-item-wrapper">
+                        <span class="context-menu-item-icon"/>
+                        <span class="context-menu-item-content">#{msg.upload_file}</span>
                     </div>
-                    <div class="context-menu-item action-add-website" role="menuitem">
-                        <div class="context-menu-item-wrapper">
-                            <span class="context-menu-item-icon"/>
-                            <span class="context-menu-item-content">#{msg.upload_url}</span>
-                        </div>
+                </div>
+                <div class="context-menu-item action-add-website" role="menuitem" data-action="add-website" data-per="canAddResources">
+                    <div class="context-menu-item-wrapper">
+                        <span class="context-menu-item-icon"/>
+                        <span class="context-menu-item-content">#{msg.upload_url}</span>
                     </div>
-                </ui:fragment>
-                <ui:fragment rendered="#{groupDetailBean.group.canAnnotateResources(userBean.user)}">
-                    <div class="context-menu-item action-add-tag" role="menuitem">
-                        <div class="context-menu-item-wrapper">
-                            <span class="context-menu-item-icon"/>
-                            <span class="context-menu-item-content">#{msg.addTag}</span>
-                        </div>
+                </div>
+                <div class="context-menu-item action-add-tag" role="menuitem" data-action="add-tag" data-per="canAnnotateResource">
+                    <div class="context-menu-item-wrapper">
+                        <span class="context-menu-item-icon"/>
+                        <span class="context-menu-item-content">#{msg.addTag}</span>
                     </div>
-                </ui:fragment>
-                <ui:fragment rendered="#{groupDetailBean.group.canEditResources(userBean.user)}">
-                    <div class="context-menu-item action-edit" role="menuitem">
-                        <div class="context-menu-item-wrapper">
-                            <span class="context-menu-item-icon"/>
-                            <span class="context-menu-item-content">#{msg.edit}</span>
-                        </div>
+                </div>
+                <div class="context-menu-item action-edit" role="menuitem" data-action="edit" data-per="canEditResource">
+                    <div class="context-menu-item-wrapper">
+                        <span class="context-menu-item-icon"/>
+                        <span class="context-menu-item-content">#{msg.edit}</span>
                     </div>
-                </ui:fragment>
-                <div class="context-menu-item action-copy" role="menuitem">
+                </div>
+                <div class="context-menu-item action-copy" role="menuitem" data-action="copy" data-per="canViewResource">
                     <div class="context-menu-item-wrapper">
                         <span class="context-menu-item-icon"/>
                         <span class="context-menu-item-content">#{msg.copy}</span>
                     </div>
                 </div>
-                <ui:fragment rendered="#{groupDetailBean.canDeleteResourcesInTheGroup()}">
-                    <div class="context-menu-item action-move" role="menuitem">
-                        <div class="context-menu-item-wrapper">
-                            <span class="context-menu-item-icon"/>
-                            <span class="context-menu-item-content">#{msg.move}</span>
-                        </div>
+                <div class="context-menu-item action-move" role="menuitem" data-action="move" data-per="canDeleteResource">
+                    <div class="context-menu-item-wrapper">
+                        <span class="context-menu-item-icon"/>
+                        <span class="context-menu-item-content">#{msg.move}</span>
                     </div>
-                    <div class="context-menu-item action-delete" role="menuitem">
-                        <div class="context-menu-item-wrapper">
-                            <span class="context-menu-item-icon"/>
-                            <span class="context-menu-item-content">#{msg.removeFromGroup}</span>
-                        </div>
+                </div>
+                <div class="context-menu-item action-delete" role="menuitem" data-action="delete" data-per="canDeleteResource">
+                    <div class="context-menu-item-wrapper">
+                        <span class="context-menu-item-icon"/>
+                        <span class="context-menu-item-content">#{msg.removeFromGroup}</span>
                     </div>
-                </ui:fragment>
+                </div>
             </div>
         </ui:fragment>
 

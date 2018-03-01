@@ -204,7 +204,7 @@ function resourceDND() {
         }
     });
 
-    if (!$dataGrid || $dataGrid.attr('data-isenabledmoving') != 'true') {
+    if (!$dataGrid || !$dataGrid.closest('#resourcesView').attr('data-canMoveResources')) {
         return;
     }
 
@@ -329,17 +329,37 @@ function load_lightbox_editor() {
  }
 
 /* Context menu */
-function showContextMenu(className, e) {
-    $(".resource-context-menu").addClass(className + "-cntx").finish().toggle().css({
+/**
+ * @param {{canAddResources?: boolean,
+ *          canViewResource?: boolean,
+ *          canEditResource?: boolean,
+ *          canDeleteResource?: boolean,
+ *          canAnnotateResource?: boolean}} options
+ * @param type
+ * @param e
+ */
+function showContextMenu(options, type, e) {
+    var $contextMenu = $("#context-menu");
+
+    $contextMenu.children().each(function () {
+        var action = $(this).attr('data-action');
+        var permission = $(this).attr('data-per');
+        if (action === "open-folder") {
+            $(this).toggle(type === "folder" && options[permission] || false);
+        } else {
+            $(this).toggle(options[permission] || false);
+        }
+    });
+
+    $contextMenu.finish().show().css({
         top: e.pageY + "px",
         left: e.pageX + "px"
     });
 }
 
 function hideContextMenu() {
-    $(".resource-context-menu").hide().removeClass(function (index, css) {
-        return (css.match(/\b\S+-cntx/g) || []).join(' ');
-    });
+    var $contextMenu = $(".resource-context-menu");
+    $contextMenu.hide();
 }
 
 function openFolder(folderId) {
@@ -575,26 +595,56 @@ $(document).ready(function () {
     $(document).on("contextmenu", ".datagrid", function (e) {
         e.preventDefault();
         e.stopPropagation();
-        showContextMenu("datagrid", e);
+
+        var $resourcesView = $(this).closest('#resourcesView');
+        showContextMenu({
+            canAddResources: $resourcesView.attr('data-canAddResources') === "true"
+        }, "datagrid", e);
     });
 
     $(document).on("contextmenu", ".group-resources-item", function (e) {
         e.preventDefault();
         e.stopPropagation();
 
-        var resource = $(e.target).parents(".group-resources-item")[0];
-        var id = resource.getAttribute("data-itemId"),
-            type = resource.getAttribute("data-itemType");
+        var $resource = $(this);
+        var id = $resource.attr("data-itemId"),
+            type = $resource.attr("data-itemType");
 
         if (!selected.selectIfExists(type, id)) {
-            selected.clearAndAdd(resource);
+            selected.clearAndAdd($resource);
             selected.selectLastItem();
         }
 
-        if (selected.getSize() == 1) {
-            showContextMenu("single-" + type, e);
-        } else if (selected.getSelectedType() == "resources") {
-            showContextMenu("resources", e);
+        if (selected.getSize() === 1) {
+            var item = selected.getItem(0);
+
+            showContextMenu({
+                canViewResource: item.element.getAttribute('data-canViewResource') === "true",
+                canEditResource: item.element.getAttribute('data-canEditResource') === "true",
+                canDeleteResource: item.element.getAttribute('data-canDeleteResource') === "true",
+                canAnnotateResource: item.element.getAttribute('data-canAnnotateResource') === "true"
+            }, item.type, e);
+        } else if (selected.getSelectedType() === "resources") {
+            var canEditResource = true, canDeleteResource = true, canAnnotateResource = true;
+
+            selected.forEachElement(function (element) {
+                if (element.getAttribute("data-canEditResource") !== "true") {
+                    canEditResource = false;
+                }
+                if (element.getAttribute("data-canDeleteResource") !== "true") {
+                    canDeleteResource = false;
+                }
+                if (element.getAttribute("data-canAnnotateResource") !== "true") {
+                    canAnnotateResource = false;
+                }
+            });
+
+            showContextMenu({
+                canViewResource: true,
+                canEditResource: canEditResource,
+                canDeleteResource: canDeleteResource,
+                canAnnotateResource: canAnnotateResource
+            }, "resources", e);
         } else {
             alert("Unfortunately, we don't support batch operation with folders.");
         }
@@ -606,8 +656,12 @@ $(document).ready(function () {
         }
     });
 
+    $(document).on("update", ".nano", function(){
+        hideContextMenu();
+    });
+
     $(document).on("click", ".resource-context-menu > .context-menu-item", function () {
-        var action = (this.className.match(/action-[^\s]+/) || []).pop().replace('action-', '');
+        var action = $(this).attr('data-action');
         doAction(action);
         hideContextMenu();
     });
@@ -699,6 +753,10 @@ function SelectedItems() {
         return this.items.length;
     };
 
+    /**
+     * @param index
+     * @returns {{id: string, type: string, element: element }}
+     */
     this.getItem = function (index) {
         return this.items[index];
     };
@@ -716,7 +774,7 @@ function SelectedItems() {
 
     this.inSelected = function (itemType, itemId) {
         for (var l = this.items.length, i = 0; i < l; ++i) {
-            if (this.items[i].type == itemType && this.items[i].id == itemId) {
+            if (this.items[i].type === itemType && this.items[i].id === itemId) {
                 return i;
             }
         }

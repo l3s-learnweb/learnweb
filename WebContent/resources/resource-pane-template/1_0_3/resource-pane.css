@@ -709,35 +709,6 @@
 
 }
 
-.context-menu.single-folder-cntx .action-open-folder,
-.context-menu.single-folder-cntx .action-edit,
-.context-menu.single-folder-cntx .action-delete,
-.context-menu.single-resource-cntx .action-add-tag,
-.context-menu.single-resource-cntx .action-copy,
-.context-menu.single-resource-cntx .action-move,
-.context-menu.single-resource-cntx .action-edit,
-.context-menu.single-resource-cntx .action-delete,
-.context-menu.single-resource-cntx .action-remove,
-.context-menu.single-group-cntx .action-open-folder,
-.context-menu.resources-cntx .action-add-tag,
-.context-menu.resources-cntx .action-copy,
-.context-menu.resources-cntx .action-move,
-.context-menu.resources-cntx .action-delete,
-.context-menu.resources-cntx .action-remove,
-.context-menu.datagrid-cntx .action-create-folder,
-.context-menu.datagrid-cntx .action-upload-file,
-.context-menu.datagrid-cntx .action-add-website {
-    display: block;
-}
-
-.context-menu.mixed-cntx .context-menu-item {
-
-}
-
-.context-menu.folders-cntx .context-menu-item {
-
-}
-
 #deleteConfirmDialog .ui-dialog-content p > span {
     display: none;
 }

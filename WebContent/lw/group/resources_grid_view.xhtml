@@ -1,12 +1,15 @@
 <ui:composition xmlns:ui="http://java.sun.com/jsf/facelets" xmlns:h="http://java.sun.com/jsf/html"
                 xmlns:f="http://java.sun.com/jsf/core" xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
-    <h:panelGroup id="datagrid" styleClass="datagrid" layout="block"
-                  pt:data-isEnabledMoving="#{groupDetailBean.canDeleteResourcesInTheGroup()}">
+    <h:panelGroup id="datagrid" styleClass="datagrid" layout="block">
         <h:panelGroup id="folderGrid" styleClass="folder-grid" layout="block">
             <ui:repeat value="#{groupDetailBean.subfolders}" var="folder">
-                <h:panelGroup styleClass="folder-item group-resources-item" pt:data-itemType="folder"
-                              pt:data-itemId="#{folder.folderId}" layout="block">
+                <h:panelGroup styleClass="folder-item group-resources-item" layout="block"
+                              pt:data-itemType="folder"
+                              pt:data-itemId="#{folder.folderId}"
+                              pt:data-canViewResource="#{folder.canViewResource(userBean.user)}"
+                              pt:data-canEditResource="#{folder.canEditResource(userBean.user)}"
+                              pt:data-canDeleteResource="#{folder.canDeleteResource(userBean.user)}">
                     <div class="folder-block">
 
                         <div class="folder-icon">
@@ -17,16 +20,15 @@
 
                         <div class="folder-title">
                             <div class="folder-title-wrapper">
-                                <h:outputText value="#{folder.name}" escape="false" styleClass="folder-title-name"
-                                              title="#{folder.name}"/>
+                                <h:outputText value="#{folder.name}" escape="false" styleClass="folder-title-name" title="#{folder.name}"/>
                             </div>
 
-                            <h:panelGroup class="resource-controls" layout="block"
-                                          rendered="${groupDetailBean.canDeleteResourcesInTheGroup()}">
+                            <h:panelGroup class="resource-controls" layout="block" rendered="${folder.canEditResource(userBean.user)}">
                                 <h:outputLink value="#" title="#{msg.edit}" styleClass="action-edit">
                                     <h:graphicImage alt="Edit" value="../resources/icon/Edit.png"/>
                                 </h:outputLink>
-
+                            </h:panelGroup>
+                            <h:panelGroup class="resource-controls" layout="block" rendered="${folder.canDeleteResource(userBean.user)}">
                                 <h:outputLink value="#" title="#{msg.delete}" styleClass="action-delete">
                                     <h:graphicImage alt="Remove" value="../resources/icon/Remove.png"/>
                                 </h:outputLink>
@@ -40,8 +42,13 @@
 
         <h:panelGroup id="resourceGrid" styleClass="resource-grid" layout="block">
             <ui:repeat value="#{groupDetailBean.paginator.currentPage}" var="res">
-                <h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource"
-                              pt:data-itemId="#{res.resource.id}" layout="block">
+                <h:panelGroup styleClass="resource-item group-resources-item" layout="block"
+                              pt:data-itemType="resource"
+                              pt:data-itemId="#{res.resource.id}"
+                              pt:data-canViewResource="#{res.resource.canViewResource(userBean.user)}"
+                              pt:data-canEditResource="#{res.resource.canEditResource(userBean.user)}"
+                              pt:data-canDeleteResource="#{res.resource.canDeleteResource(userBean.user)}"
+                              pt:data-canAnnotateResource="#{res.resource.canAnnotateResource(userBean.user)}">
                     <div class="resource-block">
 
                         <div class="resource-preview">
@@ -75,11 +82,11 @@
                         <div class="resource-title">
                             <div class="resource-title-wrapper">
                                 <div class="resource-title-text">
-                                    <h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name"
-                                                  title="#{res.title}"/>
-                                    <span class="resource-title-summary"><span>
-                                    ${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by}
-                                        <span>#{res.ownerUser.username}</span></span>
+                                    <h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}"/>
+                                    <span class="resource-title-summary">
+                                        <span>${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by}
+                                        <span>#{res.ownerUser.username}</span>
+                                    </span>
                                 </div>
                             </div>
                         </div>

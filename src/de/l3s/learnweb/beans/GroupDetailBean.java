@@ -702,46 +702,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         return links;
     }
 
-    public boolean canEditTheResource(GroupItem obj) throws SQLException
-    {
-        User user = getUser();
-        if(null == user)
-            return false;
-
-        if(user.isAdmin())
-            return true;
-
-        if(obj.getGroupId() == 0 && obj.getUserId() == getUser().getId())
-            return true;
-
-        return canEditResourcesInGroup(obj.getGroup());
-    }
-
-    public boolean canDeleteTheResource(GroupItem obj) throws SQLException
-    {
-        return canDeleteResourcesInGroup(obj.getGroup());
-    }
-
-    public boolean canDeleteResourcesInGroup(Group group) throws SQLException
-    {
-        return group.canDeleteResources(getUser());
-    }
-
-    public boolean canDeleteResourcesInTheGroup() throws SQLException
-    {
-        return canDeleteResourcesInGroup(getGroup());
-    }
-
-    public boolean canEditResourcesInGroup(Group group) throws SQLException
-    {
-        return group.canEditResources(getUser());
-    }
-
-    public boolean canCopyResourcesFromTheGroup() throws SQLException
-    {
-        return getGroup().canViewResources(getUser());
-    }
-
     public List<Presentation> getPresentations() throws SQLException
     {
         if(presentations == null)
@@ -976,7 +936,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
      */
     public void addFolder() throws SQLException
     {
-        if(canEditResourcesInGroup(getGroup()) && newFolderName != null && !newFolderName.isEmpty())
+        if(getGroup().canAddResources(getUser()) && newFolderName != null && !newFolderName.isEmpty())
         {
             Folder newFolder = new Folder(groupId, newFolderName, newFolderDescription);
             newFolder.setParentFolderId(getSelectedFolderId());
@@ -997,7 +957,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
      */
     public void editFolder() throws SQLException
     {
-        if(canEditResourcesInGroup(getGroup()) && clickedGroupItem != null && clickedGroupItem.getId() > 0)
+        if(clickedGroupItem != null && clickedGroupItem.getId() > 0 && clickedGroupItem.canEditResource(getUser()))
         {
             log(Action.edit_folder, groupId, clickedGroupItem.getId(), clickedGroupItem.getTitle());
 
@@ -1435,7 +1395,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             if(itemType != null && itemType.equals("folder") && itemId > 0)
             {
                 Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
-                if(folder != null && canEditTheResource(folder))
+                if(folder != null && folder.canEditResource(getUser()))
                 {
                     this.setClickedGroupItem(folder);
                     this.setRightPanelAction(RPAction.editFolder);
@@ -1448,7 +1408,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             else if(itemType != null && itemType.equals("resource") && itemId > 0)
             {
                 Resource resource = getLearnweb().getResourceManager().getResource(itemId);
-                if(resource != null && canEditTheResource(resource))
+                if(resource != null && resource.canEditResource(getUser()))
                 {
                     this.setClickedGroupItem(resource);
                     this.setRightPanelAction(RPAction.editResource);
@@ -1558,15 +1518,20 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             int numFolders = 0, numResources = 0, numSkipped = 0, targetGroupId = selectedResourceTargetGroupId, targetFolderId = selectedResourceTargetFolderId;
 
             Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
-            if(!canCopyResourcesFromTheGroup())
-            {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to copy this resource");
+            if (targetGroup == null) {
+                addGrowl(FacesMessage.SEVERITY_ERROR, "Target group is wrong and not exists.");
                 return;
             }
 
-            if(targetGroup != null && !canEditResourcesInGroup(targetGroup))
+            if(!getGroup().canViewResources(getUser()))
             {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to add new resources in target group");
+                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to copy this resource.");
+                return;
+            }
+
+            if(!targetGroup.canAddResources(getUser()))
+            {
+                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to add resources to target group.");
                 return;
             }
 
@@ -1637,15 +1602,9 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             }
 
             Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
-            if(!canEditResourcesInGroup(getGroup()))
+            if(targetGroupId != 0 && !targetGroup.canAddResources(getUser()))
             {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to move this resource");
-                return;
-            }
-
-            if(targetGroupId != 0 && !canEditResourcesInGroup(targetGroup))
-            {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to add new resources in target group");
+                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to add resources to target group.");
                 return;
             }
 
@@ -1656,38 +1615,38 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 int itemId = StringHelper.parseInt(item.getString("itemId"));
                 if(itemType != null && itemType.equals("folder") && itemId > 0)
                 {
-                    Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
-                    if(folder != null)
+                    Folder sourceFolder = getLearnweb().getGroupManager().getFolder(itemId);
+                    if(sourceFolder != null)
                     {
-                        if(!canDeleteTheResource(folder))
+                        if(!sourceFolder.canDeleteResource(getUser()))
                         {
                             numSkipped++;
-                            log.warn("The use don't have permissions to delete folder in target group.");
+                            log.warn("The user don't have permissions to delete folder which it want to move.");
                             continue;
                         }
 
-                        folder.moveTo(targetGroupId, targetFolderId);
+                        sourceFolder.moveTo(targetGroupId, targetFolderId);
                         numFolders++;
                     }
                     else
                     {
                         numSkipped++;
-                        log.warn("Target folder does not exists on actionMoveGroupItems");
+                        log.warn("Source folder does not exists on actionMoveGroupItems");
                     }
                 }
                 else if(itemType != null && itemType.equals("resource") && itemId > 0)
                 {
-                    Resource resource = getLearnweb().getResourceManager().getResource(itemId);
-                    if(resource != null)
+                    Resource sourceResource = getLearnweb().getResourceManager().getResource(itemId);
+                    if(sourceResource != null)
                     {
-                        if(!canDeleteTheResource(resource))
+                        if(!sourceResource.canDeleteResource(getUser()))
                         {
                             numSkipped++;
-                            log.warn("The use don't have permissions to delete resource in target group.");
+                            log.warn("The user don't have permissions to delete resource which it want to move.");
                             continue;
                         }
 
-                        resource.moveTo(targetGroupId, targetFolderId);
+                        sourceResource.moveTo(targetGroupId, targetFolderId);
                         numResources++;
                     }
                     else
@@ -1739,7 +1698,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                     Folder folder = getLearnweb().getGroupManager().getFolder(itemId);
                     if(folder != null)
                     {
-                        if(!canDeleteTheResource(folder))
+                        if(!folder.canDeleteResource(getUser()))
                         {
                             numSkipped++;
                             log.warn("The user don't have permissions to delete folder in target group.");
@@ -1827,7 +1786,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         try
         {
             int numResources = 0, numSkipped = 0;
-            if(!canEditResourcesInGroup(getGroup()))
+            if(!getGroup().canAnnotateResources(getUser()))
             {
                 addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to edit this resource");
                 return;

@@ -7,7 +7,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
-public class Folder implements Serializable, HasId, GroupItem
+public class Folder extends GroupItem implements Serializable, HasId
 {
     private static final long serialVersionUID = 2147007718176177138L;
     private static final Logger log = Logger.getLogger(Folder.class);
@@ -310,6 +310,16 @@ public class Folder implements Serializable, HasId, GroupItem
         {
             log.fatal("Couldn't clear folder cache", e);
         }
+    }
+
+    @Override
+    public boolean canViewResource(User user) throws SQLException
+    {
+        Group group = getGroup();
+        if(group != null)
+            return group.canViewResources(user);
+
+        return false;
     }
 
     @Override

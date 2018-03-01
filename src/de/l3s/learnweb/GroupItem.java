@@ -2,35 +2,69 @@ package de.l3s.learnweb;
 
 import java.sql.SQLException;
 
-public interface GroupItem
+public abstract class GroupItem
 {
-    int getId();
+    abstract public int getId();
 
-    void setId(int id);
+    abstract public void setId(int id);
 
-    String getTitle();
+    abstract public String getTitle();
 
-    void setTitle(String title);
+    abstract public void setTitle(String title);
 
-    int getGroupId();
+    abstract public int getGroupId();
 
-    void setGroupId(int groupId);
+    abstract public void setGroupId(int groupId);
 
-    Group getGroup() throws SQLException;
+    abstract public Group getGroup() throws SQLException;
 
-    int getUserId();
+    abstract public int getUserId();
 
-    void setUserId(int userId);
+    abstract public void setUserId(int userId);
 
-    User getUser() throws SQLException;
+    abstract public User getUser() throws SQLException;
 
-    void setUser(User user);
+    abstract public void setUser(User user);
 
-    GroupItem save() throws SQLException;
+    abstract public GroupItem save() throws SQLException;
 
-    void delete() throws SQLException;
+    abstract public void delete() throws SQLException;
 
-    String getPath() throws SQLException;
+    abstract public String getPath() throws SQLException;
 
-    String getPrettyPath() throws SQLException;
+    abstract public String getPrettyPath() throws SQLException;
+
+    abstract public boolean canViewResource(User user) throws SQLException;
+
+    public boolean canEditResource(User user) throws SQLException
+    {
+        if(user == null) // not logged in
+            return false;
+
+        Group group = getGroup();
+
+        if(group != null)
+            return group.canEditResource(user, this);
+
+        if(user.isAdmin() || getUserId() == user.getId())
+            return true;
+
+        return false;
+    }
+
+    public boolean canDeleteResource(User user) throws SQLException
+    {
+        if(user == null) // not logged in
+            return false;
+
+        Group group = getGroup();
+
+        if(group != null) // if the resource is part of a group the group policy has priority
+            return group.canDeleteResource(user, this);
+
+        if(user.isAdmin() || getUserId() == user.getId())
+            return true;
+
+        return false;
+    }
 }

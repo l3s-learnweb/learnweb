@@ -636,24 +636,20 @@ public class Group implements Comparable<Group>, HasId, Serializable
         return false;
     }
 
-    public boolean canDeleteResource(User user, Resource resource) throws SQLException
+    /**
+     * Used for Drag&Drop functionality, using which it is possible to move resource between folders and groups
+     */
+    public boolean canMoveResources(User user) throws SQLException
+    {
+        return canAddResources(user);
+    }
+
+    public boolean canDeleteResource(User user, GroupItem resource) throws SQLException
     {
         return canEditResource(user, resource); // currently they share the same policy
     }
 
-    @Deprecated
-    public boolean canDeleteResources(User user) throws SQLException
-    {
-        return canDeleteResource(user, null);
-    }
-
-    @Deprecated
-    public boolean canEditResources(User user) throws SQLException
-    {
-        return canEditResource(user, null);
-    }
-
-    public boolean canEditResource(User user, Resource resource) throws SQLException
+    public boolean canEditResource(User user, GroupItem resource) throws SQLException
     {
         if(user == null) // not logged in
             return false;
