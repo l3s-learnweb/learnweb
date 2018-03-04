@@ -21,6 +21,7 @@
 
 		<h:outputStylesheet library="glossary" name="glossary.css" />
 		<h:outputScript library="glossary" name="glossary.js" />
+		<ui:fragment rendered="#{glossaryBean.resourceId gt 0 and glossaryBean.deleted eq false}">
 		<h:panelGroup id="main_component" layout="block">
 			<h:form prependId="false">
 				<p:dataTable id="my_gloss_table" var="item"
@@ -386,6 +387,7 @@
 				</h:form>
 			</div>
 		</h:panelGroup>
+		</ui:fragment>
 		<script type="text/javascript">
 			//<![CDATA[
 			var groupRow = function(colIndex) {
@@ -432,5 +434,20 @@
 			});
 			//]]>
 		</script>
+		<ui:fragment rendered="#{glossaryBean.resourceId le 0}">
+					<div class="noresource">
+						<br /> <br />
+						<h:outputText value="Please select correct glossary resource."
+							style="text-align:center; font-weight:bold"></h:outputText>
+					</div>
+				</ui:fragment>
+				<ui:fragment rendered="#{glossaryBean.deleted eq true}">
+					<div class="noresource">
+						<br /> <br />
+						<h:outputText value="The resource you are trying to access is deleted and does not exist."
+							style="text-align:center; font-weight:bold"></h:outputText>
+					</div>
+				</ui:fragment>
 	</ui:define>
+	
 </ui:composition>

@@ -80,6 +80,27 @@ public class GlossaryManager
         }
     }
 
+    public boolean checkIfExists(int resourceId)
+    {
+        boolean deleted = false;
+        String checkIfGlossaryDeleted = "SELECT `deleted` FROM `lw_resource` WHERE `resource_id`=?";
+
+        try
+        {
+            PreparedStatement ps = learnweb.getConnection().prepareStatement(checkIfGlossaryDeleted);
+            ps.setInt(1, resourceId);
+            ResultSet result = ps.executeQuery();
+            if(result.next())
+                deleted = result.getBoolean("deleted");
+
+        }
+        catch(SQLException e)
+        {
+            log.error("Error in fetching deleted for glossary resource: " + resourceId, e);
+        }
+        return deleted;
+    }
+
     public void copyGlossary(int oldResourceId, int newResourceId)
     {
         String selectOldData = "SELECT * FROM `lw_resource_glossary` WHERE `resource_id`= ?";

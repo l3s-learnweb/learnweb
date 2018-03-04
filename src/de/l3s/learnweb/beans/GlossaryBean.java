@@ -34,7 +34,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = -1811030091337893637L;
     private static final Logger log = Logger.getLogger(GlossaryBean.class);
     private static final String PREFERENCE_TOPIC1 = "GLOSSARY_TOPIC1";
-
+    private boolean deleted = false;
     private List<LanguageItem> secondaryLangItems;
     private List<LanguageItem> primaryLangItems;
     private List<LanguageItem> languageItems;
@@ -68,7 +68,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         if(isAjaxRequest())
             return;
 
-        if(resourceId > 0)
+        if(resourceId > 0 && !getLearnweb().getGlossariesManager().checkIfExists(resourceId))
         {
             getGlossaryItems(resourceId);
             setlanguagePair(resourceId);
@@ -100,10 +100,28 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         uses.add("technical");
         uses.add("popular");
         uses.add("informal");
+        try
+        {
+            resourceId = getParameterInt("resource_id");
+        }
+        catch(Exception e)
+        {
+            resourceId = 0;
+        }
 
-        resourceId = getParameterInt("resource_id");
-        createEntry();
-        glossaryEntryCount = getGlossaryEntryCount(resourceId);
+        if(resourceId > 0)
+        {
+            if(!getLearnweb().getGlossariesManager().checkIfExists(resourceId))
+            {
+                createEntry();
+                glossaryEntryCount = getGlossaryEntryCount(resourceId);
+            }
+            else
+            {
+                resourceId = 0;
+                deleted = true;
+            }
+        }
     }
 
     private void setlanguagePair(int resourceId2)
@@ -685,6 +703,16 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public void setSecondaryLanguage(LANGUAGE secondaryLanguage)
     {
         this.secondaryLanguage = secondaryLanguage;
+    }
+
+    public boolean isDeleted()
+    {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted)
+    {
+        this.deleted = deleted;
     }
 
 }
