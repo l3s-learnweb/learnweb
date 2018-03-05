@@ -14,10 +14,6 @@ public class RequestData
     private Date time;
     private String URL;
 
-    public RequestData()
-    {
-    }
-
     public RequestData(String i, Date t, String u)
     {
         setIP(i);

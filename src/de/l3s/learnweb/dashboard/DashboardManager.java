@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import org.apache.log4j.Logger;
 
@@ -85,6 +87,45 @@ public class DashboardManager
 
         return summeries;
     }
+
+    public Map<String, Integer> getActionCounts(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
+    {
+        Map<String, Integer> actperday = new TreeMap<String, Integer>();
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT action, COUNT(*) as count from lw_user_log where timestamp BETWEEN ? AND ? and user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") GROUP BY action");)
+        {
+            select.setTimestamp(1, new Timestamp(startDate.getTime()));
+            select.setTimestamp(2, new Timestamp(endDate.getTime()));
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+                actperday.put(rs.getString("action"), rs.getInt("count"));
+        }
+
+        return actperday;
+    }
+
+    /*
+    public String getTopbar01data(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
+    {
+        int search = 0;
+        int glossary = 0;
+        int resource = 0;
+        int system = 0;
+        UserLogHome ulh = new UserLogHome();
+        Map<String, Integer> mappa = getActionCounts(userIds, startDate, endDate);
+    
+        for(String k : mappa.keySet())
+        {
+            if(k.contains("search"))
+                search += mappa.get(k);
+            else if(k.contains("glossary"))
+                glossary += mappa.get(k);
+            else if(k.contains("resource"))
+                resource += mappa.get(k);
+            else
+                system += mappa.get(k);
+        }
+        return topbar01data;
+    }*/
 
     public static class GlossaryFieldSummery implements Serializable
     {

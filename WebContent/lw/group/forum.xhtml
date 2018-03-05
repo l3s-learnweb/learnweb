@@ -83,14 +83,12 @@
 			        <a href="./user/detail.jsf?user_id=#{topic.userId}">
 			        	<h:outputText value="#{topic.lastPostUser.username}" />
 			        </a>
-			        
-			        <h:outputText value="waa" rendered="" />
 			    </p:column>
 			    
 			</p:dataTable>
 		</h:form>
 			
-		<ui:fragment rendered="#{groupDetailBean.member or true}">
+		<ui:fragment rendered="${forumTopicsBean.group.isMember(userBean.user)}">
 			<div class="page_header" id="new_topic">
 				<span>
 					#{msg['ForumIndex.new_topic']}

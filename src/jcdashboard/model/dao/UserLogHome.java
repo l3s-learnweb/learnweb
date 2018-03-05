@@ -1,6 +1,7 @@
 package jcdashboard.model.dao;
 
 import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -39,7 +40,8 @@ public class UserLogHome
 
     public UserLogHome()
     {
-        super();
+        learnweb = Learnweb.getInstance();
+
         try
         {
             openConnection();
@@ -48,33 +50,33 @@ public class UserLogHome
         {
             log.fatal("fatal sql error", e);
         }
-        learnweb = Learnweb.getInstance();
     }
 
     private Connection openConnection() throws SQLException
     {
-        return learnweb.getConnection();
-        /*
-        if(connect == null)
+
+        if(connect == null || !connect.isValid(2))
         {
             String url = "jdbc:mysql://localhost/learnweb_logs";
-        
+
             String username = "learnweb";
             String password = "***REMOVED***";
-        
+
+            /*
             try
-            {
-                Class.forName("org.mariadb.jdbc.Driver");
-        
-                connect = DriverManager.getConnection(url, username, password);
+            {*/
+            //Class.forName("org.mariadb.jdbc.Driver");
+
+            connect = DriverManager.getConnection(url, username, password);
+            /*
             }
+
             catch(ClassNotFoundException e)
             {
-                log.fatal("fatal error", e);
-            }
+            log.fatal("fatal error", e);
+            }*/
         }
         return connect;
-        */
     }
 
     public void closeConnection()

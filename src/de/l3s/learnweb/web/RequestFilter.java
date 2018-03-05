@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
+import de.l3s.util.BeanHelper;
+
 /**
  * Logs incoming requests by IPs. Records IP, time and URL, then at the end of the day stores it into a log file.
  *
@@ -28,11 +30,7 @@ public class RequestFilter implements Filter
         {
             HttpServletRequest req = (HttpServletRequest) request;
 
-            String IP = req.getHeader("X-FORWARDED-FOR");
-            if(IP == null)
-            {
-                IP = request.getRemoteAddr();
-            }
+            String ip = BeanHelper.getIp(req);
 
             final RequestManager requestManager = RequestManager.instance();
             //TEMPORARILY DISABLED
@@ -43,7 +41,7 @@ public class RequestFilter implements Filter
 
             String url = req.getRequestURL().toString();
 
-            requestManager.recordRequest(IP, url);
+            requestManager.recordRequest(ip, url);
         }
         catch(Throwable e) // makes sure that an error in request manager doesn't block the system
         {
