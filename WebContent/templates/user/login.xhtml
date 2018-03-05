@@ -12,41 +12,28 @@
 			</span>
 		</div>
 		<div class="grey_border">
-		<h:form rendered="#{!userBean.loggedIn}">
-			<table>
+		
+			<h:form rendered="#{!userBean.loggedIn}">
 				<p:focus for="username"/>
-					<tr><h:outputLabel for="username" value="#{msg.username}:"/>
-					<p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" styleClass="inputbox"/>
-					<p:message styleClass="error" for="username" display="icon"/>
-					</tr>
-
-					<tr>
+				<h:panelGrid columns="3">
+					<h:outputLabel for="username" value="#{msg.username}:"/>
+					<p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" />
+					<p:message styleClass="error" for="username" />
+					
 					<h:outputLabel for="password" value="#{msg.password}:"/>
-					<p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" styleClass="inputbox"/>
-					<p:message styleClass="error" for="password" display="icon"/>
-					</tr>
-
-					<tr>
+					<p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" />
+					<p:message styleClass="error" for="password" />
+					
+					<h:outputText value="" rendered="#{loginBean.captchaRequired}" />
+				    <p:captcha label="Captcha" rendered="#{loginBean.captchaRequired}" language="#{userBean.locale}" id="captcha"/>
+					<p:message styleClass="error" for="captcha" rendered="#{loginBean.captchaRequired}" />
+				    
 					<h:outputText value="" />
-					<p:commandButton styleClass="greenbutton" action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false"
-						style="margin-top:5px;"/>
+					<p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" />	
 					<h:outputText value="" />
-					</tr>
-
-					<tr><td>
-					<div id="captcha-container" style="transform:scale(0.9);transform-origin:0; 0 margin-top: 15px" >
-						<p:captcha label="Captcha" rendered="#{not empty captchaEnabled}" language="#{userBean.locale}"/>
-					</div></td>
-					</tr>
-
-					<tr><td>
-					<h:outputLink class="forgotten_password" value="user/password.jsf">
-						<h:outputText value="#{msg.forgotten_password}" />
-					</h:outputLink></td>
-					</tr>
-				</table>
-		</h:form>
-
+				</h:panelGrid>			
+			</h:form>		
+			
 			<h:outputText rendered="#{userBean.loggedIn}" value="#{msg.you_are_already_logged_in}" style="font-weight:bold;"/>
 			<br/>
 			<br/>
@@ -57,7 +44,7 @@
 			<h:outputLink value="#{request.contextPath}/lw/user/register.jsf">
 				<h:outputText value="#{msg.registerLabel}" />
 			</h:outputLink>
-
+		
 		</div>
 	</ui:composition>
 </html>

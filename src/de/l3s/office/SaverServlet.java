@@ -20,16 +20,16 @@ import com.google.gson.Gson;
 
 import de.l3s.learnweb.File;
 import de.l3s.learnweb.File.TYPE;
+import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.Resource;
 import de.l3s.office.history.model.Change;
 import de.l3s.office.history.model.History;
 import de.l3s.office.history.model.OfficeUser;
 import de.l3s.office.history.model.SavingInfo;
-import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.Resource;
 
 /**
  * Servlet Class
- * 
+ *
  * @web.servlet name="saverServlet" display-name="Simple SaverServlet"
  *              description="Servlet for saving edited documents"
  * @web.servlet-mapping url-pattern="/save"
@@ -43,7 +43,7 @@ public class SaverServlet extends HttpServlet
 
     private static final String USER_ID = "userId";
 
-    private final static Logger logger = Logger.getLogger(SaverServlet.class);
+    private final static Logger log = Logger.getLogger(SaverServlet.class);
 
     private static final String ERROR_0 = "{\"error\":0}";
 
@@ -66,21 +66,19 @@ public class SaverServlet extends HttpServlet
                 SavingInfo savingInfo = gson.fromJson(body, SavingInfo.class);
                 parseResponse(savingInfo, fileId, userId);
             }
-            request.getRemoteAddr();
             writer.write(ERROR_0);
         }
         catch(IOException e)
         {
-            logger.error(e);
+            log.error(e);
         }
-
     }
 
     private void parseResponse(SavingInfo info, String fileId, String userId)
     {
         try
         {
-            logger.info("Document " + fileId + " status : " + info.getStatus());
+            log.info("Document " + fileId + " status : " + info.getStatus());
             if(info.getStatus() == DocumentStatus.READY_FOR_SAVING.getStatus())
             {
                 learnweb = Learnweb.getInstance();
@@ -95,19 +93,19 @@ public class SaverServlet extends HttpServlet
                 learnweb.getFileManager().save(file, inputStream);
                 resource.setUrl(file.getUrl());
                 learnweb.getResourcePreviewMaker().processResource(resource);
-                logger.info("Started history saving for resourceId = " + file.getResourceId());
+                log.info("Started history saving for resourceId = " + file.getResourceId());
                 previousVersionFile.setType(TYPE.HISTORY_FILE);
-                logger.info("History is saved resourceId = " + file.getResourceId());
+                log.info("History is saved resourceId = " + file.getResourceId());
                 createResourceHistory(info, previousVersionFile, file.getResourceId(), Integer.parseInt(userId));
             }
         }
         catch(NumberFormatException e)
         {
-            logger.error(e);
+            log.error(e);
         }
         catch(SQLException | IOException e)
         {
-            logger.error(e);
+            log.error(e);
         }
 
     }

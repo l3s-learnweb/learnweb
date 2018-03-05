@@ -25,6 +25,7 @@ import de.l3s.learnweb.FileManager;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.User;
+import de.l3s.util.BeanHelper;
 
 /**
  * Servlet Class
@@ -169,7 +170,7 @@ public class DownloadServlet extends HttpServlet
             }
             catch(IllegalArgumentException e)
             {
-                log.error("Illagal If-Modified-Since header: " + e.getMessage() + "; " + LearnwebExceptionHandler.getRequestSummary(request));
+                log.error("Illagal If-Modified-Since header: " + e.getMessage() + "; " + BeanHelper.getRequestSummary(request));
             }
             if(ifNoneMatch == null && ifModifiedSince != -1 && ifModifiedSince + 1000 > lastModified)
             {

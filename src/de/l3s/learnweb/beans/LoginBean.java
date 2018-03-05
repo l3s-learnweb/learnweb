@@ -3,7 +3,6 @@ package de.l3s.learnweb.beans;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.Locale;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -19,6 +18,7 @@ import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.loginprotection.BanData;
 import de.l3s.learnweb.loginprotection.ProtectionManager;
+import de.l3s.util.BeanHelper;
 
 @ManagedBean
 @RequestScoped
@@ -31,6 +31,13 @@ public class LoginBean extends ApplicationBean implements Serializable
     private String username;
     @NotEmpty
     private String password;
+
+    private boolean captchaRequired = false;
+
+    public LoginBean()
+    {
+        // TODO set captchaRequired here
+    }
 
     public String getUsername()
     {
@@ -52,9 +59,9 @@ public class LoginBean extends ApplicationBean implements Serializable
         this.password = password;
     }
 
-    public Locale getLocale()
+    public boolean isCaptchaRequired()
     {
-        return FacesContext.getCurrentInstance().getExternalContext().getRequestLocale();
+        return captchaRequired;
     }
 
     public String login() throws SQLException
@@ -62,15 +69,11 @@ public class LoginBean extends ApplicationBean implements Serializable
         //Getting IP
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
-        String IP = request.getHeader("X-FORWARDED-FOR");
-        if(IP == null)
-        {
-            IP = request.getRemoteAddr();
-        }
+        String ip = BeanHelper.getIp(request);
 
         //Gets the ip and username info from protection manager
         ProtectionManager PM = getLearnweb().getProtectionManager();
-        BanData ipData = PM.getIPData(IP);
+        BanData ipData = PM.getIPData(ip);
         BanData usernameData = PM.getUsernameData(username);
         Date now = new Date();
 
@@ -78,12 +81,13 @@ public class LoginBean extends ApplicationBean implements Serializable
         if(ipData != null && (ipData.getBanDate().after(now)))
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "ip_banned");
-            session.setAttribute("ipbanned", true);
+            session.setAttribute("ipbanned", true); // TODO remove
             return null;
         }
         else
         {
-            session.removeAttribute("ipbanned");
+            session.removeAttribute("ipbanned"); // TODO remove
+
         }
 
         //Checks if the selected username has been banned
@@ -96,7 +100,7 @@ public class LoginBean extends ApplicationBean implements Serializable
         //Checking whether captcha is needed
         if((usernameData != null && usernameData.getAttempts() >= 3) || (ipData != null && ipData.getAttempts() >= 3))
         {
-            session.setAttribute("captchaEnabled", true);
+            session.setAttribute("captchaEnabled", true); // TODO remove
         }
 
         //USER AUTHORIZATION HAPPENS HERE
@@ -105,7 +109,7 @@ public class LoginBean extends ApplicationBean implements Serializable
         if(null == user)
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "wrong_username_or_password");
-            PM.updateFailedAttempts(IP, username);
+            PM.updateFailedAttempts(ip, username);
             return null;
         }
         else
@@ -122,7 +126,7 @@ public class LoginBean extends ApplicationBean implements Serializable
             }
             session.removeAttribute("captchaEnabled");
 
-            getLearnweb().getRequestManager().recordLogin(IP, username);
+            getLearnweb().getRequestManager().recordLogin(ip, username);
         }
 
         return loginUser(this, user);
@@ -197,11 +201,10 @@ public class LoginBean extends ApplicationBean implements Serializable
         return viewId + "?faces-redirect=true&includeViewParams=true";
     }
 
-    @SuppressWarnings("deprecation")
     public String logout()
     {
         UserBean userBean = UtilBean.getUserBean();
-        int activeCourse = userBean.getUser().getActiveCourseId();
+        int organisationId = userBean.getUser().getOrganisationId();
 
         if(userBean.getModeratorUser() != null && !userBean.getModeratorUser().equals(userBean.getUser())) // a moderator logs out from a user account
         {
@@ -215,7 +218,7 @@ public class LoginBean extends ApplicationBean implements Serializable
 
         //userBean.setUser(null);
 
-        if(activeCourse == 891) // is archive web course
+        if(organisationId == 848) // is archive web course
         {
             //userBean.setActiveCourseId(891);
 

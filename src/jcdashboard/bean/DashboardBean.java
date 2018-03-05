@@ -75,14 +75,14 @@ public class DashboardBean extends ApplicationBean implements Serializable
         /* graph02map.put("EMPTY", "rgba(38, 185, 154, 0.1)");
         graph02map.put("other", "rgb(102,205,170)");
         graph02map.put("glossary", "rgba(38, 185, 154, 0.2)");
-        
+
         graph02map.put("Wikipedia", "rgba(3, 88, 120, 0.4)");
         graph02map.put("encyclopaedia", "rgba(3, 88, 120, 0.6)");
-        
+
         graph02map.put("monolingual dictionary", "rgba(38, 175, 154, 0.3)");
         graph02map.put("bilingual dictionary", "rgba(38, 175, 154, 0.6)");
         graph02map.put("Linguee or Reverso", "rgba(38, 175, 154, 0.9)");
-        
+
         graph02map.put("institutional website", "rgba(38, 105, 154, 0.3)");
         graph02map.put("patients' websites and blogs", "rgba(38, 105, 154, 0.6)");
         graph02map.put("scientific/academic publication", "rgba(38, 105, 154, 0.9)"); */
@@ -139,9 +139,9 @@ public class DashboardBean extends ApplicationBean implements Serializable
         this.enddate = enddate;
     }
 
-    /* 
+    /*
      * replaced by selectedCourse.members list
-     * 
+     *
     public List<String> getUserlist()
     {
         if(userlist == null)
@@ -314,10 +314,10 @@ public class DashboardBean extends ApplicationBean implements Serializable
     {
         if(topbar01data.compareTo("") == 0)
         {
-            Integer search = 0;
-            Integer glossary = 0;
-            Integer resource = 0;
-            Integer system = 0;
+            int search = 0;
+            int glossary = 0;
+            int resource = 0;
+            int system = 0;
             UserLogHome ulh = new UserLogHome();
             Map<String, Integer> mappa = ulh.actionCount(this.startdate, this.enddate);
 

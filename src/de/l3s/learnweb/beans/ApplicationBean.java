@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.User;
+import de.l3s.util.BeanHelper;
 
 public class ApplicationBean
 {
@@ -18,28 +19,7 @@ public class ApplicationBean
 
     public ApplicationBean()
     {
-        /*
-        if(isAjaxRequest())
-        	return;
-        
-        FacesContext facesContext = getFacesContext();
-        ExternalContext ext = facesContext.getExternalContext();
-        HttpServletRequest servletRequest = (HttpServletRequest) ext.getRequest();
-        UIViewRoot viewRoot = facesContext.getViewRoot();
-        
-        if(null == viewRoot)
-        	log.error("ApplicationBean::viewRoot is null");
-        else
-        {
-        	String request = viewRoot.getViewId();
-        	String ip = servletRequest.getRemoteAddr();
-        
-        	log.debug(request +" - "+ ip);
-        }
-        */
         startTime = System.currentTimeMillis();
-
-        //getSessionId(); // hopefully prevents java.lang.IllegalStateException: Cannot create a session after the response has been committed
     }
 
     public String getSessionId()
@@ -281,6 +261,6 @@ public class ApplicationBean
         addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
         //addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
 
-        Logger.getLogger(ApplicationBean.class).fatal("Fatal unhandled error on " + LearnwebExceptionHandler.getRequestSummary(), exception);
+        Logger.getLogger(ApplicationBean.class).fatal("Fatal unhandled error on " + BeanHelper.getRequestSummary(), exception);
     }
 }

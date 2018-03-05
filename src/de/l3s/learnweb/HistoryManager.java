@@ -37,13 +37,14 @@ public class HistoryManager
     public List<History> getHistoryForResource(Integer resourceId) throws SQLException
     {
         List<History> histories = new ArrayList<>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement(
-                "SELECT history_id, last_save_date, doc_key, server_version, u.user_id as userId, u.username as username, @curRank := @curRank + 1 as history_version FROM lw_resource_history h left join lw_user u on u.user_id = h.user_id, (SELECT @curRank := 0) r WHERE resource_id = "
-                        + resourceId);
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
-            histories.add(createHistory(rs));
-        select.close();
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement(
+                "SELECT history_id, last_save_date, doc_key, server_version, u.user_id as userId, u.username as username, @curRank := @curRank + 1 as history_version FROM lw_resource_history h left join lw_user u on u.user_id = h.user_id, (SELECT @curRank := 0) r WHERE resource_id = ?");)
+        {
+            select.setInt(1, resourceId);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+                histories.add(createHistory(rs));
+        }
         return histories;
     }
 
@@ -84,7 +85,7 @@ public class HistoryManager
     public History saveHistory(History history) throws SQLException
     {
         PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_resource_history` (" + HISTORY_COLUMNS + ") VALUES (?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
-        if(history.getId() == null) // the file is not yet stored at the database                      
+        if(history.getId() == null) // the file is not yet stored at the database
             replace.setNull(1, java.sql.Types.INTEGER);
         else
             replace.setInt(1, history.getId());
@@ -112,7 +113,7 @@ public class HistoryManager
     {
         PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_history_change` (" + CHANGE_COLUMNS + ") VALUES (?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
-        if(change.getId() == null) // the file is not yet stored at the database                      
+        if(change.getId() == null) // the file is not yet stored at the database
             replace.setNull(1, java.sql.Types.INTEGER);
         else
             replace.setInt(1, change.getId());

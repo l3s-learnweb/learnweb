@@ -30,6 +30,7 @@ import de.l3s.learnweb.GroupManager;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Organisation.Option;
 import de.l3s.learnweb.User;
+import de.l3s.util.BeanHelper;
 import de.l3s.util.StringHelper;
 
 @ManagedBean
@@ -87,13 +88,7 @@ public class UserBean implements Serializable
         ExternalContext context = FacesContext.getCurrentInstance().getExternalContext();
         HttpServletRequest request = (HttpServletRequest) context.getRequest();
 
-        // get ip
-        String ipAddress = request.getHeader("X-FORWARDED-FOR");
-        if(ipAddress == null)
-        {
-            ipAddress = request.getRemoteAddr();
-        }
-
+        String ipAddress = BeanHelper.getIp(request);
         String userAgent = request.getHeader("User-Agent");
         String userName = user == null ? "logged_out" : user.getRealUsername();
 
@@ -102,7 +97,7 @@ public class UserBean implements Serializable
         // store the user also in the session so that it is accessible by DownloadServlet and TomcatManager
         HttpSession session = (HttpSession) context.getSession(true);
         session.setAttribute("userName", info); // set only to display it in Tomcat manager app
-        session.setAttribute("Locale", locale); // set only to display it in Tomcat manager app	
+        session.setAttribute("Locale", locale); // set only to display it in Tomcat manager app
         session.setAttribute("learnweb_user_id", new Integer(user == null ? 0 : user.getId())); // required by DownloadServlet
     }
 
@@ -121,7 +116,7 @@ public class UserBean implements Serializable
 
     /**
      * The currently logged in user
-     * 
+     *
      * @return
      */
     public User getUser()
@@ -146,7 +141,7 @@ public class UserBean implements Serializable
 
     /**
      * Use this function to log in a user.
-     * 
+     *
      * @param user
      */
     public void setUser(User user)
@@ -231,7 +226,7 @@ public class UserBean implements Serializable
     }
 
     /**
-     * 
+     *
      * @return example "de_DE"
      */
     public String getLocaleAsString()
@@ -241,7 +236,7 @@ public class UserBean implements Serializable
 
     /**
      * example "de"
-     * 
+     *
      * @return
      */
     public String getLocaleCode()
@@ -267,7 +262,7 @@ public class UserBean implements Serializable
             log.error("Unsupported language: " + localeCode);
         }
 
-        localePrettyTime = null; // reset date formatter 
+        localePrettyTime = null; // reset date formatter
 
         FacesContext facesContext = FacesContext.getCurrentInstance();
         facesContext.getViewRoot().setLocale(locale);
@@ -319,7 +314,7 @@ public class UserBean implements Serializable
 
     /**
      * returns true when the currently logged in user is allowed to moderate the given courses
-     * 
+     *
      * @param course
      * @return
      * @throws SQLException
@@ -334,7 +329,7 @@ public class UserBean implements Serializable
 
     /**
      * returns true when the currently logged in user is allowed to moderate one of the given courses
-     * 
+     *
      * @param courses
      * @return
      * @throws SQLException
@@ -373,9 +368,10 @@ public class UserBean implements Serializable
 
     /**
      * Helper method to catch exceptions
-     * 
+     *
      * @return
      */
+    @Deprecated
     private Course getActiveCourse()
     {
         if(isLoggedIn())
@@ -409,7 +405,7 @@ public class UserBean implements Serializable
 
     /**
      * Function to format Date variables in the UI depending on the users locale
-     * 
+     *
      * @param date
      * @return
      */
@@ -429,7 +425,7 @@ public class UserBean implements Serializable
 
     /**
      * Returns the css code for the banner image of the active course or an empty string if no image is defined
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -448,7 +444,7 @@ public class UserBean implements Serializable
 
     /**
      * Returns the css banner color of the active course or an empty string if no color is defined
-     * 
+     *
      * @return
      */
     public String getBannerColor()
@@ -472,7 +468,7 @@ public class UserBean implements Serializable
 
     /**
      * Returns a list of groups that have been created since the last login of this user
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -517,7 +513,7 @@ public class UserBean implements Serializable
 
     /**
      * Model for the group menu
-     * 
+     *
      * @return
      */
     public LinkedList<DefaultSubMenu> getGroupMenu()
@@ -557,7 +553,7 @@ public class UserBean implements Serializable
 
     /**
      * returns the groups tree where the user can add resources to
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -592,7 +588,7 @@ public class UserBean implements Serializable
 
     /**
      * Returns true when there is any tooltip message to show
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -610,7 +606,7 @@ public class UserBean implements Serializable
 
     public boolean isShowMessageJoinGroup() throws SQLException
     {
-        if(cacheShowMessageJoinGroup) // check until the user has joined a group 
+        if(cacheShowMessageJoinGroup) // check until the user has joined a group
         {
             User user = getUser();
             if(null == user)
@@ -674,7 +670,7 @@ public class UserBean implements Serializable
     }
 
     /**
-     * 
+     *
      * @param url
      * @return Returns the given url proxied through WAPS.io if enabled for the current organization
      */
