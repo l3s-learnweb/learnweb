@@ -116,7 +116,7 @@ public class DownloadServlet extends HttpServlet
         String[] requestFileData = requestString.substring(index + urlPattern.length()).split("/");
         if(requestFileData.length != 2)
         {
-            log.error("Invalid download URL: " + requestString);
+            log.error("Invalid download URL: " + requestString + "; " + BeanHelper.getRequestSummary(request));
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }

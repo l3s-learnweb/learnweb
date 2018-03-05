@@ -31,12 +31,14 @@
 						<h:outputText value="#{msg.presentations}" />
 					</a>
 				</li>
-				</ui:fragment>								
+				</ui:fragment>	
+				<ui:fragment rendered="#{not empty group.links}">								
 				<li>
 					<a href="./group/links.jsf?group_id=#{group.id}">
 						<h:outputText value="#{msg.links}" />
 					</a>
-				</li>								
+				</li>	
+				</ui:fragment>							
 				<li>
 					<a class="active" href="./group/forum.jsf?group_id=#{group.id}">
 						<h:outputText value="#{msg.forum}" />

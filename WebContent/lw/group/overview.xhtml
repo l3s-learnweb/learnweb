@@ -26,11 +26,12 @@
 				 #{msg.created_by} #{groupDetailBean.group.leader.username} (#{groupDetailBean.group.resourcesCount} #{msg.resources})
 				
 				<h:form id="center_header_form">
-					<p:commandLink rendered="#{not groupDetailBean.member}"
+					<p:commandLink
+						rendered="#{groupDetailBean.group.canJoinGroup(userBean.user)}"
 						action="#{groupsBean.joinGroup}"
 						styleClass="resource_button greenbutton"
-						update=":growl :group_menu @form :resource_disp"
-						partialSubmit="true" process="@this" value="#{msg.join_group}">
+						update=":growl :group_menu @form :datagrid" partialSubmit="true"
+						process="@this" value="#{msg.join_group}">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}"
 							value="#{groupDetailBean.group}" />
 					</p:commandLink>

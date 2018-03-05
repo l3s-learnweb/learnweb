@@ -38,8 +38,8 @@
 					<p:commandLink rendered="#{not groupDetailBean.member}"
 						action="#{groupsBean.joinGroup}"
 						styleClass="resource_button greenbutton"
-						update=":growl :group_menu @form :resource_disp"
-						partialSubmit="true" process="@this" value="#{msg.join_group}">
+						update=":growl :group_menu @form" partialSubmit="true"
+						process="@this" value="#{msg.join_group}">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}"
 							value="#{groupDetailBean.group}" />
 					</p:commandLink>

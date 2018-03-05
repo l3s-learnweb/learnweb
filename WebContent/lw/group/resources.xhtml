@@ -136,11 +136,13 @@
                         <h:outputText value="#{msg.presentations}"/>
                     </a>
                 </li> -->
+                <ui:fragment rendered="#{not empty groupDetailBean.group.links}">	
                 <li>
                     <a href="./group/links.jsf?group_id=#{groupDetailBean.group.id}">
                         <h:outputText value="#{msg.links}"/>
                     </a>
                 </li>
+                </ui:fragment>
                 <li>
                     <a href="./group/forum.jsf?group_id=#{groupDetailBean.group.id}">
                         <h:outputText value="#{msg.forum}"/>
