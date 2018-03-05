@@ -1,6 +1,9 @@
 package de.l3s.learnweb.loginprotection;
 
+import java.util.Date;
 import java.util.List;
+
+import de.l3s.learnweb.loginprotection.entity.AccessData;
 
 /**
  * Interface for the brute force protection manager class. Maintains separate bans on IP and usernames, records failed login attempts and can remove
@@ -11,16 +14,25 @@ import java.util.List;
  */
 public interface ProtectionManager
 {
-    public BanData getIPData(String IP);
-
-    public BanData getUsernameData(String username);
-
-    public List<BanData> getBanlist();
+    /**
+     * Gets date until a given username/IP is banned. Returns null if it isn't banned.
+     */
+    public Date getBannedUntil(String name);
 
     /**
-     * Records a failed attempt to log in. Depending on the specific implementation, also updates bantimes.
+     * Checks whether a given username/IP should get a captcha warning
+     */
+    public boolean needsCaptcha(String name);
+
+    /**
+     * Records a failed attempt to log in and, if needed, bans the username\IP.
      */
     public void updateFailedAttempts(String IP, String username);
+
+    /**
+     * Records a successful login attempt.
+     */
+    public void updateSuccessfuldAttempts(String IP, String username);
 
     /**
      * Unbans a given name or IP.
@@ -41,7 +53,7 @@ public interface ProtectionManager
      * @param bantime Duration of the ban (in hours). Negative bantime values equals permaban.
      * @param isIP Whether the given name is an IP (true) or username (false)
      */
-    void ban(BanData accData, int bantime, boolean isIP);
+    void ban(AccessData accData, int bantime, boolean isIP);
 
     /**
      * Bans selected IP or username by name for a given amount of time (or unlimited time) and updates the relevant database table.
@@ -56,4 +68,6 @@ public interface ProtectionManager
      * Deletes all bans that have already expired at least a few days ago. Specific date is dependant on implementation.
      */
     public void cleanUpOutdatedBans();
+
+    public List<AccessData> getBanlist();
 }

@@ -22,8 +22,8 @@ import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.learnweb.dashboard.DashboardManager;
+import de.l3s.learnweb.loginprotection.FrequencyProtectionManager;
 import de.l3s.learnweb.loginprotection.ProtectionManager;
-import de.l3s.learnweb.loginprotection.SimpleProtectionManager;
 import de.l3s.learnweb.rm.AudienceManager;
 import de.l3s.learnweb.rm.CategoryManager;
 import de.l3s.learnweb.rm.ExtendedMetadataManager;
@@ -317,7 +317,7 @@ public class Learnweb
         purposeManager = new PurposeManager(this);
 
         //Managers added by Kate
-        protectionManager = new SimpleProtectionManager(this);
+        protectionManager = new FrequencyProtectionManager(this);
         requestManager = RequestManager.init(this);
     }
 

@@ -59,6 +59,12 @@
 					</h:outputText>
 				</p:column>
 
+				<p:column headerText="#{msg.bannedon}" sortBy="#{entry.bannedOn}">
+					<h:outputText value="#{entry.bannedOn}">
+					    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
+					</h:outputText>
+				</p:column>
+
 				<p:column headerText="#{msg.attempts}" sortBy="#{entry.attempts}">
 					<h:outputText value="#{entry.attempts}"/>
 				</p:column>

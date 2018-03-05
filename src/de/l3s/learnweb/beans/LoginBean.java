@@ -16,7 +16,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.User;
-import de.l3s.learnweb.loginprotection.BanData;
 import de.l3s.learnweb.loginprotection.ProtectionManager;
 import de.l3s.util.BeanHelper;
 
@@ -73,34 +72,26 @@ public class LoginBean extends ApplicationBean implements Serializable
 
         //Gets the ip and username info from protection manager
         ProtectionManager PM = getLearnweb().getProtectionManager();
-        BanData ipData = PM.getIPData(ip);
-        BanData usernameData = PM.getUsernameData(username);
         Date now = new Date();
 
-        //Checks if the selected IP has been banned
-        if(ipData != null && (ipData.getBanDate().after(now)))
-        {
-            addMessage(FacesMessage.SEVERITY_ERROR, "ip_banned");
-            session.setAttribute("ipbanned", true); // TODO remove
-            return null;
-        }
-        else
-        {
-            session.removeAttribute("ipbanned"); // TODO remove
+        Date ipban = PM.getBannedUntil(ip);
+        Date userban = PM.getBannedUntil(username);
 
+        if(PM.needsCaptcha(ip) || PM.needsCaptcha(username))
+        {
+            session.setAttribute("captchaEnabled", true);
         }
 
-        //Checks if the selected username has been banned
-        if(usernameData != null && (usernameData.getBanDate().after(now)))
+        if(ipban != null && ipban.after(now))
         {
-            addMessage(FacesMessage.SEVERITY_ERROR, "username_banned");
+            addMessage(FacesMessage.SEVERITY_ERROR, "ip_banned" + ipban.toString());
             return null;
         }
 
-        //Checking whether captcha is needed
-        if((usernameData != null && usernameData.getAttempts() >= 3) || (ipData != null && ipData.getAttempts() >= 3))
+        if(userban != null && userban.after(now))
         {
-            session.setAttribute("captchaEnabled", true); // TODO remove
+            addMessage(FacesMessage.SEVERITY_ERROR, "username_banned" + userban.toString());
+            return null;
         }
 
         //USER AUTHORIZATION HAPPENS HERE
@@ -114,16 +105,7 @@ public class LoginBean extends ApplicationBean implements Serializable
         }
         else
         {
-            //On correct login resets the data and also records login into manager
-            if(usernameData != null)
-            {
-                usernameData.reset();
-            }
-
-            if(ipData != null)
-            {
-                ipData.reset();
-            }
+            PM.updateSuccessfuldAttempts(ip, username);
             session.removeAttribute("captchaEnabled");
 
             getLearnweb().getRequestManager().recordLogin(ip, username);

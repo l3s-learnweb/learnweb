@@ -74,7 +74,7 @@ public class RequestManager
      */
     private void loadBanlist()
     {
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_bans WHERE type='IP' AND bandate > now()");)
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_bans WHERE type = 'IP' AND bandate > now()");)
         {
             ResultSet rs = select.executeQuery();
             while(rs.next())
