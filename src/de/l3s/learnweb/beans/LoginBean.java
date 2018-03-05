@@ -36,7 +36,7 @@ public class LoginBean extends ApplicationBean implements Serializable
 
     public LoginBean()
     {
-        // TODO set captchaRequired here
+        this.captchaRequired = false; // TODO set captchaRequired here
     }
 
     public String getUsername()
