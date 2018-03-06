@@ -32,7 +32,7 @@ public class AccessData
     }
 
     /**
-     * Used when getting data from banlist.
+     * Used when getting data from banlist
      */
     public AccessData(String name, int attempts, Date bannedUntil, Date bannedOn)
     {
@@ -41,17 +41,6 @@ public class AccessData
         this.banDate = bannedUntil;
         this.bannedOn = bannedOn;
         allowedAttempts = 50;
-    }
-
-    /**
-     * Used by old manager when opening banlist.
-     */
-    public AccessData(int attempts, Date bannedUntil, String name)
-    {
-        this.attempts = attempts;
-        this.name = name;
-        this.banDate = bannedUntil;
-        allowedAttempts = -1;
     }
 
     /**

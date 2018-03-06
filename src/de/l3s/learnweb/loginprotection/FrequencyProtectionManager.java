@@ -1,5 +1,8 @@
 package de.l3s.learnweb.loginprotection;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -14,6 +17,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.apache.log4j.Logger;
 
@@ -54,7 +58,17 @@ public class FrequencyProtectionManager implements ProtectionManager
 
     private void loadWhitelist()
     {
-        //TODO: Add whitelist loading here
+        //TODO: This is a placeholder code, will be fixed\adjusted later
+        try(Stream<String> stream = Files.lines(Paths.get("whitelist.txt")))
+        {
+            stream.forEach(whitelist::add);
+        }
+        catch(IOException e)
+        {
+            log.error("Failed to load whitelist. SQLException: ", e);
+        }
+
+        log.debug("Whitelist loaded. Entries: " + whitelist.size());
     }
 
     /**
@@ -76,7 +90,7 @@ public class FrequencyProtectionManager implements ProtectionManager
             log.error("Failed to load banlists. SQLException: ", e);
         }
 
-        log.debug("Loaded banlists of usernames and IPs with " + accessMap.size() + " entries respectively.");
+        log.debug("Banlist loaded. Entries: " + accessMap.size());
     }
 
     @Override
