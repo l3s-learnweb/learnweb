@@ -9,7 +9,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
@@ -31,11 +30,9 @@ public class LoginBean extends ApplicationBean implements Serializable
     @NotEmpty
     private String password;
 
-    private boolean captchaRequired = false;
-
     public LoginBean()
     {
-        this.captchaRequired = false; // TODO set captchaRequired here
+        super();
     }
 
     public String getUsername()
@@ -58,16 +55,18 @@ public class LoginBean extends ApplicationBean implements Serializable
         this.password = password;
     }
 
-    public boolean isCaptchaRequired()
+    public boolean captchaRequired()
     {
-        return captchaRequired;
+        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
+        String ip = BeanHelper.getIp(request);
+
+        return getLearnweb().getProtectionManager().needsCaptcha(ip);
     }
 
     public String login() throws SQLException
     {
         //Getting IP
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        HttpSession session = (HttpSession) FacesContext.getCurrentInstance().getExternalContext().getSession(true);
         String ip = BeanHelper.getIp(request);
 
         //Gets the ip and username info from protection manager
@@ -76,11 +75,6 @@ public class LoginBean extends ApplicationBean implements Serializable
 
         Date ipban = PM.getBannedUntil(ip);
         Date userban = PM.getBannedUntil(username);
-
-        if(PM.needsCaptcha(ip) || PM.needsCaptcha(username))
-        {
-            session.setAttribute("captchaEnabled", true);
-        }
 
         if(ipban != null && ipban.after(now))
         {
@@ -106,7 +100,6 @@ public class LoginBean extends ApplicationBean implements Serializable
         else
         {
             PM.updateSuccessfuldAttempts(ip, username);
-            session.removeAttribute("captchaEnabled");
 
             getLearnweb().getRequestManager().recordLogin(ip, username);
         }
@@ -209,4 +202,5 @@ public class LoginBean extends ApplicationBean implements Serializable
         else
             return "/lw/index.xhtml?faces-redirect=true";
     }
+
 }

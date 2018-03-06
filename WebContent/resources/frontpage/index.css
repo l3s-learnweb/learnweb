@@ -2,8 +2,8 @@ body {
 	background: #f2f2f2  url("../../resources/frontpage/luh_winter.jpg") no-repeat center center fixed;
 	background-size:cover;
 }
-#message { 
-	max-width:85rem; 
+#message {
+	max-width:85rem;
 	margin:2% auto;
 }
 .content_box {
@@ -29,25 +29,25 @@ h3 { margin: 0.4rem 0; }
 h4 { text-decoration:underline;	font-size:1.3rem; margin: 0.8rem 0 0.4rem; }
 
 .homepage_infotext{
-	font-size:medium; 
+	font-size:medium;
 	text-align:justify;
 	display:block;
 	margin-bottom:2rem;
 }
 #div_left{
-	float:left; 
+	float:left;
 	padding-right:1.5rem;
 	box-sizing:border-box;
-	width:33%; 
-	
+	width:33%;
+
 	border-right:2px solid #489a83;
 }
 #div_left table { width: 100%; }
 #div_left table td { padding:0; }
 #div_right{
-	float:right; 
-	width:67%; 
-	padding-left:1.5rem;  
+	float:right;
+	width:67%;
+	padding-left:1.5rem;
 	box-sizing:border-box;
 }
 #link a{
@@ -113,20 +113,20 @@ h4 { text-decoration:underline;	font-size:1.3rem; margin: 0.8rem 0 0.4rem; }
 @media screen and (max-width:50rem){
 	#div_left{
 		float:none;
-		width:100%; 
+		width:100%;
 	}
 	#div_right{
 		float:none;
-		width:100%; 
+		width:100%;
 		border-left:none;
-		margin-top:5%; 
+		margin-top:5%;
 		padding-left:0rem;
 	}
 	.video_guide{
 		width:280px;
 		margin:0 auto;
 	}
-	#div_left table { 
-		width:280px; 
+	#div_left table {
+		width:280px;
 	}
 }
