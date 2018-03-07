@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -233,6 +234,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
             log.info("No. of selected items: " + selectedResources.size());
             User u = getLearnweb().getUserManager().getUser(11212); //special user id
             ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
+            Date submissionDate = new Date(); //Date for the resources submitted, so that the moderator can know when they were submitted
 
             List<Resource> clonedSelectedResources = new ArrayList<Resource>();
             for(Resource r : selectedResources)
@@ -243,6 +245,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
                 //So that owner of clonedResource can view the resource
                 clonedResource.setOriginalResourceId(r.getId());
                 clonedResource.setRights(ResourceViewRights.original_owner_readable);
+                clonedResource.setCreationDate(submissionDate);
 
                 u.addResource(clonedResource); //save cloned resource with special user id
 
@@ -603,12 +606,12 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         {
             try
             {
-            List<Resource> editSurveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(getUserId(), this.selectedSubmission.getCourseId());
-            for(Resource r : editSurveyResourcesForCourse)
-            {
-                String resourcePath = getResourcePath(r);
-                if(resourcePath != null)
-                    editSurveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
+                List<Resource> editSurveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(getUserId(), this.selectedSubmission.getCourseId());
+                for(Resource r : editSurveyResourcesForCourse)
+                {
+                    String resourcePath = getResourcePath(r);
+                    if(resourcePath != null)
+                        editSurveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
                 }
             }
             catch(Exception e)
@@ -624,12 +627,12 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         surveyResourcesList.clear();
         try
         {
-        List<Resource> surveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(getUserId(), this.newSubmission.getCourseId());
-        for(Resource r : surveyResourcesForCourse)
-        {
-            String resourcePath = getResourcePath(r);
-            if(resourcePath != null)
-                surveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
+            List<Resource> surveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(getUserId(), this.newSubmission.getCourseId());
+            for(Resource r : surveyResourcesForCourse)
+            {
+                String resourcePath = getResourcePath(r);
+                if(resourcePath != null)
+                    surveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
             }
         }
         catch(Exception e)
@@ -643,13 +646,13 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         editSurveyResourcesList.clear();
         try
         {
-        List<Resource> surveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(getUserId(), this.newSubmission.getCourseId());
-        for(Resource r : surveyResourcesForCourse)
-        {
-            String resourcePath = getResourcePath(r);
-            if(resourcePath != null)
-                surveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
-        }
+            List<Resource> surveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(getUserId(), this.newSubmission.getCourseId());
+            for(Resource r : surveyResourcesForCourse)
+            {
+                String resourcePath = getResourcePath(r);
+                if(resourcePath != null)
+                    surveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
+            }
         }
         catch(Exception e)
         {
