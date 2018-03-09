@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 
+import com.google.common.net.InetAddresses;
+
 import de.l3s.util.BeanHelper;
 
 /**
@@ -29,15 +31,14 @@ public class RequestFilter implements Filter
         try
         {
             HttpServletRequest req = (HttpServletRequest) request;
-
             String ip = BeanHelper.getIp(req);
 
+            if(InetAddresses.isInetAddress(ip))
+            {
+                chain.doFilter(request, response);
+            }
+
             final RequestManager requestManager = RequestManager.instance();
-            //TEMPORARILY DISABLED
-            //            if(requestManager.checkBanned(IP))
-            //            {
-            //                return;
-            //            }
 
             String url = req.getRequestURL().toString();
 

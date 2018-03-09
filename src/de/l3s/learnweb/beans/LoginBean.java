@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import com.google.common.net.InetAddresses;
+
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.User;
@@ -60,6 +62,11 @@ public class LoginBean extends ApplicationBean implements Serializable
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String ip = BeanHelper.getIp(request);
 
+        if(InetAddresses.isInetAddress(ip))
+        {
+            return true;
+        }
+
         return getLearnweb().getProtectionManager().needsCaptcha(ip);
     }
 
@@ -68,6 +75,11 @@ public class LoginBean extends ApplicationBean implements Serializable
         //Getting IP
         HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
         String ip = BeanHelper.getIp(request);
+
+        if(!InetAddresses.isInetAddress(ip))
+        {
+            return null;
+        }
 
         //Gets the ip and username info from protection manager
         ProtectionManager PM = getLearnweb().getProtectionManager();
