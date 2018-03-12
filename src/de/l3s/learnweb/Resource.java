@@ -221,16 +221,16 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
             setThumbnail3(dummyImage);
         if(null == thumbnail4)
             setThumbnail4(dummyImage);
-        
+
         /*
         if(null == embeddedSize1 || null == embeddedSize3)
         {
-        
+
         if(source.equalsIgnoreCase("YouTube"))
         {
             Pattern pattern = Pattern.compile("v[/=]([^&]+)");
             Matcher matcher = pattern.matcher(url);
-        
+
             if(matcher.find())
             {
                 String videoId = matcher.group(1);
@@ -239,34 +239,35 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
                 if(null == embeddedSize3)
                     this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
                 this.format = "application/x-shockwave-flash";
-        
+
                 dummyImage = new Thumbnail("http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg", 320, 180);
             }
         }
+
         else if(source.equals("Google") && type.equals(ResourceType.video))
         {
             Pattern pattern = Pattern.compile("youtube.com/watch%3Fv%3D([^&]+)");
             Matcher matcher = pattern.matcher(url);
-        
+
             if(matcher.find())
             {
                 String videoId = matcher.group(1);
                 this.embeddedSize1 = "<img src=\"http://img.youtube.com/vi/" + videoId + "/default.jpg\" width=\"100\" height=\"75\" />";
                 this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
-        
+
                 this.format = "application/x-shockwave-flash";
                 this.source = "YouTube";
                 this.url = "https://www.youtube.com/watch?v=" + videoId;
-        
+
                 dummyImage = new Thumbnail("http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg", 320, 180);
-        
+
             }
         }
         else if(source.equalsIgnoreCase("Vimeo"))
         {
             Pattern pattern = Pattern.compile("vimeo\\.com/([^&]+)");
             Matcher matcher = pattern.matcher(url);
-        
+
             if(matcher.find())
             {
                 String videoId = matcher.group(1);
@@ -274,9 +275,9 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
                         + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" /><embed src=\"http://vimeo.com/moogaloop.swf?clip_id=" + videoId
                         + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"500\" height=\"375\"></embed></object>";
                 this.format = "application/x-shockwave-flash";
-        
+
             }
-        
+
         }
         else if(source.equals("Ipernity") && embeddedSize1 != null)
         {
@@ -291,8 +292,8 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
                 embeddedSize3 = embeddedSize1.replace("_t.", ".");
         }
         }
-        
-        
+
+
         if(dummyImage != null)
         {
         if(null == thumbnail0)
@@ -306,7 +307,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
         if(null == thumbnail4)
             setThumbnail4(dummyImage);
         }
-        
+
         if(embeddedSize1 == null || embeddedSize1.length() < 3)
         {
         if(type.equals(ResourceType.audio))
@@ -724,7 +725,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-
+        
         }
         */
         return r;

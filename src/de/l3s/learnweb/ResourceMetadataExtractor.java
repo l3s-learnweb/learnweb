@@ -77,7 +77,7 @@ public class ResourceMetadataExtractor
     public void processWebResource(Resource resource)
     {
         if(StringUtils.isEmpty(resource.getUrl()))
-            throw new RuntimeException("Given resource doesn't have a url!");
+            throw new IllegalArgumentException("Given resource doesn't have a url!");
 
         try
         {

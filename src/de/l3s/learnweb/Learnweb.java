@@ -318,7 +318,7 @@ public class Learnweb
 
         //Managers added by Kate
         protectionManager = new FrequencyProtectionManager(this);
-        requestManager = RequestManager.init(this);
+        requestManager = RequestManager.getInstance(this);
     }
 
     /**

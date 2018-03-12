@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import com.google.common.net.InetAddresses;
 
+import de.l3s.learnweb.Learnweb;
 import de.l3s.util.BeanHelper;
 
 /**
@@ -24,32 +25,38 @@ import de.l3s.util.BeanHelper;
  */
 public class RequestFilter implements Filter
 {
+    private final static Logger log = Logger.getLogger(RequestFilter.class);
+
+    private RequestManager requestManager;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
     {
-        try
+        if(requestManager != null) // null of initialization failed
         {
-            HttpServletRequest req = (HttpServletRequest) request;
-            String ip = BeanHelper.getIp(req);
-
-            if(!InetAddresses.isInetAddress(ip))
+            try
             {
-                chain.doFilter(request, response);
-                return;
+                HttpServletRequest req = (HttpServletRequest) request;
+                String ip = BeanHelper.getIp(req);
+
+                if(InetAddresses.isInetAddress(ip))
+                {
+                    log.error("Suspicious request: " + BeanHelper.getRequestSummary(req));
+                    chain.doFilter(request, response);
+                    return;
+                }
+
+                //final RequestManager requestManager = RequestManager.instance();
+
+                String url = req.getRequestURL().toString();
+
+                requestManager.recordRequest(ip, url);
             }
-
-            final RequestManager requestManager = RequestManager.instance();
-
-            String url = req.getRequestURL().toString();
-
-            requestManager.recordRequest(ip, url);
+            catch(Throwable e) // makes sure that an error in request manager doesn't block the system
+            {
+                log.fatal("request filter error", e);
+            }
         }
-        catch(Throwable e) // makes sure that an error in request manager doesn't block the system
-        {
-            Logger.getLogger(RequestFilter.class).fatal("request filter error", e);
-        }
-
         chain.doFilter(request, response);
     }
 
@@ -59,8 +66,20 @@ public class RequestFilter implements Filter
     }
 
     @Override
-    public void init(FilterConfig arg0) throws ServletException
+    public void init(FilterConfig filterConfig) throws ServletException
     {
+        String context = filterConfig.getServletContext().getContextPath();
+        log.debug("Init RequestFilter; context = '" + context + "'");
+
+        try
+        {
+            Learnweb learnweb = Learnweb.createInstance(context);
+            requestManager = learnweb.getRequestManager();
+        }
+        catch(Exception e)
+        {
+            log.fatal("request filter not initialized ", e);
+        }
     }
 
 }

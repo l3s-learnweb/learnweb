@@ -42,18 +42,13 @@ public class RequestManager
 
     private static RequestManager instance = null;
 
-    public static RequestManager init(Learnweb learnweb)
+    public static RequestManager getInstance(Learnweb learnweb)
     {
         if(instance == null)
         {
             instance = new RequestManager(learnweb);
         }
 
-        return instance;
-    }
-
-    public static RequestManager instance()
-    {
         return instance;
     }
 

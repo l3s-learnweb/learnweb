@@ -1,7 +1,13 @@
 package de.l3s.office;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.File;
 import de.l3s.learnweb.Resource.ResourceType;
@@ -87,15 +93,19 @@ public class FileUtility
 
     public static String getFileName(String url)
     {
-        if(url == null)
-            return null;
+        if(StringUtils.isEmpty(url))
+            return "unknownFileName";
 
-        int lastIndex = url.lastIndexOf('/');
-        if(lastIndex < 1)
-            return "";
+        try
+        {
+            return Paths.get(new URI(url).getPath()).getFileName().toString();
+        }
+        catch(URISyntaxException e)
+        {
+            Logger.getLogger(FileUtility.class).error("Can't get fielname from URL: " + url, e);
+        }
 
-        String fileName = url.substring(lastIndex + 1, url.length());
-        return fileName;
+        return "unknownFileName";
     }
 
     public static String getInternalExtension(ResourceType fileType)
