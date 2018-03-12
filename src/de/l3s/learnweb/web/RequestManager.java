@@ -33,7 +33,6 @@ public class RequestManager
     private final Learnweb learnweb;
 
     //Basic maps/list
-    private final Map<String, Date> banlist;
     private Queue<RequestData> requests;
     private final Map<String, Set<String>> logins;
 
@@ -48,7 +47,6 @@ public class RequestManager
         if(instance == null)
         {
             instance = new RequestManager(learnweb);
-            instance.loadBanlist();
         }
 
         return instance;
@@ -62,50 +60,10 @@ public class RequestManager
     private RequestManager(Learnweb learnweb)
     {
         this.learnweb = learnweb;
-        banlist = new ConcurrentHashMap<String, Date>();
         logins = new ConcurrentHashMap<String, Set<String>>();
         requests = new ConcurrentLinkedQueue<RequestData>();
         aggrRequestsUpdated = new Date(0);
         aggregatedRequests = new ArrayList<AggregatedRequestData>();
-    }
-
-    /**
-     * Loads banlists from the database. Should be called by init;
-     */
-    private void loadBanlist()
-    {
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT * FROM lw_bans WHERE type = 'IP' AND bandate > now()");)
-        {
-            ResultSet rs = select.executeQuery();
-            while(rs.next())
-            {
-                banlist.put(rs.getString("name"), rs.getTimestamp("bandate"));
-            }
-        }
-        catch(SQLException e)
-        {
-            log.error("Failed to load banlist. SQLException: ", e);
-        }
-
-        log.debug("Loaded IP banlist");
-    }
-
-    /**
-     * Checks whether certain IP is banned.
-     *
-     * @return true if bantime of given IP is after today, false if it has already expired or
-     */
-    public boolean checkBanned(String ip)
-    {
-        Date bandate = banlist.get(ip);
-        if(bandate != null)
-        {
-            return bandate.after(new Date());
-        }
-        else
-        {
-            return false;
-        }
     }
 
     /**
@@ -130,14 +88,6 @@ public class RequestManager
         }
 
         names.add(username);
-    }
-
-    /**
-     * Adds some fresh bans to the IP banlist.
-     */
-    public void addBan(String ip, Date bandate)
-    {
-        banlist.put(ip, bandate);
     }
 
     /**

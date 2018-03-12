@@ -272,10 +272,6 @@ public class FrequencyProtectionManager implements ProtectionManager
 
             log.debug("Banned " + accData.getName() + " until " + accData.getBanDate());
 
-            if(isIP)
-            {
-                learnweb.getRequestManager().addBan(accData.getName(), accData.getBanDate());
-            }
         }
         catch(SQLException e)
         {

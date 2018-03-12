@@ -33,9 +33,10 @@ public class RequestFilter implements Filter
             HttpServletRequest req = (HttpServletRequest) request;
             String ip = BeanHelper.getIp(req);
 
-            if(InetAddresses.isInetAddress(ip))
+            if(!InetAddresses.isInetAddress(ip))
             {
                 chain.doFilter(request, response);
+                return;
             }
 
             final RequestManager requestManager = RequestManager.instance();
