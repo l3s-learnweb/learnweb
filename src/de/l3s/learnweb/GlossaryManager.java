@@ -106,6 +106,7 @@ public class GlossaryManager
         String selectOldData = "SELECT * FROM `lw_resource_glossary` WHERE `resource_id`= ?";
 
         String insertNewData = "INSERT INTO `lw_resource_glossary`(`resource_id`, `topic_1`, `topic_2`, `topic_3`, `description`, `deleted`, `glossary_id`) VALUES ( ?, ?, ?, ?, ?, ?, ?)";
+
         PreparedStatement ps = null;
         try
         {

@@ -134,13 +134,13 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     {
         if(!(tagO instanceof Tag))
             return false;
-
+    
         User user = getUser();
         if(null == user)
             return false;
         if(user.isAdmin() || user.isModerator())
             return true;
-
+    
         Tag tag = (Tag) tagO;
         User owner = clickedResource.getTags().getElementOwner(tag);
         if(user.equals(owner))
@@ -534,6 +534,14 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
                         newResource.setGroupId(targetGroupId);
                         newResource.setFolderId(targetFolderId);
                         resource = getUser().addResource(newResource);
+                        if(resource.getType().equals(Resource.ResourceType.survey))
+                        {
+                            getLearnweb().getCreateSurveyManager().copySurveyResource(itemId, newResource.getId());
+                        }
+                        else if(resource.getType().equals(Resource.ResourceType.glossary))
+                        {
+                            getLearnweb().getGlossariesManager().copyGlossary(itemId, newResource.getId());
+                        }
                         numResources++;
                         log(Action.adding_resource, targetGroupId, resource.getId(), "");
                     }
