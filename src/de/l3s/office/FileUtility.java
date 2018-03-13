@@ -1,7 +1,6 @@
 package de.l3s.office;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.List;
@@ -91,6 +90,20 @@ public class FileUtility
         return null;
     }
 
+    public static void main(String[] arg)
+    {
+        System.out.println(getFileName("https://www.google.de"));
+        System.out.println("--------");
+
+        System.out.println(getFileName("https://www.google.de/dfgdfgdfg"));
+        System.out.println("--------");
+
+        System.out.println(getFileName("https://www.google.de/dfgdfgdfg/"));
+        System.out.println("--------");
+
+        System.out.println(getFileName("https://www.google.de/dfgdfgdfg/asd.xmk"));
+    }
+
     public static String getFileName(String url)
     {
         if(StringUtils.isEmpty(url))
@@ -98,11 +111,17 @@ public class FileUtility
 
         try
         {
-            return Paths.get(new URI(url).getPath()).getFileName().toString();
+            URI uri = new URI(url);
+
+            String path = uri.getPath();
+            if(StringUtils.isEmpty(path))
+                path = uri.getHost();
+
+            return Paths.get(path).getFileName().toString();
         }
-        catch(URISyntaxException e)
+        catch(Throwable e)
         {
-            Logger.getLogger(FileUtility.class).error("Can't get fielname from URL: " + url, e);
+            Logger.getLogger(FileUtility.class).error("Can't get filename from URL: " + url, e);
         }
 
         return "unknownFileName";
