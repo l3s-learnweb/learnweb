@@ -207,14 +207,14 @@
 									<ui:fragment rendered="#{userBean.isMemberOfCourse(1245)}">
 									<li>
 										<a href="#{request.contextPath}/lw/admin/dashboard/index1.jsf">
-											<h:outputText value="Glossary Dashboard" />
+											<h:outputText value="Old Glossary Dashboard" />
 										</a>
 									</li>
 									</ui:fragment>
 									<ui:fragment rendered="#{userBean.isMemberOfCourse(1245) or userBean.isMemberOfCourse(1355)}">
 									<li>
 										<a href="#{request.contextPath}/lw/admin/dashboard.jsf">
-											<h:outputText value="New Glossary Dashboard" />
+											<h:outputText value="Glossary Dashboard" />
 										</a>
 									</li>
 									</ui:fragment>
