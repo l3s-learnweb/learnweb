@@ -1,5 +1,7 @@
 package de.l3s.learnweb.web;
 
+import org.apache.log4j.Logger;
+
 import de.l3s.learnweb.Learnweb;
 
 /**
@@ -10,14 +12,19 @@ import de.l3s.learnweb.Learnweb;
  */
 public class RequestsTaskHandler implements Runnable
 {
-
     @Override
     public void run()
     {
-        RequestManager requestManager = Learnweb.getInstance().getRequestManager();
-        requestManager.cleanOldRequests();
-        requestManager.recordRequestsToDB();
-
+        try
+        {
+            RequestManager requestManager = Learnweb.getInstance().getRequestManager();
+            requestManager.cleanOldRequests();
+            requestManager.recordRequestsToDB();
+        }
+        catch(Throwable e)
+        {
+            Logger.getLogger(RequestsTaskHandler.class).error("error", e);
+        }
     }
 
 }

@@ -15,6 +15,7 @@ import javax.faces.bean.RequestScoped;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.web.AggregatedRequestData;
 import de.l3s.learnweb.web.RequestData;
+import de.l3s.learnweb.web.RequestManager;
 
 @ManagedBean
 @RequestScoped
@@ -91,16 +92,18 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
 
     public void onRecordRequests()
     {
-        getLearnweb().getRequestManager().recordRequestsToDB();
-        getLearnweb().getRequestManager().updateAggregatedRequests();
-        aggregatedRequests = getLearnweb().getRequestManager().getAggrRequests();
+        RequestManager requestManager = getLearnweb().getRequestManager();
+        requestManager.recordRequestsToDB();
+        requestManager.updateAggregatedRequests();
+        aggregatedRequests = requestManager.getAggrRequests();
     }
 
     public void onClearRequestsDB()
     {
-        getLearnweb().getRequestManager().clearRequestsDB();
-        getLearnweb().getRequestManager().updateAggregatedRequests();
-        aggregatedRequests = getLearnweb().getRequestManager().getAggrRequests();
+        RequestManager requestManager = getLearnweb().getRequestManager();
+        requestManager.clearRequestsDB();
+        requestManager.updateAggregatedRequests();
+        aggregatedRequests = requestManager.getAggrRequests();
 
     }
 
