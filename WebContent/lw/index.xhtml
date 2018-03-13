@@ -27,30 +27,21 @@
 					</h2>
 					<h:form class="grey_border">
 						<p:focus for="username"/>
-						<table>
-						<tr>
-						<td>
-							<h:outputLabel for="username" value="#{msg.username}:" style="width:85px; display: inline-block;"/>
-							<p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" /></td>
-						</tr>
-						<tr>
-						<td>
-							<h:outputLabel for="password" value="#{msg.password}:" style="width:85px; display: inline-block;"/>
-							<p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" /> </td>
-						</tr>
-						<tr>
-						<td>
-							<div style="transform:scale(0.87);-webkit-transform:scale(0.87);transform-origin:0 0;-webkit-transform-origin:0 0;">
-						    	<p:captcha label="Captcha" rendered="#{loginBean.captchaRequired()}" language="#{userBean.locale}" id="captcha"/>
-						    </div>
-						    </td>
-						</tr>
-						<tr>
-							<td>
-							<p:commandButton action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" />
-							</td>
-						</tr>
-						</table>
+						<h:panelGrid columns="1">
+							<h:outputLabel for="username" value="#{msg.username}:"/>
+							<p:inputText id="username" value="#{loginBean.username}" label="#{msg.username}" styleClass="inputbox"/>
+
+							<h:outputLabel for="password" value="#{msg.password}:"/>
+							<p:password id="password" value="#{loginBean.password}" feedback="false" label="#{msg.password}" styleClass="inputbox"/>
+
+							<h:panelGroup style="transform:scale(0.87);-webkit-transform:scale(0.87);transform-origin:0 0;-webkit-transform-origin:0 0;">
+						    	<p:captcha label="Captcha" rendered="#{loginBean.captchaRequired}" language="#{userBean.locale}" id="captcha"/>
+						    </h:panelGroup>
+						    
+							<p:commandButton styleClass="greenbutton" action="#{loginBean.login()}" value="#{msg.loginLabel}" ajax="false" 
+								style="margin-top:5px;"/>
+
+						</h:panelGrid>
 						<br />
 						<h:outputLink class="forgotten_password" value="user/password.jsf">
 							<h:outputText value="#{msg.forgotten_password}" />

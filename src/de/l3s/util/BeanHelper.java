@@ -13,6 +13,17 @@ public class BeanHelper
      * Returns the remote address of the current request.
      * If available it returns the IP provided through the X-FORWARDED-FOR header
      * 
+     * @return
+     */
+    public static String getIp()
+    {
+        return getIp(null);
+    }
+
+    /**
+     * Returns the remote address of the current request.
+     * If available it returns the IP provided through the X-FORWARDED-FOR header
+     *
      * @param request
      * @return
      */

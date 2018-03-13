@@ -9,7 +9,6 @@ import javax.annotation.PreDestroy;
 import javax.faces.bean.ApplicationScoped;
 import javax.faces.bean.ManagedBean;
 import javax.faces.context.ExternalContext;
-import javax.faces.context.FacesContext;
 import javax.servlet.ServletContext;
 
 import org.apache.log4j.Logger;
@@ -47,7 +46,7 @@ public class LearnwebBean implements Serializable
     }
 
     /**
-     * 
+     *
      * @return Returns the contextpath
      */
     public String getContextPath()
@@ -56,26 +55,10 @@ public class LearnwebBean implements Serializable
     }
 
     /**
-     * 
-     * @return example for a local installation: http://localhost:8080/Learnweb-Tomcat/lw/
-     */
-    public String getBaseUrl()
-    {
-        String serverUrl = getServerUrl();
-
-        ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
-
-        String path = ext.getRequestServletPath();
-        path = path.substring(0, path.indexOf("/", 1) + 1);
-        log.debug("server url: " + serverUrl + "; path " + path);
-        return serverUrl + path;
-    }
-
-    /**
-     * 
+     *
      * @return example http://learnweb.l3s.uni-hannover.de or http://localhost:8080/Learnweb-Tomcat
      */
-    public static String getServerUrl()
+    private static String getServerUrl()
     {
         try
         {
@@ -111,7 +94,7 @@ public class LearnwebBean implements Serializable
 
     /**
      * returns the path to the users profile image or a default image if no available
-     * 
+     *
      * @param user
      * @return
      * @throws SQLException
@@ -130,7 +113,7 @@ public class LearnwebBean implements Serializable
 
     /**
      * get a message from the message property files depending on the currently used local
-     * 
+     *
      * @param msgKey
      * @param args
      * @return

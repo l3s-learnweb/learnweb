@@ -31,10 +31,16 @@ public class LoginBean extends ApplicationBean implements Serializable
     private String username;
     @NotEmpty
     private String password;
+    private boolean captchaRequired;
 
     public LoginBean()
     {
-        super();
+        String ip = BeanHelper.getIp();
+
+        if(!InetAddresses.isInetAddress(ip))
+            captchaRequired = true;
+        else
+            captchaRequired = getLearnweb().getProtectionManager().needsCaptcha(ip);
     }
 
     public String getUsername()
@@ -57,17 +63,9 @@ public class LoginBean extends ApplicationBean implements Serializable
         this.password = password;
     }
 
-    public boolean captchaRequired()
+    public boolean isCaptchaRequired()
     {
-        HttpServletRequest request = (HttpServletRequest) FacesContext.getCurrentInstance().getExternalContext().getRequest();
-        String ip = BeanHelper.getIp(request);
-
-        if(InetAddresses.isInetAddress(ip))
-        {
-            return true;
-        }
-
-        return getLearnweb().getProtectionManager().needsCaptcha(ip);
+        return captchaRequired;
     }
 
     public String login() throws SQLException

@@ -4,8 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
-
 public class LanguageItem implements Serializable
 {
     private static final long serialVersionUID = 7068970099338006288L;
@@ -224,7 +222,7 @@ public class LanguageItem implements Serializable
 
     public void setUseLabel(String useLabel)
     {
-        Logger.getLogger(this.getClass()).debug("setUseLabel: " + useLabel);
+        //        Logger.getLogger(this.getClass()).debug("setUseLabel: " + useLabel);
         this.useLabel = useLabel;
     }
 

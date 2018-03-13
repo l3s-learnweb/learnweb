@@ -40,7 +40,7 @@ public class ServicesBean extends ApplicationBean implements Serializable
 
     public String getAuthorizeUrl() throws IllegalResponseException
     {
-        return user.getInterweb().getAuthorizeUrl(UtilBean.getLearnwebBean().getBaseUrl() + "myhome/services.jsf?action=auth");
+        return user.getInterweb().getAuthorizeUrl(getLearnweb().getServerUrl() + "/lw/myhome/services.jsf?action=auth");
     }
 
     // viewParam: action
@@ -100,7 +100,7 @@ public class ServicesBean extends ApplicationBean implements Serializable
         else if(user.isLoggedInInterweb())
         {
         	String referer = getFacesContext().getExternalContext().getRequestHeaderMap().get("referer");
-        	
+        
         	if(referer != null && !referer.startsWith(Util.getLearnwebBean().getBaseUrl()))
         	{
         		log.debug("reload getAuthorizationInformation");
@@ -110,7 +110,7 @@ public class ServicesBean extends ApplicationBean implements Serializable
 
         if(user.isLoggedInInterweb())
         {
-            //Course role = user.getCourse();		
+            //Course role = user.getCourse();
 
             List<ServiceInformation> services;
             try
@@ -165,7 +165,7 @@ public class ServicesBean extends ApplicationBean implements Serializable
     {
         log.debug("signing in on service " + service.getId());
         InterWeb interWeb = user.getInterweb();
-        String callback = UtilBean.getLearnwebBean().getBaseUrl() + "/myhome/services.jsf";
+        String callback = getLearnweb().getServerUrl() + "/lw/myhome/services.jsf";
         interWeb.authorizeService(service, callback);
         return null;
     }
