@@ -94,6 +94,11 @@ public class FileUtility
     {
         System.out.println(getFileName("https://www.google.de"));
         System.out.println("--------");
+        System.out.println(getFileName("http://www.google.de/"));
+        System.out.println("--------");
+
+        System.out.println(getFileName("http://127.0.0.1"));
+        System.out.println("--------");
 
         System.out.println(getFileName("https://www.google.de/dfgdfgdfg"));
         System.out.println("--------");
@@ -114,8 +119,14 @@ public class FileUtility
             URI uri = new URI(url);
 
             String path = uri.getPath();
-            if(StringUtils.isEmpty(path))
+
+            if(StringUtils.isEmpty(path) || path.equals("/"))
+            {
                 path = uri.getHost();
+                if(path.startsWith("www."))
+                    path = path.substring(4);
+            }
+            System.out.println("path: " + path);
 
             return Paths.get(path).getFileName().toString();
         }
