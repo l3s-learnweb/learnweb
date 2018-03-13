@@ -39,14 +39,12 @@ public class RequestFilter implements Filter
                 HttpServletRequest req = (HttpServletRequest) request;
                 String ip = BeanHelper.getIp(req);
 
-                if(InetAddresses.isInetAddress(ip))
+                if(!InetAddresses.isInetAddress(ip))
                 {
                     log.error("Suspicious request: " + BeanHelper.getRequestSummary(req));
                     chain.doFilter(request, response);
                     return;
                 }
-
-                //final RequestManager requestManager = RequestManager.instance();
 
                 String url = req.getRequestURL().toString();
 

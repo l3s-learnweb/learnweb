@@ -211,6 +211,13 @@
 										</a>
 									</li>
 									</ui:fragment>
+									<ui:fragment rendered="#{userBean.isMemberOfCourse(1245) or userBean.isMemberOfCourse(1355)}">
+									<li>
+										<a href="#{request.contextPath}/lw/admin/dashboard.jsf">
+											<h:outputText value="New Glossary Dashboard" />
+										</a>
+									</li>
+									</ui:fragment>
 								</ui:fragment>
 							</ul>
 						</li>

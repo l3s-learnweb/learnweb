@@ -101,7 +101,6 @@ public class RequestManager
             logins.remove(requests.peek().getIP());
             requests.poll();
         }
-
     }
 
     /**
