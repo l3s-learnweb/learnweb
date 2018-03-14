@@ -34,10 +34,6 @@
         <p:tab title="#{msg.requests}">
 			<h:form id="requestform" >
 
-					<span>
-						<h:commandButton action="${adminRequestListBean.onRecordRequests}" value="#{msg.record_request} (Dev)" style="margin:10px;" immediate="true"/>
-					</span>
-
 					<p:dataTable var="entry" value="#{adminRequestListBean.requests}" filteredValue="#{adminRequestListBean.filteredRequests}" rows="100" paginator="true"
 			               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 			               currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})"
@@ -47,7 +43,7 @@
 							<h:outputText value="#{entry.IP}" />
 						</p:column>
 
-						<p:column headerText="#{msg.time}" sortBy="#{entry.time}" filterBy="#{entry.time}" filterMatchMode="gte">
+						<p:column headerText="#{msg.time}" sortBy="#{entry.time}" filterBy="#{entry.time}" filterFunction="#{adminRequestListBean.filterByDate}">
 							<h:outputText value="#{entry.time}">
 							    <f:convertDateTime pattern="dd.MM.yyyy HH:mm:ss" />
 							</h:outputText>
@@ -63,20 +59,20 @@
 
         <p:tab title="#{msg.logins}">
 			<h:form>
-				<p:dataTable var="entry" value="#{adminRequestListBean.logins}" rows="100" paginator="true"
+				<p:dataTable var="entry" value="#{adminRequestListBean.logins}" filteredValue="#{adminRequestListBean.filteredLogins}" rows="100" paginator="true"
 		               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}"
 		               currentPageReportTemplate="(Displaying {startRecord} - {endRecord} of {totalRecords})"
 		               >
 
-					<p:column headerText="IP" sortBy="#{entry.key}">
+					<p:column headerText="IP" sortBy="#{entry.key}"  filterBy="#{entry.key}" filterMatchMode="contains">
 						<h:outputText value="#{entry.key}" />
 					</p:column>
 
-					<p:column headerText="#{msg.logins_amount}" sortBy="#{entry.value.size()}">
+					<p:column headerText="#{msg.logins_amount}" sortBy="#{entry.value.size()}"  filterBy="#{entry.value.size()}" filterMatchMode="contains">
 						<h:outputText value="#{entry.value.size()}" />
 					</p:column>
 
-					<p:column headerText="#{msg.request_usernames}" sortBy="#{entry.value.toString()}">
+					<p:column headerText="#{msg.request_usernames}" sortBy="#{entry.value.toString()}"  filterBy="#{entry.value.toString()}" filterMatchMode="contains">
 						<h:outputText value="#{entry.value.toString()}" />
 					</p:column>
 
@@ -95,26 +91,26 @@
 					<h:commandButton action="${adminRequestListBean.onClearRequestsDB}" value="Clear table (Dev)" style="margin:10px;" immediate="true"/>
 				</span>
 
-				<p:dataTable var="entry" value="#{adminRequestListBean.aggregatedRequests}" rows="50" paginator="true"
-		               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {NextPageLink} {LastPageLink}">
+				<p:dataTable var="entry" value="#{adminRequestListBean.aggregatedRequests}" filteredValue="#{adminRequestListBean.filteredAggregatedRequests}" rows="50" paginator="true"
+		              paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
 
-					<p:column headerText="IP" sortBy="#{entry.IP}">
+					<p:column headerText="IP" sortBy="#{entry.IP}"  filterBy="#{entry.IP}" filterMatchMode="contains">
 						<h:outputText value="#{entry.IP}" />
 					</p:column>
 
-					<p:column headerText="#{msg.requests_count}" sortBy="#{entry.requests}">
+					<p:column headerText="#{msg.requests_count}" sortBy="#{entry.requests}"  filterBy="#{entry.requests}" filterMatchMode="contains">
 						<h:outputText value="#{entry.requests}" />
 					</p:column>
 
-					<p:column headerText="#{msg.logins_amount}" sortBy="#{entry.loginCount}">
+					<p:column headerText="#{msg.logins_amount}" sortBy="#{entry.loginCount}"  filterBy="#{entry.loginCount}" filterMatchMode="contains">
 						<h:outputText value="#{entry.loginCount}" />
 					</p:column>
 
-					<p:column headerText="#{msg.request_usernames}" sortBy="#{entry.usernames}">
+					<p:column headerText="#{msg.request_usernames}" sortBy="#{entry.usernames}" filterBy="#{entry.usernames}" filterMatchMode="contains">
 						<h:outputText value="#{entry.usernames}" />
 					</p:column>
 
-					<p:column headerText="#{msg.time_stamp}" sortBy="#{entry.time}">
+					<p:column headerText="#{msg.time_stamp}" sortBy="#{entry.time}" filterBy="#{entry.time}" filterFunction="#{adminRequestListBean.filterByDate}">
 						<h:outputText value="#{entry.time}">
 						    <f:convertDateTime pattern="dd.MM.yyyy HH:mm" />
 						</h:outputText>

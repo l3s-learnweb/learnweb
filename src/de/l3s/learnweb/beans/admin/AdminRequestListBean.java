@@ -1,9 +1,12 @@
 package de.l3s.learnweb.beans.admin;
 
 import java.io.Serializable;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Queue;
@@ -24,9 +27,12 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
     private static final long serialVersionUID = -5469152668344315959L;
     private Queue<RequestData> requests;
     private List<RequestData> filteredRequests;
+
     private List<Map.Entry<String, Set<String>>> logins;
+    private List<Map.Entry<String, Set<String>>> filteredLogins;
 
     private List<AggregatedRequestData> aggregatedRequests = null;
+    private List<AggregatedRequestData> filteredAggregatedRequests = null;
 
     public AdminRequestListBean()
     {
@@ -42,12 +48,29 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
                 requests = getLearnweb().getRequestManager().getRequests();
                 logins = new ArrayList<Map.Entry<String, Set<String>>>(getLearnweb().getRequestManager().getLogins().entrySet());
                 aggregatedRequests = getLearnweb().getRequestManager().getAggrRequests();
+                onUpdateAggregatedRequests();
             }
         }
         catch(Exception e)
         {
             addFatalMessage(e);
         }
+    }
+
+    public void onClearRequestsDB()
+    {
+        RequestManager requestManager = getLearnweb().getRequestManager();
+        requestManager.clearRequestsDB();
+        requestManager.updateAggregatedRequests();
+        aggregatedRequests = requestManager.getAggrRequests();
+
+    }
+
+    public boolean filterByDate(Object value, Object filter, Locale locale)
+    {
+        DateFormat df = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        String strDate = df.format(((Date) value));
+        return strDate.contains((String) filter);
     }
 
     public Queue<RequestData> getRequests()
@@ -90,21 +113,24 @@ public class AdminRequestListBean extends ApplicationBean implements Serializabl
         getLearnweb().getRequestManager().updateAggregatedRequests();
     }
 
-    public void onRecordRequests()
+    public List<Map.Entry<String, Set<String>>> getFilteredLogins()
     {
-        RequestManager requestManager = getLearnweb().getRequestManager();
-        requestManager.recordRequestsToDB();
-        requestManager.updateAggregatedRequests();
-        aggregatedRequests = requestManager.getAggrRequests();
+        return filteredLogins;
     }
 
-    public void onClearRequestsDB()
+    public void setFilteredLogins(List<Map.Entry<String, Set<String>>> filteredLogins)
     {
-        RequestManager requestManager = getLearnweb().getRequestManager();
-        requestManager.clearRequestsDB();
-        requestManager.updateAggregatedRequests();
-        aggregatedRequests = requestManager.getAggrRequests();
+        this.filteredLogins = filteredLogins;
+    }
 
+    public List<AggregatedRequestData> getFilteredAggregatedRequests()
+    {
+        return filteredAggregatedRequests;
+    }
+
+    public void setFilteredAggregatedRequests(List<AggregatedRequestData> filteredAggregatedRequests)
+    {
+        this.filteredAggregatedRequests = filteredAggregatedRequests;
     }
 
 }

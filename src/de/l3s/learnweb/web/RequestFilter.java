@@ -32,7 +32,7 @@ public class RequestFilter implements Filter
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException
     {
-        if(requestManager != null) // null of initialization failed
+        if(requestManager != null)
         {
             try
             {
@@ -50,9 +50,9 @@ public class RequestFilter implements Filter
 
                 requestManager.recordRequest(ip, url);
             }
-            catch(Throwable e) // makes sure that an error in request manager doesn't block the system
+            catch(Throwable e)
             {
-                log.fatal("request filter error", e);
+                log.fatal("Request filter error: ", e);
             }
         }
         chain.doFilter(request, response);

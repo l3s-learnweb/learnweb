@@ -96,11 +96,12 @@ public class RequestManager
 
         Date threshold = cal.getTime();
 
-        while(requests.peek().getTime().before(threshold))
+        while(!requests.isEmpty() && requests.peek().getTime().before(threshold))
         {
             logins.remove(requests.peek().getIP());
             requests.poll();
         }
+
     }
 
     /**
