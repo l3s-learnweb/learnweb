@@ -2,10 +2,10 @@ var select_res_lightbox = new lightbox_utils();
 
 function confirmSubmitMessage()
 {
-	var confirmMessage = "Are you sure you want to submit?"
+	var confirmMessage = "Are you sure you want to submit? You will no longer be able to submit any more resources."
 	//var no_selected_resources = $('.group-resources-item').length;
 	if(resources_to_select > 0)
-		confirmMessage += " You can still select " + resources_to_select + " more resources.";
+		confirmMessage = "You should select " + resources_to_select + " more resource" + (resources_to_select > 1 ? "s" : "") +" for your submission. " + confirmMessage;
 	return confirm(confirmMessage);
 }
 
@@ -91,7 +91,8 @@ $(document).ready(function(){
         if(action === "delete")
         	doAction("remove");
     });
-    
+   
+    updateMaxResources();
 });
 
 function newSelectedItems() {

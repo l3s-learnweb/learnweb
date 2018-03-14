@@ -23,7 +23,7 @@ public class Submission
     int surveyResourceId = -1;
     Survey surveyResource;
     boolean surveyMandatory = false;
-
+    boolean submitted = false;
     List<Resource> submittedResources;
 
     public Submission()
@@ -204,5 +204,15 @@ public class Submission
     public void setSubmittedResources(List<Resource> submittedResources)
     {
         this.submittedResources = submittedResources;
+    }
+
+    public boolean isSubmitted()
+    {
+        return submitted;
+    }
+
+    public void setSubmitted(boolean submitted)
+    {
+        this.submitted = submitted;
     }
 }

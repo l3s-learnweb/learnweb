@@ -31,6 +31,19 @@
 			    });
 			}
 			
+			function clickCurrentSubmissions(){
+				$('#current_submissions > .submission_header').trigger("click");
+			}
+			
+			var scrollPos;
+			function saveScrollPos(event){
+				scrollPos = $(event.currentTarget).get(0).offsetTop;
+			}
+			
+			function setScrollPos(){
+				$('.nano').nanoScroller({scrollTop: scrollPos});
+			}
+			
 			function toggleSurveySelectField(show, surveySelectType)
 			{
 				var selectFieldIdPrefix = surveySelectType == "edit" ? "#edit_dialog_survey" : "#create_dialog_survey";

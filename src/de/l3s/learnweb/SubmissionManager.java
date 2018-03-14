@@ -94,6 +94,7 @@ public class SubmissionManager
                 s.setNoOfResources(rs.getInt("number_of_resources"));
                 s.setSurveyResourceId(rs.getInt("survey_resource_id"));
                 s.setSubmittedResources(getResourcesByIdAndUserId(submissionId, user.getId()));
+                s.setSubmitted(getSubmitStatusForUser(submissionId, user.getId()));
 
                 submissions.add(s);
             }
@@ -196,6 +197,22 @@ public class SubmissionManager
         }
     }
 
+    public void deleteSubmissionResource(int submissionId, int resourceId, int userId)
+    {
+        try
+        {
+            PreparedStatement ps = learnweb.getConnection().prepareStatement("DELETE FROM lw_submit_resource WHERE submission_id=? AND resource_id=? AND user_id=?");
+            ps.setInt(1, submissionId);
+            ps.setInt(2, resourceId);
+            ps.setInt(3, userId);
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            log.error("Error while saving resource " + resourceId + " for submission id: " + submissionId, e);
+        }
+    }
+
     public void saveSubmission(Submission submission)
     {
         try
@@ -281,4 +298,72 @@ public class SubmissionManager
         return usersSubmissions;
     }
 
+    public boolean getSubmitStatusForUser(int submissionId, int userId)
+    {
+        boolean submitted = false;
+        try
+        {
+            PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT submitted FROM lw_submit_status WHERE submission_id = ? AND user_id = ?");
+            ps.setInt(1, submissionId);
+            ps.setInt(2, userId);
+            ResultSet rs = ps.executeQuery();
+            if(rs.next())
+                submitted = (rs.getInt(1) == 1);
+        }
+        catch(SQLException e)
+        {
+            log.error("Eror while retrieving submit status for submission: " + submissionId + "; user: " + userId, e);
+        }
+        return submitted;
+    }
+
+    public void saveSubmitStatusForUser(int submissionId, int userId, boolean submitted)
+    {
+        try
+        {
+            PreparedStatement ps = learnweb.getConnection().prepareStatement("REPLACE INTO lw_submit_status(submission_id, user_id, submitted) VALUES (?,?,?)");
+            ps.setInt(1, submissionId);
+            ps.setInt(2, userId);
+            ps.setInt(3, submitted ? 1 : 0);
+            ps.executeUpdate();
+        }
+        catch(SQLException e)
+        {
+            log.error("Eror while inserting submit status for submission: " + submissionId + "; user: " + userId, e);
+        }
+    }
+
+    public static void main(String[] args) throws ClassNotFoundException, SQLException
+    {
+        /*SubmissionManager sm = Learnweb.createInstance("").getSubmissionManager();
+        PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("SELECT resource_id from learnweb_main.lw_submit_resource");
+        ResultSet rs = pStmt.executeQuery();
+        int websiteCount = 0, archivedCount = 0;
+        while(rs.next())
+        {
+            int resourceId = rs.getInt(1);
+            Resource r = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+            if(r.getType() == Resource.ResourceType.website)
+            {
+                websiteCount++;
+                System.out.print("resourceid: " + resourceId);
+                PreparedStatement pStmt2 = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM learnweb_main.lw_resource_archiveurl WHERE resource_id = ?");
+                pStmt2.setInt(1, resourceId);
+                ResultSet rs2 = pStmt2.executeQuery();
+                if(rs2.next())
+                {
+                    archivedCount++;
+                    System.out.print(" archived ");
+                    System.out.print(r.getArchiveUrls().getLast().getTimestamp());
+                }
+                System.out.println();
+                pStmt2.close();
+            }
+
+        }
+        System.out.println("No. of websites submitted: " + websiteCount);
+        System.out.println("No. of them archived: " + archivedCount);
+        pStmt.close();*/
+        System.exit(0);
+    }
 }

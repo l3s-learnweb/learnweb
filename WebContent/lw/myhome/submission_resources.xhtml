@@ -93,7 +93,7 @@
 				</h:panelGroup>
 				<div class="clear"></div>
 				<h:form id="submit_resources_form" prependId="false">
-					<p:commandButton id="submit_resources_button" value="#{msg.submit}" class="greenbutton" style="display:none;" action="#{submitResourcesBean.actionSubmitItems}" update=":add_resource_panel :resourceGrid2 :growl" onclick="return confirmSubmitMessage();"/>
+					<p:commandButton id="submit_resources_button" value="#{msg.submit}" class="greenbutton" style="display:none;" action="#{submitResourcesBean.actionSubmitItems}" update=":add_resource_panel :resourceGrid2 :growl" onclick="return confirmSubmitMessage();" rendered="#{not submitResourcesBean.submitted}"/>
 				</h:form>
 		</h:panelGroup>
 		</h:panelGroup>

@@ -5,7 +5,7 @@
 	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough">
 
 	<ui:repeat var="submission" value="#{submissions}">
-		<div class="submission_card">
+		<h:panelGroup layout="block" class="submission_card">
 		<div class="submission_card_details">
 			<div class="submission_details">
 				<h2>
@@ -15,6 +15,16 @@
 							process="@this" oncomplete="PF('submission_edit_dialog').show();toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');" update=":edit_submission_dialog1">
 							<f:setPropertyActionListener target="#{submitResourcesBean.selectedSubmission}" value="#{submission}" />
 							<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
+						</p:commandLink>
+						<p:commandLink style="text-decoration:none;" title="unlock submission" rendered="#{(userBean.admin || userBean.moderator) and submitResourcesBean.submissionOverviewReadOnly and submission.currentSubmission and submission.submitted}"
+							process="@this" update=":current_submissions" action="#{submitResourcesBean.unlockSubmission}" oncomplete="addSubmissionHeaderClickHandler();clickCurrentSubmissions();setScrollPos();" onstart="saveScrollPos(event);">
+							<f:setPropertyActionListener target="#{submitResourcesBean.selectedSubmission}" value="#{submission}" />
+							<h:graphicImage value="/resources/icon/lock.png" width="16" height="16" alt="#{msg.edit}" />
+						</p:commandLink>
+						<p:commandLink style="text-decoration:none;" title="lock submission" rendered="#{(userBean.admin || userBean.moderator) and submitResourcesBean.submissionOverviewReadOnly and submission.currentSubmission and not submission.submitted and not empty submission.submittedResources}"
+							process="@this" update=":current_submissions" action="#{submitResourcesBean.lockSubmission}" oncomplete="addSubmissionHeaderClickHandler();clickCurrentSubmissions();">
+							<f:setPropertyActionListener target="#{submitResourcesBean.selectedSubmission}" value="#{submission}" />
+							<h:graphicImage value="/resources/icon/unlock.png" width="16" height="16" alt="#{msg.edit}" />
 						</p:commandLink>
 					</h:form>
 				</h2>
@@ -118,6 +128,6 @@
 			</h:panelGroup>
 			
 		</h:panelGroup>
-		</div>
+		</h:panelGroup>
 	</ui:repeat>
 </ui:composition>

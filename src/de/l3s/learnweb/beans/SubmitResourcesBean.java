@@ -109,8 +109,10 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
             if(!submittedResources.isEmpty())
             {
                 selectedResources.addAll(submittedResources);
-                submitted = true;
+                //submitted = true;
             }
+            submitted = getLearnweb().getSubmissionManager().getSubmitStatusForUser(submissionId, userId);
+
             if(selectedSubmission != null && selectedSubmission.isPastSubmission())
             {
                 submitted = true;
@@ -232,56 +234,65 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         try
         {
             log.info("No. of selected items: " + selectedResources.size());
-            User u = getLearnweb().getUserManager().getUser(11212); //special user id
+            User specialAdmin = getLearnweb().getUserManager().getUser(11212); //special user id
             ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
             Date submissionDate = new Date(); //Date for the resources submitted, so that the moderator can know when they were submitted
 
             List<Resource> clonedSelectedResources = new ArrayList<Resource>();
             for(Resource r : selectedResources)
             {
-                log.debug(r.getId());
-                Resource clonedResource = r.clone();
-
-                //So that owner of clonedResource can view the resource
-                clonedResource.setOriginalResourceId(r.getId());
-                clonedResource.setRights(ResourceViewRights.original_owner_readable);
-                clonedResource.setCreationDate(submissionDate);
-
-                u.addResource(clonedResource); //save cloned resource with special user id
-
-                //clone comments/tags of resource if it exists
-                clonedResource.cloneComments(r.getComments());
-                clonedResource.cloneTags(r.getTags());
-
-                if(clonedResource.getType() == ResourceType.website)
+                log.debug("resource: " + r.getId() + "; submission: " + submissionId + "; user:" + userId);
+                if(r.getUserId() != specialAdmin.getId())
                 {
-                    String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(clonedResource);
-                    if(response.equals("ROBOTS_ERROR") || response.equals("GENERIC_ERROR") || response.equals("PARSE_DATE_ERROR") || response.equals("SQL_SAVE_ERROR"))
+                    Resource clonedResource = r.clone();
+
+                    //So that owner of clonedResource can view the resource
+                    clonedResource.setOriginalResourceId(r.getId());
+                    clonedResource.setRights(ResourceViewRights.original_owner_readable);
+                    clonedResource.setCreationDate(submissionDate);
+
+                    specialAdmin.addResource(clonedResource); //save cloned resource with special user id
+
+                    //clone comments/tags of resource if it exists
+                    clonedResource.cloneComments(r.getComments());
+                    clonedResource.cloneTags(r.getTags());
+
+                    if(clonedResource.getType() == ResourceType.website)
                     {
-                        if(clonedResource.getThumbnail0() == null)
+
+                        String response = getLearnweb().getArchiveUrlManager().addResourceToArchive(clonedResource);
+                        if(response.equals("ROBOTS_ERROR") || response.equals("GENERIC_ERROR") || response.equals("PARSE_DATE_ERROR") || response.equals("SQL_SAVE_ERROR"))
                         {
-                            try
+                            if(clonedResource.getThumbnail0() == null)
                             {
-                                rpm.processResource(clonedResource);
-                            }
-                            catch(IOException | SQLException e)
-                            {
-                                log.error("Could not archive the resource during submission because of " + response + " for resource " + clonedResource.getId());
-                                log.error("Error during submission while processing thumbnails for resource: " + clonedResource.getId(), e);
+                                try
+                                {
+                                    rpm.processResource(clonedResource);
+                                }
+                                catch(IOException | SQLException e)
+                                {
+                                    log.error("Could not archive the resource during submission because of " + response + " for resource " + clonedResource.getId());
+                                    log.error("Error during submission while processing thumbnails for resource: " + clonedResource.getId(), e);
+                                }
                             }
                         }
                     }
+
+                    getLearnweb().getSubmissionManager().saveSubmissionResource(submissionId, clonedResource.getId(), userId);
+
+                    log(Action.submission_submitted, 0, clonedResource.getId());
+
+                    clonedSelectedResources.add(clonedResource);
                 }
-
-                getLearnweb().getSubmissionManager().saveSubmissionResource(submissionId, clonedResource.getId(), userId);
-
-                log(Action.submission_submitted, 0, clonedResource.getId());
-
-                clonedSelectedResources.add(clonedResource);
+                else
+                {
+                    clonedSelectedResources.add(r);
+                }
             }
             selectedResources.clear();
             selectedResources.addAll(clonedSelectedResources);
             setSubmitted(true);
+            getLearnweb().getSubmissionManager().saveSubmitStatusForUser(submissionId, userId, true);
 
             addGrowl(FacesMessage.SEVERITY_INFO, "Submission.success_message");
         }
@@ -296,6 +307,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
     {
         try
         {
+            int adminUserId = 11212;
             for(int i = 0, len = objects.length(); i < len; ++i)
             {
                 JSONObject item = objects.getJSONObject(i);
@@ -309,6 +321,11 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
                     if(resource != null && selectedResources.contains(resource))
                     {
                         selectedResources.remove(resource);
+                        if(resource.getUserId() == adminUserId)
+                        {
+                            resource.delete();
+                            getLearnweb().getSubmissionManager().deleteSubmissionResource(submissionId, resource.getId(), userId);
+                        }
                     }
                     if(resource.equals(clickedResource))
                     {
@@ -670,5 +687,23 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         if(courseId > 0)
             return getLearnweb().getCourseManager().getCourseById(courseId).getTitle();
         return null;
+    }
+
+    public void unlockSubmission()
+    {
+        if(selectedSubmission != null)
+        {
+            selectedSubmission.setSubmitted(false);
+            getLearnweb().getSubmissionManager().saveSubmitStatusForUser(selectedSubmission.getId(), userId, false);
+        }
+    }
+
+    public void lockSubmission()
+    {
+        if(selectedSubmission != null)
+        {
+            selectedSubmission.setSubmitted(true);
+            getLearnweb().getSubmissionManager().saveSubmitStatusForUser(selectedSubmission.getId(), userId, true);
+        }
     }
 }

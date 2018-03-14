@@ -152,18 +152,18 @@ public class ArchiveUrlManager
                     prepStmt.executeUpdate();
                     prepStmt.close();
 
-                    resource.addArchiveUrl(null); // TODO 
+                    resource.addArchiveUrl(null); // TODO
                 }
                 else if(response.getStatus() == HttpURLConnection.HTTP_FORBIDDEN)
                 {
                     if(response.getHeaders().containsKey("X-Archive-Wayback-Liveweb-Error"))
+                    {
                         if(response.getHeaders().getFirst("X-Archive-Wayback-Liveweb-Error").equalsIgnoreCase("RobotAccessControlException: Blocked By Robots"))
                             return "ROBOTS_ERROR";
-                        else
-                        {
-                            log.error("Cannot archive URL because of an error other than robots.txt for resource: " + resource.getId());
-                            return "GENERIC_ERROR";
-                        }
+                    }
+
+                    log.error("Cannot archive URL because of an error other than robots.txt for resource: " + resource.getId());
+                    return "GENERIC_ERROR";
                 }
             }
             catch(SQLException e)
