@@ -1065,8 +1065,10 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void onNodeSelect(NodeSelectEvent event)
     {
-        Folder selectedFolder = (Folder) selectedNode.getData();
-        setSelectedFolder(selectedFolder);
+        if (selectedNode != null) {
+            Folder selectedFolder = (Folder) selectedNode.getData();
+            setSelectedFolder(selectedFolder);
+        }
     }
 
     public String getNewFolderName()
