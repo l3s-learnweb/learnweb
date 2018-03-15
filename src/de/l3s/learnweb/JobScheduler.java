@@ -4,8 +4,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.loginprotection.ExpiredBansCleaner;
 import de.l3s.learnweb.web.RequestsTaskHandler;
-import de.l3s.tedapi.crawler.CheckNewTedVideos;
-import de.l3s.tedapi.crawler.CheckUpdatedTedVideos;
+import de.l3s.ted.crawler.TedCrawlerSimple;
 import it.sauronsoftware.cron4j.Scheduler;
 import it.sauronsoftware.cron4j.Task;
 import it.sauronsoftware.cron4j.TaskExecutionContext;
@@ -32,12 +31,13 @@ public class JobScheduler
         //scheduler.schedule("0 1 13,27 * *", yovistoTask);
 
         //Schedules the task, at 1:00 everyday to check for new TED videos
-        scheduler.schedule("0 1 * * *", new CheckNewTedVideos());
+        //scheduler.schedule("0 1 * * *", new CheckNewTedVideos());
 
         //Schedules the task at 1:00 on alternate days to update existing TED videos
-        scheduler.schedule("0 1 2-30/2 * *", new CheckUpdatedTedVideos());
+        //scheduler.schedule("0 1 2-30/2 * *", new CheckUpdatedTedVideos());
 
-        //scheduler.schedule("0 1 * * *", new TedCrawlController());
+        //Runs the TED crawler at 1:00 everyday to check for new/update TED videos
+        scheduler.schedule("0 1 * * *", new TedCrawlerSimple());
 
         //Cleans up expired bans once a week on Sunday at 3:00AM
         scheduler.schedule("0 3 * * Sun", new ExpiredBansCleaner());
