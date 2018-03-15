@@ -39,13 +39,18 @@ public class TedCrawlerSimple implements Runnable
 
     public TedCrawlerSimple()
     {
+
+    }
+
+    public void initialize()
+    {
         try
         {
-            rpm = Learnweb.createInstance("").getResourcePreviewMaker();
+            rpm = Learnweb.getInstance().getResourcePreviewMaker();
             tedGroup = Learnweb.getInstance().getGroupManager().getGroupById(862);
             admin = Learnweb.getInstance().getUserManager().getUser(7727);
         }
-        catch(SQLException | ClassNotFoundException e)
+        catch(SQLException e)
         {
             log.error("Error while initializing TED crawler", e);
         }
@@ -426,6 +431,7 @@ public class TedCrawlerSimple implements Runnable
     @Override
     public void run()
     {
+        initialize();
         start();
     }
 
