@@ -438,9 +438,18 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
             HSSFWorkbook wb = (HSSFWorkbook) document;
             HSSFSheet sheet = wb.getSheetAt(0);
+
             HSSFRow row0 = sheet.getRow(1);
-            HSSFCell cell0 = row0.getCell(0);
-            System.out.println(cell0);
+            HSSFCell cell0;
+
+            if(row0 != null)
+            {
+                cell0 = row0.getCell(0);
+            }
+            else
+            {
+                return;
+            }
 
             int i = 2;
             for(i = 2; i <= sheet.getLastRowNum(); i++)
@@ -469,7 +478,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            log.error("Error in postprocessing Glossary xls ", e);
+            log.error("Error in postprocessing Glossary xls for resource: " + resourceId, e);
         }
 
     }
