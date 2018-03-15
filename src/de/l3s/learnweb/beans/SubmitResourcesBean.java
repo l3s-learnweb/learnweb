@@ -102,25 +102,24 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         }
 
         selectedResources = new ArrayList<Resource>();
+        //When accessing the submission_resources page both these parameters are set
         if(submissionId > 0 && userId > 0)
         {
             selectedSubmission = getLearnweb().getSubmissionManager().getSubmissionById(submissionId);
             List<Resource> submittedResources = getLearnweb().getSubmissionManager().getResourcesByIdAndUserId(submissionId, userId);
             if(!submittedResources.isEmpty())
-            {
                 selectedResources.addAll(submittedResources);
-                //submitted = true;
-            }
+
             submitted = getLearnweb().getSubmissionManager().getSubmitStatusForUser(submissionId, userId);
 
+            //Past submissions are always considered as submitted
             if(selectedSubmission != null && selectedSubmission.isPastSubmission())
-            {
                 submitted = true;
-            }
         }
 
         //log.info("submission id:" + submissionId + " max no. of resources: " + selectedSubmission.getNoOfResources());
 
+        //When moderator accesses a student's overview page to not display edit option for a submission
         if(getUser().getId() != this.userId)
             submissionOverviewReadOnly = true;
 
@@ -134,6 +133,11 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
 
     }
 
+    /**
+     * To display my resources in the lightbox that pops up in the submission_resources page
+     *
+     * @return
+     */
     public List<Resource> getResources()
     {
         if(resources == null)
@@ -508,8 +512,6 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
             if(u == null)
                 u = getUser();
 
-            //int courseId = this.courseId > 0 ? this.courseId : u.getActiveCourseId();
-
             List<Submission> submissions = Learnweb.getInstance().getSubmissionManager().getSubmissionsByUser(u);
             for(Submission s : submissions)
             {
@@ -556,31 +558,12 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         return Learnweb.getInstance().getSubmissionManager().getSubmissionsByUser(getUser());
     }
 
-    public List<User> getUsers() throws SQLException
-    {
-        if(users == null)
-        {
-            //HashMap<User, Integer> usersSubmissions = new HashMap<User, Integer>();
-            Integer courseId = getParameterInt("course_id");
-
-            if(courseId != null)
-            {
-                this.courseId = courseId;
-                users = getLearnweb().getCourseManager().getCourseById(courseId).getMembers();
-                userSubmissions = getLearnweb().getSubmissionManager().getUsersSubmissionsByCourseId(courseId);
-            }
-        }
-        return users;
-    }
-
-    public int getNumberOfSubmissions(int userId)
-    {
-        if(userSubmissions.containsKey(userId))
-            return userSubmissions.get(userId);
-
-        return 0;
-    }
-
+    /**
+     * To list the current submissions active for a course
+     * in the homepage of each user
+     *
+     * @return
+     */
     public List<Submission> getActiveSubmissions()
     {
         if(currentSubmissions == null)
@@ -668,7 +651,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
             {
                 String resourcePath = getResourcePath(r);
                 if(resourcePath != null)
-                    surveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
+                    editSurveyResourcesList.add(new SelectItem(r.getId(), resourcePath));
             }
         }
         catch(Exception e)
@@ -682,6 +665,13 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         return submissionOverviewReadOnly;
     }
 
+    /**
+     * To display the course title in each submission card block in the
+     * submissions overview page
+     *
+     * @param courseId
+     * @return
+     */
     public String getCourseTitle(int courseId)
     {
         if(courseId > 0)
@@ -705,5 +695,38 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
             selectedSubmission.setSubmitted(true);
             getLearnweb().getSubmissionManager().saveSubmitStatusForUser(selectedSubmission.getId(), userId, true);
         }
+    }
+
+    /* -------- Methods below are used for the admin users submissions page ---------*/
+
+    /**
+     * To display the users for a particular course and the corresponding number of submissions
+     * on the admin/users_submissions page
+     *
+     * @return
+     * @throws SQLException
+     */
+    public List<User> getUsers() throws SQLException
+    {
+        if(users == null)
+        {
+            Integer courseId = getParameterInt("course_id");
+
+            if(courseId != null)
+            {
+                this.courseId = courseId;
+                users = getLearnweb().getCourseManager().getCourseById(courseId).getMembers();
+                userSubmissions = getLearnweb().getSubmissionManager().getUsersSubmissionsByCourseId(courseId);
+            }
+        }
+        return users;
+    }
+
+    public int getNumberOfSubmissions(int userId)
+    {
+        if(userSubmissions.containsKey(userId))
+            return userSubmissions.get(userId);
+
+        return 0;
     }
 }

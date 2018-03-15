@@ -11,7 +11,8 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 /**
- *
+ * DAO for submissions pages
+ * 
  * @author Trevor
  */
 public class SubmissionManager
@@ -36,16 +37,7 @@ public class SubmissionManager
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             {
-                Submission s = new Submission();
-                s.setId(rs.getInt("submission_id"));
-                s.setCourseId(courseId);
-                s.setTitle(rs.getString("title"));
-                s.setDescription(rs.getString("description"));
-                s.setOpenDatetime(rs.getDate("open_datetime"));
-                s.setCloseDatetime(rs.getDate("close_datetime"));
-                s.setNoOfResources(rs.getInt("number_of_resources"));
-                s.setSurveyResourceId(rs.getInt("survey_resource_id"));
-
+                Submission s = createSubmission(rs);
                 submissions.add(s);
             }
         }
@@ -57,6 +49,12 @@ public class SubmissionManager
         return submissions;
     }
 
+    /**
+     * Get all submissions for a particular user across all their courses
+     *
+     * @param user
+     * @return
+     */
     public ArrayList<Submission> getSubmissionsByUser(User user)
     {
         ArrayList<Submission> submissions = new ArrayList<Submission>();
@@ -83,19 +81,10 @@ public class SubmissionManager
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             {
-                Submission s = new Submission();
                 int submissionId = rs.getInt("submission_id");
-                s.setId(submissionId);
-                s.setCourseId(rs.getInt("course_id"));
-                s.setTitle(rs.getString("title"));
-                s.setDescription(rs.getString("description"));
-                s.setOpenDatetime(rs.getDate("open_datetime"));
-                s.setCloseDatetime(rs.getDate("close_datetime"));
-                s.setNoOfResources(rs.getInt("number_of_resources"));
-                s.setSurveyResourceId(rs.getInt("survey_resource_id"));
+                Submission s = createSubmission(rs);
                 s.setSubmittedResources(getResourcesByIdAndUserId(submissionId, user.getId()));
                 s.setSubmitted(getSubmitStatusForUser(submissionId, user.getId()));
-
                 submissions.add(s);
             }
         }
@@ -107,6 +96,12 @@ public class SubmissionManager
         return submissions;
     }
 
+    /**
+     * Retrieves current submissions for a user to be displayed in the homepage
+     *
+     * @param user
+     * @return
+     */
     public ArrayList<Submission> getActiveSubmissionsByUser(User user)
     {
         ArrayList<Submission> submissions = new ArrayList<Submission>();
@@ -132,16 +127,7 @@ public class SubmissionManager
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             {
-                Submission s = new Submission();
-                s.setId(rs.getInt("submission_id"));
-                s.setCourseId(rs.getInt("course_id"));
-                s.setTitle(rs.getString("title"));
-                s.setDescription(rs.getString("description"));
-                s.setOpenDatetime(rs.getDate("open_datetime"));
-                s.setCloseDatetime(rs.getDate("close_datetime"));
-                s.setNoOfResources(rs.getInt("number_of_resources"));
-                s.setSurveyResourceId(rs.getInt("survey_resource_id"));
-
+                Submission s = createSubmission(rs);
                 submissions.add(s);
             }
         }
@@ -153,6 +139,12 @@ public class SubmissionManager
         return submissions;
     }
 
+    /**
+     * Get details of a particular submission: required for submission_resources.jsf
+     *
+     * @param submissionId
+     * @return
+     */
     public Submission getSubmissionById(int submissionId)
     {
         Submission s = new Submission();
@@ -163,14 +155,7 @@ public class SubmissionManager
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             {
-                s.setId(rs.getInt("submission_id"));
-                s.setCourseId(rs.getInt("course_id"));
-                s.setTitle(rs.getString("title"));
-                s.setDescription(rs.getString("description"));
-                s.setOpenDatetime(rs.getDate("open_datetime"));
-                s.setCloseDatetime(rs.getDate("close_datetime"));
-                s.setNoOfResources(rs.getInt("number_of_resources"));
-                s.setSurveyResourceId(rs.getInt("survey_resource_id"));
+                s = createSubmission(rs);
             }
         }
         catch(SQLException e)
@@ -181,6 +166,13 @@ public class SubmissionManager
         return s;
     }
 
+    /**
+     * Saving a resource for a particular submission after the user submits
+     *
+     * @param submissionId
+     * @param resourceId
+     * @param userId
+     */
     public void saveSubmissionResource(int submissionId, int resourceId, int userId)
     {
         try
@@ -197,6 +189,14 @@ public class SubmissionManager
         }
     }
 
+    /**
+     * To be able to remove submitted resource if the submission is re-opened
+     * by the moderator
+     *
+     * @param submissionId
+     * @param resourceId
+     * @param userId
+     */
     public void deleteSubmissionResource(int submissionId, int resourceId, int userId)
     {
         try
@@ -255,6 +255,13 @@ public class SubmissionManager
         }
     }
 
+    /**
+     * Retrieves submitted resources of a user for a particular submission
+     *
+     * @param submissionId
+     * @param userId
+     * @return
+     */
     public List<Resource> getResourcesByIdAndUserId(int submissionId, int userId)
     {
         List<Resource> submittedResources = new ArrayList<Resource>();
@@ -278,6 +285,13 @@ public class SubmissionManager
         return submittedResources;
     }
 
+    /**
+     * Retrieve the number of submissions by the user for a particular course
+     * to display it in the admin/users_submissions page
+     *
+     * @param courseId
+     * @return
+     */
     public HashMap<Integer, Integer> getUsersSubmissionsByCourseId(int courseId)
     {
         HashMap<Integer, Integer> usersSubmissions = new HashMap<Integer, Integer>();
@@ -331,6 +345,21 @@ public class SubmissionManager
         {
             log.error("Eror while inserting submit status for submission: " + submissionId + "; user: " + userId, e);
         }
+    }
+
+    private Submission createSubmission(ResultSet rs) throws SQLException
+    {
+        Submission s = new Submission();
+        s.setId(rs.getInt("submission_id"));
+        s.setCourseId(rs.getInt("course_id"));
+        s.setTitle(rs.getString("title"));
+        s.setDescription(rs.getString("description"));
+        s.setOpenDatetime(rs.getDate("open_datetime"));
+        s.setCloseDatetime(rs.getDate("close_datetime"));
+        s.setNoOfResources(rs.getInt("number_of_resources"));
+        s.setSurveyResourceId(rs.getInt("survey_resource_id"));
+
+        return s;
     }
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException
