@@ -402,7 +402,7 @@
         </c:if>
 
         <ui:fragment rendered="#{groupDetailBean.group.canViewResources(userBean.user)}">
-            <h:panelGroup id="resourcesView" layout="block"
+            <h:panelGroup id="resourcesView" layout="block" style="height: 100%; width: 100%;"
                           pt:data-canAddResources="#{groupDetailBean.group.canAddResources(userBean.user)}"
                           pt:data-canMoveResources="#{groupDetailBean.group.canMoveResources(userBean.user)}">
 
