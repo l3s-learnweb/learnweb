@@ -1068,6 +1068,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         if (selectedNode != null) {
             Folder selectedFolder = (Folder) selectedNode.getData();
             setSelectedFolder(selectedFolder);
+        } else {
+            log.error("selectedNode is null on onNodeSelect called.", new Exception());
         }
     }
 
