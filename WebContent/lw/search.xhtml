@@ -10,8 +10,8 @@
 			<f:viewParam name="action" value="#{searchBean.queryMode}" />
 			<f:viewParam name="service" value="#{searchBean.queryService}" />
 			<f:viewParam name="filter" value="#{searchBean.queryFilters}" />
-			<f:viewParam name="resultsetid" value="#{searchBean.resultsetId}" />
-			<f:viewParam name="selectedquerytimestamp" value="#{searchHistoryBean.selectedQueryTimestamp}"/>
+			<!-- <f:viewParam name="resultsetid" value="#{searchBean.resultsetId}" />
+			<f:viewParam name="selectedquerytimestamp" value="#{searchHistoryBean.selectedQueryTimestamp}"/> -->
 			<f:event type="preRenderView" listener="#{searchBean.preRenderView}" />
 		</f:metadata>
 	</ui:define>
@@ -50,7 +50,7 @@
 				</h:link>
 			</h:form>		
 	
-			<h:panelGroup rendered="#{userBean.searchHistoryEnabled}">		
+			<!-- <h:panelGroup rendered="#{userBean.searchHistoryEnabled}">		
 
 				<h:form styleClass="resourcestype">
 				<span class="float-right" style="padding-right:5px; margin-top:-2.1rem;">
@@ -71,7 +71,7 @@
 					</p:submenu>
 				</p:menu>
 				</h:form>
-			</h:panelGroup>			
+			</h:panelGroup>	 -->		
 		</div>
 	</ui:define>
 				
@@ -230,15 +230,15 @@
 			<div class="clear"></div>
 		</div>		
 		
-		<h:panelGroup id="factsheet" rendered="#{!userBean.searchHistoryEnabled}">
+		<h:panelGroup id="factsheet">
 			<ui:fragment rendered="${searchBean.graphLoaded}">
 				<ui:decorate template="/lw/templates/fact_sheet.xhtml"></ui:decorate>		
 			</ui:fragment>		
 		</h:panelGroup>
 
-		<h:panelGroup layout="block" id="search_right_bar" class="right_bar" rendered="#{userBean.searchHistoryEnabled}">
-			<p:outputPanel autoUpdate="true">
-				<p:tabView scrollable="true" id="tabView" widgetVar="tabViewer" activeIndex="#{searchHistoryBean.selectedTab}">
+		<!--<h:panelGroup layout="block" id="search_right_bar" class="right_bar" rendered="#{userBean.searchHistoryEnabled}">
+		 	<p:outputPanel autoUpdate="true">
+				<p:tabView scrollable="true" id="tabView" widgetVar="tabViewer" activeIndex="#{searchHistoryBean.selectedTab}" cache="false">
 					<p:tab id="tab1" title="Fact Sheet"	rendered="${searchBean.graphLoaded}" >
 						<ui:fragment>
 							<ui:decorate template="/lw/templates/fact_sheet.xhtml"></ui:decorate>
@@ -259,7 +259,7 @@
 					</p:tab>
 				</p:tabView>
 			</p:outputPanel>
-		</h:panelGroup>		
+		</h:panelGroup> -->
 
 		<div id="search_loading_more_results">
 			#{msg.loading_more_results} <span class="loading-icon" />
@@ -288,11 +288,11 @@
 
 			<p:remoteCommand actionListener="${searchBean.setSelectedResource()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('setSelectedResource')" name="setSelectedResource" update=":resource_form" process="@this" partialSubmit="true"/>
 
-			<p:remoteCommand actionListener="${searchHistoryBean.updateSearchHistory()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('updateSearchHistory')" update=":tabView:tab3" name="ajaxLoadSearchHistory" process="@this" partialSubmit="true" />
+			<p:remoteCommand actionListener="${searchHistoryBean.updateSearchHistory()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('updateSearchHistory')" name="ajaxLoadSearchHistory" process="@this" partialSubmit="true" />
 
 			<p:remoteCommand actionListener="${searchBean.logResourceOpened()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('logResourceOpened')" update=":nothing" name="logResourceOpened" async="true" process="@form" partialSubmit="true" />
 
-			<p:remoteCommand actionListener="${searchBean.logEndTime()}" immediate="true"  ignoreAutoUpdate="true" onstart="console.log('logEndTime')" update=":tabView:tab2" name="logEndTime" async="true" process="@this" partialSubmit="true"/>
+			<!-- <p:remoteCommand actionListener="${searchBean.logEndTime()}" immediate="true"  ignoreAutoUpdate="true" onstart="console.log('logEndTime')" update=":tabView:tab2" name="logEndTime" async="true" process="@this" partialSubmit="true"/> -->
 
 			<p:remoteCommand actionListener="${searchBean.loadInterwebCounts()}" immediate="true" ignoreAutoUpdate="true" onstart="console.log('loadInterwebCounts')" update=":filters :groups_menu_bar" name="loadFilterCounts" oncomplete="updateCarousel();setContentPadding();" async="false" process="@this" partialSubmit="true"/>				
 		</h:form>

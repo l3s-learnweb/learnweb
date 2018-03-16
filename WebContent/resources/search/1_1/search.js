@@ -197,8 +197,8 @@ function prepareResources(resources)
 			lightbox_resize_container();
 			lightbox_resize_content();
 			
-			if(typeof(tabViewer) !== 'undefined')
-				tabActiveindex = tabViewer.getActiveIndex();
+			//if(typeof(tabViewer) !== 'undefined')
+			//	tabActiveindex = tabViewer.getActiveIndex();
 			
 			logResourceOpened([{name:'resource_id', value:tempResourceId}]);			
 		};
@@ -290,8 +290,8 @@ function lightbox_close()
 	openPreview.hide();	
 	
 	$('#lightbox').hide();
-	if(lightboxActiveResource != null)
-		logEndTime([{name:'resource_id', value:lightboxActiveResource.attr('id').substring(9)}]); //To record end of the viewing time
+	//if(lightboxActiveResource != null)
+	//	logEndTime([{name:'resource_id', value:lightboxActiveResource.attr('id').substring(9)}]); //To record end of the viewing time
 	$('#lightbox_content .embedded').remove();	
 
 	lightboxActiveResource = null;
@@ -322,7 +322,7 @@ function lightbox_next()
 	if(!next.hasClass('resource')) {
 		next = $('#results .resource').first();
 	}
-	logEndTime([{name:'resource_id', value:lightboxActiveResource.attr('id').substring(9)}]); //To record end of the viewing time before moving to next image	
+	//logEndTime([{name:'resource_id', value:lightboxActiveResource.attr('id').substring(9)}]); //To record end of the viewing time before moving to next image	
 	next.trigger('openLightbox');
 }
 
@@ -337,7 +337,7 @@ function lightbox_prev()
 	if(!prev.hasClass('resource')) {
 		prev = $('#results .resource').last();
 	}
-	logEndTime([{name:'resource_id', value:lightboxActiveResource.attr('id').substring(9)}]); //To record end of the viewing time before moving to next image
+	//logEndTime([{name:'resource_id', value:lightboxActiveResource.attr('id').substring(9)}]); //To record end of the viewing time before moving to next image
 	prev.trigger('openLightbox');	
 }
 
@@ -427,7 +427,7 @@ function resizeend()
 }
 
 window.onload = testIfResultsFillPage;
-
+/*
 function tabselection(current_tab){
 
 	if(current_tab == "similarqueries")
@@ -500,7 +500,7 @@ function open_searchbar()
 	}	
 	
 	return false;
-}
+}*/
 
 // set position of .filters_menu_bar to fixed when scrolled down
 function fixPositionOfFiltersMenuBar() 
@@ -541,7 +541,7 @@ $(document).ready(function()
 		resizeGridResources();
 	else if(view == 'list')
 	{
-		if(localStorage.getItem(userId) === null || localStorage.getItem(userId) !== "true")			
+		/*if(localStorage.getItem(userId) === null || localStorage.getItem(userId) !== "true")			
 		{	$('#search_right_bar').css('width','0%');
 			$('#search_right_bar').css('display','none');
 		}
@@ -549,11 +549,11 @@ $(document).ready(function()
 		{
 			$('#search_right_bar').removeClass('right_bar').addClass('web_right_bar');
 			//$('#search_loading_more_results,#search_nothing_found,#search_no_more_results').css('width','61%'); für search history aktivieren
-		}
+		}*/
 		ajaxLoadFactsheet();
 	}
 	
-	if(view=='grid' || view=='float')
+	/*if(view=='grid' || view=='float')
 	{	
 		if(localStorage.getItem(userId) === null || localStorage.getItem(userId) !== "true" || !searchHistoryEnabled)
 		{
@@ -566,10 +566,10 @@ $(document).ready(function()
 		{
 			//$('#search_loading_more_results,#search_nothing_found,#search_no_more_results').css('width','75%');	 für search history aktivieren
 		}
-	}
+	}*/
 	
-	if(searchHistoryEnabled)
-		ajaxLoadSearchHistory();
+	//if(searchHistoryEnabled)
+	//	ajaxLoadSearchHistory();
 	
 	// register cursor left/right and esc key
 	$(document).keydown(function(event) {

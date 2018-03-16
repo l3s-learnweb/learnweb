@@ -90,10 +90,10 @@ public class SearchBean extends ApplicationBean implements Serializable
     //private transient SearchLogClient searchLogClient;
     // private long batchrsStartTime; //To keep track of the start time for batch update of resultSet
     // private long batchrsTimeout; //To keep track of timeout for batch update of resultSet
-    boolean historyResourcesRetrieved; //To keep track if the previous resultSet resources have already been retrieved 
+    boolean historyResourcesRetrieved; //To keep track if the previous resultSet resources have already been retrieved
     HashSet<String> historyResources; //Stores resource URLs from a previous resultSet
-    private int resultsetId; //For getting the result set ID of the past query posted for comparison of resultsets
-    private int resultsetViewId;
+    //private int resultsetId; //For getting the result set ID of the past query posted for comparison of resultsets
+    //private int resultsetViewId;
 
     private List<GroupedResources> resourcesGroupedBySource = null;
     private List<FilterItem> availableSources = null;
@@ -200,7 +200,7 @@ public class SearchBean extends ApplicationBean implements Serializable
     }
 
     //For comparing the resources in the current result set with another result set from a similar query in the past
-    public String compareHistoryResources()
+    /*public String compareHistoryResources()
     {
         HashSet<String> searched = new HashSet<String>();
         if(resultsetId > 0)
@@ -208,7 +208,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             historyResources.clear();
             try
             {
-
+    
                 //historyResources.addAll(getSearchLogClient().getResourceUrlsByResultsetId(resultsetId));
             }
             catch(Exception e)
@@ -220,7 +220,7 @@ public class SearchBean extends ApplicationBean implements Serializable
                 historyResourcesRetrieved = true;
             resultsetId = 0;
         }
-
+    
         int historyResourcesSize = historyResources.size();
         int resourceCount = 0;
         for(ResourceDecorator resource : search.getResources())
@@ -228,7 +228,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             resource.setNewResource(false);
             ++resourceCount;
         }
-
+    
         // TODO does this really make sense?
         // shouldn't you check if a resource with the same url was part of the old resultset to check if a resource is new?
         while(resourceCount < historyResourcesSize)
@@ -239,12 +239,12 @@ public class SearchBean extends ApplicationBean implements Serializable
             {
                 if(resourceCount > historyResourcesSize)
                     break;
-
+    
                 resource.setNewResource(false);
                 ++resourceCount;
             }
         }
-
+    
         if(historyResourcesRetrieved)
         {
             for(ResourceDecorator newResource : search.getResources())
@@ -258,17 +258,17 @@ public class SearchBean extends ApplicationBean implements Serializable
                 {
                     if(!searched.contains(newResource.getUrl()))
                         searched.add(newResource.getUrl());
-
+    
                     if(!historyResources.contains(newResource.getUrl()))
                     {
                         newResource.setNewResource(true);
                     }
                 }
-
+    
             }
         }
         return getTemplateDir() + "/search.xhtml?faces-redirect=true";
-    }
+    }*/
 
     public LinkedList<ResourceDecorator> getNextPage()
     {
@@ -306,7 +306,7 @@ public class SearchBean extends ApplicationBean implements Serializable
             }
             else
             {
-                // create a copy 
+                // create a copy
                 newResource = selectedResource.clone();
             }
 
@@ -369,42 +369,6 @@ public class SearchBean extends ApplicationBean implements Serializable
         {
             log.error("Can't log resource opened event", e);
         }
-
-        /*
-        if(!logEnabled)
-            return;
-        
-        try
-        {
-            startTime = new Date(); //Recording the beginning of viewing time for a resource.
-            int tempResourceId = getParameterInt("resource_id");
-        
-            Resource resource = search.getResourceByTempId(tempResourceId);
-        
-            if(null == resource)
-                throw new InvalidParameterException("unknown resource id:" + tempResourceId);
-        
-            int userId = getUser() == null ? -1 : getUser().getId(); // search can be anonymous
-        
-            try
-            {
-                getSearchLogClient().saveResourceLog(userId, startTime, ACTION.resource_click, resource.getUrl(), tempResourceId, resource.getTitle(), resource.getSource());
-            }
-            catch(ClientHandlerException e)
-            {
-                log.debug("Search Tracker service is down");
-            }
-            catch(RuntimeException e)
-            {
-                log.debug(e.getMessage());
-            }
-        
-        }
-        catch(Throwable e)
-        {
-            log.error("unhandled error", e);
-        }
-        */
     }
 
     public void logQuerySuggestion()
@@ -434,7 +398,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
     /**
      * True if a the user has started a search request
-     * 
+     *
      * @return
      */
     public boolean isSearched()
@@ -595,28 +559,6 @@ public class SearchBean extends ApplicationBean implements Serializable
     public void setSelectedResource(Resource selectedResource)
     {
         this.selectedResource = selectedResource;
-        /*
-        //logs a resource dialog open event
-        if(logEnabled)
-        {
-            try
-            {
-                Date timestamp = new Date(); //To record when the resource dialog box is opened.
-                int userId = getUser() == null ? -1 : getUser().getId();
-                int tempResourceId = getSearchLogClient().getResourceIdByUrl(selectedResource.getUrl());
-                getSearchLogClient().saveResourceLog(userId, timestamp, ACTION.resource_dialog_open, selectedResource.getUrl(), tempResourceId, selectedResource.getTitle(), selectedResource.getSource());
-            }
-            catch(ClientHandlerException e)
-            {
-                log.debug("Search Tracker service is down");
-            }
-            catch(RuntimeException e)
-            {
-                log.debug(e.getMessage());
-            }
-        }
-        */
-
     }
 
     public TreeNode getSelectedNode()
@@ -703,26 +645,26 @@ public class SearchBean extends ApplicationBean implements Serializable
         return counter++;
     }
 
-    public HashSet<String> getHistoryResources()
+    /*public HashSet<String> getHistoryResources()
     {
         return historyResources;
     }
-
+    
     public int getResultsetId()
     {
         return resultsetId;
     }
-
+    
     public void setResultsetId(int resultsetId)
     {
         this.resultsetViewId = resultsetId;
         this.resultsetId = resultsetId;
     }
-
+    
     public int getResultsetViewId()
     {
         return resultsetViewId;
-    }
+    }*/
 
     /**
      * Used by old search result history
@@ -755,17 +697,17 @@ public class SearchBean extends ApplicationBean implements Serializable
                 return;
             }
             String label = graph.getEntities().get(0).getLabel();
-            
+
             SearchFilters filter = new SearchFilters();
             images = new Search(getLearnweb().getInterweb(), label, filter, getUser());
             images.setMode(MODE.image);
             filter.setFilter(FILTERS.service, SERVICE.bing);
-            
+
             //images.setService(SERVICE.Ipernity, SERVICE.Flickr);
             images.setResultsPerService(10);
             images.getResourcesByPage(1);
-            
-            
+
+
             graphLoaded = true;
             */
         }
