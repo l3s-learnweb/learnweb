@@ -120,6 +120,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
         }
     }
 
+    //to get pre-filled/submitted survey
     public void getSurvey(int userId)
     {
 
@@ -132,15 +133,13 @@ public class SurveyBean extends ApplicationBean implements Serializable
             resourceId = sv.getResourceId();
             update = true;
             questions.clear();
-
             questions = sv.getFormQuestions();
             surveyTitle = sv.getSurveyTitle();
             wrappedAnswers.clear();
             wrappedAnswers.putAll(sv.getWrappedAnswers());
-
             wrappedMultipleAnswers.clear();
             wrappedMultipleAnswers = sv.getWrappedMultipleAnswers();
-            //RequestContext.getCurrentInstance().update("panel");
+
         }
         catch(Exception e)
         {

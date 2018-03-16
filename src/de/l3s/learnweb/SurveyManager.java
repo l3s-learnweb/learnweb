@@ -391,7 +391,7 @@ public class SurveyManager
         String getSurveyId = "SELECT `survey_id` FROM `lw_survey_resource` WHERE `resource_id`=?";
         HashSet<Integer> surveyResourceIds = new HashSet<Integer>();
         surveyResourceIds = getSameSurveyResources(resourceId);
-        //String getQuestionByOrder = "SELECT distinct(t2.question_id), t1.question FROM `lw_survey_question` t1, lw_survey_answer t2 where t2.question_id = t1.question_id and t1.survey_id=? and t2.resource_id=? order by `order`";
+        //Check for answered questions in all survey resources which are of same kind in a course
         for(int id : surveyResourceIds)
         {
             String getQuestionByOrder = "SELECT distinct(t1.question_id), t1.question, t1.survey_id FROM `lw_survey_question` t1, lw_survey_answer t2 where (t2.question_id = t1.question_id or (t1.deleted=? and t1.question_type IN (\"INPUT_TEXT\", \"ONE_RADIO\", \"INPUT_TEXTAREA\", \"ONE_MENU\", \"ONE_MENU_EDITABLE\", \"MULTIPLE_MENU\", \"MANY_CHECKBOX\" ))) and t1.survey_id=? and t2.resource_id=? order by t1.`order`";
@@ -418,6 +418,7 @@ public class SurveyManager
         return questions;
     }
 
+    //Same surevy resources in a course to merge answers
     public HashSet<Integer> getSameSurveyResources(int resourceId) throws SQLException
     {
         HashSet<Integer> surveyResources = new HashSet<Integer>();
