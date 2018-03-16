@@ -1,5 +1,7 @@
 package de.l3s.learnweb.loginprotection;
 
+import org.apache.log4j.Logger;
+
 import de.l3s.learnweb.Learnweb;
 
 /**
@@ -14,7 +16,14 @@ public class ExpiredBansCleaner implements Runnable
     @Override
     public void run()
     {
-        Learnweb.getInstance().getProtectionManager().cleanUpOutdatedBans();
+        try
+        {
+            Learnweb.getInstance().getProtectionManager().cleanUpOutdatedBans();
+        }
+        catch(Throwable e)
+        {
+            Logger.getLogger(ExpiredBansCleaner.class).error("err", e);
+        }
     }
 
 }

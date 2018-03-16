@@ -130,7 +130,7 @@
 									id="usercreditsMessage" />			
 												
 							<h:outputText value="" />
-							<p:commandButton actionListener="#{profileBean.saveProfile}" value="#{msg.save}" ajax="false" process="@form" 
+							<p:commandButton actionListener="#{profileBean.saveProfile}" value="#{msg.save}" ajax="true" process="@form" 
 									update=":growl @form :profile_news"/>		
 							<h:outputText value="" />	
 						</h:panelGrid>			
@@ -221,7 +221,7 @@
 		
 		
 		<ui:define name="center_layout">
-	
+
 			<div class="page_header">
 				<span>
 					#{msg.last_activities}

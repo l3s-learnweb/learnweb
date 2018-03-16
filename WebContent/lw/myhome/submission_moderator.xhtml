@@ -6,6 +6,7 @@
 	xmlns:p="http://primefaces.org/ui"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	xmlns:pt="http://xmlns.jcp.org/jsf/passthrough"
 	lang="#{userBean.localeCode}">
 
 <ui:composition template="/templates/main/main_old.xhtml">
@@ -72,7 +73,45 @@
 				</div>
 			</div>
 		</h:panelGroup>
-
+		<ui:repeat var="userSubmission" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
+			<div class="submission_card">
+				<h3>#{userSubmission.user.username} (Student id: #{userSubmission.user.studentId})</h3>
+				
+				<h:panelGroup class="submission_card_resources" layout="block">
+					<hr/>
+					<h:panelGroup layout="block" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
+						<h:panelGroup styleClass="resource-grid" layout="block" style="margin-bottom:0px;">
+								<ui:repeat var="res" value="#{userSubmission.resources}" >
+				
+									<h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
+										<div class="resource-block">
+				
+											<div class="resource-preview">
+												<div class="resource-preview-wrapper">
+													<div class="resource-preview-wrapper2">
+														<div class="resource-preview-block"></div>
+														<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" />
+													</div>
+												</div>
+											</div>
+				
+											<div class="resource-title">
+												<div class="resource-title-wrapper">
+													<div class="resource-title-text">
+														<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
+														<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
+													</div>
+												</div>
+											</div>
+				
+										</div>
+									</h:panelGroup>
+								</ui:repeat>
+						</h:panelGroup>
+					</h:panelGroup>				
+				</h:panelGroup>
+			</div>
+		</ui:repeat>
 
 		<h:panelGroup id="datagrid" class="not-selectable display-none"></h:panelGroup>
 	</ui:define>

@@ -1,25 +1,23 @@
 package de.l3s.learnweb;
 
+import java.io.Serializable;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class Survey
+public class Survey implements Serializable
 {
+    private static final long serialVersionUID = -7478683722354893077L;
+
     private boolean submitted = false;
-
     private Date start;
-
     private Date end;
 
     private int surveyId;
-
     private int resourceId;
 
     private String surveyTitle;
-
     private String description;
-
     private int organizationId;
 
     private ArrayList<SurveyMetaDataFields> formQuestions = new ArrayList<SurveyMetaDataFields>();
@@ -27,6 +25,7 @@ public class Survey
     private HashMap<String, String> wrappedAnswers = new HashMap<String, String>();
 
     private HashMap<String, String[]> wrappedMultipleAnswers = new HashMap<String, String[]>();
+
     public boolean isSubmitted()
     {
         return submitted;

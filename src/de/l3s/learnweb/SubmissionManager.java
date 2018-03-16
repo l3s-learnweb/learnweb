@@ -1,5 +1,6 @@
 package de.l3s.learnweb;
 
+import java.io.Serializable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -27,12 +28,11 @@ public class SubmissionManager
         this.learnweb = learnweb;
     }
 
-    public ArrayList<Submission> getSubmissionsByCourse(int courseId)
+    public ArrayList<Submission> getSubmissionsByCourse(int courseId) throws SQLException
     {
         ArrayList<Submission> submissions = new ArrayList<Submission>();
-        try
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE course_id=? AND deleted=0 ORDER BY close_datetime");)
         {
-            PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE course_id=? AND deleted=0 ORDER BY close_datetime");
             ps.setInt(1, courseId);
             ResultSet rs = ps.executeQuery();
             while(rs.next())
@@ -40,10 +40,6 @@ public class SubmissionManager
                 Submission s = createSubmission(rs);
                 submissions.add(s);
             }
-        }
-        catch(SQLException e)
-        {
-            log.error("Error while retrieving submissions by course", e);
         }
 
         return submissions;
@@ -54,24 +50,24 @@ public class SubmissionManager
      *
      * @param user
      * @return
+     * @throws SQLException
      */
-    public ArrayList<Submission> getSubmissionsByUser(User user)
+    public ArrayList<Submission> getSubmissionsByUser(User user) throws SQLException
     {
         ArrayList<Submission> submissions = new ArrayList<Submission>();
 
-        try
+        List<Course> courses = user.getCourses();
+        StringBuilder builder = new StringBuilder();
+
+        for(int i = 0; i < courses.size(); i++)
         {
-            List<Course> courses = user.getCourses();
-            StringBuilder builder = new StringBuilder();
+            builder.append("?,");
+        }
 
-            for(int i = 0; i < courses.size(); i++)
-            {
-                builder.append("?,");
-            }
+        String pStmt = "SELECT * FROM lw_submit WHERE course_id IN (" + builder.deleteCharAt(builder.length() - 1).toString() + ") AND deleted=0 ORDER BY close_datetime";
 
-            String pStmt = "SELECT * FROM lw_submit WHERE course_id IN (" + builder.deleteCharAt(builder.length() - 1).toString() + ") AND deleted=0 ORDER BY close_datetime";
-
-            PreparedStatement ps = learnweb.getConnection().prepareStatement(pStmt);
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement(pStmt);)
+        {
             int index = 1;
             for(Course course : courses)
             {
@@ -87,10 +83,6 @@ public class SubmissionManager
                 s.setSubmitted(getSubmitStatusForUser(submissionId, user.getId()));
                 submissions.add(s);
             }
-        }
-        catch(SQLException e)
-        {
-            log.error("Error while retrieving submissions by course", e);
         }
 
         return submissions;
@@ -257,26 +249,23 @@ public class SubmissionManager
      * @param submissionId
      * @param userId
      * @return
+     * @throws SQLException
      */
-    public List<Resource> getResourcesByIdAndUserId(int submissionId, int userId)
+    public List<Resource> getResourcesByIdAndUserId(int submissionId, int userId) throws SQLException
     {
+        ResourceManager resourceManager = learnweb.getResourceManager();
         List<Resource> submittedResources = new ArrayList<Resource>();
-        try
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT resource_id FROM lw_submit_resource WHERE submission_id = ? AND user_id = ?");)
         {
-            PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT resource_id FROM lw_submit_resource WHERE submission_id = ? AND user_id = ?");
             ps.setInt(1, submissionId);
             ps.setInt(2, userId);
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             {
                 int resourceId = rs.getInt("resource_id");
-                Resource r = learnweb.getResourceManager().getResource(resourceId);
+                Resource r = resourceManager.getResource(resourceId);
                 submittedResources.add(r);
             }
-        }
-        catch(SQLException e)
-        {
-            log.error("Error while retrieving submitted resources for submission id: " + submissionId, e);
         }
         return submittedResources;
     }
@@ -308,30 +297,26 @@ public class SubmissionManager
         return usersSubmissions;
     }
 
-    public boolean getSubmitStatusForUser(int submissionId, int userId)
+    public boolean getSubmitStatusForUser(int submissionId, int userId) throws SQLException
     {
         boolean submitted = false;
-        try
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT submitted FROM lw_submit_status WHERE submission_id = ? AND user_id = ?");)
         {
-            PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT submitted FROM lw_submit_status WHERE submission_id = ? AND user_id = ?");
             ps.setInt(1, submissionId);
             ps.setInt(2, userId);
             ResultSet rs = ps.executeQuery();
             if(rs.next())
                 submitted = (rs.getInt(1) == 1);
         }
-        catch(SQLException e)
-        {
-            log.error("Eror while retrieving submit status for submission: " + submissionId + "; user: " + userId, e);
-        }
         return submitted;
     }
 
     public void saveSubmitStatusForUser(int submissionId, int userId, boolean submitted)
     {
-        try
+        //  TODO to keep survey_resource_id use:
+        // INSERT INTO lw_submit_status(submission_id, user_id, submitted) VALUES (?,?,?) ON DUPLICATE KEY UPDATE submitted = ?;
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("REPLACE INTO lw_submit_status(submission_id, user_id, submitted) VALUES (?,?,?)");)
         {
-            PreparedStatement ps = learnweb.getConnection().prepareStatement("REPLACE INTO lw_submit_status(submission_id, user_id, submitted) VALUES (?,?,?)");
             ps.setInt(1, submissionId);
             ps.setInt(2, userId);
             ps.setInt(3, submitted ? 1 : 0);
@@ -356,6 +341,111 @@ public class SubmissionManager
         s.setSurveyResourceId(rs.getInt("survey_resource_id"));
 
         return s;
+    }
+
+    /**
+     * Return all resources submitted for this submission form grouped by user
+     *
+     * @param submissionId
+     * @return
+     * @throws SQLException
+     */
+    public List<SubmittedResources> getSubmittedResourcesGroupedByUser(int submissionId) throws SQLException
+    {
+        ResourceManager resourceManager = learnweb.getResourceManager();
+        UserManager userManager = learnweb.getUserManager();
+
+        List<SubmittedResources> submittedResourcesPerUser = new ArrayList<>();
+        SubmittedResources currentUserSubmission = null;
+
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT resource_id, user_id FROM lw_submit_resource WHERE submission_id = ? ORDER BY user_id");)
+        {
+            ps.setInt(1, submissionId);
+            ResultSet rs = ps.executeQuery();
+            while(rs.next())
+            {
+                int userId = rs.getInt("user_id");
+
+                if(currentUserSubmission == null || userId != currentUserSubmission.getUserId()) // we have reached the entries of another user
+                {
+                    if(currentUserSubmission != null) // if not first entry finish the last entry set
+                        submittedResourcesPerUser.add(currentUserSubmission);
+
+                    //start new user entry set
+                    currentUserSubmission = new SubmittedResources(userManager.getUser(userId), -1);
+                }
+
+                Resource resource = resourceManager.getResource(rs.getInt("resource_id"));
+                currentUserSubmission.addResource(resource);
+            }
+        }
+        return submittedResourcesPerUser;
+    }
+
+    /**
+     * This class bundles the submitted resource of one particular user for one submission
+     *
+     * @author Philipp
+     *
+     */
+    public class SubmittedResources implements Serializable
+    {
+        private static final long serialVersionUID = -7336342838037456587L;
+
+        private int userId;
+        private transient User user;
+        private List<Resource> resources = new ArrayList<>(); // the submitted resources
+        private int surveyResourceId = -1; // the survey that was used to grade this submission
+
+        public SubmittedResources(User user, int surveyResourceId)
+        {
+            super();
+            this.user = user;
+            this.userId = user.getId();
+            this.surveyResourceId = surveyResourceId;
+        }
+
+        public User getUser()
+        {
+            if(null == user)
+            {
+                try
+                {
+                    user = Learnweb.getInstance().getUserManager().getUser(userId);
+                }
+                catch(SQLException e)
+                {
+                    log.error("Can't get user " + userId, e);
+                }
+            }
+            return user;
+        }
+
+        public int getUserId()
+        {
+            return userId;
+        }
+
+        private void addResource(Resource resource)
+        {
+            resources.add(resource);
+        }
+
+        public List<Resource> getResources()
+        {
+            return resources;
+        }
+
+        /**
+         * The survey that grades this submission
+         *
+         * @return
+         */
+        public int getSurveyResourceId()
+        {
+            return surveyResourceId;
+        }
+
     }
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException

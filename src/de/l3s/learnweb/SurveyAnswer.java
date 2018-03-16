@@ -7,10 +7,12 @@ public class SurveyAnswer implements Serializable
 {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -1442018853436353323L;
-    public String userId;
+
+    // TODO none of these fields should be public, they have to be private
+    public String userId; //  TODO why is the id stored as String????
     public LinkedHashMap<String, String> answers = new LinkedHashMap<String, String>();
     public String userName;
     public String studentId;

@@ -555,7 +555,15 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
 
     public List<Submission> getSubmissions()
     {
-        return Learnweb.getInstance().getSubmissionManager().getSubmissionsByUser(getUser());
+        try
+        {
+            return Learnweb.getInstance().getSubmissionManager().getSubmissionsByUser(getUser());
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
+        return null;
     }
 
     /**

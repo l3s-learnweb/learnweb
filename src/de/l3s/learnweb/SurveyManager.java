@@ -425,10 +425,9 @@ public class SurveyManager
         //Fetching other resource Ids with same survey id in the current course.
         if(groupId > 0)
         {
-
             int courseId = learnweb.getGroupManager().getGroupById(groupId).getCourseId();
 
-            String getOtherResources = "SELECT t1.resource_id FROM `lw_resource` t1, lw_group t2, lw_survey_resource t3 WHERE t1.group_id =t2.group_id and t1.`type`=\"survey\" and t1.resource_id=t3.resource_id and t2.course_id=?  and  t3.survey_id=?";
+            String getOtherResources = "SELECT t1.resource_id FROM `lw_resource` t1, lw_group t2, lw_survey_resource t3 WHERE t1.group_id =t2.group_id and t1.`type`='survey' and t1.resource_id=t3.resource_id and t2.course_id=?  and  t3.survey_id=?";
             String getSurveyId = "SELECT `survey_id` FROM `lw_survey_resource` WHERE `resource_id`=?";
             PreparedStatement ps = learnweb.getConnection().prepareStatement(getSurveyId);
             ps.setInt(1, resourceId);
@@ -468,10 +467,11 @@ public class SurveyManager
             ResultSet ids = pSttmnt.executeQuery();
             while(ids.next())
             {
+                User user = learnweb.getUserManager().getUser(ids.getInt("user_id"));
                 SurveyAnswer ans = new SurveyAnswer();
                 ans.userId = Integer.toString(ids.getInt("user_id"));
-                ans.userName = learnweb.getUserManager().getUser(ids.getInt("user_id")).getUsername();
-                ans.studentId = learnweb.getUserManager().getUser(ids.getInt("user_id")).getStudentId();
+                ans.userName = user.getUsername();
+                ans.studentId = user.getStudentId();
                 pSttmnt = learnweb.getConnection().prepareStatement(answerByUser);
                 for(String qid : question.keySet())
                 {

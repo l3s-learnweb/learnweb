@@ -8,6 +8,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import de.l3s.learnweb.SubmissionManager.SubmittedResources;
+
 public class Submission implements Serializable
 {
     private final static long serialVersionUID = -3143872721852606973L;
@@ -27,9 +29,10 @@ public class Submission implements Serializable
     private Survey surveyResource;
     private boolean surveyMandatory = false;
     private boolean submitted = false;
-    List<Resource> submittedResources;
+    private List<Resource> submittedResources;
 
     private transient Course course;
+    private transient List<SubmittedResources> submittedResourcesGroupedByUser;
 
     public Submission()
     {
@@ -201,9 +204,26 @@ public class Submission implements Serializable
         return false;
     }
 
+    /**
+     *
+     * @return The submitted resource of one particular user
+     */
     public List<Resource> getSubmittedResources()
     {
         return submittedResources;
+    }
+
+    /**
+     * Return all resources submitted for this submission form grouped by user
+     *
+     * @return
+     * @throws SQLException
+     */
+    public List<SubmittedResources> getSubmittedResourcesGroupedByUser() throws SQLException
+    {
+        if(submittedResourcesGroupedByUser == null)
+            submittedResourcesGroupedByUser = Learnweb.getInstance().getSubmissionManager().getSubmittedResourcesGroupedByUser(id);
+        return submittedResourcesGroupedByUser;
     }
 
     public void setSubmittedResources(List<Resource> submittedResources)

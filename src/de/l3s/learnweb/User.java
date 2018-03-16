@@ -68,13 +68,13 @@ public class User implements Comparable<User>, Serializable, HasId
     private String iwSecret;
 
     private HashMap<String, String> preferences;
+    private TimeZone timeZone = TimeZone.getTimeZone("Europe/Berlin");
 
     // caches
     private transient List<Course> courses;
     private transient List<Group> groups;
     private transient LinkedList<Group> writeAbleGroups;
     private String imageUrl;
-    private TimeZone timeZone = TimeZone.getTimeZone("Europe/Berlin");
     private transient Date lastLoginDate = null;
     private transient Date currentLoginDate = null;
     private int forumPostCount = -1;
@@ -535,14 +535,6 @@ public class User implements Comparable<User>, Serializable, HasId
     {
         if(imageUrl == null)
         {
-            /*
-            File file = Learnweb.getInstance().getFileManager().getFileById(imageFileId);
-            
-            if(null == file)
-            imageUrl = UtilBean.getLearnwebBean().getContextUrl() + "/resources/image/no_profile.jpg";
-            else
-            imageUrl = file.getUrl();
-            */
             imageUrl = getImage(imageFileId);
         }
 
