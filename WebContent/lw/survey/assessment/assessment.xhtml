@@ -11,7 +11,7 @@
 	
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="resource_id" value="#{assessmentGridBean.resource_id}" />
+			<f:viewParam name="resource_id" value="#{assessmentGridBean.resourceId}" />
 		</f:metadata>
 	</ui:define>
 	<ui:param name="pageTitle" value="Survey" />
@@ -35,7 +35,7 @@
 				 
        			 <h:outputLink value="survey/assessment/assessmentAnswers.jsf" >
        			 	<h:graphicImage library="icon" name="user_submission.png" width="16" height="16" alt="#{msg['Submission.view_user_submissions']}"/>
-       			 	<f:param name="resource_id" value="#{assessmentGridBean.resource_id}"></f:param>
+       			 	<f:param name="resource_id" value="#{assessmentGridBean.resourceId}"></f:param>
        			 	<f:param name="user_id" value="#{user.id}" />
        			 </h:outputLink>
        			

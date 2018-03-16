@@ -65,14 +65,15 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
         LinkedHashMap<String, String> questions = new LinkedHashMap<String, String>();
         try
         {
-        questions = getLearnweb().getSurveyManager().getAnsweredQuestions(resourceId);
-        answers = getLearnweb().getSurveyManager().getAnswerByUser(getResourceId(), questions);
-        int questionIndex = 1;
-        for(String qid : questions.keySet())
-        {
-            ColumnModel col = new ColumnModel(questions.get(qid), qid, questionIndex);
-            columns.add(col);
-            questionIndex++;
+
+            questions = getLearnweb().getSurveyManager().getAnsweredQuestions(resourceId);
+            answers = getLearnweb().getSurveyManager().getAnswerByUser(getResourceId(), questions);
+            int questionIndex = 1;
+            for(String qid : questions.keySet())
+            {
+                ColumnModel col = new ColumnModel(questions.get(qid), qid, questionIndex);
+                columns.add(col);
+                questionIndex++;
             }
         }
         catch(Exception e)

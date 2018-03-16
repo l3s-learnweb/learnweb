@@ -27,6 +27,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
     private String description;
     private int organizationId;
     private boolean submitted;
+    private boolean update;
     private Survey sv = new Survey();
 
     public Survey getSv()
@@ -109,9 +110,9 @@ public class SurveyBean extends ApplicationBean implements Serializable
             surveyTitle = sv.getSurveyTitle();
             description = sv.getDescription();
             organizationId = sv.getOrganizationId();
-
             if(sv.isSubmitted())
                 addGrowl(FacesMessage.SEVERITY_ERROR, "You have submitted the form previously. You can only submit once.");
+
         }
         catch(Exception e)
         {
@@ -119,26 +120,58 @@ public class SurveyBean extends ApplicationBean implements Serializable
         }
     }
 
+    public void getSurvey(int userId)
+    {
+
+        SurveyManager sm = getLearnweb().getSurveyManager();
+        questions = new ArrayList<SurveyMetaDataFields>();
+        try
+        {
+            sv = new Survey();
+            sv = sm.getAssessmentFormDetails(resourceId, userId);
+            resourceId = sv.getResourceId();
+            update = true;
+            questions.clear();
+
+            questions = sv.getFormQuestions();
+            surveyTitle = sv.getSurveyTitle();
+            wrappedAnswers.clear();
+            wrappedAnswers.putAll(sv.getWrappedAnswers());
+
+            wrappedMultipleAnswers.clear();
+            wrappedMultipleAnswers = sv.getWrappedMultipleAnswers();
+            //RequestContext.getCurrentInstance().update("panel");
+        }
+        catch(Exception e)
+        {
+            log.error("Error in fetching assessment form details for survey :" + resourceId, e);
+        }
+
+    }
+
     public void submit()
     {
         User u = getUser();
-        if(!sv.isSubmitted())
+
+        if(!sv.isSubmitted() || update)
         {
             try
             {
-                getLearnweb().getSurveyManager().uploadAnswers(u.getId(), wrappedAnswers, wrappedMultipleAnswers, resourceId);
+                getLearnweb().getSurveyManager().uploadAnswers(u.getId(), wrappedAnswers, wrappedMultipleAnswers, resourceId, update);
             }
             catch(Exception e)
             {
                 log.error("Error in uploading answers for User: " + u.getId() + " for survey: " + sv.getSurveyId());
             }
         }
+        if(update)
+            update = false;
         if(!sv.isSubmitted())
         {
             addGrowl(FacesMessage.SEVERITY_INFO, "Successful Submit");
             sv.isSubmitted();
         }
-        else
+        else if(sv.isSubmitted() && !update)
             addGrowl(FacesMessage.SEVERITY_ERROR, "You have submitted the form previously. You can only submit once.");
 
     }
@@ -221,5 +254,15 @@ public class SurveyBean extends ApplicationBean implements Serializable
     public void setSubmitted(boolean submitted)
     {
         this.submitted = submitted;
+    }
+
+    public boolean isUpdate()
+    {
+        return update;
+    }
+
+    public void setUpdate(boolean update)
+    {
+        this.update = update;
     }
 }

@@ -34,6 +34,7 @@ public class SurveyManager
 
     public Survey getAssessmentFormDetails(int resource_id, int userId) throws SQLException
     {
+
         HashMap<String, String> wrappedAnswers = new HashMap<String, String>();
         HashMap<String, String[]> wrappedMultipleAnswers = new HashMap<String, String[]>();
         Survey survey = new Survey();
@@ -101,6 +102,10 @@ public class SurveyManager
             survey.getFormQuestions().add(formQuestion);
         }
         //Get answered results for user-wise display of results
+
+        resource_id = getResourceIdForAnsweredSurvey(resource_id, userId);
+        survey.setResourceId(resource_id);
+        //Get survey data
         preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?");
         preparedStmnt.setInt(1, resource_id);
         preparedStmnt.setInt(2, userId);
@@ -268,7 +273,7 @@ public class SurveyManager
         return survey;
     }
 
-    public void uploadAnswers(int user_id, HashMap<String, String> wrappedAnswers, HashMap<String, String[]> wrappedMultipleAnswers, int resource_id) throws SQLException
+    public void uploadAnswers(int user_id, HashMap<String, String> wrappedAnswers, HashMap<String, String[]> wrappedMultipleAnswers, int resource_id, boolean update) throws SQLException
     {
 
         String submitCheck = "SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?";
@@ -279,7 +284,7 @@ public class SurveyManager
         ps.setInt(1, resource_id);
         ps.setInt(2, user_id);
         rs = ps.executeQuery();
-        if(rs.next())
+        if(rs.next() && !update)
         {
             //prevent upload on twice dblclick
             return;
@@ -293,21 +298,21 @@ public class SurveyManager
         String getSurveyId = "SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?";
 
         ps = learnweb.getConnection().prepareStatement(getSurveyId);
-        
+
         ps.setInt(1, resource_id);
-        
+
         rs = ps.executeQuery();
-        
+
         if(rs.next())
         {
-        
+
             //  start = rs.getDate("open_date");
             // end = rs.getDate("close_date");
-        
+
         }
         */
 
-        String insertAnswers = "INSERT INTO `lw_survey_answer`(`resource_id`, `user_id`, `question_id`, `answer`) VALUES (?, ?, ?, ?)";
+        String insertAnswers = "REPLACE INTO `lw_survey_answer`(`resource_id`, `user_id`, `question_id`, `answer`) VALUES (?, ?, ?, ?)";
 
         Iterator<Entry<String, String>> answer1 = wrappedAnswers.entrySet().iterator();
         PreparedStatement insert = null;
@@ -384,28 +389,32 @@ public class SurveyManager
         int surveyId;
 
         String getSurveyId = "SELECT `survey_id` FROM `lw_survey_resource` WHERE `resource_id`=?";
+        HashSet<Integer> surveyResourceIds = new HashSet<Integer>();
+        surveyResourceIds = getSameSurveyResources(resourceId);
         //String getQuestionByOrder = "SELECT distinct(t2.question_id), t1.question FROM `lw_survey_question` t1, lw_survey_answer t2 where t2.question_id = t1.question_id and t1.survey_id=? and t2.resource_id=? order by `order`";
-        String getQuestionByOrder = "SELECT distinct(t1.question_id), t1.question, t1.survey_id FROM `lw_survey_question` t1, lw_survey_answer t2 where (t2.question_id = t1.question_id or (t1.deleted=? and t1.question_type IN (\"INPUT_TEXT\", \"ONE_RADIO\", \"INPUT_TEXTAREA\", \"ONE_MENU\", \"ONE_MENU_EDITABLE\", \"MULTIPLE_MENU\", \"MANY_CHECKBOX\" ))) and t1.survey_id=? and t2.resource_id=? order by t1.`order`";
-        //Check if all questions are fetched.
-
-        PreparedStatement pSttmnt = learnweb.getConnection().prepareStatement(getSurveyId);
-        pSttmnt.setInt(1, resourceId);
-        ResultSet idResult = pSttmnt.executeQuery();
-        if(idResult.next())
+        for(int id : surveyResourceIds)
         {
-            surveyId = idResult.getInt("survey_id");
+            String getQuestionByOrder = "SELECT distinct(t1.question_id), t1.question, t1.survey_id FROM `lw_survey_question` t1, lw_survey_answer t2 where (t2.question_id = t1.question_id or (t1.deleted=? and t1.question_type IN (\"INPUT_TEXT\", \"ONE_RADIO\", \"INPUT_TEXTAREA\", \"ONE_MENU\", \"ONE_MENU_EDITABLE\", \"MULTIPLE_MENU\", \"MANY_CHECKBOX\" ))) and t1.survey_id=? and t2.resource_id=? order by t1.`order`";
+            //Check if all questions are fetched.
 
-            pSttmnt = learnweb.getConnection().prepareStatement(getQuestionByOrder);
-            pSttmnt.setBoolean(1, false);
-            pSttmnt.setInt(2, surveyId);
-            pSttmnt.setInt(3, resourceId);
-            ResultSet result = pSttmnt.executeQuery();
-            while(result.next())
+            PreparedStatement pSttmnt = learnweb.getConnection().prepareStatement(getSurveyId);
+            pSttmnt.setInt(1, resourceId);
+            ResultSet idResult = pSttmnt.executeQuery();
+            if(idResult.next())
             {
-                questions.put(Integer.toString(result.getInt("question_id")), result.getString("question"));
+                surveyId = idResult.getInt("survey_id");
+
+                pSttmnt = learnweb.getConnection().prepareStatement(getQuestionByOrder);
+                pSttmnt.setBoolean(1, false);
+                pSttmnt.setInt(2, surveyId);
+                pSttmnt.setInt(3, id);
+                ResultSet result = pSttmnt.executeQuery();
+                while(result.next())
+                {
+                    questions.put(Integer.toString(result.getInt("question_id")), result.getString("question"));
+                }
             }
         }
-
         return questions;
     }
 
@@ -449,8 +458,49 @@ public class SurveyManager
         return surveyResources;
     }
 
+    public int getResourceIdForAnsweredSurvey(int resourceId, int userId) throws SQLException
+    {
+        int newResourceId = resourceId;
+        int ifAnsweredElsewhere = 0; //To check if user answered same survey on course but with different resource id.
+
+        HashSet<Integer> otherSurveyResourceIds = new HashSet<Integer>();
+        otherSurveyResourceIds = getSameSurveyResources(resourceId);
+        Iterator<Integer> surveyResourceId = otherSurveyResourceIds.iterator();
+
+        if(!otherSurveyResourceIds.isEmpty())
+        {
+
+            while(surveyResourceId.hasNext())
+            {
+
+                PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT COUNT(*) FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?");
+                preparedStmnt.setInt(1, newResourceId);
+                preparedStmnt.setInt(2, userId);
+                ResultSet rs = preparedStmnt.executeQuery();
+
+                if(rs.next())
+                    ifAnsweredElsewhere = rs.getInt("COUNT(*)");
+
+                if(ifAnsweredElsewhere == 0)
+                {
+
+                    newResourceId = surveyResourceId.next();
+                }
+                else
+                {
+
+                    //user answered the selected survey resource
+                    break;
+                }
+            }
+        }
+
+        return newResourceId;
+    }
+
     public List<SurveyAnswer> getAnswerByUser(int resourceId, HashMap<String, String> question) throws SQLException
     {
+
         String answerByUser = "SELECT `answer` FROM `lw_survey_answer` WHERE `question_id`=? and `user_id`=? and `resource_id`=?";
         String userIds = "SELECT distinct(`user_id`) FROM `lw_survey_answer` WHERE `resource_id`=?";
 
@@ -467,14 +517,18 @@ public class SurveyManager
             ResultSet ids = pSttmnt.executeQuery();
             while(ids.next())
             {
+
                 User user = learnweb.getUserManager().getUser(ids.getInt("user_id"));
+
                 SurveyAnswer ans = new SurveyAnswer();
                 ans.userId = Integer.toString(ids.getInt("user_id"));
                 ans.userName = user.getUsername();
                 ans.studentId = user.getStudentId();
+
                 pSttmnt = learnweb.getConnection().prepareStatement(answerByUser);
                 for(String qid : question.keySet())
                 {
+
                     pSttmnt.setInt(1, Integer.parseInt(qid));
                     pSttmnt.setInt(2, ids.getInt("user_id"));
                     pSttmnt.setInt(3, surveyResourceId);
@@ -488,8 +542,12 @@ public class SurveyManager
                         ans.answers.put(qid, answerOfUser);
                     }
                     else
-                        ans.answers.put(qid, "Unanswered");
+                    {
+                        if(!ans.answers.containsKey(qid))
+                            ans.answers.put(qid, "Unanswered");
+                    }
                 }
+
                 answers.add(ans);
             }
 

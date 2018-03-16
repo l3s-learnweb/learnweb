@@ -43,7 +43,7 @@
 				
 			
        			 	<h:graphicImage  library="icon" name="print-icon.png" width="10" height="10" alt="Print}"/> 
-       			 	<f:param name="resource_id" value="#{assessmentGridBean.resourceId}"></f:param>
+       			 	<f:param name="resource_id" value="#{surveyResultBean.resourceId}"></f:param>
        			 	<f:param name="user_id" value="#{result.userId}" />
        			 </h:outputLink>
        			 <p:tooltip id="survey_print_tooltip" for="print_user" value="Print form answers of user: #{result.userName}"/>

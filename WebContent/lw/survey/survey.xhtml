@@ -159,14 +159,25 @@
 									</c:forEach>
 								</h:panelGrid>
 							</p:panel>
+							
 						</p:panel>
 
 						<p:commandButton widgetVar="sub" id="submit" value="Submit"
 							style="float:left;" styleClass="greenbutton resource_button"
 							action="#{surveyBean.submit()}"
-							update=":surveygrowl :message :panel"
+							update=":surveygrowl :message :panel :edit @this"
 							oncomplete="if (args &amp;&amp; !args.validationFailed) {PF('formVar').close(); sub.disable();}"
-							disabled="#{surveyBean.submitted}">
+							disabled="#{surveyBean.submitted and surveyBean.update eq false}">
+						</p:commandButton>
+						<p:commandButton widgetVar="editSub" id="edit" 
+						value="Edit Submission" 
+						rendered="#{surveyBean.submitted eq true and userBean.moderator eq true}"
+						style="float:left;margin-left:5px" styleClass="greenbutton resource_button" 
+						action="#{surveyBean.getSurvey(userBean.user.id)}"
+						update=":panel :submit @this" 
+						oncomplete="editSub.disable(); sub.enable();"
+						disabled="#{surveyBean.update}"
+						>
 						</p:commandButton>
 					</ui:fragment>
 				</ui:fragment>
@@ -177,6 +188,7 @@
 							style="text-align:center; font-weight:bold"></h:outputText>
 					</div>
 				</ui:fragment>
+			
 
 			</h:form>
 		</h:panelGroup>
