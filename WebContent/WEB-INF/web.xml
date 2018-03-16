@@ -29,11 +29,11 @@
 
 	<context-param>
 		 <param-name>primefaces.PRIVATE_CAPTCHA_KEY</param-name>
-		 <param-value>6LcfnUQUAAAAAPhCLff3pIqd5sAGNALXPxWW1OPQ</param-value>
+		 <param-value>***REMOVED***</param-value>
 	 </context-param>
 	<context-param>
 		 <param-name>primefaces.PUBLIC_CAPTCHA_KEY</param-name>
-		 <param-value>6LcfnUQUAAAAALJnEqd0R8sBPqj89J4jPF84RdFe</param-value>
+		 <param-value>***REMOVED***</param-value>
 	 </context-param>
 
 	<error-page>
