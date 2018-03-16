@@ -93,22 +93,25 @@ public class SurveyBean extends ApplicationBean implements Serializable
 
     private void getSurvey()
     {
-        SurveyManager sm = getLearnweb().getSurveyManager();
-        questions = new ArrayList<SurveyMetaDataFields>();
         User user = getUser();
         if(user == null)
             return;
+
+        SurveyManager sm = getLearnweb().getSurveyManager();
+        questions = new ArrayList<SurveyMetaDataFields>();
+
         try
         {
-        sv = sm.getFormQuestions(resourceId, user.getId());
-        submitted = sv.isSubmitted();
-        questions = sv.getFormQuestions();
+            sv = sm.getFormQuestions(resourceId, user.getId());
+            submitted = sv.isSubmitted();
+            questions = sv.getFormQuestions();
 
-        surveyTitle = sv.getSurveyTitle();
-        description = sv.getDescription();
-        organizationId = sv.getOrganizationId();
-        if(sv.isSubmitted())
-            addGrowl(FacesMessage.SEVERITY_ERROR, "You have submitted the form previously. You can only submit once.");
+            surveyTitle = sv.getSurveyTitle();
+            description = sv.getDescription();
+            organizationId = sv.getOrganizationId();
+
+            if(sv.isSubmitted())
+                addGrowl(FacesMessage.SEVERITY_ERROR, "You have submitted the form previously. You can only submit once.");
         }
         catch(Exception e)
         {
@@ -123,7 +126,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
         {
             try
             {
-            getLearnweb().getSurveyManager().uploadAnswers(u.getId(), wrappedAnswers, wrappedMultipleAnswers, resourceId);
+                getLearnweb().getSurveyManager().uploadAnswers(u.getId(), wrappedAnswers, wrappedMultipleAnswers, resourceId);
             }
             catch(Exception e)
             {

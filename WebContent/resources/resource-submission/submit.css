@@ -45,7 +45,11 @@
     pointer-events: none;
     z-index: 500;
 }
-
+    
+.submission_card_details > div:nth-child(1) { flex: auto; }
+.submission_card_details > div:nth-child(2) { flex: auto; }
+.submission_card_details > div:nth-child(3) { flex: auto; padding-left:5px; }	
+	
 @media screen and (max-width: 1139px) {
 	.resource-item2 {
         width: calc(25% - 16px); /* four columns */
@@ -61,10 +65,6 @@
     	width:100px;
     	padding-top:15px;
     }
-    
-	.submission_card_details > div:nth-child(1) { flex: auto; }
-	.submission_card_details > div:nth-child(2) { flex: auto; }
-	.submission_card_details > div:nth-child(3) { flex: auto; }	
 }
 
 @media screen and (min-width: 1140px) and (max-width: 1399px) {
@@ -191,6 +191,9 @@
 	position: relative;
 	float: right;
 	margin-top: 9px;
+	width: 100%;
+	text-align: center;
+	box-sizing: border-box;
 }
 
 .active {

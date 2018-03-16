@@ -1,5 +1,6 @@
 package de.l3s.learnweb;
 
+import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
@@ -7,24 +8,28 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-public class Submission
+public class Submission implements Serializable
 {
+    private final static long serialVersionUID = -3143872721852606973L;
     private final static Logger log = Logger.getLogger(Submission.class);
-    int id = -1;
-    int courseId;
-    String title;
-    String description;
-    Date openDatetime = new Date();
-    Date closeDatetime = new Date();
-    int noOfResources = 3; //Default max no. of resources 3
+
+    private int id = -1;
+    private int courseId;
+    private String title;
+    private String description;
+    private Date openDatetime = new Date();
+    private Date closeDatetime = new Date();
+    private int noOfResources = 3; //Default max no. of resources 3
 
     //Fields to handle link display based on survey submitted or not
-    String surveyURL;
-    int surveyResourceId = -1;
-    Survey surveyResource;
-    boolean surveyMandatory = false;
-    boolean submitted = false;
+    private String surveyURL;
+    private int surveyResourceId = -1;
+    private Survey surveyResource;
+    private boolean surveyMandatory = false;
+    private boolean submitted = false;
     List<Resource> submittedResources;
+
+    private transient Course course;
 
     public Submission()
     {
@@ -215,4 +220,12 @@ public class Submission
     {
         this.submitted = submitted;
     }
+
+    public Course getCourse()
+    {
+        if(course == null && courseId > 0)
+            course = Learnweb.getInstance().getCourseManager().getCourseById(courseId);
+        return course;
+    }
+
 }

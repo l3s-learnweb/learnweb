@@ -86,4 +86,10 @@ public class UsesTable
         return ((float) (pronounciation + acronym + phraseology + uses + source) / (total * 5));
     }
 
+    @Override
+    public String toString()
+    {
+        return "UsesTable [userid=" + userid + ", total=" + total + ", pronounciation=" + pronounciation + ", acronym=" + acronym + ", phraseology=" + phraseology + ", uses=" + uses + ", source=" + source + "]";
+    }
+
 }

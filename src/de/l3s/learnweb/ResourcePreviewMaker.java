@@ -154,6 +154,10 @@ public class ResourcePreviewMaker
         {
             processOfficeDocument(resource);
         }
+        else if(resource.getType().equals(Resource.ResourceType.text))
+        {
+            // TODO add default icons
+        }
         else
         {
             log.error("Can't create thumbnail. Don't know how to handle resource " + resource.getId() + ", type " + resource.getType());

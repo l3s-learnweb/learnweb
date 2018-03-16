@@ -75,14 +75,14 @@ public class DashboardBean extends ApplicationBean implements Serializable
         /* graph02map.put("EMPTY", "rgba(38, 185, 154, 0.1)");
         graph02map.put("other", "rgb(102,205,170)");
         graph02map.put("glossary", "rgba(38, 185, 154, 0.2)");
-
+        
         graph02map.put("Wikipedia", "rgba(3, 88, 120, 0.4)");
         graph02map.put("encyclopaedia", "rgba(3, 88, 120, 0.6)");
-
+        
         graph02map.put("monolingual dictionary", "rgba(38, 175, 154, 0.3)");
         graph02map.put("bilingual dictionary", "rgba(38, 175, 154, 0.6)");
         graph02map.put("Linguee or Reverso", "rgba(38, 175, 154, 0.9)");
-
+        
         graph02map.put("institutional website", "rgba(38, 105, 154, 0.3)");
         graph02map.put("patients' websites and blogs", "rgba(38, 105, 154, 0.6)");
         graph02map.put("scientific/academic publication", "rgba(38, 105, 154, 0.9)"); */
@@ -138,21 +138,6 @@ public class DashboardBean extends ApplicationBean implements Serializable
     {
         this.enddate = enddate;
     }
-
-    /*
-     * replaced by selectedCourse.members list
-     *
-    public List<String> getUserlist()
-    {
-        if(userlist == null)
-        {
-            String[] ulist = new String[] { "10107", "10108", "10109", "10110", "10111", "10112", "10113", "10114", "10115", "10116", "10117", "10136", "10137", "10138", "10150", "10152", "10154", "10155", "10156", "10200", "10408", "10409", "10410", "10411", "10412", "10413",
-                    "10414", "10415", "10416", "10417", "10427", "10428", "10429", "10430", "10443", "10445", "10595" };
-            userlist = new ArrayList<String>();
-            userlist.addAll(Arrays.asList(ulist));
-        }
-        return userlist;
-    }*/
 
     public Integer getSid()
     {
@@ -224,6 +209,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
         return totalterms;
     }
 
+    /*
     public Fields getGraph02()
     {
         if(graph02 == null)
@@ -249,16 +235,16 @@ public class DashboardBean extends ApplicationBean implements Serializable
             graph02color += " 		]";
             graph02.setData(graph02data);
             graph02.setLabel(graph02label);
-
+    
         }
         return graph02;
     }
-
+    
     public String getGraph02color()
     {
         return graph02color;
     }
-
+    */
     public Fields getGraph01()
     {
         if(graph01 == null)
@@ -382,35 +368,6 @@ public class DashboardBean extends ApplicationBean implements Serializable
         return summarylist;
     }
 
-    public ArrayList<TotalData> getSummaryOLD()
-    {
-        ArrayList<TotalData> list = new ArrayList<TotalData>();
-        String[] userid = new String[] { "10413", "10430", "10429", "10443", "10411", "10152", "10111", "10117", "10428", "10113" };
-        UserLogHome ulh = new UserLogHome();
-        ;
-        for(String uid : userid)
-        {
-            // ulh=new UserLogHome();
-            TotalData td = new TotalData();
-            td.setUserid(uid);
-
-            /*Map<String, Integer> summap=ulh.getSummary(Integer.parseInt(uid),startdate,enddate);
-            td.setConcepts(summap.get("concepts"));
-            td.setTerms(summap.get("terms"));
-            td.setSources(summap.get("sources"));
-            */
-            /*td.setConcepts(ulh.getTotalConcepts(Integer.parseInt(uid),startdate,enddate));
-            // ulh=new UserLogHome();
-            //td.setTerms(ulh.getTotalTerms(Integer.parseInt(uid),startdate,enddate));
-            // ulh=new UserLogHome();
-            //td.setSources(ulh.getTotalSourceNoempty(Integer.parseInt(uid),startdate,enddate));
-            */
-            list.add(td);
-        }
-        ulh.closeConnection();
-        return list;
-    }
-
     public ArrayList<DescData> getDesclist()
     {
         if(descdatalist == null)
@@ -493,16 +450,8 @@ public class DashboardBean extends ApplicationBean implements Serializable
         }
         return descdatalist;
     }
+    /*
 
-    public Course getSelectedCourse()
-    {
-        return selectedCourse;
-    }
-
-    public void setSelectedCourse(Course selectedCourse)
-    {
-        this.selectedCourse = selectedCourse;
-    }
 
     public Collection<HashMap<String, Object>> getTrackerStatistics()
     {
@@ -518,5 +467,16 @@ public class DashboardBean extends ApplicationBean implements Serializable
             }
         }
         return trackerStatistic;
+    }
+    */
+
+    public void setSelectedCourse(Course selectedCourse)
+    {
+        this.selectedCourse = selectedCourse;
+    }
+
+    public Course getSelectedCourse()
+    {
+        return selectedCourse;
     }
 }

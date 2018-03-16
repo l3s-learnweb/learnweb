@@ -1,5 +1,4 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml" 
 	xmlns:ui="http://java.sun.com/jsf/facelets" 
 	xmlns:h="http://java.sun.com/jsf/html" 
@@ -12,6 +11,7 @@ ul {
 	list-style: none;
 }
 </style>
+
 	<ui:define name="content">
 
 		<div class="container body">
@@ -350,7 +350,7 @@ ul {
 							</div>
 							<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
 								<span class="count_top"> Total Terms</span>
-								<div class="count">
+								<div class="count"> 
 									<h:outputText value="#{dashboard.totalterms}" />
 								</div>
 								<!-- span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>3% </i> From last Week</span -->
@@ -623,7 +623,7 @@ ul {
 									<h:panelGroup id="proxypanel">
 										<h:dataTable value="#{dashboard.fields}" var="entry" styleClass="countries_list">
 											<h:column>
-												<f:facet name="header"></f:facet>
+												<f:facet name="header"></f:facet> 
 												<a href="#{entry.userid}" target="_blank">#{entry.userid}</a>
 											</h:column>
 											<h:column>
@@ -634,37 +634,37 @@ ul {
 												<f:facet name="header">pronunciation</f:facet>
 
 												<h:outputText value="#{entry.pronounciation/entry.total*100}">
-													<f:convertNumber locale="en-US" pattern="#0.00" />
+													<f:convertNumber pattern="#0.00" />
 												</h:outputText>%
 					   		</h:column>
 											<h:column>
 												<f:facet name="header">acronym</f:facet>
 												<h:outputText value="#{entry.acronym/entry.total*100}">
-													<f:convertNumber locale="en-US" pattern="#0.00" />
+													<f:convertNumber pattern="#0.00" />
 												</h:outputText>%
 					   		</h:column>
 											<h:column>
 												<f:facet name="header">phraseology</f:facet>
 												<h:outputText value="#{entry.phraseology/entry.total*100}">
-													<f:convertNumber locale="en-US" pattern="#0.00" />
+													<f:convertNumber pattern="#0.00" />
 												</h:outputText>%
 					   		</h:column>
 											<h:column>
 												<f:facet name="header">uses</f:facet>
 												<h:outputText value="#{entry.uses/entry.total*100}">
-													<f:convertNumber locale="en-US" pattern="#0.00" />
+													<f:convertNumber pattern="#0.00" />
 												</h:outputText>%
 					   		</h:column>
 											<h:column>
 												<f:facet name="header">source</f:facet>
 												<h:outputText value="#{entry.source/entry.total*100}">
-													<f:convertNumber locale="en-US" pattern="#0.00" />
+													<f:convertNumber pattern="#0.00" />
 												</h:outputText>%
 					   		</h:column>
 											<h:column>
 												<f:facet name="header">AVG %</f:facet>
 												<h:outputText value="#{entry.avg*100}">
-													<f:convertNumber locale="en-US" pattern="#0.00" />
+													<f:convertNumber pattern="#0.00" />
 												</h:outputText>%
 					   		</h:column>
 										</h:dataTable>
@@ -729,7 +729,7 @@ ul {
 									<div class="clearfix"></div>
 								</div>
 								<div class="x_content">
-									<h:panelGroup id="descpanel">
+									<h:panelGroup id="descpanel"> 
 										<h:dataTable value="#{dashboard.desclist}" var="entry" styleClass="countries_list">
 											<h:column>
 												<f:facet name="header"></f:facet>
@@ -764,9 +764,7 @@ ul {
 				<!-- /page content -->
 
 				<!-- footer content -->
-				<footer> <!-- h:link value="See details" outcome="studentlog">
-			<f:param name="studentlogId" value="#{dashboard.sid}" />
-		</h:link -->
+				<footer> 
 				<div class="pull-right">
 					Davide Taibi
 					<a href="http://www.itd.cnr.it">CNR-ITD</a>

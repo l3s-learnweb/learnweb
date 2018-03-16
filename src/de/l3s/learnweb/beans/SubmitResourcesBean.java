@@ -665,20 +665,6 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         return submissionOverviewReadOnly;
     }
 
-    /**
-     * To display the course title in each submission card block in the
-     * submissions overview page
-     *
-     * @param courseId
-     * @return
-     */
-    public String getCourseTitle(int courseId)
-    {
-        if(courseId > 0)
-            return getLearnweb().getCourseManager().getCourseById(courseId).getTitle();
-        return null;
-    }
-
     public void unlockSubmission()
     {
         if(selectedSubmission != null)

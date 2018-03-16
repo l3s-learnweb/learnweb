@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core"
+	xmlns:fn="http://java.sun.com/jsp/jstl/functions"
+	lang="#{userBean.localeCode}">
+
+<ui:composition template="/templates/main/main_old.xhtml">
+
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="submission_id"
+				value="#{submissionModeratorBean.submissionId}" />
+			<f:viewAction action="#{submissionModeratorBean.onLoad}" />
+			<f:event type="javax.faces.event.PreRenderViewEvent"
+				listener="#{resourceDetailBean.preRenderView}" />
+		</f:metadata>
+	</ui:define>
+
+	<ui:param name="loginRequired" value="true" />
+	<ui:param name="pageTitle" value="#{msg['Submission.overview_title']}" />
+	<ui:param name="helpText" value="" />
+
+	<ui:define name="center_layout">
+		<script type="text/javascript">
+			
+		</script>
+		<h:form>
+			<p:remoteCommand name="selectGroupItemCommand"
+				actionListener="#{submitResourcesBean.actionSelectGroupItem}"
+				update=":add_resource_panel :growl"
+				oncomplete="update_header();load_editor(); " />
+		</h:form>
+
+		<h:outputStylesheet library="resource-submission" name="submit.css" />
+
+		<h:panelGroup layout="block" class="submission_card">
+			<div class="submission_card_details">
+				<div class="submission_details">
+					<h2>
+						<b>#{submissionModeratorBean.submission.title} </b>					
+					</h2>
+					<span class="submission_description">#{submissionModeratorBean.submission.description}</span>
+				</div>
+				<div class="submission_time_block">
+					<table style="position: relative; float: right;">
+						<tr>
+							<td><span style="font-weight: bold;">#{msg['Submission.open_date']}:</span></td>
+							<td>
+								<h:outputText value="#{submissionModeratorBean.submission.openDatetime}">
+									<f:convertDateTime dateStyle="medium" type="date" timeZone="#{userBean.timeZone}" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td><span style="font-weight: bold;">#{msg['Submission.close_date']}:</span></td>
+							<td>
+								<h:outputText value="#{submissionModeratorBean.submission.closeDatetime}">
+									<f:convertDateTime dateStyle="medium" type="date" timeZone="#{userBean.timeZone}" />
+								</h:outputText>
+							</td>
+						</tr>
+						<tr>
+							<td><span style="font-weight: bold;">Course: </span></td>
+							<td><h:outputText value="#{submissionModeratorBean.submission.course.title}" />
+							</td>
+						</tr>
+					</table>
+				</div>
+			</div>
+		</h:panelGroup>
+
+
+		<h:panelGroup id="datagrid" class="not-selectable display-none"></h:panelGroup>
+	</ui:define>
+	<ui:define name="right_layout">
+		<ui:decorate template="/templates/resources/right_pane.xhtml">
+			<ui:param name="bean" value="#{submitResourcesBean}" />
+		</ui:decorate>
+	</ui:define>
+</ui:composition>
+</html>

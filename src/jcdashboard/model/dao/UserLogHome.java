@@ -62,36 +62,14 @@ public class UserLogHome
             String username = "learnweb";
             String password = "***REMOVED***";
 
-            /*
-            try
-            {*/
-            //Class.forName("org.mariadb.jdbc.Driver");
-
             connect = DriverManager.getConnection(url, username, password);
-            /*
-            }
 
-            catch(ClassNotFoundException e)
-            {
-            log.fatal("fatal error", e);
-            }*/
         }
         return connect;
     }
 
     public void closeConnection()
     {
-        /*
-        if(connect != null)
-            try
-            {
-                connect.close();
-            }
-            catch(SQLException e)
-            {
-                log.fatal("fatal sql error", e);
-            }
-            */
     }
 
     /**
@@ -116,27 +94,6 @@ public class UserLogHome
         }
         return actperday;
     }
-
-    /*
-    public Map<String, Integer> actionCount()
-    {
-        Map<String, Integer> actperday = new TreeMap<String, Integer>();
-        try
-        {
-            PreparedStatement pstmt = openConnection().prepareStatement("select action,count(*) as count from user_log where timestamp>'2017-03-02' and user_id<> 8963 group by action");
-            ResultSet rs = pstmt.executeQuery();
-            while(rs.next())
-                actperday.put( rs.getString("action"), rs.getInt("count"));
-            closeConnection();
-        }
-        catch(SQLException e)
-        {
-            log.fatal("fatal sql error", e);
-        }
-
-        return actperday;
-    }
-    */
 
     public Map<String, Integer> actionCount(String startdate, String enddate)
     {
@@ -236,6 +193,7 @@ public class UserLogHome
         return result;
     }
 
+    /* never used
     public Map<String, Integer> glossarySource()
     {
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
@@ -249,7 +207,7 @@ public class UserLogHome
                     actperday.put("EMPTY", rs.getInt("count"));
                 else
                     actperday.put(rs.getString("refs"), rs.getInt("count"));
-
+    
             closeConnection();
         }
         catch(SQLException e)
@@ -258,6 +216,7 @@ public class UserLogHome
         }
         return actperday;
     }
+
 
     public Map<String, Integer> glossarySource(String startdate, String enddate)
     {
@@ -282,7 +241,7 @@ public class UserLogHome
         }
         return actperday;
     }
-
+    */
     public Map<String, Integer> glossarySource(Integer userId, String startdate, String enddate)
     {
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
@@ -307,6 +266,7 @@ public class UserLogHome
         return actperday;
     }
 
+    /*
     public Map<String, Integer> glossarySource(Integer userId)
     {
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
@@ -331,52 +291,13 @@ public class UserLogHome
         }
         return actperday;
     }
-
-    /*
-     * never used
-
-    public Map<String, Integer> userGlossary()
-    {
-        Map<String, Integer> actperday = new TreeMap<String, Integer>();
-
-        try
-        {
-            PreparedStatement pstmt = openConnection().prepareStatement(
-                    "select owner_user_id, count(distinct rgt.glossary_id) as count from resource_glossary rg, resource r, resource_glossary_terms rgt where r.resource_id=rg.resource_id and rg.glossary_id=rgt.glossary_id and rg.deleted <>1 and rg.resource_id IN (select resource_id from resource where owner_user_id<> 8963) and rg.deleted<>1 and rgt.deleted<>1 group by owner_user_id order by owner_user_id ");
-            ResultSet rs = pstmt.executeQuery();
-            while(rs.next())
-                actperday.put( rs.getString("owner_user_id"), rs.getInt("count"));
-
-            closeConnection();
-        }
-        catch(SQLException e)
-        {
-            log.fatal("fatal sql error", e);
-        }
-        return actperday;
-    }
     */
-
     public Map<String, Integer> getUserGlossaryConceptCountByCourse(Course course, String startdate, String enddate)
     {
         Map<String, Integer> conceptsPerUser = new TreeMap<String, Integer>();
 
         try
         {
-            /* Old query:
-            PreparedStatement pstmt = openConnection().prepareStatement(
-                    "select owner_user_id, count(distinct rgt.glossary_id) as count from resource_glossary rg, resource r, resource_glossary_terms rgt where r.resource_id=rg.resource_id and rg.glossary_id=rgt.glossary_id and rg.deleted <>1 and rg.resource_id IN (select resource_id from resource where owner_user_id<> 8963) and rg.deleted<>1 and rgt.deleted<>1 and rg.timestamp>'"
-                            + startdate + "' and rg.timestamp<'" + enddate + "' group by owner_user_id order by owner_user_id ");
-             */
-
-            //UserBean userBean = UtilBean.getUserBean();
-
-            /*
-             * old select includes jopin to user table
-            PreparedStatement pstmt = learnweb.getConnection().prepareStatement(
-                    "SELECT user_id, username, count( * ) AS count FROM lw_user_course c JOIN lw_resource r ON c.user_id = r.owner_user_id JOIN lw_user USING (user_id) JOIN lw_resource_glossary rg USING (resource_id)  WHERE c.course_id =? AND rg.deleted !=1 AND r.deleted !=1 AND rg.timestamp > ? AND rg.timestamp < ? GROUP BY r.owner_user_id ORDER BY username");
-
-            */
 
             UserManager userManager = learnweb.getUserManager();
             PreparedStatement pstmt = learnweb.getConnection().prepareStatement(
@@ -399,6 +320,7 @@ public class UserLogHome
         return conceptsPerUser;
     }
 
+    // TODO combine with
     public Map<String, Integer> userGlossaryTerm()
     {
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
@@ -441,6 +363,7 @@ public class UserLogHome
         return actperday;
     }
 
+    /*
     public Map<String, Integer> actionPerDay(Integer userId)
     {
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
@@ -478,7 +401,7 @@ public class UserLogHome
         }
         return actperday;
     }
-
+    */
     public Map<String, Integer> actionCount(Integer userId, String startdate, String enddate)
     {
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
@@ -498,6 +421,7 @@ public class UserLogHome
         return actperday;
     }
 
+    /*
     public Integer getTotalConcepts(Integer userId)
     {
         int result = 0;
@@ -558,7 +482,7 @@ public class UserLogHome
         }
         return result;
     }
-
+    */
     public Integer getTotalSource(Integer userId, String startdate, String enddate)
     {
         int result = 0;
@@ -580,6 +504,7 @@ public class UserLogHome
         return result;
     }
 
+    /*
     public Integer getTotalSourceNoempty(Integer userId, String startdate, String enddate)
     {
         int result = 0;
@@ -592,7 +517,7 @@ public class UserLogHome
             while(rs.next())
                 result = rs.getInt("count");
             // closeConnection();
-
+    
         }
         catch(SQLException e)
         {
@@ -600,7 +525,7 @@ public class UserLogHome
         }
         return result;
     }
-
+    */
     public Map<String, Integer[]> getSummary2(String startdate, String enddate)
     {
         int result = 0, result2 = 0;
@@ -643,13 +568,14 @@ public class UserLogHome
         return summary;
     }
 
+    /*
     public Map<String, Integer> getSummary(Integer userId, String startdate, String enddate)
     {
         int result = 0, result2 = 0;
         Map<String, Integer> summary = new TreeMap<String, Integer>();
         try
         {
-
+    
             // getTotalConcepts
             PreparedStatement pstmt = openConnection().prepareStatement(
                     "select count(distinct glossary_id) as count from resource_glossary rg, resource r where r.resource_id=rg.resource_id and rg.deleted<>1 and r.deleted<>1 and owner_user_id=" + userId + " and timestamp>'" + startdate + "' and timestamp<'" + enddate + "'");
@@ -657,7 +583,7 @@ public class UserLogHome
             while(rs.next())
                 result = rs.getInt("count");
             summary.put("concepts", result);
-
+    
             // getTotalTerms
             pstmt = openConnection()
                     .prepareStatement("select count(*) as count , count(distinct rgt.references) as count2 from resource_glossary rg, resource_glossary_terms rgt where rg.glossary_id=rgt.glossary_id and resource_id IN (select resource_id from resource where owner_user_id="
@@ -670,16 +596,7 @@ public class UserLogHome
             }
             summary.put("terms", result);
             summary.put("sources", result2);
-
-            // getTotalSourceNoempty
-            /*pstmt = openConnection().prepareStatement("select count(distinct rgt.references) as count from resource_glossary rg, resource_glossary_terms rgt where rg.glossary_id=rgt.glossary_id and resource_id IN (select resource_id from resource where owner_user_id="+sid+" and deleted<>1) and rgt.references<>'' and rgt.deleted <>1 and rg.deleted<>1 and rg.timestamp>'"+startdate+"' and rg.timestamp<'"+enddate+"'");
-            rs = pstmt.executeQuery();
-            while (rs.next())
-                result=rs.getString("count");
-            summary.put("sources",Integer.parseInt(""+result));
-            */
-            // closeConnection();
-
+    
         }
         catch(SQLException e)
         {
@@ -687,7 +604,7 @@ public class UserLogHome
         }
         return summary;
     }
-
+    
     public List<String> descritpions(Integer userId)
     {
         List<String> actperday = new ArrayList<String>();
@@ -697,17 +614,17 @@ public class UserLogHome
             ResultSet rs = pstmt.executeQuery();
             while(rs.next())
                 actperday.add(rs.getString("descr"));
-
+    
             closeConnection();
         }
         catch(SQLException e)
         {
             log.fatal("fatal sql error", e);
         }
-
+    
         return actperday;
     }
-
+    */
     public List<String> descritpions(Integer userId, String startdate, String enddate)
     {
         List<String> actperday = new ArrayList<String>();
@@ -804,10 +721,6 @@ public class UserLogHome
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
         try
         {
-            /*
-            PreparedStatement pstmt = openConnection().prepareStatement("select  REPLACE(REPLACE(SUBSTRING_INDEX(referer, '/', 3),'.waps.io',''),'.secure','') as domain, count(*) as count from proxy_log where user_id=" + userId + " and date>'" + startdate + "' and date<'"
-                    + enddate + "' and status_code < 400 group by (domain) order by count desc");
-            */
             PreparedStatement pstmt = openConnection().prepareStatement("select  REPLACE(REPLACE(SUBSTRING_INDEX(url, '/', 3),'.waps.io',''),'.secure','') as domain, count(*) as count from tracker.track where external_client_id=2 AND external_user_id='" + userId
                     + "' and created_at>'" + startdate + "' and created_at<'" + enddate + "' group by (domain) order by count desc");
             ResultSet rs = pstmt.executeQuery();
@@ -866,15 +779,6 @@ public class UserLogHome
         if(course.getMemberCount() == 0) // no course members -> nothing to return
             return null;
 
-        /*
-        StringBuilder sb = new StringBuilder();
-        for(User user : course.getMembers())
-        {
-            sb.append(',');
-            sb.append(user.getId());
-        }
-        String userIds = sb.substring(1);
-        */
         String userIds = StringHelper.implodeInt(course.getUserIds(), ",");
 
         UserManager userManager = learnweb.getUserManager();
@@ -953,6 +857,12 @@ public class UserLogHome
             statistic.add(new TrackerStatistic(rs.getInt("user_id"), rs.getInt("total_events"), rs.getInt("time_stay"), rs.getInt("time_active"), rs.getInt("clicks"), rs.getInt("keypresses")));
         }
         return statistic;
+    }
+
+    public Map<String, Integer> userGlossary()
+    {
+        // TODO Auto-generated method stub
+        return null;
     }
 
     public static class TrackerStatistic
@@ -1075,12 +985,6 @@ public class UserLogHome
         String enddate = "2017-04-02";
 
         log.debug(ulh.getTrackerStatisticsPerUser(course, startdate, enddate));
-    }
-
-    public Map<String, Integer> userGlossary()
-    {
-        // TODO Auto-generated method stub
-        return null;
     }
 
 }

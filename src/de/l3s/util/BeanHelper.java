@@ -1,5 +1,7 @@
 package de.l3s.util;
 
+import java.util.Map;
+
 import javax.faces.context.ExternalContext;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
@@ -12,7 +14,7 @@ public class BeanHelper
     /**
      * Returns the remote address of the current request.
      * If available it returns the IP provided through the X-FORWARDED-FOR header
-     * 
+     *
      * @return
      */
     public static String getIp()
@@ -66,6 +68,7 @@ public class BeanHelper
         String userAgent = null;
         Integer userId = null;
         String user = null;
+        Map<String, String[]> parameters = null;
 
         try
         {
@@ -95,11 +98,13 @@ public class BeanHelper
                 if(learnweb != null)
                     user = learnweb.getUserManager().getUser(userId).toString();
             }
+
+            parameters = request.getParameterMap();
         }
         catch(Throwable t)
         {
             // ignore
         }
-        return "page: " + url + "; user: " + user + "; ip: " + ip + "; referrer: " + referrer + "; userAgent: " + userAgent;
+        return "page: " + url + "; user: " + user + "; ip: " + ip + "; referrer: " + referrer + "; userAgent: " + userAgent + "; parameters: " + parameters + ";";
     }
 }

@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 /**
  * DAO for submissions pages
- * 
+ *
  * @author Trevor
  */
 public class SubmissionManager
@@ -144,23 +144,19 @@ public class SubmissionManager
      *
      * @param submissionId
      * @return
+     * @throws SQLException
      */
-    public Submission getSubmissionById(int submissionId)
+    public Submission getSubmissionById(int submissionId) throws SQLException
     {
         Submission s = new Submission();
-        try
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE submission_id=?");)
         {
-            PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM lw_submit WHERE submission_id=?");
             ps.setInt(1, submissionId);
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             {
                 s = createSubmission(rs);
             }
-        }
-        catch(SQLException e)
-        {
-            log.error("Error while retrieving submission by id for id: " + submissionId, e);
         }
 
         return s;
@@ -388,7 +384,7 @@ public class SubmissionManager
                 System.out.println();
                 pStmt2.close();
             }
-
+        
         }
         System.out.println("No. of websites submitted: " + websiteCount);
         System.out.println("No. of them archived: " + archivedCount);

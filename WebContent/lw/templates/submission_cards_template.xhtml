@@ -51,7 +51,7 @@
 					<tr>
 						<td><span style="font-weight: bold;">Course: </span></td>
 						<td>
-							<h:outputText value="${submitResourcesBean.getCourseTitle(submission.courseId)}" />
+							<h:outputText value="#{submission.course.title}" />
 						</td>
 					</tr>
 				</table>
@@ -71,13 +71,6 @@
 					<f:param name="user_id" value="#{submitResourcesBean.userId}" />
 					#{msg['Submission.submit_resources']}
 				</h:outputLink>
-				<!-- <h:outputLink styleClass="greenbutton submission_link"
-					value="myhome/submission_resources.jsf"
-					rendered="#{submission.currentSubmission and submission.isSurveySubmitted(userBean.user.id) and userBean.moderator and not submitResourcesBean.submissionOverviewReadOnly}">
-					<f:param name="submission_id" value="#{submission.id}" />
-					<f:param name="user_id" value="#{submitResourcesBean.userId}" />
-					Test Submit Resources
-				</h:outputLink> -->
 				<h:outputLink  style="text-decoration: underline;" styleClass="submission_link"
 					value="../templates/resources/survey.jsf"
 					rendered="#{submission.currentSubmission and not submission.isSurveySubmitted(userBean.user.id) and not submitResourcesBean.submissionOverviewReadOnly}">
@@ -92,39 +85,47 @@
 					<f:param name="user_id" value="#{submitResourcesBean.userId}" />
 					#{msg['Submission.view_submission']}
 				</h:outputLink>
+				
+				
+				<h:outputLink styleClass="greenbutton submission_link"
+					value="myhome/submission_moderator.jsf"
+					rendered="#{userBean.moderator}">
+					<f:param name="submission_id" value="#{submission.id}" />
+					#{msg['Submission.view_user_submissions']}
+				</h:outputLink>
 			</div>
 		</div>
 		<h:panelGroup class="submission_card_resources" layout="block" rendered="#{not empty submission.submittedResources}">
 			<hr/>
 			<h:panelGroup layout="block" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
-			<h:panelGroup styleClass="resource-grid" layout="block" style="margin-bottom:0px;">
-					<ui:repeat var="res" value="#{submission.submittedResources}" >
-	
-						<h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
-							<div class="resource-block">
-	
-								<div class="resource-preview">
-									<div class="resource-preview-wrapper">
-										<div class="resource-preview-wrapper2">
-											<div class="resource-preview-block"></div>
-											<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" />
+				<h:panelGroup styleClass="resource-grid" layout="block" style="margin-bottom:0px;">
+						<ui:repeat var="res" value="#{submission.submittedResources}" >
+		
+							<h:panelGroup styleClass="resource-item group-resources-item" pt:data-itemType="resource" pt:data-itemId="#{res.id}" layout="block">
+								<div class="resource-block">
+		
+									<div class="resource-preview">
+										<div class="resource-preview-wrapper">
+											<div class="resource-preview-wrapper2">
+												<div class="resource-preview-block"></div>
+												<img class="resource-preview-image" src="#{res.thumbnail1.url}" alt="#{res.title}" />
+											</div>
 										</div>
 									</div>
-								</div>
-	
-								<div class="resource-title">
-									<div class="resource-title-wrapper">
-										<div class="resource-title-text">
-											<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
-											<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
+		
+									<div class="resource-title">
+										<div class="resource-title-wrapper">
+											<div class="resource-title-text">
+												<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
+												<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
+											</div>
 										</div>
 									</div>
+		
 								</div>
-	
-							</div>
-						</h:panelGroup>
-					</ui:repeat>
-			</h:panelGroup>
+							</h:panelGroup>
+						</ui:repeat>
+				</h:panelGroup>
 			</h:panelGroup>
 			
 		</h:panelGroup>
