@@ -1607,11 +1607,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 targetFolderId = StringHelper.parseInt(dest.getString("folderId"), 0);
             }
 
-            Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
-            if(targetGroupId != 0 && !targetGroup.canAddResources(getUser()))
-            {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to add resources to target group.");
-                return;
+            if (targetGroupId != 0) {
+                Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
+                if(!targetGroup.canAddResources(getUser()))
+                {
+                    addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to add resources to target group.");
+                    return;
+                }
             }
 
             for(int i = 0, len = objects.length(); i < len; ++i)
