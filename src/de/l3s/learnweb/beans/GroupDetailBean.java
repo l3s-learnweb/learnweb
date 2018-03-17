@@ -1521,22 +1521,24 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         {
             int numFolders = 0, numResources = 0, numSkipped = 0, targetGroupId = selectedResourceTargetGroupId, targetFolderId = selectedResourceTargetFolderId;
 
-            Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
-            if (targetGroup == null) {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "Target group is wrong and not exists.");
-                return;
-            }
-
             if(!getGroup().canViewResources(getUser()))
             {
                 addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to copy this resource.");
                 return;
             }
 
-            if(!targetGroup.canAddResources(getUser()))
-            {
-                addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to add resources to target group.");
-                return;
+            if (targetGroupId != 0) {
+                Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
+                if (targetGroup == null) {
+                    addGrowl(FacesMessage.SEVERITY_ERROR, "Target group is wrong and not exists.");
+                    return;
+                }
+
+                if(!targetGroup.canAddResources(getUser()))
+                {
+                    addGrowl(FacesMessage.SEVERITY_ERROR, "You are not allowed to add resources to target group.");
+                    return;
+                }
             }
 
             for(int i = 0, len = objects.length(); i < len; ++i)
