@@ -379,19 +379,20 @@ public class TedCrawlerSimple implements Runnable
 
                 try
                 {
-                    String insertStmt = "INSERT INTO `ted_video`(`resource_id`,`slug`, `title`, `description`, `viewed_count`, `published_at`, `photo1_url`, `photo1_width`,`photo1_height`,`tags`,`duration`) VALUES (?,?,?,?,?,?,?,?,?,?,?)";
+                    String insertStmt = "INSERT INTO `ted_video`(`ted_id`,`resource_id`,`slug`, `title`, `description`, `viewed_count`, `published_at`, `photo1_url`, `photo1_width`,`photo1_height`,`tags`,`duration`) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
                     PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement(insertStmt);
-                    pStmt.setInt(1, tedResource.getId());
-                    pStmt.setString(2, slug);
-                    pStmt.setString(3, title);
-                    pStmt.setString(4, description);
-                    pStmt.setString(5, totalViews);
-                    pStmt.setTimestamp(6, new Timestamp(publishedAt.getTime()));
-                    pStmt.setString(7, maxImageUrl);
-                    pStmt.setInt(8, imageWidth);
-                    pStmt.setInt(9, imageHeight);
-                    pStmt.setString(10, keywords);
-                    pStmt.setInt(11, duration);
+                    pStmt.setInt(1, Integer.parseInt(tedId));
+                    pStmt.setInt(2, tedResource.getId());
+                    pStmt.setString(3, slug);
+                    pStmt.setString(4, title);
+                    pStmt.setString(5, description);
+                    pStmt.setString(6, totalViews);
+                    pStmt.setTimestamp(7, new Timestamp(publishedAt.getTime()));
+                    pStmt.setString(8, maxImageUrl);
+                    pStmt.setInt(9, imageWidth);
+                    pStmt.setInt(10, imageHeight);
+                    pStmt.setString(11, keywords);
+                    pStmt.setInt(12, duration);
                     int val = pStmt.executeUpdate();
                     if(val != 1)
                         log.error("Inserting ted video resource was not successful: " + tedResource.getId());
