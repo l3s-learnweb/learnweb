@@ -100,7 +100,7 @@ public class TedCrawlerSimple implements Runnable
         try
         {
             JSONParser jsonParser = new JSONParser();
-            PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("INSERT DELAYED INTO `ted_transcripts_paragraphs`(`resource_id`, `language`, `starttime`, `paragraph`) VALUES (?,?,?,?)");
+            PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("INSERT INTO `ted_transcripts_paragraphs`(`resource_id`, `language`, `starttime`, `paragraph`) VALUES (?,?,?,?)");
             pStmt.setInt(1, resourceId);
             pStmt.setString(2, language);
 
@@ -262,7 +262,7 @@ public class TedCrawlerSimple implements Runnable
 
         String sub[] = url.split("talks/");
         String slug = sub[1];
-        int resourceId = 0;
+        int resourceId = -1;
         String tedId = null;
 
         try
@@ -315,9 +315,9 @@ public class TedCrawlerSimple implements Runnable
                 title = titleEl.attr("content");
                 log.info("title: " + title);
 
-                Element keywordsEl = doc.select("meta[name=keywords]").first();
-                keywords = keywordsEl.attr("content");
-                log.info("keywords: " + keywords);
+                //Element keywordsEl = doc.select("meta[name=keywords]").first();
+                //keywords = keywordsEl.attr("content");
+                //log.info("keywords: " + keywords);
 
                 Element imgLinkEl = doc.select("meta[property=og:image]").first();
                 String maxImageUrl = imgLinkEl.attr("content");
@@ -329,20 +329,25 @@ public class TedCrawlerSimple implements Runnable
                 Element imageWidthElement = doc.select("meta[property=og:image:width]").first();
                 int imageWidth = Integer.parseInt(imageWidthElement.attr("content"));
 
+                log.info("Image height: " + imageHeight + "; Image width: " + imageWidth);
+
                 Element descriptionEl = doc.select("meta[name=description]").first(); //can use meta tag "description" instead
                 description = descriptionEl.attr("content");
 
                 Element durationEl = doc.select("meta[property=og:video:duration]").first();
-                int duration = Integer.parseInt(durationEl.attr("content"));
+                int duration = (int) Float.parseFloat(durationEl.attr("content"));
+                log.info("Duration: " + duration);
 
                 Element releaseDateEl = doc.select("meta[property=og:video:release_date").first();
                 Date publishedAt = new Date(Integer.parseInt(releaseDateEl.attr("content")) * 1000L);
 
                 Elements tags = doc.select("meta[property=og:video:tag");
                 for(Element tag : tags)
-                    keywords += tag + ",";
+                    keywords += tag.attr("content") + ",";
+
                 if(keywords.length() > 0)
                     keywords = keywords.substring(0, keywords.length() - 1);
+                log.info("keywords: " + keywords);
 
                 Resource tedResource = new Resource();
                 tedResource.setTitle(title);
@@ -353,6 +358,7 @@ public class TedCrawlerSimple implements Runnable
                 tedResource.setDuration(duration);
                 tedResource.setMaxImageUrl(maxImageUrl);
                 tedResource.setCreationDate(publishedAt);
+                tedResource.setIdAtService(tedId);
                 // the embedded code is created on the fly in Resource.getEmbedded()
                 //tedResource.setEmbeddedRaw("<iframe src=\"//embed.ted.com/talks/" + slug + ".html\" width=\"100%\" height=\"100%\" frameborder=\"0\" scrolling=\"no\" webkitAllowFullScreen mozallowfullscreen allowFullScreen></iframe>");
                 tedResource.setTranscript("");
@@ -362,6 +368,9 @@ public class TedCrawlerSimple implements Runnable
                     tedResource.setGroup(tedGroup);
                     admin.addResource(tedResource);
                     tedResource.save();
+
+                    //save new TED resource ID in order to use it later for saving transcripts
+                    resourceId = tedResource.getId();
                 }
                 catch(SQLException e)
                 {
@@ -396,6 +405,8 @@ public class TedCrawlerSimple implements Runnable
             //if video already added, check if slug has changed and then update basic attributes if so
             if(resourceId > 0)
                 updateResourceData(resourceId, slug, title, description);
+            else
+                return;
 
             //if the videos are already added, crawl for new transcripts
             //log.info("Extracting transcripts for existing ted video: " + resourceId);
