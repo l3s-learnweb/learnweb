@@ -378,7 +378,10 @@ public class SubmissionManager
                 Resource resource = resourceManager.getResource(rs.getInt("resource_id"));
                 currentUserSubmission.addResource(resource);
             }
+            if(currentUserSubmission != null) // add last entry set to list
+                submittedResourcesPerUser.add(currentUserSubmission);
         }
+
         return submittedResourcesPerUser;
     }
 
