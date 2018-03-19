@@ -199,7 +199,7 @@ public class TedCrawlerSimple implements Runnable
 
     public int checkTEDIdExists(int tedId)
     {
-        int resourceId = 0;
+        int resourceId = -1;
         try
         {
             PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("SELECT resource_id FROM ted_video WHERE ted_id = ?");
@@ -297,13 +297,13 @@ public class TedCrawlerSimple implements Runnable
             log.info("ted id: " + tedId);
 
             //Checking again if TED video exists since sometimes the slug of an existing video can change
-            if(resourceId == 0)
+            if(resourceId == -1)
             {
                 resourceId = checkTEDIdExists(Integer.parseInt(tedId));
             }
 
             //if the videos are new, crawl for the basic attributes such as title, speaker, transcripts
-            if(resourceId == 0)
+            if(resourceId == -1)
             {
                 log.info("Crawling new ted talk: " + slug);
 
