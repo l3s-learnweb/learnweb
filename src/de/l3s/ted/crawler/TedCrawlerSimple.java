@@ -159,7 +159,7 @@ public class TedCrawlerSimple implements Runnable
             int totalPages = Integer.parseInt(lastPage);
             log.info("Total no. of pages: " + totalPages);
 
-            for(int i = 1; i <= 1; i++)
+            for(int i = 1; i <= totalPages; i++)
                 visitTedTalksPage(tedTalksURLPrefix + "page=" + i);
         }
         catch(IOException e)
