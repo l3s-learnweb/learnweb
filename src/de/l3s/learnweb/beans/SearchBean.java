@@ -11,7 +11,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -84,14 +83,9 @@ public class SearchBean extends ApplicationBean implements Serializable
     private final static int minResourcesPerGroup = 2;
 
     /* For logging */
-    // private boolean logEnabled; //Only carry out search log functions if user is logged in
-    //private Date startTime; //To log when viewing time is started for a resource
-    // private Date endTime; //To log when viewing time is ended for a resource
     //private transient SearchLogClient searchLogClient;
-    // private long batchrsStartTime; //To keep track of the start time for batch update of resultSet
-    // private long batchrsTimeout; //To keep track of timeout for batch update of resultSet
-    boolean historyResourcesRetrieved; //To keep track if the previous resultSet resources have already been retrieved
-    HashSet<String> historyResources; //Stores resource URLs from a previous resultSet
+    //boolean historyResourcesRetrieved; //To keep track if the previous resultSet resources have already been retrieved
+    //HashSet<String> historyResources; //Stores resource URLs from a previous resultSet
     //private int resultsetId; //For getting the result set ID of the past query posted for comparison of resultsets
     //private int resultsetViewId;
 
@@ -109,7 +103,7 @@ public class SearchBean extends ApplicationBean implements Serializable
 
         metaFilters = new SearchFilters();
 
-        historyResources = new HashSet<String>();
+        //historyResources = new HashSet<String>();
     }
 
     public void preRenderView() throws SQLException
