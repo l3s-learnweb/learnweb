@@ -57,10 +57,9 @@ public class UserLogHome
 
         if(connect == null || !connect.isValid(2))
         {
-            String url = "jdbc:mysql://localhost/learnweb_logs";
-
-            String username = "learnweb";
-            String password = "***REMOVED***";
+            String url = Learnweb.getInstance().getProperties().getProperty("mysql_logs_url");
+            String username = Learnweb.getInstance().getProperties().getProperty("mysql_user");
+            String password = Learnweb.getInstance().getProperties().getProperty("mysql_password");
 
             connect = DriverManager.getConnection(url, username, password);
 

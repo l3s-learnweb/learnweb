@@ -1,886 +1,259 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<ui:composition template="/templates/main/main.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
-<html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:f="http://java.sun.com/jsf/core">
+  <ui:param name="pageTitle" value="Dashboard"/>
+  <ui:param name="loginRequired" value="true"/>
 
-<f:metadata>
-	<f:viewParam name="studentlogId" value="#{studentlog.sid}" />
-</f:metadata>
+  <f:metadata>
+    <f:viewParam name="studentlogId" value="#{studentlog.sid}"/>
+  </f:metadata>
 
-<ui:composition template="/lw/admin/dashboard/BasicTemplate.xhtml">
-<style>
-ul {
-list-style: none;
-}
-</style>
-	<ui:define name="content">
+  <style>
+    ul {
+      list-style: none;
+    }
+  </style>
 
-	
-		<div class="container body">
-      <div class="main_container">
-        <div class="col-md-3 left_col">
-          <div class="left_col scroll-view">
-            <div class="navbar nav_title" style="border: 0;">
-              <a href="index.html" class="site_title"> <span>LearnWeb Dashboard</span></a>
-            </div>
+  <ui:define name="center_layout">
+    <div class="ui-g" style="margin: 5px;">
+      <div class="ui-g-12 ui-md-2">
+        <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
 
-            <div class="clearfix"></div>
-
-            <!-- menu profile quick info -->
-            <div class="profile clearfix">
-              <div class="profile_pic">
-                
-                <h:graphicImage name="dashboard/images/foto_davide.jpg" styleClass="img-circle profile_img" />
-              </div>
-              <div class="profile_info">
-                <span>Welcome,</span>
-                <h2>Teacher 001</h2>
-              </div>
-            </div>
-            <!-- /menu profile quick info -->
-
-            <br />
-            
-            <!-- sidebar menu -->
-            
-			<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-              <div class="menu_section">
-                <h3>General</h3>
-                <ul class="nav side-menu">
-                  <li><a href="index1.jsf"><i class="fa fa-home"></i> Home </a>
-                  </li>
-                </ul>
-              </div>
-              </div>
-            
-
-            <!-- /menu footer buttons -->
-            <div class="sidebar-footer hidden-small">
-              <a data-toggle="tooltip" data-placement="top" title="Settings">
-                <span class="glyphicon glyphicon-cog" aria-hidden="true"></span>
-              </a>
-              <a data-toggle="tooltip" data-placement="top" title="FullScreen">
-                <span class="glyphicon glyphicon-fullscreen" aria-hidden="true"></span>
-              </a>
-              <a data-toggle="tooltip" data-placement="top" title="Lock">
-                <span class="glyphicon glyphicon-eye-close" aria-hidden="true"></span>
-              </a>
-              <a data-toggle="tooltip" data-placement="top" title="Logout" href="login.html">
-                <span class="glyphicon glyphicon-off" aria-hidden="true"></span>
-              </a>
-            </div>
-            <!-- /menu footer buttons -->
+          <div class="menu_section" style="height: 350px; overflow-y: scroll; width: 100%;">
+            <h:form id="form">
+              <p:panel header="General">
+                <a href="index1.jsf"><i class="fa fa-home"></i>Home</a>
+              </p:panel>
+            </h:form>
           </div>
         </div>
-
-        <!-- top navigation -->
-        <div class="top_nav">
-          <div class="nav_menu">
-            <nav>
-              <div class="nav toggle">
-                <a id="menu_toggle"><i class="fa fa-bars"></i></a>
-              </div>
-
-              <ul class="nav navbar-nav navbar-right">
-                <li class="">
-                 
-                  <ul class="dropdown-menu dropdown-usermenu pull-right">
-                    <li><a href="javascript:;"> Profile</a></li>
-                    <li>
-                      <a href="javascript:;">
-                        <span class="badge bg-red pull-right">50%</span>
-                        <span>Settings</span>
-                      </a>
-                    </li>
-                    <li><a href="javascript:;">Help</a></li>
-                    <li><a href="login.html"><i class="fa fa-sign-out pull-right"></i> Log Out</a></li>
-                  </ul>
-                </li>
-
-                <li role="presentation" class="dropdown">
-                  <a href="javascript:;" class="dropdown-toggle info-number" data-toggle="dropdown" aria-expanded="false">
-                    <i class="fa fa-envelope-o"></i>
-                    <span class="badge bg-green">2</span>
-                  </a>
-                  <ul id="menu1" class="dropdown-menu list-unstyled msg_list" role="menu">
-                    <li>
-                      <a>
-                        <span class="image"><h:graphicImage name="dashboard/images/img.jpg" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li>
-                      <a>
-                        <span class="image"><h:graphicImage name="dashboard/images/img.jpg" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li>
-                      <a>
-                        <span class="image"><h:graphicImage name="dashboard/images/img.jpg"  /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li>
-                      <a>
-                        <span class="image"><h:graphicImage name="dashboard/images/img.jpg" /></span>
-                        <span>
-                          <span>John Smith</span>
-                          <span class="time">3 mins ago</span>
-                        </span>
-                        <span class="message">
-                          Film festivals used to be do-or-die moments for movie makers. They were where...
-                        </span>
-                      </a>
-                    </li>
-                    <li>
-                      <div class="text-center">
-                        <a>
-                          <strong>See All Alerts</strong>
-                          <i class="fa fa-angle-right"></i>
-                        </a>
-                      </div>
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-            </nav>
+      </div>
+      <div class="ui-g-12 ui-md-10 ui-g-nopad">
+        <div class="ui-g-12 ui-g-nopad">
+          <div class="center-header" id="group_header">
+            <h2>Students' Activities</h2>
+            <span class="header_detail"><h:outputText value="#{studentlog.sid}"/></span>
           </div>
-        </div>
-        <!-- /top navigation -->
 
-        <!-- page content -->
-        <div class="right_col" role="main">
-          
-
-          <div class="row">
-            <div class="col-md-12 col-sm-12 col-xs-12">
-              <div class="dashboard_graph">
-
-                <div class="row x_title">
-                  <div class="col-md-6">
-                    <h3>Student Activities <small><h:outputText value="#{studentlog.sid}" /></small></h3>
+          <h:panelGroup id="dashboardMain" styleClass="dashboard" layout="block">
+            <div class="ui-g">
+              <div class="ui-g-2">
+                <p:panel header="Total Concepts">
+                  <div class="count">
+                    <h:outputText value="#{studentlog.totalconcepts}"/>
                   </div>
-                  <div class="col-md-6">
-                    <div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
-                      <i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-                      <span>March 2, 2017 - April 9, 2017</span> <b class="caret"></b>
-                    
-<script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
-<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script> 
-<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-<script type="text/javascript">
-$(function() {
-    $('#reportrange').daterangepicker(
-    		 {"startDate": "03/02/2017",
-    			 ranges: {
-    		           'Today': [moment(), moment()],
-    		           'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
-    		           'Last 7 Days': [moment().subtract(6, 'days'), moment()],
-    		           'Last 30 Days': [moment().subtract(29, 'days'), moment()],
-    		           'This Month': [moment().startOf('month'), moment().endOf('month')],
-    		           'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
-    		        
-    		        }
-    		    }
-    	    );
-});
-$('#reportrange').on('apply.daterangepicker', function(ev, picker) {
-	  $('#reportrange span').html(picker.startDate.format('MMMM D, YYYY') + ' - ' + picker.endDate.format('MMMM D, YYYY'));
-	  updateCharts(picker.startDate.format('YYYY-MM-DD'),picker.endDate.format('YYYY-MM-DD'));
-	});
-</script>
-	<h:form id="form1">
+                </p:panel>
+              </div>
+              <div class="ui-g-2">
+                <p:panel header="Total Terms">
+                  <div class="count">
+                    <h:outputText value="#{studentlog.totalterms}"/>
+                  </div>
+                </p:panel>
+              </div>
+              <div class="ui-g-2">
+                <p:panel header="Total Sources">
+                  <div class="count">
+                    <h:outputText value="#{studentlog.totalsource}"/>
+                  </div>
+                </p:panel>
+              </div>
+              <div class="ui-g-3">
+                <p:panel header="Ratio terms/concept">
+                  <div class="count">
+                    <h:outputText value="#{studentlog.ratiotc}"/>
+                  </div>
+                </p:panel>
+              </div>
+            </div>
+            <div class="ui-g">
+              <div class="ui-g-6">
+                <h:form id="dateForm">
+                  <div class="ui-g ui-fluid">
+                    <div class="ui-g-12 ui-md-4">
+                      <div class="ui-inputgroup">
+                        <p:outputLabel for="dateStart"/>
+                        <p:calendar id="dateStart" value="#{studentlog.startDate}"
+                                    showOn="button"/>
+                      </div>
+                    </div>
 
-<script type="text/javascript">
-		function updateCharts(data1,data2) {
-		   document.getElementById("#{p:component('inputHiddenID1')}").value = data1;
-		   document.getElementById("#{p:component('inputHiddenID2')}").value = data2;
-		   remoteCommandName();
-	    }
-	</script>
-	<h:inputHidden id="inputHiddenID1" value="#{dashboard.startdate}"/>
-	<h:inputHidden id="inputHiddenID2" value="#{dashboard.enddate}"/>	 	
-        <p:remoteCommand  name="remoteCommandName" actionListener="#{dashboard.updateCharts}"  update="canvaspanel, canvas01panel, canvas02panel, canvas03panel, glossarydata, descriptionpanel, fieldspanel, proxypanel">      
-        </p:remoteCommand>
-    </h:form>    
+                    <div class="ui-g-12 ui-md-4">
+                      <div class="ui-inputgroup">
+                        <p:outputLabel for="dateEnd"/>
+                        <p:calendar id="dateEnd" value="#{studentlog.endDate}" showOn="button"/>
+                      </div>
+                    </div>
+
+                    <div class="ui-g-12 ui-md-4">
+                      <div class="ui-inputgroup">
+                        <p:commandButton value="Update" update=":dashboardMain :growl"
+                                         actionListener="#{studentlog.onDateChanged}"
+                                         icon="ui-icon-check"/>
+                      </div>
                     </div>
                   </div>
-                </div>
-
-                <div class="col-md-9 col-sm-9 col-xs-12">
-                  <div id="chart_plot_01_no" class="demo-placeholder-no_no" style="height: 0px"></div>
-                  <canvas id="chart_plot_01_canvas" class="demo-placeholder-no_no" style="height: 700px"></canvas>
-                  <h:panelGroup id="canvaspanel">
-
-	<script>
-
-	var ctx1 = document.getElementById("chart_plot_01_canvas");
-                  	
-
-                  	var chartInstance = new Chart(ctx1, {
-                  		
-                  	    type: 'line',
-                  	  	data: {
-                  	  	  
-                    	  labels: <h:outputText value="#{studentlog.graph01.label}" /> ,
-                  	      datasets: [{
-                  	    	label: 'interactions',
-                  	        data: <h:outputText value="#{studentlog.graph01.data}" />,
-                  	        borderColor: "rgba(3, 88, 106, 0.38)",
-                  	        backgroundColor: "rgba(38, 185, 154, 0.38)"
-                  	      }]
-                  	    },
-                  	    options: {
-                  	        scales: {
-                  	            xAxes: [{
-                  	                time: {
-                  	                    unit: 'day'
-                  	                }
-                  	            }]
-                  	        }
-                  	    }
-                  	})
-                  	
-                  
-                  	</script>
-                  </h:panelGroup>
-                  	<script>
-
-                  	var chart_plot_01_settings = {
-                            series: {
-                              lines: {
-                                show: false,
-                                fill: true
-                              },
-                              splines: {
-                                show: true,
-                                tension: 0.4,
-                                lineWidth: 1,
-                                fill: 0.4
-                              },
-                              points: {
-                                radius: 0,
-                                show: true
-                              },
-                              shadowSize: 2
-                            },
-                            grid: {
-                              verticalLines: true,
-                              hoverable: true,
-                              clickable: true,
-                              tickColor: "#d5d5d5",
-                              borderWidth: 1,
-                              color: '#fff'
-                            },
-                            colors: ["rgba(38, 185, 154, 0.38)", "rgba(3, 88, 106, 0.38)"],
-                            xaxis: {
-                              tickColor: "rgba(51, 51, 51, 0.06)",
-                              mode: "time",
-                              tickSize: [1, "day"],
-                              //tickLength: 10,
-                              axisLabel: "Date",
-                              axisLabelUseCanvas: true,
-                              axisLabelFontSizePixels: 12,
-                              axisLabelFontFamily: 'Verdana, Arial',
-                              axisLabelPadding: 10
-                            },
-                            yaxis: {
-                              ticks: 8,
-                              tickColor: "rgba(51, 51, 51, 0.06)",
-                            },
-                            tooltip: false
-                          };
-                  	
-                  	// $.plot( $("#chart_plot_01_no"), [ arr_data1_test ],  chart_plot_01_settings );
-
-                  
-                  	</script>
-                </div>
-                <div class="col-md-3 col-sm-3 col-xs-12 bg-white">
-                  <div class="x_title">
-                    <h2>Students' Activity types</h2>
-                    <div class="clearfix"></div>
-                  </div>
-
-                  <div class="col-md-12 col-sm-12 col-xs-6">
-                  	<canvas id="myChart" width="400" height="400"></canvas>
-                  	<h:panelGroup id="canvas01panel">
-                  	<script>
-var ctx = document.getElementById("myChart");
-<h:outputText value="#{studentlog.topbar01data}" />
-var myChart = new Chart(ctx, {
-    type: 'bar',
-    data: {
-        labels: ["Glossary", "Search", "System (login/logout)", "Resource"],
-        datasets: [{
-            label: 'interactions',
-            data: mydata,
-            backgroundColor: [
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(75, 192, 192, 0.2)',
-                'rgba(75, 192, 192, 0.2)'
-            ],
-            borderColor: [
-                'rgba(75, 192, 192, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(75, 192, 192, 1)',
-                'rgba(75, 192, 192, 1)'
-            ],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero:true
-                }
-            }]
-        }
-    }
-});
-
-$("#myChart").click( 
-        function(evt){
-            updateGloss();
-        }
-    );      
-
-</script>
-</h:panelGroup>
-                  	
-                                      </div>
-
-                </div>
-
-                <div class="clearfix"></div>
+                </h:form>
               </div>
             </div>
 
-          </div>
-          <br />
-	<h:form id="form">
-        <script type="text/javascript">
-		function updateGloss() {
-		   remoteCommandName2();
-	    }
-	</script>
-	    <p:remoteCommand  name="remoteCommandName2" actionListener="#{dashboard.updateGloss}"  update="glossarydata">      
-        </p:remoteCommand>  
-    </h:form>
-<!-- top tiles -->
-<h:panelGroup id="glossarydata" >
-          <div class="row tile_count" >
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-            
-              <span class="count_top"> Total Concepts</span>
-              <div class="count"><h:outputText value="#{studentlog.totalconcepts}" /><span class="count_bottom"><i class="red"><i class="fa fa-chevron-circle-left"></i></i></span></div>
-              <!-- span class="count_bottom"><i class="green">4% </i> From last Week</span -->
-              
-            </div>
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"> Total Terms</span>
-              <div class="count"><h:outputText value="#{studentlog.totalterms}" /><span class="count_bottom"><i class="red"><i class="fa fa-chevron-circle-left"></i></i></span></div>
-              
-              <!-- span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>3% </i> From last Week</span -->
-            </div>
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"> Total Sources</span>
-              <div class="count"><h:outputText value="#{studentlog.totalsource}" /><span class="count_bottom"><i class="green"><i class="fa fa-chevron-circle-right"></i></i></span></div>
-             
-            </div>
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top">Ratio terms/concept</span>
-              <div class="count">#{studentlog.ratiotc}<span class="count_bottom"><i style="color: #FFC300;"><i class="fa fa-bars"></i></i></span></div>
-             
-            </div>
-            <!-- div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"> Description length (avg)</span>
-              <div class="count">#{studentlog.descriptionsavg}</div>
-             
-            </div>
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"> Total Connections</span>
-              <div class="count">7,325</div>
-             
-            </div -->
-          </div>
-          <!-- /top tiles -->
-</h:panelGroup>
-<div class="row">
-<div class="col-md-12 col-sm-12 col-xs-12">
-<div class="x_panel tile">
-                <div class="x_title">
-<h3>Skill: Ability to organize the glossary</h3>
-</div>
-</div>
-</div>
-</div>
-
-<div class="row">
-
-
-            <div class="col-md-4 col-sm-4 col-xs-12">
-              <div class="x_panel tile fixed_height_390">
-                <div class="x_title">
-                  <h2>Fields</h2>
-                  <ul class="nav navbar-right panel_toolbox">
-                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                    </li>
-                    <li class="dropdown">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                      <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Settings 1</a>
-                        </li>
-                        <li><a href="#">Settings 2</a>
-                        </li>
-                      </ul>
-                    </li>
-                    <li><a class="close-link"><i class="fa fa-close"></i></a>
-                    </li>
-                  </ul>
-                  <div class="clearfix"></div>
-                </div>
-                <div class="x_content">
-                <table align="center"><tr>
-                <td style="padding-left: 60px;"><span class="count_bottom"><i class="green"><i class="fa fa-chevron-circle-right"></i></i></span></td>
-                <td style="padding-left: 40px;"><span class="count_bottom"><i class="red"><i class="fa fa-chevron-circle-left"></i></i></span></td>
-                <td style="padding-left: 40px;"><span class="count_bottom"><i class="red"><i class="fa fa-chevron-circle-left"></i></i></span></td>
-                <td style="padding-left: 40px;"><span class="count_bottom"><i class="green"><i class="fa fa-chevron-circle-right"></i></i></span></td>
-                <td style="padding-left: 40px;"><span class="count_bottom"><i class="green"><i class="fa fa-chevron-circle-right"></i></i></span></td>
-                </tr></table>
-                <canvas id="chart_plot_fields" width="400" height="400"/>
-                <h:panelGroup id="fieldspanel">
-                <script>
-                
-                  	var ctx2 = document.getElementById("chart_plot_fields");
-                  	var chartInstance = new Chart(ctx2, {	
-                  	    type: 'bar',
-                  	  	data: {
-                    	  labels: <h:outputText value="#{studentlog.fields.label}" /> ,
-                  	      datasets: [{
-                  	    	label: '# terms',
-                  	        data: <h:outputText value="#{studentlog.fields.data}" />,
-                  	        borderColor: "rgba(3, 88, 106, 0.38)",
-                  	        backgroundColor: ["rgb(102,205,170)","rgb(154,214, 187)","rgba(38, 185, 154, 0.2)","rgb(81, 184, 138)","rgba(38, 185, 154, 0.4)","rgba(38, 185, 154, 0.5)","rgba(38, 185, 154, 0.6)","rgba(38, 185, 154, 0.7)","rgba(38, 185, 154, 0.8)","rgb(54, 131, 96)", "rgb(60,179,113)"]
-                  	      }]
-                  	    },
-                  	    options: {
-                      	   legend: {
-                  	       	display: true,
-                  	       	position: 'bottom',
-                  	       	labels: {
-                  	          	 fontColor: 'rgb(3, 88, 106)'
-                  	       	}
-                      	   },
-                  	  }
-                  	})
-                  	</script>
-                  	</h:panelGroup>
-                </div>
+            <div class="ui-g">
+              <div class="ui-g-9">
+                <p:panel id="chart_plot_Interactions" header="Interactions" style="margin-bottom:20px">
+                  <p:chart type="line" model="#{studentlog.interactionsChart}" style="height:300px;"/>
+                </p:panel>
+              </div>
+              <div class="ui-g-3">
+                <p:panel id="chart_bar_studentActivity" header="Students' Activity types"
+                         style="margin-bottom:20px">
+                  <p:chart type="bar" model="#{studentlog.studentActivityTypes}" xaxisAngle="60"
+                           style="height:300px"/>
+                </p:panel>
               </div>
             </div>
-
-            <div class="col-md-8 col-sm-8 col-xs-12">
-              <div class="x_panel tile fixed_height_390" style="overflow: scroll;">
-                <div class="x_title">
-                  <h2>Descriptions of entries from class-mates</h2>
-                  <ul class="nav navbar-right panel_toolbox">
-                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                    </li>
-                    <li class="dropdown">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                      <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Settings 1</a>
-                        </li>
-                        <li><a href="#">Settings 2</a>
-                        </li>
-                      </ul>
-                    </li>
-                    <li><a class="close-link"><i class="fa fa-close"></i></a>
-                    </li>
-                  </ul>
-                  <div class="clearfix"></div>
-                </div>
-                <div class="x_content">
-                <h:panelGroup id="descriptionpanel">
-                	<table class="countries_list">
-<tbody>
-<tr bgcolor="#F7F7F7">
-<td><b>insulin</b></td>
-</tr><tr>
-<td>Insulin (from the Latin, insula meaning island) is a peptide hormone produced by beta cells of the pancreatic islets. It regulates the metabolism of carbohydrates, fats and protein by promoting the absorption of, especially, glucose from the blood into fat, liver and skeletal muscle cells.</td>
-</tr><tr bgcolor="#F7F7F7">
-<td>a hormone that controls how glucose is absorbed and used by the body.</td>
-</tr><tr>
-<td>ormone prodotto dal pancreas</td>
-</tr><tr bgcolor="#F7F7F7">
-<td><b>Carbohydrates</b></td>
-</tr><tr>
-<td>Carbohydrates are found in a wide array of both healthy and unhealthy foods. Carbohydrates provide the body with glucose, which is converted to energy used to support bodily functions and physical activity.</td>
-</tr><tr bgcolor="#F7F7F7">
-<td>Carbohydrates are biomolecules containing carbon, hydrogen and oxygen; they can be simple or complex, depending on their chemical structure. Along with proteins and fats, carbohydrates are macronutrients and provide energy to the human body: they are converted by our digestive system into glucose, which is employed as energy for cells, tissues and organs; moreover, extra sugar is stored  in our liver and muscles for when it is needed. The body cannot produce carbohydrates on its own, so they must be obtained through diet.</td>
-</tr><tr>
-<td>any of a class of substances made of carbon, hydrogen, and oxygen, including starches and sugars.</td>
-</tr>
-</tbody>
-</table>
-                	<h:dataTable value = "#{studentlog.descriptions}" var = "descr" styleClass = "countries_list">
-   
-					   <h:column>    				
-					      <f:facet name = "header">Description</f:facet>    				
-					      #{descr.description}
-					   </h:column>
-					   
-					   <h:column>
-					      <f:facet name = "header">Lenght</f:facet>
-					      #{descr.lenght}
-					   </h:column>
-					  
-					</h:dataTable>
-					</h:panelGroup>
-                </div>
+            <div class="ui-g">
+              <div class="ui-g-12">
+                <h:form>
+                  <p:panel header="Skill">
+                    <h:outputText value="Ability to organize the glossary"/>
+                  </p:panel>
+                </h:form>
               </div>
             </div>
-
-
-           
-          </div>
-
-<div class="row">
-<div class="col-md-12 col-sm-12 col-xs-12">
-<div class="x_panel tile">
-                <div class="x_title">
-<h3>Skill: Ability to search the Web for information</h3>
-</div>
-</div>
-</div>
-</div>
-          <div class="row">
-
-
-            <div class="col-md-4 col-sm-4 col-xs-12">
-              <div class="x_panel tile" style="height: 420px">
-                <div class="x_title">
-                  <h2>Sources</h2>
-                  <ul class="nav navbar-right panel_toolbox">
-                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                    </li>
-                    <li class="dropdown">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                      <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Settings 1</a>
-                        </li>
-                        <li><a href="#">Settings 2</a>
-                        </li>
-                      </ul>
-                    </li>
-                    <li><a class="close-link"><i class="fa fa-close"></i></a>
-                    </li>
-                  </ul>
-                  <div class="clearfix"></div>
-                </div>
-                <div class="x_content">
-                <div id="pieChart"></div>
-                <script>
-var pie = new d3pie("pieChart", {
-	
-	"footer": {
-		"color": "#999999",
-		"fontSize": 10,
-		"font": "open sans",
-		"location": "bottom-left"
-	},
-	"size": {
-		"canvasWidth": 400,
-		"pieOuterRadius": "70%"
-	},
-	"data": {
-		"sortOrder": "value-desc",
-		"content": [
-			{
-				"label": "monolingual dictionary",
-				"value": 106,
-				"color": "rgba(38, 185, 154, 0.6)"
-			},
-			{
-				"label": "bilingual dictionary",
-				"value": 1,
-				"color": "rgba(38, 185, 154, 0.7)"
-			},
-			{
-				"label": "Empty",
-				"value": 17,
-				"color": "rgba(38, 185, 154, 1.0)"
-			}
-		]
-	},
-	"labels": {
-		"outer": {
-			"pieDistance": 32
-		},
-		"inner": {
-			"hideWhenLessThanPercentage": 3
-		},
-		"mainLabel": {
-			"fontSize": 11
-		},
-		"percentage": {
-			"color": "#ffffff",
-			"decimalPlaces": 0
-		},
-		"value": {
-			"color": "#adadad",
-			"fontSize": 11
-		},
-		"lines": {
-			"enabled": true
-		},
-		"truncation": {
-			"enabled": true
-		}
-	},
-	"effects": {
-		"pullOutSegmentOnClick": {
-			"effect": "linear",
-			"speed": 400,
-			"size": 8
-		}
-	},
-});
-</script>
-                
-                <div id="chart_plot_02"  style="height: 100"><canvas id="chart_plot_02_canvas" style="height: 60%; visibility: hidden" /></div>
-                <div id="js-legend" class="chart-legend"></div>
-                
-                <h:panelGroup id="canvas02panel">
-                <script>
-               		document.getElementById("chart_plot_02").innerHTML = '&nbsp;';
-            		document.getElementById("chart_plot_02").innerHTML = '<canvas id="chart_plot_02_canvas" />';
-                
-                
-                  	var ctx2 = document.getElementById("chart_plot_02_canvas");
-                  	ctx2.height = 150;
-                  	var chartInstance = new Chart(ctx2, {	
-                  	    type: 'pie',
-                  	  	data: {
-                    	  labels: <h:outputText value="#{studentlog.graph02.label}" /> ,
-                  	      datasets: [{
-                  	    	label: 'interactions',
-                  	        data: <h:outputText value="#{studentlog.graph02.data}" />,
-                  	        borderColor: "#eff4fd",
-                  	        backgroundColor: <h:outputText value="#{studentlog.graph02color}" />
-                  	      }]
-                  	    },
-                  	    options: {
-                      	   legend: {
-                  	       	display: false,
-                  	       	position: 'bottom',
-                  	       	labels: {
-                  	          	 fontColor: 'rgb(3, 88, 106)'
-                  	       	}
-                      	   },
-                      	 tooltips: {
-                             callbacks: {
-                                 label: function(tooltipItem, data) {
-                                     var allData = data.datasets[tooltipItem.datasetIndex].data;
-                                     var tooltipLabel = data.labels[tooltipItem.index];
-                                     var tooltipData = allData[tooltipItem.index];
-                                     var total = 0;
-                                     for (var i in allData) {
-                                         total += allData[i];
-                                     }
-                                     var tooltipPercentage = Math.round((tooltipData / total) * 100);
-                                     return tooltipLabel + ': ' + tooltipData + ' (' + tooltipPercentage + '%)';
-                                 }
-                             }
-                      	 },
-                  	  }
-                  	})
-                  	document.getElementById('js-legend').innerHTML = chartInstance.generateLegend();
-                  	</script>
-                  	</h:panelGroup>
-                </div>
+            <div class="ui-g">
+              <div class="ui-g-4">
+                <h:form>
+                  <p:panel id="chart_plot_studentFields" header="Fields" toggleable="true"
+                           closable="true" toggleSpeed="500" closeSpeed="500" widgetVar="panel"
+                           style="margin-bottom:20px">
+                    <p:chart type="bar" model="#{studentlog.studentFields}" xaxisAngle="60"
+                             style="height:300px"/>
+                  </p:panel>
+                </h:form>
+              </div>
+              <div class="ui-g-8">
+                <p:panel id="table_descriptions" header="Descriptions of entries from class-mates"
+                         toggleable="true" closable="true" toggleSpeed="500" closeSpeed="500"
+                         widgetVar="panel" stickyHeader="true"
+                         style="margin-bottom:20px; height:390px; overflow-y: scroll;">
+                  <p:dataTable value="">
+                    <p:column headerText="insulin">
+                      <h:outputText>Insulin (from the Latin, insula meaning island) is a peptide hormone produced by beta cells of the pancreatic islets. It regulates the metabolism of carbohydrates, fats and protein by promoting the absorption of, especially, glucose from the blood into fat, liver and skeletal muscle cells.<br/></h:outputText>
+                      <h:outputText>a hormone that controls how glucose is absorbed and used by the body.<br/></h:outputText>
+                      <h:outputText>ormone prodotto dal pancreas</h:outputText>
+                    </p:column>
+                  </p:dataTable>
+                  <p:dataTable value="">
+                    <p:column headerText="Carbohydrates">
+                      <h:outputText>Carbohydrates are found in a wide array of both healthy and unhealthy foods. Carbohydrates provide the body with glucose, which is converted to energy used to support bodily functions and physical activity.<br/></h:outputText>
+                      <h:outputText>Carbohydrates are biomolecules containing carbon, hydrogen and oxygen; they can be simple or complex, depending on their chemical structure. Along with proteins and fats, carbohydrates are macronutrients and provide energy to the human body: they are converted by our digestive system into glucose, which is employed as energy for cells, tissues and organs; moreover, extra sugar is stored in our liver and muscles for when it is needed. The body cannot produce carbohydrates on its own, so they must be obtained through diet.<br/></h:outputText>
+                      <h:outputText>any of a class of substances made of carbon, hydrogen, and oxygen, including starches and sugars.</h:outputText>
+                    </p:column>
+                  </p:dataTable>
+                  <p:dataTable value="#{studentlog.descriptions}" var="descr"
+                               styleClass="countries_list">
+                    <p:column headerText="Description">
+                      <h:outputText value="#{descr.description}"/>
+                    </p:column>
+                    <p:column headerText="Lenght">
+                      <h:outputText value="#{descr.lenght}"/>
+                    </p:column>
+                  </p:dataTable>
+                  <f:facet name="options">
+                    <p:menu>
+                      <p:submenu label="Settings">
+                        <p:menuitem value="Toggle" url="#" icon="ui-icon-newwin"
+                                    onclick="PF('panel').toggle()"/>
+                        <p:menuitem value="Remove" url="#" icon="ui-icon-close"
+                                    onclick="PF('panel').close()"/>
+                      </p:submenu>
+                    </p:menu>
+                  </f:facet>
+                </p:panel>
               </div>
             </div>
-
-            <div class="col-md-8 col-sm-8 col-xs-12">
-              <div class="x_panel tile " style="height: 420px">
-                <div class="x_title">
-                  <h2>Student Proxy sources</h2>
-                  <ul class="nav navbar-right panel_toolbox">
-                    <li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
-                    </li>
-                    <li class="dropdown">
-                      <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false"><i class="fa fa-wrench"></i></a>
-                      <ul class="dropdown-menu" role="menu">
-                        <li><a href="#">Order By #Concepts</a>
-                        </li>
-                        <li><a href="#">Order By #Terms</a>
-                        </li>
-                      </ul>
-                    </li>
-                    <li><a class="close-link"><i class="fa fa-close"></i></a>
-                    </li>
-                  </ul>
-                  <div class="clearfix"></div>
-                </div>
-                <div class="x_content">
-                <div id="chart_plot_03"><canvas id="chart_plot_03_canvas" /></div>
-                <h:panelGroup id="canvas03panel">
-                  <script>
-                  document.getElementById("chart_plot_03").innerHTML = '&nbsp;';
-      			  document.getElementById("chart_plot_03").innerHTML = '<canvas id="chart_plot_03_canvas" />';
-                  
-                  var ctx3 = document.getElementById("chart_plot_03_canvas");
-                  // ctx3.height = 140;
-                  var myChart3 = new Chart(ctx3, {
-                    type: 'bar',
-                    data: {
-                      labels: <h:outputText value="#{studentlog.proxylog.label}" />,
-                      datasets: [{
-                        label: '',
-                        data: <h:outputText value="#{studentlog.proxylog.data}" />,
-                        backgroundColor: "rgb(102,205,170)"
-                      }]
-                    }
-                  });
-                  </script>
-				</h:panelGroup>
-                </div>
+            <div class="ui-g">
+              <div class="ui-g-12">
+                <h:form>
+                  <p:panel header="Skill">
+                    <h:outputText value="Ability to search the Web for information"/>
+                  </p:panel>
+                </h:form>
               </div>
             </div>
+            <div class="ui-g">
+              <div class="ui-g-4">
+                <p:panel id="pie_chart_sources" header="Sources" toggleable="true" closable="true"
+                         toggleSpeed="500" closeSpeed="500" widgetVar="panel"
+                         style="margin-bottom:20px">
 
+                  <p:chart type="pie" model="#{studentlog.studentSources}"/>
 
-            
+                  <f:facet name="options">
+                    <p:menu>
+                      <p:submenu label="Settings">
+                        <p:menuitem value="Toggle" url="#" icon="ui-icon-newwin"
+                                    onclick="PF('panel').toggle()"/>
+                        <p:menuitem value="Remove" url="#" icon="ui-icon-close"
+                                    onclick="PF('panel').close()"/>
+                      </p:submenu>
+                    </p:menu>
+                  </f:facet>
+                </p:panel>
+              </div>
+              <div class="ui-g-8">
+                <p:panel id="chart_plot_proxySources" header="Student Proxy sources" toggleable="true"
+                         closable="true" toggleSpeed="500" closeSpeed="500" widgetVar="panel"
+                         style="margin-bottom:20px">
 
-          </div>
+                  <p:chart type="bar" model="#{studentlog.proxySources}"/>
 
-		<div class="row">
-			<div class="col-md-8 col-sm-8 col-xs-12">
-            	<div class="x_panel tile fixed_height_390" style="overflow: scroll;">
-                	<div class="x_title">
-                  		<h2>Student Proxy sources list</h2>
-                  		<ul class="nav navbar-right panel_toolbox">
-                    		<li><a class="collapse-link"><i class="fa fa-chevron-up"></i></a></li>
-                    	</ul>
-                  		<div class="clearfix"></div>
-                	</div>
-                	<div class="x_content">
-                	<h:panelGroup id="proxypanel">
-                		<h:dataTable value = "#{studentlog.proxyloglist}" var = "entry" styleClass = "countries_list">
-					   		<h:column>    				
-					      		<f:facet name = "header">Web Site</f:facet>    				
-					      		<a href="#{entry.key}" target="_blank">#{entry.key}</a>
-					   		</h:column>
-					   		<h:column>
-					      		<f:facet name = "header">Occurrences</f:facet>
-					      		#{entry.value}
-					   		</h:column>
-						</h:dataTable>
-						</h:panelGroup>
-                	</div>
-             	</div>
-			</div>
-		</div>
-          
+                  <f:facet name="options">
+                    <p:menu>
+                      <p:submenu label="Settings">
+                        <p:menuitem value="Toggle" url="#" icon="ui-icon-newwin"
+                                    onclick="PF('panel').toggle()"/>
+                        <p:menuitem value="Remove" url="#" icon="ui-icon-close"
+                                    onclick="PF('panel').close()"/>
+                      </p:submenu>
+                    </p:menu>
+                  </f:facet>
+                </p:panel>
+              </div>
+            </div>
+            <div class="ui-g">
+              <div class="ui-g-12">
+                <p:panel id="table_sources_list" header="Student Proxy sources list" widgetVar="panel"
+                         stickyHeader="true"
+                         style="margin-bottom:20px; height:390px; overflow-y: scroll;">
+                  <h:form>
+                    <p:dataTable var="entry" value="#{studentlog.proxyloglist}"
+                                 styleClass="countries_list">
+                      <p:column headerText="Web Site">
+                        <h:outputText value="#{entry.key}"/>
+                      </p:column>
+
+                      <p:column headerText="Occurrences">
+                        <h:outputText value="#{entry.value}"/>
+                      </p:column>
+                    </p:dataTable>
+                  </h:form>
+                </p:panel>
+              </div>
+            </div>
+          </h:panelGroup>
         </div>
-        <!-- /page content -->
-
-        <!-- footer content -->
-        <footer>
-          <div class="pull-right">
-            Davide Taibi <a href="http://www.itd.cnr.it">CNR-ITD</a>
-          </div>
-          <div class="clearfix"></div>
-        </footer>
-        <!-- /footer content -->
       </div>
+
+
+      <footer>
+        <div class="pull-right">
+          Davide Taibi
+          <a href="http://www.itd.cnr.it">CNR-ITD</a>
+        </div>
+        <div class="clearfix"></div>
+      </footer>
     </div>
-		
-		
-	</ui:define>
-	<script>
-	/* <![CDATA[ */
-	var MyBarChartMethods = {
-		    // sort a dataset
-		    sort: function (chart, datasetIndex) {
-		        var data = []
-		        chart.datasets.forEach(function (dataset, i) {
-		            dataset.bars.forEach(function (bar, j) {
-		                if (i === 0) {
-		                    data.push({
-		                        label: chart.scale.xLabels[j],
-		                        values: [bar.value]
-		                    })
-		                } else 
-		                    data[j].values.push(bar.value)
-		                    });
-		        })
-		        
-		        data.sort(function (a, b) {
-		            if (a.values[datasetIndex] > b.values[datasetIndex])
-		                return -1;
-		            else if (a.values[datasetIndex] < b.values[datasetIndex])
-		                return 1;
-		            else
-		                return 0;
-		        })
-		        
-		        chart.datasets.forEach(function (dataset, i) {
-		            dataset.bars.forEach(function (bar, j) {
-		                if (i === 0)
-		                    chart.scale.xLabels[j] = data[j].label;
-		                bar.label = data[j].label;
-		                bar.value = data[j].values[i];
-		            })
-		        });
-		        chart.update();
-		    },
-		    // reload data
-		    reload: function (chart, datasetIndex, labels, values) {
-		        var diff = chart.datasets[datasetIndex].bars.length - values.length;
-		        if (diff < 0) {
-		            for (var i = 0; i < -diff; i++)
-		                chart.addData([0], "");
-		        } else if (diff > 0) {
-		            for (var i = 0; i < diff; i++)
-		                chart.removeData();
-		        }
-		        
-		        chart.datasets[datasetIndex].bars.forEach(function (bar, i) {
-		            chart.scale.xLabels[i] = labels[i];
-		            bar.value = values[i];
-		        })
-		        chart.update();
-		    }
-		}
-	MyBarChartMethods.sort(myChart3, 0)
-	/* ]]> */
-	</script>
+  </ui:define>
 </ui:composition>
-</html>

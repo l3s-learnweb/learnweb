@@ -1,6 +1,6 @@
 package jcdashboard.model;
 
-public class Fields
+public class StatFields
 {
     String label;
     String data;

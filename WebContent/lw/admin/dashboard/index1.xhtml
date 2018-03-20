@@ -1,784 +1,271 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" 
-	xmlns:ui="http://java.sun.com/jsf/facelets" 
-	xmlns:h="http://java.sun.com/jsf/html" 
-	xmlns:p="http://primefaces.org/ui"
-	xmlns:f="http://java.sun.com/jsf/core">
+<ui:composition template="/templates/main/main.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+				xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+				xmlns:p="http://primefaces.org/ui">
 
-<ui:composition template="/lw/admin/dashboard/BasicTemplate.xhtml">
+	<ui:param name="pageTitle" value="Dashboard"/>
+	<ui:param name="loginRequired" value="true"/>
+
 	<style>
-ul {
-	list-style: none;
-}
-</style>
+		ul {
+			list-style: none;
+		}
+	</style>
 
-	<ui:define name="content">
+	<ui:define name="center_layout">
+		<div class="ui-g" style="margin: 5px;">
+			<div class="ui-g-12 ui-md-2">
+				<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+					<div class="center-header" id="group_header" style="margin-right: 0">
+						<h2>Student List</h2>
+					</div>
 
-		<div class="container body">
-			<div class="main_container">
-				<div class="col-md-3 left_col">
-					<div class="left_col scroll-view">
-						<div class="navbar nav_title" style="border: 0;">
-							<a href="index.html" class="site_title">
-								<span>LearnWeb Dashboard</span>
+					<div class="menu_section" style="height: calc(100vh - 102px); overflow-y: auto; width: 100%;">
+						<p:dataList value="#{dashboard.selectedCourse.members}" var="user" type="ordered">
+							<a target="_blank" href="admin/dashboard/studentlog.jsf?studentlogId=#{user.id}">
+								<h:outputText value="#{user.username}"/>
 							</a>
-						</div>
-
-						<div class="clearfix"></div>
-
-						<br />
-
-						<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-							<div class="menu_section" style="height: 350px; overflow-y: scroll; width: 100%;">
-								<h3>Student List</h3>
-								<ul class="nav side-menu">
-									<ui:repeat value="#{dashboard.selectedCourse.members}" var="user">
-										<li> 
-											<a target="_blank" href="admin/dashboard/studentlog.jsf?studentlogId=#{user.id}"><h:outputText value="#{user.username}" /></a>
-										</li>
-									</ui:repeat>
-								</ul>
-							</div>
-						</div>
-
-
-
+						</p:dataList>
 					</div>
 				</div>
+			</div>
+			<div class="ui-g-12 ui-md-10 ui-g-nopad">
+				<div class="ui-g-12 ui-g-nopad">
+					<div class="center-header" id="group_header">
+						<h2>Students' Activities</h2>
+						<span class="header_detail">All student interactions</span>
+					</div>
 
-
-				<!-- page content -->
-				<div class="right_col" >
-
-
-					<div class="row">
-						<div class="col-md-12 col-sm-12 col-xs-12">
-							<div class="dashboard_graph">
-
-								<div class="row x_title">
-									<div class="col-md-6">
-										<h3>
-											Students' Activities <small>All student interactions</small>
-										</h3>
+					<h:panelGroup id="dashboardMain" styleClass="dashboard" layout="block">
+						<div class="ui-g">
+							<div class="ui-g-3">
+								<p:panel header="Total Concepts">
+									<div class="count">
+										<h:outputText value="#{dashboard.totalconcepts}"/>
 									</div>
-									<div class="col-md-6">
-										<div id="reportrange" class="pull-right" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 1px solid #ccc">
-											<i class="glyphicon glyphicon-calendar fa fa-calendar"></i>
-											<span>March 2, 2017 - April 9, 2017</span>
-											<b class="caret"></b>
+								</p:panel>
+							</div>
+							<div class="ui-g-3">
+								<p:panel header="Total Terms">
+									<div class="count">
+										<h:outputText value="#{dashboard.totalterms}"/>
+									</div>
+								</p:panel>
+							</div>
+							<div class="ui-g-6">
+								<h:form id="dateForm">
+									<div class="ui-g ui-fluid">
+										<div class="ui-g-12 ui-md-4">
+											<div class="ui-inputgroup">
+												<p:outputLabel for="dateStart"/>
+												<p:calendar id="dateStart" value="#{dashboard.startDate}"
+															showOn="button"/>
+											</div>
+										</div>
 
-											<script type="text/javascript" src="//cdn.jsdelivr.net/jquery/1/jquery.min.js"></script>
-											<script type="text/javascript" src="//cdn.jsdelivr.net/momentjs/latest/moment.min.js"></script>
-											<script type="text/javascript" src="//cdn.jsdelivr.net/bootstrap.daterangepicker/2/daterangepicker.js"></script>
-											<script type="text/javascript">
-												$(function() {
-													$('#reportrange')
-															.daterangepicker(
-																	{
-																		"startDate" : "03/02/2017",
-																		ranges : {
-																			'Today' : [
-																					moment(),
-																					moment() ],
-																			'Yesterday' : [
-																					moment()
-																							.subtract(
-																									1,
-																									'days'),
-																					moment()
-																							.subtract(
-																									1,
-																									'days') ],
-																			'Last 7 Days' : [
-																					moment()
-																							.subtract(
-																									6,
-																									'days'),
-																					moment() ],
-																			'Last 30 Days' : [
-																					moment()
-																							.subtract(
-																									29,
-																									'days'),
-																					moment() ],
-																			'This Month' : [
-																					moment()
-																							.startOf(
-																									'month'),
-																					moment()
-																							.endOf(
-																									'month') ],
-																			'Last Month' : [
-																					moment()
-																							.subtract(
-																									1,
-																									'month')
-																							.startOf(
-																									'month'),
-																					moment()
-																							.subtract(
-																									1,
-																									'month')
-																							.endOf(
-																									'month') ]
+										<div class="ui-g-12 ui-md-4">
+											<div class="ui-inputgroup">
+												<p:outputLabel for="dateEnd"/>
+												<p:calendar id="dateEnd" value="#{dashboard.endDate}" showOn="button"/>
+											</div>
+										</div>
 
-																		}
-																	});
-												});
-												$('#reportrange')
-														.on(
-																'apply.daterangepicker',
-																function(ev,
-																		picker) {
-																	$(
-																			'#reportrange span')
-																			.html(
-																					picker.startDate
-																							.format('MMMM D, YYYY')
-																							+ ' - '
-																							+ picker.endDate
-																									.format('MMMM D, YYYY'));
-																	updateCharts(
-																			picker.startDate
-																					.format('YYYY-MM-DD'),
-																			picker.endDate
-																					.format('YYYY-MM-DD'));
-																});
-											</script>
-
-											<script type="text/javascript">
-												function updateCharts(data1,
-														data2) {
-													document
-															.getElementById("#{p:component('inputHiddenID1')}").value = data1;
-													document
-															.getElementById("#{p:component('inputHiddenID2')}").value = data2;
-													remoteCommandName();
-												}
-											</script>
-
-											<h:form id="form1">
-												<h:inputHidden id="inputHiddenID1" value="#{dashboard.startdate}" />
-												<h:inputHidden id="inputHiddenID2" value="#{dashboard.enddate}" />
-												<p:remoteCommand name="remoteCommandName" async="true" partialSubmit="true" actionListener="#{dashboard.updateCharts}"
-													update="canvaspanel, canvas01panel, canvas03panel, glossarydata, summarypanel">
-												</p:remoteCommand>
-											</h:form>
+										<div class="ui-g-12 ui-md-4">
+											<div class="ui-inputgroup">
+												<p:commandButton value="Update" update=":dashboardMain :growl"
+																 actionListener="#{dashboard.onDateChanged}"
+																 icon="ui-icon-check"/>
+											</div>
 										</div>
 									</div>
-								</div>
-
-								<div class="col-md-9 col-sm-9 col-xs-12">
-									<div id="chart_plot_01_no">
-										<canvas id="chart_plot_01_canvas" class="demo-placeholder-no_no" style="height: 700px"></canvas>
-									</div>
-									<h:panelGroup id="canvaspanel">
-
-										<script>
-											// document.getElementById("chart_plot_01_no").innerHTML = '&nbsp;';
-											// document.getElementById("chart_plot_01_no").innerHTML = '<canvas id="chart_plot_01_canvas" class="demo-placeholder-no_no" style="height: 700px"></canvas>';
-											var ctx1 = document
-													.getElementById("chart_plot_01_canvas");
-
-											var chartInstance = new Chart(
-													ctx1,
-													{
-
-														type : 'line',
-														data : {
-
-															labels : <h:outputText value="#{dashboard.graph01.label}" />,
-															datasets : [ {
-																label : 'interactions',
-																data : <h:outputText value="#{dashboard.graph01.data}" />,
-																borderColor : "rgba(3, 88, 106, 0.38)",
-																backgroundColor : "rgba(38, 185, 154, 0.38)"
-															} ]
-														},
-														options : {
-															scales : {
-																xAxes : [ {
-																	time : {
-																		unit : 'day'
-																	}
-																} ]
-															}
-														}
-													})
-										</script>
-									</h:panelGroup>
-									<script>
-										var chart_plot_01_settings = {
-											series : {
-												lines : {
-													show : false,
-													fill : true
-												},
-												splines : {
-													show : true,
-													tension : 0.4,
-													lineWidth : 1,
-													fill : 0.4
-												},
-												points : {
-													radius : 0,
-													show : true
-												},
-												shadowSize : 2
-											},
-											grid : {
-												verticalLines : true,
-												hoverable : true,
-												clickable : true,
-												tickColor : "#d5d5d5",
-												borderWidth : 1,
-												color : '#fff'
-											},
-											colors : [
-													"rgba(38, 185, 154, 0.38)",
-													"rgba(3, 88, 106, 0.38)" ],
-											xaxis : {
-												tickColor : "rgba(51, 51, 51, 0.06)",
-												mode : "time",
-												tickSize : [ 1, "day" ],
-												//tickLength: 10,
-												axisLabel : "Date",
-												axisLabelUseCanvas : true,
-												axisLabelFontSizePixels : 12,
-												axisLabelFontFamily : 'Verdana, Arial',
-												axisLabelPadding : 10
-											},
-											yaxis : {
-												ticks : 8,
-												tickColor : "rgba(51, 51, 51, 0.06)",
-											},
-											tooltip : false
-										};
-
-										// $.plot( $("#chart_plot_01_no"), [ arr_data1_test ],  chart_plot_01_settings );
-									</script>
-								</div>
-								<div class="col-md-3 col-sm-3 col-xs-12 bg-white">
-									<div class="x_title">
-										<h2>Students' Activity types</h2>
-										<div class="clearfix"></div>
-									</div>
-
-									<div class="col-md-12 col-sm-12 col-xs-6">
-
-										<canvas id="myChart" width="400" height="400"></canvas>
-										<h:panelGroup id="canvas01panel">
-											<script>
-												var ctx = document
-														.getElementById("myChart");
-												<h:outputText value="#{dashboard.topbar01data}" />
-												var myChart = new Chart(
-														ctx,
-														{
-															type : 'bar',
-															data : {
-																labels : [
-																		"Glossary",
-																		"Search",
-																		"System (login/logout)",
-																		"Resource" ],
-																datasets : [ {
-																	label : 'interactions',
-																	data : mydata,
-																	backgroundColor : [
-																			'rgba(75, 192, 192, 0.2)',
-																			'rgba(75, 192, 192, 0.2)',
-																			'rgba(75, 192, 192, 0.2)',
-																			'rgba(75, 192, 192, 0.2)' ],
-																	borderColor : [
-																			'rgba(75, 192, 192, 1)',
-																			'rgba(75, 192, 192, 1)',
-																			'rgba(75, 192, 192, 1)',
-																			'rgba(75, 192, 192, 1)' ],
-																	borderWidth : 1
-																} ]
-															},
-															options : {
-																scales : {
-																	yAxes : [ {
-																		ticks : {
-																			beginAtZero : true
-																		}
-																	} ]
-																}
-															}
-														});
-
-												$("#myChart").click(
-														function(evt) {
-															updateGloss();
-														});
-											</script>
-										</h:panelGroup>
-
-									</div>
-
-								</div>
-
-								<div class="clearfix"></div>
+								</h:form>
 							</div>
 						</div>
 
-					</div>
-					<br />
-					<h:form id="form">
-						<script type="text/javascript">
-							function updateGloss() {
-								remoteCommandName2();
-							}
-						</script>
-						<p:remoteCommand name="remoteCommandName2" actionListener="#{dashboard.updateGloss}" update="glossarydata">
-						</p:remoteCommand>
-
-					</h:form>
-					<!-- top tiles -->
-					<h:panelGroup id="glossarydata">
-						<div class="row tile_count">
-							<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-
-								<span class="count_top"> Total Concepts</span>
-								<div class="count">
-									<h:outputText value="#{dashboard.totalconcepts}" />
-								</div>
-								<!-- span class="count_bottom"><i class="green">4% </i> From last Week</span -->
-
+						<div class="ui-g">
+							<div class="ui-g-9">
+								<p:panel id="chart_plot_01" header="Interactions" style="margin-bottom:20px">
+									<p:chart type="line" model="#{dashboard.interactionsChart}" style="height:300px;"/>
+								</p:panel>
 							</div>
-							<div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-								<span class="count_top"> Total Terms</span>
-								<div class="count"> 
-									<h:outputText value="#{dashboard.totalterms}" />
-								</div>
-								<!-- span class="count_bottom"><i class="green"><i class="fa fa-sort-asc"></i>3% </i> From last Week</span -->
+							<div class="ui-g-3">
+								<p:panel id="chart_barModel" header="Students' Activity types"
+										 style="margin-bottom:20px">
+									<p:chart type="bar" model="#{dashboard.studentsActivityTypes}" xaxisAngle="60"
+											 style="height:300px"/>
+								</p:panel>
 							</div>
-							<!-- div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"> Total Males</span>
-              <div class="count green">2,500</div>
-             
-            </div>
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"> Total Females</span>
-              <div class="count">4,567</div>
-             
-            </div>
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"> Total Collections</span>
-              <div class="count">2,315</div>
-             
-            </div>
-            <div class="col-md-2 col-sm-4 col-xs-6 tile_stats_count">
-              <span class="count_top"> Total Connections</span>
-              <div class="count">7,325</div>
-             
-            </div -->
 						</div>
-						<!-- /top tiles -->
+						<div class="ui-g">
+							<div class="ui-g-4">
+								<h:form>
+									<p:panel id="toggleable" header="Students' Source" toggleable="true" closable="true"
+											 toggleSpeed="500" closeSpeed="500" widgetVar="panel"
+											 style="margin-bottom:20px">
+
+										<p:chart type="pie" model="#{dashboard.studentsSources}"/>
+
+										<f:facet name="options">
+											<p:menu>
+												<p:submenu label="Settings">
+													<p:menuitem value="Toggle" url="#" icon="ui-icon-newwin"
+																onclick="PF('panel').toggle()"/>
+													<p:menuitem value="Remove" url="#" icon="ui-icon-close"
+																onclick="PF('panel').close()"/>
+												</p:submenu>
+											</p:menu>
+										</f:facet>
+									</p:panel>
+								</h:form>
+							</div>
+							<div class="ui-g-8">
+								<h:form>
+									<p:panel id="glossary" header="Students' Glossary" toggleable="true" closable="true"
+											 toggleSpeed="500" closeSpeed="500" widgetVar="panel"
+											 style="margin-bottom:20px">
+
+										<p:chart type="bar" model="#{dashboard.studentsGlossary}" style="height:300px"/>
+
+										<f:facet name="options">
+											<p:menu>
+												<p:submenu label="Settings">
+													<p:menuitem value="Toggle" url="#" icon="ui-icon-newwin"
+																onclick="PF('panel').toggle()"/>
+													<p:menuitem value="Remove" url="#" icon="ui-icon-close"
+																onclick="PF('panel').close()"/>
+												</p:submenu>
+											</p:menu>
+										</f:facet>
+									</p:panel>
+								</h:form>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-12">
+								<h:form>
+									<p:panel id="fields" header="Fields" style="margin-bottom:20px">
+										<h:panelGrid columns="1">
+											<p:dataTable var="entry" value="#{dashboard.fields}"
+														 styleClass="countries_list">
+												<p:column headerText="Id">
+													<h:outputText value="#{entry.userid}"/>
+												</p:column>
+
+												<p:column headerText="terms">
+													<h:outputText value="#{entry.total}"/>
+												</p:column>
+
+												<p:column headerText="pronunciation">
+													<h:outputText value="#{entry.pronounciation/entry.total*100}">
+														<f:convertNumber pattern="#0.00"/>
+													</h:outputText>%
+												</p:column>
+
+												<p:column headerText="acronym">
+													<h:outputText value="#{entry.acronym/entry.total*100}">
+														<f:convertNumber pattern="#0.00"/>
+													</h:outputText>%
+												</p:column>
+
+												<p:column headerText="phraseology">
+													<h:outputText value="#{entry.phraseology/entry.total*100}">
+														<f:convertNumber pattern="#0.00"/>
+													</h:outputText>%
+												</p:column>
+
+												<p:column headerText="uses">
+													<h:outputText value="#{entry.uses/entry.total*100}">
+														<f:convertNumber pattern="#0.00"/>
+													</h:outputText>%
+												</p:column>
+
+												<p:column headerText="source">
+													<h:outputText value="#{entry.source/entry.total*100}">
+														<f:convertNumber pattern="#0.00"/>
+													</h:outputText>%
+												</p:column>
+
+												<p:column headerText="AVG %">
+													<h:outputText value="#{entry.avg*100}">
+														<f:convertNumber pattern="#0.00"/>
+													</h:outputText>%
+												</p:column>
+											</p:dataTable>
+										</h:panelGrid>
+									</p:panel>
+								</h:form>
+							</div>
+						</div>
+						<div class="ui-g">
+							<div class="ui-g-6">
+								<h:form>
+									<p:panel id="summary" header="Summary" style="margin-bottom:20px">
+										<h:panelGrid columns="1">
+											<p:dataTable var="entry" value="#{dashboard.summary}"
+														 styleClass="countries_list">
+												<p:column headerText="Id">
+													<h:outputText value="#{entry.userid}"/>
+												</p:column>
+
+												<p:column headerText="sources">
+													<h:outputText value="#{entry.sources}"/>
+												</p:column>
+
+												<p:column headerText="terms">
+													<h:outputText value="#{entry.terms}"/>
+												</p:column>
+
+												<p:column headerText="entries">
+													<h:outputText value="#{entry.concepts}">
+													</h:outputText>%
+												</p:column>
+											</p:dataTable>
+										</h:panelGrid>
+									</p:panel>
+								</h:form>
+							</div>
+							<div class="ui-g-6">
+								<h:form>
+									<p:panel id="description" header="Description field" style="margin-bottom:20px">
+										<h:panelGrid columns="1">
+											<p:dataTable var="entry" value="#{dashboard.desclist}"
+														 styleClass="countries_list">
+												<p:column headerText="Id">
+													<h:outputText value="#{entry.userid}"/>
+												</p:column>
+
+												<p:column headerText="entry id">
+													<h:outputText value="#{entry.enrtyid}"/>
+												</p:column>
+
+												<p:column headerText="lang">
+													<h:outputText value="#{entry.lang}"/>
+												</p:column>
+
+												<p:column headerText="description">
+													<h:outputText value="#{entry.description}"/>
+												</p:column>
+
+												<p:column headerText="lenght">
+													<h:outputText value="#{entry.lenght}"/>
+												</p:column>
+											</p:dataTable>
+										</h:panelGrid>
+									</p:panel>
+								</h:form>
+							</div>
+						</div>
 					</h:panelGroup>
-					<div class="row">
-
-
-						<div class="col-md-4 col-sm-4 col-xs-12">
-							<div class="x_panel tile" style="height: 450px">
-								<div class="x_title">
-									<h2>Students' Source</h2>
-									<ul class="nav navbar-right panel_toolbox">
-										<li>
-											<a class="collapse-link">
-												<i class="fa fa-chevron-up"></i>
-											</a>
-										</li>
-										<li class="dropdown">
-											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-												<i class="fa fa-wrench"></i>
-											</a>
-											<ul class="dropdown-menu" role="menu">
-												<li>
-													<a href="#">Settings 1</a>
-												</li>
-												<li>
-													<a href="#">Settings 2</a>
-												</li>
-											</ul>
-										</li>
-										<li>
-											<a class="close-link">
-												<i class="fa fa-close"></i>
-											</a>
-										</li>
-									</ul>
-									<div class="clearfix"></div>
-								</div>
-								<div class="x_content">
-									<div id="pieChart"></div>
-									<script>
-										var pie = new d3pie(
-												"pieChart",
-												{
-													"header" : {
-
-													},
-													"footer" : {
-														"color" : "#999999",
-														"fontSize" : 10,
-														"font" : "open sans",
-														"location" : "bottom-left"
-													},
-													"size" : {
-														"canvasWidth" : 400,
-														"pieOuterRadius" : "45%"
-													},
-													"data" : {
-														"sortOrder" : "value-desc",
-														"content" : [
-																{
-																	"label" : "glossary",
-																	"value" : 8,
-																	"color" : "rgba(38, 185, 154, 0.1)"
-																},
-																{
-																	"label" : "patients\\ websites and blogs",
-																	"value" : 48,
-																	"color" : "rgba(38, 185, 154, 0.2)"
-																},
-																{
-																	"label" : "encyclopaedia",
-																	"value" : 54,
-																	"color" : "rgba(38, 185, 154, 0.3)"
-																},
-																{
-																	"label" : "other",
-																	"value" : 86,
-																	"color" : "rgba(38, 185, 154, 0.4)"
-																},
-																{
-																	"label" : "scientific/academic publication",
-																	"value" : 127,
-																	"color" : "rgba(38, 185, 154, 0.5)"
-																},
-																{
-																	"label" : "Linguee or Reverso",
-																	"value" : 229,
-																	"color" : "rgba(38, 185, 154, 0.6)"
-																},
-																{
-																	"label" : "bilingual dictionary",
-																	"value" : 238,
-																	"color" : "rgba(38, 185, 154, 0.7)"
-																},
-																{
-																	"label" : "institutional website",
-																	"value" : 296,
-																	"color" : "rgba(38, 185, 154, 0.8)"
-																},
-																{
-																	"label" : "monolingual dictionary",
-																	"value" : 396,
-																	"color" : "rgba(38, 185, 154, 0.9)"
-																},
-																{
-																	"label" : "Wikipedia",
-																	"value" : 876,
-																	"color" : "rgba(38, 185, 154, 1.0)"
-																} ]
-													},
-													"labels" : {
-														"outer" : {
-															"pieDistance" : 32
-														},
-														"inner" : {
-															"hideWhenLessThanPercentage" : 3
-														},
-														"mainLabel" : {
-															"fontSize" : 10
-														},
-														"percentage" : {
-															"color" : "#ffffff",
-															"decimalPlaces" : 0
-														},
-														"value" : {
-															"color" : "#adadad",
-															"fontSize" : 11
-														},
-														"lines" : {
-															"enabled" : true
-														},
-														"truncation" : {
-															"enabled" : true
-														}
-													},
-													"effects" : {
-														"pullOutSegmentOnClick" : {
-															"effect" : "linear",
-															"speed" : 400,
-															"size" : 8
-														}
-													},
-
-												});
-									</script>
-
-
-									<div id="chart_plot_02" style="height: 100">
-										<canvas id="chart_plot_02_canvas" style="height: 60%" />
-									</div>
-									<div id="js-legend" class="chart-legend"></div>
-
-								</div>
-							</div>
-						</div>
-
-						<div class="col-md-8 col-sm-8 col-xs-12">
-							<div class="x_panel tile" style="height: 450px">
-								<div class="x_title">
-									<h2>Students' Glossary</h2>
-									<ul class="nav navbar-right panel_toolbox">
-										<li>
-											<a class="collapse-link">
-												<i class="fa fa-chevron-up"></i>
-											</a>
-										</li>
-										<li class="dropdown">
-											<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-												<i class="fa fa-wrench"></i>
-											</a>
-											<ul class="dropdown-menu" role="menu">
-												<li>
-													<a href="#">Order By #Concepts</a>
-												</li>
-												<li>
-													<a href="#">Order By #Terms</a>
-												</li>
-											</ul>
-										</li>
-										<li>
-											<a class="close-link">
-												<i class="fa fa-close"></i>
-											</a>
-										</li>
-									</ul>
-									<div class="clearfix"></div>
-								</div>
-								<div class="x_content">
-									<div id="chart_plot_03">
-										<canvas id="chart_plot_03_canvas" />
-									</div>
-									<h:panelGroup id="canvas03panel">
-										<script>
-											document
-													.getElementById("chart_plot_03").innerHTML = '&nbsp;';
-											document
-													.getElementById("chart_plot_03").innerHTML = '<canvas id="chart_plot_03_canvas" />';
-											var ctx3 = document
-													.getElementById("chart_plot_03_canvas");
-											//  ctx3.height = 140;
-											var myChart3 = new Chart(
-													ctx3,
-													{
-														type : 'bar',
-														data : {
-															labels : <h:outputText value="#{dashboard.graph03.label}" />,
-															datasets : [
-																	{
-																		label : 'concepts',
-																		data : <h:outputText value="#{dashboard.graph03.data}" />,
-																		backgroundColor : "rgb(102,205,170)"
-																	},
-																	{
-																		label : 'terms',
-																		data : <h:outputText value="#{dashboard.graph03terms}" />,
-																		backgroundColor : "rgba(3, 88, 106, 0.38)"
-																	} ]
-														}
-													});
-										</script>
-									</h:panelGroup>
-								</div>
-							</div>
-						</div>
-
-
-
-
-					</div>
-
-					<div class="row">
-						<div class="col-md-8 col-sm-8 col-xs-12">
-							<div class="x_panel tile fixed_height_390" style="overflow: scroll;">
-								<div class="x_title">
-									<h2>Fields</h2>
-									<ul class="nav navbar-right panel_toolbox">
-										<li>
-											<a class="collapse-link">
-												<i class="fa fa-chevron-up"></i>
-											</a>
-										</li>
-									</ul>
-									<div class="clearfix"></div>
-								</div>
-								<div class="x_content">
-									<h:panelGroup id="proxypanel">
-										<h:dataTable value="#{dashboard.fields}" var="entry" styleClass="countries_list">
-											<h:column>
-												<f:facet name="header"></f:facet> 
-												<a href="#{entry.userid}" target="_blank">#{entry.userid}</a>
-											</h:column>
-											<h:column>
-												<f:facet name="header">terms</f:facet>    				
-					      		#{entry.total}
-					   		</h:column>
-											<h:column>
-												<f:facet name="header">pronunciation</f:facet>
-
-												<h:outputText value="#{entry.pronounciation/entry.total*100}">
-													<f:convertNumber pattern="#0.00" />
-												</h:outputText>%
-					   		</h:column>
-											<h:column>
-												<f:facet name="header">acronym</f:facet>
-												<h:outputText value="#{entry.acronym/entry.total*100}">
-													<f:convertNumber pattern="#0.00" />
-												</h:outputText>%
-					   		</h:column>
-											<h:column>
-												<f:facet name="header">phraseology</f:facet>
-												<h:outputText value="#{entry.phraseology/entry.total*100}">
-													<f:convertNumber pattern="#0.00" />
-												</h:outputText>%
-					   		</h:column>
-											<h:column>
-												<f:facet name="header">uses</f:facet>
-												<h:outputText value="#{entry.uses/entry.total*100}">
-													<f:convertNumber pattern="#0.00" />
-												</h:outputText>%
-					   		</h:column>
-											<h:column>
-												<f:facet name="header">source</f:facet>
-												<h:outputText value="#{entry.source/entry.total*100}">
-													<f:convertNumber pattern="#0.00" />
-												</h:outputText>%
-					   		</h:column>
-											<h:column>
-												<f:facet name="header">AVG %</f:facet>
-												<h:outputText value="#{entry.avg*100}">
-													<f:convertNumber pattern="#0.00" />
-												</h:outputText>%
-					   		</h:column>
-										</h:dataTable>
-									</h:panelGroup>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-md-4 col-sm-4 col-xs-12">
-							<div class="x_panel tile " style="overflow: scroll;">
-								<div class="x_title">
-									<h2>Summary</h2>
-									<ul class="nav navbar-right panel_toolbox">
-										<li>
-											<a class="collapse-link">
-												<i class="fa fa-chevron-up"></i>
-											</a>
-										</li>
-									</ul>
-									<div class="clearfix"></div>
-								</div>
-								<div class="x_content">
-									<h:panelGroup id="summarypanel">
-										<h:dataTable value="#{dashboard.summary}" var="entry" styleClass="countries_list">
-											<h:column>
-												<f:facet name="header"></f:facet>
-												<a href="#{entry.userid}" target="_blank">#{entry.userid}</a>
-											</h:column>
-											<h:column>
-												<f:facet name="header">sources</f:facet>    				
-					      		#{entry.sources}
-					   		</h:column>
-											<h:column>
-												<f:facet name="header">terms</f:facet>
-					      		#{entry.terms}
-					   		</h:column>
-											<h:column>
-												<f:facet name="header">entries</f:facet>
-					      		#{entry.concepts}
-					   		</h:column>
-										</h:dataTable>
-									</h:panelGroup>
-								</div>
-							</div>
-						</div>
-					</div>
-
-					<div class="row">
-						<div class="col-md-4 col-sm-4 col-xs-12">
-							<div class="x_panel tile " style="overflow: scroll;">
-								<div class="x_title">
-									<h2>Description field</h2>
-									<ul class="nav navbar-right panel_toolbox">
-										<li>
-											<a class="collapse-link">
-												<i class="fa fa-chevron-up"></i>
-											</a>
-										</li>
-									</ul>
-									<div class="clearfix"></div>
-								</div>
-								<div class="x_content">
-									<h:panelGroup id="descpanel"> 
-										<h:dataTable value="#{dashboard.desclist}" var="entry" styleClass="countries_list">
-											<h:column>
-												<f:facet name="header"></f:facet>
-												<a href="#{entry.userid}" target="_blank">#{entry.userid}</a>
-											</h:column>
-											<h:column>
-												<f:facet name="header">entry id</f:facet>    				
-					      		#{entry.enrtyid}
-					   		</h:column>
-											<h:column>
-												<f:facet name="header">lang</f:facet>
-					      		#{entry.lang}
-					   		</h:column>
-											<h:column>
-												<f:facet name="header">description</f:facet>
-					      		#{entry.description}
-					   		</h:column>
-											<h:column>
-												<f:facet name="header">lenght</f:facet>
-					      		#{entry.lenght}
-					   		</h:column>
-										</h:dataTable>
-									</h:panelGroup>
-								</div>
-							</div>
-						</div>
-					</div>
-			
-					
-				
 				</div>
-				<!-- /page content -->
+			</div>
 
-				<!-- footer content -->
-				<footer> 
+
+			<footer>
 				<div class="pull-right">
 					Davide Taibi
 					<a href="http://www.itd.cnr.it">CNR-ITD</a>
 				</div>
 				<div class="clearfix"></div>
-				</footer>
-				<!-- /footer content -->
-			</div>
+			</footer>
 		</div>
-
-
-
-
 	</ui:define>
-
 </ui:composition>
-</html>

@@ -21,7 +21,7 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import jcdashboard.model.Description;
-import jcdashboard.model.Fields;
+import jcdashboard.model.StatFields;
 import jcdashboard.model.UsesTable;
 import jcdashboard.model.dao.UserLogHome;
 
@@ -34,9 +34,9 @@ import org.json.JSONObject;
 public class StudentviewBean
 {
 
-    private Fields graph01 = null;
+    private StatFields graph01 = null;
 
-    private Fields graph02 = null;
+    private StatFields graph02 = null;
     private String graph02color = "";
 
     private String topbar01data = "";
@@ -47,8 +47,8 @@ public class StudentviewBean
     private Integer sid = 10410;
 
     private List<Description> dlist = null;
-    private Fields fields;
-    private Fields proxylog;
+    private StatFields fields;
+    private StatFields proxylog;
 
     private String startdate = "2017-03-02";
     private String enddate = "2017-04-04"; // new SimpleDateFormat("yyyy-MM-dd").format(new Date());
@@ -145,11 +145,11 @@ public class StudentviewBean
         return indice;
     }
 
-    public Fields getProxylog()
+    public StatFields getProxylog()
     {
         if(proxylog == null)
         {
-            proxylog = new Fields();
+            proxylog = new StatFields();
             UserLogHome ulh = new UserLogHome();
             // Map<String,Integer> mappa=ulh.proxySources(sid);
             List<Entry<String, Integer>> mappa = entriesSortedByValues(ulh.proxySources(sid, this.startdate, this.enddate));
@@ -287,11 +287,11 @@ public class StudentviewBean
         return sortedEntries;
     }
 
-    public Fields getFields()
+    public StatFields getFields()
     {
         if(fields == null)
         {
-            fields = new Fields();
+            fields = new StatFields();
             UserLogHome ulh = new UserLogHome();
             UsesTable ut = ulh.fields(sid, this.startdate, this.enddate);
             fields.setLabel("[ 'pronounciation \uf137', 'acronym', 'phraseology', 'uses', 'source' ]");
@@ -401,11 +401,11 @@ public class StudentviewBean
         return twoDForm.format(res);
     }
 
-    public Fields getGraph02()
+    public StatFields getGraph02()
     {
         if(graph02 == null)
         {
-            graph02 = new Fields();
+            graph02 = new StatFields();
             String[] sourcelist = new String[] { "EMPTY", "Wikipedia", "encyclopaedia", "monolingual dictionary", "bilingual dictionary", "Linguee or Reverso", "institutional website", "patients' websites and blogs", "scientific/academic publication", "glossary", "other" };
             UserLogHome ulh = new UserLogHome();
             Map<String, Integer> mappa = ulh.glossarySource(this.sid, this.startdate, this.enddate);
@@ -430,12 +430,12 @@ public class StudentviewBean
         return graph02;
     }
 
-    public Fields getGraph02new()
+    public StatFields getGraph02new()
     {
         if(graph02 == null)
         {
             ArrayList<String> graph02data = new ArrayList<String>();
-            graph02 = new Fields();
+            graph02 = new StatFields();
             String[] sourcelist = new String[] { "EMPTY", "Wikipedia", "encyclopaedia", "monolingual dictionary", "bilingual dictionary", "Linguee or Reverso", "institutional website", "patients' websites and blogs", "scientific/academic publication", "glossary", "other" };
             UserLogHome ulh = new UserLogHome();
             Map<String, Integer> mappa = ulh.glossarySource(this.sid, this.startdate, this.enddate);
@@ -453,11 +453,11 @@ public class StudentviewBean
         return graph02;
     }
 
-    public Fields getGraph01()
+    public StatFields getGraph01()
     {
         if(graph01 == null)
         {
-            graph01 = new Fields();
+            graph01 = new StatFields();
             UserLogHome ulh = new UserLogHome();
             Map<String, Integer> mappa = ulh.actionPerDay(sid, this.startdate, this.enddate);
             String graph01label = " [ ";

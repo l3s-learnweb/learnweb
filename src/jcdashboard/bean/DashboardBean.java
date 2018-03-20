@@ -1,13 +1,11 @@
 package jcdashboard.bean;
 
 import java.io.Serializable;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.faces.bean.ManagedBean;
@@ -19,47 +17,36 @@ import de.l3s.learnweb.Course;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
 import jcdashboard.model.DescData;
-import jcdashboard.model.Fields;
 import jcdashboard.model.TotalData;
 import jcdashboard.model.UsesTable;
 import jcdashboard.model.dao.UserLogHome;
+
+import org.primefaces.model.chart.*;
 
 @ManagedBean(name = "dashboard")
 @ViewScoped
 public class DashboardBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6265538951073418345L;
-
     private static final Logger log = Logger.getLogger(DashboardBean.class);
 
-    private Fields graph01 = null;
-    private Fields graph02 = null;
-    private String graph02color = "";
-
-    private Fields graph03 = null;
-    private String graph03terms = "";
-
-    private String topbar01data = "";
-    private boolean viewpanel1 = true;
-    private Integer totalconcepts = 0;
-    private Integer totalterms = 0;
-
-    //private List<String> userlist;
-
-    private Integer sid = 10410;
-
-    private String startdate = "2017-03-01"; // "2017-03-02";
-    private String enddate = "2017-06-01"; // "2017-04-02" new SimpleDateFormat("yyyy-MM-dd").format(new Date());
-    Map<String, String> graph02map = new HashMap<String, String>();
-
-    ArrayList<TotalData> summarylist = null;
-    ArrayList<DescData> descdatalist = null;
+    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
     private Course selectedCourse; // the visualized course
+    private Date startDate = Date.from(ZonedDateTime.now().minusMonths(1).toInstant()); // month ago
+    private Date endDate = new Date(); // now
 
     private UserLogHome ulh;
 
-    private Collection<HashMap<String, Object>> trackerStatistic;
+    private Integer totalconcepts = 0;
+    private Integer totalterms = 0;
+    private PieChartModel studentsSources;
+    private BarChartModel studentsActivityTypes;
+    private BarChartModel studentsGlossary;
+    private LineChartModel interactionsChart;
+
+    private ArrayList<TotalData> summarylist = null;
+    private ArrayList<DescData> descdatalist = null;
 
     public DashboardBean()
     {
@@ -71,101 +58,201 @@ public class DashboardBean extends ApplicationBean implements Serializable
         setSelectedCourse(getLearnweb().getCourseManager().getCourseById(1245));
 
         ulh = new UserLogHome();
-
-        /* graph02map.put("EMPTY", "rgba(38, 185, 154, 0.1)");
-        graph02map.put("other", "rgb(102,205,170)");
-        graph02map.put("glossary", "rgba(38, 185, 154, 0.2)");
-        
-        graph02map.put("Wikipedia", "rgba(3, 88, 120, 0.4)");
-        graph02map.put("encyclopaedia", "rgba(3, 88, 120, 0.6)");
-        
-        graph02map.put("monolingual dictionary", "rgba(38, 175, 154, 0.3)");
-        graph02map.put("bilingual dictionary", "rgba(38, 175, 154, 0.6)");
-        graph02map.put("Linguee or Reverso", "rgba(38, 175, 154, 0.9)");
-        
-        graph02map.put("institutional website", "rgba(38, 105, 154, 0.3)");
-        graph02map.put("patients' websites and blogs", "rgba(38, 105, 154, 0.6)");
-        graph02map.put("scientific/academic publication", "rgba(38, 105, 154, 0.9)"); */
-
-        graph02map.put("EMPTY", "#eff4fd");
-        graph02map.put("other", "#5077bd");
-        graph02map.put("glossary", "#324a76");
-
-        graph02map.put("Wikipedia", "#e0e9fb");
-        graph02map.put("encyclopaedia", "#d0dff9");
-
-        graph02map.put("monolingual dictionary", "#c1d4f7");
-        graph02map.put("bilingual dictionary", "#b1caf6");
-        graph02map.put("Linguee or Reverso", "#a2bff4");
-
-        graph02map.put("institutional website", "#92b4f2");
-        graph02map.put("patients' websites and blogs", "#83aaf0");
-        graph02map.put("scientific/academic publication", "#739fee");
-
     }
 
-    public void updateCharts()
+    public void onDateChanged()
     {
-        graph01 = null;
-        graph02 = null;
-        topbar01data = "";
-        totalconcepts = 0;
-        totalterms = 0;
-        graph02color = "";
-        graph03 = null;
-        graph03terms = "";
-        summarylist = null;
-        descdatalist = null;
-        trackerStatistic = null;
+        studentsSources = null;
+        studentsActivityTypes = null;
+        interactionsChart = null;
+        studentsGlossary = null;
     }
 
-    public String getStartdate()
+    public PieChartModel getStudentsSources()
     {
-        return startdate;
+        if(studentsSources == null)
+            studentsSources = initStudentsSources();
+        return studentsSources;
     }
 
-    public void setStartdate(String startdate)
+    public BarChartModel getStudentsActivityTypes()
     {
-        this.startdate = startdate;
+        if(studentsActivityTypes == null)
+            studentsActivityTypes = initStudentsActivityTypes();
+        return studentsActivityTypes;
     }
 
-    public String getEnddate()
+    public BarChartModel getStudentsGlossary()
     {
-        return enddate;
+        if(studentsGlossary == null)
+            studentsGlossary = initStudentsGlossary();
+        return studentsGlossary;
     }
 
-    public void setEnddate(String enddate)
+    public LineChartModel getInteractionsChart()
     {
-        this.enddate = enddate;
+        if(interactionsChart == null)
+            interactionsChart = initInteractionsChart();
+        return interactionsChart;
     }
 
-    public Integer getSid()
+    private BarChartModel initStudentsActivityTypes()
     {
-        return sid;
-    }
+        BarChartModel model = new BarChartModel();
 
-    public Fields getGraph03()
-    {
-        if(graph03 == null)
+        int search = 0;
+        int glossary = 0;
+        int resource = 0;
+        int system = 0;
+        Map<String, Integer> mappa = ulh.actionCount(this.getStartDateString(), this.getEndDateString());
+
+        for(String k : mappa.keySet())
         {
-            Map<String, Integer> mappa = ulh.getUserGlossaryConceptCountByCourse(selectedCourse, this.startdate, this.enddate);
-
-            String graph03label = " [ ";
-            String graph03data = " [ ";
-            for(String k : mappa.keySet())
-            {
-                graph03label += " \"" + k + "\", ";
-                graph03data += " " + mappa.get(k) + ", ";
-            }
-            graph03label += " 		]";
-            graph03data += " 		]";
-
-            graph03 = new Fields();
-            graph03.setLabel(graph03label);
-            graph03.setData(graph03data);
+            if(k.contains("search"))
+                search += mappa.get(k);
+            else if(k.contains("glossary"))
+                glossary += mappa.get(k);
+            else if(k.contains("resource"))
+                resource += mappa.get(k);
+            else
+                system += mappa.get(k);
         }
-        return graph03;
 
+        ChartSeries activity = new ChartSeries();
+        activity.setLabel("interactions");
+        activity.set("Glossary", glossary);
+        activity.set("Search", search);
+        activity.set("System (login/logout)", system);
+        activity.set("Resource", resource);
+
+        model.addSeries(activity);
+        model.setLegendPosition("ne");
+
+        Axis xAxis = model.getAxis(AxisType.X);
+        xAxis.setTickAngle(-60);
+
+        return model;
+    }
+
+    private BarChartModel initStudentsGlossary()
+    {
+        BarChartModel model = new BarChartModel();
+
+        ChartSeries concepts = new ChartSeries();
+        ChartSeries terms = new ChartSeries();
+
+        Map<String, Integer> mappaConcepts = ulh.getUserGlossaryConceptCountByCourse(selectedCourse, this.getStartDateString(), this.getEndDateString());
+
+        for(String k : mappaConcepts.keySet())
+        {
+            concepts.set(k, mappaConcepts.keySet().contains(k) ? mappaConcepts.get(k) : 0);
+        }
+
+        Map<String, Integer> mappaTerms = ulh.userGlossaryTerm(this.getStartDateString(), this.getEndDateString());
+
+        for(String k : mappaTerms.keySet())
+        {
+            terms.set(k, mappaTerms.keySet().contains(k) ? mappaTerms.get(k) : 0);
+        }
+
+        concepts.setLabel("concepts");
+        terms.setLabel("terms");
+
+        model.addSeries(concepts);
+        model.addSeries(terms);
+
+        model.setLegendPosition("ne");
+        Axis xAxis = model.getAxis(AxisType.X);
+        xAxis.setTickAngle(-60);
+        Axis yAxis = model.getAxis(AxisType.Y);
+        yAxis.setMin(0);
+
+        return model;
+    }
+
+    private PieChartModel initStudentsSources()
+    {
+        PieChartModel model = new PieChartModel();
+        model.setDataFormat("percent");
+        model.setShowDataLabels(true);
+        model.setDataLabelThreshold(3);
+        model.setLegendPosition("w");
+        model.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
+
+        model.set("glossary", 8);
+        model.set("patients\\ websites and blogs", 48);
+        model.set("encyclopaedia", 54);
+        model.set("other", 86);
+        model.set("scientific/academic publication", 127);
+        model.set("Linguee or Reverso", 229);
+        model.set("bilingual dictionary", 238);
+        model.set("institutional website", 296);
+        model.set("monolingual dictionary", 396);
+        model.set("Wikipedia", 876);
+
+        return model;
+    }
+
+    private LineChartModel initInteractionsChart()
+    {
+        LineChartModel model = new LineChartModel();
+
+        Map<String, Integer> mappa = ulh.actionPerDay(this.getStartDateString(), this.getEndDateString());
+
+        LineChartSeries interactions = new LineChartSeries();
+        interactions.setLabel("interactions");
+
+        Calendar start = Calendar.getInstance();
+        start.setTime(this.startDate);
+        Calendar end = Calendar.getInstance();
+        end.setTime(this.endDate);
+
+        for(Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime())
+        {
+            String dateKey = dateFormat.format(date);
+            interactions.set(dateKey, mappa.keySet().contains(dateKey) ? mappa.get(dateKey) : 0);
+        }
+
+        model.addSeries(interactions);
+        model.setLegendPosition("e");
+        model.setShowPointLabels(true);
+        model.getAxes().put(AxisType.X, new CategoryAxis("Days"));
+        Axis xAxis = model.getAxis(AxisType.X);
+        xAxis.setTickAngle(-60);
+        Axis yAxis = model.getAxis(AxisType.Y);
+        yAxis.setLabel("Interactions");
+        yAxis.setMin(0);
+        return model;
+    }
+
+    public Date getStartDate()
+    {
+        return startDate;
+    }
+
+    public String getStartDateString()
+    {
+        return dateFormat.format(startDate);
+    }
+
+    public void setStartDate(Date startDate)
+    {
+        this.startDate = startDate;
+    }
+
+    public Date getEndDate()
+    {
+        return endDate;
+    }
+
+    public String getEndDateString()
+    {
+        return dateFormat.format(endDate);
+    }
+
+    public void setEndDate(Date endDate)
+    {
+        this.endDate = endDate;
     }
 
     public ArrayList<UsesTable> getFields()
@@ -173,28 +260,11 @@ public class DashboardBean extends ApplicationBean implements Serializable
         return ulh.fields();
     }
 
-    public String getGraph03terms()
-    {
-        if(graph03terms.compareTo("") == 0)
-        {
-            UserLogHome ulh = new UserLogHome();
-            Map<String, Integer> mappa = ulh.userGlossaryTerm(this.startdate, this.enddate);
-            graph03terms = " [ ";
-            for(String k : mappa.keySet())
-            {
-                graph03terms += " " + mappa.get(k) + ", ";
-            }
-            graph03terms += " 		]";
-        }
-        return graph03terms;
-    }
-
     public Integer getTotalconcepts()
     {
         if(totalconcepts == 0)
         {
-            UserLogHome ulh = new UserLogHome();
-            totalconcepts = ulh.getTotalConcepts(this.startdate, this.enddate);
+            totalconcepts = ulh.getTotalConcepts(this.getStartDateString(), this.getEndDateString());
         }
         return totalconcepts;
     }
@@ -203,132 +273,9 @@ public class DashboardBean extends ApplicationBean implements Serializable
     {
         if(totalterms == 0)
         {
-            UserLogHome ulh = new UserLogHome();
-            totalterms = ulh.getTotalTerms(this.startdate, this.enddate);
+            totalterms = ulh.getTotalTerms(this.getStartDateString(), this.getEndDateString());
         }
         return totalterms;
-    }
-
-    /*
-    public Fields getGraph02()
-    {
-        if(graph02 == null)
-        {
-            String[] sourcelist = new String[] { "EMPTY", "Wikipedia", "encyclopaedia", "monolingual dictionary", "bilingual dictionary", "Linguee or Reverso", "institutional website", "patients' websites and blogs", "scientific/academic publication", "glossary", "other" };
-            graph02 = new Fields();
-            UserLogHome ulh = new UserLogHome();
-            Map<String, Integer> mappa = ulh.glossarySource(this.startdate, this.enddate);
-            String graph02data = " [ ";
-            String graph02label = " [ ";
-            graph02color = " [ ";
-            for(String k : sourcelist)
-            {
-                if(mappa.keySet().contains(k))
-                {
-                    graph02data += " " + mappa.get(k) + ", ";
-                    graph02label += " \"" + k + "\", ";
-                    graph02color += " \"" + graph02map.get(k) + "\", ";
-                }
-            }
-            graph02data += " 		]";
-            graph02label += " 		]";
-            graph02color += " 		]";
-            graph02.setData(graph02data);
-            graph02.setLabel(graph02label);
-    
-        }
-        return graph02;
-    }
-    
-    public String getGraph02color()
-    {
-        return graph02color;
-    }
-    */
-    public Fields getGraph01()
-    {
-        if(graph01 == null)
-        {
-            graph01 = new Fields();
-            UserLogHome ulh = new UserLogHome();
-            Map<String, Integer> mappa = ulh.actionPerDay(this.startdate, this.enddate);
-            String graph01label = " [ ";
-            ArrayList<String> miedate = new ArrayList<String>();
-            try
-            {
-                SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-
-                Date startDate = formatter.parse(this.startdate);
-                Date endDate = formatter.parse(this.enddate);
-                Calendar start = Calendar.getInstance();
-                start.setTime(startDate);
-                Calendar end = Calendar.getInstance();
-                end.setTime(endDate);
-                for(Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime())
-                {
-                    graph01label += " \"" + formatter.format(date) + "\", ";
-                    miedate.add("" + formatter.format(date));
-                }
-            }
-            catch(ParseException e)
-            {
-                log.fatal("fatal", e);
-            }
-            graph01label += " 		]";
-
-            String graph01data = " [ ";
-            for(String miadata : miedate)
-            {
-                if(mappa.keySet().contains(miadata))
-                    graph01data += " " + mappa.get(miadata) + ", ";
-                else
-                    graph01data += " 0, ";
-            }
-            graph01data += " 		]";
-            graph01.setData(graph01data);
-            graph01.setLabel(graph01label);
-        }
-        return graph01;
-    }
-
-    public boolean isViewpanel1()
-    {
-        return viewpanel1;
-    }
-
-    public String getTopbar01data()
-    {
-        if(topbar01data.compareTo("") == 0)
-        {
-            int search = 0;
-            int glossary = 0;
-            int resource = 0;
-            int system = 0;
-            UserLogHome ulh = new UserLogHome();
-            Map<String, Integer> mappa = ulh.actionCount(this.startdate, this.enddate);
-
-            for(String k : mappa.keySet())
-            {
-                if(k.contains("search"))
-                    search += mappa.get(k);
-                else if(k.contains("glossary"))
-                    glossary += mappa.get(k);
-                else if(k.contains("resource"))
-                    resource += mappa.get(k);
-                else
-                    system += mappa.get(k);
-            }
-            topbar01data = "var mydata = [ " + glossary + "," + search + "," + system + "," + resource + " ];";
-        }
-        return topbar01data;
-    }
-
-    public void updateGloss()
-    {
-        viewpanel1 = true;
-        UserLogHome ulh = new UserLogHome();
-        totalconcepts = ulh.getTotalConcepts(this.startdate, this.enddate);
-        totalterms = ulh.getTotalTerms(this.startdate, this.enddate);
     }
 
     public ArrayList<TotalData> getSummary()
@@ -338,11 +285,11 @@ public class DashboardBean extends ApplicationBean implements Serializable
         {
             summarylist = new ArrayList<TotalData>();
             // System.out.println("DENTRO SUMMARY");
-            String[] userid = new String[] { "10413", "10430", "10429", "10443", "10411", "10152", "10111", "10117", "10428", "10113" };
+            String[] userid = new String[]{"10413", "10430", "10429", "10443", "10411", "10152", "10111", "10117", "10428", "10113"};
             UserLogHome ulh = new UserLogHome();
             ;
 
-            Map<String, Integer[]> summap = ulh.getSummary2(startdate, enddate);
+            Map<String, Integer[]> summap = ulh.getSummary2(this.getStartDateString(), this.getEndDateString());
 
             for(String uid : userid)
             {
@@ -450,25 +397,6 @@ public class DashboardBean extends ApplicationBean implements Serializable
         }
         return descdatalist;
     }
-    /*
-
-
-    public Collection<HashMap<String, Object>> getTrackerStatistics()
-    {
-        if(trackerStatistic == null)
-        {
-            try
-            {
-                trackerStatistic = new ArrayList<>(ulh.getTrackerStatisticsPerUser(selectedCourse, startdate, enddate));
-            }
-            catch(Exception e)
-            {
-                log.error("Could not get statistic for course " + selectedCourse, e);
-            }
-        }
-        return trackerStatistic;
-    }
-    */
 
     public void setSelectedCourse(Course selectedCourse)
     {
