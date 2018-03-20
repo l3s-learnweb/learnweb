@@ -105,6 +105,13 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             try
             {
                 clickedResource = Learnweb.getInstance().getResourceManager().getResource(resourceId);
+
+                if(clickedResource == null)
+                {
+                    addInvalidParameterMessage("resource_id");
+                    return;
+                }
+
                 if(clickedResource.isOfficeResource())
                 {
                     getFileEditorBean().fillInFileInfo(clickedResource);
@@ -183,7 +190,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         return dayNames.subList(1, 8);
     }
 
-    //Function to localized month names for the calendar 
+    //Function to localized month names for the calendar
     public String getMonthNames()
     {
         DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
@@ -274,7 +281,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             clickedResource.addTag(tagName, getUser());
             addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
             log(Action.tagging_resource, clickedResource.getGroupId(), clickedResource.getId(), tagName);
-            tagName = ""; // clear tag input field 
+            tagName = ""; // clear tag input field
         }
         catch(Exception e)
         {
@@ -285,7 +292,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     /**
      * Recreates the thumbnails of the selected resource
-     * 
+     *
      * @throws SQLException
      */
     public void onUpdateThumbnail() throws SQLException
@@ -677,9 +684,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
             return;
         }
 
-        //check if each value is not empty, then pass it to Resource to add new 
+        //check if each value is not empty, then pass it to Resource to add new
 
-        //selectedLevels 
+        //selectedLevels
         if(selectedLevels.length > 0)
         {
             try
@@ -692,7 +699,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
                     sLevels += selectedLevels[i] + ";";
                 }
                 log(Action.adding_yourown_metadata, clickedResource.getGroupId(), clickedResource.getId(), "language levels: " + sLevels);
-                selectedLevels = null; // clear lang level field 
+                selectedLevels = null; // clear lang level field
             }
             catch(Exception e)
             {
