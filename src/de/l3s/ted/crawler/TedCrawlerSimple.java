@@ -124,7 +124,7 @@ public class TedCrawlerSimple implements Runnable
                     paragraphText += " " + cue.get("text");
                 }
                 paragraphText = paragraphText.replace("\n", " ");
-                log.info("start time: " + startTime + " paragraph: " + paragraphText);
+                //log.info("start time: " + startTime + " paragraph: " + paragraphText);
                 pStmt.setInt(3, Math.toIntExact(startTime));
                 pStmt.setString(4, paragraphText);
                 pStmt.executeUpdate();
@@ -292,8 +292,14 @@ public class TedCrawlerSimple implements Runnable
 
             //Since there is no explicit meta property for ted id, it is extracted like below in order to be able to get transcripts
             Element iosURLEl = doc.select("meta[property=al:ios:url]").first();
-            tedId = iosURLEl.attr("content").split("ted://talks/")[1];
-            tedId = tedId.replace("?source=facebook", "");
+            if(iosURLEl != null)
+            {
+                tedId = iosURLEl.attr("content").split("ted://talks/")[1];
+                tedId = tedId.replace("?source=facebook", "");
+            }
+            else
+                return; //Few TED talks have broken links and it redirects it to the homepage
+
             log.info("ted id: " + tedId);
 
             //Checking again if TED video exists since sometimes the slug of an existing video can change
@@ -367,7 +373,7 @@ public class TedCrawlerSimple implements Runnable
                     rpm.processImage(tedResource, FileInspector.openStream(tedResource.getMaxImageUrl()));
                     tedResource.setGroup(tedGroup);
                     admin.addResource(tedResource);
-                    tedResource.save();
+                    //tedResource.save();
 
                     //save new TED resource ID in order to use it later for saving transcripts
                     resourceId = tedResource.getId();
