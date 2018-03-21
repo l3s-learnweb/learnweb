@@ -112,7 +112,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     private Thumbnail thumbnail4;
     private String embeddedCode = null; // temporal
     private String embeddedRaw;
-    private String transcript; //To store the English transcripts for TED videos
+    private String transcript; //To store the English transcripts for TED videos and saved articles
     private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
     private boolean restricted = false;
     private Date resourceTimestamp = null;

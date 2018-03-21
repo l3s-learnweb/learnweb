@@ -123,6 +123,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
             this.tedResource.setEmbeddedRaw(tedResource.getEmbeddedRaw().replace("width=\"500\" height=\"400\"", "width='100%' height='100%'"));
         String transcript = tedResource.getTranscript();
         noteId = 0;
+
         if(transcript != null && transcript != "")
         {
             Document doc = Jsoup.parse(transcript);
@@ -132,7 +133,11 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
                 element.attr("id", Integer.toString(++noteId));
             }
 
-            tedResource.setTranscript(doc.getElementsByTag("body").html());
+            if(tedResource.getType() != Resource.ResourceType.website)
+            {
+                tedResource.setTranscript(doc.getElementsByTag("body").html());
+            }
+
         }
         else
         {

@@ -616,7 +616,7 @@
                                 <tr>
                                     <td>
 										<span class="resource_field">
-											#{msg.file}: 
+											#{msg.file}:
 										</span>
                                     </td>
                                     <td>
@@ -656,7 +656,7 @@
                                 <tr>
                                     <td>
 										<span class="resource_field">
-											#{msg.resource}: 
+											#{msg.resource}:
 										</span>
                                     </td>
                                     <td>
@@ -671,7 +671,7 @@
                                 <tr>
                                     <td>
 										<span class="resource_field">
-											#{msg.relevance}: 
+											#{msg.relevance}:
 										</span>
                                     </td>
                                     <td>
@@ -694,11 +694,27 @@
                                 </tr>
                             </ui:fragment>
 
+                            <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'website'}">
+                            	<tr>
+                                    <td>
+										<span class="resource_field">
+											#{msg.content}:
+										</span>
+                                    </td>
+                                    <td>
+                                        <h:outputLink value="resource_transcript.jsf" style="text-decoration:underline;">
+                                            <f:param name="resource_id" value="#{resourceDetailBean.clickedResource.id}"/>
+                                            #{msg.link_to_content}
+                                        </h:outputLink>
+                                    </td>
+                                </tr>
+                            </ui:fragment>
+
                             <ui:fragment rendered="#{resourceDetailBean.thumbRatingEnabled}">
                                 <tr>
                                     <td>
 										<span class="resource_field">
-											#{msg.reliability}: 
+											#{msg.reliability}:
 										</span>
                                     </td>
                                     <td>
@@ -764,7 +780,7 @@
                             <tr>
                                 <td>
 									<span class="resource_field">
-										#{msg.source}: 
+										#{msg.source}:
 									</span>
                                 </td>
                                 <td style="overflow:hidden;">
@@ -793,7 +809,7 @@
                                 <tr>
                                     <td>
 										<span class="resource_field">
-											#{msg.group}: 
+											#{msg.group}:
 										</span>
                                     </td>
                                     <td>
@@ -810,7 +826,7 @@
                                 <tr>
                                     <td>
 										<span class="resource_field">
-											#{msg.copied_from}: 
+											#{msg.copied_from}:
 										</span>
                                     </td>
                                     <td>
@@ -829,7 +845,7 @@
                                 <tr>
                                     <td>
 										<span class="resource_field">
-											#{msg.transcript}: 
+											#{msg.transcript}:
 										</span>
                                     </td>
                                     <td>
@@ -883,7 +899,7 @@
                         <h:form id="archive_current_form"
                                 rendered="${resourceDetailBean.clickedResource.storageType == 2 and resourceDetailBean.clickedResource.canEditResource(userBean.user)}">
 							<span class="resource_field">
-								#{msg.current_version}: 
+								#{msg.current_version}:
 							</span>
                             <p:commandButton action="#{resourceDetailBean.archiveCurrentVersion}"
                                              styleClass="greenbutton" value="#{msg['Archive.now']}"
@@ -899,7 +915,7 @@
 									<span id="no_of_archive_versions" style="color:red">
 										#{resourceDetailBean.clickedResource.archiveUrls.size()}
 									</span>
-									): 
+									):
 								</span>
 
                                 <p:commandButton id="list_button" styleClass="greenbutton" value="#{msg.list_view}"

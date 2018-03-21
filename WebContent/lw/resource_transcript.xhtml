@@ -13,14 +13,13 @@
 	</ui:define>
 
 	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="#{msg.tedTranscriptTitle}" />
+	<ui:param name="pageTitle" value="#{tedTranscriptBean.tedResource.title}" />
 	<ui:param name="helpText" value="#{msg.tedTranscriptHelp}"/>
 	<ui:param name="helpTextStyle" value="tedtranscript_help" />
 
 	<ui:define name="center_layout">
 
 		<h:form class="display-none" id="command_form">
-			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSetSynonyms()}" name="setSynonymsForWord" process="@this" oncomplete="setSynonyms(xhr,status,args);" async="false"/>
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveResource()}" name="saveTedResource" process="@this" update=":growl" />
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSubmitResource()}" name="submitTedResource" process="@this" update=":growl :transcript :transcript_options" />
 			<p:remoteCommand partialSubmit="true" immediate="true" actionListener="${tedTranscriptBean.processActionSaveLog()}" name="saveTranscriptLog" process="@this" update="@none" />
@@ -30,7 +29,7 @@
 		<h:outputScript library="ted_transcript" name="jquery.contextMenu.js"/>
 		<h:outputScript library="ted_transcript" name="spectrum.js"/>
 		<h:outputScript library="ted_transcript" name="ntc.js"/>
-		<h:outputStylesheet library="ted_transcript" name="ted_transcript.css"  />
+		<h:outputStylesheet library="resource_transcript" name="resource_transcript.css"  />
 		<h:outputStylesheet library="ted_transcript" name="spectrum.css"  />
 		<h:outputScript library="ted_transcript" name="ted_transcript.js" target="head"/>
 
@@ -40,38 +39,15 @@
   		</script>
 
 		<div id="ted_content">
-		<div class="embedded" id="ted_embedded" >
-			<!-- ${tedTranscriptBean.tedResource.embedded} -->
-		</div>
 
 		<h:panelGroup layout="block" id="transcript_column" class="right_bar">
 			<p:outputPanel id="transcript_options">
 				<div class="center-header noselect">
 					<h:form>
-						<p:outputLabel for="select_lang" value="#{msg.select_transcript_lang}:" />
-				        <h:selectOneMenu id="select_lang" value="#{tedTranscriptBean.transcriptLanguage}" >
-				           <f:selectItem itemValue="----------------------------"/>
-				           <f:selectItems value="#{tedTranscriptBean.getLanguageList()}"/>
-				           <p:ajax listener="#{tedTranscriptBean.setTranscript}" update=":transcript" oncomplete="clearTagList();"/>
-				        </h:selectOneMenu>
-						<p:commandButton id="save" styleClass="button_position greenbutton" value="#{msg.save}" onclick="saveEditing();" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>
-						<p:tooltip id="toolTipSave" for="save" value="#{msg.save_tooltip}" position="left"/>
-						<p:commandButton id="submit" styleClass="button_position greenbutton" value="#{msg.submit}" onclick="submitTranscript();" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
-						<p:tooltip id="toolTipSubmit" for="submit" value="#{msg.submit_tooltip}" position="left"/>
-						<!-- <p:commandButton styleClass="button_position greenbutton" value="#{msg.show_tags}" onclick="openTagsDiv();"/> -->
-
-						<p:menuButton value="#{msg.options}" iconPos="right" styleClass="greenbutton options_button" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}">
-					        <p:menuitem value="#{msg.show_summary}" icon="ui-icon-circle-triangle-w" onclick="openTagsDiv();selectTab('summary');">
-					        </p:menuitem>
-					        <p:menuitem value="#{msg.show_tags}" icon="ui-icon-circle-triangle-w" onclick="openTagsDiv();selectTab('tags');">
-					        </p:menuitem>
-					        <p:menuitem value="Disable Editing" icon="ui-icon-pencil" rendered="#{!tedTranscriptBean.tedResource.readOnlyTranscript and userBean.moderator}" update=":transcript :transcript_options">
-					        	<f:setPropertyActionListener value="true" target="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>
-					        </p:menuitem>
-					        <p:menuitem value="Enable Editing" icon="ui-icon-pencil" rendered="#{tedTranscriptBean.tedResource.readOnlyTranscript and userBean.moderator}" update=":transcript :transcript_options">
-					       		<f:setPropertyActionListener value="false" target="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>
-					        </p:menuitem>
-				   	 	</p:menuButton>
+							<p:commandButton id="save" styleClass="button_position greenbutton" value="#{msg.save}" onclick="saveEditing();" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}"/>
+							<p:tooltip id="toolTipSave" for="save" value="#{msg.save_tooltip}" position="left"/>
+							<p:commandButton id="submit" styleClass="button_position greenbutton" value="#{msg.submit}" onclick="submitTranscript();" disabled="#{tedTranscriptBean.tedResource.readOnlyTranscript}" rendered="#{tedTranscriptBean.tedResource.canEditResource(userBean.user)}"/>
+							<p:tooltip id="toolTipSubmit" for="submit" value="#{msg.submit_tooltip}" position="left"/>
 					</h:form>
 				</div>
 				<div class="transcript_note noselect">
@@ -91,7 +67,6 @@
 			</h:panelGroup>
 		</h:panelGroup>
 
-		<!-- User Annotation Div-->
 		<div id="myNav" class="overlay">
 		  <a href="javascript:void(0)" class="closebtn" onclick="closeTagsDiv()"></a>
 		  <ul class="tab">
@@ -102,30 +77,12 @@
 		  	<ol id="selectable">
 		    </ol>
 		  </div>
-		  <div id="summary" class="overlay-content" style="display:none">
-			<h:form prependId="false">
-    			<h:outputText value="#{msg.brief_summary}"/>
-    			<p:inputTextarea id="textarea_s" counter="char_s" maxlength="600" counterTemplate="{0} characters remaining" autoResize="false" value="#{tedTranscriptBean.summaryTextS}" /><br/>
-    			<h:outputText id="char_s" /><br/>
-    			<p:commandButton value="#{msg.submit}" action="#{tedTranscriptBean.submitShortSummary()}"/>
-			</h:form>
-		  	<br/><br/>
-		  	<h:form prependId="false">
-    			<h:outputText value="#{msg.long_summary}"/>
-    			<p:inputTextarea id="textarea_m" counter="char_m" maxlength="1500" counterTemplate="{0} characters remaining" autoResize="false" value="#{tedTranscriptBean.summaryTextM}"/><br/>
-    			<h:outputText id="char_m" /><br/>
-    			<p:commandButton value="#{msg.submit}" action="#{tedTranscriptBean.submitLongSummary()}"/>
-			</h:form>
-		  	<br/><br/>
-		  	<h:form prependId="false">
-    			<h:outputText value="#{msg.detailed_summary}"/>
-    			<p:inputTextarea id="textarea_l" counter="char_l" maxlength="2500" counterTemplate="{0} characters remaining" autoResize="false" value="#{tedTranscriptBean.summaryTextL}"/><br/>
-    			<h:outputText id="char_l" /><br/>
-    			<p:commandButton value="#{msg.submit}" action="#{tedTranscriptBean.submitDetailedSummary()}"/>
-			</h:form>
-		  </div>
+
 		</div>
+
 		</div>
+
+
 
 		<p:dialog widgetVar="userinput_dialog" modal="true" header="#{msg.userAnnotation}" minWidth="600" resizable="false" closable="false" appendTo="@(body)">
 			<h:form id="userinput_form" prependId="false">

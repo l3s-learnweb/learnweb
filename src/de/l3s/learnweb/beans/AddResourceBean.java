@@ -299,7 +299,8 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             resource.setFolderId(resourceTargetFolderId);
             getUser().setActiveGroup(resourceTargetGroupId);
 
-            if(resource.getId() == -1){
+            if(resource.getId() == -1)
+            {
                 resource = getUser().addResource(resource);
                 getLearnweb().getGlossariesManager().setLanguagePairs(resource.getId(), resource.getLanguageOne().toString(), resource.getLanguageTwo().toString());
             }
@@ -310,7 +311,6 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
 
             UtilBean.getGroupDetailBean().updateResourcesFromSolr();
-
 
         }
         catch(SQLException e)
@@ -343,7 +343,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
     
             if(resource.getId() == -1)
                 resource = getUser().addResource(resource);
-
+    
             else
             {
     

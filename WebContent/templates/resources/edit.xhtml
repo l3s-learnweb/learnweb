@@ -7,7 +7,7 @@
         <!-- Input fields for the yell course -->
         <tr>
             <td><h:outputText value="#{msg.title}"/>:</td>
-            <td><p:inputText required="true" class="border-box-100" value="#{res.title}"/></td>
+            <td><p:inputText required="true" autoResize="false" class="border-box-100" value="#{res.title}"/></td>
         </tr>
         <tr>
             <td><h:outputText value="#{msg.language}"/>:</td>
@@ -38,10 +38,10 @@
         <tr>
             <td><h:outputText value="#{msg.description}"/>:</td>
             <td><p:inputTextarea required="true" value="#{res.description}" rows="4"
-                                 style="overflow-y: scroll; width:100%; box-sizing: border-box;"
                                  class="border-box-100"/>
             </td>
         </tr>
+
     </c:if>
 
     <c:if test="#{userBean.user.organisation.id ne 480}">
@@ -79,8 +79,7 @@
                             <c:if test="#{field.type eq 'INPUT_TEXTAREA'}">
                                 <p:inputTextarea id="input_area_#{field.name}" required="#{field.required}"
                                                  value="#{res.metadataWrapper[field.name]}" title="#{field.info}"
-                                                 rows="4"
-                                                 style="overflow-y: scroll; width:100%; box-sizing: border-box;"
+                                                 rows="4" autoResize="false"
                                                  class="border-box-100"/>
                                 <p:tooltip for="input_area_#{field.name}" showEvent="focus" hideEvent="blur"
                                            position="left" rendered="#{not empty field.info}"/>
@@ -126,4 +125,13 @@
             </tr>
         </c:forEach>
     </c:if>
+
+    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'website' or addResourceBean.resource.type eq 'website'}">
+			<tr>
+	            <td><h:outputText value="#{msg.content}"/>:</td>
+	            <td><p:inputTextarea value="#{res.transcript}" rows="6" class="border-box-100" autoResize="false"/>
+	            </td>
+	        </tr>
+        </ui:fragment>
+
 </ui:composition>

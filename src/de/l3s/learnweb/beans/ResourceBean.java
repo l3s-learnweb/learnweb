@@ -20,6 +20,7 @@ public class ResourceBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = -8834191417574642115L;
     private final static Logger log = Logger.getLogger(ResourceBean.class);
     private int id;
+
     private Resource resource;
     private String tagName;
     private String commentText;
@@ -60,7 +61,7 @@ public class ResourceBean extends ApplicationBean implements Serializable
             		org = getLearnweb().getOrganisationManager().getOrganisationByTitle("Public");
             	    else
             		org = user.getOrganisation();
-            
+
             	    isStarRatingHidden = org.getOption(Option.Resource_Hide_Star_rating);
             	    isThumbRatingHidden = org.getOption(Option.Resource_Hide_Thumb_rating);
             	    */
@@ -97,7 +98,7 @@ public class ResourceBean extends ApplicationBean implements Serializable
             resource.addTag(tagName, getUser());
             addGrowl(FacesMessage.SEVERITY_INFO, "tag_added");
             log(Action.tagging_resource, resource.getGroupId(), resource.getId(), tagName);
-            tagName = ""; // clear tag input field 
+            tagName = ""; // clear tag input field
         }
         catch(Exception e)
         {
