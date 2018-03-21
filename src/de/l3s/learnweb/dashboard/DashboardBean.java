@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.List;
 
@@ -12,7 +13,6 @@ import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.Course;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.dashboard.DashboardManager.GlossaryFieldSummery;
@@ -26,9 +26,9 @@ public class DashboardBean extends ApplicationBean implements Serializable
     private static final String PREFERENCE_STARTDATE = "dashboard_startdate";
     private static final String PREFERENCE_ENDDATE = "dashboard_enddate";
 
-    private Date startDate;
-    private Date endDate;
-    private Course selectedCourse; // the visualized course
+    private Date startDate = Date.from(ZonedDateTime.now().minusMonths(1).toInstant()); // month ago
+    private Date endDate = new Date(); // now    
+
     private Integer selectedUserId = null; // optionally select a single user to display
 
     private List<GlossaryFieldSummery> glossaryFieldSummeryPerUser;
@@ -49,11 +49,9 @@ public class DashboardBean extends ApplicationBean implements Serializable
             startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2017-03-01");
             endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2017-06-01");
 
-            // for now just hard coded to use Francesca's course
-            selectedCourse = getLearnweb().getCourseManager().getCourseById(1245);
-
-            List<Integer> selectedUserIds = selectedCourse.getUserIds();
+            List<Integer> selectedUserIds = getUser().getOrganisation().getUserIds();
             log.debug("users: " + selectedUserIds);
+
             DashboardManager dashboardManager = getLearnweb().getDashboardManager();
 
             glossaryFieldSummeryPerUser = dashboardManager.getGlossaryFieldSummeryPerUser(selectedUserIds, startDate, endDate);

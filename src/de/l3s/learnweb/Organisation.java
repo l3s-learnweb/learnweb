@@ -3,6 +3,7 @@ package de.l3s.learnweb;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -45,7 +46,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
 
     /**
      * Constructs a temporary object. Can be persisted by OrganisationManager.save()
-     * 
+     *
      */
     public Organisation()
     {
@@ -56,7 +57,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
 
     /**
      * This constructor should only be called by OrganisationManager
-     * 
+     *
      * @param rs
      * @throws SQLException
      */
@@ -79,13 +80,35 @@ public class Organisation implements Serializable, Comparable<Organisation>
         createMetadataFields();
     }
 
+    public List<User> getMembers() throws SQLException
+    {
+        return Learnweb.getInstance().getUserManager().getUsersByOrganisationId(id);
+    }
+
+    /**
+     *
+     * @return The userIds of all organization members
+     * @throws SQLException
+     */
+    public List<Integer> getUserIds() throws SQLException
+    {
+        List<User> users = getMembers();
+        List<Integer> userIds = new ArrayList<>(users.size());
+
+        for(User user : users)
+        {
+            userIds.add(user.getId());
+        }
+        return userIds;
+    }
+
     public String getDefaultLanguage()
     {
         return defaultLanguage;
     }
 
     /**
-     * 
+     *
      * @param defaultLanguage Expect NULL or two letter language code
      */
     public void setDefaultLanguage(String defaultLanguage)
@@ -126,7 +149,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
         ResourceMetadataField metadata;
 
         // define optional resource fields for some courses
-        if(id == 480) // YELL 
+        if(id == 480) // YELL
         {
             metadata = new ResourceMetadataField("title", "title", MetadataType.INPUT_TEXT);
             metadata.setRequired(true);
@@ -146,7 +169,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadataFields.add(new ResourceMetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
         }
         /*
-        else if(id == 893 ) // Admin 
+        else if(id == 893 ) // Admin
         {
             metadataFields.add(new ResourceMetadataField("noname", "Topical", MetadataType.FULLWIDTH_HEADER));
             metadataFields.add(new ResourceMetadataField("noname", "Please tell us about the topic of this resource. Edit if necessary.", MetadataType.FULLWIDTH_DESCRIPTION));
@@ -173,7 +196,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
                 public List<String> completeText(String query)
                 {
                     return ResourceMetaDataBean.completeAuthor(query);
-                    /  
+                    /
                     try
                     {
                         return Learnweb.getInstance().getSolrClient().getAutoCompletion("author", query);
@@ -241,7 +264,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadata.getOptions().add("A1");
             metadata.setInfo("");
             metadataFields.add(metadata);
-          
+        
             metadataFields.add(new ResourceMetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
         
         }*/
@@ -269,7 +292,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
 
     /**
      * A negative id indicates, that this object is not stored at the database
-     * 
+     *
      * @return
      */
     public int getId()
@@ -294,7 +317,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
 
     /**
      * This method should only be called by OrganisationManager
-     * 
+     *
      * @param id
      */
     public void setId(int id)
@@ -319,7 +342,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
 
     /**
      * The page that will be displayed after a user logs in
-     * 
+     *
      * @return
      */
     public String getWelcomePage()

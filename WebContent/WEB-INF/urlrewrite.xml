@@ -8,15 +8,21 @@
     http://www.tuckey.org/urlrewrite/
 
 -->
-<urlrewrite>
+<urlrewrite use-query-string="true">
+<!-- 
 	<rule>
 		<from>/new/(.*)</from>
 		<to type="redirect">/$1</to>
 	</rule>
-	
+	 -->
 	<rule>
 		<from>/archive/(.*)</from>
 		<to type="redirect">http://alexandria-project.eu/archivesearch/$1</to>
+	</rule>
+	
+	<rule>
+		<from>/templates/resources/survey.jsf(.*)</from>
+		<to type="redirect">%{context-path}/lw/survey/survey.jsf$1</to>
 	</rule>
 <!--         
     

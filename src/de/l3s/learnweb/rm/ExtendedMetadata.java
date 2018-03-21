@@ -15,14 +15,14 @@ public class ExtendedMetadata implements Serializable
     private List<String> targets;
     private List<String> purposes;
     private List<String> levels;
-    private Map<String, Integer> targetCount = new HashMap();
-    private Map<String, Integer> purposeCount = new HashMap();
-    private Map<String, Integer> levelCount = new HashMap();
+    private Map<String, Integer> targetCount = new HashMap<>();
+    private Map<String, Integer> purposeCount = new HashMap<>();
+    private Map<String, Integer> levelCount = new HashMap<>();
     //private Map<String, Integer> categoryCount = new HashMap();
 
     private String lCount;
     private List<String> p4Count; //reading, writing, listening and speaking only
-    private List<String> pCount; //the rest 
+    private List<String> pCount; //the rest
 
     //aggregated list for search filters
     private List<String> authors;
@@ -115,32 +115,32 @@ public class ExtendedMetadata implements Serializable
         this.levels = levels;
     }
 
-    public Map getTargetCount()
+    public Map<String, Integer> getTargetCount()
     {
         return targetCount;
     }
 
-    public void setTargetCount(Map targetCount)
+    public void setTargetCount(Map<String, Integer> targetCount)
     {
         this.targetCount = targetCount;
     }
 
-    public Map getPurposeCount()
+    public Map<String, Integer> getPurposeCount()
     {
         return purposeCount;
     }
 
-    public void setPurposeCount(Map purposeCount)
+    public void setPurposeCount(Map<String, Integer> purposeCount)
     {
         this.purposeCount = purposeCount;
     }
 
-    public Map getLevelCount()
+    public Map<String, Integer> getLevelCount()
     {
         return levelCount;
     }
 
-    public void setLevelCount(Map levelCount)
+    public void setLevelCount(Map<String, Integer> levelCount)
     {
         this.levelCount = levelCount;
     }

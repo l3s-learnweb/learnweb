@@ -1,13 +1,18 @@
 package de.l3s.learnweb.beans;
 
 import java.io.Serializable;
+import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.RequestScoped;
 import javax.mail.Message;
 import javax.mail.internet.InternetAddress;
+
+import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
@@ -19,6 +24,9 @@ import de.l3s.util.Mail;
 public class PasswordBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 2237249691336567548L;
+    private static final Logger log = Logger.getLogger(PasswordBean.class);
+    // this list contains addresses that did not except the password recovery mail
+    private static Set<String> invalidMailAdresses = new HashSet<>(Arrays.asList("au567200@uni.au.dk", "139272@aulecsit.uniud.it"));
 
     private String email;
 
@@ -26,6 +34,14 @@ public class PasswordBean extends ApplicationBean implements Serializable
     {
         try
         {
+            if(invalidMailAdresses.contains(email))
+            {
+                String mailServer = email.substring(email.indexOf("@") + 1);
+                addMessage(FacesMessage.SEVERITY_ERROR, "The mail server at " + mailServer + " responds that the address " + email + " doesn't exist. Contact our support team to solve this issue: learnweb-support@l3s.de");
+                log.error("Can't send password recovery mail to " + email);
+                return;
+            }
+
             List<User> users = getLearnweb().getUserManager().getUser(email);
 
             if(users.size() == 0)

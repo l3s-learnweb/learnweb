@@ -236,7 +236,7 @@ public class Search
                 {
                     String placeId = soln.get("valUrl1").toString();
                     place = getPlaces(placeId, language);
-                    List<String> places = new ArrayList(Arrays.asList(place.split(", ")));
+                    List<String> places = new ArrayList<>(Arrays.asList(place.split(", ")));
                     if(!propList.containsKey(propUrl1))
                     {
                         propList.put(propUrl1, propLabel);
