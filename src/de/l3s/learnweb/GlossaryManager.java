@@ -23,19 +23,13 @@ public class GlossaryManager
         this.learnweb = learnweb;
     }
 
-    //Insert Italian and Uk terms related to Glossary entry
+    //Insert 1st Language and 2nd Language terms related to Glossary entry
     public void InsertTerms(GlossaryEntry e)
     {
-        String InsertTerms = "INSERT INTO `lw_resource_glossary_terms`(`glossary_id`, `term`, `use`, `pronounciation`, `acronym`, `references`, `phraseology`, `language`, `deleted`, `user_id`) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        //TODO:: change table names
+        String InsertTerms = "INSERT INTO `lw_resource_glossary_terms_copy`(`glossary_id`, `term`, `use`, `pronounciation`, `acronym`, `references`, `phraseology`, `language`, `deleted`, `user_id`) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement preparedStmnt = null;
-        try
-        {
-            preparedStmnt = learnweb.getConnection().prepareStatement(InsertTerms);
-        }
-        catch(SQLException e1)
-        {
-            log.error(e1);
-        }
+
         try
         {
             String[] languagePair = getLanguagePairs(e.getResourceId());
@@ -103,13 +97,11 @@ public class GlossaryManager
 
     public void copyGlossary(int oldResourceId, int newResourceId)
     {
-        String selectOldData = "SELECT * FROM `lw_resource_glossary` WHERE `resource_id`= ?";
-
-        String insertNewData = "INSERT INTO `lw_resource_glossary`(`resource_id`, `topic_1`, `topic_2`, `topic_3`, `description`, `deleted`, `glossary_id`) VALUES ( ?, ?, ?, ?, ?, ?, ?)";
 
         PreparedStatement ps = null;
         try
         {
+            //copy main languages
             String getOldLanguagePair = "SELECT * FROM `lw_resource_glossary_main` WHERE `resource_id`=?";
             ps = learnweb.getConnection().prepareStatement(getOldLanguagePair);
             ps.setInt(1, oldResourceId);
@@ -123,21 +115,65 @@ public class GlossaryManager
                 ps.setString(3, langPair.getString("language_two"));
                 ps.executeUpdate();
             }
-            ps = learnweb.getConnection().prepareStatement(selectOldData);
+            //Get glossary IDs
+            ps = null;
+            ps = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_resource_glossary_copy` WHERE resource_id=?");
             ps.setInt(1, oldResourceId);
-            ResultSet oldData = ps.executeQuery();
-            while(oldData.next())
+            ResultSet oldGlossary = ps.executeQuery();
+            while(oldGlossary.next())
             {
-                ps = learnweb.getConnection().prepareStatement(insertNewData);
-                ps.setInt(1, newResourceId);
-                ps.setString(2, oldData.getString("topic_1"));
-                ps.setString(3, oldData.getString("topic_2"));
-                ps.setString(4, oldData.getString("topic_3"));
-                ps.setString(5, oldData.getString("description"));
-                ps.setInt(6, oldData.getInt("deleted"));
-                ps.setInt(7, oldData.getInt("glossary_id"));
-                ps.executeQuery();
+                //Get glossary details
+                int oldGlossId = oldGlossary.getInt("glossary_id");
+                int newGlossId = 0;
+                ps = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_details` WHERE `glossary_id`=?");
+                ps.setInt(1, oldGlossId);
+                ResultSet oldData = ps.executeQuery();
+                if(oldData.next())
+                {
+                    //insert glossary details
+                    ps = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_details`( `topic_1`, `topic_2`, `topic_3`, `description`) VALUES (?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
 
+                    ps.setString(1, oldData.getString("topic_1"));
+                    ps.setString(2, oldData.getString("topic_2"));
+                    ps.setString(3, oldData.getString("topic_3"));
+                    ps.setString(4, oldData.getString("description"));
+                    ps.executeUpdate();
+                    ResultSet newGlossary = ps.getGeneratedKeys();
+                    newGlossary.next();
+                    newGlossId = newGlossary.getInt(1); //new glossary id for a copied resource
+                    //insert glossary ID and resource ID
+                    ps = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_glossary_copy`(`deleted`, `resource_id`, `glossary_id`) VALUES (?,?,?)");
+                    ps.setBoolean(1, oldGlossary.getBoolean("deleted"));
+                    ps.setInt(2, newResourceId);
+                    ps.setInt(3, newGlossId);
+                    ps.executeUpdate();
+
+                }
+                //insert terms
+                if(newGlossId > 0)
+                {
+                    ps = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_resource_glossary_terms` WHERE `glossary_id`=?");
+                    ps.setInt(1, oldGlossId);
+                    ResultSet terms = ps.executeQuery();
+                    while(terms.next())
+                    {
+                        PreparedStatement preparedStmnt = learnweb.getConnection()
+                                .prepareStatement("INSERT INTO `lw_resource_glossary_terms_copy`(`glossary_id`, `term`, `use`, `pronounciation`, `acronym`, `references`, `phraseology`, `language`, `deleted`, `user_id`) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+                        preparedStmnt.setInt(1, newGlossId);
+                        preparedStmnt.setString(2, terms.getString("term"));
+                        preparedStmnt.setString(3, terms.getString("use"));
+                        preparedStmnt.setString(4, terms.getString("pronounciation"));
+                        preparedStmnt.setString(5, terms.getString("acronym"));
+                        preparedStmnt.setString(6, terms.getString("references"));
+                        preparedStmnt.setString(7, terms.getString("phraseology"));
+                        preparedStmnt.setString(8, terms.getString("language"));
+                        preparedStmnt.setBoolean(9, terms.getBoolean("deleted"));
+                        preparedStmnt.setInt(10, terms.getInt("user_id"));
+                        preparedStmnt.executeQuery();
+
+                    }
+                }
             }
         }
         catch(SQLException e1)
@@ -153,35 +189,33 @@ public class GlossaryManager
         boolean executeResult = true;
         if(e.getGlossaryId() == 0)
         {
-            String glossIdSelect = "SELECT MAX(glossary_id) from lw_resource_glossary";
-            String InsertGlossary = "INSERT INTO `lw_resource_glossary`(`resource_id`, `topic_1`, `topic_2`, `topic_3`, `description`, `deleted`, `glossary_id`) VALUES ( ?, ?, ?, ?, ?, ?, ?)";
 
             PreparedStatement preparedStmnt = null;
 
             try
             {
 
-                preparedStmnt = learnweb.getConnection().prepareStatement(glossIdSelect);
-                ResultSet lastGlossId = preparedStmnt.executeQuery();
-                preparedStmnt = learnweb.getConnection().prepareStatement(InsertGlossary);
+                //TODO:: Change the table names from _copy
+                //Add glossary details and generate glossary ID
+                preparedStmnt = learnweb.getConnection().prepareStatement("INSERT INTO `lw_glossary_details`(`topic_1`, `topic_2`, `topic_3`, `description`) VALUES (?,?,?,?)", PreparedStatement.RETURN_GENERATED_KEYS);
+                preparedStmnt.setString(1, e.getSelectedTopicOne());
+                preparedStmnt.setString(2, e.getSelectedTopicTwo());
+                preparedStmnt.setString(3, e.getSelectedTopicThree());
+                preparedStmnt.setString(4, e.getDescription());
+                preparedStmnt.executeUpdate();
+                ResultSet glossEntry = preparedStmnt.getGeneratedKeys();
+                glossEntry.next();
+                e.setGlossaryId(glossEntry.getInt(1));
 
+                //Add glossary ID and resource ID
+                preparedStmnt = learnweb.getConnection().prepareStatement("INSERT INTO `lw_resource_glossary_copy`( `resource_id`, `glossary_id`) VALUES (?, ?)");
                 preparedStmnt.setInt(1, e.getResourceId());
-                preparedStmnt.setString(2, e.getSelectedTopicOne());
-                preparedStmnt.setString(3, e.getSelectedTopicTwo());
-                preparedStmnt.setString(4, e.getSelectedTopicThree());
-                preparedStmnt.setString(5, e.getDescription());
-                preparedStmnt.setInt(6, 0);
+                preparedStmnt.setInt(2, e.getGlossaryId());
+                preparedStmnt.executeQuery();
 
-                /*ResultSet keys = preparedStmnt.getGeneratedKeys();
-                keys.next();*/
-                if(lastGlossId.next())
-                {
-                    int glossaryId = lastGlossId.getInt("MAX(glossary_id)") + 1;
-                    preparedStmnt.setInt(7, glossaryId);
-                    preparedStmnt.executeQuery();
-                    e.setGlossaryId(glossaryId);
-                    InsertTerms(e);
-                }
+                //Insert terms
+                InsertTerms(e);
+
             }
             catch(SQLException e1)
             {
@@ -189,16 +223,13 @@ public class GlossaryManager
                 log.error("Error in adding glossary entry for resource id: " + e.getResourceId(), e1);
             }
 
-            //            ResourcePreviewMaker rpm = learnweb.getResourcePreviewMaker();
-            //SolrClient solr = learnweb.getSolrClient();
-
             return executeResult;
 
         }
         else if(e.getGlossaryId() > 0)
         {
             int glossIden = e.getGlossaryId();
-            String updateStmnt = "UPDATE `lw_resource_glossary` SET `topic_1`= ? ,`topic_2`= ?,`topic_3`= ?,`description`= ? WHERE glossary_id = " + Integer.toString(glossIden);
+            String updateStmnt = "UPDATE `lw_glossary_details` SET `topic_1`= ? ,`topic_2`= ?,`topic_3`= ?,`description`= ? WHERE glossary_id = " + Integer.toString(glossIden);
             try
             {
                 PreparedStatement pstmnt = learnweb.getConnection().prepareStatement(updateStmnt);
@@ -207,13 +238,12 @@ public class GlossaryManager
                 pstmnt.setString(3, e.getSelectedTopicThree());
                 pstmnt.setString(4, e.getDescription());
                 pstmnt.executeQuery();
-                String deleteTerms = "SELECT glossary_term_id FROM lw_resource_glossary_terms WHERE glossary_id = " + Integer.toString(glossIden);
-                String updateTerms = "UPDATE `lw_resource_glossary_terms` SET `term`= ? ,`use`= ? ,`pronounciation`= ? ,`acronym`= ? ,`references`= ? ,`phraseology`= ? ,`language`= ?  WHERE `glossary_term_id` = ?";
+
                 List<LanguageItem> newUkItems = new ArrayList<LanguageItem>(e.getFirstLanguageItems());
 
                 List<LanguageItem> newItItems = new ArrayList<LanguageItem>(e.getSecondLanguageItems());
                 pstmnt = null;
-                pstmnt = learnweb.getConnection().prepareStatement(deleteTerms);
+                pstmnt = learnweb.getConnection().prepareStatement("SELECT glossary_term_id FROM lw_resource_glossary_terms_copy WHERE glossary_id = " + Integer.toString(glossIden));
                 ResultSet rs = pstmnt.executeQuery();
                 while(rs.next())
                 {
@@ -239,7 +269,7 @@ public class GlossaryManager
                     }
                     if(deleteTerm != true)
                     {
-                        String delete = "UPDATE `lw_resource_glossary_terms` SET `deleted`= ? WHERE glossary_term_id = ? ";
+                        String delete = "UPDATE `lw_resource_glossary_terms_copy` SET `deleted`= ? WHERE glossary_term_id = ? ";
 
                         PreparedStatement pd = learnweb.getConnection().prepareStatement(delete);
                         pd.setInt(1, 1);
@@ -253,7 +283,7 @@ public class GlossaryManager
                     PreparedStatement preparedStmnt = null;
                     if(u.getTermId() > 0)
                     {
-                        preparedStmnt = learnweb.getConnection().prepareStatement(updateTerms);
+                        preparedStmnt = learnweb.getConnection().prepareStatement("UPDATE `lw_resource_glossary_terms_copy` SET `term`= ? ,`use`= ? ,`pronounciation`= ? ,`acronym`= ? ,`references`= ? ,`phraseology`= ? ,`language`= ?  WHERE `glossary_term_id` = ?");
 
                         preparedStmnt.setString(1, u.getValue());
                         String use = String.join(", ", u.getSelectedUses());
@@ -276,7 +306,7 @@ public class GlossaryManager
                     PreparedStatement preparedStmnt = null;
                     if(u.getTermId() > 0)
                     {
-                        preparedStmnt = learnweb.getConnection().prepareStatement(updateTerms);
+                        preparedStmnt = learnweb.getConnection().prepareStatement("UPDATE `lw_resource_glossary_terms_copy` SET `term`= ? ,`use`= ? ,`pronounciation`= ? ,`acronym`= ? ,`references`= ? ,`phraseology`= ? ,`language`= ?  WHERE `glossary_term_id` = ?");
 
                         preparedStmnt.setString(1, u.getValue());
                         String use = String.join(", ", u.getSelectedUses());
@@ -311,8 +341,9 @@ public class GlossaryManager
 
     public int getEntryCount(int resourceId)
     {
+        //TODO:: change table name
         int entryCount = 0;
-        String getCount = "SELECT count(*) as entry FROM `lw_resource_glossary` WHERE `resource_id`=? and deleted=0";
+        String getCount = "SELECT count(*) as entry FROM `lw_resource_glossary_copy` WHERE `resource_id`=? and deleted=0";
         try
         {
             PreparedStatement ps = learnweb.getConnection().prepareStatement(getCount);
@@ -331,8 +362,9 @@ public class GlossaryManager
 
     public void deleteFromDb(int glossId)
     {
-        String deleteTerms = "UPDATE `lw_resource_glossary_terms` SET `deleted`= ? WHERE glossary_id = ? ";
-        String deleteGlossItem = "UPDATE `lw_resource_glossary` SET `deleted`= ? WHERE glossary_id = ? ";
+        //TODO:: change table names
+        String deleteTerms = "UPDATE `lw_resource_glossary_terms_copy` SET `deleted`= ? WHERE glossary_id = ? ";
+        String deleteGlossItem = "UPDATE `lw_resource_glossary_copy` SET `deleted`= ? WHERE glossary_id = ? ";
 
         try
         {
@@ -385,10 +417,9 @@ public class GlossaryManager
     {
         List<GlossaryItems> items = new ArrayList<GlossaryItems>();
 
-        String mainDetails = "SELECT * FROM `lw_resource_glossary` WHERE `resource_id` = ? AND `deleted`= ?";
-        String termDetails = "SELECT * FROM `lw_resource_glossary_terms` WHERE `glossary_id` = ? AND `deleted`= ? order by(`language`)";
+        //TODO:: change db names
         PreparedStatement preparedStmnt = null;
-        ResultSet result = null;
+        ResultSet resultID = null;
         String primaryLanguage = "";
         String secondaryLanguage = "";
 
@@ -398,32 +429,37 @@ public class GlossaryManager
 
             primaryLanguage = langPair[0];
             secondaryLanguage = langPair[1];
-
+            String mainDetails = "SELECT * FROM `lw_resource_glossary_copy` WHERE `resource_id` = ? AND `deleted`= ?";
             preparedStmnt = learnweb.getConnection().prepareStatement(mainDetails);
             preparedStmnt.setInt(1, id);
             preparedStmnt.setInt(2, 0);
-            result = preparedStmnt.executeQuery();
+            resultID = preparedStmnt.executeQuery();
 
-            while(result.next())
+            while(resultID.next())
             {
 
                 List<LanguageItem> finalList = new ArrayList<LanguageItem>();
 
-                int glossaryId = result.getInt("glossary_id");
-                PreparedStatement ps = learnweb.getConnection().prepareStatement(termDetails);
+                int glossaryId = resultID.getInt("glossary_id");
+                //get Glossary details
+                PreparedStatement pstmnt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_details` WHERE `glossary_id`=?");
+                pstmnt.setInt(1, glossaryId);
+                ResultSet result = pstmnt.executeQuery();
+                result.next();
+                //fetch terms
+                PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_resource_glossary_terms_copy` WHERE `glossary_id` = ? AND `deleted`= ? order by(`language`)");
                 ps.setInt(1, glossaryId);
                 ps.setInt(2, 0);
                 ResultSet termResults = ps.executeQuery();
-                ResultSet termTime = ps.executeQuery();
-                Timestamp latestTimestamp = getLatestTimestamp(glossaryId, result.getTimestamp("timestamp"), termTime);
+                ResultSet termTime = ps.executeQuery(); //for timestamp
+                Timestamp latestTimestamp = getLatestTimestamp(glossaryId, resultID.getTimestamp("timestamp"), termTime);
                 String primaryLangTerm = null;
                 while(termResults.next())
                 {
 
                     GlossaryItems gloss = new GlossaryItems();
 
-                    gloss.setGlossId(result.getInt("glossary_id"));
-                    gloss.setGlossIdString("_" + Integer.toString(result.getInt("glossary_id")));
+                    gloss.setGlossId(glossaryId);
 
                     gloss.setTopic_1(result.getString("topic_1"));
                     gloss.setTopic_2(result.getString("topic_2"));

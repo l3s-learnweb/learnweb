@@ -18,7 +18,6 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.primefaces.model.UploadedFile;
 
 import de.l3s.glossary.GlossaryItems;
 import de.l3s.glossary.LanguageItem;
@@ -49,8 +48,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private List<SelectItem> availableTopicThrees = new ArrayList<SelectItem>();
     private String valueHeaderIt;
     private int count;
-    private int glossaryEntryCount;
-    private UploadedFile multimediaFile;
     private int userId;
     private LANGUAGE primaryLanguage;
     private LANGUAGE secondaryLanguage;
@@ -59,9 +56,9 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private int glossaryId;
     private List<GlossaryItems> items = new ArrayList<GlossaryItems>();
     private List<GlossaryItems> filteredItems = new ArrayList<GlossaryItems>();
-    private int numberOfEntries;
-
     private GlossaryItems selectedGlossaryItem;
+
+    private int glossaryEntryCount;
 
     public void preRenderView()
     {
@@ -259,7 +256,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
             context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Please enter atleast one valid entry for both language terms", ""));
             context.getExternalContext().getFlash().setKeepMessages(true);
-            return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
+            return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=false";
         }
 
     }
@@ -279,8 +276,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         return "/lw/showGlossary.jsf?resource_id=" + Integer.toString(getResourceId()) + "&faces-redirect=true";
     }
 
-    // TODO rename
-    public void addIt()
+    public void addSecondLanguageItem()
     {
         secondaryLangItems.add(new LanguageItem());
         count++;
@@ -289,8 +285,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         log(Action.glossary_term_add, groupId, resourceId);
     }
 
-    // TODO rename
-    public void removeIt(LanguageItem item)
+    public void removeSecondLanguageItem(LanguageItem item)
     {
         try
         {
@@ -298,7 +293,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             boolean remove = false;
             for(LanguageItem i : iItems)
             {
-                if(!i.getValue().isEmpty())
+                if(i.getValue() != null && !i.getValue().isEmpty())
                     if(iItems.size() > 1)
                         remove = true;
             }
@@ -310,7 +305,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             }
             else
             {
-                addMessage(FacesMessage.SEVERITY_ERROR, "You need atleast one entry of Second Language Terms");
+                FacesContext context = FacesContext.getCurrentInstance();
+
+                context.addMessage(null, new FacesMessage(FacesMessage.SEVERITY_ERROR, "Error!", "You need atleast one entry of Second Language Terms"));
+
             }
         }
         catch(Exception e)
@@ -319,8 +317,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
-    // TODO rename
-    public void removeUk(LanguageItem item)
+    public void removeFirstLanguageItem(LanguageItem item)
     {
         try
         {
@@ -328,7 +325,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             boolean remove = false;
             for(LanguageItem u : primaryItems)
             {
-                if(!u.getValue().isEmpty())
+
+                if(u.getValue() != null && !u.getValue().isEmpty())
                     if(primaryItems.size() > 1)
                         remove = true;
             }
@@ -351,8 +349,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         }
     }
 
-    // TODO rename
-    public void addUk()
+    public void addFirstLanguageItem()
     {
         try
         {
@@ -597,16 +594,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         this.fileName = fileName;
     }
 
-    public UploadedFile getMultimediaFile()
-    {
-        return multimediaFile;
-    }
-
-    public void setMultimediaFile(UploadedFile multimediaFile)
-    {
-        this.multimediaFile = multimediaFile;
-    }
-
     public int getUserId()
     {
         return userId;
@@ -684,16 +671,6 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         this.filteredItems = filteredItems;
     }
 
-    public int getNumberOfEntries()
-    {
-        return numberOfEntries;
-    }
-
-    public int getGlossaryEntryCount()
-    {
-        return glossaryEntryCount;
-    }
-
     public LANGUAGE getPrimaryLanguage()
     {
         return primaryLanguage;
@@ -722,6 +699,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public void setDeleted(boolean deleted)
     {
         this.deleted = deleted;
+    }
+
+    public int getGlossaryEntryCount()
+    {
+        return glossaryEntryCount;
     }
 
 }

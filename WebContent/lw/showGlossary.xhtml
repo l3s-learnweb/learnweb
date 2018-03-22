@@ -209,10 +209,12 @@
 
 						<p:column headerText="#{msg['Glossary.term']}">
 
-							<p:inputText id="termuk" value='#{item.value}' style="width: 90%" />
+							<p:inputText id="termuk" value='#{item.value}' style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="Can not be empty"/>
+							<p:message for="termuk" />
 							<!-- <f:validator validatorId="termCountValidation"></f:validator>
 						<f:attribute name="confirmCount" value=#{confirmCount}></f:attribute> -->
 						</p:column>
+						
 						<p:column headerText="#{msg['Glossary.use']}"
 							style="text-align: center">
 							<p:selectCheckboxMenu id="use" value="#{item.selectedUses}"
@@ -264,8 +266,9 @@
 						</p:column>
 						<p:column width="10">
 							<p:commandLink id="deleteUk"
-								actionListener="#{glossaryBean.removeUk(item)}"
-								update=":glossgrowl :uk_terms">
+								actionListener="#{glossaryBean.removeFirstLanguageItem(item)}"
+								update=":glossgrowl :uk_terms"
+								 >
 								<f:ajax execute="uk_terms" />
 								<h:graphicImage value="/resources/icon/silk/delete.png"
 									width="16" height="16" alt="#{msg.delete}" />
@@ -276,7 +279,7 @@
 					</p:dataTable>
 					<br />
 					<p:commandButton value="#{msg['Glossary.add_synonym']}"
-						actionListener="#{glossaryBean.addUk}" styleClass="greenbutton"
+						actionListener="#{glossaryBean.addFirstLanguageItem}" styleClass="greenbutton"
 						update=":glossary_add :uk_terms">
 						<f:ajax execute="@this uk_terms" />
 					</p:commandButton>
@@ -292,7 +295,8 @@
 
 						<p:column headerText="#{msg['Glossary.term']}">
 
-							<p:inputText id="termIt" value='#{item.value}' style="width: 90%" />
+							<p:inputText id="termIt" value='#{item.value}' style="width: 90%"  required="#{not empty param[save.clientId]}" requiredMessage="Can not be empty"/>
+							<p:message for="termIt" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.use']}"
 							style="text-align: center"> 
@@ -344,8 +348,8 @@
 						</p:column>
 						<p:column width="10">
 							<p:commandLink id="deleteIt"
-								actionListener="#{glossaryBean.removeIt(item)}"
-								update=":glossgrowl :italian_terms">
+								actionListener="#{glossaryBean.removeSecondLanguageItem(item)}"
+								update=":glossgrowl :italian_terms" >
 								<f:ajax execute="italian_terms" />
 								<h:graphicImage value="/resources/icon/silk/delete.png"
 									width="16" height="16" alt="#{msg.delete}" />
@@ -356,7 +360,7 @@
 					</p:dataTable>
 					<br />
 					<p:commandButton value="#{msg['Glossary.add_synonym']}"
-						actionListener="#{glossaryBean.addIt}" styleClass="greenbutton "
+						actionListener="#{glossaryBean.addSecondLanguageItem}" styleClass="greenbutton "
 						style="margin: 0 auto;" update=":glossary_add :italian_terms">
 						<f:ajax execute="@this italian_terms" />
 					</p:commandButton>
@@ -368,7 +372,8 @@
 
 					<p:commandButton id="save" value="#{msg.save}"
 						action="#{glossaryBean.upload()}"
-						styleClass="greenbutton resource_button" update=":glossary_add">
+						styleClass="greenbutton resource_button" update=":glossary_add"
+						binding="#{save}">
 						<f:ajax execute="@form" />
 						
 

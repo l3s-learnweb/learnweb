@@ -22,7 +22,7 @@ public class GlossaryItems implements Serializable
     private de.l3s.glossary.LanguageItem.LANGUAGE secondaryLanguage;
 
     private String value;
-    private String glossIdString;
+
     private String pronounciation;
     private String acronym;
     private String references;
@@ -171,17 +171,6 @@ public class GlossaryItems implements Serializable
     public void setTermId(int termId)
     {
         this.termId = termId;
-    }
-
-    // TODO remove
-    public String getGlossIdString()
-    {
-        return glossIdString;
-    }
-
-    public void setGlossIdString(String glossIdString)
-    {
-        this.glossIdString = glossIdString;
     }
 
     public Timestamp getDate()
