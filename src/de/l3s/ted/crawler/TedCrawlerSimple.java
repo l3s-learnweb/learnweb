@@ -134,7 +134,7 @@ public class TedCrawlerSimple implements Runnable
         }
         catch(IOException e)
         {
-            log.error("Error while fetching transcript (" + language + ") for ted talk: " + resourceId, e);
+            log.warn("Error while fetching transcript (" + language + ") for ted talk: " + resourceId, e);
         }
         catch(ParseException e)
         {
@@ -226,13 +226,13 @@ public class TedCrawlerSimple implements Runnable
             {
                 r.setTitle(title);
                 r.setDescription(description);
-                r.setUrl("http://www.ted.com/talks/" + slug);
+                r.setUrl("http://www.ted.com/talks/" + slugFromCrawl);
                 r.save();
 
                 PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("UPDATE `ted_video` SET `title` = ?, description = ?, slug = ? WHERE `resource_id` = ?");
                 pStmt.setString(1, title);
                 pStmt.setString(2, description);
-                pStmt.setString(3, slug);
+                pStmt.setString(3, slugFromCrawl);
                 pStmt.setInt(4, resourceId);
                 int dbReturnVal = pStmt.executeUpdate();
                 if(dbReturnVal == 1)
@@ -242,7 +242,7 @@ public class TedCrawlerSimple implements Runnable
         }
         catch(SQLException e)
         {
-            log.error("Error while fetching existing resource: " + resourceId, e);
+            log.error("Error while updating existing resource: " + resourceId, e);
         }
     }
 
@@ -308,6 +308,12 @@ public class TedCrawlerSimple implements Runnable
                 resourceId = checkTEDIdExists(Integer.parseInt(tedId));
             }
 
+            Element titleEl = doc.select("meta[name=title]").first();
+            title = titleEl.attr("content");
+
+            Element descriptionEl = doc.select("meta[name=description]").first();
+            description = descriptionEl.attr("content");
+
             //if the videos are new, crawl for the basic attributes such as title, speaker, transcripts
             if(resourceId == -1)
             {
@@ -317,8 +323,6 @@ public class TedCrawlerSimple implements Runnable
                 String totalViews = totalviewsEl.attr("content");
                 log.info("total views: " + totalViews);
 
-                Element titleEl = doc.select("meta[name=title]").first();
-                title = titleEl.attr("content");
                 log.info("title: " + title);
 
                 //Element keywordsEl = doc.select("meta[name=keywords]").first();
@@ -336,9 +340,6 @@ public class TedCrawlerSimple implements Runnable
                 int imageWidth = Integer.parseInt(imageWidthElement.attr("content"));
 
                 log.info("Image height: " + imageHeight + "; Image width: " + imageWidth);
-
-                Element descriptionEl = doc.select("meta[name=description]").first(); //can use meta tag "description" instead
-                description = descriptionEl.attr("content");
 
                 Element durationEl = doc.select("meta[property=og:video:duration]").first();
                 int duration = (int) Float.parseFloat(durationEl.attr("content"));
