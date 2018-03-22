@@ -152,7 +152,7 @@ public class GlossaryManager
                 //insert terms
                 if(newGlossId > 0)
                 {
-                    ps = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_resource_glossary_terms` WHERE `glossary_id`=?");
+                    ps = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_resource_glossary_terms_copy` WHERE `glossary_id`=?");
                     ps.setInt(1, oldGlossId);
                     ResultSet terms = ps.executeQuery();
                     while(terms.next())
