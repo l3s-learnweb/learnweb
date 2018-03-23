@@ -133,14 +133,14 @@ public class Search implements Serializable
             log.fatal("error during search", e);
         }
 
-        logResources(resources);
+        logResources(resources, page);
 
         return newResources;
     }
 
     /**
      * Load resources from SOLR
-     * 
+     *
      * @param page
      * @return
      * @throws SQLException
@@ -225,7 +225,7 @@ public class Search implements Serializable
 
             if(resource.getId() > 0 && resource.getGroupId() == 0 && resource.getUserId() != userId)
             {
-                // the resource is stored in learnweb, belongs to no group and the current user is not the owner 
+                // the resource is stored in learnweb, belongs to no group and the current user is not the owner
                 // of the resource. So he is not allowed to view the resource
                 privateResourceCount++;
                 continue;
@@ -415,7 +415,7 @@ public class Search implements Serializable
     }
 
     /**
-     * 
+     *
      * @return All resources that have been loaded until now. So you have to use get getResourcesByPage first
      */
     public LinkedList<ResourceDecorator> getResources()
@@ -456,7 +456,7 @@ public class Search implements Serializable
 
     /**
      * May return null.
-     * 
+     *
      * @param page
      * @return
      */
@@ -585,7 +585,7 @@ public class Search implements Serializable
     }
 
     /**
-     * 
+     *
      * @return Unique id is generated when the query has been logged by logQuery()
      */
     public int getId()
@@ -606,7 +606,7 @@ public class Search implements Serializable
         return searchLogger;
     }
 
-    private void logResources(List<ResourceDecorator> resources)
+    private void logResources(List<ResourceDecorator> resources, int pageId)
     {
         /*if(searchId > 0) // log resources only when the logQuery() was called before; This isn't the case on the group search page
             getSearchLogger().logResources(searchId, resources);*/
@@ -614,10 +614,9 @@ public class Search implements Serializable
         //call the method to fetch the html of the logged resources
         //only if search_mode='text' and userId is admin/specificUser
         if(searchId > 0 && configMode.equals(MODE.text) && logHTML)
-            getSearchLogger().logResources(searchId, resources, true);
+            getSearchLogger().logResources(searchId, resources, true, pageId);
         else if(searchId > 0)
-            getSearchLogger().logResources(searchId, resources, false);
-
+            getSearchLogger().logResources(searchId, resources, false, pageId);
     }
 
     public void logResourceClicked(int rank, User user)
@@ -626,7 +625,7 @@ public class Search implements Serializable
     }
 
     /**
-     * 
+     *
      * @param searchId
      * @param rank
      * @param user
