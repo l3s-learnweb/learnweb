@@ -17,6 +17,8 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import org.jsoup.Connection.Response;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -286,9 +288,12 @@ public class TedCrawlerSimple implements Runnable
             log.error("Error while checking if ted video exists for slug: " + slug, e);
         }
 
+        Response response = null;
+
         try
         {
-            Document doc = Jsoup.parse(new URL(url), 10000);
+            response = Jsoup.connect(url).timeout(10000).execute();
+            Document doc = response.parse();//Jsoup.parse(new URL(url), 10000);
 
             //Since there is no explicit meta property for ted id, it is extracted like below in order to be able to get transcripts
             Element iosURLEl = doc.select("meta[property=al:ios:url]").first();
@@ -299,8 +304,6 @@ public class TedCrawlerSimple implements Runnable
             }
             else
                 return; //Few TED talks have broken links and it redirects it to the homepage
-
-            log.info("ted id: " + tedId);
 
             //Checking again if TED video exists since sometimes the slug of an existing video can change
             if(resourceId == -1)
@@ -318,6 +321,7 @@ public class TedCrawlerSimple implements Runnable
             if(resourceId == -1)
             {
                 log.info("Crawling new ted talk: " + slug);
+                log.info("ted id: " + tedId);
 
                 Element totalviewsEl = doc.select("meta[itemprop=interactionCount]").first();
                 String totalViews = totalviewsEl.attr("content");
@@ -435,11 +439,18 @@ public class TedCrawlerSimple implements Runnable
                     languageSet.removeAll(languageListfromDatabase);
                     for(String langCode : languageSet)
                     {
-                        log.info("resource id: " + resourceId + "; language code: " + langCode);
+                        log.info("inserting transcript for resource id: " + resourceId + "; language code: " + langCode);
                         extractTranscript(tedId, resourceId, langCode);
                     }
                 }
             }
+        }
+        catch(HttpStatusException e)
+        {
+            if(response != null && (response.statusCode() / 100 == 5))
+                log.warn("Http exception while fetching page: " + slug, e);
+            else if(response != null)
+                log.error("Http exception other than service unavailable while fetching page: " + slug, e);
         }
         catch(IOException e)
         {
