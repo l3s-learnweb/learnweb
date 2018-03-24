@@ -291,12 +291,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             List<LanguageItem> iItems = new ArrayList<LanguageItem>(secondaryLangItems);
             boolean remove = false;
-            for(LanguageItem i : iItems)
-            {
-                if(i.getValue() != null && !i.getValue().isEmpty())
-                    if(iItems.size() > 1)
-                        remove = true;
-            }
+
+            if(iItems.size() > 1)
+                remove = true;
+
             if(remove)
             {
                 secondaryLangItems.remove(item);
@@ -323,13 +321,10 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         {
             List<LanguageItem> primaryItems = new ArrayList<LanguageItem>(primaryLangItems);
             boolean remove = false;
-            for(LanguageItem u : primaryItems)
-            {
 
-                if(u.getValue() != null && !u.getValue().isEmpty())
-                    if(primaryItems.size() > 1)
-                        remove = true;
-            }
+            if(primaryItems.size() > 1)
+                remove = true;
+
             if(remove)
             {
                 primaryLangItems.remove(item);

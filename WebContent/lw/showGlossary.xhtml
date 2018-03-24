@@ -209,7 +209,7 @@
 
 						<p:column headerText="#{msg['Glossary.term']}">
 
-							<p:inputText id="termuk" value='#{item.value}' style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="Can not be empty"/>
+							<p:inputText id="termuk" value='#{item.value}' style="width: 90%" required="#{not empty param[save.clientId]}" requiredMessage="#{msg.mandatory_field}"/>
 							<p:message for="termuk" />
 							<!-- <f:validator validatorId="termCountValidation"></f:validator>
 						<f:attribute name="confirmCount" value=#{confirmCount}></f:attribute> -->
@@ -295,7 +295,7 @@
 
 						<p:column headerText="#{msg['Glossary.term']}">
 
-							<p:inputText id="termIt" value='#{item.value}' style="width: 90%"  required="#{not empty param[save.clientId]}" requiredMessage="Can not be empty"/>
+							<p:inputText id="termIt" value='#{item.value}' style="width: 90%"  required="#{not empty param[save.clientId]}" requiredMessage="#{msg.mandatory_field}"/>
 							<p:message for="termIt" />
 						</p:column>
 						<p:column headerText="#{msg['Glossary.use']}"

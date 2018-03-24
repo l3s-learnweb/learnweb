@@ -115,10 +115,10 @@ public class SurveyBean extends ApplicationBean implements Serializable
             organizationId = sv.getOrganizationId();
             Long currentDate = new Date().getTime();
             if((sv.isSubmitted() && !editable) || (sv.isSubmitted() && editable && (sv.getEnd() == null) || currentDate > sv.getEnd().getTime()))
-                addGrowl(FacesMessage.SEVERITY_ERROR, "You have already submitted the form.");
+                addGrowl(FacesMessage.SEVERITY_ERROR, "survey_submit_error");
             else
             {
-                addGrowl(FacesMessage.SEVERITY_WARN, "You have already submitted the form. You can edit until " + sv.getEnd());
+                addGrowl(FacesMessage.SEVERITY_WARN, "survey_submit_edit", sv.getEnd());
             }
 
         }
@@ -175,11 +175,11 @@ public class SurveyBean extends ApplicationBean implements Serializable
             update = false;
         if(!sv.isSubmitted())
         {
-            addGrowl(FacesMessage.SEVERITY_INFO, "Successful Submit");
+            addGrowl(FacesMessage.SEVERITY_INFO, "submit_survey");
             sv.isSubmitted();
         }
         else if(sv.isSubmitted() && !update && !editable)
-            addGrowl(FacesMessage.SEVERITY_ERROR, "You have submitted the form previously.");
+            addGrowl(FacesMessage.SEVERITY_ERROR, "survey_submit_error");
 
     }
 
