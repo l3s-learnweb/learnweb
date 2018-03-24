@@ -2,6 +2,7 @@ package de.l3s.learnweb.beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import javax.annotation.PostConstruct;
@@ -28,7 +29,14 @@ public class SurveyBean extends ApplicationBean implements Serializable
     private int organizationId;
     private boolean submitted;
     private boolean update;
+    private boolean editable;
+    private boolean validDates;
+
     private Survey sv = new Survey();
+
+    private HashMap<String, String> wrappedAnswers = new HashMap<String, String>();
+    private HashMap<String, String[]> wrappedMultipleAnswers = new HashMap<String, String[]>();
+    private ArrayList<SurveyMetaDataFields> questions = new ArrayList<SurveyMetaDataFields>();
 
     public Survey getSv()
     {
@@ -39,11 +47,6 @@ public class SurveyBean extends ApplicationBean implements Serializable
     {
         this.sv = sv;
     }
-
-    private HashMap<String, String> wrappedAnswers = new HashMap<String, String>();
-
-    private HashMap<String, String[]> wrappedMultipleAnswers = new HashMap<String, String[]>();
-    private ArrayList<SurveyMetaDataFields> questions = new ArrayList<SurveyMetaDataFields>();
 
     public SurveyBean()
     {
@@ -106,12 +109,17 @@ public class SurveyBean extends ApplicationBean implements Serializable
             sv = sm.getFormQuestions(resourceId, user.getId());
             submitted = sv.isSubmitted();
             questions = sv.getFormQuestions();
-
+            editable = sm.checkIfEditable(resourceId);
             surveyTitle = sv.getSurveyTitle();
             description = sv.getDescription();
             organizationId = sv.getOrganizationId();
-            if(sv.isSubmitted())
-                addGrowl(FacesMessage.SEVERITY_ERROR, "You have submitted the form previously. You can only submit once.");
+            Long currentDate = new Date().getTime();
+            if((sv.isSubmitted() && !editable) || (sv.isSubmitted() && editable && (sv.getEnd() == null) || currentDate > sv.getEnd().getTime()))
+                addGrowl(FacesMessage.SEVERITY_ERROR, "You have already submitted the form.");
+            else
+            {
+                addGrowl(FacesMessage.SEVERITY_WARN, "You have already submitted the form. You can edit until " + sv.getEnd());
+            }
 
         }
         catch(Exception e)
@@ -170,8 +178,8 @@ public class SurveyBean extends ApplicationBean implements Serializable
             addGrowl(FacesMessage.SEVERITY_INFO, "Successful Submit");
             sv.isSubmitted();
         }
-        else if(sv.isSubmitted() && !update)
-            addGrowl(FacesMessage.SEVERITY_ERROR, "You have submitted the form previously. You can only submit once.");
+        else if(sv.isSubmitted() && !update && !editable)
+            addGrowl(FacesMessage.SEVERITY_ERROR, "You have submitted the form previously.");
 
     }
 
@@ -264,4 +272,39 @@ public class SurveyBean extends ApplicationBean implements Serializable
     {
         this.update = update;
     }
+
+    public boolean isEditable()
+    {
+        return editable;
+    }
+
+    public void setEditable(boolean editable)
+    {
+        this.editable = editable;
+    }
+
+    public boolean isValidDates()
+    {
+        Long currentDate = new Date().getTime();
+        if(sv.getStart() == null && sv.getEnd() == null)
+        {
+            // Both Dates not set
+            return true;
+        }
+        else if(sv.getStart() != null && sv.getEnd() != null) //Both dates are set
+            return (sv.getStart().getTime() <= currentDate && sv.getEnd().getTime() >= currentDate ? true : false);
+        else if(sv.getStart() != null && sv.getStart().getTime() <= currentDate)
+            return true;
+        else if(sv.getEnd() != null && sv.getEnd().getTime() >= currentDate)
+            return true;
+        else
+            return false;
+
+    }
+
+    public void setValidDates(boolean validDates)
+    {
+        this.validDates = validDates;
+    }
+
 }

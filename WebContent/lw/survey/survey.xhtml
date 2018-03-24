@@ -25,7 +25,7 @@
 					globalOnly="true" showDetail="true"></p:growl>
 				<ui:fragment rendered="#{surveyBean.resourceId gt 0}">
 					<ui:fragment
-						rendered="#{userBean.user.organisation.id eq surveyBean.organizationId or surveyBean.organizationId eq 0}">
+						rendered="#{(userBean.user.organisation.id eq surveyBean.organizationId or surveyBean.organizationId eq 0) and surveyBean.validDates}">
 						<div class="headings">
 							<br />
 							<h:outputText value="#{surveyBean.description}"
@@ -171,7 +171,7 @@
 						</p:commandButton>
 						<p:commandButton widgetVar="editSub" id="edit" 
 						value="Edit Submission" 
-						rendered="#{surveyBean.submitted eq true and userBean.moderator eq true}"
+						rendered="#{surveyBean.submitted eq true and surveyBean.editable eq true}"
 						style="float:left;margin-left:5px" styleClass="greenbutton resource_button" 
 						action="#{surveyBean.getSurvey(userBean.user.id)}"
 						update=":panel :submit @this" 

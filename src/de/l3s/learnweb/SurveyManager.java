@@ -194,8 +194,8 @@ public class SurveyManager
         if(rs.next())
         {
 
-            //  start = rs.getDate("open_date");
-            // end = rs.getDate("close_date");
+            survey.setEnd(rs.getDate("close_date"));
+            survey.setStart(rs.getDate("open_date"));
             survey.setSurveyId(rs.getInt("survey_id"));
 
         }
@@ -296,19 +296,19 @@ public class SurveyManager
          *
          *
         String getSurveyId = "SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?";
-
+        
         ps = learnweb.getConnection().prepareStatement(getSurveyId);
-
+        
         ps.setInt(1, resource_id);
-
+        
         rs = ps.executeQuery();
-
+        
         if(rs.next())
         {
-
+        
             //  start = rs.getDate("open_date");
             // end = rs.getDate("close_date");
-
+        
         }
         */
 
@@ -577,6 +577,38 @@ public class SurveyManager
 
         }
         return users;
+    }
+
+    public boolean checkIfEditable(int resourceId) throws SQLException
+    {
+        boolean editable = false;
+        PreparedStatement editStmnt = learnweb.getConnection().prepareStatement("SELECT `editable` FROM `lw_survey_resource` WHERE `resource_id`=?");
+        editStmnt.setInt(1, resourceId);
+        ResultSet result = editStmnt.executeQuery();
+        result.next();
+        editable = result.getBoolean("editable");
+        //check if any other resource id is set editable of same survey in the course
+        if(editable == false)
+        {
+            HashSet<Integer> otherResourceIds = new HashSet<Integer>();
+            otherResourceIds = getSameSurveyResources(resourceId);
+            otherResourceIds.remove(resourceId);
+            for(int id : otherResourceIds)
+            {
+                editStmnt = learnweb.getConnection().prepareStatement("SELECT `editable` FROM `lw_survey_resource` WHERE `resource_id`=?");
+                editStmnt.setInt(1, id);
+                result = editStmnt.executeQuery();
+                result.next();
+                if(result.getBoolean("editable"))
+                {
+                    editable = result.getBoolean("editable");
+                    break;
+                }
+
+            }
+        }
+
+        return editable;
     }
 
 }
