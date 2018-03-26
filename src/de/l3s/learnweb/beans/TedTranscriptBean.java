@@ -10,11 +10,14 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.TreeSet;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
 import javax.faces.model.SelectItem;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.log4j.Logger;
 import org.jsoup.Jsoup;
@@ -62,7 +65,8 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     private List<TranscriptLog> detailedTranscriptLogs;
     private List<TranscriptSummary> transcriptSummaries;
     private boolean showDeletedResources = false;
-    private int selectedCourseId;
+    //private int selectedCourseId;
+    private TreeSet<Integer> selectedUsers;
 
     public void preRenderView() throws SQLException
     {
@@ -89,11 +93,12 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         //rcs.put("r", new Lesk(db));
         locale = UtilBean.getUserBean().getLocaleAsString();
 
-        String logPreference = getPreference("transcript_show_del_res");
-        if(logPreference != null)
-            showDeletedResources = Boolean.parseBoolean(logPreference);
-        selectedCourseId = getUser().getActiveCourseId();
+        //String logPreference = getPreference("transcript_show_del_res");
+        //if(logPreference != null)
+        //    showDeletedResources = Boolean.parseBoolean(logPreference);
 
+        selectedUsers = new TreeSet<Integer>();
+        //selectedCourseId = getUser().getActiveCourseId();
     }
 
     public Resource getTedResource()
@@ -115,7 +120,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         catch(SQLException e)
         {
             addFatalMessage(e);
-            log.error(e);
+            log.error("Error while retrieving TED video id", e);
         }
 
         if(tedResource.getSource().equalsIgnoreCase("TEDx"))
@@ -161,13 +166,12 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         catch(SQLException e)
         {
             addFatalMessage(e);
-            log.error(e);
+            log.error("Error while retrieving summaries for particular TED resource: " + resourceId, e);
         }
     }
 
     public void setTranscript()
     {
-
         try
         {
             String transcript = Learnweb.getInstance().getTedManager().getTranscript(videoResourceId, transcriptLanguage);
@@ -175,12 +179,17 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
             Document doc = Jsoup.parse(transcript);
             tedResource.setTranscript(doc.getElementsByTag("body").html());
         }
-        catch(SQLException | RuntimeException e)
+        catch(SQLException e)
         {
             addFatalMessage(e);
+            log.error("Error while fetching transcript for ted video id: " + videoResourceId + "; language: " + transcriptLanguage, e);
         }
     }
 
+    /**
+     * Saves the changes in the TED transcript such as selections and user annotations;
+     * Also logs the 'save' event
+     */
     public void processActionSaveResource()
     {
         String transcript = getParameter("transcript");
@@ -189,17 +198,22 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         {
             Date actionTimestamp = new Date();
             tedResource.save();
-            TranscriptLog transcriptLog = new TranscriptLog(getUser().getActiveCourseId(), getUser().getId(), tedResource.getId(), "", "", "save transcript", actionTimestamp);
+            TranscriptLog transcriptLog = new TranscriptLog(getUser().getId(), tedResource.getId(), "", "", "save transcript", actionTimestamp);
             getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
         }
-        catch(Exception e)
+        catch(SQLException e)
         {
             addFatalMessage(e);
+            log.error("Error while saving transcript changes for ted resource: " + tedResource.getId(), e);
         }
         getUser().clearCaches();
         addGrowl(FacesMessage.SEVERITY_INFO, "Changes_saved");
     }
 
+    /**
+     * Submits the transcript of a TED resource for final evaluation;
+     * Saves the 'submit' event and also the final selections in lw_transcript_selections
+     */
     public void processActionSubmitResource()
     {
         String transcript = getParameter("transcript");
@@ -209,18 +223,22 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         {
             Date actionTimestamp = new Date();
             tedResource.save();
-            TranscriptLog transcriptLog = new TranscriptLog(getUser().getActiveCourseId(), getUser().getId(), tedResource.getId(), "", "", "submit transcript", actionTimestamp);
+            TranscriptLog transcriptLog = new TranscriptLog(getUser().getId(), tedResource.getId(), "", "", "submit transcript", actionTimestamp);
             getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
             getLearnweb().getTedManager().saveTranscriptSelection(transcript, tedResource.getId());
         }
-        catch(Exception e)
+        catch(SQLException e)
         {
             addFatalMessage(e);
+            log.error("Error while submitting TED resource: " + tedResource.getId(), e);
         }
         getUser().clearCaches();
         addGrowl(FacesMessage.SEVERITY_INFO, "Transcript Submitted");
     }
 
+    /**
+     * Stores a transcript action such as selection, de-selection, user annotation
+     */
     public void processActionSaveLog()
     {
         try
@@ -231,12 +249,13 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
             String userAnnotation = getParameter("user_annotation");
             String action = getParameter("action");
 
-            TranscriptLog transcriptLog = new TranscriptLog(getUser().getActiveCourseId(), getUser().getId(), tedResource.getId(), word, userAnnotation, action, actionTimestamp);
+            TranscriptLog transcriptLog = new TranscriptLog(getUser().getId(), tedResource.getId(), word, userAnnotation, action, actionTimestamp);
             getLearnweb().getTedManager().saveTranscriptLog(transcriptLog);
         }
-        catch(Exception e)
+        catch(SQLException e)
         {
             addFatalMessage(e);
+            log.error("Error while storing transcription action", e);
         }
     }
 
@@ -248,29 +267,11 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     
     return s;
     }
-    
-    public HashMap<String, Double> sortByValues(HashMap<String, Double> similarityMeasures)
-    {
-    List<Map.Entry<String, Double>> list = new LinkedList<Map.Entry<String, Double>>(similarityMeasures.entrySet());
-    
-    Collections.sort(list, new Comparator<Map.Entry<String, Double>>()
-    {
-        @Override
-        public int compare(Map.Entry<String, Double> o1, Map.Entry<String, Double> o2)
-        {
-    	return (o2.getValue()).compareTo(o1.getValue());
-        }
-    });
-    
-    HashMap<String, Double> sortedHashMap = new LinkedHashMap<String, Double>();
-    for(Iterator<Map.Entry<String, Double>> it = list.iterator(); it.hasNext();)
-    {
-        Map.Entry<String, Double> entry = it.next();
-        sortedHashMap.put(entry.getKey(), entry.getValue());
-    }
-    return sortedHashMap;
-    }*/
+    */
 
+    /**
+     * Retrieves the set of synonyms from WordNet for given selection of word
+     */
     public void processActionSetSynonyms()
     {
         String word = getParameter("word");
@@ -351,7 +352,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         {
             try
             {
-                getLearnweb().getTedManager().saveSummaryText(getUser().getActiveCourseId(), getUser().getId(), resourceId, summaryTextS, SummaryType.SHORT);
+                getLearnweb().getTedManager().saveSummaryText(getUser().getId(), resourceId, summaryTextS, SummaryType.SHORT);
             }
             catch(SQLException e)
             {
@@ -367,7 +368,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         {
             try
             {
-                getLearnweb().getTedManager().saveSummaryText(getUser().getActiveCourseId(), getUser().getId(), resourceId, summaryTextM, SummaryType.LONG);
+                getLearnweb().getTedManager().saveSummaryText(getUser().getId(), resourceId, summaryTextM, SummaryType.LONG);
             }
             catch(SQLException e)
             {
@@ -382,7 +383,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         {
             try
             {
-                getLearnweb().getTedManager().saveSummaryText(getUser().getActiveCourseId(), getUser().getId(), resourceId, summaryTextL, SummaryType.DETAILED);
+                getLearnweb().getTedManager().saveSummaryText(getUser().getId(), resourceId, summaryTextL, SummaryType.DETAILED);
             }
             catch(SQLException e)
             {
@@ -443,24 +444,71 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         return noteId;
     }
 
+    /**
+     * Returns detailed transcript logs for selected users
+     *
+     * @throws SQLException
+     */
     public List<TranscriptLog> getTranscriptLogs() throws SQLException
     {
         if(detailedTranscriptLogs == null)
-            detailedTranscriptLogs = getLearnweb().getTedManager().getTranscriptLogs(selectedCourseId, showDeletedResources);
+            detailedTranscriptLogs = getLearnweb().getTedManager().getTranscriptLogs(selectedUsers, showDeletedResources);
         return detailedTranscriptLogs;
     }
 
+    public TreeSet<Integer> getSelectedUsers() throws SQLException
+    {
+        HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
+        String[] tempSelectedUsers = request.getParameterValues("selected_users");
+
+        if(null == tempSelectedUsers || tempSelectedUsers.length == 0)
+        {
+            addMessage(FacesMessage.SEVERITY_WARN, "select_user");
+            return null;
+        }
+
+        TreeSet<Integer> selectedUsersSet = new TreeSet<Integer>();
+        for(String userId : tempSelectedUsers)
+            selectedUsersSet.add(Integer.parseInt(userId));
+
+        return selectedUsersSet;
+    }
+
+    public void onSubmitSelectedUsers()
+    {
+        try
+        {
+            this.selectedUsers = getSelectedUsers();
+            resetTranscriptLogs();
+            resetTranscriptSummaries();
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
+    }
+
+    /**
+     * Returns transcript logs of selected users aggregating selection, deselection and user annotation counts
+     *
+     * @throws SQLException
+     */
     public List<SimpleTranscriptLog> getSimpleTranscriptLogs() throws SQLException
     {
         if(simpleTranscriptLogs == null)
-            simpleTranscriptLogs = getLearnweb().getTedManager().getSimpleTranscriptLogs(selectedCourseId, showDeletedResources);
+            simpleTranscriptLogs = getLearnweb().getTedManager().getSimpleTranscriptLogs(selectedUsers, showDeletedResources);
         return simpleTranscriptLogs;
     }
 
+    /**
+     * Returns transcript summaries of selected users
+     *
+     * @throws SQLException
+     */
     public List<TranscriptSummary> getTranscriptSummaries() throws SQLException
     {
         if(transcriptSummaries == null)
-            transcriptSummaries = getLearnweb().getTedManager().getTranscriptSummaries(selectedCourseId);
+            transcriptSummaries = getLearnweb().getTedManager().getTranscriptSummaries(selectedUsers);
         return transcriptSummaries;
     }
 
@@ -491,7 +539,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         };
     }
 
-    public int getSelectedCourseId()
+    /*public int getSelectedCourseId()
     {
         return selectedCourseId;
     }
@@ -499,7 +547,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     public void setSelectedCourseId(int selectedCourseId)
     {
         this.selectedCourseId = selectedCourseId;
-    }
+    }*/
 
     public boolean isShowDeletedResources()
     {

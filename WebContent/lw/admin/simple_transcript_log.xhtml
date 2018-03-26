@@ -23,21 +23,12 @@
 			<span>
 				#{msg.transcript_logs}
 			</span>
-			<h:form style="display:inline-block" prependId="false">
-				<h:outputLabel for="course_options" value="#{msg.choose_course}: " />
-				<h:selectOneMenu id="course_options" value="#{tedTranscriptBean.selectedCourseId}"
-					style="width:125px">
-					<f:selectItems value="#{tedTranscriptBean.courses}" var="course" itemLabel="#{course.title}" itemValue="#{course.id}" />
-					<p:ajax listener="#{tedTranscriptBean.resetTranscriptLogs}" update=":transcript_table"/>
-				</h:selectOneMenu>
-				
-				<h:selectBooleanCheckbox value="#{tedTranscriptBean.showDeletedResources}" style="margin-left:5px">
-					<p:ajax listener="#{tedTranscriptBean.resetTranscriptLogs}" update=":transcript_table"/>
-				</h:selectBooleanCheckbox>
-				<h:outputText value=" #{msg.show_transcript_del_res}"/>
-			</h:form>
 		</div>
-	
+		<h:form id="us_form" style="padding:0px 5px;" prependId="false">
+				<ui:include src="/lw/templates/user_select_form.xhtml" />
+				<p:commandButton style="margin-top:5px;" actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users" 
+					process="@form" update=":transcript_table"/>
+		</h:form>
 		<h:form style="padding:5px" prependId="false">
 			<p:dataTable id = "transcript_table" var="log" value="#{tedTranscriptBean.simpleTranscriptLogs}" rows="30" paginator="true"
 				paginatorTemplate="{CurrentPageReport}  {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown} {Exporters}"

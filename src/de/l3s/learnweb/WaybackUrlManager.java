@@ -16,6 +16,8 @@ import java.net.SocketException;
 import java.net.SocketTimeoutException;
 import java.net.URISyntaxException;
 import java.net.UnknownHostException;
+import java.nio.charset.Charset;
+import java.nio.charset.IllegalCharsetNameException;
 import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -634,12 +636,23 @@ public class WaybackUrlManager
 
                             //To check webpage character encoding if present in header field: Content-Type
                             String[] contentTypeSplit = contentType.split("charset=");
-                            String charset = null;
+                            String charsetStr = null;
                             if(contentTypeSplit != null && contentTypeSplit.length == 2)
-                                charset = contentTypeSplit[1];
+                                charsetStr = contentTypeSplit[1];
+
+                            Charset charset = null;
+                            try
+                            {
+                                if(charsetStr != null && !charsetStr.isEmpty())
+                                    charset = Charset.forName(charsetStr);
+                            }
+                            catch(IllegalCharsetNameException e)
+                            {
+                                charset = null;
+                            }
 
                             BufferedReader br;
-                            if(charset != null && !charset.isEmpty())
+                            if(charset != null)
                                 br = new BufferedReader(new InputStreamReader(inputStream, charset));
                             else
                                 br = new BufferedReader(new InputStreamReader(inputStream));
@@ -928,7 +941,7 @@ public class WaybackUrlManager
         */
 
         WaybackUrlManager manager = Learnweb.createInstance("https://learnweb.l3s.uni-hannover.de").getWaybackUrlManager();
-        String url = "http://wing.comp.nus.edu.sg/birndl-sigir2017/";
+        String url = "http://www.cs.virginia.edu/~hw5x/Course/IR2017/_site/docs/Inverted Index.pptx";
         UrlRecord record = manager.getHtmlContent(url);
         log.debug(record.getStatusCode());
         log.debug(record.getContent());

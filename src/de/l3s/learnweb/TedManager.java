@@ -10,6 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 import javax.ws.rs.core.MediaType;
 
@@ -40,7 +41,7 @@ public class TedManager
 {
     private final static Logger log = Logger.getLogger(TedManager.class);
 
-    private final static String TRANSCRIPT_COLUMNS = "`course_id`,`user_id`,`resource_id`,`words_selected`,`user_annotation`,`action`,`timestamp`";
+    private final static String TRANSCRIPT_COLUMNS = "`user_id`,`resource_id`,`words_selected`,`user_annotation`,`action`,`timestamp`";
     private final static String TRANSCRIPT_SELECTION_COLUMNS = "`resource_id`,`words_selected`,`user_annotation`,`start_offset`,`end_offset`";
     //private final static String RESOURCE_COLUMNS = "r.resource_id, r.title, r.description, r.url, r.storage_type, r.rights, r.source, r.type, r.format, r.owner_user_id, r.rating, r.rate_number, r.embedded_size1, r.embedded_size2, r.embedded_size3, r.embedded_size4, r.filename, r.max_image_url, r.query, r.original_resource_id, r.author, r.access, r.thumbnail0_url, r.thumbnail0_file_id, r.thumbnail0_width, r.thumbnail0_height, r.thumbnail1_url, r.thumbnail1_file_id, r.thumbnail1_width, r.thumbnail1_height, r.thumbnail2_url, r.thumbnail2_file_id, r.thumbnail2_width, r.thumbnail2_height, r.thumbnail3_url, r.thumbnail3_file_id, r.thumbnail3_width, r.thumbnail3_height, r.thumbnail4_url, r.thumbnail4_file_id, r.thumbnail4_width, r.thumbnail4_height, r.embeddedRaw, r.transcript, r.online_status";
 
@@ -58,32 +59,29 @@ public class TedManager
         this.learnweb = learnweb;
     }
 
-    public void saveSummaryText(int courseId, int userId, int resourceId, String summaryText, SummaryType summaryType) throws SQLException
+    public void saveSummaryText(int userId, int resourceId, String summaryText, SummaryType summaryType) throws SQLException
     {
-        PreparedStatement pStmt = learnweb.getConnection().prepareStatement("REPLACE INTO lw_transcript_summary(course_id, user_id,resource_id,summary_type,summary_text) VALUES (?,?,?,?,?)");
-        pStmt.setInt(1, courseId);
-        pStmt.setInt(2, userId);
-        pStmt.setInt(3, resourceId);
-        pStmt.setString(4, summaryType.name());
-        pStmt.setString(5, summaryText);
+        PreparedStatement pStmt = learnweb.getConnection().prepareStatement("REPLACE INTO lw_transcript_summary(user_id,resource_id,summary_type,summary_text) VALUES (?,?,?,?)");
+        pStmt.setInt(1, userId);
+        pStmt.setInt(2, resourceId);
+        pStmt.setString(3, summaryType.name());
+        pStmt.setString(4, summaryText);
         pStmt.executeUpdate();
         pStmt.close();
     }
 
     public void saveTranscriptLog(TranscriptLog transcriptLog) throws SQLException
     {
-
-        PreparedStatement saveTranscript = learnweb.getConnection().prepareStatement("INSERT into lw_transcript_actions(" + TRANSCRIPT_COLUMNS + ") VALUES (?,?,?,?,?,?,?)");
-        saveTranscript.setInt(1, transcriptLog.getCourseId());
-        saveTranscript.setInt(2, transcriptLog.getUserId());
-        saveTranscript.setInt(3, transcriptLog.getResourceId());
-        saveTranscript.setString(4, transcriptLog.getWordsSelected());
-        saveTranscript.setString(5, transcriptLog.getUserAnnotation());
-        saveTranscript.setString(6, transcriptLog.getAction());
-        saveTranscript.setTimestamp(7, new java.sql.Timestamp(transcriptLog.getTimestamp().getTime()));
+        PreparedStatement saveTranscript = learnweb.getConnection().prepareStatement("INSERT into lw_transcript_actions(" + TRANSCRIPT_COLUMNS + ") VALUES (?,?,?,?,?,?)");
+        //saveTranscript.setInt(1, transcriptLog.getCourseId());
+        saveTranscript.setInt(1, transcriptLog.getUserId());
+        saveTranscript.setInt(2, transcriptLog.getResourceId());
+        saveTranscript.setString(3, transcriptLog.getWordsSelected());
+        saveTranscript.setString(4, transcriptLog.getUserAnnotation());
+        saveTranscript.setString(5, transcriptLog.getAction());
+        saveTranscript.setTimestamp(6, new java.sql.Timestamp(transcriptLog.getTimestamp().getTime()));
         saveTranscript.executeUpdate();
         saveTranscript.close();
-
     }
 
     public void saveTranscriptSelection(String transcript, int resourceId) throws SQLException
@@ -221,11 +219,17 @@ public class TedManager
         return transcript;
     }
 
-    public List<TranscriptSummary> getTranscriptSummaries(int courseId) throws SQLException
+    public List<TranscriptSummary> getTranscriptSummaries(TreeSet<Integer> selectedUserIds) throws SQLException
     {
+        String userIdString = StringHelper.implodeInt(selectedUserIds, ",");
+
         List<TranscriptSummary> transcriptSummaries = new ArrayList<TranscriptSummary>();
-        PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM lw_transcript_summary WHERE course_id = ? ORDER BY user_id");
-        pStmt.setInt(1, courseId);
+
+        if(selectedUserIds.size() == 0)
+            return transcriptSummaries;
+
+        PreparedStatement pStmt = learnweb.getConnection().prepareStatement("SELECT * FROM lw_transcript_summary WHERE user_id IN (" + userIdString + ") ORDER BY user_id");
+        //pStmt.setInt(1, courseId);
         pStmt.executeQuery();
 
         ResultSet rs = pStmt.getResultSet();
@@ -257,22 +261,29 @@ public class TedManager
 
     }
 
-    public List<TranscriptLog> getTranscriptLogs(int courseId, boolean showDeleted) throws SQLException
+    public List<TranscriptLog> getTranscriptLogs(TreeSet<Integer> selectedUserIds, boolean showDeleted) throws SQLException
     {
+        String userIdString = StringHelper.implodeInt(selectedUserIds, ",");
+
         List<TranscriptLog> transcriptLogs = new ArrayList<TranscriptLog>();
+
+        if(selectedUserIds.size() == 0)
+            return transcriptLogs;
+
         String pStmtString;
         if(showDeleted)
-            pStmtString = "SELECT " + TRANSCRIPT_COLUMNS + " FROM lw_transcript_actions WHERE course_id = ? ORDER BY user_id, timestamp DESC";
+            //pStmtString = "SELECT " + TRANSCRIPT_COLUMNS + " FROM lw_transcript_actions WHERE course_id = ? ORDER BY user_id, timestamp DESC";
+            pStmtString = "SELECT " + TRANSCRIPT_COLUMNS + " FROM lw_transcript_actions WHERE user_id IN(" + userIdString + ") ORDER BY user_id, timestamp DESC";
         else
-            pStmtString = "SELECT " + TRANSCRIPT_COLUMNS + " FROM lw_transcript_actions JOIN lw_resource USING(resource_id) WHERE course_id = ? and deleted = 0 ORDER BY user_id, timestamp DESC";
+            pStmtString = "SELECT " + TRANSCRIPT_COLUMNS + " FROM lw_transcript_actions JOIN lw_resource USING(resource_id) WHERE user_id IN(" + userIdString + ") and deleted = 0 ORDER BY user_id, timestamp DESC";
         PreparedStatement pStmt = learnweb.getConnection().prepareStatement(pStmtString);
-        pStmt.setInt(1, courseId);
+        //pStmt.setInt(1, courseId);
         pStmt.executeQuery();
 
         ResultSet rs = pStmt.getResultSet();
         while(rs.next())
         {
-            TranscriptLog transcriptLog = new TranscriptLog(rs.getInt("course_id"), rs.getInt("user_id"), rs.getInt("resource_id"), rs.getString("words_selected"), rs.getString("user_annotation"), rs.getString("action"), rs.getTimestamp("timestamp"));
+            TranscriptLog transcriptLog = new TranscriptLog(rs.getInt("user_id"), rs.getInt("resource_id"), rs.getString("words_selected"), rs.getString("user_annotation"), rs.getString("action"), rs.getTimestamp("timestamp"));
             transcriptLogs.add(transcriptLog);
         }
         pStmt.close();
@@ -280,17 +291,18 @@ public class TedManager
         return transcriptLogs;
     }
 
-    public List<SimpleTranscriptLog> getSimpleTranscriptLogs(int courseId, boolean showDeleted) throws SQLException
+    public List<SimpleTranscriptLog> getSimpleTranscriptLogs(TreeSet<Integer> selectedUserIds, boolean showDeleted) throws SQLException
     {
         List<SimpleTranscriptLog> simpleTranscriptLogs = new LinkedList<SimpleTranscriptLog>();
 
-        PreparedStatement getUsers = learnweb.getConnection().prepareStatement("SELECT t1.user_id FROM `lw_user_course` t1 WHERE t1.course_id = ? AND t1.user_id !=7727");
-        getUsers.setInt(1, courseId);
-        ResultSet rs = getUsers.executeQuery();
-        int userId;
-        while(rs.next())
+        //PreparedStatement getUsers = learnweb.getConnection().prepareStatement("SELECT t1.user_id FROM `lw_user_course` t1 WHERE t1.course_id = ? AND t1.user_id !=7727");
+        //getUsers.setInt(1, courseId);
+        //ResultSet rs = getUsers.executeQuery();
+        //int userId;
+        //while(rs.next())
+        for(Integer userId : selectedUserIds)
         {
-            userId = rs.getInt("user_id");
+            //userId = rs.getInt("user_id");
             String pStmtString;
             if(showDeleted)
                 pStmtString = "SELECT t1.resource_id,title, SUM(action = 'selection') as selcount, SUM(action = 'deselection') as deselcount, SUM(user_annotation != '') as uacount FROM lw_resource t1 LEFT JOIN lw_transcript_actions t2 ON t1.resource_id = t2.resource_id WHERE (action = 'selection' OR action = 'deselection' OR user_annotation != '' OR action IS NULL) AND t1.owner_user_id = ? GROUP BY t1.resource_id";
