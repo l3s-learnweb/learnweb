@@ -28,7 +28,8 @@ public class Organisation implements Serializable, Comparable<Organisation>
         Resource_Hide_Thumb_rating,
         Groups_Hide_public_groups,
         Misc_Proxy_enabled,
-        Misc_Anonymize_usernames
+        Misc_Anonymize_usernames,
+        Resource_Show_Content_Annotation_Field
     }
 
     private int id;
@@ -173,25 +174,25 @@ public class Organisation implements Serializable, Comparable<Organisation>
         {
             metadataFields.add(new ResourceMetadataField("noname", "Topical", MetadataType.FULLWIDTH_HEADER));
             metadataFields.add(new ResourceMetadataField("noname", "Please tell us about the topic of this resource. Edit if necessary.", MetadataType.FULLWIDTH_DESCRIPTION));
-        
+
             metadata = new ResourceMetadataField("title", "title", MetadataType.INPUT_TEXT);
             metadata.setRequired(true);
             metadataFields.add(metadata);
-        
+
             metadata = new ResourceMetadataField("category", "category", MetadataType.INPUT_TEXT);
             metadata.setRequired(false);
             metadataFields.add(metadata);
-        
+
             metadataFields.add(new ResourceMetadataField("noname", "Attributes", MetadataType.FULLWIDTH_HEADER));
             metadataFields.add(new ResourceMetadataField("noname", "Please tell us about the characteristics of this resource. Edit if necessary.", MetadataType.FULLWIDTH_DESCRIPTION));
-        
+
             metadata = new ResourceMetadataField("Source", "Source", MetadataType.INPUT_TEXT);
             metadataFields.add(metadata);
-        
+
             metadata = new ResourceMetadataField("author", "author", MetadataType.AUTOCOMPLETE)
             {
                 private static final long serialVersionUID = -2914974737900412242L;
-        
+
                 @Override
                 public List<String> completeText(String query)
                 {
@@ -211,7 +212,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
             };
             metadata.setInfo("Please, carefully acknowledge authors of resources. In case the author is not clear, use all the details you have: URL, book reference, etc");
             metadataFields.add(metadata);
-        
+
             metadata = new ResourceMetadataField("yell_media_type", "Media Type", MetadataType.MULTIPLE_MENU);
             metadata.setInfo("Select all that apply");
             metadata.getOptions().add("Text");
@@ -220,11 +221,11 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadata.getOptions().add("Game");
             metadata.getOptions().add("App");
             metadataFields.add(metadata);
-        
+
             metadata = new ResourceMetadataField("language", "language", MetadataType.MULTIPLE_MENU)
             {
                 private static final long serialVersionUID = 1934886927426174254L;
-        
+
                 @Override
                 public List<SelectItem> getOptionsList()
                 {
@@ -233,10 +234,10 @@ public class Organisation implements Serializable, Comparable<Organisation>
             };
             metadata.setInfo("Select the language of the resource content");
             metadataFields.add(metadata);
-        
+
             metadataFields.add(new ResourceMetadataField("noname", "Context", MetadataType.FULLWIDTH_HEADER));
             metadataFields.add(new ResourceMetadataField("noname", "Please tell us for what purpose you are using this resource.", MetadataType.FULLWIDTH_DESCRIPTION));
-        
+
             metadata = new ResourceMetadataField("yell_purpose", "Purpose of use", MetadataType.MULTIPLE_MENU);
             metadata.setInfo("Select all that apply");
             metadata.getOptions().add("speaking skills");
@@ -253,7 +254,7 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadata.getOptions().add("teacher education resources");
             metadata.getOptions().add("other");
             metadataFields.add(metadata);
-        
+
             metadata = new ResourceMetadataField("language_level", "Language level", MetadataType.MULTIPLE_MENU);
             metadata.setInfo("Select all that apply");
             metadata.getOptions().add("C2");
@@ -264,9 +265,9 @@ public class Organisation implements Serializable, Comparable<Organisation>
             metadata.getOptions().add("A1");
             metadata.setInfo("");
             metadataFields.add(metadata);
-        
+
             metadataFields.add(new ResourceMetadataField("description", "description", MetadataType.INPUT_TEXTAREA));
-        
+
         }*/
         else if(id == 848) // Demo (archive course)
         {

@@ -125,6 +125,18 @@ public class StringHelper
         return out.toString();
     }
 
+    public static String implodeInt(int[] list, String delim)
+    {
+        StringBuilder out = new StringBuilder();
+        for(int item : list)
+        {
+            if(out.length() != 0)
+                out.append(delim);
+            out.append(Integer.toString(item));
+        }
+        return out.toString();
+    }
+
     /**
      * Make first character upper case
      *

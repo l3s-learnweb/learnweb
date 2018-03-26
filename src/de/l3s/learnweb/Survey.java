@@ -12,6 +12,7 @@ public class Survey implements Serializable
     private boolean submitted = false;
     private Date start;
     private Date end;
+    private boolean editable;
 
     private int surveyId;
     private int resourceId;
@@ -135,4 +136,15 @@ public class Survey implements Serializable
     {
         this.wrappedMultipleAnswers = wrappedMultipleAnswers;
     }
+
+    public boolean isEditable()
+    {
+        return editable;
+    }
+
+    public void setEditable(boolean editable)
+    {
+        this.editable = editable;
+    }
+
 }

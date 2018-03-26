@@ -1,0 +1,109 @@
+<ui:composition template="/templates/main/main.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="peer_assessment_id"
+				value="#{adminPeerAssesmentPairBeen.peerAssementId}" required="true"
+				requiredMessage="Missing parameter" />
+			<f:viewAction action="#{adminPeerAssesmentPairBeen.onLoad}" />
+		</f:metadata>
+	</ui:define>
+
+	<ui:param name="loginRequired" value="true" />
+	<ui:param name="pageTitle" value="Peer assessment pairin" />
+
+	<ui:define name="center_layout">
+		<h:outputText value="Missing authentication" rendered="#{not userBean.moderator}" />
+
+		<ui:fragment rendered="#{userBean.moderator}">
+			<div class="page_header">
+				<span>Peer assessment pairing</span>
+			</div>
+
+			<h:form>
+				<p:dataTable id="processTable" var="pair" style="margin: 2rem;"
+					value="#{adminPeerAssesmentPairBeen.pairs}"
+					tableStyle="width: 96%;table-layout:auto"
+					emptyMessage="No pairs found">
+
+					<p:columnGroup type="header">
+						<p:row>
+							<p:column colspan="3" headerText="Assessor" />
+							<p:column colspan="3" headerText="Assessed" />
+							<p:column colspan="2" headerText="Assessment" />
+						</p:row>
+
+						<p:row>
+							<p:column headerText="Course"
+								sortBy="#{pair.assessorUser.courses[0].title}">
+							</p:column>
+							<p:column headerText="Student Id"
+								sortBy="#{pair.assessorUser.studentId}">
+							</p:column>
+							<p:column headerText="#{msg.email_address}"
+								sortBy="#{pair.assessorUser.email}">
+							</p:column>
+							
+							<p:column headerText="Course"
+								sortBy="#{pair.assessedUser.courses[0].title}">
+							</p:column>
+							<p:column headerText="Student Id"
+								sortBy="#{pair.assessedUser.studentId}">
+							</p:column>
+							<p:column headerText="#{msg.email_address}"
+								sortBy="#{pair.assessedUser.email}">
+							</p:column>
+							
+							<p:column headerText="Submission">
+							</p:column>
+
+							<p:column headerText="Assessment">
+							</p:column>
+						</p:row>
+					</p:columnGroup>
+
+					<p:column>
+						<h:outputText value="#{pair.assessorUser.courses[0].title}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{pair.assessorUser.studentId}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{pair.assessorUser.email}" />
+					</p:column>
+					
+					<p:column>
+						<h:outputText value="#{pair.assessedUser.courses[0].title}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{pair.assessedUser.studentId}" />
+					</p:column>
+					<p:column>
+						<h:outputText value="#{pair.assessedUser.email}" />
+					</p:column>
+
+					<p:column>
+						<h:outputLink value="myhome/submission_resources.jsf">
+							<f:param name="user_id" value="#{pair.assessedUserId}"/>
+							<f:param name="submission_id" value="#{pair.submissionId}"/>
+							Submission
+						</h:outputLink>
+					</p:column>
+					
+					<p:column>
+						<h:outputLink value="survey/survey.jsf">
+							<f:param name="resource_id" value="#{pair.surveyResourceId}" />
+							<h:outputText value="#{pair.surveyResource.title}" />
+						</h:outputLink>
+					</p:column>
+				</p:dataTable>
+			</h:form>
+		</ui:fragment>
+	</ui:define>
+
+</ui:composition>

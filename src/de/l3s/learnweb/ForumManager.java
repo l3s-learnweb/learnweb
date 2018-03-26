@@ -24,7 +24,7 @@ public class ForumManager
 
     /**
      * returns all topic of the define group. Sorted by ORDER
-     * 
+     *
      * @param groupId
      * @param order
      * @return
@@ -32,19 +32,20 @@ public class ForumManager
     public List<ForumTopic> getTopicsByGroup(int groupId) throws SQLException
     {
         LinkedList<ForumTopic> topics = new LinkedList<ForumTopic>();
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `lw_forum_topic` WHERE group_id = ? ORDER BY topic_last_post_time DESC");
-        select.setInt(1, groupId);
-        ResultSet rs = select.executeQuery();
-        while(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `lw_forum_topic` WHERE group_id = ? ORDER BY topic_last_post_time DESC");)
         {
-            topics.add(createTopic(rs));
+            select.setInt(1, groupId);
+            ResultSet rs = select.executeQuery();
+            while(rs.next())
+            {
+                topics.add(createTopic(rs));
+            }
         }
-        select.close();
         return topics;
     }
 
     /**
-     * 
+     *
      * @param topicId
      * @return null if not found
      * @throws SQLException
@@ -52,21 +53,21 @@ public class ForumManager
     public ForumTopic getTopicById(int topicId) throws SQLException
     {
         ForumTopic topic = null;
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `lw_forum_topic` WHERE topic_id = ?");
-        select.setInt(1, topicId);
-        ResultSet rs = select.executeQuery();
-        if(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + TOPIC_COLUMNS + " FROM `lw_forum_topic` WHERE topic_id = ?");)
         {
-            topic = createTopic(rs);
+            select.setInt(1, topicId);
+            ResultSet rs = select.executeQuery();
+            if(rs.next())
+            {
+                topic = createTopic(rs);
+            }
         }
-        select.close();
-
         return topic;
     }
 
     /**
      * Sorted by date DESC
-     * 
+     *
      * @param topicId
      * @return
      */
@@ -90,21 +91,21 @@ public class ForumManager
     {
         ForumPost post = null;
 
-        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `lw_forum_post` WHERE post_id = ?");
-        select.setInt(1, postId);
-        ResultSet rs = select.executeQuery();
-        if(rs.next())
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS + " FROM `lw_forum_post` WHERE post_id = ?");)
         {
-            post = createPost(rs);
+            select.setInt(1, postId);
+            ResultSet rs = select.executeQuery();
+            if(rs.next())
+            {
+                post = createPost(rs);
+            }
         }
-        select.close();
-
         return post;
     }
 
     /**
      * Returns all posts that were created in the users group after the Date "lowerBound"
-     * 
+     *
      * @param userId
      * @param lowerBound
      * @return
@@ -119,11 +120,11 @@ public class ForumManager
      *             sb.append(Integer.toString(group.getId()));
      *             }
      *             String ids = sb.substring(1);
-     * 
+     *
      *             LinkedList<ForumPost> posts = new LinkedList<ForumPost>();
-     * 
-     * 
-     * 
+     *
+     *
+     *
      *             PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + POST_COLUMNS +
      *             " FROM `lw_forum_post` WHERE topic_id = ? ORDER BY post_time");
      *             select.setInt(1, topicId);
@@ -133,7 +134,7 @@ public class ForumManager
      *             posts.add(createPost(rs));
      *             }
      *             select.close();
-     * 
+     *
      *             return posts;
      *             }
      */
@@ -242,10 +243,10 @@ public class ForumManager
 
     /**
      * increment topic view counter
-     * 
+     *
      * @param topicId
      * @throws SQLException
-     * 
+     *
      */
 
     public void incViews(int topicId) throws SQLException

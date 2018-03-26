@@ -10,177 +10,168 @@
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="resource_id" value="#{surveyBean.resourceId}" />
+			<f:viewParam name="resource_id" value="#{surveyBean.resourceId}"
+				required="true" />
+			<f:viewAction action="#{surveyBean.onLoad}" />
 		</f:metadata>
 	</ui:define>
 	<ui:param name="pageTitle" value="Survey" />
 	<ui:param name="loginRequired" value="true" />
+	<ui:param name="disableGrowl" value="true" />
 
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="eu4all-survey" name="survey.css" />
 		<h:outputScript library="glossary" name="glossary.js" />
 		<h:panelGroup id="main_component" layout="block">
 			<h:form id="form" prependId="false">
-				<p:growl id="surveygrowl" autoUpdate="true" redisplay="false"
-					globalOnly="true" showDetail="true"></p:growl>
-				<ui:fragment rendered="#{surveyBean.resourceId gt 0}">
-					<ui:fragment
-						rendered="#{(userBean.user.organisation.id eq surveyBean.organizationId or surveyBean.organizationId eq 0) and surveyBean.validDates}">
-						<div class="headings">
-							<br />
-							<h:outputText value="#{surveyBean.description}"
-								style="text-align:center; font-weight:bold"></h:outputText>
-							<br /> <br />
-						</div>
-						<p:panel id="panelOut" header="#{surveyBean.surveyTitle}"
-							style="margin-bottom:10px;" rendered="true">
-							<p:panel id="panel" widgetVar="formVar" rendered="true"
-								style="border:none;">
-								<h:panelGrid columns="1" cellpadding="5">
-									<c:forEach var="field" items="#{surveyBean.questions}">
+				<ui:fragment rendered="#{true}">
 
-										<c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">
+					<p:panel id="panelOut" header="#{surveyBean.survey.surveyTitle}"
+						style="margin-bottom:10px;" rendered="true">
+						<h:panelGroup id="panel"
+							rendered="#{not surveyBean.survey.submitted and surveyBean.editable or surveyBean.update or facesContext.validationFailed}">
+							<h:panelGrid columns="1" cellpadding="5">
+								<c:forEach var="field"
+									items="#{surveyBean.survey.formQuestions}">
 
-											<c:if test="#{field.type eq 'FULLWIDTH_HEADER'}">
-												<br />
-												<h3>
-													<h:outputText value="${field.label}"
-														style="font-style: italic; font-weight: bold;" />
-												</h3>
-												<br />
-											</c:if>
-											<c:if test="#{field.type eq 'FULLWIDTH_DESCRIPTION'}">
-												<h:outputText value="${field.label}" />
-											</c:if>
+									<c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">
 
+										<c:if test="#{field.type eq 'FULLWIDTH_HEADER'}">
+											<br />
+											<h3>
+												<h:outputText value="${field.label}"
+													style="font-style: italic; font-weight: bold;" />
+											</h3>
+											<br />
 										</c:if>
-										<c:if test="#{field.type eq 'INPUT_TEXT'}">
-											<p:outputLabel for="input_#{field.id}" value="#{field.label}"></p:outputLabel>
-											<p:inputText id="input_#{field.id}"
-												required="#{field.required}"
-												value="#{surveyBean.wrappedAnswers[field.id]}"
-												title="#{field.info}" style="width:70%;'" />
-											<p:tooltip for="input_#{field.id}" showEvent="focus"
-												hideEvent="blur" position="left"
-												rendered="#{not empty field.info}" />
+										<c:if test="#{field.type eq 'FULLWIDTH_DESCRIPTION'}">
+											<h:outputText value="${field.label}" />
 										</c:if>
 
-										<c:if test="#{field.type eq 'INPUT_TEXTAREA'}">
-											<p:outputLabel for="input_area_#{field.id}"
-												value="#{field.label}"></p:outputLabel>
-											<p:inputTextarea id="input_area_#{field.id}"
-												required="#{field.required}"
-												value="#{surveyBean.wrappedAnswers[field.id]}"
-												title="#{field.info}" rows="4"
-												style="overflow-y: scroll; width:100%; box-sizing: border-box;"
-												class="border-box-100" />
-											<p:tooltip for="input_area_#{field.id}" showEvent="focus"
-												hideEvent="blur" position="left"
-												rendered="#{not empty field.info}" />
-										</c:if>
+									</c:if>
+									<c:if test="#{field.type eq 'INPUT_TEXT'}">
+										<p:outputLabel for="input_#{field.id}" value="#{field.label}"></p:outputLabel>
+										<p:inputText id="input_#{field.id}"
+											required="#{field.required}"
+											value="#{surveyBean.survey.wrappedAnswers[field.id]}"
+											title="#{field.info}" style="width:70%;'" />
+										<p:tooltip for="input_#{field.id}" showEvent="focus"
+											hideEvent="blur" position="left"
+											rendered="#{not empty field.info}" />
+									</c:if>
 
-										<c:if test="#{field.type eq 'AUTOCOMPLETE'}">
-											<p:outputLabel for="input_complete_#{field.id}"
-												value="#{field.label}"></p:outputLabel>
-											<p:autoComplete id="input_complete_#{field.id}"
-												required="#{field.required}"
-												value="#{surveyBean.wrappedAnswers[field.id]}"
-												completeMethod="#{field.completeText}"
-												class="border-box-100" />
-											<p:tooltip for="input_complete_#{field.id}" showEvent="hover"
-												position="left" rendered="#{true}"
-												value="blaaaaaaa #{field.info}" />
-										</c:if>
+									<c:if test="#{field.type eq 'INPUT_TEXTAREA'}">
+										<p:outputLabel for="input_area_#{field.id}"
+											value="#{field.label}"></p:outputLabel>
+										<p:inputTextarea id="input_area_#{field.id}"
+											required="#{field.required}"
+											value="#{surveyBean.survey.wrappedAnswers[field.id]}"
+											title="#{field.info}" rows="4"
+											style="overflow-y: scroll; width:100%; box-sizing: border-box;"
+											class="border-box-100" />
+										<p:tooltip for="input_area_#{field.id}" showEvent="focus"
+											hideEvent="blur" position="left"
+											rendered="#{not empty field.info}" />
+									</c:if>
 
-										<c:if
-											test="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
-											<p:outputLabel for="input_selectone_#{field.id}"
-												value="#{field.label}"></p:outputLabel>
-											<p:selectOneMenu id="input_selectone_#{field.id}"
-												value="#{surveyBean.wrappedAnswers[field.id]}"
-												editable="#{field.type eq 'ONE_MENU_EDITABLE'}"
-												required="#{field.required}" class="border-box-100"
-												title="#{field.info}">
-												<f:selectItems value="#{field.answers}" var="option"
-													itemLabel="#{option}" itemValue="#{option}" />
-											</p:selectOneMenu>
-											<p:tooltip for="input_selectone_#{field.id}" position="left"
-												rendered="#{not empty field.info}" />
-										</c:if>
+									<c:if test="#{field.type eq 'AUTOCOMPLETE'}">
+										<p:outputLabel for="input_complete_#{field.id}"
+											value="#{field.label}"></p:outputLabel>
+										<p:autoComplete id="input_complete_#{field.id}"
+											required="#{field.required}"
+											value="#{surveyBean.survey.wrappedAnswers[field.id]}"
+											completeMethod="#{field.completeText}" class="border-box-100" />
+										<p:tooltip for="input_complete_#{field.id}" showEvent="hover"
+											position="left" rendered="#{true}"
+											value="blaaaaaaa #{field.info}" />
+									</c:if>
 
-										<c:if test="#{field.type eq 'MULTIPLE_MENU'}">
-											<p:outputLabel for="input_selectmultiple_#{field.id}"
-												value="#{field.label}"></p:outputLabel>
-											<p:selectCheckboxMenu id="input_selectmultiple_#{field.id}"
-												value="#{surveyBean.wrappedMultipleAnswers[field.id]}"
-												label="" multiple="true" title="#{field.info}"
-												required="#{field.required}"
-												filter="#{field.optionsList.size() gt 8}"
-												filterMatchMode="startsWith" panelStyle="width:250px">
-												<f:selectItems value="#{field.answers}" var="option"
-													itemLabel="#{option.label}" itemValue="#{option.value}" />
-											</p:selectCheckboxMenu>
-											<p:tooltip for="input_selectmultiple_#{field.id}"
-												position="left" rendered="#{not empty field.info}" />
-										</c:if>
-										<c:if test="#{field.type eq 'ONE_RADIO'}">
-											<p:outputLabel for="input_oneradio_#{field.id}"
-												value="#{field.label}"></p:outputLabel>
-											<p:selectOneRadio id="input_oneradio_#{field.id}"
-												value="#{surveyBean.wrappedAnswers[field.id]}" label=""
-												multiple="true" title="#{field.info}"
-												required="#{field.required}"
-												filter="#{field.optionsList.size() gt 8}"
-												filterMatchMode="startsWith" panelStyle="width:250px">
-												<f:selectItems value="#{field.answers}" var="option"
-													itemLabel="#{option}" itemValue="#{option}" />
-											</p:selectOneRadio>
-											<p:tooltip for="input_oneradio_#{field.id}" position="left"
-												rendered="#{not empty field.info}" />
-										</c:if>
-										<c:if test="#{field.type eq 'MANY_CHECKBOX'}">
-											<p:outputLabel for="input_manycheckbox_#{field.id}"
-												value="#{field.label}"></p:outputLabel>
-											<p:selectManyCheckbox id="input_manycheckbox_#{field.id}"
-												value="#{surveyBean.wrappedMultipleAnswers[field.id]}"
-												label="" multiple="true" title="#{field.info}"
-												required="#{field.required}"
-												filter="#{field.optionsList.size() gt 8}"
-												filterMatchMode="startsWith" panelStyle="width:250px"
-												layout="grid" columns="1">
-												<f:selectItems value="#{field.answers}" var="option"
-													itemLabel="#{option}" itemValue="#{option}" />
-											</p:selectManyCheckbox>
-											<p:tooltip for="input_manycheckbox_#{field.id}"
-												position="left" rendered="#{not empty field.info}" />
-										</c:if>
+									<c:if
+										test="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
+										<p:outputLabel for="input_selectone_#{field.id}"
+											value="#{field.label}"></p:outputLabel>
+										<p:selectOneMenu id="input_selectone_#{field.id}"
+											value="#{surveyBean.survey.wrappedAnswers[field.id]}"
+											editable="#{field.type eq 'ONE_MENU_EDITABLE'}"
+											required="#{field.required}" class="border-box-100"
+											title="#{field.info}">
+											<f:selectItems value="#{field.answers}" var="option"
+												itemLabel="#{option}" itemValue="#{option}" />
+										</p:selectOneMenu>
+										<p:tooltip for="input_selectone_#{field.id}" position="left"
+											rendered="#{not empty field.info}" />
+									</c:if>
+
+									<c:if test="#{field.type eq 'MULTIPLE_MENU'}">
+										<p:outputLabel for="input_selectmultiple_#{field.id}"
+											value="#{field.label}"></p:outputLabel>
+										<p:selectCheckboxMenu id="input_selectmultiple_#{field.id}"
+											value="#{surveyBean.survey.wrappedMultipleAnswers[field.id]}"
+											label="" multiple="true" title="#{field.info}"
+											required="#{field.required}"
+											filter="#{field.optionsList.size() gt 8}"
+											filterMatchMode="startsWith" panelStyle="width:250px">
+											<f:selectItems value="#{field.answers}" var="option"
+												itemLabel="#{option.label}" itemValue="#{option.value}" />
+										</p:selectCheckboxMenu>
+										<p:tooltip for="input_selectmultiple_#{field.id}"
+											position="left" rendered="#{not empty field.info}" />
+									</c:if>
+									<c:if test="#{field.type eq 'ONE_RADIO'}">
+										<p:outputLabel for="input_oneradio_#{field.id}"
+											value="#{field.label}"></p:outputLabel>
+										<p:selectOneRadio id="input_oneradio_#{field.id}"
+											value="#{surveyBean.survey.wrappedAnswers[field.id]}"
+											label="" multiple="true" title="#{field.info}"
+											required="#{field.required}"
+											filter="#{field.optionsList.size() gt 8}"
+											filterMatchMode="startsWith" panelStyle="width:250px">
+											<f:selectItems value="#{field.answers}" var="option"
+												itemLabel="#{option}" itemValue="#{option}" />
+										</p:selectOneRadio>
+										<p:tooltip for="input_oneradio_#{field.id}" position="left"
+											rendered="#{not empty field.info}" />
+									</c:if>
+									<c:if test="#{field.type eq 'MANY_CHECKBOX'}">
+										<p:outputLabel for="input_manycheckbox_#{field.id}"
+											value="#{field.label}"></p:outputLabel>
+										<p:selectManyCheckbox id="input_manycheckbox_#{field.id}"
+											value="#{surveyBean.survey.wrappedMultipleAnswers[field.id]}"
+											label="" multiple="true" title="#{field.info}"
+											required="#{field.required}"
+											filter="#{field.optionsList.size() gt 8}"
+											filterMatchMode="startsWith" panelStyle="width:250px"
+											layout="grid" columns="1">
+											<f:selectItems value="#{field.answers}" var="option"
+												itemLabel="#{option}" itemValue="#{option}" />
+										</p:selectManyCheckbox>
+										<p:tooltip for="input_manycheckbox_#{field.id}"
+											position="left" rendered="#{not empty field.info}" />
+									</c:if>
 
 
-									</c:forEach>
-								</h:panelGrid>
-							</p:panel>
-							
-						</p:panel>
+								</c:forEach>
+							</h:panelGrid>
+						</h:panelGroup>
+
 
 						<p:commandButton widgetVar="sub" id="submit" value="Submit"
 							style="float:left;" styleClass="greenbutton resource_button"
-							action="#{surveyBean.submit()}"
-							update=":surveygrowl :message :panel :edit @this"
-							oncomplete="if (args &amp;&amp; !args.validationFailed) {PF('formVar').close(); sub.disable();}"
-							disabled="#{surveyBean.submitted and surveyBean.update eq false}">
+							action="#{surveyBean.submit()}" update=":message @form"
+							rendered="#{not surveyBean.survey.submitted and surveyBean.editable or surveyBean.update}">
 						</p:commandButton>
-						<p:commandButton widgetVar="editSub" id="edit" 
-						value="Edit Submission" 
-						rendered="#{surveyBean.submitted eq true and surveyBean.editable eq true}"
-						style="float:left;margin-left:5px" styleClass="greenbutton resource_button" 
-						action="#{surveyBean.getSurvey(userBean.user.id)}"
-						update=":panel :submit @this" 
-						oncomplete="editSub.disable(); sub.enable();"
-						disabled="#{surveyBean.update}"
-						>
+						<p:commandButton widgetVar="editSub" id="edit"
+							value="Edit Submission"
+							rendered="#{surveyBean.survey.submitted and surveyBean.editable and not surveyBean.update}"
+							style="float:left;margin-left:5px"
+							styleClass="greenbutton resource_button"
+							action="#{surveyBean.getSurvey(userBean.user.id)}" update="@form">
 						</p:commandButton>
-					</ui:fragment>
+						<br class="clear"/>
+					</p:panel>
+
 				</ui:fragment>
+
 				<ui:fragment rendered="#{surveyBean.resourceId le 0}">
 					<div class="noresource">
 						<br /> <br />
@@ -188,7 +179,7 @@
 							style="text-align:center; font-weight:bold"></h:outputText>
 					</div>
 				</ui:fragment>
-			
+
 
 			</h:form>
 		</h:panelGroup>

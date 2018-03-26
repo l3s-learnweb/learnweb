@@ -41,18 +41,16 @@ public class SurveyManager
 
         //Getting survey ID
         PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?");
-
         preparedStmnt.setInt(1, resource_id);
-
         ResultSet result = preparedStmnt.executeQuery();
 
         if(result.next())
         {
 
-            //  start = rs.getDate("open_date");
-            // end = rs.getDate("close_date");
+            survey.setEnd(result.getDate("close_date"));
+            survey.setStart(result.getDate("open_date"));
             survey.setSurveyId(result.getInt("survey_id"));
-
+            survey.setEditable(result.getBoolean("editable"));
         }
         //Getting title and description
         preparedStmnt = learnweb.getConnection().prepareStatement("SELECT `title`, `description` FROM `lw_resource` WHERE `resource_id` = ?");
@@ -163,44 +161,37 @@ public class SurveyManager
     {
         Survey survey = new Survey();
         survey.setResourceId(resourceId);
-        String submitCheck = "SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?";
-        String titleDesc = "SELECT `title`, `description` FROM `lw_resource` WHERE `resource_id` = ?";
-        String getSurveyId = "SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?";
+
         PreparedStatement ps = null;
 
+        // only temporary for eu made4ll
         HashSet<Integer> surveyResources = new HashSet<Integer>();
         surveyResources.addAll(getSameSurveyResources(resourceId));
+        ps = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?");
+
         for(int surveyResource_id : surveyResources)
         {
-            ResultSet rs = null;
-            ps = learnweb.getConnection().prepareStatement(submitCheck);
             ps.setInt(1, surveyResource_id);
             ps.setInt(2, userId);
-            rs = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
             if(rs.next())
             {
-
                 survey.setSubmitted(true);
-
             }
         }
 
-        ps = learnweb.getConnection().prepareStatement(getSurveyId);
-
+        ps = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?");
         ps.setInt(1, resourceId);
-
         ResultSet rs = ps.executeQuery();
-
         if(rs.next())
         {
-
             survey.setEnd(rs.getDate("close_date"));
             survey.setStart(rs.getDate("open_date"));
             survey.setSurveyId(rs.getInt("survey_id"));
-
+            survey.setEditable(rs.getBoolean("editable"));
         }
 
-        ps = learnweb.getConnection().prepareStatement(titleDesc);
+        ps = learnweb.getConnection().prepareStatement("SELECT `title`, `description` FROM `lw_resource` WHERE `resource_id` = ?");
         ps.setInt(1, resourceId);
         ResultSet descTitle = ps.executeQuery();
         while(descTitle.next())
@@ -312,12 +303,8 @@ public class SurveyManager
         }
         */
 
-        String insertAnswers = "REPLACE INTO `lw_survey_answer`(`resource_id`, `user_id`, `question_id`, `answer`) VALUES (?, ?, ?, ?)";
-
         Iterator<Entry<String, String>> answer1 = wrappedAnswers.entrySet().iterator();
-        PreparedStatement insert = null;
-
-        insert = learnweb.getConnection().prepareStatement(insertAnswers);
+        PreparedStatement insert = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_survey_answer`(`resource_id`, `user_id`, `question_id`, `answer`) VALUES (?, ?, ?, ?)");
 
         while(answer1.hasNext())
         {
@@ -579,6 +566,7 @@ public class SurveyManager
         return users;
     }
 
+    /*
     public boolean checkIfEditable(int resourceId) throws SQLException
     {
         boolean editable = false;
@@ -604,12 +592,13 @@ public class SurveyManager
                     editable = result.getBoolean("editable");
                     break;
                 }
-
+    
             }
         }
-
+    
         return editable;
     }
+    */
 
 }
 /*public ArrayList<SurveyMetaDataFields> getFormQuestions()

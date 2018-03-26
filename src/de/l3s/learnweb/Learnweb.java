@@ -106,6 +106,7 @@ public class Learnweb
     private static boolean learnwebIsLoading = false;
     private static boolean developmentMode = true; //  true if run on Localhost, disables email logger
     private final SERVICE service; // describes whether this instance runs for Learnweb or AMA
+    private PeerAssessmentManager peerAssessmentManager;
 
     /**
      * Use createInstance() first
@@ -303,6 +304,7 @@ public class Learnweb
         createSurveyManager = new createSurveyManager(this);
         waybackUrlManager = WaybackUrlManager.getInstance(this);
         dashboardManager = DashboardManager.getInstance(this);
+        peerAssessmentManager = new PeerAssessmentManager(this);
 
         learnwebIsLoading = false;
 
@@ -420,26 +422,29 @@ public class Learnweb
 
     private void checkConnection() throws SQLException
     {
-        // exit if last check was two or less seconds ago
-        if(lastCheck > System.currentTimeMillis() - 2000)
-            return;
-
-        if(!dbConnection.isValid(1))
+        synchronized(dbConnection)
         {
-            log.warn("Database connection invalid try to reconnect");
+            // exit if last check was one or less seconds ago
+            if(lastCheck > System.currentTimeMillis() - 1000)
+                return;
 
-            try
+            if(!dbConnection.isValid(1))
             {
-                dbConnection.close();
-            }
-            catch(SQLException e)
-            {
+                log.warn("Database connection invalid try to reconnect");
+
+                try
+                {
+                    dbConnection.close();
+                }
+                catch(SQLException e)
+                {
+                }
+
+                connect();
             }
 
-            connect();
+            lastCheck = System.currentTimeMillis();
         }
-
-        lastCheck = System.currentTimeMillis();
     }
 
     /**
@@ -535,12 +540,12 @@ public class Learnweb
         if(groupId == -1)
             groupId = (null == user) ? 0 : user.getActiveGroupId();
 
-        synchronized(pstmtLog)
+        try
         {
-            try
-            {
-                checkConnection();
+            checkConnection();
 
+            synchronized(pstmtLog)
+            {
                 pstmtLog.setInt(1, userId);
                 pstmtLog.setString(2, sessionId);
                 pstmtLog.setInt(3, action.ordinal());
@@ -559,10 +564,10 @@ public class Learnweb
                     logBatchSize = 0;
                 }
             }
-            catch(SQLException e)
-            {
-                log.error("Can't store log entry: " + action + "; Target: " + targetId + "; User: " + userId, e);
-            }
+        }
+        catch(SQLException e)
+        {
+            log.error("Can't store log entry: " + action + "; Target: " + targetId + "; User: " + userId, e);
         }
     }
 
@@ -584,8 +589,6 @@ public class Learnweb
     {
         LinkedList<LogEntry> log = new LinkedList<LogEntry>();
 
-        checkConnection();
-
         if(null == actions)
             actions = LOG_DEFAULT_FILTER;
 
@@ -595,7 +598,7 @@ public class Learnweb
             sb.append(",");
             sb.append(action.ordinal());
         }
-        PreparedStatement select = dbConnection.prepareStatement(LOG_SELECT + " WHERE user_id = ? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC LIMIT " + limit);
+        PreparedStatement select = getConnection().prepareStatement(LOG_SELECT + " WHERE user_id = ? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC LIMIT " + limit);
         select.setInt(1, userId);
 
         ResultSet rs = select.executeQuery();
@@ -632,8 +635,6 @@ public class Learnweb
     {
         LinkedList<LogEntry> log = new LinkedList<LogEntry>();
 
-        checkConnection();
-
         if(null == actions)
             actions = LOG_DEFAULT_FILTER;
 
@@ -648,7 +649,7 @@ public class Learnweb
         if(limit > 0)
             limitStr = "LIMIT " + limit;
 
-        PreparedStatement select = dbConnection.prepareStatement(LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
+        PreparedStatement select = getConnection().prepareStatement(LOG_SELECT + " WHERE ul.group_id = ? AND user_id != 0 AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
         select.setInt(1, groupId);
 
         ResultSet rs = select.executeQuery();
@@ -665,8 +666,6 @@ public class Learnweb
     {
         LinkedList<LogEntry> log = new LinkedList<LogEntry>();
 
-        checkConnection();
-
         if(null == actions)
             actions = LOG_DEFAULT_FILTER;
 
@@ -681,7 +680,7 @@ public class Learnweb
         if(limit > 0)
             limitStr = "LIMIT " + limit;
 
-        PreparedStatement select = dbConnection.prepareStatement(LOG_SELECT + " WHERE ul.group_id IN(SELECT group_id FROM lw_group_user WHERE user_id=?) AND user_id != 0 AND user_id!=? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
+        PreparedStatement select = getConnection().prepareStatement(LOG_SELECT + " WHERE ul.group_id IN(SELECT group_id FROM lw_group_user WHERE user_id=?) AND user_id != 0 AND user_id!=? AND action IN(" + sb.toString().substring(1) + ") ORDER BY timestamp DESC " + limitStr);
         select.setInt(1, userId);
         select.setInt(2, userId);
 
@@ -881,6 +880,16 @@ public class Learnweb
     public DashboardManager getDashboardManager()
     {
         return dashboardManager;
+    }
+
+    public PeerAssessmentManager getPeerAssessmentManager()
+    {
+        return peerAssessmentManager;
+    }
+
+    public void setPeerAssessmentManager(PeerAssessmentManager peerAssessmentManager)
+    {
+        this.peerAssessmentManager = peerAssessmentManager;
     }
 
 }

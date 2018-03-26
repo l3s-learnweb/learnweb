@@ -93,6 +93,6 @@ public class Mail
 
     public void setHTML(String text) throws MessagingException
     {
-        message.setText(text, "utf-8", "html");
+        message.setText(text, "UTF-8", "html");
     }
 }

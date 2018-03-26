@@ -258,10 +258,15 @@ public class ApplicationBean
 
     protected void addFatalMessage(Throwable exception)
     {
+        addFatalMessage(null, exception);
+    }
+
+    protected void addFatalMessage(String desc, Throwable exception)
+    {
         addMessage(FacesMessage.SEVERITY_FATAL, "fatal_error");
         //addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");
 
-        Logger.getLogger(ApplicationBean.class).fatal("Fatal unhandled error on " + BeanHelper.getRequestSummary(), exception);
+        Logger.getLogger(ApplicationBean.class).fatal((desc != null ? desc : "Fatal unhandled error") + "; " + BeanHelper.getRequestSummary(), exception);
     }
 
     protected void addInvalidParameterMessage(String... parameter)
