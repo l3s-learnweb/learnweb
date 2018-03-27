@@ -8,6 +8,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.net.URLEncoder;
+import java.time.Duration;
 import java.util.Collection;
 
 import org.apache.commons.codec.binary.Base64;
@@ -286,6 +287,26 @@ public class StringHelper
         if(rest < 10)
             str.append('0');
         return str.toString();
+    }
+
+    public static String formatDuration(Duration d)
+    {
+        long hours = d.toHours();
+        long minutes = d.minusHours(hours).toMinutes();
+
+        StringBuilder output = new StringBuilder();
+        if(hours > 0)
+        {
+            output.append(hours);
+            output.append("h ");
+        }
+
+        output.append(minutes);
+        if(minutes < 10)
+            output.append('0');
+        output.append("m");
+
+        return output.toString();
     }
 
     /**

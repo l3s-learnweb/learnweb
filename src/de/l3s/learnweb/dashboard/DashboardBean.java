@@ -2,9 +2,7 @@ package de.l3s.learnweb.dashboard;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.time.ZonedDateTime;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -26,9 +24,8 @@ public class DashboardBean extends ApplicationBean implements Serializable
     private static final String PREFERENCE_STARTDATE = "dashboard_startdate";
     private static final String PREFERENCE_ENDDATE = "dashboard_enddate";
 
-    private Date startDate = Date.from(ZonedDateTime.now().minusMonths(1).toInstant()); // month ago
-    private Date endDate = new Date(); // now    
-
+    private Date startDate = null;
+    private Date endDate = null;
     private Integer selectedUserId = null; // optionally select a single user to display
 
     private List<GlossaryFieldSummery> glossaryFieldSummeryPerUser;
@@ -46,8 +43,13 @@ public class DashboardBean extends ApplicationBean implements Serializable
 
         try
         {
-            startDate = new SimpleDateFormat("yyyy-MM-dd").parse("2017-03-01");
-            endDate = new SimpleDateFormat("yyyy-MM-dd").parse("2017-06-01");
+            Calendar cal = Calendar.getInstance();
+            cal.add(Calendar.MONTH, -1);
+
+            String savedStartDate = getPreference(PREFERENCE_STARTDATE, Long.toString(cal.getTimeInMillis())); // month ago
+            String savedEndDate = getPreference(PREFERENCE_ENDDATE, Long.toString(new Date().getTime()));
+            startDate = new Date(Long.parseLong(savedStartDate));
+            endDate = new Date(Long.parseLong(savedEndDate));
 
             List<Integer> selectedUserIds = getUser().getOrganisation().getUserIds();
             log.debug("users: " + selectedUserIds);
@@ -56,7 +58,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
 
             glossaryFieldSummeryPerUser = dashboardManager.getGlossaryFieldSummeryPerUser(selectedUserIds, startDate, endDate);
         }
-        catch(SQLException | ParseException e)
+        catch(SQLException e)
         {
             addFatalMessage(e);
         }

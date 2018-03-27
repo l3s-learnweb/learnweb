@@ -94,6 +94,9 @@ public class UserLogHome
         return actperday;
     }
 
+    /**
+     * @deprecated use {@code DashboardManager.getActionsWithCounters()} instead
+     */
     public Map<String, Integer> actionCount(String startdate, String enddate)
     {
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
@@ -112,6 +115,9 @@ public class UserLogHome
         return actperday;
     }
 
+    /**
+     * @deprecated getTotalConcepts
+     */
     public Integer getTotalConcepts(String startdate, String enddate)
     {
         int result = 0;
@@ -131,6 +137,9 @@ public class UserLogHome
         return result;
     }
 
+    /**
+     * @deprecated getTotalTerms
+     */
     public Integer getTotalTerms(String startdate, String enddate)
     {
         int result = 0;
@@ -152,6 +161,9 @@ public class UserLogHome
         return result;
     }
 
+    /**
+     * @deprecated getTotalConcepts
+     */
     public Integer getTotalConcepts(Integer userId, String startdate, String enddate)
     {
         int result = 0;
@@ -172,6 +184,9 @@ public class UserLogHome
         return result;
     }
 
+    /**
+     * @deprecated getTotalTerms
+     */
     public Integer getTotalTerms(Integer userId, String startdate, String enddate)
     {
         int result = 0;
@@ -206,7 +221,7 @@ public class UserLogHome
                     actperday.put("EMPTY", rs.getInt("count"));
                 else
                     actperday.put(rs.getString("refs"), rs.getInt("count"));
-    
+
             closeConnection();
         }
         catch(SQLException e)
@@ -241,6 +256,10 @@ public class UserLogHome
         return actperday;
     }
     */
+
+    /**
+     * @deprecated getGlossarySourcesWithCounters
+     */
     public Map<String, Integer> glossarySource(Integer userId, String startdate, String enddate)
     {
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
@@ -291,6 +310,10 @@ public class UserLogHome
         return actperday;
     }
     */
+
+    /**
+     * @deprecated getGlossaryConceptsCountPerUser
+     */
     public Map<String, Integer> getUserGlossaryConceptCountByCourse(Course course, String startdate, String enddate)
     {
         Map<String, Integer> conceptsPerUser = new TreeMap<String, Integer>();
@@ -319,7 +342,7 @@ public class UserLogHome
         return conceptsPerUser;
     }
 
-    // TODO combine with
+    // TODO combine with (actually, the results of the method is not displayed anywhere)
     public Map<String, Integer> userGlossaryTerm()
     {
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
@@ -341,6 +364,9 @@ public class UserLogHome
         return actperday;
     }
 
+    /**
+     * @deprecated getGlossaryTermsCountPerUser
+     */
     public Map<String, Integer> userGlossaryTerm(String startdate, String enddate)
     {
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
@@ -401,6 +427,10 @@ public class UserLogHome
         return actperday;
     }
     */
+
+    /**
+     * @deprecated use {@code DashboardManager.getActionsWithCounters()} instead
+     */
     public Map<String, Integer> actionCount(Integer userId, String startdate, String enddate)
     {
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
@@ -482,6 +512,10 @@ public class UserLogHome
         return result;
     }
     */
+
+    /**
+     * @deprecated getTotalSources
+     */
     public Integer getTotalSource(Integer userId, String startdate, String enddate)
     {
         int result = 0;
@@ -525,6 +559,10 @@ public class UserLogHome
         return result;
     }
     */
+
+    /**
+     * @deprecated getGlossaryStatisticPerUser
+     */
     public Map<String, Integer[]> getSummary2(String startdate, String enddate)
     {
         int result = 0, result2 = 0;
@@ -534,7 +572,10 @@ public class UserLogHome
 
             // getTotalConcepts
             PreparedStatement pstmt = openConnection().prepareStatement(
-                    "select owner_user_id,count(distinct glossary_id) as count from resource_glossary rg, resource r where r.resource_id=rg.resource_id and rg.deleted<>1 and r.deleted<>1 and timestamp>'" + startdate + "' and timestamp<'" + enddate + "' group by owner_user_id ");
+                    "select owner_user_id, count(distinct glossary_id) as count " +
+                            "from resource_glossary rg, resource r " +
+                            "where r.resource_id=rg.resource_id and rg.deleted<>1 and r.deleted<>1 " +
+                            "and timestamp>'" + startdate + "' and timestamp<'" + enddate + "' group by owner_user_id ");
             ResultSet rs = pstmt.executeQuery();
             while(rs.next())
             {
@@ -546,8 +587,10 @@ public class UserLogHome
 
             // getTotalTerms
             pstmt = openConnection().prepareStatement(
-                    "select owner_user_id, count(*) as count , count(distinct rgt.references) as count2 from resource_glossary rg, resource_glossary_terms rgt, resource r where rg.glossary_id=rgt.glossary_id and r.resource_id=rg.resource_id and r.deleted<>1 and rgt.deleted <>1 and rg.deleted<>1 and rg.timestamp>'"
-                            + startdate + "' and rg.timestamp<'" + enddate + "' group by owner_user_id");
+                    "select owner_user_id, count(*) as count, count(distinct rgt.references) as count2 " +
+                            "from resource_glossary rg, resource_glossary_terms rgt, resource r " +
+                            "where rg.glossary_id=rgt.glossary_id and r.resource_id=rg.resource_id and r.deleted<>1 and rgt.deleted <>1 and rg.deleted<>1 " +
+                            "and rg.timestamp>'" + startdate + "' and rg.timestamp<'" + enddate + "' group by owner_user_id");
             rs = pstmt.executeQuery();
             while(rs.next())
             {
@@ -624,6 +667,10 @@ public class UserLogHome
         return actperday;
     }
     */
+
+    /**
+     * @deprecated getGlossaryDescriptions
+     */
     public List<String> descritpions(Integer userId, String startdate, String enddate)
     {
         List<String> actperday = new ArrayList<String>();
@@ -644,6 +691,9 @@ public class UserLogHome
         return actperday;
     }
 
+    /**
+     * @deprecated use {@code DashboardManager.getGlossaryFieldSummeryPerUser()} instead
+     */
     public UsesTable fields(Integer userId, String startdate, String enddate)
     {
         UsesTable ut = new UsesTable();
@@ -685,6 +735,9 @@ public class UserLogHome
         return ut;
     }
 
+    /**
+     * @deprecated getGlossaryFieldSummeryPerUser
+     */
     public ArrayList<UsesTable> fields()
     {
         ArrayList<UsesTable> uts = new ArrayList<UsesTable>();
@@ -715,6 +768,9 @@ public class UserLogHome
         return uts;
     }
 
+    /**
+     * @deprecated getProxySourcesWithCounters
+     */
     public Map<String, Integer> proxySources(Integer userId, String startdate, String enddate)
     {
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
@@ -735,6 +791,9 @@ public class UserLogHome
         return actperday;
     }
 
+    /**
+     * @deprecated use {@code DashboardManager.getActionsCountPerDay()} instead
+     */
     public Map<String, Integer> actionPerDay(String startdate, String enddate)
     {
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
@@ -754,6 +813,9 @@ public class UserLogHome
         return actperday;
     }
 
+    /**
+     * @deprecated use {@code DashboardManager.getActionsCountPerDay()} instead
+     */
     public Map<String, Integer> actionPerDay(Integer userId, String startdate, String enddate)
     {
         Map<String, Integer> actperday = new TreeMap<String, Integer>();
@@ -782,6 +844,7 @@ public class UserLogHome
 
         UserManager userManager = learnweb.getUserManager();
         HashMap<Integer, HashMap<String, Object>> mergedStatistics = new HashMap<Integer, HashMap<String, Object>>();
+        // Warning, now learnweb and tracker records stored under same client = 1.
         List<TrackerStatistic> learnwebStatistics = getTrackerUserStatistics(1, userIds, startdate, enddate);
         List<TrackerStatistic> proxyStatistics = getTrackerUserStatistics(2, userIds, startdate, enddate);
 
@@ -836,6 +899,7 @@ public class UserLogHome
      * @param enddate
      * @return
      * @throws SQLException
+     * @deprecated getTrackerStatistics
      */
     private List<TrackerStatistic> getTrackerUserStatistics(int clientId, String userIds, String startdate, String enddate) throws SQLException
     {
