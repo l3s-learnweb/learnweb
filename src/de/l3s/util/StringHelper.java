@@ -102,7 +102,7 @@ public class StringHelper
         return false;
     }
 
-    public static String implode(Collection<String> list, String delim)
+    public static String implode(Iterable<String> list, String delim)
     {
         StringBuilder out = new StringBuilder();
         for(String item : list)

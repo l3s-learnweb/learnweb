@@ -264,7 +264,7 @@ public class SurveyManager
         return survey;
     }
 
-    public void uploadAnswers(int user_id, HashMap<String, String> wrappedAnswers, HashMap<String, String[]> wrappedMultipleAnswers, int resource_id, boolean update) throws SQLException
+    public void uploadAnswers(int userId, HashMap<String, String> wrappedAnswers, HashMap<String, String[]> wrappedMultipleAnswers, int resourceId, boolean update) throws SQLException
     {
 
         String submitCheck = "SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?";
@@ -272,8 +272,8 @@ public class SurveyManager
         ResultSet rs = null;
 
         ps = learnweb.getConnection().prepareStatement(submitCheck);
-        ps.setInt(1, resource_id);
-        ps.setInt(2, user_id);
+        ps.setInt(1, resourceId);
+        ps.setInt(2, userId);
         rs = ps.executeQuery();
         if(rs.next() && !update)
         {
@@ -287,19 +287,19 @@ public class SurveyManager
          *
          *
         String getSurveyId = "SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?";
-        
+
         ps = learnweb.getConnection().prepareStatement(getSurveyId);
-        
+
         ps.setInt(1, resource_id);
-        
+
         rs = ps.executeQuery();
-        
+
         if(rs.next())
         {
-        
+
             //  start = rs.getDate("open_date");
             // end = rs.getDate("close_date");
-        
+
         }
         */
 
@@ -310,8 +310,8 @@ public class SurveyManager
         {
             Entry<String, String> pair = answer1.next();
 
-            insert.setInt(1, resource_id);
-            insert.setInt(2, user_id);
+            insert.setInt(1, resourceId);
+            insert.setInt(2, userId);
             insert.setInt(3, Integer.parseInt(pair.getKey()));
             insert.setString(4, pair.getValue());
             insert.executeQuery();
@@ -320,33 +320,30 @@ public class SurveyManager
         Iterator<Entry<String, String[]>> answer2 = wrappedMultipleAnswers.entrySet().iterator();
         while(answer2.hasNext())
         {
-            Entry<String, String[]> pair1 = answer2.next();
+            Entry<String, String[]> pair = answer2.next();
 
-            insert.setInt(1, resource_id);
-            insert.setInt(2, user_id);
-            insert.setInt(3, Integer.parseInt(pair1.getKey()));
-
-            if(ArrayUtils.isEmpty(pair1.getValue()))
-            {
-                insert.setString(4, "");
-            }
-            else
-            {
-                String str = "";
-
-                for(String s : pair1.getValue())
-                {
-                    str = str + s + "|||";
-                }
-
-                str = str.substring(0, str.lastIndexOf("|||"));
-                insert.setString(4, str);
-            }
-
+            insert.setInt(1, resourceId);
+            insert.setInt(2, userId);
+            insert.setInt(3, Integer.parseInt(pair.getKey()));
+            insert.setString(4, concatMultipleAnswers(pair.getValue()));
             insert.executeQuery();
-
         }
 
+    }
+
+    private static String concatMultipleAnswers(String[] answers)
+    {
+        if(ArrayUtils.isEmpty(answers))
+            return "";
+
+        String str = "";
+
+        for(String s : answers)
+        {
+            str += "|||" + s.replace("|||", "|I|");
+        }
+
+        return str.substring(3);
     }
 
     public List<Resource> getSurveyResourcesByUserAndCourse(int userId, int courseId) throws SQLException
@@ -592,79 +589,12 @@ public class SurveyManager
                     editable = result.getBoolean("editable");
                     break;
                 }
-    
+
             }
         }
-    
+
         return editable;
     }
     */
 
 }
-/*public ArrayList<SurveyMetaDataFields> getFormQuestions()
-{
-    return formQuestions;
-}*/
-
-/*public Date getStart()
-{
-    return start;
-}
-
-public void setStart(Date start)
-{
-    this.start = start;
-}
-
-public Date getEnd()
-{
-    return end;
-}
-
-public void setEnd(Date end)
-{
-    this.end = end;
-}
-
-public int getSurvey_id()
-{
-    return survey_id;
-}
-
-public void setSurvey_id(int survey_id)
-{
-    this.survey_id = survey_id;
-}
-
-public String getSurveyTitle()
-{
-    return surveyTitle;
-}
-
-public void setSurveyTitle(String surveyTitle)
-{
-    this.surveyTitle = surveyTitle;
-}
-
-public String getDescription()
-{
-    return description;
-}
-
-public void setDescription(String description)
-{
-    this.description = description;
-}
-
-public int getResource_id()
-{
-    return resource_id;
-}
-
-public void setResource_id(int resource_id)
-{
-    this.resource_id = resource_id;
-}
-
-}
-*/

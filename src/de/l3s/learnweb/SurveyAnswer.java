@@ -5,10 +5,6 @@ import java.util.LinkedHashMap;
 
 public class SurveyAnswer implements Serializable
 {
-
-    /**
-     *
-     */
     private static final long serialVersionUID = -1442018853436353323L;
 
     // TODO none of these fields should be public, they have to be private
@@ -19,13 +15,6 @@ public class SurveyAnswer implements Serializable
 
     public SurveyAnswer()
     {
-    }
-
-    public SurveyAnswer(String id, LinkedHashMap<String, String> ans)
-    {
-        this.userId = id;
-        this.answers = ans;
-
     }
 
     public String getAnswer(String id)

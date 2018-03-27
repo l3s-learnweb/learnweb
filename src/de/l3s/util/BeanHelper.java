@@ -1,5 +1,6 @@
 package de.l3s.util;
 
+import java.util.Arrays;
 import java.util.Map;
 
 import javax.faces.context.ExternalContext;
@@ -106,5 +107,23 @@ public class BeanHelper
             // ignore
         }
         return "page: " + url + "; user: " + user + "; ip: " + ip + "; referrer: " + referrer + "; userAgent: " + userAgent + "; parameters: " + parameters + ";";
+    }
+
+    private static String printMap(Map<String, String[]> map)
+    {
+        if(null == map)
+            return "";
+        StringBuilder sb = new StringBuilder();
+        sb.append("{");
+        for(Map.Entry<String, String[]> entry : map.entrySet())
+        {
+            sb.append(entry.getKey());
+            sb.append("=[");
+            sb.append(StringHelper.implode(Arrays.asList(entry.getValue()), "; "));
+            sb.append("], ");
+        }
+        sb.setLength(sb.length() - 2);
+        sb.append("}");
+        return sb.toString();
     }
 }

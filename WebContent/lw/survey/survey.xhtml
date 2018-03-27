@@ -24,25 +24,21 @@
 		<h:outputScript library="glossary" name="glossary.js" />
 		<h:panelGroup id="main_component" layout="block">
 			<h:form id="form" prependId="false">
-				<ui:fragment rendered="#{true}">
-
-					<p:panel id="panelOut" header="#{surveyBean.survey.surveyTitle}"
-						style="margin-bottom:10px;" rendered="true">
-						<h:panelGroup id="panel"
-							rendered="#{not surveyBean.survey.submitted and surveyBean.editable or surveyBean.update or facesContext.validationFailed}">
+				<ui:fragment rendered="#{surveyBean.survey != null}">
+					<p:panel header="#{surveyBean.survey.surveyTitle}" style="margin-bottom:10px;">
+						<h:panelGroup rendered="#{not surveyBean.survey.submitted and surveyBean.editable or surveyBean.update or facesContext.validationFailed}">
 							<h:panelGrid columns="1" cellpadding="5">
 								<c:forEach var="field"
 									items="#{surveyBean.survey.formQuestions}">
 
 									<c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">
-
 										<c:if test="#{field.type eq 'FULLWIDTH_HEADER'}">
-											<br />
-											<h3>
-												<h:outputText value="${field.label}"
-													style="font-style: italic; font-weight: bold;" />
-											</h3>
-											<br />
+											<h:panelGroup>
+												<h3>
+													<h:outputText value="${field.label}"
+														style="font-style: italic; font-weight: bold;" />
+												</h3>
+											</h:panelGroup>
 										</c:if>
 										<c:if test="#{field.type eq 'FULLWIDTH_DESCRIPTION'}">
 											<h:outputText value="${field.label}" />
@@ -52,7 +48,7 @@
 									<c:if test="#{field.type eq 'INPUT_TEXT'}">
 										<p:outputLabel for="input_#{field.id}" value="#{field.label}"></p:outputLabel>
 										<p:inputText id="input_#{field.id}"
-											required="#{field.required}"
+											required="#{field.required and empty param[save.clientId]}"
 											value="#{surveyBean.survey.wrappedAnswers[field.id]}"
 											title="#{field.info}" style="width:70%;'" />
 										<p:tooltip for="input_#{field.id}" showEvent="focus"
@@ -64,7 +60,7 @@
 										<p:outputLabel for="input_area_#{field.id}"
 											value="#{field.label}"></p:outputLabel>
 										<p:inputTextarea id="input_area_#{field.id}"
-											required="#{field.required}"
+											required="#{field.required and empty param[save.clientId]}"
 											value="#{surveyBean.survey.wrappedAnswers[field.id]}"
 											title="#{field.info}" rows="4"
 											style="overflow-y: scroll; width:100%; box-sizing: border-box;"
@@ -78,7 +74,7 @@
 										<p:outputLabel for="input_complete_#{field.id}"
 											value="#{field.label}"></p:outputLabel>
 										<p:autoComplete id="input_complete_#{field.id}"
-											required="#{field.required}"
+											required="#{field.required and empty param[save.clientId]}"
 											value="#{surveyBean.survey.wrappedAnswers[field.id]}"
 											completeMethod="#{field.completeText}" class="border-box-100" />
 										<p:tooltip for="input_complete_#{field.id}" showEvent="hover"
@@ -93,8 +89,8 @@
 										<p:selectOneMenu id="input_selectone_#{field.id}"
 											value="#{surveyBean.survey.wrappedAnswers[field.id]}"
 											editable="#{field.type eq 'ONE_MENU_EDITABLE'}"
-											required="#{field.required}" class="border-box-100"
-											title="#{field.info}">
+											required="#{field.required and empty param[save.clientId]}"
+											class="border-box-100" title="#{field.info}">
 											<f:selectItems value="#{field.answers}" var="option"
 												itemLabel="#{option}" itemValue="#{option}" />
 										</p:selectOneMenu>
@@ -108,7 +104,7 @@
 										<p:selectCheckboxMenu id="input_selectmultiple_#{field.id}"
 											value="#{surveyBean.survey.wrappedMultipleAnswers[field.id]}"
 											label="" multiple="true" title="#{field.info}"
-											required="#{field.required}"
+											required="#{field.required and empty param[save.clientId]}"
 											filter="#{field.optionsList.size() gt 8}"
 											filterMatchMode="startsWith" panelStyle="width:250px">
 											<f:selectItems value="#{field.answers}" var="option"
@@ -123,7 +119,7 @@
 										<p:selectOneRadio id="input_oneradio_#{field.id}"
 											value="#{surveyBean.survey.wrappedAnswers[field.id]}"
 											label="" multiple="true" title="#{field.info}"
-											required="#{field.required}"
+											required="#{field.required and empty param[save.clientId]}"
 											filter="#{field.optionsList.size() gt 8}"
 											filterMatchMode="startsWith" panelStyle="width:250px">
 											<f:selectItems value="#{field.answers}" var="option"
@@ -138,7 +134,7 @@
 										<p:selectManyCheckbox id="input_manycheckbox_#{field.id}"
 											value="#{surveyBean.survey.wrappedMultipleAnswers[field.id]}"
 											label="" multiple="true" title="#{field.info}"
-											required="#{field.required}"
+											required="#{field.required and empty param[save.clientId]}"
 											filter="#{field.optionsList.size() gt 8}"
 											filterMatchMode="startsWith" panelStyle="width:250px"
 											layout="grid" columns="1">
@@ -167,12 +163,16 @@
 							styleClass="greenbutton resource_button"
 							action="#{surveyBean.getSurvey(userBean.user.id)}" update="@form">
 						</p:commandButton>
-						<br class="clear"/>
+
+						<p:commandButton id="save" binding="#{save}" value="#{msg.save}" rendered="false"
+							actionListener="#{surveyBean.submit()}" process="@form"
+							update=":message @form" />
+						<br class="clear" />
 					</p:panel>
 
 				</ui:fragment>
 
-				<ui:fragment rendered="#{surveyBean.resourceId le 0}">
+				<ui:fragment rendered="#{surveyBean.survey == null}">
 					<div class="noresource">
 						<br /> <br />
 						<h:outputText value="Please select correct survey resource."
