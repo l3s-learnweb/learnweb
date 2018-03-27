@@ -18,10 +18,6 @@ import de.l3s.learnweb.SurveyAnswer;
 @ManagedBean
 public class SurveyResultBean extends ApplicationBean implements Serializable
 {
-
-    /**
-     *
-     */
     private static final long serialVersionUID = 706177879900332816L;
     private static final Logger log = Logger.getLogger(SurveyResultBean.class);
     private int resourceId;
@@ -60,7 +56,6 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
 
     private void getSurveyResult()
     {
-
         columns = new ArrayList<ColumnModel>();
         LinkedHashMap<String, String> questions = new LinkedHashMap<String, String>();
         try
@@ -107,27 +102,13 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
         return answers;
     }
 
-    public void setAnswers(List<SurveyAnswer> answers)
-    {
-        this.answers = answers;
-    }
-
     public List<ColumnModel> getColumns()
     {
         return columns;
     }
 
-    public void setColumns(List<ColumnModel> columns)
-    {
-        this.columns = columns;
-    }
-
     static public class ColumnModel implements Serializable
     {
-
-        /**
-         *
-         */
         private static final long serialVersionUID = -8787608049574883366L;
         private String header;
         private String id;

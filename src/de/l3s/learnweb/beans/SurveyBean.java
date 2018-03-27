@@ -18,7 +18,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -6217166153267996666L;
     //private static final Logger log = Logger.getLogger(SurveyBean.class);
-    private int resourceId; //change this when there is a way to generate Survey type resource
+    private int resourceId;
 
     private boolean update;
     private boolean editable;
@@ -55,17 +55,20 @@ public class SurveyBean extends ApplicationBean implements Serializable
 
                 if(!isValidSubmissionDate(survey))
                     addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_error_between", survey.getStart(), survey.getEnd());
-                else if(survey.isSubmitted() && editable && survey.getEnd() != null)
-                    addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_edit_until", survey.getEnd());
-                else if(survey.isSubmitted() && editable)
-                    addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_edit");
-                else if(survey.isSubmitted() && !editable)
-                    addMessage(FacesMessage.SEVERITY_ERROR, "survey_submit_error");
+                else if(survey.isSubmitted())
+                {
+                    if(editable && survey.getEnd() != null)
+                        addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_edit_until", survey.getEnd());
+                    else if(editable)
+                        addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_edit");
+                    else if(!editable)
+                        addMessage(FacesMessage.SEVERITY_ERROR, "survey_submit_error");
+                }
             }
             catch(Exception e)
             {
                 resourceId = -1;
-                addFatalMessage("Couldn't log survey action; resource: ", e);
+                addFatalMessage("Couldn't load survey; resource: ", e);
             }
         }
     }
