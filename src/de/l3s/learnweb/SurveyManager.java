@@ -32,80 +32,26 @@ public class SurveyManager
         this.learnweb = learnweb;
     }
 
-    public Survey getAssessmentFormDetails(int resource_id, int userId) throws SQLException
+    public Survey getAssessmentFormDetails(int resourceId, int userId) throws SQLException
     {
 
         HashMap<String, String> wrappedAnswers = new HashMap<String, String>();
         HashMap<String, String[]> wrappedMultipleAnswers = new HashMap<String, String[]>();
         Survey survey = new Survey();
-
-        //Getting survey ID
-        PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?");
-        preparedStmnt.setInt(1, resource_id);
-        ResultSet result = preparedStmnt.executeQuery();
-
-        if(result.next())
-        {
-
-            survey.setEnd(result.getDate("close_date"));
-            survey.setStart(result.getDate("open_date"));
-            survey.setSurveyId(result.getInt("survey_id"));
-            survey.setEditable(result.getBoolean("editable"));
-        }
-        //Getting title and description
-        preparedStmnt = learnweb.getConnection().prepareStatement("SELECT `title`, `description` FROM `lw_resource` WHERE `resource_id` = ?");
-        preparedStmnt.setInt(1, resource_id);
-        ResultSet descTitle = preparedStmnt.executeQuery();
-        while(descTitle.next())
-        {
-            survey.setDescription(descTitle.getString("description"));
-            survey.setSurveyTitle(descTitle.getString("title"));
-        }
-
-        //Getting survey questions
-        preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_question` WHERE `survey_id` = ? and `deleted`=0 ORDER BY `order` ASC");
-        preparedStmnt.setInt(1, survey.getSurveyId());
-
-        result = preparedStmnt.executeQuery();
+        survey = getFormQuestions(resourceId, userId);
         HashMap<String, SurveyMetaDataFields> formquestions = new HashMap<String, SurveyMetaDataFields>();
-        while(result.next())
+        for(SurveyMetaDataFields question : survey.getFormQuestions())
         {
-            SurveyMetaDataFields formQuestion = new SurveyMetaDataFields(result.getString("question"), MetadataType.valueOf(result.getString("question_type")));
-            if(result.getString("answers") != null)
-            {
-                String str = result.getString("answers").trim();
-                formQuestion.setAnswers(Arrays.asList(str.split("\\s*\\|\\|\\|\\s*")));
-
-            }
-            if(result.getString("extra") != null)
-            {
-                formQuestion.setExtra(result.getString("extra"));
-            }
-            if(result.getString("option") != null)
-            {
-                String str = result.getString("option").trim();
-                formQuestion.setOptions(Arrays.asList(str.split("\\s*\\|\\|\\|\\s*")));
-            }
-            if(result.getString("info") != null)
-            {
-                formQuestion.setInfo(result.getString("info"));
-            }
-            else
-            {
-                formQuestion.setInfo("");
-            }
-            formQuestion.setRequired(result.getBoolean("required"));
-            formQuestion.setId(Integer.toString(result.getInt("question_id")));
-            formquestions.put(formQuestion.getId(), formQuestion);
-            survey.getFormQuestions().add(formQuestion);
+            formquestions.put(question.getId(), question);
         }
+
         //Get answered results for user-wise display of results
 
-        resource_id = getResourceIdForAnsweredSurvey(resource_id, userId);
-        survey.setResourceId(resource_id);
+        resourceId = getResourceIdForAnsweredSurvey(resourceId, userId);
+        survey.setResourceId(resourceId);
         //Get survey data
-        preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?");
-        preparedStmnt.setInt(1, resource_id);
+        PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?");
+        preparedStmnt.setInt(1, resourceId);
         preparedStmnt.setInt(2, userId);
         ResultSet rs = preparedStmnt.executeQuery();
         while(rs.next())
@@ -135,24 +81,6 @@ public class SurveyManager
         }
         survey.setWrappedAnswers(wrappedAnswers);
         survey.setWrappedMultipleAnswers(wrappedMultipleAnswers);
-
-        return survey;
-    }
-
-    public Survey getSurveyByUserId(int resourceId, int userId) throws SQLException
-    {
-        Survey survey = new Survey();
-        survey.setResourceId(resourceId);
-
-        String select = "SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?";
-        PreparedStatement ps = learnweb.getConnection().prepareStatement(select);
-        ps.setInt(1, resourceId);
-        ps.setInt(2, userId);
-        ResultSet rs = ps.executeQuery();
-        if(rs.next())
-        {
-            survey.setSubmitted(true);
-        }
 
         return survey;
     }
@@ -202,7 +130,7 @@ public class SurveyManager
             {
 
                 survey.setFormQuestions(new ArrayList<SurveyMetaDataFields>());
-                return survey;
+                // return survey;
 
             }
 
@@ -259,6 +187,24 @@ public class SurveyManager
             formQuestion.setRequired(result.getBoolean("required"));
             formQuestion.setId(Integer.toString(result.getInt("question_id")));
             survey.getFormQuestions().add(formQuestion);
+        }
+
+        return survey;
+    }
+
+    public Survey getSurveyByUserId(int resourceId, int userId) throws SQLException
+    {
+        Survey survey = new Survey();
+        survey.setResourceId(resourceId);
+
+        String select = "SELECT * FROM `lw_survey_answer` WHERE `resource_id` = ? AND `user_id` = ?";
+        PreparedStatement ps = learnweb.getConnection().prepareStatement(select);
+        ps.setInt(1, resourceId);
+        ps.setInt(2, userId);
+        ResultSet rs = ps.executeQuery();
+        if(rs.next())
+        {
+            survey.setSubmitted(true);
         }
 
         return survey;
