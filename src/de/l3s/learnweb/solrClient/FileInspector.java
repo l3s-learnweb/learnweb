@@ -97,6 +97,7 @@ public class FileInspector
             if(mimeType != null)
                 info.mimeType = mimeType.split(";")[0];
         }
+
         info.textContent = result.getVal(1).toString().trim().replaceAll("(?m)^[ \t]*\r?\n", "");
 
         return info;
