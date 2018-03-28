@@ -1,0 +1,13 @@
+In order to generate the thumbnails required for the archiveThumbnail.jsf visualization:
+1) Extract and store the HTML content and DOM of each archived version of a resource 
+   in lw_resource_archive_shingles using extractingHTML method;
+2) Then keep track of exact duplicate archived versions in lw_resource_archiveurl by 
+   using updateDuplicateShingleIds method; 
+3) Generate thumbnails for each resource ignoring duplicate archived versions using 
+   generateThumbnails method;
+4) For running the threshold grouping algorithm, the simhash value of each archived 
+   version needs to be computed. This can be done using computeSimhashForGroup method.
+   It updates the simhash value for each archived version in lw_resource_archiveurl;
+   
+The archive thumbnail visualization can be accessed at the url below giving resource id:
+http://learnweb.l3s.uni-hannover.de/lw/archiveThumbnail.jsf?resource_id=x

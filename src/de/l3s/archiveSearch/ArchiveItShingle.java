@@ -356,7 +356,6 @@ public class ArchiveItShingle
 
     /**
      * Compute the simhash value for a given document text string
-     *
      */
     private long computeStringFingerprint(String s)
     {
