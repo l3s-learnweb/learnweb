@@ -21,7 +21,6 @@ import org.apache.log4j.Logger;
 import de.l3s.learnweb.SearchFilters.MODE;
 import de.l3s.learnweb.SearchFilters.SERVICE;
 import de.l3s.learnweb.WaybackUrlManager.UrlRecord;
-import de.l3s.searchHistoryTest.SolrEdgeComputeForEachSession;
 import de.l3s.util.StringHelper;
 import de.l3s.util.URL;
 
@@ -60,7 +59,6 @@ public class SearchLogManager
         this.consumerThread.start();
 
         this.felAnnotatorPath = learnweb.getProperties().getProperty("FEL_ANNOTATOR_PATH", "");
-        System.out.println("felAnnotatorPath: " + felAnnotatorPath);
         File felJarFile = new File(felAnnotatorPath);
         if(felJarFile.exists())
         {
@@ -334,7 +332,6 @@ public class SearchLogManager
 
     private class FELAnnotationConsumer implements Runnable
     {
-        SolrEdgeComputeForEachSession seces = new SolrEdgeComputeForEachSession();
 
         @Override
         public void run()
@@ -374,7 +371,7 @@ public class SearchLogManager
                         {
                             log.error("Error while annotating search id: " + searchId);
                         }
-                        seces.insertEdgesForSessionGivenSearchId(searchId);
+                        learnweb.getSearchSessionEdgeComputator().insertEdgesForSessionGivenSearchId(searchId);
                     }
                 }
 

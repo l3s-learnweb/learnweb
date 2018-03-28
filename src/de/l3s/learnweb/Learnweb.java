@@ -33,6 +33,7 @@ import de.l3s.learnweb.solrClient.SolrClient;
 import de.l3s.learnweb.web.RequestManager;
 import de.l3s.office.ConverterService;
 import de.l3s.searchHistoryTest.SearchHistoryManager;
+import de.l3s.searchHistoryTest.SearchSessionEdgeComputator;
 import de.l3s.searchlogclient.SearchLogClient;
 import de.l3s.util.PropertiesBundle;
 import de.l3s.util.StringHelper;
@@ -90,6 +91,7 @@ public class Learnweb
 
     private final HistoryManager historyManager;
     private final SearchHistoryManager searchHistoryManager;
+    private final SearchSessionEdgeComputator searchSessionEdgeComputator;
     private final ProtectionManager protectionManager;
     private final RequestManager requestManager;
     private final DashboardManager dashboardManager;
@@ -310,6 +312,7 @@ public class Learnweb
 
         historyManager = new HistoryManager(this);
         searchHistoryManager = new SearchHistoryManager(this);
+        searchSessionEdgeComputator = SearchSessionEdgeComputator.getInstance(this);
 
         //new managers added by Chloe
         audienceManager = new AudienceManager(this);
@@ -855,6 +858,11 @@ public class Learnweb
     public SearchHistoryManager getSearchHistoryManager()
     {
         return searchHistoryManager;
+    }
+
+    public SearchSessionEdgeComputator getSearchSessionEdgeComputator()
+    {
+        return searchSessionEdgeComputator;
     }
 
     public ProtectionManager getProtectionManager()
