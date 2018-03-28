@@ -67,7 +67,7 @@ public class SearchSessionEdgeComputator
 
     public String insertEdgesForSessionGivenSearchId(String searchId)
     {
-        log.info("insertEdgesForSessionGivenSearchId is applied.");
+        //log.info("insertEdgesForSessionGivenSearchId is applied.");
         try
         {
             PreparedStatement pstmt = learnweb.getConnection().prepareStatement(
@@ -109,10 +109,10 @@ public class SearchSessionEdgeComputator
                 List<String> relatedEntities = getRelatedEntitiesForSearchId(searchId);
                 //log.info("related: " + related);
                 entities.addAll(relatedEntities);
-                log.info("searchId: " + searchId + "related entities size: " + relatedEntities.size());
+                log.info("searchId: " + searchId + "; related entities size: " + relatedEntities.size());
             }
             pStmt.close();
-            log.info("sessionId: " + sessionId + "related entities size: " + entities.size());
+            log.info("sessionId: " + sessionId + "; related entities size: " + entities.size());
         }
         catch(SQLException e)
         {
@@ -241,39 +241,6 @@ public class SearchSessionEdgeComputator
         }
         return denorminator;
     }
-
-    //get edge score
-    /*public static Map<EntityPair, Double> returnByScore(List<ArrayList> list) throws ClassNotFoundException, IOException, SolrServerException
-    {
-        //get a list
-        List<String> entitylist = new ArrayList<>();
-        for(List<String> li : list)
-        {
-            for(int i = 0; i < li.size(); i++)
-            {
-                entitylist.add(li.get(i));
-            }
-        }
-
-        //use solrNum
-        Double score = 0.0;
-        Double threshold = 0.001;
-        Map<EntityPair, Double> result = getEdgeScore(entitylist);
-        List<Map.Entry<EntityPair, Double>> sortresult = sortByScore(result);
-        double de = getDenorminator(sortresult);
-
-        Map<EntityPair, Double> nodepairs = new HashMap<>();//output
-        for(Map.Entry<EntityPair, Double> co : sortresult)
-        {
-            score = co.getValue() / de;
-            if(score > threshold)
-            {
-                nodepairs.put(co.getKey(), score);
-                //System.out.println(co.getKey().toString()+": "+score);
-            }
-        }
-        return nodepairs;
-    }*/
 
     public static void main(String[] args) throws SolrServerException, IOException, ClassNotFoundException, SQLException
     {
