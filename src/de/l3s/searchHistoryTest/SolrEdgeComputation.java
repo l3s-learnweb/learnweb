@@ -50,6 +50,34 @@ public class SolrEdgeComputation
         pStmt.close();
     }
 
+    public String insertEdgesForSessionGivenSearchId(String searchId)
+    {
+        log.info("insertEdgesForSessionGivenSearchId is applied.");
+        try
+        {
+            PreparedStatement pstmt = Learnweb.getInstance().getConnection().prepareStatement(
+                    "SELECT t2.session_id FROM learnweb_large.`sl_query` t1 join learnweb_main.lw_user_log t2 "
+                            + "WHERE t1.search_id=t2.target_id AND t2.action = 5 AND t1.user_id=t2.user_id AND t1.query=t2.params AND "
+                            + "t1.mode='text' AND t1.language='en' AND t1.user_id != 0 AND t1.search_id=?");
+            //+ "HAVING t1.timestamp >= (select timestamp from learnweb_large.sl_query where language='en' order by timestamp desc limit 1)"
+            //+ "ORDER BY t1.timestamp ASC");
+            pstmt.setString(1, searchId);
+            ResultSet rs = pstmt.executeQuery();
+            while(rs.next())
+            {
+                String sessionId = rs.getString("session_id");
+                insertEdgesForSessionId(sessionId);
+            }
+            pstmt.close();
+        }
+        catch(SQLException e)
+        {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     public void insertEdgesForSessionId(String sessionId)
     {
         List<String> entities = new ArrayList<String>();
@@ -212,14 +240,14 @@ public class SolrEdgeComputation
                 entitylist.add(li.get(i));
             }
         }
-    
+
         //use solrNum
         Double score = 0.0;
         Double threshold = 0.001;
         Map<EntityPair, Double> result = getEdgeScore(entitylist);
         List<Map.Entry<EntityPair, Double>> sortresult = sortByScore(result);
         double de = getDenorminator(sortresult);
-    
+
         Map<EntityPair, Double> nodepairs = new HashMap<>();//output
         for(Map.Entry<EntityPair, Double> co : sortresult)
         {
