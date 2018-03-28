@@ -23,7 +23,6 @@ import org.primefaces.model.timeline.TimelineModel;
 
 import de.l3s.archiveSearch.ArchiveItShingle;
 import de.l3s.learnweb.ArchiveUrl;
-import de.l3s.learnweb.ArchiveUrlManager;
 import de.l3s.learnweb.Learnweb;
 
 @ManagedBean
@@ -44,7 +43,6 @@ public class ArchiveThumbnailBean extends ApplicationBean
     private HashMap<String, Date> archiveUrlsHashMap;
 
     private ArchiveItShingle archiveItShingle;
-    ArchiveUrlManager archiveUrlManager;
 
     //Timeline properties
     private TimelineModel model;
@@ -52,8 +50,6 @@ public class ArchiveThumbnailBean extends ApplicationBean
     private Date max;
     private long zoomMin;
     private long zoomMax;
-
-    //   private DateFormat df; was not used
 
     public ArchiveThumbnailBean() throws SQLException
     {
@@ -65,9 +61,6 @@ public class ArchiveThumbnailBean extends ApplicationBean
         archiveUrls = new LinkedList<ArchiveUrl>();
         selectedArchiveUrls = new HashSet<String>();
         archiveUrlsHashMap = new HashMap<String, Date>();
-        archiveUrlManager = Learnweb.getInstance().getArchiveUrlManager();
-
-        //	df = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT, UtilBean.getUserBean().getLocale());
     }
 
     public Set<String> getSelectedArchiveUrls()
@@ -113,7 +106,7 @@ public class ArchiveThumbnailBean extends ApplicationBean
 
         for(String archiveUrl : selectedArchiveUrls)
         {
-            String fileUrl = archiveUrlManager.getFileUrl(resourceId, archiveUrl);
+            String fileUrl = Learnweb.getInstance().getArchiveUrlManager().getFileUrl(resourceId, archiveUrl);
             Date timestamp = archiveUrlsHashMap.get(archiveUrl);
             //model = getModel(timestamp);
             if(fileUrl == null)
@@ -203,9 +196,9 @@ public class ArchiveThumbnailBean extends ApplicationBean
 
         //model = new TimelineModel();
         Calendar cal = Calendar.getInstance();
-        max = cal.getTime(); // upper limit of visible range  
-        zoomMin = 1000L * 60 * 60 * 24; // one day in milliseconds for zoomMin  
-        zoomMax = 1000L * 60 * 60 * 24 * 31 * 12 * 12; // about 2 years for zoomMax 
+        max = cal.getTime(); // upper limit of visible range
+        zoomMin = 1000L * 60 * 60 * 24; // one day in milliseconds for zoomMin
+        zoomMax = 1000L * 60 * 60 * 24 * 31 * 12 * 12; // about 2 years for zoomMax
 
         try
         {
@@ -219,7 +212,7 @@ public class ArchiveThumbnailBean extends ApplicationBean
             {
                 cal.setTime(new Date(rs.getTimestamp("timestamp").getTime()));
                 cal.add(Calendar.YEAR, -1);
-                min = cal.getTime(); // lower limit of visible range 
+                min = cal.getTime(); // lower limit of visible range
                 rs.previous();
             }
 
