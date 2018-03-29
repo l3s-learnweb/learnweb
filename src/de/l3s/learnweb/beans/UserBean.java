@@ -28,6 +28,7 @@ import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.GroupManager;
 import de.l3s.learnweb.Learnweb;
+import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.Organisation.Option;
 import de.l3s.learnweb.User;
 import de.l3s.util.BeanHelper;
@@ -63,6 +64,9 @@ public class UserBean implements Serializable
     private HashMap<String, String> anonymousPreferences = new HashMap<String, String>(); // preferences for users who are not logged in
 
     private String domain = "learnweb"; // variable is used to change the logo
+
+    // organization specific settings
+    private boolean optionContentAnnotationFieldEnabled;
 
     public UserBean()
     {
@@ -171,10 +175,19 @@ public class UserBean implements Serializable
             else
             {
 
-                activeCourseId = user.getActiveCourseId();
+                try
+                {
+                    activeCourseId = user.getCourses().get(0).getId();
+                }
+                catch(SQLException e)
+                {
+                    log.error(e);
+                }
             }
 
-            user.setActiveCourseId(activeCourseId);
+            // get options
+            Organisation org = user.getOrganisation();
+            optionContentAnnotationFieldEnabled = org.getOption(Organisation.Option.Resource_Show_Content_Annotation_Field);
 
         }
         else
@@ -374,21 +387,10 @@ public class UserBean implements Serializable
     @Deprecated
     private Course getActiveCourse()
     {
-        if(isLoggedIn())
-        {
-            try
-            {
-                return getUser().getActiveCourse();
-            }
-            catch(SQLException e)
-            {
-                log.error("can't get active course of user: " + getUser().toString(), e);
-            }
-        }
-
         // in case of errors load public course
-        return Learnweb.getInstance().getCourseManager().getCourseById(485);
+        int courseId = isLoggedIn() ? activeCourseId : 485;
 
+        return Learnweb.getInstance().getCourseManager().getCourseById(courseId);
     }
 
     @Override
@@ -682,4 +684,10 @@ public class UserBean implements Serializable
 
         return "http://waps.io/open?u=" + StringHelper.urlEncode(url) + "&c=2&i=" + user.getId();
     }
+
+    public boolean isOptionContentAnnotationFieldEnabled()
+    {
+        return optionContentAnnotationFieldEnabled;
+    }
+
 }

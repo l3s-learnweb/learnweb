@@ -45,8 +45,7 @@ import de.l3s.learnweb.solrClient.FileInspector;
 import de.l3s.learnweb.solrClient.FileInspector.FileInfo;
 import de.l3s.office.FileEditorBean;
 
-@SuppressWarnings("unchecked")
-@ManagedBean(name = "resourceDetailBean")
+@ManagedBean
 @ViewScoped
 public class ResourceDetailBean extends ApplicationBean implements Serializable
 {
@@ -54,14 +53,15 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     private final static Logger log = Logger.getLogger(ResourceDetailBean.class);
 
     private int resourceId = 0;
-    private Resource clickedResource;
+    private Resource clickedResource = new Resource();
     private Tag selectedTag;
     private String tagName;
     private Comment clickedComment;
     private String newComment;
 
-    private boolean isStarRatingEnabled = false;
-    private boolean isThumbRatingEnabled = false;
+    // organization specific settings
+    private boolean optionStarRatingEnabled;
+    private boolean optionThumbRatingEnabled;
 
     @ManagedProperty(value = "#{fileEditorBean}")
     private FileEditorBean fileEditorBean;
@@ -77,15 +77,13 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public ResourceDetailBean() throws SQLException
     {
-        clickedResource = new Resource();
-
         User user = getUser();
-        if(user != null)
-        {
-            Organisation org = user.getOrganisation();
-            isThumbRatingEnabled = !org.getOption(Organisation.Option.Resource_Hide_Thumb_rating);
-            isStarRatingEnabled = !org.getOption(Organisation.Option.Resource_Hide_Star_rating);
-        }
+        if(user == null)
+            return;
+
+        Organisation org = user.getOrganisation();
+        optionThumbRatingEnabled = !org.getOption(Organisation.Option.Resource_Hide_Thumb_rating);
+        optionStarRatingEnabled = !org.getOption(Organisation.Option.Resource_Hide_Star_rating);
     }
 
     public void setStarRatingRounded(int value)
@@ -125,6 +123,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         }
     }
 
+    @SuppressWarnings("unchecked")
     public String getArchiveTimelineJsonData()
     {
         JSONArray highChartsData = new JSONArray();
@@ -148,6 +147,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         return highChartsData.toJSONString();
     }
 
+    @SuppressWarnings("unchecked")
     public String getArchiveCalendarJsonData()
     {
         JSONObject archiveDates = new JSONObject();
@@ -191,6 +191,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     }
 
     //Function to localized month names for the calendar
+    @SuppressWarnings("unchecked")
     public String getMonthNames()
     {
         DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
@@ -205,6 +206,7 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     }
 
     //Function to get localized short month names for the timeline
+    @SuppressWarnings("unchecked")
     public String getShortMonthNames()
     {
         DateFormatSymbols symbols = new DateFormatSymbols(UtilBean.getUserBean().getLocale());
@@ -656,12 +658,12 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public boolean isStarRatingEnabled()
     {
-        return isStarRatingEnabled;
+        return optionStarRatingEnabled;
     }
 
     public boolean isThumbRatingEnabled()
     {
-        return isThumbRatingEnabled;
+        return optionThumbRatingEnabled;
     }
 
     public FileEditorBean getFileEditorBean()
@@ -859,9 +861,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
 
     public void onOpenExtendedMetadataDialog()
     {
-        log.debug("onOpenExtendedMetadataDialog");
+        //log.debug("onOpenExtendedMetadataDialog");
         int groupId = clickedResource == null ? 0 : clickedResource.getGroupId();
         log(Action.extended_metadata_open_dialog, groupId, 0);
     }
-
 }

@@ -59,7 +59,6 @@ public class User implements Comparable<User>, Serializable, HasId
 
     private Group activeGroup;
     private int activeGroupId;
-    private int activeCourseId;
 
     private boolean admin;
     private boolean moderator;
@@ -105,7 +104,7 @@ public class User implements Comparable<User>, Serializable, HasId
         }
         catch(SQLException e)
         {
-            Logger.getLogger(User.class).error("Couldn't save user onDestroy", e);
+            log.error("Couldn't save user onDestroy", e);
         }
     }
 
@@ -326,8 +325,6 @@ public class User implements Comparable<User>, Serializable, HasId
     }
 
     private long groupsCacheTime = 0L;
-
-    private Course activeCourse;
 
     /**
      * returns the groups the user is member off
@@ -769,43 +766,6 @@ public class User implements Comparable<User>, Serializable, HasId
     public void setPreference(String key, String value)
     {
         preferences.put(key, value);
-    }
-
-    /**
-     * Since the user can not manually change the active course you should use this value very carefully
-     *
-     * @return
-     */
-    @Deprecated
-    public int getActiveCourseId()
-    {
-        try
-        {
-            if(activeCourseId == 0 && getCourses().size() > 0) // the course id wasn't set yet ; size can be 0 when the user has just been registered
-            {
-                activeCourseId = getCourses().get(0).getId();
-            }
-        }
-        catch(SQLException e)
-        {
-            log.error("Can't load courses of user: " + getId(), e);
-        }
-
-        return activeCourseId;
-    }
-
-    public Course getActiveCourse() throws SQLException
-    {
-        if(null == activeCourse)
-            activeCourse = Learnweb.getInstance().getCourseManager().getCourseById(getActiveCourseId());
-
-        return activeCourse;
-    }
-
-    public void setActiveCourseId(int activeCourseId)
-    {
-        this.activeCourseId = activeCourseId;
-        this.activeCourse = null; // clear cache;
     }
 
     public boolean isAcceptTermsAndConditions()

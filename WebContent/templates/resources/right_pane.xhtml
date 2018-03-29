@@ -694,7 +694,7 @@
                                 </tr>
                             </ui:fragment>
 
-                            <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'website'}">
+                            <ui:fragment rendered="#{userBean.optionContentAnnotationFieldEnabled and resourceDetailBean.clickedResource.type eq 'website'}">
                             	<tr>
                                     <td>
 										<span class="resource_field">

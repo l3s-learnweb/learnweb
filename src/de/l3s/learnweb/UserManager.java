@@ -420,7 +420,6 @@ public class UserManager
         user.setPassword(rs.getString("password"), true);
         user.setOrganisationId(rs.getInt("organisation_id"));
         user.setActiveGroup(rs.getInt("active_group_id"));
-        user.setActiveCourseId(rs.getInt("active_course_id"));
         user.setImageFileId(rs.getInt("image_file_id"));
 
         user.setGender(rs.getInt("gender"));

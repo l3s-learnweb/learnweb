@@ -126,12 +126,11 @@
         </c:forEach>
     </c:if>
 
-    <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'website' or addResourceBean.resource.type eq 'website'}">
-			<tr>
-	            <td><h:outputText value="#{msg.content}"/>:</td>
-	            <td><p:inputTextarea value="#{res.transcript}" rows="6" class="border-box-100" autoResize="false"/>
-	            </td>
-	        </tr>
-        </ui:fragment>
+	<ui:fragment rendered="#{userBean.optionContentAnnotationFieldEnabled and res.type eq 'website'}">
+		<tr>
+			<td><h:outputText value="#{msg.content}" />:</td>
+			<td><p:inputTextarea value="#{res.transcript}" rows="6" class="border-box-100" autoResize="false" /></td>
+		</tr>
+	</ui:fragment>
 
 </ui:composition>
