@@ -372,7 +372,7 @@ public class SubmissionManager
                         submittedResourcesPerUser.add(currentUserSubmission);
 
                     //start new user entry set
-                    currentUserSubmission = new SubmittedResources(userManager.getUser(userId), -1);
+                    currentUserSubmission = new SubmittedResources(userManager.getUser(userId), -1, getSubmitStatusForUser(submissionId, userId));
                 }
 
                 Resource resource = resourceManager.getResource(rs.getInt("resource_id"));
@@ -399,13 +399,15 @@ public class SubmissionManager
         private transient User user;
         private List<Resource> resources = new ArrayList<>(); // the submitted resources
         private int surveyResourceId = -1; // the survey that was used to grade this submission
+        private boolean submitStatus = false; // keeps track of the submit status, so as to lock/unlock a submission
 
-        public SubmittedResources(User user, int surveyResourceId)
+        public SubmittedResources(User user, int surveyResourceId, boolean submitStatus)
         {
             super();
             this.user = user;
             this.userId = user.getId();
             this.surveyResourceId = surveyResourceId;
+            this.submitStatus = submitStatus;
         }
 
         public User getUser()
@@ -449,6 +451,15 @@ public class SubmissionManager
             return surveyResourceId;
         }
 
+        public boolean getSubmitStatus()
+        {
+            return submitStatus;
+        }
+
+        public void setSubmitStatus(boolean submitStatus)
+        {
+            this.submitStatus = submitStatus;
+        }
     }
 
     public static void main(String[] args) throws ClassNotFoundException, SQLException
@@ -477,7 +488,7 @@ public class SubmissionManager
                 System.out.println();
                 pStmt2.close();
             }
-        
+
         }
         System.out.println("No. of websites submitted: " + websiteCount);
         System.out.println("No. of them archived: " + archivedCount);

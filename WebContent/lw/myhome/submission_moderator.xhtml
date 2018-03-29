@@ -73,10 +73,22 @@
 				</div>
 			</div>
 		</h:panelGroup>
+		<h:panelGroup layout="block" id="user_submissions">
 		<ui:repeat var="userSubmission" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
 			<div class="submission_card">
-				<h3>#{userSubmission.user.username} (Student id: #{userSubmission.user.studentId})</h3>
-				
+				<h3 style="display:inline;">#{userSubmission.user.username} (Student id: #{userSubmission.user.studentId})</h3>
+				<h:form style="display: inline; position:absolute;" prependId="false">
+					<p:commandLink style="text-decoration:none;" title="unlock submission" rendered="#{userSubmission.submitStatus}"
+								process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">
+								<f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
+								<h:graphicImage value="/resources/icon/lock.png" width="16" height="16" alt="#{msg.edit}" />
+					</p:commandLink>
+					<p:commandLink style="text-decoration:none;" title="lock submission" rendered="#{not userSubmission.submitStatus}"
+								process="@this" update=":user_submissions" action="#{submissionModeratorBean.lockSubmission(userSubmission.userId)}">
+								<f:setPropertyActionListener target="#{submissionModeratorBean.selectedUserSubmission}" value="#{userSubmission}" />
+								<h:graphicImage value="/resources/icon/unlock.png" width="16" height="16" alt="#{msg.edit}" />
+					</p:commandLink>
+				</h:form>
 				<h:panelGroup class="submission_card_resources" layout="block">
 					<hr/>
 					<h:panelGroup layout="block" styleClass="datagrid not-selectable" pt:data-isEnabledMoving="false">
@@ -112,7 +124,7 @@
 				</h:panelGroup>
 			</div>
 		</ui:repeat>
-
+		</h:panelGroup>
 		<h:panelGroup id="datagrid" class="not-selectable display-none"></h:panelGroup>
 	</ui:define>
 	<ui:define name="right_layout">

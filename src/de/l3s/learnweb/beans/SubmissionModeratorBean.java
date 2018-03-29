@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Submission;
+import de.l3s.learnweb.SubmissionManager.SubmittedResources;
 import de.l3s.learnweb.beans.GroupDetailBean.RPAction;
 import de.l3s.office.FileEditorBean;
 import de.l3s.util.StringHelper;
@@ -40,6 +41,7 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
     @ManagedProperty(value = "#{fileEditorBean}")
     private FileEditorBean fileEditorBean;
     private Submission submission;
+    private SubmittedResources selectedUserSubmission;
 
     public void onLoad()
     {
@@ -140,6 +142,34 @@ public class SubmissionModeratorBean extends ApplicationBean implements Serializ
     public FileEditorBean getFileEditorBean()
     {
         return fileEditorBean;
+    }
+
+    public SubmittedResources getSelectedUserSubmission()
+    {
+        return selectedUserSubmission;
+    }
+
+    public void setSelectedUserSubmission(SubmittedResources selectedUserSubmission)
+    {
+        this.selectedUserSubmission = selectedUserSubmission;
+    }
+
+    public void unlockSubmission(int userId)
+    {
+        if(selectedUserSubmission != null)
+        {
+            selectedUserSubmission.setSubmitStatus(false);
+            getLearnweb().getSubmissionManager().saveSubmitStatusForUser(submission.getId(), userId, false);
+        }
+    }
+
+    public void lockSubmission(int userId)
+    {
+        if(selectedUserSubmission != null)
+        {
+            selectedUserSubmission.setSubmitStatus(true);
+            getLearnweb().getSubmissionManager().saveSubmitStatusForUser(submission.getId(), userId, true);
+        }
     }
 
 }
