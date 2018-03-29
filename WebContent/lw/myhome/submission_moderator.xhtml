@@ -65,7 +65,7 @@
 							</td>
 						</tr>
 						<tr>
-							<td><span style="font-weight: bold;">Course: </span></td>
+							<td><span style="font-weight: bold;">#{msg.course}: </span></td>
 							<td><h:outputText value="#{submissionModeratorBean.submission.course.title}" />
 							</td>
 						</tr>
@@ -76,7 +76,7 @@
 		<h:panelGroup layout="block" id="user_submissions">
 		<ui:repeat var="userSubmission" value="#{submissionModeratorBean.submission.submittedResourcesGroupedByUser}">
 			<div class="submission_card">
-				<h3 style="display:inline;">#{userSubmission.user.username} (Student id: #{userSubmission.user.studentId})</h3>
+				<h3 style="display:inline;">#{userSubmission.user.username} (#{msg.student_id}: #{userSubmission.user.studentId})</h3>
 				<h:form style="display: inline; position:absolute;" prependId="false">
 					<p:commandLink style="text-decoration:none;" title="unlock submission" rendered="#{userSubmission.submitStatus}"
 								process="@this" update=":user_submissions" action="#{submissionModeratorBean.unlockSubmission(userSubmission.userId)}">

@@ -98,6 +98,11 @@
 				<f:param name="user_id" value="#{user.id}" />
 				<h:outputText value="#{msg.edit_profile}" escape="false"/>
 			</h:outputLink>
+			<br/>
+			<h:outputLink value="searchHistory/entityRelationship.jsf" target="_blank">
+				<f:param name="user_id" value="#{user.id}" />
+				<h:outputText value="#{msg.search_history}" escape="false"/>
+			</h:outputLink>
 		</div>
 	</ui:fragment>	
 	
