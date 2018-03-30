@@ -98,7 +98,6 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
         //    showDeletedResources = Boolean.parseBoolean(logPreference);
 
         selectedUsers = new TreeSet<Integer>();
-        //selectedCourseId = getUser().getActiveCourseId();
     }
 
     public Resource getTedResource()
@@ -262,9 +261,9 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     /*public double wordSimilarity(String word1, String word2, String pos)
     {
     WS4JConfiguration.getInstance().setMFS(true);
-    
+
     double s = rcs.get(pos).calcRelatednessOfWords(word1, word2);
-    
+
     return s;
     }
     */
@@ -543,7 +542,7 @@ public class TedTranscriptBean extends ApplicationBean implements Serializable
     {
         return selectedCourseId;
     }
-
+    
     public void setSelectedCourseId(int selectedCourseId)
     {
         this.selectedCourseId = selectedCourseId;

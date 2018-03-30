@@ -205,8 +205,6 @@ public class LoginBean extends ApplicationBean implements Serializable
 
         if(organisationId == 848) // is archive web course
         {
-            //userBean.setActiveCourseId(891);
-
             return "/aw/index.xhtml?faces-redirect=true";
         }
         else

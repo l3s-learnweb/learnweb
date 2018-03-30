@@ -47,26 +47,31 @@
 								<f:selectItems var="course" value="#{userBean.user.courses}" itemLabel="#{course.title}" itemValue="#{course.id}"/>
 							</h:selectOneMenu>
 							<h:outputText value="" />
-											
-							<h:outputText value="#{msg.category}*:" rendered="#{not empty userBean.user.activeCourse.groupCategories and userBean.user.activeCourse.id != 891}" />
-							<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{not empty userBean.user.activeCourse.groupCategories and userBean.user.activeCourse.id != 891}">
-								<f:selectItem itemValue="0" itemLabel="#{msg.no_category}" />
-								<f:selectItem itemValue="-1" itemLabel="---------------" itemDisabled="true" />	
-								<f:selectItems value="#{userBean.user.activeCourse.groupCategories}" var="cat" itemValue="#{cat.id}" 
-									itemLabel="#{cat.title} [#{cat.abbreviation}]" />
-							</h:selectOneMenu>
-							<h:outputText value="" rendered="#{not empty userBean.user.activeCourse.groupCategories and userBean.user.activeCourse.id != 891}" />						
+							
+							<ui:fragment rendered="false">
+								<!-- needs to be checked if it is ever used again			
+								<h:outputText value="#{msg.category}*:" rendered="#{not empty userBean.user.activeCourse.groupCategories and userBean.domain != 'ARCHIVEWEB'}" />
+								<h:selectOneMenu value="#{groupsBean.newGroup.categoryId}" rendered="#{not empty userBean.user.activeCourse.groupCategories and userBean.domain != 'ARCHIVEWEB'}">
+									<f:selectItem itemValue="0" itemLabel="#{msg.no_category}" />
+									<f:selectItem itemValue="-1" itemLabel="- -" itemDisabled="true" />	
+									<f:selectItems value="#{userBean.user.activeCourse.groupCategories}" var="cat" itemValue="#{cat.id}" 
+										itemLabel="#{cat.title} [#{cat.abbreviation}]" />
+								</h:selectOneMenu>
+								<h:outputText value="" rendered="#{not empty userBean.user.activeCourse.groupCategories and userBean.user.activeCourse.id != 891}" />	
+								 -->						
+							</ui:fragment>
 															
 							<h:outputText value="#{msg.description}:" />					
 							<p:editor id="new_description" widgetVar="editorWidget" value="#{groupsBean.newGroup.description}" 
 								controls="bold italic underline bullets numbering undo redo link unlink" style="width:22rem;" height="150">
 							</p:editor>
-							<p:message for="new_description" showSummary="true" showDetail="false"/>	
-	
-							<h:outputText value="#{msg.language}:" />
-							<p:inputText id="new_language" value="#{groupsBean.newGroup.language}" style="width:21rem"/>
-							<p:message for="new_language" showSummary="true" showDetail="false"/>
-							
+							<p:message for="new_description" showSummary="true" showDetail="false"/>
+
+							<ui:fragment rendered="false">
+								<h:outputText value="#{msg.language}:" />
+								<p:inputText id="new_language" value="#{groupsBean.newGroup.language}" style="width:21rem" />
+								<p:message for="new_language" showSummary="true" showDetail="false" />
+							</ui:fragment>
 						</h:panelGrid>	
 							<br/>
 							

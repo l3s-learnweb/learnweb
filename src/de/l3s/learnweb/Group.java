@@ -340,6 +340,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
     public void setCourseId(int courseId)
     {
         this.courseId = courseId;
+        this.course = null;
     }
 
     public int getLeaderUserId()

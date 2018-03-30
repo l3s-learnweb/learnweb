@@ -63,7 +63,27 @@ public class UserBean implements Serializable
     private DefaultTreeNode groupsTree;
     private HashMap<String, String> anonymousPreferences = new HashMap<String, String>(); // preferences for users who are not logged in
 
-    private String domain = "learnweb"; // variable is used to change the logo
+    public enum DOMAIN // Used to distinguish learnweb.l3s.uni-hannover.de/ and archiveweb.l3s.uni-hannover.de/
+    {
+        LEARNWEB,
+        ARCHIVEWEB;
+
+        @Override
+        public String toString()
+        {
+            switch(this)
+            {
+            case LEARNWEB:
+                return "LearnWeb";
+            case ARCHIVEWEB:
+                return "ArchiveWeb";
+            default:
+                return this.name();
+            }
+        }
+    };
+
+    private DOMAIN domain = DOMAIN.LEARNWEB; // variable is used to change the logo
 
     // organization specific settings
     private boolean optionContentAnnotationFieldEnabled;
@@ -78,8 +98,7 @@ public class UserBean implements Serializable
 
         if(FrontpageServlet.isArchiveWebRequest(httpRequest))
         {
-            domain = "archiveweb";
-            //setActiveCourseId(891); // enabled archive course when archiveweb.l3s.uni-hannover.de is used
+            domain = DOMAIN.ARCHIVEWEB;
         }
     }
 
@@ -435,7 +454,7 @@ public class UserBean implements Serializable
     {
         Course selectCourse = getActiveCourse();
 
-        if(domain.equals("archiveweb"))
+        if(domain.equals(DOMAIN.ARCHIVEWEB))
             selectCourse = Learnweb.getInstance().getCourseManager().getCourseById(891);
 
         if(selectCourse != null && selectCourse.getBannerImage() != null)
@@ -688,6 +707,11 @@ public class UserBean implements Serializable
     public boolean isOptionContentAnnotationFieldEnabled()
     {
         return optionContentAnnotationFieldEnabled;
+    }
+
+    public DOMAIN getDomain()
+    {
+        return domain;
     }
 
 }
