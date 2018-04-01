@@ -262,7 +262,7 @@
                                              id="input_query_form"
                                              onkeyup="if (event.keyCode == 13) {document.getElementById('group_resource_searchbutton').click(); return false; }"/>
 
-                                <p:commandButton actionListener="${groupDetailBean.onQueryChange()}" partialSubmit="true"
+                                <p:commandButton actionListener="${groupDetailBean.onQueryChange()}" partialSubmit="false"
                                                  oncomplete="$('#center_pane .content').scrollTop(0);resourceDND();scroller();"
                                                  process="@form" update=":resourcesView :paginator"
                                                  value="#{msg.searchLabel}" id="group_resource_searchbutton"/>
