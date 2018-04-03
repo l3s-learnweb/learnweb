@@ -164,7 +164,7 @@
 							action="#{surveyBean.getSurvey(userBean.user.id)}" update="@form">
 						</p:commandButton>
 
-						<p:commandButton id="save" binding="#{save}" value="#{msg.save}" rendered="#{surveyBean.update}"
+						<p:commandButton id="save" binding="#{save}" value="#{msg.save}" rendered="#{not surveyBean.survey.submitted and surveyBean.editable or surveyBean.update}"
 							actionListener="#{surveyBean.save()}" process="@form"
 							style="float:left;margin-left:5px"
 							styleClass="greenbutton resource_button"

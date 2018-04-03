@@ -187,7 +187,7 @@ public class PeerAssessmentManager
 
         Learnweb learnweb = Learnweb.createInstance(null);
         //learnweb.getPeerAssessmentManager().taskSetupPeerAssesmentRomeLeeds();
-        learnweb.getPeerAssessmentManager().sendInvitationMail(1, false);
+        learnweb.getPeerAssessmentManager().sendInvitationMail(1);
         learnweb.onDestroy();
     }
 
@@ -214,7 +214,7 @@ public class PeerAssessmentManager
      * @throws SQLException
      * @throws MessagingException
      */
-    private void sendInvitationMail(int peerAssementId, boolean testRun) throws SQLException, MessagingException
+    private void sendInvitationMail(int peerAssementId) throws SQLException, MessagingException
     {
         List<PeerAssesmentPair> pairs = getPeerAssesmentPairsByPeerAssesmentId(peerAssementId);
 
@@ -226,10 +226,10 @@ public class PeerAssessmentManager
             Mail mail = new Mail();
             mail.setSubject("EUMADE4LL peer assessment");
             mail.setText(getEUMADe4ALLMailText(pair.getAssessorUser().getRealUsername(), submissionUrl, surveyUrl));
-            if(testRun)
-                mail.setRecipient(RecipientType.TO, new InternetAddress("kemkes@kbs.uni-hannover.de"));
-            else
-                mail.setRecipient(RecipientType.TO, new InternetAddress(pair.getAssessorUser().getEmail()));
+
+            mail.setRecipient(RecipientType.BCC, new InternetAddress("kemkes@kbs.uni-hannover.de"));
+
+            mail.setRecipient(RecipientType.TO, new InternetAddress(pair.getAssessorUser().getEmail()));
 
             log.debug("Send to: " + pair.getAssessorUser().getEmail());
             mail.sendMail();
@@ -239,7 +239,7 @@ public class PeerAssessmentManager
 
     private String getEUMADe4ALLMailText(String username, String submissionUrl, String surveyUrl)
     {
-        return "Dear " + username + ",\r\n\\r\\n" +
+        return "Dear " + username + ",\r\n\r\n" +
                 "you have been matched with your peer-student and now you can assess his/her assignments. To see the resources please click here\r\n" +
                 submissionUrl + "\r\n" +
                 "\r\n" +
