@@ -9,9 +9,14 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage.RecipientType;
+
 import org.jboss.logging.Logger;
 
 import de.l3s.learnweb.SubmissionManager.SubmittedResources;
+import de.l3s.util.Mail;
 import de.l3s.util.StringHelper;
 
 public class PeerAssessmentManager
@@ -26,101 +31,40 @@ public class PeerAssessmentManager
         this.learnweb = learnweb;
     }
 
-    public static void main(String[] args) throws Exception
+    public boolean canAssessResource(User user, Resource resource)
     {
-        // setup for EU-Leeds and Rome
-        int[] courseIds = { 1301, 1297 }; // EU-Leeds and Rome
-        int peerAssesmentId = 1; // manually created for now
-
-        HashMap<String, Integer> taskSurveyMapping = new HashMap<String, Integer>();
-        taskSurveyMapping.put("About Us page", 214925);
-        taskSurveyMapping.put("Corporate Video", 214922);
-        taskSurveyMapping.put("Fanvid", 214924);
-        taskSurveyMapping.put("Video-Mediated Interaction", 214923);
-        taskSurveyMapping.put("Weblog", 214921);
-
-        Learnweb learnweb = Learnweb.createInstance(null);
-        learnweb.getPeerAssessmentManager().taskSetupPeerAssesment(peerAssesmentId, courseIds, taskSurveyMapping);
-        learnweb.onDestroy();
-    }
-
-    /**
-     * Pair students for a given course list
-     *
-     * @param taskSurveyMapping
-     * @throws SQLException
-     */
-    private void taskSetupPeerAssesment(int peerAssesmentId, int[] courses, HashMap<String, Integer> taskSurveyMapping) throws SQLException
-    {
-        SubmissionManager submissionManager = learnweb.getSubmissionManager();
-        UserManager um = learnweb.getUserManager();
-
-        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT submission_id, COUNT(*) FROM `lw_submit` " +
-                "JOIN lw_submit_status USING(submission_id) " +
-                "WHERE `course_id` IN (" + StringHelper.implodeInt(courses, ",") + ") AND deleted = 0 AND title = ? " +
-                "GROUP BY submission_id ORDER BY COUNT(*) DESC");)
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM `lw_submit_resource` " +
+                "JOIN lw_peerassessment_paring USING(submission_id) " +
+                "WHERE `resource_id` = ? AND assessor_user_id = ?");)
         {
-            for(String submissionTitle : taskSurveyMapping.keySet())
-            {
-                log.debug("Prepare submission: " + submissionTitle);
-
-                // create two lists of users. All users of one course are either assigned to A or B.
-                LinkedList<Integer> usersA = new LinkedList<>();
-                LinkedList<Integer> usersB = new LinkedList<>();
-                LinkedList<Integer> submissionIds = new LinkedList<>(); // all submission ids that were used by the given courses
-
-                select.setString(1, submissionTitle);
-                ResultSet rs = select.executeQuery();
-                while(rs.next())
-                {
-                    int submissionId = rs.getInt("submission_id");
-                    submissionIds.add(submissionId);
-                    List<SubmittedResources> userSubmissions = submissionManager.getSubmittedResourcesGroupedByUser(submissionId);
-
-                    List<Integer> shorterUserList = shorterList(usersA, usersB);
-                    for(SubmittedResources submission : userSubmissions)
-                        shorterUserList.add(submission.getUserId());
-                }
-
-                // interlace the two lists
-                LinkedList<Integer> usersFinal = new LinkedList<>();
-                Iterator<Integer> iteratorA = usersA.iterator();
-                Iterator<Integer> iteratorB = usersB.iterator();
-                while(iteratorA.hasNext() || iteratorB.hasNext())
-                {
-                    if(iteratorA.hasNext())
-                        usersFinal.add(iteratorA.next());
-                    if(iteratorB.hasNext())
-                        usersFinal.add(iteratorB.next());
-                }
-
-                // pair the users
-                PreparedStatement selectSubmissionId = learnweb.getConnection().prepareStatement("SELECT submission_id FROM lw_submit_status  " +
-                        "WHERE `submission_id` IN (" + StringHelper.implodeInt(submissionIds, ",") + ") AND user_id = ? ");
-
-                int surveyId = taskSurveyMapping.get(submissionTitle);
-                int lastUserId = usersFinal.getLast();
-                for(int userId : usersFinal)
-                {
-                    selectSubmissionId.setInt(1, userId);
-                    ResultSet submissionRs = selectSubmissionId.executeQuery();
-                    if(!submissionRs.next())
-                        log.error("can't get submission id");
-                    int submissionId = submissionRs.getInt(1);
-
-                    savePeerAssesmentPair(new PeerAssesmentPair(peerAssesmentId, lastUserId, userId, surveyId, submissionId));
-                    lastUserId = userId;
-                }
-                selectSubmissionId.close();
-            }
+            select.setInt(1, resource.getId());
+            select.setInt(2, user.getId());
+            ResultSet rs = select.executeQuery();
+            return rs.next();
         }
+        catch(SQLException e)
+        {
+            log.fatal("user: " + user + "; resource: " + resource, e);
+        }
+        return false;
     }
 
-    private static <T> List<T> shorterList(List<T> listA, List<T> listB)
+    public boolean canAssessSubmission(int assessorUserId, int assessedUserId, int submissionId)
     {
-        if(listA.size() < listB.size())
-            return listA;
-        return listB;
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT 1 FROM lw_peerassessment_paring " +
+                "WHERE `submission_id` = ? AND assessor_user_id = ? AND assessed_user_id = ?");)
+        {
+            select.setInt(1, submissionId);
+            select.setInt(2, assessorUserId);
+            select.setInt(3, assessedUserId);
+            ResultSet rs = select.executeQuery();
+            return rs.next();
+        }
+        catch(SQLException e)
+        {
+            log.fatal("assessorUserId: " + assessorUserId + "; assessedUserId: " + assessedUserId + "; submissionId: " + submissionId, e);
+        }
+        return false;
     }
 
     private void savePeerAssesmentPair(PeerAssesmentPair pair) throws SQLException
@@ -233,34 +177,158 @@ public class PeerAssessmentManager
         }
 
     }
-    /*
 
+    /********************************************************
+     * ******** helper methods to support courses ***********
+     *****************************************************/
 
-
-
-    public void incViews(int topicId) throws SQLException
+    public static void main(String[] args) throws Exception
     {
-        String sqlQuery = "UPDATE lw_forum_topic SET topic_views = topic_views +1 WHERE topic_id = ?";
-        PreparedStatement ps = learnweb.getConnection().prepareStatement(sqlQuery);
-        ps.setInt(1, topicId);
-        ps.executeUpdate();
+
+        Learnweb learnweb = Learnweb.createInstance(null);
+        //learnweb.getPeerAssessmentManager().taskSetupPeerAssesmentRomeLeeds();
+        learnweb.getPeerAssessmentManager().sendInvitationMail(1, false);
+        learnweb.onDestroy();
     }
 
-    public ForumPost createPost(ResultSet rs) throws SQLException
+    private void taskSetupPeerAssesmentRomeLeeds() throws SQLException
     {
-        ForumPost post = new ForumPost();
-        post.setId(rs.getInt("post_id"));
-        post.setTopicId(rs.getInt("topic_id"));
-        post.setUserId(rs.getInt("user_id"));
-        post.setText(rs.getString("text"));
-        post.setDate(new Date(rs.getTimestamp("post_time").getTime()));
-        post.setLastEditDate(new Date(rs.getTimestamp("post_edit_time").getTime()));
-        post.setEditCount(rs.getInt("post_edit_count"));
-        post.setEditUserId(rs.getInt("post_edit_user_id"));
-        post.setCategory(rs.getString("category"));
-        return post;
+        // setup for EU-Leeds and Rome
+        int[] courseIds = { 1301, 1297 }; // EU-Leeds and Rome
+        int peerAssesmentId = 1; // manually created for now
+
+        HashMap<String, Integer> taskSurveyMapping = new HashMap<String, Integer>();
+        taskSurveyMapping.put("About Us page", 214925);
+        taskSurveyMapping.put("Corporate Video", 214922);
+        taskSurveyMapping.put("Fanvid", 214924);
+        taskSurveyMapping.put("Video-Mediated Interaction", 214923);
+        taskSurveyMapping.put("Weblog", 214921);
+
+        taskSetupPeerAssesment(peerAssesmentId, courseIds, taskSurveyMapping);
     }
-    */
+
+    /**
+     * Sends an email to each assessor
+     *
+     * @param peerAssementId
+     * @throws SQLException
+     * @throws MessagingException
+     */
+    private void sendInvitationMail(int peerAssementId, boolean testRun) throws SQLException, MessagingException
+    {
+        List<PeerAssesmentPair> pairs = getPeerAssesmentPairsByPeerAssesmentId(peerAssementId);
+
+        for(PeerAssesmentPair pair : pairs)
+        {
+            String submissionUrl = "https://learnweb.l3s.uni-hannover.de/lw/myhome/submission_resources.jsf?user_id=" + pair.getAssessedUserId() + "&submission_id=" + pair.getSubmissionId();
+            String surveyUrl = "https://learnweb.l3s.uni-hannover.de/lw/survey/survey.jsf?resource_id=" + pair.getSurveyResourceId();
+
+            Mail mail = new Mail();
+            mail.setSubject("EUMADE4LL peer assessment");
+            mail.setText(getEUMADe4ALLMailText(pair.getAssessorUser().getRealUsername(), submissionUrl, surveyUrl));
+            if(testRun)
+                mail.setRecipient(RecipientType.TO, new InternetAddress("kemkes@kbs.uni-hannover.de"));
+            else
+                mail.setRecipient(RecipientType.TO, new InternetAddress(pair.getAssessorUser().getEmail()));
+
+            log.debug("Send to: " + pair.getAssessorUser().getEmail());
+            mail.sendMail();
+            // "The subject line of the email should be:
+        }
+    }
+
+    private String getEUMADe4ALLMailText(String username, String submissionUrl, String surveyUrl)
+    {
+        return "Dear " + username + ",\r\n\\r\\n" +
+                "you have been matched with your peer-student and now you can assess his/her assignments. To see the resources please click here\r\n" +
+                submissionUrl + "\r\n" +
+                "\r\n" +
+                "Read and analyse them carefully then fill in the peer-assessment grid and submit it. Click here for the grid\r\n" +
+                surveyUrl + "\r\n" +
+                "\r\n" +
+                "For this last assignment, remember to follow the instructions provided by the guidelines and to submit it by 2nd May at noon. You can save it as many times as you need to, until you are ready to submit.\r\n" +
+                "\r\n" +
+                "Thank you very much for your work!\r\n";
+    }
+
+    /**
+     * Pair students for a given course list
+     *
+     * @param taskSurveyMapping
+     * @throws SQLException
+     */
+    private void taskSetupPeerAssesment(int peerAssesmentId, int[] courses, HashMap<String, Integer> taskSurveyMapping) throws SQLException
+    {
+        SubmissionManager submissionManager = learnweb.getSubmissionManager();
+        //UserManager um = learnweb.getUserManager();
+
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT submission_id, COUNT(*) FROM `lw_submit` " +
+                "JOIN lw_submit_status USING(submission_id) " +
+                "WHERE `course_id` IN (" + StringHelper.implodeInt(courses, ",") + ") AND deleted = 0 AND title = ? " +
+                "GROUP BY submission_id ORDER BY COUNT(*) DESC");)
+        {
+            for(String submissionTitle : taskSurveyMapping.keySet())
+            {
+                log.debug("Prepare submission: " + submissionTitle);
+
+                // create two lists of users. All users of one course are either assigned to A or B.
+                LinkedList<Integer> usersA = new LinkedList<>();
+                LinkedList<Integer> usersB = new LinkedList<>();
+                LinkedList<Integer> submissionIds = new LinkedList<>(); // all submission ids that were used by the given courses
+
+                select.setString(1, submissionTitle);
+                ResultSet rs = select.executeQuery();
+                while(rs.next())
+                {
+                    int submissionId = rs.getInt("submission_id");
+                    submissionIds.add(submissionId);
+                    List<SubmittedResources> userSubmissions = submissionManager.getSubmittedResourcesGroupedByUser(submissionId);
+
+                    List<Integer> shorterUserList = shorterList(usersA, usersB);
+                    for(SubmittedResources submission : userSubmissions)
+                        shorterUserList.add(submission.getUserId());
+                }
+
+                // interlace the two lists
+                LinkedList<Integer> usersFinal = new LinkedList<>();
+                Iterator<Integer> iteratorA = usersA.iterator();
+                Iterator<Integer> iteratorB = usersB.iterator();
+                while(iteratorA.hasNext() || iteratorB.hasNext())
+                {
+                    if(iteratorA.hasNext())
+                        usersFinal.add(iteratorA.next());
+                    if(iteratorB.hasNext())
+                        usersFinal.add(iteratorB.next());
+                }
+
+                // pair the users
+                PreparedStatement selectSubmissionId = learnweb.getConnection().prepareStatement("SELECT submission_id FROM lw_submit_status  " +
+                        "WHERE `submission_id` IN (" + StringHelper.implodeInt(submissionIds, ",") + ") AND user_id = ? ");
+
+                int surveyId = taskSurveyMapping.get(submissionTitle);
+                int lastUserId = usersFinal.getLast();
+                for(int userId : usersFinal)
+                {
+                    selectSubmissionId.setInt(1, userId);
+                    ResultSet submissionRs = selectSubmissionId.executeQuery();
+                    if(!submissionRs.next())
+                        log.error("can't get submission id");
+                    int submissionId = submissionRs.getInt(1);
+
+                    savePeerAssesmentPair(new PeerAssesmentPair(peerAssesmentId, lastUserId, userId, surveyId, submissionId));
+                    lastUserId = userId;
+                }
+                selectSubmissionId.close();
+            }
+        }
+    }
+
+    private static <T> List<T> shorterList(List<T> listA, List<T> listB)
+    {
+        if(listA.size() < listB.size())
+            return listA;
+        return listB;
+    }
 
     /**
      *

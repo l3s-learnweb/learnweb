@@ -216,15 +216,15 @@ public class ApplicationBean
      * Look at the code of LogEntry.Action for explanation.
      *
      * @param action
+     * @param groupId
      * @param targetId
      * @param params
-     *
-     *            protected void log(LogEntry.Action action, int targetId, String params)
-     *            {
-     *            int executionTime = (int) (System.currentTimeMillis() - startTime);
-     *            getLearnweb().log(getUser(), action, targetId, params, getSessionId(), executionTime);
-     *            }
      */
+    protected void log(LogEntry.Action action, int groupId, int targetId, int params)
+    {
+        log(action, groupId, targetId, Integer.toString(params));
+    }
+
     /**
      * Logs a user action for the currently active user.
      * The parameters "targetId" and "params" depend on the logged action.

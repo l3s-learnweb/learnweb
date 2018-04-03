@@ -7,23 +7,28 @@ import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
+import org.apache.log4j.Logger;
+
+import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Survey;
 import de.l3s.learnweb.SurveyManager;
 import de.l3s.learnweb.User;
+import de.l3s.util.BeanHelper;
 
 @ViewScoped
 @ManagedBean
 public class SurveyBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -6217166153267996666L;
-    //private static final Logger log = Logger.getLogger(SurveyBean.class);
+    private static final Logger log = Logger.getLogger(SurveyBean.class);
     private int resourceId;
 
     private boolean update;
     private boolean editable;
 
     private Survey survey;
+    private Resource surveyResource;
 
     public SurveyBean()
     {
@@ -40,8 +45,8 @@ public class SurveyBean extends ApplicationBean implements Serializable
         {
             try
             {
-                Resource resource = getLearnweb().getResourceManager().getResource(resourceId);
-                if(!resource.canViewResource(user))
+                surveyResource = getLearnweb().getResourceManager().getResource(resourceId);
+                if(!surveyResource.canViewResource(user))
                 {
                     addMessage(FacesMessage.SEVERITY_ERROR, "group_resources_access_denied");
                     return;
@@ -100,6 +105,14 @@ public class SurveyBean extends ApplicationBean implements Serializable
 
     public void submit()
     {
+        save();
+
+        log(Action.survey_submit, surveyResource.getGroupId(), resourceId);
+        log.error("final submission not implemented yet " + BeanHelper.getRequestSummary());
+    }
+
+    public void save()
+    {
         User u = getUser();
 
         if(!survey.isSubmitted() || update)
@@ -111,6 +124,8 @@ public class SurveyBean extends ApplicationBean implements Serializable
                 addMessage(FacesMessage.SEVERITY_INFO, "submit_survey");
                 survey.setSubmitted(true);
                 update = false;
+
+                log(Action.survey_save, surveyResource.getGroupId(), resourceId);
             }
             catch(Exception e)
             {

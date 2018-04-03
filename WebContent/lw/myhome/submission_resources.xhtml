@@ -33,7 +33,7 @@
 		</h:form>
 		
 		<h:panelGroup rendered="#{not submitResourcesBean.submitted}"><h3 class="title-header">#{msg['Submission.select_resources_header']}</h3></h:panelGroup>
-		<h:panelGroup rendered="#{submitResourcesBean.submitted}"><h3 class="title-header">The resources that you have submitted</h3></h:panelGroup>
+		<h:panelGroup rendered="#{submitResourcesBean.submitted}"><h3 class="title-header">The submitted resources</h3></h:panelGroup>
 		<hr class="title-divider"/>
 		
 		<h:outputStylesheet library="lightbox" name="lightbox.css" />
@@ -80,7 +80,7 @@
 				</ui:repeat>
 
 				<h:outputText value="No resources were submitted" rendered="#{empty submitResourcesBean.selectedResources and submitResourcesBean.submitted}" class="nothing_found"/>
-				<h:panelGroup id="add_resource_sign" class="resource-item" layout="block" rendered="#{not submitResourcesBean.submitted}">
+				<h:panelGroup id="add_resource_sign" class="resource-item" layout="block" rendered="#{not submitResourcesBean.submitted and not submitResourcesBean.submissionOverviewReadOnly}">
 						<div class="resource-block" style="box-shadow:none;">
 							<div class="resource-preview">
 								<div class="resource-preview-wrapper">

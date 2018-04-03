@@ -390,7 +390,7 @@ public class Learnweb
         dbConnection = DriverManager.getConnection(properties.getProperty("mysql_url") + "?log=false", properties.getProperty("mysql_user"), properties.getProperty("mysql_password"));
         dbConnection.createStatement().execute("SET @@SQL_MODE = REPLACE(@@SQL_MODE, 'ONLY_FULL_GROUP_BY', '')");
 
-        pstmtLog = dbConnection.prepareStatement("INSERT DELAYED INTO `lw_user_log` (`user_id`, `session_id`, `action`, `target_id`, `params`, `group_id`, timestamp, execution_time, client_version) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 2)");
+        pstmtLog = dbConnection.prepareStatement("INSERT DELAYED INTO `lw_user_log` (`user_id`, `session_id`, `action`, `target_id`, `params`, `group_id`, timestamp, execution_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
 
     }
 
@@ -561,7 +561,7 @@ public class Learnweb
 
                 logBatchSize++;
 
-                if(logBatchSize > 0)
+                if(logBatchSize > 10)
                 {
                     pstmtLog.executeBatch();
                     logBatchSize = 0;

@@ -19,8 +19,9 @@ import org.apache.log4j.Logger;
 public class SubmissionManager
 {
     private final static String SUBMIT_RESOURCE_COLUMNS = "`submission_id`, `resource_id`, `user_id`";
+    private final static Logger log = Logger.getLogger(SurveyManager.class);
+    public final static int SUBMISSION_ADMIN_USER_ID = 11212;
 
-    public static Logger log = Logger.getLogger(SurveyManager.class);
     private final Learnweb learnweb;
 
     public SubmissionManager(Learnweb learnweb)

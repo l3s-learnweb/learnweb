@@ -95,4 +95,10 @@ public class Mail
     {
         message.setText(text, "UTF-8", "html");
     }
+
+    @Override
+    public String toString()
+    {
+        return message.toString();
+    }
 }

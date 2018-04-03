@@ -342,8 +342,8 @@
                     <h:outputText value="#{msg.group_resources_access_denied}"
                                   rendered="${not resourceDetailBean.clickedResource.canViewResource(userBean.user) and not (resourceDetailBean.clickedResource.deleted or resourceDetailBean.clickedResource.groupId eq 0)}"/>
                     <ui:fragment rendered="#{resourceDetailBean.clickedResource.canViewResource(userBean.user)}">
-                        <ui:fragment
-                                rendered="#{resourceDetailBean.clickedResource.type eq 'spreadsheet' or resourceDetailBean.clickedResource.type eq 'presentation' or resourceDetailBean.clickedResource.type eq 'document' or resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image' or resourceDetailBean.clickedResource.type eq 'glossary' or resourceDetailBean.clickedResource.type eq 'survey'}">
+                        
+                        <ui:fragment rendered="#{resourceDetailBean.clickedResource.type eq 'spreadsheet' or resourceDetailBean.clickedResource.type eq 'presentation' or resourceDetailBean.clickedResource.type eq 'document' or resourceDetailBean.clickedResource.type eq 'text' or resourceDetailBean.clickedResource.type eq 'website' or resourceDetailBean.clickedResource.type eq 'pdf' or resourceDetailBean.clickedResource.type eq 'video' or resourceDetailBean.clickedResource.type eq 'image' or resourceDetailBean.clickedResource.type eq 'glossary' or resourceDetailBean.clickedResource.type eq 'survey'}">
                             <div class="align-center" style="margin-top: 5px;">
                                 <ui:decorate template="/templates/resources/parts/lightbox.xhtml">
                                     <ui:param name="resource" value="#{resourceDetailBean.clickedResource}"/>

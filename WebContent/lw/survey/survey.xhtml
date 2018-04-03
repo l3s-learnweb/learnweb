@@ -151,7 +151,7 @@
 						</h:panelGroup>
 
 
-						<p:commandButton widgetVar="sub" id="submit" value="Submit"
+						<p:commandButton widgetVar="sub" id="submit" value="Final Submit"
 							style="float:left;" styleClass="greenbutton resource_button"
 							action="#{surveyBean.submit()}" update=":message @form"
 							rendered="#{not surveyBean.survey.submitted and surveyBean.editable or surveyBean.update}">
@@ -164,8 +164,10 @@
 							action="#{surveyBean.getSurvey(userBean.user.id)}" update="@form">
 						</p:commandButton>
 
-						<p:commandButton id="save" binding="#{save}" value="#{msg.save}" rendered="false"
-							actionListener="#{surveyBean.submit()}" process="@form"
+						<p:commandButton id="save" binding="#{save}" value="#{msg.save}" rendered="#{surveyBean.update}"
+							actionListener="#{surveyBean.save()}" process="@form"
+							style="float:left;margin-left:5px"
+							styleClass="greenbutton resource_button"
 							update=":message @form" />
 						<br class="clear" />
 					</p:panel>

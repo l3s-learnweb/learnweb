@@ -23,7 +23,7 @@ public class LogEntry implements Serializable
         rating_resource, // param = rate; target_id = id of the resource
         commenting_resource, // param = comment id; target_id = id of the resource
         opening_resource, // target_id = id of the tagged resource
-        unused, // param = the url
+        submission_view_resource, // target_id = submission_id; param = user_id of the submission
         searching, // param = search query
         group_joining, // target_id = group_id
         group_creating, // target_id = group_id
@@ -37,9 +37,9 @@ public class LogEntry implements Serializable
         adding_resource, // target_id = resource id
         open_link,
         deleting_comment, // target_id = resource id; param = comment_id
-        unused2,
+        survey_save, // target_id = survey resource id
         edit_resource, // target_id = resource id
-        unused4,
+        survey_submit, // target_id = survey resource id
         thumb_rating_resource, // target_id = resource id
         group_deleting, // target_id = group_id
         group_changing_description, // target_id = group_id

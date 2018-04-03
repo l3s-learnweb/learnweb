@@ -244,6 +244,12 @@ public class User implements Comparable<User>, Serializable, HasId
         return username;
     }
 
+    /**
+     * getUsername() may return "Anonymous" for some organizations.
+     * This method will always return the real username
+     * 
+     * @return
+     */
     public String getRealUsername()
     {
         return username;

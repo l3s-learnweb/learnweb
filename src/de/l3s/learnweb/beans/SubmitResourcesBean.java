@@ -31,9 +31,11 @@ import de.l3s.learnweb.Resource.ResourceType;
 import de.l3s.learnweb.Resource.ResourceViewRights;
 import de.l3s.learnweb.ResourcePreviewMaker;
 import de.l3s.learnweb.Submission;
+import de.l3s.learnweb.SubmissionManager;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.GroupDetailBean.RPAction;
 import de.l3s.office.FileEditorBean;
+import de.l3s.util.BeanHelper;
 import de.l3s.util.StringHelper;
 
 /**
@@ -60,7 +62,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
     private Resource clickedResource;
     private Folder clickedFolder;
     private List<Resource> resources;
-    private List<Resource> selectedResources;
+    private List<Resource> selectedResources = new ArrayList<Resource>(4);
 
     private List<Submission> pastSubmissions;
     private List<Submission> currentSubmissions;
@@ -101,27 +103,36 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
             return;
         }
 
-        selectedResources = new ArrayList<Resource>();
+        //When moderator or other assessor accesses a student's overview page to not display edit option for a submission
+        if(getUser().getId() != this.userId)
+        {
+            submissionOverviewReadOnly = true;
+
+            if(!getUser().isModerator() && !getLearnweb().getPeerAssessmentManager().canAssessSubmission(getUser().getId(), userId, submissionId))
+            {
+                addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to view this submission");
+                log.error("Unprivileged access: " + BeanHelper.getRequestSummary());
+                return;
+            }
+            // TODO check privileges moderator or submission assessor
+        }
+
         //When accessing the submission_resources page both these parameters are set
         if(submissionId > 0 && userId > 0)
         {
             selectedSubmission = getLearnweb().getSubmissionManager().getSubmissionById(submissionId);
-            List<Resource> submittedResources = getLearnweb().getSubmissionManager().getResourcesByIdAndUserId(submissionId, userId);
-            if(!submittedResources.isEmpty())
-                selectedResources.addAll(submittedResources);
+            selectedResources = getLearnweb().getSubmissionManager().getResourcesByIdAndUserId(submissionId, userId);
 
             submitted = getLearnweb().getSubmissionManager().getSubmitStatusForUser(submissionId, userId);
 
             //Past submissions are always considered as submitted
             if(selectedSubmission != null && selectedSubmission.isPastSubmission())
                 submitted = true;
+
+            log(Action.submission_view_resource, 0, submissionId, userId);
         }
 
         //log.info("submission id:" + submissionId + " max no. of resources: " + selectedSubmission.getNoOfResources());
-
-        //When moderator accesses a student's overview page to not display edit option for a submission
-        if(getUser().getId() != this.userId)
-            submissionOverviewReadOnly = true;
 
         getFacesContext().getExternalContext().setResponseCharacterEncoding("UTF-8");
         // stop caching (back button problem)
@@ -238,7 +249,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         try
         {
             log.info("No. of selected items: " + selectedResources.size());
-            User specialAdmin = getLearnweb().getUserManager().getUser(11212); //special user id
+            User specialAdmin = getLearnweb().getUserManager().getUser(SubmissionManager.SUBMISSION_ADMIN_USER_ID); //special user id
             ResourcePreviewMaker rpm = getLearnweb().getResourcePreviewMaker();
             Date submissionDate = new Date(); //Date for the resources submitted, so that the moderator can know when they were submitted
 
@@ -252,7 +263,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
 
                     //So that owner of clonedResource can view the resource
                     clonedResource.setOriginalResourceId(r.getId());
-                    clonedResource.setRights(ResourceViewRights.original_owner_readable);
+                    clonedResource.setRights(ResourceViewRights.SUBMISSION_READABLE);
                     clonedResource.setCreationDate(submissionDate);
 
                     specialAdmin.addResource(clonedResource); //save cloned resource with special user id
@@ -311,7 +322,6 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
     {
         try
         {
-            int adminUserId = 11212;
             for(int i = 0, len = objects.length(); i < len; ++i)
             {
                 JSONObject item = objects.getJSONObject(i);
@@ -325,7 +335,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
                     if(resource != null && selectedResources.contains(resource))
                     {
                         selectedResources.remove(resource);
-                        if(resource.getUserId() == adminUserId)
+                        if(resource.getUserId() == SubmissionManager.SUBMISSION_ADMIN_USER_ID)
                         {
                             resource.delete();
                             getLearnweb().getSubmissionManager().deleteSubmissionResource(submissionId, resource.getId(), userId);

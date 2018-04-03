@@ -64,10 +64,10 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
 
     public enum ResourceViewRights
     {
-        default_rights, //inherits group rights
-        original_owner_readable, //owner of getOriginalResourceId can also view resource
-        learnweb_readable, //all learnweb users can view resource given url
-        world_readable, //all internet users with access to url can view resource
+        DEFAULT_RIGHTS, //inherits group rights
+        SUBMISSION_READABLE, // the submitter of the resource (stored in the original resource id) and assessors can view the resource
+        LEARNWEB_READABLE, //all learnweb users can view resource given url
+        WORLD_READABLE, //all internet users with access to url can view resource
     }
 
     public static final int LEARNWEB_RESOURCE = 1;
@@ -80,7 +80,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     private String description = "";
     private String url;
     private int storageType = WEB_RESOURCE;
-    private ResourceViewRights rights = ResourceViewRights.default_rights;
+    private ResourceViewRights rights = ResourceViewRights.DEFAULT_RIGHTS;
     private String source = ""; // The place where the resource was found
     private String location = ""; // The location where the resource (metadata) is stored; for example Learnweb, Flickr, Youtube ...
     private String language; // language code
@@ -221,16 +221,16 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
             setThumbnail3(dummyImage);
         if(null == thumbnail4)
             setThumbnail4(dummyImage);
-        
+
         /*
         if(null == embeddedSize1 || null == embeddedSize3)
         {
-        
+
         if(source.equalsIgnoreCase("YouTube"))
         {
             Pattern pattern = Pattern.compile("v[/=]([^&]+)");
             Matcher matcher = pattern.matcher(url);
-        
+
             if(matcher.find())
             {
                 String videoId = matcher.group(1);
@@ -239,35 +239,35 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
                 if(null == embeddedSize3)
                     this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
                 this.format = "application/x-shockwave-flash";
-        
+
                 dummyImage = new Thumbnail("http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg", 320, 180);
             }
         }
-        
+
         else if(source.equals("Google") && type.equals(ResourceType.video))
         {
             Pattern pattern = Pattern.compile("youtube.com/watch%3Fv%3D([^&]+)");
             Matcher matcher = pattern.matcher(url);
-        
+
             if(matcher.find())
             {
                 String videoId = matcher.group(1);
                 this.embeddedSize1 = "<img src=\"http://img.youtube.com/vi/" + videoId + "/default.jpg\" width=\"100\" height=\"75\" />";
                 this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
-        
+
                 this.format = "application/x-shockwave-flash";
                 this.source = "YouTube";
                 this.url = "https://www.youtube.com/watch?v=" + videoId;
-        
+
                 dummyImage = new Thumbnail("http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg", 320, 180);
-        
+
             }
         }
         else if(source.equalsIgnoreCase("Vimeo"))
         {
             Pattern pattern = Pattern.compile("vimeo\\.com/([^&]+)");
             Matcher matcher = pattern.matcher(url);
-        
+
             if(matcher.find())
             {
                 String videoId = matcher.group(1);
@@ -275,9 +275,9 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
                         + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" /><embed src=\"http://vimeo.com/moogaloop.swf?clip_id=" + videoId
                         + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"500\" height=\"375\"></embed></object>";
                 this.format = "application/x-shockwave-flash";
-        
+
             }
-        
+
         }
         else if(source.equals("Ipernity") && embeddedSize1 != null)
         {
@@ -292,8 +292,8 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
                 embeddedSize3 = embeddedSize1.replace("_t.", ".");
         }
         }
-        
-        
+
+
         if(dummyImage != null)
         {
         if(null == thumbnail0)
@@ -307,7 +307,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
         if(null == thumbnail4)
             setThumbnail4(dummyImage);
         }
-        
+
         if(embeddedSize1 == null || embeddedSize1.length() < 3)
         {
         if(type.equals(ResourceType.audio))
@@ -550,16 +550,16 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
         switch(rights)
         {
         case 0:
-            this.rights = ResourceViewRights.default_rights;
+            this.rights = ResourceViewRights.DEFAULT_RIGHTS;
             break;
         case 1:
-            this.rights = ResourceViewRights.original_owner_readable;
+            this.rights = ResourceViewRights.SUBMISSION_READABLE;
             break;
         case 2:
-            this.rights = ResourceViewRights.learnweb_readable;
+            this.rights = ResourceViewRights.LEARNWEB_READABLE;
             break;
         case 3:
-            this.rights = ResourceViewRights.world_readable;
+            this.rights = ResourceViewRights.WORLD_READABLE;
         }
     }
 
@@ -725,7 +725,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-        
+
         }
         */
         return r;
@@ -1767,14 +1767,18 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
 
         switch(rights)
         {
-        case world_readable:
+        case WORLD_READABLE:
             return true;
-        case learnweb_readable:
-            return user == null ? false : true;
-        case original_owner_readable:
+        case LEARNWEB_READABLE:
+            return user != null;
+        case SUBMISSION_READABLE: // the submitter of the resource (stored in the original resource id) and assessors can view the resource
             Resource originalResource = Learnweb.getInstance().getResourceManager().getResource(originalResourceId);
-            return originalResource != null ? (originalResource.getUserId() == user.getId()) : false;
-        case default_rights:
+            if(originalResource != null && originalResource.getUserId() == user.getId())
+                return true; // the submitter can view his resource
+
+            // check if the current user can assess this resource
+            return Learnweb.getInstance().getPeerAssessmentManager().canAssessResource(user, this);
+        case DEFAULT_RIGHTS:
             Group group = getGroup();
             if(group != null)
                 return group.canViewResources(user);
