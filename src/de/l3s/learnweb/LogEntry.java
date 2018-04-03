@@ -76,6 +76,24 @@ public class LogEntry implements Serializable
         group_category_search // param = clicked category
     }
 
+    public static void main(String[] arg)
+    {
+        Action[] actions = { Action.adding_yourown_metadata, Action.adding_resource_metadata, Action.edit_resource_metadata, Action.group_metadata_search, Action.group_category_search };
+
+        for(Action action : actions)
+        {
+            System.out.print(action.ordinal() + ",");
+        }
+
+        System.out.print("\nCASE action");
+
+        for(Action action : actions)
+        {
+            System.out.print(" WHEN " + action.ordinal() + " THEN '" + action.name() + "'");
+        }
+        System.out.println(" END CASE");
+    }
+
     private final static HashSet<Action> resourceActions = Sets.newHashSet(Action.tagging_resource, Action.rating_resource, Action.commenting_resource, Action.opening_resource, Action.adding_resource, Action.deleting_comment, Action.edit_resource, Action.thumb_rating_resource);
     //private final static HashSet<Action> folderActions = Sets.newHashSet(Action.deleting_folder, Action.add_folder, Action.edit_folder);
 
