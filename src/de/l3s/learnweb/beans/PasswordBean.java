@@ -26,7 +26,7 @@ public class PasswordBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = 2237249691336567548L;
     private static final Logger log = Logger.getLogger(PasswordBean.class);
     // this list contains addresses that did not except the password recovery mail
-    private static Set<String> invalidMailAdresses = new HashSet<>(Arrays.asList("au567200@uni.au.dk", "139272@aulecsit.uniud.it", "au566300@uni.au.dk"));
+    private static Set<String> invalidMailAdresses = new HashSet<>(Arrays.asList("au567200@uni.au.dk", "139272@aulecsit.uniud.it", "au566300@uni.au.dk", "au568597@uni.au.dk"));
 
     private String email;
 

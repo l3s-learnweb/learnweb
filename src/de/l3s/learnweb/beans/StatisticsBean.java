@@ -40,9 +40,9 @@ public class StatisticsBean extends ApplicationBean implements Serializable
     {
         /*
          * Weitere Statistiken:
-         * 
+         *
          * Mitglieder pro Gruppe
-         * SELECT COUNT(*) AS groups, o.users FROM ( SELECT group_id, COUNT(user_id) as users FROM `lw_group` LEFT JOIN lw_group_user USING (group_id) GROUP BY group_Id) o GROUP BY o.users  
+         * SELECT COUNT(*) AS groups, o.users FROM ( SELECT group_id, COUNT(user_id) as users FROM `lw_group` LEFT JOIN lw_group_user USING (group_id) GROUP BY group_Id) o GROUP BY o.users
          *
          */
 
@@ -62,7 +62,7 @@ public class StatisticsBean extends ApplicationBean implements Serializable
         taggedResourcesAverage = (double) tagCount / (double) taggedResourcesCount;
         commentedResourcesAverage = (double) commentCount / (double) commentedResourcesCount;
 
-        //averageSessionTime = (BigDecimal) Sql.getSingleResult("SELECT avg(diff) / 60 FROM (SELECT count(*) as t, UNIX_TIMESTAMP(max(timestamp)) -  UNIX_TIMESTAMP(min(timestamp)) AS diff FROM `lw_user_log` GROUP BY session_id) AS DE");			
+        //averageSessionTime = (BigDecimal) Sql.getSingleResult("SELECT avg(diff) / 60 FROM (SELECT count(*) as t, UNIX_TIMESTAMP(max(timestamp)) -  UNIX_TIMESTAMP(min(timestamp)) AS diff FROM `lw_user_log` GROUP BY session_id) AS DE");
         activeUsersPerMonth = getEntriesForQuery(
                 "SELECT CONCAT(year(timestamp),'-',month(timestamp)) as month, count(distinct user_id) as active_users FROM `lw_user_log` WHERE `action` = 9 and timestamp > DATE_SUB(NOW(), INTERVAL 390 day) group by year(timestamp) ,month(timestamp) ORDER BY  year(timestamp) DESC,month(timestamp) DESC LIMIT 13",
                 null);
@@ -73,7 +73,10 @@ public class StatisticsBean extends ApplicationBean implements Serializable
         highlightedEntries.add("LORO");
         highlightedEntries.add("TEDx");
         highlightedEntries.add("TED");
-        resourcesPerSource = getEntriesForQuery("SELECT source, count( * ) FROM lw_resource WHERE deleted =0 GROUP BY source ORDER BY count( * ) DESC", highlightedEntries);
+        highlightedEntries.add("TED-Ed");
+        highlightedEntries.add("FactCheck");
+
+        resourcesPerSource = getEntriesForQuery("SELECT source, count(*) FROM lw_resource WHERE deleted = 0 GROUP BY source ORDER BY count( * ) DESC", highlightedEntries);
     }
 
     private List<SimpleEntry<String, String>> getEntriesForQuery(String query, HashSet<String> highlightedEntries) throws SQLException

@@ -229,8 +229,8 @@ public class AdvancedSearchBean
     public String advancedSearch()
     {
 
-        int pageOffset;
-        int pageSize;
+        //int pageOffset;
+        // pageSize;
         HttpSolrClient server = Learnweb.getInstance().getSolrClient().getSolrServer();
         //SolrInputDocument doc = new SolrInputDocument();
         solrQuery = new SolrQuery(query);
@@ -278,6 +278,7 @@ public class AdvancedSearchBean
             for(SolrDocument sd : sdl)
             {
                 String id = (String) sd.getFieldValue("id");
+                log.debug(id);
             }
         }
         catch(IOException | SolrServerException e)
