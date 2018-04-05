@@ -8,31 +8,22 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Properties;
-
-import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.Resource;
 
-//handles extended metadata search and display: similar to resource but only deal with extended metadata of resources. 
+//handles extended metadata search and display: similar to resource but only deal with extended metadata of resources.
 
 public class ExtendedMetadataManager
 {
-    private final static Logger log = Logger.getLogger(ExtendedMetadataManager.class);
+    //private final static Logger log = Logger.getLogger(ExtendedMetadataManager.class);
 
     private final static String COLUMNS_AUTHOR = "author";
     private Learnweb learnweb;
-    private ExtendedMetadata extendedMetadata = new ExtendedMetadata();
 
     public ExtendedMetadataManager(Learnweb learnweb) throws SQLException
     {
-        super();
-        Properties properties = learnweb.getProperties();
-        // int userCacheSize = Integer.parseInt(properties.getProperty("USER_CACHE"));
-
         this.learnweb = learnweb;
-        /* this.cache = userCacheSize == 0 ? new DummyCache<User>() : new Cache<User>(userCacheSize);*/
     }
 
     //get the list of authors for the given list of resources: used for display in author filter
@@ -95,7 +86,7 @@ public class ExtendedMetadataManager
         List<String> tlearners = new LinkedList<String>();
         Map<String, Integer> tcount = new HashMap();
 
-        tlearners = Learnweb.getInstance().getAudienceManager().getAudienceNamesByResourceId(resourceId);
+        tlearners = learnweb.getAudienceManager().getAudienceNamesByResourceId(resourceId);
         tcount = sortMetadataValueCount(tlearners);
         eMetadata.setTargetCount(tcount);
         eMetadata.setTargets(tlearners);
@@ -104,7 +95,7 @@ public class ExtendedMetadataManager
         List<String> purposes = new LinkedList<String>();
         Map<String, Integer> pcount = new HashMap();
 
-        purposes = Learnweb.getInstance().getPurposeManager().getPurposeNamesByResourceId(resourceId);
+        purposes = learnweb.getPurposeManager().getPurposeNamesByResourceId(resourceId);
         pcount = sortMetadataValueCount(purposes);
         eMetadata.setPurposeCount(pcount);
         eMetadata.setPurposes(purposes);
@@ -113,7 +104,7 @@ public class ExtendedMetadataManager
         List<String> langlevels = new LinkedList<String>();
         Map<String, Integer> lcount = new HashMap();
 
-        langlevels = Learnweb.getInstance().getLanglevelManager().getLanglevelNamesByResourceId(resourceId);
+        langlevels = learnweb.getLanglevelManager().getLanglevelNamesByResourceId(resourceId);
         lcount = sortMetadataValueCount(langlevels);
         eMetadata.setLevelCount(lcount);
         eMetadata.setLevels(langlevels);
@@ -126,9 +117,9 @@ public class ExtendedMetadataManager
 
         eMetadata.setlCount(lc);
 
-        //get categories 
+        //get categories
         List<String> categories = new LinkedList<String>();
-        categories = Learnweb.getInstance().getCategoryManager().getCategoryNamesByResourceId(resourceId);
+        categories = learnweb.getCategoryManager().getCategoryNamesByResourceId(resourceId);
         eMetadata.setCategories(categories);
 
         return eMetadata;

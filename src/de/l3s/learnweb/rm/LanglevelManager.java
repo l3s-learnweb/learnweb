@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -21,17 +20,12 @@ public class LanglevelManager
 
     public LanglevelManager(Learnweb learnweb) throws SQLException
     {
-        super();
-        Properties properties = learnweb.getProperties();
-        // int userCacheSize = Integer.parseInt(properties.getProperty("USER_CACHE"));
-
         this.learnweb = learnweb;
-        /* this.cache = userCacheSize == 0 ? new DummyCache<User>() : new Cache<User>(userCacheSize);*/
     }
 
     /**
      * returns a list of all langlevels with a given resource id
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -68,7 +62,7 @@ public class LanglevelManager
 
     /**
      * returns a list of all langlevels
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -129,12 +123,9 @@ public class LanglevelManager
         return langlevelId;
     }
 
-    @SuppressWarnings("unchecked")
     private Langlevel createLanglevel(ResultSet rs) throws SQLException
     {
-        int langlevelId = rs.getInt("langlevel_id");
         Langlevel langlevel = new Langlevel();
-
         langlevel.setId(rs.getInt("langlevel_id"));
         langlevel.setLanglevel_name(rs.getString("langlevel_name"));
 

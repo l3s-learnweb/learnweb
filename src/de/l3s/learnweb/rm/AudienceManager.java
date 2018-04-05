@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -20,17 +19,12 @@ public class AudienceManager
 
     public AudienceManager(Learnweb learnweb) throws SQLException
     {
-        super();
-        Properties properties = learnweb.getProperties();
-        // int userCacheSize = Integer.parseInt(properties.getProperty("USER_CACHE"));
-
         this.learnweb = learnweb;
-        /* this.cache = userCacheSize == 0 ? new DummyCache<User>() : new Cache<User>(userCacheSize);*/
     }
 
     /**
      * returns a list of all audiences with a given resource id
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -67,7 +61,7 @@ public class AudienceManager
 
     /**
      * returns a list of all audiences
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -128,12 +122,9 @@ public class AudienceManager
         return audienceId;
     }
 
-    @SuppressWarnings("unchecked")
     private Audience createAudience(ResultSet rs) throws SQLException
     {
-        int audienceId = rs.getInt("audience_id");
         Audience audience = new Audience();
-
         audience.setId(rs.getInt("audience_id"));
         audience.setAudience_name(rs.getString("audience_name"));
 

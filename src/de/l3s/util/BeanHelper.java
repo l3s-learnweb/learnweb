@@ -39,10 +39,15 @@ public class BeanHelper
         }
 
         String ip = request.getHeader("X-FORWARDED-FOR");
-        if(ip == null)
+        if(ip != null)
         {
-            ip = request.getRemoteAddr();
+            // the x forward header can contain all the ips of all rely proxies
+            String[] ips = ip.split(",");
+            ip = ips[0].trim();
         }
+
+        if(ip == null)
+            ip = request.getRemoteAddr();
 
         return ip;
     }
@@ -106,7 +111,7 @@ public class BeanHelper
         {
             // ignore
         }
-        return "page: " + url + "; user: " + user + "; ip: " + ip + "; referrer: " + referrer + "; userAgent: " + userAgent + "; parameters: " + parameters + ";";
+        return "page: " + url + "; user: " + user + "; ip: " + ip + "; referrer: " + referrer + "; userAgent: " + userAgent + "; parameters: " + printMap(parameters) + ";";
     }
 
     private static String printMap(Map<String, String[]> map)

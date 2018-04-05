@@ -5,7 +5,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -20,17 +19,12 @@ public class PurposeManager
 
     public PurposeManager(Learnweb learnweb) throws SQLException
     {
-        super();
-        Properties properties = learnweb.getProperties();
-        // int userCacheSize = Integer.parseInt(properties.getProperty("USER_CACHE"));
-
         this.learnweb = learnweb;
-        /* this.cache = userCacheSize == 0 ? new DummyCache<User>() : new Cache<User>(userCacheSize);*/
     }
 
     /**
      * returns a list of all purposes with a given resource id
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -67,7 +61,7 @@ public class PurposeManager
 
     /**
      * returns a list of all langlevels
-     * 
+     *
      * @return
      * @throws SQLException
      */
@@ -128,12 +122,9 @@ public class PurposeManager
         return purposeId;
     }
 
-    @SuppressWarnings("unchecked")
     private Purpose createPurpose(ResultSet rs) throws SQLException
     {
-        int purposeId = rs.getInt("purpose_id");
         Purpose purpose = new Purpose();
-
         purpose.setId(rs.getInt("purpose_id"));
         purpose.setPurpose_name(rs.getString("purpose_name"));
 

@@ -3,10 +3,10 @@ package de.l3s.learnweb.rm;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Properties;
 
 import org.apache.log4j.Logger;
 
@@ -26,19 +26,13 @@ public class CategoryManager
 
     public CategoryManager(Learnweb learnweb) throws SQLException
     {
-        super();
-        Properties properties = learnweb.getProperties();
-        // int userCacheSize = Integer.parseInt(properties.getProperty("USER_CACHE"));
-
         this.learnweb = learnweb;
-        /* this.cache = userCacheSize == 0 ? new DummyCache<User>() : new Cache<User>(userCacheSize);*/
     }
 
     //get category_resource for a given resource Id
     public List<CategoryResource> getCategoryResourcesByResourceId(int resourceId) throws SQLException
     {
         List<CategoryResource> cresources = new ArrayList<CategoryResource>();
-        List<Category> categories = new LinkedList<Category>();
         PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS_CATRESOURCE + " FROM `lw_resource_category` WHERE resource_id = ?");
         select.setInt(1, resourceId);
         ResultSet rs = select.executeQuery();
@@ -51,7 +45,7 @@ public class CategoryManager
         return cresources;
     }
 
-    //get category list for a given resource ID 
+    //get category list for a given resource ID
     public List<Category> getCategoriesByResourceId(int resourceId) throws SQLException
     {
         List<Category> categories = new LinkedList<Category>();
@@ -146,7 +140,7 @@ public class CategoryManager
         return catids;
     }
 
-    //get all top categories 
+    //get all top categories
     public List<CategoryTop> getAllTopCategories() throws SQLException
     {
         List<CategoryTop> cattops = new LinkedList<CategoryTop>();
@@ -255,7 +249,7 @@ public class CategoryManager
         return catmid;
     }
 
-    //get top category given the id 
+    //get top category given the id
     public CategoryTop getCategoryTopById(int cattopId) throws SQLException
     {
         CategoryTop cattop = new CategoryTop();
@@ -283,7 +277,7 @@ public class CategoryManager
     public int getCategoryBottomByNameAndMidcatId(String catbotName, int catmidId) throws SQLException
     {
         CategoryBottom catbot = new CategoryBottom();
-        int catbotId;
+        //int catbotId;
         if(catbotName == null)
         {
             new IllegalArgumentException("invalid bottom category name was requested: " + catbotName).printStackTrace();
@@ -307,11 +301,11 @@ public class CategoryManager
         return catbot.getId();
     }
 
-    //get middle category given the name and top category Id (if it does not exist, this is an error because middle categories are fixed) 
+    //get middle category given the name and top category Id (if it does not exist, this is an error because middle categories are fixed)
     public int getCategoryMiddleByNameAndTopcatId(String catmidName, int cattopId) throws SQLException
     {
         CategoryMiddle catmid = new CategoryMiddle();
-        int catmidId;
+        // int catmidId;
 
         if(catmidName == null)
         {
@@ -333,7 +327,7 @@ public class CategoryManager
         return catmid.getId();
     }
 
-    //get top category given the name (if it does not exist, this is an error because top categories are fixed) 
+    //get top category given the name (if it does not exist, this is an error because top categories are fixed)
     public int getCategoryTopByName(String cattopName) throws SQLException
     {
         CategoryTop cattop = new CategoryTop();
@@ -382,7 +376,7 @@ public class CategoryManager
         return catbot.getId();
     }
 
-    //get middle categoryId given the name 
+    //get middle categoryId given the name
     public int getCategoryMiddleByName(String catmidName) throws SQLException
     {
         CategoryMiddle catmid = new CategoryMiddle();
@@ -452,7 +446,7 @@ public class CategoryManager
         return catmid;
     }
 
-    //get bottom category given the name 
+    //get bottom category given the name
     public CategoryBottom getBottomCategoryByName(String catbotName) throws SQLException
     {
         CategoryBottom catbot = new CategoryBottom();
@@ -478,11 +472,11 @@ public class CategoryManager
         return catbot;
     }
 
-    //save new bottom category given the name and midcatId 
+    //save new bottom category given the name and midcatId
     public int saveNewBottomCategory(String catbotName, int catmidId) throws SQLException
     {
         int catbotId;
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_rm_catbot` (`cat_bot_name`, `cat_mid_id`) VALUES (?, ?)");
+        PreparedStatement replace = learnweb.getConnection().prepareStatement("INSERT INTO `lw_rm_catbot` (`cat_bot_name`, `cat_mid_id`) VALUES (?, ?)", Statement.RETURN_GENERATED_KEYS);
         replace.setString(1, catbotName);
         replace.setInt(2, catmidId);
         replace.executeUpdate();
@@ -497,10 +491,8 @@ public class CategoryManager
     }
 
     //create category_resource
-    @SuppressWarnings("unchecked")
     private CategoryResource createCategoryResource(ResultSet rs) throws SQLException
     {
-
         CategoryResource catresource = new CategoryResource();
         catresource.setResourceId(rs.getInt("resource_id"));
         catresource.setTopcatId(rs.getInt("cat_top_id"));
@@ -511,7 +503,6 @@ public class CategoryManager
     }
 
     //create category
-    @SuppressWarnings("unchecked")
     private Category createCategory(ResultSet rs) throws SQLException
     {
 
@@ -525,8 +516,8 @@ public class CategoryManager
         return cat;
     }
 
-    //create category bottom 
-    @SuppressWarnings("unchecked")
+    //create category bottom
+
     private CategoryBottom createCategoryBottom(ResultSet rs) throws SQLException
     {
         CategoryBottom catbot = new CategoryBottom();
@@ -539,7 +530,7 @@ public class CategoryManager
     }
 
     //create category middle
-    @SuppressWarnings("unchecked")
+
     private CategoryMiddle createCategoryMiddle(ResultSet rs) throws SQLException
     {
         CategoryMiddle catmid = new CategoryMiddle();
@@ -551,8 +542,8 @@ public class CategoryManager
         return catmid;
     }
 
-    //create category top 
-    @SuppressWarnings("unchecked")
+    //create category top
+
     private CategoryTop createCategoryTop(ResultSet rs) throws SQLException
     {
         CategoryTop cattop = new CategoryTop();
