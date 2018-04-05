@@ -1,30 +1,28 @@
 package de.l3s.learnweb.dashboard;
 
-import java.io.Serializable;
-import java.sql.SQLException;
-import java.text.SimpleDateFormat;
-import java.util.*;
+import de.l3s.learnweb.Organisation;
+import de.l3s.learnweb.User;
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.dashboard.DashboardManager.GlossaryFieldSummery;
+import de.l3s.learnweb.dashboard.DashboardManager.GlossaryStatistic;
+import de.l3s.learnweb.dashboard.DashboardManager.TrackerStatistic;
+import org.apache.log4j.Logger;
+import org.primefaces.model.chart.*;
 
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
-
-import de.l3s.learnweb.Organisation;
-import jcdashboard.model.DescData;
-import org.apache.log4j.Logger;
-
-import de.l3s.learnweb.User;
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.dashboard.DashboardManager.TrackerStatistic;
-import de.l3s.learnweb.dashboard.DashboardManager.GlossaryStatistic;
-import de.l3s.learnweb.dashboard.DashboardManager.GlossaryFieldSummery;
-import org.primefaces.model.chart.*;
+import java.io.Serializable;
+import java.sql.SQLException;
+import java.text.DecimalFormat;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 @ManagedBean
 @ViewScoped
-public class DashboardBean extends ApplicationBean implements Serializable
+public class DashboardStudentBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6265758951073418345L;
-    private static final Logger log = Logger.getLogger(DashboardBean.class);
+    private static final Logger log = Logger.getLogger(DashboardStudentBean.class);
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private static final String PREFERENCE_STARTDATE = "dashboard_startdate";
@@ -32,7 +30,8 @@ public class DashboardBean extends ApplicationBean implements Serializable
 
     private Date startDate = null;
     private Date endDate = null;
-    private Integer selectedUserId = null; // optionally select a single user to display
+    private Integer selectedUserId = null;
+
     private String trackerClientId = "1";
 
     private List<Integer> orgUserIds = null;
@@ -50,17 +49,17 @@ public class DashboardBean extends ApplicationBean implements Serializable
     private Map<String, Integer> actionsWithCounters;
     private Map<String, Integer> actionsCountPerDay;
     private Map<String, Integer> proxySourcesWithCounters;
+    private Map<Integer, GlossaryStatistic> glossaryStatisticPerUser;
 
     private LineChartModel interactionsChart;
     private BarChartModel studentsActivityTypes;
     private BarChartModel studentsGlossary;
+    private BarChartModel proxySources;
+    private BarChartModel studentFields;
     private PieChartModel studentsSources;
     private ArrayList<GlossaryStatistic> glossaryStat;
-    private ArrayList<DescData> langSescDataList;
 
-    private Map<Integer, GlossaryStatistic> glossaryStatisticPerUser;
-
-    public DashboardBean()
+    public DashboardStudentBean()
     {
     }
 
@@ -81,7 +80,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
             startDate = new Date(Long.parseLong(savedStartDate));
             endDate = new Date(Long.parseLong(savedEndDate));
 
-            orgUserIds = getUser().getOrganisation().getUserIds();
+            orgUserIds = Collections.singletonList(selectedUserId);
             dashboardManager = getLearnweb().getDashboardManager();
 
             updateStatsData();
@@ -98,15 +97,15 @@ public class DashboardBean extends ApplicationBean implements Serializable
         totalTerms = dashboardManager.getTotalTerms(orgUserIds, startDate, endDate);
         totalSources = dashboardManager.getTotalSources(orgUserIds, startDate, endDate);
         glossaryFieldSummeryPerUser = dashboardManager.getGlossaryFieldSummeryPerUser(orgUserIds, startDate, endDate);
+        trackerStatistics = dashboardManager.getTrackerStatistics(trackerClientId, orgUserIds, startDate, endDate);
+        glossaryDescriptions = dashboardManager.getGlossaryDescriptions(orgUserIds, startDate, endDate);
         glossaryConceptsCountPerUser = dashboardManager.getGlossaryConceptsCountPerUser(orgUserIds, startDate, endDate);
         glossarySourcesWithCounters = dashboardManager.getGlossarySourcesWithCounters(orgUserIds, startDate, endDate);
         glossaryTermsCountPerUser = dashboardManager.getGlossaryTermsCountPerUser(orgUserIds, startDate, endDate);
         actionsWithCounters = dashboardManager.getActionsWithCounters(orgUserIds, startDate, endDate);
         actionsCountPerDay = dashboardManager.getActionsCountPerDay(orgUserIds, startDate, endDate);
-        glossaryDescriptions = dashboardManager.getGlossaryDescriptions(orgUserIds, startDate, endDate);
-        glossaryStatisticPerUser = dashboardManager.getGlossaryStatisticPerUser(orgUserIds, startDate, endDate);
         proxySourcesWithCounters = dashboardManager.getProxySourcesWithCounters(trackerClientId, orgUserIds, startDate, endDate);
-        trackerStatistics = dashboardManager.getTrackerStatistics(trackerClientId, orgUserIds, startDate, endDate);
+        glossaryStatisticPerUser = dashboardManager.getGlossaryStatisticPerUser(orgUserIds, startDate, endDate);
     }
 
     public void onDateChanged() throws SQLException
@@ -114,11 +113,12 @@ public class DashboardBean extends ApplicationBean implements Serializable
         updateStatsData();
 
         interactionsChart = null;
+        studentFields = null;
         studentsActivityTypes = null;
         studentsGlossary = null;
         studentsSources = null;
         glossaryStat = null;
-        langSescDataList = null;
+        proxySources = null;
     }
 
     public LineChartModel getInteractionsChart()
@@ -126,6 +126,13 @@ public class DashboardBean extends ApplicationBean implements Serializable
         if(interactionsChart == null)
             interactionsChart = initInteractionsChart();
         return interactionsChart;
+    }
+
+    public BarChartModel getStudentFields()
+    {
+        if(studentFields == null)
+            studentFields = initStudentFields();
+        return studentFields;
     }
 
     public BarChartModel getStudentsActivityTypes()
@@ -140,6 +147,13 @@ public class DashboardBean extends ApplicationBean implements Serializable
         if(studentsGlossary == null)
             studentsGlossary = initStudentsGlossary();
         return studentsGlossary;
+    }
+
+    public BarChartModel getProxySources()
+    {
+        if(proxySources == null)
+            proxySources = initProxySources();
+        return proxySources;
     }
 
     public PieChartModel getStudentsSources()
@@ -176,6 +190,26 @@ public class DashboardBean extends ApplicationBean implements Serializable
         Axis yAxis = model.getAxis(AxisType.Y);
         yAxis.setLabel("Interactions");
         yAxis.setMin(0);
+        return model;
+    }
+
+    private BarChartModel initStudentFields()
+    {
+        BarChartModel model = new BarChartModel();
+        ChartSeries activity = new ChartSeries();
+
+        if (glossaryFieldSummeryPerUser.size() > 0) {
+            GlossaryFieldSummery gfs = glossaryFieldSummeryPerUser.get(0);
+            activity.set("pronounciation", gfs.getPronounciation());
+            activity.set("acronym", gfs.getAcronym());
+            activity.set("phraseology", gfs.getPhraseology());
+            activity.set("uses", gfs.getUses());
+            activity.set("source", gfs.getSource());
+        }
+
+        model.addSeries(activity);
+        Axis xAxis = model.getAxis(AxisType.X);
+        xAxis.setTickAngle(-60);
         return model;
     }
 
@@ -248,6 +282,32 @@ public class DashboardBean extends ApplicationBean implements Serializable
         return model;
     }
 
+    private BarChartModel initProxySources()
+    {
+        BarChartModel model = new BarChartModel();
+        BarChartSeries proxySource = new BarChartSeries();
+
+        List<Map.Entry<String, Integer>> mappa = entriesSortedByValues(proxySourcesWithCounters);
+        for(Map.Entry<String, Integer> e : mappa)
+        {
+            proxySource.set(e.getKey(), e.getValue());
+        }
+
+        if (proxySource.getData().isEmpty()) {
+            proxySource.set("1", 0);
+        }
+
+        model.addSeries(proxySource);
+        Axis xAxis = model.getAxis(AxisType.X);
+        xAxis.setTickAngle(-60);
+
+        Axis yAxis = model.getAxis(AxisType.Y);
+        yAxis.setLabel("sources");
+
+        return model;
+    }
+
+
     private PieChartModel initStudentsSources()
     {
         PieChartModel model = new PieChartModel();
@@ -287,89 +347,6 @@ public class DashboardBean extends ApplicationBean implements Serializable
         return glossaryStat;
     }
 
-    public ArrayList<DescData> getLangDesclist()
-    {
-        if(langSescDataList == null)
-        {
-            langSescDataList = new ArrayList<DescData>();
-            DescData d = new DescData();
-            d.setDescription("Vitamin");
-            d.setEnrtyid(1322);
-            d.setLang("en");
-            d.setLenght(1);
-            d.setUserid(10111);
-            langSescDataList.add(d);
-
-            d = new DescData();
-            d.setDescription("Il diabete ");
-            d.setEnrtyid(1428);
-            d.setLang("it");
-            d.setLenght(2);
-            d.setUserid(10111);
-            langSescDataList.add(d);
-
-            d = new DescData();
-            d.setDescription("Epidemiology");
-            d.setEnrtyid(1113);
-            d.setLang("en");
-            d.setLenght(1);
-            d.setUserid(10150);
-            langSescDataList.add(d);
-
-            Integer userid = 10109;
-            Integer lenght = 1;
-            String lang = "unk";
-            d = new DescData();
-            d.setDescription("g");
-            d.setEnrtyid(1320);
-            d.setLang(lang);
-            d.setLenght(lenght);
-            d.setUserid(userid);
-            langSescDataList.add(d);
-
-            d = new DescData();
-            d.setDescription("v");
-            d.setEnrtyid(1323);
-            d.setLang(lang);
-            d.setLenght(lenght);
-            d.setUserid(userid);
-            langSescDataList.add(d);
-
-            d = new DescData();
-            d.setDescription("c");
-            d.setEnrtyid(1324);
-            d.setLang(lang);
-            d.setLenght(lenght);
-            d.setUserid(userid);
-            langSescDataList.add(d);
-
-            d = new DescData();
-            d.setDescription("g");
-            d.setEnrtyid(1327);
-            d.setLang(lang);
-            d.setLenght(lenght);
-            d.setUserid(userid);
-            langSescDataList.add(d);
-
-            d = new DescData();
-            d.setDescription("b");
-            d.setEnrtyid(1328);
-            d.setLang(lang);
-            d.setLenght(lenght);
-            d.setUserid(userid);
-            langSescDataList.add(d);
-
-            d = new DescData();
-            d.setDescription("h");
-            d.setEnrtyid(1350);
-            d.setLang(lang);
-            d.setLenght(lenght);
-            d.setUserid(userid);
-            langSescDataList.add(d);
-        }
-        return langSescDataList;
-    }
-
     public Date getStartDate()
     {
         return startDate;
@@ -394,9 +371,9 @@ public class DashboardBean extends ApplicationBean implements Serializable
         setPreference(PREFERENCE_ENDDATE, Long.toString(endDate.getTime()));
     }
 
-    public List<GlossaryFieldSummery> getGlossaryFieldSummeryPerUser()
+    public List<Map.Entry<String, Integer>> getProxyLogList()
     {
-        return glossaryFieldSummeryPerUser;
+        return entriesSortedByValues(proxySourcesWithCounters);
     }
 
     public Integer getTotalConcepts()
@@ -469,14 +446,8 @@ public class DashboardBean extends ApplicationBean implements Serializable
         return getUser().getOrganisation();
     }
 
-    public List<GlossaryFieldSummery> getFields()
-    {
-        return glossaryFieldSummeryPerUser;
-    }
-
     public Integer getSelectedUserId()
     {
-
         return selectedUserId;
     }
 
@@ -486,4 +457,17 @@ public class DashboardBean extends ApplicationBean implements Serializable
         this.selectedUserId = selectedUserId;
     }
 
+    public String getRatioTermConcept()
+    {
+        float res = (float) totalTerms / totalConcepts;
+        DecimalFormat twoDForm = new DecimalFormat("#.##");
+        return twoDForm.format(res);
+    }
+
+    static <K, V extends Comparable<? super V>> List<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map)
+    {
+        List<Map.Entry<K, V>> sortedEntries = new ArrayList<>(map.entrySet());
+        Collections.sort(sortedEntries, (e1, e2) -> e2.getValue().compareTo(e1.getValue()));
+        return sortedEntries;
+    }
 }

@@ -155,7 +155,7 @@ public class DashboardManager
                         "FROM lw_resource r " +
                         "JOIN lw_user u ON u.user_id = r.owner_user_id " +
                         "JOIN lw_resource_glossary rg USING (resource_id) " +
-                        "WHERE rg.deleted != 1 AND r.deleted != 1 AND rgt.deleted != 1 " +
+                        "WHERE rg.deleted != 1 AND r.deleted != 1 " +
                         "AND r.owner_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
                         "AND rg.timestamp BETWEEN ? AND ? GROUP BY u.username ORDER BY username"))
         {
@@ -189,7 +189,7 @@ public class DashboardManager
 
             while(rs.next()) {
                 String source = rs.getString("refs");
-                if(source.trim().isEmpty())
+                if(source == null || source.trim().isEmpty())
                     countPerSource.put("EMPTY", rs.getInt("count"));
                 else
                     countPerSource.put(source, rs.getInt("count"));
@@ -229,9 +229,10 @@ public class DashboardManager
         Map<String, Integer> countPerAction = new TreeMap<>();
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
-                "SELECT action, COUNT(*) AS count FROM lw_user_log " +
-                        "AND user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
-                        "AND timestamp BETWEEN ? AND ? GROUP BY action"))
+                "SELECT le.action, COUNT(*) AS count FROM lw_user_log l " +
+                        "JOIN learnweb_logs.log_actions le ON l.action = le.action_id " +
+                        "WHERE l.user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
+                        "AND l.timestamp BETWEEN ? AND ? GROUP BY le.action"))
         {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
@@ -251,7 +252,7 @@ public class DashboardManager
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT DATE(timestamp) as day, COUNT(*) AS count FROM lw_user_log " +
-                        "AND user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
+                        "WHERE user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
                         "AND timestamp BETWEEN ? AND ? GROUP BY day"))
         {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
@@ -394,9 +395,20 @@ public class DashboardManager
 
     public static class GlossaryStatistic
     {
-        private int totalGlossaries;
-        private int totalTerms;
-        private int totalReferences;
+        private int userId = -1;
+        private int totalGlossaries = 0;
+        private int totalTerms = 0;
+        private int totalReferences = 0;
+
+        public int getUserId()
+        {
+            return userId;
+        }
+
+        public void setUserId(int userId)
+        {
+            this.userId = userId;
+        }
 
         public int getTotalGlossaries()
         {

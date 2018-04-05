@@ -1,9 +1,17 @@
-<ui:composition template="/templates/main/main.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
-				xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
-				xmlns:p="http://primefaces.org/ui">
+<ui:composition template="/templates/main/main.xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
 
-	<ui:param name="pageTitle" value="Dashboard"/>
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewAction action="#{dashboardBean.onLoad}"/>
+		</f:metadata>
+	</ui:define>
+
 	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="Dashboard"/>
 
 	<style>
 		ul {
@@ -20,8 +28,8 @@
 					</div>
 
 					<div class="menu_section" style="height: calc(100vh - 102px); overflow-y: auto; width: 100%;">
-						<p:dataList value="#{dashboard.selectedCourse.members}" var="user" type="ordered">
-							<a target="_blank" href="admin/dashboard/studentlog.jsf?studentlogId=#{user.id}">
+						<p:dataList value="#{dashboardBean.organization.members}" var="user" type="ordered">
+							<a target="_blank" href="admin/dashboard/student.jsf?studentId=#{user.id}">
 								<h:outputText value="#{user.username}"/>
 							</a>
 						</p:dataList>
@@ -40,14 +48,14 @@
 							<div class="ui-g-3">
 								<p:panel header="Total Concepts">
 									<div class="count">
-										<h:outputText value="#{dashboard.totalconcepts}"/>
+										<h:outputText value="#{dashboardBean.totalConcepts}"/>
 									</div>
 								</p:panel>
 							</div>
 							<div class="ui-g-3">
 								<p:panel header="Total Terms">
 									<div class="count">
-										<h:outputText value="#{dashboard.totalterms}"/>
+										<h:outputText value="#{dashboardBean.totalTerms}"/>
 									</div>
 								</p:panel>
 							</div>
@@ -57,7 +65,7 @@
 										<div class="ui-g-12 ui-md-4">
 											<div class="ui-inputgroup">
 												<p:outputLabel for="dateStart"/>
-												<p:calendar id="dateStart" value="#{dashboard.startDate}"
+												<p:calendar id="dateStart" value="#{dashboardBean.startDate}"
 															showOn="button"/>
 											</div>
 										</div>
@@ -65,14 +73,14 @@
 										<div class="ui-g-12 ui-md-4">
 											<div class="ui-inputgroup">
 												<p:outputLabel for="dateEnd"/>
-												<p:calendar id="dateEnd" value="#{dashboard.endDate}" showOn="button"/>
+												<p:calendar id="dateEnd" value="#{dashboardBean.endDate}" showOn="button"/>
 											</div>
 										</div>
 
 										<div class="ui-g-12 ui-md-4">
 											<div class="ui-inputgroup">
 												<p:commandButton value="Update" update=":dashboardMain :growl"
-																 actionListener="#{dashboard.onDateChanged}"
+																 actionListener="#{dashboardBean.onDateChanged}"
 																 icon="ui-icon-check"/>
 											</div>
 										</div>
@@ -84,13 +92,13 @@
 						<div class="ui-g">
 							<div class="ui-g-9">
 								<p:panel id="chart_plot_01" header="Interactions" style="margin-bottom:20px">
-									<p:chart type="line" model="#{dashboard.interactionsChart}" style="height:300px;"/>
+									<p:chart type="line" model="#{dashboardBean.interactionsChart}" style="height:300px;"/>
 								</p:panel>
 							</div>
 							<div class="ui-g-3">
 								<p:panel id="chart_barModel" header="Students' Activity types"
 										 style="margin-bottom:20px">
-									<p:chart type="bar" model="#{dashboard.studentsActivityTypes}" xaxisAngle="60"
+									<p:chart type="bar" model="#{dashboardBean.studentsActivityTypes}" xaxisAngle="60"
 											 style="height:300px"/>
 								</p:panel>
 							</div>
@@ -102,7 +110,7 @@
 											 toggleSpeed="500" closeSpeed="500" widgetVar="panel"
 											 style="margin-bottom:20px">
 
-										<p:chart type="pie" model="#{dashboard.studentsSources}"/>
+										<p:chart type="pie" model="#{dashboardBean.studentsSources}"/>
 
 										<f:facet name="options">
 											<p:menu>
@@ -123,7 +131,7 @@
 											 toggleSpeed="500" closeSpeed="500" widgetVar="panel"
 											 style="margin-bottom:20px">
 
-										<p:chart type="bar" model="#{dashboard.studentsGlossary}" style="height:300px"/>
+										<p:chart type="bar" model="#{dashboardBean.studentsGlossary}" style="height:300px"/>
 
 										<f:facet name="options">
 											<p:menu>
@@ -144,48 +152,48 @@
 								<h:form>
 									<p:panel id="fields" header="Fields" style="margin-bottom:20px">
 										<h:panelGrid columns="1">
-											<p:dataTable var="entry" value="#{dashboard.fields}"
+											<p:dataTable var="gfs" value="#{dashboardBean.glossaryFieldSummeryPerUser}"
 														 styleClass="countries_list">
 												<p:column headerText="Id">
-													<h:outputText value="#{entry.userid}"/>
+													<h:outputText value="#{gfs.userid}"/>
 												</p:column>
 
 												<p:column headerText="terms">
-													<h:outputText value="#{entry.total}"/>
+													<h:outputText value="#{gfs.total}"/>
 												</p:column>
 
 												<p:column headerText="pronunciation">
-													<h:outputText value="#{entry.pronounciation/entry.total*100}">
+													<h:outputText value="#{gfs.pronounciation/gfs.total*100}">
 														<f:convertNumber pattern="#0.00"/>
 													</h:outputText>%
 												</p:column>
 
 												<p:column headerText="acronym">
-													<h:outputText value="#{entry.acronym/entry.total*100}">
+													<h:outputText value="#{gfs.acronym/gfs.total*100}">
 														<f:convertNumber pattern="#0.00"/>
 													</h:outputText>%
 												</p:column>
 
 												<p:column headerText="phraseology">
-													<h:outputText value="#{entry.phraseology/entry.total*100}">
+													<h:outputText value="#{gfs.phraseology/gfs.total*100}">
 														<f:convertNumber pattern="#0.00"/>
 													</h:outputText>%
 												</p:column>
 
 												<p:column headerText="uses">
-													<h:outputText value="#{entry.uses/entry.total*100}">
+													<h:outputText value="#{gfs.uses/gfs.total*100}">
 														<f:convertNumber pattern="#0.00"/>
 													</h:outputText>%
 												</p:column>
 
 												<p:column headerText="source">
-													<h:outputText value="#{entry.source/entry.total*100}">
+													<h:outputText value="#{gfs.source/gfs.total*100}">
 														<f:convertNumber pattern="#0.00"/>
 													</h:outputText>%
 												</p:column>
 
 												<p:column headerText="AVG %">
-													<h:outputText value="#{entry.avg*100}">
+													<h:outputText value="#{gfs.avg*100}">
 														<f:convertNumber pattern="#0.00"/>
 													</h:outputText>%
 												</p:column>
@@ -200,22 +208,22 @@
 								<h:form>
 									<p:panel id="summary" header="Summary" style="margin-bottom:20px">
 										<h:panelGrid columns="1">
-											<p:dataTable var="entry" value="#{dashboard.summary}"
+											<p:dataTable var="gs" value="#{dashboardBean.summary}"
 														 styleClass="countries_list">
 												<p:column headerText="Id">
-													<h:outputText value="#{entry.userid}"/>
+													<h:outputText value="#{gs.userId}"/>
 												</p:column>
 
 												<p:column headerText="sources">
-													<h:outputText value="#{entry.sources}"/>
+													<h:outputText value="#{gs.totalReferences}"/>
 												</p:column>
 
 												<p:column headerText="terms">
-													<h:outputText value="#{entry.terms}"/>
+													<h:outputText value="#{gs.totalTerms}"/>
 												</p:column>
 
 												<p:column headerText="entries">
-													<h:outputText value="#{entry.concepts}">
+													<h:outputText value="#{gs.totalGlossaries}">
 													</h:outputText>%
 												</p:column>
 											</p:dataTable>
@@ -227,26 +235,26 @@
 								<h:form>
 									<p:panel id="description" header="Description field" style="margin-bottom:20px">
 										<h:panelGrid columns="1">
-											<p:dataTable var="entry" value="#{dashboard.desclist}"
+											<p:dataTable var="ldl" value="#{dashboardBean.langDesclist}"
 														 styleClass="countries_list">
 												<p:column headerText="Id">
-													<h:outputText value="#{entry.userid}"/>
+													<h:outputText value="#{ldl.userid}"/>
 												</p:column>
 
 												<p:column headerText="entry id">
-													<h:outputText value="#{entry.enrtyid}"/>
+													<h:outputText value="#{ldl.enrtyid}"/>
 												</p:column>
 
 												<p:column headerText="lang">
-													<h:outputText value="#{entry.lang}"/>
+													<h:outputText value="#{ldl.lang}"/>
 												</p:column>
 
 												<p:column headerText="description">
-													<h:outputText value="#{entry.description}"/>
+													<h:outputText value="#{ldl.description}"/>
 												</p:column>
 
 												<p:column headerText="lenght">
-													<h:outputText value="#{entry.lenght}"/>
+													<h:outputText value="#{ldl.lenght}"/>
 												</p:column>
 											</p:dataTable>
 										</h:panelGrid>
