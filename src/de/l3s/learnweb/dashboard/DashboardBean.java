@@ -9,7 +9,6 @@ import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import de.l3s.learnweb.Organisation;
-import jcdashboard.model.DescData;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.User;
@@ -56,7 +55,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
     private BarChartModel studentsGlossary;
     private PieChartModel studentsSources;
     private ArrayList<GlossaryStatistic> glossaryStat;
-    private ArrayList<DescData> langSescDataList;
+    private ArrayList<DescFieldData> langSescDataList;
 
     private Map<Integer, GlossaryStatistic> glossaryStatisticPerUser;
 
@@ -287,12 +286,12 @@ public class DashboardBean extends ApplicationBean implements Serializable
         return glossaryStat;
     }
 
-    public ArrayList<DescData> getLangDesclist()
+    public ArrayList<DescFieldData> getLangDesclist()
     {
         if(langSescDataList == null)
         {
-            langSescDataList = new ArrayList<DescData>();
-            DescData d = new DescData();
+            langSescDataList = new ArrayList<>();
+            DescFieldData d = new DescFieldData();
             d.setDescription("Vitamin");
             d.setEnrtyid(1322);
             d.setLang("en");
@@ -300,7 +299,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
             d.setUserid(10111);
             langSescDataList.add(d);
 
-            d = new DescData();
+            d = new DescFieldData();
             d.setDescription("Il diabete ");
             d.setEnrtyid(1428);
             d.setLang("it");
@@ -308,7 +307,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
             d.setUserid(10111);
             langSescDataList.add(d);
 
-            d = new DescData();
+            d = new DescFieldData();
             d.setDescription("Epidemiology");
             d.setEnrtyid(1113);
             d.setLang("en");
@@ -319,7 +318,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
             Integer userid = 10109;
             Integer lenght = 1;
             String lang = "unk";
-            d = new DescData();
+            d = new DescFieldData();
             d.setDescription("g");
             d.setEnrtyid(1320);
             d.setLang(lang);
@@ -327,7 +326,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
             d.setUserid(userid);
             langSescDataList.add(d);
 
-            d = new DescData();
+            d = new DescFieldData();
             d.setDescription("v");
             d.setEnrtyid(1323);
             d.setLang(lang);
@@ -335,7 +334,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
             d.setUserid(userid);
             langSescDataList.add(d);
 
-            d = new DescData();
+            d = new DescFieldData();
             d.setDescription("c");
             d.setEnrtyid(1324);
             d.setLang(lang);
@@ -343,7 +342,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
             d.setUserid(userid);
             langSescDataList.add(d);
 
-            d = new DescData();
+            d = new DescFieldData();
             d.setDescription("g");
             d.setEnrtyid(1327);
             d.setLang(lang);
@@ -351,7 +350,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
             d.setUserid(userid);
             langSescDataList.add(d);
 
-            d = new DescData();
+            d = new DescFieldData();
             d.setDescription("b");
             d.setEnrtyid(1328);
             d.setLang(lang);
@@ -359,7 +358,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
             d.setUserid(userid);
             langSescDataList.add(d);
 
-            d = new DescData();
+            d = new DescFieldData();
             d.setDescription("h");
             d.setEnrtyid(1350);
             d.setLang(lang);
@@ -484,6 +483,66 @@ public class DashboardBean extends ApplicationBean implements Serializable
     {
         log.debug("getSelectedUserId: " + selectedUserId);
         this.selectedUserId = selectedUserId;
+    }
+
+    public class DescFieldData
+    {
+        Integer userid;
+        String description;
+        String lang;
+        Integer lenght;
+        Integer enrtyid;
+
+        public String getDescription()
+        {
+            return description;
+        }
+
+        public void setDescription(String description)
+        {
+            this.description = description;
+        }
+
+        public String getLang()
+        {
+            return lang;
+        }
+
+        public void setLang(String lang)
+        {
+            this.lang = lang;
+        }
+
+        public Integer getLenght()
+        {
+            return lenght;
+        }
+
+        public void setLenght(Integer lenght)
+        {
+            this.lenght = lenght;
+        }
+
+        public Integer getUserid()
+        {
+            return userid;
+        }
+
+        public void setUserid(Integer userid)
+        {
+            this.userid = userid;
+        }
+
+        public Integer getEnrtyid()
+        {
+            return enrtyid;
+        }
+
+        public void setEnrtyid(Integer enrtyid)
+        {
+            this.enrtyid = enrtyid;
+        }
+
     }
 
 }

@@ -152,49 +152,48 @@
 								<h:form>
 									<p:panel id="fields" header="Fields" style="margin-bottom:20px">
 										<h:panelGrid columns="1">
-											<p:dataTable var="gfs" value="#{dashboardBean.glossaryFieldSummeryPerUser}"
-														 styleClass="countries_list">
-												<p:column headerText="Id">
-													<h:outputText value="#{gfs.userid}"/>
+											<p:dataTable value="#{dashboardBean.glossaryFieldSummeryPerUser}" var="gfs" styleClass="countries_list">
+												<p:column headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.username}" filterable="true" filterBy="#{gfs.user.username}" filterMatchMode="contains">
+													<!-- <a href="dashboard.jsf?user_id=#{gfs.userid}"> -->#{gfs.user.username}
 												</p:column>
-
-												<p:column headerText="terms">
-													<h:outputText value="#{gfs.total}"/>
+												<p:column styleClass="align-right" headerText="Terms" sortBy="#{gfs.total}" sortable="true">
+													#{gfs.total}
 												</p:column>
+												<p:column styleClass="align-right" sortBy="#{gfs.pronounciation/gfs.total}" sortable="true">
+													<f:facet name="header">Pronunciation</f:facet>
 
-												<p:column headerText="pronunciation">
 													<h:outputText value="#{gfs.pronounciation/gfs.total*100}">
-														<f:convertNumber pattern="#0.00"/>
+														<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
 													</h:outputText>%
 												</p:column>
-
-												<p:column headerText="acronym">
+												<p:column styleClass="align-right" sortBy="#{gfs.acronym/gfs.total}" sortable="true">
+													<f:facet name="header">Acronym</f:facet>
 													<h:outputText value="#{gfs.acronym/gfs.total*100}">
-														<f:convertNumber pattern="#0.00"/>
+														<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
 													</h:outputText>%
 												</p:column>
-
-												<p:column headerText="phraseology">
+												<p:column styleClass="align-right" sortBy="#{gfs.phraseology/gfs.total}" sortable="true">
+													<f:facet name="header">Phraseology</f:facet>
 													<h:outputText value="#{gfs.phraseology/gfs.total*100}">
-														<f:convertNumber pattern="#0.00"/>
+														<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
 													</h:outputText>%
 												</p:column>
-
-												<p:column headerText="uses">
+												<p:column styleClass="align-right" sortBy="#{gfs.uses/gfs.total}" sortable="true">
+													<f:facet name="header">Uses</f:facet>
 													<h:outputText value="#{gfs.uses/gfs.total*100}">
-														<f:convertNumber pattern="#0.00"/>
+														<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
 													</h:outputText>%
 												</p:column>
-
-												<p:column headerText="source">
+												<p:column styleClass="align-right" sortBy="#{gfs.source/gfs.total}" sortable="true">
+													<f:facet name="header">Source</f:facet>
 													<h:outputText value="#{gfs.source/gfs.total*100}">
-														<f:convertNumber pattern="#0.00"/>
+														<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
 													</h:outputText>%
 												</p:column>
-
-												<p:column headerText="AVG %">
+												<p:column styleClass="align-right" sortBy="#{gfs.avg}" sortable="true">
+													<f:facet name="header">AVG %</f:facet>
 													<h:outputText value="#{gfs.avg*100}">
-														<f:convertNumber pattern="#0.00"/>
+														<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
 													</h:outputText>%
 												</p:column>
 											</p:dataTable>

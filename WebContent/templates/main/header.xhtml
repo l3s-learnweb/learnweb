@@ -204,16 +204,9 @@
 											<h:outputText value="#{msg.transcript_summaries}" />
 										</a>
 									</li>
-									<ui:fragment rendered="#{userBean.isMemberOfCourse(1245)}">
-									<li>
-										<a href="#{request.contextPath}/lw/admin/dashboard/index1.jsf">
-											<h:outputText value="Old Glossary Dashboard" />
-										</a>
-									</li>
-									</ui:fragment>
 									<ui:fragment rendered="#{userBean.isMemberOfCourse(1245) or userBean.isMemberOfCourse(1355)}">
 									<li>
-										<a href="#{request.contextPath}/lw/admin/dashboard.jsf">
+										<a href="#{request.contextPath}/lw/admin/dashboard/index.jsf">
 											<h:outputText value="Glossary Dashboard" />
 										</a>
 									</li>
