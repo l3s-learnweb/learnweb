@@ -142,7 +142,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
     public PieChartModel getStudentsSources()
     {
         if(studentsSources == null)
-            studentsSources = DashboardChartsFactory.createStudentsSourcesChart();
+            studentsSources = DashboardChartsFactory.createStudentsSourcesChart(glossarySourcesWithCounters);
         return studentsSources;
     }
 

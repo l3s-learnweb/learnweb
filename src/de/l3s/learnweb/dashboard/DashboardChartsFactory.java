@@ -52,7 +52,7 @@ class DashboardChartsFactory
         return model;
     }
 
-    static PieChartModel createStudentsSourcesChart()
+    static PieChartModel createStudentsSourcesChart(Map<String, Integer> glossarySourcesWithCounters)
     {
         // TODO: fix hardcoded chart
         PieChartModel model = new PieChartModel();
