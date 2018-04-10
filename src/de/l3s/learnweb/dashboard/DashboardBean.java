@@ -152,12 +152,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
         {
             glossaryStat = new ArrayList<>();
             for(Integer uid : orgUserIds)
-            {
-                GlossaryStatistic glossaryStatistic =
-                        glossaryStatisticPerUser.getOrDefault(uid, new GlossaryStatistic());
-                glossaryStatistic.setUserId(uid);
-                glossaryStat.add(glossaryStatistic);
-            }
+                glossaryStat.add(glossaryStatisticPerUser.getOrDefault(uid, new GlossaryStatistic(uid)));
         }
         return glossaryStat;
     }

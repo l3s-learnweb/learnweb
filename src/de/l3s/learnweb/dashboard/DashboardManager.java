@@ -305,9 +305,9 @@ public class DashboardManager
 
             while(rs.next())
             {
-                GlossaryStatistic gs = new GlossaryStatistic();
+                GlossaryStatistic gs = new GlossaryStatistic(rs.getInt("owner_user_id"));
                 gs.setTotalGlossaries(rs.getInt("totalGlossary"));
-                statPerUser.put(rs.getInt("owner_user_id"), gs);
+                statPerUser.put(gs.getUserId(), gs);
             }
         }
 
@@ -329,7 +329,7 @@ public class DashboardManager
                 GlossaryStatistic gs = statPerUser.get(rs.getInt("owner_user_id"));
                 gs.setTotalTerms(rs.getInt("totalGlossaryTerms"));
                 gs.setTotalReferences(rs.getInt("totalReferences"));
-                statPerUser.put(rs.getInt("owner_user_id"), gs);
+                statPerUser.put(gs.getUserId(), gs);
             }
         }
 
@@ -393,10 +393,14 @@ public class DashboardManager
 
     public static class GlossaryStatistic
     {
-        private int userId = -1;
+        private int userId;
         private int totalGlossaries = 0;
         private int totalTerms = 0;
         private int totalReferences = 0;
+
+        GlossaryStatistic(int userId) {
+            this.userId = userId;
+        }
 
         public int getUserId()
         {
