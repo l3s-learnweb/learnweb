@@ -54,7 +54,6 @@ class DashboardChartsFactory
 
     static PieChartModel createStudentsSourcesChart(Map<String, Integer> glossarySourcesWithCounters)
     {
-        // TODO: fix hardcoded chart
         PieChartModel model = new PieChartModel();
         model.setDataFormat("percent");
         model.setShowDataLabels(true);
@@ -62,16 +61,8 @@ class DashboardChartsFactory
         model.setLegendPosition("w");
         model.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
 
-        model.set("glossary", 8);
-        model.set("patients\\ websites and blogs", 48);
-        model.set("encyclopaedia", 54);
-        model.set("other", 86);
-        model.set("scientific/academic publication", 127);
-        model.set("Linguee or Reverso", 229);
-        model.set("bilingual dictionary", 238);
-        model.set("institutional website", 296);
-        model.set("monolingual dictionary", 396);
-        model.set("Wikipedia", 876);
+        for(Map.Entry<String, Integer> source : glossarySourcesWithCounters.entrySet())
+            model.set(source.getKey(), source.getValue());
 
         return model;
     }
@@ -149,7 +140,8 @@ class DashboardChartsFactory
             proxySource.set(e.getKey(), e.getValue());
         }
 
-        if (proxySource.getData().isEmpty()) {
+        if(proxySource.getData().isEmpty())
+        {
             proxySource.set("1", 0);
         }
 
@@ -168,7 +160,8 @@ class DashboardChartsFactory
         BarChartModel model = new BarChartModel();
         ChartSeries activity = new ChartSeries();
 
-        if (glossaryFieldSummeryPerUser.size() > 0) {
+        if(glossaryFieldSummeryPerUser.size() > 0)
+        {
             DashboardManager.GlossaryFieldSummery gfs = glossaryFieldSummeryPerUser.get(0);
             activity.set("pronounciation", gfs.getPronounciation());
             activity.set("acronym", gfs.getAcronym());

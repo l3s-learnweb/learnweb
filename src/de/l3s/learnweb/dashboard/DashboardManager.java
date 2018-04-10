@@ -181,7 +181,7 @@ public class DashboardManager
                         + "JOIN lw_resource_glossary_terms rgt USING(glossary_id) "
                         + "WHERE rg.deleted != 1 AND r.deleted != 1 AND rgt.deleted != 1 "
                         + "AND r.owner_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") "
-                        + "AND rg.timestamp BETWEEN ? AND ?"))
+                        + "AND rg.timestamp BETWEEN ? AND ? GROUP BY refs"))
         {
             select.setTimestamp(1, new Timestamp(startDate.getTime()));
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
