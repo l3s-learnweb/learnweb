@@ -41,7 +41,7 @@
 					<p:panel id="panelOut" header="#{assessmentGridBean.surveyTitle}" style="margin-bottom:10px;" rendered="true">
 						<p:panel id="panel" widgetVar="formVar" rendered="true" style="border:none;">
 							<h:panelGrid columns="1" cellpadding="5">
-							<h:outputText value="Student ID: #{userBean.user.studentId}" style="text-align:center; font-weight:bold"></h:outputText>
+							<h:outputText value="Student ID: #{userBean.user.studentId}" style="text-align:center; font-weight:bold" rendered="false" />
 								<c:forEach var="field" items="#{assessmentGridBean.questions}">
 
 									<c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">

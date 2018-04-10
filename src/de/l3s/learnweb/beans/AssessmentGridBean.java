@@ -38,7 +38,7 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
     private int userId = 0;
     private Survey sv = new Survey(); // TODO dont initialize
 
-    private List<User> users = new ArrayList<User>(); // TODO dont initialize
+    private List<User> users; // TODO dont initialize
 
     public AssessmentGridBean()
     {
@@ -115,9 +115,6 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
 
     private void getAssessmentUsers()
     {
-
-        users = new ArrayList<User>(); // TODO why init?
-
         SurveyManager assessManager = getLearnweb().getSurveyManager();
         try
         {

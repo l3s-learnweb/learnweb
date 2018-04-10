@@ -83,7 +83,6 @@ public class LanguageItem implements Serializable
             return language.DE;
         default:
             return null;
-
         }
     }
 
@@ -109,6 +108,7 @@ public class LanguageItem implements Serializable
             }
         }
 
+        //StringHelper.implode(getSelectedUses(), ", ");
     }
 
     public String getValue()

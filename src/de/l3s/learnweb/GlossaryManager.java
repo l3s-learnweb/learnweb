@@ -363,16 +363,16 @@ public class GlossaryManager
     public void deleteFromDb(int glossId)
     {
         //TODO:: change table names
-        String deleteTerms = "UPDATE `lw_resource_glossary_terms_copy` SET `deleted`= ? WHERE glossary_id = ? ";
         String deleteGlossItem = "UPDATE `lw_resource_glossary_copy` SET `deleted`= ? WHERE glossary_id = ? ";
 
         try
         {
 
-            PreparedStatement Terms = learnweb.getConnection().prepareStatement(deleteTerms);
-            Terms.setInt(1, 1);
-            Terms.setInt(2, glossId);
-            Terms.executeUpdate();
+            PreparedStatement terms = learnweb.getConnection().prepareStatement("UPDATE `lw_resource_glossary_terms_copy` SET `deleted`= ? WHERE glossary_id = ? ");
+            terms.setInt(1, 1);
+            terms.setInt(2, glossId);
+            terms.executeUpdate();
+
             PreparedStatement gloss = learnweb.getConnection().prepareStatement(deleteGlossItem);
             gloss.setInt(1, 1);
             gloss.setInt(2, glossId);
