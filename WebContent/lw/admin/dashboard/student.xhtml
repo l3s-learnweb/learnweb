@@ -110,7 +110,7 @@
                             <div class="ui-g-3">
                                 <p:panel id="chart_bar_studentActivity" header="Students' Activity types"
                                          style="margin-bottom:20px">
-                                    <p:chart type="bar" model="#{dashboardStudentBean.studentsActivityTypes}" xaxisAngle="60"
+                                    <p:chart type="bar" model="#{dashboardStudentBean.studentsActivityTypesChart}" xaxisAngle="60"
                                              style="height:300px"/>
                                 </p:panel>
                             </div>
@@ -230,8 +230,7 @@
                                          stickyHeader="true"
                                          style="margin-bottom:20px; height:390px; overflow-y: scroll;">
                                     <h:form>
-                                        <p:dataTable var="pll" value="#{dashboardStudentBean.proxyLogList}"
-                                                     styleClass="countries_list">
+                                        <p:dataTable var="pll" value="#{dashboardStudentBean.proxyLogList.entrySet}" styleClass="countries_list">
                                             <p:column headerText="Web Site">
                                                 <h:outputText value="#{pll.key}"/>
                                             </p:column>

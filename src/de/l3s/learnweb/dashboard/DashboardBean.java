@@ -2,7 +2,6 @@ package de.l3s.learnweb.dashboard;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 import javax.faces.bean.ManagedBean;
@@ -25,7 +24,6 @@ public class DashboardBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = 6265758951073418345L;
     private static final Logger log = Logger.getLogger(DashboardBean.class);
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private static final String PREFERENCE_STARTDATE = "dashboard_startdate";
     private static final String PREFERENCE_ENDDATE = "dashboard_enddate";
 
@@ -46,12 +44,12 @@ public class DashboardBean extends ApplicationBean implements Serializable
     private Map<String, Integer> glossaryConceptsCountPerUser;
     private Map<String, Integer> glossarySourcesWithCounters;
     private Map<String, Integer> glossaryTermsCountPerUser;
-    private Map<String, Integer> actionsWithCounters;
+    private Map<Integer, Integer> actionsWithCounters;
     private Map<String, Integer> actionsCountPerDay;
     private Map<String, Integer> proxySourcesWithCounters;
 
     private LineChartModel interactionsChart;
-    private BarChartModel studentsActivityTypes;
+    private BarChartModel studentsActivityTypesChart;
     private BarChartModel studentsGlossary;
     private PieChartModel studentsSources;
     private ArrayList<GlossaryStatistic> glossaryStat;
@@ -113,7 +111,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
         updateStatsData();
 
         interactionsChart = null;
-        studentsActivityTypes = null;
+        studentsActivityTypesChart = null;
         studentsGlossary = null;
         studentsSources = null;
         glossaryStat = null;
@@ -123,151 +121,29 @@ public class DashboardBean extends ApplicationBean implements Serializable
     public LineChartModel getInteractionsChart()
     {
         if(interactionsChart == null)
-            interactionsChart = initInteractionsChart();
+            interactionsChart = DashboardChartsFactory.createInteractionsChart(actionsCountPerDay, this.startDate, this.endDate);
         return interactionsChart;
     }
 
-    public BarChartModel getStudentsActivityTypes()
+    public BarChartModel getStudentsActivityTypesChart()
     {
-        if(studentsActivityTypes == null)
-            studentsActivityTypes = initStudentsActivityTypes();
-        return studentsActivityTypes;
+        if(studentsActivityTypesChart == null)
+            studentsActivityTypesChart = DashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
+        return studentsActivityTypesChart;
     }
 
     public BarChartModel getStudentsGlossary()
     {
         if(studentsGlossary == null)
-            studentsGlossary = initStudentsGlossary();
+            studentsGlossary = DashboardChartsFactory.createStudentsGlossaryChart(glossaryConceptsCountPerUser, glossaryTermsCountPerUser);
         return studentsGlossary;
     }
 
     public PieChartModel getStudentsSources()
     {
         if(studentsSources == null)
-            studentsSources = initStudentsSources();
+            studentsSources = DashboardChartsFactory.createStudentsSourcesChart();
         return studentsSources;
-    }
-
-    private LineChartModel initInteractionsChart()
-    {
-        LineChartModel model = new LineChartModel();
-
-        LineChartSeries interactions = new LineChartSeries();
-        interactions.setLabel("interactions");
-
-        Calendar start = Calendar.getInstance();
-        start.setTime(this.startDate);
-        Calendar end = Calendar.getInstance();
-        end.setTime(this.endDate);
-
-        for(Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime())
-        {
-            String dateKey = dateFormat.format(date);
-            interactions.set(dateKey, actionsCountPerDay.getOrDefault(dateKey, 0));
-        }
-
-        model.addSeries(interactions);
-        model.setLegendPosition("e");
-        model.setShowPointLabels(true);
-        model.getAxes().put(AxisType.X, new CategoryAxis("Days"));
-        Axis xAxis = model.getAxis(AxisType.X);
-        xAxis.setTickAngle(-60);
-        Axis yAxis = model.getAxis(AxisType.Y);
-        yAxis.setLabel("Interactions");
-        yAxis.setMin(0);
-        return model;
-    }
-
-    private BarChartModel initStudentsActivityTypes()
-    {
-        BarChartModel model = new BarChartModel();
-
-        int search = 0;
-        int glossary = 0;
-        int resource = 0;
-        int system = 0;
-
-        for(String key : actionsWithCounters.keySet())
-        {
-            if(key.contains("search"))
-                search += actionsWithCounters.get(key);
-            else if(key.contains("glossary"))
-                glossary += actionsWithCounters.get(key);
-            else if(key.contains("resource"))
-                resource += actionsWithCounters.get(key);
-            else
-                system += actionsWithCounters.get(key);
-        }
-
-        ChartSeries activity = new ChartSeries();
-        activity.setLabel("interactions");
-        activity.set("Glossary", glossary);
-        activity.set("Search", search);
-        activity.set("System (login/logout)", system);
-        activity.set("Resource", resource);
-
-        model.addSeries(activity);
-        model.setLegendPosition("ne");
-
-        Axis xAxis = model.getAxis(AxisType.X);
-        xAxis.setTickAngle(-60);
-
-        return model;
-    }
-
-    private BarChartModel initStudentsGlossary()
-    {
-        BarChartModel model = new BarChartModel();
-
-        ChartSeries concepts = new ChartSeries();
-        ChartSeries terms = new ChartSeries();
-
-        for(String key : glossaryConceptsCountPerUser.keySet())
-        {
-            concepts.set(key, glossaryConceptsCountPerUser.getOrDefault(key, 0));
-        }
-
-        for(String key : glossaryTermsCountPerUser.keySet())
-        {
-            terms.set(key, glossaryTermsCountPerUser.getOrDefault(key, 0));
-        }
-
-        concepts.setLabel("concepts");
-        terms.setLabel("terms");
-
-        model.addSeries(concepts);
-        model.addSeries(terms);
-
-        model.setLegendPosition("ne");
-        Axis xAxis = model.getAxis(AxisType.X);
-        xAxis.setTickAngle(-60);
-        Axis yAxis = model.getAxis(AxisType.Y);
-        yAxis.setMin(0);
-
-        return model;
-    }
-
-    private PieChartModel initStudentsSources()
-    {
-        PieChartModel model = new PieChartModel();
-        model.setDataFormat("percent");
-        model.setShowDataLabels(true);
-        model.setDataLabelThreshold(3);
-        model.setLegendPosition("w");
-        model.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
-
-        model.set("glossary", 8);
-        model.set("patients\\ websites and blogs", 48);
-        model.set("encyclopaedia", 54);
-        model.set("other", 86);
-        model.set("scientific/academic publication", 127);
-        model.set("Linguee or Reverso", 229);
-        model.set("bilingual dictionary", 238);
-        model.set("institutional website", 296);
-        model.set("monolingual dictionary", 396);
-        model.set("Wikipedia", 876);
-
-        return model;
     }
 
     public ArrayList<GlossaryStatistic> getSummary()
@@ -433,7 +309,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
         return glossaryTermsCountPerUser;
     }
 
-    public Map<String, Integer> getActionsWithCounters()
+    public Map<Integer, Integer> getActionsWithCounters()
     {
         return actionsWithCounters;
     }

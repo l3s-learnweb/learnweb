@@ -3,8 +3,10 @@ package de.l3s.learnweb;
 import java.io.Serializable;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -73,7 +75,29 @@ public class LogEntry implements Serializable
         adding_resource_metadata, //target_id = resource id, param = type of metadata added (options: author, language, media source, media type)
         edit_resource_metadata, //target_id = resource id, param = type of metadata edited (options: author, language, media source, media type)
         group_metadata_search, // param = filter:value only if it is not null
-        group_category_search // param = clicked category
+        group_category_search; // param = clicked category
+
+        public static List<Action> getResourceActions()
+        {
+            return Arrays.asList(
+                tagging_resource, rating_resource, commenting_resource, opening_resource, submission_view_resource,
+                deleting_resource, adding_resource, edit_resource, thumb_rating_resource, group_removing_resource,
+                resource_thumbnail_update, adding_resource_metadata, edit_resource_metadata, downloading
+            );
+        }
+
+        public static List<Action> getSearchActions()
+        {
+            return Arrays.asList(searching, group_resource_search, group_category_search, group_metadata_search);
+        }
+
+        public static List<Action> getGlossaryActions()
+        {
+            return Arrays.asList(
+                glossary_open, glossary_create, glossary_entry_edit, glossary_entry_add, glossary_entry_delete,
+                glossary_term_edit, glossary_term_add, glossary_term_delete
+            );
+        }
     }
 
     public static void main(String[] arg)

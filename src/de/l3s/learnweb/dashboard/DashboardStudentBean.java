@@ -6,6 +6,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.dashboard.DashboardManager.GlossaryFieldSummery;
 import de.l3s.learnweb.dashboard.DashboardManager.GlossaryStatistic;
 import de.l3s.learnweb.dashboard.DashboardManager.TrackerStatistic;
+import de.l3s.util.MapHelper;
 import org.apache.log4j.Logger;
 import org.primefaces.model.chart.*;
 
@@ -14,7 +15,6 @@ import javax.faces.bean.ViewScoped;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
 import java.util.*;
 
 @ManagedBean
@@ -24,7 +24,6 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
     private static final long serialVersionUID = 6265758951073418345L;
     private static final Logger log = Logger.getLogger(DashboardStudentBean.class);
 
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
     private static final String PREFERENCE_STARTDATE = "dashboard_startdate";
     private static final String PREFERENCE_ENDDATE = "dashboard_enddate";
 
@@ -46,13 +45,13 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
     private Map<String, Integer> glossaryConceptsCountPerUser;
     private Map<String, Integer> glossarySourcesWithCounters;
     private Map<String, Integer> glossaryTermsCountPerUser;
-    private Map<String, Integer> actionsWithCounters;
+    private Map<Integer, Integer> actionsWithCounters;
     private Map<String, Integer> actionsCountPerDay;
     private Map<String, Integer> proxySourcesWithCounters;
     private Map<Integer, GlossaryStatistic> glossaryStatisticPerUser;
 
     private LineChartModel interactionsChart;
-    private BarChartModel studentsActivityTypes;
+    private BarChartModel studentsActivityTypesChart;
     private BarChartModel studentsGlossary;
     private BarChartModel proxySources;
     private BarChartModel studentFields;
@@ -114,7 +113,7 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
 
         interactionsChart = null;
         studentFields = null;
-        studentsActivityTypes = null;
+        studentsActivityTypesChart = null;
         studentsGlossary = null;
         studentsSources = null;
         glossaryStat = null;
@@ -124,211 +123,43 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
     public LineChartModel getInteractionsChart()
     {
         if(interactionsChart == null)
-            interactionsChart = initInteractionsChart();
+            interactionsChart = DashboardChartsFactory.createInteractionsChart(actionsCountPerDay, this.startDate, this.endDate);
         return interactionsChart;
     }
 
     public BarChartModel getStudentFields()
     {
         if(studentFields == null)
-            studentFields = initStudentFields();
+            studentFields = DashboardChartsFactory.createStudentFieldsChart(glossaryFieldSummeryPerUser);
         return studentFields;
     }
 
-    public BarChartModel getStudentsActivityTypes()
+    public BarChartModel getStudentsActivityTypesChart()
     {
-        if(studentsActivityTypes == null)
-            studentsActivityTypes = initStudentsActivityTypes();
-        return studentsActivityTypes;
+        if(studentsActivityTypesChart == null)
+            studentsActivityTypesChart = DashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
+        return studentsActivityTypesChart;
     }
 
     public BarChartModel getStudentsGlossary()
     {
         if(studentsGlossary == null)
-            studentsGlossary = initStudentsGlossary();
+            studentsGlossary = DashboardChartsFactory.createStudentsGlossaryChart(glossaryConceptsCountPerUser, glossaryTermsCountPerUser);
         return studentsGlossary;
     }
 
     public BarChartModel getProxySources()
     {
         if(proxySources == null)
-            proxySources = initProxySources();
+            proxySources = DashboardChartsFactory.createProxySourcesChart(proxySourcesWithCounters);
         return proxySources;
     }
 
     public PieChartModel getStudentsSources()
     {
         if(studentsSources == null)
-            studentsSources = initStudentsSources();
+            studentsSources = DashboardChartsFactory.createStudentsSourcesChart();
         return studentsSources;
-    }
-
-    private LineChartModel initInteractionsChart()
-    {
-        LineChartModel model = new LineChartModel();
-
-        LineChartSeries interactions = new LineChartSeries();
-        interactions.setLabel("interactions");
-
-        Calendar start = Calendar.getInstance();
-        start.setTime(this.startDate);
-        Calendar end = Calendar.getInstance();
-        end.setTime(this.endDate);
-
-        for(Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime())
-        {
-            String dateKey = dateFormat.format(date);
-            interactions.set(dateKey, actionsCountPerDay.getOrDefault(dateKey, 0));
-        }
-
-        model.addSeries(interactions);
-        model.setLegendPosition("e");
-        model.setShowPointLabels(true);
-        model.getAxes().put(AxisType.X, new CategoryAxis("Days"));
-        Axis xAxis = model.getAxis(AxisType.X);
-        xAxis.setTickAngle(-60);
-        Axis yAxis = model.getAxis(AxisType.Y);
-        yAxis.setLabel("Interactions");
-        yAxis.setMin(0);
-        return model;
-    }
-
-    private BarChartModel initStudentFields()
-    {
-        BarChartModel model = new BarChartModel();
-        ChartSeries activity = new ChartSeries();
-
-        if (glossaryFieldSummeryPerUser.size() > 0) {
-            GlossaryFieldSummery gfs = glossaryFieldSummeryPerUser.get(0);
-            activity.set("pronounciation", gfs.getPronounciation());
-            activity.set("acronym", gfs.getAcronym());
-            activity.set("phraseology", gfs.getPhraseology());
-            activity.set("uses", gfs.getUses());
-            activity.set("source", gfs.getSource());
-        }
-
-        model.addSeries(activity);
-        Axis xAxis = model.getAxis(AxisType.X);
-        xAxis.setTickAngle(-60);
-        return model;
-    }
-
-    private BarChartModel initStudentsActivityTypes()
-    {
-        BarChartModel model = new BarChartModel();
-
-        int search = 0;
-        int glossary = 0;
-        int resource = 0;
-        int system = 0;
-
-        for(String key : actionsWithCounters.keySet())
-        {
-            if(key.contains("search"))
-                search += actionsWithCounters.get(key);
-            else if(key.contains("glossary"))
-                glossary += actionsWithCounters.get(key);
-            else if(key.contains("resource"))
-                resource += actionsWithCounters.get(key);
-            else
-                system += actionsWithCounters.get(key);
-        }
-
-        ChartSeries activity = new ChartSeries();
-        activity.setLabel("interactions");
-        activity.set("Glossary", glossary);
-        activity.set("Search", search);
-        activity.set("System (login/logout)", system);
-        activity.set("Resource", resource);
-
-        model.addSeries(activity);
-        model.setLegendPosition("ne");
-
-        Axis xAxis = model.getAxis(AxisType.X);
-        xAxis.setTickAngle(-60);
-
-        return model;
-    }
-
-    private BarChartModel initStudentsGlossary()
-    {
-        BarChartModel model = new BarChartModel();
-
-        ChartSeries concepts = new ChartSeries();
-        ChartSeries terms = new ChartSeries();
-
-        for(String key : glossaryConceptsCountPerUser.keySet())
-        {
-            concepts.set(key, glossaryConceptsCountPerUser.getOrDefault(key, 0));
-        }
-
-        for(String key : glossaryTermsCountPerUser.keySet())
-        {
-            terms.set(key, glossaryTermsCountPerUser.getOrDefault(key, 0));
-        }
-
-        concepts.setLabel("concepts");
-        terms.setLabel("terms");
-
-        model.addSeries(concepts);
-        model.addSeries(terms);
-
-        model.setLegendPosition("ne");
-        Axis xAxis = model.getAxis(AxisType.X);
-        xAxis.setTickAngle(-60);
-        Axis yAxis = model.getAxis(AxisType.Y);
-        yAxis.setMin(0);
-
-        return model;
-    }
-
-    private BarChartModel initProxySources()
-    {
-        BarChartModel model = new BarChartModel();
-        BarChartSeries proxySource = new BarChartSeries();
-
-        List<Map.Entry<String, Integer>> mappa = entriesSortedByValues(proxySourcesWithCounters);
-        for(Map.Entry<String, Integer> e : mappa)
-        {
-            proxySource.set(e.getKey(), e.getValue());
-        }
-
-        if (proxySource.getData().isEmpty()) {
-            proxySource.set("1", 0);
-        }
-
-        model.addSeries(proxySource);
-        Axis xAxis = model.getAxis(AxisType.X);
-        xAxis.setTickAngle(-60);
-
-        Axis yAxis = model.getAxis(AxisType.Y);
-        yAxis.setLabel("sources");
-
-        return model;
-    }
-
-
-    private PieChartModel initStudentsSources()
-    {
-        PieChartModel model = new PieChartModel();
-        model.setDataFormat("percent");
-        model.setShowDataLabels(true);
-        model.setDataLabelThreshold(3);
-        model.setLegendPosition("w");
-        model.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
-
-        model.set("glossary", 8);
-        model.set("patients\\ websites and blogs", 48);
-        model.set("encyclopaedia", 54);
-        model.set("other", 86);
-        model.set("scientific/academic publication", 127);
-        model.set("Linguee or Reverso", 229);
-        model.set("bilingual dictionary", 238);
-        model.set("institutional website", 296);
-        model.set("monolingual dictionary", 396);
-        model.set("Wikipedia", 876);
-
-        return model;
     }
 
     public ArrayList<GlossaryStatistic> getSummary()
@@ -371,9 +202,9 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
         setPreference(PREFERENCE_ENDDATE, Long.toString(endDate.getTime()));
     }
 
-    public List<Map.Entry<String, Integer>> getProxyLogList()
+    public Map<String, Integer> getProxyLogList()
     {
-        return entriesSortedByValues(proxySourcesWithCounters);
+        return MapHelper.sortByValue(proxySourcesWithCounters);
     }
 
     public Integer getTotalConcepts()
@@ -411,7 +242,7 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
         return glossaryTermsCountPerUser;
     }
 
-    public Map<String, Integer> getActionsWithCounters()
+    public Map<Integer, Integer> getActionsWithCounters()
     {
         return actionsWithCounters;
     }
@@ -462,12 +293,5 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
         float res = (float) totalTerms / totalConcepts;
         DecimalFormat twoDForm = new DecimalFormat("#.##");
         return twoDForm.format(res);
-    }
-
-    static <K, V extends Comparable<? super V>> List<Map.Entry<K, V>> entriesSortedByValues(Map<K, V> map)
-    {
-        List<Map.Entry<K, V>> sortedEntries = new ArrayList<>(map.entrySet());
-        Collections.sort(sortedEntries, (e1, e2) -> e2.getValue().compareTo(e1.getValue()));
-        return sortedEntries;
     }
 }
