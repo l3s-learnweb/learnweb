@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.primefaces.model.UploadedFile;
 
@@ -20,11 +21,14 @@ public class GlossaryEntry implements Serializable
     private String selectedTopicOne;
     private String selectedTopicTwo;
     private String selectedTopicThree;
-    public String description;
+    public String description; // TODO why is this public?
     private UploadedFile multimediaFile;
     private int resourceId;
     private int userId;
     int glossaryId = 0;
+
+    // cached values
+    private transient User user;
 
     public int getGlossaryId()
     {
@@ -36,9 +40,6 @@ public class GlossaryEntry implements Serializable
         this.glossaryId = glossaryId;
     }
 
-    // cached values
-    private transient User user;
-
     public String getDescription()
     {
         return description;
@@ -46,37 +47,27 @@ public class GlossaryEntry implements Serializable
 
     public void setDescription(String description)
     {
-        if(description != null)
-            this.description = description;
-        else
-            this.description = "";
-
+        this.description = StringUtils.defaultString(description);
     }
 
     public List<LanguageItem> getSecondLanguageItems()
     {
         return secondLanguageItems;
-
-    }
-
-    public void setSecondLanguageItems(List<LanguageItem> itItems)
-    {
-        this.secondLanguageItems = itItems;
-
     }
 
     public List<LanguageItem> getFirstLanguageItems()
     {
-
         return firstLanguageItems;
-
     }
 
-    public void setFirstLanguageItems(List<LanguageItem> ukItems)
+    public void setSecondLanguageItems(List<LanguageItem> secondLanguageItems)
     {
+        this.secondLanguageItems = secondLanguageItems;
+    }
 
-        this.firstLanguageItems = ukItems;
-
+    public void setFirstLanguageItems(List<LanguageItem> firstLanguageItems)
+    {
+        this.firstLanguageItems = firstLanguageItems;
     }
 
     public String getSelectedTopicTwo()

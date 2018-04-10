@@ -24,7 +24,7 @@ public class GlossaryManager
     }
 
     //Insert 1st Language and 2nd Language terms related to Glossary entry
-    public void InsertTerms(GlossaryEntry e)
+    public void InsertTerms(GlossaryEntry e) // TODO java naming conventions
     {
         //TODO:: change table names
         String InsertTerms = "INSERT INTO `lw_resource_glossary_terms_copy`(`glossary_id`, `term`, `use`, `pronounciation`, `acronym`, `references`, `phraseology`, `language`, `deleted`, `user_id`) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
@@ -36,7 +36,7 @@ public class GlossaryManager
 
             for(LanguageItem t : e.getFirstLanguageItems())
             {
-                preparedStmnt = learnweb.getConnection().prepareStatement(InsertTerms);
+                preparedStmnt = learnweb.getConnection().prepareStatement(InsertTerms); // TODO define outside loop
                 preparedStmnt.setInt(1, e.getGlossaryId());
                 preparedStmnt.setString(2, t.getValue());
                 preparedStmnt.setString(3, String.join(", ", t.getSelectedUses()));
@@ -50,10 +50,10 @@ public class GlossaryManager
                 preparedStmnt.executeQuery();
 
             }
-            // TODO :: Combine both??
+            // TODO :: Combine both?? YES!!! use languaeitem as parameter of this method and call it once for the first and once for the second langauge
             for(LanguageItem t : e.getSecondLanguageItems())
             {
-                preparedStmnt = learnweb.getConnection().prepareStatement(InsertTerms);
+                preparedStmnt = learnweb.getConnection().prepareStatement(InsertTerms); // TODO define outside loop
                 preparedStmnt.setInt(1, e.getGlossaryId());
                 preparedStmnt.setString(2, t.getValue());
                 preparedStmnt.setString(3, String.join(", ", t.getSelectedUses()));
@@ -229,7 +229,7 @@ public class GlossaryManager
         else if(e.getGlossaryId() > 0)
         {
             int glossIden = e.getGlossaryId();
-            String updateStmnt = "UPDATE `lw_glossary_details` SET `topic_1`= ? ,`topic_2`= ?,`topic_3`= ?,`description`= ? WHERE glossary_id = " + Integer.toString(glossIden);
+            String updateStmnt = "UPDATE `lw_glossary_details` SET `topic_1`= ? ,`topic_2`= ?,`topic_3`= ?,`description`= ? WHERE glossary_id = " + Integer.toString(glossIden); // TODO set glossary id through pstmt
             try
             {
                 PreparedStatement pstmnt = learnweb.getConnection().prepareStatement(updateStmnt);
@@ -442,12 +442,12 @@ public class GlossaryManager
 
                 int glossaryId = resultID.getInt("glossary_id");
                 //get Glossary details
-                PreparedStatement pstmnt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_details` WHERE `glossary_id`=?");
+                PreparedStatement pstmnt = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_glossary_details` WHERE `glossary_id`=?"); // TODO define outside loop
                 pstmnt.setInt(1, glossaryId);
                 ResultSet result = pstmnt.executeQuery();
                 result.next();
                 //fetch terms
-                PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_resource_glossary_terms_copy` WHERE `glossary_id` = ? AND `deleted`= ? order by(`language`)");
+                PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT * FROM `lw_resource_glossary_terms_copy` WHERE `glossary_id` = ? AND `deleted`= ? order by(`language`)"); // TODO define outside loop
                 ps.setInt(1, glossaryId);
                 ps.setInt(2, 0);
                 ResultSet termResults = ps.executeQuery();

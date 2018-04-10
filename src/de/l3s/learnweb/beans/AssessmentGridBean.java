@@ -116,7 +116,7 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
     private void getAssessmentUsers()
     {
 
-        users = new ArrayList<User>();
+        users = new ArrayList<User>(); // TODO why init?
 
         SurveyManager assessManager = getLearnweb().getSurveyManager();
         try

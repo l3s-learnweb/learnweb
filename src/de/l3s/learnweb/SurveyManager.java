@@ -229,23 +229,23 @@ public class SurveyManager
 
         /*
          *
-         * use lesscode???
+         * useless code???
          *
          *
         String getSurveyId = "SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?";
-        
+
         ps = learnweb.getConnection().prepareStatement(getSurveyId);
-        
+
         ps.setInt(1, resource_id);
-        
+
         rs = ps.executeQuery();
-        
+
         if(rs.next())
         {
-        
+
             //  start = rs.getDate("open_date");
             // end = rs.getDate("close_date");
-        
+
         }
         */
 
@@ -429,82 +429,64 @@ public class SurveyManager
         return newResourceId;
     }
 
-    public List<SurveyAnswer> getAnswerByUser(int resourceId, HashMap<String, String> question) throws SQLException
+    public List<SurveyAnswer> getAnswerByUser(int surveyResourceId, HashMap<String, String> question) throws SQLException
     {
-
-        String answerByUser = "SELECT `answer` FROM `lw_survey_answer` WHERE `question_id`=? and `user_id`=? and `resource_id`=?";
-        String userIds = "SELECT distinct(`user_id`) FROM `lw_survey_answer` WHERE `resource_id`=?";
-
         List<SurveyAnswer> answers = new ArrayList<SurveyAnswer>();
 
-        //Find all results for survey id=idResult in the given course
-        HashSet<Integer> surveyResources = new HashSet<Integer>();
-        surveyResources.addAll(getSameSurveyResources(resourceId));
-        for(int surveyResourceId : surveyResources)
+        PreparedStatement pSttmnt = learnweb.getConnection().prepareStatement("SELECT distinct(`user_id`) FROM `lw_survey_answer` WHERE `resource_id`=?");
+        pSttmnt.setInt(1, surveyResourceId);
+        ResultSet ids = pSttmnt.executeQuery();
+        while(ids.next())
         {
 
-            PreparedStatement pSttmnt = learnweb.getConnection().prepareStatement(userIds);
-            pSttmnt.setInt(1, surveyResourceId);
-            ResultSet ids = pSttmnt.executeQuery();
-            while(ids.next())
+            User user = learnweb.getUserManager().getUser(ids.getInt("user_id"));
+
+            SurveyAnswer ans = new SurveyAnswer();
+            ans.userId = Integer.toString(ids.getInt("user_id")); // TODO use setters, use int, use user object
+            ans.userName = user.getUsername();
+            ans.studentId = user.getStudentId();
+
+            // TODO this is extremely inefficient
+            pSttmnt = learnweb.getConnection().prepareStatement("SELECT `answer` FROM `lw_survey_answer` WHERE `question_id`=? and `user_id`=? and `resource_id`=?");
+            for(String qid : question.keySet())
             {
 
-                User user = learnweb.getUserManager().getUser(ids.getInt("user_id"));
-
-                SurveyAnswer ans = new SurveyAnswer();
-                ans.userId = Integer.toString(ids.getInt("user_id"));
-                ans.userName = user.getUsername();
-                ans.studentId = user.getStudentId();
-
-                pSttmnt = learnweb.getConnection().prepareStatement(answerByUser);
-                for(String qid : question.keySet())
+                pSttmnt.setInt(1, Integer.parseInt(qid));
+                pSttmnt.setInt(2, ids.getInt("user_id"));
+                pSttmnt.setInt(3, surveyResourceId);
+                ResultSet result = pSttmnt.executeQuery();
+                if(result.next())
                 {
+                    String answerOfUser = result.getString("answer");
 
-                    pSttmnt.setInt(1, Integer.parseInt(qid));
-                    pSttmnt.setInt(2, ids.getInt("user_id"));
-                    pSttmnt.setInt(3, surveyResourceId);
-                    ResultSet result = pSttmnt.executeQuery();
-                    if(result.next())
-                    {
-                        String answerOfUser = result.getString("answer");
+                    answerOfUser = answerOfUser == null ? "" : answerOfUser.replaceAll("\\|\\|\\|", ",");
 
-                        answerOfUser = answerOfUser.replaceAll("\\|\\|\\|", ",");
-
-                        ans.answers.put(qid, answerOfUser);
-                    }
-                    else
-                    {
-                        if(!ans.answers.containsKey(qid))
-                            ans.answers.put(qid, "Unanswered");
-                    }
+                    ans.answers.put(qid, answerOfUser);
                 }
-
-                answers.add(ans);
+                else
+                {
+                    if(!ans.answers.containsKey(qid))
+                        ans.answers.put(qid, "Unanswered");
+                }
             }
 
+            answers.add(ans);
         }
         return answers;
     }
 
-    public ArrayList<User> getSurveyUsers(int resourceId) throws SQLException
+    public ArrayList<User> getSurveyUsers(int surveyResourceId) throws SQLException
     {
-        HashSet<Integer> surveyResources = new HashSet<Integer>();
-        surveyResources = getSameSurveyResources(resourceId);
-        ArrayList<User> users = new ArrayList<User>();
-        for(int surveyResourceId : surveyResources)
+
+        ArrayList<User> users = new ArrayList<>();
+
+        PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT distinct(`user_id`) FROM `lw_survey_answer` WHERE resource_id=?");
+        ps.setInt(1, surveyResourceId);
+        ResultSet userId = ps.executeQuery();
+        while(userId.next())
         {
-            String getUserId = "SELECT distinct(`user_id`) FROM `lw_survey_answer` WHERE resource_id=?";
-
-            PreparedStatement ps = learnweb.getConnection().prepareStatement(getUserId);
-            ps.setInt(1, surveyResourceId);
-            ResultSet userId = ps.executeQuery();
-            while(userId.next())
-            {
-                User user = learnweb.getUserManager().getUser(userId.getInt("user_id"));
-                if(!users.contains(user))
-                    users.add(user);
-            }
-
+            User user = learnweb.getUserManager().getUser(userId.getInt("user_id"));
+            users.add(user);
         }
         return users;
     }
@@ -535,10 +517,10 @@ public class SurveyManager
                     editable = result.getBoolean("editable");
                     break;
                 }
-    
+
             }
         }
-    
+
         return editable;
     }
     */
