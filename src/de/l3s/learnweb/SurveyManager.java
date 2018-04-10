@@ -233,19 +233,19 @@ public class SurveyManager
          *
          *
         String getSurveyId = "SELECT * FROM `lw_survey_resource` WHERE `resource_id` = ?";
-
+        
         ps = learnweb.getConnection().prepareStatement(getSurveyId);
-
+        
         ps.setInt(1, resource_id);
-
+        
         rs = ps.executeQuery();
-
+        
         if(rs.next())
         {
-
+        
             //  start = rs.getDate("open_date");
             // end = rs.getDate("close_date");
-
+        
         }
         */
 
@@ -535,10 +535,10 @@ public class SurveyManager
                     editable = result.getBoolean("editable");
                     break;
                 }
-
+    
             }
         }
-
+    
         return editable;
     }
     */

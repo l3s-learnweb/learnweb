@@ -73,7 +73,7 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
         }
         catch(Exception e)
         {
-            log.error("Error in fetching result for survey: " + resourceId);
+            log.error("Error in fetching result for survey: " + resourceId, e);
         }
     }
 

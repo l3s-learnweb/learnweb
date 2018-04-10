@@ -29,7 +29,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.primefaces.context.RequestContext;
 import org.primefaces.event.NodeSelectEvent;
 import org.primefaces.model.TreeNode;
 
@@ -715,7 +714,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         try
         {
             List<Presentation> presentations = getPresentations();
-    
+
             return presentations.size() > 0;
         }
         catch(SQLException e)
@@ -867,7 +866,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         {
             paginator = getResourcesFromSolr(groupId, folderId, query, getUser());
             //TODO: remove it
-//            RequestContext.getCurrentInstance().update(":filters");
+            //            RequestContext.getCurrentInstance().update(":filters");
         }
         catch(SQLException | IOException | SolrServerException e)
         {
@@ -1065,10 +1064,13 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
     public void onNodeSelect(NodeSelectEvent event)
     {
-        if (selectedNode != null) {
+        if(selectedNode != null)
+        {
             Folder selectedFolder = (Folder) selectedNode.getData();
             setSelectedFolder(selectedFolder);
-        } else {
+        }
+        else
+        {
             log.error("selectedNode is null on onNodeSelect called.", new Exception());
         }
     }
@@ -1527,9 +1529,11 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 return;
             }
 
-            if (targetGroupId != 0) {
+            if(targetGroupId != 0)
+            {
                 Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
-                if (targetGroup == null) {
+                if(targetGroup == null)
+                {
                     addGrowl(FacesMessage.SEVERITY_ERROR, "Target group is wrong and not exists.");
                     return;
                 }
@@ -1607,7 +1611,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 targetFolderId = StringHelper.parseInt(dest.getString("folderId"), 0);
             }
 
-            if (targetGroupId != 0) {
+            if(targetGroupId != 0)
+            {
                 Group targetGroup = Learnweb.getInstance().getGroupManager().getGroupById(targetGroupId);
                 if(!targetGroup.canAddResources(getUser()))
                 {

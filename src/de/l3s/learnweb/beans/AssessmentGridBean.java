@@ -17,6 +17,8 @@ import de.l3s.learnweb.SurveyManager;
 import de.l3s.learnweb.SurveyMetaDataFields;
 import de.l3s.learnweb.User;
 
+// TODO the whole class can be removed. use surveybean instead
+@Deprecated
 @ViewScoped
 @ManagedBean
 public class AssessmentGridBean extends ApplicationBean implements Serializable
@@ -34,9 +36,9 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
     private HashMap<String, String[]> wrappedMultipleAnswers = new HashMap<String, String[]>();
     private ArrayList<SurveyMetaDataFields> questions = new ArrayList<SurveyMetaDataFields>();
     private int userId = 0;
-    private Survey sv = new Survey();
+    private Survey sv = new Survey(); // TODO dont initialize
 
-    private List<User> users = new ArrayList<User>();
+    private List<User> users = new ArrayList<User>(); // TODO dont initialize
 
     public AssessmentGridBean()
     {
@@ -119,7 +121,7 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
         SurveyManager assessManager = getLearnweb().getSurveyManager();
         try
         {
-        users = assessManager.getSurveyUsers(resourceId);
+            users = assessManager.getSurveyUsers(resourceId);
         }
         catch(Exception e)
         {
@@ -136,12 +138,12 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
         questions = new ArrayList<SurveyMetaDataFields>();
         try
         {
-        sv = sm.getAssessmentFormDetails(resourceId, userId);
-        submitted = sv.isSubmitted();
-        questions = sv.getFormQuestions();
-        surveyTitle = sv.getSurveyTitle();
-        wrappedAnswers = sv.getWrappedAnswers();
-        wrappedMultipleAnswers = sv.getWrappedMultipleAnswers();
+            sv = sm.getAssessmentFormDetails(resourceId, userId);
+            submitted = sv.isSubmitted();
+            questions = sv.getFormQuestions();
+            surveyTitle = sv.getSurveyTitle();
+            wrappedAnswers = sv.getWrappedAnswers();
+            wrappedMultipleAnswers = sv.getWrappedMultipleAnswers();
         }
         catch(Exception e)
         {
@@ -150,7 +152,7 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
 
     }
 
-    public Survey getSv()
+    public Survey getSv() // TODO rename to getSurvey
     {
         return sv;
     }

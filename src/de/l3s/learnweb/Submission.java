@@ -184,22 +184,20 @@ public class Submission implements Serializable
         if(!surveyMandatory)
             return true;
 
-        if(this.surveyResource != null)
-            return this.surveyResource.isSubmitted();
-
-        if(surveyResourceId > 0)
+        if(surveyResourceId > 0 && surveyResource == null)
         {
             try
             {
-                this.surveyResource = Learnweb.getInstance().getSurveyManager().getSurveyByUserId(surveyResourceId, userId);
-                return this.surveyResource.isSubmitted();
+                surveyResource = Learnweb.getInstance().getSurveyManager().getSurveyByUserId(surveyResourceId, userId);
             }
             catch(SQLException e)
             {
                 log.error("Error while fetching survey resource " + getSurveyResourceId() + "for submission " + getId(), e);
-                return false;
             }
         }
+
+        if(surveyResource != null)
+            return this.surveyResource.isSubmitted();
 
         return false;
     }
