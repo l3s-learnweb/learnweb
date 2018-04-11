@@ -80,10 +80,9 @@ public class LogEntry implements Serializable
         public static List<Action> getResourceActions()
         {
             return Arrays.asList(
-                tagging_resource, rating_resource, commenting_resource, opening_resource, submission_view_resource,
-                deleting_resource, adding_resource, edit_resource, thumb_rating_resource, group_removing_resource,
-                resource_thumbnail_update, adding_resource_metadata, edit_resource_metadata, downloading
-            );
+                    tagging_resource, rating_resource, commenting_resource, opening_resource, submission_view_resource,
+                    deleting_resource, adding_resource, edit_resource, thumb_rating_resource, group_removing_resource,
+                    resource_thumbnail_update, adding_resource_metadata, edit_resource_metadata, downloading);
         }
 
         public static List<Action> getSearchActions()
@@ -94,15 +93,14 @@ public class LogEntry implements Serializable
         public static List<Action> getGlossaryActions()
         {
             return Arrays.asList(
-                glossary_open, glossary_create, glossary_entry_edit, glossary_entry_add, glossary_entry_delete,
-                glossary_term_edit, glossary_term_add, glossary_term_delete
-            );
+                    glossary_open, glossary_create, glossary_entry_edit, glossary_entry_add, glossary_entry_delete,
+                    glossary_term_edit, glossary_term_add, glossary_term_delete);
         }
     }
 
     public static void main(String[] arg)
     {
-        Action[] actions = { Action.adding_yourown_metadata, Action.adding_resource_metadata, Action.edit_resource_metadata, Action.group_metadata_search, Action.group_category_search };
+        Action[] actions = { Action.survey_submit };
 
         for(Action action : actions)
         {

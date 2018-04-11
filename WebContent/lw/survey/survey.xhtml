@@ -26,7 +26,7 @@
 			<h:form id="form" prependId="false">
 				<ui:fragment rendered="#{surveyBean.survey != null}">
 					<p:panel header="#{surveyBean.survey.surveyTitle}" style="margin-bottom:10px;">
-						<h:panelGroup rendered="#{not surveyBean.survey.submitted and surveyBean.editable or surveyBean.update or facesContext.validationFailed}">
+						<h:panelGroup rendered="#{not surveyBean.submitted}">
 							<h:panelGrid columns="1" cellpadding="5">
 								<c:forEach var="field"
 									items="#{surveyBean.survey.formQuestions}">
@@ -152,22 +152,17 @@
 
 
 						<p:commandButton widgetVar="sub" id="submit" value="Final Submit"
-							style="float:left;" styleClass="greenbutton resource_button"
-							action="#{surveyBean.submit()}" update=":message @form"
-							rendered="#{not surveyBean.survey.submitted and surveyBean.editable or surveyBean.update}">
-						</p:commandButton>
-						<p:commandButton widgetVar="editSub" id="edit"
-							value="Edit Submission"
-							rendered="#{surveyBean.survey.submitted and surveyBean.editable and not surveyBean.update}"
-							style="float:left;margin-left:5px"
-							styleClass="greenbutton resource_button"
-							action="#{surveyBean.getSurvey(userBean.user.id)}" update="@form">
+							style="float:left;" styleClass="greenbutton resource_button" onclick="return confirm('Do you want to submit this form finally? You will not be able to change your answers.')"
+							action="#{surveyBean.onSubmit()}" update=":message @form"
+							ajax="false"
+							rendered="#{not surveyBean.submitted}">
 						</p:commandButton>
 
-						<p:commandButton id="save" binding="#{save}" value="#{msg.save}" rendered="#{not surveyBean.survey.submitted and surveyBean.editable or surveyBean.update}"
-							actionListener="#{surveyBean.save()}" process="@form"
+						<p:commandButton id="save" binding="#{save}" value="#{msg.save}" rendered="#{not surveyBean.submitted and surveyBean.editable}"
+							actionListener="#{surveyBean.onSave()}" process="@form"
 							style="float:left;margin-left:5px"
 							styleClass="greenbutton resource_button"
+							ajax="false"
 							update=":message @form" />
 						<br class="clear" />
 					</p:panel>

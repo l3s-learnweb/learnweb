@@ -527,11 +527,6 @@ public class Learnweb
      * @param sessionId
      * @param executionTime in milliseconds
      * @throws SQLException
-     *
-     *             public void log(User user, LogEntry.Action action, int targetId, String params, String sessionId, int executionTime)
-     *             {
-     *             log(user, action, -1, targetId, params, sessionId, executionTime);
-     *             }
      */
     public void log(User user, LogEntry.Action action, int groupId, int targetId, String params, String sessionId, int executionTime)
     {

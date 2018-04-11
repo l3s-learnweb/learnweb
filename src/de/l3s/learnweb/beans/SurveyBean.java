@@ -1,6 +1,7 @@
 package de.l3s.learnweb.beans;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.Date;
 
 import javax.faces.application.FacesMessage;
@@ -14,7 +15,6 @@ import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Survey;
 import de.l3s.learnweb.SurveyManager;
 import de.l3s.learnweb.User;
-import de.l3s.util.BeanHelper;
 
 @ViewScoped
 @ManagedBean
@@ -24,8 +24,8 @@ public class SurveyBean extends ApplicationBean implements Serializable
     private static final Logger log = Logger.getLogger(SurveyBean.class);
     private int resourceId;
 
-    private boolean update;
     private boolean editable;
+    private boolean submitted;
 
     private Survey survey;
     private Resource surveyResource;
@@ -46,6 +46,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
             try
             {
                 surveyResource = getLearnweb().getResourceManager().getResource(resourceId);
+
                 if(!surveyResource.canViewResource(user))
                 {
                     addMessage(FacesMessage.SEVERITY_ERROR, "group_resources_access_denied");
@@ -55,19 +56,27 @@ public class SurveyBean extends ApplicationBean implements Serializable
                 //load survey
                 SurveyManager sm = getLearnweb().getSurveyManager();
 
-                survey = sm.getFormQuestions(resourceId, user.getId());
+                // survey = sm.getFormQuestions(resourceId, user.getId());
+                survey = sm.getAssessmentFormDetails(resourceId, user.getId()); // TODO why does it use another method than in onLoad()
+
                 editable = survey.isEditable() && isValidSubmissionDate(survey);
 
-                if(!isValidSubmissionDate(survey))
+                submitted = survey.isSubmitted();
+                if(survey.isEditable())
+                {
+                    submitted = getLearnweb().getSurveyManager().getSurveyResourceSubmitStauts(resourceId, getUser().getId());
+                }
+
+                if(submitted)
+                    addMessage(FacesMessage.SEVERITY_ERROR, "survey_submit_error");
+                else if(!isValidSubmissionDate(survey))
                     addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_error_between", survey.getStart(), survey.getEnd());
                 else if(survey.isSubmitted())
                 {
-                    if(editable && survey.getEnd() != null)
+                    if(survey.getEnd() != null)
                         addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_edit_until", survey.getEnd());
-                    else if(editable)
+                    else
                         addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_edit");
-                    else if(!editable)
-                        addMessage(FacesMessage.SEVERITY_ERROR, "survey_submit_error");
                 }
             }
             catch(Exception e)
@@ -83,47 +92,39 @@ public class SurveyBean extends ApplicationBean implements Serializable
         return survey;
     }
 
-    //to get pre-filled/submitted survey
-    public void getSurvey(int userId)
+    public boolean isSubmitted()
     {
+        return submitted;
+    }
 
-        SurveyManager sm = getLearnweb().getSurveyManager();
+    public void onSubmit()
+    {
+        onSave();
+
         try
         {
-            survey = new Survey();
-            survey = sm.getAssessmentFormDetails(resourceId, userId); // TODO why does it use another method than in onLoad()
-            resourceId = survey.getResourceId();
-            update = true;
-
+            getLearnweb().getSurveyManager().setSurveyResourceSubmitStauts(resourceId, getUser().getId(), true);
+            log(Action.survey_submit, surveyResource.getGroupId(), resourceId);
+            submitted = true;
         }
-        catch(Exception e)
+        catch(SQLException e)
         {
-            addFatalMessage("Error in fetching assessment form details for survey :" + resourceId, e);
+            addFatalMessage(e);
         }
-
     }
 
-    public void submit()
-    {
-        save();
-
-        log(Action.survey_submit, surveyResource.getGroupId(), resourceId);
-        log.error("final submission not implemented yet " + BeanHelper.getRequestSummary());
-    }
-
-    public void save()
+    public void onSave()
     {
         User u = getUser();
 
-        if(!survey.isSubmitted() || update)
+        if(!submitted)
         {
             try
             {
-                getLearnweb().getSurveyManager().uploadAnswers(u.getId(), survey.getWrappedAnswers(), survey.getWrappedMultipleAnswers(), resourceId, update);
+                getLearnweb().getSurveyManager().uploadAnswers(u.getId(), survey.getWrappedAnswers(), survey.getWrappedMultipleAnswers(), resourceId);
 
                 addMessage(FacesMessage.SEVERITY_INFO, "submit_survey");
                 survey.setSubmitted(true);
-                update = false;
 
                 log(Action.survey_save, surveyResource.getGroupId(), resourceId);
             }
@@ -144,11 +145,6 @@ public class SurveyBean extends ApplicationBean implements Serializable
         this.resourceId = resource_id;
     }
 
-    public boolean isUpdate()
-    {
-        return update;
-    }
-
     public boolean isEditable()
     {
         return editable;
@@ -165,7 +161,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
         return true;
 
         /*
-        
+
         if(sv.getStart() == null && sv.getEnd() == null)
         {
             // Both Dates not set
