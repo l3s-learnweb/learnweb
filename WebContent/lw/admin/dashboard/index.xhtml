@@ -28,7 +28,7 @@
 					</div>
 
 					<div class="menu_section" style="height: calc(100vh - 102px); overflow-y: auto; width: 100%;">
-						<p:dataList value="#{dashboardBean.organization.members}" var="user" type="ordered">
+						<p:dataList id="studentsList" value="#{dashboardBean.studentsList}" var="user" type="ordered">
 							<a target="_blank" href="admin/dashboard/student.jsf?studentId=#{user.id}">
 								<h:outputText value="#{user.username}"/>
 							</a>
@@ -44,6 +44,16 @@
 					</div>
 
 					<h:panelGroup id="dashboardMain" styleClass="dashboard" layout="block">
+						<div class="ui-g">
+							<div class="ui-g-12">
+								<p:panel id="students-select" header="Select Students" toggleable="true" collapsed="true" toggleSpeed="500" closeSpeed="500" style="margin-bottom:20px">
+									<h:form id="user_form" style="padding:0px 5px;" prependId="false">
+										<ui:include src="/lw/templates/user_select_form.xhtml" />
+										<p:commandButton style="margin-top:5px;" actionListener="#{dashboardBean.onSubmitSelectedUsers}" value="Gather data of selected users" process="@form" update=":dashboardMain :studentsList"/>
+									</h:form>
+								</p:panel>
+							</div>
+						</div>
 						<div class="ui-g">
 							<div class="ui-g-3">
 								<p:panel header="Total Concepts">
@@ -96,8 +106,7 @@
 								</p:panel>
 							</div>
 							<div class="ui-g-3">
-								<p:panel id="chart_barModel" header="Students' Activity types"
-										 style="margin-bottom:20px">
+								<p:panel id="chart_barModel" header="Students' Activity types" style="margin-bottom:20px">
 									<p:chart type="bar" model="#{dashboardBean.studentsActivityTypesChart}" xaxisAngle="60"
 											 style="height:300px"/>
 								</p:panel>
@@ -106,43 +115,15 @@
 						<div class="ui-g">
 							<div class="ui-g-4">
 								<h:form>
-									<p:panel id="toggleable" header="Students' Source" toggleable="true" closable="true"
-											 toggleSpeed="500" closeSpeed="500" widgetVar="panel"
-											 style="margin-bottom:20px">
-
+									<p:panel id="chart_barModel_stSources" header="Students' Source" style="margin-bottom:20px">
 										<p:chart type="pie" model="#{dashboardBean.studentsSources}"/>
-
-										<f:facet name="options">
-											<p:menu>
-												<p:submenu label="Settings">
-													<p:menuitem value="Toggle" url="#" icon="ui-icon-newwin"
-																onclick="PF('panel').toggle()"/>
-													<p:menuitem value="Remove" url="#" icon="ui-icon-close"
-																onclick="PF('panel').close()"/>
-												</p:submenu>
-											</p:menu>
-										</f:facet>
 									</p:panel>
 								</h:form>
 							</div>
 							<div class="ui-g-8">
 								<h:form>
-									<p:panel id="glossary" header="Students' Glossary" toggleable="true" closable="true"
-											 toggleSpeed="500" closeSpeed="500" widgetVar="panel"
-											 style="margin-bottom:20px">
-
+									<p:panel id="glossary" header="Students' Glossary" style="margin-bottom:20px">
 										<p:chart type="bar" model="#{dashboardBean.studentsGlossary}" style="height:300px"/>
-
-										<f:facet name="options">
-											<p:menu>
-												<p:submenu label="Settings">
-													<p:menuitem value="Toggle" url="#" icon="ui-icon-newwin"
-																onclick="PF('panel').toggle()"/>
-													<p:menuitem value="Remove" url="#" icon="ui-icon-close"
-																onclick="PF('panel').close()"/>
-												</p:submenu>
-											</p:menu>
-										</f:facet>
 									</p:panel>
 								</h:form>
 							</div>
@@ -209,21 +190,20 @@
 										<h:panelGrid columns="1">
 											<p:dataTable var="gs" value="#{dashboardBean.summary}"
 														 styleClass="countries_list">
-												<p:column headerText="Id">
-													<h:outputText value="#{gs.userId}"/>
+												<p:column headerText="#{msg.username}" sortable="true" sortBy="#{gs.user.username}" filterable="true" filterBy="#{gs.user.username}" filterMatchMode="contains">
+													#{gs.user.username}
 												</p:column>
 
-												<p:column headerText="sources">
-													<h:outputText value="#{gs.totalReferences}"/>
+												<p:column styleClass="align-right" headerText="Sources" sortBy="#{gs.totalReferences}" sortable="true">
+													#{gs.totalReferences}
 												</p:column>
 
-												<p:column headerText="terms">
-													<h:outputText value="#{gs.totalTerms}"/>
+												<p:column styleClass="align-right" headerText="Terms" sortBy="#{gs.totalTerms}" sortable="true">
+													#{gs.totalTerms}
 												</p:column>
 
-												<p:column headerText="entries">
-													<h:outputText value="#{gs.totalGlossaries}">
-													</h:outputText>%
+												<p:column styleClass="align-right" headerText="Entries" sortBy="#{gs.totalGlossaries}" sortable="true">
+													#{gs.totalGlossaries}
 												</p:column>
 											</p:dataTable>
 										</h:panelGrid>

@@ -116,17 +116,13 @@
                             </div>
                         </div>
                         <h:form>
-                            <p:growl id="msgs" showDetail="true"/>
-
                             <p:panel header="Skill">
                                 <h:outputText value="Ability to organize the glossary"/>
 
                                 <div class="ui-g">
                                     <div class="ui-g-4">
                                         <h:form>
-                                            <p:panel id="chart_plot_studentFields" header="Fields" toggleable="true"
-                                                     closable="true" toggleSpeed="500" closeSpeed="500"
-                                                     widgetVar="panel" style="margin-bottom:20px">
+                                            <p:panel id="chart_plot_studentFields" header="Fields" style="margin-bottom:20px">
                                                 <p:chart type="bar" model="#{dashboardStudentBean.studentFields}" xaxisAngle="60"
                                                          style="height:300px"/>
                                             </p:panel>
@@ -134,9 +130,7 @@
                                     </div>
                                     <div class="ui-g-8">
                                         <p:panel id="table_descriptions"
-                                                 header="Descriptions of entries from class-mates" toggleable="true"
-                                                 closable="true" toggleSpeed="500" closeSpeed="500" widgetVar="panel"
-                                                 stickyHeader="true"
+                                                 header="Descriptions of entries from class-mates" stickyHeader="true"
                                                  style="margin-bottom:20px; height:390px; overflow-y: scroll;">
                                             <p:dataTable value="">
                                                 <p:column headerText="insulin">
@@ -161,64 +155,24 @@
                                                     <h:outputText value="#{descr.lenght}"/>
                                                 </p:column>
                                             </p:dataTable>
-                                            <f:facet name="options">
-                                                <p:menu>
-                                                    <p:submenu label="Settings">
-                                                        <p:menuitem value="Toggle" url="#" icon="ui-icon-newwin"
-                                                                    onclick="PF('panel').toggle()"/>
-                                                        <p:menuitem value="Remove" url="#" icon="ui-icon-close"
-                                                                    onclick="PF('panel').close()"/>
-                                                    </p:submenu>
-                                                </p:menu>
-                                            </f:facet>
                                         </p:panel>
                                     </div>
                                 </div>
                             </p:panel>
                         </h:form>
                         <h:form>
-                            <p:growl id="msgs" showDetail="true"/>
-
                             <p:panel header="Skill">
                                 <h:outputText value="Ability to search the Web for information"/>
 
                                 <div class="ui-g">
                                     <div class="ui-g-4">
-                                        <p:panel id="pie_chart_sources" header="Sources" toggleable="true"
-                                                 closable="true" toggleSpeed="500" closeSpeed="500" widgetVar="panel"
-                                                 style="margin-bottom:20px">
-
+                                        <p:panel id="pie_chart_sources" header="Sources" style="margin-bottom:20px">
                                             <p:chart type="pie" model="#{dashboardStudentBean.studentsSources}"/>
-
-                                            <f:facet name="options">
-                                                <p:menu>
-                                                    <p:submenu label="Settings">
-                                                        <p:menuitem value="Toggle" url="#" icon="ui-icon-newwin"
-                                                                    onclick="PF('panel').toggle()"/>
-                                                        <p:menuitem value="Remove" url="#" icon="ui-icon-close"
-                                                                    onclick="PF('panel').close()"/>
-                                                    </p:submenu>
-                                                </p:menu>
-                                            </f:facet>
                                         </p:panel>
                                     </div>
                                     <div class="ui-g-8">
-                                        <p:panel id="chart_plot_proxySources" header="Student Proxy sources"
-                                                 toggleable="true" closable="true" toggleSpeed="500" closeSpeed="500"
-                                                 widgetVar="panel" style="margin-bottom:20px">
-
+                                        <p:panel id="chart_plot_proxySources" header="Student Proxy sources" style="margin-bottom:20px">
                                             <p:chart type="bar" model="#{dashboardStudentBean.proxySources}"/>
-
-                                            <f:facet name="options">
-                                                <p:menu>
-                                                    <p:submenu label="Settings">
-                                                        <p:menuitem value="Toggle" url="#" icon="ui-icon-newwin"
-                                                                    onclick="PF('panel').toggle()"/>
-                                                        <p:menuitem value="Remove" url="#" icon="ui-icon-close"
-                                                                    onclick="PF('panel').close()"/>
-                                                    </p:submenu>
-                                                </p:menu>
-                                            </f:facet>
                                         </p:panel>
                                     </div>
                                 </div>

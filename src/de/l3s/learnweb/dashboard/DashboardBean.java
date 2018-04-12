@@ -4,10 +4,14 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.*;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
+import javax.faces.context.FacesContext;
+import javax.servlet.http.HttpServletRequest;
 
 import de.l3s.learnweb.Organisation;
+import de.l3s.learnweb.UserManager;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.User;
@@ -15,6 +19,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.dashboard.DashboardManager.TrackerStatistic;
 import de.l3s.learnweb.dashboard.DashboardManager.GlossaryStatistic;
 import de.l3s.learnweb.dashboard.DashboardManager.GlossaryFieldSummery;
+import org.primefaces.event.ToggleEvent;
 import org.primefaces.model.chart.*;
 
 @ManagedBean
@@ -107,6 +112,18 @@ public class DashboardBean extends ApplicationBean implements Serializable
     }
 
     public void onDateChanged() throws SQLException
+    {
+        updateStatsData();
+
+        interactionsChart = null;
+        studentsActivityTypesChart = null;
+        studentsGlossary = null;
+        studentsSources = null;
+        glossaryStat = null;
+        langSescDataList = null;
+    }
+
+    public void onStudentsChanged() throws SQLException
     {
         updateStatsData();
 
@@ -339,6 +356,16 @@ public class DashboardBean extends ApplicationBean implements Serializable
         return getUser().getOrganisation();
     }
 
+    public List<User> getStudentsList() throws SQLException
+    {
+        List<User> students = new ArrayList<>();
+        UserManager userManager = getLearnweb().getUserManager();
+        for (int studentId : orgUserIds) {
+            students.add(userManager.getUser(studentId));
+        }
+        return students;
+    }
+
     public List<GlossaryFieldSummery> getFields()
     {
         return glossaryFieldSummeryPerUser;
@@ -413,7 +440,37 @@ public class DashboardBean extends ApplicationBean implements Serializable
         {
             this.enrtyid = enrtyid;
         }
+    }
 
+    public List<Integer> getSelectedUsers() throws SQLException
+    {
+        HttpServletRequest request = (HttpServletRequest) (FacesContext.getCurrentInstance().getExternalContext().getRequest());
+        String[] tempSelectedUsers = request.getParameterValues("selected_users");
+
+        if(null == tempSelectedUsers || tempSelectedUsers.length == 0)
+        {
+            addMessage(FacesMessage.SEVERITY_WARN, "select_user");
+            return null;
+        }
+
+        List<Integer> selectedUsersSet = new ArrayList<>();
+        for(String userId : tempSelectedUsers)
+            selectedUsersSet.add(Integer.parseInt(userId));
+
+        return selectedUsersSet;
+    }
+
+    public void onSubmitSelectedUsers()
+    {
+        try
+        {
+            this.orgUserIds = getSelectedUsers();
+            updateStatsData();
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
     }
 
 }

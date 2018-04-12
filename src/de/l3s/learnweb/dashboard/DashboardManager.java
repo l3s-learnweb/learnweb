@@ -391,15 +391,37 @@ public class DashboardManager
         return statistic;
     }
 
-    public static class GlossaryStatistic
+    public static class GlossaryStatistic implements Serializable
     {
-        private int userId;
+        private static final long serialVersionUID = -4378112533840640208L;
+        private int userId = -1;
         private int totalGlossaries = 0;
         private int totalTerms = 0;
         private int totalReferences = 0;
 
-        GlossaryStatistic(int userId) {
+        public GlossaryStatistic() {
+        }
+
+        public GlossaryStatistic(int userId) {
             this.userId = userId;
+        }
+
+        private transient User user;
+
+        public User getUser()
+        {
+            if(null == user && userId > 0)
+            {
+                try
+                {
+                    user = Learnweb.getInstance().getUserManager().getUser(userId);
+                }
+                catch(SQLException e)
+                {
+                    log.fatal("can't get user: " + userId, e);
+                }
+            }
+            return user;
         }
 
         public int getUserId()

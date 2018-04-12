@@ -1,52 +1,50 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:p="http://primefaces.org/ui">
 
-	<ui:composition> 
-		<h:outputScript library="primefaces" target="head" name="jquery/jquery.js" />
-		<h:outputScript library="js" target="head" name="selectionTree.js" />
+<ui:composition>
+    <h:outputScript library="primefaces" target="head" name="jquery/jquery.js"/>
+    <h:outputScript library="js" target="head" name="selectionTree.js"/>
 
-		<div id="userselect">
-			
-				<div class="klapper_zu">&nbsp;&#160;</div>
-				<input type="checkbox" name="ignore" value="1" class="checker" />
-				<h:outputText value="#{msg.courses}:" style="font-weight:bold;"/>			
-				<ul>			
-					<ui:repeat var="course" value="#{userBean.user.courses}">
-						<li>
-							<div class="klapper_zu klapper_auf">&nbsp;&#160;</div>
-							<input type="checkbox" name="ignore" value="1" class="checker" />
-							<h:outputText value="#{course.title}" style="font-weight:bold;"/>
-								
-							<ul class="display-none">
-								<ui:repeat var="group" value="#{course.groups}">
-								<li>
-									<div class="klapper_zu klapper_auf">&nbsp;&#160;</div>
-									<input type="checkbox" name="ignore" value="1" class="checker" />				
-									<h:outputText value="#{group.title} (#{msg.group})" />
-									
-									<ul class="display-none;">
-										<ui:repeat var="user" value="#{group.members}">
-										<li>
-											<input name="selected_users" id="us_form:us_checkbox:#{course.id}:#{group.id}:#{user.id}" 
-												value="#{user.id}" type="checkbox" />
-											<label for="us_form:us_checkbox:#{course.id}:#{group.id}:#{user.id}" class="">
-												#{user.username}
-											</label>													
-										</li>
-										</ui:repeat>
-									</ul>
-								</li>
-							</ui:repeat>
-						</ul>
-					</li>
-					</ui:repeat>
-				</ul>
-			
-		</div>
+    <div id="userselect">
 
-	</ui:composition>
+        <div class="klapper_zu">&nbsp;&#160;</div>
+        <input type="checkbox" name="ignore" value="1" class="checker"/>
+        <h:outputText value="#{msg.courses}:" style="font-weight:bold;"/>
+        <ul>
+            <ui:repeat var="course" value="#{userBean.user.courses}">
+                <li>
+                    <div class="klapper_zu klapper_auf">&nbsp;&#160;</div>
+                    <input type="checkbox" name="ignore" value="1" class="checker"/>
+                    <h:outputText value="#{course.title}" style="font-weight:bold;"/>
+
+                    <ul class="display-none">
+                        <ui:repeat var="group" value="#{course.groups}">
+                            <li>
+                                <div class="klapper_zu klapper_auf">&nbsp;&#160;</div>
+                                <input type="checkbox" name="ignore" value="1" class="checker"/>
+                                <h:outputText value="#{group.title} (#{msg.group})"/>
+
+                                <ul class="display-none;">
+                                    <ui:repeat var="user" value="#{group.members}">
+                                        <li>
+                                            <input name="selected_users" id="us_form:us_checkbox:#{course.id}:#{group.id}:#{user.id}" value="#{user.id}" type="checkbox"/>
+                                            <label for="us_form:us_checkbox:#{course.id}:#{group.id}:#{user.id}">#{user.username}</label>
+                                        </li>
+                                    </ui:repeat>
+                                </ul>
+                            </li>
+                        </ui:repeat>
+                    </ul>
+                </li>
+            </ui:repeat>
+        </ul>
+
+    </div>
+
+</ui:composition>
 </html>
