@@ -1,11 +1,8 @@
 package de.l3s.learnweb.dashboard;
 
-import de.l3s.learnweb.Organisation;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
 import de.l3s.learnweb.dashboard.DashboardManager.GlossaryFieldSummery;
-import de.l3s.learnweb.dashboard.DashboardManager.GlossaryStatistic;
-import de.l3s.learnweb.dashboard.DashboardManager.TrackerStatistic;
 import de.l3s.util.MapHelper;
 import org.apache.log4j.Logger;
 import org.primefaces.model.chart.*;
@@ -26,37 +23,32 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
 
     private static final String PREFERENCE_STARTDATE = "dashboard_startdate";
     private static final String PREFERENCE_ENDDATE = "dashboard_enddate";
+    private static final String TRACKER_CLIENT_ID = "1";
+
+    private Integer paramStudentId = null;
 
     private Date startDate = null;
     private Date endDate = null;
-    private Integer selectedUserId = null;
-
-    private String trackerClientId = "1";
-
-    private List<Integer> orgUserIds = null;
+    private List<Integer> selectedUsersIds = null;
     private DashboardManager dashboardManager = null;
 
     private Integer totalConcepts = null;
     private Integer totalTerms = null;
     private Integer totalSources = null;
-    private List<GlossaryFieldSummery> glossaryFieldSummeryPerUser;
-    private List<TrackerStatistic> trackerStatistics;
-    private List<String> glossaryDescriptions;
-    private Map<String, Integer> glossaryConceptsCountPerUser;
+    private ArrayList<GlossaryFieldSummery> glossaryFieldsSummeryPerUser;
     private Map<String, Integer> glossarySourcesWithCounters;
-    private Map<String, Integer> glossaryTermsCountPerUser;
     private Map<Integer, Integer> actionsWithCounters;
     private Map<String, Integer> actionsCountPerDay;
+    // private ArrayList<DescFieldData> descFieldsStatistic;
+    // private ArrayList<String> glossaryDescriptions;
     private Map<String, Integer> proxySourcesWithCounters;
-    private Map<Integer, GlossaryStatistic> glossaryStatisticPerUser;
+    // private LinkedList<TrackerStatistic> trackerStatistics;
 
     private LineChartModel interactionsChart;
     private BarChartModel studentsActivityTypesChart;
-    private BarChartModel studentsGlossary;
-    private BarChartModel proxySources;
-    private BarChartModel studentFields;
-    private PieChartModel studentsSources;
-    private ArrayList<GlossaryStatistic> glossaryStat;
+    private PieChartModel studentsSourcesChart;
+    private BarChartModel studentFieldsChart;
+    private BarChartModel proxySourcesChart;
 
     public DashboardStudentBean()
     {
@@ -79,10 +71,10 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
             startDate = new Date(Long.parseLong(savedStartDate));
             endDate = new Date(Long.parseLong(savedEndDate));
 
-            orgUserIds = Collections.singletonList(selectedUserId);
+            selectedUsersIds = Collections.singletonList(paramStudentId);
             dashboardManager = getLearnweb().getDashboardManager();
 
-            updateStatsData();
+            fetchDataFromManager();
         }
         catch(SQLException e)
         {
@@ -90,87 +82,32 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
         }
     }
 
-    private void updateStatsData() throws SQLException
+    public void cleanAndUpdateStoredData() throws SQLException
     {
-        totalConcepts = dashboardManager.getTotalConcepts(orgUserIds, startDate, endDate);
-        totalTerms = dashboardManager.getTotalTerms(orgUserIds, startDate, endDate);
-        totalSources = dashboardManager.getTotalSources(orgUserIds, startDate, endDate);
-        glossaryFieldSummeryPerUser = dashboardManager.getGlossaryFieldSummeryPerUser(orgUserIds, startDate, endDate);
-        trackerStatistics = dashboardManager.getTrackerStatistics(trackerClientId, orgUserIds, startDate, endDate);
-        glossaryDescriptions = dashboardManager.getGlossaryDescriptions(orgUserIds, startDate, endDate);
-        glossaryConceptsCountPerUser = dashboardManager.getGlossaryConceptsCountPerUser(orgUserIds, startDate, endDate);
-        glossarySourcesWithCounters = dashboardManager.getGlossarySourcesWithCounters(orgUserIds, startDate, endDate);
-        glossaryTermsCountPerUser = dashboardManager.getGlossaryTermsCountPerUser(orgUserIds, startDate, endDate);
-        actionsWithCounters = dashboardManager.getActionsWithCounters(orgUserIds, startDate, endDate);
-        actionsCountPerDay = dashboardManager.getActionsCountPerDay(orgUserIds, startDate, endDate);
-        proxySourcesWithCounters = dashboardManager.getProxySourcesWithCounters(trackerClientId, orgUserIds, startDate, endDate);
-        glossaryStatisticPerUser = dashboardManager.getGlossaryStatisticPerUser(orgUserIds, startDate, endDate);
-    }
-
-    public void onDateChanged() throws SQLException
-    {
-        updateStatsData();
-
         interactionsChart = null;
-        studentFields = null;
         studentsActivityTypesChart = null;
-        studentsGlossary = null;
-        studentsSources = null;
-        glossaryStat = null;
-        proxySources = null;
+        studentsSourcesChart = null;
+        studentFieldsChart = null;
+        proxySourcesChart = null;
+
+        fetchDataFromManager();
     }
 
-    public LineChartModel getInteractionsChart()
+    private void fetchDataFromManager() throws SQLException
     {
-        if(interactionsChart == null)
-            interactionsChart = DashboardChartsFactory.createInteractionsChart(actionsCountPerDay, this.startDate, this.endDate);
-        return interactionsChart;
-    }
+        totalConcepts = dashboardManager.getTotalConcepts(selectedUsersIds, startDate, endDate);
+        totalTerms = dashboardManager.getTotalTerms(selectedUsersIds, startDate, endDate);
+        totalSources = dashboardManager.getTotalSources(selectedUsersIds, startDate, endDate);
 
-    public BarChartModel getStudentFields()
-    {
-        if(studentFields == null)
-            studentFields = DashboardChartsFactory.createStudentFieldsChart(glossaryFieldSummeryPerUser);
-        return studentFields;
-    }
-
-    public BarChartModel getStudentsActivityTypesChart()
-    {
-        if(studentsActivityTypesChart == null)
-            studentsActivityTypesChart = DashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
-        return studentsActivityTypesChart;
-    }
-
-    public BarChartModel getStudentsGlossary()
-    {
-        if(studentsGlossary == null)
-            studentsGlossary = DashboardChartsFactory.createStudentsGlossaryChart(glossaryConceptsCountPerUser, glossaryTermsCountPerUser);
-        return studentsGlossary;
-    }
-
-    public BarChartModel getProxySources()
-    {
-        if(proxySources == null)
-            proxySources = DashboardChartsFactory.createProxySourcesChart(proxySourcesWithCounters);
-        return proxySources;
-    }
-
-    public PieChartModel getStudentsSources()
-    {
-        if(studentsSources == null)
-            studentsSources = DashboardChartsFactory.createStudentsSourcesChart(glossarySourcesWithCounters);
-        return studentsSources;
-    }
-
-    public ArrayList<GlossaryStatistic> getSummary()
-    {
-        if(glossaryStat == null)
-        {
-            glossaryStat = new ArrayList<>();
-            for(Integer uid : orgUserIds)
-                glossaryStat.add(glossaryStatisticPerUser.getOrDefault(uid, new GlossaryStatistic(uid)));
-        }
-        return glossaryStat;
+        glossaryFieldsSummeryPerUser = dashboardManager.getGlossaryFieldSummeryPerUser(selectedUsersIds, startDate, endDate);
+        glossarySourcesWithCounters = dashboardManager.getGlossarySourcesWithCounters(selectedUsersIds, startDate, endDate);
+        actionsWithCounters = dashboardManager.getActionsWithCounters(selectedUsersIds, startDate, endDate);
+        actionsCountPerDay = dashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate);
+        // TODO: display them somewhere on the user stat page
+        // glossaryDescriptions = dashboardManager.getGlossaryDescriptions(selectedUsersIds, startDate, endDate);
+        // trackerStatistics = dashboardManager.getTrackerStatistics(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
+        // descFieldsStatistic = dashboardManager.getLangDescStatistic(selectedUsersIds, startDate, endDate);
+        proxySourcesWithCounters = dashboardManager.getProxySourcesWithCounters(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
     }
 
     public Date getStartDate()
@@ -197,9 +134,39 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
         setPreference(PREFERENCE_ENDDATE, Long.toString(endDate.getTime()));
     }
 
-    public Map<String, Integer> getProxyLogList()
+    public LineChartModel getInteractionsChart()
     {
-        return MapHelper.sortByValue(proxySourcesWithCounters);
+        if(interactionsChart == null)
+            interactionsChart = DashboardChartsFactory.createInteractionsChart(actionsCountPerDay, startDate, endDate);
+        return interactionsChart;
+    }
+
+    public BarChartModel getStudentFieldsChart()
+    {
+        if(studentFieldsChart == null)
+            studentFieldsChart = DashboardChartsFactory.createStudentFieldsChart(glossaryFieldsSummeryPerUser);
+        return studentFieldsChart;
+    }
+
+    public BarChartModel getStudentsActivityTypesChart()
+    {
+        if(studentsActivityTypesChart == null)
+            studentsActivityTypesChart = DashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
+        return studentsActivityTypesChart;
+    }
+
+    public BarChartModel getProxySourcesChart()
+    {
+        if(proxySourcesChart == null)
+            proxySourcesChart = DashboardChartsFactory.createProxySourcesChart(proxySourcesWithCounters);
+        return proxySourcesChart;
+    }
+
+    public PieChartModel getStudentsSourcesChart()
+    {
+        if(studentsSourcesChart == null)
+            studentsSourcesChart = DashboardChartsFactory.createStudentsSourcesChart(glossarySourcesWithCounters);
+        return studentsSourcesChart;
     }
 
     public Integer getTotalConcepts()
@@ -217,70 +184,19 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
         return totalSources;
     }
 
-    public void setTotalSources(Integer totalSources)
+    public ArrayList<Map.Entry<String, Integer>> getStudentsProxySourcesList()
     {
-        this.totalSources = totalSources;
+        return new ArrayList<>(MapHelper.sortByValue(proxySourcesWithCounters).entrySet());
     }
 
-    public Map<String, Integer> getGlossaryConceptsCountPerUser()
+    public Integer getParamStudentId()
     {
-        return glossaryConceptsCountPerUser;
+        return paramStudentId;
     }
 
-    public Map<String, Integer> getGlossarySourcesWithCounters()
+    public void setParamStudentId(final Integer paramStudentId)
     {
-        return glossarySourcesWithCounters;
-    }
-
-    public Map<String, Integer> getGlossaryTermsCountPerUser()
-    {
-        return glossaryTermsCountPerUser;
-    }
-
-    public Map<Integer, Integer> getActionsWithCounters()
-    {
-        return actionsWithCounters;
-    }
-
-    public Map<String, Integer> getActionsCountPerDay()
-    {
-        return actionsCountPerDay;
-    }
-
-    public List<String> getGlossaryDescriptions()
-    {
-        return glossaryDescriptions;
-    }
-
-    public Map<Integer, GlossaryStatistic> getGlossaryStatisticPerUser()
-    {
-        return glossaryStatisticPerUser;
-    }
-
-    public Map<String, Integer> getProxySourcesWithCounters()
-    {
-        return proxySourcesWithCounters;
-    }
-
-    public List<TrackerStatistic> getTrackerStatistics()
-    {
-        return trackerStatistics;
-    }
-
-    public Organisation getOrganization()
-    {
-        return getUser().getOrganisation();
-    }
-
-    public Integer getSelectedUserId()
-    {
-        return selectedUserId;
-    }
-
-    public void setSelectedUserId(Integer selectedUserId)
-    {
-        log.debug("getSelectedUserId: " + selectedUserId);
-        this.selectedUserId = selectedUserId;
+        this.paramStudentId = paramStudentId;
     }
 
     public String getRatioTermConcept()

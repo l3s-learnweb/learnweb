@@ -4,7 +4,7 @@
 
     <ui:define name="metadata">
         <f:metadata>
-            <f:viewParam name="studentId" value="#{dashboardStudentBean.selectedUserId}"/>
+            <f:viewParam name="studentId" value="#{dashboardStudentBean.paramStudentId}"/>
             <f:viewAction action="#{dashboardStudentBean.onLoad}"/>
         </f:metadata>
     </ui:define>
@@ -36,7 +36,7 @@
                 <div class="ui-g-12 ui-g-nopad">
                     <div class="center-header" id="group_header">
                         <h2>Students' Activities</h2>
-                        <span class="header_detail"><h:outputText value="#{dashboardStudentBean.selectedUserId}"/></span>
+                        <span class="header_detail"><h:outputText value="#{dashboardStudentBean.paramStudentId}"/></span>
                     </div>
 
                     <h:panelGroup id="dashboardMain" styleClass="dashboard" layout="block">
@@ -92,7 +92,7 @@
                                         <div class="ui-g-12 ui-md-4">
                                             <div class="ui-inputgroup">
                                                 <p:commandButton value="Update" update=":dashboardMain :growl"
-                                                                 actionListener="#{dashboardStudentBean.onDateChanged}"
+                                                                 actionListener="#{dashboardStudentBean.cleanAndUpdateStoredData}"
                                                                  icon="ui-icon-check"/>
                                             </div>
                                         </div>
@@ -123,7 +123,7 @@
                                     <div class="ui-g-4">
                                         <h:form>
                                             <p:panel id="chart_plot_studentFields" header="Fields" style="margin-bottom:20px">
-                                                <p:chart type="bar" model="#{dashboardStudentBean.studentFields}" xaxisAngle="60"
+                                                <p:chart type="bar" model="#{dashboardStudentBean.studentFieldsChart}" xaxisAngle="60"
                                                          style="height:300px"/>
                                             </p:panel>
                                         </h:form>
@@ -167,12 +167,12 @@
                                 <div class="ui-g">
                                     <div class="ui-g-4">
                                         <p:panel id="pie_chart_sources" header="Sources" style="margin-bottom:20px">
-                                            <p:chart type="pie" model="#{dashboardStudentBean.studentsSources}"/>
+                                            <p:chart type="pie" model="#{dashboardStudentBean.studentsSourcesChart}"/>
                                         </p:panel>
                                     </div>
                                     <div class="ui-g-8">
                                         <p:panel id="chart_plot_proxySources" header="Student Proxy sources" style="margin-bottom:20px">
-                                            <p:chart type="bar" model="#{dashboardStudentBean.proxySources}"/>
+                                            <p:chart type="bar" model="#{dashboardStudentBean.proxySourcesChart}"/>
                                         </p:panel>
                                     </div>
                                 </div>
@@ -184,7 +184,7 @@
                                          stickyHeader="true"
                                          style="margin-bottom:20px; height:390px; overflow-y: scroll;">
                                     <h:form>
-                                        <p:dataTable var="pll" value="#{dashboardStudentBean.proxyLogList.entrySet}" styleClass="countries_list">
+                                        <p:dataTable var="pll" value="#{dashboardStudentBean.studentsProxySourcesList}" styleClass="countries_list">
                                             <p:column headerText="Web Site">
                                                 <h:outputText value="#{pll.key}"/>
                                             </p:column>

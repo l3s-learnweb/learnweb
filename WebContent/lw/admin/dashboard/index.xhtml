@@ -90,7 +90,7 @@
 										<div class="ui-g-12 ui-md-4">
 											<div class="ui-inputgroup">
 												<p:commandButton value="Update" update=":dashboardMain :growl"
-																 actionListener="#{dashboardBean.onDateChanged}"
+																 actionListener="#{dashboardBean.cleanAndUpdateStoredData}"
 																 icon="ui-icon-check"/>
 											</div>
 										</div>
@@ -116,14 +116,14 @@
 							<div class="ui-g-4">
 								<h:form>
 									<p:panel id="chart_barModel_stSources" header="Students' Source" style="margin-bottom:20px">
-										<p:chart type="pie" model="#{dashboardBean.studentsSources}"/>
+										<p:chart type="pie" model="#{dashboardBean.studentsSourcesChart}"/>
 									</p:panel>
 								</h:form>
 							</div>
 							<div class="ui-g-8">
 								<h:form>
 									<p:panel id="glossary" header="Students' Glossary" style="margin-bottom:20px">
-										<p:chart type="bar" model="#{dashboardBean.studentsGlossary}" style="height:300px"/>
+										<p:chart type="bar" model="#{dashboardBean.studentsGlossaryChart}" style="height:300px"/>
 									</p:panel>
 								</h:form>
 							</div>
@@ -133,9 +133,9 @@
 								<h:form>
 									<p:panel id="fields" header="Fields" style="margin-bottom:20px">
 										<h:panelGrid columns="1">
-											<p:dataTable value="#{dashboardBean.glossaryFieldSummeryPerUser}" var="gfs" styleClass="countries_list">
+											<p:dataTable value="#{dashboardBean.glossaryFieldsSummeryPerUser}" var="gfs" styleClass="countries_list">
 												<p:column headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.username}" filterable="true" filterBy="#{gfs.user.username}" filterMatchMode="contains">
-													<!-- <a href="dashboard.jsf?user_id=#{gfs.userid}"> -->#{gfs.user.username}
+													<!-- <a href="dashboard.jsf?user_id=#{gfs.userId}"> -->#{gfs.user.username}
 												</p:column>
 												<p:column styleClass="align-right" headerText="Terms" sortBy="#{gfs.total}" sortable="true">
 													#{gfs.total}
@@ -188,8 +188,7 @@
 								<h:form>
 									<p:panel id="summary" header="Summary" style="margin-bottom:20px">
 										<h:panelGrid columns="1">
-											<p:dataTable var="gs" value="#{dashboardBean.summary}"
-														 styleClass="countries_list">
+											<p:dataTable var="gs" value="#{dashboardBean.glossaryStatisticPerUser}" styleClass="countries_list">
 												<p:column headerText="#{msg.username}" sortable="true" sortBy="#{gs.user.username}" filterable="true" filterBy="#{gs.user.username}" filterMatchMode="contains">
 													#{gs.user.username}
 												</p:column>
@@ -202,7 +201,7 @@
 													#{gs.totalTerms}
 												</p:column>
 
-												<p:column styleClass="align-right" headerText="Entries" sortBy="#{gs.totalGlossaries}" sortable="true">
+												<p:column styleClass="align-right" headerText="Concepts" sortBy="#{gs.totalGlossaries}" sortable="true">
 													#{gs.totalGlossaries}
 												</p:column>
 											</p:dataTable>
@@ -214,14 +213,14 @@
 								<h:form>
 									<p:panel id="description" header="Description field" style="margin-bottom:20px">
 										<h:panelGrid columns="1">
-											<p:dataTable var="ldl" value="#{dashboardBean.langDesclist}"
+											<p:dataTable var="ldl" value="#{dashboardBean.descFieldsStatistic}"
 														 styleClass="countries_list">
 												<p:column headerText="Id">
-													<h:outputText value="#{ldl.userid}"/>
+													<h:outputText value="#{ldl.userId}"/>
 												</p:column>
 
 												<p:column headerText="entry id">
-													<h:outputText value="#{ldl.enrtyid}"/>
+													<h:outputText value="#{ldl.entryId}"/>
 												</p:column>
 
 												<p:column headerText="lang">
@@ -233,7 +232,7 @@
 												</p:column>
 
 												<p:column headerText="lenght">
-													<h:outputText value="#{ldl.lenght}"/>
+													<h:outputText value="#{ldl.length}"/>
 												</p:column>
 											</p:dataTable>
 										</h:panelGrid>

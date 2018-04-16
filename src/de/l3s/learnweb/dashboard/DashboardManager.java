@@ -39,7 +39,7 @@ public class DashboardManager
     {
         int result = 0;
 
-        try (PreparedStatement select = learnweb.getConnection().prepareStatement(
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT COUNT(distinct rg.glossary_id) as count "
                         + "FROM lw_resource r "
                         + "JOIN lw_resource_glossary rg USING(resource_id) "
@@ -62,7 +62,7 @@ public class DashboardManager
     {
         int result = 0;
 
-        try (PreparedStatement select = learnweb.getConnection().prepareStatement(
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT COUNT(*) as count "
                         + "FROM lw_resource r "
                         + "JOIN lw_resource_glossary rg USING(resource_id) "
@@ -86,7 +86,7 @@ public class DashboardManager
     {
         int result = 0;
 
-        try (PreparedStatement select = learnweb.getConnection().prepareStatement(
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT COUNT(distinct rgt.references) as count "
                         + "FROM lw_resource r "
                         + "JOIN lw_resource_glossary rg USING(resource_id) "
@@ -106,9 +106,9 @@ public class DashboardManager
         return result;
     }
 
-    public List<GlossaryFieldSummery> getGlossaryFieldSummeryPerUser(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
+    public ArrayList<GlossaryFieldSummery> getGlossaryFieldSummeryPerUser(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
     {
-        List<GlossaryFieldSummery> summeries = new ArrayList<>(userIds.size());
+        ArrayList<GlossaryFieldSummery> summeries = new ArrayList<>(userIds.size());
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT r.owner_user_id, "
@@ -187,7 +187,8 @@ public class DashboardManager
             select.setTimestamp(2, new Timestamp(endDate.getTime()));
             ResultSet rs = select.executeQuery();
 
-            while(rs.next()) {
+            while(rs.next())
+            {
                 String source = rs.getString("refs");
                 if(source == null || source.trim().isEmpty())
                     countPerSource.put("EMPTY", rs.getInt("count"));
@@ -264,9 +265,9 @@ public class DashboardManager
         return actionsPerDay;
     }
 
-    public List<String> getGlossaryDescriptions(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
+    public ArrayList<String> getGlossaryDescriptions(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
     {
-        List<String> descriptions = new ArrayList<>();
+        ArrayList<String> descriptions = new ArrayList<>();
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT rg.description as description " +
@@ -336,12 +337,95 @@ public class DashboardManager
         return statPerUser;
     }
 
+    public ArrayList<DescFieldData> getLangDescStatistic(Collection<Integer> userIds, Date startDate, Date endDate)
+    {
+        // TODO: don't use hardcoded data
+        ArrayList<DescFieldData> langDataList = new ArrayList<>();
+
+        DescFieldData d = new DescFieldData();
+        d.setDescription("Vitamin");
+        d.setEntryId(1322);
+        d.setLang("en");
+        d.setLength(1);
+        d.setUserId(10111);
+        langDataList.add(d);
+
+        d = new DescFieldData();
+        d.setDescription("Il diabete");
+        d.setEntryId(1428);
+        d.setLang("it");
+        d.setLength(2);
+        d.setUserId(10111);
+        langDataList.add(d);
+
+        d = new DescFieldData();
+        d.setDescription("Epidemiology");
+        d.setEntryId(1113);
+        d.setLang("en");
+        d.setLength(1);
+        d.setUserId(10150);
+        langDataList.add(d);
+
+        Integer userid = 10109;
+        Integer lenght = 1;
+        String lang = "unk";
+        d = new DescFieldData();
+        d.setDescription("g");
+        d.setEntryId(1320);
+        d.setLang(lang);
+        d.setLength(lenght);
+        d.setUserId(userid);
+        langDataList.add(d);
+
+        d = new DescFieldData();
+        d.setDescription("v");
+        d.setEntryId(1323);
+        d.setLang(lang);
+        d.setLength(lenght);
+        d.setUserId(userid);
+        langDataList.add(d);
+
+        d = new DescFieldData();
+        d.setDescription("c");
+        d.setEntryId(1324);
+        d.setLang(lang);
+        d.setLength(lenght);
+        d.setUserId(userid);
+        langDataList.add(d);
+
+        d = new DescFieldData();
+        d.setDescription("g");
+        d.setEntryId(1327);
+        d.setLang(lang);
+        d.setLength(lenght);
+        d.setUserId(userid);
+        langDataList.add(d);
+
+        d = new DescFieldData();
+        d.setDescription("b");
+        d.setEntryId(1328);
+        d.setLang(lang);
+        d.setLength(lenght);
+        d.setUserId(userid);
+        langDataList.add(d);
+
+        d = new DescFieldData();
+        d.setDescription("h");
+        d.setEntryId(1350);
+        d.setLang(lang);
+        d.setLength(lenght);
+        d.setUserId(userid);
+        langDataList.add(d);
+
+        return langDataList;
+    }
+
     public Map<String, Integer> getProxySourcesWithCounters(String trackerClientId, Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
     {
         Map<String, Integer> countPerSource = new TreeMap<>();
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
-                "SELECT REPLACE(REPLACE(SUBSTRING_INDEX(url, '/', 3),'.waps.io',''),'.secure','') as domain, COUNT(*) as count "
+                "SELECT REPLACE(REPLACE(website_domain, '.secure.waps.io', ''), '.waps.io', '') as domain, COUNT(*) as count "
                         + "FROM tracker.track "
                         + "WHERE external_client_id = ? "
                         + "AND external_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") "
@@ -359,9 +443,9 @@ public class DashboardManager
         return countPerSource;
     }
 
-    public List<TrackerStatistic> getTrackerStatistics(String trackerClientId, Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
+    public LinkedList<TrackerStatistic> getTrackerStatistics(String trackerClientId, Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
     {
-        List<TrackerStatistic> statistic = new LinkedList<>();
+        LinkedList<TrackerStatistic> statistic = new LinkedList<>();
 
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT external_user_id as user_id, sum(total_events) as total_events, sum(time_stay) as time_stay, sum(time_active) as time_active, sum(clicks) as clicks, sum(keypress) as keypresses "
@@ -399,14 +483,16 @@ public class DashboardManager
         private int totalTerms = 0;
         private int totalReferences = 0;
 
-        public GlossaryStatistic() {
+        private transient User user;
+
+        public GlossaryStatistic()
+        {
         }
 
-        public GlossaryStatistic(int userId) {
+        public GlossaryStatistic(int userId)
+        {
             this.userId = userId;
         }
-
-        private transient User user;
 
         public User getUser()
         {
@@ -463,6 +549,66 @@ public class DashboardManager
         {
             this.totalReferences = totalReferences;
         }
+    }
+
+    public class DescFieldData
+    {
+        Integer userId;
+        String description;
+        String lang;
+        Integer length;
+        Integer entryId;
+
+        public String getDescription()
+        {
+            return description;
+        }
+
+        public void setDescription(String description)
+        {
+            this.description = description;
+        }
+
+        public String getLang()
+        {
+            return lang;
+        }
+
+        public void setLang(String lang)
+        {
+            this.lang = lang;
+        }
+
+        public Integer getLength()
+        {
+            return length;
+        }
+
+        public void setLength(Integer length)
+        {
+            this.length = length;
+        }
+
+        public Integer getUserId()
+        {
+            return userId;
+        }
+
+        public void setUserId(Integer userId)
+        {
+            this.userId = userId;
+        }
+
+        public Integer getEntryId()
+        {
+            return entryId;
+        }
+
+        public void setEntryId(Integer entryId)
+        {
+            this.entryId = entryId;
+        }
+
     }
 
     public static class TrackerStatistic
@@ -591,7 +737,7 @@ public class DashboardManager
     public static class GlossaryFieldSummery implements Serializable
     {
         private static final long serialVersionUID = -4378112533840640208L;
-        int userId;
+        int userId = -1;
         int total;
         int pronounciation;
         int acronym;
@@ -608,7 +754,7 @@ public class DashboardManager
 
         public User getUser()
         {
-            if(null == user)
+            if(null == user && userId > 0)
             {
                 try
                 {
@@ -622,14 +768,14 @@ public class DashboardManager
             return user;
         }
 
-        public int getUserid()
+        public int getUserId()
         {
             return userId;
         }
 
-        private void setUserId(int userid)
+        private void setUserId(int userId)
         {
-            this.userId = userid;
+            this.userId = userId;
         }
 
         public int getTotal()
