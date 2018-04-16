@@ -5,12 +5,13 @@ import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.util.MapHelper;
 import org.primefaces.model.chart.*;
 
-import java.text.SimpleDateFormat;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 class DashboardChartsFactory
 {
-    private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+    private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     static BarChartModel createActivityTypesChart(final Map<Integer, Integer> actionsMap)
     {
@@ -81,7 +82,7 @@ class DashboardChartsFactory
 
         for(Date date = start.getTime(); start.before(end); start.add(Calendar.DATE, 1), date = start.getTime())
         {
-            String dateKey = dateFormat.format(date);
+            String dateKey = dateFormat.format(date.toInstant().atZone(ZoneId.systemDefault()));
             interactions.set(dateKey, actionsCountPerDay.getOrDefault(dateKey, 0));
         }
 
