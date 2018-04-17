@@ -62,8 +62,15 @@ class DashboardChartsFactory
         model.setLegendPosition("w");
         model.setLegendPlacement(LegendPlacement.OUTSIDEGRID);
 
-        for(Map.Entry<String, Integer> source : glossarySourcesWithCounters.entrySet())
-            model.set(source.getKey(), source.getValue());
+        if(glossarySourcesWithCounters.isEmpty())
+        {
+            model.set("", 0);
+        }
+        else
+        {
+            for(Map.Entry<String, Integer> source : glossarySourcesWithCounters.entrySet())
+                model.set(source.getKey(), source.getValue());
+        }
 
         return model;
     }
@@ -103,27 +110,42 @@ class DashboardChartsFactory
         BarChartModel model = new BarChartModel();
 
         ChartSeries concepts = new ChartSeries();
+        concepts.setLabel("Concepts");
+
         ChartSeries terms = new ChartSeries();
+        terms.setLabel("Terms");
 
-        for(String key : glossaryConceptsCountPerUser.keySet())
+        if(glossaryConceptsCountPerUser.isEmpty())
         {
-            concepts.set(key, glossaryConceptsCountPerUser.getOrDefault(key, 0));
+            concepts.set("", 0);
+        }
+        else
+        {
+            for(String key : glossaryConceptsCountPerUser.keySet())
+            {
+                concepts.set(key, glossaryConceptsCountPerUser.getOrDefault(key, 0));
+            }
         }
 
-        for(String key : glossaryTermsCountPerUser.keySet())
+        if(glossaryTermsCountPerUser.isEmpty())
         {
-            terms.set(key, glossaryTermsCountPerUser.getOrDefault(key, 0));
+            terms.set("", 0);
         }
-
-        concepts.setLabel("concepts");
-        terms.setLabel("terms");
+        else
+        {
+            for(String key : glossaryTermsCountPerUser.keySet())
+            {
+                terms.set(key, glossaryTermsCountPerUser.getOrDefault(key, 0));
+            }
+        }
 
         model.addSeries(concepts);
         model.addSeries(terms);
-
         model.setLegendPosition("ne");
+
         Axis xAxis = model.getAxis(AxisType.X);
         xAxis.setTickAngle(-60);
+
         Axis yAxis = model.getAxis(AxisType.Y);
         yAxis.setMin(0);
 
@@ -135,18 +157,20 @@ class DashboardChartsFactory
         BarChartModel model = new BarChartModel();
         BarChartSeries proxySource = new BarChartSeries();
 
-        Map<String, Integer> mappa = MapHelper.sortByValue(proxySourcesWithCounters);
-        for(Map.Entry<String, Integer> e : mappa.entrySet())
+        if(proxySourcesWithCounters.isEmpty())
         {
-            proxySource.set(e.getKey(), e.getValue());
+            proxySource.set("", 0);
         }
-
-        if(proxySource.getData().isEmpty())
+        else
         {
-            proxySource.set("1", 0);
+            for(Map.Entry<String, Integer> e : MapHelper.sortByValue(proxySourcesWithCounters).entrySet())
+            {
+                proxySource.set(e.getKey(), e.getValue());
+            }
         }
 
         model.addSeries(proxySource);
+
         Axis xAxis = model.getAxis(AxisType.X);
         xAxis.setTickAngle(-60);
 
@@ -161,7 +185,11 @@ class DashboardChartsFactory
         BarChartModel model = new BarChartModel();
         ChartSeries activity = new ChartSeries();
 
-        if(glossaryFieldSummeryPerUser.size() > 0)
+        if(glossaryFieldSummeryPerUser.isEmpty())
+        {
+            activity.set("", 0);
+        }
+        else
         {
             DashboardManager.GlossaryFieldSummery gfs = glossaryFieldSummeryPerUser.get(0);
             activity.set("pronounciation", gfs.getPronounciation());

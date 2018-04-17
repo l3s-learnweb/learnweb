@@ -1,257 +1,303 @@
 <ui:composition template="/templates/main/main.xhtml"
-	xmlns:ui="http://java.sun.com/jsf/facelets"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:p="http://primefaces.org/ui">
+                xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html"
+                xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
 
-	<ui:define name="metadata">
-		<f:metadata>
-			<f:viewAction action="#{dashboardBean.onLoad}"/>
-		</f:metadata>
-	</ui:define>
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:viewAction action="#{dashboardBean.onLoad}"/>
+        </f:metadata>
+    </ui:define>
 
-	<ui:param name="loginRequired" value="true"/>
-	<ui:param name="pageTitle" value="Dashboard"/>
+    <ui:param name="loginRequired" value="true"/>
+    <ui:param name="pageTitle" value="Dashboard"/>
 
-	<style>
-		ul {
-			list-style: none;
-		}
-	</style>
+    <style>
+        ul {
+            list-style: none;
+        }
+    </style>
 
-	<ui:define name="center_layout">
-		<div class="ui-g" style="margin: 5px;">
-			<div class="ui-g-12 ui-md-2">
-				<div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
-					<div class="center-header" id="group_header" style="margin-right: 0">
-						<h2>Student List</h2>
-					</div>
+    <ui:define name="center_layout">
+        <div class="ui-g" style="margin: 5px;">
+            <div class="ui-g-12 ui-md-2">
+                <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+                    <div class="center-header" id="group_header" style="margin-right: 0">
+                        <h2>Student List</h2>
+                    </div>
 
-					<div class="menu_section" style="height: calc(100vh - 102px); overflow-y: auto; width: 100%;">
-						<p:dataList id="studentsList" value="#{dashboardBean.studentsList}" var="user" type="ordered">
-							<a target="_blank" href="admin/dashboard/student.jsf?studentId=#{user.id}">
-								<h:outputText value="#{user.username}"/>
-							</a>
-						</p:dataList>
-					</div>
-				</div>
-			</div>
-			<div class="ui-g-12 ui-md-10 ui-g-nopad">
-				<div class="ui-g-12 ui-g-nopad">
-					<div class="center-header" id="group_header">
-						<h2>Students' Activities</h2>
-						<span class="header_detail">All student interactions</span>
-					</div>
+                    <div class="menu_section" style="height: calc(100vh - 102px); overflow-y: auto; width: 100%;">
+                        <p:dataList id="studentsList" value="#{dashboardBean.studentsList}" var="user" type="ordered">
+                            <a target="_blank" href="admin/dashboard/student.jsf?studentId=#{user.id}">
+                                <h:outputText value="#{user.username}"/>
+                            </a>
+                        </p:dataList>
+                    </div>
+                </div>
+            </div>
+            <div class="ui-g-12 ui-md-10 ui-g-nopad">
+                <div class="ui-g-12 ui-g-nopad">
+                    <div class="center-header student-activities" id="group_header">
+                        <h2>Students' Activities</h2>
+                        <span class="header_detail">All student interactions</span>
+                    </div>
 
-					<h:panelGroup id="dashboardMain" styleClass="dashboard" layout="block">
-						<div class="ui-g">
-							<div class="ui-g-12">
-								<p:panel id="students-select" header="Select Students" toggleable="true" collapsed="true" toggleSpeed="500" closeSpeed="500" style="margin-bottom:20px">
-									<h:form id="user_form" style="padding:0px 5px;" prependId="false">
-										<ui:include src="/lw/templates/user_select_form.xhtml" />
-										<p:commandButton style="margin-top:5px;" actionListener="#{dashboardBean.onSubmitSelectedUsers}" value="Gather data of selected users" process="@form" update=":dashboardMain :studentsList"/>
-									</h:form>
-								</p:panel>
-							</div>
-						</div>
-						<div class="ui-g">
-							<div class="ui-g-3">
-								<p:panel header="Total Concepts">
-									<div class="count">
-										<h:outputText value="#{dashboardBean.totalConcepts}"/>
-									</div>
-								</p:panel>
-							</div>
-							<div class="ui-g-3">
-								<p:panel header="Total Terms">
-									<div class="count">
-										<h:outputText value="#{dashboardBean.totalTerms}"/>
-									</div>
-								</p:panel>
-							</div>
-							<div class="ui-g-6">
-								<h:form id="dateForm">
-									<div class="ui-g ui-fluid">
-										<div class="ui-g-12 ui-md-4">
-											<div class="ui-inputgroup">
-												<p:outputLabel for="dateStart"/>
-												<p:calendar id="dateStart" value="#{dashboardBean.startDate}"
-															showOn="button"/>
-											</div>
-										</div>
+                    <h:panelGroup id="dashboardOptions" styleClass="dashboard" layout="block">
+                        <div class="ui-g">
+                            <div class="ui-g-9">
+                                <h:form id="dateForm">
+                                    <div class="ui-g ui-fluid">
+                                        <div class="ui-g-12 ui-md-4">
+                                            <div class="ui-inputgroup">
+                                                <p:outputLabel for="dateStart"/>
+                                                <p:calendar id="dateStart" value="#{dashboardBean.startDate}"
+                                                            showOn="button"/>
+                                            </div>
+                                        </div>
 
-										<div class="ui-g-12 ui-md-4">
-											<div class="ui-inputgroup">
-												<p:outputLabel for="dateEnd"/>
-												<p:calendar id="dateEnd" value="#{dashboardBean.endDate}" showOn="button"/>
-											</div>
-										</div>
+                                        <div class="ui-g-12 ui-md-4">
+                                            <div class="ui-inputgroup">
+                                                <p:outputLabel for="dateEnd"/>
+                                                <p:calendar id="dateEnd" value="#{dashboardBean.endDate}"
+                                                            showOn="button"/>
+                                            </div>
+                                        </div>
 
-										<div class="ui-g-12 ui-md-4">
-											<div class="ui-inputgroup">
-												<p:commandButton value="Update" update=":dashboardMain :growl"
-																 actionListener="#{dashboardBean.cleanAndUpdateStoredData}"
-																 icon="ui-icon-check"/>
-											</div>
-										</div>
-									</div>
-								</h:form>
-							</div>
-						</div>
+                                        <div class="ui-g-12 ui-md-4">
+                                            <div class="ui-inputgroup">
+                                                <p:commandButton value="Update" update=":dashboardMain :growl"
+                                                                 actionListener="#{dashboardBean.cleanAndUpdateStoredData}"
+                                                                 icon="ui-icon-check"/>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </h:form>
+                            </div>
+                            <div class="ui-g-3">
+                                <div class="ui-g ui-fluid">
+                                    <div class="ui-md-12">
+                                        <p:commandButton value="Select Students" type="button" onclick="PF('dlg2').show();"/>
+                                        <p:dialog header="Select Students" widgetVar="dlg2" modal="true" height="300" width="450">
+                                            <h:form id="user_form" style="padding:0 5px;" prependId="false">
+                                                <div style="overflow-y: auto; max-height: 265px;">
+                                                    <ui:include src="/lw/templates/user_select_form.xhtml"/>
+                                                </div>
+                                                <p:commandButton style="margin-top:5px;"
+                                                                 actionListener="#{dashboardBean.onSubmitSelectedUsers}"
+                                                                 value="Gather data of selected users" process="@form"
+                                                                 update=":dashboardMain :studentsList"/>
+                                            </h:form>
+                                        </p:dialog>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </h:panelGroup>
 
-						<div class="ui-g">
-							<div class="ui-g-9">
-								<p:panel id="chart_plot_01" header="Interactions" style="margin-bottom:20px">
-									<p:chart type="line" model="#{dashboardBean.interactionsChart}" style="height:300px;"/>
-								</p:panel>
-							</div>
-							<div class="ui-g-3">
-								<p:panel id="chart_barModel" header="Students' Activity types" style="margin-bottom:20px">
-									<p:chart type="bar" model="#{dashboardBean.studentsActivityTypesChart}" xaxisAngle="60"
-											 style="height:300px"/>
-								</p:panel>
-							</div>
-						</div>
-						<div class="ui-g">
-							<div class="ui-g-4">
-								<h:form>
-									<p:panel id="chart_barModel_stSources" header="Students' Source" style="margin-bottom:20px">
-										<p:chart type="pie" model="#{dashboardBean.studentsSourcesChart}"/>
-									</p:panel>
-								</h:form>
-							</div>
-							<div class="ui-g-8">
-								<h:form>
-									<p:panel id="glossary" header="Students' Glossary" style="margin-bottom:20px">
-										<p:chart type="bar" model="#{dashboardBean.studentsGlossaryChart}" style="height:300px"/>
-									</p:panel>
-								</h:form>
-							</div>
-						</div>
-						<div class="ui-g">
-							<div class="ui-g-12">
-								<h:form>
-									<p:panel id="fields" header="Fields" style="margin-bottom:20px">
-										<h:panelGrid columns="1">
-											<p:dataTable value="#{dashboardBean.glossaryFieldsSummeryPerUser}" var="gfs" styleClass="countries_list">
-												<p:column headerText="#{msg.username}" sortable="true" sortBy="#{gfs.user.username}" filterable="true" filterBy="#{gfs.user.username}" filterMatchMode="contains">
-													<!-- <a href="dashboard.jsf?user_id=#{gfs.userId}"> -->#{gfs.user.username}
-												</p:column>
-												<p:column styleClass="align-right" headerText="Terms" sortBy="#{gfs.total}" sortable="true">
-													#{gfs.total}
-												</p:column>
-												<p:column styleClass="align-right" sortBy="#{gfs.pronounciation/gfs.total}" sortable="true">
-													<f:facet name="header">Pronunciation</f:facet>
+                    <h:panelGroup id="dashboardMain" styleClass="dashboard" layout="block">
+                        <div class="ui-g">
+                            <div class="ui-g-6">
+                                <p:panel header="Total Concepts">
+                                    <div class="count">
+                                        <h:outputText value="#{dashboardBean.totalConcepts}"/>
+                                    </div>
+                                </p:panel>
+                            </div>
+                            <div class="ui-g-6">
+                                <p:panel header="Total Terms">
+                                    <div class="count">
+                                        <h:outputText value="#{dashboardBean.totalTerms}"/>
+                                    </div>
+                                </p:panel>
+                            </div>
+                        </div>
 
-													<h:outputText value="#{gfs.pronounciation/gfs.total*100}">
-														<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
-													</h:outputText>%
-												</p:column>
-												<p:column styleClass="align-right" sortBy="#{gfs.acronym/gfs.total}" sortable="true">
-													<f:facet name="header">Acronym</f:facet>
-													<h:outputText value="#{gfs.acronym/gfs.total*100}">
-														<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
-													</h:outputText>%
-												</p:column>
-												<p:column styleClass="align-right" sortBy="#{gfs.phraseology/gfs.total}" sortable="true">
-													<f:facet name="header">Phraseology</f:facet>
-													<h:outputText value="#{gfs.phraseology/gfs.total*100}">
-														<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
-													</h:outputText>%
-												</p:column>
-												<p:column styleClass="align-right" sortBy="#{gfs.uses/gfs.total}" sortable="true">
-													<f:facet name="header">Uses</f:facet>
-													<h:outputText value="#{gfs.uses/gfs.total*100}">
-														<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
-													</h:outputText>%
-												</p:column>
-												<p:column styleClass="align-right" sortBy="#{gfs.source/gfs.total}" sortable="true">
-													<f:facet name="header">Source</f:facet>
-													<h:outputText value="#{gfs.source/gfs.total*100}">
-														<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
-													</h:outputText>%
-												</p:column>
-												<p:column styleClass="align-right" sortBy="#{gfs.avg}" sortable="true">
-													<f:facet name="header">AVG %</f:facet>
-													<h:outputText value="#{gfs.avg*100}">
-														<f:convertNumber locale="#{userBean.locale}" maxFractionDigits="2" minFractionDigits="2" />
-													</h:outputText>%
-												</p:column>
-											</p:dataTable>
-										</h:panelGrid>
-									</p:panel>
-								</h:form>
-							</div>
-						</div>
-						<div class="ui-g">
-							<div class="ui-g-6">
-								<h:form>
-									<p:panel id="summary" header="Summary" style="margin-bottom:20px">
-										<h:panelGrid columns="1">
-											<p:dataTable var="gs" value="#{dashboardBean.glossaryStatisticPerUser}" styleClass="countries_list">
-												<p:column headerText="#{msg.username}" sortable="true" sortBy="#{gs.user.username}" filterable="true" filterBy="#{gs.user.username}" filterMatchMode="contains">
-													#{gs.user.username}
-												</p:column>
+                        <div class="ui-g">
+                            <div class="ui-g-9">
+                                <p:panel id="chart_plot_01" header="Interactions" style="margin-bottom:20px">
+                                    <p:chart type="line" model="#{dashboardBean.interactionsChart}"
+                                             style="height:300px;"/>
+                                </p:panel>
+                            </div>
+                            <div class="ui-g-3">
+                                <p:panel id="chart_barModel" header="Students' Activity types"
+                                         style="margin-bottom:20px">
+                                    <p:chart type="bar" model="#{dashboardBean.studentsActivityTypesChart}"
+                                             xaxisAngle="60"
+                                             style="height:300px"/>
+                                </p:panel>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-4">
+                                <h:form>
+                                    <p:panel id="chart_barModel_stSources" header="Students' Source"
+                                             style="margin-bottom:20px">
+                                        <p:chart type="pie" model="#{dashboardBean.studentsSourcesChart}"/>
+                                    </p:panel>
+                                </h:form>
+                            </div>
+                            <div class="ui-g-8">
+                                <h:form>
+                                    <p:panel id="glossary" header="Students' Glossary" style="margin-bottom:20px">
+                                        <p:chart type="bar" model="#{dashboardBean.studentsGlossaryChart}"
+                                                 style="height:300px"/>
+                                    </p:panel>
+                                </h:form>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-12">
+                                <h:form>
+                                    <p:panel id="fields" header="Fields" style="margin-bottom:20px">
+                                        <h:panelGrid columns="1">
+                                            <p:dataTable value="#{dashboardBean.glossaryFieldsSummeryPerUser}" var="gfs"
+                                                         styleClass="countries_list">
+                                                <p:column headerText="#{msg.username}" sortable="true"
+                                                          sortBy="#{gfs.user.username}" filterable="true"
+                                                          filterBy="#{gfs.user.username}" filterMatchMode="contains">
+                                                    <!-- <a href="dashboard.jsf?user_id=#{gfs.userId}"> -->#{gfs.user.username}
+                                                </p:column>
+                                                <p:column styleClass="align-right" headerText="Terms"
+                                                          sortBy="#{gfs.total}" sortable="true">
+                                                    #{gfs.total}
+                                                </p:column>
+                                                <p:column styleClass="align-right"
+                                                          sortBy="#{gfs.pronounciation/gfs.total}" sortable="true">
+                                                    <f:facet name="header">Pronunciation</f:facet>
 
-												<p:column styleClass="align-right" headerText="Sources" sortBy="#{gs.totalReferences}" sortable="true">
-													#{gs.totalReferences}
-												</p:column>
+                                                    <h:outputText value="#{gfs.pronounciation/gfs.total*100}">
+                                                        <f:convertNumber locale="#{userBean.locale}"
+                                                                         maxFractionDigits="2" minFractionDigits="2"/>
+                                                    </h:outputText>%
+                                                </p:column>
+                                                <p:column styleClass="align-right" sortBy="#{gfs.acronym/gfs.total}"
+                                                          sortable="true">
+                                                    <f:facet name="header">Acronym</f:facet>
+                                                    <h:outputText value="#{gfs.acronym/gfs.total*100}">
+                                                        <f:convertNumber locale="#{userBean.locale}"
+                                                                         maxFractionDigits="2" minFractionDigits="2"/>
+                                                    </h:outputText>%
+                                                </p:column>
+                                                <p:column styleClass="align-right" sortBy="#{gfs.phraseology/gfs.total}"
+                                                          sortable="true">
+                                                    <f:facet name="header">Phraseology</f:facet>
+                                                    <h:outputText value="#{gfs.phraseology/gfs.total*100}">
+                                                        <f:convertNumber locale="#{userBean.locale}"
+                                                                         maxFractionDigits="2" minFractionDigits="2"/>
+                                                    </h:outputText>%
+                                                </p:column>
+                                                <p:column styleClass="align-right" sortBy="#{gfs.uses/gfs.total}"
+                                                          sortable="true">
+                                                    <f:facet name="header">Uses</f:facet>
+                                                    <h:outputText value="#{gfs.uses/gfs.total*100}">
+                                                        <f:convertNumber locale="#{userBean.locale}"
+                                                                         maxFractionDigits="2" minFractionDigits="2"/>
+                                                    </h:outputText>%
+                                                </p:column>
+                                                <p:column styleClass="align-right" sortBy="#{gfs.source/gfs.total}"
+                                                          sortable="true">
+                                                    <f:facet name="header">Source</f:facet>
+                                                    <h:outputText value="#{gfs.source/gfs.total*100}">
+                                                        <f:convertNumber locale="#{userBean.locale}"
+                                                                         maxFractionDigits="2" minFractionDigits="2"/>
+                                                    </h:outputText>%
+                                                </p:column>
+                                                <p:column styleClass="align-right" sortBy="#{gfs.avg}" sortable="true">
+                                                    <f:facet name="header">AVG %</f:facet>
+                                                    <h:outputText value="#{gfs.avg*100}">
+                                                        <f:convertNumber locale="#{userBean.locale}"
+                                                                         maxFractionDigits="2" minFractionDigits="2"/>
+                                                    </h:outputText>%
+                                                </p:column>
+                                            </p:dataTable>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </h:form>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-12">
+                                <h:form>
+                                    <p:panel id="summary" header="Summary" style="margin-bottom:20px">
+                                        <h:panelGrid columns="1">
+                                            <p:dataTable var="gs" value="#{dashboardBean.glossaryStatisticPerUser}"
+                                                         styleClass="countries_list">
+                                                <p:column headerText="#{msg.username}" sortable="true"
+                                                          sortBy="#{gs.user.username}" filterable="true"
+                                                          filterBy="#{gs.user.username}" filterMatchMode="contains">
+                                                    #{gs.user.username}
+                                                </p:column>
 
-												<p:column styleClass="align-right" headerText="Terms" sortBy="#{gs.totalTerms}" sortable="true">
-													#{gs.totalTerms}
-												</p:column>
+                                                <p:column styleClass="align-right" headerText="Sources"
+                                                          sortBy="#{gs.totalReferences}" sortable="true">
+                                                    #{gs.totalReferences}
+                                                </p:column>
 
-												<p:column styleClass="align-right" headerText="Concepts" sortBy="#{gs.totalGlossaries}" sortable="true">
-													#{gs.totalGlossaries}
-												</p:column>
-											</p:dataTable>
-										</h:panelGrid>
-									</p:panel>
-								</h:form>
-							</div>
-							<div class="ui-g-6">
-								<h:form>
-									<p:panel id="description" header="Description field" style="margin-bottom:20px">
-										<h:panelGrid columns="1">
-											<p:dataTable var="ldl" value="#{dashboardBean.descFieldsStatistic}"
-														 styleClass="countries_list">
-												<p:column headerText="Id">
-													<h:outputText value="#{ldl.userId}"/>
-												</p:column>
+                                                <p:column styleClass="align-right" headerText="Terms"
+                                                          sortBy="#{gs.totalTerms}" sortable="true">
+                                                    #{gs.totalTerms}
+                                                </p:column>
 
-												<p:column headerText="entry id">
-													<h:outputText value="#{ldl.entryId}"/>
-												</p:column>
+                                                <p:column styleClass="align-right" headerText="Concepts"
+                                                          sortBy="#{gs.totalGlossaries}" sortable="true">
+                                                    #{gs.totalGlossaries}
+                                                </p:column>
+                                            </p:dataTable>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </h:form>
+                            </div>
+                            <!--<div class="ui-g-6">
+                                <h:form>
+                                    <p:panel id="description" header="Description field" style="margin-bottom:20px">
+                                        <h:panelGrid columns="1">
+                                            <p:dataTable var="ldl" value="#{dashboardBean.descFieldsStatistic}"
+                                                         styleClass="countries_list">
+                                                <p:column headerText="#{msg.username}" sortable="true"
+                                                          sortBy="#{ldl.user.username}" filterable="true"
+                                                          filterBy="#{ldl.user.username}" filterMatchMode="contains">
+                                                    #{ldl.user.username}
+                                                </p:column>
 
-												<p:column headerText="lang">
-													<h:outputText value="#{ldl.lang}"/>
-												</p:column>
+                                                <p:column styleClass="align-right" headerText="Entry id"
+                                                          sortBy="#{ldl.entryId}" sortable="true">
+                                                    #{ldl.entryId}
+                                                </p:column>
 
-												<p:column headerText="description">
-													<h:outputText value="#{ldl.description}"/>
-												</p:column>
+                                                <p:column styleClass="align-right" headerText="Lang"
+                                                          sortBy="#{ldl.lang}" sortable="true">
+                                                    #{ldl.lang}
+                                                </p:column>
 
-												<p:column headerText="lenght">
-													<h:outputText value="#{ldl.length}"/>
-												</p:column>
-											</p:dataTable>
-										</h:panelGrid>
-									</p:panel>
-								</h:form>
-							</div>
-						</div>
-					</h:panelGroup>
-				</div>
-			</div>
+                                                <p:column styleClass="align-right" headerText="Description"
+                                                          sortBy="#{ldl.description}" sortable="true">
+                                                    #{ldl.description}
+                                                </p:column>
+
+                                                <p:column styleClass="align-right" headerText="Lenght"
+                                                          sortBy="#{ldl.length}" sortable="true">
+                                                    #{ldl.length}
+                                                </p:column>
+                                            </p:dataTable>
+                                        </h:panelGrid>
+                                    </p:panel>
+                                </h:form>
+                            </div>-->
+                        </div>
+                    </h:panelGroup>
+                </div>
+            </div>
 
 
-			<footer>
-				<div class="pull-right">
-					Davide Taibi
-					<a href="http://www.itd.cnr.it">CNR-ITD</a>
-				</div>
-				<div class="clearfix"></div>
-			</footer>
-		</div>
-	</ui:define>
+            <footer>
+                <div class="pull-right">
+                    Davide Taibi
+                    <a href="http://www.itd.cnr.it">CNR-ITD</a>
+                </div>
+                <div class="clearfix"></div>
+            </footer>
+        </div>
+    </ui:define>
 </ui:composition>

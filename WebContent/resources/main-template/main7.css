@@ -1021,10 +1021,14 @@ a.graybutton:focus {
 }
 #group_header {
 	margin-bottom: 0px;
-	margin-right: 8px;
+	margin-right: 6px;
 	box-shadow: 1px 1px 1px 0 rgba(0, 0, 0, 0.1), 0px 2px 4px -1px rgba(255,250,250,0.8);
 	z-index: 10;
 	position: relative;
+}
+
+.student-activities {
+	margin-left: 6px;
 }
 
 #group_header + .ui-layout-unit-content .content {

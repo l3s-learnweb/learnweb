@@ -551,13 +551,36 @@ public class DashboardManager
         }
     }
 
-    public class DescFieldData
+    public static class DescFieldData implements Serializable
     {
+        private static final long serialVersionUID = -4378112533840640208L;
         Integer userId;
         String description;
         String lang;
         Integer length;
         Integer entryId;
+
+        private transient User user;
+
+        public DescFieldData()
+        {
+        }
+
+        public User getUser()
+        {
+            if(null == user && userId > 0)
+            {
+                try
+                {
+                    user = Learnweb.getInstance().getUserManager().getUser(userId);
+                }
+                catch(SQLException e)
+                {
+                    log.fatal("can't get user: " + userId, e);
+                }
+            }
+            return user;
+        }
 
         public String getDescription()
         {
