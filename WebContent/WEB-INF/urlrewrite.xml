@@ -16,6 +16,11 @@
 	</rule>
 	 -->
 	<rule>
+		<from>/lw/wizard=(.*)</from>
+		<to type="redirect">%{context-path}/lw/user/register.jsf?wizard=$1</to>
+	</rule>
+
+	<rule>
 		<from>/archive/(.*)</from>
 		<to type="redirect">http://alexandria-project.eu/archivesearch/$1</to>
 	</rule>
