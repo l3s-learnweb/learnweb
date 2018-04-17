@@ -2,89 +2,46 @@ package de.l3s.learnweb;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 
-public class Survey implements Serializable
+import de.l3s.util.HasId;
+
+/**
+ * This class contains only the questions of a survey.
+ * An instance of this class may be used by many SurveyResource instances.
+ *
+ * @author Philipp
+ *
+ */
+public class Survey implements Serializable, HasId
 {
     private static final long serialVersionUID = -7478683722354893077L;
 
-    private boolean submitted = false;
-    private Date start;
-    private Date end;
-    private boolean editable;
-
-    private int surveyId;
-    private int resourceId;
-
-    private String surveyTitle;
+    private int id = -1;
+    private String title;
     private String description;
-    private int organizationId;
+    private int organizationId; // if <> 0 only the specified organization can use this survey
 
-    private ArrayList<SurveyMetaDataFields> formQuestions = new ArrayList<SurveyMetaDataFields>();
+    private ArrayList<SurveyMetaDataFields> questions = new ArrayList<SurveyMetaDataFields>();
 
-    private HashMap<String, String> wrappedAnswers = new HashMap<String, String>();
-
-    private HashMap<String, String[]> wrappedMultipleAnswers = new HashMap<String, String[]>();
-
-    public boolean isSubmitted()
+    @Override
+    public int getId()
     {
-        return submitted;
+        return id;
     }
 
-    public void setSubmitted(boolean submitted)
+    protected void setId(int id)
     {
-        this.submitted = submitted;
+        this.id = id;
     }
 
-    public Date getStart()
+    public String getTitle()
     {
-        return start;
+        return title;
     }
 
-    public void setStart(Date start)
+    public void setTitle(String title)
     {
-        this.start = start;
-    }
-
-    public Date getEnd()
-    {
-        return end;
-    }
-
-    public void setEnd(Date end)
-    {
-        this.end = end;
-    }
-
-    public int getSurveyId()
-    {
-        return surveyId;
-    }
-
-    public void setSurveyId(int survey_id)
-    {
-        this.surveyId = survey_id;
-    }
-
-    public int getResourceId()
-    {
-        return resourceId;
-    }
-
-    public void setResourceId(int resource_id)
-    {
-        this.resourceId = resource_id;
-    }
-
-    public String getSurveyTitle()
-    {
-        return surveyTitle;
-    }
-
-    public void setSurveyTitle(String surveyTitle)
-    {
-        this.surveyTitle = surveyTitle;
+        this.title = title;
     }
 
     public String getDescription()
@@ -97,16 +54,6 @@ public class Survey implements Serializable
         this.description = description;
     }
 
-    public ArrayList<SurveyMetaDataFields> getFormQuestions()
-    {
-        return formQuestions;
-    }
-
-    public void setFormQuestions(ArrayList<SurveyMetaDataFields> formQuestions)
-    {
-        this.formQuestions = formQuestions;
-    }
-
     public int getOrganizationId()
     {
         return organizationId;
@@ -117,34 +64,8 @@ public class Survey implements Serializable
         this.organizationId = organizationId;
     }
 
-    public HashMap<String, String> getWrappedAnswers()
+    public ArrayList<SurveyMetaDataFields> getQuestions()
     {
-        return wrappedAnswers;
+        return questions;
     }
-
-    public void setWrappedAnswers(HashMap<String, String> wrappedAnswers)
-    {
-        this.wrappedAnswers = wrappedAnswers;
-    }
-
-    public HashMap<String, String[]> getWrappedMultipleAnswers()
-    {
-        return wrappedMultipleAnswers;
-    }
-
-    public void setWrappedMultipleAnswers(HashMap<String, String[]> wrappedMultipleAnswers)
-    {
-        this.wrappedMultipleAnswers = wrappedMultipleAnswers;
-    }
-
-    public boolean isEditable()
-    {
-        return editable;
-    }
-
-    public void setEditable(boolean editable)
-    {
-        this.editable = editable;
-    }
-
 }

@@ -26,13 +26,13 @@ public class Submission implements Serializable
     //Fields to handle link display based on survey submitted or not
     private String surveyURL;
     private int surveyResourceId = -1;
-    private Survey surveyResource;
     private boolean surveyMandatory = false;
     private boolean submitted = false;
     private List<Resource> submittedResources;
 
     private transient Course course;
     private transient List<SubmittedResources> submittedResourcesGroupedByUser;
+    private SurveyUserAnswers surveyAnswer;
 
     public Submission()
     {
@@ -180,15 +180,16 @@ public class Submission implements Serializable
 
     public boolean isSurveySubmitted(int userId)
     {
-
         if(!surveyMandatory)
             return true;
 
-        if(surveyResourceId > 0 && surveyResource == null)
+        // load surveyAnswer
+        if(surveyResourceId > 0 && surveyAnswer == null)
         {
             try
             {
-                surveyResource = Learnweb.getInstance().getSurveyManager().getSurveyByUserId(surveyResourceId, userId);
+                SurveyResource surveyResource = (SurveyResource) Learnweb.getInstance().getResourceManager().getResource(surveyResourceId);
+                surveyAnswer = surveyResource.getAnswersOfUser(userId);
             }
             catch(SQLException e)
             {
@@ -196,8 +197,8 @@ public class Submission implements Serializable
             }
         }
 
-        if(surveyResource != null)
-            return this.surveyResource.isSubmitted();
+        if(surveyAnswer != null)
+            return surveyAnswer.isSubmitted();
 
         return false;
     }

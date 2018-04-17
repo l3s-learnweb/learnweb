@@ -269,7 +269,11 @@ public class ApplicationBean
         Logger.getLogger(ApplicationBean.class).fatal((desc != null ? desc : "Fatal unhandled error") + "; " + BeanHelper.getRequestSummary(), exception);
     }
 
-    protected void addInvalidParameterMessage(String... parameter)
+    /**
+     *
+     * @param parameter invalid parameters
+     */
+    protected void addInvalidParameterMessage(String parameter)
     {
         addMessage(FacesMessage.SEVERITY_FATAL, "Invalid Parameter given. Check the URL you used.");
         //addGrowl(FacesMessage.SEVERITY_FATAL, "fatal_error");

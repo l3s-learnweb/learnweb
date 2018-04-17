@@ -12,7 +12,7 @@ import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.SurveyAnswer;
+import de.l3s.learnweb.SurveyUserAnswers;
 
 @ViewScoped
 @ManagedBean
@@ -22,7 +22,7 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
     private static final Logger log = Logger.getLogger(SurveyResultBean.class);
     private int resourceId;
     private String title;
-    private List<SurveyAnswer> answers;
+    private List<SurveyUserAnswers> answers;
     private List<ColumnModel> columns;
 
     @PostConstruct
@@ -57,14 +57,13 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
     private void getSurveyResult()
     {
         columns = new ArrayList<ColumnModel>();
-        LinkedHashMap<String, String> questions = new LinkedHashMap<String, String>();
         try
         {
 
-            questions = getLearnweb().getSurveyManager().getAnsweredQuestions(resourceId);
-            answers = getLearnweb().getSurveyManager().getAnswerByUser(getResourceId(), questions);
+            LinkedHashMap<Integer, String> questions = getLearnweb().getSurveyManager().getAnsweredQuestions(resourceId);
+            answers = getLearnweb().getSurveyManager().getAnswerOfAllUserForSurveyResource(getResourceId(), questions);
             int questionIndex = 1;
-            for(String qid : questions.keySet())
+            for(Integer qid : questions.keySet())
             {
                 ColumnModel col = new ColumnModel(questions.get(qid), qid, questionIndex);
                 columns.add(col);
@@ -97,7 +96,7 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
         this.title = title;
     }
 
-    public List<SurveyAnswer> getAnswers()
+    public List<SurveyUserAnswers> getAnswers()
     {
         return answers;
     }
@@ -111,10 +110,10 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
     {
         private static final long serialVersionUID = -8787608049574883366L;
         private String header;
-        private String id;
+        private int id;
         private int index;
 
-        public ColumnModel(String header, String id, int index)
+        public ColumnModel(String header, int id, int index)
         {
             this.header = header;
             this.id = id;
@@ -126,7 +125,7 @@ public class SurveyResultBean extends ApplicationBean implements Serializable
             return header;
         }
 
-        public String getId()
+        public int getId()
         {
             return id;
         }

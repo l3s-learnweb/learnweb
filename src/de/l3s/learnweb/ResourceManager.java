@@ -40,7 +40,7 @@ import de.l3s.util.StringHelper;
 public class ResourceManager
 {
     private final static String COMMENT_COLUMNS = "`comment_id`, `resource_id`, `user_id`, `text`, `date`";
-    private final static String RESOURCE_COLUMNS = "r.read_only_transcript, r.deleted, r.resource_id, r.title, r.description, r.url, r.storage_type, r.rights, r.source, r.language, r.type, r.format, r.owner_user_id, r.rating, r.rate_number, r.embedded_size1, r.embedded_size2, r.embedded_size3, r.embedded_size4, r.filename, r.max_image_url, r.query, r.original_resource_id, r.author, r.file_url, r.thumbnail0_url, r.thumbnail0_file_id, r.thumbnail0_width, r.thumbnail0_height, r.thumbnail1_url, r.thumbnail1_file_id, r.thumbnail1_width, r.thumbnail1_height, r.thumbnail2_url, r.thumbnail2_file_id, r.thumbnail2_width, r.thumbnail2_height, r.thumbnail3_url, r.thumbnail3_file_id, r.thumbnail3_width, r.thumbnail3_height, r.thumbnail4_url, r.thumbnail4_file_id, r.thumbnail4_width, r.thumbnail4_height, r.embeddedRaw, r.transcript, r.online_status, r.id_at_service, r.duration, r.restricted, r.resource_timestamp, r.creation_date, r.metadata, r.group_id, r.folder_id, r.mtype, r.msource";
+    public final static String RESOURCE_COLUMNS = "r.read_only_transcript, r.deleted, r.resource_id, r.title, r.description, r.url, r.storage_type, r.rights, r.source, r.language, r.type, r.format, r.owner_user_id, r.rating, r.rate_number, r.embedded_size1, r.embedded_size2, r.embedded_size3, r.embedded_size4, r.filename, r.max_image_url, r.query, r.original_resource_id, r.author, r.file_url, r.thumbnail0_url, r.thumbnail0_file_id, r.thumbnail0_width, r.thumbnail0_height, r.thumbnail1_url, r.thumbnail1_file_id, r.thumbnail1_width, r.thumbnail1_height, r.thumbnail2_url, r.thumbnail2_file_id, r.thumbnail2_width, r.thumbnail2_height, r.thumbnail3_url, r.thumbnail3_file_id, r.thumbnail3_width, r.thumbnail3_height, r.thumbnail4_url, r.thumbnail4_file_id, r.thumbnail4_width, r.thumbnail4_height, r.embeddedRaw, r.transcript, r.online_status, r.id_at_service, r.duration, r.restricted, r.resource_timestamp, r.creation_date, r.metadata, r.group_id, r.folder_id, r.mtype, r.msource";
 
     private final static Logger log = Logger.getLogger(ResourceManager.class);
 
@@ -368,7 +368,7 @@ public class ResourceManager
             Thumbnail tn = thumbnails[i];
             if(tn != null) // a thumbnail is defined
             {
-                if(tn.getFileId() == 0)
+                if(tn.getFileId() == 0) // TODO in the future don't save urls
                     url = tn.getUrl();
                 fileId = tn.getFileId();
                 width = tn.getWidth();
@@ -442,7 +442,7 @@ public class ResourceManager
         }
         resource = cache.put(resource);
 
-        resource.prepareEmbeddedCodes();
+        resource.setDefaultThumbnailIfNull();
 
         return resource;
     }
@@ -757,23 +757,23 @@ public class ResourceManager
     public AbstractPaginator getResourcesByGroupId(int groupId, Order order) throws SQLException
     {
         int results = getResourceCountByGroupId(groupId);
-    
+
         return new GroupPaginator(results, groupId, order);
     }
-    
+
     private static class GroupPaginator extends AbstractPaginator
     {
         private static final long serialVersionUID = 399863025926697377L;
         private final int groupId;
         private final Order order;
-    
+
         public GroupPaginator(int totalResults, int groupId, Order order)
         {
             super(totalResults);
             this.groupId = groupId;
             this.order = order;
         }
-    
+
         @Override
         public List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException
         {
@@ -805,7 +805,7 @@ public class ResourceManager
     public OwnerList<Resource, User> getResourcesByGroupId(int groupId, int page, int pageSize, Order order) throws SQLException
     {
     OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
-    
+
     PreparedStatement select = learnweb.getConnection().prepareStatement(
     	"SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
     select.setInt(1, groupId);
@@ -815,12 +815,12 @@ public class ResourceManager
     while(rs.next())
     {
         Resource resource = createResource(rs);
-    
+
         if(null != resource)
     	resources.add(resource.getOwnerUser(), resource.getCreationDate());
     }
     select.close();
-    
+
     return resources;
     }
     */
@@ -879,24 +879,24 @@ public class ResourceManager
         default:
             return "Learnweb";
         }
-        /*
-        if(resource.getSource().equals("TED"))
-        resource.setLocation("TED");
-        else if(resource.getSource().equals("TEDx"))
-        resource.setLocation("TEDx");
-        else if(resource.getSource().equals("TED-Ed"))
-        resource.setLocation("TED-Ed");
-        else if(resource.getSource().equals("LORO"))
-        resource.setLocation("LORO");
-        else if(resource.getSource().equals("Yovisto"))
-        resource.setLocation("Yovisto");
-        else if(resource.getSource().equals("Archive-It"))
-        resource.setLocation("Archive-It");
-        else if(resource.getSource().equals("FactCheck"))
-        resource.setLocation("FactCheck");
-        else
-        resource.setLocation("Learnweb");
-        */
+    }
+
+    /**
+     * Creates appropriate Resource instances based on the resource type.
+     * Necessary since some resource types extend the normal Resource class.
+     *
+     * @param type
+     * @return
+     */
+    private static Resource newResource(String type)
+    {
+        switch(type)
+        {
+        case "survey":
+            return new SurveyResource();
+        default:
+            return new Resource();
+        }
     }
 
     private Resource createResource(ResultSet rs) throws SQLException
@@ -906,8 +906,11 @@ public class ResourceManager
 
         if(null == resource)
         {
-            resource = new Resource();
+            String type = rs.getString("type");
+
+            resource = newResource(type);
             resource.setId(id);
+            resource.setType(type);
             resource.setTitle(rs.getString("title"));
             resource.setDescription(rs.getString("description"));
             resource.setUrl(rs.getString("url"));
@@ -916,7 +919,6 @@ public class ResourceManager
             resource.setSource(rs.getString("source"));
             resource.setAuthor(rs.getString("author"));
             resource.setFormat(rs.getString("format"));
-            resource.setType(rs.getString("type"));
             resource.setUserId(rs.getInt("owner_user_id"));
             resource.setRatingSum(rs.getInt("rating"));
             resource.setRateNumber(rs.getInt("rate_number"));
@@ -954,6 +956,7 @@ public class ResourceManager
             // This must be set manually because we stored some external sources in Learnweb/Solr
             resource.setLocation(getLocation(resource));
 
+            // TODO move to glossaryResource class
             if(resource.getType() != null && resource.getType().equals(ResourceType.glossary))
                 resource.setUrl(learnweb.getServerUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(resource.getId()));
 
@@ -997,7 +1000,7 @@ public class ResourceManager
                 }
             }
 
-            resource.prepareEmbeddedCodes();
+            resource.postConstruct();
             resource = cache.put(resource);
         }
         return resource;
@@ -1074,7 +1077,7 @@ public class ResourceManager
         resource.setTitle(searchResult.getTitle());
         resource.setLocation(searchResult.getService());
         resource.setSource(searchResult.getService());
-        resource.setViews(searchResult.getNumberOfViews());
+        //resource.setViews(searchResult.getNumberOfViews());
         resource.setIdAtService(searchResult.getIdAtService());
         resource.setDuration(searchResult.getDuration());
         resource.setDescription(searchResult.getDescription());
@@ -1283,7 +1286,7 @@ public class ResourceManager
      *
     public static void reindexAllResources() throws SQLException, ClassNotFoundException
     {
-    
+
     }
     */
 

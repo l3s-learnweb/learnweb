@@ -191,6 +191,7 @@ public class PeerAssessmentManager
         learnweb.onDestroy();
     }
 
+    @SuppressWarnings("unused")
     private void taskSetupPeerAssesmentRomeLeeds() throws SQLException
     {
         // setup for EU-Leeds and Rome

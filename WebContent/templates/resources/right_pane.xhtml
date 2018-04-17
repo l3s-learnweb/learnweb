@@ -184,20 +184,6 @@
                                 </p:row>
                                 <p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'survey'}">
                                     <p:column>
-                                        <h:outputText value="Courses: "/>
-                                    </p:column>
-                                    <p:column>
-                                        <p:selectCheckboxMenu id="courses"
-                                                              value="#{addResourceBean.resource.validCourses}"
-                                                              label="--ALL---" multiple="true" filter="true"
-                                                              filterMatchMode="startsWith">
-
-                                            <f:selectItems value="#{addResourceBean.getCourseList()}"/>
-                                        </p:selectCheckboxMenu>
-                                    </p:column>
-                                </p:row>
-                                <p:row rendered="#{addResourceBean.resource.storageType == 1 and addResourceBean.resource.type eq 'survey'}">
-                                    <p:column>
                                         <h:outputText value="survey Open Date: "/>
                                     </p:column>
                                     <p:column>

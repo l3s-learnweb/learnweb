@@ -1,7 +1,5 @@
 package de.l3s.learnweb;
 
-import java.io.IOException;
-import java.io.ObjectInputStream;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
@@ -82,7 +80,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     private int storageType = WEB_RESOURCE;
     private ResourceViewRights rights = ResourceViewRights.DEFAULT_RIGHTS;
     private String source = ""; // The place where the resource was found
-    private String location = ""; // The location where the resource (metadata) is stored; for example Learnweb, Flickr, Youtube ...
+    private String location = ""; // The location where the resource content (e.g. video) is stored; for example Learnweb, Flickr, Youtube ...
     private String language; // language code
     private String author = "";
     private ResourceType type;
@@ -110,8 +108,8 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     private Thumbnail thumbnail2c;
     private Thumbnail thumbnail3;
     private Thumbnail thumbnail4;
-    private String embeddedCode = null; // temporal
-    private String embeddedRaw;
+    private String embeddedRaw; // stored in the database
+    private String embeddedCode; // derived from type or embedded raw. Does not need to be stored in DB
     private String transcript; //To store the English transcripts for TED videos and saved articles
     private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
     private boolean restricted = false;
@@ -123,20 +121,11 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     private boolean readOnlyTranscript = false; //indicates resource transcript is read only for TED videos
     private LogEntry thumbnailUpdateInfo = null;
 
-    private int views;
     private int thumbUp = -1;
     private int thumbDown = -1;
     private HashMap<Integer, Boolean> isThumbRatedByUser = new HashMap<>(); // userId : hasRated
     private HashMap<Integer, Boolean> isRatedByUser = new HashMap<>(); // userId : hasRated
     private LinkedHashMap<Integer, File> files = new LinkedHashMap<>(); // resource_file_number : file
-
-    //Survey information
-    @Deprecated
-    private Date openDate; // TODO remove
-    @Deprecated
-    private Date closeDate; // TODO remove
-    @Deprecated
-    private String[] validCourses; // TODO remove
 
     //glossary information
     @Deprecated
@@ -168,6 +157,17 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     }
 
     /**
+     * Called by the ResorceManager after all setters have been called.
+     *
+     * @throws SQLException
+     *
+     */
+    protected void postConstruct() throws SQLException
+    {
+        setDefaultThumbnailIfNull();
+    }
+
+    /**
      * This constructor is used to create resources when returned from the learnweb resources table in order
      * to re-visit a previous result set of a query posted in the past.
      */
@@ -184,142 +184,21 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     }
 
     /**
-     * Chloe - extended constructor to include new metadata (language, author, media source and media type)
-     * when creating a new resource
+     * If no thumbnails have been assigend this method will create default thumbnails for the small thumbnails
      */
-    public Resource(int id, String description, String title, String source, int thumbnail_height, int thumbnail_width, String thumbnail_url, int thumbnail4_height, int thumbnail4_width, String thumbnail4_url, String url, String type, String author, String language, String mtype,
-            String msource)
+    public void setDefaultThumbnailIfNull()
     {
-        this.id = id;
-        this.description = description;
-        this.title = title;
-        this.source = source;
-        this.url = url;
-        this.setType(type);
-        this.language = language;
-        this.author = author;
-        this.mtype = mtype;
-        this.msource = msource;
-        setThumbnail2(new Thumbnail(thumbnail_url, thumbnail_width, thumbnail_height));
-        setThumbnail4(new Thumbnail(thumbnail4_url, thumbnail4_width, thumbnail4_height));
-    }
-
-    @Deprecated
-    public void prepareEmbeddedCodes()
-    {
-        Thumbnail dummyImage = new Thumbnail("https://learnweb.l3s.uni-hannover.de/javax.faces.resource/icon/grain.png.jsf?ln=lightbox", 200, 200);
-
-        if(null == thumbnail0)
-            setThumbnail0(dummyImage.resize(150, 120));
-        if(null == thumbnail1)
-            setThumbnail1(dummyImage.resize(150, 150));
-        if(null == thumbnail2)
-            setThumbnail2(dummyImage);
-
-        /*
-        if(null == thumbnail3)
-            setThumbnail3(dummyImage);
-        if(null == thumbnail4)
-            setThumbnail4(dummyImage);
-
-        /*
-        if(null == embeddedSize1 || null == embeddedSize3)
+        if(null == thumbnail0 || null == thumbnail1 || null == thumbnail2)
         {
+            Thumbnail dummyImage = new Thumbnail("https://learnweb.l3s.uni-hannover.de/javax.faces.resource/icon/grain.png.jsf?ln=lightbox", 200, 200);
 
-        if(source.equalsIgnoreCase("YouTube"))
-        {
-            Pattern pattern = Pattern.compile("v[/=]([^&]+)");
-            Matcher matcher = pattern.matcher(url);
-
-            if(matcher.find())
-            {
-                String videoId = matcher.group(1);
-                if(null == embeddedSize1)
-                    this.embeddedSize1 = "<img src=\"http://img.youtube.com/vi/" + videoId + "/default.jpg\" width=\"100\" height=\"75\" />";
-                if(null == embeddedSize3)
-                    this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
-                this.format = "application/x-shockwave-flash";
-
-                dummyImage = new Thumbnail("http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg", 320, 180);
-            }
+            if(null == thumbnail0)
+                setThumbnail0(dummyImage.resize(150, 120));
+            if(null == thumbnail1)
+                setThumbnail1(dummyImage.resize(150, 150));
+            if(null == thumbnail2)
+                setThumbnail2(dummyImage);
         }
-
-        else if(source.equals("Google") && type.equals(ResourceType.video))
-        {
-            Pattern pattern = Pattern.compile("youtube.com/watch%3Fv%3D([^&]+)");
-            Matcher matcher = pattern.matcher(url);
-
-            if(matcher.find())
-            {
-                String videoId = matcher.group(1);
-                this.embeddedSize1 = "<img src=\"http://img.youtube.com/vi/" + videoId + "/default.jpg\" width=\"100\" height=\"75\" />";
-                this.embeddedSize3 = "<embed pluginspage=\"http://www.adobe.com/go/getflashplayer\" src=\"http://www.youtube.com/v/" + videoId + "\" type=\"application/x-shockwave-flash\" height=\"375\" width=\"500\"></embed>";
-
-                this.format = "application/x-shockwave-flash";
-                this.source = "YouTube";
-                this.url = "https://www.youtube.com/watch?v=" + videoId;
-
-                dummyImage = new Thumbnail("http://img.youtube.com/vi/" + videoId + "/mqdefault.jpg", 320, 180);
-
-            }
-        }
-        else if(source.equalsIgnoreCase("Vimeo"))
-        {
-            Pattern pattern = Pattern.compile("vimeo\\.com/([^&]+)");
-            Matcher matcher = pattern.matcher(url);
-
-            if(matcher.find())
-            {
-                String videoId = matcher.group(1);
-                this.embeddedSize3 = "<object width=\"500\" height=\"375\"><param name=\"allowfullscreen\" value=\"true\" /><param name=\"allowscriptaccess\" value=\"always\" />" + "<param name=\"movie\" value=\"http://vimeo.com/moogaloop.swf?clip_id=" + videoId
-                        + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" /><embed src=\"http://vimeo.com/moogaloop.swf?clip_id=" + videoId
-                        + "&amp;server=vimeo.com&amp;show_title=1&amp;show_byline=1&amp;show_portrait=0&amp;color=&amp;fullscreen=1\" type=\"application/x-shockwave-flash\" allowfullscreen=\"true\" allowscriptaccess=\"always\" width=\"500\" height=\"375\"></embed></object>";
-                this.format = "application/x-shockwave-flash";
-
-            }
-
-        }
-        else if(source.equals("Ipernity") && embeddedSize1 != null)
-        {
-            if(type.equals(ResourceType.image))
-                embeddedSize3 = embeddedSize1.replace(".100.", ".500.");
-            else
-                embeddedSize3 = "<a href=\"" + url + "\">" + url + "</a>";
-        }
-        else if(source.equals("Flickr") && type.equals(ResourceType.image) && embeddedSize1 != null)
-        {
-            if(null == embeddedSize3)
-                embeddedSize3 = embeddedSize1.replace("_t.", ".");
-        }
-        }
-
-
-        if(dummyImage != null)
-        {
-        if(null == thumbnail0)
-            setThumbnail0(dummyImage.resize(150, 120));
-        if(null == thumbnail1)
-            setThumbnail1(dummyImage.resize(150, 150));
-        if(null == thumbnail2)
-            setThumbnail2(dummyImage);
-        if(null == thumbnail3)
-            setThumbnail3(dummyImage);
-        if(null == thumbnail4)
-            setThumbnail4(dummyImage);
-        }
-
-        if(embeddedSize1 == null || embeddedSize1.length() < 3)
-        {
-        if(type.equals(ResourceType.audio))
-            embeddedSize1 = "<img src=\"../resources/resources/img/audio.png\" width=\"100\" height=\"100\" />";
-        else if(format.startsWith("application/vnd.") || format.startsWith("application/ms"))
-            embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
-        else if(storageType == WEB_RESOURCE)
-            embeddedSize1 = "<img src=\"../resources/resources/img/website-140.png\" width=\"100\" height=\"100\" />";
-        else if(format.startsWith("text/"))
-            embeddedSize1 = "<img src=\"../resources/resources/img/document.png\" width=\"100\" height=\"100\" />";
-        }
-        */
     }
 
     public void addTag(String tagName, User user) throws SQLException
@@ -525,7 +404,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     public String getStringStorageType()
     {
         if(storageType == Resource.LEARNWEB_RESOURCE)
-            return "Learnweb"; // has been called before: UtilBean.getLocaleMessage("file");
+            return "Learnweb";
         else if(storageType == Resource.WEB_RESOURCE)
             return UtilBean.getLocaleMessage("web");
         else
@@ -725,7 +604,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-
+        
         }
         */
         return r;
@@ -808,12 +687,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
         }
         catch(IllegalArgumentException e)
         {
-            if(type.equalsIgnoreCase("videos"))
-                this.type = ResourceType.video;
-            else if(type.equalsIgnoreCase("photos"))
-                this.type = ResourceType.image;
-            else
-                this.setTypeFromFormat(format);
+            this.setTypeFromFormat(format);
         }
     }
 
@@ -1409,15 +1283,9 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     {
         if(embeddedCode == null)
         {
-            if(StringUtils.isNoneEmpty(getEmbeddedRaw()) && !getSource().equals("Yovisto") && !getSource().equals("TED"))
+            if(StringUtils.isNoneEmpty(getEmbeddedRaw()))
             {
-                // if the embedded code was explicitly defined then use it. Is necessary for slideshare resources.
-                // But the old flash based code of Yovisto does not work any more
-
-                if(getSource().equals("TED"))
-                    embeddedCode = getEmbeddedRaw().replace("http://", "https://");
-                else
-                    embeddedCode = getEmbeddedRaw();
+                // if the embedded code was explicitly defined then use it. Is necessary for Slideshare resources.
             }
             else if(getType().equals(ResourceType.image))
             {
@@ -1461,11 +1329,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
             {
                 log.warn("can't create embeddedCode for resource: " + toString());
 
-                if(getEmbeddedRaw() != null)
-                    embeddedCode = getEmbeddedRaw();
-                else if(getEmbeddedSize4() != null)
-                    embeddedCode = getEmbeddedSize4();
-                else if(getEmbeddedSize4() != null)
+                if(getEmbeddedSize4() != null)
                     embeddedCode = getEmbeddedSize4();
             }
 
@@ -1502,16 +1366,6 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     public void setEmbeddedRaw(String embeddedRaw)
     {
         this.embeddedRaw = embeddedRaw;
-    }
-
-    public int getViews()
-    {
-        return views;
-    }
-
-    public void setViews(int views)
-    {
-        this.views = views;
     }
 
     @Override
@@ -1629,14 +1483,6 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
             throw new IllegalArgumentException("url is too long: " + fileUrl.length() + "; " + fileUrl);
 
         this.fileUrl = fileUrl;
-    }
-
-    private void readObject(ObjectInputStream inputStream) throws IOException, ClassNotFoundException
-    {
-        inputStream.defaultReadObject();
-
-        // restore transient objects
-        //log.debug("deserialize: " + id);
     }
 
     /**
@@ -1785,6 +1631,16 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
         }
 
         return false;
+    }
+
+    public boolean canModerateResource(User user)
+    {
+        if(user == null) // not logged in
+            return false;
+
+        // TODO check whether the resource belongs to a group that this moderator is allowed to control ... propably very inefficient
+
+        return user.isModerator();
     }
 
     public boolean canAnnotateResource(User user) throws SQLException
@@ -2021,9 +1877,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
         public String[] get(Object key)
         {
             String value = wrappedMap.get(key);
-            //            log.debug("get " + key + " value:" + value);
             String[] result = (value == null || value.length() == 0) ? null : value.split(SPLITTER);
-            //            log.debug("result: " + result);
             return result;
         }
 
@@ -2133,13 +1987,17 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
         this.extendedMetadata = extendedMetadata;
     }
 
-    //selectedMtypes setter and getter: the setter will convert selectedMtypes to mtype
-
+    //
     public String[] getSelectedMtypes()
     {
         return selectedMtypes;
     }
 
+    /**
+     * the setter will convert selectedMtypes to mtype
+     *
+     * @param selectedMtypes
+     */
     public void setSelectedMtypes(String[] selectedMtypes)
     {
         String mt = "";
@@ -2158,38 +2016,6 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
         this.mtype = mt;
 
         this.selectedMtypes = null; //once setting value for mtype, reset selectedMtypes
-    }
-
-    //Opendate getter and setter
-
-    public Date getOpenDate()
-    {
-        return openDate;
-    }
-
-    public void setOpenDate(Date openDate)
-    {
-        this.openDate = openDate;
-    }
-
-    public Date getCloseDate()
-    {
-        return closeDate;
-    }
-
-    public void setCloseDate(Date closeDate)
-    {
-        this.closeDate = closeDate;
-    }
-
-    public String[] getValidCourses()
-    {
-        return validCourses;
-    }
-
-    public void setValidCourses(String[] validCourses)
-    {
-        this.validCourses = validCourses;
     }
 
     //new methods to add new metadata to given resource

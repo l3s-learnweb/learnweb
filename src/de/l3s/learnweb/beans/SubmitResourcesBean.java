@@ -624,7 +624,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         {
             try
             {
-                List<Resource> editSurveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(getUserId(), this.selectedSubmission.getCourseId());
+                List<Resource> editSurveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(this.selectedSubmission.getCourseId());
                 for(Resource r : editSurveyResourcesForCourse)
                 {
                     String resourcePath = getResourcePath(r);
@@ -645,7 +645,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         surveyResourcesList.clear();
         try
         {
-            List<Resource> surveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(getUserId(), this.newSubmission.getCourseId());
+            List<Resource> surveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(this.newSubmission.getCourseId());
             for(Resource r : surveyResourcesForCourse)
             {
                 String resourcePath = getResourcePath(r);
@@ -664,7 +664,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         editSurveyResourcesList.clear();
         try
         {
-            List<Resource> surveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(getUserId(), this.newSubmission.getCourseId());
+            List<Resource> surveyResourcesForCourse = getLearnweb().getSurveyManager().getSurveyResourcesByUserAndCourse(this.newSubmission.getCourseId());
             for(Resource r : surveyResourcesForCourse)
             {
                 String resourcePath = getResourcePath(r);

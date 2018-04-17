@@ -29,11 +29,11 @@ public class SurveyMetaDataFields implements Serializable
         MANY_CHECKBOX
     }
 
-    // private String name; // the name of this field, will be used as SOLR column name  
+    // private String name; // the name of this field, will be used as SOLR column name
     private String label; // label on the website, is replaced by a translated term if available
     private String info; // an explanation, displayed as tooltip
     private MetadataType type;
-    private String id; //question id
+    private int id; //question id
     private List<String> options = new LinkedList<String>(); // default options for some input types like OneMenu
     private boolean moderatorOnly = false; // only admins and moderators have write access
     private boolean required = false;
@@ -62,7 +62,7 @@ public class SurveyMetaDataFields implements Serializable
     {
         return name;
     }
-    
+
     public void setName(String name)
     {
         this.name = name;
@@ -167,14 +167,13 @@ public class SurveyMetaDataFields implements Serializable
         this.answers = answers;
     }
 
-    public String getId()
+    public int getId()
     {
         return id;
     }
 
-    public void setId(String id)
+    public void setId(int id)
     {
         this.id = id;
     }
-
 }

@@ -11,10 +11,10 @@ import javax.faces.bean.ViewScoped;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.LogEntry.Action;
-import de.l3s.learnweb.Resource;
-import de.l3s.learnweb.Survey;
-import de.l3s.learnweb.SurveyManager;
+import de.l3s.learnweb.SurveyResource;
+import de.l3s.learnweb.SurveyUserAnswers;
 import de.l3s.learnweb.User;
+import de.l3s.util.BeanHelper;
 
 @ViewScoped
 @ManagedBean
@@ -22,18 +22,13 @@ public class SurveyBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = -6217166153267996666L;
     private static final Logger log = Logger.getLogger(SurveyBean.class);
-    private int resourceId;
+    private int surveyResourceId;
+    private int surveyUserId; // the user whose answers are viewed, by default the currently loggedin user
 
     private boolean editable;
-    private boolean submitted;
 
-    private Survey survey;
-    private Resource surveyResource;
-
-    public SurveyBean()
-    {
-        // do nothing constructor
-    }
+    private SurveyResource resource;
+    private SurveyUserAnswers userAnswers;
 
     public void onLoad()
     {
@@ -41,108 +36,98 @@ public class SurveyBean extends ApplicationBean implements Serializable
         if(user == null)
             return;
 
-        if(resourceId > 0)
+        if(surveyResourceId <= 0)
         {
-            try
+            addInvalidParameterMessage("resource_id");
+            return;
+        }
+
+        try
+        {
+            resource = (SurveyResource) getLearnweb().getResourceManager().getResource(surveyResourceId);
+
+            if(!resource.canViewResource(user))
             {
-                surveyResource = getLearnweb().getResourceManager().getResource(resourceId);
-
-                if(!surveyResource.canViewResource(user))
-                {
-                    addMessage(FacesMessage.SEVERITY_ERROR, "group_resources_access_denied");
-                    return;
-                }
-
-                //load survey
-                SurveyManager sm = getLearnweb().getSurveyManager();
-
-                // survey = sm.getFormQuestions(resourceId, user.getId());
-                survey = sm.getAssessmentFormDetails(resourceId, user.getId()); // TODO why does it use another method than in onLoad()
-
-                editable = survey.isEditable() && isValidSubmissionDate(survey);
-
-                submitted = survey.isSubmitted();
-                if(survey.isEditable())
-                {
-                    submitted = getLearnweb().getSurveyManager().getSurveyResourceSubmitStauts(resourceId, getUser().getId());
-                }
-
-                if(submitted)
-                    addMessage(FacesMessage.SEVERITY_ERROR, "survey_submit_error");
-                else if(!isValidSubmissionDate(survey))
-                    addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_error_between", survey.getStart(), survey.getEnd());
-                else if(survey.isSubmitted())
-                {
-                    if(survey.getEnd() != null)
-                        addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_edit_until", survey.getEnd());
-                    else
-                        addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_edit");
-                }
+                addMessage(FacesMessage.SEVERITY_ERROR, "group_resources_access_denied");
+                return;
             }
-            catch(Exception e)
+
+            // whose answers shall be view
+            if(surveyUserId <= 0) // by efault view the answers of the current user
+                surveyUserId = getUser().getId();
+            else if(!resource.canModerateResource(getUser()))
             {
-                resourceId = -1;
-                addFatalMessage("Couldn't load survey; resource: ", e);
+                addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to view the answers of the given user");
+                log.warn("Illegal access: " + BeanHelper.getRequestSummary());
+                resource = null;
+                return;
+            }
+
+            editable = resource.isEditable() && isValidSubmissionDate(resource);
+            userAnswers = resource.getAnswersOfUser(surveyUserId);
+
+            if(isSubmitted())
+                addMessage(FacesMessage.SEVERITY_ERROR, "survey_submit_error");
+            else if(!isValidSubmissionDate(resource))
+                addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_error_between", resource.getStart(), resource.getEnd());
+            else if(userAnswers.isSaved())
+            {
+                if(resource.getEnd() != null)
+                    addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_edit_until", resource.getEnd());
+                else
+                    addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_edit");
             }
         }
-    }
+        catch(Exception e)
+        {
+            surveyResourceId = -1;
+            addFatalMessage("Couldn't load survey; resource: ", e);
+        }
 
-    public Survey getSurvey()
-    {
-        return survey;
     }
 
     public boolean isSubmitted()
     {
-        return submitted;
+        return userAnswers.isSubmitted();
+    }
+
+    private boolean onSaveOrSubmit(boolean submit)
+    {
+        if(isSubmitted())
+        {
+            addMessage(FacesMessage.SEVERITY_ERROR, "This Survey has already been submitted");
+            log.error("Survey already submitted. Should not happen. For User: " + surveyUserId + " for survey: " + surveyResourceId);
+            return false;
+        }
+
+        try
+        {
+            getLearnweb().getSurveyManager().saveAnswers(userAnswers, submit);
+
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage("Can't save answers for User: " + surveyUserId + " for survey: " + surveyResourceId, e);
+        }
+        return false;
     }
 
     public void onSubmit()
     {
-        onSave();
-
-        try
+        if(onSaveOrSubmit(true))
         {
-            getLearnweb().getSurveyManager().setSurveyResourceSubmitStauts(resourceId, getUser().getId(), true);
-            log(Action.survey_submit, surveyResource.getGroupId(), resourceId);
-            submitted = true;
-        }
-        catch(SQLException e)
-        {
-            addFatalMessage(e);
+            addMessage(FacesMessage.SEVERITY_INFO, "submit_survey");
+            log(Action.survey_submit, resource.getGroupId(), surveyResourceId);
         }
     }
 
     public void onSave()
     {
-        User u = getUser();
-
-        if(!submitted)
+        if(onSaveOrSubmit(false))
         {
-            try
-            {
-                getLearnweb().getSurveyManager().uploadAnswers(u.getId(), survey.getWrappedAnswers(), survey.getWrappedMultipleAnswers(), resourceId);
-
-                addMessage(FacesMessage.SEVERITY_INFO, "submit_survey");
-                survey.setSubmitted(true);
-
-                log(Action.survey_save, surveyResource.getGroupId(), resourceId);
-            }
-            catch(Exception e)
-            {
-                addFatalMessage("Error in uploading answers for User: " + u.getId() + " for survey: " + survey.getSurveyId(), e);
-            }
+            addMessage(FacesMessage.SEVERITY_INFO, "submit_save");
+            log(Action.survey_save, resource.getGroupId(), surveyResourceId);
         }
-    }
-
-    public int getResourceId()
-    {
-        return resourceId;
-    }
-
-    public void setResourceId(int resource_id)
-    {
-        this.resourceId = resource_id;
     }
 
     public boolean isEditable()
@@ -150,32 +135,44 @@ public class SurveyBean extends ApplicationBean implements Serializable
         return editable;
     }
 
-    private static boolean isValidSubmissionDate(Survey survey)
+    private static boolean isValidSubmissionDate(SurveyResource surveyResource)
     {
         Long currentDate = new Date().getTime();
 
-        if(survey.getStart() != null && survey.getStart().getTime() > currentDate)
+        if(surveyResource.getStart() != null && surveyResource.getStart().getTime() > currentDate)
             return false;
-        if(survey.getEnd() != null && survey.getEnd().getTime() < currentDate)
+        if(surveyResource.getEnd() != null && surveyResource.getEnd().getTime() < currentDate)
             return false;
         return true;
+    }
 
-        /*
+    public int getSurveyResourceId()
+    {
+        return surveyResourceId;
+    }
 
-        if(sv.getStart() == null && sv.getEnd() == null)
-        {
-            // Both Dates not set
-            return true;
-        }
-        else if(sv.getStart() != null && sv.getEnd() != null) //Both dates are set
-            return (sv.getStart().getTime() <= currentDate && sv.getEnd().getTime() >= currentDate ? true : false);
-        else if(sv.getStart() != null && sv.getStart().getTime() <= currentDate)
-            return true;
-        else if(sv.getEnd() != null && sv.getEnd().getTime() >= currentDate)
-            return true;
-        else
-            return false;
-            */
+    public void setSurveyResourceId(int surveyResourceId)
+    {
+        this.surveyResourceId = surveyResourceId;
+    }
 
+    public int getSurveyUserId()
+    {
+        return surveyUserId;
+    }
+
+    public void setSurveyUserId(int surveyUserId)
+    {
+        this.surveyUserId = surveyUserId;
+    }
+
+    public SurveyResource getResource()
+    {
+        return resource;
+    }
+
+    public SurveyUserAnswers getUserAnswers()
+    {
+        return userAnswers;
     }
 }

@@ -12,9 +12,10 @@ import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.Survey;
+import de.l3s.learnweb.SurveyUserAnswers;
 import de.l3s.learnweb.SurveyManager;
 import de.l3s.learnweb.SurveyMetaDataFields;
+import de.l3s.learnweb.SurveyResource;
 import de.l3s.learnweb.User;
 
 // TODO the whole class can be removed. use surveybean instead
@@ -31,12 +32,12 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
     private String description;
     private int organizationId;
     private boolean submitted;
-    private HashMap<String, String> wrappedAnswers = new HashMap<String, String>();
+    private HashMap<Integer, String> wrappedAnswers = new HashMap<>();
 
-    private HashMap<String, String[]> wrappedMultipleAnswers = new HashMap<String, String[]>();
+    private HashMap<Integer, String[]> wrappedMultipleAnswers = new HashMap<>();
     private ArrayList<SurveyMetaDataFields> questions = new ArrayList<SurveyMetaDataFields>();
     private int userId = 0;
-    private Survey sv = new Survey(); // TODO dont initialize
+    private SurveyResource sv; // TODO dont initialize
 
     private List<User> users; // TODO dont initialize
 
@@ -135,12 +136,14 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
         questions = new ArrayList<SurveyMetaDataFields>();
         try
         {
-            sv = sm.getAssessmentFormDetails(resourceId, userId);
-            submitted = sv.isSubmitted();
-            questions = sv.getFormQuestions();
-            surveyTitle = sv.getSurveyTitle();
-            wrappedAnswers = sv.getWrappedAnswers();
-            wrappedMultipleAnswers = sv.getWrappedMultipleAnswers();
+            SurveyResource surveyResource = (SurveyResource) getLearnweb().getResourceManager().getResource(resourceId);
+            SurveyUserAnswers surveyAnser = surveyResource.getAnswersOfUser(userId);
+            sv = surveyResource;
+            submitted = surveyAnser.isSaved();
+            questions = surveyResource.getQuestions();
+            surveyTitle = surveyResource.getTitle();
+            wrappedAnswers = surveyAnser.getAnswers();
+            wrappedMultipleAnswers = surveyAnser.getMultipleAnswers();
         }
         catch(Exception e)
         {
@@ -149,14 +152,9 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
 
     }
 
-    public Survey getSv() // TODO rename to getSurvey
+    public SurveyResource getSv() // TODO rename to getSurvey
     {
         return sv;
-    }
-
-    public void setSv(Survey sv)
-    {
-        this.sv = sv;
     }
 
     public int getResourceId()
@@ -209,22 +207,22 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
         this.submitted = submitted;
     }
 
-    public HashMap<String, String> getWrappedAnswers()
+    public HashMap<Integer, String> getWrappedAnswers()
     {
         return wrappedAnswers;
     }
 
-    public void setWrappedAnswers(HashMap<String, String> wrappedAnswers)
+    public void setWrappedAnswers(HashMap<Integer, String> wrappedAnswers)
     {
         this.wrappedAnswers = wrappedAnswers;
     }
 
-    public HashMap<String, String[]> getWrappedMultipleAnswers()
+    public HashMap<Integer, String[]> getWrappedMultipleAnswers()
     {
         return wrappedMultipleAnswers;
     }
 
-    public void setWrappedMultipleAnswers(HashMap<String, String[]> wrappedMultipleAnswers)
+    public void setWrappedMultipleAnswers(HashMap<Integer, String[]> wrappedMultipleAnswers)
     {
         this.wrappedMultipleAnswers = wrappedMultipleAnswers;
     }
