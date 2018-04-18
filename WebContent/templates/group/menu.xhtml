@@ -11,17 +11,17 @@
 				
 			<ul>
 				<li>
-					<a href="./group/overview.jsf?group_id=#{group.id}">
+					<a href="./group/overview.jsf?group_id=#{group.id}" class="#{active == 'overview'? 'active':''}">
 						<h:outputText value="#{msg.overview}" />
 					</a>
 				</li>								
 				<li>
-					<a href="./group/resources.jsf?group_id=#{group.id}">
+					<a href="./group/resources.jsf?group_id=#{group.id}" class="#{active == 'resources'? 'active':''}">
 						<h:outputText value="#{msg.resources}" />
 					</a>
 				</li>								
 				<li>
-					<a href="./group/members.jsf?group_id=#{group.id}">
+					<a href="./group/members.jsf?group_id=#{group.id}" class="#{active == 'members'? 'active':''}">
 						<h:outputText value="#{msg.members}" />
 					</a>
 				</li>	
@@ -32,21 +32,21 @@
 					</a>
 				</li>
 				</ui:fragment>	
-				<ui:fragment rendered="#{not empty group.links}">								
+				<ui:fragment rendered="#{not empty group.links or not empty group.documentLinks}">								
 				<li>
-					<a href="./group/links.jsf?group_id=#{group.id}">
+					<a href="./group/links.jsf?group_id=#{group.id}" class="#{active == 'links'? 'active':''}">
 						<h:outputText value="#{msg.links}" />
 					</a>
 				</li>	
 				</ui:fragment>							
 				<li>
-					<a class="active" href="./group/forum.jsf?group_id=#{group.id}">
+					<a href="./group/forum.jsf?group_id=#{group.id}" class="#{active == 'forum'? 'active':''}">
 						<h:outputText value="#{msg.forum}" />
 					</a>
 				</li>
 				<ui:fragment rendered="${group.course.isModerator(userBean.user) || group.isLeader(userBean.user)}">							
 				<li>
-					<a href="./group/options.jsf?group_id=#{group.id}">
+					<a href="./group/options.jsf?group_id=#{group.id}" class="#{active == 'options'? 'active':''}">
 						<h:outputText value="#{msg.options}" />
 					</a>
 				</li>

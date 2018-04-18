@@ -2,7 +2,9 @@ package de.l3s.learnweb.beans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -30,6 +32,16 @@ public class SurveyBean extends ApplicationBean implements Serializable
     private SurveyResource resource;
     private SurveyUserAnswers userAnswers;
 
+    private static List<Integer> peerAssessmentSsurveys = Arrays.asList(1, 23, 3);
+
+    private boolean canViewPeerAssessmentResult(SurveyResource resource)
+    {
+        if(!peerAssessmentSsurveys.contains(resource.getSurveyId()))
+            return false;
+
+        return true;
+    }
+
     public void onLoad()
     {
         User user = getUser();
@@ -52,22 +64,28 @@ public class SurveyBean extends ApplicationBean implements Serializable
                 return;
             }
 
-            // whose answers shall be view
-            if(surveyUserId <= 0) // by efault view the answers of the current user
+            // whose answers shall be viewed
+            if(surveyUserId <= 0 || surveyUserId == getUser().getId()) // by default view the answers of the current user,
                 surveyUserId = getUser().getId();
-            else if(!resource.canModerateResource(getUser()))
+            else
             {
-                addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to view the answers of the given user");
-                log.warn("Illegal access: " + BeanHelper.getRequestSummary());
-                resource = null;
-                return;
-            }
+                if(resource.canModerateResource(getUser()))
+                {
 
+                }
+                else
+                {
+                    addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to view the answers of the given user");
+                    log.warn("Illegal access: " + BeanHelper.getRequestSummary());
+                    resource = null;
+                    return;
+                }
+            }
             editable = resource.isEditable() && isValidSubmissionDate(resource);
             userAnswers = resource.getAnswersOfUser(surveyUserId);
 
             if(isSubmitted())
-                addMessage(FacesMessage.SEVERITY_ERROR, "survey_submit_error");
+                addMessage(FacesMessage.SEVERITY_ERROR, "survey_already_submitted");
             else if(!isValidSubmissionDate(resource))
                 addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_error_between", resource.getStart(), resource.getEnd());
             else if(userAnswers.isSaved())
@@ -103,7 +121,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
         try
         {
             getLearnweb().getSurveyManager().saveAnswers(userAnswers, submit);
-
+            return true;
         }
         catch(SQLException e)
         {
@@ -116,7 +134,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
     {
         if(onSaveOrSubmit(true))
         {
-            addMessage(FacesMessage.SEVERITY_INFO, "submit_survey");
+            addMessage(FacesMessage.SEVERITY_INFO, "survey_submitted");
             log(Action.survey_submit, resource.getGroupId(), surveyResourceId);
         }
     }
@@ -125,7 +143,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
     {
         if(onSaveOrSubmit(false))
         {
-            addMessage(FacesMessage.SEVERITY_INFO, "submit_save");
+            addMessage(FacesMessage.SEVERITY_INFO, "survey_saved");
             log(Action.survey_save, resource.getGroupId(), surveyResourceId);
         }
     }

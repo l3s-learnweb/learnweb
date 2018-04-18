@@ -33,26 +33,24 @@
 								fileName="survey"/>
 						</h:commandLink>
 					</f:facet>
-			<p:column >
-			
-			<f:facet name="header" >
-				<h:outputText value="User"></h:outputText>
-			</f:facet>
-			<h:outputText value="#{result.userName} "></h:outputText>
-			<h:outputLink id="print_user"  value="survey/assessment/assessmentAnswers.jsf"  >
-				
-			
-       			 	<h:graphicImage  library="icon" name="print-icon.png" width="10" height="10" alt="Print}"/> 
-       			 	<f:param name="resource_id" value="#{surveyResultBean.resourceId}"></f:param>
-       			 	<f:param name="user_id" value="#{result.userId}" />
-       			 </h:outputLink>
-       			 <p:tooltip id="survey_print_tooltip" for="print_user" value="Print form answers of user: #{result.userName}"/>
-			</p:column>
-			<p:column >
+						<p:column>
+
+							<f:facet name="header">
+								<h:outputText value="User"></h:outputText>
+							</f:facet>
+							<h:outputText value="#{result.user.username} "></h:outputText>
+							<h:outputLink id="print_user" value="survey/answer.jsf">
+								<h:graphicImage library="icon" name="print-icon.png" width="10" height="10" alt="Print}" />
+								<f:param name="resource_id" value="#{surveyResultBean.resourceId}"></f:param>
+								<f:param name="user_id" value="#{result.userId}" />
+							</h:outputLink>
+							<p:tooltip id="survey_print_tooltip" for="print_user" value="Print form answers of user: #{result.user.username}" />
+						</p:column>
+						<p:column >
 				<f:facet name="header" >
 				<h:outputText value="Student ID"></h:outputText>
 			</f:facet>
-				 <h:outputText value="${result.studentId}" />
+				 <h:outputText value="${result.user.studentId}" />
 				 
        			 
        			

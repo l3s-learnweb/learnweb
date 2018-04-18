@@ -37,9 +37,9 @@ public class SurveyMetaDataFields implements Serializable
     private List<String> options = new LinkedList<String>(); // default options for some input types like OneMenu
     private boolean moderatorOnly = false; // only admins and moderators have write access
     private boolean required = false;
-    private List<SelectItem> optionsList = new ArrayList<SelectItem>();
+    private List<SelectItem> optionsList;
     private String extra; // if the options are rating or othherwise
-    private List<String> answers = new ArrayList<String>(); //answers for question with options
+    private List<String> answers; //answers for question with options
 
     public SurveyMetaDataFields(String label, MetadataType type)
     {
@@ -62,7 +62,7 @@ public class SurveyMetaDataFields implements Serializable
     {
         return name;
     }
-
+    
     public void setName(String name)
     {
         this.name = name;

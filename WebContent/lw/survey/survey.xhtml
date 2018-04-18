@@ -10,7 +10,7 @@
 
 	<ui:define name="metadata">
 		<f:metadata>
-			<f:viewParam name="resource_id" value="#{surveyBean.surveyResourceId}" required="true" />
+			<f:viewParam name="resource_id" value="#{surveyBean.surveyResourceId}" required="true" requiredMessage="Missing resource parameter" />
 			<f:viewParam name="user_id" value="#{surveyBean.surveyUserId}" />
 			<f:viewAction action="#{surveyBean.onLoad}" />
 		</f:metadata>
@@ -23,7 +23,7 @@
 	<ui:define name="center_layout">
 		<h:outputStylesheet library="survey" name="survey.css" />
 
-		<h:form id="form" prependId="false">
+		<h:form id="form">
 			<ui:fragment rendered="#{surveyBean.resource != null}">
 				<p:panel header="#{surveyBean.resource.title}" style="margin-bottom:10px;">
 					<h:panelGroup rendered="#{not surveyBean.submitted}">
@@ -146,19 +146,24 @@
 						</h:panelGrid>
 					</h:panelGroup>
 					
-					<p:commandButton widgetVar="sub" id="submit" value="Final Submit"
-						style="float:left;" styleClass="greenbutton resource_button" onclick="return confirm('Do you want to submit this form finally? You will not be able to change your answers.')"
+					<p:commandButton value="#{msg.submit}"
+						style="float:left;" styleClass="greenbutton resource_button" 
+						onclick="return confirm('Do you want to submit this form finally? You will not be able to change your answers.')"
 						action="#{surveyBean.onSubmit()}" update=":message @form"
 						ajax="false"
 						rendered="#{not surveyBean.submitted}">
 					</p:commandButton>
 
-					<p:commandButton id="save" binding="#{save}" value="#{msg.save}" rendered="#{not surveyBean.submitted and surveyBean.resource.editable}"
-						actionListener="#{surveyBean.onSave()}" process="@form"
-						style="float:left;margin-left:5px"
-						styleClass="greenbutton resource_button"
-						ajax="false"
-						update=":message @form" />
+					<p:commandButton binding="#{save}" id="save" value="#{msg.save}" 
+						rendered="#{not surveyBean.submitted and surveyBean.resource.editable}"
+						actionListener="#{surveyBean.onSave()}" 
+						style="float:left; margin-left:5px"
+						styleClass="graybutton resource_button"
+						ajax="true"						
+                     	process="@form" 
+                     	update="@form :message">
+					</p:commandButton>
+								
 					<br class="clear" />
 				</p:panel>
 

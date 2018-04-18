@@ -1,6 +1,7 @@
 package de.l3s.learnweb;
 
 import java.io.Serializable;
+import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
@@ -20,6 +21,8 @@ public class SurveyUserAnswers implements Serializable
     private final HashMap<Integer, String[]> multipleAnswers = new LinkedHashMap<>();
     private boolean saved; // has the user saved the survey at least once
     private boolean submitted; // has the user submitted the survey finally
+
+    private transient User user;
 
     public SurveyUserAnswers(int userId, int surveyResourceId)
     {
@@ -44,6 +47,13 @@ public class SurveyUserAnswers implements Serializable
     public int getUserId()
     {
         return userId;
+    }
+
+    public User getUser() throws SQLException
+    {
+        if(null == user)
+            user = Learnweb.getInstance().getUserManager().getUser(userId);
+        return user;
     }
 
     public boolean isSaved()
