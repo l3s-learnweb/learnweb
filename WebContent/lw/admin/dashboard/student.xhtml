@@ -23,7 +23,7 @@
             <div class="ui-g-12 ui-md-2">
                 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
 
-                    <div class="menu_section" style="height: 350px; overflow-y: scroll; width: 100%;">
+                    <div class="menu_section" style="height: 350px; width: 100%;">
                         <h:form id="form">
                             <p:panel header="Navigation">
                                 <a href="admin/dashboard/index.jsf"><i class="fa fa-chevron-left"></i> To all users</a>
@@ -32,9 +32,9 @@
                     </div>
                 </div>
             </div>
-            <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-md-10 ui-g-nopad" style="padding: .5em;">
                 <div class="ui-g-12 ui-g-nopad">
-                    <div class="center-header" id="group_header">
+                    <div class="center-header student-activities" id="group_header">
                         <h2>Students' Activities</h2>
                         <span class="header_detail"><h:outputText value="#{dashboardStudentBean.paramStudentId}"/></span>
                     </div>
@@ -131,8 +131,8 @@
                                     <div class="ui-g-8">
                                         <p:panel id="table_descriptions"
                                                  header="Descriptions of entries from class-mates" stickyHeader="true"
-                                                 style="margin-bottom:20px; height:390px; overflow-y: scroll;">
-                                            <p:dataTable value="">
+                                                 style="height:361px; overflow-y: scroll;">
+                                            <!--<p:dataTable value="">
                                                 <p:column headerText="insulin">
                                                     <h:outputText>Insulin (from the Latin, insula meaning island) is a peptide hormone produced by beta cells of the pancreatic islets. It regulates the metabolism of carbohydrates, fats and protein by promoting the absorption of, especially, glucose from the blood into fat, liver and skeletal muscle cells.<br/></h:outputText>
                                                     <h:outputText>a hormone that controls how glucose is absorbed and used by the body.<br/></h:outputText>
@@ -145,14 +145,14 @@
                                                     <h:outputText>Carbohydrates are biomolecules containing carbon, hydrogen and oxygen; they can be simple or complex, depending on their chemical structure. Along with proteins and fats, carbohydrates are macronutrients and provide energy to the human body: they are converted by our digestive system into glucose, which is employed as energy for cells, tissues and organs; moreover, extra sugar is stored in our liver and muscles for when it is needed. The body cannot produce carbohydrates on its own, so they must be obtained through diet.<br/></h:outputText>
                                                     <h:outputText>any of a class of substances made of carbon, hydrogen, and oxygen, including starches and sugars.</h:outputText>
                                                 </p:column>
-                                            </p:dataTable>
-                                            <p:dataTable value="#{studentlog.descriptions}" var="descr"
+                                            </p:dataTable>-->
+                                            <p:dataTable value="#{dashboardStudentBean.studentsGlossaryDescriptions}" var="descr"
                                                          styleClass="countries_list">
                                                 <p:column headerText="Description">
-                                                    <h:outputText value="#{descr.description}"/>
+                                                    <h:outputText value="#{descr}"/>
                                                 </p:column>
                                                 <p:column headerText="Lenght">
-                                                    <h:outputText value="#{descr.lenght}"/>
+                                                    <h:outputText value="#{descr.length()}"/>
                                                 </p:column>
                                             </p:dataTable>
                                         </p:panel>
@@ -170,37 +170,80 @@
                                             <p:chart type="pie" model="#{dashboardStudentBean.studentsSourcesChart}"/>
                                         </p:panel>
                                     </div>
-                                    <div class="ui-g-8">
-                                        <p:panel id="chart_plot_proxySources" header="Student Proxy sources" style="margin-bottom:20px">
+                                    <div class="ui-g-6">
+                                        <!--<p:panel id="chart_plot_proxySources" header="Student Proxy sources" style="margin-bottom:20px">
                                             <p:chart type="bar" model="#{dashboardStudentBean.proxySourcesChart}"/>
+                                        </p:panel>-->
+
+                                        <p:panel id="table_sources_list" header="Student Proxy sources list" widgetVar="panel"
+                                                 stickyHeader="true"
+                                                 style="margin-bottom:20px; height:362px; overflow-y: scroll;">
+                                            <h:form>
+                                                <p:dataTable var="pll" value="#{dashboardStudentBean.studentsProxySourcesList}" styleClass="countries_list">
+                                                    <p:column headerText="Web Site">
+                                                        <h:outputText value="#{pll.key}"/>
+                                                    </p:column>
+
+                                                    <p:column headerText="Occurrences">
+                                                        <h:outputText value="#{pll.value}"/>
+                                                    </p:column>
+                                                </p:dataTable>
+                                            </h:form>
                                         </p:panel>
+                                    </div>
+                                    <div class="ui-g-2" style="padding: 0">
+                                        <div class="ui-g">
+                                            <div class="ui-g-12">
+                                                <p:panel header="Total events">
+                                                    <div class="count">
+                                                        <h:outputText value="#{dashboardStudentBean.trackerStatistic.totalEvents}"/>
+                                                    </div>
+                                                </p:panel>
+                                            </div>
+                                        </div>
+                                        <div class="ui-g">
+                                            <div class="ui-g-12">
+                                                <p:panel header="Time stay">
+                                                    <div class="count">
+                                                        <h:outputText value="#{dashboardStudentBean.trackerStatistic.timeStayFormatted}"/>
+                                                    </div>
+                                                </p:panel>
+                                            </div>
+                                        </div>
+                                        <div class="ui-g">
+                                            <div class="ui-g-12">
+                                                <p:panel header="Time active">
+                                                    <div class="count">
+                                                        <h:outputText value="#{dashboardStudentBean.trackerStatistic.timeActiveFormatted}"/>
+                                                    </div>
+                                                </p:panel>
+                                            </div>
+                                        </div>
+                                        <div class="ui-g">
+                                            <div class="ui-g-12">
+                                                <p:panel header="Clicks">
+                                                    <div class="count">
+                                                        <h:outputText value="#{dashboardStudentBean.trackerStatistic.clicks}"/>
+                                                    </div>
+                                                </p:panel>
+                                            </div>
+                                        </div>
+                                        <div class="ui-g">
+                                            <div class="ui-g-12">
+                                                <p:panel header="Key presses">
+                                                    <div class="count">
+                                                        <h:outputText value="#{dashboardStudentBean.trackerStatistic.keyPresses}"/>
+                                                    </div>
+                                                </p:panel>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </p:panel>
                         </h:form>
-                        <div class="ui-g">
-                            <div class="ui-g-12">
-                                <p:panel id="table_sources_list" header="Student Proxy sources list" widgetVar="panel"
-                                         stickyHeader="true"
-                                         style="margin-bottom:20px; height:390px; overflow-y: scroll;">
-                                    <h:form>
-                                        <p:dataTable var="pll" value="#{dashboardStudentBean.studentsProxySourcesList}" styleClass="countries_list">
-                                            <p:column headerText="Web Site">
-                                                <h:outputText value="#{pll.key}"/>
-                                            </p:column>
-
-                                            <p:column headerText="Occurrences">
-                                                <h:outputText value="#{pll.value}"/>
-                                            </p:column>
-                                        </p:dataTable>
-                                    </h:form>
-                                </p:panel>
-                            </div>
-                        </div>
                     </h:panelGroup>
                 </div>
             </div>
-
 
             <footer>
                 <div class="pull-right">

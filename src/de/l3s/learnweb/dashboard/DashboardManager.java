@@ -342,85 +342,31 @@ public class DashboardManager
         return statPerUser;
     }
 
-    public ArrayList<DescFieldData> getLangDescStatistic(Collection<Integer> userIds, Date startDate, Date endDate)
+    public ArrayList<DescFieldData> getLangDescStatistic(Collection<Integer> userIds, Date startDate, Date endDate) throws SQLException
     {
-        // TODO: don't use hardcoded data
         ArrayList<DescFieldData> langDataList = new ArrayList<>();
 
-        DescFieldData d = new DescFieldData();
-        d.setDescription("Vitamin");
-        d.setEntryId(1322);
-        d.setLang("en");
-        d.setLength(1);
-        d.setUserId(10111);
-        langDataList.add(d);
+        try(PreparedStatement select = learnweb.getConnection().prepareStatement(
+                "SELECT rg.description as description, rg.glossary_id as glossary_id, r.language as language, r.owner_user_id as user_id " +
+                        "FROM lw_resource r " +
+                        "JOIN lw_resource_glossary rg USING(resource_id) " +
+                        "WHERE rg.deleted != 1 AND r.deleted != 1 " +
+                        "AND r.owner_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") " +
+                        "AND rg.timestamp BETWEEN ? AND ?"))
+        {
+            select.setTimestamp(1, new Timestamp(startDate.getTime()));
+            select.setTimestamp(2, new Timestamp(endDate.getTime()));
+            ResultSet rs = select.executeQuery();
 
-        d = new DescFieldData();
-        d.setDescription("Il diabete");
-        d.setEntryId(1428);
-        d.setLang("it");
-        d.setLength(2);
-        d.setUserId(10111);
-        langDataList.add(d);
-
-        d = new DescFieldData();
-        d.setDescription("Epidemiology");
-        d.setEntryId(1113);
-        d.setLang("en");
-        d.setLength(1);
-        d.setUserId(10150);
-        langDataList.add(d);
-
-        Integer userid = 10109;
-        Integer lenght = 1;
-        String lang = "unk";
-        d = new DescFieldData();
-        d.setDescription("g");
-        d.setEntryId(1320);
-        d.setLang(lang);
-        d.setLength(lenght);
-        d.setUserId(userid);
-        langDataList.add(d);
-
-        d = new DescFieldData();
-        d.setDescription("v");
-        d.setEntryId(1323);
-        d.setLang(lang);
-        d.setLength(lenght);
-        d.setUserId(userid);
-        langDataList.add(d);
-
-        d = new DescFieldData();
-        d.setDescription("c");
-        d.setEntryId(1324);
-        d.setLang(lang);
-        d.setLength(lenght);
-        d.setUserId(userid);
-        langDataList.add(d);
-
-        d = new DescFieldData();
-        d.setDescription("g");
-        d.setEntryId(1327);
-        d.setLang(lang);
-        d.setLength(lenght);
-        d.setUserId(userid);
-        langDataList.add(d);
-
-        d = new DescFieldData();
-        d.setDescription("b");
-        d.setEntryId(1328);
-        d.setLang(lang);
-        d.setLength(lenght);
-        d.setUserId(userid);
-        langDataList.add(d);
-
-        d = new DescFieldData();
-        d.setDescription("h");
-        d.setEntryId(1350);
-        d.setLang(lang);
-        d.setLength(lenght);
-        d.setUserId(userid);
-        langDataList.add(d);
+            while(rs.next()) {
+                DescFieldData descFieldData = new DescFieldData();
+                descFieldData.setDescription(rs.getString("description"));
+                descFieldData.setEntryId(rs.getInt("glossary_id"));
+                descFieldData.setLang(rs.getString("language"));
+                descFieldData.setUserId(rs.getInt("user_id"));
+                langDataList.add(descFieldData);
+            }
+        }
 
         return langDataList;
     }
@@ -595,6 +541,7 @@ public class DashboardManager
         public void setDescription(String description)
         {
             this.description = description;
+            this.length = description.split(" ").length;
         }
 
         public String getLang()

@@ -36,15 +36,33 @@
                     </div>
                 </div>
             </div>
-            <div class="ui-g-12 ui-md-10 ui-g-nopad">
+            <div class="ui-g-12 ui-md-10 ui-g-nopad" style="padding: .5em;">
                 <div class="ui-g-12 ui-g-nopad">
-                    <div class="center-header student-activities" id="group_header">
+                    <div class="center-header student-activities" id="group_header" style="margin-bottom: 1em;">
                         <h2>Students' Activities</h2>
                         <span class="header_detail">All student interactions</span>
                     </div>
 
                     <h:panelGroup id="dashboardOptions" styleClass="dashboard" layout="block">
                         <div class="ui-g">
+                            <div class="ui-g-3">
+                                <div class="ui-g ui-fluid">
+                                    <div class="ui-md-12">
+                                        <p:commandButton value="Select Students" type="button" onclick="PF('dlg2').show();"/>
+                                        <p:dialog header="Select Students" widgetVar="dlg2" modal="true" height="300" width="450">
+                                            <h:form id="user_form" style="padding:0 5px;" prependId="false">
+                                                <div style="overflow-y: auto; max-height: 265px;">
+                                                    <ui:include src="/lw/templates/user_select_form.xhtml"/>
+                                                </div>
+                                                <p:commandButton style="margin-top:5px;"
+                                                                 actionListener="#{dashboardBean.onSubmitSelectedUsers}"
+                                                                 value="Gather data of selected users" process="@form"
+                                                                 update=":dashboardMain :studentsList"/>
+                                            </h:form>
+                                        </p:dialog>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="ui-g-9">
                                 <h:form id="dateForm">
                                     <div class="ui-g ui-fluid">
@@ -73,24 +91,6 @@
                                         </div>
                                     </div>
                                 </h:form>
-                            </div>
-                            <div class="ui-g-3">
-                                <div class="ui-g ui-fluid">
-                                    <div class="ui-md-12">
-                                        <p:commandButton value="Select Students" type="button" onclick="PF('dlg2').show();"/>
-                                        <p:dialog header="Select Students" widgetVar="dlg2" modal="true" height="300" width="450">
-                                            <h:form id="user_form" style="padding:0 5px;" prependId="false">
-                                                <div style="overflow-y: auto; max-height: 265px;">
-                                                    <ui:include src="/lw/templates/user_select_form.xhtml"/>
-                                                </div>
-                                                <p:commandButton style="margin-top:5px;"
-                                                                 actionListener="#{dashboardBean.onSubmitSelectedUsers}"
-                                                                 value="Gather data of selected users" process="@form"
-                                                                 update=":dashboardMain :studentsList"/>
-                                            </h:form>
-                                        </p:dialog>
-                                    </div>
-                                </div>
                             </div>
                         </div>
                     </h:panelGroup>
@@ -249,7 +249,9 @@
                                     </p:panel>
                                 </h:form>
                             </div>
-                            <!--<div class="ui-g-6">
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-12">
                                 <h:form>
                                     <p:panel id="description" header="Description field" style="margin-bottom:20px">
                                         <h:panelGrid columns="1">
@@ -276,7 +278,7 @@
                                                     #{ldl.description}
                                                 </p:column>
 
-                                                <p:column styleClass="align-right" headerText="Lenght"
+                                                <p:column styleClass="align-right" headerText="Length"
                                                           sortBy="#{ldl.length}" sortable="true">
                                                     #{ldl.length}
                                                 </p:column>
@@ -284,7 +286,7 @@
                                         </h:panelGrid>
                                     </p:panel>
                                 </h:form>
-                            </div>-->
+                            </div>
                         </div>
                     </h:panelGroup>
                 </div>

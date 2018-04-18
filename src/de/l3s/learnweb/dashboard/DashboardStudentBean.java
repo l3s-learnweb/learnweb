@@ -39,10 +39,10 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
     private Map<String, Integer> glossarySourcesWithCounters;
     private Map<Integer, Integer> actionsWithCounters;
     private Map<String, Integer> actionsCountPerDay;
-    // private ArrayList<DescFieldData> descFieldsStatistic;
-    // private ArrayList<String> glossaryDescriptions;
+    private ArrayList<DashboardManager.DescFieldData> descFieldsStatistic;
+    private ArrayList<String> glossaryDescriptions;
     private Map<String, Integer> proxySourcesWithCounters;
-    // private LinkedList<TrackerStatistic> trackerStatistics;
+    private LinkedList<DashboardManager.TrackerStatistic> trackerStatistics;
 
     private LineChartModel interactionsChart;
     private BarChartModel studentsActivityTypesChart;
@@ -104,9 +104,9 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
         actionsWithCounters = dashboardManager.getActionsWithCounters(selectedUsersIds, startDate, endDate);
         actionsCountPerDay = dashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate);
         // TODO: display them somewhere on the user stat page
-        // glossaryDescriptions = dashboardManager.getGlossaryDescriptions(selectedUsersIds, startDate, endDate);
-        // trackerStatistics = dashboardManager.getTrackerStatistics(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
-        // descFieldsStatistic = dashboardManager.getLangDescStatistic(selectedUsersIds, startDate, endDate);
+        glossaryDescriptions = dashboardManager.getGlossaryDescriptions(selectedUsersIds, startDate, endDate);
+        trackerStatistics = dashboardManager.getTrackerStatistics(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
+        descFieldsStatistic = dashboardManager.getLangDescStatistic(selectedUsersIds, startDate, endDate);
         proxySourcesWithCounters = dashboardManager.getProxySourcesWithCounters(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
     }
 
@@ -187,6 +187,20 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
     public ArrayList<Map.Entry<String, Integer>> getStudentsProxySourcesList()
     {
         return new ArrayList<>(MapHelper.sortByValue(proxySourcesWithCounters).entrySet());
+    }
+
+    public List<String> getStudentsGlossaryDescriptions()
+    {
+        return glossaryDescriptions;
+    }
+
+    public DashboardManager.TrackerStatistic getTrackerStatistic()
+    {
+        if (trackerStatistics.isEmpty()) {
+            return new DashboardManager.TrackerStatistic();
+        }
+
+        return trackerStatistics.get(0);
     }
 
     public Integer getParamStudentId()
