@@ -22,7 +22,7 @@ import de.l3s.util.StringHelper;
 public class PeerAssessmentManager
 {
     private final static Logger log = Logger.getLogger(ForumManager.class);
-    private final static String PAIR_COLUMNS = "`peerassessment_id`, `assessor_user_id`, `assessed_user_id`, `survey_resource_id`, `submission_id`";
+    private final static String PAIR_COLUMNS = "`peerassessment_id`, `assessor_user_id`, `assessed_user_id`, `survey_resource_id`, assessment_survey_resource_id, `submission_id`";
 
     private final Learnweb learnweb;
 
@@ -69,17 +69,17 @@ public class PeerAssessmentManager
 
     private void savePeerAssesmentPair(PeerAssesmentPair pair) throws SQLException
     {
-        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_peerassessment_paring` (" + PAIR_COLUMNS + ") VALUES (?,?,?,?,?)");)
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_peerassessment_paring` (" + PAIR_COLUMNS + ") VALUES (?,?,?,?,?,?)");)
         {
             ps.setInt(1, pair.getId());
             ps.setInt(2, pair.getAssessorUserId());
             ps.setInt(3, pair.getAssessedUserId());
-            ps.setInt(4, pair.getSurveyResourceId());
-            ps.setInt(5, pair.getSubmissionId());
+            ps.setInt(4, pair.getPeerAssessmentSurveyResourceId());
+            ps.setInt(5, pair.getAssessmentSurveyResourceId());
+            ps.setInt(6, pair.getSubmissionId());
             ps.executeUpdate();
         }
     }
-    //PAIR_COLUMNS = "`peerassessment_id`, `assessor_user_id`, `assessed_user_id`, `survey_resource_id`, `submission_id`";
 
     public List<PeerAssesmentPair> getPeerAssesmentPairsByPeerAssesmentId(int peerAssesmentId) throws SQLException
     {
@@ -99,7 +99,7 @@ public class PeerAssessmentManager
             ResultSet rs = select.executeQuery();
             while(rs.next())
             {
-                pairs.add(new PeerAssesmentPair(rs.getInt("peerassessment_id"), rs.getInt("assessor_user_id"), rs.getInt("assessed_user_id"), rs.getInt("survey_resource_id"), rs.getInt("submission_id")));
+                pairs.add(new PeerAssesmentPair(rs.getInt("peerassessment_id"), rs.getInt("assessor_user_id"), rs.getInt("assessed_user_id"), rs.getInt("survey_resource_id"), rs.getInt("assessment_survey_resource_id"), rs.getInt("submission_id")));
             }
         }
         return pairs;
@@ -108,22 +108,59 @@ public class PeerAssessmentManager
     public class PeerAssesmentPair implements Serializable
     {
         private static final long serialVersionUID = -4241273453267455330L;
-        private int id;
-        private int assessorUserId;
-        private int assessedUserId;
-        private int surveyResourceId;
-        private int submissionId;
+        private final int id;
+        private final int assessorUserId;
+        private final int assessedUserId;
+        private final int peerAssessmentSurveyResourceId;
+        private int assessmentSurveyResourceId;
+        private final int submissionId;
         private transient User assessorUser;
         private transient User assessedUser;
+        private transient SurveyUserAnswers peerAssessmentUserAnswers;
+        private SurveyUserAnswers assessmentUserAnswers;
 
-        public PeerAssesmentPair(int id, int assessorUserId, int assessedUserId, int surveyResourceId, int submissionId)
+        /**
+         *
+         * @param id
+         * @param assessorUserId
+         * @param assessedUserId
+         * @param peerAssessmentSurveyResourceId
+         * @param assessmentSurveyResourceId
+         * @param submissionId
+         */
+        public PeerAssesmentPair(int id, int assessorUserId, int assessedUserId, int peerAssessmentSurveyResourceId, int assessmentSurveyResourceId, int submissionId)
         {
             super();
             this.id = id;
             this.assessorUserId = assessorUserId;
             this.assessedUserId = assessedUserId;
-            this.surveyResourceId = surveyResourceId;
+            this.peerAssessmentSurveyResourceId = peerAssessmentSurveyResourceId;
+            this.assessmentSurveyResourceId = assessmentSurveyResourceId;
             this.submissionId = submissionId;
+        }
+
+        public int getPeerAssessmentSurveyResourceId()
+        {
+            return peerAssessmentSurveyResourceId;
+        }
+
+        public int getAssessmentSurveyResourceId()
+        {
+            return assessmentSurveyResourceId;
+        }
+
+        public SurveyUserAnswers getPeerAssessmentUserAnswers() throws SQLException
+        {
+            if(null == peerAssessmentUserAnswers) // load survey details
+                peerAssessmentUserAnswers = getPeerAssessment().getAnswersOfUser(assessorUserId);
+            return peerAssessmentUserAnswers;
+        }
+
+        public SurveyUserAnswers getAssessmentUserAnswers() throws SQLException
+        {
+            if(null == assessmentUserAnswers) // load survey details
+                assessmentUserAnswers = getAssessment().getAnswersOfUser(assessorUserId);
+            return assessmentUserAnswers;
         }
 
         public User getAssessorUser() throws SQLException
@@ -140,9 +177,14 @@ public class PeerAssessmentManager
             return assessedUser;
         }
 
-        public Resource getSurveyResource() throws SQLException
+        public SurveyResource getPeerAssessment() throws SQLException
         {
-            return Learnweb.getInstance().getResourceManager().getResource(surveyResourceId);
+            return (SurveyResource) Learnweb.getInstance().getResourceManager().getResource(peerAssessmentSurveyResourceId);
+        }
+
+        public SurveyResource getAssessment() throws SQLException
+        {
+            return (SurveyResource) Learnweb.getInstance().getResourceManager().getResource(assessmentSurveyResourceId);
         }
 
         public int getId()
@@ -160,11 +202,6 @@ public class PeerAssessmentManager
             return assessedUserId;
         }
 
-        public int getSurveyResourceId()
-        {
-            return surveyResourceId;
-        }
-
         public int getSubmissionId()
         {
             return submissionId;
@@ -173,7 +210,7 @@ public class PeerAssessmentManager
         @Override
         public String toString()
         {
-            return "PeerAssesmentPair [id=" + id + ", assessorUserId=" + assessorUserId + ", assessedUserId=" + assessedUserId + ", surveyResourceId=" + surveyResourceId + ", submissionId=" + submissionId + "]";
+            return "PeerAssesmentPair [id=" + id + ", assessorUserId=" + assessorUserId + ", assessedUserId=" + assessedUserId + ", surveyResourceId=" + peerAssessmentSurveyResourceId + ", submissionId=" + submissionId + "]";
         }
 
     }
@@ -187,7 +224,17 @@ public class PeerAssessmentManager
 
         Learnweb learnweb = Learnweb.createInstance(null);
         //learnweb.getPeerAssessmentManager().taskSetupPeerAssesmentRomeLeeds();
-        learnweb.getPeerAssessmentManager().sendInvitationMail(1);
+        //learnweb.getPeerAssessmentManager().sendInvitationMail(1);
+
+        HashMap<String, Integer> taskAssessmentSurveyMapping = new HashMap<String, Integer>();
+        taskAssessmentSurveyMapping.put("About Us page", 204316);
+        taskAssessmentSurveyMapping.put("Corporate Video", 204315);
+        taskAssessmentSurveyMapping.put("Fanvid", 204490);
+        taskAssessmentSurveyMapping.put("Video-Mediated Interaction", 204491);
+        taskAssessmentSurveyMapping.put("Weblog", 204492);
+
+        learnweb.getPeerAssessmentManager().taskSetupAssesment(1, taskAssessmentSurveyMapping, 443);
+
         learnweb.onDestroy();
     }
 
@@ -197,15 +244,54 @@ public class PeerAssessmentManager
         // setup for EU-Leeds and Rome
         int[] courseIds = { 1301, 1297 }; // EU-Leeds and Rome
         int peerAssesmentId = 1; // manually created for now
+        int assessmentFolderId = 443; // the fodler inside the assessmentgroup to store all assessment surveys
 
-        HashMap<String, Integer> taskSurveyMapping = new HashMap<String, Integer>();
-        taskSurveyMapping.put("About Us page", 214925);
-        taskSurveyMapping.put("Corporate Video", 214922);
-        taskSurveyMapping.put("Fanvid", 214924);
-        taskSurveyMapping.put("Video-Mediated Interaction", 214923);
-        taskSurveyMapping.put("Weblog", 214921);
+        // these surveys are used directly. One for each submission topic
+        HashMap<String, Integer> taskPeerAssessmentSurveyMapping = new HashMap<String, Integer>();
+        taskPeerAssessmentSurveyMapping.put("About Us page", 214925);
+        taskPeerAssessmentSurveyMapping.put("Corporate Video", 214922);
+        taskPeerAssessmentSurveyMapping.put("Fanvid", 214924);
+        taskPeerAssessmentSurveyMapping.put("Video-Mediated Interaction", 214923);
+        taskPeerAssessmentSurveyMapping.put("Weblog", 214921);
 
-        taskSetupPeerAssesment(peerAssesmentId, courseIds, taskSurveyMapping);
+        taskSetupPeerAssesment(peerAssesmentId, courseIds, taskPeerAssessmentSurveyMapping);
+
+        // these surveys are copied once for each assessment pair
+        HashMap<String, Integer> taskAssessmentSurveyMapping = new HashMap<String, Integer>();
+        taskAssessmentSurveyMapping.put("About Us page", 204316);
+        taskAssessmentSurveyMapping.put("Corporate Video", 204315);
+        taskAssessmentSurveyMapping.put("Fanvid", 204490);
+        taskAssessmentSurveyMapping.put("Video-Mediated Interaction", 204491);
+        taskAssessmentSurveyMapping.put("Weblog", 204492);
+
+        taskSetupAssesment(peerAssesmentId, taskAssessmentSurveyMapping, assessmentFolderId);
+    }
+
+    private void taskSetupAssesment(int peerAssesmentId, HashMap<String, Integer> taskAssessmentSurveyMapping, int assessmentFolderId) throws SQLException
+    {
+        List<PeerAssesmentPair> pairs = getPeerAssesmentPairsByPeerAssesmentId(peerAssesmentId);
+        PeerAssessmentManager peerAssessmentManager = learnweb.getPeerAssessmentManager();
+
+        for(PeerAssesmentPair pair : pairs)
+        {
+            String submissionTitle = learnweb.getSubmissionManager().getSubmissionById(pair.getSubmissionId()).getTitle();
+            Integer baseResourceId = taskAssessmentSurveyMapping.get(submissionTitle);
+
+            // copy base survey
+            SurveyResource assessmentSurvey = (SurveyResource) learnweb.getResourceManager().getResource(baseResourceId);
+            assessmentSurvey = assessmentSurvey.clone();
+
+            log.debug(assessmentSurvey);
+            assessmentSurvey.setUserId(10921);
+            assessmentSurvey.setGroupId(1373);
+            assessmentSurvey.setFolderId(assessmentFolderId);
+            assessmentSurvey.setEditable(true);
+            assessmentSurvey.save();
+
+            pair.assessmentSurveyResourceId = assessmentSurvey.getId();
+            peerAssessmentManager.savePeerAssesmentPair(pair);
+        }
+
     }
 
     /**
@@ -215,6 +301,7 @@ public class PeerAssessmentManager
      * @throws SQLException
      * @throws MessagingException
      */
+    @SuppressWarnings("unused")
     private void sendInvitationMail(int peerAssementId) throws SQLException, MessagingException
     {
         List<PeerAssesmentPair> pairs = getPeerAssesmentPairsByPeerAssesmentId(peerAssementId);
@@ -222,7 +309,7 @@ public class PeerAssessmentManager
         for(PeerAssesmentPair pair : pairs)
         {
             String submissionUrl = "https://learnweb.l3s.uni-hannover.de/lw/myhome/submission_resources.jsf?user_id=" + pair.getAssessedUserId() + "&submission_id=" + pair.getSubmissionId();
-            String surveyUrl = "https://learnweb.l3s.uni-hannover.de/lw/survey/survey.jsf?resource_id=" + pair.getSurveyResourceId();
+            String surveyUrl = "https://learnweb.l3s.uni-hannover.de/lw/survey/survey.jsf?resource_id=" + pair.getPeerAssessmentSurveyResourceId();
 
             Mail mail = new Mail();
             mail.setSubject("EUMADE4LL peer assessment");
@@ -306,7 +393,7 @@ public class PeerAssessmentManager
                 PreparedStatement selectSubmissionId = learnweb.getConnection().prepareStatement("SELECT submission_id FROM lw_submit_status  " +
                         "WHERE `submission_id` IN (" + StringHelper.implodeInt(submissionIds, ",") + ") AND user_id = ? ");
 
-                int surveyId = taskSurveyMapping.get(submissionTitle);
+                int peerAssessmentsurveyResourceId = taskSurveyMapping.get(submissionTitle);
                 int lastUserId = usersFinal.getLast();
                 for(int userId : usersFinal)
                 {
@@ -316,7 +403,7 @@ public class PeerAssessmentManager
                         log.error("can't get submission id");
                     int submissionId = submissionRs.getInt(1);
 
-                    savePeerAssesmentPair(new PeerAssesmentPair(peerAssesmentId, lastUserId, userId, surveyId, submissionId));
+                    savePeerAssesmentPair(new PeerAssesmentPair(peerAssesmentId, lastUserId, userId, peerAssessmentsurveyResourceId, 0, submissionId));
                     lastUserId = userId;
                 }
                 selectSubmissionId.close();

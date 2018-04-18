@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class SurveyResource extends Resource implements Serializable
 {
@@ -15,6 +16,27 @@ public class SurveyResource extends Resource implements Serializable
     private boolean editable; // if true users can save before their answers before finally submitting them
 
     private Survey survey;
+
+    /**
+     * Do nothing constructor
+     */
+    public SurveyResource()
+    {
+    }
+
+    /**
+     * Copy constructor
+     *
+     * @param old
+     */
+    public SurveyResource(SurveyResource old)
+    {
+        super(old);
+        setSurveyId(old.getSurveyId());
+        setStart(old.getStart());
+        setEnd(old.getEnd());
+        setEditable(old.isEditable());
+    }
 
     @Override
     protected void postConstruct() throws SQLException
@@ -39,6 +61,35 @@ public class SurveyResource extends Resource implements Serializable
     public SurveyUserAnswers getAnswersOfUser(int userId) throws SQLException
     {
         return Learnweb.getInstance().getSurveyManager().getAnswersOfUser(getSurvey(), getId(), userId);
+    }
+
+    public List<User> getUsersWhoSaved() throws SQLException
+    {
+        return Learnweb.getInstance().getSurveyManager().getUsersWhoSavedSurveyResource(getId());
+    }
+
+    @Override
+    public Resource save() throws SQLException
+    {
+        // save normal resource fields
+        super.save();
+
+        // save SurveyResourceFields
+        Learnweb.getInstance().getSurveyManager().saveSurveyResource(this);
+
+        return this;
+    }
+
+    @Override
+    public SurveyResource clone()
+    {
+        return new SurveyResource(this);
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Survey" + super.toString();
     }
 
     public int getSurveyId()

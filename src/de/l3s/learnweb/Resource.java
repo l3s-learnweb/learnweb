@@ -554,51 +554,59 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     @Override
     public Resource clone()
     {
+        return new Resource(this);
+    }
 
-        Resource r = new Resource();
-        r.setId(-1);
-        r.setGroupId(groupId);
-        r.setFolderId(folderId);
-        r.setTitle(title);
-        r.setDescription(description);
-        r.setUrl(url);
-        r.setStorageType(storageType);
-        r.setRights(rights.ordinal());
-        r.setLocation(location);
-        r.setSource(source);
-        r.setAuthor(author);
-        r.setType(type);
-        r.setFormat(format);
-        r.setUserId(ownerUserId);
-        r.setEmbeddedSize3Raw(embeddedSize3);
-        r.setEmbeddedSize4Raw(embeddedSize4);
-        r.setMaxImageUrl(maxImageUrl);
-        r.setFileName(fileName);
-        r.setFileUrl(fileUrl);
-        r.setQuery(query);
-        r.setThumbnail0(thumbnail0);
-        r.setThumbnail1(thumbnail1);
-        r.setThumbnail2(thumbnail2);
-        r.setThumbnail3(thumbnail3);
-        r.setThumbnail4(thumbnail4);
-        r.setEmbeddedRaw(embeddedRaw);
-        r.setDuration(duration);
-        r.setMachineDescription(machineDescription);
-        r.setFileName(fileName);
-        r.setTranscript(transcript);
-        r.setOnlineStatus(onlineStatus);
-        r.setIdAtService(idAtService);
-        r.setRestricted(restricted);
-        r.setResourceTimestamp(resourceTimestamp);
-        r.setCreationDate(creationDate);
-        r.setArchiveUrls(getArchiveUrls());
-        r.setDeleted(deleted);
-        r.setReadOnlyTranscript(readOnlyTranscript);
+    /**
+     * Copy constructor
+     *
+     * @param old
+     */
+    public Resource(Resource old)
+    {
+        setId(-1);
+        setGroupId(old.groupId);
+        setFolderId(old.folderId);
+        setTitle(old.title);
+        setDescription(old.description);
+        setUrl(old.url);
+        setStorageType(old.storageType);
+        setRights(old.rights.ordinal());
+        setLocation(old.location);
+        setSource(old.source);
+        setAuthor(old.author);
+        setType(old.type);
+        setFormat(old.format);
+        setUserId(old.ownerUserId);
+        setEmbeddedSize3Raw(old.embeddedSize3);
+        setEmbeddedSize4Raw(old.embeddedSize4);
+        setMaxImageUrl(old.maxImageUrl);
+        setFileName(old.fileName);
+        setFileUrl(old.fileUrl);
+        setQuery(old.query);
+        setThumbnail0(old.thumbnail0);
+        setThumbnail1(old.thumbnail1);
+        setThumbnail2(old.thumbnail2);
+        setThumbnail3(old.thumbnail3);
+        setThumbnail4(old.thumbnail4);
+        setEmbeddedRaw(old.embeddedRaw);
+        setDuration(old.duration);
+        setMachineDescription(old.machineDescription);
+        setFileName(old.fileName);
+        setTranscript(old.transcript);
+        setOnlineStatus(old.onlineStatus);
+        setIdAtService(old.idAtService);
+        setRestricted(old.restricted);
+        setResourceTimestamp(old.resourceTimestamp);
+        setCreationDate(old.creationDate);
+        setArchiveUrls(old.getArchiveUrls());
+        setDeleted(old.deleted);
+        setReadOnlyTranscript(old.readOnlyTranscript);
         // sets the originalResourceId to the id of the source resource
-        if(originalResourceId == 0)
-            r.setOriginalResourceId(id);
+        if(old.originalResourceId == 0)
+            setOriginalResourceId(old.id);
         else
-            r.setOriginalResourceId(originalResourceId);
+            setOriginalResourceId(old.originalResourceId);
 
         /*
         for(File file :files)
@@ -607,7 +615,6 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
         
         }
         */
-        return r;
     }
 
     /**

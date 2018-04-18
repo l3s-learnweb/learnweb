@@ -483,6 +483,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         getLearnweb().getSubmissionManager().saveSubmission(newSubmission);
         clearSubmissionLists();
         this.newSubmission = new Submission();
+        addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public Submission getNewSubmission()
@@ -494,12 +495,14 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
     {
         getLearnweb().getSubmissionManager().saveSubmission(selectedSubmission);
         clearSubmissionLists();
+        addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public void deleteSubmission()
     {
         getLearnweb().getSubmissionManager().deleteSubmission(selectedSubmission.getId());
         clearSubmissionLists();
+        addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
     }
 
     public void clearSubmissionLists()
@@ -689,6 +692,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         {
             selectedSubmission.setSubmitted(false);
             getLearnweb().getSubmissionManager().saveSubmitStatusForUser(selectedSubmission.getId(), userId, false);
+            addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
         }
     }
 
@@ -698,6 +702,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
         {
             selectedSubmission.setSubmitted(true);
             getLearnweb().getSubmissionManager().saveSubmitStatusForUser(selectedSubmission.getId(), userId, true);
+            addMessage(FacesMessage.SEVERITY_INFO, "changes_saved");
         }
     }
 

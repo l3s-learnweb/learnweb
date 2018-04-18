@@ -8,6 +8,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.util.Date;
 
 import org.apache.log4j.Logger;
 
@@ -73,6 +75,14 @@ public class Sql
             }
         }
         return null;
+    }
+
+    public static Timestamp convertDateTime(Date date)
+    {
+        if(date == null)
+            return null;
+
+        return new java.sql.Timestamp(date.getTime());
     }
 
 }

@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map.Entry;
 
@@ -17,6 +18,7 @@ import org.apache.commons.lang3.Validate;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.SurveyMetaDataFields.MetadataType;
+import de.l3s.util.Sql;
 
 /**
  * @author Rishita
@@ -126,18 +128,18 @@ public class SurveyManager
         surveyResources.add(resourceId);
         Resource surveyResource;
         int groupId;
-
+    
         int surveyId = 0;
-
+    
         surveyResource = learnweb.getResourceManager().getResource(resourceId);
-
+    
         groupId = surveyResource.getGroupId();
         //Fetching course id for given resource
         //Fetching other resource Ids with same survey id in the current course.
         if(groupId > 0)
         {
             int courseId = learnweb.getGroupManager().getGroupById(groupId).getCourseId();
-
+    
             String getOtherResources = "SELECT r.resource_id FROM `lw_resource` r, lw_group t2, lw_survey_resource t3 WHERE r.group_id =t2.group_id and r.`type`='survey' and r.resource_id=t3.resource_id and t2.course_id=?  and  t3.survey_id=?";
             String getSurveyId = "SELECT `survey_id` FROM `lw_survey_resource` WHERE `resource_id`=?";
             PreparedStatement ps = learnweb.getConnection().prepareStatement(getSurveyId);
@@ -156,7 +158,7 @@ public class SurveyManager
                 }
             }
         }
-
+    
         return surveyResources;
     }*/
 
@@ -421,11 +423,11 @@ public class SurveyManager
         return learnweb.getResourceManager().getResources("SELECT " + ResourceManager.RESOURCE_COLUMNS + " FROM lw_resource r JOIN lw_group g USING(group_id) WHERE r.type='survey' AND r.deleted=0 AND g.course_id=? ORDER BY r.title", null, courseId);
         /*
         ArrayList<Resource> resources = new ArrayList<Resource>();
-        
+
         try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT r.resource_id FROM lw_resource r JOIN lw_group t2 USING(group_id) WHERE r.type='survey' AND r.deleted=0 AND t2.course_id=? ORDER BY r.title");)
         {
             ps.setInt(1, courseId);
-        
+
             ResultSet rs = ps.executeQuery();
             while(rs.next())
             {
@@ -436,6 +438,37 @@ public class SurveyManager
         }
         return resources;
         */
+    }
+
+    public Resource saveSurveyResource(SurveyResource surveyResource) throws SQLException
+    {
+        try(PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_survey_resource` (`resource_id`, `survey_id`, `open_date`, `close_date`, `editable`) VALUES (?,?,?,?,?)");)
+        {
+            replace.setInt(1, surveyResource.getId());
+            replace.setInt(2, surveyResource.getSurveyId());
+            replace.setTimestamp(3, Sql.convertDateTime(surveyResource.getStart()));
+            replace.setTimestamp(4, Sql.convertDateTime(surveyResource.getEnd()));
+            replace.setBoolean(5, surveyResource.isEditable());
+            replace.executeUpdate();
+        }
+        return surveyResource;
+    }
+
+    public List<User> getUsersWhoSavedSurveyResource(int surveyResourceId) throws SQLException
+    {
+        UserManager userManager = learnweb.getUserManager();
+        List<User> users = new LinkedList<>();
+
+        try(PreparedStatement preparedStmnt = learnweb.getConnection().prepareStatement("SELECT DISTINCT user_id FROM `lw_survey_answer` WHERE `resource_id` = ?");)
+        {
+            preparedStmnt.setInt(1, surveyResourceId);
+            ResultSet rs = preparedStmnt.executeQuery();
+            while(rs.next())
+            {
+                users.add(userManager.getUser(rs.getInt(1)));
+            }
+        }
+        return users;
     }
 
 }

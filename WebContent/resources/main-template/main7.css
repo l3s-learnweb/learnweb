@@ -2000,3 +2000,14 @@ transform: translate(-22.5px, -14.5px) scale(0.225, 0.15) translate(22.5px, 22.5
   transform: translate(-22.5px, -22.5px) scale(0.225) translate(22.5px, 22.5px);
 }
 
+.green {
+	color: #489a83;
+}
+
+.yellow {
+	color: #ffff00;
+}
+
+.red {
+	color: #d2571e;
+}

@@ -96,7 +96,7 @@ public class IndexFakeNews
                 URL = "http://" + URL;
             resource.setUrl(URL);
 
-            resourceManager.saveResource(resource);
+            resource.save();
 
             log.debug("Added resource: " + resource);
             /*
