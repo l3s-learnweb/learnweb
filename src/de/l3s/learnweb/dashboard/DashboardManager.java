@@ -14,6 +14,11 @@ import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.User;
 import de.l3s.util.StringHelper;
 
+/**
+ * Glossary is a resource, stored in lw_resource table.
+ * Concepts is a "glossaries", stored in lw_resource_glossary(_copy) table.
+ * TODO: update queries using the knowledge :'(
+ */
 public class DashboardManager
 {
     private static final Logger log = Logger.getLogger(DashboardManager.class);
