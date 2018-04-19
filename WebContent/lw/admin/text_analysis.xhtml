@@ -19,7 +19,7 @@
 		
 		<h:form id="anlyse_form" style="margin:5px;">
 			<p:panel header="#{msg.select_users}">
-				<ui:include src="/lw/templates/user_select_form.xhtml" />	
+				<ui:include src="/templates/user/user_select_form.xhtml" />	
 				<br/>
 				<p:commandButton actionListener="#{adminTextAnalysisBean.onAnalyseComments}" value="#{msg.selected_users_comments}" 
 					process="@form" update=":growl output"/>	

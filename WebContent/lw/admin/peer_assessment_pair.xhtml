@@ -5,9 +5,8 @@
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
-	
-	<c:set var="showMail" value="false" scope="request" />
 
+	<c:set var="showEmail" value="true" scope="request" />
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="peer_assessment_id"
@@ -23,22 +22,24 @@
 	<ui:define name="center_layout">
 		<h:outputText value="Missing authentication" rendered="#{not userBean.moderator}" />
 
-		<ui:fragment rendered="#{userBean.moderator}">
-			<div class="page_header">
-				<span>Peer assessment pairing</span>
+		<ui:fragment rendered="#{userBean.moderator}">			
+			<div class="page_header" style="margin:5px;">
+				<span>
+					Peer assessment pairing
+				</span>
 			</div>
-
-			<h:form>
-				<p:dataTable id="processTable" var="pair" style="margin: 2rem;"
+		
+			<h:form style="margin:5px;">
+				<p:dataTable id="processTable" var="pair"
 					value="#{adminPeerAssesmentPairBeen.pairs}"
-					tableStyle="width: 96%;table-layout:auto"
+					tableStyle="width: 96%; table-layout:auto"
 					emptyMessage="No pairs found">
 
 					<p:columnGroup type="header">
 						<p:row>
-							<p:column colspan="#{showMail? 3:2}" headerText="Assessor" style="font-size:1.2em" />
-							<p:column colspan="#{showMail? 3:2}" headerText="Assessed" style="font-size:1.2em"  />
-							<p:column colspan="2" headerText="Assessment" style="font-size:1.2em"  />
+							<p:column colspan="#{showEmail? 3:2}" headerText="Assessor" style="font-size:1.2em" />
+							<p:column colspan="#{showEmail? 3:2}" headerText="Assessed" style="font-size:1.2em"  />
+							<p:column colspan="3" headerText="Assessment" style="font-size:1.2em"  />
 						</p:row>
 
 						<p:row>
@@ -48,25 +49,28 @@
 							<p:column headerText="Student Id"
 								sortBy="#{pair.assessorUser.studentId}">
 							</p:column>
-							<c:if test="#{false}">
-								<p:column headerText="#{msg.email_address}" 
-									sortBy="#{pair.assessorUser.email}">
-								</p:column>
-							</c:if>
+							
+							<p:column headerText="#{msg.email_address}" rendered="#{showEmail}"
+								sortBy="#{pair.assessorUser.email}">
+							</p:column>
+							
 							<p:column headerText="Course"
 								sortBy="#{pair.assessedUser.courses[0].title}">
 							</p:column>
 							<p:column headerText="Student Id"
 								sortBy="#{pair.assessedUser.studentId}">
 							</p:column>
-							<p:column headerText="#{msg.email_address}" rendered="#{showMail}"
+							<p:column headerText="#{msg.email_address}" rendered="#{showEmail}"
 								sortBy="#{pair.assessedUser.email}">
 							</p:column>
 							
 							<p:column headerText="Submission">
 							</p:column>
 
-							<p:column headerText="Assessment">
+							<p:column headerText="Peer Assessment">
+							</p:column>
+							
+							<p:column headerText="Teachers Assessment's">
 							</p:column>
 						</p:row>
 					</p:columnGroup>
@@ -77,7 +81,7 @@
 					<p:column>
 						<h:outputText value="#{pair.assessorUser.studentId}" />
 					</p:column>
-					<p:column>
+					<p:column rendered="#{showEmail}">
 						<h:outputText value="#{pair.assessorUser.email}" />
 					</p:column>
 					
@@ -87,7 +91,7 @@
 					<p:column>
 						<h:outputText value="#{pair.assessedUser.studentId}" />
 					</p:column>
-					<p:column>
+					<p:column rendered="#{showEmail}">
 						<h:outputText value="#{pair.assessedUser.email}" />
 					</p:column>
 
@@ -100,10 +104,32 @@
 					</p:column>
 					
 					<p:column>
-						<h:outputLink value="survey/survey.jsf">
-							<f:param name="resource_id" value="#{pair.surveyResourceId}" />
-							<h:outputText value="#{pair.surveyResource.title}" />
+						<h:outputLink value="survey/answer.jsf">
+							<f:param name="resource_id" value="#{pair.peerAssessmentSurveyResourceId}" />							
+							<f:param name="user_id" value="#{pair.assessorUserId}" />
+							<h:outputText value="#{pair.peerAssessment.title}" />
 						</h:outputLink>
+						
+						<h:outputText value=" Saved" rendered="#{pair.peerAssessmentUserAnswers.saved and not pair.peerAssessmentUserAnswers.submitted}" styleClass="red bold" />
+						<h:outputText value=" Submitted" rendered="#{pair.peerAssessmentUserAnswers.submitted}" styleClass="green bold" />
+					</p:column>
+					
+					<p:column>
+						<h:outputLink value="survey/survey.jsf">
+							<f:param name="resource_id" value="#{pair.assessmentSurveyResourceId}" />	
+							<h:outputText value="My" />
+						</h:outputLink>
+						
+						<ui:repeat var="user" value="#{pair.assessment.usersWhoSaved}">
+							<h:outputText value=" " />
+							<h:outputLink value="survey/answer.jsf" rendered="#{user.id != userBean.user.id}">
+								<f:param name="resource_id" value="#{pair.assessmentSurveyResourceId}" />							
+								<f:param name="user_id" value="#{user.id}" />							
+								<h:outputText value="#{user.realUsername}" />
+							</h:outputLink>
+						
+						</ui:repeat>
+						
 					</p:column>
 				</p:dataTable>
 			</h:form>

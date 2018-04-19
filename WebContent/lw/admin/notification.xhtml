@@ -42,7 +42,7 @@
 					<h:outputText style="font-weight:bold" value="#{msg.select_users}" />
 				</h:panelGrid>
 					
-				<ui:include src="/lw/templates/user_select_form.xhtml" />	
+				<ui:include src="/templates/user/user_select_form.xhtml" />	
 				
 				<h:panelGrid columns="2" style="margin-top:10px" rendered="#{adminNotificationBean.moderatorCanSendMail}">	
 					<p:selectBooleanCheckbox value="#{adminNotificationBean.sendEmail}" id="send_notification_also_per_mail"  />					

@@ -25,7 +25,7 @@
 			</span>
 		</div>
 		<h:form id="us_form" style="padding:0px 5px;" prependId="false">
-				<ui:include src="/lw/templates/user_select_form.xhtml" />
+				<ui:include src="/templates/user/user_select_form.xhtml" />
 				<p:commandButton style="margin-top:5px;" actionListener="#{tedTranscriptBean.onSubmitSelectedUsers}" value="Gather logs of selected users" 
 					process="@form" update=":transcript_table"/>
 		</h:form>

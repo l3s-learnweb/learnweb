@@ -89,11 +89,11 @@
 				
 				return status;
 			}
-			
 			$(document).ready(function(){
 				addSubmissionHeaderClickHandler();
 				toggleSurveySelectField(surveyCheckBox.input.is(':checked'), 'create');
 				toggleSurveySelectField(editSurveyCheckBox.input.is(':checked'), 'edit');
+				$('#current_submissions .submission_header').click();
 			});
 			</script>
 			<h:form>
@@ -129,12 +129,12 @@
 						
 						<p:row>
 							<p:column><h:outputText value="#{msg['Submission.open_date']}"/></p:column>
-							<p:column><p:calendar value="#{submitResourcesBean.selectedSubmission.openDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/></p:column>
+							<p:column><p:calendar value="#{submitResourcesBean.selectedSubmission.openDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button" /></p:column>
 						</p:row>
 						
 						<p:row>
 							<p:column><h:outputText value="#{msg['Submission.close_date']}"/></p:column>
-							<p:column><p:calendar value="#{submitResourcesBean.selectedSubmission.closeDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button"/></p:column>
+							<p:column><p:calendar value="#{submitResourcesBean.selectedSubmission.closeDatetime}"  locale="#{userBean.locale}" navigator="true" showOn="button" /></p:column>
 						</p:row>
 						
 						<p:row>
@@ -162,18 +162,12 @@
 						</p:row>
 						
 						<p:row>
-							<p:column><p:commandButton value="#{msg.save}" styleClass="greenbutton" onclick="PF('submission_edit_dialog').hide();" update=":submissions" actionListener="#{submitResourcesBean.updateSubmissionDetails()}" oncomplete="addSubmissionHeaderClickHandler();"/></p:column>
-							<p:column><h:outputText value=""/></p:column> 
+							<p:column colspan="2">
+								<p:commandButton value="#{msg.delete}" styleClass="graybutton float-right" onclick="return confirmSubmissionDelete('#{submitResourcesBean.selectedSubmission.title}');" update=":submissions" actionListener="#{submitResourcesBean.deleteSubmission()}" oncomplete="addSubmissionHeaderClickHandler();"/>
+								<p:commandButton value="#{msg.save}" styleClass="greenbutton" onclick="PF('submission_edit_dialog').hide();" update=":submissions" actionListener="#{submitResourcesBean.updateSubmissionDetails()}" oncomplete="addSubmissionHeaderClickHandler();"/>
+							</p:column>
 						</p:row>
 						
-						<p:row>
-							<p:column colspan="2"><p:separator /></p:column>
-						</p:row>
-						
-						<p:row>
-							<p:column><p:commandButton value="#{msg.delete}" styleClass="greenbutton" onclick="return confirmSubmissionDelete('#{submitResourcesBean.selectedSubmission.title}');" update=":submissions" actionListener="#{submitResourcesBean.deleteSubmission()}" oncomplete="addSubmissionHeaderClickHandler();"/></p:column>
-							<p:column><h:outputText value=""/></p:column> 
-						</p:row>
 						
 					</p:panelGrid>	
 				</h:form>

@@ -2,7 +2,11 @@ package de.l3s.learnweb.dashboard;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -10,17 +14,17 @@ import javax.faces.bean.ViewScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
-import de.l3s.learnweb.UserManager;
 import org.apache.log4j.Logger;
-
-import de.l3s.learnweb.User;
-import de.l3s.learnweb.beans.ApplicationBean;
-import de.l3s.learnweb.dashboard.DashboardManager.DescFieldData;
-import de.l3s.learnweb.dashboard.DashboardManager.GlossaryStatistic;
-import de.l3s.learnweb.dashboard.DashboardManager.GlossaryFieldSummery;
 import org.primefaces.model.chart.BarChartModel;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.PieChartModel;
+
+import de.l3s.learnweb.User;
+import de.l3s.learnweb.UserManager;
+import de.l3s.learnweb.beans.ApplicationBean;
+import de.l3s.learnweb.dashboard.DashboardManager.DescFieldData;
+import de.l3s.learnweb.dashboard.DashboardManager.GlossaryFieldSummery;
+import de.l3s.learnweb.dashboard.DashboardManager.GlossaryStatistic;
 
 @ManagedBean
 @ViewScoped
@@ -59,7 +63,6 @@ public class DashboardBean extends ApplicationBean implements Serializable
 
     public void onLoad()
     {
-        log.debug("onLoad");
         User user = getUser(); // the current user
         if(user == null || !user.isModerator()) // not logged in or no privileges
             return;
@@ -191,7 +194,8 @@ public class DashboardBean extends ApplicationBean implements Serializable
     {
         ArrayList<User> students = new ArrayList<>();
         UserManager userManager = getLearnweb().getUserManager();
-        for (int studentId : selectedUsersIds) {
+        for(int studentId : selectedUsersIds)
+        {
             students.add(userManager.getUser(studentId));
         }
         return students;

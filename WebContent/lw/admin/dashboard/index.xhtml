@@ -52,7 +52,7 @@
                                         <p:dialog header="Select Students" widgetVar="dlg2" modal="true" height="300" width="450">
                                             <h:form id="user_form" style="padding:0 5px;" prependId="false">
                                                 <div style="overflow-y: auto; max-height: 265px;">
-                                                    <ui:include src="/lw/templates/user_select_form.xhtml"/>
+                                                    <ui:include src="/templates/user/user_select_form.xhtml"/>
                                                 </div>
                                                 <p:commandButton style="margin-top:5px;"
                                                                  actionListener="#{dashboardBean.onSubmitSelectedUsers}"
@@ -254,37 +254,29 @@
                             <div class="ui-g-12">
                                 <h:form>
                                     <p:panel id="description" header="Description field" style="margin-bottom:20px">
-                                        <h:panelGrid columns="1">
-                                            <p:dataTable var="ldl" value="#{dashboardBean.descFieldsStatistic}"
-                                                         styleClass="countries_list">
-                                                <p:column headerText="#{msg.username}" sortable="true"
-                                                          sortBy="#{ldl.user.username}" filterable="true"
-                                                          filterBy="#{ldl.user.username}" filterMatchMode="contains">
-                                                    #{ldl.user.username}
-                                                </p:column>
+										<p:dataTable var="ldl" value="#{dashboardBean.descFieldsStatistic}" styleClass="countries_list"
+											tableStyle="table-layout:auto">
+											<p:column headerText="#{msg.username}" sortable="true" sortBy="#{ldl.user.username}" filterable="true" filterBy="#{ldl.user.username}" filterMatchMode="contains">
+                                                 #{ldl.user.username}
+                                             </p:column>
 
-                                                <p:column styleClass="align-right" headerText="Entry id"
-                                                          sortBy="#{ldl.entryId}" sortable="true">
-                                                    #{ldl.entryId}
-                                                </p:column>
+											<p:column styleClass="align-right" style="min-width:70px;" headerText="Entry id" sortBy="#{ldl.entryId}" sortable="true">
+                                                 #{ldl.entryId}
+                                             </p:column>
 
-                                                <p:column styleClass="align-right" headerText="Lang"
-                                                          sortBy="#{ldl.lang}" sortable="true">
-                                                    #{ldl.lang}
-                                                </p:column>
+											<p:column styleClass="align-right" headerText="Lang" sortBy="#{ldl.lang}" sortable="true">
+                                                 #{ldl.lang}
+                                             </p:column>
 
-                                                <p:column styleClass="align-right" headerText="Description"
-                                                          sortBy="#{ldl.description}" sortable="true">
-                                                    #{ldl.description}
-                                                </p:column>
+											<p:column headerText="Description" sortBy="#{ldl.description}" sortable="true">
+                                                 #{ldl.description}
+                                             </p:column>
 
-                                                <p:column styleClass="align-right" headerText="Length"
-                                                          sortBy="#{ldl.length}" sortable="true">
-                                                    #{ldl.length}
-                                                </p:column>
-                                            </p:dataTable>
-                                        </h:panelGrid>
-                                    </p:panel>
+											<p:column styleClass="align-right" headerText="Length" sortBy="#{ldl.length}" sortable="true">
+                                                 #{ldl.length}
+                                             </p:column>
+										</p:dataTable>
+									</p:panel>
                                 </h:form>
                             </div>
                         </div>

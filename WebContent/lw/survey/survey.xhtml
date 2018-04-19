@@ -159,7 +159,7 @@
 						actionListener="#{surveyBean.onSave()}" 
 						style="float:left; margin-left:5px"
 						styleClass="graybutton resource_button"
-						ajax="true"						
+						ajax="true" oncomplete="$('.nano').nanoScroller({scrollTop: 0});"				
                      	process="@form" 
                      	update="@form :message">
 					</p:commandButton>

@@ -127,7 +127,8 @@ public class BeanHelper
             sb.append(StringHelper.implode(Arrays.asList(entry.getValue()), "; "));
             sb.append("], ");
         }
-        sb.setLength(sb.length() - 2);
+        if(sb.length() > 1) // remove last comma and whitespace
+            sb.setLength(sb.length() - 2);
         sb.append("}");
         return sb.toString();
     }

@@ -36,7 +36,7 @@
 						<td><span style="font-weight: bold;">#{msg['Submission.open_date']}: </span></td>
 						<td>
 							<h:outputText value="#{submission.openDatetime}">
-								<f:convertDateTime dateStyle="medium" type="date" timeZone="CET"/>
+								<f:convertDateTime dateStyle="long" type="both" timeZone="#{userBean.timeZone}"/>
 							</h:outputText>
 						</td>
 					</tr>
@@ -44,7 +44,7 @@
 						<td><span style="font-weight: bold;">#{msg['Submission.close_date']}: </span></td>
 						<td>
 							<h:outputText value="#{submission.closeDatetime}">
-								<f:convertDateTime dateStyle="medium" type="date" timeZone="CET"/>
+								<f:convertDateTime dateStyle="long" type="both" timeZone="#{userBean.timeZone}"/>
 							</h:outputText>
 						</td>
 					</tr>
