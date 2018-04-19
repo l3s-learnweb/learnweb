@@ -100,18 +100,22 @@
 				<p:remoteCommand name="selectGroupItemCommand" actionListener="#{submitResourcesBean.actionSelectGroupItem}" update=":add_resource_panel :growl" oncomplete="update_header();load_editor(); "/>
 			</h:form>
 			
-			<h:outputStylesheet library="resource-submission" name="submit.css" />
-			
-			<ui:fragment rendered="#{userBean.user.courses.contains(1297)}">
-				These are the Links to the Resources that you have submitted:
-				<ul>
-					<ui:repeat var="submission" value="#{submitResourcesBean.pastSubmissions}">
-						<ui:repeat var="resource" value="#{submission.submittedResources}">
-							<li>#{resource}</li>
+				<h:outputStylesheet library="resource-submission" name="submit.css" />
+	
+			<ui:repeat var="course" value="#{userBean.user.courses}">
+				<ui:fragment rendered="#{course.id ==1297}">
+					These are the Links to the Resources that you have submitted:
+					<ul>
+						<ui:repeat var="submission" value="#{submitResourcesBean.pastSubmissions}">
+							<ui:repeat var="resource" value="#{submission.submittedResources}">
+								<li>#{resource}</li>
+							</ui:repeat>
 						</ui:repeat>
-					</ui:repeat>
-				</ul>
-			</ui:fragment>
+					</ul>
+				</ui:fragment>
+			</ui:repeat>
+	
+	
 			<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" modal="true" minWidth="440" appendTo="@(body)" widgetVar="submission_edit_dialog">
 				<h:form id="submission_dialog_form" prependId="false">
 					<p:panelGrid styleClass="ui-noborder">
@@ -244,9 +248,9 @@
 			</div>
 			<h:panelGroup id="submissions" layout="block" style="margin-bottom: 30px;">
 				<div>
-					<h:outputText id="no_submissions" rendered="${submitResourcesBean.pastSubmissions.size() == 0 and submitResourcesBean.currentSubmissions.size() == 0 and submitResourcesBean.futureSubmissions.size() == 0}" value="#{msg['Submission.no_submissions_message']}"/>
+					<h:outputText id="no_submissions" rendered="#{empty submitResourcesBean.pastSubmissions and empty submitResourcesBean.currentSubmissions and empty submitResourcesBean.futureSubmissions}" value="#{msg['Submission.no_submissions_message']}"/>
 				</div>
-				<h:panelGroup id="past_submissions" layout="block" rendered="${submitResourcesBean.pastSubmissions.size() > 0}">
+				<h:panelGroup id="past_submissions" layout="block" rendered="#{not empty submitResourcesBean.pastSubmissions}">
 					<div class="submission_header">
 						<div style="margin-top:10px;"><h1>#{msg['Submission.past_submissions']} (${submitResourcesBean.pastSubmissions.size()})</h1></div>
 					</div>
@@ -256,7 +260,7 @@
 						</ui:decorate>
 					</div>
 				</h:panelGroup>
-				<h:panelGroup id="current_submissions" layout="block" rendered="${submitResourcesBean.currentSubmissions.size() > 0}">
+				<h:panelGroup id="current_submissions" layout="block" rendered="#{not empty submitResourcesBean.currentSubmissions}">
 					<div class="submission_header">
 						<div style="margin-top:10px;"><h1>#{msg['Submission.current_submissions']} (${submitResourcesBean.currentSubmissions.size()})</h1></div>
 					</div>
@@ -266,7 +270,7 @@
 						</ui:decorate>
 					</div>
 				</h:panelGroup>
-				<h:panelGroup id="future_submissions" layout="block" rendered="${submitResourcesBean.futureSubmissions.size() > 0}">
+				<h:panelGroup id="future_submissions" layout="block" rendered="#{not empty submitResourcesBean.futureSubmissions}">
 					<div class="submission_header">
 						<div style="margin-top:10px;"><h1>#{msg['Submission.future_submissions']} (${submitResourcesBean.futureSubmissions.size()})</h1></div>
 					</div>
