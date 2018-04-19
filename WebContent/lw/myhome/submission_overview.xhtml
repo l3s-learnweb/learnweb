@@ -102,6 +102,16 @@
 			
 			<h:outputStylesheet library="resource-submission" name="submit.css" />
 			
+			<ui:fragment rendered="#{userBean.user.courses.contains(1297)}">
+				These are the Links to the Resources that you have submitted:
+				<ul>
+					<ui:repeat var="submission" value="#{submitResourcesBean.pastSubmissions}">
+						<ui:repeat var="resource" value="#{submission.submittedResources}">
+							<li>#{resource}</li>
+						</ui:repeat>
+					</ui:repeat>
+				</ul>
+			</ui:fragment>
 			<p:dialog header="#{msg['Submission.edit_submission']}" id="edit_submission_dialog1" modal="true" minWidth="440" appendTo="@(body)" widgetVar="submission_edit_dialog">
 				<h:form id="submission_dialog_form" prependId="false">
 					<p:panelGrid styleClass="ui-noborder">

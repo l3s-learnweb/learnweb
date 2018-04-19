@@ -83,8 +83,7 @@
 
 								<c:if
 									test="#{field.type eq 'ONE_MENU' or field.type eq 'ONE_MENU_EDITABLE'}">
-									<p:outputLabel for="input_selectone_#{field.id}"
-										value="#{field.label}"></p:outputLabel>
+									<p:outputLabel for="input_selectone_#{field.id}" value="#{field.label}"></p:outputLabel>
 									<p:selectOneMenu id="input_selectone_#{field.id}"
 										value="#{surveyBean.userAnswers.answers[field.id]}"
 										editable="#{field.type eq 'ONE_MENU_EDITABLE'}"
@@ -97,10 +96,9 @@
 								</c:if>
 
 								<c:if test="#{field.type eq 'MULTIPLE_MENU'}">
-									<p:outputLabel for="input_selectmultiple_#{field.id}"
-										value="#{field.label}"></p:outputLabel>
+									<p:outputLabel for="input_selectmultiple_#{field.id}" value="#{field.label}"></p:outputLabel>
 									<p:selectCheckboxMenu id="input_selectmultiple_#{field.id}"
-										value="#{surveyBean.userAnswers.answers[field.id]}"
+										value="#{surveyBean.userAnswers.multipleAnswers[field.id]}"
 										label="" multiple="true" title="#{field.info}"
 										required="#{field.required and empty param[save.clientId]}"
 										filter="#{field.optionsList.size() gt 8}"
@@ -130,7 +128,7 @@
 									<p:outputLabel for="input_manycheckbox_#{field.id}"
 										value="#{field.label}"></p:outputLabel>
 									<p:selectManyCheckbox id="input_manycheckbox_#{field.id}"
-										value="#{surveyBean.userAnswers.answers[field.id]}"
+										value="#{surveyBean.userAnswers.multipleAnswers[field.id]}"
 										label="" multiple="true" title="#{field.info}"
 										required="#{field.required and empty param[save.clientId]}"
 										filter="#{field.optionsList.size() gt 8}"

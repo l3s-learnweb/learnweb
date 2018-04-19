@@ -43,6 +43,7 @@ public class ProxyClient
         System.out.println(DatatypeConverter.printBase64Binary(sig));
     }
 
+    @SuppressWarnings("unused")
     public static void generatePrivateKey() throws Exception
     {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");

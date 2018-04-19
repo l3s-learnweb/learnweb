@@ -25,13 +25,6 @@
 						<h:outputText value="#{msg.members}" />
 					</a>
 				</li>	
-				<ui:fragment rendered="false">							
-				<li>
-					<a href="./group/presentations.jsf?group_id=#{group.id}">
-						<h:outputText value="#{msg.presentations}" />
-					</a>
-				</li>
-				</ui:fragment>	
 				<ui:fragment rendered="#{not empty group.links or not empty group.documentLinks}">								
 				<li>
 					<a href="./group/links.jsf?group_id=#{group.id}" class="#{active == 'links'? 'active':''}">

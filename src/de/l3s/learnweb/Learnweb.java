@@ -63,7 +63,6 @@ public class Learnweb
 
     private final ForumManager forumManager;
     private final ResourceManager resourceManager;
-    private final PresentationManager presentationManager;
     private final OrganisationManager organisationManager;
     private final CourseManager courseManager;
     private final GroupManager groupManager;
@@ -280,7 +279,6 @@ public class Learnweb
         interweb = new InterWeb(properties.getProperty("INTERWEBJ_API_URL"), properties.getProperty("INTERWEBJ_API_KEY"), properties.getProperty("INTERWEBJ_API_SECRET"));
 
         resourceManager = new ResourceManager(this);
-        presentationManager = new PresentationManager(this);
         forumManager = new ForumManager(this);
         organisationManager = new OrganisationManager(this);
         courseManager = new CourseManager(this);
@@ -731,11 +729,6 @@ public class Learnweb
             fileManager.setServerUrl(secureServerUrl);
 
         log.debug("Server base url updated: " + serverUrl);
-    }
-
-    public PresentationManager getPresentationManager()
-    {
-        return presentationManager;
     }
 
     public SearchLogClient getSearchlogClient()

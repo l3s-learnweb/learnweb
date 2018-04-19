@@ -3,8 +3,6 @@ package de.l3s.learnweb.loginprotection;
 import java.util.Date;
 import java.util.List;
 
-import de.l3s.learnweb.loginprotection.entity.AccessData;
-
 /**
  * Interface for the brute force protection manager class. Maintains separate bans on IP and usernames, records failed login attempts and can remove
  * bans as well as add them.

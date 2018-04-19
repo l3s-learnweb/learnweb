@@ -39,6 +39,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
         if(!peerAssessmentSsurveys.contains(resource.getSurveyId()))
             return false;
 
+        // TODO check if user can access a given resource
         return true;
     }
 
@@ -61,6 +62,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
             if(!resource.canViewResource(user))
             {
                 addMessage(FacesMessage.SEVERITY_ERROR, "group_resources_access_denied");
+                resource = null;
                 return;
             }
 
@@ -106,6 +108,11 @@ public class SurveyBean extends ApplicationBean implements Serializable
 
     public boolean isSubmitted()
     {
+        if(null == userAnswers)
+        {
+            log.warn("userAnswers is null");
+            return false;
+        }
         return userAnswers.isSubmitted();
     }
 

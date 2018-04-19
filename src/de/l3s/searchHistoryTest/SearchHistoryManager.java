@@ -330,6 +330,7 @@ public class SearchHistoryManager
         return groupIds;
     }
 
+    @SuppressWarnings("unused")
     public static void main(String[] args) throws Exception
     {
         SearchHistoryManager searchHistoryManager = Learnweb.createInstance("").getSearchHistoryManager();
@@ -343,8 +344,8 @@ public class SearchHistoryManager
         }
         long end = System.currentTimeMillis();
         //System.out.println(end - start);
-
-
+        
+        
         Set<Integer> groupIds = searchHistoryManager.getGroupIds();
         for(int groupId : groupIds)
         {

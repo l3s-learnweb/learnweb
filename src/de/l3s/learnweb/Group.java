@@ -782,13 +782,4 @@ public class Group implements Comparable<Group>, HasId, Serializable
         else if(maxMemberCount <= 0) // if limit true but not defined yet > set default limit = 1
             maxMemberCount = 1;
     }
-
-    // list of group ids for which the old presentation tool is enabled
-    private final static int[] presentationsEnabled = { 113, 118, 151, 199, 281, 560, 760, 764, 795, 800, 841, 844, 861, 883, 896, 897, 898, 900, 901, 902, 1085, 1145, 1155, 1156, 1253, 1254, 1283 };
-
-    public boolean isPresentationsEnabled()
-    {
-        return ArrayUtils.contains(presentationsEnabled, id);
-    }
-
 }

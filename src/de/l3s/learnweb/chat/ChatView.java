@@ -21,6 +21,8 @@ public class ChatView extends ApplicationBean implements Serializable
 
     //private final PushContext pushContext = PushContextFactory.getDefault().getPushContext();
 
+    private static final long serialVersionUID = -2190983402628583947L;
+
     private final EventBus eventBus;
 
     @ManagedProperty("#{chatUsers}")

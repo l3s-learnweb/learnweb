@@ -12,7 +12,7 @@ import javax.faces.bean.ManagedBean;
 @ApplicationScoped
 public class ChatUsers implements Serializable
 {
-
+    private static final long serialVersionUID = -177281489874784225L;
     private List<String> users;
 
     @PostConstruct

@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.Learnweb;
-import de.l3s.learnweb.loginprotection.entity.AccessData;
-import de.l3s.learnweb.loginprotection.entity.LoginAttemptData;
 
 /**
  * A fancier ProtectionManager that, rather than autoban based on pure attempts, analyzes frequency of access on every nth failed attempt.

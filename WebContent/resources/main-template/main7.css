@@ -1325,39 +1325,6 @@ div.title {
 	border-right:1px solid rgb(210,210,210);
 }
 
-.presentation_clear{
-	clear:both;
-	margin-bottom:5px;
-}
-.presentation_detail_div{
-	float:left;
-	width:300px;
-	margin-left:2.5%;
-}
-.presentation_commandbutton{
-	float:right;
-	margin-right:2.5%;
-}
-.presentation_link{
-	padding: 3.5px 6px 3.5px 6px;
-    background-color: #dedede;
-    border-color: #ccc;
-    color: #4a4a4a;
-    border-style: solid;
-    border-width: 1px;
-    font-size: 1em;
-}
-div#presentation_preview {
-    height:0px;
-   	width:95%;
-    border-radius:5px;
-	border:1px solid #ccc !important;
-	box-shadow:0 0 3px 3px #dfdfdf;
-    margin:auto;
-    text-align:center;
-    margin-bottom:15px;
-}
-
 .format_button_link{
 	display:inline-block;
 	text-align:center;

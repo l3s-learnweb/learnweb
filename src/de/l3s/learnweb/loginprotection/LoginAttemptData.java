@@ -1,4 +1,4 @@
-package de.l3s.learnweb.loginprotection.entity;
+package de.l3s.learnweb.loginprotection;
 
 import java.util.Date;
 

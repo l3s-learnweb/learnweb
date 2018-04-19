@@ -2,8 +2,6 @@ package de.l3s.learnweb.beans;
 
 import java.io.IOException;
 import java.io.Serializable;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -46,8 +44,6 @@ import de.l3s.learnweb.LogEntry;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.NewsEntry;
 import de.l3s.learnweb.Organisation.Option;
-import de.l3s.learnweb.Presentation;
-import de.l3s.learnweb.PresentationManager;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Resource.ResourceType;
 import de.l3s.learnweb.ResourceManager;
@@ -79,7 +75,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private List<Folder> breadcrumbs;
 
     private List<User> members;
-    private List<Presentation> presentations;
     private List<LogEntry> logMessages;
     private ArrayList<NewsEntry> newslist;
 
@@ -91,7 +86,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     private int editedGroupLeaderId;
 
     private User clickedUser;
-    private Presentation clickedPresentation;
     private GroupItem clickedGroupItem; // Preview of resource/folder
     private RPAction rightPanelAction = RPAction.none;
 
@@ -190,7 +184,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         updateLinksList();
 
         clickedUser = new User(); // TODO initialize with null
-        clickedPresentation = new Presentation();// TODO initialize with null
 
         searchFilters = new SearchFilters();
         searchFilters.setMode(MODE.group);
@@ -269,21 +262,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
         return newslist;
 
-    }
-
-    public String present()
-    {
-        return "../lw/group/presentation.jsf?id=" + clickedPresentation.getPresentationId();
-    }
-
-    public String editPresentation(String format)
-    {
-        return "../lw/myhome/reedit_presentation.jsf?group_id=" + groupId + "&presentation_id=" + clickedPresentation.getPresentationId() + "&format=" + format;
-    }
-
-    public String edit(String format)
-    {
-        return "../lw/myhome/edit_presentation.jsf?group_id=" + groupId + "&format=" + format;
     }
 
     private void loadGroup() throws SQLException
@@ -463,24 +441,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         this.editLink = editLink;
     }
 
-    public void removePresentationFromGroup()
-    {
-        try
-        {
-            Connection dbCon = getLearnweb().getConnection();
-            PreparedStatement ps = dbCon.prepareStatement("UPDATE `lw_presentation` SET deleted=1 WHERE `presentation_id`=?");
-            ps.setInt(1, clickedPresentation.getPresentationId());
-            ps.execute();
-
-            presentations = getLearnweb().getPresentationManager().getPresentationsByGroupId(groupId);
-            clickedPresentation = new Presentation();
-        }
-        catch(SQLException e)
-        {
-            log.error("unhandled error", e);
-        }
-    }
-
     public void onDeleteLinkFromGroup(int linkId)
     {
         try
@@ -597,21 +557,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         }
     }
 
-    public void onSelectPresentation()
-    {
-        PresentationManager pm = getLearnweb().getPresentationManager();
-        Presentation temp;
-        try
-        {
-            temp = pm.getPresentationsById(Integer.parseInt(FacesContext.getCurrentInstance().getExternalContext().getRequestParameterMap().get("id")));
-            setClickedPresentation(temp);
-        }
-        catch(NumberFormatException | SQLException e)
-        {
-            addFatalMessage(e);
-        }
-    }
-
     public void onSortingChanged(ValueChangeEvent e)
     {
         // TODO implement
@@ -701,34 +646,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         return links;
     }
 
-    public List<Presentation> getPresentations() throws SQLException
-    {
-        if(presentations == null)
-            presentations = getLearnweb().getPresentationManager().getPresentationsByGroupId(groupId);
-        return presentations;
-    }
-
-    /*
-    public boolean hasPresentations()
-    {
-        try
-        {
-            List<Presentation> presentations = getPresentations();
-
-            return presentations.size() > 0;
-        }
-        catch(SQLException e)
-        {
-            log.error(e);
-        }
-        return false;
-    }*/
-
-    public void setPresentations(List<Presentation> presentations)
-    {
-        this.presentations = presentations;
-    }
-
     public RPAction getRightPanelAction()
     {
         return rightPanelAction;
@@ -779,16 +696,6 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     public void setReloadLogs(boolean reloadLogs)
     {
         this.reloadLogs = reloadLogs;
-    }
-
-    public Presentation getClickedPresentation()
-    {
-        return clickedPresentation;
-    }
-
-    public void setClickedPresentation(Presentation clickedPresentation)
-    {
-        this.clickedPresentation = clickedPresentation;
     }
 
     public AbstractPaginator getPaginator()

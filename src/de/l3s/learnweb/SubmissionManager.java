@@ -462,38 +462,4 @@ public class SubmissionManager
             this.submitStatus = submitStatus;
         }
     }
-
-    public static void main(String[] args) throws ClassNotFoundException, SQLException
-    {
-        /*SubmissionManager sm = Learnweb.createInstance("").getSubmissionManager();
-        PreparedStatement pStmt = Learnweb.getInstance().getConnection().prepareStatement("SELECT resource_id from learnweb_main.lw_submit_resource");
-        ResultSet rs = pStmt.executeQuery();
-        int websiteCount = 0, archivedCount = 0;
-        while(rs.next())
-        {
-            int resourceId = rs.getInt(1);
-            Resource r = Learnweb.getInstance().getResourceManager().getResource(resourceId);
-            if(r.getType() == Resource.ResourceType.website)
-            {
-                websiteCount++;
-                System.out.print("resourceid: " + resourceId);
-                PreparedStatement pStmt2 = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM learnweb_main.lw_resource_archiveurl WHERE resource_id = ?");
-                pStmt2.setInt(1, resourceId);
-                ResultSet rs2 = pStmt2.executeQuery();
-                if(rs2.next())
-                {
-                    archivedCount++;
-                    System.out.print(" archived ");
-                    System.out.print(r.getArchiveUrls().getLast().getTimestamp());
-                }
-                System.out.println();
-                pStmt2.close();
-            }
-
-        }
-        System.out.println("No. of websites submitted: " + websiteCount);
-        System.out.println("No. of them archived: " + archivedCount);
-        pStmt.close();*/
-        System.exit(0);
-    }
 }
