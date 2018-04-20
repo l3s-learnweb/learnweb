@@ -101,7 +101,9 @@ public class LoroManager
             {
                 if(l.getDisplayName().toLowerCase().trim().contains(language.toLowerCase().trim()))
                 {
-                    resource.setLanguage(l.getLanguage().trim());
+                    if (l.getLanguage() != null) {
+                        resource.setLanguage(l.getLanguage().trim());
+                    }
                     break;
                 }
             }
