@@ -205,8 +205,10 @@ public class DashboardBean extends ApplicationBean implements Serializable
     {
         try
         {
-            this.selectedUsersIds = getSelectedUsers();
-            cleanAndUpdateStoredData();
+            selectedUsersIds = getSelectedUsers();
+            if (selectedUsersIds != null) {
+                cleanAndUpdateStoredData();
+            }
         }
         catch(SQLException e)
         {
