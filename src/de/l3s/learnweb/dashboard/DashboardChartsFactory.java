@@ -3,6 +3,7 @@ package de.l3s.learnweb.dashboard;
 import de.l3s.learnweb.LogEntry.Action;
 import de.l3s.learnweb.beans.UtilBean;
 import de.l3s.util.MapHelper;
+import org.apache.log4j.Logger;
 import org.primefaces.model.chart.*;
 
 import java.time.ZoneId;
@@ -11,6 +12,7 @@ import java.util.*;
 
 class DashboardChartsFactory
 {
+    private static final Logger log = Logger.getLogger(DashboardChartsFactory.class);
     private static final DateTimeFormatter dateFormat = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     static BarChartModel createActivityTypesChart(final Map<Integer, Integer> actionsMap)
@@ -26,15 +28,19 @@ class DashboardChartsFactory
 
         for(Integer actionId : actionsMap.keySet())
         {
-            Action action = actionTypes[actionId];
-            if(Action.getSearchActions().contains(action))
-                search += actionsMap.get(actionId);
-            else if(Action.getGlossaryActions().contains(action))
-                glossary += actionsMap.get(actionId);
-            else if(Action.getResourceActions().contains(action))
-                resource += actionsMap.get(actionId);
-            else
-                system += actionsMap.get(actionId);
+            if (actionId < actionTypes.length) {
+                Action action = actionTypes[actionId];
+                if(Action.getSearchActions().contains(action))
+                    search += actionsMap.get(actionId);
+                else if(Action.getGlossaryActions().contains(action))
+                    glossary += actionsMap.get(actionId);
+                else if(Action.getResourceActions().contains(action))
+                    resource += actionsMap.get(actionId);
+                else
+                    system += actionsMap.get(actionId);
+            } else {
+                log.error("Unknown actionId: " + actionId);
+            }
         }
 
         ChartSeries activity = new ChartSeries();
