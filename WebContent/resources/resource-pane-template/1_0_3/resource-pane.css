@@ -194,7 +194,7 @@
 }
 
 #archive_list .bold{
-	font-weight:bold;	
+	font-weight:bold;
 }
 
 #list_button{
@@ -763,7 +763,7 @@ a.more_resources_link:hover { text-decoration: none; }
     padding-right: 7px;
     display: block;
 }
-						
+
 @media screen  and (max-width:1050px) {
     .myresource-listview .resource-item:nth-child(1),
     .myresource-listview .resource-item:nth-child(2) { display: inline-block; }
@@ -790,6 +790,6 @@ a.more_resources_link:hover { text-decoration: none; }
 }
 
 #resources_informations_table a:hover, #resources_informations_table a:focus{
-	text-decoration:underline; 
+	text-decoration:underline;
 }
 .ui-rating { opacity: 1 !important; filter: Alpha(Opacity=100) !important; }

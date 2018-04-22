@@ -1,0 +1,43 @@
+<ui:composition
+	template="/templates/main/main.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg.discussion_help} - Learnweb"/>
+
+	<ui:define name="center_layout">
+
+	<style type="text/css">
+		.a{
+			color: blue;
+			text-decoration: underline;
+		}
+	</style>
+
+	<section id="content" class="small_page">
+			<p:panel header="#{msg.discussion_help}">
+			<h:outputText escape="false" value="#{msg.discussion_help_intro}"/>
+			<br/><h:outputText escape="false" value="1. #{msg.discussion_help_user_step_1}"/>
+
+			<ui:fragment rendered="#{empty param['type'] or param['type'] eq 'user'}">
+				<br/><h:outputText escape="false" value="2. #{msg.discussion_help_user_step_2}"/>
+				<br/><h:outputText escape="false" value="3. #{msg.discussion_help_user_step_3}"/>
+			</ui:fragment>
+
+			<ui:fragment rendered="#{not empty param['type'] and param['type'] eq 'admin'}">
+				<br/><h:outputText escape="false" value="2. #{msg.discussion_help_admin_step_2}"/>
+				<br/><h:outputText escape="false" value="3. #{msg.discussion_help_admin_step_3}"/>
+				<br/><h:outputText escape="false" value="4. #{msg.discussion_help_admin_step_4}"/>
+			</ui:fragment>
+
+			<br/>
+		</p:panel>
+		</section>
+
+
+	</ui:define>
+</ui:composition>

@@ -103,6 +103,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
     @NotEmpty
     private String newLinkTitle;
     private String newLinkType;
+    private String newHypothesisLink;
+    private String newHypothesisToken;
 
     private Link selectedLink;
     private Link editLink;
@@ -282,6 +284,8 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             editedGroupDescription = group.getDescription();
             editedGroupLeaderId = group.getLeader() == null ? 0 : group.getLeader().getId();
             editedGroupTitle = group.getTitle();
+            newHypothesisLink = group.getHypothesisLink();
+            newHypothesisToken = group.getHypothesisToken();
 
             if(null == selectedFolder)
             {
@@ -1171,6 +1175,15 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
                 group.setLeaderUserId(editedGroupLeaderId);
                 log(Action.group_changing_leader, group.getId(), group.getId());
             }
+            if(newHypothesisLink != group.getHypothesisLink())
+            {
+                group.setHypothesisLink(newHypothesisLink);
+                log(Action.group_changing_leader, group.getId(), group.getId());
+            }
+            if(newHypothesisToken != group.getHypothesisToken())
+            {
+                group.setHypothesisToken(newHypothesisToken);
+            }
             getLearnweb().getGroupManager().save(group);
             //getLearnweb().getGroupManager().resetCache();
             getUser().clearCaches();
@@ -2029,6 +2042,26 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
         //emSearchBean.setSort("timestamp DESC");
 
         paginator = extendedMetadataSearch.getFilterResults(groupId, folderId, emFilters, getUser());
+    }
+
+    public String getNewHypothesisLink()
+    {
+        return newHypothesisLink;
+    }
+
+    public void setNewHypothesisLink(String newHypothesisLink)
+    {
+        this.newHypothesisLink = newHypothesisLink;
+    }
+
+    public String getNewHypothesisToken()
+    {
+        return newHypothesisToken;
+    }
+
+    public void setNewHypothesisToken(String newHypothesisToken)
+    {
+        this.newHypothesisToken = newHypothesisToken;
     }
 
 }

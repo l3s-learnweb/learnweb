@@ -33,6 +33,8 @@ public class Group implements Comparable<Group>, HasId, Serializable
     private String title;
     private String description;
     private String metadata1;
+    private String hypothesisLink;
+    private String hypothesisToken;
     @Size(max = 50)
     private String language;
     private int categoryId;
@@ -122,6 +124,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
         folders = null;
         resourceCount = -1;
         memberCount = -1;
+        hypothesisLink = null;
     }
 
     public Group()
@@ -782,4 +785,24 @@ public class Group implements Comparable<Group>, HasId, Serializable
         else if(maxMemberCount <= 0) // if limit true but not defined yet > set default limit = 1
             maxMemberCount = 1;
     }
+    public String getHypothesisLink()
+    {
+        return hypothesisLink;
+    }
+
+    public void setHypothesisLink(String hypothesisLink)
+    {
+        this.hypothesisLink = hypothesisLink;
+    }
+
+    public String getHypothesisToken()
+    {
+        return hypothesisToken;
+    }
+
+    public void setHypothesisToken(String hypothesisToken)
+    {
+        this.hypothesisToken = hypothesisToken;
+    }
+
 }

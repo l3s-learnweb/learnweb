@@ -56,7 +56,7 @@ public class ResourceMetadataExtractor
 
     private static final String base58alphabetString = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ";
 
-    private static final BoilerpipeExtractor extractor = CommonExtractors.DEFAULT_EXTRACTOR;
+    private static final BoilerpipeExtractor extractor = CommonExtractors.ARTICLE_EXTRACTOR;
     private static final HTMLHighlighter hh = HTMLHighlighter.newExtractingInstance();
 
     private static final int DESCRIPTION_LIMIT = 1400;

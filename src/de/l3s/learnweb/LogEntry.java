@@ -75,7 +75,10 @@ public class LogEntry implements Serializable
         adding_resource_metadata, //target_id = resource id, param = type of metadata added (options: author, language, media source, media type)
         edit_resource_metadata, //target_id = resource id, param = type of metadata edited (options: author, language, media source, media type)
         group_metadata_search, // param = filter:value only if it is not null
-        group_category_search; // param = clicked category
+        group_category_search, // param = clicked category
+
+        //editing link to hypothesis, experimental
+        group_changing_discussion_link;
 
         public static List<Action> getResourceActions()
         {
@@ -271,6 +274,9 @@ public class LogEntry implements Serializable
         case downloading:
             description = usernameLink + UtilBean.getLocaleMessage("log_downloading", resourceTitle);
             //description = usernameLink + " has downloaded " + resource;
+            break;
+        case group_changing_discussion_link:
+            description = usernameLink + UtilBean.getLocaleMessage("log_changing_discussion_link", resourceTitle);
             break;
         default:
             description = "no message for action " + action.name(); // should never happen;

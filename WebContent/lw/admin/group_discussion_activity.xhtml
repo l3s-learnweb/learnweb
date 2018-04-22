@@ -1,0 +1,60 @@
+<ui:composition
+	template="/templates/main/main.xhtml"
+	xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:param name="loginRequired" value="true"/>
+	<ui:param name="pageTitle" value="#{msg.discussion_activity}"/>
+
+	<ui:define name="center_layout">
+
+	<style type="text/css">
+		.ui-state-hover, .ui-state-focus, .ui-state-active{
+			box-shadow:0 0 0px 0px #fff !important;
+			background-color:#d1d1d1 !important;
+			background-image:none !important;
+			border:1px solid #a8a8a8 !important;
+		}
+
+		.page_header{margin:5px 5px 0px 5px;}
+		#banlistform{padding:5px; width:100%;}
+	</style>
+
+		<div class="page_header">
+			<span>
+				#{msg.discussion_activity}
+			</span>
+		</div>
+
+	 <p:panel>
+			<p:dataTable var="entry" value="#{adminGroupDiscussionActivityBean.groupAnnotations}" rows="50" paginator="true"
+	               paginatorTemplate="{FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}">
+
+				<p:column headerText="#{msg.name}" sortBy="#{entry.name}">
+					<h:outputText value="#{entry.name}" />
+				</p:column>
+
+				<p:column headerText="#{msg.annotation}" sortBy="#{entry.annotation}">
+					<h:outputText value="#{entry.annotation}" />
+				</p:column>
+
+				<p:column headerText="#{msg.snippet}" sortBy="#{entry.snippet}">
+					<h:outputText value="#{entry.snippet}" />
+				</p:column>
+
+				<p:column headerText="#{msg.url}" sortBy="#{entry.url}">
+					<h:outputText value="#{entry.url}" />
+				</p:column>
+
+				<p:column headerText="#{msg.time}" sortBy="#{entry.time}">
+					<h:outputText value="#{entry.time}"/>
+				</p:column>
+
+			</p:dataTable>
+	</p:panel>
+
+	</ui:define>
+</ui:composition>

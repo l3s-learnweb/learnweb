@@ -52,6 +52,8 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
     private final static long serialVersionUID = -4468979717844804599L;
     private final static Logger log = Logger.getLogger(ResourceDetailBean.class);
 
+    private final static String hypothesisProxy = "https://via.hypothes.is/";
+
     private int resourceId = 0;
     private Resource clickedResource = new Resource();
     private Tag selectedTag;
@@ -865,4 +867,9 @@ public class ResourceDetailBean extends ApplicationBean implements Serializable
         int groupId = clickedResource == null ? 0 : clickedResource.getGroupId();
         log(Action.extended_metadata_open_dialog, groupId, 0);
     }
+    public String getHypothesisLink()
+    {
+        return hypothesisProxy + clickedResource.getUrl();
+    }
+
 }
