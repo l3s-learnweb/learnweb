@@ -6,16 +6,16 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.annotation.PostConstruct;
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
 import org.apache.log4j.Logger;
 
-import de.l3s.learnweb.SurveyUserAnswers;
 import de.l3s.learnweb.SurveyManager;
 import de.l3s.learnweb.SurveyMetaDataFields;
 import de.l3s.learnweb.SurveyResource;
+import de.l3s.learnweb.SurveyUserAnswers;
 import de.l3s.learnweb.User;
 
 // TODO the whole class can be removed. use surveybean instead
@@ -50,6 +50,12 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
         if(isAjaxRequest())
             return;
 
+        if(getUser() == null || (!getUser().isModerator() && getUser().getId() != getUserId()))
+        {
+            addMessage(FacesMessage.SEVERITY_ERROR, "group_resources_access_denied");
+            return;
+        }
+
         if(resourceId > 0)
         {
 
@@ -71,11 +77,6 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
 
         }
 
-    }
-
-    @PostConstruct
-    public void init()
-    {
         try
         {
             resourceId = getParameterInt("resource_id");

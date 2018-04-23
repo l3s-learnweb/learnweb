@@ -788,8 +788,9 @@ a.more_resources_link:hover { text-decoration: none; }
     .myresource-listview .resource-item:nth-child(4),
     .myresource-listview .resource-item:nth-child(5) { display: inline-block; }
 }
-
+/*
 #resources_informations_table a:hover, #resources_informations_table a:focus{
 	text-decoration:underline;
 }
+*/
 .ui-rating { opacity: 1 !important; filter: Alpha(Opacity=100) !important; }

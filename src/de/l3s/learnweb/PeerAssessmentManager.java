@@ -81,12 +81,36 @@ public class PeerAssessmentManager
         }
     }
 
-    public List<PeerAssesmentPair> getPeerAssesmentPairsByPeerAssesmentId(int peerAssesmentId) throws SQLException
+    public List<PeerAssesmentPair> getPeerAssessmentPairsByPeerAssessmentId(int peerAssesmentId) throws SQLException
     {
-        return getPeerAssesmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE peerassessment_id = ? ORDER BY survey_resource_id", peerAssesmentId);
+        return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE peerassessment_id = ? ORDER BY survey_resource_id", peerAssesmentId);
     }
 
-    private List<PeerAssesmentPair> getPeerAssesmentPairs(String query, int... parameters) throws SQLException
+    /**
+     * Returns all assessment pairs that the given user has assessed
+     *
+     * @param userId
+     * @return
+     * @throws SQLException
+     */
+    public List<PeerAssesmentPair> getPeerAssessmentPairsByAssessorUserId(int userId) throws SQLException
+    {
+        return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE assessor_user_id = ?", userId);
+    }
+
+    /**
+     * Returns all assessment pairs that the given user has been assessed by
+     *
+     * @param userId
+     * @return
+     * @throws SQLException
+     */
+    public List<PeerAssesmentPair> getPeerAssessmentPairsByAssessedUserId(int userId) throws SQLException
+    {
+        return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE assessor_user_id = ?", userId);
+    }
+
+    private List<PeerAssesmentPair> getPeerAssessmentPairs(String query, int... parameters) throws SQLException
     {
         LinkedList<PeerAssesmentPair> pairs = new LinkedList<>();
 
@@ -216,7 +240,7 @@ public class PeerAssessmentManager
     }
 
     /********************************************************
-     * ******** helper methods to support courses ***********
+     * ******** helper methods to setup courses ***********
      *****************************************************/
 
     public static void main(String[] args) throws Exception
@@ -269,7 +293,7 @@ public class PeerAssessmentManager
 
     private void taskSetupAssesment(int peerAssesmentId, HashMap<String, Integer> taskAssessmentSurveyMapping, int assessmentFolderId) throws SQLException
     {
-        List<PeerAssesmentPair> pairs = getPeerAssesmentPairsByPeerAssesmentId(peerAssesmentId);
+        List<PeerAssesmentPair> pairs = getPeerAssessmentPairsByPeerAssessmentId(peerAssesmentId);
         PeerAssessmentManager peerAssessmentManager = learnweb.getPeerAssessmentManager();
 
         for(PeerAssesmentPair pair : pairs)
@@ -304,7 +328,7 @@ public class PeerAssessmentManager
     @SuppressWarnings("unused")
     private void sendInvitationMail(int peerAssementId) throws SQLException, MessagingException
     {
-        List<PeerAssesmentPair> pairs = getPeerAssesmentPairsByPeerAssesmentId(peerAssementId);
+        List<PeerAssesmentPair> pairs = getPeerAssessmentPairsByPeerAssessmentId(peerAssementId);
 
         for(PeerAssesmentPair pair : pairs)
         {

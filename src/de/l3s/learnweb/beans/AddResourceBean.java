@@ -208,7 +208,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
              *
             User user = getUser();
             //resource = user.addResource(resource);
-            
+
             // check if the user is logged in at interweb and to which services the file can be uploaded to
             if(user.isLoggedInInterweb())
             {
@@ -321,57 +321,57 @@ public class AddResourceBean extends ApplicationBean implements Serializable
 
     /*public void addSurvey() throws IOException
     {
-    
+
         try
         {
             resource.setDeleted(false);
             resource.setSource("Survey");
             resource.setType("Survey");
             resource.setUrl("");
-    
+
             // add resource to a group if selected
             if(resourceTargetGroupId != 0)
             {
                 resource.setGroupId(resourceTargetGroupId);
                 getUser().setActiveGroup(resourceTargetGroupId);
             }
-    
+
             if(resourceTargetFolderId != 0)
             {
                 resource.setFolderId(resourceTargetFolderId);
             }
-    
+
             if(resource.getId() == -1)
                 resource = getUser().addResource(resource);
-    
+
             else
             {
-    
+
                 resource.save();
             }
-    
+
             Resource iconResource = getLearnweb().getResourceManager().getResource(204095);
-    
+
             resource.setThumbnail0(iconResource.getThumbnail0());
             resource.setThumbnail1(iconResource.getThumbnail1());
             resource.setThumbnail2(iconResource.getThumbnail2());
             resource.setThumbnail3(iconResource.getThumbnail3());
             resource.setThumbnail4(iconResource.getThumbnail4());
-    
-            resource.setUrl(getLearnweb().getServerUrl() + "/templates/resources/survey.jsf?resource_id=" + Integer.toString(resource.getId()));
+
+            resource.setUrl(getLearnweb().getServerUrl() + "/xxxxxsurvey.jsf?resource_id=" + Integer.toString(resource.getId()));
             resource.save();
             getLearnweb().getCreateSurveyManager().createSurveyResource(resource.getId(), resource.getTitle(), resource.getDescription(), resource.getOpenDate(), resource.getCloseDate(), resource.getValidCourses());
             log(Action.adding_resource, resourceTargetGroupId, resource.getId(), "");
             addMessage(FacesMessage.SEVERITY_INFO, "addedToResources", resource.getTitle());
-    
+
             UtilBean.getGroupDetailBean().updateResourcesFromSolr();
-    
+
             resource = new Resource();
             resource.setSource("Internet");
             resource.setLocation("Learnweb");
             resource.setStorageType(Resource.SURVEY_RESOURCE);
             resource.setDeleted(true);
-    
+
             //resource.setUrl("");
         }
         catch(SQLException e)
@@ -622,7 +622,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         Add resources through get parameter.
         Implemented for collaboration with an Italian software.
         Currently not used.
-        
+
         if(null != paramUrl || null != paramTitle || null != paramDescription || null != paramSource || null != paramType)
         {
             if(null == paramUrl || paramUrl.length() == 0)
@@ -635,36 +635,36 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         	addMessage(FacesMessage.SEVERITY_ERROR, "Missing required param: title");
         	return;
             }
-        
+
             resource = new Resource();
             resource.setStorageType(Resource.WEB_RESOURCE);
             resource.setUrl(StringHelper.decodeBase64(paramUrl));
             resource.setTitle(StringHelper.decodeBase64(paramTitle));
             resource.setSource("Internet");
             resource.setLocation("Learnweb");
-        
+
             if(null != paramThumbnail && paramThumbnail.length() != 0)
             {
         	String image = "<img src\"" + StringHelper.decodeBase64(paramThumbnail) + "\" />";
         	resource.setEmbeddedSize1Raw(image);
             }
-        
+
             if(null != paramDescription)
         	resource.setDescription(StringHelper.decodeBase64(paramDescription));
-        
+
             if(null != paramSource)
         	resource.setLocation(StringHelper.decodeBase64(paramSource));
-        
+
             if(null != paramType)
         	resource.setType(StringHelper.decodeBase64(paramType));
-        
+
             try
             {
         	addResource();
-        
+
         	String redirect = UtilBean.getLearnwebBean().getContextUrl() + getTemplateDir() + "/resource.jsf?resource_id=" + resource.getId();
         	getFacesContext().getExternalContext().redirect(redirect);
-        
+
             }
             catch(Exception e)
             {
@@ -738,9 +738,9 @@ public class AddResourceBean extends ApplicationBean implements Serializable
         /*
         Resource resource = Learnweb.getInstance().getResourceManager().getResource(190236);
         log.debug(resource);
-        
+
         new CreateThumbnailThread(resource).start();
-        
+
         Thread.sleep(99999999);
         */
     }

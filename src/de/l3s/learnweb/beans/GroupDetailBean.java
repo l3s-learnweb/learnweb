@@ -46,7 +46,6 @@ import de.l3s.learnweb.NewsEntry;
 import de.l3s.learnweb.Organisation.Option;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Resource.ResourceType;
-import de.l3s.learnweb.ResourceManager;
 import de.l3s.learnweb.ResourceManager.Order;
 import de.l3s.learnweb.SearchFilters;
 import de.l3s.learnweb.SearchFilters.Filter;
@@ -239,17 +238,12 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
 
         if(feed != null)
         {
-            ResourceManager resourceManager = getLearnweb().getResourceManager();
-
             newslist = new ArrayList<NewsEntry>();
             for(LogEntry l : feed)
             {
                 newslist.add(new NewsEntry(l));
-
             }
-
         }
-
     }
 
     public ArrayList<NewsEntry> getNewslist()

@@ -26,6 +26,7 @@ import org.json.JSONObject;
 import de.l3s.learnweb.Folder;
 import de.l3s.learnweb.Learnweb;
 import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.PeerAssessmentManager.PeerAssesmentPair;
 import de.l3s.learnweb.Resource;
 import de.l3s.learnweb.Resource.ResourceType;
 import de.l3s.learnweb.Resource.ResourceViewRights;
@@ -90,6 +91,20 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
 
         if(getParameterInt("resource_id") != null)
             setRightPanelAction("viewResource");
+    }
+
+    public List<PeerAssesmentPair> getPeerAssessmentPairs()
+    {
+        try
+        {
+            return getLearnweb().getPeerAssessmentManager().getPeerAssessmentPairsByAssessorUserId(getUserId());
+
+        }
+        catch(SQLException e)
+        {
+            addFatalMessage(e);
+        }
+        return null;
     }
 
     public void preRenderView(ComponentSystemEvent e) throws SQLException

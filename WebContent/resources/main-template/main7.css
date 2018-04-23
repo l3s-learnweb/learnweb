@@ -580,9 +580,10 @@ iframe { border:none }
 .center-header a {
 	padding:5px 15px;
 	display:block;
+	
 }
 .center-header a.active,
-.center-header a:hover {	background-color: #EEE;}
+.center-header a:hover { background-color: #EEE; text-decoration:none; }
 .center-header ul {
 	list-style: outside none none;
 	margin: 10px -10px -10px;
@@ -781,7 +782,7 @@ h3.group_link {
 
 /* general settings */
 
-a { text-decoration:none; }
+a { text-decoration:underline; }
 a:hover{ text-decoration:none; }
 
 td[role=gridcell] a,

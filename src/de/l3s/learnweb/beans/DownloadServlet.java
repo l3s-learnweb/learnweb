@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
 
+import javax.faces.context.ExternalContext;
+import javax.faces.context.FacesContext;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -18,6 +20,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.catalina.connector.ClientAbortException;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.File;
@@ -114,9 +118,17 @@ public class DownloadServlet extends HttpServlet
 
         int index = requestString.indexOf(urlPattern);
         String[] requestFileData = requestString.substring(index + urlPattern.length()).split("/");
-        if(requestFileData.length != 2)
+
+        if(requestFileData.length != 2) // download url is incomplete
         {
-            log.error("Invalid download URL: " + requestString + "; " + BeanHelper.getRequestSummary(request));
+            ExternalContext ext = FacesContext.getCurrentInstance().getExternalContext();
+            request = (HttpServletRequest) ext.getRequest();
+            String referrer = request.getHeader("referer");
+
+            // only log the error if the referrer is uni-hannover.de where we have a chance to fix the link
+            Level logLevel = StringUtils.contains(referrer, "uni-hannover.de") ? Level.WARN : Level.ERROR;
+            log.log(logLevel, "Invalid download URL: " + requestString + "; " + BeanHelper.getRequestSummary(request));
+
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }

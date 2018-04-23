@@ -36,7 +36,7 @@ public class AdminPeerAssesmentPairBeen extends ApplicationBean implements Seria
 
         try
         {
-            pairs = getLearnweb().getPeerAssessmentManager().getPeerAssesmentPairsByPeerAssesmentId(peerAssementId);
+            pairs = getLearnweb().getPeerAssessmentManager().getPeerAssessmentPairsByPeerAssessmentId(peerAssementId);
         }
         catch(SQLException e)
         {
