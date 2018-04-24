@@ -40,8 +40,9 @@
 					</div>
 					<p:panel id="panelOut" header="#{assessmentGridBean.surveyTitle}" style="margin-bottom:10px;" rendered="true">
 						<p:panel id="panel" widgetVar="formVar" rendered="true" style="border:none;">
+						
 							<h:panelGrid columns="1" cellpadding="5">
-							<h:outputText value="Student ID: #{userBean.user.studentId}" style="text-align:center; font-weight:bold" rendered="false" />
+							<h:outputText value="Student ID: #{assessmentGridBean.surveyAnswer.user.studentId}" style="text-align:center; font-weight:bold" />
 								<c:forEach var="field" items="#{assessmentGridBean.questions}">
 
 									<c:if test="#{fn:startsWith(field.type,'FULLWIDTH_')}">
@@ -134,8 +135,13 @@
 				
 			</h:form>
 			<p:commandButton value="Print" type="button" style="float:left;" styleClass="greenbutton resource_button">
-    		<p:printer target="form" />
+			<p:printer target="form" />
 			</p:commandButton>
+			
+			<h:outputLink value="survey/survey.jsf" rendered="#{not assessmentGridBean.surveyAnswer.submitted}" style="float:left; margin-left:20px;"  styleClass="greenbutton resource_button">
+				<f:param name="resource_id" value="#{assessmentGridBean.resourceId}" />	
+				<h:outputText value="Edit" />
+			</h:outputLink>
 					
 		</h:panelGroup>
 	</ui:define>

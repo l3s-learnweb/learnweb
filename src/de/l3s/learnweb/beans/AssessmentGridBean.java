@@ -40,6 +40,7 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
     private SurveyResource sv; // TODO dont initialize
 
     private List<User> users; // TODO dont initialize
+    private SurveyUserAnswers surveyAnswer;
 
     public AssessmentGridBean()
     {
@@ -138,19 +139,24 @@ public class AssessmentGridBean extends ApplicationBean implements Serializable
         try
         {
             SurveyResource surveyResource = (SurveyResource) getLearnweb().getResourceManager().getResource(resourceId);
-            SurveyUserAnswers surveyAnser = surveyResource.getAnswersOfUser(userId);
+            surveyAnswer = surveyResource.getAnswersOfUser(userId);
             sv = surveyResource;
-            submitted = surveyAnser.isSaved();
+            submitted = surveyAnswer.isSaved();
             questions = surveyResource.getQuestions();
             surveyTitle = surveyResource.getTitle();
-            wrappedAnswers = surveyAnser.getAnswers();
-            wrappedMultipleAnswers = surveyAnser.getMultipleAnswers();
+            wrappedAnswers = surveyAnswer.getAnswers();
+            wrappedMultipleAnswers = surveyAnswer.getMultipleAnswers();
         }
         catch(Exception e)
         {
             log.error("Error in fetching assessment form details for survey :" + resourceId, e);
         }
 
+    }
+
+    public SurveyUserAnswers getSurveyAnswer()
+    {
+        return surveyAnswer;
     }
 
     public SurveyResource getSv() // TODO rename to getSurvey

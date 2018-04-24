@@ -103,7 +103,7 @@ public class LogEntry implements Serializable
 
     public static void main(String[] arg)
     {
-        Action[] actions = { Action.survey_submit };
+        Action[] actions = { Action.survey_submit, Action.survey_save };
 
         for(Action action : actions)
         {

@@ -116,12 +116,17 @@ public class SurveyBean extends ApplicationBean implements Serializable
         return userAnswers.isSubmitted();
     }
 
+    /**
+     *
+     * @param submit true if final submit
+     * @return false on error
+     */
     private boolean onSaveOrSubmit(boolean submit)
     {
         if(isSubmitted())
         {
             addMessage(FacesMessage.SEVERITY_ERROR, "This Survey has already been submitted");
-            log.error("Survey already submitted. Should not happen. For User: " + surveyUserId + " for survey: " + surveyResourceId);
+            log.error("Survey already submitted. Should not happen. User: " + surveyUserId + "; Survey: " + surveyResourceId);
             return false;
         }
 
