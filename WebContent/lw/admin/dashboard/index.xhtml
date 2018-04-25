@@ -24,12 +24,12 @@
             <div class="ui-g-12 ui-md-2">
                 <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
                     <div class="center-header" id="group_header" style="margin-right: 0">
-                        <h2>Student List</h2>
+                        <h2>User List</h2>
                     </div>
 
                     <div class="menu_section" style="height: calc(100vh - 102px); overflow-y: auto; width: 100%;">
-                        <p:dataList id="studentsList" value="#{dashboardBean.studentsList}" var="user" type="ordered">
-                            <a target="_blank" href="admin/dashboard/student.jsf?studentId=#{user.id}">
+                        <p:dataList id="usersList" value="#{dashboardBean.usersList}" var="user" type="ordered">
+                            <a target="_self" href="admin/dashboard/user.jsf?userId=#{user.id}">
                                 <h:outputText value="#{user.username}"/>
                             </a>
                         </p:dataList>
@@ -38,9 +38,9 @@
             </div>
             <div class="ui-g-12 ui-md-10 ui-g-nopad" style="padding: .5em;">
                 <div class="ui-g-12 ui-g-nopad">
-                    <div class="center-header student-activities" id="group_header" style="margin-bottom: 1em;">
-                        <h2>Students' Activities</h2>
-                        <span class="header_detail">All student interactions</span>
+                    <div class="center-header user-activities" id="group_header" style="margin-bottom: 1em;">
+                        <h2>Users' Activities</h2>
+                        <span class="header_detail">All user interactions</span>
                     </div>
 
                     <h:panelGroup id="dashboardOptions" styleClass="dashboard" layout="block">
@@ -48,8 +48,8 @@
                             <div class="ui-g-3">
                                 <div class="ui-g ui-fluid">
                                     <div class="ui-md-12">
-                                        <p:commandButton value="Select Students" type="button" onclick="PF('dlg2').show();"/>
-                                        <p:dialog header="Select Students" widgetVar="dlg2" modal="true" height="300" width="450">
+                                        <p:commandButton value="Select Users" type="button" onclick="PF('dlg2').show();"/>
+                                        <p:dialog header="Select Users" widgetVar="dlg2" modal="true" height="300" width="450">
                                             <h:form id="user_form" style="padding:0 5px;" prependId="false">
                                                 <div style="overflow-y: auto; max-height: 265px;">
                                                     <ui:include src="/templates/user/user_select_form.xhtml"/>
@@ -57,7 +57,7 @@
                                                 <p:commandButton style="margin-top:5px;"
                                                                  actionListener="#{dashboardBean.onSubmitSelectedUsers}"
                                                                  value="Gather data of selected users" process="@form"
-                                                                 update=":dashboardMain :studentsList"/>
+                                                                 update=":dashboardMain :usersList :growl" oncomplete="PF('dlg2').hide();"/>
                                             </h:form>
                                         </p:dialog>
                                     </div>
@@ -121,9 +121,9 @@
                                 </p:panel>
                             </div>
                             <div class="ui-g-3">
-                                <p:panel id="chart_barModel" header="Students' Activity types"
+                                <p:panel id="chart_barModel" header="Users' Activity types"
                                          style="margin-bottom:20px">
-                                    <p:chart type="bar" model="#{dashboardBean.studentsActivityTypesChart}"
+                                    <p:chart type="bar" model="#{dashboardBean.usersActivityTypesChart}"
                                              xaxisAngle="60"
                                              style="height:300px"/>
                                 </p:panel>
@@ -132,16 +132,16 @@
                         <div class="ui-g">
                             <div class="ui-g-4">
                                 <h:form>
-                                    <p:panel id="chart_barModel_stSources" header="Students' Source"
+                                    <p:panel id="chart_barModel_stSources" header="Users' Source"
                                              style="margin-bottom:20px">
-                                        <p:chart type="pie" model="#{dashboardBean.studentsSourcesChart}"/>
+                                        <p:chart type="pie" model="#{dashboardBean.usersSourcesChart}"/>
                                     </p:panel>
                                 </h:form>
                             </div>
                             <div class="ui-g-8">
                                 <h:form>
-                                    <p:panel id="glossary" header="Students' Glossary" style="margin-bottom:20px">
-                                        <p:chart type="bar" model="#{dashboardBean.studentsGlossaryChart}"
+                                    <p:panel id="glossary" header="Users' Glossary" style="margin-bottom:20px">
+                                        <p:chart type="bar" model="#{dashboardBean.usersGlossaryChart}"
                                                  style="height:300px"/>
                                     </p:panel>
                                 </h:form>

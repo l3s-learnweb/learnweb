@@ -59,7 +59,7 @@ class DashboardChartsFactory
         return model;
     }
 
-    static PieChartModel createStudentsSourcesChart(Map<String, Integer> glossarySourcesWithCounters)
+    static PieChartModel createUsersSourcesChart(Map<String, Integer> glossarySourcesWithCounters)
     {
         PieChartModel model = new PieChartModel();
         model.setDataFormat("percent");
@@ -111,7 +111,7 @@ class DashboardChartsFactory
         return model;
     }
 
-    static BarChartModel createStudentsGlossaryChart(Map<String, Integer> glossaryConceptsCountPerUser, Map<String, Integer> glossaryTermsCountPerUser)
+    static BarChartModel createUsersGlossaryChart(Map<String, Integer> glossaryConceptsCountPerUser, Map<String, Integer> glossaryTermsCountPerUser)
     {
         BarChartModel model = new BarChartModel();
 
@@ -186,7 +186,7 @@ class DashboardChartsFactory
         return model;
     }
 
-    static BarChartModel createStudentFieldsChart(List<DashboardManager.GlossaryFieldSummery> glossaryFieldSummeryPerUser)
+    static BarChartModel createUserFieldsChart(List<DashboardManager.GlossaryFieldSummery> glossaryFieldSummeryPerUser)
     {
         BarChartModel model = new BarChartModel();
         ChartSeries activity = new ChartSeries();

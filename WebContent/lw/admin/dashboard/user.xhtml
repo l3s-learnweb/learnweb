@@ -1,0 +1,254 @@
+<ui:composition template="/templates/main/main.xhtml" xmlns:ui="http://java.sun.com/jsf/facelets"
+                xmlns:h="http://java.sun.com/jsf/html" xmlns:f="http://java.sun.com/jsf/core"
+                xmlns:p="http://primefaces.org/ui">
+
+    <ui:define name="metadata">
+        <f:metadata>
+            <f:viewParam name="userId" value="#{dashboardUserBean.paramUserId}"/>
+            <f:viewAction action="#{dashboardUserBean.onLoad}"/>
+        </f:metadata>
+    </ui:define>
+
+    <ui:param name="loginRequired" value="true"/>
+    <ui:param name="pageTitle" value="Dashboard"/>
+
+    <style>
+        ul {
+            list-style: none;
+        }
+    </style>
+
+    <ui:define name="center_layout">
+        <div class="ui-g" style="margin: 5px;">
+            <!--<div class="ui-g-12 ui-md-2">
+                <div id="sidebar-menu" class="main_menu_side hidden-print main_menu">
+
+                    <div class="menu_section" style="height: 350px; width: 100%;">
+                        <h:form id="form">
+                            <p:panel header="Navigation">
+                                <a href="admin/dashboard/index.jsf"><i class="fa fa-chevron-left"></i> To all users</a>
+                            </p:panel>
+                        </h:form>
+                    </div>
+                </div>
+            </div>-->
+            <div class="ui-g-12 ui-g-nopad" style="padding: .5em;">
+                <div class="center-header user-activities" id="group_header">
+                    <h2>Users' Activities</h2>
+                    <span class="header_detail"><h:outputText value="#{dashboardUserBean.paramUserId}"/></span>
+                </div>
+
+                <h:panelGroup id="dashboardMain" styleClass="dashboard" layout="block">
+                    <div class="ui-g">
+                        <div class="ui-g-2">
+                            <p:panel header="Total Concepts">
+                                <div class="count">
+                                    <h:outputText value="#{dashboardUserBean.totalConcepts}"/>
+                                </div>
+                            </p:panel>
+                        </div>
+                        <div class="ui-g-2">
+                            <p:panel header="Total Terms">
+                                <div class="count">
+                                    <h:outputText value="#{dashboardUserBean.totalTerms}"/>
+                                </div>
+                            </p:panel>
+                        </div>
+                        <div class="ui-g-2">
+                            <p:panel header="Total Sources">
+                                <div class="count">
+                                    <h:outputText value="#{dashboardUserBean.totalSources}"/>
+                                </div>
+                            </p:panel>
+                        </div>
+                        <div class="ui-g-3">
+                            <p:panel header="Ratio terms/concept">
+                                <div class="count">
+                                    <h:outputText value="#{dashboardUserBean.ratioTermConcept}"/>
+                                </div>
+                            </p:panel>
+                        </div>
+                    </div>
+                    <div class="ui-g">
+                        <div class="ui-g-6">
+                            <h:form id="dateForm">
+                                <div class="ui-g ui-fluid">
+                                    <div class="ui-g-12 ui-md-4">
+                                        <div class="ui-inputgroup">
+                                            <p:outputLabel for="dateStart"/>
+                                            <p:calendar id="dateStart" value="#{dashboardUserBean.startDate}"
+                                                        showOn="button"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-4">
+                                        <div class="ui-inputgroup">
+                                            <p:outputLabel for="dateEnd"/>
+                                            <p:calendar id="dateEnd" value="#{dashboardUserBean.endDate}" showOn="button"/>
+                                        </div>
+                                    </div>
+
+                                    <div class="ui-g-12 ui-md-4">
+                                        <div class="ui-inputgroup">
+                                            <p:commandButton value="Update" update=":dashboardMain :growl"
+                                                             actionListener="#{dashboardUserBean.cleanAndUpdateStoredData}"
+                                                             icon="ui-icon-check"/>
+                                        </div>
+                                    </div>
+                                </div>
+                            </h:form>
+                        </div>
+                    </div>
+
+                    <div class="page_header" style="margin:5px;">
+                        <span>Glossary</span>
+                    </div>
+                    <p:panel style="min-width:628px; margin:5px;">
+                        <div class="ui-g">
+                            <div class="ui-g-9">
+                                <p:panel id="chart_plot_Interactions" header="Interactions" style="margin-bottom:20px">
+                                    <p:chart type="line" model="#{dashboardUserBean.interactionsChart}" style="height:300px;"/>
+                                </p:panel>
+                            </div>
+                            <div class="ui-g-3">
+                                <p:panel id="chart_bar_userActivity" header="Users' Activity types"
+                                         style="margin-bottom:20px">
+                                    <p:chart type="bar" model="#{dashboardUserBean.usersActivityTypesChart}" xaxisAngle="60"
+                                             style="height:300px"/>
+                                </p:panel>
+                            </div>
+                        </div>
+                        <div class="ui-g">
+                            <div class="ui-g-4">
+                                <h:form>
+                                    <p:panel id="chart_plot_userFields" header="Fields" style="margin-bottom:20px">
+                                        <p:chart type="bar" model="#{dashboardUserBean.userFieldsChart}" xaxisAngle="60"
+                                                 style="height:300px"/>
+                                    </p:panel>
+                                </h:form>
+                            </div>
+                            <div class="ui-g-8">
+                                <p:panel id="table_descriptions"
+                                         header="Descriptions of entries from class-mates" stickyHeader="true"
+                                         style="height:361px; overflow-y: scroll;">
+                                    <!--<p:dataTable value="">
+                                        <p:column headerText="insulin">
+                                            <h:outputText>Insulin (from the Latin, insula meaning island) is a peptide hormone produced by beta cells of the pancreatic islets. It regulates the metabolism of carbohydrates, fats and protein by promoting the absorption of, especially, glucose from the blood into fat, liver and skeletal muscle cells.<br/></h:outputText>
+                                            <h:outputText>a hormone that controls how glucose is absorbed and used by the body.<br/></h:outputText>
+                                            <h:outputText>ormone prodotto dal pancreas</h:outputText>
+                                        </p:column>
+                                    </p:dataTable>
+                                    <p:dataTable value="">
+                                        <p:column headerText="Carbohydrates">
+                                            <h:outputText>Carbohydrates are found in a wide array of both healthy and unhealthy foods. Carbohydrates provide the body with glucose, which is converted to energy used to support bodily functions and physical activity.<br/></h:outputText>
+                                            <h:outputText>Carbohydrates are biomolecules containing carbon, hydrogen and oxygen; they can be simple or complex, depending on their chemical structure. Along with proteins and fats, carbohydrates are macronutrients and provide energy to the human body: they are converted by our digestive system into glucose, which is employed as energy for cells, tissues and organs; moreover, extra sugar is stored in our liver and muscles for when it is needed. The body cannot produce carbohydrates on its own, so they must be obtained through diet.<br/></h:outputText>
+                                            <h:outputText>any of a class of substances made of carbon, hydrogen, and oxygen, including starches and sugars.</h:outputText>
+                                        </p:column>
+                                    </p:dataTable>-->
+                                    <p:dataTable value="#{dashboardUserBean.usersGlossaryDescriptions}" var="descr"
+                                                 styleClass="countries_list">
+                                        <p:column headerText="Description">
+                                            <h:outputText value="#{descr}"/>
+                                        </p:column>
+                                        <p:column headerText="Lenght">
+                                            <h:outputText value="#{descr.length()}"/>
+                                        </p:column>
+                                    </p:dataTable>
+                                </p:panel>
+                            </div>
+                        </div>
+                    </p:panel>
+                    <div class="page_header" style="margin:5px; margin-top: 1.5em;">
+                        <span>Tracker</span>
+                    </div>
+                    <p:panel style="min-width:628px; margin:5px;">
+                        <div class="ui-g">
+                            <div class="ui-g-4">
+                                <p:panel id="pie_chart_sources" header="Sources" style="margin-bottom:20px">
+                                    <p:chart type="pie" model="#{dashboardUserBean.usersSourcesChart}"/>
+                                </p:panel>
+                            </div>
+                            <div class="ui-g-6">
+                                <!--<p:panel id="chart_plot_proxySources" header="User Proxy sources" style="margin-bottom:20px">
+                                    <p:chart type="bar" model="#{dashboardUserBean.proxySourcesChart}"/>
+                                </p:panel>-->
+
+                                <p:panel id="table_sources_list" header="User Proxy sources list" widgetVar="panel"
+                                         stickyHeader="true"
+                                         style="margin-bottom:20px; height:362px; overflow-y: scroll;">
+                                    <h:form>
+                                        <p:dataTable var="pll" value="#{dashboardUserBean.usersProxySourcesList}" styleClass="countries_list">
+                                            <p:column headerText="Web Site">
+                                                <h:outputText value="#{pll.key}"/>
+                                            </p:column>
+
+                                            <p:column headerText="Occurrences">
+                                                <h:outputText value="#{pll.value}"/>
+                                            </p:column>
+                                        </p:dataTable>
+                                    </h:form>
+                                </p:panel>
+                            </div>
+                            <div class="ui-g-2" style="padding: 0">
+                                <div class="ui-g">
+                                    <div class="ui-g-12">
+                                        <p:panel header="Total events">
+                                            <div class="count">
+                                                <h:outputText value="#{dashboardUserBean.trackerStatistic.totalEvents}"/>
+                                            </div>
+                                        </p:panel>
+                                    </div>
+                                </div>
+                                <div class="ui-g">
+                                    <div class="ui-g-12">
+                                        <p:panel header="Time stay">
+                                            <div class="count">
+                                                <h:outputText value="#{dashboardUserBean.trackerStatistic.timeStayFormatted}"/>
+                                            </div>
+                                        </p:panel>
+                                    </div>
+                                </div>
+                                <div class="ui-g">
+                                    <div class="ui-g-12">
+                                        <p:panel header="Time active">
+                                            <div class="count">
+                                                <h:outputText value="#{dashboardUserBean.trackerStatistic.timeActiveFormatted}"/>
+                                            </div>
+                                        </p:panel>
+                                    </div>
+                                </div>
+                                <div class="ui-g">
+                                    <div class="ui-g-12">
+                                        <p:panel header="Clicks">
+                                            <div class="count">
+                                                <h:outputText value="#{dashboardUserBean.trackerStatistic.clicks}"/>
+                                            </div>
+                                        </p:panel>
+                                    </div>
+                                </div>
+                                <div class="ui-g">
+                                    <div class="ui-g-12">
+                                        <p:panel header="Key presses">
+                                            <div class="count">
+                                                <h:outputText value="#{dashboardUserBean.trackerStatistic.keyPresses}"/>
+                                            </div>
+                                        </p:panel>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </p:panel>
+                </h:panelGroup>
+            </div>
+
+        </div>
+            <footer>
+                <div class="pull-left">
+                    Davide Taibi
+                    <a href="http://www.itd.cnr.it">CNR-ITD</a>
+                </div>
+                <div class="clearfix"></div>
+            </footer>
+
+    </ui:define>
+</ui:composition>

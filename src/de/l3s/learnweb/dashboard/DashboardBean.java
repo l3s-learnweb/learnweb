@@ -10,7 +10,7 @@ import java.util.Map;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
-import javax.faces.bean.ViewScoped;
+import javax.faces.bean.SessionScoped;
 import javax.faces.context.FacesContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -27,7 +27,7 @@ import de.l3s.learnweb.dashboard.DashboardManager.GlossaryFieldSummery;
 import de.l3s.learnweb.dashboard.DashboardManager.GlossaryStatistic;
 
 @ManagedBean
-@ViewScoped
+@SessionScoped
 public class DashboardBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6265758951073418345L;
@@ -41,21 +41,21 @@ public class DashboardBean extends ApplicationBean implements Serializable
     private List<Integer> selectedUsersIds = null;
     private DashboardManager dashboardManager = null;
 
-    private Integer totalConcepts = null;
-    private Integer totalTerms = null;
-    private ArrayList<GlossaryFieldSummery> glossaryFieldsSummeryPerUser;
-    private Map<Integer, GlossaryStatistic> glossaryStatisticPerUser;
-    private Map<String, Integer> glossaryConceptsCountPerUser;
-    private Map<String, Integer> glossarySourcesWithCounters;
-    private Map<String, Integer> glossaryTermsCountPerUser;
-    private Map<Integer, Integer> actionsWithCounters;
-    private Map<String, Integer> actionsCountPerDay;
-    private ArrayList<DescFieldData> descFieldsStatistic;
+    private transient Integer totalConcepts = null;
+    private transient Integer totalTerms = null;
+    private transient ArrayList<GlossaryFieldSummery> glossaryFieldsSummeryPerUser;
+    private transient Map<Integer, GlossaryStatistic> glossaryStatisticPerUser;
+    private transient Map<String, Integer> glossaryConceptsCountPerUser;
+    private transient Map<String, Integer> glossarySourcesWithCounters;
+    private transient Map<String, Integer> glossaryTermsCountPerUser;
+    private transient Map<Integer, Integer> actionsWithCounters;
+    private transient Map<String, Integer> actionsCountPerDay;
+    private transient ArrayList<DescFieldData> descFieldsStatistic;
 
-    private LineChartModel interactionsChart;
-    private BarChartModel studentsActivityTypesChart;
-    private BarChartModel studentsGlossaryChart;
-    private PieChartModel studentsSourcesChart;
+    private transient LineChartModel interactionsChart;
+    private transient BarChartModel usersActivityTypesChart;
+    private transient BarChartModel usersGlossaryChart;
+    private transient PieChartModel usersSourcesChart;
 
     public DashboardBean()
     {
@@ -77,8 +77,10 @@ public class DashboardBean extends ApplicationBean implements Serializable
             startDate = new Date(Long.parseLong(savedStartDate));
             endDate = new Date(Long.parseLong(savedEndDate));
 
-            selectedUsersIds = getUser().getOrganisation().getUserIds();
             dashboardManager = getLearnweb().getDashboardManager();
+            if (selectedUsersIds == null) {
+                selectedUsersIds = getUser().getOrganisation().getUserIds();
+            }
 
             fetchDataFromManager();
         }
@@ -91,9 +93,9 @@ public class DashboardBean extends ApplicationBean implements Serializable
     public void cleanAndUpdateStoredData() throws SQLException
     {
         interactionsChart = null;
-        studentsActivityTypesChart = null;
-        studentsGlossaryChart = null;
-        studentsSourcesChart = null;
+        usersActivityTypesChart = null;
+        usersGlossaryChart = null;
+        usersSourcesChart = null;
 
         fetchDataFromManager();
     }
@@ -144,25 +146,25 @@ public class DashboardBean extends ApplicationBean implements Serializable
         return interactionsChart;
     }
 
-    public BarChartModel getStudentsActivityTypesChart()
+    public BarChartModel getUsersActivityTypesChart()
     {
-        if(studentsActivityTypesChart == null)
-            studentsActivityTypesChart = DashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
-        return studentsActivityTypesChart;
+        if(usersActivityTypesChart == null)
+            usersActivityTypesChart = DashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
+        return usersActivityTypesChart;
     }
 
-    public BarChartModel getStudentsGlossaryChart()
+    public BarChartModel getUsersGlossaryChart()
     {
-        if(studentsGlossaryChart == null)
-            studentsGlossaryChart = DashboardChartsFactory.createStudentsGlossaryChart(glossaryConceptsCountPerUser, glossaryTermsCountPerUser);
-        return studentsGlossaryChart;
+        if(usersGlossaryChart == null)
+            usersGlossaryChart = DashboardChartsFactory.createUsersGlossaryChart(glossaryConceptsCountPerUser, glossaryTermsCountPerUser);
+        return usersGlossaryChart;
     }
 
-    public PieChartModel getStudentsSourcesChart()
+    public PieChartModel getUsersSourcesChart()
     {
-        if(studentsSourcesChart == null)
-            studentsSourcesChart = DashboardChartsFactory.createStudentsSourcesChart(glossarySourcesWithCounters);
-        return studentsSourcesChart;
+        if(usersSourcesChart == null)
+            usersSourcesChart = DashboardChartsFactory.createUsersSourcesChart(glossarySourcesWithCounters);
+        return usersSourcesChart;
     }
 
     public Integer getTotalConcepts()
@@ -190,23 +192,24 @@ public class DashboardBean extends ApplicationBean implements Serializable
         return descFieldsStatistic;
     }
 
-    public ArrayList<User> getStudentsList() throws SQLException
+    public ArrayList<User> getUsersList() throws SQLException
     {
-        ArrayList<User> students = new ArrayList<>();
+        ArrayList<User> users = new ArrayList<>();
         UserManager userManager = getLearnweb().getUserManager();
-        for(int studentId : selectedUsersIds)
+        for(int userId : selectedUsersIds)
         {
-            students.add(userManager.getUser(studentId));
+            users.add(userManager.getUser(userId));
         }
-        return students;
+        return users;
     }
 
     public void onSubmitSelectedUsers()
     {
         try
         {
-            selectedUsersIds = getSelectedUsers();
-            if (selectedUsersIds != null) {
+            List<Integer> newSelectedUsers = getSelectedUsers();
+            if (newSelectedUsers != null) {
+                selectedUsersIds = newSelectedUsers;
                 cleanAndUpdateStoredData();
             }
         }
@@ -223,7 +226,7 @@ public class DashboardBean extends ApplicationBean implements Serializable
 
         if(null == tempSelectedUsers || tempSelectedUsers.length == 0)
         {
-            addMessage(FacesMessage.SEVERITY_WARN, "select_user");
+            addMessage(FacesMessage.SEVERITY_ERROR, "select_user");
             return null;
         }
 

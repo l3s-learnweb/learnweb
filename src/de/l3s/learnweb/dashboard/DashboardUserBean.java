@@ -16,16 +16,16 @@ import java.util.*;
 
 @ManagedBean
 @ViewScoped
-public class DashboardStudentBean extends ApplicationBean implements Serializable
+public class DashboardUserBean extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6265758951073418345L;
-    private static final Logger log = Logger.getLogger(DashboardStudentBean.class);
+    private static final Logger log = Logger.getLogger(DashboardUserBean.class);
 
     private static final String PREFERENCE_STARTDATE = "dashboard_startdate";
     private static final String PREFERENCE_ENDDATE = "dashboard_enddate";
     private static final String TRACKER_CLIENT_ID = "1";
 
-    private Integer paramStudentId = null;
+    private Integer paramUserId = null;
 
     private Date startDate = null;
     private Date endDate = null;
@@ -45,12 +45,12 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
     private LinkedList<DashboardManager.TrackerStatistic> trackerStatistics;
 
     private LineChartModel interactionsChart;
-    private BarChartModel studentsActivityTypesChart;
-    private PieChartModel studentsSourcesChart;
-    private BarChartModel studentFieldsChart;
+    private BarChartModel usersActivityTypesChart;
+    private PieChartModel usersSourcesChart;
+    private BarChartModel userFieldsChart;
     private BarChartModel proxySourcesChart;
 
-    public DashboardStudentBean()
+    public DashboardUserBean()
     {
     }
 
@@ -58,7 +58,7 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
     {
         log.debug("onLoad");
         User user = getUser(); // the current user
-        if(user == null || !user.isModerator()) // not logged in or no privileges
+        if(user == null || (!user.isModerator() && paramUserId != null && paramUserId != user.getId())) // not logged in or no privileges
             return;
 
         try
@@ -71,7 +71,7 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
             startDate = new Date(Long.parseLong(savedStartDate));
             endDate = new Date(Long.parseLong(savedEndDate));
 
-            selectedUsersIds = Collections.singletonList(paramStudentId);
+            selectedUsersIds = Collections.singletonList(paramUserId == null ? user.getId() : paramUserId);
             dashboardManager = getLearnweb().getDashboardManager();
 
             fetchDataFromManager();
@@ -85,9 +85,9 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
     public void cleanAndUpdateStoredData() throws SQLException
     {
         interactionsChart = null;
-        studentsActivityTypesChart = null;
-        studentsSourcesChart = null;
-        studentFieldsChart = null;
+        usersActivityTypesChart = null;
+        usersSourcesChart = null;
+        userFieldsChart = null;
         proxySourcesChart = null;
 
         fetchDataFromManager();
@@ -103,7 +103,6 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
         glossarySourcesWithCounters = dashboardManager.getGlossarySourcesWithCounters(selectedUsersIds, startDate, endDate);
         actionsWithCounters = dashboardManager.getActionsWithCounters(selectedUsersIds, startDate, endDate);
         actionsCountPerDay = dashboardManager.getActionsCountPerDay(selectedUsersIds, startDate, endDate);
-        // TODO: display them somewhere on the user stat page
         glossaryDescriptions = dashboardManager.getGlossaryDescriptions(selectedUsersIds, startDate, endDate);
         trackerStatistics = dashboardManager.getTrackerStatistics(TRACKER_CLIENT_ID, selectedUsersIds, startDate, endDate);
         descFieldsStatistic = dashboardManager.getLangDescStatistic(selectedUsersIds, startDate, endDate);
@@ -141,18 +140,18 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
         return interactionsChart;
     }
 
-    public BarChartModel getStudentFieldsChart()
+    public BarChartModel getUserFieldsChart()
     {
-        if(studentFieldsChart == null)
-            studentFieldsChart = DashboardChartsFactory.createStudentFieldsChart(glossaryFieldsSummeryPerUser);
-        return studentFieldsChart;
+        if(userFieldsChart == null)
+            userFieldsChart = DashboardChartsFactory.createUserFieldsChart(glossaryFieldsSummeryPerUser);
+        return userFieldsChart;
     }
 
-    public BarChartModel getStudentsActivityTypesChart()
+    public BarChartModel getUsersActivityTypesChart()
     {
-        if(studentsActivityTypesChart == null)
-            studentsActivityTypesChart = DashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
-        return studentsActivityTypesChart;
+        if(usersActivityTypesChart == null)
+            usersActivityTypesChart = DashboardChartsFactory.createActivityTypesChart(actionsWithCounters);
+        return usersActivityTypesChart;
     }
 
     public BarChartModel getProxySourcesChart()
@@ -162,11 +161,11 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
         return proxySourcesChart;
     }
 
-    public PieChartModel getStudentsSourcesChart()
+    public PieChartModel getUsersSourcesChart()
     {
-        if(studentsSourcesChart == null)
-            studentsSourcesChart = DashboardChartsFactory.createStudentsSourcesChart(glossarySourcesWithCounters);
-        return studentsSourcesChart;
+        if(usersSourcesChart == null)
+            usersSourcesChart = DashboardChartsFactory.createUsersSourcesChart(glossarySourcesWithCounters);
+        return usersSourcesChart;
     }
 
     public Integer getTotalConcepts()
@@ -184,12 +183,12 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
         return totalSources;
     }
 
-    public ArrayList<Map.Entry<String, Integer>> getStudentsProxySourcesList()
+    public ArrayList<Map.Entry<String, Integer>> getUsersProxySourcesList()
     {
         return new ArrayList<>(MapHelper.sortByValue(proxySourcesWithCounters).entrySet());
     }
 
-    public List<String> getStudentsGlossaryDescriptions()
+    public List<String> getUsersGlossaryDescriptions()
     {
         return glossaryDescriptions;
     }
@@ -203,14 +202,14 @@ public class DashboardStudentBean extends ApplicationBean implements Serializabl
         return trackerStatistics.get(0);
     }
 
-    public Integer getParamStudentId()
+    public Integer getParamUserId()
     {
-        return paramStudentId;
+        return paramUserId;
     }
 
-    public void setParamStudentId(final Integer paramStudentId)
+    public void setParamUserId(final Integer paramUserId)
     {
-        this.paramStudentId = paramStudentId;
+        this.paramUserId = paramUserId;
     }
 
     public String getRatioTermConcept()
