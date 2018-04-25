@@ -125,7 +125,7 @@ public class ResourcePreviewMaker
         }
         catch(Throwable e)
         {
-            log.error("Error in creating thumbnails from " + resource.getFormat() + " for resource: " + resource.getId(), e);
+            log.error("Error in creating thumbnails from " + resource.getFormat() + " (detected type: " + resource.getType() + ") for resource: " + resource.getId(), e);
         }
         finally
         {
