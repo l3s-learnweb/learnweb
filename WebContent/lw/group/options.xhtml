@@ -203,7 +203,7 @@
 			<h:form id="group_delete_form" style="margin:0 0 4rem 1rem;">
 				<p:commandButton action="#{groupsBean.deleteGroup}" ajax="false"
 					title="#{msg.delete}" process="@this" value="#{msg.delete_group} "
-					onclick="return confirm('${groupsBean.getLocaleMessage('group_delete_question', groupDetailBean.group.title)}');" >
+					onclick="return confirm('${utilBean.getLocaleMessage('group_delete_question', groupDetailBean.group.title)}');" >
 					<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{groupDetailBean.group}" />
 				</p:commandButton>
 			</h:form>

@@ -106,7 +106,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             if(groupId == 0 && getSelectedFolderId() == 0)
             {
                 rootFolder = false;
-                Folder folder = new Folder(0, 0, UtilBean.getLocaleMessage("myPrivateResources"));
+                Folder folder = new Folder(0, 0, getLocaleMessage("myPrivateResources"));
                 breadcrumb.add(folder);
                 resources = getLearnweb().getResourceManager().getFolderResourcesByUserId(0, 0, getUser().getId(), 10000);
             }
@@ -134,13 +134,13 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
     {
         if(!(tagO instanceof Tag))
             return false;
-    
+
         User user = getUser();
         if(null == user)
             return false;
         if(user.isAdmin() || user.isModerator())
             return true;
-    
+
         Tag tag = (Tag) tagO;
         User owner = clickedResource.getTags().getElementOwner(tag);
         if(user.equals(owner))
@@ -324,7 +324,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             }
             else if(itemType != null && itemType.equals("group") && itemId == 0)
             {
-                Folder folder = new Folder(0, 0, UtilBean.getLocaleMessage("myPrivateResources"));
+                Folder folder = new Folder(0, 0, getLocaleMessage("myPrivateResources"));
                 folder.setUserId(getUser().getId());
                 this.setClickedGroupItem(folder);
             }
@@ -371,7 +371,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
             }
             else if(isRootFolder() && folderId == 0)
             {
-                Folder folder = new Folder(0, 0, UtilBean.getLocaleMessage("myPrivateResources"));
+                Folder folder = new Folder(0, 0, getLocaleMessage("myPrivateResources"));
                 folder.setUserId(getUser().getId());
                 this.setClickedFolder(folder);
                 this.setSelectedFolder(folder);
@@ -690,7 +690,7 @@ public class MyResourcesBean extends ApplicationBean implements Serializable
         if(rootFolder)
         {
             LinkedList<Folder> folders = new LinkedList<Folder>();
-            Folder myPrivateFolder = new Folder(0, 0, UtilBean.getLocaleMessage("myPrivateResources"));
+            Folder myPrivateFolder = new Folder(0, 0, getLocaleMessage("myPrivateResources"));
             myPrivateFolder.setUserId(getUser().getId());
             folders.add(myPrivateFolder);
             folders.addAll(Learnweb.getInstance().getGroupManager().getGroupsForMyResources(getUser().getId()));

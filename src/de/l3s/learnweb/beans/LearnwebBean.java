@@ -111,23 +111,6 @@ public class LearnwebBean implements Serializable
         return getContextPath() + "/resources/image/no_profile.jpg";
     }
 
-    /**
-     * get a message from the message property files depending on the currently used local
-     *
-     * @param msgKey
-     * @param args
-     * @return
-     */
-    public String getLocaleMessage(String msgKey, Object... args)
-    {
-        return UtilBean.getLocaleMessage(msgKey, args);
-    }
-
-    public String getLocaleMessage(String msgKey)
-    {
-        return UtilBean.getLocaleMessage(msgKey);
-    }
-
     public boolean isMaintenanceMode()
     {
         return maintenanceMode;

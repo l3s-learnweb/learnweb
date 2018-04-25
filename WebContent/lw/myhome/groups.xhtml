@@ -158,12 +158,12 @@
 				
 				<p:column headerText="#{msg.options}" styleClass="nowrap align-center" width="60">					
 					<p:commandLink action="#{groupsBean.leaveGroup}" styleClass="optionIcon" process="@this" 
-						update=":other_groups :growl :group_menu :my_groups"  title="#{msg.leave}" oncomplete="applyTooltip()"
-						onstart="return confirm('${groupsBean.getLocaleMessage('leave_group_question', group.title)}');">
+						update=":other_groups :growl :group_menu :my_groups"  title="#{msg.leave}" oncomplete="applyTooltip()">
 						<f:setPropertyActionListener target="#{groupsBean.selectedGroup}" value="#{group}" />
 						<h:graphicImage value="/resources/icon/silk/group_delete.png" width="16" height="16" alt="#{msg.leave}" />
-					</p:commandLink>					
-					
+						<p:confirm message="${utilBean.getLocaleMessage('leave_group_question', group.title)}" />
+				    </p:commandLink>			 
+			    
 					<h:outputLink value="group/options.jsf" rendered="#{groupsBean.canDeleteGroup(group)}">
 							<f:param name="group_id" value="#{group.id}" />
 							<h:graphicImage value="/resources/icon/silk/pencil.png" width="16" height="16" alt="#{msg.edit}" />
@@ -173,6 +173,9 @@
 				
 			</p:dataTable>
 			<br/><br/>
+			
+				
+			    
 		</h:form>
 		<br/>
 		<br/>

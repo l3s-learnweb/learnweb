@@ -590,7 +590,7 @@ public class AddResourceBean extends ApplicationBean implements Serializable
             return targetGroup.getTitle();
         }
 
-        return UtilBean.getLocaleMessage("myResourcesTitle");
+        return getLocaleMessage("myResourcesTitle");
     }
 
     public void nextStep()

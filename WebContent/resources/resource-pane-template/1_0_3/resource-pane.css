@@ -276,10 +276,6 @@
     margin-left: 0;
 }
 
-.breadcrumbs li:last-child {
-    pointer-events: none;
-}
-
 .breadcrumbs li:first-child:before {
     display: none;
 }

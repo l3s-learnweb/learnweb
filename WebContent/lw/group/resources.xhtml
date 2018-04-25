@@ -174,10 +174,11 @@
                                           onclick="openFolder(0); return false;">#{groupDetailBean.group.title}</h:outputLink>
                         </li>
 
-                        <ui:repeat var="folder" value="#{groupDetailBean.breadcrumbs}">
+                        <ui:repeat var="folder" value="#{groupDetailBean.breadcrumbs}" varStatus="status">
                             <li data-folderId="#{folder.id}">
-                                <h:outputLink value="#"
-                                              onclick="openFolder(#{folder.id}); return false;">#{folder.name}</h:outputLink>
+                                <h:outputLink rendered="#{not status.last}" value="#" nclick="openFolder(#{folder.id}); return false;">#{folder.name}</h:outputLink>                                
+                                
+								<h:outputText rendered="#{status.last}" value="#{folder.name}" escape="false" styleClass="bold"/>
                             </li>
                         </ui:repeat>
                     </ul>

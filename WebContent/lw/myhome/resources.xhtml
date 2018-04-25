@@ -104,10 +104,12 @@
 
 						<ui:repeat var="folder" value="#{myResourcesBean.breadcrumb}" varStatus="status">
 							<li>
-								<p:commandLink update=":breadcrumb :datagrid :add_resource_panel" oncomplete="update_header();update_url(0,0,#{folder.groupId});scroller();resourceDND();">
+								<p:commandLink rendered="#{not status.last}" update=":breadcrumb :datagrid :add_resource_panel" oncomplete="update_header();update_url(0,0,#{folder.groupId});scroller();resourceDND();">
 									<f:setPropertyActionListener target="#{myResourcesBean.clickedFolder}" value="#{folder}" />
 									<h:outputText value="#{folder.name}" escape="false"/>
 								</p:commandLink>
+								
+								<h:outputText rendered="#{status.last}" value="#{folder.name}" escape="false" styleClass="bold"/>
 							</li>
 						</ui:repeat>
 					</ul>
@@ -256,7 +258,7 @@
 											<div class="resource-title-text">
 												<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
 
-												<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
+												<span class="resource-title-summary"><span>${utilBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
 											</div>
 										</div>
 									</div>
@@ -321,7 +323,7 @@
 											</div>-->
 										<div class="resource-title-text">
 											<h:outputText value="#{res.title}" escape="false" styleClass="resource-title-name" title="#{res.title}" />
-											<span class="resource-title-summary"><span>${learnwebBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
+											<span class="resource-title-summary"><span>${utilBean.getLocaleMessage(res.type)}</span> #{msg.added_by} <span>#{res.getOwnerUser().username}</span></span>
 										</div>
 									</div>
 								</div>

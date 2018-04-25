@@ -322,6 +322,11 @@
 	<h:form class="display-none">
 		<p:remoteCommand actionListener="${searchBean.logQuerySuggestion()}" name="logQuerySuggestion" async="true" process="@this" partialSubmit="true" global="false"/>
 	</h:form>
+	<p:confirmDialog global="true" showEffect="fade" hideEffect="fade" header="#{msg.confirmation}" icon="ui-icon-alert">
+		<p:commandButton value="#{msg.yes}" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+		<p:commandButton value="#{msg.no}" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+	</p:confirmDialog>
+
 	<script type="text/javascript">
 		var market = '#{userBean.localeCode}';
 	</script>

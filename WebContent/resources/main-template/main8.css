@@ -577,7 +577,8 @@ iframe { border:none }
 	display:block;
 	border-right: 1px solid rgb(230, 230, 230);
 }
-.center-header a {
+.center-header ul span,
+.center-header ul a {
 	padding:5px 15px;
 	display:block;
 	
@@ -1405,6 +1406,11 @@ div.title {
 #preview{
 	max-height:100%;
 	max-width:100%;
+}
+
+.folder-tree .ui-tree-container >li > ul > li:last-child {
+  margin-bottom:0.7rem
+  /* fix for safari: If scrollbar is shown the last entry is not clickable */
 }
 
 .folder-tree .ui-tree {

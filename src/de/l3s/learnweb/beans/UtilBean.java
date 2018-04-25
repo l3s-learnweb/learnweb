@@ -41,7 +41,7 @@ public class UtilBean implements Serializable
             return false;
     }
 
-    // ------------------------ 
+    // ------------------------
 
     public static ExternalContext getExternalContext()
     {
@@ -96,6 +96,7 @@ public class UtilBean implements Serializable
 
     public static String getLocaleMessage(String msgKey, Object... args)
     {
+        // get bundle by locale. The bundles are cached in the ResourceBundle class.
         ResourceBundle bundle = ResourceBundle.getBundle("de.l3s.learnweb.lang.messages", UtilBean.getUserBean().getLocale());
 
         String msg;
@@ -116,7 +117,13 @@ public class UtilBean implements Serializable
         return msg;
     }
 
-    // ------------------------ 
+    public static String getLocaleMessage(String msgKey)
+    {
+        Object[] args = new Object[0];
+        return getLocaleMessage(msgKey, args);
+    }
+
+    // ------------------------
 
     public static int time()
     {

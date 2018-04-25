@@ -21,6 +21,13 @@ import de.l3s.learnweb.User;
 @ManagedBean
 @ApplicationScoped
 */
+/**
+ * This class provides auto completion for selected resource metadata fields of the yell course.
+ * It is not a real bean
+ * 
+ * @author Kemkes
+ *
+ */
 public class ResourceMetaDataBean
 {
     private static final Logger log = Logger.getLogger(ResourceMetaDataBean.class);
@@ -61,7 +68,7 @@ public class ResourceMetaDataBean
     /**
      * Very inefficient implementation
      * TODO improve
-     * 
+     *
      * @param query
      * @return
      */
