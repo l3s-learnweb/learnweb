@@ -43,15 +43,6 @@ public class FrontpageServlet extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
-        boolean archiveWebRequest = isArchiveWebRequest(request);
-
-        // redirect to HTTPS
-        if(!Learnweb.isInDevelopmentMode() && !archiveWebRequest && request.getScheme().equals("http"))
-        {
-            response.sendRedirect("https://" + request.getServerName() + request.getContextPath());
-            return;
-        }
-
         // forward request to homepage depending on Learnweb installation
         SERVICE service = null;
         try
@@ -63,6 +54,27 @@ public class FrontpageServlet extends HttpServlet
         {
             log.error("unhandled error", e);
         }
+
+        boolean archiveWebRequest = isArchiveWebRequest(request);
+
+        /*
+        // redirect to HTTPS
+        if(!Learnweb.isInDevelopmentMode() && !archiveWebRequest && request.getScheme().equals("http"))
+        {
+            String server;
+        
+            switch(service)
+            {
+            case AMA:
+                server = "https://network.ama-academy.eu";
+            default:
+                server = "https://learnweb.l3s.uni-hannover.de";
+            }
+        
+            response.sendRedirect(server);
+            return;
+        }*/
+
         String url;//request.getContextPath();
 
         if(service == SERVICE.AMA)
