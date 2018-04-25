@@ -16,7 +16,7 @@ import de.l3s.learnweb.Learnweb.SERVICE;
 
 /**
  * Redirects users to the Learnweb or ArchiveWeb Frontpage depending of the used domain
- * 
+ *
  */
 public class FrontpageServlet extends HttpServlet
 {
@@ -43,6 +43,16 @@ public class FrontpageServlet extends HttpServlet
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException
     {
+        boolean archiveWebRequest = isArchiveWebRequest(request);
+
+        // redirect to HTTPS
+        if(!Learnweb.isInDevelopmentMode() && !archiveWebRequest && request.getScheme().equals("http"))
+        {
+            response.sendRedirect("https://" + request.getServerName() + request.getContextPath());
+            return;
+        }
+
+        // forward request to homepage depending on Learnweb installation
         SERVICE service = null;
         try
         {
@@ -57,7 +67,7 @@ public class FrontpageServlet extends HttpServlet
 
         if(service == SERVICE.AMA)
             url = "/ama/";
-        else if(isArchiveWebRequest(request))
+        else if(archiveWebRequest)
             url = "/aw/";
         else
             url = "/lw/";
@@ -66,8 +76,6 @@ public class FrontpageServlet extends HttpServlet
         {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher(url);
             dispatcher.forward(request, response);
-
-            //response.sendRedirect(url);
         }
         catch(Exception e)
         {

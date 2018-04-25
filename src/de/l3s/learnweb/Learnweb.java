@@ -805,6 +805,10 @@ public class Learnweb
         return glossariesManager;
     }
 
+    /**
+     *
+     * @return true if it is not run onthe Learnweb server
+     */
     public static boolean isInDevelopmentMode()
     {
         return developmentMode;
