@@ -378,7 +378,7 @@ public class DashboardManager
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT REPLACE(REPLACE(website_domain, '.secure.waps.io', ''), '.waps.io', '') as domain, COUNT(*) as count "
                         + "FROM tracker.track "
-                        + "WHERE external_client_id = ? "
+                        + "WHERE status = 'PROCESSED' AND external_client_id = ? "
                         + "AND external_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") "
                         + "AND created_at BETWEEN ? AND ? group by (domain) order by count desc"))
         {
@@ -401,7 +401,7 @@ public class DashboardManager
         try(PreparedStatement select = learnweb.getConnection().prepareStatement(
                 "SELECT external_user_id as user_id, sum(total_events) as total_events, sum(time_stay) as time_stay, sum(time_active) as time_active, sum(clicks) as clicks, sum(keypress) as keypresses "
                         + "FROM tracker.track "
-                        + "WHERE external_client_id = ? "
+                        + "WHERE status = 'PROCESSED' AND external_client_id = ? "
                         + "AND external_user_id IN(" + StringHelper.implodeInt(userIds, ",") + ") "
                         + "AND created_at BETWEEN ? AND ? group by external_user_id"))
         {
