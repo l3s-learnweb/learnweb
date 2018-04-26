@@ -1,4 +1,4 @@
-package de.l3s.learnweb;
+package de.l3s.clustering;
 
 public class Metric
 {

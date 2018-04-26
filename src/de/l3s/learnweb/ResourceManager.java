@@ -40,7 +40,7 @@ import de.l3s.util.StringHelper;
 public class ResourceManager
 {
     private final static String COMMENT_COLUMNS = "`comment_id`, `resource_id`, `user_id`, `text`, `date`";
-    public final static String RESOURCE_COLUMNS = "r.read_only_transcript, r.deleted, r.resource_id, r.title, r.description, r.url, r.storage_type, r.rights, r.source, r.language, r.type, r.format, r.owner_user_id, r.rating, r.rate_number, r.embedded_size1, r.embedded_size2, r.embedded_size3, r.embedded_size4, r.filename, r.max_image_url, r.query, r.original_resource_id, r.author, r.file_url, r.thumbnail0_url, r.thumbnail0_file_id, r.thumbnail0_width, r.thumbnail0_height, r.thumbnail1_url, r.thumbnail1_file_id, r.thumbnail1_width, r.thumbnail1_height, r.thumbnail2_url, r.thumbnail2_file_id, r.thumbnail2_width, r.thumbnail2_height, r.thumbnail3_url, r.thumbnail3_file_id, r.thumbnail3_width, r.thumbnail3_height, r.thumbnail4_url, r.thumbnail4_file_id, r.thumbnail4_width, r.thumbnail4_height, r.embeddedRaw, r.transcript, r.online_status, r.id_at_service, r.duration, r.restricted, r.resource_timestamp, r.creation_date, r.metadata, r.group_id, r.folder_id, r.mtype, r.msource";
+    public final static String RESOURCE_COLUMNS = "r.read_only_transcript, r.deleted, r.resource_id, r.title, r.description, r.url, r.storage_type, r.rights, r.source, r.language, r.type, r.format, r.owner_user_id, r.rating, r.rate_number, r.filename, r.max_image_url, r.query, r.original_resource_id, r.author, r.file_url, r.thumbnail0_url, r.thumbnail0_file_id, r.thumbnail0_width, r.thumbnail0_height, r.thumbnail1_url, r.thumbnail1_file_id, r.thumbnail1_width, r.thumbnail1_height, r.thumbnail2_url, r.thumbnail2_file_id, r.thumbnail2_width, r.thumbnail2_height, r.thumbnail3_url, r.thumbnail3_file_id, r.thumbnail3_width, r.thumbnail3_height, r.thumbnail4_url, r.thumbnail4_file_id, r.thumbnail4_width, r.thumbnail4_height, r.embeddedRaw, r.transcript, r.online_status, r.id_at_service, r.duration, r.restricted, r.resource_timestamp, r.creation_date, r.metadata, r.group_id, r.folder_id, r.mtype, r.msource";
 
     private final static Logger log = Logger.getLogger(ResourceManager.class);
 
@@ -325,8 +325,7 @@ public class ResourceManager
         if(resource.getUserId() <= 0)
             throw new IllegalArgumentException("Resource has no owner");
 
-        String query = "REPLACE INTO `lw_resource` (`resource_id` ,`title` ,`description` ,`url` ,`storage_type` ,`rights` ,`source` ,`type` ,`format` ,`owner_user_id` ,`rating` ,`rate_number` ,`query`, embedded_size1, embedded_size2, embedded_size3, embedded_size4, filename, max_image_url, original_resource_id, machine_description, author, file_url, thumbnail0_url, thumbnail0_file_id, thumbnail0_width, thumbnail0_height, thumbnail1_url, thumbnail1_file_id, thumbnail1_width, thumbnail1_height, thumbnail2_url, thumbnail2_file_id, thumbnail2_width, thumbnail2_height, thumbnail3_url, thumbnail3_file_id, thumbnail3_width, thumbnail3_height, thumbnail4_url, thumbnail4_file_id, thumbnail4_width, thumbnail4_height, embeddedRaw, transcript, online_status, id_at_service, duration, restricted, language, creation_date, metadata, group_id, folder_id, deleted, read_only_transcript, mtype, msource) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,"
-                + "?, ?)";
+        String query = "REPLACE INTO `lw_resource` (`resource_id` ,`title` ,`description` ,`url` ,`storage_type` ,`rights` ,`source` ,`type` ,`format` ,`owner_user_id` ,`rating` ,`rate_number` ,`query`, filename, max_image_url, original_resource_id, machine_description, author, file_url, thumbnail0_url, thumbnail0_file_id, thumbnail0_width, thumbnail0_height, thumbnail1_url, thumbnail1_file_id, thumbnail1_width, thumbnail1_height, thumbnail2_url, thumbnail2_file_id, thumbnail2_width, thumbnail2_height, thumbnail3_url, thumbnail3_file_id, thumbnail3_width, thumbnail3_height, thumbnail4_url, thumbnail4_file_id, thumbnail4_width, thumbnail4_height, embeddedRaw, transcript, online_status, id_at_service, duration, restricted, language, creation_date, metadata, group_id, folder_id, deleted, read_only_transcript, mtype, msource) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         PreparedStatement replace = learnweb.getConnection().prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
 
         if(resource.getId() < 0) // the Resource is not yet stored at the database
@@ -345,20 +344,16 @@ public class ResourceManager
         replace.setInt(11, resource.getRatingSum());
         replace.setInt(12, resource.getRateNumber());
         replace.setString(13, resource.getQuery());
-        replace.setString(14, resource.getEmbeddedSize1Raw());
-        replace.setString(15, resource.getEmbeddedSize1Raw());
-        replace.setString(16, resource.getEmbeddedSize3Raw());
-        replace.setString(17, resource.getEmbeddedSize4Raw());
-        replace.setString(18, resource.getFileName());
-        replace.setString(19, resource.getMaxImageUrl());
-        replace.setInt(20, resource.getOriginalResourceId());
-        replace.setString(21, resource.getMachineDescription());
-        replace.setString(22, resource.getAuthor());
-        replace.setString(23, resource.getFileUrl());
+        replace.setString(14, resource.getFileName());
+        replace.setString(15, resource.getMaxImageUrl());
+        replace.setInt(16, resource.getOriginalResourceId());
+        replace.setString(17, resource.getMachineDescription());
+        replace.setString(18, resource.getAuthor());
+        replace.setString(19, resource.getFileUrl());
 
         Thumbnail[] thumbnails = { resource.getThumbnail0(), resource.getThumbnail1(), resource.getThumbnail2(), resource.getThumbnail3(), resource.getThumbnail4() };
 
-        for(int i = 0, m = 24; i < 5; i++)
+        for(int i = 0, m = 20; i < 5; i++)
         {
             String url = null;
             int fileId = 0;
@@ -380,22 +375,22 @@ public class ResourceManager
             replace.setInt(m++, height);
         }
 
-        replace.setString(44, resource.getEmbeddedRaw());
-        replace.setString(45, resource.getTranscript());
-        replace.setString(46, resource.getOnlineStatus().name());
-        replace.setString(47, resource.getIdAtService());
-        replace.setInt(48, resource.getDuration());
-        replace.setInt(49, resource.isRestricted() ? 1 : 0);
-        replace.setString(50, resource.getLanguage());
-        replace.setTimestamp(51, resource.getCreationDate() == null ? null : new java.sql.Timestamp(resource.getCreationDate().getTime()));
-        Sql.setSerializedObject(replace, 52, resource.getMetadata());
-        replace.setInt(53, resource.getGroupId());
-        replace.setInt(54, resource.getFolderId());
-        replace.setInt(55, resource.isDeleted() ? 1 : 0);
-        replace.setInt(56, resource.isReadOnlyTranscript() ? 1 : 0);
+        replace.setString(40, resource.getEmbeddedRaw());
+        replace.setString(41, resource.getTranscript());
+        replace.setString(42, resource.getOnlineStatus().name());
+        replace.setString(43, resource.getIdAtService());
+        replace.setInt(44, resource.getDuration());
+        replace.setInt(45, resource.isRestricted() ? 1 : 0);
+        replace.setString(46, resource.getLanguage());
+        replace.setTimestamp(47, resource.getCreationDate() == null ? null : new java.sql.Timestamp(resource.getCreationDate().getTime()));
+        Sql.setSerializedObject(replace, 48, resource.getMetadata());
+        replace.setInt(49, resource.getGroupId());
+        replace.setInt(50, resource.getFolderId());
+        replace.setInt(51, resource.isDeleted() ? 1 : 0);
+        replace.setInt(52, resource.isReadOnlyTranscript() ? 1 : 0);
         //added by Chloe: adding mtype and msource
-        replace.setString(57, resource.getMtype());
-        replace.setString(58, resource.getMsource());
+        replace.setString(53, resource.getMtype());
+        replace.setString(54, resource.getMsource());
 
         replace.executeUpdate();
 
@@ -757,23 +752,23 @@ public class ResourceManager
     public AbstractPaginator getResourcesByGroupId(int groupId, Order order) throws SQLException
     {
         int results = getResourceCountByGroupId(groupId);
-
+    
         return new GroupPaginator(results, groupId, order);
     }
-
+    
     private static class GroupPaginator extends AbstractPaginator
     {
         private static final long serialVersionUID = 399863025926697377L;
         private final int groupId;
         private final Order order;
-
+    
         public GroupPaginator(int totalResults, int groupId, Order order)
         {
             super(totalResults);
             this.groupId = groupId;
             this.order = order;
         }
-
+    
         @Override
         public List<ResourceDecorator> getCurrentPage() throws SQLException, SolrServerException
         {
@@ -805,7 +800,7 @@ public class ResourceManager
     public OwnerList<Resource, User> getResourcesByGroupId(int groupId, int page, int pageSize, Order order) throws SQLException
     {
     OwnerList<Resource, User> resources = new OwnerList<Resource, User>();
-
+    
     PreparedStatement select = learnweb.getConnection().prepareStatement(
     	"SELECT " + RESOURCE_COLUMNS + " FROM lw_resource r WHERE `group_id` = ? ORDER BY resource_id ASC LIMIT ? OFFSET ? ");
     select.setInt(1, groupId);
@@ -815,12 +810,12 @@ public class ResourceManager
     while(rs.next())
     {
         Resource resource = createResource(rs);
-
+    
         if(null != resource)
     	resources.add(resource.getOwnerUser(), resource.getCreationDate());
     }
     select.close();
-
+    
     return resources;
     }
     */
@@ -922,11 +917,6 @@ public class ResourceManager
             resource.setUserId(rs.getInt("owner_user_id"));
             resource.setRatingSum(rs.getInt("rating"));
             resource.setRateNumber(rs.getInt("rate_number"));
-            resource.setEmbeddedSize1Raw(rs.getString("embedded_size1"));
-            if(resource.getEmbeddedSize1Raw() == null || resource.getEmbeddedSize1Raw().length() < 5)
-                resource.setEmbeddedSize1Raw(rs.getString("embedded_size2"));
-            resource.setEmbeddedSize3Raw(rs.getString("embedded_size3"));
-            resource.setEmbeddedSize4Raw(rs.getString("embedded_size4"));
             resource.setFileName(rs.getString("filename"));
             resource.setMaxImageUrl(rs.getString("max_image_url"));
             resource.setQuery(rs.getString("query"));
@@ -1286,7 +1276,7 @@ public class ResourceManager
      *
     public static void reindexAllResources() throws SQLException, ClassNotFoundException
     {
-
+    
     }
     */
 

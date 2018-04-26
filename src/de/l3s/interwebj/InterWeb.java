@@ -1,9 +1,6 @@
 package de.l3s.interwebj;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.Serializable;
 import java.io.StringWriter;
 import java.util.List;
@@ -165,7 +162,7 @@ public class InterWeb implements Serializable
             params.add("password", service.getSecret());
         }
         ClientResponse response = resource.type(MediaType.APPLICATION_FORM_URLENCODED).post(ClientResponse.class, params);
-        //CoreUtils.printClientResponse(response);
+
         Element root = asXML(response);
         if(!root.attribute("stat").getValue().equals("ok"))
         {
@@ -244,36 +241,15 @@ public class InterWeb implements Serializable
             WebResource resource = createWebResource("users/default", getIWToken());
             ClientResponse response = resource.get(ClientResponse.class);
 
-            try
-            {
-                username = getClientResponseContent(response);
-                usernameLastCacheTime = UtilBean.time();
-            }
-            catch(IOException e)
-            {
-                throw new IllegalResponseException(e);
-            }
+            username = responseToString(response);
+            usernameLastCacheTime = UtilBean.time();
         }
         return username;
     }
 
-    public static String getClientResponseContent(ClientResponse response) throws IOException
-    {
-        StringBuilder sb = new StringBuilder();
-        InputStream is = response.getEntityInputStream();
-        BufferedReader br = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-        int c;
-        while((c = br.read()) != -1)
-        {
-            sb.append((char) c);
-        }
-        br.close();
-        return sb.toString();
-    }
-
     /**
      * Registers a new user at interweb and returns his interweb_token
-     * 
+     *
      * @param username
      * @param password
      * @param defaultToken Returns null if username is already taken
@@ -316,7 +292,7 @@ public class InterWeb implements Serializable
     public void revokeAuthorizationOnService(String serviceId) throws IOException, IllegalResponseException
     {
         WebResource resource = createWebResource("users/default/services/" + serviceId + "/auth", getIWToken());
-        //ClientResponse response = 
+        //ClientResponse response =
         resource.delete(ClientResponse.class);
         //	Element root = asXML(response);
 
@@ -343,46 +319,6 @@ public class InterWeb implements Serializable
         return root;
     }
 
-    /*
-    	private void convertMediaTypesParams(TreeMap<String, String> params)
-    	{
-    		Set<String> newMediaTypes = new TreeSet<String>();
-    		String mediaTypeParam = params.get("media_types");
-    		if (mediaTypeParam == null)
-    		{
-    			return;
-    		}
-    		String[] mediaTypes = mediaTypeParam.split(",");
-    		for (String mediaType : mediaTypes)
-    		{
-    			if (mediaType.equals("photos"))
-    			{
-    				newMediaTypes.add(Query.CT_IMAGE);
-    			}
-    			else if (mediaType.equals("videos"))
-    			{
-    				newMediaTypes.add(Query.CT_VIDEO);
-    			}
-    			else if (mediaType.equals("slideshows"))
-    			{
-    				newMediaTypes.add(Query.CT_IMAGE);
-    			}
-    			else if (mediaType.equals("audio"))
-    			{
-    				newMediaTypes.add(Query.CT_AUDIO);
-    			}
-    			else if (mediaType.equals("music"))
-    			{
-    				newMediaTypes.add(Query.CT_AUDIO);
-    			}
-    			else if (mediaType.equals("bookmarks"))
-    			{
-    				newMediaTypes.add(Query.CT_TEXT);
-    			}
-    		}
-    		params.put("media_types", StringUtils.join(newMediaTypes, ','));
-    	}*/
-
     public String buildSignature(String string, TreeMap<String, String> params)
     {
         log.fatal("Interweb.buildSignature hat olex nicht implementiert");
@@ -392,7 +328,7 @@ public class InterWeb implements Serializable
     // Überarbeitet:
 
     /**
-     * 
+     *
      * @param query The query string
      * @param params see http://athena.l3s.uni-hannover.de:8000/doc/search
      * @return
@@ -418,9 +354,7 @@ public class InterWeb implements Serializable
 
         if(response.getStatus() != 200)
         {
-            StringWriter writer = new StringWriter();
-            IOUtils.copy(response.getEntityInputStream(), writer, "UTF-8");
-            String content = writer.toString();
+            String content = responseToString(response);
 
             log.fatal("Interweb request failes; Error code : " + response.getStatus() + "; for query:" + query + " | " + params + "; response: " + content);
             throw new RuntimeException("Interweb request failed : HTTP error code : " + response.getStatus());
@@ -429,6 +363,21 @@ public class InterWeb implements Serializable
         //SearchResponse r = response.getEntity(SearchResponse.class);
 
         return new SearchQuery(response.getEntityInputStream()); //.getResults();
+    }
+
+    public static String responseToString(ClientResponse response)
+    {
+        StringWriter writer = new StringWriter();
+        try
+        {
+            IOUtils.copy(response.getEntityInputStream(), writer, "UTF-8");
+        }
+        catch(IOException e)
+        {
+            log.warn("Can't convert response to String", e);
+            return null;
+        }
+        return writer.toString();
     }
 
     public static void main(String[] args) throws Exception
@@ -448,7 +397,7 @@ public class InterWeb implements Serializable
     }
 
     /**
-     * 
+     *
      * @param resource
      * @param selectedUploadServices the services to which the resource should be uploaded
      * @return
@@ -478,16 +427,6 @@ public class InterWeb implements Serializable
         catch(IOException e)
         {
         }
-        /*
-        try
-        {
-        	CoreUtils.printClientResponse(response);
-        	log.debug(CoreUtils.getClientResponseContent(response));
-        }
-        catch (IOException e)
-        {
-        	log.error("unhandled error", e);
-        }*/
 
         UploadResponse uploadResponse = new UploadResponse(response.getEntityInputStream());
         return uploadResponse.getResult();

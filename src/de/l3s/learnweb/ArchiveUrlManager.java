@@ -33,6 +33,7 @@ import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.WebResource;
 
 import de.l3s.archiveSearch.CDXClient;
+import de.l3s.interwebj.InterWeb;
 import de.l3s.learnweb.Resource.OnlineStatus;
 
 public class ArchiveUrlManager
@@ -162,7 +163,7 @@ public class ArchiveUrlManager
                             return "ROBOTS_ERROR";
                     }
 
-                    log.error("Cannot archive URL because of an error other than robots.txt for resource: " + resource.getId());
+                    log.error("Cannot archive URL because of an error other than robots.txt for resource: " + resource.getId() + "; Response: " + InterWeb.responseToString(response));
                     return "GENERIC_ERROR";
                 }
             }
@@ -334,7 +335,7 @@ public class ArchiveUrlManager
 
                 boolean toProcessUrl = false, redirect = false;
                 int learnwebResourceId = rs.getInt("lw_resource_id");
-                String archiveitUrl = rs.getString("url"); //To fetch Archive-It versions of a resource 
+                String archiveitUrl = rs.getString("url"); //To fetch Archive-It versions of a resource
                 Resource archiveResource = createResource(learnwebResourceId, rs);
 
                 if(learnwebResourceId == 0)
@@ -523,7 +524,7 @@ public class ArchiveUrlManager
 
     /**
      * copied method to avoid reindexing at SOLR
-     * 
+     *
      * @param resource
      * @param tagName
      * @param user
@@ -705,7 +706,7 @@ public class ArchiveUrlManager
         	try
         	{
         	    info = new FileInspector().inspect(FileInspector.openStream(resource.getUrl()), "unknown");
-        
+
         	    if(info != null)
         	    {
         		log.debug(info.getFileName() + " " + info.getMimeType());
@@ -722,12 +723,12 @@ public class ArchiveUrlManager
         	{
         	    log.error("unhandled error", e);
         	}
-        
+
             }
         }
         PreparedStatement select = Learnweb.getInstance().getConnection().prepareStatement("SELECT * FROM lw_resource WHERE url LIKE '%facebook%' AND online_status = 'OFFLINE' AND deleted = 0 AND source= 'Archive-It'");
         ResultSet rs = select.executeQuery();
-        
+
         while(rs.next())
         {
             if(rs.getInt("resource_id") <= 0)
@@ -735,9 +736,9 @@ public class ArchiveUrlManager
         	log.info("Not in lw_resource collection ID:" + rs.getInt("collection_id") + " Resource ID:" + rs.getInt("resource_id"));
         	continue;
             }
-        
+
             Resource resource = rm.getResource(rs.getInt("resource_id"));
-        
+
             try
             {
         	HttpURLConnection con;
@@ -753,7 +754,7 @@ public class ArchiveUrlManager
         		con = (HttpURLConnection) new URL(con.getHeaderField("Location")).openConnection();
         		con.setInstanceFollowRedirects(true);
         		con.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 6.1; WOW64; rv:32.0) Gecko/20100101 Firefox/32.0");
-        
+
         		if(con.getResponseCode() == HttpURLConnection.HTTP_OK)
         		    break;
         	    }
@@ -787,7 +788,7 @@ public class ArchiveUrlManager
             try
             {
         	String url = rs.getString("url");
-        
+
         	Document doc = Jsoup.connect(url).timeout(60000).userAgent("Mozilla").get();
         	log.debug(rs.getInt("resource_id") + " " + doc.title());
         	pStmt2.setString(1, doc.title());
@@ -804,9 +805,9 @@ public class ArchiveUrlManager
         MultivaluedMap<String, String> formData = new MultivaluedMapImpl();
         formData.add("url", "http://docs.oracle.com/javase/7/docs/api/java/net/HttpURLConnection.html#setFollowRedirects(boolean)");
         ClientResponse response = webResource.get(ClientResponse.class);
-        
+
         String refreshHeader = null;
-        
+
         if(response.getHeaders().containsKey("Refresh"))
             refreshHeader = response.getHeaders().get("Refresh").get(0);
         Pattern p = Pattern.compile("https?://[-a-zA-Z0-9+&@#/%?=~_|!:,.;]*[-a-zA-Z0-9+&@#/%=~_|]");

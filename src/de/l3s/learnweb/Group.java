@@ -8,7 +8,6 @@ import java.util.List;
 
 import javax.validation.constraints.Size;
 
-import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.hibernate.validator.constraints.NotEmpty;
@@ -785,6 +784,7 @@ public class Group implements Comparable<Group>, HasId, Serializable
         else if(maxMemberCount <= 0) // if limit true but not defined yet > set default limit = 1
             maxMemberCount = 1;
     }
+
     public String getHypothesisLink()
     {
         return hypothesisLink;

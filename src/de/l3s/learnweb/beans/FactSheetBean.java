@@ -17,6 +17,7 @@ import de.l3s.learnweb.facts.Search;
 @ViewScoped
 public class FactSheetBean extends ApplicationBean implements Serializable
 {
+    private static final long serialVersionUID = -5464782129571454914L;
     private String search;
     private Entity entity;
 
@@ -51,7 +52,7 @@ public class FactSheetBean extends ApplicationBean implements Serializable
 
         for(FactSheetEntry fact : entity.getFacts())
         {
-            // replace strange label 
+            // replace strange label
             if(fact.getLabel().equals("mass"))
                 fact.setLabel(getLocaleMessage("weight"));
         }

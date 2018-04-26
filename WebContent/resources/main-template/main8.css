@@ -577,7 +577,7 @@ iframe { border:none }
 	display:block;
 	border-right: 1px solid rgb(230, 230, 230);
 }
-.center-header ul span,
+.breadcrumbs ul span,
 .center-header ul a {
 	padding:5px 15px;
 	display:block;

@@ -132,7 +132,7 @@
                 </li>
 				<ui:fragment rendered="#{not empty groupDetailBean.group.links or not empty groupDetailBean.group.documentLinks}">								
 				<li>
-					<a href="./group/links.jsf?group_id=#{group.id}">
+					<a href="./group/links.jsf?group_id=#{groupDetailBean.group.id}">
 						<h:outputText value="#{msg.links}" />
 					</a>
 				</li>	

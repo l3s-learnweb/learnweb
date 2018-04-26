@@ -10,6 +10,7 @@ public class LanguageItem implements Serializable
 
     //private Locale[] supportedLanguages = { Locale.GERMANY, Locale.UK };
 
+    @Deprecated
     public enum LANGUAGE
     {
         EN

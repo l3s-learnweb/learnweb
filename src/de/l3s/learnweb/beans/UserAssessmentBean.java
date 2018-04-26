@@ -25,10 +25,10 @@ import org.primefaces.model.chart.ChartSeries;
 import org.primefaces.model.chart.LineChartModel;
 import org.primefaces.model.chart.PieChartModel;
 
+import de.l3s.clustering.Metric;
 import de.l3s.learnweb.Course;
 import de.l3s.learnweb.Group;
 import de.l3s.learnweb.GroupManager;
-import de.l3s.learnweb.Metric;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.UserManager;
 import de.l3s.learnweb.beans.admin.AdminNotificationBean;

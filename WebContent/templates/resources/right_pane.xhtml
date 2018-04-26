@@ -201,14 +201,13 @@
                                     </p:column>
                                 </p:row>
 
-                                <p:row rendered="#{false and addResourceBean.formStep > 1 and addResourceBean.resource.embeddedSize1 != null}">
+                                <p:row rendered="#{false and addResourceBean.formStep > 1 and addResourceBean.resource.thumbnail3 != null}">
                                     <p:column>
 
                                         <h:outputText value="#{msg.preview}:"/>
                                     </p:column>
                                     <p:column styleClass="form-preview">
-                                        <h:outputText id="preview" escape="false"
-                                                      value="#{addResourceBean.resource.embeddedSize1}"/>
+                                        <h:outputText id="preview" escape="false" value="#{addResourceBean.resource.thumbnail1.html}"/>
                                     </p:column>
                                 </p:row>
                             </p:panelGrid>

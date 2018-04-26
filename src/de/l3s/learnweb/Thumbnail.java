@@ -37,7 +37,7 @@ public class Thumbnail implements Comparable<Thumbnail>, Serializable
 
     /**
      * Returns a resized version f the thumbnail
-     * 
+     *
      * @param maxWidth
      * @param maxHeight
      */
@@ -104,7 +104,7 @@ public class Thumbnail implements Comparable<Thumbnail>, Serializable
 
     /**
      * The file id is 0 if the thumbnail is not stored in learnweb
-     * 
+     *
      * @return
      */
     public int getFileId()
@@ -124,7 +124,11 @@ public class Thumbnail implements Comparable<Thumbnail>, Serializable
         return new Thumbnail(url, width, height, fileId);
     }
 
-    public String toHTML()
+    /**
+     *
+     * @return HTML img tag for this thumbnail
+     */
+    public String getHtml()
     {
         return "<img src=\"" + url + "\" width=\"" + width + "\" height=\"" + height + "\" />";
     }

@@ -11,12 +11,12 @@ import de.l3s.learnweb.rm.ExtendedMetadata;
 import de.l3s.util.StringHelper;
 
 /**
- * 
+ *
  * @author Kemkes
- * 
+ *
  *         This class wraps a resource. It's necessary because a resource can appear in various search results with different search terms. Which lead
  *         to different text snippets.
- * 
+ *
  */
 public class ResourceDecorator implements Serializable
 {
@@ -29,7 +29,7 @@ public class ResourceDecorator implements Serializable
     private String title;
 
     private User addedToGroupBy; // only set if the resource is loaded in a group context
-    private Date addedToGroupOn; // only set if the resource is loaded in a group context 
+    private Date addedToGroupOn; // only set if the resource is loaded in a group context
 
     //new variables for extended metadata
     private String mtype;
@@ -87,7 +87,7 @@ public class ResourceDecorator implements Serializable
 
     /**
      * The title with highlighted search terms
-     * 
+     *
      * @return
      */
     public String getTitle()
@@ -168,18 +168,6 @@ public class ResourceDecorator implements Serializable
         return resource.getEmbedded();
     }
 
-    @Deprecated
-    public String getEmbeddedSize1()
-    {
-        return resource.getEmbeddedSize1();
-    }
-
-    @Deprecated
-    public String getEmbeddedSize3()
-    {
-        return resource.getEmbeddedSize3();
-    }
-
     public String getUrl()
     {
         return resource.getUrl();
@@ -212,7 +200,7 @@ public class ResourceDecorator implements Serializable
 
     /**
      * The rank this resource had at its source service
-     * 
+     *
      * @return
      */
     public int getRankAtService()
@@ -275,7 +263,7 @@ public class ResourceDecorator implements Serializable
         return resource.getRatingSum();
     }
 
-    //getters for new variables for extended metadata (Chloe) 
+    //getters for new variables for extended metadata (Chloe)
 
     public String getMtype()
     {

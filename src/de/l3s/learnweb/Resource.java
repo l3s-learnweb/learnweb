@@ -90,11 +90,6 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     private String idAtService = "";
     private int ratingSum;
     private int rateNumber;
-    private String embeddedSize3;
-    private String embeddedSize4;
-    private String embeddedSize1Raw;
-    private String embeddedSize3Raw;
-    private String embeddedSize4Raw;
     private String fileName; // stores the file name of uploaded resource
     private String fileUrl;
     private String maxImageUrl; // an url to the largest image preview of this resource
@@ -111,6 +106,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     private String embeddedRaw; // stored in the database
     private String embeddedCode; // derived from type or embedded raw. Does not need to be stored in DB
     private String transcript; //To store the English transcripts for TED videos and saved articles
+    private boolean readOnlyTranscript = false; //indicates resource transcript is read only for TED videos
     private OnlineStatus onlineStatus = OnlineStatus.UNKNOWN;
     private boolean restricted = false;
     private Date resourceTimestamp = null;
@@ -118,7 +114,6 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     private Map<String, String> metadata = new HashMap<>(); // field_name : field_value
 
     private boolean deleted = false; // indicates whether this resource has been deleted
-    private boolean readOnlyTranscript = false; //indicates resource transcript is read only for TED videos
     private LogEntry thumbnailUpdateInfo = null;
 
     private int thumbUp = -1;
@@ -140,7 +135,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     private transient LinkedList<ArchiveUrl> archiveUrls = null; //To store the archived URLs
     private transient String path = null;
     private transient String prettyPath = null;
-    private transient MetadataMapWrapper metadataWrapper; // includes static fields like title, description, author into the map
+    private transient MetadataMapWrapper metadataWrapper; // includes static fields like title, description and author into the map
     private transient MetadataMultiValueMapWrapper metadataMultiValue;
 
     //extended metadata (Chloe)
@@ -578,8 +573,6 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
         setType(old.type);
         setFormat(old.format);
         setUserId(old.ownerUserId);
-        setEmbeddedSize3Raw(old.embeddedSize3);
-        setEmbeddedSize4Raw(old.embeddedSize4);
         setMaxImageUrl(old.maxImageUrl);
         setFileName(old.fileName);
         setFileUrl(old.fileUrl);
@@ -902,97 +895,13 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
             return embeddedSize1;
         */
         if(getThumbnail1() != null)
-            return getThumbnail1().toHTML();
+            return getThumbnail1().getHtml();
         if(getThumbnail2() != null)
-            return getThumbnail2().resize(150, 150).toHTML();
+            return getThumbnail2().resize(150, 150).getHtml();
         if(getThumbnail3() != null)
-            return getThumbnail3().resize(150, 150).toHTML();
+            return getThumbnail3().resize(150, 150).getHtml();
 
         return "<img src=\"../resources/resources/img/website-140.png\" width=\"100\" height=\"100\" />";
-    }
-
-    /**
-     * html code, only image or text<br/>
-     * max width and max height 100px
-     */
-    @Deprecated
-    public void setEmbeddedSize1Raw(String embeddedSize1)
-    {
-        this.embeddedSize1Raw = embeddedSize1;
-    }
-
-    /**
-     * html code, may contain flash<br/>
-     * max width 500px and max height 600px
-     */
-    @Deprecated
-    public void setEmbeddedSize3Raw(String embedded)
-    {
-
-        this.embeddedSize3 = embedded;
-        this.embeddedSize3Raw = embedded;
-    }
-
-    /**
-     * html code, may contain flash<br/>
-     * max width 500px and max height 600px
-     */
-    @Deprecated
-    public String getEmbeddedSize3()
-    {
-
-        if(getThumbnail3() != null && getType().equals(ResourceType.image))
-            return getThumbnail3().toHTML();
-
-        return embeddedSize3;
-    }
-
-    /**
-     * html code, may contain flash<br/>
-     * max width and max height 100%
-     */
-    @Deprecated
-    public String getEmbeddedSize4()
-    {
-        return embeddedSize4;
-    }
-
-    /**
-     * html code, may contain flash<br/>
-     * max width and max height 100%
-     */
-    @Deprecated
-    public void setEmbeddedSize4Raw(String embeddedSize4)
-    {
-        this.embeddedSize4 = embeddedSize4;
-        this.embeddedSize4Raw = embeddedSize4;
-    }
-
-    /**
-     * Contains placeholders for the files
-     */
-    @Deprecated
-    public String getEmbeddedSize1Raw()
-    {
-        return embeddedSize1Raw;
-    }
-
-    /**
-     * Contains placeholders for the files
-     */
-    @Deprecated
-    public String getEmbeddedSize3Raw()
-    {
-        return embeddedSize3Raw;
-    }
-
-    /**
-     * Contains placeholders for the files
-     */
-    @Deprecated
-    public String getEmbeddedSize4Raw()
-    {
-        return embeddedSize4Raw;
     }
 
     /**
@@ -1335,9 +1244,6 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
             if(embeddedCode == null)
             {
                 log.warn("can't create embeddedCode for resource: " + toString());
-
-                if(getEmbeddedSize4() != null)
-                    embeddedCode = getEmbeddedSize4();
             }
 
         }
