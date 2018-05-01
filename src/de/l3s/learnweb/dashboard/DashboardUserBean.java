@@ -29,6 +29,7 @@ public class DashboardUserBean extends ApplicationBean implements Serializable
 
     private Date startDate = null;
     private Date endDate = null;
+    private User selectedUser = null;
     private List<Integer> selectedUsersIds = null;
     private DashboardManager dashboardManager = null;
 
@@ -71,7 +72,14 @@ public class DashboardUserBean extends ApplicationBean implements Serializable
             startDate = new Date(Long.parseLong(savedStartDate));
             endDate = new Date(Long.parseLong(savedEndDate));
 
-            selectedUsersIds = Collections.singletonList(paramUserId == null ? user.getId() : paramUserId);
+            if (paramUserId != null) {
+                selectedUser = getLearnweb().getUserManager().getUser(paramUserId);
+                selectedUsersIds = Collections.singletonList(paramUserId);
+            } else {
+                selectedUser = user;
+                selectedUsersIds = Collections.singletonList(user.getId());
+            }
+
             dashboardManager = getLearnweb().getDashboardManager();
 
             fetchDataFromManager();
@@ -131,6 +139,11 @@ public class DashboardUserBean extends ApplicationBean implements Serializable
         this.endDate = endDate;
 
         setPreference(PREFERENCE_ENDDATE, Long.toString(endDate.getTime()));
+    }
+
+    public User getSelectedUser()
+    {
+        return selectedUser;
     }
 
     public LineChartModel getInteractionsChart()
@@ -214,8 +227,11 @@ public class DashboardUserBean extends ApplicationBean implements Serializable
 
     public String getRatioTermConcept()
     {
-        float res = (float) totalTerms / totalConcepts;
-        DecimalFormat twoDForm = new DecimalFormat("#.##");
-        return twoDForm.format(res);
+        float res = 0;
+        if (totalConcepts == 0)
+            res = 0;
+        else
+            res = (float) totalTerms / totalConcepts;
+        return String.format("%.2f", res);
     }
 }

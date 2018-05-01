@@ -99,6 +99,10 @@
                         <div class="ui-g">
                             <div class="ui-g-6">
                                 <p:panel header="Total Concepts">
+                                    <f:facet name="actions">
+                                        <p:button id="totalConcepts" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                        <p:tooltip for="totalConcepts" value="Total number of concepts ()" />
+                                    </f:facet>
                                     <div class="count">
                                         <h:outputText value="#{dashboardBean.totalConcepts}"/>
                                     </div>
@@ -106,6 +110,10 @@
                             </div>
                             <div class="ui-g-6">
                                 <p:panel header="Total Terms">
+                                    <f:facet name="actions">
+                                        <p:button id="totalTerms" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                        <p:tooltip for="totalTerms" value="Total number of terms ()" />
+                                    </f:facet>
                                     <div class="count">
                                         <h:outputText value="#{dashboardBean.totalTerms}"/>
                                     </div>
@@ -116,6 +124,10 @@
                         <div class="ui-g">
                             <div class="ui-g-9">
                                 <p:panel id="chart_plot_01" header="Interactions" style="margin-bottom:20px">
+                                    <f:facet name="actions">
+                                        <p:button id="interactions" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                        <p:tooltip for="interactions" value="Total number of interactions (of all selected users) per day" />
+                                    </f:facet>
                                     <p:chart type="line" model="#{dashboardBean.interactionsChart}"
                                              style="height:300px;"/>
                                 </p:panel>
@@ -123,6 +135,10 @@
                             <div class="ui-g-3">
                                 <p:panel id="chart_barModel" header="Users' Activity types"
                                          style="margin-bottom:20px">
+                                    <f:facet name="actions">
+                                        <p:button id="userActivityTypes" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                        <p:tooltip for="userActivityTypes" value="Number of interactions divided by four categories" />
+                                    </f:facet>
                                     <p:chart type="bar" model="#{dashboardBean.usersActivityTypesChart}"
                                              xaxisAngle="60"
                                              style="height:300px"/>
@@ -134,6 +150,10 @@
                                 <h:form>
                                     <p:panel id="chart_barModel_stSources" header="Users' Source"
                                              style="margin-bottom:20px">
+                                        <f:facet name="actions">
+                                            <p:button id="usersSourcesChart" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                            <p:tooltip for="usersSourcesChart" value="Percentage ratio of visited pages (sorted by categories) by users" />
+                                        </f:facet>
                                         <p:chart type="pie" model="#{dashboardBean.usersSourcesChart}"/>
                                     </p:panel>
                                 </h:form>
@@ -141,6 +161,10 @@
                             <div class="ui-g-8">
                                 <h:form>
                                     <p:panel id="glossary" header="Users' Glossary" style="margin-bottom:20px">
+                                        <f:facet name="actions">
+                                            <p:button id="usersGlossary" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                            <p:tooltip for="usersGlossary" value="The number of concepts and terms by a user" />
+                                        </f:facet>
                                         <p:chart type="bar" model="#{dashboardBean.usersGlossaryChart}"
                                                  style="height:300px"/>
                                     </p:panel>
@@ -151,6 +175,10 @@
                             <div class="ui-g-12">
                                 <h:form>
                                     <p:panel id="fields" header="Fields" style="margin-bottom:20px">
+                                        <!--<f:facet name="actions">
+                                            <p:button id="fieldsTable" styleClass="ui-panel-titlebar-icon ui-corner-all ui-state-default ui-icon" icon="ui-icon-help" onclick="return false;" />
+                                            <p:tooltip for="fieldsTable" value="Description" />
+                                        </f:facet>-->
                                         <h:panelGrid columns="1">
                                             <p:dataTable value="#{dashboardBean.glossaryFieldsSummeryPerUser}" var="gfs"
                                                          styleClass="countries_list">

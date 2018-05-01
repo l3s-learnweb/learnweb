@@ -35,7 +35,7 @@
             <div class="ui-g-12 ui-g-nopad" style="padding: .5em;">
                 <div class="center-header user-activities" id="group_header">
                     <h2>Users' Activities</h2>
-                    <span class="header_detail"><h:outputText value="#{dashboardUserBean.paramUserId}"/></span>
+                    <span class="header_detail"><h:outputText value="#{dashboardUserBean.selectedUser.getRealUsername()}"/></span>
                 </div>
 
                 <h:panelGroup id="dashboardMain" styleClass="dashboard" layout="block">
