@@ -1,11 +1,16 @@
 package de.l3s.learnweb.tasks;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.List;
 
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.json.simple.JSONObject;
@@ -17,6 +22,7 @@ import de.l3s.learnweb.Resource.ResourceType;
 import de.l3s.learnweb.ResourceManager;
 import de.l3s.learnweb.solrClient.SolrClient;
 
+@SuppressWarnings("unused")
 public class IndexFakeNews
 {
     private final static Logger log = Logger.getLogger(IndexFakeNews.class);
@@ -30,18 +36,53 @@ public class IndexFakeNews
         new IndexFakeNews();
     }
 
-    public IndexFakeNews() throws IOException, ClassNotFoundException, SQLException
+    public IndexFakeNews()
     {
-        learnweb = Learnweb.createInstance(null);
-        resourceManager = learnweb.getResourceManager();
-
-        reindexAllFakeNewsResources();
-
-        int i = 1;
-        for(File file : new File("./Snopes").listFiles())
+        try
         {
-            log.debug("process file: " + (i++) + ", " + file);
-            indexFile(file);
+            learnweb = Learnweb.createInstance(null);
+            resourceManager = learnweb.getResourceManager();
+
+            indexFullfactFile("d:\\full_fact.csv");
+            //reindexAllFakeNewsResources();
+            //indexSnopes();
+
+        }
+        catch(Throwable e)
+        {
+            log.fatal(e);
+        }
+        finally
+        {
+            learnweb.onDestroy();
+        }
+    }
+
+    private void indexFullfactFile(String file) throws FileNotFoundException, IOException, SQLException
+    {
+        CSVParser parser = CSVParser.parse(new File(file), StandardCharsets.UTF_8, CSVFormat.EXCEL.withHeader());
+
+        for(CSVRecord csvRecord : parser)
+        {
+            String title = csvRecord.get("title").trim();
+            String url = csvRecord.get("url").trim();
+            String description = csvRecord.get("claim_text").trim().replaceFirst("Claim\n", "<b>Claim</b>: ") + "\n<br/>" + csvRecord.get("conclusion_text").trim().replaceFirst("Conclusion\n", "<b>Conclusion</b>: ");
+
+            Resource resource = new Resource();
+            resource.setType(ResourceType.website);
+            resource.setSource("FactCheck");
+            resource.setLocation("FactCheck");
+            resource.setMetadataValue("publisher", "fullfact.org");
+            resource.setUserId(7727); // Admin
+            resource.setGroupId(1346); // Admin Fact Check group
+
+            resource.setTitle(title);
+            resource.setDescription(description);
+            resource.setUrl(url);
+
+            resource.save();
+
+            log.debug("Added resource: " + resource);
         }
     }
 
@@ -60,7 +101,17 @@ public class IndexFakeNews
         System.exit(0);
     }
 
-    private void indexFile(File file)
+    private void indexSnopes()
+    {
+        int i = 1;
+        for(File file : new File("./Snopes").listFiles())
+        {
+            log.debug("process file: " + (i++) + ", " + file);
+            indexSnopesFile(file);
+        }
+    }
+
+    private void indexSnopesFile(File file)
     {
         JSONParser parser = new JSONParser();
 
