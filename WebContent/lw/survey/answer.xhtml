@@ -60,17 +60,9 @@
 										</c:if>
 
 									</c:if>
-									<c:if test="#{field.type eq 'INPUT_TEXT'}">
-										<p:outputLabel for="input_#{field.id}" value="#{field.label}" ></p:outputLabel>
-										<p:inputText id="input_#{field.id}" required="#{field.required}" value="#{assessmentGridBean.wrappedAnswers[field.id]}" title="#{field.info}" style="width:70%;'" />
-										<p:tooltip for="input_#{field.id}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}" />
-									</c:if>
-
-									<c:if test="#{field.type eq 'INPUT_TEXTAREA'}">
-										<p:outputLabel for="input_area_#{field.id}" value="#{field.label}"></p:outputLabel>
-										<p:inputTextarea id="input_area_#{field.id}" required="#{field.required}" value="#{assessmentGridBean.wrappedAnswers[field.id]}" title="#{field.info}" rows="4"
-											style="overflow-y: scroll; width:100%; box-sizing: border-box;" class="border-box-100" />
-										<p:tooltip for="input_area_#{field.id}" showEvent="focus" hideEvent="blur" position="left" rendered="#{not empty field.info}" />
+									<c:if test="#{field.type eq 'INPUT_TEXT' or field.type eq 'INPUT_TEXTAREA'}">
+										<h:outputText value="#{field.label}" />
+										<h:outputText value="#{assessmentGridBean.wrappedAnswers[field.id]}" style="font-style:italic;" />
 									</c:if>
 
 									<c:if test="#{field.type eq 'AUTOCOMPLETE'}">

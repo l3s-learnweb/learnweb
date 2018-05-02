@@ -329,11 +329,10 @@ public class SurveyManager
             ps.setInt(1, resourceId);
             ps.setInt(2, userId);
             ps.setBoolean(3, submitted);
-            log.debug(ps);
             int affectedRows = ps.executeUpdate();
 
             if(affectedRows != 1)
-                log.error("Did not store survey submit: " + ps);
+                log.error(affectedRows + "; Did not store survey submit: " + ps);
         }
     }
 
