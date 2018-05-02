@@ -132,6 +132,7 @@ public class LoginBean extends ApplicationBean implements Serializable
      */
     public static String loginUser(ApplicationBean bean, User user, boolean disableLog) throws SQLException
     {
+        // TODO Oleh: redirect to confirm_required page
         UtilBean.getUserBean().setUser(user); // logs the user in
         //addMessage(FacesMessage.SEVERITY_INFO, "welcome_username", user.getUsername());
         user.setCurrentLoginDate(new Date());

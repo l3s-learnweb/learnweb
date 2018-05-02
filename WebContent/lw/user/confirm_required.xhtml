@@ -1,0 +1,27 @@
+<ui:composition 
+	template="/templates/main/main.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewAction action="#{confirmRequiredBean.onLoad}"/>
+		</f:metadata>
+	</ui:define>
+
+	<ui:param name="pageTitle" value="#{msg.confirm_required}" />
+	<ui:param name="loginRequired" value="false" />
+	<ui:param name="smallPage" value="true" />
+	<ui:param name="disableGrowl" value="true" />
+
+	<ui:define name="center_layout">
+		<p:panel header="#{msg.confirm_required}">
+			<p>Dear #{confirmRequiredBean.user.realUsername},</p>
+			<p>Before start working on Learnweb, you need to confirm your email.</p>
+			<p>Please, check your mailbox.</p>
+		</p:panel>
+	</ui:define>
+</ui:composition>
