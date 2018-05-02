@@ -41,6 +41,8 @@ public class User implements Comparable<User>, Serializable, HasId
     private String affiliation; //affiliated with which institute
     private String username;
     private String email;
+    private String emailConfirmationToken;
+    private boolean isEmailConfirmed;
     private String password; // md5 hash
 
     private int gender;
@@ -158,6 +160,16 @@ public class User implements Comparable<User>, Serializable, HasId
         return email;
     }
 
+    public String getEmailConfirmationToken()
+    {
+        return emailConfirmationToken;
+    }
+
+    public boolean getIsEmailConfirmed()
+    {
+        return isEmailConfirmed;
+    }
+
     @Override
     public int getId()
     {
@@ -273,6 +285,16 @@ public class User implements Comparable<User>, Serializable, HasId
     public void setEmail(String email)
     {
         this.email = email;
+    }
+
+    public void setEmailConfirmationToken(String emailConfirmationToken)
+    {
+        this.emailConfirmationToken = emailConfirmationToken;
+    }
+
+    public void setIsEmailConfirmed(boolean isEmailConfirmed)
+    {
+        this.isEmailConfirmed = isEmailConfirmed;
     }
 
     public void setGender(int gender)

@@ -1,0 +1,28 @@
+<ui:composition 
+	template="/templates/main/main.xhtml" 
+	xmlns="http://www.w3.org/1999/xhtml" 
+	xmlns:ui="http://java.sun.com/jsf/facelets" 
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core" 
+	xmlns:p="http://primefaces.org/ui">
+
+	<ui:define name="metadata">
+		<f:metadata>
+			<f:viewParam name="email" value="#{confirmEmailBean.email}" />
+			<f:viewParam name="token" value="#{confirmEmailBean.token}" />
+			<f:viewAction action="#{confirmEmailBean.onLoad}"/>
+		</f:metadata>
+	</ui:define>
+
+	<ui:param name="pageTitle" value="#{msg.confirm_email}" />
+	<ui:param name="loginRequired" value="false" />
+	<ui:param name="smallPage" value="true" />
+	<ui:param name="disableGrowl" value="true" />
+
+	<ui:define name="center_layout">
+		<p:panel header="#{msg.confirm_email}" rendered="#{confirmEmailBean.isConfirmed()}">
+			<p>Thank you,</p>
+			<p>Your email confirmed, you can continue your work.</p>
+		</p:panel>
+	</ui:define>
+</ui:composition>

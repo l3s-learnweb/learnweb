@@ -2,6 +2,7 @@ package de.l3s.learnweb;
 
 import java.io.ByteArrayInputStream;
 import java.io.ObjectInputStream;
+import java.net.URLEncoder;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -13,13 +14,14 @@ import java.util.List;
 import java.util.Properties;
 import java.util.TimeZone;
 
+import de.l3s.util.*;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 
 import de.l3s.interwebj.AuthCredentials;
-import de.l3s.util.Cache;
-import de.l3s.util.DummyCache;
-import de.l3s.util.ICache;
-import de.l3s.util.Sql;
+
+import javax.mail.Message;
+import javax.mail.internet.InternetAddress;
 
 /**
  * DAO for the User class.
@@ -33,7 +35,7 @@ public class UserManager
     private final static Logger log = Logger.getLogger(UserManager.class);
 
     // if you change this, you have to change the constructor of User too
-    private final static String COLUMNS = "user_id, username, email, organisation_id, iw_token, iw_secret, active_group_id, image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, is_moderator, active_course_id, registration_date, password, preferences, credits, fullname, affiliation, accept_terms_and_conditions";
+    private final static String COLUMNS = "user_id, username, email, email_confirmation_token, is_email_confirmed, organisation_id, iw_token, iw_secret, active_group_id, image_file_id, gender, dateofbirth, address, profession, additionalinformation, interest, phone, is_admin, is_moderator, active_course_id, registration_date, password, preferences, credits, fullname, affiliation, accept_terms_and_conditions";
 
     private Learnweb learnweb;
     private ICache<User> cache;
@@ -134,8 +136,8 @@ public class UserManager
     /**
      * get a user by username and password
      *
-     * @param Username
-     * @param Password
+     * @param username
+     * @param password
      * @return null if user not found
      * @throws SQLException
      */
@@ -223,6 +225,24 @@ public class UserManager
         return user;
     }
 
+    public User getUserByEmailAndConfirmationToken(String email, String emailConfirmationToken) throws SQLException
+    {
+        PreparedStatement select = learnweb.getConnection().prepareStatement("SELECT " + COLUMNS + " FROM lw_user WHERE email = ? AND email_confirmation_token = ?");
+        select.setString(1, email);
+        select.setString(2, emailConfirmationToken);
+        ResultSet rs = select.executeQuery();
+
+        if(!rs.next())
+        {
+            return null;
+        }
+
+        User user = createUser(rs);
+        select.close();
+
+        return user;
+    }
+
     /**
      * Get a User ID given the username
      *
@@ -248,14 +268,12 @@ public class UserManager
     }
 
     /**
-     *
      * @param username
      * @param password
      * @param email
-     * @param wizard
+     * @param wizardTitle
      * @throws Exception
      */
-
     public User registerUser(String username, String password, String email, String wizardTitle) throws Exception
     {
         if(null == wizardTitle || wizardTitle.length() == 0)
@@ -287,12 +305,34 @@ public class UserManager
 
         User user = new User();
         user.setUsername(username);
-        user.setEmail(email);
+
+        if (StringUtils.isNotEmpty(email)) {
+            user.setEmail(email);
+            user.setIsEmailConfirmed(false);
+            user.setEmailConfirmationToken(MD5.hash(Learnweb.salt3 + user.getId() + user.getEmail()));
+        }
+
         user.setInterwebToken(iwToken);
         user.setOrganisationId(course.getOrganisationId());
         user.setPassword(password, false);
         user.setPreferences(new HashMap<String, String>());
         user = save(user);
+
+        if (user.getEmailConfirmationToken() != null) {
+            String confirmEmailUrl = learnweb.getServerUrl() + "/lw/user/confirm_email.jsf?" +
+                    "email=" + URLEncoder.encode(user.getEmail(), "UTF-8") +
+                    "&token=" + user.getEmailConfirmationToken();
+
+            Mail message = new Mail();
+            message.setSubject("Confirmation email request from Learnweb");
+            message.setRecipient(Message.RecipientType.TO, new InternetAddress(user.getEmail()));
+            message.setText("Hi " + user.getRealUsername() + ",\n\n" +
+                    "Thank you for registration on Learnweb, to continue using our system you need to confirm your email.\n" +
+                    "There is your confirmation link:\n" + confirmEmailUrl + "\n\n" +
+                    "Or just ignore this email, if you haven't requested it.\n\n" +
+                    "Best regards,\nLearnweb Team");
+            message.sendMail();
+        }
 
         course.addUser(user);
 
@@ -355,7 +395,7 @@ public class UserManager
 
     public User save(User user) throws SQLException
     {
-        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
+        PreparedStatement replace = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_user` (" + COLUMNS + ") VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", Statement.RETURN_GENERATED_KEYS);
 
         if(user.getId() < 0) // the User is not yet stored at the database
             replace.setNull(1, java.sql.Types.INTEGER);
@@ -363,30 +403,33 @@ public class UserManager
             replace.setInt(1, user.getId());
         replace.setString(2, user.getRealUsername());
         replace.setString(3, user.getEmail());
-        replace.setInt(4, user.getOrganisationId());
-        replace.setString(5, user.getInterwebKey());
-        replace.setString(6, user.getInterwebSecret());
-        replace.setInt(7, user.getActiveGroupId());
-        replace.setInt(8, user.getImageFileId());
-        replace.setInt(9, user.getGender());
-        replace.setDate(10, user.getDateofbirth() == null ? null : new java.sql.Date(user.getDateofbirth().getTime()));
-        replace.setString(11, user.getAddress());
-        replace.setString(12, user.getProfession());
-        replace.setString(13, user.getAdditionalInformation());
-        replace.setString(14, user.getInterest());
-        replace.setString(15, user.getStudentId());
-        replace.setInt(16, user.isAdmin() ? 1 : 0);
-        replace.setInt(17, user.isModerator() ? 1 : 0);
-        replace.setInt(18, 0); // not used any more
-        replace.setTimestamp(19, user.getRegistrationDate() == null ? new java.sql.Timestamp(System.currentTimeMillis()) : new java.sql.Timestamp(user.getRegistrationDate().getTime()));
-        replace.setString(20, user.getPassword());
+        replace.setString(4, user.getEmailConfirmationToken());
+        replace.setBoolean(5, user.getIsEmailConfirmed());
 
-        Sql.setSerializedObject(replace, 21, user.getPreferences());
+        replace.setInt(6, user.getOrganisationId());
+        replace.setString(7, user.getInterwebKey());
+        replace.setString(8, user.getInterwebSecret());
+        replace.setInt(9, user.getActiveGroupId());
+        replace.setInt(10, user.getImageFileId());
+        replace.setInt(11, user.getGender());
+        replace.setDate(12, user.getDateofbirth() == null ? null : new java.sql.Date(user.getDateofbirth().getTime()));
+        replace.setString(13, user.getAddress());
+        replace.setString(14, user.getProfession());
+        replace.setString(15, user.getAdditionalInformation());
+        replace.setString(16, user.getInterest());
+        replace.setString(17, user.getStudentId());
+        replace.setInt(18, user.isAdmin() ? 1 : 0);
+        replace.setInt(19, user.isModerator() ? 1 : 0);
+        replace.setInt(20, 0); // not used any more
+        replace.setTimestamp(21, user.getRegistrationDate() == null ? new java.sql.Timestamp(System.currentTimeMillis()) : new java.sql.Timestamp(user.getRegistrationDate().getTime()));
+        replace.setString(22, user.getPassword());
 
-        replace.setString(22, user.getCredits());
-        replace.setString(23, user.getFullName());
-        replace.setString(24, user.getAffiliation());
-        replace.setBoolean(25, user.isAcceptTermsAndConditions());
+        Sql.setSerializedObject(replace, 23, user.getPreferences());
+
+        replace.setString(24, user.getCredits());
+        replace.setString(25, user.getFullName());
+        replace.setString(26, user.getAffiliation());
+        replace.setBoolean(27, user.isAcceptTermsAndConditions());
         replace.executeUpdate();
 
         if(user.getId() < 0) // get the assigned id
@@ -417,6 +460,8 @@ public class UserManager
         user.setId(rs.getInt("user_id"));
         user.setUsername(rs.getString("username"));
         user.setEmail(rs.getString("email"));
+        user.setEmailConfirmationToken(rs.getString("email_confirmation_token"));
+        user.setIsEmailConfirmed(rs.getBoolean("is_email_confirmed"));
         user.setPassword(rs.getString("password"), true);
         user.setOrganisationId(rs.getInt("organisation_id"));
         user.setActiveGroup(rs.getInt("active_group_id"));

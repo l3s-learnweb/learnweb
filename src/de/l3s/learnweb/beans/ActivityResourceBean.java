@@ -5,6 +5,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
@@ -47,6 +48,12 @@ public class ActivityResourceBean extends ApplicationBean implements Serializabl
     public ActivityResourceBean()
     {
         clickedGroupItem = new Resource();
+
+        // TODO: can be removed later (for demo purpose only)
+        User user = getUser();
+        if (!user.getIsEmailConfirmed()) {
+            addMessage(FacesMessage.SEVERITY_WARN, "Email confirmation required!", "Your email is not confirmed, please, check your mailbox.");
+        }
     }
 
     public boolean canDeleteTag(Object tagO) throws SQLException
