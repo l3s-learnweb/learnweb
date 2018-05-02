@@ -30,24 +30,7 @@
 			</h2> 	
 			<span class="header_detail">
 				#{msg.activity_message}
-			</span>	
-				
-			<h:form id="center_header_form" rendered="false">				
-				<p:menuButton value="#{msg.upload_resource}" menuStyleClass="test" iconPos="right" styleClass="resource_button greenbutton resourcetoolbutton">
-			        <p:menuitem value="#{msg.upload_file}" icon="ui-icon-disk" update=":add_resource_panel" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
-						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="1"/>
-						<f:setPropertyActionListener target="#{activityResourceBean.rightPanelAction}" value="newResource"/>
-			        </p:menuitem>
-			        <p:menuitem value="#{msg.upload_url}" icon="ui-icon-link" update=":add_resource_panel" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
-						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="2"/>
-						<f:setPropertyActionListener target="#{activityResourceBean.rightPanelAction}" value="newResource"/>
-			        </p:menuitem>
-			        <p:menuitem value="#{msg['Glossary.add_glossary']}" icon="ui-icon-link" update=":add_resource_panel" oncomplete="update_header()" actionListener="#{addResourceBean.clearForm()}">
-						<f:setPropertyActionListener target="#{addResourceBean.resource.storageType}" value="3"/>
-						<f:setPropertyActionListener target="#{activityResourceBean.rightPanelAction}" value="newResource"/>
-			        </p:menuitem>
-			    </p:menuButton>
-			</h:form>
+			</span>
 		</div>
 
 		<script type="text/javascript">
