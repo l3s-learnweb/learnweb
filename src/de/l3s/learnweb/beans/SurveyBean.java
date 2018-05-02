@@ -45,6 +45,8 @@ public class SurveyBean extends ApplicationBean implements Serializable
 
     public void onLoad()
     {
+        log.debug("survey onLoad resource_id: " + surveyResourceId + "; user_id: " + surveyUserId);
+
         User user = getUser();
         if(user == null)
             return;

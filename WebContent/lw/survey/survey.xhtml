@@ -26,6 +26,8 @@
 		<h:form id="form">
 			<ui:fragment rendered="#{surveyBean.resource != null}">
 				<p:panel header="#{surveyBean.resource.title}" style="margin-bottom:10px;">
+					
+					<h:outputText value="#{msg.survey_already_submitted}" rendered="#{surveyBean.submitted}" />
 					<h:panelGroup rendered="#{not surveyBean.submitted}">
 						<h:panelGrid columns="1" cellpadding="5">
 							<c:forEach var="field" items="#{surveyBean.resource.questions}">
@@ -142,27 +144,25 @@
 								
 							</c:forEach>
 						</h:panelGrid>
-					</h:panelGroup>
-					
-					<p:commandButton value="#{msg.submit}"
-						style="float:left;" styleClass="greenbutton resource_button" 
-						onclick="return confirm('Do you want to submit this form finally? You will not be able to change your answers.')"
-						action="#{surveyBean.onSubmit()}" update=":message @form"
-						ajax="false"
-						rendered="#{not surveyBean.submitted}">
-					</p:commandButton>
-
-					<p:commandButton binding="#{save}" id="save" value="#{msg.save}" 
-						rendered="#{not surveyBean.submitted and surveyBean.resource.editable}"
-						actionListener="#{surveyBean.onSave()}" 
-						style="float:left; margin-left:5px"
-						styleClass="graybutton resource_button"
-						ajax="true" oncomplete="$('.nano').nanoScroller({scrollTop: 0});"				
-                     	process="@form" 
-                     	update="@form :message">
-					</p:commandButton>
-								
-					<br class="clear" />
+						
+						<p:commandButton value="#{msg.submit}"
+							style="float:left;" styleClass="greenbutton resource_button" 
+							onclick="return confirm('Do you want to submit this form finally? You will not be able to change your answers.')"
+							action="#{surveyBean.onSubmit()}" update=":message @form"
+							ajax="false">
+						</p:commandButton>
+	
+						<p:commandButton binding="#{save}" id="save" value="#{msg.save}" 
+							rendered="#{surveyBean.resource.editable}"
+							actionListener="#{surveyBean.onSave()}" 
+							style="float:left; margin-left:5px"
+							styleClass="graybutton resource_button"
+							ajax="true" oncomplete="$('.nano').nanoScroller({scrollTop: 0});"				
+	                     	process="@form" 
+	                     	update="@form :message">
+						</p:commandButton>
+						<br class="clear" />
+					</h:panelGroup>	
 				</p:panel>
 
 			</ui:fragment>

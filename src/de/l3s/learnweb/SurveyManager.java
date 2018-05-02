@@ -330,7 +330,10 @@ public class SurveyManager
             ps.setInt(2, userId);
             ps.setBoolean(3, submitted);
             log.debug(ps);
-            ps.executeUpdate();
+            int affectedRows = ps.executeUpdate();
+
+            if(affectedRows != 1)
+                log.error("Did not store survey submit: " + ps);
         }
     }
 
@@ -377,7 +380,7 @@ public class SurveyManager
      * @param finalSubmit true if thisis the final submit
      * @throws SQLException
      */
-    public void saveAnswers(SurveyUserAnswers surveyAnswer, boolean finalSubmit) throws SQLException
+    public void saveAnswers(SurveyUserAnswers surveyAnswer, final boolean finalSubmit) throws SQLException
     {
         try(PreparedStatement insert = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_survey_answer`(`resource_id`, `user_id`, `question_id`, `answer`) VALUES (?, ?, ?, ?)");)
         {
