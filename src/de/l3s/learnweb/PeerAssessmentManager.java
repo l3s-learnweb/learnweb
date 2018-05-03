@@ -21,7 +21,7 @@ import de.l3s.util.StringHelper;
 
 public class PeerAssessmentManager
 {
-    private final static Logger log = Logger.getLogger(ForumManager.class);
+    private final static Logger log = Logger.getLogger(PeerAssessmentManager.class);
     private final static String PAIR_COLUMNS = "`peerassessment_id`, `assessor_user_id`, `assessed_user_id`, `survey_resource_id`, assessment_survey_resource_id, `submission_id`";
 
     private final Learnweb learnweb;
@@ -69,7 +69,8 @@ public class PeerAssessmentManager
 
     private void savePeerAssesmentPair(PeerAssesmentPair pair) throws SQLException
     {
-        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("REPLACE INTO `lw_peerassessment_paring` (" + PAIR_COLUMNS + ") VALUES (?,?,?,?,?,?)");)
+        try(PreparedStatement ps = learnweb.getConnection().prepareStatement("INSERT INTO `lw_peerassessment_paring` (" + PAIR_COLUMNS + ") VALUES (?,?,?,?,?,?) " +
+                "ON DUPLICATE KEY UPDATE peerassessment_id=VALUES(peerassessment_id), assessor_user_id=VALUES(assessor_user_id), survey_resource_id=VALUES(survey_resource_id), survey_resource_id=VALUES(survey_resource_id), assessment_survey_resource_id=VALUES(assessment_survey_resource_id), submission_id=VALUES(submission_id)");)
         {
             ps.setInt(1, pair.getId());
             ps.setInt(2, pair.getAssessorUserId());
@@ -81,7 +82,14 @@ public class PeerAssessmentManager
         }
     }
 
-    public List<PeerAssesmentPair> getPeerAssessmentPairsByPeerAssessmentId(int peerAssesmentId) throws SQLException
+    /**
+     * Returns all peer assessment pairs for the given assessment id
+     *
+     * @param peerAssesmentId
+     * @return
+     * @throws SQLException
+     */
+    public List<PeerAssesmentPair> getPairsByPeerAssessmentId(int peerAssesmentId) throws SQLException
     {
         return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE peerassessment_id = ? ORDER BY survey_resource_id", peerAssesmentId);
     }
@@ -93,7 +101,7 @@ public class PeerAssessmentManager
      * @return
      * @throws SQLException
      */
-    public List<PeerAssesmentPair> getPeerAssessmentPairsByAssessorUserId(int userId) throws SQLException
+    public List<PeerAssesmentPair> getPairsByAssessorUserId(int userId) throws SQLException
     {
         return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE assessor_user_id = ?", userId);
     }
@@ -105,9 +113,21 @@ public class PeerAssessmentManager
      * @return
      * @throws SQLException
      */
-    public List<PeerAssesmentPair> getPeerAssessmentPairsByAssessedUserId(int userId) throws SQLException
+    public List<PeerAssesmentPair> getPairsByAssessedUserId(int userId) throws SQLException
     {
         return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE assessor_user_id = ?", userId);
+    }
+
+    /**
+     * Returns all assessment pairs that used the given resource id to peer assess the given user
+     *
+     * @param peerAssessmentSurveyResourceId
+     * @return
+     * @throws SQLException
+     */
+    public List<PeerAssesmentPair> getPairsByPeerAssessmentForm(int peerAssessmentSurveyResourceId, int assessedUserId) throws SQLException
+    {
+        return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE survey_resource_id = ? AND assessed_user_id = ?", peerAssessmentSurveyResourceId, assessedUserId);
     }
 
     private List<PeerAssesmentPair> getPeerAssessmentPairs(String query, int... parameters) throws SQLException
@@ -293,7 +313,7 @@ public class PeerAssessmentManager
 
     private void taskSetupAssesment(int peerAssesmentId, HashMap<String, Integer> taskAssessmentSurveyMapping, int assessmentFolderId) throws SQLException
     {
-        List<PeerAssesmentPair> pairs = getPeerAssessmentPairsByPeerAssessmentId(peerAssesmentId);
+        List<PeerAssesmentPair> pairs = getPairsByPeerAssessmentId(peerAssesmentId);
         PeerAssessmentManager peerAssessmentManager = learnweb.getPeerAssessmentManager();
 
         for(PeerAssesmentPair pair : pairs)
@@ -309,7 +329,7 @@ public class PeerAssessmentManager
             assessmentSurvey.setUserId(10921);
             assessmentSurvey.setGroupId(1373);
             assessmentSurvey.setFolderId(assessmentFolderId);
-            assessmentSurvey.setEditable(true);
+            assessmentSurvey.setSaveable(true);
             assessmentSurvey.save();
 
             pair.assessmentSurveyResourceId = assessmentSurvey.getId();
@@ -328,7 +348,7 @@ public class PeerAssessmentManager
     @SuppressWarnings("unused")
     private void sendInvitationMail(int peerAssementId) throws SQLException, MessagingException
     {
-        List<PeerAssesmentPair> pairs = getPeerAssessmentPairsByPeerAssessmentId(peerAssementId);
+        List<PeerAssesmentPair> pairs = getPairsByPeerAssessmentId(peerAssementId);
 
         for(PeerAssesmentPair pair : pairs)
         {

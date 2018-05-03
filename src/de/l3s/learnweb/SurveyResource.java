@@ -13,7 +13,7 @@ public class SurveyResource extends Resource implements Serializable
     private int surveyId;
     private Date start;
     private Date end;
-    private boolean editable; // if true users can save before their answers before finally submitting them
+    private boolean saveable; // if true users can save before their answers before finally submitting them
 
     private Survey survey;
 
@@ -35,7 +35,7 @@ public class SurveyResource extends Resource implements Serializable
         setSurveyId(old.getSurveyId());
         setStart(old.getStart());
         setEnd(old.getEnd());
-        setEditable(old.isEditable());
+        setSaveable(old.isSaveable());
     }
 
     @Override
@@ -122,14 +122,18 @@ public class SurveyResource extends Resource implements Serializable
         this.end = end;
     }
 
-    public boolean isEditable()
+    /**
+     *
+     * @return True if the form can be saved before submit
+     */
+    public boolean isSaveable()
     {
-        return editable;
+        return saveable;
     }
 
-    public void setEditable(boolean editable)
+    public void setSaveable(boolean editable)
     {
-        this.editable = editable;
+        this.saveable = editable;
     }
 
 }

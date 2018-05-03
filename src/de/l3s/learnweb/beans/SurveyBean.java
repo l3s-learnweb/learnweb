@@ -2,7 +2,6 @@ package de.l3s.learnweb.beans;
 
 import java.io.Serializable;
 import java.sql.SQLException;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -13,6 +12,7 @@ import javax.faces.bean.ViewScoped;
 import org.apache.log4j.Logger;
 
 import de.l3s.learnweb.LogEntry.Action;
+import de.l3s.learnweb.PeerAssessmentManager.PeerAssesmentPair;
 import de.l3s.learnweb.SurveyResource;
 import de.l3s.learnweb.SurveyUserAnswers;
 import de.l3s.learnweb.User;
@@ -27,20 +27,24 @@ public class SurveyBean extends ApplicationBean implements Serializable
     private int surveyResourceId;
     private int surveyUserId; // the user whose answers are viewed, by default the currently loggedin user
 
-    private boolean editable;
+    private boolean formEnabled;
 
     private SurveyResource resource;
     private SurveyUserAnswers userAnswers;
 
-    private static List<Integer> peerAssessmentSsurveys = Arrays.asList(1, 23, 3);
-
-    private boolean canViewPeerAssessmentResult(SurveyResource resource)
+    private boolean canViewPeerAssessmentResult() throws SQLException
     {
-        if(!peerAssessmentSsurveys.contains(resource.getSurveyId()))
-            return false;
+        int userId = getUser().getId();
+        List<PeerAssesmentPair> pairs = getLearnweb().getPeerAssessmentManager().getPairsByPeerAssessmentForm(surveyResourceId, surveyUserId);
 
-        // TODO check if user can access a given resource
-        return true;
+        for(PeerAssesmentPair pair : pairs)
+        {
+            if(pair.getAssessedUserId() == userId || pair.getAssessorUserId() == userId)
+                return true;
+        }
+        log.debug("canViewPeerAssessmentResult is false");
+
+        return false;
     }
 
     public void onLoad()
@@ -69,36 +73,25 @@ public class SurveyBean extends ApplicationBean implements Serializable
             }
 
             // whose answers shall be viewed
-            if(surveyUserId <= 0 || surveyUserId == getUser().getId()) // by default view the answers of the current user,
+            if(surveyUserId <= 0 || surveyUserId == getUser().getId()) // by default view the answers of the current user
+            {
                 surveyUserId = getUser().getId();
+            }
             else
             {
-                if(resource.canModerateResource(getUser()))
-                {
-
-                }
-                else
+                // if a user wants to see the answers of another user make sure he is a moderator or the survey is part of a peer assessment
+                if(!resource.canModerateResource(getUser()) && !canViewPeerAssessmentResult())
                 {
                     addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to view the answers of the given user");
-                    log.warn("Illegal access: " + BeanHelper.getRequestSummary());
+                    log.error("Illegal access: " + BeanHelper.getRequestSummary());
                     resource = null;
                     return;
                 }
             }
-            editable = resource.isEditable() && isValidSubmissionDate(resource);
             userAnswers = resource.getAnswersOfUser(surveyUserId);
 
-            if(isSubmitted())
-                addMessage(FacesMessage.SEVERITY_ERROR, "survey_already_submitted");
-            else if(!isValidSubmissionDate(resource))
-                addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_error_between", resource.getStart(), resource.getEnd());
-            else if(userAnswers.isSaved())
-            {
-                if(resource.getEnd() != null)
-                    addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_edit_until", resource.getEnd());
-                else
-                    addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_edit");
-            }
+            formEnabled = !userAnswers.isSubmitted() && surveyUserId == getUser().getId() && isValidSubmissionDate(resource);
+
         }
         catch(Exception e)
         {
@@ -106,6 +99,24 @@ public class SurveyBean extends ApplicationBean implements Serializable
             addFatalMessage("Couldn't load survey; resource: ", e);
         }
 
+    }
+
+    /**
+     * This method is only called by the survey/survey.jsf page to load necessary warnings
+     */
+    public void onLoadEdit()
+    {
+        if(isSubmitted())
+            addMessage(FacesMessage.SEVERITY_ERROR, "survey_already_submitted");
+        else if(!isValidSubmissionDate(resource))
+            addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_error_between", resource.getStart(), resource.getEnd());
+        else if(userAnswers.isSaved())
+        {
+            if(resource.getEnd() != null)
+                addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_edit_until", resource.getEnd());
+            else
+                addMessage(FacesMessage.SEVERITY_WARN, "survey_submit_edit");
+        }
     }
 
     public boolean isSubmitted()
@@ -160,11 +171,6 @@ public class SurveyBean extends ApplicationBean implements Serializable
             addMessage(FacesMessage.SEVERITY_INFO, "survey_saved");
             log(Action.survey_save, resource.getGroupId(), surveyResourceId);
         }
-    }
-
-    public boolean isEditable()
-    {
-        return editable;
     }
 
     private static boolean isValidSubmissionDate(SurveyResource surveyResource)

@@ -605,7 +605,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
         for(File file :files)
         {
             // TODO Philipp: copy files too. The DB layout doesn't support this right now
-        
+
         }
         */
     }
@@ -1521,7 +1521,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
     public boolean canViewResource(User user) throws SQLException
     {
         //admins, moderators and resource owners can always view the resource
-        if(user != null && (user.isAdmin() || user.isModerator() || getUserId() == user.getId()))
+        if(user != null && (user.isModerator() || getUserId() == user.getId()))
             return true;
 
         switch(rights)
@@ -1530,6 +1530,7 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
             return true;
         case LEARNWEB_READABLE:
             return user != null;
+
         case SUBMISSION_READABLE: // the submitter of the resource (stored in the original resource id) and assessors can view the resource
             Resource originalResource = Learnweb.getInstance().getResourceManager().getResource(originalResourceId);
             if(originalResource != null && originalResource.getUserId() == user.getId())
@@ -1537,7 +1538,8 @@ public class Resource extends GroupItem implements HasId, Serializable // Abstra
 
             // check if the current user can assess this resource
             return Learnweb.getInstance().getPeerAssessmentManager().canAssessResource(user, this);
-        case DEFAULT_RIGHTS:
+
+        case DEFAULT_RIGHTS: // if the resource is part of the group the group permissions are used
             Group group = getGroup();
             if(group != null)
                 return group.canViewResources(user);

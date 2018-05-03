@@ -83,7 +83,7 @@ public class SurveyManager
         }
 
         if(surveyAnswer.isSaved())
-            surveyAnswer.setSubmitted(this.getSurveyResourceSubmitStauts(surveyResourceId, userId));
+            surveyAnswer.setSubmitted(this.getSurveyResourceSubmitStatus(surveyResourceId, userId));
 
         return surveyAnswer;
     }
@@ -203,7 +203,7 @@ public class SurveyManager
             }
 
             if(userServeyAnswers.isSaved())
-                userServeyAnswers.setSubmitted(this.getSurveyResourceSubmitStauts(surveyResourceId, ids.getInt("user_id")));
+                userServeyAnswers.setSubmitted(this.getSurveyResourceSubmitStatus(surveyResourceId, ids.getInt("user_id")));
 
             answers.add(userServeyAnswers);
         }
@@ -246,7 +246,7 @@ public class SurveyManager
                 resource.setEnd(rs.getDate("close_date"));
                 resource.setStart(rs.getDate("open_date"));
                 resource.setSurveyId(rs.getInt("survey_id"));
-                resource.setEditable(rs.getBoolean("editable"));
+                resource.setSaveable(rs.getBoolean("editable"));
             }
             else
                 log.error("Can't load metadata of survey resource: " + resource.getId());
@@ -343,7 +343,7 @@ public class SurveyManager
      * @return
      * @throws SQLException
      */
-    private boolean getSurveyResourceSubmitStauts(int resourceId, int userId) throws SQLException
+    private boolean getSurveyResourceSubmitStatus(int resourceId, int userId) throws SQLException
     {
         try(PreparedStatement ps = learnweb.getConnection().prepareStatement("SELECT submitted FROM `lw_survey_resource_user` WHERE resource_id = ? AND user_id = ?");)
         {
@@ -465,7 +465,7 @@ public class SurveyManager
             replace.setInt(2, surveyResource.getSurveyId());
             replace.setTimestamp(3, Sql.convertDateTime(surveyResource.getStart()));
             replace.setTimestamp(4, Sql.convertDateTime(surveyResource.getEnd()));
-            replace.setBoolean(5, surveyResource.isEditable());
+            replace.setBoolean(5, surveyResource.isSaveable());
             replace.executeUpdate();
         }
         return surveyResource;

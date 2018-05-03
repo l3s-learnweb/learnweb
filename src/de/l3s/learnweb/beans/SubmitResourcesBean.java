@@ -97,7 +97,7 @@ public class SubmitResourcesBean extends ApplicationBean implements Serializable
     {
         try
         {
-            return getLearnweb().getPeerAssessmentManager().getPeerAssessmentPairsByAssessorUserId(getUserId());
+            return getLearnweb().getPeerAssessmentManager().getPairsByAssessorUserId(getUserId());
 
         }
         catch(SQLException e)
