@@ -15,9 +15,12 @@ import javax.faces.model.SelectItem;
 
 import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFCell;
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
+import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.util.HSSFColor;
 
 import de.l3s.glossary.GlossaryItems;
 import de.l3s.glossary.LanguageItem;
@@ -57,6 +60,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private List<GlossaryItems> items = new ArrayList<GlossaryItems>();
     private List<GlossaryItems> filteredItems = new ArrayList<GlossaryItems>();
     private GlossaryItems selectedGlossaryItem;
+    private Resource glossaryResource;
 
     private int glossaryEntryCount;
 
@@ -73,8 +77,8 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             glossaryEntryCount = getGlossaryEntryCount(resourceId);
             try
             {
-                Resource resource = getLearnweb().getResourceManager().getResource(resourceId);
-                groupId = resource.getGroupId();
+                glossaryResource = getLearnweb().getResourceManager().getResource(resourceId);
+                groupId = glossaryResource.getGroupId();
                 log(Action.glossary_open, groupId, resourceId);
             }
             catch(Exception e)
@@ -440,6 +444,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
             }
             else
             {
+
                 return;
             }
 
@@ -467,6 +472,18 @@ public class GlossaryBean extends ApplicationBean implements Serializable
                 }
 
             }
+
+            //Set owner details
+            HSSFRow rowN = sheet.createRow(sheet.getLastRowNum() + 2);
+            String owner = "Owner username: " + glossaryResource.getUser().getUsername() + ((glossaryResource.getUser().getFullName() == null) ? "" : ", Fullname: " + glossaryResource.getUser().getFullName());
+            rowN.createCell(0).setCellValue(owner);
+            HSSFCellStyle copyrightStyle = wb.createCellStyle();
+            HSSFFont hSSFFont = wb.createFont();
+            hSSFFont.setFontName(HSSFFont.FONT_ARIAL);
+            hSSFFont.setFontHeightInPoints((short) 16);
+            hSSFFont.setColor(HSSFColor.RED.index);
+            copyrightStyle.setFont(hSSFFont);
+            rowN.getCell(0).setCellStyle(copyrightStyle);
         }
         catch(Exception e)
         {
@@ -699,6 +716,16 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     public int getGlossaryEntryCount()
     {
         return glossaryEntryCount;
+    }
+
+    public Resource getGlossaryResource()
+    {
+        return glossaryResource;
+    }
+
+    public void setGlossaryResource(Resource glossaryResource)
+    {
+        this.glossaryResource = glossaryResource;
     }
 
 }
