@@ -45,11 +45,11 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     private String selectedTopicOne;
     private String selectedTopicTwo;
     private String selectedTopicThree;
-    public String description;
+    public String description; // TODO private
     private final List<SelectItem> availableTopicOnes = new ArrayList<SelectItem>();
     private List<SelectItem> availableTopicTwos = new ArrayList<SelectItem>();
     private List<SelectItem> availableTopicThrees = new ArrayList<SelectItem>();
-    private String valueHeaderIt;
+    private String valueHeaderIt; // TODO does It refer to italian? then change it
     private int count;
     private int userId;
     private LANGUAGE primaryLanguage;
@@ -64,7 +64,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
 
     private int glossaryEntryCount;
 
-    public void preRenderView()
+    public void preRenderView() // TODO use only on onload method
     {
         if(isAjaxRequest())
             return;
@@ -90,7 +90,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
     }
 
     @PostConstruct
-    public void init()
+    public void init() // TODO use only on onload method
     {
         //Add topic One
         availableTopicOnes.add(new SelectItem("Environment"));
@@ -103,7 +103,7 @@ public class GlossaryBean extends ApplicationBean implements Serializable
         uses.add("informal");
         try
         {
-            resourceId = getParameterInt("resource_id");
+            resourceId = getParameterInt("resource_id"); // don't sue that any more
         }
         catch(Exception e)
         {
