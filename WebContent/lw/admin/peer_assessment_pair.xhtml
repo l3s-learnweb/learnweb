@@ -6,7 +6,6 @@
 	xmlns:c="http://java.sun.com/jsp/jstl/core"
 	xmlns:p="http://primefaces.org/ui">
 
-	<c:set var="showEmail" value="true" scope="request" />
 	<ui:define name="metadata">
 		<f:metadata>
 			<f:viewParam name="peer_assessment_id"
@@ -17,9 +16,11 @@
 	</ui:define>
 
 	<ui:param name="loginRequired" value="true" />
-	<ui:param name="pageTitle" value="Peer assessment pairin" />
+	<ui:param name="pageTitle" value="Peer assessment pairing" />
 
 	<ui:define name="center_layout">
+		<c:set var="showEmail" value="false" scope="request" />
+	
 		<h:outputText value="Missing authentication" rendered="#{not userBean.moderator}" />
 
 		<ui:fragment rendered="#{userBean.moderator}">			
@@ -37,8 +38,8 @@
 
 					<p:columnGroup type="header">
 						<p:row>
-							<p:column colspan="#{showEmail? 3:2}" headerText="Assessor" style="font-size:1.2em" />
-							<p:column colspan="#{showEmail? 3:2}" headerText="Assessed" style="font-size:1.2em"  />
+							<p:column colspan="${showEmail? 3:2}" headerText="Assessor" style="font-size:1.2em" />
+							<p:column colspan="${showEmail? 3:2}" headerText="Assessed" style="font-size:1.2em"  />
 							<p:column colspan="3" headerText="Assessment" style="font-size:1.2em"  />
 						</p:row>
 
@@ -50,7 +51,7 @@
 								sortBy="#{pair.assessorUser.studentId}">
 							</p:column>
 							
-							<p:column headerText="#{msg.email_address}" rendered="#{showEmail}"
+							<p:column headerText="#{msg.email_address}" rendered="${showEmail}"
 								sortBy="#{pair.assessorUser.email}">
 							</p:column>
 							
@@ -60,7 +61,7 @@
 							<p:column headerText="Student Id"
 								sortBy="#{pair.assessedUser.studentId}">
 							</p:column>
-							<p:column headerText="#{msg.email_address}" rendered="#{showEmail}"
+							<p:column headerText="#{msg.email_address}" rendered="${showEmail}"
 								sortBy="#{pair.assessedUser.email}">
 							</p:column>
 							
@@ -83,6 +84,7 @@
 					</p:column>
 					<p:column rendered="#{showEmail}">
 						<h:outputText value="#{pair.assessorUser.email}" />
+						<h:outputText value="#{pair.assessorUser.id}" />
 					</p:column>
 					
 					<p:column>
@@ -93,6 +95,7 @@
 					</p:column>
 					<p:column rendered="#{showEmail}">
 						<h:outputText value="#{pair.assessedUser.email}" />
+						<h:outputText value="#{pair.assessedUser.id}" />
 					</p:column>
 
 					<p:column>
@@ -120,14 +123,20 @@
 							<h:outputText value="My" />
 						</h:outputLink>
 						
-						<ui:repeat var="user" value="#{pair.assessment.usersWhoSaved}">
-							<h:outputText value=" " />
-							<h:outputLink value="survey/answer.jsf" rendered="#{user.id != userBean.user.id}">
-								<f:param name="resource_id" value="#{pair.assessmentSurveyResourceId}" />							
-								<f:param name="user_id" value="#{user.id}" />							
-								<h:outputText value="#{user.realUsername}" />
-							</h:outputLink>
+						<h:outputText value=" Saved" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).saved and not pair.assessment.getAnswersOfUser(userBean.user.id).submitted}" styleClass="red bold" />
+						<h:outputText value=" Submitted" rendered="#{pair.assessment.getAnswersOfUser(userBean.user.id).submitted}" styleClass="green bold" />
 						
+						<ui:repeat var="user" value="#{pair.assessment.usersWhoSaved}">
+							<ui:fragment rendered="#{user.id != userBean.user.id}">
+								<h:outputText value=", " />
+								<h:outputLink value="survey/answer.jsf">
+									<f:param name="resource_id" value="#{pair.assessmentSurveyResourceId}" />							
+									<f:param name="user_id" value="#{user.id}" />							
+									<h:outputText value="#{user.realUsername}" />	 
+								</h:outputLink>
+								<h:outputText value=" Saved" rendered="#{pair.assessment.getAnswersOfUser(user.id).saved and not pair.assessment.getAnswersOfUser(user.id).submitted}" styleClass="red bold" />
+								<h:outputText value=" Submitted" rendered="#{pair.assessment.getAnswersOfUser(user.id).submitted}" styleClass="green bold" />
+							</ui:fragment>
 						</ui:repeat>
 						
 					</p:column>

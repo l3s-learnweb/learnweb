@@ -3,7 +3,6 @@ package de.l3s.learnweb.beans;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.Date;
-import java.util.List;
 
 import javax.faces.application.FacesMessage;
 import javax.faces.bean.ManagedBean;
@@ -25,45 +24,30 @@ public class SurveyBean extends ApplicationBean implements Serializable
     private static final long serialVersionUID = -6217166153267996666L;
     private static final Logger log = Logger.getLogger(SurveyBean.class);
     private int surveyResourceId;
-    private int surveyUserId; // the user whose answers are viewed, by default the currently loggedin user
+    private int surveyUserId; // the user whose answers are viewed, by default the currently logged in user
 
     private boolean formEnabled;
 
     private SurveyResource resource;
     private SurveyUserAnswers userAnswers;
 
-    private boolean canViewPeerAssessmentResult() throws SQLException
-    {
-        int userId = getUser().getId();
-        List<PeerAssesmentPair> pairs = getLearnweb().getPeerAssessmentManager().getPairsByPeerAssessmentForm(surveyResourceId, surveyUserId);
-
-        for(PeerAssesmentPair pair : pairs)
-        {
-            if(pair.getAssessedUserId() == userId || pair.getAssessorUserId() == userId)
-                return true;
-        }
-        log.debug("canViewPeerAssessmentResult is false");
-
-        return false;
-    }
-
     public void onLoad()
     {
-        log.debug("survey onLoad resource_id: " + surveyResourceId + "; user_id: " + surveyUserId);
+        //log.debug("survey onLoad resource_id: " + surveyResourceId + "; user_id: " + surveyUserId);
 
         User user = getUser();
         if(user == null)
             return;
 
-        if(surveyResourceId <= 0)
-        {
-            addInvalidParameterMessage("resource_id");
-            return;
-        }
-
         try
         {
             resource = (SurveyResource) getLearnweb().getResourceManager().getResource(surveyResourceId);
+
+            if(resource == null)
+            {
+                addInvalidParameterMessage("resource_id");
+                return;
+            }
 
             if(!resource.canViewResource(user))
             {
@@ -77,21 +61,18 @@ public class SurveyBean extends ApplicationBean implements Serializable
             {
                 surveyUserId = getUser().getId();
             }
-            else
+            // if a user wants to see the answers of another user make sure he is a moderator or the survey is part of a peer assessment
+            else if(!resource.canModerateResource(getUser()) && !canViewPeerAssessmentResult())
             {
-                // if a user wants to see the answers of another user make sure he is a moderator or the survey is part of a peer assessment
-                if(!resource.canModerateResource(getUser()) && !canViewPeerAssessmentResult())
-                {
-                    addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to view the answers of the given user");
-                    log.error("Illegal access: " + BeanHelper.getRequestSummary());
-                    resource = null;
-                    return;
-                }
+                addMessage(FacesMessage.SEVERITY_ERROR, "You are not allowed to view the answers of the given user");
+                log.error("Illegal access: " + BeanHelper.getRequestSummary());
+                resource = null;
+                return;
             }
+
             userAnswers = resource.getAnswersOfUser(surveyUserId);
 
             formEnabled = !userAnswers.isSubmitted() && surveyUserId == getUser().getId() && isValidSubmissionDate(resource);
-
         }
         catch(Exception e)
         {
@@ -99,6 +80,19 @@ public class SurveyBean extends ApplicationBean implements Serializable
             addFatalMessage("Couldn't load survey; resource: ", e);
         }
 
+    }
+
+    private boolean canViewPeerAssessmentResult() throws SQLException
+    {
+        int userId = getUser().getId();
+        PeerAssesmentPair pair = getLearnweb().getPeerAssessmentManager().getPair(surveyResourceId, surveyUserId, userId);
+
+        if(pair != null)
+            return true;
+
+        log.debug("canViewPeerAssessmentResult is false");
+
+        return false;
     }
 
     /**
@@ -161,6 +155,7 @@ public class SurveyBean extends ApplicationBean implements Serializable
         {
             addMessage(FacesMessage.SEVERITY_INFO, "survey_submitted");
             log(Action.survey_submit, resource.getGroupId(), surveyResourceId);
+            formEnabled = false;
         }
     }
 
@@ -212,5 +207,10 @@ public class SurveyBean extends ApplicationBean implements Serializable
     public SurveyUserAnswers getUserAnswers()
     {
         return userAnswers;
+    }
+
+    public boolean isFormEnabled()
+    {
+        return formEnabled;
     }
 }

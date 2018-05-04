@@ -5,13 +5,15 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 
+import de.l3s.util.HasId;
+
 /**
  * This class represents the answers of a single suer for a survey resources
  *
  * @author Philipp
  *
  */
-public class SurveyUserAnswers implements Serializable
+public class SurveyUserAnswers implements Serializable, HasId
 {
     private static final long serialVersionUID = -1442011853436353323L;
 
@@ -84,6 +86,17 @@ public class SurveyUserAnswers implements Serializable
     public HashMap<Integer, String[]> getMultipleAnswers()
     {
         return multipleAnswers;
+    }
+
+    /**
+     * This class should only be cached inside an Resource object hence it returns the userId as its id
+     * 
+     * @return
+     */
+    @Override
+    public int getId()
+    {
+        return getUserId();
     }
 
 }

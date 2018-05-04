@@ -54,7 +54,7 @@
 		</ui:fragment>
 		
 		<ui:fragment rendered="#{groupDetailBean.group.canViewResources(userBean.user)}">		
-			<h:dataTable var="datagrid" value="#{groupDetailBean.newslist}" id="datagrid" styleClass="not-selectable">				
+			<h:dataTable var="datagrid" value="#{groupDetailBean.newslist}" id="datagrid" styleClass="not-selectable" style="width: 100%;">				
 				<h:column >
 					<div class="newsfeed_user_image_div">
 				    	<img id="userpic" src="#{datagrid.logEntry.userImage}" alt="profile image" width="30" height="30" class="newsfeed_user_image"/>

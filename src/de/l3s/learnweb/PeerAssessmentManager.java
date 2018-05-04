@@ -119,15 +119,27 @@ public class PeerAssessmentManager
     }
 
     /**
-     * Returns all assessment pairs that used the given resource id to peer assess the given user
+     * Checks whether the given users and the survey are part of a peer assessment
      *
      * @param peerAssessmentSurveyResourceId
+     * @param assessedUserId
      * @return
      * @throws SQLException
      */
-    public List<PeerAssesmentPair> getPairsByPeerAssessmentForm(int peerAssessmentSurveyResourceId, int assessedUserId) throws SQLException
+    public PeerAssesmentPair getPair(int peerAssessmentSurveyResourceId, int assessorUserId, int assessedUserId) throws SQLException
     {
-        return getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE survey_resource_id = ? AND assessed_user_id = ?", peerAssessmentSurveyResourceId, assessedUserId);
+        List<PeerAssesmentPair> pairs = getPeerAssessmentPairs("SELECT " + PAIR_COLUMNS + " FROM lw_peerassessment_paring WHERE survey_resource_id = ? AND assessor_user_id = ? AND assessed_user_id = ?", peerAssessmentSurveyResourceId, assessorUserId, assessedUserId);
+
+        // this query can not return more than one result
+        switch(pairs.size())
+        {
+        case 0:
+            return null;
+        case 1:
+            return pairs.get(0);
+        default:
+            throw new IllegalStateException();
+        }
     }
 
     private List<PeerAssesmentPair> getPeerAssessmentPairs(String query, int... parameters) throws SQLException
@@ -267,17 +279,11 @@ public class PeerAssessmentManager
     {
 
         Learnweb learnweb = Learnweb.createInstance(null);
+        PeerAssessmentManager pam = learnweb.getPeerAssessmentManager();
         //learnweb.getPeerAssessmentManager().taskSetupPeerAssesmentRomeLeeds();
         //learnweb.getPeerAssessmentManager().sendInvitationMail(1);
 
-        HashMap<String, Integer> taskAssessmentSurveyMapping = new HashMap<String, Integer>();
-        taskAssessmentSurveyMapping.put("About Us page", 204316);
-        taskAssessmentSurveyMapping.put("Corporate Video", 204315);
-        taskAssessmentSurveyMapping.put("Fanvid", 204490);
-        taskAssessmentSurveyMapping.put("Video-Mediated Interaction", 204491);
-        taskAssessmentSurveyMapping.put("Weblog", 204492);
-
-        learnweb.getPeerAssessmentManager().taskSetupAssesment(1, taskAssessmentSurveyMapping, 443);
+        pam.sendResultMail(1);
 
         learnweb.onDestroy();
     }
@@ -357,7 +363,7 @@ public class PeerAssessmentManager
 
             Mail mail = new Mail();
             mail.setSubject("EUMADE4LL peer assessment");
-            mail.setText(getEUMADe4ALLMailText(pair.getAssessorUser().getRealUsername(), submissionUrl, surveyUrl));
+            mail.setText(getEUMADe4ALLInvitationMailText(pair.getAssessorUser().getRealUsername(), submissionUrl, surveyUrl));
 
             mail.setRecipient(RecipientType.BCC, new InternetAddress("kemkes@kbs.uni-hannover.de"));
 
@@ -365,11 +371,41 @@ public class PeerAssessmentManager
 
             log.debug("Send to: " + pair.getAssessorUser().getEmail());
             mail.sendMail();
-            // "The subject line of the email should be:
         }
     }
 
-    private String getEUMADe4ALLMailText(String username, String submissionUrl, String surveyUrl)
+    /**
+     * Sends the results of the assessment to the assessed users
+     *
+     * @param peerAssementId
+     * @throws SQLException
+     * @throws MessagingException
+     */
+    @SuppressWarnings("unused")
+    private void sendResultMail(int peerAssementId) throws SQLException, MessagingException
+    {
+        List<PeerAssesmentPair> pairs = getPairsByPeerAssessmentId(peerAssementId);
+
+        for(PeerAssesmentPair pair : pairs)
+        {
+            // TODO check if peer assessment was submitted
+            String peerAssessmentUrl = "https://learnweb.l3s.uni-hannover.de/lw/survey/answer.jsf?resource_id=" + pair.getPeerAssessmentSurveyResourceId() + "&user_id=" + pair.getAssessorUserId();
+            String teacherAssessmentUrl = "https://learnweb.l3s.uni-hannover.de/lw/survey/answer.jsf?resource_id=" + pair.getAssessmentSurveyResourceId(); // TODO get teacher id
+
+            Mail mail = new Mail();
+            mail.setSubject("EUMADE4LL assessment");
+            mail.setText(getEUMADe4ALLResultMailText(pair.getAssessedUser().getRealUsername(), peerAssessmentUrl, teacherAssessmentUrl));
+
+            mail.setRecipient(RecipientType.BCC, new InternetAddress("kemkes@kbs.uni-hannover.de"));
+
+            //mail.setRecipient(RecipientType.TO, new InternetAddress(pair.getAssessedUser().getEmail()));
+
+            log.debug("Send to: " + pair.getAssessedUser().getEmail());
+            mail.sendMail();
+        }
+    }
+
+    private String getEUMADe4ALLInvitationMailText(String username, String submissionUrl, String surveyUrl)
     {
         return "Dear " + username + ",\r\n\r\n" +
                 "you have been matched with your peer-student and now you can assess his/her assignments. To see the resources please click here\r\n" +
@@ -377,6 +413,20 @@ public class PeerAssessmentManager
                 "\r\n" +
                 "Read and analyse them carefully then fill in the peer-assessment grid and submit it. Click here for the grid\r\n" +
                 surveyUrl + "\r\n" +
+                "\r\n" +
+                "For this last assignment, remember to follow the instructions provided by the guidelines and to submit it by 2nd May at noon. You can save it as many times as you need to, until you are ready to submit.\r\n" +
+                "\r\n" +
+                "Thank you very much for your work!\r\n";
+    }
+
+    private String getEUMADe4ALLResultMailText(String username, String peerAssessmentUrl, String assessmentUrl)
+    {
+        return "Dear " + username + ",\r\n\r\n" +
+                "teacher assessment: \r\n" +
+                assessmentUrl + "\r\n" +
+                "\r\n" +
+                "student assessment\r\n" +
+                peerAssessmentUrl + "\r\n" +
                 "\r\n" +
                 "For this last assignment, remember to follow the instructions provided by the guidelines and to submit it by 2nd May at noon. You can save it as many times as you need to, until you are ready to submit.\r\n" +
                 "\r\n" +

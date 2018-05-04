@@ -363,7 +363,7 @@ public class Search
             { //if not city, big city or country, not add to the list
                 places = getPlaces(newPlaceId, language);
             }
-            else if(wikiProp.get("P31").equals("Q6256"))
+            else if(wikiProp.get("P31").equals("Q6256")) // TODO check this line
             { //if country, stop trace
                 places = place;
             }

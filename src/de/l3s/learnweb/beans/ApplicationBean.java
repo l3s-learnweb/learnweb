@@ -145,7 +145,7 @@ public class ApplicationBean
      */
     protected void addMessage(FacesMessage.Severity severity, String msgKey, Object... args)
     {
-        Logger.getLogger(ApplicationBean.class).debug("JSF message: " + getLocaleMessage(msgKey, args));
+        //Logger.getLogger(ApplicationBean.class).debug("JSF message: " + getLocaleMessage(msgKey, args));
         getFacesContext().addMessage("message", new FacesMessage(severity, getLocaleMessage(msgKey, args), null));
     }
 

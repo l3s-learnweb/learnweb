@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import de.l3s.util.Cache;
+
 public class SurveyResource extends Resource implements Serializable
 {
     private static final long serialVersionUID = 3431955030925189235L;
@@ -16,6 +18,8 @@ public class SurveyResource extends Resource implements Serializable
     private boolean saveable; // if true users can save before their answers before finally submitting them
 
     private Survey survey;
+
+    private transient Cache<SurveyUserAnswers> answerCache;
 
     /**
      * Do nothing constructor
@@ -58,9 +62,22 @@ public class SurveyResource extends Resource implements Serializable
         return getSurvey().getQuestions();
     }
 
+    private Cache<SurveyUserAnswers> getAnswerCache()
+    {
+        if(null == answerCache)
+            answerCache = new Cache<SurveyUserAnswers>(50);
+        return answerCache;
+    }
+
     public SurveyUserAnswers getAnswersOfUser(int userId) throws SQLException
     {
-        return Learnweb.getInstance().getSurveyManager().getAnswersOfUser(getSurvey(), getId(), userId);
+        SurveyUserAnswers answers = getAnswerCache().get(userId);
+        if(null == answers)
+        {
+            answers = Learnweb.getInstance().getSurveyManager().getAnswersOfUser(getSurvey(), getId(), userId);
+            getAnswerCache().put(answers);
+        }
+        return answers;
     }
 
     public List<User> getUsersWhoSaved() throws SQLException

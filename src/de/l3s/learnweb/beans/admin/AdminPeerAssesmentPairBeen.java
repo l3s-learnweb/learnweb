@@ -7,8 +7,6 @@ import java.util.List;
 import javax.faces.bean.ManagedBean;
 import javax.faces.bean.ViewScoped;
 
-import org.apache.log4j.Logger;
-
 import de.l3s.learnweb.PeerAssessmentManager.PeerAssesmentPair;
 import de.l3s.learnweb.User;
 import de.l3s.learnweb.beans.ApplicationBean;
@@ -18,7 +16,7 @@ import de.l3s.learnweb.beans.ApplicationBean;
 public class AdminPeerAssesmentPairBeen extends ApplicationBean implements Serializable
 {
     private static final long serialVersionUID = 6265758951073496345L;
-    private static final Logger log = Logger.getLogger(AdminPeerAssesmentPairBeen.class);
+    //private static final Logger log = Logger.getLogger(AdminPeerAssesmentPairBeen.class);
 
     private int peerAssementId = 0;
     private List<PeerAssesmentPair> pairs;
@@ -29,7 +27,6 @@ public class AdminPeerAssesmentPairBeen extends ApplicationBean implements Seria
 
     public void onLoad()
     {
-        log.debug("onLoad");
         User user = getUser(); // the current user
         if(user == null || !user.isModerator()) // not logged in or no privileges
             return;

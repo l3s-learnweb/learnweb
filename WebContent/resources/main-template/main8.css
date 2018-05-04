@@ -861,6 +861,7 @@ a.graybutton {
 	border-radius:2px !important;
 	transition: all 0.3s;
 	text-decoration: none !important;
+	display: inline-block;
 }
 
 .greenbutton .ui-button-text,
