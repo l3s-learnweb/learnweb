@@ -1379,6 +1379,7 @@ public class GroupDetailBean extends ApplicationBean implements Serializable
             this.setRightPanelAction(RPAction.newResource);
             this.getAddResourceBean().clearForm();
             this.getAddResourceBean().getResource().setStorageType(Resource.LEARNWEB_RESOURCE);
+            this.getAddResourceBean().getResource().setType(ResourceType.survey);
             break;
         case "newFile":
             this.setRightPanelAction(RPAction.newFile);

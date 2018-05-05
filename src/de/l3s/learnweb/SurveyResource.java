@@ -13,8 +13,8 @@ public class SurveyResource extends Resource implements Serializable
     private static final long serialVersionUID = 3431955030925189235L;
 
     private int surveyId;
-    private Date start;
-    private Date end;
+    private Date start = null;
+    private Date end = null;
     private boolean saveable; // if true users can save before their answers before finally submitting them
 
     private Survey survey;

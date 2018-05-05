@@ -52,28 +52,11 @@ public class createSurveyManager
 
     }
 
-    public void createSurveyResource(int userId, String title, String desc, java.util.Date open, java.util.Date close)
+    public void createSurveyResource(int resourceId, String title, String desc, java.util.Date open, java.util.Date close)
     {
 
         try
         {
-            Resource iconResource = learnweb.getResourceManager().getResource(204095);
-
-            Resource surveyRes = new Resource();
-            surveyRes.setThumbnail0(iconResource.getThumbnail0());
-            surveyRes.setThumbnail1(iconResource.getThumbnail1());
-            surveyRes.setThumbnail2(iconResource.getThumbnail2());
-            surveyRes.setThumbnail3(iconResource.getThumbnail3());
-            surveyRes.setThumbnail4(iconResource.getThumbnail4());
-            surveyRes.setDeleted(false);
-            surveyRes.setSource("Learnweb");
-            surveyRes.setType(Resource.ResourceType.survey);
-            surveyRes.setStorageType(Resource.LEARNWEB_RESOURCE);
-            surveyRes.setUser(learnweb.getUserManager().getUser(userId));
-            surveyRes.setTitle(title);
-            surveyRes.setDescription(desc);
-            surveyRes.setUrl(learnweb.getServerUrl() + "/lw/showGlossary.jsf?resource_id=" + Integer.toString(surveyRes.getId()));
-            surveyRes.save();
             String insertSurveyDetails = "INSERT INTO `lw_survey`(`title`, `description`, `organization_id`) VALUES (?, ?, ?)";
             String insertNewSurvey = "INSERT INTO `lw_survey_resource`(`resource_id`, `survey_id`, `open_date`, `close_date`) VALUES (?, ?, ?, ?)";
 
@@ -88,7 +71,7 @@ public class createSurveyManager
 
             // System.out.println("r id" + surveyRes.getId());
             PreparedStatement surveyResource = learnweb.getConnection().prepareStatement(insertNewSurvey);
-            surveyResource.setInt(1, surveyRes.getId());
+            surveyResource.setInt(1, resourceId);
             surveyResource.setInt(2, newSurveyId);
             if(open != null && close != null)
             {
