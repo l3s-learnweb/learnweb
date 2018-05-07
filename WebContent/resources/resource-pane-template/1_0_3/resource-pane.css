@@ -69,18 +69,6 @@
     box-shadow: 0 0 0px 0px #fff !important;
 }
 
-#add_resource_panel{
-    padding: 0px 0 2rem 0;
-    border: 0px !important;
-}
-
-#add_resource_table{
-    width:100%;
-    margin: auto;
-}
-#add_resource_panel_content{
-    padding-top:0px !important;
-}
 .add_field{
     width:100%;
     box-sizing: border-box;
@@ -159,7 +147,7 @@
     vertical-align: middle;
 }
 
-#archive_timestamp_overlay_text {
+.archive_timestamp_overlay_text {
 	position: absolute;
     top: 50%;
     left: 50%;
